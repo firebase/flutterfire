@@ -16,16 +16,12 @@ class MethodChannelHttpsCallable extends HttpsCallablePlatform {
   /// Creates a new [MethodChannelHttpsCallable] instance.
   MethodChannelHttpsCallable(FirebaseFunctionsPlatform functions,
       String? origin, String? name, HttpsCallableOptions options, Uri? uri)
-      : _transformedUri = uri?.pathSegments.join('_').replaceAll('.', '_'),
-        super(functions, origin, name, options, uri) {
-    _eventChannelId = name ?? _transformedUri ?? '';
-    _channel =
-        EventChannel('plugins.flutter.io/firebase_functions/$_eventChannelId');
-  }
+      : _baseEventChannelId =
+            name ?? uri?.pathSegments.join('_').replaceAll('.', '_') ?? '',
+        super(functions, origin, name, options, uri);
 
-  late final EventChannel _channel;
-  final String? _transformedUri;
-  late String _eventChannelId;
+  static int _streamIdCounter = 0;
+  final String _baseEventChannelId;
 
   @override
   Future<dynamic> call([Object? parameters]) async {
@@ -54,10 +50,15 @@ class MethodChannelHttpsCallable extends HttpsCallablePlatform {
 
   @override
   Stream<dynamic> stream(Object? parameters) async* {
+    // Each stream() call gets a unique channel ID to prevent collisions
+    // when invoking the same function concurrently. See #18036.
+    final eventChannelId = '${_baseEventChannelId}_${_streamIdCounter++}';
+    final channel =
+        EventChannel('plugins.flutter.io/firebase_functions/$eventChannelId');
     try {
       await MethodChannelFirebaseFunctions.pigeonChannel
           .registerEventChannel(<String, Object>{
-        'eventChannelId': _eventChannelId,
+        'eventChannelId': eventChannelId,
         'appName': functions.app!.name,
         'region': functions.region,
       });
@@ -69,7 +70,7 @@ class MethodChannelHttpsCallable extends HttpsCallablePlatform {
         'limitedUseAppCheckToken': options.limitedUseAppCheckToken,
         'timeout': options.timeout.inMilliseconds,
       };
-      yield* _channel.receiveBroadcastStream(eventData).map((message) {
+      yield* channel.receiveBroadcastStream(eventData).map((message) {
         if (message is Map) {
           return Map<String, dynamic>.from(message);
         }

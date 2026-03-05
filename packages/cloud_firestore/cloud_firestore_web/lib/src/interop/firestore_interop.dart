@@ -234,9 +234,7 @@ external PersistentSingleTabManager persistentSingleTabManager(
 
 @JS()
 @staticInterop
-external PersistentMultipleTabManager persistentMultipleTabManager(
-  PersistentSingleTabManagerSettings? settings,
-);
+external PersistentMultipleTabManager persistentMultipleTabManager();
 
 @JS()
 @staticInterop
@@ -825,11 +823,20 @@ extension PersistentCacheSettingsExtension on PersistentCacheSettings {
   external set tabManager(JSObject v);
 }
 
-/// An settings object to configure an PersistentLocalCache instance.
+/// Settings to configure a PersistentSingleTabManager instance.
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firestore_.persistentsingletabmanagersettings>.
-extension type PersistentSingleTabManagerSettings._(JSObject _)
-    implements JSObject {
+@anonymous
+@JS()
+@staticInterop
+abstract class PersistentSingleTabManagerSettings {
+  external factory PersistentSingleTabManagerSettings({
+    JSBoolean? forceOwnership,
+  });
+}
+
+extension PersistentSingleTabManagerSettingsExtension
+    on PersistentSingleTabManagerSettings {
   /// Whether to force-enable persistent (IndexedDB) cache for the client.
   /// This cannot be used with multi-tab synchronization and is primarily
   /// intended for use with Web Workers.

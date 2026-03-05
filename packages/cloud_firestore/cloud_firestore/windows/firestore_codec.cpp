@@ -212,18 +212,23 @@ cloud_firestore_windows::FirestoreCodec::ReadValueOfType(
               std::get<CustomEncodableValue>(
                   FirestoreCodec::ReadValue(stream)));
 
-      if (CloudFirestorePlugin::firestoreInstances_.find(appName) !=
+      // Use composite key matching GetFirestoreFromPigeon to avoid
+      // creating a duplicate unique_ptr for the same Firestore instance.
+      // See https://github.com/firebase/flutterfire/issues/18028
+      std::string cacheKey = appName + "-" + databaseUrl;
+
+      if (CloudFirestorePlugin::firestoreInstances_.find(cacheKey) !=
           CloudFirestorePlugin::firestoreInstances_.end()) {
         return CustomEncodableValue(
-            CloudFirestorePlugin::firestoreInstances_[appName].get());
+            CloudFirestorePlugin::firestoreInstances_[cacheKey].get());
       }
 
       firebase::App* app = firebase::App::GetInstance(appName.c_str());
 
-      Firestore* firestore = Firestore::GetInstance(app);
+      Firestore* firestore = Firestore::GetInstance(app, databaseUrl.c_str());
       firestore->set_settings(settings);
 
-      CloudFirestorePlugin::firestoreInstances_[appName] =
+      CloudFirestorePlugin::firestoreInstances_[cacheKey] =
           std::unique_ptr<firebase::firestore::Firestore>(firestore);
 
       return CustomEncodableValue(firestore);

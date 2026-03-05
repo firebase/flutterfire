@@ -135,11 +135,11 @@ public class FirebaseAnalyticsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
       Analytics.initiateOnDeviceConversionMeasurement(phoneNumber: phoneNumber)
     }
     if let hashedEmailAddress = arguments["hashedEmailAddress"] as? String,
-       let data = hashedEmailAddress.data(using: .utf8) {
+       let data = hexStringToData(hashedEmailAddress) {
       Analytics.initiateOnDeviceConversionMeasurement(hashedEmailAddress: data)
     }
     if let hashedPhoneNumber = arguments["hashedPhoneNumber"] as? String,
-       let data = hashedPhoneNumber.data(using: .utf8) {
+       let data = hexStringToData(hashedPhoneNumber) {
       Analytics.initiateOnDeviceConversionMeasurement(hashedPhoneNumber: data)
     }
     completion(.success(()))
@@ -216,6 +216,25 @@ public class FirebaseAnalyticsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
         completion(.failure(error))
       }
     }
+  }
+
+  private func hexStringToData(_ hexString: String) -> Data? {
+    let length = hexString.count
+    guard length % 2 == 0 else { return nil }
+
+    var data = Data(capacity: length / 2)
+    var index = hexString.startIndex
+
+    for _ in 0 ..< (length / 2) {
+      let nextIndex = hexString.index(index, offsetBy: 2)
+      guard let byte = UInt8(hexString[index ..< nextIndex], radix: 16) else {
+        return nil
+      }
+      data.append(byte)
+      index = nextIndex
+    }
+
+    return data
   }
 
   public func didReinitializeFirebaseCore(_ completion: @escaping () -> Void) {

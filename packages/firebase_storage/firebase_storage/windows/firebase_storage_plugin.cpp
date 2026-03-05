@@ -265,7 +265,9 @@ void FirebaseStoragePlugin::SetMaxDownloadRetryTime(
 void FirebaseStoragePlugin::UseStorageEmulator(
     const PigeonStorageFirebaseApp& app, const std::string& host, int64_t port,
     std::function<void(std::optional<FlutterError> reply)> result) {
-  // C++ doesn't support emulator on desktop for now. Do nothing.
+  Storage* cpp_storage = GetCPPStorageFromPigeon(app, "");
+  cpp_storage->UseEmulator(host, static_cast<int>(port));
+  result(std::nullopt);
 }
 
 void FirebaseStoragePlugin::ReferenceDelete(

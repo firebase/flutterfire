@@ -253,10 +253,13 @@ class _ImagenPageState extends State<ImagenPage> {
     MessageData? resultMessage;
 
     try {
+      // ignore: experimental_member_use
       final response = await widget.model.inpaintImage(
         _sourceImage!,
         prompt,
+        // ignore: experimental_member_use
         ImagenBackgroundMask(),
+        // ignore: experimental_member_use
         config: ImagenEditingConfig(editMode: ImagenEditMode.inpaintInsertion),
       );
       if (response.images.isNotEmpty) {
@@ -308,9 +311,12 @@ class _ImagenPageState extends State<ImagenPage> {
     MessageData? resultMessage;
 
     try {
+      // ignore: experimental_member_use
       final response = await widget.model.editImage(
         [
+          // ignore: experimental_member_use
           ImagenRawImage(image: _sourceImage!),
+          // ignore: experimental_member_use
           ImagenRawMask(mask: _maskImageForEditing!),
         ],
         prompt,
@@ -359,11 +365,14 @@ class _ImagenPageState extends State<ImagenPage> {
     try {
       final referenceImages = await generateMaskAndPadForOutpainting(
         image: _sourceImage!,
+        // ignore: experimental_member_use
         newDimensions: ImagenDimensions(width: 1400, height: 1400),
       );
+      // ignore: experimental_member_use
       final response = await widget.model.editImage(
         referenceImages,
         '',
+        // ignore: experimental_member_use
         config: ImagenEditingConfig(editMode: ImagenEditMode.outpaint),
       );
       if (response.images.isNotEmpty) {
@@ -407,8 +416,10 @@ class _ImagenPageState extends State<ImagenPage> {
     );
     MessageData? resultMessage;
     try {
+      // ignore: experimental_member_use
       final response = await widget.model.editImage(
         [
+          // ignore: experimental_member_use
           ImagenStyleReference(
             image: _sourceImage!,
             description: 'van goh style',
@@ -416,6 +427,7 @@ class _ImagenPageState extends State<ImagenPage> {
           ),
         ],
         prompt,
+        // ignore: experimental_member_use
         config: ImagenEditingConfig(editSteps: 50),
       );
       if (response.images.isNotEmpty) {

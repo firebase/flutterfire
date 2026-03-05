@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import 'dart:convert';
+import 'package:crypto/crypto.dart';
 
 import 'package:firebase_app_check/firebase_app_check.dart';
 
@@ -37,6 +38,14 @@ String getFirebaseClientVal(String packageVersion) {
   return 'flutter-fire-dc/$packageVersion';
 }
 
+String convertToSha256(String inputString) {
+  List<int> bytes = utf8.encode(inputString);
+  Digest digest = sha256.convert(bytes);
+  String sha256Hash = digest.toString();
+
+  return sha256Hash;
+}
+
 /// Transport Options for connecting to a specific host.
 class TransportOptions {
   /// Constructor
@@ -50,6 +59,20 @@ class TransportOptions {
 
   /// isSecure - use secure protocol
   bool? isSecure;
+}
+
+/// Encapsulates the response from server
+class ServerResponse {
+  /// Data returned from server
+  final Map<String, dynamic> data;
+
+  /// duration for which the results are considered not stale
+  Duration? ttl;
+
+  /// Additional data provided in extensions
+  final Map<String, dynamic>? extensions;
+
+  ServerResponse(this.data, {this.extensions});
 }
 
 /// Interface for transports connecting to the DataConnect backend.
@@ -78,7 +101,7 @@ abstract class DataConnectTransport {
   String appId;
 
   /// Invokes corresponding query endpoint.
-  Future<Data> invokeQuery<Data, Variables>(
+  Future<ServerResponse> invokeQuery<Data, Variables>(
     String queryName,
     Deserializer<Data> deserializer,
     Serializer<Variables> serializer,
@@ -87,7 +110,7 @@ abstract class DataConnectTransport {
   );
 
   /// Invokes corresponding mutation endpoint.
-  Future<Data> invokeMutation<Data, Variables>(
+  Future<ServerResponse> invokeMutation<Data, Variables>(
     String queryName,
     Deserializer<Data> deserializer,
     Serializer<Variables> serializer,

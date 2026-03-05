@@ -4,7 +4,7 @@
 # customers of the plugin.
 cmake_minimum_required(VERSION 3.14)
 
-set(FIREBASE_SDK_VERSION "12.7.0")
+set(FIREBASE_SDK_VERSION "13.5.0")
 
 if (EXISTS $ENV{FIREBASE_CPP_SDK_DIR}/include/firebase/version.h)
     file(READ "$ENV{FIREBASE_CPP_SDK_DIR}/include/firebase/version.h" existing_version)
@@ -65,6 +65,8 @@ list(APPEND PLUGIN_SOURCES
   "firebase_core_plugin.h"
   "messages.g.cpp"
   "messages.g.h"
+  "flutter_firebase_plugin_registry.h"
+  "flutter_firebase_plugin_registry.cpp"
 )
 
 # Read version from pubspec.yaml
@@ -120,7 +122,7 @@ add_subdirectory(${FIREBASE_CPP_SDK_DIR} bin/ EXCLUDE_FROM_ALL)
 target_include_directories(${PLUGIN_NAME} INTERFACE
   "${FIREBASE_CPP_SDK_DIR}/include")
 
-set(FIREBASE_RELEASE_PATH_LIBS firebase_app firebase_auth firebase_storage firebase_firestore)
+set(FIREBASE_RELEASE_PATH_LIBS firebase_app firebase_auth firebase_remote_config firebase_storage firebase_firestore)
 foreach(firebase_lib IN ITEMS ${FIREBASE_RELEASE_PATH_LIBS})
     get_target_property(firebase_lib_path ${firebase_lib} IMPORTED_LOCATION)
     string(REPLACE "Debug" "Release" firebase_lib_release_path ${firebase_lib_path})

@@ -16,6 +16,7 @@ import 'package:mockito/mockito.dart';
 import 'mock.dart';
 
 MockReferencePlatform mockReference = MockReferencePlatform();
+MockReferencePlatform mockJpgReference = MockReferencePlatform();
 MockListResultPlatform mockListResultPlatform = MockListResultPlatform();
 MockUploadTaskPlatform mockUploadTaskPlatform = MockUploadTaskPlatform();
 MockDownloadTaskPlatform mockDownloadTaskPlatform = MockDownloadTaskPlatform();
@@ -305,6 +306,130 @@ Future<void> main() async {
         expect(result, isA<Task>());
 
         verify(mockReference.writeToFile(testFile));
+      });
+    });
+
+    group('putData() contentType inference', () {
+      late Reference jpgRef;
+
+      setUp(() {
+        when(kMockStoragePlatform.ref(any)).thenReturn(mockJpgReference);
+        when(mockJpgReference.bucket).thenReturn(testBucket);
+        when(mockJpgReference.fullPath).thenReturn('foo/photo.jpg');
+        when(mockJpgReference.name).thenReturn('photo.jpg');
+        jpgRef = storage.ref('foo/photo.jpg');
+      });
+
+      test('infers contentType from ref name when no metadata', () {
+        List<int> list = utf8.encode('hello');
+        Uint8List data = Uint8List.fromList(list);
+        when(mockJpgReference.putData(data, any))
+            .thenReturn(mockUploadTaskPlatform);
+
+        jpgRef.putData(data);
+
+        final captured = verify(mockJpgReference.putData(data, captureAny))
+            .captured
+            .single as SettableMetadata;
+        expect(captured.contentType, 'image/jpeg');
+      });
+
+      test('infers contentType when metadata has no contentType', () {
+        List<int> list = utf8.encode('hello');
+        Uint8List data = Uint8List.fromList(list);
+        when(mockJpgReference.putData(data, any))
+            .thenReturn(mockUploadTaskPlatform);
+
+        jpgRef.putData(data, SettableMetadata(contentLanguage: 'en'));
+
+        final captured = verify(mockJpgReference.putData(data, captureAny))
+            .captured
+            .single as SettableMetadata;
+        expect(captured.contentType, 'image/jpeg');
+        expect(captured.contentLanguage, 'en');
+      });
+
+      test('preserves explicit contentType', () {
+        List<int> list = utf8.encode('hello');
+        Uint8List data = Uint8List.fromList(list);
+        when(mockJpgReference.putData(data, any))
+            .thenReturn(mockUploadTaskPlatform);
+
+        jpgRef.putData(
+            data, SettableMetadata(contentType: 'application/octet-stream'));
+
+        final captured = verify(mockJpgReference.putData(data, captureAny))
+            .captured
+            .single as SettableMetadata;
+        expect(captured.contentType, 'application/octet-stream');
+      });
+
+      test('preserves customMetadata when inferring contentType', () {
+        List<int> list = utf8.encode('hello');
+        Uint8List data = Uint8List.fromList(list);
+        when(mockJpgReference.putData(data, any))
+            .thenReturn(mockUploadTaskPlatform);
+
+        jpgRef.putData(
+            data, SettableMetadata(customMetadata: {'activity': 'test'}));
+
+        final captured = verify(mockJpgReference.putData(data, captureAny))
+            .captured
+            .single as SettableMetadata;
+        expect(captured.contentType, 'image/jpeg');
+        expect(captured.customMetadata, {'activity': 'test'});
+      });
+
+      test('no inference when ref has no extension', () {
+        // Reset to the default mock with no extension
+        when(kMockStoragePlatform.ref(any)).thenReturn(mockReference);
+        when(mockReference.name).thenReturn(testName);
+        final noExtRef = storage.ref();
+
+        List<int> list = utf8.encode('hello');
+        Uint8List data = Uint8List.fromList(list);
+        when(mockReference.putData(data)).thenReturn(mockUploadTaskPlatform);
+
+        noExtRef.putData(data);
+
+        verify(mockReference.putData(data));
+      });
+    });
+
+    group('putBlob() contentType inference', () {
+      late Reference jpgRef;
+
+      setUp(() {
+        when(kMockStoragePlatform.ref(any)).thenReturn(mockJpgReference);
+        when(mockJpgReference.bucket).thenReturn(testBucket);
+        when(mockJpgReference.fullPath).thenReturn('foo/photo.jpg');
+        when(mockJpgReference.name).thenReturn('photo.jpg');
+        jpgRef = storage.ref('foo/photo.jpg');
+      });
+
+      test('infers contentType from ref name when no metadata', () {
+        when(mockJpgReference.putBlob(any, any))
+            .thenReturn(mockUploadTaskPlatform);
+
+        jpgRef.putBlob('blob-data');
+
+        final captured = verify(mockJpgReference.putBlob(any, captureAny))
+            .captured
+            .single as SettableMetadata;
+        expect(captured.contentType, 'image/jpeg');
+      });
+
+      test('preserves explicit contentType', () {
+        when(mockJpgReference.putBlob(any, any))
+            .thenReturn(mockUploadTaskPlatform);
+
+        jpgRef.putBlob(
+            'blob-data', SettableMetadata(contentType: 'text/plain'));
+
+        final captured = verify(mockJpgReference.putBlob(any, captureAny))
+            .captured
+            .single as SettableMetadata;
+        expect(captured.contentType, 'text/plain');
       });
     });
 

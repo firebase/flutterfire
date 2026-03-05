@@ -1,3 +1,13 @@
+## 3.9.0
+
+ - **FIX**: resolve lint issues ([#18017](https://github.com/firebase/flutterfire/issues/18017)). ([e8e85397](https://github.com/firebase/flutterfire/commit/e8e85397ccdcab6c8b84348884b4673f86b79d1c))
+ - **FEAT**(firebaseai): update Live API sample to add video support. ([#18018](https://github.com/firebase/flutterfire/issues/18018)). ([f91df750](https://github.com/firebase/flutterfire/commit/f91df7503bc4506c66cbebcfa562d65de1ae0e5b))
+
+## 3.8.0
+
+ - **FIX**(firebase_ai): Rename `groundingSupport` to `groundingSupports` ([#17961](https://github.com/firebase/flutterfire/issues/17961)). ([cfb90989](https://github.com/firebase/flutterfire/commit/cfb909896d8ae9edc49b10f1def5b64dcc3dfb35))
+ - **FEAT**(firebaseai): implicit caching, add metadata ([#17979](https://github.com/firebase/flutterfire/issues/17979)). ([e5fc7587](https://github.com/firebase/flutterfire/commit/e5fc7587e372ba2daa7500d4e9ce30e0537ff889))
+
 ## 3.7.0
 
  - **FIX**(firebase_ai): add missing error exports for ServiceApiNotEnabled and QuotaExceeded ([#17928](https://github.com/firebase/flutterfire/issues/17928)). ([fc6dd40f](https://github.com/firebase/flutterfire/commit/fc6dd40f59a1ead2865cfb93ad6e76b07da4097f))

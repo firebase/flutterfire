@@ -53,6 +53,9 @@ void FirebaseAuthPlugin::RegisterWithRegistrar(
   FirebaseAuthHostApi::SetUp(registrar->messenger(), plugin.get());
   FirebaseAuthUserHostApi::SetUp(registrar->messenger(), plugin.get());
 
+  RegisterFlutterFirebasePlugin("plugins.flutter.io/firebase_auth",
+                                plugin.get());
+
   registrar->AddPlugin(std::move(plugin));
 
   binaryMessenger = registrar->messenger();
@@ -1141,10 +1144,8 @@ void FirebaseAuthPlugin::UpdateEmail(
   firebase::auth::Auth* firebaseAuth = GetAuthFromPigeon(app);
   firebase::auth::User user = firebaseAuth->current_user();
 
-#pragma warning(push)
-#pragma warning(disable : 4996)
-  firebase::Future<void> future = user.UpdateEmail(new_email.c_str());
-#pragma warning(pop)
+  firebase::Future<void> future =
+      user.SendEmailVerificationBeforeUpdatingEmail(new_email.c_str());
 
   future.OnCompletion([result, firebaseAuth](
                           const firebase::Future<void>& completed_future) {
@@ -1283,6 +1284,37 @@ void FirebaseAuthPlugin::RevokeTokenWithAuthorizationCode(
       "unimplemented",
       "RevokeTokenWithAuthorizationCode is not available on this platform yet.",
       nullptr));
+}
+
+flutter::EncodableMap FirebaseAuthPlugin::GetPluginConstantsForFirebaseApp(
+    const firebase::App& app) {
+  flutter::EncodableMap constants;
+
+  Auth* auth = Auth::GetAuth(const_cast<firebase::App*>(&app));
+  firebase::auth::User user = auth->current_user();
+
+  if (user.is_valid()) {
+    PigeonUserDetails userDetails = ParseUserDetails(user);
+    flutter::EncodableList userDetailsList;
+    userDetailsList.push_back(
+        flutter::EncodableValue(userDetails.user_info().ToEncodableList()));
+    userDetailsList.push_back(
+        flutter::EncodableValue(userDetails.provider_data()));
+    constants[flutter::EncodableValue("APP_CURRENT_USER")] =
+        flutter::EncodableValue(userDetailsList);
+  }
+
+  std::string lang = auth->language_code();
+  if (!lang.empty()) {
+    constants[flutter::EncodableValue("APP_LANGUAGE_CODE")] =
+        flutter::EncodableValue(lang);
+  }
+
+  return constants;
+}
+
+void FirebaseAuthPlugin::DidReinitializeFirebaseCore() {
+  // No-op for now. Could be used to reset cached auth instances.
 }
 
 }  // namespace firebase_auth_windows

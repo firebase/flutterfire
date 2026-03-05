@@ -6,6 +6,7 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void setupQueryTests() {
@@ -440,22 +441,21 @@ void setupQueryTests() {
       test(
         'emits an event when a child is added',
         () async {
-          expect(
-            ref.onChildAdded,
-            emitsInOrder([
-              isA<DatabaseEvent>()
-                  .having((s) => s.snapshot.value, 'value', 'foo')
-                  .having((e) => e.type, 'type', DatabaseEventType.childAdded),
-              isA<DatabaseEvent>()
-                  .having((s) => s.snapshot.value, 'value', 'bar')
-                  .having((e) => e.type, 'type', DatabaseEventType.childAdded),
-            ]),
-          );
+          // Set data first, then subscribe. onChildAdded fires for
+          // existing children on initial listen, avoiding race conditions
+          // with native listener registration.
+          // Use keys that sort alphabetically in the expected order,
+          // since onChildAdded returns children in key order.
+          await ref.child('a_first').set('foo');
+          await ref.child('b_second').set('bar');
 
-          await ref.child('foo').set('foo');
-          await ref.child('bar').set('bar');
+          final events = await ref.onChildAdded.take(2).toList();
+
+          expect(events[0].snapshot.value, 'foo');
+          expect(events[0].type, DatabaseEventType.childAdded);
+          expect(events[1].snapshot.value, 'bar');
+          expect(events[1].type, DatabaseEventType.childAdded);
         },
-        retry: 2,
       );
     });
 
@@ -466,24 +466,26 @@ void setupQueryTests() {
           await ref.child('foo').set('foo');
           await ref.child('bar').set('bar');
 
-          expect(
-            ref.onChildRemoved,
-            emitsInOrder([
-              isA<DatabaseEvent>()
-                  .having((s) => s.snapshot.value, 'value', 'bar')
-                  .having(
-                    (e) => e.type,
-                    'type',
-                    DatabaseEventType.childRemoved,
-                  ),
-            ]),
-          );
-          // Give time for listen to be registered on native.
-          // TODO is there a better way to do this?
-          await Future.delayed(const Duration(seconds: 1));
+          final completer = Completer<DatabaseEvent>();
+          final subscription = ref.onChildRemoved.listen((event) {
+            // Skip probe events used for listener registration
+            if (event.snapshot.key == '__probe__') return;
+            if (!completer.isCompleted) completer.complete(event);
+          });
+
+          // Wait for native listener registration by doing a round-trip
+          await ref.child('__probe__').set(true);
+          await ref.child('__probe__').remove();
+
           await ref.child('bar').remove();
+
+          final event =
+              await completer.future.timeout(const Duration(seconds: 10));
+          expect(event.snapshot.value, 'bar');
+          expect(event.type, DatabaseEventType.childRemoved);
+
+          await subscription.cancel();
         },
-        retry: 2,
       );
     });
 
@@ -502,34 +504,33 @@ void setupQueryTests() {
           await childRef.child('foo').set('foo');
           await childRef.child('bar').set('bar');
 
-          expect(
-            childRef.onChildChanged,
-            emitsInOrder([
-              isA<DatabaseEvent>()
-                  .having((s) => s.snapshot.key, 'key', 'bar')
-                  .having((s) => s.snapshot.value, 'value', 'baz')
-                  .having(
-                    (e) => e.type,
-                    'type',
-                    DatabaseEventType.childChanged,
-                  ),
-              isA<DatabaseEvent>()
-                  .having((s) => s.snapshot.key, 'key', 'foo')
-                  .having((s) => s.snapshot.value, 'value', 'bar')
-                  .having(
-                    (e) => e.type,
-                    'type',
-                    DatabaseEventType.childChanged,
-                  ),
-            ]),
-          );
-          // Give time for listen to be registered on native.
-          // TODO is there a better way to do this?
-          await Future.delayed(const Duration(seconds: 1));
+          final events = <DatabaseEvent>[];
+          final receivedTwo = Completer<void>();
+          final subscription = childRef.onChildChanged.listen((event) {
+            events.add(event);
+            if (events.length >= 2 && !receivedTwo.isCompleted) {
+              receivedTwo.complete();
+            }
+          });
+
+          // Wait for native listener registration by doing a round-trip
+          await childRef.child('__probe__').set(true);
+          await childRef.child('__probe__').remove();
+
           await childRef.child('bar').set('baz');
           await childRef.child('foo').set('bar');
+
+          await receivedTwo.future.timeout(const Duration(seconds: 10));
+
+          expect(events[0].snapshot.key, 'bar');
+          expect(events[0].snapshot.value, 'baz');
+          expect(events[0].type, DatabaseEventType.childChanged);
+          expect(events[1].snapshot.key, 'foo');
+          expect(events[1].snapshot.value, 'bar');
+          expect(events[1].type, DatabaseEventType.childChanged);
+
+          await subscription.cancel();
         },
-        retry: 2,
       );
     });
 
@@ -545,24 +546,32 @@ void setupQueryTests() {
             'greg': {'nuggets': 52},
           });
 
-          expect(
-            ref.orderByChild('nuggets').onChildMoved,
-            emitsInOrder([
-              isA<DatabaseEvent>().having((s) => s.snapshot.value, 'value', {
-                'nuggets': 57,
-              }).having((e) => e.type, 'type', DatabaseEventType.childMoved),
-              isA<DatabaseEvent>().having((s) => s.snapshot.value, 'value', {
-                'nuggets': 61,
-              }).having((e) => e.type, 'type', DatabaseEventType.childMoved),
-            ]),
-          );
-          // Give time for listen to be registered on native.
-          // TODO is there a better way to do this?
-          await Future.delayed(const Duration(seconds: 1));
+          final events = <DatabaseEvent>[];
+          final receivedTwo = Completer<void>();
+          final subscription =
+              ref.orderByChild('nuggets').onChildMoved.listen((event) {
+            events.add(event);
+            if (events.length >= 2 && !receivedTwo.isCompleted) {
+              receivedTwo.complete();
+            }
+          });
+
+          // Wait for native listener registration by doing a round-trip
+          await ref.child('__probe__').set(true);
+          await ref.child('__probe__').remove();
+
           await ref.child('greg/nuggets').set(57);
           await ref.child('rob/nuggets').set(61);
+
+          await receivedTwo.future.timeout(const Duration(seconds: 10));
+
+          expect(events[0].snapshot.value, {'nuggets': 57});
+          expect(events[0].type, DatabaseEventType.childMoved);
+          expect(events[1].snapshot.value, {'nuggets': 61});
+          expect(events[1].type, DatabaseEventType.childMoved);
+
+          await subscription.cancel();
         },
-        retry: 2,
       );
     });
 
@@ -603,6 +612,128 @@ void setupQueryTests() {
         expect(streamError, isA<FirebaseException>());
         expect(streamError.code, 'permission-denied');
       });
+    });
+
+    group('keepSynced', () {
+      test(
+        'multiple queries can enable keepSynced without crashing',
+        () async {
+          await ref.set({
+            'a': {'value': 1},
+            'b': {'value': 2},
+            'c': {'value': 3},
+          });
+
+          // Enable keepSynced on multiple different queries
+          final query1 = ref.orderByChild('value').limitToFirst(2);
+          final query2 = ref.orderByChild('value').limitToLast(2);
+          final query3 = ref.orderByKey().startAt('a');
+          final query4 = ref.orderByValue();
+
+          // These should all complete without throwing
+          await query1.keepSynced(true);
+          await query2.keepSynced(true);
+          await query3.keepSynced(true);
+          await query4.keepSynced(true);
+
+          // Verify data is still accessible after enabling keepSynced
+          final snapshot = await ref.get();
+          expect(snapshot.value, isNotNull);
+        },
+        skip: kIsWeb,
+      );
+
+      test(
+        'multiple queries can disable keepSynced without crashing',
+        () async {
+          await ref.set({
+            'a': {'value': 1},
+            'b': {'value': 2},
+            'c': {'value': 3},
+          });
+
+          final query1 = ref.orderByChild('value').limitToFirst(2);
+          final query2 = ref.orderByChild('value').limitToLast(2);
+          final query3 = ref.orderByKey().startAt('a');
+
+          // First enable keepSynced
+          await query1.keepSynced(true);
+          await query2.keepSynced(true);
+          await query3.keepSynced(true);
+
+          // Then disable keepSynced on all queries - should not crash
+          await query1.keepSynced(false);
+          await query2.keepSynced(false);
+          await query3.keepSynced(false);
+
+          // Verify data is still accessible after disabling keepSynced
+          final snapshot = await ref.get();
+          expect(snapshot.value, isNotNull);
+        },
+        skip: kIsWeb,
+      );
+
+      test(
+        'calling keepSynced multiple times on same query does not crash',
+        () async {
+          await ref.set({
+            'a': 1,
+            'b': 2,
+          });
+
+          final query = ref.orderByValue().limitToFirst(5);
+
+          // Call keepSynced multiple times on the same query
+          await query.keepSynced(true);
+          await query.keepSynced(true);
+          await query.keepSynced(false);
+          await query.keepSynced(true);
+          await query.keepSynced(false);
+          await query.keepSynced(false);
+
+          // Should complete without any issues
+          final snapshot = await ref.get();
+          expect(snapshot.value, isNotNull);
+        },
+        skip: kIsWeb,
+      );
+
+      test(
+        'keepSynced works with various query combinations',
+        () async {
+          await ref.set({
+            'item1': {'name': 'alpha', 'priority': 1},
+            'item2': {'name': 'beta', 'priority': 2},
+            'item3': {'name': 'gamma', 'priority': 3},
+            'item4': {'name': 'delta', 'priority': 4},
+          });
+
+          // Test various query combinations with keepSynced
+          final queries = [
+            ref.orderByChild('name'),
+            ref.orderByChild('priority').startAt(2),
+            ref.orderByChild('priority').endAt(3),
+            ref.orderByChild('priority').equalTo(2),
+            ref.orderByKey().limitToFirst(2),
+            ref.orderByKey().limitToLast(2),
+          ];
+
+          // Enable keepSynced on all queries
+          for (final query in queries) {
+            await query.keepSynced(true);
+          }
+
+          // Disable keepSynced on all queries
+          for (final query in queries) {
+            await query.keepSynced(false);
+          }
+
+          // Verify everything still works
+          final snapshot = await ref.get();
+          expect(snapshot.children.length, 4);
+        },
+        skip: kIsWeb,
+      );
     });
   });
 }

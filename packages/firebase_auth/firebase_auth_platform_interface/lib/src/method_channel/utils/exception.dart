@@ -154,7 +154,7 @@ String? _getCustomCode(Map? additionalData, String? message) {
   for (final recognizedCode in listOfRecognizedCode) {
     if (additionalData?['message'] == recognizedCode ||
         (message?.contains(recognizedCode) ?? false)) {
-      return recognizedCode;
+      return recognizedCode.toLowerCase().replaceAll('_', '-');
     }
   }
 

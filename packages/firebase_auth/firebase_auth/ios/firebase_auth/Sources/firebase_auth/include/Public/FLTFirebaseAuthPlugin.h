@@ -19,6 +19,10 @@
 #endif
 #import "firebase_auth_messages.g.h"
 
+#if !TARGET_OS_OSX
+@protocol FlutterSceneLifeCycleDelegate;
+#endif
+
 @interface FLTFirebaseAuthPlugin
     : FLTFirebasePlugin <FlutterPlugin,
                          FirebaseAuthHostApi,
@@ -28,7 +32,15 @@
                          MultiFactorTotpHostApi,
                          MultiFactorTotpSecretHostApi,
                          ASAuthorizationControllerDelegate,
-                         ASAuthorizationControllerPresentationContextProviding>
+                         ASAuthorizationControllerPresentationContextProviding
+#if !TARGET_OS_OSX
+#if __has_include(<Flutter/FlutterSceneLifeCycleDelegate.h>) || \
+    defined(FlutterSceneLifeCycleDelegate)
+                         ,
+                         FlutterSceneLifeCycleDelegate
+#endif
+#endif
+                         >
 
 + (FlutterError *)convertToFlutterError:(NSError *)error;
 @end

@@ -12,6 +12,13 @@ Both native platforms and web support creating a credential which can then be pa
 or `linkWithCredential` methods. Alternatively on web platforms, you can trigger the authentication process via
 a popup or redirect.
 
+Note: On Android, `signInWithProvider` opens a Chrome Custom Tab for the OAuth flow. If your
+`AndroidManifest.xml` contains `android:taskAffinity=""` (Flutter's default template), the Custom Tab
+will close when the user switches apps (e.g. to open a password manager), and returning will give a
+`web-context-already-presented` error. To fix this, remove `android:taskAffinity=""` from your
+`AndroidManifest.xml`.
+{: .callout .callout-warning}
+
 ## Google
 
 Most configuration is already setup when using Google Sign-In with Firebase, however you need to ensure your machine's
@@ -208,11 +215,18 @@ For further information, see this [issue](https://github.com/firebase/flutterfir
   and [enable Apple as a sign-in provider](/docs/auth/web/apple#enable-apple-as-a-sign-in-provider).
 
 
+To have Apple present the full first-time sign-in UI (including the "Share/Hide email" option),
+you must request the `email` and `name` scopes:
+{: .callout .callout-info}
+
 ```dart
 import 'package:firebase_auth/firebase_auth.dart';
 
 Future<UserCredential> signInWithApple() async {
   final appleProvider = AppleAuthProvider();
+  appleProvider.addScope('email');
+  appleProvider.addScope('name');
+
   if (kIsWeb) {
     await FirebaseAuth.instance.signInWithPopup(appleProvider);
   } else {
@@ -259,6 +273,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 Future<UserCredential> signInWithApple() async {
   final appleProvider = AppleAuthProvider();
+  appleProvider.addScope('email');
+  appleProvider.addScope('name');
 
   UserCredential userCredential = await FirebaseAuth.instance.signInWithPopup(appleProvider);
   // Keep the authorization code returned from Apple platforms
