@@ -11,7 +11,11 @@
 #include <flutter/method_channel.h>
 #include <flutter/plugin_registrar_windows.h>
 
+#include <functional>
 #include <memory>
+#include <mutex>
+#include <queue>
+#include <variant>
 
 #include "firebase/database.h"
 #include "firebase/database/common.h"
@@ -129,6 +133,14 @@ class FirebaseDatabasePlugin : public flutter::Plugin,
       stream_handlers_;
   static std::map<std::string, firebase::database::Database*>
       database_instances_;
+
+  // Thread-safe dispatch: posts a task to run on the platform (UI) thread.
+  static void DispatchToMainThread(std::function<void()> task);
+
+  // Platform thread HWND for PostMessage-based dispatch.
+  static HWND hwnd_;
+  static std::mutex dispatch_mutex_;
+  static std::queue<std::function<void()>> dispatch_queue_;
 
  private:
   firebase::database::Database* GetDatabaseFromPigeon(

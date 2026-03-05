@@ -53,8 +53,14 @@ namespace firebase_database_windows {
 
 static const std::string kLibraryName = "flutter-fire-db";
 
+// Custom Windows message for dispatching tasks to the platform thread.
+static constexpr UINT WM_DISPATCH_TASK = WM_APP + 0xDB;  // 0xDB for "database"
+
 // Static member initialization
 flutter::BinaryMessenger* FirebaseDatabasePlugin::messenger_ = nullptr;
+HWND FirebaseDatabasePlugin::hwnd_ = nullptr;
+std::mutex FirebaseDatabasePlugin::dispatch_mutex_;
+std::queue<std::function<void()>> FirebaseDatabasePlugin::dispatch_queue_;
 std::map<std::string,
          std::unique_ptr<flutter::EventChannel<flutter::EncodableValue>>>
     FirebaseDatabasePlugin::event_channels_;
@@ -62,6 +68,17 @@ std::map<std::string, std::unique_ptr<flutter::StreamHandler<>>>
     FirebaseDatabasePlugin::stream_handlers_;
 std::map<std::string, firebase::database::Database*>
     FirebaseDatabasePlugin::database_instances_;
+
+void FirebaseDatabasePlugin::DispatchToMainThread(
+    std::function<void()> task) {
+  {
+    std::lock_guard<std::mutex> lock(dispatch_mutex_);
+    dispatch_queue_.push(std::move(task));
+  }
+  if (hwnd_) {
+    ::PostMessage(hwnd_, WM_DISPATCH_TASK, 0, 0);
+  }
+}
 
 // atexit handler: clean up Database resources before static destruction.
 // 1. Clear event channels to trigger StreamHandler destruction, which
@@ -354,6 +371,35 @@ void FirebaseDatabasePlugin::RegisterWithRegistrar(
   auto plugin = std::make_unique<FirebaseDatabasePlugin>();
   messenger_ = registrar->messenger();
   FirebaseDatabaseHostApi::SetUp(registrar->messenger(), plugin.get());
+
+  // Capture the HWND for cross-thread dispatch.
+  auto* view = registrar->GetView();
+  if (view) {
+    hwnd_ = view->GetNativeWindow();
+  }
+
+  // Register a WindowProc delegate to process dispatched tasks on the
+  // platform thread.
+  registrar->RegisterTopLevelWindowProcDelegate(
+      [](HWND hwnd, UINT message, WPARAM wparam,
+         LPARAM lparam) -> std::optional<LRESULT> {
+        if (message == WM_DISPATCH_TASK) {
+          // Drain the queue on the platform thread.
+          std::queue<std::function<void()>> tasks;
+          {
+            std::lock_guard<std::mutex> lock(
+                FirebaseDatabasePlugin::dispatch_mutex_);
+            std::swap(tasks, FirebaseDatabasePlugin::dispatch_queue_);
+          }
+          while (!tasks.empty()) {
+            tasks.front()();
+            tasks.pop();
+          }
+          return 0;
+        }
+        return std::nullopt;
+      });
+
   registrar->AddPlugin(std::move(plugin));
   App::RegisterLibrary(kLibraryName.c_str(), getPluginVersion().c_str(),
                        nullptr);
@@ -361,31 +407,6 @@ void FirebaseDatabasePlugin::RegisterWithRegistrar(
   // Register atexit handler to clean up listeners and disconnect
   // before static destruction triggers thread joins in the C++ SDK.
   std::atexit(CleanupBeforeStaticDestruction);
-}
-
-// --- Helper: Extract namespace from a Firebase RTDB URL ---
-// e.g. "https://my-project-default-rtdb.firebaseio.com" ->
-// "my-project-default-rtdb" e.g.
-// "https://my-project-default-rtdb.europe-west1.firebasedatabase.app" ->
-// "my-project-default-rtdb"
-static std::string ExtractNamespaceFromUrl(const std::string& url) {
-  // Strip scheme
-  std::string host = url;
-  auto scheme_end = host.find("://");
-  if (scheme_end != std::string::npos) {
-    host = host.substr(scheme_end + 3);
-  }
-  // Strip path
-  auto slash = host.find('/');
-  if (slash != std::string::npos) {
-    host = host.substr(0, slash);
-  }
-  // Namespace is the first label of the host
-  auto dot = host.find('.');
-  if (dot != std::string::npos) {
-    return host.substr(0, dot);
-  }
-  return host;
 }
 
 // --- Helper: Get Database instance from Pigeon app ---
@@ -401,20 +422,13 @@ Database* FirebaseDatabasePlugin::GetDatabaseFromPigeon(
 
   // Build a cache key from app name + effective URL (like Firestore does)
   std::string effective_url;
-  const std::string* emulator_host = settings.emulator_host();
-  const int64_t* emulator_port = settings.emulator_port();
-  if (emulator_host && emulator_port) {
-    std::string ns;
-    if (url && !url->empty()) {
-      ns = ExtractNamespaceFromUrl(*url);
-    } else {
-      ns = std::string(firebase_app->options().project_id()) + "-default-rtdb";
-    }
-    effective_url = "http://" + *emulator_host + ":" +
-                    std::to_string(*emulator_port) + "?ns=" + ns;
-  } else if (url && !url->empty()) {
+  if (url && !url->empty()) {
     effective_url = *url;
   }
+  // Note: The Firebase C++ SDK does not have a UseEmulator() API for Realtime
+  // Database (unlike Auth/Storage). Emulator host/port settings are stored
+  // but not applied via a custom URL, as the C++ SDK rejects non-Firebase
+  // URLs. The database will connect to the production URL from app options.
 
   std::string cache_key = app.app_name() + "-" + effective_url;
 
@@ -717,37 +731,49 @@ void FirebaseDatabasePlugin::DatabaseReferenceRunTransaction(
         EncodableValue snapshot_value =
             FirebaseDatabasePlugin::VariantToEncodableValue(current_value);
 
-        // Call the Flutter transaction handler synchronously using a semaphore
+        // Call the Flutter transaction handler synchronously.
+        // The pigeon call must be dispatched to the platform thread, then
+        // we wait here (on the SDK worker thread) for the response.
         std::mutex mtx;
         std::condition_variable cv;
         bool handler_complete = false;
         TransactionHandlerResult* handler_result = nullptr;
 
-        auto flutter_api =
-            std::make_unique<FirebaseDatabaseFlutterApi>(ctx->messenger);
+        // Copy snapshot data for the dispatch closure.
+        auto snapshot_copy = std::make_shared<EncodableValue>(snapshot_value);
+        int64_t txn_key = ctx->transaction_key;
+        flutter::BinaryMessenger* messenger = ctx->messenger;
 
-        const EncodableValue* snapshot_ptr =
-            std::holds_alternative<std::monostate>(snapshot_value)
-                ? nullptr
-                : &snapshot_value;
+        FirebaseDatabasePlugin::DispatchToMainThread([&, snapshot_copy, txn_key,
+                                                      messenger]() {
+          auto flutter_api =
+              std::make_unique<FirebaseDatabaseFlutterApi>(messenger);
 
-        flutter_api->CallTransactionHandler(
-            ctx->transaction_key, snapshot_ptr,
-            [&](const TransactionHandlerResult& result) {
-              handler_result = new TransactionHandlerResult(
-                  result.value(), result.aborted(), result.exception());
-              std::lock_guard<std::mutex> lock(mtx);
-              handler_complete = true;
-              cv.notify_one();
-            },
-            [&](const FlutterError& error) {
-              handler_result = new TransactionHandlerResult(true, true);
-              std::lock_guard<std::mutex> lock(mtx);
-              handler_complete = true;
-              cv.notify_one();
-            });
+          const EncodableValue* snapshot_ptr =
+              std::holds_alternative<std::monostate>(*snapshot_copy)
+                  ? nullptr
+                  : snapshot_copy.get();
 
-        // Wait for the Flutter callback to complete
+          flutter_api->CallTransactionHandler(
+              txn_key, snapshot_ptr,
+              [&](const TransactionHandlerResult& result) {
+                handler_result = new TransactionHandlerResult(
+                    result.value(), result.aborted(), result.exception());
+                std::lock_guard<std::mutex> lock(mtx);
+                handler_complete = true;
+                cv.notify_one();
+              },
+              [&](const FlutterError& error) {
+                handler_result = new TransactionHandlerResult(true, true);
+                std::lock_guard<std::mutex> lock(mtx);
+                handler_complete = true;
+                cv.notify_one();
+              });
+        });
+
+        // Wait for the Flutter callback to complete.
+        // The platform thread pumps messages while we wait, so the pigeon
+        // response will be processed and our cv will be notified.
         {
           std::unique_lock<std::mutex> lock(mtx);
           cv.wait(lock, [&] { return handler_complete; });
@@ -996,23 +1022,36 @@ void FirebaseDatabasePlugin::QueryObserve(
       }
 
       if (event_type == "value") {
-        // Value listener
+        // Value listener — dispatches to platform thread via PostMessage
         class VL : public firebase::database::ValueListener {
          public:
           VL(flutter::EventSink<flutter::EncodableValue>* events)
               : events_(events) {}
           void OnValueChanged(const DataSnapshot& snapshot) override {
+            // Copy snapshot data before dispatching — the snapshot reference
+            // is only valid during this callback.
             EncodableMap event;
             event[EncodableValue("eventType")] = EncodableValue("value");
             event[EncodableValue("previousChildKey")] = EncodableValue();
             event[EncodableValue("snapshot")] = EncodableValue(
                 FirebaseDatabasePlugin::DataSnapshotToEncodableMap(snapshot));
-            events_->Success(EncodableValue(event));
+            auto event_value =
+                std::make_shared<EncodableValue>(std::move(event));
+            auto* sink = events_;
+            FirebaseDatabasePlugin::DispatchToMainThread(
+                [sink, event_value]() {
+                  sink->Success(*event_value);
+                });
           }
           void OnCancelled(const Error& error,
                            const char* error_message) override {
-            events_->Error(FirebaseDatabasePlugin::GetDatabaseErrorCode(error),
-                           error_message ? error_message : "Unknown error");
+            std::string code =
+                FirebaseDatabasePlugin::GetDatabaseErrorCode(error);
+            std::string msg =
+                error_message ? error_message : "Unknown error";
+            auto* sink = events_;
+            FirebaseDatabasePlugin::DispatchToMainThread(
+                [sink, code, msg]() { sink->Error(code, msg); });
           }
 
          private:
@@ -1021,7 +1060,7 @@ void FirebaseDatabasePlugin::QueryObserve(
         value_listener_ = new VL(events_.get());
         query_.AddValueListener(value_listener_);
       } else {
-        // Child listener
+        // Child listener — dispatches to platform thread via PostMessage
         class CL : public firebase::database::ChildListener {
          public:
           CL(flutter::EventSink<flutter::EncodableValue>* events,
@@ -1046,20 +1085,32 @@ void FirebaseDatabasePlugin::QueryObserve(
           }
           void OnCancelled(const Error& error,
                            const char* error_message) override {
-            events_->Error(FirebaseDatabasePlugin::GetDatabaseErrorCode(error),
-                           error_message ? error_message : "Unknown error");
+            std::string code =
+                FirebaseDatabasePlugin::GetDatabaseErrorCode(error);
+            std::string msg =
+                error_message ? error_message : "Unknown error";
+            auto* sink = events_;
+            FirebaseDatabasePlugin::DispatchToMainThread(
+                [sink, code, msg]() { sink->Error(code, msg); });
           }
 
          private:
           void Send(const std::string& type, const DataSnapshot& snapshot,
                     const char* prev) {
+            // Copy data before dispatching.
             EncodableMap event;
             event[EncodableValue("eventType")] = EncodableValue(type);
             event[EncodableValue("previousChildKey")] =
                 prev ? EncodableValue(std::string(prev)) : EncodableValue();
             event[EncodableValue("snapshot")] = EncodableValue(
                 FirebaseDatabasePlugin::DataSnapshotToEncodableMap(snapshot));
-            events_->Success(EncodableValue(event));
+            auto event_value =
+                std::make_shared<EncodableValue>(std::move(event));
+            auto* sink = events_;
+            FirebaseDatabasePlugin::DispatchToMainThread(
+                [sink, event_value]() {
+                  sink->Success(*event_value);
+                });
           }
           flutter::EventSink<flutter::EncodableValue>* events_;
           std::string event_type_;
