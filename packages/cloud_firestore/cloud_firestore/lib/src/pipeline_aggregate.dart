@@ -171,11 +171,11 @@ class Maximum extends PipelineAggregateFunction {
 }
 
 /// Represents an aggregate stage with functions and optional grouping
-class AggregateStage implements PipelineSerializable {
+class AggregateStageOptions implements PipelineSerializable {
   final List<AliasedAggregateFunction> accumulators;
   final List<Selectable>? groups;
 
-  AggregateStage({
+  AggregateStageOptions({
     required this.accumulators,
     this.groups,
   });

@@ -59,6 +59,8 @@ class PipelineStageHandlers {
         return handleDistinct(pipeline, args);
       case "aggregate":
         return handleAggregate(pipeline, args);
+      case "aggregate_with_options":
+        return handleAggregateWithOptions(pipeline, args);
       case "unnest":
         return handleUnnest(pipeline, args);
       case "replace_with":
@@ -218,45 +220,40 @@ class PipelineStageHandlers {
 
   @SuppressWarnings("unchecked")
   private Pipeline handleAggregate(@NonNull Pipeline pipeline, @Nullable Map<String, Object> args) {
-    // Check if this is using aggregate_stage (new API) or aggregate_functions (legacy API)
-    if (args.containsKey("aggregate_stage")) {
-      // New API: aggregateStage with optional options
-      Map<String, Object> aggregateStageMap = (Map<String, Object>) args.get("aggregate_stage");
-      AggregateStage aggregateStage = parsers.parseAggregateStage(aggregateStageMap);
+    List<Map<String, Object>> aggregateMaps =
+        (List<Map<String, Object>>) args.get("aggregate_functions");
 
-      // Parse optional options
-      Map<String, Object> optionsMap = (Map<String, Object>) args.get("options");
-      if (optionsMap != null && !optionsMap.isEmpty()) {
-        AggregateOptions options = parsers.parseAggregateOptions(optionsMap);
-        return pipeline.aggregate(aggregateStage, options);
-      } else {
-        return pipeline.aggregate(aggregateStage);
-      }
-    } else {
-      // Legacy API: aggregate_functions (varargs)
-      List<Map<String, Object>> aggregateMaps =
-          (List<Map<String, Object>>) args.get("aggregate_functions");
-
-      if (aggregateMaps == null || aggregateMaps.isEmpty()) {
-        throw new IllegalArgumentException(
-            "'aggregate' requires at least one aggregate function or an aggregate_stage");
-      }
-
-      // Parse first aggregate function as AliasedAggregate
-      AliasedAggregate firstAccumulator = parsers.parseAliasedAggregate(aggregateMaps.get(0));
-
-      // Parse remaining aggregate functions as AliasedAggregate varargs
-      if (aggregateMaps.size() == 1) {
-        return pipeline.aggregate(firstAccumulator);
-      }
-
-      AliasedAggregate[] additionalAccumulators = new AliasedAggregate[aggregateMaps.size() - 1];
-      for (int i = 1; i < aggregateMaps.size(); i++) {
-        additionalAccumulators[i - 1] = parsers.parseAliasedAggregate(aggregateMaps.get(i));
-      }
-
-      return pipeline.aggregate(firstAccumulator, additionalAccumulators);
+    if (aggregateMaps == null || aggregateMaps.isEmpty()) {
+      throw new IllegalArgumentException("'aggregate' requires at least one aggregate function");
     }
+
+    AliasedAggregate firstAccumulator = parsers.parseAliasedAggregate(aggregateMaps.get(0));
+
+    if (aggregateMaps.size() == 1) {
+      return pipeline.aggregate(firstAccumulator);
+    }
+
+    AliasedAggregate[] additionalAccumulators = new AliasedAggregate[aggregateMaps.size() - 1];
+    for (int i = 1; i < aggregateMaps.size(); i++) {
+      additionalAccumulators[i - 1] = parsers.parseAliasedAggregate(aggregateMaps.get(i));
+    }
+
+    return pipeline.aggregate(firstAccumulator, additionalAccumulators);
+  }
+
+  @SuppressWarnings("unchecked")
+  private Pipeline handleAggregateWithOptions(
+      @NonNull Pipeline pipeline, @Nullable Map<String, Object> args) {
+    Map<String, Object> aggregateStageMap = (Map<String, Object>) args.get("aggregate_stage");
+
+    AggregateStage aggregateStage = parsers.parseAggregateStage(aggregateStageMap);
+
+    Map<String, Object> optionsMap = (Map<String, Object>) args.get("options");
+    if (optionsMap != null && !optionsMap.isEmpty()) {
+      AggregateOptions options = parsers.parseAggregateOptions(optionsMap);
+      return pipeline.aggregate(aggregateStage, options);
+    }
+    return pipeline.aggregate(aggregateStage);
   }
 
   private Pipeline handleUnnest(@NonNull Pipeline pipeline, @Nullable Map<String, Object> args) {

@@ -129,13 +129,13 @@ final class _AggregateStage extends PipelineStage {
 
 /// Stage for aggregating data with options and grouping
 final class _AggregateStageWithOptions extends PipelineStage {
-  final AggregateStage aggregateStage;
+  final AggregateStageOptions aggregateStage;
   final AggregateOptions? options;
 
   _AggregateStageWithOptions(this.aggregateStage, this.options);
 
   @override
-  String get name => 'aggregate';
+  String get name => 'aggregate_with_options';
 
   @override
   Map<String, dynamic> toMap() {

@@ -119,7 +119,10 @@ interop.PipelineJsImpl _applyStage(
       if (expressions == null || expressions.isEmpty) return pipeline;
       return pipeline.distinct(converter.toDistinctOptions(expressions));
     case 'aggregate':
-      return pipeline.aggregate(converter.toAggregateOptions(map));
+      return pipeline.aggregate(converter.toAggregateOptionsFromFunctions(map));
+    case 'aggregate_with_options':
+      return pipeline
+          .aggregate(converter.toAggregateOptionsFromStageAndOptions(map));
     case 'sample':
       return pipeline.sample(converter.toSampleOptions(args));
     case 'unnest':

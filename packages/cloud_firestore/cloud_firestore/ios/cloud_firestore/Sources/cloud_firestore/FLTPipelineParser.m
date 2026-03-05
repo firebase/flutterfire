@@ -647,6 +647,8 @@ static NSError *parseError(NSString *message) {
         }
       } else if ([stageName isEqualToString:@"aggregate"]) {
         stage = [self parseAggregateStageWithArgs:args exprParser:exprParser error:error];
+      } else if ([stageName isEqualToString:@"aggregate_with_options"]) {
+        stage = [self parseAggregateStageWithOptionsArgs:args exprParser:exprParser error:error];
       } else if ([stageName isEqualToString:@"unnest"]) {
         id exprMap = args[@"expression"];
         if (![exprMap isKindOfClass:[NSDictionary class]]) {
@@ -739,30 +741,48 @@ static NSError *parseError(NSString *message) {
   return [[FIRAggregateFunctionBridge alloc] initWithName:iosName Args:argsArray];
 }
 
-+ (FIRStageBridge *)parseAggregateStageWithArgs:(NSDictionary *)args
-                                     exprParser:(FLTPipelineExpressionParser *)exprParser
-                                          error:(NSError **)error {
-  NSError *parseErr = nil;
-  NSArray *accumulatorMaps = nil;
-  NSArray *groupMaps = nil;
-
-  if (args[@"aggregate_stage"]) {
-    NSDictionary *stageMap = args[@"aggregate_stage"];
-    if (![stageMap isKindOfClass:[NSDictionary class]]) {
-      if (error) *error = parseError(@"aggregate_stage must be a map");
-      return nil;
-    }
-    accumulatorMaps = stageMap[@"accumulators"];
-    groupMaps = stageMap[@"groups"];
-  }
-  if (!accumulatorMaps || ![accumulatorMaps isKindOfClass:[NSArray class]]) {
-    accumulatorMaps = args[@"aggregate_functions"];
-  }
++ (FIRStageBridge *)parseAggregateStageLegacyArgs:(NSDictionary *)args
+                                       exprParser:(FLTPipelineExpressionParser *)exprParser
+                                            error:(NSError **)error {
+  NSArray *accumulatorMaps = args[@"aggregate_functions"];
   if (![accumulatorMaps isKindOfClass:[NSArray class]] || accumulatorMaps.count == 0) {
-    if (error) *error = parseError(@"aggregate requires accumulators or aggregate_functions");
+    if (error) *error = parseError(@"aggregate requires aggregate_functions");
     return nil;
   }
+  return [self parseAggregateStageWithAccumulatorMaps:accumulatorMaps
+                                            groupMaps:nil
+                                           exprParser:exprParser
+                                                error:error];
+}
 
++ (FIRStageBridge *)parseAggregateStageWithOptionsArgs:(NSDictionary *)args
+                                            exprParser:(FLTPipelineExpressionParser *)exprParser
+                                                 error:(NSError **)error {
+  NSDictionary *stageMap = args[@"aggregate_stage"];
+  if (![stageMap isKindOfClass:[NSDictionary class]]) {
+    if (error) *error = parseError(@"aggregate_with_options requires aggregate_stage");
+    return nil;
+  }
+  NSArray *accumulatorMaps = stageMap[@"accumulators"];
+  if (![accumulatorMaps isKindOfClass:[NSArray class]] || accumulatorMaps.count == 0) {
+    accumulatorMaps = stageMap[@"aggregate_functions"];
+  }
+  if (![accumulatorMaps isKindOfClass:[NSArray class]] || accumulatorMaps.count == 0) {
+    if (error) *error = parseError(@"aggregate_stage requires accumulators or aggregate_functions");
+    return nil;
+  }
+  NSArray *groupMaps = stageMap[@"groups"];
+  return [self parseAggregateStageWithAccumulatorMaps:accumulatorMaps
+                                            groupMaps:groupMaps
+                                           exprParser:exprParser
+                                                error:error];
+}
+
++ (FIRStageBridge *)parseAggregateStageWithAccumulatorMaps:(NSArray *)accumulatorMaps
+                                                 groupMaps:(nullable NSArray *)groupMaps
+                                                exprParser:(FLTPipelineExpressionParser *)exprParser
+                                                     error:(NSError **)error {
+  NSError *parseErr = nil;
   NSMutableDictionary<NSString *, FIRAggregateFunctionBridge *> *accumulators =
       [NSMutableDictionary dictionary];
   for (id accMap in accumulatorMaps) {

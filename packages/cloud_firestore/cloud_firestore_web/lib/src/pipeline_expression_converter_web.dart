@@ -18,125 +18,103 @@ class PipelineExpressionConverterWeb {
 
   final interop.PipelinesJsImpl _pipelines;
 
-  /// Converts a serialized value expression to JS Expression (field, constant only).
-  /// For boolean expressions (equal, not_equal, and, or, etc.) use [toBooleanExpression].
-  interop.ExpressionJsImpl toExpression(Map<String, dynamic> map) {
-    final name = map['name'] as String?;
-    final args = map['args'];
-    final argsMap = args is Map<String, dynamic> ? args : <String, dynamic>{};
+  static const _kName = 'name';
+  static const _kArgs = 'args';
+  static const _kLeft = 'left';
+  static const _kRight = 'right';
+  static const _kExpression = 'expression';
+  static const _kField = 'field';
+  static const _kAlias = 'alias';
+  static const _kValue = 'value';
 
+  // ── Value expressions ─────────────────────────────────────────────────────
+
+  /// Converts a serialized value expression to a JS Expression.
+  interop.ExpressionJsImpl toExpression(Map<String, dynamic> map) {
+    final name = map[_kName] as String?;
+    final argsMap = _argsOf(map);
     switch (name) {
       case 'field':
-        final path = (argsMap['field'] as String?) ?? '';
-        return _pipelines.field(path.toJS);
+        return _pipelines.field(((argsMap[_kField] as String?) ?? '').toJS);
       case 'add':
-        final leftJsExpr =
-            toExpression(argsMap['left'] as Map<String, dynamic>);
-        final rightJsExpr =
-            toExpression(argsMap['right'] as Map<String, dynamic>);
-        return leftJsExpr.add(rightJsExpr);
+        return _binaryArithmetic(argsMap, (l, r) => l.add(r));
+      case 'subtract':
+        return _binaryArithmetic(argsMap, (l, r) => l.subtract(r));
+      case 'multiply':
+        return _binaryArithmetic(argsMap, (l, r) => l.multiply(r));
+      case 'divide':
+        return _binaryArithmetic(argsMap, (l, r) => l.divide(r));
+      case 'modulo':
+        return _binaryArithmetic(argsMap, (l, r) => l.modulo(r));
       case 'constant':
       case 'null':
-        final value = argsMap['value'];
-        if (value == null) {
-          throw UnsupportedError(
-            'constant(null) is not supported on web; use a non-null value.',
-          );
-        }
-        return _pipelines.constant(jsify(value)!);
-      // return _pipelines.constant(value.toJS);
+        return _pipelines.constant(jsify(argsMap[_kValue])!);
       default:
-        return throw UnsupportedError(
-          'Unsupported expression: $name',
-        );
+        throw UnsupportedError('Unsupported expression: $name');
     }
   }
 
-  /// Converts a serialized boolean expression to JS BooleanExpression for where().
-  /// Handles equal, not_equal, comparisons, and, or, not, exists, is_absent, is_error, array_contains.
-  /// Sub-expressions (e.g. left/right of equal) can be value expressions or nested boolean expressions.
-  /// Returns null if [map] is not a recognized boolean or value expression.
+  // ── Boolean expressions ───────────────────────────────────────────────────
+
+  /// Converts a serialized boolean expression to a JS BooleanExpression.
+  ///
+  /// Returns null if [map] is not a recognized boolean expression.
   JSAny? toBooleanExpression(Map<String, dynamic> map) {
-    final name = map['name'] as String?;
-    final args = map['args'];
-    final argsMap = args is Map<String, dynamic> ? args : <String, dynamic>{};
-
-    JSAny leftJs(Map<String, dynamic> left) => toExpression(left);
-    JSAny rightJs(Map<String, dynamic> right) => toExpression(right);
-
+    final name = map[_kName] as String?;
+    final argsMap = _argsOf(map);
     switch (name) {
       case 'equal':
-        return _pipelines.equal(leftJs(argsMap['left'] as Map<String, dynamic>),
-            rightJs(argsMap['right'] as Map<String, dynamic>));
+        return _pipelines.equal(
+            _expr(argsMap, _kLeft), _expr(argsMap, _kRight));
       case 'not_equal':
         return _pipelines.notEqual(
-            leftJs(argsMap['left'] as Map<String, dynamic>),
-            rightJs(argsMap['right'] as Map<String, dynamic>));
+            _expr(argsMap, _kLeft), _expr(argsMap, _kRight));
       case 'greater_than':
         return _pipelines.greaterThan(
-            leftJs(argsMap['left'] as Map<String, dynamic>),
-            rightJs(argsMap['right'] as Map<String, dynamic>));
+            _expr(argsMap, _kLeft), _expr(argsMap, _kRight));
       case 'greater_than_or_equal':
         return _pipelines.greaterThanOrEqual(
-            leftJs(argsMap['left'] as Map<String, dynamic>),
-            rightJs(argsMap['right'] as Map<String, dynamic>));
+            _expr(argsMap, _kLeft), _expr(argsMap, _kRight));
       case 'less_than':
         return _pipelines.lessThan(
-            leftJs(argsMap['left'] as Map<String, dynamic>),
-            rightJs(argsMap['right'] as Map<String, dynamic>));
+            _expr(argsMap, _kLeft), _expr(argsMap, _kRight));
       case 'less_than_or_equal':
         return _pipelines.lessThanOrEqual(
-            leftJs(argsMap['left'] as Map<String, dynamic>),
-            rightJs(argsMap['right'] as Map<String, dynamic>));
-      case 'filter':
-        final operator = argsMap['operator'] as String?;
-        final expressions = argsMap['expressions'] as List<dynamic>?;
-        if (expressions == null || expressions.isEmpty) return null;
-        final jsList = expressions
-            .map((e) => toExpression(e as Map<String, dynamic>))
-            .toList();
-        if (jsList.length == 1) return jsList.single;
-        JSAny result = jsList[0];
-        for (var i = 1; i < jsList.length; i++) {
-          result = operator == 'and'
-              ? _pipelines.and(result, jsList[i])
-              : _pipelines.or(result, jsList[i]);
-        }
-        return result;
+            _expr(argsMap, _kLeft), _expr(argsMap, _kRight));
       case 'not':
-        return _pipelines
-            .not(leftJs(argsMap['expression'] as Map<String, dynamic>));
+        return _pipelines.not(_expr(argsMap, _kExpression));
       case 'exists':
-        return _pipelines
-            .exists(leftJs(argsMap['expression'] as Map<String, dynamic>));
+        return _pipelines.exists(_expr(argsMap, _kExpression));
       case 'is_absent':
-        return _pipelines
-            .isAbsent(leftJs(argsMap['expression'] as Map<String, dynamic>));
+        return _pipelines.isAbsent(_expr(argsMap, _kExpression));
       case 'is_error':
-        return _pipelines
-            .isError(leftJs(argsMap['expression'] as Map<String, dynamic>));
+        return _pipelines.isError(_expr(argsMap, _kExpression));
       case 'array_contains':
         return _pipelines.arrayContains(
-            leftJs(argsMap['array'] as Map<String, dynamic>),
-            rightJs(argsMap['element'] as Map<String, dynamic>));
+            _expr(argsMap, 'array'), _expr(argsMap, 'element'));
+      case 'filter':
+        return _buildFilterExpression(argsMap);
       default:
         return null;
     }
   }
 
-  /// Converts orderings list to JS SortStageOptions. Each item: { expression, order_direction }.
+  // ── Stage options ─────────────────────────────────────────────────────────
+
+  /// Converts orderings list to JS SortStageOptions.
+  ///
+  /// Each item shape: `{ expression: Map, order_direction: 'asc' | 'desc' }`.
   JSAny toSortOptions(List<dynamic> orderings) {
     final list = <JSAny>[];
     for (final o in orderings) {
       final m = o is Map<String, dynamic> ? o : <String, dynamic>{};
-      final expr = m['expression'];
-      final dir = m['order_direction'] as String?;
+      final expr = m[_kExpression];
       if (expr == null) continue;
       final exprJs = toExpression(expr as Map<String, dynamic>);
-      final ordering = (dir == 'desc')
+      final dir = m['order_direction'] as String?;
+      list.add(dir == 'desc'
           ? _pipelines.descending(exprJs)
-          : _pipelines.ascending(exprJs);
-      list.add(ordering);
+          : _pipelines.ascending(exprJs));
     }
     if (list.isEmpty) {
       throw UnsupportedError(
@@ -149,67 +127,36 @@ class PipelineExpressionConverterWeb {
     return obj as JSAny;
   }
 
-  /// Converts add_fields expressions (Selectable[]) to JS AddFieldsStageOptions.
-  JSAny toAddFieldsOptions(List<dynamic> expressions) {
-    final list = <JSAny>[];
-    for (final e in expressions) {
-      print('e: $e');
-      final sel =
-          toSelectable(e is Map<String, dynamic> ? e : <String, dynamic>{});
-      if (sel != null) list.add(sel);
-    }
-
-    return interop.AddFieldsOptionsJsImpl()..fields = list.toJS;
-  }
-
   /// Converts a single expression map to a JS Selectable (field or aliased).
   JSAny? toSelectable(Map<String, dynamic> map) {
-    final name = map['name'] as String?;
-    final args = map['args'];
-    final argsMap = args is Map<String, dynamic> ? args : <String, dynamic>{};
+    final name = map[_kName] as String?;
+    final argsMap = _argsOf(map);
     if (name == 'field') {
-      final path = (argsMap['field'] as String?) ?? '';
-      return _pipelines.field(path.toJS);
+      return _pipelines.field(((argsMap[_kField] as String?) ?? '').toJS);
     }
-    if (name == 'alias') {
-      final alias = argsMap['alias'] as String?;
-      final expression = argsMap['expression'];
+    if (name == _kAlias) {
+      final alias = argsMap[_kAlias] as String?;
+      final expression = argsMap[_kExpression];
       if (alias == null || expression == null) return null;
-      final exprJs = toExpression(expression as Map<String, dynamic>);
-      if (exprJs == null) return null;
-      // return _pipelines.aliased(exprJs, alias.toJS);
-      return exprJs.asAlias(alias.toJS);
+      return toExpression(expression as Map<String, dynamic>)
+          .asAlias(alias.toJS);
     }
-    final exprJs = toExpression(map);
-    return exprJs;
+    return toExpression(map);
   }
 
+  /// Converts add_fields expressions to JS AddFieldsStageOptions.
+  JSAny toAddFieldsOptions(List<dynamic> expressions) =>
+      interop.AddFieldsOptionsJsImpl()
+        ..fields = _toSelectableList(expressions).toJS;
+
   /// Converts select stage expressions to JS SelectStageOptions.
-  JSAny toSelectOptions(List<dynamic> expressions) {
-    final list = <JSAny>[];
-    for (final e in expressions) {
-      final sel =
-          toSelectable(e is Map<String, dynamic> ? e : <String, dynamic>{});
-      if (sel != null) list.add(sel);
-    }
-    if (list.isEmpty) {
-      throw UnsupportedError(
-        'Pipeline select() on web requires the Firebase JS pipeline expression API.',
-      );
-    }
-    final obj = JSObject.new;
-    setProperty(obj, 'selections', list.toJS);
-    return obj as JSAny;
-  }
+  JSAny toSelectOptions(List<dynamic> expressions) =>
+      interop.SelectStageOptionsJsImpl()
+        ..selections = _toSelectableList(expressions).toJS;
 
   /// Converts distinct stage groups to JS DistinctStageOptions.
   JSAny toDistinctOptions(List<dynamic> expressions) {
-    final list = <JSAny>[];
-    for (final e in expressions) {
-      final sel =
-          toSelectable(e is Map<String, dynamic> ? e : <String, dynamic>{});
-      if (sel != null) list.add(sel);
-    }
+    final list = _toSelectableList(expressions);
     if (list.isEmpty) {
       throw UnsupportedError(
         'Pipeline distinct() on web requires the Firebase JS pipeline expression API.',
@@ -220,83 +167,202 @@ class PipelineExpressionConverterWeb {
     return obj as JSAny;
   }
 
-  /// Converts aggregate stage args to JS AggregateStageOptions.
-  /// Input shape: { aggregate_functions: [...] } or { aggregate_stage: { aggregate_functions: [...] } } or { accumulators: [...] }.
-  /// Each list item is an aliased aggregate: { name: 'alias', args: { alias: String, aggregate_function: { name, args?: { expression } } } }.
-  interop.AggregateStageOptionsJsImpl toAggregateOptions(
+  // ── Aggregate ─────────────────────────────────────────────────────────────
+
+  /// Converts args for the 'aggregate' stage to JS AggregateStageOptions.
+  ///
+  /// Expects [map] to contain an [aggregate_functions] list.
+  interop.AggregateStageOptionsJsImpl toAggregateOptionsFromFunctions(
       Map<String, dynamic> map) {
-    final aggregateFunctions = _getAggregateFunctionsList(map);
-    if (aggregateFunctions.isEmpty) {
+    final list = map['aggregate_functions'] as List<dynamic>;
+    return _buildAccumulators(list);
+  }
+
+  /// Converts args for the 'aggregate_with_options' stage to JS AggregateStageOptions.
+  ///
+  /// Expects [map] to contain an [aggregate_stage] map with [accumulators]
+  /// and optionally [groups].
+  interop.AggregateStageOptionsJsImpl toAggregateOptionsFromStageAndOptions(
+      Map<String, dynamic> map) {
+    final stage = map['aggregate_stage'] as Map<String, dynamic>;
+    final list = stage['accumulators'] as List<dynamic>;
+    final groups = stage['groups'] as List<dynamic>?;
+    return _buildAccumulators(list, groups: groups);
+  }
+
+  // ── Other stage options ───────────────────────────────────────────────────
+
+  /// Converts sample stage args to JS (integer count or SampleStageOptions).
+  ///
+  /// Dart serializes as `{ type: 'size', value: n }` or a raw number.
+  JSAny toSampleOptions(dynamic args) {
+    if (args is num) return args.toInt().toJS;
+    if (args is Map<String, dynamic>) {
+      final type = args['type'] as String?;
+      final value = args[_kValue];
+      if (type == 'size' && value != null) return (value as num).toInt().toJS;
+      final n = args['documents'] as int? ?? args['count'] as int?;
+      if (n != null) return n.toJS;
+      return (args['documents'] as num?)?.toInt().toJS ?? 0.toJS;
+    }
+    return 0.toJS;
+  }
+
+  /// Converts unnest stage args to JS UnnestStageOptions.
+  JSAny toUnnestOptions(Map<String, dynamic> map) {
+    final selectable = map['selectable'] ?? map[_kExpression] ?? map[_kField];
+    if (selectable == null) {
       throw UnsupportedError(
-        'Pipeline aggregate() on web requires aggregate_functions.',
+          'Pipeline unnest() on web requires selectable or field.');
+    }
+    final indexField = map['index_field'] as String?;
+    final sel = selectable is Map<String, dynamic>
+        ? toSelectable(selectable)
+        : toExpression({
+            _kName: 'field',
+            _kArgs: {_kField: selectable.toString()}
+          });
+    if (sel == null) {
+      throw UnsupportedError(
+        'Pipeline unnest() on web requires the Firebase JS pipeline expression API.',
       );
     }
+    final obj = JSObject.new;
+    setProperty(obj, 'selectable', sel);
+    if (indexField != null) setProperty(obj, 'indexField', indexField.toJS);
+    return obj as JSAny;
+  }
 
-    final accumulators = <JSAny>[];
-    for (final item in aggregateFunctions) {
-      final aliased = _asStringKeyMap(item);
-      if (aliased == null) continue;
-
-      final args = _asStringKeyMap(aliased['args']) ?? {};
-      final alias = args['alias'] ?? aliased['alias'];
-      if (alias is! String) continue;
-
-      final aggregateFn = _asStringKeyMap(args['aggregate_function']) ??
-          _asStringKeyMap(args['aggregate']) ??
-          _asStringKeyMap(aliased['aggregate_function']);
-      if (aggregateFn == null) continue;
-
-      final name = aggregateFn['name'] as String?;
-      if (name == null) continue;
-
-      final fnArgs = _asStringKeyMap(aggregateFn['args']) ?? {};
-      final expressionMap = _asStringKeyMap(fnArgs['expression']) ??
-          _asStringKeyMap(aggregateFn['expression']);
-
-      JSAny? exprJs;
-      if (name != 'count_all') {
-        if (expressionMap == null) continue;
-        exprJs = toExpression(expressionMap);
-        if (exprJs == null) continue;
-      }
-
-      final fn = _buildAggregateFunction(name, exprJs);
-      if (fn == null) continue;
-
-      accumulators.add(fn.asAlias(alias.toJS));
+  /// Converts remove_fields field paths to JS RemoveFieldsStageOptions.
+  JSAny toRemoveFieldsOptions(List<dynamic> fieldPaths) {
+    final paths = <JSString>[];
+    for (final e in fieldPaths) {
+      final s = e is String
+          ? e
+          : (e is Map ? e[_kField] ?? e['path'] : null)?.toString();
+      if (s != null) paths.add(s.toJS);
     }
+    if (paths.isEmpty) {
+      throw UnsupportedError(
+        'Pipeline removeFields() on web requires at least one field path.',
+      );
+    }
+    final obj = JSObject.new;
+    setProperty(obj, 'fields', paths.toJS);
+    return obj as JSAny;
+  }
+
+  /// Converts replace_with expression to JS ReplaceWithStageOptions.
+  JSAny toReplaceWithOptions(Map<String, dynamic> expression) {
+    final obj = JSObject.new;
+    setProperty(obj, _kExpression, toExpression(expression));
+    return obj as JSAny;
+  }
+
+  /// Converts find_nearest args to JS FindNearestStageOptions.
+  JSAny toFindNearestOptions(Map<String, dynamic> map) {
+    final vectorField =
+        (map['vector_field'] as String?) ?? (map[_kField] as String?);
+    final vectorValue = map['vector_value'] as List<dynamic>?;
+    final distanceMeasure = (map['distance_measure'] as String?) ?? 'cosine';
+    final limit = map['limit'] as int?;
+    if (vectorField == null || vectorValue == null) {
+      throw UnsupportedError(
+        'Pipeline findNearest() on web requires vector_field and vector_value.',
+      );
+    }
+    final obj = JSObject.new;
+    setProperty(obj, 'vectorField', vectorField.toJS);
+    setProperty(obj, 'vectorValue',
+        jsify(vectorValue.map((e) => (e as num).toDouble()).toList()));
+    setProperty(obj, 'distanceMeasure', distanceMeasure.toJS);
+    if (limit != null) setProperty(obj, 'limit', limit.toJS);
+    return obj as JSAny;
+  }
+
+  // ── Private helpers ───────────────────────────────────────────────────────
+
+  /// Extracts and safe-casts the 'args' sub-map from an expression map.
+  static Map<String, dynamic> _argsOf(Map<String, dynamic> map) {
+    final a = map[_kArgs];
+    return a is Map<String, dynamic> ? a : const {};
+  }
+
+  /// Resolves [key] from [argsMap] as a value expression.
+  JSAny _expr(Map<String, dynamic> argsMap, String key) =>
+      toExpression(argsMap[key] as Map<String, dynamic>);
+
+  interop.ExpressionJsImpl _binaryArithmetic(
+    Map<String, dynamic> argsMap,
+    interop.ExpressionJsImpl Function(
+            interop.ExpressionJsImpl left, interop.ExpressionJsImpl right)
+        op,
+  ) =>
+      op(
+        toExpression(argsMap[_kLeft] as Map<String, dynamic>),
+        toExpression(argsMap[_kRight] as Map<String, dynamic>),
+      );
+
+  JSAny? _buildFilterExpression(Map<String, dynamic> argsMap) {
+    final operator = argsMap['operator'] as String?;
+    final expressions = argsMap['expressions'] as List<dynamic>?;
+    if (expressions == null || expressions.isEmpty) return null;
+    final jsList = expressions
+        .map((e) => toExpression(e as Map<String, dynamic>))
+        .toList();
+    if (jsList.length == 1) return jsList.single;
+    JSAny result = jsList[0];
+    for (var i = 1; i < jsList.length; i++) {
+      result = operator == 'and'
+          ? _pipelines.and(result, jsList[i])
+          : _pipelines.or(result, jsList[i]);
+    }
+    return result;
+  }
+
+  List<JSAny> _toSelectableList(List<dynamic> expressions) => expressions
+      .map((e) =>
+          toSelectable(e is Map<String, dynamic> ? e : <String, dynamic>{}))
+      .whereType<JSAny>()
+      .toList();
+
+  interop.AggregateStageOptionsJsImpl _buildAccumulators(
+    List<dynamic> items, {
+    List<dynamic>? groups,
+  }) {
+    final accumulators = items
+        .map((item) => _parseAccumulator(item as Map<String, dynamic>))
+        .whereType<JSAny>()
+        .toList();
 
     if (accumulators.isEmpty) {
       throw UnsupportedError(
-        'Pipeline aggregate() on web requires the Firebase JS pipeline expression API '
-        '(sum, average, count, etc.).',
+        'Pipeline aggregate() on web requires at least one valid accumulator.',
       );
     }
 
-    final options = interop.AggregateStageOptionsJsImpl();
-    options.accumulators = accumulators.toJS;
-    return options;
+    final opts = interop.AggregateStageOptionsJsImpl()
+      ..accumulators = accumulators.toJS;
+    if (groups != null && groups.isNotEmpty) {
+      opts.groups = _toSelectableList(groups).toJS;
+    }
+    return opts;
   }
 
-  /// Returns the aggregate_functions list from [map] (top-level, under aggregate_stage, or as accumulators).
-  static List<dynamic> _getAggregateFunctionsList(Map<String, dynamic> map) {
-    final list = map['aggregate_functions'];
-    if (list is List && list.isNotEmpty) return list;
-
-    final stage = _asStringKeyMap(map['aggregate_stage']);
-    final fromStage = stage?['aggregate_functions'];
-    if (fromStage is List && fromStage.isNotEmpty) return fromStage;
-
-    final accumulators = map['accumulators'];
-    if (accumulators is List && accumulators.isNotEmpty) return accumulators;
-
-    return [];
+  JSAny? _parseAccumulator(Map<String, dynamic> item) {
+    final args = item[_kArgs] as Map<String, dynamic>;
+    final alias = args[_kAlias] as String?;
+    final aggregateFn = args['aggregate_function'] as Map<String, dynamic>?;
+    if (alias == null || aggregateFn == null) return null;
+    final fnName = aggregateFn[_kName] as String?;
+    if (fnName == null) return null;
+    final expressionMap = (aggregateFn[_kArgs]
+        as Map<String, dynamic>?)?[_kExpression] as Map<String, dynamic>?;
+    final exprJs = expressionMap != null ? toExpression(expressionMap) : null;
+    return _buildAggregateFunction(fnName, exprJs)?.asAlias(alias.toJS);
   }
 
-  static Map<String, dynamic>? _asStringKeyMap(dynamic value) =>
-      value is Map<String, dynamic> ? value : null;
-
-  /// Builds one aggregate function (sum, average, count_all, etc.) from serialized [name] and optional [exprJs].
+  /// Builds one JS aggregate function from a serialized [name] and optional [exprJs].
   interop.AggregateFunctionJsImpl? _buildAggregateFunction(
       String name, JSAny? exprJs) {
     switch (name) {
@@ -317,100 +383,5 @@ class PipelineExpressionConverterWeb {
       default:
         return null;
     }
-  }
-
-  /// Converts sample stage args to JS (number or SampleStageOptions).
-  /// Dart PipelineSample.toMap() returns { type: 'size', value: n } or { type: 'percentage', value: p }.
-  JSAny toSampleOptions(dynamic args) {
-    if (args is num) return args.toInt().toJS;
-    if (args is Map<String, dynamic>) {
-      final type = args['type'] as String?;
-      final value = args['value'];
-      if (type == 'size' && value != null) return (value as num).toInt().toJS;
-      final n = args['documents'] as int? ?? args['count'] as int?;
-      if (n != null) return n.toJS;
-      return (args['documents'] as num?)?.toInt().toJS ?? 0.toJS;
-    }
-    return 0.toJS;
-  }
-
-  /// Converts unnest stage args to JS UnnestStageOptions.
-  /// Dart uses 'expression' (Selectable/Expression toMap).
-  JSAny toUnnestOptions(Map<String, dynamic> map) {
-    final selectable = map['selectable'] ?? map['expression'] ?? map['field'];
-    final indexField = map['index_field'] as String?;
-    if (selectable == null) {
-      throw UnsupportedError(
-        'Pipeline unnest() on web requires selectable or field.',
-      );
-    }
-    final sel = selectable is Map<String, dynamic>
-        ? toSelectable(selectable)
-        : toExpression({
-            'name': 'field',
-            'args': {'field': selectable.toString()}
-          });
-    if (sel == null) {
-      throw UnsupportedError(
-        'Pipeline unnest() on web requires the Firebase JS pipeline expression API.',
-      );
-    }
-    final obj = JSObject.new;
-    setProperty(obj, 'selectable', sel);
-    if (indexField != null) setProperty(obj, 'indexField', indexField.toJS);
-    return obj as JSAny;
-  }
-
-  /// Converts remove_fields field paths to JS RemoveFieldsStageOptions.
-  JSAny toRemoveFieldsOptions(List<dynamic> fieldPaths) {
-    final paths = <JSString>[];
-    for (final e in fieldPaths) {
-      final s = e is String
-          ? e
-          : (e is Map ? e['field'] ?? e['path'] : null)?.toString();
-      if (s != null) paths.add(s.toJS);
-    }
-    if (paths.isEmpty) {
-      throw UnsupportedError(
-        'Pipeline removeFields() on web requires at least one field path.',
-      );
-    }
-    final obj = JSObject.new;
-    setProperty(obj, 'fields', paths.toJS);
-    return obj as JSAny;
-  }
-
-  /// Converts replace_with expression to JS ReplaceWithStageOptions.
-  JSAny toReplaceWithOptions(Map<String, dynamic> expression) {
-    final exprJs = toExpression(expression);
-    if (exprJs == null) {
-      throw UnsupportedError(
-        'Pipeline replaceWith() on web requires the Firebase JS pipeline expression API.',
-      );
-    }
-    final obj = JSObject.new;
-    setProperty(obj, 'expression', exprJs);
-    return obj as JSAny;
-  }
-
-  /// Converts find_nearest args to JS FindNearestStageOptions.
-  JSAny toFindNearestOptions(Map<String, dynamic> map) {
-    final vectorField =
-        (map['vector_field'] as String?) ?? (map['field'] as String?);
-    final vectorValue = map['vector_value'] as List<dynamic>?;
-    final distanceMeasure = (map['distance_measure'] as String?) ?? 'cosine';
-    final limit = map['limit'] as int?;
-    if (vectorField == null || vectorValue == null) {
-      throw UnsupportedError(
-        'Pipeline findNearest() on web requires vector_field and vector_value.',
-      );
-    }
-    final obj = JSObject.new;
-    setProperty(obj, 'vectorField', vectorField.toJS);
-    setProperty(obj, 'vectorValue',
-        jsify(vectorValue.map((e) => (e as num).toDouble()).toList()));
-    setProperty(obj, 'distanceMeasure', distanceMeasure.toJS);
-    if (limit != null) setProperty(obj, 'limit', limit.toJS);
-    return obj as JSAny;
   }
 }

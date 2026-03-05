@@ -407,6 +407,7 @@ extension type ExpressionJsImpl._(JSObject _) implements JSObject {
   external ExpressionJsImpl subtract(JSAny right);
   external ExpressionJsImpl multiply(JSAny right);
   external ExpressionJsImpl divide(JSAny right);
+  @JS('mod')
   external ExpressionJsImpl modulo(JSAny right);
   external ExpressionJsImpl length();
   external ExpressionJsImpl concat(JSAny right);
@@ -437,13 +438,23 @@ abstract class AliasedAggregateJsImpl {
 extension type AggregateStageOptionsJsImpl._(JSObject _) implements JSObject {
   AggregateStageOptionsJsImpl() : this._(JSObject.new());
 
+  // ignore: avoid_setters_without_getters
   external set accumulators(JSAny value);
+  // ignore: avoid_setters_without_getters
   external set groups(JSAny value);
+}
+
+extension type SelectStageOptionsJsImpl._(JSObject _) implements JSObject {
+  SelectStageOptionsJsImpl() : this._(JSObject.new());
+
+  // ignore: avoid_setters_without_getters
+  external set selections(JSArray<JSAny> value);
 }
 
 extension type AddFieldsOptionsJsImpl._(JSObject _) implements JSObject {
   AddFieldsOptionsJsImpl() : this._(JSObject.new());
 
+  // ignore: avoid_setters_without_getters
   external set fields(JSAny value);
 }
 

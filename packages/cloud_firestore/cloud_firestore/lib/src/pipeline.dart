@@ -223,8 +223,8 @@ class Pipeline {
   ///   options: AggregateOptions(),
   /// );
   /// ```
-  Pipeline aggregateStage(
-    AggregateStage aggregateStage, {
+  Pipeline aggregateWithOptions(
+    AggregateStageOptions aggregateStage, {
     AggregateOptions? options,
   }) {
     final stage = _AggregateStageWithOptions(
