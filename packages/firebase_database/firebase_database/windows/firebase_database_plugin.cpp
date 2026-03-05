@@ -361,6 +361,7 @@ void FirebaseDatabasePlugin::RegisterWithRegistrar(
   // Register atexit handler to clean up listeners and disconnect
   // before static destruction triggers thread joins in the C++ SDK.
   std::atexit(CleanupBeforeStaticDestruction);
+
 }
 
 // --- Helper: Get Database instance from Pigeon app ---
@@ -379,10 +380,6 @@ Database* FirebaseDatabasePlugin::GetDatabaseFromPigeon(
   if (url && !url->empty()) {
     effective_url = *url;
   }
-  // Note: The Firebase C++ SDK does not have a UseEmulator() API for Realtime
-  // Database (unlike Auth/Storage). Emulator host/port settings are stored
-  // but not applied via a custom URL, as the C++ SDK rejects non-Firebase
-  // URLs. The database will connect to the production URL from app options.
 
   std::string cache_key = app.app_name() + "-" + effective_url;
 
@@ -395,6 +392,12 @@ Database* FirebaseDatabasePlugin::GetDatabaseFromPigeon(
   }
 
   // Create new instance
+  // Always pass the URL explicitly - the C++ SDK on desktop may not
+  // properly read database_url from app options without it.
+  const char* app_db_url = firebase_app->options().database_url();
+  if (effective_url.empty() && app_db_url && strlen(app_db_url) > 0) {
+    effective_url = app_db_url;
+  }
   Database* database = nullptr;
   if (!effective_url.empty()) {
     database = Database::GetInstance(firebase_app, effective_url.c_str());
@@ -480,9 +483,8 @@ void FirebaseDatabasePlugin::SetLoggingEnabled(
 void FirebaseDatabasePlugin::UseDatabaseEmulator(
     const DatabasePigeonFirebaseApp& app, const std::string& host, int64_t port,
     std::function<void(std::optional<FlutterError> reply)> result) {
-  // The C++ SDK does not have a direct emulator API.
-  // The emulator host/port should be set via the database URL or settings
-  // before any other operations.
+  // The C++ SDK for Realtime Database does not have a UseEmulator API.
+  // On Windows, tests run against the live Firebase instance.
   result(std::nullopt);
 }
 

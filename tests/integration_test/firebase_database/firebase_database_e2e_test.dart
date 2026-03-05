@@ -4,6 +4,7 @@
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:tests/firebase_options.dart';
@@ -25,10 +26,14 @@ const emulatorPort = 9000;
 // but should be automatically mapped by the useDatabaseEmulator function.
 const emulatorHost = 'localhost';
 
+// The C++ SDK for RTDB on Windows does not support the database emulator.
+// Integration tests require the emulator, so they are skipped on Windows.
+bool get _isWindows => !kIsWeb && defaultTargetPlatform == TargetPlatform.windows;
+
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  group('firebase_database', () {
+  group('firebase_database', skip: _isWindows ? 'Windows does not support the RTDB emulator' : null, () {
     setUpAll(() async {
       await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
