@@ -15,6 +15,7 @@
 #include <map>
 #include <memory>
 #include <mutex>
+#include <set>
 #include <sstream>
 #include <string>
 #include <thread>
@@ -59,6 +60,8 @@ std::map<std::string,
     FirebaseDatabasePlugin::event_channels_;
 std::map<std::string, std::unique_ptr<flutter::StreamHandler<>>>
     FirebaseDatabasePlugin::stream_handlers_;
+std::set<firebase::database::Database*>
+    FirebaseDatabasePlugin::active_databases_;
 
 // --- Helper: Register an EventChannel with a generated name ---
 static std::string RegisterEventChannel(
@@ -322,7 +325,23 @@ firebase::database::Query FirebaseDatabasePlugin::ApplyQueryModifiers(
 
 FirebaseDatabasePlugin::FirebaseDatabasePlugin() {}
 
-FirebaseDatabasePlugin::~FirebaseDatabasePlugin() {}
+FirebaseDatabasePlugin::~FirebaseDatabasePlugin() {
+  // Clean up event channels (which own the stream handlers via
+  // SetStreamHandler). Destroying them triggers DatabaseGenericStreamHandler
+  // destructors that remove active listeners from queries.
+  event_channels_.clear();
+  stream_handlers_.clear();
+  transaction_results_.clear();
+
+  // Disconnect all database instances to close WebSocket connections and
+  // allow background threads to exit cleanly.
+  for (auto* db : active_databases_) {
+    if (db) {
+      db->GoOffline();
+    }
+  }
+  active_databases_.clear();
+}
 
 void FirebaseDatabasePlugin::RegisterWithRegistrar(
     flutter::PluginRegistrarWindows* registrar) {
@@ -395,6 +414,8 @@ Database* FirebaseDatabasePlugin::GetDatabaseFromPigeon(
   }
 
   if (!database) return nullptr;
+
+  active_databases_.insert(database);
 
   if (settings.persistence_enabled()) {
     database->set_persistence_enabled(*settings.persistence_enabled());
