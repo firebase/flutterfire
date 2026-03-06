@@ -26,19 +26,8 @@ const emulatorPort = 9000;
 // but should be automatically mapped by the useDatabaseEmulator function.
 const emulatorHost = 'localhost';
 
-// The C++ SDK for RTDB on Windows does not support the database emulator.
-// Integration tests require the emulator, so they are skipped on Windows.
-bool get _isWindows =>
-    !kIsWeb && defaultTargetPlatform == TargetPlatform.windows;
-
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-
-  if (_isWindows) {
-    test('skipped on Windows – RTDB emulator not supported', () {},
-        skip: 'Windows does not support the RTDB emulator');
-    return;
-  }
 
   group('firebase_database', () {
     setUpAll(() async {
