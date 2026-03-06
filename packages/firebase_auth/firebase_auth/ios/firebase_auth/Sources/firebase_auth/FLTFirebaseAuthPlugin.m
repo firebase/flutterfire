@@ -1149,9 +1149,9 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
                    // Re-fetch the raw requestType via REST to resolve the operation.
                    // See: https://github.com/firebase/flutterfire/issues/17452
                    [self resolveActionCodeOperationForApp:app
-                                                    code:code
-                                            fallbackInfo:result
-                                              completion:completion];
+                                                     code:code
+                                             fallbackInfo:result
+                                               completion:completion];
                  } else {
                    completion(result, nil);
                  }
@@ -1238,8 +1238,8 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
   request.HTTPMethod = @"POST";
   [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
   request.HTTPBody = [NSJSONSerialization dataWithJSONObject:@{@"oobCode" : code}
-                                                    options:0
-                                                      error:nil];
+                                                     options:0
+                                                       error:nil];
 
   NSURLSessionDataTask *task = [[NSURLSession sharedSession]
       dataTaskWithRequest:request
