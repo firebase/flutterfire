@@ -4,8 +4,10 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:js_interop';
-import 'dart:js_util' show setProperty;
+import 'dart:typed_data';
 
+import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart'
+    show Blob, GeoPoint, Timestamp, VectorValue;
 import 'package:cloud_firestore_web/src/interop/firestore_interop.dart'
     as interop;
 import 'package:cloud_firestore_web/src/interop/utils/utils.dart';
@@ -13,10 +15,11 @@ import 'package:cloud_firestore_web/src/interop/utils/utils.dart';
 /// Converts Dart serialized pipeline expressions/stage args into JS pipeline
 /// types by calling the pipelines interop API (field, constant, equal, and,
 /// ascending, etc.) that mirrors the Firebase JS SDK.
-class PipelineExpressionConverterWeb {
-  PipelineExpressionConverterWeb(this._pipelines);
+class PipelineExpressionParserWeb {
+  PipelineExpressionParserWeb(this._pipelines, this._jsFirestore);
 
   final interop.PipelinesJsImpl _pipelines;
+  final interop.FirestoreJsImpl _jsFirestore;
 
   static const _kName = 'name';
   static const _kArgs = 'args';
@@ -48,7 +51,7 @@ class PipelineExpressionConverterWeb {
         return _binaryArithmetic(argsMap, (l, r) => l.modulo(r));
       case 'constant':
       case 'null':
-        return _pipelines.constant(jsify(argsMap[_kValue])!);
+        return _pipelines.constant(_constantValueToJs(argsMap[_kValue]));
       default:
         throw UnsupportedError('Unsupported expression: $name');
     }
@@ -204,7 +207,6 @@ class PipelineExpressionConverterWeb {
 
   /// Converts unnest stage args to JS UnnestStageOptions.
   JSAny toUnnestOptions(Map<String, dynamic> map) {
-    print('toUnnestOptions: ${map.toString()}');
     final expression = map[_kExpression] as Map<String, dynamic>;
     final indexField = map['index_field'] as String?;
     final sel = toSelectable(expression);
@@ -228,31 +230,77 @@ class PipelineExpressionConverterWeb {
   /// Converts replace_with expression to JS ReplaceWithStageOptions.
   JSAny toReplaceWithOptions(Map<String, dynamic> expression) {
     return interop.ReplaceWithStageOptionsJsImpl()
-      ..expression = toExpression(expression);
+      ..map = toExpression(expression);
   }
 
   /// Converts find_nearest args to JS FindNearestStageOptions.
-  JSAny toFindNearestOptions(Map<String, dynamic> map) {
+  interop.FindNearestStageOptionsJsImpl toFindNearestOptions(
+      Map<String, dynamic> map) {
     final vectorField =
         (map['vector_field'] as String?) ?? (map[_kField] as String?);
     final vectorValue = map['vector_value'] as List<dynamic>?;
     final distanceMeasure = (map['distance_measure'] as String?) ?? 'cosine';
     final limit = map['limit'] as int?;
+    final distanceField = map['distance_field'] as String?;
     if (vectorField == null || vectorValue == null) {
       throw UnsupportedError(
         'Pipeline findNearest() on web requires vector_field and vector_value.',
       );
     }
-    final obj = JSObject.new;
-    setProperty(obj, 'vectorField', vectorField.toJS);
-    setProperty(obj, 'vectorValue',
-        jsify(vectorValue.map((e) => (e as num).toDouble()).toList()));
-    setProperty(obj, 'distanceMeasure', distanceMeasure.toJS);
-    if (limit != null) setProperty(obj, 'limit', limit.toJS);
-    return obj as JSAny;
+    final doubles = vectorValue.map((e) => (e as num).toDouble()).toList();
+    final opts = interop.FindNearestStageOptionsJsImpl()
+      ..field = _pipelines.field(vectorField.toJS)
+      ..vectorValue = interop.vector(doubles.jsify()! as JSArray)
+      ..distanceMeasure = distanceMeasure.toJS;
+    if (limit != null) opts.limit = limit.toJS;
+    if (distanceField != null) opts.distanceField = distanceField.toJS;
+    return opts;
   }
 
   // ── Private helpers ───────────────────────────────────────────────────────
+
+  /// Converts a [Constant] value to the correct JS type for the pipelines API.
+  ///
+  /// Each Dart type accepted by [Constant] is mapped to the corresponding
+  /// Firestore JS SDK interop type so that the JS SDK receives a properly typed
+  /// value (e.g. a JS `Timestamp`, `GeoPoint`, or `Bytes` object) rather than
+  /// a plain JS primitive or an unrecognised object.
+  JSAny? _constantValueToJs(Object? value) {
+    if (value == null) return null;
+    if (value is String) return value.toJS;
+    if (value is bool) return value.toJS;
+    if (value is int) return value.toJS;
+    if (value is double) return value.toJS;
+    if (value is DateTime) {
+      return interop.TimestampJsImpl.fromMillis(
+          value.millisecondsSinceEpoch.toJS) as JSAny;
+    }
+
+    if (value is Timestamp) {
+      // Use seconds + nanoseconds directly to preserve sub-millisecond precision.
+      return interop.TimestampJsImpl(value.seconds.toJS, value.nanoseconds.toJS)
+          as JSAny;
+    }
+    if (value is GeoPoint) {
+      return interop.GeoPointJsImpl(value.latitude.toJS, value.longitude.toJS)
+          as JSAny;
+    }
+    if (value is Blob) {
+      return interop.BytesJsImpl.fromUint8Array(value.bytes.toJS) as JSAny;
+    }
+    if (value is List<int>) {
+      return interop.BytesJsImpl.fromUint8Array(Uint8List.fromList(value).toJS)
+          as JSAny;
+    }
+    if (value is VectorValue) {
+      return interop.vector(value.toArray().jsify()! as JSArray) as JSAny;
+    }
+    if (value is Map) {
+      final path = value['path'] as String;
+      return interop.doc(_jsFirestore as JSAny, path.toJS) as JSAny;
+    }
+    return jsify(value);
+  }
 
   /// Extracts and safe-casts the 'args' sub-map from an expression map.
   static Map<String, dynamic> _argsOf(Map<String, dynamic> map) {

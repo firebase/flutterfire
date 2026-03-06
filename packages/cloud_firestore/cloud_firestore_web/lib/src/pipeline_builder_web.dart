@@ -7,7 +7,7 @@ import 'dart:js_interop';
 
 import 'package:cloud_firestore_web/src/interop/firestore_interop.dart'
     as interop;
-import 'package:cloud_firestore_web/src/pipeline_expression_converter_web.dart';
+import 'package:cloud_firestore_web/src/pipeline_expression_parser_web.dart';
 
 /// Builds a JS Pipeline from serialized [stages] and returns it ready to execute.
 /// Keeps [executePipeline] thin: build → execute → convert.
@@ -26,7 +26,7 @@ interop.PipelineJsImpl buildPipelineFromStages(
   interop.PipelineJsImpl pipeline = _applySourceStage(
       source as interop.PipelineSourceJsImpl, jsFirestore, stageName, first);
 
-  final converter = PipelineExpressionConverterWeb(interop.pipelines);
+  final converter = PipelineExpressionParserWeb(interop.pipelines, jsFirestore);
 
   // Apply remaining stages
   for (var i = 1; i < stages.length; i++) {
@@ -77,7 +77,7 @@ interop.PipelineJsImpl _applySourceStage(
 interop.PipelineJsImpl _applyStage(
   interop.PipelineJsImpl pipeline,
   Map<String, dynamic> stage,
-  PipelineExpressionConverterWeb converter,
+  PipelineExpressionParserWeb converter,
   interop.FirestoreJsImpl jsFirestore,
 ) {
   final name = stage['stage'] as String?;
@@ -139,8 +139,10 @@ interop.PipelineJsImpl _applyStage(
     case 'find_nearest':
       return pipeline.findNearest(converter.toFindNearestOptions(map));
     case 'union':
-      // Union requires another Pipeline; not yet supported from serialized stages.
-      return pipeline;
+      final pipelineStages = map['pipeline'] as List<Map<String, dynamic>>;
+      final otherPipeline =
+          buildPipelineFromStages(jsFirestore, pipelineStages);
+      return pipeline.union(otherPipeline);
     default:
       // Ignore unknown stages
       return pipeline;

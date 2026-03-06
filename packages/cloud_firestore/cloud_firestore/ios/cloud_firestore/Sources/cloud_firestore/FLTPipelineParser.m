@@ -35,6 +35,8 @@ static NSError *parseError(NSString *message) {
 }
 
 @interface FLTPipelineExpressionParser : NSObject
+@property(nonatomic, strong) FIRFirestore *firestore;
+- (instancetype)initWithFirestore:(FIRFirestore *)firestore;
 - (FIRExprBridge *)parseExpression:(NSDictionary<NSString *, id> *)map error:(NSError **)error;
 - (FIRExprBridge *)parseBooleanExpression:(NSDictionary<NSString *, id> *)map
                                     error:(NSError **)error;
@@ -42,6 +44,14 @@ static NSError *parseError(NSString *message) {
 @end
 
 @implementation FLTPipelineExpressionParser
+
+- (instancetype)initWithFirestore:(FIRFirestore *)firestore {
+  self = [super init];
+  if (self) {
+    _firestore = firestore;
+  }
+  return self;
+}
 
 - (FIRExprBridge *)parseExpression:(NSDictionary<NSString *, id> *)map error:(NSError **)error {
   NSString *name = map[@"name"];
@@ -71,6 +81,13 @@ static NSError *parseError(NSString *message) {
     if (value == nil) {
       if (error) *error = parseError(@"Constant requires 'value' argument");
       return nil;
+    }
+    if ([value isKindOfClass:[NSDictionary class]]) {
+      NSString *path = ((NSDictionary *)value)[@"path"];
+      if ([path isKindOfClass:[NSString class]] && self.firestore) {
+        FIRDocumentReference *docRef = [self.firestore documentWithPath:path];
+        return [[FIRConstantBridge alloc] init:docRef];
+      }
     }
     return [[FIRConstantBridge alloc] init:value];
   }
@@ -428,7 +445,8 @@ static NSError *parseError(NSString *message) {
     parseStagesWithFirestore:(FIRFirestore *)firestore
                       stages:(NSArray<NSDictionary<NSString *, id> *> *)stages
                        error:(NSError **)error {
-  FLTPipelineExpressionParser *exprParser = [[FLTPipelineExpressionParser alloc] init];
+  FLTPipelineExpressionParser *exprParser =
+      [[FLTPipelineExpressionParser alloc] initWithFirestore:firestore];
   NSMutableArray<FIRStageBridge *> *stageBridges = [NSMutableArray array];
   NSError *parseErr = nil;
 
@@ -741,9 +759,9 @@ static NSError *parseError(NSString *message) {
   return [[FIRAggregateFunctionBridge alloc] initWithName:iosName Args:argsArray];
 }
 
-+ (FIRStageBridge *)parseAggregateStageLegacyArgs:(NSDictionary *)args
-                                       exprParser:(FLTPipelineExpressionParser *)exprParser
-                                            error:(NSError **)error {
++ (FIRStageBridge *)parseAggregateStageWithArgs:(NSDictionary *)args
+                                     exprParser:(FLTPipelineExpressionParser *)exprParser
+                                          error:(NSError **)error {
   NSArray *accumulatorMaps = args[@"aggregate_functions"];
   if (![accumulatorMaps isKindOfClass:[NSArray class]] || accumulatorMaps.count == 0) {
     if (error) *error = parseError(@"aggregate requires aggregate_functions");

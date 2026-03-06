@@ -1254,11 +1254,13 @@ class Constant extends Expression {
 
   @override
   Map<String, dynamic> toMap() {
+    Object? serializedValue = value;
+    if (value is DocumentReference) {
+      serializedValue = {'path': (value! as DocumentReference).path};
+    }
     return {
       'name': name,
-      'args': {
-        'value': value,
-      },
+      'args': {'value': serializedValue},
     };
   }
 }

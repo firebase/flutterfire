@@ -8,6 +8,7 @@ package io.flutter.plugins.firebase.firestore.utils;
 
 import android.util.Log;
 import androidx.annotation.NonNull;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.pipeline.AggregateFunction;
 import com.google.firebase.firestore.pipeline.AggregateOptions;
 import com.google.firebase.firestore.pipeline.AggregateStage;
@@ -23,6 +24,12 @@ import java.util.Map;
 /** Handles parsing of all expression types from Dart map representations to Android SDK objects. */
 class ExpressionParsers {
   private static final String TAG = "ExpressionParsers";
+
+  private final FirebaseFirestore firestore;
+
+  ExpressionParsers(@NonNull FirebaseFirestore firestore) {
+    this.firestore = firestore;
+  }
 
   /** Binary operation on two expressions. Used instead of BiFunction for API 23 compatibility. */
   private interface BinaryExpressionOp<R> {
@@ -65,6 +72,12 @@ class ExpressionParsers {
       case "constant":
         {
           Object value = args.get("value");
+          if (value instanceof Map) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> valueMap = (Map<String, Object>) value;
+            String path = (String) valueMap.get("path");
+            return Expression.constant(firestore.document(path));
+          }
           return ExpressionHelpers.parseConstantValue(value);
         }
       case "alias":

@@ -354,7 +354,7 @@ extension type PipelinesJsImpl._(JSObject _) implements JSObject {
 
   // --- Expression builders ---
   external ExpressionJsImpl field(JSString path);
-  external ExpressionJsImpl constant(JSAny value);
+  external ExpressionJsImpl constant(JSAny? value);
 
   // --- Boolean / comparison ---
   external JSAny equal(JSAny left, JSAny right);
@@ -1235,5 +1235,20 @@ extension type ReplaceWithStageOptionsJsImpl._(JSObject _) implements JSObject {
   ReplaceWithStageOptionsJsImpl() : this._(JSObject.new());
 
   // ignore: avoid_setters_without_getters
-  external set expression(JSAny value);
+  external set map(JSAny value);
+}
+
+extension type FindNearestStageOptionsJsImpl._(JSObject _) implements JSObject {
+  FindNearestStageOptionsJsImpl() : this._(JSObject.new());
+
+  // ignore: avoid_setters_without_getters
+  external set field(JSAny value);
+  // ignore: avoid_setters_without_getters
+  external set vectorValue(JSAny value);
+  // ignore: avoid_setters_without_getters
+  external set distanceMeasure(JSString value);
+  // ignore: avoid_setters_without_getters
+  external set limit(JSNumber value);
+  // ignore: avoid_setters_without_getters
+  external set distanceField(JSString value);
 }

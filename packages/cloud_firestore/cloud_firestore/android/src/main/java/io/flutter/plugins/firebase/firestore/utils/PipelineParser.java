@@ -21,9 +21,6 @@ import java.util.Map;
 
 public class PipelineParser {
   private static final String TAG = "PipelineParser";
-  private static final ExpressionParsers expressionParsers = new ExpressionParsers();
-  private static final PipelineStageHandlers stageHandlers =
-      new PipelineStageHandlers(expressionParsers);
 
   /**
    * Executes a pipeline from a list of stage maps.
@@ -50,6 +47,8 @@ public class PipelineParser {
   @SuppressWarnings("unchecked")
   public static Pipeline buildPipeline(
       @NonNull FirebaseFirestore firestore, @NonNull List<Map<String, Object>> stages) {
+    ExpressionParsers expressionParsers = new ExpressionParsers(firestore);
+    PipelineStageHandlers stageHandlers = new PipelineStageHandlers(expressionParsers);
     PipelineSource pipelineSource = firestore.pipeline();
     Pipeline pipeline = null;
 
