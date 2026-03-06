@@ -43,8 +43,8 @@ flutter:
     platforms:
       android:
         package: io.flutter.plugins.firebase.ai
-        pluginClass: FirebaseAiPlugin
+        pluginClass: FirebaseAIPlugin
       ios:
-        pluginClass: FirebaseAiPlugin
+        pluginClass: FirebaseAIPlugin
       macos:
-        pluginClass: FirebaseAiPlugin
+        pluginClass: FirebaseAIPlugin

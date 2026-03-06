@@ -1,4 +1,4 @@
-// Copyright 2025 Google LLC
+// Copyright 2026 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
   import Flutter
 #endif
 
-public class FirebaseAiPlugin: NSObject, FlutterPlugin {
+public class FirebaseAIPlugin: NSObject, FlutterPlugin {
   public static func register(with registrar: FlutterPluginRegistrar) {
     #if canImport(FlutterMacOS)
       let messenger = registrar.messenger
@@ -30,7 +30,7 @@ public class FirebaseAiPlugin: NSObject, FlutterPlugin {
       name: "plugins.flutter.io/firebase_ai",
       binaryMessenger: messenger
     )
-    let instance = FirebaseAiPlugin()
+    let instance = FirebaseAIPlugin()
     registrar.addMethodCallDelegate(instance, channel: channel)
   }
 

@@ -1,1 +1,0 @@
-../../../../ios/firebase_ai/Sources/firebase_ai/FirebaseAiPlugin.swift

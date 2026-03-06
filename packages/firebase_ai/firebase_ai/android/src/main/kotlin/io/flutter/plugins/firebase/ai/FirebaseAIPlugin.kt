@@ -1,4 +1,4 @@
-// Copyright 2025 Google LLC
+// Copyright 2026 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import io.flutter.plugin.common.MethodChannel
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 
-class FirebaseAiPlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
+class FirebaseAIPlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
     private lateinit var channel: MethodChannel
     private lateinit var context: Context
 
@@ -61,7 +61,7 @@ class FirebaseAiPlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
                     PackageManager.GET_SIGNING_CERTIFICATES
                 )
             } catch (e: PackageManager.NameNotFoundException) {
-                Log.d(TAG, "PackageManager couldn't find the package \"$packageName\"")
+                Log.e(TAG, "PackageManager couldn't find the package \"$packageName\"", e)
                 return null
             }
             val signingInfo = packageInfo?.signingInfo ?: return null
@@ -78,7 +78,7 @@ class FirebaseAiPlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
                     PackageManager.GET_SIGNATURES
                 )
             } catch (e: PackageManager.NameNotFoundException) {
-                Log.d(TAG, "PackageManager couldn't find the package \"$packageName\"")
+                Log.e(TAG, "PackageManager couldn't find the package \"$packageName\"", e)
                 return null
             }
             @Suppress("DEPRECATION")
@@ -96,6 +96,6 @@ class FirebaseAiPlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
     }
 
     companion object {
-        private const val TAG = "FirebaseAiPlugin"
+        private const val TAG = "FirebaseAIPlugin"
     }
 }
