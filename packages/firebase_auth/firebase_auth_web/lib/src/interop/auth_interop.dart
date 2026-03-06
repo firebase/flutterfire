@@ -575,6 +575,7 @@ extension type ConfirmationResultJsImpl._(JSObject _) implements JSObject {
 /// See: <https://firebase.google.com/docs/reference/js/firebase.auth.ActionCodeInfo>.
 extension type ActionCodeInfo._(JSObject _) implements JSObject {
   external ActionCodeData get data;
+  external JSString get operation;
 }
 
 /// Interface representing a user's metadata.
