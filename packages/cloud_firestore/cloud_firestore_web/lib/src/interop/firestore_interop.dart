@@ -1190,3 +1190,50 @@ extension type PipelineResultJsImpl._(JSObject _) implements JSObject {
   external JSAny? get createTime;
   external JSAny? get updateTime;
 }
+
+extension type SampleStageOptionsJsImpl._(JSObject _) implements JSObject {
+  SampleStageOptionsJsImpl() : this._(JSObject.new());
+
+  // ignore: avoid_setters_without_getters
+  external set documents(JSAny value);
+  // ignore: avoid_setters_without_getters
+  external set percentage(JSAny value);
+}
+
+extension type SortStageOptionsJsImpl._(JSObject _) implements JSObject {
+  SortStageOptionsJsImpl() : this._(JSObject.new());
+
+  // ignore: avoid_setters_without_getters
+  external set orderings(JSAny value);
+}
+
+extension type DistinctStageOptionsJsImpl._(JSObject _) implements JSObject {
+  DistinctStageOptionsJsImpl() : this._(JSObject.new());
+
+  // ignore: avoid_setters_without_getters
+  external set groups(JSAny value);
+}
+
+extension type UnnestStageOptionsJsImpl._(JSObject _) implements JSObject {
+  UnnestStageOptionsJsImpl() : this._(JSObject.new());
+
+  // ignore: avoid_setters_without_getters
+  external set selectable(JSAny value);
+  // ignore: avoid_setters_without_getters
+  external set indexField(JSString? value);
+}
+
+extension type RemoveFieldsStageOptionsJsImpl._(JSObject _)
+    implements JSObject {
+  RemoveFieldsStageOptionsJsImpl() : this._(JSObject.new());
+
+  // ignore: avoid_setters_without_getters
+  external set fields(JSArray<JSString> value);
+}
+
+extension type ReplaceWithStageOptionsJsImpl._(JSObject _) implements JSObject {
+  ReplaceWithStageOptionsJsImpl() : this._(JSObject.new());
+
+  // ignore: avoid_setters_without_getters
+  external set expression(JSAny value);
+}

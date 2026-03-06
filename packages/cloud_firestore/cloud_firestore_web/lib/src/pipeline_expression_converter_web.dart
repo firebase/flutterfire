@@ -122,22 +122,19 @@ class PipelineExpressionConverterWeb {
         '(ascending, descending). Ensure the pipelines module is loaded.',
       );
     }
-    final obj = JSObject.new;
-    setProperty(obj, 'orderings', list.toJS);
-    return obj as JSAny;
+    return interop.SortStageOptionsJsImpl()..orderings = list.toJS;
   }
 
   /// Converts a single expression map to a JS Selectable (field or aliased).
-  JSAny? toSelectable(Map<String, dynamic> map) {
+  JSAny toSelectable(Map<String, dynamic> map) {
     final name = map[_kName] as String?;
     final argsMap = _argsOf(map);
     if (name == 'field') {
       return _pipelines.field(((argsMap[_kField] as String?) ?? '').toJS);
     }
     if (name == _kAlias) {
-      final alias = argsMap[_kAlias] as String?;
+      final alias = argsMap[_kAlias] as String;
       final expression = argsMap[_kExpression];
-      if (alias == null || expression == null) return null;
       return toExpression(expression as Map<String, dynamic>)
           .asAlias(alias.toJS);
     }
@@ -162,9 +159,7 @@ class PipelineExpressionConverterWeb {
         'Pipeline distinct() on web requires the Firebase JS pipeline expression API.',
       );
     }
-    final obj = JSObject.new;
-    setProperty(obj, 'groups', list.toJS);
-    return obj as JSAny;
+    return interop.DistinctStageOptionsJsImpl()..groups = list.toJS;
   }
 
   // ── Aggregate ─────────────────────────────────────────────────────────────
@@ -195,42 +190,27 @@ class PipelineExpressionConverterWeb {
   /// Converts sample stage args to JS (integer count or SampleStageOptions).
   ///
   /// Dart serializes as `{ type: 'size', value: n }` or a raw number.
-  JSAny toSampleOptions(dynamic args) {
-    if (args is num) return args.toInt().toJS;
-    if (args is Map<String, dynamic>) {
-      final type = args['type'] as String?;
-      final value = args[_kValue];
-      if (type == 'size' && value != null) return (value as num).toInt().toJS;
-      final n = args['documents'] as int? ?? args['count'] as int?;
-      if (n != null) return n.toJS;
-      return (args['documents'] as num?)?.toInt().toJS ?? 0.toJS;
+  JSAny toSampleOptions(Map<String, dynamic> map) {
+    final args = map['type'] as String;
+    if (args == 'size') {
+      final value = map['value'] as num;
+      return interop.SampleStageOptionsJsImpl()..documents = value.toInt().toJS;
+    } else {
+      final value = map['value'] as num;
+      return interop.SampleStageOptionsJsImpl()
+        ..percentage = value.toDouble().toJS;
     }
-    return 0.toJS;
   }
 
   /// Converts unnest stage args to JS UnnestStageOptions.
   JSAny toUnnestOptions(Map<String, dynamic> map) {
-    final selectable = map['selectable'] ?? map[_kExpression] ?? map[_kField];
-    if (selectable == null) {
-      throw UnsupportedError(
-          'Pipeline unnest() on web requires selectable or field.');
-    }
+    print('toUnnestOptions: ${map.toString()}');
+    final expression = map[_kExpression] as Map<String, dynamic>;
     final indexField = map['index_field'] as String?;
-    final sel = selectable is Map<String, dynamic>
-        ? toSelectable(selectable)
-        : toExpression({
-            _kName: 'field',
-            _kArgs: {_kField: selectable.toString()}
-          });
-    if (sel == null) {
-      throw UnsupportedError(
-        'Pipeline unnest() on web requires the Firebase JS pipeline expression API.',
-      );
-    }
-    final obj = JSObject.new;
-    setProperty(obj, 'selectable', sel);
-    if (indexField != null) setProperty(obj, 'indexField', indexField.toJS);
-    return obj as JSAny;
+    final sel = toSelectable(expression);
+    return interop.UnnestStageOptionsJsImpl()
+      ..selectable = sel
+      ..indexField = indexField?.toJS;
   }
 
   /// Converts remove_fields field paths to JS RemoveFieldsStageOptions.
@@ -242,21 +222,13 @@ class PipelineExpressionConverterWeb {
           : (e is Map ? e[_kField] ?? e['path'] : null)?.toString();
       if (s != null) paths.add(s.toJS);
     }
-    if (paths.isEmpty) {
-      throw UnsupportedError(
-        'Pipeline removeFields() on web requires at least one field path.',
-      );
-    }
-    final obj = JSObject.new;
-    setProperty(obj, 'fields', paths.toJS);
-    return obj as JSAny;
+    return interop.RemoveFieldsStageOptionsJsImpl()..fields = paths.toJS;
   }
 
   /// Converts replace_with expression to JS ReplaceWithStageOptions.
   JSAny toReplaceWithOptions(Map<String, dynamic> expression) {
-    final obj = JSObject.new;
-    setProperty(obj, _kExpression, toExpression(expression));
-    return obj as JSAny;
+    return interop.ReplaceWithStageOptionsJsImpl()
+      ..expression = toExpression(expression);
   }
 
   /// Converts find_nearest args to JS FindNearestStageOptions.
