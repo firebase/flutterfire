@@ -50,9 +50,13 @@ class Cache {
   Stream<Set<String>> get impactedQueries => _impactedQueryController.stream;
 
   String _constructCacheIdentifier() {
-    final rawIdentifier =
-        '${_settings.storage}-${dataConnect.app.options.projectId}-${dataConnect.app.name}-${dataConnect.connectorConfig.serviceId}-${dataConnect.connectorConfig.connector}-${dataConnect.connectorConfig.location}-${dataConnect.auth?.currentUser?.uid ?? 'anon'}-${dataConnect.transport.transportOptions.host}';
-    return convertToSha256(rawIdentifier);
+    final rawPrefix =
+        '${_settings.storage}-${dataConnect.app.options.projectId}-${dataConnect.app.name}-${dataConnect.connectorConfig.serviceId}-${dataConnect.connectorConfig.connector}-${dataConnect.connectorConfig.location}-${dataConnect.transport.transportOptions.host}';
+    final prefixSha = convertToSha256(rawPrefix);
+    final rawSuffix = dataConnect.auth?.currentUser?.uid ?? 'anon';
+    final suffixSha = convertToSha256(rawSuffix);
+
+    return '$prefixSha-$suffixSha';
   }
 
   void _initializeProvider() {
@@ -92,23 +96,32 @@ class Cache {
       return;
     }
 
-    final dehydrationResult = await _resultTreeProcessor.dehydrate(
-        queryId, serverResponse.data, _cacheProvider!);
+    final Map<DataConnectPath, PathMetadata> paths =
+        serverResponse.extensions != null
+            ? ExtensionResponse.fromJson(serverResponse.extensions!)
+                .flattenPathMetadata()
+            : {};
+
+    final dehydrationResult = await _resultTreeProcessor.dehydrateResults(
+        queryId, serverResponse.data, _cacheProvider!, paths);
 
     EntityNode rootNode = dehydrationResult.dehydratedTree;
     Map<String, dynamic> dehydratedMap =
         rootNode.toJson(mode: EncodingMode.dehydrated);
 
     // if we have server ttl, that overrides maxAge from cacheSettings
-    Duration ttl =
-        serverResponse.ttl != null ? serverResponse.ttl! : _settings.maxAge;
+    Duration ttl = serverResponse.extensions != null &&
+            serverResponse.extensions!['ttl'] != null
+        ? Duration(seconds: serverResponse.extensions!['ttl'] as int)
+        : (serverResponse.ttl ?? _settings.maxAge);
+
     final resultTree = ResultTree(
         data: dehydratedMap,
         ttl: ttl,
         cachedAt: DateTime.now(),
         lastAccessed: DateTime.now());
 
-    _cacheProvider!.saveResultTree(queryId, resultTree);
+    _cacheProvider!.setResultTree(queryId, resultTree);
 
     Set<String> impactedQueryIds = dehydrationResult.impactedQueryIds;
     impactedQueryIds.remove(queryId); // remove query being cached
@@ -116,7 +129,8 @@ class Cache {
   }
 
   /// Fetches a cached result.
-  Future<Map<String, dynamic>?> get(String queryId, bool allowStale) async {
+  Future<Map<String, dynamic>?> resultTree(
+      String queryId, bool allowStale) async {
     if (_cacheProvider == null) {
       return null;
     }
@@ -137,21 +151,18 @@ class Cache {
       }
 
       resultTree.lastAccessed = DateTime.now();
-      _cacheProvider!.saveResultTree(queryId, resultTree);
+      _cacheProvider!.setResultTree(queryId, resultTree);
 
       EntityNode rootNode =
           EntityNode.fromJson(resultTree.data, _cacheProvider!);
+
       Map<String, dynamic> hydratedJson =
-          rootNode.toJson(); //default mode for toJson is hydrate
+          await _resultTreeProcessor.hydrateResults(rootNode, _cacheProvider!);
+
       return hydratedJson;
     }
 
     return null;
-  }
-
-  /// Invalidates the cache.
-  Future<void> invalidate() async {
-    _cacheProvider?.clear();
   }
 
   void dispose() {
