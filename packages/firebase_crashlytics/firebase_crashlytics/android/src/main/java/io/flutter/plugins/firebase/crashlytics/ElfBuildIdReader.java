@@ -61,8 +61,8 @@ final class ElfBuildIdReader {
   }
 
   /**
-   * Reads the ELF build ID from libapp.so stored inside the APK. On newer Android versions,
-   * native libraries may not be extracted to the filesystem.
+   * Reads the ELF build ID from libapp.so stored inside the APK. On newer Android versions, native
+   * libraries may not be extracted to the filesystem.
    */
   private static String readBuildIdFromApk(Context context) throws Exception {
     // Check the base APK first.
@@ -221,7 +221,9 @@ final class ElfBuildIdReader {
       if (namesz > 0 && type == NT_GNU_BUILD_ID && descPos + descsz <= end) {
         byte[] nameBytes = new byte[namesz];
         buf.get(nameBytes);
-        String name = new String(nameBytes, 0, Math.max(0, namesz - 1), java.nio.charset.StandardCharsets.US_ASCII);
+        String name =
+            new String(
+                nameBytes, 0, Math.max(0, namesz - 1), java.nio.charset.StandardCharsets.US_ASCII);
 
         if (GNU_NOTE_NAME.equals(name) && descsz > 0) {
           buf.position((int) descPos);
