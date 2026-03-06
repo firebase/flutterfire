@@ -271,6 +271,59 @@ void main() {
               fail(e.toString());
             }
           });
+
+          test('returns correct operation for verifyEmail action code',
+              () async {
+            final email = generateRandomEmail();
+            await FirebaseAuth.instance.createUserWithEmailAndPassword(
+              email: email,
+              password: testPassword,
+            );
+
+            await FirebaseAuth.instance.currentUser!.sendEmailVerification();
+
+            final oobCode = await emulatorOutOfBandCode(
+              email,
+              EmulatorOobCodeType.verifyEmail,
+            );
+            expect(oobCode, isNotNull);
+
+            final actionCodeInfo = await FirebaseAuth.instance.checkActionCode(
+              oobCode!.oobCode!,
+            );
+
+            expect(
+              actionCodeInfo.operation,
+              equals(ActionCodeInfoOperation.verifyEmail),
+            );
+          });
+
+          test('returns correct operation for passwordReset action code',
+              () async {
+            final email = generateRandomEmail();
+            await FirebaseAuth.instance.createUserWithEmailAndPassword(
+              email: email,
+              password: testPassword,
+            );
+            await ensureSignedOut();
+
+            await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+
+            final oobCode = await emulatorOutOfBandCode(
+              email,
+              EmulatorOobCodeType.passwordReset,
+            );
+            expect(oobCode, isNotNull);
+
+            final actionCodeInfo = await FirebaseAuth.instance.checkActionCode(
+              oobCode!.oobCode!,
+            );
+
+            expect(
+              actionCodeInfo.operation,
+              equals(ActionCodeInfoOperation.passwordReset),
+            );
+          });
         },
         skip: !kIsWeb && Platform.isWindows,
       );
