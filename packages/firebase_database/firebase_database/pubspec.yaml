@@ -39,5 +39,7 @@ flutter:
         pluginClass: FLTFirebaseDatabasePlugin
       macos:
         pluginClass: FLTFirebaseDatabasePlugin
+      windows:
+        pluginClass: FirebaseDatabasePluginCApi
       web:
         default_package: firebase_database_web
