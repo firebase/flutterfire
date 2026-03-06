@@ -443,4 +443,16 @@ class FlutterFirebaseAnalyticsPlugin : FlutterFirebasePlugin,
       )
     )
   }
+
+  override fun logTransaction(transactionId: String, callback: (Result<Unit>) -> Unit) {
+    callback(
+      Result.failure(
+        FlutterError(
+          "unimplemented",
+          "logTransaction is only available on iOS.",
+          null
+        )
+      )
+    )
+  }
 }
