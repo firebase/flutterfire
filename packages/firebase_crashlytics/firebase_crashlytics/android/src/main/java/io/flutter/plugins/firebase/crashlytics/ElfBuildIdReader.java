@@ -140,8 +140,7 @@ final class ElfBuildIdReader {
   /**
    * Searches a PT_NOTE segment for the GNU build ID note.
    *
-   * <p>Note format: namesz (4) | descsz (4) | type (4) | name (aligned to 4) | desc (aligned to
-   * 4)
+   * <p>Note format: namesz (4) | descsz (4) | type (4) | name (aligned to 4) | desc (aligned to 4)
    */
   private static String findGnuBuildId(
       RandomAccessFile raf, long offset, long size, ByteOrder order) throws Exception {
