@@ -84,6 +84,27 @@ class PipelineExpressionParserWeb {
       case 'less_than_or_equal':
         return _pipelines.lessThanOrEqual(
             _expr(argsMap, _kLeft), _expr(argsMap, _kRight));
+      case 'and':
+      case 'or':
+      case 'xor':
+        final exprMaps = argsMap['expressions'] as List<dynamic>?;
+        if (exprMaps == null || exprMaps.isEmpty) return null;
+        final exprs = exprMaps
+            .map((e) => toBooleanExpression(e as Map<String, dynamic>))
+            .whereType<JSAny>()
+            .toList();
+        if (exprs.isEmpty) return null;
+        var result = exprs.first;
+        for (var i = 1; i < exprs.length; i++) {
+          if (name == 'and') {
+            result = _pipelines.and(result, exprs[i]);
+          } else if (name == 'or') {
+            result = _pipelines.or(result, exprs[i]);
+          } else {
+            result = _pipelines.xor(result, exprs[i]);
+          }
+        }
+        return result;
       case 'not':
         return _pipelines.not(_expr(argsMap, _kExpression));
       case 'exists':

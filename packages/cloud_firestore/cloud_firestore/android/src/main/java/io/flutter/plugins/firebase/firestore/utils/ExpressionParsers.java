@@ -122,6 +122,11 @@ class ExpressionParsers {
           List<Map<String, Object>> exprMaps = (List<Map<String, Object>>) args.get("expressions");
           return ExpressionHelpers.parseOrExpression(exprMaps, this);
         }
+      case "xor":
+        {
+          List<Map<String, Object>> exprMaps = (List<Map<String, Object>>) args.get("expressions");
+          return ExpressionHelpers.parseXorExpression(exprMaps, this);
+        }
       case "not":
         {
           Map<String, Object> exprMap = (Map<String, Object>) args.get("expression");
@@ -208,6 +213,11 @@ class ExpressionParsers {
             result = BooleanExpression.or(result, next);
           }
           return result;
+        }
+      case "xor":
+        {
+          List<Map<String, Object>> exprMaps = (List<Map<String, Object>>) args.get("expressions");
+          return ExpressionHelpers.parseXorExpression(exprMaps, this);
         }
       case "not":
         {

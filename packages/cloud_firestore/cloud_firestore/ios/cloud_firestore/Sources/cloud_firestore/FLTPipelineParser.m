@@ -115,7 +115,7 @@ static NSError *parseError(NSString *message) {
   dispatch_once(&onceToken, ^{
     binaryNames = @[
       @"equal", @"not_equal", @"greater_than", @"greater_than_or_equal", @"less_than",
-      @"less_than_or_equal", @"add", @"subtract", @"multiply", @"divide", @"modulo", @"xor"
+      @"less_than_or_equal", @"add", @"subtract", @"multiply", @"divide", @"modulo"
     ];
   });
   if ([binaryNames containsObject:sdkName] || [name isEqualToString:@"bit_xor"]) {
@@ -152,9 +152,10 @@ static NSError *parseError(NSString *message) {
   }
 
   // -------------------------------------------------------------------------
-  // N-ary logical (expressions array): and, or
+  // N-ary logical (expressions array): and, or, xor
   // -------------------------------------------------------------------------
-  if ([name isEqualToString:@"and"] || [name isEqualToString:@"or"]) {
+  if ([name isEqualToString:@"and"] || [name isEqualToString:@"or"] ||
+      [name isEqualToString:@"xor"]) {
     NSArray *exprMaps = args[@"expressions"];
     if (![exprMaps isKindOfClass:[NSArray class]] || exprMaps.count == 0) {
       if (error)
