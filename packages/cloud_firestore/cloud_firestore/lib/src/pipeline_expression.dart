@@ -11,8 +11,13 @@ mixin PipelineSerializable {
 
 /// Helper function to convert values to Expression (wraps in Constant if needed)
 Expression _toExpression(Object? value) {
+  if (value == null) return Constant(null);
   if (value is Expression) return value;
-  return Constant(value!);
+  if (value is List) return Expression.array(value.cast<Object?>());
+  if (value is Map) {
+    return Expression.map(value.cast<String, Object?>());
+  }
+  return Constant(value);
 }
 
 /// Base class for all pipeline expressions
@@ -440,6 +445,12 @@ abstract class Expression implements PipelineSerializable {
     return _ArrayContainsExpression(this, _toExpression(element));
   }
 
+  /// Checks if this array contains any of the given values or expressions
+  BooleanExpression arrayContainsAny(List<Object?> values) {
+    return _ArrayContainsAnyExpression(
+        this, values.map(_toExpression).toList());
+  }
+
   /// Returns the length of this array expression
   // ignore: use_to_and_as_if_applicable
   Expression arrayLength() {
@@ -762,6 +773,204 @@ abstract class Expression implements PipelineSerializable {
   /// Negates a boolean expression
   static BooleanExpression not(BooleanExpression expression) {
     return _NotExpression(expression);
+  }
+
+  /// Combines boolean expressions with a logical XOR
+  static BooleanExpression xor(
+    BooleanExpression expression1, [
+    BooleanExpression? expression2,
+    BooleanExpression? expression3,
+    BooleanExpression? expression4,
+    BooleanExpression? expression5,
+    BooleanExpression? expression6,
+    BooleanExpression? expression7,
+    BooleanExpression? expression8,
+    BooleanExpression? expression9,
+    BooleanExpression? expression10,
+    BooleanExpression? expression11,
+    BooleanExpression? expression12,
+    BooleanExpression? expression13,
+    BooleanExpression? expression14,
+    BooleanExpression? expression15,
+    BooleanExpression? expression16,
+    BooleanExpression? expression17,
+    BooleanExpression? expression18,
+    BooleanExpression? expression19,
+    BooleanExpression? expression20,
+    BooleanExpression? expression21,
+    BooleanExpression? expression22,
+    BooleanExpression? expression23,
+    BooleanExpression? expression24,
+    BooleanExpression? expression25,
+    BooleanExpression? expression26,
+    BooleanExpression? expression27,
+    BooleanExpression? expression28,
+    BooleanExpression? expression29,
+    BooleanExpression? expression30,
+  ]) {
+    final expressions = <BooleanExpression>[expression1];
+    if (expression2 != null) expressions.add(expression2);
+    if (expression3 != null) expressions.add(expression3);
+    if (expression4 != null) expressions.add(expression4);
+    if (expression5 != null) expressions.add(expression5);
+    if (expression6 != null) expressions.add(expression6);
+    if (expression7 != null) expressions.add(expression7);
+    if (expression8 != null) expressions.add(expression8);
+    if (expression9 != null) expressions.add(expression9);
+    if (expression10 != null) expressions.add(expression10);
+    if (expression11 != null) expressions.add(expression11);
+    if (expression12 != null) expressions.add(expression12);
+    if (expression13 != null) expressions.add(expression13);
+    if (expression14 != null) expressions.add(expression14);
+    if (expression15 != null) expressions.add(expression15);
+    if (expression16 != null) expressions.add(expression16);
+    if (expression17 != null) expressions.add(expression17);
+    if (expression18 != null) expressions.add(expression18);
+    if (expression19 != null) expressions.add(expression19);
+    if (expression20 != null) expressions.add(expression20);
+    if (expression21 != null) expressions.add(expression21);
+    if (expression22 != null) expressions.add(expression22);
+    if (expression23 != null) expressions.add(expression23);
+    if (expression24 != null) expressions.add(expression24);
+    if (expression25 != null) expressions.add(expression25);
+    if (expression26 != null) expressions.add(expression26);
+    if (expression27 != null) expressions.add(expression27);
+    if (expression28 != null) expressions.add(expression28);
+    if (expression29 != null) expressions.add(expression29);
+    if (expression30 != null) expressions.add(expression30);
+    return _XorExpression(expressions);
+  }
+
+  /// Combines boolean expressions with a logical AND
+  static BooleanExpression and(
+    BooleanExpression expression1, [
+    BooleanExpression? expression2,
+    BooleanExpression? expression3,
+    BooleanExpression? expression4,
+    BooleanExpression? expression5,
+    BooleanExpression? expression6,
+    BooleanExpression? expression7,
+    BooleanExpression? expression8,
+    BooleanExpression? expression9,
+    BooleanExpression? expression10,
+    BooleanExpression? expression11,
+    BooleanExpression? expression12,
+    BooleanExpression? expression13,
+    BooleanExpression? expression14,
+    BooleanExpression? expression15,
+    BooleanExpression? expression16,
+    BooleanExpression? expression17,
+    BooleanExpression? expression18,
+    BooleanExpression? expression19,
+    BooleanExpression? expression20,
+    BooleanExpression? expression21,
+    BooleanExpression? expression22,
+    BooleanExpression? expression23,
+    BooleanExpression? expression24,
+    BooleanExpression? expression25,
+    BooleanExpression? expression26,
+    BooleanExpression? expression27,
+    BooleanExpression? expression28,
+    BooleanExpression? expression29,
+    BooleanExpression? expression30,
+  ]) {
+    final expressions = <BooleanExpression>[expression1];
+    if (expression2 != null) expressions.add(expression2);
+    if (expression3 != null) expressions.add(expression3);
+    if (expression4 != null) expressions.add(expression4);
+    if (expression5 != null) expressions.add(expression5);
+    if (expression6 != null) expressions.add(expression6);
+    if (expression7 != null) expressions.add(expression7);
+    if (expression8 != null) expressions.add(expression8);
+    if (expression9 != null) expressions.add(expression9);
+    if (expression10 != null) expressions.add(expression10);
+    if (expression11 != null) expressions.add(expression11);
+    if (expression12 != null) expressions.add(expression12);
+    if (expression13 != null) expressions.add(expression13);
+    if (expression14 != null) expressions.add(expression14);
+    if (expression15 != null) expressions.add(expression15);
+    if (expression16 != null) expressions.add(expression16);
+    if (expression17 != null) expressions.add(expression17);
+    if (expression18 != null) expressions.add(expression18);
+    if (expression19 != null) expressions.add(expression19);
+    if (expression20 != null) expressions.add(expression20);
+    if (expression21 != null) expressions.add(expression21);
+    if (expression22 != null) expressions.add(expression22);
+    if (expression23 != null) expressions.add(expression23);
+    if (expression24 != null) expressions.add(expression24);
+    if (expression25 != null) expressions.add(expression25);
+    if (expression26 != null) expressions.add(expression26);
+    if (expression27 != null) expressions.add(expression27);
+    if (expression28 != null) expressions.add(expression28);
+    if (expression29 != null) expressions.add(expression29);
+    if (expression30 != null) expressions.add(expression30);
+    return _AndExpression(expressions);
+  }
+
+  /// Combines boolean expressions with a logical OR
+  static BooleanExpression or(
+    BooleanExpression expression1, [
+    BooleanExpression? expression2,
+    BooleanExpression? expression3,
+    BooleanExpression? expression4,
+    BooleanExpression? expression5,
+    BooleanExpression? expression6,
+    BooleanExpression? expression7,
+    BooleanExpression? expression8,
+    BooleanExpression? expression9,
+    BooleanExpression? expression10,
+    BooleanExpression? expression11,
+    BooleanExpression? expression12,
+    BooleanExpression? expression13,
+    BooleanExpression? expression14,
+    BooleanExpression? expression15,
+    BooleanExpression? expression16,
+    BooleanExpression? expression17,
+    BooleanExpression? expression18,
+    BooleanExpression? expression19,
+    BooleanExpression? expression20,
+    BooleanExpression? expression21,
+    BooleanExpression? expression22,
+    BooleanExpression? expression23,
+    BooleanExpression? expression24,
+    BooleanExpression? expression25,
+    BooleanExpression? expression26,
+    BooleanExpression? expression27,
+    BooleanExpression? expression28,
+    BooleanExpression? expression29,
+    BooleanExpression? expression30,
+  ]) {
+    final expressions = <BooleanExpression>[expression1];
+    if (expression2 != null) expressions.add(expression2);
+    if (expression3 != null) expressions.add(expression3);
+    if (expression4 != null) expressions.add(expression4);
+    if (expression5 != null) expressions.add(expression5);
+    if (expression6 != null) expressions.add(expression6);
+    if (expression7 != null) expressions.add(expression7);
+    if (expression8 != null) expressions.add(expression8);
+    if (expression9 != null) expressions.add(expression9);
+    if (expression10 != null) expressions.add(expression10);
+    if (expression11 != null) expressions.add(expression11);
+    if (expression12 != null) expressions.add(expression12);
+    if (expression13 != null) expressions.add(expression13);
+    if (expression14 != null) expressions.add(expression14);
+    if (expression15 != null) expressions.add(expression15);
+    if (expression16 != null) expressions.add(expression16);
+    if (expression17 != null) expressions.add(expression17);
+    if (expression18 != null) expressions.add(expression18);
+    if (expression19 != null) expressions.add(expression19);
+    if (expression20 != null) expressions.add(expression20);
+    if (expression21 != null) expressions.add(expression21);
+    if (expression22 != null) expressions.add(expression22);
+    if (expression23 != null) expressions.add(expression23);
+    if (expression24 != null) expressions.add(expression24);
+    if (expression25 != null) expressions.add(expression25);
+    if (expression26 != null) expressions.add(expression26);
+    if (expression27 != null) expressions.add(expression27);
+    if (expression28 != null) expressions.add(expression28);
+    if (expression29 != null) expressions.add(expression29);
+    if (expression30 != null) expressions.add(expression30);
+    return _OrExpression(expressions);
   }
 
   /// Joins array elements with a delimiter
@@ -1490,7 +1699,7 @@ class PipelineFilter extends BooleanExpression {
   final Object? isGreaterThan;
   final Object? isGreaterThanOrEqualTo;
   final Object? arrayContains;
-  final List<Object>? arrayContainsAny;
+  final List<Object>? filterArrayContainsAny;
   final List<Object>? whereIn;
   final List<Object>? whereNotIn;
   final bool? isNull;
@@ -1507,7 +1716,7 @@ class PipelineFilter extends BooleanExpression {
     this.isGreaterThan,
     this.isGreaterThanOrEqualTo,
     this.arrayContains,
-    this.arrayContainsAny,
+    this.filterArrayContainsAny,
     this.whereIn,
     this.whereNotIn,
     this.isNull,
@@ -1526,7 +1735,7 @@ class PipelineFilter extends BooleanExpression {
         isGreaterThan = null,
         isGreaterThanOrEqualTo = null,
         arrayContains = null,
-        arrayContainsAny = null,
+        filterArrayContainsAny = null,
         whereIn = null,
         whereNotIn = null,
         isNull = null,
@@ -1733,8 +1942,8 @@ class PipelineFilter extends BooleanExpression {
       args['isGreaterThanOrEqualTo'] = isGreaterThanOrEqualTo;
     }
     if (arrayContains != null) args['arrayContains'] = arrayContains;
-    if (arrayContainsAny != null) {
-      args['arrayContainsAny'] = arrayContainsAny;
+    if (filterArrayContainsAny != null) {
+      args['arrayContainsAny'] = filterArrayContainsAny;
     }
     if (whereIn != null) args['whereIn'] = whereIn;
     if (whereNotIn != null) args['whereNotIn'] = whereNotIn;
@@ -2100,6 +2309,28 @@ class _ArrayContainsExpression extends BooleanExpression {
   }
 }
 
+/// Represents an arrayContainsAny function expression
+class _ArrayContainsAnyExpression extends BooleanExpression {
+  final Expression array;
+  final List<Expression> values;
+
+  _ArrayContainsAnyExpression(this.array, this.values);
+
+  @override
+  String get name => 'array_contains_any';
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'args': {
+        'array': array.toMap(),
+        'values': values.map((v) => v.toMap()).toList(),
+      },
+    };
+  }
+}
+
 /// Represents an array length function expression
 class _ArrayLengthExpression extends FunctionExpression {
   final Expression expression;
@@ -2307,6 +2538,63 @@ class _NotExpression extends BooleanExpression {
       'name': name,
       'args': {
         'expression': expression.toMap(),
+      },
+    };
+  }
+}
+
+class _XorExpression extends BooleanExpression {
+  final List<BooleanExpression> expressions;
+
+  _XorExpression(this.expressions);
+
+  @override
+  String get name => 'xor';
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'args': {
+        'expressions': expressions.map((e) => e.toMap()).toList(),
+      },
+    };
+  }
+}
+
+class _AndExpression extends BooleanExpression {
+  final List<BooleanExpression> expressions;
+
+  _AndExpression(this.expressions);
+
+  @override
+  String get name => 'and';
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'args': {
+        'expressions': expressions.map((e) => e.toMap()).toList(),
+      },
+    };
+  }
+}
+
+class _OrExpression extends BooleanExpression {
+  final List<BooleanExpression> expressions;
+
+  _OrExpression(this.expressions);
+
+  @override
+  String get name => 'or';
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'args': {
+        'expressions': expressions.map((e) => e.toMap()).toList(),
       },
     };
   }

@@ -116,6 +116,14 @@ class PipelineExpressionParserWeb {
       case 'array_contains':
         return _pipelines.arrayContains(
             _expr(argsMap, 'array'), _expr(argsMap, 'element'));
+      case 'array_contains_any':
+        final valuesMaps = argsMap['values'] as List<dynamic>?;
+        if (valuesMaps == null || valuesMaps.isEmpty) return null;
+        final valuesJs = valuesMaps
+            .map((v) => toExpression(v as Map<String, dynamic>))
+            .toList()
+            .toJS;
+        return _pipelines.arrayContainsAny(_expr(argsMap, 'array'), valuesJs);
       case 'filter':
         return _buildFilterExpression(argsMap);
       default:

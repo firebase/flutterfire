@@ -375,6 +375,7 @@ extension type PipelinesJsImpl._(JSObject _) implements JSObject {
 
   // --- Array ---
   external JSAny arrayContains(JSAny array, JSAny element);
+  external JSAny arrayContainsAny(JSAny array, JSArray<JSAny> values);
 
   // --- Ordering (for sort stage) ---
   external JSAny ascending(JSAny expr);
