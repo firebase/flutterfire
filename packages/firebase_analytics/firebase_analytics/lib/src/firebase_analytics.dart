@@ -100,15 +100,27 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   Future<void> logEvent({
     required String name,
     Map<String, Object>? parameters,
+    List<AnalyticsEventItem>? items,
     AnalyticsCallOptions? callOptions,
   }) async {
     _logEventNameValidation(name);
 
     _assertParameterTypesAreCorrect(parameters);
+    _assertItemsParameterTypesAreCorrect(items);
+
+    final Map<String, Object>? effectiveParameters;
+    if (items != null) {
+      effectiveParameters = filterOutNulls(<String, Object?>{
+        _ITEMS: _marshalItems(items),
+        if (parameters != null) ...parameters,
+      });
+    } else {
+      effectiveParameters = parameters;
+    }
 
     await _delegate.logEvent(
       name: name,
-      parameters: parameters,
+      parameters: effectiveParameters,
       callOptions: callOptions,
     );
   }

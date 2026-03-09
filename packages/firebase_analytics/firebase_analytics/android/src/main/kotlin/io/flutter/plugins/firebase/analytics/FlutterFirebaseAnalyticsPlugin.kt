@@ -310,11 +310,11 @@ class FlutterFirebaseAnalyticsPlugin : FlutterFirebasePlugin,
       } else if (value == null) {
         bundle.putString(key, null)
       } else if (value is Iterable<*>) {
-        val list = ArrayList<Parcelable?>()
+        val list = mutableListOf<Parcelable>()
 
         for (item in value) {
           if (item is Map<*, *>) {
-            list.add(createBundleFromMap(item as Map<String, Any>))
+            createBundleFromMap(item as Map<String, Any>)?.let { list.add(it) }
           } else {
             if (item != null) {
               throw IllegalArgumentException(
@@ -327,7 +327,7 @@ class FlutterFirebaseAnalyticsPlugin : FlutterFirebasePlugin,
           }
         }
 
-        bundle.putParcelableArrayList(key, list)
+        bundle.putParcelableArray(key, list.toTypedArray())
       } else if (value is Map<*, *>) {
         bundle.putParcelable(key, createBundleFromMap(value as Map<String, Any>))
       } else {
