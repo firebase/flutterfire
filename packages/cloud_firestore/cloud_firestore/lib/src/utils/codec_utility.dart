@@ -17,11 +17,8 @@ class _CodecUtility {
     if (data == null) {
       return null;
     }
-    final output = <String, dynamic>{};
-    data.forEach((key, value) {
-      final stringKey = key is DocumentReference ? key.path : key as String;
-      output[stringKey] = valueEncode(value);
-    });
+    Map<String, dynamic> output = Map.from(data);
+    output.updateAll((_, value) => valueEncode(value));
     return output;
   }
 
