@@ -106,7 +106,8 @@ void main() {
           'should have consistent error reason format',
           () async {
             const eventChannel = EventChannel(
-                'plugins.flutter.io/firebase_crashlytics_test_stream');
+              'plugins.flutter.io/firebase_crashlytics_test_stream',
+            );
             final eventStream = eventChannel.receiveBroadcastStream();
 
             final completer = Completer<String>();
