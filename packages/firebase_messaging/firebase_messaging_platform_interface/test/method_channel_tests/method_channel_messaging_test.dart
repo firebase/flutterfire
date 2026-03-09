@@ -172,8 +172,8 @@ void main() {
     test('getNotificationSettings', () async {
       final settings = await messaging.getNotificationSettings();
       expect(settings, isA<NotificationSettings>());
-      expect(settings.authorizationStatus,
-          equals(AuthorizationStatus.authorized));
+      expect(
+          settings.authorizationStatus, equals(AuthorizationStatus.authorized));
 
       // check native method was called
       expect(log, <Matcher>[
