@@ -59,7 +59,8 @@ private func wrapError(_ error: Any) -> [Any?] {
 
 private func createConnectionError(withChannelName channelName: String) -> PigeonError {
   PigeonError(
-    code: "channel-error", message: "Unable to establish connection on channel: '\(channelName)'.",
+    code: "channel-error",
+    message: "Unable to establish connection on channel: '\(channelName)'.",
     details: ""
   )
 }
@@ -490,9 +491,10 @@ private class FirebaseDatabaseMessagesPigeonCodecReaderWriter: FlutterStandardRe
 }
 
 class FirebaseDatabaseMessagesPigeonCodec: FlutterStandardMessageCodec, @unchecked Sendable {
-  static let shared = FirebaseDatabaseMessagesPigeonCodec(
-    readerWriter: FirebaseDatabaseMessagesPigeonCodecReaderWriter()
-  )
+  static let shared =
+    FirebaseDatabaseMessagesPigeonCodec(
+      readerWriter: FirebaseDatabaseMessagesPigeonCodecReaderWriter()
+    )
 }
 
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
@@ -558,9 +560,9 @@ class FirebaseDatabaseHostApiSetup {
                     messageChannelSuffix: String = "") {
     let channelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
     let goOnlineChannel = FlutterBasicMessageChannel(
-      name:
-      "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.goOnline\(channelSuffix)",
-      binaryMessenger: binaryMessenger, codec: codec
+      name: "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.goOnline\(channelSuffix)",
+      binaryMessenger: binaryMessenger,
+      codec: codec
     )
     if let api {
       goOnlineChannel.setMessageHandler { message, reply in
@@ -579,9 +581,9 @@ class FirebaseDatabaseHostApiSetup {
       goOnlineChannel.setMessageHandler(nil)
     }
     let goOfflineChannel = FlutterBasicMessageChannel(
-      name:
-      "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.goOffline\(channelSuffix)",
-      binaryMessenger: binaryMessenger, codec: codec
+      name: "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.goOffline\(channelSuffix)",
+      binaryMessenger: binaryMessenger,
+      codec: codec
     )
     if let api {
       goOfflineChannel.setMessageHandler { message, reply in
@@ -600,9 +602,9 @@ class FirebaseDatabaseHostApiSetup {
       goOfflineChannel.setMessageHandler(nil)
     }
     let setPersistenceEnabledChannel = FlutterBasicMessageChannel(
-      name:
-      "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.setPersistenceEnabled\(channelSuffix)",
-      binaryMessenger: binaryMessenger, codec: codec
+      name: "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.setPersistenceEnabled\(channelSuffix)",
+      binaryMessenger: binaryMessenger,
+      codec: codec
     )
     if let api {
       setPersistenceEnabledChannel.setMessageHandler { message, reply in
@@ -622,9 +624,9 @@ class FirebaseDatabaseHostApiSetup {
       setPersistenceEnabledChannel.setMessageHandler(nil)
     }
     let setPersistenceCacheSizeBytesChannel = FlutterBasicMessageChannel(
-      name:
-      "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.setPersistenceCacheSizeBytes\(channelSuffix)",
-      binaryMessenger: binaryMessenger, codec: codec
+      name: "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.setPersistenceCacheSizeBytes\(channelSuffix)",
+      binaryMessenger: binaryMessenger,
+      codec: codec
     )
     if let api {
       setPersistenceCacheSizeBytesChannel.setMessageHandler { message, reply in
@@ -644,9 +646,9 @@ class FirebaseDatabaseHostApiSetup {
       setPersistenceCacheSizeBytesChannel.setMessageHandler(nil)
     }
     let setLoggingEnabledChannel = FlutterBasicMessageChannel(
-      name:
-      "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.setLoggingEnabled\(channelSuffix)",
-      binaryMessenger: binaryMessenger, codec: codec
+      name: "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.setLoggingEnabled\(channelSuffix)",
+      binaryMessenger: binaryMessenger,
+      codec: codec
     )
     if let api {
       setLoggingEnabledChannel.setMessageHandler { message, reply in
@@ -666,9 +668,9 @@ class FirebaseDatabaseHostApiSetup {
       setLoggingEnabledChannel.setMessageHandler(nil)
     }
     let useDatabaseEmulatorChannel = FlutterBasicMessageChannel(
-      name:
-      "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.useDatabaseEmulator\(channelSuffix)",
-      binaryMessenger: binaryMessenger, codec: codec
+      name: "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.useDatabaseEmulator\(channelSuffix)",
+      binaryMessenger: binaryMessenger,
+      codec: codec
     )
     if let api {
       useDatabaseEmulatorChannel.setMessageHandler { message, reply in
@@ -689,9 +691,9 @@ class FirebaseDatabaseHostApiSetup {
       useDatabaseEmulatorChannel.setMessageHandler(nil)
     }
     let refChannel = FlutterBasicMessageChannel(
-      name:
-      "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.ref\(channelSuffix)",
-      binaryMessenger: binaryMessenger, codec: codec
+      name: "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.ref\(channelSuffix)",
+      binaryMessenger: binaryMessenger,
+      codec: codec
     )
     if let api {
       refChannel.setMessageHandler { message, reply in
@@ -711,9 +713,9 @@ class FirebaseDatabaseHostApiSetup {
       refChannel.setMessageHandler(nil)
     }
     let refFromURLChannel = FlutterBasicMessageChannel(
-      name:
-      "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.refFromURL\(channelSuffix)",
-      binaryMessenger: binaryMessenger, codec: codec
+      name: "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.refFromURL\(channelSuffix)",
+      binaryMessenger: binaryMessenger,
+      codec: codec
     )
     if let api {
       refFromURLChannel.setMessageHandler { message, reply in
@@ -733,9 +735,9 @@ class FirebaseDatabaseHostApiSetup {
       refFromURLChannel.setMessageHandler(nil)
     }
     let purgeOutstandingWritesChannel = FlutterBasicMessageChannel(
-      name:
-      "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.purgeOutstandingWrites\(channelSuffix)",
-      binaryMessenger: binaryMessenger, codec: codec
+      name: "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.purgeOutstandingWrites\(channelSuffix)",
+      binaryMessenger: binaryMessenger,
+      codec: codec
     )
     if let api {
       purgeOutstandingWritesChannel.setMessageHandler { message, reply in
@@ -754,9 +756,9 @@ class FirebaseDatabaseHostApiSetup {
       purgeOutstandingWritesChannel.setMessageHandler(nil)
     }
     let databaseReferenceSetChannel = FlutterBasicMessageChannel(
-      name:
-      "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceSet\(channelSuffix)",
-      binaryMessenger: binaryMessenger, codec: codec
+      name: "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceSet\(channelSuffix)",
+      binaryMessenger: binaryMessenger,
+      codec: codec
     )
     if let api {
       databaseReferenceSetChannel.setMessageHandler { message, reply in
@@ -776,9 +778,9 @@ class FirebaseDatabaseHostApiSetup {
       databaseReferenceSetChannel.setMessageHandler(nil)
     }
     let databaseReferenceSetWithPriorityChannel = FlutterBasicMessageChannel(
-      name:
-      "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceSetWithPriority\(channelSuffix)",
-      binaryMessenger: binaryMessenger, codec: codec
+      name: "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceSetWithPriority\(channelSuffix)",
+      binaryMessenger: binaryMessenger,
+      codec: codec
     )
     if let api {
       databaseReferenceSetWithPriorityChannel.setMessageHandler { message, reply in
@@ -798,9 +800,9 @@ class FirebaseDatabaseHostApiSetup {
       databaseReferenceSetWithPriorityChannel.setMessageHandler(nil)
     }
     let databaseReferenceUpdateChannel = FlutterBasicMessageChannel(
-      name:
-      "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceUpdate\(channelSuffix)",
-      binaryMessenger: binaryMessenger, codec: codec
+      name: "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceUpdate\(channelSuffix)",
+      binaryMessenger: binaryMessenger,
+      codec: codec
     )
     if let api {
       databaseReferenceUpdateChannel.setMessageHandler { message, reply in
@@ -820,9 +822,9 @@ class FirebaseDatabaseHostApiSetup {
       databaseReferenceUpdateChannel.setMessageHandler(nil)
     }
     let databaseReferenceSetPriorityChannel = FlutterBasicMessageChannel(
-      name:
-      "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceSetPriority\(channelSuffix)",
-      binaryMessenger: binaryMessenger, codec: codec
+      name: "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceSetPriority\(channelSuffix)",
+      binaryMessenger: binaryMessenger,
+      codec: codec
     )
     if let api {
       databaseReferenceSetPriorityChannel.setMessageHandler { message, reply in
@@ -842,9 +844,9 @@ class FirebaseDatabaseHostApiSetup {
       databaseReferenceSetPriorityChannel.setMessageHandler(nil)
     }
     let databaseReferenceRunTransactionChannel = FlutterBasicMessageChannel(
-      name:
-      "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceRunTransaction\(channelSuffix)",
-      binaryMessenger: binaryMessenger, codec: codec
+      name: "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceRunTransaction\(channelSuffix)",
+      binaryMessenger: binaryMessenger,
+      codec: codec
     )
     if let api {
       databaseReferenceRunTransactionChannel.setMessageHandler { message, reply in
@@ -864,32 +866,33 @@ class FirebaseDatabaseHostApiSetup {
       databaseReferenceRunTransactionChannel.setMessageHandler(nil)
     }
     let databaseReferenceGetTransactionResultChannel = FlutterBasicMessageChannel(
-      name:
-      "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceGetTransactionResult\(channelSuffix)",
-      binaryMessenger: binaryMessenger, codec: codec
+      name: "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceGetTransactionResult\(channelSuffix)",
+      binaryMessenger: binaryMessenger,
+      codec: codec
     )
     if let api {
       databaseReferenceGetTransactionResultChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let appArg = args[0] as! DatabasePigeonFirebaseApp
         let transactionKeyArg = args[1] as! Int64
-        api.databaseReferenceGetTransactionResult(app: appArg, transactionKey: transactionKeyArg) {
-          result in
-          switch result {
-          case let .success(res):
-            reply(wrapResult(res))
-          case let .failure(error):
-            reply(wrapError(error))
+        api
+          .databaseReferenceGetTransactionResult(app: appArg,
+                                                 transactionKey: transactionKeyArg) { result in
+            switch result {
+            case let .success(res):
+              reply(wrapResult(res))
+            case let .failure(error):
+              reply(wrapError(error))
+            }
           }
-        }
       }
     } else {
       databaseReferenceGetTransactionResultChannel.setMessageHandler(nil)
     }
     let onDisconnectSetChannel = FlutterBasicMessageChannel(
-      name:
-      "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectSet\(channelSuffix)",
-      binaryMessenger: binaryMessenger, codec: codec
+      name: "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectSet\(channelSuffix)",
+      binaryMessenger: binaryMessenger,
+      codec: codec
     )
     if let api {
       onDisconnectSetChannel.setMessageHandler { message, reply in
@@ -909,9 +912,9 @@ class FirebaseDatabaseHostApiSetup {
       onDisconnectSetChannel.setMessageHandler(nil)
     }
     let onDisconnectSetWithPriorityChannel = FlutterBasicMessageChannel(
-      name:
-      "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectSetWithPriority\(channelSuffix)",
-      binaryMessenger: binaryMessenger, codec: codec
+      name: "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectSetWithPriority\(channelSuffix)",
+      binaryMessenger: binaryMessenger,
+      codec: codec
     )
     if let api {
       onDisconnectSetWithPriorityChannel.setMessageHandler { message, reply in
@@ -931,9 +934,9 @@ class FirebaseDatabaseHostApiSetup {
       onDisconnectSetWithPriorityChannel.setMessageHandler(nil)
     }
     let onDisconnectUpdateChannel = FlutterBasicMessageChannel(
-      name:
-      "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectUpdate\(channelSuffix)",
-      binaryMessenger: binaryMessenger, codec: codec
+      name: "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectUpdate\(channelSuffix)",
+      binaryMessenger: binaryMessenger,
+      codec: codec
     )
     if let api {
       onDisconnectUpdateChannel.setMessageHandler { message, reply in
@@ -953,9 +956,9 @@ class FirebaseDatabaseHostApiSetup {
       onDisconnectUpdateChannel.setMessageHandler(nil)
     }
     let onDisconnectCancelChannel = FlutterBasicMessageChannel(
-      name:
-      "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectCancel\(channelSuffix)",
-      binaryMessenger: binaryMessenger, codec: codec
+      name: "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectCancel\(channelSuffix)",
+      binaryMessenger: binaryMessenger,
+      codec: codec
     )
     if let api {
       onDisconnectCancelChannel.setMessageHandler { message, reply in
@@ -975,9 +978,9 @@ class FirebaseDatabaseHostApiSetup {
       onDisconnectCancelChannel.setMessageHandler(nil)
     }
     let queryObserveChannel = FlutterBasicMessageChannel(
-      name:
-      "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.queryObserve\(channelSuffix)",
-      binaryMessenger: binaryMessenger, codec: codec
+      name: "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.queryObserve\(channelSuffix)",
+      binaryMessenger: binaryMessenger,
+      codec: codec
     )
     if let api {
       queryObserveChannel.setMessageHandler { message, reply in
@@ -997,9 +1000,9 @@ class FirebaseDatabaseHostApiSetup {
       queryObserveChannel.setMessageHandler(nil)
     }
     let queryKeepSyncedChannel = FlutterBasicMessageChannel(
-      name:
-      "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.queryKeepSynced\(channelSuffix)",
-      binaryMessenger: binaryMessenger, codec: codec
+      name: "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.queryKeepSynced\(channelSuffix)",
+      binaryMessenger: binaryMessenger,
+      codec: codec
     )
     if let api {
       queryKeepSyncedChannel.setMessageHandler { message, reply in
@@ -1019,9 +1022,9 @@ class FirebaseDatabaseHostApiSetup {
       queryKeepSyncedChannel.setMessageHandler(nil)
     }
     let queryGetChannel = FlutterBasicMessageChannel(
-      name:
-      "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.queryGet\(channelSuffix)",
-      binaryMessenger: binaryMessenger, codec: codec
+      name: "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.queryGet\(channelSuffix)",
+      binaryMessenger: binaryMessenger,
+      codec: codec
     )
     if let api {
       queryGetChannel.setMessageHandler { message, reply in
@@ -1067,10 +1070,11 @@ class FirebaseDatabaseFlutterApi: FirebaseDatabaseFlutterApiProtocol {
                               snapshotValue snapshotValueArg: Any?,
                               completion: @escaping (Result<TransactionHandlerResult, PigeonError>)
                                 -> Void) {
-    let channelName =
-      "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseFlutterApi.callTransactionHandler\(messageChannelSuffix)"
+    let channelName = "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseFlutterApi.callTransactionHandler\(messageChannelSuffix)"
     let channel = FlutterBasicMessageChannel(
-      name: channelName, binaryMessenger: binaryMessenger, codec: codec
+      name: channelName,
+      binaryMessenger: binaryMessenger,
+      codec: codec
     )
     channel.sendMessage([transactionKeyArg, snapshotValueArg] as [Any?]) { response in
       guard let listResponse = response as? [Any?] else {
@@ -1083,14 +1087,11 @@ class FirebaseDatabaseFlutterApi: FirebaseDatabaseFlutterApiProtocol {
         let details: String? = nilOrValue(listResponse[2])
         completion(.failure(PigeonError(code: code, message: message, details: details)))
       } else if listResponse[0] == nil {
-        completion(
-          .failure(
-            PigeonError(
-              code: "null-error",
-              message: "Flutter api returned null value for non-null return value.", details: ""
-            )
-          )
-        )
+        completion(.failure(PigeonError(
+          code: "null-error",
+          message: "Flutter api returned null value for non-null return value.",
+          details: ""
+        )))
       } else {
         let result = listResponse[0] as! TransactionHandlerResult
         completion(.success(result))

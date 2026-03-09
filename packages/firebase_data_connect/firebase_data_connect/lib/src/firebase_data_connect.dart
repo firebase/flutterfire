@@ -22,6 +22,7 @@ import 'package:flutter/foundation.dart';
 
 import './network/transport_library.dart'
     if (dart.library.io) './network/grpc_library.dart'
+    if (dart.library.js_interop) './network/rest_library.dart'
     if (dart.library.html) './network/rest_library.dart';
 
 import 'cache/cache_data_types.dart';

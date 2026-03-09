@@ -1,3 +1,7 @@
+## 16.1.2
+
+ - Update a dependency to the latest release.
+
 ## 16.1.1
 
  - **FIX**(messaging,iOS): scope iOS 18 duplicate notification workaround to iOS 18.0 only ([#17932](https://github.com/firebase/flutterfire/issues/17932)). ([c78f56ea](https://github.com/firebase/flutterfire/commit/c78f56ea0fd0d5ba0b565a11cbf9acce73f93401))

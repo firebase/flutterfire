@@ -114,6 +114,28 @@ void main() {
       );
 
       test(
+        'accepts raw data as arguments on web (excluding Int64List)',
+        () async {
+          HttpsCallableResult result = await callable({
+            'type': 'rawData',
+            'list': Uint8List(100),
+            'int': Int32List(39),
+            'float': Float32List(23),
+            'double': Float64List(1001),
+          });
+          final data = result.data;
+          expect(data['list'], isA<List>());
+          expect(data['int'], isA<List>());
+          expect(data['float'], isA<List>());
+          expect(data['double'], isA<List>());
+        },
+        // This test is the web counterpart of the above test,
+        // verifying that typed data serialization works on dart2js
+        // without triggering "Int64 accessor not supported by dart2js".
+        skip: !kIsWeb,
+      );
+
+      test(
         '[HttpsCallableResult.data] should return Map<String, dynamic> type for returned objects',
         () async {
           HttpsCallable callable =
@@ -345,6 +367,27 @@ void main() {
         final stream = callable.stream();
         await expectLater(stream, emits(isA<StreamResponse>()));
       });
+
+      test(
+        'concurrent streams on the same callable do not collide',
+        () async {
+          // Regression test for https://github.com/firebase/flutterfire/issues/18036
+          final stream1 = callable
+              .stream('foo')
+              .where((event) => event is Chunk)
+              .map((event) => (event as Chunk).partialData)
+              .first;
+          final stream2 = callable
+              .stream(123)
+              .where((event) => event is Chunk)
+              .map((event) => (event as Chunk).partialData)
+              .first;
+
+          final results = await Future.wait([stream1, stream2]);
+          expect(results[0], equals('string'));
+          expect(results[1], equals('number'));
+        },
+      );
 
       test('should emit a [Result] as last value', () async {
         final stream = await callable.stream().last;
