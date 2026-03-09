@@ -10,7 +10,9 @@
 #import <FirebaseFirestore/FirebaseFirestore.h>
 #else
 @import FirebaseFirestore;
+#if __has_include("FIRPipelineBridge.h")
 #import "FIRPipelineBridge.h"
+#endif
 #endif
 
 #import <Foundation/Foundation.h>
