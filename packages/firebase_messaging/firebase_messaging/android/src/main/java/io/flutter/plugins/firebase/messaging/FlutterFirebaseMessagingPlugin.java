@@ -424,16 +424,15 @@ public class FlutterFirebaseMessagingPlugin
                 // 3. shouldShowRationale=false + wasDeniedBefore=true  → permanently denied
                 //
                 // This mirrors how permission_handler solves the same ambiguity.
-                boolean shouldShowRationale = mainActivity != null
-                    && ActivityCompat.shouldShowRequestPermissionRationale(
-                        mainActivity, Manifest.permission.POST_NOTIFICATIONS);
+                boolean shouldShowRationale =
+                    mainActivity != null
+                        && ActivityCompat.shouldShowRequestPermissionRationale(
+                            mainActivity, Manifest.permission.POST_NOTIFICATIONS);
 
                 SharedPreferences prefs =
                     ContextHolder.getApplicationContext()
-                        .getSharedPreferences(
-                            "FlutterFirebaseMessaging", Context.MODE_PRIVATE);
-                boolean wasDeniedBefore =
-                    prefs.getBoolean("notification_permission_denied", false);
+                        .getSharedPreferences("FlutterFirebaseMessaging", Context.MODE_PRIVATE);
+                boolean wasDeniedBefore = prefs.getBoolean("notification_permission_denied", false);
 
                 if (shouldShowRationale) {
                   // User denied at least once but didn't select "Don't ask again".
