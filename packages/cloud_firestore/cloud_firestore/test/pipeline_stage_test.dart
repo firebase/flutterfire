@@ -251,6 +251,53 @@ void main() {
       });
     });
 
+    group('_AggregateStageWithOptions', () {
+      test('serializes aggregate stage with accumulators only', () {
+        final pipeline =
+            firestore.pipeline().collection('orders').aggregateWithOptions(
+                  AggregateStageOptions(
+                    accumulators: [CountAll().as('count')],
+                  ),
+                );
+        final stage = pipeline.stages.last;
+        expect(stage['stage'], 'aggregate_with_options');
+        final aggregateStage =
+            stage['args']['aggregate_stage'] as Map<String, dynamic>;
+        expect(aggregateStage['accumulators'], hasLength(1));
+        expect(aggregateStage.containsKey('groups'), isFalse);
+      });
+
+      test('serializes aggregate stage with accumulators and groups', () {
+        final pipeline =
+            firestore.pipeline().collection('orders').aggregateWithOptions(
+                  AggregateStageOptions(
+                    accumulators: [
+                      Sum(Field('amount')).as('total'),
+                      CountAll().as('count'),
+                    ],
+                    groups: [Field('category')],
+                  ),
+                );
+        final stage = pipeline.stages.last;
+        expect(stage['stage'], 'aggregate_with_options');
+        final aggregateStage =
+            stage['args']['aggregate_stage'] as Map<String, dynamic>;
+        expect(aggregateStage['accumulators'], hasLength(2));
+        expect(aggregateStage['groups'], hasLength(1));
+      });
+
+      test('includes options map in args', () {
+        final pipeline =
+            firestore.pipeline().collection('orders').aggregateWithOptions(
+                  AggregateStageOptions(
+                    accumulators: [CountAll().as('count')],
+                  ),
+                );
+        final stage = pipeline.stages.last;
+        expect(stage['args'].containsKey('options'), isTrue);
+      });
+    });
+
     group('_DistinctStage', () {
       test('serializes distinct stage', () {
         final pipeline =
