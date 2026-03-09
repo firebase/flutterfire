@@ -1188,7 +1188,6 @@ class Pipeline extends JsObjectWrapper<firestore_interop.PipelineJsImpl> {
   Future<PipelineSnapshot> execute() async {
     final snapshot =
         await firestore_interop.pipelines.execute(jsObject as JSAny).toDart;
-    return PipelineSnapshot.getInstance(
-        snapshot! as firestore_interop.PipelineSnapshotJsImpl);
+    return PipelineSnapshot.getInstance(snapshot);
   }
 }
