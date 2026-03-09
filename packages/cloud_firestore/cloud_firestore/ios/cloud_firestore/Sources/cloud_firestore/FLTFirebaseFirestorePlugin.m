@@ -15,6 +15,7 @@
 #import "include/cloud_firestore/Private/FLTFirebaseFirestoreReader.h"
 #import "include/cloud_firestore/Private/FLTFirebaseFirestoreUtils.h"
 #import "include/cloud_firestore/Private/FLTLoadBundleStreamHandler.h"
+#import "include/cloud_firestore/Private/FLTPipelineParser.h"
 #import "include/cloud_firestore/Private/FLTQuerySnapshotStreamHandler.h"
 #import "include/cloud_firestore/Private/FLTSnapshotsInSyncStreamHandler.h"
 #import "include/cloud_firestore/Private/FLTTransactionStreamHandler.h"
@@ -72,6 +73,20 @@ NSString *const kFLTFirebaseFirestoreLoadBundleChannelName =
 @end
 
 static NSCache<NSNumber *, NSString *> *_serverTimestampMap;
+
+static id _Nullable FLTPipelineNullSafe(id value) {
+  return (value == nil || [value isKindOfClass:[NSNull class]]) ? nil : value;
+}
+
+static NSNumber *_Nullable FLTPipelineTimestampToMs(id value) {
+  if (!value) return nil;
+  if ([value isKindOfClass:[NSNumber class]]) return value;
+  if ([value isKindOfClass:[FIRTimestamp class]]) {
+    FIRTimestamp *ts = value;
+    return @((int64_t)ts.seconds * 1000 + (int64_t)ts.nanoseconds / 1000000);
+  }
+  return nil;
+}
 
 @implementation FLTFirebaseFirestorePlugin {
   NSMutableDictionary<NSString *, FlutterEventChannel *> *_eventChannels;
@@ -881,6 +896,68 @@ FlutterStandardMethodCodec *_codec;
 
                    completion(aggregateResponses, nil);
                  }];
+}
+
+- (void)executePipelineApp:(nonnull FirestorePigeonFirebaseApp *)app
+                    stages:(nonnull NSArray<NSDictionary<NSString *, id> *> *)stages
+                   options:(nullable NSDictionary<NSString *, id> *)options
+                completion:(nonnull void (^)(PigeonPipelineSnapshot *_Nullable,
+                                             FlutterError *_Nullable))completion {
+  FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
+
+  [FLTPipelineParser
+      executePipelineWithFirestore:firestore
+                            stages:stages
+                           options:options
+                        completion:^(id _Nullable snapshot, NSError *_Nullable error) {
+                          if (error) {
+                            completion(nil, [self convertToFlutterError:error]);
+                            return;
+                          }
+                          if (snapshot == nil) {
+                            completion(
+                                nil,
+                                [FlutterError errorWithCode:@"error"
+                                                    message:@"Pipeline execution returned no result"
+                                                    details:nil]);
+                            return;
+                          }
+
+                          NSMutableArray<PigeonPipelineResult *> *pigeonResults =
+                              [NSMutableArray array];
+                          NSArray *results = [snapshot results];
+                          if ([results isKindOfClass:[NSArray class]]) {
+                            for (id result in results) {
+                              id ref = [result reference];
+                              NSString *path = (ref && [ref respondsToSelector:@selector(path)])
+                                                   ? [ref path]
+                                                   : FLTPipelineNullSafe([result documentID]);
+                              NSNumber *createTime =
+                                  FLTPipelineTimestampToMs([result valueForKey:@"create_time"]);
+                              NSNumber *updateTime =
+                                  FLTPipelineTimestampToMs([result valueForKey:@"update_time"]);
+                              NSDictionary *data = FLTPipelineNullSafe([result data]);
+                              PigeonPipelineResult *pigeonResult =
+                                  [PigeonPipelineResult makeWithDocumentPath:path
+                                                                  createTime:createTime
+                                                                  updateTime:updateTime
+                                                                        data:data];
+                              [pigeonResults addObject:pigeonResult];
+                            }
+                          }
+
+                          NSNumber *executionTime =
+                              FLTPipelineTimestampToMs([snapshot execution_time]);
+                          if (executionTime == nil) {
+                            executionTime =
+                                @((int64_t)([[NSDate date] timeIntervalSince1970] * 1000));
+                          }
+
+                          PigeonPipelineSnapshot *pigeonSnapshot =
+                              [PigeonPipelineSnapshot makeWithResults:pigeonResults
+                                                        executionTime:executionTime];
+                          completion(pigeonSnapshot, nil);
+                        }];
 }
 
 @end
