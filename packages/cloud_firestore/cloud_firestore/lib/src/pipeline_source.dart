@@ -25,7 +25,8 @@ class PipelineSource {
 
   /// Creates a pipeline from a collection reference
   Pipeline collectionReference(
-      CollectionReference<Map<String, dynamic>> collectionReference) {
+    CollectionReference<Map<String, dynamic>> collectionReference,
+  ) {
     final stage = _CollectionPipelineStage(collectionReference.path);
     final delegate = _firestore._delegate.pipeline([stage.toMap()]);
     return Pipeline._(_firestore, delegate);

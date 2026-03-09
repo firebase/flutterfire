@@ -315,8 +315,12 @@ class Pipeline {
     DistanceMeasure distanceMeasure, {
     int? limit,
   }) {
-    final stage = _FindNearestStage(vectorField, vectorValue, distanceMeasure,
-        limit: limit);
+    final stage = _FindNearestStage(
+      vectorField,
+      vectorValue,
+      distanceMeasure,
+      limit: limit,
+    );
     return Pipeline._(
       _firestore,
       _delegate.addStage(stage.toMap()),

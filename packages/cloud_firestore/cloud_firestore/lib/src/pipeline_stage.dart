@@ -43,9 +43,11 @@ final class _DocumentsPipelineStage extends PipelineStage {
     return {
       'stage': name,
       'args': documents
-          .map((doc) => {
-                'path': doc.path,
-              })
+          .map(
+            (doc) => {
+              'path': doc.path,
+            },
+          )
           .toList(),
     };
   }
@@ -338,11 +340,13 @@ final class _SortStage extends PipelineStage {
       'stage': name,
       'args': {
         'orderings': orderings
-            .map((o) => {
-                  'expression': o.expression.toMap(),
-                  'order_direction':
-                      o.direction == OrderDirection.asc ? 'asc' : 'desc',
-                })
+            .map(
+              (o) => {
+                'expression': o.expression.toMap(),
+                'order_direction':
+                    o.direction == OrderDirection.asc ? 'asc' : 'desc',
+              },
+            )
             .toList(),
       },
     };

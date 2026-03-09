@@ -448,7 +448,9 @@ abstract class Expression implements PipelineSerializable {
   /// Checks if this array contains any of the given values or expressions
   BooleanExpression arrayContainsAny(List<Object?> values) {
     return _ArrayContainsAnyExpression(
-        this, values.map(_toExpression).toList());
+      this,
+      values.map(_toExpression).toList(),
+    );
   }
 
   /// Returns the length of this array expression
@@ -1334,7 +1336,9 @@ abstract class Expression implements PipelineSerializable {
     Object? element,
   ) {
     return _ArrayContainsExpression(
-        Field(arrayFieldName), _toExpression(element));
+      Field(arrayFieldName),
+      _toExpression(element),
+    );
   }
 
   /// Creates a raw/custom function expression
