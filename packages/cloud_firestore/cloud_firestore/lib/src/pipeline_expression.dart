@@ -760,11 +760,11 @@ abstract class Expression implements PipelineSerializable {
   }
 
   /// Returns an expression if another errors
-  static BooleanExpression ifErrorStatic(
-    BooleanExpression tryExpr,
-    BooleanExpression catchExpr,
+  static Expression ifErrorStatic(
+    Expression tryExpr,
+    Expression catchExpr,
   ) {
-    return _IfErrorExpression(tryExpr, catchExpr) as BooleanExpression;
+    return _IfErrorExpression(tryExpr, catchExpr);
   }
 
   /// Checks if an expression produces an error
@@ -2446,7 +2446,7 @@ class _IfAbsentExpression extends FunctionExpression {
 }
 
 /// Represents an ifError function expression
-class _IfErrorExpression extends FunctionExpression {
+class _IfErrorExpression extends Expression {
   final Expression expression;
   final Expression catchExpr;
 

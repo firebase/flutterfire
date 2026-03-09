@@ -56,7 +56,7 @@ part 'src/filters.dart';
 part 'src/firestore.dart';
 part 'src/load_bundle_task.dart';
 part 'src/load_bundle_task_snapshot.dart';
-part 'pipeline_snapshot.dart';
+part 'src/pipeline_snapshot.dart';
 part 'src/persistent_cache_index_manager.dart';
 part 'src/pipeline.dart';
 part 'src/pipeline_aggregate.dart';
