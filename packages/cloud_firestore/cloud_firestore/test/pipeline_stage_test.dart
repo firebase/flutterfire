@@ -218,7 +218,7 @@ void main() {
             );
         final stage = pipeline.stages.last;
         expect(
-          (stage['args']['orderings'] as List),
+          stage['args']['orderings'] as List,
           hasLength(2),
         );
       });
@@ -245,7 +245,7 @@ void main() {
             );
         final stage = pipeline.stages.last;
         expect(
-          (stage['args']['aggregate_functions'] as List),
+          stage['args']['aggregate_functions'] as List,
           hasLength(2),
         );
       });
@@ -360,7 +360,7 @@ void main() {
         expect(stage['stage'], 'union');
         expect(stage['args']['pipeline'], isA<List>());
         expect(
-          (stage['args']['pipeline'] as List),
+          stage['args']['pipeline'] as List,
           hasLength(1),
         );
       });
