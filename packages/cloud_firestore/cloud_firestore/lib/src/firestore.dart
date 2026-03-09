@@ -282,6 +282,7 @@ class FirebaseFirestore extends FirebasePluginPlatform {
           settings.webExperimentalAutoDetectLongPolling,
       webExperimentalLongPollingOptions:
           settings.webExperimentalLongPollingOptions,
+      webPersistentTabManager: settings.webPersistentTabManager,
     );
   }
 
