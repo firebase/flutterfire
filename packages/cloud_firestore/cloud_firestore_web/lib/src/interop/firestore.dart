@@ -1140,8 +1140,6 @@ class PipelineSnapshot
 
   static PipelineSnapshot getInstance(
       firestore_interop.PipelineSnapshotJsImpl jsObject) {
-    // Bypass Expando to test if key type causes the error:
-    // return PipelineSnapshot._fromJsObject(jsObject);
     return _expando[jsObject] ??= PipelineSnapshot._fromJsObject(jsObject);
   }
 
