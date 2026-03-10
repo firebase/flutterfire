@@ -350,7 +350,7 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   /// final snapshot = await FirebaseFirestore.instance
   ///     .pipeline()
   ///     .collection('users')
-  ///     .where(PipelineFilter(Field('age'), isGreaterThan: 18))
+  ///     .where(Field('age').greaterThan(Constant(18)))
   ///     .sort(Field('name').ascending(), Field('age').descending())
   ///     .limit(10)
   ///     .execute();

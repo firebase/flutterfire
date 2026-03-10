@@ -453,6 +453,20 @@ abstract class Expression implements PipelineSerializable {
     );
   }
 
+  /// Checks if this array contains all of the given values or expressions
+  BooleanExpression arrayContainsAll(List<Object?> values) {
+    return _ArrayContainsAllValuesExpression(
+      this,
+      values.map(_toExpression).toList(),
+    );
+  }
+
+  /// Checks if this array contains all elements of [arrayExpression]
+  /// (e.g. [arrayExpression] can be [Expression.array] of fields/literals).
+  BooleanExpression arrayContainsAllFrom(Expression arrayExpression) {
+    return _ArrayContainsAllExpression(this, arrayExpression);
+  }
+
   /// Returns the length of this array expression
   // ignore: use_to_and_as_if_applicable
   Expression arrayLength() {
@@ -760,11 +774,11 @@ abstract class Expression implements PipelineSerializable {
   }
 
   /// Returns an expression if another errors
-  static BooleanExpression ifErrorStatic(
-    BooleanExpression tryExpr,
-    BooleanExpression catchExpr,
+  static Expression ifErrorStatic(
+    Expression tryExpr,
+    Expression catchExpr,
   ) {
-    return _IfErrorExpression(tryExpr, catchExpr) as BooleanExpression;
+    return _IfErrorExpression(tryExpr, catchExpr);
   }
 
   /// Checks if an expression produces an error
@@ -1341,6 +1355,38 @@ abstract class Expression implements PipelineSerializable {
     );
   }
 
+  /// Checks if [array] contains all elements of [arrayExpression]
+  /// (e.g. [arrayExpression] can be [Expression.array] of fields/literals).
+  static BooleanExpression arrayContainsAllWithExpression(
+    Expression array,
+    Expression arrayExpression,
+  ) {
+    return _ArrayContainsAllExpression(array, arrayExpression);
+  }
+
+  /// Checks if [array] contains all of the specified [values].
+  static BooleanExpression arrayContainsAllValues(
+    Expression array,
+    List<Object?> values,
+  ) {
+    return _ArrayContainsAllValuesExpression(
+      array,
+      values.map(_toExpression).toList(),
+    );
+  }
+
+  /// Checks if the array field [arrayFieldName] contains all elements of
+  /// [arrayExpression].
+  static BooleanExpression arrayContainsAllField(
+    String arrayFieldName,
+    Expression arrayExpression,
+  ) {
+    return arrayContainsAllWithExpression(
+      Field(arrayFieldName),
+      arrayExpression,
+    );
+  }
+
   /// Creates a raw/custom function expression
   static Expression rawFunction(
     String name,
@@ -1692,272 +1738,6 @@ class _TrimExpression extends FunctionExpression {
 
 /// Base class for boolean expressions used in filtering
 abstract class BooleanExpression extends Expression {}
-
-/// Represents a filter expression for pipeline where clauses
-class PipelineFilter extends BooleanExpression {
-  final Object field;
-  final Object? isEqualTo;
-  final Object? isNotEqualTo;
-  final Object? isLessThan;
-  final Object? isLessThanOrEqualTo;
-  final Object? isGreaterThan;
-  final Object? isGreaterThanOrEqualTo;
-  final Object? arrayContains;
-  final List<Object>? filterArrayContainsAny;
-  final List<Object>? whereIn;
-  final List<Object>? whereNotIn;
-  final bool? isNull;
-  final bool? isNotNull;
-  final BooleanExpression? _andExpression;
-  final BooleanExpression? _orExpression;
-
-  PipelineFilter(
-    this.field, {
-    this.isEqualTo,
-    this.isNotEqualTo,
-    this.isLessThan,
-    this.isLessThanOrEqualTo,
-    this.isGreaterThan,
-    this.isGreaterThanOrEqualTo,
-    this.arrayContains,
-    this.filterArrayContainsAny,
-    this.whereIn,
-    this.whereNotIn,
-    this.isNull,
-    this.isNotNull,
-  })  : _andExpression = null,
-        _orExpression = null;
-
-  PipelineFilter._internal({
-    required BooleanExpression? andExpression,
-    required BooleanExpression? orExpression,
-  })  : field = '',
-        isEqualTo = null,
-        isNotEqualTo = null,
-        isLessThan = null,
-        isLessThanOrEqualTo = null,
-        isGreaterThan = null,
-        isGreaterThanOrEqualTo = null,
-        arrayContains = null,
-        filterArrayContainsAny = null,
-        whereIn = null,
-        whereNotIn = null,
-        isNull = null,
-        isNotNull = null,
-        _andExpression = andExpression,
-        _orExpression = orExpression;
-
-  /// Creates an OR filter combining multiple boolean expressions
-  static PipelineFilter or(
-    BooleanExpression expression1, [
-    BooleanExpression? expression2,
-    BooleanExpression? expression3,
-    BooleanExpression? expression4,
-    BooleanExpression? expression5,
-    BooleanExpression? expression6,
-    BooleanExpression? expression7,
-    BooleanExpression? expression8,
-    BooleanExpression? expression9,
-    BooleanExpression? expression10,
-    BooleanExpression? expression11,
-    BooleanExpression? expression12,
-    BooleanExpression? expression13,
-    BooleanExpression? expression14,
-    BooleanExpression? expression15,
-    BooleanExpression? expression16,
-    BooleanExpression? expression17,
-    BooleanExpression? expression18,
-    BooleanExpression? expression19,
-    BooleanExpression? expression20,
-    BooleanExpression? expression21,
-    BooleanExpression? expression22,
-    BooleanExpression? expression23,
-    BooleanExpression? expression24,
-    BooleanExpression? expression25,
-    BooleanExpression? expression26,
-    BooleanExpression? expression27,
-    BooleanExpression? expression28,
-    BooleanExpression? expression29,
-    BooleanExpression? expression30,
-  ]) {
-    final expressions = <BooleanExpression>[expression1];
-    if (expression2 != null) expressions.add(expression2);
-    if (expression3 != null) expressions.add(expression3);
-    if (expression4 != null) expressions.add(expression4);
-    if (expression5 != null) expressions.add(expression5);
-    if (expression6 != null) expressions.add(expression6);
-    if (expression7 != null) expressions.add(expression7);
-    if (expression8 != null) expressions.add(expression8);
-    if (expression9 != null) expressions.add(expression9);
-    if (expression10 != null) expressions.add(expression10);
-    if (expression11 != null) expressions.add(expression11);
-    if (expression12 != null) expressions.add(expression12);
-    if (expression13 != null) expressions.add(expression13);
-    if (expression14 != null) expressions.add(expression14);
-    if (expression15 != null) expressions.add(expression15);
-    if (expression16 != null) expressions.add(expression16);
-    if (expression17 != null) expressions.add(expression17);
-    if (expression18 != null) expressions.add(expression18);
-    if (expression19 != null) expressions.add(expression19);
-    if (expression20 != null) expressions.add(expression20);
-    if (expression21 != null) expressions.add(expression21);
-    if (expression22 != null) expressions.add(expression22);
-    if (expression23 != null) expressions.add(expression23);
-    if (expression24 != null) expressions.add(expression24);
-    if (expression25 != null) expressions.add(expression25);
-    if (expression26 != null) expressions.add(expression26);
-    if (expression27 != null) expressions.add(expression27);
-    if (expression28 != null) expressions.add(expression28);
-    if (expression29 != null) expressions.add(expression29);
-    if (expression30 != null) expressions.add(expression30);
-
-    return PipelineFilter._internal(
-      andExpression: null,
-      orExpression: _combineExpressions(expressions, 'or'),
-    );
-  }
-
-  /// Creates an AND filter combining multiple boolean expressions
-  static PipelineFilter and(
-    BooleanExpression expression1, [
-    BooleanExpression? expression2,
-    BooleanExpression? expression3,
-    BooleanExpression? expression4,
-    BooleanExpression? expression5,
-    BooleanExpression? expression6,
-    BooleanExpression? expression7,
-    BooleanExpression? expression8,
-    BooleanExpression? expression9,
-    BooleanExpression? expression10,
-    BooleanExpression? expression11,
-    BooleanExpression? expression12,
-    BooleanExpression? expression13,
-    BooleanExpression? expression14,
-    BooleanExpression? expression15,
-    BooleanExpression? expression16,
-    BooleanExpression? expression17,
-    BooleanExpression? expression18,
-    BooleanExpression? expression19,
-    BooleanExpression? expression20,
-    BooleanExpression? expression21,
-    BooleanExpression? expression22,
-    BooleanExpression? expression23,
-    BooleanExpression? expression24,
-    BooleanExpression? expression25,
-    BooleanExpression? expression26,
-    BooleanExpression? expression27,
-    BooleanExpression? expression28,
-    BooleanExpression? expression29,
-    BooleanExpression? expression30,
-  ]) {
-    final expressions = <BooleanExpression>[expression1];
-    if (expression2 != null) expressions.add(expression2);
-    if (expression3 != null) expressions.add(expression3);
-    if (expression4 != null) expressions.add(expression4);
-    if (expression5 != null) expressions.add(expression5);
-    if (expression6 != null) expressions.add(expression6);
-    if (expression7 != null) expressions.add(expression7);
-    if (expression8 != null) expressions.add(expression8);
-    if (expression9 != null) expressions.add(expression9);
-    if (expression10 != null) expressions.add(expression10);
-    if (expression11 != null) expressions.add(expression11);
-    if (expression12 != null) expressions.add(expression12);
-    if (expression13 != null) expressions.add(expression13);
-    if (expression14 != null) expressions.add(expression14);
-    if (expression15 != null) expressions.add(expression15);
-    if (expression16 != null) expressions.add(expression16);
-    if (expression17 != null) expressions.add(expression17);
-    if (expression18 != null) expressions.add(expression18);
-    if (expression19 != null) expressions.add(expression19);
-    if (expression20 != null) expressions.add(expression20);
-    if (expression21 != null) expressions.add(expression21);
-    if (expression22 != null) expressions.add(expression22);
-    if (expression23 != null) expressions.add(expression23);
-    if (expression24 != null) expressions.add(expression24);
-    if (expression25 != null) expressions.add(expression25);
-    if (expression26 != null) expressions.add(expression26);
-    if (expression27 != null) expressions.add(expression27);
-    if (expression28 != null) expressions.add(expression28);
-    if (expression29 != null) expressions.add(expression29);
-    if (expression30 != null) expressions.add(expression30);
-
-    return PipelineFilter._internal(
-      andExpression: _combineExpressions(expressions, 'and'),
-      orExpression: null,
-    );
-  }
-
-  static BooleanExpression _combineExpressions(
-    List<BooleanExpression> expressions,
-    String operator,
-  ) {
-    if (expressions.length == 1) return expressions.first;
-
-    // Create a nested structure for multiple expressions
-    BooleanExpression result = expressions.first;
-    for (int i = 1; i < expressions.length; i++) {
-      if (operator == 'and') {
-        result = PipelineFilter.and(result, expressions[i]);
-      } else {
-        result = PipelineFilter.or(result, expressions[i]);
-      }
-    }
-    return result;
-  }
-
-  @override
-  String get name => 'filter';
-
-  @override
-  Map<String, dynamic> toMap() {
-    final map = super.toMap();
-
-    if (_andExpression != null) {
-      map['args'] = {
-        'operator': 'and',
-        'expressions': [_andExpression.toMap()],
-      };
-      return map;
-    }
-
-    if (_orExpression != null) {
-      map['args'] = {
-        'operator': 'or',
-        'expressions': [_orExpression.toMap()],
-      };
-      return map;
-    }
-
-    final args = <String, dynamic>{};
-    if (field is String) {
-      args['field'] = field;
-    } else if (field is Field) {
-      args['field'] = (field as Field).fieldName;
-    }
-
-    if (isEqualTo != null) args['isEqualTo'] = isEqualTo;
-    if (isNotEqualTo != null) args['isNotEqualTo'] = isNotEqualTo;
-    if (isLessThan != null) args['isLessThan'] = isLessThan;
-    if (isLessThanOrEqualTo != null) {
-      args['isLessThanOrEqualTo'] = isLessThanOrEqualTo;
-    }
-    if (isGreaterThan != null) args['isGreaterThan'] = isGreaterThan;
-    if (isGreaterThanOrEqualTo != null) {
-      args['isGreaterThanOrEqualTo'] = isGreaterThanOrEqualTo;
-    }
-    if (arrayContains != null) args['arrayContains'] = arrayContains;
-    if (filterArrayContainsAny != null) {
-      args['arrayContainsAny'] = filterArrayContainsAny;
-    }
-    if (whereIn != null) args['whereIn'] = whereIn;
-    if (whereNotIn != null) args['whereNotIn'] = whereNotIn;
-    if (isNull != null) args['isNull'] = isNull;
-    if (isNotNull != null) args['isNotNull'] = isNotNull;
-
-    map['args'] = args;
-    return map;
-  }
-}
 
 // ============================================================================
 // PATTERN DEMONSTRATION - Concrete Function Expression Classes
@@ -2335,6 +2115,50 @@ class _ArrayContainsAnyExpression extends BooleanExpression {
   }
 }
 
+/// Represents an arrayContainsAll function expression (array + list of values)
+class _ArrayContainsAllValuesExpression extends BooleanExpression {
+  final Expression array;
+  final List<Expression> values;
+
+  _ArrayContainsAllValuesExpression(this.array, this.values);
+
+  @override
+  String get name => 'array_contains_all';
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'args': {
+        'array': array.toMap(),
+        'values': values.map((v) => v.toMap()).toList(),
+      },
+    };
+  }
+}
+
+/// Represents an arrayContainsAll function expression (array + array expression)
+class _ArrayContainsAllExpression extends BooleanExpression {
+  final Expression array;
+  final Expression arrayExpression;
+
+  _ArrayContainsAllExpression(this.array, this.arrayExpression);
+
+  @override
+  String get name => 'array_contains_all';
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'args': {
+        'array': array.toMap(),
+        'array_expression': arrayExpression.toMap(),
+      },
+    };
+  }
+}
+
 /// Represents an array length function expression
 class _ArrayLengthExpression extends FunctionExpression {
   final Expression expression;
@@ -2446,7 +2270,7 @@ class _IfAbsentExpression extends FunctionExpression {
 }
 
 /// Represents an ifError function expression
-class _IfErrorExpression extends FunctionExpression {
+class _IfErrorExpression extends Expression {
   final Expression expression;
   final Expression catchExpr;
 
