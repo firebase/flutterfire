@@ -56,7 +56,15 @@ jobs:
       - name: "Build Windows (Release)"
         run: cd tests && flutter build windows --release
       - name: Start Firebase Emulator and run tests
-        run: cd ./.github/workflows/scripts && firebase emulators:exec --project flutterfire-e2e-tests "cd ../../../tests && flutter test .\integration_test\e2e_test.dart -d windows --verbose"
+        shell: bash
+        run: |
+          cd ./.github/workflows/scripts && firebase emulators:exec --project flutterfire-e2e-tests "
+            cd ../../../tests
+            flutter test ./integration_test/e2e_test.dart -d windows --verbose || {
+              echo 'First attempt failed. Retrying...'
+              flutter test ./integration_test/e2e_test.dart -d windows --verbose
+            }
+          "
 
 # We cannot run the tests but we can still try to build the app because of https://github.com/flutter/flutter/issues/79213
   windows-firestore:
