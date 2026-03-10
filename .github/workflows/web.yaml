@@ -147,16 +147,21 @@ jobs:
         # Web devices are not supported for the `flutter test` command yet. As a
         # workaround we can use the `flutter drive` command. Tracking issue:
         # https://github.com/flutter/flutter/issues/66264
+        # Chrome debug service can fail with AppConnectionException. Retry once.
         run: |
           chromedriver --port=4444 --trace-buffer-size=100000 &
-          flutter drive --target=./integration_test/e2e_test.dart --driver=./test_driver/integration_test.dart -d chrome --dart-define=CI=true --dart-define=APP_CHECK_E2E=true | tee output.log
-          # We have to check the output for failed tests matching the string "[E]"
-          output=$(<output.log)
-          if [[ "$output" =~ \[E\] ]]; then
-          # You will see "All tests passed." in the logs even when tests failed.
-          echo "All tests did not pass. Please check the logs for more information."
-          exit 1
-          fi
+          run_tests() {
+            flutter drive --target=./integration_test/e2e_test.dart --driver=./test_driver/integration_test.dart -d chrome --dart-define=CI=true --dart-define=APP_CHECK_E2E=true | tee output.log
+            output=$(<output.log)
+            if [[ "$output" =~ \[E\] ]]; then
+              echo "All tests did not pass. Please check the logs for more information."
+              return 1
+            fi
+          }
+          run_tests || {
+            echo "First attempt failed. Retrying..."
+            run_tests
+          }
         shell: bash
       - name: Save Firestore Emulator Cache
         # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
