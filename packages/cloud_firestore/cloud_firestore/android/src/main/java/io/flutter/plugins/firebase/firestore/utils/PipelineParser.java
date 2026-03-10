@@ -47,6 +47,9 @@ public class PipelineParser {
   @SuppressWarnings("unchecked")
   public static Pipeline buildPipeline(
       @NonNull FirebaseFirestore firestore, @NonNull List<Map<String, Object>> stages) {
+    if (stages.isEmpty()) {
+      throw new IllegalArgumentException("Pipeline must have at least one stage (source).");
+    }
     ExpressionParsers expressionParsers = new ExpressionParsers(firestore);
     PipelineStageHandlers stageHandlers = new PipelineStageHandlers(expressionParsers);
     PipelineSource pipelineSource = firestore.pipeline();
@@ -81,6 +84,9 @@ public class PipelineParser {
       @NonNull String stageName,
       @Nullable Map<String, Object> args,
       @NonNull FirebaseFirestore firestore) {
+    if (args == null && !"database".equals(stageName)) {
+      throw new IllegalArgumentException("Stage args must not be null for stage: " + stageName);
+    }
     switch (stageName) {
       case "collection":
         {

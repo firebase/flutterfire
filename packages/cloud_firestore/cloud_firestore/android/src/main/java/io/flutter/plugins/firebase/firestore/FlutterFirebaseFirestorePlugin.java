@@ -1016,17 +1016,11 @@ public class FlutterFirebaseFirestorePlugin
                 resultBuilder.setDocumentPath(pipelineResult.getRef().getPath());
               }
 
-              // Convert timestamps (assuming they're in milliseconds)
               if (pipelineResult.getCreateTime() != null) {
                 resultBuilder.setCreateTime(pipelineResult.getCreateTime().toDate().getTime());
-              } else {
-                resultBuilder.setCreateTime(0L);
               }
-
               if (pipelineResult.getUpdateTime() != null) {
                 resultBuilder.setUpdateTime(pipelineResult.getUpdateTime().toDate().getTime());
-              } else {
-                resultBuilder.setUpdateTime(0L);
               }
 
               Map<String, Object> data = pipelineResult.getData();
@@ -1042,11 +1036,9 @@ public class FlutterFirebaseFirestorePlugin
                 new GeneratedAndroidFirebaseFirestore.PigeonPipelineSnapshot.Builder();
             snapshotBuilder.setResults(pipelineResults);
 
-            // Set execution time (use current time if not available from snapshot)
+            // Set execution time when available. Do not fabricate a value when null.
             if (snapshot.getExecutionTime() != null) {
               snapshotBuilder.setExecutionTime(snapshot.getExecutionTime().toDate().getTime());
-            } else {
-              snapshotBuilder.setExecutionTime(System.currentTimeMillis());
             }
 
             result.success(snapshotBuilder.build());

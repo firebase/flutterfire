@@ -292,11 +292,11 @@ class PipelineStageHandlers {
     Map<String, Object> sampleMap = (Map<String, Object>) args;
     // Parse sample configuration
     String type = (String) sampleMap.get("type");
-    if (type == "percentage") {
-      double value = (double) sampleMap.get("value");
+    if ("percentage".equals(type)) {
+      double value = ((Number) sampleMap.get("value")).doubleValue();
       return pipeline.sample(SampleStage.withPercentage(value));
     } else {
-      int value = (int) sampleMap.get("value");
+      int value = ((Number) sampleMap.get("value")).intValue();
       return pipeline.sample(SampleStage.withDocLimit(value));
     }
   }

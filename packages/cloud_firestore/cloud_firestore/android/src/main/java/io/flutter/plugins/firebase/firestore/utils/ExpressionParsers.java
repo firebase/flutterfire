@@ -17,6 +17,7 @@ import com.google.firebase.firestore.pipeline.BooleanExpression;
 import com.google.firebase.firestore.pipeline.Expression;
 import com.google.firebase.firestore.pipeline.FindNearestStage;
 import com.google.firebase.firestore.pipeline.Selectable;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -255,18 +256,30 @@ class ExpressionParsers {
       case "array_contains_all":
         {
           Map<String, Object> arrayMap = (Map<String, Object>) args.get("array");
-          Map<String, Object> arrayExprMap = (Map<String, Object>) args.get("array_expression");
           Expression array = parseExpression(arrayMap);
-          Expression arrayExpr = parseExpression(arrayExprMap);
-          return array.arrayContainsAll(arrayExpr);
+          if (args.get("values") != null) {
+            List<Map<String, Object>> valuesMaps = (List<Map<String, Object>>) args.get("values");
+            Expression[] values = new Expression[valuesMaps.size()];
+            for (int i = 0; i < valuesMaps.size(); i++) {
+              values[i] = parseExpression(valuesMaps.get(i));
+            }
+            return array.arrayContainsAll(Arrays.asList(values));
+          } else {
+            Map<String, Object> arrayExprMap = (Map<String, Object>) args.get("array_expression");
+            Expression arrayExpr = parseExpression(arrayExprMap);
+            return array.arrayContainsAll(arrayExpr);
+          }
         }
       case "array_contains_any":
         {
           Map<String, Object> arrayMap = (Map<String, Object>) args.get("array");
-          Map<String, Object> arrayExprMap = (Map<String, Object>) args.get("array_expression");
+          List<Map<String, Object>> valuesMaps = (List<Map<String, Object>>) args.get("values");
           Expression array = parseExpression(arrayMap);
-          Expression arrayExpr = parseExpression(arrayExprMap);
-          return array.arrayContainsAny(arrayExpr);
+          Expression[] values = new Expression[valuesMaps.size()];
+          for (int i = 0; i < valuesMaps.size(); i++) {
+            values[i] = parseExpression(valuesMaps.get(i));
+          }
+          return array.arrayContainsAny(Arrays.asList(values));
         }
       case "equal_any":
         {
@@ -277,7 +290,7 @@ class ExpressionParsers {
           for (int i = 0; i < valuesMaps.size(); i++) {
             values[i] = parseExpression(valuesMaps.get(i));
           }
-          return value.equalAny(List.of(values));
+          return value.equalAny(Arrays.asList(values));
         }
       case "not_equal_any":
         {
@@ -288,7 +301,7 @@ class ExpressionParsers {
           for (int i = 0; i < valuesMaps.size(); i++) {
             values[i] = parseExpression(valuesMaps.get(i));
           }
-          return value.notEqualAny(List.of(values));
+          return value.notEqualAny(Arrays.asList(values));
         }
       case "as_boolean":
         {
