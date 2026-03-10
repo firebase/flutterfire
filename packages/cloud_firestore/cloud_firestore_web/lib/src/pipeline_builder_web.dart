@@ -15,9 +15,6 @@ interop.PipelineJsImpl buildPipelineFromStages(
   interop.FirestoreJsImpl jsFirestore,
   List<Map<String, dynamic>> stages,
 ) {
-  if (stages.isEmpty) {
-    throw ArgumentError('Pipeline must have at least one stage (source).');
-  }
   final source = jsFirestore.pipeline();
   final first = stages.first;
   final stageName = first['stage'] as String?;
@@ -42,36 +39,22 @@ interop.PipelineJsImpl _applySourceStage(
   Map<String, dynamic> first,
 ) {
   final args = first['args'];
-  switch (stageName) {
-    case 'collection':
-      final path = (args is Map ? args['path'] as String? : null) ?? '';
-      return source.collection(path.toJS);
-    case 'collection_group':
-      final path = (args is Map ? args['path'] as String? : null) ?? '';
-      return source.collectionGroup(path.toJS);
-    case 'database':
-      return source.database();
-    case 'documents':
-      final docsRaw = first['args'];
-      final docs = docsRaw is List
-          ? docsRaw
-          : (args is Map
-                  ? args['documents'] as List<dynamic>? ??
-                      args['paths'] as List<dynamic>?
-                  : null) ??
-              [];
-      final paths = docs
-          .map((e) => (e is Map ? e['path'] as String? : e?.toString()) ?? '')
-          .where((s) => s.isNotEmpty)
-          .toList();
-      final refs =
-          paths.map((p) => interop.doc(jsFirestore as JSAny, p.toJS)).toList();
-      return source.documents(refs.toJS);
-    default:
-      throw UnsupportedError(
-        'Pipeline source stage "$stageName" is not supported on web.',
-      );
-  }
+  return switch (stageName) {
+    'collection' => source
+        .collection(((args as Map<String, dynamic>)['path']! as String).toJS),
+    'collection_group' => source.collectionGroup(
+        ((args as Map<String, dynamic>)['path']! as String).toJS),
+    'database' => source.database(),
+    'documents' => source.documents(
+        (args as List<dynamic>)
+            .map((e) => (e as Map<String, dynamic>)['path']! as String)
+            .map((p) => interop.doc(jsFirestore as JSAny, p.toJS))
+            .toList()
+            .toJS,
+      ),
+    _ => throw UnsupportedError(
+        'Pipeline source stage "$stageName" is not supported on web.'),
+  };
 }
 
 interop.PipelineJsImpl _applyStage(

@@ -11,6 +11,7 @@ import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_inte
 import 'package:cloud_firestore_web/src/interop/firestore_interop.dart'
     as interop;
 import 'package:cloud_firestore_web/src/interop/utils/utils.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 /// Converts Dart serialized pipeline expressions/stage args into JS pipeline
 /// types by calling the pipelines interop API (field, constant, equal, and,
@@ -52,8 +53,160 @@ class PipelineExpressionParserWeb {
       case 'constant':
       case 'null':
         return _pipelines.constant(_constantValueToJs(argsMap[_kValue]));
+      case 'concat':
+        final expressions = argsMap['expressions'] as List<dynamic>?;
+        if (expressions == null || expressions.isEmpty) {
+          throw UnsupportedError('concat requires at least one expression');
+        }
+        interop.ExpressionJsImpl result =
+            toExpression(expressions[0] as Map<String, dynamic>);
+        for (var i = 1; i < expressions.length; i++) {
+          result = result
+              .concat(toExpression(expressions[i] as Map<String, dynamic>));
+        }
+        return result;
+      case 'length':
+        return (_expr(argsMap, _kExpression) as interop.ExpressionJsImpl)
+            .length();
+      case 'to_lower_case':
+        return (_expr(argsMap, _kExpression) as interop.ExpressionJsImpl)
+            .toLower();
+      case 'to_upper_case':
+        return (_expr(argsMap, _kExpression) as interop.ExpressionJsImpl)
+            .toUpper();
+      case 'trim':
+        return (_expr(argsMap, _kExpression) as interop.ExpressionJsImpl)
+            .toLower();
+      case 'substring':
+        return _pipelines.substring(
+          _expr(argsMap, _kExpression),
+          _expr(argsMap, 'start'),
+          _expr(argsMap, 'end'),
+        );
+      case 'replace':
+        return _pipelines.stringReplaceAll(
+          _expr(argsMap, _kExpression),
+          _expr(argsMap, 'find'),
+          _expr(argsMap, 'replacement'),
+        );
+      case 'split':
+        return _pipelines.split(
+          _expr(argsMap, _kExpression),
+          _expr(argsMap, 'delimiter'),
+        );
+      case 'join':
+        return _pipelines.join(
+          _expr(argsMap, _kExpression),
+          _expr(argsMap, 'delimiter'),
+        );
+      case 'if_absent':
+        return _pipelines.ifAbsent(
+          _expr(argsMap, _kExpression),
+          _expr(argsMap, 'else'),
+        );
+      case 'if_error':
+        return _pipelines.ifError(
+          _expr(argsMap, _kExpression),
+          _expr(argsMap, 'catch'),
+        );
+      case 'conditional':
+        return _pipelines.conditional(
+          toBooleanExpression(argsMap['condition'] as Map<String, dynamic>)!,
+          _expr(argsMap, 'then'),
+          _expr(argsMap, 'else'),
+        );
+      case 'document_id':
+        final pathArg = argsMap[_kExpression];
+        return _pipelines
+            .documentId(toExpression(pathArg as Map<String, dynamic>));
+      case 'collection_id':
+        return _pipelines.collectionId(_expr(argsMap, _kExpression));
+      case 'map_get':
+        return _pipelines.mapGet(
+          _expr(argsMap, 'map'),
+          _expr(argsMap, 'key'),
+        );
+      case 'map_keys':
+        return _pipelines.mapKeys(_expr(argsMap, _kExpression));
+      case 'map_values':
+        return _pipelines.mapValues(_expr(argsMap, _kExpression));
+      case 'current_timestamp':
+        return _pipelines.currentTimestamp();
+      case 'timestamp_add':
+        return _pipelines.timestampAdd(
+          _expr(argsMap, 'timestamp'),
+          (argsMap['unit'] as String).toJS,
+          _expr(argsMap, 'amount'),
+        );
+      case 'timestamp_subtract':
+        return _pipelines.timestampSubtract(
+          _expr(argsMap, 'timestamp'),
+          (argsMap['unit'] as String).toJS,
+          _expr(argsMap, 'amount'),
+        );
+      case 'timestamp_truncate':
+        final tz = argsMap['timezone'] as String?;
+        return _pipelines.timestampTruncate(
+          _expr(argsMap, 'timestamp'),
+          (argsMap['unit'] as String).toJS,
+          tz?.toJS,
+        );
+      case 'abs':
+        return _pipelines.abs(_expr(argsMap, _kExpression));
+      case 'array_length':
+        return _pipelines.arrayLength(_expr(argsMap, _kExpression));
+      case 'array_sum':
+        return _pipelines.arraySum(_expr(argsMap, _kExpression));
+      case 'array_concat':
+        return _pipelines.arrayConcat(
+          _expr(argsMap, 'first'),
+          _expr(argsMap, 'second'),
+        );
+      case 'array_concat_multiple':
+        final arrays = argsMap['arrays'] as List<dynamic>?;
+        if (arrays == null || arrays.length < 2) {
+          throw UnsupportedError(
+              'array_concat_multiple requires at least two arrays');
+        }
+        var arrResult = _pipelines.arrayConcat(
+          toExpression(arrays[0] as Map<String, dynamic>),
+          toExpression(arrays[1] as Map<String, dynamic>),
+        );
+        for (var i = 2; i < arrays.length; i++) {
+          arrResult = _pipelines.arrayConcat(
+            arrResult,
+            toExpression(arrays[i] as Map<String, dynamic>),
+          );
+        }
+        return arrResult;
+      case 'array':
+        final elements = argsMap['elements'] as List<dynamic>?;
+        if (elements == null) {
+          throw UnsupportedError('array requires elements');
+        }
+        final jsElements = elements
+            .map((e) => toExpression(e as Map<String, dynamic>))
+            .toList()
+            .toJS;
+        return _pipelines.array(jsElements);
+      case 'map':
+        final data = argsMap['data'] as Map<String, dynamic>?;
+        if (data == null) {
+          throw UnsupportedError('map requires data');
+        }
+        final m = <String, dynamic>{};
+        for (final entry in data.entries) {
+          m[entry.key] = toExpression(entry.value as Map<String, dynamic>);
+        }
+        return _pipelines.map(jsify(m)! as JSObject);
       default:
-        throw UnsupportedError('Unsupported expression: $name');
+        throw FirebaseException(
+          plugin: 'cloud_firestore',
+          code: 'unsupported-expression',
+          message:
+              "The pipeline expression '$name' is not supported on the web "
+              'platform. The Firebase JS SDK may not expose this expression.',
+        );
     }
   }
 
@@ -124,6 +277,40 @@ class PipelineExpressionParserWeb {
             .toList()
             .toJS;
         return _pipelines.arrayContainsAny(_expr(argsMap, 'array'), valuesJs);
+      case 'array_contains_all':
+        final arrayExpr = _expr(argsMap, 'array');
+        final valuesArg = argsMap['values'] as List<dynamic>?;
+        final arrayExpressionArg = argsMap['array_expression'];
+        if (valuesArg != null && valuesArg.isNotEmpty) {
+          final valuesJs = valuesArg
+              .map((v) => toExpression(v as Map<String, dynamic>))
+              .toList()
+              .toJS;
+          return _pipelines.arrayContainsAll(arrayExpr, valuesJs);
+        }
+        if (arrayExpressionArg != null) {
+          return _pipelines.arrayContainsAll(arrayExpr,
+              toExpression(arrayExpressionArg as Map<String, dynamic>));
+        }
+        return null;
+      case 'equal_any':
+        final valueExpr = _expr(argsMap, 'value');
+        final valuesMaps = argsMap['values'] as List<dynamic>?;
+        if (valuesMaps == null || valuesMaps.isEmpty) return null;
+        final valuesJs = valuesMaps
+            .map((v) => toExpression(v as Map<String, dynamic>))
+            .toList()
+            .toJS;
+        return _pipelines.equalAny(valueExpr, valuesJs);
+      case 'not_equal_any':
+        final valueExpr = _expr(argsMap, 'value');
+        final valuesMaps = argsMap['values'] as List<dynamic>?;
+        if (valuesMaps == null || valuesMaps.isEmpty) return null;
+        final valuesJs = valuesMaps
+            .map((v) => toExpression(v as Map<String, dynamic>))
+            .toList()
+            .toJS;
+        return _pipelines.notEqualAny(valueExpr, valuesJs);
       case 'filter':
         return _buildFilterExpression(argsMap);
       default:

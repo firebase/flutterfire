@@ -374,6 +374,41 @@ extension type PipelinesJsImpl._(JSObject _) implements JSObject {
   // --- Array ---
   external JSAny arrayContains(JSAny array, JSAny element);
   external JSAny arrayContainsAny(JSAny array, JSArray<JSAny> values);
+  external JSAny arrayContainsAll(JSAny array, JSAny valuesOrArray);
+
+  // --- IN / NOT IN (boolean) ---
+  external JSAny equalAny(JSAny element, JSAny valuesArray);
+  external JSAny notEqualAny(JSAny element, JSAny valuesArray);
+
+  // --- String / value expressions (global) ---
+  external ExpressionJsImpl split(JSAny expression, JSAny delimiter);
+  external ExpressionJsImpl join(JSAny arrayExpression, JSAny delimiter);
+  external ExpressionJsImpl substring(
+      JSAny input, JSAny position, JSAny length);
+  external ExpressionJsImpl stringReplaceAll(
+      JSAny expression, JSAny find, JSAny replacement);
+  external ExpressionJsImpl ifAbsent(JSAny expression, JSAny elseExpr);
+  external ExpressionJsImpl ifError(JSAny expression, JSAny catchExpr);
+  external ExpressionJsImpl conditional(
+      JSAny condition, JSAny thenExpr, JSAny elseExpr);
+  external ExpressionJsImpl documentId(JSAny path);
+  external ExpressionJsImpl collectionId(JSAny expression);
+  external ExpressionJsImpl mapGet(JSAny mapExpr, JSAny key);
+  external ExpressionJsImpl mapKeys(JSAny mapExpr);
+  external ExpressionJsImpl mapValues(JSAny mapExpr);
+  external ExpressionJsImpl currentTimestamp();
+  external ExpressionJsImpl timestampAdd(
+      JSAny timestamp, JSString unit, JSAny amount);
+  external ExpressionJsImpl timestampSubtract(
+      JSAny timestamp, JSString unit, JSAny amount);
+  external ExpressionJsImpl timestampTruncate(JSAny timestamp, JSString unit,
+      [JSString? timezone]);
+  external ExpressionJsImpl abs(JSAny expr);
+  external ExpressionJsImpl arrayLength(JSAny array);
+  external ExpressionJsImpl arraySum(JSAny expression);
+  external ExpressionJsImpl arrayConcat(JSAny first, JSAny second);
+  external ExpressionJsImpl array(JSArray<JSAny> elements);
+  external ExpressionJsImpl map(JSObject keyValuePairs);
 
   // --- Ordering (for sort stage) ---
   external JSAny ascending(JSAny expr);
@@ -411,8 +446,8 @@ extension type ExpressionJsImpl._(JSObject _) implements JSObject {
   external ExpressionJsImpl modulo(JSAny right);
   external ExpressionJsImpl length();
   external ExpressionJsImpl concat(JSAny right);
-  external ExpressionJsImpl toLowerCase();
-  external ExpressionJsImpl toUpperCase();
+  external ExpressionJsImpl toLower();
+  external ExpressionJsImpl toUpper();
   external ExpressionJsImpl trim();
 }
 

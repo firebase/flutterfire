@@ -285,10 +285,24 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
     List<Map<String, dynamic>> stages, {
     Map<String, dynamic>? options,
   }) async {
+    final jsFirestore = _delegate.jsObject;
+    firestore_interop_js.PipelineJsImpl jsPipeline;
+    try {
+      jsPipeline = buildPipelineFromStages(jsFirestore, stages);
+    } catch (e, stack) {
+      // Let our Dart FirebaseException (e.g. unsupported expression) propagate
+      // so the user sees a clear message; the guard would cast it to JSError.
+      if (e is FirebaseException) {
+        Error.throwWithStackTrace(e, stack);
+      }
+      // JS or other errors: run through the guard to convert to FirebaseException.
+      return convertWebExceptions(() async {
+        Error.throwWithStackTrace(e, stack);
+      });
+    }
+
+    final dartPipeline = firestore_interop.Pipeline.getInstance(jsPipeline);
     return convertWebExceptions(() async {
-      final jsFirestore = _delegate.jsObject;
-      final jsPipeline = buildPipelineFromStages(jsFirestore, stages);
-      final dartPipeline = firestore_interop.Pipeline.getInstance(jsPipeline);
       final snapshot = await dartPipeline.execute();
 
       final results = snapshot.results
