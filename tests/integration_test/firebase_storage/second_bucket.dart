@@ -228,7 +228,10 @@ void setupSecondBucketTests() {
               ),
             );
           },
-          retry: 2,
+          // The Firebase JS SDK / emulator never returns the permission error
+          // for list operations on the second bucket, causing a consistent
+          // 30s timeout.
+          skip: kIsWeb,
         );
 
         test('errors if maxResults is less than 0 ', () async {
