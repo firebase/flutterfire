@@ -31,7 +31,7 @@ void main() {
       expect(ordering.toMap(), {
         'expression': {
           'name': 'field',
-          'args': {'field': 'name'}
+          'args': {'field': 'name'},
         },
         'order_direction': 'asc',
       });
@@ -42,7 +42,7 @@ void main() {
       expect(ordering.toMap(), {
         'expression': {
           'name': 'field',
-          'args': {'field': 'score'}
+          'args': {'field': 'score'},
         },
         'order_direction': 'desc',
       });
@@ -53,7 +53,7 @@ void main() {
       expect(ordering.toMap(), {
         'expression': {
           'name': 'constant',
-          'args': {'value': 42}
+          'args': {'value': 42},
         },
         'order_direction': 'asc',
       });

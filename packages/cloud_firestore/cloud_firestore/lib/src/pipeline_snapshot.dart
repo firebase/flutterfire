@@ -8,10 +8,13 @@ part of '../cloud_firestore.dart';
 class PipelineResult {
   /// The document reference, or null if no document was returned.
   final DocumentReference<Map<String, dynamic>>? document;
+
   /// The time the document was created.
   final DateTime? createTime;
+
   /// The time the document was last updated (at the time the snapshot was generated).
   final DateTime? updateTime;
+
   /// Retrieves all fields in the result as a map.
   final Map<String, dynamic>? _data;
 
@@ -30,6 +33,7 @@ class PipelineResult {
 class PipelineSnapshot {
   /// List of all the results
   final List<PipelineResult> result;
+
   /// The time at which the pipeline producing this result is executed.
   final DateTime executionTime;
 

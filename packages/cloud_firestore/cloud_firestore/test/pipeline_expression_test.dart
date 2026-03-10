@@ -106,21 +106,29 @@ void main() {
     test('toMap for List<int> (bytes)', () {
       final bytes = <int>[1, 2, 3];
       final expr = Constant(bytes);
-      expect(expr.toMap(), {
-        'name': 'constant',
-        'args': {
-          'value': [1, 2, 3]
+      expect(
+        expr.toMap(),
+        {
+          'name': 'constant',
+          'args': {
+            'value': [1, 2, 3],
+          },
         },
-      });
+      );
     });
 
     test('toMap for Blob', () {
       final blob = Blob(Uint8List.fromList([1, 2, 3]));
       final expr = Constant(blob);
-      expect(expr.toMap(), {
-        'name': 'constant',
-        'args': {'value': blob},
-      });
+      expect(
+        expr.toMap(),
+        {
+          'name': 'constant',
+          'args': {
+            'value': blob,
+          },
+        },
+      );
     });
 
     test('toMap for DocumentReference serializes path', () {
@@ -129,7 +137,9 @@ void main() {
       expect(expr.toMap(), {
         'name': 'constant',
         'args': {
-          'value': {'path': 'users/alice'}
+          'value': {
+            'path': 'users/alice',
+          },
         },
       });
     });
@@ -194,11 +204,11 @@ void main() {
         'args': {
           'left': {
             'name': 'field',
-            'args': {'field': 'age'}
+            'args': {'field': 'age'},
           },
           'right': {
             'name': 'constant',
-            'args': {'value': 18}
+            'args': {'value': 18},
           },
         },
       });
@@ -211,11 +221,11 @@ void main() {
         'args': {
           'left': {
             'name': 'field',
-            'args': {'field': 'score'}
+            'args': {'field': 'score'},
           },
           'right': {
             'name': 'constant',
-            'args': {'value': 0}
+            'args': {'value': 0},
           },
         },
       });
@@ -228,7 +238,7 @@ void main() {
         'args': {
           'expression': {
             'name': 'field',
-            'args': {'field': 'email'}
+            'args': {'field': 'email'},
           },
         },
       });
@@ -241,11 +251,11 @@ void main() {
         'args': {
           'left': {
             'name': 'field',
-            'args': {'field': 'x'}
+            'args': {'field': 'x'},
           },
           'right': {
             'name': 'constant',
-            'args': {'value': 0}
+            'args': {'value': 0},
           },
         },
       });
@@ -292,7 +302,7 @@ void main() {
           'alias': 'sumTotal',
           'expression': {
             'name': 'field',
-            'args': {'field': 'total'}
+            'args': {'field': 'total'},
           },
         },
       });
@@ -319,11 +329,11 @@ void main() {
             'args': {
               'left': {
                 'name': 'field',
-                'args': {'field': 'active'}
+                'args': {'field': 'active'},
               },
               'right': {
                 'name': 'constant',
-                'args': {'value': true}
+                'args': {'value': true},
               },
             },
           },

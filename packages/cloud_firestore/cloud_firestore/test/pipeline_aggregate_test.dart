@@ -29,7 +29,7 @@ void main() {
         'args': {
           'expression': {
             'name': 'field',
-            'args': {'field': 'amount'}
+            'args': {'field': 'amount'},
           },
         },
       });
@@ -42,7 +42,7 @@ void main() {
         'args': {
           'expression': {
             'name': 'field',
-            'args': {'field': 'total'}
+            'args': {'field': 'total'},
           },
         },
       });
@@ -55,7 +55,7 @@ void main() {
         'args': {
           'expression': {
             'name': 'field',
-            'args': {'field': 'score'}
+            'args': {'field': 'score'},
           },
         },
       });
@@ -68,7 +68,7 @@ void main() {
         'args': {
           'expression': {
             'name': 'field',
-            'args': {'field': 'category'}
+            'args': {'field': 'category'},
           },
         },
       });
@@ -81,7 +81,7 @@ void main() {
         'args': {
           'expression': {
             'name': 'field',
-            'args': {'field': 'price'}
+            'args': {'field': 'price'},
           },
         },
       });
@@ -94,7 +94,7 @@ void main() {
         'args': {
           'expression': {
             'name': 'field',
-            'args': {'field': 'price'}
+            'args': {'field': 'price'},
           },
         },
       });
