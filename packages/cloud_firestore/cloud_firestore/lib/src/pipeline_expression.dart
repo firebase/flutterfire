@@ -453,6 +453,20 @@ abstract class Expression implements PipelineSerializable {
     );
   }
 
+  /// Checks if this array contains all of the given values or expressions
+  BooleanExpression arrayContainsAll(List<Object?> values) {
+    return _ArrayContainsAllValuesExpression(
+      this,
+      values.map(_toExpression).toList(),
+    );
+  }
+
+  /// Checks if this array contains all elements of [arrayExpression]
+  /// (e.g. [arrayExpression] can be [Expression.array] of fields/literals).
+  BooleanExpression arrayContainsAllFrom(Expression arrayExpression) {
+    return _ArrayContainsAllExpression(this, arrayExpression);
+  }
+
   /// Returns the length of this array expression
   // ignore: use_to_and_as_if_applicable
   Expression arrayLength() {
@@ -1338,6 +1352,38 @@ abstract class Expression implements PipelineSerializable {
     return _ArrayContainsExpression(
       Field(arrayFieldName),
       _toExpression(element),
+    );
+  }
+
+  /// Checks if [array] contains all elements of [arrayExpression]
+  /// (e.g. [arrayExpression] can be [Expression.array] of fields/literals).
+  static BooleanExpression arrayContainsAllWithExpression(
+    Expression array,
+    Expression arrayExpression,
+  ) {
+    return _ArrayContainsAllExpression(array, arrayExpression);
+  }
+
+  /// Checks if [array] contains all of the specified [values].
+  static BooleanExpression arrayContainsAllValues(
+    Expression array,
+    List<Object?> values,
+  ) {
+    return _ArrayContainsAllValuesExpression(
+      array,
+      values.map(_toExpression).toList(),
+    );
+  }
+
+  /// Checks if the array field [arrayFieldName] contains all elements of
+  /// [arrayExpression].
+  static BooleanExpression arrayContainsAllField(
+    String arrayFieldName,
+    Expression arrayExpression,
+  ) {
+    return arrayContainsAllWithExpression(
+      Field(arrayFieldName),
+      arrayExpression,
     );
   }
 
@@ -2330,6 +2376,50 @@ class _ArrayContainsAnyExpression extends BooleanExpression {
       'args': {
         'array': array.toMap(),
         'values': values.map((v) => v.toMap()).toList(),
+      },
+    };
+  }
+}
+
+/// Represents an arrayContainsAll function expression (array + list of values)
+class _ArrayContainsAllValuesExpression extends BooleanExpression {
+  final Expression array;
+  final List<Expression> values;
+
+  _ArrayContainsAllValuesExpression(this.array, this.values);
+
+  @override
+  String get name => 'array_contains_all';
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'args': {
+        'array': array.toMap(),
+        'values': values.map((v) => v.toMap()).toList(),
+      },
+    };
+  }
+}
+
+/// Represents an arrayContainsAll function expression (array + array expression)
+class _ArrayContainsAllExpression extends BooleanExpression {
+  final Expression array;
+  final Expression arrayExpression;
+
+  _ArrayContainsAllExpression(this.array, this.arrayExpression);
+
+  @override
+  String get name => 'array_contains_all';
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'args': {
+        'array': array.toMap(),
+        'array_expression': arrayExpression.toMap(),
       },
     };
   }
