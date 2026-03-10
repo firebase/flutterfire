@@ -561,6 +561,72 @@ void main() {
       expect(expr.toMap()['args']['values'], hasLength(2));
     });
 
+    test('arrayContainsAll with list serializes correctly', () {
+      final expr = Field('tags').arrayContainsAll(['a', Constant('b')]);
+      expect(expr.toMap(), {
+        'name': 'array_contains_all',
+        'args': {
+          'array': Field('tags').toMap(),
+          'values': [
+            Constant('a').toMap(),
+            Constant('b').toMap(),
+          ],
+        },
+      });
+    });
+
+    test('arrayContainsAllFrom with array expression serializes correctly', () {
+      final elements = Expression.array([Field('tag1'), Constant('tag2')]);
+      final expr = Field('tags').arrayContainsAllFrom(elements);
+      expect(expr.toMap(), {
+        'name': 'array_contains_all',
+        'args': {
+          'array': Field('tags').toMap(),
+          'array_expression': elements.toMap(),
+        },
+      });
+    });
+
+    test(
+        'Expression.arrayContainsAllWithExpression(array, arrayExpression) serializes correctly',
+        () {
+      final arrayExpr =
+          Expression.array([Field('required'), Constant('admin')]);
+      final expr = Expression.arrayContainsAllWithExpression(
+        Field('permissions'),
+        arrayExpr,
+      );
+      expect(expr.toMap(), {
+        'name': 'array_contains_all',
+        'args': {
+          'array': Field('permissions').toMap(),
+          'array_expression': arrayExpr.toMap(),
+        },
+      });
+    });
+
+    test('Expression.arrayContainsAllValues(array, list) serializes correctly',
+        () {
+      final expr = Expression.arrayContainsAllValues(
+        Field('tags'),
+        [Constant('flutter'), Constant('dart')],
+      );
+      expect(expr.toMap()['name'], 'array_contains_all');
+      expect(expr.toMap()['args']['values'], hasLength(2));
+    });
+
+    test('Expression.arrayContainsAllField serializes correctly', () {
+      final required = Expression.array([Field('requiredPermissions')]);
+      final expr = Expression.arrayContainsAllField('permissions', required);
+      expect(expr.toMap(), {
+        'name': 'array_contains_all',
+        'args': {
+          'array': Field('permissions').toMap(),
+          'array_expression': required.toMap(),
+        },
+      });
+    });
+
     test('arrayLength serializes correctly', () {
       final expr = Field('items').arrayLength();
       expect(expr.toMap(), {
