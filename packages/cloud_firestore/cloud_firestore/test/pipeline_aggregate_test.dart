@@ -27,7 +27,10 @@ void main() {
       expect(fn.toMap(), {
         'name': 'count',
         'args': {
-          'expression': {'name': 'field', 'args': {'field': 'amount'}},
+          'expression': {
+            'name': 'field',
+            'args': {'field': 'amount'}
+          },
         },
       });
     });
@@ -37,7 +40,10 @@ void main() {
       expect(fn.toMap(), {
         'name': 'sum',
         'args': {
-          'expression': {'name': 'field', 'args': {'field': 'total'}},
+          'expression': {
+            'name': 'field',
+            'args': {'field': 'total'}
+          },
         },
       });
     });
@@ -47,7 +53,10 @@ void main() {
       expect(fn.toMap(), {
         'name': 'average',
         'args': {
-          'expression': {'name': 'field', 'args': {'field': 'score'}},
+          'expression': {
+            'name': 'field',
+            'args': {'field': 'score'}
+          },
         },
       });
     });
@@ -57,7 +66,10 @@ void main() {
       expect(fn.toMap(), {
         'name': 'count_distinct',
         'args': {
-          'expression': {'name': 'field', 'args': {'field': 'category'}},
+          'expression': {
+            'name': 'field',
+            'args': {'field': 'category'}
+          },
         },
       });
     });
@@ -67,7 +79,10 @@ void main() {
       expect(fn.toMap(), {
         'name': 'minimum',
         'args': {
-          'expression': {'name': 'field', 'args': {'field': 'price'}},
+          'expression': {
+            'name': 'field',
+            'args': {'field': 'price'}
+          },
         },
       });
     });
@@ -77,7 +92,10 @@ void main() {
       expect(fn.toMap(), {
         'name': 'maximum',
         'args': {
-          'expression': {'name': 'field', 'args': {'field': 'price'}},
+          'expression': {
+            'name': 'field',
+            'args': {'field': 'price'}
+          },
         },
       });
     });

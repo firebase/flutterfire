@@ -29,7 +29,10 @@ void main() {
     test('toMap() serializes ascending order', () {
       final ordering = Ordering(Field('name'), OrderDirection.asc);
       expect(ordering.toMap(), {
-        'expression': {'name': 'field', 'args': {'field': 'name'}},
+        'expression': {
+          'name': 'field',
+          'args': {'field': 'name'}
+        },
         'order_direction': 'asc',
       });
     });
@@ -37,7 +40,10 @@ void main() {
     test('toMap() serializes descending order', () {
       final ordering = Ordering(Field('score'), OrderDirection.desc);
       expect(ordering.toMap(), {
-        'expression': {'name': 'field', 'args': {'field': 'score'}},
+        'expression': {
+          'name': 'field',
+          'args': {'field': 'score'}
+        },
         'order_direction': 'desc',
       });
     });
@@ -45,7 +51,10 @@ void main() {
     test('toMap() includes expression toMap() result', () {
       final ordering = Ordering(Constant(42), OrderDirection.asc);
       expect(ordering.toMap(), {
-        'expression': {'name': 'constant', 'args': {'value': 42}},
+        'expression': {
+          'name': 'constant',
+          'args': {'value': 42}
+        },
         'order_direction': 'asc',
       });
     });

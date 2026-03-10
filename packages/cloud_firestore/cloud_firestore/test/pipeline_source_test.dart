@@ -35,8 +35,7 @@ void main() {
       });
 
       test('accepts nested collection path', () {
-        final pipeline =
-            firestore.pipeline().collection('users/abc123/orders');
+        final pipeline = firestore.pipeline().collection('users/abc123/orders');
         expect(pipeline.stages.first['args'], {'path': 'users/abc123/orders'});
       });
 
@@ -67,7 +66,8 @@ void main() {
       });
 
       test('uses path from nested collection reference', () {
-        final colRef = firestore.collection('users').doc('u1').collection('posts');
+        final colRef =
+            firestore.collection('users').doc('u1').collection('posts');
         final pipeline = firestore.pipeline().collectionReference(colRef);
         expect(pipeline.stages.first['args'], {
           'path': 'users/u1/posts',

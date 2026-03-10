@@ -108,7 +108,9 @@ void main() {
       final expr = Constant(bytes);
       expect(expr.toMap(), {
         'name': 'constant',
-        'args': {'value': [1, 2, 3]},
+        'args': {
+          'value': [1, 2, 3]
+        },
       });
     });
 
@@ -126,7 +128,9 @@ void main() {
       final expr = Constant(ref);
       expect(expr.toMap(), {
         'name': 'constant',
-        'args': {'value': {'path': 'users/alice'}},
+        'args': {
+          'value': {'path': 'users/alice'}
+        },
       });
     });
 
@@ -142,22 +146,26 @@ void main() {
     test('throws ArgumentError for invalid value type', () {
       expect(
         () => Constant({'key': 'value'}),
-        throwsA(isA<ArgumentError>().having(
-          (e) => e.message,
-          'message',
-          allOf(contains('Constant value must be'), contains('Got:')),
-        )),
+        throwsA(
+          isA<ArgumentError>().having(
+            (e) => e.message,
+            'message',
+            allOf(contains('Constant value must be'), contains('Got:')),
+          ),
+        ),
       );
     });
 
     test('throws ArgumentError for List<String> (not List<int>)', () {
       expect(
         () => Constant(<String>['a', 'b']),
-        throwsA(isA<ArgumentError>().having(
-          (e) => e.message,
-          'message',
-          contains('Got:'),
-        )),
+        throwsA(
+          isA<ArgumentError>().having(
+            (e) => e.message,
+            'message',
+            contains('Got:'),
+          ),
+        ),
       );
     });
   });
@@ -184,8 +192,14 @@ void main() {
       expect(expr.toMap(), {
         'name': 'equal',
         'args': {
-          'left': {'name': 'field', 'args': {'field': 'age'}},
-          'right': {'name': 'constant', 'args': {'value': 18}},
+          'left': {
+            'name': 'field',
+            'args': {'field': 'age'}
+          },
+          'right': {
+            'name': 'constant',
+            'args': {'value': 18}
+          },
         },
       });
     });
@@ -195,8 +209,14 @@ void main() {
       expect(expr.toMap(), {
         'name': 'greater_than',
         'args': {
-          'left': {'name': 'field', 'args': {'field': 'score'}},
-          'right': {'name': 'constant', 'args': {'value': 0}},
+          'left': {
+            'name': 'field',
+            'args': {'field': 'score'}
+          },
+          'right': {
+            'name': 'constant',
+            'args': {'value': 0}
+          },
         },
       });
     });
@@ -206,7 +226,10 @@ void main() {
       expect(expr.toMap(), {
         'name': 'exists',
         'args': {
-          'expression': {'name': 'field', 'args': {'field': 'email'}},
+          'expression': {
+            'name': 'field',
+            'args': {'field': 'email'}
+          },
         },
       });
     });
@@ -216,8 +239,14 @@ void main() {
       expect(expr.toMap(), {
         'name': 'not_equal',
         'args': {
-          'left': {'name': 'field', 'args': {'field': 'x'}},
-          'right': {'name': 'constant', 'args': {'value': 0}},
+          'left': {
+            'name': 'field',
+            'args': {'field': 'x'}
+          },
+          'right': {
+            'name': 'constant',
+            'args': {'value': 0}
+          },
         },
       });
     });
@@ -261,7 +290,10 @@ void main() {
         'name': 'alias',
         'args': {
           'alias': 'sumTotal',
-          'expression': {'name': 'field', 'args': {'field': 'total'}},
+          'expression': {
+            'name': 'field',
+            'args': {'field': 'total'}
+          },
         },
       });
     });
@@ -285,8 +317,14 @@ void main() {
           'expression': {
             'name': 'equal',
             'args': {
-              'left': {'name': 'field', 'args': {'field': 'active'}},
-              'right': {'name': 'constant', 'args': {'value': true}},
+              'left': {
+                'name': 'field',
+                'args': {'field': 'active'}
+              },
+              'right': {
+                'name': 'constant',
+                'args': {'value': true}
+              },
             },
           },
         },
@@ -506,7 +544,8 @@ void main() {
     });
 
     test('arrayContainsAny serializes correctly', () {
-      final expr = Field('tags').arrayContainsAny([Constant('a'), Constant('b')]);
+      final expr =
+          Field('tags').arrayContainsAny([Constant('a'), Constant('b')]);
       expect(expr.toMap()['name'], 'array_contains_any');
       expect(expr.toMap()['args']['array']['args']['field'], 'tags');
       expect(expr.toMap()['args']['values'], hasLength(2));
