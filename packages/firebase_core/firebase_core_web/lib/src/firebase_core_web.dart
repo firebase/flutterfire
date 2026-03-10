@@ -214,7 +214,7 @@ class FirebaseCoreWeb extends FirebasePlatform {
           return Future.value();
         }
 
-        final firestoreServiceName = 'firestore';
+        const firestoreServiceName = 'firestore';
 
         if (service.name == firestoreServiceName) {
           // Inject the Firestore Pipelines script. This bundle supports both
