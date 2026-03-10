@@ -8,6 +8,7 @@
 
 #if TARGET_OS_OSX
 #import <FirebaseFirestore/FirebaseFirestore.h>
+#import "FirebaseFirestoreInternal/FIRPipelineBridge.h"
 #else
 @import FirebaseFirestore;
 #if __has_include("FIRPipelineBridge.h")
@@ -27,8 +28,17 @@ static NSError *pipelineUnavailableError(void) {
                          userInfo:@{NSLocalizedDescriptionKey : kPipelineNotAvailable}];
 }
 
+#if TARGET_OS_OSX
+#if __has_include("FirebaseFirestoreInternal/FIRPipelineBridge.h")
+#define FLT_PIPELINE_AVAILABLE 1
+#endif
+#else
 #if __has_include("FIRPipelineBridge.h")
 #define FLT_PIPELINE_AVAILABLE 1
+#endif
+#endif
+
+#if FLT_PIPELINE_AVAILABLE
 
 static NSError *parseError(NSString *message) {
   return [NSError errorWithDomain:@"FLTFirebaseFirestore"
