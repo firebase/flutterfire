@@ -228,10 +228,11 @@ void setupSecondBucketTests() {
               ),
             );
           },
-          // The Firebase JS SDK / emulator never returns the permission error
-          // for list operations on the second bucket, causing a consistent
-          // 30s timeout.
-          skip: kIsWeb,
+          // Web: Firebase JS SDK / emulator never returns the permission error,
+          // causing a consistent 30s timeout.
+          // Windows: C++ SDK / emulator does not enforce permissions for list
+          // operations on the second bucket (returns results instead of error).
+          skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
         );
 
         test('errors if maxResults is less than 0 ', () async {
