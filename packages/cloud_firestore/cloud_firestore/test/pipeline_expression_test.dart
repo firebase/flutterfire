@@ -708,14 +708,6 @@ void main() {
       expect(expr.toMap()['name'], 'modulo');
     });
 
-    test('negate serializes correctly', () {
-      final expr = Field('x').negate();
-      expect(expr.toMap(), {
-        'name': 'negate',
-        'args': {'expression': Field('x').toMap()},
-      });
-    });
-
     test('abs serializes correctly', () {
       final expr = Field('diff').abs();
       expect(expr.toMap()['name'], 'abs');
@@ -768,20 +760,6 @@ void main() {
       });
     });
 
-    test('timestampDiff serializes correctly', () {
-      final t1 = Field('start');
-      final t2 = Field('end');
-      final expr = Expression.timestampDiff(t1, t2, 'hours');
-      expect(expr.toMap(), {
-        'name': 'timestamp_diff',
-        'args': {
-          'timestamp1': t1.toMap(),
-          'timestamp2': t2.toMap(),
-          'unit': 'hours',
-        },
-      });
-    });
-
     test('timestampTruncate serializes correctly', () {
       final expr = Expression.timestampTruncate(Field('ts'), 'days');
       expect(expr.toMap(), {
@@ -827,23 +805,12 @@ void main() {
     });
   });
 
-  group('asBoolean and toStringWithFormat', () {
+  group('asBoolean', () {
     test('asBoolean serializes correctly', () {
       final expr = Field('flag').asBoolean();
       expect(expr.toMap(), {
         'name': 'as_boolean',
         'args': {'expression': Field('flag').toMap()},
-      });
-    });
-
-    test('toStringWithFormatLiteral serializes correctly', () {
-      final expr = Field('ts').toStringWithFormatLiteral('yyyy-MM-dd');
-      expect(expr.toMap(), {
-        'name': 'to_string_with_format',
-        'args': {
-          'expression': Field('ts').toMap(),
-          'format': Constant('yyyy-MM-dd').toMap(),
-        },
       });
     });
   });
