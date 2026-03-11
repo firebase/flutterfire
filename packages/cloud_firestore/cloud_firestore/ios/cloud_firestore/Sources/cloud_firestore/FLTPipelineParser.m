@@ -115,19 +115,25 @@ static NSError *parseError(NSString *message) {
     return [self parseExpression:exprMap error:error];
   }
 
+  if ([name isEqualToString:@"null"]) {
+    return [[FIRConstantBridge alloc] init:[NSNull null]];
+  }
+
   // Map Dart names to iOS SDK names where they differ
   NSString *sdkName = name;
   if ([name isEqualToString:@"bit_xor"]) sdkName = @"xor";
+  if ([name isEqualToString:@"modulo"]) sdkName = @"mod";
 
   // -------------------------------------------------------------------------
-  // Binary expressions (left + right): comparisons, arithmetic, xor
+  // Binary expressions (left + right): comparisons, arithmetic, bitwise
   // -------------------------------------------------------------------------
   static NSArray *binaryNames = nil;
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
     binaryNames = @[
       @"equal", @"not_equal", @"greater_than", @"greater_than_or_equal", @"less_than",
-      @"less_than_or_equal", @"add", @"subtract", @"multiply", @"divide", @"modulo"
+      @"less_than_or_equal", @"add", @"subtract", @"multiply", @"divide", @"mod",
+      @"bit_and", @"bit_or", @"bit_left_shift", @"bit_right_shift"
     ];
   });
   if ([binaryNames containsObject:sdkName] || [name isEqualToString:@"bit_xor"]) {
@@ -161,6 +167,28 @@ static NSError *parseError(NSString *message) {
                               : [self parseExpression:exprMap error:error];
     if (!expr) return nil;
     return [[FIRFunctionExprBridge alloc] initWithName:name Args:@[ expr ]];
+  }
+
+  // -------------------------------------------------------------------------
+  // Unary with optional SDK name mapping: length, to_lower, to_upper, trim,
+  // abs, array_length, array_reverse, bit_not, document_id, collection_id
+  // -------------------------------------------------------------------------
+  NSArray *unaryWithSdkName = @[
+    @"length", @"to_lower_case", @"to_upper_case", @"trim", @"abs",
+    @"array_length", @"array_reverse", @"bit_not", @"document_id", @"collection_id"
+  ];
+  if ([unaryWithSdkName containsObject:name]) {
+    id exprMap = args[@"expression"];
+    if (![exprMap isKindOfClass:[NSDictionary class]]) {
+      if (error) *error = parseError([NSString stringWithFormat:@"%@ requires expression", name]);
+      return nil;
+    }
+    FIRExprBridge *expr = [self parseExpression:exprMap error:error];
+    if (!expr) return nil;
+    NSString *unarySdkName = name;
+    if ([name isEqualToString:@"to_lower_case"]) unarySdkName = @"to_lower";
+    if ([name isEqualToString:@"to_upper_case"]) unarySdkName = @"to_upper";
+    return [[FIRFunctionExprBridge alloc] initWithName:unarySdkName Args:@[ expr ]];
   }
 
   // -------------------------------------------------------------------------
@@ -270,6 +298,221 @@ static NSError *parseError(NSString *message) {
       return nil;
     }
     return [[FIRFunctionExprBridge alloc] initWithName:name Args:argsArray];
+  }
+
+  // -------------------------------------------------------------------------
+  // expressions[]: concat (SDK: concat)
+  // -------------------------------------------------------------------------
+  if ([name isEqualToString:@"concat"]) {
+    NSArray *exprMaps = args[@"expressions"];
+    if (![exprMaps isKindOfClass:[NSArray class]] || exprMaps.count == 0) {
+      if (error) *error = parseError(@"concat requires non-empty expressions");
+      return nil;
+    }
+    NSMutableArray<FIRExprBridge *> *all = [NSMutableArray array];
+    for (id em in exprMaps) {
+      if (![em isKindOfClass:[NSDictionary class]]) continue;
+      FIRExprBridge *e = [self parseExpression:em error:error];
+      if (!e) return nil;
+      [all addObject:e];
+    }
+    if (all.count == 0) {
+      if (error) *error = parseError(@"concat requires at least one expression");
+      return nil;
+    }
+    return [[FIRFunctionExprBridge alloc] initWithName:@"concat" Args:all];
+  }
+
+  // -------------------------------------------------------------------------
+  // expression + start + end: substring (SDK: substring)
+  // -------------------------------------------------------------------------
+  if ([name isEqualToString:@"substring"]) {
+    id exprMap = args[@"expression"];
+    id startMap = args[@"start"];
+    id endMap = args[@"end"];
+    if (![exprMap isKindOfClass:[NSDictionary class]] ||
+        ![startMap isKindOfClass:[NSDictionary class]] ||
+        ![endMap isKindOfClass:[NSDictionary class]]) {
+      if (error) *error = parseError(@"substring requires expression, start, and end");
+      return nil;
+    }
+    FIRExprBridge *expr = [self parseExpression:exprMap error:error];
+    FIRExprBridge *start = [self parseExpression:startMap error:error];
+    FIRExprBridge *end = [self parseExpression:endMap error:error];
+    if (!expr || !start || !end) return nil;
+    return [[FIRFunctionExprBridge alloc] initWithName:@"substring"
+                                                  Args:@[ expr, start, end ]];
+  }
+
+  // -------------------------------------------------------------------------
+  // expression + find + replacement: replace (SDK: string_replace)
+  // -------------------------------------------------------------------------
+  if ([name isEqualToString:@"replace"]) {
+    id exprMap = args[@"expression"];
+    id findMap = args[@"find"];
+    id replacementMap = args[@"replacement"];
+    if (![exprMap isKindOfClass:[NSDictionary class]] ||
+        ![findMap isKindOfClass:[NSDictionary class]] ||
+        ![replacementMap isKindOfClass:[NSDictionary class]]) {
+      if (error) *error = parseError(@"replace requires expression, find, and replacement");
+      return nil;
+    }
+    FIRExprBridge *expr = [self parseExpression:exprMap error:error];
+    FIRExprBridge *find = [self parseExpression:findMap error:error];
+    FIRExprBridge *replacement = [self parseExpression:replacementMap error:error];
+    if (!expr || !find || !replacement) return nil;
+    return [[FIRFunctionExprBridge alloc] initWithName:@"string_replace"
+                                                  Args:@[ expr, find, replacement ]];
+  }
+
+  // -------------------------------------------------------------------------
+  // expression + delimiter: split, join (SDK: split, join)
+  // -------------------------------------------------------------------------
+  if ([name isEqualToString:@"split"] || [name isEqualToString:@"join"]) {
+    id exprMap = args[@"expression"];
+    id delimiterMap = args[@"delimiter"];
+    if (![exprMap isKindOfClass:[NSDictionary class]] ||
+        ![delimiterMap isKindOfClass:[NSDictionary class]]) {
+      if (error)
+        *error = parseError([NSString stringWithFormat:@"%@ requires expression and delimiter", name]);
+      return nil;
+    }
+    FIRExprBridge *expr = [self parseExpression:exprMap error:error];
+    FIRExprBridge *delimiter = [self parseExpression:delimiterMap error:error];
+    if (!expr || !delimiter) return nil;
+    return [[FIRFunctionExprBridge alloc] initWithName:name Args:@[ expr, delimiter ]];
+  }
+
+  // -------------------------------------------------------------------------
+  // first + second: array_concat (SDK: array_concat)
+  // -------------------------------------------------------------------------
+  if ([name isEqualToString:@"array_concat"]) {
+    id firstMap = args[@"first"];
+    id secondMap = args[@"second"];
+    if (![firstMap isKindOfClass:[NSDictionary class]] ||
+        ![secondMap isKindOfClass:[NSDictionary class]]) {
+      if (error) *error = parseError(@"array_concat requires first and second");
+      return nil;
+    }
+    FIRExprBridge *first = [self parseExpression:firstMap error:error];
+    FIRExprBridge *second = [self parseExpression:secondMap error:error];
+    if (!first || !second) return nil;
+    return [[FIRFunctionExprBridge alloc] initWithName:@"array_concat"
+                                                  Args:@[ first, second ]];
+  }
+
+  // -------------------------------------------------------------------------
+  // arrays[]: array_concat_multiple (SDK: array_concat)
+  // -------------------------------------------------------------------------
+  if ([name isEqualToString:@"array_concat_multiple"]) {
+    NSArray *arraysMaps = args[@"arrays"];
+    if (![arraysMaps isKindOfClass:[NSArray class]] || arraysMaps.count == 0) {
+      if (error) *error = parseError(@"array_concat_multiple requires non-empty arrays");
+      return nil;
+    }
+    NSMutableArray<FIRExprBridge *> *all = [NSMutableArray array];
+    for (id am in arraysMaps) {
+      if (![am isKindOfClass:[NSDictionary class]]) continue;
+      FIRExprBridge *e = [self parseExpression:am error:error];
+      if (!e) return nil;
+      [all addObject:e];
+    }
+    if (all.count == 0) {
+      if (error) *error = parseError(@"array_concat_multiple requires at least one array");
+      return nil;
+    }
+    return [[FIRFunctionExprBridge alloc] initWithName:@"array_concat" Args:all];
+  }
+
+  // -------------------------------------------------------------------------
+  // map + key: map_get (SDK: map_get)
+  // -------------------------------------------------------------------------
+  if ([name isEqualToString:@"map_get"]) {
+    id mapMap = args[@"map"];
+    id keyMap = args[@"key"];
+    if (![mapMap isKindOfClass:[NSDictionary class]] ||
+        ![keyMap isKindOfClass:[NSDictionary class]]) {
+      if (error) *error = parseError(@"map_get requires map and key");
+      return nil;
+    }
+    FIRExprBridge *mapExpr = [self parseExpression:mapMap error:error];
+    FIRExprBridge *keyExpr = [self parseExpression:keyMap error:error];
+    if (!mapExpr || !keyExpr) return nil;
+    return [[FIRFunctionExprBridge alloc] initWithName:@"map_get"
+                                                  Args:@[ mapExpr, keyExpr ]];
+  }
+
+  // -------------------------------------------------------------------------
+  // expression + else: if_absent (SDK: if_absent)
+  // -------------------------------------------------------------------------
+  if ([name isEqualToString:@"if_absent"]) {
+    id exprMap = args[@"expression"];
+    id elseMap = args[@"else"];
+    if (![exprMap isKindOfClass:[NSDictionary class]] ||
+        ![elseMap isKindOfClass:[NSDictionary class]]) {
+      if (error) *error = parseError(@"if_absent requires expression and else");
+      return nil;
+    }
+    FIRExprBridge *expr = [self parseExpression:exprMap error:error];
+    FIRExprBridge *elseExpr = [self parseExpression:elseMap error:error];
+    if (!expr || !elseExpr) return nil;
+    return [[FIRFunctionExprBridge alloc] initWithName:@"if_absent" Args:@[ expr, elseExpr ]];
+  }
+
+  // -------------------------------------------------------------------------
+  // expression + catch: if_error (SDK: if_error)
+  // -------------------------------------------------------------------------
+  if ([name isEqualToString:@"if_error"]) {
+    id exprMap = args[@"expression"];
+    id catchMap = args[@"catch"];
+    if (![exprMap isKindOfClass:[NSDictionary class]] ||
+        ![catchMap isKindOfClass:[NSDictionary class]]) {
+      if (error) *error = parseError(@"if_error requires expression and catch");
+      return nil;
+    }
+    FIRExprBridge *expr = [self parseExpression:exprMap error:error];
+    FIRExprBridge *catchExpr = [self parseExpression:catchMap error:error];
+    if (!expr || !catchExpr) return nil;
+    return [[FIRFunctionExprBridge alloc] initWithName:@"if_error" Args:@[ expr, catchExpr ]];
+  }
+
+  // -------------------------------------------------------------------------
+  // timestamp + unit + amount: timestamp_add, timestamp_subtract (SDK names)
+  // -------------------------------------------------------------------------
+  if ([name isEqualToString:@"timestamp_add"] || [name isEqualToString:@"timestamp_subtract"]) {
+    id timestampMap = args[@"timestamp"];
+    id unitVal = args[@"unit"];
+    id amountMap = args[@"amount"];
+    if (![timestampMap isKindOfClass:[NSDictionary class]] ||
+        !unitVal ||
+        ![amountMap isKindOfClass:[NSDictionary class]]) {
+      if (error)
+        *error = parseError([NSString stringWithFormat:@"%@ requires timestamp, unit, and amount", name]);
+      return nil;
+    }
+    FIRExprBridge *timestampExpr = [self parseExpression:timestampMap error:error];
+    FIRExprBridge *amountExpr = [self parseExpression:amountMap error:error];
+    if (!timestampExpr || !amountExpr) return nil;
+    FIRExprBridge *unitExpr = [[FIRConstantBridge alloc] init:unitVal];
+    return [[FIRFunctionExprBridge alloc] initWithName:name
+                                                  Args:@[ timestampExpr, unitExpr, amountExpr ]];
+  }
+
+  // -------------------------------------------------------------------------
+  // timestamp + unit: timestamp_truncate (SDK: timestamp_trunc)
+  // -------------------------------------------------------------------------
+  if ([name isEqualToString:@"timestamp_truncate"]) {
+    id timestampMap = args[@"timestamp"];
+    id unitVal = args[@"unit"];
+    if (![timestampMap isKindOfClass:[NSDictionary class]] || !unitVal) {
+      if (error) *error = parseError(@"timestamp_truncate requires timestamp and unit");
+      return nil;
+    }
+    FIRExprBridge *timestampExpr = [self parseExpression:timestampMap error:error];
+    if (!timestampExpr) return nil;
+    FIRExprBridge *unitExpr = [[FIRConstantBridge alloc] init:unitVal];
+    return [[FIRFunctionExprBridge alloc] initWithName:@"timestamp_trunc"
+                                                  Args:@[ timestampExpr, unitExpr ]];
   }
 
   // -------------------------------------------------------------------------
