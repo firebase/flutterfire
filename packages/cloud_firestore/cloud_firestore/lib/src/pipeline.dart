@@ -97,6 +97,16 @@ class Pipeline {
     if (selectable8 != null) selectables.add(selectable8);
     if (selectable9 != null) selectables.add(selectable9);
     if (selectable10 != null) selectables.add(selectable10);
+    if (selectable11 != null) selectables.add(selectable11);
+    if (selectable12 != null) selectables.add(selectable12);
+    if (selectable13 != null) selectables.add(selectable13);
+    if (selectable14 != null) selectables.add(selectable14);
+    if (selectable15 != null) selectables.add(selectable15);
+    if (selectable16 != null) selectables.add(selectable16);
+    if (selectable17 != null) selectables.add(selectable17);
+    if (selectable18 != null) selectables.add(selectable18);
+    if (selectable19 != null) selectables.add(selectable19);
+    if (selectable20 != null) selectables.add(selectable20);
     if (selectable21 != null) selectables.add(selectable21);
     if (selectable22 != null) selectables.add(selectable22);
     if (selectable23 != null) selectables.add(selectable23);
