@@ -422,8 +422,8 @@ abstract class Expression implements PipelineSerializable {
   // ============================================================================
 
   /// Concatenates this array with another array expression
-  Expression arrayConcat(Expression secondArray) {
-    return _ArrayConcatExpression(this, secondArray);
+  Expression arrayConcat(Object? secondArray) {
+    return _ArrayConcatExpression(this, _toExpression(secondArray));
   }
 
   /// Concatenates this array with multiple arrays/values
