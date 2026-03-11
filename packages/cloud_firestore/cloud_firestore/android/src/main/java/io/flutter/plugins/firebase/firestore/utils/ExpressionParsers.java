@@ -134,6 +134,273 @@ class ExpressionParsers {
           BooleanExpression expr = parseBooleanExpression(exprMap);
           return Expression.not(expr);
         }
+        // String / array value expressions
+      case "concat":
+        {
+          List<Map<String, Object>> exprMaps = (List<Map<String, Object>>) args.get("expressions");
+          if (exprMaps == null || exprMaps.size() < 2) {
+            throw new IllegalArgumentException("concat requires at least two expressions");
+          }
+          Expression first = parseExpression(exprMaps.get(0));
+          Expression second = parseExpression(exprMaps.get(1));
+          if (exprMaps.size() == 2) {
+            return Expression.concat(first, second);
+          }
+          Object[] others = new Object[exprMaps.size() - 2];
+          for (int i = 2; i < exprMaps.size(); i++) {
+            others[i - 2] = parseExpression(exprMaps.get(i));
+          }
+          return Expression.concat(first, second, others);
+        }
+      case "length":
+        {
+          Map<String, Object> exprMap = (Map<String, Object>) args.get("expression");
+          return Expression.length(parseExpression(exprMap));
+        }
+      case "to_lower_case":
+        {
+          Map<String, Object> exprMap = (Map<String, Object>) args.get("expression");
+          return Expression.toLower(parseExpression(exprMap));
+        }
+      case "to_upper_case":
+        {
+          Map<String, Object> exprMap = (Map<String, Object>) args.get("expression");
+          return Expression.toUpper(parseExpression(exprMap));
+        }
+      case "trim":
+        {
+          Map<String, Object> exprMap = (Map<String, Object>) args.get("expression");
+          return Expression.trim(parseExpression(exprMap));
+        }
+      case "substring":
+        {
+          Map<String, Object> exprMap = (Map<String, Object>) args.get("expression");
+          Map<String, Object> startMap = (Map<String, Object>) args.get("start");
+          Map<String, Object> endMap = (Map<String, Object>) args.get("end");
+          Expression stringExpr = parseExpression(exprMap);
+          Expression startExpr = parseExpression(startMap);
+          Expression endExpr = parseExpression(endMap);
+          // Android uses (stringExpression, index, length). Dart uses (expression, start, end).
+          Expression lengthExpr = Expression.subtract(endExpr, startExpr);
+          return Expression.substring(stringExpr, startExpr, lengthExpr);
+        }
+      case "replace":
+        throw new UnsupportedOperationException(
+            "Expression type 'replace' is not supported on Android Firestore pipeline API");
+      case "split":
+        {
+          Map<String, Object> valueMap = (Map<String, Object>) args.get("expression");
+          Map<String, Object> delimiterMap = (Map<String, Object>) args.get("delimiter");
+          return Expression.split(parseExpression(valueMap), parseExpression(delimiterMap));
+        }
+      case "join":
+        {
+          Map<String, Object> arrayMap = (Map<String, Object>) args.get("expression");
+          Map<String, Object> delimiterMap = (Map<String, Object>) args.get("delimiter");
+          return Expression.join(parseExpression(arrayMap), parseExpression(delimiterMap));
+        }
+        // Numeric
+      case "abs":
+        {
+          Map<String, Object> exprMap = (Map<String, Object>) args.get("expression");
+          return Expression.abs(parseExpression(exprMap));
+        }
+      case "negate":
+        {
+          Map<String, Object> exprMap = (Map<String, Object>) args.get("expression");
+          Expression expr = parseExpression(exprMap);
+          return Expression.subtract(Expression.constant(0), expr);
+        }
+        // Array expressions
+      case "array_concat":
+        {
+          Map<String, Object> firstMap = (Map<String, Object>) args.get("first");
+          Map<String, Object> secondMap = (Map<String, Object>) args.get("second");
+          return Expression.arrayConcat(parseExpression(firstMap), parseExpression(secondMap));
+        }
+      case "array_concat_multiple":
+        {
+          List<Map<String, Object>> arrays = (List<Map<String, Object>>) args.get("arrays");
+          if (arrays == null || arrays.size() < 2) {
+            throw new IllegalArgumentException(
+                "array_concat_multiple requires at least two arrays");
+          }
+          Expression result =
+              Expression.arrayConcat(
+                  parseExpression(arrays.get(0)), parseExpression(arrays.get(1)));
+          for (int i = 2; i < arrays.size(); i++) {
+            result = result.arrayConcat(parseExpression(arrays.get(i)));
+          }
+          return result;
+        }
+      case "array_length":
+        {
+          Map<String, Object> exprMap = (Map<String, Object>) args.get("expression");
+          return Expression.arrayLength(parseExpression(exprMap));
+        }
+      case "array_reverse":
+        {
+          Map<String, Object> exprMap = (Map<String, Object>) args.get("expression");
+          return Expression.arrayReverse(parseExpression(exprMap));
+        }
+      case "array_sum":
+        {
+          Map<String, Object> exprMap = (Map<String, Object>) args.get("expression");
+          return Expression.arraySum(parseExpression(exprMap));
+        }
+      case "array_slice":
+        throw new UnsupportedOperationException(
+            "Expression type 'array_slice' is not supported on Android Firestore pipeline API");
+        // Conditional / logic value expressions
+      case "if_absent":
+        {
+          Map<String, Object> exprMap = (Map<String, Object>) args.get("expression");
+          Map<String, Object> elseMap = (Map<String, Object>) args.get("else");
+          return Expression.ifAbsent(parseExpression(exprMap), parseExpression(elseMap));
+        }
+      case "if_error":
+        {
+          Map<String, Object> exprMap = (Map<String, Object>) args.get("expression");
+          Map<String, Object> catchMap = (Map<String, Object>) args.get("catch");
+          return Expression.ifError(parseExpression(exprMap), parseExpression(catchMap));
+        }
+      case "conditional":
+        {
+          Map<String, Object> conditionMap = (Map<String, Object>) args.get("condition");
+          Map<String, Object> thenMap = (Map<String, Object>) args.get("then");
+          Map<String, Object> elseMap = (Map<String, Object>) args.get("else");
+          BooleanExpression condition = parseBooleanExpression(conditionMap);
+          Expression thenExpr = parseExpression(thenMap);
+          Expression elseExpr = parseExpression(elseMap);
+          return Expression.conditional(condition, thenExpr, elseExpr);
+        }
+        // Document / path
+      case "document_id":
+        {
+          Map<String, Object> exprMap = (Map<String, Object>) args.get("expression");
+          return Expression.documentId(parseExpression(exprMap));
+        }
+      case "document_id_from_ref":
+        {
+          String path = (String) args.get("doc_ref");
+          if (path == null) {
+            throw new IllegalArgumentException("document_id_from_ref requires 'doc_ref' argument");
+          }
+          return Expression.documentId(firestore.document(path));
+        }
+      case "collection_id":
+        {
+          Map<String, Object> exprMap = (Map<String, Object>) args.get("expression");
+          return Expression.collectionId(parseExpression(exprMap));
+        }
+        // Map operations
+      case "map_get":
+        {
+          Map<String, Object> mapMap = (Map<String, Object>) args.get("map");
+          Map<String, Object> keyMap = (Map<String, Object>) args.get("key");
+          return Expression.mapGet(parseExpression(mapMap), parseExpression(keyMap));
+        }
+        // Timestamp
+      case "current_timestamp":
+        return Expression.currentTimestamp();
+      case "timestamp_add":
+        {
+          Map<String, Object> timestampMap = (Map<String, Object>) args.get("timestamp");
+          String unit = (String) args.get("unit");
+          Map<String, Object> amountMap = (Map<String, Object>) args.get("amount");
+          if (unit == null || amountMap == null) {
+            throw new IllegalArgumentException("timestamp_add requires 'unit' and 'amount'");
+          }
+          Expression timestampExpr = parseExpression(timestampMap);
+          Expression amountExpr = parseExpression(amountMap);
+          return Expression.timestampAdd(timestampExpr, Expression.constant(unit), amountExpr);
+        }
+      case "timestamp_subtract":
+        {
+          Map<String, Object> timestampMap = (Map<String, Object>) args.get("timestamp");
+          String unit = (String) args.get("unit");
+          Map<String, Object> amountMap = (Map<String, Object>) args.get("amount");
+          if (unit == null || amountMap == null) {
+            throw new IllegalArgumentException("timestamp_subtract requires 'unit' and 'amount'");
+          }
+          Expression timestampExpr = parseExpression(timestampMap);
+          Expression amountExpr = parseExpression(amountMap);
+          return Expression.timestampSubtract(timestampExpr, Expression.constant(unit), amountExpr);
+        }
+      case "timestamp_truncate":
+        {
+          Map<String, Object> timestampMap = (Map<String, Object>) args.get("timestamp");
+          String unit = (String) args.get("unit");
+          if (unit == null) {
+            throw new IllegalArgumentException("timestamp_truncate requires 'unit'");
+          }
+          return Expression.timestampTruncate(parseExpression(timestampMap), unit);
+        }
+        // Array / map literals
+      case "array":
+        {
+          List<?> elements = (List<?>) args.get("elements");
+          if (elements == null) {
+            throw new IllegalArgumentException("array requires 'elements'");
+          }
+          Object[] parsed = new Object[elements.size()];
+          for (int i = 0; i < elements.size(); i++) {
+            Object el = elements.get(i);
+            if (el instanceof Map) {
+              parsed[i] = parseExpression((Map<String, Object>) el);
+            } else {
+              parsed[i] = ExpressionHelpers.parseConstantValue(el);
+            }
+          }
+          return Expression.array(Arrays.asList(parsed));
+        }
+      case "map":
+        {
+          Map<String, Object> data = (Map<String, Object>) args.get("data");
+          if (data == null) {
+            throw new IllegalArgumentException("map requires 'data'");
+          }
+          Map<String, Object> parsed = new HashMap<>();
+          for (Map.Entry<String, Object> e : data.entrySet()) {
+            Object v = e.getValue();
+            if (v instanceof Map) {
+              @SuppressWarnings("unchecked")
+              Map<String, Object> nested = (Map<String, Object>) v;
+              if (nested.containsKey("name") && nested.containsKey("args")) {
+                parsed.put(e.getKey(), parseExpression(nested));
+              } else {
+                parsed.put(e.getKey(), v);
+              }
+            } else {
+              parsed.put(e.getKey(), ExpressionHelpers.parseConstantValue(v));
+            }
+          }
+          return Expression.map(parsed);
+        }
+        // Bitwise
+      case "bit_and":
+        return parseBinaryOperation(args, (left, right) -> left.bitAnd(right));
+      case "bit_or":
+        return parseBinaryOperation(args, (left, right) -> left.bitOr(right));
+      case "bit_xor":
+        return parseBinaryOperation(args, (left, right) -> left.bitXor(right));
+      case "bit_not":
+        {
+          Map<String, Object> exprMap = (Map<String, Object>) args.get("expression");
+          return parseExpression(exprMap).bitNot();
+        }
+      case "bit_left_shift":
+        {
+          Map<String, Object> exprMap = (Map<String, Object>) args.get("expression");
+          Map<String, Object> amountMap = (Map<String, Object>) args.get("amount");
+          return parseExpression(exprMap).bitLeftShift(parseExpression(amountMap));
+        }
+      case "bit_right_shift":
+        {
+          Map<String, Object> exprMap = (Map<String, Object>) args.get("expression");
+          Map<String, Object> amountMap = (Map<String, Object>) args.get("amount");
+          return parseExpression(exprMap).bitRightShift(parseExpression(amountMap));
+        }
       default:
         Log.w(TAG, "Unsupported expression type: " + name);
         throw new UnsupportedOperationException("Expression type not yet implemented: " + name);
