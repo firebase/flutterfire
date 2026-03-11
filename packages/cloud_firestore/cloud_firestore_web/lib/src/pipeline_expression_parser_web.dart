@@ -76,7 +76,7 @@ class PipelineExpressionParserWeb {
             .toUpper();
       case 'trim':
         return (_expr(argsMap, _kExpression) as interop.ExpressionJsImpl)
-            .toLower();
+            .trim();
       case 'substring':
         return _pipelines.substring(
           _expr(argsMap, _kExpression),
@@ -119,6 +119,14 @@ class PipelineExpressionParserWeb {
         final pathArg = argsMap[_kExpression];
         return _pipelines
             .documentId(toExpression(pathArg as Map<String, dynamic>));
+      case 'document_id_from_ref':
+        final path = argsMap['doc_ref'] as String?;
+        if (path == null || path.isEmpty) {
+          throw ArgumentError(
+              "document_id_from_ref requires a non-empty 'doc_ref' path");
+        }
+        final docRef = interop.doc(_jsFirestore as JSAny, path.toJS);
+        return _pipelines.documentId(docRef);
       case 'collection_id':
         return _pipelines.collectionId(_expr(argsMap, _kExpression));
       case 'map_get':
@@ -179,6 +187,9 @@ class PipelineExpressionParserWeb {
           );
         }
         return arrResult;
+      case 'array_reverse':
+        return (_expr(argsMap, _kExpression) as interop.ExpressionJsImpl)
+            .arrayReverse();
       case 'array':
         final elements = argsMap['elements'] as List<dynamic>?;
         if (elements == null) {

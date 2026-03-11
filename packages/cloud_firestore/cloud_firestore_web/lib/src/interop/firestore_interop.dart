@@ -449,6 +449,7 @@ extension type ExpressionJsImpl._(JSObject _) implements JSObject {
   external ExpressionJsImpl toLower();
   external ExpressionJsImpl toUpper();
   external ExpressionJsImpl trim();
+  external ExpressionJsImpl arrayReverse();
 }
 
 extension type SelectableJsImpl._(JSObject _) implements JSObject {

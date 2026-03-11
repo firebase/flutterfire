@@ -8,6 +8,7 @@ import 'dart:js_interop';
 import 'package:cloud_firestore_web/src/interop/firestore_interop.dart'
     as interop;
 import 'package:cloud_firestore_web/src/pipeline_expression_parser_web.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 /// Builds a JS Pipeline from serialized [stages] and returns it ready to execute.
 /// Keeps [executePipeline] thin: build → execute → convert.
@@ -127,7 +128,10 @@ interop.PipelineJsImpl _applyStage(
           buildPipelineFromStages(jsFirestore, pipelineStages);
       return pipeline.union(otherPipeline);
     default:
-      // Ignore unknown stages
-      return pipeline;
+      throw FirebaseException(
+        plugin: 'cloud_firestore',
+        code: 'unknown-pipeline-stage',
+        message: 'Unknown pipeline stage: $name',
+      );
   }
 }

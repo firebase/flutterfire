@@ -79,8 +79,10 @@ class PipelineResultWeb extends PipelineResultPlatform {
   static Map<String, dynamic>? _dataFromResult(
       interop.PipelineResultJsImpl jsResult) {
     final d = jsResult.data();
-    return d != null
-        ? Map<String, dynamic>.from(dartify(d) as Map<Object?, Object?>)
+    if (d == null) return null;
+    final parsed = dartify(d);
+    return parsed != null
+        ? Map<String, dynamic>.from(parsed as Map<Object?, Object?>)
         : null;
   }
 
