@@ -270,6 +270,8 @@ static NSError *parseError(NSString *message) {
 
   // -------------------------------------------------------------------------
   // array + values[]: array_contains_all, array_contains_any
+  // SDK expects: array_contains_any(field, array(val1, val2, ...)) — two args.
+  // Reuse the "array" expression parser to build the values array.
   // -------------------------------------------------------------------------
   if ([name isEqualToString:@"array_contains_all"] ||
       [name isEqualToString:@"array_contains_any"]) {
@@ -280,24 +282,18 @@ static NSError *parseError(NSString *message) {
       if (error) *error = parseError([NSString stringWithFormat:@"%@ requires array", name]);
       return nil;
     }
-    FIRExprBridge *arrayExpr = [self parseExpression:arrayMap error:error];
-    if (!arrayExpr) return nil;
-    NSMutableArray<FIRExprBridge *> *argsArray = [NSMutableArray arrayWithObject:arrayExpr];
-    if ([valuesMaps isKindOfClass:[NSArray class]]) {
-      for (id vm in valuesMaps) {
-        if (![vm isKindOfClass:[NSDictionary class]]) continue;
-        FIRExprBridge *ve = [self parseExpression:vm error:error];
-        if (!ve) return nil;
-        [argsArray addObject:ve];
-      }
-    }
-    if (argsArray.count < 2) {
+    if (![valuesMaps isKindOfClass:[NSArray class]] || valuesMaps.count == 0) {
       if (error)
         *error = parseError(
             [NSString stringWithFormat:@"%@ requires array and at least one value", name]);
       return nil;
     }
-    return [[FIRFunctionExprBridge alloc] initWithName:name Args:argsArray];
+    FIRExprBridge *arrayExpr = [self parseExpression:arrayMap error:error];
+    if (!arrayExpr) return nil;
+    NSDictionary *arrayExprMap = @{@"name" : @"array", @"args" : @{@"elements" : valuesMaps}};
+    FIRExprBridge *valuesArrayExpr = [self parseExpression:arrayExprMap error:error];
+    if (!valuesArrayExpr) return nil;
+    return [[FIRFunctionExprBridge alloc] initWithName:name Args:@[ arrayExpr, valuesArrayExpr ]];
   }
 
   // -------------------------------------------------------------------------
@@ -421,6 +417,56 @@ static NSError *parseError(NSString *message) {
       return nil;
     }
     return [[FIRFunctionExprBridge alloc] initWithName:@"array_concat" Args:all];
+  }
+
+  // -------------------------------------------------------------------------
+  // elements[]: array (construct) — Expression.array([...]) from Dart
+  // -------------------------------------------------------------------------
+  if ([name isEqualToString:@"array"]) {
+    NSArray *elementsMaps = args[@"elements"];
+    if (![elementsMaps isKindOfClass:[NSArray class]] || elementsMaps.count == 0) {
+      if (error) *error = parseError(@"array requires non-empty elements");
+      return nil;
+    }
+    NSMutableArray<FIRExprBridge *> *elementExprs = [NSMutableArray array];
+    for (id em in elementsMaps) {
+      if (![em isKindOfClass:[NSDictionary class]]) continue;
+      FIRExprBridge *e = [self parseExpression:em error:error];
+      if (!e) return nil;
+      [elementExprs addObject:e];
+    }
+    if (elementExprs.count == 0) {
+      if (error) *error = parseError(@"array requires at least one element");
+      return nil;
+    }
+    return [[FIRFunctionExprBridge alloc] initWithName:@"array" Args:elementExprs];
+  }
+
+  // -------------------------------------------------------------------------
+  // data: map (construct) — Expression.map({ "k": expr, ... }) from Dart
+  // SDK expects Args as alternating key (constant), value (expression).
+  // -------------------------------------------------------------------------
+  if ([name isEqualToString:@"map"]) {
+    NSDictionary *dataMap = args[@"data"];
+    if (![dataMap isKindOfClass:[NSDictionary class]] || dataMap.count == 0) {
+      if (error) *error = parseError(@"map requires non-empty data");
+      return nil;
+    }
+    NSMutableArray<FIRExprBridge *> *mapArgs = [NSMutableArray array];
+    for (NSString *key in dataMap) {
+      id valueMap = dataMap[key];
+      if (![valueMap isKindOfClass:[NSDictionary class]]) continue;
+      FIRExprBridge *keyExpr = [[FIRConstantBridge alloc] init:key];
+      FIRExprBridge *valueExpr = [self parseExpression:valueMap error:error];
+      if (!valueExpr) return nil;
+      [mapArgs addObject:keyExpr];
+      [mapArgs addObject:valueExpr];
+    }
+    if (mapArgs.count == 0) {
+      if (error) *error = parseError(@"map requires at least one key-value pair");
+      return nil;
+    }
+    return [[FIRFunctionExprBridge alloc] initWithName:@"map" Args:mapArgs];
   }
 
   // -------------------------------------------------------------------------
