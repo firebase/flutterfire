@@ -132,8 +132,8 @@ static NSError *parseError(NSString *message) {
   dispatch_once(&onceToken, ^{
     binaryNames = @[
       @"equal", @"not_equal", @"greater_than", @"greater_than_or_equal", @"less_than",
-      @"less_than_or_equal", @"add", @"subtract", @"multiply", @"divide", @"mod",
-      @"bit_and", @"bit_or", @"bit_left_shift", @"bit_right_shift"
+      @"less_than_or_equal", @"add", @"subtract", @"multiply", @"divide", @"mod", @"bit_and",
+      @"bit_or", @"bit_left_shift", @"bit_right_shift"
     ];
   });
   if ([binaryNames containsObject:sdkName] || [name isEqualToString:@"bit_xor"]) {
@@ -174,8 +174,8 @@ static NSError *parseError(NSString *message) {
   // abs, array_length, array_reverse, bit_not, document_id, collection_id
   // -------------------------------------------------------------------------
   NSArray *unaryWithSdkName = @[
-    @"length", @"to_lower_case", @"to_upper_case", @"trim", @"abs",
-    @"array_length", @"array_reverse", @"bit_not", @"document_id", @"collection_id"
+    @"length", @"to_lower_case", @"to_upper_case", @"trim", @"abs", @"array_length",
+    @"array_reverse", @"bit_not", @"document_id", @"collection_id"
   ];
   if ([unaryWithSdkName containsObject:name]) {
     id exprMap = args[@"expression"];
@@ -340,8 +340,7 @@ static NSError *parseError(NSString *message) {
     FIRExprBridge *start = [self parseExpression:startMap error:error];
     FIRExprBridge *end = [self parseExpression:endMap error:error];
     if (!expr || !start || !end) return nil;
-    return [[FIRFunctionExprBridge alloc] initWithName:@"substring"
-                                                  Args:@[ expr, start, end ]];
+    return [[FIRFunctionExprBridge alloc] initWithName:@"substring" Args:@[ expr, start, end ]];
   }
 
   // -------------------------------------------------------------------------
@@ -374,7 +373,8 @@ static NSError *parseError(NSString *message) {
     if (![exprMap isKindOfClass:[NSDictionary class]] ||
         ![delimiterMap isKindOfClass:[NSDictionary class]]) {
       if (error)
-        *error = parseError([NSString stringWithFormat:@"%@ requires expression and delimiter", name]);
+        *error =
+            parseError([NSString stringWithFormat:@"%@ requires expression and delimiter", name]);
       return nil;
     }
     FIRExprBridge *expr = [self parseExpression:exprMap error:error];
@@ -397,8 +397,7 @@ static NSError *parseError(NSString *message) {
     FIRExprBridge *first = [self parseExpression:firstMap error:error];
     FIRExprBridge *second = [self parseExpression:secondMap error:error];
     if (!first || !second) return nil;
-    return [[FIRFunctionExprBridge alloc] initWithName:@"array_concat"
-                                                  Args:@[ first, second ]];
+    return [[FIRFunctionExprBridge alloc] initWithName:@"array_concat" Args:@[ first, second ]];
   }
 
   // -------------------------------------------------------------------------
@@ -438,8 +437,7 @@ static NSError *parseError(NSString *message) {
     FIRExprBridge *mapExpr = [self parseExpression:mapMap error:error];
     FIRExprBridge *keyExpr = [self parseExpression:keyMap error:error];
     if (!mapExpr || !keyExpr) return nil;
-    return [[FIRFunctionExprBridge alloc] initWithName:@"map_get"
-                                                  Args:@[ mapExpr, keyExpr ]];
+    return [[FIRFunctionExprBridge alloc] initWithName:@"map_get" Args:@[ mapExpr, keyExpr ]];
   }
 
   // -------------------------------------------------------------------------
@@ -483,11 +481,11 @@ static NSError *parseError(NSString *message) {
     id timestampMap = args[@"timestamp"];
     id unitVal = args[@"unit"];
     id amountMap = args[@"amount"];
-    if (![timestampMap isKindOfClass:[NSDictionary class]] ||
-        !unitVal ||
+    if (![timestampMap isKindOfClass:[NSDictionary class]] || !unitVal ||
         ![amountMap isKindOfClass:[NSDictionary class]]) {
       if (error)
-        *error = parseError([NSString stringWithFormat:@"%@ requires timestamp, unit, and amount", name]);
+        *error = parseError(
+            [NSString stringWithFormat:@"%@ requires timestamp, unit, and amount", name]);
       return nil;
     }
     FIRExprBridge *timestampExpr = [self parseExpression:timestampMap error:error];
