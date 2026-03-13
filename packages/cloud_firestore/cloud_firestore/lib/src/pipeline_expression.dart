@@ -371,14 +371,15 @@ abstract class Expression implements PipelineSerializable {
     return _SubstringExpression(this, Constant(start), Constant(end));
   }
 
-  /// Replaces occurrences of a pattern in this string
-  Expression replace(Expression find, Expression replacement) {
-    return _ReplaceExpression(this, find, replacement);
+  /// Replaces all occurrences of a pattern in this string (stringReplaceAll)
+  Expression stringReplaceAll(Expression find, Expression replacement) {
+    return _StringReplaceAllExpression(this, find, replacement);
   }
 
-  /// Replaces occurrences of a string literal
-  Expression replaceLiteral(String find, String replacement) {
-    return _ReplaceExpression(this, Constant(find), Constant(replacement));
+  /// Replaces all occurrences of a string literal
+  Expression stringReplaceAllLiteral(String find, String replacement) {
+    return _StringReplaceAllExpression(
+        this, Constant(find), Constant(replacement));
   }
 
   /// Splits this string expression by a delimiter
@@ -1263,13 +1264,13 @@ abstract class Expression implements PipelineSerializable {
     return _SubstringExpression(stringExpr, start, end);
   }
 
-  /// Replaces in string
-  static Expression replaceStatic(
+  /// Replaces all occurrences in string (stringReplaceAll)
+  static Expression stringReplaceAllStatic(
     Expression stringExpr,
     Expression find,
     Expression replacement,
   ) {
-    return _ReplaceExpression(stringExpr, find, replacement);
+    return _StringReplaceAllExpression(stringExpr, find, replacement);
   }
 
   /// Splits string
@@ -1631,16 +1632,16 @@ class _SubstringExpression extends FunctionExpression {
   }
 }
 
-/// Represents a replace function expression
-class _ReplaceExpression extends FunctionExpression {
+/// Represents a string_replace_all function expression
+class _StringReplaceAllExpression extends FunctionExpression {
   final Expression expression;
   final Expression find;
   final Expression replacement;
 
-  _ReplaceExpression(this.expression, this.find, this.replacement);
+  _StringReplaceAllExpression(this.expression, this.find, this.replacement);
 
   @override
-  String get name => 'replace';
+  String get name => 'string_replace_all';
 
   @override
   Map<String, dynamic> toMap() {
