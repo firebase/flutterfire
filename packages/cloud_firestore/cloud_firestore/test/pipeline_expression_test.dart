@@ -495,10 +495,11 @@ void main() {
       });
     });
 
-    test('replace serializes correctly', () {
-      final expr = Field('s').replace(Constant('old'), Constant('new'));
+    test('stringReplaceAll serializes correctly', () {
+      final expr =
+          Field('s').stringReplaceAll(Constant('old'), Constant('new'));
       expect(expr.toMap(), {
-        'name': 'replace',
+        'name': 'string_replace_all',
         'args': {
           'expression': Field('s').toMap(),
           'find': Constant('old').toMap(),
