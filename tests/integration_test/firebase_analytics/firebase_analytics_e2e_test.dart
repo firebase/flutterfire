@@ -102,11 +102,33 @@ void main() {
           parameters: {
             'foo': 'bar',
             'baz': 500,
-            // Lists are not supported
+            // Lists are not supported in parameters
             'items': [analyticsEventItem],
           },
         ),
         throwsA(isA<AssertionError>()),
+      );
+
+      // test logEvent with typed items parameter
+      await expectLater(
+        FirebaseAnalytics.instance.logEvent(
+          name: 'testing-items',
+          items: [analyticsEventItem],
+        ),
+        completes,
+      );
+
+      // test logEvent with both items and parameters
+      await expectLater(
+        FirebaseAnalytics.instance.logEvent(
+          name: 'testing-items-and-parameters',
+          items: [analyticsEventItem],
+          parameters: {
+            'foo': 'bar',
+            'baz': 500,
+          },
+        ),
+        completes,
       );
 
       // test 3 reserved events

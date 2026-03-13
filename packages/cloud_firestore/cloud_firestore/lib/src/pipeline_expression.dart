@@ -20,6 +20,25 @@ Expression _toExpression(Object? value) {
   return Constant(value);
 }
 
+/// Valid unit strings for timestamp add/subtract/truncate expressions.
+const Set<String> _timestampUnits = {
+  'microsecond',
+  'millisecond',
+  'second',
+  'minute',
+  'hour',
+  'day',
+};
+
+void _validateTimestampUnit(String unit) {
+  if (!_timestampUnits.contains(unit)) {
+    throw ArgumentError(
+      "Timestamp unit must be one of: 'microsecond', 'millisecond', 'second', "
+      "'minute', 'hour', 'day'. Got: '$unit'",
+    );
+  }
+}
+
 /// Base class for all pipeline expressions
 abstract class Expression implements PipelineSerializable {
   /// Creates an aliased expression
@@ -89,16 +108,6 @@ abstract class Expression implements PipelineSerializable {
   /// Casts this expression to a boolean expression
   BooleanExpression asBoolean() {
     return _AsBooleanExpression(this);
-  }
-
-  /// Converts this expression to a string with a format
-  Expression toStringWithFormat(Expression format) {
-    return _ToStringWithFormatExpression(this, format);
-  }
-
-  /// Converts this expression to a string with a literal format
-  Expression toStringWithFormatLiteral(String format) {
-    return _ToStringWithFormatExpression(this, Constant(format));
   }
 
   // ============================================================================
@@ -190,19 +199,6 @@ abstract class Expression implements PipelineSerializable {
   Expression mapGetLiteral(String key) {
     return _MapGetExpression(this, Constant(key));
   }
-
-  /// Returns the keys from this map expression
-  // ignore: use_to_and_as_if_applicable
-  Expression mapKeys() {
-    return _MapKeysExpression(this);
-  }
-
-  /// Returns the values from this map expression
-  // ignore: use_to_and_as_if_applicable
-  Expression mapValues() {
-    return _MapValuesExpression(this);
-  }
-
   // ============================================================================
   // ALIASING
   // ============================================================================
@@ -270,12 +266,6 @@ abstract class Expression implements PipelineSerializable {
   // ignore: use_to_and_as_if_applicable
   Expression abs() {
     return _AbsExpression(this);
-  }
-
-  /// Returns the negation of this expression
-  // ignore: use_to_and_as_if_applicable
-  Expression negate() {
-    return _NegateExpression(this);
   }
 
   // ============================================================================
@@ -381,14 +371,15 @@ abstract class Expression implements PipelineSerializable {
     return _SubstringExpression(this, Constant(start), Constant(end));
   }
 
-  /// Replaces occurrences of a pattern in this string
-  Expression replace(Expression find, Expression replacement) {
-    return _ReplaceExpression(this, find, replacement);
+  /// Replaces all occurrences of a pattern in this string (stringReplaceAll)
+  Expression stringReplaceAll(Expression find, Expression replacement) {
+    return _StringReplaceAllExpression(this, find, replacement);
   }
 
-  /// Replaces occurrences of a string literal
-  Expression replaceLiteral(String find, String replacement) {
-    return _ReplaceExpression(this, Constant(find), Constant(replacement));
+  /// Replaces all occurrences of a string literal
+  Expression stringReplaceAllLiteral(String find, String replacement) {
+    return _StringReplaceAllExpression(
+        this, Constant(find), Constant(replacement));
   }
 
   /// Splits this string expression by a delimiter
@@ -660,65 +651,68 @@ abstract class Expression implements PipelineSerializable {
     return _CurrentTimestampExpression();
   }
 
-  /// Adds time to a timestamp expression
+  /// Adds time to a timestamp expression.
+  ///
+  /// [unit] must be one of: `microsecond`, `millisecond`, `second`, `minute`,
+  /// `hour`, `day`.
   static Expression timestampAdd(
     Expression timestamp,
     String unit,
     Expression amount,
   ) {
+    _validateTimestampUnit(unit);
     return _TimestampAddExpression(timestamp, unit, amount);
   }
 
-  /// Adds time to a timestamp with a literal amount
+  /// Adds time to a timestamp with a literal amount.
+  ///
+  /// [unit] must be one of: `microsecond`, `millisecond`, `second`, `minute`,
+  /// `hour`, `day`.
   static Expression timestampAddLiteral(
     Expression timestamp,
     String unit,
     int amount,
   ) {
+    _validateTimestampUnit(unit);
     return _TimestampAddExpression(timestamp, unit, Constant(amount));
   }
 
-  /// Subtracts time from a timestamp expression
+  /// Subtracts time from a timestamp expression.
+  ///
+  /// [unit] must be one of: `microsecond`, `millisecond`, `second`, `minute`,
+  /// `hour`, `day`.
   static Expression timestampSubtract(
     Expression timestamp,
     String unit,
     Expression amount,
   ) {
+    _validateTimestampUnit(unit);
     return _TimestampSubtractExpression(timestamp, unit, amount);
   }
 
-  /// Subtracts time from a timestamp with a literal amount
+  /// Subtracts time from a timestamp with a literal amount.
+  ///
+  /// [unit] must be one of: `microsecond`, `millisecond`, `second`, `minute`,
+  /// `hour`, `day`.
   static Expression timestampSubtractLiteral(
     Expression timestamp,
     String unit,
     int amount,
   ) {
+    _validateTimestampUnit(unit);
     return _TimestampSubtractExpression(timestamp, unit, Constant(amount));
   }
 
-  /// Calculates the difference between two timestamps
-  static Expression timestampDiff(
-    Expression timestamp1,
-    Expression timestamp2,
-    String unit,
-  ) {
-    return _TimestampDiffExpression(timestamp1, timestamp2, unit);
-  }
-
-  /// Truncates a timestamp to a specific unit
+  /// Truncates a timestamp to a specific unit.
+  ///
+  /// [unit] must be one of: `microsecond`, `millisecond`, `second`, `minute`,
+  /// `hour`, `day`.
   static Expression timestampTruncate(
     Expression timestamp,
     String unit,
   ) {
+    _validateTimestampUnit(unit);
     return _TimestampTruncateExpression(timestamp, unit);
-  }
-
-  /// Calculates the distance between two GeoPoint expressions
-  static Expression distance(
-    Expression geoPoint1,
-    Expression geoPoint2,
-  ) {
-    return _DistanceExpression(geoPoint1, geoPoint2);
   }
 
   /// Creates a document ID expression from a DocumentReference
@@ -1048,16 +1042,6 @@ abstract class Expression implements PipelineSerializable {
     return _AbsExpression(Field(numericField));
   }
 
-  /// Negates an expression
-  static Expression negateStatic(Expression numericExpr) {
-    return _NegateExpression(numericExpr);
-  }
-
-  /// Negates a field
-  static Expression negateField(String numericField) {
-    return _NegateExpression(Field(numericField));
-  }
-
   /// Adds two expressions
   static Expression addStatic(
     Expression first,
@@ -1280,13 +1264,13 @@ abstract class Expression implements PipelineSerializable {
     return _SubstringExpression(stringExpr, start, end);
   }
 
-  /// Replaces in string
-  static Expression replaceStatic(
+  /// Replaces all occurrences in string (stringReplaceAll)
+  static Expression stringReplaceAllStatic(
     Expression stringExpr,
     Expression find,
     Expression replacement,
   ) {
-    return _ReplaceExpression(stringExpr, find, replacement);
+    return _StringReplaceAllExpression(stringExpr, find, replacement);
   }
 
   /// Splits string
@@ -1648,16 +1632,16 @@ class _SubstringExpression extends FunctionExpression {
   }
 }
 
-/// Represents a replace function expression
-class _ReplaceExpression extends FunctionExpression {
+/// Represents a string_replace_all function expression
+class _StringReplaceAllExpression extends FunctionExpression {
   final Expression expression;
   final Expression find;
   final Expression replacement;
 
-  _ReplaceExpression(this.expression, this.find, this.replacement);
+  _StringReplaceAllExpression(this.expression, this.find, this.replacement);
 
   @override
-  String get name => 'replace';
+  String get name => 'string_replace_all';
 
   @override
   Map<String, dynamic> toMap() {
@@ -1918,25 +1902,6 @@ class _AbsExpression extends FunctionExpression {
 }
 
 /// Represents a negation function expression
-class _NegateExpression extends FunctionExpression {
-  final Expression expression;
-
-  _NegateExpression(this.expression);
-
-  @override
-  String get name => 'negate';
-
-  @override
-  Map<String, dynamic> toMap() {
-    return {
-      'name': name,
-      'args': {
-        'expression': expression.toMap(),
-      },
-    };
-  }
-}
-
 /// Represents a not-equal comparison function expression
 class _NotEqualExpression extends BooleanExpression {
   final Expression left;
@@ -2476,28 +2441,6 @@ class _AsBooleanExpression extends BooleanExpression {
   }
 }
 
-/// Represents a toStringWithFormat function expression
-class _ToStringWithFormatExpression extends FunctionExpression {
-  final Expression expression;
-  final Expression format;
-
-  _ToStringWithFormatExpression(this.expression, this.format);
-
-  @override
-  String get name => 'to_string_with_format';
-
-  @override
-  Map<String, dynamic> toMap() {
-    return {
-      'name': name,
-      'args': {
-        'expression': expression.toMap(),
-        'format': format.toMap(),
-      },
-    };
-  }
-}
-
 // ============================================================================
 // BITWISE OPERATION EXPRESSION CLASSES
 // ============================================================================
@@ -2722,46 +2665,6 @@ class _MapGetExpression extends FunctionExpression {
   }
 }
 
-/// Represents a mapKeys function expression
-class _MapKeysExpression extends FunctionExpression {
-  final Expression expression;
-
-  _MapKeysExpression(this.expression);
-
-  @override
-  String get name => 'map_keys';
-
-  @override
-  Map<String, dynamic> toMap() {
-    return {
-      'name': name,
-      'args': {
-        'expression': expression.toMap(),
-      },
-    };
-  }
-}
-
-/// Represents a mapValues function expression
-class _MapValuesExpression extends FunctionExpression {
-  final Expression expression;
-
-  _MapValuesExpression(this.expression);
-
-  @override
-  String get name => 'map_values';
-
-  @override
-  Map<String, dynamic> toMap() {
-    return {
-      'name': name,
-      'args': {
-        'expression': expression.toMap(),
-      },
-    };
-  }
-}
-
 // ============================================================================
 // TIMESTAMP OPERATION EXPRESSION CLASSES
 // ============================================================================
@@ -2781,7 +2684,8 @@ class _CurrentTimestampExpression extends FunctionExpression {
   }
 }
 
-/// Represents a timestampAdd function expression
+/// Represents a timestamp_add function expression.
+/// Unit must be one of: microsecond, millisecond, second, minute, hour, day.
 class _TimestampAddExpression extends FunctionExpression {
   final Expression timestamp;
   final String unit;
@@ -2805,7 +2709,8 @@ class _TimestampAddExpression extends FunctionExpression {
   }
 }
 
-/// Represents a timestampSubtract function expression
+/// Represents a timestamp_subtract function expression.
+/// Unit must be one of: microsecond, millisecond, second, minute, hour, day.
 class _TimestampSubtractExpression extends FunctionExpression {
   final Expression timestamp;
   final String unit;
@@ -2829,31 +2734,8 @@ class _TimestampSubtractExpression extends FunctionExpression {
   }
 }
 
-/// Represents a timestampDiff function expression
-class _TimestampDiffExpression extends FunctionExpression {
-  final Expression timestamp1;
-  final Expression timestamp2;
-  final String unit;
-
-  _TimestampDiffExpression(this.timestamp1, this.timestamp2, this.unit);
-
-  @override
-  String get name => 'timestamp_diff';
-
-  @override
-  Map<String, dynamic> toMap() {
-    return {
-      'name': name,
-      'args': {
-        'timestamp1': timestamp1.toMap(),
-        'timestamp2': timestamp2.toMap(),
-        'unit': unit,
-      },
-    };
-  }
-}
-
-/// Represents a timestampTruncate function expression
+/// Represents a timestamp_truncate function expression.
+/// Unit must be one of: microsecond, millisecond, second, minute, hour, day.
 class _TimestampTruncateExpression extends FunctionExpression {
   final Expression timestamp;
   final String unit;
@@ -2870,28 +2752,6 @@ class _TimestampTruncateExpression extends FunctionExpression {
       'args': {
         'timestamp': timestamp.toMap(),
         'unit': unit,
-      },
-    };
-  }
-}
-
-/// Represents a distance function expression
-class _DistanceExpression extends FunctionExpression {
-  final Expression geoPoint1;
-  final Expression geoPoint2;
-
-  _DistanceExpression(this.geoPoint1, this.geoPoint2);
-
-  @override
-  String get name => 'distance';
-
-  @override
-  Map<String, dynamic> toMap() {
-    return {
-      'name': name,
-      'args': {
-        'geo_point1': geoPoint1.toMap(),
-        'geo_point2': geoPoint2.toMap(),
       },
     };
   }
