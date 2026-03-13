@@ -83,7 +83,7 @@ class PipelineExpressionParserWeb {
           _expr(argsMap, 'start'),
           _expr(argsMap, 'end'),
         );
-      case 'replace':
+      case 'string_replace_all':
         return _pipelines.stringReplaceAll(
           _expr(argsMap, _kExpression),
           _expr(argsMap, 'find'),
