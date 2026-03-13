@@ -21,6 +21,9 @@ import 'src/collection_reference_web.dart';
 import 'src/document_reference_web.dart';
 import 'src/field_value_factory_web.dart';
 import 'src/interop/firestore.dart' as firestore_interop;
+import 'src/interop/firestore_interop.dart' as firestore_interop_js;
+import 'src/pipeline_builder_web.dart';
+import 'src/pipeline_web.dart';
 import 'src/query_web.dart';
 import 'src/transaction_web.dart';
 import 'src/write_batch_web.dart';
@@ -270,5 +273,45 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
       value = 'silent';
     }
     _delegate.setLoggingEnabled(value);
+  }
+
+  @override
+  PipelinePlatform pipeline(List<Map<String, dynamic>> initialStages) {
+    return PipelineWeb(this, _delegate, initialStages);
+  }
+
+  @override
+  Future<PipelineSnapshotPlatform> executePipeline(
+    List<Map<String, dynamic>> stages, {
+    Map<String, dynamic>? options,
+  }) async {
+    final jsFirestore = _delegate.jsObject;
+    firestore_interop_js.PipelineJsImpl jsPipeline;
+    try {
+      jsPipeline = buildPipelineFromStages(jsFirestore, stages);
+    } catch (e, stack) {
+      // Let our Dart FirebaseException (e.g. unsupported expression) propagate
+      // so the user sees a clear message; the guard would cast it to JSError.
+      if (e is FirebaseException) {
+        Error.throwWithStackTrace(e, stack);
+      }
+      // JS or other errors: run through the guard to convert to FirebaseException.
+      return convertWebExceptions(() async {
+        Error.throwWithStackTrace(e, stack);
+      });
+    }
+
+    final dartPipeline = firestore_interop.Pipeline.getInstance(jsPipeline);
+    return convertWebExceptions(() async {
+      final snapshot = await dartPipeline.execute();
+
+      final results = snapshot.results
+          .map((r) => PipelineResultWeb(this, _delegate, r.jsObject))
+          .toList();
+
+      final executionTime = snapshot.executionTime ?? DateTime.now();
+
+      return PipelineSnapshotWeb(results, executionTime);
+    });
   }
 }

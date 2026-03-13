@@ -1075,3 +1075,117 @@ class AggregateQuerySnapshot
     }
   }
 }
+
+// =============================================================================
+// Pipeline (global execute + snapshot/result wrappers)
+// =============================================================================
+
+/// Single result in a pipeline snapshot (document + data).
+class PipelineResult
+    extends JsObjectWrapper<firestore_interop.PipelineResultJsImpl> {
+  static final _expando = Expando<PipelineResult>();
+
+  late final DocumentReference? _ref;
+  late final Map<String, dynamic>? _data;
+  late final DateTime? _createTime;
+  late final DateTime? _updateTime;
+
+  static PipelineResult getInstance(
+      firestore_interop.PipelineResultJsImpl jsObject) {
+    return _expando[jsObject] ??= PipelineResult._fromJsObject(jsObject);
+  }
+
+  PipelineResult._fromJsObject(firestore_interop.PipelineResultJsImpl jsObject)
+      : _ref = jsObject.ref != null
+            ? DocumentReference.getInstance(jsObject.ref!)
+            : null,
+        _data = _dataFromResult(jsObject),
+        _createTime = _timestampToDateTime(jsObject.createTime),
+        _updateTime = _timestampToDateTime(jsObject.updateTime),
+        super.fromJsObject(jsObject);
+
+  static Map<String, dynamic>? _dataFromResult(
+      firestore_interop.PipelineResultJsImpl jsResult) {
+    final d = jsResult.data();
+    if (d == null) return null;
+    final parsed = dartify(d);
+    return parsed != null
+        ? Map<String, dynamic>.from(parsed as Map<Object?, Object?>)
+        : null;
+  }
+
+  static DateTime? _timestampToDateTime(dynamic value) {
+    if (value == null) return null;
+    final d = dartify(value);
+    if (d == null) return null;
+    if (d is DateTime) return d;
+    if (d is Timestamp) return d.toDate();
+    if (d is int) return DateTime.fromMillisecondsSinceEpoch(d);
+    return null;
+  }
+
+  DocumentReference? get ref => _ref;
+  Map<String, dynamic>? get data => _data;
+  DateTime? get createTime => _createTime;
+  DateTime? get updateTime => _updateTime;
+}
+
+/// Snapshot of pipeline execution results.
+class PipelineSnapshot
+    extends JsObjectWrapper<firestore_interop.PipelineSnapshotJsImpl> {
+  static final _expando = Expando<PipelineSnapshot>();
+
+  late final List<PipelineResult> _results;
+  late final DateTime? _executionTime;
+
+  static PipelineSnapshot getInstance(
+      firestore_interop.PipelineSnapshotJsImpl jsObject) {
+    return _expando[jsObject] ??= PipelineSnapshot._fromJsObject(jsObject);
+  }
+
+  static List<PipelineResult> _buildResults(
+      firestore_interop.PipelineSnapshotJsImpl jsObject) {
+    final rawResults = jsObject.results.toDart;
+    return rawResults
+        .cast<firestore_interop.PipelineResultJsImpl>()
+        .map(PipelineResult.getInstance)
+        .toList();
+  }
+
+  PipelineSnapshot._fromJsObject(
+      firestore_interop.PipelineSnapshotJsImpl jsObject)
+      : _results = _buildResults(jsObject),
+        _executionTime = _executionTimeFromJs(jsObject.executionTime),
+        super.fromJsObject(jsObject);
+
+  static DateTime? _executionTimeFromJs(dynamic value) {
+    if (value == null) return null;
+    final d = dartify(value);
+    if (d == null) return null;
+    if (d is DateTime) return d;
+    if (d is int) return DateTime.fromMillisecondsSinceEpoch(d);
+    return null;
+  }
+
+  List<PipelineResult> get results => _results;
+  DateTime? get executionTime => _executionTime;
+}
+
+/// Wraps a JS pipeline; use [execute] to run it via the global execute function.
+class Pipeline extends JsObjectWrapper<firestore_interop.PipelineJsImpl> {
+  static final _expando = Expando<Pipeline>();
+
+  static Pipeline getInstance(firestore_interop.PipelineJsImpl jsObject) {
+    return _expando[jsObject] ??= Pipeline._fromJsObject(jsObject);
+  }
+
+  Pipeline._fromJsObject(firestore_interop.PipelineJsImpl jsObject)
+      : super.fromJsObject(jsObject);
+
+  /// Runs this pipeline using the global JS SDK execute function.
+  Future<PipelineSnapshot> execute() async {
+    final snapshot =
+        await firestore_interop.pipelines.execute(jsObject as JSAny).toDart;
+    return PipelineSnapshot.getInstance(snapshot);
+  }
+}
