@@ -20,6 +20,25 @@ Expression _toExpression(Object? value) {
   return Constant(value);
 }
 
+/// Valid unit strings for timestamp add/subtract/truncate expressions.
+const Set<String> _timestampUnits = {
+  'microsecond',
+  'millisecond',
+  'second',
+  'minute',
+  'hour',
+  'day',
+};
+
+void _validateTimestampUnit(String unit) {
+  if (!_timestampUnits.contains(unit)) {
+    throw ArgumentError(
+      "Timestamp unit must be one of: 'microsecond', 'millisecond', 'second', "
+      "'minute', 'hour', 'day'. Got: '$unit'",
+    );
+  }
+}
+
 /// Base class for all pipeline expressions
 abstract class Expression implements PipelineSerializable {
   /// Creates an aliased expression
@@ -631,47 +650,67 @@ abstract class Expression implements PipelineSerializable {
     return _CurrentTimestampExpression();
   }
 
-  /// Adds time to a timestamp expression
+  /// Adds time to a timestamp expression.
+  ///
+  /// [unit] must be one of: `microsecond`, `millisecond`, `second`, `minute`,
+  /// `hour`, `day`.
   static Expression timestampAdd(
     Expression timestamp,
     String unit,
     Expression amount,
   ) {
+    _validateTimestampUnit(unit);
     return _TimestampAddExpression(timestamp, unit, amount);
   }
 
-  /// Adds time to a timestamp with a literal amount
+  /// Adds time to a timestamp with a literal amount.
+  ///
+  /// [unit] must be one of: `microsecond`, `millisecond`, `second`, `minute`,
+  /// `hour`, `day`.
   static Expression timestampAddLiteral(
     Expression timestamp,
     String unit,
     int amount,
   ) {
+    _validateTimestampUnit(unit);
     return _TimestampAddExpression(timestamp, unit, Constant(amount));
   }
 
-  /// Subtracts time from a timestamp expression
+  /// Subtracts time from a timestamp expression.
+  ///
+  /// [unit] must be one of: `microsecond`, `millisecond`, `second`, `minute`,
+  /// `hour`, `day`.
   static Expression timestampSubtract(
     Expression timestamp,
     String unit,
     Expression amount,
   ) {
+    _validateTimestampUnit(unit);
     return _TimestampSubtractExpression(timestamp, unit, amount);
   }
 
-  /// Subtracts time from a timestamp with a literal amount
+  /// Subtracts time from a timestamp with a literal amount.
+  ///
+  /// [unit] must be one of: `microsecond`, `millisecond`, `second`, `minute`,
+  /// `hour`, `day`.
   static Expression timestampSubtractLiteral(
     Expression timestamp,
     String unit,
     int amount,
   ) {
+    _validateTimestampUnit(unit);
     return _TimestampSubtractExpression(timestamp, unit, Constant(amount));
   }
 
-  /// Truncates a timestamp to a specific unit
+  /// Truncates a timestamp to a specific unit.
+  ///
+  /// [unit] must be one of: `microsecond`, `millisecond`, `second`, `minute`,
+  /// `hour`, `day`.
   static Expression timestampTruncate(
     Expression timestamp,
     String unit,
   ) {
+    _validateTimestampUnit(unit);
     return _TimestampTruncateExpression(timestamp, unit);
   }
 
@@ -2644,7 +2683,8 @@ class _CurrentTimestampExpression extends FunctionExpression {
   }
 }
 
-/// Represents a timestampAdd function expression
+/// Represents a timestamp_add function expression.
+/// Unit must be one of: microsecond, millisecond, second, minute, hour, day.
 class _TimestampAddExpression extends FunctionExpression {
   final Expression timestamp;
   final String unit;
@@ -2668,7 +2708,8 @@ class _TimestampAddExpression extends FunctionExpression {
   }
 }
 
-/// Represents a timestampSubtract function expression
+/// Represents a timestamp_subtract function expression.
+/// Unit must be one of: microsecond, millisecond, second, minute, hour, day.
 class _TimestampSubtractExpression extends FunctionExpression {
   final Expression timestamp;
   final String unit;
@@ -2692,7 +2733,8 @@ class _TimestampSubtractExpression extends FunctionExpression {
   }
 }
 
-/// Represents a timestampTruncate function expression
+/// Represents a timestamp_truncate function expression.
+/// Unit must be one of: microsecond, millisecond, second, minute, hour, day.
 class _TimestampTruncateExpression extends FunctionExpression {
   final Expression timestamp;
   final String unit;
