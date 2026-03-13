@@ -379,7 +379,10 @@ abstract class Expression implements PipelineSerializable {
   /// Replaces all occurrences of a string literal
   Expression stringReplaceAllLiteral(String find, String replacement) {
     return _StringReplaceAllExpression(
-        this, Constant(find), Constant(replacement));
+      this,
+      Constant(find),
+      Constant(replacement),
+    );
   }
 
   /// Splits this string expression by a delimiter
