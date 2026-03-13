@@ -857,6 +857,197 @@ public class GeneratedAndroidFirebaseFirestore {
   }
 
   /** Generated class from Pigeon that represents data sent in messages. */
+  public static final class PigeonPipelineResult {
+    private @Nullable String documentPath;
+
+    public @Nullable String getDocumentPath() {
+      return documentPath;
+    }
+
+    public void setDocumentPath(@Nullable String setterArg) {
+      this.documentPath = setterArg;
+    }
+
+    private @Nullable Long createTime;
+
+    public @Nullable Long getCreateTime() {
+      return createTime;
+    }
+
+    public void setCreateTime(@Nullable Long setterArg) {
+      this.createTime = setterArg;
+    }
+
+    private @Nullable Long updateTime;
+
+    public @Nullable Long getUpdateTime() {
+      return updateTime;
+    }
+
+    public void setUpdateTime(@Nullable Long setterArg) {
+      this.updateTime = setterArg;
+    }
+
+    /** All fields in the result (from PipelineResult.data() on Android). */
+    private @Nullable Map<String, Object> data;
+
+    public @Nullable Map<String, Object> getData() {
+      return data;
+    }
+
+    public void setData(@Nullable Map<String, Object> setterArg) {
+      this.data = setterArg;
+    }
+
+    public static final class Builder {
+
+      private @Nullable String documentPath;
+
+      public @NonNull Builder setDocumentPath(@Nullable String setterArg) {
+        this.documentPath = setterArg;
+        return this;
+      }
+
+      private @Nullable Long createTime;
+
+      public @NonNull Builder setCreateTime(@Nullable Long setterArg) {
+        this.createTime = setterArg;
+        return this;
+      }
+
+      private @Nullable Long updateTime;
+
+      public @NonNull Builder setUpdateTime(@Nullable Long setterArg) {
+        this.updateTime = setterArg;
+        return this;
+      }
+
+      private @Nullable Map<String, Object> data;
+
+      public @NonNull Builder setData(@Nullable Map<String, Object> setterArg) {
+        this.data = setterArg;
+        return this;
+      }
+
+      public @NonNull PigeonPipelineResult build() {
+        PigeonPipelineResult pigeonReturn = new PigeonPipelineResult();
+        pigeonReturn.setDocumentPath(documentPath);
+        pigeonReturn.setCreateTime(createTime);
+        pigeonReturn.setUpdateTime(updateTime);
+        pigeonReturn.setData(data);
+        return pigeonReturn;
+      }
+    }
+
+    @NonNull
+    public ArrayList<Object> toList() {
+      ArrayList<Object> toListResult = new ArrayList<Object>(4);
+      toListResult.add(documentPath);
+      toListResult.add(createTime);
+      toListResult.add(updateTime);
+      toListResult.add(data);
+      return toListResult;
+    }
+
+    static @NonNull PigeonPipelineResult fromList(@NonNull ArrayList<Object> list) {
+      PigeonPipelineResult pigeonResult = new PigeonPipelineResult();
+      Object documentPath = list.get(0);
+      pigeonResult.setDocumentPath((String) documentPath);
+      Object createTime = list.get(1);
+      pigeonResult.setCreateTime(
+          (createTime == null)
+              ? null
+              : ((createTime instanceof Integer) ? (Integer) createTime : (Long) createTime));
+      Object updateTime = list.get(2);
+      pigeonResult.setUpdateTime(
+          (updateTime == null)
+              ? null
+              : ((updateTime instanceof Integer) ? (Integer) updateTime : (Long) updateTime));
+      Object data = list.get(3);
+      pigeonResult.setData((Map<String, Object>) data);
+      return pigeonResult;
+    }
+  }
+
+  /** Generated class from Pigeon that represents data sent in messages. */
+  public static final class PigeonPipelineSnapshot {
+    private @NonNull List<PigeonPipelineResult> results;
+
+    public @NonNull List<PigeonPipelineResult> getResults() {
+      return results;
+    }
+
+    public void setResults(@NonNull List<PigeonPipelineResult> setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"results\" is null.");
+      }
+      this.results = setterArg;
+    }
+
+    private @NonNull Long executionTime;
+
+    public @NonNull Long getExecutionTime() {
+      return executionTime;
+    }
+
+    public void setExecutionTime(@NonNull Long setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"executionTime\" is null.");
+      }
+      this.executionTime = setterArg;
+    }
+
+    /** Constructor is non-public to enforce null safety; use Builder. */
+    PigeonPipelineSnapshot() {}
+
+    public static final class Builder {
+
+      private @Nullable List<PigeonPipelineResult> results;
+
+      public @NonNull Builder setResults(@NonNull List<PigeonPipelineResult> setterArg) {
+        this.results = setterArg;
+        return this;
+      }
+
+      private @Nullable Long executionTime;
+
+      public @NonNull Builder setExecutionTime(@NonNull Long setterArg) {
+        this.executionTime = setterArg;
+        return this;
+      }
+
+      public @NonNull PigeonPipelineSnapshot build() {
+        PigeonPipelineSnapshot pigeonReturn = new PigeonPipelineSnapshot();
+        pigeonReturn.setResults(results);
+        pigeonReturn.setExecutionTime(executionTime);
+        return pigeonReturn;
+      }
+    }
+
+    @NonNull
+    public ArrayList<Object> toList() {
+      ArrayList<Object> toListResult = new ArrayList<Object>(2);
+      toListResult.add(results);
+      toListResult.add(executionTime);
+      return toListResult;
+    }
+
+    static @NonNull PigeonPipelineSnapshot fromList(@NonNull ArrayList<Object> list) {
+      PigeonPipelineSnapshot pigeonResult = new PigeonPipelineSnapshot();
+      Object results = list.get(0);
+      pigeonResult.setResults((List<PigeonPipelineResult>) results);
+      Object executionTime = list.get(1);
+      pigeonResult.setExecutionTime(
+          (executionTime == null)
+              ? null
+              : ((executionTime instanceof Integer)
+                  ? (Integer) executionTime
+                  : (Long) executionTime));
+      return pigeonResult;
+    }
+  }
+
+  /** Generated class from Pigeon that represents data sent in messages. */
   public static final class PigeonGetOptions {
     private @NonNull Source source;
 
@@ -1660,12 +1851,16 @@ public class GeneratedAndroidFirebaseFirestore {
         case (byte) 136:
           return PigeonGetOptions.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 137:
-          return PigeonQueryParameters.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonPipelineResult.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 138:
-          return PigeonQuerySnapshot.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonPipelineSnapshot.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 139:
-          return PigeonSnapshotMetadata.fromList((ArrayList<Object>) readValue(buffer));
+          return PigeonQueryParameters.fromList((ArrayList<Object>) readValue(buffer));
         case (byte) 140:
+          return PigeonQuerySnapshot.fromList((ArrayList<Object>) readValue(buffer));
+        case (byte) 141:
+          return PigeonSnapshotMetadata.fromList((ArrayList<Object>) readValue(buffer));
+        case (byte) 142:
           return PigeonTransactionCommand.fromList((ArrayList<Object>) readValue(buffer));
         default:
           return super.readValueOfType(type, buffer);
@@ -1701,17 +1896,23 @@ public class GeneratedAndroidFirebaseFirestore {
       } else if (value instanceof PigeonGetOptions) {
         stream.write(136);
         writeValue(stream, ((PigeonGetOptions) value).toList());
-      } else if (value instanceof PigeonQueryParameters) {
+      } else if (value instanceof PigeonPipelineResult) {
         stream.write(137);
+        writeValue(stream, ((PigeonPipelineResult) value).toList());
+      } else if (value instanceof PigeonPipelineSnapshot) {
+        stream.write(138);
+        writeValue(stream, ((PigeonPipelineSnapshot) value).toList());
+      } else if (value instanceof PigeonQueryParameters) {
+        stream.write(139);
         writeValue(stream, ((PigeonQueryParameters) value).toList());
       } else if (value instanceof PigeonQuerySnapshot) {
-        stream.write(138);
+        stream.write(140);
         writeValue(stream, ((PigeonQuerySnapshot) value).toList());
       } else if (value instanceof PigeonSnapshotMetadata) {
-        stream.write(139);
+        stream.write(141);
         writeValue(stream, ((PigeonSnapshotMetadata) value).toList());
       } else if (value instanceof PigeonTransactionCommand) {
-        stream.write(140);
+        stream.write(142);
         writeValue(stream, ((PigeonTransactionCommand) value).toList());
       } else {
         super.writeValue(stream, value);
@@ -1835,6 +2036,12 @@ public class GeneratedAndroidFirebaseFirestore {
         @NonNull FirestorePigeonFirebaseApp app,
         @NonNull PersistenceCacheIndexManagerRequest request,
         @NonNull Result<Void> result);
+
+    void executePipeline(
+        @NonNull FirestorePigeonFirebaseApp app,
+        @NonNull List<Map<String, Object>> stages,
+        @Nullable Map<String, Object> options,
+        @NonNull Result<PigeonPipelineSnapshot> result);
 
     /** The codec used by FirebaseFirestoreHostApi. */
     static @NonNull MessageCodec<Object> getCodec() {
@@ -2619,6 +2826,39 @@ public class GeneratedAndroidFirebaseFirestore {
                     };
 
                 api.persistenceCacheIndexManagerRequest(appArg, requestArg, resultCallback);
+              });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(
+                binaryMessenger,
+                "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.executePipeline",
+                getCodec());
+        if (api != null) {
+          channel.setMessageHandler(
+              (message, reply) -> {
+                ArrayList<Object> wrapped = new ArrayList<Object>();
+                ArrayList<Object> args = (ArrayList<Object>) message;
+                FirestorePigeonFirebaseApp appArg = (FirestorePigeonFirebaseApp) args.get(0);
+                List<Map<String, Object>> stagesArg = (List<Map<String, Object>>) args.get(1);
+                Map<String, Object> optionsArg = (Map<String, Object>) args.get(2);
+                Result<PigeonPipelineSnapshot> resultCallback =
+                    new Result<PigeonPipelineSnapshot>() {
+                      public void success(PigeonPipelineSnapshot result) {
+                        wrapped.add(0, result);
+                        reply.reply(wrapped);
+                      }
+
+                      public void error(Throwable error) {
+                        ArrayList<Object> wrappedError = wrapError(error);
+                        reply.reply(wrappedError);
+                      }
+                    };
+
+                api.executePipeline(appArg, stagesArg, optionsArg, resultCallback);
               });
         } else {
           channel.setMessageHandler(null);
