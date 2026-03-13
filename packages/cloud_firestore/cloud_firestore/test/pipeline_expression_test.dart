@@ -495,10 +495,11 @@ void main() {
       });
     });
 
-    test('replace serializes correctly', () {
-      final expr = Field('s').replace(Constant('old'), Constant('new'));
+    test('stringReplaceAll serializes correctly', () {
+      final expr =
+          Field('s').stringReplaceAll(Constant('old'), Constant('new'));
       expect(expr.toMap(), {
-        'name': 'replace',
+        'name': 'string_replace_all',
         'args': {
           'expression': Field('s').toMap(),
           'find': Constant('old').toMap(),
@@ -749,24 +750,24 @@ void main() {
 
     test('timestampAddLiteral serializes correctly', () {
       final ts = Field('created');
-      final expr = Expression.timestampAddLiteral(ts, 'days', 1);
+      final expr = Expression.timestampAddLiteral(ts, 'day', 1);
       expect(expr.toMap(), {
         'name': 'timestamp_add',
         'args': {
           'timestamp': ts.toMap(),
-          'unit': 'days',
+          'unit': 'day',
           'amount': Constant(1).toMap(),
         },
       });
     });
 
     test('timestampTruncate serializes correctly', () {
-      final expr = Expression.timestampTruncate(Field('ts'), 'days');
+      final expr = Expression.timestampTruncate(Field('ts'), 'day');
       expect(expr.toMap(), {
         'name': 'timestamp_truncate',
         'args': {
           'timestamp': Field('ts').toMap(),
-          'unit': 'days',
+          'unit': 'day',
         },
       });
     });

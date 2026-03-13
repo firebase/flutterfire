@@ -20,6 +20,25 @@ Expression _toExpression(Object? value) {
   return Constant(value);
 }
 
+/// Valid unit strings for timestamp add/subtract/truncate expressions.
+const Set<String> _timestampUnits = {
+  'microsecond',
+  'millisecond',
+  'second',
+  'minute',
+  'hour',
+  'day',
+};
+
+void _validateTimestampUnit(String unit) {
+  if (!_timestampUnits.contains(unit)) {
+    throw ArgumentError(
+      "Timestamp unit must be one of: 'microsecond', 'millisecond', 'second', "
+      "'minute', 'hour', 'day'. Got: '$unit'",
+    );
+  }
+}
+
 /// Base class for all pipeline expressions
 abstract class Expression implements PipelineSerializable {
   /// Creates an aliased expression
@@ -352,14 +371,18 @@ abstract class Expression implements PipelineSerializable {
     return _SubstringExpression(this, Constant(start), Constant(end));
   }
 
-  /// Replaces occurrences of a pattern in this string
-  Expression replace(Expression find, Expression replacement) {
-    return _ReplaceExpression(this, find, replacement);
+  /// Replaces all occurrences of a pattern in this string (stringReplaceAll)
+  Expression stringReplaceAll(Expression find, Expression replacement) {
+    return _StringReplaceAllExpression(this, find, replacement);
   }
 
-  /// Replaces occurrences of a string literal
-  Expression replaceLiteral(String find, String replacement) {
-    return _ReplaceExpression(this, Constant(find), Constant(replacement));
+  /// Replaces all occurrences of a string literal
+  Expression stringReplaceAllLiteral(String find, String replacement) {
+    return _StringReplaceAllExpression(
+      this,
+      Constant(find),
+      Constant(replacement),
+    );
   }
 
   /// Splits this string expression by a delimiter
@@ -631,47 +654,67 @@ abstract class Expression implements PipelineSerializable {
     return _CurrentTimestampExpression();
   }
 
-  /// Adds time to a timestamp expression
+  /// Adds time to a timestamp expression.
+  ///
+  /// [unit] must be one of: `microsecond`, `millisecond`, `second`, `minute`,
+  /// `hour`, `day`.
   static Expression timestampAdd(
     Expression timestamp,
     String unit,
     Expression amount,
   ) {
+    _validateTimestampUnit(unit);
     return _TimestampAddExpression(timestamp, unit, amount);
   }
 
-  /// Adds time to a timestamp with a literal amount
+  /// Adds time to a timestamp with a literal amount.
+  ///
+  /// [unit] must be one of: `microsecond`, `millisecond`, `second`, `minute`,
+  /// `hour`, `day`.
   static Expression timestampAddLiteral(
     Expression timestamp,
     String unit,
     int amount,
   ) {
+    _validateTimestampUnit(unit);
     return _TimestampAddExpression(timestamp, unit, Constant(amount));
   }
 
-  /// Subtracts time from a timestamp expression
+  /// Subtracts time from a timestamp expression.
+  ///
+  /// [unit] must be one of: `microsecond`, `millisecond`, `second`, `minute`,
+  /// `hour`, `day`.
   static Expression timestampSubtract(
     Expression timestamp,
     String unit,
     Expression amount,
   ) {
+    _validateTimestampUnit(unit);
     return _TimestampSubtractExpression(timestamp, unit, amount);
   }
 
-  /// Subtracts time from a timestamp with a literal amount
+  /// Subtracts time from a timestamp with a literal amount.
+  ///
+  /// [unit] must be one of: `microsecond`, `millisecond`, `second`, `minute`,
+  /// `hour`, `day`.
   static Expression timestampSubtractLiteral(
     Expression timestamp,
     String unit,
     int amount,
   ) {
+    _validateTimestampUnit(unit);
     return _TimestampSubtractExpression(timestamp, unit, Constant(amount));
   }
 
-  /// Truncates a timestamp to a specific unit
+  /// Truncates a timestamp to a specific unit.
+  ///
+  /// [unit] must be one of: `microsecond`, `millisecond`, `second`, `minute`,
+  /// `hour`, `day`.
   static Expression timestampTruncate(
     Expression timestamp,
     String unit,
   ) {
+    _validateTimestampUnit(unit);
     return _TimestampTruncateExpression(timestamp, unit);
   }
 
@@ -1224,13 +1267,13 @@ abstract class Expression implements PipelineSerializable {
     return _SubstringExpression(stringExpr, start, end);
   }
 
-  /// Replaces in string
-  static Expression replaceStatic(
+  /// Replaces all occurrences in string (stringReplaceAll)
+  static Expression stringReplaceAllStatic(
     Expression stringExpr,
     Expression find,
     Expression replacement,
   ) {
-    return _ReplaceExpression(stringExpr, find, replacement);
+    return _StringReplaceAllExpression(stringExpr, find, replacement);
   }
 
   /// Splits string
@@ -1592,16 +1635,16 @@ class _SubstringExpression extends FunctionExpression {
   }
 }
 
-/// Represents a replace function expression
-class _ReplaceExpression extends FunctionExpression {
+/// Represents a string_replace_all function expression
+class _StringReplaceAllExpression extends FunctionExpression {
   final Expression expression;
   final Expression find;
   final Expression replacement;
 
-  _ReplaceExpression(this.expression, this.find, this.replacement);
+  _StringReplaceAllExpression(this.expression, this.find, this.replacement);
 
   @override
-  String get name => 'replace';
+  String get name => 'string_replace_all';
 
   @override
   Map<String, dynamic> toMap() {
@@ -2644,7 +2687,8 @@ class _CurrentTimestampExpression extends FunctionExpression {
   }
 }
 
-/// Represents a timestampAdd function expression
+/// Represents a timestamp_add function expression.
+/// Unit must be one of: microsecond, millisecond, second, minute, hour, day.
 class _TimestampAddExpression extends FunctionExpression {
   final Expression timestamp;
   final String unit;
@@ -2668,7 +2712,8 @@ class _TimestampAddExpression extends FunctionExpression {
   }
 }
 
-/// Represents a timestampSubtract function expression
+/// Represents a timestamp_subtract function expression.
+/// Unit must be one of: microsecond, millisecond, second, minute, hour, day.
 class _TimestampSubtractExpression extends FunctionExpression {
   final Expression timestamp;
   final String unit;
@@ -2692,7 +2737,8 @@ class _TimestampSubtractExpression extends FunctionExpression {
   }
 }
 
-/// Represents a timestampTruncate function expression
+/// Represents a timestamp_truncate function expression.
+/// Unit must be one of: microsecond, millisecond, second, minute, hour, day.
 class _TimestampTruncateExpression extends FunctionExpression {
   final Expression timestamp;
   final String unit;
