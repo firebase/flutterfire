@@ -211,8 +211,8 @@ class Pipeline {
   ///
   /// Example:
   /// ```dart
-  /// pipeline.aggregateStage(
-  ///   AggregateStage(
+  /// pipeline.aggregateWithOptions(
+  ///   AggregateStageOptions(
   ///     accumulators: [
   ///       Expression.field('likes').sum().as('total_likes'),
   ///       Expression.field('likes').average().as('avg_likes'),
@@ -224,8 +224,8 @@ class Pipeline {
   ///
   /// With options:
   /// ```dart
-  /// pipeline.aggregateStage(
-  ///   AggregateStage(
+  /// pipeline.aggregateWithOptions(
+  ///   AggregateStageOptions(
   ///     accumulators: [
   ///       Expression.field('likes').sum().as('total_likes'),
   ///     ],
