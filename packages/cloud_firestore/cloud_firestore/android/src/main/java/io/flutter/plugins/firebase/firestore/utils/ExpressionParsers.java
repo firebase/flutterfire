@@ -184,9 +184,6 @@ class ExpressionParsers {
           Expression lengthExpr = Expression.subtract(endExpr, startExpr);
           return Expression.substring(stringExpr, startExpr, lengthExpr);
         }
-      case "replace":
-        throw new UnsupportedOperationException(
-            "Expression type 'replace' is not supported on Android Firestore pipeline API");
       case "split":
         {
           Map<String, Object> valueMap = (Map<String, Object>) args.get("expression");
