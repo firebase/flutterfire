@@ -220,7 +220,6 @@ static NSError *parseError(NSString *message) {
   }
 
   // -------------------------------------------------------------------------
-  // value + values[]: equal_any, not_equal_any
   // -------------------------------------------------------------------------
   if ([name isEqualToString:@"equal_any"] || [name isEqualToString:@"not_equal_any"]) {
     id valueMap = args[@"value"];
@@ -246,9 +245,9 @@ static NSError *parseError(NSString *message) {
         *error = parseError([NSString stringWithFormat:@"%@ requires at least one value", name]);
       return nil;
     }
-    NSMutableArray *argsArray = [NSMutableArray arrayWithObject:valueExpr];
-    [argsArray addObjectsFromArray:valueExprs];
-    return [[FIRFunctionExprBridge alloc] initWithName:name Args:argsArray];
+    FIRExprBridge *valuesArrayExpr = [[FIRFunctionExprBridge alloc] initWithName:@"array"
+                                                                            Args:valueExprs];
+    return [[FIRFunctionExprBridge alloc] initWithName:name Args:@[ valueExpr, valuesArrayExpr ]];
   }
 
   // -------------------------------------------------------------------------
@@ -521,7 +520,28 @@ static NSError *parseError(NSString *message) {
   }
 
   // -------------------------------------------------------------------------
-  // timestamp + unit + amount: timestamp_add, timestamp_subtract (SDK names)
+  // condition + then + else: conditional (SDK: conditional)
+  // -------------------------------------------------------------------------
+  if ([name isEqualToString:@"conditional"]) {
+    id conditionMap = args[@"condition"];
+    id thenMap = args[@"then"];
+    id elseMap = args[@"else"];
+    if (![conditionMap isKindOfClass:[NSDictionary class]] ||
+        ![thenMap isKindOfClass:[NSDictionary class]] ||
+        ![elseMap isKindOfClass:[NSDictionary class]]) {
+      if (error) *error = parseError(@"conditional requires condition, then, and else");
+      return nil;
+    }
+    FIRExprBridge *condition = [self parseBooleanExpression:conditionMap error:error];
+    FIRExprBridge *thenExpr = [self parseExpression:thenMap error:error];
+    FIRExprBridge *elseExpr = [self parseExpression:elseMap error:error];
+    if (!condition || !thenExpr || !elseExpr) return nil;
+    return [[FIRFunctionExprBridge alloc] initWithName:@"conditional"
+                                                  Args:@[ condition, thenExpr, elseExpr ]];
+  }
+
+  // -------------------------------------------------------------------------
+  // timestamp + amount + unit: timestamp_add, timestamp_subtract (SDK: Args ts, amount, unit)
   // -------------------------------------------------------------------------
   if ([name isEqualToString:@"timestamp_add"] || [name isEqualToString:@"timestamp_subtract"]) {
     id timestampMap = args[@"timestamp"];
@@ -540,6 +560,13 @@ static NSError *parseError(NSString *message) {
     FIRExprBridge *unitExpr = [[FIRConstantBridge alloc] init:unitVal];
     return [[FIRFunctionExprBridge alloc] initWithName:name
                                                   Args:@[ timestampExpr, unitExpr, amountExpr ]];
+  }
+
+  // -------------------------------------------------------------------------
+  // No args: current_timestamp (SDK: current_timestamp with empty Args)
+  // -------------------------------------------------------------------------
+  if ([name isEqualToString:@"current_timestamp"]) {
+    return [[FIRFunctionExprBridge alloc] initWithName:@"current_timestamp" Args:@[]];
   }
 
   // -------------------------------------------------------------------------
@@ -677,9 +704,11 @@ static NSError *parseError(NSString *message) {
         if (error) *error = parseError(@"arrayContainsAny/whereIn requires non-empty list");
         return nil;
       }
-      NSMutableArray *argsArray = [NSMutableArray arrayWithObject:fieldExpr];
-      [argsArray addObjectsFromArray:valueExprs];
-      return [[FIRFunctionExprBridge alloc] initWithName:@"equal_any" Args:argsArray];
+      // SDK expects (value, array) not (value, v1, v2, ...); wrap in "array" expr.
+      FIRExprBridge *valuesArrayExpr = [[FIRFunctionExprBridge alloc] initWithName:@"array"
+                                                                              Args:valueExprs];
+      return [[FIRFunctionExprBridge alloc] initWithName:@"equal_any"
+                                                    Args:@[ fieldExpr, valuesArrayExpr ]];
     }
     if ([key isEqualToString:@"whereNotIn"]) {
       NSArray *valuesList = [value isKindOfClass:[NSArray class]] ? value : @[];
@@ -693,9 +722,11 @@ static NSError *parseError(NSString *message) {
         if (error) *error = parseError(@"whereNotIn requires non-empty list");
         return nil;
       }
-      NSMutableArray *argsArray = [NSMutableArray arrayWithObject:fieldExpr];
-      [argsArray addObjectsFromArray:valueExprs];
-      return [[FIRFunctionExprBridge alloc] initWithName:@"not_equal_any" Args:argsArray];
+      // SDK expects (value, array) not (value, v1, v2, ...); wrap in "array" expr.
+      FIRExprBridge *valuesArrayExpr = [[FIRFunctionExprBridge alloc] initWithName:@"array"
+                                                                              Args:valueExprs];
+      return [[FIRFunctionExprBridge alloc] initWithName:@"not_equal_any"
+                                                    Args:@[ fieldExpr, valuesArrayExpr ]];
     }
     if ([key isEqualToString:@"isNull"]) {
       FIRExprBridge *right = [[FIRConstantBridge alloc] init:[NSNull null]];
