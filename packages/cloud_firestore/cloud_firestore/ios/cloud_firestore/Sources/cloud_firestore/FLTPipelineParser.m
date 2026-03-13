@@ -1041,6 +1041,44 @@ static NSError *parseError(NSString *message) {
         stage = [[FIRUnnestStageBridge alloc] initWithField:fieldExpr
                                                       alias:aliasExpr
                                                  indexField:indexFieldExpr];
+      } else if ([stageName isEqualToString:@"find_nearest"]) {
+        NSString *vectorFieldName = args[@"vector_field"];
+        NSArray *vectorValueArray = args[@"vector_value"];
+        NSString *distanceMeasure = args[@"distance_measure"];
+        NSNumber *limit = [args[@"limit"] isKindOfClass:[NSNumber class]] ? args[@"limit"] : nil;
+        NSString *distanceField = [args[@"distance_field"] isKindOfClass:[NSString class]]
+                                      ? args[@"distance_field"]
+                                      : nil;
+        if (![vectorFieldName isKindOfClass:[NSString class]] || vectorFieldName.length == 0) {
+          if (error) *error = parseError(@"find_nearest requires 'vector_field'");
+          return nil;
+        }
+        if (![vectorValueArray isKindOfClass:[NSArray class]] || vectorValueArray.count == 0) {
+          if (error) *error = parseError(@"find_nearest requires non-empty 'vector_value'");
+          return nil;
+        }
+        if (![distanceMeasure isKindOfClass:[NSString class]] || distanceMeasure.length == 0) {
+          if (error) *error = parseError(@"find_nearest requires 'distance_measure'");
+          return nil;
+        }
+        FIRFieldBridge *embeddingField = [[FIRFieldBridge alloc] initWithName:vectorFieldName];
+        NSMutableArray<NSNumber *> *numbers =
+            [NSMutableArray arrayWithCapacity:vectorValueArray.count];
+        for (id v in vectorValueArray) {
+          if ([v isKindOfClass:[NSNumber class]]) {
+            [numbers addObject:(NSNumber *)v];
+          }
+        }
+        if (numbers.count != (NSUInteger)vectorValueArray.count) {
+          if (error) *error = parseError(@"find_nearest vector_value must be an array of numbers");
+          return nil;
+        }
+        FIRVectorValue *queryVector = [[FIRVectorValue alloc] initWithArray:numbers];
+        stage = [[FIRFindNearestStageBridge alloc] initWithField:embeddingField
+                                                     vectorValue:queryVector
+                                                 distanceMeasure:distanceMeasure
+                                                           limit:limit
+                                                   distanceField:distanceField];
       } else {
         if (error)
           *error = parseError([NSString stringWithFormat:@"Unknown pipeline stage: %@", stageName]);
