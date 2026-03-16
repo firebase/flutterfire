@@ -5,6 +5,7 @@
  */
 
 #import "include/cloud_firestore/Private/FLTPipelineParser.h"
+#import "include/cloud_firestore/Private/FLTFirebaseFirestoreUtils.h"
 
 #if TARGET_OS_OSX
 #import <FirebaseFirestore/FirebaseFirestore.h>
@@ -24,7 +25,7 @@ static NSString *const kPipelineNotAvailable =
 
 static NSError *pipelineUnavailableError(void) {
   return [NSError errorWithDomain:@"FLTFirebaseFirestore"
-                             code:-1
+                             code:FLTFirebaseFirestoreErrorCodePipelineParse
                          userInfo:@{NSLocalizedDescriptionKey : kPipelineNotAvailable}];
 }
 
@@ -42,7 +43,7 @@ static NSError *pipelineUnavailableError(void) {
 
 static NSError *parseError(NSString *message) {
   return [NSError errorWithDomain:@"FLTFirebaseFirestore"
-                             code:-1
+                             code:FLTFirebaseFirestoreErrorCodePipelineParse
                          userInfo:@{NSLocalizedDescriptionKey : message}];
 }
 
@@ -767,8 +768,7 @@ static NSError *parseError(NSString *message) {
     if (error) *error = parseError(@"field expression must have args.field");
     return nil;
   }
-  if (error)
-    *error = parseError(@"select/distinct expression must have alias or be a field reference");
+  if (error) *error = parseError(@"expression must have alias or be a field reference");
   return nil;
 }
 
@@ -1207,7 +1207,17 @@ static NSError *parseError(NSString *message) {
       if (![gm isKindOfClass:[NSDictionary class]]) continue;
       FIRExprBridge *expr = [exprParser parseExpression:gm error:&parseErr];
       if (!expr) continue;
-      groups[[NSString stringWithFormat:@"_%lu", (unsigned long)g]] = expr;
+      NSError *groupKeyError = nil;
+      NSString *groupKey = [self keyForExpressionMap:gm error:&groupKeyError];
+      if (![groupKey isKindOfClass:[NSString class]] || groupKey.length == 0) {
+        if (error)
+          *error =
+              groupKeyError
+                  ?: parseError(
+                         @"aggregate group expression must be a field reference or have an alias");
+        return nil;
+      }
+      groups[groupKey] = expr;
     }
   }
 
