@@ -1183,9 +1183,14 @@ class Pipeline extends JsObjectWrapper<firestore_interop.PipelineJsImpl> {
       : super.fromJsObject(jsObject);
 
   /// Runs this pipeline using the global JS SDK execute function.
-  Future<PipelineSnapshot> execute() async {
+  Future<PipelineSnapshot> execute(String? executeOptions) async {
+    final executeOptionsJs = firestore_interop.PipelineExecuteOptionsJsImpl();
+    if (executeOptions != null) {
+      executeOptionsJs.indexMode = executeOptions.toJS;
+    }
+    executeOptionsJs.pipeline = jsObject as JSAny;
     final snapshot =
-        await firestore_interop.pipelines.execute(jsObject as JSAny).toDart;
+        await firestore_interop.pipelines.execute(executeOptionsJs).toDart;
     return PipelineSnapshot.getInstance(snapshot);
   }
 }

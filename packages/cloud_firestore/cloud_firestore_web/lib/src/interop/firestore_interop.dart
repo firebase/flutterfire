@@ -348,7 +348,8 @@ external PipelinesJsImpl get pipelines;
 /// Pipeline expression API — mirrors the Firebase JS SDK pipelines module.
 /// Use these to build expressions for where(), sort(), addFields(), aggregate(), etc.
 extension type PipelinesJsImpl._(JSObject _) implements JSObject {
-  external JSPromise<PipelineSnapshotJsImpl> execute(JSAny pipeline);
+  external JSPromise<PipelineSnapshotJsImpl> execute(
+      PipelineExecuteOptionsJsImpl pipeline);
 
   // --- Expression builders ---
   external ExpressionJsImpl field(JSString path);
@@ -1186,8 +1187,6 @@ extension type PipelineSourceJsImpl._(JSObject _) implements JSObject {
 /// Pipeline returned by PipelineSource methods; chain stages and call execute().
 /// See: https://firebase.google.com/docs/reference/js/firestore_pipelines.pipeline
 extension type PipelineJsImpl._(JSObject _) implements JSObject {
-  external JSPromise<PipelineSnapshotJsImpl> execute(
-      [PipelineExecuteOptions? options]);
   external PipelineJsImpl limit(JSNumber limit);
   external PipelineJsImpl offset(JSNumber offset);
   external PipelineJsImpl where(JSAny condition);
@@ -1296,4 +1295,13 @@ extension type FindNearestStageOptionsJsImpl._(JSObject _) implements JSObject {
   external set limit(JSNumber value);
   // ignore: avoid_setters_without_getters
   external set distanceField(JSString value);
+}
+
+extension type PipelineExecuteOptionsJsImpl._(JSObject _) implements JSObject {
+  PipelineExecuteOptionsJsImpl() : this._(JSObject.new());
+
+  // ignore: avoid_setters_without_getters
+  external set indexMode(JSString value);
+  // ignore: avoid_setters_without_getters
+  external set pipeline(JSAny value);
 }

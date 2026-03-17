@@ -303,7 +303,11 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
 
     final dartPipeline = firestore_interop.Pipeline.getInstance(jsPipeline);
     return convertWebExceptions(() async {
-      final snapshot = await dartPipeline.execute();
+      String? executeOptions;
+      if (options != null) {
+        executeOptions = options['indexMode'] as String;
+      }
+      final snapshot = await dartPipeline.execute(executeOptions);
 
       final results = snapshot.results
           .map((r) => PipelineResultWeb(this, _delegate, r.jsObject))
