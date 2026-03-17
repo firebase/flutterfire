@@ -4,7 +4,36 @@
 
 part of '../cloud_firestore.dart';
 
-/// A pipeline for querying and transforming Firestore data
+/// A pipeline for querying and transforming Firestore data.
+///
+/// A [Pipeline] is composed of a sequence of stages. Each stage processes the
+/// output from the previous one, and the final stage's output is the result of
+/// the pipeline's execution.
+///
+/// Start with [FirebaseFirestore.pipeline] and a source stage (e.g.
+/// [PipelineSource.collection]), then add transformation and filtering stages.
+/// Call [execute] to run the pipeline.
+///
+/// Example:
+/// ```dart
+/// final snapshot = await FirebaseFirestore.instance
+///     .pipeline()
+///     .collection('users')
+///     .where(Expression.field('active').equal(true))
+///     .limit(10)
+///     .execute();
+/// for (final result in snapshot.result) {
+///   print(result.data());
+/// }
+/// ```
+///
+/// **Note on execution:** The stages are conceptual. The Firestore backend may
+/// optimize execution (e.g., reordering or merging stages) as long as the final
+/// result remains the same.
+///
+/// **Important limitations:** Pipelines operate on a request/response basis only.
+/// They do not utilize or update the local SDK cache, and they do not support
+/// realtime snapshot listeners.
 class Pipeline {
   final FirebaseFirestore _firestore;
   final PipelinePlatform _delegate;
@@ -23,7 +52,17 @@ class Pipeline {
     return _delegate.stages;
   }
 
-  /// Executes the pipeline and returns a snapshot of the results
+  /// Executes this pipeline and returns the results as a [PipelineSnapshot].
+  ///
+  /// Example:
+  /// ```dart
+  /// final snapshot = await firestore
+  ///     .pipeline()
+  ///     .collection('products')
+  ///     .limit(5)
+  ///     .execute();
+  /// print('Got ${snapshot.result.length} documents');
+  /// ```
   Future<PipelineSnapshot> execute({ExecuteOptions? options}) async {
     final optionsMap = options != null
         ? {
@@ -54,7 +93,22 @@ class Pipeline {
 
   // Pipeline Actions
 
-  /// Adds fields to documents using expressions
+  /// Adds new fields to outputs from previous stages.
+  ///
+  /// This stage allows you to compute values on-the-fly based on existing data
+  /// from previous stages or constants. You can create new fields or overwrite
+  /// existing ones. The added fields are defined using [Selectable]s, which can
+  /// be a [Field] (from [Expression.field]) or an expression with an alias via
+  /// [Expression.as].
+  ///
+  /// Example:
+  /// ```dart
+  /// firestore.pipeline().collection('books').addFields(
+  ///   Expression.field('rating').as('bookRating'),
+  ///   Expression.field('title').stringReplaceAllLiteral('Item', 'Doc').as('title_replaced'),
+  ///   Expression.field('score').abs().as('abs_score'),
+  /// );
+  /// ```
   Pipeline addFields(
     Selectable selectable1, [
     Selectable? selectable2,
@@ -124,7 +178,22 @@ class Pipeline {
     );
   }
 
-  /// Aggregates data using aggregate functions
+  /// Performs aggregation operations on the documents from previous stages.
+  ///
+  /// This stage allows you to calculate aggregate values over a set of documents.
+  /// Define aggregations using [AliasedAggregateFunction]s, typically by calling
+  /// [PipelineAggregateFunction.as] on [PipelineAggregateFunction] instances
+  /// such as [Expression.field] with [Expression.sum], [Expression.average],
+  /// or [CountAll].
+  ///
+  /// Example:
+  /// ```dart
+  /// firestore.pipeline().collection('books').aggregate(
+  ///   Expression.field('score').sum().as('total_score'),
+  ///   Expression.field('score').average().as('avg_score'),
+  ///   CountAll().as('count'),
+  /// );
+  /// ```
   Pipeline aggregate(
     AliasedAggregateFunction aggregateFunction1, [
     AliasedAggregateFunction? aggregateFunction2,
@@ -247,7 +316,18 @@ class Pipeline {
     );
   }
 
-  /// Gets distinct values based on expressions
+  /// Returns a set of distinct values from the inputs to this stage.
+  ///
+  /// This stage runs through the results from previous stages to include only
+  /// results with unique combinations of the given [Selectable] expressions
+  /// (e.g. [Expression.field], or expressions with [Expression.as]).
+  ///
+  /// Example:
+  /// ```dart
+  /// firestore.pipeline().collection('books').distinct(
+  ///   Expression.field('category').as('category'),
+  /// );
+  /// ```
   Pipeline distinct(
     Selectable expression1, [
     Selectable? expression2,
@@ -318,7 +398,23 @@ class Pipeline {
     );
   }
 
-  /// Finds nearest vectors using vector similarity search
+  /// Performs a vector similarity search.
+  ///
+  /// Orders the result set by most similar to least similar and returns
+  /// documents in that order. Requires a vector index on [vectorField].
+  /// [vectorValue] is the query embedding; [distanceMeasure] specifies how to
+  /// compare vectors (e.g. [DistanceMeasure.cosine]). Use [limit] to return
+  /// only the first N documents.
+  ///
+  /// Example:
+  /// ```dart
+  /// firestore.pipeline().collection('books').findNearest(
+  ///   Field('embedding'),
+  ///   [0.1, 0.2, 0.3],
+  ///   DistanceMeasure.cosine,
+  ///   limit: 10,
+  /// );
+  /// ```
   Pipeline findNearest(
     Field vectorField,
     List<double> vectorValue,
@@ -337,7 +433,18 @@ class Pipeline {
     );
   }
 
-  /// Limits the number of results
+  /// Limits the maximum number of documents returned by previous stages to
+  /// [limit].
+  ///
+  /// Useful for pagination (with [offset]) or to cap data retrieval and
+  /// improve performance.
+  ///
+  /// Example:
+  /// ```dart
+  /// firestore.pipeline().collection('books')
+  ///     .sort(Expression.field('rating').descending())
+  ///     .limit(10);
+  /// ```
   Pipeline limit(int limit) {
     final stage = _LimitStage(limit);
     return Pipeline._(
@@ -346,7 +453,18 @@ class Pipeline {
     );
   }
 
-  /// Offsets the results
+  /// Skips the first [offset] documents from the results of previous stages.
+  ///
+  /// Useful for implementing pagination; typically used with [limit] to control
+  /// the size of each page.
+  ///
+  /// Example:
+  /// ```dart
+  /// firestore.pipeline().collection('books')
+  ///     .sort(Expression.field('published').descending())
+  ///     .offset(20)
+  ///     .limit(20);
+  /// ```
   Pipeline offset(int offset) {
     final stage = _OffsetStage(offset);
     return Pipeline._(
@@ -355,7 +473,13 @@ class Pipeline {
     );
   }
 
-  /// Removes specified fields from documents
+  /// Removes fields from outputs of previous stages.
+  ///
+  /// Example:
+  /// ```dart
+  /// firestore.pipeline().collection('books')
+  ///     .removeFields('rating', 'cost');
+  /// ```
   Pipeline removeFields(
     String fieldPath1, [
     String? fieldPath2,
@@ -426,7 +550,18 @@ class Pipeline {
     );
   }
 
-  /// Replaces documents with the result of an expression
+  /// Fully overwrites each document with the value of the given expression.
+  ///
+  /// This stage allows you to emit a nested map or array as the document: each
+  /// document from the previous stage is replaced by the evaluated [expression]
+  /// (e.g. [Expression.field] referencing a nested map or array).
+  ///
+  /// Example:
+  /// ```dart
+  /// // Emit the 'parents' map as the document.
+  /// firestore.pipeline().collection('people')
+  ///     .replaceWith(Expression.field('parents'));
+  /// ```
   Pipeline replaceWith(Expression expression) {
     final stage = _ReplaceWithStage(expression);
     return Pipeline._(
@@ -435,7 +570,18 @@ class Pipeline {
     );
   }
 
-  /// Samples documents using a sampling strategy
+  /// Performs a pseudo-random sampling of the input documents.
+  ///
+  /// Use [PipelineSample.withSize] for a fixed number of documents, or
+  /// [PipelineSample.withPercentage] for a fraction of the result set.
+  ///
+  /// Example:
+  /// ```dart
+  /// firestore.pipeline().collection('books')
+  ///     .sample(PipelineSample.withSize(10));
+  /// firestore.pipeline().collection('books')
+  ///     .sample(PipelineSample.withPercentage(0.5));
+  /// ```
   Pipeline sample(PipelineSample sample) {
     final stage = _SampleStage(sample);
     return Pipeline._(
@@ -444,7 +590,19 @@ class Pipeline {
     );
   }
 
-  /// Selects specific fields using selectable expressions
+  /// Selects or creates a set of fields from the outputs of previous stages.
+  ///
+  /// Only the selected fields (with their aliases) appear in the output. Use
+  /// [Expression.field] with [Expression.as] for expressions. Use [addFields]
+  /// if you only want to add or overwrite fields while keeping the rest.
+  ///
+  /// Example:
+  /// ```dart
+  /// firestore.pipeline().collection('books').select(
+  ///   Expression.field('name').as('name'),
+  ///   Expression.field('address').toUpperCase().as('upperAddress'),
+  /// );
+  /// ```
   Pipeline select(
     Selectable expression1, [
     Selectable? expression2,
@@ -515,8 +673,20 @@ class Pipeline {
     );
   }
 
-  /// Sorts results using one or more ordering specifications.
-  /// Orderings are applied in sequence (e.g. primary sort by first, then by second, etc.).
+  /// Sorts the documents from previous stages based on one or more orderings.
+  ///
+  /// Orderings are applied in sequence (primary sort by the first, then by the
+  /// second, etc.). If documents have the same value for a field used for
+  /// sorting, the next ordering is used. Use [Expression.field] with
+  /// [Expression.descending] and [Expression.ascending].
+  ///
+  /// Example:
+  /// ```dart
+  /// firestore.pipeline().collection('books').sort(
+  ///   Expression.field('rating').descending(),
+  ///   Expression.field('title').ascending(),
+  /// );
+  /// ```
   Pipeline sort(
     Ordering order, [
     Ordering? order2,
@@ -587,7 +757,21 @@ class Pipeline {
     );
   }
 
-  /// Unnests arrays into separate documents
+  /// Takes a specified array from the input documents and outputs a document
+  /// for each element, with the element stored in a field named by the alias.
+  ///
+  /// For each document from the previous stage, this stage emits zero or more
+  /// documents (one per array element). Use [Expression.field].as() to specify
+  /// the array and the output field name. Optionally use [indexField] to add
+  /// the array index to each emitted document.
+  ///
+  /// Example:
+  /// ```dart
+  /// // Input: { "title": "Guide", "tags": ["comedy", "space"] }
+  /// // Output: one doc per tag with field "tag".
+  /// firestore.pipeline().collection('books')
+  ///     .unnest(Expression.field('tags').as('tag'));
+  /// ```
   Pipeline unnest(Selectable expression, [String? indexField]) {
     final stage = _UnnestStage(expression, indexField);
     return Pipeline._(
@@ -596,7 +780,18 @@ class Pipeline {
     );
   }
 
-  /// Unions results with another pipeline
+  /// Performs a union of all documents from this pipeline and [pipeline],
+  /// including duplicates.
+  ///
+  /// Documents from the previous stage and from [pipeline] are combined. The
+  /// order of documents emitted from this stage is undefined.
+  ///
+  /// Example:
+  /// ```dart
+  /// firestore.pipeline().collection('books').union(
+  ///   firestore.pipeline().collection('magazines'),
+  /// );
+  /// ```
   Pipeline union(Pipeline pipeline) {
     final stage = _UnionStage(pipeline);
     return Pipeline._(
@@ -605,7 +800,23 @@ class Pipeline {
     );
   }
 
-  /// Filters documents using a boolean expression
+  /// Filters the documents from previous stages to only include those matching
+  /// the specified [BooleanExpression].
+  ///
+  /// This stage applies conditions to the data, similar to a WHERE clause. You
+  /// can use [Expression.field] with [Expression.equal], [Expression.greaterThan],
+  /// [Expression.lessThan], etc., and combine conditions with [Expression.and]
+  /// and [Expression.or].
+  ///
+  /// Example:
+  /// ```dart
+  /// firestore.pipeline().collection('books').where(
+  ///   Expression.and(
+  ///     Expression.field('rating').greaterThan(4.0),
+  ///     Expression.field('genre').equal('Science Fiction'),
+  ///   ),
+  /// );
+  /// ```
   Pipeline where(BooleanExpression expression) {
     final stage = _WhereStage(expression);
     return Pipeline._(
