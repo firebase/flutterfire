@@ -27,6 +27,10 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
   private var handleToTask: [Int64: AnyObject] = [:]
   private var handleToPath: [Int64: String] = [:]
   private var handleToIdentifier: [Int64: String] = [:]
+  /// Tracks which buckets have had the emulator set to avoid calling useEmulator more than once
+  /// per bucket (prevents crash on hot restart). See
+  /// https://github.com/firebase/flutterfire/pull/11862
+  private var emulatorBooted: [String: Bool] = [:]
 
   /// Registry to help stream handler classify failure events as cancellations when initiated from
   /// Dart
@@ -98,8 +102,13 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
 
   func useStorageEmulator(app: PigeonStorageFirebaseApp, host: String, port: Int64,
                           completion: @escaping (Result<Void, Error>) -> Void) {
+    guard emulatorBooted[app.bucket] == nil else {
+      completion(.success(()))
+      return
+    }
     let s = storage(app: app)
     s.useEmulator(withHost: host, port: Int(port))
+    emulatorBooted[app.bucket] = true
     completion(.success(()))
   }
 
