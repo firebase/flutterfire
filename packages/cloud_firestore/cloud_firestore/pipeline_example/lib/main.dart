@@ -1006,6 +1006,7 @@ class _PipelineExamplePageState extends State<PipelineExamplePage> {
                   _btn('24: lower/upper', _runPipeline24),
                   _btn('25: trim', _runPipeline25),
                   _btn('26: substring', _runPipeline26),
+                  // test comment
                   _btn('28: split', _runPipeline28),
                   _btn('29: join', _runPipeline29),
                   _btn('30: if_absent', _runPipeline30),
