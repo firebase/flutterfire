@@ -13,10 +13,12 @@ void runPipelineAddFieldsTests() {
     late FirebaseFirestore firestore;
 
     setUpAll(() {
-      firestore = FirebaseFirestore.instanceFor(app: Firebase.app(), databaseId: 'firestore-pipeline-test');
+      firestore = FirebaseFirestore.instanceFor(
+          app: Firebase.app(), databaseId: 'firestore-pipeline-test');
     });
 
-    test('addFields with expression returns expected transformed data', () async {
+    test('addFields with expression returns expected transformed data',
+        () async {
       final snapshot = await firestore
           .pipeline()
           .collection('pipeline-e2e')
@@ -29,9 +31,9 @@ void runPipelineAddFieldsTests() {
           .execute();
       expectResultCount(snapshot, 3);
       expectResultsData(snapshot, [
-        {'title': 'alpha', 'score': -7,  'abs_score': 7},
-        {'title': 'beta', 'score': 42,  'abs_score': 42},
-        {'title': 'gamma', 'score': 0,  'abs_score': 0},
+        {'title': 'alpha', 'score': -7, 'abs_score': 7},
+        {'title': 'beta', 'score': 42, 'abs_score': 42},
+        {'title': 'gamma', 'score': 0, 'abs_score': 0},
       ]);
     });
   });

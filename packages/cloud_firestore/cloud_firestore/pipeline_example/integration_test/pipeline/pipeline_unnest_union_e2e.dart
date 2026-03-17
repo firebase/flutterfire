@@ -29,11 +29,14 @@ void runPipelineUnnestUnionTests() {
           .limit(10)
           .execute();
       expectResultCount(snapshot, 5);
-      final tags = snapshot.result.map((r) => r.data()!['tag'] as String).toList();
-      expect(tags..sort(), ['dart', 'dart', 'firestore', 'firestore', 'flutter']);
+      final tags =
+          snapshot.result.map((r) => r.data()!['tag'] as String).toList();
+      expect(
+          tags..sort(), ['dart', 'dart', 'firestore', 'firestore', 'flutter']);
     });
 
-    test('union concatenates both pipelines with deterministic total count', () async {
+    test('union concatenates both pipelines with deterministic total count',
+        () async {
       final other = firestore
           .pipeline()
           .collection('pipeline-e2e')

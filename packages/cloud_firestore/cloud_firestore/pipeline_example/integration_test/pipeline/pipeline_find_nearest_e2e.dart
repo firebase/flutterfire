@@ -17,7 +17,9 @@ void runPipelineFindNearestTests() {
       );
     });
 
-    test('findNearest returns results ordered by distance when vector index exists', () async {
+    test(
+        'findNearest returns results ordered by distance when vector index exists',
+        () async {
       final pipeline = firestore
           .pipeline()
           .collection('pipeline-e2e')
