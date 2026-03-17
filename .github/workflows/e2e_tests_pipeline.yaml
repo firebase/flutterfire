@@ -12,6 +12,8 @@ on:
   push:
     branches:
       - main
+      - firestore-pipelines-dart-api-v2
+      - master
     paths:
       - 'packages/cloud_firestore/cloud_firestore/pipeline_example/**'
       - 'packages/cloud_firestore/cloud_firestore/lib/**'
