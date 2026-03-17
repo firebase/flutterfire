@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +14,6 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   if (shouldUseFirestoreEmulator) {
-    print('Using Firestore emulator');
     FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
   }
   runApp(const PipelineExampleApp());
@@ -66,7 +67,7 @@ class _PipelineExamplePageState extends State<PipelineExamplePage> {
 
     try {
       final col = _firestore.collection(_collectionId);
-      
+
       final batch = _firestore.batch();
       _seedDocRefs = [];
 
@@ -222,6 +223,22 @@ class _PipelineExamplePageState extends State<PipelineExamplePage> {
                 Expression.field('score').greaterThan(Expression.constant(10)))
             .limit(3)
             .execute(),
+      );
+
+  // 1b: execute with ExecuteOptions (indexMode: recommended)
+  Future<void> _runPipelineExecuteOptions() => _runPipeline(
+        'Pipeline 1b: same as 1 but execute(options: ExecuteOptions(indexMode: recommended))',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .where(
+                Expression.field('score').greaterThan(Expression.constant(10)))
+            .limit(3)
+            .execute(
+              options: const ExecuteOptions(
+                indexMode: IndexMode.recommended,
+              ),
+            ),
       );
 
   // 2: select
@@ -464,8 +481,8 @@ class _PipelineExamplePageState extends State<PipelineExamplePage> {
             Constant(const GeoPoint(37.7749, -122.4194)).as('c_geo_point'),
             // List<int> (raw bytes)
             Constant(<int>[72, 101, 108, 108, 111]).as('c_bytes'),
-            // Blob
-            Constant(Blob(Uint8List.fromList([1, 2, 3, 4, 5]))).as('c_blob'),
+            // // Blob
+            // Constant(Blob(Uint8List.fromList([1, 2, 3, 4, 5]))).as('c_blob'),
             // DocumentReference
             Constant(docRef).as('c_doc_ref'),
           )
@@ -521,7 +538,7 @@ class _PipelineExamplePageState extends State<PipelineExamplePage> {
         'Pipeline 21: collection → where(tags arrayContainsAny [x, z]) → select(title, tags) → limit(5)',
         () => _firestore
             .pipeline()
-            .collection(_collectionId) 
+            .collection(_collectionId)
             .where(
               Expression.field('tags').arrayContainsAny(['x', 'z']),
             )
@@ -963,6 +980,7 @@ class _PipelineExamplePageState extends State<PipelineExamplePage> {
                 runSpacing: 8,
                 children: [
                   _btn('1: where+limit', _runPipeline1),
+                  _btn('1b: execute(options)', _runPipelineExecuteOptions),
                   _btn('2: select', _runPipeline2),
                   _btn('3: aggregate', _runPipeline3),
                   _btn('4: addFields', _runPipeline4),
