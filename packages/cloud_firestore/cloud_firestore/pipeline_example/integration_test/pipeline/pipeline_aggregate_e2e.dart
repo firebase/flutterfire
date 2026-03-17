@@ -35,7 +35,8 @@ void runPipelineAggregateTests() {
       ]);
     });
 
-    test('aggregateWithOptions with groups returns one row per group', () async {
+    test('aggregateWithOptions with groups returns one row per group',
+        () async {
       final snapshot = await firestore
           .pipeline()
           .collection('pipeline-e2e')
@@ -52,7 +53,8 @@ void runPipelineAggregateTests() {
           .execute();
       expectResultCount(snapshot, 2);
       final results = snapshot.result.map((r) => r.data()!).toList();
-      results.sort((a, b) => (a['category'] as String).compareTo(b['category'] as String));
+      results.sort((a, b) =>
+          (a['category'] as String).compareTo(b['category'] as String));
       expect(results[0]['category'], 'x');
       expect(results[0]['total_score'], 30);
       expect(results[0]['count'], 2);

@@ -4,7 +4,8 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart' show defaultTargetPlatform, TargetPlatform;
+import 'package:flutter/foundation.dart'
+    show defaultTargetPlatform, TargetPlatform;
 import 'package:flutter_test/flutter_test.dart';
 
 import 'pipeline_test_helpers.dart';
@@ -46,9 +47,7 @@ void runPipelineExpressionsTests() {
           .where(Expression.field('test').equalValue('expressions'))
           .sort(Expression.field('score').ascending())
           .addFields(
-            Expression.field('a')
-                .add(Expression.field('b'))
-                .as('sum_ab'),
+            Expression.field('a').add(Expression.field('b')).as('sum_ab'),
           )
           .limit(5)
           .execute();
@@ -99,7 +98,8 @@ void runPipelineExpressionsTests() {
           .limit(5)
           .execute();
       expectResultCount(snapshot, 5);
-      final withTags = snapshot.result.where((r) => r.data()!['tags_len'] == 2).toList();
+      final withTags =
+          snapshot.result.where((r) => r.data()!['tags_len'] == 2).toList();
       expect(withTags.length, 1);
       expect(withTags.first.data()!['score'], 50);
     });
@@ -185,7 +185,8 @@ void runPipelineExpressionsTests() {
       ]);
     });
 
-    test('where with greaterThanValue and lessThanValue filter correctly', () async {
+    test('where with greaterThanValue and lessThanValue filter correctly',
+        () async {
       final snapshot = await firestore
           .pipeline()
           .collection('pipeline-e2e')
@@ -206,13 +207,15 @@ void runPipelineExpressionsTests() {
       ]);
     });
 
-    test('where with greaterThanOrEqual and lessThanOrEqual filter correctly', () async {
+    test('where with greaterThanOrEqual and lessThanOrEqual filter correctly',
+        () async {
       final snapshot = await firestore
           .pipeline()
           .collection('pipeline-e2e')
           .where(Expression.field('test').equalValue('expressions'))
           .where(
-            Expression.field('score').greaterThanOrEqual(Expression.constant(50)),
+            Expression.field('score')
+                .greaterThanOrEqual(Expression.constant(50)),
           )
           .where(
             Expression.field('score').lessThanOrEqual(Expression.constant(70)),
@@ -227,7 +230,9 @@ void runPipelineExpressionsTests() {
       ]);
     });
 
-    test('addFields with subtract, multiply, divide, modulo return expected values', () async {
+    test(
+        'addFields with subtract, multiply, divide, modulo return expected values',
+        () async {
       final snapshot = await firestore
           .pipeline()
           .collection('pipeline-e2e')
@@ -236,16 +241,44 @@ void runPipelineExpressionsTests() {
           .addFields(
             Expression.field('a').subtract(Expression.field('b')).as('diff'),
             Expression.field('a').multiply(Expression.field('b')).as('product'),
-            Expression.field('score').divide(Expression.constant(10)).as('score_div_10'),
-            Expression.field('score').modulo(Expression.constant(30)).as('score_mod_30'),
+            Expression.field('score')
+                .divide(Expression.constant(10))
+                .as('score_div_10'),
+            Expression.field('score')
+                .modulo(Expression.constant(30))
+                .as('score_mod_30'),
           )
           .limit(3)
           .execute();
       expectResultCount(snapshot, 3);
       expectResultsData(snapshot, [
-        {'score': 40, 'a': 5, 'b': 5, 'diff': 0, 'product': 25, 'score_div_10': 4, 'score_mod_30': 10},
-        {'score': 50, 'a': 1, 'b': 2, 'diff': -1, 'product': 2, 'score_div_10': 5, 'score_mod_30': 20},
-        {'score': 60, 'a': 1, 'b': 2, 'diff': -1, 'product': 2, 'score_div_10': 6, 'score_mod_30': 0},
+        {
+          'score': 40,
+          'a': 5,
+          'b': 5,
+          'diff': 0,
+          'product': 25,
+          'score_div_10': 4,
+          'score_mod_30': 10
+        },
+        {
+          'score': 50,
+          'a': 1,
+          'b': 2,
+          'diff': -1,
+          'product': 2,
+          'score_div_10': 5,
+          'score_mod_30': 20
+        },
+        {
+          'score': 60,
+          'a': 1,
+          'b': 2,
+          'diff': -1,
+          'product': 2,
+          'score_div_10': 6,
+          'score_mod_30': 0
+        },
       ]);
     });
 
@@ -297,7 +330,8 @@ void runPipelineExpressionsTests() {
           .where(Expression.field('test').equalValue('expressions'))
           .where(
             Expression.not(
-              Expression.field('score').greaterThanOrEqual(Expression.constant(60)),
+              Expression.field('score')
+                  .greaterThanOrEqual(Expression.constant(60)),
             ),
           )
           .sort(Expression.field('score').ascending())
@@ -309,14 +343,17 @@ void runPipelineExpressionsTests() {
       ]);
     });
 
-    test('addFields with ifAbsentValue uses default when field missing', () async {
+    test('addFields with ifAbsentValue uses default when field missing',
+        () async {
       final snapshot = await firestore
           .pipeline()
           .collection('pipeline-e2e')
           .where(Expression.field('test').equalValue('expressions'))
           .sort(Expression.field('score').ascending())
           .addFields(
-            Expression.field('tags').ifAbsentValue('default_value').as('tags_or_empty'),
+            Expression.field('tags')
+                .ifAbsentValue('default_value')
+                .as('tags_or_empty'),
           )
           .limit(2)
           .execute();
@@ -325,7 +362,9 @@ void runPipelineExpressionsTests() {
       expect(snapshot.result[1].data()!['tags_or_empty'], ['p', 'q']);
     });
 
-    test('addFields with ifAbsent(Expression) uses else expression when field missing', () async {
+    test(
+        'addFields with ifAbsent(Expression) uses else expression when field missing',
+        () async {
       final snapshot = await firestore
           .pipeline()
           .collection('pipeline-e2e')
@@ -343,7 +382,8 @@ void runPipelineExpressionsTests() {
       expect(snapshot.result[1].data()!['tags_or_default'], ['p', 'q']);
     });
 
-    test('where arrayContainsValue filters docs with array containing value', () async {
+    test('where arrayContainsValue filters docs with array containing value',
+        () async {
       final snapshot = await firestore
           .pipeline()
           .collection('pipeline-e2e')
@@ -354,26 +394,41 @@ void runPipelineExpressionsTests() {
           .execute();
       expectResultCount(snapshot, 1);
       expectResultsData(snapshot, [
-        {'score': 50, 'a': 1, 'b': 2, 'tags': ['p', 'q']},
+        {
+          'score': 50,
+          'a': 1,
+          'b': 2,
+          'tags': ['p', 'q']
+        },
       ]);
     });
 
-    test('where arrayContainsElement(Expression) filters docs with array containing element', () async {
+    test(
+        'where arrayContainsElement(Expression) filters docs with array containing element',
+        () async {
       final snapshot = await firestore
           .pipeline()
           .collection('pipeline-e2e')
           .where(Expression.field('test').equalValue('expressions'))
           .where(
-            Expression.field('tags').arrayContainsElement(Expression.constant('q')),
+            Expression.field('tags')
+                .arrayContainsElement(Expression.constant('q')),
           )
           .execute();
       expectResultCount(snapshot, 1);
       expectResultsData(snapshot, [
-        {'score': 50, 'a': 1, 'b': 2, 'tags': ['p', 'q']},
+        {
+          'score': 50,
+          'a': 1,
+          'b': 2,
+          'tags': ['p', 'q']
+        },
       ]);
     });
 
-    test('addFields with string expressions (concat, length, toLower, toUpper, trim)', () async {
+    test(
+        'addFields with string expressions (concat, length, toLower, toUpper, trim)',
+        () async {
       final snapshot = await firestore
           .pipeline()
           .collection('pipeline-e2e')
@@ -408,7 +463,9 @@ void runPipelineExpressionsTests() {
           .where(Expression.field('test').equalValue('expressions'))
           .where(Expression.field('score').equalValue(70))
           .addFields(
-            Expression.field('s').substring(Expression.constant(0), Expression.constant(1)).as('s_first'),
+            Expression.field('s')
+                .substring(Expression.constant(0), Expression.constant(1))
+                .as('s_first'),
           )
           .limit(1)
           .execute();
@@ -485,7 +542,7 @@ void runPipelineExpressionsTests() {
         }
       },
       skip: defaultTargetPlatform != TargetPlatform.iOS &&
-              defaultTargetPlatform != TargetPlatform.macOS,
+          defaultTargetPlatform != TargetPlatform.macOS,
     );
   });
 }
