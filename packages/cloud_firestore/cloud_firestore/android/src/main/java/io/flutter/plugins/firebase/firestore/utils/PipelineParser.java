@@ -36,8 +36,27 @@ public class PipelineParser {
       @Nullable Map<String, Object> options)
       throws Exception {
     Pipeline pipeline = buildPipeline(firestore, stages);
-    Task<Snapshot> task = pipeline.execute();
+    Task<Snapshot> task;
+    if (options != null && !options.isEmpty()) {
+      Pipeline.ExecuteOptions executeOptions = parseExecuteOptions(options);
+      task = pipeline.execute(executeOptions);
+    } else {
+      task = pipeline.execute();
+    }
     return Tasks.await(task);
+  }
+
+  private static Pipeline.ExecuteOptions parseExecuteOptions(@NonNull Map<String, Object> options) {
+    Pipeline.ExecuteOptions executeOptions = new Pipeline.ExecuteOptions();
+    Object indexModeObj = options.get("indexMode");
+    if (indexModeObj instanceof String) {
+      String indexModeStr = (String) indexModeObj;
+      if ("recommended".equalsIgnoreCase(indexModeStr)) {
+        executeOptions =
+            executeOptions.withIndexMode(Pipeline.ExecuteOptions.IndexMode.RECOMMENDED);
+      }
+    }
+    return executeOptions;
   }
 
   /**
