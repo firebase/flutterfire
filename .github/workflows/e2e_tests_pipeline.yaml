@@ -1,22 +1,28 @@
-name: pipeline-e2e
+name: e2e-pipeline
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+# on:
+#   pull_request:
+#     paths:
+#       - 'packages/cloud_firestore/cloud_firestore/pipeline_example/**'
+#       - 'packages/cloud_firestore/cloud_firestore/lib/**'
+#       - '.github/workflows/e2e_tests_pipeline.yaml'
+#   push:
+#     branches:
+#       - main
+#       - firestore-pipelines-dart-api-v2
+#       - master
+#     paths:
+#       - 'packages/cloud_firestore/cloud_firestore/pipeline_example/**'
+#       - 'packages/cloud_firestore/cloud_firestore/lib/**'
+#       - '.github/workflows/e2e_tests_pipeline.yaml'
+
 on:
   pull_request:
-    paths:
-      - 'packages/cloud_firestore/cloud_firestore/pipeline_example/**'
-      - 'packages/cloud_firestore/cloud_firestore/lib/**'
   push:
-    branches:
-      - main
-      - firestore-pipelines-dart-api-v2
-      - master
-    paths:
-      - 'packages/cloud_firestore/cloud_firestore/pipeline_example/**'
-      - 'packages/cloud_firestore/cloud_firestore/lib/**'
 
 jobs:
   pipeline-e2e-android:
@@ -140,3 +146,55 @@ jobs:
         working-directory: packages/cloud_firestore/cloud_firestore/pipeline_example
         run: |
           flutter test integration_test/pipeline/pipeline_live_test.dart --timeout 10x --dart-define=CI=true -d chrome
+
+  pipeline-e2e-ios:
+    if: ${{ secrets.PIPELINE_E2E_FIREBASE_OPTIONS_DART != '' }}
+    runs-on: macos-15
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
+      - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
+        name: Install Node.js 20
+        with:
+          node-version: '20'
+      - name: Xcode
+        run: sudo xcode-select -s /Applications/Xcode_16.4.app/Contents/Developer
+      - uses: actions/setup-java@8df1039502a15bceb9433410b1a100fbe190c53b
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+      - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
+        with:
+          channel: 'stable'
+          cache: true
+          cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
+          pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
+      - uses: bluefireteam/melos-action@c7dcb921b23cc520cace360b95d02b37bf09cdaa
+        with:
+          run-bootstrap: false
+          melos-version: '5.3.0'
+      - name: Inject Firebase config for pipeline E2E
+        env:
+          FIREBASE_OPTIONS_DART: ${{ secrets.PIPELINE_E2E_FIREBASE_OPTIONS_DART }}
+          GOOGLE_SERVICES_JSON: ${{ secrets.PIPELINE_E2E_GOOGLE_SERVICES_JSON }}
+          GOOGLE_SERVICE_INFO_PLIST: ${{ secrets.PIPELINE_E2E_GOOGLE_SERVICE_INFO_PLIST }}
+        run: |
+          echo "$FIREBASE_OPTIONS_DART" > packages/cloud_firestore/cloud_firestore/pipeline_example/lib/firebase_options.dart
+          echo "$GOOGLE_SERVICES_JSON" > packages/cloud_firestore/cloud_firestore/pipeline_example/android/app/google-services.json
+          echo "$GOOGLE_SERVICE_INFO_PLIST" > packages/cloud_firestore/cloud_firestore/pipeline_example/ios/Runner/GoogleService-Info.plist
+      - name: Bootstrap package
+        run: melos bootstrap --scope "cloud_firestore*"
+      - uses: futureware-tech/simulator-action@e89aa8f93d3aec35083ff49d2854d07f7186f7f5
+        id: simulator
+        with:
+          model: "iPhone 16"
+      - name: Build iOS (simulator)
+        working-directory: packages/cloud_firestore/cloud_firestore/pipeline_example
+        run: |
+          flutter build ios --no-codesign --simulator --debug --target=./integration_test/pipeline/pipeline_live_test.dart --dart-define=CI=true
+      - name: Run pipeline E2E tests (iOS)
+        working-directory: packages/cloud_firestore/cloud_firestore/pipeline_example
+        env:
+          SIMULATOR: ${{ steps.simulator.outputs.udid }}
+        run: |
+          flutter test integration_test/pipeline/pipeline_live_test.dart -d "$SIMULATOR" --timeout 10x --dart-define=CI=true
