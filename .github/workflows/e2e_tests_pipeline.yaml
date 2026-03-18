@@ -4,21 +4,25 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+# on:
+#   pull_request:
+#     paths:
+#       - 'packages/cloud_firestore/cloud_firestore/pipeline_example/**'
+#       - 'packages/cloud_firestore/cloud_firestore/lib/**'
+#       - '.github/workflows/e2e_tests_pipeline.yaml'
+#   push:
+#     branches:
+#       - main
+#       - firestore-pipelines-dart-api-v2
+#       - master
+#     paths:
+#       - 'packages/cloud_firestore/cloud_firestore/pipeline_example/**'
+#       - 'packages/cloud_firestore/cloud_firestore/lib/**'
+#       - '.github/workflows/e2e_tests_pipeline.yaml'
+
 on:
   pull_request:
-    paths:
-      - 'packages/cloud_firestore/cloud_firestore/pipeline_example/**'
-      - 'packages/cloud_firestore/cloud_firestore/lib/**'
-      - '.github/workflows/e2e_tests_pipeline.yaml'
   push:
-    branches:
-      - main
-      - firestore-pipelines-dart-api-v2
-      - master
-    paths:
-      - 'packages/cloud_firestore/cloud_firestore/pipeline_example/**'
-      - 'packages/cloud_firestore/cloud_firestore/lib/**'
-      - '.github/workflows/e2e_tests_pipeline.yaml'
 
 jobs:
   pipeline-e2e-android:
