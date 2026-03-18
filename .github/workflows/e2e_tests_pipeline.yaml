@@ -112,7 +112,7 @@ jobs:
             ~/.android/adb*
 
   pipeline-e2e-web:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
@@ -143,8 +143,18 @@ jobs:
         run: melos bootstrap --scope "cloud_firestore*"
       - name: Run pipeline E2E tests (Chrome)
         working-directory: packages/cloud_firestore/cloud_firestore/pipeline_example
+        # Web devices are not supported for the `flutter test` command yet. As a
+        # workaround we use the `flutter drive` command. Tracking issue:
+        # https://github.com/flutter/flutter/issues/66264
         run: |
-          flutter test integration_test/pipeline/pipeline_live_test.dart --timeout 10x --dart-define=CI=true -d chrome
+          chromedriver --port=4444 --trace-buffer-size=100000 &
+          flutter drive --target=./integration_test/pipeline/pipeline_live_test.dart --driver=./test_driver/integration_test.dart -d chrome --dart-define=CI=true | tee output.log
+          output=$(<output.log)
+          if [[ "$output" =~ \[E\] ]]; then
+            echo "All tests did not pass. Please check the logs for more information."
+            exit 1
+          fi
+        shell: bash
 
   pipeline-e2e-ios:
     runs-on: macos-15
