@@ -394,7 +394,7 @@ extension type PipelinesJsImpl._(JSObject _) implements JSObject {
       JSAny condition, JSAny thenExpr, JSAny elseExpr);
   external ExpressionJsImpl documentId(JSAny path);
   external ExpressionJsImpl collectionId(JSAny expression);
-  external ExpressionJsImpl mapGet(JSAny mapExpr, JSAny key);
+  external ExpressionJsImpl mapGet(JSAny mapExpr, JSString key);
   external ExpressionJsImpl mapKeys(JSAny mapExpr);
   external ExpressionJsImpl mapValues(JSAny mapExpr);
   external ExpressionJsImpl currentTimestamp();

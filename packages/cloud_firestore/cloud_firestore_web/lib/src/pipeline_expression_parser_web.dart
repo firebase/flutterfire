@@ -130,10 +130,21 @@ class PipelineExpressionParserWeb {
       case 'collection_id':
         return _pipelines.collectionId(_expr(argsMap, _kExpression));
       case 'map_get':
-        return _pipelines.mapGet(
-          _expr(argsMap, 'map'),
-          _expr(argsMap, 'key'),
-        );
+        {
+          final keyExprMap = argsMap['key'] as Map<String, dynamic>?;
+          if (keyExprMap == null) {
+            throw ArgumentError("map_get requires a 'key' argument");
+          }
+          final keyString = _constantStringFromExpression(keyExprMap);
+          if (keyString == null) {
+            throw UnsupportedError(
+                'mapGet on web only supports a constant string key ');
+          }
+          return _pipelines.mapGet(
+            _expr(argsMap, 'map'),
+            keyString.toJS,
+          );
+        }
       case 'map_keys':
         return _pipelines.mapKeys(_expr(argsMap, _kExpression));
       case 'map_values':
@@ -533,6 +544,15 @@ class PipelineExpressionParserWeb {
   static Map<String, dynamic> _argsOf(Map<String, dynamic> map) {
     final a = map[_kArgs];
     return a is Map<String, dynamic> ? a : const {};
+  }
+
+  /// Returns the string value if [exprMap] is a constant string expression;
+  /// otherwise null.
+  String? _constantStringFromExpression(Map<String, dynamic> exprMap) {
+    if ((exprMap[_kName] as String?) != 'constant') return null;
+    final args = _argsOf(exprMap);
+    final value = args[_kValue];
+    return value is String ? value : null;
   }
 
   /// Resolves [key] from [argsMap] as a value expression.
