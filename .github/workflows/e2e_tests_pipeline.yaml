@@ -27,7 +27,6 @@ on:
 
 jobs:
   pipeline-e2e-android:
-    if: ${{ secrets.PIPELINE_E2E_FIREBASE_OPTIONS_DART != '' }}
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
@@ -113,7 +112,6 @@ jobs:
             ~/.android/adb*
 
   pipeline-e2e-web:
-    if: ${{ secrets.PIPELINE_E2E_FIREBASE_OPTIONS_DART != '' }}
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
@@ -149,7 +147,6 @@ jobs:
           flutter test integration_test/pipeline/pipeline_live_test.dart --timeout 10x --dart-define=CI=true -d chrome
 
   pipeline-e2e-ios:
-    if: ${{ secrets.PIPELINE_E2E_FIREBASE_OPTIONS_DART != '' }}
     runs-on: macos-15
     timeout-minutes: 50
     steps:
