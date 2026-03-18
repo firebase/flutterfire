@@ -23,6 +23,7 @@ concurrency:
 on:
   pull_request:
   push:
+  workflow_dispatch:
 
 jobs:
   pipeline-e2e-android:
