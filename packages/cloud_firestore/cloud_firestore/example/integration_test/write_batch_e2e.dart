@@ -70,6 +70,28 @@ void runWriteBatchTests() {
       expect(snapshot.exists, false);
     });
 
+    test('should update a document using FieldPath keys', () async {
+      CollectionReference<Map<String, dynamic>> collection =
+          await initializeTest('write-batch-field-path');
+      DocumentReference<Map<String, dynamic>> doc = collection.doc('doc1');
+
+      await doc.set({
+        'nested': {'field': 'old_value'},
+        'top': 'value',
+      });
+
+      WriteBatch batch = firestore.batch();
+      batch.update(doc, {
+        FieldPath(const ['nested', 'field']): 'new_value',
+      });
+      await batch.commit();
+
+      DocumentSnapshot<Map<String, dynamic>> snapshot = await doc.get();
+      expect(snapshot.exists, isTrue);
+      expect(snapshot.data()!['nested']['field'], equals('new_value'));
+      expect(snapshot.data()!['top'], equals('value'));
+    });
+
     test('performs batch operations', () async {
       CollectionReference<Map<String, dynamic>> collection =
           await initializeTest('write-batch-ops');

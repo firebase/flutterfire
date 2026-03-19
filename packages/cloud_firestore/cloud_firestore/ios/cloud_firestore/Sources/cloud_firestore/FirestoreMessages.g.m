@@ -463,7 +463,7 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 @implementation PigeonTransactionCommand
 + (instancetype)makeWithType:(PigeonTransactionType)type
                         path:(NSString *)path
-                        data:(nullable NSDictionary<NSString *, id> *)data
+                        data:(nullable NSDictionary<id, id> *)data
                       option:(nullable PigeonDocumentOption *)option {
   PigeonTransactionCommand *pigeonResult = [[PigeonTransactionCommand alloc] init];
   pigeonResult.type = type;
