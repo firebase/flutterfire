@@ -264,11 +264,11 @@ typedef NS_ENUM(NSUInteger, AggregateType) {
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)makeWithType:(PigeonTransactionType)type
                         path:(NSString *)path
-                        data:(nullable NSDictionary<NSString *, id> *)data
+                        data:(nullable NSDictionary<id, id> *)data
                       option:(nullable PigeonDocumentOption *)option;
 @property(nonatomic, assign) PigeonTransactionType type;
 @property(nonatomic, copy) NSString *path;
-@property(nonatomic, strong, nullable) NSDictionary<NSString *, id> *data;
+@property(nonatomic, strong, nullable) NSDictionary<id, id> *data;
 @property(nonatomic, strong, nullable) PigeonDocumentOption *option;
 @end
 
