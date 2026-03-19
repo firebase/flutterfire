@@ -1,0 +1,210 @@
+name: e2e-pipeline
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  pull_request:
+    paths:
+      - 'packages/cloud_firestore/cloud_firestore/pipeline_example/**'
+      - 'packages/cloud_firestore/cloud_firestore/lib/**'
+      - '.github/workflows/e2e_tests_pipeline.yaml'
+  push:
+    branches:
+      - main
+      - firestore-pipelines-dart-api-v2
+    paths:
+      - 'packages/cloud_firestore/cloud_firestore/pipeline_example/**'
+      - 'packages/cloud_firestore/cloud_firestore/lib/**'
+      - '.github/workflows/e2e_tests_pipeline.yaml'
+
+jobs:
+  pipeline-e2e-android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      AVD_ARCH: x86_64
+      AVD_API_LEVEL: 34
+      AVD_TARGET: google_apis
+    steps:
+      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
+      - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
+        name: Install Node.js 20
+        with:
+          node-version: '20'
+      - uses: actions/setup-java@8df1039502a15bceb9433410b1a100fbe190c53b
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+      - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
+        with:
+          channel: 'stable'
+          cache: true
+          cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
+          pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
+      - uses: bluefireteam/melos-action@c7dcb921b23cc520cace360b95d02b37bf09cdaa
+        with:
+          run-bootstrap: false
+          melos-version: '5.3.0'
+      - name: Inject Firebase config for pipeline E2E
+        env:
+          FIREBASE_OPTIONS_DART: ${{ secrets.PIPELINE_E2E_FIREBASE_OPTIONS_DART }}
+          GOOGLE_SERVICES_JSON: ${{ secrets.PIPELINE_E2E_GOOGLE_SERVICES_JSON }}
+          GOOGLE_SERVICE_INFO_PLIST: ${{ secrets.PIPELINE_E2E_GOOGLE_SERVICE_INFO_PLIST }}
+        run: |
+          echo "$FIREBASE_OPTIONS_DART" > packages/cloud_firestore/cloud_firestore/pipeline_example/lib/firebase_options.dart
+          echo "$GOOGLE_SERVICES_JSON" > packages/cloud_firestore/cloud_firestore/pipeline_example/android/app/google-services.json
+          echo "$GOOGLE_SERVICE_INFO_PLIST" > packages/cloud_firestore/cloud_firestore/pipeline_example/ios/Runner/GoogleService-Info.plist
+      - name: Bootstrap package
+        run: melos bootstrap --scope "cloud_firestore*"
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Gradle cache
+        uses: gradle/actions/setup-gradle@v4
+      - name: Free Disk Space (Ubuntu)
+        uses: AdityaGarg8/remove-unwanted-software@90e01b21170618765a73370fcc3abbd1684a7793
+        with:
+          remove-dotnet: true
+          remove-haskell: true
+          remove-codeql: true
+          remove-docker-images: true
+          remove-large-packages: true
+      - name: AVD cache
+        uses: actions/cache/restore@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        continue-on-error: true
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-${{ runner.os }}-${{ env.AVD_API_LEVEL }}-${{ env.AVD_TARGET }}-${{ env.AVD_ARCH }}
+      - name: Start AVD then run pipeline E2E tests
+        uses: reactivecircus/android-emulator-runner@b530d96654c385303d652368551fb075bc2f0b6b
+        with:
+          api-level: ${{ env.AVD_API_LEVEL }}
+          target: ${{ env.AVD_TARGET }}
+          arch: ${{ env.AVD_ARCH }}
+          emulator-build: 14214601
+          working-directory: packages/cloud_firestore/cloud_firestore/pipeline_example
+          script: |
+            flutter test integration_test/pipeline/pipeline_live_test.dart --timeout 10x --dart-define=CI=true -d emulator-5554
+      - name: Ensure Appium is shut down
+        run: |
+          pgrep -f appium && pkill -f appium || echo "No Appium process found"
+      - name: Save Android Emulator Cache
+        if: github.ref == 'refs/heads/main'
+        uses: actions/cache/save@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        continue-on-error: true
+        with:
+          key: ${{ steps.avd-cache.outputs.cache-primary-key }}
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+
+  pipeline-e2e-web:
+    runs-on: macos-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
+      - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
+        name: Install Node.js 20
+        with:
+          node-version: '20'
+      - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
+        with:
+          channel: 'stable'
+          cache: true
+          cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
+          pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
+      - uses: bluefireteam/melos-action@c7dcb921b23cc520cace360b95d02b37bf09cdaa
+        with:
+          run-bootstrap: false
+          melos-version: '5.3.0'
+      - name: Inject Firebase config for pipeline E2E
+        env:
+          FIREBASE_OPTIONS_DART: ${{ secrets.PIPELINE_E2E_FIREBASE_OPTIONS_DART }}
+          GOOGLE_SERVICES_JSON: ${{ secrets.PIPELINE_E2E_GOOGLE_SERVICES_JSON }}
+          GOOGLE_SERVICE_INFO_PLIST: ${{ secrets.PIPELINE_E2E_GOOGLE_SERVICE_INFO_PLIST }}
+        run: |
+          echo "$FIREBASE_OPTIONS_DART" > packages/cloud_firestore/cloud_firestore/pipeline_example/lib/firebase_options.dart
+          echo "$GOOGLE_SERVICES_JSON" > packages/cloud_firestore/cloud_firestore/pipeline_example/android/app/google-services.json
+          echo "$GOOGLE_SERVICE_INFO_PLIST" > packages/cloud_firestore/cloud_firestore/pipeline_example/ios/Runner/GoogleService-Info.plist
+      - name: Bootstrap package
+        run: melos bootstrap --scope "cloud_firestore*"
+      - name: Run pipeline E2E tests (Chrome)
+        working-directory: packages/cloud_firestore/cloud_firestore/pipeline_example
+        # Web devices are not supported for the `flutter test` command yet. As a
+        # workaround we use the `flutter drive` command. Tracking issue:
+        # https://github.com/flutter/flutter/issues/66264
+        run: |
+          chromedriver --port=4444 --trace-buffer-size=100000 &
+          flutter drive --target=./integration_test/pipeline/pipeline_live_test.dart --driver=./test_driver/integration_test.dart -d chrome --dart-define=CI=true | tee output.log
+          output=$(<output.log)
+          if [[ "$output" =~ \[E\] ]]; then
+            echo "All tests did not pass. Please check the logs for more information."
+            exit 1
+          fi
+        shell: bash
+
+  pipeline-e2e-ios:
+    runs-on: macos-15
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
+      - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
+        name: Install Node.js 20
+        with:
+          node-version: '20'
+      - name: Xcode
+        run: sudo xcode-select -s /Applications/Xcode_16.4.app/Contents/Developer
+      - uses: actions/setup-java@8df1039502a15bceb9433410b1a100fbe190c53b
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+      - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
+        with:
+          channel: 'stable'
+          cache: true
+          cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
+          pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
+      - name: Enable Swift Package Manager for iOS
+        run: flutter config --enable-swift-package-manager
+      - uses: bluefireteam/melos-action@c7dcb921b23cc520cace360b95d02b37bf09cdaa
+        with:
+          run-bootstrap: false
+          melos-version: '5.3.0'
+      - name: Inject Firebase config for pipeline E2E
+        env:
+          FIREBASE_OPTIONS_DART: ${{ secrets.PIPELINE_E2E_FIREBASE_OPTIONS_DART }}
+          GOOGLE_SERVICES_JSON: ${{ secrets.PIPELINE_E2E_GOOGLE_SERVICES_JSON }}
+          GOOGLE_SERVICE_INFO_PLIST: ${{ secrets.PIPELINE_E2E_GOOGLE_SERVICE_INFO_PLIST }}
+        run: |
+          echo "$FIREBASE_OPTIONS_DART" > packages/cloud_firestore/cloud_firestore/pipeline_example/lib/firebase_options.dart
+          echo "$GOOGLE_SERVICES_JSON" > packages/cloud_firestore/cloud_firestore/pipeline_example/android/app/google-services.json
+          echo "$GOOGLE_SERVICE_INFO_PLIST" > packages/cloud_firestore/cloud_firestore/pipeline_example/ios/Runner/GoogleService-Info.plist
+      - name: Bootstrap package
+        run: melos bootstrap --scope "cloud_firestore*"
+      - name: Prepare iOS project for Swift Package Manager
+        working-directory: packages/cloud_firestore/cloud_firestore/pipeline_example/ios
+        run: |
+          if [ -f Podfile ]; then pod deintegrate; fi
+          rm -f Podfile Podfile.lock
+          rm -rf Pods
+      - uses: futureware-tech/simulator-action@e89aa8f93d3aec35083ff49d2854d07f7186f7f5
+        id: simulator
+        with:
+          model: "iPhone 16"
+      - name: Build iOS (simulator)
+        working-directory: packages/cloud_firestore/cloud_firestore/pipeline_example
+        run: |
+          flutter build ios --no-codesign --simulator --debug --target=./integration_test/pipeline/pipeline_live_test.dart --dart-define=CI=true
+      - name: Run pipeline E2E tests (iOS)
+        working-directory: packages/cloud_firestore/cloud_firestore/pipeline_example
+        env:
+          SIMULATOR: ${{ steps.simulator.outputs.udid }}
+        run: |
+          flutter test integration_test/pipeline/pipeline_live_test.dart -d "$SIMULATOR" --timeout 10x --dart-define=CI=true
