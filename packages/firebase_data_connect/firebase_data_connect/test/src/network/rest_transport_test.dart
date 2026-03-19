@@ -282,7 +282,8 @@ void main() {
       // what the Firebase emulator sends). Without explicit UTF-8
       // decoding, the http package defaults to latin1, corrupting
       // multi-byte characters.
-      final koreanJson = '{"data": {"name": "\ud55c\uad6d\uc5b4 \ud14c\uc2a4\ud2b8"}}';
+      const koreanJson =
+          '{"data": {"name": "\ud55c\uad6d\uc5b4 \ud14c\uc2a4\ud2b8"}}';
       final mockResponse = http.Response.bytes(
         utf8.encode(koreanJson),
         200,
@@ -307,7 +308,8 @@ void main() {
         null,
       );
 
-      expect(result.data['data']['name'], equals('\ud55c\uad6d\uc5b4 \ud14c\uc2a4\ud2b8'));
+      expect(result.data['data']['name'],
+          equals('\ud55c\uad6d\uc5b4 \ud14c\uc2a4\ud2b8'));
     });
 
     test(
