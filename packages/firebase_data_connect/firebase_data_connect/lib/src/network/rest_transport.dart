@@ -116,11 +116,12 @@ class RestTransport implements DataConnectTransport {
         headers: headers,
       );
       Map<String, dynamic> bodyJson =
-          jsonDecode(r.body) as Map<String, dynamic>;
+          jsonDecode(utf8.decode(r.bodyBytes)) as Map<String, dynamic>;
 
       if (r.statusCode != 200) {
-        String message =
-            bodyJson.containsKey('message') ? bodyJson['message']! : r.body;
+        String message = bodyJson.containsKey('message')
+            ? bodyJson['message']!
+            : utf8.decode(r.bodyBytes);
         throw DataConnectError(
           r.statusCode == 401
               ? DataConnectErrorCode.unauthorized
