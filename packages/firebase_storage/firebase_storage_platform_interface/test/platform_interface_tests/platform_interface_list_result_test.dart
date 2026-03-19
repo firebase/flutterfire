@@ -66,7 +66,8 @@ void main() {
 }
 
 class TestListResultPlatform extends ListResultPlatform {
-  TestListResultPlatform(FirebaseStoragePlatform? storage, String? nextPageToken)
+  TestListResultPlatform(
+      FirebaseStoragePlatform? storage, String? nextPageToken)
       : super(storage, nextPageToken);
 }
 
