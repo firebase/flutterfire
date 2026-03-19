@@ -14,7 +14,9 @@ void runPipelineFilterSortTests() {
 
     setUpAll(() {
       firestore = FirebaseFirestore.instanceFor(
-          app: Firebase.app(), databaseId: 'firestore-pipeline-test');
+        app: Firebase.app(),
+        databaseId: 'firestore-pipeline-test',
+      );
     });
 
     test('where + limit returns expected count and data', () async {
@@ -78,8 +80,9 @@ void runPipelineFilterSortTests() {
           .limit(10)
           .execute();
       expectResultCount(snapshot, 3);
-      final categories =
-          snapshot.result.map((r) => r.data()!['category']).toList();
+      final categories = snapshot.result
+          .map((r) => r.data()!['category'])
+          .toList();
       expect(categories..sort(), ['a', 'b', 'c']);
     });
   });
