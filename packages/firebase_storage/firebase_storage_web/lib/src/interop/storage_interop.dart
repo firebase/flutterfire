@@ -223,6 +223,7 @@ extension type ListResultJsImpl._(JSObject _) implements JSObject {
   external JSArray /* ReferenceJsImpl */ get prefixes;
 }
 
+// ignore: avoid_classes_with_only_static_members
 /// An enumeration of the possible string formats for upload.
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.storage#stringformat>
