@@ -281,7 +281,9 @@ class PipelineExpressionParserWeb {
         }
         return result;
       case 'not':
-        return _pipelines.not(_expr(argsMap, _kExpression));
+        final expr = argsMap[_kExpression] as Map<String, dynamic>;
+        final boolExpr = toBooleanExpression(expr) as JSAny;
+        return _pipelines.not(boolExpr);
       case 'exists':
         return _pipelines.exists(_expr(argsMap, _kExpression));
       case 'is_absent':
@@ -336,7 +338,12 @@ class PipelineExpressionParserWeb {
       case 'filter':
         return _buildFilterExpression(argsMap);
       default:
-        return null;
+        throw FirebaseException(
+          plugin: 'cloud_firestore',
+          code: 'unsupported-boolean-expression',
+          message: "The boolean expression '$name' is not supported on the web "
+              'platform. The Firebase JS SDK may not expose this expression.',
+        );
     }
   }
 
