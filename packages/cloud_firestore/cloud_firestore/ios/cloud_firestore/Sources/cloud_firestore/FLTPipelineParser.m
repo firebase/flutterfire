@@ -12,7 +12,9 @@
 #import "FirebaseFirestoreInternal/FIRPipelineBridge.h"
 #else
 @import FirebaseFirestore;
-#if __has_include("FIRPipelineBridge.h")
+#if __has_include("FirebaseFirestoreInternal/FIRPipelineBridge.h")
+#import "FirebaseFirestoreInternal/FIRPipelineBridge.h"
+#elif __has_include("FIRPipelineBridge.h")
 #import "FIRPipelineBridge.h"
 #endif
 #endif
@@ -34,7 +36,8 @@ static NSError *pipelineUnavailableError(void) {
 #define FLT_PIPELINE_AVAILABLE 1
 #endif
 #else
-#if __has_include("FIRPipelineBridge.h")
+#if __has_include("FirebaseFirestoreInternal/FIRPipelineBridge.h") || \
+                  __has_include("FIRPipelineBridge.h")
 #define FLT_PIPELINE_AVAILABLE 1
 #endif
 #endif
