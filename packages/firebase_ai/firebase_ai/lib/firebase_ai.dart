@@ -111,7 +111,13 @@ export 'src/live_api.dart'
         Transcription;
 export 'src/live_session.dart' show LiveSession;
 export 'src/schema.dart' show Schema, SchemaType;
-
+export 'src/server_template/template_chat.dart'
+    show TemplateChatSession, StartTemplateChatExtension;
+export 'src/server_template/template_tool.dart'
+    show
+        TemplateAutoFunctionDeclaration,
+        TemplateFunctionDeclaration,
+        TemplateTool;
 export 'src/tool.dart'
     show
         AutoFunctionDeclaration,

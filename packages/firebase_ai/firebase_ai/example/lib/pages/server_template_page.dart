@@ -14,6 +14,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../utils/function_call_utils.dart';
 import '../widgets/message_widget.dart';
 import 'package:firebase_ai/firebase_ai.dart';
 
@@ -43,6 +44,10 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
   // ignore: experimental_member_use
   TemplateImagenModel? _templateImagenModel;
 
+  TemplateChatSession? _chatSession;
+  TemplateChatSession? _chatFunctionSession;
+  TemplateChatSession? _chatAutoFunctionSession;
+
   @override
   void initState() {
     super.initState();
@@ -65,6 +70,30 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
           // ignore: experimental_member_use
           FirebaseAI.googleAI().templateImagenModel();
     }
+
+    // Inputs are now provided ONCE here when creating the session
+    _chatSession = _templateGenerativeModel?.startChat(
+      'chat_history.prompt',
+      inputs: {},
+    );
+    _chatFunctionSession = _templateGenerativeModel?.startChat(
+      'cj-function-calling-weather',
+      inputs: {},
+    );
+    _chatAutoFunctionSession = _templateGenerativeModel?.startChat(
+      'cj-function-calling-weather',
+      inputs: {},
+      tools: [
+        TemplateTool.functionDeclarations(
+          [
+            TemplateAutoFunctionDeclaration(
+              name: 'fetchWeather',
+              callable: fetchWeatherCallable,
+            ),
+          ],
+        ),
+      ],
+    );
   }
 
   void _scrollDown() {
@@ -129,6 +158,41 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
                   const SizedBox.square(
                     dimension: 15,
                   ),
+                  if (!_loading)
+                    IconButton(
+                      onPressed: () async {
+                        await _serverTemplateAutoFunctionCall(
+                          _textController.text,
+                        );
+                      },
+                      icon: Icon(
+                        Icons.auto_mode,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      tooltip: 'Auto Function Calling',
+                    ),
+                  if (!_loading)
+                    IconButton(
+                      onPressed: () async {
+                        await _serverTemplateFunctionCall(_textController.text);
+                      },
+                      icon: Icon(
+                        Icons.functions,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      tooltip: 'Function Calling',
+                    ),
+                  if (!_loading)
+                    IconButton(
+                      onPressed: () async {
+                        await _serverTemplateChat(_textController.text);
+                      },
+                      icon: Icon(
+                        Icons.chat,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      tooltip: 'Chat',
+                    ),
                   if (!_loading) ...[
                     IconButton(
                       onPressed: () async {
@@ -189,78 +253,135 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
     );
   }
 
-  Future<void> _serverTemplateUrlContext(String message) async {
+  Future<void> _handleServerTemplateMessage(
+    String message,
+    Future<void> Function(String) generateContent,
+  ) async {
     setState(() {
       _loading = true;
     });
 
     try {
       _messages.add(MessageData(text: message, fromUser: true));
-      var response = await _templateGenerativeModel
-          // ignore: experimental_member_use
-          ?.generateContent('cj-urlcontext', inputs: {'url': message});
-
-      final candidate = response?.candidates.first;
-      if (candidate == null) {
-        _messages.add(MessageData(text: 'No response', fromUser: false));
-      } else {
-        final responseText = candidate.text ?? '';
-        final groundingMetadata = candidate.groundingMetadata;
-        final urlContextMetadata = candidate.urlContextMetadata;
-
-        final buffer = StringBuffer(responseText);
-        if (groundingMetadata != null) {
-          buffer.writeln('\n\n--- Grounding Metadata ---');
-          buffer.writeln('Web Search Queries:');
-          for (final query in groundingMetadata.webSearchQueries) {
-            buffer.writeln(' - $query');
-          }
-          buffer.writeln('\nGrounding Chunks:');
-          for (final chunk in groundingMetadata.groundingChunks) {
-            if (chunk.web != null) {
-              buffer.writeln(' - Web Chunk:');
-              buffer.writeln('   - Title: ${chunk.web!.title}');
-              buffer.writeln('   - URI: ${chunk.web!.uri}');
-              buffer.writeln('   - Domain: ${chunk.web!.domain}');
-            }
-          }
-        }
-
-        if (urlContextMetadata != null) {
-          buffer.writeln('\n\n--- URL Context Metadata ---');
-          for (final data in urlContextMetadata.urlMetadata) {
-            buffer.writeln(' - URL: ${data.retrievedUrl}');
-            buffer.writeln('   Status: ${data.urlRetrievalStatus}');
-          }
-        }
-        _messages.add(MessageData(text: buffer.toString(), fromUser: false));
-      }
-
-      setState(() {
-        _loading = false;
-        _scrollDown();
-      });
+      await generateContent(message);
     } catch (e) {
       _showError(e.toString());
-      setState(() {
-        _loading = false;
-      });
     } finally {
       _textController.clear();
       setState(() {
         _loading = false;
       });
       _textFieldFocus.requestFocus();
+      _scrollDown();
     }
   }
 
-  Future<void> _serverTemplateImagen(String message) async {
-    setState(() {
-      _loading = true;
+  Future<void> _serverTemplateUrlContext(String message) async {
+    await _handleServerTemplateMessage(
+      message,
+      (message) async {
+        _messages.add(MessageData(text: message, fromUser: true));
+        var response = await _templateGenerativeModel
+            // ignore: experimental_member_use
+            ?.generateContent('cj-urlcontext', inputs: {'url': message});
+
+        final candidate = response?.candidates.first;
+        if (candidate == null) {
+          _messages.add(MessageData(text: 'No response', fromUser: false));
+        } else {
+          final responseText = candidate.text ?? '';
+          final groundingMetadata = candidate.groundingMetadata;
+          final urlContextMetadata = candidate.urlContextMetadata;
+
+          final buffer = StringBuffer(responseText);
+          if (groundingMetadata != null) {
+            buffer.writeln('\n\n--- Grounding Metadata ---');
+            buffer.writeln('Web Search Queries:');
+            for (final query in groundingMetadata.webSearchQueries) {
+              buffer.writeln(' - $query');
+            }
+            buffer.writeln('\nGrounding Chunks:');
+            for (final chunk in groundingMetadata.groundingChunks) {
+              if (chunk.web != null) {
+                buffer.writeln(' - Web Chunk:');
+                buffer.writeln('   - Title: ${chunk.web!.title}');
+                buffer.writeln('   - URI: ${chunk.web!.uri}');
+                buffer.writeln('   - Domain: ${chunk.web!.domain}');
+              }
+            }
+          }
+
+          if (urlContextMetadata != null) {
+            buffer.writeln('\n\n--- URL Context Metadata ---');
+            for (final data in urlContextMetadata.urlMetadata) {
+              buffer.writeln(' - URL: ${data.retrievedUrl}');
+              buffer.writeln('   Status: ${data.urlRetrievalStatus}');
+            }
+          }
+          _messages.add(MessageData(text: buffer.toString(), fromUser: false));
+        }
+      },
+    );
+  }
+
+  Future<void> _serverTemplateAutoFunctionCall(String message) async {
+    await _handleServerTemplateMessage(message, (message) async {
+      // Inputs are no longer passed during sendMessage
+      var response = await _chatAutoFunctionSession?.sendMessage(
+        Content.text(message),
+      );
+
+      _messages.add(MessageData(text: response?.text, fromUser: false));
     });
-    MessageData? resultMessage;
-    try {
-      _messages.add(MessageData(text: message, fromUser: true));
+  }
+
+  Future<void> _serverTemplateFunctionCall(String message) async {
+    await _handleServerTemplateMessage(message, (message) async {
+      // Inputs are no longer passed during sendMessage
+      var response = await _chatFunctionSession?.sendMessage(
+        Content.text(message),
+      );
+
+      _messages.add(MessageData(text: response?.text, fromUser: false));
+      final functionCalls = response?.functionCalls.toList();
+      if (functionCalls!.isNotEmpty) {
+        final functionCall = functionCalls.first;
+        if (functionCall.name == 'fetchWeather') {
+          final location =
+              functionCall.args['location']! as Map<String, dynamic>;
+          final date = functionCall.args['date']! as String;
+          final city = location['city'] as String;
+          final state = location['state'] as String;
+          final functionResult =
+              await fetchWeather(Location(city, state), date);
+
+          // Respond to the function call
+          var functionResponse = await _chatFunctionSession?.sendMessage(
+            Content.functionResponse(functionCall.name, functionResult),
+          );
+          _messages
+              .add(MessageData(text: functionResponse?.text, fromUser: false));
+        }
+      }
+    });
+  }
+
+  Future<void> _serverTemplateChat(String message) async {
+    await _handleServerTemplateMessage(message, (message) async {
+      // Inputs are no longer passed during sendMessage
+      var response = await _chatSession?.sendMessage(
+        Content.text(message),
+      );
+
+      var text = response?.text;
+
+      _messages.add(MessageData(text: text, fromUser: false));
+    });
+  }
+
+  Future<void> _serverTemplateImagen(String message) async {
+    await _handleServerTemplateMessage(message, (message) async {
+      MessageData? resultMessage;
       // ignore: experimental_member_use
       var response = await _templateImagenModel?.generateImages(
         'portrait-googleai',
@@ -281,34 +402,14 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
         // Handle the case where no images were generated
         _showError('Error: No images were generated.');
       }
-
-      setState(() {
-        if (resultMessage != null) {
-          _messages.add(resultMessage);
-        }
-        _loading = false;
-        _scrollDown();
-      });
-    } catch (e) {
-      _showError(e.toString());
-      setState(() {
-        _loading = false;
-      });
-    } finally {
-      _textController.clear();
-      setState(() {
-        _loading = false;
-      });
-      _textFieldFocus.requestFocus();
-    }
+      if (resultMessage != null) {
+        _messages.add(resultMessage);
+      }
+    });
   }
 
   Future<void> _serverTemplateImageInput(String message) async {
-    setState(() {
-      _loading = true;
-    });
-
-    try {
+    await _handleServerTemplateMessage(message, (message) async {
       ByteData catBytes = await rootBundle.load('assets/images/cat.jpg');
       var imageBytes = catBytes.buffer.asUint8List();
       _messages.add(
@@ -321,7 +422,7 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
 
       // ignore: experimental_member_use
       var response = await _templateGenerativeModel?.generateContent(
-        'media.prompt',
+        'media',
         inputs: {
           'imageData': {
             'isInline': true,
@@ -331,23 +432,7 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
         },
       );
       _messages.add(MessageData(text: response?.text, fromUser: false));
-
-      setState(() {
-        _loading = false;
-        _scrollDown();
-      });
-    } catch (e) {
-      _showError(e.toString());
-      setState(() {
-        _loading = false;
-      });
-    } finally {
-      _textController.clear();
-      setState(() {
-        _loading = false;
-      });
-      _textFieldFocus.requestFocus();
-    }
+    });
   }
 
   Future<void> _sendServerTemplateMessage(String message) async {
@@ -362,11 +447,6 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
           ?.generateContent('new-greeting', inputs: {});
 
       _messages.add(MessageData(text: response?.text, fromUser: false));
-
-      setState(() {
-        _loading = false;
-        _scrollDown();
-      });
     } catch (e) {
       _showError(e.toString());
       setState(() {
