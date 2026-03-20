@@ -333,13 +333,166 @@ external JSObject get and;
 @staticInterop
 external WriteBatchJsImpl writeBatch(FirestoreJsImpl firestore);
 
-@JS('Firestore')
-@staticInterop
-abstract class FirestoreJsImpl {}
-
-extension FirestoreJsImplExtension on FirestoreJsImpl {
+extension type FirestoreJsImpl._(JSObject _) implements JSObject {
   external AppJsImpl get app;
   external JSString get type;
+
+  /// Returns the pipeline source for building and executing pipelines.
+  external JSAny pipeline();
+}
+
+@JS()
+@staticInterop
+external PipelinesJsImpl get pipelines;
+
+/// Pipeline expression API — mirrors the Firebase JS SDK pipelines module.
+/// Use these to build expressions for where(), sort(), addFields(), aggregate(), etc.
+extension type PipelinesJsImpl._(JSObject _) implements JSObject {
+  external JSPromise<PipelineSnapshotJsImpl> execute(
+      PipelineExecuteOptionsJsImpl pipeline);
+
+  // --- Expression builders ---
+  external ExpressionJsImpl field(JSString path);
+  external ExpressionJsImpl constant(JSAny? value);
+
+  // --- Boolean / comparison ---
+  external JSAny equal(JSAny left, JSAny right);
+  external JSAny notEqual(JSAny left, JSAny right);
+  external JSAny greaterThan(JSAny left, JSAny right);
+  external JSAny greaterThanOrEqual(JSAny left, JSAny right);
+  external JSAny lessThan(JSAny left, JSAny right);
+  external JSAny lessThanOrEqual(JSAny left, JSAny right);
+  external JSAny and(JSAny a, JSAny b);
+  external JSAny or(JSAny a, JSAny b);
+  external JSAny xor(JSAny a, JSAny b);
+  external JSAny not(JSAny expr);
+
+  // --- Existence / type checks ---
+  external JSAny exists(JSAny expr);
+  external JSAny isAbsent(JSAny expr);
+  external JSAny isError(JSAny expr);
+
+  // --- Array ---
+  external JSAny arrayContains(JSAny array, JSAny element);
+  external JSAny arrayContainsAny(JSAny array, JSArray<JSAny> values);
+  external JSAny arrayContainsAll(JSAny array, JSAny valuesOrArray);
+
+  // --- IN / NOT IN (boolean) ---
+  external JSAny equalAny(JSAny element, JSAny valuesArray);
+  external JSAny notEqualAny(JSAny element, JSAny valuesArray);
+
+  // --- String / value expressions (global) ---
+  external ExpressionJsImpl split(JSAny expression, JSAny delimiter);
+  external ExpressionJsImpl join(JSAny arrayExpression, JSAny delimiter);
+  external ExpressionJsImpl substring(
+      JSAny input, JSAny position, JSAny length);
+  external ExpressionJsImpl stringReplaceAll(
+      JSAny expression, JSAny find, JSAny replacement);
+  external ExpressionJsImpl ifAbsent(JSAny expression, JSAny elseExpr);
+  external ExpressionJsImpl ifError(JSAny expression, JSAny catchExpr);
+  external ExpressionJsImpl conditional(
+      JSAny condition, JSAny thenExpr, JSAny elseExpr);
+  external ExpressionJsImpl documentId(JSAny path);
+  external ExpressionJsImpl collectionId(JSAny expression);
+  external ExpressionJsImpl mapGet(JSAny mapExpr, JSString key);
+  external ExpressionJsImpl mapKeys(JSAny mapExpr);
+  external ExpressionJsImpl mapValues(JSAny mapExpr);
+  external ExpressionJsImpl currentTimestamp();
+  external ExpressionJsImpl timestampAdd(
+      JSAny timestamp, JSString unit, JSAny amount);
+  external ExpressionJsImpl timestampSubtract(
+      JSAny timestamp, JSString unit, JSAny amount);
+  external ExpressionJsImpl timestampTruncate(JSAny timestamp, JSString unit,
+      [JSString? timezone]);
+  external ExpressionJsImpl abs(JSAny expr);
+  external ExpressionJsImpl arrayLength(JSAny array);
+  external ExpressionJsImpl arraySum(JSAny expression);
+  external ExpressionJsImpl arrayConcat(JSAny first, JSAny second);
+  external ExpressionJsImpl array(JSArray<JSAny> elements);
+  external ExpressionJsImpl map(JSObject keyValuePairs);
+
+  // --- Ordering (for sort stage) ---
+  external JSAny ascending(JSAny expr);
+  external JSAny descending(JSAny expr);
+
+  // --- Aggregates ---
+  external AggregateFunctionJsImpl sum(JSAny expr);
+  external AggregateFunctionJsImpl average(JSAny expr);
+  external AggregateFunctionJsImpl count(JSAny expr);
+  external AggregateFunctionJsImpl countDistinct(JSAny expr);
+  external AggregateFunctionJsImpl minimum(JSAny expr);
+  external AggregateFunctionJsImpl maximum(JSAny expr);
+  external AggregateFunctionJsImpl countAll();
+
+  // --- Aliased (for select/addFields/aggregate output names) ---
+  external JSAny aliased(JSAny expr, JSString alias);
+}
+
+/// Aggregate function (result of sum(), average(), count(), etc. on pipelines).
+/// Has .as(alias) to create an aliased aggregate for accumulators.
+extension type AggregateFunctionJsImpl._(JSObject _) implements JSObject {
+  @JS('as')
+  external JSAny asAlias(JSString alias);
+}
+
+extension type ExpressionJsImpl._(JSObject _) implements JSObject {
+  @JS('as')
+  external JSAny asAlias(JSString alias);
+
+  external ExpressionJsImpl add(JSAny right);
+  external ExpressionJsImpl subtract(JSAny right);
+  external ExpressionJsImpl multiply(JSAny right);
+  external ExpressionJsImpl divide(JSAny right);
+  @JS('mod')
+  external ExpressionJsImpl modulo(JSAny right);
+  external ExpressionJsImpl length();
+  external ExpressionJsImpl concat(JSAny right);
+  external ExpressionJsImpl toLower();
+  external ExpressionJsImpl toUpper();
+  external ExpressionJsImpl trim();
+  external ExpressionJsImpl arrayReverse();
+}
+
+extension type SelectableJsImpl._(JSObject _) implements JSObject {
+  @JS('as')
+  external JSAny asAlias(JSString alias);
+}
+
+/// Aliased aggregate for use in aggregate() stage accumulators.
+/// Mirrors Firebase JS SDK: constructor(aggregate, alias, _methodName?).
+@JS('AliasedAggregate')
+@staticInterop
+abstract class AliasedAggregateJsImpl {
+  external factory AliasedAggregateJsImpl(
+    JSAny aggregate,
+    JSString alias, [
+    JSString? methodName,
+  ]);
+}
+
+/// Options for the aggregate() pipeline stage.
+/// Mirrors Firebase JS SDK AggregateStageOptions: { accumulators, groups? }.
+extension type AggregateStageOptionsJsImpl._(JSObject _) implements JSObject {
+  AggregateStageOptionsJsImpl() : this._(JSObject.new());
+
+  // ignore: avoid_setters_without_getters
+  external set accumulators(JSAny value);
+  // ignore: avoid_setters_without_getters
+  external set groups(JSAny value);
+}
+
+extension type SelectStageOptionsJsImpl._(JSObject _) implements JSObject {
+  SelectStageOptionsJsImpl() : this._(JSObject.new());
+
+  // ignore: avoid_setters_without_getters
+  external set selections(JSArray<JSAny> value);
+}
+
+extension type AddFieldsOptionsJsImpl._(JSObject _) implements JSObject {
+  AddFieldsOptionsJsImpl() : this._(JSObject.new());
+
+  // ignore: avoid_setters_without_getters
+  external set fields(JSAny value);
 }
 
 extension type WriteBatchJsImpl._(JSObject _) implements JSObject {
@@ -1014,3 +1167,141 @@ extension type AggregateQuerySnapshotJsImpl._(JSObject _) implements JSObject {
 @JS()
 @staticInterop
 abstract class PersistentCacheIndexManager {}
+
+/// Entry point for defining the data source of a Firestore Pipeline.
+/// Use .collection(), .collectionGroup(), .database(), or .documents().
+extension type PipelineSourceJsImpl._(JSObject _) implements JSObject {
+  /// Returns all documents from the entire collection (can be nested).
+  external PipelineJsImpl collection(JSString collectionPath);
+
+  /// Returns all documents from a collection ID regardless of parent.
+  external PipelineJsImpl collectionGroup(JSString collectionId);
+
+  /// Returns all documents from the entire database.
+  external PipelineJsImpl database();
+
+  /// Sets the pipeline source to the given document paths or references.
+  external PipelineJsImpl documents(JSArray docs);
+}
+
+/// Pipeline returned by PipelineSource methods; chain stages and call execute().
+/// See: https://firebase.google.com/docs/reference/js/firestore_pipelines.pipeline
+extension type PipelineJsImpl._(JSObject _) implements JSObject {
+  external PipelineJsImpl limit(JSNumber limit);
+  external PipelineJsImpl offset(JSNumber offset);
+  external PipelineJsImpl where(JSAny condition);
+  external PipelineJsImpl sort(JSAny orderingOrOptions);
+  external PipelineJsImpl addFields(JSAny fieldOrOptions);
+  external PipelineJsImpl select(JSAny selectionOrOptions);
+  external PipelineJsImpl distinct(JSAny groupOrOptions);
+  external PipelineJsImpl aggregate(AggregateStageOptionsJsImpl options);
+  external PipelineJsImpl sample(JSAny documentsOrOptions);
+  external PipelineJsImpl unnest(JSAny selectableOrOptions);
+  external PipelineJsImpl removeFields(JSAny fieldOrOptions);
+  external PipelineJsImpl replaceWith(JSAny fieldNameOrOptions);
+  external PipelineJsImpl findNearest(JSAny options);
+  external PipelineJsImpl union(JSAny otherOrOptions);
+  external PipelineJsImpl rawStage(JSString name, JSArray params,
+      [JSAny? options]);
+}
+
+/// Options for pipeline execution (e.g. index mode).
+@anonymous
+@JS()
+@staticInterop
+abstract class PipelineExecuteOptions {
+  external factory PipelineExecuteOptions({JSString? indexMode});
+}
+
+extension PipelineExecuteOptionsExtension on PipelineExecuteOptions {
+  external JSString? get indexMode;
+  external set indexMode(JSString? v);
+}
+
+/// Snapshot of pipeline execution results.
+extension type PipelineSnapshotJsImpl._(JSObject _) implements JSObject {
+  /// Array of [PipelineResultJsImpl].
+  external JSArray get results;
+
+  /// Execution time (if provided by SDK).
+  external JSAny? get executionTime;
+}
+
+/// Single result in a pipeline snapshot (document + data).
+extension type PipelineResultJsImpl._(JSObject _) implements JSObject {
+  external DocumentReferenceJsImpl? get ref;
+  external JSObject? data();
+  external JSAny? get createTime;
+  external JSAny? get updateTime;
+}
+
+extension type SampleStageOptionsJsImpl._(JSObject _) implements JSObject {
+  SampleStageOptionsJsImpl() : this._(JSObject.new());
+
+  // ignore: avoid_setters_without_getters
+  external set documents(JSAny value);
+  // ignore: avoid_setters_without_getters
+  external set percentage(JSAny value);
+}
+
+extension type SortStageOptionsJsImpl._(JSObject _) implements JSObject {
+  SortStageOptionsJsImpl() : this._(JSObject.new());
+
+  // ignore: avoid_setters_without_getters
+  external set orderings(JSAny value);
+}
+
+extension type DistinctStageOptionsJsImpl._(JSObject _) implements JSObject {
+  DistinctStageOptionsJsImpl() : this._(JSObject.new());
+
+  // ignore: avoid_setters_without_getters
+  external set groups(JSAny value);
+}
+
+extension type UnnestStageOptionsJsImpl._(JSObject _) implements JSObject {
+  UnnestStageOptionsJsImpl() : this._(JSObject.new());
+
+  // ignore: avoid_setters_without_getters
+  external set selectable(JSAny value);
+  // ignore: avoid_setters_without_getters
+  external set indexField(JSString? value);
+}
+
+extension type RemoveFieldsStageOptionsJsImpl._(JSObject _)
+    implements JSObject {
+  RemoveFieldsStageOptionsJsImpl() : this._(JSObject.new());
+
+  // ignore: avoid_setters_without_getters
+  external set fields(JSArray<JSString> value);
+}
+
+extension type ReplaceWithStageOptionsJsImpl._(JSObject _) implements JSObject {
+  ReplaceWithStageOptionsJsImpl() : this._(JSObject.new());
+
+  // ignore: avoid_setters_without_getters
+  external set map(JSAny value);
+}
+
+extension type FindNearestStageOptionsJsImpl._(JSObject _) implements JSObject {
+  FindNearestStageOptionsJsImpl() : this._(JSObject.new());
+
+  // ignore: avoid_setters_without_getters
+  external set field(JSAny value);
+  // ignore: avoid_setters_without_getters
+  external set vectorValue(JSAny value);
+  // ignore: avoid_setters_without_getters
+  external set distanceMeasure(JSString value);
+  // ignore: avoid_setters_without_getters
+  external set limit(JSNumber value);
+  // ignore: avoid_setters_without_getters
+  external set distanceField(JSString value);
+}
+
+extension type PipelineExecuteOptionsJsImpl._(JSObject _) implements JSObject {
+  PipelineExecuteOptionsJsImpl() : this._(JSObject.new());
+
+  // ignore: avoid_setters_without_getters
+  external set indexMode(JSString value);
+  // ignore: avoid_setters_without_getters
+  external set pipeline(JSAny value);
+}
