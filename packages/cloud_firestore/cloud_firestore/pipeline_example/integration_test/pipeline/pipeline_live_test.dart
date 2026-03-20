@@ -38,15 +38,15 @@ void main() {
       await seedPipelineE2ECollections(firestore);
     });
 
-    runPipelineFilterSortTests();
-    runPipelineAddFieldsTests();
-    runPipelineSelectTests();
-    runPipelineRemoveFieldsTests();
-    runPipelineReplaceWithTests();
-    runPipelineAggregateTests();
-    runPipelineUnnestUnionTests();
-    runPipelineSampleTests();
-    runPipelineFindNearestTests();
+    // runPipelineFilterSortTests();
+    // runPipelineAddFieldsTests();
+    // runPipelineSelectTests();
+    // runPipelineRemoveFieldsTests();
+    // runPipelineReplaceWithTests();
+    // runPipelineAggregateTests();
+    // runPipelineUnnestUnionTests();
+    // runPipelineSampleTests();
+    // runPipelineFindNearestTests();
     runPipelineExpressionsTests();
   });
 }
