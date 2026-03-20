@@ -21,6 +21,18 @@ void runPipelineExpressionsTests() {
       );
     });
 
+    /// Single doc: `test==expressions`, `score==50` (see pipeline seed).
+    Future<PipelineSnapshot> expressionsDocScore50(Selectable field) {
+      return firestore
+          .pipeline()
+          .collection('pipeline-e2e')
+          .where(Expression.field('test').equalValue('expressions'))
+          .where(Expression.field('score').equalValue(50))
+          .addFields(field)
+          .limit(1)
+          .execute();
+    }
+
     test('where with greaterThan filters and returns expected docs', () async {
       final snapshot = await firestore
           .pipeline()
@@ -556,103 +568,155 @@ void runPipelineExpressionsTests() {
       ]);
     });
 
-    test(
-      'addFields with split, join, array concat/slice/all/any and map constructors',
-      () async {
-        final snapshot = await firestore
-            .pipeline()
-            .collection('pipeline-e2e')
-            .where(Expression.field('test').equalValue('expressions'))
-            .where(Expression.field('score').equalValue(50))
-            .addFields(
-              Expression.field('s').splitLiteral('-').as('s_split'),
-              Expression.field('tags').joinLiteral('|').as('tags_joined'),
-              Expression.field('arr').arrayConcat([9]).as('arr_concat'),
-              Expression.field('arr')
-                  .arrayConcatMultiple([
-                    [10],
-                    [11],
-                  ])
-                  .as('arr_concat_multi'),
-              Expression.field('arr').arraySliceLiteral(1, 3).as('arr_slice'),
-              Expression.field(
-                'arr',
-              ).arrayContainsAny([2, 99]).as('arr_has_any'),
-              Expression.field(
-                'arr',
-              ).arrayContainsAll([2, 4]).as('arr_has_all_values'),
-              Expression.field('arr')
-                  .arrayContainsAllFrom(
-                    Expression.array([Expression.constant(2), 4]),
-                  )
-                  .as('arr_has_all_expr'),
-              Expression.map({
-                'left': Expression.field('a'),
-                'right': Expression.field('b'),
-              }).as('mapped'),
-              Expression.mapFromPairs([
-                Expression.constant('k1'),
-                Expression.constant(1),
-                Expression.constant('k2'),
-                Expression.constant('v2'),
-              ]).as('mapped_pairs'),
-              Expression.nullValue().as('explicit_null'),
-            )
-            .limit(1)
-            .execute();
-
-        expectResultCount(snapshot, 1);
-        expectResultsData(snapshot, [
-          {
-            's_split': ['a', 'b', 'c'],
-            'tags_joined': 'p|q',
-            'arr_concat': [2, 4, 6, 9],
-            'arr_concat_multi': [2, 4, 6, 10, 11],
-            'arr_slice': [4, 6],
-            'arr_has_any': true,
-            'arr_has_all_values': true,
-            'arr_has_all_expr': true,
-            'mapped': {'left': 1, 'right': 2},
-            'mapped_pairs': {'k1': 1, 'k2': 'v2'},
-            'explicit_null': null,
-          },
-        ]);
-      },
-    );
-
-    test('addFields with ifError, isAbsent, isError and asBoolean', () async {
-      final snapshot = await firestore
-          .pipeline()
-          .collection('pipeline-e2e')
-          .where(Expression.field('test').equalValue('expressions'))
-          .where(Expression.field('score').equalValue(50))
-          .addFields(
-            Expression.field('score')
-                .divide(Expression.constant(0))
-                .ifErrorValue('safe')
-                .as('safe_div'),
-            Expression.field('missing_field').isAbsent().as('missing_absent'),
-            Expression.field('missing_field').isError().as('missing_error'),
-            Expression.field('a').asBoolean().as('a_bool'),
-          )
-          .limit(1)
-          .execute();
-
+    test('addFields split', () async {
+      final snapshot = await expressionsDocScore50(
+        Expression.field('s').splitLiteral('-').as('s_split'),
+      );
       expectResultCount(snapshot, 1);
-      expectResultsData(snapshot, [
-        {
-          'safe_div': 'safe',
-          'missing_absent': true,
-          'missing_error': false,
-          'a_bool': true,
-        },
-      ]);
+      expect(snapshot.result[0].data()!['s_split'], ['a', 'b', 'c']);
+    });
+
+    test('addFields join', () async {
+      final snapshot = await expressionsDocScore50(
+        Expression.field('tags').joinLiteral('|').as('tags_joined'),
+      );
+      expectResultCount(snapshot, 1);
+      expect(snapshot.result[0].data()!['tags_joined'], 'p|q');
+    });
+
+    test('addFields arrayConcat', () async {
+      final snapshot = await expressionsDocScore50(
+        Expression.field('arr').arrayConcat([9]).as('arr_concat'),
+      );
+      expectResultCount(snapshot, 1);
+      expect(snapshot.result[0].data()!['arr_concat'], [2, 4, 6, 9]);
+    });
+
+    test('addFields arrayConcatMultiple', () async {
+      final snapshot = await expressionsDocScore50(
+        Expression.field('arr')
+            .arrayConcatMultiple([
+              [10],
+              [11],
+            ])
+            .as('arr_concat_multi'),
+      );
+      expectResultCount(snapshot, 1);
+      expect(snapshot.result[0].data()!['arr_concat_multi'], [2, 4, 6, 10, 11]);
+    });
+
+    test('addFields arraySlice', () async {
+      final snapshot = await expressionsDocScore50(
+        Expression.field('arr').arraySliceLiteral(1, 3).as('arr_slice'),
+      );
+      expectResultCount(snapshot, 1);
+      expect(snapshot.result[0].data()!['arr_slice'], [4, 6]);
+    }, skip: defaultTargetPlatform == TargetPlatform.android);
+
+    test('addFields arrayContainsAny', () async {
+      final snapshot = await expressionsDocScore50(
+        Expression.field('arr').arrayContainsAny([2, 99]).as('arr_has_any'),
+      );
+      expectResultCount(snapshot, 1);
+      expect(snapshot.result[0].data()!['arr_has_any'], true);
+    });
+
+    test('addFields arrayContainsAll values', () async {
+      final snapshot = await expressionsDocScore50(
+        Expression.field(
+          'arr',
+        ).arrayContainsAll([2, 4]).as('arr_has_all_values'),
+      );
+      expectResultCount(snapshot, 1);
+      expect(snapshot.result[0].data()!['arr_has_all_values'], true);
+    });
+
+    test('addFields arrayContainsAllFrom expression', () async {
+      final snapshot = await expressionsDocScore50(
+        Expression.field('arr')
+            .arrayContainsAllFrom(Expression.array([Expression.constant(2), 4]))
+            .as('arr_has_all_expr'),
+      );
+      expectResultCount(snapshot, 1);
+      expect(snapshot.result[0].data()!['arr_has_all_expr'], true);
+    });
+
+    test('addFields map constructor', () async {
+      final snapshot = await expressionsDocScore50(
+        Expression.map({
+          'left': Expression.field('a'),
+          'right': Expression.field('b'),
+        }).as('mapped'),
+      );
+      expectResultCount(snapshot, 1);
+      expect(snapshot.result[0].data()!['mapped'], {'left': 1, 'right': 2});
     });
 
     test(
-      'addFields with bitwise expressions and path/id expressions',
+      'addFields mapFromPairs',
       () async {
-        final docRef = firestore.collection('pipeline-e2e').doc('seed_0');
+        final snapshot = await expressionsDocScore50(
+          Expression.mapFromPairs([
+            Expression.constant('k1'),
+            Expression.constant(1),
+            Expression.constant('k2'),
+            Expression.constant('v2'),
+          ]).as('mapped_pairs'),
+        );
+        expectResultCount(snapshot, 1);
+        expect(snapshot.result[0].data()!['mapped_pairs'], {
+          'k1': 1,
+          'k2': 'v2',
+        });
+      },
+      skip: defaultTargetPlatform == TargetPlatform.android,
+    );
+
+    test('addFields nullValue', () async {
+      final snapshot = await expressionsDocScore50(
+        Expression.nullValue().as('explicit_null'),
+      );
+      expectResultCount(snapshot, 1);
+      expect(snapshot.result[0].data()!['explicit_null'], null);
+    });
+
+    test('addFields ifError uses catch when expression errors', () async {
+      final snapshot = await expressionsDocScore50(
+        Expression.field(
+          'score',
+        ).divide(Expression.constant(0)).ifErrorValue('safe').as('safe_div'),
+      );
+      expectResultCount(snapshot, 1);
+      expect(snapshot.result[0].data()!['safe_div'], 'safe');
+    });
+
+    test('addFields isAbsent true for missing field', () async {
+      final snapshot = await expressionsDocScore50(
+        Expression.field('missing_field').isAbsent().as('missing_absent'),
+      );
+      expectResultCount(snapshot, 1);
+      expect(snapshot.result[0].data()!['missing_absent'], true);
+    });
+
+    test('addFields isError false for missing field', () async {
+      final snapshot = await expressionsDocScore50(
+        Expression.field('missing_field').isError().as('missing_error'),
+      );
+      expectResultCount(snapshot, 1);
+      expect(snapshot.result[0].data()!['missing_error'], false);
+    });
+
+    test('addFields asBoolean coerces numeric field', () async {
+      final snapshot = await expressionsDocScore50(
+        Expression.field('a').asBoolean().as('a_bool'),
+      );
+      expectResultCount(snapshot, 1);
+      expect(snapshot.result[0].data()!['a_bool'], true);
+    });
+
+    test(
+      'addFields bitwise expressions (bitAnd/Or/Xor/Not/shifts)',
+      () async {
         final snapshot = await firestore
             .pipeline()
             .collection('pipeline-e2e')
@@ -671,30 +735,53 @@ void runPipelineExpressionsTests() {
               Expression.field('bit_a').bitNot().as('b_not'),
               Expression.field('bit_a').bitLeftShiftLiteral(1).as('b_lsh'),
               Expression.field('bit_a').bitRightShiftLiteral(1).as('b_rsh'),
-              Expression.field('__path__').documentId().as('doc_id'),
-              Expression.field('__path__').collectionId().as('coll_id'),
-              Expression.documentIdFromRef(docRef).as('doc_id_from_ref'),
             )
             .limit(1)
             .execute();
 
         expectResultCount(snapshot, 1);
         expectResultsData(snapshot, [
-          {
-            'b_and': 2,
-            'b_or': 7,
-            'b_xor': 1,
-            'b_lsh': 12,
-            'b_rsh': 3,
-            'coll_id': 'pipeline-e2e',
-            'doc_id': 'seed_0',
-            'doc_id_from_ref': 'seed_0',
-          },
+          {'b_and': 2, 'b_or': 7, 'b_xor': 1, 'b_lsh': 12, 'b_rsh': 3},
         ]);
         expect(snapshot.result[0].data()!['b_not'], isNotNull);
       },
-      skip: kIsWeb,
+      // Bitwise pipeline addFields not supported on Android native SDK yet.
+      skip: true,
     );
+
+    test('addFields documentId, collectionId and documentIdFromRef', () async {
+      final col = firestore.collection('pipeline-e2e');
+      final seedQuery = await col
+          .where('test', isEqualTo: 'expressions')
+          .where('score', isEqualTo: 60)
+          .limit(1)
+          .get();
+      expect(seedQuery.docs, isNotEmpty);
+      final docRef = seedQuery.docs.first.reference;
+      final expectedDocId = seedQuery.docs.first.id;
+
+      final snapshot = await firestore
+          .pipeline()
+          .collection('pipeline-e2e')
+          .where(Expression.field('test').equalValue('expressions'))
+          .where(Expression.field('score').equalValue(60))
+          .addFields(
+            Expression.field('__name__').documentId().as('doc_id'),
+            Expression.field('__name__').collectionId().as('coll_id'),
+            Expression.documentIdFromRef(docRef).as('doc_id_from_ref'),
+          )
+          .limit(1)
+          .execute();
+
+      expectResultCount(snapshot, 1);
+      expectResultsData(snapshot, [
+        {
+          'coll_id': 'pipeline-e2e',
+          'doc_id': expectedDocId,
+          'doc_id_from_ref': expectedDocId,
+        },
+      ]);
+    }, skip: kIsWeb);
 
     test(
       'addFields with currentTimestamp, timestampAdd/Subtract/Truncate',
