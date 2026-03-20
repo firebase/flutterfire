@@ -35,6 +35,14 @@ final class Schema {
     this.optionalProperties,
     this.propertyOrdering,
     this.anyOf,
+    this.ref,
+    this.minProperties,
+    this.maxProperties,
+    this.minLength,
+    this.maxLength,
+    this.pattern,
+    this.example,
+    this.defaultValue,
   });
 
   /// Construct a schema for an object with one or more properties.
@@ -45,6 +53,10 @@ final class Schema {
     String? description,
     String? title,
     bool? nullable,
+    int? minProperties,
+    int? maxProperties,
+    Object? example,
+    Object? defaultValue,
   }) : this(
           SchemaType.object,
           properties: properties,
@@ -53,6 +65,10 @@ final class Schema {
           description: description,
           title: title,
           nullable: nullable,
+          minProperties: minProperties,
+          maxProperties: maxProperties,
+          example: example,
+          defaultValue: defaultValue,
         );
 
   /// Construct a schema for an array of values with a specified type.
@@ -63,6 +79,8 @@ final class Schema {
     bool? nullable,
     int? minItems,
     int? maxItems,
+    Object? example,
+    Object? defaultValue,
   }) : this(
           SchemaType.array,
           description: description,
@@ -71,6 +89,8 @@ final class Schema {
           items: items,
           minItems: minItems,
           maxItems: maxItems,
+          example: example,
+          defaultValue: defaultValue,
         );
 
   /// Construct a schema for bool value.
@@ -78,11 +98,15 @@ final class Schema {
     String? description,
     String? title,
     bool? nullable,
+    Object? example,
+    Object? defaultValue,
   }) : this(
           SchemaType.boolean,
           description: description,
           title: title,
           nullable: nullable,
+          example: example,
+          defaultValue: defaultValue,
         );
 
   /// Construct a schema for an integer number.
@@ -95,6 +119,8 @@ final class Schema {
     String? format,
     int? minimum,
     int? maximum,
+    Object? example,
+    Object? defaultValue,
   }) : this(
           SchemaType.integer,
           description: description,
@@ -103,6 +129,8 @@ final class Schema {
           format: format,
           minimum: minimum?.toDouble(),
           maximum: maximum?.toDouble(),
+          example: example,
+          defaultValue: defaultValue,
         );
 
   /// Construct a schema for a non-integer number.
@@ -115,6 +143,8 @@ final class Schema {
     String? format,
     double? minimum,
     double? maximum,
+    Object? example,
+    Object? defaultValue,
   }) : this(
           SchemaType.number,
           description: description,
@@ -123,6 +153,8 @@ final class Schema {
           format: format,
           minimum: minimum,
           maximum: maximum,
+          example: example,
+          defaultValue: defaultValue,
         );
 
   /// Construct a schema for String value with enumerated possible values.
@@ -131,6 +163,8 @@ final class Schema {
     String? description,
     String? title,
     bool? nullable,
+    Object? example,
+    Object? defaultValue,
   }) : this(
           SchemaType.string,
           enumValues: enumValues,
@@ -138,6 +172,8 @@ final class Schema {
           title: title,
           nullable: nullable,
           format: 'enum',
+          example: example,
+          defaultValue: defaultValue,
         );
 
   /// Construct a schema for a String value.
@@ -146,12 +182,22 @@ final class Schema {
     String? title,
     bool? nullable,
     String? format,
+    int? minLength,
+    int? maxLength,
+    String? pattern,
+    Object? example,
+    Object? defaultValue,
   }) : this(
           SchemaType.string,
           description: description,
           title: title,
           nullable: nullable,
           format: format,
+          minLength: minLength,
+          maxLength: maxLength,
+          pattern: pattern,
+          example: example,
+          defaultValue: defaultValue,
         );
 
   /// Construct a schema representing a value that must conform to
@@ -178,6 +224,12 @@ final class Schema {
   }) : this(
           SchemaType.anyOf, // The type will be ignored in toJson
           anyOf: schemas,
+        );
+
+  /// Construct a schema referencing another schema.
+  Schema.ref(String ref) : this(
+          SchemaType.ref,
+          ref: ref,
         );
 
   /// The type of this value.
@@ -257,10 +309,35 @@ final class Schema {
   /// Schema.anyOf(schemas: [Schema.string(), Schema.integer()]);
   List<Schema>? anyOf;
 
+  /// Reference to another schema.
+  String? ref;
+
+  /// Minimum number of properties for Type.OBJECT.
+  int? minProperties;
+
+  /// Maximum number of properties for Type.OBJECT.
+  int? maxProperties;
+
+  /// Minimum length for Type.STRING.
+  int? minLength;
+
+  /// Maximum length for Type.STRING.
+  int? maxLength;
+
+  /// Pattern for Type.STRING to restrict a string to a regular expression.
+  String? pattern;
+
+  /// Example of the object.
+  Object? example;
+
+  /// Default value of the field.
+  Object? defaultValue;
+
   /// Convert to json object.
   Map<String, Object> toJson() => {
-        if (type != SchemaType.anyOf)
-          'type': type.toJson(), // Omit the field while type is anyOf
+        if (type != SchemaType.anyOf && type != SchemaType.ref)
+          'type': type.toJson(), // Omit the field while type is anyOf or ref
+        if (ref case final ref?) r'$ref': ref,
         if (format case final format?) 'format': format,
         if (description case final description?) 'description': description,
         if (title case final title?) 'title': title,
@@ -287,6 +364,59 @@ final class Schema {
           'propertyOrdering': propertyOrdering,
         if (anyOf case final anyOf?)
           'anyOf': anyOf.map((e) => e.toJson()).toList(),
+        if (minProperties case final minProperties?)
+          'minProperties': minProperties,
+        if (maxProperties case final maxProperties?)
+          'maxProperties': maxProperties,
+        if (minLength case final minLength?)
+          'minLength': minLength,
+        if (maxLength case final maxLength?)
+          'maxLength': maxLength,
+        if (pattern case final pattern?)
+          'pattern': pattern,
+        if (example case final example?) 'example': example,
+        if (defaultValue case final defaultValue?) 'default': defaultValue,
+      };
+
+  /// Convert to standard JSON Schema object.
+  ///
+  /// Reference: https://ai.google.dev/api/caching#FunctionDeclaration
+  Map<String, Object> toJSONSchemaJson() => {
+        if (type != SchemaType.anyOf && type != SchemaType.ref)
+          'type': nullable == true ? [type.name, 'null'] : type.name,
+        if (ref case final ref?) r'$ref': ref,
+        if (format case final format?) 'format': format,
+        if (description case final description?) 'description': description,
+        if (title case final title?) 'title': title,
+        if (enumValues case final enumValues?) 'enum': enumValues,
+        if (items case final items?) 'items': items.toJSONSchemaJson(),
+        if (minItems case final minItems?) 'minItems': minItems,
+        if (maxItems case final maxItems?) 'maxItems': maxItems,
+        if (minimum case final minimum?) 'minimum': minimum,
+        if (maximum case final maximum?) 'maximum': maximum,
+        if (properties case final properties?)
+          'properties': {
+            for (final MapEntry(:key, :value) in properties.entries)
+              key: value.toJSONSchemaJson()
+          },
+        // Calculate required properties based on optionalProperties
+        if (properties != null)
+          'required': optionalProperties != null
+              ? properties!.keys
+                  .where((key) => !optionalProperties!.contains(key))
+                  .toList()
+              : properties!.keys.toList(),
+        if (anyOf case final anyOf?)
+          'anyOf': anyOf.map((e) => e.toJSONSchemaJson()).toList(),
+        if (minProperties case final minProperties?)
+          'minProperties': minProperties,
+        if (maxProperties case final maxProperties?)
+          'maxProperties': maxProperties,
+        if (minLength case final minLength?) 'minLength': minLength,
+        if (maxLength case final maxLength?) 'maxLength': maxLength,
+        if (pattern case final pattern?) 'pattern': pattern,
+        if (example case final example?) 'examples': [example],
+        if (defaultValue case final defaultValue?) 'default': defaultValue,
       };
 }
 
@@ -310,6 +440,9 @@ enum SchemaType {
   /// object type
   object,
 
+  /// This schema is a reference type.
+  ref,
+
   /// This schema is anyOf type.
   anyOf;
 
@@ -321,6 +454,7 @@ enum SchemaType {
         boolean => 'BOOLEAN',
         array => 'ARRAY',
         object => 'OBJECT',
+        ref => 'null',
         anyOf => 'null',
       };
 }

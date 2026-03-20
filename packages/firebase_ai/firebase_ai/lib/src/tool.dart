@@ -118,6 +118,19 @@ final class Tool {
         if (_urlContext case final _urlContext?)
           'urlContext': _urlContext.toJson(),
       };
+
+  /// Reference: https://ai.google.dev/api/caching#FunctionDeclaration
+  Map<String, Object?> toJSONSchemaJson() => {
+        if (_functionDeclarations case final _functionDeclarations?)
+          'functionDeclarations':
+              _functionDeclarations.map((f) => f.toJSONSchemaJson()).toList(),
+        if (_googleSearch case final _googleSearch?)
+          'googleSearch': _googleSearch.toJson(),
+        if (_codeExecution case final _codeExecution?)
+          'codeExecution': _codeExecution.toJson(),
+        if (_urlContext case final _urlContext?)
+          'urlContext': _urlContext.toJson(),
+      };
 }
 
 /// A tool that allows the generative model to connect to Google Search to
@@ -193,6 +206,15 @@ class FunctionDeclaration {
         'name': name,
         'description': description,
         'parameters': _schemaObject.toJson()
+      };
+
+  /// Convert schema object to JSON schema.
+  ///
+  /// Reference: https://ai.google.dev/api/caching#FunctionDeclaration
+  Map<String, Object?> toJSONSchemaJson() => {
+        'name': name,
+        'description': description,
+        'parametersJsonSchema': _schemaObject.toJson()
       };
 }
 
