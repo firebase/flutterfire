@@ -52,7 +52,7 @@ abstract class TransactionPlatform extends PlatformInterface {
   /// The update will fail if applied to a document that does not exist.
   TransactionPlatform update(
     String documentPath,
-    Map<String, dynamic> data,
+    Map<FieldPath, dynamic> data,
   ) {
     throw UnimplementedError('update() is not implemented');
   }

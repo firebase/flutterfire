@@ -34,15 +34,15 @@ Future<void> seedPipelineE2ECollections(FirebaseFirestore firestore) async {
     ..._withTest('replace-with', [
       {
         'name': 'Doc 1',
-        'nested': {'father': 'John Doe Sr.', 'mother': 'Jane Doe'}
+        'nested': {'father': 'John Doe Sr.', 'mother': 'Jane Doe'},
       },
       {
         'name': 'Doc 2',
-        'nested': {'a': 1, 'b': 2}
+        'nested': {'a': 1, 'b': 2},
       },
       {
         'name': 'Doc 3',
-        'nested': {'x': 'foo', 'y': 'bar'}
+        'nested': {'x': 'foo', 'y': 'bar'},
       },
     ]),
     ..._withTest('aggregate', [
@@ -53,13 +53,13 @@ Future<void> seedPipelineE2ECollections(FirebaseFirestore firestore) async {
     ]),
     ..._withTest('unnest', [
       {
-        'tags': ['dart', 'flutter']
+        'tags': ['dart', 'flutter'],
       },
       {
-        'tags': ['firestore']
+        'tags': ['firestore'],
       },
       {
-        'tags': ['dart', 'firestore']
+        'tags': ['dart', 'firestore'],
       },
     ]),
     ..._withTest('union-a', [
@@ -87,15 +87,15 @@ Future<void> seedPipelineE2ECollections(FirebaseFirestore firestore) async {
     ..._withTest('find-nearest', [
       {
         'embedding': VectorValue([0.1, 0.2, 0.3]),
-        'label': 'near'
+        'label': 'near',
       },
       {
         'embedding': VectorValue([0.15, 0.25, 0.35]),
-        'label': 'near2'
+        'label': 'near2',
       },
       {
         'embedding': VectorValue([1.0, 0.0, 0.0]),
-        'label': 'far'
+        'label': 'far',
       },
     ]),
     ..._withTest('expressions', [
@@ -104,14 +104,14 @@ Future<void> seedPipelineE2ECollections(FirebaseFirestore firestore) async {
         'a': 1,
         'b': 2,
         's': '  AbC  ',
-        'm': {'x': 10, 'y': 20}
+        'm': {'x': 10, 'y': 20},
       },
       {
         'score': 70,
         'a': 10,
         'b': 20,
         's': 'xy',
-        'm': {'x': 1}
+        'm': {'x': 1},
       },
       {'score': 40, 'a': 5, 'b': 5},
       {'score': 80, 'a': 0, 'b': 100, 's': 'Hi'},
@@ -119,7 +119,7 @@ Future<void> seedPipelineE2ECollections(FirebaseFirestore firestore) async {
         'score': 50,
         'a': 1,
         'b': 2,
-        'tags': ['p', 'q']
+        'tags': ['p', 'q'],
       },
     ]),
   ];
@@ -127,7 +127,9 @@ Future<void> seedPipelineE2ECollections(FirebaseFirestore firestore) async {
 }
 
 List<Map<String, dynamic>> _withTest(
-    String test, List<Map<String, dynamic>> maps) {
+  String test,
+  List<Map<String, dynamic>> maps,
+) {
   return maps.map((m) => {'test': test, ...m}).toList();
 }
 

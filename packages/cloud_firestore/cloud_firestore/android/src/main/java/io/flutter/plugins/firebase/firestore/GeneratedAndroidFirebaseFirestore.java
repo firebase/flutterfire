@@ -1023,13 +1023,13 @@ public class GeneratedAndroidFirebaseFirestore {
       this.path = setterArg;
     }
 
-    private @Nullable Map<String, Object> data;
+    private @Nullable Map<Object, Object> data;
 
-    public @Nullable Map<String, Object> getData() {
+    public @Nullable Map<Object, Object> getData() {
       return data;
     }
 
-    public void setData(@Nullable Map<String, Object> setterArg) {
+    public void setData(@Nullable Map<Object, Object> setterArg) {
       this.data = setterArg;
     }
 
@@ -1062,9 +1062,9 @@ public class GeneratedAndroidFirebaseFirestore {
         return this;
       }
 
-      private @Nullable Map<String, Object> data;
+      private @Nullable Map<Object, Object> data;
 
-      public @NonNull Builder setData(@Nullable Map<String, Object> setterArg) {
+      public @NonNull Builder setData(@Nullable Map<Object, Object> setterArg) {
         this.data = setterArg;
         return this;
       }
@@ -1103,7 +1103,7 @@ public class GeneratedAndroidFirebaseFirestore {
       Object path = list.get(1);
       pigeonResult.setPath((String) path);
       Object data = list.get(2);
-      pigeonResult.setData((Map<String, Object>) data);
+      pigeonResult.setData((Map<Object, Object>) data);
       Object option = list.get(3);
       pigeonResult.setOption(
           (option == null) ? null : PigeonDocumentOption.fromList((ArrayList<Object>) option));

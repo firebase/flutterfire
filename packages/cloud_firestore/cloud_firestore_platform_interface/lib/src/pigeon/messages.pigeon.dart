@@ -429,7 +429,7 @@ class PigeonTransactionCommand {
 
   String path;
 
-  Map<String?, Object?>? data;
+  Map<Object?, Object?>? data;
 
   PigeonDocumentOption? option;
 
@@ -447,7 +447,7 @@ class PigeonTransactionCommand {
     return PigeonTransactionCommand(
       type: PigeonTransactionType.values[result[0]! as int],
       path: result[1]! as String,
-      data: (result[2] as Map<Object?, Object?>?)?.cast<String?, Object?>(),
+      data: (result[2] as Map<Object?, Object?>?)?.cast<Object?, Object?>(),
       option: result[3] != null
           ? PigeonDocumentOption.decode(result[3]! as List<Object?>)
           : null,

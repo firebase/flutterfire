@@ -23,6 +23,7 @@ import io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestoreTransaction
 import io.flutter.plugins.firebase.firestore.GeneratedAndroidFirebaseFirestore;
 import io.flutter.plugins.firebase.firestore.utils.ExceptionConverter;
 import io.flutter.plugins.firebase.firestore.utils.PigeonParser;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -102,9 +103,30 @@ public class TransactionStreamHandler implements OnTransactionResultListener, St
                     transaction.delete(documentReference);
                     break;
                   case UPDATE:
-                    transaction.update(
-                        documentReference, Objects.requireNonNull(command.getData()));
-                    break;
+                    {
+                      Map<Object, Object> rawData = Objects.requireNonNull(command.getData());
+                      Map<FieldPath, Object> updateData = new HashMap<>();
+                      for (Object key : rawData.keySet()) {
+                        if (key instanceof String) {
+                          updateData.put(FieldPath.of((String) key), rawData.get(key));
+                        } else if (key instanceof FieldPath) {
+                          updateData.put((FieldPath) key, rawData.get(key));
+                        }
+                      }
+                      FieldPath firstFieldPath = updateData.keySet().iterator().next();
+                      Object firstObject = updateData.get(firstFieldPath);
+                      ArrayList<Object> flattenData = new ArrayList<>();
+                      for (FieldPath fieldPath : updateData.keySet()) {
+                        if (fieldPath.equals(firstFieldPath)) {
+                          continue;
+                        }
+                        flattenData.add(fieldPath);
+                        flattenData.add(updateData.get(fieldPath));
+                      }
+                      transaction.update(
+                          documentReference, firstFieldPath, firstObject, flattenData.toArray());
+                      break;
+                    }
                   case SET:
                     {
                       GeneratedAndroidFirebaseFirestore.PigeonDocumentOption options =
@@ -121,7 +143,10 @@ public class TransactionStreamHandler implements OnTransactionResultListener, St
                         setOptions = SetOptions.mergeFieldPaths(fieldPathList);
                       }
 
-                      Map<String, Object> data = Objects.requireNonNull(command.getData());
+                      @SuppressWarnings("unchecked")
+                      Map<String, Object> data =
+                          (Map<String, Object>)
+                              (Map<?, ?>) Objects.requireNonNull(command.getData());
 
                       if (setOptions == null) {
                         transaction.set(documentReference, data);

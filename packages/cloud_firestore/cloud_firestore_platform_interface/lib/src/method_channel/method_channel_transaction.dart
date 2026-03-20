@@ -74,7 +74,7 @@ class MethodChannelTransaction extends TransactionPlatform {
   @override
   MethodChannelTransaction update(
     String documentPath,
-    Map<String, dynamic> data,
+    Map<FieldPath, dynamic> data,
   ) {
     _commands.add(PigeonTransactionCommand(
       type: PigeonTransactionType.update,

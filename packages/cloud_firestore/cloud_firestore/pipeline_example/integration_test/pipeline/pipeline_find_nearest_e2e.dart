@@ -18,27 +18,28 @@ void runPipelineFindNearestTests() {
     });
 
     test(
-        'findNearest returns results ordered by distance when vector index exists',
-        () async {
-      final pipeline = firestore
-          .pipeline()
-          .collection('pipeline-e2e')
-          .where(Expression.field('test').equalValue('find-nearest'))
-          .findNearest(
-            Field('embedding'),
-            [0.1, 0.2, 0.3],
-            DistanceMeasure.cosine,
-            limit: 5,
-          );
-      final snapshot = await pipeline.execute();
-      expect(snapshot, isNotNull);
-      expect(snapshot.result, isA<List<PipelineResult>>());
-      if (snapshot.result.isNotEmpty) {
-        final first = snapshot.result.first.data();
-        if (first != null && first.containsKey('label')) {
-          expect(first['label'], 'near');
+      'findNearest returns results ordered by distance when vector index exists',
+      () async {
+        final pipeline = firestore
+            .pipeline()
+            .collection('pipeline-e2e')
+            .where(Expression.field('test').equalValue('find-nearest'))
+            .findNearest(
+              Field('embedding'),
+              [0.1, 0.2, 0.3],
+              DistanceMeasure.cosine,
+              limit: 5,
+            );
+        final snapshot = await pipeline.execute();
+        expect(snapshot, isNotNull);
+        expect(snapshot.result, isA<List<PipelineResult>>());
+        if (snapshot.result.isNotEmpty) {
+          final first = snapshot.result.first.data();
+          if (first != null && first.containsKey('label')) {
+            expect(first['label'], 'near');
+          }
         }
-      }
-    });
+      },
+    );
   });
 }

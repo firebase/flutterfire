@@ -19,25 +19,19 @@ void runPipelineExecuteOptionsTests() {
       );
     });
 
-    test(
-      'execute with ExecuteOptions returns expected results',
-      () async {
-        final snapshot = await firestore
-            .pipeline()
-            .collection('pipeline-e2e')
-            .where(Expression.field('test').equalValue('add-fields'))
-            .sort(Expression.field('title').ascending())
-            .limit(2)
-            .execute(
-              options: const ExecuteOptions(
-                indexMode: IndexMode.recommended,
-              ),
-            );
-        expectResultCount(snapshot, 2);
-        expect(snapshot.result[0].data()!['title'], 'alpha');
-        expect(snapshot.result[1].data()!['title'], 'beta');
-      },
-      skip: true,
-    );
+    test('execute with ExecuteOptions returns expected results', () async {
+      final snapshot = await firestore
+          .pipeline()
+          .collection('pipeline-e2e')
+          .where(Expression.field('test').equalValue('add-fields'))
+          .sort(Expression.field('title').ascending())
+          .limit(2)
+          .execute(
+            options: const ExecuteOptions(indexMode: IndexMode.recommended),
+          );
+      expectResultCount(snapshot, 2);
+      expect(snapshot.result[0].data()!['title'], 'alpha');
+      expect(snapshot.result[1].data()!['title'], 'beta');
+    }, skip: true);
   });
 }

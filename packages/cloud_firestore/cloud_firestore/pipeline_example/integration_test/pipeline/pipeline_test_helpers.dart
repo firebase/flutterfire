@@ -7,8 +7,11 @@ import 'package:flutter_test/flutter_test.dart';
 
 /// Asserts that [snapshot] has exactly [count] results.
 void expectResultCount(PipelineSnapshot snapshot, int count) {
-  expect(snapshot.result.length, count,
-      reason: 'Expected $count pipeline results');
+  expect(
+    snapshot.result.length,
+    count,
+    reason: 'Expected $count pipeline results',
+  );
 }
 
 /// Asserts that [snapshot] has the same number of results as [expectedData]
@@ -21,8 +24,11 @@ void expectResultsData(
   List<Map<String, dynamic>> expectedData, {
   bool exactMatch = false,
 }) {
-  expect(snapshot.result.length, expectedData.length,
-      reason: 'Result count mismatch');
+  expect(
+    snapshot.result.length,
+    expectedData.length,
+    reason: 'Result count mismatch',
+  );
   for (var i = 0; i < expectedData.length; i++) {
     final result = snapshot.result[i];
     final data = result.data();
@@ -33,8 +39,11 @@ void expectResultsData(
       expect(actual, expected, reason: 'Result $i data mismatch');
     } else {
       for (final entry in expected.entries) {
-        expect(actual[entry.key], entry.value,
-            reason: 'Result $i field ${entry.key}');
+        expect(
+          actual[entry.key],
+          entry.value,
+          reason: 'Result $i field ${entry.key}',
+        );
       }
     }
   }
