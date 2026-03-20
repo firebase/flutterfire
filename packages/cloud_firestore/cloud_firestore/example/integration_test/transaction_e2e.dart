@@ -326,6 +326,29 @@ void runTransactionTests() {
           expect(snapshot.data()!['bar'], equals(2));
           expect(snapshot.data()!['foo'], equals('bar'));
         });
+
+        test('should update a document using FieldPath keys', () async {
+          DocumentReference<Map<String, dynamic>> documentReference =
+              await initializeTest('transaction-update-field-path');
+
+          await documentReference.set({
+            'nested': {'field': 'old_value'},
+            'top': 'value',
+          });
+
+          await firestore.runTransaction((Transaction transaction) async {
+            await transaction.get(documentReference);
+            transaction.update(documentReference, {
+              FieldPath(const ['nested', 'field']): 'new_value',
+            });
+          });
+
+          DocumentSnapshot<Map<String, dynamic>> snapshot =
+              await documentReference.get();
+          expect(snapshot.exists, isTrue);
+          expect(snapshot.data()!['nested']['field'], equals('new_value'));
+          expect(snapshot.data()!['top'], equals('value'));
+        });
       });
 
       group('Transaction.set()', () {

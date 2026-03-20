@@ -94,9 +94,8 @@ void runPipelineExpressionsTests() {
           .limit(5)
           .execute();
       expectResultCount(snapshot, 5);
-      final withTags = snapshot.result
-          .where((r) => r.data()!['tags_len'] == 2)
-          .toList();
+      final withTags =
+          snapshot.result.where((r) => r.data()!['tags_len'] == 2).toList();
       expect(withTags.length, 1);
       expect(withTags.first.data()!['score'], 50);
     });
@@ -539,8 +538,7 @@ void runPipelineExpressionsTests() {
           expect(e.message!, contains('Unsupported expression'));
         }
       },
-      skip:
-          defaultTargetPlatform != TargetPlatform.iOS &&
+      skip: defaultTargetPlatform != TargetPlatform.iOS &&
           defaultTargetPlatform != TargetPlatform.macOS,
     );
   });

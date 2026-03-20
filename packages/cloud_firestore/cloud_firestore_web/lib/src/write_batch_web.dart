@@ -40,9 +40,9 @@ class WriteBatchWeb extends WriteBatchPlatform {
   @override
   void update(
     String documentPath,
-    Map<String, dynamic> data,
+    Map<FieldPath, dynamic> data,
   ) {
     _webWriteBatchDelegate.update(_webFirestoreDelegate.doc(documentPath),
-        EncodeUtility.encodeMapData(data)!);
+        EncodeUtility.encodeMapDataFieldPath(data)!);
   }
 }

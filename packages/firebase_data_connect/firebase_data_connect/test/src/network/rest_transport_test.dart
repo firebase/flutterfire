@@ -275,6 +275,44 @@ void main() {
     });
 
     test(
+        'regression #17290 - invokeOperation should correctly decode UTF-8 response with international characters',
+        () async {
+      // Simulate a server response with Korean characters, where the
+      // Content-Type header does NOT include charset=utf-8 (which is
+      // what the Firebase emulator sends). Without explicit UTF-8
+      // decoding, the http package defaults to latin1, corrupting
+      // multi-byte characters.
+      const koreanJson =
+          '{"data": {"name": "\ud55c\uad6d\uc5b4 \ud14c\uc2a4\ud2b8"}}';
+      final mockResponse = http.Response.bytes(
+        utf8.encode(koreanJson),
+        200,
+        headers: {'content-type': 'application/json'},
+      );
+      when(
+        mockHttpClient.post(
+          any,
+          headers: anyNamed('headers'),
+          body: anyNamed('body'),
+        ),
+      ).thenAnswer((_) async => mockResponse);
+
+      final deserializer = (String data) => 'Deserialized Data';
+
+      final result = await transport.invokeOperation(
+        'testQuery',
+        'executeQuery',
+        deserializer,
+        null,
+        null,
+        null,
+      );
+
+      expect(result.data['data']['name'],
+          equals('\ud55c\uad6d\uc5b4 \ud14c\uc2a4\ud2b8'));
+    });
+
+    test(
         'invokeOperation should handle missing auth and appCheck tokens gracefully',
         () async {
       final mockResponse = http.Response('{"data": {"key": "value"}}', 200);

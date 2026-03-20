@@ -245,6 +245,11 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   ///
   /// If all arguments are `false` or are omitted, a notification will not be displayed in the
   /// foreground, however you will still receive events relating to the notification.
+  ///
+  /// Important: Options set to `true` are persisted. If you
+  /// later remove or comment out this call, those values remain in effect—they are not reset to
+  /// `false`. To turn off foreground display after having set it to `true`, call this method
+  /// explicitly with `alert: false` (and `badge`/`sound` as desired).
   Future<void> setForegroundNotificationPresentationOptions({
     bool alert = false,
     bool badge = false,

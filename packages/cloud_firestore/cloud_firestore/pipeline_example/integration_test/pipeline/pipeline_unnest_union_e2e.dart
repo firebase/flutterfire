@@ -29,9 +29,8 @@ void runPipelineUnnestUnionTests() {
           .limit(10)
           .execute();
       expectResultCount(snapshot, 5);
-      final tags = snapshot.result
-          .map((r) => r.data()!['tag'] as String)
-          .toList();
+      final tags =
+          snapshot.result.map((r) => r.data()!['tag'] as String).toList();
       expect(tags..sort(), [
         'dart',
         'dart',
