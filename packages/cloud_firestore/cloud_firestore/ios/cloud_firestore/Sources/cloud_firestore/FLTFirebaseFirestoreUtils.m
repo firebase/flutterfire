@@ -21,6 +21,8 @@
 
 NSMutableDictionary<NSString *, FLTFirebaseFirestoreExtension *> *firestoreInstanceCache;
 
+const NSInteger FLTFirebaseFirestoreErrorCodePipelineParse = -1;
+
 @implementation FLTFirebaseFirestoreUtils
 
 + (NSString *)generateKeyForAppName:(NSString *)appName andDatabaseURL:(NSString *)databaseURL {
@@ -239,6 +241,11 @@ NSMutableDictionary<NSString *, FLTFirebaseFirestoreExtension *> *firestoreInsta
     case FIRFirestoreErrorCodeUnknown:
       code = @"unknown";
       message = @"Unknown error or an error from a different error domain.";
+      break;
+    case FLTFirebaseFirestoreErrorCodePipelineParse:
+      code = @"parse-error";
+      message = (error.localizedDescription.length > 0) ? error.localizedDescription
+                                                        : @"An unknown error occurred.";
       break;
     default:
       code = @"unknown";
