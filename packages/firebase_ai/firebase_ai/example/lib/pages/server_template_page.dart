@@ -283,7 +283,7 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
         _messages.add(MessageData(text: message, fromUser: true));
         var response = await _templateGenerativeModel
             // ignore: experimental_member_use
-          ?.generateContent('cj-urlcontext', inputs: {'url': message});
+            ?.generateContent('cj-urlcontext', inputs: {'url': message});
 
         final candidate = response?.candidates.first;
         if (candidate == null) {
@@ -447,7 +447,18 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
           ?.generateContent('new-greeting', inputs: {});
 
       _messages.add(MessageData(text: response?.text, fromUser: false));
-    });
+    } catch (e) {
+      _showError(e.toString());
+      setState(() {
+        _loading = false;
+      });
+    } finally {
+      _textController.clear();
+      setState(() {
+        _loading = false;
+      });
+      _textFieldFocus.requestFocus();
+    }
   }
 
   Future<void> _testCodeExecution() async {
