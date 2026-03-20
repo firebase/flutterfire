@@ -18,23 +18,7 @@ import '../base_model.dart';
 import '../content.dart';
 import '../utils/chat_utils.dart';
 import '../utils/mutex.dart';
-
-final class TemplateAutoFunction {
-  TemplateAutoFunction({
-    required this.name,
-    required this.callable,
-  });
-
-  /// The name of the function.
-  ///
-  /// Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum
-  /// length of 63.
-  final String name;
-
-  /// The callable function that this declaration represents.
-  final FutureOr<Map<String, Object?>> Function(Map<String, Object?> args)
-      callable;
-}
+import 'template_tool.dart';
 
 /// A back-and-forth chat with a server template.
 ///
@@ -49,9 +33,14 @@ final class TemplateChatSession {
     this._templateId,
     this._inputs,
     this._history,
-    List<TemplateAutoFunction> autoFunctionLists,
+    List<TemplateTool>? tools,
     this._maxTurns,
-  ) : _autoFunctions = {for (var item in autoFunctionLists) item.name: item};
+  ) : _autoFunctions = tools
+            ?.expand((tool) => tool.templateAutoFunctionDeclarations)
+            .fold(<String, TemplateAutoFunctionDeclaration>{}, (map, function) {
+          map?[function.name] = function;
+          return map;
+        });
 
   final Future<GenerateContentResponse> Function(
       Iterable<Content> content, String templateId,
@@ -65,7 +54,7 @@ final class TemplateChatSession {
   final String _templateId;
   final Map<String, Object?> _inputs;
   final List<Content> _history;
-  final Map<String, TemplateAutoFunction> _autoFunctions;
+  final Map<String, TemplateAutoFunctionDeclaration>? _autoFunctions;
   final int _maxTurns;
 
   final _mutex = Mutex();
@@ -99,7 +88,7 @@ final class TemplateChatSession {
         );
 
         final functionCalls = response.functionCalls;
-        final shouldAutoExecute = _autoFunctions.isNotEmpty &&
+        final shouldAutoExecute = _autoFunctions!.isNotEmpty &&
             functionCalls.isNotEmpty &&
             functionCalls.every((c) => _autoFunctions.containsKey(c.name));
 
@@ -192,7 +181,7 @@ extension StartTemplateChatExtension on TemplateGenerativeModel {
   TemplateChatSession startChat(String templateId,
           {required Map<String, Object?> inputs,
           List<Content>? history,
-          List<TemplateAutoFunction>? autoFunctions,
+          List<TemplateTool>? tools,
           int? maxTurns}) =>
       TemplateChatSession._(
           templateGenerateContentWithHistory,
@@ -200,6 +189,6 @@ extension StartTemplateChatExtension on TemplateGenerativeModel {
           templateId,
           inputs,
           history ?? [],
-          autoFunctions ?? [],
+          tools ?? [],
           maxTurns ?? 5);
 }

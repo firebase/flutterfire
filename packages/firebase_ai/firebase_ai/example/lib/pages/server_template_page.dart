@@ -76,10 +76,14 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
     _chatAutoFunctionSession = _templateGenerativeModel?.startChat(
       'cj-function-calling-weather',
       inputs: {},
-      autoFunctions: [
-        TemplateAutoFunction(
-          name: 'fetchWeather',
-          callable: fetchWeatherCallable,
+      tools: [
+        TemplateTool.functionDeclarations(
+          [
+            TemplateAutoFunctionDeclaration(
+              name: 'fetchWeather',
+              callable: fetchWeatherCallable,
+            ),
+          ],
         ),
       ],
     );
