@@ -113,6 +113,59 @@ void main() {
       expect(resultWithName, {'message': 'Hello, Bob!'});
     });
 
+    test('AutoFunctionDeclaration with useJSONSchema true', () async {
+      final parametersSchema = {
+        'count': Schema.integer(),
+      };
+
+      final autoDeclaration = AutoFunctionDeclaration(
+        name: 'testSchema',
+        description: 'Tests JSON Schema output.',
+        parameters: parametersSchema,
+        useJSONSchema: true,
+        callable: (args) async => {'result': args['count']},
+      );
+
+      expect(autoDeclaration.useJSONSchema, isTrue);
+      expect(autoDeclaration.toJson(), {
+        'name': 'testSchema',
+        'description': 'Tests JSON Schema output.',
+        'parametersJsonSchema': {
+          'type': 'object',
+          'properties': {
+            'count': {'type': 'integer'},
+          },
+          'required': ['count'],
+        },
+      });
+    });
+
+    test('FunctionDeclaration with useJSONSchema true', () {
+      final parametersSchema = {
+        'count': Schema.integer(),
+      };
+
+      final declaration = FunctionDeclaration(
+        'testSchema',
+        'Tests JSON Schema output.',
+        parameters: parametersSchema,
+        useJSONSchema: true,
+      );
+
+      expect(declaration.useJSONSchema, isTrue);
+      expect(declaration.toJson(), {
+        'name': 'testSchema',
+        'description': 'Tests JSON Schema output.',
+        'parametersJsonSchema': {
+          'type': 'object',
+          'properties': {
+            'count': {'type': 'integer'},
+          },
+          'required': ['count'],
+        },
+      });
+    });
+
     // Test FunctionCallingConfig
     test('FunctionCallingConfig.auto()', () {
       final config = FunctionCallingConfig.auto();

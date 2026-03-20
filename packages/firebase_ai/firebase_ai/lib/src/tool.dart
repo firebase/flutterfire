@@ -173,7 +173,8 @@ class FunctionDeclaration {
   // ignore: public_member_api_docs
   FunctionDeclaration(this.name, this.description,
       {required Map<String, Schema> parameters,
-      List<String> optionalParameters = const []})
+      List<String> optionalParameters = const [],
+      this.useJSONSchema = false})
       : _schemaObject = Schema.object(
             properties: parameters, optionalProperties: optionalParameters);
 
@@ -186,13 +187,19 @@ class FunctionDeclaration {
   /// A brief description of the function.
   final String description;
 
+  /// Whether to output parameters using [Schema.toJSONSchemaJson].
+  final bool useJSONSchema;
+
   final Schema _schemaObject;
 
   /// Convert to json object.
   Map<String, Object?> toJson() => {
         'name': name,
         'description': description,
-        'parameters': _schemaObject.toJson()
+        if (useJSONSchema)
+          'parametersJsonSchema': _schemaObject.toJSONSchemaJson()
+        else
+          'parameters': _schemaObject.toJson(),
       };
 }
 
@@ -210,9 +217,12 @@ final class AutoFunctionDeclaration extends FunctionDeclaration {
     required String description,
     required Map<String, Schema> parameters,
     List<String> optionalParameters = const [],
+    bool useJSONSchema = false,
     required this.callable,
   }) : super(name, description,
-            parameters: parameters, optionalParameters: optionalParameters);
+            parameters: parameters,
+            optionalParameters: optionalParameters,
+            useJSONSchema: useJSONSchema);
 
   /// The callable function that this declaration represents.
   final FutureOr<Map<String, Object?>> Function(Map<String, Object?> args)
