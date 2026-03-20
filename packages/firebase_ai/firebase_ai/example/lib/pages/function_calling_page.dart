@@ -42,8 +42,10 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
   late GenerativeModel _functionCallModel;
   late GenerativeModel _autoFunctionCallModel;
   late GenerativeModel _parallelAutoFunctionCallModel;
+  late GenerativeModel _complexJSONSchemaModel;
   late GenerativeModel _codeExecutionModel;
   late final AutoFunctionDeclaration _autoFetchWeatherTool;
+  late final AutoFunctionDeclaration _autoPlanVacationTool;
   final List<MessageData> _messages = <MessageData>[];
   bool _loading = false;
   bool _enableThinking = false;
@@ -111,6 +113,47 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
       callable: (args) async {
         final restaurantName = args['restaurantName']! as String;
         return getRestaurantMenu(restaurantName);
+      },
+    );
+    _autoPlanVacationTool = AutoFunctionDeclaration(
+      name: 'planVacation',
+      description:
+          'Plans a complex vacation itinerary combining flights, hotels, and activities.',
+      useJSONSchema: true,
+      parameters: {
+        'destination':
+            Schema.string(description: 'The city or country to travel to.'),
+        'travelers': Schema.integer(
+            description: 'Number of travelers.', minimum: 1, maximum: 10),
+        'travelClass': Schema.enumString(
+          enumValues: ['ECONOMY', 'BUSINESS', 'FIRST'],
+          description: 'The preferred travel class.',
+        ),
+        'budget':
+            Schema.number(description: 'Total budget for the trip in USD.'),
+        'activities': Schema.array(
+          items: Schema.string(),
+          description: 'A list of preferred activities.',
+          minItems: 1,
+        ),
+        'accommodations': Schema.object(
+          description: 'Hotel preferences.',
+          properties: {
+            'hotelType': Schema.string(),
+            'stars': Schema.integer(minimum: 1, maximum: 5),
+            'amenities': Schema.array(items: Schema.string()),
+          },
+          optionalProperties: ['amenities'],
+        ),
+      },
+      callable: (args) async {
+        return {
+          'status': 'SUCCESS',
+          'itineraryId': 'TRIP-98765',
+          'destination': args['destination'],
+          'estimatedCost': 3500.0,
+          'message': 'Vacation planned successfully!',
+        };
       },
     );
     _initializeModel();
@@ -200,6 +243,13 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
       generationConfig: generationConfig,
       tools: [
         Tool.codeExecution(),
+      ],
+    );
+    _complexJSONSchemaModel = aiClient.generativeModel(
+      model: 'gemini-2.5-flash',
+      generationConfig: generationConfig,
+      tools: [
+        Tool.functionDeclarations([_autoPlanVacationTool]),
       ],
     );
   }
@@ -371,6 +421,19 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
                           onPressed:
                               !_loading ? _testAutoStreamFunctionCalling : null,
                           child: const Text('Auto Stream FC'),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: !_loading
+                              ? _testComplexJSONSchemaAutoFunctionCalling
+                              : null,
+                          child: const Text('Complex JSON Schema FC'),
                         ),
                       ),
                     ],
@@ -604,6 +667,31 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
             fromUser: false,
           ),
         );
+      }
+    });
+  }
+
+  Future<void> _testComplexJSONSchemaAutoFunctionCalling() async {
+    await _runTest(() async {
+      final chat = _complexJSONSchemaModel.startChat();
+      const prompt =
+          'I want to plan a vacation to Paris for 2 people. We want to fly Business class, our budget is 5500 USD. We want to do wine tasting and museum tours. We prefer a 4-star boutique hotel with free breakfast.';
+
+      _messages.add(MessageData(text: prompt, fromUser: true));
+      setState(() {});
+
+      final response = await chat.sendMessage(Content.text(prompt));
+
+      final thought = response.thoughtSummary;
+      if (thought != null) {
+        _messages
+            .add(MessageData(text: thought, fromUser: false, isThought: true));
+      }
+
+      if (response.text case final text?) {
+        _messages.add(MessageData(text: text));
+      } else {
+        _messages.add(MessageData(text: 'No text response from model.'));
       }
     });
   }
