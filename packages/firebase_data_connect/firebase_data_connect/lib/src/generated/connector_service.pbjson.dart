@@ -1,16 +1,3 @@
-// Copyright 2024 Google LLC
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
 //
 //  Generated code. Do not modify.
 //  source: connector_service.proto
@@ -108,6 +95,14 @@ const ExecuteQueryResponse$json = {
       '6': '.google.firebase.dataconnect.v1.GraphqlError',
       '10': 'errors'
     },
+    {
+      '1': 'extensions',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.google.firebase.dataconnect.v1.GraphqlResponseExtensions',
+      '10': 'extensions'
+    },
   ],
 };
 
@@ -115,7 +110,9 @@ const ExecuteQueryResponse$json = {
 final $typed_data.Uint8List executeQueryResponseDescriptor = $convert.base64Decode(
     'ChRFeGVjdXRlUXVlcnlSZXNwb25zZRIrCgRkYXRhGAEgASgLMhcuZ29vZ2xlLnByb3RvYnVmLl'
     'N0cnVjdFIEZGF0YRJECgZlcnJvcnMYAiADKAsyLC5nb29nbGUuZmlyZWJhc2UuZGF0YWNvbm5l'
-    'Y3QudjEuR3JhcGhxbEVycm9yUgZlcnJvcnM=');
+    'Y3QudjEuR3JhcGhxbEVycm9yUgZlcnJvcnMSWQoKZXh0ZW5zaW9ucxgDIAEoCzI5Lmdvb2dsZS'
+    '5maXJlYmFzZS5kYXRhY29ubmVjdC52MS5HcmFwaHFsUmVzcG9uc2VFeHRlbnNpb25zUgpleHRl'
+    'bnNpb25z');
 
 @$core.Deprecated('Use executeMutationResponseDescriptor instead')
 const ExecuteMutationResponse$json = {
@@ -137,6 +134,14 @@ const ExecuteMutationResponse$json = {
       '6': '.google.firebase.dataconnect.v1.GraphqlError',
       '10': 'errors'
     },
+    {
+      '1': 'extensions',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.google.firebase.dataconnect.v1.GraphqlResponseExtensions',
+      '10': 'extensions'
+    },
   ],
 };
 
@@ -144,4 +149,6 @@ const ExecuteMutationResponse$json = {
 final $typed_data.Uint8List executeMutationResponseDescriptor = $convert.base64Decode(
     'ChdFeGVjdXRlTXV0YXRpb25SZXNwb25zZRIrCgRkYXRhGAEgASgLMhcuZ29vZ2xlLnByb3RvYn'
     'VmLlN0cnVjdFIEZGF0YRJECgZlcnJvcnMYAiADKAsyLC5nb29nbGUuZmlyZWJhc2UuZGF0YWNv'
-    'bm5lY3QudjEuR3JhcGhxbEVycm9yUgZlcnJvcnM=');
+    'bm5lY3QudjEuR3JhcGhxbEVycm9yUgZlcnJvcnMSWQoKZXh0ZW5zaW9ucxgDIAEoCzI5Lmdvb2'
+    'dsZS5maXJlYmFzZS5kYXRhY29ubmVjdC52MS5HcmFwaHFsUmVzcG9uc2VFeHRlbnNpb25zUgpl'
+    'eHRlbnNpb25z');

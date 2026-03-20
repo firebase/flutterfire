@@ -885,8 +885,6 @@ public class FlutterFirebaseFirestorePlugin
               GeneratedAndroidFirebaseFirestore.PigeonTransactionType type =
                   Objects.requireNonNull(write.getType());
               String path = Objects.requireNonNull(write.getPath());
-              Map<String, Object> data = write.getData();
-
               DocumentReference documentReference = firestore.document(path);
 
               switch (type) {
@@ -894,29 +892,55 @@ public class FlutterFirebaseFirestorePlugin
                   batch = batch.delete(documentReference);
                   break;
                 case UPDATE:
-                  batch = batch.update(documentReference, Objects.requireNonNull(data));
-                  break;
-                case SET:
-                  GeneratedAndroidFirebaseFirestore.PigeonDocumentOption options =
-                      Objects.requireNonNull(write.getOption());
-
-                  if (options.getMerge() != null && options.getMerge()) {
+                  {
+                    Map<Object, Object> rawData = Objects.requireNonNull(write.getData());
+                    Map<FieldPath, Object> updateData = new HashMap<>();
+                    for (Object key : rawData.keySet()) {
+                      if (key instanceof String) {
+                        updateData.put(FieldPath.of((String) key), rawData.get(key));
+                      } else if (key instanceof FieldPath) {
+                        updateData.put((FieldPath) key, rawData.get(key));
+                      }
+                    }
+                    FieldPath firstFieldPath = updateData.keySet().iterator().next();
+                    Object firstObject = updateData.get(firstFieldPath);
+                    ArrayList<Object> flattenData = new ArrayList<>();
+                    for (FieldPath fieldPath : updateData.keySet()) {
+                      if (fieldPath.equals(firstFieldPath)) {
+                        continue;
+                      }
+                      flattenData.add(fieldPath);
+                      flattenData.add(updateData.get(fieldPath));
+                    }
                     batch =
-                        batch.set(
-                            documentReference, Objects.requireNonNull(data), SetOptions.merge());
-                  } else if (options.getMergeFields() != null) {
-                    List<FieldPath> fieldPathList =
-                        PigeonParser.parseFieldPath(
-                            Objects.requireNonNull(options.getMergeFields()));
-                    batch =
-                        batch.set(
-                            documentReference,
-                            Objects.requireNonNull(data),
-                            SetOptions.mergeFieldPaths(fieldPathList));
-                  } else {
-                    batch = batch.set(documentReference, Objects.requireNonNull(data));
+                        batch.update(
+                            documentReference, firstFieldPath, firstObject, flattenData.toArray());
+                    break;
                   }
-                  break;
+                case SET:
+                  {
+                    @SuppressWarnings("unchecked")
+                    Map<String, Object> setData =
+                        (Map<String, Object>) (Map<?, ?>) Objects.requireNonNull(write.getData());
+                    GeneratedAndroidFirebaseFirestore.PigeonDocumentOption options =
+                        Objects.requireNonNull(write.getOption());
+
+                    if (options.getMerge() != null && options.getMerge()) {
+                      batch = batch.set(documentReference, setData, SetOptions.merge());
+                    } else if (options.getMergeFields() != null) {
+                      List<FieldPath> fieldPathList =
+                          PigeonParser.parseFieldPath(
+                              Objects.requireNonNull(options.getMergeFields()));
+                      batch =
+                          batch.set(
+                              documentReference,
+                              setData,
+                              SetOptions.mergeFieldPaths(fieldPathList));
+                    } else {
+                      batch = batch.set(documentReference, setData);
+                    }
+                    break;
+                  }
               }
             }
 

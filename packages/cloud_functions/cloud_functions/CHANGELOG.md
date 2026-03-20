@@ -1,3 +1,7 @@
+## 6.0.7
+
+ - Update a dependency to the latest release.
+
 ## 6.0.6
 
  - **FIX**(cloud_functions): enhance stream response types for better type safety ([#17938](https://github.com/firebase/flutterfire/issues/17938)). ([b89e5890](https://github.com/firebase/flutterfire/commit/b89e5890dfe7ce725022c9e470ee34ff64eb7a99))

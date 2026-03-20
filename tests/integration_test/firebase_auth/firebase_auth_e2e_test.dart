@@ -34,29 +34,32 @@ void main() {
     setUp(() async {
       // Reset users on emulator.
       await emulatorClearAllUsers();
+      await ensureSignedOut();
 
       try {
-        // Create a generic testing user account. Wrapped around try/catch because web still seems to have knowledge of user.
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: testEmail,
           password: testPassword,
         );
-      } catch (e) {
-        // ignore: avoid_print
-        print('Already existing user: $e');
+      } on FirebaseAuthException catch (e) {
+        // 'email-already-in-use': web may retain user state after emulator clear
+        // 'keychain-error': known macOS issue needing keychain sharing entitlement
+        if (e.code != 'email-already-in-use' && e.code != 'keychain-error') {
+          rethrow;
+        }
       }
 
       try {
-        // Create a disabled user account. Wrapped around try/catch because web still seems to have knowledge of user.
         final disabledUserCredential =
             await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: testDisabledEmail,
           password: testPassword,
         );
         await emulatorDisableUser(disabledUserCredential.user!.uid);
-      } catch (e) {
-        // ignore: avoid_print
-        print('Already existing disabled user: $e');
+      } on FirebaseAuthException catch (e) {
+        if (e.code != 'email-already-in-use' && e.code != 'keychain-error') {
+          rethrow;
+        }
       }
       await ensureSignedOut();
     });

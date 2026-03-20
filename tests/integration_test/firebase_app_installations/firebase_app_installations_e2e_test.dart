@@ -52,15 +52,28 @@ void main() {
         () async {
           final id = await FirebaseInstallations.instance.getId();
 
-          // Wait a little so we don't get a delete-pending exception
-          await Future.delayed(const Duration(seconds: 8));
+          // Retry delete in case of delete-pending state
+          for (var attempt = 0; attempt < 5; attempt++) {
+            try {
+              await FirebaseInstallations.instance.delete();
+              break;
+            } catch (e) {
+              if (attempt == 4) rethrow;
+              await Future.delayed(const Duration(seconds: 2));
+            }
+          }
 
-          await FirebaseInstallations.instance.delete();
-
-          // Wait a little so we don't get a delete-pending exception
-          await Future.delayed(const Duration(seconds: 8));
-
-          final newId = await FirebaseInstallations.instance.getId();
+          // Retry getId in case of delete-pending state
+          String? newId;
+          for (var attempt = 0; attempt < 5; attempt++) {
+            try {
+              newId = await FirebaseInstallations.instance.getId();
+              break;
+            } catch (e) {
+              if (attempt == 4) rethrow;
+              await Future.delayed(const Duration(seconds: 2));
+            }
+          }
           expect(newId, isNot(equals(id)));
           // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
         },

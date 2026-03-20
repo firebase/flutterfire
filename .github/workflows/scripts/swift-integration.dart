@@ -214,7 +214,10 @@ Future<void> updatePackageSwiftForPackage(
     }
 
     // handles forked repositories
-    final repoSlug = headRepo != baseRepo ? headRepo : baseRepo;
+    final repoSlug =
+        (headRepo != null && headRepo.isNotEmpty && headRepo != baseRepo)
+            ? headRepo
+            : baseRepo;
     print('repoSlug: $repoSlug');
     print('branch: $branch');
 

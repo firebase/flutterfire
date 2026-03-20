@@ -221,7 +221,7 @@ class PigeonTransactionCommand {
 
   final PigeonTransactionType type;
   final String path;
-  final Map<String?, Object?>? data;
+  final Map<Object?, Object?>? data;
   final PigeonDocumentOption? option;
 }
 

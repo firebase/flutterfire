@@ -1,3 +1,7 @@
+## 2.1.0
+
+ - **FEAT**(remote-config,windows): add support for windows ([#18006](https://github.com/firebase/flutterfire/issues/18006)). ([a6ec167f](https://github.com/firebase/flutterfire/commit/a6ec167f4ece9c9b455a916366781f482cc380b3))
+
 ## 2.0.7
 
  - Update a dependency to the latest release.

@@ -16,6 +16,7 @@
 #include "firebase/auth.h"
 #include "firebase/auth/types.h"
 #include "firebase/future.h"
+#include "firebase_core/flutter_firebase_plugin.h"
 #include "messages.g.h"
 
 using firebase::auth::AuthError;
@@ -24,7 +25,8 @@ namespace firebase_auth_windows {
 
 class FirebaseAuthPlugin : public flutter::Plugin,
                            public FirebaseAuthHostApi,
-                           public FirebaseAuthUserHostApi {
+                           public FirebaseAuthUserHostApi,
+                           public FlutterFirebasePlugin {
  public:
   static void RegisterWithRegistrar(flutter::PluginRegistrarWindows* registrar);
 
@@ -179,6 +181,11 @@ class FirebaseAuthPlugin : public flutter::Plugin,
   virtual void RevokeTokenWithAuthorizationCode(
       const AuthPigeonFirebaseApp& app, const std::string& authorization_code,
       std::function<void(std::optional<FlutterError> reply)> result) override;
+
+  // FlutterFirebasePlugin methods.
+  flutter::EncodableMap GetPluginConstantsForFirebaseApp(
+      const firebase::App& app) override;
+  void DidReinitializeFirebaseCore() override;
 
  private:
   static flutter::BinaryMessenger* binaryMessenger;

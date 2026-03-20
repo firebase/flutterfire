@@ -39,7 +39,9 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
   final List<MessageData> _messages = <MessageData>[];
   bool _loading = false;
 
+  // ignore: experimental_member_use
   TemplateGenerativeModel? _templateGenerativeModel;
+  // ignore: experimental_member_use
   TemplateImagenModel? _templateImagenModel;
 
   TemplateChatSession? _chatSession;
@@ -55,13 +57,18 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
   void _initializeServerTemplate() {
     if (widget.useVertexBackend) {
       _templateGenerativeModel =
+          // ignore: experimental_member_use
           FirebaseAI.vertexAI(location: 'global').templateGenerativeModel();
       _templateImagenModel =
+          // ignore: experimental_member_use
           FirebaseAI.vertexAI(location: 'global').templateImagenModel();
     } else {
       _templateGenerativeModel =
+          // ignore: experimental_member_use
           FirebaseAI.googleAI().templateGenerativeModel();
-      _templateImagenModel = FirebaseAI.googleAI().templateImagenModel();
+      _templateImagenModel =
+          // ignore: experimental_member_use
+          FirebaseAI.googleAI().templateImagenModel();
     }
 
     // Inputs are now provided ONCE here when creating the session
@@ -186,7 +193,7 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
                       ),
                       tooltip: 'Chat',
                     ),
-                  if (!_loading)
+                  if (!_loading) ...[
                     IconButton(
                       onPressed: () async {
                         await _serverTemplateImagen(_textController.text);
@@ -197,7 +204,6 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
                       ),
                       tooltip: 'Imagen',
                     ),
-                  if (!_loading)
                     IconButton(
                       onPressed: () async {
                         await _serverTemplateImageInput(_textController.text);
@@ -208,7 +214,6 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
                       ),
                       tooltip: 'Image Input',
                     ),
-                  if (!_loading)
                     IconButton(
                       onPressed: () async {
                         await _serverTemplateUrlContext(_textController.text);
@@ -219,7 +224,6 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
                       ),
                       tooltip: 'URL Context',
                     ),
-                  if (!_loading)
                     IconButton(
                       onPressed: () async {
                         await _sendServerTemplateMessage(_textController.text);
@@ -229,8 +233,16 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
                         color: Theme.of(context).colorScheme.primary,
                       ),
                       tooltip: 'Generate',
-                    )
-                  else
+                    ),
+                    IconButton(
+                      onPressed: _testCodeExecution,
+                      icon: Icon(
+                        Icons.code,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      tooltip: 'Test Code Execution',
+                    ),
+                  ] else
                     const CircularProgressIndicator(),
                 ],
               ),
@@ -270,7 +282,8 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
       (message) async {
         _messages.add(MessageData(text: message, fromUser: true));
         var response = await _templateGenerativeModel
-            ?.generateContent('cj-urlcontext', inputs: {'url': message});
+            // ignore: experimental_member_use
+          ?.generateContent('cj-urlcontext', inputs: {'url': message});
 
         final candidate = response?.candidates.first;
         if (candidate == null) {
@@ -369,6 +382,7 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
   Future<void> _serverTemplateImagen(String message) async {
     await _handleServerTemplateMessage(message, (message) async {
       MessageData? resultMessage;
+      // ignore: experimental_member_use
       var response = await _templateImagenModel?.generateImages(
         'portrait-googleai',
         inputs: {
@@ -406,6 +420,7 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
         ),
       );
 
+      // ignore: experimental_member_use
       var response = await _templateGenerativeModel?.generateContent(
         'media',
         inputs: {
@@ -421,12 +436,74 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
   }
 
   Future<void> _sendServerTemplateMessage(String message) async {
-    await _handleServerTemplateMessage(message, (message) async {
+    setState(() {
+      _loading = true;
+    });
+
+    try {
+      _messages.add(MessageData(text: message, fromUser: true));
       var response = await _templateGenerativeModel
+          // ignore: experimental_member_use
           ?.generateContent('new-greeting', inputs: {});
 
       _messages.add(MessageData(text: response?.text, fromUser: false));
     });
+  }
+
+  Future<void> _testCodeExecution() async {
+    setState(() {
+      _loading = true;
+    });
+
+    try {
+      _messages
+          .add(MessageData(text: 'Testing code execution', fromUser: true));
+      final response = await _templateGenerativeModel
+          // ignore: experimental_member_use
+          ?.generateContent('cj-code-execution', inputs: {});
+
+      final buffer = StringBuffer();
+      for (final part in response!.candidates.first.content.parts) {
+        if (part is ExecutableCodePart) {
+          buffer.writeln('Executable Code:');
+          buffer.writeln('Language: ${part.language}');
+          buffer.writeln('Code:');
+          buffer.writeln(part.code);
+        } else if (part is CodeExecutionResultPart) {
+          buffer.writeln('Code Execution Result:');
+          buffer.writeln('Outcome: ${part.outcome}');
+          buffer.writeln('Output:');
+          buffer.writeln(part.output);
+        } else if (part is TextPart) {
+          buffer.writeln(part.text);
+        }
+      }
+
+      if (buffer.isNotEmpty) {
+        _messages.add(
+          MessageData(
+            text: buffer.toString(),
+            fromUser: false,
+          ),
+        );
+      }
+
+      setState(() {
+        _loading = false;
+        _scrollDown();
+      });
+    } catch (e) {
+      _showError(e.toString());
+      setState(() {
+        _loading = false;
+      });
+    } finally {
+      _textController.clear();
+      setState(() {
+        _loading = false;
+      });
+      _textFieldFocus.requestFocus();
+    }
   }
 
   void _showError(String message) {

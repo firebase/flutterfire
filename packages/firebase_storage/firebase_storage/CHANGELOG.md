@@ -1,3 +1,7 @@
+## 13.1.0
+
+ - **FEAT**(storage,windows): add emulator support ([#18030](https://github.com/firebase/flutterfire/issues/18030)). ([461dfa43](https://github.com/firebase/flutterfire/commit/461dfa43764469b518984052cb7bbc0a2a2675eb))
+
 ## 13.0.6
 
  - Update a dependency to the latest release.

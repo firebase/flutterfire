@@ -6,4 +6,4 @@
 part of '../firebase_core_web.dart';
 
 /// The currently supported Firebase JS SDK version.
-const String supportedFirebaseJsSdkVersion = '12.7.0';
+const String supportedFirebaseJsSdkVersion = '12.9.0';

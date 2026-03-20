@@ -12,16 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:record/record.dart';
-import 'dart:typed_data';
+import 'dart:async';
+import 'package:waveform_flutter/waveform_flutter.dart' as wf;
 
 class AudioInput extends ChangeNotifier {
-  final _recorder = AudioRecorder();
+  AudioRecorder _recorder = AudioRecorder();
   final AudioEncoder _encoder = AudioEncoder.pcm16bits;
+
   bool isRecording = false;
   bool isPaused = false;
-  Stream<Uint8List>? audioStream;
+
+  StreamController<Uint8List>? _audioDataController;
+  StreamSubscription? _recorderStreamSub;
+
+  Stream<Uint8List>? get audioStream => _audioDataController?.stream;
+
+  Stream<wf.Amplitude>? amplitudeStream;
+  StreamSubscription? _amplitudeSubscription;
+  StreamController<wf.Amplitude>? _amplitudeStreamController;
 
   Future<void> init() async {
     await _checkPermission();
@@ -30,6 +40,7 @@ class AudioInput extends ChangeNotifier {
   @override
   void dispose() {
     _recorder.dispose();
+    _audioDataController?.close();
     super.dispose();
   }
 
@@ -43,9 +54,61 @@ class AudioInput extends ChangeNotifier {
   }
 
   Future<Stream<Uint8List>?> startRecordingStream() async {
+    await _amplitudeSubscription?.cancel();
+    if (_amplitudeStreamController != null &&
+        !_amplitudeStreamController!.isClosed) {
+      await _amplitudeStreamController!.close();
+    }
+
+    await _recorderStreamSub?.cancel();
+    if (_audioDataController != null && !_audioDataController!.isClosed) {
+      await _audioDataController!.close();
+    }
+
+    _audioDataController = StreamController<Uint8List>();
+
+    // Re-instantiate the recorder to ensure we get a fresh stream.
+    // This fixes "Stream has already been listened to" errors when restarting recording.
+    try {
+      if (await _recorder.isRecording()) {
+        await _recorder.stop();
+      }
+    } catch (e) {
+      debugPrint('Error stopping recorder: $e');
+    }
+    await _recorder.dispose();
+    _recorder = AudioRecorder();
+
+    // 1. DEVICE SELECTION LOGIC
+    // Fetch all devices to find the real microphone
+    final devices = await _recorder.listInputDevices();
+    InputDevice? selectedDevice;
+
+    try {
+      // Find the device that is NOT BlackHole and looks like a built-in mic.
+      // Browsers often name it "Default - Internal Microphone" or "Built-in Audio".
+      selectedDevice = devices.firstWhere(
+        (device) {
+          final label = device.label.toLowerCase();
+          return !label.contains('blackhole') &&
+              (label.contains('internal') ||
+                  label.contains('built-in') ||
+                  label.contains('macbook'));
+        },
+        // Fallback: Just find anything that isn't Blackhole
+        orElse: () => devices.firstWhere(
+          (d) => !d.label.toLowerCase().contains('blackhole'),
+          orElse: () => devices.first, // Absolute fallback
+        ),
+      );
+    } catch (e) {
+      debugPrint('Error selecting device: $e');
+    }
+
     var recordConfig = RecordConfig(
       encoder: _encoder,
       sampleRate: 24000,
+      device: selectedDevice,
       numChannels: 1,
       echoCancel: true,
       noiseSuppress: true,
@@ -54,15 +117,60 @@ class AudioInput extends ChangeNotifier {
       ),
       iosConfig: const IosRecordConfig(categoryOptions: []),
     );
-    await _recorder.listInputDevices();
-    audioStream = await _recorder.startStream(recordConfig);
+
+    final rawStream = await _recorder.startStream(recordConfig);
+
+    _recorderStreamSub = rawStream.listen(
+      (data) {
+        if (data.isNotEmpty &&
+            _audioDataController != null &&
+            !_audioDataController!.isClosed) {
+          // debugPrint('AudioInput: received ${data.length} bytes');
+          _audioDataController!.add(data);
+        }
+      },
+      onError: (e) {
+        debugPrint('Recorder stream error: $e');
+        if (_audioDataController != null && !_audioDataController!.isClosed) {
+          _audioDataController!.addError(e);
+        }
+      },
+      onDone: () {
+        // Do not close the controller here automatically; let stopRecording handle it
+        // to prevent race conditions in the UI.
+      },
+    );
+
+    _amplitudeStreamController = StreamController<wf.Amplitude>.broadcast();
+    _amplitudeSubscription = _recorder
+        .onAmplitudeChanged(const Duration(milliseconds: 100))
+        .listen((amp) {
+      _amplitudeStreamController?.add(
+        wf.Amplitude(current: amp.current, max: amp.max),
+      );
+    });
+    amplitudeStream = _amplitudeStreamController?.stream;
+
     isRecording = true;
     notifyListeners();
-    return audioStream;
+
+    return _audioDataController!.stream;
   }
 
   Future<void> stopRecording() async {
-    await _recorder.stop();
+    try {
+      await _recorder.stop();
+    } catch (e) {
+      debugPrint('Error stopping recorder hardware: $e');
+    }
+    await _amplitudeSubscription?.cancel();
+    await _amplitudeStreamController?.close();
+    amplitudeStream = null;
+
+    await _recorderStreamSub?.cancel();
+    await _audioDataController?.close();
+    _audioDataController = null;
+
     isRecording = false;
     notifyListeners();
   }

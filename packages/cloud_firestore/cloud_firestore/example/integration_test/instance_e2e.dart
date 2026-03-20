@@ -148,7 +148,43 @@ void runInstanceTests() {
           await firestore.terminate();
           await firestore.clearPersistence();
         },
-        skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
+        skip: kIsWeb,
+      );
+
+      test(
+        'terminate() then use Firestore again',
+        () async {
+          // Regression test for https://github.com/firebase/flutterfire/issues/17781
+          // On Windows, terminate() did not remove the instance from the native
+          // cache, so subsequent usage would crash with "The client has already
+          // been terminated".
+          final instance = FirebaseFirestore.instanceFor(
+            app: Firebase.app(),
+            databaseId: 'flutterfire-2',
+          );
+
+          instance.useFirestoreEmulator('localhost', 8080);
+
+          // Use Firestore so it is fully initialized
+          await instance.collection('flutterfire-2').doc('terminate-test').set(
+            {'foo': 'bar'},
+          );
+
+          await instance.terminate();
+          await instance.clearPersistence();
+
+          // After terminate + clearPersistence, we should be able to use
+          // Firestore again without crashing.
+          await instance
+              .collection('flutterfire-2')
+              .doc('terminate-test')
+              .get();
+
+          // Clean up: terminate so the native instance cache is cleared
+          // for subsequent tests that may use the same databaseId.
+          await instance.terminate();
+        },
+        skip: kIsWeb,
       );
 
       test(
@@ -174,6 +210,7 @@ void runInstanceTests() {
             ],
           });
 
+          // ignore: experimental_member_use
           await firestore.setIndexConfigurationFromJSON(json);
         },
         skip: defaultTargetPlatform == TargetPlatform.windows,

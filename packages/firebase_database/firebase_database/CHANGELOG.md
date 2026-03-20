@@ -1,3 +1,7 @@
+## 12.1.4
+
+ - Update a dependency to the latest release.
+
 ## 12.1.3
 
  - **FIX**(firebase_database): Add modifiers to keepSynced ref in android ([#17978](https://github.com/firebase/flutterfire/issues/17978)). ([8b1e05f6](https://github.com/firebase/flutterfire/commit/8b1e05f69544f22eaac568ea217cdce1299ded47))

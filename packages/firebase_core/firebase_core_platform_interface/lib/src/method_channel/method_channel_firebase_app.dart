@@ -18,7 +18,7 @@ class MethodChannelFirebaseApp extends FirebaseAppPlatform {
   MethodChannelFirebaseApp(
     String name,
     FirebaseOptions options, {
-    isAutomaticDataCollectionEnabled,
+    bool? isAutomaticDataCollectionEnabled,
   })  : _isAutomaticDataCollectionEnabled =
             isAutomaticDataCollectionEnabled ?? false,
         super(name, options);

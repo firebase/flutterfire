@@ -22,10 +22,11 @@ import 'package:flutter/foundation.dart';
 
 import './network/transport_library.dart'
     if (dart.library.io) './network/grpc_library.dart'
+    if (dart.library.js_interop) './network/rest_library.dart'
     if (dart.library.html) './network/rest_library.dart';
 
 import 'cache/cache_data_types.dart';
-import 'cache/cache_manager.dart';
+import 'cache/cache.dart';
 
 /// DataConnect class
 class FirebaseDataConnect extends FirebasePluginPlatform {
@@ -199,7 +200,7 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
     }
 
     //TODO remove after testing since CS should be null by default
-    cacheSettings = cacheSettings ?? CacheSettings();
+    final resolvedCacheSettings = cacheSettings ?? CacheSettings();
 
     FirebaseDataConnect newInstance = FirebaseDataConnect(
       app: app,
@@ -207,7 +208,7 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
       appCheck: appCheck,
       connectorConfig: connectorConfig,
       sdkType: sdkType,
-      cacheSettings: cacheSettings,
+      cacheSettings: resolvedCacheSettings,
     );
     if (cachedInstances[app.name] == null) {
       cachedInstances[app.name] = <String, FirebaseDataConnect>{};

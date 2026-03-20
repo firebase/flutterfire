@@ -20,7 +20,8 @@ export 'package:firebase_app_check_platform_interface/firebase_app_check_platfor
         AppleAppAttestProvider,
         AppleAppAttestWithDeviceCheckFallbackProvider,
         ReCaptchaEnterpriseProvider,
-        ReCaptchaV3Provider;
+        ReCaptchaV3Provider,
+        WebDebugProvider;
 export 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
     show FirebaseException;
 
