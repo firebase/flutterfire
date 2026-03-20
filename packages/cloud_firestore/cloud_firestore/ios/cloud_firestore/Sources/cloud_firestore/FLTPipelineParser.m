@@ -123,6 +123,32 @@ static NSError *parseError(NSString *message) {
     return [[FIRConstantBridge alloc] init:[NSNull null]];
   }
 
+  if ([name isEqualToString:@"document_id_from_ref"]) {
+    NSString *path = args[@"doc_ref"];
+    if (![path isKindOfClass:[NSString class]] || path.length == 0) {
+      if (error) *error = parseError(@"document_id_from_ref requires doc_ref path");
+      return nil;
+    }
+    if (!self.firestore) {
+      if (error) *error = parseError(@"document_id_from_ref requires firestore");
+      return nil;
+    }
+    FIRDocumentReference *docRef = [self.firestore documentWithPath:path];
+    FIRExprBridge *refExpr = [[FIRConstantBridge alloc] init:docRef];
+    return [[FIRFunctionExprBridge alloc] initWithName:@"document_id" Args:@[ refExpr ]];
+  }
+
+  // Swift asBoolean() is a type coercion, not a pipeline function named "as_boolean".
+  // Dart still sends as_boolean + expression; unwrap to the inner FIRExprBridge.
+  if ([name isEqualToString:@"as_boolean"]) {
+    id exprMap = args[@"expression"];
+    if (![exprMap isKindOfClass:[NSDictionary class]]) {
+      if (error) *error = parseError(@"as_boolean requires expression");
+      return nil;
+    }
+    return [self parseExpression:(NSDictionary *)exprMap error:error];
+  }
+
   // Map Dart names to iOS SDK names where they differ
   NSString *sdkName = name;
   if ([name isEqualToString:@"bit_xor"]) sdkName = @"xor";
@@ -158,6 +184,7 @@ static NSError *parseError(NSString *message) {
 
   // -------------------------------------------------------------------------
   // Unary expressions (single expression): exists, is_error, is_absent, not
+  // (as_boolean is handled above — unwrap only, not a pipeline function.)
   // -------------------------------------------------------------------------
   NSArray *unaryNames = @[ @"exists", @"is_error", @"is_absent", @"not" ];
   if ([unaryNames containsObject:name]) {
@@ -279,24 +306,40 @@ static NSError *parseError(NSString *message) {
   if ([name isEqualToString:@"array_contains_all"] ||
       [name isEqualToString:@"array_contains_any"]) {
     id arrayMap = args[@"array"];
-    NSArray *valuesMaps = args[@"values"];
-    if (![valuesMaps isKindOfClass:[NSArray class]]) valuesMaps = args[@"elements"];
     if (![arrayMap isKindOfClass:[NSDictionary class]]) {
       if (error) *error = parseError([NSString stringWithFormat:@"%@ requires array", name]);
       return nil;
     }
-    if (![valuesMaps isKindOfClass:[NSArray class]] || valuesMaps.count == 0) {
-      if (error)
-        *error = parseError(
-            [NSString stringWithFormat:@"%@ requires array and at least one value", name]);
-      return nil;
-    }
     FIRExprBridge *arrayExpr = [self parseExpression:arrayMap error:error];
     if (!arrayExpr) return nil;
-    NSDictionary *arrayExprMap = @{@"name" : @"array", @"args" : @{@"elements" : valuesMaps}};
-    FIRExprBridge *valuesArrayExpr = [self parseExpression:arrayExprMap error:error];
-    if (!valuesArrayExpr) return nil;
-    return [[FIRFunctionExprBridge alloc] initWithName:name Args:@[ arrayExpr, valuesArrayExpr ]];
+
+    NSArray *valuesMaps = args[@"values"];
+    if (![valuesMaps isKindOfClass:[NSArray class]]) valuesMaps = args[@"elements"];
+    BOOL hasValues = [valuesMaps isKindOfClass:[NSArray class]] && valuesMaps.count > 0;
+
+    if (hasValues) {
+      NSDictionary *arrayExprMap = @{@"name" : @"array", @"args" : @{@"elements" : valuesMaps}};
+      FIRExprBridge *valuesArrayExpr = [self parseExpression:arrayExprMap error:error];
+      if (!valuesArrayExpr) return nil;
+      return [[FIRFunctionExprBridge alloc] initWithName:name Args:@[ arrayExpr, valuesArrayExpr ]];
+    }
+
+    if ([name isEqualToString:@"array_contains_all"]) {
+      id arrayExpressionMap = args[@"array_expression"];
+      if ([arrayExpressionMap isKindOfClass:[NSDictionary class]]) {
+        FIRExprBridge *requiredArrayExpr = [self parseExpression:arrayExpressionMap error:error];
+        if (!requiredArrayExpr) return nil;
+        return [[FIRFunctionExprBridge alloc] initWithName:name
+                                                      Args:@[ arrayExpr, requiredArrayExpr ]];
+      }
+    }
+
+    if (error)
+      *error = parseError([NSString
+          stringWithFormat:
+              @"%@ requires array and values/elements, or array_contains_all with array_expression",
+              name]);
+    return nil;
   }
 
   // -------------------------------------------------------------------------
