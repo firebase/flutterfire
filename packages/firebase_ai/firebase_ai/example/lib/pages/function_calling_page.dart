@@ -43,9 +43,11 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
   late GenerativeModel _autoFunctionCallModel;
   late GenerativeModel _parallelAutoFunctionCallModel;
   late GenerativeModel _complexJSONSchemaModel;
+  late GenerativeModel _refSchemaModel;
   late GenerativeModel _codeExecutionModel;
   late final AutoFunctionDeclaration _autoFetchWeatherTool;
   late final AutoFunctionDeclaration _autoPlanVacationTool;
+  late final AutoFunctionDeclaration _autoProcessTransactionTool;
   final List<MessageData> _messages = <MessageData>[];
   bool _loading = false;
   bool _enableThinking = false;
@@ -156,6 +158,32 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
         };
       },
     );
+    _autoProcessTransactionTool = AutoFunctionDeclaration(
+      name: 'processTransaction',
+      description:
+          'Processes a financial transaction using a predefined transaction model reference.',
+      useJSONSchema: true,
+      parameters: {
+        'baseTransaction': Schema.object(
+          description: 'The base transaction block.',
+          properties: {
+            'amount': Schema.number(),
+            'transactionId': Schema.integer(),
+          },
+        ),
+        'transaction': Schema.ref('#/properties/baseTransaction'),
+      },
+      callable: (args) async {
+        final transaction = args['transaction'] as Map<String, dynamic>?;
+        return {
+          'status': 'SUCCESS',
+          'amountProcessed': transaction?['amount'],
+          'transactionId': transaction?['transactionId'],
+          'message':
+              'Transaction processed successfully using the reference schema!',
+        };
+      },
+    );
     _initializeModel();
   }
 
@@ -250,6 +278,13 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
       generationConfig: generationConfig,
       tools: [
         Tool.functionDeclarations([_autoPlanVacationTool]),
+      ],
+    );
+    _refSchemaModel = aiClient.generativeModel(
+      model: 'gemini-2.5-flash',
+      generationConfig: generationConfig,
+      tools: [
+        Tool.functionDeclarations([_autoProcessTransactionTool]),
       ],
     );
   }
@@ -434,6 +469,15 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
                               ? _testComplexJSONSchemaAutoFunctionCalling
                               : null,
                           child: const Text('Complex JSON Schema FC'),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: !_loading
+                              ? _testRefSchemaAutoFunctionCalling
+                              : null,
+                          child: const Text('Ref Schema FC'),
                         ),
                       ),
                     ],
@@ -676,6 +720,31 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
       final chat = _complexJSONSchemaModel.startChat();
       const prompt =
           'I want to plan a vacation to Paris for 2 people. We want to fly Business class, our budget is 5500 USD. We want to do wine tasting and museum tours. We prefer a 4-star boutique hotel with free breakfast.';
+
+      _messages.add(MessageData(text: prompt, fromUser: true));
+      setState(() {});
+
+      final response = await chat.sendMessage(Content.text(prompt));
+
+      final thought = response.thoughtSummary;
+      if (thought != null) {
+        _messages
+            .add(MessageData(text: thought, fromUser: false, isThought: true));
+      }
+
+      if (response.text case final text?) {
+        _messages.add(MessageData(text: text));
+      } else {
+        _messages.add(MessageData(text: 'No text response from model.'));
+      }
+    });
+  }
+
+  Future<void> _testRefSchemaAutoFunctionCalling() async {
+    await _runTest(() async {
+      final chat = _refSchemaModel.startChat();
+      const prompt =
+          r'Process a transaction of \$50.00 for a pair of shoes. The transaction ID is 98765.';
 
       _messages.add(MessageData(text: prompt, fromUser: true));
       setState(() {});
