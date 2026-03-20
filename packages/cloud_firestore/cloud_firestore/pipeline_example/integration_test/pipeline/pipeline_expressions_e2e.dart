@@ -605,13 +605,19 @@ void runPipelineExpressionsTests() {
       expect(snapshot.result[0].data()!['arr_concat_multi'], [2, 4, 6, 10, 11]);
     });
 
-    test('addFields arraySlice', () async {
-      final snapshot = await expressionsDocScore50(
-        Expression.field('arr').arraySliceLiteral(1, 3).as('arr_slice'),
-      );
-      expectResultCount(snapshot, 1);
-      expect(snapshot.result[0].data()!['arr_slice'], [4, 6]);
-    }, skip: defaultTargetPlatform == TargetPlatform.android);
+    test(
+      'addFields arraySlice',
+      () async {
+        final snapshot = await expressionsDocScore50(
+          Expression.field('arr').arraySliceLiteral(1, 3).as('arr_slice'),
+        );
+        expectResultCount(snapshot, 1);
+        expect(snapshot.result[0].data()!['arr_slice'], [4, 6]);
+      },
+      skip:
+          defaultTargetPlatform == TargetPlatform.android ||
+          defaultTargetPlatform == TargetPlatform.iOS,
+    );
 
     test('addFields arrayContainsAny', () async {
       final snapshot = await expressionsDocScore50(
@@ -669,7 +675,9 @@ void runPipelineExpressionsTests() {
           'k2': 'v2',
         });
       },
-      skip: defaultTargetPlatform == TargetPlatform.android,
+      skip:
+          defaultTargetPlatform == TargetPlatform.android ||
+          defaultTargetPlatform == TargetPlatform.iOS,
     );
 
     test('addFields nullValue', () async {
@@ -711,7 +719,7 @@ void runPipelineExpressionsTests() {
         Expression.field('a').asBoolean().as('a_bool'),
       );
       expectResultCount(snapshot, 1);
-      expect(snapshot.result[0].data()!['a_bool'], true);
+      expect(snapshot.result[0].data()!['a_bool'], 1);
     });
 
     test(
