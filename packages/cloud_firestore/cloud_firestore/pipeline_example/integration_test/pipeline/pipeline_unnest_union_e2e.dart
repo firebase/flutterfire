@@ -31,25 +31,32 @@ void runPipelineUnnestUnionTests() {
       expectResultCount(snapshot, 5);
       final tags =
           snapshot.result.map((r) => r.data()!['tag'] as String).toList();
-      expect(
-          tags..sort(), ['dart', 'dart', 'firestore', 'firestore', 'flutter']);
+      expect(tags..sort(), [
+        'dart',
+        'dart',
+        'firestore',
+        'firestore',
+        'flutter',
+      ]);
     });
 
-    test('union concatenates both pipelines with deterministic total count',
-        () async {
-      final other = firestore
-          .pipeline()
-          .collection('pipeline-e2e')
-          .where(Expression.field('test').equalValue('union-b'))
-          .limit(5);
-      final snapshot = await firestore
-          .pipeline()
-          .collection('pipeline-e2e')
-          .where(Expression.field('test').equalValue('union-a'))
-          .limit(5)
-          .union(other)
-          .execute();
-      expectResultCount(snapshot, 6);
-    });
+    test(
+      'union concatenates both pipelines with deterministic total count',
+      () async {
+        final other = firestore
+            .pipeline()
+            .collection('pipeline-e2e')
+            .where(Expression.field('test').equalValue('union-b'))
+            .limit(5);
+        final snapshot = await firestore
+            .pipeline()
+            .collection('pipeline-e2e')
+            .where(Expression.field('test').equalValue('union-a'))
+            .limit(5)
+            .union(other)
+            .execute();
+        expectResultCount(snapshot, 6);
+      },
+    );
   });
 }

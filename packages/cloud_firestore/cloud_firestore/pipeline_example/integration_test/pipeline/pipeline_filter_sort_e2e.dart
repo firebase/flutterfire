@@ -14,7 +14,9 @@ void runPipelineFilterSortTests() {
 
     setUpAll(() {
       firestore = FirebaseFirestore.instanceFor(
-          app: Firebase.app(), databaseId: 'firestore-pipeline-test');
+        app: Firebase.app(),
+        databaseId: 'firestore-pipeline-test',
+      );
     });
 
     test('where + limit returns expected count and data', () async {

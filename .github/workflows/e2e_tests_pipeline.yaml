@@ -4,26 +4,25 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-# on:
-#   pull_request:
-#     paths:
-#       - 'packages/cloud_firestore/cloud_firestore/pipeline_example/**'
-#       - 'packages/cloud_firestore/cloud_firestore/lib/**'
-#       - '.github/workflows/e2e_tests_pipeline.yaml'
-#   push:
-#     branches:
-#       - main
-#       - firestore-pipelines-dart-api-v2
-#       - master
-#     paths:
-#       - 'packages/cloud_firestore/cloud_firestore/pipeline_example/**'
-#       - 'packages/cloud_firestore/cloud_firestore/lib/**'
-#       - '.github/workflows/e2e_tests_pipeline.yaml'
-
 on:
   pull_request:
+    paths:
+      - 'packages/cloud_firestore/cloud_firestore/pipeline_example/**'
+      - 'packages/cloud_firestore/cloud_firestore/lib/**'
+      - '.github/workflows/e2e_tests_pipeline.yaml'
   push:
-  workflow_dispatch:
+    branches:
+      - main
+      - firestore-pipelines-dart-api-v2
+      - firestore-pipelines-ios
+      - firestore-pipelines-android
+      - firestore-pipelines-web
+    paths:
+      - 'packages/cloud_firestore/cloud_firestore/pipeline_example/**'
+      - 'packages/cloud_firestore/cloud_firestore/lib/**'
+      - 'packages/cloud_firestore/cloud_firestore/ios/**'
+      - 'packages/cloud_firestore/cloud_firestore/macos/**'
+      - '.github/workflows/e2e_tests_pipeline.yaml'
 
 jobs:
   pipeline-e2e-android:
@@ -177,6 +176,8 @@ jobs:
           cache: true
           cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
           pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
+      - name: Enable Swift Package Manager for iOS
+        run: flutter config --enable-swift-package-manager
       - uses: bluefireteam/melos-action@c7dcb921b23cc520cace360b95d02b37bf09cdaa
         with:
           run-bootstrap: false
@@ -192,6 +193,12 @@ jobs:
           echo "$GOOGLE_SERVICE_INFO_PLIST" > packages/cloud_firestore/cloud_firestore/pipeline_example/ios/Runner/GoogleService-Info.plist
       - name: Bootstrap package
         run: melos bootstrap --scope "cloud_firestore*"
+      - name: Prepare iOS project for Swift Package Manager
+        working-directory: packages/cloud_firestore/cloud_firestore/pipeline_example/ios
+        run: |
+          if [ -f Podfile ]; then pod deintegrate; fi
+          rm -f Podfile Podfile.lock
+          rm -rf Pods
       - uses: futureware-tech/simulator-action@e89aa8f93d3aec35083ff49d2854d07f7186f7f5
         id: simulator
         with:

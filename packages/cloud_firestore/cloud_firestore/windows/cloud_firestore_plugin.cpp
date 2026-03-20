@@ -906,8 +906,8 @@ class TransactionStreamHandler
                     std::cout << "Transaction update" << path
                               << std::endl;  // Debug print.
 
-                    transaction.Update(reference,
-                                       ConvertToMapFieldValue(*command.data()));
+                    transaction.Update(
+                        reference, ConvertToMapFieldPathValue(*command.data()));
                     break;
                   case PigeonTransactionType::deleteType:
                     std::cout << "Transaction delete" << path
@@ -1500,7 +1500,7 @@ void CloudFirestorePlugin::WriteBatchCommit(
           batch.Delete(documentReference);
           break;
         case PigeonTransactionType::update:
-          batch.Update(documentReference, ConvertToMapFieldValue(*data));
+          batch.Update(documentReference, ConvertToMapFieldPathValue(*data));
           break;
         case PigeonTransactionType::set:
           const PigeonDocumentOption* options = transaction.option();
