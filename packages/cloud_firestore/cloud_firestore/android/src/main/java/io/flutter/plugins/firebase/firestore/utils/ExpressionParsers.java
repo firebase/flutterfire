@@ -22,7 +22,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/** Handles parsing of all expression types from Dart map representations to Android SDK objects. */
+/**
+ * Parses Dart pipeline expression maps into Android {@link Expression} / {@link BooleanExpression}
+ * types. {@link #parseBooleanExpression}'s default delegates to {@link #parseExpression} when the
+ * name is a value expression that yields a boolean (e.g. aliased comparisons).
+ */
 class ExpressionParsers {
   private static final String TAG = "ExpressionParsers";
 
@@ -37,17 +41,80 @@ class ExpressionParsers {
     R apply(Expression left, Expression right);
   }
 
+  @SuppressWarnings("unchecked")
+  private static Map<String, Object> argsOf(@NonNull Map<String, Object> expressionMap) {
+    Map<String, Object> args = (Map<String, Object>) expressionMap.get("args");
+    return args != null ? args : new HashMap<>();
+  }
+
+  @SuppressWarnings("unchecked")
+  private Expression parseChild(@NonNull Map<String, Object> args, @NonNull String key) {
+    return parseExpression((Map<String, Object>) args.get(key));
+  }
+
+  /** Parses a list of nested expression maps (e.g. {@code values}) to {@link Expression}s. */
+  private List<Expression> parseExpressionMaps(@NonNull List<Map<String, Object>> maps) {
+    Expression[] out = new Expression[maps.size()];
+    for (int i = 0; i < maps.size(); i++) {
+      out[i] = parseExpression(maps.get(i));
+    }
+    return Arrays.asList(out);
+  }
+
+  private BooleanExpression parseBinaryComparisonNamed(
+      @NonNull String name, @NonNull Map<String, Object> args) {
+    switch (name) {
+      case "equal":
+        return parseBinaryComparison(args, (left, right) -> left.equal(right));
+      case "not_equal":
+        return parseBinaryComparison(args, (left, right) -> left.notEqual(right));
+      case "greater_than":
+        return parseBinaryComparison(args, (left, right) -> left.greaterThan(right));
+      case "greater_than_or_equal":
+        return parseBinaryComparison(args, (left, right) -> left.greaterThanOrEqual(right));
+      case "less_than":
+        return parseBinaryComparison(args, (left, right) -> left.lessThan(right));
+      case "less_than_or_equal":
+        return parseBinaryComparison(args, (left, right) -> left.lessThanOrEqual(right));
+      default:
+        throw new IllegalArgumentException("Not a binary comparison expression: " + name);
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  private BooleanExpression parseEqualAny(@NonNull Map<String, Object> args) {
+    Map<String, Object> valueMap = (Map<String, Object>) args.get("value");
+    List<Map<String, Object>> valuesMaps = (List<Map<String, Object>>) args.get("values");
+    Expression value = parseExpression(valueMap);
+    return value.equalAny(parseExpressionMaps(valuesMaps));
+  }
+
+  @SuppressWarnings("unchecked")
+  private BooleanExpression parseNotEqualAny(@NonNull Map<String, Object> args) {
+    Map<String, Object> valueMap = (Map<String, Object>) args.get("value");
+    List<Map<String, Object>> valuesMaps = (List<Map<String, Object>>) args.get("values");
+    Expression value = parseExpression(valueMap);
+    return value.notEqualAny(parseExpressionMaps(valuesMaps));
+  }
+
+  @SuppressWarnings("unchecked")
+  private BooleanExpression parseArrayContainsElement(@NonNull Map<String, Object> args) {
+    Map<String, Object> arrayMap = (Map<String, Object>) args.get("array");
+    Map<String, Object> elementMap = (Map<String, Object>) args.get("element");
+    Expression array = parseExpression(arrayMap);
+    Expression element = parseExpression(elementMap);
+    return array.arrayContains(element);
+  }
+
   /** Parses an expression from a map representation. */
   @SuppressWarnings("unchecked")
   Expression parseExpression(@NonNull Map<String, Object> expressionMap) {
     String name = (String) expressionMap.get("name");
     if (name == null) {
-      // Might be a field reference directly (legacy format)
       if (expressionMap.containsKey("field_name")) {
         String fieldName = (String) expressionMap.get("field_name");
         return Expression.field(fieldName);
       }
-      // Check for field in args (current format)
       Map<String, Object> argsCheck = (Map<String, Object>) expressionMap.get("args");
       if (argsCheck != null && argsCheck.containsKey("field")) {
         String fieldName = (String) argsCheck.get("field");
@@ -56,12 +123,11 @@ class ExpressionParsers {
       throw new IllegalArgumentException("Expression must have a 'name' field");
     }
 
-    Map<String, Object> args = (Map<String, Object>) expressionMap.get("args");
-    if (args == null) {
-      args = new HashMap<>();
-    }
+    Map<String, Object> args = argsOf(expressionMap);
 
     switch (name) {
+      case "null":
+        return Expression.nullValue();
       case "field":
         {
           String fieldName = (String) args.get("field");
@@ -74,7 +140,6 @@ class ExpressionParsers {
         {
           Object value = args.get("value");
           if (value instanceof Map) {
-            @SuppressWarnings("unchecked")
             Map<String, Object> valueMap = (Map<String, Object>) value;
             String path = (String) valueMap.get("path");
             return Expression.constant(firestore.document(path));
@@ -88,20 +153,13 @@ class ExpressionParsers {
           Expression expr = parseExpression(exprMap);
           return expr.alias(alias);
         }
-        // Comparison operations
       case "equal":
-        return parseBinaryComparison(args, (left, right) -> left.equal(right));
       case "not_equal":
-        return parseBinaryComparison(args, (left, right) -> left.notEqual(right));
       case "greater_than":
-        return parseBinaryComparison(args, (left, right) -> left.greaterThan(right));
       case "greater_than_or_equal":
-        return parseBinaryComparison(args, (left, right) -> left.greaterThanOrEqual(right));
       case "less_than":
-        return parseBinaryComparison(args, (left, right) -> left.lessThan(right));
       case "less_than_or_equal":
-        return parseBinaryComparison(args, (left, right) -> left.lessThanOrEqual(right));
-        // Arithmetic operations
+        return parseBinaryComparisonNamed(name, args);
       case "add":
         return parseBinaryOperation(args, (left, right) -> left.add(right));
       case "subtract":
@@ -112,7 +170,6 @@ class ExpressionParsers {
         return parseBinaryOperation(args, (left, right) -> left.divide(right));
       case "modulo":
         return parseBinaryOperation(args, (left, right) -> left.mod(right));
-        // Logic operations
       case "and":
         {
           List<Map<String, Object>> exprMaps = (List<Map<String, Object>>) args.get("expressions");
@@ -134,7 +191,6 @@ class ExpressionParsers {
           BooleanExpression expr = parseBooleanExpression(exprMap);
           return Expression.not(expr);
         }
-        // String / array value expressions
       case "concat":
         {
           List<Map<String, Object>> exprMaps = (List<Map<String, Object>>) args.get("expressions");
@@ -153,25 +209,13 @@ class ExpressionParsers {
           return Expression.concat(first, second, others);
         }
       case "length":
-        {
-          Map<String, Object> exprMap = (Map<String, Object>) args.get("expression");
-          return Expression.length(parseExpression(exprMap));
-        }
+        return Expression.length(parseChild(args, "expression"));
       case "to_lower_case":
-        {
-          Map<String, Object> exprMap = (Map<String, Object>) args.get("expression");
-          return Expression.toLower(parseExpression(exprMap));
-        }
+        return Expression.toLower(parseChild(args, "expression"));
       case "to_upper_case":
-        {
-          Map<String, Object> exprMap = (Map<String, Object>) args.get("expression");
-          return Expression.toUpper(parseExpression(exprMap));
-        }
+        return Expression.toUpper(parseChild(args, "expression"));
       case "trim":
-        {
-          Map<String, Object> exprMap = (Map<String, Object>) args.get("expression");
-          return Expression.trim(parseExpression(exprMap));
-        }
+        return Expression.trim(parseChild(args, "expression"));
       case "substring":
         {
           Map<String, Object> exprMap = (Map<String, Object>) args.get("expression");
@@ -180,7 +224,6 @@ class ExpressionParsers {
           Expression stringExpr = parseExpression(exprMap);
           Expression startExpr = parseExpression(startMap);
           Expression endExpr = parseExpression(endMap);
-          // Android uses (stringExpression, index, length). Dart uses (expression, start, end).
           Expression lengthExpr = Expression.subtract(endExpr, startExpr);
           return Expression.substring(stringExpr, startExpr, lengthExpr);
         }
@@ -196,19 +239,13 @@ class ExpressionParsers {
           Map<String, Object> delimiterMap = (Map<String, Object>) args.get("delimiter");
           return Expression.join(parseExpression(arrayMap), parseExpression(delimiterMap));
         }
-        // Numeric
       case "abs":
-        {
-          Map<String, Object> exprMap = (Map<String, Object>) args.get("expression");
-          return Expression.abs(parseExpression(exprMap));
-        }
+        return Expression.abs(parseChild(args, "expression"));
       case "negate":
         {
-          Map<String, Object> exprMap = (Map<String, Object>) args.get("expression");
-          Expression expr = parseExpression(exprMap);
+          Expression expr = parseChild(args, "expression");
           return Expression.subtract(Expression.constant(0), expr);
         }
-        // Array expressions
       case "array_concat":
         {
           Map<String, Object> firstMap = (Map<String, Object>) args.get("first");
@@ -231,24 +268,14 @@ class ExpressionParsers {
           return result;
         }
       case "array_length":
-        {
-          Map<String, Object> exprMap = (Map<String, Object>) args.get("expression");
-          return Expression.arrayLength(parseExpression(exprMap));
-        }
+        return Expression.arrayLength(parseChild(args, "expression"));
       case "array_reverse":
-        {
-          Map<String, Object> exprMap = (Map<String, Object>) args.get("expression");
-          return Expression.arrayReverse(parseExpression(exprMap));
-        }
+        return Expression.arrayReverse(parseChild(args, "expression"));
       case "array_sum":
-        {
-          Map<String, Object> exprMap = (Map<String, Object>) args.get("expression");
-          return Expression.arraySum(parseExpression(exprMap));
-        }
+        return Expression.arraySum(parseChild(args, "expression"));
       case "array_slice":
         throw new UnsupportedOperationException(
             "Expression type 'array_slice' is not supported on Android Firestore pipeline API");
-        // Conditional / logic value expressions
       case "if_absent":
         {
           Map<String, Object> exprMap = (Map<String, Object>) args.get("expression");
@@ -271,12 +298,8 @@ class ExpressionParsers {
           Expression elseExpr = parseExpression(elseMap);
           return Expression.conditional(condition, thenExpr, elseExpr);
         }
-        // Document / path
       case "document_id":
-        {
-          Map<String, Object> exprMap = (Map<String, Object>) args.get("expression");
-          return Expression.documentId(parseExpression(exprMap));
-        }
+        return Expression.documentId(parseChild(args, "expression"));
       case "document_id_from_ref":
         {
           String path = (String) args.get("doc_ref");
@@ -286,18 +309,13 @@ class ExpressionParsers {
           return Expression.documentId(firestore.document(path));
         }
       case "collection_id":
-        {
-          Map<String, Object> exprMap = (Map<String, Object>) args.get("expression");
-          return Expression.collectionId(parseExpression(exprMap));
-        }
-        // Map operations
+        return Expression.collectionId(parseChild(args, "expression"));
       case "map_get":
         {
           Map<String, Object> mapMap = (Map<String, Object>) args.get("map");
           Map<String, Object> keyMap = (Map<String, Object>) args.get("key");
           return Expression.mapGet(parseExpression(mapMap), parseExpression(keyMap));
         }
-        // Timestamp
       case "current_timestamp":
         return Expression.currentTimestamp();
       case "timestamp_add":
@@ -333,7 +351,6 @@ class ExpressionParsers {
           }
           return Expression.timestampTruncate(parseExpression(timestampMap), unit);
         }
-        // Array / map literals
       case "array":
         {
           List<?> elements = (List<?>) args.get("elements");
@@ -374,7 +391,6 @@ class ExpressionParsers {
           }
           return Expression.map(parsed);
         }
-        // Bitwise
       case "bit_and":
         return parseBinaryOperation(args, (left, right) -> left.bitAnd(right));
       case "bit_or":
@@ -382,10 +398,7 @@ class ExpressionParsers {
       case "bit_xor":
         return parseBinaryOperation(args, (left, right) -> left.bitXor(right));
       case "bit_not":
-        {
-          Map<String, Object> exprMap = (Map<String, Object>) args.get("expression");
-          return parseExpression(exprMap).bitNot();
-        }
+        return parseChild(args, "expression").bitNot();
       case "bit_left_shift":
         {
           Map<String, Object> exprMap = (Map<String, Object>) args.get("expression");
@@ -398,13 +411,24 @@ class ExpressionParsers {
           Map<String, Object> amountMap = (Map<String, Object>) args.get("amount");
           return parseExpression(exprMap).bitRightShift(parseExpression(amountMap));
         }
+      case "is_absent":
+        return parseIsAbsent(args);
+      case "is_error":
+        return parseIsError(args);
+      case "exists":
+        return parseExists(args);
+      case "as_boolean":
+        return parseAsBoolean(args);
+      case "array_contains_all":
+        return parseArrayContainsAll(args);
+      case "array_contains_any":
+        return parseArrayContainsAny(args);
       default:
         Log.w(TAG, "Unsupported expression type: " + name);
         throw new UnsupportedOperationException("Expression type not yet implemented: " + name);
     }
   }
 
-  /** Helper to parse binary comparison operations (equal, not_equal, greater_than, etc.). */
   @SuppressWarnings("unchecked")
   private BooleanExpression parseBinaryComparison(
       @NonNull Map<String, Object> args, @NonNull BinaryExpressionOp<BooleanExpression> operation) {
@@ -415,7 +439,6 @@ class ExpressionParsers {
     return operation.apply(left, right);
   }
 
-  /** Helper to parse binary arithmetic operations (add, subtract, multiply, etc.). */
   @SuppressWarnings("unchecked")
   private Expression parseBinaryOperation(
       @NonNull Map<String, Object> args, @NonNull BinaryExpressionOp<Expression> operation) {
@@ -426,10 +449,43 @@ class ExpressionParsers {
     return operation.apply(left, right);
   }
 
-  /**
-   * Parses a boolean expression from a map representation. Boolean expressions are used in where
-   * clauses and return BooleanExpression.
-   */
+  private BooleanExpression parseIsAbsent(@NonNull Map<String, Object> args) {
+    return parseChild(args, "expression").isAbsent();
+  }
+
+  private BooleanExpression parseIsError(@NonNull Map<String, Object> args) {
+    return parseChild(args, "expression").isError();
+  }
+
+  private BooleanExpression parseExists(@NonNull Map<String, Object> args) {
+    return parseChild(args, "expression").exists();
+  }
+
+  private BooleanExpression parseAsBoolean(@NonNull Map<String, Object> args) {
+    return parseChild(args, "expression").asBoolean();
+  }
+
+  @SuppressWarnings("unchecked")
+  private BooleanExpression parseArrayContainsAll(@NonNull Map<String, Object> args) {
+    Map<String, Object> arrayMap = (Map<String, Object>) args.get("array");
+    Expression array = parseExpression(arrayMap);
+    if (args.get("values") != null) {
+      List<Map<String, Object>> valuesMaps = (List<Map<String, Object>>) args.get("values");
+      return array.arrayContainsAll(parseExpressionMaps(valuesMaps));
+    }
+    Map<String, Object> arrayExprMap = (Map<String, Object>) args.get("array_expression");
+    Expression arrayExpr = parseExpression(arrayExprMap);
+    return array.arrayContainsAll(arrayExpr);
+  }
+
+  @SuppressWarnings("unchecked")
+  private BooleanExpression parseArrayContainsAny(@NonNull Map<String, Object> args) {
+    Map<String, Object> arrayMap = (Map<String, Object>) args.get("array");
+    List<Map<String, Object>> valuesMaps = (List<Map<String, Object>>) args.get("values");
+    Expression array = parseExpression(arrayMap);
+    return array.arrayContainsAny(parseExpressionMaps(valuesMaps));
+  }
+
   @SuppressWarnings("unchecked")
   BooleanExpression parseBooleanExpression(@NonNull Map<String, Object> expressionMap) {
     String name = (String) expressionMap.get("name");
@@ -437,26 +493,16 @@ class ExpressionParsers {
       throw new IllegalArgumentException("BooleanExpression must have a 'name' field");
     }
 
-    Map<String, Object> args = (Map<String, Object>) expressionMap.get("args");
-    if (args == null) {
-      args = new HashMap<>();
-    }
+    Map<String, Object> args = argsOf(expressionMap);
 
     switch (name) {
-        // Comparison operations - these return BooleanExpression
       case "equal":
-        return parseBinaryComparison(args, (left, right) -> left.equal(right));
       case "not_equal":
-        return parseBinaryComparison(args, (left, right) -> left.notEqual(right));
       case "greater_than":
-        return parseBinaryComparison(args, (left, right) -> left.greaterThan(right));
       case "greater_than_or_equal":
-        return parseBinaryComparison(args, (left, right) -> left.greaterThanOrEqual(right));
       case "less_than":
-        return parseBinaryComparison(args, (left, right) -> left.lessThan(right));
       case "less_than_or_equal":
-        return parseBinaryComparison(args, (left, right) -> left.lessThanOrEqual(right));
-        // Logical operations - these return BooleanExpression
+        return parseBinaryComparisonNamed(name, args);
       case "and":
         {
           List<Map<String, Object>> exprMaps = (List<Map<String, Object>>) args.get("expressions");
@@ -465,19 +511,7 @@ class ExpressionParsers {
       case "or":
         {
           List<Map<String, Object>> exprMaps = (List<Map<String, Object>>) args.get("expressions");
-          if (exprMaps == null || exprMaps.isEmpty()) {
-            throw new IllegalArgumentException("'or' requires at least one expression");
-          }
-          if (exprMaps.size() == 1) {
-            return parseBooleanExpression(exprMaps.get(0));
-          }
-          // BooleanExpression.or() takes exactly 2 parameters, so we chain them
-          BooleanExpression result = parseBooleanExpression(exprMaps.get(0));
-          for (int i = 1; i < exprMaps.size(); i++) {
-            BooleanExpression next = parseBooleanExpression(exprMaps.get(i));
-            result = BooleanExpression.or(result, next);
-          }
-          return result;
+          return ExpressionHelpers.parseOrExpression(exprMaps, this);
         }
       case "xor":
         {
@@ -490,94 +524,25 @@ class ExpressionParsers {
           BooleanExpression expr = parseBooleanExpression(exprMap);
           return expr.not();
         }
-        // Boolean-specific expressions
       case "is_absent":
-        {
-          Map<String, Object> exprMap = (Map<String, Object>) args.get("expression");
-          Expression expr = parseExpression(exprMap);
-          return expr.isAbsent();
-        }
+        return parseIsAbsent(args);
       case "is_error":
-        {
-          Map<String, Object> exprMap = (Map<String, Object>) args.get("expression");
-          Expression expr = parseExpression(exprMap);
-          return expr.isError();
-        }
+        return parseIsError(args);
       case "exists":
-        {
-          Map<String, Object> exprMap = (Map<String, Object>) args.get("expression");
-          Expression expr = parseExpression(exprMap);
-          return expr.exists();
-        }
+        return parseExists(args);
       case "array_contains":
-        {
-          Map<String, Object> arrayMap = (Map<String, Object>) args.get("array");
-          Map<String, Object> elementMap = (Map<String, Object>) args.get("element");
-          Expression array = parseExpression(arrayMap);
-          Expression element = parseExpression(elementMap);
-          return array.arrayContains(element);
-        }
+        return parseArrayContainsElement(args);
       case "array_contains_all":
-        {
-          Map<String, Object> arrayMap = (Map<String, Object>) args.get("array");
-          Expression array = parseExpression(arrayMap);
-          if (args.get("values") != null) {
-            List<Map<String, Object>> valuesMaps = (List<Map<String, Object>>) args.get("values");
-            Expression[] values = new Expression[valuesMaps.size()];
-            for (int i = 0; i < valuesMaps.size(); i++) {
-              values[i] = parseExpression(valuesMaps.get(i));
-            }
-            return array.arrayContainsAll(Arrays.asList(values));
-          } else {
-            Map<String, Object> arrayExprMap = (Map<String, Object>) args.get("array_expression");
-            Expression arrayExpr = parseExpression(arrayExprMap);
-            return array.arrayContainsAll(arrayExpr);
-          }
-        }
+        return parseArrayContainsAll(args);
       case "array_contains_any":
-        {
-          Map<String, Object> arrayMap = (Map<String, Object>) args.get("array");
-          List<Map<String, Object>> valuesMaps = (List<Map<String, Object>>) args.get("values");
-          Expression array = parseExpression(arrayMap);
-          Expression[] values = new Expression[valuesMaps.size()];
-          for (int i = 0; i < valuesMaps.size(); i++) {
-            values[i] = parseExpression(valuesMaps.get(i));
-          }
-          return array.arrayContainsAny(Arrays.asList(values));
-        }
+        return parseArrayContainsAny(args);
       case "equal_any":
-        {
-          Map<String, Object> valueMap = (Map<String, Object>) args.get("value");
-          List<Map<String, Object>> valuesMaps = (List<Map<String, Object>>) args.get("values");
-          Expression value = parseExpression(valueMap);
-          Expression[] values = new Expression[valuesMaps.size()];
-          for (int i = 0; i < valuesMaps.size(); i++) {
-            values[i] = parseExpression(valuesMaps.get(i));
-          }
-          return value.equalAny(Arrays.asList(values));
-        }
+        return parseEqualAny(args);
       case "not_equal_any":
-        {
-          Map<String, Object> valueMap = (Map<String, Object>) args.get("value");
-          List<Map<String, Object>> valuesMaps = (List<Map<String, Object>>) args.get("values");
-          Expression value = parseExpression(valueMap);
-          Expression[] values = new Expression[valuesMaps.size()];
-          for (int i = 0; i < valuesMaps.size(); i++) {
-            values[i] = parseExpression(valuesMaps.get(i));
-          }
-          return value.notEqualAny(Arrays.asList(values));
-        }
+        return parseNotEqualAny(args);
       case "as_boolean":
-        {
-          Map<String, Object> exprMap = (Map<String, Object>) args.get("expression");
-          Expression expr = parseExpression(exprMap);
-          return expr.asBoolean();
-        }
-        // Handle filter expressions (PipelineFilter)
-      case "filter":
-        return parseFilterExpression(args);
+        return parseAsBoolean(args);
       default:
-        // Try parsing as a regular expression first, then cast to BooleanExpression if possible
         Expression expr = parseExpression(expressionMap);
         if (expr instanceof BooleanExpression) {
           return (BooleanExpression) expr;
@@ -588,93 +553,6 @@ class ExpressionParsers {
     }
   }
 
-  /**
-   * Parses a filter expression (PipelineFilter) which can have operator-based or field-based forms.
-   */
-  @SuppressWarnings("unchecked")
-  private BooleanExpression parseFilterExpression(@NonNull Map<String, Object> args) {
-    // PipelineFilter can have various forms - check for operator-based or field-based
-    if (args.containsKey("operator")) {
-      String operator = (String) args.get("operator");
-      List<Map<String, Object>> exprMaps = (List<Map<String, Object>>) args.get("expressions");
-      if ("and".equals(operator)) {
-        return ExpressionHelpers.parseAndExpression(exprMaps, this);
-      } else if ("or".equals(operator)) {
-        if (exprMaps == null || exprMaps.isEmpty()) {
-          throw new IllegalArgumentException("'or' requires at least one expression");
-        }
-        if (exprMaps.size() == 1) {
-          return parseBooleanExpression(exprMaps.get(0));
-        }
-        // BooleanExpression.or() takes exactly 2 parameters, so we chain them
-        BooleanExpression result = parseBooleanExpression(exprMaps.get(0));
-        for (int i = 1; i < exprMaps.size(); i++) {
-          BooleanExpression next = parseBooleanExpression(exprMaps.get(i));
-          result = BooleanExpression.or(result, next);
-        }
-        return result;
-      }
-    }
-    // Field-based filter - parse field and create appropriate comparison
-    String fieldName = (String) args.get("field");
-    Expression fieldExpr = Expression.field(fieldName);
-
-    return parseFieldBasedFilter(fieldExpr, args);
-  }
-
-  /** Parses field-based filter comparisons (isEqualTo, isGreaterThan, etc.). */
-  @SuppressWarnings("unchecked")
-  private BooleanExpression parseFieldBasedFilter(
-      @NonNull Expression fieldExpr, @NonNull Map<String, Object> args) {
-    if (args.containsKey("isEqualTo")) {
-      Object value = args.get("isEqualTo");
-      return value instanceof Map
-          ? fieldExpr.equal(parseExpression((Map<String, Object>) value))
-          : fieldExpr.equal(value);
-    }
-    if (args.containsKey("isNotEqualTo")) {
-      Object value = args.get("isNotEqualTo");
-      return value instanceof Map
-          ? fieldExpr.notEqual(parseExpression((Map<String, Object>) value))
-          : fieldExpr.notEqual(value);
-    }
-    if (args.containsKey("isGreaterThan")) {
-      Object value = args.get("isGreaterThan");
-      return value instanceof Map
-          ? fieldExpr.greaterThan(parseExpression((Map<String, Object>) value))
-          : fieldExpr.greaterThan(value);
-    }
-    if (args.containsKey("isGreaterThanOrEqualTo")) {
-      Object value = args.get("isGreaterThanOrEqualTo");
-      return value instanceof Map
-          ? fieldExpr.greaterThanOrEqual(parseExpression((Map<String, Object>) value))
-          : fieldExpr.greaterThanOrEqual(value);
-    }
-    if (args.containsKey("isLessThan")) {
-      Object value = args.get("isLessThan");
-      return value instanceof Map
-          ? fieldExpr.lessThan(parseExpression((Map<String, Object>) value))
-          : fieldExpr.lessThan(value);
-    }
-    if (args.containsKey("isLessThanOrEqualTo")) {
-      Object value = args.get("isLessThanOrEqualTo");
-      return value instanceof Map
-          ? fieldExpr.lessThanOrEqual(parseExpression((Map<String, Object>) value))
-          : fieldExpr.lessThanOrEqual(value);
-    }
-    if (args.containsKey("arrayContains")) {
-      Object value = args.get("arrayContains");
-      return value instanceof Map
-          ? fieldExpr.arrayContains(parseExpression((Map<String, Object>) value))
-          : fieldExpr.arrayContains(value);
-    }
-    throw new IllegalArgumentException("Unsupported filter expression format");
-  }
-
-  /**
-   * Parses a Selectable from a map representation. Selectables are Field or AliasedExpression
-   * types.
-   */
   @SuppressWarnings("unchecked")
   Selectable parseSelectable(@NonNull Map<String, Object> expressionMap) {
     Expression expr = parseExpression(expressionMap);
@@ -686,19 +564,16 @@ class ExpressionParsers {
     return (Selectable) expr;
   }
 
-  /** Parses an aggregate function from a map representation. */
   @SuppressWarnings("unchecked")
   AggregateFunction parseAggregateFunction(@NonNull Map<String, Object> aggregateMap) {
     String functionName = (String) aggregateMap.get("function");
     if (functionName == null) {
-      // Try "name" as fallback
       functionName = (String) aggregateMap.get("name");
     }
     Map<String, Object> args = (Map<String, Object>) aggregateMap.get("args");
-    Map<String, Object> exprMap;
     Expression expr = null;
     if (args != null) {
-      exprMap = (Map<String, Object>) args.get("expression");
+      Map<String, Object> exprMap = (Map<String, Object>) args.get("expression");
       expr = parseExpression(exprMap);
     }
 
@@ -722,13 +597,8 @@ class ExpressionParsers {
     }
   }
 
-  /**
-   * Parses an AliasedAggregate from a Dart AliasedAggregateFunction map representation. Since Dart
-   * API only accepts AliasedAggregateFunction, we can directly construct AliasedAggregate.
-   */
   @SuppressWarnings("unchecked")
   AliasedAggregate parseAliasedAggregate(@NonNull Map<String, Object> aggregateMap) {
-    // Check if this is an aliased aggregate function (Dart AliasedAggregateFunction format)
     String name = (String) aggregateMap.get("name");
     if ("alias".equals(name)) {
       Map<String, Object> args = (Map<String, Object>) aggregateMap.get("args");
@@ -736,15 +606,10 @@ class ExpressionParsers {
       Map<String, Object> aggregateFunctionMap =
           (Map<String, Object>) args.get("aggregate_function");
 
-      // Parse the underlying aggregate function
       AggregateFunction function = parseAggregateFunction(aggregateFunctionMap);
-
-      // Apply the alias to get AliasedAggregate
       return function.alias(alias);
     }
 
-    // If not in alias format, it might be a direct aggregate function with alias field
-    // This shouldn't happen with the new Dart API, but handle for backward compatibility
     String alias = (String) aggregateMap.get("alias");
     if (alias != null) {
       AggregateFunction function = parseAggregateFunction(aggregateMap);
@@ -755,23 +620,19 @@ class ExpressionParsers {
         "Aggregate function must have an alias. Expected AliasedAggregateFunction format.");
   }
 
-  /** Parses an AggregateStage from a map representation. */
   @SuppressWarnings("unchecked")
   AggregateStage parseAggregateStage(@NonNull Map<String, Object> stageMap) {
-    // Parse accumulators (required)
     List<Map<String, Object>> accumulatorMaps =
         (List<Map<String, Object>>) stageMap.get("accumulators");
     if (accumulatorMaps == null || accumulatorMaps.isEmpty()) {
       throw new IllegalArgumentException("AggregateStage must have at least one accumulator");
     }
 
-    // Parse accumulators as AliasedAggregate
     AliasedAggregate[] accumulators = new AliasedAggregate[accumulatorMaps.size()];
     for (int i = 0; i < accumulatorMaps.size(); i++) {
       accumulators[i] = parseAliasedAggregate(accumulatorMaps.get(i));
     }
 
-    // Build AggregateStage with accumulators
     AggregateStage aggregateStage;
     if (accumulators.length == 1) {
       aggregateStage = AggregateStage.withAccumulators(accumulators[0]);
@@ -781,23 +642,17 @@ class ExpressionParsers {
       aggregateStage = AggregateStage.withAccumulators(accumulators[0], rest);
     }
 
-    // Parse optional groups and add them using withGroups()
-    // withGroups(group: Selectable, vararg additionalGroups: Any)
     List<Map<String, Object>> groupMaps = (List<Map<String, Object>>) stageMap.get("groups");
     if (groupMaps != null && !groupMaps.isEmpty()) {
-      // Parse first group as Selectable (required)
       Selectable firstGroup = parseSelectable(groupMaps.get(0));
 
       if (groupMaps.size() == 1) {
-        // Only one group
         aggregateStage = aggregateStage.withGroups(firstGroup);
       } else {
-        // Multiple groups - parse remaining as Any[] (varargs)
         Object[] additionalGroups = new Object[groupMaps.size() - 1];
         for (int i = 1; i < groupMaps.size(); i++) {
-          // Parse as Expression first, then convert to Object (can be Selectable or Any)
-          Expression expr = parseExpression(groupMaps.get(i));
-          additionalGroups[i - 1] = expr;
+          Expression groupExpr = parseExpression(groupMaps.get(i));
+          additionalGroups[i - 1] = groupExpr;
         }
         aggregateStage = aggregateStage.withGroups(firstGroup, additionalGroups);
       }
@@ -806,18 +661,10 @@ class ExpressionParsers {
     return aggregateStage;
   }
 
-  /** Parses AggregateOptions from a map representation. */
-  @SuppressWarnings("unchecked")
   AggregateOptions parseAggregateOptions(@NonNull Map<String, Object> optionsMap) {
-    // For now, AggregateOptions is empty, but this method is ready for future options
     return new AggregateOptions();
   }
 
-  /**
-   * Converts a Dart DistanceMeasure enum name to Android FindNearestStage.DistanceMeasure enum.
-   * Dart enum values: cosine, euclidean, dotProduct Android enum values: COSINE, EUCLIDEAN,
-   * DOT_PRODUCT
-   */
   FindNearestStage.DistanceMeasure parseDistanceMeasure(@NonNull String dartEnumName) {
     switch (dartEnumName) {
       case "cosine":
