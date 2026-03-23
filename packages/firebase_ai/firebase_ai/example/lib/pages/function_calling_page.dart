@@ -126,7 +126,10 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
         'destination':
             Schema.string(description: 'The city or country to travel to.'),
         'travelers': Schema.integer(
-            description: 'Number of travelers.', minimum: 1, maximum: 10),
+          description: 'Number of travelers.',
+          minimum: 1,
+          maximum: 10,
+        ),
         'travelClass': Schema.enumString(
           enumValues: ['ECONOMY', 'BUSINESS', 'FIRST'],
           description: 'The preferred travel class.',
