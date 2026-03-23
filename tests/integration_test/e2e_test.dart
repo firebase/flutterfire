@@ -7,6 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
 import 'cloud_functions/cloud_functions_e2e_test.dart' as cloud_functions;
+import 'firebase_ai/firebase_ai_e2e_test.dart' as firebase_ai;
 import 'firebase_analytics/firebase_analytics_e2e_test.dart'
     as firebase_analytics;
 import 'firebase_app_check/firebase_app_check_e2e_test.dart'
@@ -51,6 +52,7 @@ void main() {
     }
     if (kIsWeb) {
       firebase_core.main();
+      firebase_ai.main();
       firebase_auth.main();
       firebase_database.main();
       firebase_crashlytics.main();
@@ -87,6 +89,7 @@ void main() {
 
 void runAllTests() {
   firebase_core.main();
+  firebase_ai.main();
   firebase_auth.main();
   firebase_database.main();
   firebase_crashlytics.main();
