@@ -317,7 +317,7 @@ class PipelineExpressionParserWeb {
         return result;
       case 'not':
         final expr = argsMap[_kExpression] as Map<String, dynamic>;
-        final boolExpr = toBooleanExpression(expr) as JSAny;
+        final boolExpr = toBooleanExpression(expr) as JSAny?;
         return _pipelines.not(boolExpr);
       case 'exists':
         return _pipelines.exists(_expr(argsMap, _kExpression));
