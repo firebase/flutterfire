@@ -479,16 +479,6 @@ abstract class Expression implements PipelineSerializable {
     return _ArraySumExpression(this);
   }
 
-  /// Extracts a slice from this array
-  Expression arraySlice(Expression start, Expression end) {
-    return _ArraySliceExpression(this, start, end);
-  }
-
-  /// Extracts a slice using literal indices
-  Expression arraySliceLiteral(int start, int end) {
-    return _ArraySliceExpression(this, Constant(start), Constant(end));
-  }
-
   // ============================================================================
   // AGGREGATE FUNCTIONS
   // ============================================================================
@@ -1307,15 +1297,6 @@ abstract class Expression implements PipelineSerializable {
   /// Gets field array length
   static Expression arrayLengthField(String arrayFieldName) {
     return _ArrayLengthExpression(Field(arrayFieldName));
-  }
-
-  /// Slices array
-  static Expression arraySliceStatic(
-    Expression array,
-    Expression start,
-    Expression end,
-  ) {
-    return _ArraySliceExpression(array, start, end);
   }
 
   /// Checks array contains
@@ -2177,30 +2158,6 @@ class _ArraySumExpression extends FunctionExpression {
       'name': name,
       'args': {
         'expression': expression.toMap(),
-      },
-    };
-  }
-}
-
-/// Represents an array slice function expression
-class _ArraySliceExpression extends FunctionExpression {
-  final Expression array;
-  final Expression start;
-  final Expression end;
-
-  _ArraySliceExpression(this.array, this.start, this.end);
-
-  @override
-  String get name => 'array_slice';
-
-  @override
-  Map<String, dynamic> toMap() {
-    return {
-      'name': name,
-      'args': {
-        'array': array.toMap(),
-        'start': start.toMap(),
-        'end': end.toMap(),
       },
     };
   }
