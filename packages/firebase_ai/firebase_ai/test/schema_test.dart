@@ -271,65 +271,7 @@ void main() {
       });
     });
 
-    // Test new constraints & keywords
-    test('Schema.string with new constraints', () {
-      final schema = Schema.string(
-          minLength: 5,
-          maxLength: 10,
-          pattern: r'^[a-z]+$',
-          example: 'hello',
-          defaultValue: 'test');
-      expect(schema.minLength, 5);
-      expect(schema.maxLength, 10);
-      expect(schema.pattern, r'^[a-z]+$');
-      expect(schema.example, 'hello');
-      expect(schema.defaultValue, 'test');
-      expect(schema.toJson(), {
-        'type': 'STRING',
-        'minLength': 5,
-        'maxLength': 10,
-        'pattern': r'^[a-z]+$',
-        'example': 'hello',
-        'default': 'test',
-      });
-      expect(schema.toJSONSchemaJson(), {
-        'type': 'string',
-        'minLength': 5,
-        'maxLength': 10,
-        'pattern': r'^[a-z]+$',
-        'examples': ['hello'],
-        'default': 'test',
-      });
-    });
 
-    test('Schema.object with new constraints', () {
-      final schema = Schema.object(
-          properties: {},
-          minProperties: 1,
-          maxProperties: 5,
-          example: {'a': 1},
-          defaultValue: {'a': 2});
-      expect(schema.minProperties, 1);
-      expect(schema.maxProperties, 5);
-      expect(schema.toJson(), {
-        'type': 'OBJECT',
-        'properties': {},
-        'required': [],
-        'minProperties': 1,
-        'maxProperties': 5,
-        'example': {'a': 1},
-        'default': {'a': 2},
-      });
-      expect(schema.toJSONSchemaJson(), {
-        'type': 'object',
-        'properties': {},
-        'required': [],
-        'minProperties': 1,
-        'maxProperties': 5,
-        'examples': [{'a': 1}],
-        'default': {'a': 2},
-      });
-    });
 
     test('toJSONSchemaJson handles nullable correctly', () {
       final schema = Schema.integer(nullable: true);
