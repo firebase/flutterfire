@@ -8,8 +8,8 @@
 import PackageDescription
 
 let library_version = "5.0.8"
-let firebase_sdk_version = Version("12.9.0")!
-let shared_spm_version = Version("4.5.0-firebase-core-swift")!
+let firebase_sdk_version: Version = "12.9.0"
+let shared_spm_version: Version = "4.5.0-firebase-core-swift"
 
 let package = Package(
   name: "firebase_crashlytics",

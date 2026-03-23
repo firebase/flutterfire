@@ -156,14 +156,14 @@ void updatePluginPackageSwiftVersions(
 
       // Update firebase_sdk_version
       content = content.replaceAll(
-        RegExp(r'let firebase_sdk_version = Version\("[^"]+"\)!'),
-        'let firebase_sdk_version = Version("$firebaseiOSVersion")!',
+        RegExp('let firebase_sdk_version: Version = "[^"]+"'),
+        'let firebase_sdk_version: Version = "$firebaseiOSVersion"',
       );
 
       // Update shared_spm_version
       content = content.replaceAll(
-        RegExp(r'let shared_spm_version = Version\("[^"]+"\)!'),
-        'let shared_spm_version = Version("$firebaseCoreVersion-firebase-core-swift")!',
+        RegExp('let shared_spm_version: Version = "[^"]+"'),
+        'let shared_spm_version: Version = "$firebaseCoreVersion-firebase-core-swift"',
       );
 
       // Update library_version or library_version_string from pubspec version
