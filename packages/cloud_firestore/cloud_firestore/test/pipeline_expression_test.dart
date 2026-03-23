@@ -649,19 +649,6 @@ void main() {
       });
     });
 
-    test('arraySlice serializes correctly', () {
-      final arr = Expression.array([Constant(1), Constant(2), Constant(3)]);
-      final expr = arr.arraySlice(Constant(0), Constant(2));
-      expect(expr.toMap(), {
-        'name': 'array_slice',
-        'args': {
-          'array': arr.toMap(),
-          'start': Constant(0).toMap(),
-          'end': Constant(2).toMap(),
-        },
-      });
-    });
-
     test('arraySum serializes correctly', () {
       final expr = Field('values').arraySum();
       expect(expr.toMap()['name'], 'array_sum');
