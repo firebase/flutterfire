@@ -869,20 +869,6 @@ class _PipelineExamplePageState extends State<PipelineExamplePage> {
         .execute(),
   );
 
-  // 39: array_slice
-  Future<void> _runPipeline39() => _runPipeline(
-    'Pipeline 39: where(has tags) → addFields arraySlice(tags, 0, 2)',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .where(Expression.field('tags').exists())
-        .addFields(
-          Expression.field('tags').arraySliceLiteral(0, 2).as('tags_slice'),
-        )
-        .limit(3)
-        .execute(),
-  );
-
   // 40: array (construct)
   Future<void> _runPipeline40() => _runPipeline(
     'Pipeline 40: addFields array([title, score, year])',
@@ -949,6 +935,33 @@ class _PipelineExamplePageState extends State<PipelineExamplePage> {
         .where(Expression.notEqualAny(Expression.field('category'), ['news']))
         .select(Expression.field('title'), Expression.field('category'))
         .limit(5)
+        .execute(),
+  );
+
+  // 45: asBoolean (coerce numeric to boolean)
+  Future<void> _runPipeline45() => _runPipeline(
+    'Pipeline 45: addFields asBoolean(score)',
+    () => _firestore
+        .pipeline()
+        .collection(_collectionId)
+        .addFields(Expression.field('score').asBoolean().as('score_bool'))
+        .limit(4)
+        .execute(),
+  );
+
+  // 46: isError (missing field vs divide-by-zero)
+  Future<void> _runPipeline46() => _runPipeline(
+    'Pipeline 46: addFields isError(missing field), isError(score/0)',
+    () => _firestore
+        .pipeline()
+        .collection(_collectionId)
+        .addFields(
+          Expression.field('missing_field').isError().as('missing_is_err'),
+          Expression.field(
+            'score',
+          ).divide(Expression.constant(0)).isError().as('div0_is_err'),
+        )
+        .limit(3)
         .execute(),
   );
 
@@ -1044,12 +1057,13 @@ class _PipelineExamplePageState extends State<PipelineExamplePage> {
                   _btn('37: arrayLen', _runPipeline37),
                   _btn('37b: arraySum', _runPipeline37b),
                   _btn('38: arrayConcat', _runPipeline38),
-                  _btn('39: arraySlice', _runPipeline39),
                   _btn('40: array()', _runPipeline40),
                   _btn('41: map()', _runPipeline41),
                   _btn('42: arrayContainsAll', _runPipeline42),
                   _btn('43: equalAny', _runPipeline43),
                   _btn('44: notEqualAny', _runPipeline44),
+                  _btn('45: asBoolean', _runPipeline45),
+                  _btn('46: isError', _runPipeline46),
                 ],
               ),
             ),
