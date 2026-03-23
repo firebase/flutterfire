@@ -56,12 +56,11 @@ void setupQueryTests() {
         'onValue with startAt(value, key) and no orderBy should not crash',
         () async {
           await ref.set({
-            'a': 1,
-            'b': 2,
+            't1': {'timestamp': 1, 'value': 'old'},
+            't2': {'timestamp': 1000, 'value': 'current'},
           });
 
-          final event =
-              await ref.startAt(1772319600000, key: 'start').onValue.first;
+          final event = await ref.startAt(1000, key: 't2').onValue.first;
 
           expect(event.type, DatabaseEventType.value);
         },
