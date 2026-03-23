@@ -1,3 +1,7 @@
+## 0.2.3
+
+ - **FEAT**(messaging,web): add support for debug tokens on Web ([#18057](https://github.com/firebase/flutterfire/issues/18057)). ([b853386e](https://github.com/firebase/flutterfire/commit/b853386e987d686eab4b8fd9b8dad14eda97479c))
+
 ## 0.2.2+3
 
  - Update a dependency to the latest release.
