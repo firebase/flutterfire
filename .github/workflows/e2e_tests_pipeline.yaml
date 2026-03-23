@@ -22,6 +22,7 @@ on:
       - 'packages/cloud_firestore/cloud_firestore/lib/**'
       - 'packages/cloud_firestore/cloud_firestore/ios/**'
       - 'packages/cloud_firestore/cloud_firestore/macos/**'
+      - 'packages/cloud_firestore/cloud_firestore_web/**'
       - '.github/workflows/e2e_tests_pipeline.yaml'
 
 jobs:
