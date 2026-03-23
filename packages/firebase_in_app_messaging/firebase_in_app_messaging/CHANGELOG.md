@@ -1,3 +1,7 @@
+## 0.9.1
+
+ - **FEAT**(ios): migrate iOS to UIScene lifecycle ([#18054](https://github.com/firebase/flutterfire/issues/18054)). ([3ffa4110](https://github.com/firebase/flutterfire/commit/3ffa411098132fd5182a84be4e7a226106bc7451))
+
 ## 0.9.0+7
 
  - Update a dependency to the latest release.

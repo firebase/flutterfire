@@ -1,3 +1,8 @@
+## 3.10.0
+
+ - **FEAT**(firebaseai): add proper headers for X-Android-Package, X-Android-Cert and x-ios-bundle-identifier ([#18076](https://github.com/firebase/flutterfire/issues/18076)). ([1351e94e](https://github.com/firebase/flutterfire/commit/1351e94ed3213c458a955cebf05802f12838d5f7))
+ - **FEAT**(ios): migrate iOS to UIScene lifecycle ([#18054](https://github.com/firebase/flutterfire/issues/18054)). ([3ffa4110](https://github.com/firebase/flutterfire/commit/3ffa411098132fd5182a84be4e7a226106bc7451))
+
 ## 3.9.0
 
  - **FIX**: resolve lint issues ([#18017](https://github.com/firebase/flutterfire/issues/18017)). ([e8e85397](https://github.com/firebase/flutterfire/commit/e8e85397ccdcab6c8b84348884b4673f86b79d1c))

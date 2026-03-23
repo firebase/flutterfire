@@ -1,3 +1,8 @@
+## 0.4.2
+
+ - **FEAT**(messaging,web): add support for debug tokens on Web ([#18057](https://github.com/firebase/flutterfire/issues/18057)). ([b853386e](https://github.com/firebase/flutterfire/commit/b853386e987d686eab4b8fd9b8dad14eda97479c))
+ - **FEAT**(ios): migrate iOS to UIScene lifecycle ([#18054](https://github.com/firebase/flutterfire/issues/18054)). ([3ffa4110](https://github.com/firebase/flutterfire/commit/3ffa411098132fd5182a84be4e7a226106bc7451))
+
 ## 0.4.1+5
 
  - Update a dependency to the latest release.
