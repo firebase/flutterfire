@@ -68,7 +68,9 @@ final class TemplateImagenModel extends BaseTemplateApiClientModel {
         TemplateTask.templatePredict,
         templateId,
         inputs,
-        null,
+        null, // history
+        null, // tools
+        null, // toolConfig
         (jsonObject) =>
             parseImagenGenerationResponse<ImagenInlineImage>(jsonObject),
       );

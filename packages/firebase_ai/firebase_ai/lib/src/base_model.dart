@@ -36,6 +36,7 @@ import 'imagen/imagen_edit.dart';
 import 'imagen/imagen_reference.dart';
 import 'live_api.dart';
 import 'live_session.dart';
+import 'server_template/template_tool.dart';
 import 'tool.dart';
 
 part 'generative_model.dart';
@@ -364,6 +365,8 @@ abstract class BaseTemplateApiClientModel extends BaseApiClientModel {
       String templateId,
       Map<String, Object?>? inputs,
       Iterable<Content>? history,
+      List<TemplateTool>? tools,
+      TemplateToolConfig? toolConfig,
       T Function(Map<String, Object?>) parse) {
     Map<String, Object?> body = {};
     if (inputs != null) {
@@ -371,6 +374,12 @@ abstract class BaseTemplateApiClientModel extends BaseApiClientModel {
     }
     if (history != null) {
       body['history'] = history.map((c) => c.toJson()).toList();
+    }
+    if (tools != null) {
+      body['tools'] = tools.map((t) => t.toJson()).toList();
+    }
+    if (toolConfig != null) {
+      body['toolConfig'] = toolConfig.toJson();
     }
     return _client
         .makeRequest(templateTaskUri(task, templateId), body)
@@ -386,6 +395,8 @@ abstract class BaseTemplateApiClientModel extends BaseApiClientModel {
       String templateId,
       Map<String, Object?>? inputs,
       Iterable<Content>? history,
+      List<TemplateTool>? tools,
+      TemplateToolConfig? toolConfig,
       T Function(Map<String, Object?>) parse) {
     Map<String, Object?> body = {};
     if (inputs != null) {
@@ -393,6 +404,12 @@ abstract class BaseTemplateApiClientModel extends BaseApiClientModel {
     }
     if (history != null) {
       body['history'] = history.map((c) => c.toJson()).toList();
+    }
+    if (tools != null) {
+      body['tools'] = tools.map((t) => t.toJson()).toList();
+    }
+    if (toolConfig != null) {
+      body['toolConfig'] = toolConfig.toJson();
     }
     final response =
         _client.streamRequest(templateTaskUri(task, templateId), body);
