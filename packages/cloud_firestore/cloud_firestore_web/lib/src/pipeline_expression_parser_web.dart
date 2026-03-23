@@ -83,6 +83,9 @@ class PipelineExpressionParserWeb {
       case 'is_error':
         return (_expr(argsMap, _kExpression) as interop.ExpressionJsImpl)
             .isError();
+      case 'is_absent':
+        return (_expr(argsMap, _kExpression) as interop.ExpressionJsImpl)
+            .isAbsent();
       case 'substring':
         return _pipelines.substring(
           _expr(argsMap, _kExpression),
@@ -217,6 +220,32 @@ class PipelineExpressionParserWeb {
             .toList()
             .toJS;
         return _pipelines.array(jsElements);
+      case 'array_contains':
+        return _jsArrayContains(argsMap) as interop.ExpressionJsImpl;
+      case 'array_contains_any':
+        final js = _jsArrayContainsAny(argsMap);
+        if (js == null) {
+          throw UnsupportedError('array_contains_any requires values');
+        }
+        return js as interop.ExpressionJsImpl;
+      case 'array_contains_all':
+        final js = _jsArrayContainsAll(argsMap);
+        if (js == null) {
+          throw UnsupportedError(
+            'array_contains_all requires values or array_expression',
+          );
+        }
+        return js as interop.ExpressionJsImpl;
+      case 'equal_any':
+        final js = _jsEqualAny(argsMap);
+        if (js == null) throw UnsupportedError('equal_any requires values');
+        return js as interop.ExpressionJsImpl;
+      case 'not_equal_any':
+        final js = _jsNotEqualAny(argsMap);
+        if (js == null) {
+          throw UnsupportedError('not_equal_any requires values');
+        }
+        return js as interop.ExpressionJsImpl;
       case 'map':
         final data = argsMap['data'] as Map<String, dynamic>?;
         if (data == null) {
@@ -298,50 +327,15 @@ class PipelineExpressionParserWeb {
       case 'is_error':
         return _pipelines.isError(_expr(argsMap, _kExpression));
       case 'array_contains':
-        return _pipelines.arrayContains(
-            _expr(argsMap, 'array'), _expr(argsMap, 'element'));
+        return _jsArrayContains(argsMap);
       case 'array_contains_any':
-        final valuesMaps = argsMap['values'] as List<dynamic>?;
-        if (valuesMaps == null || valuesMaps.isEmpty) return null;
-        final valuesJs = valuesMaps
-            .map((v) => toExpression(v as Map<String, dynamic>))
-            .toList()
-            .toJS;
-        return _pipelines.arrayContainsAny(_expr(argsMap, 'array'), valuesJs);
+        return _jsArrayContainsAny(argsMap);
       case 'array_contains_all':
-        final arrayExpr = _expr(argsMap, 'array');
-        final valuesArg = argsMap['values'] as List<dynamic>?;
-        final arrayExpressionArg = argsMap['array_expression'];
-        if (valuesArg != null && valuesArg.isNotEmpty) {
-          final valuesJs = valuesArg
-              .map((v) => toExpression(v as Map<String, dynamic>))
-              .toList()
-              .toJS;
-          return _pipelines.arrayContainsAll(arrayExpr, valuesJs);
-        }
-        if (arrayExpressionArg != null) {
-          return _pipelines.arrayContainsAll(arrayExpr,
-              toExpression(arrayExpressionArg as Map<String, dynamic>));
-        }
-        return null;
+        return _jsArrayContainsAll(argsMap);
       case 'equal_any':
-        final valueExpr = _expr(argsMap, 'value');
-        final valuesMaps = argsMap['values'] as List<dynamic>?;
-        if (valuesMaps == null || valuesMaps.isEmpty) return null;
-        final valuesJs = valuesMaps
-            .map((v) => toExpression(v as Map<String, dynamic>))
-            .toList()
-            .toJS;
-        return _pipelines.equalAny(valueExpr, valuesJs);
+        return _jsEqualAny(argsMap);
       case 'not_equal_any':
-        final valueExpr = _expr(argsMap, 'value');
-        final valuesMaps = argsMap['values'] as List<dynamic>?;
-        if (valuesMaps == null || valuesMaps.isEmpty) return null;
-        final valuesJs = valuesMaps
-            .map((v) => toExpression(v as Map<String, dynamic>))
-            .toList()
-            .toJS;
-        return _pipelines.notEqualAny(valueExpr, valuesJs);
+        return _jsNotEqualAny(argsMap);
       case 'filter':
         return _buildFilterExpression(argsMap);
       default:
@@ -572,6 +566,62 @@ class PipelineExpressionParserWeb {
   /// Resolves [key] from [argsMap] as a value expression.
   JSAny _expr(Map<String, dynamic> argsMap, String key) =>
       toExpression(argsMap[key] as Map<String, dynamic>);
+
+  JSAny _jsArrayContains(Map<String, dynamic> argsMap) =>
+      _pipelines.arrayContains(
+        _expr(argsMap, 'array'),
+        _expr(argsMap, 'element'),
+      );
+
+  JSAny? _jsArrayContainsAny(Map<String, dynamic> argsMap) {
+    final valuesMaps = argsMap['values'] as List<dynamic>?;
+    if (valuesMaps == null || valuesMaps.isEmpty) return null;
+    final valuesJs = valuesMaps
+        .map((v) => toExpression(v as Map<String, dynamic>))
+        .toList()
+        .toJS;
+    return _pipelines.arrayContainsAny(_expr(argsMap, 'array'), valuesJs);
+  }
+
+  JSAny? _jsArrayContainsAll(Map<String, dynamic> argsMap) {
+    final arrayExpr = _expr(argsMap, 'array');
+    final valuesArg = argsMap['values'] as List<dynamic>?;
+    final arrayExpressionArg = argsMap['array_expression'];
+    if (valuesArg != null && valuesArg.isNotEmpty) {
+      final valuesJs = valuesArg
+          .map((v) => toExpression(v as Map<String, dynamic>))
+          .toList()
+          .toJS;
+      return _pipelines.arrayContainsAll(arrayExpr, valuesJs);
+    }
+    if (arrayExpressionArg != null) {
+      return _pipelines.arrayContainsAll(
+        arrayExpr,
+        toExpression(arrayExpressionArg as Map<String, dynamic>),
+      );
+    }
+    return null;
+  }
+
+  JSAny? _jsEqualAny(Map<String, dynamic> argsMap) {
+    final valuesMaps = argsMap['values'] as List<dynamic>?;
+    if (valuesMaps == null || valuesMaps.isEmpty) return null;
+    final valuesJs = valuesMaps
+        .map((v) => toExpression(v as Map<String, dynamic>))
+        .toList()
+        .toJS;
+    return _pipelines.equalAny(_expr(argsMap, 'value'), valuesJs);
+  }
+
+  JSAny? _jsNotEqualAny(Map<String, dynamic> argsMap) {
+    final valuesMaps = argsMap['values'] as List<dynamic>?;
+    if (valuesMaps == null || valuesMaps.isEmpty) return null;
+    final valuesJs = valuesMaps
+        .map((v) => toExpression(v as Map<String, dynamic>))
+        .toList()
+        .toJS;
+    return _pipelines.notEqualAny(_expr(argsMap, 'value'), valuesJs);
+  }
 
   interop.ExpressionJsImpl _binaryArithmetic(
     Map<String, dynamic> argsMap,
