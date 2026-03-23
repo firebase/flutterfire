@@ -24,18 +24,6 @@ void main(List<String> args) async {
 
   final firebaseiOSVersion = getFirebaseiOSVersion(firebaseCoreIosVersionFile);
 
-  for (final package in workspace.filteredPackages.values) {
-    final packageSwiftFile =
-        File('${package.path}/ios/${package.name}/Package.swift');
-
-    // only want to write this for plugins that support Swift
-    // ignore core as it already has canonical firebase_sdk_version.rb
-    if (packageSwiftFile.existsSync() && package.name != 'firebase_core') {
-      final versionFile =
-          File('${package.path}/ios/generated_firebase_sdk_version.txt');
-      versionFile.writeAsStringSync(firebaseiOSVersion);
-    }
-  }
   // Update the versions in root Package.swift
   updateVersionsPackageSwift(firebaseiOSVersion);
   // Update hard-coded versions in all plugin Package.swift files
