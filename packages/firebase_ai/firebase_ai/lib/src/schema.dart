@@ -328,6 +328,9 @@ final class Schema {
   String? pattern;
 
   /// Example of the object.
+  ///
+  /// When using [toJSONSchemaJson], this will be serialized as a
+  /// single-element array under the `examples` key.
   Object? example;
 
   /// Default value of the field.
