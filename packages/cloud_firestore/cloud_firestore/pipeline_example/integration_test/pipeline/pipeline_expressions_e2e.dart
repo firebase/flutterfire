@@ -658,28 +658,6 @@ void runPipelineExpressionsTests() {
       expect(snapshot.result[0].data()!['mapped'], {'left': 1, 'right': 2});
     });
 
-    test(
-      'addFields mapFromPairs',
-      () async {
-        final snapshot = await expressionsDocScore50(
-          Expression.mapFromPairs([
-            Expression.constant('k1'),
-            Expression.constant(1),
-            Expression.constant('k2'),
-            Expression.constant('v2'),
-          ]).as('mapped_pairs'),
-        );
-        expectResultCount(snapshot, 1);
-        expect(snapshot.result[0].data()!['mapped_pairs'], {
-          'k1': 1,
-          'k2': 'v2',
-        });
-      },
-      skip:
-          defaultTargetPlatform == TargetPlatform.android ||
-          defaultTargetPlatform == TargetPlatform.iOS,
-    );
-
     test('addFields nullValue', () async {
       final snapshot = await expressionsDocScore50(
         Expression.nullValue().as('explicit_null'),

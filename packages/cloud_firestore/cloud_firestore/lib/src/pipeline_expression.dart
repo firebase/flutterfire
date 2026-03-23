@@ -644,11 +644,6 @@ abstract class Expression implements PipelineSerializable {
     return _MapExpression(data.map((k, v) => MapEntry(k, _toExpression(v))));
   }
 
-  /// Creates a map expression from alternating key-value expressions
-  static Expression mapFromPairs(List<Expression> keyValuePairs) {
-    return _MapFromPairsExpression(keyValuePairs);
-  }
-
   /// Returns the current timestamp
   static Expression currentTimestamp() {
     return _CurrentTimestampExpression();
@@ -2843,26 +2838,6 @@ class _MapExpression extends FunctionExpression {
       'name': name,
       'args': {
         'data': data.map((k, v) => MapEntry(k, v.toMap())),
-      },
-    };
-  }
-}
-
-/// Represents a mapFromPairs expression
-class _MapFromPairsExpression extends FunctionExpression {
-  final List<Expression> keyValuePairs;
-
-  _MapFromPairsExpression(this.keyValuePairs);
-
-  @override
-  String get name => 'map_from_pairs';
-
-  @override
-  Map<String, dynamic> toMap() {
-    return {
-      'name': name,
-      'args': {
-        'pairs': keyValuePairs.map((expr) => expr.toMap()).toList(),
       },
     };
   }
