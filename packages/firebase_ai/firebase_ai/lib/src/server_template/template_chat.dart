@@ -140,30 +140,71 @@ final class TemplateChatSession {
   /// When there are no candidates in the response, the [message] and response
   /// are ignored and will not be recorded in the [history].
   Stream<GenerateContentResponse> sendMessageStream(Content message) {
-    final controller = StreamController<GenerateContentResponse>(sync: true);
+    final controller = StreamController<GenerateContentResponse>();
     _mutex.acquire().then((lock) async {
       try {
-        final responses = _templateHistoryGenerateContentStream(
-          _history.followedBy([message]),
-          _templateId,
-          inputs: _inputs,
-        );
-        final content = <Content>[];
-        await for (final response in responses) {
-          if (response.candidates case [final candidate, ...]) {
-            content.add(candidate.content);
+        final requestHistory = <Content>[message];
+        var turn = 0;
+        while (turn < _maxTurns) {
+          final responses = _templateHistoryGenerateContentStream(
+            _history.followedBy(requestHistory),
+            _templateId,
+            inputs: _inputs,
+          );
+
+          final turnChunks = <GenerateContentResponse>[];
+          await for (final response in responses) {
+            turnChunks.add(response);
+            controller.add(response);
           }
-          controller.add(response);
+          if (turnChunks.isEmpty) break;
+          final aggregatedContent = historyAggregate(turnChunks.map((r) {
+            final content = r.candidates.firstOrNull?.content;
+            if (content == null) {
+              throw Exception('No content in response candidate');
+            }
+            return content;
+          }).toList());
+
+          final functionCalls =
+              aggregatedContent.parts.whereType<FunctionCall>().toList();
+
+          final shouldAutoExecute = _autoFunctions != null &&
+              _autoFunctions!.isNotEmpty &&
+              functionCalls.isNotEmpty &&
+              functionCalls.every((c) => _autoFunctions.containsKey(c.name));
+
+          if (!shouldAutoExecute) {
+            _history.addAll(requestHistory);
+            _history.add(aggregatedContent);
+            return;
+          }
+
+          requestHistory.add(aggregatedContent);
+          final functionResponseFutures =
+              functionCalls.map((functionCall) async {
+            final function = _autoFunctions![functionCall.name];
+
+            Object? result;
+            try {
+              result = await function!.callable(functionCall.args);
+            } catch (e) {
+              result = e.toString();
+            }
+            return FunctionResponse(functionCall.name, {'result': result});
+          });
+          final functionResponseParts =
+              await Future.wait(functionResponseFutures);
+          requestHistory.add(Content.functionResponses(functionResponseParts));
+          turn++;
         }
-        if (content.isNotEmpty) {
-          _history.add(message);
-          _history.add(historyAggregate(content));
-        }
+        throw Exception('Max turns of $_maxTurns reached.');
       } catch (e, s) {
         controller.addError(e, s);
+      } finally {
+        lock.release();
+        unawaited(controller.close());
       }
-      lock.release();
-      unawaited(controller.close());
     });
     return controller.stream;
   }

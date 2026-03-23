@@ -15,6 +15,7 @@ import 'dart:async';
 
 import '../schema.dart';
 
+/// A collection of template tools.
 final class TemplateTool {
   // ignore: public_member_api_docs
   TemplateTool._(this._functionDeclarations);
@@ -44,6 +45,7 @@ final class TemplateTool {
       };
 }
 
+/// A function declaration for a template tool.
 class TemplateFunctionDeclaration {
   // ignore: public_member_api_docs
   TemplateFunctionDeclaration(this.name,
@@ -69,8 +71,10 @@ class TemplateFunctionDeclaration {
       };
 }
 
+/// A function declaration for a template tool that can be called by the model.
 final class TemplateAutoFunctionDeclaration
     extends TemplateFunctionDeclaration {
+  // ignore: public_member_api_docs
   TemplateAutoFunctionDeclaration(
       {required String name,
       required this.callable,
@@ -82,4 +86,13 @@ final class TemplateAutoFunctionDeclaration
   /// The callable function that this declaration represents.
   final FutureOr<Map<String, Object?>> Function(Map<String, Object?> args)
       callable;
+}
+
+/// Config for template tools to use with server prompts.
+final class TemplateToolConfig {
+  // ignore: public_member_api_docs
+  TemplateToolConfig();
+
+  /// Convert to json object.
+  Map<String, Object?> toJson() => {};
 }

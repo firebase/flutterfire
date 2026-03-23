@@ -185,6 +185,32 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
                   if (!_loading)
                     IconButton(
                       onPressed: () async {
+                        await _serverTemplateAutoStreamFunctionCall(
+                          _textController.text,
+                        );
+                      },
+                      icon: Icon(
+                        Icons.smart_toy,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      tooltip: 'Auto Stream Function Calling',
+                    ),
+                  if (!_loading)
+                    IconButton(
+                      onPressed: () async {
+                        await _serverTemplateStreamFunctionCall(
+                          _textController.text,
+                        );
+                      },
+                      icon: Icon(
+                        Icons.settings_system_daydream,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      tooltip: 'Stream Function Calling',
+                    ),
+                  if (!_loading)
+                    IconButton(
+                      onPressed: () async {
                         await _serverTemplateChat(_textController.text);
                       },
                       icon: Icon(
@@ -362,6 +388,102 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
           _messages
               .add(MessageData(text: functionResponse?.text, fromUser: false));
         }
+      }
+    });
+  }
+
+  Future<void> _serverTemplateAutoStreamFunctionCall(String message) async {
+    await _handleServerTemplateMessage(message, (message) async {
+      var responseStream = _chatAutoFunctionSession?.sendMessageStream(
+        Content.text(message),
+      );
+
+      var accumulatedText = '';
+      MessageData? modelMessage;
+
+      if (responseStream != null) {
+        await for (final response in responseStream) {
+          if (response.text case final text?) {
+            accumulatedText += text;
+            if (modelMessage == null) {
+              modelMessage =
+                  MessageData(text: accumulatedText, fromUser: false);
+              _messages.add(modelMessage);
+            } else {
+              modelMessage = modelMessage.copyWith(text: accumulatedText);
+              _messages.last = modelMessage;
+            }
+            setState(() {});
+          }
+        }
+      }
+
+      if (accumulatedText.isEmpty) {
+        _messages.add(MessageData(
+            text: 'No text response from model.', fromUser: false));
+      }
+    });
+  }
+
+  Future<void> _serverTemplateStreamFunctionCall(String message) async {
+    await _handleServerTemplateMessage(message, (message) async {
+      var responseStream = _chatFunctionSession?.sendMessageStream(
+        Content.text(message),
+      );
+
+      GenerateContentResponse? lastResponse;
+      if (responseStream != null) {
+        await for (final response in responseStream) {
+          lastResponse = response;
+        }
+      }
+
+      final functionCalls = lastResponse?.functionCalls.toList();
+      if (functionCalls != null && functionCalls.isNotEmpty) {
+        final functionCall = functionCalls.first;
+        if (functionCall.name == 'fetchWeather') {
+          final location =
+              functionCall.args['location']! as Map<String, dynamic>;
+          final date = functionCall.args['date']! as String;
+          final city = location['city'] as String;
+          final state = location['state'] as String;
+          final functionResult =
+              await fetchWeather(Location(city, state), date);
+
+          // Stream the function response
+          var responseStream2 = _chatFunctionSession?.sendMessageStream(
+            Content.functionResponse(functionCall.name, functionResult),
+          );
+
+          var accumulatedText = '';
+          MessageData? modelMessage;
+
+          if (responseStream2 != null) {
+            await for (final response in responseStream2) {
+              if (response.text case final text?) {
+                accumulatedText += text;
+                if (modelMessage == null) {
+                  modelMessage =
+                      MessageData(text: accumulatedText, fromUser: false);
+                  _messages.add(modelMessage);
+                } else {
+                  modelMessage = modelMessage.copyWith(text: accumulatedText);
+                  _messages.last = modelMessage;
+                }
+                setState(() {});
+              }
+            }
+          }
+          if (accumulatedText.isEmpty) {
+            _messages.add(MessageData(
+                text: 'No text response from model.', fromUser: false));
+          }
+        }
+      } else if (lastResponse?.text case final text?) {
+        _messages.add(MessageData(text: text, fromUser: false));
+      } else {
+        _messages.add(MessageData(
+            text: 'No text response from model.', fromUser: false));
       }
     });
   }
