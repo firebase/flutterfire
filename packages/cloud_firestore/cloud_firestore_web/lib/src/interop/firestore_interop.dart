@@ -451,6 +451,9 @@ extension type ExpressionJsImpl._(JSObject _) implements JSObject {
   external ExpressionJsImpl toUpper();
   external ExpressionJsImpl trim();
   external ExpressionJsImpl arrayReverse();
+  external ExpressionJsImpl asBoolean();
+  external ExpressionJsImpl isError();
+  external ExpressionJsImpl isAbsent();
 }
 
 extension type SelectableJsImpl._(JSObject _) implements JSObject {

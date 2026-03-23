@@ -77,6 +77,12 @@ class PipelineExpressionParserWeb {
       case 'trim':
         return (_expr(argsMap, _kExpression) as interop.ExpressionJsImpl)
             .trim();
+      case 'as_boolean':
+        return (_expr(argsMap, _kExpression) as interop.ExpressionJsImpl)
+            .asBoolean();
+      case 'is_error':
+        return (_expr(argsMap, _kExpression) as interop.ExpressionJsImpl)
+            .isError();
       case 'substring':
         return _pipelines.substring(
           _expr(argsMap, _kExpression),
@@ -287,7 +293,8 @@ class PipelineExpressionParserWeb {
       case 'exists':
         return _pipelines.exists(_expr(argsMap, _kExpression));
       case 'is_absent':
-        return _pipelines.isAbsent(_expr(argsMap, _kExpression));
+        return (_expr(argsMap, _kExpression) as interop.ExpressionJsImpl)
+            .isAbsent();
       case 'is_error':
         return _pipelines.isError(_expr(argsMap, _kExpression));
       case 'array_contains':
