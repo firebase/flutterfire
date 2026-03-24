@@ -184,6 +184,8 @@ void updateLibraryVersionPureSwiftPlugins() {
     'firebase_ml_model_downloader',
     'firebase_app_installations',
     'cloud_functions',
+    'firebase_remote_config',
+    'firebase_app_check',
   ];
 
   for (final package in packages) {

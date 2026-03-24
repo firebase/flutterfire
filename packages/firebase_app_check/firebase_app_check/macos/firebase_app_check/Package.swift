@@ -7,7 +7,6 @@
 
 import PackageDescription
 
-let library_version = "0.4.1-5"
 let firebase_sdk_version: Version = "12.9.0"
 let shared_spm_version: Version = "4.5.0-firebase-core-swift"
 
@@ -33,11 +32,6 @@ let package = Package(
       ],
       resources: [
         .process("Resources"),
-      ],
-      cSettings: [
-        .headerSearchPath("include"),
-        .define("LIBRARY_VERSION", to: "\"\(library_version)\""),
-        .define("LIBRARY_NAME", to: "\"flutter-fire-appcheck\""),
       ]
     ),
   ]

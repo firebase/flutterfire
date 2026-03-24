@@ -10,6 +10,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import '../../firebase_app_check_platform_interface.dart';
+import '../pigeon/messages.pigeon.dart';
 import 'utils/exception.dart';
 import 'utils/provider_to_string.dart';
 
@@ -19,10 +20,8 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
       : super(appInstance: app) {
     _tokenChangesListeners[app.name] = StreamController<String?>.broadcast();
 
-    channel.invokeMethod<String>('FirebaseAppCheck#registerTokenListener', {
-      'appName': app.name,
-    }).then((channelName) {
-      final events = EventChannel(channelName!, channel.codec);
+    _pigeonApi.registerTokenListener(app.name).then((channelName) {
+      final events = EventChannel(channelName);
       events
           .receiveGuardedBroadcastStream(onError: convertPlatformException)
           .listen(
@@ -44,10 +43,8 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
       _methodChannelFirebaseAppCheckInstances =
       <String, MethodChannelFirebaseAppCheck>{};
 
-  /// The [MethodChannel] used to communicate with the native plugin
-  static MethodChannel channel = const MethodChannel(
-    'plugins.flutter.io/firebase_app_check',
-  );
+  /// The Pigeon API used for platform communication.
+  final FirebaseAppCheckHostApi _pigeonApi = FirebaseAppCheckHostApi();
 
   /// Returns a stub instance to allow the platform interface to access
   /// the class instance statically.
@@ -90,28 +87,33 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
     AppleAppCheckProvider? providerApple,
   }) async {
     try {
-      await channel.invokeMethod<void>('FirebaseAppCheck#activate', {
-        'appName': app.name,
-        // Allow value to pass for debug mode for unit testing
-        if (defaultTargetPlatform == TargetPlatform.android || kDebugMode)
-          'androidProvider': getAndroidProviderString(
-            legacyProvider: androidProvider,
-            newProvider: providerAndroid,
-          ),
-        if (providerAndroid is AndroidDebugProvider &&
-            providerAndroid.debugToken != null)
-          'androidDebugToken': providerAndroid.debugToken,
-        if (defaultTargetPlatform == TargetPlatform.iOS ||
-            defaultTargetPlatform == TargetPlatform.macOS ||
-            kDebugMode)
-          'appleProvider': getAppleProviderString(
-            legacyProvider: appleProvider,
-            newProvider: providerApple,
-          ),
-        if (providerApple is AppleDebugProvider &&
-            providerApple.debugToken != null)
-          'appleDebugToken': providerApple.debugToken,
-      });
+      String? debugToken;
+      if (providerAndroid is AndroidDebugProvider &&
+          providerAndroid.debugToken != null) {
+        debugToken = providerAndroid.debugToken;
+      } else if (providerApple is AppleDebugProvider &&
+          providerApple.debugToken != null) {
+        debugToken = providerApple.debugToken;
+      }
+
+      await _pigeonApi.activate(
+        app.name,
+        defaultTargetPlatform == TargetPlatform.android || kDebugMode
+            ? getAndroidProviderString(
+                legacyProvider: androidProvider,
+                newProvider: providerAndroid,
+              )
+            : null,
+        defaultTargetPlatform == TargetPlatform.iOS ||
+                defaultTargetPlatform == TargetPlatform.macOS ||
+                kDebugMode
+            ? getAppleProviderString(
+                legacyProvider: appleProvider,
+                newProvider: providerApple,
+              )
+            : null,
+        debugToken,
+      );
     } on PlatformException catch (e, s) {
       convertPlatformException(e, s);
     }
@@ -120,12 +122,7 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
   @override
   Future<String?> getToken(bool forceRefresh) async {
     try {
-      final result = await channel.invokeMethod(
-        'FirebaseAppCheck#getToken',
-        {'appName': app.name, 'forceRefresh': forceRefresh},
-      );
-
-      return result;
+      return await _pigeonApi.getToken(app.name, forceRefresh);
     } on PlatformException catch (e, s) {
       convertPlatformException(e, s);
     }
@@ -136,12 +133,9 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
     bool isTokenAutoRefreshEnabled,
   ) async {
     try {
-      await channel.invokeMethod(
-        'FirebaseAppCheck#setTokenAutoRefreshEnabled',
-        {
-          'appName': app.name,
-          'isTokenAutoRefreshEnabled': isTokenAutoRefreshEnabled,
-        },
+      await _pigeonApi.setTokenAutoRefreshEnabled(
+        app.name,
+        isTokenAutoRefreshEnabled,
       );
     } on PlatformException catch (e, s) {
       convertPlatformException(e, s);
@@ -156,14 +150,7 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
   @override
   Future<String> getLimitedUseToken() async {
     try {
-      final result = await channel.invokeMethod(
-        'FirebaseAppCheck#getLimitedUseAppCheckToken',
-        {
-          'appName': app.name,
-        },
-      );
-
-      return result;
+      return await _pigeonApi.getLimitedUseAppCheckToken(app.name);
     } on PlatformException catch (e, s) {
       convertPlatformException(e, s);
     }
