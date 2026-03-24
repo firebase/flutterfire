@@ -113,20 +113,18 @@ void main() {
       expect(resultWithName, {'message': 'Hello, Bob!'});
     });
 
-    test('AutoFunctionDeclaration with useJSONSchema true', () async {
+    test('AutoFunctionDeclaration with JSONSchema', () async {
       final parametersSchema = {
-        'count': Schema.integer(),
+        'count': JSONSchema.integer(),
       };
 
       final autoDeclaration = AutoFunctionDeclaration(
         name: 'testSchema',
         description: 'Tests JSON Schema output.',
         parameters: parametersSchema,
-        useJSONSchema: true,
         callable: (args) async => {'result': args['count']},
       );
 
-      expect(autoDeclaration.useJSONSchema, isTrue);
       expect(autoDeclaration.toJson(), {
         'name': 'testSchema',
         'description': 'Tests JSON Schema output.',
@@ -140,19 +138,17 @@ void main() {
       });
     });
 
-    test('FunctionDeclaration with useJSONSchema true', () {
+    test('FunctionDeclaration with JSONSchema', () {
       final parametersSchema = {
-        'count': Schema.integer(),
+        'count': JSONSchema.integer(),
       };
 
       final declaration = FunctionDeclaration(
         'testSchema',
         'Tests JSON Schema output.',
         parameters: parametersSchema,
-        useJSONSchema: true,
       );
 
-      expect(declaration.useJSONSchema, isTrue);
       expect(declaration.toJson(), {
         'name': 'testSchema',
         'description': 'Tests JSON Schema output.',
@@ -162,6 +158,69 @@ void main() {
             'count': {'type': 'integer'},
           },
           'required': ['count'],
+        },
+      });
+    });
+
+    test('FunctionDeclaration mixing Schema and JSONSchema throws TypeError on toJson', () {
+      final mixedParametersSchema = {
+        'count': Schema.integer(),
+        'mixed': JSONSchema.string(),
+      };
+
+      final declaration = FunctionDeclaration(
+        'testMixedSchema',
+        'Tests mixed schemas.',
+        parameters: mixedParametersSchema,
+      );
+
+      expect(declaration.toJson, throwsA(isA<TypeError>()));
+    });
+
+    test('FunctionDeclaration with JSONSchema defs and ref', () {
+      final parametersSchema = {
+        'metadataContainer': JSONSchema.object(
+          properties: {
+            'metadata': JSONSchema.ref('#/metadata_schema'),
+          },
+          defs: {
+            'metadata_schema': JSONSchema.object(properties: {
+              'id': JSONSchema.string(),
+            }),
+          },
+        ),
+      };
+
+      final declaration = FunctionDeclaration(
+        'testDefsRef',
+        'Tests defs and ref.',
+        parameters: parametersSchema,
+      );
+
+      expect(declaration.toJson(), {
+        'name': 'testDefsRef',
+        'description': 'Tests defs and ref.',
+        'parametersJsonSchema': {
+          'type': 'object',
+          'properties': {
+            'metadataContainer': {
+              'type': 'object',
+              'properties': {
+                'metadata': {r'$ref': '#/metadata_schema'},
+              },
+              'required': ['metadata'],
+              r'$defs': {
+                'metadata_schema': {
+                  'type': 'object',
+                  'properties': {
+                    'id': {'type': 'string'},
+                  },
+                  'required': ['id'],
+                }
+              }
+            }
+          },
+          'required': ['metadataContainer'],
         },
       });
     });
