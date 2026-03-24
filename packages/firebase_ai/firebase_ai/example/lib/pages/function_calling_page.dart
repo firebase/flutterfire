@@ -165,7 +165,7 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
       name: 'processTransactions',
       description:
           'Processes a list of financial transactions using a predefined transaction model reference.',
-      useJSONSchema: true,
+      //useJSONSchema: true,
       parameters: {
         'transactionsBlock': Schema.object(
           description: 'A block containing a list of transactions.',

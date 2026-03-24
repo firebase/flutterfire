@@ -277,9 +277,9 @@ final class Schema {
   Map<String, Object> toJson() => {
         if (type != SchemaType.anyOf && type != SchemaType.ref)
           'type': type.toJson(), // Omit the field while type is anyOf or ref
-        if (ref case final ref?) r'$ref': ref,
+        if (ref case final ref?) 'ref': ref,
         if (defs case final defs?)
-          r'$defs': {
+          'defs': {
             for (final MapEntry(:key, :value) in defs.entries)
               key: value.toJson()
           },
