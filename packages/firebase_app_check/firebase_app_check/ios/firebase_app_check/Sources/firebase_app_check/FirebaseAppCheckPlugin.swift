@@ -25,7 +25,7 @@ public class FirebaseAppCheckPlugin: NSObject, FlutterPlugin,
   FLTFirebasePluginProtocol, FirebaseAppCheckHostApi {
   private var eventChannels: [String: FlutterEventChannel] = [:]
   private var streamHandlers: [String: AppCheckTokenStreamHandler] = [:]
-  private var providerFactory: AppCheckProviderFactory?
+  private var providerFactory: FlutterAppCheckProviderFactory?
 
   static let shared: FirebaseAppCheckPlugin = {
     let instance = FirebaseAppCheckPlugin()
@@ -60,11 +60,15 @@ public class FirebaseAppCheckPlugin: NSObject, FlutterPlugin,
   func activate(appName: String, androidProvider: String?, appleProvider: String?,
                 debugToken: String?,
                 completion: @escaping (Result<Void, Error>) -> Void) {
-    let app = FLTFirebasePlugin.firebaseAppNamed(appName)!
+    guard let app = FLTFirebasePlugin.firebaseAppNamed(appName) else {
+      completion(.failure(FlutterError(
+        code: "unknown", message: "Firebase app not found: \(appName)", details: nil)))
+      return
+    }
     let provider = appleProvider ?? "deviceCheck"
 
     if providerFactory == nil {
-      providerFactory = AppCheckProviderFactory()
+      providerFactory = FlutterAppCheckProviderFactory()
     }
 
     providerFactory!.configure(app: app, providerName: provider, debugToken: debugToken)
@@ -75,8 +79,13 @@ public class FirebaseAppCheckPlugin: NSObject, FlutterPlugin,
 
   func getToken(appName: String, forceRefresh: Bool,
                 completion: @escaping (Result<String?, Error>) -> Void) {
-    let app = FLTFirebasePlugin.firebaseAppNamed(appName)!
-    let appCheck = AppCheck.appCheck(app: app)
+    guard let app = FLTFirebasePlugin.firebaseAppNamed(appName),
+          let appCheck = AppCheck.appCheck(app: app)
+    else {
+      completion(.failure(FlutterError(
+        code: "unknown", message: "App Check not available for app: \(appName)", details: nil)))
+      return
+    }
 
     appCheck.token(forcingRefresh: forceRefresh) { token, error in
       if let error {
@@ -89,8 +98,13 @@ public class FirebaseAppCheckPlugin: NSObject, FlutterPlugin,
 
   func setTokenAutoRefreshEnabled(appName: String, isTokenAutoRefreshEnabled: Bool,
                                   completion: @escaping (Result<Void, Error>) -> Void) {
-    let app = FLTFirebasePlugin.firebaseAppNamed(appName)!
-    let appCheck = AppCheck.appCheck(app: app)
+    guard let app = FLTFirebasePlugin.firebaseAppNamed(appName),
+          let appCheck = AppCheck.appCheck(app: app)
+    else {
+      completion(.failure(FlutterError(
+        code: "unknown", message: "App Check not available for app: \(appName)", details: nil)))
+      return
+    }
     appCheck.isTokenAutoRefreshEnabled = isTokenAutoRefreshEnabled
     completion(.success(()))
   }
@@ -120,8 +134,13 @@ public class FirebaseAppCheckPlugin: NSObject, FlutterPlugin,
 
   func getLimitedUseAppCheckToken(appName: String,
                                   completion: @escaping (Result<String, Error>) -> Void) {
-    let app = FLTFirebasePlugin.firebaseAppNamed(appName)!
-    let appCheck = AppCheck.appCheck(app: app)
+    guard let app = FLTFirebasePlugin.firebaseAppNamed(appName),
+          let appCheck = AppCheck.appCheck(app: app)
+    else {
+      completion(.failure(FlutterError(
+        code: "unknown", message: "App Check not available for app: \(appName)", details: nil)))
+      return
+    }
 
     appCheck.limitedUseToken { token, error in
       if let error {
@@ -215,7 +234,7 @@ class AppCheckTokenStreamHandler: NSObject, FlutterStreamHandler {
 
 // MARK: - App Check Provider Factory
 
-class AppCheckProviderFactory: NSObject, AppCheckProviderFactory {
+class FlutterAppCheckProviderFactory: NSObject, AppCheckProviderFactory {
   private var providers: [String: AppCheckProviderWrapper] = [:]
 
   func createProvider(with app: FirebaseApp) -> (any AppCheckProvider)? {

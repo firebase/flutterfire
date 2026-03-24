@@ -22,8 +22,12 @@
 
 namespace firebase_app_check_windows {
 
+class TokenStreamHandler;
+
 class FirebaseAppCheckPlugin : public flutter::Plugin,
                                public FirebaseAppCheckHostApi {
+  friend class TokenStreamHandler;
+
  public:
   static void RegisterWithRegistrar(flutter::PluginRegistrarWindows* registrar);
 
