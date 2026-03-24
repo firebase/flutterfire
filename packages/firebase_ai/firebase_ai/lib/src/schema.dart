@@ -314,10 +314,10 @@ final class JSONSchema extends Schema {
     this.ref,
     this.defs,
   }) : super(
-         items: items,
-         properties: properties,
-         anyOf: anyOf,
-       );
+          items: items,
+          properties: properties,
+          anyOf: anyOf,
+        );
 
   /// Construct a schema for an object with one or more properties.
   JSONSchema.object({

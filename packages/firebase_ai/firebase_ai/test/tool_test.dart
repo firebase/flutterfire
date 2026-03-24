@@ -162,7 +162,9 @@ void main() {
       });
     });
 
-    test('FunctionDeclaration mixing Schema and JSONSchema throws TypeError on toJson', () {
+    test(
+        'FunctionDeclaration mixing Schema and JSONSchema throws TypeError on toJson',
+        () {
       final mixedParametersSchema = {
         'count': Schema.integer(),
         'mixed': JSONSchema.string(),

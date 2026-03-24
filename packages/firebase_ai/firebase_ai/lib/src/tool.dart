@@ -219,8 +219,7 @@ final class AutoFunctionDeclaration extends FunctionDeclaration {
     List<String> optionalParameters = const [],
     required this.callable,
   }) : super(name, description,
-            parameters: parameters,
-            optionalParameters: optionalParameters);
+            parameters: parameters, optionalParameters: optionalParameters);
 
   /// The callable function that this declaration represents.
   final FutureOr<Map<String, Object?>> Function(Map<String, Object?> args)

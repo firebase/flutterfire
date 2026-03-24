@@ -302,8 +302,6 @@ void main() {
       });
     });
 
-
-
     test('JSONSchema.toJson handles nullable correctly', () {
       final schema = JSONSchema.integer(nullable: true);
       expect(schema.toJson(), {
