@@ -302,15 +302,15 @@ final class JSONSchema extends Schema {
     super.title,
     super.nullable,
     super.enumValues,
-    this.items,
+    JSONSchema? items,
     super.minItems,
     super.maxItems,
     super.minimum,
     super.maximum,
-    this.properties,
+    Map<String, JSONSchema>? properties,
     super.optionalProperties,
     super.propertyOrdering,
-    this.anyOf,
+    List<JSONSchema>? anyOf,
     this.ref,
     this.defs,
   }) : super(
@@ -473,15 +473,26 @@ final class JSONSchema extends Schema {
 
   /// JSONSchema for the elements if this is a [SchemaType.array].
   @override
-  covariant JSONSchema? items;
+  JSONSchema? get items => super.items as JSONSchema?;
+
+  @override
+  set items(covariant JSONSchema? value) => super.items = value;
 
   /// Properties of this type if this is a [SchemaType.object].
   @override
-  covariant Map<String, JSONSchema>? properties;
+  Map<String, JSONSchema>? get properties =>
+      super.properties as Map<String, JSONSchema>?;
+
+  @override
+  set properties(covariant Map<String, JSONSchema>? value) =>
+      super.properties = value;
 
   /// An array of [Schema] objects to validate generated content.
   @override
-  covariant List<JSONSchema>? anyOf;
+  List<JSONSchema>? get anyOf => super.anyOf as List<JSONSchema>?;
+
+  @override
+  set anyOf(covariant List<JSONSchema>? value) => super.anyOf = value;
 
   /// Reference to another schema.
   String? ref;
