@@ -40,10 +40,9 @@ class FirebaseAppCheckPlugin : public flutter::Plugin,
       const std::string& app_name, const std::string* android_provider,
       const std::string* apple_provider, const std::string* debug_token,
       std::function<void(std::optional<FlutterError> reply)> result) override;
-  void GetToken(
-      const std::string& app_name, bool force_refresh,
-      std::function<void(ErrorOr<std::optional<std::string>> reply)> result)
-      override;
+  void GetToken(const std::string& app_name, bool force_refresh,
+                std::function<void(ErrorOr<std::optional<std::string>> reply)>
+                    result) override;
   void SetTokenAutoRefreshEnabled(
       const std::string& app_name, bool is_token_auto_refresh_enabled,
       std::function<void(std::optional<FlutterError> reply)> result) override;

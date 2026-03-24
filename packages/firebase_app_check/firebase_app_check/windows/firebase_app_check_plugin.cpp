@@ -18,8 +18,8 @@
 #include "firebase/app_check.h"
 #include "firebase/app_check/debug_provider.h"
 #include "firebase/future.h"
-#include "firebase_core/firebase_core_plugin_c_api.h"
 #include "firebase_app_check/plugin_version.h"
+#include "firebase_core/firebase_core_plugin_c_api.h"
 #include "messages.g.h"
 
 using ::firebase::App;
@@ -186,19 +186,18 @@ void FirebaseAppCheckPlugin::GetToken(
   AppCheck* app_check = GetAppCheckFromPigeon(app_name);
 
   Future<AppCheckToken> future = app_check->GetAppCheckToken(force_refresh);
-  future.OnCompletion(
-      [result](const Future<AppCheckToken>& completed_future) {
-        if (completed_future.error() != 0) {
-          result(ParseError(completed_future));
-        } else {
-          const AppCheckToken* token = completed_future.result();
-          if (token) {
-            result(std::optional<std::string>(token->token));
-          } else {
-            result(std::optional<std::string>(std::nullopt));
-          }
-        }
-      });
+  future.OnCompletion([result](const Future<AppCheckToken>& completed_future) {
+    if (completed_future.error() != 0) {
+      result(ParseError(completed_future));
+    } else {
+      const AppCheckToken* token = completed_future.result();
+      if (token) {
+        result(std::optional<std::string>(token->token));
+      } else {
+        result(std::optional<std::string>(std::nullopt));
+      }
+    }
+  });
 }
 
 void FirebaseAppCheckPlugin::SetTokenAutoRefreshEnabled(
@@ -218,8 +217,7 @@ void FirebaseAppCheckPlugin::RegisterTokenListener(
 
   auto event_channel =
       std::make_unique<flutter::EventChannel<flutter::EncodableValue>>(
-          binaryMessenger, name,
-          &flutter::StandardMethodCodec::GetInstance());
+          binaryMessenger, name, &flutter::StandardMethodCodec::GetInstance());
   event_channel->SetStreamHandler(
       std::make_unique<TokenStreamHandler>(app_check, app_name));
 
@@ -234,19 +232,18 @@ void FirebaseAppCheckPlugin::GetLimitedUseAppCheckToken(
   AppCheck* app_check = GetAppCheckFromPigeon(app_name);
 
   Future<AppCheckToken> future = app_check->GetLimitedUseAppCheckToken();
-  future.OnCompletion(
-      [result](const Future<AppCheckToken>& completed_future) {
-        if (completed_future.error() != 0) {
-          result(ParseError(completed_future));
-        } else {
-          const AppCheckToken* token = completed_future.result();
-          if (token) {
-            result(token->token);
-          } else {
-            result(FlutterError("unknown", "Failed to get limited use token"));
-          }
-        }
-      });
+  future.OnCompletion([result](const Future<AppCheckToken>& completed_future) {
+    if (completed_future.error() != 0) {
+      result(ParseError(completed_future));
+    } else {
+      const AppCheckToken* token = completed_future.result();
+      if (token) {
+        result(token->token);
+      } else {
+        result(FlutterError("unknown", "Failed to get limited use token"));
+      }
+    }
+  });
 }
 
 }  // namespace firebase_app_check_windows

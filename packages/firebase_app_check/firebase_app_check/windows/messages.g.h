@@ -17,17 +17,16 @@
 
 namespace firebase_app_check_windows {
 
-
 // Generated class from Pigeon.
 
 class FlutterError {
  public:
-  explicit FlutterError(const std::string& code)
-    : code_(code) {}
+  explicit FlutterError(const std::string& code) : code_(code) {}
   explicit FlutterError(const std::string& code, const std::string& message)
-    : code_(code), message_(message) {}
-  explicit FlutterError(const std::string& code, const std::string& message, const flutter::EncodableValue& details)
-    : code_(code), message_(message), details_(details) {}
+      : code_(code), message_(message) {}
+  explicit FlutterError(const std::string& code, const std::string& message,
+                        const flutter::EncodableValue& details)
+      : code_(code), message_(message), details_(details) {}
 
   const std::string& code() const { return code_; }
   const std::string& message() const { return message_; }
@@ -39,7 +38,8 @@ class FlutterError {
   flutter::EncodableValue details_;
 };
 
-template<class T> class ErrorOr {
+template <class T>
+class ErrorOr {
  public:
   ErrorOr(const T& rhs) : v_(rhs) {}
   ErrorOr(const T&& rhs) : v_(std::move(rhs)) {}
@@ -58,8 +58,6 @@ template<class T> class ErrorOr {
   std::variant<T, FlutterError> v_;
 };
 
-
-
 class PigeonInternalCodecSerializer : public flutter::StandardCodecSerializer {
  public:
   PigeonInternalCodecSerializer();
@@ -68,54 +66,51 @@ class PigeonInternalCodecSerializer : public flutter::StandardCodecSerializer {
     return sInstance;
   }
 
-  void WriteValue(
-    const flutter::EncodableValue& value,
-    flutter::ByteStreamWriter* stream) const override;
+  void WriteValue(const flutter::EncodableValue& value,
+                  flutter::ByteStreamWriter* stream) const override;
+
  protected:
   flutter::EncodableValue ReadValueOfType(
-    uint8_t type,
-    flutter::ByteStreamReader* stream) const override;
+      uint8_t type, flutter::ByteStreamReader* stream) const override;
 };
 
-// Generated interface from Pigeon that represents a handler of messages from Flutter.
+// Generated interface from Pigeon that represents a handler of messages from
+// Flutter.
 class FirebaseAppCheckHostApi {
  public:
   FirebaseAppCheckHostApi(const FirebaseAppCheckHostApi&) = delete;
   FirebaseAppCheckHostApi& operator=(const FirebaseAppCheckHostApi&) = delete;
   virtual ~FirebaseAppCheckHostApi() {}
   virtual void Activate(
-    const std::string& app_name,
-    const std::string* android_provider,
-    const std::string* apple_provider,
-    const std::string* debug_token,
-    std::function<void(std::optional<FlutterError> reply)> result) = 0;
+      const std::string& app_name, const std::string* android_provider,
+      const std::string* apple_provider, const std::string* debug_token,
+      std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void GetToken(
-    const std::string& app_name,
-    bool force_refresh,
-    std::function<void(ErrorOr<std::optional<std::string>> reply)> result) = 0;
+      const std::string& app_name, bool force_refresh,
+      std::function<void(ErrorOr<std::optional<std::string>> reply)>
+          result) = 0;
   virtual void SetTokenAutoRefreshEnabled(
-    const std::string& app_name,
-    bool is_token_auto_refresh_enabled,
-    std::function<void(std::optional<FlutterError> reply)> result) = 0;
+      const std::string& app_name, bool is_token_auto_refresh_enabled,
+      std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void RegisterTokenListener(
-    const std::string& app_name,
-    std::function<void(ErrorOr<std::string> reply)> result) = 0;
+      const std::string& app_name,
+      std::function<void(ErrorOr<std::string> reply)> result) = 0;
   virtual void GetLimitedUseAppCheckToken(
-    const std::string& app_name,
-    std::function<void(ErrorOr<std::string> reply)> result) = 0;
+      const std::string& app_name,
+      std::function<void(ErrorOr<std::string> reply)> result) = 0;
 
   // The codec used by FirebaseAppCheckHostApi.
   static const flutter::StandardMessageCodec& GetCodec();
-  // Sets up an instance of `FirebaseAppCheckHostApi` to handle messages through the `binary_messenger`.
-  static void SetUp(
-    flutter::BinaryMessenger* binary_messenger,
-    FirebaseAppCheckHostApi* api);
-  static void SetUp(
-    flutter::BinaryMessenger* binary_messenger,
-    FirebaseAppCheckHostApi* api,
-    const std::string& message_channel_suffix);
+  // Sets up an instance of `FirebaseAppCheckHostApi` to handle messages through
+  // the `binary_messenger`.
+  static void SetUp(flutter::BinaryMessenger* binary_messenger,
+                    FirebaseAppCheckHostApi* api);
+  static void SetUp(flutter::BinaryMessenger* binary_messenger,
+                    FirebaseAppCheckHostApi* api,
+                    const std::string& message_channel_suffix);
   static flutter::EncodableValue WrapError(std::string_view error_message);
   static flutter::EncodableValue WrapError(const FlutterError& error);
+
  protected:
   FirebaseAppCheckHostApi() = default;
 };

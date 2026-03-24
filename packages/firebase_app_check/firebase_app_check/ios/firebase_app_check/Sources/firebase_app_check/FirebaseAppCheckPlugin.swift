@@ -57,11 +57,9 @@ public class FirebaseAppCheckPlugin: NSObject, FlutterPlugin,
 
   private var binaryMessenger: FlutterBinaryMessenger?
 
-  func activate(
-    appName: String, androidProvider: String?, appleProvider: String?,
-    debugToken: String?,
-    completion: @escaping (Result<Void, Error>) -> Void
-  ) {
+  func activate(appName: String, androidProvider: String?, appleProvider: String?,
+                debugToken: String?,
+                completion: @escaping (Result<Void, Error>) -> Void) {
     let app = FLTFirebasePlugin.firebaseAppNamed(appName)!
     let provider = appleProvider ?? "deviceCheck"
 
@@ -75,10 +73,8 @@ public class FirebaseAppCheckPlugin: NSObject, FlutterPlugin,
     completion(.success(()))
   }
 
-  func getToken(
-    appName: String, forceRefresh: Bool,
-    completion: @escaping (Result<String?, Error>) -> Void
-  ) {
+  func getToken(appName: String, forceRefresh: Bool,
+                completion: @escaping (Result<String?, Error>) -> Void) {
     let app = FLTFirebasePlugin.firebaseAppNamed(appName)!
     let appCheck = AppCheck.appCheck(app: app)
 
@@ -91,20 +87,16 @@ public class FirebaseAppCheckPlugin: NSObject, FlutterPlugin,
     }
   }
 
-  func setTokenAutoRefreshEnabled(
-    appName: String, isTokenAutoRefreshEnabled: Bool,
-    completion: @escaping (Result<Void, Error>) -> Void
-  ) {
+  func setTokenAutoRefreshEnabled(appName: String, isTokenAutoRefreshEnabled: Bool,
+                                  completion: @escaping (Result<Void, Error>) -> Void) {
     let app = FLTFirebasePlugin.firebaseAppNamed(appName)!
     let appCheck = AppCheck.appCheck(app: app)
     appCheck.isTokenAutoRefreshEnabled = isTokenAutoRefreshEnabled
     completion(.success(()))
   }
 
-  func registerTokenListener(
-    appName: String,
-    completion: @escaping (Result<String, Error>) -> Void
-  ) {
+  func registerTokenListener(appName: String,
+                             completion: @escaping (Result<String, Error>) -> Void) {
     let name = kFirebaseAppCheckTokenChannelPrefix + appName
 
     guard let messenger = binaryMessenger else {
@@ -126,10 +118,8 @@ public class FirebaseAppCheckPlugin: NSObject, FlutterPlugin,
     completion(.success(name))
   }
 
-  func getLimitedUseAppCheckToken(
-    appName: String,
-    completion: @escaping (Result<String, Error>) -> Void
-  ) {
+  func getLimitedUseAppCheckToken(appName: String,
+                                  completion: @escaping (Result<String, Error>) -> Void) {
     let app = FLTFirebasePlugin.firebaseAppNamed(appName)!
     let appCheck = AppCheck.appCheck(app: app)
 
@@ -157,7 +147,7 @@ public class FirebaseAppCheckPlugin: NSObject, FlutterPlugin,
   }
 
   public func pluginConstants(for firebaseApp: FirebaseApp) -> [AnyHashable: Any] {
-    return [:]
+    [:]
   }
 
   public func firebaseLibraryName() -> String {
@@ -176,13 +166,13 @@ public class FirebaseAppCheckPlugin: NSObject, FlutterPlugin,
     let nsError = error as NSError
     var code = "unknown"
     switch nsError.code {
-    case 0:  // FIRAppCheckErrorCodeServerUnreachable
+    case 0: // FIRAppCheckErrorCodeServerUnreachable
       code = "server-unreachable"
-    case 1:  // FIRAppCheckErrorCodeInvalidConfiguration
+    case 1: // FIRAppCheckErrorCodeInvalidConfiguration
       code = "invalid-configuration"
-    case 2:  // FIRAppCheckErrorCodeKeychain
+    case 2: // FIRAppCheckErrorCodeKeychain
       code = "code-keychain"
-    case 3:  // FIRAppCheckErrorCodeUnsupported
+    case 3: // FIRAppCheckErrorCodeUnsupported
       code = "code-unsupported"
     default:
       code = "unknown"
@@ -200,10 +190,8 @@ public class FirebaseAppCheckPlugin: NSObject, FlutterPlugin,
 class AppCheckTokenStreamHandler: NSObject, FlutterStreamHandler {
   private var observer: NSObjectProtocol?
 
-  public func onListen(
-    withArguments arguments: Any?,
-    eventSink events: @escaping FlutterEventSink
-  ) -> FlutterError? {
+  func onListen(withArguments arguments: Any?,
+                eventSink events: @escaping FlutterEventSink) -> FlutterError? {
     observer = NotificationCenter.default.addObserver(
       forName: NSNotification.Name("FIRAppCheckAppCheckTokenDidChangeNotification"),
       object: nil,
@@ -216,7 +204,7 @@ class AppCheckTokenStreamHandler: NSObject, FlutterStreamHandler {
     return nil
   }
 
-  public func onCancel(withArguments arguments: Any?) -> FlutterError? {
+  func onCancel(withArguments arguments: Any?) -> FlutterError? {
     if let observer {
       NotificationCenter.default.removeObserver(observer)
       self.observer = nil
@@ -282,7 +270,8 @@ class AppCheckProviderWrapper: NSObject, AppCheckProvider {
     guard let delegateProvider else {
       throw NSError(
         domain: "firebase_app_check", code: -1,
-        userInfo: [NSLocalizedDescriptionKey: "Provider not configured"])
+        userInfo: [NSLocalizedDescriptionKey: "Provider not configured"]
+      )
     }
     return try await delegateProvider.getToken()
   }
