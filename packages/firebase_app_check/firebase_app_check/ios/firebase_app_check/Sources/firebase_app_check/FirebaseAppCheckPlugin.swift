@@ -272,13 +272,13 @@ class AppCheckProviderWrapper: NSObject, AppCheckProvider {
         print("Firebase App Check Debug Token: \(debugProvider.localDebugToken())")
       }
     case "appAttest":
-      if #available(iOS 14.0, macCatalyst 14.0, tvOS 15.0, watchOS 9.0, *) {
+      if #available(iOS 14.0, macOS 14.0, macCatalyst 14.0, tvOS 15.0, watchOS 9.0, *) {
         delegateProvider = AppAttestProvider(app: app)
       } else {
         delegateProvider = AppCheckDebugProvider(app: app)
       }
     case "appAttestWithDeviceCheckFallback":
-      if #available(iOS 14.0, *) {
+      if #available(iOS 14.0, macOS 14.0, *) {
         delegateProvider = AppAttestProvider(app: app)
       } else {
         delegateProvider = DeviceCheckProvider(app: app)
