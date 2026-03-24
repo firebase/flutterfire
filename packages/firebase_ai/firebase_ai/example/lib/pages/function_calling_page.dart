@@ -43,7 +43,7 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
   late GenerativeModel _autoFunctionCallModel;
   late GenerativeModel _parallelAutoFunctionCallModel;
   late GenerativeModel _complexJSONSchemaModel;
-  late GenerativeModel _refSchemaModel;
+  late GenerativeModel _refDefJsonSchemaModel;
   late GenerativeModel _codeExecutionModel;
   late final AutoFunctionDeclaration _autoFetchWeatherTool;
   late final AutoFunctionDeclaration _autoPlanVacationTool;
@@ -121,7 +121,6 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
       name: 'planVacation',
       description:
           'Plans a complex vacation itinerary combining flights, hotels, and activities.',
-      useJSONSchema: true,
       parameters: {
         'destination':
             Schema.string(description: 'The city or country to travel to.'),
@@ -165,21 +164,22 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
       name: 'processTransactions',
       description:
           'Processes a list of financial transactions using a predefined transaction model reference.',
-      //useJSONSchema: true,
       parameters: {
-        'transactionsBlock': Schema.object(
+        'transactionsBlock': JSONSchema.object(
           description: 'A block containing a list of transactions.',
           properties: {
-            'transactionsList': Schema.array(
-              items: Schema.ref(r'#/properties/transactionsBlock/$defs/transactionDef'),
+            'transactionsList': JSONSchema.array(
+              items: JSONSchema.ref(
+                r'#/properties/transactionsBlock/$defs/transactionDef',
+              ),
             ),
           },
           defs: {
-            'transactionDef': Schema.object(
+            'transactionDef': JSONSchema.object(
               properties: {
-                'amount': Schema.number(),
-                'transactionId': Schema.integer(),
-                'currency': Schema.string(),
+                'amount': JSONSchema.number(),
+                'transactionId': JSONSchema.integer(),
+                'currency': JSONSchema.string(),
               },
             ),
           },
@@ -292,7 +292,7 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
         Tool.functionDeclarations([_autoPlanVacationTool]),
       ],
     );
-    _refSchemaModel = aiClient.generativeModel(
+    _refDefJsonSchemaModel = aiClient.generativeModel(
       model: 'gemini-2.5-flash',
       generationConfig: generationConfig,
       tools: [
@@ -478,18 +478,18 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
                       Expanded(
                         child: ElevatedButton(
                           onPressed: !_loading
-                              ? _testComplexJSONSchemaAutoFunctionCalling
+                              ? _testComplexSchemaAutoFunctionCalling
                               : null,
-                          child: const Text('Complex JSON Schema FC'),
+                          child: const Text('Complex Schema Auto FC'),
                         ),
                       ),
                       const SizedBox(width: 8),
                       Expanded(
                         child: ElevatedButton(
                           onPressed: !_loading
-                              ? _testRefSchemaAutoFunctionCalling
+                              ? _testRefDefJsonSchemaAutoFunctionCalling
                               : null,
-                          child: const Text('Ref Schema FC'),
+                          child: const Text('Ref Def JSON Schema Auto FC'),
                         ),
                       ),
                     ],
@@ -727,7 +727,7 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
     });
   }
 
-  Future<void> _testComplexJSONSchemaAutoFunctionCalling() async {
+  Future<void> _testComplexSchemaAutoFunctionCalling() async {
     await _runTest(() async {
       final chat = _complexJSONSchemaModel.startChat();
       const prompt =
@@ -752,9 +752,9 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
     });
   }
 
-  Future<void> _testRefSchemaAutoFunctionCalling() async {
+  Future<void> _testRefDefJsonSchemaAutoFunctionCalling() async {
     await _runTest(() async {
-      final chat = _refSchemaModel.startChat();
+      final chat = _refDefJsonSchemaModel.startChat();
       const prompt =
           r'Process two transactions. The first is $50.00 in USD (ID 98765) and the second is €30.00 in EUR (ID 98766).';
 

@@ -147,16 +147,16 @@ void main() {
       });
     });
 
-    test('Schema.object with defs', () {
+    test('JSONSchema.object with defs', () {
       final properties = {
-        'metadata': Schema.ref('#/metadata_schema'),
+        'metadata': JSONSchema.ref('#/metadata_schema'),
       };
       final defs = {
-        'metadata_schema': Schema.object(properties: {
-          'id': Schema.string(),
+        'metadata_schema': JSONSchema.object(properties: {
+          'id': JSONSchema.string(),
         })
       };
-      final schema = Schema.object(
+      final schema = JSONSchema.object(
         properties: properties,
         defs: defs,
       );
@@ -164,22 +164,6 @@ void main() {
       expect(schema.properties, properties);
       expect(schema.defs, defs);
       expect(schema.toJson(), {
-        'type': 'OBJECT',
-        'properties': {
-          'metadata': {r'$ref': '#/metadata_schema'},
-        },
-        'required': ['metadata'],
-        r'$defs': {
-          'metadata_schema': {
-            'type': 'OBJECT',
-            'properties': {
-              'id': {'type': 'STRING'},
-            },
-            'required': ['id'],
-          }
-        }
-      });
-      expect(schema.toJSONSchemaJson(), {
         'type': 'object',
         'properties': {
           'metadata': {r'$ref': '#/metadata_schema'},
@@ -308,29 +292,26 @@ void main() {
           'null'); // As per implementation, 'null' string for anyOf
     });
 
-    // Test Schema.ref
-    test('Schema.ref', () {
-      final schema = Schema.ref('#/components/schemas/User');
+    // Test JSONSchema.ref
+    test('JSONSchema.ref', () {
+      final schema = JSONSchema.ref('#/components/schemas/User');
       expect(schema.type, SchemaType.ref);
       expect(schema.ref, '#/components/schemas/User');
       expect(schema.toJson(), {
-        r'$ref': '#/components/schemas/User',
-      });
-      expect(schema.toJSONSchemaJson(), {
         r'$ref': '#/components/schemas/User',
       });
     });
 
 
 
-    test('toJSONSchemaJson handles nullable correctly', () {
-      final schema = Schema.integer(nullable: true);
-      expect(schema.toJSONSchemaJson(), {
+    test('JSONSchema.toJson handles nullable correctly', () {
+      final schema = JSONSchema.integer(nullable: true);
+      expect(schema.toJson(), {
         'type': ['integer', 'null'],
       });
 
-      final stringSchema = Schema.string(nullable: false);
-      expect(stringSchema.toJSONSchemaJson(), {
+      final stringSchema = JSONSchema.string(nullable: false);
+      expect(stringSchema.toJson(), {
         'type': 'string',
       });
     });
@@ -345,11 +326,6 @@ void main() {
         'properties': {},
         'required': [],
       });
-      expect(schema.toJSONSchemaJson(), {
-        'type': 'object',
-        'properties': {},
-        'required': [],
-      });
     });
 
     test('Schema.array with no items (should not happen with constructor)', () {
@@ -359,10 +335,6 @@ void main() {
       expect(schema.type, SchemaType.array);
       expect(schema.toJson(), {
         'type': 'ARRAY',
-        // 'items' field should be absent if items is null
-      });
-      expect(schema.toJSONSchemaJson(), {
-        'type': 'array',
         // 'items' field should be absent if items is null
       });
     });
@@ -379,35 +351,27 @@ void main() {
       expect(schema.optionalProperties, isNull);
       expect(schema.anyOf, isNull);
       expect(schema.toJson(), {'type': 'STRING'});
-      expect(schema.toJSONSchemaJson(), {'type': 'string'});
     });
 
-    test('Schema with recursive array referencing another schema', () {
-      final schema = Schema.array(
-        items: Schema.ref('#/components/schemas/Item'),
+    test('JSONSchema with recursive array referencing another schema', () {
+      final schema = JSONSchema.array(
+        items: JSONSchema.ref('#/components/schemas/Item'),
         nullable: true,
       );
       expect(schema.toJson(), {
-        'type': 'ARRAY',
-        'nullable': true,
-        'items': {r'$ref': '#/components/schemas/Item'},
-      });
-      expect(schema.toJSONSchemaJson(), {
         'type': ['array', 'null'],
         'items': {r'$ref': '#/components/schemas/Item'},
       });
     });
 
-    test('Schema manually constructed without matching values (ref)', () {
-      final schema = Schema(SchemaType.ref);
+    test('JSONSchema manually constructed without matching values (ref)', () {
+      final schema = JSONSchema(SchemaType.ref);
       expect(schema.toJson(), {}); // type is ignored, ref is null
-      expect(schema.toJSONSchemaJson(), {}); 
     });
 
     test('Schema manually constructed without matching values (anyOf)', () {
       final schema = Schema(SchemaType.anyOf);
       expect(schema.toJson(), {}); // type is ignored, anyOf is null
-      expect(schema.toJSONSchemaJson(), {}); 
     });
   });
 }
