@@ -40,7 +40,7 @@ final class TemplateTool {
   /// Convert to json object.
   Map<String, Object> toJson() => {
         if (_functionDeclarations case final _functionDeclarations?)
-          'functionDeclarations':
+          'templateFunctions':
               _functionDeclarations.map((f) => f.toJson()).toList(),
       };
 }

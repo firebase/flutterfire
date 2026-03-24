@@ -79,6 +79,45 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
     _chatFunctionSession = _templateGenerativeModel?.startChat(
       'cj-function-calling-weather',
       inputs: {},
+      tools: [
+        TemplateTool.functionDeclarations(
+          [
+            TemplateFunctionDeclaration(
+              'fetchWeather',
+              parameters: {
+                'location': Schema.object(
+                  description:
+                      'The name of the city and its state for which to get '
+                      'the weather. Only cities in the USA are supported.',
+                  properties: {
+                    'city': Schema.string(
+                      description: 'The city of the location.',
+                    ),
+                    'state': Schema.string(
+                      description: 'The state of the location.',
+                    ),
+                    'zipCode': Schema.integer(
+                      description: 'Optional zip code of the location.',
+                      nullable: true,
+                    ),
+                  },
+                  optionalProperties: ['zipCode'],
+                ),
+                'date': Schema.string(
+                  description: 'The date for which to get the weather. '
+                      'Date must be in the format: YYYY-MM-DD.',
+                ),
+                'unit': Schema.enumString(
+                  enumValues: ['CELSIUS', 'FAHRENHEIT'],
+                  description: 'The temperature unit.',
+                  nullable: true,
+                ),
+              },
+              optionalParameters: ['unit'],
+            ),
+          ],
+        ),
+      ],
     );
     _chatAutoFunctionSession = _templateGenerativeModel?.startChat(
       'cj-function-calling-weather',
