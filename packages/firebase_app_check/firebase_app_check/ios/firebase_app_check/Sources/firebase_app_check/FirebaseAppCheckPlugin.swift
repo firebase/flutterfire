@@ -62,7 +62,8 @@ public class FirebaseAppCheckPlugin: NSObject, FlutterPlugin,
                 completion: @escaping (Result<Void, Error>) -> Void) {
     guard let app = FLTFirebasePlugin.firebaseAppNamed(appName) else {
       completion(.failure(FlutterError(
-        code: "unknown", message: "Firebase app not found: \(appName)", details: nil)))
+        code: "unknown", message: "Firebase app not found: \(appName)", details: nil
+      )))
       return
     }
     let provider = appleProvider ?? "deviceCheck"
@@ -83,7 +84,8 @@ public class FirebaseAppCheckPlugin: NSObject, FlutterPlugin,
           let appCheck = AppCheck.appCheck(app: app)
     else {
       completion(.failure(FlutterError(
-        code: "unknown", message: "App Check not available for app: \(appName)", details: nil)))
+        code: "unknown", message: "App Check not available for app: \(appName)", details: nil
+      )))
       return
     }
 
@@ -102,7 +104,8 @@ public class FirebaseAppCheckPlugin: NSObject, FlutterPlugin,
           let appCheck = AppCheck.appCheck(app: app)
     else {
       completion(.failure(FlutterError(
-        code: "unknown", message: "App Check not available for app: \(appName)", details: nil)))
+        code: "unknown", message: "App Check not available for app: \(appName)", details: nil
+      )))
       return
     }
     appCheck.isTokenAutoRefreshEnabled = isTokenAutoRefreshEnabled
@@ -138,7 +141,8 @@ public class FirebaseAppCheckPlugin: NSObject, FlutterPlugin,
           let appCheck = AppCheck.appCheck(app: app)
     else {
       completion(.failure(FlutterError(
-        code: "unknown", message: "App Check not available for app: \(appName)", details: nil)))
+        code: "unknown", message: "App Check not available for app: \(appName)", details: nil
+      )))
       return
     }
 
