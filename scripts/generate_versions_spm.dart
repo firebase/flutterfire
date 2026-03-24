@@ -27,9 +27,10 @@ void main(List<String> args) async {
   // Update the versions in root Package.swift
   updateVersionsPackageSwift(firebaseiOSVersion);
   // Update hard-coded versions in all plugin Package.swift files
-  final firebaseCoreVersion =
-      loadYaml(File('${firebaseCorePackage.path}/pubspec.yaml').readAsStringSync())['version']
-          .toString();
+  final firebaseCoreVersion = loadYaml(
+          File('${firebaseCorePackage.path}/pubspec.yaml')
+              .readAsStringSync())['version']
+      .toString();
   updatePluginPackageSwiftVersions(
     workspace,
     firebaseiOSVersion,

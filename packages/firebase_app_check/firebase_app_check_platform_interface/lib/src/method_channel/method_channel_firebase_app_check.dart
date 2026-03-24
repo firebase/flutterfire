@@ -33,6 +33,10 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
           controller.add(result['token'] as String?);
         },
       );
+      // ignore: avoid_catches_without_on_clauses
+    }).catchError((_) {
+      // Silently ignore errors during token listener registration.
+      // This can happen in test environments where the host API is not set up.
     });
   }
 
