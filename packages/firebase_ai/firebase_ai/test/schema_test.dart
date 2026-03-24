@@ -147,6 +147,56 @@ void main() {
       });
     });
 
+    test('Schema.object with defs', () {
+      final properties = {
+        'metadata': Schema.ref('#/metadata_schema'),
+      };
+      final defs = {
+        'metadata_schema': Schema.object(properties: {
+          'id': Schema.string(),
+        })
+      };
+      final schema = Schema.object(
+        properties: properties,
+        defs: defs,
+      );
+      expect(schema.type, SchemaType.object);
+      expect(schema.properties, properties);
+      expect(schema.defs, defs);
+      expect(schema.toJson(), {
+        'type': 'OBJECT',
+        'properties': {
+          'metadata': {r'$ref': '#/metadata_schema'},
+        },
+        'required': ['metadata'],
+        r'$defs': {
+          'metadata_schema': {
+            'type': 'OBJECT',
+            'properties': {
+              'id': {'type': 'STRING'},
+            },
+            'required': ['id'],
+          }
+        }
+      });
+      expect(schema.toJSONSchemaJson(), {
+        'type': 'object',
+        'properties': {
+          'metadata': {r'$ref': '#/metadata_schema'},
+        },
+        'required': ['metadata'],
+        r'$defs': {
+          'metadata_schema': {
+            'type': 'object',
+            'properties': {
+              'id': {'type': 'string'},
+            },
+            'required': ['id'],
+          }
+        }
+      });
+    });
+
     test('Schema.object with empty optionalProperties', () {
       final properties = {
         'name': Schema.string(),

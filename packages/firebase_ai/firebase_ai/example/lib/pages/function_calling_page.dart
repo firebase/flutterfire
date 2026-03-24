@@ -162,28 +162,37 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
       },
     );
     _autoProcessTransactionTool = AutoFunctionDeclaration(
-      name: 'processTransaction',
+      name: 'processTransactions',
       description:
-          'Processes a financial transaction using a predefined transaction model reference.',
+          'Processes a list of financial transactions using a predefined transaction model reference.',
       useJSONSchema: true,
       parameters: {
-        'baseTransaction': Schema.object(
-          description: 'The base transaction block.',
+        'transactionsBlock': Schema.object(
+          description: 'A block containing a list of transactions.',
           properties: {
-            'amount': Schema.number(),
-            'transactionId': Schema.integer(),
+            'transactionsList': Schema.array(
+              items: Schema.ref(r'#/properties/transactionsBlock/$defs/transactionDef'),
+            ),
+          },
+          defs: {
+            'transactionDef': Schema.object(
+              properties: {
+                'amount': Schema.number(),
+                'transactionId': Schema.integer(),
+                'currency': Schema.string(),
+              },
+            ),
           },
         ),
-        'transaction': Schema.ref('#/properties/baseTransaction'),
       },
       callable: (args) async {
-        final transaction = args['transaction'] as Map<String, dynamic>?;
+        final block = args['transactionsBlock'] as Map<String, dynamic>?;
+        final list = block?['transactionsList'] as List<dynamic>?;
         return {
           'status': 'SUCCESS',
-          'amountProcessed': transaction?['amount'],
-          'transactionId': transaction?['transactionId'],
+          'transactionsProcessed': list?.length ?? 0,
           'message':
-              'Transaction processed successfully using the reference schema!',
+              'Transactions processed successfully using the reference schema!',
         };
       },
     );
@@ -747,7 +756,7 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
     await _runTest(() async {
       final chat = _refSchemaModel.startChat();
       const prompt =
-          r'Process a transaction of \$50.00 for a pair of shoes. The transaction ID is 98765.';
+          r'Process two transactions. The first is $50.00 in USD (ID 98765) and the second is €30.00 in EUR (ID 98766).';
 
       _messages.add(MessageData(text: prompt, fromUser: true));
       setState(() {});

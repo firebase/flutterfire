@@ -36,6 +36,7 @@ final class Schema {
     this.propertyOrdering,
     this.anyOf,
     this.ref,
+    this.defs,
   });
 
   /// Construct a schema for an object with one or more properties.
@@ -46,6 +47,7 @@ final class Schema {
     String? description,
     String? title,
     bool? nullable,
+    Map<String, Schema>? defs,
   }) : this(
           SchemaType.object,
           properties: properties,
@@ -54,6 +56,7 @@ final class Schema {
           description: description,
           title: title,
           nullable: nullable,
+          defs: defs,
         );
 
   /// Construct a schema for an array of values with a specified type.
@@ -267,11 +270,19 @@ final class Schema {
   /// Reference to another schema.
   String? ref;
 
+  /// Schema definitions for creating reusable sub-schemas.
+  Map<String, Schema>? defs;
+
   /// Convert to json object.
   Map<String, Object> toJson() => {
         if (type != SchemaType.anyOf && type != SchemaType.ref)
           'type': type.toJson(), // Omit the field while type is anyOf or ref
         if (ref case final ref?) r'$ref': ref,
+        if (defs case final defs?)
+          r'$defs': {
+            for (final MapEntry(:key, :value) in defs.entries)
+              key: value.toJson()
+          },
         if (format case final format?) 'format': format,
         if (description case final description?) 'description': description,
         if (title case final title?) 'title': title,
@@ -307,6 +318,11 @@ final class Schema {
         if (type != SchemaType.anyOf && type != SchemaType.ref)
           'type': nullable == true ? [type.name, 'null'] : type.name,
         if (ref case final ref?) r'$ref': ref,
+        if (defs case final defs?)
+          r'$defs': {
+            for (final MapEntry(:key, :value) in defs.entries)
+              key: value.toJSONSchemaJson()
+          },
         if (format case final format?) 'format': format,
         if (description case final description?) 'description': description,
         if (title case final title?) 'title': title,
