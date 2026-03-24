@@ -42,7 +42,7 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
   late GenerativeModel _functionCallModel;
   late GenerativeModel _autoFunctionCallModel;
   late GenerativeModel _parallelAutoFunctionCallModel;
-  late GenerativeModel _complexJSONSchemaModel;
+  late GenerativeModel _complexSchemaModel;
   late GenerativeModel _refDefJsonSchemaModel;
   late GenerativeModel _codeExecutionModel;
   late final AutoFunctionDeclaration _autoFetchWeatherTool;
@@ -285,7 +285,7 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
         Tool.codeExecution(),
       ],
     );
-    _complexJSONSchemaModel = aiClient.generativeModel(
+    _complexSchemaModel = aiClient.generativeModel(
       model: 'gemini-2.5-flash',
       generationConfig: generationConfig,
       tools: [
@@ -729,7 +729,7 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
 
   Future<void> _testComplexSchemaAutoFunctionCalling() async {
     await _runTest(() async {
-      final chat = _complexJSONSchemaModel.startChat();
+      final chat = _complexSchemaModel.startChat();
       const prompt =
           'I want to plan a vacation to Paris for 2 people. We want to fly Business class, our budget is 5500 USD. We want to do wine tasting and museum tours. We prefer a 4-star boutique hotel with free breakfast.';
 
