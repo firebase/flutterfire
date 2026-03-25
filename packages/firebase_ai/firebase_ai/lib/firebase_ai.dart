@@ -117,7 +117,8 @@ export 'src/server_template/template_tool.dart'
     show
         TemplateAutoFunctionDeclaration,
         TemplateFunctionDeclaration,
-        TemplateTool;
+        TemplateTool,
+        TemplateToolConfig;
 export 'src/tool.dart'
     show
         AutoFunctionDeclaration,
