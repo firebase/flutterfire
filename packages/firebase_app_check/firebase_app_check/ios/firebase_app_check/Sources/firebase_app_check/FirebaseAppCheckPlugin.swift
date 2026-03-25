@@ -29,6 +29,8 @@ public class FirebaseAppCheckPlugin: NSObject, FlutterPlugin,
 
   static let shared: FirebaseAppCheckPlugin = {
     let instance = FirebaseAppCheckPlugin()
+    instance.providerFactory = FlutterAppCheckProviderFactory()
+    AppCheck.setAppCheckProviderFactory(instance.providerFactory)
     FLTFirebasePluginRegistry.sharedInstance().register(instance)
     return instance
   }()
@@ -68,12 +70,7 @@ public class FirebaseAppCheckPlugin: NSObject, FlutterPlugin,
     }
     let provider = appleProvider ?? "deviceCheck"
 
-    if providerFactory == nil {
-      providerFactory = FlutterAppCheckProviderFactory()
-    }
-
-    providerFactory!.configure(app: app, providerName: provider, debugToken: debugToken)
-    AppCheck.setAppCheckProviderFactory(providerFactory)
+    providerFactory?.configure(app: app, providerName: provider, debugToken: debugToken)
 
     completion(.success(()))
   }
@@ -244,6 +241,7 @@ class FlutterAppCheckProviderFactory: NSObject, AppCheckProviderFactory {
   func createProvider(with app: FirebaseApp) -> (any AppCheckProvider)? {
     if providers[app.name] == nil {
       let wrapper = AppCheckProviderWrapper()
+      // Default to deviceCheck. activate() will reconfigure with the correct provider.
       wrapper.configure(app: app, providerName: "deviceCheck", debugToken: nil)
       providers[app.name] = wrapper
     }
@@ -289,13 +287,14 @@ class AppCheckProviderWrapper: NSObject, AppCheckProvider {
     }
   }
 
-  func getToken() async throws -> AppCheckToken {
+  func getToken(completion handler: @escaping (AppCheckToken?, Error?) -> Void) {
     guard let delegateProvider else {
-      throw NSError(
+      handler(nil, NSError(
         domain: "firebase_app_check", code: -1,
         userInfo: [NSLocalizedDescriptionKey: "Provider not configured"]
-      )
+      ))
+      return
     }
-    return try await delegateProvider.getToken()
+    delegateProvider.getToken(completion: handler)
   }
 }
