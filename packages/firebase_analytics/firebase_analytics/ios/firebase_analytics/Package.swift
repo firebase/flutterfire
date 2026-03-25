@@ -9,7 +9,6 @@ import Foundation
 import PackageDescription
 
 let firebase_sdk_version: Version = "12.9.0"
-let shared_spm_version: Version = "4.5.0-firebase-core-swift"
 
 // Set FIREBASE_ANALYTICS_WITHOUT_ADID=true to use FirebaseAnalyticsWithoutAdIdSupport
 // e.g. FIREBASE_ANALYTICS_WITHOUT_ADID=true flutter build ios
@@ -26,15 +25,14 @@ let package = Package(
   ],
   dependencies: [
     .package(url: "https://github.com/firebase/firebase-ios-sdk", from: firebase_sdk_version),
-    .package(url: "https://github.com/firebase/flutterfire", exact: shared_spm_version),
+    .package(name: "firebase_core", path: "../firebase_core"),
   ],
   targets: [
     .target(
       name: "firebase_analytics",
       dependencies: [
         .product(name: analyticsProduct, package: "firebase-ios-sdk"),
-        // Wrapper dependency
-        .product(name: "firebase-core-shared", package: "flutterfire"),
+        .product(name: "firebase-core", package: "firebase_core"),
       ],
       resources: [
         .process("Resources"),

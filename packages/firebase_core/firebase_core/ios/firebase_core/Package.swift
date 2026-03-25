@@ -9,7 +9,6 @@ import PackageDescription
 
 let library_version_string = "4.5.0"
 let firebase_sdk_version: Version = "12.9.0"
-let shared_spm_version: Version = "4.5.0-firebase-core-swift"
 
 let package = Package(
   name: "firebase_core",
@@ -21,7 +20,6 @@ let package = Package(
   ],
   dependencies: [
     .package(url: "https://github.com/firebase/firebase-ios-sdk", from: firebase_sdk_version),
-    .package(url: "https://github.com/firebase/flutterfire", exact: shared_spm_version),
   ],
   targets: [
     .target(
@@ -29,18 +27,6 @@ let package = Package(
       dependencies: [
         // No product for firebase-core so we pull in the smallest one
         .product(name: "FirebaseInstallations", package: "firebase-ios-sdk"),
-        .product(name: "firebase-core-shared", package: "flutterfire"),
-      ],
-      exclude: [
-        // These are now pulled in as a remote dependency from FlutterFire repo
-        "FLTFirebaseCorePlugin.m",
-        "FLTFirebasePlugin.m",
-        "FLTFirebasePluginRegistry.m",
-        "messages.g.m",
-        "include/firebase_core/FLTFirebaseCorePlugin.h",
-        "include/firebase_core/messages.g.h",
-        "include/firebase_core/FLTFirebasePlugin.h",
-        "include/firebase_core/FLTFirebasePluginRegistry.h",
       ],
       resources: [
         .process("Resources"),
