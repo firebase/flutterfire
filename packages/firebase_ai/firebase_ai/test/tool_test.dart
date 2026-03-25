@@ -246,20 +246,20 @@ void main() {
 
     test('RetrievalConfig.toJson() with all fields', () {
       final config = RetrievalConfig(
-        latLng: LatLng(latitude: 1.0, longitude: 2.0),
+        latLng: LatLng(latitude: 1.2, longitude: 2.1),
         languageCode: 'fr',
       );
       expect(config.toJson(), {
-        'latLng': {'latitude': 1.0, 'longitude': 2.0},
+        'latLng': {'latitude': 1.2, 'longitude': 2.1},
         'languageCode': 'fr',
       });
     });
 
     test('RetrievalConfig.toJson() with partial fields', () {
       final config1 =
-          RetrievalConfig(latLng: LatLng(latitude: 1.0, longitude: 2.0));
+          RetrievalConfig(latLng: LatLng(latitude: 1.2, longitude: 2.1));
       expect(config1.toJson(), {
-        'latLng': {'latitude': 1.0, 'longitude': 2.0}
+        'latLng': {'latitude': 1.2, 'longitude': 2.1}
       });
 
       final config2 = RetrievalConfig(languageCode: 'fr');

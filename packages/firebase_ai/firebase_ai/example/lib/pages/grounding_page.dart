@@ -122,7 +122,7 @@ class _GroundingPageState extends State<GroundingPage> {
         final chunks = groundingMetadata.groundingChunks.map((chunk) {
           if (chunk.web != null) {
             final title = chunk.web!.title ?? chunk.web!.uri;
-            return '- [${title}](${chunk.web!.uri})';
+            return '- [$title](${chunk.web!.uri})';
           }
           if (chunk.maps != null) {
             return '- [${chunk.maps!.title}](${chunk.maps!.uri})';
@@ -168,7 +168,7 @@ class _GroundingPageState extends State<GroundingPage> {
                 Navigator.of(context).pop();
               },
               child: const Text('OK'),
-            )
+            ),
           ],
         );
       },
@@ -190,7 +190,7 @@ class _GroundingPageState extends State<GroundingPage> {
                 Expanded(
                   child: SwitchListTile(
                     title: const Text('Search Grounding',
-                        style: TextStyle(fontSize: 12)),
+                        style: TextStyle(fontSize: 12),),
                     value: _enableSearchGrounding,
                     onChanged: (bool value) {
                       setState(() {
@@ -202,7 +202,7 @@ class _GroundingPageState extends State<GroundingPage> {
                 Expanded(
                   child: SwitchListTile(
                     title: const Text('Maps Grounding',
-                        style: TextStyle(fontSize: 12)),
+                        style: TextStyle(fontSize: 12),),
                     value: _enableMapsGrounding,
                     onChanged: (bool value) {
                       setState(() {
@@ -215,7 +215,7 @@ class _GroundingPageState extends State<GroundingPage> {
             ),
             if (_enableMapsGrounding)
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Row(
                   children: [
                     Expanded(
@@ -224,7 +224,7 @@ class _GroundingPageState extends State<GroundingPage> {
                         decoration:
                             const InputDecoration(labelText: 'Latitude'),
                         keyboardType: const TextInputType.numberWithOptions(
-                            decimal: true, signed: true),
+                            decimal: true, signed: true,),
                       ),
                     ),
                     const SizedBox(width: 16),
@@ -234,7 +234,7 @@ class _GroundingPageState extends State<GroundingPage> {
                         decoration:
                             const InputDecoration(labelText: 'Longitude'),
                         keyboardType: const TextInputType.numberWithOptions(
-                            decimal: true, signed: true),
+                            decimal: true, signed: true,),
                       ),
                     ),
                   ],
