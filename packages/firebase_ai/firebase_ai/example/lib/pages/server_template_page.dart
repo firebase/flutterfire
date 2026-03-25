@@ -462,7 +462,8 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
 
       if (accumulatedText.isEmpty) {
         _messages.add(
-            MessageData(text: 'No text response from model.', fromUser: false));
+          MessageData(text: 'No text response from model.', fromUser: false),
+        );
       }
     });
   }

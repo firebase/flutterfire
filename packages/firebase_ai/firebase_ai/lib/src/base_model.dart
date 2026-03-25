@@ -36,8 +36,8 @@ import 'imagen/imagen_edit.dart';
 import 'imagen/imagen_reference.dart';
 import 'live_api.dart';
 import 'live_session.dart';
-import 'server_template/template_tool.dart';
 import 'platform_header_helper.dart';
+import 'server_template/template_tool.dart';
 import 'tool.dart';
 
 part 'generative_model.dart';
