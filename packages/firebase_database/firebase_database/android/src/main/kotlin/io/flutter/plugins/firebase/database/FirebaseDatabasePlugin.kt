@@ -876,31 +876,29 @@ class FirebaseDatabasePlugin :
               "startAt" -> {
                 if (!hasOrderModifier) {
                   // Firebase Database requires an order modifier before startAt
-                  // For observe, we can't return null, so we'll create a query that returns no data
-                  query = query.limitToFirst(0)
-                  break
-                }
-                val value = modifier["value"]
-                val key = modifier["key"] as String?
-                query = when (value) {
-                  is Boolean -> if (key == null) query.startAt(value) else query.startAt(value, key)
-                  is Number -> if (key == null) query.startAt(value.toDouble()) else query.startAt(value.toDouble(), key)
-                  else -> if (key == null) query.startAt(value.toString()) else query.startAt(value.toString(), key)
+                  // For observe, we skip the cursor modifier and return all data
+                } else {
+                  val value = modifier["value"]
+                  val key = modifier["key"] as String?
+                  query = when (value) {
+                    is Boolean -> if (key == null) query.startAt(value) else query.startAt(value, key)
+                    is Number -> if (key == null) query.startAt(value.toDouble()) else query.startAt(value.toDouble(), key)
+                    else -> if (key == null) query.startAt(value.toString()) else query.startAt(value.toString(), key)
+                  }
                 }
               }
               "startAfter" -> {
                 if (!hasOrderModifier) {
                   // Firebase Database requires an order modifier before startAfter
-                  // For observe, we can't return null, so we'll create a query that returns no data
-                  query = query.limitToFirst(0)
-                  break
-                }
-                val value = modifier["value"]
-                val key = modifier["key"] as String?
-                query = when (value) {
-                  is Boolean -> if (key == null) query.startAfter(value) else query.startAfter(value, key)
-                  is Number -> if (key == null) query.startAfter(value.toDouble()) else query.startAfter(value.toDouble(), key)
-                  else -> if (key == null) query.startAfter(value.toString()) else query.startAfter(value.toString(), key)
+                  // For observe, we skip the cursor modifier and return all data
+                } else {
+                  val value = modifier["value"]
+                  val key = modifier["key"] as String?
+                  query = when (value) {
+                    is Boolean -> if (key == null) query.startAfter(value) else query.startAfter(value, key)
+                    is Number -> if (key == null) query.startAfter(value.toDouble()) else query.startAfter(value.toDouble(), key)
+                    else -> if (key == null) query.startAfter(value.toString()) else query.startAfter(value.toString(), key)
+                  }
                 }
               }
               "endAt" -> {
@@ -1006,31 +1004,29 @@ class FirebaseDatabasePlugin :
               "startAt" -> {
                 if (!hasOrderModifier) {
                   // Firebase Database requires an order modifier before startAt
-                  // For keepSync, we can't return null, so we'll create a query that returns no data
-                  query = query.limitToFirst(0)
-                  break
-                }
-                val value = modifier["value"]
-                val key = modifier["key"] as String?
-                query = when (value) {
-                  is Boolean -> if (key == null) query.startAt(value) else query.startAt(value, key)
-                  is Number -> if (key == null) query.startAt(value.toDouble()) else query.startAt(value.toDouble(), key)
-                  else -> if (key == null) query.startAt(value.toString()) else query.startAt(value.toString(), key)
+                  // For keepSync, we skip the cursor modifier and return all data
+                } else {
+                  val value = modifier["value"]
+                  val key = modifier["key"] as String?
+                  query = when (value) {
+                    is Boolean -> if (key == null) query.startAt(value) else query.startAt(value, key)
+                    is Number -> if (key == null) query.startAt(value.toDouble()) else query.startAt(value.toDouble(), key)
+                    else -> if (key == null) query.startAt(value.toString()) else query.startAt(value.toString(), key)
+                  }
                 }
               }
               "startAfter" -> {
                 if (!hasOrderModifier) {
                   // Firebase Database requires an order modifier before startAfter
-                  // For keepSync, we can't return null, so we'll create a query that returns no data
-                  query = query.limitToFirst(0)
-                  break
-                }
-                val value = modifier["value"]
-                val key = modifier["key"] as String?
-                query = when (value) {
-                  is Boolean -> if (key == null) query.startAfter(value) else query.startAfter(value, key)
-                  is Number -> if (key == null) query.startAfter(value.toDouble()) else query.startAfter(value.toDouble(), key)
-                  else -> if (key == null) query.startAfter(value.toString()) else query.startAfter(value.toString(), key)
+                  // For keepSync, we skip the cursor modifier and return all data
+                } else {
+                  val value = modifier["value"]
+                  val key = modifier["key"] as String?
+                  query = when (value) {
+                    is Boolean -> if (key == null) query.startAfter(value) else query.startAfter(value, key)
+                    is Number -> if (key == null) query.startAfter(value.toDouble()) else query.startAfter(value.toDouble(), key)
+                    else -> if (key == null) query.startAfter(value.toString()) else query.startAfter(value.toString(), key)
+                  }
                 }
               }
               "endAt" -> {
