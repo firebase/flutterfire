@@ -39,9 +39,12 @@ final class TemplateTool {
 
   /// Convert to json object.
   Map<String, Object> toJson() => {
-        if (_functionDeclarations case final _functionDeclarations?)
-          'templateFunctions':
-              _functionDeclarations.map((f) => f.toJson()).toList(),
+        if (_functionDeclarations case final functionDeclarations?
+            when functionDeclarations.isNotEmpty)
+          'templateFunctions': functionDeclarations
+              .map((f) => f.hasSchema ? f.toJson() : null)
+              .where((f) => f != null)
+              .toList(),
       };
 }
 
@@ -49,10 +52,10 @@ final class TemplateTool {
 class TemplateFunctionDeclaration {
   // ignore: public_member_api_docs
   TemplateFunctionDeclaration(this.name,
-      {Map<String, Schema>? parameters,
+      {Map<String, JSONSchema>? parameters,
       List<String> optionalParameters = const []})
       : _schemaObject = parameters != null
-            ? Schema.object(
+            ? JSONSchema.object(
                 properties: parameters, optionalProperties: optionalParameters)
             : null;
 
@@ -64,10 +67,14 @@ class TemplateFunctionDeclaration {
 
   final Schema? _schemaObject;
 
+  /// Whether the function declaration has a schema override.
+  bool get hasSchema => _schemaObject != null;
+
   /// Convert to json object.
   Map<String, Object?> toJson() => {
         'name': name,
-        'input_schema': _schemaObject != null ? _schemaObject.toJson() : '',
+        if (_schemaObject case final schemaObject?)
+          'inputSchema': schemaObject.toJson(),
       };
 }
 
@@ -78,7 +85,7 @@ final class TemplateAutoFunctionDeclaration
   TemplateAutoFunctionDeclaration(
       {required String name,
       required this.callable,
-      Map<String, Schema>? parameters,
+      Map<String, JSONSchema>? parameters,
       List<String> optionalParameters = const []})
       : super(name,
             parameters: parameters, optionalParameters: optionalParameters);

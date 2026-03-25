@@ -45,8 +45,9 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
   TemplateImagenModel? _templateImagenModel;
 
   TemplateChatSession? _chatSession;
-  TemplateChatSession? _chatFunctionSession;
+  TemplateChatSession? _chatFunctionOverrideSession;
   TemplateChatSession? _chatAutoFunctionSession;
+  TemplateChatSession? _chatStreamFunctionSession;
 
   @override
   void initState() {
@@ -76,8 +77,8 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
       'chat_history.prompt',
       inputs: {},
     );
-    _chatFunctionSession = _templateGenerativeModel?.startChat(
-      'cj-function-calling-weather',
+    _chatFunctionOverrideSession = _templateGenerativeModel?.startChat(
+      'cj-function-calling-weather-override',
       inputs: {},
       tools: [
         TemplateTool.functionDeclarations(
@@ -85,29 +86,29 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
             TemplateFunctionDeclaration(
               'fetchWeather',
               parameters: {
-                'location': Schema.object(
+                'location': JSONSchema.object(
                   description:
                       'The name of the city and its state for which to get '
                       'the weather. Only cities in the USA are supported.',
                   properties: {
-                    'city': Schema.string(
+                    'city': JSONSchema.string(
                       description: 'The city of the location.',
                     ),
-                    'state': Schema.string(
+                    'state': JSONSchema.string(
                       description: 'The state of the location.',
                     ),
-                    'zipCode': Schema.integer(
+                    'zipCode': JSONSchema.integer(
                       description: 'Optional zip code of the location.',
                       nullable: true,
                     ),
                   },
                   optionalProperties: ['zipCode'],
                 ),
-                'date': Schema.string(
+                'date': JSONSchema.string(
                   description: 'The date for which to get the weather. '
                       'Date must be in the format: YYYY-MM-DD.',
                 ),
-                'unit': Schema.enumString(
+                'unit': JSONSchema.enumString(
                   enumValues: ['CELSIUS', 'FAHRENHEIT'],
                   description: 'The temperature unit.',
                   nullable: true,
@@ -121,6 +122,20 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
     );
     _chatAutoFunctionSession = _templateGenerativeModel?.startChat(
       'cj-function-calling-weather',
+      inputs: {},
+      tools: [
+        TemplateTool.functionDeclarations(
+          [
+            TemplateAutoFunctionDeclaration(
+              name: 'fetchWeather',
+              callable: fetchWeatherCallable,
+            ),
+          ],
+        ),
+      ],
+    );
+    _chatStreamFunctionSession = _templateGenerativeModel?.startChat(
+      'cj-function-calling-weather-stream',
       inputs: {},
       tools: [
         TemplateTool.functionDeclarations(
@@ -219,7 +234,7 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
                         Icons.functions,
                         color: Theme.of(context).colorScheme.primary,
                       ),
-                      tooltip: 'Function Calling',
+                      tooltip: 'Function Calling (client override)',
                     ),
                   if (!_loading)
                     IconButton(
@@ -233,19 +248,6 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
                         color: Theme.of(context).colorScheme.primary,
                       ),
                       tooltip: 'Auto Stream Function Calling',
-                    ),
-                  if (!_loading)
-                    IconButton(
-                      onPressed: () async {
-                        await _serverTemplateStreamFunctionCall(
-                          _textController.text,
-                        );
-                      },
-                      icon: Icon(
-                        Icons.settings_system_daydream,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                      tooltip: 'Stream Function Calling',
                     ),
                   if (!_loading)
                     IconButton(
@@ -403,7 +405,7 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
   Future<void> _serverTemplateFunctionCall(String message) async {
     await _handleServerTemplateMessage(message, (message) async {
       // Inputs are no longer passed during sendMessage
-      var response = await _chatFunctionSession?.sendMessage(
+      var response = await _chatFunctionOverrideSession?.sendMessage(
         Content.text(message),
       );
 
@@ -421,7 +423,8 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
               await fetchWeather(Location(city, state), date);
 
           // Respond to the function call
-          var functionResponse = await _chatFunctionSession?.sendMessage(
+          var functionResponse =
+              await _chatFunctionOverrideSession?.sendMessage(
             Content.functionResponse(functionCall.name, functionResult),
           );
           _messages
@@ -433,7 +436,7 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
 
   Future<void> _serverTemplateAutoStreamFunctionCall(String message) async {
     await _handleServerTemplateMessage(message, (message) async {
-      var responseStream = _chatAutoFunctionSession?.sendMessageStream(
+      var responseStream = _chatStreamFunctionSession?.sendMessageStream(
         Content.text(message),
       );
 
@@ -458,71 +461,8 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
       }
 
       if (accumulatedText.isEmpty) {
-        _messages.add(MessageData(
-            text: 'No text response from model.', fromUser: false));
-      }
-    });
-  }
-
-  Future<void> _serverTemplateStreamFunctionCall(String message) async {
-    await _handleServerTemplateMessage(message, (message) async {
-      var responseStream = _chatFunctionSession?.sendMessageStream(
-        Content.text(message),
-      );
-
-      GenerateContentResponse? lastResponse;
-      if (responseStream != null) {
-        await for (final response in responseStream) {
-          lastResponse = response;
-        }
-      }
-
-      final functionCalls = lastResponse?.functionCalls.toList();
-      if (functionCalls != null && functionCalls.isNotEmpty) {
-        final functionCall = functionCalls.first;
-        if (functionCall.name == 'fetchWeather') {
-          final location =
-              functionCall.args['location']! as Map<String, dynamic>;
-          final date = functionCall.args['date']! as String;
-          final city = location['city'] as String;
-          final state = location['state'] as String;
-          final functionResult =
-              await fetchWeather(Location(city, state), date);
-
-          // Stream the function response
-          var responseStream2 = _chatFunctionSession?.sendMessageStream(
-            Content.functionResponse(functionCall.name, functionResult),
-          );
-
-          var accumulatedText = '';
-          MessageData? modelMessage;
-
-          if (responseStream2 != null) {
-            await for (final response in responseStream2) {
-              if (response.text case final text?) {
-                accumulatedText += text;
-                if (modelMessage == null) {
-                  modelMessage =
-                      MessageData(text: accumulatedText, fromUser: false);
-                  _messages.add(modelMessage);
-                } else {
-                  modelMessage = modelMessage.copyWith(text: accumulatedText);
-                  _messages.last = modelMessage;
-                }
-                setState(() {});
-              }
-            }
-          }
-          if (accumulatedText.isEmpty) {
-            _messages.add(MessageData(
-                text: 'No text response from model.', fromUser: false));
-          }
-        }
-      } else if (lastResponse?.text case final text?) {
-        _messages.add(MessageData(text: text, fromUser: false));
-      } else {
-        _messages.add(MessageData(
-            text: 'No text response from model.', fromUser: false));
+        _messages.add(
+            MessageData(text: 'No text response from model.', fromUser: false));
       }
     });
   }
