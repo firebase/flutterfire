@@ -1,3 +1,7 @@
+## 6.0.3
+
+ - **REFACTOR**: fix formatting and analysis issues across the repo ([#18124](https://github.com/firebase/flutterfire/issues/18124)). ([ab79fd93](https://github.com/firebase/flutterfire/commit/ab79fd93ee4ccfeb478687623134b1cf8ab71c74))
+
 ## 6.0.2
 
  - **FIX**: a bug with the `demoProjectId` arg to `Firebase.initializeApp()` ([#17703](https://github.com/firebase/flutterfire/issues/17703)). ([09d03aac](https://github.com/firebase/flutterfire/commit/09d03aac8ced6f7f9211c24f40b57eb992f2996d))

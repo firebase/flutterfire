@@ -14,9 +14,12 @@
 
 import 'package:firebase_ai/src/base_model.dart';
 import 'package:firebase_ai/src/client.dart';
+import 'package:firebase_ai/src/platform_header_helper.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
@@ -74,7 +77,11 @@ class MockApiClient extends Mock implements ApiClient {
 }
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   group('BaseModel', () {
+    setUp(clearPlatformSecurityHeadersCache);
+
     test('firebaseTokens returns a function that generates headers', () async {
       final tokenFunction = BaseModel.firebaseTokens(null, null, null, false);
       final headers = await tokenFunction();
@@ -158,6 +165,59 @@ void main() {
       expect(headers['x-goog-api-client'], contains('gl-dart'));
       expect(headers['x-goog-api-client'], contains('fire'));
       expect(headers.length, 2);
+    });
+
+    test('firebaseTokens includes Android platform headers when available',
+        () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      addTearDown(() {
+        debugDefaultTargetPlatformOverride = null;
+      });
+
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(platformHeaderChannel,
+              (MethodCall methodCall) async {
+        return <String, String>{
+          'X-Android-Package': 'com.example.test',
+          'X-Android-Cert': 'AABBCCDD',
+        };
+      });
+      addTearDown(() {
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(platformHeaderChannel, null);
+      });
+
+      final tokenFunction = BaseModel.firebaseTokens(null, null, null, false);
+      final headers = await tokenFunction();
+      expect(headers['X-Android-Package'], 'com.example.test');
+      expect(headers['X-Android-Cert'], 'AABBCCDD');
+      expect(headers['x-goog-api-client'], contains('gl-dart'));
+      expect(headers.length, 3);
+    });
+
+    test('firebaseTokens includes iOS bundle identifier when available',
+        () async {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(platformHeaderChannel,
+              (MethodCall methodCall) async {
+        return <String, String>{
+          'x-ios-bundle-identifier': 'com.example.iosapp',
+        };
+      });
+      addTearDown(() {
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(platformHeaderChannel, null);
+      });
+
+      final mockApp = MockFirebaseApp();
+
+      final tokenFunction =
+          BaseModel.firebaseTokens(null, null, mockApp, false);
+      final headers = await tokenFunction();
+      expect(headers['x-ios-bundle-identifier'], 'com.example.iosapp');
+      expect(headers['X-Firebase-AppId'], 'test-app-id');
+      expect(headers['x-goog-api-client'], contains('gl-dart'));
+      expect(headers.length, 3);
     });
   });
 }

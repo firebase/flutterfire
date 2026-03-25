@@ -1,3 +1,9 @@
+## 8.1.8
+
+ - **REFACTOR**: fix formatting and analysis issues across the repo ([#18124](https://github.com/firebase/flutterfire/issues/18124)). ([ab79fd93](https://github.com/firebase/flutterfire/commit/ab79fd93ee4ccfeb478687623134b1cf8ab71c74))
+ - **FIX**(auth,android): fix an error casing that wasn't consistent accross platforms ([#18056](https://github.com/firebase/flutterfire/issues/18056)). ([a6a0554d](https://github.com/firebase/flutterfire/commit/a6a0554d011d0490e6ed22d576aabdbc40a9364b))
+ - **DOCS**(auth): add documentation about errors code when Email Enumeration Protection is activated ([#18084](https://github.com/firebase/flutterfire/issues/18084)). ([476ba53f](https://github.com/firebase/flutterfire/commit/476ba53f016f20009fd571ad6ab359631f97094b))
+
 ## 8.1.7
 
  - Update a dependency to the latest release.
