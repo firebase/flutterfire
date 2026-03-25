@@ -371,12 +371,11 @@ final class JSONSchema extends Schema {
 
   /// Construct a schema for an integer number.
   ///
-  /// The [format] may be "int32" or "int64".
+  /// Json schema integer doesn't support format.
   JSONSchema.integer({
     String? description,
     String? title,
     bool? nullable,
-    String? format,
     int? minimum,
     int? maximum,
   }) : this(
@@ -384,19 +383,17 @@ final class JSONSchema extends Schema {
           description: description,
           title: title,
           nullable: nullable,
-          format: format,
           minimum: minimum?.toDouble(),
           maximum: maximum?.toDouble(),
         );
 
   /// Construct a schema for a non-integer number.
   ///
-  /// The [format] may be "float" or "double".
+  /// Json schema number doesn't support format.
   JSONSchema.number({
     String? description,
     String? title,
     bool? nullable,
-    String? format,
     double? minimum,
     double? maximum,
   }) : this(
@@ -404,7 +401,6 @@ final class JSONSchema extends Schema {
           description: description,
           title: title,
           nullable: nullable,
-          format: format,
           minimum: minimum,
           maximum: maximum,
         );
