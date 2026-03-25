@@ -18,6 +18,8 @@ export 'src/api.dart'
         Candidate,
         CitationMetadata,
         Citation,
+        GoogleMapsGroundingChunk,
+        GroundingChunk,
         CountTokensResponse,
         FinishReason,
         GenerateContentResponse,
@@ -121,5 +123,8 @@ export 'src/tool.dart'
         Tool,
         ToolConfig,
         GoogleSearch,
+        GoogleMaps,
         CodeExecution,
-        UrlContext;
+        UrlContext,
+        LatLng,
+        RetrievalConfig;

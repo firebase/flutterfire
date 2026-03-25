@@ -96,6 +96,23 @@ void main() {
       expect(vertexAIAppCheck.useLimitedUseAppCheckTokens, true);
     });
 
+    test('generativeModel creation with Grounding tools', () {
+      final ai = FirebaseAI.googleAI();
+
+      final model = ai.generativeModel(
+        model: 'gemini-2.5-flash',
+        tools: [Tool.googleMaps()],
+        toolConfig: ToolConfig(
+          retrievalConfig: RetrievalConfig(
+            latLng: LatLng(latitude: 37.42, longitude: -122.08),
+            languageCode: 'en-US',
+          ),
+        ),
+      );
+
+      expect(model, isA<GenerativeModel>());
+    });
+
     // ... other tests (e.g., with different parameters)
   });
 }

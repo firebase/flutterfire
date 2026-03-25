@@ -200,6 +200,14 @@ void main() {
       });
     });
 
+    // Test Tool.googleMaps()
+    test('Tool.googleMaps()', () {
+      final tool = Tool.googleMaps();
+      expect(tool.toJson(), {
+        'googleMaps': {},
+      });
+    });
+
     // Test ToolConfig
     test('ToolConfig with FunctionCallingConfig', () {
       final config = ToolConfig(
@@ -215,7 +223,50 @@ void main() {
       expect(config.toJson(), {});
     });
 
-    // Test GoogleSearch, CodeExecution, UrlContext toJson()
+    test('ToolConfig with RetrievalConfig', () {
+      final config = ToolConfig(
+        retrievalConfig: RetrievalConfig(
+          latLng: LatLng(latitude: 37.422, longitude: -122.084),
+          languageCode: 'en-US',
+        ),
+      );
+      expect(config.toJson(), {
+        'retrievalConfig': {
+          'latLng': {'latitude': 37.422, 'longitude': -122.084},
+          'languageCode': 'en-US',
+        },
+      });
+    });
+
+    // Test LatLng and RetrievalConfig
+    test('LatLng.toJson()', () {
+      final latLng = LatLng(latitude: 37.42, longitude: -122.08);
+      expect(latLng.toJson(), {'latitude': 37.42, 'longitude': -122.08});
+    });
+
+    test('RetrievalConfig.toJson() with all fields', () {
+      final config = RetrievalConfig(
+        latLng: LatLng(latitude: 1.0, longitude: 2.0),
+        languageCode: 'fr',
+      );
+      expect(config.toJson(), {
+        'latLng': {'latitude': 1.0, 'longitude': 2.0},
+        'languageCode': 'fr',
+      });
+    });
+
+    test('RetrievalConfig.toJson() with partial fields', () {
+      final config1 =
+          RetrievalConfig(latLng: LatLng(latitude: 1.0, longitude: 2.0));
+      expect(config1.toJson(), {
+        'latLng': {'latitude': 1.0, 'longitude': 2.0}
+      });
+
+      final config2 = RetrievalConfig(languageCode: 'fr');
+      expect(config2.toJson(), {'languageCode': 'fr'});
+    });
+
+    // Test GoogleSearch, CodeExecution, UrlContext, GoogleMaps toJson()
     test('GoogleSearch.toJson()', () {
       const search = GoogleSearch();
       expect(search.toJson(), {});
@@ -229,6 +280,11 @@ void main() {
     test('UrlContext.toJson()', () {
       const context = UrlContext();
       expect(context.toJson(), {});
+    });
+
+    test('GoogleMaps.toJson()', () {
+      const maps = GoogleMaps();
+      expect(maps.toJson(), {});
     });
   });
 }
