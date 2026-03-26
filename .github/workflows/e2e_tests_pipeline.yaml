@@ -6,10 +6,11 @@ concurrency:
 
 on:
   pull_request:
-    paths:
-      - 'packages/cloud_firestore/cloud_firestore/pipeline_example/**'
-      - 'packages/cloud_firestore/cloud_firestore/lib/**'
-      - '.github/workflows/e2e_tests_pipeline.yaml'
+     paths-ignore:
+      - 'docs/**'
+      - 'website/**'
+      - '**/example/**'
+      - '**.md'
   push:
     branches:
       - main
@@ -17,13 +18,11 @@ on:
       - firestore-pipelines-ios
       - firestore-pipelines-android
       - firestore-pipelines-web
-    paths:
-      - 'packages/cloud_firestore/cloud_firestore/pipeline_example/**'
-      - 'packages/cloud_firestore/cloud_firestore/lib/**'
-      - 'packages/cloud_firestore/cloud_firestore/ios/**'
-      - 'packages/cloud_firestore/cloud_firestore/macos/**'
-      - 'packages/cloud_firestore/cloud_firestore_web/**'
-      - '.github/workflows/e2e_tests_pipeline.yaml'
+    paths-ignore:
+      - 'docs/**'
+      - 'website/**'
+      - '**/example/**'
+      - '**.md'
 
 jobs:
   pipeline-e2e-android:
