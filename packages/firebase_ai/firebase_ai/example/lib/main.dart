@@ -32,6 +32,7 @@ import 'pages/schema_page.dart';
 import 'pages/token_count_page.dart';
 import 'pages/video_page.dart';
 import 'pages/server_template_page.dart';
+import 'pages/grounding_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

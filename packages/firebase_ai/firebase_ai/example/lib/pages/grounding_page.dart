@@ -189,8 +189,10 @@ class _GroundingPageState extends State<GroundingPage> {
               children: [
                 Expanded(
                   child: SwitchListTile(
-                    title: const Text('Search Grounding',
-                        style: TextStyle(fontSize: 12),),
+                    title: const Text(
+                      'Search Grounding',
+                      style: TextStyle(fontSize: 12),
+                    ),
                     value: _enableSearchGrounding,
                     onChanged: (bool value) {
                       setState(() {
@@ -201,8 +203,10 @@ class _GroundingPageState extends State<GroundingPage> {
                 ),
                 Expanded(
                   child: SwitchListTile(
-                    title: const Text('Maps Grounding',
-                        style: TextStyle(fontSize: 12),),
+                    title: const Text(
+                      'Maps Grounding',
+                      style: TextStyle(fontSize: 12),
+                    ),
                     value: _enableMapsGrounding,
                     onChanged: (bool value) {
                       setState(() {
@@ -224,7 +228,9 @@ class _GroundingPageState extends State<GroundingPage> {
                         decoration:
                             const InputDecoration(labelText: 'Latitude'),
                         keyboardType: const TextInputType.numberWithOptions(
-                            decimal: true, signed: true,),
+                          decimal: true,
+                          signed: true,
+                        ),
                       ),
                     ),
                     const SizedBox(width: 16),
@@ -234,7 +240,9 @@ class _GroundingPageState extends State<GroundingPage> {
                         decoration:
                             const InputDecoration(labelText: 'Longitude'),
                         keyboardType: const TextInputType.numberWithOptions(
-                            decimal: true, signed: true,),
+                          decimal: true,
+                          signed: true,
+                        ),
                       ),
                     ),
                   ],
