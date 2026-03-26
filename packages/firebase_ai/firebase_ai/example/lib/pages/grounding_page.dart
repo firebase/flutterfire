@@ -74,19 +74,15 @@ class _GroundingPageState extends State<GroundingPage> {
       }
     }
 
-    if (widget.useVertexBackend) {
-      _model = FirebaseAI.vertexAI(auth: FirebaseAuth.instance).generativeModel(
-        model: 'gemini-2.5-flash',
-        tools: tools.isNotEmpty ? tools : null,
-        toolConfig: toolConfig,
-      );
-    } else {
-      _model = FirebaseAI.googleAI(auth: FirebaseAuth.instance).generativeModel(
-        model: 'gemini-2.5-flash',
-        tools: tools.isNotEmpty ? tools : null,
-        toolConfig: toolConfig,
-      );
-    }
+    final aiProvider = widget.useVertexBackend
+        ? FirebaseAI.vertexAI(auth: FirebaseAuth.instance)
+        : FirebaseAI.googleAI(auth: FirebaseAuth.instance);
+
+    _model = aiProvider.generativeModel(
+      model: 'gemini-2.5-flash',
+      tools: tools.isNotEmpty ? tools : null,
+      toolConfig: toolConfig,
+    );
   }
 
   void _scrollDown() {
@@ -145,12 +141,14 @@ class _GroundingPageState extends State<GroundingPage> {
     } catch (e) {
       _showError(e.toString());
     } finally {
-      _textController.clear();
-      setState(() {
-        _loading = false;
-      });
-      _textFieldFocus.requestFocus();
-      _scrollDown();
+      if (mounted) {
+        _textController.clear();
+        setState(() {
+          _loading = false;
+        });
+        _textFieldFocus.requestFocus();
+        _scrollDown();
+      }
     }
   }
 
