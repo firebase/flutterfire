@@ -125,7 +125,8 @@ class _GroundingPageState extends State<GroundingPage> {
             return '- [$title](${chunk.web!.uri})';
           }
           if (chunk.maps != null) {
-            return '- [${chunk.maps!.title}](${chunk.maps!.uri})';
+            final title = chunk.maps!.title ?? chunk.maps!.uri;
+            return '- [${title ?? 'Maps Result'}](${chunk.maps!.uri ?? ''})';
           }
           return '- Unknown chunk';
         }).join('\n');
