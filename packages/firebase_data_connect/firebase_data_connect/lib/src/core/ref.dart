@@ -60,10 +60,30 @@ abstract class OperationRef<Data, Variables> {
 
   FirebaseDataConnect dataConnect;
 
+  static dynamic _sortKeys(dynamic value) {
+    if (value is Map) {
+      final sortedMap = <String, dynamic>{};
+      final sortedKeys = value.keys.toList()..sort();
+      for (final key in sortedKeys) {
+        sortedMap[key.toString()] = _sortKeys(value[key]);
+      }
+      return sortedMap;
+    } else if (value is List) {
+      return value.map(_sortKeys).toList();
+    }
+    return value;
+  }
+
   static String createOperationId<Variables>(String operationName,
       Variables? vars, Serializer<Variables>? serializer) {
     if (vars != null && serializer != null) {
-      return '$operationName::${serializer(vars)}';
+      try {
+        final decoded = jsonDecode(serializer(vars));
+        final sortedStr = jsonEncode(_sortKeys(decoded));
+        return '$operationName::$sortedStr';
+      } catch (_) {
+        return '$operationName::${serializer(vars)}';
+      }
     } else {
       return operationName;
     }
