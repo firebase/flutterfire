@@ -40,7 +40,7 @@ class ExecuteRequest {
 /// Request to resume a query.
 class ResumeRequest {
   ResumeRequest();
-  
+
   Map<String, dynamic> toJson() {
     return <String, dynamic>{};
   }
@@ -85,7 +85,7 @@ class StreamRequest {
 
   /// Execute a Data Connect query or mutation.
   final ExecuteRequest? execute;
-  
+
   /// Resume a query.
   final ResumeRequest? resume;
 
@@ -152,9 +152,9 @@ class StreamResponse {
         ]
       };
     }
-    
+
     List<dynamic>? errorsList = json['errors'] as List<dynamic>?;
-    
+
     return StreamResponse(
       requestId: json['requestId'] as String?,
       data: json['data'] as Map<String, dynamic>?,

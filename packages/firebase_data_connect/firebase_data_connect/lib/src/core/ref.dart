@@ -53,7 +53,7 @@ abstract class OperationRef<Data, Variables> {
   );
   Variables? variables;
   String operationName;
-  DataConnectTransport _transport;
+  final DataConnectTransport _transport;
   Deserializer<Data> deserializer;
   Serializer<Variables> serializer;
   String? _lastToken;
@@ -192,8 +192,6 @@ class QueryManager {
     return streamController;
   }
 
-
-
   void dispose() {
     _impactedQueriesSubscription?.cancel();
   }
@@ -217,7 +215,7 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
           variables,
         );
 
-  QueryManager _queryManager;
+  final QueryManager _queryManager;
 
   @override
   Future<QueryResult<Data, Variables>> execute(
@@ -311,13 +309,16 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
 
   Stream<QueryResult<Data, Variables>> subscribe() {
     _streamController ??= _queryManager.addQuery(this);
-    
-    final stream = _streamController!.stream.cast<QueryResult<Data, Variables>>();
+
+    final stream =
+        _streamController!.stream.cast<QueryResult<Data, Variables>>();
 
     // Return the stream to the caller, then execute fetches
     Future.microtask(() {
       if (dataConnect.cacheManager != null) {
-        _executeFromCache(QueryFetchPolicy.cacheOnly).then((_) {}).catchError((err) {
+        _executeFromCache(QueryFetchPolicy.cacheOnly)
+            .then((_) {})
+            .catchError((err) {
           log("Error fetching from cache during subscribe $err");
           // Ignore cache misses here, server stream will provide latest data
         });
@@ -378,20 +379,13 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
 
 class MutationRef<Data, Variables> extends OperationRef<Data, Variables> {
   MutationRef(
-    FirebaseDataConnect dataConnect,
-    String operationName,
-    DataConnectTransport transport,
-    Deserializer<Data> deserializer,
-    Serializer<Variables> serializer,
-    Variables? variables,
-  ) : super(
-          dataConnect,
-          operationName,
-          transport,
-          deserializer,
-          serializer,
-          variables,
-        );
+    super.dataConnect,
+    super.operationName,
+    super.transport,
+    super.deserializer,
+    super.serializer,
+    super.variables,
+  );
 
   @override
   Future<OperationResult<Data, Variables>> execute() async {

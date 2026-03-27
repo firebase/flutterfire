@@ -36,9 +36,7 @@ class DataConnectError extends FirebaseException {
 
 /// Error thrown when an operation is partially successful.
 class DataConnectOperationError<T> extends DataConnectError {
-  DataConnectOperationError(
-      DataConnectErrorCode code, String message, this.response)
-      : super(code, message);
+  DataConnectOperationError(super.code, String super.message, this.response);
   final DataConnectOperationFailureResponse<T> response;
 }
 

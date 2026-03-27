@@ -29,7 +29,7 @@ class DehydrationResult {
 class ResultTreeProcessor {
   /// Takes a server response, traverses the data, creates or updates `EntityDataObject`s,
   /// and builds a dehydrated `EntityNode` tree.
-  Future<DehydrationResult>  dehydrateResults(
+  Future<DehydrationResult> dehydrateResults(
       String queryId,
       Map<String, dynamic> serverResponse,
       CacheProvider cacheProvider,

@@ -233,7 +233,7 @@ void main() {
     });
 
     test('maxAge conformance', () async {
-      final deserializer = (String data) => 'Deserialized Data';
+      String deserializer(String data) => 'Deserialized Data';
       final mockResponseSuccess = http.Response('{"success": true}', 200);
 
       if (dataConnect.cacheManager == null) {

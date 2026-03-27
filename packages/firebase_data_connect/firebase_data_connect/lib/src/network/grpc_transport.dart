@@ -14,7 +14,8 @@
 
 part of 'grpc_library.dart';
 
-@Deprecated('Use RestTransport and WebSocketTransport instead. The Data Connect SDK has moved away from gRPC.')
+@Deprecated(
+    'Use RestTransport and WebSocketTransport instead. The Data Connect SDK has moved away from gRPC.')
 class GRPCTransport implements DataConnectTransport {
   /// GRPCTransport creates a new channel
   GRPCTransport(
@@ -177,7 +178,8 @@ class GRPCTransport implements DataConnectTransport {
     Variables? vars,
     String? token,
   ) {
-    throw UnsupportedError('Streaming should be routed through WebSocketTransport');
+    throw UnsupportedError(
+        'Streaming should be routed through WebSocketTransport');
   }
 }
 

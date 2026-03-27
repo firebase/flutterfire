@@ -34,7 +34,7 @@ class WebSocketTransport implements DataConnectTransport {
     int port = transportOptions.port ?? 443;
     String location = options.location;
     _url = '$protocol://$host:$port/v1/Connect/locations/$location';
-    
+
     _currentUid = auth?.currentUser?.uid;
     _authSubscription = auth?.idTokenChanges().listen((user) async {
       final newUid = user?.uid;
@@ -50,7 +50,7 @@ class WebSocketTransport implements DataConnectTransport {
             authToken: token,
           );
           _channel!.sink.add(jsonEncode(request.toJson()));
-        } catch (e) {
+        } catch (_) {
           // Ignored
         }
       }
@@ -60,8 +60,8 @@ class WebSocketTransport implements DataConnectTransport {
 
   FirebaseAuth? auth;
   String? _currentUid;
-  StreamSubscription<User?>? _authSubscription;
-
+  // ignore: unused_field
+  StreamSubscription<User?>? _authSubscription; //required to hold reference
 
   @override
   FirebaseAppCheck? appCheck;
@@ -81,10 +81,12 @@ class WebSocketTransport implements DataConnectTransport {
   String appId;
 
   WebSocketChannel? _channel;
+  // ignore: unused_field
   StreamSubscription? _channelSubscription;
 
   // Active listeners for stream subscriptions mapped by requestId.
-  final Map<String, List<StreamController<ServerResponse>>> _streamListeners = {};
+  final Map<String, List<StreamController<ServerResponse>>> _streamListeners =
+      {};
 
   // Active completers for unary operations mapped by requestId.
   final Map<String, List<Completer<ServerResponse>>> _unaryListeners = {};
@@ -120,11 +122,11 @@ class WebSocketTransport implements DataConnectTransport {
 
   Future<void> _ensureConnected(String? authToken) async {
     if (_channel != null) return;
-    
+
     String? appCheckToken;
     try {
       appCheckToken = await appCheck?.getToken();
-    } catch (e) {
+    } catch (_) {
       // Ignored
     }
 
@@ -138,7 +140,8 @@ class WebSocketTransport implements DataConnectTransport {
     );
 
     final initRequest = StreamRequest(
-      name: 'projects/${options.projectId}/locations/${options.location}/services/${options.serviceId}/connectors/${options.connector}',
+      name:
+          'projects/${options.projectId}/locations/${options.location}/services/${options.serviceId}/connectors/${options.connector}',
       headers: headers,
     );
     _channel!.sink.add(jsonEncode(initRequest.toJson()));
@@ -167,21 +170,21 @@ class WebSocketTransport implements DataConnectTransport {
 
       if (_unaryListeners.containsKey(requestId)) {
         final completers = _unaryListeners.remove(requestId)!;
-        for (var completer in completers) {
+        for (final completer in completers) {
           completer.complete(serverResponse);
         }
-      } 
-      
+      }
+
       if (_streamListeners.containsKey(requestId)) {
         final controllers = _streamListeners[requestId]!;
         if (response.cancelled == true) {
-          for (var controller in controllers) {
+          for (final controller in controllers) {
             controller.close();
           }
           _streamListeners.remove(requestId);
           _activeSubscriptions.removeWhere((key, value) => value == requestId);
         } else {
-          for (var controller in controllers) {
+          for (final controller in controllers) {
             controller.add(serverResponse);
           }
         }
@@ -193,12 +196,17 @@ class WebSocketTransport implements DataConnectTransport {
   }
 
   void _onError(dynamic error) {
-    final e = DataConnectError(DataConnectErrorCode.other, 'WebSocket error: $error');
+    final e =
+        DataConnectError(DataConnectErrorCode.other, 'WebSocket error: $error');
     for (final completers in _unaryListeners.values) {
-      for (var completer in completers) completer.completeError(e);
+      for (final completer in completers) {
+        completer.completeError(e);
+      }
     }
     for (final controllers in _streamListeners.values) {
-      for (var controller in controllers) controller.addError(e);
+      for (final controller in controllers) {
+        controller.addError(e);
+      }
     }
     _unaryListeners.clear();
     _streamListeners.clear();
@@ -213,7 +221,9 @@ class WebSocketTransport implements DataConnectTransport {
   void _onDone() {
     _channel = null;
     for (final controllers in _streamListeners.values) {
-      for (var controller in controllers) controller.close();
+      for (final controller in controllers) {
+        controller.close();
+      }
     }
     _unaryListeners.clear();
     _streamListeners.clear();
@@ -228,7 +238,8 @@ class WebSocketTransport implements DataConnectTransport {
     Variables? vars,
     String? authToken,
   ) async {
-    return _invokeUnary(queryName, deserializer, serializer, vars, authToken, RequestKind.execute);
+    return _invokeUnary(queryName, deserializer, serializer, vars, authToken,
+        RequestKind.execute);
   }
 
   @override
@@ -239,7 +250,8 @@ class WebSocketTransport implements DataConnectTransport {
     Variables? vars,
     String? authToken,
   ) async {
-    return _invokeUnary(queryName, deserializer, serializer, vars, authToken, RequestKind.execute);
+    return _invokeUnary(queryName, deserializer, serializer, vars, authToken,
+        RequestKind.execute);
   }
 
   Future<ServerResponse> _invokeUnary<Data, Variables>(
@@ -252,20 +264,21 @@ class WebSocketTransport implements DataConnectTransport {
   ) async {
     await _ensureConnected(authToken);
 
-    final operationId = OperationRef.createOperationId(operationName, vars, serializer);
+    final operationId =
+        OperationRef.createOperationId(operationName, vars, serializer);
     final completer = Completer<ServerResponse>();
 
     if (_activeSubscriptions.containsKey(operationId)) {
       final existingRequestId = _activeSubscriptions[operationId]!;
       _unaryListeners.putIfAbsent(existingRequestId, () => []).add(completer);
-      
+
       String? appCheckToken;
       try {
         appCheckToken = await appCheck?.getToken();
-      } catch (e) {
+      } catch (_) {
         // Ignored
       }
-      
+
       final headers = _buildHeaders(authToken, appCheckToken);
 
       final request = StreamRequest(
@@ -277,7 +290,7 @@ class WebSocketTransport implements DataConnectTransport {
         headers: headers,
       );
       _channel!.sink.add(jsonEncode(request.toJson()));
-      
+
       return completer.future;
     }
 
@@ -292,7 +305,7 @@ class WebSocketTransport implements DataConnectTransport {
     String? appCheckToken;
     try {
       appCheckToken = await appCheck?.getToken();
-    } catch (e) {
+    } catch (_) {
       // Ignored
     }
 
@@ -321,15 +334,18 @@ class WebSocketTransport implements DataConnectTransport {
     String? authToken,
   ) {
     late StreamController<ServerResponse> controller;
-    final operationId = OperationRef.createOperationId(queryName, vars, serializer);
+    final operationId =
+        OperationRef.createOperationId(queryName, vars, serializer);
 
     controller = StreamController<ServerResponse>(
       onListen: () async {
         await _ensureConnected(authToken);
-        
+
         if (_activeSubscriptions.containsKey(operationId)) {
           final existingRequestId = _activeSubscriptions[operationId]!;
-          _streamListeners.putIfAbsent(existingRequestId, () => []).add(controller);
+          _streamListeners
+              .putIfAbsent(existingRequestId, () => [])
+              .add(controller);
           return;
         }
 
@@ -345,7 +361,7 @@ class WebSocketTransport implements DataConnectTransport {
         String? appCheckToken;
         try {
           appCheckToken = await appCheck?.getToken();
-        } catch (e) {
+        } catch (_) {
           // Ignored
         }
 
@@ -365,14 +381,14 @@ class WebSocketTransport implements DataConnectTransport {
       onCancel: () {
         if (!_activeSubscriptions.containsKey(operationId)) return;
         final requestId = _activeSubscriptions[operationId]!;
-        
+
         final listeners = _streamListeners[requestId];
         if (listeners != null) {
           listeners.remove(controller);
           if (listeners.isEmpty) {
             _streamListeners.remove(requestId);
             _activeSubscriptions.remove(operationId);
-            
+
             if (_channel != null) {
               final cancelReq = StreamRequest(
                 requestId: requestId,

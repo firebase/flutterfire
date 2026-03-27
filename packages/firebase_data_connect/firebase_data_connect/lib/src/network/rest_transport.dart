@@ -194,7 +194,8 @@ class RestTransport implements DataConnectTransport {
     Variables? vars,
     String? token,
   ) {
-    throw UnsupportedError('Streaming should be routed through WebSocketTransport');
+    throw UnsupportedError(
+        'Streaming should be routed through WebSocketTransport');
   }
 }
 
