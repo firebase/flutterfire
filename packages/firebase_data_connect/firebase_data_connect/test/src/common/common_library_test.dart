@@ -103,7 +103,7 @@ void main() {
 
     test('should handle invokeQuery with proper deserializer', () async {
       const queryName = 'testQuery';
-      final deserializer = (json) => json;
+      deserializer(json) => json;
       final result = await transport.invokeQuery(
         queryName,
         deserializer,
@@ -117,7 +117,7 @@ void main() {
 
     test('should handle invokeMutation with proper deserializer', () async {
       const queryName = 'testMutation';
-      final deserializer = (json) => json;
+      deserializer(json) => json;
       final result = await transport.invokeMutation(
         queryName,
         deserializer,
@@ -134,12 +134,12 @@ void main() {
 // Test class extending DataConnectTransport for testing purposes
 class TestDataConnectTransport extends DataConnectTransport {
   TestDataConnectTransport(
-    TransportOptions transportOptions,
-    DataConnectOptions options,
-    String appId,
-    CallerSDKType sdkType, {
+    super.transportOptions,
+    super.options,
+    super.appId,
+    super.sdkType, {
     FirebaseAppCheck? appCheck,
-  }) : super(transportOptions, options, appId, sdkType) {
+  }) {
     this.appCheck = appCheck;
   }
 
@@ -165,5 +165,16 @@ class TestDataConnectTransport extends DataConnectTransport {
   ) async {
     // Simulate mutation invocation logic here
     return ServerResponse({});
+  }
+
+  @override
+  Stream<ServerResponse> invokeStreamQuery<Data, Variables>(
+    String queryName,
+    Deserializer<Data> deserializer,
+    Serializer<Variables>? serializer,
+    Variables? vars,
+    String? authToken,
+  ) {
+    return Stream.value(ServerResponse({}));
   }
 }

@@ -20,10 +20,8 @@ import 'package:firebase_data_connect/src/common/common_library.dart';
 import 'package:firebase_data_connect/src/core/ref.dart';
 import 'package:flutter/foundation.dart';
 
-import './network/transport_library.dart'
-    if (dart.library.io) './network/grpc_library.dart'
-    if (dart.library.js_interop) './network/rest_library.dart'
-    if (dart.library.html) './network/rest_library.dart';
+import './network/rest_library.dart';
+import './network/transport_library.dart';
 
 import 'cache/cache_data_types.dart';
 import 'cache/cache.dart';
@@ -93,13 +91,22 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
   void checkTransport() {
     transportOptions ??=
         TransportOptions('firebasedataconnect.googleapis.com', null, true);
-    transport = getTransport(
+    final rest = RestTransport(
       transportOptions!,
       options,
       app.options.appId,
       _sdkType,
       appCheck,
     );
+    final ws = WebSocketTransport(
+      transportOptions!,
+      options,
+      app.options.appId,
+      _sdkType,
+      appCheck,
+      auth,
+    );
+    transport = _RoutingTransport(rest, ws);
   }
 
   @visibleForTesting
@@ -120,7 +127,7 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
     checkTransport();
     checkAndInitializeCache();
     String queryId =
-        QueryManager.createQueryId(operationName, vars, varsSerializer);
+        OperationRef.createOperationId(operationName, vars, varsSerializer);
 
     QueryRef<Data, Variables>? ref =
         _queryManager.trackedQueries[queryId] as QueryRef<Data, Variables>?;
@@ -216,5 +223,94 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
     cachedInstances[app.name]![connectorConfig.toJson()] = newInstance;
 
     return newInstance;
+  }
+}
+
+class _RoutingTransport implements DataConnectTransport {
+  _RoutingTransport(this.rest, this.websocket);
+  final RestTransport rest;
+  final WebSocketTransport websocket;
+
+  @override
+  FirebaseAppCheck? get appCheck => rest.appCheck;
+  @override
+  set appCheck(FirebaseAppCheck? val) {
+    rest.appCheck = val;
+    websocket.appCheck = val;
+  }
+
+  @override
+  CallerSDKType get sdkType => rest.sdkType;
+  @override
+  set sdkType(CallerSDKType val) {
+    rest.sdkType = val;
+    websocket.sdkType = val;
+  }
+
+  @override
+  TransportOptions get transportOptions => rest.transportOptions;
+  @override
+  set transportOptions(TransportOptions val) {
+    rest.transportOptions = val;
+    websocket.transportOptions = val;
+  }
+
+  @override
+  DataConnectOptions get options => rest.options;
+  @override
+  set options(DataConnectOptions val) {
+    rest.options = val;
+    websocket.options = val;
+  }
+
+  @override
+  String get appId => rest.appId;
+  @override
+  set appId(String val) {
+    rest.appId = val;
+    websocket.appId = val;
+  }
+
+  @override
+  Future<ServerResponse> invokeMutation<Data, Variables>(
+    String queryName,
+    Deserializer<Data> deserializer,
+    Serializer<Variables>? serializer,
+    Variables? vars,
+    String? token,
+  ) {
+    if (websocket.isConnected) {
+      return websocket.invokeMutation(
+          queryName, deserializer, serializer, vars, token);
+    }
+    return rest.invokeMutation(
+        queryName, deserializer, serializer, vars, token);
+  }
+
+  @override
+  Future<ServerResponse> invokeQuery<Data, Variables>(
+    String queryName,
+    Deserializer<Data> deserializer,
+    Serializer<Variables>? serialize,
+    Variables? vars,
+    String? token,
+  ) {
+    if (websocket.isConnected) {
+      return websocket.invokeQuery(
+          queryName, deserializer, serialize, vars, token);
+    }
+    return rest.invokeQuery(queryName, deserializer, serialize, vars, token);
+  }
+
+  @override
+  Stream<ServerResponse> invokeStreamQuery<Data, Variables>(
+    String queryName,
+    Deserializer<Data> deserializer,
+    Serializer<Variables>? serializer,
+    Variables? vars,
+    String? token,
+  ) {
+    return websocket.invokeStreamQuery(
+        queryName, deserializer, serializer, vars, token);
   }
 }
