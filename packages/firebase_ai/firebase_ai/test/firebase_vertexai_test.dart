@@ -112,7 +112,5 @@ void main() {
 
       expect(model, isA<GenerativeModel>());
     });
-
-    // ... other tests (e.g., with different parameters)
   });
 }
