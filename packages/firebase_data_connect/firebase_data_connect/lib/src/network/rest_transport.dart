@@ -184,6 +184,19 @@ class RestTransport implements DataConnectTransport {
       token,
     );
   }
+
+  /// WebSockets are now handled by WebSocketTransport in FirebaseDataConnect.
+  @override
+  Stream<ServerResponse> invokeStreamQuery<Data, Variables>(
+    String queryName,
+    Deserializer<Data> deserializer,
+    Serializer<Variables>? serializer,
+    Variables? vars,
+    String? token,
+  ) {
+    throw UnsupportedError(
+        'Streaming should be routed through WebSocketTransport');
+  }
 }
 
 /// Initializes Rest transport for Data Connect.

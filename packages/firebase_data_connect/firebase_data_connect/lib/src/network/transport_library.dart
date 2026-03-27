@@ -1,4 +1,4 @@
-// Copyright 2024 Google LLC
+// Copyright 2026 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,8 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:async';
+import 'dart:convert';
+import 'dart:developer' as developer;
+import 'dart:math';
 import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../common/common_library.dart';
+import '../core/ref.dart';
+import '../dataconnect_version.dart';
+import 'stream_protocol.dart';
 
 part 'transport_stub.dart';
+part 'websocket_transport.dart';
