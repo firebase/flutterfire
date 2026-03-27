@@ -26,14 +26,17 @@ class WebSocketTransport implements DataConnectTransport {
     this.appCheck, [
     this.auth,
   ]) {
-    String protocol = 'ws';
-    if (transportOptions.isSecure ?? true) {
-      protocol += 's';
-    }
-    String host = transportOptions.host;
-    int port = transportOptions.port ?? 443;
-    String location = options.location;
-    _url = '$protocol://$host:$port/v1/Connect/locations/$location';
+    final protocol = (transportOptions.isSecure ?? true) ? 'wss' : 'ws';
+    final host = transportOptions.host;
+    final port = transportOptions.port ?? 443;
+    final location = options.location;
+
+    _url = Uri(
+      scheme: protocol,
+      host: host,
+      port: port,
+      path: '/v1/Connect/locations/$location',
+    ).toString();
 
     _currentUid = auth?.currentUser?.uid;
     _authSubscription = auth?.idTokenChanges().listen((user) async {
