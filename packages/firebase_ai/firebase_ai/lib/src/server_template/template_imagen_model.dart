@@ -16,6 +16,11 @@ part of '../base_model.dart';
 
 /// An image model that connects to a remote server template.
 @experimental
+@Deprecated(
+  'All Imagen models are deprecated and will shut down as early as June 2026. '
+  'As a replacement, you can migrate your apps to use Gemini Image models (the '
+  '"Nano Banana" models)(https://firebase.google.com/docs/ai-logic/imagen-models-migration).',
+)
 final class TemplateImagenModel extends BaseTemplateApiClientModel {
   TemplateImagenModel._testModel(
       {required FirebaseApp app,
