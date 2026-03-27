@@ -1,4 +1,4 @@
-// Copyright 2024 Google LLC
+// Copyright 2026 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -57,6 +57,19 @@ class TransportStub implements DataConnectTransport {
     String? token,
   ) async {
     // TODO: implement invokeMutation
+    throw UnimplementedError();
+  }
+
+  /// Stub for subscribing to a query.
+  @override
+  Stream<ServerResponse> invokeStreamQuery<Data, Variables>(
+    String queryName,
+    Deserializer<Data> deserializer,
+    Serializer<Variables>? serializer,
+    Variables? vars,
+    String? token,
+  ) {
+    // TODO: implement invokeStreamQuery
     throw UnimplementedError();
   }
 

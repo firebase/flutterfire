@@ -1,4 +1,4 @@
-// Copyright 2024 Google LLC
+// Copyright 2026 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -53,15 +53,43 @@ abstract class OperationRef<Data, Variables> {
   );
   Variables? variables;
   String operationName;
-  DataConnectTransport _transport;
+  final DataConnectTransport _transport;
   Deserializer<Data> deserializer;
   Serializer<Variables> serializer;
   String? _lastToken;
 
   FirebaseDataConnect dataConnect;
 
-  Future<OperationResult<Data, Variables>> execute(
-      {QueryFetchPolicy fetchPolicy = QueryFetchPolicy.preferCache});
+  static dynamic _sortKeys(dynamic value) {
+    if (value is Map) {
+      final sortedMap = <String, dynamic>{};
+      final sortedKeys = value.keys.toList()..sort();
+      for (final key in sortedKeys) {
+        sortedMap[key.toString()] = _sortKeys(value[key]);
+      }
+      return sortedMap;
+    } else if (value is List) {
+      return value.map(_sortKeys).toList();
+    }
+    return value;
+  }
+
+  static String createOperationId<Variables>(String operationName,
+      Variables? vars, Serializer<Variables>? serializer) {
+    if (vars != null && serializer != null) {
+      try {
+        final decoded = jsonDecode(serializer(vars));
+        final sortedStr = jsonEncode(_sortKeys(decoded));
+        return '$operationName::$sortedStr';
+      } catch (_) {
+        return '$operationName::${serializer(vars)}';
+      }
+    } else {
+      return operationName;
+    }
+  }
+
+  Future<OperationResult<Data, Variables>> execute();
 
   Future<bool> _shouldRetry() async {
     String? newToken;
@@ -184,15 +212,6 @@ class QueryManager {
     return streamController;
   }
 
-  static String createQueryId<QueryVariables>(String queryName,
-      QueryVariables? vars, Serializer<QueryVariables> varSerializer) {
-    if (vars != null) {
-      return '$queryName::${varSerializer(vars)}';
-    } else {
-      return queryName;
-    }
-  }
-
   void dispose() {
     _impactedQueriesSubscription?.cancel();
   }
@@ -216,7 +235,7 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
           variables,
         );
 
-  QueryManager _queryManager;
+  final QueryManager _queryManager;
 
   @override
   Future<QueryResult<Data, Variables>> execute(
@@ -240,7 +259,7 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
   }
 
   String get _queryId =>
-      QueryManager.createQueryId(operationName, variables, serializer);
+      OperationRef.createOperationId(operationName, variables, serializer);
 
   Future<QueryResult<Data, Variables>> _executeFromCache(
       QueryFetchPolicy fetchPolicy) async {
@@ -311,9 +330,58 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
   Stream<QueryResult<Data, Variables>> subscribe() {
     _streamController ??= _queryManager.addQuery(this);
 
-    execute();
+    final stream =
+        _streamController!.stream.cast<QueryResult<Data, Variables>>();
 
-    return _streamController!.stream.cast<QueryResult<Data, Variables>>();
+    // Return the stream to the caller, then execute fetches
+    Future.microtask(() {
+      if (dataConnect.cacheManager != null) {
+        _executeFromCache(QueryFetchPolicy.cacheOnly)
+            .then((_) {})
+            .catchError((err) {
+          log("Error fetching from cache during subscribe $err");
+          // Ignore cache misses here, server stream will provide latest data
+        });
+      }
+
+      // Initiate Web Socket stream
+      _streamFromServer();
+    });
+
+    return stream;
+  }
+
+  void _streamFromServer() async {
+    bool shouldRetry = await _shouldRetry();
+    try {
+      final stream = _transport.invokeStreamQuery<Data, Variables>(
+        operationName,
+        deserializer,
+        serializer,
+        variables,
+        _lastToken,
+      );
+
+      await for (final serverResponse in stream) {
+        if (dataConnect.cacheManager != null) {
+          await dataConnect.cacheManager!.update(_queryId, serverResponse);
+        }
+        Data typedData = _convertBodyJsonToData(serverResponse.data);
+
+        QueryResult<Data, Variables> res =
+            QueryResult(dataConnect, typedData, DataSource.server, this);
+        publishResultToStream(res);
+      }
+    } on DataConnectError catch (e) {
+      if (shouldRetry &&
+          e.code == DataConnectErrorCode.unauthorized.toString()) {
+        _streamFromServer();
+      } else {
+        publishErrorToStream(e);
+      }
+    } catch (e) {
+      publishErrorToStream(e as Error);
+    }
   }
 
   void publishResultToStream(QueryResult<Data, Variables> result) {
@@ -322,7 +390,7 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
     }
   }
 
-  void publishErrorToStream(Error err) {
+  void publishErrorToStream(Object err) {
     if (_streamController != null) {
       _streamController?.addError(err);
     }
@@ -331,24 +399,16 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
 
 class MutationRef<Data, Variables> extends OperationRef<Data, Variables> {
   MutationRef(
-    FirebaseDataConnect dataConnect,
-    String operationName,
-    DataConnectTransport transport,
-    Deserializer<Data> deserializer,
-    Serializer<Variables> serializer,
-    Variables? variables,
-  ) : super(
-          dataConnect,
-          operationName,
-          transport,
-          deserializer,
-          serializer,
-          variables,
-        );
+    super.dataConnect,
+    super.operationName,
+    super.transport,
+    super.deserializer,
+    super.serializer,
+    super.variables,
+  );
 
   @override
-  Future<OperationResult<Data, Variables>> execute(
-      {QueryFetchPolicy fetchPolicy = QueryFetchPolicy.serverOnly}) async {
+  Future<OperationResult<Data, Variables>> execute() async {
     bool shouldRetry = await _shouldRetry();
     try {
       // Logic below is duplicated due to the fact that `executeOperation` returns
