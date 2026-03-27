@@ -14,7 +14,7 @@
 
 part of 'grpc_library.dart';
 
-/// Transport used for Android/iOS. Uses a GRPC transport instead of REST.
+@Deprecated('Use RestTransport and WebSocketTransport instead. The Data Connect SDK has moved away from gRPC.')
 class GRPCTransport implements DataConnectTransport {
   /// GRPCTransport creates a new channel
   GRPCTransport(
@@ -166,6 +166,18 @@ class GRPCTransport implements DataConnectTransport {
       }
       rethrow;
     }
+  }
+
+  /// Invokes stream query using WebSockets (even for GRPC clients we fall back to WebSockets for streaming right now).
+  @override
+  Stream<ServerResponse> invokeStreamQuery<Data, Variables>(
+    String queryName,
+    Deserializer<Data> deserializer,
+    Serializer<Variables>? serializer,
+    Variables? vars,
+    String? token,
+  ) {
+    throw UnsupportedError('Streaming should be routed through WebSocketTransport');
   }
 }
 

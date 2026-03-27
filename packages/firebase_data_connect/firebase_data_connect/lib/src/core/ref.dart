@@ -60,8 +60,16 @@ abstract class OperationRef<Data, Variables> {
 
   FirebaseDataConnect dataConnect;
 
-  Future<OperationResult<Data, Variables>> execute(
-      {QueryFetchPolicy fetchPolicy = QueryFetchPolicy.preferCache});
+  static String createOperationId<Variables>(String operationName,
+      Variables? vars, Serializer<Variables>? serializer) {
+    if (vars != null && serializer != null) {
+      return '$operationName::${serializer(vars)}';
+    } else {
+      return operationName;
+    }
+  }
+
+  Future<OperationResult<Data, Variables>> execute();
 
   Future<bool> _shouldRetry() async {
     String? newToken;
@@ -184,14 +192,7 @@ class QueryManager {
     return streamController;
   }
 
-  static String createQueryId<QueryVariables>(String queryName,
-      QueryVariables? vars, Serializer<QueryVariables> varSerializer) {
-    if (vars != null) {
-      return '$queryName::${varSerializer(vars)}';
-    } else {
-      return queryName;
-    }
-  }
+
 
   void dispose() {
     _impactedQueriesSubscription?.cancel();
@@ -240,7 +241,7 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
   }
 
   String get _queryId =>
-      QueryManager.createQueryId(operationName, variables, serializer);
+      OperationRef.createOperationId(operationName, variables, serializer);
 
   Future<QueryResult<Data, Variables>> _executeFromCache(
       QueryFetchPolicy fetchPolicy) async {
@@ -310,10 +311,56 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
 
   Stream<QueryResult<Data, Variables>> subscribe() {
     _streamController ??= _queryManager.addQuery(this);
+    
+    final stream = _streamController!.stream.cast<QueryResult<Data, Variables>>();
 
-    execute();
+    // Return the stream to the caller, then execute fetches
+    Future.microtask(() {
+      if (dataConnect.cacheManager != null) {
+        _executeFromCache(QueryFetchPolicy.cacheOnly).then((_) {}).catchError((err) {
+          log("Error fetching from cache during subscribe $err");
+          // Ignore cache misses here, server stream will provide latest data
+        });
+      }
 
-    return _streamController!.stream.cast<QueryResult<Data, Variables>>();
+      // Initiate Web Socket stream
+      _streamFromServer();
+    });
+
+    return stream;
+  }
+
+  void _streamFromServer() async {
+    bool shouldRetry = await _shouldRetry();
+    try {
+      final stream = _transport.invokeStreamQuery<Data, Variables>(
+        operationName,
+        deserializer,
+        serializer,
+        variables,
+        _lastToken,
+      );
+
+      await for (final serverResponse in stream) {
+        if (dataConnect.cacheManager != null) {
+          await dataConnect.cacheManager!.update(_queryId, serverResponse);
+        }
+        Data typedData = _convertBodyJsonToData(serverResponse.data);
+
+        QueryResult<Data, Variables> res =
+            QueryResult(dataConnect, typedData, DataSource.server, this);
+        publishResultToStream(res);
+      }
+    } on DataConnectError catch (e) {
+      if (shouldRetry &&
+          e.code == DataConnectErrorCode.unauthorized.toString()) {
+        _streamFromServer();
+      } else {
+        publishErrorToStream(e);
+      }
+    } catch (e) {
+      publishErrorToStream(e as Error);
+    }
   }
 
   void publishResultToStream(QueryResult<Data, Variables> result) {
@@ -322,7 +369,7 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
     }
   }
 
-  void publishErrorToStream(Error err) {
+  void publishErrorToStream(Object err) {
     if (_streamController != null) {
       _streamController?.addError(err);
     }
@@ -347,8 +394,7 @@ class MutationRef<Data, Variables> extends OperationRef<Data, Variables> {
         );
 
   @override
-  Future<OperationResult<Data, Variables>> execute(
-      {QueryFetchPolicy fetchPolicy = QueryFetchPolicy.serverOnly}) async {
+  Future<OperationResult<Data, Variables>> execute() async {
     bool shouldRetry = await _shouldRetry();
     try {
       // Logic below is duplicated due to the fact that `executeOperation` returns

@@ -117,4 +117,13 @@ abstract class DataConnectTransport {
     Variables? vars,
     String? token,
   );
+
+  /// Invokes corresponding stream query endpoint.
+  Stream<ServerResponse> invokeStreamQuery<Data, Variables>(
+    String queryName,
+    Deserializer<Data> deserializer,
+    Serializer<Variables> serializer,
+    Variables? vars,
+    String? token,
+  );
 }

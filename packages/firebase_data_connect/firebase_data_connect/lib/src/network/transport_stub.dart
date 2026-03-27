@@ -60,6 +60,19 @@ class TransportStub implements DataConnectTransport {
     throw UnimplementedError();
   }
 
+  /// Stub for subscribing to a query.
+  @override
+  Stream<ServerResponse> invokeStreamQuery<Data, Variables>(
+    String queryName,
+    Deserializer<Data> deserializer,
+    Serializer<Variables>? serializer,
+    Variables? vars,
+    String? token,
+  ) {
+    // TODO: implement invokeStreamQuery
+    throw UnimplementedError();
+  }
+
   /// Stub for invoking a query.
   @override
   Future<ServerResponse> invokeQuery<Data, Variables>(

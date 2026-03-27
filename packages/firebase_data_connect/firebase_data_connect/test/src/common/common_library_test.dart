@@ -166,4 +166,15 @@ class TestDataConnectTransport extends DataConnectTransport {
     // Simulate mutation invocation logic here
     return ServerResponse({});
   }
+
+  @override
+  Stream<ServerResponse> invokeStreamQuery<Data, Variables>(
+    String queryName,
+    Deserializer<Data> deserializer,
+    Serializer<Variables>? serializer,
+    Variables? vars,
+    String? authToken,
+  ) {
+    return Stream.value(ServerResponse({}));
+  }
 }
