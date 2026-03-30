@@ -62,6 +62,26 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   static Stream<RemoteMessage> get onMessageOpenedApp =>
       FirebaseMessagingPlatform.onMessageOpenedApp.stream;
 
+  /// Returns a [Stream] of [RemoteMessage] events when the user opens the app by tapping the
+  /// notification that was delivered as the initial (terminated-state) message on **iOS**.
+  ///
+  /// Each event is a [RemoteMessage] in the same sense as [getInitialMessage]: if the application
+  /// was opened from a terminated state via a [RemoteMessage], that is the payload you receive here.
+  ///
+  /// This is an **event-driven** alternative to [getInitialMessage]
+  ///
+  /// See also [onMessageOpenedApp].
+  ///
+  /// Throws [UnsupportedError] when not running on iOS.
+  static Stream<RemoteMessage> get onInitialMessage {
+    if (defaultTargetPlatform != TargetPlatform.iOS) {
+      throw UnsupportedError(
+        'onInitialMessage is only supported on iOS.',
+      );
+    }
+    return FirebaseMessagingPlatform.onInitialMessage.stream;
+  }
+
   // ignore: use_setters_to_change_properties
   /// Set a message handler function which is called when the app is in the
   /// background or terminated.

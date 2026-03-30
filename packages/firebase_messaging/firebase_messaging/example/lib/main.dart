@@ -174,6 +174,7 @@ class Application extends StatefulWidget {
 class _Application extends State<Application> {
   String? _token;
   String? initialMessage;
+  String? _onInitialMessagePreview;
   bool _resolved = false;
 
   @override
@@ -201,6 +202,15 @@ class _Application extends State<Application> {
         '/message',
         arguments: MessageArguments(message, true),
       );
+    });
+
+    FirebaseMessaging.onInitialMessage.listen((RemoteMessage message) {
+      print(
+        'onInitialMessage: messageId=${message.messageId} data=${message.data}',
+      );
+      setState(() {
+        _onInitialMessagePreview = message.data.toString();
+      });
     });
   }
 
@@ -308,9 +318,16 @@ class _Application extends State<Application> {
             MetaCard(
               'Initial Message',
               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(_resolved ? 'Resolved' : 'Resolving'),
                   Text(initialMessage ?? 'None'),
+                  const SizedBox(height: 8),
+                  Text(
+                    'onInitialMessage (iOS terminated tap)',
+                    style: Theme.of(context).textTheme.titleSmall,
+                  ),
+                  Text(_onInitialMessagePreview ?? 'None yet'),
                 ],
               ),
             ),

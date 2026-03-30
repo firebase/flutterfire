@@ -450,6 +450,11 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     NSDictionary *notificationDict =
         [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:remoteNotification];
     [_channel invokeMethod:@"Messaging#onMessageOpenedApp" arguments:notificationDict];
+  } else if (_notificationOpenedAppID != nil &&
+             [_initialNotificationID isEqualToString:_notificationOpenedAppID]) {
+    NSDictionary *notificationDict =
+        [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:remoteNotification];
+    [_channel invokeMethod:@"Messaging#onInitialMessage" arguments:notificationDict];
   }
 
   // Forward on to any other delegates.

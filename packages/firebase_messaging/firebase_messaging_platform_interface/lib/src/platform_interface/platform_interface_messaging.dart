@@ -86,6 +86,18 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   static final StreamController<RemoteMessage> onMessageOpenedApp =
       StreamController<RemoteMessage>.broadcast();
 
+  /// Returns a [Stream] of [RemoteMessage] events when the user opens the app by tapping the
+  /// notification that was delivered as the initial (terminated-state) message on **iOS**.
+  ///
+  /// Each event is a [RemoteMessage] in the same sense as [getInitialMessage]: if the application
+  /// was opened from a terminated state via a [RemoteMessage], that is the payload you receive here.
+  ///
+  /// This is an **event-driven** alternative to [getInitialMessage]
+  ///
+  /// See also [onMessageOpenedApp].
+  static final StreamController<RemoteMessage> onInitialMessage =
+      StreamController<RemoteMessage>.broadcast();
+
   static BackgroundMessageHandler? _onBackgroundMessageHandler;
 
   /// Set a message handler function which is called when the app is in the

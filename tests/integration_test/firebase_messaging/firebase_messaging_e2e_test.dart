@@ -131,6 +131,31 @@ void main() {
         });
       });
 
+      group('onInitialMessage', () {
+        test(
+          'throws UnsupportedError on non-iOS',
+          () {
+            expect(
+              () => FirebaseMessaging.onInitialMessage,
+              throwsA(isA<UnsupportedError>()),
+            );
+          },
+          skip: defaultTargetPlatform == TargetPlatform.iOS,
+        );
+
+        test(
+          'can listen multiple times on iOS',
+          () async {
+            StreamSubscription<RemoteMessage> sub =
+                FirebaseMessaging.onInitialMessage.listen((_) {});
+            await sub.cancel();
+            sub = FirebaseMessaging.onInitialMessage.listen((_) {});
+            await sub.cancel();
+          },
+          skip: defaultTargetPlatform != TargetPlatform.iOS,
+        );
+      });
+
       group(
         'getToken()',
         () {
