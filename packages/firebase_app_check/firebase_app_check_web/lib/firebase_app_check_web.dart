@@ -132,6 +132,7 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
     AppleProvider? appleProvider,
     AndroidAppCheckProvider? providerAndroid,
     AppleAppCheckProvider? providerApple,
+    WindowsAppCheckProvider? providerWindows,
   }) async {
     // save the recaptcha type and site key for future startups
     if (webProvider != null) {
