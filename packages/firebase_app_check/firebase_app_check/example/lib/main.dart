@@ -141,9 +141,8 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
                 android: const AndroidDebugProvider(),
                 apple: const AppleDebugProvider(),
                 windows: WindowsDebugProvider(
-                  debugToken: kWindowsDebugToken.isNotEmpty
-                      ? kWindowsDebugToken
-                      : null,
+                  debugToken:
+                      kWindowsDebugToken.isNotEmpty ? kWindowsDebugToken : null,
                 ),
               ),
               child: const Text('activate(Debug)'),

@@ -59,8 +59,7 @@ class Win32Window {
   // Processes and route salient window messages for mouse handling,
   // size change and DPI. Delegates handling of these to member overloads that
   // inheriting classes can handle.
-  virtual LRESULT MessageHandler(HWND window,
-                                 UINT const message,
+  virtual LRESULT MessageHandler(HWND window, UINT const message,
                                  WPARAM const wparam,
                                  LPARAM const lparam) noexcept;
 
@@ -79,8 +78,7 @@ class Win32Window {
   // non-client DPI scaling so that the non-client area automatically
   // responds to changes in DPI. All other messages are handled by
   // MessageHandler.
-  static LRESULT CALLBACK WndProc(HWND const window,
-                                  UINT const message,
+  static LRESULT CALLBACK WndProc(HWND const window, UINT const message,
                                   WPARAM const wparam,
                                   LPARAM const lparam) noexcept;
 
