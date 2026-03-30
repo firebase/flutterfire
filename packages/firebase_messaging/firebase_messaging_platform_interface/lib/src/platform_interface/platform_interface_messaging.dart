@@ -95,6 +95,7 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   /// This is an **event-driven** alternative to [getInitialMessage]
   ///
   /// See also [onMessageOpenedApp].
+  // ignore: close_sinks, never closed
   static final StreamController<RemoteMessage> onInitialMessage =
       StreamController<RemoteMessage>.broadcast();
 
