@@ -24,6 +24,11 @@ part of '../base_model.dart';
 /// > Warning: For Vertex AI in Firebase, image generation using Imagen 3 models
 /// is in Public Preview, which means that the feature is not subject to any SLA
 /// or deprecation policy and could change in backwards-incompatible ways.
+@Deprecated(
+  'All Imagen models are deprecated and will shut down as early as June 2026. '
+  'As a replacement, you can migrate your apps to use Gemini Image models (the '
+  '"Nano Banana" models)(https://firebase.google.com/docs/ai-logic/imagen-models-migration).',
+)
 final class ImagenModel extends BaseApiClientModel {
   ImagenModel._(
       {required FirebaseApp app,

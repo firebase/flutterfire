@@ -40,8 +40,6 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
 
   // ignore: experimental_member_use
   TemplateGenerativeModel? _templateGenerativeModel;
-  // ignore: experimental_member_use
-  TemplateImagenModel? _templateImagenModel;
 
   @override
   void initState() {
@@ -54,16 +52,10 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
       _templateGenerativeModel =
           // ignore: experimental_member_use
           FirebaseAI.vertexAI(location: 'global').templateGenerativeModel();
-      _templateImagenModel =
-          // ignore: experimental_member_use
-          FirebaseAI.vertexAI(location: 'global').templateImagenModel();
     } else {
       _templateGenerativeModel =
           // ignore: experimental_member_use
           FirebaseAI.googleAI().templateGenerativeModel();
-      _templateImagenModel =
-          // ignore: experimental_member_use
-          FirebaseAI.googleAI().templateImagenModel();
     }
   }
 
@@ -130,16 +122,6 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
                     dimension: 15,
                   ),
                   if (!_loading) ...[
-                    IconButton(
-                      onPressed: () async {
-                        await _serverTemplateImagen(_textController.text);
-                      },
-                      icon: Icon(
-                        Icons.image_search,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                      tooltip: 'Imagen',
-                    ),
                     IconButton(
                       onPressed: () async {
                         await _serverTemplateImageInput(_textController.text);
@@ -237,55 +219,6 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
       }
 
       setState(() {
-        _loading = false;
-        _scrollDown();
-      });
-    } catch (e) {
-      _showError(e.toString());
-      setState(() {
-        _loading = false;
-      });
-    } finally {
-      _textController.clear();
-      setState(() {
-        _loading = false;
-      });
-      _textFieldFocus.requestFocus();
-    }
-  }
-
-  Future<void> _serverTemplateImagen(String message) async {
-    setState(() {
-      _loading = true;
-    });
-    MessageData? resultMessage;
-    try {
-      _messages.add(MessageData(text: message, fromUser: true));
-      // ignore: experimental_member_use
-      var response = await _templateImagenModel?.generateImages(
-        'portrait-googleai',
-        inputs: {
-          'animal': message,
-        },
-      );
-
-      if (response!.images.isNotEmpty) {
-        var imagenImage = response.images[0];
-
-        resultMessage = MessageData(
-          imageBytes: imagenImage.bytesBase64Encoded,
-          text: message,
-          fromUser: false,
-        );
-      } else {
-        // Handle the case where no images were generated
-        _showError('Error: No images were generated.');
-      }
-
-      setState(() {
-        if (resultMessage != null) {
-          _messages.add(resultMessage);
-        }
         _loading = false;
         _scrollDown();
       });
