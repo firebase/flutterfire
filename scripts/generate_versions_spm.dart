@@ -25,9 +25,10 @@ void main(List<String> args) async {
   final firebaseiOSVersion = getFirebaseiOSVersion(firebaseCoreIosVersionFile);
 
   // Update hard-coded versions in all plugin Package.swift files
-  final firebaseCoreVersion =
-      loadYaml(File('${firebaseCorePackage.path}/pubspec.yaml').readAsStringSync())['version']
-          .toString();
+  final firebaseCoreVersion = loadYaml(
+          File('${firebaseCorePackage.path}/pubspec.yaml')
+              .readAsStringSync())['version']
+      .toString();
   updatePluginPackageSwiftVersions(
     workspace,
     firebaseiOSVersion,
@@ -128,6 +129,8 @@ void updateLibraryVersionPureSwiftPlugins() {
     'firebase_ml_model_downloader',
     'firebase_app_installations',
     'cloud_functions',
+    'firebase_remote_config',
+    'firebase_app_check',
   ];
 
   for (final package in packages) {

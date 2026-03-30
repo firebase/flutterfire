@@ -141,6 +141,7 @@ class MockFirebaseAppCheckWeb extends _i1.Mock
     _i3.AppleProvider? appleProvider,
     _i3.AndroidAppCheckProvider? providerAndroid,
     _i3.AppleAppCheckProvider? providerApple,
+    _i3.WindowsAppCheckProvider? providerWindows,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -152,6 +153,7 @@ class MockFirebaseAppCheckWeb extends _i1.Mock
             #appleProvider: appleProvider,
             #providerAndroid: providerAndroid,
             #providerApple: providerApple,
+            #providerWindows: providerWindows,
           },
         ),
         returnValue: _i5.Future<void>.value(),

@@ -61,6 +61,13 @@ class FirebaseAppCheck extends FirebasePluginPlatform {
   /// "app attest with fallback to device check" via `AppleAppCheckProvider`.
   /// Note: App Attest is only available on iOS 14.0+ and macOS 14.0+.
   ///
+  /// **Windows**: Only the debug provider is supported. You **must** supply a
+  /// debug token — the desktop C++ SDK does not auto-generate one. Either pass
+  /// it via `providerWindows: WindowsDebugProvider(debugToken: 'your-token')`
+  /// or set the `APP_CHECK_DEBUG_TOKEN` environment variable. The token must
+  /// first be registered in the Firebase Console under
+  /// *App Check → Apps → Manage debug tokens*.
+  ///
   /// ## Migration Notice
   ///
   /// The `androidProvider` and `appleProvider` parameters will be deprecated
@@ -89,6 +96,7 @@ class FirebaseAppCheck extends FirebasePluginPlatform {
     AndroidAppCheckProvider providerAndroid =
         const AndroidPlayIntegrityProvider(),
     AppleAppCheckProvider providerApple = const AppleDeviceCheckProvider(),
+    WindowsAppCheckProvider providerWindows = const WindowsDebugProvider(),
   }) {
     return _delegate.activate(
       webProvider: providerWeb ?? webProvider,
@@ -98,6 +106,7 @@ class FirebaseAppCheck extends FirebasePluginPlatform {
       appleProvider: appleProvider,
       providerAndroid: providerAndroid,
       providerApple: providerApple,
+      providerWindows: providerWindows,
     );
   }
 

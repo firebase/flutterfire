@@ -5,13 +5,10 @@ apply plugin: 'com.android.library'
 apply from: file("local-config.gradle")
 
 buildscript {
+  ext.kotlin_version = "1.8.22"
   repositories {
     google()
     mavenCentral()
-  }
-
-  dependencies {
-    classpath 'com.android.tools.build:gradle:8.3.0'
   }
 }
 
@@ -20,6 +17,12 @@ rootProject.allprojects {
     google()
     mavenCentral()
   }
+}
+
+// AGP 9+ has built-in Kotlin support; older versions need the plugin explicitly.
+def agpMajor = com.android.Version.ANDROID_GRADLE_PLUGIN_VERSION.tokenize('.')[0] as int
+if (agpMajor < 9) {
+    apply plugin: 'kotlin-android'
 }
 
 def firebaseCoreProject = findProject(':firebase_core')
@@ -48,9 +51,20 @@ android {
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
   }
 
+  if (agpMajor < 9) {
+    kotlinOptions {
+      jvmTarget = project.ext.javaVersion
+    }
+  }
+
   compileOptions {
     sourceCompatibility project.ext.javaVersion
     targetCompatibility project.ext.javaVersion
+  }
+
+  sourceSets {
+    main.java.srcDirs += "src/main/kotlin"
+    test.java.srcDirs += "src/test/kotlin"
   }
 
   buildFeatures {
@@ -67,7 +81,6 @@ android {
     implementation 'com.google.firebase:firebase-appcheck-debug'
     implementation 'com.google.firebase:firebase-appcheck-playintegrity'
     implementation 'androidx.annotation:annotation:1.7.0'
-
   }
 }
 

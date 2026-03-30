@@ -78,6 +78,7 @@ void main() {
         firebase_auth.main();
         firebase_remote_config.main();
         firebase_storage.main();
+        firebase_app_check.main();
         break;
       default:
         throw UnsupportedError(
