@@ -21,7 +21,9 @@ export 'package:firebase_app_check_platform_interface/firebase_app_check_platfor
         AppleAppAttestWithDeviceCheckFallbackProvider,
         ReCaptchaEnterpriseProvider,
         ReCaptchaV3Provider,
-        WebDebugProvider;
+        WebDebugProvider,
+        WindowsAppCheckProvider,
+        WindowsDebugProvider;
 export 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
     show FirebaseException;
 

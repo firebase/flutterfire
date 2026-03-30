@@ -89,6 +89,7 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
     AppleProvider? appleProvider,
     AndroidAppCheckProvider? providerAndroid,
     AppleAppCheckProvider? providerApple,
+    WindowsAppCheckProvider? providerWindows,
   }) async {
     try {
       String? debugToken;
@@ -98,6 +99,9 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
       } else if (providerApple is AppleDebugProvider &&
           providerApple.debugToken != null) {
         debugToken = providerApple.debugToken;
+      } else if (providerWindows is WindowsDebugProvider &&
+          providerWindows.debugToken != null) {
+        debugToken = providerWindows.debugToken;
       }
 
       await _pigeonApi.activate(

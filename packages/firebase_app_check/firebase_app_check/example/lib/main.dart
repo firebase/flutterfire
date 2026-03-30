@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// ignore_for_file: do_not_use_environment
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -11,6 +13,15 @@ import 'package:flutter/material.dart';
 import 'firebase_options.dart';
 
 const kWebRecaptchaSiteKey = '6Lemcn0dAAAAABLkf6aiiHvpGD6x-zF3nOSDU2M8';
+
+// Windows: create a debug token in the Firebase Console
+// (App Check > Apps > Manage debug tokens), then paste it here
+// or set the APP_CHECK_DEBUG_TOKEN environment variable.
+const kWindowsDebugToken = String.fromEnvironment(
+  'APP_CHECK_DEBUG_TOKEN',
+  // ignore: avoid_redundant_argument_values
+  defaultValue: '',
+);
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,6 +37,15 @@ Future<void> main() async {
         : ReCaptchaV3Provider(kWebRecaptchaSiteKey),
     providerAndroid: const AndroidDebugProvider(),
     providerApple: const AppleDebugProvider(),
+    // On Windows, only the debug provider is available.
+    // You must supply a debug token — the desktop C++ SDK does not
+    // auto-generate one. Create one in the Firebase Console under
+    // App Check > Apps > Manage debug tokens, then either:
+    //   - pass it via --dart-define=APP_CHECK_DEBUG_TOKEN=<token>
+    //   - or set the APP_CHECK_DEBUG_TOKEN environment variable
+    providerWindows: WindowsDebugProvider(
+      debugToken: kWindowsDebugToken.isNotEmpty ? kWindowsDebugToken : null,
+    ),
   );
 
   runApp(MyApp());
@@ -81,14 +101,17 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
   Future<void> _activate({
     AndroidAppCheckProvider? android,
     AppleAppCheckProvider? apple,
+    WindowsAppCheckProvider? windows,
   }) async {
     try {
       await appCheck.activate(
         providerAndroid: android ?? const AndroidPlayIntegrityProvider(),
         providerApple: apple ?? const AppleDeviceCheckProvider(),
         providerWeb: ReCaptchaV3Provider(kWebRecaptchaSiteKey),
+        providerWindows: windows ?? const WindowsDebugProvider(),
       );
-      final providerName = apple?.runtimeType.toString() ??
+      final providerName = windows?.runtimeType.toString() ??
+          apple?.runtimeType.toString() ??
           android?.runtimeType.toString() ??
           'default';
       setMessage('Activated with $providerName');
@@ -117,6 +140,11 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
               onPressed: () => _activate(
                 android: const AndroidDebugProvider(),
                 apple: const AppleDebugProvider(),
+                windows: WindowsDebugProvider(
+                  debugToken: kWindowsDebugToken.isNotEmpty
+                      ? kWindowsDebugToken
+                      : null,
+                ),
               ),
               child: const Text('activate(Debug)'),
             ),
