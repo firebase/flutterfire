@@ -22,7 +22,7 @@ let package = Package(
       dependencies: [],
       resources: [
         .process("Resources"),
-      ],
+      ]
     ),
   ]
 )
