@@ -41,8 +41,6 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
 
   // ignore: experimental_member_use
   TemplateGenerativeModel? _templateGenerativeModel;
-  // ignore: experimental_member_use
-  TemplateImagenModel? _templateImagenModel;
 
   TemplateChatSession? _chatSession;
   TemplateChatSession? _chatFunctionOverrideSession;
@@ -60,16 +58,10 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
       _templateGenerativeModel =
           // ignore: experimental_member_use
           FirebaseAI.vertexAI(location: 'global').templateGenerativeModel();
-      _templateImagenModel =
-          // ignore: experimental_member_use
-          FirebaseAI.vertexAI(location: 'global').templateImagenModel();
     } else {
       _templateGenerativeModel =
           // ignore: experimental_member_use
           FirebaseAI.googleAI().templateGenerativeModel();
-      _templateImagenModel =
-          // ignore: experimental_member_use
-          FirebaseAI.googleAI().templateImagenModel();
     }
 
     // Inputs are now provided ONCE here when creating the session
@@ -212,65 +204,56 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
                   const SizedBox.square(
                     dimension: 15,
                   ),
-                  if (!_loading)
-                    IconButton(
-                      onPressed: () async {
-                        await _serverTemplateAutoFunctionCall(
-                          _textController.text,
-                        );
-                      },
-                      icon: Icon(
-                        Icons.auto_mode,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                      tooltip: 'Auto Function Calling',
-                    ),
-                  if (!_loading)
-                    IconButton(
-                      onPressed: () async {
-                        await _serverTemplateFunctionCall(_textController.text);
-                      },
-                      icon: Icon(
-                        Icons.functions,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                      tooltip: 'Function Calling (client override)',
-                    ),
-                  if (!_loading)
-                    IconButton(
-                      onPressed: () async {
-                        await _serverTemplateAutoStreamFunctionCall(
-                          _textController.text,
-                        );
-                      },
-                      icon: Icon(
-                        Icons.smart_toy,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                      tooltip: 'Auto Stream Function Calling',
-                    ),
-                  if (!_loading)
-                    IconButton(
-                      onPressed: () async {
-                        await _serverTemplateChat(_textController.text);
-                      },
-                      icon: Icon(
-                        Icons.chat,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                      tooltip: 'Chat',
-                    ),
                   if (!_loading) ...[
-                    IconButton(
-                      onPressed: () async {
-                        await _serverTemplateImagen(_textController.text);
-                      },
-                      icon: Icon(
-                        Icons.image_search,
-                        color: Theme.of(context).colorScheme.primary,
+                    if (!_loading)
+                      IconButton(
+                        onPressed: () async {
+                          await _serverTemplateAutoFunctionCall(
+                            _textController.text,
+                          );
+                        },
+                        icon: Icon(
+                          Icons.auto_mode,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        tooltip: 'Auto Function Calling',
                       ),
-                      tooltip: 'Imagen',
-                    ),
+                    if (!_loading)
+                      IconButton(
+                        onPressed: () async {
+                          await _serverTemplateFunctionCall(
+                              _textController.text);
+                        },
+                        icon: Icon(
+                          Icons.functions,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        tooltip: 'Function Calling (client override)',
+                      ),
+                    if (!_loading)
+                      IconButton(
+                        onPressed: () async {
+                          await _serverTemplateAutoStreamFunctionCall(
+                            _textController.text,
+                          );
+                        },
+                        icon: Icon(
+                          Icons.smart_toy,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        tooltip: 'Auto Stream Function Calling',
+                      ),
+                    if (!_loading)
+                      IconButton(
+                        onPressed: () async {
+                          await _serverTemplateChat(_textController.text);
+                        },
+                        icon: Icon(
+                          Icons.chat,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        tooltip: 'Chat',
+                      ),
                     IconButton(
                       onPressed: () async {
                         await _serverTemplateImageInput(_textController.text);
@@ -478,35 +461,6 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
       var text = response?.text;
 
       _messages.add(MessageData(text: text, fromUser: false));
-    });
-  }
-
-  Future<void> _serverTemplateImagen(String message) async {
-    await _handleServerTemplateMessage(message, (message) async {
-      MessageData? resultMessage;
-      // ignore: experimental_member_use
-      var response = await _templateImagenModel?.generateImages(
-        'portrait-googleai',
-        inputs: {
-          'animal': message,
-        },
-      );
-
-      if (response!.images.isNotEmpty) {
-        var imagenImage = response.images[0];
-
-        resultMessage = MessageData(
-          imageBytes: imagenImage.bytesBase64Encoded,
-          text: message,
-          fromUser: false,
-        );
-      } else {
-        // Handle the case where no images were generated
-        _showError('Error: No images were generated.');
-      }
-      if (resultMessage != null) {
-        _messages.add(resultMessage);
-      }
     });
   }
 

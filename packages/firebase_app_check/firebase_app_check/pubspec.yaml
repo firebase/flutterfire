@@ -36,10 +36,12 @@ flutter:
     platforms:
       android:
         package: io.flutter.plugins.firebase.appcheck
-        pluginClass: FlutterFirebaseAppCheckPlugin
+        pluginClass: FirebaseAppCheckPlugin
       ios:
-        pluginClass: FLTFirebaseAppCheckPlugin
+        pluginClass: FirebaseAppCheckPlugin
       macos:
-        pluginClass: FLTFirebaseAppCheckPlugin
+        pluginClass: FirebaseAppCheckPlugin
       web:
         default_package: firebase_app_check_web
+      windows:
+        pluginClass: FirebaseAppCheckPluginCApi

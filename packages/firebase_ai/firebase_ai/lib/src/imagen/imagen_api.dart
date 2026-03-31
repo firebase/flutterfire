@@ -16,6 +16,11 @@ import 'dart:developer';
 /// Specifies the level of safety filtering for image generation.
 ///
 /// If not specified, default will be "block_medium_and_above".
+@Deprecated(
+  'All Imagen models are deprecated and will shut down as early as June 2026. '
+  'As a replacement, you can migrate your apps to use Gemini Image models (the '
+  '"Nano Banana" models)(https://firebase.google.com/docs/ai-logic/imagen-models-migration).',
+)
 enum ImagenSafetyFilterLevel {
   /// Strongest filtering level, most strict blocking.
   blockLowAndAbove('block_low_and_above'),
@@ -57,6 +62,11 @@ enum ImagenSafetyFilterLevel {
 /// Allow generation of people by the model.
 ///
 /// If not specified, the default value is "allow_adult".
+@Deprecated(
+  'All Imagen models are deprecated and will shut down as early as June 2026. '
+  'As a replacement, you can migrate your apps to use Gemini Image models (the '
+  '"Nano Banana" models)(https://firebase.google.com/docs/ai-logic/imagen-models-migration).',
+)
 enum ImagenPersonFilterLevel {
   /// Disallow the inclusion of people or faces in images.
   blockAll('dont_allow'),
@@ -92,6 +102,11 @@ enum ImagenPersonFilterLevel {
 /// A class representing safety settings for image generation.
 ///
 /// It includes a safety filter level and a person filter level.
+@Deprecated(
+  'All Imagen models are deprecated and will shut down as early as June 2026. '
+  'As a replacement, you can migrate your apps to use Gemini Image models (the '
+  '"Nano Banana" models)(https://firebase.google.com/docs/ai-logic/imagen-models-migration).',
+)
 final class ImagenSafetySettings {
   // ignore: public_member_api_docs
   ImagenSafetySettings(this.safetyFilterLevel, this.personFilterLevel);
@@ -114,6 +129,11 @@ final class ImagenSafetySettings {
 /// The aspect ratio for the image.
 ///
 /// The default value is "1:1".
+@Deprecated(
+  'All Imagen models are deprecated and will shut down as early as June 2026. '
+  'As a replacement, you can migrate your apps to use Gemini Image models (the '
+  '"Nano Banana" models)(https://firebase.google.com/docs/ai-logic/imagen-models-migration).',
+)
 enum ImagenAspectRatio {
   /// Square (1:1).
   square1x1('1:1'),
@@ -155,6 +175,11 @@ enum ImagenAspectRatio {
 }
 
 /// Configuration options for image generation.
+@Deprecated(
+  'All Imagen models are deprecated and will shut down as early as June 2026. '
+  'As a replacement, you can migrate your apps to use Gemini Image models (the '
+  '"Nano Banana" models)(https://firebase.google.com/docs/ai-logic/imagen-models-migration).',
+)
 final class ImagenGenerationConfig {
   // ignore: public_member_api_docs
   ImagenGenerationConfig(
@@ -195,6 +220,11 @@ final class ImagenGenerationConfig {
 }
 
 /// Represents the image format and compression quality.
+@Deprecated(
+  'All Imagen models are deprecated and will shut down as early as June 2026. '
+  'As a replacement, you can migrate your apps to use Gemini Image models (the '
+  '"Nano Banana" models)(https://firebase.google.com/docs/ai-logic/imagen-models-migration).',
+)
 final class ImagenFormat {
   // ignore: public_member_api_docs
   ImagenFormat(this.mimeType, this.compressionQuality);
