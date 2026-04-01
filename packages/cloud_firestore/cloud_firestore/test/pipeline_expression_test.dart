@@ -854,8 +854,7 @@ void main() {
     });
 
     test('stringReplaceOne serializes correctly', () {
-      final expr =
-          Field('s').stringReplaceOne(Constant('a'), Constant('b'));
+      final expr = Field('s').stringReplaceOne(Constant('a'), Constant('b'));
       expect(expr.toMap(), {
         'name': 'string_replace_one',
         'args': {
@@ -1019,7 +1018,8 @@ void main() {
     });
 
     test('arrayAggDistinct returns ArrayAggDistinct', () {
-      expect(Field('t').arrayAggDistinct().toMap()['name'], 'array_agg_distinct');
+      expect(
+          Field('t').arrayAggDistinct().toMap()['name'], 'array_agg_distinct');
     });
   });
 }
