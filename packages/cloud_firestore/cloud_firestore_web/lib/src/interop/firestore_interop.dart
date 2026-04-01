@@ -410,6 +410,10 @@ extension type PipelinesJsImpl._(JSObject _) implements JSObject {
   external ExpressionJsImpl arrayConcat(JSAny first, JSAny second);
   external ExpressionJsImpl array(JSArray<JSAny> elements);
   external ExpressionJsImpl map(JSObject keyValuePairs);
+  external ExpressionJsImpl rand();
+
+  @JS('isType')
+  external JSAny isTypeExpr(JSAny expression, JSAny typeValue);
 
   // --- Ordering (for sort stage) ---
   external JSAny ascending(JSAny expr);
@@ -422,6 +426,10 @@ extension type PipelinesJsImpl._(JSObject _) implements JSObject {
   external AggregateFunctionJsImpl countDistinct(JSAny expr);
   external AggregateFunctionJsImpl minimum(JSAny expr);
   external AggregateFunctionJsImpl maximum(JSAny expr);
+  external AggregateFunctionJsImpl first(JSAny expr);
+  external AggregateFunctionJsImpl last(JSAny expr);
+  external AggregateFunctionJsImpl arrayAgg(JSAny expr);
+  external AggregateFunctionJsImpl arrayAggDistinct(JSAny expr);
   external AggregateFunctionJsImpl countAll();
 
   // --- Aliased (for select/addFields/aggregate output names) ---
@@ -454,6 +462,29 @@ extension type ExpressionJsImpl._(JSObject _) implements JSObject {
   external ExpressionJsImpl asBoolean();
   external ExpressionJsImpl isError();
   external ExpressionJsImpl isAbsent();
+
+  external ExpressionJsImpl regexFind(JSAny pattern);
+  external ExpressionJsImpl regexFindAll(JSAny pattern);
+  external ExpressionJsImpl stringReplaceOne(JSAny find, JSAny replacement);
+  external ExpressionJsImpl stringIndexOf(JSAny search);
+  external ExpressionJsImpl stringRepeat(JSAny repetitions);
+  external ExpressionJsImpl ltrim([JSAny? valueToTrim]);
+  external ExpressionJsImpl rtrim([JSAny? valueToTrim]);
+  external ExpressionJsImpl type();
+  external ExpressionJsImpl trunc([JSAny? decimals]);
+  external ExpressionJsImpl arrayFirst();
+  external ExpressionJsImpl arrayFirstN(JSAny n);
+  external ExpressionJsImpl arrayLast();
+  external ExpressionJsImpl arrayLastN(JSAny n);
+  external ExpressionJsImpl arrayMaximum();
+  external ExpressionJsImpl arrayMaximumN(JSAny n);
+  external ExpressionJsImpl arrayMinimum();
+  external ExpressionJsImpl arrayMinimumN(JSAny n);
+  external ExpressionJsImpl arrayIndexOf(JSAny element);
+  external ExpressionJsImpl arrayLastIndexOf(JSAny element);
+  external ExpressionJsImpl arrayIndexOfAll(JSAny element);
+  external ExpressionJsImpl mapSet(JSAny key, JSAny value);
+  external ExpressionJsImpl mapEntries();
 }
 
 extension type SelectableJsImpl._(JSObject _) implements JSObject {

@@ -802,4 +802,224 @@ void main() {
       });
     });
   });
+
+  group('Map mapSet / mapEntries', () {
+    test('mapSet serializes map and key_values pairs', () {
+      final expr = Field('meta').mapSet('k', 1, ['k2', 2]);
+      expect(expr.toMap(), {
+        'name': 'map_set',
+        'args': {
+          'map': Field('meta').toMap(),
+          'key_values': [
+            Constant('k').toMap(),
+            Constant(1).toMap(),
+            Constant('k2').toMap(),
+            Constant(2).toMap(),
+          ],
+        },
+      });
+    });
+
+    test('mapSet throws when key/value list has odd length', () {
+      expect(
+        () => Field('m').mapSet('a', 1, ['orphan']),
+        throwsA(isA<ArgumentError>()),
+      );
+    });
+
+    test('mapEntries serializes correctly', () {
+      final expr = Field('m').mapEntries();
+      expect(expr.toMap(), {
+        'name': 'map_entries',
+        'args': {'expression': Field('m').toMap()},
+      });
+    });
+  });
+
+  group('Regex and extended string expressions', () {
+    test('regexFind serializes correctly', () {
+      final expr = Field('email').regexFind(r'\w+');
+      expect(expr.toMap(), {
+        'name': 'regex_find',
+        'args': {
+          'expression': Field('email').toMap(),
+          'pattern': Constant(r'\w+').toMap(),
+        },
+      });
+    });
+
+    test('regexFindAll serializes correctly', () {
+      final expr = Field('text').regexFindAll('[a-z]+');
+      expect(expr.toMap()['name'], 'regex_find_all');
+    });
+
+    test('stringReplaceOne serializes correctly', () {
+      final expr =
+          Field('s').stringReplaceOne(Constant('a'), Constant('b'));
+      expect(expr.toMap(), {
+        'name': 'string_replace_one',
+        'args': {
+          'expression': Field('s').toMap(),
+          'find': Constant('a').toMap(),
+          'replacement': Constant('b').toMap(),
+        },
+      });
+    });
+
+    test('stringIndexOf serializes correctly', () {
+      final expr = Field('s').stringIndexOf('needle');
+      expect(expr.toMap()['name'], 'string_index_of');
+      expect(expr.toMap()['args']['search'], Constant('needle').toMap());
+    });
+
+    test('stringRepeat serializes correctly', () {
+      final expr = Field('s').stringRepeat(3);
+      expect(expr.toMap(), {
+        'name': 'string_repeat',
+        'args': {
+          'expression': Field('s').toMap(),
+          'repetitions': Constant(3).toMap(),
+        },
+      });
+    });
+
+    test('ltrim without value serializes correctly', () {
+      final expr = Field('s').ltrim();
+      expect(expr.toMap(), {
+        'name': 'ltrim',
+        'args': {'expression': Field('s').toMap()},
+      });
+    });
+
+    test('ltrim with value serializes correctly', () {
+      final expr = Field('s').ltrim('"');
+      expect(expr.toMap()['args']['value'], Constant('"').toMap());
+    });
+
+    test('rtrim serializes correctly', () {
+      expect(Field('s').rtrim().toMap()['name'], 'rtrim');
+    });
+  });
+
+  group('type / isType / trunc / rand', () {
+    test('type() serializes correctly', () {
+      final expr = Field('x').type();
+      expect(expr.toMap(), {
+        'name': 'type',
+        'args': {'expression': Field('x').toMap()},
+      });
+    });
+
+    test('isType serializes correctly', () {
+      final expr = Field('n').isType('int64');
+      expect(expr.toMap(), {
+        'name': 'is_type',
+        'args': {
+          'expression': Field('n').toMap(),
+          'type': 'int64',
+        },
+      });
+    });
+
+    test('Expression.isTypeStatic matches instance isType', () {
+      expect(
+        Expression.isTypeStatic(Field('n'), 'float64').toMap(),
+        Field('n').isType('float64').toMap(),
+      );
+    });
+
+    test('trunc without decimals serializes correctly', () {
+      final expr = Field('pi').trunc();
+      expect(expr.toMap(), {
+        'name': 'trunc',
+        'args': {'expression': Field('pi').toMap()},
+      });
+    });
+
+    test('trunc with decimals serializes correctly', () {
+      final expr = Field('pi').trunc(Constant(2));
+      expect(expr.toMap()['args']['decimals'], Constant(2).toMap());
+    });
+
+    test('Expression.rand serializes correctly', () {
+      expect(Expression.rand().toMap(), {
+        'name': 'rand',
+        'args': <String, dynamic>{},
+      });
+    });
+  });
+
+  group('Array analytics expressions', () {
+    test('arrayFirst serializes correctly', () {
+      expect(Field('tags').arrayFirst().toMap()['name'], 'array_first');
+    });
+
+    test('arrayFirstN serializes correctly', () {
+      final expr = Field('tags').arrayFirstN(2);
+      expect(expr.toMap(), {
+        'name': 'array_first_n',
+        'args': {
+          'expression': Field('tags').toMap(),
+          'n': Constant(2).toMap(),
+        },
+      });
+    });
+
+    test('arrayLast / arrayLastN serialize correctly', () {
+      expect(Field('tags').arrayLast().toMap()['name'], 'array_last');
+      expect(Field('tags').arrayLastN(1).toMap()['name'], 'array_last_n');
+    });
+
+    test('arrayMaximum / arrayMinimum serialize correctly', () {
+      expect(Field('nums').arrayMaximum().toMap()['name'], 'maximum');
+      expect(Field('nums').arrayMinimum().toMap()['name'], 'minimum');
+    });
+
+    test('arrayMaximumN / arrayMinimumN serialize correctly', () {
+      expect(Field('nums').arrayMaximumN(2).toMap()['name'], 'maximum_n');
+      expect(Field('nums').arrayMinimumN(2).toMap()['name'], 'minimum_n');
+    });
+
+    test('arrayIndexOf serializes occurrence first', () {
+      final expr = Field('tags').arrayIndexOf('x');
+      expect(expr.toMap(), {
+        'name': 'array_index_of',
+        'args': {
+          'expression': Field('tags').toMap(),
+          'element': Constant('x').toMap(),
+          'occurrence': Constant('first').toMap(),
+        },
+      });
+    });
+
+    test('arrayLastIndexOf serializes occurrence last', () {
+      final expr = Field('tags').arrayLastIndexOf('x');
+      expect(expr.toMap()['args']['occurrence'], Constant('last').toMap());
+    });
+
+    test('arrayIndexOfAll serializes correctly', () {
+      expect(
+        Field('tags').arrayIndexOfAll('a').toMap()['name'],
+        'array_index_of_all',
+      );
+    });
+  });
+
+  group('Expression aggregate helpers', () {
+    test('first() returns First aggregate', () {
+      expect(Field('s').first().toMap()['name'], 'first');
+    });
+
+    test('last() returns Last aggregate', () {
+      expect(Field('s').last().toMap()['name'], 'last');
+    });
+
+    test('arrayAgg returns ArrayAgg', () {
+      expect(Field('t').arrayAgg().toMap()['name'], 'array_agg');
+    });
+
+    test('arrayAggDistinct returns ArrayAggDistinct', () {
+      expect(Field('t').arrayAggDistinct().toMap()['name'], 'array_agg_distinct');
+    });
+  });
 }

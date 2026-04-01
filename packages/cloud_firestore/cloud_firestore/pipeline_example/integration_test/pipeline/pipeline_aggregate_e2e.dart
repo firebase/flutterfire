@@ -4,6 +4,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_test/flutter_test.dart';
 
 import 'pipeline_test_helpers.dart';
@@ -66,5 +67,43 @@ void runPipelineAggregateTests() {
         expect(results[1]['count'], 2);
       },
     );
+
+    test('aggregate first and last score with sort', () async {
+      final snapshot = await firestore
+          .pipeline()
+          .collection('pipeline-e2e')
+          .where(Expression.field('test').equalValue('aggregate'))
+          .sort(Expression.field('score').ascending())
+          .aggregate(
+            Expression.field('score').first().as('first_s'),
+            Expression.field('score').last().as('last_s'),
+          )
+          .execute();
+      expectResultCount(snapshot, 1);
+      expectResultsData(snapshot, [
+        {'first_s': 10, 'last_s': 40},
+      ]);
+    }, skip: !kIsWeb);
+
+    test('aggregate array_agg and array_agg_distinct on category', () async {
+      final snapshot = await firestore
+          .pipeline()
+          .collection('pipeline-e2e')
+          .where(Expression.field('test').equalValue('aggregate'))
+          .sort(Expression.field('score').ascending())
+          .aggregate(
+            Expression.field('category').arrayAgg().as('cats'),
+            Expression.field('category').arrayAggDistinct().as('cats_d'),
+          )
+          .execute();
+      expectResultCount(snapshot, 1);
+      final data = snapshot.result[0].data()!;
+      final cats = data['cats'] as List<dynamic>;
+      expect(cats.length, 4);
+      expect(cats.map((e) => e as String).toSet(), {'x', 'y'});
+      final catsD = data['cats_d'] as List<dynamic>;
+      expect(catsD.length, 2);
+      expect(catsD.map((e) => e as String).toSet(), {'x', 'y'});
+    }, skip: !kIsWeb);
   });
 }

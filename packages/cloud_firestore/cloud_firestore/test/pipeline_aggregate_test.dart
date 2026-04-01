@@ -99,6 +99,58 @@ void main() {
         },
       });
     });
+
+    test('First serializes with expression', () {
+      final fn = First(Field('rating'));
+      expect(fn.toMap(), {
+        'name': 'first',
+        'args': {
+          'expression': {
+            'name': 'field',
+            'args': {'field': 'rating'},
+          },
+        },
+      });
+    });
+
+    test('Last serializes with expression', () {
+      final fn = Last(Field('rating'));
+      expect(fn.toMap(), {
+        'name': 'last',
+        'args': {
+          'expression': {
+            'name': 'field',
+            'args': {'field': 'rating'},
+          },
+        },
+      });
+    });
+
+    test('ArrayAgg serializes with expression', () {
+      final fn = ArrayAgg(Field('tags'));
+      expect(fn.toMap(), {
+        'name': 'array_agg',
+        'args': {
+          'expression': {
+            'name': 'field',
+            'args': {'field': 'tags'},
+          },
+        },
+      });
+    });
+
+    test('ArrayAggDistinct serializes with expression', () {
+      final fn = ArrayAggDistinct(Field('tags'));
+      expect(fn.toMap(), {
+        'name': 'array_agg_distinct',
+        'args': {
+          'expression': {
+            'name': 'field',
+            'args': {'field': 'tags'},
+          },
+        },
+      });
+    });
   });
 
   group('AliasedAggregateFunction', () {

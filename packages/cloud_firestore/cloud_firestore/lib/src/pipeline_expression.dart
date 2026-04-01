@@ -199,6 +199,29 @@ abstract class Expression implements PipelineSerializable {
   Expression mapGetLiteral(String key) {
     return _MapGetExpression(this, Constant(key));
   }
+
+  /// Returns a map expression with keys set to the given values (shallow update).
+  ///
+  /// [key] and [value] are the first pair. [moreKeyValues] must be alternating
+  /// keys and values. Setting a value to `null` keeps the key with a null value;
+  /// use map APIs that remove keys if you need deletion semantics.
+  Expression mapSet(Object? key, Object? value,
+      [List<Object?>? moreKeyValues]) {
+    final pairs = <Expression>[_toExpression(key), _toExpression(value)];
+    if (moreKeyValues != null) {
+      for (final o in moreKeyValues) {
+        pairs.add(_toExpression(o));
+      }
+    }
+    return _MapSetExpression(this, pairs);
+  }
+
+  /// Returns an array of `{k, v}` map entries for this map expression.
+  // ignore: use_to_and_as_if_applicable
+  Expression mapEntries() {
+    return _MapEntriesExpression(this);
+  }
+
   // ============================================================================
   // ALIASING
   // ============================================================================
@@ -266,6 +289,14 @@ abstract class Expression implements PipelineSerializable {
   // ignore: use_to_and_as_if_applicable
   Expression abs() {
     return _AbsExpression(this);
+  }
+
+  /// Truncates this numeric expression toward zero.
+  ///
+  /// If [decimals] is omitted, truncates to an integer. If provided, truncates to
+  /// that many fractional digits (Firestore pipeline `trunc`).
+  Expression trunc([Expression? decimals]) {
+    return _TruncExpression(this, decimals);
   }
 
   // ============================================================================
@@ -411,6 +442,66 @@ abstract class Expression implements PipelineSerializable {
     return _TrimExpression(this);
   }
 
+  /// Returns the first regex match of [pattern] in this string expression.
+  Expression regexFind(Object? pattern) {
+    return _RegexFindExpression(this, _toExpression(pattern));
+  }
+
+  /// Returns all regex matches of [pattern] in this string expression.
+  Expression regexFindAll(Object? pattern) {
+    return _RegexFindAllExpression(this, _toExpression(pattern));
+  }
+
+  /// Replaces the first occurrence of [find] with [replacement].
+  Expression stringReplaceOne(Expression find, Expression replacement) {
+    return _StringReplaceOneExpression(this, find, replacement);
+  }
+
+  /// Replaces the first occurrence of string literals [find] with [replacement].
+  Expression stringReplaceOneLiteral(String find, String replacement) {
+    return _StringReplaceOneExpression(
+      this,
+      Constant(find),
+      Constant(replacement),
+    );
+  }
+
+  /// Returns the index of [search] in this string, or an absent/error value if not found.
+  Expression stringIndexOf(Object? search) {
+    return _StringIndexOfExpression(this, _toExpression(search));
+  }
+
+  /// Repeats this string [repetitions] times ([repetitions] may be an [Expression] or number).
+  Expression stringRepeat(Object? repetitions) {
+    return _StringRepeatExpression(this, _toExpression(repetitions));
+  }
+
+  /// Trims leading whitespace, or the characters in [valueToTrim] when given.
+  Expression ltrim([Object? valueToTrim]) {
+    return valueToTrim == null
+        ? _LtrimExpression(this, null)
+        : _LtrimExpression(this, _toExpression(valueToTrim));
+  }
+
+  /// Trims trailing whitespace, or the characters in [valueToTrim] when given.
+  Expression rtrim([Object? valueToTrim]) {
+    return valueToTrim == null
+        ? _RtrimExpression(this, null)
+        : _RtrimExpression(this, _toExpression(valueToTrim));
+  }
+
+  /// Returns the Firestore value type of this expression as a string (e.g. `int64`, `timestamp`).
+  // ignore: use_to_and_as_if_applicable
+  Expression type() {
+    return _TypeExpression(this);
+  }
+
+  /// Whether this expression evaluates to the given Firestore type (e.g. `int64`, `float64`).
+  // ignore: use_to_and_as_if_applicable
+  BooleanExpression isType(String type) {
+    return _IsTypeExpression(this, type);
+  }
+
   // ============================================================================
   // ARRAY OPERATIONS
   // ============================================================================
@@ -479,6 +570,65 @@ abstract class Expression implements PipelineSerializable {
     return _ArraySumExpression(this);
   }
 
+  /// First element of this array expression.
+  // ignore: use_to_and_as_if_applicable
+  Expression arrayFirst() {
+    return _ArrayFirstExpression(this);
+  }
+
+  /// First [n] elements of this array expression.
+  Expression arrayFirstN(Object? n) {
+    return _ArrayFirstNExpression(this, _toExpression(n));
+  }
+
+  /// Last element of this array expression.
+  // ignore: use_to_and_as_if_applicable
+  Expression arrayLast() {
+    return _ArrayLastExpression(this);
+  }
+
+  /// Last [n] elements of this array expression.
+  Expression arrayLastN(Object? n) {
+    return _ArrayLastNExpression(this, _toExpression(n));
+  }
+
+  /// Maximum element of this array (per-document), not the aggregate [maximum] accumulator.
+  // ignore: use_to_and_as_if_applicable
+  Expression arrayMaximum() {
+    return _ArrayMaximumExpression(this);
+  }
+
+  /// The [n] largest elements of this array.
+  Expression arrayMaximumN(Object? n) {
+    return _ArrayMaximumNExpression(this, _toExpression(n));
+  }
+
+  /// Minimum element of this array (per-document), not the aggregate [minimum] accumulator.
+  // ignore: use_to_and_as_if_applicable
+  Expression arrayMinimum() {
+    return _ArrayMinimumExpression(this);
+  }
+
+  /// The [n] smallest elements of this array.
+  Expression arrayMinimumN(Object? n) {
+    return _ArrayMinimumNExpression(this, _toExpression(n));
+  }
+
+  /// Index of the first occurrence of [element] in this array.
+  Expression arrayIndexOf(Object? element) {
+    return _ArrayIndexOfExpression(this, _toExpression(element), isLast: false);
+  }
+
+  /// Index of the last occurrence of [element] in this array.
+  Expression arrayLastIndexOf(Object? element) {
+    return _ArrayIndexOfExpression(this, _toExpression(element), isLast: true);
+  }
+
+  /// Array of all indices where [element] occurs in this array.
+  Expression arrayIndexOfAll(Object? element) {
+    return _ArrayIndexOfAllExpression(this, _toExpression(element));
+  }
+
   // ============================================================================
   // AGGREGATE FUNCTIONS
   // ============================================================================
@@ -517,6 +667,30 @@ abstract class Expression implements PipelineSerializable {
   // ignore: use_to_and_as_if_applicable
   PipelineAggregateFunction maximum() {
     return Maximum(this);
+  }
+
+  /// Aggregate: first value across inputs. See [First].
+  // ignore: use_to_and_as_if_applicable
+  PipelineAggregateFunction first() {
+    return First(this);
+  }
+
+  /// Aggregate: last value across inputs. See [Last].
+  // ignore: use_to_and_as_if_applicable
+  PipelineAggregateFunction last() {
+    return Last(this);
+  }
+
+  /// Aggregate: collect values into an array. See [ArrayAgg].
+  // ignore: use_to_and_as_if_applicable
+  PipelineAggregateFunction arrayAgg() {
+    return ArrayAgg(this);
+  }
+
+  /// Aggregate: collect distinct values into an array. See [ArrayAggDistinct].
+  // ignore: use_to_and_as_if_applicable
+  PipelineAggregateFunction arrayAggDistinct() {
+    return ArrayAggDistinct(this);
   }
 
   String get name;
@@ -1356,6 +1530,17 @@ abstract class Expression implements PipelineSerializable {
     List<Expression> args,
   ) {
     return _RawFunctionExpression(name, args);
+  }
+
+  /// A random value between 0 (inclusive) and 1 (exclusive) per evaluation
+  /// (Firestore pipeline `rand`).
+  static Expression rand() {
+    return _RandExpression();
+  }
+
+  /// Same as [Expression.isType] but usable as a static helper for any [expression].
+  static BooleanExpression isTypeStatic(Expression expression, String type) {
+    return _IsTypeExpression(expression, type);
   }
 }
 
@@ -2795,6 +2980,512 @@ class _MapExpression extends FunctionExpression {
       'name': name,
       'args': {
         'data': data.map((k, v) => MapEntry(k, v.toMap())),
+      },
+    };
+  }
+}
+
+/// Serialized pipeline function `map_set` (map plus alternating key/value pairs).
+class _MapSetExpression extends FunctionExpression {
+  final Expression map;
+  final List<Expression> keyValues;
+
+  _MapSetExpression(this.map, this.keyValues) {
+    if (keyValues.isEmpty || keyValues.length.isOdd) {
+      throw ArgumentError('mapSet requires one or more key/value pairs');
+    }
+  }
+
+  @override
+  String get name => 'map_set';
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'args': {
+        'map': map.toMap(),
+        'key_values': keyValues.map((e) => e.toMap()).toList(),
+      },
+    };
+  }
+}
+
+/// Serialized pipeline function `map_entries`.
+class _MapEntriesExpression extends FunctionExpression {
+  final Expression expression;
+
+  _MapEntriesExpression(this.expression);
+
+  @override
+  String get name => 'map_entries';
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'args': {
+        'expression': expression.toMap(),
+      },
+    };
+  }
+}
+
+/// Serialized pipeline function `regex_find`.
+class _RegexFindExpression extends FunctionExpression {
+  final Expression expression;
+  final Expression pattern;
+
+  _RegexFindExpression(this.expression, this.pattern);
+
+  @override
+  String get name => 'regex_find';
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'args': {
+        'expression': expression.toMap(),
+        'pattern': pattern.toMap(),
+      },
+    };
+  }
+}
+
+/// Serialized pipeline function `regex_find_all`.
+class _RegexFindAllExpression extends FunctionExpression {
+  final Expression expression;
+  final Expression pattern;
+
+  _RegexFindAllExpression(this.expression, this.pattern);
+
+  @override
+  String get name => 'regex_find_all';
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'args': {
+        'expression': expression.toMap(),
+        'pattern': pattern.toMap(),
+      },
+    };
+  }
+}
+
+/// Serialized pipeline function `string_replace_one`.
+class _StringReplaceOneExpression extends FunctionExpression {
+  final Expression expression;
+  final Expression find;
+  final Expression replacement;
+
+  _StringReplaceOneExpression(this.expression, this.find, this.replacement);
+
+  @override
+  String get name => 'string_replace_one';
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'args': {
+        'expression': expression.toMap(),
+        'find': find.toMap(),
+        'replacement': replacement.toMap(),
+      },
+    };
+  }
+}
+
+/// Serialized pipeline function `string_index_of`.
+class _StringIndexOfExpression extends FunctionExpression {
+  final Expression expression;
+  final Expression search;
+
+  _StringIndexOfExpression(this.expression, this.search);
+
+  @override
+  String get name => 'string_index_of';
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'args': {
+        'expression': expression.toMap(),
+        'search': search.toMap(),
+      },
+    };
+  }
+}
+
+/// Serialized pipeline function `string_repeat`.
+class _StringRepeatExpression extends FunctionExpression {
+  final Expression expression;
+  final Expression repetitions;
+
+  _StringRepeatExpression(this.expression, this.repetitions);
+
+  @override
+  String get name => 'string_repeat';
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'args': {
+        'expression': expression.toMap(),
+        'repetitions': repetitions.toMap(),
+      },
+    };
+  }
+}
+
+/// Serialized pipeline function `ltrim`.
+class _LtrimExpression extends FunctionExpression {
+  final Expression expression;
+  final Expression? value;
+
+  _LtrimExpression(this.expression, this.value);
+
+  @override
+  String get name => 'ltrim';
+
+  @override
+  Map<String, dynamic> toMap() {
+    final args = <String, dynamic>{
+      'expression': expression.toMap(),
+    };
+    if (value != null) {
+      args['value'] = value!.toMap();
+    }
+    return {
+      'name': name,
+      'args': args,
+    };
+  }
+}
+
+/// Serialized pipeline function `rtrim`.
+class _RtrimExpression extends FunctionExpression {
+  final Expression expression;
+  final Expression? value;
+
+  _RtrimExpression(this.expression, this.value);
+
+  @override
+  String get name => 'rtrim';
+
+  @override
+  Map<String, dynamic> toMap() {
+    final args = <String, dynamic>{
+      'expression': expression.toMap(),
+    };
+    if (value != null) {
+      args['value'] = value!.toMap();
+    }
+    return {
+      'name': name,
+      'args': args,
+    };
+  }
+}
+
+/// Serialized pipeline function `type` (runtime type name of the value).
+class _TypeExpression extends FunctionExpression {
+  final Expression expression;
+
+  _TypeExpression(this.expression);
+
+  @override
+  String get name => 'type';
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'args': {
+        'expression': expression.toMap(),
+      },
+    };
+  }
+}
+
+/// Serialized pipeline boolean function `is_type`.
+class _IsTypeExpression extends BooleanExpression {
+  final Expression expression;
+  final String _typeName;
+
+  _IsTypeExpression(this.expression, String type) : _typeName = type;
+
+  @override
+  String get name => 'is_type';
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'args': {
+        'expression': expression.toMap(),
+        'type': _typeName,
+      },
+    };
+  }
+}
+
+/// Serialized pipeline function `trunc`.
+class _TruncExpression extends FunctionExpression {
+  final Expression expression;
+  final Expression? decimals;
+
+  _TruncExpression(this.expression, this.decimals);
+
+  @override
+  String get name => 'trunc';
+
+  @override
+  Map<String, dynamic> toMap() {
+    final args = <String, dynamic>{
+      'expression': expression.toMap(),
+    };
+    if (decimals != null) {
+      args['decimals'] = decimals!.toMap();
+    }
+    return {
+      'name': name,
+      'args': args,
+    };
+  }
+}
+
+/// Serialized pipeline function `rand`.
+class _RandExpression extends FunctionExpression {
+  _RandExpression();
+
+  @override
+  String get name => 'rand';
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'args': <String, dynamic>{},
+    };
+  }
+}
+
+/// Serialized pipeline function `array_first`.
+class _ArrayFirstExpression extends FunctionExpression {
+  final Expression expression;
+
+  _ArrayFirstExpression(this.expression);
+
+  @override
+  String get name => 'array_first';
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'args': {
+        'expression': expression.toMap(),
+      },
+    };
+  }
+}
+
+/// Serialized pipeline function `array_first_n`.
+class _ArrayFirstNExpression extends FunctionExpression {
+  final Expression expression;
+  final Expression n;
+
+  _ArrayFirstNExpression(this.expression, this.n);
+
+  @override
+  String get name => 'array_first_n';
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'args': {
+        'expression': expression.toMap(),
+        'n': n.toMap(),
+      },
+    };
+  }
+}
+
+/// Serialized pipeline function `array_last`.
+class _ArrayLastExpression extends FunctionExpression {
+  final Expression expression;
+
+  _ArrayLastExpression(this.expression);
+
+  @override
+  String get name => 'array_last';
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'args': {
+        'expression': expression.toMap(),
+      },
+    };
+  }
+}
+
+/// Serialized pipeline function `array_last_n`.
+class _ArrayLastNExpression extends FunctionExpression {
+  final Expression expression;
+  final Expression n;
+
+  _ArrayLastNExpression(this.expression, this.n);
+
+  @override
+  String get name => 'array_last_n';
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'args': {
+        'expression': expression.toMap(),
+        'n': n.toMap(),
+      },
+    };
+  }
+}
+
+/// Serialized pipeline function `maximum` on an array value (not the aggregate).
+class _ArrayMaximumExpression extends FunctionExpression {
+  final Expression expression;
+
+  _ArrayMaximumExpression(this.expression);
+
+  @override
+  String get name => 'maximum';
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'args': {
+        'expression': expression.toMap(),
+      },
+    };
+  }
+}
+
+/// Serialized pipeline function `maximum_n`.
+class _ArrayMaximumNExpression extends FunctionExpression {
+  final Expression expression;
+  final Expression n;
+
+  _ArrayMaximumNExpression(this.expression, this.n);
+
+  @override
+  String get name => 'maximum_n';
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'args': {
+        'expression': expression.toMap(),
+        'n': n.toMap(),
+      },
+    };
+  }
+}
+
+/// Serialized pipeline function `minimum` on an array value (not the aggregate).
+class _ArrayMinimumExpression extends FunctionExpression {
+  final Expression expression;
+
+  _ArrayMinimumExpression(this.expression);
+
+  @override
+  String get name => 'minimum';
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'args': {
+        'expression': expression.toMap(),
+      },
+    };
+  }
+}
+
+/// Serialized pipeline function `minimum_n`.
+class _ArrayMinimumNExpression extends FunctionExpression {
+  final Expression expression;
+  final Expression n;
+
+  _ArrayMinimumNExpression(this.expression, this.n);
+
+  @override
+  String get name => 'minimum_n';
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'args': {
+        'expression': expression.toMap(),
+        'n': n.toMap(),
+      },
+    };
+  }
+}
+
+/// Serialized pipeline function `array_index_of` (first or last occurrence).
+class _ArrayIndexOfExpression extends FunctionExpression {
+  final Expression expression;
+  final Expression element;
+  final bool isLast;
+
+  _ArrayIndexOfExpression(this.expression, this.element,
+      {required this.isLast});
+
+  @override
+  String get name => 'array_index_of';
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'args': {
+        'expression': expression.toMap(),
+        'element': element.toMap(),
+        'occurrence': Constant(isLast ? 'last' : 'first').toMap(),
+      },
+    };
+  }
+}
+
+/// Serialized pipeline function `array_index_of_all`.
+class _ArrayIndexOfAllExpression extends FunctionExpression {
+  final Expression expression;
+  final Expression element;
+
+  _ArrayIndexOfAllExpression(this.expression, this.element);
+
+  @override
+  String get name => 'array_index_of_all';
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'args': {
+        'expression': expression.toMap(),
+        'element': element.toMap(),
       },
     };
   }

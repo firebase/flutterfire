@@ -170,6 +170,94 @@ class Maximum extends PipelineAggregateFunction {
   }
 }
 
+/// Aggregate that picks the first value of [expression] across pipeline inputs.
+///
+/// Use with [Pipeline.aggregate] or [AggregateStageOptions]. Corresponds to the
+/// Firestore pipeline `first` accumulator.
+class First extends PipelineAggregateFunction {
+  final Expression expression;
+
+  First(this.expression);
+
+  @override
+  String get name => 'first';
+
+  @override
+  Map<String, dynamic> toMap() {
+    final map = super.toMap();
+    map['args'] = {
+      'expression': expression.toMap(),
+    };
+    return map;
+  }
+}
+
+/// Aggregate that picks the last value of [expression] across pipeline inputs.
+///
+/// Use with [Pipeline.aggregate] or [AggregateStageOptions]. Corresponds to the
+/// Firestore pipeline `last` accumulator.
+class Last extends PipelineAggregateFunction {
+  final Expression expression;
+
+  Last(this.expression);
+
+  @override
+  String get name => 'last';
+
+  @override
+  Map<String, dynamic> toMap() {
+    final map = super.toMap();
+    map['args'] = {
+      'expression': expression.toMap(),
+    };
+    return map;
+  }
+}
+
+/// Aggregate that collects all values of [expression] into an array.
+///
+/// Order of elements is not guaranteed. Absent values become `null` in the result.
+/// Corresponds to the Firestore pipeline `array_agg` accumulator.
+class ArrayAgg extends PipelineAggregateFunction {
+  final Expression expression;
+
+  ArrayAgg(this.expression);
+
+  @override
+  String get name => 'array_agg';
+
+  @override
+  Map<String, dynamic> toMap() {
+    final map = super.toMap();
+    map['args'] = {
+      'expression': expression.toMap(),
+    };
+    return map;
+  }
+}
+
+/// Aggregate that collects distinct values of [expression] into an array.
+///
+/// Order of elements is not guaranteed. Corresponds to the Firestore pipeline
+/// `array_agg_distinct` accumulator.
+class ArrayAggDistinct extends PipelineAggregateFunction {
+  final Expression expression;
+
+  ArrayAggDistinct(this.expression);
+
+  @override
+  String get name => 'array_agg_distinct';
+
+  @override
+  Map<String, dynamic> toMap() {
+    final map = super.toMap();
+    map['args'] = {
+      'expression': expression.toMap(),
+    };
+    return map;
+  }
+}
+
 /// Represents an aggregate stage with functions and optional grouping
 class AggregateStageOptions implements PipelineSerializable {
   final List<AliasedAggregateFunction> accumulators;

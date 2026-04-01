@@ -256,6 +256,110 @@ class PipelineExpressionParserWeb {
           m[entry.key] = toExpression(entry.value as Map<String, dynamic>);
         }
         return _pipelines.map(jsify(m)! as JSObject);
+      case 'map_set':
+        final kv = argsMap['key_values'] as List<dynamic>?;
+        if (kv == null || kv.isEmpty || kv.length.isOdd) {
+          throw UnsupportedError(
+              'map_set requires key_values with even length');
+        }
+        var cur = _expr(argsMap, 'map') as interop.ExpressionJsImpl;
+        for (var i = 0; i < kv.length; i += 2) {
+          cur = cur.mapSet(
+            toExpression(kv[i] as Map<String, dynamic>),
+            toExpression(kv[i + 1] as Map<String, dynamic>),
+          );
+        }
+        return cur;
+      case 'map_entries':
+        return (_expr(argsMap, _kExpression) as interop.ExpressionJsImpl)
+            .mapEntries();
+      case 'regex_find':
+        return (_expr(argsMap, _kExpression) as interop.ExpressionJsImpl)
+            .regexFind(_expr(argsMap, 'pattern'));
+      case 'regex_find_all':
+        return (_expr(argsMap, _kExpression) as interop.ExpressionJsImpl)
+            .regexFindAll(_expr(argsMap, 'pattern'));
+      case 'string_replace_one':
+        return (_expr(argsMap, _kExpression) as interop.ExpressionJsImpl)
+            .stringReplaceOne(
+          _expr(argsMap, 'find'),
+          _expr(argsMap, 'replacement'),
+        );
+      case 'string_index_of':
+        return (_expr(argsMap, _kExpression) as interop.ExpressionJsImpl)
+            .stringIndexOf(_expr(argsMap, 'search'));
+      case 'string_repeat':
+        return (_expr(argsMap, _kExpression) as interop.ExpressionJsImpl)
+            .stringRepeat(_expr(argsMap, 'repetitions'));
+      case 'ltrim':
+        {
+          final expr = _expr(argsMap, _kExpression) as interop.ExpressionJsImpl;
+          final v = argsMap['value'];
+          if (v == null) return expr.ltrim();
+          return expr.ltrim(toExpression(v as Map<String, dynamic>));
+        }
+      case 'rtrim':
+        {
+          final expr = _expr(argsMap, _kExpression) as interop.ExpressionJsImpl;
+          final v = argsMap['value'];
+          if (v == null) return expr.rtrim();
+          return expr.rtrim(toExpression(v as Map<String, dynamic>));
+        }
+      case 'type':
+        return (_expr(argsMap, _kExpression) as interop.ExpressionJsImpl)
+            .type();
+      case 'trunc':
+        {
+          final expr = _expr(argsMap, _kExpression) as interop.ExpressionJsImpl;
+          final dec = argsMap['decimals'];
+          if (dec == null) return expr.trunc();
+          return expr.trunc(toExpression(dec as Map<String, dynamic>));
+        }
+      case 'rand':
+        return _pipelines.rand();
+      case 'array_first':
+        return (_expr(argsMap, _kExpression) as interop.ExpressionJsImpl)
+            .arrayFirst();
+      case 'array_first_n':
+        return (_expr(argsMap, _kExpression) as interop.ExpressionJsImpl)
+            .arrayFirstN(_expr(argsMap, 'n'));
+      case 'array_last':
+        return (_expr(argsMap, _kExpression) as interop.ExpressionJsImpl)
+            .arrayLast();
+      case 'array_last_n':
+        return (_expr(argsMap, _kExpression) as interop.ExpressionJsImpl)
+            .arrayLastN(_expr(argsMap, 'n'));
+      case 'maximum':
+        return (_expr(argsMap, _kExpression) as interop.ExpressionJsImpl)
+            .arrayMaximum();
+      case 'maximum_n':
+        return (_expr(argsMap, _kExpression) as interop.ExpressionJsImpl)
+            .arrayMaximumN(_expr(argsMap, 'n'));
+      case 'minimum':
+        return (_expr(argsMap, _kExpression) as interop.ExpressionJsImpl)
+            .arrayMinimum();
+      case 'minimum_n':
+        return (_expr(argsMap, _kExpression) as interop.ExpressionJsImpl)
+            .arrayMinimumN(_expr(argsMap, 'n'));
+      case 'array_index_of':
+        {
+          final base = _expr(argsMap, _kExpression) as interop.ExpressionJsImpl;
+          final el = _expr(argsMap, 'element');
+          final occMap = argsMap['occurrence'] as Map<String, dynamic>?;
+          final occ = _constantStringFromExpression(occMap ?? {});
+          if (occ == 'last') {
+            return base.arrayLastIndexOf(el);
+          }
+          if (occ == 'first') {
+            return base.arrayIndexOf(el);
+          }
+          throw UnsupportedError(
+            'array_index_of requires occurrence constant first or last',
+          );
+        }
+      case 'array_index_of_all':
+        return (_expr(argsMap, _kExpression) as interop.ExpressionJsImpl)
+            .arrayIndexOfAll(_expr(argsMap, 'element'));
       default:
         throw FirebaseException(
           plugin: 'cloud_firestore',
@@ -341,6 +445,15 @@ class PipelineExpressionParserWeb {
         return _jsNotEqualAny(argsMap);
       case 'filter':
         return _buildFilterExpression(argsMap);
+      case 'is_type':
+        final typeStr = argsMap['type'] as String?;
+        if (typeStr == null) {
+          throw UnsupportedError("is_type requires string 'type'");
+        }
+        return _pipelines.isTypeExpr(
+          _expr(argsMap, _kExpression),
+          _pipelines.constant(typeStr.toJS),
+        );
       default:
         throw FirebaseException(
           plugin: 'cloud_firestore',
@@ -714,6 +827,14 @@ class PipelineExpressionParserWeb {
         return exprJs != null ? _pipelines.minimum(exprJs) : null;
       case 'maximum':
         return exprJs != null ? _pipelines.maximum(exprJs) : null;
+      case 'first':
+        return exprJs != null ? _pipelines.first(exprJs) : null;
+      case 'last':
+        return exprJs != null ? _pipelines.last(exprJs) : null;
+      case 'array_agg':
+        return exprJs != null ? _pipelines.arrayAgg(exprJs) : null;
+      case 'array_agg_distinct':
+        return exprJs != null ? _pipelines.arrayAggDistinct(exprJs) : null;
       default:
         return null;
     }

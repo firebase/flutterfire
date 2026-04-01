@@ -858,5 +858,231 @@ void runPipelineExpressionsTests() {
           defaultTargetPlatform != TargetPlatform.iOS &&
           defaultTargetPlatform != TargetPlatform.macOS,
     );
+
+    test('addFields regexFind on email', () async {
+      final snapshot = await firestore
+          .pipeline()
+          .collection('pipeline-e2e')
+          .where(Expression.field('test').equalValue('expressions'))
+          .where(Expression.field('score').equalValue(60))
+          .addFields(
+            Expression.field('email').regexFind('@.+').as('domain_part'),
+          )
+          .limit(1)
+          .execute();
+      expectResultCount(snapshot, 1);
+      expect(snapshot.result[0].data()!['domain_part'], '@example.com');
+    }, skip: _skipNewPipelineExpressionE2E);
+
+    test('addFields regexFindAll on email', () async {
+      final snapshot = await firestore
+          .pipeline()
+          .collection('pipeline-e2e')
+          .where(Expression.field('test').equalValue('expressions'))
+          .where(Expression.field('score').equalValue(60))
+          .addFields(
+            Expression.field('email').regexFindAll('[a-z]+').as('chunks'),
+          )
+          .limit(1)
+          .execute();
+      expectResultCount(snapshot, 1);
+      final chunks = snapshot.result[0].data()!['chunks'] as List<dynamic>?;
+      expect(chunks, isNotNull);
+      expect(chunks, contains('demo'));
+      expect(chunks, contains('com'));
+    }, skip: !kIsWeb);
+
+    test(
+      'addFields stringReplaceOne stringIndexOf stringRepeat on s',
+      () async {
+        final snapshot = await firestore
+            .pipeline()
+            .collection('pipeline-e2e')
+            .where(Expression.field('test').equalValue('expressions'))
+            .where(Expression.field('score').equalValue(70))
+            .addFields(
+              Expression.field('s').stringReplaceOneLiteral('x', 'Z').as('s1'),
+              Expression.field('s').stringIndexOf('y').as('iy'),
+              Expression.field('s').stringRepeat(2).as('s2'),
+            )
+            .limit(1)
+            .execute();
+        expectResultCount(snapshot, 1);
+        expectResultsData(snapshot, [
+          {'s1': 'Zy', 'iy': 1, 's2': 'xyxy'},
+        ]);
+      },
+      skip: !kIsWeb,
+    );
+
+    test('addFields ltrim rtrim on padded s', () async {
+      final snapshot = await firestore
+          .pipeline()
+          .collection('pipeline-e2e')
+          .where(Expression.field('test').equalValue('expressions'))
+          .where(Expression.field('score').equalValue(60))
+          .addFields(
+            Expression.field('s').ltrim().as('lt'),
+            Expression.field('s').rtrim().as('rt'),
+          )
+          .limit(1)
+          .execute();
+      expectResultCount(snapshot, 1);
+      expectResultsData(snapshot, [
+        {'lt': 'AbC  ', 'rt': '  AbC'},
+      ]);
+    }, skip: !kIsWeb);
+
+    test('addFields mapSet and mapEntries on m', () async {
+      final snapshot = await firestore
+          .pipeline()
+          .collection('pipeline-e2e')
+          .where(Expression.field('test').equalValue('expressions'))
+          .where(Expression.field('score').equalValue(60))
+          .addFields(
+            Expression.field('m').mapSet('z', 99).as('m2'),
+            Expression.field('m').mapEntries().as('entries'),
+          )
+          .limit(1)
+          .execute();
+      expectResultCount(snapshot, 1);
+      final data = snapshot.result[0].data()!;
+      expect(data['m2'], {'x': 10, 'y': 20, 'z': 99});
+      final entries = data['entries'] as List<dynamic>?;
+      expect(entries, isNotNull);
+      expect(entries!.length, 2);
+    }, skip: !kIsWeb);
+
+    test('addFields type(score) is int64 string', () async {
+      final snapshot = await expressionsDocScore50(
+        Expression.field('score').type().as('stype'),
+      );
+      expectResultCount(snapshot, 1);
+      expect(snapshot.result[0].data()!['stype'], 'int64');
+    }, skip: !kIsWeb);
+
+    test('where isType int64 on score keeps integer score docs', () async {
+      final snapshot = await firestore
+          .pipeline()
+          .collection('pipeline-e2e')
+          .where(Expression.field('test').equalValue('expressions'))
+          .where(Expression.field('score').isType('int64'))
+          .sort(Expression.field('score').ascending())
+          .execute();
+      expectResultCount(snapshot, 5);
+    }, skip: !kIsWeb);
+
+    test('addFields trunc pi and rand', () async {
+      final snapshot = await firestore
+          .pipeline()
+          .collection('pipeline-e2e')
+          .where(Expression.field('test').equalValue('expressions'))
+          .where(Expression.field('score').equalValue(60))
+          .addFields(
+            Expression.field('pi').trunc().as('pi0'),
+            Expression.field('pi').trunc(Expression.constant(2)).as('pi2'),
+            Expression.rand().as('r'),
+          )
+          .limit(1)
+          .execute();
+      expectResultCount(snapshot, 1);
+      final data = snapshot.result[0].data()!;
+      expect(data['pi0'], 3);
+      expect(data['pi2'], closeTo(3.14, 0.01));
+      expect(data['r'], isA<num>());
+    }, skip: !kIsWeb);
+
+    test('addFields arrayFirst arrayLast on tags', () async {
+      final snapshot = await expressionsDocScore50(
+        Expression.field('tags').arrayFirst().as('t0'),
+      );
+      expectResultCount(snapshot, 1);
+      expectResultsData(snapshot, [
+        {'t0': 'p'},
+      ]);
+      final snap2 = await expressionsDocScore50(
+        Expression.field('tags').arrayLast().as('t1'),
+      );
+      expect(snap2.result[0].data()!['t1'], 'q');
+    }, skip: !kIsWeb);
+
+    test('addFields arrayFirstN arrayLastN on tags', () async {
+      final snapshot = await expressionsDocScore50(
+        Expression.field('tags').arrayFirstN(1).as('head'),
+      );
+      expectResultCount(snapshot, 1);
+      expect(snapshot.result[0].data()!['head'], ['p']);
+      final snap2 = await expressionsDocScore50(
+        Expression.field('tags').arrayLastN(1).as('tail'),
+      );
+      expect(snap2.result[0].data()!['tail'], ['q']);
+    }, skip: !kIsWeb);
+
+    test('addFields arrayMaximum arrayMinimum on arr', () async {
+      final snapshot = await expressionsDocScore50(
+        Expression.field('arr').arrayMaximum().as('mx'),
+      );
+      expectResultCount(snapshot, 1);
+      expect(snapshot.result[0].data()!['mx'], 6);
+      final snap2 = await expressionsDocScore50(
+        Expression.field('arr').arrayMinimum().as('mn'),
+      );
+      expect(snap2.result[0].data()!['mn'], 2);
+    }, skip: !kIsWeb);
+
+    test('addFields arrayMaximumN arrayMinimumN on arr', () async {
+      final snapshot = await expressionsDocScore50(
+        Expression.field('arr').arrayMaximumN(2).as('top2'),
+      );
+      expectResultCount(snapshot, 1);
+      final top2 = snapshot.result[0].data()!['top2'] as List<dynamic>;
+      expect(top2.length, 2);
+      expect(top2.map((e) => e as int).toSet(), {4, 6});
+      final snap2 = await expressionsDocScore50(
+        Expression.field('arr').arrayMinimumN(2).as('bot2'),
+      );
+      final bot2 = snap2.result[0].data()!['bot2'] as List<dynamic>;
+      expect(bot2.length, 2);
+      expect(bot2.map((e) => e as int).toSet(), {2, 4});
+    }, skip: !kIsWeb);
+
+    test(
+      'addFields arrayIndexOf arrayLastIndexOf arrayIndexOfAll on dup_tags',
+      () async {
+        final snapshot = await firestore
+            .pipeline()
+            .collection('pipeline-e2e')
+            .where(Expression.field('test').equalValue('expressions'))
+            .where(Expression.field('score').equalValue(60))
+            .addFields(
+              Expression.field('dup_tags').arrayIndexOf('a').as('i0'),
+              Expression.field('dup_tags').arrayLastIndexOf('a').as('i1'),
+              Expression.field('dup_tags').arrayIndexOfAll('a').as('all'),
+            )
+            .limit(1)
+            .execute();
+        expectResultCount(snapshot, 1);
+        expectResultsData(snapshot, [
+          {
+            'i0': 0,
+            'i1': 2,
+            'all': [0, 2],
+          },
+        ]);
+      },
+      skip: !kIsWeb,
+    );
+
+    test('Expression.isTypeStatic equals where isType', () async {
+      final snapshot = await firestore
+          .pipeline()
+          .collection('pipeline-e2e')
+          .where(Expression.field('test').equalValue('expressions'))
+          .where(Expression.isTypeStatic(Expression.field('score'), 'int64'))
+          .sort(Expression.field('score').ascending())
+          .limit(2)
+          .execute();
+      expectResultCount(snapshot, 2);
+    }, skip: !kIsWeb);
   });
 }
