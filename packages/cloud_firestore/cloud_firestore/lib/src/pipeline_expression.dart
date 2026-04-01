@@ -205,8 +205,11 @@ abstract class Expression implements PipelineSerializable {
   /// [key] and [value] are the first pair. [moreKeyValues] must be alternating
   /// keys and values. Setting a value to `null` keeps the key with a null value;
   /// use map APIs that remove keys if you need deletion semantics.
-  Expression mapSet(Object? key, Object? value,
-      [List<Object?>? moreKeyValues]) {
+  Expression mapSet(
+    Object? key,
+    Object? value, [
+    List<Object?>? moreKeyValues,
+  ]) {
     final pairs = <Expression>[_toExpression(key), _toExpression(value)];
     if (moreKeyValues != null) {
       for (final o in moreKeyValues) {
@@ -3450,8 +3453,11 @@ class _ArrayIndexOfExpression extends FunctionExpression {
   final Expression element;
   final bool isLast;
 
-  _ArrayIndexOfExpression(this.expression, this.element,
-      {required this.isLast});
+  _ArrayIndexOfExpression(
+    this.expression,
+    this.element, {
+    required this.isLast,
+  });
 
   @override
   String get name => 'array_index_of';
