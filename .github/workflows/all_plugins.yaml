@@ -186,7 +186,7 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
-      - uses: actions/setup-go@f111f3307d8850f501ac008e886eec1fd1932a34
+      - uses: actions/setup-go@4a3601121dd01d1626a1e23e37211e3254c1c06c
         with:
           go-version: '^1.13.1'
       # Go is used by addlicense command (addlicense is used in melos run
