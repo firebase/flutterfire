@@ -330,7 +330,6 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
     await _handleServerTemplateMessage(
       message,
       (message) async {
-        _messages.add(MessageData(text: message, fromUser: true));
         var response = await _templateGenerativeModel
             // ignore: experimental_member_use
             ?.generateContent('cj-urlcontext', inputs: {'url': message});

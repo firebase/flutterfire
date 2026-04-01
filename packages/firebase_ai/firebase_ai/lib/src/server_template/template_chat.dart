@@ -97,7 +97,8 @@ final class TemplateChatSession {
         );
 
         final functionCalls = response.functionCalls;
-        final shouldAutoExecute = _autoFunctions!.isNotEmpty &&
+        final shouldAutoExecute = _autoFunctions != null &&
+            _autoFunctions.isNotEmpty &&
             functionCalls.isNotEmpty &&
             functionCalls.every((c) => _autoFunctions.containsKey(c.name));
 
