@@ -50,13 +50,12 @@ class WebSocketTransport implements DataConnectTransport {
     final port = transportOptions.port ?? 443;
     final location = options.location;
 
-    // TODO: Path to change to /ws/google.firebase.dataconnect.v1.ConnectorStreamService/Connect/locations/{location}
-    // after server change deploys April 3rd
     _url = Uri(
       scheme: protocol,
       host: host,
       port: port,
-      path: '/v1/Connect/locations/$location',
+      path:
+          '/ws/google.firebase.dataconnect.v1.ConnectorStreamService/Connect/locations/$location',
     ).toString();
 
     _currentUid = auth?.currentUser?.uid;
@@ -291,7 +290,7 @@ class WebSocketTransport implements DataConnectTransport {
 
   void _scheduleReconnect() {
     developer.log(
-        '${DateTime.now()} _scheduleReconnect $_reconnectAttempts $_isReconnecting');
+        '${DateTime.now()} _scheduleReconnect $_reconnectAttempts $_isReconnecting $_isExpectedDisconnect');
     if (_isReconnecting || _isExpectedDisconnect) return;
     _isReconnecting = true;
 
@@ -555,7 +554,9 @@ class WebSocketTransport implements DataConnectTransport {
           await _ensureConnected(authToken);
         } catch (e) {
           developer.log("Error subscribing - setting up stream $e");
-          controller.sink.addError(e);
+          // Do NOT add error to sink here. The stream is designed to quietly
+          // add the query to `_pendingSubscriptions` below and silently
+          // retry when the network reconnects via `_scheduleReconnect`.
         }
 
         if (_activeSubscriptions.containsKey(operationId)) {
@@ -602,7 +603,9 @@ class WebSocketTransport implements DataConnectTransport {
           headers: headers,
         );
 
-        _channel!.sink.add(jsonEncode(request.toJson()));
+        if (_channel != null) {
+          _channel!.sink.add(jsonEncode(request.toJson()));
+        }
       },
       onCancel: () {
         if (!_activeSubscriptions.containsKey(operationId)) return;
