@@ -50,6 +50,8 @@ class WebSocketTransport implements DataConnectTransport {
     final port = transportOptions.port ?? 443;
     final location = options.location;
 
+    // TODO: Path to change to /ws/google.firebase.dataconnect.v1.ConnectorStreamService/Connect/locations/{location}
+    // after server change deploys April 3rd
     _url = Uri(
       scheme: protocol,
       host: host,
@@ -121,13 +123,14 @@ class WebSocketTransport implements DataConnectTransport {
   final Map<String, String> _activeSubscriptions = {};
 
   bool _isReconnecting = false;
-  bool _isIdleDisconnect = false;
   int _reconnectAttempts = 0;
+  bool _isExpectedDisconnect = false;
 
   void _checkIdleAndDisconnect() {
     if (_streamListeners.isEmpty && _unaryListeners.isEmpty) {
-      _isIdleDisconnect = true;
+      _isExpectedDisconnect = true;
       _disconnect();
+      _clearState();
     }
   }
 
@@ -157,9 +160,18 @@ class WebSocketTransport implements DataConnectTransport {
     return headers;
   }
 
-  Future<void> _ensureConnected(String? authToken) async {
-    if (_channel != null) return;
+  Future<void>? _connectionFuture;
 
+  Future<void> _ensureConnected(String? authToken) {
+    if (_channel != null) return Future.value();
+    if (_connectionFuture != null) return _connectionFuture!;
+    _connectionFuture = _doConnect(authToken).whenComplete(() {
+      _connectionFuture = null;
+    });
+    return _connectionFuture!;
+  }
+
+  Future<void> _doConnect(String? authToken) async {
     String? appCheckToken;
     try {
       appCheckToken = await appCheck?.getToken();
@@ -176,6 +188,18 @@ class WebSocketTransport implements DataConnectTransport {
       onDone: _onDone,
     );
 
+    // reset this since an explicit connect was requested
+    _isExpectedDisconnect = false;
+
+    try {
+      await _channel!.ready;
+    } catch (e) {
+      developer.log('WebSocket connection failed to become ready: $e');
+      _channel = null;
+      throw DataConnectError(
+          DataConnectErrorCode.other, 'WebSocket connection failed: $e');
+    }
+
     final initRequest = StreamRequest(
       name:
           'projects/${options.projectId}/locations/${options.location}/services/${options.serviceId}/connectors/${options.connector}',
@@ -184,6 +208,7 @@ class WebSocketTransport implements DataConnectTransport {
     _channel!.sink.add(jsonEncode(initRequest.toJson()));
   }
 
+  // called when a message is received from the stream
   void _onMessage(dynamic message) {
     try {
       developer.log("Received stream response \n $message");
@@ -262,8 +287,12 @@ class WebSocketTransport implements DataConnectTransport {
     _reconnectAttempts = 0;
   }
 
+  Timer? _reconnectTimer;
+
   void _scheduleReconnect() {
-    if (_isReconnecting) return;
+    developer.log(
+        '${DateTime.now()} _scheduleReconnect $_reconnectAttempts $_isReconnecting');
+    if (_isReconnecting || _isExpectedDisconnect) return;
     _isReconnecting = true;
 
     if (_reconnectAttempts >= 10) {
@@ -273,7 +302,13 @@ class WebSocketTransport implements DataConnectTransport {
     }
 
     final delay = min(1000 * pow(2, _reconnectAttempts).toInt(), 30000);
-    Future.delayed(Duration(milliseconds: delay), () {
+    var startTime = DateTime.now();
+    developer.log('$startTime scheduling _performReconnect in $delay ms');
+
+    _reconnectTimer?.cancel();
+    _reconnectTimer = Timer(Duration(milliseconds: delay), () async {
+      developer.log(
+          '${DateTime.now()} calling delayed _performReconnect scheduled at $startTime');
       _performReconnect();
     });
   }
@@ -364,34 +399,38 @@ class WebSocketTransport implements DataConnectTransport {
       _resubscribeActive(authToken, appCheckToken);
       _replayQueriesAndFailMutations(authToken, appCheckToken);
     } catch (e) {
+      _isReconnecting = false;
       _scheduleReconnect();
     }
   }
 
   void _onError(dynamic error) {
+    if (_channel == null) return;
     developer.log('WebSocket error: $error');
     _channel = null;
-    if (!_isIdleDisconnect) {
-      _scheduleReconnect();
-    } else {
-      _clearState();
-      _isIdleDisconnect = false;
-    }
+    _isReconnecting = false;
+    _scheduleReconnect();
   }
 
   void _disconnect() {
+    _reconnectTimer?.cancel();
+    _reconnectTimer = null;
     _channel?.sink.close();
     _channel = null;
   }
 
+  void disconnect() {
+    _isExpectedDisconnect = true;
+    _disconnect();
+  }
+
   void _onDone() {
+    if (_channel == null) return;
     developer.log('WebSocket connection closed.');
     _channel = null;
-    if (!_isIdleDisconnect) {
+    _isReconnecting = false;
+    if (!_isExpectedDisconnect) {
       _scheduleReconnect();
-    } else {
-      _clearState();
-      _isIdleDisconnect = false;
     }
   }
 
@@ -437,8 +476,9 @@ class WebSocketTransport implements DataConnectTransport {
     if (_activeSubscriptions.containsKey(operationId)) {
       final existingRequestId = _activeSubscriptions[operationId]!;
       Map<String, dynamic>? variablesMap;
-      if (vars != null && serializer != null)
+      if (vars != null && serializer != null) {
         variablesMap = jsonDecode(serializer(vars));
+      }
       _unaryListeners.putIfAbsent(existingRequestId, () => []).add(
           _PendingUnary(completer, operationName, variablesMap, isMutation));
 
@@ -511,7 +551,12 @@ class WebSocketTransport implements DataConnectTransport {
 
     controller = StreamController<ServerResponse>(
       onListen: () async {
-        await _ensureConnected(authToken);
+        try {
+          await _ensureConnected(authToken);
+        } catch (e) {
+          developer.log("Error subscribing - setting up stream $e");
+          controller.sink.addError(e);
+        }
 
         if (_activeSubscriptions.containsKey(operationId)) {
           final existingRequestId = _activeSubscriptions[operationId]!;
@@ -531,6 +576,13 @@ class WebSocketTransport implements DataConnectTransport {
         }
         _pendingSubscriptions[requestId] =
             _PendingSubscription(operationId, queryName, variables);
+
+        if (!isConnected) {
+          // we are not connected -
+          // keep pending sub to use for retry
+          _scheduleReconnect();
+          return;
+        }
 
         String? appCheckToken;
         try {
