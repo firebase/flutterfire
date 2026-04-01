@@ -222,7 +222,8 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
                       IconButton(
                         onPressed: () async {
                           await _serverTemplateFunctionCall(
-                              _textController.text);
+                            _textController.text,
+                          );
                         },
                         icon: Icon(
                           Icons.functions,
