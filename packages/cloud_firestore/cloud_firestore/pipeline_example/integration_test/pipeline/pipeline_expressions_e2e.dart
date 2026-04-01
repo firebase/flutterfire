@@ -872,7 +872,7 @@ void runPipelineExpressionsTests() {
           .execute();
       expectResultCount(snapshot, 1);
       expect(snapshot.result[0].data()!['domain_part'], '@example.com');
-    }, skip: _skipNewPipelineExpressionE2E);
+    }, skip: !kIsWeb));
 
     test('addFields regexFindAll on email', () async {
       final snapshot = await firestore
