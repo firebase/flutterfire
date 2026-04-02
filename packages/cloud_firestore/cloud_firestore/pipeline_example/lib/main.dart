@@ -1033,7 +1033,9 @@ class _PipelineExamplePageState extends State<PipelineExamplePage> {
           ),
         )
         .addFields(
-          Expression.field('s').stringReplaceOneLiteral('A', 'Z').as('s_replace_one'),
+          Expression.field(
+            's',
+          ).stringReplaceOneLiteral('A', 'Z').as('s_replace_one'),
           Expression.field('s').stringIndexOf('y').as('idx_y'),
           Expression.field('s').stringRepeat(2).as('s_twice'),
         )
@@ -1195,9 +1197,7 @@ class _PipelineExamplePageState extends State<PipelineExamplePage> {
         .pipeline()
         .collection(_collectionId)
         .limit(25)
-        .aggregate(
-          Expression.field('title').arrayAgg().as('all_titles'),
-        )
+        .aggregate(Expression.field('title').arrayAgg().as('all_titles'))
         .execute(),
   );
 
@@ -1207,9 +1207,7 @@ class _PipelineExamplePageState extends State<PipelineExamplePage> {
         .pipeline()
         .collection(_collectionId)
         .limit(25)
-        .aggregate(
-          Expression.field('category').arrayAggDistinct().as('cats'),
-        )
+        .aggregate(Expression.field('category').arrayAggDistinct().as('cats'))
         .execute(),
   );
 

@@ -1019,7 +1019,9 @@ void main() {
 
     test('arrayAggDistinct returns ArrayAggDistinct', () {
       expect(
-          Field('t').arrayAggDistinct().toMap()['name'], 'array_agg_distinct');
+        Field('t').arrayAggDistinct().toMap()['name'],
+        'array_agg_distinct',
+      );
     });
   });
 }
