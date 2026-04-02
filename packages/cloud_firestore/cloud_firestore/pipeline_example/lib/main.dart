@@ -142,6 +142,21 @@ class _PipelineExamplePageState extends State<PipelineExamplePage> {
           'b': 2,
           'tags': ['p', 'q'],
         },
+        {
+          'title': 'Regex Email Doc',
+          'score': 99,
+          'year': 2024,
+          'category': 'tech',
+          'email': 'demo@example.com',
+          'pi': 3.14159,
+        },
+        {
+          'title': 'Dup Tags',
+          'score': 8,
+          'year': 2023,
+          'category': 'tech',
+          'tags': ['a', 'b', 'a'],
+        },
       ];
 
       for (final item in items) {
@@ -230,6 +245,21 @@ class _PipelineExamplePageState extends State<PipelineExamplePage> {
           'a': 1,
           'b': 2,
           'tags': ['p', 'q'],
+        },
+        {
+          'title': 'Regex Email Doc',
+          'score': 99,
+          'year': 2024,
+          'category': 'tech',
+          'email': 'demo@example.com',
+          'pi': 3.14159,
+        },
+        {
+          'title': 'Dup Tags',
+          'score': 8,
+          'year': 2023,
+          'category': 'tech',
+          'tags': ['a', 'b', 'a'],
         },
       ];
 
@@ -965,6 +995,224 @@ class _PipelineExamplePageState extends State<PipelineExamplePage> {
         .execute(),
   );
 
+  // ── New pipeline expressions (regex, map, string, array, agg) ───────────
+
+  Future<void> _runPipeline47() => _runPipeline(
+    'Pipeline 47: where(has email) → addFields regexFind(@.+)',
+    () => _firestore
+        .pipeline()
+        .collection(_collectionId)
+        .where(Expression.field('email').exists())
+        .addFields(Expression.field('email').regexFind('@.+').as('at_domain'))
+        .limit(5)
+        .execute(),
+  );
+
+  Future<void> _runPipeline48() => _runPipeline(
+    'Pipeline 48: where(has email) → addFields regexFindAll([a-z]+)',
+    () => _firestore
+        .pipeline()
+        .collection(_collectionId)
+        .where(Expression.field('email').exists())
+        .addFields(
+          Expression.field('email').regexFindAll('[a-z]+').as('word_chunks'),
+        )
+        .limit(5)
+        .execute(),
+  );
+
+  Future<void> _runPipeline49() => _runPipeline(
+    'Pipeline 49: test=expressions + has s → stringReplaceOne, stringIndexOf, stringRepeat',
+    () => _firestore
+        .pipeline()
+        .collection(_collectionId)
+        .where(
+          Expression.and(
+            Expression.field('test').equalValue('expressions'),
+            Expression.field('s').exists(),
+          ),
+        )
+        .addFields(
+          Expression.field('s').stringReplaceOneLiteral('A', 'Z').as('s_replace_one'),
+          Expression.field('s').stringIndexOf('y').as('idx_y'),
+          Expression.field('s').stringRepeat(2).as('s_twice'),
+        )
+        .limit(8)
+        .execute(),
+  );
+
+  Future<void> _runPipeline50() => _runPipeline(
+    'Pipeline 50: title "  Padded  " → ltrim, rtrim',
+    () => _firestore
+        .pipeline()
+        .collection(_collectionId)
+        .where(Expression.field('title').equalValue('  Padded  '))
+        .addFields(
+          Expression.field('title').ltrim().as('lt'),
+          Expression.field('title').rtrim().as('rt'),
+        )
+        .limit(3)
+        .execute(),
+  );
+
+  Future<void> _runPipeline51() => _runPipeline(
+    'Pipeline 51: where(has items) → mapSet(z), mapEntries()',
+    () => _firestore
+        .pipeline()
+        .collection(_collectionId)
+        .where(Expression.field('items').exists())
+        .addFields(
+          Expression.field('items').mapSet('z', 'added').as('items_plus'),
+          Expression.field('items').mapEntries().as('items_entries'),
+        )
+        .limit(3)
+        .execute(),
+  );
+
+  Future<void> _runPipeline52() => _runPipeline(
+    'Pipeline 52: addFields type(score)',
+    () => _firestore
+        .pipeline()
+        .collection(_collectionId)
+        .addFields(Expression.field('score').type().as('score_type'))
+        .limit(6)
+        .execute(),
+  );
+
+  Future<void> _runPipeline53() => _runPipeline(
+    'Pipeline 53: where(score isType int64) → select title, score',
+    () => _firestore
+        .pipeline()
+        .collection(_collectionId)
+        .where(Expression.field('score').isType('int64'))
+        .select(Expression.field('title'), Expression.field('score'))
+        .limit(8)
+        .execute(),
+  );
+
+  Future<void> _runPipeline54() => _runPipeline(
+    'Pipeline 54: where(has pi) → trunc(pi), trunc(2dp), rand()',
+    () => _firestore
+        .pipeline()
+        .collection(_collectionId)
+        .where(Expression.field('pi').exists())
+        .addFields(
+          Expression.field('pi').trunc().as('pi_trunc'),
+          Expression.field('pi').trunc(Expression.constant(2)).as('pi_2'),
+          Expression.rand().as('rnd'),
+        )
+        .limit(3)
+        .execute(),
+  );
+
+  Future<void> _runPipeline55() => _runPipeline(
+    'Pipeline 55: title Item G → arrayFirst, arrayLast(tags)',
+    () => _firestore
+        .pipeline()
+        .collection(_collectionId)
+        .where(Expression.field('title').equalValue('Item G'))
+        .addFields(
+          Expression.field('tags').arrayFirst().as('tag_first'),
+          Expression.field('tags').arrayLast().as('tag_last'),
+        )
+        .limit(3)
+        .execute(),
+  );
+
+  Future<void> _runPipeline56() => _runPipeline(
+    'Pipeline 56: Item G → arrayFirstN(2), arrayLastN(2)(tags)',
+    () => _firestore
+        .pipeline()
+        .collection(_collectionId)
+        .where(Expression.field('title').equalValue('Item G'))
+        .addFields(
+          Expression.field('tags').arrayFirstN(2).as('tags_head'),
+          Expression.field('tags').arrayLastN(2).as('tags_tail'),
+        )
+        .limit(3)
+        .execute(),
+  );
+
+  Future<void> _runPipeline57() => _runPipeline(
+    'Pipeline 57: where(has scores) → arrayMaximum, arrayMinimum',
+    () => _firestore
+        .pipeline()
+        .collection(_collectionId)
+        .where(Expression.field('scores').exists())
+        .addFields(
+          Expression.field('scores').arrayMaximum().as('smax'),
+          Expression.field('scores').arrayMinimum().as('smin'),
+        )
+        .limit(3)
+        .execute(),
+  );
+
+  Future<void> _runPipeline58() => _runPipeline(
+    'Pipeline 58: where(has scores) → arrayMaximumN(2), arrayMinimumN(2)',
+    () => _firestore
+        .pipeline()
+        .collection(_collectionId)
+        .where(Expression.field('scores').exists())
+        .addFields(
+          Expression.field('scores').arrayMaximumN(2).as('top2'),
+          Expression.field('scores').arrayMinimumN(2).as('bottom2'),
+        )
+        .limit(3)
+        .execute(),
+  );
+
+  Future<void> _runPipeline59() => _runPipeline(
+    'Pipeline 59: Dup Tags → arrayIndexOf(a), arrayLastIndexOf(a), arrayIndexOfAll(a)',
+    () => _firestore
+        .pipeline()
+        .collection(_collectionId)
+        .where(Expression.field('title').equalValue('Dup Tags'))
+        .addFields(
+          Expression.field('tags').arrayIndexOf('a').as('idx_first_a'),
+          Expression.field('tags').arrayLastIndexOf('a').as('idx_last_a'),
+          Expression.field('tags').arrayIndexOfAll('a').as('all_a'),
+        )
+        .limit(3)
+        .execute(),
+  );
+
+  Future<void> _runPipeline60() => _runPipeline(
+    'Pipeline 60: aggregate first(score), last(score)',
+    () => _firestore
+        .pipeline()
+        .collection(_collectionId)
+        .limit(50)
+        .aggregate(
+          Expression.field('score').first().as('first_score'),
+          Expression.field('score').last().as('last_score'),
+        )
+        .execute(),
+  );
+
+  Future<void> _runPipeline61() => _runPipeline(
+    'Pipeline 61: limit 25 → aggregate array_agg(title)',
+    () => _firestore
+        .pipeline()
+        .collection(_collectionId)
+        .limit(25)
+        .aggregate(
+          Expression.field('title').arrayAgg().as('all_titles'),
+        )
+        .execute(),
+  );
+
+  Future<void> _runPipeline62() => _runPipeline(
+    'Pipeline 62: limit 25 → aggregate array_agg_distinct(category)',
+    () => _firestore
+        .pipeline()
+        .collection(_collectionId)
+        .limit(25)
+        .aggregate(
+          Expression.field('category').arrayAggDistinct().as('cats'),
+        )
+        .execute(),
+  );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -1043,7 +1291,6 @@ class _PipelineExamplePageState extends State<PipelineExamplePage> {
                   _btn('24: lower/upper', _runPipeline24),
                   _btn('25: trim', _runPipeline25),
                   _btn('26: substring', _runPipeline26),
-                  // test comment
                   _btn('28: split', _runPipeline28),
                   _btn('29: join', _runPipeline29),
                   _btn('30: if_absent', _runPipeline30),
@@ -1064,6 +1311,22 @@ class _PipelineExamplePageState extends State<PipelineExamplePage> {
                   _btn('44: notEqualAny', _runPipeline44),
                   _btn('45: asBoolean', _runPipeline45),
                   _btn('46: isError', _runPipeline46),
+                  _btn('47: regexFind', _runPipeline47),
+                  _btn('48: regexFindAll', _runPipeline48),
+                  _btn('49: string idx/repeat', _runPipeline49),
+                  _btn('50: ltrim/rtrim', _runPipeline50),
+                  _btn('51: mapSet/entries', _runPipeline51),
+                  _btn('52: type(score)', _runPipeline52),
+                  _btn('53: isType int64', _runPipeline53),
+                  _btn('54: trunc/rand', _runPipeline54),
+                  _btn('55: array first/last', _runPipeline55),
+                  _btn('56: arrayFirstN/LastN', _runPipeline56),
+                  _btn('57: array max/min', _runPipeline57),
+                  _btn('58: arrayMaxN/MinN', _runPipeline58),
+                  _btn('59: arrayIndexOf*', _runPipeline59),
+                  _btn('60: agg first/last', _runPipeline60),
+                  _btn('61: agg array_agg', _runPipeline61),
+                  _btn('62: agg array_agg_dist', _runPipeline62),
                 ],
               ),
             ),
