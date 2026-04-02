@@ -452,7 +452,7 @@ class PipelineExpressionParserWeb {
         }
         return _pipelines.isTypeExpr(
           _expr(argsMap, _kExpression),
-          _pipelines.constant(typeStr.toJS),
+          typeStr.toJS,
         );
       default:
         throw FirebaseException(
