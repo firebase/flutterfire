@@ -42,8 +42,12 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
   late GenerativeModel _functionCallModel;
   late GenerativeModel _autoFunctionCallModel;
   late GenerativeModel _parallelAutoFunctionCallModel;
+  late GenerativeModel _complexSchemaModel;
+  late GenerativeModel _refDefJsonSchemaModel;
   late GenerativeModel _codeExecutionModel;
   late final AutoFunctionDeclaration _autoFetchWeatherTool;
+  late final AutoFunctionDeclaration _autoPlanVacationTool;
+  late final AutoFunctionDeclaration _autoProcessTransactionTool;
   final List<MessageData> _messages = <MessageData>[];
   bool _loading = false;
   bool _enableThinking = false;
@@ -111,6 +115,85 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
       callable: (args) async {
         final restaurantName = args['restaurantName']! as String;
         return getRestaurantMenu(restaurantName);
+      },
+    );
+    _autoPlanVacationTool = AutoFunctionDeclaration(
+      name: 'planVacation',
+      description:
+          'Plans a complex vacation itinerary combining flights, hotels, and activities.',
+      parameters: {
+        'destination':
+            Schema.string(description: 'The city or country to travel to.'),
+        'travelers': Schema.integer(
+          description: 'Number of travelers.',
+          minimum: 1,
+          maximum: 10,
+        ),
+        'travelClass': Schema.enumString(
+          enumValues: ['ECONOMY', 'BUSINESS', 'FIRST'],
+          description: 'The preferred travel class.',
+        ),
+        'budget':
+            Schema.number(description: 'Total budget for the trip in USD.'),
+        'activities': Schema.array(
+          items: Schema.string(),
+          description: 'A list of preferred activities.',
+          minItems: 1,
+        ),
+        'accommodations': Schema.object(
+          description: 'Hotel preferences.',
+          properties: {
+            'hotelType': Schema.string(),
+            'stars': Schema.integer(minimum: 1, maximum: 5),
+            'amenities': Schema.array(items: Schema.string()),
+          },
+          optionalProperties: ['amenities'],
+        ),
+      },
+      callable: (args) async {
+        return {
+          'status': 'SUCCESS',
+          'itineraryId': 'TRIP-98765',
+          'destination': args['destination'],
+          'estimatedCost': 3500.0,
+          'message': 'Vacation planned successfully!',
+        };
+      },
+    );
+    _autoProcessTransactionTool = AutoFunctionDeclaration(
+      name: 'processTransactions',
+      description:
+          'Processes a list of financial transactions using a predefined transaction model reference.',
+      parameters: {
+        'transactionsBlock': JSONSchema.object(
+          description: 'A block containing a list of transactions.',
+          properties: {
+            'transactionsList': JSONSchema.array(
+              items: JSONSchema.ref(
+                r'#/properties/transactionsBlock/$defs/transactionDef',
+              ),
+            ),
+          },
+          defs: {
+            'transactionDef': JSONSchema.object(
+              properties: {
+                'amount': JSONSchema.number(),
+                'transactionId': JSONSchema.integer(),
+                'currency': JSONSchema.string(),
+              },
+            ),
+          },
+        ),
+      },
+      callable: (args) async {
+        final block = args['transactionsBlock'] as Map<String, dynamic>?;
+        final list = block?['transactionsList'] as List<dynamic>?;
+        return {
+          'status': 'SUCCESS',
+          'transactionsProcessed': list?.length ?? 0,
+          'message':
+              'Transactions processed successfully using the reference schema!',
+        };
       },
     );
     _initializeModel();
@@ -200,6 +283,20 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
       generationConfig: generationConfig,
       tools: [
         Tool.codeExecution(),
+      ],
+    );
+    _complexSchemaModel = aiClient.generativeModel(
+      model: 'gemini-2.5-flash',
+      generationConfig: generationConfig,
+      tools: [
+        Tool.functionDeclarations([_autoPlanVacationTool]),
+      ],
+    );
+    _refDefJsonSchemaModel = aiClient.generativeModel(
+      model: 'gemini-2.5-flash',
+      generationConfig: generationConfig,
+      tools: [
+        Tool.functionDeclarations([_autoProcessTransactionTool]),
       ],
     );
   }
@@ -371,6 +468,28 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
                           onPressed:
                               !_loading ? _testAutoStreamFunctionCalling : null,
                           child: const Text('Auto Stream FC'),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: !_loading
+                              ? _testComplexSchemaAutoFunctionCalling
+                              : null,
+                          child: const Text('Complex Schema Auto FC'),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: !_loading
+                              ? _testRefDefJsonSchemaAutoFunctionCalling
+                              : null,
+                          child: const Text('Ref Def JSON Schema Auto FC'),
                         ),
                       ),
                     ],
@@ -604,6 +723,56 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
             fromUser: false,
           ),
         );
+      }
+    });
+  }
+
+  Future<void> _testComplexSchemaAutoFunctionCalling() async {
+    await _runTest(() async {
+      final chat = _complexSchemaModel.startChat();
+      const prompt =
+          'I want to plan a vacation to Paris for 2 people. We want to fly Business class, our budget is 5500 USD. We want to do wine tasting and museum tours. We prefer a 4-star boutique hotel with free breakfast.';
+
+      _messages.add(MessageData(text: prompt, fromUser: true));
+      setState(() {});
+
+      final response = await chat.sendMessage(Content.text(prompt));
+
+      final thought = response.thoughtSummary;
+      if (thought != null) {
+        _messages
+            .add(MessageData(text: thought, fromUser: false, isThought: true));
+      }
+
+      if (response.text case final text?) {
+        _messages.add(MessageData(text: text));
+      } else {
+        _messages.add(MessageData(text: 'No text response from model.'));
+      }
+    });
+  }
+
+  Future<void> _testRefDefJsonSchemaAutoFunctionCalling() async {
+    await _runTest(() async {
+      final chat = _refDefJsonSchemaModel.startChat();
+      const prompt =
+          r'Process two transactions. The first is $50.00 in USD (ID 98765) and the second is €30.00 in EUR (ID 98766).';
+
+      _messages.add(MessageData(text: prompt, fromUser: true));
+      setState(() {});
+
+      final response = await chat.sendMessage(Content.text(prompt));
+
+      final thought = response.thoughtSummary;
+      if (thought != null) {
+        _messages
+            .add(MessageData(text: thought, fromUser: false, isThought: true));
+      }
+
+      if (response.text case final text?) {
+        _messages.add(MessageData(text: text));
+      } else {
+        _messages.add(MessageData(text: 'No text response from model.'));
       }
     });
   }

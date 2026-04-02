@@ -1,3 +1,10 @@
+## 13.2.0
+
+ - **FIX**(storage,iOS): guard `useStorageEmulator` to prevent crash on hot restart ([#18116](https://github.com/firebase/flutterfire/issues/18116)). ([9919bf03](https://github.com/firebase/flutterfire/commit/9919bf035226a4b066ac1ef52859d5349eff61c6))
+ - **FIX**(storage,web): contentType inference for web ([#18078](https://github.com/firebase/flutterfire/issues/18078)). ([a1fad454](https://github.com/firebase/flutterfire/commit/a1fad454a7a613c6376ddbce6fbd0d8832688d80))
+ - **FIX**(android): remove kotlin-android since AGP 9 supports it ([#18059](https://github.com/firebase/flutterfire/issues/18059)). ([1e39ad1f](https://github.com/firebase/flutterfire/commit/1e39ad1f146ce23742731ceeb30ff36c440b816f))
+ - **FEAT**(ios): migrate iOS to UIScene lifecycle ([#18054](https://github.com/firebase/flutterfire/issues/18054)). ([3ffa4110](https://github.com/firebase/flutterfire/commit/3ffa411098132fd5182a84be4e7a226106bc7451))
+
 ## 13.1.0
 
  - **FEAT**(storage,windows): add emulator support ([#18030](https://github.com/firebase/flutterfire/issues/18030)). ([461dfa43](https://github.com/firebase/flutterfire/commit/461dfa43764469b518984052cb7bbc0a2a2675eb))

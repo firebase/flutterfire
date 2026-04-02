@@ -1,3 +1,9 @@
+## 6.1.0
+
+ - **FIX**(functions,web): fix a crash that could happen with the Int64 type ([#18066](https://github.com/firebase/flutterfire/issues/18066)). ([5eed50c1](https://github.com/firebase/flutterfire/commit/5eed50c15dd29ab97934a4bd0919378f61c46f9e))
+ - **FIX**(android): remove kotlin-android since AGP 9 supports it ([#18059](https://github.com/firebase/flutterfire/issues/18059)). ([1e39ad1f](https://github.com/firebase/flutterfire/commit/1e39ad1f146ce23742731ceeb30ff36c440b816f))
+ - **FEAT**(ios): migrate iOS to UIScene lifecycle ([#18054](https://github.com/firebase/flutterfire/issues/18054)). ([3ffa4110](https://github.com/firebase/flutterfire/commit/3ffa411098132fd5182a84be4e7a226106bc7451))
+
 ## 6.0.7
 
  - Update a dependency to the latest release.
