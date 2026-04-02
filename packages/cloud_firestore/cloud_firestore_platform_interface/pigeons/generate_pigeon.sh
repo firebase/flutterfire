@@ -15,7 +15,7 @@ sed -i '' 's/private static class FirebaseFirestoreHostApiCodec extends Standard
 echo "Android modification complete."
 
 # Fix iOS files
-FILE_NAME="../../cloud_firestore/ios/Classes/FirestoreMessages.g.m"
+FILE_NAME="../../cloud_firestore/ios/cloud_firestore/Sources/cloud_firestore/FirestoreMessages.g.m"
 sed -i '' '/#import "FirestoreMessages.g.h"/a\
 #import "FLTFirebaseFirestoreReader.h"\
 #import "FLTFirebaseFirestoreWriter.h"
@@ -26,7 +26,7 @@ sed -i '' 's/(self\.newIndex \?: \[NSNull null\]),/(self.index ?: [NSNull null])
 sed -i '' 's/@interface FirebaseFirestoreHostApiCodecReader : FlutterStandardReader/@interface FirebaseFirestoreHostApiCodecReader : FLTFirebaseFirestoreReader/' $FILE_NAME
 sed -i '' 's/@interface FirebaseFirestoreHostApiCodecWriter : FlutterStandardWriter/@interface FirebaseFirestoreHostApiCodecWriter : FLTFirebaseFirestoreWriter/' $FILE_NAME
 
-FILE_NAME="../../cloud_firestore/ios/Classes/Public/FirestoreMessages.g.h"
+FILE_NAME="../../cloud_firestore/ios/cloud_firestore/Sources/cloud_firestore/include/cloud_firestore/Public/FirestoreMessages.g.h"
 sed -i '' 's/@property(nonatomic, strong) NSNumber \*newIndex;/@property(nonatomic, strong) NSNumber \*index;/' $FILE_NAME
 
 echo "iOS modification complete."
