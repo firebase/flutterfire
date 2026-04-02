@@ -19,6 +19,12 @@
 #endif
 #endif
 
+#if __has_include("FirebaseFirestoreInternal/FIRVectorValue.h")
+#import "FirebaseFirestoreInternal/FIRVectorValue.h"
+#elif __has_include(<FirebaseFirestoreInternal/FIRVectorValue.h>)
+#import <FirebaseFirestoreInternal/FIRVectorValue.h>
+#endif
+
 #import <Foundation/Foundation.h>
 
 static NSString *const kPipelineNotAvailable =
