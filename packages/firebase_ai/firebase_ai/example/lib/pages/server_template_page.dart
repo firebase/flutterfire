@@ -190,55 +190,57 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
                     ),
                   ),
                   const SizedBox.square(dimension: 15),
-                  if (!_loading)
-                    IconButton(
-                      onPressed: () async {
-                        await _serverTemplateAutoFunctionCall(
-                          _textController.text,
-                        );
-                      },
-                      icon: Icon(
-                        Icons.auto_mode,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                      tooltip: 'Auto Function Calling',
-                    ),
-                  if (!_loading)
-                    IconButton(
-                      onPressed: () async {
-                        await _serverTemplateFunctionCall(_textController.text);
-                      },
-                      icon: Icon(
-                        Icons.functions,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                      tooltip: 'Function Calling (client override)',
-                    ),
-                  if (!_loading)
-                    IconButton(
-                      onPressed: () async {
-                        await _serverTemplateAutoStreamFunctionCall(
-                          _textController.text,
-                        );
-                      },
-                      icon: Icon(
-                        Icons.smart_toy,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                      tooltip: 'Auto Stream Function Calling',
-                    ),
-                  if (!_loading)
-                    IconButton(
-                      onPressed: () async {
-                        await _serverTemplateChat(_textController.text);
-                      },
-                      icon: Icon(
-                        Icons.chat,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                      tooltip: 'Chat',
-                    ),
                   if (!_loading) ...[
+                    if (!_loading)
+                      IconButton(
+                        onPressed: () async {
+                          await _serverTemplateAutoFunctionCall(
+                            _textController.text,
+                          );
+                        },
+                        icon: Icon(
+                          Icons.auto_mode,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        tooltip: 'Auto Function Calling',
+                      ),
+                    if (!_loading)
+                      IconButton(
+                        onPressed: () async {
+                          await _serverTemplateFunctionCall(
+                            _textController.text,
+                          );
+                        },
+                        icon: Icon(
+                          Icons.functions,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        tooltip: 'Function Calling (client override)',
+                      ),
+                    if (!_loading)
+                      IconButton(
+                        onPressed: () async {
+                          await _serverTemplateAutoStreamFunctionCall(
+                            _textController.text,
+                          );
+                        },
+                        icon: Icon(
+                          Icons.smart_toy,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        tooltip: 'Auto Stream Function Calling',
+                      ),
+                    if (!_loading)
+                      IconButton(
+                        onPressed: () async {
+                          await _serverTemplateChat(_textController.text);
+                        },
+                        icon: Icon(
+                          Icons.chat,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        tooltip: 'Chat',
+                      ),
                     IconButton(
                       onPressed: () async {
                         await _serverTemplateImageInput(_textController.text);
@@ -312,11 +314,12 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
   }
 
   Future<void> _serverTemplateUrlContext(String message) async {
-    await _handleServerTemplateMessage(message, (message) async {
-      _messages.add(MessageData(text: message, fromUser: true));
-      var response = await _templateGenerativeModel
-          // ignore: experimental_member_use
-          ?.generateContent('cj-urlcontext', inputs: {'url': message});
+    await _handleServerTemplateMessage(
+      message,
+      (message) async {
+        var response = await _templateGenerativeModel
+            // ignore: experimental_member_use
+            ?.generateContent('cj-urlcontext', inputs: {'url': message});
 
       final candidate = response?.candidates.first;
       if (candidate == null) {

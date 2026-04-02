@@ -70,7 +70,9 @@ final class TemplateGenerativeModel extends BaseTemplateApiClientModel {
   @experimental
   Future<GenerateContentResponse> generateContent(String templateId,
           {required Map<String, Object?> inputs}) =>
-      makeTemplateRequest(TemplateTask.templateGenerateContent, templateId,
+      makeTemplateRequest(
+          TemplateTask.templateGenerateContent,
+          templateId,
           inputs,
           null, // history
           null, // tools
@@ -102,7 +104,9 @@ final class TemplateGenerativeModel extends BaseTemplateApiClientModel {
           {required Map<String, Object?> inputs,
           List<TemplateTool>? tools,
           TemplateToolConfig? templateToolConfig}) =>
-      makeTemplateRequest(TemplateTask.templateGenerateContent, templateId,
+      makeTemplateRequest(
+          TemplateTask.templateGenerateContent,
+          templateId,
           inputs,
           history,
           tools,
