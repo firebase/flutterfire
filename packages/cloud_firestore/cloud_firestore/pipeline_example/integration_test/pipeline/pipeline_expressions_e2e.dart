@@ -966,7 +966,7 @@ void runPipelineExpressionsTests() {
           .pipeline()
           .collection('pipeline-e2e')
           .where(Expression.field('test').equalValue('expressions'))
-          .where(Expression.field('score').isType('int64'))
+          .where(Expression.field('score').isType(Type.int64))
           .sort(Expression.field('score').ascending())
           .execute();
       expectResultCount(snapshot, 5);
@@ -1078,7 +1078,12 @@ void runPipelineExpressionsTests() {
           .pipeline()
           .collection('pipeline-e2e')
           .where(Expression.field('test').equalValue('expressions'))
-          .where(Expression.isTypeStatic(Expression.field('score'), 'int64'))
+          .where(
+            Expression.isTypeStatic(
+              Expression.field('score'),
+              Type.int64,
+            ),
+          )
           .sort(Expression.field('score').ascending())
           .limit(2)
           .execute();

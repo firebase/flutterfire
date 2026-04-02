@@ -39,6 +39,74 @@ void _validateTimestampUnit(String unit) {
   }
 }
 
+/// Value types for [Expression.isType] and [Expression.isTypeStatic].
+enum Type {
+  /// `null`
+  nullValue('null'),
+
+  /// `array`
+  array('array'),
+
+  /// `boolean`
+  boolean('boolean'),
+
+  /// `bytes`
+  bytes('bytes'),
+
+  /// `timestamp`
+  timestamp('timestamp'),
+
+  /// `geo_point`
+  geoPoint('geo_point'),
+
+  /// `number`
+  number('number'),
+
+  /// `int32`
+  int32('int32'),
+
+  /// `int64`
+  int64('int64'),
+
+  /// `float64`
+  float64('float64'),
+
+  /// `decimal128`
+  decimal128('decimal128'),
+
+  /// `map`
+  map('map'),
+
+  /// `reference`
+  reference('reference'),
+
+  /// `string`
+  string('string'),
+
+  /// `vector`
+  vector('vector'),
+
+  /// `max_key`
+  maxKey('max_key'),
+
+  /// `min_key`
+  minKey('min_key'),
+
+  /// `object_id`
+  objectId('object_id'),
+
+  /// `regex`
+  regex('regex'),
+
+  /// `request_timestamp`
+  requestTimestamp('request_timestamp');
+
+  const Type(this.typeValue);
+
+  /// String passed to Firestore for `is_type` (same literals as the JS SDK).
+  final String typeValue;
+}
+
 /// Base class for all pipeline expressions
 abstract class Expression implements PipelineSerializable {
   /// Creates an aliased expression
@@ -493,16 +561,17 @@ abstract class Expression implements PipelineSerializable {
         : _RtrimExpression(this, _toExpression(valueToTrim));
   }
 
-  /// Returns the Firestore value type of this expression as a string (e.g. `int64`, `timestamp`).
+  /// Returns the Firestore value type of this expression as a string (e.g.
+  /// `int64`, `timestamp`). Possible values align with [Type].
   // ignore: use_to_and_as_if_applicable
   Expression type() {
     return _TypeExpression(this);
   }
 
-  /// Whether this expression evaluates to the given Firestore type (e.g. `int64`, `float64`).
+  /// Whether this expression evaluates to the given backend [Type].
   // ignore: use_to_and_as_if_applicable
-  BooleanExpression isType(String type) {
-    return _IsTypeExpression(this, type);
+  BooleanExpression isType(Type valueType) {
+    return _IsTypeExpression(this, valueType);
   }
 
   // ============================================================================
@@ -1542,8 +1611,11 @@ abstract class Expression implements PipelineSerializable {
   }
 
   /// Same as [Expression.isType] but usable as a static helper for any [expression].
-  static BooleanExpression isTypeStatic(Expression expression, String type) {
-    return _IsTypeExpression(expression, type);
+  static BooleanExpression isTypeStatic(
+    Expression expression,
+    Type valueType,
+  ) {
+    return _IsTypeExpression(expression, valueType);
   }
 }
 
@@ -3219,9 +3291,9 @@ class _TypeExpression extends FunctionExpression {
 /// Serialized pipeline boolean function `is_type`.
 class _IsTypeExpression extends BooleanExpression {
   final Expression expression;
-  final String _typeName;
+  final Type valueType;
 
-  _IsTypeExpression(this.expression, String type) : _typeName = type;
+  _IsTypeExpression(this.expression, this.valueType);
 
   @override
   String get name => 'is_type';
@@ -3232,7 +3304,7 @@ class _IsTypeExpression extends BooleanExpression {
       'name': name,
       'args': {
         'expression': expression.toMap(),
-        'type': _typeName,
+        'type': valueType.typeValue,
       },
     };
   }

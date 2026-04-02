@@ -1086,7 +1086,7 @@ class _PipelineExamplePageState extends State<PipelineExamplePage> {
     () => _firestore
         .pipeline()
         .collection(_collectionId)
-        .where(Expression.field('score').isType('int64'))
+        .where(Expression.field('score').isType(Type.int64))
         .select(Expression.field('title'), Expression.field('score'))
         .limit(8)
         .execute(),

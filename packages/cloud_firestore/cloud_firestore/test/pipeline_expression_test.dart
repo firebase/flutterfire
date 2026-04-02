@@ -910,7 +910,7 @@ void main() {
     });
 
     test('isType serializes correctly', () {
-      final expr = Field('n').isType('int64');
+      final expr = Field('n').isType(Type.int64);
       expect(expr.toMap(), {
         'name': 'is_type',
         'args': {
@@ -922,8 +922,8 @@ void main() {
 
     test('Expression.isTypeStatic matches instance isType', () {
       expect(
-        Expression.isTypeStatic(Field('n'), 'float64').toMap(),
-        Field('n').isType('float64').toMap(),
+        Expression.isTypeStatic(Field('n'), Type.float64).toMap(),
+        Field('n').isType(Type.float64).toMap(),
       );
     });
 
