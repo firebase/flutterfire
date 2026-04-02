@@ -1078,12 +1078,7 @@ void runPipelineExpressionsTests() {
           .pipeline()
           .collection('pipeline-e2e')
           .where(Expression.field('test').equalValue('expressions'))
-          .where(
-            Expression.isTypeStatic(
-              Expression.field('score'),
-              Type.int64,
-            ),
-          )
+          .where(Expression.isTypeStatic(Expression.field('score'), Type.int64))
           .sort(Expression.field('score').ascending())
           .limit(2)
           .execute();
