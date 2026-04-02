@@ -210,8 +210,15 @@ class WebSocketTransport implements DataConnectTransport {
   // called when a message is received from the stream
   void _onMessage(dynamic message) {
     try {
-      developer.log("Received stream response \n $message");
-      final bodyJson = jsonDecode(message as String) as Map<String, dynamic>;
+      var bodyString = '';
+      if (message is List<int>) {
+        bodyString = utf8.decode(message);
+      } else {
+        bodyString = message as String;
+      }
+      developer.log("Received stream response \n $bodyString");
+
+      final bodyJson = jsonDecode(bodyString) as Map<String, dynamic>;
       final response = StreamResponse.fromJson(bodyJson);
 
       final requestId = response.requestId;
