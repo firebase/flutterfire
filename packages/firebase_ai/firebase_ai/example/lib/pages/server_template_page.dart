@@ -96,8 +96,7 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
                 optionalProperties: ['zipCode'],
               ),
               'date': JSONSchema.string(
-                description:
-                    'The date for which to get the weather. '
+                description: 'The date for which to get the weather. '
                     'Date must be in the format: YYYY-MM-DD.',
               ),
               'unit': JSONSchema.enumString(
@@ -314,12 +313,10 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
   }
 
   Future<void> _serverTemplateUrlContext(String message) async {
-    await _handleServerTemplateMessage(
-      message,
-      (message) async {
-        var response = await _templateGenerativeModel
-            // ignore: experimental_member_use
-            ?.generateContent('cj-urlcontext', inputs: {'url': message});
+    await _handleServerTemplateMessage(message, (message) async {
+      var response = await _templateGenerativeModel
+          // ignore: experimental_member_use
+          ?.generateContent('cj-urlcontext', inputs: {'url': message});
 
       final candidate = response?.candidates.first;
       if (candidate == null) {
@@ -393,10 +390,10 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
           );
 
           // Respond to the function call
-          var functionResponse = await _chatFunctionOverrideSession
-              ?.sendMessage(
-                Content.functionResponse(functionCall.name, functionResult),
-              );
+          var functionResponse =
+              await _chatFunctionOverrideSession?.sendMessage(
+            Content.functionResponse(functionCall.name, functionResult),
+          );
           _messages.add(
             MessageData(text: functionResponse?.text, fromUser: false),
           );
