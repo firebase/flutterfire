@@ -36,6 +36,10 @@ class _PendingSubscription {
 }
 
 class WebSocketTransport implements DataConnectTransport {
+  static const int _maxReconnectAttempts = 10;
+  static const int _maxReconnectDelayMs = 30000;
+  static const int _initialReconnectDelayMs = 1000;
+
   /// Initializes necessary protocol and port.
   WebSocketTransport(
     this.transportOptions,
@@ -73,7 +77,7 @@ class WebSocketTransport implements DataConnectTransport {
             requestId: _generateRequestId('auth'),
             authToken: token,
           );
-          _channel!.sink.add(jsonEncode(request.toJson()));
+          _channel?.sink.add(jsonEncode(request.toJson()));
         } catch (_) {
           // Ignored
         }
@@ -181,7 +185,7 @@ class WebSocketTransport implements DataConnectTransport {
     final headers = _buildHeaders(authToken, appCheckToken);
 
     _channel = WebSocketChannel.connect(Uri.parse(_url));
-    _channelSubscription = _channel!.stream.listen(
+    _channelSubscription = _channel?.stream.listen(
       _onMessage,
       onError: _onError,
       onDone: _onDone,
@@ -191,7 +195,7 @@ class WebSocketTransport implements DataConnectTransport {
     _isExpectedDisconnect = false;
 
     try {
-      await _channel!.ready;
+      await _channel?.ready;
     } catch (e) {
       developer.log('WebSocket connection failed to become ready: $e');
       _channel = null;
@@ -204,7 +208,7 @@ class WebSocketTransport implements DataConnectTransport {
           'projects/${options.projectId}/locations/${options.location}/services/${options.serviceId}/connectors/${options.connector}',
       headers: headers,
     );
-    _channel!.sink.add(jsonEncode(initRequest.toJson()));
+    _channel?.sink.add(jsonEncode(initRequest.toJson()));
   }
 
   // called when a message is received from the stream
@@ -301,13 +305,15 @@ class WebSocketTransport implements DataConnectTransport {
     if (_isReconnecting || _isExpectedDisconnect) return;
     _isReconnecting = true;
 
-    if (_reconnectAttempts >= 10) {
+    if (_reconnectAttempts >= _maxReconnectAttempts) {
       _clearState(DataConnectError(DataConnectErrorCode.other,
           'Network disconnected after max attempts.'));
       return;
     }
 
-    final delay = min(1000 * pow(2, _reconnectAttempts).toInt(), 30000);
+    final delay = min(
+        _initialReconnectDelayMs * pow(2, _reconnectAttempts).toInt(),
+        _maxReconnectDelayMs);
     var startTime = DateTime.now();
     developer.log('$startTime scheduling _performReconnect in $delay ms');
 
@@ -352,7 +358,7 @@ class WebSocketTransport implements DataConnectTransport {
         subscribe: ExecuteRequest(sub.queryName, sub.variables),
         headers: headers,
       );
-      _channel!.sink.add(jsonEncode(request.toJson()));
+      _channel?.sink.add(jsonEncode(request.toJson()));
     }
   }
 
@@ -377,7 +383,7 @@ class WebSocketTransport implements DataConnectTransport {
             execute: ExecuteRequest(p.operationName, p.variables),
             headers: headers,
           );
-          _channel!.sink.add(jsonEncode(request.toJson()));
+          _channel?.sink.add(jsonEncode(request.toJson()));
         }
       }
       if (kept.isNotEmpty) {
@@ -505,7 +511,7 @@ class WebSocketTransport implements DataConnectTransport {
         resume: ResumeRequest(),
         headers: headers,
       );
-      _channel!.sink.add(jsonEncode(request.toJson()));
+      _channel?.sink.add(jsonEncode(request.toJson()));
 
       return completer.future;
     }
@@ -514,7 +520,7 @@ class WebSocketTransport implements DataConnectTransport {
 
     Map<String, dynamic>? variables;
     if (vars != null && serializer != null) {
-      variables = json.decode(serializer(vars));
+      variables = jsonDecode(serializer(vars));
     }
     _unaryListeners
         .putIfAbsent(requestId, () => [])
@@ -538,7 +544,7 @@ class WebSocketTransport implements DataConnectTransport {
       headers: headers,
     );
 
-    _channel!.sink.add(jsonEncode(request.toJson()));
+    _channel?.sink.add(jsonEncode(request.toJson()));
 
     return completer.future;
   }
@@ -611,7 +617,7 @@ class WebSocketTransport implements DataConnectTransport {
         );
 
         if (_channel != null) {
-          _channel!.sink.add(jsonEncode(request.toJson()));
+          _channel?.sink.add(jsonEncode(request.toJson()));
         }
       },
       onCancel: () {
@@ -632,7 +638,7 @@ class WebSocketTransport implements DataConnectTransport {
                 requestKind: RequestKind.cancel,
                 cancel: true,
               );
-              _channel!.sink.add(jsonEncode(cancelReq.toJson()));
+              _channel?.sink.add(jsonEncode(cancelReq.toJson()));
             }
             _checkIdleAndDisconnect();
           }

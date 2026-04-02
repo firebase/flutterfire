@@ -39,6 +39,7 @@ import 'package:mockito/src/dummies.dart' as _i4;
 // ignore_for_file: unnecessary_parenthesis
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
+// ignore_for_file: invalid_use_of_internal_member
 
 class _FakeFirebaseOptions_0 extends _i1.SmartFake
     implements _i2.FirebaseOptions {
@@ -165,28 +166,28 @@ class MockConnectorConfig extends _i1.Mock implements _i6.ConnectorConfig {
       ) as String);
 
   @override
-  set location(String? _location) => super.noSuchMethod(
+  set location(String? value) => super.noSuchMethod(
         Invocation.setter(
           #location,
-          _location,
+          value,
         ),
         returnValueForMissingStub: null,
       );
 
   @override
-  set connector(String? _connector) => super.noSuchMethod(
+  set connector(String? value) => super.noSuchMethod(
         Invocation.setter(
           #connector,
-          _connector,
+          value,
         ),
         returnValueForMissingStub: null,
       );
 
   @override
-  set serviceId(String? _serviceId) => super.noSuchMethod(
+  set serviceId(String? value) => super.noSuchMethod(
         Invocation.setter(
           #serviceId,
-          _serviceId,
+          value,
         ),
         returnValueForMissingStub: null,
       );
