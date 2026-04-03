@@ -31,6 +31,7 @@ import 'pages/schema_page.dart';
 import 'pages/token_count_page.dart';
 import 'pages/video_page.dart';
 import 'pages/server_template_page.dart';
+import 'pages/grounding_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -172,6 +173,11 @@ class _HomeScreenState extends State<HomeScreen> {
           title: 'Server Template',
           useVertexBackend: useVertexBackend,
         );
+      case 12:
+        return GroundingPage(
+          title: 'Grounding',
+          useVertexBackend: useVertexBackend,
+        );
 
       default:
         // Fallback to the first page in case of an unexpected index
@@ -303,6 +309,13 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             label: 'Server',
             tooltip: 'Server Template',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.location_on,
+            ),
+            label: 'Grounding',
+            tooltip: 'Search & Maps Grounding',
           ),
         ],
         currentIndex: _selectedIndex,
