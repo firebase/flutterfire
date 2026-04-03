@@ -77,21 +77,90 @@ class AudioTranscriptionConfig {
   Map<String, Object?> toJson() => {};
 }
 
+/// Configures the sliding window context compression mechanism.
+///
+/// The context window will be truncated by keeping only a suffix of it.
+class SlidingWindow {
+  /// Creates a [SlidingWindow] instance.
+  ///
+  /// [targetTokens] (optional): The target number of tokens to keep in the
+  /// context window.
+  SlidingWindow({this.targetTokens});
+
+  /// The session reduction target, i.e., how many tokens we should keep.
+  final int? targetTokens;
+  // ignore: public_member_api_docs
+  Map<String, Object?> toJson() =>
+      {if (targetTokens case final targetTokens?) 'targetTokens': targetTokens};
+}
+
+/// Enables context window compression to manage the model's context window.
+///
+/// This mechanism prevents the context from exceeding a given length.
+class ContextWindowCompressionConfig {
+  /// Creates a [ContextWindowCompressionConfig] instance.
+  ///
+  /// [triggerTokens] (optional): The number of tokens that triggers the
+  /// compression mechanism.
+  /// [slidingWindow] (optional): The sliding window compression mechanism to
+  /// use.
+  ContextWindowCompressionConfig({this.triggerTokens, this.slidingWindow});
+
+  /// The number of tokens (before running a turn) that triggers the context
+  /// window compression.
+  final int? triggerTokens;
+
+  /// The sliding window compression mechanism.
+  final SlidingWindow? slidingWindow;
+  // ignore: public_member_api_docs
+  Map<String, Object?> toJson() => {
+        if (triggerTokens case final triggerTokens?)
+          'triggerTokens': triggerTokens,
+        if (slidingWindow case final slidingWindow?)
+          'slidingWindow': slidingWindow.toJson()
+      };
+}
+
+/// Configuration for the session resumption mechanism.
+///
+/// When included in the session setup, the server will send
+/// [SessionResumptionUpdate] messages.
+class SessionResumptionConfig {
+  /// Creates a [SessionResumptionConfig] instance.
+  ///
+  /// [handle] (optional): The session resumption handle of the previous session
+  /// to restore.
+  /// [transparent] (optional): If set, requests the server to send updates with
+  /// the message index of the last client message included in the session
+  /// state.
+  SessionResumptionConfig({this.handle});
+
+  /// The session resumption handle of the previous session to restore.
+  ///
+  /// If not present, a new session will be started.
+  final String? handle;
+
+  // ignore: public_member_api_docs
+  Map<String, Object?> toJson() => {
+        if (handle case final handle?) 'handle': handle,
+      };
+}
+
 /// Configures live generation settings.
 final class LiveGenerationConfig extends BaseGenerationConfig {
   // ignore: public_member_api_docs
-  LiveGenerationConfig({
-    this.speechConfig,
-    this.inputAudioTranscription,
-    this.outputAudioTranscription,
-    super.responseModalities,
-    super.maxOutputTokens,
-    super.temperature,
-    super.topP,
-    super.topK,
-    super.presencePenalty,
-    super.frequencyPenalty,
-  });
+  LiveGenerationConfig(
+      {this.speechConfig,
+      this.inputAudioTranscription,
+      this.outputAudioTranscription,
+      this.contextWindowCompression,
+      super.responseModalities,
+      super.maxOutputTokens,
+      super.temperature,
+      super.topP,
+      super.topK,
+      super.presencePenalty,
+      super.frequencyPenalty});
 
   /// The speech configuration.
   final SpeechConfig? speechConfig;
@@ -102,6 +171,9 @@ final class LiveGenerationConfig extends BaseGenerationConfig {
   /// The transcription of the output aligns with the language code specified for
   /// the output audio.
   final AudioTranscriptionConfig? outputAudioTranscription;
+
+  /// The context window compression configuration.
+  final ContextWindowCompressionConfig? contextWindowCompression;
 
   @override
   Map<String, Object?> toJson() => {
@@ -220,6 +292,34 @@ class GoingAwayNotice implements LiveServerMessage {
 
   /// The remaining time before the connection will be terminated as ABORTED.
   final String? timeLeft;
+}
+
+/// An update of the session resumption state.
+///
+/// This message is only sent if [SessionResumptionConfig] was set in the
+/// session setup.
+class SessionResumptionUpdate implements LiveServerMessage {
+  /// Creates a [SessionResumptionUpdate] instance.
+  ///
+  /// [newHandle] (optional): The new handle that represents the state that can
+  /// be resumed.
+  /// [resumable] (optional): Indicates if the session can be resumed at this
+  /// point.
+  /// [lastConsumedClientMessageIndex] (optional): The index of the last client
+  /// message that is included in the state represented by this update.
+  SessionResumptionUpdate(
+      {this.newHandle, this.resumable, this.lastConsumedClientMessageIndex});
+
+  /// The new handle that represents the state that can be resumed. Empty if
+  /// `resumable` is false.
+  final String? newHandle;
+
+  /// Indicates if the session can be resumed at this point.
+  final bool? resumable;
+
+  /// The index of the last client message that is included in the state
+  /// represented by this update.
+  final int? lastConsumedClientMessageIndex;
 }
 
 /// A single response chunk received during a live content generation.
@@ -449,8 +549,17 @@ LiveServerMessage _parseServerMessage(Object jsonObject) {
   } else if (json.containsKey('setupComplete')) {
     return LiveServerSetupComplete();
   } else if (json.containsKey('goAway')) {
-    final goAwayJson = json['goAway'] as Map;
+    final goAwayJson = json['goAway'] as Map<String, dynamic>;
     return GoingAwayNotice(timeLeft: goAwayJson['timeLeft'] as String?);
+  } else if (json.containsKey('sessionResumptionUpdate')) {
+    final sessionResumptionUpdateJson =
+        json['sessionResumptionUpdate'] as Map<String, dynamic>;
+    return SessionResumptionUpdate(
+      newHandle: sessionResumptionUpdateJson['newHandle'] as String?,
+      resumable: sessionResumptionUpdateJson['resumable'] as bool?,
+      lastConsumedClientMessageIndex:
+          sessionResumptionUpdateJson['lastConsumedClientMessageIndex'] as int?,
+    );
   } else {
     throw unhandledFormat('LiveServerMessage', json);
   }
