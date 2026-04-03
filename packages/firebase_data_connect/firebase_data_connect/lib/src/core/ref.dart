@@ -334,14 +334,14 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
         _streamController!.stream.cast<QueryResult<Data, Variables>>();
 
     // Return the stream to the caller, then execute fetches
-    Future.microtask(() {
+    Future.microtask(() async {
       if (dataConnect.cacheManager != null) {
-        _executeFromCache(QueryFetchPolicy.cacheOnly)
-            .then((_) {})
-            .catchError((err) {
+        try {
+          await _executeFromCache(QueryFetchPolicy.cacheOnly);
+        } catch (err) {
           log("Error fetching from cache during subscribe $err");
           // Ignore cache misses here, server stream will provide latest data
-        });
+        }
       }
 
       // Initiate Web Socket stream
@@ -380,7 +380,7 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
         publishErrorToStream(e);
       }
     } catch (e) {
-      publishErrorToStream(e as Error);
+      publishErrorToStream(e);
     }
   }
 

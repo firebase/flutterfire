@@ -16,7 +16,30 @@ part of 'transport_library.dart';
 
 /// WebSocketTransport makes requests out to the streaming endpoints of the configured backend,
 /// multiplexing multiple subscriptions and unary operations over a single WebSocket connection.
+
+class _PendingUnary {
+  final Completer<ServerResponse> completer;
+  final String operationName;
+  final Map<String, dynamic>? variables;
+  final bool isMutation;
+
+  _PendingUnary(
+      this.completer, this.operationName, this.variables, this.isMutation);
+}
+
+class _PendingSubscription {
+  final String operationId;
+  final String queryName;
+  final Map<String, dynamic>? variables;
+
+  _PendingSubscription(this.operationId, this.queryName, this.variables);
+}
+
 class WebSocketTransport implements DataConnectTransport {
+  static const int _maxReconnectAttempts = 10;
+  static const int _maxReconnectDelayMs = 30000;
+  static const int _initialReconnectDelayMs = 1000;
+
   /// Initializes necessary protocol and port.
   WebSocketTransport(
     this.transportOptions,
@@ -35,24 +58,26 @@ class WebSocketTransport implements DataConnectTransport {
       scheme: protocol,
       host: host,
       port: port,
-      path: '/v1/Connect/locations/$location',
+      path:
+          '/ws/google.firebase.dataconnect.v1.ConnectorStreamService/Connect/locations/$location',
     ).toString();
 
     _currentUid = auth?.currentUser?.uid;
     _authSubscription = auth?.idTokenChanges().listen((user) async {
       final newUid = user?.uid;
-      // Don't disconnect if auth state changes from not logged in to logged in.
-      // Only disconnect if logged in user changes.
-      if (_currentUid != null && _currentUid != newUid) {
+      // Disconnect and reconnect on any fundamental user change (login, logout, switch).
+      if (_currentUid != newUid) {
         _disconnect();
+        _scheduleReconnect();
       } else if (newUid != null && isConnected) {
+        // Token refreshed for the same user, push the new token natively down the socket.
         try {
           final token = await user?.getIdToken();
           final request = StreamRequest(
             requestId: _generateRequestId('auth'),
             authToken: token,
           );
-          _channel!.sink.add(jsonEncode(request.toJson()));
+          _channel?.sink.add(jsonEncode(request.toJson()));
         } catch (_) {
           // Ignored
         }
@@ -91,11 +116,26 @@ class WebSocketTransport implements DataConnectTransport {
   final Map<String, List<StreamController<ServerResponse>>> _streamListeners =
       {};
 
+  // Pending information for subscriptions mapped by requestId.
+  final Map<String, _PendingSubscription> _pendingSubscriptions = {};
+
   // Active completers for unary operations mapped by requestId.
-  final Map<String, List<Completer<ServerResponse>>> _unaryListeners = {};
+  final Map<String, List<_PendingUnary>> _unaryListeners = {};
 
   // Active subscriptions mapped by operationId => requestId.
   final Map<String, String> _activeSubscriptions = {};
+
+  bool _isReconnecting = false;
+  int _reconnectAttempts = 0;
+  bool _isExpectedDisconnect = false;
+
+  void _checkIdleAndDisconnect() {
+    if (_streamListeners.isEmpty && _unaryListeners.isEmpty) {
+      _isExpectedDisconnect = true;
+      _disconnect();
+      _clearState();
+    }
+  }
 
   final Random _random = Random();
   static const String _chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
@@ -123,9 +163,18 @@ class WebSocketTransport implements DataConnectTransport {
     return headers;
   }
 
-  Future<void> _ensureConnected(String? authToken) async {
-    if (_channel != null) return;
+  Future<void>? _connectionFuture;
 
+  Future<void> _ensureConnected(String? authToken) {
+    if (_channel != null) return Future.value();
+    if (_connectionFuture != null) return _connectionFuture!;
+    _connectionFuture = _doConnect(authToken).whenComplete(() {
+      _connectionFuture = null;
+    });
+    return _connectionFuture!;
+  }
+
+  Future<void> _doConnect(String? authToken) async {
     String? appCheckToken;
     try {
       appCheckToken = await appCheck?.getToken();
@@ -136,24 +185,44 @@ class WebSocketTransport implements DataConnectTransport {
     final headers = _buildHeaders(authToken, appCheckToken);
 
     _channel = WebSocketChannel.connect(Uri.parse(_url));
-    _channelSubscription = _channel!.stream.listen(
+    _channelSubscription = _channel?.stream.listen(
       _onMessage,
       onError: _onError,
       onDone: _onDone,
     );
+
+    // reset this since an explicit connect was requested
+    _isExpectedDisconnect = false;
+
+    try {
+      await _channel?.ready;
+    } catch (e) {
+      developer.log('WebSocket connection failed to become ready: $e');
+      _channel = null;
+      throw DataConnectError(
+          DataConnectErrorCode.other, 'WebSocket connection failed: $e');
+    }
 
     final initRequest = StreamRequest(
       name:
           'projects/${options.projectId}/locations/${options.location}/services/${options.serviceId}/connectors/${options.connector}',
       headers: headers,
     );
-    _channel!.sink.add(jsonEncode(initRequest.toJson()));
+    _channel?.sink.add(jsonEncode(initRequest.toJson()));
   }
 
+  // called when a message is received from the stream
   void _onMessage(dynamic message) {
     try {
-      developer.log("Received stream response \n $message");
-      final bodyJson = jsonDecode(message as String) as Map<String, dynamic>;
+      var bodyString = '';
+      if (message is List<int>) {
+        bodyString = utf8.decode(message);
+      } else {
+        bodyString = message as String;
+      }
+      developer.log("Received stream response \n $bodyString");
+
+      final bodyJson = jsonDecode(bodyString) as Map<String, dynamic>;
       final response = StreamResponse.fromJson(bodyJson);
 
       final requestId = response.requestId;
@@ -172,10 +241,13 @@ class WebSocketTransport implements DataConnectTransport {
       }
 
       if (_unaryListeners.containsKey(requestId)) {
-        final completers = _unaryListeners.remove(requestId)!;
-        for (final completer in completers) {
-          completer.complete(serverResponse);
+        final pendings = _unaryListeners.remove(requestId)!;
+        for (final p in pendings) {
+          if (!p.completer.isCompleted) {
+            p.completer.complete(serverResponse);
+          }
         }
+        _checkIdleAndDisconnect();
       }
 
       if (_streamListeners.containsKey(requestId)) {
@@ -186,6 +258,8 @@ class WebSocketTransport implements DataConnectTransport {
           }
           _streamListeners.remove(requestId);
           _activeSubscriptions.removeWhere((key, value) => value == requestId);
+          _pendingSubscriptions.remove(requestId);
+          _checkIdleAndDisconnect();
         } else {
           for (final controller in controllers) {
             controller.add(serverResponse);
@@ -198,39 +272,178 @@ class WebSocketTransport implements DataConnectTransport {
     }
   }
 
-  void _onError(dynamic error) {
-    final e =
-        DataConnectError(DataConnectErrorCode.other, 'WebSocket error: $error');
-    for (final completers in _unaryListeners.values) {
-      for (final completer in completers) {
-        completer.completeError(e);
+  void _clearState([DataConnectError? error]) {
+    final e = error ??
+        DataConnectError(
+            DataConnectErrorCode.other, 'WebSocket connection closed.');
+    for (final pendings in _unaryListeners.values) {
+      for (final p in pendings) {
+        if (!p.completer.isCompleted) {
+          p.completer.completeError(e);
+        }
       }
     }
     for (final controllers in _streamListeners.values) {
       for (final controller in controllers) {
         controller.addError(e);
-      }
-    }
-    _unaryListeners.clear();
-    _streamListeners.clear();
-    _activeSubscriptions.clear();
-    _channel = null;
-  }
-
-  void _disconnect() {
-    _channel?.sink.close();
-  }
-
-  void _onDone() {
-    _channel = null;
-    for (final controllers in _streamListeners.values) {
-      for (final controller in controllers) {
         controller.close();
       }
     }
     _unaryListeners.clear();
     _streamListeners.clear();
     _activeSubscriptions.clear();
+    _pendingSubscriptions.clear();
+    _isReconnecting = false;
+    _reconnectAttempts = 0;
+  }
+
+  Timer? _reconnectTimer;
+
+  void _scheduleReconnect() {
+    developer.log(
+        '${DateTime.now()} _scheduleReconnect $_reconnectAttempts $_isReconnecting $_isExpectedDisconnect');
+    if (_isReconnecting || _isExpectedDisconnect) return;
+    _isReconnecting = true;
+
+    if (_reconnectAttempts >= _maxReconnectAttempts) {
+      _clearState(DataConnectError(DataConnectErrorCode.other,
+          'Network disconnected after max attempts.'));
+      return;
+    }
+
+    final delay = min(
+        _initialReconnectDelayMs * pow(2, _reconnectAttempts).toInt(),
+        _maxReconnectDelayMs);
+    var startTime = DateTime.now();
+    developer.log('$startTime scheduling _performReconnect in $delay ms');
+
+    _reconnectTimer?.cancel();
+    _reconnectTimer = Timer(Duration(milliseconds: delay), () async {
+      developer.log(
+          '${DateTime.now()} calling delayed _performReconnect scheduled at $startTime');
+      _performReconnect();
+    });
+  }
+
+  Future<String?> _refreshAuthToken() async {
+    try {
+      return await auth?.currentUser?.getIdToken();
+    } catch (_) {
+      // If fetching token fails, continue unauthenticated.
+      return null;
+    }
+  }
+
+  Future<String?> _refreshAppCheckToken() async {
+    try {
+      if (appCheck != null) {
+        return await appCheck!.getToken();
+      }
+    } catch (_) {
+      // Ignored: continue without AppCheck token if it fails.
+    }
+    return null;
+  }
+
+  void _resubscribeActive(String? authToken, String? appCheckToken) {
+    for (final sub in _pendingSubscriptions.values) {
+      final reqId = _activeSubscriptions[sub.operationId];
+      if (reqId == null) continue;
+      final headers = _buildHeaders(authToken, appCheckToken);
+      final request = StreamRequest(
+        authToken: authToken,
+        appCheckToken: headers['X-Firebase-AppCheck'],
+        requestId: reqId,
+        requestKind: RequestKind.subscribe,
+        subscribe: ExecuteRequest(sub.queryName, sub.variables),
+        headers: headers,
+      );
+      _channel?.sink.add(jsonEncode(request.toJson()));
+    }
+  }
+
+  void _replayQueriesAndFailMutations(
+      String? authToken, String? appCheckToken) {
+    final unariesToReplay = <String, List<_PendingUnary>>{};
+    for (final entry in _unaryListeners.entries) {
+      final reqId = entry.key;
+      final kept = <_PendingUnary>[];
+      for (final p in entry.value) {
+        if (p.isMutation) {
+          p.completer.completeError(DataConnectError(DataConnectErrorCode.other,
+              'Network reconnected; mutations cannot be safely retried.'));
+        } else {
+          kept.add(p);
+          final headers = _buildHeaders(authToken, appCheckToken);
+          final request = StreamRequest(
+            authToken: authToken,
+            appCheckToken: headers['X-Firebase-AppCheck'],
+            requestId: reqId,
+            requestKind: RequestKind.execute,
+            execute: ExecuteRequest(p.operationName, p.variables),
+            headers: headers,
+          );
+          _channel?.sink.add(jsonEncode(request.toJson()));
+        }
+      }
+      if (kept.isNotEmpty) {
+        unariesToReplay[reqId] = kept;
+      }
+    }
+    _unaryListeners.clear();
+    _unaryListeners.addAll(unariesToReplay);
+  }
+
+  Future<void> _performReconnect() async {
+    _channel?.sink.close();
+    _channel = null;
+    _reconnectAttempts++;
+
+    final authToken = await _refreshAuthToken();
+    final appCheckToken = await _refreshAppCheckToken();
+
+    try {
+      await _ensureConnected(authToken);
+
+      _reconnectAttempts = 0;
+      _isReconnecting = false;
+
+      _resubscribeActive(authToken, appCheckToken);
+      _replayQueriesAndFailMutations(authToken, appCheckToken);
+    } catch (e) {
+      _isReconnecting = false;
+      _scheduleReconnect();
+    }
+  }
+
+  void _onError(dynamic error) {
+    if (_channel == null) return;
+    developer.log('WebSocket error: $error');
+    _channel = null;
+    _isReconnecting = false;
+    _scheduleReconnect();
+  }
+
+  void _disconnect() {
+    _reconnectTimer?.cancel();
+    _reconnectTimer = null;
+    _channel?.sink.close();
+    _channel = null;
+  }
+
+  void disconnect() {
+    _isExpectedDisconnect = true;
+    _disconnect();
+  }
+
+  void _onDone() {
+    if (_channel == null) return;
+    developer.log('WebSocket connection closed.');
+    _channel = null;
+    _isReconnecting = false;
+    if (!_isExpectedDisconnect) {
+      _scheduleReconnect();
+    }
   }
 
   @override
@@ -242,7 +455,7 @@ class WebSocketTransport implements DataConnectTransport {
     String? authToken,
   ) async {
     return _invokeUnary(queryName, deserializer, serializer, vars, authToken,
-        RequestKind.execute);
+        RequestKind.execute, false);
   }
 
   @override
@@ -254,7 +467,7 @@ class WebSocketTransport implements DataConnectTransport {
     String? authToken,
   ) async {
     return _invokeUnary(queryName, deserializer, serializer, vars, authToken,
-        RequestKind.execute);
+        RequestKind.execute, true);
   }
 
   Future<ServerResponse> _invokeUnary<Data, Variables>(
@@ -264,6 +477,7 @@ class WebSocketTransport implements DataConnectTransport {
     Variables? vars,
     String? authToken,
     RequestKind requestKind,
+    bool isMutation,
   ) async {
     await _ensureConnected(authToken);
 
@@ -273,7 +487,12 @@ class WebSocketTransport implements DataConnectTransport {
 
     if (_activeSubscriptions.containsKey(operationId)) {
       final existingRequestId = _activeSubscriptions[operationId]!;
-      _unaryListeners.putIfAbsent(existingRequestId, () => []).add(completer);
+      Map<String, dynamic>? variablesMap;
+      if (vars != null && serializer != null) {
+        variablesMap = jsonDecode(serializer(vars));
+      }
+      _unaryListeners.putIfAbsent(existingRequestId, () => []).add(
+          _PendingUnary(completer, operationName, variablesMap, isMutation));
 
       String? appCheckToken;
       try {
@@ -292,18 +511,20 @@ class WebSocketTransport implements DataConnectTransport {
         resume: ResumeRequest(),
         headers: headers,
       );
-      _channel!.sink.add(jsonEncode(request.toJson()));
+      _channel?.sink.add(jsonEncode(request.toJson()));
 
       return completer.future;
     }
 
     final requestId = _generateRequestId(operationId);
-    _unaryListeners.putIfAbsent(requestId, () => []).add(completer);
 
     Map<String, dynamic>? variables;
     if (vars != null && serializer != null) {
-      variables = json.decode(serializer(vars));
+      variables = jsonDecode(serializer(vars));
     }
+    _unaryListeners
+        .putIfAbsent(requestId, () => [])
+        .add(_PendingUnary(completer, operationName, variables, isMutation));
 
     String? appCheckToken;
     try {
@@ -323,7 +544,7 @@ class WebSocketTransport implements DataConnectTransport {
       headers: headers,
     );
 
-    _channel!.sink.add(jsonEncode(request.toJson()));
+    _channel?.sink.add(jsonEncode(request.toJson()));
 
     return completer.future;
   }
@@ -342,7 +563,14 @@ class WebSocketTransport implements DataConnectTransport {
 
     controller = StreamController<ServerResponse>(
       onListen: () async {
-        await _ensureConnected(authToken);
+        try {
+          await _ensureConnected(authToken);
+        } catch (e) {
+          developer.log("Error subscribing - setting up stream $e");
+          // Do NOT add error to sink here. The stream is designed to quietly
+          // add the query to `_pendingSubscriptions` below and silently
+          // retry when the network reconnects via `_scheduleReconnect`.
+        }
 
         if (_activeSubscriptions.containsKey(operationId)) {
           final existingRequestId = _activeSubscriptions[operationId]!;
@@ -359,6 +587,15 @@ class WebSocketTransport implements DataConnectTransport {
         Map<String, dynamic>? variables;
         if (vars != null && serializer != null) {
           variables = json.decode(serializer(vars));
+        }
+        _pendingSubscriptions[requestId] =
+            _PendingSubscription(operationId, queryName, variables);
+
+        if (!isConnected) {
+          // we are not connected -
+          // keep pending sub to use for retry
+          _scheduleReconnect();
+          return;
         }
 
         String? appCheckToken;
@@ -379,7 +616,9 @@ class WebSocketTransport implements DataConnectTransport {
           headers: headers,
         );
 
-        _channel!.sink.add(jsonEncode(request.toJson()));
+        if (_channel != null) {
+          _channel?.sink.add(jsonEncode(request.toJson()));
+        }
       },
       onCancel: () {
         if (!_activeSubscriptions.containsKey(operationId)) return;
@@ -391,6 +630,7 @@ class WebSocketTransport implements DataConnectTransport {
           if (listeners.isEmpty) {
             _streamListeners.remove(requestId);
             _activeSubscriptions.remove(operationId);
+            _pendingSubscriptions.remove(requestId);
 
             if (_channel != null) {
               final cancelReq = StreamRequest(
@@ -398,8 +638,9 @@ class WebSocketTransport implements DataConnectTransport {
                 requestKind: RequestKind.cancel,
                 cancel: true,
               );
-              _channel!.sink.add(jsonEncode(cancelReq.toJson()));
+              _channel?.sink.add(jsonEncode(cancelReq.toJson()));
             }
+            _checkIdleAndDisconnect();
           }
         }
       },
