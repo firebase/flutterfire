@@ -80,9 +80,12 @@ abstract class OperationRef<Data, Variables> {
       try {
         final decoded = jsonDecode(serializer(vars));
         final sortedStr = jsonEncode(_sortKeys(decoded));
-        return '$operationName::$sortedStr';
+        final hashVars = convertToSha256(sortedStr);
+        return '$operationName::$hashVars';
       } catch (_) {
-        return '$operationName::${serializer(vars)}';
+        final rawVars = serializer(vars);
+        final hashVars = convertToSha256(rawVars);
+        return '$operationName::$hashVars';
       }
     } else {
       return operationName;
@@ -180,7 +183,7 @@ class QueryManager {
             try {
               await queryRef.execute(fetchPolicy: QueryFetchPolicy.cacheOnly);
             } catch (e) {
-              log('Error executing impacted query $e');
+              log('Error executing impacted query $queryId $e');
             }
           }
         }
@@ -353,6 +356,7 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
 
   void _streamFromServer() async {
     bool shouldRetry = await _shouldRetry();
+    log("QueryRef $_queryId _streamFromServer loop started.");
     try {
       final stream = _transport.invokeStreamQuery<Data, Variables>(
         operationName,
@@ -363,8 +367,13 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
       );
 
       await for (final serverResponse in stream) {
+        log("QueryRef $_queryId _streamFromServer loop received snapshot.");
         if (dataConnect.cacheManager != null) {
-          await dataConnect.cacheManager!.update(_queryId, serverResponse);
+          try {
+            await dataConnect.cacheManager!.update(_queryId, serverResponse);
+          } catch (e) {
+            log("QueryRef $_queryId _streamFromServer loop cache update failed: $e");
+          }
         }
         Data typedData = _convertBodyJsonToData(serverResponse.data);
 
@@ -380,6 +389,7 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
         publishErrorToStream(e);
       }
     } catch (e) {
+      log("QueryRef $_queryId _streamFromServer loop Unknown loop failure: $e");
       publishErrorToStream(e);
     }
   }
@@ -387,6 +397,8 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
   void publishResultToStream(QueryResult<Data, Variables> result) {
     if (_streamController != null) {
       _streamController?.add(result);
+    } else {
+      log("QueryRef $_queryId _streamFromServer loop _streamController is null");
     }
   }
 
