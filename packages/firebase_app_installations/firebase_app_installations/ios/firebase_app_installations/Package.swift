@@ -28,6 +28,14 @@ let package = Package(
         .product(name: "FirebaseInstallations", package: "firebase-ios-sdk"),
         .product(name: "firebase-core", package: "firebase_core"),
       ],
+      // Exclude Objective-C sources that are used only for CocoaPods integration.
+      // The Swift Package Manager target is pure Swift and uses the Swift Pigeon
+      // types defined in FirebaseAppInstallationsMessages.g.swift instead.
+      exclude: [
+        "Sources/firebase_app_installations/firebase_app_installations.h",
+        "Sources/firebase_app_installations/firebase_app_installations_messages.g.h",
+        "Sources/firebase_app_installations/firebase_app_installations_messages.g.m",
+      ],
       resources: [
         .process("Resources"),
       ]

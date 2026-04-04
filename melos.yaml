@@ -141,6 +141,7 @@ scripts:
       dirExists:
         - test
       ignore:
+        - firebase_app_installations_platform_interface
         - '*web*'
         - '*example*'
 
