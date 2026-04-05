@@ -329,6 +329,7 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
   }
 
   StreamController<QueryResult<Data, Variables>>? _streamController;
+  Stream<ServerResponse>? _serverStream;
 
   Stream<QueryResult<Data, Variables>> subscribe() {
     _streamController ??= _queryManager.addQuery(this);
@@ -347,8 +348,10 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
         }
       }
 
-      // Initiate Web Socket stream
-      _streamFromServer();
+      // Initiate Web Socket stream only if not already streaming
+      if (_serverStream == null) {
+        _streamFromServer();
+      }
     });
 
     return stream;
@@ -358,7 +361,7 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
     bool shouldRetry = await _shouldRetry();
     log("QueryRef $_queryId _streamFromServer loop started.");
     try {
-      final stream = _transport.invokeStreamQuery<Data, Variables>(
+      _serverStream = _transport.invokeStreamQuery<Data, Variables>(
         operationName,
         deserializer,
         serializer,
@@ -366,7 +369,7 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
         _lastToken,
       );
 
-      await for (final serverResponse in stream) {
+      await for (final serverResponse in _serverStream!) {
         log("QueryRef $_queryId _streamFromServer loop received snapshot.");
         if (dataConnect.cacheManager != null) {
           try {
@@ -382,6 +385,7 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
         publishResultToStream(res);
       }
     } on DataConnectError catch (e) {
+      _serverStream = null; // Clear stream on error to allow retry
       if (shouldRetry &&
           e.code == DataConnectErrorCode.unauthorized.toString()) {
         _streamFromServer();
@@ -389,8 +393,11 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
         publishErrorToStream(e);
       }
     } catch (e) {
+      _serverStream = null; // Clear stream on error
       log("QueryRef $_queryId _streamFromServer loop Unknown loop failure: $e");
       publishErrorToStream(e);
+    } finally {
+      _serverStream = null; // Clear stream on completion
     }
   }
 
