@@ -210,7 +210,12 @@ class QueryManager {
     trackedQueries[queryId] = ref;
 
     final streamController =
-        StreamController<QueryResult<Data, Variables>>.broadcast();
+        StreamController<QueryResult<Data, Variables>>.broadcast(
+      onCancel: () {
+        trackedQueries.remove(queryId);
+        ref._onAllSubscribersCancelled();
+      },
+    );
 
     return streamController;
   }
@@ -330,6 +335,14 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
 
   StreamController<QueryResult<Data, Variables>>? _streamController;
   Stream<ServerResponse>? _serverStream;
+  StreamSubscription<ServerResponse>? _serverStreamSubscription;
+
+  void _onAllSubscribersCancelled() {
+    _serverStreamSubscription?.cancel();
+    _serverStreamSubscription = null;
+    _serverStream = null;
+    log("QueryRef $_queryId: All subscribers cancelled. Unsubscribed from server stream.");
+  }
 
   Stream<QueryResult<Data, Variables>> subscribe() {
     _streamController ??= _queryManager.addQuery(this);
@@ -369,35 +382,47 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
         _lastToken,
       );
 
-      await for (final serverResponse in _serverStream!) {
-        log("QueryRef $_queryId _streamFromServer loop received snapshot.");
-        if (dataConnect.cacheManager != null) {
-          try {
-            await dataConnect.cacheManager!.update(_queryId, serverResponse);
-          } catch (e) {
-            log("QueryRef $_queryId _streamFromServer loop cache update failed: $e");
+      _serverStreamSubscription = _serverStream!.listen(
+        (serverResponse) async {
+          log("QueryRef $_queryId _streamFromServer loop received snapshot.");
+          if (dataConnect.cacheManager != null) {
+            try {
+              await dataConnect.cacheManager!.update(_queryId, serverResponse);
+            } catch (e) {
+              log("QueryRef $_queryId _streamFromServer loop cache update failed: $e");
+            }
           }
-        }
-        Data typedData = _convertBodyJsonToData(serverResponse.data);
+          Data typedData = _convertBodyJsonToData(serverResponse.data);
 
-        QueryResult<Data, Variables> res =
-            QueryResult(dataConnect, typedData, DataSource.server, this);
-        publishResultToStream(res);
-      }
-    } on DataConnectError catch (e) {
-      _serverStream = null; // Clear stream on error to allow retry
-      if (shouldRetry &&
-          e.code == DataConnectErrorCode.unauthorized.toString()) {
-        _streamFromServer();
-      } else {
-        publishErrorToStream(e);
-      }
+          QueryResult<Data, Variables> res =
+              QueryResult(dataConnect, typedData, DataSource.server, this);
+          publishResultToStream(res);
+        },
+        onError: (e) {
+          _serverStreamSubscription?.cancel();
+          _serverStreamSubscription = null;
+          _serverStream = null;
+          
+          if (shouldRetry &&
+              e is DataConnectError &&
+              e.code == DataConnectErrorCode.unauthorized.toString()) {
+            _streamFromServer();
+          } else {
+            publishErrorToStream(e);
+          }
+        },
+        onDone: () {
+          _serverStreamSubscription?.cancel();
+          _serverStreamSubscription = null;
+          _serverStream = null;
+        },
+      );
     } catch (e) {
-      _serverStream = null; // Clear stream on error
+      _serverStreamSubscription?.cancel();
+      _serverStreamSubscription = null;
+      _serverStream = null;
       log("QueryRef $_queryId _streamFromServer loop Unknown loop failure: $e");
       publishErrorToStream(e);
-    } finally {
-      _serverStream = null; // Clear stream on completion
     }
   }
 
