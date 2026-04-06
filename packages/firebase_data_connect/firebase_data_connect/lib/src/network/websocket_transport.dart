@@ -617,7 +617,9 @@ class WebSocketTransport implements DataConnectTransport {
         );
 
         if (_channel != null) {
-          _channel?.sink.add(jsonEncode(request.toJson()));
+          final encodedMessage = jsonEncode(request.toJson());
+          developer.log('Sending subscribe message $encodedMessage');
+          _channel?.sink.add(encodedMessage);
         }
       },
       onCancel: () {

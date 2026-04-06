@@ -98,8 +98,7 @@ void main() {
       );
       final stream = queryManager.addQuery(ref);
 
-      //expect(queryManager.trackedQueries['testQuery'], isNotNull);
-      expect(queryManager.trackedQueries['testQuery::varsAsStr'], isNotNull);
+      expect(queryManager.trackedQueries.values.contains(ref), isTrue);
       expect(stream, isA<StreamController>());
     });
   });

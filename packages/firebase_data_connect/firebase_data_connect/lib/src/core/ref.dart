@@ -80,9 +80,12 @@ abstract class OperationRef<Data, Variables> {
       try {
         final decoded = jsonDecode(serializer(vars));
         final sortedStr = jsonEncode(_sortKeys(decoded));
-        return '$operationName::$sortedStr';
+        final hashVars = convertToSha256(sortedStr);
+        return '$operationName::$hashVars';
       } catch (_) {
-        return '$operationName::${serializer(vars)}';
+        final rawVars = serializer(vars);
+        final hashVars = convertToSha256(rawVars);
+        return '$operationName::$hashVars';
       }
     } else {
       return operationName;
@@ -180,7 +183,7 @@ class QueryManager {
             try {
               await queryRef.execute(fetchPolicy: QueryFetchPolicy.cacheOnly);
             } catch (e) {
-              log('Error executing impacted query $e');
+              log('Error executing impacted query $queryId $e');
             }
           }
         }
@@ -207,7 +210,12 @@ class QueryManager {
     trackedQueries[queryId] = ref;
 
     final streamController =
-        StreamController<QueryResult<Data, Variables>>.broadcast();
+        StreamController<QueryResult<Data, Variables>>.broadcast(
+      onCancel: () {
+        trackedQueries.remove(queryId);
+        ref._onAllSubscribersCancelled();
+      },
+    );
 
     return streamController;
   }
@@ -326,6 +334,15 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
   }
 
   StreamController<QueryResult<Data, Variables>>? _streamController;
+  Stream<ServerResponse>? _serverStream;
+  StreamSubscription<ServerResponse>? _serverStreamSubscription;
+
+  void _onAllSubscribersCancelled() {
+    _serverStreamSubscription?.cancel();
+    _serverStreamSubscription = null;
+    _serverStream = null;
+    log("QueryRef $_queryId: All subscribers cancelled. Unsubscribed from server stream.");
+  }
 
   Stream<QueryResult<Data, Variables>> subscribe() {
     _streamController ??= _queryManager.addQuery(this);
@@ -344,8 +361,10 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
         }
       }
 
-      // Initiate Web Socket stream
-      _streamFromServer();
+      // Initiate Web Socket stream only if not already streaming
+      if (_serverStream == null) {
+        _streamFromServer();
+      }
     });
 
     return stream;
@@ -353,8 +372,9 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
 
   void _streamFromServer() async {
     bool shouldRetry = await _shouldRetry();
+    log("QueryRef $_queryId _streamFromServer loop started.");
     try {
-      final stream = _transport.invokeStreamQuery<Data, Variables>(
+      _serverStream = _transport.invokeStreamQuery<Data, Variables>(
         operationName,
         deserializer,
         serializer,
@@ -362,24 +382,46 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
         _lastToken,
       );
 
-      await for (final serverResponse in stream) {
-        if (dataConnect.cacheManager != null) {
-          await dataConnect.cacheManager!.update(_queryId, serverResponse);
-        }
-        Data typedData = _convertBodyJsonToData(serverResponse.data);
+      _serverStreamSubscription = _serverStream!.listen(
+        (serverResponse) async {
+          log("QueryRef $_queryId _streamFromServer loop received snapshot.");
+          if (dataConnect.cacheManager != null) {
+            try {
+              await dataConnect.cacheManager!.update(_queryId, serverResponse);
+            } catch (e) {
+              log("QueryRef $_queryId _streamFromServer loop cache update failed: $e");
+            }
+          }
+          Data typedData = _convertBodyJsonToData(serverResponse.data);
 
-        QueryResult<Data, Variables> res =
-            QueryResult(dataConnect, typedData, DataSource.server, this);
-        publishResultToStream(res);
-      }
-    } on DataConnectError catch (e) {
-      if (shouldRetry &&
-          e.code == DataConnectErrorCode.unauthorized.toString()) {
-        _streamFromServer();
-      } else {
-        publishErrorToStream(e);
-      }
+          QueryResult<Data, Variables> res =
+              QueryResult(dataConnect, typedData, DataSource.server, this);
+          publishResultToStream(res);
+        },
+        onError: (e) {
+          _serverStreamSubscription?.cancel();
+          _serverStreamSubscription = null;
+          _serverStream = null;
+
+          if (shouldRetry &&
+              e is DataConnectError &&
+              e.code == DataConnectErrorCode.unauthorized.toString()) {
+            _streamFromServer();
+          } else {
+            publishErrorToStream(e);
+          }
+        },
+        onDone: () {
+          _serverStreamSubscription?.cancel();
+          _serverStreamSubscription = null;
+          _serverStream = null;
+        },
+      );
     } catch (e) {
+      _serverStreamSubscription?.cancel();
+      _serverStreamSubscription = null;
+      _serverStream = null;
+      log("QueryRef $_queryId _streamFromServer loop Unknown loop failure: $e");
       publishErrorToStream(e);
     }
   }
@@ -387,6 +429,8 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
   void publishResultToStream(QueryResult<Data, Variables> result) {
     if (_streamController != null) {
       _streamController?.add(result);
+    } else {
+      log("QueryRef $_queryId _streamFromServer loop _streamController is null");
     }
   }
 
