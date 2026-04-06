@@ -402,7 +402,7 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
           _serverStreamSubscription?.cancel();
           _serverStreamSubscription = null;
           _serverStream = null;
-          
+
           if (shouldRetry &&
               e is DataConnectError &&
               e.code == DataConnectErrorCode.unauthorized.toString()) {
