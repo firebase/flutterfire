@@ -276,6 +276,7 @@ class _RoutingTransport implements DataConnectTransport {
 
   @override
   Future<ServerResponse> invokeMutation<Data, Variables>(
+    String operationId,
     String queryName,
     Deserializer<Data> deserializer,
     Serializer<Variables>? serializer,
@@ -284,14 +285,15 @@ class _RoutingTransport implements DataConnectTransport {
   ) {
     if (websocket.isConnected) {
       return websocket.invokeMutation(
-          queryName, deserializer, serializer, vars, token);
+          operationId, queryName, deserializer, serializer, vars, token);
     }
     return rest.invokeMutation(
-        queryName, deserializer, serializer, vars, token);
+        operationId, queryName, deserializer, serializer, vars, token);
   }
 
   @override
   Future<ServerResponse> invokeQuery<Data, Variables>(
+    String operationId,
     String queryName,
     Deserializer<Data> deserializer,
     Serializer<Variables>? serialize,
@@ -300,13 +302,15 @@ class _RoutingTransport implements DataConnectTransport {
   ) {
     if (websocket.isConnected) {
       return websocket.invokeQuery(
-          queryName, deserializer, serialize, vars, token);
+          operationId, queryName, deserializer, serialize, vars, token);
     }
-    return rest.invokeQuery(queryName, deserializer, serialize, vars, token);
+    return rest.invokeQuery(
+        operationId, queryName, deserializer, serialize, vars, token);
   }
 
   @override
   Stream<ServerResponse> invokeStreamQuery<Data, Variables>(
+    String operationId,
     String queryName,
     Deserializer<Data> deserializer,
     Serializer<Variables>? serializer,
@@ -314,6 +318,6 @@ class _RoutingTransport implements DataConnectTransport {
     String? token,
   ) {
     return websocket.invokeStreamQuery(
-        queryName, deserializer, serializer, vars, token);
+        operationId, queryName, deserializer, serializer, vars, token);
   }
 }

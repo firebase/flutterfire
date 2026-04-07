@@ -95,6 +95,7 @@ class GRPCTransport implements DataConnectTransport {
   /// Invokes GPRC query endpoint.
   @override
   Future<ServerResponse> invokeQuery<Data, Variables>(
+    String operationId,
     String queryName,
     Deserializer<Data> deserializer,
     Serializer<Variables>? serializer,
@@ -139,6 +140,7 @@ class GRPCTransport implements DataConnectTransport {
   /// Invokes GPRC mutation endpoint.
   @override
   Future<ServerResponse> invokeMutation<Data, Variables>(
+    String operationId,
     String queryName,
     Deserializer<Data> deserializer,
     Serializer<Variables>? serializer,
@@ -173,6 +175,7 @@ class GRPCTransport implements DataConnectTransport {
   /// Invokes stream query using WebSockets (even for GRPC clients we fall back to WebSockets for streaming right now).
   @override
   Stream<ServerResponse> invokeStreamQuery<Data, Variables>(
+    String operationId,
     String queryName,
     Deserializer<Data> deserializer,
     Serializer<Variables>? serializer,

@@ -60,6 +60,9 @@ abstract class OperationRef<Data, Variables> {
 
   final FirebaseDataConnect dataConnect;
 
+  late final String operationId =
+      createOperationId(operationName, variables, serializer);
+
   static dynamic _sortKeys(dynamic value) {
     if (value is Map) {
       final sortedMap = <String, dynamic>{};
@@ -307,6 +310,7 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
     try {
       ServerResponse serverResponse =
           await _transport.invokeQuery<Data, Variables>(
+        operationId,
         operationName,
         deserializer,
         serializer,
@@ -375,6 +379,7 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
     log("QueryRef $_queryId _streamFromServer loop started.");
     try {
       _serverStream = _transport.invokeStreamQuery<Data, Variables>(
+        operationId,
         operationName,
         deserializer,
         serializer,
@@ -474,6 +479,7 @@ class MutationRef<Data, Variables> extends OperationRef<Data, Variables> {
   ) async {
     ServerResponse serverResponse =
         await _transport.invokeMutation<Data, Variables>(
+      operationId,
       operationName,
       deserializer,
       serializer,

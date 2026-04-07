@@ -444,29 +444,32 @@ class WebSocketTransport implements DataConnectTransport {
 
   @override
   Future<ServerResponse> invokeQuery<Data, Variables>(
+    String operationId,
     String queryName,
     Deserializer<Data> deserializer,
     Serializer<Variables>? serializer,
     Variables? vars,
     String? authToken,
   ) async {
-    return _invokeUnary(queryName, deserializer, serializer, vars, authToken,
-        RequestKind.execute, false);
+    return _invokeUnary(operationId, queryName, deserializer, serializer, vars,
+        authToken, RequestKind.execute, false);
   }
 
   @override
   Future<ServerResponse> invokeMutation<Data, Variables>(
+    String operationId,
     String queryName,
     Deserializer<Data> deserializer,
     Serializer<Variables>? serializer,
     Variables? vars,
     String? authToken,
   ) async {
-    return _invokeUnary(queryName, deserializer, serializer, vars, authToken,
-        RequestKind.execute, true);
+    return _invokeUnary(operationId, queryName, deserializer, serializer, vars,
+        authToken, RequestKind.execute, true);
   }
 
   Future<ServerResponse> _invokeUnary<Data, Variables>(
+    String operationId,
     String operationName,
     Deserializer<Data> deserializer,
     Serializer<Variables>? serializer,
@@ -477,8 +480,6 @@ class WebSocketTransport implements DataConnectTransport {
   ) async {
     await _ensureConnected(authToken);
 
-    final operationId =
-        OperationRef.createOperationId(operationName, vars, serializer);
     final completer = Completer<ServerResponse>();
 
     if (_activeSubscriptions.containsKey(operationId)) {
@@ -543,6 +544,7 @@ class WebSocketTransport implements DataConnectTransport {
 
   @override
   Stream<ServerResponse> invokeStreamQuery<Data, Variables>(
+    String operationId,
     String queryName,
     Deserializer<Data> deserializer,
     Serializer<Variables>? serializer,
@@ -550,8 +552,6 @@ class WebSocketTransport implements DataConnectTransport {
     String? authToken,
   ) {
     late StreamController<ServerResponse> controller;
-    final operationId =
-        OperationRef.createOperationId(queryName, vars, serializer);
 
     controller = StreamController<ServerResponse>(
       onListen: () async {

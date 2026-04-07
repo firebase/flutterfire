@@ -21,7 +21,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../common/common_library.dart';
-import '../core/ref.dart';
 import '../dataconnect_version.dart';
 import 'stream_protocol.dart';
 
