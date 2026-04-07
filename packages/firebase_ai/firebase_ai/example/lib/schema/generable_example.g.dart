@@ -1,16 +1,33 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
 
+part of 'generable_example.dart';
 
 // **************************************************************************
 // SchemaGenerator
 // **************************************************************************
 
 /// Auto-generated schema for MockUser.
-const MockUserSchema = AutoSchema<MockUser>(
-  schemaMap: const <String, dynamic>{'type': 'OBJECT', 'properties': {'name': {'description': 'The user name', 'type': 'STRING', 'pattern': '^[a-zA-Z]+$'}, 'age': {'description': 'The user age', 'type': 'INTEGER', 'minimum': 0, 'maximum': 120}}},
+final MockUserSchema = AutoSchema<MockUser>(
+  schemaMap: const <String, dynamic>{
+    'type': 'OBJECT',
+    'properties': {
+      'name': {
+        'description': 'The user name',
+        'type': 'STRING',
+        'pattern': '^[a-zA-Z]+\$'
+      },
+      'age': {
+        'description': 'The user age',
+        'type': 'INTEGER',
+        'minimum': 0,
+        'maximum': 120
+      }
+    }
+  },
   fromJson: (json) => MockUser(
-  name: json['name'] as String,
-  age: json['age'] as int,
-),
+    name: json['name'] as String,
+    age: json['age'] as int,
+  ),
 );
 
 // **************************************************************************
@@ -21,12 +38,15 @@ const MockUserSchema = AutoSchema<MockUser>(
 final getMockUserTool = AutoFunctionDeclaration(
   name: 'get_mock_user',
   description: 'Auto-generated tool for getMockUser',
-  parameters: const {'type': 'OBJECT', 'properties': {'name': {'type': 'STRING'}}},
+  parameters: {
+    'name': Schema.string(),
+  },
   callable: (args) async {
-  // Extract arguments
-  final _name = args['name'] as String;
-  final result = await getMockUser(_name, );
-  return result.toJson(); // Assumes result has toJson
-}
-,
+    // Extract arguments
+    final _name = args['name'] as String;
+    final result = await getMockUser(
+      _name,
+    );
+    return result.toJson(); // Assumes result has toJson
+  },
 );

@@ -101,7 +101,7 @@ class SchemaGenerator extends GeneratorForAnnotation<Generable> {
 
     return '''
 /// Auto-generated schema for $className.
-const ${className}Schema = AutoSchema<$className>(
+final ${className}Schema = AutoSchema<$className>(
   schemaMap: const <String, dynamic>${_mapToDartCode(schemaMap)},
   fromJson: $fromJsonBuffer,
 );
@@ -134,6 +134,7 @@ const ${className}Schema = AutoSchema<$className>(
   String _mapToDartCode(Map<String, dynamic> map) {
     return jsonEncode(map)
         .replaceAll('"', "'")
+        .replaceAll(r'$', r'\$')
         .replaceAll(':', ': ')
         .replaceAll(',', ', ');
   }

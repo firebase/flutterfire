@@ -19,5 +19,5 @@ import 'src/tool_generator.dart';
 
 /// Builder factory for Firebase AI.
 Builder firebaseAiBuilder(BuilderOptions options) {
-  return SharedPartBuilder([SchemaGenerator(), ToolGenerator()], 'firebase_ai');
+  return PartBuilder([SchemaGenerator(), ToolGenerator()], '.g.dart');
 }

@@ -35,11 +35,9 @@ class ToolGenerator extends GeneratorForAnnotation<GenerateTool> {
     final toolName = annotation.read('name').literalValue as String? ?? functionName;
     final description = element.documentationComment ?? 'Auto-generated tool for $functionName';
 
-    final parametersSchema = <String, dynamic>{
-      'type': 'OBJECT',
-      'properties': <String, dynamic>{},
-    };
-
+    final propertiesBuffer = StringBuffer();
+    propertiesBuffer.writeln('{');
+    
     final callableBuffer = StringBuffer();
     callableBuffer.writeln('(args) async {');
     callableBuffer.writeln('  // Extract arguments');
@@ -48,30 +46,30 @@ class ToolGenerator extends GeneratorForAnnotation<GenerateTool> {
       final paramName = param.name;
       final paramType = param.type;
 
-      final fieldSchema = <String, dynamic>{};
+      propertiesBuffer.write("    '$paramName': ");
       if (paramType.isDartCoreString) {
-        fieldSchema['type'] = 'STRING';
+        propertiesBuffer.writeln('Schema.string(),');
       } else if (paramType.isDartCoreInt) {
-        fieldSchema['type'] = 'INTEGER';
+        propertiesBuffer.writeln('Schema.integer(),');
       } else if (paramType.isDartCoreDouble) {
-        fieldSchema['type'] = 'NUMBER';
+        propertiesBuffer.writeln('Schema.number(),');
       } else if (paramType.isDartCoreBool) {
-        fieldSchema['type'] = 'BOOLEAN';
+        propertiesBuffer.writeln('Schema.boolean(),');
       } else {
-        fieldSchema['type'] = 'OBJECT';
+        propertiesBuffer.writeln('Schema.object(properties: {}), // TODO: Handle complex types');
       }
 
-      (parametersSchema['properties'] as Map<String, dynamic>)[paramName] = fieldSchema;
-
-      callableBuffer.writeln('  final _$paramName = args[\'$paramName\'] as ${_mapDartType(paramType)};');
+      callableBuffer.writeln("  final _$paramName = args['$paramName'] as ${_mapDartType(paramType)};");
     }
 
-    callableBuffer.write('  final result = await $functionName(');
+    propertiesBuffer.write('  }');
+
+    callableBuffer.writeln('  final result = await $functionName(');
     for (final param in parameters) {
       final paramName = param.name;
-      callableBuffer.write('_$paramName, ');
+      callableBuffer.writeln('    _$paramName,');
     }
-    callableBuffer.writeln(');');
+    callableBuffer.writeln('  );');
     callableBuffer.writeln('  return result.toJson(); // Assumes result has toJson');
     callableBuffer.writeln('}');
 
@@ -80,7 +78,7 @@ class ToolGenerator extends GeneratorForAnnotation<GenerateTool> {
 final ${functionName}Tool = AutoFunctionDeclaration(
   name: '$toolName',
   description: '$description',
-  parameters: const ${_mapToDartCode(parametersSchema)},
+  parameters: $propertiesBuffer,
   callable: $callableBuffer,
 );
 ''';
@@ -97,6 +95,7 @@ final ${functionName}Tool = AutoFunctionDeclaration(
   String _mapToDartCode(Map<String, dynamic> map) {
     return jsonEncode(map)
         .replaceAll('"', "'")
+        .replaceAll(r'$', r'\$')
         .replaceAll(':', ': ')
         .replaceAll(',', ', ');
   }
