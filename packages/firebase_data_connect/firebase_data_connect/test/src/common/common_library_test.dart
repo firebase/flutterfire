@@ -103,8 +103,10 @@ void main() {
 
     test('should handle invokeQuery with proper deserializer', () async {
       const queryName = 'testQuery';
+      const queryId = 'testQueryId';
       deserializer(json) => json;
       final result = await transport.invokeQuery(
+        queryId,
         queryName,
         deserializer,
         emptySerializer,
@@ -117,8 +119,10 @@ void main() {
 
     test('should handle invokeMutation with proper deserializer', () async {
       const queryName = 'testMutation';
+      const operationId = 'testMutationId';
       deserializer(json) => json;
       final result = await transport.invokeMutation(
+        operationId,
         queryName,
         deserializer,
         emptySerializer,
@@ -145,6 +149,7 @@ class TestDataConnectTransport extends DataConnectTransport {
 
   @override
   Future<ServerResponse> invokeQuery<Data, Variables>(
+    String operationId,
     String queryName,
     Deserializer<Data> deserializer,
     Serializer<Variables>? serializer,
@@ -157,6 +162,7 @@ class TestDataConnectTransport extends DataConnectTransport {
 
   @override
   Future<ServerResponse> invokeMutation<Data, Variables>(
+    String operationId,
     String queryName,
     Deserializer<Data> deserializer,
     Serializer<Variables>? serializer,
@@ -169,6 +175,7 @@ class TestDataConnectTransport extends DataConnectTransport {
 
   @override
   Stream<ServerResponse> invokeStreamQuery<Data, Variables>(
+    String operationId,
     String queryName,
     Deserializer<Data> deserializer,
     Serializer<Variables>? serializer,

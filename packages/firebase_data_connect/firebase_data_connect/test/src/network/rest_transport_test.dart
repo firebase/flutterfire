@@ -152,7 +152,8 @@ void main() {
 
       String deserializer(String data) => 'Deserialized Data';
 
-      await transport.invokeQuery('testQuery', deserializer, null, null, null);
+      await transport.invokeQuery(
+          'testQueryId', 'testQuery', deserializer, null, null, null);
 
       verify(
         mockHttpClient.post(
@@ -181,6 +182,7 @@ void main() {
       String deserializer(String data) => 'Deserialized Mutation Data';
 
       await transport.invokeMutation(
+        'testMutationId',
         'testMutation',
         deserializer,
         null,
