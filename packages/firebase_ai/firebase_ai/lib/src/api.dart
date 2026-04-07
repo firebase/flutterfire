@@ -1409,7 +1409,6 @@ final class GenerationConfig extends BaseGenerationConfig {
           'imageConfig': imageConfig.toJson(),
       };
 }
-}
 
 /// Type of task for which the embedding will be used.
 enum TaskType {
