@@ -770,6 +770,45 @@ enum FinishReason {
   /// The candidate content was flagged for malformed function call reasons.
   malformedFunctionCall('MALFORMED_FUNCTION_CALL'),
 
+  /// Token generation was stopped because the response contained forbidden terms.
+  blocklist('BLOCKLIST'),
+
+  /// Token generation was stopped because the response contained potentially prohibited content.
+  prohibitedContent('PROHIBITED_CONTENT'),
+
+  /// Token generation was stopped because of Sensitive Personally Identifiable Information (SPII).
+  spii('SPII'),
+
+  /// Token generation stopped because generated images contain safety violations.
+  imageSafety('IMAGE_SAFETY'),
+
+  /// Image generation stopped because generated images have other prohibited content.
+  imageProhibitedContent('IMAGE_PROHIBITED_CONTENT'),
+
+  /// Image generation stopped because of other miscellaneous issue.
+  imageOther('IMAGE_OTHER'),
+
+  /// The model was expected to generate an image, but none was generated.
+  noImage('NO_IMAGE'),
+
+  /// Image generation stopped due to recitation.
+  imageRecitation('IMAGE_RECITATION'),
+
+  /// The response candidate content was flagged for using an unsupported language.
+  language('LANGUAGE'),
+
+  /// Model generated a tool call but no tools were enabled in the request.
+  unexpectedToolCall('UNEXPECTED_TOOL_CALL'),
+
+  /// Model called too many tools consecutively, thus the system exited execution.
+  tooManyToolCalls('TOO_MANY_TOOL_CALLS'),
+
+  /// Request has at least one thought signature missing.
+  missingThoughtSignature('MISSING_THOUGHT_SIGNATURE'),
+
+  /// Finished due to malformed response.
+  malformedResponse('MALFORMED_RESPONSE'),
+
   /// Unknown reason.
   other('OTHER');
 
@@ -790,6 +829,19 @@ enum FinishReason {
       'RECITATION' => FinishReason.recitation,
       'OTHER' => FinishReason.other,
       'MALFORMED_FUNCTION_CALL' => FinishReason.malformedFunctionCall,
+      'BLOCKLIST' => FinishReason.blocklist,
+      'PROHIBITED_CONTENT' => FinishReason.prohibitedContent,
+      'SPII' => FinishReason.spii,
+      'IMAGE_SAFETY' => FinishReason.imageSafety,
+      'IMAGE_PROHIBITED_CONTENT' => FinishReason.imageProhibitedContent,
+      'IMAGE_OTHER' => FinishReason.imageOther,
+      'NO_IMAGE' => FinishReason.noImage,
+      'IMAGE_RECITATION' => FinishReason.imageRecitation,
+      'LANGUAGE' => FinishReason.language,
+      'UNEXPECTED_TOOL_CALL' => FinishReason.unexpectedToolCall,
+      'TOO_MANY_TOOL_CALLS' => FinishReason.tooManyToolCalls,
+      'MISSING_THOUGHT_SIGNATURE' => FinishReason.missingThoughtSignature,
+      'MALFORMED_RESPONSE' => FinishReason.malformedResponse,
       _ => throw FormatException('Unhandled FinishReason format', jsonObject),
     };
   }
@@ -1069,6 +1121,97 @@ class ThinkingConfig {
       };
 }
 
+/// Configuration options for generating images with Gemini models.
+final class ImageConfig {
+  /// Initializes configuration options for generating images with Gemini.
+  ImageConfig({this.aspectRatio, this.imageSize});
+
+  /// The aspect ratio of generated images.
+  final ImageAspectRatio? aspectRatio;
+
+  /// The size of the generated images.
+  final ImageSize? imageSize;
+
+  /// Convert to json format.
+  Map<String, Object?> toJson() => {
+        if (aspectRatio case final aspectRatio?)
+          'aspectRatio': aspectRatio.toJson(),
+        if (imageSize case final imageSize?) 'imageSize': imageSize.toJson(),
+      };
+}
+
+/// An aspect ratio for generated images.
+enum ImageAspectRatio {
+  /// Square (1:1) aspect ratio.
+  square1x1('1:1'),
+
+  /// Portrait widescreen (9:16) aspect ratio.
+  portrait9x16('9:16'),
+
+  /// Widescreen (16:9) aspect ratio.
+  landscape16x9('16:9'),
+
+  /// Portrait full screen (3:4) aspect ratio.
+  portrait3x4('3:4'),
+
+  /// Fullscreen (4:3) aspect ratio.
+  landscape4x3('4:3'),
+
+  /// Portrait (2:3) aspect ratio.
+  portrait2x3('2:3'),
+
+  /// Landscape (3:2) aspect ratio.
+  landscape3x2('3:2'),
+
+  /// Portrait (4:5) aspect ratio.
+  portrait4x5('4:5'),
+
+  /// Landscape (5:4) aspect ratio.
+  landscape5x4('5:4'),
+
+  /// Portrait (1:4) aspect ratio.
+  portrait1x4('1:4'),
+
+  /// Landscape (4:1) aspect ratio.
+  landscape4x1('4:1'),
+
+  /// Portrait (1:8) aspect ratio.
+  portrait1x8('1:8'),
+
+  /// Landscape (8:1) aspect ratio.
+  landscape8x1('8:1'),
+
+  /// Ultrawide (21:9) aspect ratio.
+  ultrawide21x9('21:9');
+
+  const ImageAspectRatio(this._jsonString);
+  final String _jsonString;
+
+  /// Convert to json format.
+  String toJson() => _jsonString;
+}
+
+/// The size of images to generate.
+enum ImageSize {
+  /// 512px (0.5K) image size.
+  size512('512'),
+
+  /// 1K image size.
+  size1K('1K'),
+
+  /// 2K image size.
+  size2K('2K'),
+
+  /// 4K image size.
+  size4K('4K');
+
+  const ImageSize(this._jsonString);
+  final String _jsonString;
+
+  /// Convert to json format.
+  String toJson() => _jsonString;
+}
+
 /// Configuration options for model generation and outputs.
 abstract class BaseGenerationConfig {
   // ignore: public_member_api_docs
@@ -1196,6 +1339,7 @@ final class GenerationConfig extends BaseGenerationConfig {
     this.responseSchema,
     this.responseJsonSchema,
     this.thinkingConfig,
+    this.imageConfig,
   }) : assert(responseSchema == null || responseJsonSchema == null,
             'responseSchema and responseJsonSchema cannot both be set.');
 
@@ -1244,6 +1388,9 @@ final class GenerationConfig extends BaseGenerationConfig {
   /// support thinking.
   final ThinkingConfig? thinkingConfig;
 
+  /// Configuration options for generating images with Gemini models.
+  final ImageConfig? imageConfig;
+
   @override
   Map<String, Object?> toJson() => {
         ...super.toJson(),
@@ -1258,7 +1405,10 @@ final class GenerationConfig extends BaseGenerationConfig {
           'responseJsonSchema': responseJsonSchema,
         if (thinkingConfig case final thinkingConfig?)
           'thinkingConfig': thinkingConfig.toJson(),
+        if (imageConfig case final imageConfig?)
+          'imageConfig': imageConfig.toJson(),
       };
+}
 }
 
 /// Type of task for which the embedding will be used.
