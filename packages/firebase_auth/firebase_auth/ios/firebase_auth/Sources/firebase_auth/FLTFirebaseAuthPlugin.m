@@ -97,6 +97,8 @@ static NSMutableDictionary<NSNumber *, FIRAuthCredential *> *credentialsMap;
 @property(strong, nonatomic) void (^appleCompletion)
     (PigeonUserCredential *_Nullable, FlutterError *_Nullable);
 @property(strong, nonatomic) AuthPigeonFirebaseApp *appleArguments;
+/// YES while an `ASAuthorizationController` Sign in with Apple flow is active.
+@property(nonatomic, assign) BOOL appleSignInRequestInFlight;
 
 @end
 
@@ -380,16 +382,25 @@ static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResu
                                   NSString *authorizationCode, NSError *error) {
   void (^completion)(PigeonUserCredential *_Nullable, FlutterError *_Nullable) =
       object.appleCompletion;
-  if (completion == nil) return;
+  if (completion == nil) {
+    object.appleSignInRequestInFlight = NO;
+    return;
+  }
 
   if (error != nil) {
     if (error.code == FIRAuthErrorCodeSecondFactorRequired) {
+      object.appleCompletion = nil;
+      object.appleSignInRequestInFlight = NO;
       [object handleMultiFactorError:object.appleArguments completion:completion withError:error];
     } else {
+      object.appleCompletion = nil;
+      object.appleSignInRequestInFlight = NO;
       completion(nil, [FLTFirebaseAuthPlugin convertToFlutterError:error]);
     }
     return;
   }
+  object.appleCompletion = nil;
+  object.appleSignInRequestInFlight = NO;
   completion([PigeonParser getPigeonUserCredentialFromAuthResult:authResult
                                                authorizationCode:authorizationCode],
              nil);
@@ -406,6 +417,15 @@ static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResu
 
     if (appleIDCredential.identityToken == nil) {
       NSLog(@"Unable to fetch identity token.");
+      void (^completion)(PigeonUserCredential *_Nullable, FlutterError *_Nullable) =
+          self.appleCompletion;
+      self.appleCompletion = nil;
+      self.appleSignInRequestInFlight = NO;
+      if (completion != nil) {
+        completion(nil, [FlutterError errorWithCode:kErrCodeInvalidCredential
+                                            message:kErrMsgInvalidCredential
+                                            details:nil]);
+      }
       return;
     }
 
@@ -459,47 +479,62 @@ static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResu
                               handleSignInWithApple(self, authResult, authorizationCode, error);
                             }];
     }
+  } else {
+    void (^completion)(PigeonUserCredential *_Nullable, FlutterError *_Nullable) =
+        self.appleCompletion;
+    self.appleCompletion = nil;
+    self.appleSignInRequestInFlight = NO;
+    if (completion != nil) {
+      completion(nil, [FlutterError errorWithCode:kErrCodeInvalidCredential
+                                          message:kErrMsgInvalidCredential
+                                          details:nil]);
+    }
   }
 }
 
 - (void)authorizationController:(ASAuthorizationController *)controller
            didCompleteWithError:(NSError *)error API_AVAILABLE(macos(10.15), ios(13.0)) {
+  void (^completion)(PigeonUserCredential *_Nullable, FlutterError *_Nullable) =
+      self.appleCompletion;
+  self.appleCompletion = nil;
+  self.appleSignInRequestInFlight = NO;
+
   NSLog(@"Sign in with Apple errored: %@", error);
+  if (completion == nil) {
+    return;
+  }
+
   switch (error.code) {
     case ASAuthorizationErrorCanceled:
-      self.appleCompletion(
-          nil, [FlutterError errorWithCode:@"canceled"
-                                   message:@"The user canceled the authorization attempt."
-                                   details:nil]);
+      completion(nil, [FlutterError errorWithCode:@"canceled"
+                                          message:@"The user canceled the authorization attempt."
+                                          details:nil]);
       break;
 
     case ASAuthorizationErrorInvalidResponse:
-      self.appleCompletion(
-          nil,
-          [FlutterError errorWithCode:@"invalid-response"
-                              message:@"The authorization request received an invalid response."
-                              details:nil]);
+      completion(nil, [FlutterError
+                          errorWithCode:@"invalid-response"
+                                message:@"The authorization request received an invalid response."
+                                details:nil]);
       break;
 
     case ASAuthorizationErrorNotHandled:
-      self.appleCompletion(nil,
-                           [FlutterError errorWithCode:@"not-handled"
-                                               message:@"The authorization request wasn’t handled."
-                                               details:nil]);
+      completion(nil, [FlutterError errorWithCode:@"not-handled"
+                                          message:@"The authorization request wasn’t handled."
+                                          details:nil]);
       break;
 
     case ASAuthorizationErrorFailed:
-      self.appleCompletion(nil, [FlutterError errorWithCode:@"failed"
-                                                    message:@"The authorization attempt failed."
-                                                    details:nil]);
+      completion(nil, [FlutterError errorWithCode:@"failed"
+                                          message:@"The authorization attempt failed."
+                                          details:nil]);
       break;
 
     case ASAuthorizationErrorUnknown:
     default:
-      self.appleCompletion(nil, [FLTFirebaseAuthPlugin convertToFlutterError:error]);
+      completion(nil, [FLTFirebaseAuthPlugin convertToFlutterError:error]);
       break;
   }
-  self.appleCompletion = nil;
 }
 
 - (void)handleInternalError:(nonnull void (^)(PigeonUserCredential *_Nullable,
@@ -570,10 +605,19 @@ static void launchAppleSignInRequest(FLTFirebaseAuthPlugin *object, AuthPigeonFi
                                      void (^_Nonnull completion)(PigeonUserCredential *_Nullable,
                                                                  FlutterError *_Nullable)) {
   if (@available(iOS 13.0, macOS 10.15, *)) {
+    if (object.appleSignInRequestInFlight) {
+      completion(nil,
+                 [FlutterError errorWithCode:@"operation-not-allowed"
+                                     message:@"A Sign in with Apple request is already in progress."
+                                     details:nil]);
+      return;
+    }
+
     NSString *nonce = [object randomNonce:32];
     object.currentNonce = nonce;
     object.appleCompletion = completion;
     object.appleArguments = app;
+    object.appleSignInRequestInFlight = YES;
 
     ASAuthorizationAppleIDProvider *appleIDProvider = [[ASAuthorizationAppleIDProvider alloc] init];
 
