@@ -13,7 +13,6 @@
 // limitations under the License.
 
 export 'src/annotations.dart' show Generable, Guide, GenerateTool;
-export 'src/auto_schema.dart' show AutoSchema;
 export 'src/api.dart'
     show
         BlockReason,
@@ -35,6 +34,7 @@ export 'src/api.dart'
         SafetyRating,
         SafetySetting,
         UsageMetadata;
+export 'src/auto_schema.dart' show AutoSchema;
 export 'src/base_model.dart'
     show
         GenerativeModel,
