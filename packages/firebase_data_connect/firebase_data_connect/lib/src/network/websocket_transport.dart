@@ -75,7 +75,7 @@ class WebSocketTransport implements DataConnectTransport {
           final token = await user?.getIdToken();
           final request = StreamRequest(
             requestId: _generateRequestId('auth'),
-            authToken: token,
+            headers: _buildHeaders(token, null),
           );
           _channel?.sink.add(jsonEncode(request.toJson()));
         } catch (_) {
@@ -241,7 +241,7 @@ class WebSocketTransport implements DataConnectTransport {
       }
 
       if (_unaryListeners.containsKey(requestId)) {
-        final pendings = _unaryListeners.remove(requestId)!;
+        final pendings = _unaryListeners.remove(requestId) ?? [];
         for (final p in pendings) {
           if (!p.completer.isCompleted) {
             p.completer.complete(serverResponse);
@@ -251,7 +251,7 @@ class WebSocketTransport implements DataConnectTransport {
       }
 
       if (_streamListeners.containsKey(requestId)) {
-        final controllers = _streamListeners[requestId]!;
+        final controllers = _streamListeners[requestId] ?? [];
         if (response.cancelled == true) {
           for (final controller in controllers) {
             controller.close();
@@ -351,8 +351,6 @@ class WebSocketTransport implements DataConnectTransport {
       if (reqId == null) continue;
       final headers = _buildHeaders(authToken, appCheckToken);
       final request = StreamRequest(
-        authToken: authToken,
-        appCheckToken: headers['X-Firebase-AppCheck'],
         requestId: reqId,
         requestKind: RequestKind.subscribe,
         subscribe: ExecuteRequest(sub.queryName, sub.variables),
@@ -376,8 +374,6 @@ class WebSocketTransport implements DataConnectTransport {
           kept.add(p);
           final headers = _buildHeaders(authToken, appCheckToken);
           final request = StreamRequest(
-            authToken: authToken,
-            appCheckToken: headers['X-Firebase-AppCheck'],
             requestId: reqId,
             requestKind: RequestKind.execute,
             execute: ExecuteRequest(p.operationName, p.variables),
@@ -504,8 +500,6 @@ class WebSocketTransport implements DataConnectTransport {
       final headers = _buildHeaders(authToken, appCheckToken);
 
       final request = StreamRequest(
-        authToken: authToken,
-        appCheckToken: appCheckToken,
         requestId: existingRequestId,
         requestKind: RequestKind.resume,
         resume: ResumeRequest(),
@@ -536,8 +530,6 @@ class WebSocketTransport implements DataConnectTransport {
     final headers = _buildHeaders(authToken, appCheckToken);
 
     final request = StreamRequest(
-      authToken: authToken,
-      appCheckToken: appCheckToken,
       requestId: requestId,
       requestKind: requestKind,
       execute: ExecuteRequest(operationName, variables),
@@ -608,8 +600,6 @@ class WebSocketTransport implements DataConnectTransport {
         final headers = _buildHeaders(authToken, appCheckToken);
 
         final request = StreamRequest(
-          authToken: authToken,
-          appCheckToken: appCheckToken,
           requestId: requestId,
           requestKind: RequestKind.subscribe,
           subscribe: ExecuteRequest(queryName, variables),
