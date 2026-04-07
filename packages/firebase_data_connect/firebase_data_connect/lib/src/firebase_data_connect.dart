@@ -65,9 +65,9 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
   /// FirebaseAppCheck
   FirebaseAppCheck? appCheck;
 
-  /// Due to compatibility issues with grpc-web, we swap out the transport based on what platform the user is using.
-  /// For web, we use RestTransport. For mobile, we use GRPCTransport.
-  late DataConnectTransport transport;
+  /// Transport for connecting to the Data Connect service.
+  /// Routes between RestTransport and WebSocketTransport based on subscription status
+  DataConnectTransport? transport;
 
   /// FirebaseAuth
   FirebaseAuth? auth;
@@ -89,6 +89,9 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
   /// Checks whether the transport has been properly initialized.
   @visibleForTesting
   void checkTransport() {
+    if (transport != null) {
+      return;
+    }
     transportOptions ??=
         TransportOptions('firebasedataconnect.googleapis.com', null, true);
     final rest = RestTransport(
@@ -137,7 +140,7 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
       return QueryRef<Data, Variables>(
         this,
         operationName,
-        transport,
+        transport!,
         dataDeserializer,
         _queryManager,
         varsSerializer,
@@ -154,10 +157,12 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
     Variables? vars,
   ) {
     checkTransport();
+    //initialize cache since mutations on a stream could result in subscribed query updates
+    checkAndInitializeCache();
     return MutationRef<Data, Variables>(
       this,
       operationName,
-      transport,
+      transport!,
       dataDeserializer,
       varsSerializer,
       vars,
@@ -174,11 +179,12 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
     String mappedHost = automaticHostMapping ? getMappedHost(host) : host;
     transportOptions = TransportOptions(mappedHost, port, isSecure);
 
-    if (cacheManager != null) {
-      // dispose and clean this up. it will get reinitialized for newer QueryRefs that target the emulator.
-      cacheManager?.dispose();
-      cacheManager = null;
-    }
+    // dispose and clean this up. it will get reinitialized for newer QueryRefs that target the emulator.
+    cacheManager?.dispose();
+    cacheManager = null;
+
+    // transport will get reinitialized for newer QueryRefs that target the emulator.
+    transport = null;
   }
 
   /// Currently cached DataConnect instances. Maps from app name to ConnectorConfigStr, DataConnect.
@@ -206,16 +212,13 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
       return cachedInstances[app.name]![connectorConfig.toJson()]!;
     }
 
-    //TODO remove after testing since CS should be null by default
-    final resolvedCacheSettings = cacheSettings ?? CacheSettings();
-
     FirebaseDataConnect newInstance = FirebaseDataConnect(
       app: app,
       auth: auth,
       appCheck: appCheck,
       connectorConfig: connectorConfig,
       sdkType: sdkType,
-      cacheSettings: resolvedCacheSettings,
+      cacheSettings: cacheSettings,
     );
     if (cachedInstances[app.name] == null) {
       cachedInstances[app.name] = <String, FirebaseDataConnect>{};
