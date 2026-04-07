@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+export 'src/annotations.dart' show Generable, Guide, GenerateTool;
+export 'src/auto_schema.dart' show AutoSchema;
 export 'src/api.dart'
     show
         BlockReason,
