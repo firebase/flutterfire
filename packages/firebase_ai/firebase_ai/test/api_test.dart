@@ -319,14 +319,16 @@ void main() {
       expect(FinishReason.prohibitedContent.toJson(), 'PROHIBITED_CONTENT');
       expect(FinishReason.spii.toJson(), 'SPII');
       expect(FinishReason.imageSafety.toJson(), 'IMAGE_SAFETY');
-      expect(FinishReason.imageProhibitedContent.toJson(), 'IMAGE_PROHIBITED_CONTENT');
+      expect(FinishReason.imageProhibitedContent.toJson(),
+          'IMAGE_PROHIBITED_CONTENT');
       expect(FinishReason.imageOther.toJson(), 'IMAGE_OTHER');
       expect(FinishReason.noImage.toJson(), 'NO_IMAGE');
       expect(FinishReason.imageRecitation.toJson(), 'IMAGE_RECITATION');
       expect(FinishReason.language.toJson(), 'LANGUAGE');
       expect(FinishReason.unexpectedToolCall.toJson(), 'UNEXPECTED_TOOL_CALL');
       expect(FinishReason.tooManyToolCalls.toJson(), 'TOO_MANY_TOOL_CALLS');
-      expect(FinishReason.missingThoughtSignature.toJson(), 'MISSING_THOUGHT_SIGNATURE');
+      expect(FinishReason.missingThoughtSignature.toJson(),
+          'MISSING_THOUGHT_SIGNATURE');
       expect(FinishReason.malformedResponse.toJson(), 'MALFORMED_RESPONSE');
       expect(FinishReason.other.toJson(), 'OTHER');
     });
@@ -336,20 +338,28 @@ void main() {
       expect(FinishReason.parseValue('MAX_TOKENS'), FinishReason.maxTokens);
       expect(FinishReason.parseValue('SAFETY'), FinishReason.safety);
       expect(FinishReason.parseValue('RECITATION'), FinishReason.recitation);
-      expect(FinishReason.parseValue('MALFORMED_FUNCTION_CALL'), FinishReason.malformedFunctionCall);
+      expect(FinishReason.parseValue('MALFORMED_FUNCTION_CALL'),
+          FinishReason.malformedFunctionCall);
       expect(FinishReason.parseValue('BLOCKLIST'), FinishReason.blocklist);
-      expect(FinishReason.parseValue('PROHIBITED_CONTENT'), FinishReason.prohibitedContent);
+      expect(FinishReason.parseValue('PROHIBITED_CONTENT'),
+          FinishReason.prohibitedContent);
       expect(FinishReason.parseValue('SPII'), FinishReason.spii);
       expect(FinishReason.parseValue('IMAGE_SAFETY'), FinishReason.imageSafety);
-      expect(FinishReason.parseValue('IMAGE_PROHIBITED_CONTENT'), FinishReason.imageProhibitedContent);
+      expect(FinishReason.parseValue('IMAGE_PROHIBITED_CONTENT'),
+          FinishReason.imageProhibitedContent);
       expect(FinishReason.parseValue('IMAGE_OTHER'), FinishReason.imageOther);
       expect(FinishReason.parseValue('NO_IMAGE'), FinishReason.noImage);
-      expect(FinishReason.parseValue('IMAGE_RECITATION'), FinishReason.imageRecitation);
+      expect(FinishReason.parseValue('IMAGE_RECITATION'),
+          FinishReason.imageRecitation);
       expect(FinishReason.parseValue('LANGUAGE'), FinishReason.language);
-      expect(FinishReason.parseValue('UNEXPECTED_TOOL_CALL'), FinishReason.unexpectedToolCall);
-      expect(FinishReason.parseValue('TOO_MANY_TOOL_CALLS'), FinishReason.tooManyToolCalls);
-      expect(FinishReason.parseValue('MISSING_THOUGHT_SIGNATURE'), FinishReason.missingThoughtSignature);
-      expect(FinishReason.parseValue('MALFORMED_RESPONSE'), FinishReason.malformedResponse);
+      expect(FinishReason.parseValue('UNEXPECTED_TOOL_CALL'),
+          FinishReason.unexpectedToolCall);
+      expect(FinishReason.parseValue('TOO_MANY_TOOL_CALLS'),
+          FinishReason.tooManyToolCalls);
+      expect(FinishReason.parseValue('MISSING_THOUGHT_SIGNATURE'),
+          FinishReason.missingThoughtSignature);
+      expect(FinishReason.parseValue('MALFORMED_RESPONSE'),
+          FinishReason.malformedResponse);
       expect(FinishReason.parseValue('OTHER'), FinishReason.other);
       expect(FinishReason.parseValue('UNSPECIFIED'), FinishReason.unknown);
     });
@@ -501,7 +511,8 @@ void main() {
     test('GenerationConfig toJson with all fields', () {
       final schema = Schema.object(properties: {});
       final thinkingConfig = ThinkingConfig(thinkingBudget: 100);
-      final imageConfig = ImageConfig(aspectRatio: ImageAspectRatio.square1x1, imageSize: ImageSize.size1K);
+      final imageConfig = ImageConfig(
+          aspectRatio: ImageAspectRatio.square1x1, imageSize: ImageSize.size1K);
       final config = GenerationConfig(
         candidateCount: 1,
         stopSequences: ['\n', 'stop'],
