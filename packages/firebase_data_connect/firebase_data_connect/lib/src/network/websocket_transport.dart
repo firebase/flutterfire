@@ -429,8 +429,6 @@ class WebSocketTransport implements DataConnectTransport {
     _reconnectTimer = null;
     _channel?.sink.close();
     _channel = null;
-    _authSubscription?.cancel();
-    _authSubscription = null;
   }
 
   void disconnect() {
