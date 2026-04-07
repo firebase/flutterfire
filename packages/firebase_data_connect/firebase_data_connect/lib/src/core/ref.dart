@@ -1,4 +1,4 @@
-// Copyright 2026 Google LLC
+// Copyright 2024 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -51,14 +51,14 @@ abstract class OperationRef<Data, Variables> {
     this.serializer,
     this.variables,
   );
-  Variables? variables;
-  String operationName;
+  final Variables? variables;
+  final String operationName;
   final DataConnectTransport _transport;
-  Deserializer<Data> deserializer;
-  Serializer<Variables> serializer;
+  final Deserializer<Data> deserializer;
+  final Serializer<Variables> serializer;
   String? _lastToken;
 
-  FirebaseDataConnect dataConnect;
+  final FirebaseDataConnect dataConnect;
 
   static dynamic _sortKeys(dynamic value) {
     if (value is Map) {
