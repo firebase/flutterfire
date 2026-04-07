@@ -209,7 +209,7 @@ class QueryManager {
   StreamController<QueryResult<Data, Variables>> addQuery<Data, Variables>(
     QueryRef<Data, Variables> ref,
   ) {
-    final queryId = ref._queryId;
+    final queryId = ref.operationId;
     trackedQueries[queryId] = ref;
 
     final streamController =
@@ -269,9 +269,6 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
     }
   }
 
-  String get _queryId =>
-      OperationRef.createOperationId(operationName, variables, serializer);
-
   Future<QueryResult<Data, Variables>> _executeFromCache(
       QueryFetchPolicy fetchPolicy) async {
     if (dataConnect.cacheManager == null) {
@@ -281,7 +278,7 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
     final cacheManager = dataConnect.cacheManager!;
     bool allowStale = fetchPolicy ==
         QueryFetchPolicy.cacheOnly; //if its cache only, we always allow stale
-    final cachedData = await cacheManager.resultTree(_queryId, allowStale);
+    final cachedData = await cacheManager.resultTree(operationId, allowStale);
 
     if (cachedData != null) {
       try {
@@ -319,7 +316,7 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
       );
 
       if (dataConnect.cacheManager != null) {
-        await dataConnect.cacheManager!.update(_queryId, serverResponse);
+        await dataConnect.cacheManager!.update(operationId, serverResponse);
       }
       Data typedData = _convertBodyJsonToData(serverResponse.data);
 
@@ -345,7 +342,7 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
     _serverStreamSubscription?.cancel();
     _serverStreamSubscription = null;
     _serverStream = null;
-    log("QueryRef $_queryId: All subscribers cancelled. Unsubscribed from server stream.");
+    log("QueryRef $operationId: All subscribers cancelled. Unsubscribed from server stream.");
   }
 
   Stream<QueryResult<Data, Variables>> subscribe() {
@@ -376,7 +373,7 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
 
   void _streamFromServer() async {
     bool shouldRetry = await _shouldRetry();
-    log("QueryRef $_queryId _streamFromServer loop started.");
+    log("QueryRef $operationId _streamFromServer loop started.");
     try {
       _serverStream = _transport.invokeStreamQuery<Data, Variables>(
         operationId,
@@ -389,12 +386,13 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
 
       _serverStreamSubscription = _serverStream!.listen(
         (serverResponse) async {
-          log("QueryRef $_queryId _streamFromServer loop received snapshot.");
+          log("QueryRef $operationId _streamFromServer loop received snapshot.");
           if (dataConnect.cacheManager != null) {
             try {
-              await dataConnect.cacheManager!.update(_queryId, serverResponse);
+              await dataConnect.cacheManager!
+                  .update(operationId, serverResponse);
             } catch (e) {
-              log("QueryRef $_queryId _streamFromServer loop cache update failed: $e");
+              log("QueryRef $operationId _streamFromServer loop cache update failed: $e");
             }
           }
           Data typedData = _convertBodyJsonToData(serverResponse.data);
@@ -426,7 +424,7 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
       _serverStreamSubscription?.cancel();
       _serverStreamSubscription = null;
       _serverStream = null;
-      log("QueryRef $_queryId _streamFromServer loop Unknown loop failure: $e");
+      log("QueryRef $operationId _streamFromServer loop Unknown loop failure: $e");
       publishErrorToStream(e);
     }
   }
@@ -435,7 +433,7 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
     if (_streamController != null) {
       _streamController?.add(result);
     } else {
-      log("QueryRef $_queryId _streamFromServer loop _streamController is null");
+      log("QueryRef $operationId _streamFromServer loop _streamController is null");
     }
   }
 
