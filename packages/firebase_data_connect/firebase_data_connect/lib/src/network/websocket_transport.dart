@@ -77,7 +77,7 @@ class WebSocketTransport implements DataConnectTransport {
             requestId: _generateRequestId('auth'),
             headers: _buildHeaders(token, null),
           );
-          _channel?.sink.add(jsonEncode(request.toJson()));
+          _send(request.toJson());
         } catch (_) {
           // Ignored
         }
@@ -146,6 +146,15 @@ class WebSocketTransport implements DataConnectTransport {
     return '${operationName}_$randStr';
   }
 
+  void _send(Map<String, dynamic> json) {
+    if (_channel == null) return;
+    final encoded = jsonEncode(json);
+    if (encoded.isNotEmpty) {
+      developer.log("Sending stream message \n $encoded");
+      _channel!.sink.add(encoded);
+    }
+  }
+
   bool get isConnected => _channel != null;
 
   Map<String, String> _buildHeaders(String? authToken, String? appCheckToken) {
@@ -208,7 +217,7 @@ class WebSocketTransport implements DataConnectTransport {
           'projects/${options.projectId}/locations/${options.location}/services/${options.serviceId}/connectors/${options.connector}',
       headers: headers,
     );
-    _channel?.sink.add(jsonEncode(initRequest.toJson()));
+    _send(initRequest.toJson());
   }
 
   // called when a message is received from the stream
@@ -356,7 +365,7 @@ class WebSocketTransport implements DataConnectTransport {
         subscribe: ExecuteRequest(sub.queryName, sub.variables),
         headers: headers,
       );
-      _channel?.sink.add(jsonEncode(request.toJson()));
+      _send(request.toJson());
     }
   }
 
@@ -379,7 +388,7 @@ class WebSocketTransport implements DataConnectTransport {
             execute: ExecuteRequest(p.operationName, p.variables),
             headers: headers,
           );
-          _channel?.sink.add(jsonEncode(request.toJson()));
+          _send(request.toJson());
         }
       }
       if (kept.isNotEmpty) {
@@ -506,7 +515,7 @@ class WebSocketTransport implements DataConnectTransport {
         resume: ResumeRequest(),
         headers: headers,
       );
-      _channel?.sink.add(jsonEncode(request.toJson()));
+      _send(request.toJson());
 
       return completer.future;
     }
@@ -537,7 +546,7 @@ class WebSocketTransport implements DataConnectTransport {
       headers: headers,
     );
 
-    _channel?.sink.add(jsonEncode(request.toJson()));
+    _send(request.toJson());
 
     return completer.future;
   }
@@ -606,11 +615,7 @@ class WebSocketTransport implements DataConnectTransport {
           headers: headers,
         );
 
-        if (_channel != null) {
-          final encodedMessage = jsonEncode(request.toJson());
-          developer.log('Sending subscribe message $encodedMessage');
-          _channel?.sink.add(encodedMessage);
-        }
+        _send(request.toJson());
       },
       onCancel: () {
         if (!_activeSubscriptions.containsKey(operationId)) return;
@@ -624,14 +629,12 @@ class WebSocketTransport implements DataConnectTransport {
             _activeSubscriptions.remove(operationId);
             _pendingSubscriptions.remove(requestId);
 
-            if (_channel != null) {
-              final cancelReq = StreamRequest(
-                requestId: requestId,
-                requestKind: RequestKind.cancel,
-                cancel: true,
-              );
-              _channel?.sink.add(jsonEncode(cancelReq.toJson()));
-            }
+            final cancelReq = StreamRequest(
+              requestId: requestId,
+              requestKind: RequestKind.cancel,
+              cancel: true,
+            );
+            _send(cancelReq.toJson());
             _checkIdleAndDisconnect();
           }
         }
