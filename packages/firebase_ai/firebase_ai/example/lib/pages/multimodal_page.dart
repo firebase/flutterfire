@@ -55,9 +55,7 @@ class _MultimodalPageState extends State<MultimodalPage> {
       '${(await getApplicationDocumentsDirectory()).path}/libs/recordings',
     );
 
-    if (!await dir.exists()) {
-      await dir.create(recursive: true);
-    }
+    await dir.create(recursive: true);
 
     String filePath =
         '${dir.path}/recording_${DateTime.now().millisecondsSinceEpoch}.wav';
@@ -233,7 +231,7 @@ class _MultimodalPageState extends State<MultimodalPage> {
             ),
             if (_loading)
               const Padding(
-                padding: EdgeInsets.all(8.0),
+                padding: EdgeInsets.all(8),
                 child: CircularProgressIndicator(),
               ),
             Padding(

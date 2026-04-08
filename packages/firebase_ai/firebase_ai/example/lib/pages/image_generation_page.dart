@@ -139,7 +139,7 @@ class _ImageGenerationPageState extends State<ImageGenerationPage> {
         title: Text(widget.title),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8),
         child: Column(
           children: [
             Expanded(
