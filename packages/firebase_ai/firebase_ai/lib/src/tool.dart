@@ -217,8 +217,12 @@ class FunctionDeclaration {
   FunctionDeclaration(this.name, this.description,
       {required Map<String, Schema> parameters,
       List<String> optionalParameters = const []})
-      : _schemaObject = Schema.object(
-            properties: parameters, optionalProperties: optionalParameters);
+      : _schemaObject = parameters.values.any((s) => s is JSONSchema)
+            ? JSONSchema.object(
+                properties: parameters.cast<String, JSONSchema>(),
+                optionalProperties: optionalParameters)
+            : Schema.object(
+                properties: parameters, optionalProperties: optionalParameters);
 
   /// The name of the function.
   ///
@@ -235,7 +239,10 @@ class FunctionDeclaration {
   Map<String, Object?> toJson() => {
         'name': name,
         'description': description,
-        'parameters': _schemaObject.toJson()
+        if (_schemaObject is JSONSchema)
+          'parametersJsonSchema': _schemaObject.toJson()
+        else
+          'parameters': _schemaObject.toJson(),
       };
 }
 

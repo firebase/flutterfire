@@ -24,12 +24,11 @@ void main(List<String> args) async {
 
   final firebaseiOSVersion = getFirebaseiOSVersion(firebaseCoreIosVersionFile);
 
-  // Update the versions in root Package.swift
-  updateVersionsPackageSwift(firebaseiOSVersion);
   // Update hard-coded versions in all plugin Package.swift files
-  final firebaseCoreVersion =
-      loadYaml(File('${firebaseCorePackage.path}/pubspec.yaml').readAsStringSync())['version']
-          .toString();
+  final firebaseCoreVersion = loadYaml(
+          File('${firebaseCorePackage.path}/pubspec.yaml')
+              .readAsStringSync())['version']
+      .toString();
   updatePluginPackageSwiftVersions(
     workspace,
     firebaseiOSVersion,
@@ -72,60 +71,6 @@ String getFirebaseiOSVersion(File firebaseCoreIosSdkVersion) {
   } else {
     throw Exception('firebase_sdk_version.rb file does not exist.');
   }
-}
-
-void updateVersionsPackageSwift(String firebaseiOSVersion) {
-  // Define the path to the pubspec.yaml file
-  const pubspecPath = 'packages/firebase_core/firebase_core/pubspec.yaml';
-
-  // Read the pubspec.yaml file
-  final pubspecFile = File(pubspecPath);
-  if (!pubspecFile.existsSync()) {
-    print('Error: pubspec.yaml file not found at $pubspecPath');
-    return;
-  }
-
-  // Parse the YAML content
-  final pubspecContent = pubspecFile.readAsStringSync();
-  final pubspecYaml = loadYaml(pubspecContent);
-
-  // Extract the version
-  final version = pubspecYaml['version'];
-  if (version == null) {
-    print('Error: Version not found in pubspec.yaml');
-    return;
-  }
-
-  // Define the path to the Package.swift file
-  const packageSwiftPath = 'Package.swift';
-
-  // Read the Package.swift file
-  final packageSwiftFile = File(packageSwiftPath);
-  if (!packageSwiftFile.existsSync()) {
-    print('Error: Package.swift file not found at $packageSwiftPath');
-    return;
-  }
-
-  // Read the content of Package.swift
-  final packageSwiftContent = packageSwiftFile.readAsStringSync();
-
-  // Update the library_version_string with the new version
-  final updatedFirebaseCoreVersion = packageSwiftContent.replaceAll(
-    RegExp('let firebase_core_version: String = "[^"]+"'),
-    'let firebase_core_version: String = "$version"',
-  );
-
-  final updatedFirebaseIosVersion = updatedFirebaseCoreVersion.replaceAll(
-    RegExp('let firebase_ios_sdk_version: String = "[^"]+"'),
-    'let firebase_ios_sdk_version: String = "$firebaseiOSVersion"',
-  );
-
-  // Write the updated content back to Package.swift
-  packageSwiftFile.writeAsStringSync(updatedFirebaseIosVersion);
-
-  print(
-    'Updated Package.swift with firebase_core version: $version & firebase-ios-sdk version: $firebaseiOSVersion',
-  );
 }
 
 void updatePluginPackageSwiftVersions(
@@ -184,6 +129,8 @@ void updateLibraryVersionPureSwiftPlugins() {
     'firebase_ml_model_downloader',
     'firebase_app_installations',
     'cloud_functions',
+    'firebase_remote_config',
+    'firebase_app_check',
   ];
 
   for (final package in packages) {

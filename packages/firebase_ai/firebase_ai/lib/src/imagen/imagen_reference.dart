@@ -30,6 +30,11 @@ enum _ReferenceType {
 
 /// A reference image for image editing.
 @experimental
+@Deprecated(
+  'All Imagen models are deprecated and will shut down as early as June 2026. '
+  'As a replacement, you can migrate your apps to use Gemini Image models (the '
+  '"Nano Banana" models)(https://firebase.google.com/docs/ai-logic/imagen-models-migration).',
+)
 sealed class ImagenReferenceImage {
   ImagenReferenceImage._({
     this.referenceConfig,
@@ -72,6 +77,11 @@ sealed class ImagenReferenceImage {
 
 /// A reference image that is a mask.
 @experimental
+@Deprecated(
+  'All Imagen models are deprecated and will shut down as early as June 2026. '
+  'As a replacement, you can migrate your apps to use Gemini Image models (the '
+  '"Nano Banana" models)(https://firebase.google.com/docs/ai-logic/imagen-models-migration).',
+)
 sealed class ImagenMaskReference extends ImagenReferenceImage {
   // ignore: public_member_api_docs
   ImagenMaskReference({
@@ -86,6 +96,11 @@ sealed class ImagenMaskReference extends ImagenReferenceImage {
 
 /// A raw image.
 @experimental
+@Deprecated(
+  'All Imagen models are deprecated and will shut down as early as June 2026. '
+  'As a replacement, you can migrate your apps to use Gemini Image models (the '
+  '"Nano Banana" models)(https://firebase.google.com/docs/ai-logic/imagen-models-migration).',
+)
 final class ImagenRawImage extends ImagenReferenceImage {
   // ignore: public_member_api_docs
   ImagenRawImage({
@@ -96,6 +111,11 @@ final class ImagenRawImage extends ImagenReferenceImage {
 
 /// A raw mask.
 @experimental
+@Deprecated(
+  'All Imagen models are deprecated and will shut down as early as June 2026. '
+  'As a replacement, you can migrate your apps to use Gemini Image models (the '
+  '"Nano Banana" models)(https://firebase.google.com/docs/ai-logic/imagen-models-migration).',
+)
 final class ImagenRawMask extends ImagenMaskReference {
   // ignore: public_member_api_docs
   ImagenRawMask({
@@ -113,6 +133,11 @@ final class ImagenRawMask extends ImagenMaskReference {
 
 /// A semantic mask.
 @experimental
+@Deprecated(
+  'All Imagen models are deprecated and will shut down as early as June 2026. '
+  'As a replacement, you can migrate your apps to use Gemini Image models (the '
+  '"Nano Banana" models)(https://firebase.google.com/docs/ai-logic/imagen-models-migration).',
+)
 final class ImagenSemanticMask extends ImagenMaskReference {
   // ignore: public_member_api_docs
   ImagenSemanticMask({
@@ -130,6 +155,11 @@ final class ImagenSemanticMask extends ImagenMaskReference {
 
 /// A background mask.
 @experimental
+@Deprecated(
+  'All Imagen models are deprecated and will shut down as early as June 2026. '
+  'As a replacement, you can migrate your apps to use Gemini Image models (the '
+  '"Nano Banana" models)(https://firebase.google.com/docs/ai-logic/imagen-models-migration).',
+)
 final class ImagenBackgroundMask extends ImagenMaskReference {
   // ignore: public_member_api_docs
   ImagenBackgroundMask({
@@ -145,6 +175,11 @@ final class ImagenBackgroundMask extends ImagenMaskReference {
 
 /// A foreground mask.
 @experimental
+@Deprecated(
+  'All Imagen models are deprecated and will shut down as early as June 2026. '
+  'As a replacement, you can migrate your apps to use Gemini Image models (the '
+  '"Nano Banana" models)(https://firebase.google.com/docs/ai-logic/imagen-models-migration).',
+)
 final class ImagenForegroundMask extends ImagenMaskReference {
   // ignore: public_member_api_docs
   ImagenForegroundMask({
@@ -160,6 +195,11 @@ final class ImagenForegroundMask extends ImagenMaskReference {
 
 /// A subject reference.
 @experimental
+@Deprecated(
+  'All Imagen models are deprecated and will shut down as early as June 2026. '
+  'As a replacement, you can migrate your apps to use Gemini Image models (the '
+  '"Nano Banana" models)(https://firebase.google.com/docs/ai-logic/imagen-models-migration).',
+)
 final class ImagenSubjectReference extends ImagenReferenceImage {
   // ignore: public_member_api_docs
   ImagenSubjectReference({
@@ -179,6 +219,11 @@ final class ImagenSubjectReference extends ImagenReferenceImage {
 
 /// A style reference.
 @experimental
+@Deprecated(
+  'All Imagen models are deprecated and will shut down as early as June 2026. '
+  'As a replacement, you can migrate your apps to use Gemini Image models (the '
+  '"Nano Banana" models)(https://firebase.google.com/docs/ai-logic/imagen-models-migration).',
+)
 final class ImagenStyleReference extends ImagenReferenceImage {
   // ignore: public_member_api_docs
   ImagenStyleReference({
@@ -196,6 +241,11 @@ final class ImagenStyleReference extends ImagenReferenceImage {
 
 /// A control reference.
 @experimental
+@Deprecated(
+  'All Imagen models are deprecated and will shut down as early as June 2026. '
+  'As a replacement, you can migrate your apps to use Gemini Image models (the '
+  '"Nano Banana" models)(https://firebase.google.com/docs/ai-logic/imagen-models-migration).',
+)
 final class ImagenControlReference extends ImagenReferenceImage {
   // ignore: public_member_api_docs
   ImagenControlReference({
