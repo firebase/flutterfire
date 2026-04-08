@@ -18,20 +18,19 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 // Import after file is generated through flutterfire_cli.
-//import 'package:firebase_ai_example/firebase_options.dart';
+// import 'package:firebase_ai_example/firebase_options.dart';
 
-import 'pages/audio_page.dart';
 import 'pages/bidi_page.dart';
 import 'pages/chat_page.dart';
-import 'pages/document.dart';
 import 'pages/function_calling_page.dart';
+import 'pages/image_generation_page.dart';
 import 'pages/image_prompt_page.dart';
 import 'pages/json_schema_page.dart';
+import 'pages/multimodal_page.dart';
 import 'pages/schema_page.dart';
-import 'pages/token_count_page.dart';
-import 'pages/video_page.dart';
 import 'pages/server_template_page.dart';
 import 'pages/grounding_page.dart';
+import 'pages/token_count_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -143,7 +142,7 @@ class _HomeScreenState extends State<HomeScreen> {
           useVertexBackend: useVertexBackend,
         );
       case 1:
-        return AudioPage(title: 'Audio', model: currentModel);
+        return MultimodalPage(title: 'Multimodal', model: currentModel);
       case 2:
         return TokenCountPage(title: 'Token Count', model: currentModel);
       case 3:
@@ -155,20 +154,21 @@ class _HomeScreenState extends State<HomeScreen> {
       case 4:
         return ImagePromptPage(title: 'Image Prompt', model: currentModel);
       case 5:
-        return SchemaPromptPage(title: 'Schema Prompt', model: currentModel);
+        return ImageGenerationPage(
+          title: 'Image Gen',
+          useVertexBackend: useVertexBackend,
+        );
       case 6:
-        return JsonSchemaPage(title: 'JSON Schema', model: currentModel);
+        return SchemaPromptPage(title: 'Schema Prompt', model: currentModel);
       case 7:
-        return DocumentPage(title: 'Document Prompt', model: currentModel);
+        return JsonSchemaPage(title: 'JSON Schema', model: currentModel);
       case 8:
-        return VideoPage(title: 'Video Prompt', model: currentModel);
-      case 9:
         return BidiPage(
           title: 'Live Stream',
           model: currentModel,
           useVertexBackend: useVertexBackend,
         );
-      case 10:
+      case 9:
         return ServerTemplatePage(
           title: 'Server Template',
           useVertexBackend: useVertexBackend,
@@ -257,9 +257,9 @@ class _HomeScreenState extends State<HomeScreen> {
             tooltip: 'Chat',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.mic),
-            label: 'Audio',
-            tooltip: 'Audio Prompt',
+            icon: Icon(Icons.perm_media),
+            label: 'Multimodal',
+            tooltip: 'Multimodal Prompt',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.numbers),
@@ -277,6 +277,11 @@ class _HomeScreenState extends State<HomeScreen> {
             tooltip: 'Image Prompt',
           ),
           BottomNavigationBarItem(
+            icon: Icon(Icons.brush),
+            label: 'NanoBanana',
+            tooltip: 'Image Generation',
+          ),
+          BottomNavigationBarItem(
             icon: Icon(Icons.schema),
             label: 'Schema',
             tooltip: 'Schema Prompt',
@@ -285,16 +290,6 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: Icon(Icons.data_object),
             label: 'JSON',
             tooltip: 'JSON Schema',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.edit_document),
-            label: 'Document',
-            tooltip: 'Document Prompt',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.video_collection),
-            label: 'Video',
-            tooltip: 'Video Prompt',
           ),
           BottomNavigationBarItem(
             icon: Icon(
