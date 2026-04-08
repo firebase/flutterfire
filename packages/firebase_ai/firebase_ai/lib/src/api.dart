@@ -785,7 +785,7 @@ enum FinishReason {
   /// Image generation stopped because generated images have other prohibited content.
   imageProhibitedContent('IMAGE_PROHIBITED_CONTENT'),
 
-  /// Image generation stopped because of other miscellaneous issue.
+  /// Image generation stopped because of other miscellaneous issues.
   imageOther('IMAGE_OTHER'),
 
   /// The model was expected to generate an image, but none was generated.
