@@ -1124,7 +1124,7 @@ class ThinkingConfig {
 /// Configuration options for generating images with Gemini models.
 final class ImageConfig {
   /// Initializes configuration options for generating images with Gemini.
-  ImageConfig({this.aspectRatio, this.imageSize});
+  const ImageConfig({this.aspectRatio, this.imageSize});
 
   /// The aspect ratio of generated images.
   final ImageAspectRatio? aspectRatio;

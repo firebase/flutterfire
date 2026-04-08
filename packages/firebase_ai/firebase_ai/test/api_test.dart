@@ -487,7 +487,7 @@ void main() {
 
   group('ImageConfig', () {
     test('toJson with all fields', () {
-      final config = ImageConfig(
+      const config = ImageConfig(
         aspectRatio: ImageAspectRatio.portrait9x16,
         imageSize: ImageSize.size2K,
       );
@@ -498,7 +498,7 @@ void main() {
     });
 
     test('toJson with some fields null', () {
-      final config = ImageConfig(
+      const config = ImageConfig(
         aspectRatio: ImageAspectRatio.landscape16x9,
       );
       expect(config.toJson(), {
@@ -511,7 +511,7 @@ void main() {
     test('GenerationConfig toJson with all fields', () {
       final schema = Schema.object(properties: {});
       final thinkingConfig = ThinkingConfig(thinkingBudget: 100);
-      final imageConfig = ImageConfig(
+      const imageConfig = ImageConfig(
           aspectRatio: ImageAspectRatio.square1x1, imageSize: ImageSize.size1K);
       final config = GenerationConfig(
         candidateCount: 1,
