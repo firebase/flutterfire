@@ -154,7 +154,9 @@ class _HomeScreenState extends State<HomeScreen> {
         return ImagePromptPage(title: 'Image Prompt', model: currentModel);
       case 5:
         return ImageGenerationPage(
-            title: 'Image Gen', useVertexBackend: useVertexBackend,);
+          title: 'Image Gen',
+          useVertexBackend: useVertexBackend,
+        );
       case 6:
         return SchemaPromptPage(title: 'Schema Prompt', model: currentModel);
       case 7:
