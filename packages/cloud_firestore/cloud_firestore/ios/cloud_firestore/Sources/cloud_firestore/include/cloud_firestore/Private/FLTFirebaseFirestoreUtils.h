@@ -18,6 +18,10 @@
 #import <Foundation/Foundation.h>
 #import "FLTFirebaseFirestoreExtension.h"
 
+/// Error code used by the pipeline parser for parse/unsupported expression errors.
+/// Handled in ErrorCodeAndMessageFromNSError to return code "parse-error" and the error message.
+FOUNDATION_EXPORT const NSInteger FLTFirebaseFirestoreErrorCodePipelineParse;
+
 typedef NS_ENUM(UInt8, FirestoreDataType) {
   FirestoreDataTypeDateTime = 180,
   FirestoreDataTypeGeoPoint = 181,
