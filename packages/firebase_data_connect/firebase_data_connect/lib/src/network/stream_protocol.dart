@@ -51,8 +51,6 @@ class StreamRequest {
   StreamRequest({
     this.name,
     this.headers,
-    this.authToken,
-    this.appCheckToken,
     this.requestId,
     this.requestKind,
     this.subscribe,
@@ -67,12 +65,6 @@ class StreamRequest {
 
   /// Optional headers.
   final Map<String, String>? headers;
-
-  /// Optional Auth token.
-  final String? authToken;
-
-  /// Optional App Check token.
-  final String? appCheckToken;
 
   /// The request id used to identify a request within the stream.
   final String? requestId;
@@ -102,12 +94,6 @@ class StreamRequest {
     }
     if (headers != null) {
       data['headers'] = headers;
-    }
-    if (authToken != null) {
-      data['authToken'] = authToken;
-    }
-    if (appCheckToken != null) {
-      data['appCheckToken'] = appCheckToken;
     }
     if (requestId != null) {
       data['requestId'] = requestId;
