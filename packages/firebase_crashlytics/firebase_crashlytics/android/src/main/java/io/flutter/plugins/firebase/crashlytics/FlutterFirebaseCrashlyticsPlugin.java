@@ -40,6 +40,13 @@ public class FlutterFirebaseCrashlyticsPlugin
   private MethodChannel channel;
   private EventChannel testEventChannel;
   private EventChannel.EventSink testEventSink;
+  private Context applicationContext;
+
+  // Cached ELF build ID read from libapp.so at startup. This is the build ID that the
+  // firebase-crashlytics-buildtools JAR extracts from .symbols files during upload, so using
+  // it ensures crash reports match uploaded symbols (even when the Dart VM's internal snapshot
+  // build ID differs, which happens with AAB + flavor + obfuscation builds).
+  private String elfBuildId;
 
   private static final String FIREBASE_CRASHLYTICS_COLLECTION_ENABLED =
       "firebase_crashlytics_collection_enabled";
@@ -56,6 +63,8 @@ public class FlutterFirebaseCrashlyticsPlugin
 
   @Override
   public void onAttachedToEngine(FlutterPluginBinding binding) {
+    applicationContext = binding.getApplicationContext();
+    elfBuildId = ElfBuildIdReader.readBuildId(applicationContext);
     initInstance(binding.getBinaryMessenger());
   }
 
@@ -157,14 +166,18 @@ public class FlutterFirebaseCrashlyticsPlugin
             final String information =
                 (String) Objects.requireNonNull(arguments.get(Constants.INFORMATION));
             final boolean fatal = (boolean) Objects.requireNonNull(arguments.get(Constants.FATAL));
-            final String buildId =
+            final String dartBuildId =
                 (String) Objects.requireNonNull(arguments.get(Constants.BUILD_ID));
             @SuppressWarnings("unchecked")
             final List<String> loadingUnits =
                 (List<String>) Objects.requireNonNull(arguments.get(Constants.LOADING_UNITS));
 
-            if (buildId.length() > 0) {
-              FlutterFirebaseCrashlyticsInternal.setFlutterBuildId(buildId);
+            // Prefer the ELF build ID from libapp.so over the Dart VM's snapshot build ID.
+            // The firebase-crashlytics-buildtools JAR uses the ELF build ID when uploading
+            // symbols, so we must report the same ID for Crashlytics to match them.
+            String effectiveBuildId = elfBuildId != null ? elfBuildId : dartBuildId;
+            if (effectiveBuildId.length() > 0) {
+              FlutterFirebaseCrashlyticsInternal.setFlutterBuildId(effectiveBuildId);
             }
 
             FlutterFirebaseCrashlyticsInternal.setLoadingUnits(loadingUnits);
