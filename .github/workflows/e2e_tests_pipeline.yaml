@@ -20,6 +20,9 @@ on:
       - '**/example/**'
       - '**.md'
 
+permissions:
+  contents: read
+
 jobs:
   pipeline-e2e-android:
     runs-on: ubuntu-latest
