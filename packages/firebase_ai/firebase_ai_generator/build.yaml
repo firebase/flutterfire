@@ -1,0 +1,7 @@
+builders:
+  firebase_ai_generator:
+    import: "package:firebase_ai_generator/firebase_ai_generator.dart"
+    builder_factories: ["firebaseAiBuilder"]
+    build_extensions: {".dart": [".g.dart"]}
+    auto_apply: dependents
+    build_to: source

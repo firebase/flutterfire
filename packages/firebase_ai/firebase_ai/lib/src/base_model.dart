@@ -39,6 +39,7 @@ import 'live_session.dart';
 import 'platform_header_helper.dart';
 import 'server_template/template_tool.dart';
 import 'tool.dart';
+import 'auto_schema.dart';
 
 part 'generative_model.dart';
 part 'imagen/imagen_model.dart';
