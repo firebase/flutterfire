@@ -173,7 +173,7 @@ class _HomeScreenState extends State<HomeScreen> {
           title: 'Server Template',
           useVertexBackend: useVertexBackend,
         );
-      case 12:
+      case 10:
         return GroundingPage(
           title: 'Grounding',
           useVertexBackend: useVertexBackend,

@@ -69,14 +69,15 @@ final class TemplateGenerativeModel extends BaseTemplateApiClientModel {
   /// Sends a "templateGenerateContent" API request for the configured model.
   @experimental
   Future<GenerateContentResponse> generateContent(String templateId,
-          {required Map<String, Object?> inputs}) =>
+          {required Map<String, Object?> inputs,
+          TemplateToolConfig? toolConfig}) =>
       makeTemplateRequest(
           TemplateTask.templateGenerateContent,
           templateId,
           inputs,
           null, // history
           null, // tools
-          null, // toolConfig
+          toolConfig,
           _serializationStrategy.parseGenerateContentResponse);
 
   /// Generates a stream of content responding to [templateId] and [inputs].
@@ -85,14 +86,14 @@ final class TemplateGenerativeModel extends BaseTemplateApiClientModel {
   /// and waits for the response.
   @experimental
   Stream<GenerateContentResponse> generateContentStream(String templateId,
-      {required Map<String, Object?> inputs}) {
+      {required Map<String, Object?> inputs, TemplateToolConfig? toolConfig}) {
     return streamTemplateRequest(
         TemplateTask.templateStreamGenerateContent,
         templateId,
         inputs,
         null, // history
         null, // tools
-        null, // toolConfig
+        toolConfig,
         _serializationStrategy.parseGenerateContentResponse);
   }
 
@@ -103,14 +104,14 @@ final class TemplateGenerativeModel extends BaseTemplateApiClientModel {
           Iterable<Content> history, String templateId,
           {required Map<String, Object?> inputs,
           List<TemplateTool>? tools,
-          TemplateToolConfig? templateToolConfig}) =>
+          TemplateToolConfig? toolConfig}) =>
       makeTemplateRequest(
           TemplateTask.templateGenerateContent,
           templateId,
           inputs,
           history,
           tools,
-          templateToolConfig,
+          toolConfig,
           _serializationStrategy.parseGenerateContentResponse);
 
   /// Generates a stream of content from a template with the given [templateId],
@@ -120,14 +121,14 @@ final class TemplateGenerativeModel extends BaseTemplateApiClientModel {
       Iterable<Content> history, String templateId,
       {required Map<String, Object?> inputs,
       List<TemplateTool>? tools,
-      TemplateToolConfig? templateToolConfig}) {
+      TemplateToolConfig? toolConfig}) {
     return streamTemplateRequest(
         TemplateTask.templateStreamGenerateContent,
         templateId,
         inputs,
         history,
         tools,
-        templateToolConfig,
+        toolConfig,
         _serializationStrategy.parseGenerateContentResponse);
   }
 }

@@ -47,14 +47,13 @@ final class TemplateChatSession {
       Iterable<Content> content, String templateId,
       {required Map<String, Object?> inputs,
       List<TemplateTool>? tools,
-      TemplateToolConfig? templateToolConfig}) _templateHistoryGenerateContent;
+      TemplateToolConfig? toolConfig}) _templateHistoryGenerateContent;
 
   final Stream<GenerateContentResponse> Function(
-          Iterable<Content> content, String templateId,
-          {required Map<String, Object?> inputs,
-          List<TemplateTool>? tools,
-          TemplateToolConfig? templateToolConfig})
-      _templateHistoryGenerateContentStream;
+      Iterable<Content> content, String templateId,
+      {required Map<String, Object?> inputs,
+      List<TemplateTool>? tools,
+      TemplateToolConfig? toolConfig}) _templateHistoryGenerateContentStream;
 
   final String _templateId;
   final Map<String, Object?> _inputs;
@@ -93,7 +92,7 @@ final class TemplateChatSession {
           _templateId,
           inputs: _inputs,
           tools: _tools,
-          templateToolConfig: _toolConfig,
+          toolConfig: _toolConfig,
         );
 
         final functionCalls = response.functionCalls;
@@ -161,7 +160,7 @@ final class TemplateChatSession {
             _templateId,
             inputs: _inputs,
             tools: _tools,
-            templateToolConfig: _toolConfig,
+            toolConfig: _toolConfig,
           );
 
           final turnChunks = <GenerateContentResponse>[];
