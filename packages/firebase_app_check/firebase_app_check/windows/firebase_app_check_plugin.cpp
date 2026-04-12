@@ -10,6 +10,7 @@
 #include <flutter/standard_method_codec.h>
 #include <windows.h>
 
+#include <chrono>
 #include <future>
 #include <memory>
 #include <string>
@@ -98,6 +99,57 @@ class TokenStreamHandler
   std::unique_ptr<FlutterAppCheckListener> listener_;
 };
 
+// FlutterCustomAppCheckProvider — calls into Dart via the FlutterApi and
+// completes the Firebase C++ SDK callback asynchronously when Dart returns a
+// token (or an error).
+FlutterCustomAppCheckProvider::FlutterCustomAppCheckProvider(
+    flutter::BinaryMessenger* binary_messenger)
+    : flutter_api_(
+          std::make_unique<FirebaseAppCheckFlutterApi>(binary_messenger)) {}
+
+void FlutterCustomAppCheckProvider::GetToken(
+    std::function<void(firebase::app_check::AppCheckToken, int,
+                       const std::string&)>
+        completion_callback) {
+  auto completion = std::make_shared<
+      std::function<void(firebase::app_check::AppCheckToken, int,
+                         const std::string&)>>(std::move(completion_callback));
+
+  flutter_api_->GetCustomToken(
+      [completion](const std::string& token) {
+        firebase::app_check::AppCheckToken result_token;
+        result_token.token = token;
+        // Set expiry to 55 minutes from now (server mints 1-hour tokens;
+        // 5-minute buffer avoids using a nearly-expired token).
+        result_token.expire_time_millis =
+            static_cast<int64_t>(
+                std::chrono::duration_cast<std::chrono::milliseconds>(
+                    std::chrono::system_clock::now().time_since_epoch())
+                    .count()) +
+            55LL * 60LL * 1000LL;
+        (*completion)(result_token, firebase::app_check::kAppCheckErrorNone,
+                      "");
+      },
+      [completion](const FlutterError& error) {
+        (*completion)(firebase::app_check::AppCheckToken(),
+                      firebase::app_check::kAppCheckErrorUnknown,
+                      error.message().empty() ? "unknown" : error.message());
+      });
+}
+
+FlutterCustomAppCheckProviderFactory::FlutterCustomAppCheckProviderFactory(
+    flutter::BinaryMessenger* binary_messenger)
+    : binary_messenger_(binary_messenger) {}
+
+firebase::app_check::AppCheckProvider*
+FlutterCustomAppCheckProviderFactory::CreateProvider(firebase::App* app) {
+  if (!provider_) {
+    provider_ =
+        std::make_unique<FlutterCustomAppCheckProvider>(binary_messenger_);
+  }
+  return provider_.get();
+}
+
 static AppCheck* GetAppCheckFromPigeon(const std::string& app_name) {
   App* app = App::GetInstance(app_name.c_str());
   return AppCheck::GetInstance(app);
@@ -166,17 +218,23 @@ FirebaseAppCheckPlugin::~FirebaseAppCheckPlugin() {
 void FirebaseAppCheckPlugin::Activate(
     const std::string& app_name, const std::string* android_provider,
     const std::string* apple_provider, const std::string* debug_token,
+    const std::string* windows_provider,
     std::function<void(std::optional<FlutterError> reply)> result) {
-  // On Windows/desktop, only the Debug provider is available.
-  DebugAppCheckProviderFactory* factory =
-      DebugAppCheckProviderFactory::GetInstance();
+  if (windows_provider != nullptr && *windows_provider == "custom") {
+    custom_provider_factory_ =
+        std::make_unique<FlutterCustomAppCheckProviderFactory>(
+            binaryMessenger);
+    AppCheck::SetAppCheckProviderFactory(custom_provider_factory_.get());
+  } else {
+    DebugAppCheckProviderFactory* factory =
+        DebugAppCheckProviderFactory::GetInstance();
 
-  if (debug_token != nullptr && !debug_token->empty()) {
-    factory->SetDebugToken(*debug_token);
+    if (debug_token != nullptr && !debug_token->empty()) {
+      factory->SetDebugToken(*debug_token);
+    }
+
+    AppCheck::SetAppCheckProviderFactory(factory);
   }
-
-  AppCheck::SetAppCheckProviderFactory(factory);
-
   result(std::nullopt);
 }
 
@@ -229,9 +287,12 @@ void FirebaseAppCheckPlugin::RegisterTokenListener(
 void FirebaseAppCheckPlugin::GetLimitedUseAppCheckToken(
     const std::string& app_name,
     std::function<void(ErrorOr<std::string> reply)> result) {
+  // GetLimitedUseAppCheckToken was added to the Firebase C++ SDK after the
+  // version currently bundled with this plugin. Fall back to GetAppCheckToken,
+  // which is functionally equivalent for our custom Windows provider since it
+  // does not cache — it calls getWindowsAppCheckToken on every invocation.
   AppCheck* app_check = GetAppCheckFromPigeon(app_name);
-
-  Future<AppCheckToken> future = app_check->GetLimitedUseAppCheckToken();
+  Future<AppCheckToken> future = app_check->GetAppCheckToken(false);
   future.OnCompletion([result](const Future<AppCheckToken>& completed_future) {
     if (completed_future.error() != 0) {
       result(ParseError(completed_future));

@@ -11,6 +11,7 @@
 #include <flutter/method_channel.h>
 #include <flutter/plugin_registrar_windows.h>
 
+#include <functional>
 #include <map>
 #include <memory>
 #include <string>
@@ -23,6 +24,37 @@
 namespace firebase_app_check_windows {
 
 class TokenStreamHandler;
+
+// Custom App Check provider for Windows. When the Firebase C++ SDK calls
+// GetToken(), this provider calls into Dart via FirebaseAppCheckFlutterApi
+// to request a server-minted token (from the getWindowsAppCheckToken Cloud
+// Function), then completes the SDK callback with the result.
+class FlutterCustomAppCheckProvider
+    : public firebase::app_check::AppCheckProvider {
+ public:
+  explicit FlutterCustomAppCheckProvider(
+      flutter::BinaryMessenger* binary_messenger);
+  void GetToken(std::function<void(firebase::app_check::AppCheckToken, int,
+                                   const std::string&)>
+                    completion_callback) override;
+
+ private:
+  std::unique_ptr<FirebaseAppCheckFlutterApi> flutter_api_;
+};
+
+// Factory that creates FlutterCustomAppCheckProvider instances.
+class FlutterCustomAppCheckProviderFactory
+    : public firebase::app_check::AppCheckProviderFactory {
+ public:
+  explicit FlutterCustomAppCheckProviderFactory(
+      flutter::BinaryMessenger* binary_messenger);
+  firebase::app_check::AppCheckProvider* CreateProvider(
+      firebase::App* app) override;
+
+ private:
+  flutter::BinaryMessenger* binary_messenger_;
+  std::unique_ptr<FlutterCustomAppCheckProvider> provider_;
+};
 
 class FirebaseAppCheckPlugin : public flutter::Plugin,
                                public FirebaseAppCheckHostApi {
@@ -43,6 +75,7 @@ class FirebaseAppCheckPlugin : public flutter::Plugin,
   void Activate(
       const std::string& app_name, const std::string* android_provider,
       const std::string* apple_provider, const std::string* debug_token,
+      const std::string* windows_provider,
       std::function<void(std::optional<FlutterError> reply)> result) override;
   void GetToken(const std::string& app_name, bool force_refresh,
                 std::function<void(ErrorOr<std::optional<std::string>> reply)>
@@ -58,6 +91,11 @@ class FirebaseAppCheckPlugin : public flutter::Plugin,
       std::function<void(ErrorOr<std::string> reply)> result) override;
 
  private:
+  // Holds ownership of the custom provider factory for its lifetime.
+  // Must outlive the AppCheck instance it was registered with.
+  std::unique_ptr<FlutterCustomAppCheckProviderFactory>
+      custom_provider_factory_;
+
   static flutter::BinaryMessenger* binaryMessenger;
   static std::map<
       std::string,

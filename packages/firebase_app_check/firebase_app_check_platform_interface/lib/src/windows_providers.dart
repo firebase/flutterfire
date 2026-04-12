@@ -12,6 +12,24 @@ abstract class WindowsAppCheckProvider {
   const WindowsAppCheckProvider(this.type);
 }
 
+/// Custom provider for Windows production builds.
+///
+/// When activated, the Windows C++ plugin registers a custom
+/// [AppCheckProvider] that calls into Dart via a Pigeon FlutterApi each time
+/// the Firebase SDK needs a fresh token. The Dart handler is expected to call
+/// a server-side Cloud Function (e.g. `getWindowsAppCheckToken`) that mints a
+/// valid App Check token using the Firebase Admin SDK and returns it.
+///
+/// Register the Dart token handler before any Firestore operations:
+/// ```dart
+/// FirebaseAppCheckFlutterApi.setUp(myHandler);
+/// ```
+///
+/// **Do not use [WindowsDebugProvider] in production builds.**
+class WindowsCustomProvider extends WindowsAppCheckProvider {
+  const WindowsCustomProvider() : super('custom');
+}
+
 /// Debug provider for Windows.
 ///
 /// This is the **only** provider available on Windows. Unlike mobile platforms,

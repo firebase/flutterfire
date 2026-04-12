@@ -18,6 +18,9 @@ import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
 private object GeneratedAndroidFirebaseAppCheckPigeonUtils {
 
+  fun createConnectionError(channelName: String): FlutterError {
+    return FlutterError("channel-error",  "Unable to establish connection on channel: '$channelName'.", "")  }
+
   fun wrapResult(result: Any?): List<Any?> {
     return listOf(result)
   }
@@ -62,7 +65,7 @@ private open class GeneratedAndroidFirebaseAppCheckPigeonCodec : StandardMessage
 
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface FirebaseAppCheckHostApi {
-  fun activate(appName: String, androidProvider: String?, appleProvider: String?, debugToken: String?, callback: (Result<Unit>) -> Unit)
+  fun activate(appName: String, androidProvider: String?, appleProvider: String?, debugToken: String?, windowsProvider: String?, callback: (Result<Unit>) -> Unit)
   fun getToken(appName: String, forceRefresh: Boolean, callback: (Result<String?>) -> Unit)
   fun setTokenAutoRefreshEnabled(appName: String, isTokenAutoRefreshEnabled: Boolean, callback: (Result<Unit>) -> Unit)
   fun registerTokenListener(appName: String, callback: (Result<String>) -> Unit)
@@ -86,7 +89,8 @@ interface FirebaseAppCheckHostApi {
             val androidProviderArg = args[1] as String?
             val appleProviderArg = args[2] as String?
             val debugTokenArg = args[3] as String?
-            api.activate(appNameArg, androidProviderArg, appleProviderArg, debugTokenArg) { result: Result<Unit> ->
+            val windowsProviderArg = args[4] as String?
+            api.activate(appNameArg, androidProviderArg, appleProviderArg, debugTokenArg, windowsProviderArg) { result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidFirebaseAppCheckPigeonUtils.wrapError(error))
@@ -180,6 +184,35 @@ interface FirebaseAppCheckHostApi {
           channel.setMessageHandler(null)
         }
       }
+    }
+  }
+}
+/** Generated class from Pigeon that represents Flutter messages that can be called from Kotlin. */
+class FirebaseAppCheckFlutterApi(private val binaryMessenger: BinaryMessenger, private val messageChannelSuffix: String = "") {
+  companion object {
+    /** The codec used by FirebaseAppCheckFlutterApi. */
+    val codec: MessageCodec<Any?> by lazy {
+      GeneratedAndroidFirebaseAppCheckPigeonCodec()
+    }
+  }
+  fun getCustomToken(callback: (Result<String>) -> Unit)
+{
+    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    val channelName = "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckFlutterApi.getCustomToken$separatedMessageChannelSuffix"
+    val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
+    channel.send(null) {
+      if (it is List<*>) {
+        if (it.size > 1) {
+          callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
+        } else if (it[0] == null) {
+          callback(Result.failure(FlutterError("null-error", "Flutter api returned null value for non-null return value.", "")))
+        } else {
+          val output = it[0] as String
+          callback(Result.success(output))
+        }
+      } else {
+        callback(Result.failure(GeneratedAndroidFirebaseAppCheckPigeonUtils.createConnectionError(channelName)))
+      } 
     }
   }
 }

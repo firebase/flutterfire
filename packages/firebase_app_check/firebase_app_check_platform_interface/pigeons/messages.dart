@@ -29,6 +29,7 @@ abstract class FirebaseAppCheckHostApi {
     String? androidProvider,
     String? appleProvider,
     String? debugToken,
+    String? windowsProvider,
   );
 
   @async
@@ -45,4 +46,15 @@ abstract class FirebaseAppCheckHostApi {
 
   @async
   String getLimitedUseAppCheckToken(String appName);
+}
+
+// Dart-side handler invoked by C++ when the Firebase SDK needs a fresh App
+// Check token on Windows. Implementations call getWindowsAppCheckToken (a
+// Cloud Function with enforceAppCheck:false) and return the minted token
+// string. The C++ side blocks until the Future resolves, then hands the token
+// to the Firebase SDK, which attaches it to every subsequent Firestore request.
+@FlutterApi()
+abstract class FirebaseAppCheckFlutterApi {
+  @async
+  String getCustomToken();
 }
