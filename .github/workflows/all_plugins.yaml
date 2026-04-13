@@ -192,8 +192,12 @@ jobs:
       # Go is used by addlicense command (addlicense is used in melos run
       # check-license-header)
       - run: go install github.com/google/addlicense@latest
-      - name: Install Dart
-        uses: dart-lang/setup-dart@65eb853c7ba17dde3be364c3d2858773e7144260
+      - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
+        with:
+          channel: 'stable'
+          cache: true
+          cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
+          pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
       - name: Install Melos
         uses: bluefireteam/melos-action@705015c3d2bc4ab94201ac24accb2bbe070cf533
         with:

@@ -4,9 +4,11 @@ description: 'Firebase Data Connect example app'
 publish_to: 'none'
 
 version: 1.0.0+1
+resolution: workspace
 
 environment:
-  sdk: '>=3.2.0 <4.0.0'
+  sdk: '^3.6.0'
+  flutter: '>=3.27.0'
 
 dependencies:
   flutter:
@@ -28,7 +30,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  flutter_lints: ^3.0.0
+  flutter_lints: ^4.0.0
   integration_test:
     sdk: flutter
 
