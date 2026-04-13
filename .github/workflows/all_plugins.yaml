@@ -148,15 +148,15 @@ jobs:
           pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
       - name: Xcode
         run: sudo xcode-select -s /Applications/Xcode_16.4.app/Contents/Developer
+      - uses: bluefireteam/melos-action@705015c3d2bc4ab94201ac24accb2bbe070cf533
+        with:
+          melos-version: '5.3.0'
       - name: Setup firebase_core example app to test Swift integration
-        # run this before running melos boostrap to ensure the example app is set up
+        # Run after melos bootstrap so workspace pubspec_overrides resolve unpublished package versions.
         run: |
           cd packages/firebase_core/firebase_core/example
           flutter pub add $FLUTTER_DEPENDENCIES
           cd ../../../..
-      - uses: bluefireteam/melos-action@705015c3d2bc4ab94201ac24accb2bbe070cf533
-        with:
-          melos-version: '5.3.0'
       - name: 'Swift Integration Setup'
         run: flutter config --enable-swift-package-manager
       - name: 'Build Apps with Swift Package Manager'
