@@ -51,7 +51,7 @@ class Cache {
 
   String _constructCacheIdentifier() {
     final rawPrefix =
-        '${_settings.storage}-${dataConnect.app.options.projectId}-${dataConnect.app.name}-${dataConnect.connectorConfig.serviceId}-${dataConnect.connectorConfig.connector}-${dataConnect.connectorConfig.location}-${dataConnect.transport.transportOptions.host}';
+        '${_settings.storage}-${dataConnect.app.options.projectId}-${dataConnect.app.name}-${dataConnect.connectorConfig.serviceId}-${dataConnect.connectorConfig.connector}-${dataConnect.connectorConfig.location}-${dataConnect.transport?.transportOptions.host}';
     final prefixSha = convertToSha256(rawPrefix);
     final rawSuffix = dataConnect.auth?.currentUser?.uid ?? 'anon';
     final suffixSha = convertToSha256(rawSuffix);
