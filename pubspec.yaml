@@ -69,6 +69,15 @@ workspace:
   - packages/firebase_storage/firebase_storage_web
   - tests
 
+dev_dependencies:
+  cli_util: ^0.4.1
+  glob: ^2.1.2
+  intl: ^0.20.2
+  melos: ^7.5.1
+  path: ^1.9.0
+  pub_semver: ^2.1.4
+  yaml: ^3.1.2
+
 melos:
   repository: https://github.com/firebase/flutterfire
   resolution: workspace
@@ -102,6 +111,10 @@ melos:
     lint:all:
       run: melos run analyze-ci && melos run format-ci
       description: Run all static analysis checks.
+
+    validate:workspace:
+      run: dart scripts/validate_workspace.dart
+      description: Validate that all packages are listed in the workspace.
 
     analyze-ci:
       # We are setting the concurrency to 1 because a higher concurrency can crash
@@ -420,12 +433,3 @@ melos:
     bom:
       run: dart scripts/generate_bom.dart
       description: Generate a Bill of Materials (BOM) file for all packages.
-
-dev_dependencies:
-  cli_util: ^0.4.1
-  glob: ^2.1.2
-  intl: ^0.20.2
-  melos: ^7.5.1
-  path: ^1.9.0
-  pub_semver: ^2.1.4
-  yaml: ^3.1.2
