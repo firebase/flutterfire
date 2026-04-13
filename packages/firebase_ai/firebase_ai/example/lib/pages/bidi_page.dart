@@ -189,7 +189,7 @@ class BidiSessionController extends ChangeNotifier {
     );
 
     final tools = [
-      Tool.functionDeclarations([_lightControlTool])
+      Tool.functionDeclarations([_lightControlTool]),
     ];
 
     _liveModel = useVertexBackend
@@ -434,12 +434,17 @@ class BidiSessionController extends ChangeNotifier {
       _activeSessionHandle = message.newHandle;
       _lastProcessedIndex = message.lastConsumedClientMessageIndex;
       developer.log(
-          'SessionResumptionUpdate: handle ${message.newHandle}, index $_lastProcessedIndex');
+        'SessionResumptionUpdate: handle ${message.newHandle}, index $_lastProcessedIndex',
+      );
     }
   }
 
-  int? _handleTranscription(Transcription? transcription, int? messageIndex,
-      String prefix, bool fromUser) {
+  int? _handleTranscription(
+    Transcription? transcription,
+    int? messageIndex,
+    String prefix,
+    bool fromUser,
+  ) {
     int? currentIndex = messageIndex;
     if (transcription?.text != null) {
       if (currentIndex != null) {
