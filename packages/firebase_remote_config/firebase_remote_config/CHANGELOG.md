@@ -1,3 +1,7 @@
+## 6.4.0
+
+ - **FEAT**: use local firebase_core instead of remote SPM dependency ([#18141](https://github.com/firebase/flutterfire/issues/18141)). ([995caf40](https://github.com/firebase/flutterfire/commit/995caf400df80c0fde7151c651ccc6c0f756e381))
+
 ## 6.3.0
 
  - **FIX**(remote-config,ios): fix hot reload issue ([#18062](https://github.com/firebase/flutterfire/issues/18062)). ([5db57711](https://github.com/firebase/flutterfire/commit/5db577116139d469bcdf38dd58f69c1e5f61c87e))

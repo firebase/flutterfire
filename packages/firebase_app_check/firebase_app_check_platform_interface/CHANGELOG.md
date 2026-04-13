@@ -1,3 +1,7 @@
+## 0.3.0
+
+ - **FEAT**(app_check,windows): add support for AppCheck for Windows ([#18140](https://github.com/firebase/flutterfire/issues/18140)). ([81f30325](https://github.com/firebase/flutterfire/commit/81f30325fc926fe94b630e49f56b795c781a4cbe))
+
 ## 0.2.2
 
  - **FEAT**(messaging,web): add support for debug tokens on Web ([#18057](https://github.com/firebase/flutterfire/issues/18057)). ([b853386e](https://github.com/firebase/flutterfire/commit/b853386e987d686eab4b8fd9b8dad14eda97479c))
