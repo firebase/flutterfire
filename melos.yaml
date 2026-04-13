@@ -22,8 +22,6 @@ command:
         dart run scripts/generate_versions_web.dart && \
         dart run scripts/generate_versions_spm.dart && \
         git add packages/firebase_data_connect/firebase_data_connect/lib/src/dataconnect_version.dart && git add packages/*/*_web/lib/src/*_version.dart && git add packages/*/*/ios/*/Package.swift packages/*/*/macos/*/Package.swift && git add packages/*/*/ios/*/Sources/*/Constants.swift
-      post: |
-        dart run scripts/generate_tag_spm_firebase_core.dart
 
   bootstrap:
     # It seems so that running "pub get" in parallel has some issues (like
@@ -171,6 +169,13 @@ scripts:
       flutter test integration_test/e2e_test.dart
     description: |
       Run all e2e tests for cloud_firestore.
+
+  test:e2e:pipeline:
+    run: |
+      cd packages/cloud_firestore/cloud_firestore/pipeline_example
+      flutter test integration_test/pipeline/pipeline_live_test.dart
+    description: |
+      Run pipeline e2e tests.
 
   test:e2e:firebase_performance:
     run: |

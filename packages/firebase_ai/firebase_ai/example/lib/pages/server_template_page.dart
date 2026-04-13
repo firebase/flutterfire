@@ -262,6 +262,18 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
                     ),
                     IconButton(
                       onPressed: () async {
+                        await _serverTemplateMapsGrounding(
+                          _textController.text,
+                        );
+                      },
+                      icon: Icon(
+                        Icons.map,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      tooltip: 'Maps Grounding',
+                    ),
+                    IconButton(
+                      onPressed: () async {
                         await _sendServerTemplateMessage(_textController.text);
                       },
                       icon: Icon(
@@ -351,6 +363,50 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
             buffer.writeln('   Status: ${data.urlRetrievalStatus}');
           }
         }
+        _messages.add(MessageData(text: buffer.toString(), fromUser: false));
+      }
+    });
+  }
+
+  Future<void> _serverTemplateMapsGrounding(String message) async {
+    await _handleServerTemplateMessage(message, (message) async {
+      var response = await _templateGenerativeModel
+          // ignore: experimental_member_use
+          ?.generateContent(
+        'cj-googlemaps',
+        inputs: {'question': message},
+        toolConfig: TemplateToolConfig(
+          retrievalConfig: RetrievalConfig(
+            latLng: LatLng(latitude: 37.422, longitude: -122.084), // Googleplex
+          ),
+        ),
+      );
+
+      final candidate = response?.candidates.first;
+      if (candidate == null) {
+        _messages.add(MessageData(text: 'No response', fromUser: false));
+      } else {
+        final responseText = candidate.text ?? '';
+        final groundingMetadata = candidate.groundingMetadata;
+
+        final buffer = StringBuffer(responseText);
+        if (groundingMetadata != null) {
+          buffer.writeln('\n\n--- Grounding Metadata ---');
+          buffer.writeln('Grounding Chunks:');
+          for (final chunk in groundingMetadata.groundingChunks) {
+            if (chunk.web != null) {
+              buffer.writeln(' - Web Chunk:');
+              buffer.writeln('   - Title: ${chunk.web!.title}');
+              buffer.writeln('   - URI: ${chunk.web!.uri}');
+            }
+            if (chunk.maps != null) {
+              buffer.writeln(' - Maps Chunk:');
+              buffer.writeln('   - Title: ${chunk.maps!.title}');
+              buffer.writeln('   - URI: ${chunk.maps!.uri}');
+            }
+          }
+        }
+
         _messages.add(MessageData(text: buffer.toString(), fromUser: false));
       }
     });

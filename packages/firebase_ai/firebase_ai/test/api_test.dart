@@ -1123,6 +1123,18 @@ void main() {
               FinishReason.malformedFunctionCall);
         });
 
+        test('parses unexpectedToolCall finishReason', () {
+          final jsonResponse = {
+            'candidates': [
+              {'finishReason': 'UNEXPECTED_TOOL_CALL'}
+            ]
+          };
+          final response =
+              VertexSerialization().parseGenerateContentResponse(jsonResponse);
+          expect(response.candidates.first.finishReason,
+              FinishReason.unexpectedToolCall);
+        });
+
         test(
             'parses groundingSupports and filters out entries without a segment',
             () {

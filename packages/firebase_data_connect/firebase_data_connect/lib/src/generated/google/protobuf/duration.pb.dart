@@ -1,3 +1,4 @@
+// ignore_for_file: implementation_imports
 //
 //  Generated code. Do not modify.
 //  source: google/protobuf/duration.proto

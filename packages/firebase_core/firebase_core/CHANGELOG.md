@@ -1,3 +1,12 @@
+## 4.7.0
+
+ - **FEAT**(core): bump Firebase Android SDK to 34.12.0 ([#18185](https://github.com/firebase/flutterfire/issues/18185)). ([346a048f](https://github.com/firebase/flutterfire/commit/346a048f098090e6848fdd0f61a8bf7d01394676))
+ - **FEAT**: bump Firebase iOS SDK to 12.12.0 ([#18187](https://github.com/firebase/flutterfire/issues/18187)). ([cc063bd9](https://github.com/firebase/flutterfire/commit/cc063bd9df1c59dd3bb8c25d067f8655bc268523))
+ - **FEAT**: bump iOS SDK to version 12.11.0 ([#18161](https://github.com/firebase/flutterfire/issues/18161)). ([2664b2c2](https://github.com/firebase/flutterfire/commit/2664b2c2dab4d0147461ce4d3f7862267e880542))
+ - **FEAT**(app_check,windows): add support for AppCheck for Windows ([#18140](https://github.com/firebase/flutterfire/issues/18140)). ([81f30325](https://github.com/firebase/flutterfire/commit/81f30325fc926fe94b630e49f56b795c781a4cbe))
+ - **FEAT**: bump Firebase android SDK to 34.11.0 ([#18146](https://github.com/firebase/flutterfire/issues/18146)). ([2b50061a](https://github.com/firebase/flutterfire/commit/2b50061a689634957efba8bd17c196dd548a08a2))
+ - **FEAT**: use local firebase_core instead of remote SPM dependency ([#18141](https://github.com/firebase/flutterfire/issues/18141)). ([995caf40](https://github.com/firebase/flutterfire/commit/995caf400df80c0fde7151c651ccc6c0f756e381))
+
 ## 4.6.0
 
  - **FIX**(remote_config,windows): release mode wasn't linking properly for windows ([#18073](https://github.com/firebase/flutterfire/issues/18073)). ([ea1f309a](https://github.com/firebase/flutterfire/commit/ea1f309a33075fc06c082819f0653976c6d5214b))

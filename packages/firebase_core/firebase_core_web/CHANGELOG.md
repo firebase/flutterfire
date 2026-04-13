@@ -1,3 +1,9 @@
+## 3.6.0
+
+ - **FEAT**: support for Firestore Pipelines ([#18183](https://github.com/firebase/flutterfire/issues/18183)). ([d734cf08](https://github.com/firebase/flutterfire/commit/d734cf0885f6d9403c2fb3ac48d6c52e14199309))
+ - **FEAT**: bump JS SDK to version 12.12.0 ([#18186](https://github.com/firebase/flutterfire/issues/18186)). ([3d943ed4](https://github.com/firebase/flutterfire/commit/3d943ed4154eb61617746825fc5c1c90f1e73d88))
+ - **FEAT**: bump JS SDK to version 12.11.0 ([#18160](https://github.com/firebase/flutterfire/issues/18160)). ([b3ab0003](https://github.com/firebase/flutterfire/commit/b3ab00036c70debca59414ea236c5012fb841a63))
+
 ## 3.5.1
 
  - Update a dependency to the latest release.
