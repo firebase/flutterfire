@@ -864,7 +864,8 @@ enum FinishReason {
       'TOO_MANY_TOOL_CALLS' => FinishReason.tooManyToolCalls,
       'MISSING_THOUGHT_SIGNATURE' => FinishReason.missingThoughtSignature,
       'MALFORMED_RESPONSE' => FinishReason.malformedResponse,
-      _ => throw FormatException('Unhandled FinishReason format', jsonObject),
+      'UNKNOWN' => FinishReason.unknown,
+      _ => FinishReason.unknown,
     };
   }
 
