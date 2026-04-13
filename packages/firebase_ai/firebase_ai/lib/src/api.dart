@@ -770,6 +770,9 @@ enum FinishReason {
   /// The candidate content was flagged for malformed function call reasons.
   malformedFunctionCall('MALFORMED_FUNCTION_CALL'),
 
+  /// The model produced an unexpected tool call.
+  unexpectedToolCall('UNEXPECTED_TOOL_CALL'),
+
   /// Unknown reason.
   other('OTHER');
 
@@ -790,6 +793,7 @@ enum FinishReason {
       'RECITATION' => FinishReason.recitation,
       'OTHER' => FinishReason.other,
       'MALFORMED_FUNCTION_CALL' => FinishReason.malformedFunctionCall,
+      'UNEXPECTED_TOOL_CALL' => FinishReason.unexpectedToolCall,
       _ => throw FormatException('Unhandled FinishReason format', jsonObject),
     };
   }

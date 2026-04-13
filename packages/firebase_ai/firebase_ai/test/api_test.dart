@@ -315,6 +315,7 @@ void main() {
       expect(FinishReason.recitation.toJson(), 'RECITATION');
       expect(FinishReason.malformedFunctionCall.toJson(),
           'MALFORMED_FUNCTION_CALL');
+      expect(FinishReason.unexpectedToolCall.toJson(), 'UNEXPECTED_TOOL_CALL');
       expect(FinishReason.other.toJson(), 'OTHER');
     });
 
@@ -1046,6 +1047,18 @@ void main() {
               VertexSerialization().parseGenerateContentResponse(jsonResponse);
           expect(response.candidates.first.finishReason,
               FinishReason.malformedFunctionCall);
+        });
+
+        test('parses unexpectedToolCall finishReason', () {
+          final jsonResponse = {
+            'candidates': [
+              {'finishReason': 'UNEXPECTED_TOOL_CALL'}
+            ]
+          };
+          final response =
+              VertexSerialization().parseGenerateContentResponse(jsonResponse);
+          expect(response.candidates.first.finishReason,
+              FinishReason.unexpectedToolCall);
         });
 
         test(
