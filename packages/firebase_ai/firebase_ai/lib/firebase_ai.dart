@@ -33,6 +33,11 @@ export 'src/api.dart'
         SafetyRating,
         SafetySetting,
         UsageMetadata;
+export 'src/image_config.dart'
+    show
+        ImageConfig,
+        ImageAspectRatio,
+        ImageSize;
 export 'src/base_model.dart'
     show
         GenerativeModel,
