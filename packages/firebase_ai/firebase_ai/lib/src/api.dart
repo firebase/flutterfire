@@ -15,9 +15,9 @@
 import 'content.dart';
 import 'error.dart';
 import 'image_config.dart';
-export 'image_config.dart';
 import 'schema.dart';
 import 'tool.dart' show Tool, ToolConfig;
+export 'image_config.dart';
 
 /// Response for Count Tokens
 final class CountTokensResponse {
