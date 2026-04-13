@@ -15,6 +15,7 @@
 import 'content.dart';
 import 'error.dart';
 import 'image_config.dart';
+export 'image_config.dart';
 import 'schema.dart';
 import 'tool.dart' show Tool, ToolConfig;
 
