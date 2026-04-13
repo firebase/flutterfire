@@ -1,3 +1,11 @@
+## 5.1.1
+
+ - Update a dependency to the latest release.
+
+## 5.1.0
+
+ - **FEAT**(analytics,iOS): add support for `logTransaction` ([#17995](https://github.com/firebase/flutterfire/issues/17995)). ([103d7ffa](https://github.com/firebase/flutterfire/commit/103d7ffa9343c654ec23c782a802b929dbf37d01))
+
 ## 5.0.7
 
  - Update a dependency to the latest release.

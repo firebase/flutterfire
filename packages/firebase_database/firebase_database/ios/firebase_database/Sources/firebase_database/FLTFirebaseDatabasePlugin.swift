@@ -389,7 +389,6 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
     let reference = database.reference(withPath: request.path)
 
     var query: DatabaseQuery = reference
-    var hasOrderModifier = false
     for modifier in request.modifiers {
       guard let type = modifier["type"] as? String else { continue }
 
@@ -400,17 +399,13 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
           case "orderByChild":
             if let path = modifier["path"] as? String {
               query = query.queryOrdered(byChild: path)
-              hasOrderModifier = true
             }
           case "orderByKey":
             query = query.queryOrderedByKey()
-            hasOrderModifier = true
           case "orderByValue":
             query = query.queryOrderedByValue()
-            hasOrderModifier = true
           case "orderByPriority":
             query = query.queryOrderedByPriority()
-            hasOrderModifier = true
           default:
             break
           }
@@ -422,17 +417,13 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
           let key = modifier["key"] as? String
           switch name {
           case "startAt":
-            if !hasOrderModifier {
-              query = query.queryLimited(toFirst: 0)
-            } else if let key {
+            if let key {
               query = query.queryStarting(atValue: value, childKey: key)
             } else {
               query = query.queryStarting(atValue: value)
             }
           case "startAfter":
-            if !hasOrderModifier {
-              query = query.queryLimited(toFirst: 0)
-            } else if let key {
+            if let key {
               query = query.queryStarting(afterValue: value, childKey: key)
             } else {
               query = query.queryStarting(afterValue: value)

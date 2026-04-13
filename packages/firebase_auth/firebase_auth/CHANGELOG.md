@@ -1,3 +1,16 @@
+## 6.4.0
+
+ - **FIX**(auth,ios): serialize Sign in with Apple to prevent crash on overlapping requests ([#18172](https://github.com/firebase/flutterfire/issues/18172)). ([752cbcaa](https://github.com/firebase/flutterfire/commit/752cbcaa57f887a8fea3bda728bb8482290fa049))
+ - **FEAT**: use local firebase_core instead of remote SPM dependency ([#18141](https://github.com/firebase/flutterfire/issues/18141)). ([995caf40](https://github.com/firebase/flutterfire/commit/995caf400df80c0fde7151c651ccc6c0f756e381))
+
+## 6.3.0
+
+ - **FIX**(auth): fix inconsistence in casing in the native iOS SDK and Web SDK ([#18086](https://github.com/firebase/flutterfire/issues/18086)). ([60b5cd5c](https://github.com/firebase/flutterfire/commit/60b5cd5c7888fa932124958125e87bd39e1c323c))
+ - **FIX**(auth,ios): fix crash that could happen when reloading currentUser informations ([#18065](https://github.com/firebase/flutterfire/issues/18065)). ([6e6f6546](https://github.com/firebase/flutterfire/commit/6e6f65468c07045e1c21b1d7970234b2dfc16b3d))
+ - **FIX**(auth,windows): add pluginregistry to properly restore state on Windows ([#18049](https://github.com/firebase/flutterfire/issues/18049)). ([8d715a77](https://github.com/firebase/flutterfire/commit/8d715a777a4827bff59f820d9978007bd7568a7d))
+ - **FEAT**(ios): migrate iOS to UIScene lifecycle ([#18054](https://github.com/firebase/flutterfire/issues/18054)). ([3ffa4110](https://github.com/firebase/flutterfire/commit/3ffa411098132fd5182a84be4e7a226106bc7451))
+ - **DOCS**(auth): add documentation about errors code when Email Enumeration Protection is activated ([#18084](https://github.com/firebase/flutterfire/issues/18084)). ([476ba53f](https://github.com/firebase/flutterfire/commit/476ba53f016f20009fd571ad6ab359631f97094b))
+
 ## 6.2.0
 
  - **FEAT**(remote-config,windows): add support for windows ([#18006](https://github.com/firebase/flutterfire/issues/18006)). ([a6ec167f](https://github.com/firebase/flutterfire/commit/a6ec167f4ece9c9b455a916366781f482cc380b3))

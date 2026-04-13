@@ -132,6 +132,7 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
     AppleProvider? appleProvider,
     AndroidAppCheckProvider? providerAndroid,
     AppleAppCheckProvider? providerApple,
+    WindowsAppCheckProvider? providerWindows,
   }) async {
     // save the recaptcha type and site key for future startups
     if (webProvider != null) {
@@ -171,9 +172,18 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
           _delegate!.idTokenChangedController?.close();
         },
       );
-      _delegate!.onTokenChanged(app.name).listen((event) {
-        _tokenChangesListeners[app.name]!.add(event.token.toDart);
-      });
+      _delegate!.onTokenChanged(app.name).listen(
+        (event) {
+          _tokenChangesListeners[app.name]!.add(event.token.toDart);
+        },
+        // Forward JS SDK errors (e.g. network failures during background
+        // token refresh) to the broadcast controller instead of letting them
+        // surface as unhandled zone errors. If nobody is listening on the
+        // broadcast stream the error is silently dropped.
+        onError: (Object error) {
+          _tokenChangesListeners[app.name]?.addError(error);
+        },
+      );
     }
   }
 

@@ -5,6 +5,7 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:tests/firebase_options.dart';
@@ -101,11 +102,33 @@ void main() {
           parameters: {
             'foo': 'bar',
             'baz': 500,
-            // Lists are not supported
+            // Lists are not supported in parameters
             'items': [analyticsEventItem],
           },
         ),
         throwsA(isA<AssertionError>()),
+      );
+
+      // test logEvent with typed items parameter
+      await expectLater(
+        FirebaseAnalytics.instance.logEvent(
+          name: 'testing-items',
+          items: [analyticsEventItem],
+        ),
+        completes,
+      );
+
+      // test logEvent with both items and parameters
+      await expectLater(
+        FirebaseAnalytics.instance.logEvent(
+          name: 'testing-items-and-parameters',
+          items: [analyticsEventItem],
+          parameters: {
+            'foo': 'bar',
+            'baz': 500,
+          },
+        ),
+        completes,
       );
 
       // test 3 reserved events
@@ -356,5 +379,45 @@ void main() {
       },
       skip: kIsWeb || defaultTargetPlatform != TargetPlatform.iOS,
     );
+
+    group('logTransaction', () {
+      test(
+        'throws when transactionId is not a valid numeric string',
+        () async {
+          await expectLater(
+            FirebaseAnalytics.instance.logTransaction('not_a_number'),
+            throwsA(
+              isA<PlatformException>().having(
+                (e) => e.message,
+                'message',
+                'Invalid transactionId',
+              ),
+            ),
+          );
+        },
+        skip: kIsWeb ||
+            (defaultTargetPlatform != TargetPlatform.iOS &&
+                defaultTargetPlatform != TargetPlatform.macOS),
+      );
+
+      test(
+        'throws when transactionId is valid format but transaction not found in StoreKit',
+        () async {
+          await expectLater(
+            FirebaseAnalytics.instance.logTransaction('12345'),
+            throwsA(
+              isA<PlatformException>().having(
+                (e) => e.message,
+                'message',
+                'Transaction not found',
+              ),
+            ),
+          );
+        },
+        skip: kIsWeb ||
+            (defaultTargetPlatform != TargetPlatform.iOS &&
+                defaultTargetPlatform != TargetPlatform.macOS),
+      );
+    });
   });
 }

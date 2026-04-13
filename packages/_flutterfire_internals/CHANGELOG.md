@@ -1,3 +1,11 @@
+## 1.3.69
+
+ - **FIX**: improve error handling in _firebaseExceptionFromCoreFirebaseError ([#18177](https://github.com/firebase/flutterfire/issues/18177)). ([3c29048a](https://github.com/firebase/flutterfire/commit/3c29048a859b62f3f224b1fa3c8db61f78f63374))
+
+## 1.3.68
+
+ - Update a dependency to the latest release.
+
 ## 1.3.67
 
  - **FIX**(database): improve error handling in `platformExceptionToFirebaseException` ([#18007](https://github.com/firebase/flutterfire/issues/18007)). ([25f92046](https://github.com/firebase/flutterfire/commit/25f92046985b7b7105bb88f31d35d0d793744b23))

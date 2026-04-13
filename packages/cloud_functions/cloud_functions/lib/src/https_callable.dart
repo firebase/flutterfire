@@ -79,7 +79,8 @@ class HttpsCallable {
 dynamic _updateRawDataToList(dynamic value) {
   if (value is Uint8List ||
       value is Int32List ||
-      value is Int64List ||
+      // Int64List is not supported by dart2js, skip the check on web.
+      (!kIsWeb && value is Int64List) ||
       value is Float32List ||
       value is Float64List) {
     return value.toList();

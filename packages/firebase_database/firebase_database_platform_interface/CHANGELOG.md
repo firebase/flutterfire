@@ -1,3 +1,11 @@
+## 0.3.1+1
+
+ - Update a dependency to the latest release.
+
+## 0.3.1
+
+ - **FEAT**(database,windows): add support for Realtime Database to windows ([#18079](https://github.com/firebase/flutterfire/issues/18079)). ([007689f9](https://github.com/firebase/flutterfire/commit/007689f99866582828a063d174c52ebba13ac0ef))
+
 ## 0.3.0+3
 
  - Update a dependency to the latest release.

@@ -97,6 +97,8 @@ static NSMutableDictionary<NSNumber *, FIRAuthCredential *> *credentialsMap;
 @property(strong, nonatomic) void (^appleCompletion)
     (PigeonUserCredential *_Nullable, FlutterError *_Nullable);
 @property(strong, nonatomic) AuthPigeonFirebaseApp *appleArguments;
+/// YES while an `ASAuthorizationController` Sign in with Apple flow is active.
+@property(nonatomic, assign) BOOL appleSignInRequestInFlight;
 
 @end
 
@@ -112,6 +114,9 @@ static NSMutableDictionary<NSNumber *, FIRAuthCredential *> *credentialsMap;
 
   // Map an id to a MultiFactorResolver object.
   NSMutableDictionary<NSString *, FIRTOTPSecret *> *_multiFactorTotpSecretMap;
+
+  // Emulator host/port per app, used to build REST URLs for workarounds.
+  NSMutableDictionary<NSString *, NSDictionary *> *_emulatorConfigs;
 
   NSObject<FlutterBinaryMessenger> *_binaryMessenger;
   NSMutableDictionary<NSString *, FlutterEventChannel *> *_eventChannels;
@@ -134,6 +139,7 @@ static NSMutableDictionary<NSNumber *, FIRAuthCredential *> *credentialsMap;
     _multiFactorResolverMap = [NSMutableDictionary dictionary];
     _multiFactorAssertionMap = [NSMutableDictionary dictionary];
     _multiFactorTotpSecretMap = [NSMutableDictionary dictionary];
+    _emulatorConfigs = [NSMutableDictionary dictionary];
   }
   return self;
 }
@@ -376,16 +382,25 @@ static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResu
                                   NSString *authorizationCode, NSError *error) {
   void (^completion)(PigeonUserCredential *_Nullable, FlutterError *_Nullable) =
       object.appleCompletion;
-  if (completion == nil) return;
+  if (completion == nil) {
+    object.appleSignInRequestInFlight = NO;
+    return;
+  }
 
   if (error != nil) {
     if (error.code == FIRAuthErrorCodeSecondFactorRequired) {
+      object.appleCompletion = nil;
+      object.appleSignInRequestInFlight = NO;
       [object handleMultiFactorError:object.appleArguments completion:completion withError:error];
     } else {
+      object.appleCompletion = nil;
+      object.appleSignInRequestInFlight = NO;
       completion(nil, [FLTFirebaseAuthPlugin convertToFlutterError:error]);
     }
     return;
   }
+  object.appleCompletion = nil;
+  object.appleSignInRequestInFlight = NO;
   completion([PigeonParser getPigeonUserCredentialFromAuthResult:authResult
                                                authorizationCode:authorizationCode],
              nil);
@@ -402,6 +417,15 @@ static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResu
 
     if (appleIDCredential.identityToken == nil) {
       NSLog(@"Unable to fetch identity token.");
+      void (^completion)(PigeonUserCredential *_Nullable, FlutterError *_Nullable) =
+          self.appleCompletion;
+      self.appleCompletion = nil;
+      self.appleSignInRequestInFlight = NO;
+      if (completion != nil) {
+        completion(nil, [FlutterError errorWithCode:kErrCodeInvalidCredential
+                                            message:kErrMsgInvalidCredential
+                                            details:nil]);
+      }
       return;
     }
 
@@ -455,47 +479,62 @@ static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResu
                               handleSignInWithApple(self, authResult, authorizationCode, error);
                             }];
     }
+  } else {
+    void (^completion)(PigeonUserCredential *_Nullable, FlutterError *_Nullable) =
+        self.appleCompletion;
+    self.appleCompletion = nil;
+    self.appleSignInRequestInFlight = NO;
+    if (completion != nil) {
+      completion(nil, [FlutterError errorWithCode:kErrCodeInvalidCredential
+                                          message:kErrMsgInvalidCredential
+                                          details:nil]);
+    }
   }
 }
 
 - (void)authorizationController:(ASAuthorizationController *)controller
            didCompleteWithError:(NSError *)error API_AVAILABLE(macos(10.15), ios(13.0)) {
+  void (^completion)(PigeonUserCredential *_Nullable, FlutterError *_Nullable) =
+      self.appleCompletion;
+  self.appleCompletion = nil;
+  self.appleSignInRequestInFlight = NO;
+
   NSLog(@"Sign in with Apple errored: %@", error);
+  if (completion == nil) {
+    return;
+  }
+
   switch (error.code) {
     case ASAuthorizationErrorCanceled:
-      self.appleCompletion(
-          nil, [FlutterError errorWithCode:@"canceled"
-                                   message:@"The user canceled the authorization attempt."
-                                   details:nil]);
+      completion(nil, [FlutterError errorWithCode:@"canceled"
+                                          message:@"The user canceled the authorization attempt."
+                                          details:nil]);
       break;
 
     case ASAuthorizationErrorInvalidResponse:
-      self.appleCompletion(
-          nil,
-          [FlutterError errorWithCode:@"invalid-response"
-                              message:@"The authorization request received an invalid response."
-                              details:nil]);
+      completion(nil, [FlutterError
+                          errorWithCode:@"invalid-response"
+                                message:@"The authorization request received an invalid response."
+                                details:nil]);
       break;
 
     case ASAuthorizationErrorNotHandled:
-      self.appleCompletion(nil,
-                           [FlutterError errorWithCode:@"not-handled"
-                                               message:@"The authorization request wasn’t handled."
-                                               details:nil]);
+      completion(nil, [FlutterError errorWithCode:@"not-handled"
+                                          message:@"The authorization request wasn’t handled."
+                                          details:nil]);
       break;
 
     case ASAuthorizationErrorFailed:
-      self.appleCompletion(nil, [FlutterError errorWithCode:@"failed"
-                                                    message:@"The authorization attempt failed."
-                                                    details:nil]);
+      completion(nil, [FlutterError errorWithCode:@"failed"
+                                          message:@"The authorization attempt failed."
+                                          details:nil]);
       break;
 
     case ASAuthorizationErrorUnknown:
     default:
-      self.appleCompletion(nil, [FLTFirebaseAuthPlugin convertToFlutterError:error]);
+      completion(nil, [FLTFirebaseAuthPlugin convertToFlutterError:error]);
       break;
   }
-  self.appleCompletion = nil;
 }
 
 - (void)handleInternalError:(nonnull void (^)(PigeonUserCredential *_Nullable,
@@ -566,10 +605,19 @@ static void launchAppleSignInRequest(FLTFirebaseAuthPlugin *object, AuthPigeonFi
                                      void (^_Nonnull completion)(PigeonUserCredential *_Nullable,
                                                                  FlutterError *_Nullable)) {
   if (@available(iOS 13.0, macOS 10.15, *)) {
+    if (object.appleSignInRequestInFlight) {
+      completion(nil,
+                 [FlutterError errorWithCode:@"operation-not-allowed"
+                                     message:@"A Sign in with Apple request is already in progress."
+                                     details:nil]);
+      return;
+    }
+
     NSString *nonce = [object randomNonce:32];
     object.currentNonce = nonce;
     object.appleCompletion = completion;
     object.appleArguments = app;
+    object.appleSignInRequestInFlight = YES;
 
     ASAuthorizationAppleIDProvider *appleIDProvider = [[ASAuthorizationAppleIDProvider alloc] init];
 
@@ -1137,7 +1185,20 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
                if (error != nil) {
                  completion(nil, [FLTFirebaseAuthPlugin convertToFlutterError:error]);
                } else {
-                 completion([self parseActionCode:info], nil);
+                 PigeonActionCodeInfo *result = [self parseActionCode:info];
+                 if (result.operation == ActionCodeInfoOperationUnknown) {
+                   // Workaround: Firebase iOS SDK >=11.12.0 returns .unknown because
+                   // actionCodeOperation(forRequestType:) only matches camelCase but the
+                   // REST API returns SCREAMING_SNAKE_CASE (e.g. "VERIFY_EMAIL").
+                   // Re-fetch the raw requestType via REST to resolve the operation.
+                   // See: https://github.com/firebase/flutterfire/issues/17452
+                   [self resolveActionCodeOperationForApp:app
+                                                     code:code
+                                             fallbackInfo:result
+                                               completion:completion];
+                 } else {
+                   completion(result, nil);
+                 }
                }
              }];
 }
@@ -1165,6 +1226,91 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
   }
 
   return [PigeonActionCodeInfo makeWithOperation:operation data:data];
+}
+
+/// Maps a raw requestType string (either camelCase or SCREAMING_SNAKE_CASE) to
+/// the corresponding Pigeon enum value.
++ (ActionCodeInfoOperation)operationFromRequestType:(nullable NSString *)requestType {
+  static NSDictionary<NSString *, NSNumber *> *mapping;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    mapping = @{
+      @"PASSWORD_RESET" : @(ActionCodeInfoOperationPasswordReset),
+      @"resetPassword" : @(ActionCodeInfoOperationPasswordReset),
+      @"VERIFY_EMAIL" : @(ActionCodeInfoOperationVerifyEmail),
+      @"verifyEmail" : @(ActionCodeInfoOperationVerifyEmail),
+      @"RECOVER_EMAIL" : @(ActionCodeInfoOperationRecoverEmail),
+      @"recoverEmail" : @(ActionCodeInfoOperationRecoverEmail),
+      @"EMAIL_SIGNIN" : @(ActionCodeInfoOperationEmailSignIn),
+      @"signIn" : @(ActionCodeInfoOperationEmailSignIn),
+      @"VERIFY_AND_CHANGE_EMAIL" : @(ActionCodeInfoOperationVerifyAndChangeEmail),
+      @"verifyAndChangeEmail" : @(ActionCodeInfoOperationVerifyAndChangeEmail),
+      @"REVERT_SECOND_FACTOR_ADDITION" : @(ActionCodeInfoOperationRevertSecondFactorAddition),
+      @"revertSecondFactorAddition" : @(ActionCodeInfoOperationRevertSecondFactorAddition),
+    };
+  });
+
+  NSNumber *value = mapping[requestType];
+  return value ? (ActionCodeInfoOperation)value.integerValue : ActionCodeInfoOperationUnknown;
+}
+
+/// Calls the Identity Toolkit REST API directly to retrieve the raw requestType
+/// string, which the iOS SDK fails to parse correctly. Falls back to the original
+/// result if the REST call fails for any reason.
+- (void)resolveActionCodeOperationForApp:(nonnull AuthPigeonFirebaseApp *)app
+                                    code:(nonnull NSString *)code
+                            fallbackInfo:(nonnull PigeonActionCodeInfo *)fallbackInfo
+                              completion:(nonnull void (^)(PigeonActionCodeInfo *_Nullable,
+                                                           FlutterError *_Nullable))completion {
+  FIRApp *firebaseApp = [FLTFirebasePlugin firebaseAppNamed:app.appName];
+  NSString *apiKey = firebaseApp.options.APIKey;
+
+  NSString *baseURL;
+  NSDictionary *emulatorConfig = _emulatorConfigs[app.appName];
+  if (emulatorConfig) {
+    baseURL = [NSString stringWithFormat:@"http://%@:%@/identitytoolkit.googleapis.com",
+                                         emulatorConfig[@"host"], emulatorConfig[@"port"]];
+  } else {
+    baseURL = @"https://identitytoolkit.googleapis.com";
+  }
+
+  NSString *urlString =
+      [NSString stringWithFormat:@"%@/v1/accounts:resetPassword?key=%@", baseURL, apiKey];
+  NSURL *url = [NSURL URLWithString:urlString];
+
+  NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+  request.HTTPMethod = @"POST";
+  [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+  request.HTTPBody = [NSJSONSerialization dataWithJSONObject:@{@"oobCode" : code}
+                                                     options:0
+                                                       error:nil];
+
+  NSURLSessionDataTask *task = [[NSURLSession sharedSession]
+      dataTaskWithRequest:request
+        completionHandler:^(NSData *_Nullable data, NSURLResponse *_Nullable response,
+                            NSError *_Nullable error) {
+          if (error || !data) {
+            completion(fallbackInfo, nil);
+            return;
+          }
+
+          NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+          if (!json || json[@"error"]) {
+            completion(fallbackInfo, nil);
+            return;
+          }
+
+          ActionCodeInfoOperation operation =
+              [FLTFirebaseAuthPlugin operationFromRequestType:json[@"requestType"]];
+
+          if (operation != ActionCodeInfoOperationUnknown) {
+            completion([PigeonActionCodeInfo makeWithOperation:operation data:fallbackInfo.data],
+                       nil);
+          } else {
+            completion(fallbackInfo, nil);
+          }
+        }];
+  [task resume];
 }
 
 - (void)confirmPasswordResetApp:(nonnull AuthPigeonFirebaseApp *)app
@@ -1600,6 +1746,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
             completion:(nonnull void (^)(FlutterError *_Nullable))completion {
   FIRAuth *auth = [self getFIRAuthFromAppNameFromPigeon:app];
   [auth useEmulatorWithHost:host port:port];
+  _emulatorConfigs[app.appName] = @{@"host" : host, @"port" : @(port)};
   completion(nil);
 }
 

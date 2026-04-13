@@ -307,6 +307,46 @@ void setupReferenceTests() {
             expect(complete.metadata?.contentType, 'application/json');
           },
         );
+
+        test(
+          'infers contentType from .json ref path when no contentType set',
+          () async {
+            final Uint8List jsonData =
+                utf8.encode(jsonEncode({'key': 'value'}));
+            final Reference ref =
+                storage.ref('flutter-tests').child('flt-infer.json');
+            final TaskSnapshot complete = await ref.putData(jsonData);
+            expect(complete.metadata?.contentType, 'application/json');
+          },
+        );
+
+        test(
+          'infers contentType from .txt ref path and preserves customMetadata',
+          () async {
+            final Uint8List txtData = utf8.encode('hello world');
+            final Reference ref =
+                storage.ref('flutter-tests').child('flt-infer.txt');
+            final TaskSnapshot complete = await ref.putData(
+              txtData,
+              SettableMetadata(
+                customMetadata: {'activity': 'test'},
+              ),
+            );
+            expect(complete.metadata?.contentType, 'text/plain');
+            expect(complete.metadata?.customMetadata?['activity'], 'test');
+          },
+        );
+
+        test(
+          'infers contentType from .jpg ref path when no metadata provided',
+          () async {
+            final Uint8List imgData = Uint8List.fromList([0xFF, 0xD8, 0xFF]);
+            final Reference ref =
+                storage.ref('flutter-tests').child('flt-infer.jpg');
+            final TaskSnapshot complete = await ref.putData(imgData);
+            expect(complete.metadata?.contentType, 'image/jpeg');
+          },
+        );
       },
     );
 

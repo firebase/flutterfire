@@ -33,6 +33,8 @@ import 'imagen/imagen_edit.dart';
 import 'imagen/imagen_reference.dart';
 import 'live_api.dart';
 import 'live_session.dart';
+import 'platform_header_helper.dart';
+import 'server_template/template_tool.dart';
 import 'tool.dart';
 
 part 'generative_model.dart';
@@ -297,6 +299,10 @@ abstract class BaseModel {
       if (app != null && app.isAutomaticDataCollectionEnabled) {
         headers['X-Firebase-AppId'] = app.options.appId;
       }
+      // Add platform-specific headers for API key restrictions.
+      // Android: X-Android-Package + X-Android-Cert
+      // iOS/macOS: x-ios-bundle-identifier
+      headers.addAll(await getPlatformSecurityHeaders());
       return headers;
     };
   }
@@ -361,6 +367,8 @@ abstract class BaseTemplateApiClientModel extends BaseApiClientModel {
       String templateId,
       Map<String, Object?>? inputs,
       Iterable<Content>? history,
+      List<TemplateTool>? tools,
+      TemplateToolConfig? toolConfig,
       T Function(Map<String, Object?>) parse) {
     Map<String, Object?> body = {};
     if (inputs != null) {
@@ -368,6 +376,12 @@ abstract class BaseTemplateApiClientModel extends BaseApiClientModel {
     }
     if (history != null) {
       body['history'] = history.map((c) => c.toJson()).toList();
+    }
+    if (tools != null) {
+      body['tools'] = tools.map((t) => t.toJson()).toList();
+    }
+    if (toolConfig != null) {
+      body['toolConfig'] = toolConfig.toJson();
     }
     return _client
         .makeRequest(templateTaskUri(task, templateId), body)
@@ -383,6 +397,8 @@ abstract class BaseTemplateApiClientModel extends BaseApiClientModel {
       String templateId,
       Map<String, Object?>? inputs,
       Iterable<Content>? history,
+      List<TemplateTool>? tools,
+      TemplateToolConfig? toolConfig,
       T Function(Map<String, Object?>) parse) {
     Map<String, Object?> body = {};
     if (inputs != null) {
@@ -390,6 +406,12 @@ abstract class BaseTemplateApiClientModel extends BaseApiClientModel {
     }
     if (history != null) {
       body['history'] = history.map((c) => c.toJson()).toList();
+    }
+    if (tools != null) {
+      body['tools'] = tools.map((t) => t.toJson()).toList();
+    }
+    if (toolConfig != null) {
+      body['toolConfig'] = toolConfig.toJson();
     }
     final response =
         _client.streamRequest(templateTaskUri(task, templateId), body);

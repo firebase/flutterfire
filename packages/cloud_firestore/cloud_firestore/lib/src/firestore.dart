@@ -282,6 +282,7 @@ class FirebaseFirestore extends FirebasePluginPlatform {
           settings.webExperimentalAutoDetectLongPolling,
       webExperimentalLongPollingOptions:
           settings.webExperimentalLongPollingOptions,
+      webPersistentTabManager: settings.webPersistentTabManager,
     );
   }
 
@@ -337,6 +338,26 @@ class FirebaseFirestore extends FirebasePluginPlatform {
       );
     }
     return null;
+  }
+
+  /// Returns a [PipelineSource] for creating and executing pipelines.
+  ///
+  /// Pipelines allow you to perform complex queries and transformations on
+  /// Firestore data using a fluent API.
+  ///
+  /// Example:
+  /// ```dart
+  /// final snapshot = await FirebaseFirestore.instance
+  ///     .pipeline()
+  ///     .collection('users')
+  ///     .where(Field('age').greaterThan(Constant(18)))
+  ///     .sort(Field('name').ascending(), Field('age').descending())
+  ///     .limit(10)
+  ///     .execute();
+  /// ```
+  // ignore: use_to_and_as_if_applicable
+  PipelineSource pipeline() {
+    return PipelineSource._(this);
   }
 
   /// Configures indexing for local query execution. Any previous index configuration is overridden.

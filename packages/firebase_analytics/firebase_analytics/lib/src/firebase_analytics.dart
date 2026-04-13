@@ -100,15 +100,27 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   Future<void> logEvent({
     required String name,
     Map<String, Object>? parameters,
+    List<AnalyticsEventItem>? items,
     AnalyticsCallOptions? callOptions,
   }) async {
     _logEventNameValidation(name);
 
     _assertParameterTypesAreCorrect(parameters);
+    _assertItemsParameterTypesAreCorrect(items);
+
+    final Map<String, Object>? effectiveParameters;
+    if (items != null) {
+      effectiveParameters = filterOutNulls(<String, Object?>{
+        _ITEMS: _marshalItems(items),
+        if (parameters != null) ...parameters,
+      });
+    } else {
+      effectiveParameters = parameters;
+    }
 
     await _delegate.logEvent(
       name: name,
-      parameters: parameters,
+      parameters: effectiveParameters,
       callOptions: callOptions,
     );
   }
@@ -1209,9 +1221,11 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   ///
   /// This event signifies that an item(s) was purchased by a user.
   ///
-  /// This API supports manually logging in-app purchase events on iOS.
-  /// This is especially useful in cases where purchases happen outside the native
-  /// billing systems (e.g. custom payment flows).
+  /// This API is intended for manually logging in-app purchase events on iOS,
+  /// particularly for purchases that occur in WebView or non-native billing flows.
+  /// For StoreKit 2 transactions, use [logTransaction] instead.
+  ///
+  /// Only available on iOS.
   Future<void> logInAppPurchase({
     String? currency,
     bool? freeTrial,
@@ -1240,6 +1254,23 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
         _VALUE: value,
       }),
     );
+  }
+
+  /// Logs verified in-app purchase events in Google Analytics for Firebase
+  /// after a purchase is successful.
+  ///
+  /// Only available on iOS.
+  ///
+  /// You can obtain the [transactionId] from the
+  /// [in_app_purchase](https://pub.dev/packages/in_app_purchase) package.
+  Future<void> logTransaction(String transactionId) async {
+    if (defaultTargetPlatform != TargetPlatform.iOS &&
+        defaultTargetPlatform != TargetPlatform.macOS) {
+      throw UnimplementedError(
+        'logTransaction() is only supported on iOS and macOS.',
+      );
+    }
+    return _delegate.logTransaction(transactionId: transactionId);
   }
 
   /// Sets the duration of inactivity that terminates the current session.

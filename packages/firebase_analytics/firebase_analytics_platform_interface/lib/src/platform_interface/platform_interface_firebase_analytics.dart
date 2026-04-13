@@ -209,4 +209,10 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
       'initiateOnDeviceConversionMeasurement() is not implemented',
     );
   }
+
+  Future<void> logTransaction({
+    required String transactionId,
+  }) {
+    throw UnimplementedError('logTransaction() is not implemented');
+  }
 }

@@ -147,6 +147,7 @@ interface FirebaseAnalyticsHostApi {
   fun getAppInstanceId(callback: (Result<String?>) -> Unit)
   fun getSessionId(callback: (Result<Long?>) -> Unit)
   fun initiateOnDeviceConversionMeasurement(arguments: Map<String, String?>, callback: (Result<Unit>) -> Unit)
+  fun logTransaction(transactionId: String, callback: (Result<Unit>) -> Unit)
 
   companion object {
     /** The codec used by FirebaseAnalyticsHostApi. */
@@ -351,6 +352,25 @@ interface FirebaseAnalyticsHostApi {
             val args = message as List<Any?>
             val argumentsArg = args[0] as Map<String, String?>
             api.initiateOnDeviceConversionMeasurement(argumentsArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidFirebaseAnalyticsPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(GeneratedAndroidFirebaseAnalyticsPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.logTransaction$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val transactionIdArg = args[0] as String
+            api.logTransaction(transactionIdArg) { result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidFirebaseAnalyticsPigeonUtils.wrapError(error))

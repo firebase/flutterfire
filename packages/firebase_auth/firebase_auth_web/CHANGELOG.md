@@ -1,3 +1,11 @@
+## 6.1.5
+
+ - Update a dependency to the latest release.
+
+## 6.1.4
+
+ - **FIX**(auth): fix inconsistence in casing in the native iOS SDK and Web SDK ([#18086](https://github.com/firebase/flutterfire/issues/18086)). ([60b5cd5c](https://github.com/firebase/flutterfire/commit/60b5cd5c7888fa932124958125e87bd39e1c323c))
+
 ## 6.1.3
 
  - Update a dependency to the latest release.

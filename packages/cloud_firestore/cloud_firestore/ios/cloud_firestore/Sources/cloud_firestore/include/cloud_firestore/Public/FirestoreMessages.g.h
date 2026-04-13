@@ -165,6 +165,8 @@ typedef NS_ENUM(NSUInteger, AggregateType) {
 @class PigeonDocumentSnapshot;
 @class PigeonDocumentChange;
 @class PigeonQuerySnapshot;
+@class PigeonPipelineResult;
+@class PigeonPipelineSnapshot;
 @class PigeonGetOptions;
 @class PigeonDocumentOption;
 @class PigeonTransactionCommand;
@@ -243,6 +245,27 @@ typedef NS_ENUM(NSUInteger, AggregateType) {
 @property(nonatomic, strong) PigeonSnapshotMetadata *metadata;
 @end
 
+@interface PigeonPipelineResult : NSObject
++ (instancetype)makeWithDocumentPath:(nullable NSString *)documentPath
+                          createTime:(nullable NSNumber *)createTime
+                          updateTime:(nullable NSNumber *)updateTime
+                                data:(nullable NSDictionary<NSString *, id> *)data;
+@property(nonatomic, copy, nullable) NSString *documentPath;
+@property(nonatomic, strong, nullable) NSNumber *createTime;
+@property(nonatomic, strong, nullable) NSNumber *updateTime;
+/// All fields in the result (from PipelineResult.data() on Android).
+@property(nonatomic, strong, nullable) NSDictionary<NSString *, id> *data;
+@end
+
+@interface PigeonPipelineSnapshot : NSObject
+/// `init` unavailable to enforce nonnull fields, see the `make` class method.
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)makeWithResults:(NSArray<PigeonPipelineResult *> *)results
+                  executionTime:(NSNumber *)executionTime;
+@property(nonatomic, strong) NSArray<PigeonPipelineResult *> *results;
+@property(nonatomic, strong) NSNumber *executionTime;
+@end
+
 @interface PigeonGetOptions : NSObject
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
 - (instancetype)init NS_UNAVAILABLE;
@@ -264,11 +287,11 @@ typedef NS_ENUM(NSUInteger, AggregateType) {
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)makeWithType:(PigeonTransactionType)type
                         path:(NSString *)path
-                        data:(nullable NSDictionary<NSString *, id> *)data
+                        data:(nullable NSDictionary<id, id> *)data
                       option:(nullable PigeonDocumentOption *)option;
 @property(nonatomic, assign) PigeonTransactionType type;
 @property(nonatomic, copy) NSString *path;
-@property(nonatomic, strong, nullable) NSDictionary<NSString *, id> *data;
+@property(nonatomic, strong, nullable) NSDictionary<id, id> *data;
 @property(nonatomic, strong, nullable) PigeonDocumentOption *option;
 @end
 
@@ -416,6 +439,11 @@ NSObject<FlutterMessageCodec> *FirebaseFirestoreHostApiGetCodec(void);
 - (void)persistenceCacheIndexManagerRequestApp:(FirestorePigeonFirebaseApp *)app
                                        request:(PersistenceCacheIndexManagerRequest)request
                                     completion:(void (^)(FlutterError *_Nullable))completion;
+- (void)executePipelineApp:(FirestorePigeonFirebaseApp *)app
+                    stages:(NSArray<NSDictionary<NSString *, id> *> *)stages
+                   options:(nullable NSDictionary<NSString *, id> *)options
+                completion:(void (^)(PigeonPipelineSnapshot *_Nullable,
+                                     FlutterError *_Nullable))completion;
 @end
 
 extern void FirebaseFirestoreHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,

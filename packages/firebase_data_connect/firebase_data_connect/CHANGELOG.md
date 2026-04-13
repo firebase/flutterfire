@@ -1,3 +1,14 @@
+## 0.3.0
+
+ - **FEAT**(fdc): Streaming implementation for data connect ([#18174](https://github.com/firebase/flutterfire/issues/18174)). ([6ce6f6b2](https://github.com/firebase/flutterfire/commit/6ce6f6b2369b9d43e69b24b284d8ef816c430e31))
+ - **FEAT**(app_check,windows): add support for AppCheck for Windows ([#18140](https://github.com/firebase/flutterfire/issues/18140)). ([81f30325](https://github.com/firebase/flutterfire/commit/81f30325fc926fe94b630e49f56b795c781a4cbe))
+
+## 0.2.4
+
+ - **FIX**(data_connect): fix UTF 8 characters decoding in data connect ([#18120](https://github.com/firebase/flutterfire/issues/18120)). ([25ec5c42](https://github.com/firebase/flutterfire/commit/25ec5c429863c34f8473daad7f83487a31dcd7a1))
+ - **FIX**(fdc,web): add WASM support and improve CI ([#18074](https://github.com/firebase/flutterfire/issues/18074)). ([904249eb](https://github.com/firebase/flutterfire/commit/904249ebc67b14115aebe619b2874b0fd325a3ce))
+ - **FEAT**(ios): migrate iOS to UIScene lifecycle ([#18054](https://github.com/firebase/flutterfire/issues/18054)). ([3ffa4110](https://github.com/firebase/flutterfire/commit/3ffa411098132fd5182a84be4e7a226106bc7451))
+
 ## 0.2.3
 
  - **REFACTOR**(fdc): Support for entityId path extensions and hardening ([#17988](https://github.com/firebase/flutterfire/issues/17988)). ([fed585f5](https://github.com/firebase/flutterfire/commit/fed585f5a9b65d683cefdc7fa97ed2692e4ec817))

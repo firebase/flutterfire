@@ -28,6 +28,8 @@ import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.MemoryCacheSettings;
 import com.google.firebase.firestore.PersistentCacheIndexManager;
 import com.google.firebase.firestore.PersistentCacheSettings;
+import com.google.firebase.firestore.Pipeline;
+import com.google.firebase.firestore.PipelineResult;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
@@ -52,6 +54,7 @@ import io.flutter.plugins.firebase.firestore.streamhandler.SnapshotsInSyncStream
 import io.flutter.plugins.firebase.firestore.streamhandler.TransactionStreamHandler;
 import io.flutter.plugins.firebase.firestore.utils.ExceptionConverter;
 import io.flutter.plugins.firebase.firestore.utils.PigeonParser;
+import io.flutter.plugins.firebase.firestore.utils.PipelineParser;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -885,8 +888,6 @@ public class FlutterFirebaseFirestorePlugin
               GeneratedAndroidFirebaseFirestore.PigeonTransactionType type =
                   Objects.requireNonNull(write.getType());
               String path = Objects.requireNonNull(write.getPath());
-              Map<String, Object> data = write.getData();
-
               DocumentReference documentReference = firestore.document(path);
 
               switch (type) {
@@ -894,29 +895,55 @@ public class FlutterFirebaseFirestorePlugin
                   batch = batch.delete(documentReference);
                   break;
                 case UPDATE:
-                  batch = batch.update(documentReference, Objects.requireNonNull(data));
-                  break;
-                case SET:
-                  GeneratedAndroidFirebaseFirestore.PigeonDocumentOption options =
-                      Objects.requireNonNull(write.getOption());
-
-                  if (options.getMerge() != null && options.getMerge()) {
+                  {
+                    Map<Object, Object> rawData = Objects.requireNonNull(write.getData());
+                    Map<FieldPath, Object> updateData = new HashMap<>();
+                    for (Object key : rawData.keySet()) {
+                      if (key instanceof String) {
+                        updateData.put(FieldPath.of((String) key), rawData.get(key));
+                      } else if (key instanceof FieldPath) {
+                        updateData.put((FieldPath) key, rawData.get(key));
+                      }
+                    }
+                    FieldPath firstFieldPath = updateData.keySet().iterator().next();
+                    Object firstObject = updateData.get(firstFieldPath);
+                    ArrayList<Object> flattenData = new ArrayList<>();
+                    for (FieldPath fieldPath : updateData.keySet()) {
+                      if (fieldPath.equals(firstFieldPath)) {
+                        continue;
+                      }
+                      flattenData.add(fieldPath);
+                      flattenData.add(updateData.get(fieldPath));
+                    }
                     batch =
-                        batch.set(
-                            documentReference, Objects.requireNonNull(data), SetOptions.merge());
-                  } else if (options.getMergeFields() != null) {
-                    List<FieldPath> fieldPathList =
-                        PigeonParser.parseFieldPath(
-                            Objects.requireNonNull(options.getMergeFields()));
-                    batch =
-                        batch.set(
-                            documentReference,
-                            Objects.requireNonNull(data),
-                            SetOptions.mergeFieldPaths(fieldPathList));
-                  } else {
-                    batch = batch.set(documentReference, Objects.requireNonNull(data));
+                        batch.update(
+                            documentReference, firstFieldPath, firstObject, flattenData.toArray());
+                    break;
                   }
-                  break;
+                case SET:
+                  {
+                    @SuppressWarnings("unchecked")
+                    Map<String, Object> setData =
+                        (Map<String, Object>) (Map<?, ?>) Objects.requireNonNull(write.getData());
+                    GeneratedAndroidFirebaseFirestore.PigeonDocumentOption options =
+                        Objects.requireNonNull(write.getOption());
+
+                    if (options.getMerge() != null && options.getMerge()) {
+                      batch = batch.set(documentReference, setData, SetOptions.merge());
+                    } else if (options.getMergeFields() != null) {
+                      List<FieldPath> fieldPathList =
+                          PigeonParser.parseFieldPath(
+                              Objects.requireNonNull(options.getMergeFields()));
+                      batch =
+                          batch.set(
+                              documentReference,
+                              setData,
+                              SetOptions.mergeFieldPaths(fieldPathList));
+                    } else {
+                      batch = batch.set(documentReference, setData);
+                    }
+                    break;
+                  }
               }
             }
 
@@ -982,5 +1009,66 @@ public class FlutterFirebaseFirestorePlugin
                 PigeonParser.parsePigeonServerTimestampBehavior(
                     parameters.getServerTimestampBehavior()),
                 PigeonParser.parseListenSource(source))));
+  }
+
+  @Override
+  public void executePipeline(
+      @NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app,
+      @NonNull List<Map<String, Object>> stages,
+      @Nullable Map<String, Object> options,
+      @NonNull
+          GeneratedAndroidFirebaseFirestore.Result<
+                  GeneratedAndroidFirebaseFirestore.PigeonPipelineSnapshot>
+              result) {
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            FirebaseFirestore firestore = getFirestoreFromPigeon(app);
+
+            // Execute pipeline using Android Firestore SDK
+            Pipeline.Snapshot snapshot = PipelineParser.executePipeline(firestore, stages, options);
+
+            // Convert Pipeline.Snapshot to PigeonPipelineSnapshot
+            List<GeneratedAndroidFirebaseFirestore.PigeonPipelineResult> pipelineResults =
+                new ArrayList<>();
+
+            // Iterate through snapshot results
+            for (PipelineResult pipelineResult : snapshot.getResults()) {
+              GeneratedAndroidFirebaseFirestore.PigeonPipelineResult.Builder resultBuilder =
+                  new GeneratedAndroidFirebaseFirestore.PigeonPipelineResult.Builder();
+              if (pipelineResult.getRef() != null) {
+                resultBuilder.setDocumentPath(pipelineResult.getRef().getPath());
+              }
+
+              if (pipelineResult.getCreateTime() != null) {
+                resultBuilder.setCreateTime(pipelineResult.getCreateTime().toDate().getTime());
+              }
+              if (pipelineResult.getUpdateTime() != null) {
+                resultBuilder.setUpdateTime(pipelineResult.getUpdateTime().toDate().getTime());
+              }
+
+              Map<String, Object> data = pipelineResult.getData();
+              if (data != null) {
+                resultBuilder.setData(data);
+              }
+
+              pipelineResults.add(resultBuilder.build());
+            }
+
+            // Build the snapshot
+            GeneratedAndroidFirebaseFirestore.PigeonPipelineSnapshot.Builder snapshotBuilder =
+                new GeneratedAndroidFirebaseFirestore.PigeonPipelineSnapshot.Builder();
+            snapshotBuilder.setResults(pipelineResults);
+
+            // Set execution time when available. Do not fabricate a value when null.
+            if (snapshot.getExecutionTime() != null) {
+              snapshotBuilder.setExecutionTime(snapshot.getExecutionTime().toDate().getTime());
+            }
+
+            result.success(snapshotBuilder.build());
+          } catch (Exception e) {
+            ExceptionConverter.sendErrorToFlutter(result, e);
+          }
+        });
   }
 }

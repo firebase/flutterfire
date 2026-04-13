@@ -51,17 +51,51 @@ abstract class OperationRef<Data, Variables> {
     this.serializer,
     this.variables,
   );
-  Variables? variables;
-  String operationName;
-  DataConnectTransport _transport;
-  Deserializer<Data> deserializer;
-  Serializer<Variables> serializer;
+  final Variables? variables;
+  final String operationName;
+  final DataConnectTransport _transport;
+  final Deserializer<Data> deserializer;
+  final Serializer<Variables> serializer;
   String? _lastToken;
 
-  FirebaseDataConnect dataConnect;
+  final FirebaseDataConnect dataConnect;
 
-  Future<OperationResult<Data, Variables>> execute(
-      {QueryFetchPolicy fetchPolicy = QueryFetchPolicy.preferCache});
+  late final String operationId =
+      createOperationId(operationName, variables, serializer);
+
+  static dynamic _sortKeys(dynamic value) {
+    if (value is Map) {
+      final sortedMap = <String, dynamic>{};
+      final sortedKeys = value.keys.toList()..sort();
+      for (final key in sortedKeys) {
+        sortedMap[key.toString()] = _sortKeys(value[key]);
+      }
+      return sortedMap;
+    } else if (value is List) {
+      return value.map(_sortKeys).toList();
+    }
+    return value;
+  }
+
+  static String createOperationId<Variables>(String operationName,
+      Variables? vars, Serializer<Variables>? serializer) {
+    if (vars != null && serializer != null) {
+      try {
+        final decoded = jsonDecode(serializer(vars));
+        final sortedStr = jsonEncode(_sortKeys(decoded));
+        final hashVars = convertToSha256(sortedStr);
+        return '$operationName::$hashVars';
+      } catch (_) {
+        final rawVars = serializer(vars);
+        final hashVars = convertToSha256(rawVars);
+        return '$operationName::$hashVars';
+      }
+    } else {
+      return operationName;
+    }
+  }
+
+  Future<OperationResult<Data, Variables>> execute();
 
   Future<bool> _shouldRetry() async {
     String? newToken;
@@ -152,7 +186,7 @@ class QueryManager {
             try {
               await queryRef.execute(fetchPolicy: QueryFetchPolicy.cacheOnly);
             } catch (e) {
-              log('Error executing impacted query $e');
+              log('Error executing impacted query $queryId $e');
             }
           }
         }
@@ -175,22 +209,18 @@ class QueryManager {
   StreamController<QueryResult<Data, Variables>> addQuery<Data, Variables>(
     QueryRef<Data, Variables> ref,
   ) {
-    final queryId = ref._queryId;
+    final queryId = ref.operationId;
     trackedQueries[queryId] = ref;
 
     final streamController =
-        StreamController<QueryResult<Data, Variables>>.broadcast();
+        StreamController<QueryResult<Data, Variables>>.broadcast(
+      onCancel: () {
+        trackedQueries.remove(queryId);
+        ref._onAllSubscribersCancelled();
+      },
+    );
 
     return streamController;
-  }
-
-  static String createQueryId<QueryVariables>(String queryName,
-      QueryVariables? vars, Serializer<QueryVariables> varSerializer) {
-    if (vars != null) {
-      return '$queryName::${varSerializer(vars)}';
-    } else {
-      return queryName;
-    }
   }
 
   void dispose() {
@@ -216,7 +246,7 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
           variables,
         );
 
-  QueryManager _queryManager;
+  final QueryManager _queryManager;
 
   @override
   Future<QueryResult<Data, Variables>> execute(
@@ -239,9 +269,6 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
     }
   }
 
-  String get _queryId =>
-      QueryManager.createQueryId(operationName, variables, serializer);
-
   Future<QueryResult<Data, Variables>> _executeFromCache(
       QueryFetchPolicy fetchPolicy) async {
     if (dataConnect.cacheManager == null) {
@@ -251,7 +278,7 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
     final cacheManager = dataConnect.cacheManager!;
     bool allowStale = fetchPolicy ==
         QueryFetchPolicy.cacheOnly; //if its cache only, we always allow stale
-    final cachedData = await cacheManager.resultTree(_queryId, allowStale);
+    final cachedData = await cacheManager.resultTree(operationId, allowStale);
 
     if (cachedData != null) {
       try {
@@ -280,6 +307,7 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
     try {
       ServerResponse serverResponse =
           await _transport.invokeQuery<Data, Variables>(
+        operationId,
         operationName,
         deserializer,
         serializer,
@@ -288,7 +316,7 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
       );
 
       if (dataConnect.cacheManager != null) {
-        await dataConnect.cacheManager!.update(_queryId, serverResponse);
+        await dataConnect.cacheManager!.update(operationId, serverResponse);
       }
       Data typedData = _convertBodyJsonToData(serverResponse.data);
 
@@ -307,22 +335,109 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
   }
 
   StreamController<QueryResult<Data, Variables>>? _streamController;
+  Stream<ServerResponse>? _serverStream;
+  StreamSubscription<ServerResponse>? _serverStreamSubscription;
+
+  void _onAllSubscribersCancelled() {
+    _serverStreamSubscription?.cancel();
+    _serverStreamSubscription = null;
+    _serverStream = null;
+    log("QueryRef $operationId: All subscribers cancelled. Unsubscribed from server stream.");
+  }
 
   Stream<QueryResult<Data, Variables>> subscribe() {
     _streamController ??= _queryManager.addQuery(this);
 
-    execute();
+    final stream =
+        _streamController!.stream.cast<QueryResult<Data, Variables>>();
 
-    return _streamController!.stream.cast<QueryResult<Data, Variables>>();
+    // Return the stream to the caller, then execute fetches
+    Future.microtask(() async {
+      if (dataConnect.cacheManager != null) {
+        try {
+          await _executeFromCache(QueryFetchPolicy.cacheOnly);
+        } catch (err) {
+          log("Error fetching from cache during subscribe $err");
+          // Ignore cache misses here, server stream will provide latest data
+        }
+      }
+
+      // Initiate Web Socket stream only if not already streaming
+      if (_serverStream == null) {
+        _streamFromServer();
+      }
+    });
+
+    return stream;
+  }
+
+  void _streamFromServer() async {
+    bool shouldRetry = await _shouldRetry();
+    log("QueryRef $operationId _streamFromServer loop started.");
+    try {
+      _serverStream = _transport.invokeStreamQuery<Data, Variables>(
+        operationId,
+        operationName,
+        deserializer,
+        serializer,
+        variables,
+        _lastToken,
+      );
+
+      _serverStreamSubscription = _serverStream!.listen(
+        (serverResponse) async {
+          log("QueryRef $operationId _streamFromServer loop received snapshot.");
+          if (dataConnect.cacheManager != null) {
+            try {
+              await dataConnect.cacheManager!
+                  .update(operationId, serverResponse);
+            } catch (e) {
+              log("QueryRef $operationId _streamFromServer loop cache update failed: $e");
+            }
+          }
+          Data typedData = _convertBodyJsonToData(serverResponse.data);
+
+          QueryResult<Data, Variables> res =
+              QueryResult(dataConnect, typedData, DataSource.server, this);
+          publishResultToStream(res);
+        },
+        onError: (e) {
+          _serverStreamSubscription?.cancel();
+          _serverStreamSubscription = null;
+          _serverStream = null;
+
+          if (shouldRetry &&
+              e is DataConnectError &&
+              e.code == DataConnectErrorCode.unauthorized.toString()) {
+            _streamFromServer();
+          } else {
+            publishErrorToStream(e);
+          }
+        },
+        onDone: () {
+          _serverStreamSubscription?.cancel();
+          _serverStreamSubscription = null;
+          _serverStream = null;
+        },
+      );
+    } catch (e) {
+      _serverStreamSubscription?.cancel();
+      _serverStreamSubscription = null;
+      _serverStream = null;
+      log("QueryRef $operationId _streamFromServer loop Unknown loop failure: $e");
+      publishErrorToStream(e);
+    }
   }
 
   void publishResultToStream(QueryResult<Data, Variables> result) {
     if (_streamController != null) {
       _streamController?.add(result);
+    } else {
+      log("QueryRef $operationId _streamFromServer loop _streamController is null");
     }
   }
 
-  void publishErrorToStream(Error err) {
+  void publishErrorToStream(Object err) {
     if (_streamController != null) {
       _streamController?.addError(err);
     }
@@ -331,24 +446,16 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
 
 class MutationRef<Data, Variables> extends OperationRef<Data, Variables> {
   MutationRef(
-    FirebaseDataConnect dataConnect,
-    String operationName,
-    DataConnectTransport transport,
-    Deserializer<Data> deserializer,
-    Serializer<Variables> serializer,
-    Variables? variables,
-  ) : super(
-          dataConnect,
-          operationName,
-          transport,
-          deserializer,
-          serializer,
-          variables,
-        );
+    super.dataConnect,
+    super.operationName,
+    super.transport,
+    super.deserializer,
+    super.serializer,
+    super.variables,
+  );
 
   @override
-  Future<OperationResult<Data, Variables>> execute(
-      {QueryFetchPolicy fetchPolicy = QueryFetchPolicy.serverOnly}) async {
+  Future<OperationResult<Data, Variables>> execute() async {
     bool shouldRetry = await _shouldRetry();
     try {
       // Logic below is duplicated due to the fact that `executeOperation` returns
@@ -370,6 +477,7 @@ class MutationRef<Data, Variables> extends OperationRef<Data, Variables> {
   ) async {
     ServerResponse serverResponse =
         await _transport.invokeMutation<Data, Variables>(
+      operationId,
       operationName,
       deserializer,
       serializer,

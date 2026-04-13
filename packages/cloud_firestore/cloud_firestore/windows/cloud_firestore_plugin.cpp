@@ -706,10 +706,12 @@ void CloudFirestorePlugin::EnableNetwork(
 void CloudFirestorePlugin::Terminate(
     const FirestorePigeonFirebaseApp& app,
     std::function<void(std::optional<FlutterError> reply)> result) {
+  std::string cacheKey = app.app_name() + "-" + app.database_u_r_l();
   Firestore* firestore = GetFirestoreFromPigeon(app);
   firestore->Terminate().OnCompletion(
-      [result](const Future<void>& completed_future) {
+      [result, cacheKey](const Future<void>& completed_future) {
         if (completed_future.error() == firebase::firestore::kErrorOk) {
+          CloudFirestorePlugin::firestoreInstances_.erase(cacheKey);
           result(std::nullopt);
         } else {
           result(CloudFirestorePlugin::ParseError(completed_future));
@@ -904,8 +906,8 @@ class TransactionStreamHandler
                     std::cout << "Transaction update" << path
                               << std::endl;  // Debug print.
 
-                    transaction.Update(reference,
-                                       ConvertToMapFieldValue(*command.data()));
+                    transaction.Update(
+                        reference, ConvertToMapFieldPathValue(*command.data()));
                     break;
                   case PigeonTransactionType::deleteType:
                     std::cout << "Transaction delete" << path
@@ -1498,7 +1500,7 @@ void CloudFirestorePlugin::WriteBatchCommit(
           batch.Delete(documentReference);
           break;
         case PigeonTransactionType::update:
-          batch.Update(documentReference, ConvertToMapFieldValue(*data));
+          batch.Update(documentReference, ConvertToMapFieldPathValue(*data));
           break;
         case PigeonTransactionType::set:
           const PigeonDocumentOption* options = transaction.option();

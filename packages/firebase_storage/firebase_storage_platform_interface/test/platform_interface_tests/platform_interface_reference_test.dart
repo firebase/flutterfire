@@ -15,9 +15,9 @@ import '../mock.dart';
 void main() {
   setupFirebaseStorageMocks();
 
-  TestReferencePlatform? referencePlatform;
-  FirebaseApp? app;
-  FirebaseStoragePlatform? firebaseStoragePlatform;
+  FirebaseApp app;
+  FirebaseStoragePlatform firebaseStoragePlatform;
+  late TestReferencePlatform referencePlatform;
 
   group('$ReferencePlatform()', () {
     setUpAll(() async {
@@ -35,7 +35,7 @@ void main() {
     group('verify()', () {
       test('calls successfully', () {
         try {
-          ReferencePlatform.verify(referencePlatform!);
+          ReferencePlatform.verify(referencePlatform);
           return;
         } catch (_) {
           fail('thrown an unexpected exception');
@@ -44,23 +44,23 @@ void main() {
     });
 
     test('get.bucket returns successfully', () async {
-      final bucket = referencePlatform!.bucket;
+      final bucket = referencePlatform.bucket;
       expect(bucket, isA<String>());
     });
 
     test('get.fullPath returns successfully', () async {
-      final fullPath = referencePlatform!.fullPath;
+      final fullPath = referencePlatform.fullPath;
       expect(fullPath, isA<String>());
     });
 
     test('get.name returns successfully', () async {
-      final name = referencePlatform!.name;
+      final name = referencePlatform.name;
       expect(name, isA<String>());
     });
 
     test('get.parent should throw unimplemented', () async {
       try {
-        referencePlatform!.parent;
+        referencePlatform.parent;
       } on UnimplementedError catch (e) {
         expect(e.message, equals('ref() is not implemented'));
         return;
@@ -70,7 +70,7 @@ void main() {
 
     test('get.root should throw unimplemented', () async {
       try {
-        referencePlatform!.root;
+        referencePlatform.root;
       } on UnimplementedError catch (e) {
         expect(e.message, equals('ref() is not implemented'));
         return;
@@ -80,7 +80,7 @@ void main() {
 
     test('get.child should throw unimplemented', () async {
       try {
-        referencePlatform!.child('/');
+        referencePlatform.child('/');
       } on UnimplementedError catch (e) {
         expect(e.message, equals('ref() is not implemented'));
         return;
@@ -90,7 +90,7 @@ void main() {
 
     test('throws if delete()', () async {
       try {
-        await referencePlatform!.delete();
+        await referencePlatform.delete();
       } on UnimplementedError catch (e) {
         expect(e.message, equals('delete() is not implemented'));
         return;
@@ -100,7 +100,7 @@ void main() {
 
     test('throws if getDownloadURL()', () async {
       try {
-        await referencePlatform!.getDownloadURL();
+        await referencePlatform.getDownloadURL();
       } on UnimplementedError catch (e) {
         expect(e.message, equals('getDownloadURL() is not implemented'));
         return;
@@ -110,7 +110,7 @@ void main() {
 
     test('throws if getMetadata()', () async {
       try {
-        await referencePlatform!.getMetadata();
+        await referencePlatform.getMetadata();
       } on UnimplementedError catch (e) {
         expect(e.message, equals('getMetadata() is not implemented'));
         return;
@@ -120,7 +120,7 @@ void main() {
 
     test('throws if list()', () async {
       try {
-        await referencePlatform!.list(const ListOptions(maxResults: 10));
+        await referencePlatform.list(const ListOptions(maxResults: 10));
       } on UnimplementedError catch (e) {
         expect(e.message, equals('list() is not implemented'));
         return;
@@ -130,7 +130,7 @@ void main() {
 
     test('throws if listAll()', () async {
       try {
-        await referencePlatform!.listAll();
+        await referencePlatform.listAll();
       } on UnimplementedError catch (e) {
         expect(e.message, equals('listAll() is not implemented'));
         return;
@@ -140,7 +140,7 @@ void main() {
 
     test('throws if putBlob()', () async {
       try {
-        referencePlatform!.putBlob(null);
+        referencePlatform.putBlob(null);
       } on UnimplementedError catch (e) {
         expect(e.message, equals('putBlob() is not implemented'));
         return;
@@ -150,7 +150,7 @@ void main() {
 
     test('throws if putString()', () async {
       try {
-        referencePlatform!.putString('foo', PutStringFormat.base64);
+        referencePlatform.putString('foo', PutStringFormat.base64);
       } on UnimplementedError catch (e) {
         expect(e.message, equals('putString() is not implemented'));
         return;
@@ -161,7 +161,8 @@ void main() {
 }
 
 class TestReferencePlatform extends ReferencePlatform {
-  TestReferencePlatform(storage, path) : super(storage, path);
+  TestReferencePlatform(FirebaseStoragePlatform storage, String path)
+      : super(storage, path);
 }
 
 class TestFirebaseStoragePlatform extends FirebaseStoragePlatform {
