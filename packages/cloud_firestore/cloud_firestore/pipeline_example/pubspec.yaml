@@ -30,7 +30,7 @@ environment:
 dependencies:
   cloud_firestore:
     path: ..
-  firebase_core: ^4.4.0
+  firebase_core: ^4.7.0
   flutter:
     sdk: flutter
   http: ^1.0.0

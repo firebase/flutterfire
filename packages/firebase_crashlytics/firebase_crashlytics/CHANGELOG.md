@@ -1,3 +1,8 @@
+## 5.2.0
+
+ - **FIX**(crashlytics,android): fix an issue with deobfuscating flavored builds ([#18085](https://github.com/firebase/flutterfire/issues/18085)). ([55a7f6ff](https://github.com/firebase/flutterfire/commit/55a7f6ff17940487e29d8bc78779ca4cfce24b0c))
+ - **FEAT**: use local firebase_core instead of remote SPM dependency ([#18141](https://github.com/firebase/flutterfire/issues/18141)). ([995caf40](https://github.com/firebase/flutterfire/commit/995caf400df80c0fde7151c651ccc6c0f756e381))
+
 ## 5.1.0
 
  - **FEAT**(ios): migrate iOS to UIScene lifecycle ([#18054](https://github.com/firebase/flutterfire/issues/18054)). ([3ffa4110](https://github.com/firebase/flutterfire/commit/3ffa411098132fd5182a84be4e7a226106bc7451))

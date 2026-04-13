@@ -1,3 +1,8 @@
+## 6.3.0
+
+ - **FEAT**: support for Firestore Pipelines ([#18183](https://github.com/firebase/flutterfire/issues/18183)). ([d734cf08](https://github.com/firebase/flutterfire/commit/d734cf0885f6d9403c2fb3ac48d6c52e14199309))
+ - **FEAT**: use local firebase_core instead of remote SPM dependency ([#18141](https://github.com/firebase/flutterfire/issues/18141)). ([995caf40](https://github.com/firebase/flutterfire/commit/995caf400df80c0fde7151c651ccc6c0f756e381))
+
 ## 6.2.0
 
  - **FIX**(firestore,windows): fix a crash happening when terminating the firestore instance ([#18069](https://github.com/firebase/flutterfire/issues/18069)). ([adef1872](https://github.com/firebase/flutterfire/commit/adef1872b523b77e2309f3d7400e5a5fdd95738c))

@@ -1,3 +1,7 @@
+## 13.3.0
+
+ - **FEAT**: use local firebase_core instead of remote SPM dependency ([#18141](https://github.com/firebase/flutterfire/issues/18141)). ([995caf40](https://github.com/firebase/flutterfire/commit/995caf400df80c0fde7151c651ccc6c0f756e381))
+
 ## 13.2.0
 
  - **FIX**(storage,iOS): guard `useStorageEmulator` to prevent crash on hot restart ([#18116](https://github.com/firebase/flutterfire/issues/18116)). ([9919bf03](https://github.com/firebase/flutterfire/commit/9919bf035226a4b066ac1ef52859d5349eff61c6))

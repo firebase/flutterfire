@@ -1,3 +1,7 @@
+## 12.3.0
+
+ - **FEAT**: use local firebase_core instead of remote SPM dependency ([#18141](https://github.com/firebase/flutterfire/issues/18141)). ([995caf40](https://github.com/firebase/flutterfire/commit/995caf400df80c0fde7151c651ccc6c0f756e381))
+
 ## 12.2.0
 
  - **FIX**(analytics,iOS): Update hashedEmailAddress handling to use hex string conversion ([#18060](https://github.com/firebase/flutterfire/issues/18060)). ([80c6cff2](https://github.com/firebase/flutterfire/commit/80c6cff2836ef102c716d1e54eda8114b8ee629b))
