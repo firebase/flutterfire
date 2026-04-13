@@ -31,18 +31,72 @@ FlutterError CreateConnectionError(const std::string channel_name) {
       EncodableValue(""));
 }
 
+// CustomAppCheckToken
+
+CustomAppCheckToken::CustomAppCheckToken(
+  const std::string& token,
+  int64_t expire_time_millis)
+ : token_(token),
+    expire_time_millis_(expire_time_millis) {}
+
+const std::string& CustomAppCheckToken::token() const {
+  return token_;
+}
+
+void CustomAppCheckToken::set_token(std::string_view value_arg) {
+  token_ = value_arg;
+}
+
+
+int64_t CustomAppCheckToken::expire_time_millis() const {
+  return expire_time_millis_;
+}
+
+void CustomAppCheckToken::set_expire_time_millis(int64_t value_arg) {
+  expire_time_millis_ = value_arg;
+}
+
+
+EncodableList CustomAppCheckToken::ToEncodableList() const {
+  EncodableList list;
+  list.reserve(2);
+  list.push_back(EncodableValue(token_));
+  list.push_back(EncodableValue(expire_time_millis_));
+  return list;
+}
+
+CustomAppCheckToken CustomAppCheckToken::FromEncodableList(const EncodableList& list) {
+  CustomAppCheckToken decoded(
+    std::get<std::string>(list[0]),
+    std::get<int64_t>(list[1]));
+  return decoded;
+}
+
 
 PigeonInternalCodecSerializer::PigeonInternalCodecSerializer() {}
 
 EncodableValue PigeonInternalCodecSerializer::ReadValueOfType(
   uint8_t type,
   flutter::ByteStreamReader* stream) const {
-  return flutter::StandardCodecSerializer::ReadValueOfType(type, stream);
+  switch (type) {
+    case 129: {
+        return CustomEncodableValue(CustomAppCheckToken::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
+      }
+    default:
+      return flutter::StandardCodecSerializer::ReadValueOfType(type, stream);
+    }
 }
 
 void PigeonInternalCodecSerializer::WriteValue(
   const EncodableValue& value,
   flutter::ByteStreamWriter* stream) const {
+  if (const CustomEncodableValue* custom_value = std::get_if<CustomEncodableValue>(&value)) {
+    if (custom_value->type() == typeid(CustomAppCheckToken)) {
+      stream->WriteByte(129);
+      WriteValue(EncodableValue(std::any_cast<CustomAppCheckToken>(*custom_value).ToEncodableList()), stream);
+      return;
+    }
+  }
   flutter::StandardCodecSerializer::WriteValue(value, stream);
 }
 
@@ -267,7 +321,7 @@ const flutter::StandardMessageCodec& FirebaseAppCheckFlutterApi::GetCodec() {
 }
 
 void FirebaseAppCheckFlutterApi::GetCustomToken(
-  std::function<void(const std::string&)>&& on_success,
+  std::function<void(const CustomAppCheckToken&)>&& on_success,
   std::function<void(const FlutterError&)>&& on_error) {
   const std::string channel_name = "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckFlutterApi.getCustomToken" + message_channel_suffix_;
   BasicMessageChannel<> channel(binary_messenger_, channel_name, &GetCodec());
@@ -280,7 +334,7 @@ void FirebaseAppCheckFlutterApi::GetCustomToken(
       if (list_return_value->size() > 1) {
         on_error(FlutterError(std::get<std::string>(list_return_value->at(0)), std::get<std::string>(list_return_value->at(1)), list_return_value->at(2)));
       } else {
-        const auto& return_value = std::get<std::string>(list_return_value->at(0));
+        const auto& return_value = std::any_cast<const CustomAppCheckToken&>(std::get<CustomEncodableValue>(list_return_value->at(0)));
         on_success(return_value);
       }
     } else {

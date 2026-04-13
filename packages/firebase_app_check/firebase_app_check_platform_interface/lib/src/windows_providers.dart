@@ -4,9 +4,10 @@
 
 /// Base class for Windows App Check providers.
 ///
-/// On Windows, only the [WindowsDebugProvider] is supported. The Firebase C++
-/// SDK does not support platform attestation providers (such as Play Integrity
-/// or DeviceCheck) on desktop platforms.
+/// The Firebase C++ SDK does not ship native platform attestation providers
+/// (such as Play Integrity or DeviceCheck) on desktop, so Windows supports
+/// [WindowsDebugProvider] for development and [WindowsCustomProvider] for
+/// production builds that mint tokens via a backend.
 abstract class WindowsAppCheckProvider {
   final String type;
   const WindowsAppCheckProvider(this.type);
@@ -15,24 +16,38 @@ abstract class WindowsAppCheckProvider {
 /// Custom provider for Windows production builds.
 ///
 /// When activated, the Windows C++ plugin registers a custom
-/// [AppCheckProvider] that calls into Dart via a Pigeon FlutterApi each time
-/// the Firebase SDK needs a fresh token. The Dart handler is expected to call
-/// a server-side Cloud Function (e.g. `getWindowsAppCheckToken`) that mints a
-/// valid App Check token using the Firebase Admin SDK and returns it.
+/// `AppCheckProvider` that calls into Dart via a Pigeon `FlutterApi` each time
+/// the Firebase SDK needs a fresh App Check token. The Dart handler is
+/// expected to call a backend service (typically a Cloud Function with
+/// `enforceAppCheck: false`) that mints a valid App Check token using the
+/// Firebase Admin SDK, then return both the token and its expiry.
 ///
-/// Register the Dart token handler before any Firestore operations:
+/// Register the Dart token handler before any Firebase operations that require
+/// App Check, alongside `FirebaseAppCheck.instance.activate`:
+///
 /// ```dart
-/// FirebaseAppCheckFlutterApi.setUp(myHandler);
-/// ```
+/// FirebaseAppCheckFlutterApi.setUp(MyWindowsTokenHandler());
 ///
-/// **Do not use [WindowsDebugProvider] in production builds.**
+/// class MyWindowsTokenHandler implements FirebaseAppCheckFlutterApi {
+///   @override
+///   Future<CustomAppCheckToken> getCustomToken() async {
+///     // Call your backend, e.g. a callable Cloud Function that uses
+///     // admin.appCheck().createToken(windowsAppId).
+///     final response = await myBackend.mintAppCheckToken();
+///     return CustomAppCheckToken(
+///       token: response.token,
+///       expireTimeMillis: response.expireTimeMillis,
+///     );
+///   }
+/// }
+/// ```
 class WindowsCustomProvider extends WindowsAppCheckProvider {
   const WindowsCustomProvider() : super('custom');
 }
 
 /// Debug provider for Windows.
 ///
-/// This is the **only** provider available on Windows. Unlike mobile platforms,
+/// Intended for development and local testing only. Unlike mobile platforms,
 /// the desktop C++ SDK does **not** auto-generate a debug token. You must
 /// supply one explicitly.
 ///

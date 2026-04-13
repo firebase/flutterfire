@@ -10,7 +10,6 @@
 #include <flutter/standard_method_codec.h>
 #include <windows.h>
 
-#include <chrono>
 #include <future>
 #include <memory>
 #include <string>
@@ -99,9 +98,11 @@ class TokenStreamHandler
   std::unique_ptr<FlutterAppCheckListener> listener_;
 };
 
-// FlutterCustomAppCheckProvider — calls into Dart via the FlutterApi and
+// FlutterCustomAppCheckProvider calls into Dart via the FlutterApi and
 // completes the Firebase C++ SDK callback asynchronously when Dart returns a
-// token (or an error).
+// token (or an error). The Dart handler returns the token together with its
+// expiry, so the C++ SDK can cache for the exact lifetime the backend minted
+// rather than a hardcoded refresh window.
 FlutterCustomAppCheckProvider::FlutterCustomAppCheckProvider(
     flutter::BinaryMessenger* binary_messenger)
     : flutter_api_(
@@ -116,17 +117,10 @@ void FlutterCustomAppCheckProvider::GetToken(
                          const std::string&)>>(std::move(completion_callback));
 
   flutter_api_->GetCustomToken(
-      [completion](const std::string& token) {
+      [completion](const CustomAppCheckToken& dart_token) {
         firebase::app_check::AppCheckToken result_token;
-        result_token.token = token;
-        // Set expiry to 55 minutes from now (server mints 1-hour tokens;
-        // 5-minute buffer avoids using a nearly-expired token).
-        result_token.expire_time_millis =
-            static_cast<int64_t>(
-                std::chrono::duration_cast<std::chrono::milliseconds>(
-                    std::chrono::system_clock::now().time_since_epoch())
-                    .count()) +
-            55LL * 60LL * 1000LL;
+        result_token.token = dart_token.token();
+        result_token.expire_time_millis = dart_token.expire_time_millis();
         (*completion)(result_token, firebase::app_check::kAppCheckErrorNone,
                       "");
       },
