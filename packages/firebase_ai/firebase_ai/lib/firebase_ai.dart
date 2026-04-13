@@ -34,12 +34,6 @@ export 'src/api.dart'
         ResponseModalities,
         SafetyRating,
         SafetySetting,
-        UsageMetadata;
-export 'src/image_config.dart'
-    show
-        ImageConfig,
-        ImageAspectRatio,
-        ImageSize;
         UsageMetadata,
         WebGroundingChunk;
 export 'src/base_model.dart'

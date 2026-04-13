@@ -80,6 +80,9 @@ enum ImageAspectRatio {
 
   /// Convert to json format.
   String toJson() => _jsonString;
+
+  @override
+  String toString() => name;
 }
 
 /// The size of images to generate.
@@ -101,4 +104,7 @@ enum ImageSize {
 
   /// Convert to json format.
   String toJson() => _jsonString;
+
+  @override
+  String toString() => name;
 }
