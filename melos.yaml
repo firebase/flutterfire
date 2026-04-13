@@ -172,6 +172,13 @@ scripts:
     description: |
       Run all e2e tests for cloud_firestore.
 
+  test:e2e:pipeline:
+    run: |
+      cd packages/cloud_firestore/cloud_firestore/pipeline_example
+      flutter test integration_test/pipeline/pipeline_live_test.dart
+    description: |
+      Run pipeline e2e tests.
+
   test:e2e:firebase_performance:
     run: |
       cd packages/firebase_performance/firebase_performance/example
