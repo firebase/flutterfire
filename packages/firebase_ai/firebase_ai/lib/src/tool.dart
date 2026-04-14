@@ -27,6 +27,12 @@ final class Tool {
       this._urlContext);
 
   /// Returns a [Tool] instance with list of [FunctionDeclaration].
+  ///
+  /// **Note:** Function declarations cannot be combined with other tool types
+  /// such as [googleSearch], [codeExecution], or [urlContext] in the same
+  /// [tools] list. The Gemini API does not support mixing function calling
+  /// with other tool types in a single request. Use separate model instances
+  /// or separate requests for different tool types.
   static Tool functionDeclarations(
       List<FunctionDeclaration> functionDeclarations) {
     return Tool._(functionDeclarations, null, null, null);
@@ -47,6 +53,10 @@ final class Tool {
   ///
   /// - [googleSearch]: An empty [GoogleSearch] object. The presence of this
   ///   object in the list of tools enables the model to use Google Search.
+  ///
+  /// **Note:** Google Search cannot be combined with [functionDeclarations]
+  /// in the same [tools] list. The Gemini API does not support mixing function
+  /// calling with other tool types in a single request.
   ///
   /// Returns a `Tool` configured for Google Search.
   static Tool googleSearch({GoogleSearch googleSearch = const GoogleSearch()}) {
@@ -104,6 +114,33 @@ final class Tool {
             ?.whereType<AutoFunctionDeclaration>()
             .toList() ??
         [];
+  }
+
+  /// Validates that a list of [tools] does not contain incompatible
+  /// combinations.
+  ///
+  /// The Gemini API does not support mixing [functionDeclarations] with other
+  /// tool types ([googleSearch], [codeExecution], [urlContext]) in the same
+  /// request. This method throws an [ArgumentError] if such a combination is
+  /// detected, providing a clear error message instead of a cryptic server
+  /// error.
+  static void validateToolCombination(List<Tool> tools) {
+    final hasFunctionDeclarations =
+        tools.any((t) => t._functionDeclarations != null);
+    final hasOtherTools = tools.any((t) =>
+        t._googleSearch != null ||
+        t._codeExecution != null ||
+        t._urlContext != null);
+
+    if (hasFunctionDeclarations && hasOtherTools) {
+      throw ArgumentError(
+        'Function declarations cannot be combined with other tool types '
+        '(googleSearch, codeExecution, urlContext) in the same request. '
+        'The Gemini API does not support mixing function calling with other '
+        'tool types. Use separate model instances or separate requests for '
+        'different tool types.',
+      );
+    }
   }
 
   /// Convert to json object.

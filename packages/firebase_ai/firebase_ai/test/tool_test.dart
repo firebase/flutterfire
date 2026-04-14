@@ -227,6 +227,104 @@ void main() {
       });
     });
 
+    // Test Tool.validateToolCombination
+    group('validateToolCombination', () {
+      test('allows function declarations alone', () {
+        expect(
+          () => Tool.validateToolCombination([
+            Tool.functionDeclarations([
+              FunctionDeclaration('fn', 'desc',
+                  parameters: {'p': Schema.string()}),
+            ]),
+          ]),
+          returnsNormally,
+        );
+      });
+
+      test('allows googleSearch alone', () {
+        expect(
+          () => Tool.validateToolCombination([Tool.googleSearch()]),
+          returnsNormally,
+        );
+      });
+
+      test('allows codeExecution alone', () {
+        expect(
+          () => Tool.validateToolCombination([Tool.codeExecution()]),
+          returnsNormally,
+        );
+      });
+
+      test('allows urlContext alone', () {
+        expect(
+          () => Tool.validateToolCombination([Tool.urlContext()]),
+          returnsNormally,
+        );
+      });
+
+      test('allows empty list', () {
+        expect(
+          () => Tool.validateToolCombination([]),
+          returnsNormally,
+        );
+      });
+
+      test('throws when mixing functionDeclarations with googleSearch', () {
+        expect(
+          () => Tool.validateToolCombination([
+            Tool.functionDeclarations([
+              FunctionDeclaration('fn', 'desc',
+                  parameters: {'p': Schema.string()}),
+            ]),
+            Tool.googleSearch(),
+          ]),
+          throwsArgumentError,
+        );
+      });
+
+      test('throws when mixing functionDeclarations with codeExecution', () {
+        expect(
+          () => Tool.validateToolCombination([
+            Tool.functionDeclarations([
+              FunctionDeclaration('fn', 'desc',
+                  parameters: {'p': Schema.string()}),
+            ]),
+            Tool.codeExecution(),
+          ]),
+          throwsArgumentError,
+        );
+      });
+
+      test('throws when mixing functionDeclarations with urlContext', () {
+        expect(
+          () => Tool.validateToolCombination([
+            Tool.functionDeclarations([
+              FunctionDeclaration('fn', 'desc',
+                  parameters: {'p': Schema.string()}),
+            ]),
+            Tool.urlContext(),
+          ]),
+          throwsArgumentError,
+        );
+      });
+
+      test('allows multiple function declaration tools', () {
+        expect(
+          () => Tool.validateToolCombination([
+            Tool.functionDeclarations([
+              FunctionDeclaration('fn1', 'desc1',
+                  parameters: {'p': Schema.string()}),
+            ]),
+            Tool.functionDeclarations([
+              FunctionDeclaration('fn2', 'desc2',
+                  parameters: {'p': Schema.string()}),
+            ]),
+          ]),
+          returnsNormally,
+        );
+      });
+    });
+
     // Test FunctionCallingConfig
     test('FunctionCallingConfig.auto()', () {
       final config = FunctionCallingConfig.auto();
