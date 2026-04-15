@@ -271,22 +271,33 @@ class BidiSessionController extends ChangeNotifier {
 
   Future<void> _sessionResume() async {
     if (isSessionActive) {
-      // Explicit false means we keep the hardware pipelines active
-      // so they immediately route data to the new session object
-      await _stopSession(explicit: false);
-      await _startSession(explicit: false);
+      // Try stopping explicitly to reset hardware and stop spamming,
+      // mimicking the manual stop/resume flow that works.
+      await _stopSession(explicit: true);
+      await _startSession(explicit: true);
     }
   }
 
-  void _onAudioData(Uint8List data) {
+  Future<void> _onAudioData(Uint8List data) async {
     if (isSessionActive && _session != null) {
-      _session!.sendAudioRealtime(InlineDataPart('audio/pcm', data));
+      try {
+        await _session!.sendAudioRealtime(InlineDataPart('audio/pcm', data));
+      } catch (e) {
+        developer.log('Error sending audio realtime: $e');
+        // If we hit a closed socket, stop trying to send until reconnected
+        isMicOn = false;
+        notifyListeners();
+      }
     }
   }
 
-  void _onVideoData(Uint8List data, String mimeType) {
+  Future<void> _onVideoData(Uint8List data, String mimeType) async {
     if (isSessionActive && _session != null) {
-      _session!.sendVideoRealtime(InlineDataPart(mimeType, data));
+      try {
+        await _session!.sendVideoRealtime(InlineDataPart(mimeType, data));
+      } catch (e) {
+        developer.log('Error sending video realtime: $e');
+      }
     }
   }
 
@@ -426,16 +437,16 @@ class BidiSessionController extends ChangeNotifier {
       if (_activeSessionHandle != null) {
         developer.log('=====================================================');
         developer.log('Resume Session with handle: $_activeSessionHandle');
-        await _sessionResume();
+        unawaited(_sessionResume());
       }
     } else if (message is SessionResumptionUpdate &&
         message.resumable != null &&
         message.resumable!) {
       _activeSessionHandle = message.newHandle;
       _lastProcessedIndex = message.lastConsumedClientMessageIndex;
-      developer.log(
-        'SessionResumptionUpdate: handle ${message.newHandle}, index $_lastProcessedIndex',
-      );
+      // developer.log(
+      //   'SessionResumptionUpdate: handle ${message.newHandle}, index $_lastProcessedIndex',
+      // );
     }
   }
 
@@ -521,6 +532,13 @@ class BidiSessionController extends ChangeNotifier {
       } else {
         throw UnimplementedError('Function not declared: ${functionCall.name}');
       }
+    }
+  }
+
+  void simulateGoingAway() {
+    if (isSessionActive && _session != null) {
+      developer.log('Simulating GoingAwayNotice locally');
+      _handleLiveServerMessage(LiveServerResponse(message: const GoingAwayNotice(timeLeft: '10')));
     }
   }
 
@@ -631,6 +649,19 @@ class _BidiPageState extends State<BidiPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Live Stream Session', style: TextStyle(fontWeight: FontWeight.bold)),
+                  ElevatedButton.icon(
+                    icon: const Icon(Icons.speed, size: 16),
+                    label: const Text('Simulate GoAway'),
+                    style: ElevatedButton.styleFrom(visualDensity: VisualDensity.compact),
+                    onPressed: _controller.isSessionActive ? () => _controller.simulateGoingAway() : null,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
               if (_controller.isCameraOn)
                 Container(
                   height: 200,

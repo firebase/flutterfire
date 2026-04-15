@@ -144,15 +144,30 @@ class LiveSession {
           var jsonString = utf8.decode(message);
           var response = json.decode(jsonString);
 
-          _messageController.add(parseServerResponse(response));
+          if (!_messageController.isClosed) {
+            _messageController.add(parseServerResponse(response));
+          }
         } catch (e) {
-          _messageController.addError(e);
+          if (!_messageController.isClosed && _messageController.hasListener) {
+            _messageController.addError(e);
+          } else {
+            log('live_session: Dropped parse error because no listeners: $e');
+          }
         }
       },
       onError: (error) {
-        _messageController.addError(error);
+        if (!_messageController.isClosed && _messageController.hasListener) {
+          _messageController.addError(error);
+        } else {
+          log('live_session: Dropped stream error because no listeners: $error');
+        }
       },
-      onDone: _messageController.close,
+      onDone: () {
+        log('live_session: WebSocket stream done.');
+        if (!_messageController.isClosed) {
+          _messageController.close();
+        }
+      },
     );
   }
 
@@ -166,18 +181,31 @@ class LiveSession {
   /// such as the handle to the previous session state to restore.
   Future<void> resumeSession(
       {SessionResumptionConfig? sessionResumption}) async {
-    await _wsSubscription.cancel();
-    await _ws.sink.close();
+    log('live_session.resumeSession: Attempting to resume with handle ${sessionResumption?.handle}');
+    try {
+      await _wsSubscription.cancel().timeout(const Duration(seconds: 2),
+          onTimeout: () {
+        log('live_session.resumeSession: WebSocket subscription cancel timed out.');
+      });
+      await _ws.sink.close().timeout(const Duration(seconds: 2), onTimeout: () {
+        log('live_session.resumeSession: WebSocket close timed out.');
+      });
+      log('live_session.resumeSession: WebSocket cancel and close done.');
 
-    _ws = await _performWebSocketSetup(
-      uri: _uri,
-      headers: _headers,
-      modelString: _modelString,
-      systemInstruction: _systemInstruction,
-      tools: _tools,
-      sessionResumption: sessionResumption,
-      liveGenerationConfig: _liveGenerationConfig,
-    );
+      _ws = await _performWebSocketSetup(
+        uri: _uri,
+        headers: _headers,
+        modelString: _modelString,
+        systemInstruction: _systemInstruction,
+        tools: _tools,
+        sessionResumption: sessionResumption,
+        liveGenerationConfig: _liveGenerationConfig,
+      );
+      log('live_session.resumeSession: WebSocket setup success');
+    } catch (e) {
+      log('live_session.resumeSession: WebSocket setup failed: $e');
+      rethrow;
+    }
 
     _listenToWebSocket();
   }
@@ -300,16 +328,28 @@ class LiveSession {
     _checkWsStatus();
 
     await for (final result in _messageController.stream) {
-      log('live_session.received result, ${result.message.runtimeType}');
       yield result;
     }
   }
 
   /// Closes the WebSocket connection.
   Future<void> close() async {
-    await _wsSubscription.cancel();
-    await _messageController.close();
-    await _ws.sink.close();
+    log('live_session.close: closing session');
+    try {
+      await _wsSubscription.cancel().timeout(const Duration(seconds: 1),
+          onTimeout: () {
+        log('live_session.close: cancel timed out');
+      });
+      if (!_messageController.isClosed) {
+        await _messageController.close();
+      }
+      await _ws.sink.close().timeout(const Duration(seconds: 1), onTimeout: () {
+        log('live_session.close: sink close timed out');
+      });
+    } catch (e) {
+      log('live_session.close: error during close: $e');
+    }
+    log('live_session.close: completed');
   }
 
   void _checkWsStatus() {
