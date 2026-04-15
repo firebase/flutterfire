@@ -432,8 +432,6 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
   void publishResultToStream(QueryResult<Data, Variables> result) {
     if (_streamController != null) {
       _streamController?.add(result);
-    } else {
-      log("QueryRef $operationId _streamFromServer loop _streamController is null");
     }
   }
 
