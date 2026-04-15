@@ -112,9 +112,9 @@ void FlutterCustomAppCheckProvider::GetToken(
     std::function<void(firebase::app_check::AppCheckToken, int,
                        const std::string&)>
         completion_callback) {
-  auto completion = std::make_shared<
-      std::function<void(firebase::app_check::AppCheckToken, int,
-                         const std::string&)>>(std::move(completion_callback));
+  auto completion = std::make_shared<std::function<void(
+      firebase::app_check::AppCheckToken, int, const std::string&)>>(
+      std::move(completion_callback));
 
   flutter_api_->GetCustomToken(
       [completion](const CustomAppCheckToken& dart_token) {
@@ -216,8 +216,7 @@ void FirebaseAppCheckPlugin::Activate(
     std::function<void(std::optional<FlutterError> reply)> result) {
   if (windows_provider != nullptr && *windows_provider == "custom") {
     custom_provider_factory_ =
-        std::make_unique<FlutterCustomAppCheckProviderFactory>(
-            binaryMessenger);
+        std::make_unique<FlutterCustomAppCheckProviderFactory>(binaryMessenger);
     AppCheck::SetAppCheckProviderFactory(custom_provider_factory_.get());
   } else {
     DebugAppCheckProviderFactory* factory =
