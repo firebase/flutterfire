@@ -1,3 +1,10 @@
+## 3.11.0
+
+ - **FEAT**(firebaseai): server prompt chat and function calling ([#17972](https://github.com/firebase/flutterfire/issues/17972)). ([4b8f2288](https://github.com/firebase/flutterfire/commit/4b8f22889808c0a55f4fc2abc52c72aa2d932379))
+ - **FEAT**(firebaseai): add spm support for firebase_ai, and update example to running with spm ([#18159](https://github.com/firebase/flutterfire/issues/18159)). ([bb1e04f8](https://github.com/firebase/flutterfire/commit/bb1e04f8cd0f29cad3913af7bcf40744ffb2515a))
+ - **FEAT**(firebaseai): deprecate imagen ([#18148](https://github.com/firebase/flutterfire/issues/18148)). ([99450317](https://github.com/firebase/flutterfire/commit/99450317d83f7b77ab192aed7071432785337789))
+ - **FEAT**(firebaseai): Add ability for Schema class to export to json schema ([#18131](https://github.com/firebase/flutterfire/issues/18131)). ([5818a33c](https://github.com/firebase/flutterfire/commit/5818a33c060f775b4a00e11ad5ee04b71e939dad))
+
 ## 3.10.0
 
  - **FEAT**(firebaseai): add proper headers for X-Android-Package, X-Android-Cert and x-ios-bundle-identifier ([#18076](https://github.com/firebase/flutterfire/issues/18076)). ([1351e94e](https://github.com/firebase/flutterfire/commit/1351e94ed3213c458a955cebf05802f12838d5f7))

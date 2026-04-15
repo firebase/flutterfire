@@ -1,3 +1,8 @@
+## 12.3.0
+
+ - **FEAT**(database,android): fix order issue ([#18142](https://github.com/firebase/flutterfire/issues/18142)). ([5dd661cb](https://github.com/firebase/flutterfire/commit/5dd661cb7b9efa9e02c1bc9233222860be8be7bd))
+ - **FEAT**: use local firebase_core instead of remote SPM dependency ([#18141](https://github.com/firebase/flutterfire/issues/18141)). ([995caf40](https://github.com/firebase/flutterfire/commit/995caf400df80c0fde7151c651ccc6c0f756e381))
+
 ## 12.2.0
 
  - **FIX**(database,iOS): remove unnecessary order modifier checks in query construction ([#18134](https://github.com/firebase/flutterfire/issues/18134)). ([4fa10c36](https://github.com/firebase/flutterfire/commit/4fa10c36d195d4cd67c39d89984cfe5a1eee5d85))

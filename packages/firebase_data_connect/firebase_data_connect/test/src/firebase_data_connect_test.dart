@@ -25,7 +25,16 @@ import 'package:mockito/mockito.dart';
 @GenerateNiceMocks([MockSpec<FirebaseApp>(), MockSpec<ConnectorConfig>()])
 import 'firebase_data_connect_test.mocks.dart';
 
-class MockFirebaseAuth extends Mock implements FirebaseAuth {}
+class MockFirebaseAuth extends Mock implements FirebaseAuth {
+  @override
+  Stream<User?> idTokenChanges() {
+    return super.noSuchMethod(
+      Invocation.method(#idTokenChanges, []),
+      returnValue: const Stream<User?>.empty(),
+      returnValueForMissingStub: const Stream<User?>.empty(),
+    ) as Stream<User?>;
+  }
+}
 
 class MockFirebaseAppCheck extends Mock implements FirebaseAppCheck {}
 

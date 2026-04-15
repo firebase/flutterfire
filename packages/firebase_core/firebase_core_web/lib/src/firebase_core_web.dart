@@ -214,6 +214,17 @@ class FirebaseCoreWeb extends FirebasePlatform {
           return Future.value();
         }
 
+        const firestoreServiceName = 'firestore';
+
+        if (service.name == firestoreServiceName) {
+          // Inject the Firestore Pipelines script. This bundle supports both
+          // Pipeline operations (Enterprise edition) and standard Firestore queries.
+          return injectSrcScript(
+            'https://www.gstatic.com/firebasejs/$version/firebase-firestore-pipelines.js',
+            'firebase_$firestoreServiceName',
+          );
+        }
+
         return injectSrcScript(
           'https://www.gstatic.com/firebasejs/$version/firebase-${service.name}.js',
           'firebase_${service.override ?? service.name}',

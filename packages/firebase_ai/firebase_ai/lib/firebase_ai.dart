@@ -22,6 +22,8 @@ export 'src/api.dart'
         FinishReason,
         GenerateContentResponse,
         GenerationConfig,
+        GoogleMapsGroundingChunk,
+        GroundingChunk,
         ThinkingConfig,
         ThinkingLevel,
         HarmBlockThreshold,
@@ -32,7 +34,8 @@ export 'src/api.dart'
         ResponseModalities,
         SafetyRating,
         SafetySetting,
-        UsageMetadata;
+        UsageMetadata,
+        WebGroundingChunk;
 export 'src/base_model.dart'
     show
         GenerativeModel,
@@ -128,5 +131,8 @@ export 'src/tool.dart'
         Tool,
         ToolConfig,
         GoogleSearch,
+        GoogleMaps,
         CodeExecution,
-        UrlContext;
+        UrlContext,
+        LatLng,
+        RetrievalConfig;

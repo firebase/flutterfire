@@ -1115,6 +1115,43 @@ void main() {
       expect(urlContextMetadata.urlMetadata[0].urlRetrievalStatus,
           UrlRetrievalStatus.error);
     });
+
+    test('parses json with google maps grounding chunk', () {
+      final jsonResponse = {
+        'candidates': [
+          {
+            'content': {
+              'parts': [
+                {'text': 'This is a maps response.'}
+              ]
+            },
+            'finishReason': 'STOP',
+            'groundingMetadata': {
+              'groundingChunks': [
+                {
+                  'maps': {
+                    'uri': 'https://maps.google.com/?cid=123',
+                    'title': 'Google HQ',
+                    'placeId': 'ChIJS5dFe_cZzosR26ZvwqWaMAM',
+                  }
+                }
+              ],
+            }
+          }
+        ]
+      };
+
+      final response =
+          VertexSerialization().parseGenerateContentResponse(jsonResponse);
+      final groundingMetadata = response.candidates.first.groundingMetadata;
+
+      expect(groundingMetadata, isNotNull);
+      final groundingChunk = groundingMetadata!.groundingChunks.first;
+      expect(groundingChunk.maps?.uri, 'https://maps.google.com/?cid=123');
+      expect(groundingChunk.maps?.title, 'Google HQ');
+      expect(groundingChunk.maps?.placeId, 'ChIJS5dFe_cZzosR26ZvwqWaMAM');
+      expect(groundingChunk.web, isNull);
+    });
   });
 
   group('parses and throws error responses', () {

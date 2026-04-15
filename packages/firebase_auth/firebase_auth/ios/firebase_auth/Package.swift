@@ -7,8 +7,8 @@
 
 import PackageDescription
 
-let library_version = "6.2.0"
-let firebase_sdk_version: Version = "12.9.0"
+let library_version = "6.4.0"
+let firebase_sdk_version: Version = "12.12.0"
 
 let package = Package(
   name: "firebase_auth",

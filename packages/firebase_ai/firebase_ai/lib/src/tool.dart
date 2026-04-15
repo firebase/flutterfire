@@ -24,12 +24,12 @@ import 'schema.dart';
 final class Tool {
   // ignore: public_member_api_docs
   Tool._(this._functionDeclarations, this._googleSearch, this._codeExecution,
-      this._urlContext);
+      this._urlContext, this._googleMaps);
 
   /// Returns a [Tool] instance with list of [FunctionDeclaration].
   static Tool functionDeclarations(
       List<FunctionDeclaration> functionDeclarations) {
-    return Tool._(functionDeclarations, null, null, null);
+    return Tool._(functionDeclarations, null, null, null, null);
   }
 
   /// Creates a tool that allows the model to use Grounding with Google Search.
@@ -50,13 +50,13 @@ final class Tool {
   ///
   /// Returns a `Tool` configured for Google Search.
   static Tool googleSearch({GoogleSearch googleSearch = const GoogleSearch()}) {
-    return Tool._(null, googleSearch, null, null);
+    return Tool._(null, googleSearch, null, null, null);
   }
 
   /// Returns a [Tool] instance that enables the model to use Code Execution.
   static Tool codeExecution(
       {CodeExecution codeExecution = const CodeExecution()}) {
-    return Tool._(null, null, codeExecution, null);
+    return Tool._(null, null, codeExecution, null, null);
   }
 
   /// Creates a tool that allows you to provide additional context to the models
@@ -73,7 +73,27 @@ final class Tool {
   /// is in Public Preview, which means that the feature is not subject to any SLA
   /// or deprecation policy and could change in backwards-incompatible ways.
   static Tool urlContext({UrlContext urlContext = const UrlContext()}) {
-    return Tool._(null, null, null, urlContext);
+    return Tool._(null, null, null, urlContext, null);
+  }
+
+  /// Creates a tool that allows the model to use Grounding with Google Maps.
+  ///
+  /// Grounding with Google Maps can be used to allow the model to connect to
+  /// Google Maps to access and incorporate location-based information into its
+  /// responses.
+  ///
+  /// When using this feature, you are required to comply with the
+  /// "Grounding with Google Maps" usage requirements for your chosen API
+  /// provider:
+  /// [Gemini Developer API](https://ai.google.dev/gemini-api/terms#grounding-with-google-maps)
+  /// or Vertex AI Gemini API (see [Service Terms](https://cloud.google.com/terms/service-terms)
+  /// section within the Service Specific Terms).
+  ///
+  /// - [googleMaps]: An empty [GoogleMaps] object.
+  ///
+  /// Returns a `Tool` configured for Google Maps.
+  static Tool googleMaps({GoogleMaps googleMaps = const GoogleMaps()}) {
+    return Tool._(null, null, null, null, googleMaps);
   }
 
   /// A list of `FunctionDeclarations` available to the model that can be used
@@ -97,6 +117,10 @@ final class Tool {
   /// A tool that allows providing URL context to the model.
   final UrlContext? _urlContext;
 
+  /// A tool that allows the model to connect to Google Maps to access
+  /// location-based information.
+  final GoogleMaps? _googleMaps;
+
   /// Returns a list of all [AutoFunctionDeclaration] objects
   /// found within the [_functionDeclarations] list.
   List<AutoFunctionDeclaration> get autoFunctionDeclarations {
@@ -117,6 +141,8 @@ final class Tool {
           'codeExecution': _codeExecution.toJson(),
         if (_urlContext case final _urlContext?)
           'urlContext': _urlContext.toJson(),
+        if (_googleMaps case final _googleMaps?)
+          'googleMaps': _googleMaps.toJson(),
       };
 }
 
@@ -133,6 +159,23 @@ final class Tool {
 final class GoogleSearch {
   // ignore: public_member_api_docs
   const GoogleSearch();
+
+  /// Convert to json object.
+  Map<String, Object> toJson() => {};
+}
+
+/// A tool that allows a Gemini model to connect to Google Maps to access and
+/// incorporate location-based information into its responses.
+///
+/// Important: If using Grounding with Google Maps, you are required to comply
+/// with the "Grounding with Google Maps" usage requirements for your chosen API
+/// provider:
+/// [Gemini Developer API](https://ai.google.dev/gemini-api/terms#grounding-with-google-maps)
+/// or Vertex AI Gemini API (see [Service Terms](https://cloud.google.com/terms/service-terms)
+/// section within the Service Specific Terms).
+final class GoogleMaps {
+  // ignore: public_member_api_docs
+  const GoogleMaps();
 
   /// Convert to json object.
   Map<String, Object> toJson() => {};
@@ -229,15 +272,57 @@ final class AutoFunctionDeclaration extends FunctionDeclaration {
 /// Config for tools to use with model.
 final class ToolConfig {
   // ignore: public_member_api_docs
-  ToolConfig({this.functionCallingConfig});
+  ToolConfig({this.functionCallingConfig, this.retrievalConfig});
 
   /// Config for function calling.
   final FunctionCallingConfig? functionCallingConfig;
+
+  /// Config that specifies information which can be used by tools during inference calls.
+  final RetrievalConfig? retrievalConfig;
 
   /// Convert to json object.
   Map<String, Object?> toJson() => {
         if (functionCallingConfig case final config?)
           'functionCallingConfig': config.toJson(),
+        if (retrievalConfig case final config?)
+          'retrievalConfig': config.toJson(),
+      };
+}
+
+/// An object that represents a latitude/longitude pair.
+final class LatLng {
+  // ignore: public_member_api_docs
+  LatLng({required this.latitude, required this.longitude});
+
+  /// The latitude in degrees. It must be in the range [-90.0, +90.0].
+  final double latitude;
+
+  /// The longitude in degrees. It must be in the range [-180.0, +180.0].
+  final double longitude;
+
+  /// Convert to json object.
+  Map<String, Object?> toJson() => {
+        'latitude': latitude,
+        'longitude': longitude,
+      };
+}
+
+/// The configuration that specifies information which can be used by tools
+/// during inference calls.
+final class RetrievalConfig {
+  // ignore: public_member_api_docs
+  RetrievalConfig({this.latLng, this.languageCode});
+
+  /// A latitude/longitude pair.
+  final LatLng? latLng;
+
+  /// The language code.
+  final String? languageCode;
+
+  /// Convert to json object.
+  Map<String, Object?> toJson() => {
+        if (latLng case final latLng?) 'latLng': latLng.toJson(),
+        if (languageCode case final languageCode?) 'languageCode': languageCode,
       };
 }
 
