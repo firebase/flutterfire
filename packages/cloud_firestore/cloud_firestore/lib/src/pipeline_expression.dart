@@ -39,6 +39,63 @@ void _validateTimestampUnit(String unit) {
   }
 }
 
+/// Validates and normalizes [Expression.switchOn] arguments.
+List<Object> _parseSwitchOnParts(List<Object?> parts) {
+  final n = parts.length;
+  if (n < 2) {
+    throw ArgumentError.value(
+      parts,
+      'parts',
+      'switchOn requires at least a condition and a result',
+    );
+  }
+  if (n.isEven) {
+    final out = <Object>[];
+    for (var i = 0; i < n; i += 2) {
+      final c = parts[i];
+      final r = parts[i + 1];
+      if (c is! BooleanExpression) {
+        throw ArgumentError(
+          'switchOn position $i: expected BooleanExpression, got ${c.runtimeType}',
+        );
+      }
+      if (r is! Expression) {
+        throw ArgumentError(
+          'switchOn position ${i + 1}: expected Expression, got ${r.runtimeType}',
+        );
+      }
+      out.add(c);
+      out.add(r);
+    }
+    return out;
+  }
+  final out = <Object>[];
+  for (var i = 0; i < n - 1; i += 2) {
+    final c = parts[i];
+    final r = parts[i + 1];
+    if (c is! BooleanExpression) {
+      throw ArgumentError(
+        'switchOn position $i: expected BooleanExpression, got ${c.runtimeType}',
+      );
+    }
+    if (r is! Expression) {
+      throw ArgumentError(
+        'switchOn position ${i + 1}: expected Expression, got ${r.runtimeType}',
+      );
+    }
+    out.add(c);
+    out.add(r);
+  }
+  final d = parts[n - 1];
+  if (d is! Expression) {
+    throw ArgumentError(
+      'switchOn default: expected Expression, got ${d.runtimeType}',
+    );
+  }
+  out.add(d);
+  return out;
+}
+
 /// Value types for [Expression.isType] and [Expression.isTypeStatic].
 enum Type {
   /// `null`
@@ -291,6 +348,49 @@ abstract class Expression implements PipelineSerializable {
   // ignore: use_to_and_as_if_applicable
   Expression mapEntries() {
     return _MapEntriesExpression(this);
+  }
+
+  /// Returns an array of keys for this map expression.
+  // ignore: use_to_and_as_if_applicable
+  Expression mapKeys() {
+    return _MapKeysExpression(this);
+  }
+
+  /// Returns an array of values for this map expression.
+  // ignore: use_to_and_as_if_applicable
+  Expression mapValues() {
+    return _MapValuesExpression(this);
+  }
+
+  /// Parent collection or document reference for this document reference expression.
+  // ignore: use_to_and_as_if_applicable
+  Expression parent() {
+    return _ParentExpression(this);
+  }
+
+  /// Difference between this timestamp ([end]) and [start], in [unit] (a unit string
+  /// or an expression).
+  Expression timestampDiff(Expression start, Object unit) {
+    return _TimestampDiffExpression(this, start, _toExpression(unit));
+  }
+
+  /// Extracts [part] (string or expression) from this timestamp; optional [timezone].
+  Expression timestampExtract(Object part, [Object? timezone]) {
+    return _TimestampExtractExpression(
+      this,
+      _toExpression(part),
+      timezone == null ? null : _toExpression(timezone),
+    );
+  }
+
+  /// If this expression is null, evaluates to [replacement].
+  Expression ifNull(Expression replacement) {
+    return _IfNullExpression(this, replacement);
+  }
+
+  /// If this expression is null, evaluates to [replacement].
+  Expression ifNullValue(Object? replacement) {
+    return _IfNullExpression(this, _toExpression(replacement));
   }
 
   // ============================================================================
@@ -949,9 +1049,46 @@ abstract class Expression implements PipelineSerializable {
     return _TimestampTruncateExpression(timestamp, unit);
   }
 
+  /// Difference between [end] and [start] timestamps in [unit] (string or expression).
+  static Expression timestampDiffStatic(
+    Expression end,
+    Expression start,
+    Object unit,
+  ) {
+    return end.timestampDiff(start, unit);
+  }
+
   /// Creates a document ID expression from a DocumentReference
   static Expression documentIdFromRef(DocumentReference docRef) {
     return _DocumentIdFromRefExpression(docRef);
+  }
+
+  /// Parent collection or document reference of a constant [docRef].
+  static Expression parentFromRef(DocumentReference docRef) {
+    return _ParentFromDocumentRefExpression(docRef);
+  }
+
+  /// First non-null argument among operands (short-circuit).
+  static Expression coalesce(
+    Expression first,
+    Object second, [
+    List<Object?>? more,
+  ]) {
+    final expressions = <Expression>[first, _toExpression(second)];
+    if (more != null) {
+      for (final o in more) {
+        expressions.add(_toExpression(o));
+      }
+    }
+    return _CoalesceExpression(expressions);
+  }
+
+  /// Switch: first matching [BooleanExpression] condition wins.
+  ///
+  /// [parts] alternates condition, result, ... If [parts] has odd length, the last
+  /// value is a default [Expression] when no condition matches.
+  static Expression switchOn(List<Object?> parts) {
+    return _SwitchOnExpression(_parseSwitchOnParts(parts));
   }
 
   /// Checks if a value is in a list (IN operator)
@@ -1215,6 +1352,72 @@ abstract class Expression implements PipelineSerializable {
     if (expression29 != null) expressions.add(expression29);
     if (expression30 != null) expressions.add(expression30);
     return _OrExpression(expressions);
+  }
+
+  /// Combines boolean expressions with a logical NOR
+  static BooleanExpression nor(
+    BooleanExpression expression1, [
+    BooleanExpression? expression2,
+    BooleanExpression? expression3,
+    BooleanExpression? expression4,
+    BooleanExpression? expression5,
+    BooleanExpression? expression6,
+    BooleanExpression? expression7,
+    BooleanExpression? expression8,
+    BooleanExpression? expression9,
+    BooleanExpression? expression10,
+    BooleanExpression? expression11,
+    BooleanExpression? expression12,
+    BooleanExpression? expression13,
+    BooleanExpression? expression14,
+    BooleanExpression? expression15,
+    BooleanExpression? expression16,
+    BooleanExpression? expression17,
+    BooleanExpression? expression18,
+    BooleanExpression? expression19,
+    BooleanExpression? expression20,
+    BooleanExpression? expression21,
+    BooleanExpression? expression22,
+    BooleanExpression? expression23,
+    BooleanExpression? expression24,
+    BooleanExpression? expression25,
+    BooleanExpression? expression26,
+    BooleanExpression? expression27,
+    BooleanExpression? expression28,
+    BooleanExpression? expression29,
+    BooleanExpression? expression30,
+  ]) {
+    final expressions = <BooleanExpression>[expression1];
+    if (expression2 != null) expressions.add(expression2);
+    if (expression3 != null) expressions.add(expression3);
+    if (expression4 != null) expressions.add(expression4);
+    if (expression5 != null) expressions.add(expression5);
+    if (expression6 != null) expressions.add(expression6);
+    if (expression7 != null) expressions.add(expression7);
+    if (expression8 != null) expressions.add(expression8);
+    if (expression9 != null) expressions.add(expression9);
+    if (expression10 != null) expressions.add(expression10);
+    if (expression11 != null) expressions.add(expression11);
+    if (expression12 != null) expressions.add(expression12);
+    if (expression13 != null) expressions.add(expression13);
+    if (expression14 != null) expressions.add(expression14);
+    if (expression15 != null) expressions.add(expression15);
+    if (expression16 != null) expressions.add(expression16);
+    if (expression17 != null) expressions.add(expression17);
+    if (expression18 != null) expressions.add(expression18);
+    if (expression19 != null) expressions.add(expression19);
+    if (expression20 != null) expressions.add(expression20);
+    if (expression21 != null) expressions.add(expression21);
+    if (expression22 != null) expressions.add(expression22);
+    if (expression23 != null) expressions.add(expression23);
+    if (expression24 != null) expressions.add(expression24);
+    if (expression25 != null) expressions.add(expression25);
+    if (expression26 != null) expressions.add(expression26);
+    if (expression27 != null) expressions.add(expression27);
+    if (expression28 != null) expressions.add(expression28);
+    if (expression29 != null) expressions.add(expression29);
+    if (expression30 != null) expressions.add(expression30);
+    return _NorExpression(expressions);
   }
 
   /// Joins array elements with a delimiter
@@ -3101,6 +3304,219 @@ class _MapEntriesExpression extends FunctionExpression {
       'name': name,
       'args': {
         'expression': expression.toMap(),
+      },
+    };
+  }
+}
+
+/// Serialized pipeline function `map_keys`.
+class _MapKeysExpression extends FunctionExpression {
+  final Expression expression;
+
+  _MapKeysExpression(this.expression);
+
+  @override
+  String get name => 'map_keys';
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'args': {
+        'expression': expression.toMap(),
+      },
+    };
+  }
+}
+
+/// Serialized pipeline function `map_values`.
+class _MapValuesExpression extends FunctionExpression {
+  final Expression expression;
+
+  _MapValuesExpression(this.expression);
+
+  @override
+  String get name => 'map_values';
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'args': {
+        'expression': expression.toMap(),
+      },
+    };
+  }
+}
+
+/// Serialized pipeline function `parent` (expression operand).
+class _ParentExpression extends FunctionExpression {
+  final Expression expression;
+
+  _ParentExpression(this.expression);
+
+  @override
+  String get name => 'parent';
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'args': {
+        'expression': expression.toMap(),
+      },
+    };
+  }
+}
+
+/// Serialized pipeline function `parent` ([DocumentReference] constant).
+class _ParentFromDocumentRefExpression extends FunctionExpression {
+  final DocumentReference docRef;
+
+  _ParentFromDocumentRefExpression(this.docRef);
+
+  @override
+  String get name => 'parent';
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'args': {
+        'doc_ref': docRef.path,
+      },
+    };
+  }
+}
+
+/// Serialized pipeline function `timestamp_diff`.
+class _TimestampDiffExpression extends FunctionExpression {
+  final Expression end;
+  final Expression start;
+  final Expression unit;
+
+  _TimestampDiffExpression(this.end, this.start, this.unit);
+
+  @override
+  String get name => 'timestamp_diff';
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'args': {
+        'end': end.toMap(),
+        'start': start.toMap(),
+        'unit': unit.toMap(),
+      },
+    };
+  }
+}
+
+/// Serialized pipeline function `timestamp_extract`.
+class _TimestampExtractExpression extends FunctionExpression {
+  final Expression timestamp;
+  final Expression part;
+  final Expression? timezone;
+
+  _TimestampExtractExpression(this.timestamp, this.part, this.timezone);
+
+  @override
+  String get name => 'timestamp_extract';
+
+  @override
+  Map<String, dynamic> toMap() {
+    final args = <String, dynamic>{
+      'timestamp': timestamp.toMap(),
+      'part': part.toMap(),
+    };
+    final tz = timezone;
+    if (tz != null) {
+      args['timezone'] = tz.toMap();
+    }
+    return {
+      'name': name,
+      'args': args,
+    };
+  }
+}
+
+/// Serialized pipeline function `if_null`.
+class _IfNullExpression extends FunctionExpression {
+  final Expression expression;
+  final Expression replacement;
+
+  _IfNullExpression(this.expression, this.replacement);
+
+  @override
+  String get name => 'if_null';
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'args': {
+        'expression': expression.toMap(),
+        'replacement': replacement.toMap(),
+      },
+    };
+  }
+}
+
+class _NorExpression extends BooleanExpression {
+  final List<BooleanExpression> expressions;
+
+  _NorExpression(this.expressions);
+
+  @override
+  String get name => 'nor';
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'args': {
+        'expressions': expressions.map((e) => e.toMap()).toList(),
+      },
+    };
+  }
+}
+
+/// Serialized pipeline function `switch_on`.
+class _SwitchOnExpression extends FunctionExpression {
+  final List<Object> parts;
+
+  _SwitchOnExpression(this.parts);
+
+  @override
+  String get name => 'switch_on';
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'args': {
+        'expressions': parts.map((p) => (p as Expression).toMap()).toList(),
+      },
+    };
+  }
+}
+
+/// Serialized pipeline function `coalesce`.
+class _CoalesceExpression extends FunctionExpression {
+  final List<Expression> expressions;
+
+  _CoalesceExpression(this.expressions);
+
+  @override
+  String get name => 'coalesce';
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'args': {
+        'expressions': expressions.map((e) => e.toMap()).toList(),
       },
     };
   }

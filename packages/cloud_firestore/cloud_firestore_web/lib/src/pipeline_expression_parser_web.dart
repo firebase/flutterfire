@@ -360,6 +360,59 @@ class PipelineExpressionParserWeb {
       case 'array_index_of_all':
         return (_expr(argsMap, _kExpression) as interop.ExpressionJsImpl)
             .arrayIndexOfAll(_expr(argsMap, 'element'));
+      case 'timestamp_diff':
+        return _pipelines.timestampDiff(
+          _expr(argsMap, 'end'),
+          _expr(argsMap, 'start'),
+          _expr(argsMap, 'unit'),
+        );
+      case 'timestamp_extract':
+        {
+          final ts = _expr(argsMap, 'timestamp');
+          final part = _expr(argsMap, 'part');
+          final tzRaw = argsMap['timezone'];
+          if (tzRaw == null) {
+            return _pipelines.timestampExtract(ts, part);
+          }
+          final tzJs = tzRaw is String
+              ? tzRaw.toJS
+              : toExpression(tzRaw as Map<String, dynamic>);
+          return _pipelines.timestampExtract(ts, part, tzJs);
+        }
+      case 'parent':
+        {
+          final docRefPath = argsMap['doc_ref'] as String?;
+          if (docRefPath != null && docRefPath.isNotEmpty) {
+            final docRef = interop.doc(_jsFirestore as JSAny, docRefPath.toJS);
+            return _pipelines.parent(docRef);
+          }
+          return _pipelines.parent(_expr(argsMap, _kExpression));
+        }
+      case 'if_null':
+        return _pipelines.ifNull(
+          _expr(argsMap, _kExpression),
+          _expr(argsMap, 'replacement'),
+        );
+      case 'coalesce':
+        {
+          final exprMaps = argsMap['expressions'] as List<dynamic>?;
+          if (exprMaps == null || exprMaps.length < 2) {
+            throw UnsupportedError(
+                'coalesce requires at least two expressions');
+          }
+          final first = toExpression(exprMaps[0] as Map<String, dynamic>);
+          final second = toExpression(exprMaps[1] as Map<String, dynamic>);
+          if (exprMaps.length == 2) {
+            return _pipelines.coalesce(first, second, <JSAny>[].toJS);
+          }
+          final more = <JSAny>[];
+          for (var i = 2; i < exprMaps.length; i++) {
+            more.add(toExpression(exprMaps[i] as Map<String, dynamic>));
+          }
+          return _pipelines.coalesce(first, second, more.toJS);
+        }
+      case 'switch_on':
+        return _switchOnToExpression(argsMap);
       default:
         throw FirebaseException(
           plugin: 'cloud_firestore',
@@ -369,6 +422,37 @@ class PipelineExpressionParserWeb {
               'platform. The Firebase JS SDK may not expose this expression.',
         );
     }
+  }
+
+  interop.ExpressionJsImpl _switchOnToExpression(Map<String, dynamic> argsMap) {
+    final exprMaps = argsMap['expressions'] as List<dynamic>?;
+    if (exprMaps == null || exprMaps.length < 2) {
+      throw UnsupportedError('switch_on requires at least two expressions');
+    }
+    final n = exprMaps.length;
+    final first = toBooleanExpression(exprMaps[0] as Map<String, dynamic>);
+    if (first == null) {
+      throw UnsupportedError('switch_on requires a boolean condition');
+    }
+    final second = toExpression(exprMaps[1] as Map<String, dynamic>);
+    if (n == 2) {
+      return _pipelines.switchOn(first, second, <JSAny>[].toJS);
+    }
+    final tail = <JSAny>[];
+    for (var i = 2; i < n; i++) {
+      if (n.isOdd && i == n - 1) {
+        tail.add(toExpression(exprMaps[i] as Map<String, dynamic>));
+      } else if (i.isEven) {
+        final b = toBooleanExpression(exprMaps[i] as Map<String, dynamic>);
+        if (b == null) {
+          throw UnsupportedError('switch_on expected a boolean expression');
+        }
+        tail.add(b);
+      } else {
+        tail.add(toExpression(exprMaps[i] as Map<String, dynamic>));
+      }
+    }
+    return _pipelines.switchOn(first, second, tail.toJS);
   }
 
   // ── Boolean expressions ───────────────────────────────────────────────────
@@ -401,6 +485,7 @@ class PipelineExpressionParserWeb {
       case 'and':
       case 'or':
       case 'xor':
+      case 'nor':
         final exprMaps = argsMap['expressions'] as List<dynamic>?;
         if (exprMaps == null || exprMaps.isEmpty) return null;
         final exprs = exprMaps
@@ -414,8 +499,10 @@ class PipelineExpressionParserWeb {
             result = _pipelines.and(result, exprs[i]);
           } else if (name == 'or') {
             result = _pipelines.or(result, exprs[i]);
-          } else {
+          } else if (name == 'xor') {
             result = _pipelines.xor(result, exprs[i]);
+          } else {
+            result = _pipelines.nor(result, exprs[i]);
           }
         }
         return result;

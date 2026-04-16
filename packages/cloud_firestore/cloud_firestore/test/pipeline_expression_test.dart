@@ -1004,6 +1004,96 @@ void main() {
     });
   });
 
+  group('Option A: extended pipeline expressions', () {
+    test('mapKeys / mapValues serialize correctly', () {
+      expect(Field('m').mapKeys().toMap()['name'], 'map_keys');
+      expect(Field('m').mapValues().toMap()['name'], 'map_values');
+    });
+
+    test('parent() serializes correctly', () {
+      expect(Field('ref').parent().toMap(), {
+        'name': 'parent',
+        'args': {'expression': Field('ref').toMap()},
+      });
+    });
+
+    test('parentFromRef serializes correctly', () {
+      final ref = firestore.collection('c').doc('d');
+      expect(Expression.parentFromRef(ref).toMap(), {
+        'name': 'parent',
+        'args': {'doc_ref': 'c/d'},
+      });
+    });
+
+    test('timestampDiffStatic serializes correctly', () {
+      final expr = Expression.timestampDiffStatic(
+        Field('end'),
+        Field('start'),
+        'day',
+      );
+      expect(expr.toMap(), {
+        'name': 'timestamp_diff',
+        'args': {
+          'end': Field('end').toMap(),
+          'start': Field('start').toMap(),
+          'unit': Constant('day').toMap(),
+        },
+      });
+    });
+
+    test('timestampExtract serializes correctly', () {
+      final expr = Field('created').timestampExtract('year');
+      expect(expr.toMap()['name'], 'timestamp_extract');
+      expect(expr.toMap()['args']['part'], Constant('year').toMap());
+    });
+
+    test('timestampExtract with timezone serializes correctly', () {
+      final expr = Field('created').timestampExtract('hour', 'UTC');
+      expect(expr.toMap()['args']['timezone'], Constant('UTC').toMap());
+    });
+
+    test('if_null serializes correctly', () {
+      final expr = Field('x').ifNullValue('fallback');
+      expect(expr.toMap(), {
+        'name': 'if_null',
+        'args': {
+          'expression': Field('x').toMap(),
+          'replacement': Constant('fallback').toMap(),
+        },
+      });
+    });
+
+    test('nor serializes correctly', () {
+      final expr = Expression.nor(
+        Field('a').equalValue(1),
+        Field('b').equalValue(2),
+      );
+      expect(expr.toMap()['name'], 'nor');
+    });
+
+    test('coalesce serializes correctly', () {
+      final expr = Expression.coalesce(Field('a'), Field('b'), [Constant('c')]);
+      expect(expr.toMap()['name'], 'coalesce');
+      expect((expr.toMap()['args']['expressions'] as List).length, 3);
+    });
+
+    test('switchOn serializes correctly', () {
+      final expr = Expression.switchOn([
+        Field('x').greaterThanValue(0),
+        Constant('pos'),
+        Constant('zero'),
+      ]);
+      expect(expr.toMap()['name'], 'switch_on');
+    });
+
+    test('switchOn rejects invalid parts', () {
+      expect(
+        () => Expression.switchOn([Field('x')]),
+        throwsA(isA<ArgumentError>()),
+      );
+    });
+  });
+
   group('Expression aggregate helpers', () {
     test('first() returns First aggregate', () {
       expect(Field('s').first().toMap()['name'], 'first');

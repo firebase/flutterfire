@@ -124,6 +124,9 @@ class _PipelineExamplePageState extends State<PipelineExamplePage> {
           'b': 2,
           's': '  AbC  ',
           'm': {'x': 10, 'y': 20},
+          'title': 'Expressions seed doc',
+          't_start': Timestamp.fromDate(DateTime.utc(2025, 1, 1, 12)),
+          't_end': Timestamp.fromDate(DateTime.utc(2025, 1, 3, 12)),
         },
         {
           'test': 'expressions',
@@ -228,6 +231,9 @@ class _PipelineExamplePageState extends State<PipelineExamplePage> {
           'b': 2,
           's': '  AbC  ',
           'm': {'x': 10, 'y': 20},
+          'title': 'Expressions seed doc',
+          't_start': Timestamp.fromDate(DateTime.utc(2025, 1, 1, 12)),
+          't_end': Timestamp.fromDate(DateTime.utc(2025, 1, 3, 12)),
         },
         {
           'test': 'expressions',
@@ -304,162 +310,168 @@ class _PipelineExamplePageState extends State<PipelineExamplePage> {
 
   // 1: where + limit
   Future<void> _runPipeline1() => _runPipeline(
-    'Pipeline 1: collection → where(score > 10) → limit(3)',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .where(Expression.field('score').greaterThan(Expression.constant(10)))
-        .limit(3)
-        .execute(),
-  );
+        'Pipeline 1: collection → where(score > 10) → limit(3)',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .where(
+                Expression.field('score').greaterThan(Expression.constant(10)))
+            .limit(3)
+            .execute(),
+      );
 
   // 1b: execute with ExecuteOptions (indexMode: recommended)
   Future<void> _runPipelineExecuteOptions() => _runPipeline(
-    'Pipeline 1b: same as 1 but execute(options: ExecuteOptions(indexMode: recommended))',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .where(Expression.field('score').greaterThan(Expression.constant(10)))
-        .limit(3)
-        .execute(
-          options: const ExecuteOptions(indexMode: IndexMode.recommended),
-        ),
-  );
+        'Pipeline 1b: same as 1 but execute(options: ExecuteOptions(indexMode: recommended))',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .where(
+                Expression.field('score').greaterThan(Expression.constant(10)))
+            .limit(3)
+            .execute(
+              options: const ExecuteOptions(indexMode: IndexMode.recommended),
+            ),
+      );
 
   // 2: select
   Future<void> _runPipeline2() => _runPipeline(
-    'Pipeline 2: collection → where(year > 2022) → select(title, score, year) → limit(4)',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .where(Expression.field('year').greaterThan(Expression.constant(2022)))
-        .select(
-          Expression.field('title'),
-          Expression.field('score'),
-          Expression.field('year'),
-        )
-        .limit(4)
-        .execute(),
-  );
+        'Pipeline 2: collection → where(year > 2022) → select(title, score, year) → limit(4)',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .where(
+                Expression.field('year').greaterThan(Expression.constant(2022)))
+            .select(
+              Expression.field('title'),
+              Expression.field('score'),
+              Expression.field('year'),
+            )
+            .limit(4)
+            .execute(),
+      );
 
   // 3: aggregate
   Future<void> _runPipeline3() => _runPipeline(
-    'Pipeline 3: collection → aggregate(sum, avg, count_all)',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .aggregate(
-          Expression.field('score').sum().as('total_score'),
-          Expression.field('score').average().as('avg_score'),
-          CountAll().as('doc_count'),
-        )
-        .execute(),
-  );
+        'Pipeline 3: collection → aggregate(sum, avg, count_all)',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .aggregate(
+              Expression.field('score').sum().as('total_score'),
+              Expression.field('score').average().as('avg_score'),
+              CountAll().as('doc_count'),
+            )
+            .execute(),
+      );
 
   // 4: addFields
   Future<void> _runPipeline4() => _runPipeline(
-    'Pipeline 4: collection → addFields(score+100 as bonus) → limit(2)',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .addFields(
-          Expression.field(
-            'score',
-          ).add(Expression.constant(100)).as('bonus_score'),
-        )
-        .limit(2)
-        .execute(),
-  );
+        'Pipeline 4: collection → addFields(score+100 as bonus) → limit(2)',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .addFields(
+              Expression.field(
+                'score',
+              ).add(Expression.constant(100)).as('bonus_score'),
+            )
+            .limit(2)
+            .execute(),
+      );
 
   // 5: distinct
   Future<void> _runPipeline5() => _runPipeline(
-    'Pipeline 5: collection → distinct(category) → limit(5)',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .distinct(Expression.field('category'))
-        .limit(5)
-        .execute(),
-  );
+        'Pipeline 5: collection → distinct(category) → limit(5)',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .distinct(Expression.field('category'))
+            .limit(5)
+            .execute(),
+      );
 
   // 6: offset
   Future<void> _runPipeline6() => _runPipeline(
-    'Pipeline 6: collection → limit(4) → offset(2)',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .limit(4)
-        .offset(2)
-        .execute(),
-  );
+        'Pipeline 6: collection → limit(4) → offset(2)',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .limit(4)
+            .offset(2)
+            .execute(),
+      );
 
   // 7: removeFields
   Future<void> _runPipeline7() => _runPipeline(
-    'Pipeline 7: collection → removeFields(category) → limit(2)',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .removeFields('category')
-        .limit(2)
-        .execute(),
-  );
+        'Pipeline 7: collection → removeFields(category) → limit(2)',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .removeFields('category')
+            .limit(2)
+            .execute(),
+      );
 
   // 8: replaceWith
   Future<void> _runPipeline8() => _runPipeline(
-    'Pipeline 8: collection → replaceWith(constant) → limit(1)',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .replaceWith(Expression.field('items'))
-        // .limit(1)
-        .execute(),
-  );
+        'Pipeline 8: collection → replaceWith(constant) → limit(1)',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .replaceWith(Expression.field('items'))
+            // .limit(1)
+            .execute(),
+      );
 
   // 9: sample
   Future<void> _runPipeline9() => _runPipeline(
-    'Pipeline 9: collection → sample(size: 3)',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .sample(PipelineSample.withSize(3))
-        .execute(),
-  );
+        'Pipeline 9: collection → sample(size: 3)',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .sample(PipelineSample.withSize(3))
+            .execute(),
+      );
 
   // 10: sort
   Future<void> _runPipeline10() => _runPipeline(
-    'Pipeline 10: collection → sort(score desc) → limit(3)',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .sort(Expression.field('score').descending())
-        .limit(3)
-        .execute(),
-  );
+        'Pipeline 10: collection → sort(score desc) → limit(3)',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .sort(Expression.field('score').descending())
+            .limit(3)
+            .execute(),
+      );
 
   // 11: aggregateStage with groups
   Future<void> _runPipeline11() => _runPipeline(
-    'Pipeline 11: collection → aggregateStage(groups: category)',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .aggregateWithOptions(
-          AggregateStageOptions(
-            accumulators: [
-              Expression.field('score').sum().as('total'),
-              CountAll().as('count'),
-            ],
-            groups: [Expression.field('category')],
-          ),
-        )
-        .execute(),
-  );
+        'Pipeline 11: collection → aggregateStage(groups: category)',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .aggregateWithOptions(
+              AggregateStageOptions(
+                accumulators: [
+                  Expression.field('score').sum().as('total'),
+                  CountAll().as('count'),
+                ],
+                groups: [Expression.field('category')],
+              ),
+            )
+            .execute(),
+      );
 
   // 12: collectionGroup
   Future<void> _runPipeline12() => _runPipeline(
-    'Pipeline 12: collectionGroup → limit(2)',
-    () =>
-        _firestore.pipeline().collectionGroup(_collectionId).limit(2).execute(),
-  );
+        'Pipeline 12: collectionGroup → limit(2)',
+        () => _firestore
+            .pipeline()
+            .collectionGroup(_collectionId)
+            .limit(2)
+            .execute(),
+      );
 
   // 13: documents
   Future<void> _runPipeline13() async {
@@ -481,54 +493,54 @@ class _PipelineExamplePageState extends State<PipelineExamplePage> {
 
   // 14: database
   Future<void> _runPipeline14() => _runPipeline(
-    'Pipeline 14: database() → limit(2)',
-    () => _firestore.pipeline().database().execute(),
-  );
+        'Pipeline 14: database() → limit(2)',
+        () => _firestore.pipeline().database().execute(),
+      );
 
   // 15: findNearest (may fail without vector index)
   Future<void> _runPipeline15() => _runPipeline(
-    'Pipeline 15: collection → findNearest (needs vector index)',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .findNearest(
-          Field('embedding'),
-          [0.1, 0.2, 0.3],
-          DistanceMeasure.cosine,
-          limit: 2,
-        )
-        .execute(),
-  );
+        'Pipeline 15: collection → findNearest (needs vector index)',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .findNearest(
+              Field('embedding'),
+              [0.1, 0.2, 0.3],
+              DistanceMeasure.cosine,
+              limit: 2,
+            )
+            .execute(),
+      );
 
   // 16: unnest
   Future<void> _runPipeline16() => _runPipeline(
-    'Pipeline 16: collection → where(has tags) → unnest(tags) → limit(5)',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .where(Expression.field('tags').exists())
-        .unnest(Expression.field('tags'), 'index')
-        .limit(5)
-        .execute(),
-  );
+        'Pipeline 16: collection → where(has tags) → unnest(tags) → limit(5)',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .where(Expression.field('tags').exists())
+            .unnest(Expression.field('tags'), 'index')
+            .limit(5)
+            .execute(),
+      );
 
   // 17: union
   Future<void> _runPipeline17() => _runPipeline(
-    'Pipeline 17: collection limit 2 → union(collection offset 2 limit 2)',
-    () {
-      final p2 = _firestore
-          .pipeline()
-          .collection(_collectionId)
-          .offset(2)
-          .limit(2);
-      return _firestore
-          .pipeline()
-          .collection(_collectionId)
-          .limit(2)
-          .union(p2)
-          .execute();
-    },
-  );
+        'Pipeline 17: collection limit 2 → union(collection offset 2 limit 2)',
+        () {
+          final p2 = _firestore
+              .pipeline()
+              .collection(_collectionId)
+              .offset(2)
+              .limit(2);
+          return _firestore
+              .pipeline()
+              .collection(_collectionId)
+              .limit(2)
+              .union(p2)
+              .execute();
+        },
+      );
 
   // 18: Constant — one addFields field per supported constant type
   Future<void> _runPipeline18() {
@@ -573,144 +585,147 @@ class _PipelineExamplePageState extends State<PipelineExamplePage> {
 
   // 19: Expression.and
   Future<void> _runPipeline19() => _runPipeline(
-    'Pipeline 19: collection → where(and(score > 50, year >= 2022)) → select(title, score, year) → limit(5)',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .where(
-          Expression.and(
-            Expression.field('score').greaterThan(Expression.constant(20)),
-            Expression.field(
-              'year',
-            ).greaterThanOrEqual(Expression.constant(2022)),
-          ),
-        )
-        .select(
-          Expression.field('title'),
-          Expression.field('score'),
-          Expression.field('year'),
-        )
-        .limit(5)
-        .execute(),
-  );
+        'Pipeline 19: collection → where(and(score > 50, year >= 2022)) → select(title, score, year) → limit(5)',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .where(
+              Expression.and(
+                Expression.field('score').greaterThan(Expression.constant(20)),
+                Expression.field(
+                  'year',
+                ).greaterThanOrEqual(Expression.constant(2022)),
+              ),
+            )
+            .select(
+              Expression.field('title'),
+              Expression.field('score'),
+              Expression.field('year'),
+            )
+            .limit(5)
+            .execute(),
+      );
 
   // 20: Expression.or
   Future<void> _runPipeline20() => _runPipeline(
-    'Pipeline 20: collection → where(or(score > 80, year < 2021)) → select(title, score, year) → limit(5)',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .where(
-          Expression.or(
-            Expression.field('score').greaterThan(Expression.constant(30)),
-            Expression.field('year').lessThan(Expression.constant(2022)),
-          ),
-        )
-        .select(
-          Expression.field('title'),
-          Expression.field('score'),
-          Expression.field('year'),
-        )
-        .limit(5)
-        .execute(),
-  );
+        'Pipeline 20: collection → where(or(score > 80, year < 2021)) → select(title, score, year) → limit(5)',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .where(
+              Expression.or(
+                Expression.field('score').greaterThan(Expression.constant(30)),
+                Expression.field('year').lessThan(Expression.constant(2022)),
+              ),
+            )
+            .select(
+              Expression.field('title'),
+              Expression.field('score'),
+              Expression.field('year'),
+            )
+            .limit(5)
+            .execute(),
+      );
 
   // 20b: Expression.not (same pattern as pipeline_expressions_e2e "where with not")
   Future<void> _runPipeline20b() => _runPipeline(
-    'Pipeline 20b: where(test=expressions) + NOT(score>=60) + sort(score)',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .where(Expression.field('test').equalValue('expressions'))
-        .where(
-          Expression.not(
-            Expression.field(
-              'score',
-            ).greaterThanOrEqual(Expression.constant(60)),
-          ),
-        )
-        .sort(Expression.field('score').ascending())
-        .execute(),
-  );
+        'Pipeline 20b: where(test=expressions) + NOT(score>=60) + sort(score)',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .where(Expression.field('test').equalValue('expressions'))
+            .where(
+              Expression.not(
+                Expression.field(
+                  'score',
+                ).greaterThanOrEqual(Expression.constant(60)),
+              ),
+            )
+            .sort(Expression.field('score').ascending())
+            .execute(),
+      );
 
   // 21: arrayContainsAny
   Future<void> _runPipeline21() => _runPipeline(
-    'Pipeline 21: collection → where(tags arrayContainsAny [x, z]) → select(title, tags) → limit(5)',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .where(Expression.field('tags').arrayContainsAny(['x', 'z']))
-        .select(Expression.field('title'), Expression.field('tags'))
-        .limit(5)
-        .execute(),
-  );
+        'Pipeline 21: collection → where(tags arrayContainsAny [x, z]) → select(title, tags) → limit(5)',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .where(Expression.field('tags').arrayContainsAny(['x', 'z']))
+            .select(Expression.field('title'), Expression.field('tags'))
+            .limit(5)
+            .execute(),
+      );
 
   // ── New expression examples (22+) ─────────────────────────────────────
 
   // 22: concat
   Future<void> _runPipeline22() => _runPipeline(
-    'Pipeline 22: addFields concat(title, " | ", category)',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .addFields(
-          Expression.field(
-            'title',
-          ).concat([' | ', Expression.field('category')]).as('title_category'),
-        )
-        .limit(3)
-        .execute(),
-  );
+        'Pipeline 22: addFields concat(title, " | ", category)',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .addFields(
+              Expression.field(
+                'title',
+              ).concat([' | ', Expression.field('category')]).as(
+                  'title_category'),
+            )
+            .limit(3)
+            .execute(),
+      );
 
   // 23: length (string)
   Future<void> _runPipeline23() => _runPipeline(
-    'Pipeline 23: addFields title.length()',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .addFields(Expression.field('title').length().as('title_len'))
-        .limit(4)
-        .execute(),
-  );
+        'Pipeline 23: addFields title.length()',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .addFields(Expression.field('title').length().as('title_len'))
+            .limit(4)
+            .execute(),
+      );
 
   // 24: toLowerCase / toUpperCase
   Future<void> _runPipeline24() => _runPipeline(
-    'Pipeline 24: addFields toLowerCase(title), toUpperCase(category)',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .addFields(
-          Expression.field('title').toLowerCase().as('title_lower'),
-          Expression.field('category').toUpperCase().as('category_upper'),
-        )
-        .limit(3)
-        .execute(),
-  );
+        'Pipeline 24: addFields toLowerCase(title), toUpperCase(category)',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .addFields(
+              Expression.field('title').toLowerCase().as('title_lower'),
+              Expression.field('category').toUpperCase().as('category_upper'),
+            )
+            .limit(3)
+            .execute(),
+      );
 
   // 25: trim
   Future<void> _runPipeline25() => _runPipeline(
-    'Pipeline 25: where(has title) → addFields trim(title)',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .where(Expression.field('title').exists())
-        .addFields(Expression.field('title').trim().as('title_trimmed'))
-        .limit(5)
-        .execute(),
-  );
+        'Pipeline 25: where(has title) → addFields trim(title)',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .where(Expression.field('title').exists())
+            .addFields(Expression.field('title').trim().as('title_trimmed'))
+            .limit(5)
+            .execute(),
+      );
 
   // 26: substring
   Future<void> _runPipeline26() => _runPipeline(
-    'Pipeline 26: addFields substring(title, 0, 5)',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .addFields(
-          Expression.field('title').substringLiteral(0, 5).as('title_prefix'),
-        )
-        .limit(4)
-        .execute(),
-  );
+        'Pipeline 26: addFields substring(title, 0, 5)',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .addFields(
+              Expression.field('title')
+                  .substringLiteral(0, 5)
+                  .as('title_prefix'),
+            )
+            .limit(4)
+            .execute(),
+      );
 
   // 27: stringReplaceAll
   // Future<void> _runPipeline27() => _runPipeline(
@@ -729,487 +744,660 @@ class _PipelineExamplePageState extends State<PipelineExamplePage> {
 
   // 28: split
   Future<void> _runPipeline28() => _runPipeline(
-    'Pipeline 28: addFields split(title, " ")',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .addFields(
-          Expression.field('title').splitLiteral(' ').as('title_parts'),
-        )
-        .limit(3)
-        .execute(),
-  );
+        'Pipeline 28: addFields split(title, " ")',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .addFields(
+              Expression.field('title').splitLiteral(' ').as('title_parts'),
+            )
+            .limit(3)
+            .execute(),
+      );
 
   // 29: join
   Future<void> _runPipeline29() => _runPipeline(
-    'Pipeline 29: where(has tags) → addFields join(tags, "-")',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .where(Expression.field('tags').exists())
-        .addFields(Expression.field('tags').joinLiteral('-').as('tags_joined'))
-        .limit(3)
-        .execute(),
-  );
+        'Pipeline 29: where(has tags) → addFields join(tags, "-")',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .where(Expression.field('tags').exists())
+            .addFields(
+                Expression.field('tags').joinLiteral('-').as('tags_joined'))
+            .limit(3)
+            .execute(),
+      );
 
   // 30: if_absent
   Future<void> _runPipeline30() => _runPipeline(
-    'Pipeline 30: addFields if_absent(optional_field, "default")',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .addFields(
-          Expression.field(
-            'optional_field',
-          ).ifAbsentValue('default').as('opt_or_default'),
-        )
-        .limit(4)
-        .execute(),
-  );
+        'Pipeline 30: addFields if_absent(optional_field, "default")',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .addFields(
+              Expression.field(
+                'optional_field',
+              ).ifAbsentValue('default').as('opt_or_default'),
+            )
+            .limit(4)
+            .execute(),
+      );
 
   // 30b: if_error (e.g. safe divide)
   Future<void> _runPipeline30b() => _runPipeline(
-    'Pipeline 30b: addFields score/0 with ifError("N/A")',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .addFields(
-          Expression.field(
-            'score',
-          ).divide(Expression.constant(0)).ifErrorValue('N/A').as('safe_ratio'),
-        )
-        .limit(2)
-        .execute(),
-  );
+        'Pipeline 30b: addFields score/0 with ifError("N/A")',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .addFields(
+              Expression.field(
+                'score',
+              )
+                  .divide(Expression.constant(0))
+                  .ifErrorValue('N/A')
+                  .as('safe_ratio'),
+            )
+            .limit(2)
+            .execute(),
+      );
 
   // 31: conditional
   Future<void> _runPipeline31() => _runPipeline(
-    'Pipeline 31: addFields conditional(score > 20, "high", "low")',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .addFields(
-          Expression.conditionalValues(
-            Expression.field('score').greaterThan(Expression.constant(20)),
-            'high',
-            'low',
-          ).as('score_tier'),
-        )
-        .limit(5)
-        .execute(),
-  );
+        'Pipeline 31: addFields conditional(score > 20, "high", "low")',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .addFields(
+              Expression.conditionalValues(
+                Expression.field('score').greaterThan(Expression.constant(20)),
+                'high',
+                'low',
+              ).as('score_tier'),
+            )
+            .limit(5)
+            .execute(),
+      );
 
   // 32: document_id (current document ID)
   Future<void> _runPipeline32() => _runPipeline(
-    'Pipeline 32: addFields documentId()',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .addFields(Expression.field('__path__').documentId().as('doc_id'))
-        .limit(3)
-        .execute(),
-  );
+        'Pipeline 32: addFields documentId()',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .addFields(Expression.field('__path__').documentId().as('doc_id'))
+            .limit(3)
+            .execute(),
+      );
 
   // 33: collection_id (current collection ID)
   Future<void> _runPipeline33() => _runPipeline(
-    'Pipeline 33: addFields collectionId()',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .addFields(Expression.field('__path__').collectionId().as('coll_id'))
-        .limit(2)
-        .execute(),
-  );
+        'Pipeline 33: addFields collectionId()',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .addFields(
+                Expression.field('__path__').collectionId().as('coll_id'))
+            .limit(2)
+            .execute(),
+      );
 
   // 34: map_get, map_keys, map_values
   Future<void> _runPipeline34() => _runPipeline(
-    'Pipeline 34: where(has items) → addFields mapGet, mapKeys, mapValues',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .where(Expression.field('items').exists())
-        .addFields(Expression.field('items').mapGetLiteral('a').as('items_a'))
-        .limit(2)
-        .execute(),
-  );
+        'Pipeline 34: where(has items) → mapGet, mapKeys, mapValues',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .where(Expression.field('items').exists())
+            .addFields(
+              Expression.field('items').mapGetLiteral('a').as('items_a'),
+              Expression.field('items').mapKeys().as('items_keys'),
+              Expression.field('items').mapValues().as('items_vals'),
+            )
+            .limit(2)
+            .execute(),
+      );
 
   // 35: current_timestamp, timestamp_add, timestamp_subtract, timestamp_truncate
   Future<void> _runPipeline35() => _runPipeline(
-    'Pipeline 35: addFields currentTimestamp, timestampAdd(1 day)',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .addFields(
-          Expression.currentTimestamp().as('now'),
-          Expression.timestampAddLiteral(
-            Expression.currentTimestamp(),
-            'day',
-            1,
-          ).as('tomorrow'),
-        )
-        .limit(1)
-        .execute(),
-  );
+        'Pipeline 35: addFields currentTimestamp, timestampAdd(1 day)',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .addFields(
+              Expression.currentTimestamp().as('now'),
+              Expression.timestampAddLiteral(
+                Expression.currentTimestamp(),
+                'day',
+                1,
+              ).as('tomorrow'),
+            )
+            .limit(1)
+            .execute(),
+      );
 
   // 36: abs
   Future<void> _runPipeline36() => _runPipeline(
-    'Pipeline 36: addFields abs(score)',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .addFields(Expression.field('score').abs().as('score_abs'))
-        .limit(5)
-        .execute(),
-  );
+        'Pipeline 36: addFields abs(score)',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .addFields(Expression.field('score').abs().as('score_abs'))
+            .limit(5)
+            .execute(),
+      );
 
   // 37: array_length
   Future<void> _runPipeline37() => _runPipeline(
-    'Pipeline 37: where(has tags) → addFields arrayLength(tags)',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .where(Expression.field('tags').exists())
-        .addFields(Expression.field('tags').arrayLength().as('tags_len'))
-        .limit(5)
-        .execute(),
-  );
+        'Pipeline 37: where(has tags) → addFields arrayLength(tags)',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .where(Expression.field('tags').exists())
+            .addFields(Expression.field('tags').arrayLength().as('tags_len'))
+            .limit(5)
+            .execute(),
+      );
 
   Future<void> _runPipeline37b() => _runPipeline(
-    'Pipeline 37b: where(has scores) → addFields arraySum(scores)',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .where(Expression.field('scores').exists())
-        .addFields(Expression.field('scores').arraySum().as('scores_total'))
-        .limit(3)
-        .execute(),
-  );
+        'Pipeline 37b: where(has scores) → addFields arraySum(scores)',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .where(Expression.field('scores').exists())
+            .addFields(Expression.field('scores').arraySum().as('scores_total'))
+            .limit(3)
+            .execute(),
+      );
 
   // 38: array_concat
   Future<void> _runPipeline38() => _runPipeline(
-    'Pipeline 38: where(has tags) → addFields arrayConcat(tags, [extra])',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .where(Expression.field('tags').exists())
-        .addFields(
-          Expression.field('tags').arrayConcat(['extra']).as('tags_extended'),
-        )
-        .limit(2)
-        .execute(),
-  );
+        'Pipeline 38: where(has tags) → addFields arrayConcat(tags, [extra])',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .where(Expression.field('tags').exists())
+            .addFields(
+              Expression.field('tags')
+                  .arrayConcat(['extra']).as('tags_extended'),
+            )
+            .limit(2)
+            .execute(),
+      );
 
   // 40: array (construct)
   Future<void> _runPipeline40() => _runPipeline(
-    'Pipeline 40: addFields array([title, score, year])',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .addFields(
-          Expression.array([
-            Expression.field('title'),
-            Expression.field('score'),
-            Expression.field('year'),
-          ]).as('tuple'),
-        )
-        .limit(2)
-        .execute(),
-  );
+        'Pipeline 40: addFields array([title, score, year])',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .addFields(
+              Expression.array([
+                Expression.field('title'),
+                Expression.field('score'),
+                Expression.field('year'),
+              ]).as('tuple'),
+            )
+            .limit(2)
+            .execute(),
+      );
 
   // 41: map (construct)
   Future<void> _runPipeline41() => _runPipeline(
-    'Pipeline 41: addFields map({ t: title, s: score })',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .addFields(
-          Expression.map({
-            't': Expression.field('title'),
-            's': Expression.field('score'),
-          }).as('mini_map'),
-        )
-        .limit(2)
-        .execute(),
-  );
+        'Pipeline 41: addFields map({ t: title, s: score })',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .addFields(
+              Expression.map({
+                't': Expression.field('title'),
+                's': Expression.field('score'),
+              }).as('mini_map'),
+            )
+            .limit(2)
+            .execute(),
+      );
 
   // 42: array_contains_all (values list)
   Future<void> _runPipeline42() => _runPipeline(
-    'Pipeline 42: where(tags arrayContainsAll [x, y]) → select title, tags',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .where(Expression.field('tags').arrayContainsAll(['x', 'y']))
-        .select(Expression.field('title'), Expression.field('tags'))
-        .limit(5)
-        .execute(),
-  );
+        'Pipeline 42: where(tags arrayContainsAll [x, y]) → select title, tags',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .where(Expression.field('tags').arrayContainsAll(['x', 'y']))
+            .select(Expression.field('title'), Expression.field('tags'))
+            .limit(5)
+            .execute(),
+      );
 
   // 43: equal_any (IN)
   Future<void> _runPipeline43() => _runPipeline(
-    'Pipeline 43: where(score equalAny [10, 25, 40]) → select title, score',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .where(Expression.equalAny(Expression.field('score'), [10, 25, 40]))
-        .select(Expression.field('title'), Expression.field('score'))
-        .limit(5)
-        .execute(),
-  );
+        'Pipeline 43: where(score equalAny [10, 25, 40]) → select title, score',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .where(Expression.equalAny(Expression.field('score'), [10, 25, 40]))
+            .select(Expression.field('title'), Expression.field('score'))
+            .limit(5)
+            .execute(),
+      );
 
   // 44: not_equal_any (NOT IN)
   Future<void> _runPipeline44() => _runPipeline(
-    'Pipeline 44: where(category notEqualAny [news]) → select title, category',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .where(Expression.notEqualAny(Expression.field('category'), ['news']))
-        .select(Expression.field('title'), Expression.field('category'))
-        .limit(5)
-        .execute(),
-  );
+        'Pipeline 44: where(category notEqualAny [news]) → select title, category',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .where(
+                Expression.notEqualAny(Expression.field('category'), ['news']))
+            .select(Expression.field('title'), Expression.field('category'))
+            .limit(5)
+            .execute(),
+      );
 
   // 45: asBoolean (coerce numeric to boolean)
   Future<void> _runPipeline45() => _runPipeline(
-    'Pipeline 45: addFields asBoolean(score)',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .addFields(Expression.field('score').asBoolean().as('score_bool'))
-        .limit(4)
-        .execute(),
-  );
+        'Pipeline 45: addFields asBoolean(score)',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .addFields(Expression.field('score').asBoolean().as('score_bool'))
+            .limit(4)
+            .execute(),
+      );
 
   // 46: isError (missing field vs divide-by-zero)
   Future<void> _runPipeline46() => _runPipeline(
-    'Pipeline 46: addFields isError(missing field), isError(score/0)',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .addFields(
-          Expression.field('missing_field').isError().as('missing_is_err'),
-          Expression.field(
-            'score',
-          ).divide(Expression.constant(0)).isError().as('div0_is_err'),
-        )
-        .limit(3)
-        .execute(),
-  );
+        'Pipeline 46: addFields isError(missing field), isError(score/0)',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .addFields(
+              Expression.field('missing_field').isError().as('missing_is_err'),
+              Expression.field(
+                'score',
+              ).divide(Expression.constant(0)).isError().as('div0_is_err'),
+            )
+            .limit(3)
+            .execute(),
+      );
 
   // ── New pipeline expressions (regex, map, string, array, agg) ───────────
 
   Future<void> _runPipeline47() => _runPipeline(
-    'Pipeline 47: where(has email) → addFields regexFind(@.+)',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .where(Expression.field('email').exists())
-        .addFields(Expression.field('email').regexFind('@.+').as('at_domain'))
-        .limit(5)
-        .execute(),
-  );
+        'Pipeline 47: where(has email) → addFields regexFind(@.+)',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .where(Expression.field('email').exists())
+            .addFields(
+                Expression.field('email').regexFind('@.+').as('at_domain'))
+            .limit(5)
+            .execute(),
+      );
 
   Future<void> _runPipeline48() => _runPipeline(
-    'Pipeline 48: where(has email) → addFields regexFindAll([a-z]+)',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .where(Expression.field('email').exists())
-        .addFields(
-          Expression.field('email').regexFindAll('[a-z]+').as('word_chunks'),
-        )
-        .limit(5)
-        .execute(),
-  );
+        'Pipeline 48: where(has email) → addFields regexFindAll([a-z]+)',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .where(Expression.field('email').exists())
+            .addFields(
+              Expression.field('email')
+                  .regexFindAll('[a-z]+')
+                  .as('word_chunks'),
+            )
+            .limit(5)
+            .execute(),
+      );
 
   Future<void> _runPipeline49() => _runPipeline(
-    'Pipeline 49: test=expressions + has s → stringReplaceOne, stringIndexOf, stringRepeat',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .where(
-          Expression.and(
-            Expression.field('test').equalValue('expressions'),
-            Expression.field('s').exists(),
-          ),
-        )
-        .addFields(
-          Expression.field(
-            's',
-          ).stringReplaceOneLiteral('A', 'Z').as('s_replace_one'),
-          Expression.field('s').stringIndexOf('y').as('idx_y'),
-          Expression.field('s').stringRepeat(2).as('s_twice'),
-        )
-        .limit(8)
-        .execute(),
-  );
+        'Pipeline 49: test=expressions + has s → stringReplaceOne, stringIndexOf, stringRepeat',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .where(
+              Expression.and(
+                Expression.field('test').equalValue('expressions'),
+                Expression.field('s').exists(),
+              ),
+            )
+            .addFields(
+              Expression.field(
+                's',
+              ).stringReplaceOneLiteral('A', 'Z').as('s_replace_one'),
+              Expression.field('s').stringIndexOf('y').as('idx_y'),
+              Expression.field('s').stringRepeat(2).as('s_twice'),
+            )
+            .limit(8)
+            .execute(),
+      );
 
   Future<void> _runPipeline50() => _runPipeline(
-    'Pipeline 50: title "  Padded  " → ltrim, rtrim',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .where(Expression.field('title').equalValue('  Padded  '))
-        .addFields(
-          Expression.field('title').ltrim().as('lt'),
-          Expression.field('title').rtrim().as('rt'),
-        )
-        .limit(3)
-        .execute(),
-  );
+        'Pipeline 50: title "  Padded  " → ltrim, rtrim',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .where(Expression.field('title').equalValue('  Padded  '))
+            .addFields(
+              Expression.field('title').ltrim().as('lt'),
+              Expression.field('title').rtrim().as('rt'),
+            )
+            .limit(3)
+            .execute(),
+      );
 
   Future<void> _runPipeline51() => _runPipeline(
-    'Pipeline 51: where(has items) → mapSet(z), mapEntries()',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .where(Expression.field('items').exists())
-        .addFields(
-          Expression.field('items').mapSet('z', 'added').as('items_plus'),
-          Expression.field('items').mapEntries().as('items_entries'),
-        )
-        .limit(3)
-        .execute(),
-  );
+        'Pipeline 51: where(has items) → mapSet(z), mapEntries()',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .where(Expression.field('items').exists())
+            .addFields(
+              Expression.field('items').mapSet('z', 'added').as('items_plus'),
+              Expression.field('items').mapEntries().as('items_entries'),
+            )
+            .limit(3)
+            .execute(),
+      );
 
   Future<void> _runPipeline52() => _runPipeline(
-    'Pipeline 52: addFields type(score)',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .addFields(Expression.field('score').type().as('score_type'))
-        .limit(6)
-        .execute(),
-  );
+        'Pipeline 52: addFields type(score)',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .addFields(Expression.field('score').type().as('score_type'))
+            .limit(6)
+            .execute(),
+      );
 
   Future<void> _runPipeline53() => _runPipeline(
-    'Pipeline 53: where(score isType int64) → select title, score',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .where(Expression.field('score').isType(Type.int64))
-        .select(Expression.field('title'), Expression.field('score'))
-        .limit(8)
-        .execute(),
-  );
+        'Pipeline 53: where(score isType int64) → select title, score',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .where(Expression.field('score').isType(Type.int64))
+            .select(Expression.field('title'), Expression.field('score'))
+            .limit(8)
+            .execute(),
+      );
 
   Future<void> _runPipeline54() => _runPipeline(
-    'Pipeline 54: where(has pi) → trunc(pi), trunc(2dp), rand()',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .where(Expression.field('pi').exists())
-        .addFields(
-          Expression.field('pi').trunc().as('pi_trunc'),
-          Expression.field('pi').trunc(Expression.constant(2)).as('pi_2'),
-          Expression.rand().as('rnd'),
-        )
-        .limit(3)
-        .execute(),
-  );
+        'Pipeline 54: where(has pi) → trunc(pi), trunc(2dp), rand()',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .where(Expression.field('pi').exists())
+            .addFields(
+              Expression.field('pi').trunc().as('pi_trunc'),
+              Expression.field('pi').trunc(Expression.constant(2)).as('pi_2'),
+              Expression.rand().as('rnd'),
+            )
+            .limit(3)
+            .execute(),
+      );
 
   Future<void> _runPipeline55() => _runPipeline(
-    'Pipeline 55: title Item G → arrayFirst, arrayLast(tags)',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .where(Expression.field('title').equalValue('Item G'))
-        .addFields(
-          Expression.field('tags').arrayFirst().as('tag_first'),
-          Expression.field('tags').arrayLast().as('tag_last'),
-        )
-        .limit(3)
-        .execute(),
-  );
+        'Pipeline 55: title Item G → arrayFirst, arrayLast(tags)',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .where(Expression.field('title').equalValue('Item G'))
+            .addFields(
+              Expression.field('tags').arrayFirst().as('tag_first'),
+              Expression.field('tags').arrayLast().as('tag_last'),
+            )
+            .limit(3)
+            .execute(),
+      );
 
   Future<void> _runPipeline56() => _runPipeline(
-    'Pipeline 56: Item G → arrayFirstN(2), arrayLastN(2)(tags)',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .where(Expression.field('title').equalValue('Item G'))
-        .addFields(
-          Expression.field('tags').arrayFirstN(2).as('tags_head'),
-          Expression.field('tags').arrayLastN(2).as('tags_tail'),
-        )
-        .limit(3)
-        .execute(),
-  );
+        'Pipeline 56: Item G → arrayFirstN(2), arrayLastN(2)(tags)',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .where(Expression.field('title').equalValue('Item G'))
+            .addFields(
+              Expression.field('tags').arrayFirstN(2).as('tags_head'),
+              Expression.field('tags').arrayLastN(2).as('tags_tail'),
+            )
+            .limit(3)
+            .execute(),
+      );
 
   Future<void> _runPipeline57() => _runPipeline(
-    'Pipeline 57: where(has scores) → arrayMaximum, arrayMinimum',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .where(Expression.field('scores').exists())
-        .addFields(
-          Expression.field('scores').arrayMaximum().as('smax'),
-          Expression.field('scores').arrayMinimum().as('smin'),
-        )
-        .limit(3)
-        .execute(),
-  );
+        'Pipeline 57: where(has scores) → arrayMaximum, arrayMinimum',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .where(Expression.field('scores').exists())
+            .addFields(
+              Expression.field('scores').arrayMaximum().as('smax'),
+              Expression.field('scores').arrayMinimum().as('smin'),
+            )
+            .limit(3)
+            .execute(),
+      );
 
   Future<void> _runPipeline58() => _runPipeline(
-    'Pipeline 58: where(has scores) → arrayMaximumN(2), arrayMinimumN(2)',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .where(Expression.field('scores').exists())
-        .addFields(
-          Expression.field('scores').arrayMaximumN(2).as('top2'),
-          Expression.field('scores').arrayMinimumN(2).as('bottom2'),
-        )
-        .limit(3)
-        .execute(),
-  );
+        'Pipeline 58: where(has scores) → arrayMaximumN(2), arrayMinimumN(2)',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .where(Expression.field('scores').exists())
+            .addFields(
+              Expression.field('scores').arrayMaximumN(2).as('top2'),
+              Expression.field('scores').arrayMinimumN(2).as('bottom2'),
+            )
+            .limit(3)
+            .execute(),
+      );
 
   Future<void> _runPipeline59() => _runPipeline(
-    'Pipeline 59: Dup Tags → arrayIndexOf(a), arrayLastIndexOf(a), arrayIndexOfAll(a)',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .where(Expression.field('title').equalValue('Dup Tags'))
-        .addFields(
-          Expression.field('tags').arrayIndexOf('a').as('idx_first_a'),
-          Expression.field('tags').arrayLastIndexOf('a').as('idx_last_a'),
-          Expression.field('tags').arrayIndexOfAll('a').as('all_a'),
-        )
-        .limit(3)
-        .execute(),
-  );
+        'Pipeline 59: Dup Tags → arrayIndexOf(a), arrayLastIndexOf(a), arrayIndexOfAll(a)',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .where(Expression.field('title').equalValue('Dup Tags'))
+            .addFields(
+              Expression.field('tags').arrayIndexOf('a').as('idx_first_a'),
+              Expression.field('tags').arrayLastIndexOf('a').as('idx_last_a'),
+              Expression.field('tags').arrayIndexOfAll('a').as('all_a'),
+            )
+            .limit(3)
+            .execute(),
+      );
 
   Future<void> _runPipeline60() => _runPipeline(
-    'Pipeline 60: aggregate first(score), last(score)',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .limit(50)
-        .aggregate(
-          Expression.field('score').first().as('first_score'),
-          Expression.field('score').last().as('last_score'),
-        )
-        .execute(),
-  );
+        'Pipeline 60: aggregate first(score), last(score)',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .limit(50)
+            .aggregate(
+              Expression.field('score').first().as('first_score'),
+              Expression.field('score').last().as('last_score'),
+            )
+            .execute(),
+      );
 
   Future<void> _runPipeline61() => _runPipeline(
-    'Pipeline 61: limit 25 → aggregate array_agg(title)',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .limit(25)
-        .aggregate(Expression.field('title').arrayAgg().as('all_titles'))
-        .execute(),
-  );
+        'Pipeline 61: limit 25 → aggregate array_agg(title)',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .limit(25)
+            .aggregate(Expression.field('title').arrayAgg().as('all_titles'))
+            .execute(),
+      );
 
   Future<void> _runPipeline62() => _runPipeline(
-    'Pipeline 62: limit 25 → aggregate array_agg_distinct(category)',
-    () => _firestore
-        .pipeline()
-        .collection(_collectionId)
-        .limit(25)
-        .aggregate(Expression.field('category').arrayAggDistinct().as('cats'))
-        .execute(),
-  );
+        'Pipeline 62: limit 25 → aggregate array_agg_distinct(category)',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .limit(25)
+            .aggregate(
+                Expression.field('category').arrayAggDistinct().as('cats'))
+            .execute(),
+      );
+
+  /// map_keys, timestamp_diff, nor, switchOn, if_null, coalesce, parent — expressions row score 60.
+  Future<void> _runPipeline63() => _runPipeline(
+        'Pipeline 63: test=expressions score=60 → maps, ts diff/extract, nor, switchOn, ifNull, coalesce, parent',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .where(Expression.field('test').equalValue('expressions'))
+            .where(Expression.field('score').equalValue(60))
+            .addFields(
+              Expression.field('m').mapKeys().as('m_keys'),
+              Expression.field('m').mapValues().as('m_vals'),
+              Expression.field('t_end')
+                  .timestampDiff(Expression.field('t_start'), 'day')
+                  .as('diff_days_field'),
+              Expression.timestampDiffStatic(
+                Expression.field('t_end'),
+                Expression.field('t_start'),
+                'hour',
+              ).as('diff_hours_static'),
+              Expression.field('t_end')
+                  .timestampExtract('month')
+                  .as('end_month'),
+              Expression.currentTimestamp()
+                  .timestampExtract('year')
+                  .as('now_year'),
+              Expression.currentTimestamp()
+                  .timestampExtract('hour', 'UTC')
+                  .as('now_hour_utc'),
+              Expression.field('nope').ifNullValue(-1).as('if_null_n'),
+              Expression.coalesce(
+                Expression.field('title'),
+                Expression.field('missing'),
+                [Expression.constant('fb')],
+              ).as('coalesce_title'),
+              Expression.nor(
+                Expression.field('score').lessThanValue(0),
+                Expression.field('a').equalValue(9999),
+              ).as('nor_ok'),
+              Expression.switchOn([
+                Expression.field('a').greaterThanValue(50),
+                Expression.constant('high'),
+                Expression.field('a').greaterThanValue(5),
+                Expression.constant('mid'),
+                Expression.constant('low'),
+              ]).as('bucket'),
+              Expression.parentFromRef(
+                _firestore.collection(_collectionId).doc('demo_parent'),
+              ).as('parent_from_ref'),
+              Constant(
+                _firestore.collection(_collectionId).doc('demo_parent'),
+              ).parent().as('parent_of_const_ref'),
+            )
+            .limit(5)
+            .execute(),
+      );
+
+  Future<void> _runPipeline64() => _runPipeline(
+        'Pipeline 64: test=expressions score=60 → mapKeys, mapValues only',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .where(Expression.field('test').equalValue('expressions'))
+            .where(Expression.field('score').equalValue(60))
+            .addFields(
+              Expression.field('m').mapKeys().as('m_keys'),
+              Expression.field('m').mapValues().as('m_vals'),
+            )
+            .limit(3)
+            .execute(),
+      );
+
+  Future<void> _runPipeline65() => _runPipeline(
+        'Pipeline 65: test=expressions score=60 → timestampDiff + timestampExtract',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .where(Expression.field('test').equalValue('expressions'))
+            .where(Expression.field('score').equalValue(60))
+            .addFields(
+              Expression.field('t_end')
+                  .timestampDiff(Expression.field('t_start'), 'day')
+                  .as('diff_days'),
+              Expression.timestampDiffStatic(
+                Expression.field('t_end'),
+                Expression.field('t_start'),
+                'hour',
+              ).as('diff_hours'),
+              Expression.field('t_end').timestampExtract('day').as('end_day'),
+              Expression.currentTimestamp()
+                  .timestampExtract('year')
+                  .as('now_year'),
+            )
+            .limit(3)
+            .execute(),
+      );
+
+  Future<void> _runPipeline66() => _runPipeline(
+        'Pipeline 66: test=expressions score=60 → Expression.nor only (two falsey arms → true)',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .where(Expression.field('test').equalValue('expressions'))
+            .where(Expression.field('score').equalValue(60))
+            .addFields(
+              Expression.nor(
+                Expression.field('score').lessThanValue(0),
+                Expression.field('a').equalValue(9999),
+              ).as('nor_ok'),
+            )
+            .limit(3)
+            .execute(),
+      );
+
+  Future<void> _runPipeline67() => _runPipeline(
+        'Pipeline 67: test=expressions score=60 → Expression.switchOn only (a=1 → low)',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .where(Expression.field('test').equalValue('expressions'))
+            .where(Expression.field('score').equalValue(60))
+            .addFields(
+              Expression.switchOn([
+                Expression.field('a').greaterThanValue(50),
+                Expression.constant('high'),
+                Expression.field('a').greaterThanValue(5),
+                Expression.constant('mid'),
+                Expression.constant('low'),
+              ]).as('bucket'),
+            )
+            .limit(3)
+            .execute(),
+      );
+
+  Future<void> _runPipeline68() => _runPipeline(
+        'Pipeline 68: test=expressions score=60 → ifNull, coalesce, parentFromRef, parent(expr)',
+        () => _firestore
+            .pipeline()
+            .collection(_collectionId)
+            .where(Expression.field('test').equalValue('expressions'))
+            .where(Expression.field('score').equalValue(60))
+            .addFields(
+              Expression.field('nope').ifNullValue(-1).as('if_null_n'),
+              Expression.coalesce(
+                Expression.field('title'),
+                Expression.field('missing'),
+                [Expression.constant('fb')],
+              ).as('coalesce_title'),
+              Expression.parentFromRef(
+                _firestore.collection(_collectionId).doc('demo_parent'),
+              ).as('parent_from_ref'),
+              Constant(
+                _firestore.collection(_collectionId).doc('demo_parent'),
+              ).parent().as('parent_of_const_ref'),
+            )
+            .limit(3)
+            .execute(),
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -1325,6 +1513,12 @@ class _PipelineExamplePageState extends State<PipelineExamplePage> {
                   _btn('60: agg first/last', _runPipeline60),
                   _btn('61: agg array_agg', _runPipeline61),
                   _btn('62: agg array_agg_dist', _runPipeline62),
+                  _btn('63: Option A (all)', _runPipeline63),
+                  _btn('64: OA map keys/vals', _runPipeline64),
+                  _btn('65: OA timestamps', _runPipeline65),
+                  _btn('66: OA nor', _runPipeline66),
+                  _btn('67: OA switchOn', _runPipeline67),
+                  _btn('68: OA ifNull/parent', _runPipeline68),
                 ],
               ),
             ),

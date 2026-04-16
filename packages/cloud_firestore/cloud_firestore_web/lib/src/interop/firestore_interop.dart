@@ -404,6 +404,15 @@ extension type PipelinesJsImpl._(JSObject _) implements JSObject {
       JSAny timestamp, JSString unit, JSAny amount);
   external ExpressionJsImpl timestampTruncate(JSAny timestamp, JSString unit,
       [JSString? timezone]);
+  external ExpressionJsImpl timestampDiff(JSAny end, JSAny start, JSAny unit);
+  external ExpressionJsImpl timestampExtract(JSAny timestamp, JSAny part,
+      [JSAny? timezone]);
+  external ExpressionJsImpl parent(JSAny documentRefOrExpression);
+  external ExpressionJsImpl ifNull(JSAny ifExpr, JSAny elseExpr);
+  external ExpressionJsImpl coalesce(
+      JSAny first, JSAny second, JSArray<JSAny> more);
+  external ExpressionJsImpl switchOn(
+      JSAny condition, JSAny result, JSArray<JSAny> others);
   external ExpressionJsImpl abs(JSAny expr);
   external ExpressionJsImpl arrayLength(JSAny array);
   external ExpressionJsImpl arraySum(JSAny expression);
