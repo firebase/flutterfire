@@ -150,7 +150,6 @@ class WebSocketTransport implements DataConnectTransport {
     if (_channel == null) return;
     final encoded = jsonEncode(json);
     if (encoded.isNotEmpty) {
-      developer.log("Sending stream message \n $encoded");
       _channel!.sink.add(encoded);
     }
   }
@@ -229,7 +228,6 @@ class WebSocketTransport implements DataConnectTransport {
       } else {
         bodyString = message as String;
       }
-      developer.log("Received stream response \n $bodyString");
 
       final bodyJson = jsonDecode(bodyString) as Map<String, dynamic>;
       final response = StreamResponse.fromJson(bodyJson);
@@ -309,8 +307,6 @@ class WebSocketTransport implements DataConnectTransport {
   Timer? _reconnectTimer;
 
   void _scheduleReconnect() {
-    developer.log(
-        '${DateTime.now()} _scheduleReconnect $_reconnectAttempts $_isReconnecting $_isExpectedDisconnect');
     if (_isReconnecting || _isExpectedDisconnect) return;
     _isReconnecting = true;
 
@@ -323,13 +319,9 @@ class WebSocketTransport implements DataConnectTransport {
     final delay = min(
         _initialReconnectDelayMs * pow(2, _reconnectAttempts).toInt(),
         _maxReconnectDelayMs);
-    var startTime = DateTime.now();
-    developer.log('$startTime scheduling _performReconnect in $delay ms');
 
     _reconnectTimer?.cancel();
     _reconnectTimer = Timer(Duration(milliseconds: delay), () async {
-      developer.log(
-          '${DateTime.now()} calling delayed _performReconnect scheduled at $startTime');
       _performReconnect();
     });
   }
@@ -443,7 +435,6 @@ class WebSocketTransport implements DataConnectTransport {
 
   void _onDone() {
     if (_channel == null) return;
-    developer.log('WebSocket connection closed.');
     _channel = null;
     _isReconnecting = false;
     if (!_isExpectedDisconnect) {

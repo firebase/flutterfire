@@ -342,7 +342,6 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
     _serverStreamSubscription?.cancel();
     _serverStreamSubscription = null;
     _serverStream = null;
-    log("QueryRef $operationId: All subscribers cancelled. Unsubscribed from server stream.");
   }
 
   Stream<QueryResult<Data, Variables>> subscribe() {
@@ -373,7 +372,6 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
 
   void _streamFromServer() async {
     bool shouldRetry = await _shouldRetry();
-    log("QueryRef $operationId _streamFromServer loop started.");
     try {
       _serverStream = _transport.invokeStreamQuery<Data, Variables>(
         operationId,
@@ -386,7 +384,6 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
 
       _serverStreamSubscription = _serverStream!.listen(
         (serverResponse) async {
-          log("QueryRef $operationId _streamFromServer loop received snapshot.");
           if (dataConnect.cacheManager != null) {
             try {
               await dataConnect.cacheManager!
@@ -432,8 +429,6 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
   void publishResultToStream(QueryResult<Data, Variables> result) {
     if (_streamController != null) {
       _streamController?.add(result);
-    } else {
-      log("QueryRef $operationId _streamFromServer loop _streamController is null");
     }
   }
 
