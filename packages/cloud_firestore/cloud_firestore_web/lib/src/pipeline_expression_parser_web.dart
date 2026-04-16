@@ -413,6 +413,15 @@ class PipelineExpressionParserWeb {
         }
       case 'switch_on':
         return _switchOnToExpression(argsMap);
+      // Boolean combinators / `not` — used as value expressions in add_fields,
+      // select, etc. (e.g. `Expression.nor(...).as('x')`). Those stages call
+      // [toExpression] only; [where] uses [toBooleanExpression] directly.
+      case 'and':
+      case 'or':
+      case 'xor':
+      case 'nor':
+      case 'not':
+        return _expressionFromBooleanMap(map);
       default:
         throw FirebaseException(
           plugin: 'cloud_firestore',
@@ -422,6 +431,24 @@ class PipelineExpressionParserWeb {
               'platform. The Firebase JS SDK may not expose this expression.',
         );
     }
+  }
+
+  /// Builds a JS value [Expression] from a serialized boolean expression map.
+  ///
+  /// The Firebase JS pipeline API represents boolean expressions as values
+  /// where needed (e.g. aliased add_fields); [toBooleanExpression] already
+  /// constructs the correct interop objects.
+  interop.ExpressionJsImpl _expressionFromBooleanMap(
+    Map<String, dynamic> map,
+  ) {
+    final boolExpr = toBooleanExpression(map);
+    if (boolExpr == null) {
+      final n = map[_kName] as String? ?? '?';
+      throw UnsupportedError(
+        'Boolean expression $n requires at least one valid sub-expression',
+      );
+    }
+    return boolExpr as interop.ExpressionJsImpl;
   }
 
   interop.ExpressionJsImpl _switchOnToExpression(Map<String, dynamic> argsMap) {

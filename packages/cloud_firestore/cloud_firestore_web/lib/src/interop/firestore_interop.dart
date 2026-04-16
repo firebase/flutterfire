@@ -365,6 +365,7 @@ extension type PipelinesJsImpl._(JSObject _) implements JSObject {
   external JSAny and(JSAny a, JSAny b);
   external JSAny or(JSAny a, JSAny b);
   external JSAny xor(JSAny a, JSAny b);
+  external JSAny nor(JSAny a, JSAny b);
   external JSAny not(JSAny expr);
 
   // --- Existence / type checks ---
