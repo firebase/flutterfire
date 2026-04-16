@@ -190,6 +190,7 @@ class BidiSessionController extends ChangeNotifier {
 
     final tools = [
       Tool.functionDeclarations([_lightControlTool]),
+      Tool.googleSearch(),
     ];
 
     _liveModel = useVertexBackend
