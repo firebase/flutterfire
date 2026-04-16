@@ -1,5 +1,5 @@
-Project: /docs/_project.yaml
-Book: /docs/_book.yaml
+Project: /docs/\_project.yaml
+Book: /docs/\_book.yaml
 
 <link rel="stylesheet" type="text/css" href="/styles/docs.css" />
 
@@ -51,49 +51,40 @@ try {
 } on FirebaseAuthException catch (e) {
   if (e.code == 'account-exists-with-different-credential') {
     // The account already exists with a different credential
-    String email = e.email;
-    AuthCredential pendingCredential = e.credential;
+    String email = e.email!;
+    AuthCredential pendingCredential = e.credential!;
 
-    // Fetch a list of what sign-in methods exist for the conflicting user
-    List<String> userSignInMethods = await auth.fetchSignInMethodsForEmail(email);
+    // Note: fetchSignInMethodsForEmail() is deprecated.
+    // Instead, attempt sign-in directly with known providers
+    // and handle the linking flow accordingly.
 
-    // If the user has several sign-in methods,
-    // the first method in the list will be the "recommended" method to use.
-    if (userSignInMethods.first == 'password') {
-      // Prompt the user to enter their password
-      String password = '...';
-
-      // Sign the user in to their account with the password
+    // Try signing in with email/password if applicable
+    try {
       UserCredential userCredential = await auth.signInWithEmailAndPassword(
         email: email,
-        password: password,
+        password: promptUserForPassword(), // prompt user for password
       );
-
       // Link the pending credential with the existing account
-      await userCredential.user.linkWithCredential(pendingCredential);
-
+      await userCredential.user!.linkWithCredential(pendingCredential);
       // Success! Go back to your application flow
       return goToApplication();
+    } on FirebaseAuthException catch (_) {
+      // Email/password sign-in failed, try another provider
     }
 
-    // Since other providers are now external, you must now sign the user in with another
-    // auth provider, such as Facebook.
-    if (userSignInMethods.first == 'facebook.com') {
-      // Create a new Facebook credential
-      String accessToken = await triggerFacebookAuthentication();
-      var facebookAuthCredential = FacebookAuthProvider.credential(accessToken);
+    // Try signing in with Facebook if applicable
+    String accessToken = await triggerFacebookAuthentication();
+    var facebookAuthCredential =
+        FacebookAuthProvider.credential(accessToken);
 
-      // Sign the user in with the credential
-      UserCredential userCredential = await auth.signInWithCredential(facebookAuthCredential);
+    UserCredential userCredential =
+        await auth.signInWithCredential(facebookAuthCredential);
 
-      // Link the pending credential with the existing account
-      await userCredential.user.linkWithCredential(pendingCredential);
+    // Link the pending credential with the existing account
+    await userCredential.user!.linkWithCredential(pendingCredential);
 
-      // Success! Go back to your application flow
-      return goToApplication();
-    }
-
-    // Handle other OAuth providers...
+    // Success! Go back to your application flow
+    return goToApplication();
   }
 }
 ```
