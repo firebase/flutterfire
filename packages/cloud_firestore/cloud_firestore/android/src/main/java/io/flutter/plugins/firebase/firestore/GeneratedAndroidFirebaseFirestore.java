@@ -2319,7 +2319,7 @@ public class GeneratedAndroidFirebaseFirestore {
     }
   }
 
-  private static class PigeonCodec extends FlutterFirebaseFirestoreMessageCodec {
+  public static class PigeonCodec extends FlutterFirebaseFirestoreMessageCodec {
     public static final PigeonCodec INSTANCE = new PigeonCodec();
 
     private PigeonCodec() {}

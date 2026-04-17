@@ -77,8 +77,7 @@ public class FlutterFirebaseFirestorePlugin
   private static final String METHOD_CHANNEL_NAME = "plugins.flutter.io/firebase_firestore";
 
   final StandardMethodCodec MESSAGE_CODEC =
-      new StandardMethodCodec(
-          io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestoreMessageCodec.INSTANCE);
+      new StandardMethodCodec(GeneratedAndroidFirebaseFirestore.PigeonCodec.INSTANCE);
 
   private BinaryMessenger binaryMessenger;
 

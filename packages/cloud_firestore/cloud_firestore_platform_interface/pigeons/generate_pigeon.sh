@@ -13,8 +13,10 @@ FILE_NAME="../../cloud_firestore/android/src/main/java/io/flutter/plugins/fireba
 # Expose toList() so plugin code can serialize generated classes outside of the pigeon codec.
 sed -i '' 's/ArrayList<Object> toList() {/public ArrayList<Object> toList() {/' "$FILE_NAME"
 # Pigeon 26 emits a single `PigeonCodec` per file (was `FirebaseFirestoreHostApiCodec` in older versions).
-# Swap its base class to the custom Firestore codec so Firestore types are encoded/decoded.
-sed -i '' 's/private static class PigeonCodec extends StandardMessageCodec {/private static class PigeonCodec extends FlutterFirebaseFirestoreMessageCodec {/' "$FILE_NAME"
+# Swap its base class to the custom Firestore codec so Firestore types are encoded/decoded, and
+# expose it publicly so the plugin can reuse it on EventChannel/MethodChannel instances (those
+# must serialize Pigeon-generated types like `InternalDocumentSnapshot` emitted via stream handlers).
+sed -i '' 's/private static class PigeonCodec extends StandardMessageCodec {/public static class PigeonCodec extends FlutterFirebaseFirestoreMessageCodec {/' "$FILE_NAME"
 
 echo "Android modification complete."
 
