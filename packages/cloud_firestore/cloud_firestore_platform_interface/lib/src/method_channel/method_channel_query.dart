@@ -185,21 +185,10 @@ class MethodChannelQuery extends QueryPlatform {
         )
                 .listen(
           (snapshot) {
-            final snapshotList = snapshot as List<Object?>;
-            // We force the types here of list because they are not automatically
-            // decoded by the pigeon generated code.
-            final List<InternalDocumentSnapshot> documents =
-                (snapshotList[0]! as List)
-                    .map((e) => InternalDocumentSnapshot.decode(e))
-                    .toList()
-                    .cast<InternalDocumentSnapshot>();
-            final List<InternalDocumentChange> changes =
-                (snapshotList[1]! as List)
-                    .map((e) => InternalDocumentChange.decode(e))
-                    .toList()
-                    .cast<InternalDocumentChange>();
-            final InternalQuerySnapshot result = InternalQuerySnapshot.decode(
-                [documents, changes, snapshotList[2]]);
+            // With Pigeon 26, the native side emits the generated Pigeon class
+            // directly through the Pigeon-aware codec, so we receive a fully
+            // decoded `InternalQuerySnapshot` here (no manual decode required).
+            final result = snapshot as InternalQuerySnapshot;
             controller.add(MethodChannelQuerySnapshot(firestore, result));
           },
           onError: controller.addError,

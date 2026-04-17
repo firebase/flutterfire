@@ -65,32 +65,12 @@
       });
     } else {
       dispatch_async(dispatch_get_main_queue(), ^{
-        NSMutableArray *toListResult = [[NSMutableArray alloc] initWithCapacity:3];
-
-        NSMutableArray *documents =
-            [[NSMutableArray alloc] initWithCapacity:snapshot.documents.count];
-        NSMutableArray *documentChanges =
-            [[NSMutableArray alloc] initWithCapacity:snapshot.documentChanges.count];
-
-        for (FIRDocumentSnapshot *documentSnapshot in snapshot.documents) {
-          [documents addObject:[[FirestorePigeonParser
-                                   toPigeonDocumentSnapshot:documentSnapshot
-                                    serverTimestampBehavior:self.serverTimestampBehavior] toList]];
-        }
-
-        for (FIRDocumentChange *documentChange in snapshot.documentChanges) {
-          [documentChanges
-              addObject:[[FirestorePigeonParser toPigeonDocumentChange:documentChange
-                                               serverTimestampBehavior:self.serverTimestampBehavior]
-                            toList]];
-        }
-
-        [toListResult addObject:documents];
-        [toListResult addObject:documentChanges];
-        [toListResult
-            addObject:[[FirestorePigeonParser toPigeonSnapshotMetadata:snapshot.metadata] toList]];
-
-        events(toListResult);
+        // Emit the Pigeon object directly; the Pigeon-aware codec serializes nested
+        // `InternalDocumentSnapshot` / `InternalDocumentChange` / `InternalSnapshotMetadata`
+        // with their proper type codes. Pigeon 26 no longer flattens nested types
+        // via `toList`.
+        events([FirestorePigeonParser toPigeonQuerySnapshot:snapshot
+                                    serverTimestampBehavior:self.serverTimestampBehavior]);
       });
     }
   };

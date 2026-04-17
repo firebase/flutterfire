@@ -21,6 +21,14 @@
 #import "include/cloud_firestore/Private/FLTTransactionStreamHandler.h"
 #import "include/cloud_firestore/Private/FirestorePigeonParser.h"
 #import "include/cloud_firestore/Public/FLTFirebaseFirestorePlugin.h"
+#import "include/cloud_firestore/Public/FirestoreMessages.g.h"
+
+// Forward-declare the Pigeon-generated reader/writer defined in
+// `FirestoreMessages.g.m`. It bundles `FLTFirebaseFirestoreReader/Writer` with
+// Pigeon type serialization, so it's safe to use on the plugin's method/event
+// channels.
+@interface FirebaseFirestoreHostApiCodecReaderWriter : FlutterStandardReaderWriter
+@end
 
 NSString *const kFLTFirebaseFirestoreChannelName = @"plugins.flutter.io/firebase_firestore";
 NSString *const kFLTFirebaseFirestoreQuerySnapshotEventChannelName =
@@ -106,8 +114,13 @@ FlutterStandardMethodCodec *_codec;
 }
 
 + (void)initialize {
-  _codec =
-      [FlutterStandardMethodCodec codecWithReaderWriter:[FLTFirebaseFirestoreReaderWriter new]];
+  // Use the Pigeon-generated reader/writer for MethodChannel/EventChannels so
+  // Pigeon types emitted by stream handlers (e.g. `InternalDocumentSnapshot`,
+  // `InternalSnapshotMetadata`) serialize correctly. The reader/writer extend
+  // `FLTFirebaseFirestoreReader/Writer`, so Firestore-specific types
+  // (Timestamp, GeoPoint, FieldValue, ...) still round-trip.
+  _codec = [FlutterStandardMethodCodec
+      codecWithReaderWriter:[[FirebaseFirestoreHostApiCodecReaderWriter alloc] init]];
 }
 
 #pragma mark - FlutterPlugin

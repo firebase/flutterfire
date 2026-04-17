@@ -1055,8 +1055,8 @@ class AggregateQueryResponse {
   int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
 }
 
-class _PigeonCodec extends FirestoreMessageCodec {
-  const _PigeonCodec();
+class PigeonCodec extends FirestoreMessageCodec {
+  const PigeonCodec();
   @override
   void writeValue(WriteBuffer buffer, Object? value) {
     if (value is int) {
@@ -1218,7 +1218,7 @@ class FirebaseFirestoreHostApi {
             messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
   final BinaryMessenger? pigeonVar_binaryMessenger;
 
-  static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
+  static const MessageCodec<Object?> pigeonChannelCodec = PigeonCodec();
 
   final String pigeonVar_messageChannelSuffix;
 

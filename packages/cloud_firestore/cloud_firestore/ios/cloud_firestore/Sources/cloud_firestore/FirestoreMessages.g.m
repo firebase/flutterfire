@@ -1285,7 +1285,7 @@ static id GetNullableObjectAtIndex(NSArray<id> *array, NSInteger key) {
 }
 @end
 
-NSObject<FlutterMessageCodec> *nullGetFirestoreMessagesCodec(void) {
+NSObject<FlutterMessageCodec> *GetFirebaseFirestoreHostApiCodec(void) {
   static FlutterStandardMessageCodec *sSharedObject = nil;
   static dispatch_once_t sPred = 0;
   dispatch_once(&sPred, ^{
@@ -1313,7 +1313,7 @@ void SetUpFirebaseFirestoreHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMe
                                                    @"interface.FirebaseFirestoreHostApi.loadBundle",
                                                    messageChannelSuffix]
         binaryMessenger:binaryMessenger
-                  codec:nullGetFirestoreMessagesCodec()];
+                  codec:GetFirebaseFirestoreHostApiCodec()];
     if (api) {
       NSCAssert([api respondsToSelector:@selector(loadBundleApp:bundle:completion:)],
                 @"FirebaseFirestoreHostApi api (%@) doesn't respond to "
@@ -1341,7 +1341,7 @@ void SetUpFirebaseFirestoreHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMe
                                              @"interface.FirebaseFirestoreHostApi.namedQueryGet",
                                              messageChannelSuffix]
         binaryMessenger:binaryMessenger
-                  codec:nullGetFirestoreMessagesCodec()];
+                  codec:GetFirebaseFirestoreHostApiCodec()];
     if (api) {
       NSCAssert([api respondsToSelector:@selector(namedQueryGetApp:name:options:completion:)],
                 @"FirebaseFirestoreHostApi api (%@) doesn't respond to "
@@ -1372,7 +1372,7 @@ void SetUpFirebaseFirestoreHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMe
                                              @"interface.FirebaseFirestoreHostApi.clearPersistence",
                                              messageChannelSuffix]
         binaryMessenger:binaryMessenger
-                  codec:nullGetFirestoreMessagesCodec()];
+                  codec:GetFirebaseFirestoreHostApiCodec()];
     if (api) {
       NSCAssert([api respondsToSelector:@selector(clearPersistenceApp:completion:)],
                 @"FirebaseFirestoreHostApi api (%@) doesn't respond to "
@@ -1398,7 +1398,7 @@ void SetUpFirebaseFirestoreHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMe
                                              @"interface.FirebaseFirestoreHostApi.disableNetwork",
                                              messageChannelSuffix]
         binaryMessenger:binaryMessenger
-                  codec:nullGetFirestoreMessagesCodec()];
+                  codec:GetFirebaseFirestoreHostApiCodec()];
     if (api) {
       NSCAssert([api respondsToSelector:@selector(disableNetworkApp:completion:)],
                 @"FirebaseFirestoreHostApi api (%@) doesn't respond to "
@@ -1424,7 +1424,7 @@ void SetUpFirebaseFirestoreHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMe
                                              @"interface.FirebaseFirestoreHostApi.enableNetwork",
                                              messageChannelSuffix]
         binaryMessenger:binaryMessenger
-                  codec:nullGetFirestoreMessagesCodec()];
+                  codec:GetFirebaseFirestoreHostApiCodec()];
     if (api) {
       NSCAssert([api respondsToSelector:@selector(enableNetworkApp:completion:)],
                 @"FirebaseFirestoreHostApi api (%@) doesn't respond to "
@@ -1449,7 +1449,7 @@ void SetUpFirebaseFirestoreHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMe
                                                    @"interface.FirebaseFirestoreHostApi.terminate",
                                                    messageChannelSuffix]
         binaryMessenger:binaryMessenger
-                  codec:nullGetFirestoreMessagesCodec()];
+                  codec:GetFirebaseFirestoreHostApiCodec()];
     if (api) {
       NSCAssert([api respondsToSelector:@selector(terminateApp:completion:)],
                 @"FirebaseFirestoreHostApi api (%@) doesn't respond to "
@@ -1475,7 +1475,7 @@ void SetUpFirebaseFirestoreHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMe
                                           @"FirebaseFirestoreHostApi.waitForPendingWrites",
                                           messageChannelSuffix]
         binaryMessenger:binaryMessenger
-                  codec:nullGetFirestoreMessagesCodec()];
+                  codec:GetFirebaseFirestoreHostApiCodec()];
     if (api) {
       NSCAssert([api respondsToSelector:@selector(waitForPendingWritesApp:completion:)],
                 @"FirebaseFirestoreHostApi api (%@) doesn't respond to "
@@ -1501,7 +1501,7 @@ void SetUpFirebaseFirestoreHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMe
                                           @"FirebaseFirestoreHostApi.setIndexConfiguration",
                                           messageChannelSuffix]
         binaryMessenger:binaryMessenger
-                  codec:nullGetFirestoreMessagesCodec()];
+                  codec:GetFirebaseFirestoreHostApiCodec()];
     if (api) {
       NSCAssert(
           [api respondsToSelector:@selector(
@@ -1531,7 +1531,7 @@ void SetUpFirebaseFirestoreHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMe
                                           @"FirebaseFirestoreHostApi.setLoggingEnabled",
                                           messageChannelSuffix]
         binaryMessenger:binaryMessenger
-                  codec:nullGetFirestoreMessagesCodec()];
+                  codec:GetFirebaseFirestoreHostApiCodec()];
     if (api) {
       NSCAssert([api respondsToSelector:@selector(setLoggingEnabledLoggingEnabled:completion:)],
                 @"FirebaseFirestoreHostApi api (%@) doesn't respond to "
@@ -1557,7 +1557,7 @@ void SetUpFirebaseFirestoreHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMe
                                           @"FirebaseFirestoreHostApi.snapshotsInSyncSetup",
                                           messageChannelSuffix]
         binaryMessenger:binaryMessenger
-                  codec:nullGetFirestoreMessagesCodec()];
+                  codec:GetFirebaseFirestoreHostApiCodec()];
     if (api) {
       NSCAssert([api respondsToSelector:@selector(snapshotsInSyncSetupApp:completion:)],
                 @"FirebaseFirestoreHostApi api (%@) doesn't respond to "
@@ -1583,7 +1583,7 @@ void SetUpFirebaseFirestoreHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMe
                                           @"FirebaseFirestoreHostApi.transactionCreate",
                                           messageChannelSuffix]
         binaryMessenger:binaryMessenger
-                  codec:nullGetFirestoreMessagesCodec()];
+                  codec:GetFirebaseFirestoreHostApiCodec()];
     if (api) {
       NSCAssert(
           [api respondsToSelector:@selector(transactionCreateApp:timeout:maxAttempts:completion:)],
@@ -1614,7 +1614,7 @@ void SetUpFirebaseFirestoreHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMe
                                           @"FirebaseFirestoreHostApi.transactionStoreResult",
                                           messageChannelSuffix]
         binaryMessenger:binaryMessenger
-                  codec:nullGetFirestoreMessagesCodec()];
+                  codec:GetFirebaseFirestoreHostApiCodec()];
     if (api) {
       NSCAssert([api respondsToSelector:@selector(transactionStoreResultTransactionId:resultType:
                                                   commands:completion:)],
@@ -1647,7 +1647,7 @@ void SetUpFirebaseFirestoreHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMe
                                              @"interface.FirebaseFirestoreHostApi.transactionGet",
                                              messageChannelSuffix]
         binaryMessenger:binaryMessenger
-                  codec:nullGetFirestoreMessagesCodec()];
+                  codec:GetFirebaseFirestoreHostApiCodec()];
     if (api) {
       NSCAssert(
           [api respondsToSelector:@selector(transactionGetApp:transactionId:path:completion:)],
@@ -1679,7 +1679,7 @@ void SetUpFirebaseFirestoreHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMe
                                           @"FirebaseFirestoreHostApi.documentReferenceSet",
                                           messageChannelSuffix]
         binaryMessenger:binaryMessenger
-                  codec:nullGetFirestoreMessagesCodec()];
+                  codec:GetFirebaseFirestoreHostApiCodec()];
     if (api) {
       NSCAssert([api respondsToSelector:@selector(documentReferenceSetApp:request:completion:)],
                 @"FirebaseFirestoreHostApi api (%@) doesn't respond to "
@@ -1707,7 +1707,7 @@ void SetUpFirebaseFirestoreHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMe
                                           @"FirebaseFirestoreHostApi.documentReferenceUpdate",
                                           messageChannelSuffix]
         binaryMessenger:binaryMessenger
-                  codec:nullGetFirestoreMessagesCodec()];
+                  codec:GetFirebaseFirestoreHostApiCodec()];
     if (api) {
       NSCAssert([api respondsToSelector:@selector(documentReferenceUpdateApp:request:completion:)],
                 @"FirebaseFirestoreHostApi api (%@) doesn't respond to "
@@ -1735,7 +1735,7 @@ void SetUpFirebaseFirestoreHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMe
                                           @"FirebaseFirestoreHostApi.documentReferenceGet",
                                           messageChannelSuffix]
         binaryMessenger:binaryMessenger
-                  codec:nullGetFirestoreMessagesCodec()];
+                  codec:GetFirebaseFirestoreHostApiCodec()];
     if (api) {
       NSCAssert([api respondsToSelector:@selector(documentReferenceGetApp:request:completion:)],
                 @"FirebaseFirestoreHostApi api (%@) doesn't respond to "
@@ -1764,7 +1764,7 @@ void SetUpFirebaseFirestoreHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMe
                                           @"FirebaseFirestoreHostApi.documentReferenceDelete",
                                           messageChannelSuffix]
         binaryMessenger:binaryMessenger
-                  codec:nullGetFirestoreMessagesCodec()];
+                  codec:GetFirebaseFirestoreHostApiCodec()];
     if (api) {
       NSCAssert([api respondsToSelector:@selector(documentReferenceDeleteApp:request:completion:)],
                 @"FirebaseFirestoreHostApi api (%@) doesn't respond to "
@@ -1791,7 +1791,7 @@ void SetUpFirebaseFirestoreHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMe
                                                    @"interface.FirebaseFirestoreHostApi.queryGet",
                                                    messageChannelSuffix]
         binaryMessenger:binaryMessenger
-                  codec:nullGetFirestoreMessagesCodec()];
+                  codec:GetFirebaseFirestoreHostApiCodec()];
     if (api) {
       NSCAssert([api respondsToSelector:@selector(queryGetApp:path:isCollectionGroup:parameters:
                                                   options:completion:)],
@@ -1827,7 +1827,7 @@ void SetUpFirebaseFirestoreHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMe
                                              @"interface.FirebaseFirestoreHostApi.aggregateQuery",
                                              messageChannelSuffix]
         binaryMessenger:binaryMessenger
-                  codec:nullGetFirestoreMessagesCodec()];
+                  codec:GetFirebaseFirestoreHostApiCodec()];
     if (api) {
       NSCAssert([api respondsToSelector:@selector(aggregateQueryApp:path:parameters:source:queries:
                                                   isCollectionGroup:completion:)],
@@ -1867,7 +1867,7 @@ void SetUpFirebaseFirestoreHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMe
                                              @"interface.FirebaseFirestoreHostApi.writeBatchCommit",
                                              messageChannelSuffix]
         binaryMessenger:binaryMessenger
-                  codec:nullGetFirestoreMessagesCodec()];
+                  codec:GetFirebaseFirestoreHostApiCodec()];
     if (api) {
       NSCAssert([api respondsToSelector:@selector(writeBatchCommitApp:writes:completion:)],
                 @"FirebaseFirestoreHostApi api (%@) doesn't respond to "
@@ -1895,7 +1895,7 @@ void SetUpFirebaseFirestoreHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMe
                                              @"interface.FirebaseFirestoreHostApi.querySnapshot",
                                              messageChannelSuffix]
         binaryMessenger:binaryMessenger
-                  codec:nullGetFirestoreMessagesCodec()];
+                  codec:GetFirebaseFirestoreHostApiCodec()];
     if (api) {
       NSCAssert(
           [api respondsToSelector:@selector(querySnapshotApp:path:isCollectionGroup:parameters:
@@ -1937,7 +1937,7 @@ void SetUpFirebaseFirestoreHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMe
                                           @"FirebaseFirestoreHostApi.documentReferenceSnapshot",
                                           messageChannelSuffix]
         binaryMessenger:binaryMessenger
-                  codec:nullGetFirestoreMessagesCodec()];
+                  codec:GetFirebaseFirestoreHostApiCodec()];
     if (api) {
       NSCAssert([api respondsToSelector:@selector(documentReferenceSnapshotApp:parameters:
                                                   includeMetadataChanges:source:completion:)],
@@ -1974,7 +1974,7 @@ void SetUpFirebaseFirestoreHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMe
                                     @"FirebaseFirestoreHostApi.persistenceCacheIndexManagerRequest",
                                     messageChannelSuffix]
         binaryMessenger:binaryMessenger
-                  codec:nullGetFirestoreMessagesCodec()];
+                  codec:GetFirebaseFirestoreHostApiCodec()];
     if (api) {
       NSCAssert(
           [api respondsToSelector:@selector(
@@ -2007,7 +2007,7 @@ void SetUpFirebaseFirestoreHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMe
                                              @"interface.FirebaseFirestoreHostApi.executePipeline",
                                              messageChannelSuffix]
         binaryMessenger:binaryMessenger
-                  codec:nullGetFirestoreMessagesCodec()];
+                  codec:GetFirebaseFirestoreHostApiCodec()];
     if (api) {
       NSCAssert([api respondsToSelector:@selector(executePipelineApp:stages:options:completion:)],
                 @"FirebaseFirestoreHostApi api (%@) doesn't respond to "

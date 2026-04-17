@@ -137,8 +137,10 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
         )
                 .listen(
           (snapshot) {
-            final InternalDocumentSnapshot result =
-                InternalDocumentSnapshot.decode(snapshot);
+            // With Pigeon 26, the native side emits the generated Pigeon class
+            // directly through the Pigeon-aware codec, so we receive a fully
+            // decoded `InternalDocumentSnapshot` here (no manual decode required).
+            final result = snapshot as InternalDocumentSnapshot;
             controller.add(
               DocumentSnapshotPlatform(
                 firestore,

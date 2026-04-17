@@ -31,6 +31,10 @@ sed -i '' '/#import "FirestoreMessages.g.h"/a\
 sed -i '' 's/nullFirestoreMessagesPigeonCodecReaderWriter/FirebaseFirestoreHostApiCodecReaderWriter/g' $FILE_NAME
 sed -i '' 's/nullFirestoreMessagesPigeonCodecReader/FirebaseFirestoreHostApiCodecReader/g' $FILE_NAME
 sed -i '' 's/nullFirestoreMessagesPigeonCodecWriter/FirebaseFirestoreHostApiCodecWriter/g' $FILE_NAME
+# Rename the public codec getter from `nullGetFirestoreMessagesCodec` so the plugin can reuse
+# it on EventChannels without an awkward `null` prefix.
+sed -i '' 's/nullGetFirestoreMessagesCodec/GetFirebaseFirestoreHostApiCodec/g' $FILE_NAME
+sed -i '' 's/nullGetFirestoreMessagesCodec/GetFirebaseFirestoreHostApiCodec/g' ../../cloud_firestore/ios/cloud_firestore/Sources/cloud_firestore/include/cloud_firestore/Public/FirestoreMessages.g.h
 # Reparent the reader/writer onto our custom Firestore reader/writer so Firestore-specific
 # types (Timestamp, GeoPoint, FieldValue, DocumentReference, FieldPath, ...) round-trip.
 sed -i '' 's/@interface FirebaseFirestoreHostApiCodecReader : FlutterStandardReader/@interface FirebaseFirestoreHostApiCodecReader : FLTFirebaseFirestoreReader/' $FILE_NAME
@@ -79,8 +83,12 @@ FILE_NAME="../lib/src/pigeon/messages.pigeon.dart"
 sed -i '' '/import '\''package:flutter\/services\.dart'\'';/i\
 import '\''package:cloud_firestore_platform_interface/src/method_channel/utils/firestore_message_codec.dart'\'';
 ' $FILE_NAME
-# Pigeon 26 renamed the private codec to `_PigeonCodec`. Swap its base class to our custom one.
-sed -i '' 's/class _PigeonCodec extends StandardMessageCodec {/class _PigeonCodec extends FirestoreMessageCodec {/' $FILE_NAME
+# Pigeon 26 renamed the private codec to `_PigeonCodec`. Swap its base class to our custom one
+# and expose it publicly (as `PigeonCodec`) so the plugin's EventChannels can reuse it to decode
+# Pigeon-generated types like `InternalDocumentSnapshot` emitted via stream handlers.
+sed -i '' 's/class _PigeonCodec extends StandardMessageCodec {/class PigeonCodec extends FirestoreMessageCodec {/' $FILE_NAME
+sed -i '' 's/const _PigeonCodec();/const PigeonCodec();/' $FILE_NAME
+sed -i '' 's/pigeonChannelCodec = _PigeonCodec();/pigeonChannelCodec = PigeonCodec();/' $FILE_NAME
 (cd .. && dart fix --apply > /dev/null)
 
 FILE_NAME="../test/pigeon/test_api.dart"

@@ -350,7 +350,7 @@ typedef NS_ENUM(NSUInteger, AggregateType) {
 @end
 
 /// The codec used by all APIs.
-NSObject<FlutterMessageCodec> *nullGetFirestoreMessagesCodec(void);
+NSObject<FlutterMessageCodec> *GetFirebaseFirestoreHostApiCodec(void);
 
 @protocol FirebaseFirestoreHostApi
 - (void)loadBundleApp:(FirestorePigeonFirebaseApp *)app

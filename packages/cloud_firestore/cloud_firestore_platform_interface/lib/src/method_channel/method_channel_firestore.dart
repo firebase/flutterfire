@@ -20,8 +20,8 @@ import 'method_channel_pipeline_snapshot.dart';
 import 'method_channel_query.dart';
 import 'method_channel_transaction.dart';
 import 'method_channel_write_batch.dart';
+import '../pigeon/messages.pigeon.dart' show PigeonCodec;
 import 'utils/exception.dart';
-import 'utils/firestore_message_codec.dart';
 
 /// The entry point for accessing a Firestore.
 ///
@@ -39,7 +39,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   static EventChannel querySnapshotChannel(String id) {
     return EventChannel(
       'plugins.flutter.io/firebase_firestore/query/$id',
-      const StandardMethodCodec(FirestoreMessageCodec()),
+      const StandardMethodCodec(PigeonCodec()),
     );
   }
 
@@ -47,7 +47,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   static EventChannel documentSnapshotChannel(String id) {
     return EventChannel(
       'plugins.flutter.io/firebase_firestore/document/$id',
-      const StandardMethodCodec(FirestoreMessageCodec()),
+      const StandardMethodCodec(PigeonCodec()),
     );
   }
 
@@ -55,7 +55,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   static EventChannel snapshotsInSyncChannel(String id) {
     return EventChannel(
       'plugins.flutter.io/firebase_firestore/snapshotsInSync/$id',
-      const StandardMethodCodec(FirestoreMessageCodec()),
+      const StandardMethodCodec(PigeonCodec()),
     );
   }
 
@@ -63,7 +63,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   static EventChannel loadBundleChannel(String id) {
     return EventChannel(
       'plugins.flutter.io/firebase_firestore/loadBundle/$id',
-      const StandardMethodCodec(FirestoreMessageCodec()),
+      const StandardMethodCodec(PigeonCodec()),
     );
   }
 
@@ -233,7 +233,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
 
     final eventChannel = EventChannel(
       'plugins.flutter.io/firebase_firestore/transaction/$transactionId',
-      const StandardMethodCodec(FirestoreMessageCodec()),
+      const StandardMethodCodec(PigeonCodec()),
     );
 
     final snapshotStreamSubscription =
