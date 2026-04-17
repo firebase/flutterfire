@@ -80,8 +80,9 @@ void runPipelineFilterSortTests() {
           .limit(10)
           .execute();
       expectResultCount(snapshot, 3);
-      final categories =
-          snapshot.result.map((r) => r.data()!['category']).toList();
+      final categories = snapshot.result
+          .map((r) => r.data()!['category'])
+          .toList();
       expect(categories..sort(), ['a', 'b', 'c']);
     });
   });
