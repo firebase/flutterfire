@@ -72,7 +72,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   late final FirestorePigeonFirebaseApp pigeonApp = FirestorePigeonFirebaseApp(
     appName: appInstance!.name,
     databaseURL: databaseId,
-    settings: PigeonFirebaseSettings(
+    settings: InternalFirebaseSettings(
       persistenceEnabled: settings.persistenceEnabled,
       host: settings.host,
       sslEnabled: settings.sslEnabled,
@@ -107,7 +107,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
       final data = await pigeonChannel.namedQueryGet(
         pigeonApp,
         name,
-        PigeonGetOptions(
+        InternalGetOptions(
           source: options.source,
           serverTimestampBehavior: options.serverTimestampBehavior,
         ),
@@ -276,7 +276,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
           // transaction
           await pigeonChannel.transactionStoreResult(
             transactionId,
-            PigeonTransactionResult.failure,
+            InternalTransactionResult.failure,
             null,
           );
 
@@ -290,7 +290,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
         // Send the transaction commands to Dart.
         await pigeonChannel.transactionStoreResult(
           transactionId,
-          PigeonTransactionResult.success,
+          InternalTransactionResult.success,
           transaction.commands,
         );
       },
@@ -374,7 +374,8 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
         MapEntry<String?, Object?>.new,
       );
 
-      final PigeonPipelineSnapshot result = await pigeonChannel.executePipeline(
+      final InternalPipelineSnapshot result =
+          await pigeonChannel.executePipeline(
         pigeonApp,
         pigeonStages,
         pigeonOptions,

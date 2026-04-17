@@ -18,7 +18,7 @@
 }
 
 #if TARGET_OS_OSX
-- (instancetype)initWithAuth:(id)auth request:(PigeonVerifyPhoneNumberRequest *)request {
+- (instancetype)initWithAuth:(id)auth request:(InternalVerifyPhoneNumberRequest *)request {
   self = [super init];
   if (self) {
     _auth = auth;
@@ -28,7 +28,7 @@
 }
 #else
 - (instancetype)initWithAuth:(id)auth
-                     request:(PigeonVerifyPhoneNumberRequest *)request
+                     request:(InternalVerifyPhoneNumberRequest *)request
                      session:(FIRMultiFactorSession *)session
                   factorInfo:(FIRPhoneMultiFactorInfo *)factorInfo {
   self = [super init];

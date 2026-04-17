@@ -60,7 +60,7 @@
   @throw [NSException exceptionWithName:@"InvalidOperator" reason:@"Invalid operator" userInfo:nil];
 }
 
-+ (FIRQuery *_Nonnull)parseQueryWithParameters:(nonnull PigeonQueryParameters *)parameters
++ (FIRQuery *_Nonnull)parseQueryWithParameters:(nonnull InternalQueryParameters *)parameters
                                      firestore:(nonnull FIRFirestore *)firestore
                                           path:(nonnull NSString *)path
                              isCollectionGroup:(Boolean)isCollectionGroup {
@@ -218,17 +218,17 @@
   }
 }
 
-+ (PigeonSnapshotMetadata *_Nonnull)toPigeonSnapshotMetadata:
++ (InternalSnapshotMetadata *_Nonnull)toPigeonSnapshotMetadata:
     (FIRSnapshotMetadata *_Nonnull)snapshotMetadata {
-  return [PigeonSnapshotMetadata
+  return [InternalSnapshotMetadata
       makeWithHasPendingWrites:[NSNumber numberWithBool:snapshotMetadata.hasPendingWrites]
                    isFromCache:[NSNumber numberWithBool:snapshotMetadata.isFromCache]];
 }
 
-+ (PigeonDocumentSnapshot *_Nonnull)
++ (InternalDocumentSnapshot *_Nonnull)
     toPigeonDocumentSnapshot:(FIRDocumentSnapshot *_Nonnull)documentSnapshot
      serverTimestampBehavior:(FIRServerTimestampBehavior)serverTimestampBehavior {
-  return [PigeonDocumentSnapshot
+  return [InternalDocumentSnapshot
       makeWithPath:documentSnapshot.reference.path
               data:[documentSnapshot dataWithServerTimestampBehavior:serverTimestampBehavior]
           metadata:[FirestorePigeonParser toPigeonSnapshotMetadata:documentSnapshot.metadata]];
@@ -249,9 +249,9 @@
   }
 }
 
-+ (PigeonDocumentChange *_Nonnull)toPigeonDocumentChange:(FIRDocumentChange *_Nonnull)documentChange
-                                 serverTimestampBehavior:
-                                     (FIRServerTimestampBehavior)serverTimestampBehavior {
++ (InternalDocumentChange *_Nonnull)
+     toPigeonDocumentChange:(FIRDocumentChange *_Nonnull)documentChange
+    serverTimestampBehavior:(FIRServerTimestampBehavior)serverTimestampBehavior {
   NSNumber *oldIndex;
   NSNumber *newIndex;
 
@@ -273,7 +273,7 @@
     oldIndex = @([@(documentChange.oldIndex) intValue]);
   }
 
-  return [PigeonDocumentChange
+  return [InternalDocumentChange
       makeWithType:[FirestorePigeonParser toPigeonDocumentChangeType:documentChange.type]
           document:[FirestorePigeonParser toPigeonDocumentSnapshot:documentChange.document
                                            serverTimestampBehavior:serverTimestampBehavior]
@@ -281,7 +281,7 @@
           newIndex:newIndex];
 }
 
-+ (NSArray<PigeonDocumentChange *> *_Nonnull)
++ (NSArray<InternalDocumentChange *> *_Nonnull)
     toPigeonDocumentChanges:(NSArray<FIRDocumentChange *> *_Nonnull)documentChanges
     serverTimestampBehavior:(FIRServerTimestampBehavior)serverTimestampBehavior {
   NSMutableArray *pigeonDocumentChanges = [NSMutableArray array];
@@ -293,16 +293,16 @@
   return pigeonDocumentChanges;
 }
 
-+ (PigeonQuerySnapshot *_Nonnull)toPigeonQuerySnapshot:(FIRQuerySnapshot *_Nonnull)querySnaphot
-                               serverTimestampBehavior:
-                                   (FIRServerTimestampBehavior)serverTimestampBehavior {
++ (InternalQuerySnapshot *_Nonnull)toPigeonQuerySnapshot:(FIRQuerySnapshot *_Nonnull)querySnaphot
+                                 serverTimestampBehavior:
+                                     (FIRServerTimestampBehavior)serverTimestampBehavior {
   NSMutableArray *documentSnapshots = [NSMutableArray array];
   for (FIRDocumentSnapshot *documentSnapshot in querySnaphot.documents) {
     [documentSnapshots
         addObject:[FirestorePigeonParser toPigeonDocumentSnapshot:documentSnapshot
                                           serverTimestampBehavior:serverTimestampBehavior]];
   }
-  return [PigeonQuerySnapshot
+  return [InternalQuerySnapshot
       makeWithDocuments:documentSnapshots
         documentChanges:[FirestorePigeonParser toPigeonDocumentChanges:querySnaphot.documentChanges
                                                serverTimestampBehavior:serverTimestampBehavior]

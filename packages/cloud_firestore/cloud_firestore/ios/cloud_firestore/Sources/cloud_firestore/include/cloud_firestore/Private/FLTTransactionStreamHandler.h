@@ -34,8 +34,8 @@ NS_ASSUME_NONNULL_BEGIN
                maxAttempts:(nonnull NSNumber *)maxAttempts
                    started:(void (^)(FIRTransaction *))startedListener
                      ended:(void (^)(void))endedListener;
-- (void)receiveTransactionResponse:(PigeonTransactionResult)resultType
-                          commands:(NSArray<PigeonTransactionCommand *> *)commands;
+- (void)receiveTransactionResponse:(InternalTransactionResult)resultType
+                          commands:(NSArray<InternalTransactionCommand *> *)commands;
 
 @end
 

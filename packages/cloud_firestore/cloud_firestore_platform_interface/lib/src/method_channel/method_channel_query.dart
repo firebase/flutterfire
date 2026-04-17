@@ -43,8 +43,8 @@ class MethodChannelQuery extends QueryPlatform {
     return _pointer.path;
   }
 
-  PigeonQueryParameters get _pigeonParameters {
-    return PigeonQueryParameters(
+  InternalQueryParameters get _pigeonParameters {
+    return InternalQueryParameters(
       where: parameters['where'],
       orderBy: parameters['orderBy'],
       limit: parameters['limit'],
@@ -114,13 +114,13 @@ class MethodChannelQuery extends QueryPlatform {
   Future<QuerySnapshotPlatform> get(
       [GetOptions options = const GetOptions()]) async {
     try {
-      final PigeonQuerySnapshot result =
+      final InternalQuerySnapshot result =
           await MethodChannelFirebaseFirestore.pigeonChannel.queryGet(
         pigeonApp,
         _pointer.path,
         isCollectionGroupQuery,
         _pigeonParameters,
-        PigeonGetOptions(
+        InternalGetOptions(
           source: options.source,
           serverTimestampBehavior: options.serverTimestampBehavior,
         ),
@@ -170,7 +170,7 @@ class MethodChannelQuery extends QueryPlatform {
           _pointer.path,
           isCollectionGroupQuery,
           _pigeonParameters,
-          PigeonGetOptions(
+          InternalGetOptions(
             source: Source.serverAndCache,
             serverTimestampBehavior: serverTimestampBehavior,
           ),
@@ -188,17 +188,17 @@ class MethodChannelQuery extends QueryPlatform {
             final snapshotList = snapshot as List<Object?>;
             // We force the types here of list because they are not automatically
             // decoded by the pigeon generated code.
-            final List<PigeonDocumentSnapshot> documents =
+            final List<InternalDocumentSnapshot> documents =
                 (snapshotList[0]! as List)
-                    .map((e) => PigeonDocumentSnapshot.decode(e))
+                    .map((e) => InternalDocumentSnapshot.decode(e))
                     .toList()
-                    .cast<PigeonDocumentSnapshot>();
-            final List<PigeonDocumentChange> changes =
+                    .cast<InternalDocumentSnapshot>();
+            final List<InternalDocumentChange> changes =
                 (snapshotList[1]! as List)
-                    .map((e) => PigeonDocumentChange.decode(e))
+                    .map((e) => InternalDocumentChange.decode(e))
                     .toList()
-                    .cast<PigeonDocumentChange>();
-            final PigeonQuerySnapshot result = PigeonQuerySnapshot.decode(
+                    .cast<InternalDocumentChange>();
+            final InternalQuerySnapshot result = InternalQuerySnapshot.decode(
                 [documents, changes, snapshotList[2]]);
             controller.add(MethodChannelQuerySnapshot(firestore, result));
           },

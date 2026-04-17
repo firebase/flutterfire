@@ -25,7 +25,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   mockito: ^5.4.0
-  pigeon: 19.0.0
+  pigeon: 26.3.4
 
   # NOTE: This is a temporary workaround for Flutter 3.13
   watcher: ^1.1.0

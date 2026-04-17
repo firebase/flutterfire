@@ -37,7 +37,7 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
         DocumentReferenceRequest(
           path: _pointer.path,
           data: data,
-          option: PigeonDocumentOption(
+          option: InternalDocumentOption(
             merge: options?.merge,
             mergeFields:
                 options?.mergeFields?.map((e) => e.components).toList(),
@@ -137,8 +137,8 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
         )
                 .listen(
           (snapshot) {
-            final PigeonDocumentSnapshot result =
-                PigeonDocumentSnapshot.decode(snapshot);
+            final InternalDocumentSnapshot result =
+                InternalDocumentSnapshot.decode(snapshot);
             controller.add(
               DocumentSnapshotPlatform(
                 firestore,

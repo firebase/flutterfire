@@ -17,8 +17,8 @@
 @property(nonatomic, copy, nonnull) void (^started)(FIRTransaction *);
 @property(nonatomic, copy, nonnull) void (^ended)(void);
 @property(strong) dispatch_semaphore_t semaphore;
-@property PigeonTransactionResult resultType;
-@property NSArray<PigeonTransactionCommand *> *commands;
+@property InternalTransactionResult resultType;
+@property NSArray<InternalTransactionCommand *> *commands;
 
 @end
 
@@ -80,24 +80,24 @@
       });
     }
 
-    if (self.resultType == PigeonTransactionResultFailure) {
+    if (self.resultType == InternalTransactionResultFailure) {
       // Do nothing - already handled in Dart land.
       return nil;
     }
 
-    for (PigeonTransactionCommand *command in self.commands) {
-      PigeonTransactionType commandType = command.type;
+    for (InternalTransactionCommand *command in self.commands) {
+      InternalTransactionType commandType = command.type;
       NSString *documentPath = command.path;
       FIRDocumentReference *reference = [self.firestore documentWithPath:documentPath];
 
       switch (commandType) {
-        case PigeonTransactionTypeDeleteType:
+        case InternalTransactionTypeDeleteType:
           [transaction deleteDocument:reference];
           break;
-        case PigeonTransactionTypeUpdate:
+        case InternalTransactionTypeUpdate:
           [transaction updateData:command.data forDocument:reference];
           break;
-        case PigeonTransactionTypeSet:
+        case InternalTransactionTypeSet:
           if ([command.option.merge isEqual:@YES]) {
             [transaction setData:command.data forDocument:reference merge:YES];
           } else if (command.option.mergeFields) {
@@ -157,8 +157,8 @@
   return nil;
 }
 
-- (void)receiveTransactionResponse:(PigeonTransactionResult)resultType
-                          commands:(NSArray<PigeonTransactionCommand *> *)commands {
+- (void)receiveTransactionResponse:(InternalTransactionResult)resultType
+                          commands:(NSArray<InternalTransactionCommand *> *)commands {
   self.resultType = resultType;
   self.commands = commands;
 

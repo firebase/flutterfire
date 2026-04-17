@@ -151,7 +151,7 @@ FlutterStandardMethodCodec *_codec;
 #else
   [registrar publish:instance];
 #endif
-  FirebaseFirestoreHostApiSetup(registrar.messenger, instance);
+  SetUpFirebaseFirestoreHostApi(registrar.messenger, instance);
 }
 
 - (void)cleanupEventListeners {
@@ -353,7 +353,7 @@ FlutterStandardMethodCodec *_codec;
 
 - (void)documentReferenceGetApp:(nonnull FirestorePigeonFirebaseApp *)app
                         request:(nonnull DocumentReferenceRequest *)request
-                     completion:(nonnull void (^)(PigeonDocumentSnapshot *_Nullable,
+                     completion:(nonnull void (^)(InternalDocumentSnapshot *_Nullable,
                                                   FlutterError *_Nullable))completion {
   FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
   FIRDocumentReference *document = [firestore documentWithPath:request.path];
@@ -467,8 +467,8 @@ FlutterStandardMethodCodec *_codec;
 
 - (void)namedQueryGetApp:(nonnull FirestorePigeonFirebaseApp *)app
                     name:(nonnull NSString *)name
-                 options:(nonnull PigeonGetOptions *)options
-              completion:(nonnull void (^)(PigeonQuerySnapshot *_Nullable,
+                 options:(nonnull InternalGetOptions *)options
+              completion:(nonnull void (^)(InternalQuerySnapshot *_Nullable,
                                            FlutterError *_Nullable))completion {
   FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
 
@@ -506,9 +506,9 @@ FlutterStandardMethodCodec *_codec;
 - (void)queryGetApp:(nonnull FirestorePigeonFirebaseApp *)app
                  path:(nonnull NSString *)path
     isCollectionGroup:(nonnull NSNumber *)isCollectionGroup
-           parameters:(nonnull PigeonQueryParameters *)parameters
-              options:(nonnull PigeonGetOptions *)options
-           completion:(nonnull void (^)(PigeonQuerySnapshot *_Nullable,
+           parameters:(nonnull InternalQueryParameters *)parameters
+              options:(nonnull InternalGetOptions *)options
+           completion:(nonnull void (^)(InternalQuerySnapshot *_Nullable,
                                         FlutterError *_Nullable))completion {
   FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
   FIRQuery *query = [FirestorePigeonParser parseQueryWithParameters:parameters
@@ -543,8 +543,8 @@ FlutterStandardMethodCodec *_codec;
 - (void)querySnapshotApp:(nonnull FirestorePigeonFirebaseApp *)app
                       path:(nonnull NSString *)path
          isCollectionGroup:(nonnull NSNumber *)isCollectionGroup
-                parameters:(nonnull PigeonQueryParameters *)parameters
-                   options:(nonnull PigeonGetOptions *)options
+                parameters:(nonnull InternalQueryParameters *)parameters
+                   options:(nonnull InternalGetOptions *)options
     includeMetadataChanges:(nonnull NSNumber *)includeMetadataChanges
                     source:(ListenSource)source
                 completion:
@@ -643,7 +643,7 @@ FlutterStandardMethodCodec *_codec;
 - (void)transactionGetApp:(nonnull FirestorePigeonFirebaseApp *)app
             transactionId:(nonnull NSString *)transactionId
                      path:(nonnull NSString *)path
-               completion:(nonnull void (^)(PigeonDocumentSnapshot *_Nullable,
+               completion:(nonnull void (^)(InternalDocumentSnapshot *_Nullable,
                                             FlutterError *_Nullable))completion {
   // Dispatching to main thread allow us to ensure that the auth token are fetched in time
   // for the transaction
@@ -680,8 +680,9 @@ FlutterStandardMethodCodec *_codec;
 }
 
 - (void)transactionStoreResultTransactionId:(nonnull NSString *)transactionId
-                                 resultType:(PigeonTransactionResult)resultType
-                                   commands:(nullable NSArray<PigeonTransactionCommand *> *)commands
+                                 resultType:(InternalTransactionResult)resultType
+                                   commands:
+                                       (nullable NSArray<InternalTransactionCommand *> *)commands
                                  completion:(nonnull void (^)(FlutterError *_Nullable))completion {
   [_transactionHandlers[transactionId] receiveTransactionResponse:resultType commands:commands];
 
@@ -701,26 +702,26 @@ FlutterStandardMethodCodec *_codec;
 }
 
 - (void)writeBatchCommitApp:(nonnull FirestorePigeonFirebaseApp *)app
-                     writes:(nonnull NSArray<PigeonTransactionCommand *> *)writes
+                     writes:(nonnull NSArray<InternalTransactionCommand *> *)writes
                  completion:(nonnull void (^)(FlutterError *_Nullable))completion {
   FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
   FIRWriteBatch *batch = [firestore batch];
 
-  for (PigeonTransactionCommand *write in writes) {
-    PigeonTransactionType type = write.type;
+  for (InternalTransactionCommand *write in writes) {
+    InternalTransactionType type = write.type;
     NSString *path = write.path;
     FIRDocumentReference *reference = [firestore documentWithPath:path];
 
     switch (type) {
-      case PigeonTransactionTypeGet:
+      case InternalTransactionTypeGet:
         break;
-      case PigeonTransactionTypeDeleteType:
+      case InternalTransactionTypeDeleteType:
         [batch deleteDocument:reference];
         break;
-      case PigeonTransactionTypeUpdate:
+      case InternalTransactionTypeUpdate:
         [batch updateData:write.data forDocument:reference];
         break;
-      case PigeonTransactionTypeSet:
+      case InternalTransactionTypeSet:
         if ([write.option.merge isEqual:@YES]) {
           [batch setData:write.data forDocument:reference merge:YES];
         } else if (write.option.mergeFields) {
@@ -786,7 +787,7 @@ FlutterStandardMethodCodec *_codec;
 
 - (void)aggregateQueryApp:(nonnull FirestorePigeonFirebaseApp *)app
                      path:(nonnull NSString *)path
-               parameters:(nonnull PigeonQueryParameters *)parameters
+               parameters:(nonnull InternalQueryParameters *)parameters
                    source:(AggregateSource)source
                   queries:(nonnull NSArray<AggregateQuery *> *)queries
         isCollectionGroup:(NSNumber *)isCollectionGroup
@@ -901,7 +902,7 @@ FlutterStandardMethodCodec *_codec;
 - (void)executePipelineApp:(nonnull FirestorePigeonFirebaseApp *)app
                     stages:(nonnull NSArray<NSDictionary<NSString *, id> *> *)stages
                    options:(nullable NSDictionary<NSString *, id> *)options
-                completion:(nonnull void (^)(PigeonPipelineSnapshot *_Nullable,
+                completion:(nonnull void (^)(InternalPipelineSnapshot *_Nullable,
                                              FlutterError *_Nullable))completion {
   FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
 
@@ -923,7 +924,7 @@ FlutterStandardMethodCodec *_codec;
                             return;
                           }
 
-                          NSMutableArray<PigeonPipelineResult *> *pigeonResults =
+                          NSMutableArray<InternalPipelineResult *> *pigeonResults =
                               [NSMutableArray array];
                           NSArray *results = [snapshot results];
                           if ([results isKindOfClass:[NSArray class]]) {
@@ -937,11 +938,11 @@ FlutterStandardMethodCodec *_codec;
                               NSNumber *updateTime =
                                   FLTPipelineTimestampToMs([result valueForKey:@"update_time"]);
                               NSDictionary *data = FLTPipelineNullSafe([result data]);
-                              PigeonPipelineResult *pigeonResult =
-                                  [PigeonPipelineResult makeWithDocumentPath:path
-                                                                  createTime:createTime
-                                                                  updateTime:updateTime
-                                                                        data:data];
+                              InternalPipelineResult *pigeonResult =
+                                  [InternalPipelineResult makeWithDocumentPath:path
+                                                                    createTime:createTime
+                                                                    updateTime:updateTime
+                                                                          data:data];
                               [pigeonResults addObject:pigeonResult];
                             }
                           }
@@ -953,9 +954,9 @@ FlutterStandardMethodCodec *_codec;
                                 @((int64_t)([[NSDate date] timeIntervalSince1970] * 1000));
                           }
 
-                          PigeonPipelineSnapshot *pigeonSnapshot =
-                              [PigeonPipelineSnapshot makeWithResults:pigeonResults
-                                                        executionTime:executionTime];
+                          InternalPipelineSnapshot *pigeonSnapshot =
+                              [InternalPipelineSnapshot makeWithResults:pigeonResults
+                                                          executionTime:executionTime];
                           completion(pigeonSnapshot, nil);
                         }];
 }

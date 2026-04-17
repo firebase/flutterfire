@@ -19,7 +19,7 @@
 
 + (FIRFilter *_Nonnull)filterFromJson:(NSDictionary<NSString *, id> *_Nullable)map;
 
-+ (FIRQuery *_Nonnull)parseQueryWithParameters:(nonnull PigeonQueryParameters *)parameters
++ (FIRQuery *_Nonnull)parseQueryWithParameters:(nonnull InternalQueryParameters *)parameters
                                      firestore:(nonnull FIRFirestore *)firestore
                                           path:(nonnull NSString *)path
                              isCollectionGroup:(Boolean)isCollectionGroup;
@@ -34,25 +34,25 @@
 
 + (FIRListenSource)parseListenSource:(ListenSource)source;
 
-+ (PigeonSnapshotMetadata *_Nonnull)toPigeonSnapshotMetadata:
++ (InternalSnapshotMetadata *_Nonnull)toPigeonSnapshotMetadata:
     (FIRSnapshotMetadata *_Nonnull)snapshotMetadata;
 
-+ (PigeonDocumentSnapshot *_Nonnull)
++ (InternalDocumentSnapshot *_Nonnull)
     toPigeonDocumentSnapshot:(FIRDocumentSnapshot *_Nonnull)documentSnapshot
      serverTimestampBehavior:(FIRServerTimestampBehavior)serverTimestampBehavior;
 
 + (DocumentChangeType)toPigeonDocumentChangeType:(FIRDocumentChangeType)documentChangeType;
 
-+ (PigeonDocumentChange *_Nonnull)toPigeonDocumentChange:(FIRDocumentChange *_Nonnull)documentChange
-                                 serverTimestampBehavior:
-                                     (FIRServerTimestampBehavior)serverTimestampBehavior;
++ (InternalDocumentChange *_Nonnull)
+     toPigeonDocumentChange:(FIRDocumentChange *_Nonnull)documentChange
+    serverTimestampBehavior:(FIRServerTimestampBehavior)serverTimestampBehavior;
 
-+ (NSArray<PigeonDocumentChange *> *_Nonnull)
++ (NSArray<InternalDocumentChange *> *_Nonnull)
     toPigeonDocumentChanges:(NSArray<FIRDocumentChange *> *_Nonnull)documentChanges
     serverTimestampBehavior:(FIRServerTimestampBehavior)serverTimestampBehavior;
 
-+ (PigeonQuerySnapshot *_Nonnull)toPigeonQuerySnapshot:(FIRQuerySnapshot *_Nonnull)querySnaphot
-                               serverTimestampBehavior:
-                                   (FIRServerTimestampBehavior)serverTimestampBehavior;
++ (InternalQuerySnapshot *_Nonnull)toPigeonQuerySnapshot:(FIRQuerySnapshot *_Nonnull)querySnaphot
+                                 serverTimestampBehavior:
+                                     (FIRServerTimestampBehavior)serverTimestampBehavior;
 
 @end

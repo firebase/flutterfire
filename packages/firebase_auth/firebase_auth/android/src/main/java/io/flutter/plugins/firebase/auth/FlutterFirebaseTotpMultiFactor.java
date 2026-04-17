@@ -25,7 +25,7 @@ public class FlutterFirebaseTotpMultiFactor
   public void generateSecret(
       @NonNull String sessionId,
       @NonNull
-          GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonTotpSecret>
+          GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.InternalTotpSecret>
               result) {
     MultiFactorSession multiFactorSession =
         FlutterFirebaseMultiFactor.multiFactorSessionMap.get(sessionId);
@@ -38,7 +38,7 @@ public class FlutterFirebaseTotpMultiFactor
                 TotpSecret secret = task.getResult();
                 multiFactorSecret.put(secret.getSharedSecretKey(), secret);
                 result.success(
-                    new GeneratedAndroidFirebaseAuth.PigeonTotpSecret.Builder()
+                    new GeneratedAndroidFirebaseAuth.InternalTotpSecret.Builder()
                         .setCodeIntervalSeconds((long) secret.getCodeIntervalSeconds())
                         .setCodeLength((long) secret.getCodeLength())
                         .setSecretKey(secret.getSharedSecretKey())
