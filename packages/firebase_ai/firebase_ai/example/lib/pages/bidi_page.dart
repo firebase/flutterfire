@@ -176,7 +176,6 @@ class BidiSessionController extends ChangeNotifier {
 
   final List<MessageData> messages = [];
   String? _activeSessionHandle;
-  int? _lastProcessedIndex;
   int? _inputTranscriptionMessageIndex;
   int? _outputTranscriptionMessageIndex;
 
@@ -272,10 +271,8 @@ class BidiSessionController extends ChangeNotifier {
 
   Future<void> _sessionResume() async {
     if (isSessionActive) {
-      // Try stopping explicitly to reset hardware and stop spamming,
-      // mimicking the manual stop/resume flow that works.
-      await _stopSession(explicit: true);
-      await _startSession(explicit: true);
+      await _stopSession(explicit: false);
+      await _startSession(explicit: false);
     }
   }
 
@@ -434,20 +431,13 @@ class BidiSessionController extends ChangeNotifier {
     } else if (message is LiveServerToolCall && message.functionCalls != null) {
       await _handleLiveServerToolCall(message);
     } else if (message is GoingAwayNotice) {
-      developer.log('GoAway message received, time left: ${message.timeLeft}');
       if (_activeSessionHandle != null) {
-        developer.log('=====================================================');
-        developer.log('Resume Session with handle: $_activeSessionHandle');
         unawaited(_sessionResume());
       }
     } else if (message is SessionResumptionUpdate &&
         message.resumable != null &&
         message.resumable!) {
       _activeSessionHandle = message.newHandle;
-      _lastProcessedIndex = message.lastConsumedClientMessageIndex;
-      // developer.log(
-      //   'SessionResumptionUpdate: handle ${message.newHandle}, index $_lastProcessedIndex',
-      // );
     }
   }
 
