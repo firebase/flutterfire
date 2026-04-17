@@ -187,6 +187,8 @@ abstract class TestFirebaseAuthHostApi {
   Future<void> revokeTokenWithAuthorizationCode(
       AuthPigeonFirebaseApp app, String authorizationCode);
 
+  Future<void> revokeAccessToken(AuthPigeonFirebaseApp app, String accessToken);
+
   Future<void> initializeRecaptchaConfig(AuthPigeonFirebaseApp app);
 
   static void setUp(
@@ -985,6 +987,41 @@ abstract class TestFirebaseAuthHostApi {
           try {
             await api.revokeTokenWithAuthorizationCode(
                 arg_app!, arg_authorizationCode!);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> __pigeon_channel = BasicMessageChannel<
+              Object?>(
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.revokeAccessToken$messageChannelSuffix',
+          pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(__pigeon_channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(__pigeon_channel,
+                (Object? message) async {
+          assert(message != null,
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.revokeAccessToken was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final AuthPigeonFirebaseApp? arg_app =
+              (args[0] as AuthPigeonFirebaseApp?);
+          assert(arg_app != null,
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.revokeAccessToken was null, expected non-null AuthPigeonFirebaseApp.');
+          final String? arg_accessToken = (args[1] as String?);
+          assert(arg_accessToken != null,
+              'Argument for dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.revokeAccessToken was null, expected non-null String.');
+          try {
+            await api.revokeAccessToken(arg_app!, arg_accessToken!);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
