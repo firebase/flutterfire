@@ -954,9 +954,9 @@ FlutterStandardMethodCodec *_codec;
                                 @((int64_t)([[NSDate date] timeIntervalSince1970] * 1000));
                           }
 
-                          InternalPipelineSnapshot *pigeonSnapshot =
-                              [InternalPipelineSnapshot makeWithResults:pigeonResults
-                                                          executionTime:executionTime];
+                          InternalPipelineSnapshot *pigeonSnapshot = [InternalPipelineSnapshot
+                              makeWithResults:pigeonResults
+                                executionTime:[executionTime longLongValue]];
                           completion(pigeonSnapshot, nil);
                         }];
 }

@@ -1290,6 +1290,15 @@ void FirebaseAuthPlugin::RevokeTokenWithAuthorizationCode(
       nullptr));
 }
 
+void FirebaseAuthPlugin::InitializeRecaptchaConfig(
+    const AuthPigeonFirebaseApp& app,
+    std::function<void(std::optional<FlutterError> reply)> result) {
+  result(FlutterError(
+      "unimplemented",
+      "InitializeRecaptchaConfig is not available on this platform yet.",
+      nullptr));
+}
+
 flutter::EncodableMap FirebaseAuthPlugin::GetPluginConstantsForFirebaseApp(
     const firebase::App& app) {
   flutter::EncodableMap constants;
