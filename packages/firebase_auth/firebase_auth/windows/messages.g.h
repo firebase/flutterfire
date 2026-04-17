@@ -509,10 +509,11 @@ class InternalUserInfo {
   /// benefit of hash tables.
   size_t Hash() const;
 
- private:
   static InternalUserInfo FromEncodableList(
       const ::flutter::EncodableList& list);
   ::flutter::EncodableList ToEncodableList() const;
+
+ private:
   friend class InternalUserDetails;
   friend class FirebaseAuthHostApi;
   friend class FirebaseAuthUserHostApi;

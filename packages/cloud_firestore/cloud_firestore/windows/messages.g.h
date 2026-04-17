@@ -134,8 +134,8 @@ enum class AggregateSource {
   kServer = 0
 };
 
-// [PersistenceCacheIndexManagerRequestEnum] represents the request types for the
-// persistence cache index manager.
+// [PersistenceCacheIndexManagerRequestEnum] represents the request types for
+// the persistence cache index manager.
 enum class PersistenceCacheIndexManagerRequestEnum {
   kEnableIndexAutoCreation = 0,
   kDisableIndexAutoCreation = 1,

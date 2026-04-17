@@ -138,6 +138,12 @@ class CloudFirestorePlugin : public flutter::Plugin,
       const FirestorePigeonFirebaseApp& app,
       const PersistenceCacheIndexManagerRequestEnum& request,
       std::function<void(std::optional<FlutterError> reply)> result) override;
+  virtual void ExecutePipeline(
+      const FirestorePigeonFirebaseApp& app,
+      const ::flutter::EncodableList& stages,
+      const ::flutter::EncodableMap* options,
+      std::function<void(ErrorOr<InternalPipelineSnapshot> reply)> result)
+      override;
 
   static flutter::BinaryMessenger* messenger_;
   static std::map<

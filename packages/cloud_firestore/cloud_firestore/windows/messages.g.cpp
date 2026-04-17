@@ -2036,7 +2036,8 @@ void FirebaseFirestoreHostApiCodecSerializer::WriteValue(
                  stream);
       return;
     }
-    if (custom_value->type() == typeid(PersistenceCacheIndexManagerRequestEnum)) {
+    if (custom_value->type() ==
+        typeid(PersistenceCacheIndexManagerRequestEnum)) {
       stream->WriteByte(134);
       WriteValue(EncodableValue(static_cast<int>(
                      std::any_cast<PersistenceCacheIndexManagerRequestEnum>(

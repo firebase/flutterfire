@@ -1744,4 +1744,12 @@ void CloudFirestorePlugin::PersistenceCacheIndexManagerRequest(
   result(FlutterError("Not implemented on Windows"));
 }
 
+void CloudFirestorePlugin::ExecutePipeline(
+    const FirestorePigeonFirebaseApp& app,
+    const ::flutter::EncodableList& stages,
+    const ::flutter::EncodableMap* options,
+    std::function<void(ErrorOr<InternalPipelineSnapshot> reply)> result) {
+  result(FlutterError("Not implemented on Windows"));
+}
+
 }  // namespace cloud_firestore_windows
