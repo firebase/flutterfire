@@ -1249,19 +1249,19 @@ class _PipelineExamplePageState extends State<PipelineExamplePage> {
           Expression.coalesce(
             Expression.field('title'),
             Expression.field('missing'),
-            [Expression.constant('fb')],
+            Expression.constant('fb'),
           ).as('coalesce_title'),
           Expression.nor(
             Expression.field('score').lessThanValue(0),
             Expression.field('a').equalValue(9999),
           ).as('nor_ok'),
-          Expression.switchOn([
+          Expression.switchOn(
             Expression.field('a').greaterThanValue(50),
             Expression.constant('high'),
             Expression.field('a').greaterThanValue(5),
             Expression.constant('mid'),
             Expression.constant('low'),
-          ]).as('bucket'),
+          ).as('bucket'),
           Expression.parentFromRef(
             _firestore.collection(_collectionId).doc('demo_parent'),
           ).as('parent_from_ref'),
@@ -1336,13 +1336,13 @@ class _PipelineExamplePageState extends State<PipelineExamplePage> {
         .where(Expression.field('test').equalValue('expressions'))
         .where(Expression.field('score').equalValue(60))
         .addFields(
-          Expression.switchOn([
+          Expression.switchOn(
             Expression.field('a').greaterThanValue(50),
             Expression.constant('high'),
             Expression.field('a').greaterThanValue(5),
             Expression.constant('mid'),
             Expression.constant('low'),
-          ]).as('bucket'),
+          ).as('bucket'),
         )
         .limit(3)
         .execute(),
@@ -1360,7 +1360,7 @@ class _PipelineExamplePageState extends State<PipelineExamplePage> {
           Expression.coalesce(
             Expression.field('title'),
             Expression.field('missing'),
-            [Expression.constant('fb')],
+            Expression.constant('fb'),
           ).as('coalesce_title'),
           Expression.parentFromRef(
             _firestore.collection(_collectionId).doc('demo_parent'),

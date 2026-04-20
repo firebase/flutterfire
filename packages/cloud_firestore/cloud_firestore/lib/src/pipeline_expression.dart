@@ -1072,22 +1072,136 @@ abstract class Expression implements PipelineSerializable {
   static Expression coalesce(
     Expression first,
     Object second, [
-    List<Object?>? more,
+    Object? expression3,
+    Object? expression4,
+    Object? expression5,
+    Object? expression6,
+    Object? expression7,
+    Object? expression8,
+    Object? expression9,
+    Object? expression10,
+    Object? expression11,
+    Object? expression12,
+    Object? expression13,
+    Object? expression14,
+    Object? expression15,
+    Object? expression16,
+    Object? expression17,
+    Object? expression18,
+    Object? expression19,
+    Object? expression20,
+    Object? expression21,
+    Object? expression22,
+    Object? expression23,
+    Object? expression24,
+    Object? expression25,
+    Object? expression26,
+    Object? expression27,
+    Object? expression28,
+    Object? expression29,
+    Object? expression30,
   ]) {
     final expressions = <Expression>[first, _toExpression(second)];
-    if (more != null) {
-      for (final o in more) {
-        expressions.add(_toExpression(o));
-      }
-    }
+    if (expression3 != null) expressions.add(_toExpression(expression3));
+    if (expression4 != null) expressions.add(_toExpression(expression4));
+    if (expression5 != null) expressions.add(_toExpression(expression5));
+    if (expression6 != null) expressions.add(_toExpression(expression6));
+    if (expression7 != null) expressions.add(_toExpression(expression7));
+    if (expression8 != null) expressions.add(_toExpression(expression8));
+    if (expression9 != null) expressions.add(_toExpression(expression9));
+    if (expression10 != null) expressions.add(_toExpression(expression10));
+    if (expression11 != null) expressions.add(_toExpression(expression11));
+    if (expression12 != null) expressions.add(_toExpression(expression12));
+    if (expression13 != null) expressions.add(_toExpression(expression13));
+    if (expression14 != null) expressions.add(_toExpression(expression14));
+    if (expression15 != null) expressions.add(_toExpression(expression15));
+    if (expression16 != null) expressions.add(_toExpression(expression16));
+    if (expression17 != null) expressions.add(_toExpression(expression17));
+    if (expression18 != null) expressions.add(_toExpression(expression18));
+    if (expression19 != null) expressions.add(_toExpression(expression19));
+    if (expression20 != null) expressions.add(_toExpression(expression20));
+    if (expression21 != null) expressions.add(_toExpression(expression21));
+    if (expression22 != null) expressions.add(_toExpression(expression22));
+    if (expression23 != null) expressions.add(_toExpression(expression23));
+    if (expression24 != null) expressions.add(_toExpression(expression24));
+    if (expression25 != null) expressions.add(_toExpression(expression25));
+    if (expression26 != null) expressions.add(_toExpression(expression26));
+    if (expression27 != null) expressions.add(_toExpression(expression27));
+    if (expression28 != null) expressions.add(_toExpression(expression28));
+    if (expression29 != null) expressions.add(_toExpression(expression29));
+    if (expression30 != null) expressions.add(_toExpression(expression30));
     return _CoalesceExpression(expressions);
   }
 
   /// Switch: first matching [BooleanExpression] condition wins.
   ///
-  /// [parts] alternates condition, result, ... If [parts] has odd length, the last
-  /// value is a default [Expression] when no condition matches.
-  static Expression switchOn(List<Object?> parts) {
+  /// After the first [condition] and [result], pass an alternating sequence of
+  /// additional conditions and results. If you pass an odd number of
+  /// additional arguments, the last one is a default [Expression] when no
+  /// condition matches.
+  static Expression switchOn(
+    BooleanExpression condition,
+    Expression result, [
+    Object? arg3,
+    Object? arg4,
+    Object? arg5,
+    Object? arg6,
+    Object? arg7,
+    Object? arg8,
+    Object? arg9,
+    Object? arg10,
+    Object? arg11,
+    Object? arg12,
+    Object? arg13,
+    Object? arg14,
+    Object? arg15,
+    Object? arg16,
+    Object? arg17,
+    Object? arg18,
+    Object? arg19,
+    Object? arg20,
+    Object? arg21,
+    Object? arg22,
+    Object? arg23,
+    Object? arg24,
+    Object? arg25,
+    Object? arg26,
+    Object? arg27,
+    Object? arg28,
+    Object? arg29,
+    Object? arg30,
+    Object? arg31,
+  ]) {
+    final parts = <Object?>[condition, result];
+    if (arg3 != null) parts.add(arg3);
+    if (arg4 != null) parts.add(arg4);
+    if (arg5 != null) parts.add(arg5);
+    if (arg6 != null) parts.add(arg6);
+    if (arg7 != null) parts.add(arg7);
+    if (arg8 != null) parts.add(arg8);
+    if (arg9 != null) parts.add(arg9);
+    if (arg10 != null) parts.add(arg10);
+    if (arg11 != null) parts.add(arg11);
+    if (arg12 != null) parts.add(arg12);
+    if (arg13 != null) parts.add(arg13);
+    if (arg14 != null) parts.add(arg14);
+    if (arg15 != null) parts.add(arg15);
+    if (arg16 != null) parts.add(arg16);
+    if (arg17 != null) parts.add(arg17);
+    if (arg18 != null) parts.add(arg18);
+    if (arg19 != null) parts.add(arg19);
+    if (arg20 != null) parts.add(arg20);
+    if (arg21 != null) parts.add(arg21);
+    if (arg22 != null) parts.add(arg22);
+    if (arg23 != null) parts.add(arg23);
+    if (arg24 != null) parts.add(arg24);
+    if (arg25 != null) parts.add(arg25);
+    if (arg26 != null) parts.add(arg26);
+    if (arg27 != null) parts.add(arg27);
+    if (arg28 != null) parts.add(arg28);
+    if (arg29 != null) parts.add(arg29);
+    if (arg30 != null) parts.add(arg30);
+    if (arg31 != null) parts.add(arg31);
     return _SwitchOnExpression(_parseSwitchOnParts(parts));
   }
 

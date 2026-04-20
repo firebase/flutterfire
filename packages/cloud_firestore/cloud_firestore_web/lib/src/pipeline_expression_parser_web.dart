@@ -4,6 +4,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:js_interop';
+import 'dart:js_interop_unsafe';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart'
@@ -462,24 +463,27 @@ class PipelineExpressionParserWeb {
       throw UnsupportedError('switch_on requires a boolean condition');
     }
     final second = toExpression(exprMaps[1] as Map<String, dynamic>);
-    if (n == 2) {
-      return _pipelines.switchOn(first, second, <JSAny>[].toJS);
-    }
-    final tail = <JSAny>[];
-    for (var i = 2; i < n; i++) {
-      if (n.isOdd && i == n - 1) {
-        tail.add(toExpression(exprMaps[i] as Map<String, dynamic>));
-      } else if (i.isEven) {
-        final b = toBooleanExpression(exprMaps[i] as Map<String, dynamic>);
-        if (b == null) {
-          throw UnsupportedError('switch_on expected a boolean expression');
+    final allArgs = <JSAny>[first, second];
+    if (n > 2) {
+      for (var i = 2; i < n; i++) {
+        if (n.isOdd && i == n - 1) {
+          allArgs.add(toExpression(exprMaps[i] as Map<String, dynamic>));
+        } else if (i.isEven) {
+          final b = toBooleanExpression(exprMaps[i] as Map<String, dynamic>);
+          if (b == null) {
+            throw UnsupportedError('switch_on expected a boolean expression');
+          }
+          allArgs.add(b);
+        } else {
+          allArgs.add(toExpression(exprMaps[i] as Map<String, dynamic>));
         }
-        tail.add(b);
-      } else {
-        tail.add(toExpression(exprMaps[i] as Map<String, dynamic>));
       }
     }
-    return _pipelines.switchOn(first, second, tail.toJS);
+    return (_pipelines.switchOnJs as JSObject).callMethodVarArgs<
+            interop.ExpressionJsImpl>(
+          'apply'.toJS,
+          [_pipelines, allArgs.toJS],
+        );
   }
 
   // ── Boolean expressions ───────────────────────────────────────────────────

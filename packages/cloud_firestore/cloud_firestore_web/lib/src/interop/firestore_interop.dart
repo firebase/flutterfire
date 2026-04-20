@@ -412,8 +412,8 @@ extension type PipelinesJsImpl._(JSObject _) implements JSObject {
   external ExpressionJsImpl ifNull(JSAny ifExpr, JSAny elseExpr);
   external ExpressionJsImpl coalesce(
       JSAny first, JSAny second, JSArray<JSAny> more);
-  external ExpressionJsImpl switchOn(
-      JSAny condition, JSAny result, JSArray<JSAny> others);
+  @JS('switchOn')
+  external JSFunction get switchOnJs;
   external ExpressionJsImpl abs(JSAny expr);
   external ExpressionJsImpl arrayLength(JSAny array);
   external ExpressionJsImpl arraySum(JSAny expression);

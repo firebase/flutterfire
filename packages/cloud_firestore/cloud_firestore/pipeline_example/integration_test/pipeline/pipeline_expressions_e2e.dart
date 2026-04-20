@@ -1190,13 +1190,13 @@ void runPipelineExpressionsTests() {
             .where(Expression.field('test').equalValue('expressions'))
             .where(Expression.field('score').equalValue(60))
             .addFields(
-              Expression.switchOn([
+              Expression.switchOn(
                 Expression.field('a').greaterThanValue(50),
                 Expression.constant('high'),
                 Expression.field('a').greaterThanValue(5),
                 Expression.constant('mid'),
                 Expression.constant('low'),
-              ]).as('bucket'),
+              ).as('bucket'),
             )
             .limit(1)
             .execute();
@@ -1216,7 +1216,7 @@ void runPipelineExpressionsTests() {
             Expression.coalesce(
               Expression.field('title'),
               Expression.field('missing'),
-              [Expression.constant('fb')],
+              Expression.constant('fb'),
             ).as('coalesce_title'),
           )
           .limit(1)

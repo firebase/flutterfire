@@ -1072,23 +1072,27 @@ void main() {
     });
 
     test('coalesce serializes correctly', () {
-      final expr = Expression.coalesce(Field('a'), Field('b'), [Constant('c')]);
+      final expr = Expression.coalesce(Field('a'), Field('b'), Constant('c'));
       expect(expr.toMap()['name'], 'coalesce');
       expect((expr.toMap()['args']['expressions'] as List).length, 3);
     });
 
     test('switchOn serializes correctly', () {
-      final expr = Expression.switchOn([
+      final expr = Expression.switchOn(
         Field('x').greaterThanValue(0),
         Constant('pos'),
         Constant('zero'),
-      ]);
+      );
       expect(expr.toMap()['name'], 'switch_on');
     });
 
-    test('switchOn rejects invalid parts', () {
+    test('switchOn rejects invalid default', () {
       expect(
-        () => Expression.switchOn([Field('x')]),
+        () => Expression.switchOn(
+          Field('x').equalValue(0),
+          Constant('a'),
+          42,
+        ),
         throwsA(isA<ArgumentError>()),
       );
     });
