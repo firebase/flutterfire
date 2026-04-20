@@ -60,9 +60,10 @@ try {
 
     // Try signing in with email/password if applicable
     try {
+      String password = '...';
       UserCredential userCredential = await auth.signInWithEmailAndPassword(
         email: email,
-        password: promptUserForPassword(), // prompt user for password
+        password: password,
       );
       // Link the pending credential with the existing account
       await userCredential.user!.linkWithCredential(pendingCredential);
