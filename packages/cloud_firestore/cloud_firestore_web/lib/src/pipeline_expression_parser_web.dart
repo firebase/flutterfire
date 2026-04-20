@@ -479,11 +479,11 @@ class PipelineExpressionParserWeb {
         }
       }
     }
-    return (_pipelines.switchOnJs as JSObject).callMethodVarArgs<
-            interop.ExpressionJsImpl>(
-          'apply'.toJS,
-          [_pipelines, allArgs.toJS],
-        );
+    return (_pipelines.switchOnJs as JSObject)
+        .callMethodVarArgs<interop.ExpressionJsImpl>(
+      'apply'.toJS,
+      [_pipelines, allArgs.toJS],
+    );
   }
 
   // ── Boolean expressions ───────────────────────────────────────────────────
