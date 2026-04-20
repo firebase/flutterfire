@@ -679,6 +679,27 @@ public class FlutterFirebaseAuthPlugin
   }
 
   @Override
+  public void revokeAccessToken(
+      @NonNull GeneratedAndroidFirebaseAuth.AuthPigeonFirebaseApp app,
+      @NonNull String accessToken,
+      @NonNull GeneratedAndroidFirebaseAuth.VoidResult result) {
+    FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
+
+    firebaseAuth
+        .revokeAccessToken(accessToken)
+        .addOnCompleteListener(
+            task -> {
+              if (task.isSuccessful()) {
+                result.success();
+              } else {
+                result.error(
+                    FlutterFirebaseAuthPluginException.parserExceptionToFlutter(
+                        task.getException()));
+              }
+            });
+  }
+
+  @Override
   public void initializeRecaptchaConfig(
       @NonNull GeneratedAndroidFirebaseAuth.AuthPigeonFirebaseApp app,
       @NonNull GeneratedAndroidFirebaseAuth.VoidResult result) {

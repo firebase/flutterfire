@@ -665,6 +665,20 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   }
 
   @override
+  Future<void> revokeAccessToken(String accessToken) async {
+    if (defaultTargetPlatform != TargetPlatform.android) {
+      throw UnimplementedError(
+          'revokeAccessToken() is only available on the Android platform.');
+    }
+
+    try {
+      await _api.revokeAccessToken(pigeonDefault, accessToken);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
+    }
+  }
+
+  @override
   Future<void> initializeRecaptchaConfig() async {
     try {
       await _api.initializeRecaptchaConfig(pigeonDefault);
