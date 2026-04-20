@@ -60,8 +60,7 @@
     });
 
     long timedOut = dispatch_semaphore_wait(
-        strongSelf.semaphore,
-        dispatch_time(DISPATCH_TIME_NOW, self.timeout * NSEC_PER_MSEC));
+        strongSelf.semaphore, dispatch_time(DISPATCH_TIME_NOW, self.timeout * NSEC_PER_MSEC));
 
     if (timedOut) {
       NSArray *codeAndMessage = [FLTFirebaseFirestoreUtils
