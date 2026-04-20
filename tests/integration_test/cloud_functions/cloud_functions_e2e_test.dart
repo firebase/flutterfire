@@ -404,9 +404,9 @@ void main() {
             'type': 'deepMap',
             'inputData': data.deepMap,
           });
-          final data = await stream.where((e) => e is Result).last;
-          expect(data, isA<Result>());
-          final result = (data as Result).result;
+          final terminalEvent = await stream.where((e) => e is Result).last;
+          expect(terminalEvent, isA<Result>());
+          final result = (terminalEvent as Result).result;
           expect(
             result.data,
             isA<Map<String, dynamic>>(),
