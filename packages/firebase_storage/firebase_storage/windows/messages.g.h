@@ -104,7 +104,13 @@ class InternalStorageFirebaseApp {
  private:
   static InternalStorageFirebaseApp FromEncodableList(
       const ::flutter::EncodableList& list);
+
+ public:
+ public:
   ::flutter::EncodableList ToEncodableList() const;
+
+ private:
+ private:
   friend class FirebaseStorageHostApi;
   friend class PigeonInternalCodecSerializer;
   std::string app_name_;
@@ -138,7 +144,13 @@ class InternalStorageReference {
  private:
   static InternalStorageReference FromEncodableList(
       const ::flutter::EncodableList& list);
+
+ public:
+ public:
   ::flutter::EncodableList ToEncodableList() const;
+
+ private:
+ private:
   friend class FirebaseStorageHostApi;
   friend class PigeonInternalCodecSerializer;
   std::string bucket_;
@@ -168,7 +180,13 @@ class InternalFullMetaData {
  private:
   static InternalFullMetaData FromEncodableList(
       const ::flutter::EncodableList& list);
+
+ public:
+ public:
   ::flutter::EncodableList ToEncodableList() const;
+
+ private:
+ private:
   friend class InternalStorageTaskSnapShot;
   friend class FirebaseStorageHostApi;
   friend class PigeonInternalCodecSerializer;
@@ -207,7 +225,13 @@ class InternalListOptions {
  private:
   static InternalListOptions FromEncodableList(
       const ::flutter::EncodableList& list);
+
+ public:
+ public:
   ::flutter::EncodableList ToEncodableList() const;
+
+ private:
+ private:
   friend class FirebaseStorageHostApi;
   friend class PigeonInternalCodecSerializer;
   int64_t max_results_;
@@ -280,7 +304,13 @@ class InternalSettableMetadata {
  private:
   static InternalSettableMetadata FromEncodableList(
       const ::flutter::EncodableList& list);
+
+ public:
+ public:
   ::flutter::EncodableList ToEncodableList() const;
+
+ private:
+ private:
   friend class FirebaseStorageHostApi;
   friend class PigeonInternalCodecSerializer;
   std::optional<std::string> cache_control_;
@@ -334,7 +364,13 @@ class InternalStorageTaskSnapShot {
  private:
   static InternalStorageTaskSnapShot FromEncodableList(
       const ::flutter::EncodableList& list);
+
+ public:
+ public:
   ::flutter::EncodableList ToEncodableList() const;
+
+ private:
+ private:
   friend class FirebaseStorageHostApi;
   friend class PigeonInternalCodecSerializer;
   int64_t bytes_transferred_;
@@ -374,7 +410,13 @@ class InternalListResult {
  private:
   static InternalListResult FromEncodableList(
       const ::flutter::EncodableList& list);
+
+ public:
+ public:
   ::flutter::EncodableList ToEncodableList() const;
+
+ private:
+ private:
   friend class FirebaseStorageHostApi;
   friend class PigeonInternalCodecSerializer;
   ::flutter::EncodableList items_;

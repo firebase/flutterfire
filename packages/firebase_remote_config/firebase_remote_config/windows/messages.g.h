@@ -80,7 +80,13 @@ class RemoteConfigPigeonSettings {
  private:
   static RemoteConfigPigeonSettings FromEncodableList(
       const ::flutter::EncodableList& list);
+
+ public:
+ public:
   ::flutter::EncodableList ToEncodableList() const;
+
+ private:
+ private:
   friend class FirebaseRemoteConfigHostApi;
   friend class PigeonInternalCodecSerializer;
   int64_t fetch_timeout_seconds_;

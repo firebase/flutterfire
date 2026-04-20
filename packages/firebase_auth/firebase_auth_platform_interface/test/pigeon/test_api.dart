@@ -13,7 +13,6 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:firebase_auth_platform_interface/src/pigeon/messages.pigeon.dart';
 
-
 class _PigeonCodec extends StandardMessageCodec {
   const _PigeonCodec();
   @override
@@ -21,64 +20,64 @@ class _PigeonCodec extends StandardMessageCodec {
     if (value is int) {
       buffer.putUint8(4);
       buffer.putInt64(value);
-    }    else if (value is ActionCodeInfoOperation) {
+    } else if (value is ActionCodeInfoOperation) {
       buffer.putUint8(129);
       writeValue(buffer, value.index);
-    }    else if (value is InternalMultiFactorSession) {
+    } else if (value is InternalMultiFactorSession) {
       buffer.putUint8(130);
       writeValue(buffer, value.encode());
-    }    else if (value is InternalPhoneMultiFactorAssertion) {
+    } else if (value is InternalPhoneMultiFactorAssertion) {
       buffer.putUint8(131);
       writeValue(buffer, value.encode());
-    }    else if (value is InternalMultiFactorInfo) {
+    } else if (value is InternalMultiFactorInfo) {
       buffer.putUint8(132);
       writeValue(buffer, value.encode());
-    }    else if (value is AuthPigeonFirebaseApp) {
+    } else if (value is AuthPigeonFirebaseApp) {
       buffer.putUint8(133);
       writeValue(buffer, value.encode());
-    }    else if (value is InternalActionCodeInfoData) {
+    } else if (value is InternalActionCodeInfoData) {
       buffer.putUint8(134);
       writeValue(buffer, value.encode());
-    }    else if (value is InternalActionCodeInfo) {
+    } else if (value is InternalActionCodeInfo) {
       buffer.putUint8(135);
       writeValue(buffer, value.encode());
-    }    else if (value is InternalAdditionalUserInfo) {
+    } else if (value is InternalAdditionalUserInfo) {
       buffer.putUint8(136);
       writeValue(buffer, value.encode());
-    }    else if (value is InternalAuthCredential) {
+    } else if (value is InternalAuthCredential) {
       buffer.putUint8(137);
       writeValue(buffer, value.encode());
-    }    else if (value is InternalUserInfo) {
+    } else if (value is InternalUserInfo) {
       buffer.putUint8(138);
       writeValue(buffer, value.encode());
-    }    else if (value is InternalUserDetails) {
+    } else if (value is InternalUserDetails) {
       buffer.putUint8(139);
       writeValue(buffer, value.encode());
-    }    else if (value is InternalUserCredential) {
+    } else if (value is InternalUserCredential) {
       buffer.putUint8(140);
       writeValue(buffer, value.encode());
-    }    else if (value is InternalAuthCredentialInput) {
+    } else if (value is InternalAuthCredentialInput) {
       buffer.putUint8(141);
       writeValue(buffer, value.encode());
-    }    else if (value is InternalActionCodeSettings) {
+    } else if (value is InternalActionCodeSettings) {
       buffer.putUint8(142);
       writeValue(buffer, value.encode());
-    }    else if (value is InternalFirebaseAuthSettings) {
+    } else if (value is InternalFirebaseAuthSettings) {
       buffer.putUint8(143);
       writeValue(buffer, value.encode());
-    }    else if (value is InternalSignInProvider) {
+    } else if (value is InternalSignInProvider) {
       buffer.putUint8(144);
       writeValue(buffer, value.encode());
-    }    else if (value is InternalVerifyPhoneNumberRequest) {
+    } else if (value is InternalVerifyPhoneNumberRequest) {
       buffer.putUint8(145);
       writeValue(buffer, value.encode());
-    }    else if (value is InternalIdTokenResult) {
+    } else if (value is InternalIdTokenResult) {
       buffer.putUint8(146);
       writeValue(buffer, value.encode());
-    }    else if (value is InternalUserProfile) {
+    } else if (value is InternalUserProfile) {
       buffer.putUint8(147);
       writeValue(buffer, value.encode());
-    }    else if (value is InternalTotpSecret) {
+    } else if (value is InternalTotpSecret) {
       buffer.putUint8(148);
       writeValue(buffer, value.encode());
     } else {
@@ -137,7 +136,8 @@ class _PigeonCodec extends StandardMessageCodec {
 }
 
 abstract class TestFirebaseAuthHostApi {
-  static TestDefaultBinaryMessengerBinding? get _testBinaryMessengerBinding => TestDefaultBinaryMessengerBinding.instance;
+  static TestDefaultBinaryMessengerBinding? get _testBinaryMessengerBinding =>
+      TestDefaultBinaryMessengerBinding.instance;
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
 
   Future<String> registerIdTokenListener(AuthPigeonFirebaseApp app);
@@ -148,100 +148,138 @@ abstract class TestFirebaseAuthHostApi {
 
   Future<void> applyActionCode(AuthPigeonFirebaseApp app, String code);
 
-  Future<InternalActionCodeInfo> checkActionCode(AuthPigeonFirebaseApp app, String code);
+  Future<InternalActionCodeInfo> checkActionCode(
+      AuthPigeonFirebaseApp app, String code);
 
-  Future<void> confirmPasswordReset(AuthPigeonFirebaseApp app, String code, String newPassword);
+  Future<void> confirmPasswordReset(
+      AuthPigeonFirebaseApp app, String code, String newPassword);
 
-  Future<InternalUserCredential> createUserWithEmailAndPassword(AuthPigeonFirebaseApp app, String email, String password);
+  Future<InternalUserCredential> createUserWithEmailAndPassword(
+      AuthPigeonFirebaseApp app, String email, String password);
 
   Future<InternalUserCredential> signInAnonymously(AuthPigeonFirebaseApp app);
 
-  Future<InternalUserCredential> signInWithCredential(AuthPigeonFirebaseApp app, Map<String?, Object?> input);
+  Future<InternalUserCredential> signInWithCredential(
+      AuthPigeonFirebaseApp app, Map<String?, Object?> input);
 
-  Future<InternalUserCredential> signInWithCustomToken(AuthPigeonFirebaseApp app, String token);
+  Future<InternalUserCredential> signInWithCustomToken(
+      AuthPigeonFirebaseApp app, String token);
 
-  Future<InternalUserCredential> signInWithEmailAndPassword(AuthPigeonFirebaseApp app, String email, String password);
+  Future<InternalUserCredential> signInWithEmailAndPassword(
+      AuthPigeonFirebaseApp app, String email, String password);
 
-  Future<InternalUserCredential> signInWithEmailLink(AuthPigeonFirebaseApp app, String email, String emailLink);
+  Future<InternalUserCredential> signInWithEmailLink(
+      AuthPigeonFirebaseApp app, String email, String emailLink);
 
-  Future<InternalUserCredential> signInWithProvider(AuthPigeonFirebaseApp app, InternalSignInProvider signInProvider);
+  Future<InternalUserCredential> signInWithProvider(
+      AuthPigeonFirebaseApp app, InternalSignInProvider signInProvider);
 
   Future<void> signOut(AuthPigeonFirebaseApp app);
 
-  Future<List<String>> fetchSignInMethodsForEmail(AuthPigeonFirebaseApp app, String email);
+  Future<List<String>> fetchSignInMethodsForEmail(
+      AuthPigeonFirebaseApp app, String email);
 
-  Future<void> sendPasswordResetEmail(AuthPigeonFirebaseApp app, String email, InternalActionCodeSettings? actionCodeSettings);
+  Future<void> sendPasswordResetEmail(AuthPigeonFirebaseApp app, String email,
+      InternalActionCodeSettings? actionCodeSettings);
 
-  Future<void> sendSignInLinkToEmail(AuthPigeonFirebaseApp app, String email, InternalActionCodeSettings actionCodeSettings);
+  Future<void> sendSignInLinkToEmail(AuthPigeonFirebaseApp app, String email,
+      InternalActionCodeSettings actionCodeSettings);
 
-  Future<String> setLanguageCode(AuthPigeonFirebaseApp app, String? languageCode);
+  Future<String> setLanguageCode(
+      AuthPigeonFirebaseApp app, String? languageCode);
 
-  Future<void> setSettings(AuthPigeonFirebaseApp app, InternalFirebaseAuthSettings settings);
+  Future<void> setSettings(
+      AuthPigeonFirebaseApp app, InternalFirebaseAuthSettings settings);
 
-  Future<String> verifyPasswordResetCode(AuthPigeonFirebaseApp app, String code);
+  Future<String> verifyPasswordResetCode(
+      AuthPigeonFirebaseApp app, String code);
 
-  Future<String> verifyPhoneNumber(AuthPigeonFirebaseApp app, InternalVerifyPhoneNumberRequest request);
+  Future<String> verifyPhoneNumber(
+      AuthPigeonFirebaseApp app, InternalVerifyPhoneNumberRequest request);
 
-  Future<void> revokeTokenWithAuthorizationCode(AuthPigeonFirebaseApp app, String authorizationCode);
+  Future<void> revokeTokenWithAuthorizationCode(
+      AuthPigeonFirebaseApp app, String authorizationCode);
 
   Future<void> revokeAccessToken(AuthPigeonFirebaseApp app, String accessToken);
 
   Future<void> initializeRecaptchaConfig(AuthPigeonFirebaseApp app);
 
-  static void setUp(TestFirebaseAuthHostApi? api, {BinaryMessenger? binaryMessenger, String messageChannelSuffix = '',}) {
-    messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+  static void setUp(
+    TestFirebaseAuthHostApi? api, {
+    BinaryMessenger? binaryMessenger,
+    String messageChannelSuffix = '',
+  }) {
+    messageChannelSuffix =
+        messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.registerIdTokenListener$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.registerIdTokenListener$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           final List<Object?> args = message! as List<Object?>;
-          final AuthPigeonFirebaseApp arg_app = args[0]! as AuthPigeonFirebaseApp;
+          final AuthPigeonFirebaseApp arg_app =
+              args[0]! as AuthPigeonFirebaseApp;
           try {
             final String output = await api.registerIdTokenListener(arg_app);
             return <Object?>[output];
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.registerAuthStateListener$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.registerAuthStateListener$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           final List<Object?> args = message! as List<Object?>;
-          final AuthPigeonFirebaseApp arg_app = args[0]! as AuthPigeonFirebaseApp;
+          final AuthPigeonFirebaseApp arg_app =
+              args[0]! as AuthPigeonFirebaseApp;
           try {
             final String output = await api.registerAuthStateListener(arg_app);
             return <Object?>[output];
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.useEmulator$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.useEmulator$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           final List<Object?> args = message! as List<Object?>;
-          final AuthPigeonFirebaseApp arg_app = args[0]! as AuthPigeonFirebaseApp;
+          final AuthPigeonFirebaseApp arg_app =
+              args[0]! as AuthPigeonFirebaseApp;
           final String arg_host = args[1]! as String;
           final int arg_port = args[2]! as int;
           try {
@@ -249,66 +287,85 @@ abstract class TestFirebaseAuthHostApi {
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.applyActionCode$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.applyActionCode$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           final List<Object?> args = message! as List<Object?>;
-          final AuthPigeonFirebaseApp arg_app = args[0]! as AuthPigeonFirebaseApp;
+          final AuthPigeonFirebaseApp arg_app =
+              args[0]! as AuthPigeonFirebaseApp;
           final String arg_code = args[1]! as String;
           try {
             await api.applyActionCode(arg_app, arg_code);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.checkActionCode$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.checkActionCode$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           final List<Object?> args = message! as List<Object?>;
-          final AuthPigeonFirebaseApp arg_app = args[0]! as AuthPigeonFirebaseApp;
+          final AuthPigeonFirebaseApp arg_app =
+              args[0]! as AuthPigeonFirebaseApp;
           final String arg_code = args[1]! as String;
           try {
-            final InternalActionCodeInfo output = await api.checkActionCode(arg_app, arg_code);
+            final InternalActionCodeInfo output =
+                await api.checkActionCode(arg_app, arg_code);
             return <Object?>[output];
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.confirmPasswordReset$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.confirmPasswordReset$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           final List<Object?> args = message! as List<Object?>;
-          final AuthPigeonFirebaseApp arg_app = args[0]! as AuthPigeonFirebaseApp;
+          final AuthPigeonFirebaseApp arg_app =
+              args[0]! as AuthPigeonFirebaseApp;
           final String arg_code = args[1]! as String;
           final String arg_newPassword = args[2]! as String;
           try {
@@ -316,406 +373,536 @@ abstract class TestFirebaseAuthHostApi {
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.createUserWithEmailAndPassword$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.createUserWithEmailAndPassword$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           final List<Object?> args = message! as List<Object?>;
-          final AuthPigeonFirebaseApp arg_app = args[0]! as AuthPigeonFirebaseApp;
+          final AuthPigeonFirebaseApp arg_app =
+              args[0]! as AuthPigeonFirebaseApp;
           final String arg_email = args[1]! as String;
           final String arg_password = args[2]! as String;
           try {
-            final InternalUserCredential output = await api.createUserWithEmailAndPassword(arg_app, arg_email, arg_password);
+            final InternalUserCredential output =
+                await api.createUserWithEmailAndPassword(
+                    arg_app, arg_email, arg_password);
             return <Object?>[output];
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInAnonymously$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInAnonymously$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           final List<Object?> args = message! as List<Object?>;
-          final AuthPigeonFirebaseApp arg_app = args[0]! as AuthPigeonFirebaseApp;
+          final AuthPigeonFirebaseApp arg_app =
+              args[0]! as AuthPigeonFirebaseApp;
           try {
-            final InternalUserCredential output = await api.signInAnonymously(arg_app);
+            final InternalUserCredential output =
+                await api.signInAnonymously(arg_app);
             return <Object?>[output];
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithCredential$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithCredential$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           final List<Object?> args = message! as List<Object?>;
-          final AuthPigeonFirebaseApp arg_app = args[0]! as AuthPigeonFirebaseApp;
-          final Map<String?, Object?> arg_input = (args[1]! as Map<Object?, Object?>).cast<String?, Object?>();
+          final AuthPigeonFirebaseApp arg_app =
+              args[0]! as AuthPigeonFirebaseApp;
+          final Map<String?, Object?> arg_input =
+              (args[1]! as Map<Object?, Object?>).cast<String?, Object?>();
           try {
-            final InternalUserCredential output = await api.signInWithCredential(arg_app, arg_input);
+            final InternalUserCredential output =
+                await api.signInWithCredential(arg_app, arg_input);
             return <Object?>[output];
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithCustomToken$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithCustomToken$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           final List<Object?> args = message! as List<Object?>;
-          final AuthPigeonFirebaseApp arg_app = args[0]! as AuthPigeonFirebaseApp;
+          final AuthPigeonFirebaseApp arg_app =
+              args[0]! as AuthPigeonFirebaseApp;
           final String arg_token = args[1]! as String;
           try {
-            final InternalUserCredential output = await api.signInWithCustomToken(arg_app, arg_token);
+            final InternalUserCredential output =
+                await api.signInWithCustomToken(arg_app, arg_token);
             return <Object?>[output];
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithEmailAndPassword$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithEmailAndPassword$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           final List<Object?> args = message! as List<Object?>;
-          final AuthPigeonFirebaseApp arg_app = args[0]! as AuthPigeonFirebaseApp;
+          final AuthPigeonFirebaseApp arg_app =
+              args[0]! as AuthPigeonFirebaseApp;
           final String arg_email = args[1]! as String;
           final String arg_password = args[2]! as String;
           try {
-            final InternalUserCredential output = await api.signInWithEmailAndPassword(arg_app, arg_email, arg_password);
+            final InternalUserCredential output = await api
+                .signInWithEmailAndPassword(arg_app, arg_email, arg_password);
             return <Object?>[output];
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithEmailLink$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithEmailLink$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           final List<Object?> args = message! as List<Object?>;
-          final AuthPigeonFirebaseApp arg_app = args[0]! as AuthPigeonFirebaseApp;
+          final AuthPigeonFirebaseApp arg_app =
+              args[0]! as AuthPigeonFirebaseApp;
           final String arg_email = args[1]! as String;
           final String arg_emailLink = args[2]! as String;
           try {
-            final InternalUserCredential output = await api.signInWithEmailLink(arg_app, arg_email, arg_emailLink);
+            final InternalUserCredential output = await api.signInWithEmailLink(
+                arg_app, arg_email, arg_emailLink);
             return <Object?>[output];
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithProvider$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithProvider$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           final List<Object?> args = message! as List<Object?>;
-          final AuthPigeonFirebaseApp arg_app = args[0]! as AuthPigeonFirebaseApp;
-          final InternalSignInProvider arg_signInProvider = args[1]! as InternalSignInProvider;
+          final AuthPigeonFirebaseApp arg_app =
+              args[0]! as AuthPigeonFirebaseApp;
+          final InternalSignInProvider arg_signInProvider =
+              args[1]! as InternalSignInProvider;
           try {
-            final InternalUserCredential output = await api.signInWithProvider(arg_app, arg_signInProvider);
+            final InternalUserCredential output =
+                await api.signInWithProvider(arg_app, arg_signInProvider);
             return <Object?>[output];
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signOut$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signOut$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           final List<Object?> args = message! as List<Object?>;
-          final AuthPigeonFirebaseApp arg_app = args[0]! as AuthPigeonFirebaseApp;
+          final AuthPigeonFirebaseApp arg_app =
+              args[0]! as AuthPigeonFirebaseApp;
           try {
             await api.signOut(arg_app);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.fetchSignInMethodsForEmail$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.fetchSignInMethodsForEmail$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           final List<Object?> args = message! as List<Object?>;
-          final AuthPigeonFirebaseApp arg_app = args[0]! as AuthPigeonFirebaseApp;
+          final AuthPigeonFirebaseApp arg_app =
+              args[0]! as AuthPigeonFirebaseApp;
           final String arg_email = args[1]! as String;
           try {
-            final List<String> output = await api.fetchSignInMethodsForEmail(arg_app, arg_email);
+            final List<String> output =
+                await api.fetchSignInMethodsForEmail(arg_app, arg_email);
             return <Object?>[output];
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.sendPasswordResetEmail$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.sendPasswordResetEmail$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           final List<Object?> args = message! as List<Object?>;
-          final AuthPigeonFirebaseApp arg_app = args[0]! as AuthPigeonFirebaseApp;
+          final AuthPigeonFirebaseApp arg_app =
+              args[0]! as AuthPigeonFirebaseApp;
           final String arg_email = args[1]! as String;
-          final InternalActionCodeSettings? arg_actionCodeSettings = args[2] as InternalActionCodeSettings?;
+          final InternalActionCodeSettings? arg_actionCodeSettings =
+              args[2] as InternalActionCodeSettings?;
           try {
-            await api.sendPasswordResetEmail(arg_app, arg_email, arg_actionCodeSettings);
+            await api.sendPasswordResetEmail(
+                arg_app, arg_email, arg_actionCodeSettings);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.sendSignInLinkToEmail$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.sendSignInLinkToEmail$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           final List<Object?> args = message! as List<Object?>;
-          final AuthPigeonFirebaseApp arg_app = args[0]! as AuthPigeonFirebaseApp;
+          final AuthPigeonFirebaseApp arg_app =
+              args[0]! as AuthPigeonFirebaseApp;
           final String arg_email = args[1]! as String;
-          final InternalActionCodeSettings arg_actionCodeSettings = args[2]! as InternalActionCodeSettings;
+          final InternalActionCodeSettings arg_actionCodeSettings =
+              args[2]! as InternalActionCodeSettings;
           try {
-            await api.sendSignInLinkToEmail(arg_app, arg_email, arg_actionCodeSettings);
+            await api.sendSignInLinkToEmail(
+                arg_app, arg_email, arg_actionCodeSettings);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.setLanguageCode$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.setLanguageCode$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           final List<Object?> args = message! as List<Object?>;
-          final AuthPigeonFirebaseApp arg_app = args[0]! as AuthPigeonFirebaseApp;
+          final AuthPigeonFirebaseApp arg_app =
+              args[0]! as AuthPigeonFirebaseApp;
           final String? arg_languageCode = args[1] as String?;
           try {
-            final String output = await api.setLanguageCode(arg_app, arg_languageCode);
+            final String output =
+                await api.setLanguageCode(arg_app, arg_languageCode);
             return <Object?>[output];
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.setSettings$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.setSettings$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           final List<Object?> args = message! as List<Object?>;
-          final AuthPigeonFirebaseApp arg_app = args[0]! as AuthPigeonFirebaseApp;
-          final InternalFirebaseAuthSettings arg_settings = args[1]! as InternalFirebaseAuthSettings;
+          final AuthPigeonFirebaseApp arg_app =
+              args[0]! as AuthPigeonFirebaseApp;
+          final InternalFirebaseAuthSettings arg_settings =
+              args[1]! as InternalFirebaseAuthSettings;
           try {
             await api.setSettings(arg_app, arg_settings);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.verifyPasswordResetCode$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.verifyPasswordResetCode$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           final List<Object?> args = message! as List<Object?>;
-          final AuthPigeonFirebaseApp arg_app = args[0]! as AuthPigeonFirebaseApp;
+          final AuthPigeonFirebaseApp arg_app =
+              args[0]! as AuthPigeonFirebaseApp;
           final String arg_code = args[1]! as String;
           try {
-            final String output = await api.verifyPasswordResetCode(arg_app, arg_code);
+            final String output =
+                await api.verifyPasswordResetCode(arg_app, arg_code);
             return <Object?>[output];
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.verifyPhoneNumber$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.verifyPhoneNumber$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           final List<Object?> args = message! as List<Object?>;
-          final AuthPigeonFirebaseApp arg_app = args[0]! as AuthPigeonFirebaseApp;
-          final InternalVerifyPhoneNumberRequest arg_request = args[1]! as InternalVerifyPhoneNumberRequest;
+          final AuthPigeonFirebaseApp arg_app =
+              args[0]! as AuthPigeonFirebaseApp;
+          final InternalVerifyPhoneNumberRequest arg_request =
+              args[1]! as InternalVerifyPhoneNumberRequest;
           try {
-            final String output = await api.verifyPhoneNumber(arg_app, arg_request);
+            final String output =
+                await api.verifyPhoneNumber(arg_app, arg_request);
             return <Object?>[output];
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.revokeTokenWithAuthorizationCode$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.revokeTokenWithAuthorizationCode$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           final List<Object?> args = message! as List<Object?>;
-          final AuthPigeonFirebaseApp arg_app = args[0]! as AuthPigeonFirebaseApp;
+          final AuthPigeonFirebaseApp arg_app =
+              args[0]! as AuthPigeonFirebaseApp;
           final String arg_authorizationCode = args[1]! as String;
           try {
-            await api.revokeTokenWithAuthorizationCode(arg_app, arg_authorizationCode);
+            await api.revokeTokenWithAuthorizationCode(
+                arg_app, arg_authorizationCode);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.revokeAccessToken$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.revokeAccessToken$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           final List<Object?> args = message! as List<Object?>;
-          final AuthPigeonFirebaseApp arg_app = args[0]! as AuthPigeonFirebaseApp;
+          final AuthPigeonFirebaseApp arg_app =
+              args[0]! as AuthPigeonFirebaseApp;
           final String arg_accessToken = args[1]! as String;
           try {
             await api.revokeAccessToken(arg_app, arg_accessToken);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.initializeRecaptchaConfig$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.initializeRecaptchaConfig$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           final List<Object?> args = message! as List<Object?>;
-          final AuthPigeonFirebaseApp arg_app = args[0]! as AuthPigeonFirebaseApp;
+          final AuthPigeonFirebaseApp arg_app =
+              args[0]! as AuthPigeonFirebaseApp;
           try {
             await api.initializeRecaptchaConfig(arg_app);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
@@ -724,342 +911,463 @@ abstract class TestFirebaseAuthHostApi {
 }
 
 abstract class TestFirebaseAuthUserHostApi {
-  static TestDefaultBinaryMessengerBinding? get _testBinaryMessengerBinding => TestDefaultBinaryMessengerBinding.instance;
+  static TestDefaultBinaryMessengerBinding? get _testBinaryMessengerBinding =>
+      TestDefaultBinaryMessengerBinding.instance;
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
 
   Future<void> delete(AuthPigeonFirebaseApp app);
 
-  Future<InternalIdTokenResult> getIdToken(AuthPigeonFirebaseApp app, bool forceRefresh);
+  Future<InternalIdTokenResult> getIdToken(
+      AuthPigeonFirebaseApp app, bool forceRefresh);
 
-  Future<InternalUserCredential> linkWithCredential(AuthPigeonFirebaseApp app, Map<String?, Object?> input);
+  Future<InternalUserCredential> linkWithCredential(
+      AuthPigeonFirebaseApp app, Map<String?, Object?> input);
 
-  Future<InternalUserCredential> linkWithProvider(AuthPigeonFirebaseApp app, InternalSignInProvider signInProvider);
+  Future<InternalUserCredential> linkWithProvider(
+      AuthPigeonFirebaseApp app, InternalSignInProvider signInProvider);
 
-  Future<InternalUserCredential> reauthenticateWithCredential(AuthPigeonFirebaseApp app, Map<String?, Object?> input);
+  Future<InternalUserCredential> reauthenticateWithCredential(
+      AuthPigeonFirebaseApp app, Map<String?, Object?> input);
 
-  Future<InternalUserCredential> reauthenticateWithProvider(AuthPigeonFirebaseApp app, InternalSignInProvider signInProvider);
+  Future<InternalUserCredential> reauthenticateWithProvider(
+      AuthPigeonFirebaseApp app, InternalSignInProvider signInProvider);
 
   Future<InternalUserDetails> reload(AuthPigeonFirebaseApp app);
 
-  Future<void> sendEmailVerification(AuthPigeonFirebaseApp app, InternalActionCodeSettings? actionCodeSettings);
+  Future<void> sendEmailVerification(AuthPigeonFirebaseApp app,
+      InternalActionCodeSettings? actionCodeSettings);
 
-  Future<InternalUserCredential> unlink(AuthPigeonFirebaseApp app, String providerId);
+  Future<InternalUserCredential> unlink(
+      AuthPigeonFirebaseApp app, String providerId);
 
-  Future<InternalUserDetails> updateEmail(AuthPigeonFirebaseApp app, String newEmail);
+  Future<InternalUserDetails> updateEmail(
+      AuthPigeonFirebaseApp app, String newEmail);
 
-  Future<InternalUserDetails> updatePassword(AuthPigeonFirebaseApp app, String newPassword);
+  Future<InternalUserDetails> updatePassword(
+      AuthPigeonFirebaseApp app, String newPassword);
 
-  Future<InternalUserDetails> updatePhoneNumber(AuthPigeonFirebaseApp app, Map<String?, Object?> input);
+  Future<InternalUserDetails> updatePhoneNumber(
+      AuthPigeonFirebaseApp app, Map<String?, Object?> input);
 
-  Future<InternalUserDetails> updateProfile(AuthPigeonFirebaseApp app, InternalUserProfile profile);
+  Future<InternalUserDetails> updateProfile(
+      AuthPigeonFirebaseApp app, InternalUserProfile profile);
 
-  Future<void> verifyBeforeUpdateEmail(AuthPigeonFirebaseApp app, String newEmail, InternalActionCodeSettings? actionCodeSettings);
+  Future<void> verifyBeforeUpdateEmail(AuthPigeonFirebaseApp app,
+      String newEmail, InternalActionCodeSettings? actionCodeSettings);
 
-  static void setUp(TestFirebaseAuthUserHostApi? api, {BinaryMessenger? binaryMessenger, String messageChannelSuffix = '',}) {
-    messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+  static void setUp(
+    TestFirebaseAuthUserHostApi? api, {
+    BinaryMessenger? binaryMessenger,
+    String messageChannelSuffix = '',
+  }) {
+    messageChannelSuffix =
+        messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.delete$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.delete$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           final List<Object?> args = message! as List<Object?>;
-          final AuthPigeonFirebaseApp arg_app = args[0]! as AuthPigeonFirebaseApp;
+          final AuthPigeonFirebaseApp arg_app =
+              args[0]! as AuthPigeonFirebaseApp;
           try {
             await api.delete(arg_app);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.getIdToken$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.getIdToken$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           final List<Object?> args = message! as List<Object?>;
-          final AuthPigeonFirebaseApp arg_app = args[0]! as AuthPigeonFirebaseApp;
+          final AuthPigeonFirebaseApp arg_app =
+              args[0]! as AuthPigeonFirebaseApp;
           final bool arg_forceRefresh = args[1]! as bool;
           try {
-            final InternalIdTokenResult output = await api.getIdToken(arg_app, arg_forceRefresh);
+            final InternalIdTokenResult output =
+                await api.getIdToken(arg_app, arg_forceRefresh);
             return <Object?>[output];
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.linkWithCredential$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.linkWithCredential$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           final List<Object?> args = message! as List<Object?>;
-          final AuthPigeonFirebaseApp arg_app = args[0]! as AuthPigeonFirebaseApp;
-          final Map<String?, Object?> arg_input = (args[1]! as Map<Object?, Object?>).cast<String?, Object?>();
+          final AuthPigeonFirebaseApp arg_app =
+              args[0]! as AuthPigeonFirebaseApp;
+          final Map<String?, Object?> arg_input =
+              (args[1]! as Map<Object?, Object?>).cast<String?, Object?>();
           try {
-            final InternalUserCredential output = await api.linkWithCredential(arg_app, arg_input);
+            final InternalUserCredential output =
+                await api.linkWithCredential(arg_app, arg_input);
             return <Object?>[output];
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.linkWithProvider$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.linkWithProvider$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           final List<Object?> args = message! as List<Object?>;
-          final AuthPigeonFirebaseApp arg_app = args[0]! as AuthPigeonFirebaseApp;
-          final InternalSignInProvider arg_signInProvider = args[1]! as InternalSignInProvider;
+          final AuthPigeonFirebaseApp arg_app =
+              args[0]! as AuthPigeonFirebaseApp;
+          final InternalSignInProvider arg_signInProvider =
+              args[1]! as InternalSignInProvider;
           try {
-            final InternalUserCredential output = await api.linkWithProvider(arg_app, arg_signInProvider);
+            final InternalUserCredential output =
+                await api.linkWithProvider(arg_app, arg_signInProvider);
             return <Object?>[output];
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reauthenticateWithCredential$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reauthenticateWithCredential$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           final List<Object?> args = message! as List<Object?>;
-          final AuthPigeonFirebaseApp arg_app = args[0]! as AuthPigeonFirebaseApp;
-          final Map<String?, Object?> arg_input = (args[1]! as Map<Object?, Object?>).cast<String?, Object?>();
+          final AuthPigeonFirebaseApp arg_app =
+              args[0]! as AuthPigeonFirebaseApp;
+          final Map<String?, Object?> arg_input =
+              (args[1]! as Map<Object?, Object?>).cast<String?, Object?>();
           try {
-            final InternalUserCredential output = await api.reauthenticateWithCredential(arg_app, arg_input);
+            final InternalUserCredential output =
+                await api.reauthenticateWithCredential(arg_app, arg_input);
             return <Object?>[output];
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reauthenticateWithProvider$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reauthenticateWithProvider$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           final List<Object?> args = message! as List<Object?>;
-          final AuthPigeonFirebaseApp arg_app = args[0]! as AuthPigeonFirebaseApp;
-          final InternalSignInProvider arg_signInProvider = args[1]! as InternalSignInProvider;
+          final AuthPigeonFirebaseApp arg_app =
+              args[0]! as AuthPigeonFirebaseApp;
+          final InternalSignInProvider arg_signInProvider =
+              args[1]! as InternalSignInProvider;
           try {
-            final InternalUserCredential output = await api.reauthenticateWithProvider(arg_app, arg_signInProvider);
+            final InternalUserCredential output = await api
+                .reauthenticateWithProvider(arg_app, arg_signInProvider);
             return <Object?>[output];
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reload$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reload$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           final List<Object?> args = message! as List<Object?>;
-          final AuthPigeonFirebaseApp arg_app = args[0]! as AuthPigeonFirebaseApp;
+          final AuthPigeonFirebaseApp arg_app =
+              args[0]! as AuthPigeonFirebaseApp;
           try {
             final InternalUserDetails output = await api.reload(arg_app);
             return <Object?>[output];
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.sendEmailVerification$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.sendEmailVerification$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           final List<Object?> args = message! as List<Object?>;
-          final AuthPigeonFirebaseApp arg_app = args[0]! as AuthPigeonFirebaseApp;
-          final InternalActionCodeSettings? arg_actionCodeSettings = args[1] as InternalActionCodeSettings?;
+          final AuthPigeonFirebaseApp arg_app =
+              args[0]! as AuthPigeonFirebaseApp;
+          final InternalActionCodeSettings? arg_actionCodeSettings =
+              args[1] as InternalActionCodeSettings?;
           try {
             await api.sendEmailVerification(arg_app, arg_actionCodeSettings);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.unlink$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.unlink$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           final List<Object?> args = message! as List<Object?>;
-          final AuthPigeonFirebaseApp arg_app = args[0]! as AuthPigeonFirebaseApp;
+          final AuthPigeonFirebaseApp arg_app =
+              args[0]! as AuthPigeonFirebaseApp;
           final String arg_providerId = args[1]! as String;
           try {
-            final InternalUserCredential output = await api.unlink(arg_app, arg_providerId);
+            final InternalUserCredential output =
+                await api.unlink(arg_app, arg_providerId);
             return <Object?>[output];
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updateEmail$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updateEmail$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           final List<Object?> args = message! as List<Object?>;
-          final AuthPigeonFirebaseApp arg_app = args[0]! as AuthPigeonFirebaseApp;
+          final AuthPigeonFirebaseApp arg_app =
+              args[0]! as AuthPigeonFirebaseApp;
           final String arg_newEmail = args[1]! as String;
           try {
-            final InternalUserDetails output = await api.updateEmail(arg_app, arg_newEmail);
+            final InternalUserDetails output =
+                await api.updateEmail(arg_app, arg_newEmail);
             return <Object?>[output];
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updatePassword$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updatePassword$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           final List<Object?> args = message! as List<Object?>;
-          final AuthPigeonFirebaseApp arg_app = args[0]! as AuthPigeonFirebaseApp;
+          final AuthPigeonFirebaseApp arg_app =
+              args[0]! as AuthPigeonFirebaseApp;
           final String arg_newPassword = args[1]! as String;
           try {
-            final InternalUserDetails output = await api.updatePassword(arg_app, arg_newPassword);
+            final InternalUserDetails output =
+                await api.updatePassword(arg_app, arg_newPassword);
             return <Object?>[output];
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updatePhoneNumber$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updatePhoneNumber$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           final List<Object?> args = message! as List<Object?>;
-          final AuthPigeonFirebaseApp arg_app = args[0]! as AuthPigeonFirebaseApp;
-          final Map<String?, Object?> arg_input = (args[1]! as Map<Object?, Object?>).cast<String?, Object?>();
+          final AuthPigeonFirebaseApp arg_app =
+              args[0]! as AuthPigeonFirebaseApp;
+          final Map<String?, Object?> arg_input =
+              (args[1]! as Map<Object?, Object?>).cast<String?, Object?>();
           try {
-            final InternalUserDetails output = await api.updatePhoneNumber(arg_app, arg_input);
+            final InternalUserDetails output =
+                await api.updatePhoneNumber(arg_app, arg_input);
             return <Object?>[output];
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updateProfile$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updateProfile$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           final List<Object?> args = message! as List<Object?>;
-          final AuthPigeonFirebaseApp arg_app = args[0]! as AuthPigeonFirebaseApp;
-          final InternalUserProfile arg_profile = args[1]! as InternalUserProfile;
+          final AuthPigeonFirebaseApp arg_app =
+              args[0]! as AuthPigeonFirebaseApp;
+          final InternalUserProfile arg_profile =
+              args[1]! as InternalUserProfile;
           try {
-            final InternalUserDetails output = await api.updateProfile(arg_app, arg_profile);
+            final InternalUserDetails output =
+                await api.updateProfile(arg_app, arg_profile);
             return <Object?>[output];
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.verifyBeforeUpdateEmail$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.verifyBeforeUpdateEmail$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           final List<Object?> args = message! as List<Object?>;
-          final AuthPigeonFirebaseApp arg_app = args[0]! as AuthPigeonFirebaseApp;
+          final AuthPigeonFirebaseApp arg_app =
+              args[0]! as AuthPigeonFirebaseApp;
           final String arg_newEmail = args[1]! as String;
-          final InternalActionCodeSettings? arg_actionCodeSettings = args[2] as InternalActionCodeSettings?;
+          final InternalActionCodeSettings? arg_actionCodeSettings =
+              args[2] as InternalActionCodeSettings?;
           try {
-            await api.verifyBeforeUpdateEmail(arg_app, arg_newEmail, arg_actionCodeSettings);
+            await api.verifyBeforeUpdateEmail(
+                arg_app, arg_newEmail, arg_actionCodeSettings);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
@@ -1068,54 +1376,75 @@ abstract class TestFirebaseAuthUserHostApi {
 }
 
 abstract class TestMultiFactorUserHostApi {
-  static TestDefaultBinaryMessengerBinding? get _testBinaryMessengerBinding => TestDefaultBinaryMessengerBinding.instance;
+  static TestDefaultBinaryMessengerBinding? get _testBinaryMessengerBinding =>
+      TestDefaultBinaryMessengerBinding.instance;
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
 
-  Future<void> enrollPhone(AuthPigeonFirebaseApp app, InternalPhoneMultiFactorAssertion assertion, String? displayName);
+  Future<void> enrollPhone(AuthPigeonFirebaseApp app,
+      InternalPhoneMultiFactorAssertion assertion, String? displayName);
 
-  Future<void> enrollTotp(AuthPigeonFirebaseApp app, String assertionId, String? displayName);
+  Future<void> enrollTotp(
+      AuthPigeonFirebaseApp app, String assertionId, String? displayName);
 
   Future<InternalMultiFactorSession> getSession(AuthPigeonFirebaseApp app);
 
   Future<void> unenroll(AuthPigeonFirebaseApp app, String factorUid);
 
-  Future<List<InternalMultiFactorInfo>> getEnrolledFactors(AuthPigeonFirebaseApp app);
+  Future<List<InternalMultiFactorInfo>> getEnrolledFactors(
+      AuthPigeonFirebaseApp app);
 
-  static void setUp(TestMultiFactorUserHostApi? api, {BinaryMessenger? binaryMessenger, String messageChannelSuffix = '',}) {
-    messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+  static void setUp(
+    TestMultiFactorUserHostApi? api, {
+    BinaryMessenger? binaryMessenger,
+    String messageChannelSuffix = '',
+  }) {
+    messageChannelSuffix =
+        messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollPhone$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollPhone$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           final List<Object?> args = message! as List<Object?>;
-          final AuthPigeonFirebaseApp arg_app = args[0]! as AuthPigeonFirebaseApp;
-          final InternalPhoneMultiFactorAssertion arg_assertion = args[1]! as InternalPhoneMultiFactorAssertion;
+          final AuthPigeonFirebaseApp arg_app =
+              args[0]! as AuthPigeonFirebaseApp;
+          final InternalPhoneMultiFactorAssertion arg_assertion =
+              args[1]! as InternalPhoneMultiFactorAssertion;
           final String? arg_displayName = args[2] as String?;
           try {
             await api.enrollPhone(arg_app, arg_assertion, arg_displayName);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollTotp$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollTotp$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           final List<Object?> args = message! as List<Object?>;
-          final AuthPigeonFirebaseApp arg_app = args[0]! as AuthPigeonFirebaseApp;
+          final AuthPigeonFirebaseApp arg_app =
+              args[0]! as AuthPigeonFirebaseApp;
           final String arg_assertionId = args[1]! as String;
           final String? arg_displayName = args[2] as String?;
           try {
@@ -1123,72 +1452,93 @@ abstract class TestMultiFactorUserHostApi {
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.getSession$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.getSession$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           final List<Object?> args = message! as List<Object?>;
-          final AuthPigeonFirebaseApp arg_app = args[0]! as AuthPigeonFirebaseApp;
+          final AuthPigeonFirebaseApp arg_app =
+              args[0]! as AuthPigeonFirebaseApp;
           try {
-            final InternalMultiFactorSession output = await api.getSession(arg_app);
+            final InternalMultiFactorSession output =
+                await api.getSession(arg_app);
             return <Object?>[output];
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.unenroll$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.unenroll$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           final List<Object?> args = message! as List<Object?>;
-          final AuthPigeonFirebaseApp arg_app = args[0]! as AuthPigeonFirebaseApp;
+          final AuthPigeonFirebaseApp arg_app =
+              args[0]! as AuthPigeonFirebaseApp;
           final String arg_factorUid = args[1]! as String;
           try {
             await api.unenroll(arg_app, arg_factorUid);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.getEnrolledFactors$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.getEnrolledFactors$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           final List<Object?> args = message! as List<Object?>;
-          final AuthPigeonFirebaseApp arg_app = args[0]! as AuthPigeonFirebaseApp;
+          final AuthPigeonFirebaseApp arg_app =
+              args[0]! as AuthPigeonFirebaseApp;
           try {
-            final List<InternalMultiFactorInfo> output = await api.getEnrolledFactors(arg_app);
+            final List<InternalMultiFactorInfo> output =
+                await api.getEnrolledFactors(arg_app);
             return <Object?>[output];
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
@@ -1197,32 +1547,46 @@ abstract class TestMultiFactorUserHostApi {
 }
 
 abstract class TestMultiFactoResolverHostApi {
-  static TestDefaultBinaryMessengerBinding? get _testBinaryMessengerBinding => TestDefaultBinaryMessengerBinding.instance;
+  static TestDefaultBinaryMessengerBinding? get _testBinaryMessengerBinding =>
+      TestDefaultBinaryMessengerBinding.instance;
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
 
-  Future<InternalUserCredential> resolveSignIn(String resolverId, InternalPhoneMultiFactorAssertion? assertion, String? totpAssertionId);
+  Future<InternalUserCredential> resolveSignIn(String resolverId,
+      InternalPhoneMultiFactorAssertion? assertion, String? totpAssertionId);
 
-  static void setUp(TestMultiFactoResolverHostApi? api, {BinaryMessenger? binaryMessenger, String messageChannelSuffix = '',}) {
-    messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+  static void setUp(
+    TestMultiFactoResolverHostApi? api, {
+    BinaryMessenger? binaryMessenger,
+    String messageChannelSuffix = '',
+  }) {
+    messageChannelSuffix =
+        messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactoResolverHostApi.resolveSignIn$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactoResolverHostApi.resolveSignIn$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           final List<Object?> args = message! as List<Object?>;
           final String arg_resolverId = args[0]! as String;
-          final InternalPhoneMultiFactorAssertion? arg_assertion = args[1] as InternalPhoneMultiFactorAssertion?;
+          final InternalPhoneMultiFactorAssertion? arg_assertion =
+              args[1] as InternalPhoneMultiFactorAssertion?;
           final String? arg_totpAssertionId = args[2] as String?;
           try {
-            final InternalUserCredential output = await api.resolveSignIn(arg_resolverId, arg_assertion, arg_totpAssertionId);
+            final InternalUserCredential output = await api.resolveSignIn(
+                arg_resolverId, arg_assertion, arg_totpAssertionId);
             return <Object?>[output];
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
@@ -1231,78 +1595,104 @@ abstract class TestMultiFactoResolverHostApi {
 }
 
 abstract class TestMultiFactoResolverHostApi {
-  static TestDefaultBinaryMessengerBinding? get _testBinaryMessengerBinding => TestDefaultBinaryMessengerBinding.instance;
+  static TestDefaultBinaryMessengerBinding? get _testBinaryMessengerBinding =>
+      TestDefaultBinaryMessengerBinding.instance;
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
 
   Future<InternalTotpSecret> generateSecret(String sessionId);
 
-  Future<String> getAssertionForEnrollment(String secretKey, String oneTimePassword);
+  Future<String> getAssertionForEnrollment(
+      String secretKey, String oneTimePassword);
 
-  Future<String> getAssertionForSignIn(String enrollmentId, String oneTimePassword);
+  Future<String> getAssertionForSignIn(
+      String enrollmentId, String oneTimePassword);
 
-  static void setUp(TestMultiFactoResolverHostApi? api, {BinaryMessenger? binaryMessenger, String messageChannelSuffix = '',}) {
-    messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+  static void setUp(
+    TestMultiFactoResolverHostApi? api, {
+    BinaryMessenger? binaryMessenger,
+    String messageChannelSuffix = '',
+  }) {
+    messageChannelSuffix =
+        messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.generateSecret$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.generateSecret$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           final List<Object?> args = message! as List<Object?>;
           final String arg_sessionId = args[0]! as String;
           try {
-            final InternalTotpSecret output = await api.generateSecret(arg_sessionId);
+            final InternalTotpSecret output =
+                await api.generateSecret(arg_sessionId);
             return <Object?>[output];
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForEnrollment$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForEnrollment$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           final List<Object?> args = message! as List<Object?>;
           final String arg_secretKey = args[0]! as String;
           final String arg_oneTimePassword = args[1]! as String;
           try {
-            final String output = await api.getAssertionForEnrollment(arg_secretKey, arg_oneTimePassword);
+            final String output = await api.getAssertionForEnrollment(
+                arg_secretKey, arg_oneTimePassword);
             return <Object?>[output];
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForSignIn$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForSignIn$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           final List<Object?> args = message! as List<Object?>;
           final String arg_enrollmentId = args[0]! as String;
           final String arg_oneTimePassword = args[1]! as String;
           try {
-            final String output = await api.getAssertionForSignIn(arg_enrollmentId, arg_oneTimePassword);
+            final String output = await api.getAssertionForSignIn(
+                arg_enrollmentId, arg_oneTimePassword);
             return <Object?>[output];
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
@@ -1311,46 +1701,63 @@ abstract class TestMultiFactoResolverHostApi {
 }
 
 abstract class TestMultiFactoResolverHostApi {
-  static TestDefaultBinaryMessengerBinding? get _testBinaryMessengerBinding => TestDefaultBinaryMessengerBinding.instance;
+  static TestDefaultBinaryMessengerBinding? get _testBinaryMessengerBinding =>
+      TestDefaultBinaryMessengerBinding.instance;
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
 
-  Future<String> generateQrCodeUrl(String secretKey, String? accountName, String? issuer);
+  Future<String> generateQrCodeUrl(
+      String secretKey, String? accountName, String? issuer);
 
   Future<void> openInOtpApp(String secretKey, String qrCodeUrl);
 
-  static void setUp(TestMultiFactoResolverHostApi? api, {BinaryMessenger? binaryMessenger, String messageChannelSuffix = '',}) {
-    messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+  static void setUp(
+    TestMultiFactoResolverHostApi? api, {
+    BinaryMessenger? binaryMessenger,
+    String messageChannelSuffix = '',
+  }) {
+    messageChannelSuffix =
+        messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.generateQrCodeUrl$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.generateQrCodeUrl$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           final List<Object?> args = message! as List<Object?>;
           final String arg_secretKey = args[0]! as String;
           final String? arg_accountName = args[1] as String?;
           final String? arg_issuer = args[2] as String?;
           try {
-            final String output = await api.generateQrCodeUrl(arg_secretKey, arg_accountName, arg_issuer);
+            final String output = await api.generateQrCodeUrl(
+                arg_secretKey, arg_accountName, arg_issuer);
             return <Object?>[output];
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.openInOtpApp$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.openInOtpApp$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
-        _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
           final List<Object?> args = message! as List<Object?>;
           final String arg_secretKey = args[0]! as String;
           final String arg_qrCodeUrl = args[1]! as String;
@@ -1359,8 +1766,9 @@ abstract class TestMultiFactoResolverHostApi {
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }

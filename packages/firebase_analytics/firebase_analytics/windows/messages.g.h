@@ -83,7 +83,13 @@ class AnalyticsEvent {
 
  private:
   static AnalyticsEvent FromEncodableList(const ::flutter::EncodableList& list);
+
+ public:
+ public:
   ::flutter::EncodableList ToEncodableList() const;
+
+ private:
+ private:
   friend class FirebaseAnalyticsHostApi;
   friend class PigeonInternalCodecSerializer;
   std::string name_;

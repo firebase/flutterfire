@@ -1175,6 +1175,17 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
                               }];
 }
 
+- (void)revokeAccessTokenApp:(nonnull AuthPigeonFirebaseApp *)app
+                 accessToken:(nonnull NSString *)accessToken
+                  completion:(nonnull void (^)(FlutterError *_Nullable))completion {
+  // `revokeAccessToken(_:)` is currently Android-only on the Firebase SDK.
+  // On Apple platforms use `revokeTokenWithAuthorizationCode:` instead.
+  completion([FlutterError errorWithCode:@"unsupported-platform-operation"
+                                 message:@"revokeAccessToken is not supported on iOS/macOS. "
+                                         @"Use revokeTokenWithAuthorizationCode instead."
+                                 details:nil]);
+}
+
 - (void)checkActionCodeApp:(nonnull AuthPigeonFirebaseApp *)app
                       code:(nonnull NSString *)code
                 completion:(nonnull void (^)(InternalActionCodeInfo *_Nullable,

@@ -20,7 +20,6 @@ import 'method_channel_pipeline_snapshot.dart';
 import 'method_channel_query.dart';
 import 'method_channel_transaction.dart';
 import 'method_channel_write_batch.dart';
-import '../pigeon/messages.pigeon.dart' show PigeonCodec;
 import 'utils/exception.dart';
 
 /// The entry point for accessing a Firestore.

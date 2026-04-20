@@ -196,6 +196,10 @@ class FirebaseAuthPlugin : public flutter::Plugin,
       const AuthPigeonFirebaseApp& app, const std::string& authorization_code,
       std::function<void(std::optional<FlutterError> reply)> result) override;
 
+  virtual void RevokeAccessToken(
+      const AuthPigeonFirebaseApp& app, const std::string& access_token,
+      std::function<void(std::optional<FlutterError> reply)> result) override;
+
   virtual void InitializeRecaptchaConfig(
       const AuthPigeonFirebaseApp& app,
       std::function<void(std::optional<FlutterError> reply)> result) override;

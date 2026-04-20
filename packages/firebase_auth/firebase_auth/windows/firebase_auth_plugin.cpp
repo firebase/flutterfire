@@ -1290,6 +1290,14 @@ void FirebaseAuthPlugin::RevokeTokenWithAuthorizationCode(
       nullptr));
 }
 
+void FirebaseAuthPlugin::RevokeAccessToken(
+    const AuthPigeonFirebaseApp& app, const std::string& access_token,
+    std::function<void(std::optional<FlutterError> reply)> result) {
+  result(FlutterError("unimplemented",
+                      "RevokeAccessToken is not available on this platform.",
+                      nullptr));
+}
+
 void FirebaseAuthPlugin::InitializeRecaptchaConfig(
     const AuthPigeonFirebaseApp& app,
     std::function<void(std::optional<FlutterError> reply)> result) {

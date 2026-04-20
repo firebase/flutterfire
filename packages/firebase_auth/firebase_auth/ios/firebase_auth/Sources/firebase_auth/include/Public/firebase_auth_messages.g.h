@@ -62,364 +62,510 @@ typedef NS_ENUM(NSUInteger, ActionCodeInfoOperation) {
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)makeWithId:(NSString *)id;
-@property(nonatomic, copy) NSString * id;
+@property(nonatomic, copy) NSString *id;
 @end
 
 @interface InternalPhoneMultiFactorAssertion : NSObject
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)makeWithVerificationId:(NSString *)verificationId
-    verificationCode:(NSString *)verificationCode;
-@property(nonatomic, copy) NSString * verificationId;
-@property(nonatomic, copy) NSString * verificationCode;
+                      verificationCode:(NSString *)verificationCode;
+@property(nonatomic, copy) NSString *verificationId;
+@property(nonatomic, copy) NSString *verificationCode;
 @end
 
 @interface InternalMultiFactorInfo : NSObject
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)makeWithDisplayName:(nullable NSString *)displayName
-    enrollmentTimestamp:(double )enrollmentTimestamp
-    factorId:(nullable NSString *)factorId
-    uid:(NSString *)uid
-    phoneNumber:(nullable NSString *)phoneNumber;
-@property(nonatomic, copy, nullable) NSString * displayName;
-@property(nonatomic, assign) double  enrollmentTimestamp;
-@property(nonatomic, copy, nullable) NSString * factorId;
-@property(nonatomic, copy) NSString * uid;
-@property(nonatomic, copy, nullable) NSString * phoneNumber;
+                enrollmentTimestamp:(double)enrollmentTimestamp
+                           factorId:(nullable NSString *)factorId
+                                uid:(NSString *)uid
+                        phoneNumber:(nullable NSString *)phoneNumber;
+@property(nonatomic, copy, nullable) NSString *displayName;
+@property(nonatomic, assign) double enrollmentTimestamp;
+@property(nonatomic, copy, nullable) NSString *factorId;
+@property(nonatomic, copy) NSString *uid;
+@property(nonatomic, copy, nullable) NSString *phoneNumber;
 @end
 
 @interface AuthPigeonFirebaseApp : NSObject
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)makeWithAppName:(NSString *)appName
-    tenantId:(nullable NSString *)tenantId
-    customAuthDomain:(nullable NSString *)customAuthDomain;
-@property(nonatomic, copy) NSString * appName;
-@property(nonatomic, copy, nullable) NSString * tenantId;
-@property(nonatomic, copy, nullable) NSString * customAuthDomain;
+                       tenantId:(nullable NSString *)tenantId
+               customAuthDomain:(nullable NSString *)customAuthDomain;
+@property(nonatomic, copy) NSString *appName;
+@property(nonatomic, copy, nullable) NSString *tenantId;
+@property(nonatomic, copy, nullable) NSString *customAuthDomain;
 @end
 
 @interface InternalActionCodeInfoData : NSObject
 + (instancetype)makeWithEmail:(nullable NSString *)email
-    previousEmail:(nullable NSString *)previousEmail;
-@property(nonatomic, copy, nullable) NSString * email;
-@property(nonatomic, copy, nullable) NSString * previousEmail;
+                previousEmail:(nullable NSString *)previousEmail;
+@property(nonatomic, copy, nullable) NSString *email;
+@property(nonatomic, copy, nullable) NSString *previousEmail;
 @end
 
 @interface InternalActionCodeInfo : NSObject
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)makeWithOperation:(ActionCodeInfoOperation)operation
-    data:(InternalActionCodeInfoData *)data;
+                             data:(InternalActionCodeInfoData *)data;
 @property(nonatomic, assign) ActionCodeInfoOperation operation;
-@property(nonatomic, strong) InternalActionCodeInfoData * data;
+@property(nonatomic, strong) InternalActionCodeInfoData *data;
 @end
 
 @interface InternalAdditionalUserInfo : NSObject
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
 - (instancetype)init NS_UNAVAILABLE;
-+ (instancetype)makeWithIsNewUser:(BOOL )isNewUser
-    providerId:(nullable NSString *)providerId
-    username:(nullable NSString *)username
-    authorizationCode:(nullable NSString *)authorizationCode
-    profile:(nullable NSDictionary<NSString *, id> *)profile;
-@property(nonatomic, assign) BOOL  isNewUser;
-@property(nonatomic, copy, nullable) NSString * providerId;
-@property(nonatomic, copy, nullable) NSString * username;
-@property(nonatomic, copy, nullable) NSString * authorizationCode;
-@property(nonatomic, copy, nullable) NSDictionary<NSString *, id> * profile;
++ (instancetype)makeWithIsNewUser:(BOOL)isNewUser
+                       providerId:(nullable NSString *)providerId
+                         username:(nullable NSString *)username
+                authorizationCode:(nullable NSString *)authorizationCode
+                          profile:(nullable NSDictionary<NSString *, id> *)profile;
+@property(nonatomic, assign) BOOL isNewUser;
+@property(nonatomic, copy, nullable) NSString *providerId;
+@property(nonatomic, copy, nullable) NSString *username;
+@property(nonatomic, copy, nullable) NSString *authorizationCode;
+@property(nonatomic, copy, nullable) NSDictionary<NSString *, id> *profile;
 @end
 
 @interface InternalAuthCredential : NSObject
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)makeWithProviderId:(NSString *)providerId
-    signInMethod:(NSString *)signInMethod
-    nativeId:(NSInteger )nativeId
-    accessToken:(nullable NSString *)accessToken;
-@property(nonatomic, copy) NSString * providerId;
-@property(nonatomic, copy) NSString * signInMethod;
-@property(nonatomic, assign) NSInteger  nativeId;
-@property(nonatomic, copy, nullable) NSString * accessToken;
+                      signInMethod:(NSString *)signInMethod
+                          nativeId:(NSInteger)nativeId
+                       accessToken:(nullable NSString *)accessToken;
+@property(nonatomic, copy) NSString *providerId;
+@property(nonatomic, copy) NSString *signInMethod;
+@property(nonatomic, assign) NSInteger nativeId;
+@property(nonatomic, copy, nullable) NSString *accessToken;
 @end
 
 @interface InternalUserInfo : NSObject
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)makeWithUid:(NSString *)uid
-    email:(nullable NSString *)email
-    displayName:(nullable NSString *)displayName
-    photoUrl:(nullable NSString *)photoUrl
-    phoneNumber:(nullable NSString *)phoneNumber
-    isAnonymous:(BOOL )isAnonymous
-    isEmailVerified:(BOOL )isEmailVerified
-    providerId:(nullable NSString *)providerId
-    tenantId:(nullable NSString *)tenantId
-    refreshToken:(nullable NSString *)refreshToken
-    creationTimestamp:(nullable NSNumber *)creationTimestamp
-    lastSignInTimestamp:(nullable NSNumber *)lastSignInTimestamp;
-@property(nonatomic, copy) NSString * uid;
-@property(nonatomic, copy, nullable) NSString * email;
-@property(nonatomic, copy, nullable) NSString * displayName;
-@property(nonatomic, copy, nullable) NSString * photoUrl;
-@property(nonatomic, copy, nullable) NSString * phoneNumber;
-@property(nonatomic, assign) BOOL  isAnonymous;
-@property(nonatomic, assign) BOOL  isEmailVerified;
-@property(nonatomic, copy, nullable) NSString * providerId;
-@property(nonatomic, copy, nullable) NSString * tenantId;
-@property(nonatomic, copy, nullable) NSString * refreshToken;
-@property(nonatomic, strong, nullable) NSNumber * creationTimestamp;
-@property(nonatomic, strong, nullable) NSNumber * lastSignInTimestamp;
+                      email:(nullable NSString *)email
+                displayName:(nullable NSString *)displayName
+                   photoUrl:(nullable NSString *)photoUrl
+                phoneNumber:(nullable NSString *)phoneNumber
+                isAnonymous:(BOOL)isAnonymous
+            isEmailVerified:(BOOL)isEmailVerified
+                 providerId:(nullable NSString *)providerId
+                   tenantId:(nullable NSString *)tenantId
+               refreshToken:(nullable NSString *)refreshToken
+          creationTimestamp:(nullable NSNumber *)creationTimestamp
+        lastSignInTimestamp:(nullable NSNumber *)lastSignInTimestamp;
+@property(nonatomic, copy) NSString *uid;
+@property(nonatomic, copy, nullable) NSString *email;
+@property(nonatomic, copy, nullable) NSString *displayName;
+@property(nonatomic, copy, nullable) NSString *photoUrl;
+@property(nonatomic, copy, nullable) NSString *phoneNumber;
+@property(nonatomic, assign) BOOL isAnonymous;
+@property(nonatomic, assign) BOOL isEmailVerified;
+@property(nonatomic, copy, nullable) NSString *providerId;
+@property(nonatomic, copy, nullable) NSString *tenantId;
+@property(nonatomic, copy, nullable) NSString *refreshToken;
+@property(nonatomic, strong, nullable) NSNumber *creationTimestamp;
+@property(nonatomic, strong, nullable) NSNumber *lastSignInTimestamp;
 @end
 
 @interface InternalUserDetails : NSObject
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)makeWithUserInfo:(InternalUserInfo *)userInfo
-    providerData:(NSArray<NSDictionary<id, id> *> *)providerData;
-@property(nonatomic, strong) InternalUserInfo * userInfo;
-@property(nonatomic, copy) NSArray<NSDictionary<id, id> *> * providerData;
+                    providerData:(NSArray<NSDictionary<id, id> *> *)providerData;
+@property(nonatomic, strong) InternalUserInfo *userInfo;
+@property(nonatomic, copy) NSArray<NSDictionary<id, id> *> *providerData;
 @end
 
 @interface InternalUserCredential : NSObject
 + (instancetype)makeWithUser:(nullable InternalUserDetails *)user
-    additionalUserInfo:(nullable InternalAdditionalUserInfo *)additionalUserInfo
-    credential:(nullable InternalAuthCredential *)credential;
-@property(nonatomic, strong, nullable) InternalUserDetails * user;
-@property(nonatomic, strong, nullable) InternalAdditionalUserInfo * additionalUserInfo;
-@property(nonatomic, strong, nullable) InternalAuthCredential * credential;
+          additionalUserInfo:(nullable InternalAdditionalUserInfo *)additionalUserInfo
+                  credential:(nullable InternalAuthCredential *)credential;
+@property(nonatomic, strong, nullable) InternalUserDetails *user;
+@property(nonatomic, strong, nullable) InternalAdditionalUserInfo *additionalUserInfo;
+@property(nonatomic, strong, nullable) InternalAuthCredential *credential;
 @end
 
 @interface InternalAuthCredentialInput : NSObject
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)makeWithProviderId:(NSString *)providerId
-    signInMethod:(NSString *)signInMethod
-    token:(nullable NSString *)token
-    accessToken:(nullable NSString *)accessToken;
-@property(nonatomic, copy) NSString * providerId;
-@property(nonatomic, copy) NSString * signInMethod;
-@property(nonatomic, copy, nullable) NSString * token;
-@property(nonatomic, copy, nullable) NSString * accessToken;
+                      signInMethod:(NSString *)signInMethod
+                             token:(nullable NSString *)token
+                       accessToken:(nullable NSString *)accessToken;
+@property(nonatomic, copy) NSString *providerId;
+@property(nonatomic, copy) NSString *signInMethod;
+@property(nonatomic, copy, nullable) NSString *token;
+@property(nonatomic, copy, nullable) NSString *accessToken;
 @end
 
 @interface InternalActionCodeSettings : NSObject
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)makeWithUrl:(NSString *)url
-    dynamicLinkDomain:(nullable NSString *)dynamicLinkDomain
-    handleCodeInApp:(BOOL )handleCodeInApp
-    iOSBundleId:(nullable NSString *)iOSBundleId
-    androidPackageName:(nullable NSString *)androidPackageName
-    androidInstallApp:(BOOL )androidInstallApp
-    androidMinimumVersion:(nullable NSString *)androidMinimumVersion
-    linkDomain:(nullable NSString *)linkDomain;
-@property(nonatomic, copy) NSString * url;
-@property(nonatomic, copy, nullable) NSString * dynamicLinkDomain;
-@property(nonatomic, assign) BOOL  handleCodeInApp;
-@property(nonatomic, copy, nullable) NSString * iOSBundleId;
-@property(nonatomic, copy, nullable) NSString * androidPackageName;
-@property(nonatomic, assign) BOOL  androidInstallApp;
-@property(nonatomic, copy, nullable) NSString * androidMinimumVersion;
-@property(nonatomic, copy, nullable) NSString * linkDomain;
+          dynamicLinkDomain:(nullable NSString *)dynamicLinkDomain
+            handleCodeInApp:(BOOL)handleCodeInApp
+                iOSBundleId:(nullable NSString *)iOSBundleId
+         androidPackageName:(nullable NSString *)androidPackageName
+          androidInstallApp:(BOOL)androidInstallApp
+      androidMinimumVersion:(nullable NSString *)androidMinimumVersion
+                 linkDomain:(nullable NSString *)linkDomain;
+@property(nonatomic, copy) NSString *url;
+@property(nonatomic, copy, nullable) NSString *dynamicLinkDomain;
+@property(nonatomic, assign) BOOL handleCodeInApp;
+@property(nonatomic, copy, nullable) NSString *iOSBundleId;
+@property(nonatomic, copy, nullable) NSString *androidPackageName;
+@property(nonatomic, assign) BOOL androidInstallApp;
+@property(nonatomic, copy, nullable) NSString *androidMinimumVersion;
+@property(nonatomic, copy, nullable) NSString *linkDomain;
 @end
 
 @interface InternalFirebaseAuthSettings : NSObject
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
 - (instancetype)init NS_UNAVAILABLE;
-+ (instancetype)makeWithAppVerificationDisabledForTesting:(BOOL )appVerificationDisabledForTesting
-    userAccessGroup:(nullable NSString *)userAccessGroup
-    phoneNumber:(nullable NSString *)phoneNumber
-    smsCode:(nullable NSString *)smsCode
-    forceRecaptchaFlow:(nullable NSNumber *)forceRecaptchaFlow;
-@property(nonatomic, assign) BOOL  appVerificationDisabledForTesting;
-@property(nonatomic, copy, nullable) NSString * userAccessGroup;
-@property(nonatomic, copy, nullable) NSString * phoneNumber;
-@property(nonatomic, copy, nullable) NSString * smsCode;
-@property(nonatomic, strong, nullable) NSNumber * forceRecaptchaFlow;
++ (instancetype)makeWithAppVerificationDisabledForTesting:(BOOL)appVerificationDisabledForTesting
+                                          userAccessGroup:(nullable NSString *)userAccessGroup
+                                              phoneNumber:(nullable NSString *)phoneNumber
+                                                  smsCode:(nullable NSString *)smsCode
+                                       forceRecaptchaFlow:(nullable NSNumber *)forceRecaptchaFlow;
+@property(nonatomic, assign) BOOL appVerificationDisabledForTesting;
+@property(nonatomic, copy, nullable) NSString *userAccessGroup;
+@property(nonatomic, copy, nullable) NSString *phoneNumber;
+@property(nonatomic, copy, nullable) NSString *smsCode;
+@property(nonatomic, strong, nullable) NSNumber *forceRecaptchaFlow;
 @end
 
 @interface InternalSignInProvider : NSObject
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)makeWithProviderId:(NSString *)providerId
-    scopes:(nullable NSArray<NSString *> *)scopes
-    customParameters:(nullable NSDictionary<NSString *, NSString *> *)customParameters;
-@property(nonatomic, copy) NSString * providerId;
-@property(nonatomic, copy, nullable) NSArray<NSString *> * scopes;
-@property(nonatomic, copy, nullable) NSDictionary<NSString *, NSString *> * customParameters;
+                            scopes:(nullable NSArray<NSString *> *)scopes
+                  customParameters:
+                      (nullable NSDictionary<NSString *, NSString *> *)customParameters;
+@property(nonatomic, copy) NSString *providerId;
+@property(nonatomic, copy, nullable) NSArray<NSString *> *scopes;
+@property(nonatomic, copy, nullable) NSDictionary<NSString *, NSString *> *customParameters;
 @end
 
 @interface InternalVerifyPhoneNumberRequest : NSObject
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)makeWithPhoneNumber:(nullable NSString *)phoneNumber
-    timeout:(NSInteger )timeout
-    forceResendingToken:(nullable NSNumber *)forceResendingToken
-    autoRetrievedSmsCodeForTesting:(nullable NSString *)autoRetrievedSmsCodeForTesting
-    multiFactorInfoId:(nullable NSString *)multiFactorInfoId
-    multiFactorSessionId:(nullable NSString *)multiFactorSessionId;
-@property(nonatomic, copy, nullable) NSString * phoneNumber;
-@property(nonatomic, assign) NSInteger  timeout;
-@property(nonatomic, strong, nullable) NSNumber * forceResendingToken;
-@property(nonatomic, copy, nullable) NSString * autoRetrievedSmsCodeForTesting;
-@property(nonatomic, copy, nullable) NSString * multiFactorInfoId;
-@property(nonatomic, copy, nullable) NSString * multiFactorSessionId;
+                            timeout:(NSInteger)timeout
+                forceResendingToken:(nullable NSNumber *)forceResendingToken
+     autoRetrievedSmsCodeForTesting:(nullable NSString *)autoRetrievedSmsCodeForTesting
+                  multiFactorInfoId:(nullable NSString *)multiFactorInfoId
+               multiFactorSessionId:(nullable NSString *)multiFactorSessionId;
+@property(nonatomic, copy, nullable) NSString *phoneNumber;
+@property(nonatomic, assign) NSInteger timeout;
+@property(nonatomic, strong, nullable) NSNumber *forceResendingToken;
+@property(nonatomic, copy, nullable) NSString *autoRetrievedSmsCodeForTesting;
+@property(nonatomic, copy, nullable) NSString *multiFactorInfoId;
+@property(nonatomic, copy, nullable) NSString *multiFactorSessionId;
 @end
 
 @interface InternalIdTokenResult : NSObject
 + (instancetype)makeWithToken:(nullable NSString *)token
-    expirationTimestamp:(nullable NSNumber *)expirationTimestamp
-    authTimestamp:(nullable NSNumber *)authTimestamp
-    issuedAtTimestamp:(nullable NSNumber *)issuedAtTimestamp
-    signInProvider:(nullable NSString *)signInProvider
-    claims:(nullable NSDictionary<NSString *, id> *)claims
-    signInSecondFactor:(nullable NSString *)signInSecondFactor;
-@property(nonatomic, copy, nullable) NSString * token;
-@property(nonatomic, strong, nullable) NSNumber * expirationTimestamp;
-@property(nonatomic, strong, nullable) NSNumber * authTimestamp;
-@property(nonatomic, strong, nullable) NSNumber * issuedAtTimestamp;
-@property(nonatomic, copy, nullable) NSString * signInProvider;
-@property(nonatomic, copy, nullable) NSDictionary<NSString *, id> * claims;
-@property(nonatomic, copy, nullable) NSString * signInSecondFactor;
+          expirationTimestamp:(nullable NSNumber *)expirationTimestamp
+                authTimestamp:(nullable NSNumber *)authTimestamp
+            issuedAtTimestamp:(nullable NSNumber *)issuedAtTimestamp
+               signInProvider:(nullable NSString *)signInProvider
+                       claims:(nullable NSDictionary<NSString *, id> *)claims
+           signInSecondFactor:(nullable NSString *)signInSecondFactor;
+@property(nonatomic, copy, nullable) NSString *token;
+@property(nonatomic, strong, nullable) NSNumber *expirationTimestamp;
+@property(nonatomic, strong, nullable) NSNumber *authTimestamp;
+@property(nonatomic, strong, nullable) NSNumber *issuedAtTimestamp;
+@property(nonatomic, copy, nullable) NSString *signInProvider;
+@property(nonatomic, copy, nullable) NSDictionary<NSString *, id> *claims;
+@property(nonatomic, copy, nullable) NSString *signInSecondFactor;
 @end
 
 @interface InternalUserProfile : NSObject
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)makeWithDisplayName:(nullable NSString *)displayName
-    photoUrl:(nullable NSString *)photoUrl
-    displayNameChanged:(BOOL )displayNameChanged
-    photoUrlChanged:(BOOL )photoUrlChanged;
-@property(nonatomic, copy, nullable) NSString * displayName;
-@property(nonatomic, copy, nullable) NSString * photoUrl;
-@property(nonatomic, assign) BOOL  displayNameChanged;
-@property(nonatomic, assign) BOOL  photoUrlChanged;
+                           photoUrl:(nullable NSString *)photoUrl
+                 displayNameChanged:(BOOL)displayNameChanged
+                    photoUrlChanged:(BOOL)photoUrlChanged;
+@property(nonatomic, copy, nullable) NSString *displayName;
+@property(nonatomic, copy, nullable) NSString *photoUrl;
+@property(nonatomic, assign) BOOL displayNameChanged;
+@property(nonatomic, assign) BOOL photoUrlChanged;
 @end
 
 @interface InternalTotpSecret : NSObject
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)makeWithCodeIntervalSeconds:(nullable NSNumber *)codeIntervalSeconds
-    codeLength:(nullable NSNumber *)codeLength
-    enrollmentCompletionDeadline:(nullable NSNumber *)enrollmentCompletionDeadline
-    hashingAlgorithm:(nullable NSString *)hashingAlgorithm
-    secretKey:(NSString *)secretKey;
-@property(nonatomic, strong, nullable) NSNumber * codeIntervalSeconds;
-@property(nonatomic, strong, nullable) NSNumber * codeLength;
-@property(nonatomic, strong, nullable) NSNumber * enrollmentCompletionDeadline;
-@property(nonatomic, copy, nullable) NSString * hashingAlgorithm;
-@property(nonatomic, copy) NSString * secretKey;
+                                 codeLength:(nullable NSNumber *)codeLength
+               enrollmentCompletionDeadline:(nullable NSNumber *)enrollmentCompletionDeadline
+                           hashingAlgorithm:(nullable NSString *)hashingAlgorithm
+                                  secretKey:(NSString *)secretKey;
+@property(nonatomic, strong, nullable) NSNumber *codeIntervalSeconds;
+@property(nonatomic, strong, nullable) NSNumber *codeLength;
+@property(nonatomic, strong, nullable) NSNumber *enrollmentCompletionDeadline;
+@property(nonatomic, copy, nullable) NSString *hashingAlgorithm;
+@property(nonatomic, copy) NSString *secretKey;
 @end
 
 /// The codec used by all APIs.
 NSObject<FlutterMessageCodec> *nullGetFirebaseAuthMessagesCodec(void);
 
 @protocol FirebaseAuthHostApi
-- (void)registerIdTokenListenerApp:(AuthPigeonFirebaseApp *)app completion:(void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
-- (void)registerAuthStateListenerApp:(AuthPigeonFirebaseApp *)app completion:(void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
-- (void)useEmulatorApp:(AuthPigeonFirebaseApp *)app host:(NSString *)host port:(NSInteger)port completion:(void (^)(FlutterError *_Nullable))completion;
-- (void)applyActionCodeApp:(AuthPigeonFirebaseApp *)app code:(NSString *)code completion:(void (^)(FlutterError *_Nullable))completion;
-- (void)checkActionCodeApp:(AuthPigeonFirebaseApp *)app code:(NSString *)code completion:(void (^)(InternalActionCodeInfo *_Nullable, FlutterError *_Nullable))completion;
-- (void)confirmPasswordResetApp:(AuthPigeonFirebaseApp *)app code:(NSString *)code newPassword:(NSString *)newPassword completion:(void (^)(FlutterError *_Nullable))completion;
-- (void)createUserWithEmailAndPasswordApp:(AuthPigeonFirebaseApp *)app email:(NSString *)email password:(NSString *)password completion:(void (^)(InternalUserCredential *_Nullable, FlutterError *_Nullable))completion;
-- (void)signInAnonymouslyApp:(AuthPigeonFirebaseApp *)app completion:(void (^)(InternalUserCredential *_Nullable, FlutterError *_Nullable))completion;
-- (void)signInWithCredentialApp:(AuthPigeonFirebaseApp *)app input:(NSDictionary<NSString *, id> *)input completion:(void (^)(InternalUserCredential *_Nullable, FlutterError *_Nullable))completion;
-- (void)signInWithCustomTokenApp:(AuthPigeonFirebaseApp *)app token:(NSString *)token completion:(void (^)(InternalUserCredential *_Nullable, FlutterError *_Nullable))completion;
-- (void)signInWithEmailAndPasswordApp:(AuthPigeonFirebaseApp *)app email:(NSString *)email password:(NSString *)password completion:(void (^)(InternalUserCredential *_Nullable, FlutterError *_Nullable))completion;
-- (void)signInWithEmailLinkApp:(AuthPigeonFirebaseApp *)app email:(NSString *)email emailLink:(NSString *)emailLink completion:(void (^)(InternalUserCredential *_Nullable, FlutterError *_Nullable))completion;
-- (void)signInWithProviderApp:(AuthPigeonFirebaseApp *)app signInProvider:(InternalSignInProvider *)signInProvider completion:(void (^)(InternalUserCredential *_Nullable, FlutterError *_Nullable))completion;
-- (void)signOutApp:(AuthPigeonFirebaseApp *)app completion:(void (^)(FlutterError *_Nullable))completion;
-- (void)fetchSignInMethodsForEmailApp:(AuthPigeonFirebaseApp *)app email:(NSString *)email completion:(void (^)(NSArray<NSString *> *_Nullable, FlutterError *_Nullable))completion;
-- (void)sendPasswordResetEmailApp:(AuthPigeonFirebaseApp *)app email:(NSString *)email actionCodeSettings:(nullable InternalActionCodeSettings *)actionCodeSettings completion:(void (^)(FlutterError *_Nullable))completion;
-- (void)sendSignInLinkToEmailApp:(AuthPigeonFirebaseApp *)app email:(NSString *)email actionCodeSettings:(InternalActionCodeSettings *)actionCodeSettings completion:(void (^)(FlutterError *_Nullable))completion;
-- (void)setLanguageCodeApp:(AuthPigeonFirebaseApp *)app languageCode:(nullable NSString *)languageCode completion:(void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
-- (void)setSettingsApp:(AuthPigeonFirebaseApp *)app settings:(InternalFirebaseAuthSettings *)settings completion:(void (^)(FlutterError *_Nullable))completion;
-- (void)verifyPasswordResetCodeApp:(AuthPigeonFirebaseApp *)app code:(NSString *)code completion:(void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
-- (void)verifyPhoneNumberApp:(AuthPigeonFirebaseApp *)app request:(InternalVerifyPhoneNumberRequest *)request completion:(void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
-- (void)revokeTokenWithAuthorizationCodeApp:(AuthPigeonFirebaseApp *)app authorizationCode:(NSString *)authorizationCode completion:(void (^)(FlutterError *_Nullable))completion;
-- (void)revokeAccessTokenApp:(AuthPigeonFirebaseApp *)app accessToken:(NSString *)accessToken completion:(void (^)(FlutterError *_Nullable))completion;
-- (void)initializeRecaptchaConfigApp:(AuthPigeonFirebaseApp *)app completion:(void (^)(FlutterError *_Nullable))completion;
+- (void)registerIdTokenListenerApp:(AuthPigeonFirebaseApp *)app
+                        completion:
+                            (void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
+- (void)registerAuthStateListenerApp:(AuthPigeonFirebaseApp *)app
+                          completion:
+                              (void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
+- (void)useEmulatorApp:(AuthPigeonFirebaseApp *)app
+                  host:(NSString *)host
+                  port:(NSInteger)port
+            completion:(void (^)(FlutterError *_Nullable))completion;
+- (void)applyActionCodeApp:(AuthPigeonFirebaseApp *)app
+                      code:(NSString *)code
+                completion:(void (^)(FlutterError *_Nullable))completion;
+- (void)checkActionCodeApp:(AuthPigeonFirebaseApp *)app
+                      code:(NSString *)code
+                completion:(void (^)(InternalActionCodeInfo *_Nullable,
+                                     FlutterError *_Nullable))completion;
+- (void)confirmPasswordResetApp:(AuthPigeonFirebaseApp *)app
+                           code:(NSString *)code
+                    newPassword:(NSString *)newPassword
+                     completion:(void (^)(FlutterError *_Nullable))completion;
+- (void)createUserWithEmailAndPasswordApp:(AuthPigeonFirebaseApp *)app
+                                    email:(NSString *)email
+                                 password:(NSString *)password
+                               completion:(void (^)(InternalUserCredential *_Nullable,
+                                                    FlutterError *_Nullable))completion;
+- (void)signInAnonymouslyApp:(AuthPigeonFirebaseApp *)app
+                  completion:(void (^)(InternalUserCredential *_Nullable,
+                                       FlutterError *_Nullable))completion;
+- (void)signInWithCredentialApp:(AuthPigeonFirebaseApp *)app
+                          input:(NSDictionary<NSString *, id> *)input
+                     completion:(void (^)(InternalUserCredential *_Nullable,
+                                          FlutterError *_Nullable))completion;
+- (void)signInWithCustomTokenApp:(AuthPigeonFirebaseApp *)app
+                           token:(NSString *)token
+                      completion:(void (^)(InternalUserCredential *_Nullable,
+                                           FlutterError *_Nullable))completion;
+- (void)signInWithEmailAndPasswordApp:(AuthPigeonFirebaseApp *)app
+                                email:(NSString *)email
+                             password:(NSString *)password
+                           completion:(void (^)(InternalUserCredential *_Nullable,
+                                                FlutterError *_Nullable))completion;
+- (void)signInWithEmailLinkApp:(AuthPigeonFirebaseApp *)app
+                         email:(NSString *)email
+                     emailLink:(NSString *)emailLink
+                    completion:(void (^)(InternalUserCredential *_Nullable,
+                                         FlutterError *_Nullable))completion;
+- (void)signInWithProviderApp:(AuthPigeonFirebaseApp *)app
+               signInProvider:(InternalSignInProvider *)signInProvider
+                   completion:(void (^)(InternalUserCredential *_Nullable,
+                                        FlutterError *_Nullable))completion;
+- (void)signOutApp:(AuthPigeonFirebaseApp *)app
+        completion:(void (^)(FlutterError *_Nullable))completion;
+- (void)fetchSignInMethodsForEmailApp:(AuthPigeonFirebaseApp *)app
+                                email:(NSString *)email
+                           completion:(void (^)(NSArray<NSString *> *_Nullable,
+                                                FlutterError *_Nullable))completion;
+- (void)sendPasswordResetEmailApp:(AuthPigeonFirebaseApp *)app
+                            email:(NSString *)email
+               actionCodeSettings:(nullable InternalActionCodeSettings *)actionCodeSettings
+                       completion:(void (^)(FlutterError *_Nullable))completion;
+- (void)sendSignInLinkToEmailApp:(AuthPigeonFirebaseApp *)app
+                           email:(NSString *)email
+              actionCodeSettings:(InternalActionCodeSettings *)actionCodeSettings
+                      completion:(void (^)(FlutterError *_Nullable))completion;
+- (void)setLanguageCodeApp:(AuthPigeonFirebaseApp *)app
+              languageCode:(nullable NSString *)languageCode
+                completion:(void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
+- (void)setSettingsApp:(AuthPigeonFirebaseApp *)app
+              settings:(InternalFirebaseAuthSettings *)settings
+            completion:(void (^)(FlutterError *_Nullable))completion;
+- (void)verifyPasswordResetCodeApp:(AuthPigeonFirebaseApp *)app
+                              code:(NSString *)code
+                        completion:
+                            (void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
+- (void)verifyPhoneNumberApp:(AuthPigeonFirebaseApp *)app
+                     request:(InternalVerifyPhoneNumberRequest *)request
+                  completion:(void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
+- (void)revokeTokenWithAuthorizationCodeApp:(AuthPigeonFirebaseApp *)app
+                          authorizationCode:(NSString *)authorizationCode
+                                 completion:(void (^)(FlutterError *_Nullable))completion;
+- (void)revokeAccessTokenApp:(AuthPigeonFirebaseApp *)app
+                 accessToken:(NSString *)accessToken
+                  completion:(void (^)(FlutterError *_Nullable))completion;
+- (void)initializeRecaptchaConfigApp:(AuthPigeonFirebaseApp *)app
+                          completion:(void (^)(FlutterError *_Nullable))completion;
 @end
 
-extern void SetUpFirebaseAuthHostApi(id<FlutterBinaryMessenger> binaryMessenger, NSObject<FirebaseAuthHostApi> *_Nullable api);
+extern void SetUpFirebaseAuthHostApi(id<FlutterBinaryMessenger> binaryMessenger,
+                                     NSObject<FirebaseAuthHostApi> *_Nullable api);
 
-extern void SetUpFirebaseAuthHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMessenger, NSObject<FirebaseAuthHostApi> *_Nullable api, NSString *messageChannelSuffix);
-
+extern void SetUpFirebaseAuthHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMessenger,
+                                               NSObject<FirebaseAuthHostApi> *_Nullable api,
+                                               NSString *messageChannelSuffix);
 
 @protocol FirebaseAuthUserHostApi
-- (void)deleteApp:(AuthPigeonFirebaseApp *)app completion:(void (^)(FlutterError *_Nullable))completion;
-- (void)getIdTokenApp:(AuthPigeonFirebaseApp *)app forceRefresh:(BOOL)forceRefresh completion:(void (^)(InternalIdTokenResult *_Nullable, FlutterError *_Nullable))completion;
-- (void)linkWithCredentialApp:(AuthPigeonFirebaseApp *)app input:(NSDictionary<NSString *, id> *)input completion:(void (^)(InternalUserCredential *_Nullable, FlutterError *_Nullable))completion;
-- (void)linkWithProviderApp:(AuthPigeonFirebaseApp *)app signInProvider:(InternalSignInProvider *)signInProvider completion:(void (^)(InternalUserCredential *_Nullable, FlutterError *_Nullable))completion;
-- (void)reauthenticateWithCredentialApp:(AuthPigeonFirebaseApp *)app input:(NSDictionary<NSString *, id> *)input completion:(void (^)(InternalUserCredential *_Nullable, FlutterError *_Nullable))completion;
-- (void)reauthenticateWithProviderApp:(AuthPigeonFirebaseApp *)app signInProvider:(InternalSignInProvider *)signInProvider completion:(void (^)(InternalUserCredential *_Nullable, FlutterError *_Nullable))completion;
-- (void)reloadApp:(AuthPigeonFirebaseApp *)app completion:(void (^)(InternalUserDetails *_Nullable, FlutterError *_Nullable))completion;
-- (void)sendEmailVerificationApp:(AuthPigeonFirebaseApp *)app actionCodeSettings:(nullable InternalActionCodeSettings *)actionCodeSettings completion:(void (^)(FlutterError *_Nullable))completion;
-- (void)unlinkApp:(AuthPigeonFirebaseApp *)app providerId:(NSString *)providerId completion:(void (^)(InternalUserCredential *_Nullable, FlutterError *_Nullable))completion;
-- (void)updateEmailApp:(AuthPigeonFirebaseApp *)app newEmail:(NSString *)newEmail completion:(void (^)(InternalUserDetails *_Nullable, FlutterError *_Nullable))completion;
-- (void)updatePasswordApp:(AuthPigeonFirebaseApp *)app newPassword:(NSString *)newPassword completion:(void (^)(InternalUserDetails *_Nullable, FlutterError *_Nullable))completion;
-- (void)updatePhoneNumberApp:(AuthPigeonFirebaseApp *)app input:(NSDictionary<NSString *, id> *)input completion:(void (^)(InternalUserDetails *_Nullable, FlutterError *_Nullable))completion;
-- (void)updateProfileApp:(AuthPigeonFirebaseApp *)app profile:(InternalUserProfile *)profile completion:(void (^)(InternalUserDetails *_Nullable, FlutterError *_Nullable))completion;
-- (void)verifyBeforeUpdateEmailApp:(AuthPigeonFirebaseApp *)app newEmail:(NSString *)newEmail actionCodeSettings:(nullable InternalActionCodeSettings *)actionCodeSettings completion:(void (^)(FlutterError *_Nullable))completion;
+- (void)deleteApp:(AuthPigeonFirebaseApp *)app
+       completion:(void (^)(FlutterError *_Nullable))completion;
+- (void)getIdTokenApp:(AuthPigeonFirebaseApp *)app
+         forceRefresh:(BOOL)forceRefresh
+           completion:
+               (void (^)(InternalIdTokenResult *_Nullable, FlutterError *_Nullable))completion;
+- (void)linkWithCredentialApp:(AuthPigeonFirebaseApp *)app
+                        input:(NSDictionary<NSString *, id> *)input
+                   completion:(void (^)(InternalUserCredential *_Nullable,
+                                        FlutterError *_Nullable))completion;
+- (void)linkWithProviderApp:(AuthPigeonFirebaseApp *)app
+             signInProvider:(InternalSignInProvider *)signInProvider
+                 completion:(void (^)(InternalUserCredential *_Nullable,
+                                      FlutterError *_Nullable))completion;
+- (void)reauthenticateWithCredentialApp:(AuthPigeonFirebaseApp *)app
+                                  input:(NSDictionary<NSString *, id> *)input
+                             completion:(void (^)(InternalUserCredential *_Nullable,
+                                                  FlutterError *_Nullable))completion;
+- (void)reauthenticateWithProviderApp:(AuthPigeonFirebaseApp *)app
+                       signInProvider:(InternalSignInProvider *)signInProvider
+                           completion:(void (^)(InternalUserCredential *_Nullable,
+                                                FlutterError *_Nullable))completion;
+- (void)reloadApp:(AuthPigeonFirebaseApp *)app
+       completion:(void (^)(InternalUserDetails *_Nullable, FlutterError *_Nullable))completion;
+- (void)sendEmailVerificationApp:(AuthPigeonFirebaseApp *)app
+              actionCodeSettings:(nullable InternalActionCodeSettings *)actionCodeSettings
+                      completion:(void (^)(FlutterError *_Nullable))completion;
+- (void)unlinkApp:(AuthPigeonFirebaseApp *)app
+       providerId:(NSString *)providerId
+       completion:(void (^)(InternalUserCredential *_Nullable, FlutterError *_Nullable))completion;
+- (void)updateEmailApp:(AuthPigeonFirebaseApp *)app
+              newEmail:(NSString *)newEmail
+            completion:
+                (void (^)(InternalUserDetails *_Nullable, FlutterError *_Nullable))completion;
+- (void)updatePasswordApp:(AuthPigeonFirebaseApp *)app
+              newPassword:(NSString *)newPassword
+               completion:
+                   (void (^)(InternalUserDetails *_Nullable, FlutterError *_Nullable))completion;
+- (void)updatePhoneNumberApp:(AuthPigeonFirebaseApp *)app
+                       input:(NSDictionary<NSString *, id> *)input
+                  completion:
+                      (void (^)(InternalUserDetails *_Nullable, FlutterError *_Nullable))completion;
+- (void)updateProfileApp:(AuthPigeonFirebaseApp *)app
+                 profile:(InternalUserProfile *)profile
+              completion:
+                  (void (^)(InternalUserDetails *_Nullable, FlutterError *_Nullable))completion;
+- (void)verifyBeforeUpdateEmailApp:(AuthPigeonFirebaseApp *)app
+                          newEmail:(NSString *)newEmail
+                actionCodeSettings:(nullable InternalActionCodeSettings *)actionCodeSettings
+                        completion:(void (^)(FlutterError *_Nullable))completion;
 @end
 
-extern void SetUpFirebaseAuthUserHostApi(id<FlutterBinaryMessenger> binaryMessenger, NSObject<FirebaseAuthUserHostApi> *_Nullable api);
+extern void SetUpFirebaseAuthUserHostApi(id<FlutterBinaryMessenger> binaryMessenger,
+                                         NSObject<FirebaseAuthUserHostApi> *_Nullable api);
 
-extern void SetUpFirebaseAuthUserHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMessenger, NSObject<FirebaseAuthUserHostApi> *_Nullable api, NSString *messageChannelSuffix);
-
+extern void SetUpFirebaseAuthUserHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMessenger,
+                                                   NSObject<FirebaseAuthUserHostApi> *_Nullable api,
+                                                   NSString *messageChannelSuffix);
 
 @protocol MultiFactorUserHostApi
-- (void)enrollPhoneApp:(AuthPigeonFirebaseApp *)app assertion:(InternalPhoneMultiFactorAssertion *)assertion displayName:(nullable NSString *)displayName completion:(void (^)(FlutterError *_Nullable))completion;
-- (void)enrollTotpApp:(AuthPigeonFirebaseApp *)app assertionId:(NSString *)assertionId displayName:(nullable NSString *)displayName completion:(void (^)(FlutterError *_Nullable))completion;
-- (void)getSessionApp:(AuthPigeonFirebaseApp *)app completion:(void (^)(InternalMultiFactorSession *_Nullable, FlutterError *_Nullable))completion;
-- (void)unenrollApp:(AuthPigeonFirebaseApp *)app factorUid:(NSString *)factorUid completion:(void (^)(FlutterError *_Nullable))completion;
-- (void)getEnrolledFactorsApp:(AuthPigeonFirebaseApp *)app completion:(void (^)(NSArray<InternalMultiFactorInfo *> *_Nullable, FlutterError *_Nullable))completion;
+- (void)enrollPhoneApp:(AuthPigeonFirebaseApp *)app
+             assertion:(InternalPhoneMultiFactorAssertion *)assertion
+           displayName:(nullable NSString *)displayName
+            completion:(void (^)(FlutterError *_Nullable))completion;
+- (void)enrollTotpApp:(AuthPigeonFirebaseApp *)app
+          assertionId:(NSString *)assertionId
+          displayName:(nullable NSString *)displayName
+           completion:(void (^)(FlutterError *_Nullable))completion;
+- (void)getSessionApp:(AuthPigeonFirebaseApp *)app
+           completion:
+               (void (^)(InternalMultiFactorSession *_Nullable, FlutterError *_Nullable))completion;
+- (void)unenrollApp:(AuthPigeonFirebaseApp *)app
+          factorUid:(NSString *)factorUid
+         completion:(void (^)(FlutterError *_Nullable))completion;
+- (void)getEnrolledFactorsApp:(AuthPigeonFirebaseApp *)app
+                   completion:(void (^)(NSArray<InternalMultiFactorInfo *> *_Nullable,
+                                        FlutterError *_Nullable))completion;
 @end
 
-extern void SetUpMultiFactorUserHostApi(id<FlutterBinaryMessenger> binaryMessenger, NSObject<MultiFactorUserHostApi> *_Nullable api);
+extern void SetUpMultiFactorUserHostApi(id<FlutterBinaryMessenger> binaryMessenger,
+                                        NSObject<MultiFactorUserHostApi> *_Nullable api);
 
-extern void SetUpMultiFactorUserHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMessenger, NSObject<MultiFactorUserHostApi> *_Nullable api, NSString *messageChannelSuffix);
-
+extern void SetUpMultiFactorUserHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMessenger,
+                                                  NSObject<MultiFactorUserHostApi> *_Nullable api,
+                                                  NSString *messageChannelSuffix);
 
 @protocol MultiFactoResolverHostApi
-- (void)resolveSignInResolverId:(NSString *)resolverId assertion:(nullable InternalPhoneMultiFactorAssertion *)assertion totpAssertionId:(nullable NSString *)totpAssertionId completion:(void (^)(InternalUserCredential *_Nullable, FlutterError *_Nullable))completion;
+- (void)resolveSignInResolverId:(NSString *)resolverId
+                      assertion:(nullable InternalPhoneMultiFactorAssertion *)assertion
+                totpAssertionId:(nullable NSString *)totpAssertionId
+                     completion:(void (^)(InternalUserCredential *_Nullable,
+                                          FlutterError *_Nullable))completion;
 @end
 
-extern void SetUpMultiFactoResolverHostApi(id<FlutterBinaryMessenger> binaryMessenger, NSObject<MultiFactoResolverHostApi> *_Nullable api);
+extern void SetUpMultiFactoResolverHostApi(id<FlutterBinaryMessenger> binaryMessenger,
+                                           NSObject<MultiFactoResolverHostApi> *_Nullable api);
 
-extern void SetUpMultiFactoResolverHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMessenger, NSObject<MultiFactoResolverHostApi> *_Nullable api, NSString *messageChannelSuffix);
-
+extern void SetUpMultiFactoResolverHostApiWithSuffix(
+    id<FlutterBinaryMessenger> binaryMessenger, NSObject<MultiFactoResolverHostApi> *_Nullable api,
+    NSString *messageChannelSuffix);
 
 @protocol MultiFactorTotpHostApi
-- (void)generateSecretSessionId:(NSString *)sessionId completion:(void (^)(InternalTotpSecret *_Nullable, FlutterError *_Nullable))completion;
-- (void)getAssertionForEnrollmentSecretKey:(NSString *)secretKey oneTimePassword:(NSString *)oneTimePassword completion:(void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
-- (void)getAssertionForSignInEnrollmentId:(NSString *)enrollmentId oneTimePassword:(NSString *)oneTimePassword completion:(void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
+- (void)generateSecretSessionId:(NSString *)sessionId
+                     completion:(void (^)(InternalTotpSecret *_Nullable,
+                                          FlutterError *_Nullable))completion;
+- (void)getAssertionForEnrollmentSecretKey:(NSString *)secretKey
+                           oneTimePassword:(NSString *)oneTimePassword
+                                completion:(void (^)(NSString *_Nullable,
+                                                     FlutterError *_Nullable))completion;
+- (void)getAssertionForSignInEnrollmentId:(NSString *)enrollmentId
+                          oneTimePassword:(NSString *)oneTimePassword
+                               completion:(void (^)(NSString *_Nullable,
+                                                    FlutterError *_Nullable))completion;
 @end
 
-extern void SetUpMultiFactorTotpHostApi(id<FlutterBinaryMessenger> binaryMessenger, NSObject<MultiFactorTotpHostApi> *_Nullable api);
+extern void SetUpMultiFactorTotpHostApi(id<FlutterBinaryMessenger> binaryMessenger,
+                                        NSObject<MultiFactorTotpHostApi> *_Nullable api);
 
-extern void SetUpMultiFactorTotpHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMessenger, NSObject<MultiFactorTotpHostApi> *_Nullable api, NSString *messageChannelSuffix);
-
+extern void SetUpMultiFactorTotpHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMessenger,
+                                                  NSObject<MultiFactorTotpHostApi> *_Nullable api,
+                                                  NSString *messageChannelSuffix);
 
 @protocol MultiFactorTotpSecretHostApi
-- (void)generateQrCodeUrlSecretKey:(NSString *)secretKey accountName:(nullable NSString *)accountName issuer:(nullable NSString *)issuer completion:(void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
-- (void)openInOtpAppSecretKey:(NSString *)secretKey qrCodeUrl:(NSString *)qrCodeUrl completion:(void (^)(FlutterError *_Nullable))completion;
+- (void)generateQrCodeUrlSecretKey:(NSString *)secretKey
+                       accountName:(nullable NSString *)accountName
+                            issuer:(nullable NSString *)issuer
+                        completion:
+                            (void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
+- (void)openInOtpAppSecretKey:(NSString *)secretKey
+                    qrCodeUrl:(NSString *)qrCodeUrl
+                   completion:(void (^)(FlutterError *_Nullable))completion;
 @end
 
-extern void SetUpMultiFactorTotpSecretHostApi(id<FlutterBinaryMessenger> binaryMessenger, NSObject<MultiFactorTotpSecretHostApi> *_Nullable api);
+extern void SetUpMultiFactorTotpSecretHostApi(
+    id<FlutterBinaryMessenger> binaryMessenger,
+    NSObject<MultiFactorTotpSecretHostApi> *_Nullable api);
 
-extern void SetUpMultiFactorTotpSecretHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMessenger, NSObject<MultiFactorTotpSecretHostApi> *_Nullable api, NSString *messageChannelSuffix);
-
+extern void SetUpMultiFactorTotpSecretHostApiWithSuffix(
+    id<FlutterBinaryMessenger> binaryMessenger,
+    NSObject<MultiFactorTotpSecretHostApi> *_Nullable api, NSString *messageChannelSuffix);
 
 /// Only used to generate the object interface that are use outside of the Pigeon interface
 @protocol GenerateInterfaces
-- (void)pigeonInterfaceInfo:(InternalMultiFactorInfo *)info error:(FlutterError *_Nullable *_Nonnull)error;
+- (void)pigeonInterfaceInfo:(InternalMultiFactorInfo *)info
+                      error:(FlutterError *_Nullable *_Nonnull)error;
 @end
 
-extern void SetUpGenerateInterfaces(id<FlutterBinaryMessenger> binaryMessenger, NSObject<GenerateInterfaces> *_Nullable api);
+extern void SetUpGenerateInterfaces(id<FlutterBinaryMessenger> binaryMessenger,
+                                    NSObject<GenerateInterfaces> *_Nullable api);
 
-extern void SetUpGenerateInterfacesWithSuffix(id<FlutterBinaryMessenger> binaryMessenger, NSObject<GenerateInterfaces> *_Nullable api, NSString *messageChannelSuffix);
+extern void SetUpGenerateInterfacesWithSuffix(id<FlutterBinaryMessenger> binaryMessenger,
+                                              NSObject<GenerateInterfaces> *_Nullable api,
+                                              NSString *messageChannelSuffix);
 
 NS_ASSUME_NONNULL_END

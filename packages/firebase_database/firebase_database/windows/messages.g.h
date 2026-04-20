@@ -101,7 +101,13 @@ class DatabasePigeonSettings {
  private:
   static DatabasePigeonSettings FromEncodableList(
       const ::flutter::EncodableList& list);
+
+ public:
+ public:
   ::flutter::EncodableList ToEncodableList() const;
+
+ private:
+ private:
   friend class DatabasePigeonFirebaseApp;
   friend class FirebaseDatabaseHostApi;
   friend class FirebaseDatabaseFlutterApi;
@@ -150,7 +156,13 @@ class DatabasePigeonFirebaseApp {
  private:
   static DatabasePigeonFirebaseApp FromEncodableList(
       const ::flutter::EncodableList& list);
+
+ public:
+ public:
   ::flutter::EncodableList ToEncodableList() const;
+
+ private:
+ private:
   friend class FirebaseDatabaseHostApi;
   friend class FirebaseDatabaseFlutterApi;
   friend class PigeonInternalCodecSerializer;
@@ -177,7 +189,13 @@ class DatabaseReferencePlatform {
  private:
   static DatabaseReferencePlatform FromEncodableList(
       const ::flutter::EncodableList& list);
+
+ public:
+ public:
   ::flutter::EncodableList ToEncodableList() const;
+
+ private:
+ private:
   friend class FirebaseDatabaseHostApi;
   friend class FirebaseDatabaseFlutterApi;
   friend class PigeonInternalCodecSerializer;
@@ -215,7 +233,13 @@ class DatabaseReferenceRequest {
  private:
   static DatabaseReferenceRequest FromEncodableList(
       const ::flutter::EncodableList& list);
+
+ public:
+ public:
   ::flutter::EncodableList ToEncodableList() const;
+
+ private:
+ private:
   friend class FirebaseDatabaseHostApi;
   friend class FirebaseDatabaseFlutterApi;
   friend class PigeonInternalCodecSerializer;
@@ -245,7 +269,13 @@ class UpdateRequest {
 
  private:
   static UpdateRequest FromEncodableList(const ::flutter::EncodableList& list);
+
+ public:
+ public:
   ::flutter::EncodableList ToEncodableList() const;
+
+ private:
+ private:
   friend class FirebaseDatabaseHostApi;
   friend class FirebaseDatabaseFlutterApi;
   friend class PigeonInternalCodecSerializer;
@@ -278,7 +308,13 @@ class TransactionRequest {
  private:
   static TransactionRequest FromEncodableList(
       const ::flutter::EncodableList& list);
+
+ public:
+ public:
   ::flutter::EncodableList ToEncodableList() const;
+
+ private:
+ private:
   friend class FirebaseDatabaseHostApi;
   friend class FirebaseDatabaseFlutterApi;
   friend class PigeonInternalCodecSerializer;
@@ -317,7 +353,13 @@ class QueryRequest {
 
  private:
   static QueryRequest FromEncodableList(const ::flutter::EncodableList& list);
+
+ public:
+ public:
   ::flutter::EncodableList ToEncodableList() const;
+
+ private:
+ private:
   friend class FirebaseDatabaseHostApi;
   friend class FirebaseDatabaseFlutterApi;
   friend class PigeonInternalCodecSerializer;
@@ -355,7 +397,13 @@ class TransactionHandlerResult {
  private:
   static TransactionHandlerResult FromEncodableList(
       const ::flutter::EncodableList& list);
+
+ public:
+ public:
   ::flutter::EncodableList ToEncodableList() const;
+
+ private:
+ private:
   friend class FirebaseDatabaseHostApi;
   friend class FirebaseDatabaseFlutterApi;
   friend class PigeonInternalCodecSerializer;

@@ -92,7 +92,13 @@ class HttpMetricOptions {
  private:
   static HttpMetricOptions FromEncodableList(
       const ::flutter::EncodableList& list);
+
+ public:
+ public:
   ::flutter::EncodableList ToEncodableList() const;
+
+ private:
+ private:
   friend class FirebasePerformanceHostApi;
   friend class PigeonInternalCodecSerializer;
   std::string url_;
@@ -141,7 +147,13 @@ class HttpMetricAttributes {
  private:
   static HttpMetricAttributes FromEncodableList(
       const ::flutter::EncodableList& list);
+
+ public:
+ public:
   ::flutter::EncodableList ToEncodableList() const;
+
+ private:
+ private:
   friend class FirebasePerformanceHostApi;
   friend class PigeonInternalCodecSerializer;
   std::optional<int64_t> http_response_code_;
@@ -178,7 +190,13 @@ class TraceAttributes {
  private:
   static TraceAttributes FromEncodableList(
       const ::flutter::EncodableList& list);
+
+ public:
+ public:
   ::flutter::EncodableList ToEncodableList() const;
+
+ private:
+ private:
   friend class FirebasePerformanceHostApi;
   friend class PigeonInternalCodecSerializer;
   std::optional<::flutter::EncodableMap> metrics_;
