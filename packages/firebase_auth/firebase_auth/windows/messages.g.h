@@ -17,16 +17,17 @@
 
 namespace firebase_auth_windows {
 
+
 // Generated class from Pigeon.
 
 class FlutterError {
  public:
-  explicit FlutterError(const std::string& code) : code_(code) {}
+  explicit FlutterError(const std::string& code)
+    : code_(code) {}
   explicit FlutterError(const std::string& code, const std::string& message)
-      : code_(code), message_(message) {}
-  explicit FlutterError(const std::string& code, const std::string& message,
-                        const ::flutter::EncodableValue& details)
-      : code_(code), message_(message), details_(details) {}
+    : code_(code), message_(message) {}
+  explicit FlutterError(const std::string& code, const std::string& message, const ::flutter::EncodableValue& details)
+    : code_(code), message_(message), details_(details) {}
 
   const std::string& code() const { return code_; }
   const std::string& message() const { return message_; }
@@ -38,8 +39,7 @@ class FlutterError {
   ::flutter::EncodableValue details_;
 };
 
-template <class T>
-class ErrorOr {
+template<class T> class ErrorOr {
  public:
   ErrorOr(const T& rhs) : v_(rhs) {}
   ErrorOr(const T&& rhs) : v_(std::move(rhs)) {}
@@ -64,6 +64,7 @@ class ErrorOr {
   std::variant<T, FlutterError> v_;
 };
 
+
 // The type of operation that generated the action code from calling
 // [checkActionCode].
 enum class ActionCodeInfoOperation {
@@ -83,6 +84,7 @@ enum class ActionCodeInfoOperation {
   kRevertSecondFactorAddition = 6
 };
 
+
 // Generated class from Pigeon that represents data sent in messages.
 class InternalMultiFactorSession {
  public:
@@ -94,13 +96,10 @@ class InternalMultiFactorSession {
 
   bool operator==(const InternalMultiFactorSession& other) const;
   bool operator!=(const InternalMultiFactorSession& other) const;
-  /// Returns a hash code value for the object. This method is supported for the
-  /// benefit of hash tables.
+  /// Returns a hash code value for the object. This method is supported for the benefit of hash tables.
   size_t Hash() const;
-
  private:
-  static InternalMultiFactorSession FromEncodableList(
-      const ::flutter::EncodableList& list);
+  static InternalMultiFactorSession FromEncodableList(const ::flutter::EncodableList& list);
   ::flutter::EncodableList ToEncodableList() const;
   friend class FirebaseAuthHostApi;
   friend class FirebaseAuthUserHostApi;
@@ -113,12 +112,14 @@ class InternalMultiFactorSession {
   std::string id_;
 };
 
+
 // Generated class from Pigeon that represents data sent in messages.
 class InternalPhoneMultiFactorAssertion {
  public:
   // Constructs an object setting all fields.
   explicit InternalPhoneMultiFactorAssertion(
-      const std::string& verification_id, const std::string& verification_code);
+    const std::string& verification_id,
+    const std::string& verification_code);
 
   const std::string& verification_id() const;
   void set_verification_id(std::string_view value_arg);
@@ -128,13 +129,10 @@ class InternalPhoneMultiFactorAssertion {
 
   bool operator==(const InternalPhoneMultiFactorAssertion& other) const;
   bool operator!=(const InternalPhoneMultiFactorAssertion& other) const;
-  /// Returns a hash code value for the object. This method is supported for the
-  /// benefit of hash tables.
+  /// Returns a hash code value for the object. This method is supported for the benefit of hash tables.
   size_t Hash() const;
-
  private:
-  static InternalPhoneMultiFactorAssertion FromEncodableList(
-      const ::flutter::EncodableList& list);
+  static InternalPhoneMultiFactorAssertion FromEncodableList(const ::flutter::EncodableList& list);
   ::flutter::EncodableList ToEncodableList() const;
   friend class FirebaseAuthHostApi;
   friend class FirebaseAuthUserHostApi;
@@ -148,19 +146,22 @@ class InternalPhoneMultiFactorAssertion {
   std::string verification_code_;
 };
 
+
 // Generated class from Pigeon that represents data sent in messages.
 class InternalMultiFactorInfo {
  public:
   // Constructs an object setting all non-nullable fields.
-  explicit InternalMultiFactorInfo(double enrollment_timestamp,
-                                   const std::string& uid);
+  explicit InternalMultiFactorInfo(
+    double enrollment_timestamp,
+    const std::string& uid);
 
   // Constructs an object setting all fields.
-  explicit InternalMultiFactorInfo(const std::string* display_name,
-                                   double enrollment_timestamp,
-                                   const std::string* factor_id,
-                                   const std::string& uid,
-                                   const std::string* phone_number);
+  explicit InternalMultiFactorInfo(
+    const std::string* display_name,
+    double enrollment_timestamp,
+    const std::string* factor_id,
+    const std::string& uid,
+    const std::string* phone_number);
 
   const std::string* display_name() const;
   void set_display_name(const std::string_view* value_arg);
@@ -182,13 +183,10 @@ class InternalMultiFactorInfo {
 
   bool operator==(const InternalMultiFactorInfo& other) const;
   bool operator!=(const InternalMultiFactorInfo& other) const;
-  /// Returns a hash code value for the object. This method is supported for the
-  /// benefit of hash tables.
+  /// Returns a hash code value for the object. This method is supported for the benefit of hash tables.
   size_t Hash() const;
-
  private:
-  static InternalMultiFactorInfo FromEncodableList(
-      const ::flutter::EncodableList& list);
+  static InternalMultiFactorInfo FromEncodableList(const ::flutter::EncodableList& list);
   ::flutter::EncodableList ToEncodableList() const;
   friend class FirebaseAuthHostApi;
   friend class FirebaseAuthUserHostApi;
@@ -205,6 +203,7 @@ class InternalMultiFactorInfo {
   std::optional<std::string> phone_number_;
 };
 
+
 // Generated class from Pigeon that represents data sent in messages.
 class AuthPigeonFirebaseApp {
  public:
@@ -212,9 +211,10 @@ class AuthPigeonFirebaseApp {
   explicit AuthPigeonFirebaseApp(const std::string& app_name);
 
   // Constructs an object setting all fields.
-  explicit AuthPigeonFirebaseApp(const std::string& app_name,
-                                 const std::string* tenant_id,
-                                 const std::string* custom_auth_domain);
+  explicit AuthPigeonFirebaseApp(
+    const std::string& app_name,
+    const std::string* tenant_id,
+    const std::string* custom_auth_domain);
 
   const std::string& app_name() const;
   void set_app_name(std::string_view value_arg);
@@ -229,13 +229,10 @@ class AuthPigeonFirebaseApp {
 
   bool operator==(const AuthPigeonFirebaseApp& other) const;
   bool operator!=(const AuthPigeonFirebaseApp& other) const;
-  /// Returns a hash code value for the object. This method is supported for the
-  /// benefit of hash tables.
+  /// Returns a hash code value for the object. This method is supported for the benefit of hash tables.
   size_t Hash() const;
-
  private:
-  static AuthPigeonFirebaseApp FromEncodableList(
-      const ::flutter::EncodableList& list);
+  static AuthPigeonFirebaseApp FromEncodableList(const ::flutter::EncodableList& list);
   ::flutter::EncodableList ToEncodableList() const;
   friend class FirebaseAuthHostApi;
   friend class FirebaseAuthUserHostApi;
@@ -250,6 +247,7 @@ class AuthPigeonFirebaseApp {
   std::optional<std::string> custom_auth_domain_;
 };
 
+
 // Generated class from Pigeon that represents data sent in messages.
 class InternalActionCodeInfoData {
  public:
@@ -257,8 +255,9 @@ class InternalActionCodeInfoData {
   InternalActionCodeInfoData();
 
   // Constructs an object setting all fields.
-  explicit InternalActionCodeInfoData(const std::string* email,
-                                      const std::string* previous_email);
+  explicit InternalActionCodeInfoData(
+    const std::string* email,
+    const std::string* previous_email);
 
   const std::string* email() const;
   void set_email(const std::string_view* value_arg);
@@ -270,13 +269,10 @@ class InternalActionCodeInfoData {
 
   bool operator==(const InternalActionCodeInfoData& other) const;
   bool operator!=(const InternalActionCodeInfoData& other) const;
-  /// Returns a hash code value for the object. This method is supported for the
-  /// benefit of hash tables.
+  /// Returns a hash code value for the object. This method is supported for the benefit of hash tables.
   size_t Hash() const;
-
  private:
-  static InternalActionCodeInfoData FromEncodableList(
-      const ::flutter::EncodableList& list);
+  static InternalActionCodeInfoData FromEncodableList(const ::flutter::EncodableList& list);
   ::flutter::EncodableList ToEncodableList() const;
   friend class InternalActionCodeInfo;
   friend class FirebaseAuthHostApi;
@@ -291,19 +287,20 @@ class InternalActionCodeInfoData {
   std::optional<std::string> previous_email_;
 };
 
+
 // Generated class from Pigeon that represents data sent in messages.
 class InternalActionCodeInfo {
  public:
   // Constructs an object setting all fields.
-  explicit InternalActionCodeInfo(const ActionCodeInfoOperation& operation,
-                                  const InternalActionCodeInfoData& data);
+  explicit InternalActionCodeInfo(
+    const ActionCodeInfoOperation& operation,
+    const InternalActionCodeInfoData& data);
 
   ~InternalActionCodeInfo() = default;
   InternalActionCodeInfo(const InternalActionCodeInfo& other);
   InternalActionCodeInfo& operator=(const InternalActionCodeInfo& other);
   InternalActionCodeInfo(InternalActionCodeInfo&& other) = default;
-  InternalActionCodeInfo& operator=(InternalActionCodeInfo&& other) noexcept =
-      default;
+  InternalActionCodeInfo& operator=(InternalActionCodeInfo&& other) noexcept = default;
   const ActionCodeInfoOperation& operation() const;
   void set_operation(const ActionCodeInfoOperation& value_arg);
 
@@ -312,13 +309,10 @@ class InternalActionCodeInfo {
 
   bool operator==(const InternalActionCodeInfo& other) const;
   bool operator!=(const InternalActionCodeInfo& other) const;
-  /// Returns a hash code value for the object. This method is supported for the
-  /// benefit of hash tables.
+  /// Returns a hash code value for the object. This method is supported for the benefit of hash tables.
   size_t Hash() const;
-
  private:
-  static InternalActionCodeInfo FromEncodableList(
-      const ::flutter::EncodableList& list);
+  static InternalActionCodeInfo FromEncodableList(const ::flutter::EncodableList& list);
   ::flutter::EncodableList ToEncodableList() const;
   friend class FirebaseAuthHostApi;
   friend class FirebaseAuthUserHostApi;
@@ -332,6 +326,7 @@ class InternalActionCodeInfo {
   std::unique_ptr<InternalActionCodeInfoData> data_;
 };
 
+
 // Generated class from Pigeon that represents data sent in messages.
 class InternalAdditionalUserInfo {
  public:
@@ -339,11 +334,12 @@ class InternalAdditionalUserInfo {
   explicit InternalAdditionalUserInfo(bool is_new_user);
 
   // Constructs an object setting all fields.
-  explicit InternalAdditionalUserInfo(bool is_new_user,
-                                      const std::string* provider_id,
-                                      const std::string* username,
-                                      const std::string* authorization_code,
-                                      const ::flutter::EncodableMap* profile);
+  explicit InternalAdditionalUserInfo(
+    bool is_new_user,
+    const std::string* provider_id,
+    const std::string* username,
+    const std::string* authorization_code,
+    const ::flutter::EncodableMap* profile);
 
   bool is_new_user() const;
   void set_is_new_user(bool value_arg);
@@ -366,13 +362,10 @@ class InternalAdditionalUserInfo {
 
   bool operator==(const InternalAdditionalUserInfo& other) const;
   bool operator!=(const InternalAdditionalUserInfo& other) const;
-  /// Returns a hash code value for the object. This method is supported for the
-  /// benefit of hash tables.
+  /// Returns a hash code value for the object. This method is supported for the benefit of hash tables.
   size_t Hash() const;
-
  private:
-  static InternalAdditionalUserInfo FromEncodableList(
-      const ::flutter::EncodableList& list);
+  static InternalAdditionalUserInfo FromEncodableList(const ::flutter::EncodableList& list);
   ::flutter::EncodableList ToEncodableList() const;
   friend class InternalUserCredential;
   friend class FirebaseAuthHostApi;
@@ -390,19 +383,22 @@ class InternalAdditionalUserInfo {
   std::optional<::flutter::EncodableMap> profile_;
 };
 
+
 // Generated class from Pigeon that represents data sent in messages.
 class InternalAuthCredential {
  public:
   // Constructs an object setting all non-nullable fields.
-  explicit InternalAuthCredential(const std::string& provider_id,
-                                  const std::string& sign_in_method,
-                                  int64_t native_id);
+  explicit InternalAuthCredential(
+    const std::string& provider_id,
+    const std::string& sign_in_method,
+    int64_t native_id);
 
   // Constructs an object setting all fields.
-  explicit InternalAuthCredential(const std::string& provider_id,
-                                  const std::string& sign_in_method,
-                                  int64_t native_id,
-                                  const std::string* access_token);
+  explicit InternalAuthCredential(
+    const std::string& provider_id,
+    const std::string& sign_in_method,
+    int64_t native_id,
+    const std::string* access_token);
 
   const std::string& provider_id() const;
   void set_provider_id(std::string_view value_arg);
@@ -419,13 +415,10 @@ class InternalAuthCredential {
 
   bool operator==(const InternalAuthCredential& other) const;
   bool operator!=(const InternalAuthCredential& other) const;
-  /// Returns a hash code value for the object. This method is supported for the
-  /// benefit of hash tables.
+  /// Returns a hash code value for the object. This method is supported for the benefit of hash tables.
   size_t Hash() const;
-
  private:
-  static InternalAuthCredential FromEncodableList(
-      const ::flutter::EncodableList& list);
+  static InternalAuthCredential FromEncodableList(const ::flutter::EncodableList& list);
   ::flutter::EncodableList ToEncodableList() const;
   friend class InternalUserCredential;
   friend class FirebaseAuthHostApi;
@@ -442,21 +435,30 @@ class InternalAuthCredential {
   std::optional<std::string> access_token_;
 };
 
+
 // Generated class from Pigeon that represents data sent in messages.
 class InternalUserInfo {
  public:
   // Constructs an object setting all non-nullable fields.
-  explicit InternalUserInfo(const std::string& uid, bool is_anonymous,
-                            bool is_email_verified);
+  explicit InternalUserInfo(
+    const std::string& uid,
+    bool is_anonymous,
+    bool is_email_verified);
 
   // Constructs an object setting all fields.
   explicit InternalUserInfo(
-      const std::string& uid, const std::string* email,
-      const std::string* display_name, const std::string* photo_url,
-      const std::string* phone_number, bool is_anonymous,
-      bool is_email_verified, const std::string* provider_id,
-      const std::string* tenant_id, const std::string* refresh_token,
-      const int64_t* creation_timestamp, const int64_t* last_sign_in_timestamp);
+    const std::string& uid,
+    const std::string* email,
+    const std::string* display_name,
+    const std::string* photo_url,
+    const std::string* phone_number,
+    bool is_anonymous,
+    bool is_email_verified,
+    const std::string* provider_id,
+    const std::string* tenant_id,
+    const std::string* refresh_token,
+    const int64_t* creation_timestamp,
+    const int64_t* last_sign_in_timestamp);
 
   const std::string& uid() const;
   void set_uid(std::string_view value_arg);
@@ -505,15 +507,11 @@ class InternalUserInfo {
 
   bool operator==(const InternalUserInfo& other) const;
   bool operator!=(const InternalUserInfo& other) const;
-  /// Returns a hash code value for the object. This method is supported for the
-  /// benefit of hash tables.
+  /// Returns a hash code value for the object. This method is supported for the benefit of hash tables.
   size_t Hash() const;
-
-  static InternalUserInfo FromEncodableList(
-      const ::flutter::EncodableList& list);
-  ::flutter::EncodableList ToEncodableList() const;
-
  private:
+  static InternalUserInfo FromEncodableList(const ::flutter::EncodableList& list);
+  ::flutter::EncodableList ToEncodableList() const;
   friend class InternalUserDetails;
   friend class FirebaseAuthHostApi;
   friend class FirebaseAuthUserHostApi;
@@ -537,19 +535,20 @@ class InternalUserInfo {
   std::optional<int64_t> last_sign_in_timestamp_;
 };
 
+
 // Generated class from Pigeon that represents data sent in messages.
 class InternalUserDetails {
  public:
   // Constructs an object setting all fields.
-  explicit InternalUserDetails(const InternalUserInfo& user_info,
-                               const ::flutter::EncodableList& provider_data);
+  explicit InternalUserDetails(
+    const InternalUserInfo& user_info,
+    const ::flutter::EncodableList& provider_data);
 
   ~InternalUserDetails() = default;
   InternalUserDetails(const InternalUserDetails& other);
   InternalUserDetails& operator=(const InternalUserDetails& other);
   InternalUserDetails(InternalUserDetails&& other) = default;
-  InternalUserDetails& operator=(InternalUserDetails&& other) noexcept =
-      default;
+  InternalUserDetails& operator=(InternalUserDetails&& other) noexcept = default;
   const InternalUserInfo& user_info() const;
   void set_user_info(const InternalUserInfo& value_arg);
 
@@ -558,13 +557,10 @@ class InternalUserDetails {
 
   bool operator==(const InternalUserDetails& other) const;
   bool operator!=(const InternalUserDetails& other) const;
-  /// Returns a hash code value for the object. This method is supported for the
-  /// benefit of hash tables.
+  /// Returns a hash code value for the object. This method is supported for the benefit of hash tables.
   size_t Hash() const;
-
  private:
-  static InternalUserDetails FromEncodableList(
-      const ::flutter::EncodableList& list);
+  static InternalUserDetails FromEncodableList(const ::flutter::EncodableList& list);
   ::flutter::EncodableList ToEncodableList() const;
   friend class InternalUserCredential;
   friend class FirebaseAuthHostApi;
@@ -579,6 +575,7 @@ class InternalUserDetails {
   ::flutter::EncodableList provider_data_;
 };
 
+
 // Generated class from Pigeon that represents data sent in messages.
 class InternalUserCredential {
  public:
@@ -587,16 +584,15 @@ class InternalUserCredential {
 
   // Constructs an object setting all fields.
   explicit InternalUserCredential(
-      const InternalUserDetails* user,
-      const InternalAdditionalUserInfo* additional_user_info,
-      const InternalAuthCredential* credential);
+    const InternalUserDetails* user,
+    const InternalAdditionalUserInfo* additional_user_info,
+    const InternalAuthCredential* credential);
 
   ~InternalUserCredential() = default;
   InternalUserCredential(const InternalUserCredential& other);
   InternalUserCredential& operator=(const InternalUserCredential& other);
   InternalUserCredential(InternalUserCredential&& other) = default;
-  InternalUserCredential& operator=(InternalUserCredential&& other) noexcept =
-      default;
+  InternalUserCredential& operator=(InternalUserCredential&& other) noexcept = default;
   const InternalUserDetails* user() const;
   void set_user(const InternalUserDetails* value_arg);
   void set_user(const InternalUserDetails& value_arg);
@@ -611,13 +607,10 @@ class InternalUserCredential {
 
   bool operator==(const InternalUserCredential& other) const;
   bool operator!=(const InternalUserCredential& other) const;
-  /// Returns a hash code value for the object. This method is supported for the
-  /// benefit of hash tables.
+  /// Returns a hash code value for the object. This method is supported for the benefit of hash tables.
   size_t Hash() const;
-
  private:
-  static InternalUserCredential FromEncodableList(
-      const ::flutter::EncodableList& list);
+  static InternalUserCredential FromEncodableList(const ::flutter::EncodableList& list);
   ::flutter::EncodableList ToEncodableList() const;
   friend class FirebaseAuthHostApi;
   friend class FirebaseAuthUserHostApi;
@@ -632,18 +625,21 @@ class InternalUserCredential {
   std::unique_ptr<InternalAuthCredential> credential_;
 };
 
+
 // Generated class from Pigeon that represents data sent in messages.
 class InternalAuthCredentialInput {
  public:
   // Constructs an object setting all non-nullable fields.
-  explicit InternalAuthCredentialInput(const std::string& provider_id,
-                                       const std::string& sign_in_method);
+  explicit InternalAuthCredentialInput(
+    const std::string& provider_id,
+    const std::string& sign_in_method);
 
   // Constructs an object setting all fields.
-  explicit InternalAuthCredentialInput(const std::string& provider_id,
-                                       const std::string& sign_in_method,
-                                       const std::string* token,
-                                       const std::string* access_token);
+  explicit InternalAuthCredentialInput(
+    const std::string& provider_id,
+    const std::string& sign_in_method,
+    const std::string* token,
+    const std::string* access_token);
 
   const std::string& provider_id() const;
   void set_provider_id(std::string_view value_arg);
@@ -661,13 +657,10 @@ class InternalAuthCredentialInput {
 
   bool operator==(const InternalAuthCredentialInput& other) const;
   bool operator!=(const InternalAuthCredentialInput& other) const;
-  /// Returns a hash code value for the object. This method is supported for the
-  /// benefit of hash tables.
+  /// Returns a hash code value for the object. This method is supported for the benefit of hash tables.
   size_t Hash() const;
-
  private:
-  static InternalAuthCredentialInput FromEncodableList(
-      const ::flutter::EncodableList& list);
+  static InternalAuthCredentialInput FromEncodableList(const ::flutter::EncodableList& list);
   ::flutter::EncodableList ToEncodableList() const;
   friend class FirebaseAuthHostApi;
   friend class FirebaseAuthUserHostApi;
@@ -683,21 +676,26 @@ class InternalAuthCredentialInput {
   std::optional<std::string> access_token_;
 };
 
+
 // Generated class from Pigeon that represents data sent in messages.
 class InternalActionCodeSettings {
  public:
   // Constructs an object setting all non-nullable fields.
-  explicit InternalActionCodeSettings(const std::string& url,
-                                      bool handle_code_in_app,
-                                      bool android_install_app);
+  explicit InternalActionCodeSettings(
+    const std::string& url,
+    bool handle_code_in_app,
+    bool android_install_app);
 
   // Constructs an object setting all fields.
   explicit InternalActionCodeSettings(
-      const std::string& url, const std::string* dynamic_link_domain,
-      bool handle_code_in_app, const std::string* i_o_s_bundle_id,
-      const std::string* android_package_name, bool android_install_app,
-      const std::string* android_minimum_version,
-      const std::string* link_domain);
+    const std::string& url,
+    const std::string* dynamic_link_domain,
+    bool handle_code_in_app,
+    const std::string* i_o_s_bundle_id,
+    const std::string* android_package_name,
+    bool android_install_app,
+    const std::string* android_minimum_version,
+    const std::string* link_domain);
 
   const std::string& url() const;
   void set_url(std::string_view value_arg);
@@ -730,13 +728,10 @@ class InternalActionCodeSettings {
 
   bool operator==(const InternalActionCodeSettings& other) const;
   bool operator!=(const InternalActionCodeSettings& other) const;
-  /// Returns a hash code value for the object. This method is supported for the
-  /// benefit of hash tables.
+  /// Returns a hash code value for the object. This method is supported for the benefit of hash tables.
   size_t Hash() const;
-
  private:
-  static InternalActionCodeSettings FromEncodableList(
-      const ::flutter::EncodableList& list);
+  static InternalActionCodeSettings FromEncodableList(const ::flutter::EncodableList& list);
   ::flutter::EncodableList ToEncodableList() const;
   friend class FirebaseAuthHostApi;
   friend class FirebaseAuthUserHostApi;
@@ -756,18 +751,20 @@ class InternalActionCodeSettings {
   std::optional<std::string> link_domain_;
 };
 
+
 // Generated class from Pigeon that represents data sent in messages.
 class InternalFirebaseAuthSettings {
  public:
   // Constructs an object setting all non-nullable fields.
-  explicit InternalFirebaseAuthSettings(
-      bool app_verification_disabled_for_testing);
+  explicit InternalFirebaseAuthSettings(bool app_verification_disabled_for_testing);
 
   // Constructs an object setting all fields.
   explicit InternalFirebaseAuthSettings(
-      bool app_verification_disabled_for_testing,
-      const std::string* user_access_group, const std::string* phone_number,
-      const std::string* sms_code, const bool* force_recaptcha_flow);
+    bool app_verification_disabled_for_testing,
+    const std::string* user_access_group,
+    const std::string* phone_number,
+    const std::string* sms_code,
+    const bool* force_recaptcha_flow);
 
   bool app_verification_disabled_for_testing() const;
   void set_app_verification_disabled_for_testing(bool value_arg);
@@ -790,13 +787,10 @@ class InternalFirebaseAuthSettings {
 
   bool operator==(const InternalFirebaseAuthSettings& other) const;
   bool operator!=(const InternalFirebaseAuthSettings& other) const;
-  /// Returns a hash code value for the object. This method is supported for the
-  /// benefit of hash tables.
+  /// Returns a hash code value for the object. This method is supported for the benefit of hash tables.
   size_t Hash() const;
-
  private:
-  static InternalFirebaseAuthSettings FromEncodableList(
-      const ::flutter::EncodableList& list);
+  static InternalFirebaseAuthSettings FromEncodableList(const ::flutter::EncodableList& list);
   ::flutter::EncodableList ToEncodableList() const;
   friend class FirebaseAuthHostApi;
   friend class FirebaseAuthUserHostApi;
@@ -813,6 +807,7 @@ class InternalFirebaseAuthSettings {
   std::optional<bool> force_recaptcha_flow_;
 };
 
+
 // Generated class from Pigeon that represents data sent in messages.
 class InternalSignInProvider {
  public:
@@ -821,8 +816,9 @@ class InternalSignInProvider {
 
   // Constructs an object setting all fields.
   explicit InternalSignInProvider(
-      const std::string& provider_id, const ::flutter::EncodableList* scopes,
-      const ::flutter::EncodableMap* custom_parameters);
+    const std::string& provider_id,
+    const ::flutter::EncodableList* scopes,
+    const ::flutter::EncodableMap* custom_parameters);
 
   const std::string& provider_id() const;
   void set_provider_id(std::string_view value_arg);
@@ -837,13 +833,10 @@ class InternalSignInProvider {
 
   bool operator==(const InternalSignInProvider& other) const;
   bool operator!=(const InternalSignInProvider& other) const;
-  /// Returns a hash code value for the object. This method is supported for the
-  /// benefit of hash tables.
+  /// Returns a hash code value for the object. This method is supported for the benefit of hash tables.
   size_t Hash() const;
-
  private:
-  static InternalSignInProvider FromEncodableList(
-      const ::flutter::EncodableList& list);
+  static InternalSignInProvider FromEncodableList(const ::flutter::EncodableList& list);
   ::flutter::EncodableList ToEncodableList() const;
   friend class FirebaseAuthHostApi;
   friend class FirebaseAuthUserHostApi;
@@ -858,6 +851,7 @@ class InternalSignInProvider {
   std::optional<::flutter::EncodableMap> custom_parameters_;
 };
 
+
 // Generated class from Pigeon that represents data sent in messages.
 class InternalVerifyPhoneNumberRequest {
  public:
@@ -866,11 +860,12 @@ class InternalVerifyPhoneNumberRequest {
 
   // Constructs an object setting all fields.
   explicit InternalVerifyPhoneNumberRequest(
-      const std::string* phone_number, int64_t timeout,
-      const int64_t* force_resending_token,
-      const std::string* auto_retrieved_sms_code_for_testing,
-      const std::string* multi_factor_info_id,
-      const std::string* multi_factor_session_id);
+    const std::string* phone_number,
+    int64_t timeout,
+    const int64_t* force_resending_token,
+    const std::string* auto_retrieved_sms_code_for_testing,
+    const std::string* multi_factor_info_id,
+    const std::string* multi_factor_session_id);
 
   const std::string* phone_number() const;
   void set_phone_number(const std::string_view* value_arg);
@@ -884,8 +879,7 @@ class InternalVerifyPhoneNumberRequest {
   void set_force_resending_token(int64_t value_arg);
 
   const std::string* auto_retrieved_sms_code_for_testing() const;
-  void set_auto_retrieved_sms_code_for_testing(
-      const std::string_view* value_arg);
+  void set_auto_retrieved_sms_code_for_testing(const std::string_view* value_arg);
   void set_auto_retrieved_sms_code_for_testing(std::string_view value_arg);
 
   const std::string* multi_factor_info_id() const;
@@ -898,13 +892,10 @@ class InternalVerifyPhoneNumberRequest {
 
   bool operator==(const InternalVerifyPhoneNumberRequest& other) const;
   bool operator!=(const InternalVerifyPhoneNumberRequest& other) const;
-  /// Returns a hash code value for the object. This method is supported for the
-  /// benefit of hash tables.
+  /// Returns a hash code value for the object. This method is supported for the benefit of hash tables.
   size_t Hash() const;
-
  private:
-  static InternalVerifyPhoneNumberRequest FromEncodableList(
-      const ::flutter::EncodableList& list);
+  static InternalVerifyPhoneNumberRequest FromEncodableList(const ::flutter::EncodableList& list);
   ::flutter::EncodableList ToEncodableList() const;
   friend class FirebaseAuthHostApi;
   friend class FirebaseAuthUserHostApi;
@@ -922,6 +913,7 @@ class InternalVerifyPhoneNumberRequest {
   std::optional<std::string> multi_factor_session_id_;
 };
 
+
 // Generated class from Pigeon that represents data sent in messages.
 class InternalIdTokenResult {
  public:
@@ -929,13 +921,14 @@ class InternalIdTokenResult {
   InternalIdTokenResult();
 
   // Constructs an object setting all fields.
-  explicit InternalIdTokenResult(const std::string* token,
-                                 const int64_t* expiration_timestamp,
-                                 const int64_t* auth_timestamp,
-                                 const int64_t* issued_at_timestamp,
-                                 const std::string* sign_in_provider,
-                                 const ::flutter::EncodableMap* claims,
-                                 const std::string* sign_in_second_factor);
+  explicit InternalIdTokenResult(
+    const std::string* token,
+    const int64_t* expiration_timestamp,
+    const int64_t* auth_timestamp,
+    const int64_t* issued_at_timestamp,
+    const std::string* sign_in_provider,
+    const ::flutter::EncodableMap* claims,
+    const std::string* sign_in_second_factor);
 
   const std::string* token() const;
   void set_token(const std::string_view* value_arg);
@@ -967,13 +960,10 @@ class InternalIdTokenResult {
 
   bool operator==(const InternalIdTokenResult& other) const;
   bool operator!=(const InternalIdTokenResult& other) const;
-  /// Returns a hash code value for the object. This method is supported for the
-  /// benefit of hash tables.
+  /// Returns a hash code value for the object. This method is supported for the benefit of hash tables.
   size_t Hash() const;
-
  private:
-  static InternalIdTokenResult FromEncodableList(
-      const ::flutter::EncodableList& list);
+  static InternalIdTokenResult FromEncodableList(const ::flutter::EncodableList& list);
   ::flutter::EncodableList ToEncodableList() const;
   friend class FirebaseAuthHostApi;
   friend class FirebaseAuthUserHostApi;
@@ -992,18 +982,21 @@ class InternalIdTokenResult {
   std::optional<std::string> sign_in_second_factor_;
 };
 
+
 // Generated class from Pigeon that represents data sent in messages.
 class InternalUserProfile {
  public:
   // Constructs an object setting all non-nullable fields.
-  explicit InternalUserProfile(bool display_name_changed,
-                               bool photo_url_changed);
+  explicit InternalUserProfile(
+    bool display_name_changed,
+    bool photo_url_changed);
 
   // Constructs an object setting all fields.
-  explicit InternalUserProfile(const std::string* display_name,
-                               const std::string* photo_url,
-                               bool display_name_changed,
-                               bool photo_url_changed);
+  explicit InternalUserProfile(
+    const std::string* display_name,
+    const std::string* photo_url,
+    bool display_name_changed,
+    bool photo_url_changed);
 
   const std::string* display_name() const;
   void set_display_name(const std::string_view* value_arg);
@@ -1021,13 +1014,10 @@ class InternalUserProfile {
 
   bool operator==(const InternalUserProfile& other) const;
   bool operator!=(const InternalUserProfile& other) const;
-  /// Returns a hash code value for the object. This method is supported for the
-  /// benefit of hash tables.
+  /// Returns a hash code value for the object. This method is supported for the benefit of hash tables.
   size_t Hash() const;
-
  private:
-  static InternalUserProfile FromEncodableList(
-      const ::flutter::EncodableList& list);
+  static InternalUserProfile FromEncodableList(const ::flutter::EncodableList& list);
   ::flutter::EncodableList ToEncodableList() const;
   friend class FirebaseAuthHostApi;
   friend class FirebaseAuthUserHostApi;
@@ -1043,6 +1033,7 @@ class InternalUserProfile {
   bool photo_url_changed_;
 };
 
+
 // Generated class from Pigeon that represents data sent in messages.
 class InternalTotpSecret {
  public:
@@ -1050,11 +1041,12 @@ class InternalTotpSecret {
   explicit InternalTotpSecret(const std::string& secret_key);
 
   // Constructs an object setting all fields.
-  explicit InternalTotpSecret(const int64_t* code_interval_seconds,
-                              const int64_t* code_length,
-                              const int64_t* enrollment_completion_deadline,
-                              const std::string* hashing_algorithm,
-                              const std::string& secret_key);
+  explicit InternalTotpSecret(
+    const int64_t* code_interval_seconds,
+    const int64_t* code_length,
+    const int64_t* enrollment_completion_deadline,
+    const std::string* hashing_algorithm,
+    const std::string& secret_key);
 
   const int64_t* code_interval_seconds() const;
   void set_code_interval_seconds(const int64_t* value_arg);
@@ -1077,13 +1069,10 @@ class InternalTotpSecret {
 
   bool operator==(const InternalTotpSecret& other) const;
   bool operator!=(const InternalTotpSecret& other) const;
-  /// Returns a hash code value for the object. This method is supported for the
-  /// benefit of hash tables.
+  /// Returns a hash code value for the object. This method is supported for the benefit of hash tables.
   size_t Hash() const;
-
  private:
-  static InternalTotpSecret FromEncodableList(
-      const ::flutter::EncodableList& list);
+  static InternalTotpSecret FromEncodableList(const ::flutter::EncodableList& list);
   ::flutter::EncodableList ToEncodableList() const;
   friend class FirebaseAuthHostApi;
   friend class FirebaseAuthUserHostApi;
@@ -1100,8 +1089,8 @@ class InternalTotpSecret {
   std::string secret_key_;
 };
 
-class PigeonInternalCodecSerializer
-    : public ::flutter::StandardCodecSerializer {
+
+class PigeonInternalCodecSerializer : public ::flutter::StandardCodecSerializer {
  public:
   PigeonInternalCodecSerializer();
   inline static PigeonInternalCodecSerializer& GetInstance() {
@@ -1109,343 +1098,367 @@ class PigeonInternalCodecSerializer
     return sInstance;
   }
 
-  void WriteValue(const ::flutter::EncodableValue& value,
-                  ::flutter::ByteStreamWriter* stream) const override;
-
+  void WriteValue(
+    const ::flutter::EncodableValue& value,
+    ::flutter::ByteStreamWriter* stream) const override;
  protected:
   ::flutter::EncodableValue ReadValueOfType(
-      uint8_t type, ::flutter::ByteStreamReader* stream) const override;
+    uint8_t type,
+    ::flutter::ByteStreamReader* stream) const override;
 };
 
-// Generated interface from Pigeon that represents a handler of messages from
-// Flutter.
+// Generated interface from Pigeon that represents a handler of messages from Flutter.
 class FirebaseAuthHostApi {
  public:
   FirebaseAuthHostApi(const FirebaseAuthHostApi&) = delete;
   FirebaseAuthHostApi& operator=(const FirebaseAuthHostApi&) = delete;
   virtual ~FirebaseAuthHostApi() {}
   virtual void RegisterIdTokenListener(
-      const AuthPigeonFirebaseApp& app,
-      std::function<void(ErrorOr<std::string> reply)> result) = 0;
+    const AuthPigeonFirebaseApp& app,
+    std::function<void(ErrorOr<std::string> reply)> result) = 0;
   virtual void RegisterAuthStateListener(
-      const AuthPigeonFirebaseApp& app,
-      std::function<void(ErrorOr<std::string> reply)> result) = 0;
+    const AuthPigeonFirebaseApp& app,
+    std::function<void(ErrorOr<std::string> reply)> result) = 0;
   virtual void UseEmulator(
-      const AuthPigeonFirebaseApp& app, const std::string& host, int64_t port,
-      std::function<void(std::optional<FlutterError> reply)> result) = 0;
+    const AuthPigeonFirebaseApp& app,
+    const std::string& host,
+    int64_t port,
+    std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void ApplyActionCode(
-      const AuthPigeonFirebaseApp& app, const std::string& code,
-      std::function<void(std::optional<FlutterError> reply)> result) = 0;
+    const AuthPigeonFirebaseApp& app,
+    const std::string& code,
+    std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void CheckActionCode(
-      const AuthPigeonFirebaseApp& app, const std::string& code,
-      std::function<void(ErrorOr<InternalActionCodeInfo> reply)> result) = 0;
+    const AuthPigeonFirebaseApp& app,
+    const std::string& code,
+    std::function<void(ErrorOr<InternalActionCodeInfo> reply)> result) = 0;
   virtual void ConfirmPasswordReset(
-      const AuthPigeonFirebaseApp& app, const std::string& code,
-      const std::string& new_password,
-      std::function<void(std::optional<FlutterError> reply)> result) = 0;
+    const AuthPigeonFirebaseApp& app,
+    const std::string& code,
+    const std::string& new_password,
+    std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void CreateUserWithEmailAndPassword(
-      const AuthPigeonFirebaseApp& app, const std::string& email,
-      const std::string& password,
-      std::function<void(ErrorOr<InternalUserCredential> reply)> result) = 0;
+    const AuthPigeonFirebaseApp& app,
+    const std::string& email,
+    const std::string& password,
+    std::function<void(ErrorOr<InternalUserCredential> reply)> result) = 0;
   virtual void SignInAnonymously(
-      const AuthPigeonFirebaseApp& app,
-      std::function<void(ErrorOr<InternalUserCredential> reply)> result) = 0;
+    const AuthPigeonFirebaseApp& app,
+    std::function<void(ErrorOr<InternalUserCredential> reply)> result) = 0;
   virtual void SignInWithCredential(
-      const AuthPigeonFirebaseApp& app, const ::flutter::EncodableMap& input,
-      std::function<void(ErrorOr<InternalUserCredential> reply)> result) = 0;
+    const AuthPigeonFirebaseApp& app,
+    const ::flutter::EncodableMap& input,
+    std::function<void(ErrorOr<InternalUserCredential> reply)> result) = 0;
   virtual void SignInWithCustomToken(
-      const AuthPigeonFirebaseApp& app, const std::string& token,
-      std::function<void(ErrorOr<InternalUserCredential> reply)> result) = 0;
+    const AuthPigeonFirebaseApp& app,
+    const std::string& token,
+    std::function<void(ErrorOr<InternalUserCredential> reply)> result) = 0;
   virtual void SignInWithEmailAndPassword(
-      const AuthPigeonFirebaseApp& app, const std::string& email,
-      const std::string& password,
-      std::function<void(ErrorOr<InternalUserCredential> reply)> result) = 0;
+    const AuthPigeonFirebaseApp& app,
+    const std::string& email,
+    const std::string& password,
+    std::function<void(ErrorOr<InternalUserCredential> reply)> result) = 0;
   virtual void SignInWithEmailLink(
-      const AuthPigeonFirebaseApp& app, const std::string& email,
-      const std::string& email_link,
-      std::function<void(ErrorOr<InternalUserCredential> reply)> result) = 0;
+    const AuthPigeonFirebaseApp& app,
+    const std::string& email,
+    const std::string& email_link,
+    std::function<void(ErrorOr<InternalUserCredential> reply)> result) = 0;
   virtual void SignInWithProvider(
-      const AuthPigeonFirebaseApp& app,
-      const InternalSignInProvider& sign_in_provider,
-      std::function<void(ErrorOr<InternalUserCredential> reply)> result) = 0;
+    const AuthPigeonFirebaseApp& app,
+    const InternalSignInProvider& sign_in_provider,
+    std::function<void(ErrorOr<InternalUserCredential> reply)> result) = 0;
   virtual void SignOut(
-      const AuthPigeonFirebaseApp& app,
-      std::function<void(std::optional<FlutterError> reply)> result) = 0;
+    const AuthPigeonFirebaseApp& app,
+    std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void FetchSignInMethodsForEmail(
-      const AuthPigeonFirebaseApp& app, const std::string& email,
-      std::function<void(ErrorOr<::flutter::EncodableList> reply)> result) = 0;
+    const AuthPigeonFirebaseApp& app,
+    const std::string& email,
+    std::function<void(ErrorOr<::flutter::EncodableList> reply)> result) = 0;
   virtual void SendPasswordResetEmail(
-      const AuthPigeonFirebaseApp& app, const std::string& email,
-      const InternalActionCodeSettings* action_code_settings,
-      std::function<void(std::optional<FlutterError> reply)> result) = 0;
+    const AuthPigeonFirebaseApp& app,
+    const std::string& email,
+    const InternalActionCodeSettings* action_code_settings,
+    std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void SendSignInLinkToEmail(
-      const AuthPigeonFirebaseApp& app, const std::string& email,
-      const InternalActionCodeSettings& action_code_settings,
-      std::function<void(std::optional<FlutterError> reply)> result) = 0;
+    const AuthPigeonFirebaseApp& app,
+    const std::string& email,
+    const InternalActionCodeSettings& action_code_settings,
+    std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void SetLanguageCode(
-      const AuthPigeonFirebaseApp& app, const std::string* language_code,
-      std::function<void(ErrorOr<std::string> reply)> result) = 0;
+    const AuthPigeonFirebaseApp& app,
+    const std::string* language_code,
+    std::function<void(ErrorOr<std::string> reply)> result) = 0;
   virtual void SetSettings(
-      const AuthPigeonFirebaseApp& app,
-      const InternalFirebaseAuthSettings& settings,
-      std::function<void(std::optional<FlutterError> reply)> result) = 0;
+    const AuthPigeonFirebaseApp& app,
+    const InternalFirebaseAuthSettings& settings,
+    std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void VerifyPasswordResetCode(
-      const AuthPigeonFirebaseApp& app, const std::string& code,
-      std::function<void(ErrorOr<std::string> reply)> result) = 0;
+    const AuthPigeonFirebaseApp& app,
+    const std::string& code,
+    std::function<void(ErrorOr<std::string> reply)> result) = 0;
   virtual void VerifyPhoneNumber(
-      const AuthPigeonFirebaseApp& app,
-      const InternalVerifyPhoneNumberRequest& request,
-      std::function<void(ErrorOr<std::string> reply)> result) = 0;
+    const AuthPigeonFirebaseApp& app,
+    const InternalVerifyPhoneNumberRequest& request,
+    std::function<void(ErrorOr<std::string> reply)> result) = 0;
   virtual void RevokeTokenWithAuthorizationCode(
-      const AuthPigeonFirebaseApp& app, const std::string& authorization_code,
-      std::function<void(std::optional<FlutterError> reply)> result) = 0;
+    const AuthPigeonFirebaseApp& app,
+    const std::string& authorization_code,
+    std::function<void(std::optional<FlutterError> reply)> result) = 0;
+  virtual void RevokeAccessToken(
+    const AuthPigeonFirebaseApp& app,
+    const std::string& access_token,
+    std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void InitializeRecaptchaConfig(
-      const AuthPigeonFirebaseApp& app,
-      std::function<void(std::optional<FlutterError> reply)> result) = 0;
+    const AuthPigeonFirebaseApp& app,
+    std::function<void(std::optional<FlutterError> reply)> result) = 0;
 
   // The codec used by FirebaseAuthHostApi.
   static const ::flutter::StandardMessageCodec& GetCodec();
-  // Sets up an instance of `FirebaseAuthHostApi` to handle messages through the
-  // `binary_messenger`.
-  static void SetUp(::flutter::BinaryMessenger* binary_messenger,
-                    FirebaseAuthHostApi* api);
-  static void SetUp(::flutter::BinaryMessenger* binary_messenger,
-                    FirebaseAuthHostApi* api,
-                    const std::string& message_channel_suffix);
+  // Sets up an instance of `FirebaseAuthHostApi` to handle messages through the `binary_messenger`.
+  static void SetUp(
+    ::flutter::BinaryMessenger* binary_messenger,
+    FirebaseAuthHostApi* api);
+  static void SetUp(
+    ::flutter::BinaryMessenger* binary_messenger,
+    FirebaseAuthHostApi* api,
+    const std::string& message_channel_suffix);
   static ::flutter::EncodableValue WrapError(std::string_view error_message);
   static ::flutter::EncodableValue WrapError(const FlutterError& error);
-
  protected:
   FirebaseAuthHostApi() = default;
 };
-// Generated interface from Pigeon that represents a handler of messages from
-// Flutter.
+// Generated interface from Pigeon that represents a handler of messages from Flutter.
 class FirebaseAuthUserHostApi {
  public:
   FirebaseAuthUserHostApi(const FirebaseAuthUserHostApi&) = delete;
   FirebaseAuthUserHostApi& operator=(const FirebaseAuthUserHostApi&) = delete;
   virtual ~FirebaseAuthUserHostApi() {}
   virtual void Delete(
-      const AuthPigeonFirebaseApp& app,
-      std::function<void(std::optional<FlutterError> reply)> result) = 0;
+    const AuthPigeonFirebaseApp& app,
+    std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void GetIdToken(
-      const AuthPigeonFirebaseApp& app, bool force_refresh,
-      std::function<void(ErrorOr<InternalIdTokenResult> reply)> result) = 0;
+    const AuthPigeonFirebaseApp& app,
+    bool force_refresh,
+    std::function<void(ErrorOr<InternalIdTokenResult> reply)> result) = 0;
   virtual void LinkWithCredential(
-      const AuthPigeonFirebaseApp& app, const ::flutter::EncodableMap& input,
-      std::function<void(ErrorOr<InternalUserCredential> reply)> result) = 0;
+    const AuthPigeonFirebaseApp& app,
+    const ::flutter::EncodableMap& input,
+    std::function<void(ErrorOr<InternalUserCredential> reply)> result) = 0;
   virtual void LinkWithProvider(
-      const AuthPigeonFirebaseApp& app,
-      const InternalSignInProvider& sign_in_provider,
-      std::function<void(ErrorOr<InternalUserCredential> reply)> result) = 0;
+    const AuthPigeonFirebaseApp& app,
+    const InternalSignInProvider& sign_in_provider,
+    std::function<void(ErrorOr<InternalUserCredential> reply)> result) = 0;
   virtual void ReauthenticateWithCredential(
-      const AuthPigeonFirebaseApp& app, const ::flutter::EncodableMap& input,
-      std::function<void(ErrorOr<InternalUserCredential> reply)> result) = 0;
+    const AuthPigeonFirebaseApp& app,
+    const ::flutter::EncodableMap& input,
+    std::function<void(ErrorOr<InternalUserCredential> reply)> result) = 0;
   virtual void ReauthenticateWithProvider(
-      const AuthPigeonFirebaseApp& app,
-      const InternalSignInProvider& sign_in_provider,
-      std::function<void(ErrorOr<InternalUserCredential> reply)> result) = 0;
+    const AuthPigeonFirebaseApp& app,
+    const InternalSignInProvider& sign_in_provider,
+    std::function<void(ErrorOr<InternalUserCredential> reply)> result) = 0;
   virtual void Reload(
-      const AuthPigeonFirebaseApp& app,
-      std::function<void(ErrorOr<InternalUserDetails> reply)> result) = 0;
+    const AuthPigeonFirebaseApp& app,
+    std::function<void(ErrorOr<InternalUserDetails> reply)> result) = 0;
   virtual void SendEmailVerification(
-      const AuthPigeonFirebaseApp& app,
-      const InternalActionCodeSettings* action_code_settings,
-      std::function<void(std::optional<FlutterError> reply)> result) = 0;
+    const AuthPigeonFirebaseApp& app,
+    const InternalActionCodeSettings* action_code_settings,
+    std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void Unlink(
-      const AuthPigeonFirebaseApp& app, const std::string& provider_id,
-      std::function<void(ErrorOr<InternalUserCredential> reply)> result) = 0;
+    const AuthPigeonFirebaseApp& app,
+    const std::string& provider_id,
+    std::function<void(ErrorOr<InternalUserCredential> reply)> result) = 0;
   virtual void UpdateEmail(
-      const AuthPigeonFirebaseApp& app, const std::string& new_email,
-      std::function<void(ErrorOr<InternalUserDetails> reply)> result) = 0;
+    const AuthPigeonFirebaseApp& app,
+    const std::string& new_email,
+    std::function<void(ErrorOr<InternalUserDetails> reply)> result) = 0;
   virtual void UpdatePassword(
-      const AuthPigeonFirebaseApp& app, const std::string& new_password,
-      std::function<void(ErrorOr<InternalUserDetails> reply)> result) = 0;
+    const AuthPigeonFirebaseApp& app,
+    const std::string& new_password,
+    std::function<void(ErrorOr<InternalUserDetails> reply)> result) = 0;
   virtual void UpdatePhoneNumber(
-      const AuthPigeonFirebaseApp& app, const ::flutter::EncodableMap& input,
-      std::function<void(ErrorOr<InternalUserDetails> reply)> result) = 0;
+    const AuthPigeonFirebaseApp& app,
+    const ::flutter::EncodableMap& input,
+    std::function<void(ErrorOr<InternalUserDetails> reply)> result) = 0;
   virtual void UpdateProfile(
-      const AuthPigeonFirebaseApp& app, const InternalUserProfile& profile,
-      std::function<void(ErrorOr<InternalUserDetails> reply)> result) = 0;
+    const AuthPigeonFirebaseApp& app,
+    const InternalUserProfile& profile,
+    std::function<void(ErrorOr<InternalUserDetails> reply)> result) = 0;
   virtual void VerifyBeforeUpdateEmail(
-      const AuthPigeonFirebaseApp& app, const std::string& new_email,
-      const InternalActionCodeSettings* action_code_settings,
-      std::function<void(std::optional<FlutterError> reply)> result) = 0;
+    const AuthPigeonFirebaseApp& app,
+    const std::string& new_email,
+    const InternalActionCodeSettings* action_code_settings,
+    std::function<void(std::optional<FlutterError> reply)> result) = 0;
 
   // The codec used by FirebaseAuthUserHostApi.
   static const ::flutter::StandardMessageCodec& GetCodec();
-  // Sets up an instance of `FirebaseAuthUserHostApi` to handle messages through
-  // the `binary_messenger`.
-  static void SetUp(::flutter::BinaryMessenger* binary_messenger,
-                    FirebaseAuthUserHostApi* api);
-  static void SetUp(::flutter::BinaryMessenger* binary_messenger,
-                    FirebaseAuthUserHostApi* api,
-                    const std::string& message_channel_suffix);
+  // Sets up an instance of `FirebaseAuthUserHostApi` to handle messages through the `binary_messenger`.
+  static void SetUp(
+    ::flutter::BinaryMessenger* binary_messenger,
+    FirebaseAuthUserHostApi* api);
+  static void SetUp(
+    ::flutter::BinaryMessenger* binary_messenger,
+    FirebaseAuthUserHostApi* api,
+    const std::string& message_channel_suffix);
   static ::flutter::EncodableValue WrapError(std::string_view error_message);
   static ::flutter::EncodableValue WrapError(const FlutterError& error);
-
  protected:
   FirebaseAuthUserHostApi() = default;
 };
-// Generated interface from Pigeon that represents a handler of messages from
-// Flutter.
+// Generated interface from Pigeon that represents a handler of messages from Flutter.
 class MultiFactorUserHostApi {
  public:
   MultiFactorUserHostApi(const MultiFactorUserHostApi&) = delete;
   MultiFactorUserHostApi& operator=(const MultiFactorUserHostApi&) = delete;
   virtual ~MultiFactorUserHostApi() {}
   virtual void EnrollPhone(
-      const AuthPigeonFirebaseApp& app,
-      const InternalPhoneMultiFactorAssertion& assertion,
-      const std::string* display_name,
-      std::function<void(std::optional<FlutterError> reply)> result) = 0;
+    const AuthPigeonFirebaseApp& app,
+    const InternalPhoneMultiFactorAssertion& assertion,
+    const std::string* display_name,
+    std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void EnrollTotp(
-      const AuthPigeonFirebaseApp& app, const std::string& assertion_id,
-      const std::string* display_name,
-      std::function<void(std::optional<FlutterError> reply)> result) = 0;
+    const AuthPigeonFirebaseApp& app,
+    const std::string& assertion_id,
+    const std::string* display_name,
+    std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void GetSession(
-      const AuthPigeonFirebaseApp& app,
-      std::function<void(ErrorOr<InternalMultiFactorSession> reply)>
-          result) = 0;
+    const AuthPigeonFirebaseApp& app,
+    std::function<void(ErrorOr<InternalMultiFactorSession> reply)> result) = 0;
   virtual void Unenroll(
-      const AuthPigeonFirebaseApp& app, const std::string& factor_uid,
-      std::function<void(std::optional<FlutterError> reply)> result) = 0;
+    const AuthPigeonFirebaseApp& app,
+    const std::string& factor_uid,
+    std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void GetEnrolledFactors(
-      const AuthPigeonFirebaseApp& app,
-      std::function<void(ErrorOr<::flutter::EncodableList> reply)> result) = 0;
+    const AuthPigeonFirebaseApp& app,
+    std::function<void(ErrorOr<::flutter::EncodableList> reply)> result) = 0;
 
   // The codec used by MultiFactorUserHostApi.
   static const ::flutter::StandardMessageCodec& GetCodec();
-  // Sets up an instance of `MultiFactorUserHostApi` to handle messages through
-  // the `binary_messenger`.
-  static void SetUp(::flutter::BinaryMessenger* binary_messenger,
-                    MultiFactorUserHostApi* api);
-  static void SetUp(::flutter::BinaryMessenger* binary_messenger,
-                    MultiFactorUserHostApi* api,
-                    const std::string& message_channel_suffix);
+  // Sets up an instance of `MultiFactorUserHostApi` to handle messages through the `binary_messenger`.
+  static void SetUp(
+    ::flutter::BinaryMessenger* binary_messenger,
+    MultiFactorUserHostApi* api);
+  static void SetUp(
+    ::flutter::BinaryMessenger* binary_messenger,
+    MultiFactorUserHostApi* api,
+    const std::string& message_channel_suffix);
   static ::flutter::EncodableValue WrapError(std::string_view error_message);
   static ::flutter::EncodableValue WrapError(const FlutterError& error);
-
  protected:
   MultiFactorUserHostApi() = default;
 };
-// Generated interface from Pigeon that represents a handler of messages from
-// Flutter.
+// Generated interface from Pigeon that represents a handler of messages from Flutter.
 class MultiFactoResolverHostApi {
  public:
   MultiFactoResolverHostApi(const MultiFactoResolverHostApi&) = delete;
-  MultiFactoResolverHostApi& operator=(const MultiFactoResolverHostApi&) =
-      delete;
+  MultiFactoResolverHostApi& operator=(const MultiFactoResolverHostApi&) = delete;
   virtual ~MultiFactoResolverHostApi() {}
   virtual void ResolveSignIn(
-      const std::string& resolver_id,
-      const InternalPhoneMultiFactorAssertion* assertion,
-      const std::string* totp_assertion_id,
-      std::function<void(ErrorOr<InternalUserCredential> reply)> result) = 0;
+    const std::string& resolver_id,
+    const InternalPhoneMultiFactorAssertion* assertion,
+    const std::string* totp_assertion_id,
+    std::function<void(ErrorOr<InternalUserCredential> reply)> result) = 0;
 
   // The codec used by MultiFactoResolverHostApi.
   static const ::flutter::StandardMessageCodec& GetCodec();
-  // Sets up an instance of `MultiFactoResolverHostApi` to handle messages
-  // through the `binary_messenger`.
-  static void SetUp(::flutter::BinaryMessenger* binary_messenger,
-                    MultiFactoResolverHostApi* api);
-  static void SetUp(::flutter::BinaryMessenger* binary_messenger,
-                    MultiFactoResolverHostApi* api,
-                    const std::string& message_channel_suffix);
+  // Sets up an instance of `MultiFactoResolverHostApi` to handle messages through the `binary_messenger`.
+  static void SetUp(
+    ::flutter::BinaryMessenger* binary_messenger,
+    MultiFactoResolverHostApi* api);
+  static void SetUp(
+    ::flutter::BinaryMessenger* binary_messenger,
+    MultiFactoResolverHostApi* api,
+    const std::string& message_channel_suffix);
   static ::flutter::EncodableValue WrapError(std::string_view error_message);
   static ::flutter::EncodableValue WrapError(const FlutterError& error);
-
  protected:
   MultiFactoResolverHostApi() = default;
 };
-// Generated interface from Pigeon that represents a handler of messages from
-// Flutter.
+// Generated interface from Pigeon that represents a handler of messages from Flutter.
 class MultiFactorTotpHostApi {
  public:
   MultiFactorTotpHostApi(const MultiFactorTotpHostApi&) = delete;
   MultiFactorTotpHostApi& operator=(const MultiFactorTotpHostApi&) = delete;
   virtual ~MultiFactorTotpHostApi() {}
   virtual void GenerateSecret(
-      const std::string& session_id,
-      std::function<void(ErrorOr<InternalTotpSecret> reply)> result) = 0;
+    const std::string& session_id,
+    std::function<void(ErrorOr<InternalTotpSecret> reply)> result) = 0;
   virtual void GetAssertionForEnrollment(
-      const std::string& secret_key, const std::string& one_time_password,
-      std::function<void(ErrorOr<std::string> reply)> result) = 0;
+    const std::string& secret_key,
+    const std::string& one_time_password,
+    std::function<void(ErrorOr<std::string> reply)> result) = 0;
   virtual void GetAssertionForSignIn(
-      const std::string& enrollment_id, const std::string& one_time_password,
-      std::function<void(ErrorOr<std::string> reply)> result) = 0;
+    const std::string& enrollment_id,
+    const std::string& one_time_password,
+    std::function<void(ErrorOr<std::string> reply)> result) = 0;
 
   // The codec used by MultiFactorTotpHostApi.
   static const ::flutter::StandardMessageCodec& GetCodec();
-  // Sets up an instance of `MultiFactorTotpHostApi` to handle messages through
-  // the `binary_messenger`.
-  static void SetUp(::flutter::BinaryMessenger* binary_messenger,
-                    MultiFactorTotpHostApi* api);
-  static void SetUp(::flutter::BinaryMessenger* binary_messenger,
-                    MultiFactorTotpHostApi* api,
-                    const std::string& message_channel_suffix);
+  // Sets up an instance of `MultiFactorTotpHostApi` to handle messages through the `binary_messenger`.
+  static void SetUp(
+    ::flutter::BinaryMessenger* binary_messenger,
+    MultiFactorTotpHostApi* api);
+  static void SetUp(
+    ::flutter::BinaryMessenger* binary_messenger,
+    MultiFactorTotpHostApi* api,
+    const std::string& message_channel_suffix);
   static ::flutter::EncodableValue WrapError(std::string_view error_message);
   static ::flutter::EncodableValue WrapError(const FlutterError& error);
-
  protected:
   MultiFactorTotpHostApi() = default;
 };
-// Generated interface from Pigeon that represents a handler of messages from
-// Flutter.
+// Generated interface from Pigeon that represents a handler of messages from Flutter.
 class MultiFactorTotpSecretHostApi {
  public:
   MultiFactorTotpSecretHostApi(const MultiFactorTotpSecretHostApi&) = delete;
-  MultiFactorTotpSecretHostApi& operator=(const MultiFactorTotpSecretHostApi&) =
-      delete;
+  MultiFactorTotpSecretHostApi& operator=(const MultiFactorTotpSecretHostApi&) = delete;
   virtual ~MultiFactorTotpSecretHostApi() {}
   virtual void GenerateQrCodeUrl(
-      const std::string& secret_key, const std::string* account_name,
-      const std::string* issuer,
-      std::function<void(ErrorOr<std::string> reply)> result) = 0;
+    const std::string& secret_key,
+    const std::string* account_name,
+    const std::string* issuer,
+    std::function<void(ErrorOr<std::string> reply)> result) = 0;
   virtual void OpenInOtpApp(
-      const std::string& secret_key, const std::string& qr_code_url,
-      std::function<void(std::optional<FlutterError> reply)> result) = 0;
+    const std::string& secret_key,
+    const std::string& qr_code_url,
+    std::function<void(std::optional<FlutterError> reply)> result) = 0;
 
   // The codec used by MultiFactorTotpSecretHostApi.
   static const ::flutter::StandardMessageCodec& GetCodec();
-  // Sets up an instance of `MultiFactorTotpSecretHostApi` to handle messages
-  // through the `binary_messenger`.
-  static void SetUp(::flutter::BinaryMessenger* binary_messenger,
-                    MultiFactorTotpSecretHostApi* api);
-  static void SetUp(::flutter::BinaryMessenger* binary_messenger,
-                    MultiFactorTotpSecretHostApi* api,
-                    const std::string& message_channel_suffix);
+  // Sets up an instance of `MultiFactorTotpSecretHostApi` to handle messages through the `binary_messenger`.
+  static void SetUp(
+    ::flutter::BinaryMessenger* binary_messenger,
+    MultiFactorTotpSecretHostApi* api);
+  static void SetUp(
+    ::flutter::BinaryMessenger* binary_messenger,
+    MultiFactorTotpSecretHostApi* api,
+    const std::string& message_channel_suffix);
   static ::flutter::EncodableValue WrapError(std::string_view error_message);
   static ::flutter::EncodableValue WrapError(const FlutterError& error);
-
  protected:
   MultiFactorTotpSecretHostApi() = default;
 };
-// Only used to generate the object interface that are use outside of the Pigeon
-// interface
+// Only used to generate the object interface that are use outside of the Pigeon interface
 //
-// Generated interface from Pigeon that represents a handler of messages from
-// Flutter.
+// Generated interface from Pigeon that represents a handler of messages from Flutter.
 class GenerateInterfaces {
  public:
   GenerateInterfaces(const GenerateInterfaces&) = delete;
   GenerateInterfaces& operator=(const GenerateInterfaces&) = delete;
   virtual ~GenerateInterfaces() {}
-  virtual std::optional<FlutterError> PigeonInterface(
-      const InternalMultiFactorInfo& info) = 0;
+  virtual std::optional<FlutterError> PigeonInterface(const InternalMultiFactorInfo& info) = 0;
 
   // The codec used by GenerateInterfaces.
   static const ::flutter::StandardMessageCodec& GetCodec();
-  // Sets up an instance of `GenerateInterfaces` to handle messages through the
-  // `binary_messenger`.
-  static void SetUp(::flutter::BinaryMessenger* binary_messenger,
-                    GenerateInterfaces* api);
-  static void SetUp(::flutter::BinaryMessenger* binary_messenger,
-                    GenerateInterfaces* api,
-                    const std::string& message_channel_suffix);
+  // Sets up an instance of `GenerateInterfaces` to handle messages through the `binary_messenger`.
+  static void SetUp(
+    ::flutter::BinaryMessenger* binary_messenger,
+    GenerateInterfaces* api);
+  static void SetUp(
+    ::flutter::BinaryMessenger* binary_messenger,
+    GenerateInterfaces* api,
+    const std::string& message_channel_suffix);
   static ::flutter::EncodableValue WrapError(std::string_view error_message);
   static ::flutter::EncodableValue WrapError(const FlutterError& error);
-
  protected:
   GenerateInterfaces() = default;
 };

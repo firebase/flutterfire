@@ -35,6 +35,7 @@ void main() {
   const String kMockSmsCode = '123456';
   const String kMockLanguage = 'en';
   const String kMockOobCode = 'oobcode';
+  const String kMockAuthToken = '12460';
   const String kMockURL = 'http://www.example.com';
   const String kMockHost = 'www.example.com';
   const String kMockValidPassword =
@@ -778,6 +779,17 @@ void main() {
       });
     });
 
+    group('revokeAccessToken()', () {
+      test('should call delegate method', () async {
+        // Necessary as we otherwise get a "null is not a Future<void>" error
+        when(mockAuthPlatform.revokeAccessToken(kMockAuthToken))
+            .thenAnswer((i) async {});
+
+        await auth.revokeAccessToken(kMockAuthToken);
+        verify(mockAuthPlatform.revokeAccessToken(kMockAuthToken));
+      });
+    });
+
     group('passwordPolicy', () {
       test('passwordPolicy should be initialized with correct parameters',
           () async {
@@ -1148,6 +1160,15 @@ class MockFirebaseAuth extends Mock
       }),
       returnValue: neverEndingFuture<String>(),
       returnValueForMissingStub: neverEndingFuture<String>(),
+    );
+  }
+
+  @override
+  Future<void> revokeAccessToken(String accessToken) {
+    return super.noSuchMethod(
+      Invocation.method(#revokeAccessToken, [accessToken]),
+      returnValue: neverEndingFuture<void>(),
+      returnValueForMissingStub: neverEndingFuture<void>(),
     );
   }
 }

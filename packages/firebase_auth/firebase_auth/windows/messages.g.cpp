@@ -34,36 +34,32 @@ FlutterError CreateConnectionError(const std::string channel_name) {
 }
 
 namespace {
-template <typename T>
+template<typename T>
 bool PigeonInternalDeepEquals(const T& a, const T& b);
 
 bool PigeonInternalDeepEquals(const double& a, const double& b);
 
-template <typename T>
+template<typename T>
 bool PigeonInternalDeepEquals(const std::vector<T>& a, const std::vector<T>& b);
 
-template <typename K, typename V>
+template<typename K, typename V>
 bool PigeonInternalDeepEquals(const std::map<K, V>& a, const std::map<K, V>& b);
 
-template <typename T>
-bool PigeonInternalDeepEquals(const std::optional<T>& a,
-                              const std::optional<T>& b);
+template<typename T>
+bool PigeonInternalDeepEquals(const std::optional<T>& a, const std::optional<T>& b);
 
-template <typename T>
-bool PigeonInternalDeepEquals(const std::unique_ptr<T>& a,
-                              const std::unique_ptr<T>& b);
+template<typename T>
+bool PigeonInternalDeepEquals(const std::unique_ptr<T>& a, const std::unique_ptr<T>& b);
 
-bool PigeonInternalDeepEquals(const ::flutter::EncodableValue& a,
-                              const ::flutter::EncodableValue& b);
+bool PigeonInternalDeepEquals(const ::flutter::EncodableValue& a, const ::flutter::EncodableValue& b);
 
-template <typename T>
+template<typename T>
 bool PigeonInternalDeepEquals(const T& a, const T& b) {
   return a == b;
 }
 
-template <typename T>
-bool PigeonInternalDeepEquals(const std::vector<T>& a,
-                              const std::vector<T>& b) {
+template<typename T>
+bool PigeonInternalDeepEquals(const std::vector<T>& a, const std::vector<T>& b) {
   if (a.size() != b.size()) {
     return false;
   }
@@ -76,8 +72,7 @@ bool PigeonInternalDeepEquals(const std::vector<T>& a,
 }
 
 template <typename K, typename V>
-bool PigeonInternalDeepEquals(const std::map<K, V>& a,
-                              const std::map<K, V>& b) {
+bool PigeonInternalDeepEquals(const std::map<K, V>& a, const std::map<K, V>& b) {
   if (a.size() != b.size()) {
     return false;
   }
@@ -105,9 +100,8 @@ bool PigeonInternalDeepEquals(const double& a, const double& b) {
   return (a == b) || (std::isnan(a) && std::isnan(b));
 }
 
-template <typename T>
-bool PigeonInternalDeepEquals(const std::optional<T>& a,
-                              const std::optional<T>& b) {
+template<typename T>
+bool PigeonInternalDeepEquals(const std::optional<T>& a, const std::optional<T>& b) {
   if (!a && !b) {
     return true;
   }
@@ -117,9 +111,8 @@ bool PigeonInternalDeepEquals(const std::optional<T>& a,
   return PigeonInternalDeepEquals(*a, *b);
 }
 
-template <typename T>
-bool PigeonInternalDeepEquals(const std::unique_ptr<T>& a,
-                              const std::unique_ptr<T>& b) {
+template<typename T>
+bool PigeonInternalDeepEquals(const std::unique_ptr<T>& a, const std::unique_ptr<T>& b) {
   if (a.get() == b.get()) {
     return true;
   }
@@ -129,18 +122,15 @@ bool PigeonInternalDeepEquals(const std::unique_ptr<T>& a,
   return PigeonInternalDeepEquals(*a, *b);
 }
 
-bool PigeonInternalDeepEquals(const ::flutter::EncodableValue& a,
-                              const ::flutter::EncodableValue& b) {
+bool PigeonInternalDeepEquals(const ::flutter::EncodableValue& a, const ::flutter::EncodableValue& b) {
   if (a.index() != b.index()) {
     return false;
   }
   if (const double* da = std::get_if<double>(&a)) {
     return PigeonInternalDeepEquals(*da, std::get<double>(b));
-  } else if (const ::flutter::EncodableList* la =
-                 std::get_if<::flutter::EncodableList>(&a)) {
+  } else if (const ::flutter::EncodableList* la = std::get_if<::flutter::EncodableList>(&a)) {
     return PigeonInternalDeepEquals(*la, std::get<::flutter::EncodableList>(b));
-  } else if (const ::flutter::EncodableMap* ma =
-                 std::get_if<::flutter::EncodableMap>(&a)) {
+  } else if (const ::flutter::EncodableMap* ma = std::get_if<::flutter::EncodableMap>(&a)) {
     return PigeonInternalDeepEquals(*ma, std::get<::flutter::EncodableMap>(b));
   }
   return a == b;
@@ -183,8 +173,7 @@ template <typename K, typename V>
 size_t PigeonInternalDeepHash(const std::map<K, V>& v) {
   size_t result = 0;
   for (const auto& kv : v) {
-    result += ((PigeonInternalDeepHash(kv.first) * 31) ^
-               PigeonInternalDeepHash(kv.second));
+    result += ((PigeonInternalDeepHash(kv.first) * 31) ^ PigeonInternalDeepHash(kv.second));
   }
   return result;
 }
@@ -242,13 +231,16 @@ size_t PigeonInternalDeepHash(const ::flutter::EncodableValue& v) {
 // InternalMultiFactorSession
 
 InternalMultiFactorSession::InternalMultiFactorSession(const std::string& id)
-    : id_(id) {}
+ : id_(id) {}
 
-const std::string& InternalMultiFactorSession::id() const { return id_; }
+const std::string& InternalMultiFactorSession::id() const {
+  return id_;
+}
 
 void InternalMultiFactorSession::set_id(std::string_view value_arg) {
   id_ = value_arg;
 }
+
 
 EncodableList InternalMultiFactorSession::ToEncodableList() const {
   EncodableList list;
@@ -257,19 +249,17 @@ EncodableList InternalMultiFactorSession::ToEncodableList() const {
   return list;
 }
 
-InternalMultiFactorSession InternalMultiFactorSession::FromEncodableList(
-    const EncodableList& list) {
-  InternalMultiFactorSession decoded(std::get<std::string>(list[0]));
+InternalMultiFactorSession InternalMultiFactorSession::FromEncodableList(const EncodableList& list) {
+  InternalMultiFactorSession decoded(
+    std::get<std::string>(list[0]));
   return decoded;
 }
 
-bool InternalMultiFactorSession::operator==(
-    const InternalMultiFactorSession& other) const {
+bool InternalMultiFactorSession::operator==(const InternalMultiFactorSession& other) const {
   return PigeonInternalDeepEquals(id_, other.id_);
 }
 
-bool InternalMultiFactorSession::operator!=(
-    const InternalMultiFactorSession& other) const {
+bool InternalMultiFactorSession::operator!=(const InternalMultiFactorSession& other) const {
   return !(*this == other);
 }
 
@@ -286,28 +276,28 @@ size_t PigeonInternalDeepHash(const InternalMultiFactorSession& v) {
 // InternalPhoneMultiFactorAssertion
 
 InternalPhoneMultiFactorAssertion::InternalPhoneMultiFactorAssertion(
-    const std::string& verification_id, const std::string& verification_code)
-    : verification_id_(verification_id),
-      verification_code_(verification_code) {}
+  const std::string& verification_id,
+  const std::string& verification_code)
+ : verification_id_(verification_id),
+    verification_code_(verification_code) {}
 
 const std::string& InternalPhoneMultiFactorAssertion::verification_id() const {
   return verification_id_;
 }
 
-void InternalPhoneMultiFactorAssertion::set_verification_id(
-    std::string_view value_arg) {
+void InternalPhoneMultiFactorAssertion::set_verification_id(std::string_view value_arg) {
   verification_id_ = value_arg;
 }
 
-const std::string& InternalPhoneMultiFactorAssertion::verification_code()
-    const {
+
+const std::string& InternalPhoneMultiFactorAssertion::verification_code() const {
   return verification_code_;
 }
 
-void InternalPhoneMultiFactorAssertion::set_verification_code(
-    std::string_view value_arg) {
+void InternalPhoneMultiFactorAssertion::set_verification_code(std::string_view value_arg) {
   verification_code_ = value_arg;
 }
+
 
 EncodableList InternalPhoneMultiFactorAssertion::ToEncodableList() const {
   EncodableList list;
@@ -317,22 +307,18 @@ EncodableList InternalPhoneMultiFactorAssertion::ToEncodableList() const {
   return list;
 }
 
-InternalPhoneMultiFactorAssertion
-InternalPhoneMultiFactorAssertion::FromEncodableList(
-    const EncodableList& list) {
-  InternalPhoneMultiFactorAssertion decoded(std::get<std::string>(list[0]),
-                                            std::get<std::string>(list[1]));
+InternalPhoneMultiFactorAssertion InternalPhoneMultiFactorAssertion::FromEncodableList(const EncodableList& list) {
+  InternalPhoneMultiFactorAssertion decoded(
+    std::get<std::string>(list[0]),
+    std::get<std::string>(list[1]));
   return decoded;
 }
 
-bool InternalPhoneMultiFactorAssertion::operator==(
-    const InternalPhoneMultiFactorAssertion& other) const {
-  return PigeonInternalDeepEquals(verification_id_, other.verification_id_) &&
-         PigeonInternalDeepEquals(verification_code_, other.verification_code_);
+bool InternalPhoneMultiFactorAssertion::operator==(const InternalPhoneMultiFactorAssertion& other) const {
+  return PigeonInternalDeepEquals(verification_id_, other.verification_id_) && PigeonInternalDeepEquals(verification_code_, other.verification_code_);
 }
 
-bool InternalPhoneMultiFactorAssertion::operator!=(
-    const InternalPhoneMultiFactorAssertion& other) const {
+bool InternalPhoneMultiFactorAssertion::operator!=(const InternalPhoneMultiFactorAssertion& other) const {
   return !(*this == other);
 }
 
@@ -349,36 +335,36 @@ size_t PigeonInternalDeepHash(const InternalPhoneMultiFactorAssertion& v) {
 
 // InternalMultiFactorInfo
 
-InternalMultiFactorInfo::InternalMultiFactorInfo(double enrollment_timestamp,
-                                                 const std::string& uid)
-    : enrollment_timestamp_(enrollment_timestamp), uid_(uid) {}
+InternalMultiFactorInfo::InternalMultiFactorInfo(
+  double enrollment_timestamp,
+  const std::string& uid)
+ : enrollment_timestamp_(enrollment_timestamp),
+    uid_(uid) {}
 
 InternalMultiFactorInfo::InternalMultiFactorInfo(
-    const std::string* display_name, double enrollment_timestamp,
-    const std::string* factor_id, const std::string& uid,
-    const std::string* phone_number)
-    : display_name_(display_name ? std::optional<std::string>(*display_name)
-                                 : std::nullopt),
-      enrollment_timestamp_(enrollment_timestamp),
-      factor_id_(factor_id ? std::optional<std::string>(*factor_id)
-                           : std::nullopt),
-      uid_(uid),
-      phone_number_(phone_number ? std::optional<std::string>(*phone_number)
-                                 : std::nullopt) {}
+  const std::string* display_name,
+  double enrollment_timestamp,
+  const std::string* factor_id,
+  const std::string& uid,
+  const std::string* phone_number)
+ : display_name_(display_name ? std::optional<std::string>(*display_name) : std::nullopt),
+    enrollment_timestamp_(enrollment_timestamp),
+    factor_id_(factor_id ? std::optional<std::string>(*factor_id) : std::nullopt),
+    uid_(uid),
+    phone_number_(phone_number ? std::optional<std::string>(*phone_number) : std::nullopt) {}
 
 const std::string* InternalMultiFactorInfo::display_name() const {
   return display_name_ ? &(*display_name_) : nullptr;
 }
 
-void InternalMultiFactorInfo::set_display_name(
-    const std::string_view* value_arg) {
-  display_name_ =
-      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+void InternalMultiFactorInfo::set_display_name(const std::string_view* value_arg) {
+  display_name_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
 void InternalMultiFactorInfo::set_display_name(std::string_view value_arg) {
   display_name_ = value_arg;
 }
+
 
 double InternalMultiFactorInfo::enrollment_timestamp() const {
   return enrollment_timestamp_;
@@ -388,56 +374,57 @@ void InternalMultiFactorInfo::set_enrollment_timestamp(double value_arg) {
   enrollment_timestamp_ = value_arg;
 }
 
+
 const std::string* InternalMultiFactorInfo::factor_id() const {
   return factor_id_ ? &(*factor_id_) : nullptr;
 }
 
 void InternalMultiFactorInfo::set_factor_id(const std::string_view* value_arg) {
-  factor_id_ =
-      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+  factor_id_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
 void InternalMultiFactorInfo::set_factor_id(std::string_view value_arg) {
   factor_id_ = value_arg;
 }
 
-const std::string& InternalMultiFactorInfo::uid() const { return uid_; }
+
+const std::string& InternalMultiFactorInfo::uid() const {
+  return uid_;
+}
 
 void InternalMultiFactorInfo::set_uid(std::string_view value_arg) {
   uid_ = value_arg;
 }
 
+
 const std::string* InternalMultiFactorInfo::phone_number() const {
   return phone_number_ ? &(*phone_number_) : nullptr;
 }
 
-void InternalMultiFactorInfo::set_phone_number(
-    const std::string_view* value_arg) {
-  phone_number_ =
-      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+void InternalMultiFactorInfo::set_phone_number(const std::string_view* value_arg) {
+  phone_number_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
 void InternalMultiFactorInfo::set_phone_number(std::string_view value_arg) {
   phone_number_ = value_arg;
 }
 
+
 EncodableList InternalMultiFactorInfo::ToEncodableList() const {
   EncodableList list;
   list.reserve(5);
-  list.push_back(display_name_ ? EncodableValue(*display_name_)
-                               : EncodableValue());
+  list.push_back(display_name_ ? EncodableValue(*display_name_) : EncodableValue());
   list.push_back(EncodableValue(enrollment_timestamp_));
   list.push_back(factor_id_ ? EncodableValue(*factor_id_) : EncodableValue());
   list.push_back(EncodableValue(uid_));
-  list.push_back(phone_number_ ? EncodableValue(*phone_number_)
-                               : EncodableValue());
+  list.push_back(phone_number_ ? EncodableValue(*phone_number_) : EncodableValue());
   return list;
 }
 
-InternalMultiFactorInfo InternalMultiFactorInfo::FromEncodableList(
-    const EncodableList& list) {
-  InternalMultiFactorInfo decoded(std::get<double>(list[1]),
-                                  std::get<std::string>(list[3]));
+InternalMultiFactorInfo InternalMultiFactorInfo::FromEncodableList(const EncodableList& list) {
+  InternalMultiFactorInfo decoded(
+    std::get<double>(list[1]),
+    std::get<std::string>(list[3]));
   auto& encodable_display_name = list[0];
   if (!encodable_display_name.IsNull()) {
     decoded.set_display_name(std::get<std::string>(encodable_display_name));
@@ -453,18 +440,11 @@ InternalMultiFactorInfo InternalMultiFactorInfo::FromEncodableList(
   return decoded;
 }
 
-bool InternalMultiFactorInfo::operator==(
-    const InternalMultiFactorInfo& other) const {
-  return PigeonInternalDeepEquals(display_name_, other.display_name_) &&
-         PigeonInternalDeepEquals(enrollment_timestamp_,
-                                  other.enrollment_timestamp_) &&
-         PigeonInternalDeepEquals(factor_id_, other.factor_id_) &&
-         PigeonInternalDeepEquals(uid_, other.uid_) &&
-         PigeonInternalDeepEquals(phone_number_, other.phone_number_);
+bool InternalMultiFactorInfo::operator==(const InternalMultiFactorInfo& other) const {
+  return PigeonInternalDeepEquals(display_name_, other.display_name_) && PigeonInternalDeepEquals(enrollment_timestamp_, other.enrollment_timestamp_) && PigeonInternalDeepEquals(factor_id_, other.factor_id_) && PigeonInternalDeepEquals(uid_, other.uid_) && PigeonInternalDeepEquals(phone_number_, other.phone_number_);
 }
 
-bool InternalMultiFactorInfo::operator!=(
-    const InternalMultiFactorInfo& other) const {
+bool InternalMultiFactorInfo::operator!=(const InternalMultiFactorInfo& other) const {
   return !(*this == other);
 }
 
@@ -485,86 +465,79 @@ size_t PigeonInternalDeepHash(const InternalMultiFactorInfo& v) {
 // AuthPigeonFirebaseApp
 
 AuthPigeonFirebaseApp::AuthPigeonFirebaseApp(const std::string& app_name)
-    : app_name_(app_name) {}
+ : app_name_(app_name) {}
 
 AuthPigeonFirebaseApp::AuthPigeonFirebaseApp(
-    const std::string& app_name, const std::string* tenant_id,
-    const std::string* custom_auth_domain)
-    : app_name_(app_name),
-      tenant_id_(tenant_id ? std::optional<std::string>(*tenant_id)
-                           : std::nullopt),
-      custom_auth_domain_(custom_auth_domain
-                              ? std::optional<std::string>(*custom_auth_domain)
-                              : std::nullopt) {}
+  const std::string& app_name,
+  const std::string* tenant_id,
+  const std::string* custom_auth_domain)
+ : app_name_(app_name),
+    tenant_id_(tenant_id ? std::optional<std::string>(*tenant_id) : std::nullopt),
+    custom_auth_domain_(custom_auth_domain ? std::optional<std::string>(*custom_auth_domain) : std::nullopt) {}
 
-const std::string& AuthPigeonFirebaseApp::app_name() const { return app_name_; }
+const std::string& AuthPigeonFirebaseApp::app_name() const {
+  return app_name_;
+}
 
 void AuthPigeonFirebaseApp::set_app_name(std::string_view value_arg) {
   app_name_ = value_arg;
 }
+
 
 const std::string* AuthPigeonFirebaseApp::tenant_id() const {
   return tenant_id_ ? &(*tenant_id_) : nullptr;
 }
 
 void AuthPigeonFirebaseApp::set_tenant_id(const std::string_view* value_arg) {
-  tenant_id_ =
-      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+  tenant_id_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
 void AuthPigeonFirebaseApp::set_tenant_id(std::string_view value_arg) {
   tenant_id_ = value_arg;
 }
 
+
 const std::string* AuthPigeonFirebaseApp::custom_auth_domain() const {
   return custom_auth_domain_ ? &(*custom_auth_domain_) : nullptr;
 }
 
-void AuthPigeonFirebaseApp::set_custom_auth_domain(
-    const std::string_view* value_arg) {
-  custom_auth_domain_ =
-      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+void AuthPigeonFirebaseApp::set_custom_auth_domain(const std::string_view* value_arg) {
+  custom_auth_domain_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
 void AuthPigeonFirebaseApp::set_custom_auth_domain(std::string_view value_arg) {
   custom_auth_domain_ = value_arg;
 }
 
+
 EncodableList AuthPigeonFirebaseApp::ToEncodableList() const {
   EncodableList list;
   list.reserve(3);
   list.push_back(EncodableValue(app_name_));
   list.push_back(tenant_id_ ? EncodableValue(*tenant_id_) : EncodableValue());
-  list.push_back(custom_auth_domain_ ? EncodableValue(*custom_auth_domain_)
-                                     : EncodableValue());
+  list.push_back(custom_auth_domain_ ? EncodableValue(*custom_auth_domain_) : EncodableValue());
   return list;
 }
 
-AuthPigeonFirebaseApp AuthPigeonFirebaseApp::FromEncodableList(
-    const EncodableList& list) {
-  AuthPigeonFirebaseApp decoded(std::get<std::string>(list[0]));
+AuthPigeonFirebaseApp AuthPigeonFirebaseApp::FromEncodableList(const EncodableList& list) {
+  AuthPigeonFirebaseApp decoded(
+    std::get<std::string>(list[0]));
   auto& encodable_tenant_id = list[1];
   if (!encodable_tenant_id.IsNull()) {
     decoded.set_tenant_id(std::get<std::string>(encodable_tenant_id));
   }
   auto& encodable_custom_auth_domain = list[2];
   if (!encodable_custom_auth_domain.IsNull()) {
-    decoded.set_custom_auth_domain(
-        std::get<std::string>(encodable_custom_auth_domain));
+    decoded.set_custom_auth_domain(std::get<std::string>(encodable_custom_auth_domain));
   }
   return decoded;
 }
 
-bool AuthPigeonFirebaseApp::operator==(
-    const AuthPigeonFirebaseApp& other) const {
-  return PigeonInternalDeepEquals(app_name_, other.app_name_) &&
-         PigeonInternalDeepEquals(tenant_id_, other.tenant_id_) &&
-         PigeonInternalDeepEquals(custom_auth_domain_,
-                                  other.custom_auth_domain_);
+bool AuthPigeonFirebaseApp::operator==(const AuthPigeonFirebaseApp& other) const {
+  return PigeonInternalDeepEquals(app_name_, other.app_name_) && PigeonInternalDeepEquals(tenant_id_, other.tenant_id_) && PigeonInternalDeepEquals(custom_auth_domain_, other.custom_auth_domain_);
 }
 
-bool AuthPigeonFirebaseApp::operator!=(
-    const AuthPigeonFirebaseApp& other) const {
+bool AuthPigeonFirebaseApp::operator!=(const AuthPigeonFirebaseApp& other) const {
   return !(*this == other);
 }
 
@@ -585,11 +558,10 @@ size_t PigeonInternalDeepHash(const AuthPigeonFirebaseApp& v) {
 InternalActionCodeInfoData::InternalActionCodeInfoData() {}
 
 InternalActionCodeInfoData::InternalActionCodeInfoData(
-    const std::string* email, const std::string* previous_email)
-    : email_(email ? std::optional<std::string>(*email) : std::nullopt),
-      previous_email_(previous_email
-                          ? std::optional<std::string>(*previous_email)
-                          : std::nullopt) {}
+  const std::string* email,
+  const std::string* previous_email)
+ : email_(email ? std::optional<std::string>(*email) : std::nullopt),
+    previous_email_(previous_email ? std::optional<std::string>(*previous_email) : std::nullopt) {}
 
 const std::string* InternalActionCodeInfoData::email() const {
   return email_ ? &(*email_) : nullptr;
@@ -603,32 +575,29 @@ void InternalActionCodeInfoData::set_email(std::string_view value_arg) {
   email_ = value_arg;
 }
 
+
 const std::string* InternalActionCodeInfoData::previous_email() const {
   return previous_email_ ? &(*previous_email_) : nullptr;
 }
 
-void InternalActionCodeInfoData::set_previous_email(
-    const std::string_view* value_arg) {
-  previous_email_ =
-      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+void InternalActionCodeInfoData::set_previous_email(const std::string_view* value_arg) {
+  previous_email_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
-void InternalActionCodeInfoData::set_previous_email(
-    std::string_view value_arg) {
+void InternalActionCodeInfoData::set_previous_email(std::string_view value_arg) {
   previous_email_ = value_arg;
 }
+
 
 EncodableList InternalActionCodeInfoData::ToEncodableList() const {
   EncodableList list;
   list.reserve(2);
   list.push_back(email_ ? EncodableValue(*email_) : EncodableValue());
-  list.push_back(previous_email_ ? EncodableValue(*previous_email_)
-                                 : EncodableValue());
+  list.push_back(previous_email_ ? EncodableValue(*previous_email_) : EncodableValue());
   return list;
 }
 
-InternalActionCodeInfoData InternalActionCodeInfoData::FromEncodableList(
-    const EncodableList& list) {
+InternalActionCodeInfoData InternalActionCodeInfoData::FromEncodableList(const EncodableList& list) {
   InternalActionCodeInfoData decoded;
   auto& encodable_email = list[0];
   if (!encodable_email.IsNull()) {
@@ -641,14 +610,11 @@ InternalActionCodeInfoData InternalActionCodeInfoData::FromEncodableList(
   return decoded;
 }
 
-bool InternalActionCodeInfoData::operator==(
-    const InternalActionCodeInfoData& other) const {
-  return PigeonInternalDeepEquals(email_, other.email_) &&
-         PigeonInternalDeepEquals(previous_email_, other.previous_email_);
+bool InternalActionCodeInfoData::operator==(const InternalActionCodeInfoData& other) const {
+  return PigeonInternalDeepEquals(email_, other.email_) && PigeonInternalDeepEquals(previous_email_, other.previous_email_);
 }
 
-bool InternalActionCodeInfoData::operator!=(
-    const InternalActionCodeInfoData& other) const {
+bool InternalActionCodeInfoData::operator!=(const InternalActionCodeInfoData& other) const {
   return !(*this == other);
 }
 
@@ -666,18 +632,16 @@ size_t PigeonInternalDeepHash(const InternalActionCodeInfoData& v) {
 // InternalActionCodeInfo
 
 InternalActionCodeInfo::InternalActionCodeInfo(
-    const ActionCodeInfoOperation& operation,
-    const InternalActionCodeInfoData& data)
-    : operation_(operation),
-      data_(std::make_unique<InternalActionCodeInfoData>(data)) {}
+  const ActionCodeInfoOperation& operation,
+  const InternalActionCodeInfoData& data)
+ : operation_(operation),
+    data_(std::make_unique<InternalActionCodeInfoData>(data)) {}
 
-InternalActionCodeInfo::InternalActionCodeInfo(
-    const InternalActionCodeInfo& other)
-    : operation_(other.operation_),
-      data_(std::make_unique<InternalActionCodeInfoData>(*other.data_)) {}
+InternalActionCodeInfo::InternalActionCodeInfo(const InternalActionCodeInfo& other)
+ : operation_(other.operation_),
+    data_(std::make_unique<InternalActionCodeInfoData>(*other.data_)) {}
 
-InternalActionCodeInfo& InternalActionCodeInfo::operator=(
-    const InternalActionCodeInfo& other) {
+InternalActionCodeInfo& InternalActionCodeInfo::operator=(const InternalActionCodeInfo& other) {
   operation_ = other.operation_;
   data_ = std::make_unique<InternalActionCodeInfoData>(*other.data_);
   return *this;
@@ -687,19 +651,19 @@ const ActionCodeInfoOperation& InternalActionCodeInfo::operation() const {
   return operation_;
 }
 
-void InternalActionCodeInfo::set_operation(
-    const ActionCodeInfoOperation& value_arg) {
+void InternalActionCodeInfo::set_operation(const ActionCodeInfoOperation& value_arg) {
   operation_ = value_arg;
 }
+
 
 const InternalActionCodeInfoData& InternalActionCodeInfo::data() const {
   return *data_;
 }
 
-void InternalActionCodeInfo::set_data(
-    const InternalActionCodeInfoData& value_arg) {
+void InternalActionCodeInfo::set_data(const InternalActionCodeInfoData& value_arg) {
   data_ = std::make_unique<InternalActionCodeInfoData>(value_arg);
 }
+
 
 EncodableList InternalActionCodeInfo::ToEncodableList() const {
   EncodableList list;
@@ -709,24 +673,18 @@ EncodableList InternalActionCodeInfo::ToEncodableList() const {
   return list;
 }
 
-InternalActionCodeInfo InternalActionCodeInfo::FromEncodableList(
-    const EncodableList& list) {
+InternalActionCodeInfo InternalActionCodeInfo::FromEncodableList(const EncodableList& list) {
   InternalActionCodeInfo decoded(
-      std::any_cast<const ActionCodeInfoOperation&>(
-          std::get<CustomEncodableValue>(list[0])),
-      std::any_cast<const InternalActionCodeInfoData&>(
-          std::get<CustomEncodableValue>(list[1])));
+    std::any_cast<const ActionCodeInfoOperation&>(std::get<CustomEncodableValue>(list[0])),
+    std::any_cast<const InternalActionCodeInfoData&>(std::get<CustomEncodableValue>(list[1])));
   return decoded;
 }
 
-bool InternalActionCodeInfo::operator==(
-    const InternalActionCodeInfo& other) const {
-  return PigeonInternalDeepEquals(operation_, other.operation_) &&
-         PigeonInternalDeepEquals(data_, other.data_);
+bool InternalActionCodeInfo::operator==(const InternalActionCodeInfo& other) const {
+  return PigeonInternalDeepEquals(operation_, other.operation_) && PigeonInternalDeepEquals(data_, other.data_);
 }
 
-bool InternalActionCodeInfo::operator!=(
-    const InternalActionCodeInfo& other) const {
+bool InternalActionCodeInfo::operator!=(const InternalActionCodeInfo& other) const {
   return !(*this == other);
 }
 
@@ -744,49 +702,47 @@ size_t PigeonInternalDeepHash(const InternalActionCodeInfo& v) {
 // InternalAdditionalUserInfo
 
 InternalAdditionalUserInfo::InternalAdditionalUserInfo(bool is_new_user)
-    : is_new_user_(is_new_user) {}
+ : is_new_user_(is_new_user) {}
 
 InternalAdditionalUserInfo::InternalAdditionalUserInfo(
-    bool is_new_user, const std::string* provider_id,
-    const std::string* username, const std::string* authorization_code,
-    const EncodableMap* profile)
-    : is_new_user_(is_new_user),
-      provider_id_(provider_id ? std::optional<std::string>(*provider_id)
-                               : std::nullopt),
-      username_(username ? std::optional<std::string>(*username)
-                         : std::nullopt),
-      authorization_code_(authorization_code
-                              ? std::optional<std::string>(*authorization_code)
-                              : std::nullopt),
-      profile_(profile ? std::optional<EncodableMap>(*profile) : std::nullopt) {
-}
+  bool is_new_user,
+  const std::string* provider_id,
+  const std::string* username,
+  const std::string* authorization_code,
+  const EncodableMap* profile)
+ : is_new_user_(is_new_user),
+    provider_id_(provider_id ? std::optional<std::string>(*provider_id) : std::nullopt),
+    username_(username ? std::optional<std::string>(*username) : std::nullopt),
+    authorization_code_(authorization_code ? std::optional<std::string>(*authorization_code) : std::nullopt),
+    profile_(profile ? std::optional<EncodableMap>(*profile) : std::nullopt) {}
 
-bool InternalAdditionalUserInfo::is_new_user() const { return is_new_user_; }
+bool InternalAdditionalUserInfo::is_new_user() const {
+  return is_new_user_;
+}
 
 void InternalAdditionalUserInfo::set_is_new_user(bool value_arg) {
   is_new_user_ = value_arg;
 }
 
+
 const std::string* InternalAdditionalUserInfo::provider_id() const {
   return provider_id_ ? &(*provider_id_) : nullptr;
 }
 
-void InternalAdditionalUserInfo::set_provider_id(
-    const std::string_view* value_arg) {
-  provider_id_ =
-      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+void InternalAdditionalUserInfo::set_provider_id(const std::string_view* value_arg) {
+  provider_id_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
 void InternalAdditionalUserInfo::set_provider_id(std::string_view value_arg) {
   provider_id_ = value_arg;
 }
 
+
 const std::string* InternalAdditionalUserInfo::username() const {
   return username_ ? &(*username_) : nullptr;
 }
 
-void InternalAdditionalUserInfo::set_username(
-    const std::string_view* value_arg) {
+void InternalAdditionalUserInfo::set_username(const std::string_view* value_arg) {
   username_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
@@ -794,20 +750,19 @@ void InternalAdditionalUserInfo::set_username(std::string_view value_arg) {
   username_ = value_arg;
 }
 
+
 const std::string* InternalAdditionalUserInfo::authorization_code() const {
   return authorization_code_ ? &(*authorization_code_) : nullptr;
 }
 
-void InternalAdditionalUserInfo::set_authorization_code(
-    const std::string_view* value_arg) {
-  authorization_code_ =
-      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+void InternalAdditionalUserInfo::set_authorization_code(const std::string_view* value_arg) {
+  authorization_code_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
-void InternalAdditionalUserInfo::set_authorization_code(
-    std::string_view value_arg) {
+void InternalAdditionalUserInfo::set_authorization_code(std::string_view value_arg) {
   authorization_code_ = value_arg;
 }
+
 
 const EncodableMap* InternalAdditionalUserInfo::profile() const {
   return profile_ ? &(*profile_) : nullptr;
@@ -821,22 +776,21 @@ void InternalAdditionalUserInfo::set_profile(const EncodableMap& value_arg) {
   profile_ = value_arg;
 }
 
+
 EncodableList InternalAdditionalUserInfo::ToEncodableList() const {
   EncodableList list;
   list.reserve(5);
   list.push_back(EncodableValue(is_new_user_));
-  list.push_back(provider_id_ ? EncodableValue(*provider_id_)
-                              : EncodableValue());
+  list.push_back(provider_id_ ? EncodableValue(*provider_id_) : EncodableValue());
   list.push_back(username_ ? EncodableValue(*username_) : EncodableValue());
-  list.push_back(authorization_code_ ? EncodableValue(*authorization_code_)
-                                     : EncodableValue());
+  list.push_back(authorization_code_ ? EncodableValue(*authorization_code_) : EncodableValue());
   list.push_back(profile_ ? EncodableValue(*profile_) : EncodableValue());
   return list;
 }
 
-InternalAdditionalUserInfo InternalAdditionalUserInfo::FromEncodableList(
-    const EncodableList& list) {
-  InternalAdditionalUserInfo decoded(std::get<bool>(list[0]));
+InternalAdditionalUserInfo InternalAdditionalUserInfo::FromEncodableList(const EncodableList& list) {
+  InternalAdditionalUserInfo decoded(
+    std::get<bool>(list[0]));
   auto& encodable_provider_id = list[1];
   if (!encodable_provider_id.IsNull()) {
     decoded.set_provider_id(std::get<std::string>(encodable_provider_id));
@@ -847,8 +801,7 @@ InternalAdditionalUserInfo InternalAdditionalUserInfo::FromEncodableList(
   }
   auto& encodable_authorization_code = list[3];
   if (!encodable_authorization_code.IsNull()) {
-    decoded.set_authorization_code(
-        std::get<std::string>(encodable_authorization_code));
+    decoded.set_authorization_code(std::get<std::string>(encodable_authorization_code));
   }
   auto& encodable_profile = list[4];
   if (!encodable_profile.IsNull()) {
@@ -857,18 +810,11 @@ InternalAdditionalUserInfo InternalAdditionalUserInfo::FromEncodableList(
   return decoded;
 }
 
-bool InternalAdditionalUserInfo::operator==(
-    const InternalAdditionalUserInfo& other) const {
-  return PigeonInternalDeepEquals(is_new_user_, other.is_new_user_) &&
-         PigeonInternalDeepEquals(provider_id_, other.provider_id_) &&
-         PigeonInternalDeepEquals(username_, other.username_) &&
-         PigeonInternalDeepEquals(authorization_code_,
-                                  other.authorization_code_) &&
-         PigeonInternalDeepEquals(profile_, other.profile_);
+bool InternalAdditionalUserInfo::operator==(const InternalAdditionalUserInfo& other) const {
+  return PigeonInternalDeepEquals(is_new_user_, other.is_new_user_) && PigeonInternalDeepEquals(provider_id_, other.provider_id_) && PigeonInternalDeepEquals(username_, other.username_) && PigeonInternalDeepEquals(authorization_code_, other.authorization_code_) && PigeonInternalDeepEquals(profile_, other.profile_);
 }
 
-bool InternalAdditionalUserInfo::operator!=(
-    const InternalAdditionalUserInfo& other) const {
+bool InternalAdditionalUserInfo::operator!=(const InternalAdditionalUserInfo& other) const {
   return !(*this == other);
 }
 
@@ -889,20 +835,22 @@ size_t PigeonInternalDeepHash(const InternalAdditionalUserInfo& v) {
 // InternalAuthCredential
 
 InternalAuthCredential::InternalAuthCredential(
-    const std::string& provider_id, const std::string& sign_in_method,
-    int64_t native_id)
-    : provider_id_(provider_id),
-      sign_in_method_(sign_in_method),
-      native_id_(native_id) {}
+  const std::string& provider_id,
+  const std::string& sign_in_method,
+  int64_t native_id)
+ : provider_id_(provider_id),
+    sign_in_method_(sign_in_method),
+    native_id_(native_id) {}
 
 InternalAuthCredential::InternalAuthCredential(
-    const std::string& provider_id, const std::string& sign_in_method,
-    int64_t native_id, const std::string* access_token)
-    : provider_id_(provider_id),
-      sign_in_method_(sign_in_method),
-      native_id_(native_id),
-      access_token_(access_token ? std::optional<std::string>(*access_token)
-                                 : std::nullopt) {}
+  const std::string& provider_id,
+  const std::string& sign_in_method,
+  int64_t native_id,
+  const std::string* access_token)
+ : provider_id_(provider_id),
+    sign_in_method_(sign_in_method),
+    native_id_(native_id),
+    access_token_(access_token ? std::optional<std::string>(*access_token) : std::nullopt) {}
 
 const std::string& InternalAuthCredential::provider_id() const {
   return provider_id_;
@@ -912,6 +860,7 @@ void InternalAuthCredential::set_provider_id(std::string_view value_arg) {
   provider_id_ = value_arg;
 }
 
+
 const std::string& InternalAuthCredential::sign_in_method() const {
   return sign_in_method_;
 }
@@ -920,25 +869,28 @@ void InternalAuthCredential::set_sign_in_method(std::string_view value_arg) {
   sign_in_method_ = value_arg;
 }
 
-int64_t InternalAuthCredential::native_id() const { return native_id_; }
+
+int64_t InternalAuthCredential::native_id() const {
+  return native_id_;
+}
 
 void InternalAuthCredential::set_native_id(int64_t value_arg) {
   native_id_ = value_arg;
 }
 
+
 const std::string* InternalAuthCredential::access_token() const {
   return access_token_ ? &(*access_token_) : nullptr;
 }
 
-void InternalAuthCredential::set_access_token(
-    const std::string_view* value_arg) {
-  access_token_ =
-      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+void InternalAuthCredential::set_access_token(const std::string_view* value_arg) {
+  access_token_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
 void InternalAuthCredential::set_access_token(std::string_view value_arg) {
   access_token_ = value_arg;
 }
+
 
 EncodableList InternalAuthCredential::ToEncodableList() const {
   EncodableList list;
@@ -946,16 +898,15 @@ EncodableList InternalAuthCredential::ToEncodableList() const {
   list.push_back(EncodableValue(provider_id_));
   list.push_back(EncodableValue(sign_in_method_));
   list.push_back(EncodableValue(native_id_));
-  list.push_back(access_token_ ? EncodableValue(*access_token_)
-                               : EncodableValue());
+  list.push_back(access_token_ ? EncodableValue(*access_token_) : EncodableValue());
   return list;
 }
 
-InternalAuthCredential InternalAuthCredential::FromEncodableList(
-    const EncodableList& list) {
-  InternalAuthCredential decoded(std::get<std::string>(list[0]),
-                                 std::get<std::string>(list[1]),
-                                 std::get<int64_t>(list[2]));
+InternalAuthCredential InternalAuthCredential::FromEncodableList(const EncodableList& list) {
+  InternalAuthCredential decoded(
+    std::get<std::string>(list[0]),
+    std::get<std::string>(list[1]),
+    std::get<int64_t>(list[2]));
   auto& encodable_access_token = list[3];
   if (!encodable_access_token.IsNull()) {
     decoded.set_access_token(std::get<std::string>(encodable_access_token));
@@ -963,16 +914,11 @@ InternalAuthCredential InternalAuthCredential::FromEncodableList(
   return decoded;
 }
 
-bool InternalAuthCredential::operator==(
-    const InternalAuthCredential& other) const {
-  return PigeonInternalDeepEquals(provider_id_, other.provider_id_) &&
-         PigeonInternalDeepEquals(sign_in_method_, other.sign_in_method_) &&
-         PigeonInternalDeepEquals(native_id_, other.native_id_) &&
-         PigeonInternalDeepEquals(access_token_, other.access_token_);
+bool InternalAuthCredential::operator==(const InternalAuthCredential& other) const {
+  return PigeonInternalDeepEquals(provider_id_, other.provider_id_) && PigeonInternalDeepEquals(sign_in_method_, other.sign_in_method_) && PigeonInternalDeepEquals(native_id_, other.native_id_) && PigeonInternalDeepEquals(access_token_, other.access_token_);
 }
 
-bool InternalAuthCredential::operator!=(
-    const InternalAuthCredential& other) const {
+bool InternalAuthCredential::operator!=(const InternalAuthCredential& other) const {
   return !(*this == other);
 }
 
@@ -991,46 +937,48 @@ size_t PigeonInternalDeepHash(const InternalAuthCredential& v) {
 
 // InternalUserInfo
 
-InternalUserInfo::InternalUserInfo(const std::string& uid, bool is_anonymous,
-                                   bool is_email_verified)
-    : uid_(uid),
-      is_anonymous_(is_anonymous),
-      is_email_verified_(is_email_verified) {}
+InternalUserInfo::InternalUserInfo(
+  const std::string& uid,
+  bool is_anonymous,
+  bool is_email_verified)
+ : uid_(uid),
+    is_anonymous_(is_anonymous),
+    is_email_verified_(is_email_verified) {}
 
 InternalUserInfo::InternalUserInfo(
-    const std::string& uid, const std::string* email,
-    const std::string* display_name, const std::string* photo_url,
-    const std::string* phone_number, bool is_anonymous, bool is_email_verified,
-    const std::string* provider_id, const std::string* tenant_id,
-    const std::string* refresh_token, const int64_t* creation_timestamp,
-    const int64_t* last_sign_in_timestamp)
-    : uid_(uid),
-      email_(email ? std::optional<std::string>(*email) : std::nullopt),
-      display_name_(display_name ? std::optional<std::string>(*display_name)
-                                 : std::nullopt),
-      photo_url_(photo_url ? std::optional<std::string>(*photo_url)
-                           : std::nullopt),
-      phone_number_(phone_number ? std::optional<std::string>(*phone_number)
-                                 : std::nullopt),
-      is_anonymous_(is_anonymous),
-      is_email_verified_(is_email_verified),
-      provider_id_(provider_id ? std::optional<std::string>(*provider_id)
-                               : std::nullopt),
-      tenant_id_(tenant_id ? std::optional<std::string>(*tenant_id)
-                           : std::nullopt),
-      refresh_token_(refresh_token ? std::optional<std::string>(*refresh_token)
-                                   : std::nullopt),
-      creation_timestamp_(creation_timestamp
-                              ? std::optional<int64_t>(*creation_timestamp)
-                              : std::nullopt),
-      last_sign_in_timestamp_(
-          last_sign_in_timestamp
-              ? std::optional<int64_t>(*last_sign_in_timestamp)
-              : std::nullopt) {}
+  const std::string& uid,
+  const std::string* email,
+  const std::string* display_name,
+  const std::string* photo_url,
+  const std::string* phone_number,
+  bool is_anonymous,
+  bool is_email_verified,
+  const std::string* provider_id,
+  const std::string* tenant_id,
+  const std::string* refresh_token,
+  const int64_t* creation_timestamp,
+  const int64_t* last_sign_in_timestamp)
+ : uid_(uid),
+    email_(email ? std::optional<std::string>(*email) : std::nullopt),
+    display_name_(display_name ? std::optional<std::string>(*display_name) : std::nullopt),
+    photo_url_(photo_url ? std::optional<std::string>(*photo_url) : std::nullopt),
+    phone_number_(phone_number ? std::optional<std::string>(*phone_number) : std::nullopt),
+    is_anonymous_(is_anonymous),
+    is_email_verified_(is_email_verified),
+    provider_id_(provider_id ? std::optional<std::string>(*provider_id) : std::nullopt),
+    tenant_id_(tenant_id ? std::optional<std::string>(*tenant_id) : std::nullopt),
+    refresh_token_(refresh_token ? std::optional<std::string>(*refresh_token) : std::nullopt),
+    creation_timestamp_(creation_timestamp ? std::optional<int64_t>(*creation_timestamp) : std::nullopt),
+    last_sign_in_timestamp_(last_sign_in_timestamp ? std::optional<int64_t>(*last_sign_in_timestamp) : std::nullopt) {}
 
-const std::string& InternalUserInfo::uid() const { return uid_; }
+const std::string& InternalUserInfo::uid() const {
+  return uid_;
+}
 
-void InternalUserInfo::set_uid(std::string_view value_arg) { uid_ = value_arg; }
+void InternalUserInfo::set_uid(std::string_view value_arg) {
+  uid_ = value_arg;
+}
+
 
 const std::string* InternalUserInfo::email() const {
   return email_ ? &(*email_) : nullptr;
@@ -1044,151 +992,152 @@ void InternalUserInfo::set_email(std::string_view value_arg) {
   email_ = value_arg;
 }
 
+
 const std::string* InternalUserInfo::display_name() const {
   return display_name_ ? &(*display_name_) : nullptr;
 }
 
 void InternalUserInfo::set_display_name(const std::string_view* value_arg) {
-  display_name_ =
-      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+  display_name_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
 void InternalUserInfo::set_display_name(std::string_view value_arg) {
   display_name_ = value_arg;
 }
 
+
 const std::string* InternalUserInfo::photo_url() const {
   return photo_url_ ? &(*photo_url_) : nullptr;
 }
 
 void InternalUserInfo::set_photo_url(const std::string_view* value_arg) {
-  photo_url_ =
-      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+  photo_url_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
 void InternalUserInfo::set_photo_url(std::string_view value_arg) {
   photo_url_ = value_arg;
 }
 
+
 const std::string* InternalUserInfo::phone_number() const {
   return phone_number_ ? &(*phone_number_) : nullptr;
 }
 
 void InternalUserInfo::set_phone_number(const std::string_view* value_arg) {
-  phone_number_ =
-      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+  phone_number_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
 void InternalUserInfo::set_phone_number(std::string_view value_arg) {
   phone_number_ = value_arg;
 }
 
-bool InternalUserInfo::is_anonymous() const { return is_anonymous_; }
+
+bool InternalUserInfo::is_anonymous() const {
+  return is_anonymous_;
+}
 
 void InternalUserInfo::set_is_anonymous(bool value_arg) {
   is_anonymous_ = value_arg;
 }
 
-bool InternalUserInfo::is_email_verified() const { return is_email_verified_; }
+
+bool InternalUserInfo::is_email_verified() const {
+  return is_email_verified_;
+}
 
 void InternalUserInfo::set_is_email_verified(bool value_arg) {
   is_email_verified_ = value_arg;
 }
+
 
 const std::string* InternalUserInfo::provider_id() const {
   return provider_id_ ? &(*provider_id_) : nullptr;
 }
 
 void InternalUserInfo::set_provider_id(const std::string_view* value_arg) {
-  provider_id_ =
-      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+  provider_id_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
 void InternalUserInfo::set_provider_id(std::string_view value_arg) {
   provider_id_ = value_arg;
 }
 
+
 const std::string* InternalUserInfo::tenant_id() const {
   return tenant_id_ ? &(*tenant_id_) : nullptr;
 }
 
 void InternalUserInfo::set_tenant_id(const std::string_view* value_arg) {
-  tenant_id_ =
-      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+  tenant_id_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
 void InternalUserInfo::set_tenant_id(std::string_view value_arg) {
   tenant_id_ = value_arg;
 }
 
+
 const std::string* InternalUserInfo::refresh_token() const {
   return refresh_token_ ? &(*refresh_token_) : nullptr;
 }
 
 void InternalUserInfo::set_refresh_token(const std::string_view* value_arg) {
-  refresh_token_ =
-      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+  refresh_token_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
 void InternalUserInfo::set_refresh_token(std::string_view value_arg) {
   refresh_token_ = value_arg;
 }
 
+
 const int64_t* InternalUserInfo::creation_timestamp() const {
   return creation_timestamp_ ? &(*creation_timestamp_) : nullptr;
 }
 
 void InternalUserInfo::set_creation_timestamp(const int64_t* value_arg) {
-  creation_timestamp_ =
-      value_arg ? std::optional<int64_t>(*value_arg) : std::nullopt;
+  creation_timestamp_ = value_arg ? std::optional<int64_t>(*value_arg) : std::nullopt;
 }
 
 void InternalUserInfo::set_creation_timestamp(int64_t value_arg) {
   creation_timestamp_ = value_arg;
 }
 
+
 const int64_t* InternalUserInfo::last_sign_in_timestamp() const {
   return last_sign_in_timestamp_ ? &(*last_sign_in_timestamp_) : nullptr;
 }
 
 void InternalUserInfo::set_last_sign_in_timestamp(const int64_t* value_arg) {
-  last_sign_in_timestamp_ =
-      value_arg ? std::optional<int64_t>(*value_arg) : std::nullopt;
+  last_sign_in_timestamp_ = value_arg ? std::optional<int64_t>(*value_arg) : std::nullopt;
 }
 
 void InternalUserInfo::set_last_sign_in_timestamp(int64_t value_arg) {
   last_sign_in_timestamp_ = value_arg;
 }
 
+
 EncodableList InternalUserInfo::ToEncodableList() const {
   EncodableList list;
   list.reserve(12);
   list.push_back(EncodableValue(uid_));
   list.push_back(email_ ? EncodableValue(*email_) : EncodableValue());
-  list.push_back(display_name_ ? EncodableValue(*display_name_)
-                               : EncodableValue());
+  list.push_back(display_name_ ? EncodableValue(*display_name_) : EncodableValue());
   list.push_back(photo_url_ ? EncodableValue(*photo_url_) : EncodableValue());
-  list.push_back(phone_number_ ? EncodableValue(*phone_number_)
-                               : EncodableValue());
+  list.push_back(phone_number_ ? EncodableValue(*phone_number_) : EncodableValue());
   list.push_back(EncodableValue(is_anonymous_));
   list.push_back(EncodableValue(is_email_verified_));
-  list.push_back(provider_id_ ? EncodableValue(*provider_id_)
-                              : EncodableValue());
+  list.push_back(provider_id_ ? EncodableValue(*provider_id_) : EncodableValue());
   list.push_back(tenant_id_ ? EncodableValue(*tenant_id_) : EncodableValue());
-  list.push_back(refresh_token_ ? EncodableValue(*refresh_token_)
-                                : EncodableValue());
-  list.push_back(creation_timestamp_ ? EncodableValue(*creation_timestamp_)
-                                     : EncodableValue());
-  list.push_back(last_sign_in_timestamp_
-                     ? EncodableValue(*last_sign_in_timestamp_)
-                     : EncodableValue());
+  list.push_back(refresh_token_ ? EncodableValue(*refresh_token_) : EncodableValue());
+  list.push_back(creation_timestamp_ ? EncodableValue(*creation_timestamp_) : EncodableValue());
+  list.push_back(last_sign_in_timestamp_ ? EncodableValue(*last_sign_in_timestamp_) : EncodableValue());
   return list;
 }
 
-InternalUserInfo InternalUserInfo::FromEncodableList(
-    const EncodableList& list) {
-  InternalUserInfo decoded(std::get<std::string>(list[0]),
-                           std::get<bool>(list[5]), std::get<bool>(list[6]));
+InternalUserInfo InternalUserInfo::FromEncodableList(const EncodableList& list) {
+  InternalUserInfo decoded(
+    std::get<std::string>(list[0]),
+    std::get<bool>(list[5]),
+    std::get<bool>(list[6]));
   auto& encodable_email = list[1];
   if (!encodable_email.IsNull()) {
     decoded.set_email(std::get<std::string>(encodable_email));
@@ -1219,33 +1168,17 @@ InternalUserInfo InternalUserInfo::FromEncodableList(
   }
   auto& encodable_creation_timestamp = list[10];
   if (!encodable_creation_timestamp.IsNull()) {
-    decoded.set_creation_timestamp(
-        std::get<int64_t>(encodable_creation_timestamp));
+    decoded.set_creation_timestamp(std::get<int64_t>(encodable_creation_timestamp));
   }
   auto& encodable_last_sign_in_timestamp = list[11];
   if (!encodable_last_sign_in_timestamp.IsNull()) {
-    decoded.set_last_sign_in_timestamp(
-        std::get<int64_t>(encodable_last_sign_in_timestamp));
+    decoded.set_last_sign_in_timestamp(std::get<int64_t>(encodable_last_sign_in_timestamp));
   }
   return decoded;
 }
 
 bool InternalUserInfo::operator==(const InternalUserInfo& other) const {
-  return PigeonInternalDeepEquals(uid_, other.uid_) &&
-         PigeonInternalDeepEquals(email_, other.email_) &&
-         PigeonInternalDeepEquals(display_name_, other.display_name_) &&
-         PigeonInternalDeepEquals(photo_url_, other.photo_url_) &&
-         PigeonInternalDeepEquals(phone_number_, other.phone_number_) &&
-         PigeonInternalDeepEquals(is_anonymous_, other.is_anonymous_) &&
-         PigeonInternalDeepEquals(is_email_verified_,
-                                  other.is_email_verified_) &&
-         PigeonInternalDeepEquals(provider_id_, other.provider_id_) &&
-         PigeonInternalDeepEquals(tenant_id_, other.tenant_id_) &&
-         PigeonInternalDeepEquals(refresh_token_, other.refresh_token_) &&
-         PigeonInternalDeepEquals(creation_timestamp_,
-                                  other.creation_timestamp_) &&
-         PigeonInternalDeepEquals(last_sign_in_timestamp_,
-                                  other.last_sign_in_timestamp_);
+  return PigeonInternalDeepEquals(uid_, other.uid_) && PigeonInternalDeepEquals(email_, other.email_) && PigeonInternalDeepEquals(display_name_, other.display_name_) && PigeonInternalDeepEquals(photo_url_, other.photo_url_) && PigeonInternalDeepEquals(phone_number_, other.phone_number_) && PigeonInternalDeepEquals(is_anonymous_, other.is_anonymous_) && PigeonInternalDeepEquals(is_email_verified_, other.is_email_verified_) && PigeonInternalDeepEquals(provider_id_, other.provider_id_) && PigeonInternalDeepEquals(tenant_id_, other.tenant_id_) && PigeonInternalDeepEquals(refresh_token_, other.refresh_token_) && PigeonInternalDeepEquals(creation_timestamp_, other.creation_timestamp_) && PigeonInternalDeepEquals(last_sign_in_timestamp_, other.last_sign_in_timestamp_);
 }
 
 bool InternalUserInfo::operator!=(const InternalUserInfo& other) const {
@@ -1269,21 +1202,23 @@ size_t InternalUserInfo::Hash() const {
   return result;
 }
 
-size_t PigeonInternalDeepHash(const InternalUserInfo& v) { return v.Hash(); }
+size_t PigeonInternalDeepHash(const InternalUserInfo& v) {
+  return v.Hash();
+}
 
 // InternalUserDetails
 
-InternalUserDetails::InternalUserDetails(const InternalUserInfo& user_info,
-                                         const EncodableList& provider_data)
-    : user_info_(std::make_unique<InternalUserInfo>(user_info)),
-      provider_data_(provider_data) {}
+InternalUserDetails::InternalUserDetails(
+  const InternalUserInfo& user_info,
+  const EncodableList& provider_data)
+ : user_info_(std::make_unique<InternalUserInfo>(user_info)),
+    provider_data_(provider_data) {}
 
 InternalUserDetails::InternalUserDetails(const InternalUserDetails& other)
-    : user_info_(std::make_unique<InternalUserInfo>(*other.user_info_)),
-      provider_data_(other.provider_data_) {}
+ : user_info_(std::make_unique<InternalUserInfo>(*other.user_info_)),
+    provider_data_(other.provider_data_) {}
 
-InternalUserDetails& InternalUserDetails::operator=(
-    const InternalUserDetails& other) {
+InternalUserDetails& InternalUserDetails::operator=(const InternalUserDetails& other) {
   user_info_ = std::make_unique<InternalUserInfo>(*other.user_info_);
   provider_data_ = other.provider_data_;
   return *this;
@@ -1297,6 +1232,7 @@ void InternalUserDetails::set_user_info(const InternalUserInfo& value_arg) {
   user_info_ = std::make_unique<InternalUserInfo>(value_arg);
 }
 
+
 const EncodableList& InternalUserDetails::provider_data() const {
   return provider_data_;
 }
@@ -1304,6 +1240,7 @@ const EncodableList& InternalUserDetails::provider_data() const {
 void InternalUserDetails::set_provider_data(const EncodableList& value_arg) {
   provider_data_ = value_arg;
 }
+
 
 EncodableList InternalUserDetails::ToEncodableList() const {
   EncodableList list;
@@ -1313,17 +1250,15 @@ EncodableList InternalUserDetails::ToEncodableList() const {
   return list;
 }
 
-InternalUserDetails InternalUserDetails::FromEncodableList(
-    const EncodableList& list) {
-  InternalUserDetails decoded(std::any_cast<const InternalUserInfo&>(
-                                  std::get<CustomEncodableValue>(list[0])),
-                              std::get<EncodableList>(list[1]));
+InternalUserDetails InternalUserDetails::FromEncodableList(const EncodableList& list) {
+  InternalUserDetails decoded(
+    std::any_cast<const InternalUserInfo&>(std::get<CustomEncodableValue>(list[0])),
+    std::get<EncodableList>(list[1]));
   return decoded;
 }
 
 bool InternalUserDetails::operator==(const InternalUserDetails& other) const {
-  return PigeonInternalDeepEquals(user_info_, other.user_info_) &&
-         PigeonInternalDeepEquals(provider_data_, other.provider_data_);
+  return PigeonInternalDeepEquals(user_info_, other.user_info_) && PigeonInternalDeepEquals(provider_data_, other.provider_data_);
 }
 
 bool InternalUserDetails::operator!=(const InternalUserDetails& other) const {
@@ -1337,49 +1272,31 @@ size_t InternalUserDetails::Hash() const {
   return result;
 }
 
-size_t PigeonInternalDeepHash(const InternalUserDetails& v) { return v.Hash(); }
+size_t PigeonInternalDeepHash(const InternalUserDetails& v) {
+  return v.Hash();
+}
 
 // InternalUserCredential
 
 InternalUserCredential::InternalUserCredential() {}
 
 InternalUserCredential::InternalUserCredential(
-    const InternalUserDetails* user,
-    const InternalAdditionalUserInfo* additional_user_info,
-    const InternalAuthCredential* credential)
-    : user_(user ? std::make_unique<InternalUserDetails>(*user) : nullptr),
-      additional_user_info_(additional_user_info
-                                ? std::make_unique<InternalAdditionalUserInfo>(
-                                      *additional_user_info)
-                                : nullptr),
-      credential_(credential
-                      ? std::make_unique<InternalAuthCredential>(*credential)
-                      : nullptr) {}
+  const InternalUserDetails* user,
+  const InternalAdditionalUserInfo* additional_user_info,
+  const InternalAuthCredential* credential)
+ : user_(user ? std::make_unique<InternalUserDetails>(*user) : nullptr),
+    additional_user_info_(additional_user_info ? std::make_unique<InternalAdditionalUserInfo>(*additional_user_info) : nullptr),
+    credential_(credential ? std::make_unique<InternalAuthCredential>(*credential) : nullptr) {}
 
-InternalUserCredential::InternalUserCredential(
-    const InternalUserCredential& other)
-    : user_(other.user_ ? std::make_unique<InternalUserDetails>(*other.user_)
-                        : nullptr),
-      additional_user_info_(other.additional_user_info_
-                                ? std::make_unique<InternalAdditionalUserInfo>(
-                                      *other.additional_user_info_)
-                                : nullptr),
-      credential_(other.credential_ ? std::make_unique<InternalAuthCredential>(
-                                          *other.credential_)
-                                    : nullptr) {}
+InternalUserCredential::InternalUserCredential(const InternalUserCredential& other)
+ : user_(other.user_ ? std::make_unique<InternalUserDetails>(*other.user_) : nullptr),
+    additional_user_info_(other.additional_user_info_ ? std::make_unique<InternalAdditionalUserInfo>(*other.additional_user_info_) : nullptr),
+    credential_(other.credential_ ? std::make_unique<InternalAuthCredential>(*other.credential_) : nullptr) {}
 
-InternalUserCredential& InternalUserCredential::operator=(
-    const InternalUserCredential& other) {
-  user_ = other.user_ ? std::make_unique<InternalUserDetails>(*other.user_)
-                      : nullptr;
-  additional_user_info_ = other.additional_user_info_
-                              ? std::make_unique<InternalAdditionalUserInfo>(
-                                    *other.additional_user_info_)
-                              : nullptr;
-  credential_ =
-      other.credential_
-          ? std::make_unique<InternalAuthCredential>(*other.credential_)
-          : nullptr;
+InternalUserCredential& InternalUserCredential::operator=(const InternalUserCredential& other) {
+  user_ = other.user_ ? std::make_unique<InternalUserDetails>(*other.user_) : nullptr;
+  additional_user_info_ = other.additional_user_info_ ? std::make_unique<InternalAdditionalUserInfo>(*other.additional_user_info_) : nullptr;
+  credential_ = other.credential_ ? std::make_unique<InternalAuthCredential>(*other.credential_) : nullptr;
   return *this;
 }
 
@@ -1388,91 +1305,71 @@ const InternalUserDetails* InternalUserCredential::user() const {
 }
 
 void InternalUserCredential::set_user(const InternalUserDetails* value_arg) {
-  user_ =
-      value_arg ? std::make_unique<InternalUserDetails>(*value_arg) : nullptr;
+  user_ = value_arg ? std::make_unique<InternalUserDetails>(*value_arg) : nullptr;
 }
 
 void InternalUserCredential::set_user(const InternalUserDetails& value_arg) {
   user_ = std::make_unique<InternalUserDetails>(value_arg);
 }
 
-const InternalAdditionalUserInfo* InternalUserCredential::additional_user_info()
-    const {
+
+const InternalAdditionalUserInfo* InternalUserCredential::additional_user_info() const {
   return additional_user_info_.get();
 }
 
-void InternalUserCredential::set_additional_user_info(
-    const InternalAdditionalUserInfo* value_arg) {
-  additional_user_info_ =
-      value_arg ? std::make_unique<InternalAdditionalUserInfo>(*value_arg)
-                : nullptr;
+void InternalUserCredential::set_additional_user_info(const InternalAdditionalUserInfo* value_arg) {
+  additional_user_info_ = value_arg ? std::make_unique<InternalAdditionalUserInfo>(*value_arg) : nullptr;
 }
 
-void InternalUserCredential::set_additional_user_info(
-    const InternalAdditionalUserInfo& value_arg) {
-  additional_user_info_ =
-      std::make_unique<InternalAdditionalUserInfo>(value_arg);
+void InternalUserCredential::set_additional_user_info(const InternalAdditionalUserInfo& value_arg) {
+  additional_user_info_ = std::make_unique<InternalAdditionalUserInfo>(value_arg);
 }
+
 
 const InternalAuthCredential* InternalUserCredential::credential() const {
   return credential_.get();
 }
 
-void InternalUserCredential::set_credential(
-    const InternalAuthCredential* value_arg) {
-  credential_ = value_arg ? std::make_unique<InternalAuthCredential>(*value_arg)
-                          : nullptr;
+void InternalUserCredential::set_credential(const InternalAuthCredential* value_arg) {
+  credential_ = value_arg ? std::make_unique<InternalAuthCredential>(*value_arg) : nullptr;
 }
 
-void InternalUserCredential::set_credential(
-    const InternalAuthCredential& value_arg) {
+void InternalUserCredential::set_credential(const InternalAuthCredential& value_arg) {
   credential_ = std::make_unique<InternalAuthCredential>(value_arg);
 }
+
 
 EncodableList InternalUserCredential::ToEncodableList() const {
   EncodableList list;
   list.reserve(3);
   list.push_back(user_ ? CustomEncodableValue(*user_) : EncodableValue());
-  list.push_back(additional_user_info_
-                     ? CustomEncodableValue(*additional_user_info_)
-                     : EncodableValue());
-  list.push_back(credential_ ? CustomEncodableValue(*credential_)
-                             : EncodableValue());
+  list.push_back(additional_user_info_ ? CustomEncodableValue(*additional_user_info_) : EncodableValue());
+  list.push_back(credential_ ? CustomEncodableValue(*credential_) : EncodableValue());
   return list;
 }
 
-InternalUserCredential InternalUserCredential::FromEncodableList(
-    const EncodableList& list) {
+InternalUserCredential InternalUserCredential::FromEncodableList(const EncodableList& list) {
   InternalUserCredential decoded;
   auto& encodable_user = list[0];
   if (!encodable_user.IsNull()) {
-    decoded.set_user(std::any_cast<const InternalUserDetails&>(
-        std::get<CustomEncodableValue>(encodable_user)));
+    decoded.set_user(std::any_cast<const InternalUserDetails&>(std::get<CustomEncodableValue>(encodable_user)));
   }
   auto& encodable_additional_user_info = list[1];
   if (!encodable_additional_user_info.IsNull()) {
-    decoded.set_additional_user_info(
-        std::any_cast<const InternalAdditionalUserInfo&>(
-            std::get<CustomEncodableValue>(encodable_additional_user_info)));
+    decoded.set_additional_user_info(std::any_cast<const InternalAdditionalUserInfo&>(std::get<CustomEncodableValue>(encodable_additional_user_info)));
   }
   auto& encodable_credential = list[2];
   if (!encodable_credential.IsNull()) {
-    decoded.set_credential(std::any_cast<const InternalAuthCredential&>(
-        std::get<CustomEncodableValue>(encodable_credential)));
+    decoded.set_credential(std::any_cast<const InternalAuthCredential&>(std::get<CustomEncodableValue>(encodable_credential)));
   }
   return decoded;
 }
 
-bool InternalUserCredential::operator==(
-    const InternalUserCredential& other) const {
-  return PigeonInternalDeepEquals(user_, other.user_) &&
-         PigeonInternalDeepEquals(additional_user_info_,
-                                  other.additional_user_info_) &&
-         PigeonInternalDeepEquals(credential_, other.credential_);
+bool InternalUserCredential::operator==(const InternalUserCredential& other) const {
+  return PigeonInternalDeepEquals(user_, other.user_) && PigeonInternalDeepEquals(additional_user_info_, other.additional_user_info_) && PigeonInternalDeepEquals(credential_, other.credential_);
 }
 
-bool InternalUserCredential::operator!=(
-    const InternalUserCredential& other) const {
+bool InternalUserCredential::operator!=(const InternalUserCredential& other) const {
   return !(*this == other);
 }
 
@@ -1491,17 +1388,20 @@ size_t PigeonInternalDeepHash(const InternalUserCredential& v) {
 // InternalAuthCredentialInput
 
 InternalAuthCredentialInput::InternalAuthCredentialInput(
-    const std::string& provider_id, const std::string& sign_in_method)
-    : provider_id_(provider_id), sign_in_method_(sign_in_method) {}
+  const std::string& provider_id,
+  const std::string& sign_in_method)
+ : provider_id_(provider_id),
+    sign_in_method_(sign_in_method) {}
 
 InternalAuthCredentialInput::InternalAuthCredentialInput(
-    const std::string& provider_id, const std::string& sign_in_method,
-    const std::string* token, const std::string* access_token)
-    : provider_id_(provider_id),
-      sign_in_method_(sign_in_method),
-      token_(token ? std::optional<std::string>(*token) : std::nullopt),
-      access_token_(access_token ? std::optional<std::string>(*access_token)
-                                 : std::nullopt) {}
+  const std::string& provider_id,
+  const std::string& sign_in_method,
+  const std::string* token,
+  const std::string* access_token)
+ : provider_id_(provider_id),
+    sign_in_method_(sign_in_method),
+    token_(token ? std::optional<std::string>(*token) : std::nullopt),
+    access_token_(access_token ? std::optional<std::string>(*access_token) : std::nullopt) {}
 
 const std::string& InternalAuthCredentialInput::provider_id() const {
   return provider_id_;
@@ -1511,14 +1411,15 @@ void InternalAuthCredentialInput::set_provider_id(std::string_view value_arg) {
   provider_id_ = value_arg;
 }
 
+
 const std::string& InternalAuthCredentialInput::sign_in_method() const {
   return sign_in_method_;
 }
 
-void InternalAuthCredentialInput::set_sign_in_method(
-    std::string_view value_arg) {
+void InternalAuthCredentialInput::set_sign_in_method(std::string_view value_arg) {
   sign_in_method_ = value_arg;
 }
+
 
 const std::string* InternalAuthCredentialInput::token() const {
   return token_ ? &(*token_) : nullptr;
@@ -1532,19 +1433,19 @@ void InternalAuthCredentialInput::set_token(std::string_view value_arg) {
   token_ = value_arg;
 }
 
+
 const std::string* InternalAuthCredentialInput::access_token() const {
   return access_token_ ? &(*access_token_) : nullptr;
 }
 
-void InternalAuthCredentialInput::set_access_token(
-    const std::string_view* value_arg) {
-  access_token_ =
-      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+void InternalAuthCredentialInput::set_access_token(const std::string_view* value_arg) {
+  access_token_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
 void InternalAuthCredentialInput::set_access_token(std::string_view value_arg) {
   access_token_ = value_arg;
 }
+
 
 EncodableList InternalAuthCredentialInput::ToEncodableList() const {
   EncodableList list;
@@ -1552,15 +1453,14 @@ EncodableList InternalAuthCredentialInput::ToEncodableList() const {
   list.push_back(EncodableValue(provider_id_));
   list.push_back(EncodableValue(sign_in_method_));
   list.push_back(token_ ? EncodableValue(*token_) : EncodableValue());
-  list.push_back(access_token_ ? EncodableValue(*access_token_)
-                               : EncodableValue());
+  list.push_back(access_token_ ? EncodableValue(*access_token_) : EncodableValue());
   return list;
 }
 
-InternalAuthCredentialInput InternalAuthCredentialInput::FromEncodableList(
-    const EncodableList& list) {
-  InternalAuthCredentialInput decoded(std::get<std::string>(list[0]),
-                                      std::get<std::string>(list[1]));
+InternalAuthCredentialInput InternalAuthCredentialInput::FromEncodableList(const EncodableList& list) {
+  InternalAuthCredentialInput decoded(
+    std::get<std::string>(list[0]),
+    std::get<std::string>(list[1]));
   auto& encodable_token = list[2];
   if (!encodable_token.IsNull()) {
     decoded.set_token(std::get<std::string>(encodable_token));
@@ -1572,16 +1472,11 @@ InternalAuthCredentialInput InternalAuthCredentialInput::FromEncodableList(
   return decoded;
 }
 
-bool InternalAuthCredentialInput::operator==(
-    const InternalAuthCredentialInput& other) const {
-  return PigeonInternalDeepEquals(provider_id_, other.provider_id_) &&
-         PigeonInternalDeepEquals(sign_in_method_, other.sign_in_method_) &&
-         PigeonInternalDeepEquals(token_, other.token_) &&
-         PigeonInternalDeepEquals(access_token_, other.access_token_);
+bool InternalAuthCredentialInput::operator==(const InternalAuthCredentialInput& other) const {
+  return PigeonInternalDeepEquals(provider_id_, other.provider_id_) && PigeonInternalDeepEquals(sign_in_method_, other.sign_in_method_) && PigeonInternalDeepEquals(token_, other.token_) && PigeonInternalDeepEquals(access_token_, other.access_token_);
 }
 
-bool InternalAuthCredentialInput::operator!=(
-    const InternalAuthCredentialInput& other) const {
+bool InternalAuthCredentialInput::operator!=(const InternalAuthCredentialInput& other) const {
   return !(*this == other);
 }
 
@@ -1600,57 +1495,53 @@ size_t PigeonInternalDeepHash(const InternalAuthCredentialInput& v) {
 
 // InternalActionCodeSettings
 
-InternalActionCodeSettings::InternalActionCodeSettings(const std::string& url,
-                                                       bool handle_code_in_app,
-                                                       bool android_install_app)
-    : url_(url),
-      handle_code_in_app_(handle_code_in_app),
-      android_install_app_(android_install_app) {}
+InternalActionCodeSettings::InternalActionCodeSettings(
+  const std::string& url,
+  bool handle_code_in_app,
+  bool android_install_app)
+ : url_(url),
+    handle_code_in_app_(handle_code_in_app),
+    android_install_app_(android_install_app) {}
 
 InternalActionCodeSettings::InternalActionCodeSettings(
-    const std::string& url, const std::string* dynamic_link_domain,
-    bool handle_code_in_app, const std::string* i_o_s_bundle_id,
-    const std::string* android_package_name, bool android_install_app,
-    const std::string* android_minimum_version, const std::string* link_domain)
-    : url_(url),
-      dynamic_link_domain_(
-          dynamic_link_domain ? std::optional<std::string>(*dynamic_link_domain)
-                              : std::nullopt),
-      handle_code_in_app_(handle_code_in_app),
-      i_o_s_bundle_id_(i_o_s_bundle_id
-                           ? std::optional<std::string>(*i_o_s_bundle_id)
-                           : std::nullopt),
-      android_package_name_(android_package_name ? std::optional<std::string>(
-                                                       *android_package_name)
-                                                 : std::nullopt),
-      android_install_app_(android_install_app),
-      android_minimum_version_(
-          android_minimum_version
-              ? std::optional<std::string>(*android_minimum_version)
-              : std::nullopt),
-      link_domain_(link_domain ? std::optional<std::string>(*link_domain)
-                               : std::nullopt) {}
+  const std::string& url,
+  const std::string* dynamic_link_domain,
+  bool handle_code_in_app,
+  const std::string* i_o_s_bundle_id,
+  const std::string* android_package_name,
+  bool android_install_app,
+  const std::string* android_minimum_version,
+  const std::string* link_domain)
+ : url_(url),
+    dynamic_link_domain_(dynamic_link_domain ? std::optional<std::string>(*dynamic_link_domain) : std::nullopt),
+    handle_code_in_app_(handle_code_in_app),
+    i_o_s_bundle_id_(i_o_s_bundle_id ? std::optional<std::string>(*i_o_s_bundle_id) : std::nullopt),
+    android_package_name_(android_package_name ? std::optional<std::string>(*android_package_name) : std::nullopt),
+    android_install_app_(android_install_app),
+    android_minimum_version_(android_minimum_version ? std::optional<std::string>(*android_minimum_version) : std::nullopt),
+    link_domain_(link_domain ? std::optional<std::string>(*link_domain) : std::nullopt) {}
 
-const std::string& InternalActionCodeSettings::url() const { return url_; }
+const std::string& InternalActionCodeSettings::url() const {
+  return url_;
+}
 
 void InternalActionCodeSettings::set_url(std::string_view value_arg) {
   url_ = value_arg;
 }
 
+
 const std::string* InternalActionCodeSettings::dynamic_link_domain() const {
   return dynamic_link_domain_ ? &(*dynamic_link_domain_) : nullptr;
 }
 
-void InternalActionCodeSettings::set_dynamic_link_domain(
-    const std::string_view* value_arg) {
-  dynamic_link_domain_ =
-      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+void InternalActionCodeSettings::set_dynamic_link_domain(const std::string_view* value_arg) {
+  dynamic_link_domain_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
-void InternalActionCodeSettings::set_dynamic_link_domain(
-    std::string_view value_arg) {
+void InternalActionCodeSettings::set_dynamic_link_domain(std::string_view value_arg) {
   dynamic_link_domain_ = value_arg;
 }
+
 
 bool InternalActionCodeSettings::handle_code_in_app() const {
   return handle_code_in_app_;
@@ -1660,35 +1551,32 @@ void InternalActionCodeSettings::set_handle_code_in_app(bool value_arg) {
   handle_code_in_app_ = value_arg;
 }
 
+
 const std::string* InternalActionCodeSettings::i_o_s_bundle_id() const {
   return i_o_s_bundle_id_ ? &(*i_o_s_bundle_id_) : nullptr;
 }
 
-void InternalActionCodeSettings::set_i_o_s_bundle_id(
-    const std::string_view* value_arg) {
-  i_o_s_bundle_id_ =
-      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+void InternalActionCodeSettings::set_i_o_s_bundle_id(const std::string_view* value_arg) {
+  i_o_s_bundle_id_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
-void InternalActionCodeSettings::set_i_o_s_bundle_id(
-    std::string_view value_arg) {
+void InternalActionCodeSettings::set_i_o_s_bundle_id(std::string_view value_arg) {
   i_o_s_bundle_id_ = value_arg;
 }
+
 
 const std::string* InternalActionCodeSettings::android_package_name() const {
   return android_package_name_ ? &(*android_package_name_) : nullptr;
 }
 
-void InternalActionCodeSettings::set_android_package_name(
-    const std::string_view* value_arg) {
-  android_package_name_ =
-      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+void InternalActionCodeSettings::set_android_package_name(const std::string_view* value_arg) {
+  android_package_name_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
-void InternalActionCodeSettings::set_android_package_name(
-    std::string_view value_arg) {
+void InternalActionCodeSettings::set_android_package_name(std::string_view value_arg) {
   android_package_name_ = value_arg;
 }
+
 
 bool InternalActionCodeSettings::android_install_app() const {
   return android_install_app_;
@@ -1698,79 +1586,67 @@ void InternalActionCodeSettings::set_android_install_app(bool value_arg) {
   android_install_app_ = value_arg;
 }
 
+
 const std::string* InternalActionCodeSettings::android_minimum_version() const {
   return android_minimum_version_ ? &(*android_minimum_version_) : nullptr;
 }
 
-void InternalActionCodeSettings::set_android_minimum_version(
-    const std::string_view* value_arg) {
-  android_minimum_version_ =
-      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+void InternalActionCodeSettings::set_android_minimum_version(const std::string_view* value_arg) {
+  android_minimum_version_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
-void InternalActionCodeSettings::set_android_minimum_version(
-    std::string_view value_arg) {
+void InternalActionCodeSettings::set_android_minimum_version(std::string_view value_arg) {
   android_minimum_version_ = value_arg;
 }
+
 
 const std::string* InternalActionCodeSettings::link_domain() const {
   return link_domain_ ? &(*link_domain_) : nullptr;
 }
 
-void InternalActionCodeSettings::set_link_domain(
-    const std::string_view* value_arg) {
-  link_domain_ =
-      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+void InternalActionCodeSettings::set_link_domain(const std::string_view* value_arg) {
+  link_domain_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
 void InternalActionCodeSettings::set_link_domain(std::string_view value_arg) {
   link_domain_ = value_arg;
 }
 
+
 EncodableList InternalActionCodeSettings::ToEncodableList() const {
   EncodableList list;
   list.reserve(8);
   list.push_back(EncodableValue(url_));
-  list.push_back(dynamic_link_domain_ ? EncodableValue(*dynamic_link_domain_)
-                                      : EncodableValue());
+  list.push_back(dynamic_link_domain_ ? EncodableValue(*dynamic_link_domain_) : EncodableValue());
   list.push_back(EncodableValue(handle_code_in_app_));
-  list.push_back(i_o_s_bundle_id_ ? EncodableValue(*i_o_s_bundle_id_)
-                                  : EncodableValue());
-  list.push_back(android_package_name_ ? EncodableValue(*android_package_name_)
-                                       : EncodableValue());
+  list.push_back(i_o_s_bundle_id_ ? EncodableValue(*i_o_s_bundle_id_) : EncodableValue());
+  list.push_back(android_package_name_ ? EncodableValue(*android_package_name_) : EncodableValue());
   list.push_back(EncodableValue(android_install_app_));
-  list.push_back(android_minimum_version_
-                     ? EncodableValue(*android_minimum_version_)
-                     : EncodableValue());
-  list.push_back(link_domain_ ? EncodableValue(*link_domain_)
-                              : EncodableValue());
+  list.push_back(android_minimum_version_ ? EncodableValue(*android_minimum_version_) : EncodableValue());
+  list.push_back(link_domain_ ? EncodableValue(*link_domain_) : EncodableValue());
   return list;
 }
 
-InternalActionCodeSettings InternalActionCodeSettings::FromEncodableList(
-    const EncodableList& list) {
-  InternalActionCodeSettings decoded(std::get<std::string>(list[0]),
-                                     std::get<bool>(list[2]),
-                                     std::get<bool>(list[5]));
+InternalActionCodeSettings InternalActionCodeSettings::FromEncodableList(const EncodableList& list) {
+  InternalActionCodeSettings decoded(
+    std::get<std::string>(list[0]),
+    std::get<bool>(list[2]),
+    std::get<bool>(list[5]));
   auto& encodable_dynamic_link_domain = list[1];
   if (!encodable_dynamic_link_domain.IsNull()) {
-    decoded.set_dynamic_link_domain(
-        std::get<std::string>(encodable_dynamic_link_domain));
+    decoded.set_dynamic_link_domain(std::get<std::string>(encodable_dynamic_link_domain));
   }
   auto& encodable_i_o_s_bundle_id = list[3];
   if (!encodable_i_o_s_bundle_id.IsNull()) {
-    decoded.set_i_o_s_bundle_id(
-        std::get<std::string>(encodable_i_o_s_bundle_id));
+    decoded.set_i_o_s_bundle_id(std::get<std::string>(encodable_i_o_s_bundle_id));
   }
   auto& encodable_android_package_name = list[4];
   if (!encodable_android_package_name.IsNull()) {
-    decoded.set_android_package_name(
-        std::get<std::string>(encodable_android_package_name));
+    decoded.set_android_package_name(std::get<std::string>(encodable_android_package_name));
   }
   auto& encodable_android_minimum_version = list[6];
   if (!encodable_android_minimum_version.IsNull()) {
-    decoded.set_android_minimum_version(
-        std::get<std::string>(encodable_android_minimum_version));
+    decoded.set_android_minimum_version(std::get<std::string>(encodable_android_minimum_version));
   }
   auto& encodable_link_domain = list[7];
   if (!encodable_link_domain.IsNull()) {
@@ -1779,25 +1655,11 @@ InternalActionCodeSettings InternalActionCodeSettings::FromEncodableList(
   return decoded;
 }
 
-bool InternalActionCodeSettings::operator==(
-    const InternalActionCodeSettings& other) const {
-  return PigeonInternalDeepEquals(url_, other.url_) &&
-         PigeonInternalDeepEquals(dynamic_link_domain_,
-                                  other.dynamic_link_domain_) &&
-         PigeonInternalDeepEquals(handle_code_in_app_,
-                                  other.handle_code_in_app_) &&
-         PigeonInternalDeepEquals(i_o_s_bundle_id_, other.i_o_s_bundle_id_) &&
-         PigeonInternalDeepEquals(android_package_name_,
-                                  other.android_package_name_) &&
-         PigeonInternalDeepEquals(android_install_app_,
-                                  other.android_install_app_) &&
-         PigeonInternalDeepEquals(android_minimum_version_,
-                                  other.android_minimum_version_) &&
-         PigeonInternalDeepEquals(link_domain_, other.link_domain_);
+bool InternalActionCodeSettings::operator==(const InternalActionCodeSettings& other) const {
+  return PigeonInternalDeepEquals(url_, other.url_) && PigeonInternalDeepEquals(dynamic_link_domain_, other.dynamic_link_domain_) && PigeonInternalDeepEquals(handle_code_in_app_, other.handle_code_in_app_) && PigeonInternalDeepEquals(i_o_s_bundle_id_, other.i_o_s_bundle_id_) && PigeonInternalDeepEquals(android_package_name_, other.android_package_name_) && PigeonInternalDeepEquals(android_install_app_, other.android_install_app_) && PigeonInternalDeepEquals(android_minimum_version_, other.android_minimum_version_) && PigeonInternalDeepEquals(link_domain_, other.link_domain_);
 }
 
-bool InternalActionCodeSettings::operator!=(
-    const InternalActionCodeSettings& other) const {
+bool InternalActionCodeSettings::operator!=(const InternalActionCodeSettings& other) const {
   return !(*this == other);
 }
 
@@ -1820,74 +1682,61 @@ size_t PigeonInternalDeepHash(const InternalActionCodeSettings& v) {
 
 // InternalFirebaseAuthSettings
 
-InternalFirebaseAuthSettings::InternalFirebaseAuthSettings(
-    bool app_verification_disabled_for_testing)
-    : app_verification_disabled_for_testing_(
-          app_verification_disabled_for_testing) {}
+InternalFirebaseAuthSettings::InternalFirebaseAuthSettings(bool app_verification_disabled_for_testing)
+ : app_verification_disabled_for_testing_(app_verification_disabled_for_testing) {}
 
 InternalFirebaseAuthSettings::InternalFirebaseAuthSettings(
-    bool app_verification_disabled_for_testing,
-    const std::string* user_access_group, const std::string* phone_number,
-    const std::string* sms_code, const bool* force_recaptcha_flow)
-    : app_verification_disabled_for_testing_(
-          app_verification_disabled_for_testing),
-      user_access_group_(user_access_group
-                             ? std::optional<std::string>(*user_access_group)
-                             : std::nullopt),
-      phone_number_(phone_number ? std::optional<std::string>(*phone_number)
-                                 : std::nullopt),
-      sms_code_(sms_code ? std::optional<std::string>(*sms_code)
-                         : std::nullopt),
-      force_recaptcha_flow_(force_recaptcha_flow
-                                ? std::optional<bool>(*force_recaptcha_flow)
-                                : std::nullopt) {}
+  bool app_verification_disabled_for_testing,
+  const std::string* user_access_group,
+  const std::string* phone_number,
+  const std::string* sms_code,
+  const bool* force_recaptcha_flow)
+ : app_verification_disabled_for_testing_(app_verification_disabled_for_testing),
+    user_access_group_(user_access_group ? std::optional<std::string>(*user_access_group) : std::nullopt),
+    phone_number_(phone_number ? std::optional<std::string>(*phone_number) : std::nullopt),
+    sms_code_(sms_code ? std::optional<std::string>(*sms_code) : std::nullopt),
+    force_recaptcha_flow_(force_recaptcha_flow ? std::optional<bool>(*force_recaptcha_flow) : std::nullopt) {}
 
-bool InternalFirebaseAuthSettings::app_verification_disabled_for_testing()
-    const {
+bool InternalFirebaseAuthSettings::app_verification_disabled_for_testing() const {
   return app_verification_disabled_for_testing_;
 }
 
-void InternalFirebaseAuthSettings::set_app_verification_disabled_for_testing(
-    bool value_arg) {
+void InternalFirebaseAuthSettings::set_app_verification_disabled_for_testing(bool value_arg) {
   app_verification_disabled_for_testing_ = value_arg;
 }
+
 
 const std::string* InternalFirebaseAuthSettings::user_access_group() const {
   return user_access_group_ ? &(*user_access_group_) : nullptr;
 }
 
-void InternalFirebaseAuthSettings::set_user_access_group(
-    const std::string_view* value_arg) {
-  user_access_group_ =
-      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+void InternalFirebaseAuthSettings::set_user_access_group(const std::string_view* value_arg) {
+  user_access_group_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
-void InternalFirebaseAuthSettings::set_user_access_group(
-    std::string_view value_arg) {
+void InternalFirebaseAuthSettings::set_user_access_group(std::string_view value_arg) {
   user_access_group_ = value_arg;
 }
+
 
 const std::string* InternalFirebaseAuthSettings::phone_number() const {
   return phone_number_ ? &(*phone_number_) : nullptr;
 }
 
-void InternalFirebaseAuthSettings::set_phone_number(
-    const std::string_view* value_arg) {
-  phone_number_ =
-      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+void InternalFirebaseAuthSettings::set_phone_number(const std::string_view* value_arg) {
+  phone_number_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
-void InternalFirebaseAuthSettings::set_phone_number(
-    std::string_view value_arg) {
+void InternalFirebaseAuthSettings::set_phone_number(std::string_view value_arg) {
   phone_number_ = value_arg;
 }
+
 
 const std::string* InternalFirebaseAuthSettings::sms_code() const {
   return sms_code_ ? &(*sms_code_) : nullptr;
 }
 
-void InternalFirebaseAuthSettings::set_sms_code(
-    const std::string_view* value_arg) {
+void InternalFirebaseAuthSettings::set_sms_code(const std::string_view* value_arg) {
   sms_code_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
@@ -1895,41 +1744,37 @@ void InternalFirebaseAuthSettings::set_sms_code(std::string_view value_arg) {
   sms_code_ = value_arg;
 }
 
+
 const bool* InternalFirebaseAuthSettings::force_recaptcha_flow() const {
   return force_recaptcha_flow_ ? &(*force_recaptcha_flow_) : nullptr;
 }
 
-void InternalFirebaseAuthSettings::set_force_recaptcha_flow(
-    const bool* value_arg) {
-  force_recaptcha_flow_ =
-      value_arg ? std::optional<bool>(*value_arg) : std::nullopt;
+void InternalFirebaseAuthSettings::set_force_recaptcha_flow(const bool* value_arg) {
+  force_recaptcha_flow_ = value_arg ? std::optional<bool>(*value_arg) : std::nullopt;
 }
 
 void InternalFirebaseAuthSettings::set_force_recaptcha_flow(bool value_arg) {
   force_recaptcha_flow_ = value_arg;
 }
 
+
 EncodableList InternalFirebaseAuthSettings::ToEncodableList() const {
   EncodableList list;
   list.reserve(5);
   list.push_back(EncodableValue(app_verification_disabled_for_testing_));
-  list.push_back(user_access_group_ ? EncodableValue(*user_access_group_)
-                                    : EncodableValue());
-  list.push_back(phone_number_ ? EncodableValue(*phone_number_)
-                               : EncodableValue());
+  list.push_back(user_access_group_ ? EncodableValue(*user_access_group_) : EncodableValue());
+  list.push_back(phone_number_ ? EncodableValue(*phone_number_) : EncodableValue());
   list.push_back(sms_code_ ? EncodableValue(*sms_code_) : EncodableValue());
-  list.push_back(force_recaptcha_flow_ ? EncodableValue(*force_recaptcha_flow_)
-                                       : EncodableValue());
+  list.push_back(force_recaptcha_flow_ ? EncodableValue(*force_recaptcha_flow_) : EncodableValue());
   return list;
 }
 
-InternalFirebaseAuthSettings InternalFirebaseAuthSettings::FromEncodableList(
-    const EncodableList& list) {
-  InternalFirebaseAuthSettings decoded(std::get<bool>(list[0]));
+InternalFirebaseAuthSettings InternalFirebaseAuthSettings::FromEncodableList(const EncodableList& list) {
+  InternalFirebaseAuthSettings decoded(
+    std::get<bool>(list[0]));
   auto& encodable_user_access_group = list[1];
   if (!encodable_user_access_group.IsNull()) {
-    decoded.set_user_access_group(
-        std::get<std::string>(encodable_user_access_group));
+    decoded.set_user_access_group(std::get<std::string>(encodable_user_access_group));
   }
   auto& encodable_phone_number = list[2];
   if (!encodable_phone_number.IsNull()) {
@@ -1941,34 +1786,22 @@ InternalFirebaseAuthSettings InternalFirebaseAuthSettings::FromEncodableList(
   }
   auto& encodable_force_recaptcha_flow = list[4];
   if (!encodable_force_recaptcha_flow.IsNull()) {
-    decoded.set_force_recaptcha_flow(
-        std::get<bool>(encodable_force_recaptcha_flow));
+    decoded.set_force_recaptcha_flow(std::get<bool>(encodable_force_recaptcha_flow));
   }
   return decoded;
 }
 
-bool InternalFirebaseAuthSettings::operator==(
-    const InternalFirebaseAuthSettings& other) const {
-  return PigeonInternalDeepEquals(
-             app_verification_disabled_for_testing_,
-             other.app_verification_disabled_for_testing_) &&
-         PigeonInternalDeepEquals(user_access_group_,
-                                  other.user_access_group_) &&
-         PigeonInternalDeepEquals(phone_number_, other.phone_number_) &&
-         PigeonInternalDeepEquals(sms_code_, other.sms_code_) &&
-         PigeonInternalDeepEquals(force_recaptcha_flow_,
-                                  other.force_recaptcha_flow_);
+bool InternalFirebaseAuthSettings::operator==(const InternalFirebaseAuthSettings& other) const {
+  return PigeonInternalDeepEquals(app_verification_disabled_for_testing_, other.app_verification_disabled_for_testing_) && PigeonInternalDeepEquals(user_access_group_, other.user_access_group_) && PigeonInternalDeepEquals(phone_number_, other.phone_number_) && PigeonInternalDeepEquals(sms_code_, other.sms_code_) && PigeonInternalDeepEquals(force_recaptcha_flow_, other.force_recaptcha_flow_);
 }
 
-bool InternalFirebaseAuthSettings::operator!=(
-    const InternalFirebaseAuthSettings& other) const {
+bool InternalFirebaseAuthSettings::operator!=(const InternalFirebaseAuthSettings& other) const {
   return !(*this == other);
 }
 
 size_t InternalFirebaseAuthSettings::Hash() const {
   size_t result = 1;
-  result = result * 31 +
-           PigeonInternalDeepHash(app_verification_disabled_for_testing_);
+  result = result * 31 + PigeonInternalDeepHash(app_verification_disabled_for_testing_);
   result = result * 31 + PigeonInternalDeepHash(user_access_group_);
   result = result * 31 + PigeonInternalDeepHash(phone_number_);
   result = result * 31 + PigeonInternalDeepHash(sms_code_);
@@ -1983,16 +1816,15 @@ size_t PigeonInternalDeepHash(const InternalFirebaseAuthSettings& v) {
 // InternalSignInProvider
 
 InternalSignInProvider::InternalSignInProvider(const std::string& provider_id)
-    : provider_id_(provider_id) {}
+ : provider_id_(provider_id) {}
 
 InternalSignInProvider::InternalSignInProvider(
-    const std::string& provider_id, const EncodableList* scopes,
-    const EncodableMap* custom_parameters)
-    : provider_id_(provider_id),
-      scopes_(scopes ? std::optional<EncodableList>(*scopes) : std::nullopt),
-      custom_parameters_(custom_parameters
-                             ? std::optional<EncodableMap>(*custom_parameters)
-                             : std::nullopt) {}
+  const std::string& provider_id,
+  const EncodableList* scopes,
+  const EncodableMap* custom_parameters)
+ : provider_id_(provider_id),
+    scopes_(scopes ? std::optional<EncodableList>(*scopes) : std::nullopt),
+    custom_parameters_(custom_parameters ? std::optional<EncodableMap>(*custom_parameters) : std::nullopt) {}
 
 const std::string& InternalSignInProvider::provider_id() const {
   return provider_id_;
@@ -2001,6 +1833,7 @@ const std::string& InternalSignInProvider::provider_id() const {
 void InternalSignInProvider::set_provider_id(std::string_view value_arg) {
   provider_id_ = value_arg;
 }
+
 
 const EncodableList* InternalSignInProvider::scopes() const {
   return scopes_ ? &(*scopes_) : nullptr;
@@ -2014,55 +1847,48 @@ void InternalSignInProvider::set_scopes(const EncodableList& value_arg) {
   scopes_ = value_arg;
 }
 
+
 const EncodableMap* InternalSignInProvider::custom_parameters() const {
   return custom_parameters_ ? &(*custom_parameters_) : nullptr;
 }
 
-void InternalSignInProvider::set_custom_parameters(
-    const EncodableMap* value_arg) {
-  custom_parameters_ =
-      value_arg ? std::optional<EncodableMap>(*value_arg) : std::nullopt;
+void InternalSignInProvider::set_custom_parameters(const EncodableMap* value_arg) {
+  custom_parameters_ = value_arg ? std::optional<EncodableMap>(*value_arg) : std::nullopt;
 }
 
-void InternalSignInProvider::set_custom_parameters(
-    const EncodableMap& value_arg) {
+void InternalSignInProvider::set_custom_parameters(const EncodableMap& value_arg) {
   custom_parameters_ = value_arg;
 }
+
 
 EncodableList InternalSignInProvider::ToEncodableList() const {
   EncodableList list;
   list.reserve(3);
   list.push_back(EncodableValue(provider_id_));
   list.push_back(scopes_ ? EncodableValue(*scopes_) : EncodableValue());
-  list.push_back(custom_parameters_ ? EncodableValue(*custom_parameters_)
-                                    : EncodableValue());
+  list.push_back(custom_parameters_ ? EncodableValue(*custom_parameters_) : EncodableValue());
   return list;
 }
 
-InternalSignInProvider InternalSignInProvider::FromEncodableList(
-    const EncodableList& list) {
-  InternalSignInProvider decoded(std::get<std::string>(list[0]));
+InternalSignInProvider InternalSignInProvider::FromEncodableList(const EncodableList& list) {
+  InternalSignInProvider decoded(
+    std::get<std::string>(list[0]));
   auto& encodable_scopes = list[1];
   if (!encodable_scopes.IsNull()) {
     decoded.set_scopes(std::get<EncodableList>(encodable_scopes));
   }
   auto& encodable_custom_parameters = list[2];
   if (!encodable_custom_parameters.IsNull()) {
-    decoded.set_custom_parameters(
-        std::get<EncodableMap>(encodable_custom_parameters));
+    decoded.set_custom_parameters(std::get<EncodableMap>(encodable_custom_parameters));
   }
   return decoded;
 }
 
-bool InternalSignInProvider::operator==(
-    const InternalSignInProvider& other) const {
-  return PigeonInternalDeepEquals(provider_id_, other.provider_id_) &&
-         PigeonInternalDeepEquals(scopes_, other.scopes_) &&
-         PigeonInternalDeepEquals(custom_parameters_, other.custom_parameters_);
+bool InternalSignInProvider::operator==(const InternalSignInProvider& other) const {
+  return PigeonInternalDeepEquals(provider_id_, other.provider_id_) && PigeonInternalDeepEquals(scopes_, other.scopes_) && PigeonInternalDeepEquals(custom_parameters_, other.custom_parameters_);
 }
 
-bool InternalSignInProvider::operator!=(
-    const InternalSignInProvider& other) const {
+bool InternalSignInProvider::operator!=(const InternalSignInProvider& other) const {
   return !(*this == other);
 }
 
@@ -2080,186 +1906,140 @@ size_t PigeonInternalDeepHash(const InternalSignInProvider& v) {
 
 // InternalVerifyPhoneNumberRequest
 
-InternalVerifyPhoneNumberRequest::InternalVerifyPhoneNumberRequest(
-    int64_t timeout)
-    : timeout_(timeout) {}
+InternalVerifyPhoneNumberRequest::InternalVerifyPhoneNumberRequest(int64_t timeout)
+ : timeout_(timeout) {}
 
 InternalVerifyPhoneNumberRequest::InternalVerifyPhoneNumberRequest(
-    const std::string* phone_number, int64_t timeout,
-    const int64_t* force_resending_token,
-    const std::string* auto_retrieved_sms_code_for_testing,
-    const std::string* multi_factor_info_id,
-    const std::string* multi_factor_session_id)
-    : phone_number_(phone_number ? std::optional<std::string>(*phone_number)
-                                 : std::nullopt),
-      timeout_(timeout),
-      force_resending_token_(
-          force_resending_token ? std::optional<int64_t>(*force_resending_token)
-                                : std::nullopt),
-      auto_retrieved_sms_code_for_testing_(
-          auto_retrieved_sms_code_for_testing
-              ? std::optional<std::string>(*auto_retrieved_sms_code_for_testing)
-              : std::nullopt),
-      multi_factor_info_id_(multi_factor_info_id ? std::optional<std::string>(
-                                                       *multi_factor_info_id)
-                                                 : std::nullopt),
-      multi_factor_session_id_(
-          multi_factor_session_id
-              ? std::optional<std::string>(*multi_factor_session_id)
-              : std::nullopt) {}
+  const std::string* phone_number,
+  int64_t timeout,
+  const int64_t* force_resending_token,
+  const std::string* auto_retrieved_sms_code_for_testing,
+  const std::string* multi_factor_info_id,
+  const std::string* multi_factor_session_id)
+ : phone_number_(phone_number ? std::optional<std::string>(*phone_number) : std::nullopt),
+    timeout_(timeout),
+    force_resending_token_(force_resending_token ? std::optional<int64_t>(*force_resending_token) : std::nullopt),
+    auto_retrieved_sms_code_for_testing_(auto_retrieved_sms_code_for_testing ? std::optional<std::string>(*auto_retrieved_sms_code_for_testing) : std::nullopt),
+    multi_factor_info_id_(multi_factor_info_id ? std::optional<std::string>(*multi_factor_info_id) : std::nullopt),
+    multi_factor_session_id_(multi_factor_session_id ? std::optional<std::string>(*multi_factor_session_id) : std::nullopt) {}
 
 const std::string* InternalVerifyPhoneNumberRequest::phone_number() const {
   return phone_number_ ? &(*phone_number_) : nullptr;
 }
 
-void InternalVerifyPhoneNumberRequest::set_phone_number(
-    const std::string_view* value_arg) {
-  phone_number_ =
-      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+void InternalVerifyPhoneNumberRequest::set_phone_number(const std::string_view* value_arg) {
+  phone_number_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
-void InternalVerifyPhoneNumberRequest::set_phone_number(
-    std::string_view value_arg) {
+void InternalVerifyPhoneNumberRequest::set_phone_number(std::string_view value_arg) {
   phone_number_ = value_arg;
 }
 
-int64_t InternalVerifyPhoneNumberRequest::timeout() const { return timeout_; }
+
+int64_t InternalVerifyPhoneNumberRequest::timeout() const {
+  return timeout_;
+}
 
 void InternalVerifyPhoneNumberRequest::set_timeout(int64_t value_arg) {
   timeout_ = value_arg;
 }
 
+
 const int64_t* InternalVerifyPhoneNumberRequest::force_resending_token() const {
   return force_resending_token_ ? &(*force_resending_token_) : nullptr;
 }
 
-void InternalVerifyPhoneNumberRequest::set_force_resending_token(
-    const int64_t* value_arg) {
-  force_resending_token_ =
-      value_arg ? std::optional<int64_t>(*value_arg) : std::nullopt;
+void InternalVerifyPhoneNumberRequest::set_force_resending_token(const int64_t* value_arg) {
+  force_resending_token_ = value_arg ? std::optional<int64_t>(*value_arg) : std::nullopt;
 }
 
-void InternalVerifyPhoneNumberRequest::set_force_resending_token(
-    int64_t value_arg) {
+void InternalVerifyPhoneNumberRequest::set_force_resending_token(int64_t value_arg) {
   force_resending_token_ = value_arg;
 }
 
-const std::string*
-InternalVerifyPhoneNumberRequest::auto_retrieved_sms_code_for_testing() const {
-  return auto_retrieved_sms_code_for_testing_
-             ? &(*auto_retrieved_sms_code_for_testing_)
-             : nullptr;
+
+const std::string* InternalVerifyPhoneNumberRequest::auto_retrieved_sms_code_for_testing() const {
+  return auto_retrieved_sms_code_for_testing_ ? &(*auto_retrieved_sms_code_for_testing_) : nullptr;
 }
 
-void InternalVerifyPhoneNumberRequest::set_auto_retrieved_sms_code_for_testing(
-    const std::string_view* value_arg) {
-  auto_retrieved_sms_code_for_testing_ =
-      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+void InternalVerifyPhoneNumberRequest::set_auto_retrieved_sms_code_for_testing(const std::string_view* value_arg) {
+  auto_retrieved_sms_code_for_testing_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
-void InternalVerifyPhoneNumberRequest::set_auto_retrieved_sms_code_for_testing(
-    std::string_view value_arg) {
+void InternalVerifyPhoneNumberRequest::set_auto_retrieved_sms_code_for_testing(std::string_view value_arg) {
   auto_retrieved_sms_code_for_testing_ = value_arg;
 }
 
-const std::string* InternalVerifyPhoneNumberRequest::multi_factor_info_id()
-    const {
+
+const std::string* InternalVerifyPhoneNumberRequest::multi_factor_info_id() const {
   return multi_factor_info_id_ ? &(*multi_factor_info_id_) : nullptr;
 }
 
-void InternalVerifyPhoneNumberRequest::set_multi_factor_info_id(
-    const std::string_view* value_arg) {
-  multi_factor_info_id_ =
-      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+void InternalVerifyPhoneNumberRequest::set_multi_factor_info_id(const std::string_view* value_arg) {
+  multi_factor_info_id_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
-void InternalVerifyPhoneNumberRequest::set_multi_factor_info_id(
-    std::string_view value_arg) {
+void InternalVerifyPhoneNumberRequest::set_multi_factor_info_id(std::string_view value_arg) {
   multi_factor_info_id_ = value_arg;
 }
 
-const std::string* InternalVerifyPhoneNumberRequest::multi_factor_session_id()
-    const {
+
+const std::string* InternalVerifyPhoneNumberRequest::multi_factor_session_id() const {
   return multi_factor_session_id_ ? &(*multi_factor_session_id_) : nullptr;
 }
 
-void InternalVerifyPhoneNumberRequest::set_multi_factor_session_id(
-    const std::string_view* value_arg) {
-  multi_factor_session_id_ =
-      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+void InternalVerifyPhoneNumberRequest::set_multi_factor_session_id(const std::string_view* value_arg) {
+  multi_factor_session_id_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
-void InternalVerifyPhoneNumberRequest::set_multi_factor_session_id(
-    std::string_view value_arg) {
+void InternalVerifyPhoneNumberRequest::set_multi_factor_session_id(std::string_view value_arg) {
   multi_factor_session_id_ = value_arg;
 }
+
 
 EncodableList InternalVerifyPhoneNumberRequest::ToEncodableList() const {
   EncodableList list;
   list.reserve(6);
-  list.push_back(phone_number_ ? EncodableValue(*phone_number_)
-                               : EncodableValue());
+  list.push_back(phone_number_ ? EncodableValue(*phone_number_) : EncodableValue());
   list.push_back(EncodableValue(timeout_));
-  list.push_back(force_resending_token_
-                     ? EncodableValue(*force_resending_token_)
-                     : EncodableValue());
-  list.push_back(auto_retrieved_sms_code_for_testing_
-                     ? EncodableValue(*auto_retrieved_sms_code_for_testing_)
-                     : EncodableValue());
-  list.push_back(multi_factor_info_id_ ? EncodableValue(*multi_factor_info_id_)
-                                       : EncodableValue());
-  list.push_back(multi_factor_session_id_
-                     ? EncodableValue(*multi_factor_session_id_)
-                     : EncodableValue());
+  list.push_back(force_resending_token_ ? EncodableValue(*force_resending_token_) : EncodableValue());
+  list.push_back(auto_retrieved_sms_code_for_testing_ ? EncodableValue(*auto_retrieved_sms_code_for_testing_) : EncodableValue());
+  list.push_back(multi_factor_info_id_ ? EncodableValue(*multi_factor_info_id_) : EncodableValue());
+  list.push_back(multi_factor_session_id_ ? EncodableValue(*multi_factor_session_id_) : EncodableValue());
   return list;
 }
 
-InternalVerifyPhoneNumberRequest
-InternalVerifyPhoneNumberRequest::FromEncodableList(const EncodableList& list) {
-  InternalVerifyPhoneNumberRequest decoded(std::get<int64_t>(list[1]));
+InternalVerifyPhoneNumberRequest InternalVerifyPhoneNumberRequest::FromEncodableList(const EncodableList& list) {
+  InternalVerifyPhoneNumberRequest decoded(
+    std::get<int64_t>(list[1]));
   auto& encodable_phone_number = list[0];
   if (!encodable_phone_number.IsNull()) {
     decoded.set_phone_number(std::get<std::string>(encodable_phone_number));
   }
   auto& encodable_force_resending_token = list[2];
   if (!encodable_force_resending_token.IsNull()) {
-    decoded.set_force_resending_token(
-        std::get<int64_t>(encodable_force_resending_token));
+    decoded.set_force_resending_token(std::get<int64_t>(encodable_force_resending_token));
   }
   auto& encodable_auto_retrieved_sms_code_for_testing = list[3];
   if (!encodable_auto_retrieved_sms_code_for_testing.IsNull()) {
-    decoded.set_auto_retrieved_sms_code_for_testing(
-        std::get<std::string>(encodable_auto_retrieved_sms_code_for_testing));
+    decoded.set_auto_retrieved_sms_code_for_testing(std::get<std::string>(encodable_auto_retrieved_sms_code_for_testing));
   }
   auto& encodable_multi_factor_info_id = list[4];
   if (!encodable_multi_factor_info_id.IsNull()) {
-    decoded.set_multi_factor_info_id(
-        std::get<std::string>(encodable_multi_factor_info_id));
+    decoded.set_multi_factor_info_id(std::get<std::string>(encodable_multi_factor_info_id));
   }
   auto& encodable_multi_factor_session_id = list[5];
   if (!encodable_multi_factor_session_id.IsNull()) {
-    decoded.set_multi_factor_session_id(
-        std::get<std::string>(encodable_multi_factor_session_id));
+    decoded.set_multi_factor_session_id(std::get<std::string>(encodable_multi_factor_session_id));
   }
   return decoded;
 }
 
-bool InternalVerifyPhoneNumberRequest::operator==(
-    const InternalVerifyPhoneNumberRequest& other) const {
-  return PigeonInternalDeepEquals(phone_number_, other.phone_number_) &&
-         PigeonInternalDeepEquals(timeout_, other.timeout_) &&
-         PigeonInternalDeepEquals(force_resending_token_,
-                                  other.force_resending_token_) &&
-         PigeonInternalDeepEquals(auto_retrieved_sms_code_for_testing_,
-                                  other.auto_retrieved_sms_code_for_testing_) &&
-         PigeonInternalDeepEquals(multi_factor_info_id_,
-                                  other.multi_factor_info_id_) &&
-         PigeonInternalDeepEquals(multi_factor_session_id_,
-                                  other.multi_factor_session_id_);
+bool InternalVerifyPhoneNumberRequest::operator==(const InternalVerifyPhoneNumberRequest& other) const {
+  return PigeonInternalDeepEquals(phone_number_, other.phone_number_) && PigeonInternalDeepEquals(timeout_, other.timeout_) && PigeonInternalDeepEquals(force_resending_token_, other.force_resending_token_) && PigeonInternalDeepEquals(auto_retrieved_sms_code_for_testing_, other.auto_retrieved_sms_code_for_testing_) && PigeonInternalDeepEquals(multi_factor_info_id_, other.multi_factor_info_id_) && PigeonInternalDeepEquals(multi_factor_session_id_, other.multi_factor_session_id_);
 }
 
-bool InternalVerifyPhoneNumberRequest::operator!=(
-    const InternalVerifyPhoneNumberRequest& other) const {
+bool InternalVerifyPhoneNumberRequest::operator!=(const InternalVerifyPhoneNumberRequest& other) const {
   return !(*this == other);
 }
 
@@ -2268,8 +2048,7 @@ size_t InternalVerifyPhoneNumberRequest::Hash() const {
   result = result * 31 + PigeonInternalDeepHash(phone_number_);
   result = result * 31 + PigeonInternalDeepHash(timeout_);
   result = result * 31 + PigeonInternalDeepHash(force_resending_token_);
-  result = result * 31 +
-           PigeonInternalDeepHash(auto_retrieved_sms_code_for_testing_);
+  result = result * 31 + PigeonInternalDeepHash(auto_retrieved_sms_code_for_testing_);
   result = result * 31 + PigeonInternalDeepHash(multi_factor_info_id_);
   result = result * 31 + PigeonInternalDeepHash(multi_factor_session_id_);
   return result;
@@ -2284,26 +2063,20 @@ size_t PigeonInternalDeepHash(const InternalVerifyPhoneNumberRequest& v) {
 InternalIdTokenResult::InternalIdTokenResult() {}
 
 InternalIdTokenResult::InternalIdTokenResult(
-    const std::string* token, const int64_t* expiration_timestamp,
-    const int64_t* auth_timestamp, const int64_t* issued_at_timestamp,
-    const std::string* sign_in_provider, const EncodableMap* claims,
-    const std::string* sign_in_second_factor)
-    : token_(token ? std::optional<std::string>(*token) : std::nullopt),
-      expiration_timestamp_(expiration_timestamp
-                                ? std::optional<int64_t>(*expiration_timestamp)
-                                : std::nullopt),
-      auth_timestamp_(auth_timestamp ? std::optional<int64_t>(*auth_timestamp)
-                                     : std::nullopt),
-      issued_at_timestamp_(issued_at_timestamp
-                               ? std::optional<int64_t>(*issued_at_timestamp)
-                               : std::nullopt),
-      sign_in_provider_(sign_in_provider
-                            ? std::optional<std::string>(*sign_in_provider)
-                            : std::nullopt),
-      claims_(claims ? std::optional<EncodableMap>(*claims) : std::nullopt),
-      sign_in_second_factor_(sign_in_second_factor ? std::optional<std::string>(
-                                                         *sign_in_second_factor)
-                                                   : std::nullopt) {}
+  const std::string* token,
+  const int64_t* expiration_timestamp,
+  const int64_t* auth_timestamp,
+  const int64_t* issued_at_timestamp,
+  const std::string* sign_in_provider,
+  const EncodableMap* claims,
+  const std::string* sign_in_second_factor)
+ : token_(token ? std::optional<std::string>(*token) : std::nullopt),
+    expiration_timestamp_(expiration_timestamp ? std::optional<int64_t>(*expiration_timestamp) : std::nullopt),
+    auth_timestamp_(auth_timestamp ? std::optional<int64_t>(*auth_timestamp) : std::nullopt),
+    issued_at_timestamp_(issued_at_timestamp ? std::optional<int64_t>(*issued_at_timestamp) : std::nullopt),
+    sign_in_provider_(sign_in_provider ? std::optional<std::string>(*sign_in_provider) : std::nullopt),
+    claims_(claims ? std::optional<EncodableMap>(*claims) : std::nullopt),
+    sign_in_second_factor_(sign_in_second_factor ? std::optional<std::string>(*sign_in_second_factor) : std::nullopt) {}
 
 const std::string* InternalIdTokenResult::token() const {
   return token_ ? &(*token_) : nullptr;
@@ -2317,58 +2090,58 @@ void InternalIdTokenResult::set_token(std::string_view value_arg) {
   token_ = value_arg;
 }
 
+
 const int64_t* InternalIdTokenResult::expiration_timestamp() const {
   return expiration_timestamp_ ? &(*expiration_timestamp_) : nullptr;
 }
 
 void InternalIdTokenResult::set_expiration_timestamp(const int64_t* value_arg) {
-  expiration_timestamp_ =
-      value_arg ? std::optional<int64_t>(*value_arg) : std::nullopt;
+  expiration_timestamp_ = value_arg ? std::optional<int64_t>(*value_arg) : std::nullopt;
 }
 
 void InternalIdTokenResult::set_expiration_timestamp(int64_t value_arg) {
   expiration_timestamp_ = value_arg;
 }
 
+
 const int64_t* InternalIdTokenResult::auth_timestamp() const {
   return auth_timestamp_ ? &(*auth_timestamp_) : nullptr;
 }
 
 void InternalIdTokenResult::set_auth_timestamp(const int64_t* value_arg) {
-  auth_timestamp_ =
-      value_arg ? std::optional<int64_t>(*value_arg) : std::nullopt;
+  auth_timestamp_ = value_arg ? std::optional<int64_t>(*value_arg) : std::nullopt;
 }
 
 void InternalIdTokenResult::set_auth_timestamp(int64_t value_arg) {
   auth_timestamp_ = value_arg;
 }
 
+
 const int64_t* InternalIdTokenResult::issued_at_timestamp() const {
   return issued_at_timestamp_ ? &(*issued_at_timestamp_) : nullptr;
 }
 
 void InternalIdTokenResult::set_issued_at_timestamp(const int64_t* value_arg) {
-  issued_at_timestamp_ =
-      value_arg ? std::optional<int64_t>(*value_arg) : std::nullopt;
+  issued_at_timestamp_ = value_arg ? std::optional<int64_t>(*value_arg) : std::nullopt;
 }
 
 void InternalIdTokenResult::set_issued_at_timestamp(int64_t value_arg) {
   issued_at_timestamp_ = value_arg;
 }
 
+
 const std::string* InternalIdTokenResult::sign_in_provider() const {
   return sign_in_provider_ ? &(*sign_in_provider_) : nullptr;
 }
 
-void InternalIdTokenResult::set_sign_in_provider(
-    const std::string_view* value_arg) {
-  sign_in_provider_ =
-      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+void InternalIdTokenResult::set_sign_in_provider(const std::string_view* value_arg) {
+  sign_in_provider_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
 void InternalIdTokenResult::set_sign_in_provider(std::string_view value_arg) {
   sign_in_provider_ = value_arg;
 }
+
 
 const EncodableMap* InternalIdTokenResult::claims() const {
   return claims_ ? &(*claims_) : nullptr;
@@ -2382,42 +2155,34 @@ void InternalIdTokenResult::set_claims(const EncodableMap& value_arg) {
   claims_ = value_arg;
 }
 
+
 const std::string* InternalIdTokenResult::sign_in_second_factor() const {
   return sign_in_second_factor_ ? &(*sign_in_second_factor_) : nullptr;
 }
 
-void InternalIdTokenResult::set_sign_in_second_factor(
-    const std::string_view* value_arg) {
-  sign_in_second_factor_ =
-      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+void InternalIdTokenResult::set_sign_in_second_factor(const std::string_view* value_arg) {
+  sign_in_second_factor_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
-void InternalIdTokenResult::set_sign_in_second_factor(
-    std::string_view value_arg) {
+void InternalIdTokenResult::set_sign_in_second_factor(std::string_view value_arg) {
   sign_in_second_factor_ = value_arg;
 }
+
 
 EncodableList InternalIdTokenResult::ToEncodableList() const {
   EncodableList list;
   list.reserve(7);
   list.push_back(token_ ? EncodableValue(*token_) : EncodableValue());
-  list.push_back(expiration_timestamp_ ? EncodableValue(*expiration_timestamp_)
-                                       : EncodableValue());
-  list.push_back(auth_timestamp_ ? EncodableValue(*auth_timestamp_)
-                                 : EncodableValue());
-  list.push_back(issued_at_timestamp_ ? EncodableValue(*issued_at_timestamp_)
-                                      : EncodableValue());
-  list.push_back(sign_in_provider_ ? EncodableValue(*sign_in_provider_)
-                                   : EncodableValue());
+  list.push_back(expiration_timestamp_ ? EncodableValue(*expiration_timestamp_) : EncodableValue());
+  list.push_back(auth_timestamp_ ? EncodableValue(*auth_timestamp_) : EncodableValue());
+  list.push_back(issued_at_timestamp_ ? EncodableValue(*issued_at_timestamp_) : EncodableValue());
+  list.push_back(sign_in_provider_ ? EncodableValue(*sign_in_provider_) : EncodableValue());
   list.push_back(claims_ ? EncodableValue(*claims_) : EncodableValue());
-  list.push_back(sign_in_second_factor_
-                     ? EncodableValue(*sign_in_second_factor_)
-                     : EncodableValue());
+  list.push_back(sign_in_second_factor_ ? EncodableValue(*sign_in_second_factor_) : EncodableValue());
   return list;
 }
 
-InternalIdTokenResult InternalIdTokenResult::FromEncodableList(
-    const EncodableList& list) {
+InternalIdTokenResult InternalIdTokenResult::FromEncodableList(const EncodableList& list) {
   InternalIdTokenResult decoded;
   auto& encodable_token = list[0];
   if (!encodable_token.IsNull()) {
@@ -2425,8 +2190,7 @@ InternalIdTokenResult InternalIdTokenResult::FromEncodableList(
   }
   auto& encodable_expiration_timestamp = list[1];
   if (!encodable_expiration_timestamp.IsNull()) {
-    decoded.set_expiration_timestamp(
-        std::get<int64_t>(encodable_expiration_timestamp));
+    decoded.set_expiration_timestamp(std::get<int64_t>(encodable_expiration_timestamp));
   }
   auto& encodable_auth_timestamp = list[2];
   if (!encodable_auth_timestamp.IsNull()) {
@@ -2434,13 +2198,11 @@ InternalIdTokenResult InternalIdTokenResult::FromEncodableList(
   }
   auto& encodable_issued_at_timestamp = list[3];
   if (!encodable_issued_at_timestamp.IsNull()) {
-    decoded.set_issued_at_timestamp(
-        std::get<int64_t>(encodable_issued_at_timestamp));
+    decoded.set_issued_at_timestamp(std::get<int64_t>(encodable_issued_at_timestamp));
   }
   auto& encodable_sign_in_provider = list[4];
   if (!encodable_sign_in_provider.IsNull()) {
-    decoded.set_sign_in_provider(
-        std::get<std::string>(encodable_sign_in_provider));
+    decoded.set_sign_in_provider(std::get<std::string>(encodable_sign_in_provider));
   }
   auto& encodable_claims = list[5];
   if (!encodable_claims.IsNull()) {
@@ -2448,28 +2210,16 @@ InternalIdTokenResult InternalIdTokenResult::FromEncodableList(
   }
   auto& encodable_sign_in_second_factor = list[6];
   if (!encodable_sign_in_second_factor.IsNull()) {
-    decoded.set_sign_in_second_factor(
-        std::get<std::string>(encodable_sign_in_second_factor));
+    decoded.set_sign_in_second_factor(std::get<std::string>(encodable_sign_in_second_factor));
   }
   return decoded;
 }
 
-bool InternalIdTokenResult::operator==(
-    const InternalIdTokenResult& other) const {
-  return PigeonInternalDeepEquals(token_, other.token_) &&
-         PigeonInternalDeepEquals(expiration_timestamp_,
-                                  other.expiration_timestamp_) &&
-         PigeonInternalDeepEquals(auth_timestamp_, other.auth_timestamp_) &&
-         PigeonInternalDeepEquals(issued_at_timestamp_,
-                                  other.issued_at_timestamp_) &&
-         PigeonInternalDeepEquals(sign_in_provider_, other.sign_in_provider_) &&
-         PigeonInternalDeepEquals(claims_, other.claims_) &&
-         PigeonInternalDeepEquals(sign_in_second_factor_,
-                                  other.sign_in_second_factor_);
+bool InternalIdTokenResult::operator==(const InternalIdTokenResult& other) const {
+  return PigeonInternalDeepEquals(token_, other.token_) && PigeonInternalDeepEquals(expiration_timestamp_, other.expiration_timestamp_) && PigeonInternalDeepEquals(auth_timestamp_, other.auth_timestamp_) && PigeonInternalDeepEquals(issued_at_timestamp_, other.issued_at_timestamp_) && PigeonInternalDeepEquals(sign_in_provider_, other.sign_in_provider_) && PigeonInternalDeepEquals(claims_, other.claims_) && PigeonInternalDeepEquals(sign_in_second_factor_, other.sign_in_second_factor_);
 }
 
-bool InternalIdTokenResult::operator!=(
-    const InternalIdTokenResult& other) const {
+bool InternalIdTokenResult::operator!=(const InternalIdTokenResult& other) const {
   return !(*this == other);
 }
 
@@ -2491,47 +2241,47 @@ size_t PigeonInternalDeepHash(const InternalIdTokenResult& v) {
 
 // InternalUserProfile
 
-InternalUserProfile::InternalUserProfile(bool display_name_changed,
-                                         bool photo_url_changed)
-    : display_name_changed_(display_name_changed),
-      photo_url_changed_(photo_url_changed) {}
+InternalUserProfile::InternalUserProfile(
+  bool display_name_changed,
+  bool photo_url_changed)
+ : display_name_changed_(display_name_changed),
+    photo_url_changed_(photo_url_changed) {}
 
-InternalUserProfile::InternalUserProfile(const std::string* display_name,
-                                         const std::string* photo_url,
-                                         bool display_name_changed,
-                                         bool photo_url_changed)
-    : display_name_(display_name ? std::optional<std::string>(*display_name)
-                                 : std::nullopt),
-      photo_url_(photo_url ? std::optional<std::string>(*photo_url)
-                           : std::nullopt),
-      display_name_changed_(display_name_changed),
-      photo_url_changed_(photo_url_changed) {}
+InternalUserProfile::InternalUserProfile(
+  const std::string* display_name,
+  const std::string* photo_url,
+  bool display_name_changed,
+  bool photo_url_changed)
+ : display_name_(display_name ? std::optional<std::string>(*display_name) : std::nullopt),
+    photo_url_(photo_url ? std::optional<std::string>(*photo_url) : std::nullopt),
+    display_name_changed_(display_name_changed),
+    photo_url_changed_(photo_url_changed) {}
 
 const std::string* InternalUserProfile::display_name() const {
   return display_name_ ? &(*display_name_) : nullptr;
 }
 
 void InternalUserProfile::set_display_name(const std::string_view* value_arg) {
-  display_name_ =
-      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+  display_name_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
 void InternalUserProfile::set_display_name(std::string_view value_arg) {
   display_name_ = value_arg;
 }
 
+
 const std::string* InternalUserProfile::photo_url() const {
   return photo_url_ ? &(*photo_url_) : nullptr;
 }
 
 void InternalUserProfile::set_photo_url(const std::string_view* value_arg) {
-  photo_url_ =
-      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+  photo_url_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
 void InternalUserProfile::set_photo_url(std::string_view value_arg) {
   photo_url_ = value_arg;
 }
+
 
 bool InternalUserProfile::display_name_changed() const {
   return display_name_changed_;
@@ -2541,6 +2291,7 @@ void InternalUserProfile::set_display_name_changed(bool value_arg) {
   display_name_changed_ = value_arg;
 }
 
+
 bool InternalUserProfile::photo_url_changed() const {
   return photo_url_changed_;
 }
@@ -2549,20 +2300,21 @@ void InternalUserProfile::set_photo_url_changed(bool value_arg) {
   photo_url_changed_ = value_arg;
 }
 
+
 EncodableList InternalUserProfile::ToEncodableList() const {
   EncodableList list;
   list.reserve(4);
-  list.push_back(display_name_ ? EncodableValue(*display_name_)
-                               : EncodableValue());
+  list.push_back(display_name_ ? EncodableValue(*display_name_) : EncodableValue());
   list.push_back(photo_url_ ? EncodableValue(*photo_url_) : EncodableValue());
   list.push_back(EncodableValue(display_name_changed_));
   list.push_back(EncodableValue(photo_url_changed_));
   return list;
 }
 
-InternalUserProfile InternalUserProfile::FromEncodableList(
-    const EncodableList& list) {
-  InternalUserProfile decoded(std::get<bool>(list[2]), std::get<bool>(list[3]));
+InternalUserProfile InternalUserProfile::FromEncodableList(const EncodableList& list) {
+  InternalUserProfile decoded(
+    std::get<bool>(list[2]),
+    std::get<bool>(list[3]));
   auto& encodable_display_name = list[0];
   if (!encodable_display_name.IsNull()) {
     decoded.set_display_name(std::get<std::string>(encodable_display_name));
@@ -2575,11 +2327,7 @@ InternalUserProfile InternalUserProfile::FromEncodableList(
 }
 
 bool InternalUserProfile::operator==(const InternalUserProfile& other) const {
-  return PigeonInternalDeepEquals(display_name_, other.display_name_) &&
-         PigeonInternalDeepEquals(photo_url_, other.photo_url_) &&
-         PigeonInternalDeepEquals(display_name_changed_,
-                                  other.display_name_changed_) &&
-         PigeonInternalDeepEquals(photo_url_changed_, other.photo_url_changed_);
+  return PigeonInternalDeepEquals(display_name_, other.display_name_) && PigeonInternalDeepEquals(photo_url_, other.photo_url_) && PigeonInternalDeepEquals(display_name_changed_, other.display_name_changed_) && PigeonInternalDeepEquals(photo_url_changed_, other.photo_url_changed_);
 }
 
 bool InternalUserProfile::operator!=(const InternalUserProfile& other) const {
@@ -2595,43 +2343,39 @@ size_t InternalUserProfile::Hash() const {
   return result;
 }
 
-size_t PigeonInternalDeepHash(const InternalUserProfile& v) { return v.Hash(); }
+size_t PigeonInternalDeepHash(const InternalUserProfile& v) {
+  return v.Hash();
+}
 
 // InternalTotpSecret
 
 InternalTotpSecret::InternalTotpSecret(const std::string& secret_key)
-    : secret_key_(secret_key) {}
+ : secret_key_(secret_key) {}
 
 InternalTotpSecret::InternalTotpSecret(
-    const int64_t* code_interval_seconds, const int64_t* code_length,
-    const int64_t* enrollment_completion_deadline,
-    const std::string* hashing_algorithm, const std::string& secret_key)
-    : code_interval_seconds_(
-          code_interval_seconds ? std::optional<int64_t>(*code_interval_seconds)
-                                : std::nullopt),
-      code_length_(code_length ? std::optional<int64_t>(*code_length)
-                               : std::nullopt),
-      enrollment_completion_deadline_(
-          enrollment_completion_deadline
-              ? std::optional<int64_t>(*enrollment_completion_deadline)
-              : std::nullopt),
-      hashing_algorithm_(hashing_algorithm
-                             ? std::optional<std::string>(*hashing_algorithm)
-                             : std::nullopt),
-      secret_key_(secret_key) {}
+  const int64_t* code_interval_seconds,
+  const int64_t* code_length,
+  const int64_t* enrollment_completion_deadline,
+  const std::string* hashing_algorithm,
+  const std::string& secret_key)
+ : code_interval_seconds_(code_interval_seconds ? std::optional<int64_t>(*code_interval_seconds) : std::nullopt),
+    code_length_(code_length ? std::optional<int64_t>(*code_length) : std::nullopt),
+    enrollment_completion_deadline_(enrollment_completion_deadline ? std::optional<int64_t>(*enrollment_completion_deadline) : std::nullopt),
+    hashing_algorithm_(hashing_algorithm ? std::optional<std::string>(*hashing_algorithm) : std::nullopt),
+    secret_key_(secret_key) {}
 
 const int64_t* InternalTotpSecret::code_interval_seconds() const {
   return code_interval_seconds_ ? &(*code_interval_seconds_) : nullptr;
 }
 
 void InternalTotpSecret::set_code_interval_seconds(const int64_t* value_arg) {
-  code_interval_seconds_ =
-      value_arg ? std::optional<int64_t>(*value_arg) : std::nullopt;
+  code_interval_seconds_ = value_arg ? std::optional<int64_t>(*value_arg) : std::nullopt;
 }
 
 void InternalTotpSecret::set_code_interval_seconds(int64_t value_arg) {
   code_interval_seconds_ = value_arg;
 }
+
 
 const int64_t* InternalTotpSecret::code_length() const {
   return code_length_ ? &(*code_length_) : nullptr;
@@ -2645,34 +2389,32 @@ void InternalTotpSecret::set_code_length(int64_t value_arg) {
   code_length_ = value_arg;
 }
 
+
 const int64_t* InternalTotpSecret::enrollment_completion_deadline() const {
-  return enrollment_completion_deadline_ ? &(*enrollment_completion_deadline_)
-                                         : nullptr;
+  return enrollment_completion_deadline_ ? &(*enrollment_completion_deadline_) : nullptr;
 }
 
-void InternalTotpSecret::set_enrollment_completion_deadline(
-    const int64_t* value_arg) {
-  enrollment_completion_deadline_ =
-      value_arg ? std::optional<int64_t>(*value_arg) : std::nullopt;
+void InternalTotpSecret::set_enrollment_completion_deadline(const int64_t* value_arg) {
+  enrollment_completion_deadline_ = value_arg ? std::optional<int64_t>(*value_arg) : std::nullopt;
 }
 
 void InternalTotpSecret::set_enrollment_completion_deadline(int64_t value_arg) {
   enrollment_completion_deadline_ = value_arg;
 }
 
+
 const std::string* InternalTotpSecret::hashing_algorithm() const {
   return hashing_algorithm_ ? &(*hashing_algorithm_) : nullptr;
 }
 
-void InternalTotpSecret::set_hashing_algorithm(
-    const std::string_view* value_arg) {
-  hashing_algorithm_ =
-      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+void InternalTotpSecret::set_hashing_algorithm(const std::string_view* value_arg) {
+  hashing_algorithm_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
 void InternalTotpSecret::set_hashing_algorithm(std::string_view value_arg) {
   hashing_algorithm_ = value_arg;
 }
+
 
 const std::string& InternalTotpSecret::secret_key() const {
   return secret_key_;
@@ -2682,30 +2424,24 @@ void InternalTotpSecret::set_secret_key(std::string_view value_arg) {
   secret_key_ = value_arg;
 }
 
+
 EncodableList InternalTotpSecret::ToEncodableList() const {
   EncodableList list;
   list.reserve(5);
-  list.push_back(code_interval_seconds_
-                     ? EncodableValue(*code_interval_seconds_)
-                     : EncodableValue());
-  list.push_back(code_length_ ? EncodableValue(*code_length_)
-                              : EncodableValue());
-  list.push_back(enrollment_completion_deadline_
-                     ? EncodableValue(*enrollment_completion_deadline_)
-                     : EncodableValue());
-  list.push_back(hashing_algorithm_ ? EncodableValue(*hashing_algorithm_)
-                                    : EncodableValue());
+  list.push_back(code_interval_seconds_ ? EncodableValue(*code_interval_seconds_) : EncodableValue());
+  list.push_back(code_length_ ? EncodableValue(*code_length_) : EncodableValue());
+  list.push_back(enrollment_completion_deadline_ ? EncodableValue(*enrollment_completion_deadline_) : EncodableValue());
+  list.push_back(hashing_algorithm_ ? EncodableValue(*hashing_algorithm_) : EncodableValue());
   list.push_back(EncodableValue(secret_key_));
   return list;
 }
 
-InternalTotpSecret InternalTotpSecret::FromEncodableList(
-    const EncodableList& list) {
-  InternalTotpSecret decoded(std::get<std::string>(list[4]));
+InternalTotpSecret InternalTotpSecret::FromEncodableList(const EncodableList& list) {
+  InternalTotpSecret decoded(
+    std::get<std::string>(list[4]));
   auto& encodable_code_interval_seconds = list[0];
   if (!encodable_code_interval_seconds.IsNull()) {
-    decoded.set_code_interval_seconds(
-        std::get<int64_t>(encodable_code_interval_seconds));
+    decoded.set_code_interval_seconds(std::get<int64_t>(encodable_code_interval_seconds));
   }
   auto& encodable_code_length = list[1];
   if (!encodable_code_length.IsNull()) {
@@ -2713,26 +2449,17 @@ InternalTotpSecret InternalTotpSecret::FromEncodableList(
   }
   auto& encodable_enrollment_completion_deadline = list[2];
   if (!encodable_enrollment_completion_deadline.IsNull()) {
-    decoded.set_enrollment_completion_deadline(
-        std::get<int64_t>(encodable_enrollment_completion_deadline));
+    decoded.set_enrollment_completion_deadline(std::get<int64_t>(encodable_enrollment_completion_deadline));
   }
   auto& encodable_hashing_algorithm = list[3];
   if (!encodable_hashing_algorithm.IsNull()) {
-    decoded.set_hashing_algorithm(
-        std::get<std::string>(encodable_hashing_algorithm));
+    decoded.set_hashing_algorithm(std::get<std::string>(encodable_hashing_algorithm));
   }
   return decoded;
 }
 
 bool InternalTotpSecret::operator==(const InternalTotpSecret& other) const {
-  return PigeonInternalDeepEquals(code_interval_seconds_,
-                                  other.code_interval_seconds_) &&
-         PigeonInternalDeepEquals(code_length_, other.code_length_) &&
-         PigeonInternalDeepEquals(enrollment_completion_deadline_,
-                                  other.enrollment_completion_deadline_) &&
-         PigeonInternalDeepEquals(hashing_algorithm_,
-                                  other.hashing_algorithm_) &&
-         PigeonInternalDeepEquals(secret_key_, other.secret_key_);
+  return PigeonInternalDeepEquals(code_interval_seconds_, other.code_interval_seconds_) && PigeonInternalDeepEquals(code_length_, other.code_length_) && PigeonInternalDeepEquals(enrollment_completion_deadline_, other.enrollment_completion_deadline_) && PigeonInternalDeepEquals(hashing_algorithm_, other.hashing_algorithm_) && PigeonInternalDeepEquals(secret_key_, other.secret_key_);
 }
 
 bool InternalTotpSecret::operator!=(const InternalTotpSecret& other) const {
@@ -2743,275 +2470,192 @@ size_t InternalTotpSecret::Hash() const {
   size_t result = 1;
   result = result * 31 + PigeonInternalDeepHash(code_interval_seconds_);
   result = result * 31 + PigeonInternalDeepHash(code_length_);
-  result =
-      result * 31 + PigeonInternalDeepHash(enrollment_completion_deadline_);
+  result = result * 31 + PigeonInternalDeepHash(enrollment_completion_deadline_);
   result = result * 31 + PigeonInternalDeepHash(hashing_algorithm_);
   result = result * 31 + PigeonInternalDeepHash(secret_key_);
   return result;
 }
 
-size_t PigeonInternalDeepHash(const InternalTotpSecret& v) { return v.Hash(); }
+size_t PigeonInternalDeepHash(const InternalTotpSecret& v) {
+  return v.Hash();
+}
+
 
 PigeonInternalCodecSerializer::PigeonInternalCodecSerializer() {}
 
 EncodableValue PigeonInternalCodecSerializer::ReadValueOfType(
-    uint8_t type, ::flutter::ByteStreamReader* stream) const {
+  uint8_t type,
+  ::flutter::ByteStreamReader* stream) const {
   switch (type) {
     case 129: {
-      const auto& encodable_enum_arg = ReadValue(stream);
-      const int64_t enum_arg_value =
-          encodable_enum_arg.IsNull() ? 0 : encodable_enum_arg.LongValue();
-      return encodable_enum_arg.IsNull()
-                 ? EncodableValue()
-                 : CustomEncodableValue(
-                       static_cast<ActionCodeInfoOperation>(enum_arg_value));
-    }
+        const auto& encodable_enum_arg = ReadValue(stream);
+        const int64_t enum_arg_value = encodable_enum_arg.IsNull() ? 0 : encodable_enum_arg.LongValue();
+        return encodable_enum_arg.IsNull() ? EncodableValue() : CustomEncodableValue(static_cast<ActionCodeInfoOperation>(enum_arg_value));
+      }
     case 130: {
-      return CustomEncodableValue(InternalMultiFactorSession::FromEncodableList(
-          std::get<EncodableList>(ReadValue(stream))));
-    }
+        return CustomEncodableValue(InternalMultiFactorSession::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
+      }
     case 131: {
-      return CustomEncodableValue(
-          InternalPhoneMultiFactorAssertion::FromEncodableList(
-              std::get<EncodableList>(ReadValue(stream))));
-    }
+        return CustomEncodableValue(InternalPhoneMultiFactorAssertion::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
+      }
     case 132: {
-      return CustomEncodableValue(InternalMultiFactorInfo::FromEncodableList(
-          std::get<EncodableList>(ReadValue(stream))));
-    }
+        return CustomEncodableValue(InternalMultiFactorInfo::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
+      }
     case 133: {
-      return CustomEncodableValue(AuthPigeonFirebaseApp::FromEncodableList(
-          std::get<EncodableList>(ReadValue(stream))));
-    }
+        return CustomEncodableValue(AuthPigeonFirebaseApp::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
+      }
     case 134: {
-      return CustomEncodableValue(InternalActionCodeInfoData::FromEncodableList(
-          std::get<EncodableList>(ReadValue(stream))));
-    }
+        return CustomEncodableValue(InternalActionCodeInfoData::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
+      }
     case 135: {
-      return CustomEncodableValue(InternalActionCodeInfo::FromEncodableList(
-          std::get<EncodableList>(ReadValue(stream))));
-    }
+        return CustomEncodableValue(InternalActionCodeInfo::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
+      }
     case 136: {
-      return CustomEncodableValue(InternalAdditionalUserInfo::FromEncodableList(
-          std::get<EncodableList>(ReadValue(stream))));
-    }
+        return CustomEncodableValue(InternalAdditionalUserInfo::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
+      }
     case 137: {
-      return CustomEncodableValue(InternalAuthCredential::FromEncodableList(
-          std::get<EncodableList>(ReadValue(stream))));
-    }
+        return CustomEncodableValue(InternalAuthCredential::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
+      }
     case 138: {
-      return CustomEncodableValue(InternalUserInfo::FromEncodableList(
-          std::get<EncodableList>(ReadValue(stream))));
-    }
+        return CustomEncodableValue(InternalUserInfo::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
+      }
     case 139: {
-      return CustomEncodableValue(InternalUserDetails::FromEncodableList(
-          std::get<EncodableList>(ReadValue(stream))));
-    }
+        return CustomEncodableValue(InternalUserDetails::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
+      }
     case 140: {
-      return CustomEncodableValue(InternalUserCredential::FromEncodableList(
-          std::get<EncodableList>(ReadValue(stream))));
-    }
+        return CustomEncodableValue(InternalUserCredential::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
+      }
     case 141: {
-      return CustomEncodableValue(
-          InternalAuthCredentialInput::FromEncodableList(
-              std::get<EncodableList>(ReadValue(stream))));
-    }
+        return CustomEncodableValue(InternalAuthCredentialInput::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
+      }
     case 142: {
-      return CustomEncodableValue(InternalActionCodeSettings::FromEncodableList(
-          std::get<EncodableList>(ReadValue(stream))));
-    }
+        return CustomEncodableValue(InternalActionCodeSettings::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
+      }
     case 143: {
-      return CustomEncodableValue(
-          InternalFirebaseAuthSettings::FromEncodableList(
-              std::get<EncodableList>(ReadValue(stream))));
-    }
+        return CustomEncodableValue(InternalFirebaseAuthSettings::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
+      }
     case 144: {
-      return CustomEncodableValue(InternalSignInProvider::FromEncodableList(
-          std::get<EncodableList>(ReadValue(stream))));
-    }
+        return CustomEncodableValue(InternalSignInProvider::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
+      }
     case 145: {
-      return CustomEncodableValue(
-          InternalVerifyPhoneNumberRequest::FromEncodableList(
-              std::get<EncodableList>(ReadValue(stream))));
-    }
+        return CustomEncodableValue(InternalVerifyPhoneNumberRequest::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
+      }
     case 146: {
-      return CustomEncodableValue(InternalIdTokenResult::FromEncodableList(
-          std::get<EncodableList>(ReadValue(stream))));
-    }
+        return CustomEncodableValue(InternalIdTokenResult::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
+      }
     case 147: {
-      return CustomEncodableValue(InternalUserProfile::FromEncodableList(
-          std::get<EncodableList>(ReadValue(stream))));
-    }
+        return CustomEncodableValue(InternalUserProfile::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
+      }
     case 148: {
-      return CustomEncodableValue(InternalTotpSecret::FromEncodableList(
-          std::get<EncodableList>(ReadValue(stream))));
-    }
+        return CustomEncodableValue(InternalTotpSecret::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
+      }
     default:
       return ::flutter::StandardCodecSerializer::ReadValueOfType(type, stream);
-  }
+    }
 }
 
 void PigeonInternalCodecSerializer::WriteValue(
-    const EncodableValue& value, ::flutter::ByteStreamWriter* stream) const {
-  if (const CustomEncodableValue* custom_value =
-          std::get_if<CustomEncodableValue>(&value)) {
+  const EncodableValue& value,
+  ::flutter::ByteStreamWriter* stream) const {
+  if (const CustomEncodableValue* custom_value = std::get_if<CustomEncodableValue>(&value)) {
     if (custom_value->type() == typeid(ActionCodeInfoOperation)) {
       stream->WriteByte(129);
-      WriteValue(EncodableValue(static_cast<int>(
-                     std::any_cast<ActionCodeInfoOperation>(*custom_value))),
-                 stream);
+      WriteValue(EncodableValue(static_cast<int>(std::any_cast<ActionCodeInfoOperation>(*custom_value))), stream);
       return;
     }
     if (custom_value->type() == typeid(InternalMultiFactorSession)) {
       stream->WriteByte(130);
-      WriteValue(EncodableValue(
-                     std::any_cast<InternalMultiFactorSession>(*custom_value)
-                         .ToEncodableList()),
-                 stream);
+      WriteValue(EncodableValue(std::any_cast<InternalMultiFactorSession>(*custom_value).ToEncodableList()), stream);
       return;
     }
     if (custom_value->type() == typeid(InternalPhoneMultiFactorAssertion)) {
       stream->WriteByte(131);
-      WriteValue(
-          EncodableValue(
-              std::any_cast<InternalPhoneMultiFactorAssertion>(*custom_value)
-                  .ToEncodableList()),
-          stream);
+      WriteValue(EncodableValue(std::any_cast<InternalPhoneMultiFactorAssertion>(*custom_value).ToEncodableList()), stream);
       return;
     }
     if (custom_value->type() == typeid(InternalMultiFactorInfo)) {
       stream->WriteByte(132);
-      WriteValue(
-          EncodableValue(std::any_cast<InternalMultiFactorInfo>(*custom_value)
-                             .ToEncodableList()),
-          stream);
+      WriteValue(EncodableValue(std::any_cast<InternalMultiFactorInfo>(*custom_value).ToEncodableList()), stream);
       return;
     }
     if (custom_value->type() == typeid(AuthPigeonFirebaseApp)) {
       stream->WriteByte(133);
-      WriteValue(
-          EncodableValue(std::any_cast<AuthPigeonFirebaseApp>(*custom_value)
-                             .ToEncodableList()),
-          stream);
+      WriteValue(EncodableValue(std::any_cast<AuthPigeonFirebaseApp>(*custom_value).ToEncodableList()), stream);
       return;
     }
     if (custom_value->type() == typeid(InternalActionCodeInfoData)) {
       stream->WriteByte(134);
-      WriteValue(EncodableValue(
-                     std::any_cast<InternalActionCodeInfoData>(*custom_value)
-                         .ToEncodableList()),
-                 stream);
+      WriteValue(EncodableValue(std::any_cast<InternalActionCodeInfoData>(*custom_value).ToEncodableList()), stream);
       return;
     }
     if (custom_value->type() == typeid(InternalActionCodeInfo)) {
       stream->WriteByte(135);
-      WriteValue(
-          EncodableValue(std::any_cast<InternalActionCodeInfo>(*custom_value)
-                             .ToEncodableList()),
-          stream);
+      WriteValue(EncodableValue(std::any_cast<InternalActionCodeInfo>(*custom_value).ToEncodableList()), stream);
       return;
     }
     if (custom_value->type() == typeid(InternalAdditionalUserInfo)) {
       stream->WriteByte(136);
-      WriteValue(EncodableValue(
-                     std::any_cast<InternalAdditionalUserInfo>(*custom_value)
-                         .ToEncodableList()),
-                 stream);
+      WriteValue(EncodableValue(std::any_cast<InternalAdditionalUserInfo>(*custom_value).ToEncodableList()), stream);
       return;
     }
     if (custom_value->type() == typeid(InternalAuthCredential)) {
       stream->WriteByte(137);
-      WriteValue(
-          EncodableValue(std::any_cast<InternalAuthCredential>(*custom_value)
-                             .ToEncodableList()),
-          stream);
+      WriteValue(EncodableValue(std::any_cast<InternalAuthCredential>(*custom_value).ToEncodableList()), stream);
       return;
     }
     if (custom_value->type() == typeid(InternalUserInfo)) {
       stream->WriteByte(138);
-      WriteValue(
-          EncodableValue(
-              std::any_cast<InternalUserInfo>(*custom_value).ToEncodableList()),
-          stream);
+      WriteValue(EncodableValue(std::any_cast<InternalUserInfo>(*custom_value).ToEncodableList()), stream);
       return;
     }
     if (custom_value->type() == typeid(InternalUserDetails)) {
       stream->WriteByte(139);
-      WriteValue(
-          EncodableValue(std::any_cast<InternalUserDetails>(*custom_value)
-                             .ToEncodableList()),
-          stream);
+      WriteValue(EncodableValue(std::any_cast<InternalUserDetails>(*custom_value).ToEncodableList()), stream);
       return;
     }
     if (custom_value->type() == typeid(InternalUserCredential)) {
       stream->WriteByte(140);
-      WriteValue(
-          EncodableValue(std::any_cast<InternalUserCredential>(*custom_value)
-                             .ToEncodableList()),
-          stream);
+      WriteValue(EncodableValue(std::any_cast<InternalUserCredential>(*custom_value).ToEncodableList()), stream);
       return;
     }
     if (custom_value->type() == typeid(InternalAuthCredentialInput)) {
       stream->WriteByte(141);
-      WriteValue(EncodableValue(
-                     std::any_cast<InternalAuthCredentialInput>(*custom_value)
-                         .ToEncodableList()),
-                 stream);
+      WriteValue(EncodableValue(std::any_cast<InternalAuthCredentialInput>(*custom_value).ToEncodableList()), stream);
       return;
     }
     if (custom_value->type() == typeid(InternalActionCodeSettings)) {
       stream->WriteByte(142);
-      WriteValue(EncodableValue(
-                     std::any_cast<InternalActionCodeSettings>(*custom_value)
-                         .ToEncodableList()),
-                 stream);
+      WriteValue(EncodableValue(std::any_cast<InternalActionCodeSettings>(*custom_value).ToEncodableList()), stream);
       return;
     }
     if (custom_value->type() == typeid(InternalFirebaseAuthSettings)) {
       stream->WriteByte(143);
-      WriteValue(EncodableValue(
-                     std::any_cast<InternalFirebaseAuthSettings>(*custom_value)
-                         .ToEncodableList()),
-                 stream);
+      WriteValue(EncodableValue(std::any_cast<InternalFirebaseAuthSettings>(*custom_value).ToEncodableList()), stream);
       return;
     }
     if (custom_value->type() == typeid(InternalSignInProvider)) {
       stream->WriteByte(144);
-      WriteValue(
-          EncodableValue(std::any_cast<InternalSignInProvider>(*custom_value)
-                             .ToEncodableList()),
-          stream);
+      WriteValue(EncodableValue(std::any_cast<InternalSignInProvider>(*custom_value).ToEncodableList()), stream);
       return;
     }
     if (custom_value->type() == typeid(InternalVerifyPhoneNumberRequest)) {
       stream->WriteByte(145);
-      WriteValue(EncodableValue(std::any_cast<InternalVerifyPhoneNumberRequest>(
-                                    *custom_value)
-                                    .ToEncodableList()),
-                 stream);
+      WriteValue(EncodableValue(std::any_cast<InternalVerifyPhoneNumberRequest>(*custom_value).ToEncodableList()), stream);
       return;
     }
     if (custom_value->type() == typeid(InternalIdTokenResult)) {
       stream->WriteByte(146);
-      WriteValue(
-          EncodableValue(std::any_cast<InternalIdTokenResult>(*custom_value)
-                             .ToEncodableList()),
-          stream);
+      WriteValue(EncodableValue(std::any_cast<InternalIdTokenResult>(*custom_value).ToEncodableList()), stream);
       return;
     }
     if (custom_value->type() == typeid(InternalUserProfile)) {
       stream->WriteByte(147);
-      WriteValue(
-          EncodableValue(std::any_cast<InternalUserProfile>(*custom_value)
-                             .ToEncodableList()),
-          stream);
+      WriteValue(EncodableValue(std::any_cast<InternalUserProfile>(*custom_value).ToEncodableList()), stream);
       return;
     }
     if (custom_value->type() == typeid(InternalTotpSecret)) {
       stream->WriteByte(148);
-      WriteValue(EncodableValue(std::any_cast<InternalTotpSecret>(*custom_value)
-                                    .ToEncodableList()),
-                 stream);
+      WriteValue(EncodableValue(std::any_cast<InternalTotpSecret>(*custom_value).ToEncodableList()), stream);
       return;
     }
   }
@@ -3020,2105 +2664,857 @@ void PigeonInternalCodecSerializer::WriteValue(
 
 /// The codec used by FirebaseAuthHostApi.
 const ::flutter::StandardMessageCodec& FirebaseAuthHostApi::GetCodec() {
-  return ::flutter::StandardMessageCodec::GetInstance(
-      &PigeonInternalCodecSerializer::GetInstance());
+  return ::flutter::StandardMessageCodec::GetInstance(&PigeonInternalCodecSerializer::GetInstance());
 }
 
-// Sets up an instance of `FirebaseAuthHostApi` to handle messages through the
-// `binary_messenger`.
-void FirebaseAuthHostApi::SetUp(::flutter::BinaryMessenger* binary_messenger,
-                                FirebaseAuthHostApi* api) {
+// Sets up an instance of `FirebaseAuthHostApi` to handle messages through the `binary_messenger`.
+void FirebaseAuthHostApi::SetUp(
+  ::flutter::BinaryMessenger* binary_messenger,
+  FirebaseAuthHostApi* api) {
   FirebaseAuthHostApi::SetUp(binary_messenger, api, "");
 }
 
-void FirebaseAuthHostApi::SetUp(::flutter::BinaryMessenger* binary_messenger,
-                                FirebaseAuthHostApi* api,
-                                const std::string& message_channel_suffix) {
-  const std::string prepended_suffix =
-      message_channel_suffix.length() > 0
-          ? std::string(".") + message_channel_suffix
-          : "";
+void FirebaseAuthHostApi::SetUp(
+  ::flutter::BinaryMessenger* binary_messenger,
+  FirebaseAuthHostApi* api,
+  const std::string& message_channel_suffix) {
+  const std::string prepended_suffix = message_channel_suffix.length() > 0 ? std::string(".") + message_channel_suffix : "";
   {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_auth_platform_interface."
-        "FirebaseAuthHostApi.registerIdTokenListener" +
-            prepended_suffix,
-        &GetCodec());
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.registerIdTokenListener" + prepended_suffix, &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const ::flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
-                  std::get<CustomEncodableValue>(encodable_app_arg));
-              api->RegisterIdTokenListener(
-                  app_arg, [reply](ErrorOr<std::string>&& output) {
-                    if (output.has_error()) {
-                      reply(WrapError(output.error()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(
-                        EncodableValue(std::move(output).TakeValue()));
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
-            }
-          });
-    } else {
-      channel.SetMessageHandler(nullptr);
-    }
-  }
-  {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_auth_platform_interface."
-        "FirebaseAuthHostApi.registerAuthStateListener" +
-            prepended_suffix,
-        &GetCodec());
-    if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const ::flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
-                  std::get<CustomEncodableValue>(encodable_app_arg));
-              api->RegisterAuthStateListener(
-                  app_arg, [reply](ErrorOr<std::string>&& output) {
-                    if (output.has_error()) {
-                      reply(WrapError(output.error()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(
-                        EncodableValue(std::move(output).TakeValue()));
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
-            }
-          });
-    } else {
-      channel.SetMessageHandler(nullptr);
-    }
-  }
-  {
-    BasicMessageChannel<> channel(binary_messenger,
-                                  "dev.flutter.pigeon.firebase_auth_platform_"
-                                  "interface.FirebaseAuthHostApi.useEmulator" +
-                                      prepended_suffix,
-                                  &GetCodec());
-    if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const ::flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
-                  std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_host_arg = args.at(1);
-              if (encodable_host_arg.IsNull()) {
-                reply(WrapError("host_arg unexpectedly null."));
-                return;
-              }
-              const auto& host_arg = std::get<std::string>(encodable_host_arg);
-              const auto& encodable_port_arg = args.at(2);
-              if (encodable_port_arg.IsNull()) {
-                reply(WrapError("port_arg unexpectedly null."));
-                return;
-              }
-              const int64_t port_arg = encodable_port_arg.LongValue();
-              api->UseEmulator(app_arg, host_arg, port_arg,
-                               [reply](std::optional<FlutterError>&& output) {
-                                 if (output.has_value()) {
-                                   reply(WrapError(output.value()));
-                                   return;
-                                 }
-                                 EncodableList wrapped;
-                                 wrapped.push_back(EncodableValue());
-                                 reply(EncodableValue(std::move(wrapped)));
-                               });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
-            }
-          });
-    } else {
-      channel.SetMessageHandler(nullptr);
-    }
-  }
-  {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_auth_platform_interface."
-        "FirebaseAuthHostApi.applyActionCode" +
-            prepended_suffix,
-        &GetCodec());
-    if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const ::flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
-                  std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_code_arg = args.at(1);
-              if (encodable_code_arg.IsNull()) {
-                reply(WrapError("code_arg unexpectedly null."));
-                return;
-              }
-              const auto& code_arg = std::get<std::string>(encodable_code_arg);
-              api->ApplyActionCode(
-                  app_arg, code_arg,
-                  [reply](std::optional<FlutterError>&& output) {
-                    if (output.has_value()) {
-                      reply(WrapError(output.value()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(EncodableValue());
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
-            }
-          });
-    } else {
-      channel.SetMessageHandler(nullptr);
-    }
-  }
-  {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_auth_platform_interface."
-        "FirebaseAuthHostApi.checkActionCode" +
-            prepended_suffix,
-        &GetCodec());
-    if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const ::flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
-                  std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_code_arg = args.at(1);
-              if (encodable_code_arg.IsNull()) {
-                reply(WrapError("code_arg unexpectedly null."));
-                return;
-              }
-              const auto& code_arg = std::get<std::string>(encodable_code_arg);
-              api->CheckActionCode(
-                  app_arg, code_arg,
-                  [reply](ErrorOr<InternalActionCodeInfo>&& output) {
-                    if (output.has_error()) {
-                      reply(WrapError(output.error()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(
-                        CustomEncodableValue(std::move(output).TakeValue()));
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
-            }
-          });
-    } else {
-      channel.SetMessageHandler(nullptr);
-    }
-  }
-  {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_auth_platform_interface."
-        "FirebaseAuthHostApi.confirmPasswordReset" +
-            prepended_suffix,
-        &GetCodec());
-    if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const ::flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
-                  std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_code_arg = args.at(1);
-              if (encodable_code_arg.IsNull()) {
-                reply(WrapError("code_arg unexpectedly null."));
-                return;
-              }
-              const auto& code_arg = std::get<std::string>(encodable_code_arg);
-              const auto& encodable_new_password_arg = args.at(2);
-              if (encodable_new_password_arg.IsNull()) {
-                reply(WrapError("new_password_arg unexpectedly null."));
-                return;
-              }
-              const auto& new_password_arg =
-                  std::get<std::string>(encodable_new_password_arg);
-              api->ConfirmPasswordReset(
-                  app_arg, code_arg, new_password_arg,
-                  [reply](std::optional<FlutterError>&& output) {
-                    if (output.has_value()) {
-                      reply(WrapError(output.value()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(EncodableValue());
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
-            }
-          });
-    } else {
-      channel.SetMessageHandler(nullptr);
-    }
-  }
-  {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_auth_platform_interface."
-        "FirebaseAuthHostApi.createUserWithEmailAndPassword" +
-            prepended_suffix,
-        &GetCodec());
-    if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const ::flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
-                  std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_email_arg = args.at(1);
-              if (encodable_email_arg.IsNull()) {
-                reply(WrapError("email_arg unexpectedly null."));
-                return;
-              }
-              const auto& email_arg =
-                  std::get<std::string>(encodable_email_arg);
-              const auto& encodable_password_arg = args.at(2);
-              if (encodable_password_arg.IsNull()) {
-                reply(WrapError("password_arg unexpectedly null."));
-                return;
-              }
-              const auto& password_arg =
-                  std::get<std::string>(encodable_password_arg);
-              api->CreateUserWithEmailAndPassword(
-                  app_arg, email_arg, password_arg,
-                  [reply](ErrorOr<InternalUserCredential>&& output) {
-                    if (output.has_error()) {
-                      reply(WrapError(output.error()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(
-                        CustomEncodableValue(std::move(output).TakeValue()));
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
-            }
-          });
-    } else {
-      channel.SetMessageHandler(nullptr);
-    }
-  }
-  {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_auth_platform_interface."
-        "FirebaseAuthHostApi.signInAnonymously" +
-            prepended_suffix,
-        &GetCodec());
-    if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const ::flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
-                  std::get<CustomEncodableValue>(encodable_app_arg));
-              api->SignInAnonymously(
-                  app_arg, [reply](ErrorOr<InternalUserCredential>&& output) {
-                    if (output.has_error()) {
-                      reply(WrapError(output.error()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(
-                        CustomEncodableValue(std::move(output).TakeValue()));
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
-            }
-          });
-    } else {
-      channel.SetMessageHandler(nullptr);
-    }
-  }
-  {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_auth_platform_interface."
-        "FirebaseAuthHostApi.signInWithCredential" +
-            prepended_suffix,
-        &GetCodec());
-    if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const ::flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
-                  std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_input_arg = args.at(1);
-              if (encodable_input_arg.IsNull()) {
-                reply(WrapError("input_arg unexpectedly null."));
-                return;
-              }
-              const auto& input_arg =
-                  std::get<EncodableMap>(encodable_input_arg);
-              api->SignInWithCredential(
-                  app_arg, input_arg,
-                  [reply](ErrorOr<InternalUserCredential>&& output) {
-                    if (output.has_error()) {
-                      reply(WrapError(output.error()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(
-                        CustomEncodableValue(std::move(output).TakeValue()));
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
-            }
-          });
-    } else {
-      channel.SetMessageHandler(nullptr);
-    }
-  }
-  {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_auth_platform_interface."
-        "FirebaseAuthHostApi.signInWithCustomToken" +
-            prepended_suffix,
-        &GetCodec());
-    if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const ::flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
-                  std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_token_arg = args.at(1);
-              if (encodable_token_arg.IsNull()) {
-                reply(WrapError("token_arg unexpectedly null."));
-                return;
-              }
-              const auto& token_arg =
-                  std::get<std::string>(encodable_token_arg);
-              api->SignInWithCustomToken(
-                  app_arg, token_arg,
-                  [reply](ErrorOr<InternalUserCredential>&& output) {
-                    if (output.has_error()) {
-                      reply(WrapError(output.error()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(
-                        CustomEncodableValue(std::move(output).TakeValue()));
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
-            }
-          });
-    } else {
-      channel.SetMessageHandler(nullptr);
-    }
-  }
-  {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_auth_platform_interface."
-        "FirebaseAuthHostApi.signInWithEmailAndPassword" +
-            prepended_suffix,
-        &GetCodec());
-    if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const ::flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
-                  std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_email_arg = args.at(1);
-              if (encodable_email_arg.IsNull()) {
-                reply(WrapError("email_arg unexpectedly null."));
-                return;
-              }
-              const auto& email_arg =
-                  std::get<std::string>(encodable_email_arg);
-              const auto& encodable_password_arg = args.at(2);
-              if (encodable_password_arg.IsNull()) {
-                reply(WrapError("password_arg unexpectedly null."));
-                return;
-              }
-              const auto& password_arg =
-                  std::get<std::string>(encodable_password_arg);
-              api->SignInWithEmailAndPassword(
-                  app_arg, email_arg, password_arg,
-                  [reply](ErrorOr<InternalUserCredential>&& output) {
-                    if (output.has_error()) {
-                      reply(WrapError(output.error()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(
-                        CustomEncodableValue(std::move(output).TakeValue()));
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
-            }
-          });
-    } else {
-      channel.SetMessageHandler(nullptr);
-    }
-  }
-  {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_auth_platform_interface."
-        "FirebaseAuthHostApi.signInWithEmailLink" +
-            prepended_suffix,
-        &GetCodec());
-    if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const ::flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
-                  std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_email_arg = args.at(1);
-              if (encodable_email_arg.IsNull()) {
-                reply(WrapError("email_arg unexpectedly null."));
-                return;
-              }
-              const auto& email_arg =
-                  std::get<std::string>(encodable_email_arg);
-              const auto& encodable_email_link_arg = args.at(2);
-              if (encodable_email_link_arg.IsNull()) {
-                reply(WrapError("email_link_arg unexpectedly null."));
-                return;
-              }
-              const auto& email_link_arg =
-                  std::get<std::string>(encodable_email_link_arg);
-              api->SignInWithEmailLink(
-                  app_arg, email_arg, email_link_arg,
-                  [reply](ErrorOr<InternalUserCredential>&& output) {
-                    if (output.has_error()) {
-                      reply(WrapError(output.error()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(
-                        CustomEncodableValue(std::move(output).TakeValue()));
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
-            }
-          });
-    } else {
-      channel.SetMessageHandler(nullptr);
-    }
-  }
-  {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_auth_platform_interface."
-        "FirebaseAuthHostApi.signInWithProvider" +
-            prepended_suffix,
-        &GetCodec());
-    if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const ::flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
-                  std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_sign_in_provider_arg = args.at(1);
-              if (encodable_sign_in_provider_arg.IsNull()) {
-                reply(WrapError("sign_in_provider_arg unexpectedly null."));
-                return;
-              }
-              const auto& sign_in_provider_arg =
-                  std::any_cast<const InternalSignInProvider&>(
-                      std::get<CustomEncodableValue>(
-                          encodable_sign_in_provider_arg));
-              api->SignInWithProvider(
-                  app_arg, sign_in_provider_arg,
-                  [reply](ErrorOr<InternalUserCredential>&& output) {
-                    if (output.has_error()) {
-                      reply(WrapError(output.error()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(
-                        CustomEncodableValue(std::move(output).TakeValue()));
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
-            }
-          });
-    } else {
-      channel.SetMessageHandler(nullptr);
-    }
-  }
-  {
-    BasicMessageChannel<> channel(binary_messenger,
-                                  "dev.flutter.pigeon.firebase_auth_platform_"
-                                  "interface.FirebaseAuthHostApi.signOut" +
-                                      prepended_suffix,
-                                  &GetCodec());
-    if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const ::flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
-                  std::get<CustomEncodableValue>(encodable_app_arg));
-              api->SignOut(app_arg,
-                           [reply](std::optional<FlutterError>&& output) {
-                             if (output.has_value()) {
-                               reply(WrapError(output.value()));
-                               return;
-                             }
-                             EncodableList wrapped;
-                             wrapped.push_back(EncodableValue());
-                             reply(EncodableValue(std::move(wrapped)));
-                           });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
-            }
-          });
-    } else {
-      channel.SetMessageHandler(nullptr);
-    }
-  }
-  {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_auth_platform_interface."
-        "FirebaseAuthHostApi.fetchSignInMethodsForEmail" +
-            prepended_suffix,
-        &GetCodec());
-    if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const ::flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
-                  std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_email_arg = args.at(1);
-              if (encodable_email_arg.IsNull()) {
-                reply(WrapError("email_arg unexpectedly null."));
-                return;
-              }
-              const auto& email_arg =
-                  std::get<std::string>(encodable_email_arg);
-              api->FetchSignInMethodsForEmail(
-                  app_arg, email_arg, [reply](ErrorOr<EncodableList>&& output) {
-                    if (output.has_error()) {
-                      reply(WrapError(output.error()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(
-                        EncodableValue(std::move(output).TakeValue()));
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
-            }
-          });
-    } else {
-      channel.SetMessageHandler(nullptr);
-    }
-  }
-  {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_auth_platform_interface."
-        "FirebaseAuthHostApi.sendPasswordResetEmail" +
-            prepended_suffix,
-        &GetCodec());
-    if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const ::flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
-                  std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_email_arg = args.at(1);
-              if (encodable_email_arg.IsNull()) {
-                reply(WrapError("email_arg unexpectedly null."));
-                return;
-              }
-              const auto& email_arg =
-                  std::get<std::string>(encodable_email_arg);
-              const auto& encodable_action_code_settings_arg = args.at(2);
-              const auto* action_code_settings_arg =
-                  encodable_action_code_settings_arg.IsNull()
-                      ? nullptr
-                      : &(std::any_cast<const InternalActionCodeSettings&>(
-                            std::get<CustomEncodableValue>(
-                                encodable_action_code_settings_arg)));
-              api->SendPasswordResetEmail(
-                  app_arg, email_arg, action_code_settings_arg,
-                  [reply](std::optional<FlutterError>&& output) {
-                    if (output.has_value()) {
-                      reply(WrapError(output.value()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(EncodableValue());
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
-            }
-          });
-    } else {
-      channel.SetMessageHandler(nullptr);
-    }
-  }
-  {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_auth_platform_interface."
-        "FirebaseAuthHostApi.sendSignInLinkToEmail" +
-            prepended_suffix,
-        &GetCodec());
-    if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const ::flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
-                  std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_email_arg = args.at(1);
-              if (encodable_email_arg.IsNull()) {
-                reply(WrapError("email_arg unexpectedly null."));
-                return;
-              }
-              const auto& email_arg =
-                  std::get<std::string>(encodable_email_arg);
-              const auto& encodable_action_code_settings_arg = args.at(2);
-              if (encodable_action_code_settings_arg.IsNull()) {
-                reply(WrapError("action_code_settings_arg unexpectedly null."));
-                return;
-              }
-              const auto& action_code_settings_arg =
-                  std::any_cast<const InternalActionCodeSettings&>(
-                      std::get<CustomEncodableValue>(
-                          encodable_action_code_settings_arg));
-              api->SendSignInLinkToEmail(
-                  app_arg, email_arg, action_code_settings_arg,
-                  [reply](std::optional<FlutterError>&& output) {
-                    if (output.has_value()) {
-                      reply(WrapError(output.value()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(EncodableValue());
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
-            }
-          });
-    } else {
-      channel.SetMessageHandler(nullptr);
-    }
-  }
-  {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_auth_platform_interface."
-        "FirebaseAuthHostApi.setLanguageCode" +
-            prepended_suffix,
-        &GetCodec());
-    if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const ::flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
-                  std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_language_code_arg = args.at(1);
-              const auto* language_code_arg =
-                  std::get_if<std::string>(&encodable_language_code_arg);
-              api->SetLanguageCode(app_arg, language_code_arg,
-                                   [reply](ErrorOr<std::string>&& output) {
-                                     if (output.has_error()) {
-                                       reply(WrapError(output.error()));
-                                       return;
-                                     }
-                                     EncodableList wrapped;
-                                     wrapped.push_back(EncodableValue(
-                                         std::move(output).TakeValue()));
-                                     reply(EncodableValue(std::move(wrapped)));
-                                   });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
-            }
-          });
-    } else {
-      channel.SetMessageHandler(nullptr);
-    }
-  }
-  {
-    BasicMessageChannel<> channel(binary_messenger,
-                                  "dev.flutter.pigeon.firebase_auth_platform_"
-                                  "interface.FirebaseAuthHostApi.setSettings" +
-                                      prepended_suffix,
-                                  &GetCodec());
-    if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const ::flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
-                  std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_settings_arg = args.at(1);
-              if (encodable_settings_arg.IsNull()) {
-                reply(WrapError("settings_arg unexpectedly null."));
-                return;
-              }
-              const auto& settings_arg =
-                  std::any_cast<const InternalFirebaseAuthSettings&>(
-                      std::get<CustomEncodableValue>(encodable_settings_arg));
-              api->SetSettings(app_arg, settings_arg,
-                               [reply](std::optional<FlutterError>&& output) {
-                                 if (output.has_value()) {
-                                   reply(WrapError(output.value()));
-                                   return;
-                                 }
-                                 EncodableList wrapped;
-                                 wrapped.push_back(EncodableValue());
-                                 reply(EncodableValue(std::move(wrapped)));
-                               });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
-            }
-          });
-    } else {
-      channel.SetMessageHandler(nullptr);
-    }
-  }
-  {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_auth_platform_interface."
-        "FirebaseAuthHostApi.verifyPasswordResetCode" +
-            prepended_suffix,
-        &GetCodec());
-    if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const ::flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
-                  std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_code_arg = args.at(1);
-              if (encodable_code_arg.IsNull()) {
-                reply(WrapError("code_arg unexpectedly null."));
-                return;
-              }
-              const auto& code_arg = std::get<std::string>(encodable_code_arg);
-              api->VerifyPasswordResetCode(
-                  app_arg, code_arg, [reply](ErrorOr<std::string>&& output) {
-                    if (output.has_error()) {
-                      reply(WrapError(output.error()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(
-                        EncodableValue(std::move(output).TakeValue()));
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
-            }
-          });
-    } else {
-      channel.SetMessageHandler(nullptr);
-    }
-  }
-  {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_auth_platform_interface."
-        "FirebaseAuthHostApi.verifyPhoneNumber" +
-            prepended_suffix,
-        &GetCodec());
-    if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const ::flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
-                  std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_request_arg = args.at(1);
-              if (encodable_request_arg.IsNull()) {
-                reply(WrapError("request_arg unexpectedly null."));
-                return;
-              }
-              const auto& request_arg =
-                  std::any_cast<const InternalVerifyPhoneNumberRequest&>(
-                      std::get<CustomEncodableValue>(encodable_request_arg));
-              api->VerifyPhoneNumber(
-                  app_arg, request_arg, [reply](ErrorOr<std::string>&& output) {
-                    if (output.has_error()) {
-                      reply(WrapError(output.error()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(
-                        EncodableValue(std::move(output).TakeValue()));
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
-            }
-          });
-    } else {
-      channel.SetMessageHandler(nullptr);
-    }
-  }
-  {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_auth_platform_interface."
-        "FirebaseAuthHostApi.revokeTokenWithAuthorizationCode" +
-            prepended_suffix,
-        &GetCodec());
-    if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const ::flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
-                  std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_authorization_code_arg = args.at(1);
-              if (encodable_authorization_code_arg.IsNull()) {
-                reply(WrapError("authorization_code_arg unexpectedly null."));
-                return;
-              }
-              const auto& authorization_code_arg =
-                  std::get<std::string>(encodable_authorization_code_arg);
-              api->RevokeTokenWithAuthorizationCode(
-                  app_arg, authorization_code_arg,
-                  [reply](std::optional<FlutterError>&& output) {
-                    if (output.has_value()) {
-                      reply(WrapError(output.value()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(EncodableValue());
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
-            }
-          });
-    } else {
-      channel.SetMessageHandler(nullptr);
-    }
-  }
-  {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_auth_platform_interface."
-        "FirebaseAuthHostApi.initializeRecaptchaConfig" +
-            prepended_suffix,
-        &GetCodec());
-    if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const ::flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
-                  std::get<CustomEncodableValue>(encodable_app_arg));
-              api->InitializeRecaptchaConfig(
-                  app_arg, [reply](std::optional<FlutterError>&& output) {
-                    if (output.has_value()) {
-                      reply(WrapError(output.value()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(EncodableValue());
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
-            }
-          });
-    } else {
-      channel.SetMessageHandler(nullptr);
-    }
-  }
-}
-
-EncodableValue FirebaseAuthHostApi::WrapError(std::string_view error_message) {
-  return EncodableValue(
-      EncodableList{EncodableValue(std::string(error_message)),
-                    EncodableValue("Error"), EncodableValue()});
-}
-
-EncodableValue FirebaseAuthHostApi::WrapError(const FlutterError& error) {
-  return EncodableValue(EncodableList{EncodableValue(error.code()),
-                                      EncodableValue(error.message()),
-                                      error.details()});
-}
-
-/// The codec used by FirebaseAuthUserHostApi.
-const ::flutter::StandardMessageCodec& FirebaseAuthUserHostApi::GetCodec() {
-  return ::flutter::StandardMessageCodec::GetInstance(
-      &PigeonInternalCodecSerializer::GetInstance());
-}
-
-// Sets up an instance of `FirebaseAuthUserHostApi` to handle messages through
-// the `binary_messenger`.
-void FirebaseAuthUserHostApi::SetUp(
-    ::flutter::BinaryMessenger* binary_messenger,
-    FirebaseAuthUserHostApi* api) {
-  FirebaseAuthUserHostApi::SetUp(binary_messenger, api, "");
-}
-
-void FirebaseAuthUserHostApi::SetUp(
-    ::flutter::BinaryMessenger* binary_messenger, FirebaseAuthUserHostApi* api,
-    const std::string& message_channel_suffix) {
-  const std::string prepended_suffix =
-      message_channel_suffix.length() > 0
-          ? std::string(".") + message_channel_suffix
-          : "";
-  {
-    BasicMessageChannel<> channel(binary_messenger,
-                                  "dev.flutter.pigeon.firebase_auth_platform_"
-                                  "interface.FirebaseAuthUserHostApi.delete" +
-                                      prepended_suffix,
-                                  &GetCodec());
-    if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const ::flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
-                  std::get<CustomEncodableValue>(encodable_app_arg));
-              api->Delete(app_arg,
-                          [reply](std::optional<FlutterError>&& output) {
-                            if (output.has_value()) {
-                              reply(WrapError(output.value()));
-                              return;
-                            }
-                            EncodableList wrapped;
-                            wrapped.push_back(EncodableValue());
-                            reply(EncodableValue(std::move(wrapped)));
-                          });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
-            }
-          });
-    } else {
-      channel.SetMessageHandler(nullptr);
-    }
-  }
-  {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_auth_platform_interface."
-        "FirebaseAuthUserHostApi.getIdToken" +
-            prepended_suffix,
-        &GetCodec());
-    if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const ::flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
-                  std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_force_refresh_arg = args.at(1);
-              if (encodable_force_refresh_arg.IsNull()) {
-                reply(WrapError("force_refresh_arg unexpectedly null."));
-                return;
-              }
-              const auto& force_refresh_arg =
-                  std::get<bool>(encodable_force_refresh_arg);
-              api->GetIdToken(app_arg, force_refresh_arg,
-                              [reply](ErrorOr<InternalIdTokenResult>&& output) {
-                                if (output.has_error()) {
-                                  reply(WrapError(output.error()));
-                                  return;
-                                }
-                                EncodableList wrapped;
-                                wrapped.push_back(CustomEncodableValue(
-                                    std::move(output).TakeValue()));
-                                reply(EncodableValue(std::move(wrapped)));
-                              });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
-            }
-          });
-    } else {
-      channel.SetMessageHandler(nullptr);
-    }
-  }
-  {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_auth_platform_interface."
-        "FirebaseAuthUserHostApi.linkWithCredential" +
-            prepended_suffix,
-        &GetCodec());
-    if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const ::flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
-                  std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_input_arg = args.at(1);
-              if (encodable_input_arg.IsNull()) {
-                reply(WrapError("input_arg unexpectedly null."));
-                return;
-              }
-              const auto& input_arg =
-                  std::get<EncodableMap>(encodable_input_arg);
-              api->LinkWithCredential(
-                  app_arg, input_arg,
-                  [reply](ErrorOr<InternalUserCredential>&& output) {
-                    if (output.has_error()) {
-                      reply(WrapError(output.error()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(
-                        CustomEncodableValue(std::move(output).TakeValue()));
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
-            }
-          });
-    } else {
-      channel.SetMessageHandler(nullptr);
-    }
-  }
-  {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_auth_platform_interface."
-        "FirebaseAuthUserHostApi.linkWithProvider" +
-            prepended_suffix,
-        &GetCodec());
-    if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const ::flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
-                  std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_sign_in_provider_arg = args.at(1);
-              if (encodable_sign_in_provider_arg.IsNull()) {
-                reply(WrapError("sign_in_provider_arg unexpectedly null."));
-                return;
-              }
-              const auto& sign_in_provider_arg =
-                  std::any_cast<const InternalSignInProvider&>(
-                      std::get<CustomEncodableValue>(
-                          encodable_sign_in_provider_arg));
-              api->LinkWithProvider(
-                  app_arg, sign_in_provider_arg,
-                  [reply](ErrorOr<InternalUserCredential>&& output) {
-                    if (output.has_error()) {
-                      reply(WrapError(output.error()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(
-                        CustomEncodableValue(std::move(output).TakeValue()));
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
-            }
-          });
-    } else {
-      channel.SetMessageHandler(nullptr);
-    }
-  }
-  {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_auth_platform_interface."
-        "FirebaseAuthUserHostApi.reauthenticateWithCredential" +
-            prepended_suffix,
-        &GetCodec());
-    if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const ::flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
-                  std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_input_arg = args.at(1);
-              if (encodable_input_arg.IsNull()) {
-                reply(WrapError("input_arg unexpectedly null."));
-                return;
-              }
-              const auto& input_arg =
-                  std::get<EncodableMap>(encodable_input_arg);
-              api->ReauthenticateWithCredential(
-                  app_arg, input_arg,
-                  [reply](ErrorOr<InternalUserCredential>&& output) {
-                    if (output.has_error()) {
-                      reply(WrapError(output.error()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(
-                        CustomEncodableValue(std::move(output).TakeValue()));
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
-            }
-          });
-    } else {
-      channel.SetMessageHandler(nullptr);
-    }
-  }
-  {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_auth_platform_interface."
-        "FirebaseAuthUserHostApi.reauthenticateWithProvider" +
-            prepended_suffix,
-        &GetCodec());
-    if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const ::flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
-                  std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_sign_in_provider_arg = args.at(1);
-              if (encodable_sign_in_provider_arg.IsNull()) {
-                reply(WrapError("sign_in_provider_arg unexpectedly null."));
-                return;
-              }
-              const auto& sign_in_provider_arg =
-                  std::any_cast<const InternalSignInProvider&>(
-                      std::get<CustomEncodableValue>(
-                          encodable_sign_in_provider_arg));
-              api->ReauthenticateWithProvider(
-                  app_arg, sign_in_provider_arg,
-                  [reply](ErrorOr<InternalUserCredential>&& output) {
-                    if (output.has_error()) {
-                      reply(WrapError(output.error()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(
-                        CustomEncodableValue(std::move(output).TakeValue()));
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
-            }
-          });
-    } else {
-      channel.SetMessageHandler(nullptr);
-    }
-  }
-  {
-    BasicMessageChannel<> channel(binary_messenger,
-                                  "dev.flutter.pigeon.firebase_auth_platform_"
-                                  "interface.FirebaseAuthUserHostApi.reload" +
-                                      prepended_suffix,
-                                  &GetCodec());
-    if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const ::flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
-                  std::get<CustomEncodableValue>(encodable_app_arg));
-              api->Reload(
-                  app_arg, [reply](ErrorOr<InternalUserDetails>&& output) {
-                    if (output.has_error()) {
-                      reply(WrapError(output.error()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(
-                        CustomEncodableValue(std::move(output).TakeValue()));
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
-            }
-          });
-    } else {
-      channel.SetMessageHandler(nullptr);
-    }
-  }
-  {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_auth_platform_interface."
-        "FirebaseAuthUserHostApi.sendEmailVerification" +
-            prepended_suffix,
-        &GetCodec());
-    if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const ::flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
-                  std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_action_code_settings_arg = args.at(1);
-              const auto* action_code_settings_arg =
-                  encodable_action_code_settings_arg.IsNull()
-                      ? nullptr
-                      : &(std::any_cast<const InternalActionCodeSettings&>(
-                            std::get<CustomEncodableValue>(
-                                encodable_action_code_settings_arg)));
-              api->SendEmailVerification(
-                  app_arg, action_code_settings_arg,
-                  [reply](std::optional<FlutterError>&& output) {
-                    if (output.has_value()) {
-                      reply(WrapError(output.value()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(EncodableValue());
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
-            }
-          });
-    } else {
-      channel.SetMessageHandler(nullptr);
-    }
-  }
-  {
-    BasicMessageChannel<> channel(binary_messenger,
-                                  "dev.flutter.pigeon.firebase_auth_platform_"
-                                  "interface.FirebaseAuthUserHostApi.unlink" +
-                                      prepended_suffix,
-                                  &GetCodec());
-    if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const ::flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
-                  std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_provider_id_arg = args.at(1);
-              if (encodable_provider_id_arg.IsNull()) {
-                reply(WrapError("provider_id_arg unexpectedly null."));
-                return;
-              }
-              const auto& provider_id_arg =
-                  std::get<std::string>(encodable_provider_id_arg);
-              api->Unlink(app_arg, provider_id_arg,
-                          [reply](ErrorOr<InternalUserCredential>&& output) {
-                            if (output.has_error()) {
-                              reply(WrapError(output.error()));
-                              return;
-                            }
-                            EncodableList wrapped;
-                            wrapped.push_back(CustomEncodableValue(
-                                std::move(output).TakeValue()));
-                            reply(EncodableValue(std::move(wrapped)));
-                          });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
-            }
-          });
-    } else {
-      channel.SetMessageHandler(nullptr);
-    }
-  }
-  {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_auth_platform_interface."
-        "FirebaseAuthUserHostApi.updateEmail" +
-            prepended_suffix,
-        &GetCodec());
-    if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const ::flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
-                  std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_new_email_arg = args.at(1);
-              if (encodable_new_email_arg.IsNull()) {
-                reply(WrapError("new_email_arg unexpectedly null."));
-                return;
-              }
-              const auto& new_email_arg =
-                  std::get<std::string>(encodable_new_email_arg);
-              api->UpdateEmail(app_arg, new_email_arg,
-                               [reply](ErrorOr<InternalUserDetails>&& output) {
-                                 if (output.has_error()) {
-                                   reply(WrapError(output.error()));
-                                   return;
-                                 }
-                                 EncodableList wrapped;
-                                 wrapped.push_back(CustomEncodableValue(
-                                     std::move(output).TakeValue()));
-                                 reply(EncodableValue(std::move(wrapped)));
-                               });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
-            }
-          });
-    } else {
-      channel.SetMessageHandler(nullptr);
-    }
-  }
-  {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_auth_platform_interface."
-        "FirebaseAuthUserHostApi.updatePassword" +
-            prepended_suffix,
-        &GetCodec());
-    if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const ::flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
-                  std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_new_password_arg = args.at(1);
-              if (encodable_new_password_arg.IsNull()) {
-                reply(WrapError("new_password_arg unexpectedly null."));
-                return;
-              }
-              const auto& new_password_arg =
-                  std::get<std::string>(encodable_new_password_arg);
-              api->UpdatePassword(
-                  app_arg, new_password_arg,
-                  [reply](ErrorOr<InternalUserDetails>&& output) {
-                    if (output.has_error()) {
-                      reply(WrapError(output.error()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(
-                        CustomEncodableValue(std::move(output).TakeValue()));
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
-            }
-          });
-    } else {
-      channel.SetMessageHandler(nullptr);
-    }
-  }
-  {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_auth_platform_interface."
-        "FirebaseAuthUserHostApi.updatePhoneNumber" +
-            prepended_suffix,
-        &GetCodec());
-    if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const ::flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
-                  std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_input_arg = args.at(1);
-              if (encodable_input_arg.IsNull()) {
-                reply(WrapError("input_arg unexpectedly null."));
-                return;
-              }
-              const auto& input_arg =
-                  std::get<EncodableMap>(encodable_input_arg);
-              api->UpdatePhoneNumber(
-                  app_arg, input_arg,
-                  [reply](ErrorOr<InternalUserDetails>&& output) {
-                    if (output.has_error()) {
-                      reply(WrapError(output.error()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(
-                        CustomEncodableValue(std::move(output).TakeValue()));
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
-            }
-          });
-    } else {
-      channel.SetMessageHandler(nullptr);
-    }
-  }
-  {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_auth_platform_interface."
-        "FirebaseAuthUserHostApi.updateProfile" +
-            prepended_suffix,
-        &GetCodec());
-    if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const ::flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
-                  std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_profile_arg = args.at(1);
-              if (encodable_profile_arg.IsNull()) {
-                reply(WrapError("profile_arg unexpectedly null."));
-                return;
-              }
-              const auto& profile_arg =
-                  std::any_cast<const InternalUserProfile&>(
-                      std::get<CustomEncodableValue>(encodable_profile_arg));
-              api->UpdateProfile(
-                  app_arg, profile_arg,
-                  [reply](ErrorOr<InternalUserDetails>&& output) {
-                    if (output.has_error()) {
-                      reply(WrapError(output.error()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(
-                        CustomEncodableValue(std::move(output).TakeValue()));
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
-            }
-          });
-    } else {
-      channel.SetMessageHandler(nullptr);
-    }
-  }
-  {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_auth_platform_interface."
-        "FirebaseAuthUserHostApi.verifyBeforeUpdateEmail" +
-            prepended_suffix,
-        &GetCodec());
-    if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const ::flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
-                  std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_new_email_arg = args.at(1);
-              if (encodable_new_email_arg.IsNull()) {
-                reply(WrapError("new_email_arg unexpectedly null."));
-                return;
-              }
-              const auto& new_email_arg =
-                  std::get<std::string>(encodable_new_email_arg);
-              const auto& encodable_action_code_settings_arg = args.at(2);
-              const auto* action_code_settings_arg =
-                  encodable_action_code_settings_arg.IsNull()
-                      ? nullptr
-                      : &(std::any_cast<const InternalActionCodeSettings&>(
-                            std::get<CustomEncodableValue>(
-                                encodable_action_code_settings_arg)));
-              api->VerifyBeforeUpdateEmail(
-                  app_arg, new_email_arg, action_code_settings_arg,
-                  [reply](std::optional<FlutterError>&& output) {
-                    if (output.has_value()) {
-                      reply(WrapError(output.value()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(EncodableValue());
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
-            }
-          });
-    } else {
-      channel.SetMessageHandler(nullptr);
-    }
-  }
-}
-
-EncodableValue FirebaseAuthUserHostApi::WrapError(
-    std::string_view error_message) {
-  return EncodableValue(
-      EncodableList{EncodableValue(std::string(error_message)),
-                    EncodableValue("Error"), EncodableValue()});
-}
-
-EncodableValue FirebaseAuthUserHostApi::WrapError(const FlutterError& error) {
-  return EncodableValue(EncodableList{EncodableValue(error.code()),
-                                      EncodableValue(error.message()),
-                                      error.details()});
-}
-
-/// The codec used by MultiFactorUserHostApi.
-const ::flutter::StandardMessageCodec& MultiFactorUserHostApi::GetCodec() {
-  return ::flutter::StandardMessageCodec::GetInstance(
-      &PigeonInternalCodecSerializer::GetInstance());
-}
-
-// Sets up an instance of `MultiFactorUserHostApi` to handle messages through
-// the `binary_messenger`.
-void MultiFactorUserHostApi::SetUp(::flutter::BinaryMessenger* binary_messenger,
-                                   MultiFactorUserHostApi* api) {
-  MultiFactorUserHostApi::SetUp(binary_messenger, api, "");
-}
-
-void MultiFactorUserHostApi::SetUp(::flutter::BinaryMessenger* binary_messenger,
-                                   MultiFactorUserHostApi* api,
-                                   const std::string& message_channel_suffix) {
-  const std::string prepended_suffix =
-      message_channel_suffix.length() > 0
-          ? std::string(".") + message_channel_suffix
-          : "";
-  {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_auth_platform_interface."
-        "MultiFactorUserHostApi.enrollPhone" +
-            prepended_suffix,
-        &GetCodec());
-    if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const ::flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
-                  std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_assertion_arg = args.at(1);
-              if (encodable_assertion_arg.IsNull()) {
-                reply(WrapError("assertion_arg unexpectedly null."));
-                return;
-              }
-              const auto& assertion_arg =
-                  std::any_cast<const InternalPhoneMultiFactorAssertion&>(
-                      std::get<CustomEncodableValue>(encodable_assertion_arg));
-              const auto& encodable_display_name_arg = args.at(2);
-              const auto* display_name_arg =
-                  std::get_if<std::string>(&encodable_display_name_arg);
-              api->EnrollPhone(app_arg, assertion_arg, display_name_arg,
-                               [reply](std::optional<FlutterError>&& output) {
-                                 if (output.has_value()) {
-                                   reply(WrapError(output.value()));
-                                   return;
-                                 }
-                                 EncodableList wrapped;
-                                 wrapped.push_back(EncodableValue());
-                                 reply(EncodableValue(std::move(wrapped)));
-                               });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
-            }
-          });
-    } else {
-      channel.SetMessageHandler(nullptr);
-    }
-  }
-  {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_auth_platform_interface."
-        "MultiFactorUserHostApi.enrollTotp" +
-            prepended_suffix,
-        &GetCodec());
-    if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const ::flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
-                  std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_assertion_id_arg = args.at(1);
-              if (encodable_assertion_id_arg.IsNull()) {
-                reply(WrapError("assertion_id_arg unexpectedly null."));
-                return;
-              }
-              const auto& assertion_id_arg =
-                  std::get<std::string>(encodable_assertion_id_arg);
-              const auto& encodable_display_name_arg = args.at(2);
-              const auto* display_name_arg =
-                  std::get_if<std::string>(&encodable_display_name_arg);
-              api->EnrollTotp(app_arg, assertion_id_arg, display_name_arg,
-                              [reply](std::optional<FlutterError>&& output) {
-                                if (output.has_value()) {
-                                  reply(WrapError(output.value()));
-                                  return;
-                                }
-                                EncodableList wrapped;
-                                wrapped.push_back(EncodableValue());
-                                reply(EncodableValue(std::move(wrapped)));
-                              });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
-            }
-          });
-    } else {
-      channel.SetMessageHandler(nullptr);
-    }
-  }
-  {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_auth_platform_interface."
-        "MultiFactorUserHostApi.getSession" +
-            prepended_suffix,
-        &GetCodec());
-    if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const ::flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
-                  std::get<CustomEncodableValue>(encodable_app_arg));
-              api->GetSession(
-                  app_arg,
-                  [reply](ErrorOr<InternalMultiFactorSession>&& output) {
-                    if (output.has_error()) {
-                      reply(WrapError(output.error()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(
-                        CustomEncodableValue(std::move(output).TakeValue()));
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
-            }
-          });
-    } else {
-      channel.SetMessageHandler(nullptr);
-    }
-  }
-  {
-    BasicMessageChannel<> channel(binary_messenger,
-                                  "dev.flutter.pigeon.firebase_auth_platform_"
-                                  "interface.MultiFactorUserHostApi.unenroll" +
-                                      prepended_suffix,
-                                  &GetCodec());
-    if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const ::flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
-                  std::get<CustomEncodableValue>(encodable_app_arg));
-              const auto& encodable_factor_uid_arg = args.at(1);
-              if (encodable_factor_uid_arg.IsNull()) {
-                reply(WrapError("factor_uid_arg unexpectedly null."));
-                return;
-              }
-              const auto& factor_uid_arg =
-                  std::get<std::string>(encodable_factor_uid_arg);
-              api->Unenroll(app_arg, factor_uid_arg,
-                            [reply](std::optional<FlutterError>&& output) {
-                              if (output.has_value()) {
-                                reply(WrapError(output.value()));
-                                return;
-                              }
-                              EncodableList wrapped;
-                              wrapped.push_back(EncodableValue());
-                              reply(EncodableValue(std::move(wrapped)));
-                            });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
-            }
-          });
-    } else {
-      channel.SetMessageHandler(nullptr);
-    }
-  }
-  {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_auth_platform_interface."
-        "MultiFactorUserHostApi.getEnrolledFactors" +
-            prepended_suffix,
-        &GetCodec());
-    if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const ::flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_app_arg = args.at(0);
-              if (encodable_app_arg.IsNull()) {
-                reply(WrapError("app_arg unexpectedly null."));
-                return;
-              }
-              const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(
-                  std::get<CustomEncodableValue>(encodable_app_arg));
-              api->GetEnrolledFactors(
-                  app_arg, [reply](ErrorOr<EncodableList>&& output) {
-                    if (output.has_error()) {
-                      reply(WrapError(output.error()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(
-                        EncodableValue(std::move(output).TakeValue()));
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
-            }
-          });
-    } else {
-      channel.SetMessageHandler(nullptr);
-    }
-  }
-}
-
-EncodableValue MultiFactorUserHostApi::WrapError(
-    std::string_view error_message) {
-  return EncodableValue(
-      EncodableList{EncodableValue(std::string(error_message)),
-                    EncodableValue("Error"), EncodableValue()});
-}
-
-EncodableValue MultiFactorUserHostApi::WrapError(const FlutterError& error) {
-  return EncodableValue(EncodableList{EncodableValue(error.code()),
-                                      EncodableValue(error.message()),
-                                      error.details()});
-}
-
-/// The codec used by MultiFactoResolverHostApi.
-const ::flutter::StandardMessageCodec& MultiFactoResolverHostApi::GetCodec() {
-  return ::flutter::StandardMessageCodec::GetInstance(
-      &PigeonInternalCodecSerializer::GetInstance());
-}
-
-// Sets up an instance of `MultiFactoResolverHostApi` to handle messages through
-// the `binary_messenger`.
-void MultiFactoResolverHostApi::SetUp(
-    ::flutter::BinaryMessenger* binary_messenger,
-    MultiFactoResolverHostApi* api) {
-  MultiFactoResolverHostApi::SetUp(binary_messenger, api, "");
-}
-
-void MultiFactoResolverHostApi::SetUp(
-    ::flutter::BinaryMessenger* binary_messenger,
-    MultiFactoResolverHostApi* api, const std::string& message_channel_suffix) {
-  const std::string prepended_suffix =
-      message_channel_suffix.length() > 0
-          ? std::string(".") + message_channel_suffix
-          : "";
-  {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_auth_platform_interface."
-        "MultiFactoResolverHostApi.resolveSignIn" +
-            prepended_suffix,
-        &GetCodec());
-    if (api != nullptr) {
-      channel.SetMessageHandler([api](const EncodableValue& message,
-                                      const ::flutter::MessageReply<
-                                          EncodableValue>& reply) {
+      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
         try {
           const auto& args = std::get<EncodableList>(message);
-          const auto& encodable_resolver_id_arg = args.at(0);
-          if (encodable_resolver_id_arg.IsNull()) {
-            reply(WrapError("resolver_id_arg unexpectedly null."));
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
             return;
           }
-          const auto& resolver_id_arg =
-              std::get<std::string>(encodable_resolver_id_arg);
-          const auto& encodable_assertion_arg = args.at(1);
-          const auto* assertion_arg =
-              encodable_assertion_arg.IsNull()
-                  ? nullptr
-                  : &(std::any_cast<const InternalPhoneMultiFactorAssertion&>(
-                        std::get<CustomEncodableValue>(
-                            encodable_assertion_arg)));
-          const auto& encodable_totp_assertion_id_arg = args.at(2);
-          const auto* totp_assertion_id_arg =
-              std::get_if<std::string>(&encodable_totp_assertion_id_arg);
-          api->ResolveSignIn(
-              resolver_id_arg, assertion_arg, totp_assertion_id_arg,
-              [reply](ErrorOr<InternalUserCredential>&& output) {
-                if (output.has_error()) {
-                  reply(WrapError(output.error()));
-                  return;
-                }
-                EncodableList wrapped;
-                wrapped.push_back(
-                    CustomEncodableValue(std::move(output).TakeValue()));
-                reply(EncodableValue(std::move(wrapped)));
-              });
+          const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          api->RegisterIdTokenListener(app_arg, [reply](ErrorOr<std::string>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel.SetMessageHandler(nullptr);
+    }
+  }
+  {
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.registerAuthStateListener" + prepended_suffix, &GetCodec());
+    if (api != nullptr) {
+      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          api->RegisterAuthStateListener(app_arg, [reply](ErrorOr<std::string>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel.SetMessageHandler(nullptr);
+    }
+  }
+  {
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.useEmulator" + prepended_suffix, &GetCodec());
+    if (api != nullptr) {
+      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_host_arg = args.at(1);
+          if (encodable_host_arg.IsNull()) {
+            reply(WrapError("host_arg unexpectedly null."));
+            return;
+          }
+          const auto& host_arg = std::get<std::string>(encodable_host_arg);
+          const auto& encodable_port_arg = args.at(2);
+          if (encodable_port_arg.IsNull()) {
+            reply(WrapError("port_arg unexpectedly null."));
+            return;
+          }
+          const int64_t port_arg = encodable_port_arg.LongValue();
+          api->UseEmulator(app_arg, host_arg, port_arg, [reply](std::optional<FlutterError>&& output) {
+            if (output.has_value()) {
+              reply(WrapError(output.value()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue());
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel.SetMessageHandler(nullptr);
+    }
+  }
+  {
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.applyActionCode" + prepended_suffix, &GetCodec());
+    if (api != nullptr) {
+      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_code_arg = args.at(1);
+          if (encodable_code_arg.IsNull()) {
+            reply(WrapError("code_arg unexpectedly null."));
+            return;
+          }
+          const auto& code_arg = std::get<std::string>(encodable_code_arg);
+          api->ApplyActionCode(app_arg, code_arg, [reply](std::optional<FlutterError>&& output) {
+            if (output.has_value()) {
+              reply(WrapError(output.value()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue());
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel.SetMessageHandler(nullptr);
+    }
+  }
+  {
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.checkActionCode" + prepended_suffix, &GetCodec());
+    if (api != nullptr) {
+      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_code_arg = args.at(1);
+          if (encodable_code_arg.IsNull()) {
+            reply(WrapError("code_arg unexpectedly null."));
+            return;
+          }
+          const auto& code_arg = std::get<std::string>(encodable_code_arg);
+          api->CheckActionCode(app_arg, code_arg, [reply](ErrorOr<InternalActionCodeInfo>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(CustomEncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel.SetMessageHandler(nullptr);
+    }
+  }
+  {
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.confirmPasswordReset" + prepended_suffix, &GetCodec());
+    if (api != nullptr) {
+      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_code_arg = args.at(1);
+          if (encodable_code_arg.IsNull()) {
+            reply(WrapError("code_arg unexpectedly null."));
+            return;
+          }
+          const auto& code_arg = std::get<std::string>(encodable_code_arg);
+          const auto& encodable_new_password_arg = args.at(2);
+          if (encodable_new_password_arg.IsNull()) {
+            reply(WrapError("new_password_arg unexpectedly null."));
+            return;
+          }
+          const auto& new_password_arg = std::get<std::string>(encodable_new_password_arg);
+          api->ConfirmPasswordReset(app_arg, code_arg, new_password_arg, [reply](std::optional<FlutterError>&& output) {
+            if (output.has_value()) {
+              reply(WrapError(output.value()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue());
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel.SetMessageHandler(nullptr);
+    }
+  }
+  {
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.createUserWithEmailAndPassword" + prepended_suffix, &GetCodec());
+    if (api != nullptr) {
+      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_email_arg = args.at(1);
+          if (encodable_email_arg.IsNull()) {
+            reply(WrapError("email_arg unexpectedly null."));
+            return;
+          }
+          const auto& email_arg = std::get<std::string>(encodable_email_arg);
+          const auto& encodable_password_arg = args.at(2);
+          if (encodable_password_arg.IsNull()) {
+            reply(WrapError("password_arg unexpectedly null."));
+            return;
+          }
+          const auto& password_arg = std::get<std::string>(encodable_password_arg);
+          api->CreateUserWithEmailAndPassword(app_arg, email_arg, password_arg, [reply](ErrorOr<InternalUserCredential>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(CustomEncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel.SetMessageHandler(nullptr);
+    }
+  }
+  {
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInAnonymously" + prepended_suffix, &GetCodec());
+    if (api != nullptr) {
+      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          api->SignInAnonymously(app_arg, [reply](ErrorOr<InternalUserCredential>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(CustomEncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel.SetMessageHandler(nullptr);
+    }
+  }
+  {
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithCredential" + prepended_suffix, &GetCodec());
+    if (api != nullptr) {
+      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_input_arg = args.at(1);
+          if (encodable_input_arg.IsNull()) {
+            reply(WrapError("input_arg unexpectedly null."));
+            return;
+          }
+          const auto& input_arg = std::get<EncodableMap>(encodable_input_arg);
+          api->SignInWithCredential(app_arg, input_arg, [reply](ErrorOr<InternalUserCredential>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(CustomEncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel.SetMessageHandler(nullptr);
+    }
+  }
+  {
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithCustomToken" + prepended_suffix, &GetCodec());
+    if (api != nullptr) {
+      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_token_arg = args.at(1);
+          if (encodable_token_arg.IsNull()) {
+            reply(WrapError("token_arg unexpectedly null."));
+            return;
+          }
+          const auto& token_arg = std::get<std::string>(encodable_token_arg);
+          api->SignInWithCustomToken(app_arg, token_arg, [reply](ErrorOr<InternalUserCredential>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(CustomEncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel.SetMessageHandler(nullptr);
+    }
+  }
+  {
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithEmailAndPassword" + prepended_suffix, &GetCodec());
+    if (api != nullptr) {
+      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_email_arg = args.at(1);
+          if (encodable_email_arg.IsNull()) {
+            reply(WrapError("email_arg unexpectedly null."));
+            return;
+          }
+          const auto& email_arg = std::get<std::string>(encodable_email_arg);
+          const auto& encodable_password_arg = args.at(2);
+          if (encodable_password_arg.IsNull()) {
+            reply(WrapError("password_arg unexpectedly null."));
+            return;
+          }
+          const auto& password_arg = std::get<std::string>(encodable_password_arg);
+          api->SignInWithEmailAndPassword(app_arg, email_arg, password_arg, [reply](ErrorOr<InternalUserCredential>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(CustomEncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel.SetMessageHandler(nullptr);
+    }
+  }
+  {
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithEmailLink" + prepended_suffix, &GetCodec());
+    if (api != nullptr) {
+      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_email_arg = args.at(1);
+          if (encodable_email_arg.IsNull()) {
+            reply(WrapError("email_arg unexpectedly null."));
+            return;
+          }
+          const auto& email_arg = std::get<std::string>(encodable_email_arg);
+          const auto& encodable_email_link_arg = args.at(2);
+          if (encodable_email_link_arg.IsNull()) {
+            reply(WrapError("email_link_arg unexpectedly null."));
+            return;
+          }
+          const auto& email_link_arg = std::get<std::string>(encodable_email_link_arg);
+          api->SignInWithEmailLink(app_arg, email_arg, email_link_arg, [reply](ErrorOr<InternalUserCredential>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(CustomEncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel.SetMessageHandler(nullptr);
+    }
+  }
+  {
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithProvider" + prepended_suffix, &GetCodec());
+    if (api != nullptr) {
+      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_sign_in_provider_arg = args.at(1);
+          if (encodable_sign_in_provider_arg.IsNull()) {
+            reply(WrapError("sign_in_provider_arg unexpectedly null."));
+            return;
+          }
+          const auto& sign_in_provider_arg = std::any_cast<const InternalSignInProvider&>(std::get<CustomEncodableValue>(encodable_sign_in_provider_arg));
+          api->SignInWithProvider(app_arg, sign_in_provider_arg, [reply](ErrorOr<InternalUserCredential>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(CustomEncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel.SetMessageHandler(nullptr);
+    }
+  }
+  {
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signOut" + prepended_suffix, &GetCodec());
+    if (api != nullptr) {
+      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          api->SignOut(app_arg, [reply](std::optional<FlutterError>&& output) {
+            if (output.has_value()) {
+              reply(WrapError(output.value()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue());
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel.SetMessageHandler(nullptr);
+    }
+  }
+  {
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.fetchSignInMethodsForEmail" + prepended_suffix, &GetCodec());
+    if (api != nullptr) {
+      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_email_arg = args.at(1);
+          if (encodable_email_arg.IsNull()) {
+            reply(WrapError("email_arg unexpectedly null."));
+            return;
+          }
+          const auto& email_arg = std::get<std::string>(encodable_email_arg);
+          api->FetchSignInMethodsForEmail(app_arg, email_arg, [reply](ErrorOr<EncodableList>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel.SetMessageHandler(nullptr);
+    }
+  }
+  {
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.sendPasswordResetEmail" + prepended_suffix, &GetCodec());
+    if (api != nullptr) {
+      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_email_arg = args.at(1);
+          if (encodable_email_arg.IsNull()) {
+            reply(WrapError("email_arg unexpectedly null."));
+            return;
+          }
+          const auto& email_arg = std::get<std::string>(encodable_email_arg);
+          const auto& encodable_action_code_settings_arg = args.at(2);
+          const auto* action_code_settings_arg = encodable_action_code_settings_arg.IsNull() ? nullptr : &(std::any_cast<const InternalActionCodeSettings&>(std::get<CustomEncodableValue>(encodable_action_code_settings_arg)));
+          api->SendPasswordResetEmail(app_arg, email_arg, action_code_settings_arg, [reply](std::optional<FlutterError>&& output) {
+            if (output.has_value()) {
+              reply(WrapError(output.value()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue());
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel.SetMessageHandler(nullptr);
+    }
+  }
+  {
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.sendSignInLinkToEmail" + prepended_suffix, &GetCodec());
+    if (api != nullptr) {
+      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_email_arg = args.at(1);
+          if (encodable_email_arg.IsNull()) {
+            reply(WrapError("email_arg unexpectedly null."));
+            return;
+          }
+          const auto& email_arg = std::get<std::string>(encodable_email_arg);
+          const auto& encodable_action_code_settings_arg = args.at(2);
+          if (encodable_action_code_settings_arg.IsNull()) {
+            reply(WrapError("action_code_settings_arg unexpectedly null."));
+            return;
+          }
+          const auto& action_code_settings_arg = std::any_cast<const InternalActionCodeSettings&>(std::get<CustomEncodableValue>(encodable_action_code_settings_arg));
+          api->SendSignInLinkToEmail(app_arg, email_arg, action_code_settings_arg, [reply](std::optional<FlutterError>&& output) {
+            if (output.has_value()) {
+              reply(WrapError(output.value()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue());
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel.SetMessageHandler(nullptr);
+    }
+  }
+  {
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.setLanguageCode" + prepended_suffix, &GetCodec());
+    if (api != nullptr) {
+      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_language_code_arg = args.at(1);
+          const auto* language_code_arg = std::get_if<std::string>(&encodable_language_code_arg);
+          api->SetLanguageCode(app_arg, language_code_arg, [reply](ErrorOr<std::string>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel.SetMessageHandler(nullptr);
+    }
+  }
+  {
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.setSettings" + prepended_suffix, &GetCodec());
+    if (api != nullptr) {
+      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_settings_arg = args.at(1);
+          if (encodable_settings_arg.IsNull()) {
+            reply(WrapError("settings_arg unexpectedly null."));
+            return;
+          }
+          const auto& settings_arg = std::any_cast<const InternalFirebaseAuthSettings&>(std::get<CustomEncodableValue>(encodable_settings_arg));
+          api->SetSettings(app_arg, settings_arg, [reply](std::optional<FlutterError>&& output) {
+            if (output.has_value()) {
+              reply(WrapError(output.value()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue());
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel.SetMessageHandler(nullptr);
+    }
+  }
+  {
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.verifyPasswordResetCode" + prepended_suffix, &GetCodec());
+    if (api != nullptr) {
+      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_code_arg = args.at(1);
+          if (encodable_code_arg.IsNull()) {
+            reply(WrapError("code_arg unexpectedly null."));
+            return;
+          }
+          const auto& code_arg = std::get<std::string>(encodable_code_arg);
+          api->VerifyPasswordResetCode(app_arg, code_arg, [reply](ErrorOr<std::string>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel.SetMessageHandler(nullptr);
+    }
+  }
+  {
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.verifyPhoneNumber" + prepended_suffix, &GetCodec());
+    if (api != nullptr) {
+      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_request_arg = args.at(1);
+          if (encodable_request_arg.IsNull()) {
+            reply(WrapError("request_arg unexpectedly null."));
+            return;
+          }
+          const auto& request_arg = std::any_cast<const InternalVerifyPhoneNumberRequest&>(std::get<CustomEncodableValue>(encodable_request_arg));
+          api->VerifyPhoneNumber(app_arg, request_arg, [reply](ErrorOr<std::string>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel.SetMessageHandler(nullptr);
+    }
+  }
+  {
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.revokeTokenWithAuthorizationCode" + prepended_suffix, &GetCodec());
+    if (api != nullptr) {
+      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_authorization_code_arg = args.at(1);
+          if (encodable_authorization_code_arg.IsNull()) {
+            reply(WrapError("authorization_code_arg unexpectedly null."));
+            return;
+          }
+          const auto& authorization_code_arg = std::get<std::string>(encodable_authorization_code_arg);
+          api->RevokeTokenWithAuthorizationCode(app_arg, authorization_code_arg, [reply](std::optional<FlutterError>&& output) {
+            if (output.has_value()) {
+              reply(WrapError(output.value()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue());
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel.SetMessageHandler(nullptr);
+    }
+  }
+  {
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.revokeAccessToken" + prepended_suffix, &GetCodec());
+    if (api != nullptr) {
+      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_access_token_arg = args.at(1);
+          if (encodable_access_token_arg.IsNull()) {
+            reply(WrapError("access_token_arg unexpectedly null."));
+            return;
+          }
+          const auto& access_token_arg = std::get<std::string>(encodable_access_token_arg);
+          api->RevokeAccessToken(app_arg, access_token_arg, [reply](std::optional<FlutterError>&& output) {
+            if (output.has_value()) {
+              reply(WrapError(output.value()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue());
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel.SetMessageHandler(nullptr);
+    }
+  }
+  {
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.initializeRecaptchaConfig" + prepended_suffix, &GetCodec());
+    if (api != nullptr) {
+      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          api->InitializeRecaptchaConfig(app_arg, [reply](std::optional<FlutterError>&& output) {
+            if (output.has_value()) {
+              reply(WrapError(output.value()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue());
+            reply(EncodableValue(std::move(wrapped)));
+          });
         } catch (const std::exception& exception) {
           reply(WrapError(exception.what()));
         }
@@ -5129,372 +3525,1081 @@ void MultiFactoResolverHostApi::SetUp(
   }
 }
 
-EncodableValue MultiFactoResolverHostApi::WrapError(
-    std::string_view error_message) {
-  return EncodableValue(
-      EncodableList{EncodableValue(std::string(error_message)),
-                    EncodableValue("Error"), EncodableValue()});
+EncodableValue FirebaseAuthHostApi::WrapError(std::string_view error_message) {
+  return EncodableValue(EncodableList{
+    EncodableValue(std::string(error_message)),
+    EncodableValue("Error"),
+    EncodableValue()
+  });
+}
+
+EncodableValue FirebaseAuthHostApi::WrapError(const FlutterError& error) {
+  return EncodableValue(EncodableList{
+    EncodableValue(error.code()),
+    EncodableValue(error.message()),
+    error.details()
+  });
+}
+
+/// The codec used by FirebaseAuthUserHostApi.
+const ::flutter::StandardMessageCodec& FirebaseAuthUserHostApi::GetCodec() {
+  return ::flutter::StandardMessageCodec::GetInstance(&PigeonInternalCodecSerializer::GetInstance());
+}
+
+// Sets up an instance of `FirebaseAuthUserHostApi` to handle messages through the `binary_messenger`.
+void FirebaseAuthUserHostApi::SetUp(
+  ::flutter::BinaryMessenger* binary_messenger,
+  FirebaseAuthUserHostApi* api) {
+  FirebaseAuthUserHostApi::SetUp(binary_messenger, api, "");
+}
+
+void FirebaseAuthUserHostApi::SetUp(
+  ::flutter::BinaryMessenger* binary_messenger,
+  FirebaseAuthUserHostApi* api,
+  const std::string& message_channel_suffix) {
+  const std::string prepended_suffix = message_channel_suffix.length() > 0 ? std::string(".") + message_channel_suffix : "";
+  {
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.delete" + prepended_suffix, &GetCodec());
+    if (api != nullptr) {
+      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          api->Delete(app_arg, [reply](std::optional<FlutterError>&& output) {
+            if (output.has_value()) {
+              reply(WrapError(output.value()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue());
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel.SetMessageHandler(nullptr);
+    }
+  }
+  {
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.getIdToken" + prepended_suffix, &GetCodec());
+    if (api != nullptr) {
+      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_force_refresh_arg = args.at(1);
+          if (encodable_force_refresh_arg.IsNull()) {
+            reply(WrapError("force_refresh_arg unexpectedly null."));
+            return;
+          }
+          const auto& force_refresh_arg = std::get<bool>(encodable_force_refresh_arg);
+          api->GetIdToken(app_arg, force_refresh_arg, [reply](ErrorOr<InternalIdTokenResult>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(CustomEncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel.SetMessageHandler(nullptr);
+    }
+  }
+  {
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.linkWithCredential" + prepended_suffix, &GetCodec());
+    if (api != nullptr) {
+      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_input_arg = args.at(1);
+          if (encodable_input_arg.IsNull()) {
+            reply(WrapError("input_arg unexpectedly null."));
+            return;
+          }
+          const auto& input_arg = std::get<EncodableMap>(encodable_input_arg);
+          api->LinkWithCredential(app_arg, input_arg, [reply](ErrorOr<InternalUserCredential>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(CustomEncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel.SetMessageHandler(nullptr);
+    }
+  }
+  {
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.linkWithProvider" + prepended_suffix, &GetCodec());
+    if (api != nullptr) {
+      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_sign_in_provider_arg = args.at(1);
+          if (encodable_sign_in_provider_arg.IsNull()) {
+            reply(WrapError("sign_in_provider_arg unexpectedly null."));
+            return;
+          }
+          const auto& sign_in_provider_arg = std::any_cast<const InternalSignInProvider&>(std::get<CustomEncodableValue>(encodable_sign_in_provider_arg));
+          api->LinkWithProvider(app_arg, sign_in_provider_arg, [reply](ErrorOr<InternalUserCredential>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(CustomEncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel.SetMessageHandler(nullptr);
+    }
+  }
+  {
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reauthenticateWithCredential" + prepended_suffix, &GetCodec());
+    if (api != nullptr) {
+      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_input_arg = args.at(1);
+          if (encodable_input_arg.IsNull()) {
+            reply(WrapError("input_arg unexpectedly null."));
+            return;
+          }
+          const auto& input_arg = std::get<EncodableMap>(encodable_input_arg);
+          api->ReauthenticateWithCredential(app_arg, input_arg, [reply](ErrorOr<InternalUserCredential>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(CustomEncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel.SetMessageHandler(nullptr);
+    }
+  }
+  {
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reauthenticateWithProvider" + prepended_suffix, &GetCodec());
+    if (api != nullptr) {
+      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_sign_in_provider_arg = args.at(1);
+          if (encodable_sign_in_provider_arg.IsNull()) {
+            reply(WrapError("sign_in_provider_arg unexpectedly null."));
+            return;
+          }
+          const auto& sign_in_provider_arg = std::any_cast<const InternalSignInProvider&>(std::get<CustomEncodableValue>(encodable_sign_in_provider_arg));
+          api->ReauthenticateWithProvider(app_arg, sign_in_provider_arg, [reply](ErrorOr<InternalUserCredential>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(CustomEncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel.SetMessageHandler(nullptr);
+    }
+  }
+  {
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reload" + prepended_suffix, &GetCodec());
+    if (api != nullptr) {
+      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          api->Reload(app_arg, [reply](ErrorOr<InternalUserDetails>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(CustomEncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel.SetMessageHandler(nullptr);
+    }
+  }
+  {
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.sendEmailVerification" + prepended_suffix, &GetCodec());
+    if (api != nullptr) {
+      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_action_code_settings_arg = args.at(1);
+          const auto* action_code_settings_arg = encodable_action_code_settings_arg.IsNull() ? nullptr : &(std::any_cast<const InternalActionCodeSettings&>(std::get<CustomEncodableValue>(encodable_action_code_settings_arg)));
+          api->SendEmailVerification(app_arg, action_code_settings_arg, [reply](std::optional<FlutterError>&& output) {
+            if (output.has_value()) {
+              reply(WrapError(output.value()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue());
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel.SetMessageHandler(nullptr);
+    }
+  }
+  {
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.unlink" + prepended_suffix, &GetCodec());
+    if (api != nullptr) {
+      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_provider_id_arg = args.at(1);
+          if (encodable_provider_id_arg.IsNull()) {
+            reply(WrapError("provider_id_arg unexpectedly null."));
+            return;
+          }
+          const auto& provider_id_arg = std::get<std::string>(encodable_provider_id_arg);
+          api->Unlink(app_arg, provider_id_arg, [reply](ErrorOr<InternalUserCredential>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(CustomEncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel.SetMessageHandler(nullptr);
+    }
+  }
+  {
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updateEmail" + prepended_suffix, &GetCodec());
+    if (api != nullptr) {
+      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_new_email_arg = args.at(1);
+          if (encodable_new_email_arg.IsNull()) {
+            reply(WrapError("new_email_arg unexpectedly null."));
+            return;
+          }
+          const auto& new_email_arg = std::get<std::string>(encodable_new_email_arg);
+          api->UpdateEmail(app_arg, new_email_arg, [reply](ErrorOr<InternalUserDetails>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(CustomEncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel.SetMessageHandler(nullptr);
+    }
+  }
+  {
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updatePassword" + prepended_suffix, &GetCodec());
+    if (api != nullptr) {
+      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_new_password_arg = args.at(1);
+          if (encodable_new_password_arg.IsNull()) {
+            reply(WrapError("new_password_arg unexpectedly null."));
+            return;
+          }
+          const auto& new_password_arg = std::get<std::string>(encodable_new_password_arg);
+          api->UpdatePassword(app_arg, new_password_arg, [reply](ErrorOr<InternalUserDetails>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(CustomEncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel.SetMessageHandler(nullptr);
+    }
+  }
+  {
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updatePhoneNumber" + prepended_suffix, &GetCodec());
+    if (api != nullptr) {
+      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_input_arg = args.at(1);
+          if (encodable_input_arg.IsNull()) {
+            reply(WrapError("input_arg unexpectedly null."));
+            return;
+          }
+          const auto& input_arg = std::get<EncodableMap>(encodable_input_arg);
+          api->UpdatePhoneNumber(app_arg, input_arg, [reply](ErrorOr<InternalUserDetails>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(CustomEncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel.SetMessageHandler(nullptr);
+    }
+  }
+  {
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updateProfile" + prepended_suffix, &GetCodec());
+    if (api != nullptr) {
+      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_profile_arg = args.at(1);
+          if (encodable_profile_arg.IsNull()) {
+            reply(WrapError("profile_arg unexpectedly null."));
+            return;
+          }
+          const auto& profile_arg = std::any_cast<const InternalUserProfile&>(std::get<CustomEncodableValue>(encodable_profile_arg));
+          api->UpdateProfile(app_arg, profile_arg, [reply](ErrorOr<InternalUserDetails>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(CustomEncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel.SetMessageHandler(nullptr);
+    }
+  }
+  {
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.verifyBeforeUpdateEmail" + prepended_suffix, &GetCodec());
+    if (api != nullptr) {
+      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_new_email_arg = args.at(1);
+          if (encodable_new_email_arg.IsNull()) {
+            reply(WrapError("new_email_arg unexpectedly null."));
+            return;
+          }
+          const auto& new_email_arg = std::get<std::string>(encodable_new_email_arg);
+          const auto& encodable_action_code_settings_arg = args.at(2);
+          const auto* action_code_settings_arg = encodable_action_code_settings_arg.IsNull() ? nullptr : &(std::any_cast<const InternalActionCodeSettings&>(std::get<CustomEncodableValue>(encodable_action_code_settings_arg)));
+          api->VerifyBeforeUpdateEmail(app_arg, new_email_arg, action_code_settings_arg, [reply](std::optional<FlutterError>&& output) {
+            if (output.has_value()) {
+              reply(WrapError(output.value()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue());
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel.SetMessageHandler(nullptr);
+    }
+  }
+}
+
+EncodableValue FirebaseAuthUserHostApi::WrapError(std::string_view error_message) {
+  return EncodableValue(EncodableList{
+    EncodableValue(std::string(error_message)),
+    EncodableValue("Error"),
+    EncodableValue()
+  });
+}
+
+EncodableValue FirebaseAuthUserHostApi::WrapError(const FlutterError& error) {
+  return EncodableValue(EncodableList{
+    EncodableValue(error.code()),
+    EncodableValue(error.message()),
+    error.details()
+  });
+}
+
+/// The codec used by MultiFactorUserHostApi.
+const ::flutter::StandardMessageCodec& MultiFactorUserHostApi::GetCodec() {
+  return ::flutter::StandardMessageCodec::GetInstance(&PigeonInternalCodecSerializer::GetInstance());
+}
+
+// Sets up an instance of `MultiFactorUserHostApi` to handle messages through the `binary_messenger`.
+void MultiFactorUserHostApi::SetUp(
+  ::flutter::BinaryMessenger* binary_messenger,
+  MultiFactorUserHostApi* api) {
+  MultiFactorUserHostApi::SetUp(binary_messenger, api, "");
+}
+
+void MultiFactorUserHostApi::SetUp(
+  ::flutter::BinaryMessenger* binary_messenger,
+  MultiFactorUserHostApi* api,
+  const std::string& message_channel_suffix) {
+  const std::string prepended_suffix = message_channel_suffix.length() > 0 ? std::string(".") + message_channel_suffix : "";
+  {
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollPhone" + prepended_suffix, &GetCodec());
+    if (api != nullptr) {
+      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_assertion_arg = args.at(1);
+          if (encodable_assertion_arg.IsNull()) {
+            reply(WrapError("assertion_arg unexpectedly null."));
+            return;
+          }
+          const auto& assertion_arg = std::any_cast<const InternalPhoneMultiFactorAssertion&>(std::get<CustomEncodableValue>(encodable_assertion_arg));
+          const auto& encodable_display_name_arg = args.at(2);
+          const auto* display_name_arg = std::get_if<std::string>(&encodable_display_name_arg);
+          api->EnrollPhone(app_arg, assertion_arg, display_name_arg, [reply](std::optional<FlutterError>&& output) {
+            if (output.has_value()) {
+              reply(WrapError(output.value()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue());
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel.SetMessageHandler(nullptr);
+    }
+  }
+  {
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollTotp" + prepended_suffix, &GetCodec());
+    if (api != nullptr) {
+      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_assertion_id_arg = args.at(1);
+          if (encodable_assertion_id_arg.IsNull()) {
+            reply(WrapError("assertion_id_arg unexpectedly null."));
+            return;
+          }
+          const auto& assertion_id_arg = std::get<std::string>(encodable_assertion_id_arg);
+          const auto& encodable_display_name_arg = args.at(2);
+          const auto* display_name_arg = std::get_if<std::string>(&encodable_display_name_arg);
+          api->EnrollTotp(app_arg, assertion_id_arg, display_name_arg, [reply](std::optional<FlutterError>&& output) {
+            if (output.has_value()) {
+              reply(WrapError(output.value()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue());
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel.SetMessageHandler(nullptr);
+    }
+  }
+  {
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.getSession" + prepended_suffix, &GetCodec());
+    if (api != nullptr) {
+      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          api->GetSession(app_arg, [reply](ErrorOr<InternalMultiFactorSession>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(CustomEncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel.SetMessageHandler(nullptr);
+    }
+  }
+  {
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.unenroll" + prepended_suffix, &GetCodec());
+    if (api != nullptr) {
+      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          const auto& encodable_factor_uid_arg = args.at(1);
+          if (encodable_factor_uid_arg.IsNull()) {
+            reply(WrapError("factor_uid_arg unexpectedly null."));
+            return;
+          }
+          const auto& factor_uid_arg = std::get<std::string>(encodable_factor_uid_arg);
+          api->Unenroll(app_arg, factor_uid_arg, [reply](std::optional<FlutterError>&& output) {
+            if (output.has_value()) {
+              reply(WrapError(output.value()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue());
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel.SetMessageHandler(nullptr);
+    }
+  }
+  {
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.getEnrolledFactors" + prepended_suffix, &GetCodec());
+    if (api != nullptr) {
+      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_app_arg = args.at(0);
+          if (encodable_app_arg.IsNull()) {
+            reply(WrapError("app_arg unexpectedly null."));
+            return;
+          }
+          const auto& app_arg = std::any_cast<const AuthPigeonFirebaseApp&>(std::get<CustomEncodableValue>(encodable_app_arg));
+          api->GetEnrolledFactors(app_arg, [reply](ErrorOr<EncodableList>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel.SetMessageHandler(nullptr);
+    }
+  }
+}
+
+EncodableValue MultiFactorUserHostApi::WrapError(std::string_view error_message) {
+  return EncodableValue(EncodableList{
+    EncodableValue(std::string(error_message)),
+    EncodableValue("Error"),
+    EncodableValue()
+  });
+}
+
+EncodableValue MultiFactorUserHostApi::WrapError(const FlutterError& error) {
+  return EncodableValue(EncodableList{
+    EncodableValue(error.code()),
+    EncodableValue(error.message()),
+    error.details()
+  });
+}
+
+/// The codec used by MultiFactoResolverHostApi.
+const ::flutter::StandardMessageCodec& MultiFactoResolverHostApi::GetCodec() {
+  return ::flutter::StandardMessageCodec::GetInstance(&PigeonInternalCodecSerializer::GetInstance());
+}
+
+// Sets up an instance of `MultiFactoResolverHostApi` to handle messages through the `binary_messenger`.
+void MultiFactoResolverHostApi::SetUp(
+  ::flutter::BinaryMessenger* binary_messenger,
+  MultiFactoResolverHostApi* api) {
+  MultiFactoResolverHostApi::SetUp(binary_messenger, api, "");
+}
+
+void MultiFactoResolverHostApi::SetUp(
+  ::flutter::BinaryMessenger* binary_messenger,
+  MultiFactoResolverHostApi* api,
+  const std::string& message_channel_suffix) {
+  const std::string prepended_suffix = message_channel_suffix.length() > 0 ? std::string(".") + message_channel_suffix : "";
+  {
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactoResolverHostApi.resolveSignIn" + prepended_suffix, &GetCodec());
+    if (api != nullptr) {
+      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_resolver_id_arg = args.at(0);
+          if (encodable_resolver_id_arg.IsNull()) {
+            reply(WrapError("resolver_id_arg unexpectedly null."));
+            return;
+          }
+          const auto& resolver_id_arg = std::get<std::string>(encodable_resolver_id_arg);
+          const auto& encodable_assertion_arg = args.at(1);
+          const auto* assertion_arg = encodable_assertion_arg.IsNull() ? nullptr : &(std::any_cast<const InternalPhoneMultiFactorAssertion&>(std::get<CustomEncodableValue>(encodable_assertion_arg)));
+          const auto& encodable_totp_assertion_id_arg = args.at(2);
+          const auto* totp_assertion_id_arg = std::get_if<std::string>(&encodable_totp_assertion_id_arg);
+          api->ResolveSignIn(resolver_id_arg, assertion_arg, totp_assertion_id_arg, [reply](ErrorOr<InternalUserCredential>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
+            }
+            EncodableList wrapped;
+            wrapped.push_back(CustomEncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
+          });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
+    } else {
+      channel.SetMessageHandler(nullptr);
+    }
+  }
+}
+
+EncodableValue MultiFactoResolverHostApi::WrapError(std::string_view error_message) {
+  return EncodableValue(EncodableList{
+    EncodableValue(std::string(error_message)),
+    EncodableValue("Error"),
+    EncodableValue()
+  });
 }
 
 EncodableValue MultiFactoResolverHostApi::WrapError(const FlutterError& error) {
-  return EncodableValue(EncodableList{EncodableValue(error.code()),
-                                      EncodableValue(error.message()),
-                                      error.details()});
+  return EncodableValue(EncodableList{
+    EncodableValue(error.code()),
+    EncodableValue(error.message()),
+    error.details()
+  });
 }
 
 /// The codec used by MultiFactorTotpHostApi.
 const ::flutter::StandardMessageCodec& MultiFactorTotpHostApi::GetCodec() {
-  return ::flutter::StandardMessageCodec::GetInstance(
-      &PigeonInternalCodecSerializer::GetInstance());
+  return ::flutter::StandardMessageCodec::GetInstance(&PigeonInternalCodecSerializer::GetInstance());
 }
 
-// Sets up an instance of `MultiFactorTotpHostApi` to handle messages through
-// the `binary_messenger`.
-void MultiFactorTotpHostApi::SetUp(::flutter::BinaryMessenger* binary_messenger,
-                                   MultiFactorTotpHostApi* api) {
+// Sets up an instance of `MultiFactorTotpHostApi` to handle messages through the `binary_messenger`.
+void MultiFactorTotpHostApi::SetUp(
+  ::flutter::BinaryMessenger* binary_messenger,
+  MultiFactorTotpHostApi* api) {
   MultiFactorTotpHostApi::SetUp(binary_messenger, api, "");
 }
 
-void MultiFactorTotpHostApi::SetUp(::flutter::BinaryMessenger* binary_messenger,
-                                   MultiFactorTotpHostApi* api,
-                                   const std::string& message_channel_suffix) {
-  const std::string prepended_suffix =
-      message_channel_suffix.length() > 0
-          ? std::string(".") + message_channel_suffix
-          : "";
+void MultiFactorTotpHostApi::SetUp(
+  ::flutter::BinaryMessenger* binary_messenger,
+  MultiFactorTotpHostApi* api,
+  const std::string& message_channel_suffix) {
+  const std::string prepended_suffix = message_channel_suffix.length() > 0 ? std::string(".") + message_channel_suffix : "";
   {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_auth_platform_interface."
-        "MultiFactorTotpHostApi.generateSecret" +
-            prepended_suffix,
-        &GetCodec());
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.generateSecret" + prepended_suffix, &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const ::flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_session_id_arg = args.at(0);
-              if (encodable_session_id_arg.IsNull()) {
-                reply(WrapError("session_id_arg unexpectedly null."));
-                return;
-              }
-              const auto& session_id_arg =
-                  std::get<std::string>(encodable_session_id_arg);
-              api->GenerateSecret(
-                  session_id_arg,
-                  [reply](ErrorOr<InternalTotpSecret>&& output) {
-                    if (output.has_error()) {
-                      reply(WrapError(output.error()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(
-                        CustomEncodableValue(std::move(output).TakeValue()));
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
+      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_session_id_arg = args.at(0);
+          if (encodable_session_id_arg.IsNull()) {
+            reply(WrapError("session_id_arg unexpectedly null."));
+            return;
+          }
+          const auto& session_id_arg = std::get<std::string>(encodable_session_id_arg);
+          api->GenerateSecret(session_id_arg, [reply](ErrorOr<InternalTotpSecret>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
             }
+            EncodableList wrapped;
+            wrapped.push_back(CustomEncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
           });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
   {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_auth_platform_interface."
-        "MultiFactorTotpHostApi.getAssertionForEnrollment" +
-            prepended_suffix,
-        &GetCodec());
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForEnrollment" + prepended_suffix, &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const ::flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_secret_key_arg = args.at(0);
-              if (encodable_secret_key_arg.IsNull()) {
-                reply(WrapError("secret_key_arg unexpectedly null."));
-                return;
-              }
-              const auto& secret_key_arg =
-                  std::get<std::string>(encodable_secret_key_arg);
-              const auto& encodable_one_time_password_arg = args.at(1);
-              if (encodable_one_time_password_arg.IsNull()) {
-                reply(WrapError("one_time_password_arg unexpectedly null."));
-                return;
-              }
-              const auto& one_time_password_arg =
-                  std::get<std::string>(encodable_one_time_password_arg);
-              api->GetAssertionForEnrollment(
-                  secret_key_arg, one_time_password_arg,
-                  [reply](ErrorOr<std::string>&& output) {
-                    if (output.has_error()) {
-                      reply(WrapError(output.error()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(
-                        EncodableValue(std::move(output).TakeValue()));
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
+      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_secret_key_arg = args.at(0);
+          if (encodable_secret_key_arg.IsNull()) {
+            reply(WrapError("secret_key_arg unexpectedly null."));
+            return;
+          }
+          const auto& secret_key_arg = std::get<std::string>(encodable_secret_key_arg);
+          const auto& encodable_one_time_password_arg = args.at(1);
+          if (encodable_one_time_password_arg.IsNull()) {
+            reply(WrapError("one_time_password_arg unexpectedly null."));
+            return;
+          }
+          const auto& one_time_password_arg = std::get<std::string>(encodable_one_time_password_arg);
+          api->GetAssertionForEnrollment(secret_key_arg, one_time_password_arg, [reply](ErrorOr<std::string>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
             }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
           });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
   {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_auth_platform_interface."
-        "MultiFactorTotpHostApi.getAssertionForSignIn" +
-            prepended_suffix,
-        &GetCodec());
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForSignIn" + prepended_suffix, &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const ::flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_enrollment_id_arg = args.at(0);
-              if (encodable_enrollment_id_arg.IsNull()) {
-                reply(WrapError("enrollment_id_arg unexpectedly null."));
-                return;
-              }
-              const auto& enrollment_id_arg =
-                  std::get<std::string>(encodable_enrollment_id_arg);
-              const auto& encodable_one_time_password_arg = args.at(1);
-              if (encodable_one_time_password_arg.IsNull()) {
-                reply(WrapError("one_time_password_arg unexpectedly null."));
-                return;
-              }
-              const auto& one_time_password_arg =
-                  std::get<std::string>(encodable_one_time_password_arg);
-              api->GetAssertionForSignIn(
-                  enrollment_id_arg, one_time_password_arg,
-                  [reply](ErrorOr<std::string>&& output) {
-                    if (output.has_error()) {
-                      reply(WrapError(output.error()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(
-                        EncodableValue(std::move(output).TakeValue()));
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
+      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_enrollment_id_arg = args.at(0);
+          if (encodable_enrollment_id_arg.IsNull()) {
+            reply(WrapError("enrollment_id_arg unexpectedly null."));
+            return;
+          }
+          const auto& enrollment_id_arg = std::get<std::string>(encodable_enrollment_id_arg);
+          const auto& encodable_one_time_password_arg = args.at(1);
+          if (encodable_one_time_password_arg.IsNull()) {
+            reply(WrapError("one_time_password_arg unexpectedly null."));
+            return;
+          }
+          const auto& one_time_password_arg = std::get<std::string>(encodable_one_time_password_arg);
+          api->GetAssertionForSignIn(enrollment_id_arg, one_time_password_arg, [reply](ErrorOr<std::string>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
             }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
           });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
 }
 
-EncodableValue MultiFactorTotpHostApi::WrapError(
-    std::string_view error_message) {
-  return EncodableValue(
-      EncodableList{EncodableValue(std::string(error_message)),
-                    EncodableValue("Error"), EncodableValue()});
+EncodableValue MultiFactorTotpHostApi::WrapError(std::string_view error_message) {
+  return EncodableValue(EncodableList{
+    EncodableValue(std::string(error_message)),
+    EncodableValue("Error"),
+    EncodableValue()
+  });
 }
 
 EncodableValue MultiFactorTotpHostApi::WrapError(const FlutterError& error) {
-  return EncodableValue(EncodableList{EncodableValue(error.code()),
-                                      EncodableValue(error.message()),
-                                      error.details()});
+  return EncodableValue(EncodableList{
+    EncodableValue(error.code()),
+    EncodableValue(error.message()),
+    error.details()
+  });
 }
 
 /// The codec used by MultiFactorTotpSecretHostApi.
-const ::flutter::StandardMessageCodec&
-MultiFactorTotpSecretHostApi::GetCodec() {
-  return ::flutter::StandardMessageCodec::GetInstance(
-      &PigeonInternalCodecSerializer::GetInstance());
+const ::flutter::StandardMessageCodec& MultiFactorTotpSecretHostApi::GetCodec() {
+  return ::flutter::StandardMessageCodec::GetInstance(&PigeonInternalCodecSerializer::GetInstance());
 }
 
-// Sets up an instance of `MultiFactorTotpSecretHostApi` to handle messages
-// through the `binary_messenger`.
+// Sets up an instance of `MultiFactorTotpSecretHostApi` to handle messages through the `binary_messenger`.
 void MultiFactorTotpSecretHostApi::SetUp(
-    ::flutter::BinaryMessenger* binary_messenger,
-    MultiFactorTotpSecretHostApi* api) {
+  ::flutter::BinaryMessenger* binary_messenger,
+  MultiFactorTotpSecretHostApi* api) {
   MultiFactorTotpSecretHostApi::SetUp(binary_messenger, api, "");
 }
 
 void MultiFactorTotpSecretHostApi::SetUp(
-    ::flutter::BinaryMessenger* binary_messenger,
-    MultiFactorTotpSecretHostApi* api,
-    const std::string& message_channel_suffix) {
-  const std::string prepended_suffix =
-      message_channel_suffix.length() > 0
-          ? std::string(".") + message_channel_suffix
-          : "";
+  ::flutter::BinaryMessenger* binary_messenger,
+  MultiFactorTotpSecretHostApi* api,
+  const std::string& message_channel_suffix) {
+  const std::string prepended_suffix = message_channel_suffix.length() > 0 ? std::string(".") + message_channel_suffix : "";
   {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_auth_platform_interface."
-        "MultiFactorTotpSecretHostApi.generateQrCodeUrl" +
-            prepended_suffix,
-        &GetCodec());
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.generateQrCodeUrl" + prepended_suffix, &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const ::flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_secret_key_arg = args.at(0);
-              if (encodable_secret_key_arg.IsNull()) {
-                reply(WrapError("secret_key_arg unexpectedly null."));
-                return;
-              }
-              const auto& secret_key_arg =
-                  std::get<std::string>(encodable_secret_key_arg);
-              const auto& encodable_account_name_arg = args.at(1);
-              const auto* account_name_arg =
-                  std::get_if<std::string>(&encodable_account_name_arg);
-              const auto& encodable_issuer_arg = args.at(2);
-              const auto* issuer_arg =
-                  std::get_if<std::string>(&encodable_issuer_arg);
-              api->GenerateQrCodeUrl(
-                  secret_key_arg, account_name_arg, issuer_arg,
-                  [reply](ErrorOr<std::string>&& output) {
-                    if (output.has_error()) {
-                      reply(WrapError(output.error()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(
-                        EncodableValue(std::move(output).TakeValue()));
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
+      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_secret_key_arg = args.at(0);
+          if (encodable_secret_key_arg.IsNull()) {
+            reply(WrapError("secret_key_arg unexpectedly null."));
+            return;
+          }
+          const auto& secret_key_arg = std::get<std::string>(encodable_secret_key_arg);
+          const auto& encodable_account_name_arg = args.at(1);
+          const auto* account_name_arg = std::get_if<std::string>(&encodable_account_name_arg);
+          const auto& encodable_issuer_arg = args.at(2);
+          const auto* issuer_arg = std::get_if<std::string>(&encodable_issuer_arg);
+          api->GenerateQrCodeUrl(secret_key_arg, account_name_arg, issuer_arg, [reply](ErrorOr<std::string>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
             }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
           });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
   {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_auth_platform_interface."
-        "MultiFactorTotpSecretHostApi.openInOtpApp" +
-            prepended_suffix,
-        &GetCodec());
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.openInOtpApp" + prepended_suffix, &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const ::flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_secret_key_arg = args.at(0);
-              if (encodable_secret_key_arg.IsNull()) {
-                reply(WrapError("secret_key_arg unexpectedly null."));
-                return;
-              }
-              const auto& secret_key_arg =
-                  std::get<std::string>(encodable_secret_key_arg);
-              const auto& encodable_qr_code_url_arg = args.at(1);
-              if (encodable_qr_code_url_arg.IsNull()) {
-                reply(WrapError("qr_code_url_arg unexpectedly null."));
-                return;
-              }
-              const auto& qr_code_url_arg =
-                  std::get<std::string>(encodable_qr_code_url_arg);
-              api->OpenInOtpApp(secret_key_arg, qr_code_url_arg,
-                                [reply](std::optional<FlutterError>&& output) {
-                                  if (output.has_value()) {
-                                    reply(WrapError(output.value()));
-                                    return;
-                                  }
-                                  EncodableList wrapped;
-                                  wrapped.push_back(EncodableValue());
-                                  reply(EncodableValue(std::move(wrapped)));
-                                });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
+      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_secret_key_arg = args.at(0);
+          if (encodable_secret_key_arg.IsNull()) {
+            reply(WrapError("secret_key_arg unexpectedly null."));
+            return;
+          }
+          const auto& secret_key_arg = std::get<std::string>(encodable_secret_key_arg);
+          const auto& encodable_qr_code_url_arg = args.at(1);
+          if (encodable_qr_code_url_arg.IsNull()) {
+            reply(WrapError("qr_code_url_arg unexpectedly null."));
+            return;
+          }
+          const auto& qr_code_url_arg = std::get<std::string>(encodable_qr_code_url_arg);
+          api->OpenInOtpApp(secret_key_arg, qr_code_url_arg, [reply](std::optional<FlutterError>&& output) {
+            if (output.has_value()) {
+              reply(WrapError(output.value()));
+              return;
             }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue());
+            reply(EncodableValue(std::move(wrapped)));
           });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
 }
 
-EncodableValue MultiFactorTotpSecretHostApi::WrapError(
-    std::string_view error_message) {
-  return EncodableValue(
-      EncodableList{EncodableValue(std::string(error_message)),
-                    EncodableValue("Error"), EncodableValue()});
+EncodableValue MultiFactorTotpSecretHostApi::WrapError(std::string_view error_message) {
+  return EncodableValue(EncodableList{
+    EncodableValue(std::string(error_message)),
+    EncodableValue("Error"),
+    EncodableValue()
+  });
 }
 
-EncodableValue MultiFactorTotpSecretHostApi::WrapError(
-    const FlutterError& error) {
-  return EncodableValue(EncodableList{EncodableValue(error.code()),
-                                      EncodableValue(error.message()),
-                                      error.details()});
+EncodableValue MultiFactorTotpSecretHostApi::WrapError(const FlutterError& error) {
+  return EncodableValue(EncodableList{
+    EncodableValue(error.code()),
+    EncodableValue(error.message()),
+    error.details()
+  });
 }
 
 /// The codec used by GenerateInterfaces.
 const ::flutter::StandardMessageCodec& GenerateInterfaces::GetCodec() {
-  return ::flutter::StandardMessageCodec::GetInstance(
-      &PigeonInternalCodecSerializer::GetInstance());
+  return ::flutter::StandardMessageCodec::GetInstance(&PigeonInternalCodecSerializer::GetInstance());
 }
 
-// Sets up an instance of `GenerateInterfaces` to handle messages through the
-// `binary_messenger`.
-void GenerateInterfaces::SetUp(::flutter::BinaryMessenger* binary_messenger,
-                               GenerateInterfaces* api) {
+// Sets up an instance of `GenerateInterfaces` to handle messages through the `binary_messenger`.
+void GenerateInterfaces::SetUp(
+  ::flutter::BinaryMessenger* binary_messenger,
+  GenerateInterfaces* api) {
   GenerateInterfaces::SetUp(binary_messenger, api, "");
 }
 
-void GenerateInterfaces::SetUp(::flutter::BinaryMessenger* binary_messenger,
-                               GenerateInterfaces* api,
-                               const std::string& message_channel_suffix) {
-  const std::string prepended_suffix =
-      message_channel_suffix.length() > 0
-          ? std::string(".") + message_channel_suffix
-          : "";
+void GenerateInterfaces::SetUp(
+  ::flutter::BinaryMessenger* binary_messenger,
+  GenerateInterfaces* api,
+  const std::string& message_channel_suffix) {
+  const std::string prepended_suffix = message_channel_suffix.length() > 0 ? std::string(".") + message_channel_suffix : "";
   {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_auth_platform_interface."
-        "GenerateInterfaces.pigeonInterface" +
-            prepended_suffix,
-        &GetCodec());
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_auth_platform_interface.GenerateInterfaces.pigeonInterface" + prepended_suffix, &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const ::flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_info_arg = args.at(0);
-              if (encodable_info_arg.IsNull()) {
-                reply(WrapError("info_arg unexpectedly null."));
-                return;
-              }
-              const auto& info_arg =
-                  std::any_cast<const InternalMultiFactorInfo&>(
-                      std::get<CustomEncodableValue>(encodable_info_arg));
-              std::optional<FlutterError> output =
-                  api->PigeonInterface(info_arg);
-              if (output.has_value()) {
-                reply(WrapError(output.value()));
-                return;
-              }
-              EncodableList wrapped;
-              wrapped.push_back(EncodableValue());
-              reply(EncodableValue(std::move(wrapped)));
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
-            }
-          });
+      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_info_arg = args.at(0);
+          if (encodable_info_arg.IsNull()) {
+            reply(WrapError("info_arg unexpectedly null."));
+            return;
+          }
+          const auto& info_arg = std::any_cast<const InternalMultiFactorInfo&>(std::get<CustomEncodableValue>(encodable_info_arg));
+          std::optional<FlutterError> output = api->PigeonInterface(info_arg);
+          if (output.has_value()) {
+            reply(WrapError(output.value()));
+            return;
+          }
+          EncodableList wrapped;
+          wrapped.push_back(EncodableValue());
+          reply(EncodableValue(std::move(wrapped)));
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
@@ -5502,15 +4607,19 @@ void GenerateInterfaces::SetUp(::flutter::BinaryMessenger* binary_messenger,
 }
 
 EncodableValue GenerateInterfaces::WrapError(std::string_view error_message) {
-  return EncodableValue(
-      EncodableList{EncodableValue(std::string(error_message)),
-                    EncodableValue("Error"), EncodableValue()});
+  return EncodableValue(EncodableList{
+    EncodableValue(std::string(error_message)),
+    EncodableValue("Error"),
+    EncodableValue()
+  });
 }
 
 EncodableValue GenerateInterfaces::WrapError(const FlutterError& error) {
-  return EncodableValue(EncodableList{EncodableValue(error.code()),
-                                      EncodableValue(error.message()),
-                                      error.details()});
+  return EncodableValue(EncodableList{
+    EncodableValue(error.code()),
+    EncodableValue(error.message()),
+    error.details()
+  });
 }
 
 }  // namespace firebase_auth_windows

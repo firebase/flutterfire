@@ -13,9 +13,9 @@ import 'package:flutter/services.dart';
 import 'package:meta/meta.dart' show immutable, protected, visibleForTesting;
 
 Object? _extractReplyValueOrThrow(
-  List<Object?>? replyList,
-  String channelName, {
-  required bool isNullValid,
+    List<Object?>? replyList,
+    String channelName, {
+    required bool isNullValid,
 }) {
   if (replyList == null) {
     throw PlatformException(
@@ -37,8 +37,8 @@ Object? _extractReplyValueOrThrow(
   return replyList.firstOrNull;
 }
 
-List<Object?> wrapResponse(
-    {Object? result, PlatformException? error, bool empty = false}) {
+
+List<Object?> wrapResponse({Object? result, PlatformException? error, bool empty = false}) {
   if (empty) {
     return <Object?>[];
   }
@@ -47,7 +47,6 @@ List<Object?> wrapResponse(
   }
   return <Object?>[error.code, error.message, error.details];
 }
-
 bool _deepEquals(Object? a, Object? b) {
   if (identical(a, b)) {
     return true;
@@ -110,27 +109,22 @@ int _deepHash(Object? value) {
   return value.hashCode;
 }
 
+
 /// The type of operation that generated the action code from calling
 /// [checkActionCode].
 enum ActionCodeInfoOperation {
   /// Unknown operation.
   unknown,
-
   /// Password reset code generated via [sendPasswordResetEmail].
   passwordReset,
-
   /// Email verification code generated via [User.sendEmailVerification].
   verifyEmail,
-
   /// Email change revocation code generated via [User.updateEmail].
   recoverEmail,
-
   /// Email sign in code generated via [sendSignInLinkToEmail].
   emailSignIn,
-
   /// Verify and change email code generated via [User.verifyBeforeUpdateEmail].
   verifyAndChangeEmail,
-
   /// Action code for reverting second factor addition.
   revertSecondFactorAddition,
 }
@@ -149,8 +143,7 @@ class InternalMultiFactorSession {
   }
 
   Object encode() {
-    return _toList();
-  }
+    return _toList();  }
 
   static InternalMultiFactorSession decode(Object result) {
     result as List<Object?>;
@@ -162,8 +155,7 @@ class InternalMultiFactorSession {
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
-    if (other is! InternalMultiFactorSession ||
-        other.runtimeType != runtimeType) {
+    if (other is! InternalMultiFactorSession || other.runtimeType != runtimeType) {
       return false;
     }
     if (identical(this, other)) {
@@ -195,8 +187,7 @@ class InternalPhoneMultiFactorAssertion {
   }
 
   Object encode() {
-    return _toList();
-  }
+    return _toList();  }
 
   static InternalPhoneMultiFactorAssertion decode(Object result) {
     result as List<Object?>;
@@ -209,15 +200,13 @@ class InternalPhoneMultiFactorAssertion {
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
-    if (other is! InternalPhoneMultiFactorAssertion ||
-        other.runtimeType != runtimeType) {
+    if (other is! InternalPhoneMultiFactorAssertion || other.runtimeType != runtimeType) {
       return false;
     }
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(verificationId, other.verificationId) &&
-        _deepEquals(verificationCode, other.verificationCode);
+    return _deepEquals(verificationId, other.verificationId) && _deepEquals(verificationCode, other.verificationCode);
   }
 
   @override
@@ -255,8 +244,7 @@ class InternalMultiFactorInfo {
   }
 
   Object encode() {
-    return _toList();
-  }
+    return _toList();  }
 
   static InternalMultiFactorInfo decode(Object result) {
     result as List<Object?>;
@@ -278,11 +266,7 @@ class InternalMultiFactorInfo {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(displayName, other.displayName) &&
-        _deepEquals(enrollmentTimestamp, other.enrollmentTimestamp) &&
-        _deepEquals(factorId, other.factorId) &&
-        _deepEquals(uid, other.uid) &&
-        _deepEquals(phoneNumber, other.phoneNumber);
+    return _deepEquals(displayName, other.displayName) && _deepEquals(enrollmentTimestamp, other.enrollmentTimestamp) && _deepEquals(factorId, other.factorId) && _deepEquals(uid, other.uid) && _deepEquals(phoneNumber, other.phoneNumber);
   }
 
   @override
@@ -312,8 +296,7 @@ class AuthPigeonFirebaseApp {
   }
 
   Object encode() {
-    return _toList();
-  }
+    return _toList();  }
 
   static AuthPigeonFirebaseApp decode(Object result) {
     result as List<Object?>;
@@ -333,9 +316,7 @@ class AuthPigeonFirebaseApp {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(appName, other.appName) &&
-        _deepEquals(tenantId, other.tenantId) &&
-        _deepEquals(customAuthDomain, other.customAuthDomain);
+    return _deepEquals(appName, other.appName) && _deepEquals(tenantId, other.tenantId) && _deepEquals(customAuthDomain, other.customAuthDomain);
   }
 
   @override
@@ -361,8 +342,7 @@ class InternalActionCodeInfoData {
   }
 
   Object encode() {
-    return _toList();
-  }
+    return _toList();  }
 
   static InternalActionCodeInfoData decode(Object result) {
     result as List<Object?>;
@@ -375,15 +355,13 @@ class InternalActionCodeInfoData {
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
-    if (other is! InternalActionCodeInfoData ||
-        other.runtimeType != runtimeType) {
+    if (other is! InternalActionCodeInfoData || other.runtimeType != runtimeType) {
       return false;
     }
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(email, other.email) &&
-        _deepEquals(previousEmail, other.previousEmail);
+    return _deepEquals(email, other.email) && _deepEquals(previousEmail, other.previousEmail);
   }
 
   @override
@@ -409,8 +387,7 @@ class InternalActionCodeInfo {
   }
 
   Object encode() {
-    return _toList();
-  }
+    return _toList();  }
 
   static InternalActionCodeInfo decode(Object result) {
     result as List<Object?>;
@@ -429,8 +406,7 @@ class InternalActionCodeInfo {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(operation, other.operation) &&
-        _deepEquals(data, other.data);
+    return _deepEquals(operation, other.operation) && _deepEquals(data, other.data);
   }
 
   @override
@@ -468,8 +444,7 @@ class InternalAdditionalUserInfo {
   }
 
   Object encode() {
-    return _toList();
-  }
+    return _toList();  }
 
   static InternalAdditionalUserInfo decode(Object result) {
     result as List<Object?>;
@@ -485,18 +460,13 @@ class InternalAdditionalUserInfo {
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
-    if (other is! InternalAdditionalUserInfo ||
-        other.runtimeType != runtimeType) {
+    if (other is! InternalAdditionalUserInfo || other.runtimeType != runtimeType) {
       return false;
     }
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(isNewUser, other.isNewUser) &&
-        _deepEquals(providerId, other.providerId) &&
-        _deepEquals(username, other.username) &&
-        _deepEquals(authorizationCode, other.authorizationCode) &&
-        _deepEquals(profile, other.profile);
+    return _deepEquals(isNewUser, other.isNewUser) && _deepEquals(providerId, other.providerId) && _deepEquals(username, other.username) && _deepEquals(authorizationCode, other.authorizationCode) && _deepEquals(profile, other.profile);
   }
 
   @override
@@ -530,8 +500,7 @@ class InternalAuthCredential {
   }
 
   Object encode() {
-    return _toList();
-  }
+    return _toList();  }
 
   static InternalAuthCredential decode(Object result) {
     result as List<Object?>;
@@ -552,10 +521,7 @@ class InternalAuthCredential {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(providerId, other.providerId) &&
-        _deepEquals(signInMethod, other.signInMethod) &&
-        _deepEquals(nativeId, other.nativeId) &&
-        _deepEquals(accessToken, other.accessToken);
+    return _deepEquals(providerId, other.providerId) && _deepEquals(signInMethod, other.signInMethod) && _deepEquals(nativeId, other.nativeId) && _deepEquals(accessToken, other.accessToken);
   }
 
   @override
@@ -621,8 +587,7 @@ class InternalUserInfo {
   }
 
   Object encode() {
-    return _toList();
-  }
+    return _toList();  }
 
   static InternalUserInfo decode(Object result) {
     result as List<Object?>;
@@ -651,18 +616,7 @@ class InternalUserInfo {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(uid, other.uid) &&
-        _deepEquals(email, other.email) &&
-        _deepEquals(displayName, other.displayName) &&
-        _deepEquals(photoUrl, other.photoUrl) &&
-        _deepEquals(phoneNumber, other.phoneNumber) &&
-        _deepEquals(isAnonymous, other.isAnonymous) &&
-        _deepEquals(isEmailVerified, other.isEmailVerified) &&
-        _deepEquals(providerId, other.providerId) &&
-        _deepEquals(tenantId, other.tenantId) &&
-        _deepEquals(refreshToken, other.refreshToken) &&
-        _deepEquals(creationTimestamp, other.creationTimestamp) &&
-        _deepEquals(lastSignInTimestamp, other.lastSignInTimestamp);
+    return _deepEquals(uid, other.uid) && _deepEquals(email, other.email) && _deepEquals(displayName, other.displayName) && _deepEquals(photoUrl, other.photoUrl) && _deepEquals(phoneNumber, other.phoneNumber) && _deepEquals(isAnonymous, other.isAnonymous) && _deepEquals(isEmailVerified, other.isEmailVerified) && _deepEquals(providerId, other.providerId) && _deepEquals(tenantId, other.tenantId) && _deepEquals(refreshToken, other.refreshToken) && _deepEquals(creationTimestamp, other.creationTimestamp) && _deepEquals(lastSignInTimestamp, other.lastSignInTimestamp);
   }
 
   @override
@@ -688,15 +642,13 @@ class InternalUserDetails {
   }
 
   Object encode() {
-    return _toList();
-  }
+    return _toList();  }
 
   static InternalUserDetails decode(Object result) {
     result as List<Object?>;
     return InternalUserDetails(
       userInfo: result[0]! as InternalUserInfo,
-      providerData:
-          (result[1]! as List<Object?>).cast<Map<Object?, Object?>?>(),
+      providerData: (result[1]! as List<Object?>).cast<Map<Object?, Object?>?>(),
     );
   }
 
@@ -709,8 +661,7 @@ class InternalUserDetails {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(userInfo, other.userInfo) &&
-        _deepEquals(providerData, other.providerData);
+    return _deepEquals(userInfo, other.userInfo) && _deepEquals(providerData, other.providerData);
   }
 
   @override
@@ -740,8 +691,7 @@ class InternalUserCredential {
   }
 
   Object encode() {
-    return _toList();
-  }
+    return _toList();  }
 
   static InternalUserCredential decode(Object result) {
     result as List<Object?>;
@@ -761,9 +711,7 @@ class InternalUserCredential {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(user, other.user) &&
-        _deepEquals(additionalUserInfo, other.additionalUserInfo) &&
-        _deepEquals(credential, other.credential);
+    return _deepEquals(user, other.user) && _deepEquals(additionalUserInfo, other.additionalUserInfo) && _deepEquals(credential, other.credential);
   }
 
   @override
@@ -797,8 +745,7 @@ class InternalAuthCredentialInput {
   }
 
   Object encode() {
-    return _toList();
-  }
+    return _toList();  }
 
   static InternalAuthCredentialInput decode(Object result) {
     result as List<Object?>;
@@ -813,17 +760,13 @@ class InternalAuthCredentialInput {
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
-    if (other is! InternalAuthCredentialInput ||
-        other.runtimeType != runtimeType) {
+    if (other is! InternalAuthCredentialInput || other.runtimeType != runtimeType) {
       return false;
     }
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(providerId, other.providerId) &&
-        _deepEquals(signInMethod, other.signInMethod) &&
-        _deepEquals(token, other.token) &&
-        _deepEquals(accessToken, other.accessToken);
+    return _deepEquals(providerId, other.providerId) && _deepEquals(signInMethod, other.signInMethod) && _deepEquals(token, other.token) && _deepEquals(accessToken, other.accessToken);
   }
 
   @override
@@ -873,8 +816,7 @@ class InternalActionCodeSettings {
   }
 
   Object encode() {
-    return _toList();
-  }
+    return _toList();  }
 
   static InternalActionCodeSettings decode(Object result) {
     result as List<Object?>;
@@ -893,21 +835,13 @@ class InternalActionCodeSettings {
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
-    if (other is! InternalActionCodeSettings ||
-        other.runtimeType != runtimeType) {
+    if (other is! InternalActionCodeSettings || other.runtimeType != runtimeType) {
       return false;
     }
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(url, other.url) &&
-        _deepEquals(dynamicLinkDomain, other.dynamicLinkDomain) &&
-        _deepEquals(handleCodeInApp, other.handleCodeInApp) &&
-        _deepEquals(iOSBundleId, other.iOSBundleId) &&
-        _deepEquals(androidPackageName, other.androidPackageName) &&
-        _deepEquals(androidInstallApp, other.androidInstallApp) &&
-        _deepEquals(androidMinimumVersion, other.androidMinimumVersion) &&
-        _deepEquals(linkDomain, other.linkDomain);
+    return _deepEquals(url, other.url) && _deepEquals(dynamicLinkDomain, other.dynamicLinkDomain) && _deepEquals(handleCodeInApp, other.handleCodeInApp) && _deepEquals(iOSBundleId, other.iOSBundleId) && _deepEquals(androidPackageName, other.androidPackageName) && _deepEquals(androidInstallApp, other.androidInstallApp) && _deepEquals(androidMinimumVersion, other.androidMinimumVersion) && _deepEquals(linkDomain, other.linkDomain);
   }
 
   @override
@@ -945,8 +879,7 @@ class InternalFirebaseAuthSettings {
   }
 
   Object encode() {
-    return _toList();
-  }
+    return _toList();  }
 
   static InternalFirebaseAuthSettings decode(Object result) {
     result as List<Object?>;
@@ -962,19 +895,13 @@ class InternalFirebaseAuthSettings {
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
-    if (other is! InternalFirebaseAuthSettings ||
-        other.runtimeType != runtimeType) {
+    if (other is! InternalFirebaseAuthSettings || other.runtimeType != runtimeType) {
       return false;
     }
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(appVerificationDisabledForTesting,
-            other.appVerificationDisabledForTesting) &&
-        _deepEquals(userAccessGroup, other.userAccessGroup) &&
-        _deepEquals(phoneNumber, other.phoneNumber) &&
-        _deepEquals(smsCode, other.smsCode) &&
-        _deepEquals(forceRecaptchaFlow, other.forceRecaptchaFlow);
+    return _deepEquals(appVerificationDisabledForTesting, other.appVerificationDisabledForTesting) && _deepEquals(userAccessGroup, other.userAccessGroup) && _deepEquals(phoneNumber, other.phoneNumber) && _deepEquals(smsCode, other.smsCode) && _deepEquals(forceRecaptchaFlow, other.forceRecaptchaFlow);
   }
 
   @override
@@ -1004,16 +931,14 @@ class InternalSignInProvider {
   }
 
   Object encode() {
-    return _toList();
-  }
+    return _toList();  }
 
   static InternalSignInProvider decode(Object result) {
     result as List<Object?>;
     return InternalSignInProvider(
       providerId: result[0]! as String,
       scopes: (result[1] as List<Object?>?)?.cast<String?>(),
-      customParameters:
-          (result[2] as Map<Object?, Object?>?)?.cast<String?, String?>(),
+      customParameters: (result[2] as Map<Object?, Object?>?)?.cast<String?, String?>(),
     );
   }
 
@@ -1026,9 +951,7 @@ class InternalSignInProvider {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(providerId, other.providerId) &&
-        _deepEquals(scopes, other.scopes) &&
-        _deepEquals(customParameters, other.customParameters);
+    return _deepEquals(providerId, other.providerId) && _deepEquals(scopes, other.scopes) && _deepEquals(customParameters, other.customParameters);
   }
 
   @override
@@ -1070,8 +993,7 @@ class InternalVerifyPhoneNumberRequest {
   }
 
   Object encode() {
-    return _toList();
-  }
+    return _toList();  }
 
   static InternalVerifyPhoneNumberRequest decode(Object result) {
     result as List<Object?>;
@@ -1088,20 +1010,13 @@ class InternalVerifyPhoneNumberRequest {
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
-    if (other is! InternalVerifyPhoneNumberRequest ||
-        other.runtimeType != runtimeType) {
+    if (other is! InternalVerifyPhoneNumberRequest || other.runtimeType != runtimeType) {
       return false;
     }
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(phoneNumber, other.phoneNumber) &&
-        _deepEquals(timeout, other.timeout) &&
-        _deepEquals(forceResendingToken, other.forceResendingToken) &&
-        _deepEquals(autoRetrievedSmsCodeForTesting,
-            other.autoRetrievedSmsCodeForTesting) &&
-        _deepEquals(multiFactorInfoId, other.multiFactorInfoId) &&
-        _deepEquals(multiFactorSessionId, other.multiFactorSessionId);
+    return _deepEquals(phoneNumber, other.phoneNumber) && _deepEquals(timeout, other.timeout) && _deepEquals(forceResendingToken, other.forceResendingToken) && _deepEquals(autoRetrievedSmsCodeForTesting, other.autoRetrievedSmsCodeForTesting) && _deepEquals(multiFactorInfoId, other.multiFactorInfoId) && _deepEquals(multiFactorSessionId, other.multiFactorSessionId);
   }
 
   @override
@@ -1147,8 +1062,7 @@ class InternalIdTokenResult {
   }
 
   Object encode() {
-    return _toList();
-  }
+    return _toList();  }
 
   static InternalIdTokenResult decode(Object result) {
     result as List<Object?>;
@@ -1172,13 +1086,7 @@ class InternalIdTokenResult {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(token, other.token) &&
-        _deepEquals(expirationTimestamp, other.expirationTimestamp) &&
-        _deepEquals(authTimestamp, other.authTimestamp) &&
-        _deepEquals(issuedAtTimestamp, other.issuedAtTimestamp) &&
-        _deepEquals(signInProvider, other.signInProvider) &&
-        _deepEquals(claims, other.claims) &&
-        _deepEquals(signInSecondFactor, other.signInSecondFactor);
+    return _deepEquals(token, other.token) && _deepEquals(expirationTimestamp, other.expirationTimestamp) && _deepEquals(authTimestamp, other.authTimestamp) && _deepEquals(issuedAtTimestamp, other.issuedAtTimestamp) && _deepEquals(signInProvider, other.signInProvider) && _deepEquals(claims, other.claims) && _deepEquals(signInSecondFactor, other.signInSecondFactor);
   }
 
   @override
@@ -1212,8 +1120,7 @@ class InternalUserProfile {
   }
 
   Object encode() {
-    return _toList();
-  }
+    return _toList();  }
 
   static InternalUserProfile decode(Object result) {
     result as List<Object?>;
@@ -1234,10 +1141,7 @@ class InternalUserProfile {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(displayName, other.displayName) &&
-        _deepEquals(photoUrl, other.photoUrl) &&
-        _deepEquals(displayNameChanged, other.displayNameChanged) &&
-        _deepEquals(photoUrlChanged, other.photoUrlChanged);
+    return _deepEquals(displayName, other.displayName) && _deepEquals(photoUrl, other.photoUrl) && _deepEquals(displayNameChanged, other.displayNameChanged) && _deepEquals(photoUrlChanged, other.photoUrlChanged);
   }
 
   @override
@@ -1275,8 +1179,7 @@ class InternalTotpSecret {
   }
 
   Object encode() {
-    return _toList();
-  }
+    return _toList();  }
 
   static InternalTotpSecret decode(Object result) {
     result as List<Object?>;
@@ -1298,18 +1201,14 @@ class InternalTotpSecret {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(codeIntervalSeconds, other.codeIntervalSeconds) &&
-        _deepEquals(codeLength, other.codeLength) &&
-        _deepEquals(
-            enrollmentCompletionDeadline, other.enrollmentCompletionDeadline) &&
-        _deepEquals(hashingAlgorithm, other.hashingAlgorithm) &&
-        _deepEquals(secretKey, other.secretKey);
+    return _deepEquals(codeIntervalSeconds, other.codeIntervalSeconds) && _deepEquals(codeLength, other.codeLength) && _deepEquals(enrollmentCompletionDeadline, other.enrollmentCompletionDeadline) && _deepEquals(hashingAlgorithm, other.hashingAlgorithm) && _deepEquals(secretKey, other.secretKey);
   }
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
 }
+
 
 class _PigeonCodec extends StandardMessageCodec {
   const _PigeonCodec();
@@ -1318,64 +1217,64 @@ class _PigeonCodec extends StandardMessageCodec {
     if (value is int) {
       buffer.putUint8(4);
       buffer.putInt64(value);
-    } else if (value is ActionCodeInfoOperation) {
+    }    else if (value is ActionCodeInfoOperation) {
       buffer.putUint8(129);
       writeValue(buffer, value.index);
-    } else if (value is InternalMultiFactorSession) {
+    }    else if (value is InternalMultiFactorSession) {
       buffer.putUint8(130);
       writeValue(buffer, value.encode());
-    } else if (value is InternalPhoneMultiFactorAssertion) {
+    }    else if (value is InternalPhoneMultiFactorAssertion) {
       buffer.putUint8(131);
       writeValue(buffer, value.encode());
-    } else if (value is InternalMultiFactorInfo) {
+    }    else if (value is InternalMultiFactorInfo) {
       buffer.putUint8(132);
       writeValue(buffer, value.encode());
-    } else if (value is AuthPigeonFirebaseApp) {
+    }    else if (value is AuthPigeonFirebaseApp) {
       buffer.putUint8(133);
       writeValue(buffer, value.encode());
-    } else if (value is InternalActionCodeInfoData) {
+    }    else if (value is InternalActionCodeInfoData) {
       buffer.putUint8(134);
       writeValue(buffer, value.encode());
-    } else if (value is InternalActionCodeInfo) {
+    }    else if (value is InternalActionCodeInfo) {
       buffer.putUint8(135);
       writeValue(buffer, value.encode());
-    } else if (value is InternalAdditionalUserInfo) {
+    }    else if (value is InternalAdditionalUserInfo) {
       buffer.putUint8(136);
       writeValue(buffer, value.encode());
-    } else if (value is InternalAuthCredential) {
+    }    else if (value is InternalAuthCredential) {
       buffer.putUint8(137);
       writeValue(buffer, value.encode());
-    } else if (value is InternalUserInfo) {
+    }    else if (value is InternalUserInfo) {
       buffer.putUint8(138);
       writeValue(buffer, value.encode());
-    } else if (value is InternalUserDetails) {
+    }    else if (value is InternalUserDetails) {
       buffer.putUint8(139);
       writeValue(buffer, value.encode());
-    } else if (value is InternalUserCredential) {
+    }    else if (value is InternalUserCredential) {
       buffer.putUint8(140);
       writeValue(buffer, value.encode());
-    } else if (value is InternalAuthCredentialInput) {
+    }    else if (value is InternalAuthCredentialInput) {
       buffer.putUint8(141);
       writeValue(buffer, value.encode());
-    } else if (value is InternalActionCodeSettings) {
+    }    else if (value is InternalActionCodeSettings) {
       buffer.putUint8(142);
       writeValue(buffer, value.encode());
-    } else if (value is InternalFirebaseAuthSettings) {
+    }    else if (value is InternalFirebaseAuthSettings) {
       buffer.putUint8(143);
       writeValue(buffer, value.encode());
-    } else if (value is InternalSignInProvider) {
+    }    else if (value is InternalSignInProvider) {
       buffer.putUint8(144);
       writeValue(buffer, value.encode());
-    } else if (value is InternalVerifyPhoneNumberRequest) {
+    }    else if (value is InternalVerifyPhoneNumberRequest) {
       buffer.putUint8(145);
       writeValue(buffer, value.encode());
-    } else if (value is InternalIdTokenResult) {
+    }    else if (value is InternalIdTokenResult) {
       buffer.putUint8(146);
       writeValue(buffer, value.encode());
-    } else if (value is InternalUserProfile) {
+    }    else if (value is InternalUserProfile) {
       buffer.putUint8(147);
       writeValue(buffer, value.encode());
-    } else if (value is InternalTotpSecret) {
+    }    else if (value is InternalTotpSecret) {
       buffer.putUint8(148);
       writeValue(buffer, value.encode());
     } else {
@@ -1437,11 +1336,9 @@ class FirebaseAuthHostApi {
   /// Constructor for [FirebaseAuthHostApi].  The [binaryMessenger] named argument is
   /// available for dependency injection.  If it is left null, the default
   /// BinaryMessenger will be used which routes to the host platform.
-  FirebaseAuthHostApi(
-      {BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
+  FirebaseAuthHostApi({BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
       : pigeonVar_binaryMessenger = binaryMessenger,
-        pigeonVar_messageChannelSuffix =
-            messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+        pigeonVar_messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
   final BinaryMessenger? pigeonVar_binaryMessenger;
 
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
@@ -1449,472 +1346,449 @@ class FirebaseAuthHostApi {
   final String pigeonVar_messageChannelSuffix;
 
   Future<String> registerIdTokenListener(AuthPigeonFirebaseApp app) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.registerIdTokenListener$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.registerIdTokenListener$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: false,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
     return pigeonVar_replyValue! as String;
   }
 
   Future<String> registerAuthStateListener(AuthPigeonFirebaseApp app) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.registerAuthStateListener$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.registerAuthStateListener$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: false,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
     return pigeonVar_replyValue! as String;
   }
 
-  Future<void> useEmulator(
-      AuthPigeonFirebaseApp app, String host, int port) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.useEmulator$pigeonVar_messageChannelSuffix';
+  Future<void> useEmulator(AuthPigeonFirebaseApp app, String host, int port) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.useEmulator$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, host, port]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app, host, port]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: true,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: true,
+    )
+    ;
   }
 
   Future<void> applyActionCode(AuthPigeonFirebaseApp app, String code) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.applyActionCode$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.applyActionCode$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, code]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app, code]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: true,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: true,
+    )
+    ;
   }
 
-  Future<InternalActionCodeInfo> checkActionCode(
-      AuthPigeonFirebaseApp app, String code) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.checkActionCode$pigeonVar_messageChannelSuffix';
+  Future<InternalActionCodeInfo> checkActionCode(AuthPigeonFirebaseApp app, String code) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.checkActionCode$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, code]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app, code]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: false,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
     return pigeonVar_replyValue! as InternalActionCodeInfo;
   }
 
-  Future<void> confirmPasswordReset(
-      AuthPigeonFirebaseApp app, String code, String newPassword) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.confirmPasswordReset$pigeonVar_messageChannelSuffix';
+  Future<void> confirmPasswordReset(AuthPigeonFirebaseApp app, String code, String newPassword) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.confirmPasswordReset$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, code, newPassword]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app, code, newPassword]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: true,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: true,
+    )
+    ;
   }
 
-  Future<InternalUserCredential> createUserWithEmailAndPassword(
-      AuthPigeonFirebaseApp app, String email, String password) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.createUserWithEmailAndPassword$pigeonVar_messageChannelSuffix';
+  Future<InternalUserCredential> createUserWithEmailAndPassword(AuthPigeonFirebaseApp app, String email, String password) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.createUserWithEmailAndPassword$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, email, password]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app, email, password]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: false,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
     return pigeonVar_replyValue! as InternalUserCredential;
   }
 
-  Future<InternalUserCredential> signInAnonymously(
-      AuthPigeonFirebaseApp app) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInAnonymously$pigeonVar_messageChannelSuffix';
+  Future<InternalUserCredential> signInAnonymously(AuthPigeonFirebaseApp app) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInAnonymously$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: false,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
     return pigeonVar_replyValue! as InternalUserCredential;
   }
 
-  Future<InternalUserCredential> signInWithCredential(
-      AuthPigeonFirebaseApp app, Map<String?, Object?> input) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithCredential$pigeonVar_messageChannelSuffix';
+  Future<InternalUserCredential> signInWithCredential(AuthPigeonFirebaseApp app, Map<String?, Object?> input) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithCredential$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, input]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app, input]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: false,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
     return pigeonVar_replyValue! as InternalUserCredential;
   }
 
-  Future<InternalUserCredential> signInWithCustomToken(
-      AuthPigeonFirebaseApp app, String token) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithCustomToken$pigeonVar_messageChannelSuffix';
+  Future<InternalUserCredential> signInWithCustomToken(AuthPigeonFirebaseApp app, String token) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithCustomToken$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, token]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app, token]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: false,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
     return pigeonVar_replyValue! as InternalUserCredential;
   }
 
-  Future<InternalUserCredential> signInWithEmailAndPassword(
-      AuthPigeonFirebaseApp app, String email, String password) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithEmailAndPassword$pigeonVar_messageChannelSuffix';
+  Future<InternalUserCredential> signInWithEmailAndPassword(AuthPigeonFirebaseApp app, String email, String password) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithEmailAndPassword$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, email, password]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app, email, password]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: false,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
     return pigeonVar_replyValue! as InternalUserCredential;
   }
 
-  Future<InternalUserCredential> signInWithEmailLink(
-      AuthPigeonFirebaseApp app, String email, String emailLink) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithEmailLink$pigeonVar_messageChannelSuffix';
+  Future<InternalUserCredential> signInWithEmailLink(AuthPigeonFirebaseApp app, String email, String emailLink) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithEmailLink$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, email, emailLink]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app, email, emailLink]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: false,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
     return pigeonVar_replyValue! as InternalUserCredential;
   }
 
-  Future<InternalUserCredential> signInWithProvider(
-      AuthPigeonFirebaseApp app, InternalSignInProvider signInProvider) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithProvider$pigeonVar_messageChannelSuffix';
+  Future<InternalUserCredential> signInWithProvider(AuthPigeonFirebaseApp app, InternalSignInProvider signInProvider) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithProvider$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, signInProvider]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app, signInProvider]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: false,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
     return pigeonVar_replyValue! as InternalUserCredential;
   }
 
   Future<void> signOut(AuthPigeonFirebaseApp app) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signOut$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signOut$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: true,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: true,
+    )
+    ;
   }
 
-  Future<List<String>> fetchSignInMethodsForEmail(
-      AuthPigeonFirebaseApp app, String email) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.fetchSignInMethodsForEmail$pigeonVar_messageChannelSuffix';
+  Future<List<String>> fetchSignInMethodsForEmail(AuthPigeonFirebaseApp app, String email) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.fetchSignInMethodsForEmail$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, email]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app, email]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: false,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
     return (pigeonVar_replyValue! as List<Object?>).cast<String>();
   }
 
-  Future<void> sendPasswordResetEmail(AuthPigeonFirebaseApp app, String email,
-      InternalActionCodeSettings? actionCodeSettings) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.sendPasswordResetEmail$pigeonVar_messageChannelSuffix';
+  Future<void> sendPasswordResetEmail(AuthPigeonFirebaseApp app, String email, InternalActionCodeSettings? actionCodeSettings) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.sendPasswordResetEmail$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, email, actionCodeSettings]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app, email, actionCodeSettings]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: true,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: true,
+    )
+    ;
   }
 
-  Future<void> sendSignInLinkToEmail(AuthPigeonFirebaseApp app, String email,
-      InternalActionCodeSettings actionCodeSettings) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.sendSignInLinkToEmail$pigeonVar_messageChannelSuffix';
+  Future<void> sendSignInLinkToEmail(AuthPigeonFirebaseApp app, String email, InternalActionCodeSettings actionCodeSettings) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.sendSignInLinkToEmail$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, email, actionCodeSettings]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app, email, actionCodeSettings]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: true,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: true,
+    )
+    ;
   }
 
-  Future<String> setLanguageCode(
-      AuthPigeonFirebaseApp app, String? languageCode) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.setLanguageCode$pigeonVar_messageChannelSuffix';
+  Future<String> setLanguageCode(AuthPigeonFirebaseApp app, String? languageCode) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.setLanguageCode$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, languageCode]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app, languageCode]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: false,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
     return pigeonVar_replyValue! as String;
   }
 
-  Future<void> setSettings(
-      AuthPigeonFirebaseApp app, InternalFirebaseAuthSettings settings) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.setSettings$pigeonVar_messageChannelSuffix';
+  Future<void> setSettings(AuthPigeonFirebaseApp app, InternalFirebaseAuthSettings settings) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.setSettings$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, settings]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app, settings]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: true,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: true,
+    )
+    ;
   }
 
-  Future<String> verifyPasswordResetCode(
-      AuthPigeonFirebaseApp app, String code) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.verifyPasswordResetCode$pigeonVar_messageChannelSuffix';
+  Future<String> verifyPasswordResetCode(AuthPigeonFirebaseApp app, String code) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.verifyPasswordResetCode$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, code]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app, code]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: false,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
     return pigeonVar_replyValue! as String;
   }
 
-  Future<String> verifyPhoneNumber(AuthPigeonFirebaseApp app,
-      InternalVerifyPhoneNumberRequest request) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.verifyPhoneNumber$pigeonVar_messageChannelSuffix';
+  Future<String> verifyPhoneNumber(AuthPigeonFirebaseApp app, InternalVerifyPhoneNumberRequest request) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.verifyPhoneNumber$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, request]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app, request]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: false,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
     return pigeonVar_replyValue! as String;
   }
 
-  Future<void> revokeTokenWithAuthorizationCode(
-      AuthPigeonFirebaseApp app, String authorizationCode) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.revokeTokenWithAuthorizationCode$pigeonVar_messageChannelSuffix';
+  Future<void> revokeTokenWithAuthorizationCode(AuthPigeonFirebaseApp app, String authorizationCode) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.revokeTokenWithAuthorizationCode$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, authorizationCode]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app, authorizationCode]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
-      pigeonVar_replyList,
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: true,
+    )
+    ;
+  }
+
+  Future<void> revokeAccessToken(AuthPigeonFirebaseApp app, String accessToken) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.revokeAccessToken$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
-      isNullValid: true,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
     );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app, accessToken]);
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    _extractReplyValueOrThrow(
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: true,
+    )
+    ;
   }
 
   Future<void> initializeRecaptchaConfig(AuthPigeonFirebaseApp app) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.initializeRecaptchaConfig$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.initializeRecaptchaConfig$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: true,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: true,
+    )
+    ;
   }
 }
 
@@ -1922,11 +1796,9 @@ class FirebaseAuthUserHostApi {
   /// Constructor for [FirebaseAuthUserHostApi].  The [binaryMessenger] named argument is
   /// available for dependency injection.  If it is left null, the default
   /// BinaryMessenger will be used which routes to the host platform.
-  FirebaseAuthUserHostApi(
-      {BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
+  FirebaseAuthUserHostApi({BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
       : pigeonVar_binaryMessenger = binaryMessenger,
-        pigeonVar_messageChannelSuffix =
-            messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+        pigeonVar_messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
   final BinaryMessenger? pigeonVar_binaryMessenger;
 
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
@@ -1934,292 +1806,266 @@ class FirebaseAuthUserHostApi {
   final String pigeonVar_messageChannelSuffix;
 
   Future<void> delete(AuthPigeonFirebaseApp app) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.delete$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.delete$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: true,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: true,
+    )
+    ;
   }
 
-  Future<InternalIdTokenResult> getIdToken(
-      AuthPigeonFirebaseApp app, bool forceRefresh) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.getIdToken$pigeonVar_messageChannelSuffix';
+  Future<InternalIdTokenResult> getIdToken(AuthPigeonFirebaseApp app, bool forceRefresh) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.getIdToken$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, forceRefresh]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app, forceRefresh]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: false,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
     return pigeonVar_replyValue! as InternalIdTokenResult;
   }
 
-  Future<InternalUserCredential> linkWithCredential(
-      AuthPigeonFirebaseApp app, Map<String?, Object?> input) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.linkWithCredential$pigeonVar_messageChannelSuffix';
+  Future<InternalUserCredential> linkWithCredential(AuthPigeonFirebaseApp app, Map<String?, Object?> input) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.linkWithCredential$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, input]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app, input]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: false,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
     return pigeonVar_replyValue! as InternalUserCredential;
   }
 
-  Future<InternalUserCredential> linkWithProvider(
-      AuthPigeonFirebaseApp app, InternalSignInProvider signInProvider) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.linkWithProvider$pigeonVar_messageChannelSuffix';
+  Future<InternalUserCredential> linkWithProvider(AuthPigeonFirebaseApp app, InternalSignInProvider signInProvider) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.linkWithProvider$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, signInProvider]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app, signInProvider]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: false,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
     return pigeonVar_replyValue! as InternalUserCredential;
   }
 
-  Future<InternalUserCredential> reauthenticateWithCredential(
-      AuthPigeonFirebaseApp app, Map<String?, Object?> input) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reauthenticateWithCredential$pigeonVar_messageChannelSuffix';
+  Future<InternalUserCredential> reauthenticateWithCredential(AuthPigeonFirebaseApp app, Map<String?, Object?> input) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reauthenticateWithCredential$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, input]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app, input]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: false,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
     return pigeonVar_replyValue! as InternalUserCredential;
   }
 
-  Future<InternalUserCredential> reauthenticateWithProvider(
-      AuthPigeonFirebaseApp app, InternalSignInProvider signInProvider) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reauthenticateWithProvider$pigeonVar_messageChannelSuffix';
+  Future<InternalUserCredential> reauthenticateWithProvider(AuthPigeonFirebaseApp app, InternalSignInProvider signInProvider) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reauthenticateWithProvider$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, signInProvider]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app, signInProvider]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: false,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
     return pigeonVar_replyValue! as InternalUserCredential;
   }
 
   Future<InternalUserDetails> reload(AuthPigeonFirebaseApp app) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reload$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reload$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: false,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
     return pigeonVar_replyValue! as InternalUserDetails;
   }
 
-  Future<void> sendEmailVerification(AuthPigeonFirebaseApp app,
-      InternalActionCodeSettings? actionCodeSettings) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.sendEmailVerification$pigeonVar_messageChannelSuffix';
+  Future<void> sendEmailVerification(AuthPigeonFirebaseApp app, InternalActionCodeSettings? actionCodeSettings) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.sendEmailVerification$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, actionCodeSettings]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app, actionCodeSettings]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: true,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: true,
+    )
+    ;
   }
 
-  Future<InternalUserCredential> unlink(
-      AuthPigeonFirebaseApp app, String providerId) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.unlink$pigeonVar_messageChannelSuffix';
+  Future<InternalUserCredential> unlink(AuthPigeonFirebaseApp app, String providerId) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.unlink$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, providerId]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app, providerId]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: false,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
     return pigeonVar_replyValue! as InternalUserCredential;
   }
 
-  Future<InternalUserDetails> updateEmail(
-      AuthPigeonFirebaseApp app, String newEmail) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updateEmail$pigeonVar_messageChannelSuffix';
+  Future<InternalUserDetails> updateEmail(AuthPigeonFirebaseApp app, String newEmail) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updateEmail$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, newEmail]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app, newEmail]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: false,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
     return pigeonVar_replyValue! as InternalUserDetails;
   }
 
-  Future<InternalUserDetails> updatePassword(
-      AuthPigeonFirebaseApp app, String newPassword) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updatePassword$pigeonVar_messageChannelSuffix';
+  Future<InternalUserDetails> updatePassword(AuthPigeonFirebaseApp app, String newPassword) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updatePassword$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, newPassword]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app, newPassword]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: false,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
     return pigeonVar_replyValue! as InternalUserDetails;
   }
 
-  Future<InternalUserDetails> updatePhoneNumber(
-      AuthPigeonFirebaseApp app, Map<String?, Object?> input) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updatePhoneNumber$pigeonVar_messageChannelSuffix';
+  Future<InternalUserDetails> updatePhoneNumber(AuthPigeonFirebaseApp app, Map<String?, Object?> input) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updatePhoneNumber$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, input]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app, input]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: false,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
     return pigeonVar_replyValue! as InternalUserDetails;
   }
 
-  Future<InternalUserDetails> updateProfile(
-      AuthPigeonFirebaseApp app, InternalUserProfile profile) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updateProfile$pigeonVar_messageChannelSuffix';
+  Future<InternalUserDetails> updateProfile(AuthPigeonFirebaseApp app, InternalUserProfile profile) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updateProfile$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, profile]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app, profile]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: false,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
     return pigeonVar_replyValue! as InternalUserDetails;
   }
 
-  Future<void> verifyBeforeUpdateEmail(AuthPigeonFirebaseApp app,
-      String newEmail, InternalActionCodeSettings? actionCodeSettings) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.verifyBeforeUpdateEmail$pigeonVar_messageChannelSuffix';
+  Future<void> verifyBeforeUpdateEmail(AuthPigeonFirebaseApp app, String newEmail, InternalActionCodeSettings? actionCodeSettings) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.verifyBeforeUpdateEmail$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, newEmail, actionCodeSettings]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app, newEmail, actionCodeSettings]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: true,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: true,
+    )
+    ;
   }
 }
 
@@ -2227,117 +2073,105 @@ class MultiFactorUserHostApi {
   /// Constructor for [MultiFactorUserHostApi].  The [binaryMessenger] named argument is
   /// available for dependency injection.  If it is left null, the default
   /// BinaryMessenger will be used which routes to the host platform.
-  MultiFactorUserHostApi(
-      {BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
+  MultiFactorUserHostApi({BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
       : pigeonVar_binaryMessenger = binaryMessenger,
-        pigeonVar_messageChannelSuffix =
-            messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+        pigeonVar_messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
   final BinaryMessenger? pigeonVar_binaryMessenger;
 
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
 
   final String pigeonVar_messageChannelSuffix;
 
-  Future<void> enrollPhone(AuthPigeonFirebaseApp app,
-      InternalPhoneMultiFactorAssertion assertion, String? displayName) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollPhone$pigeonVar_messageChannelSuffix';
+  Future<void> enrollPhone(AuthPigeonFirebaseApp app, InternalPhoneMultiFactorAssertion assertion, String? displayName) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollPhone$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, assertion, displayName]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app, assertion, displayName]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: true,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: true,
+    )
+    ;
   }
 
-  Future<void> enrollTotp(AuthPigeonFirebaseApp app, String assertionId,
-      String? displayName) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollTotp$pigeonVar_messageChannelSuffix';
+  Future<void> enrollTotp(AuthPigeonFirebaseApp app, String assertionId, String? displayName) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollTotp$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, assertionId, displayName]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app, assertionId, displayName]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: true,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: true,
+    )
+    ;
   }
 
-  Future<InternalMultiFactorSession> getSession(
-      AuthPigeonFirebaseApp app) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.getSession$pigeonVar_messageChannelSuffix';
+  Future<InternalMultiFactorSession> getSession(AuthPigeonFirebaseApp app) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.getSession$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: false,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
     return pigeonVar_replyValue! as InternalMultiFactorSession;
   }
 
   Future<void> unenroll(AuthPigeonFirebaseApp app, String factorUid) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.unenroll$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.unenroll$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, factorUid]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app, factorUid]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: true,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: true,
+    )
+    ;
   }
 
-  Future<List<InternalMultiFactorInfo>> getEnrolledFactors(
-      AuthPigeonFirebaseApp app) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.getEnrolledFactors$pigeonVar_messageChannelSuffix';
+  Future<List<InternalMultiFactorInfo>> getEnrolledFactors(AuthPigeonFirebaseApp app) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.getEnrolledFactors$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[app]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: false,
-    );
-    return (pigeonVar_replyValue! as List<Object?>)
-        .cast<InternalMultiFactorInfo>();
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
+    return (pigeonVar_replyValue! as List<Object?>).cast<InternalMultiFactorInfo>();
   }
 }
 
@@ -2345,37 +2179,31 @@ class MultiFactoResolverHostApi {
   /// Constructor for [MultiFactoResolverHostApi].  The [binaryMessenger] named argument is
   /// available for dependency injection.  If it is left null, the default
   /// BinaryMessenger will be used which routes to the host platform.
-  MultiFactoResolverHostApi(
-      {BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
+  MultiFactoResolverHostApi({BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
       : pigeonVar_binaryMessenger = binaryMessenger,
-        pigeonVar_messageChannelSuffix =
-            messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+        pigeonVar_messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
   final BinaryMessenger? pigeonVar_binaryMessenger;
 
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
 
   final String pigeonVar_messageChannelSuffix;
 
-  Future<InternalUserCredential> resolveSignIn(
-      String resolverId,
-      InternalPhoneMultiFactorAssertion? assertion,
-      String? totpAssertionId) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactoResolverHostApi.resolveSignIn$pigeonVar_messageChannelSuffix';
+  Future<InternalUserCredential> resolveSignIn(String resolverId, InternalPhoneMultiFactorAssertion? assertion, String? totpAssertionId) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactoResolverHostApi.resolveSignIn$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel
-        .send(<Object?>[resolverId, assertion, totpAssertionId]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[resolverId, assertion, totpAssertionId]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: false,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
     return pigeonVar_replyValue! as InternalUserCredential;
   }
 }
@@ -2384,11 +2212,9 @@ class MultiFactorTotpHostApi {
   /// Constructor for [MultiFactorTotpHostApi].  The [binaryMessenger] named argument is
   /// available for dependency injection.  If it is left null, the default
   /// BinaryMessenger will be used which routes to the host platform.
-  MultiFactorTotpHostApi(
-      {BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
+  MultiFactorTotpHostApi({BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
       : pigeonVar_binaryMessenger = binaryMessenger,
-        pigeonVar_messageChannelSuffix =
-            messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+        pigeonVar_messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
   final BinaryMessenger? pigeonVar_binaryMessenger;
 
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
@@ -2396,64 +2222,59 @@ class MultiFactorTotpHostApi {
   final String pigeonVar_messageChannelSuffix;
 
   Future<InternalTotpSecret> generateSecret(String sessionId) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.generateSecret$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.generateSecret$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[sessionId]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[sessionId]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: false,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
     return pigeonVar_replyValue! as InternalTotpSecret;
   }
 
-  Future<String> getAssertionForEnrollment(
-      String secretKey, String oneTimePassword) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForEnrollment$pigeonVar_messageChannelSuffix';
+  Future<String> getAssertionForEnrollment(String secretKey, String oneTimePassword) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForEnrollment$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[secretKey, oneTimePassword]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[secretKey, oneTimePassword]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: false,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
     return pigeonVar_replyValue! as String;
   }
 
-  Future<String> getAssertionForSignIn(
-      String enrollmentId, String oneTimePassword) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForSignIn$pigeonVar_messageChannelSuffix';
+  Future<String> getAssertionForSignIn(String enrollmentId, String oneTimePassword) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForSignIn$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[enrollmentId, oneTimePassword]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[enrollmentId, oneTimePassword]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: false,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
     return pigeonVar_replyValue! as String;
   }
 }
@@ -2462,55 +2283,50 @@ class MultiFactorTotpSecretHostApi {
   /// Constructor for [MultiFactorTotpSecretHostApi].  The [binaryMessenger] named argument is
   /// available for dependency injection.  If it is left null, the default
   /// BinaryMessenger will be used which routes to the host platform.
-  MultiFactorTotpSecretHostApi(
-      {BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
+  MultiFactorTotpSecretHostApi({BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
       : pigeonVar_binaryMessenger = binaryMessenger,
-        pigeonVar_messageChannelSuffix =
-            messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+        pigeonVar_messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
   final BinaryMessenger? pigeonVar_binaryMessenger;
 
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
 
   final String pigeonVar_messageChannelSuffix;
 
-  Future<String> generateQrCodeUrl(
-      String secretKey, String? accountName, String? issuer) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.generateQrCodeUrl$pigeonVar_messageChannelSuffix';
+  Future<String> generateQrCodeUrl(String secretKey, String? accountName, String? issuer) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.generateQrCodeUrl$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[secretKey, accountName, issuer]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[secretKey, accountName, issuer]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: false,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
     return pigeonVar_replyValue! as String;
   }
 
   Future<void> openInOtpApp(String secretKey, String qrCodeUrl) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.openInOtpApp$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.openInOtpApp$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[secretKey, qrCodeUrl]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[secretKey, qrCodeUrl]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: true,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: true,
+    )
+    ;
   }
 }
 
@@ -2519,11 +2335,9 @@ class GenerateInterfaces {
   /// Constructor for [GenerateInterfaces].  The [binaryMessenger] named argument is
   /// available for dependency injection.  If it is left null, the default
   /// BinaryMessenger will be used which routes to the host platform.
-  GenerateInterfaces(
-      {BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
+  GenerateInterfaces({BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
       : pigeonVar_binaryMessenger = binaryMessenger,
-        pigeonVar_messageChannelSuffix =
-            messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+        pigeonVar_messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
   final BinaryMessenger? pigeonVar_binaryMessenger;
 
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
@@ -2531,21 +2345,20 @@ class GenerateInterfaces {
   final String pigeonVar_messageChannelSuffix;
 
   Future<void> pigeonInterface(InternalMultiFactorInfo info) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_auth_platform_interface.GenerateInterfaces.pigeonInterface$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_auth_platform_interface.GenerateInterfaces.pigeonInterface$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[info]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[info]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: true,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: true,
+    )
+    ;
   }
 }

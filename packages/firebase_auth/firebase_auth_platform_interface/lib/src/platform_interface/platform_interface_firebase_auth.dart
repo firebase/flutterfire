@@ -717,6 +717,11 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
         'revokeTokenWithAuthorizationCode() is not implemented');
   }
 
+  /// Android only. Revokes the provided accessToken. Currently supports revoking Apple-issued accessToken only.
+  Future<void> revokeAccessToken(String accessToken) {
+    throw UnimplementedError('revokeAccessToken() is not implemented');
+  }
+
   /// Initializes the reCAPTCHA Enterprise client proactively to enhance reCAPTCHA signal collection and
   /// to complete reCAPTCHA-protected flows in a single attempt.
   Future<void> initializeRecaptchaConfig() {

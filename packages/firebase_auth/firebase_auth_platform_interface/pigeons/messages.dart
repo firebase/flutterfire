@@ -421,6 +421,12 @@ abstract class FirebaseAuthHostApi {
   );
 
   @async
+  void revokeAccessToken(
+    AuthPigeonFirebaseApp app,
+    String accessToken,
+  );
+
+  @async
   void initializeRecaptchaConfig(
     AuthPigeonFirebaseApp app,
   );
