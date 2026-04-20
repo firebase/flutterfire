@@ -28,8 +28,8 @@
 
 - (instancetype)initWithId:(NSString *)transactionId
                  firestore:(FIRFirestore *)firestore
-                   timeout:(nonnull NSNumber *)timeout
-               maxAttempts:(nonnull NSNumber *)maxAttempts
+                   timeout:(NSInteger)timeout
+               maxAttempts:(NSInteger)maxAttempts
                    started:(void (^)(FIRTransaction *))startedListener
                      ended:(void (^)(void))endedListener {
   self = [super init];
@@ -61,7 +61,7 @@
 
     long timedOut = dispatch_semaphore_wait(
         strongSelf.semaphore,
-        dispatch_time(DISPATCH_TIME_NOW, [self.timeout integerValue] * NSEC_PER_MSEC));
+        dispatch_time(DISPATCH_TIME_NOW, self.timeout * NSEC_PER_MSEC));
 
     if (timedOut) {
       NSArray *codeAndMessage = [FLTFirebaseFirestoreUtils
@@ -142,7 +142,7 @@
     strongSelf.ended();
   };
   FIRTransactionOptions *options = [[FIRTransactionOptions alloc] init];
-  options.maxAttempts = _maxAttempts.integerValue;
+  options.maxAttempts = _maxAttempts;
 
   [_firestore runTransactionWithOptions:options
                                   block:transactionRunBlock

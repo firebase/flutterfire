@@ -220,9 +220,8 @@
 
 + (InternalSnapshotMetadata *_Nonnull)toPigeonSnapshotMetadata:
     (FIRSnapshotMetadata *_Nonnull)snapshotMetadata {
-  return [InternalSnapshotMetadata
-      makeWithHasPendingWrites:[NSNumber numberWithBool:snapshotMetadata.hasPendingWrites]
-                   isFromCache:[NSNumber numberWithBool:snapshotMetadata.isFromCache]];
+  return [InternalSnapshotMetadata makeWithHasPendingWrites:snapshotMetadata.hasPendingWrites
+                                                isFromCache:snapshotMetadata.isFromCache];
 }
 
 + (InternalDocumentSnapshot *_Nonnull)
@@ -252,8 +251,8 @@
 + (InternalDocumentChange *_Nonnull)
      toPigeonDocumentChange:(FIRDocumentChange *_Nonnull)documentChange
     serverTimestampBehavior:(FIRServerTimestampBehavior)serverTimestampBehavior {
-  NSNumber *oldIndex;
-  NSNumber *newIndex;
+  NSInteger oldIndex;
+  NSInteger newIndex;
 
   // Note the Firestore C++ SDK here returns a maxed UInt that is != NSUIntegerMax, so we make one
   // ourselves so we can convert to -1 for Dart.
@@ -261,16 +260,16 @@
 
   if (documentChange.newIndex == NSNotFound || documentChange.newIndex == 4294967295 ||
       documentChange.newIndex == MAX_VAL) {
-    newIndex = @([@(-1) intValue]);
+    newIndex = -1;
   } else {
-    newIndex = @([@(documentChange.newIndex) intValue]);
+    newIndex = (NSInteger)documentChange.newIndex;
   }
 
   if (documentChange.oldIndex == NSNotFound || documentChange.oldIndex == 4294967295 ||
       documentChange.oldIndex == MAX_VAL) {
-    oldIndex = @([@(-1) intValue]);
+    oldIndex = -1;
   } else {
-    oldIndex = @([@(documentChange.oldIndex) intValue]);
+    oldIndex = (NSInteger)documentChange.oldIndex;
   }
 
   return [InternalDocumentChange

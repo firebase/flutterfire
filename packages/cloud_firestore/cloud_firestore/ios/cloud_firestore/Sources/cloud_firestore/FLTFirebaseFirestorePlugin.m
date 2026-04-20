@@ -415,7 +415,7 @@ FlutterStandardMethodCodec *_codec;
 
 - (void)documentReferenceSnapshotApp:(nonnull FirestorePigeonFirebaseApp *)app
                           parameters:(nonnull DocumentReferenceRequest *)parameters
-              includeMetadataChanges:(nonnull NSNumber *)includeMetadataChanges
+              includeMetadataChanges:(BOOL)includeMetadataChanges
                               source:(ListenSource)source
                           completion:(nonnull void (^)(NSString *_Nullable,
                                                        FlutterError *_Nullable))completion {
@@ -431,7 +431,6 @@ FlutterStandardMethodCodec *_codec;
                                                      initWithFirestore:firestore
                                                              reference:document
                                                 includeMetadataChanges:includeMetadataChanges
-                                                                           .boolValue
                                                serverTimestampBehavior:serverTimestampBehavior
                                                                 source:listenSource]],
       nil);
@@ -518,7 +517,7 @@ FlutterStandardMethodCodec *_codec;
 
 - (void)queryGetApp:(nonnull FirestorePigeonFirebaseApp *)app
                  path:(nonnull NSString *)path
-    isCollectionGroup:(nonnull NSNumber *)isCollectionGroup
+    isCollectionGroup:(BOOL)isCollectionGroup
            parameters:(nonnull InternalQueryParameters *)parameters
               options:(nonnull InternalGetOptions *)options
            completion:(nonnull void (^)(InternalQuerySnapshot *_Nullable,
@@ -527,7 +526,7 @@ FlutterStandardMethodCodec *_codec;
   FIRQuery *query = [FirestorePigeonParser parseQueryWithParameters:parameters
                                                           firestore:firestore
                                                                path:path
-                                                  isCollectionGroup:[isCollectionGroup boolValue]];
+                                                  isCollectionGroup:isCollectionGroup];
   if (query == nil) {
     completion(nil, [FlutterError errorWithCode:@"error-parsing"
                                         message:@"An error occurred while parsing query arguments, "
@@ -555,10 +554,10 @@ FlutterStandardMethodCodec *_codec;
 
 - (void)querySnapshotApp:(nonnull FirestorePigeonFirebaseApp *)app
                       path:(nonnull NSString *)path
-         isCollectionGroup:(nonnull NSNumber *)isCollectionGroup
+         isCollectionGroup:(BOOL)isCollectionGroup
                 parameters:(nonnull InternalQueryParameters *)parameters
                    options:(nonnull InternalGetOptions *)options
-    includeMetadataChanges:(nonnull NSNumber *)includeMetadataChanges
+    includeMetadataChanges:(BOOL)includeMetadataChanges
                     source:(ListenSource)source
                 completion:
                     (nonnull void (^)(NSString *_Nullable, FlutterError *_Nullable))completion {
@@ -566,7 +565,7 @@ FlutterStandardMethodCodec *_codec;
   FIRQuery *query = [FirestorePigeonParser parseQueryWithParameters:parameters
                                                           firestore:firestore
                                                                path:path
-                                                  isCollectionGroup:[isCollectionGroup boolValue]];
+                                                  isCollectionGroup:isCollectionGroup];
   if (query == nil) {
     completion(nil, [FlutterError errorWithCode:@"error-parsing"
                                         message:@"An error occurred while parsing query arguments, "
@@ -585,7 +584,6 @@ FlutterStandardMethodCodec *_codec;
                                                      initWithFirestore:firestore
                                                                  query:query
                                                 includeMetadataChanges:includeMetadataChanges
-                                                                           .boolValue
                                                serverTimestampBehavior:serverTimestampBehavior
                                                                 source:listenSource]],
       nil);
@@ -631,9 +629,9 @@ FlutterStandardMethodCodec *_codec;
   completion(nil);
 }
 
-- (void)setLoggingEnabledLoggingEnabled:(nonnull NSNumber *)loggingEnabled
+- (void)setLoggingEnabledLoggingEnabled:(BOOL)loggingEnabled
                              completion:(nonnull void (^)(FlutterError *_Nullable))completion {
-  [FIRFirestore enableLogging:[loggingEnabled boolValue]];
+  [FIRFirestore enableLogging:loggingEnabled];
   completion(nil);
 }
 
@@ -770,8 +768,8 @@ FlutterStandardMethodCodec *_codec;
 }
 
 - (void)transactionCreateApp:(nonnull FirestorePigeonFirebaseApp *)app
-                     timeout:(nonnull NSNumber *)timeout
-                 maxAttempts:(nonnull NSNumber *)maxAttempts
+                     timeout:(NSInteger)timeout
+                 maxAttempts:(NSInteger)maxAttempts
                   completion:
                       (nonnull void (^)(NSString *_Nullable, FlutterError *_Nullable))completion {
   FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
@@ -803,7 +801,7 @@ FlutterStandardMethodCodec *_codec;
                parameters:(nonnull InternalQueryParameters *)parameters
                    source:(AggregateSource)source
                   queries:(nonnull NSArray<AggregateQuery *> *)queries
-        isCollectionGroup:(NSNumber *)isCollectionGroup
+        isCollectionGroup:(BOOL)isCollectionGroup
                completion:(nonnull void (^)(NSArray<AggregateQueryResponse *> *_Nullable,
                                             FlutterError *_Nullable))completion {
   FIRFirestore *firestore = [self getFIRFirestoreFromAppNameFromPigeon:app];
@@ -811,7 +809,7 @@ FlutterStandardMethodCodec *_codec;
   FIRQuery *query = [FirestorePigeonParser parseQueryWithParameters:parameters
                                                           firestore:firestore
                                                                path:path
-                                                  isCollectionGroup:[isCollectionGroup boolValue]];
+                                                  isCollectionGroup:isCollectionGroup];
   if (query == nil) {
     completion(nil, [FlutterError errorWithCode:@"error-parsing"
                                         message:@"An error occurred while parsing query arguments, "

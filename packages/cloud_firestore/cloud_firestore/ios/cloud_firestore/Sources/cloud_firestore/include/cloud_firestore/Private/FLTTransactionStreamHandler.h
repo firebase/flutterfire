@@ -25,13 +25,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FLTTransactionStreamHandler : NSObject <FlutterStreamHandler>
 @property(nonatomic, strong) FIRFirestore *firestore;
-@property(nonatomic, strong) NSNumber *timeout;
-@property(nonatomic, strong) NSNumber *maxAttempts;
+@property(nonatomic, assign) NSInteger timeout;
+@property(nonatomic, assign) NSInteger maxAttempts;
 
 - (instancetype)initWithId:(NSString *)transactionId
                  firestore:(FIRFirestore *)firestore
-                   timeout:(nonnull NSNumber *)timeout
-               maxAttempts:(nonnull NSNumber *)maxAttempts
+                   timeout:(NSInteger)timeout
+               maxAttempts:(NSInteger)maxAttempts
                    started:(void (^)(FIRTransaction *))startedListener
                      ended:(void (^)(void))endedListener;
 - (void)receiveTransactionResponse:(InternalTransactionResult)resultType
