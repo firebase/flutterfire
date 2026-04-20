@@ -397,6 +397,24 @@ void main() {
         );
       });
 
+      test(
+        'Result.data is Map<String, dynamic> for object-shaped JSON',
+        () async {
+          final stream = callable.stream({
+            'type': 'deepMap',
+            'inputData': data.deepMap,
+          });
+          final data = await stream.where((e) => e is Result).last;
+          expect(data, isA<Result>());
+          final result = (data as Result).result;
+          expect(
+            result.data,
+            isA<Map<String, dynamic>>(),
+          );
+        },
+        skip: !kIsWeb,
+      );
+
       test('accepts a [List]', () async {
         final stream =
             callable.stream(data.list).where((event) => event is Chunk);
