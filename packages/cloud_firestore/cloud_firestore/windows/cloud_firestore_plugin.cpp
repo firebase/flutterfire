@@ -1567,31 +1567,17 @@ class QuerySnapshotStreamHandler
                           firebase::firestore::Error error,
                           const std::string& errorMessage) mutable {
           if (error == firebase::firestore::kErrorOk) {
-            flutter::EncodableList toListResult(3);
-            std::vector<flutter::EncodableValue> documents;
-            std::vector<flutter::EncodableValue> documentChanges;
-
-            for (const auto& documentSnapshot : snapshot.documents()) {
-              documents.push_back(ParseDocumentSnapshot(documentSnapshot,
-                                                        serverTimestampBehavior)
-                                      .ToEncodableList());
-            }
-
-            // Assuming querySnapshot.getDocumentChanges() returns an iterable
-            // collection
-            for (const auto& documentChange :
-                 snapshot.DocumentChanges(metadataChanges)) {
-              documentChanges.push_back(
-                  ParseDocumentChange(documentChange, serverTimestampBehavior)
-                      .ToEncodableList());
-            }
-
-            toListResult[0] = documents;
-            toListResult[1] = documentChanges;
-            toListResult[2] =
-                ParseSnapshotMetadata(snapshot.metadata()).ToEncodableList();
-
-            events_->Success(toListResult);
+            // Emit the Pigeon object directly so the Pigeon-aware codec on
+            // the EventChannel serializes it end-to-end. Pigeon 26 no longer
+            // flattens nested types, so sending a raw list here would cause
+            // the Dart side to receive a List<Object?> it can no longer
+            // decode into InternalQuerySnapshot.
+            events_->Success(CustomEncodableValue(InternalQuerySnapshot(
+                ParseDocumentSnapshots(snapshot.documents(),
+                                       serverTimestampBehavior),
+                ParseDocumentChanges(snapshot.DocumentChanges(metadataChanges),
+                                     serverTimestampBehavior),
+                ParseSnapshotMetadata(snapshot.metadata()))));
           } else {
             EncodableMap details;
             details[EncodableValue("code")] =
@@ -1674,14 +1660,18 @@ class DocumentSnapshotStreamHandler
 
     listener_ = reference_->AddSnapshotListener(
         metadataChanges,
-        [this, serverTimestampBehavior = serverTimestampBehavior_,
-         metadataChanges](const firebase::firestore::DocumentSnapshot& snapshot,
-                          firebase::firestore::Error error,
-                          const std::string& errorMessage) mutable {
+        [this, serverTimestampBehavior = serverTimestampBehavior_](
+            const firebase::firestore::DocumentSnapshot& snapshot,
+            firebase::firestore::Error error,
+            const std::string& errorMessage) mutable {
           if (error == firebase::firestore::kErrorOk) {
-            events_->Success(
-                ParseDocumentSnapshot(snapshot, serverTimestampBehavior)
-                    .ToEncodableList());
+            // Emit the Pigeon object directly so the Pigeon-aware codec on
+            // the EventChannel serializes it end-to-end. Pigeon 26 no longer
+            // flattens nested types, so sending a raw list here would cause
+            // the Dart side to receive a List<Object?> it can no longer
+            // decode into InternalDocumentSnapshot.
+            events_->Success(CustomEncodableValue(
+                ParseDocumentSnapshot(snapshot, serverTimestampBehavior)));
           } else {
             EncodableMap details;
             details[EncodableValue("code")] =
