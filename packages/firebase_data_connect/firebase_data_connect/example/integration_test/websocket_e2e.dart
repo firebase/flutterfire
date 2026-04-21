@@ -187,6 +187,37 @@ void runWebSocketTests() {
         expect(received, isFalse,
             reason: 'Should not receive events after cancel');
       });
+
+      testWidgets(
+          'should disconnect the websocket channel when all subscriptions are closed',
+          (WidgetTester tester) async {
+        final Completer<void> isReady = Completer<void>();
+        int count = 0;
+
+        final sub = MoviesConnector.instance
+            .listMovies()
+            .ref()
+            .subscribe()
+            .listen((value) {
+          if (count == 0) {
+            isReady.complete();
+          }
+          count++;
+        });
+
+        await isReady.future;
+
+        final dataConnect = MoviesConnector.instance.dataConnect;
+        final transport = (dataConnect as dynamic).transport;
+        final ws = (transport as dynamic).websocket;
+
+        expect(ws.isConnected, isTrue);
+
+        // Cancel the subscription
+        await sub.cancel();
+
+        expect(ws.isConnected, isFalse);
+      });
     },
   );
 }
