@@ -8,7 +8,6 @@ package io.flutter.plugins.firebase.firestore.streamhandler;
 
 import static io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestorePlugin.DEFAULT_ERROR_CODE;
 
-import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.ListenSource;
 import com.google.firebase.firestore.ListenerRegistration;
@@ -19,7 +18,6 @@ import io.flutter.plugin.common.EventChannel.EventSink;
 import io.flutter.plugin.common.EventChannel.StreamHandler;
 import io.flutter.plugins.firebase.firestore.utils.ExceptionConverter;
 import io.flutter.plugins.firebase.firestore.utils.PigeonParser;
-import java.util.ArrayList;
 import java.util.Map;
 
 public class QuerySnapshotsStreamHandler implements StreamHandler {
@@ -61,28 +59,12 @@ public class QuerySnapshotsStreamHandler implements StreamHandler {
 
                 onCancel(null);
               } else {
-                ArrayList<Object> toListResult = new ArrayList<Object>(3);
-                ArrayList<Object> documents =
-                    new ArrayList<Object>(querySnapshot.getDocuments().size());
-                ArrayList<Object> documentChanges =
-                    new ArrayList<Object>(querySnapshot.getDocumentChanges().size());
-                for (DocumentSnapshot documentSnapshot : querySnapshot.getDocuments()) {
-                  documents.add(
-                      PigeonParser.toPigeonDocumentSnapshot(
-                              documentSnapshot, serverTimestampBehavior)
-                          .toList());
-                }
-                for (DocumentChange documentChange : querySnapshot.getDocumentChanges()) {
-                  documentChanges.add(
-                      PigeonParser.toPigeonDocumentChange(documentChange, serverTimestampBehavior)
-                          .toList());
-                }
-                toListResult.add(documents);
-                toListResult.add(documentChanges);
-                toListResult.add(
-                    PigeonParser.toPigeonSnapshotMetadata(querySnapshot.getMetadata()).toList());
-
-                events.success(toListResult);
+                // Emit the Pigeon object directly; the Pigeon-aware codec serializes
+                // nested `InternalDocumentSnapshot` / `InternalDocumentChange` /
+                // `InternalSnapshotMetadata` with their proper type codes. Pigeon 26
+                // no longer flattens nested types via `.toList()`.
+                events.success(
+                    PigeonParser.toPigeonQuerySnapshot(querySnapshot, serverTimestampBehavior));
               }
             });
   }

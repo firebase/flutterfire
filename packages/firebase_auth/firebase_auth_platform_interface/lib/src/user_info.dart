@@ -14,7 +14,7 @@ class UserInfo {
 
   @protected
   UserInfo.fromJson(Map<dynamic, dynamic> data)
-      : _data = PigeonUserInfo(
+      : _data = InternalUserInfo(
           uid: data['uid'] as String,
           email: data['email'] as String?,
           displayName: data['displayName'] as String?,
@@ -29,7 +29,7 @@ class UserInfo {
           lastSignInTimestamp: data['lastSignInTimestamp'] as int?,
         );
 
-  final PigeonUserInfo _data;
+  final InternalUserInfo _data;
 
   /// The users display name.
   ///

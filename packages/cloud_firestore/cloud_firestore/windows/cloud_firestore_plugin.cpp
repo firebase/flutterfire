@@ -291,12 +291,12 @@ FlutterError CloudFirestorePlugin::ParseError(
 
 firebase::firestore::Source GetSourceFromPigeon(const Source& pigeonSource) {
   switch (pigeonSource) {
-    case Source::serverAndCache:
+    case Source::kServerAndCache:
     default:
       return firebase::firestore::Source::kDefault;
-    case Source::server:
+    case Source::kServer:
       return firebase::firestore::Source::kServer;
-    case Source::cache:
+    case Source::kCache:
       return firebase::firestore::Source::kCache;
   }
 }
@@ -305,13 +305,13 @@ firebase::firestore::DocumentSnapshot::ServerTimestampBehavior
 GetServerTimestampBehaviorFromPigeon(
     const ServerTimestampBehavior& pigeonServerTimestampBehavior) {
   switch (pigeonServerTimestampBehavior) {
-    case ServerTimestampBehavior::estimate:
+    case ServerTimestampBehavior::kEstimate:
       return firebase::firestore::DocumentSnapshot::ServerTimestampBehavior::
           kEstimate;
-    case ServerTimestampBehavior::previous:
+    case ServerTimestampBehavior::kPrevious:
       return firebase::firestore::DocumentSnapshot::ServerTimestampBehavior::
           kPrevious;
-    case ServerTimestampBehavior::none:
+    case ServerTimestampBehavior::kNone:
     default:
       return firebase::firestore::DocumentSnapshot::ServerTimestampBehavior::
           kNone;
@@ -382,27 +382,27 @@ flutter::EncodableMap ConvertToEncodableMap(
   return convertedMap;
 }
 
-PigeonSnapshotMetadata ParseSnapshotMetadata(
+InternalSnapshotMetadata ParseSnapshotMetadata(
     const firebase::firestore::SnapshotMetadata& metadata) {
-  PigeonSnapshotMetadata pigeonSnapshotMetadata = PigeonSnapshotMetadata(
+  InternalSnapshotMetadata pigeonSnapshotMetadata = InternalSnapshotMetadata(
       metadata.has_pending_writes(), metadata.is_from_cache());
   return pigeonSnapshotMetadata;
 }
 
-PigeonDocumentSnapshot ParseDocumentSnapshot(
+InternalDocumentSnapshot ParseDocumentSnapshot(
     DocumentSnapshot document,
     DocumentSnapshot::ServerTimestampBehavior serverTimestampBehavior) {
   flutter::EncodableMap tempMap =
       ConvertToEncodableMap(document.GetData(serverTimestampBehavior));
 
   if (tempMap.empty()) {
-    return PigeonDocumentSnapshot(document.reference().path(), nullptr,
-                                  ParseSnapshotMetadata(document.metadata()));
+    return InternalDocumentSnapshot(document.reference().path(), nullptr,
+                                    ParseSnapshotMetadata(document.metadata()));
   }
 
-  PigeonDocumentSnapshot pigeonDocumentSnapshot =
-      PigeonDocumentSnapshot(document.reference().path(), &tempMap,
-                             ParseSnapshotMetadata(document.metadata()));
+  InternalDocumentSnapshot pigeonDocumentSnapshot =
+      InternalDocumentSnapshot(document.reference().path(), &tempMap,
+                               ParseSnapshotMetadata(document.metadata()));
   return pigeonDocumentSnapshot;
 }
 
@@ -422,20 +422,20 @@ DocumentChangeType ParseDocumentChangeType(
     const firebase::firestore::DocumentChange::Type& type) {
   switch (type) {
     case firebase::firestore::DocumentChange::Type::kAdded:
-      return DocumentChangeType::added;
+      return DocumentChangeType::kAdded;
     case firebase::firestore::DocumentChange::Type::kRemoved:
-      return DocumentChangeType::removed;
+      return DocumentChangeType::kRemoved;
     case firebase::firestore::DocumentChange::Type::kModified:
-      return DocumentChangeType::modified;
+      return DocumentChangeType::kModified;
   }
 
   throw std::invalid_argument("Invalid DocumentChangeType");
 }
 
-PigeonDocumentChange ParseDocumentChange(
+InternalDocumentChange ParseDocumentChange(
     const firebase::firestore::DocumentChange& document_change,
     DocumentSnapshot::ServerTimestampBehavior serverTimestampBehavior) {
-  PigeonDocumentChange pigeonDocumentChange = PigeonDocumentChange(
+  InternalDocumentChange pigeonDocumentChange = InternalDocumentChange(
       ParseDocumentChangeType(document_change.type()),
       ParseDocumentSnapshot(document_change.document(),
                             serverTimestampBehavior),
@@ -454,10 +454,10 @@ flutter::EncodableList ParseDocumentChanges(
   return pigeonDocumentChanges;
 }
 
-PigeonQuerySnapshot ParseQuerySnapshot(
+InternalQuerySnapshot ParseQuerySnapshot(
     const firebase::firestore::QuerySnapshot* query_snapshot,
     DocumentSnapshot::ServerTimestampBehavior serverTimestampBehavior) {
-  PigeonQuerySnapshot pigeonQuerySnapshot = PigeonQuerySnapshot(
+  InternalQuerySnapshot pigeonQuerySnapshot = InternalQuerySnapshot(
       ParseDocumentSnapshots(query_snapshot->documents(),
                              serverTimestampBehavior),
       ParseDocumentChanges(query_snapshot->DocumentChanges(),
@@ -625,8 +625,8 @@ using firebase::firestore::QuerySnapshot;
 
 void CloudFirestorePlugin::NamedQueryGet(
     const FirestorePigeonFirebaseApp& app, const std::string& name,
-    const PigeonGetOptions& options,
-    std::function<void(ErrorOr<PigeonQuerySnapshot> reply)> result) {
+    const InternalGetOptions& options,
+    std::function<void(ErrorOr<InternalQuerySnapshot> reply)> result) {
   Firestore* firestore = GetFirestoreFromPigeon(app);
   Future<Query> future = firestore->NamedQuery(name.c_str());
 
@@ -825,8 +825,8 @@ class TransactionStreamHandler
         transactionId_(transactionId) {}
 
   void ReceiveTransactionResponse(
-      PigeonTransactionResult resultType,
-      std::vector<PigeonTransactionCommand> commands) {
+      InternalTransactionResult resultType,
+      std::vector<InternalTransactionCommand> commands) {
     std::lock_guard<std::mutex> lock(commands_mutex_);
     resultType_ = resultType;
     commands_ = commands;
@@ -867,9 +867,9 @@ class TransactionStreamHandler
               std::lock_guard<std::mutex> command_lock(commands_mutex_);
               if (commands_.empty()) return Error::kErrorOk;
 
-              for (PigeonTransactionCommand& command : commands_) {
+              for (InternalTransactionCommand& command : commands_) {
                 std::string path = command.path();
-                PigeonTransactionType type = command.type();
+                InternalTransactionType type = command.type();
                 if (path.empty() /* or some other invalid condition */) {
                   std::cerr << "Path is invalid: " << path << std::endl;
                   continue;  // Skip this iteration.
@@ -882,7 +882,7 @@ class TransactionStreamHandler
                           << std::endl;  // debug print
 
                 switch (type) {
-                  case PigeonTransactionType::set:
+                  case InternalTransactionType::kSet:
                     std::cout << "Transaction set" << path
                               << std::endl;  // Debug print.
 
@@ -902,14 +902,14 @@ class TransactionStreamHandler
                     }
 
                     break;
-                  case PigeonTransactionType::update:
+                  case InternalTransactionType::kUpdate:
                     std::cout << "Transaction update" << path
                               << std::endl;  // Debug print.
 
                     transaction.Update(
                         reference, ConvertToMapFieldPathValue(*command.data()));
                     break;
-                  case PigeonTransactionType::deleteType:
+                  case InternalTransactionType::kDeleteType:
                     std::cout << "Transaction delete" << path
                               << std::endl;  // Debug print.
 
@@ -948,8 +948,8 @@ class TransactionStreamHandler
   long timeout_;
   int maxAttempts_;
   std::string transactionId_;
-  std::vector<PigeonTransactionCommand> commands_;
-  PigeonTransactionResult resultType_;
+  std::vector<InternalTransactionCommand> commands_;
+  InternalTransactionResult resultType_;
   std::mutex mtx_;
   std::mutex commands_mutex_;
   std::condition_variable cv_;
@@ -990,16 +990,16 @@ using flutter::CustomEncodableValue;
 
 void CloudFirestorePlugin::TransactionStoreResult(
     const std::string& transaction_id,
-    const PigeonTransactionResult& result_type,
+    const InternalTransactionResult& result_type,
     const flutter::EncodableList* commands,
     std::function<void(std::optional<FlutterError> reply)> result) {
   if (CloudFirestorePlugin::transaction_handlers_[transaction_id]) {
     TransactionStreamHandler& handler = *static_cast<TransactionStreamHandler*>(
         CloudFirestorePlugin::transaction_handlers_[transaction_id].get());
-    std::vector<PigeonTransactionCommand> commandVector;
+    std::vector<InternalTransactionCommand> commandVector;
     for (const auto& element : *commands) {
-      const PigeonTransactionCommand& command =
-          std::any_cast<PigeonTransactionCommand>(
+      const InternalTransactionCommand& command =
+          std::any_cast<InternalTransactionCommand>(
               std::get<CustomEncodableValue>(element));
       commandVector.push_back(command);
     }
@@ -1015,7 +1015,7 @@ void CloudFirestorePlugin::TransactionStoreResult(
 void CloudFirestorePlugin::TransactionGet(
     const FirestorePigeonFirebaseApp& app, const std::string& transaction_id,
     const std::string& path,
-    std::function<void(ErrorOr<PigeonDocumentSnapshot> reply)> result) {
+    std::function<void(ErrorOr<InternalDocumentSnapshot> reply)> result) {
   Firestore* firestore = GetFirestoreFromPigeon(app);
   DocumentReference reference = firestore->Document(path);
 
@@ -1114,7 +1114,7 @@ void CloudFirestorePlugin::DocumentReferenceUpdate(
 void CloudFirestorePlugin::DocumentReferenceGet(
     const FirestorePigeonFirebaseApp& app,
     const DocumentReferenceRequest& request,
-    std::function<void(ErrorOr<PigeonDocumentSnapshot> reply)> result) {
+    std::function<void(ErrorOr<InternalDocumentSnapshot> reply)> result) {
   Firestore* firestore = GetFirestoreFromPigeon(app);
   DocumentReference document_reference = firestore->Document(request.path());
 
@@ -1249,10 +1249,9 @@ firebase::firestore::Filter filterFromJson(const EncodableMap& map) {
   throw std::runtime_error("Invalid operator");
 }
 
-firebase::firestore::Query ParseQuery(firebase::firestore::Firestore* firestore,
-                                      const std::string& path,
-                                      bool isCollectionGroup,
-                                      const PigeonQueryParameters& parameters) {
+firebase::firestore::Query ParseQuery(
+    firebase::firestore::Firestore* firestore, const std::string& path,
+    bool isCollectionGroup, const InternalQueryParameters& parameters) {
   try {
     firebase::firestore::Query query;
 
@@ -1369,9 +1368,9 @@ firebase::firestore::Query ParseQuery(firebase::firestore::Firestore* firestore,
 
 void CloudFirestorePlugin::QueryGet(
     const FirestorePigeonFirebaseApp& app, const std::string& path,
-    bool is_collection_group, const PigeonQueryParameters& parameters,
-    const PigeonGetOptions& options,
-    std::function<void(ErrorOr<PigeonQuerySnapshot> reply)> result) {
+    bool is_collection_group, const InternalQueryParameters& parameters,
+    const InternalGetOptions& options,
+    std::function<void(ErrorOr<InternalQuerySnapshot> reply)> result) {
   Firestore* firestore = GetFirestoreFromPigeon(app);
   Query query = ParseQuery(firestore, path, is_collection_group, parameters);
 
@@ -1397,7 +1396,7 @@ void CloudFirestorePlugin::QueryGet(
 firebase::firestore::AggregateSource GetAggregateSourceFromPigeon(
     const AggregateSource& source) {
   switch (source) {
-    case AggregateSource::server:
+    case AggregateSource::kServer:
     default:
       return firebase::firestore::AggregateSource::kServer;
   }
@@ -1405,7 +1404,7 @@ firebase::firestore::AggregateSource GetAggregateSourceFromPigeon(
 
 void CloudFirestorePlugin::AggregateQuery(
     const FirestorePigeonFirebaseApp& app, const std::string& path,
-    const PigeonQueryParameters& parameters, const AggregateSource& source,
+    const InternalQueryParameters& parameters, const AggregateSource& source,
     const flutter::EncodableList& queries, bool is_collection_group,
     std::function<void(ErrorOr<flutter::EncodableList> reply)> result) {
   Firestore* firestore = GetFirestoreFromPigeon(app);
@@ -1420,13 +1419,13 @@ void CloudFirestorePlugin::AggregateQuery(
             std::get<CustomEncodableValue>(queryRequest));
 
     switch (queryRequestTyped.type()) {
-      case AggregateType::count:
+      case AggregateType::kCount:
         aggregate_query = query.Count();
         break;
-      case AggregateType::sum:
+      case AggregateType::kSum:
         std::cout << "Sum is not supported on C++" << std::endl;
         break;
-      case AggregateType::average:
+      case AggregateType::kAverage:
         std::cout << "Average is not supported on C++" << std::endl;
         break;
     }
@@ -1449,20 +1448,20 @@ void CloudFirestorePlugin::AggregateQuery(
                     std::get<CustomEncodableValue>(queryRequest));
 
             switch (queryRequestTyped.type()) {
-              case AggregateType::count: {
+              case AggregateType::kCount: {
                 double doubleValue =
                     static_cast<double>(aggregateQuerySnapshot->count());
-                AggregateQueryResponse aggregateResponse(AggregateType::count,
+                AggregateQueryResponse aggregateResponse(AggregateType::kCount,
                                                          nullptr, &doubleValue);
                 aggregateResponses.push_back(
                     CustomEncodableValue(aggregateResponse));
                 break;
               }
-              case AggregateType::sum: {
+              case AggregateType::kSum: {
                 std::cout << "Sum is not supported on C++" << std::endl;
                 break;
               }
-              case AggregateType::average: {
+              case AggregateType::kAverage: {
                 std::cout << "Average is not supported on C++" << std::endl;
                 break;
               }
@@ -1484,11 +1483,11 @@ void CloudFirestorePlugin::WriteBatchCommit(
     firebase::firestore::WriteBatch batch = firestore->batch();
 
     for (const auto& write : writes) {
-      const PigeonTransactionCommand& transaction =
-          std::any_cast<PigeonTransactionCommand>(
+      const InternalTransactionCommand& transaction =
+          std::any_cast<InternalTransactionCommand>(
               std::get<CustomEncodableValue>(write));
 
-      PigeonTransactionType type = transaction.type();
+      InternalTransactionType type = transaction.type();
       std::string path = transaction.path();
       auto data = transaction.data();
 
@@ -1496,14 +1495,14 @@ void CloudFirestorePlugin::WriteBatchCommit(
           firestore->Document(path);
 
       switch (type) {
-        case PigeonTransactionType::deleteType:
+        case InternalTransactionType::kDeleteType:
           batch.Delete(documentReference);
           break;
-        case PigeonTransactionType::update:
+        case InternalTransactionType::kUpdate:
           batch.Update(documentReference, ConvertToMapFieldPathValue(*data));
           break;
-        case PigeonTransactionType::set:
-          const PigeonDocumentOption* options = transaction.option();
+        case InternalTransactionType::kSet:
+          const InternalDocumentOption* options = transaction.option();
 
           if (options->merge()) {
             batch.Set(documentReference, ConvertToMapFieldValue(*data),
@@ -1624,11 +1623,11 @@ class QuerySnapshotStreamHandler
 
 void CloudFirestorePlugin::QuerySnapshot(
     const FirestorePigeonFirebaseApp& app, const std::string& path,
-    bool is_collection_group, const PigeonQueryParameters& parameters,
-    const PigeonGetOptions& options, bool include_metadata_changes,
+    bool is_collection_group, const InternalQueryParameters& parameters,
+    const InternalGetOptions& options, bool include_metadata_changes,
     const ListenSource& source,
     std::function<void(ErrorOr<std::string> reply)> result) {
-  if (source == ListenSource::cache) {
+  if (source == ListenSource::kCache) {
     result(FlutterError("Listening from cache isn't supported on Windows"));
     return;
   }
@@ -1717,7 +1716,7 @@ void CloudFirestorePlugin::DocumentReferenceSnapshot(
     const DocumentReferenceRequest& parameters, bool include_metadata_changes,
     const ListenSource& source,
     std::function<void(ErrorOr<std::string> reply)> result) {
-  if (source == ListenSource::cache) {
+  if (source == ListenSource::kCache) {
     result(FlutterError("Listening from cache isn't supported on Windows"));
     return;
   }
@@ -1742,6 +1741,14 @@ void CloudFirestorePlugin::PersistenceCacheIndexManagerRequest(
     const FirestorePigeonFirebaseApp& app,
     const PersistenceCacheIndexManagerRequestEnum& request,
     std::function<void(std::optional<FlutterError> reply)> result) {
+  result(FlutterError("Not implemented on Windows"));
+}
+
+void CloudFirestorePlugin::ExecutePipeline(
+    const FirestorePigeonFirebaseApp& app,
+    const ::flutter::EncodableList& stages,
+    const ::flutter::EncodableMap* options,
+    std::function<void(ErrorOr<InternalPipelineSnapshot> reply)> result) {
   result(FlutterError("Not implemented on Windows"));
 }
 
