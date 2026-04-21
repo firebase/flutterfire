@@ -148,8 +148,8 @@ class DatabaseReference extends Query<database_interop.ReferenceJsImpl> {
   /// Sets a priority for data at actual database location.
   ///
   /// The [priority] must be a [String], [num] or `null`, or the error is thrown.
-  Future setPriority(priority) =>
-      database_interop.setPriority(jsObject, priority).toDart;
+  Future setPriority(Object? priority) =>
+      database_interop.setPriority(jsObject, priority?.jsify()).toDart;
 
   /// Sets data [newVal] at actual database location with provided priority
   /// [newPriority].
@@ -159,9 +159,10 @@ class DatabaseReference extends Query<database_interop.ReferenceJsImpl> {
   /// The [newVal] must be a Dart basic type or the error is thrown.
   /// The [newPriority] must be a [String], [num] or `null`, or the error
   /// is thrown.
-  Future setWithPriority(Object? newVal, newPriority) => database_interop
-      .setWithPriority(jsObject, newVal?.jsify(), newPriority)
-      .toDart;
+  Future setWithPriority(Object? newVal, Object? newPriority) =>
+      database_interop
+          .setWithPriority(jsObject, newVal?.jsify(), newPriority?.jsify())
+          .toDart;
 
   /// Atomically updates data at actual database location.
   ///
