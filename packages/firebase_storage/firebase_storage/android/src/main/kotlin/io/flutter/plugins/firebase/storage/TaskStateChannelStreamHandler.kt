@@ -31,7 +31,7 @@ internal class TaskStateChannelStreamHandler(
     androidTask.addOnProgressListener { taskSnapshot ->
       if (flutterTask.isDestroyed()) return@addOnProgressListener
       val event = getTaskEventMap(taskSnapshot, null)
-      event[TASK_STATE_NAME] = PigeonStorageTaskState.RUNNING.raw
+      event[TASK_STATE_NAME] = InternalStorageTaskState.RUNNING.raw
       events.success(event)
       flutterTask.notifyResumeObjects()
     }
@@ -39,7 +39,7 @@ internal class TaskStateChannelStreamHandler(
     androidTask.addOnPausedListener { taskSnapshot ->
       if (flutterTask.isDestroyed()) return@addOnPausedListener
       val event = getTaskEventMap(taskSnapshot, null)
-      event[TASK_STATE_NAME] = PigeonStorageTaskState.PAUSED.raw
+      event[TASK_STATE_NAME] = InternalStorageTaskState.PAUSED.raw
       events.success(event)
       flutterTask.notifyPauseObjects()
     }
@@ -47,7 +47,7 @@ internal class TaskStateChannelStreamHandler(
     androidTask.addOnSuccessListener { taskSnapshot ->
       if (flutterTask.isDestroyed()) return@addOnSuccessListener
       val event = getTaskEventMap(taskSnapshot, null)
-      event[TASK_STATE_NAME] = PigeonStorageTaskState.SUCCESS.raw
+      event[TASK_STATE_NAME] = InternalStorageTaskState.SUCCESS.raw
       events.success(event)
       flutterTask.destroy()
     }
@@ -55,7 +55,7 @@ internal class TaskStateChannelStreamHandler(
     androidTask.addOnCanceledListener {
       if (flutterTask.isDestroyed()) return@addOnCanceledListener
       val event = getTaskEventMap(null, null)
-      event[TASK_STATE_NAME] = PigeonStorageTaskState.ERROR.raw
+      event[TASK_STATE_NAME] = InternalStorageTaskState.ERROR.raw
       val syntheticException: MutableMap<String, Any> = HashMap()
       syntheticException["code"] = FlutterFirebaseStorageException.getCode(StorageException.ERROR_CANCELED)
       syntheticException["message"] = FlutterFirebaseStorageException.getMessage(StorageException.ERROR_CANCELED)
@@ -68,7 +68,7 @@ internal class TaskStateChannelStreamHandler(
     androidTask.addOnFailureListener { exception ->
       if (flutterTask.isDestroyed()) return@addOnFailureListener
       val event = getTaskEventMap(null, exception)
-      event[TASK_STATE_NAME] = PigeonStorageTaskState.ERROR.raw
+      event[TASK_STATE_NAME] = InternalStorageTaskState.ERROR.raw
       events.success(event)
       flutterTask.destroy()
     }

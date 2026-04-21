@@ -239,6 +239,7 @@ scripts:
       melos exec -- "flutter pub run pigeon --input ./pigeons/messages.dart" && \
       melos run generate:pigeon:macos --no-select && \
       melos run generate:pigeon:android --no-select && \
+      melos run generate:pigeon:windows --no-select && \
       melos run format-ci --no-select
     packageFilters:
       fileExists: 'pigeons/messages.dart'
@@ -258,6 +259,13 @@ scripts:
     packageFilters:
       dirExists: 'android'
     description: Transform the method toList() into a public one to be used in EventChannel
+
+  generate:pigeon:windows:
+    run: |
+      melos exec -- "perl -i -pe 's{^(\s+::flutter::EncodableList ToEncodableList\(\) const;)\n}{ public:\n\$1\n private:\n}' ./windows/messages.g.h"
+    packageFilters:
+      fileExists: 'windows/messages.g.h'
+    description: Make ToEncodableList public so it can be called from plugin code.
 
   # Additional cleanup lifecycle script, executed when `melos clean` is run.
   postclean: >

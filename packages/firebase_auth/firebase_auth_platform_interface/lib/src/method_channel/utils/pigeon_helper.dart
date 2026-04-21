@@ -6,7 +6,7 @@ import 'package:firebase_auth_platform_interface/firebase_auth_platform_interfac
 import 'package:firebase_auth_platform_interface/src/pigeon/messages.pigeon.dart';
 
 List<MultiFactorInfo> multiFactorInfoPigeonToObject(
-  List<PigeonMultiFactorInfo?> pigeonMultiFactorInfo,
+  List<InternalMultiFactorInfo?> pigeonMultiFactorInfo,
 ) {
   return pigeonMultiFactorInfo.nonNulls.map((e) {
     if (e.phoneNumber != null) {

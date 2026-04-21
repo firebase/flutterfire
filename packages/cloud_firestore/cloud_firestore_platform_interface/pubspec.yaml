@@ -23,6 +23,6 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   mockito: ^5.0.0
-  pigeon: 25.3.2
+  pigeon: 26.3.4
   watcher: ^1.1.0
 

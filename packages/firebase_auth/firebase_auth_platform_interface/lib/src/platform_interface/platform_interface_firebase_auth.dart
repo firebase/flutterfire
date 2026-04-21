@@ -64,9 +64,9 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
 
     if (currentUser != null) {
       currentUser as List<Object?>;
-      final firstElement = PigeonUserInfo.decode(currentUser[0]!);
+      final firstElement = InternalUserInfo.decode(currentUser[0]!);
       final secondElement = currentUser[1]!;
-      currentUser = PigeonUserDetails.decode([firstElement, secondElement]);
+      currentUser = InternalUserDetails.decode([firstElement, secondElement]);
     }
     return FirebaseAuthPlatform.instance.delegateFor(app: app).setInitialValues(
           languageCode: pluginConstants['APP_LANGUAGE_CODE'],
@@ -107,7 +107,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// calls.
   @protected
   FirebaseAuthPlatform setInitialValues({
-    PigeonUserDetails? currentUser,
+    InternalUserDetails? currentUser,
     String? languageCode,
   }) {
     throw UnimplementedError('setInitialValues() is not implemented');
@@ -715,6 +715,11 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   Future<void> revokeTokenWithAuthorizationCode(String authorizationCode) {
     throw UnimplementedError(
         'revokeTokenWithAuthorizationCode() is not implemented');
+  }
+
+  /// Android only. Revokes the provided accessToken. Currently supports revoking Apple-issued accessToken only.
+  Future<void> revokeAccessToken(String accessToken) {
+    throw UnimplementedError('revokeAccessToken() is not implemented');
   }
 
   /// Initializes the reCAPTCHA Enterprise client proactively to enhance reCAPTCHA signal collection and

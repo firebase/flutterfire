@@ -24,8 +24,8 @@ import 'package:pigeon/pigeon.dart';
     copyrightHeader: 'pigeons/copyright.txt',
   ),
 )
-class PigeonStorageFirebaseApp {
-  const PigeonStorageFirebaseApp({
+class InternalStorageFirebaseApp {
+  const InternalStorageFirebaseApp({
     required this.appName,
     required this.tenantId,
     required this.bucket,
@@ -38,7 +38,7 @@ class PigeonStorageFirebaseApp {
 
 /// The type of operation that generated the action code from calling
 /// [TaskState].
-enum PigeonStorageTaskState {
+enum InternalStorageTaskState {
   /// Indicates the task has been paused by the user.
   paused,
 
@@ -55,8 +55,8 @@ enum PigeonStorageTaskState {
   error,
 }
 
-class PigeonStorageReference {
-  const PigeonStorageReference({
+class InternalStorageReference {
+  const InternalStorageReference({
     required this.bucket,
     required this.fullPath,
     required this.name,
@@ -67,15 +67,15 @@ class PigeonStorageReference {
   final String name;
 }
 
-class PigeonFullMetaData {
-  const PigeonFullMetaData({
+class InternalFullMetaData {
+  const InternalFullMetaData({
     required this.metadata,
   });
   final Map<String?, Object?>? metadata;
 }
 
-class PigeonListOptions {
-  const PigeonListOptions({
+class InternalListOptions {
+  const InternalListOptions({
     required this.maxResults,
     this.pageToken,
   });
@@ -91,9 +91,9 @@ class PigeonListOptions {
   final String? pageToken;
 }
 
-class PigeonSettableMetadata {
-  /// Creates a new [PigeonSettableMetadata] instance.
-  PigeonSettableMetadata({
+class InternalSettableMetadata {
+  /// Creates a new [InternalSettableMetadata] instance.
+  InternalSettableMetadata({
     this.cacheControl,
     this.contentDisposition,
     this.contentEncoding,
@@ -131,8 +131,8 @@ class PigeonSettableMetadata {
   final Map<String?, String?>? customMetadata;
 }
 
-class PigeonStorageTaskSnapShot {
-  const PigeonStorageTaskSnapShot({
+class InternalStorageTaskSnapShot {
+  const InternalStorageTaskSnapShot({
     required this.bytesTransferred,
     required this.metadata,
     required this.state,
@@ -140,50 +140,50 @@ class PigeonStorageTaskSnapShot {
   });
 
   final int bytesTransferred;
-  final PigeonFullMetaData? metadata;
-  final PigeonStorageTaskState state;
+  final InternalFullMetaData? metadata;
+  final InternalStorageTaskState state;
   final int totalBytes;
 }
 
-class PigeonListResult {
-  const PigeonListResult({
+class InternalListResult {
+  const InternalListResult({
     required this.items,
     required this.pageToken,
     required this.prefixs,
   });
 
-  final List<PigeonStorageReference?> items;
+  final List<InternalStorageReference?> items;
   final String? pageToken;
-  final List<PigeonStorageReference?> prefixs;
+  final List<InternalStorageReference?> prefixs;
 }
 
 @HostApi(dartHostTestHandler: 'TestFirebaseStorageHostApi')
 abstract class FirebaseStorageHostApi {
   @async
-  PigeonStorageReference getReferencebyPath(
-    PigeonStorageFirebaseApp app,
+  InternalStorageReference getReferencebyPath(
+    InternalStorageFirebaseApp app,
     String path,
     String? bucket,
   );
   @async
   void setMaxOperationRetryTime(
-    PigeonStorageFirebaseApp app,
+    InternalStorageFirebaseApp app,
     int time,
   );
   @async
   void setMaxUploadRetryTime(
-    PigeonStorageFirebaseApp app,
+    InternalStorageFirebaseApp app,
     int time,
   );
   @async
   void setMaxDownloadRetryTime(
-    PigeonStorageFirebaseApp app,
+    InternalStorageFirebaseApp app,
     int time,
   );
 
   @async
   void useStorageEmulator(
-    PigeonStorageFirebaseApp app,
+    InternalStorageFirebaseApp app,
     String host,
     int port,
   );
@@ -192,101 +192,101 @@ abstract class FirebaseStorageHostApi {
 
   @async
   void referenceDelete(
-    PigeonStorageFirebaseApp app,
-    PigeonStorageReference reference,
+    InternalStorageFirebaseApp app,
+    InternalStorageReference reference,
   );
 
   @async
   String referenceGetDownloadURL(
-    PigeonStorageFirebaseApp app,
-    PigeonStorageReference reference,
+    InternalStorageFirebaseApp app,
+    InternalStorageReference reference,
   );
 
   @async
-  PigeonFullMetaData referenceGetMetaData(
-    PigeonStorageFirebaseApp app,
-    PigeonStorageReference reference,
+  InternalFullMetaData referenceGetMetaData(
+    InternalStorageFirebaseApp app,
+    InternalStorageReference reference,
   );
 
   @async
-  PigeonListResult referenceList(
-    PigeonStorageFirebaseApp app,
-    PigeonStorageReference reference,
-    PigeonListOptions options,
+  InternalListResult referenceList(
+    InternalStorageFirebaseApp app,
+    InternalStorageReference reference,
+    InternalListOptions options,
   );
 
   @async
-  PigeonListResult referenceListAll(
-    PigeonStorageFirebaseApp app,
-    PigeonStorageReference reference,
+  InternalListResult referenceListAll(
+    InternalStorageFirebaseApp app,
+    InternalStorageReference reference,
   );
 
   @async
   Uint8List? referenceGetData(
-    PigeonStorageFirebaseApp app,
-    PigeonStorageReference reference,
+    InternalStorageFirebaseApp app,
+    InternalStorageReference reference,
     int maxSize,
   );
 
   @async
   String referencePutData(
-    PigeonStorageFirebaseApp app,
-    PigeonStorageReference reference,
+    InternalStorageFirebaseApp app,
+    InternalStorageReference reference,
     Uint8List data,
-    PigeonSettableMetadata settableMetaData,
+    InternalSettableMetadata settableMetaData,
     int handle,
   );
 
   @async
   String referencePutString(
-    PigeonStorageFirebaseApp app,
-    PigeonStorageReference reference,
+    InternalStorageFirebaseApp app,
+    InternalStorageReference reference,
     String data,
     int format,
-    PigeonSettableMetadata settableMetaData,
+    InternalSettableMetadata settableMetaData,
     int handle,
   );
 
   @async
   String referencePutFile(
-    PigeonStorageFirebaseApp app,
-    PigeonStorageReference reference,
+    InternalStorageFirebaseApp app,
+    InternalStorageReference reference,
     String filePath,
-    PigeonSettableMetadata? settableMetaData,
+    InternalSettableMetadata? settableMetaData,
     int handle,
   );
 
   @async
   String referenceDownloadFile(
-    PigeonStorageFirebaseApp app,
-    PigeonStorageReference reference,
+    InternalStorageFirebaseApp app,
+    InternalStorageReference reference,
     String filePath,
     int handle,
   );
 
   @async
-  PigeonFullMetaData referenceUpdateMetadata(
-    PigeonStorageFirebaseApp app,
-    PigeonStorageReference reference,
-    PigeonSettableMetadata metadata,
+  InternalFullMetaData referenceUpdateMetadata(
+    InternalStorageFirebaseApp app,
+    InternalStorageReference reference,
+    InternalSettableMetadata metadata,
   );
 
   // APIs for Task class
   @async
   Map<String, Object> taskPause(
-    PigeonStorageFirebaseApp app,
+    InternalStorageFirebaseApp app,
     int handle,
   );
 
   @async
   Map<String, Object> taskResume(
-    PigeonStorageFirebaseApp app,
+    InternalStorageFirebaseApp app,
     int handle,
   );
 
   @async
   Map<String, Object> taskCancel(
-    PigeonStorageFirebaseApp app,
+    InternalStorageFirebaseApp app,
     int handle,
   );
 }
