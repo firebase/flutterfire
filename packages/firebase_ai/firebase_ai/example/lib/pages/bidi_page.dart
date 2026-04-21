@@ -532,7 +532,8 @@ class BidiSessionController extends ChangeNotifier {
     if (isSessionActive && _session != null) {
       developer.log('Simulating GoingAwayNotice locally');
       _handleLiveServerMessage(
-          LiveServerResponse(message: const GoingAwayNotice(timeLeft: '10')));
+        LiveServerResponse(message: const GoingAwayNotice(timeLeft: '10')),
+      );
     }
   }
 
@@ -646,13 +647,16 @@ class _BidiPageState extends State<BidiPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('Live Stream Session',
-                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  const Text(
+                    'Live Stream Session',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                   ElevatedButton.icon(
                     icon: const Icon(Icons.speed, size: 16),
                     label: const Text('Simulate GoAway'),
                     style: ElevatedButton.styleFrom(
-                        visualDensity: VisualDensity.compact),
+                      visualDensity: VisualDensity.compact,
+                    ),
                     onPressed: _controller.isSessionActive
                         ? () => _controller.simulateGoingAway()
                         : null,
