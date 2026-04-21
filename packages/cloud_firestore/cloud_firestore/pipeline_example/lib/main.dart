@@ -543,7 +543,7 @@ class _PipelineExamplePageState extends State<PipelineExamplePage> {
           .limit(1)
           .addFields(
             // VectorValue
-            Constant(VectorValue([1.0, 2.0, 3.0])).as('c_vector'),
+            Constant(const VectorValue([1.0, 2.0, 3.0])).as('c_vector'),
 
             Constant(null).as('c_null'),
             // String

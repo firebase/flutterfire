@@ -4,9 +4,10 @@ homepage: https://github.com/firebase/flutterfire/tree/main/packages/cloud_funct
 repository: https://github.com/firebase/flutterfire/tree/main/packages/cloud_functions/cloud_functions_web
 
 version: 5.1.5
+resolution: workspace
 
 environment:
-  sdk: '>=3.4.0 <4.0.0'
+  sdk: '^3.6.0'
   flutter: '>=3.22.0'
 
 dependencies:

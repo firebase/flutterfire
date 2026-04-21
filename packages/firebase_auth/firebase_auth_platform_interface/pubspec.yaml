@@ -5,9 +5,10 @@ repository: https://github.com/firebase/flutterfire/tree/main/packages/firebase_
 # NOTE: We strongly prefer non-breaking changes, even at the expense of a
 # less-clean API. See https://flutter.dev/go/platform-interface-breaking-changes
 version: 8.1.9
+resolution: workspace
 
 environment:
-  sdk: '>=3.2.0 <4.0.0'
+  sdk: '^3.6.0'
   flutter: '>=3.16.0'
 
 dependencies:
@@ -30,5 +31,3 @@ dev_dependencies:
   # NOTE: This is a temporary workaround for Flutter 3.13
   watcher: ^1.1.0
 
-dependency_overrides:
-  watcher: ^1.1.0
