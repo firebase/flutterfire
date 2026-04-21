@@ -125,7 +125,7 @@ class DatabaseReference extends Query<database_interop.ReferenceJsImpl> {
   ///
   /// This method returns [ThenableReference], [DatabaseReference]
   /// with a [Future] property.
-  ThenableReference push([value]) => ThenableReference.fromJsObject(
+  ThenableReference push([Object? value]) => ThenableReference.fromJsObject(
       database_interop.push(jsObject, value?.jsify()));
 
   /// Removes data from actual database location.
