@@ -163,7 +163,6 @@ class LiveSession {
         }
       },
       onDone: () {
-        log('live_session: WebSocket stream done.');
         if (!_messageController.isClosed) {
           _messageController.close();
         }
@@ -181,7 +180,6 @@ class LiveSession {
   /// such as the handle to the previous session state to restore.
   Future<void> resumeSession(
       {SessionResumptionConfig? sessionResumption}) async {
-    log('live_session.resumeSession: Attempting to resume with handle ${sessionResumption?.handle}');
     try {
       await _wsSubscription.cancel().timeout(const Duration(seconds: 2),
           onTimeout: () {
@@ -190,7 +188,6 @@ class LiveSession {
       await _ws.sink.close().timeout(const Duration(seconds: 2), onTimeout: () {
         log('live_session.resumeSession: WebSocket close timed out.');
       });
-      log('live_session.resumeSession: WebSocket cancel and close done.');
 
       _ws = await _performWebSocketSetup(
         uri: _uri,
@@ -201,7 +198,6 @@ class LiveSession {
         sessionResumption: sessionResumption,
         liveGenerationConfig: _liveGenerationConfig,
       );
-      log('live_session.resumeSession: WebSocket setup success');
     } catch (e) {
       log('live_session.resumeSession: WebSocket setup failed: $e');
       rethrow;
@@ -269,7 +265,6 @@ class LiveSession {
   /// [text]: The text data to send.
   Future<void> sendTextRealtime(String text) async {
     _checkWsStatus();
-    log('sendTextRealtime: $text');
     var clientMessage = LiveClientRealtimeInput.text(text);
     var clientJson = jsonEncode(clientMessage.toJson());
     _ws.sink.add(clientJson);
@@ -334,7 +329,6 @@ class LiveSession {
 
   /// Closes the WebSocket connection.
   Future<void> close() async {
-    log('live_session.close: closing session');
     try {
       await _wsSubscription.cancel().timeout(const Duration(seconds: 1),
           onTimeout: () {
@@ -349,7 +343,6 @@ class LiveSession {
     } catch (e) {
       log('live_session.close: error during close: $e');
     }
-    log('live_session.close: completed');
   }
 
   void _checkWsStatus() {
