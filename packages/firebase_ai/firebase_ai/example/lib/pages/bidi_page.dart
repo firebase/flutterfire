@@ -231,7 +231,9 @@ class BidiSessionController extends ChangeNotifier {
             SessionResumptionConfig(handle: _activeSessionHandle),
       );
     } on Exception catch (e) {
-      developer.log('Error setting up session: $e, starting a new one.');
+      developer.log(
+        'Error setting up session with handle $_activeSessionHandle, error: $e, starting a new one.',
+      );
       _session = await _liveModel.connect();
     }
 
