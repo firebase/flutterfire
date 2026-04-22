@@ -3,6 +3,7 @@ description: App Check works alongside other Firebase services to help protect y
 homepage: https://firebase.google.com/docs/app-check
 repository: https://github.com/firebase/flutterfire/tree/main/packages/firebase_app_check/firebase_app_check
 version: 0.4.3
+resolution: workspace
 topics:
   - firebase
   - app-check
@@ -13,8 +14,8 @@ false_secrets:
   - example/**
 
 environment:
-  sdk: '>=3.2.0 <4.0.0'
-  flutter: '>=3.3.0'
+  sdk: '^3.6.0'
+  flutter: '>=3.27.0'
 
 dependencies:
   firebase_app_check_platform_interface: ^0.3.0

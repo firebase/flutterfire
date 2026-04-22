@@ -3,9 +3,10 @@ name: tests
 description: A an app for FlutterFire testing (e2e).
 publish_to: 'none'
 version: 1.0.0+1
+resolution: workspace
 
 environment:
-  sdk: '>=3.4.0 <4.0.0'
+  sdk: '^3.6.0'
   flutter: '>=3.22.0'
 
 dependencies:

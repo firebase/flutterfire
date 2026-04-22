@@ -11,7 +11,7 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 /// A user account.
 abstract class UserPlatform extends PlatformInterface {
   // ignore: public_member_api_docs
-  UserPlatform(this.auth, this.multiFactor, PigeonUserDetails user)
+  UserPlatform(this.auth, this.multiFactor, InternalUserDetails user)
       : _user = user,
         super(token: _token);
 
@@ -27,7 +27,7 @@ abstract class UserPlatform extends PlatformInterface {
 
   final MultiFactorPlatform multiFactor;
 
-  final PigeonUserDetails _user;
+  final InternalUserDetails _user;
 
   /// The users display name.
   ///

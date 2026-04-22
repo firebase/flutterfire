@@ -49,7 +49,13 @@ String _harmCategoryToJson(HarmCategory harmCategory) => switch (harmCategory) {
       HarmCategory.harassment => 'HARM_CATEGORY_HARASSMENT',
       HarmCategory.hateSpeech => 'HARM_CATEGORY_HATE_SPEECH',
       HarmCategory.sexuallyExplicit => 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
-      HarmCategory.dangerousContent => 'HARM_CATEGORY_DANGEROUS_CONTENT'
+      HarmCategory.dangerousContent => 'HARM_CATEGORY_DANGEROUS_CONTENT',
+      HarmCategory.imageHate => 'HARM_CATEGORY_IMAGE_HATE',
+      HarmCategory.imageDangerousContent =>
+        'HARM_CATEGORY_IMAGE_DANGEROUS_CONTENT',
+      HarmCategory.imageHarassment => 'HARM_CATEGORY_IMAGE_HARASSMENT',
+      HarmCategory.imageSexuallyExplicit =>
+        'HARM_CATEGORY_IMAGE_SEXUALLY_EXPLICIT',
     };
 
 Object _safetySettingToJson(SafetySetting safetySetting) {
@@ -241,5 +247,11 @@ HarmCategory _parseHarmCategory(Object jsonObject) => switch (jsonObject) {
       'HARM_CATEGORY_HATE_SPEECH' => HarmCategory.hateSpeech,
       'HARM_CATEGORY_SEXUALLY_EXPLICIT' => HarmCategory.sexuallyExplicit,
       'HARM_CATEGORY_DANGEROUS_CONTENT' => HarmCategory.dangerousContent,
-      _ => throw unhandledFormat('HarmCategory', jsonObject),
+      'HARM_CATEGORY_IMAGE_HATE' => HarmCategory.imageHate,
+      'HARM_CATEGORY_IMAGE_DANGEROUS_CONTENT' =>
+        HarmCategory.imageDangerousContent,
+      'HARM_CATEGORY_IMAGE_HARASSMENT' => HarmCategory.imageHarassment,
+      'HARM_CATEGORY_IMAGE_SEXUALLY_EXPLICIT' =>
+        HarmCategory.imageSexuallyExplicit,
+      _ => HarmCategory.unknown,
     };
