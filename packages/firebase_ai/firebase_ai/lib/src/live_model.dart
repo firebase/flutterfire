@@ -92,7 +92,7 @@ final class LiveGenerativeModel extends BaseModel {
   /// object that can be used to communicate with the service.
   /// [sessionResumption] (optional): The configuration for session resumption,
   /// such as the handle to the previous session state to restore.
-  /// 
+  ///
   /// Returns a [Future] that resolves to an [LiveSession] object upon successful
   /// connection.
   Future<LiveSession> connect(
