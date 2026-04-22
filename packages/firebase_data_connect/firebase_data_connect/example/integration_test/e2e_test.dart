@@ -14,6 +14,7 @@ import 'generation_e2e.dart';
 import 'instance_e2e.dart';
 import 'listen_e2e.dart';
 import 'query_e2e.dart';
+import 'websocket_e2e.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -27,8 +28,8 @@ void main() {
       final connector = MoviesConnector.connectorConfig;
 
       FirebaseDataConnect.instanceFor(connectorConfig: connector)
-          .useDataConnectEmulator('localhost', 9399);
-      await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
+          .useDataConnectEmulator('127.0.0.1', 9399);
+      await FirebaseAuth.instance.useAuthEmulator('127.0.0.1', 9099);
 
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: 'test@mail.com', password: 'password');
@@ -38,5 +39,6 @@ void main() {
     runQueryTests();
     runGenerationTest();
     runListenTests();
+    runWebSocketTests();
   });
 }
