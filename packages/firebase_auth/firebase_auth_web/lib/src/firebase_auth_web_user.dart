@@ -25,8 +25,8 @@ class UserWeb extends UserPlatform {
   ) : super(
           auth,
           multiFactor,
-          PigeonUserDetails(
-              userInfo: PigeonUserInfo(
+          InternalUserDetails(
+              userInfo: InternalUserInfo(
                 displayName: _webUser.displayName,
                 email: _webUser.email,
                 isEmailVerified: _webUser.emailVerified,

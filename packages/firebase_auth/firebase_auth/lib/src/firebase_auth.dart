@@ -798,6 +798,11 @@ class FirebaseAuth extends FirebasePluginPlatform {
     return _delegate.revokeTokenWithAuthorizationCode(authorizationCode);
   }
 
+  /// Android only. Revokes the provided accessToken. Currently supports revoking Apple-issued accessToken only.
+  Future<void> revokeAccessToken(String accessToken) {
+    return _delegate.revokeAccessToken(accessToken);
+  }
+
   /// Signs out the current user.
   ///
   /// If successful, it also updates

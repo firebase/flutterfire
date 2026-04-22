@@ -56,11 +56,11 @@ public class PigeonParser {
     }
   }
 
-  public static GeneratedAndroidFirebaseFirestore.PigeonQuerySnapshot toPigeonQuerySnapshot(
+  public static GeneratedAndroidFirebaseFirestore.InternalQuerySnapshot toPigeonQuerySnapshot(
       com.google.firebase.firestore.QuerySnapshot querySnapshot,
       DocumentSnapshot.ServerTimestampBehavior serverTimestampBehavior) {
-    GeneratedAndroidFirebaseFirestore.PigeonQuerySnapshot.Builder pigeonQuerySnapshot =
-        new GeneratedAndroidFirebaseFirestore.PigeonQuerySnapshot.Builder();
+    GeneratedAndroidFirebaseFirestore.InternalQuerySnapshot.Builder pigeonQuerySnapshot =
+        new GeneratedAndroidFirebaseFirestore.InternalQuerySnapshot.Builder();
     pigeonQuerySnapshot.setMetadata(toPigeonSnapshotMetadata(querySnapshot.getMetadata()));
     pigeonQuerySnapshot.setDocumentChanges(
         toPigeonDocumentChanges(querySnapshot.getDocumentChanges(), serverTimestampBehavior));
@@ -69,20 +69,20 @@ public class PigeonParser {
     return pigeonQuerySnapshot.build();
   }
 
-  public static GeneratedAndroidFirebaseFirestore.PigeonSnapshotMetadata toPigeonSnapshotMetadata(
+  public static GeneratedAndroidFirebaseFirestore.InternalSnapshotMetadata toPigeonSnapshotMetadata(
       com.google.firebase.firestore.SnapshotMetadata snapshotMetadata) {
-    GeneratedAndroidFirebaseFirestore.PigeonSnapshotMetadata.Builder pigeonSnapshotMetadata =
-        new GeneratedAndroidFirebaseFirestore.PigeonSnapshotMetadata.Builder();
+    GeneratedAndroidFirebaseFirestore.InternalSnapshotMetadata.Builder pigeonSnapshotMetadata =
+        new GeneratedAndroidFirebaseFirestore.InternalSnapshotMetadata.Builder();
     pigeonSnapshotMetadata.setHasPendingWrites(snapshotMetadata.hasPendingWrites());
     pigeonSnapshotMetadata.setIsFromCache(snapshotMetadata.isFromCache());
     return pigeonSnapshotMetadata.build();
   }
 
-  public static List<GeneratedAndroidFirebaseFirestore.PigeonDocumentChange>
+  public static List<GeneratedAndroidFirebaseFirestore.InternalDocumentChange>
       toPigeonDocumentChanges(
           List<com.google.firebase.firestore.DocumentChange> documentChanges,
           DocumentSnapshot.ServerTimestampBehavior serverTimestampBehavior) {
-    List<GeneratedAndroidFirebaseFirestore.PigeonDocumentChange> pigeonDocumentChanges =
+    List<GeneratedAndroidFirebaseFirestore.InternalDocumentChange> pigeonDocumentChanges =
         new ArrayList<>(documentChanges.size());
     for (com.google.firebase.firestore.DocumentChange documentChange : documentChanges) {
       pigeonDocumentChanges.add(toPigeonDocumentChange(documentChange, serverTimestampBehavior));
@@ -90,11 +90,11 @@ public class PigeonParser {
     return pigeonDocumentChanges;
   }
 
-  public static GeneratedAndroidFirebaseFirestore.PigeonDocumentChange toPigeonDocumentChange(
+  public static GeneratedAndroidFirebaseFirestore.InternalDocumentChange toPigeonDocumentChange(
       com.google.firebase.firestore.DocumentChange documentChange,
       DocumentSnapshot.ServerTimestampBehavior serverTimestampBehavior) {
-    GeneratedAndroidFirebaseFirestore.PigeonDocumentChange.Builder pigeonDocumentChange =
-        new GeneratedAndroidFirebaseFirestore.PigeonDocumentChange.Builder();
+    GeneratedAndroidFirebaseFirestore.InternalDocumentChange.Builder pigeonDocumentChange =
+        new GeneratedAndroidFirebaseFirestore.InternalDocumentChange.Builder();
     pigeonDocumentChange.setType(toPigeonDocumentChangeType(documentChange.getType()));
     pigeonDocumentChange.setOldIndex((long) documentChange.getOldIndex());
     pigeonDocumentChange.setNewIndex((long) documentChange.getNewIndex());
@@ -129,22 +129,22 @@ public class PigeonParser {
     }
   }
 
-  public static GeneratedAndroidFirebaseFirestore.PigeonDocumentSnapshot toPigeonDocumentSnapshot(
+  public static GeneratedAndroidFirebaseFirestore.InternalDocumentSnapshot toPigeonDocumentSnapshot(
       com.google.firebase.firestore.DocumentSnapshot documentSnapshot,
       DocumentSnapshot.ServerTimestampBehavior serverTimestampBehavior) {
-    GeneratedAndroidFirebaseFirestore.PigeonDocumentSnapshot.Builder pigeonDocumentSnapshot =
-        new GeneratedAndroidFirebaseFirestore.PigeonDocumentSnapshot.Builder();
+    GeneratedAndroidFirebaseFirestore.InternalDocumentSnapshot.Builder pigeonDocumentSnapshot =
+        new GeneratedAndroidFirebaseFirestore.InternalDocumentSnapshot.Builder();
     pigeonDocumentSnapshot.setMetadata(toPigeonSnapshotMetadata(documentSnapshot.getMetadata()));
     pigeonDocumentSnapshot.setData(documentSnapshot.getData(serverTimestampBehavior));
     pigeonDocumentSnapshot.setPath(documentSnapshot.getReference().getPath());
     return pigeonDocumentSnapshot.build();
   }
 
-  public static List<GeneratedAndroidFirebaseFirestore.PigeonDocumentSnapshot>
+  public static List<GeneratedAndroidFirebaseFirestore.InternalDocumentSnapshot>
       toPigeonDocumentSnapshots(
           List<com.google.firebase.firestore.DocumentSnapshot> documentSnapshots,
           DocumentSnapshot.ServerTimestampBehavior serverTimestampBehavior) {
-    List<GeneratedAndroidFirebaseFirestore.PigeonDocumentSnapshot> pigeonDocumentSnapshots =
+    List<GeneratedAndroidFirebaseFirestore.InternalDocumentSnapshot> pigeonDocumentSnapshots =
         new ArrayList<>(documentSnapshots.size());
     for (com.google.firebase.firestore.DocumentSnapshot documentSnapshot : documentSnapshots) {
       pigeonDocumentSnapshots.add(
@@ -165,7 +165,7 @@ public class PigeonParser {
       FirebaseFirestore firestore,
       @NonNull String path,
       boolean isCollectionGroup,
-      GeneratedAndroidFirebaseFirestore.PigeonQueryParameters parameters) {
+      GeneratedAndroidFirebaseFirestore.InternalQueryParameters parameters) {
     try {
       Query query;
       if (isCollectionGroup) {

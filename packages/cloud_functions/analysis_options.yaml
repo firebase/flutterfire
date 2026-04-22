@@ -8,3 +8,4 @@ analyzer:
   exclude:
     - cloud_functions_platform_interface/lib/src/pigeon/messages.pigeon.dart
     - cloud_functions_platform_interface/test/pigeon/test_api.dart
+    - cloud_functions_platform_interface/pigeons/messages.dart

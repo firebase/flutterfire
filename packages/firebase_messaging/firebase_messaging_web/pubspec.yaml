@@ -3,9 +3,10 @@ description: The web implementation of firebase_messaging
 homepage: https://github.com/firebase/flutterfire/tree/main/packages/firebase_messaging/firebase_messaging_web
 repository: https://github.com/firebase/flutterfire/tree/main/packages/firebase_messaging/firebase_messaging_web
 version: 4.1.5
+resolution: workspace
 
 environment:
-  sdk: '>=3.4.0 <4.0.0'
+  sdk: '^3.6.0'
   flutter: '>=3.22.0'
 
 dependencies:

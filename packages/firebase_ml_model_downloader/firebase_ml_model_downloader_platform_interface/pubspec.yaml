@@ -1,12 +1,13 @@
 name: firebase_ml_model_downloader_platform_interface
 description: A common platform interface for the firebase_ml_model_downloader plugin.
 version: 0.1.5+20
+resolution: workspace
 homepage: https://github.com/firebase/flutterfire/tree/main/packages/firebase_ml_model_downloader/firebase_ml_model_downloader_platform_interface
 repository: https://github.com/firebase/flutterfire/tree/main/packages/firebase_ml_model_downloader/firebase_ml_model_downloader_platform_interface
 
 environment:
-  sdk: '>=3.2.0 <4.0.0'
-  flutter: '>=3.3.0'
+  sdk: '^3.6.0'
+  flutter: '>=3.27.0'
 
 dependencies:
   firebase_core: ^4.7.0
