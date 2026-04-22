@@ -54,7 +54,8 @@ class LiveSession {
   ///
   /// Returns a [Future] that resolves to an [LiveSession] object upon successful
   /// connection.
-  static Future<LiveSession> connect({
+  @internal
+  static Future<LiveSession> create({
     required String uri,
     required Map<String, String> headers,
     required String modelString,

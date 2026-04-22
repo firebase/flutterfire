@@ -108,7 +108,12 @@ class BidiMediaManager {
     if (!kIsWeb && defaultTargetPlatform == TargetPlatform.macOS) {
       int attempts = 0;
       while (_videoInput.cameraController == null) {
-        if (attempts > 50) break; // 5 second timeout safety
+        if (attempts > 50) {
+          developer.log(
+            'BidiMediaManager.startVideo(): macOS camera controller initialization timed out after 50 attempts.',
+          );
+          break; // 5 second timeout safety
+        }
         await Future.delayed(const Duration(milliseconds: 100));
         attempts++;
       }

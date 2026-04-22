@@ -90,7 +90,9 @@ final class LiveGenerativeModel extends BaseModel {
   ///
   /// This function handles the WebSocket connection setup and returns an [LiveSession]
   /// object that can be used to communicate with the service.
-  ///
+  /// [sessionResumption] (optional): The configuration for session resumption,
+  /// such as the handle to the previous session state to restore.
+  /// 
   /// Returns a [Future] that resolves to an [LiveSession] object upon successful
   /// connection.
   Future<LiveSession> connect(
@@ -106,7 +108,7 @@ final class LiveGenerativeModel extends BaseModel {
       _useLimitedUseAppCheckTokens,
     )();
 
-    return LiveSession.connect(
+    return LiveSession.create(
       uri: uri,
       headers: headers,
       modelString: modelString,
