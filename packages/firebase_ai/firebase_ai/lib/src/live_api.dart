@@ -79,7 +79,10 @@ class AudioTranscriptionConfig {
 
 /// Configures the sliding window context compression mechanism.
 ///
-/// The context window will be truncated by keeping only a suffix of it.
+/// The SlidingWindow method operates by discarding content at the beginning of
+/// the context window. The resulting context will always begin at the start of
+/// a USER role turn. System instructions will always remain at the start of the
+/// result.
 class SlidingWindow {
   /// Creates a [SlidingWindow] instance.
   ///
