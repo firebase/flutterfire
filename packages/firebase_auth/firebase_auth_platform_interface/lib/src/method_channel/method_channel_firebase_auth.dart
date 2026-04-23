@@ -4,6 +4,7 @@
 // found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:io' show Platform;
 
 import 'package:_flutterfire_internals/_flutterfire_internals.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_multi_factor.dart';
@@ -17,6 +18,25 @@ import '../../firebase_auth_platform_interface.dart';
 import 'method_channel_user.dart';
 import 'method_channel_user_credential.dart';
 import 'utils/exception.dart';
+
+/// Returns `true` when the `id-token` [EventChannel] subscription should be
+/// skipped. Only effective on Windows when the host app has explicitly opted
+/// in via [FirebaseAuthPlatform.disableIdTokenChannelOnWindows]. Never
+/// returns `true` on web or on platforms other than Windows.
+///
+/// See [FirebaseAuthPlatform.disableIdTokenChannelOnWindows] for the
+/// rationale (upstream Flutter engine threading bug tracked in
+/// https://github.com/firebase/flutterfire/issues/18210 /
+/// https://github.com/flutter/flutter/issues/134346).
+bool _shouldSkipIdTokenChannel() {
+  if (kIsWeb) return false;
+  if (!FirebaseAuthPlatform.disableIdTokenChannelOnWindows) return false;
+  try {
+    return Platform.isWindows;
+  } on Object catch (_) {
+    return false;
+  }
+}
 
 /// Method Channel delegate for [FirebaseAuthPlatform].
 class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
@@ -74,16 +94,21 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   /// Creates a new instance with a given [FirebaseApp].
   MethodChannelFirebaseAuth({required FirebaseApp app})
       : super(appInstance: app) {
-    _api.registerIdTokenListener(pigeonDefault).then((channelName) {
-      final events = EventChannel(channelName, channel.codec);
-      events
-          .receiveGuardedBroadcastStream(onError: convertPlatformException)
-          .listen(
-        (arguments) {
-          _handleIdTokenChangesListener(app.name, arguments);
-        },
-      );
-    });
+    // Skip the `id-token` EventChannel subscription on Windows when the host
+    // app has opted in via `FirebaseAuthPlatform.disableIdTokenChannelOnWindows`.
+    // See `_shouldSkipIdTokenChannel()` for the rationale.
+    if (!_shouldSkipIdTokenChannel()) {
+      _api.registerIdTokenListener(pigeonDefault).then((channelName) {
+        final events = EventChannel(channelName, channel.codec);
+        events
+            .receiveGuardedBroadcastStream(onError: convertPlatformException)
+            .listen(
+          (arguments) {
+            _handleIdTokenChangesListener(app.name, arguments);
+          },
+        );
+      });
+    }
 
     _api.registerAuthStateListener(pigeonDefault).then((channelName) {
       final events = EventChannel(channelName, channel.codec);

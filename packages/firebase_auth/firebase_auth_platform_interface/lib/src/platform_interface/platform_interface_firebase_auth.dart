@@ -41,6 +41,31 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// If not `null`, this value will supersede `authDomain` property set in `initializeApp`.
   String? customAuthDomain;
 
+  /// Opt-in workaround for the Windows-only native threading bug tracked in:
+  ///   - https://github.com/firebase/flutterfire/issues/18210
+  ///   - https://github.com/flutter/flutter/issues/134346
+  ///
+  /// When set to `true` **before** calling [Firebase.initializeApp], the
+  /// method-channel implementation skips registering the `id-token`
+  /// [EventChannel] subscription on Windows. This avoids the
+  /// `FAST_FAIL_INVALID_ARG` (`0xc0000409` / `STATUS_STACK_BUFFER_OVERRUN`)
+  /// process abort produced when the native Windows `firebase_auth` plugin
+  /// dispatches id-token events from a background thread.
+  ///
+  /// Trade-off: with this flag enabled, `idTokenChanges()` and
+  /// `userChanges()` on Windows only emit on sign-in / sign-out (via the
+  /// separate `auth-state` channel). Mid-session token-refresh events
+  /// (e.g. custom-claims updates) are not observed until the underlying
+  /// engine fix ships. `authStateChanges()` and all imperative APIs
+  /// (`getIdToken`, `getIdTokenResult`, sign-in, sign-up, sign-out, etc.)
+  /// are unaffected.
+  ///
+  /// Has no effect on web or on platforms other than Windows.
+  ///
+  /// This flag is a temporary mitigation and will be removed in a future
+  /// release once the underlying engine bug is resolved.
+  static bool disableIdTokenChannelOnWindows = false;
+
   /// Create an instance using [app]
   FirebaseAuthPlatform({this.appInstance}) : super(token: _token);
 
