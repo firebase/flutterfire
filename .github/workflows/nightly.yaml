@@ -223,4 +223,4 @@ jobs:
           IOS_STATUS: ${{ needs.pipeline-e2e-ios.result }}
           REPO: ${{ github.repository }}
         run: |
-          dart .github/workflows/scripts/update_dashboard.dart
+          dart .github/workflows/scripts/nightly_issue_dashboard.dart
