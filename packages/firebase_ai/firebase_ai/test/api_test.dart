@@ -18,6 +18,7 @@ import 'dart:convert';
 import 'package:firebase_ai/src/api.dart';
 import 'package:firebase_ai/src/content.dart';
 import 'package:firebase_ai/src/error.dart';
+import 'package:firebase_ai/src/image_config.dart';
 import 'package:firebase_ai/src/schema.dart';
 import 'package:flutter_test/flutter_test.dart';
 
