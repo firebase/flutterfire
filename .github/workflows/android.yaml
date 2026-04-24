@@ -32,13 +32,14 @@ on:
 jobs:
   android:
     runs-on: ubuntu-latest
-    if: ${{ !inputs.skip_firestore || matrix.working_directory != 'packages/cloud_firestore/cloud_firestore/example' }}
     timeout-minutes: 45
     strategy:
       fail-fast: false
       matrix:
         working_directory:
           ['tests', 'packages/cloud_firestore/cloud_firestore/example']
+        exclude:
+          - working_directory: ${{ inputs.skip_firestore && 'packages/cloud_firestore/cloud_firestore/example' || 'none' }}
     env:
       AVD_ARCH: x86_64
       AVD_API_LEVEL: 34
