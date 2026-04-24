@@ -66,6 +66,7 @@ jobs:
       - name: Update Dashboard Issue
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TEST_MODE: ${{ github.event.inputs.test_mode == 'true' }}
           ANDROID_STATUS: ${{ needs.e2e-android.result }}
           IOS_STATUS: ${{ needs.e2e-ios.result }}
           MACOS_STATUS: ${{ needs.e2e-macos.result }}

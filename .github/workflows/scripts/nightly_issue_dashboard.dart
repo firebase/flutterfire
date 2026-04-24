@@ -29,6 +29,8 @@ void main() async {
   final runId = env['GITHUB_RUN_ID'];
   final serverUrl = env['GITHUB_SERVER_URL'] ?? 'https://github.com';
 
+  final testMode = env['TEST_MODE'] == 'true';
+
   if (token == null || repo == null) {
     print('Error: GITHUB_TOKEN or REPO environment variables not set.');
     exit(1);
@@ -50,6 +52,13 @@ void main() async {
       '| $date | $androidIcon | $iosIcon | $webIcon | $macosIcon | $windowsIcon | $fdcIcon | $pipelineIcon | $notes |';
 
   print('New Row: $newRow');
+
+  if (testMode) {
+    print('Test mode enabled. Skipping dashboard update.');
+    print('The following row would be added to the issue:');
+    print(newRow);
+    return;
+  }
 
   final client = HttpClient();
   try {
