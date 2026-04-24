@@ -25,21 +25,21 @@ on:
       - '**.md'
   workflow_call:
     inputs:
-      skip_firestore:
+      nightly_test_mode:
         type: boolean
         default: false
 
 jobs:
   android:
     runs-on: ubuntu-latest
-    timeout-minutes: ${{ inputs.skip_firestore && 5 || 45 }}
+    timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 45 }}
     strategy:
       fail-fast: false
       matrix:
         working_directory:
           ['tests', 'packages/cloud_firestore/cloud_firestore/example']
         exclude:
-          - working_directory: ${{ inputs.skip_firestore && 'packages/cloud_firestore/cloud_firestore/example' || 'none' }}
+          - working_directory: ${{ inputs.nightly_test_mode && 'packages/cloud_firestore/cloud_firestore/example' || 'none' }}
     env:
       AVD_ARCH: x86_64
       AVD_API_LEVEL: 34

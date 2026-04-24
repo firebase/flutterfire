@@ -22,30 +22,32 @@ jobs:
   e2e-android:
     uses: ./.github/workflows/android.yaml
     with:
-      skip_firestore: ${{ github.event.inputs.test_mode == 'true' }}
+      nightly_test_mode: ${{ github.event.inputs.test_mode == 'true' }}
     secrets: inherit
   e2e-ios:
     uses: ./.github/workflows/ios.yaml
     with:
-      skip_firestore: ${{ github.event.inputs.test_mode == 'true' }}
+      nightly_test_mode: ${{ github.event.inputs.test_mode == 'true' }}
     secrets: inherit
   e2e-macos:
     uses: ./.github/workflows/macos.yaml
     with:
-      skip_firestore: ${{ github.event.inputs.test_mode == 'true' }}
+      nightly_test_mode: ${{ github.event.inputs.test_mode == 'true' }}
     secrets: inherit
   e2e-web:
     uses: ./.github/workflows/web.yaml
     with:
-      skip_firestore: ${{ github.event.inputs.test_mode == 'true' }}
+      nightly_test_mode: ${{ github.event.inputs.test_mode == 'true' }}
     secrets: inherit
   e2e-windows:
     uses: ./.github/workflows/windows.yaml
     with:
-      skip_firestore: ${{ github.event.inputs.test_mode == 'true' }}
+      nightly_test_mode: ${{ github.event.inputs.test_mode == 'true' }}
     secrets: inherit
   e2e-fdc:
     uses: ./.github/workflows/e2e_tests_fdc.yaml
+    with:
+      nightly_test_mode: ${{ github.event.inputs.test_mode == 'true' }}
     secrets: inherit
   e2e-pipeline:
     uses: ./.github/workflows/e2e_tests_pipeline.yaml

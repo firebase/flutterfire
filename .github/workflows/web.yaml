@@ -25,21 +25,21 @@ on:
       - '**.md'
   workflow_call:
     inputs:
-      skip_firestore:
+      nightly_test_mode:
         type: boolean
         default: false
 
 jobs:
   web:
     runs-on: macos-latest
-    timeout-minutes: ${{ inputs.skip_firestore && 5 || 15 }}
+    timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 15 }}
     strategy:
       fail-fast: false
       matrix:
         working_directory:
           ['tests', 'packages/cloud_firestore/cloud_firestore/example']
         exclude:
-          - working_directory: ${{ inputs.skip_firestore && 'packages/cloud_firestore/cloud_firestore/example' || 'none' }}
+          - working_directory: ${{ inputs.nightly_test_mode && 'packages/cloud_firestore/cloud_firestore/example' || 'none' }}
     steps:
       - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
       - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
@@ -184,14 +184,14 @@ jobs:
 
   web-wasm:
     runs-on: macos-latest
-    timeout-minutes: ${{ inputs.skip_firestore && 5 || 15 }}
+    timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 15 }}
     strategy:
       fail-fast: false
       matrix:
         working_directory:
           ['tests', 'packages/cloud_firestore/cloud_firestore/example']
         exclude:
-          - working_directory: ${{ inputs.skip_firestore && 'packages/cloud_firestore/cloud_firestore/example' || 'none' }}
+          - working_directory: ${{ inputs.nightly_test_mode && 'packages/cloud_firestore/cloud_firestore/example' || 'none' }}
     steps:
       - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
       - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
