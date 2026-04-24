@@ -38,7 +38,7 @@ jobs:
 
   update-dashboard:
     runs-on: ubuntu-latest
-    if: always()
+    if: ${{ !cancelled() }}
     needs: [e2e-android, e2e-ios, e2e-macos, e2e-web, e2e-windows, e2e-fdc, e2e-pipeline]
     steps:
       - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
