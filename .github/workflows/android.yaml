@@ -1,7 +1,7 @@
 name: e2e-android
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}-android
   cancel-in-progress: true
 
 on:

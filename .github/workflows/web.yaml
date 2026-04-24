@@ -1,7 +1,7 @@
 name: e2e-web
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}-web
   cancel-in-progress: true
 
 on:

@@ -1,7 +1,7 @@
 name: e2e-fdc
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}-fdc
   cancel-in-progress: true
 
 on:
