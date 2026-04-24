@@ -32,7 +32,7 @@ on:
 jobs:
   web:
     runs-on: macos-latest
-    timeout-minutes: 15
+    timeout-minutes: ${{ inputs.skip_firestore && 5 || 15 }}
     strategy:
       fail-fast: false
       matrix:
@@ -184,7 +184,7 @@ jobs:
 
   web-wasm:
     runs-on: macos-latest
-    timeout-minutes: 15
+    timeout-minutes: ${{ inputs.skip_firestore && 5 || 15 }}
     strategy:
       fail-fast: false
       matrix:

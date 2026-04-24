@@ -32,7 +32,7 @@ on:
 jobs:
   macos:
     runs-on: macos-15
-    timeout-minutes: 45
+    timeout-minutes: ${{ inputs.skip_firestore && 5 || 45 }}
     strategy:
       fail-fast: false
       matrix:
