@@ -9,12 +9,12 @@ on:
   schedule:
     - cron: '0 4 * * *'
   # The dispatch is only for test purpose  
-  workflow_dispatch:
-    inputs:
-      test_mode:
-        description: 'Run in test mode'
-        type: boolean
-        default: false
+  # workflow_dispatch:
+  #   inputs:
+  #     test_mode:
+  #       description: 'Run in test mode'
+  #       type: boolean
+  #       default: false
 
 permissions:
   contents: read
