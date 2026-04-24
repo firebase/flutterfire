@@ -39,6 +39,8 @@ class _ImageGenerationPageState extends State<ImageGenerationPage> {
   final FocusNode _textFieldFocus = FocusNode();
   final List<MessageData> _messages = <MessageData>[];
   bool _loading = false;
+  ImageAspectRatio? _selectedAspectRatio;
+  ImageSize? _selectedImageSize;
 
   @override
   void initState() {
@@ -80,7 +82,19 @@ class _ImageGenerationPageState extends State<ImageGenerationPage> {
     _scrollDown();
 
     try {
-      final response = await _model.generateContent([Content.text(prompt)]);
+      final response = await _model.generateContent(
+        [Content.text(prompt)],
+        generationConfig: GenerationConfig(
+          responseModalities: [
+            ResponseModalities.text,
+            ResponseModalities.image,
+          ],
+          imageConfig: ImageConfig(
+            aspectRatio: _selectedAspectRatio,
+            imageSize: _selectedImageSize,
+          ),
+        ),
+      );
 
       String? textResponse = response.text;
       Uint8List? imageBytes;
@@ -162,31 +176,100 @@ class _ImageGenerationPageState extends State<ImageGenerationPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 15),
-              child: Row(
+              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Expanded(
-                    child: TextField(
-                      autofocus: true,
-                      focusNode: _textFieldFocus,
-                      controller: _textController,
-                      decoration: const InputDecoration(
-                        hintText: 'Enter image prompt...',
+                  Row(
+                    children: [
+                      Expanded(
+                        child: DropdownButtonFormField<ImageAspectRatio?>(
+                          initialValue: _selectedAspectRatio,
+                          decoration: const InputDecoration(
+                            labelText: 'Aspect Ratio',
+                            border: OutlineInputBorder(),
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 10,
+                            ),
+                          ),
+                          items: [
+                            const DropdownMenuItem(
+                              child: Text('Default'),
+                            ),
+                            ...ImageAspectRatio.values.map(
+                              (e) => DropdownMenuItem(
+                                value: e,
+                                child: Text('${e.name} (${e.toJson()})'),
+                              ),
+                            ),
+                          ],
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedAspectRatio = value;
+                            });
+                          },
+                        ),
                       ),
-                      onSubmitted: _generateImage,
-                    ),
+                      const SizedBox(width: 15),
+                      Expanded(
+                        child: DropdownButtonFormField<ImageSize?>(
+                          initialValue: _selectedImageSize,
+                          decoration: const InputDecoration(
+                            labelText: 'Image Size',
+                            border: OutlineInputBorder(),
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 10,
+                            ),
+                          ),
+                          items: [
+                            const DropdownMenuItem(
+                              child: Text('Default'),
+                            ),
+                            ...ImageSize.values.map(
+                              (e) => DropdownMenuItem(
+                                value: e,
+                                child: Text('${e.name} (${e.toJson()})'),
+                              ),
+                            ),
+                          ],
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedImageSize = value;
+                            });
+                          },
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 15),
-                  if (!_loading)
-                    IconButton(
-                      onPressed: () => _generateImage(_textController.text),
-                      icon: Icon(
-                        Icons.send,
-                        color: Theme.of(context).colorScheme.primary,
+                  const SizedBox(height: 15),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          autofocus: true,
+                          focusNode: _textFieldFocus,
+                          controller: _textController,
+                          decoration: const InputDecoration(
+                            hintText: 'Enter image prompt...',
+                          ),
+                          onSubmitted: _generateImage,
+                        ),
                       ),
-                    )
-                  else
-                    const CircularProgressIndicator(),
+                      const SizedBox(width: 15),
+                      if (!_loading)
+                        IconButton(
+                          onPressed: () => _generateImage(_textController.text),
+                          icon: Icon(
+                            Icons.send,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                        )
+                      else
+                        const CircularProgressIndicator(),
+                    ],
+                  ),
                 ],
               ),
             ),
