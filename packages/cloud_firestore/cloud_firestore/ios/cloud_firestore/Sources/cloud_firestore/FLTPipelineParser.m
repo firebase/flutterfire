@@ -247,10 +247,10 @@ static NSError *parseError(NSString *message) {
   }
 
   // -------------------------------------------------------------------------
-  // N-ary logical (expressions array): and, or, xor
+  // N-ary logical (expressions array): and, or, xor, nor
   // -------------------------------------------------------------------------
   if ([name isEqualToString:@"and"] || [name isEqualToString:@"or"] ||
-      [name isEqualToString:@"xor"]) {
+      [name isEqualToString:@"xor"] || [name isEqualToString:@"nor"]) {
     NSArray *exprMaps = args[@"expressions"];
     if (![exprMaps isKindOfClass:[NSArray class]] || exprMaps.count == 0) {
       if (error)
@@ -649,6 +649,173 @@ static NSError *parseError(NSString *message) {
     if (!timestampExpr) return nil;
     FIRExprBridge *unitExpr = [[FIRConstantBridge alloc] init:unitVal];
     return FLTNewFunctionExprBridge(@"timestamp_trunc", @[ timestampExpr, unitExpr ]);
+  }
+
+  // -------------------------------------------------------------------------
+  // map_keys, map_values (unary on map expression)
+  // -------------------------------------------------------------------------
+  if ([name isEqualToString:@"map_keys"] || [name isEqualToString:@"map_values"]) {
+    id exprMap = args[@"expression"];
+    if (![exprMap isKindOfClass:[NSDictionary class]]) {
+      if (error) *error = parseError([NSString stringWithFormat:@"%@ requires expression", name]);
+      return nil;
+    }
+    FIRExprBridge *expr = [self parseExpression:(NSDictionary *)exprMap error:error];
+    if (!expr) return nil;
+    return FLTNewFunctionExprBridge(name, @[ expr ]);
+  }
+
+  // -------------------------------------------------------------------------
+  // parent: doc_ref path or expression
+  // -------------------------------------------------------------------------
+  if ([name isEqualToString:@"parent"]) {
+    NSString *docPath = args[@"doc_ref"];
+    if ([docPath isKindOfClass:[NSString class]] && docPath.length > 0) {
+      FIRDocumentReference *ref = [self.firestore documentWithPath:docPath];
+      FIRExprBridge *refExpr = [[FIRConstantBridge alloc] init:ref];
+      return FLTNewFunctionExprBridge(@"parent", @[ refExpr ]);
+    }
+    id exprMap = args[@"expression"];
+    if (![exprMap isKindOfClass:[NSDictionary class]]) {
+      if (error) *error = parseError(@"parent requires expression or doc_ref");
+      return nil;
+    }
+    FIRExprBridge *expr = [self parseExpression:(NSDictionary *)exprMap error:error];
+    if (!expr) return nil;
+    return FLTNewFunctionExprBridge(@"parent", @[ expr ]);
+  }
+
+  // -------------------------------------------------------------------------
+  // timestamp_diff: end, start, unit (unit = string or expression map)
+  // -------------------------------------------------------------------------
+  if ([name isEqualToString:@"timestamp_diff"]) {
+    id endMap = args[@"end"];
+    id startMap = args[@"start"];
+    id unitObj = args[@"unit"];
+    if (![endMap isKindOfClass:[NSDictionary class]] ||
+        ![startMap isKindOfClass:[NSDictionary class]] || !unitObj) {
+      if (error) *error = parseError(@"timestamp_diff requires end, start, and unit");
+      return nil;
+    }
+    FIRExprBridge *endExpr = [self parseExpression:(NSDictionary *)endMap error:error];
+    FIRExprBridge *startExpr = [self parseExpression:(NSDictionary *)startMap error:error];
+    if (!endExpr || !startExpr) return nil;
+    FIRExprBridge *unitExpr = nil;
+    if ([unitObj isKindOfClass:[NSString class]]) {
+      unitExpr = [[FIRConstantBridge alloc] init:unitObj];
+    } else if ([unitObj isKindOfClass:[NSDictionary class]]) {
+      unitExpr = [self parseExpression:(NSDictionary *)unitObj error:error];
+    } else {
+      if (error) *error = parseError(@"timestamp_diff unit must be string or expression");
+      return nil;
+    }
+    if (!unitExpr) return nil;
+    return FLTNewFunctionExprBridge(@"timestamp_diff", @[ endExpr, startExpr, unitExpr ]);
+  }
+
+  // -------------------------------------------------------------------------
+  // timestamp_extract: timestamp, part; optional timezone (string or expression)
+  // -------------------------------------------------------------------------
+  if ([name isEqualToString:@"timestamp_extract"]) {
+    id timestampMap = args[@"timestamp"];
+    id partMap = args[@"part"];
+    if (![timestampMap isKindOfClass:[NSDictionary class]] ||
+        ![partMap isKindOfClass:[NSDictionary class]]) {
+      if (error) *error = parseError(@"timestamp_extract requires timestamp and part");
+      return nil;
+    }
+    FIRExprBridge *tsExpr = [self parseExpression:(NSDictionary *)timestampMap error:error];
+    FIRExprBridge *partExpr = [self parseExpression:(NSDictionary *)partMap error:error];
+    if (!tsExpr || !partExpr) return nil;
+    id tzRaw = args[@"timezone"];
+    if (tzRaw == nil) {
+      return FLTNewFunctionExprBridge(@"timestamp_extract", @[ tsExpr, partExpr ]);
+    }
+    FIRExprBridge *tzExpr = nil;
+    if ([tzRaw isKindOfClass:[NSString class]]) {
+      tzExpr = [[FIRConstantBridge alloc] init:tzRaw];
+    } else if ([tzRaw isKindOfClass:[NSDictionary class]]) {
+      tzExpr = [self parseExpression:(NSDictionary *)tzRaw error:error];
+    } else {
+      if (error) *error = parseError(@"timestamp_extract timezone must be string or expression");
+      return nil;
+    }
+    if (!tzExpr) return nil;
+    return FLTNewFunctionExprBridge(@"timestamp_extract", @[ tsExpr, partExpr, tzExpr ]);
+  }
+
+  // -------------------------------------------------------------------------
+  // if_null: expression + replacement
+  // -------------------------------------------------------------------------
+  if ([name isEqualToString:@"if_null"]) {
+    id exprMap = args[@"expression"];
+    id replMap = args[@"replacement"];
+    if (![exprMap isKindOfClass:[NSDictionary class]] ||
+        ![replMap isKindOfClass:[NSDictionary class]]) {
+      if (error) *error = parseError(@"if_null requires expression and replacement");
+      return nil;
+    }
+    FIRExprBridge *ifExpr = [self parseExpression:(NSDictionary *)exprMap error:error];
+    FIRExprBridge *replExpr = [self parseExpression:(NSDictionary *)replMap error:error];
+    if (!ifExpr || !replExpr) return nil;
+    return FLTNewFunctionExprBridge(@"if_null", @[ ifExpr, replExpr ]);
+  }
+
+  // -------------------------------------------------------------------------
+  // coalesce: expressions[] (>= 2)
+  // -------------------------------------------------------------------------
+  if ([name isEqualToString:@"coalesce"]) {
+    NSArray *exprMaps = args[@"expressions"];
+    if (![exprMaps isKindOfClass:[NSArray class]] || exprMaps.count < 2) {
+      if (error) *error = parseError(@"coalesce requires at least two expressions");
+      return nil;
+    }
+    NSMutableArray<FIRExprBridge *> *exprs = [NSMutableArray array];
+    for (id em in exprMaps) {
+      if (![em isKindOfClass:[NSDictionary class]]) continue;
+      FIRExprBridge *e = [self parseExpression:(NSDictionary *)em error:error];
+      if (!e) return nil;
+      [exprs addObject:e];
+    }
+    if (exprs.count < 2) {
+      if (error) *error = parseError(@"coalesce requires at least two expressions");
+      return nil;
+    }
+    return FLTNewFunctionExprBridge(@"coalesce", exprs);
+  }
+
+  // -------------------------------------------------------------------------
+  // switch_on: alternating condition (bool), result (expr), optional default
+  // -------------------------------------------------------------------------
+  if ([name isEqualToString:@"switch_on"]) {
+    NSArray *exprMaps = args[@"expressions"];
+    if (![exprMaps isKindOfClass:[NSArray class]] || exprMaps.count < 2) {
+      if (error) *error = parseError(@"switch_on requires at least two expressions");
+      return nil;
+    }
+    NSUInteger n = exprMaps.count;
+    FIRExprBridge *first = [self parseBooleanExpression:exprMaps[0] error:error];
+    FIRExprBridge *second = [self parseExpression:exprMaps[1] error:error];
+    if (!first || !second) return nil;
+    if (n == 2) {
+      return FLTNewFunctionExprBridge(@"switch_on", @[ first, second ]);
+    }
+    NSMutableArray<FIRExprBridge *> *rest = [NSMutableArray array];
+    for (NSUInteger i = 2; i < n; i++) {
+      FIRExprBridge *e = nil;
+      if ((n % 2 == 1) && (i == n - 1)) {
+        e = [self parseExpression:exprMaps[i] error:error];
+      } else if (i % 2 == 0) {
+        e = [self parseBooleanExpression:exprMaps[i] error:error];
+      } else {
+        e = [self parseExpression:exprMaps[i] error:error];
+      }
+      if (!e) return nil;
+      [rest addObject:e];
+    }
+    NSMutableArray<FIRExprBridge *> *all = [NSMutableArray arrayWithObjects:first, second, nil];
+    [all addObjectsFromArray:rest];
+    return FLTNewFunctionExprBridge(@"switch_on", all);
   }
 
   // -------------------------------------------------------------------------

@@ -4,6 +4,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:js_interop';
+import 'dart:js_interop_unsafe';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart'
@@ -360,6 +361,68 @@ class PipelineExpressionParserWeb {
       case 'array_index_of_all':
         return (_expr(argsMap, _kExpression) as interop.ExpressionJsImpl)
             .arrayIndexOfAll(_expr(argsMap, 'element'));
+      case 'timestamp_diff':
+        return _pipelines.timestampDiff(
+          _expr(argsMap, 'end'),
+          _expr(argsMap, 'start'),
+          _expr(argsMap, 'unit'),
+        );
+      case 'timestamp_extract':
+        {
+          final ts = _expr(argsMap, 'timestamp');
+          final part = _expr(argsMap, 'part');
+          final tzRaw = argsMap['timezone'];
+          if (tzRaw == null) {
+            return _pipelines.timestampExtract(ts, part);
+          }
+          final tzJs = tzRaw is String
+              ? tzRaw.toJS
+              : toExpression(tzRaw as Map<String, dynamic>);
+          return _pipelines.timestampExtract(ts, part, tzJs);
+        }
+      case 'parent':
+        {
+          final docRefPath = argsMap['doc_ref'] as String?;
+          if (docRefPath != null && docRefPath.isNotEmpty) {
+            final docRef = interop.doc(_jsFirestore as JSAny, docRefPath.toJS);
+            return _pipelines.parent(docRef);
+          }
+          return _pipelines.parent(_expr(argsMap, _kExpression));
+        }
+      case 'if_null':
+        return _pipelines.ifNull(
+          _expr(argsMap, _kExpression),
+          _expr(argsMap, 'replacement'),
+        );
+      case 'coalesce':
+        {
+          final exprMaps = argsMap['expressions'] as List<dynamic>?;
+          if (exprMaps == null || exprMaps.length < 2) {
+            throw UnsupportedError(
+                'coalesce requires at least two expressions');
+          }
+          final first = toExpression(exprMaps[0] as Map<String, dynamic>);
+          final second = toExpression(exprMaps[1] as Map<String, dynamic>);
+          if (exprMaps.length == 2) {
+            return _pipelines.coalesce(first, second, <JSAny>[].toJS);
+          }
+          final more = <JSAny>[];
+          for (var i = 2; i < exprMaps.length; i++) {
+            more.add(toExpression(exprMaps[i] as Map<String, dynamic>));
+          }
+          return _pipelines.coalesce(first, second, more.toJS);
+        }
+      case 'switch_on':
+        return _switchOnToExpression(argsMap);
+      // Boolean combinators / `not` — used as value expressions in add_fields,
+      // select, etc. (e.g. `Expression.nor(...).as('x')`). Those stages call
+      // [toExpression] only; [where] uses [toBooleanExpression] directly.
+      case 'and':
+      case 'or':
+      case 'xor':
+      case 'nor':
+      case 'not':
+        return _expressionFromBooleanMap(map);
       default:
         throw FirebaseException(
           plugin: 'cloud_firestore',
@@ -369,6 +432,58 @@ class PipelineExpressionParserWeb {
               'platform. The Firebase JS SDK may not expose this expression.',
         );
     }
+  }
+
+  /// Builds a JS value [Expression] from a serialized boolean expression map.
+  ///
+  /// The Firebase JS pipeline API represents boolean expressions as values
+  /// where needed (e.g. aliased add_fields); [toBooleanExpression] already
+  /// constructs the correct interop objects.
+  interop.ExpressionJsImpl _expressionFromBooleanMap(
+    Map<String, dynamic> map,
+  ) {
+    final boolExpr = toBooleanExpression(map);
+    if (boolExpr == null) {
+      final n = map[_kName] as String? ?? '?';
+      throw UnsupportedError(
+        'Boolean expression $n requires at least one valid sub-expression',
+      );
+    }
+    return boolExpr as interop.ExpressionJsImpl;
+  }
+
+  interop.ExpressionJsImpl _switchOnToExpression(Map<String, dynamic> argsMap) {
+    final exprMaps = argsMap['expressions'] as List<dynamic>?;
+    if (exprMaps == null || exprMaps.length < 2) {
+      throw UnsupportedError('switch_on requires at least two expressions');
+    }
+    final n = exprMaps.length;
+    final first = toBooleanExpression(exprMaps[0] as Map<String, dynamic>);
+    if (first == null) {
+      throw UnsupportedError('switch_on requires a boolean condition');
+    }
+    final second = toExpression(exprMaps[1] as Map<String, dynamic>);
+    final allArgs = <JSAny>[first, second];
+    if (n > 2) {
+      for (var i = 2; i < n; i++) {
+        if (n.isOdd && i == n - 1) {
+          allArgs.add(toExpression(exprMaps[i] as Map<String, dynamic>));
+        } else if (i.isEven) {
+          final b = toBooleanExpression(exprMaps[i] as Map<String, dynamic>);
+          if (b == null) {
+            throw UnsupportedError('switch_on expected a boolean expression');
+          }
+          allArgs.add(b);
+        } else {
+          allArgs.add(toExpression(exprMaps[i] as Map<String, dynamic>));
+        }
+      }
+    }
+    return (_pipelines.switchOnJs as JSObject)
+        .callMethodVarArgs<interop.ExpressionJsImpl>(
+      'apply'.toJS,
+      [_pipelines, allArgs.toJS],
+    );
   }
 
   // ── Boolean expressions ───────────────────────────────────────────────────
@@ -401,6 +516,7 @@ class PipelineExpressionParserWeb {
       case 'and':
       case 'or':
       case 'xor':
+      case 'nor':
         final exprMaps = argsMap['expressions'] as List<dynamic>?;
         if (exprMaps == null || exprMaps.isEmpty) return null;
         final exprs = exprMaps
@@ -414,8 +530,10 @@ class PipelineExpressionParserWeb {
             result = _pipelines.and(result, exprs[i]);
           } else if (name == 'or') {
             result = _pipelines.or(result, exprs[i]);
-          } else {
+          } else if (name == 'xor') {
             result = _pipelines.xor(result, exprs[i]);
+          } else {
+            result = _pipelines.nor(result, exprs[i]);
           }
         }
         return result;
