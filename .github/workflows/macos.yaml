@@ -1,7 +1,7 @@
 name: e2e-macOS
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}-macos
   cancel-in-progress: true
 
 on:
@@ -23,6 +23,7 @@ on:
       - '!**/example/integration_test/**'
       - '**/flutterfire_ui/**'
       - '**.md'
+  workflow_call:
 
 jobs:
   macos:
