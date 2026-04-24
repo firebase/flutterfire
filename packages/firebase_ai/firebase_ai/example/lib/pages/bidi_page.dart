@@ -14,9 +14,9 @@
 import 'dart:async';
 import 'dart:developer' as developer;
 import 'package:flutter/foundation.dart';
-
 import 'package:flutter/material.dart';
 import 'package:firebase_ai/firebase_ai.dart';
+import 'package:waveform_flutter/waveform_flutter.dart';
 
 import '../utils/audio_input.dart';
 import '../utils/audio_output.dart';
@@ -25,79 +25,31 @@ import '../widgets/message_widget.dart';
 import '../widgets/audio_visualizer.dart';
 import '../widgets/camera_previews.dart';
 
-class BidiPage extends StatefulWidget {
-  const BidiPage({
-    super.key,
-    required this.title,
-    required this.model,
-    required this.useVertexBackend,
-  });
-
-  final String title;
-  final GenerativeModel model;
-  final bool useVertexBackend;
-
-  @override
-  State<BidiPage> createState() => _BidiPageState();
-}
-
-class LightControl {
-  final int? brightness;
-  final String? colorTemperature;
-
-  LightControl({this.brightness, this.colorTemperature});
-}
-
-class _BidiPageState extends State<BidiPage> {
-  final ScrollController _scrollController = ScrollController();
-  final TextEditingController _textController = TextEditingController();
-  final FocusNode _textFieldFocus = FocusNode();
-  final List<MessageData> _messages = <MessageData>[];
-  bool _loading = false;
-  bool _sessionOpening = false;
-  bool _recording = false;
-  late LiveGenerativeModel _liveModel;
-  late LiveSession _session;
+// ============================================================================
+// MEDIA MANAGER
+// Isolates Audio and Video hardware stream setup, start, stop, and cleanup.
+// ============================================================================
+class BidiMediaManager {
   final AudioOutput _audioOutput = AudioOutput();
   final AudioInput _audioInput = AudioInput();
   final VideoInput _videoInput = VideoInput();
+
   StreamSubscription? _audioSubscription;
-  int? _inputTranscriptionMessageIndex;
-  int? _outputTranscriptionMessageIndex;
-  bool _isCameraOn = false;
-  bool _videoIsInitialized = false;
+  StreamSubscription? _videoSubscription;
 
-  @override
-  void initState() {
-    super.initState();
+  bool videoIsInitialized = false;
 
-    final config = LiveGenerationConfig(
-      speechConfig: SpeechConfig(voiceName: 'Fenrir'),
-      responseModalities: [
-        ResponseModalities.audio,
-      ],
-      inputAudioTranscription: AudioTranscriptionConfig(),
-      outputAudioTranscription: AudioTranscriptionConfig(),
-    );
+  // Expose hardware state/streams to the Controller and UI
+  Stream<Amplitude>? get amplitudeStream => _audioInput.amplitudeStream;
+  dynamic get cameraController => _videoInput.cameraController;
+  String? get selectedCameraId => _videoInput.selectedCameraId;
+  bool get controllerInitialized => _videoInput.controllerInitialized;
 
-    _liveModel = widget.useVertexBackend
-        ? FirebaseAI.vertexAI().liveGenerativeModel(
-            model: 'gemini-live-2.5-flash-preview-native-audio-09-2025',
-            liveGenerationConfig: config,
-            tools: [
-              Tool.functionDeclarations([lightControlTool]),
-            ],
-          )
-        : FirebaseAI.googleAI().liveGenerativeModel(
-            model: 'gemini-2.5-flash-native-audio-preview-09-2025',
-            liveGenerationConfig: config,
-            tools: [
-              Tool.functionDeclarations([lightControlTool]),
-            ],
-          );
+  void setMacOSController(dynamic controller) {
+    _videoInput.setMacOSController(controller);
   }
 
-  Future<void> _initAudio() async {
+  Future<void> init() async {
     try {
       await _audioOutput.init();
     } catch (e) {
@@ -109,382 +61,353 @@ class _BidiPageState extends State<BidiPage> {
     } catch (e) {
       developer.log('Audio Input init error: $e');
     }
-  }
 
-  Future<void> _initVideo() async {
     try {
       await _videoInput.init();
-      setState(() {
-        _videoIsInitialized = true;
-      });
+      videoIsInitialized = true;
     } catch (e) {
       developer.log('Error during video initialization: $e');
     }
   }
 
-  void _scrollDown() {
-    if (!_scrollController.hasClients) return;
-
-    _scrollController.jumpTo(
-      _scrollController.position.maxScrollExtent,
-    );
-  }
-
-  @override
-  void dispose() {
-    if (_sessionOpening) {
-      _sessionOpening = false;
-      _session.close();
-    }
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (_isCameraOn)
-            Container(
-              height: 200,
-              color: Colors.black,
-              alignment: Alignment.center,
-              child: (!kIsWeb && defaultTargetPlatform == TargetPlatform.macOS)
-                  ? FullCameraPreview(
-                      controller: _videoInput.cameraController,
-                      deviceId: _videoInput.selectedCameraId,
-                      onInitialized: (controller) {
-                        // This is where the controller actually gets born on macOS
-                        _videoInput.setMacOSController(controller);
-                      },
-                    )
-                  : (_videoInput.cameraController != null &&
-                          _videoInput.controllerInitialized)
-                      ? FullCameraPreview(
-                          controller: _videoInput.cameraController,
-                          deviceId: _videoInput.selectedCameraId,
-                          onInitialized: (controller) {
-                            // Web/Mobile callback (often unused if controller passed in)
-                          },
-                        )
-                      : const Center(child: CircularProgressIndicator()),
-            ),
-          Expanded(
-            child: ListView.builder(
-              controller: _scrollController,
-              itemBuilder: (context, idx) {
-                return MessageWidget(
-                  text: _messages[idx].text,
-                  image: _messages[idx].imageBytes != null
-                      ? Image.memory(
-                          _messages[idx].imageBytes!,
-                          cacheWidth: 400,
-                          cacheHeight: 400,
-                        )
-                      : null,
-                  isFromUser: _messages[idx].fromUser ?? false,
-                  isThought: _messages[idx].isThought,
-                );
-              },
-              itemCount: _messages.length,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              vertical: 25,
-              horizontal: 15,
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    focusNode: _textFieldFocus,
-                    controller: _textController,
-                    onSubmitted: _sendTextPrompt,
-                  ),
-                ),
-                const SizedBox.square(
-                  dimension: 15,
-                ),
-                AudioVisualizer(
-                  audioStreamIsActive: _recording,
-                  amplitudeStream: _audioInput.amplitudeStream,
-                ),
-                const SizedBox.square(
-                  dimension: 15,
-                ),
-                IconButton(
-                  tooltip: 'Start Streaming',
-                  onPressed: !_loading
-                      ? () async {
-                          await _setupSession();
-                        }
-                      : null,
-                  icon: Icon(
-                    Icons.network_wifi,
-                    color: _sessionOpening
-                        ? Theme.of(context).colorScheme.secondary
-                        : Theme.of(context).colorScheme.primary,
-                  ),
-                ),
-                IconButton(
-                  tooltip: 'Send Stream Message',
-                  onPressed: !_loading
-                      ? () async {
-                          if (_recording) {
-                            await _stopRecording();
-                          } else {
-                            await _startRecording();
-                          }
-                        }
-                      : null,
-                  icon: Icon(
-                    _recording ? Icons.stop : Icons.mic,
-                    color: _loading
-                        ? Theme.of(context).colorScheme.secondary
-                        : Theme.of(context).colorScheme.primary,
-                  ),
-                ),
-                IconButton(
-                  tooltip: 'Toggle Camera',
-                  onPressed: _isCameraOn ? _stopVideoStream : _startVideoStream,
-                  icon: Icon(
-                    _isCameraOn ? Icons.videocam_off : Icons.videocam,
-                    color: _loading
-                        ? Theme.of(context).colorScheme.secondary
-                        : Theme.of(context).colorScheme.primary,
-                  ),
-                ),
-                if (!_loading)
-                  IconButton(
-                    onPressed: () async {
-                      await _sendTextPrompt(_textController.text);
-                    },
-                    icon: Icon(
-                      Icons.send,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  )
-                else
-                  const CircularProgressIndicator(),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  final lightControlTool = FunctionDeclaration(
-    'setLightValues',
-    'Set the brightness and color temperature of a room light.',
-    parameters: {
-      'brightness': Schema.integer(
-        description: 'Light level from 0 to 100. '
-            'Zero is off and 100 is full brightness.',
-      ),
-      'colorTemperature': Schema.string(
-        description: 'Color temperature of the light fixture, '
-            'which can be `daylight`, `cool` or `warm`.',
-      ),
-    },
-  );
-
-  Future<Map<String, Object?>> _setLightValues({
-    int? brightness,
-    String? colorTemperature,
-  }) async {
-    final apiResponse = {
-      'colorTemprature': 'warm',
-      'brightness': brightness,
-    };
-    return apiResponse;
-  }
-
-  Future<void> _setupSession() async {
-    setState(() {
-      _loading = true;
-    });
-    await _initAudio();
-
-    try {
-      if (!_videoIsInitialized) {
-        await _initVideo();
-      } else {
-        await _videoInput.initializeCameraController();
-      }
-    } catch (e) {
-      developer.log('Video Hardware init error: $e');
-    }
-
-    if (!_sessionOpening) {
-      _session = await _liveModel.connect();
-      _sessionOpening = true;
-      unawaited(
-        _processMessagesContinuously(),
-      );
-    } else {
-      await _session.close();
-      _sessionOpening = false;
-    }
-
-    setState(() {
-      _loading = false;
-    });
-  }
-
-  Future<void> _startRecording() async {
-    await _audioSubscription?.cancel();
-    _audioSubscription = null;
-    setState(() {
-      _recording = true;
-    });
+  Future<void> startAudio(void Function(Uint8List) onData) async {
+    await stopAudio();
     try {
       var inputStream = await _audioInput.startRecordingStream();
       await _audioOutput.playStream();
       if (inputStream != null) {
         _audioSubscription = inputStream.listen(
-          (data) {
-            _session.sendAudioRealtime(InlineDataPart('audio/pcm', data));
-          },
+          onData,
           onError: (e) {
             developer.log('Audio Stream Error: $e');
-            _stopRecording();
+            stopAudio();
           },
           cancelOnError: true,
         );
       }
     } catch (e) {
-      developer.log('bidi_page._startRecording(): $e');
-      _showError('bidi_page._startRecording(): $e');
-      setState(() => _recording = false);
+      developer.log('BidiMediaManager.startAudio(): $e');
+      rethrow;
     }
   }
 
-  Future<void> _stopRecording() async {
+  Future<void> stopAudio() async {
     await _audioSubscription?.cancel();
     _audioSubscription = null;
-    try {
-      await _audioInput.stopRecording();
-    } catch (e) {
-      _showError(e.toString());
-    }
-
-    setState(() {
-      _recording = false;
-    });
+    await _audioInput.stopRecording();
   }
 
-  Future<void> _startVideoStream() async {
-    // 1. Re-entry Guard: Prevent multiple clicks while switching
-    if (_loading || !_videoIsInitialized) return;
+  Future<void> startVideo(void Function(Uint8List, String) onData) async {
+    if (!videoIsInitialized) return;
 
-    // 2. Capture the current recording state
-    bool wasRecording = _recording;
+    if (!_videoInput.controllerInitialized ||
+        _videoInput.cameraController == null) {
+      await _videoInput.initializeCameraController();
+    }
 
-    setState(() {
-      _loading = true; // Lock the UI during the switch
-    });
+    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.macOS) {
+      int attempts = 0;
+      while (_videoInput.cameraController == null) {
+        if (attempts > 50) {
+          developer.log(
+            'BidiMediaManager.startVideo(): macOS camera controller initialization timed out after 50 attempts.',
+          );
+          break; // 5 second timeout safety
+        }
+        await Future.delayed(const Duration(milliseconds: 100));
+        attempts++;
+      }
+    }
+
+    // Wait for Mac Camera to Settle (Prevent audio hijack)
+    await Future.delayed(const Duration(milliseconds: 1000));
+
+    _videoSubscription = _videoInput.startStreamingImages().listen(
+      (data) {
+        String mimeType = 'image/jpeg';
+        if (!kIsWeb && defaultTargetPlatform == TargetPlatform.macOS) {
+          if (data.length > 3 && data[0] == 0x89 && data[1] == 0x50) {
+            mimeType = 'image/png';
+          }
+        }
+        onData(data, mimeType);
+      },
+      onError: (e) => developer.log('Video Stream Error: $e'),
+    );
+  }
+
+  Future<void> stopVideo() async {
+    await _videoSubscription?.cancel();
+    _videoSubscription = null;
+    await _videoInput.stopStreamingImages();
+  }
+
+  void playAudioChunk(Uint8List bytes) {
+    _audioOutput.addDataToAudioStream(bytes);
+  }
+}
+
+// ============================================================================
+// BIDI SESSION CONTROLLER
+// Isolates business logic, session start/stop, reconnection, and tool execution.
+// ============================================================================
+class BidiSessionController extends ChangeNotifier {
+  BidiSessionController({
+    required this.model,
+    required this.useVertexBackend,
+    this.onShowError,
+    this.onScrollDown,
+  }) {
+    _initLiveModel();
+  }
+
+  final GenerativeModel model;
+  final bool useVertexBackend;
+  final void Function(String)? onShowError;
+  final VoidCallback? onScrollDown;
+
+  late LiveGenerativeModel _liveModel;
+  LiveSession? _session;
+  final BidiMediaManager mediaManager = BidiMediaManager();
+
+  bool isLoading = false;
+  bool isSessionActive = false;
+  bool isMicOn = false;
+  bool isCameraOn = false;
+
+  // Intention state for robust stream reconnection
+  bool _intendedMicOn = false;
+  bool _intendedCameraOn = false;
+
+  final List<MessageData> messages = [];
+  String? _activeSessionHandle;
+  int? _inputTranscriptionMessageIndex;
+  int? _outputTranscriptionMessageIndex;
+
+  void _initLiveModel() {
+    final config = LiveGenerationConfig(
+      speechConfig: SpeechConfig(voiceName: 'Fenrir'),
+      responseModalities: [ResponseModalities.audio],
+      inputAudioTranscription: AudioTranscriptionConfig(),
+      outputAudioTranscription: AudioTranscriptionConfig(),
+    );
+
+    final tools = [
+      Tool.functionDeclarations([_lightControlTool]),
+      Tool.googleSearch(),
+    ];
+
+    _liveModel = useVertexBackend
+        ? FirebaseAI.vertexAI().liveGenerativeModel(
+            model: 'gemini-live-2.5-flash-preview-native-audio-09-2025',
+            liveGenerationConfig: config,
+            tools: tools,
+          )
+        : FirebaseAI.googleAI().liveGenerativeModel(
+            model: 'gemini-2.5-flash-native-audio-preview-09-2025',
+            liveGenerationConfig: config,
+            tools: tools,
+          );
+  }
+
+  Future<void> initialize() async {
+    isLoading = true;
+    notifyListeners();
+    await mediaManager.init();
+    isLoading = false;
+    notifyListeners();
+  }
+
+  Future<void> toggleSession() async {
+    if (isSessionActive) {
+      await _stopSession(explicit: true);
+    } else {
+      await _startSession(explicit: true);
+    }
+  }
+
+  Future<void> _startSession({required bool explicit}) async {
+    isLoading = true;
+    notifyListeners();
 
     try {
-      if (wasRecording) {
-        await _stopRecording();
-      }
-
-      // 4. Wait for ripple/UI (Prevent freeze)
-      await Future.delayed(const Duration(milliseconds: 250));
-
-      // 5. Initialize Camera if needed
-      if (!_videoInput.controllerInitialized ||
-          _videoInput.cameraController == null) {
-        await _videoInput.initializeCameraController();
-      }
-
-      // 6. Mount Camera UI
-      setState(() {
-        _isCameraOn = true;
-      });
-
-      if (!kIsWeb && defaultTargetPlatform == TargetPlatform.macOS) {
-        // ✅ Because we set _cameraController to null in stopStreamingImages,
-        // this loop will now CORRECTLY wait for the new View to initialize.
-        int attempts = 0;
-        while (_videoInput.cameraController == null) {
-          if (attempts > 50) break; // 5 second timeout safety
-          await Future.delayed(const Duration(milliseconds: 100));
-          attempts++;
-        }
-      }
-
-      // 7. Wait for Mac Camera to Settle (Prevent audio hijack)
-      await Future.delayed(const Duration(milliseconds: 1000));
-
-      // 8. CLEAN RESTART: Use the helper method!
-      // Only restart if we were recording before.
-      if (wasRecording) {
-        developer.log('Resuming audio session...');
-        await _startRecording();
-      }
-
-      // 9. Start Video Stream
-      _videoInput.startStreamingImages().listen(
-        (data) {
-          String mimeType = 'image/jpeg';
-          if (!kIsWeb && defaultTargetPlatform == TargetPlatform.macOS) {
-            if (data.length > 3 && data[0] == 0x89 && data[1] == 0x50) {
-              mimeType = 'image/png';
-            }
-          }
-          _session.sendVideoRealtime(InlineDataPart(mimeType, data));
-        },
-        onError: (e) => developer.log('Video Stream Error: $e'),
+      _session = await _liveModel.connect(
+        sessionResumption:
+            SessionResumptionConfig(handle: _activeSessionHandle),
       );
+    } on Exception catch (e) {
+      developer.log(
+        'Error setting up session with handle $_activeSessionHandle, error: $e, starting a new one.',
+      );
+      _session = await _liveModel.connect();
+    }
+
+    isSessionActive = true;
+    unawaited(_processMessagesContinuously());
+
+    if (explicit) {
+      // Reconnect previously active hardware seamlessly into the new session
+      if (_intendedMicOn) await _startMicStream();
+      if (_intendedCameraOn) await _startCameraStream();
+    }
+
+    isLoading = false;
+    notifyListeners();
+  }
+
+  Future<void> _stopSession({required bool explicit}) async {
+    isLoading = true;
+    notifyListeners();
+
+    if (explicit) {
+      await mediaManager.stopAudio();
+      await mediaManager.stopVideo();
+      isMicOn = false;
+      isCameraOn = false;
+      // We purposefully DO NOT reset _intendedMicOn/CameraOn so we know what
+      // the user had active when they reconnect!
+    }
+
+    await _session?.close();
+    _session = null;
+    isSessionActive = false;
+
+    isLoading = false;
+    notifyListeners();
+  }
+
+  Future<void> _sessionResume() async {
+    if (isSessionActive) {
+      await _stopSession(explicit: false);
+      await _startSession(explicit: false);
+    }
+  }
+
+  Future<void> _onAudioData(Uint8List data) async {
+    if (isSessionActive && _session != null) {
+      try {
+        await _session!.sendAudioRealtime(InlineDataPart('audio/pcm', data));
+      } catch (e) {
+        developer.log('Error sending audio realtime: $e');
+        // If we hit a closed socket, stop trying to send until reconnected
+        isMicOn = false;
+        notifyListeners();
+      }
+    }
+  }
+
+  Future<void> _onVideoData(Uint8List data, String mimeType) async {
+    if (isSessionActive && _session != null) {
+      try {
+        await _session!.sendVideoRealtime(InlineDataPart(mimeType, data));
+      } catch (e) {
+        developer.log('Error sending video realtime: $e');
+      }
+    }
+  }
+
+  Future<void> toggleMic() async {
+    _intendedMicOn = !_intendedMicOn;
+    if (_intendedMicOn) {
+      await _startMicStream();
+    } else {
+      await mediaManager.stopAudio();
+      isMicOn = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> _startMicStream() async {
+    if (!isSessionActive) {
+      isMicOn = true;
+      notifyListeners();
+      return;
+    }
+    try {
+      await mediaManager.startAudio(_onAudioData);
+      isMicOn = true;
+      notifyListeners();
+    } catch (e) {
+      onShowError?.call(e.toString());
+      isMicOn = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> _startCameraStream() async {
+    if (!isSessionActive) {
+      isCameraOn = true;
+      notifyListeners();
+      return;
+    }
+    try {
+      await mediaManager.startVideo(_onVideoData);
+      isCameraOn = true;
+      notifyListeners();
+    } catch (e) {
+      developer.log('Error starting video stream: $e');
+      onShowError?.call(e.toString());
+      isCameraOn = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> toggleCamera() async {
+    if (isLoading) return; // Prevent multiple clicks
+    _intendedCameraOn = !_intendedCameraOn;
+
+    isLoading = true;
+    notifyListeners();
+
+    try {
+      if (!_intendedCameraOn) {
+        await mediaManager.stopVideo();
+        isCameraOn = false;
+      } else {
+        // Stop audio momentarily to prevent hijacking (Mac quirk workaround)
+        bool wasMicOn = isMicOn;
+        if (wasMicOn) await mediaManager.stopAudio();
+
+        await Future.delayed(const Duration(milliseconds: 250));
+
+        await _startCameraStream();
+
+        // Restart Audio
+        if (wasMicOn) await _startMicStream();
+      }
     } catch (e) {
       developer.log('Error switching to video: $e');
-      _showError(e.toString());
+      onShowError?.call(e.toString());
+      isCameraOn = false;
     } finally {
-      // 10. Always unlock the UI
-      setState(() {
-        _loading = false;
-      });
+      isLoading = false;
+      notifyListeners();
     }
   }
 
-  Future<void> _stopVideoStream() async {
-    await _videoInput.stopStreamingImages();
-    setState(() {
-      _isCameraOn = false;
-    });
-  }
+  Future<void> sendTextPrompt(String textPrompt) async {
+    if (!isSessionActive || _session == null) return;
+    isLoading = true;
+    notifyListeners();
 
-  Future<void> _sendTextPrompt(String textPrompt) async {
-    setState(() {
-      _loading = true;
-    });
     try {
-      //final prompt = Content.text(textPrompt);
-      // await _session.send(input: prompt, turnComplete: true);
-      await _session.sendTextRealtime(textPrompt);
+      await _session!.sendTextRealtime(textPrompt);
     } catch (e) {
-      _showError(e.toString());
+      onShowError?.call(e.toString());
     }
 
-    setState(() {
-      _loading = false;
-    });
+    isLoading = false;
+    notifyListeners();
   }
 
   Future<void> _processMessagesContinuously() async {
+    if (_session == null) return;
     try {
-      await for (final message in _session.receive()) {
-        if (!mounted) break;
+      await for (final message in _session!.receive()) {
         await _handleLiveServerMessage(message);
       }
     } catch (e) {
-      _showError(e.toString());
+      onShowError?.call(e.toString());
     }
   }
 
@@ -494,40 +417,6 @@ class _BidiPageState extends State<BidiPage> {
     if (message is LiveServerContent) {
       if (message.modelTurn != null) {
         await _handleLiveServerContent(message);
-      }
-
-      int? _handleTranscription(
-        Transcription? transcription,
-        int? messageIndex,
-        String prefix,
-        bool fromUser,
-      ) {
-        int? currentIndex = messageIndex;
-        if (transcription?.text != null) {
-          if (currentIndex != null) {
-            _messages[currentIndex] = _messages[currentIndex].copyWith(
-              text: '${_messages[currentIndex].text}${transcription!.text!}',
-            );
-          } else {
-            _messages.add(
-              MessageData(
-                text: '$prefix${transcription!.text!}',
-                fromUser: fromUser,
-              ),
-            );
-            currentIndex = _messages.length - 1;
-          }
-          if (transcription.finished ?? false) {
-            currentIndex = null;
-            setState(_scrollDown);
-          } else {
-            // Use a scheduled frame instead of an immediate setState
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              if (mounted) setState(() {});
-            });
-          }
-        }
-        return currentIndex;
       }
 
       _inputTranscriptionMessageIndex = _handleTranscription(
@@ -549,8 +438,46 @@ class _BidiPageState extends State<BidiPage> {
     } else if (message is LiveServerToolCall && message.functionCalls != null) {
       await _handleLiveServerToolCall(message);
     } else if (message is GoingAwayNotice) {
-      developer.log('Session is going away in ${message.timeLeft} seconds');
+      if (_activeSessionHandle != null) {
+        unawaited(_sessionResume());
+      }
+    } else if (message is SessionResumptionUpdate &&
+        message.resumable != null &&
+        message.resumable!) {
+      _activeSessionHandle = message.newHandle;
     }
+  }
+
+  int? _handleTranscription(
+    Transcription? transcription,
+    int? messageIndex,
+    String prefix,
+    bool fromUser,
+  ) {
+    int? currentIndex = messageIndex;
+    if (transcription?.text != null) {
+      if (currentIndex != null) {
+        messages[currentIndex] = messages[currentIndex].copyWith(
+          text: '${messages[currentIndex].text}${transcription!.text!}',
+        );
+      } else {
+        messages.add(
+          MessageData(
+            text: '$prefix${transcription!.text!}',
+            fromUser: fromUser,
+          ),
+        );
+        currentIndex = messages.length - 1;
+      }
+
+      if (transcription.finished ?? false) {
+        currentIndex = null;
+        onScrollDown?.call();
+      } else {
+        notifyListeners(); // Trigger UI rebuild for streaming text
+      }
+    }
+    return currentIndex;
   }
 
   Future<void> _handleLiveServerContent(LiveServerContent response) async {
@@ -558,38 +485,23 @@ class _BidiPageState extends State<BidiPage> {
     if (partList != null) {
       for (final part in partList) {
         if (part is TextPart) {
-          await _handleTextPart(part);
+          messages.add(
+            MessageData(
+              text: part.text,
+              fromUser: false,
+              isThought: part.isThought ?? false,
+            ),
+          );
+          onScrollDown?.call();
+          notifyListeners();
         } else if (part is InlineDataPart) {
-          await _handleInlineDataPart(part);
+          if (part.mimeType.startsWith('audio')) {
+            mediaManager.playAudioChunk(part.bytes);
+          }
         } else {
           developer.log('receive part with type ${part.runtimeType}');
         }
       }
-    }
-  }
-
-  Future<void> _handleTextPart(TextPart part) async {
-    if (!_loading) {
-      setState(() {
-        _loading = true;
-      });
-    }
-    _messages.add(
-      MessageData(
-        text: part.text,
-        fromUser: false,
-        isThought: part.isThought ?? false,
-      ),
-    );
-    setState(() {
-      _loading = false;
-      _scrollDown();
-    });
-  }
-
-  Future<void> _handleInlineDataPart(InlineDataPart part) async {
-    if (part.mimeType.startsWith('audio')) {
-      _audioOutput.addDataToAudioStream(part.bytes);
     }
   }
 
@@ -600,11 +512,15 @@ class _BidiPageState extends State<BidiPage> {
       if (functionCall.name == 'setLightValues') {
         var color = functionCall.args['colorTemperature']! as String;
         var brightness = functionCall.args['brightness']! as int;
-        final functionResult = await _setLightValues(
-          brightness: brightness,
-          colorTemperature: color,
-        );
-        await _session.sendToolResponse([
+
+        // Mock Tool Execution
+        final functionResult = {
+          'colorTemprature':
+              color, // original had a typo, keeping to preserve functionality intent
+          'brightness': brightness,
+        };
+
+        await _session?.sendToolResponse([
           FunctionResponse(
             functionCall.name,
             functionResult,
@@ -612,11 +528,96 @@ class _BidiPageState extends State<BidiPage> {
           ),
         ]);
       } else {
-        throw UnimplementedError(
-          'Function not declared to the model: ${functionCall.name}',
-        );
+        throw UnimplementedError('Function not declared: ${functionCall.name}');
       }
     }
+  }
+
+  void simulateGoingAway() {
+    if (isSessionActive && _session != null) {
+      developer.log('Simulating GoingAwayNotice locally');
+      _handleLiveServerMessage(
+        LiveServerResponse(message: const GoingAwayNotice(timeLeft: '10')),
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    _stopSession(explicit: true);
+    super.dispose();
+  }
+
+  static final _lightControlTool = FunctionDeclaration(
+    'setLightValues',
+    'Set the brightness and color temperature of a room light.',
+    parameters: {
+      'brightness': Schema.integer(
+        description:
+            'Light level from 0 to 100. Zero is off and 100 is full brightness.',
+      ),
+      'colorTemperature': Schema.string(
+        description:
+            'Color temperature of the light fixture, which can be `daylight`, `cool` or `warm`.',
+      ),
+    },
+  );
+}
+
+// ============================================================================
+// UI WIDGET
+// Isolates presentation, keeping state out of the visual hierarchy.
+// ============================================================================
+class BidiPage extends StatefulWidget {
+  const BidiPage({
+    super.key,
+    required this.title,
+    required this.model,
+    required this.useVertexBackend,
+  });
+
+  final String title;
+  final GenerativeModel model;
+  final bool useVertexBackend;
+
+  @override
+  State<BidiPage> createState() => _BidiPageState();
+}
+
+class _BidiPageState extends State<BidiPage> {
+  late final BidiSessionController _controller;
+  final ScrollController _scrollController = ScrollController();
+  final TextEditingController _textController = TextEditingController();
+  final FocusNode _textFieldFocus = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = BidiSessionController(
+      model: widget.model,
+      useVertexBackend: widget.useVertexBackend,
+      onShowError: _showError,
+      onScrollDown: _scrollDown,
+    );
+    _controller.initialize();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _scrollController.dispose();
+    _textController.dispose();
+    _textFieldFocus.dispose();
+    super.dispose();
+  }
+
+  void _scrollDown() {
+    if (!_scrollController.hasClients) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+      }
+    });
   }
 
   void _showError(String message) {
@@ -625,17 +626,174 @@ class _BidiPageState extends State<BidiPage> {
       builder: (context) {
         return AlertDialog(
           title: const Text('Something went wrong'),
-          content: SingleChildScrollView(
-            child: SelectableText(message),
-          ),
+          content: SingleChildScrollView(child: SelectableText(message)),
           actions: [
             TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+              onPressed: () => Navigator.of(context).pop(),
               child: const Text('OK'),
             ),
           ],
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) {
+        return Padding(
+          padding: const EdgeInsets.all(8),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Live Stream Session',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  ElevatedButton.icon(
+                    icon: const Icon(Icons.speed, size: 16),
+                    label: const Text('Simulate GoAway'),
+                    style: ElevatedButton.styleFrom(
+                      visualDensity: VisualDensity.compact,
+                    ),
+                    onPressed: _controller.isSessionActive
+                        ? () => _controller.simulateGoingAway()
+                        : null,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              if (_controller.isCameraOn)
+                Container(
+                  height: 200,
+                  color: Colors.black,
+                  alignment: Alignment.center,
+                  child: (!kIsWeb &&
+                          defaultTargetPlatform == TargetPlatform.macOS)
+                      ? FullCameraPreview(
+                          controller: _controller.mediaManager.cameraController,
+                          deviceId: _controller.mediaManager.selectedCameraId,
+                          onInitialized: (controller) {
+                            _controller.mediaManager
+                                .setMacOSController(controller);
+                          },
+                        )
+                      : (_controller.mediaManager.cameraController != null &&
+                              _controller.mediaManager.controllerInitialized)
+                          ? FullCameraPreview(
+                              controller:
+                                  _controller.mediaManager.cameraController,
+                              deviceId:
+                                  _controller.mediaManager.selectedCameraId,
+                              onInitialized: (controller) {},
+                            )
+                          : const Center(child: CircularProgressIndicator()),
+                ),
+              Expanded(
+                child: ListView.builder(
+                  controller: _scrollController,
+                  itemCount: _controller.messages.length,
+                  itemBuilder: (context, idx) {
+                    final message = _controller.messages[idx];
+                    return MessageWidget(
+                      text: message.text,
+                      image: message.imageBytes != null
+                          ? Image.memory(
+                              message.imageBytes!,
+                              cacheWidth: 400,
+                              cacheHeight: 400,
+                            )
+                          : null,
+                      isFromUser: message.fromUser ?? false,
+                      isThought: message.isThought,
+                    );
+                  },
+                ),
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 25, horizontal: 15),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        focusNode: _textFieldFocus,
+                        controller: _textController,
+                        onSubmitted: (text) {
+                          _controller.sendTextPrompt(text);
+                          _textController.clear();
+                        },
+                      ),
+                    ),
+                    const SizedBox.square(dimension: 15),
+                    AudioVisualizer(
+                      audioStreamIsActive: _controller.isMicOn,
+                      amplitudeStream: _controller.mediaManager.amplitudeStream,
+                    ),
+                    const SizedBox.square(dimension: 15),
+                    IconButton(
+                      tooltip: 'Start Streaming',
+                      onPressed: !_controller.isLoading
+                          ? () => _controller.toggleSession()
+                          : null,
+                      icon: Icon(
+                        Icons.network_wifi,
+                        color: _controller.isSessionActive
+                            ? Theme.of(context).colorScheme.secondary
+                            : Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+                    IconButton(
+                      tooltip: 'Send Stream Message',
+                      onPressed: !_controller.isLoading
+                          ? () => _controller.toggleMic()
+                          : null,
+                      icon: Icon(
+                        _controller.isMicOn ? Icons.stop : Icons.mic,
+                        color: _controller.isLoading
+                            ? Theme.of(context).colorScheme.secondary
+                            : Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+                    IconButton(
+                      tooltip: 'Toggle Camera',
+                      onPressed: !_controller.isLoading
+                          ? () => _controller.toggleCamera()
+                          : null,
+                      icon: Icon(
+                        _controller.isCameraOn
+                            ? Icons.videocam_off
+                            : Icons.videocam,
+                        color: _controller.isLoading
+                            ? Theme.of(context).colorScheme.secondary
+                            : Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+                    if (!_controller.isLoading)
+                      IconButton(
+                        tooltip: 'Send Text',
+                        onPressed: () {
+                          _controller.sendTextPrompt(_textController.text);
+                          _textController.clear();
+                        },
+                        icon: Icon(
+                          Icons.send,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                      )
+                    else
+                      const CircularProgressIndicator(),
+                  ],
+                ),
+              ),
+            ],
+          ),
         );
       },
     );
