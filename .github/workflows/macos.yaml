@@ -24,10 +24,15 @@ on:
       - '**/flutterfire_ui/**'
       - '**.md'
   workflow_call:
+    inputs:
+      skip_firestore:
+        type: boolean
+        default: false
 
 jobs:
   macos:
     runs-on: macos-15
+    if: ${{ !inputs.skip_firestore || matrix.working_directory != 'packages/cloud_firestore/cloud_firestore/example' }}
     timeout-minutes: 45
     strategy:
       fail-fast: false

@@ -24,6 +24,10 @@ on:
       - '**/flutterfire_ui/**'
       - '**.md'
   workflow_call:
+    inputs:
+      skip_firestore:
+        type: boolean
+        default: false
 
 jobs:
   windows:
@@ -62,6 +66,7 @@ jobs:
 # We cannot run the tests but we can still try to build the app because of https://github.com/flutter/flutter/issues/79213
   windows-firestore:
     runs-on: windows-latest
+    if: ${{ !inputs.skip_firestore }}
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
