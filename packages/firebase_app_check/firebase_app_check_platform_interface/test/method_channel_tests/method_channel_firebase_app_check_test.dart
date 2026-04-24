@@ -3,7 +3,10 @@
 // found in the LICENSE file.
 
 import 'package:firebase_app_check_platform_interface/firebase_app_check_platform_interface.dart';
+import 'package:firebase_app_check_platform_interface/src/pigeon/messages.pigeon.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../mock.dart';
@@ -44,5 +47,168 @@ void main() {
         expect(appCheck.setInitialValues(), appCheck);
       });
     });
+
+    group('activate() on Windows', () {
+      late BasicMessageChannel<Object?> activateChannel;
+      late List<Object?> activateMessages;
+
+      setUp(() {
+        debugDefaultTargetPlatformOverride = TargetPlatform.windows;
+        activateChannel = const BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.activate',
+          FirebaseAppCheckHostApi.pigeonChannelCodec,
+        );
+        activateMessages = <Object?>[];
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(activateChannel,
+                (Object? message) async {
+          activateMessages.add(message);
+          return <Object?>[];
+        });
+      });
+
+      tearDown(() {
+        debugDefaultTargetPlatformOverride = null;
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(activateChannel, null);
+      });
+
+      test('forwards WindowsCustomProvider over Pigeon', () async {
+        final appCheck = MethodChannelFirebaseAppCheck(app: secondaryApp);
+
+        await appCheck.activate(
+          providerWindows: const WindowsCustomProvider(),
+        );
+
+        // Android/Apple slots carry method-channel defaults even on Windows.
+        expect(activateMessages, hasLength(1));
+        expect(activateMessages.single, <Object?>[
+          'secondaryApp',
+          'playIntegrity',
+          'deviceCheck',
+          null,
+          'custom',
+        ]);
+      });
+
+      test(
+          'forwards WindowsDebugProvider with an explicit debug token over Pigeon',
+          () async {
+        final appCheck = MethodChannelFirebaseAppCheck(app: secondaryApp);
+
+        await appCheck.activate(
+          providerWindows: const WindowsDebugProvider(
+            debugToken: 'debug-token',
+          ),
+        );
+
+        expect(activateMessages, hasLength(1));
+        expect(activateMessages.single, <Object?>[
+          'secondaryApp',
+          'playIntegrity',
+          'deviceCheck',
+          'debug-token',
+          'debug',
+        ]);
+      });
+
+      test(
+          'forwards WindowsDebugProvider with no explicit token as null '
+          '(env-var fallback path)', () async {
+        final appCheck = MethodChannelFirebaseAppCheck(app: secondaryApp);
+
+        // Null debugToken triggers the native APP_CHECK_DEBUG_TOKEN fallback.
+        await appCheck.activate(
+          providerWindows: const WindowsDebugProvider(),
+        );
+
+        expect(activateMessages, hasLength(1));
+        expect(activateMessages.single, <Object?>[
+          'secondaryApp',
+          'playIntegrity',
+          'deviceCheck',
+          null,
+          'debug',
+        ]);
+      });
+    });
   });
+
+  group('$FirebaseAppCheckFlutterApi', () {
+    const BasicMessageChannel<Object?> flutterApiChannel =
+        BasicMessageChannel<Object?>(
+      'dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckFlutterApi.getCustomToken',
+      FirebaseAppCheckFlutterApi.pigeonChannelCodec,
+    );
+
+    tearDown(() {
+      FirebaseAppCheckFlutterApi.setUp(null);
+    });
+
+    test('returns CustomAppCheckToken in a success envelope', () async {
+      final token = CustomAppCheckToken(
+        token: 'app-check-token',
+        expireTimeMillis: 1735689600000,
+      );
+      FirebaseAppCheckFlutterApi.setUp(
+        _TestFirebaseAppCheckFlutterApi(
+          onGetCustomToken: () async => token,
+        ),
+      );
+
+      final replyData = await TestDefaultBinaryMessengerBinding
+          .instance.defaultBinaryMessenger
+          .handlePlatformMessage(
+        flutterApiChannel.name,
+        flutterApiChannel.codec.encodeMessage(null),
+        null,
+      );
+      final reply =
+          flutterApiChannel.codec.decodeMessage(replyData) as List<Object?>?;
+
+      expect(reply, <Object?>[token]);
+    });
+
+    test('returns a PlatformException envelope when the handler throws',
+        () async {
+      FirebaseAppCheckFlutterApi.setUp(
+        _TestFirebaseAppCheckFlutterApi(
+          onGetCustomToken: () async {
+            throw PlatformException(
+              code: 'token-error',
+              message: 'Failed to mint App Check token',
+              details: <String, String>{'source': 'test'},
+            );
+          },
+        ),
+      );
+
+      final replyData = await TestDefaultBinaryMessengerBinding
+          .instance.defaultBinaryMessenger
+          .handlePlatformMessage(
+        flutterApiChannel.name,
+        flutterApiChannel.codec.encodeMessage(null),
+        null,
+      );
+      final reply =
+          flutterApiChannel.codec.decodeMessage(replyData) as List<Object?>?;
+
+      expect(reply, <Object?>[
+        'token-error',
+        'Failed to mint App Check token',
+        <String, String>{'source': 'test'},
+      ]);
+    });
+  });
+}
+
+class _TestFirebaseAppCheckFlutterApi implements FirebaseAppCheckFlutterApi {
+  _TestFirebaseAppCheckFlutterApi({
+    required this.onGetCustomToken,
+  });
+
+  final Future<CustomAppCheckToken> Function() onGetCustomToken;
+
+  @override
+  Future<CustomAppCheckToken> getCustomToken() => onGetCustomToken();
 }

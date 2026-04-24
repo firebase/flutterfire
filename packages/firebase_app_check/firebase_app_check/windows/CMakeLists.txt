@@ -4,6 +4,53 @@
 # customers of the plugin.
 cmake_minimum_required(VERSION 3.14)
 
+set(FIREBASE_SDK_VERSION "13.5.0")
+
+if(EXISTS $ENV{FIREBASE_CPP_SDK_DIR}/include/firebase/version.h)
+    file(READ "$ENV{FIREBASE_CPP_SDK_DIR}/include/firebase/version.h" existing_version)
+
+    string(REGEX MATCH "FIREBASE_VERSION_MAJOR ([0-9]*)" _ ${existing_version})
+    set(existing_version_major ${CMAKE_MATCH_1})
+
+    string(REGEX MATCH "FIREBASE_VERSION_MINOR ([0-9]*)" _ ${existing_version})
+    set(existing_version_minor ${CMAKE_MATCH_1})
+
+    string(REGEX MATCH "FIREBASE_VERSION_REVISION ([0-9]*)" _ ${existing_version})
+    set(existing_version_revision ${CMAKE_MATCH_1})
+
+    set(existing_version "${existing_version_major}.${existing_version_minor}.${existing_version_revision}")
+endif()
+
+if(existing_version VERSION_EQUAL FIREBASE_SDK_VERSION)
+    message(STATUS "Found Firebase SDK version ${existing_version}")
+    set(FIREBASE_CPP_SDK_DIR $ENV{FIREBASE_CPP_SDK_DIR})
+else()
+    set(firebase_sdk_url "https://dl.google.com/firebase/sdk/cpp/firebase_cpp_sdk_windows_${FIREBASE_SDK_VERSION}.zip")
+    set(firebase_sdk_filename "${CMAKE_BINARY_DIR}/firebase_cpp_sdk_windows_${FIREBASE_SDK_VERSION}.zip")
+    set(extracted_path "${CMAKE_BINARY_DIR}/extracted")
+    if(NOT EXISTS ${firebase_sdk_filename})
+        file(DOWNLOAD ${firebase_sdk_url} ${firebase_sdk_filename}
+             SHOW_PROGRESS
+             STATUS download_status
+             LOG download_log)
+        list(GET download_status 0 status_code)
+        if(NOT status_code EQUAL 0)
+            message(FATAL_ERROR "Download failed: ${download_log}")
+        endif()
+    else()
+        message(STATUS "Using cached Firebase SDK zip file")
+    endif()
+
+    if(NOT EXISTS ${extracted_path})
+        file(MAKE_DIRECTORY ${extracted_path})
+        file(ARCHIVE_EXTRACT INPUT ${firebase_sdk_filename}
+             DESTINATION ${extracted_path})
+    else()
+        message(STATUS "Using cached extracted Firebase SDK")
+    endif()
+    set(FIREBASE_CPP_SDK_DIR "${extracted_path}/firebase_cpp_sdk_windows")
+endif()
+
 # Project-level configuration.
 set(PROJECT_NAME "firebase_app_check")
 project(${PROJECT_NAME} LANGUAGES CXX)
@@ -66,6 +113,34 @@ target_compile_definitions(${PLUGIN_NAME} PRIVATE -DINTERNAL_EXPERIMENTAL=1)
 # dependencies here.
 set(MSVC_RUNTIME_MODE MD)
 set(firebase_libs firebase_core_plugin firebase_app_check)
+
+set(FLUTTERFIRE_FIREBASE_CPP_SDK_BINARY_DIR
+    "${CMAKE_BINARY_DIR}/firebase_cpp_sdk")
+if(NOT TARGET firebase_app)
+  add_subdirectory(${FIREBASE_CPP_SDK_DIR}
+    ${FLUTTERFIRE_FIREBASE_CPP_SDK_BINARY_DIR}
+    EXCLUDE_FROM_ALL)
+endif()
+
+target_include_directories(${PLUGIN_NAME} INTERFACE
+  "${FIREBASE_CPP_SDK_DIR}/include")
+
+# firebase_core rewrites the imported Firebase C++ SDK library targets so
+# multi-config generators (Visual Studio) use the Release .lib paths when
+# building Release/Profile. Without this, firebase_app_check can end up linking
+# the Debug firebase_app_check.lib into a Release runner, which pulls in debug
+# CRT symbols and fails at link time.
+get_target_property(firebase_app_check_debug_path firebase_app_check IMPORTED_LOCATION)
+if(firebase_app_check_debug_path)
+  string(REPLACE "Debug" "Release" firebase_app_check_release_path
+         ${firebase_app_check_debug_path})
+  set_target_properties(firebase_app_check PROPERTIES
+    IMPORTED_LOCATION_DEBUG "${firebase_app_check_debug_path}"
+    IMPORTED_LOCATION_RELEASE "${firebase_app_check_release_path}"
+    IMPORTED_LOCATION_PROFILE "${firebase_app_check_release_path}"
+  )
+endif()
+
 target_link_libraries(${PLUGIN_NAME} PRIVATE "${firebase_libs}")
 
 target_include_directories(${PLUGIN_NAME} INTERFACE

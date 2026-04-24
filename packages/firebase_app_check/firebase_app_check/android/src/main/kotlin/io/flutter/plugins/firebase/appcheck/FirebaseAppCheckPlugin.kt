@@ -55,6 +55,7 @@ class FirebaseAppCheckPlugin :
     androidProvider: String?,
     appleProvider: String?,
     debugToken: String?,
+    windowsProvider: String?,
     callback: (Result<Unit>) -> Unit
   ) {
     try {
