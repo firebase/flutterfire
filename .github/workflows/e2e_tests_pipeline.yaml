@@ -19,6 +19,7 @@ on:
       - 'website/**'
       - '**/example/**'
       - '**.md'
+  workflow_call:
 
 permissions:
   contents: read

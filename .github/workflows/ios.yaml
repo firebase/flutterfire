@@ -23,6 +23,7 @@ on:
       - '!**/example/integration_test/**'
       - '**/flutterfire_ui/**'
       - '**.md'
+  workflow_call:
 
 jobs:
   ios:
