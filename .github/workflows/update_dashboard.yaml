@@ -1,0 +1,30 @@
+name: update-dashboard
+
+on:
+  workflow_run:
+    workflows: ["e2e-android", "e2e-iOS", "e2e-web", "e2e-macOS", "e2e-windows", "e2e-fdc", "e2e-pipeline"]
+    types:
+      - completed
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.event == 'schedule' || github.event.workflow_run.event == 'workflow_dispatch' }}
+    steps:
+      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
+      - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
+        with:
+          channel: 'stable'
+      - name: Update Dashboard Issue
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WORKFLOW_NAME: ${{ github.event.workflow_run.name }}
+          STATUS: ${{ github.event.workflow_run.conclusion }}
+          RUN_ID: ${{ github.event.workflow_run.id }}
+          REPO: ${{ github.repository }}
+        run: |
+          dart .github/workflows/scripts/nightly_issue_dashboard.dart
