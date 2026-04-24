@@ -51,3 +51,26 @@ jobs:
     uses: ./.github/workflows/e2e_tests_pipeline.yaml
     if: ${{ github.event.inputs.test_mode != 'true' }}
     secrets: inherit
+
+  update-dashboard:
+    runs-on: ubuntu-latest
+    if: ${{ always() && !cancelled() }}
+    needs: [e2e-android, e2e-ios, e2e-macos, e2e-web, e2e-windows, e2e-fdc, e2e-pipeline]
+    steps:
+      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
+      - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
+        with:
+          channel: 'stable'
+      - name: Update Dashboard Issue
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ANDROID_STATUS: ${{ needs.e2e-android.result }}
+          IOS_STATUS: ${{ needs.e2e-ios.result }}
+          MACOS_STATUS: ${{ needs.e2e-macos.result }}
+          WEB_STATUS: ${{ needs.e2e-web.result }}
+          WINDOWS_STATUS: ${{ needs.e2e-windows.result }}
+          FDC_STATUS: ${{ needs.e2e-fdc.result }}
+          PIPELINE_STATUS: ${{ needs.e2e-pipeline.result }}
+          REPO: ${{ github.repository }}
+        run: |
+          dart .github/workflows/scripts/nightly_issue_dashboard.dart

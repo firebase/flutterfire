@@ -19,19 +19,37 @@ void main() async {
   final env = Platform.environment;
   final token = env['GITHUB_TOKEN'];
   final repo = env['REPO'];
-  final workflowName = env['WORKFLOW_NAME'];
-  final status = env['STATUS'];
-  final runId = env['RUN_ID'];
+  final androidStatus = env['ANDROID_STATUS'] ?? 'skipped';
+  final webStatus = env['WEB_STATUS'] ?? 'skipped';
+  final iosStatus = env['IOS_STATUS'] ?? 'skipped';
+  final macosStatus = env['MACOS_STATUS'] ?? 'skipped';
+  final windowsStatus = env['WINDOWS_STATUS'] ?? 'skipped';
+  final fdcStatus = env['FDC_STATUS'] ?? 'skipped';
+  final pipelineStatus = env['PIPELINE_STATUS'] ?? 'skipped';
+  final runId = env['GITHUB_RUN_ID'];
   final serverUrl = env['GITHUB_SERVER_URL'] ?? 'https://github.com';
 
-  if (token == null || repo == null || workflowName == null || status == null) {
-    print('Error: Required environment variables not set.');
+  if (token == null || repo == null) {
+    print('Error: GITHUB_TOKEN or REPO environment variables not set.');
     exit(1);
   }
 
   final date = DateTime.now().toUtc().toString().substring(0, 10);
   final runUrl = '$serverUrl/$repo/actions/runs/$runId';
-  final statusIcon = _getIcon(status);
+  final notes = '[View Run]($runUrl)';
+
+  final androidIcon = _getIcon(androidStatus);
+  final webIcon = _getIcon(webStatus);
+  final iosIcon = _getIcon(iosStatus);
+  final macosIcon = _getIcon(macosStatus);
+  final windowsIcon = _getIcon(windowsStatus);
+  final fdcIcon = _getIcon(fdcStatus);
+  final pipelineIcon = _getIcon(pipelineStatus);
+
+  final newRow =
+      '| $date | $androidIcon | $iosIcon | $webIcon | $macosIcon | $windowsIcon | $fdcIcon | $pipelineIcon | $notes |';
+
+  print('New Row: $newRow');
 
   final client = HttpClient();
   try {
@@ -39,10 +57,10 @@ void main() async {
 
     if (issueNumber == null) {
       print('Issue not found. Creating a new one.');
-      await _createIssue(client, token, repo, date, workflowName, statusIcon, runUrl);
+      await _createIssue(client, token, repo, newRow);
     } else {
       print('Found issue #$issueNumber. Updating.');
-      await _updateIssue(client, token, repo, issueNumber, date, workflowName, statusIcon, runUrl);
+      await _updateIssue(client, token, repo, issueNumber, newRow);
     }
   } finally {
     client.close();
@@ -64,29 +82,10 @@ String _getIcon(String status) {
   }
 }
 
-int _getColumnIndex(String workflowName) {
-  switch (workflowName) {
-    case 'e2e-android':
-      return 1;
-    case 'e2e-iOS':
-      return 2;
-    case 'e2e-web':
-      return 3;
-    case 'e2e-macOS':
-      return 4;
-    case 'e2e-windows':
-      return 5;
-    case 'e2e-fdc':
-      return 6;
-    case 'e2e-pipeline':
-      return 7;
-    default:
-      return -1;
-  }
-}
-
 Future<int?> _findIssue(HttpClient client, String token, String repo) async {
-  final url = Uri.parse('https://api.github.com/repos/$repo/issues?labels=nightly-testing&state=open');
+  final url = Uri.parse(
+    'https://api.github.com/repos/$repo/issues?labels=nightly-testing&state=open',
+  );
   final request = await client.getUrl(url);
   _addHeaders(request, token);
 
@@ -107,31 +106,27 @@ Future<int?> _findIssue(HttpClient client, String token, String repo) async {
   return null;
 }
 
-Future<void> _createIssue(HttpClient client, String token, String repo, String date, String workflowName, String statusIcon, String runUrl) async {
+Future<void> _createIssue(
+  HttpClient client,
+  String token,
+  String repo,
+  String newRow,
+) async {
   final url = Uri.parse('https://api.github.com/repos/$repo/issues');
   final request = await client.postUrl(url);
   _addHeaders(request, token);
 
-  final colIndex = _getColumnIndex(workflowName);
-  final rowData = List.filled(9, '➖ Skipped');
-  rowData[0] = date;
-  if (colIndex != -1) {
-    rowData[colIndex] = statusIcon;
-  }
-  rowData[8] = '[View Run]($runUrl)';
-
-  final newRow = '| ${rowData.join(' | ')} |';
-
   final body = {
     'title': '[FlutterFire] Nightly Integration Testing Report',
     'labels': ['nightly-testing'],
-    'body': '''
+    'body':
+        '''
 ## Testing History (last 30 days)
 
 | Date | Android | iOS | Web | MacOS | Windows | FDC | Pipeline | Notes |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 $newRow
-'''
+''',
   };
 
   request.add(utf8.encode(jsonEncode(body)));
@@ -145,8 +140,16 @@ $newRow
   }
 }
 
-Future<void> _updateIssue(HttpClient client, String token, String repo, int issueNumber, String date, String workflowName, String statusIcon, String runUrl) async {
-  final getUrl = Uri.parse('https://api.github.com/repos/$repo/issues/$issueNumber');
+Future<void> _updateIssue(
+  HttpClient client,
+  String token,
+  String repo,
+  int issueNumber,
+  String newRow,
+) async {
+  final getUrl = Uri.parse(
+    'https://api.github.com/repos/$repo/issues/$issueNumber',
+  );
   final getRequest = await client.getUrl(getUrl);
   _addHeaders(getRequest, token);
 
@@ -160,9 +163,11 @@ Future<void> _updateIssue(HttpClient client, String token, String repo, int issu
   final issueJson = jsonDecode(getBody);
   String currentBody = issueJson['body'] ?? '';
 
-  final updatedBody = _updateTable(currentBody, date, workflowName, statusIcon, runUrl);
+  final updatedBody = _appendRow(currentBody, newRow);
 
-  final patchUrl = Uri.parse('https://api.github.com/repos/$repo/issues/$issueNumber');
+  final patchUrl = Uri.parse(
+    'https://api.github.com/repos/$repo/issues/$issueNumber',
+  );
   final patchRequest = await client.patchUrl(patchUrl);
   _addHeaders(patchRequest, token);
 
@@ -179,15 +184,12 @@ Future<void> _updateIssue(HttpClient client, String token, String repo, int issu
   }
 }
 
-String _updateTable(String currentBody, String date, String workflowName, String statusIcon, String runUrl) {
+String _appendRow(String currentBody, String newRow) {
   final lines = currentBody.split('\n');
   final tableRows = <String>[];
   var inTable = false;
-  var foundToday = false;
-  final colIndex = _getColumnIndex(workflowName);
 
-  for (var i = 0; i < lines.length; i++) {
-    final line = lines[i];
+  for (final line in lines) {
     if (line.startsWith('| Date |')) {
       inTable = true;
       continue;
@@ -196,32 +198,11 @@ String _updateTable(String currentBody, String date, String workflowName, String
       if (line.startsWith('| ---') || line.startsWith('| :---')) {
         continue;
       }
-      final cells = line.split('|').map((c) => c.trim()).toList();
-      if (cells.length >= 10) {
-        final rowDate = cells[1];
-        if (rowDate == date) {
-          foundToday = true;
-          if (colIndex != -1) {
-            cells[colIndex + 1] = statusIcon;
-          }
-          cells[9] = '[View Run]($runUrl)';
-          tableRows.add('| ${cells.sublist(1, 10).join(' | ')} |');
-        } else {
-          tableRows.add(line);
-        }
-      }
+      tableRows.add(line);
     }
   }
 
-  if (!foundToday) {
-    final rowData = List.filled(9, '➖ Skipped');
-    rowData[0] = date;
-    if (colIndex != -1) {
-      rowData[colIndex] = statusIcon;
-    }
-    rowData[8] = '[View Run]($runUrl)';
-    tableRows.add('| ${rowData.join(' | ')} |');
-  }
+  tableRows.add(newRow);
 
   if (tableRows.length > 30) {
     tableRows.removeRange(0, tableRows.length - 30);
@@ -233,8 +214,12 @@ String _updateTable(String currentBody, String date, String workflowName, String
   for (final line in lines) {
     if (line.startsWith('| Date |')) {
       if (!processedTable) {
-        newBodyLines.add('| Date | Android | iOS | Web | MacOS | Windows | FDC | Pipeline | Notes |');
-        newBodyLines.add('| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |');
+        newBodyLines.add(
+          '| Date | Android | iOS | Web | MacOS | Windows | FDC | Pipeline | Notes |',
+        );
+        newBodyLines.add(
+          '| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |',
+        );
         newBodyLines.addAll(tableRows);
         processedTable = true;
       }
@@ -251,15 +236,13 @@ String _updateTable(String currentBody, String date, String workflowName, String
   if (!processedTable) {
     newBodyLines.add('## Testing History (last 30 days)');
     newBodyLines.add('');
-    newBodyLines.add('| Date | Android | iOS | Web | MacOS | Windows | FDC | Pipeline | Notes |');
-    newBodyLines.add('| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |');
-    final rowData = List.filled(9, '➖ Skipped');
-    rowData[0] = date;
-    if (colIndex != -1) {
-      rowData[colIndex] = statusIcon;
-    }
-    rowData[8] = '[View Run]($runUrl)';
-    newBodyLines.add('| ${rowData.join(' | ')} |');
+    newBodyLines.add(
+      '| Date | Android | iOS | Web | MacOS | Windows | FDC | Pipeline | Notes |',
+    );
+    newBodyLines.add(
+      '| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |',
+    );
+    newBodyLines.add(newRow);
   }
 
   return newBodyLines.join('\n');
