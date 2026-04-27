@@ -59,8 +59,8 @@ public class TransactionStreamHandler implements OnTransactionResultListener, St
   }
 
   final Semaphore semaphore = new Semaphore(0);
-  private GeneratedAndroidFirebaseFirestore.PigeonTransactionResult resultType;
-  private List<GeneratedAndroidFirebaseFirestore.PigeonTransactionCommand> commands;
+  private GeneratedAndroidFirebaseFirestore.InternalTransactionResult resultType;
+  private List<GeneratedAndroidFirebaseFirestore.InternalTransactionCommand> commands;
 
   final Handler mainLooper = new Handler(Looper.getMainLooper());
 
@@ -91,11 +91,13 @@ public class TransactionStreamHandler implements OnTransactionResultListener, St
                 return FlutterFirebaseFirestoreTransactionResult.complete();
               }
 
-              if (resultType == GeneratedAndroidFirebaseFirestore.PigeonTransactionResult.FAILURE) {
+              if (resultType
+                  == GeneratedAndroidFirebaseFirestore.InternalTransactionResult.FAILURE) {
                 return FlutterFirebaseFirestoreTransactionResult.complete();
               }
 
-              for (GeneratedAndroidFirebaseFirestore.PigeonTransactionCommand command : commands) {
+              for (GeneratedAndroidFirebaseFirestore.InternalTransactionCommand command :
+                  commands) {
                 DocumentReference documentReference = firestore.document(command.getPath());
 
                 switch (command.getType()) {
@@ -129,7 +131,7 @@ public class TransactionStreamHandler implements OnTransactionResultListener, St
                     }
                   case SET:
                     {
-                      GeneratedAndroidFirebaseFirestore.PigeonDocumentOption options =
+                      GeneratedAndroidFirebaseFirestore.InternalDocumentOption options =
                           Objects.requireNonNull(command.getOption());
                       SetOptions setOptions = null;
 
@@ -187,8 +189,8 @@ public class TransactionStreamHandler implements OnTransactionResultListener, St
 
   @Override
   public void receiveTransactionResponse(
-      GeneratedAndroidFirebaseFirestore.PigeonTransactionResult resultType,
-      List<GeneratedAndroidFirebaseFirestore.PigeonTransactionCommand> commands) {
+      GeneratedAndroidFirebaseFirestore.InternalTransactionResult resultType,
+      List<GeneratedAndroidFirebaseFirestore.InternalTransactionCommand> commands) {
     this.resultType = resultType;
     this.commands = commands;
     semaphore.release();

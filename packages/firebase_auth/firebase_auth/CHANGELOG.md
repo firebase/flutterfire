@@ -1,3 +1,8 @@
+## 6.4.0
+
+ - **FIX**(auth,ios): serialize Sign in with Apple to prevent crash on overlapping requests ([#18172](https://github.com/firebase/flutterfire/issues/18172)). ([752cbcaa](https://github.com/firebase/flutterfire/commit/752cbcaa57f887a8fea3bda728bb8482290fa049))
+ - **FEAT**: use local firebase_core instead of remote SPM dependency ([#18141](https://github.com/firebase/flutterfire/issues/18141)). ([995caf40](https://github.com/firebase/flutterfire/commit/995caf400df80c0fde7151c651ccc6c0f756e381))
+
 ## 6.3.0
 
  - **FIX**(auth): fix inconsistence in casing in the native iOS SDK and Web SDK ([#18086](https://github.com/firebase/flutterfire/issues/18086)). ([60b5cd5c](https://github.com/firebase/flutterfire/commit/60b5cd5c7888fa932124958125e87bd39e1c323c))

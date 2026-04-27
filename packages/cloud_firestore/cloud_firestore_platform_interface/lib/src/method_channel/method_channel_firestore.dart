@@ -15,11 +15,12 @@ import 'package:flutter/services.dart';
 
 import 'method_channel_collection_reference.dart';
 import 'method_channel_document_reference.dart';
+import 'method_channel_pipeline.dart';
+import 'method_channel_pipeline_snapshot.dart';
 import 'method_channel_query.dart';
 import 'method_channel_transaction.dart';
 import 'method_channel_write_batch.dart';
 import 'utils/exception.dart';
-import 'utils/firestore_message_codec.dart';
 
 /// The entry point for accessing a Firestore.
 ///
@@ -37,7 +38,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   static EventChannel querySnapshotChannel(String id) {
     return EventChannel(
       'plugins.flutter.io/firebase_firestore/query/$id',
-      const StandardMethodCodec(FirestoreMessageCodec()),
+      const StandardMethodCodec(PigeonCodec()),
     );
   }
 
@@ -45,7 +46,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   static EventChannel documentSnapshotChannel(String id) {
     return EventChannel(
       'plugins.flutter.io/firebase_firestore/document/$id',
-      const StandardMethodCodec(FirestoreMessageCodec()),
+      const StandardMethodCodec(PigeonCodec()),
     );
   }
 
@@ -53,7 +54,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   static EventChannel snapshotsInSyncChannel(String id) {
     return EventChannel(
       'plugins.flutter.io/firebase_firestore/snapshotsInSync/$id',
-      const StandardMethodCodec(FirestoreMessageCodec()),
+      const StandardMethodCodec(PigeonCodec()),
     );
   }
 
@@ -61,7 +62,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   static EventChannel loadBundleChannel(String id) {
     return EventChannel(
       'plugins.flutter.io/firebase_firestore/loadBundle/$id',
-      const StandardMethodCodec(FirestoreMessageCodec()),
+      const StandardMethodCodec(PigeonCodec()),
     );
   }
 
@@ -70,7 +71,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   late final FirestorePigeonFirebaseApp pigeonApp = FirestorePigeonFirebaseApp(
     appName: appInstance!.name,
     databaseURL: databaseId,
-    settings: PigeonFirebaseSettings(
+    settings: InternalFirebaseSettings(
       persistenceEnabled: settings.persistenceEnabled,
       host: settings.host,
       sslEnabled: settings.sslEnabled,
@@ -105,7 +106,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
       final data = await pigeonChannel.namedQueryGet(
         pigeonApp,
         name,
-        PigeonGetOptions(
+        InternalGetOptions(
           source: options.source,
           serverTimestampBehavior: options.serverTimestampBehavior,
         ),
@@ -231,7 +232,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
 
     final eventChannel = EventChannel(
       'plugins.flutter.io/firebase_firestore/transaction/$transactionId',
-      const StandardMethodCodec(FirestoreMessageCodec()),
+      const StandardMethodCodec(PigeonCodec()),
     );
 
     final snapshotStreamSubscription =
@@ -274,7 +275,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
           // transaction
           await pigeonChannel.transactionStoreResult(
             transactionId,
-            PigeonTransactionResult.failure,
+            InternalTransactionResult.failure,
             null,
           );
 
@@ -288,7 +289,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
         // Send the transaction commands to Dart.
         await pigeonChannel.transactionStoreResult(
           transactionId,
-          PigeonTransactionResult.success,
+          InternalTransactionResult.success,
           transaction.commands,
         );
       },
@@ -346,6 +347,40 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
       await pigeonChannel.setLoggingEnabled(
         enabled,
       );
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
+    }
+  }
+
+  @override
+  PipelinePlatform pipeline(List<Map<String, dynamic>> initialStages) {
+    return MethodChannelPipeline(this, pigeonApp, stages: initialStages);
+  }
+
+  @override
+  Future<PipelineSnapshotPlatform> executePipeline(
+    List<Map<String, dynamic>> stages, {
+    Map<String, dynamic>? options,
+  }) async {
+    try {
+      // Convert stages to Pigeon format (List<Map<String?, Object?>?>)
+      final List<Map<String?, Object?>?> pigeonStages = stages.map((stage) {
+        return stage.map(MapEntry<String?, Object?>.new);
+      }).toList();
+
+      // Convert options to Pigeon format (Map<String?, Object?>?)
+      final Map<String?, Object?>? pigeonOptions = options?.map(
+        MapEntry<String?, Object?>.new,
+      );
+
+      final InternalPipelineSnapshot result =
+          await pigeonChannel.executePipeline(
+        pigeonApp,
+        pigeonStages,
+        pigeonOptions,
+      );
+
+      return MethodChannelPipelineSnapshot(this, pigeonApp, result);
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }

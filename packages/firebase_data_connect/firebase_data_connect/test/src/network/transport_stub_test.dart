@@ -65,6 +65,7 @@ void main() {
 
       expect(
         () async => transportStub.invokeMutation(
+          'operationId',
           'queryName',
           (json) => json,
           null,
@@ -86,6 +87,7 @@ void main() {
 
       expect(
         () async => transportStub.invokeQuery(
+          'operationId',
           'queryName',
           (json) => json,
           null,

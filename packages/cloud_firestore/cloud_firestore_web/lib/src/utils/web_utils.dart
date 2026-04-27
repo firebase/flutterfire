@@ -67,7 +67,7 @@ DocumentSnapshotPlatform convertWebDocumentSnapshot(
       )),
       firestore,
     ),
-    PigeonSnapshotMetadata(
+    InternalSnapshotMetadata(
       hasPendingWrites: webSnapshot.metadata.hasPendingWrites.toDart,
       isFromCache: webSnapshot.metadata.fromCache.toDart,
     ),

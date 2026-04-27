@@ -1,3 +1,7 @@
+## 0.1.6+7
+
+ - Update a dependency to the latest release.
+
 ## 0.1.6+6
 
  - **REFACTOR**: fix formatting and analysis issues across the repo ([#18124](https://github.com/firebase/flutterfire/issues/18124)). ([ab79fd93](https://github.com/firebase/flutterfire/commit/ab79fd93ee4ccfeb478687623134b1cf8ab71c74))

@@ -289,6 +289,13 @@ void main() {
           'HARM_CATEGORY_SEXUALLY_EXPLICIT');
       expect(HarmCategory.dangerousContent.toJson(),
           'HARM_CATEGORY_DANGEROUS_CONTENT');
+      expect(HarmCategory.imageHate.toJson(), 'HARM_CATEGORY_IMAGE_HATE');
+      expect(HarmCategory.imageDangerousContent.toJson(),
+          'HARM_CATEGORY_IMAGE_DANGEROUS_CONTENT');
+      expect(HarmCategory.imageHarassment.toJson(),
+          'HARM_CATEGORY_IMAGE_HARASSMENT');
+      expect(HarmCategory.imageSexuallyExplicit.toJson(),
+          'HARM_CATEGORY_IMAGE_SEXUALLY_EXPLICIT');
     });
 
     test('HarmProbability toJson and toString', () {
@@ -315,6 +322,7 @@ void main() {
       expect(FinishReason.recitation.toJson(), 'RECITATION');
       expect(FinishReason.malformedFunctionCall.toJson(),
           'MALFORMED_FUNCTION_CALL');
+      expect(FinishReason.unexpectedToolCall.toJson(), 'UNEXPECTED_TOOL_CALL');
       expect(FinishReason.other.toJson(), 'OTHER');
     });
 
@@ -735,6 +743,75 @@ void main() {
         expect(response.usageMetadata!.candidatesTokensDetails, hasLength(1));
       });
 
+      test('parses image harm categories in safetyRatings', () {
+        final json = {
+          'candidates': [
+            {
+              'content': {
+                'role': 'model',
+                'parts': [
+                  {'text': ''}
+                ]
+              },
+              'finishReason': 'STOP',
+              'safetyRatings': [
+                {
+                  'category': 'HARM_CATEGORY_IMAGE_DANGEROUS_CONTENT',
+                  'probability': 'NEGLIGIBLE'
+                },
+                {
+                  'category': 'HARM_CATEGORY_IMAGE_SEXUALLY_EXPLICIT',
+                  'probability': 'NEGLIGIBLE'
+                },
+                {
+                  'category': 'HARM_CATEGORY_IMAGE_HATE',
+                  'probability': 'NEGLIGIBLE'
+                },
+                {
+                  'category': 'HARM_CATEGORY_IMAGE_HARASSMENT',
+                  'probability': 'NEGLIGIBLE'
+                },
+              ]
+            }
+          ]
+        };
+        final response =
+            VertexSerialization().parseGenerateContentResponse(json);
+        final ratings = response.candidates.first.safetyRatings!;
+        expect(ratings.map((r) => r.category), [
+          HarmCategory.imageDangerousContent,
+          HarmCategory.imageSexuallyExplicit,
+          HarmCategory.imageHate,
+          HarmCategory.imageHarassment,
+        ]);
+      });
+
+      test('falls back to HarmCategory.unknown for unrecognized values', () {
+        final json = {
+          'candidates': [
+            {
+              'content': {
+                'role': 'model',
+                'parts': [
+                  {'text': ''}
+                ]
+              },
+              'finishReason': 'STOP',
+              'safetyRatings': [
+                {
+                  'category': 'HARM_CATEGORY_SOMETHING_NEW',
+                  'probability': 'NEGLIGIBLE'
+                }
+              ]
+            }
+          ]
+        };
+        final response =
+            VertexSerialization().parseGenerateContentResponse(json);
+        expect(response.candidates.first.safetyRatings!.first.category,
+            HarmCategory.unknown);
+      });
+
       group('usageMetadata parsing', () {
         test('parses usageMetadata when thoughtsTokenCount is set', () {
           final json = {
@@ -1046,6 +1123,18 @@ void main() {
               VertexSerialization().parseGenerateContentResponse(jsonResponse);
           expect(response.candidates.first.finishReason,
               FinishReason.malformedFunctionCall);
+        });
+
+        test('parses unexpectedToolCall finishReason', () {
+          final jsonResponse = {
+            'candidates': [
+              {'finishReason': 'UNEXPECTED_TOOL_CALL'}
+            ]
+          };
+          final response =
+              VertexSerialization().parseGenerateContentResponse(jsonResponse);
+          expect(response.candidates.first.finishReason,
+              FinishReason.unexpectedToolCall);
         });
 
         test(

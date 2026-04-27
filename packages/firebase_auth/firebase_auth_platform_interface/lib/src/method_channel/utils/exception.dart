@@ -62,8 +62,9 @@ FirebaseException platformExceptionToFirebaseAuthException(
 
     if (platformException.details != null) {
       if (platformException.details['authCredential'] != null &&
-          platformException.details['authCredential'] is PigeonAuthCredential) {
-        PigeonAuthCredential pigeonAuthCredential =
+          platformException.details['authCredential']
+              is InternalAuthCredential) {
+        InternalAuthCredential pigeonAuthCredential =
             platformException.details['authCredential'];
 
         credential = AuthCredential(
@@ -180,7 +181,7 @@ FirebaseAuthMultiFactorExceptionPlatform parseMultiFactorError(
       (additionalData['multiFactorHints'] as List<Object?>? ?? [])
           .nonNulls
           .map(
-            PigeonMultiFactorInfo.decode,
+            InternalMultiFactorInfo.decode,
           )
           .toList();
 

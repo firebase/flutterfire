@@ -284,6 +284,16 @@ Future<UserCredential> signInWithApple() async {
 }
 ```
 
+On Android platforms, obtain the access token then revoke the token using the
+`revokeAccessToken()` API.
+
+```dart
+// Keep the access token returned from Android platforms
+String? accessToken = userCredential.credential?.accessToken;
+// Revoke the access token
+await FirebaseAuth.instance.revokeAccessToken(accessToken!);
+```
+
 ## Apple Game Center (Apple only) {:#games}
 
 Ensure the "Game Center" sign-in provider is enabled on the [Firebase Console](https://console.firebase.google.com/project/_/authentication/providers).

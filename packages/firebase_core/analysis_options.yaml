@@ -9,6 +9,7 @@ analyzer:
   exclude:
     - firebase_core_platform_interface/lib/src/pigeon/messages.pigeon.dart
     - firebase_core_platform_interface/lib/src/pigeon/test_api.dart
+    - firebase_core_platform_interface/pigeons/messages.dart
 
 linter:
   rules:

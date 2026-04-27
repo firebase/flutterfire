@@ -14,6 +14,7 @@
 import 'dart:async';
 
 import '../schema.dart';
+import '../tool.dart';
 
 /// A collection of template tools.
 final class TemplateTool {
@@ -98,8 +99,14 @@ final class TemplateAutoFunctionDeclaration
 /// Config for template tools to use with server prompts.
 final class TemplateToolConfig {
   // ignore: public_member_api_docs
-  TemplateToolConfig();
+  TemplateToolConfig({RetrievalConfig? retrievalConfig})
+      : _retrievalConfig = retrievalConfig;
+
+  final RetrievalConfig? _retrievalConfig;
 
   /// Convert to json object.
-  Map<String, Object?> toJson() => {};
+  Map<String, Object?> toJson() => {
+        if (_retrievalConfig case final retrievalConfig?)
+          'retrievalConfig': retrievalConfig.toJson(),
+      };
 }

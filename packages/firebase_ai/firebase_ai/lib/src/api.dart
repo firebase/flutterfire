@@ -347,6 +347,23 @@ final class WebGroundingChunk {
   final String? domain;
 }
 
+/// A grounding chunk sourced from Google Maps.
+final class GoogleMapsGroundingChunk {
+  // ignore: public_member_api_docs
+  GoogleMapsGroundingChunk({this.uri, this.title, this.placeId});
+
+  /// The URI of the place.
+  final String? uri;
+
+  /// The title of the place.
+  final String? title;
+
+  /// This Place's resource name, in `places/{place_id}` format.
+  ///
+  /// This can be used to look up the place using the Google Maps API.
+  final String? placeId;
+}
+
 /// Represents a chunk of retrieved data that supports a claim in the model's
 /// response.
 ///
@@ -354,10 +371,13 @@ final class WebGroundingChunk {
 /// enabled.
 final class GroundingChunk {
   // ignore: public_member_api_docs
-  GroundingChunk({this.web});
+  GroundingChunk({this.web, this.maps});
 
   /// Contains details if the grounding chunk is from a web source.
   final WebGroundingChunk? web;
+
+  /// Contains details if the grounding chunk is from a Google Maps source.
+  final GoogleMapsGroundingChunk? maps;
 }
 
 /// Provides information about how a specific segment of the model's response
@@ -606,7 +626,19 @@ enum HarmCategory {
   sexuallyExplicit('HARM_CATEGORY_SEXUALLY_EXPLICIT'),
 
   /// Promotes or enables access to harmful goods, services, and activities.
-  dangerousContent('HARM_CATEGORY_DANGEROUS_CONTENT');
+  dangerousContent('HARM_CATEGORY_DANGEROUS_CONTENT'),
+
+  /// Image content containing hate speech.
+  imageHate('HARM_CATEGORY_IMAGE_HATE'),
+
+  /// Image content that is dangerous.
+  imageDangerousContent('HARM_CATEGORY_IMAGE_DANGEROUS_CONTENT'),
+
+  /// Image content containing harassment.
+  imageHarassment('HARM_CATEGORY_IMAGE_HARASSMENT'),
+
+  /// Image content that is sexually explicit.
+  imageSexuallyExplicit('HARM_CATEGORY_IMAGE_SEXUALLY_EXPLICIT');
 
   const HarmCategory(this._jsonString);
 
@@ -618,7 +650,13 @@ enum HarmCategory {
       'HARM_CATEGORY_HATE_SPEECH' => HarmCategory.hateSpeech,
       'HARM_CATEGORY_SEXUALLY_EXPLICIT' => HarmCategory.sexuallyExplicit,
       'HARM_CATEGORY_DANGEROUS_CONTENT' => HarmCategory.dangerousContent,
-      _ => throw FormatException('Unhandled HarmCategory format', jsonObject),
+      'HARM_CATEGORY_IMAGE_HATE' => HarmCategory.imageHate,
+      'HARM_CATEGORY_IMAGE_DANGEROUS_CONTENT' =>
+        HarmCategory.imageDangerousContent,
+      'HARM_CATEGORY_IMAGE_HARASSMENT' => HarmCategory.imageHarassment,
+      'HARM_CATEGORY_IMAGE_SEXUALLY_EXPLICIT' =>
+        HarmCategory.imageSexuallyExplicit,
+      _ => HarmCategory.unknown,
     };
   }
 
@@ -770,6 +808,9 @@ enum FinishReason {
   /// The candidate content was flagged for malformed function call reasons.
   malformedFunctionCall('MALFORMED_FUNCTION_CALL'),
 
+  /// The model produced an unexpected tool call.
+  unexpectedToolCall('UNEXPECTED_TOOL_CALL'),
+
   /// Unknown reason.
   other('OTHER');
 
@@ -790,6 +831,7 @@ enum FinishReason {
       'RECITATION' => FinishReason.recitation,
       'OTHER' => FinishReason.other,
       'MALFORMED_FUNCTION_CALL' => FinishReason.malformedFunctionCall,
+      'UNEXPECTED_TOOL_CALL' => FinishReason.unexpectedToolCall,
       _ => throw FormatException('Unhandled FinishReason format', jsonObject),
     };
   }
@@ -1689,6 +1731,18 @@ WebGroundingChunk _parseWebGroundingChunk(Object? jsonObject) {
   );
 }
 
+GoogleMapsGroundingChunk _parseGoogleMapsGroundingChunk(Object? jsonObject) {
+  if (jsonObject is! Map) {
+    throw unhandledFormat('GoogleMapsGroundingChunk', jsonObject);
+  }
+
+  return GoogleMapsGroundingChunk(
+    uri: jsonObject['uri'] as String?,
+    title: jsonObject['title'] as String?,
+    placeId: jsonObject['placeId'] as String?,
+  );
+}
+
 GroundingChunk _parseGroundingChunk(Object? jsonObject) {
   if (jsonObject is! Map) {
     throw unhandledFormat('GroundingChunk', jsonObject);
@@ -1697,6 +1751,9 @@ GroundingChunk _parseGroundingChunk(Object? jsonObject) {
   return GroundingChunk(
     web: jsonObject['web'] != null
         ? _parseWebGroundingChunk(jsonObject['web'])
+        : null,
+    maps: jsonObject['maps'] != null
+        ? _parseGoogleMapsGroundingChunk(jsonObject['maps'])
         : null,
   );
 }

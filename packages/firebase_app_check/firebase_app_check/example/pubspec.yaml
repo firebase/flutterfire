@@ -4,14 +4,16 @@ description: Firebase App Check example application.
 publish_to: 'none'
 
 version: 1.0.0+1
+resolution: workspace
 
 environment:
-  sdk: '>=3.2.0 <4.0.0'
+  sdk: '^3.6.0'
+  flutter: '>=3.27.0'
 
 dependencies:
-  cloud_firestore: ^6.2.0
-  firebase_app_check: ^0.4.2
-  firebase_core: ^4.6.0
+  cloud_firestore: ^6.3.0
+  firebase_app_check: ^0.4.3
+  firebase_core: ^4.7.0
   flutter:
     sdk: flutter
 

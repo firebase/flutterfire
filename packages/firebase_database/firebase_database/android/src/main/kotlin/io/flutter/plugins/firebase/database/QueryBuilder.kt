@@ -9,13 +9,12 @@ package io.flutter.plugins.firebase.database
 import androidx.annotation.NonNull
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.Query
-import java.util.*
 
 class QueryBuilder
   @JvmOverloads
   constructor(
     @NonNull ref: DatabaseReference,
-    @NonNull private val modifiers: List<Map<String, Any>>,
+    @NonNull private val modifiers: List<Map<String, Any?>>,
   ) {
     private var query: Query = ref
 
@@ -35,9 +34,14 @@ class QueryBuilder
       return query
     }
 
-    private fun limit(modifier: Map<String, Any>) {
+    private fun limit(modifier: Map<String, Any?>) {
       val name = modifier["name"] as String
-      val value = modifier["limit"] as Int
+      val value =
+        when (val limit = modifier["limit"]) {
+          is Int -> limit
+          is Number -> limit.toInt()
+          else -> throw IllegalArgumentException("Invalid limit value: $limit")
+        }
 
       query =
         when (name) {
@@ -47,7 +51,7 @@ class QueryBuilder
         }
     }
 
-    private fun orderBy(modifier: Map<String, Any>) {
+    private fun orderBy(modifier: Map<String, Any?>) {
       val name = modifier["name"] as String
 
       query =
@@ -63,7 +67,7 @@ class QueryBuilder
         }
     }
 
-    private fun cursor(modifier: Map<String, Any>) {
+    private fun cursor(modifier: Map<String, Any?>) {
       val name = modifier["name"] as String
 
       when (name) {
@@ -74,7 +78,7 @@ class QueryBuilder
       }
     }
 
-    private fun startAt(modifier: Map<String, Any>) {
+    private fun startAt(modifier: Map<String, Any?>) {
       val value = modifier["value"]
       val key = modifier["key"] as String?
 
@@ -82,11 +86,11 @@ class QueryBuilder
         when (value) {
           is Boolean -> if (key == null) query.startAt(value) else query.startAt(value, key)
           is Number -> if (key == null) query.startAt(value.toDouble()) else query.startAt(value.toDouble(), key)
-          else -> if (key == null) query.startAt(value as String) else query.startAt(value as String, key)
+          else -> if (key == null) query.startAt(value.toString()) else query.startAt(value.toString(), key)
         }
     }
 
-    private fun startAfter(modifier: Map<String, Any>) {
+    private fun startAfter(modifier: Map<String, Any?>) {
       val value = modifier["value"]
       val key = modifier["key"] as String?
 
@@ -94,11 +98,11 @@ class QueryBuilder
         when (value) {
           is Boolean -> if (key == null) query.startAfter(value) else query.startAfter(value, key)
           is Number -> if (key == null) query.startAfter(value.toDouble()) else query.startAfter(value.toDouble(), key)
-          else -> if (key == null) query.startAfter(value as String) else query.startAfter(value as String, key)
+          else -> if (key == null) query.startAfter(value.toString()) else query.startAfter(value.toString(), key)
         }
     }
 
-    private fun endAt(modifier: Map<String, Any>) {
+    private fun endAt(modifier: Map<String, Any?>) {
       val value = modifier["value"]
       val key = modifier["key"] as String?
 
@@ -106,11 +110,11 @@ class QueryBuilder
         when (value) {
           is Boolean -> if (key == null) query.endAt(value) else query.endAt(value, key)
           is Number -> if (key == null) query.endAt(value.toDouble()) else query.endAt(value.toDouble(), key)
-          else -> if (key == null) query.endAt(value as String) else query.endAt(value as String, key)
+          else -> if (key == null) query.endAt(value.toString()) else query.endAt(value.toString(), key)
         }
     }
 
-    private fun endBefore(modifier: Map<String, Any>) {
+    private fun endBefore(modifier: Map<String, Any?>) {
       val value = modifier["value"]
       val key = modifier["key"] as String?
 
@@ -118,7 +122,7 @@ class QueryBuilder
         when (value) {
           is Boolean -> if (key == null) query.endBefore(value) else query.endBefore(value, key)
           is Number -> if (key == null) query.endBefore(value.toDouble()) else query.endBefore(value.toDouble(), key)
-          else -> if (key == null) query.endBefore(value as String) else query.endBefore(value as String, key)
+          else -> if (key == null) query.endBefore(value.toString()) else query.endBefore(value.toString(), key)
         }
     }
   }

@@ -1,3 +1,7 @@
+## 16.2.0
+
+ - **FEAT**: use local firebase_core instead of remote SPM dependency ([#18141](https://github.com/firebase/flutterfire/issues/18141)). ([995caf40](https://github.com/firebase/flutterfire/commit/995caf400df80c0fde7151c651ccc6c0f756e381))
+
 ## 16.1.3
 
  - **FIX**(messaging,ios): fix an issue where the scene initializer could be called twice in latest Flutter versions ([#18051](https://github.com/firebase/flutterfire/issues/18051)). ([5b602105](https://github.com/firebase/flutterfire/commit/5b602105faf9f64ac977a4266de5ee10785330bd))

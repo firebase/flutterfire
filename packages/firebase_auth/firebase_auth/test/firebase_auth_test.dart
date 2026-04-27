@@ -35,6 +35,7 @@ void main() {
   const String kMockSmsCode = '123456';
   const String kMockLanguage = 'en';
   const String kMockOobCode = 'oobcode';
+  const String kMockAuthToken = '12460';
   const String kMockURL = 'http://www.example.com';
   const String kMockHost = 'www.example.com';
   const String kMockValidPassword =
@@ -67,8 +68,8 @@ void main() {
   final int kMockLastSignInTimestamp =
       DateTime.now().subtract(const Duration(days: 1)).millisecondsSinceEpoch;
 
-  final kMockUser = PigeonUserDetails(
-    userInfo: PigeonUserInfo(
+  final kMockUser = InternalUserDetails(
+    userInfo: InternalUserInfo(
       uid: '12345',
       displayName: 'displayName',
       creationTimestamp: kMockCreationTimestamp,
@@ -97,7 +98,7 @@ void main() {
   MockFirebaseAuth mockAuthPlatform = MockFirebaseAuth();
 
   group('$FirebaseAuth', () {
-    PigeonUserDetails user;
+    InternalUserDetails user;
     // used to generate a unique application name for each test
     var testCount = 0;
 
@@ -778,6 +779,17 @@ void main() {
       });
     });
 
+    group('revokeAccessToken()', () {
+      test('should call delegate method', () async {
+        // Necessary as we otherwise get a "null is not a Future<void>" error
+        when(mockAuthPlatform.revokeAccessToken(kMockAuthToken))
+            .thenAnswer((i) async {});
+
+        await auth.revokeAccessToken(kMockAuthToken);
+        verify(mockAuthPlatform.revokeAccessToken(kMockAuthToken));
+      });
+    });
+
     group('passwordPolicy', () {
       test('passwordPolicy should be initialized with correct parameters',
           () async {
@@ -983,7 +995,7 @@ class MockFirebaseAuth extends Mock
 
   @override
   FirebaseAuthPlatform setInitialValues({
-    PigeonUserDetails? currentUser,
+    InternalUserDetails? currentUser,
     String? languageCode,
   }) {
     return super.noSuchMethod(
@@ -1150,6 +1162,15 @@ class MockFirebaseAuth extends Mock
       returnValueForMissingStub: neverEndingFuture<String>(),
     );
   }
+
+  @override
+  Future<void> revokeAccessToken(String accessToken) {
+    return super.noSuchMethod(
+      Invocation.method(#revokeAccessToken, [accessToken]),
+      returnValue: neverEndingFuture<void>(),
+      returnValueForMissingStub: neverEndingFuture<void>(),
+    );
+  }
 }
 
 class FakeFirebaseAuthPlatform extends Fake
@@ -1171,7 +1192,7 @@ class FakeFirebaseAuthPlatform extends Fake
 
   @override
   FirebaseAuthPlatform setInitialValues({
-    PigeonUserDetails? currentUser,
+    InternalUserDetails? currentUser,
     String? languageCode,
   }) {
     return this;
@@ -1182,7 +1203,7 @@ class MockUserPlatform extends Mock
     with MockPlatformInterfaceMixin
     implements TestUserPlatform {
   MockUserPlatform(FirebaseAuthPlatform auth, MultiFactorPlatform multiFactor,
-      PigeonUserDetails _user) {
+      InternalUserDetails _user) {
     TestUserPlatform(auth, multiFactor, _user);
   }
 }
@@ -1233,7 +1254,7 @@ class TestFirebaseAuthPlatform extends FirebaseAuthPlatform {
 
   @override
   FirebaseAuthPlatform setInitialValues({
-    PigeonUserDetails? currentUser,
+    InternalUserDetails? currentUser,
     String? languageCode,
   }) {
     return this;
@@ -1302,7 +1323,7 @@ class TestAuthProvider extends AuthProvider {
 
 class TestUserPlatform extends UserPlatform {
   TestUserPlatform(FirebaseAuthPlatform auth, MultiFactorPlatform multiFactor,
-      PigeonUserDetails data)
+      InternalUserDetails data)
       : super(auth, multiFactor, data);
 }
 

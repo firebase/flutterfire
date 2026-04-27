@@ -150,6 +150,7 @@ class RestTransport implements DataConnectTransport {
   /// Invokes query REST endpoint.
   @override
   Future<ServerResponse> invokeQuery<Data, Variables>(
+    String operationId,
     String queryName,
     Deserializer<Data> deserializer,
     Serializer<Variables>? serializer,
@@ -169,6 +170,7 @@ class RestTransport implements DataConnectTransport {
   /// Invokes mutation REST endpoint.
   @override
   Future<ServerResponse> invokeMutation<Data, Variables>(
+    String operationId,
     String queryName,
     Deserializer<Data> deserializer,
     Serializer<Variables>? serializer,
@@ -183,6 +185,20 @@ class RestTransport implements DataConnectTransport {
       vars,
       token,
     );
+  }
+
+  /// WebSockets are now handled by WebSocketTransport in FirebaseDataConnect.
+  @override
+  Stream<ServerResponse> invokeStreamQuery<Data, Variables>(
+    String operationId,
+    String queryName,
+    Deserializer<Data> deserializer,
+    Serializer<Variables>? serializer,
+    Variables? vars,
+    String? token,
+  ) {
+    throw UnsupportedError(
+        'Streaming should be routed through WebSocketTransport');
   }
 }
 
