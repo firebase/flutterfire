@@ -232,8 +232,9 @@ class BidiSessionController extends ChangeNotifier {
 
     try {
       _session = await _liveModel.connect(
-        sessionResumption:
-            SessionResumptionConfig(handle: _activeSessionHandle),
+        sessionResumption: _activeSessionHandle != null
+            ? SessionResumptionConfig.resume(_activeSessionHandle!)
+            : SessionResumptionConfig(),
       );
     } on Exception catch (e) {
       developer.log(

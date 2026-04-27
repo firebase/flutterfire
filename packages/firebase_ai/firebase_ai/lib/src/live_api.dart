@@ -129,18 +129,23 @@ class ContextWindowCompressionConfig {
 /// When included in the session setup, the server will send
 /// [SessionResumptionUpdate] messages.
 class SessionResumptionConfig {
-  /// Creates a [SessionResumptionConfig] instance.
+  /// Creates a [SessionResumptionConfig] to start a new resumable session.
   ///
-  /// [handle] (optional): The session resumption handle of the previous session
-  /// to restore.
-  /// [transparent] (optional): If set, requests the server to send updates with
-  /// the message index of the last client message included in the session
-  /// state.
-  SessionResumptionConfig({this.handle});
+  /// When this is included in the session setup, the server will send
+  /// [SessionResumptionUpdate] messages with handles that can be used to
+  /// resume the session later.
+  SessionResumptionConfig() : handle = null;
+
+  /// Creates a [SessionResumptionConfig] to resume a previous session.
+  ///
+  /// [handle] is the session resumption handle received in a previous session's
+  /// [SessionResumptionUpdate].
+  SessionResumptionConfig.resume(String this.handle);
 
   /// The session resumption handle of the previous session to restore.
   ///
-  /// If not present, a new session will be started.
+  /// If null, a new session will be started (and will be resumable if this
+  /// config was included).
   final String? handle;
 
   // ignore: public_member_api_docs
