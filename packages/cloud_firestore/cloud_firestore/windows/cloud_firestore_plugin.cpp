@@ -70,9 +70,9 @@ class PlatformThreadDispatcher {
     window_class.lpszClassName = kTaskRunnerWindowClassName;
 
     RegisterClassW(&window_class);
-    window_ = CreateWindowExW(0, kTaskRunnerWindowClassName, L"", 0, 0, 0, 0,
-                              0, HWND_MESSAGE, nullptr,
-                              window_class.hInstance, this);
+    window_ =
+        CreateWindowExW(0, kTaskRunnerWindowClassName, L"", 0, 0, 0, 0, 0,
+                        HWND_MESSAGE, nullptr, window_class.hInstance, this);
   }
 
   void Post(std::function<void()> task) {
@@ -89,9 +89,7 @@ class PlatformThreadDispatcher {
   }
 
  private:
-  static LRESULT CALLBACK WindowProc(HWND window,
-                                     UINT message,
-                                     WPARAM wparam,
+  static LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wparam,
                                      LPARAM lparam) {
     if (message == WM_NCCREATE) {
       auto create_struct = reinterpret_cast<CREATESTRUCT*>(lparam);
@@ -285,8 +283,7 @@ std::map<std::string,
     event_channels_;
 std::map<std::string, std::unique_ptr<flutter::StreamHandler<>>>
     stream_handlers_;
-std::map<std::string,
-         std::unique_ptr<flutter::StreamHandler<flutter::EncodableValue>>>
+std::map<std::string, flutter::StreamHandler<flutter::EncodableValue>*>
     cloud_firestore_windows::CloudFirestorePlugin::transaction_handlers_;
 std::map<std::string, std::shared_ptr<firebase::firestore::Transaction>>
     cloud_firestore_windows::CloudFirestorePlugin::transactions_;
@@ -701,8 +698,8 @@ class LoadBundleStreamHandler
     events_state_->events = std::move(events);
     events.reset();
     firestore_->LoadBundle(
-        bundle_, [events_state = events_state_](
-                     const LoadBundleTaskProgress& progress) {
+        bundle_,
+        [events_state = events_state_](const LoadBundleTaskProgress& progress) {
           flutter::EncodableMap map;
           map[flutter::EncodableValue("bytesLoaded")] =
               flutter::EncodableValue(progress.bytes_loaded());
@@ -1090,9 +1087,9 @@ class TransactionStreamHandler
             SendSuccessOnPlatformThread(events_state_,
                                         flutter::EncodableValue(result));
           } else {
-            SendErrorOnPlatformThread(
-                events_state_, "transaction_error",
-                completed_future.error_message(), flutter::EncodableValue());
+            SendErrorOnPlatformThread(events_state_, "transaction_error",
+                                      completed_future.error_message(),
+                                      flutter::EncodableValue());
           }
           EndStreamOnPlatformThread(events_state_);
         });
@@ -1136,16 +1133,13 @@ void CloudFirestorePlugin::TransactionCreate(
   auto handler = std::make_unique<TransactionStreamHandler>(
       firestore, static_cast<long>(timeout), static_cast<int>(max_attempts),
       transactionId);
-
-  // Temporarily release the ownership.
-  TransactionStreamHandler* raw_handler = handler.release();
-  CloudFirestorePlugin::transaction_handlers_[transactionId] =
-      std::unique_ptr<TransactionStreamHandler>(raw_handler);
+  TransactionStreamHandler* raw_handler = handler.get();
+  CloudFirestorePlugin::transaction_handlers_[transactionId] = raw_handler;
 
   // Register the event channel.
   std::string channelName = RegisterEventChannelWithUUID(
       "plugins.flutter.io/firebase_firestore/transaction/", transactionId,
-      std::unique_ptr<TransactionStreamHandler>(raw_handler));
+      std::move(handler));
 
   // Return the result (assumed to be transaction ID in this example).
   result(transactionId);
@@ -1158,9 +1152,12 @@ void CloudFirestorePlugin::TransactionStoreResult(
     const InternalTransactionResult& result_type,
     const flutter::EncodableList* commands,
     std::function<void(std::optional<FlutterError> reply)> result) {
-  if (CloudFirestorePlugin::transaction_handlers_[transaction_id]) {
-    TransactionStreamHandler& handler = *static_cast<TransactionStreamHandler*>(
-        CloudFirestorePlugin::transaction_handlers_[transaction_id].get());
+  auto handler_it =
+      CloudFirestorePlugin::transaction_handlers_.find(transaction_id);
+  if (handler_it != CloudFirestorePlugin::transaction_handlers_.end() &&
+      handler_it->second) {
+    TransactionStreamHandler& handler =
+        *static_cast<TransactionStreamHandler*>(handler_it->second);
     std::vector<InternalTransactionCommand> commandVector;
     for (const auto& element : *commands) {
       const InternalTransactionCommand& command =
@@ -1844,9 +1841,8 @@ class DocumentSnapshotStreamHandler
             // the Dart side to receive a List<Object?> it can no longer
             // decode into InternalDocumentSnapshot.
             SendSuccessOnPlatformThread(
-                events_state,
-                CustomEncodableValue(
-                    ParseDocumentSnapshot(snapshot, serverTimestampBehavior)));
+                events_state, CustomEncodableValue(ParseDocumentSnapshot(
+                                  snapshot, serverTimestampBehavior)));
           } else {
             EncodableMap details;
             details[EncodableValue("code")] =
