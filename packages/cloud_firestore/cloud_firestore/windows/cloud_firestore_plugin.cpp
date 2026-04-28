@@ -1025,6 +1025,9 @@ class TransactionStreamHandler
               }
 
               std::lock_guard<std::mutex> command_lock(commands_mutex_);
+              if (resultType_ == InternalTransactionResult::kFailure) {
+                return Error::kErrorAborted;
+              }
               if (commands_.empty()) return Error::kErrorOk;
 
               for (InternalTransactionCommand& command : commands_) {
@@ -1111,7 +1114,7 @@ class TransactionStreamHandler
   int maxAttempts_;
   std::string transactionId_;
   std::vector<InternalTransactionCommand> commands_;
-  InternalTransactionResult resultType_;
+  InternalTransactionResult resultType_ = InternalTransactionResult::kSuccess;
   std::mutex mtx_;
   std::mutex commands_mutex_;
   std::condition_variable cv_;
@@ -1159,11 +1162,13 @@ void CloudFirestorePlugin::TransactionStoreResult(
     TransactionStreamHandler& handler =
         *static_cast<TransactionStreamHandler*>(handler_it->second);
     std::vector<InternalTransactionCommand> commandVector;
-    for (const auto& element : *commands) {
-      const InternalTransactionCommand& command =
-          std::any_cast<InternalTransactionCommand>(
-              std::get<CustomEncodableValue>(element));
-      commandVector.push_back(command);
+    if (commands) {
+      for (const auto& element : *commands) {
+        const InternalTransactionCommand& command =
+            std::any_cast<InternalTransactionCommand>(
+                std::get<CustomEncodableValue>(element));
+        commandVector.push_back(command);
+      }
     }
     handler.ReceiveTransactionResponse(result_type, commandVector);
     result(std::nullopt);
