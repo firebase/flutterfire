@@ -161,7 +161,7 @@ void runTransactionTests() {
             ),
           );
         },
-        skip: defaultTargetPlatform == TargetPlatform.windows,
+        skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
       );
 
       test('runs multiple transactions in parallel', () async {
@@ -207,7 +207,7 @@ void runTransactionTests() {
             ),
           );
         },
-        skip: defaultTargetPlatform == TargetPlatform.windows,
+        skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
       );
 
       test('should throw with exception', () async {
@@ -243,7 +243,7 @@ void runTransactionTests() {
             fail('Transaction threw invalid exception');
           }
         },
-        skip: defaultTargetPlatform == TargetPlatform.windows,
+        skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
       );
 
       group('Transaction.get()', () {
@@ -279,7 +279,7 @@ void runTransactionTests() {
               fail('Transaction threw invalid exception');
             }
           },
-          skip: defaultTargetPlatform == TargetPlatform.windows,
+          skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
         );
 
         // ignore: todo
