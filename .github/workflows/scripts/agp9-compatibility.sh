@@ -23,11 +23,22 @@ grep -q '^android.newDsl=false$' "$TEST_ANDROID_DIR/gradle.properties" || \
 perl -0pi -e 's/\n\s*id "kotlin-android"\n/\n/' "$TEST_ANDROID_DIR/app/build.gradle"
 perl -0pi -e 's/\n\s*kotlinOptions \{\n\s*jvmTarget = JavaVersion\.VERSION_17\n\s*\}\n/\n/' "$TEST_ANDROID_DIR/app/build.gradle"
 
+# AGP 9 rejects older Espresso artifacts that share the same namespace.
+grep -q 'androidx.test.espresso:espresso-core:3.7.0' "$TEST_ANDROID_DIR/app/build.gradle" || cat <<'EOF' >> "$TEST_ANDROID_DIR/app/build.gradle"
+
+dependencies {
+    debugImplementation 'androidx.test.espresso:espresso-core:3.7.0'
+    debugImplementation 'androidx.test.espresso:espresso-idling-resource:3.7.0'
+}
+EOF
+
 grep -q "id \"com.android.application\" version \"$AGP_VERSION\" apply false" "$TEST_ANDROID_DIR/settings.gradle"
 grep -q "gradle-$GRADLE_VERSION-all.zip" "$TEST_ANDROID_DIR/gradle/wrapper/gradle-wrapper.properties"
 grep -q '^android.newDsl=false$' "$TEST_ANDROID_DIR/gradle.properties"
 ! grep -q 'id "kotlin-android"' "$TEST_ANDROID_DIR/app/build.gradle"
 ! grep -q 'kotlinOptions' "$TEST_ANDROID_DIR/app/build.gradle"
+grep -q 'androidx.test.espresso:espresso-core:3.7.0' "$TEST_ANDROID_DIR/app/build.gradle"
+grep -q 'androidx.test.espresso:espresso-idling-resource:3.7.0' "$TEST_ANDROID_DIR/app/build.gradle"
 
 cd tests
 flutter build apk --debug --dart-define=CI=true --no-android-gradle-daemon
