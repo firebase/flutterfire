@@ -93,4 +93,4 @@ jobs:
         run: |
           npm install -g firebase-tools
       - name: Start Firebase Emulator and run tests
-        run: cd ./.github/workflows/scripts && firebase emulators:exec --project flutterfire-e2e-tests "cd ../../../packages/cloud_firestore/cloud_firestore/example && flutter test .\integration_test\e2e_test.dart -d windows --verbose"
+        run: cd ./.github/workflows/scripts && firebase emulators:exec --project flutterfire-e2e-tests "cd ../../../packages/cloud_firestore/cloud_firestore/example && flutter drive --target=.\integration_test\e2e_test.dart --driver=.\test_driver\integration_test.dart -d windows --verbose"
