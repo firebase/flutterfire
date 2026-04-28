@@ -153,7 +153,13 @@ static NSMutableDictionary<NSNumber *, FIRAuthCredential *> *credentialsMap;
   [registrar addMethodCallDelegate:instance channel:channel];
 
   [registrar publish:instance];
+#if !TARGET_OS_EXTENSION
+  // -[FlutterPluginRegistrar addApplicationDelegate:] is unavailable when
+  // building for an app extension target (APPLICATION_EXTENSION_API_ONLY=YES).
+  // The application-delegate callbacks below (openURL etc.) are never
+  // exercised in extensions because sign-in flows cannot run from there.
   [registrar addApplicationDelegate:instance];
+#endif
 #if !TARGET_OS_OSX
   if (@available(iOS 13.0, *)) {
     if ([registrar respondsToSelector:@selector(addSceneDelegate:)]) {
@@ -897,7 +903,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
     (nonnull ASAuthorizationController *)controller API_AVAILABLE(macos(10.15), ios(13.0)) {
 #if TARGET_OS_OSX
   return [[NSApplication sharedApplication] keyWindow];
-#else
+#elif !TARGET_OS_EXTENSION
   // UIApplication.keyWindow is deprecated in iOS 13+ with UIScene lifecycle.
   // Walk the connected scenes to find the foreground active window.
   if (@available(iOS 15.0, *)) {
@@ -924,6 +930,12 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
     }
   }
   return [[UIApplication sharedApplication] keyWindow];
+#else
+  // App-extension build: +[UIApplication sharedApplication] is unavailable.
+  // Sign-in flows that require a presentation anchor cannot run from an
+  // extension — the host app is the only context that can present them —
+  // so this method is not expected to be invoked here.
+  return (ASPresentationAnchor)nil;
 #endif
 }
 
