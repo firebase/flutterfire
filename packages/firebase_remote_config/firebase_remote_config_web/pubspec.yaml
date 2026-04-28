@@ -4,9 +4,10 @@ homepage: https://github.com/firebase/flutterfire/tree/main/packages/firebase_re
 repository: https://github.com/firebase/flutterfire/tree/main/packages/firebase_remote_config/firebase_remote_config_web
 
 version: 1.10.6
+resolution: workspace
 
 environment:
-  sdk: '>=3.4.0 <4.0.0'
+  sdk: '^3.6.0'
   flutter: '>=3.22.0'
 
 dependencies:

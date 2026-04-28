@@ -46,10 +46,26 @@ class CreateMovieVariablesBuilder {
   }
 }
 
+@immutable
 class CreateMovieMovieInsert {
-  String id;
+  final String id;
   CreateMovieMovieInsert.fromJson(dynamic json)
       : id = nativeFromJson<String>(json['id']);
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+
+    final CreateMovieMovieInsert otherTyped = other as CreateMovieMovieInsert;
+    return id == otherTyped.id;
+  }
+
+  @override
+  int get hashCode => id.hashCode;
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -62,10 +78,26 @@ class CreateMovieMovieInsert {
   });
 }
 
+@immutable
 class CreateMovieData {
-  CreateMovieMovieInsert movie_insert;
+  final CreateMovieMovieInsert movie_insert;
   CreateMovieData.fromJson(dynamic json)
       : movie_insert = CreateMovieMovieInsert.fromJson(json['movie_insert']);
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+
+    final CreateMovieData otherTyped = other as CreateMovieData;
+    return movie_insert == otherTyped.movie_insert;
+  }
+
+  @override
+  int get hashCode => movie_insert.hashCode;
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -78,12 +110,13 @@ class CreateMovieData {
   });
 }
 
+@immutable
 class CreateMovieVariables {
-  String title;
-  int releaseYear;
-  String genre;
-  late Optional<double> rating;
-  late Optional<String> description;
+  final String title;
+  final int releaseYear;
+  final String genre;
+  late final Optional<double> rating;
+  late final Optional<String> description;
   @Deprecated(
       'fromJson is deprecated for Variable classes as they are no longer required for deserialization.')
   CreateMovieVariables.fromJson(Map<String, dynamic> json)
@@ -99,6 +132,31 @@ class CreateMovieVariables {
         ? null
         : nativeFromJson<String>(json['description']);
   }
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+
+    final CreateMovieVariables otherTyped = other as CreateMovieVariables;
+    return title == otherTyped.title &&
+        releaseYear == otherTyped.releaseYear &&
+        genre == otherTyped.genre &&
+        rating == otherTyped.rating &&
+        description == otherTyped.description;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+        title.hashCode,
+        releaseYear.hashCode,
+        genre.hashCode,
+        rating.hashCode,
+        description.hashCode
+      ]);
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};

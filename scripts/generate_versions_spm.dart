@@ -26,8 +26,8 @@ void main(List<String> args) async {
 
   // Update hard-coded versions in all plugin Package.swift files
   final firebaseCoreVersion = loadYaml(
-          File('${firebaseCorePackage.path}/pubspec.yaml')
-              .readAsStringSync())['version']
+    File('${firebaseCorePackage.path}/pubspec.yaml').readAsStringSync(),
+  )['version']
       .toString();
   updatePluginPackageSwiftVersions(
     workspace,
@@ -52,7 +52,6 @@ Future<melos.MelosWorkspace> getMelosWorkspace() async {
     logger: melos.MelosLogger(logging.Logger.standard()),
     packageFilters: packageFilters,
   );
-
   return workspace;
 }
 
