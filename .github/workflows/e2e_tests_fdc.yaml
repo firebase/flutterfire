@@ -58,12 +58,9 @@ jobs:
         uses: actions/cache/restore@668228422ae6a00e4ad889ee87cd7109ec5666a7
         continue-on-error: true
         with:
-          # The firebase emulators are pure javascript and java, OS-independent
-          enableCrossOsArchive: true
           # Must match the save path exactly
           path: ~/.cache/firebase/emulators
-          key: firebase-emulators-v3-${{ env.FIREBASE_TOOLS_VERSION }}
-          restore-keys: firebase-emulators-v3
+          key: firebase-emulators-v4-${{ runner.os }}-${{ env.FIREBASE_TOOLS_VERSION }}
       - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
         with:
           channel: 'stable'
@@ -137,8 +134,6 @@ jobs:
         uses: actions/cache/save@668228422ae6a00e4ad889ee87cd7109ec5666a7
         continue-on-error: true
         with:
-          # The firebase emulators are pure javascript and java, OS-independent
-          enableCrossOsArchive: true
           key: ${{ steps.firebase-emulator-cache.outputs.cache-primary-key }}
           # Must match the restore path exactly
           path: ~/.cache/firebase/emulators
@@ -186,12 +181,9 @@ jobs:
         uses: actions/cache/restore@668228422ae6a00e4ad889ee87cd7109ec5666a7
         continue-on-error: true
         with:
-          # The firebase emulators are pure javascript and java, OS-independent
-          enableCrossOsArchive: true
           # Must match the save path exactly
           path: ~/.cache/firebase/emulators
-          key: firebase-emulators-v3-${{ env.FIREBASE_TOOLS_VERSION }}
-          restore-keys: firebase-emulators-v3
+          key: firebase-emulators-v4-${{ runner.os }}-${{ env.FIREBASE_TOOLS_VERSION }}
       - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
         with:
           channel: 'stable'
@@ -249,8 +241,6 @@ jobs:
         uses: actions/cache/save@668228422ae6a00e4ad889ee87cd7109ec5666a7
         continue-on-error: true
         with:
-          # The firebase emulators are pure javascript and java, OS-independent
-          enableCrossOsArchive: true
           key: ${{ steps.firebase-emulator-cache.outputs.cache-primary-key }}
           # Must match the restore path exactly
           path: ~/.cache/firebase/emulators
@@ -302,12 +292,9 @@ jobs:
         uses: actions/cache/restore@668228422ae6a00e4ad889ee87cd7109ec5666a7
         continue-on-error: true
         with:
-          # The firebase emulators are pure javascript and java, OS-independent
-          enableCrossOsArchive: true
           # Must match the save path exactly
           path: ~/.cache/firebase/emulators
-          key: firebase-emulators-v3-${{ env.FIREBASE_TOOLS_VERSION }}
-          restore-keys: firebase-emulators-v3
+          key: firebase-emulators-v4-${{ runner.os }}-${{ env.FIREBASE_TOOLS_VERSION }}
       - name: Start Firebase Emulator
         run: |
           sudo chown -R 501:20 "/Users/runner/.npm"
@@ -338,8 +325,6 @@ jobs:
         uses: actions/cache/save@668228422ae6a00e4ad889ee87cd7109ec5666a7
         continue-on-error: true
         with:
-          # The firebase emulators are pure javascript and java, OS-independent
-          enableCrossOsArchive: true
           key: ${{ steps.firebase-emulator-cache.outputs.cache-primary-key }}
           # Must match the restore path exactly
           path: ~/.cache/firebase/emulators
@@ -382,12 +367,9 @@ jobs:
         uses: actions/cache/restore@668228422ae6a00e4ad889ee87cd7109ec5666a7
         continue-on-error: true
         with:
-          # The firebase emulators are pure javascript and java, OS-independent
-          enableCrossOsArchive: true
           # Must match the save path exactly
           path: ~/.cache/firebase/emulators
-          key: firebase-emulators-v3-${{ env.FIREBASE_TOOLS_VERSION }}
-          restore-keys: firebase-emulators-v3
+          key: firebase-emulators-v4-${{ runner.os }}-${{ env.FIREBASE_TOOLS_VERSION }}
       - name: Start Firebase Emulator
         run: |
           cd ./packages/firebase_data_connect/firebase_data_connect/example
@@ -418,8 +400,6 @@ jobs:
         uses: actions/cache/save@668228422ae6a00e4ad889ee87cd7109ec5666a7
         continue-on-error: true
         with:
-          # The firebase emulators are pure javascript and java, OS-independent
-          enableCrossOsArchive: true
           key: ${{ steps.firebase-emulator-cache.outputs.cache-primary-key }}
           # Must match the restore path exactly
           path: ~/.cache/firebase/emulators
