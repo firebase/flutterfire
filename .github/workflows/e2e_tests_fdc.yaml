@@ -52,7 +52,7 @@ jobs:
       - name: 'Install Tools'
         run: |
           sudo npm i -g firebase-tools
-          echo "FIREBASE_TOOLS_VERSION=$(npm firebase --version)" >> $GITHUB_ENV
+          echo "FIREBASE_TOOLS_VERSION=$(firebase --version)" >> $GITHUB_ENV
       - name: Firebase Emulator Cache
         id: firebase-emulator-cache
         uses: actions/cache/restore@668228422ae6a00e4ad889ee87cd7109ec5666a7
@@ -179,7 +179,7 @@ jobs:
       - name: 'Install Tools'
         run: |
           sudo npm i -g firebase-tools
-          echo "FIREBASE_TOOLS_VERSION=$(npm firebase --version)" >> $GITHUB_ENV
+          echo "FIREBASE_TOOLS_VERSION=$(firebase --version)" >> $GITHUB_ENV
       - name: Firebase Emulator Cache
         id: firebase-emulator-cache
         uses: actions/cache/restore@668228422ae6a00e4ad889ee87cd7109ec5666a7
@@ -232,10 +232,9 @@ jobs:
         run: |
           # Uncomment following line to have simulator logs printed out for debugging purposes.
           # xcrun simctl spawn booted log stream --predicate 'eventMessage contains "flutter"' &
-          # The iOS simulator sometimes fails to connect the VM Service, hanging for
-          # 12 minutes before timing out. Use a 6-minute limit and retry once with
-          # a simulator reboot. Normal connection takes 30s-5min.
-          perl -e 'alarm 360; exec @ARGV' -- flutter test integration_test/e2e_test.dart -d "$SIMULATOR" --dart-define=CI=true --timeout 10x || {
+          # The iOS simulator sometimes fails to connect the VM Service. Keep a
+          # limit around the full test command and retry once with a simulator reboot.
+          perl -e 'alarm 900; exec @ARGV' -- flutter test integration_test/e2e_test.dart -d "$SIMULATOR" --dart-define=CI=true --timeout 10x || {
             echo "First attempt failed or timed out. Rebooting simulator and retrying..."
             xcrun simctl shutdown "$SIMULATOR" || true
             xcrun simctl boot "$SIMULATOR"
@@ -295,7 +294,7 @@ jobs:
       - name: 'Install Tools'
         run: |
           sudo npm i -g firebase-tools
-          echo "FIREBASE_TOOLS_VERSION=$(npm firebase --version)" >> $GITHUB_ENV
+          echo "FIREBASE_TOOLS_VERSION=$(firebase --version)" >> $GITHUB_ENV
       - name: Firebase Emulator Cache
         id: firebase-emulator-cache
         uses: actions/cache/restore@668228422ae6a00e4ad889ee87cd7109ec5666a7
@@ -374,7 +373,7 @@ jobs:
       - name: 'Install Tools'
         run: |
           sudo npm i -g firebase-tools
-          echo "FIREBASE_TOOLS_VERSION=$(npm firebase --version)" >> $GITHUB_ENV
+          echo "FIREBASE_TOOLS_VERSION=$(firebase --version)" >> $GITHUB_ENV
       - name: Firebase Emulator Cache
         id: firebase-emulator-cache
         uses: actions/cache/restore@668228422ae6a00e4ad889ee87cd7109ec5666a7
