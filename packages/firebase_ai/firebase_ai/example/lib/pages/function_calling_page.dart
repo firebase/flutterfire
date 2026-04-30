@@ -14,7 +14,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_ai/firebase_ai.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import '../utils/function_call_utils.dart';
 import '../widgets/message_widget.dart';
 

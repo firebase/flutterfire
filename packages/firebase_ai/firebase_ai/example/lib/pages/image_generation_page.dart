@@ -15,7 +15,7 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:firebase_ai/firebase_ai.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import '../widgets/message_widget.dart';
 
 class ImageGenerationPage extends StatefulWidget {
