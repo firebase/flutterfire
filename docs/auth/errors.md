@@ -98,3 +98,4 @@ to be linked or your **Identity Platform** project configuration must be adjuste
 See [Phone Authentication — iOS: reCAPTCHA SDK and Identity Platform](/docs/auth/phone-auth#ios-recaptcha-sdk-and-identity-platform) for
 recommended setup, the Safari flow, and a documented **GCP / Identity Toolkit** workaround with trade-offs.
 
+
