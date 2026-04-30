@@ -63,7 +63,6 @@ jobs:
       - name: Start Firebase Emulator and run tests
         run: cd ./.github/workflows/scripts && firebase emulators:exec --project flutterfire-e2e-tests "cd ../../../tests && flutter test .\integration_test\e2e_test.dart -d windows --verbose"
 
-# We cannot run the tests but we can still try to build the app because of https://github.com/flutter/flutter/issues/79213
   windows-firestore:
     runs-on: windows-latest
     if: ${{ !inputs.nightly_test_mode }}
@@ -94,4 +93,13 @@ jobs:
         run: |
           npm install -g firebase-tools
       - name: Start Firebase Emulator and run tests
-        run: cd ./.github/workflows/scripts && firebase emulators:exec --project flutterfire-e2e-tests "cd ../../../packages/cloud_firestore/cloud_firestore/example && flutter build windows"
+        run: |
+          cd ./.github/workflows/scripts
+          firebase emulators:exec --project flutterfire-e2e-tests "cd ../../../packages/cloud_firestore/cloud_firestore/example && flutter drive --target=.\integration_test\e2e_test.dart --driver=.\test_driver\integration_test.dart -d windows --verbose" 2>&1 | Tee-Object -FilePath output.log
+          $exitCode = $LASTEXITCODE
+          $output = Get-Content output.log -Raw
+          if ($output -match '\[E\]' -or $output -match 'Some tests failed') {
+            Write-Error "All tests did not pass. Please check the logs for more information."
+            exit 1
+          }
+          exit $exitCode
