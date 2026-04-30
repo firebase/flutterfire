@@ -48,8 +48,8 @@ class _ImageGenerationPageState extends State<ImageGenerationPage> {
 
   void _initializeModel() {
     final aiClient = widget.useVertexBackend
-        ? FirebaseAI.vertexAI(auth: FirebaseAuth.instance)
-        : FirebaseAI.googleAI(auth: FirebaseAuth.instance);
+        ? FirebaseAI.vertexAI()
+        : FirebaseAI.googleAI();
 
     _model = aiClient.generativeModel(
       model: 'gemini-2.5-flash-image',

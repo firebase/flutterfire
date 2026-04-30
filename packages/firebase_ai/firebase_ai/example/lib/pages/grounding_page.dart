@@ -75,8 +75,8 @@ class _GroundingPageState extends State<GroundingPage> {
     }
 
     final aiProvider = widget.useVertexBackend
-        ? FirebaseAI.vertexAI(auth: FirebaseAuth.instance)
-        : FirebaseAI.googleAI(auth: FirebaseAuth.instance);
+        ? FirebaseAI.vertexAI()
+        : FirebaseAI.googleAI();
 
     _model = aiProvider.generativeModel(
       model: 'gemini-2.5-flash',

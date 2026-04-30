@@ -57,12 +57,12 @@ class _ChatPageState extends State<ChatPage> {
           : null,
     );
     if (widget.useVertexBackend) {
-      _model = FirebaseAI.vertexAI(auth: FirebaseAuth.instance).generativeModel(
+      _model = FirebaseAI.vertexAI().generativeModel(
         model: 'gemini-2.5-flash',
         generationConfig: generationConfig,
       );
     } else {
-      _model = FirebaseAI.googleAI(auth: FirebaseAuth.instance).generativeModel(
+      _model = FirebaseAI.googleAI().generativeModel(
         model: 'gemini-2.5-flash',
         generationConfig: generationConfig,
       );
