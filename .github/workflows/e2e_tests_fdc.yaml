@@ -70,6 +70,8 @@ jobs:
           cache: true
           cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
           pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
+      - name: Setup PostgreSQL for Linux/macOS/Windows
+        uses: ikalnytskyi/action-setup-postgres@v7
       - uses: bluefireteam/melos-action@705015c3d2bc4ab94201ac24accb2bbe070cf533
         with:
           run-bootstrap: false
@@ -79,6 +81,7 @@ jobs:
       - name: Start Firebase Emulator
         run: |
           cd ./packages/firebase_data_connect/firebase_data_connect/example
+          pkill -x postgres || true
           unset PGSERVICEFILE
           firebase experiments:enable dataconnect
           ./start-firebase-emulator.sh
@@ -157,6 +160,8 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '21'
+      - name: Setup PostgreSQL for Linux/macOS/Windows
+        uses: ikalnytskyi/action-setup-postgres@v7
       - uses: hendrikmuhs/ccache-action@5ebbd400eff9e74630f759d94ddd7b6c26299639
         name: Xcode Compile Cache
         with:
@@ -214,6 +219,7 @@ jobs:
         run: |
           sudo chown -R 501:20 "/Users/runner/.npm"
           cd ./packages/firebase_data_connect/firebase_data_connect/example
+          pkill -x postgres || true
           unset PGSERVICEFILE
           firebase experiments:enable dataconnect
           ./start-firebase-emulator.sh
@@ -273,6 +279,8 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '21'
+      - name: Setup PostgreSQL for Linux/macOS/Windows
+        uses: ikalnytskyi/action-setup-postgres@v7
       - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
         with:
           channel: 'stable'
@@ -304,6 +312,7 @@ jobs:
         run: |
           sudo chown -R 501:20 "/Users/runner/.npm"
           cd ./packages/firebase_data_connect/firebase_data_connect/example
+          pkill -x postgres || true
           unset PGSERVICEFILE
           firebase experiments:enable dataconnect
           ./start-firebase-emulator.sh
@@ -350,6 +359,8 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '21'
+      - name: Setup PostgreSQL for Linux/macOS/Windows
+        uses: ikalnytskyi/action-setup-postgres@v7
       - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
         with:
           channel: 'stable'
@@ -380,6 +391,7 @@ jobs:
       - name: Start Firebase Emulator
         run: |
           cd ./packages/firebase_data_connect/firebase_data_connect/example
+          pkill -x postgres || true
           unset PGSERVICEFILE
           firebase experiments:enable dataconnect
           ./start-firebase-emulator.sh
