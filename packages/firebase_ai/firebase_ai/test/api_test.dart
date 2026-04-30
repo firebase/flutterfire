@@ -18,6 +18,7 @@ import 'dart:convert';
 import 'package:firebase_ai/src/api.dart';
 import 'package:firebase_ai/src/content.dart';
 import 'package:firebase_ai/src/error.dart';
+import 'package:firebase_ai/src/image_config.dart';
 import 'package:firebase_ai/src/schema.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -322,8 +323,53 @@ void main() {
       expect(FinishReason.recitation.toJson(), 'RECITATION');
       expect(FinishReason.malformedFunctionCall.toJson(),
           'MALFORMED_FUNCTION_CALL');
+      expect(FinishReason.blocklist.toJson(), 'BLOCKLIST');
+      expect(FinishReason.prohibitedContent.toJson(), 'PROHIBITED_CONTENT');
+      expect(FinishReason.spii.toJson(), 'SPII');
+      expect(FinishReason.imageSafety.toJson(), 'IMAGE_SAFETY');
+      expect(FinishReason.imageProhibitedContent.toJson(),
+          'IMAGE_PROHIBITED_CONTENT');
+      expect(FinishReason.imageOther.toJson(), 'IMAGE_OTHER');
+      expect(FinishReason.noImage.toJson(), 'NO_IMAGE');
+      expect(FinishReason.imageRecitation.toJson(), 'IMAGE_RECITATION');
+      expect(FinishReason.language.toJson(), 'LANGUAGE');
       expect(FinishReason.unexpectedToolCall.toJson(), 'UNEXPECTED_TOOL_CALL');
+      expect(FinishReason.tooManyToolCalls.toJson(), 'TOO_MANY_TOOL_CALLS');
+      expect(FinishReason.missingThoughtSignature.toJson(),
+          'MISSING_THOUGHT_SIGNATURE');
+      expect(FinishReason.malformedResponse.toJson(), 'MALFORMED_RESPONSE');
       expect(FinishReason.other.toJson(), 'OTHER');
+    });
+
+    test('FinishReason parseValue', () {
+      expect(FinishReason.parseValue('STOP'), FinishReason.stop);
+      expect(FinishReason.parseValue('MAX_TOKENS'), FinishReason.maxTokens);
+      expect(FinishReason.parseValue('SAFETY'), FinishReason.safety);
+      expect(FinishReason.parseValue('RECITATION'), FinishReason.recitation);
+      expect(FinishReason.parseValue('MALFORMED_FUNCTION_CALL'),
+          FinishReason.malformedFunctionCall);
+      expect(FinishReason.parseValue('BLOCKLIST'), FinishReason.blocklist);
+      expect(FinishReason.parseValue('PROHIBITED_CONTENT'),
+          FinishReason.prohibitedContent);
+      expect(FinishReason.parseValue('SPII'), FinishReason.spii);
+      expect(FinishReason.parseValue('IMAGE_SAFETY'), FinishReason.imageSafety);
+      expect(FinishReason.parseValue('IMAGE_PROHIBITED_CONTENT'),
+          FinishReason.imageProhibitedContent);
+      expect(FinishReason.parseValue('IMAGE_OTHER'), FinishReason.imageOther);
+      expect(FinishReason.parseValue('NO_IMAGE'), FinishReason.noImage);
+      expect(FinishReason.parseValue('IMAGE_RECITATION'),
+          FinishReason.imageRecitation);
+      expect(FinishReason.parseValue('LANGUAGE'), FinishReason.language);
+      expect(FinishReason.parseValue('UNEXPECTED_TOOL_CALL'),
+          FinishReason.unexpectedToolCall);
+      expect(FinishReason.parseValue('TOO_MANY_TOOL_CALLS'),
+          FinishReason.tooManyToolCalls);
+      expect(FinishReason.parseValue('MISSING_THOUGHT_SIGNATURE'),
+          FinishReason.missingThoughtSignature);
+      expect(FinishReason.parseValue('MALFORMED_RESPONSE'),
+          FinishReason.malformedResponse);
+      expect(FinishReason.parseValue('OTHER'), FinishReason.other);
+      expect(FinishReason.parseValue('UNSPECIFIED'), FinishReason.unknown);
     });
 
     test('ContentModality toJson and toString', () {
@@ -447,10 +493,34 @@ void main() {
     });
   });
 
+  group('ImageConfig', () {
+    test('toJson with all fields', () {
+      const config = ImageConfig(
+        aspectRatio: ImageAspectRatio.portrait9x16,
+        imageSize: ImageSize.size2K,
+      );
+      expect(config.toJson(), {
+        'aspectRatio': '9:16',
+        'imageSize': '2K',
+      });
+    });
+
+    test('toJson with some fields null', () {
+      const config = ImageConfig(
+        aspectRatio: ImageAspectRatio.landscape16x9,
+      );
+      expect(config.toJson(), {
+        'aspectRatio': '16:9',
+      });
+    });
+  });
+
   group('GenerationConfig & BaseGenerationConfig', () {
     test('GenerationConfig toJson with all fields', () {
       final schema = Schema.object(properties: {});
       final thinkingConfig = ThinkingConfig(thinkingBudget: 100);
+      const imageConfig = ImageConfig(
+          aspectRatio: ImageAspectRatio.square1x1, imageSize: ImageSize.size1K);
       final config = GenerationConfig(
         candidateCount: 1,
         stopSequences: ['\n', 'stop'],
@@ -463,6 +533,7 @@ void main() {
         responseMimeType: 'application/json',
         responseSchema: schema,
         thinkingConfig: thinkingConfig,
+        imageConfig: imageConfig,
       );
       expect(config.toJson(), {
         'candidateCount': 1,
@@ -476,6 +547,10 @@ void main() {
         'responseMimeType': 'application/json',
         'responseSchema': schema.toJson(),
         'thinkingConfig': {'thinkingBudget': 100},
+        'imageConfig': {
+          'aspectRatio': '1:1',
+          'imageSize': '1K',
+        },
       });
     });
 
