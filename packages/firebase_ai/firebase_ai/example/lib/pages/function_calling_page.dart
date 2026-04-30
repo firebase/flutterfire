@@ -235,9 +235,8 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
           : null,
     );
 
-    final aiClient = widget.useVertexBackend
-        ? FirebaseAI.vertexAI()
-        : FirebaseAI.googleAI();
+    final aiClient =
+        widget.useVertexBackend ? FirebaseAI.vertexAI() : FirebaseAI.googleAI();
 
     _functionCallModel = aiClient.generativeModel(
       model: 'gemini-2.5-flash',
