@@ -20,6 +20,18 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'query_e2e.dart'; // For deleteAllMovies
 
+const _streamTimeout = Duration(seconds: 30);
+
+Future<T> _waitForStreamEvent<T>(Future<T> future, String description) {
+  return future.timeout(
+    _streamTimeout,
+    onTimeout: () => throw TimeoutException(
+      'Timed out waiting for $description',
+      _streamTimeout,
+    ),
+  );
+}
+
 void runWebSocketTests() {
   group(
     '$FirebaseDataConnect WebSocketTransport',
@@ -44,9 +56,9 @@ void runWebSocketTests() {
             .subscribe()
             .listen((value) {
           if (count1 == 0) {
-            ready1.complete();
+            if (!ready1.isCompleted) ready1.complete();
           } else {
-            update1.complete();
+            if (!update1.isCompleted) update1.complete();
           }
           count1++;
         });
@@ -57,44 +69,57 @@ void runWebSocketTests() {
             .subscribe()
             .listen((value) {
           if (count2 == 0) {
-            ready2.complete();
+            if (!ready2.isCompleted) ready2.complete();
           } else {
-            update2.complete();
+            if (!update2.isCompleted) update2.complete();
           }
           count2++;
         });
 
-        // Wait for both to be ready
-        await ready1.future;
-        await ready2.future;
+        try {
+          // Wait for both to be ready
+          await _waitForStreamEvent(ready1.future, 'Matrix subscription');
+          await _waitForStreamEvent(ready2.future, 'Titan subscription');
 
-        // Create movies
-        await MoviesConnector.instance
-            .createMovie(
-              genre: 'Action',
-              title: 'The Matrix',
-              releaseYear: 1999,
-            )
-            .rating(4.5)
-            .ref()
-            .execute();
+          // Create movies
+          await MoviesConnector.instance
+              .createMovie(
+                genre: 'Action',
+                title: 'The Matrix',
+                releaseYear: 1999,
+              )
+              .rating(4.5)
+              .ref()
+              .execute();
 
-        await MoviesConnector.instance
-            .createMovie(
-              genre: 'Drama',
-              title: 'Titanic',
-              releaseYear: 1997,
-            )
-            .rating(4.8)
-            .ref()
-            .execute();
+          await MoviesConnector.instance
+              .createMovie(
+                genre: 'Drama',
+                title: 'Titanic',
+                releaseYear: 1997,
+              )
+              .rating(4.8)
+              .ref()
+              .execute();
 
-        // Wait for updates
-        await update1.future;
-        await update2.future;
+          // Explicitly resume each active query so this test does not depend on
+          // emulator-side push timing.
+          await MoviesConnector.instance
+              .listMoviesByPartialTitle(input: 'Matrix')
+              .ref()
+              .execute(fetchPolicy: QueryFetchPolicy.serverOnly);
+          await MoviesConnector.instance
+              .listMoviesByPartialTitle(input: 'Titan')
+              .ref()
+              .execute(fetchPolicy: QueryFetchPolicy.serverOnly);
 
-        await sub1.cancel();
-        await sub2.cancel();
+          // Wait for updates
+          await _waitForStreamEvent(update1.future, 'Matrix update');
+          await _waitForStreamEvent(update2.future, 'Titan update');
+        } finally {
+          await sub1.cancel();
+          await sub2.cancel();
+        }
       });
 
       testWidgets(
@@ -110,36 +135,38 @@ void runWebSocketTests() {
             .subscribe()
             .listen((value) {
           if (count == 0) {
-            isReady.complete();
+            if (!isReady.isCompleted) isReady.complete();
           }
           count++;
         });
 
-        await isReady.future;
+        try {
+          await _waitForStreamEvent(isReady.future, 'listMovies subscription');
 
-        // Now perform a query, which should go over WebSocket if connected
-        final result =
-            await MoviesConnector.instance.listMovies().ref().execute();
-        expect(result.data.movies.length, 0);
+          // Now perform a query, which should go over WebSocket if connected
+          final result =
+              await MoviesConnector.instance.listMovies().ref().execute();
+          expect(result.data.movies.length, 0);
 
-        // Perform a mutation
-        await MoviesConnector.instance
-            .createMovie(
-              genre: 'Action',
-              title: 'Inception',
-              releaseYear: 2010,
-            )
-            .rating(4.9)
-            .ref()
-            .execute();
+          // Perform a mutation
+          await MoviesConnector.instance
+              .createMovie(
+                genre: 'Action',
+                title: 'Inception',
+                releaseYear: 2010,
+              )
+              .rating(4.9)
+              .ref()
+              .execute();
 
-        // Verify update via query
-        final result2 =
-            await MoviesConnector.instance.listMovies().ref().execute();
-        expect(result2.data.movies.length, 1);
-        expect(result2.data.movies[0].title, 'Inception');
-
-        await sub.cancel();
+          // Verify update via query
+          final result2 =
+              await MoviesConnector.instance.listMovies().ref().execute();
+          expect(result2.data.movies.length, 1);
+          expect(result2.data.movies[0].title, 'Inception');
+        } finally {
+          await sub.cancel();
+        }
       });
 
       testWidgets('should stop receiving events after cancel',
@@ -154,14 +181,14 @@ void runWebSocketTests() {
             .subscribe()
             .listen((value) {
           if (count == 0) {
-            isReady.complete();
+            if (!isReady.isCompleted) isReady.complete();
           } else {
-            receivedUpdate.complete();
+            if (!receivedUpdate.isCompleted) receivedUpdate.complete();
           }
           count++;
         });
 
-        await isReady.future;
+        await _waitForStreamEvent(isReady.future, 'listMovies subscription');
 
         // Cancel the subscription
         await sub.cancel();
@@ -200,12 +227,12 @@ void runWebSocketTests() {
             .subscribe()
             .listen((value) {
           if (count == 0) {
-            isReady.complete();
+            if (!isReady.isCompleted) isReady.complete();
           }
           count++;
         });
 
-        await isReady.future;
+        await _waitForStreamEvent(isReady.future, 'listMovies subscription');
 
         final dataConnect = MoviesConnector.instance.dataConnect;
         final transport = (dataConnect as dynamic).transport;
