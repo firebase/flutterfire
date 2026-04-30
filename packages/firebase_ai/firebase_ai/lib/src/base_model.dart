@@ -282,19 +282,23 @@ abstract class BaseModel {
   ) {
     return () async {
       Map<String, String> headers = {};
+      
+      final effectiveAppCheck = appCheck ?? app?.getService<FirebaseAppCheck>();
+      final effectiveAuth = auth ?? app?.getService<FirebaseAuth>();
+      
       // Override the client name in Google AI SDK
       headers['x-goog-api-client'] =
           'gl-dart/$packageVersion fire/$packageVersion';
-      if (appCheck != null) {
+      if (effectiveAppCheck != null) {
         final appCheckToken = useLimitedUseAppCheckTokens == true
-            ? await appCheck.getLimitedUseToken()
-            : await appCheck.getToken();
+            ? await effectiveAppCheck.getLimitedUseToken()
+            : await effectiveAppCheck.getToken();
         if (appCheckToken != null) {
           headers['X-Firebase-AppCheck'] = appCheckToken;
         }
       }
-      if (auth != null) {
-        final idToken = await auth.currentUser?.getIdToken();
+      if (effectiveAuth != null) {
+        final idToken = await effectiveAuth.currentUser?.getIdToken();
         if (idToken != null) {
           headers['Authorization'] = 'Firebase $idToken';
         }
