@@ -76,13 +76,13 @@ class FirebaseApp {
   static final Map<String, Map<Type, dynamic>> _registries = {};
 
   /// Registers a service instance for this app.
-  void registerService<T>(T service) {
+  void registerService<T extends FirebaseService>(T service) {
     final registry = _registries.putIfAbsent(name, () => {});
     registry[T] = service;
   }
 
   /// Returns a registered service instance for this app.
-  T? getService<T>() {
+  T? getService<T extends FirebaseService>() {
     final registry = _registries[name];
     if (registry != null) {
       return registry[T] as T?;
@@ -90,3 +90,6 @@ class FirebaseApp {
     return null;
   }
 }
+
+/// A marker interface for Firebase services that can be registered in [FirebaseApp].
+abstract class FirebaseService {}

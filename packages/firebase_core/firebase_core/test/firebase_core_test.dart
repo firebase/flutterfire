@@ -67,12 +67,11 @@ void main() {
 
     test('.registerService() and .getService()', () {
       FirebaseApp app = Firebase.app(testAppName);
-
-      const testService = 'testServiceInstance';
-      app.registerService<String>(testService);
-
-      expect(app.getService<String>(), testService);
-      expect(app.getService<int>(), isNull);
+      
+      final testService = TestService();
+      app.registerService<TestService>(testService);
+      
+      expect(app.getService<TestService>(), testService);
     });
   });
 
@@ -162,3 +161,5 @@ class MockFirebaseCore extends Mock
 
 // ignore: avoid_implementing_value_types
 class FakeFirebaseAppPlatform extends Fake implements FirebaseAppPlatform {}
+
+class TestService implements FirebaseService {}
