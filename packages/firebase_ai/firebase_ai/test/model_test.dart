@@ -356,6 +356,55 @@ void main() {
       });
     });
 
+    group('generate object', () {
+      test('can make successful request and parse object', () async {
+        final (client, model) = createModel();
+        const prompt = 'Some prompt';
+        const result = '{"name": "John", "age": 30}';
+        
+        final schema = AutoSchema<Map<String, dynamic>>(
+          schemaMap: const {
+            'type': 'OBJECT',
+            'properties': {
+              'name': {'type': 'STRING'},
+              'age': {'type': 'INTEGER'},
+            },
+          },
+          fromJson: (json) => json,
+        );
+
+        final response = await client.checkRequest(
+          () => model.generateObject(schema, [Content.text(prompt)]),
+          verifyRequest: (uri, request) {
+            expect(request['generationConfig'], {
+              'responseMimeType': 'application/json',
+              'responseJsonSchema': {
+                'type': 'OBJECT',
+                'properties': {
+                  'name': {'type': 'STRING'},
+                  'age': {'type': 'INTEGER'},
+                },
+              },
+            });
+          },
+          response: {
+            'candidates': [
+              {
+                'content': {
+                  'role': 'model',
+                  'parts': [
+                    {'text': result},
+                  ],
+                },
+              },
+            ],
+          },
+        );
+        expect(response['name'], 'John');
+        expect(response['age'], 30);
+      });
+    });
+
     group('generate content stream', () {
       test('can make successful request', () async {
         final (client, model) = createModel();

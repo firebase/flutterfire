@@ -163,6 +163,54 @@ final class GenerativeModel extends BaseApiClientModel {
     return response.map(_serializationStrategy.parseGenerateContentResponse);
   }
 
+  /// Generates an object of type [T] responding to [prompt].
+  ///
+  /// Uses the provided [schema] to constrain the output to match the JSON
+  /// schema and uses [schema.fromJson] to parse the result.
+  Future<T> generateObject<T>(
+    AutoSchema<T> schema,
+    Iterable<Content> prompt, {
+    List<SafetySetting>? safetySettings,
+    GenerationConfig? generationConfig,
+    List<Tool>? tools,
+    ToolConfig? toolConfig,
+  }) async {
+    final config = GenerationConfig(
+      candidateCount: generationConfig?.candidateCount,
+      stopSequences: generationConfig?.stopSequences,
+      maxOutputTokens: generationConfig?.maxOutputTokens,
+      temperature: generationConfig?.temperature,
+      topP: generationConfig?.topP,
+      topK: generationConfig?.topK,
+      presencePenalty: generationConfig?.presencePenalty,
+      frequencyPenalty: generationConfig?.frequencyPenalty,
+      responseModalities: generationConfig?.responseModalities,
+      thinkingConfig: generationConfig?.thinkingConfig,
+      responseMimeType: 'application/json',
+      responseJsonSchema: schema.schemaMap,
+    );
+
+    final response = await generateContent(
+      prompt,
+      safetySettings: safetySettings,
+      generationConfig: config,
+      tools: tools,
+      toolConfig: toolConfig,
+    );
+
+    final text = response.text;
+    if (text == null) {
+      throw FirebaseAIException('No text returned from model');
+    }
+
+    final json = jsonDecode(text);
+    if (json is! Map<String, dynamic>) {
+      throw FirebaseAIException('Expected JSON map from model, got: $text');
+    }
+
+    return schema.fromJson(json);
+  }
+
   /// Counts the total number of tokens in [contents].
   ///
   /// Sends a "countTokens" API request for the configured model,

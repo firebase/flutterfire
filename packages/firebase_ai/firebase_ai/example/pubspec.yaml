@@ -39,9 +39,12 @@ dependencies:
   waveform_flutter: ^1.2.0
 
 dev_dependencies:
+  build_runner: ^2.4.8
+  firebase_ai_generator: ^0.1.0
   flutter_lints: ^4.0.0
   flutter_test:
     sdk: flutter
+
 
 flutter:
 

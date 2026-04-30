@@ -1,0 +1,14 @@
+name: firebase_ai_generator
+description: Code generator for Firebase AI.
+version: 0.1.0
+environment:
+  sdk: '>=3.2.0 <4.0.0'
+
+dependencies:
+  analyzer: ^6.4.1
+  build: ^2.4.1
+  source_gen: ^1.5.0
+  firebase_ai: ^3.10.0
+
+dev_dependencies:
+  build_runner: ^2.4.8
