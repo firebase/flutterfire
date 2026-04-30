@@ -71,4 +71,21 @@ class FirebaseApp {
 
   @override
   String toString() => '$FirebaseApp($name)';
+
+  static final Map<String, Map<Type, dynamic>> _registries = {};
+
+  /// Registers a service instance for this app.
+  void registerService<T>(T service) {
+    final registry = _registries.putIfAbsent(name, () => {});
+    registry[T] = service;
+  }
+
+  /// Returns a registered service instance for this app.
+  T? getService<T>() {
+    final registry = _registries[name];
+    if (registry != null) {
+      return registry[T] as T?;
+    }
+    return null;
+  }
 }

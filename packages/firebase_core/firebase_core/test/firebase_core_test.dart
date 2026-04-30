@@ -64,6 +64,16 @@ void main() {
         mock.app(testAppName),
       ]);
     });
+
+    test('.registerService() and .getService()', () {
+      FirebaseApp app = Firebase.app(testAppName);
+      
+      const testService = 'testServiceInstance';
+      app.registerService<String>(testService);
+      
+      expect(app.getService<String>(), testService);
+      expect(app.getService<int>(), isNull);
+    });
   });
 
   test('.initializeApp() with demoProjectId', () async {

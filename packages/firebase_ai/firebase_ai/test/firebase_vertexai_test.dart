@@ -96,6 +96,13 @@ void main() {
       expect(vertexAIAppCheck.useLimitedUseAppCheckTokens, true);
     });
 
+    test('Instance creation with auto-injected AppCheck', () {
+      final vertexAI = FirebaseAI.vertexAI(app: customApp);
+      
+      expect(vertexAI.app, equals(customApp));
+      expect(vertexAI.appCheck, equals(customAppCheck));
+    });
+
     test('generativeModel creation with Grounding tools', () {
       final ai = FirebaseAI.googleAI();
 

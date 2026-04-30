@@ -68,6 +68,7 @@ class FirebaseAI extends FirebasePluginPlatform {
     bool? useLimitedUseAppCheckTokens,
   }) {
     app ??= Firebase.app();
+    appCheck ??= app.getService<FirebaseAppCheck>();
     var instanceKey = '${app.name}::vertexai::$location';
 
     if (_cachedInstances.containsKey(instanceKey)) {
@@ -100,6 +101,7 @@ class FirebaseAI extends FirebasePluginPlatform {
     bool? useLimitedUseAppCheckTokens,
   }) {
     app ??= Firebase.app();
+    appCheck ??= app.getService<FirebaseAppCheck>();
     var instanceKey = '${app.name}::googleai';
 
     if (_cachedInstances.containsKey(instanceKey)) {
