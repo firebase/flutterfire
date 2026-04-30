@@ -62,7 +62,11 @@ class FirebaseAI extends FirebasePluginPlatform {
   /// If pass in [appCheck], request session will get protected from abusing.
   static FirebaseAI vertexAI({
     FirebaseApp? app,
+    @Deprecated(
+        'Passing an explicit instance is deprecated, internal handling is now automatic.')
     FirebaseAppCheck? appCheck,
+    @Deprecated(
+        'Passing an explicit instance is deprecated, internal handling is now automatic.')
     FirebaseAuth? auth,
     String? location,
     bool? useLimitedUseAppCheckTokens,
@@ -97,7 +101,11 @@ class FirebaseAI extends FirebasePluginPlatform {
   /// If pass in [appCheck], request session will get protected from abusing.
   static FirebaseAI googleAI({
     FirebaseApp? app,
+    @Deprecated(
+        'Passing an explicit instance is deprecated, internal handling is now automatic.')
     FirebaseAppCheck? appCheck,
+    @Deprecated(
+        'Passing an explicit instance is deprecated, internal handling is now automatic.')
     FirebaseAuth? auth,
     bool? useLimitedUseAppCheckTokens,
   }) {

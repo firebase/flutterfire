@@ -67,10 +67,10 @@ void main() {
 
     test('.registerService() and .getService()', () {
       FirebaseApp app = Firebase.app(testAppName);
-      
+
       final testService = TestService();
       app.registerService<TestService>(testService);
-      
+
       expect(app.getService<TestService>(), testService);
     });
   });
