@@ -248,7 +248,7 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
         ]));
   }
 
-  _showError(String message) {
+  void _showError(String message) {
     showDialog<void>(
       context: context,
       builder: (context) {
