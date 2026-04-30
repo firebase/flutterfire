@@ -69,6 +69,7 @@ class FirebaseAI extends FirebasePluginPlatform {
   }) {
     app ??= Firebase.app();
     appCheck ??= app.getService<FirebaseAppCheck>();
+    auth ??= app.getService<FirebaseAuth>();
     var instanceKey = '${app.name}::vertexai::$location';
 
     if (_cachedInstances.containsKey(instanceKey)) {
@@ -102,6 +103,7 @@ class FirebaseAI extends FirebasePluginPlatform {
   }) {
     app ??= Firebase.app();
     appCheck ??= app.getService<FirebaseAppCheck>();
+    auth ??= app.getService<FirebaseAuth>();
     var instanceKey = '${app.name}::googleai';
 
     if (_cachedInstances.containsKey(instanceKey)) {

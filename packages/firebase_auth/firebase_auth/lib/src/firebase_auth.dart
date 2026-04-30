@@ -45,7 +45,9 @@ class FirebaseAuth extends FirebasePluginPlatform {
     required FirebaseApp app,
   }) {
     return _firebaseAuthInstances.putIfAbsent(app.name, () {
-      return FirebaseAuth._(app: app);
+      final instance = FirebaseAuth._(app: app);
+      app.registerService<FirebaseAuth>(instance);
+      return instance;
     });
   }
 
