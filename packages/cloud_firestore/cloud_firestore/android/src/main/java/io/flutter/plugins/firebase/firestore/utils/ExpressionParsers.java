@@ -185,6 +185,11 @@ class ExpressionParsers {
           List<Map<String, Object>> exprMaps = (List<Map<String, Object>>) args.get("expressions");
           return ExpressionHelpers.parseXorExpression(exprMaps, this);
         }
+      case "nor":
+        {
+          List<Map<String, Object>> exprMaps = (List<Map<String, Object>>) args.get("expressions");
+          return ExpressionHelpers.parseNorExpression(exprMaps, this);
+        }
       case "not":
         {
           Map<String, Object> exprMap = (Map<String, Object>) args.get("expression");
@@ -351,6 +356,68 @@ class ExpressionParsers {
           }
           return Expression.timestampTruncate(parseExpression(timestampMap), unit);
         }
+      case "timestamp_diff":
+        {
+          Map<String, Object> endMap = (Map<String, Object>) args.get("end");
+          Map<String, Object> startMap = (Map<String, Object>) args.get("start");
+          Object unitObj = args.get("unit");
+          Expression endExpr = parseExpression(endMap);
+          Expression startExpr = parseExpression(startMap);
+          if (unitObj instanceof String) {
+            return Expression.timestampDiff(endExpr, startExpr, (String) unitObj);
+          }
+          @SuppressWarnings("unchecked")
+          Map<String, Object> unitMap = (Map<String, Object>) unitObj;
+          return Expression.timestampDiff(endExpr, startExpr, parseExpression(unitMap));
+        }
+      case "timestamp_extract":
+        {
+          Map<String, Object> timestampMap = (Map<String, Object>) args.get("timestamp");
+          Map<String, Object> partMap = (Map<String, Object>) args.get("part");
+          Expression tsExpr = parseExpression(timestampMap);
+          Expression partExpr = parseExpression(partMap);
+          if (!args.containsKey("timezone") || args.get("timezone") == null) {
+            return Expression.timestampExtract(tsExpr, partExpr);
+          }
+          Object tzObj = args.get("timezone");
+          if (tzObj instanceof String) {
+            return Expression.timestampExtractWithTimezone(tsExpr, partExpr, (String) tzObj);
+          }
+          @SuppressWarnings("unchecked")
+          Map<String, Object> tzMap = (Map<String, Object>) tzObj;
+          return Expression.timestampExtractWithTimezone(tsExpr, partExpr, parseExpression(tzMap));
+        }
+      case "parent":
+        {
+          if (args.containsKey("doc_ref")) {
+            String path = (String) args.get("doc_ref");
+            if (path == null) {
+              throw new IllegalArgumentException("parent requires 'doc_ref' argument");
+            }
+            return Expression.parent(firestore.document(path));
+          }
+          return Expression.parent(parseChild(args, "expression"));
+        }
+      case "if_null":
+        {
+          Map<String, Object> exprMap = (Map<String, Object>) args.get("expression");
+          Map<String, Object> replacementMap = (Map<String, Object>) args.get("replacement");
+          return Expression.ifNull(parseExpression(exprMap), parseExpression(replacementMap));
+        }
+      case "coalesce":
+        {
+          List<Map<String, Object>> exprMaps = (List<Map<String, Object>>) args.get("expressions");
+          return ExpressionHelpers.parseCoalesceExpression(exprMaps, this);
+        }
+      case "switch_on":
+        {
+          List<Map<String, Object>> exprMaps = (List<Map<String, Object>>) args.get("expressions");
+          return ExpressionHelpers.parseSwitchOnExpression(exprMaps, this);
+        }
+      case "map_keys":
+        return Expression.mapKeys(parseChild(args, "expression"));
+      case "map_values":
+        return Expression.mapValues(parseChild(args, "expression"));
       case "array":
         {
           List<?> elements = (List<?>) args.get("elements");
@@ -517,6 +584,11 @@ class ExpressionParsers {
         {
           List<Map<String, Object>> exprMaps = (List<Map<String, Object>>) args.get("expressions");
           return ExpressionHelpers.parseXorExpression(exprMaps, this);
+        }
+      case "nor":
+        {
+          List<Map<String, Object>> exprMaps = (List<Map<String, Object>>) args.get("expressions");
+          return ExpressionHelpers.parseNorExpression(exprMaps, this);
         }
       case "not":
         {
