@@ -14,7 +14,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_ai/firebase_ai.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import '../utils/function_call_utils.dart';
 import '../widgets/message_widget.dart';
 
@@ -235,9 +235,8 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
           : null,
     );
 
-    final aiClient = widget.useVertexBackend
-        ? FirebaseAI.vertexAI(auth: FirebaseAuth.instance)
-        : FirebaseAI.googleAI(auth: FirebaseAuth.instance);
+    final aiClient =
+        widget.useVertexBackend ? FirebaseAI.vertexAI() : FirebaseAI.googleAI();
 
     _functionCallModel = aiClient.generativeModel(
       model: 'gemini-2.5-flash',

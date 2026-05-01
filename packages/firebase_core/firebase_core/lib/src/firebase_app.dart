@@ -28,6 +28,7 @@ class FirebaseApp {
   /// Deleting the default app is not possible and throws an exception.
   Future<void> delete() async {
     await _delegate.delete();
+    _registries.remove(name);
   }
 
   /// The name of this [FirebaseApp].
@@ -71,4 +72,24 @@ class FirebaseApp {
 
   @override
   String toString() => '$FirebaseApp($name)';
+
+  static final Map<String, Map<Type, dynamic>> _registries = {};
+
+  /// Registers a service instance for this app.
+  void registerService<T extends FirebaseService>(T service) {
+    final registry = _registries.putIfAbsent(name, () => {});
+    registry[T] = service;
+  }
+
+  /// Returns a registered service instance for this app.
+  T? getService<T extends FirebaseService>() {
+    final registry = _registries[name];
+    if (registry != null) {
+      return registry[T] as T?;
+    }
+    return null;
+  }
 }
+
+/// A marker interface for Firebase services that can be registered in [FirebaseApp].
+abstract class FirebaseService {}

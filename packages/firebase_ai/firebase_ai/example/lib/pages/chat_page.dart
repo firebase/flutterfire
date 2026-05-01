@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_ai/firebase_ai.dart';
 import '../widgets/message_widget.dart';
@@ -57,12 +56,12 @@ class _ChatPageState extends State<ChatPage> {
           : null,
     );
     if (widget.useVertexBackend) {
-      _model = FirebaseAI.vertexAI(auth: FirebaseAuth.instance).generativeModel(
+      _model = FirebaseAI.vertexAI().generativeModel(
         model: 'gemini-2.5-flash',
         generationConfig: generationConfig,
       );
     } else {
-      _model = FirebaseAI.googleAI(auth: FirebaseAuth.instance).generativeModel(
+      _model = FirebaseAI.googleAI().generativeModel(
         model: 'gemini-2.5-flash',
         generationConfig: generationConfig,
       );

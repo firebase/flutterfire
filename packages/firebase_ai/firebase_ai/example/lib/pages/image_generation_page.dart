@@ -15,7 +15,7 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:firebase_ai/firebase_ai.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import '../widgets/message_widget.dart';
 
 class ImageGenerationPage extends StatefulWidget {
@@ -47,9 +47,8 @@ class _ImageGenerationPageState extends State<ImageGenerationPage> {
   }
 
   void _initializeModel() {
-    final aiClient = widget.useVertexBackend
-        ? FirebaseAI.vertexAI(auth: FirebaseAuth.instance)
-        : FirebaseAI.googleAI(auth: FirebaseAuth.instance);
+    final aiClient =
+        widget.useVertexBackend ? FirebaseAI.vertexAI() : FirebaseAI.googleAI();
 
     _model = aiClient.generativeModel(
       model: 'gemini-2.5-flash-image',

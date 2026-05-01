@@ -64,6 +64,15 @@ void main() {
         mock.app(testAppName),
       ]);
     });
+
+    test('.registerService() and .getService()', () {
+      FirebaseApp app = Firebase.app(testAppName);
+
+      final testService = TestService();
+      app.registerService<TestService>(testService);
+
+      expect(app.getService<TestService>(), testService);
+    });
   });
 
   test('.initializeApp() with demoProjectId', () async {
@@ -152,3 +161,5 @@ class MockFirebaseCore extends Mock
 
 // ignore: avoid_implementing_value_types
 class FakeFirebaseAppPlatform extends Fake implements FirebaseAppPlatform {}
+
+class TestService implements FirebaseService {}
