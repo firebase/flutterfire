@@ -11,7 +11,7 @@ if project_dir.include? "Flutter/ephemeral"
   # Note: macOS CWD can be based in <macosProjectDir>/Flutter/ephemeral - so we need to go up two levels.
   project_dir = File.expand_path(File.join(project_dir, '..', '..'))
 end
-system("ruby #{current_dir}/crashlytics_add_upload_symbols -f -p #{project_dir} -n Runner.xcodeproj")
+system("ruby '#{current_dir}/crashlytics_add_upload_symbols' -f -p '#{project_dir}' -n Runner.xcodeproj")
 
 if defined?($FirebaseSDKVersion)
   Pod::UI.puts "#{pubspec['name']}: Using user specified Firebase SDK version '#{$FirebaseSDKVersion}'"
