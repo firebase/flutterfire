@@ -282,10 +282,10 @@ abstract class BaseModel {
   ) {
     return () async {
       Map<String, String> headers = {};
-      
+
       final effectiveAppCheck = appCheck ?? app?.getService<FirebaseAppCheck>();
       final effectiveAuth = auth ?? app?.getService<FirebaseAuth>();
-      
+
       // Override the client name in Google AI SDK
       headers['x-goog-api-client'] =
           'gl-dart/$packageVersion fire/$packageVersion';
