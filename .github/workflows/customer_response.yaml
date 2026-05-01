@@ -1,0 +1,56 @@
+name: Customer response management
+
+on:
+  issue_comment:
+    types: [created]
+  schedule:
+    - cron: '0 9 * * *'
+
+permissions:
+  issues: write
+
+jobs:
+  remove-label:
+    if: >
+      github.event_name == 'issue_comment' &&
+      !github.event.issue.pull_request &&
+      github.event.comment.user.login == github.event.issue.user.login &&
+      contains(toJSON(github.event.issue.labels.*.name), 'blocked: customer-response')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.removeLabel({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              name: 'blocked: customer-response',
+            });
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              labels: ['Needs Attention'],
+            });
+
+  stale-check:
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v9
+        with:
+          only-labels: 'blocked: customer-response'
+          stale-issue-label: 'stale'
+          stale-issue-message: >
+            This issue has been inactive for 14 days since we requested more
+            information. It will be closed in 7 days if no further response
+            is received.
+          close-issue-message: >
+            Closing this issue as no response has been received. If this is
+            still a problem, please reopen with the requested information.
+          days-before-stale: 14
+          days-before-close: 7
+          days-before-pr-stale: -1
+          days-before-pr-close: -1
+          remove-stale-when-updated: true
