@@ -118,7 +118,13 @@ if(NOT MSVC_RUNTIME_MODE)
   set(MSVC_RUNTIME_MODE MD)
 endif()
 
-add_subdirectory(${FIREBASE_CPP_SDK_DIR} bin/ EXCLUDE_FROM_ALL)
+set(FLUTTERFIRE_FIREBASE_CPP_SDK_BINARY_DIR
+    "${CMAKE_BINARY_DIR}/firebase_cpp_sdk")
+if(NOT TARGET firebase_app)
+  add_subdirectory(${FIREBASE_CPP_SDK_DIR}
+    ${FLUTTERFIRE_FIREBASE_CPP_SDK_BINARY_DIR}
+    EXCLUDE_FROM_ALL)
+endif()
 target_include_directories(${PLUGIN_NAME} INTERFACE
   "${FIREBASE_CPP_SDK_DIR}/include")
 
@@ -129,6 +135,7 @@ foreach(firebase_lib IN ITEMS ${FIREBASE_RELEASE_PATH_LIBS})
     set_target_properties(${firebase_lib} PROPERTIES
       IMPORTED_LOCATION_DEBUG "${firebase_lib_path}"
       IMPORTED_LOCATION_RELEASE "${firebase_lib_release_path}"
+      IMPORTED_LOCATION_PROFILE "${firebase_lib_release_path}"
     )
 endforeach()
 

@@ -93,6 +93,7 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
   }) async {
     try {
       String? debugToken;
+      String? windowsProvider;
       if (providerAndroid is AndroidDebugProvider &&
           providerAndroid.debugToken != null) {
         debugToken = providerAndroid.debugToken;
@@ -102,6 +103,9 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
       } else if (providerWindows is WindowsDebugProvider &&
           providerWindows.debugToken != null) {
         debugToken = providerWindows.debugToken;
+      }
+      if (!kIsWeb && defaultTargetPlatform == TargetPlatform.windows) {
+        windowsProvider = providerWindows?.type;
       }
 
       await _pigeonApi.activate(
@@ -121,6 +125,7 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
               )
             : null,
         debugToken,
+        windowsProvider,
       );
     } on PlatformException catch (e, s) {
       convertPlatformException(e, s);
