@@ -8,12 +8,15 @@ import static io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry.reg
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
@@ -367,6 +370,15 @@ public class FlutterFirebaseMessagingPlugin
               permissionManager.requestPermissions(
                   mainActivity,
                   (notificationsEnabled) -> {
+                    if (notificationsEnabled == 0) {
+                      // User denied — record this so getNotificationSettings()
+                      // can later distinguish "permanently denied" from "never asked".
+                      SharedPreferences prefs =
+                          ContextHolder.getApplicationContext()
+                              .getSharedPreferences(
+                                  "FlutterFirebaseMessaging", Context.MODE_PRIVATE);
+                      prefs.edit().putBoolean("notification_permission_denied", true).apply();
+                    }
                     permissions.put("authorizationStatus", notificationsEnabled);
                     taskCompletionSource.setResult(permissions);
                   },
@@ -399,14 +411,51 @@ public class FlutterFirebaseMessagingPlugin
         () -> {
           try {
             final Map<String, Integer> permissions = new HashMap<>();
-            final boolean areNotificationsEnabled;
             if (Build.VERSION.SDK_INT >= 33) {
-              areNotificationsEnabled = checkPermissions();
+              final boolean areNotificationsEnabled = checkPermissions();
+              if (areNotificationsEnabled) {
+                permissions.put("authorizationStatus", 1);
+              } else {
+                // Permission is not granted. Use shouldShowRequestPermissionRationale
+                // combined with a SharedPreferences flag to distinguish three states:
+                //
+                // 1. shouldShowRationale=true  → user denied once, can still prompt
+                // 2. shouldShowRationale=false + wasDeniedBefore=false → never asked
+                // 3. shouldShowRationale=false + wasDeniedBefore=true  → permanently denied
+                //
+                // This mirrors how permission_handler solves the same ambiguity.
+                boolean shouldShowRationale =
+                    mainActivity != null
+                        && ActivityCompat.shouldShowRequestPermissionRationale(
+                            mainActivity, Manifest.permission.POST_NOTIFICATIONS);
+
+                SharedPreferences prefs =
+                    ContextHolder.getApplicationContext()
+                        .getSharedPreferences("FlutterFirebaseMessaging", Context.MODE_PRIVATE);
+                boolean wasDeniedBefore = prefs.getBoolean("notification_permission_denied", false);
+
+                if (shouldShowRationale) {
+                  // User denied at least once but didn't select "Don't ask again".
+                  // Record the denial if not already recorded.
+                  if (!wasDeniedBefore) {
+                    prefs.edit().putBoolean("notification_permission_denied", true).apply();
+                  }
+                  // Denied but can still be prompted again.
+                  permissions.put("authorizationStatus", 0);
+                } else if (wasDeniedBefore) {
+                  // No rationale + previously denied = permanently denied.
+                  permissions.put("authorizationStatus", 0);
+                } else {
+                  // No rationale + never denied = never asked.
+                  permissions.put("authorizationStatus", -1);
+                }
+              }
             } else {
-              areNotificationsEnabled =
-                  NotificationManagerCompat.from(mainActivity).areNotificationsEnabled();
+              final boolean areNotificationsEnabled =
+                  NotificationManagerCompat.from(ContextHolder.getApplicationContext())
+                      .areNotificationsEnabled();
+              permissions.put("authorizationStatus", areNotificationsEnabled ? 1 : 0);
             }
-            permissions.put("authorizationStatus", areNotificationsEnabled ? 1 : 0);
             taskCompletionSource.setResult(permissions);
           } catch (Exception e) {
             taskCompletionSource.setException(e);
