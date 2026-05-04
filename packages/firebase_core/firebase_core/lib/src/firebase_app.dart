@@ -83,11 +83,7 @@ class FirebaseApp {
 
   /// Returns a registered service instance for this app.
   T? getService<T extends FirebaseService>() {
-    final registry = _registries[name];
-    if (registry != null) {
-      return registry[T] as T?;
-    }
-    return null;
+    return _registries[name]?[T] as T?;
   }
 }
 
