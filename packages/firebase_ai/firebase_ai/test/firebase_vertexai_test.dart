@@ -14,6 +14,7 @@
 
 import 'package:firebase_ai/firebase_ai.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -28,6 +29,7 @@ void main() {
   late FirebaseApp customApp;
   late FirebaseApp limitTokenApp;
   late FirebaseAppCheck customAppCheck;
+  late FirebaseAuth customAuth;
   late FirebaseAppCheck limitTokenAppCheck;
 
   group('FirebaseAI Tests', () {
@@ -47,6 +49,7 @@ void main() {
       appCheck = FirebaseAppCheck.instance;
       customAppCheck = FirebaseAppCheck.instanceFor(app: customApp);
       limitTokenAppCheck = FirebaseAppCheck.instanceFor(app: limitTokenApp);
+      customAuth = FirebaseAuth.instanceFor(app: customApp);
     });
 
     test('Singleton behavior', () {
@@ -94,6 +97,20 @@ void main() {
       expect(vertexAIAppCheck.appCheck, equals(limitTokenAppCheck));
       expect(vertexAIAppCheck.location, equals('limit-token-location'));
       expect(vertexAIAppCheck.useLimitedUseAppCheckTokens, true);
+    });
+
+    test('Instance creation with auto-injected AppCheck', () {
+      final vertexAI = FirebaseAI.vertexAI(app: customApp);
+
+      expect(vertexAI.app, equals(customApp));
+      expect(vertexAI.appCheck, equals(customAppCheck));
+    });
+
+    test('Instance creation with auto-injected Auth', () {
+      final vertexAI = FirebaseAI.vertexAI(app: customApp);
+
+      expect(vertexAI.app, equals(customApp));
+      expect(vertexAI.auth, equals(customAuth));
     });
 
     test('generativeModel creation with Grounding tools', () {
