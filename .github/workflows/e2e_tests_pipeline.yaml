@@ -1,7 +1,7 @@
 name: e2e-pipeline
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}-pipeline
   cancel-in-progress: true
 
 on:
@@ -19,6 +19,7 @@ on:
       - 'website/**'
       - '**/example/**'
       - '**.md'
+  workflow_call:
 
 permissions:
   contents: read

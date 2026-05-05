@@ -1,7 +1,7 @@
 name: e2e-fdc
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}-fdc
   cancel-in-progress: true
 
 on:
@@ -20,6 +20,11 @@ on:
       - 'website/**'
       - '**/example/**'
       - '**.md'
+  workflow_call:
+    inputs:
+      nightly_test_mode:
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -27,7 +32,7 @@ permissions:
 jobs:
   android:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 45 }}
     strategy:
       fail-fast: false
     env:
@@ -139,7 +144,7 @@ jobs:
 
   ios:
     runs-on: macos-15
-    timeout-minutes: 45
+    timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 45 }}
     strategy:
       fail-fast: false
     steps:
@@ -260,7 +265,7 @@ jobs:
 
   web:
     runs-on: macos-latest
-    timeout-minutes: 15
+    timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 15 }}
     strategy:
       fail-fast: false
     steps:
@@ -339,7 +344,7 @@ jobs:
 
   web-wasm:
     runs-on: macos-latest
-    timeout-minutes: 15
+    timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 15 }}
     strategy:
       fail-fast: false
     steps:

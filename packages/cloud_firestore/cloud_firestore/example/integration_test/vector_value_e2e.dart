@@ -3,9 +3,21 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void runVectorValueTests() {
+  if (defaultTargetPlatform == TargetPlatform.windows) {
+    group('$VectorValue', () {
+      test(
+        'is not supported on Windows',
+        () {},
+        skip: 'The Firebase C++ SDK does not expose Firestore vector values.',
+      );
+    });
+    return;
+  }
+
   group('$VectorValue', () {
     late FirebaseFirestore firestore;
 

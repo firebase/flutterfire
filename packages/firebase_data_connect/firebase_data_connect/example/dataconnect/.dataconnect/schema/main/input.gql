@@ -1,0 +1,1049 @@
+"""
+✨ `DirectedBy_KeyOutput` returns the primary key fields of table type `DirectedBy`.
+
+It has the same format as `DirectedBy_Key`, but is only used as mutation return value.
+"""
+scalar DirectedBy_KeyOutput
+"""
+✨ `Movie_KeyOutput` returns the primary key fields of table type `Movie`.
+
+It has the same format as `Movie_Key`, but is only used as mutation return value.
+"""
+scalar Movie_KeyOutput
+"""
+✨ `Person_KeyOutput` returns the primary key fields of table type `Person`.
+
+It has the same format as `Person_Key`, but is only used as mutation return value.
+"""
+scalar Person_KeyOutput
+"""
+✨ `Thing_KeyOutput` returns the primary key fields of table type `Thing`.
+
+It has the same format as `Thing_Key`, but is only used as mutation return value.
+"""
+scalar Thing_KeyOutput
+"""
+✨ `TimestampHolder_KeyOutput` returns the primary key fields of table type `TimestampHolder`.
+
+It has the same format as `TimestampHolder_Key`, but is only used as mutation return value.
+"""
+scalar TimestampHolder_KeyOutput
+"""
+✨ Generated data input type for table 'DirectedBy'. It includes all necessary fields for creating or upserting rows into table.
+"""
+input DirectedBy_Data {
+  """
+  ✨ Generated from Field `DirectedBy`.`movieId` of type `UUID!`
+  """
+  movieId: UUID
+  """
+  ✨ `_expr` server value variant of `movieId` (✨ Generated from Field `DirectedBy`.`movieId` of type `UUID!`)
+  """
+  movieId_expr: UUID_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `DirectedBy`.`directedbyId` of type `UUID!`
+  """
+  directedbyId: UUID
+  """
+  ✨ `_expr` server value variant of `directedbyId` (✨ Generated from Field `DirectedBy`.`directedbyId` of type `UUID!`)
+  """
+  directedbyId_expr: UUID_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `DirectedBy`.`directedby` of type `Person!`
+  """
+  directedby: Person_Key @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `DirectedBy`.`movie` of type `Movie!`
+  """
+  movie: Movie_Key @fdc_forbiddenInVariables
+}
+"""
+✨ Generated filter input type for table 'DirectedBy'. This input allows filtering objects using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input DirectedBy_Filter {
+  """
+  Apply multiple filter conditions using `AND` logic.
+  """
+  _and: [DirectedBy_Filter!]
+  """
+  Negate the result of the provided filter condition.
+  """
+  _not: DirectedBy_Filter
+  """
+  Apply multiple filter conditions using `OR` logic.
+  """
+  _or: [DirectedBy_Filter!]
+  """
+  ✨ Generated from Field `DirectedBy`.`movieId` of type `UUID!`
+  """
+  movieId: UUID_Filter
+  """
+  ✨ Generated from Field `DirectedBy`.`directedbyId` of type `UUID!`
+  """
+  directedbyId: UUID_Filter
+  """
+  ✨ Generated from Field `DirectedBy`.`directedby` of type `Person!`
+  """
+  directedby: Person_Filter
+  """
+  ✨ Generated from Field `DirectedBy`.`movie` of type `Movie!`
+  """
+  movie: Movie_Filter
+}
+"""
+✨ Generated first-row input type for table 'DirectedBy'. This input selects the first row matching the filter criteria, ordered according to the specified conditions.
+"""
+input DirectedBy_FirstRow {
+  """
+  Order the result by the specified fields.
+  """
+  orderBy: [DirectedBy_Order!]
+  """
+  Filters rows based on the specified conditions.
+  """
+  where: DirectedBy_Filter
+}
+"""
+✨ Generated having input type for table 'DirectedBy'. This input allows you to filter groups during aggregate queries using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input DirectedBy_Having {
+  """
+  Apply multiple Having conditions using `AND` logic.
+  """
+  _and: [DirectedBy_Having!]
+  """
+  Whether to apply DISTINCT to the aggregate function.
+  """
+  _distinct: Boolean
+  """
+  Negate the result of the provided Having condition.
+  """
+  _not: DirectedBy_Having
+  """
+  Apply multiple Having conditions using `OR` logic.
+  """
+  _or: [DirectedBy_Having!]
+  """
+  ✨ Generated from Field `DirectedBy`.`_count` of type `Int!`
+  """
+  _count: Int_Filter
+  """
+  ✨ Generated from Field `DirectedBy`.`directedbyId_count` of type `Int!`
+  """
+  directedbyId_count: Int_Filter
+  """
+  ✨ Generated from Field `DirectedBy`.`movieId_count` of type `Int!`
+  """
+  movieId_count: Int_Filter
+}
+"""
+✨ Generated key input type for table 'DirectedBy'. It represents the primary key fields used to uniquely identify a row in the table.
+"""
+input DirectedBy_Key {
+  """
+  ✨ Generated from Field `DirectedBy`.`movieId` of type `UUID!`
+  """
+  movieId: UUID
+  """
+  ✨ `_expr` server value variant of `movieId` (✨ Generated from Field `DirectedBy`.`movieId` of type `UUID!`)
+  """
+  movieId_expr: UUID_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `DirectedBy`.`directedbyId` of type `UUID!`
+  """
+  directedbyId: UUID
+  """
+  ✨ `_expr` server value variant of `directedbyId` (✨ Generated from Field `DirectedBy`.`directedbyId` of type `UUID!`)
+  """
+  directedbyId_expr: UUID_Expr @fdc_forbiddenInVariables
+}
+"""
+✨ Generated list filter input type for table 'DirectedBy'. This input applies filtering logic based on the count or existence of related objects that matches certain criteria.
+"""
+input DirectedBy_ListFilter {
+  """
+  The desired number of objects that match the condition (defaults to at least one).
+  """
+  count: Int_Filter = {gt:0}
+  """
+  Condition of the related objects to filter for.
+  """
+  exist: DirectedBy_Filter
+}
+"""
+✨ Generated order input type for table 'DirectedBy'. This input defines the sorting order of rows in query results based on one or more fields.
+"""
+input DirectedBy_Order {
+  """
+  ✨ Generated from Field `DirectedBy`.`movieId` of type `UUID!`
+  """
+  movieId: OrderDirection
+  """
+  ✨ Generated from Field `DirectedBy`.`directedbyId` of type `UUID!`
+  """
+  directedbyId: OrderDirection
+  """
+  ✨ Generated from Field `DirectedBy`.`directedby` of type `Person!`
+  """
+  directedby: Person_Order
+  """
+  ✨ Generated from Field `DirectedBy`.`movie` of type `Movie!`
+  """
+  movie: Movie_Order
+  """
+  ✨ Generated from Field `DirectedBy`.`_count` of type `Int!`
+  """
+  _count: OrderDirection
+  """
+  ✨ Generated from Field `DirectedBy`.`directedbyId_count` of type `Int!`
+  """
+  directedbyId_count: OrderDirection
+  """
+  ✨ Generated from Field `DirectedBy`.`movieId_count` of type `Int!`
+  """
+  movieId_count: OrderDirection
+}
+"""
+✨ Generated data input type for table 'Movie'. It includes all necessary fields for creating or upserting rows into table.
+"""
+input Movie_Data {
+  """
+  ✨ Generated from Field `Movie`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `Movie`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `Movie`.`description` of type `String`
+  """
+  description: String
+  """
+  ✨ `_expr` server value variant of `description` (✨ Generated from Field `Movie`.`description` of type `String`)
+  """
+  description_expr: String_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `Movie`.`genre` of type `String!`
+  """
+  genre: String
+  """
+  ✨ `_expr` server value variant of `genre` (✨ Generated from Field `Movie`.`genre` of type `String!`)
+  """
+  genre_expr: String_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `Movie`.`rating` of type `Float`
+  """
+  rating: Float
+  """
+  ✨ `_expr` server value variant of `rating` (✨ Generated from Field `Movie`.`rating` of type `Float`)
+  """
+  rating_expr: Float_Expr @fdc_forbiddenInVariables
+  """
+  ✨ `_update` server value variant of `rating` (✨ Generated from Field `Movie`.`rating` of type `Float`)
+  """
+  rating_update: [Float_Update!] @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `Movie`.`releaseYear` of type `Int`
+  """
+  releaseYear: Int
+  """
+  ✨ `_expr` server value variant of `releaseYear` (✨ Generated from Field `Movie`.`releaseYear` of type `Int`)
+  """
+  releaseYear_expr: Int_Expr @fdc_forbiddenInVariables
+  """
+  ✨ `_update` server value variant of `releaseYear` (✨ Generated from Field `Movie`.`releaseYear` of type `Int`)
+  """
+  releaseYear_update: [Int_Update!] @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `Movie`.`title` of type `String!`
+  """
+  title: String
+  """
+  ✨ `_expr` server value variant of `title` (✨ Generated from Field `Movie`.`title` of type `String!`)
+  """
+  title_expr: String_Expr @fdc_forbiddenInVariables
+}
+"""
+✨ Generated filter input type for table 'Movie'. This input allows filtering objects using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input Movie_Filter {
+  """
+  Apply multiple filter conditions using `AND` logic.
+  """
+  _and: [Movie_Filter!]
+  """
+  Negate the result of the provided filter condition.
+  """
+  _not: Movie_Filter
+  """
+  Apply multiple filter conditions using `OR` logic.
+  """
+  _or: [Movie_Filter!]
+  """
+  ✨ Generated from Field `Movie`.`id` of type `UUID!`
+  """
+  id: UUID_Filter
+  """
+  ✨ Generated from Field `Movie`.`description` of type `String`
+  """
+  description: String_Filter
+  """
+  ✨ Generated from Field `Movie`.`genre` of type `String!`
+  """
+  genre: String_Filter
+  """
+  ✨ Generated from Field `Movie`.`rating` of type `Float`
+  """
+  rating: Float_Filter
+  """
+  ✨ Generated from Field `Movie`.`releaseYear` of type `Int`
+  """
+  releaseYear: Int_Filter
+  """
+  ✨ Generated from Field `Movie`.`title` of type `String!`
+  """
+  title: String_Filter
+  """
+  ✨ Generated from Field `Movie`.`directedBies_on_movie` of type `[DirectedBy!]!`
+  """
+  directedBies_on_movie: DirectedBy_ListFilter
+  """
+  ✨ Generated from Field `Movie`.`people_via_DirectedBy` of type `[Person!]!`
+  """
+  people_via_DirectedBy: Person_ListFilter
+}
+"""
+✨ Generated first-row input type for table 'Movie'. This input selects the first row matching the filter criteria, ordered according to the specified conditions.
+"""
+input Movie_FirstRow {
+  """
+  Order the result by the specified fields.
+  """
+  orderBy: [Movie_Order!]
+  """
+  Filters rows based on the specified conditions.
+  """
+  where: Movie_Filter
+}
+"""
+✨ Generated having input type for table 'Movie'. This input allows you to filter groups during aggregate queries using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input Movie_Having {
+  """
+  Apply multiple Having conditions using `AND` logic.
+  """
+  _and: [Movie_Having!]
+  """
+  Whether to apply DISTINCT to the aggregate function.
+  """
+  _distinct: Boolean
+  """
+  Negate the result of the provided Having condition.
+  """
+  _not: Movie_Having
+  """
+  Apply multiple Having conditions using `OR` logic.
+  """
+  _or: [Movie_Having!]
+  """
+  ✨ Generated from Field `Movie`.`_count` of type `Int!`
+  """
+  _count: Int_Filter
+  """
+  ✨ Generated from Field `Movie`.`description_count` of type `Int!`
+  """
+  description_count: Int_Filter
+  """
+  ✨ Generated from Field `Movie`.`genre_count` of type `Int!`
+  """
+  genre_count: Int_Filter
+  """
+  ✨ Generated from Field `Movie`.`id_count` of type `Int!`
+  """
+  id_count: Int_Filter
+  """
+  ✨ Generated from Field `Movie`.`rating_count` of type `Int!`
+  """
+  rating_count: Int_Filter
+  """
+  ✨ Generated from Field `Movie`.`releaseYear_count` of type `Int!`
+  """
+  releaseYear_count: Int_Filter
+  """
+  ✨ Generated from Field `Movie`.`title_count` of type `Int!`
+  """
+  title_count: Int_Filter
+  """
+  ✨ Generated from Field `Movie`.`rating_sum` of type `Float`
+  """
+  rating_sum: Float_Filter
+  """
+  ✨ Generated from Field `Movie`.`releaseYear_sum` of type `Int`
+  """
+  releaseYear_sum: Int_Filter
+  """
+  ✨ Generated from Field `Movie`.`rating_avg` of type `Float`
+  """
+  rating_avg: Float_Filter
+  """
+  ✨ Generated from Field `Movie`.`releaseYear_avg` of type `Float`
+  """
+  releaseYear_avg: Float_Filter
+  """
+  ✨ Generated from Field `Movie`.`rating_min` of type `Float`
+  """
+  rating_min: Float_Filter
+  """
+  ✨ Generated from Field `Movie`.`releaseYear_min` of type `Int`
+  """
+  releaseYear_min: Int_Filter
+  """
+  ✨ Generated from Field `Movie`.`rating_max` of type `Float`
+  """
+  rating_max: Float_Filter
+  """
+  ✨ Generated from Field `Movie`.`releaseYear_max` of type `Int`
+  """
+  releaseYear_max: Int_Filter
+}
+"""
+✨ Generated key input type for table 'Movie'. It represents the primary key fields used to uniquely identify a row in the table.
+"""
+input Movie_Key {
+  """
+  ✨ Generated from Field `Movie`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `Movie`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr @fdc_forbiddenInVariables
+}
+"""
+✨ Generated list filter input type for table 'Movie'. This input applies filtering logic based on the count or existence of related objects that matches certain criteria.
+"""
+input Movie_ListFilter {
+  """
+  The desired number of objects that match the condition (defaults to at least one).
+  """
+  count: Int_Filter = {gt:0}
+  """
+  Condition of the related objects to filter for.
+  """
+  exist: Movie_Filter
+}
+"""
+✨ Generated order input type for table 'Movie'. This input defines the sorting order of rows in query results based on one or more fields.
+"""
+input Movie_Order {
+  """
+  ✨ Generated from Field `Movie`.`id` of type `UUID!`
+  """
+  id: OrderDirection
+  """
+  ✨ Generated from Field `Movie`.`description` of type `String`
+  """
+  description: OrderDirection
+  """
+  ✨ Generated from Field `Movie`.`genre` of type `String!`
+  """
+  genre: OrderDirection
+  """
+  ✨ Generated from Field `Movie`.`rating` of type `Float`
+  """
+  rating: OrderDirection
+  """
+  ✨ Generated from Field `Movie`.`releaseYear` of type `Int`
+  """
+  releaseYear: OrderDirection
+  """
+  ✨ Generated from Field `Movie`.`title` of type `String!`
+  """
+  title: OrderDirection
+  """
+  ✨ Generated from Field `Movie`.`_count` of type `Int!`
+  """
+  _count: OrderDirection
+  """
+  ✨ Generated from Field `Movie`.`description_count` of type `Int!`
+  """
+  description_count: OrderDirection
+  """
+  ✨ Generated from Field `Movie`.`genre_count` of type `Int!`
+  """
+  genre_count: OrderDirection
+  """
+  ✨ Generated from Field `Movie`.`id_count` of type `Int!`
+  """
+  id_count: OrderDirection
+  """
+  ✨ Generated from Field `Movie`.`rating_count` of type `Int!`
+  """
+  rating_count: OrderDirection
+  """
+  ✨ Generated from Field `Movie`.`releaseYear_count` of type `Int!`
+  """
+  releaseYear_count: OrderDirection
+  """
+  ✨ Generated from Field `Movie`.`title_count` of type `Int!`
+  """
+  title_count: OrderDirection
+  """
+  ✨ Generated from Field `Movie`.`rating_sum` of type `Float`
+  """
+  rating_sum: OrderDirection
+  """
+  ✨ Generated from Field `Movie`.`releaseYear_sum` of type `Int`
+  """
+  releaseYear_sum: OrderDirection
+  """
+  ✨ Generated from Field `Movie`.`rating_avg` of type `Float`
+  """
+  rating_avg: OrderDirection
+  """
+  ✨ Generated from Field `Movie`.`releaseYear_avg` of type `Float`
+  """
+  releaseYear_avg: OrderDirection
+  """
+  ✨ Generated from Field `Movie`.`rating_min` of type `Float`
+  """
+  rating_min: OrderDirection
+  """
+  ✨ Generated from Field `Movie`.`releaseYear_min` of type `Int`
+  """
+  releaseYear_min: OrderDirection
+  """
+  ✨ Generated from Field `Movie`.`rating_max` of type `Float`
+  """
+  rating_max: OrderDirection
+  """
+  ✨ Generated from Field `Movie`.`releaseYear_max` of type `Int`
+  """
+  releaseYear_max: OrderDirection
+}
+"""
+✨ Generated data input type for table 'Person'. It includes all necessary fields for creating or upserting rows into table.
+"""
+input Person_Data {
+  """
+  ✨ Generated from Field `Person`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `Person`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `Person`.`name` of type `String!`
+  """
+  name: String
+  """
+  ✨ `_expr` server value variant of `name` (✨ Generated from Field `Person`.`name` of type `String!`)
+  """
+  name_expr: String_Expr @fdc_forbiddenInVariables
+}
+"""
+✨ Generated filter input type for table 'Person'. This input allows filtering objects using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input Person_Filter {
+  """
+  Apply multiple filter conditions using `AND` logic.
+  """
+  _and: [Person_Filter!]
+  """
+  Negate the result of the provided filter condition.
+  """
+  _not: Person_Filter
+  """
+  Apply multiple filter conditions using `OR` logic.
+  """
+  _or: [Person_Filter!]
+  """
+  ✨ Generated from Field `Person`.`id` of type `UUID!`
+  """
+  id: UUID_Filter
+  """
+  ✨ Generated from Field `Person`.`name` of type `String!`
+  """
+  name: String_Filter
+  """
+  ✨ Generated from Field `Person`.`directedBies_on_directedby` of type `[DirectedBy!]!`
+  """
+  directedBies_on_directedby: DirectedBy_ListFilter
+  """
+  ✨ Generated from Field `Person`.`movies_via_DirectedBy` of type `[Movie!]!`
+  """
+  movies_via_DirectedBy: Movie_ListFilter
+}
+"""
+✨ Generated first-row input type for table 'Person'. This input selects the first row matching the filter criteria, ordered according to the specified conditions.
+"""
+input Person_FirstRow {
+  """
+  Order the result by the specified fields.
+  """
+  orderBy: [Person_Order!]
+  """
+  Filters rows based on the specified conditions.
+  """
+  where: Person_Filter
+}
+"""
+✨ Generated having input type for table 'Person'. This input allows you to filter groups during aggregate queries using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input Person_Having {
+  """
+  Apply multiple Having conditions using `AND` logic.
+  """
+  _and: [Person_Having!]
+  """
+  Whether to apply DISTINCT to the aggregate function.
+  """
+  _distinct: Boolean
+  """
+  Negate the result of the provided Having condition.
+  """
+  _not: Person_Having
+  """
+  Apply multiple Having conditions using `OR` logic.
+  """
+  _or: [Person_Having!]
+  """
+  ✨ Generated from Field `Person`.`_count` of type `Int!`
+  """
+  _count: Int_Filter
+  """
+  ✨ Generated from Field `Person`.`id_count` of type `Int!`
+  """
+  id_count: Int_Filter
+  """
+  ✨ Generated from Field `Person`.`name_count` of type `Int!`
+  """
+  name_count: Int_Filter
+}
+"""
+✨ Generated key input type for table 'Person'. It represents the primary key fields used to uniquely identify a row in the table.
+"""
+input Person_Key {
+  """
+  ✨ Generated from Field `Person`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `Person`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr @fdc_forbiddenInVariables
+}
+"""
+✨ Generated list filter input type for table 'Person'. This input applies filtering logic based on the count or existence of related objects that matches certain criteria.
+"""
+input Person_ListFilter {
+  """
+  The desired number of objects that match the condition (defaults to at least one).
+  """
+  count: Int_Filter = {gt:0}
+  """
+  Condition of the related objects to filter for.
+  """
+  exist: Person_Filter
+}
+"""
+✨ Generated order input type for table 'Person'. This input defines the sorting order of rows in query results based on one or more fields.
+"""
+input Person_Order {
+  """
+  ✨ Generated from Field `Person`.`id` of type `UUID!`
+  """
+  id: OrderDirection
+  """
+  ✨ Generated from Field `Person`.`name` of type `String!`
+  """
+  name: OrderDirection
+  """
+  ✨ Generated from Field `Person`.`_count` of type `Int!`
+  """
+  _count: OrderDirection
+  """
+  ✨ Generated from Field `Person`.`id_count` of type `Int!`
+  """
+  id_count: OrderDirection
+  """
+  ✨ Generated from Field `Person`.`name_count` of type `Int!`
+  """
+  name_count: OrderDirection
+}
+"""
+✨ Generated data input type for table 'Thing'. It includes all necessary fields for creating or upserting rows into table.
+"""
+input Thing_Data {
+  """
+  ✨ Generated from Field `Thing`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `Thing`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `Thing`.`title` of type `Any!`
+  """
+  title: Any
+  """
+  ✨ `_expr` server value variant of `title` (✨ Generated from Field `Thing`.`title` of type `Any!`)
+  """
+  title_expr: Any_Expr @fdc_forbiddenInVariables
+}
+"""
+✨ Generated filter input type for table 'Thing'. This input allows filtering objects using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input Thing_Filter {
+  """
+  Apply multiple filter conditions using `AND` logic.
+  """
+  _and: [Thing_Filter!]
+  """
+  Negate the result of the provided filter condition.
+  """
+  _not: Thing_Filter
+  """
+  Apply multiple filter conditions using `OR` logic.
+  """
+  _or: [Thing_Filter!]
+  """
+  ✨ Generated from Field `Thing`.`id` of type `UUID!`
+  """
+  id: UUID_Filter
+  """
+  ✨ Generated from Field `Thing`.`title` of type `Any!`
+  """
+  title: Any_Filter
+}
+"""
+✨ Generated first-row input type for table 'Thing'. This input selects the first row matching the filter criteria, ordered according to the specified conditions.
+"""
+input Thing_FirstRow {
+  """
+  Order the result by the specified fields.
+  """
+  orderBy: [Thing_Order!]
+  """
+  Filters rows based on the specified conditions.
+  """
+  where: Thing_Filter
+}
+"""
+✨ Generated having input type for table 'Thing'. This input allows you to filter groups during aggregate queries using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input Thing_Having {
+  """
+  Apply multiple Having conditions using `AND` logic.
+  """
+  _and: [Thing_Having!]
+  """
+  Whether to apply DISTINCT to the aggregate function.
+  """
+  _distinct: Boolean
+  """
+  Negate the result of the provided Having condition.
+  """
+  _not: Thing_Having
+  """
+  Apply multiple Having conditions using `OR` logic.
+  """
+  _or: [Thing_Having!]
+  """
+  ✨ Generated from Field `Thing`.`_count` of type `Int!`
+  """
+  _count: Int_Filter
+  """
+  ✨ Generated from Field `Thing`.`id_count` of type `Int!`
+  """
+  id_count: Int_Filter
+  """
+  ✨ Generated from Field `Thing`.`title_count` of type `Int!`
+  """
+  title_count: Int_Filter
+  """
+  ✨ Generated from Field `Thing`.`title_min` of type `Any`
+  """
+  title_min: Any_Filter
+  """
+  ✨ Generated from Field `Thing`.`title_max` of type `Any`
+  """
+  title_max: Any_Filter
+}
+"""
+✨ Generated key input type for table 'Thing'. It represents the primary key fields used to uniquely identify a row in the table.
+"""
+input Thing_Key {
+  """
+  ✨ Generated from Field `Thing`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `Thing`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr @fdc_forbiddenInVariables
+}
+"""
+✨ Generated list filter input type for table 'Thing'. This input applies filtering logic based on the count or existence of related objects that matches certain criteria.
+"""
+input Thing_ListFilter {
+  """
+  The desired number of objects that match the condition (defaults to at least one).
+  """
+  count: Int_Filter = {gt:0}
+  """
+  Condition of the related objects to filter for.
+  """
+  exist: Thing_Filter
+}
+"""
+✨ Generated order input type for table 'Thing'. This input defines the sorting order of rows in query results based on one or more fields.
+"""
+input Thing_Order {
+  """
+  ✨ Generated from Field `Thing`.`id` of type `UUID!`
+  """
+  id: OrderDirection
+  """
+  ✨ Generated from Field `Thing`.`title` of type `Any!`
+  """
+  title: OrderDirection
+  """
+  ✨ Generated from Field `Thing`.`_count` of type `Int!`
+  """
+  _count: OrderDirection
+  """
+  ✨ Generated from Field `Thing`.`id_count` of type `Int!`
+  """
+  id_count: OrderDirection
+  """
+  ✨ Generated from Field `Thing`.`title_count` of type `Int!`
+  """
+  title_count: OrderDirection
+  """
+  ✨ Generated from Field `Thing`.`title_min` of type `Any`
+  """
+  title_min: OrderDirection
+  """
+  ✨ Generated from Field `Thing`.`title_max` of type `Any`
+  """
+  title_max: OrderDirection
+}
+"""
+✨ Generated data input type for table 'TimestampHolder'. It includes all necessary fields for creating or upserting rows into table.
+"""
+input TimestampHolder_Data {
+  """
+  ✨ Generated from Field `TimestampHolder`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `TimestampHolder`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `TimestampHolder`.`date` of type `Date`
+  """
+  date: Date
+  """
+  ✨ `_date` server value variant of `date` (✨ Generated from Field `TimestampHolder`.`date` of type `Date`)
+  """
+  date_date: Date_Relative @fdc_forbiddenInVariables
+  """
+  ✨ `_expr` server value variant of `date` (✨ Generated from Field `TimestampHolder`.`date` of type `Date`)
+  """
+  date_expr: Date_Expr @fdc_forbiddenInVariables
+  """
+  ✨ `_update` server value variant of `date` (✨ Generated from Field `TimestampHolder`.`date` of type `Date`)
+  """
+  date_update: [Date_Update!] @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `TimestampHolder`.`timestamp` of type `Timestamp!`
+  """
+  timestamp: Timestamp
+  """
+  ✨ `_expr` server value variant of `timestamp` (✨ Generated from Field `TimestampHolder`.`timestamp` of type `Timestamp!`)
+  """
+  timestamp_expr: Timestamp_Expr @fdc_forbiddenInVariables
+  """
+  ✨ `_time` server value variant of `timestamp` (✨ Generated from Field `TimestampHolder`.`timestamp` of type `Timestamp!`)
+  """
+  timestamp_time: Timestamp_Relative @fdc_forbiddenInVariables
+  """
+  ✨ `_update` server value variant of `timestamp` (✨ Generated from Field `TimestampHolder`.`timestamp` of type `Timestamp!`)
+  """
+  timestamp_update: [Timestamp_Update!] @fdc_forbiddenInVariables
+}
+"""
+✨ Generated filter input type for table 'TimestampHolder'. This input allows filtering objects using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input TimestampHolder_Filter {
+  """
+  Apply multiple filter conditions using `AND` logic.
+  """
+  _and: [TimestampHolder_Filter!]
+  """
+  Negate the result of the provided filter condition.
+  """
+  _not: TimestampHolder_Filter
+  """
+  Apply multiple filter conditions using `OR` logic.
+  """
+  _or: [TimestampHolder_Filter!]
+  """
+  ✨ Generated from Field `TimestampHolder`.`id` of type `UUID!`
+  """
+  id: UUID_Filter
+  """
+  ✨ Generated from Field `TimestampHolder`.`date` of type `Date`
+  """
+  date: Date_Filter
+  """
+  ✨ Generated from Field `TimestampHolder`.`timestamp` of type `Timestamp!`
+  """
+  timestamp: Timestamp_Filter
+}
+"""
+✨ Generated first-row input type for table 'TimestampHolder'. This input selects the first row matching the filter criteria, ordered according to the specified conditions.
+"""
+input TimestampHolder_FirstRow {
+  """
+  Order the result by the specified fields.
+  """
+  orderBy: [TimestampHolder_Order!]
+  """
+  Filters rows based on the specified conditions.
+  """
+  where: TimestampHolder_Filter
+}
+"""
+✨ Generated having input type for table 'TimestampHolder'. This input allows you to filter groups during aggregate queries using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input TimestampHolder_Having {
+  """
+  Apply multiple Having conditions using `AND` logic.
+  """
+  _and: [TimestampHolder_Having!]
+  """
+  Whether to apply DISTINCT to the aggregate function.
+  """
+  _distinct: Boolean
+  """
+  Negate the result of the provided Having condition.
+  """
+  _not: TimestampHolder_Having
+  """
+  Apply multiple Having conditions using `OR` logic.
+  """
+  _or: [TimestampHolder_Having!]
+  """
+  ✨ Generated from Field `TimestampHolder`.`_count` of type `Int!`
+  """
+  _count: Int_Filter
+  """
+  ✨ Generated from Field `TimestampHolder`.`date_count` of type `Int!`
+  """
+  date_count: Int_Filter
+  """
+  ✨ Generated from Field `TimestampHolder`.`id_count` of type `Int!`
+  """
+  id_count: Int_Filter
+  """
+  ✨ Generated from Field `TimestampHolder`.`timestamp_count` of type `Int!`
+  """
+  timestamp_count: Int_Filter
+  """
+  ✨ Generated from Field `TimestampHolder`.`date_min` of type `Date`
+  """
+  date_min: Date_Filter
+  """
+  ✨ Generated from Field `TimestampHolder`.`timestamp_min` of type `Timestamp`
+  """
+  timestamp_min: Timestamp_Filter
+  """
+  ✨ Generated from Field `TimestampHolder`.`date_max` of type `Date`
+  """
+  date_max: Date_Filter
+  """
+  ✨ Generated from Field `TimestampHolder`.`timestamp_max` of type `Timestamp`
+  """
+  timestamp_max: Timestamp_Filter
+}
+"""
+✨ Generated key input type for table 'TimestampHolder'. It represents the primary key fields used to uniquely identify a row in the table.
+"""
+input TimestampHolder_Key {
+  """
+  ✨ Generated from Field `TimestampHolder`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `TimestampHolder`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr @fdc_forbiddenInVariables
+}
+"""
+✨ Generated list filter input type for table 'TimestampHolder'. This input applies filtering logic based on the count or existence of related objects that matches certain criteria.
+"""
+input TimestampHolder_ListFilter {
+  """
+  The desired number of objects that match the condition (defaults to at least one).
+  """
+  count: Int_Filter = {gt:0}
+  """
+  Condition of the related objects to filter for.
+  """
+  exist: TimestampHolder_Filter
+}
+"""
+✨ Generated order input type for table 'TimestampHolder'. This input defines the sorting order of rows in query results based on one or more fields.
+"""
+input TimestampHolder_Order {
+  """
+  ✨ Generated from Field `TimestampHolder`.`id` of type `UUID!`
+  """
+  id: OrderDirection
+  """
+  ✨ Generated from Field `TimestampHolder`.`date` of type `Date`
+  """
+  date: OrderDirection
+  """
+  ✨ Generated from Field `TimestampHolder`.`timestamp` of type `Timestamp!`
+  """
+  timestamp: OrderDirection
+  """
+  ✨ Generated from Field `TimestampHolder`.`_count` of type `Int!`
+  """
+  _count: OrderDirection
+  """
+  ✨ Generated from Field `TimestampHolder`.`date_count` of type `Int!`
+  """
+  date_count: OrderDirection
+  """
+  ✨ Generated from Field `TimestampHolder`.`id_count` of type `Int!`
+  """
+  id_count: OrderDirection
+  """
+  ✨ Generated from Field `TimestampHolder`.`timestamp_count` of type `Int!`
+  """
+  timestamp_count: OrderDirection
+  """
+  ✨ Generated from Field `TimestampHolder`.`date_min` of type `Date`
+  """
+  date_min: OrderDirection
+  """
+  ✨ Generated from Field `TimestampHolder`.`timestamp_min` of type `Timestamp`
+  """
+  timestamp_min: OrderDirection
+  """
+  ✨ Generated from Field `TimestampHolder`.`date_max` of type `Date`
+  """
+  date_max: OrderDirection
+  """
+  ✨ Generated from Field `TimestampHolder`.`timestamp_max` of type `Timestamp`
+  """
+  timestamp_max: OrderDirection
+}

@@ -141,9 +141,15 @@ class FirebaseDatabasePlugin :
   @Suppress("UNCHECKED_CAST")
   private fun getQuery(arguments: Map<String, Any>): Query {
     val ref = getReference(arguments)
-    val modifiers = arguments[Constants.MODIFIERS] as List<Map<String, Any>>
-    return QueryBuilder(ref, modifiers).build()
+    val modifiers = arguments[Constants.MODIFIERS] as List<Map<String, Any?>>
+    return queryFromModifiers(ref, modifiers)
   }
+
+  /** Applies [modifiers]. */
+  private fun queryFromModifiers(
+    reference: DatabaseReference,
+    modifiers: List<Map<String, Any?>>,
+  ): Query = QueryBuilder(reference, modifiers).build()
 
   private fun goOnline(arguments: Map<String, Any>): Task<Void> {
     val taskCompletionSource = TaskCompletionSource<Void>()
@@ -844,84 +850,7 @@ class FirebaseDatabasePlugin :
       Log.d("FirebaseDatabase", "🔍 Kotlin: Setting up query observe for path=${request.path}")
       val database = getDatabaseFromPigeonApp(app)
       val reference = database.getReference(request.path)
-
-      // Apply query modifiers if any
-      var query: com.google.firebase.database.Query = reference
-      // Note: no hasOrderModifier needed — Android SDK defaults to PriorityIndex
-      // when no orderBy is specified, so cursors work without an explicit orderBy.
-
-      for (modifier in request.modifiers) {
-        when (modifier["type"] as String) {
-          "orderBy" -> {
-            when (modifier["name"] as String) {
-              "orderByChild" -> {
-                query = query.orderByChild(modifier["path"] as String)
-              }
-              "orderByKey" -> {
-                query = query.orderByKey()
-              }
-              "orderByValue" -> {
-                query = query.orderByValue()
-              }
-              "orderByPriority" -> {
-                query = query.orderByPriority()
-              }
-            }
-          }
-          "cursor" -> {
-            when (modifier["name"] as String) {
-              "startAt" -> {
-                val value = modifier["value"]
-                val key = modifier["key"] as String?
-                query = when (value) {
-                  is Boolean -> if (key == null) query.startAt(value) else query.startAt(value, key)
-                  is Number -> if (key == null) query.startAt(value.toDouble()) else query.startAt(value.toDouble(), key)
-                  else -> if (key == null) query.startAt(value.toString()) else query.startAt(value.toString(), key)
-                }
-              }
-              "startAfter" -> {
-                val value = modifier["value"]
-                val key = modifier["key"] as String?
-                query = when (value) {
-                  is Boolean -> if (key == null) query.startAfter(value) else query.startAfter(value, key)
-                  is Number -> if (key == null) query.startAfter(value.toDouble()) else query.startAfter(value.toDouble(), key)
-                  else -> if (key == null) query.startAfter(value.toString()) else query.startAfter(value.toString(), key)
-                }
-              }
-              "endAt" -> {
-                val value = modifier["value"]
-                val key = modifier["key"] as String?
-                query = when (value) {
-                  is Boolean -> if (key == null) query.endAt(value) else query.endAt(value, key)
-                  is Number -> if (key == null) query.endAt(value.toDouble()) else query.endAt(value.toDouble(), key)
-                  else -> if (key == null) query.endAt(value.toString()) else query.endAt(value.toString(), key)
-                }
-              }
-              "endBefore" -> {
-                val value = modifier["value"]
-                val key = modifier["key"] as String?
-                query = when (value) {
-                  is Boolean -> if (key == null) query.endBefore(value) else query.endBefore(value, key)
-                  is Number -> if (key == null) query.endBefore(value.toDouble()) else query.endBefore(value.toDouble(), key)
-                  else -> if (key == null) query.endBefore(value.toString()) else query.endBefore(value.toString(), key)
-                }
-              }
-            }
-          }
-          "limit" -> {
-            when (modifier["name"] as String) {
-              "limitToFirst" -> {
-                val value = (modifier["limit"] as Number).toInt()
-                query = query.limitToFirst(value)
-              }
-              "limitToLast" -> {
-                val value = (modifier["limit"] as Number).toInt()
-                query = query.limitToLast(value)
-              }
-            }
-          }
-        }
-      }
+      val query = queryFromModifiers(reference, request.modifiers)
 
       // Generate a unique channel name
       val channelName = "firebase_database_query_${System.currentTimeMillis()}_${request.path.hashCode()}"
@@ -947,84 +876,7 @@ class FirebaseDatabasePlugin :
     try {
       val database = getDatabaseFromPigeonApp(app)
       val reference = database.getReference(request.path)
-
-      // Apply query modifiers if any
-      var query: com.google.firebase.database.Query = reference
-      // Note: no hasOrderModifier needed — Android SDK defaults to PriorityIndex
-      // when no orderBy is specified, so cursors work without an explicit orderBy.
-
-      for (modifier in request.modifiers) {
-        when (modifier["type"] as String) {
-          "orderBy" -> {
-            when (modifier["name"] as String) {
-              "orderByChild" -> {
-                query = query.orderByChild(modifier["path"] as String)
-              }
-              "orderByKey" -> {
-                query = query.orderByKey()
-              }
-              "orderByValue" -> {
-                query = query.orderByValue()
-              }
-              "orderByPriority" -> {
-                query = query.orderByPriority()
-              }
-            }
-          }
-          "cursor" -> {
-            when (modifier["name"] as String) {
-              "startAt" -> {
-                val value = modifier["value"]
-                val key = modifier["key"] as String?
-                query = when (value) {
-                  is Boolean -> if (key == null) query.startAt(value) else query.startAt(value, key)
-                  is Number -> if (key == null) query.startAt(value.toDouble()) else query.startAt(value.toDouble(), key)
-                  else -> if (key == null) query.startAt(value.toString()) else query.startAt(value.toString(), key)
-                }
-              }
-              "startAfter" -> {
-                val value = modifier["value"]
-                val key = modifier["key"] as String?
-                query = when (value) {
-                  is Boolean -> if (key == null) query.startAfter(value) else query.startAfter(value, key)
-                  is Number -> if (key == null) query.startAfter(value.toDouble()) else query.startAfter(value.toDouble(), key)
-                  else -> if (key == null) query.startAfter(value.toString()) else query.startAfter(value.toString(), key)
-                }
-              }
-              "endAt" -> {
-                val value = modifier["value"]
-                val key = modifier["key"] as String?
-                query = when (value) {
-                  is Boolean -> if (key == null) query.endAt(value) else query.endAt(value, key)
-                  is Number -> if (key == null) query.endAt(value.toDouble()) else query.endAt(value.toDouble(), key)
-                  else -> if (key == null) query.endAt(value.toString()) else query.endAt(value.toString(), key)
-                }
-              }
-              "endBefore" -> {
-                val value = modifier["value"]
-                val key = modifier["key"] as String?
-                query = when (value) {
-                  is Boolean -> if (key == null) query.endBefore(value) else query.endBefore(value, key)
-                  is Number -> if (key == null) query.endBefore(value.toDouble()) else query.endBefore(value.toDouble(), key)
-                  else -> if (key == null) query.endBefore(value.toString()) else query.endBefore(value.toString(), key)
-                }
-              }
-            }
-          }
-          "limit" -> {
-            when (modifier["name"] as String) {
-              "limitToFirst" -> {
-                val value = (modifier["limit"] as Number).toInt()
-                query = query.limitToFirst(value)
-              }
-              "limitToLast" -> {
-                val value = (modifier["limit"] as Number).toInt()
-                query = query.limitToLast(value)
-              }
-            }
-          }
-        }
-      }
+      val query = queryFromModifiers(reference, request.modifiers)
 
       // Add keepSynced to the query
       query.keepSynced(request.value ?: false)
@@ -1038,92 +890,7 @@ class FirebaseDatabasePlugin :
     try {
       val database = getDatabaseFromPigeonApp(app)
       val reference = database.getReference(request.path)
-
-      // Apply query modifiers if any
-      var query: com.google.firebase.database.Query = reference
-      // Note: no hasOrderModifier needed — Android SDK defaults to PriorityIndex
-      // when no orderBy is specified, so cursors work without an explicit orderBy.
-
-      for (modifier in request.modifiers) {
-        when (modifier["type"] as String) {
-          "orderBy" -> {
-            when (modifier["name"] as String) {
-              "orderByChild" -> {
-                query = query.orderByChild(modifier["path"] as String)
-              }
-              "orderByKey" -> {
-                query = query.orderByKey()
-              }
-              "orderByValue" -> {
-                query = query.orderByValue()
-              }
-              "orderByPriority" -> {
-                query = query.orderByPriority()
-              }
-            }
-          }
-          "cursor" -> {
-            when (modifier["name"] as String) {
-              "startAt" -> {
-                val value = modifier["value"]
-                val key = modifier["key"] as String?
-                query = when (value) {
-                  is Boolean -> if (key == null) query.startAt(value) else query.startAt(value, key)
-                  is Number -> if (key == null) query.startAt(value.toDouble()) else query.startAt(value.toDouble(), key)
-                  else -> if (key == null) query.startAt(value.toString()) else query.startAt(value.toString(), key)
-                }
-              }
-              "startAfter" -> {
-                val value = modifier["value"]
-                val key = modifier["key"] as String?
-                query = when (value) {
-                  is Boolean -> if (key == null) query.startAfter(value) else query.startAfter(value, key)
-                  is Number -> if (key == null) query.startAfter(value.toDouble()) else query.startAfter(value.toDouble(), key)
-                  else -> if (key == null) query.startAfter(value.toString()) else query.startAfter(value.toString(), key)
-                }
-              }
-              "endAt" -> {
-                val value = modifier["value"]
-                val key = modifier["key"] as String?
-                query = when (value) {
-                  is Boolean -> if (key == null) query.endAt(value) else query.endAt(value, key)
-                  is Number -> if (key == null) query.endAt(value.toDouble()) else query.endAt(value.toDouble(), key)
-                  else -> if (key == null) query.endAt(value.toString()) else query.endAt(value.toString(), key)
-                }
-              }
-              "endBefore" -> {
-                val value = modifier["value"]
-                val key = modifier["key"] as String?
-                query = when (value) {
-                  is Boolean -> if (key == null) query.endBefore(value) else query.endBefore(value, key)
-                  is Number -> if (key == null) query.endBefore(value.toDouble()) else query.endBefore(value.toDouble(), key)
-                  else -> if (key == null) query.endBefore(value.toString()) else query.endBefore(value.toString(), key)
-                }
-              }
-            }
-          }
-          "limit" -> {
-            when (modifier["name"] as String) {
-              "limitToFirst" -> {
-                val value = when (val limit = modifier["limit"]) {
-                  is Int -> limit
-                  is Number -> limit.toInt()
-                  else -> throw IllegalArgumentException("Invalid limit value: $limit")
-                }
-                query = query.limitToFirst(value)
-              }
-              "limitToLast" -> {
-                val value = when (val limit = modifier["limit"]) {
-                  is Int -> limit
-                  is Number -> limit.toInt()
-                  else -> throw IllegalArgumentException("Invalid limit value: $limit")
-                }
-                query = query.limitToLast(value)
-              }
-            }
-          }
-        }
-      }
+      val query = queryFromModifiers(reference, request.modifiers)
 
       // Get the data
       query.get().addOnCompleteListener { task ->
