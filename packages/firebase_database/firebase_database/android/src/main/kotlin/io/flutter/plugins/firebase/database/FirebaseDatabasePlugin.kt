@@ -770,7 +770,7 @@ class FirebaseDatabasePlugin :
             callback(KotlinResult.success(Unit))
           }
         }
-      })
+      }, request.applyLocally)
     } catch (e: Exception) {
       // Convert generic exceptions to FlutterFirebaseDatabaseException for proper error handling
       val flutterException = if (e is FlutterFirebaseDatabaseException) e else FlutterFirebaseDatabaseException.unknown(e.message ?: "Unknown transaction error")

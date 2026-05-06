@@ -304,7 +304,7 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
       ]
 
       completion(.success(()))
-    }
+    } withLocalEvents: request.applyLocally
   }
 
   func databaseReferenceGetTransactionResult(app: DatabasePigeonFirebaseApp, transactionKey: Int64,
