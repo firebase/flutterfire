@@ -164,7 +164,8 @@ class LiveSession {
           if (!_messageController.isClosed && _messageController.hasListener) {
             _messageController.addError(e);
           } else {
-            log('live_session: Dropped parse error because no listeners: $e');
+            log('live_session: Dropped parse error because no listeners',
+                error: e);
           }
         }
       },
@@ -172,7 +173,8 @@ class LiveSession {
         if (!_messageController.isClosed && _messageController.hasListener) {
           _messageController.addError(error);
         } else {
-          log('live_session: Dropped stream error because no listeners: $error');
+          log('live_session: Dropped stream error because no listeners',
+              error: error);
         }
       },
       onDone: () {
@@ -196,10 +198,12 @@ class LiveSession {
     try {
       await _wsSubscription.cancel().timeout(const Duration(seconds: 2),
           onTimeout: () {
-        log('live_session.resumeSession: WebSocket subscription cancel timed out.');
+        log('live_session.resumeSession: WebSocket subscription cancel timed out.',
+            error: TimeoutException('Cancel timed out'));
       });
       await _ws.sink.close().timeout(const Duration(seconds: 2), onTimeout: () {
-        log('live_session.resumeSession: WebSocket close timed out.');
+        log('live_session.resumeSession: WebSocket close timed out.',
+            error: TimeoutException('Close timed out'));
       });
 
       _ws = await _performWebSocketSetup(
@@ -212,7 +216,7 @@ class LiveSession {
         liveGenerationConfig: _liveGenerationConfig,
       );
     } catch (e) {
-      log('live_session.resumeSession: WebSocket setup failed: $e');
+      log('live_session.resumeSession: WebSocket setup failed', error: e);
       rethrow;
     }
 
