@@ -6,9 +6,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:tests/firebase_options.dart';
 
 import './test_utils.dart';
 
@@ -345,6 +348,38 @@ void setupTaskTests() {
           retry: 2,
           // Windows `task.cancel()` is returning "false", same code on example app works as intended
           skip: defaultTargetPlatform == TargetPlatform.windows,
+        );
+
+        test(
+          'cancels multiple in-progress Android tasks during core reinitialization',
+          () async {
+            final tasks = <UploadTask>[
+              for (var i = 0; i < 3; i++)
+                storage
+                    .ref('flutter-tests/regression-18240-$i.txt')
+                    .putString('A' * 20000000),
+            ];
+            final completions = tasks
+                .map(
+                  (task) => task.then<void>(
+                    (_) {},
+                    onError: (_) {},
+                  ),
+                )
+                .toList();
+
+            try {
+              MethodChannelFirebase.isCoreInitialized = false;
+              await Firebase.initializeApp(
+                options: DefaultFirebaseOptions.currentPlatform,
+              ).timeout(const Duration(seconds: 30));
+            } finally {
+              MethodChannelFirebase.isCoreInitialized = true;
+              completions.forEach(unawaited);
+            }
+          },
+          retry: 2,
+          skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android,
         );
       },
     );

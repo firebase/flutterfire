@@ -95,11 +95,13 @@ internal class FlutterFirebaseStorageTask private constructor(
     @JvmStatic
     fun cancelInProgressTasks() {
       synchronized(inProgressTasks) {
+        val tasks = ArrayList<FlutterFirebaseStorageTask>(inProgressTasks.size())
         for (i in 0 until inProgressTasks.size()) {
           val task: FlutterFirebaseStorageTask? = inProgressTasks.valueAt(i)
-          task?.destroy()
+          task?.let { tasks.add(it) }
         }
         inProgressTasks.clear()
+        tasks.forEach { it.destroy() }
       }
     }
 
