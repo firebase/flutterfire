@@ -19,7 +19,7 @@ import java.util.ArrayList;
 class FlutterFirebasePermissionManager implements PluginRegistry.RequestPermissionsResultListener {
   private static final String REQUEST_IN_PROGRESS_ERROR =
       "A request for permissions is already running, please wait for it to finish before doing "
-      + "another request.";
+          + "another request.";
 
   private final Object requestLock = new Object();
   private final int permissionCode = 240;
@@ -64,8 +64,10 @@ class FlutterFirebasePermissionManager implements PluginRegistry.RequestPermissi
   }
 
   @RequiresApi(api = 33)
-  public void requestPermissions(Activity activity,
-      RequestPermissionsSuccessCallback successCallback, ErrorCallback errorCallback) {
+  public void requestPermissions(
+      Activity activity,
+      RequestPermissionsSuccessCallback successCallback,
+      ErrorCallback errorCallback) {
     if (activity == null) {
       errorCallback.onError("Unable to detect current Android Activity.");
       return;
