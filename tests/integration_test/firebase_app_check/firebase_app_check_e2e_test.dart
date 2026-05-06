@@ -2,12 +2,19 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// ignore_for_file: do_not_use_environment
+
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:tests/firebase_options.dart';
+
+const androidDebugToken =
+    String.fromEnvironment('APP_CHECK_ANDROID_DEBUG_TOKEN');
+
+const appleDebugToken = String.fromEnvironment('APP_CHECK_APPLE_DEBUG_TOKEN');
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -98,6 +105,56 @@ void main() {
           );
         },
         skip: defaultTargetPlatform != TargetPlatform.iOS,
+      );
+
+      test(
+        'uses Apple debug token when both Android and Apple debug tokens are configured',
+        () async {
+          await FirebaseAppCheck.instance.activate(
+            providerAndroid: const AndroidDebugProvider(
+              debugToken: androidDebugToken,
+            ),
+            providerApple: const AppleDebugProvider(
+              debugToken: appleDebugToken,
+            ),
+          );
+
+          await expectLater(
+            FirebaseAppCheck.instance.getToken(true),
+            completes,
+          );
+        },
+        skip: defaultTargetPlatform != TargetPlatform.iOS ||
+                androidDebugToken.isEmpty ||
+                appleDebugToken.isEmpty
+            ? 'Requires iOS plus APP_CHECK_ANDROID_DEBUG_TOKEN and '
+                'APP_CHECK_APPLE_DEBUG_TOKEN dart-defines.'
+            : null,
+      );
+
+      test(
+        'uses Android debug token when both Android and Apple debug tokens are configured',
+        () async {
+          await FirebaseAppCheck.instance.activate(
+            providerAndroid: const AndroidDebugProvider(
+              debugToken: androidDebugToken,
+            ),
+            providerApple: const AppleDebugProvider(
+              debugToken: appleDebugToken,
+            ),
+          );
+
+          await expectLater(
+            FirebaseAppCheck.instance.getToken(true),
+            completes,
+          );
+        },
+        skip: defaultTargetPlatform != TargetPlatform.android ||
+                androidDebugToken.isEmpty ||
+                appleDebugToken.isEmpty
+            ? 'Requires Android plus APP_CHECK_ANDROID_DEBUG_TOKEN and '
+                'APP_CHECK_APPLE_DEBUG_TOKEN dart-defines.'
+            : null,
       );
     },
   );
