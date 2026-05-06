@@ -20,19 +20,21 @@ import 'package:flutter/services.dart';
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-      .setMockMethodCallHandler(
-          const MethodChannel('plugins.flutter.io/firebase_ai'),
-          (MethodCall call) async {
-    if (call.method == 'getPlatformHeaders') {
-      return <String, String>{
-        'X-Android-Package': 'com.example.test',
-        'X-Android-Cert': '12345',
-        'x-ios-bundle-identifier': 'com.example.test',
-      };
-    }
-    return null;
-  });
+  if (!kIsWeb) {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(
+            const MethodChannel('plugins.flutter.io/firebase_ai'),
+            (MethodCall call) async {
+      if (call.method == 'getPlatformHeaders') {
+        return <String, String>{
+          'X-Android-Package': 'com.example.test',
+          'X-Android-Cert': '12345',
+          'x-ios-bundle-identifier': 'com.example.test',
+        };
+      }
+      return null;
+    });
+  }
 
   group('platform security headers', () {
     const _channel = MethodChannel('plugins.flutter.io/firebase_ai');

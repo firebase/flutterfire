@@ -43,6 +43,13 @@ void main() {
       );
       final treeResponse = await http.get(treeUrl);
       if (treeResponse.statusCode != 200) {
+        if (treeResponse.statusCode == 403 || treeResponse.statusCode == 429) {
+          // ignore: avoid_print
+          print(
+              'Skipping test: Failed to fetch tree due to rate limit (status ${treeResponse.statusCode})',
+          );
+          return;
+        }
         fail('Failed to fetch tree: ${treeResponse.statusCode}');
       }
       final treeData = jsonDecode(treeResponse.body);
