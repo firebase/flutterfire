@@ -6,7 +6,6 @@ import 'package:firebase_app_check_platform_interface/firebase_app_check_platfor
 import 'package:firebase_app_check_platform_interface/src/pigeon/messages.pigeon.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../mock.dart';
@@ -66,7 +65,7 @@ void main() {
           'dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.activate',
           (ByteData? message) async {
             calls.add(
-              FirebaseAppCheckHostApi.pigeonChannelCodec.decodeMessage(message)
+              FirebaseAppCheckHostApi.pigeonChannelCodec.decodeMessage(message)!
                   as List<Object?>,
             );
             return FirebaseAppCheckHostApi.pigeonChannelCodec.encodeMessage(
@@ -98,7 +97,7 @@ void main() {
           'dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.activate',
           (ByteData? message) async {
             calls.add(
-              FirebaseAppCheckHostApi.pigeonChannelCodec.decodeMessage(message)
+              FirebaseAppCheckHostApi.pigeonChannelCodec.decodeMessage(message)!
                   as List<Object?>,
             );
             return FirebaseAppCheckHostApi.pigeonChannelCodec.encodeMessage(
