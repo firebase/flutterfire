@@ -17,7 +17,11 @@ import io.flutter.plugin.common.PluginRegistry;
 import java.util.ArrayList;
 
 class FlutterFirebasePermissionManager implements PluginRegistry.RequestPermissionsResultListener {
+  private static final String REQUEST_IN_PROGRESS_ERROR =
+      "A request for permissions is already running, please wait for it to finish before doing "
+      + "another request.";
 
+  private final Object requestLock = new Object();
   private final int permissionCode = 240;
   @Nullable private RequestPermissionsSuccessCallback successCallback;
   private boolean requestInProgress = false;
@@ -30,42 +34,52 @@ class FlutterFirebasePermissionManager implements PluginRegistry.RequestPermissi
   @Override
   public boolean onRequestPermissionsResult(
       int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-    if (requestInProgress && requestCode == permissionCode && this.successCallback != null) {
-      requestInProgress = false;
-      boolean granted =
-          grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED;
+    final RequestPermissionsSuccessCallback callback;
+    synchronized (requestLock) {
+      if (!requestInProgress || requestCode != permissionCode || this.successCallback == null) {
+        return false;
+      }
 
-      this.successCallback.onSuccess(granted ? 1 : 0);
+      callback = this.successCallback;
+      this.successCallback = null;
+      requestInProgress = false;
+    }
+
+    boolean granted =
+        grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED;
+    callback.onSuccess(granted ? 1 : 0);
+    return true;
+  }
+
+  private boolean setRequestInProgress(RequestPermissionsSuccessCallback successCallback) {
+    synchronized (requestLock) {
+      if (requestInProgress) {
+        return false;
+      }
+
+      requestInProgress = true;
+      this.successCallback = successCallback;
       return true;
-    } else {
-      return false;
     }
   }
 
   @RequiresApi(api = 33)
-  public void requestPermissions(
-      Activity activity,
-      RequestPermissionsSuccessCallback successCallback,
-      ErrorCallback errorCallback) {
-    if (requestInProgress) {
-      errorCallback.onError(
-          "A request for permissions is already running, please wait for it to finish before doing another request.");
-      return;
-    }
-
+  public void requestPermissions(Activity activity,
+      RequestPermissionsSuccessCallback successCallback, ErrorCallback errorCallback) {
     if (activity == null) {
       errorCallback.onError("Unable to detect current Android Activity.");
       return;
     }
 
-    this.successCallback = successCallback;
+    if (!setRequestInProgress(successCallback)) {
+      errorCallback.onError(REQUEST_IN_PROGRESS_ERROR);
+      return;
+    }
+
     final ArrayList<String> permissions = new ArrayList<String>();
     permissions.add(Manifest.permission.POST_NOTIFICATIONS);
     final String[] requestNotificationPermission = permissions.toArray(new String[0]);
 
-    if (!requestInProgress) {
-      ActivityCompat.requestPermissions(activity, requestNotificationPermission, permissionCode);
-      requestInProgress = true;
-    }
+    ActivityCompat.requestPermissions(activity, requestNotificationPermission, permissionCode);
   }
 }
