@@ -152,6 +152,7 @@ class _ChatPageState extends State<ChatPage> {
                             Icons.send,
                             color: Theme.of(context).colorScheme.primary,
                           ),
+                          tooltip: 'Send',
                         ),
                         IconButton(
                           onPressed: () {
@@ -161,6 +162,7 @@ class _ChatPageState extends State<ChatPage> {
                             Icons.stream,
                             color: Theme.of(context).colorScheme.primary,
                           ),
+                          tooltip: 'Send Stream',
                         ),
                       ],
                     )
