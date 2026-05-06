@@ -21,7 +21,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/test.dart';
 import 'package:firebase_ai/src/api.dart';
 import 'package:firebase_ai/src/developer/api.dart';
-import 'package:firebase_ai/src/imagen/imagen_content.dart';
 import 'package:tests/firebase_options.dart';
 
 void main() {
@@ -71,13 +70,7 @@ void main() {
             isVertex ? VertexSerialization() : DeveloperSerialization();
 
         try {
-          if (path.contains('generate-images')) {
-            if (path.contains('gcs')) {
-              parseImagenGenerationResponse<ImagenGCSImage>(jsonData);
-            } else {
-              parseImagenGenerationResponse<ImagenInlineImage>(jsonData);
-            }
-          } else if (path.contains('total-tokens') || path.contains('token')) {
+          if (path.contains('total-tokens') || path.contains('token')) {
             if (jsonData is Map &&
                 (jsonData.containsKey('totalTokens') ||
                     jsonData.containsKey('error'))) {

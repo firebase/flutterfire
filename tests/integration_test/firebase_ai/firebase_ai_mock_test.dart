@@ -1,3 +1,17 @@
+// Copyright 2026 Google LLC
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 import 'dart:async';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
@@ -16,14 +30,14 @@ class MockApiClient implements ApiClient {
 
   @override
   Future<Map<String, Object?>> makeRequest(
-      Uri uri, Map<String, Object?> body) async {
+      Uri uri, Map<String, Object?> body,) async {
     requests.add({'uri': uri, 'body': body});
     return mockResponse;
   }
 
   @override
   Stream<Map<String, Object?>> streamRequest(
-      Uri uri, Map<String, Object?> body) async* {
+      Uri uri, Map<String, Object?> body,) async* {
     requests.add({'uri': uri, 'body': body});
     yield mockResponse;
   }
@@ -49,11 +63,11 @@ void main() {
           {
             'content': {
               'parts': [
-                {'text': 'Hello!'}
-              ]
-            }
+                {'text': 'Hello!'},
+              ],
+            },
           }
-        ]
+        ],
       };
 
       // Using the package-private test method via src import
@@ -85,11 +99,11 @@ void main() {
           {
             'content': {
               'parts': [
-                {'text': '{"name": "Apple", "price": 1.2}'}
-              ]
-            }
+                {'text': '{"name": "Apple", "price": 1.2}'},
+              ],
+            },
           }
-        ]
+        ],
       };
 
       final model = createModelWithClient(
@@ -104,9 +118,9 @@ void main() {
         'type': 'OBJECT',
         'properties': {
           'name': {'type': 'STRING'},
-          'price': {'type': 'NUMBER'}
+          'price': {'type': 'NUMBER'},
         },
-        'required': ['name', 'price']
+        'required': ['name', 'price'],
       };
 
       await model.generateContent(
@@ -135,11 +149,11 @@ void main() {
             'content': {
               'role': 'model',
               'parts': [
-                {'text': 'Hello!'}
-              ]
-            }
+                {'text': 'Hello!'},
+              ],
+            },
           }
-        ]
+        ],
       };
 
       final model = createModelWithClient(
@@ -162,11 +176,11 @@ void main() {
             'content': {
               'role': 'model',
               'parts': [
-                {'text': 'I am good.'}
-              ]
-            }
+                {'text': 'I am good.'},
+              ],
+            },
           }
-        ]
+        ],
       };
 
       // Second turn
