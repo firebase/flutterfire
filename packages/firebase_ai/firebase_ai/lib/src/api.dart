@@ -14,6 +14,7 @@
 
 import 'content.dart';
 import 'error.dart';
+import 'image_config.dart';
 import 'schema.dart';
 import 'tool.dart' show Tool, ToolConfig;
 
@@ -808,8 +809,44 @@ enum FinishReason {
   /// The candidate content was flagged for malformed function call reasons.
   malformedFunctionCall('MALFORMED_FUNCTION_CALL'),
 
-  /// The model produced an unexpected tool call.
+  /// Token generation was stopped because the response contained forbidden terms.
+  blocklist('BLOCKLIST'),
+
+  /// Token generation was stopped because the response contained potentially prohibited content.
+  prohibitedContent('PROHIBITED_CONTENT'),
+
+  /// Token generation was stopped because of Sensitive Personally Identifiable Information (SPII).
+  spii('SPII'),
+
+  /// Token generation stopped because generated images contain safety violations.
+  imageSafety('IMAGE_SAFETY'),
+
+  /// Image generation stopped because generated images have other prohibited content.
+  imageProhibitedContent('IMAGE_PROHIBITED_CONTENT'),
+
+  /// Image generation stopped because of other miscellaneous issues.
+  imageOther('IMAGE_OTHER'),
+
+  /// The model was expected to generate an image, but none was generated.
+  noImage('NO_IMAGE'),
+
+  /// Image generation stopped due to recitation.
+  imageRecitation('IMAGE_RECITATION'),
+
+  /// The response candidate content was flagged for using an unsupported language.
+  language('LANGUAGE'),
+
+  /// Model generated a tool call but no tools were enabled in the request.
   unexpectedToolCall('UNEXPECTED_TOOL_CALL'),
+
+  /// Model called too many tools consecutively, thus the system exited execution.
+  tooManyToolCalls('TOO_MANY_TOOL_CALLS'),
+
+  /// Request has at least one thought signature missing.
+  missingThoughtSignature('MISSING_THOUGHT_SIGNATURE'),
+
+  /// Finished due to malformed response.
+  malformedResponse('MALFORMED_RESPONSE'),
 
   /// Unknown reason.
   other('OTHER');
@@ -831,8 +868,21 @@ enum FinishReason {
       'RECITATION' => FinishReason.recitation,
       'OTHER' => FinishReason.other,
       'MALFORMED_FUNCTION_CALL' => FinishReason.malformedFunctionCall,
+      'BLOCKLIST' => FinishReason.blocklist,
+      'PROHIBITED_CONTENT' => FinishReason.prohibitedContent,
+      'SPII' => FinishReason.spii,
+      'IMAGE_SAFETY' => FinishReason.imageSafety,
+      'IMAGE_PROHIBITED_CONTENT' => FinishReason.imageProhibitedContent,
+      'IMAGE_OTHER' => FinishReason.imageOther,
+      'NO_IMAGE' => FinishReason.noImage,
+      'IMAGE_RECITATION' => FinishReason.imageRecitation,
+      'LANGUAGE' => FinishReason.language,
       'UNEXPECTED_TOOL_CALL' => FinishReason.unexpectedToolCall,
-      _ => throw FormatException('Unhandled FinishReason format', jsonObject),
+      'TOO_MANY_TOOL_CALLS' => FinishReason.tooManyToolCalls,
+      'MISSING_THOUGHT_SIGNATURE' => FinishReason.missingThoughtSignature,
+      'MALFORMED_RESPONSE' => FinishReason.malformedResponse,
+      'UNKNOWN' => FinishReason.unknown,
+      _ => FinishReason.unknown,
     };
   }
 
@@ -1238,6 +1288,7 @@ final class GenerationConfig extends BaseGenerationConfig {
     this.responseSchema,
     this.responseJsonSchema,
     this.thinkingConfig,
+    this.imageConfig,
   }) : assert(responseSchema == null || responseJsonSchema == null,
             'responseSchema and responseJsonSchema cannot both be set.');
 
@@ -1286,6 +1337,9 @@ final class GenerationConfig extends BaseGenerationConfig {
   /// support thinking.
   final ThinkingConfig? thinkingConfig;
 
+  /// Configuration options for generating images with Gemini models.
+  final ImageConfig? imageConfig;
+
   @override
   Map<String, Object?> toJson() => {
         ...super.toJson(),
@@ -1300,6 +1354,8 @@ final class GenerationConfig extends BaseGenerationConfig {
           'responseJsonSchema': responseJsonSchema,
         if (thinkingConfig case final thinkingConfig?)
           'thinkingConfig': thinkingConfig.toJson(),
+        if (imageConfig case final imageConfig?)
+          'imageConfig': imageConfig.toJson(),
       };
 }
 
