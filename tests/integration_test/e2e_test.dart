@@ -28,7 +28,6 @@ import 'firebase_performance/firebase_performance_e2e_test.dart'
 import 'firebase_remote_config/firebase_remote_config_e2e_test.dart'
     as firebase_remote_config;
 import 'firebase_storage/firebase_storage_e2e_test.dart' as firebase_storage;
-import 'firebase_ai/firebase_ai_e2e_test.dart' as firebase_ai;
 
 // Github Actions environment variable
 // ignore: do_not_use_environment
