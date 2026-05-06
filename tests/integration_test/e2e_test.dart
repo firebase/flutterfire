@@ -64,6 +64,7 @@ void main() {
       firebase_performance.main();
       firebase_remote_config.main();
       firebase_storage.main();
+      firebase_ai.main();
       return;
     }
 
@@ -102,5 +103,6 @@ void runAllTests() {
   firebase_performance.main();
   firebase_remote_config.main();
   firebase_storage.main();
+  firebase_ai.main();
   firebase_app_check.main();
 }
