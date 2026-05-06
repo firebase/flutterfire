@@ -627,7 +627,19 @@ enum HarmCategory {
   sexuallyExplicit('HARM_CATEGORY_SEXUALLY_EXPLICIT'),
 
   /// Promotes or enables access to harmful goods, services, and activities.
-  dangerousContent('HARM_CATEGORY_DANGEROUS_CONTENT');
+  dangerousContent('HARM_CATEGORY_DANGEROUS_CONTENT'),
+
+  /// Image content containing hate speech.
+  imageHate('HARM_CATEGORY_IMAGE_HATE'),
+
+  /// Image content that is dangerous.
+  imageDangerousContent('HARM_CATEGORY_IMAGE_DANGEROUS_CONTENT'),
+
+  /// Image content containing harassment.
+  imageHarassment('HARM_CATEGORY_IMAGE_HARASSMENT'),
+
+  /// Image content that is sexually explicit.
+  imageSexuallyExplicit('HARM_CATEGORY_IMAGE_SEXUALLY_EXPLICIT');
 
   const HarmCategory(this._jsonString);
 
@@ -639,7 +651,13 @@ enum HarmCategory {
       'HARM_CATEGORY_HATE_SPEECH' => HarmCategory.hateSpeech,
       'HARM_CATEGORY_SEXUALLY_EXPLICIT' => HarmCategory.sexuallyExplicit,
       'HARM_CATEGORY_DANGEROUS_CONTENT' => HarmCategory.dangerousContent,
-      _ => throw FormatException('Unhandled HarmCategory format', jsonObject),
+      'HARM_CATEGORY_IMAGE_HATE' => HarmCategory.imageHate,
+      'HARM_CATEGORY_IMAGE_DANGEROUS_CONTENT' =>
+        HarmCategory.imageDangerousContent,
+      'HARM_CATEGORY_IMAGE_HARASSMENT' => HarmCategory.imageHarassment,
+      'HARM_CATEGORY_IMAGE_SEXUALLY_EXPLICIT' =>
+        HarmCategory.imageSexuallyExplicit,
+      _ => HarmCategory.unknown,
     };
   }
 

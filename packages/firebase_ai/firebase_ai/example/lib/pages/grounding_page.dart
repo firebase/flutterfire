@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_ai/firebase_ai.dart';
 import '../widgets/message_widget.dart';
@@ -74,9 +73,8 @@ class _GroundingPageState extends State<GroundingPage> {
       }
     }
 
-    final aiProvider = widget.useVertexBackend
-        ? FirebaseAI.vertexAI(auth: FirebaseAuth.instance)
-        : FirebaseAI.googleAI(auth: FirebaseAuth.instance);
+    final aiProvider =
+        widget.useVertexBackend ? FirebaseAI.vertexAI() : FirebaseAI.googleAI();
 
     _model = aiProvider.generativeModel(
       model: 'gemini-2.5-flash',

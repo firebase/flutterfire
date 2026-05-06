@@ -35,6 +35,9 @@ jobs:
           melos-version: '5.3.0'
       - name: 'Run Analyze'
         run: melos analyze-ci
+      - name: 'Validate Workspace'
+        if: always()
+        run: melos run validate:workspace
 
   # Separated from "analyse" action as pubspec_override file is not being taken into account when running `flutter pub publish --dry-run`
   # This will fail on CI until this is fixed: https://github.com/invertase/melos/issues/467
@@ -148,15 +151,15 @@ jobs:
           pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
       - name: Xcode
         run: sudo xcode-select -s /Applications/Xcode_16.4.app/Contents/Developer
+      - uses: bluefireteam/melos-action@705015c3d2bc4ab94201ac24accb2bbe070cf533
+        with:
+          melos-version: '5.3.0'
       - name: Setup firebase_core example app to test Swift integration
-        # run this before running melos boostrap to ensure the example app is set up
+        # Run after melos bootstrap so workspace pubspec_overrides resolve unpublished package versions.
         run: |
           cd packages/firebase_core/firebase_core/example
           flutter pub add $FLUTTER_DEPENDENCIES
           cd ../../../..
-      - uses: bluefireteam/melos-action@705015c3d2bc4ab94201ac24accb2bbe070cf533
-        with:
-          melos-version: '5.3.0'
       - name: 'Swift Integration Setup'
         run: flutter config --enable-swift-package-manager
       - name: 'Build Apps with Swift Package Manager'
@@ -192,8 +195,12 @@ jobs:
       # Go is used by addlicense command (addlicense is used in melos run
       # check-license-header)
       - run: go install github.com/google/addlicense@latest
-      - name: Install Dart
-        uses: dart-lang/setup-dart@65eb853c7ba17dde3be364c3d2858773e7144260
+      - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
+        with:
+          channel: 'stable'
+          cache: true
+          cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
+          pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
       - name: Install Melos
         uses: bluefireteam/melos-action@705015c3d2bc4ab94201ac24accb2bbe070cf533
         with:

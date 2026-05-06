@@ -1,7 +1,7 @@
 name: e2e-fdc
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}-fdc
   cancel-in-progress: true
 
 on:
@@ -20,6 +20,11 @@ on:
       - 'website/**'
       - '**/example/**'
       - '**.md'
+  workflow_call:
+    inputs:
+      nightly_test_mode:
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -27,7 +32,7 @@ permissions:
 jobs:
   android:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 45 }}
     strategy:
       fail-fast: false
     env:
@@ -47,18 +52,15 @@ jobs:
       - name: 'Install Tools'
         run: |
           sudo npm i -g firebase-tools
-          echo "FIREBASE_TOOLS_VERSION=$(npm firebase --version)" >> $GITHUB_ENV
+          echo "FIREBASE_TOOLS_VERSION=$(firebase --version)" >> $GITHUB_ENV
       - name: Firebase Emulator Cache
         id: firebase-emulator-cache
         uses: actions/cache/restore@668228422ae6a00e4ad889ee87cd7109ec5666a7
         continue-on-error: true
         with:
-          # The firebase emulators are pure javascript and java, OS-independent
-          enableCrossOsArchive: true
           # Must match the save path exactly
           path: ~/.cache/firebase/emulators
-          key: firebase-emulators-v3-${{ env.FIREBASE_TOOLS_VERSION }}
-          restore-keys: firebase-emulators-v3
+          key: firebase-emulators-v4-${{ runner.os }}-${{ env.FIREBASE_TOOLS_VERSION }}
       - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
         with:
           channel: 'stable'
@@ -76,6 +78,7 @@ jobs:
       - name: Start Firebase Emulator
         run: |
           cd ./packages/firebase_data_connect/firebase_data_connect/example
+          pkill -x postgres || true
           unset PGSERVICEFILE
           firebase experiments:enable dataconnect
           ./start-firebase-emulator.sh
@@ -131,15 +134,13 @@ jobs:
         uses: actions/cache/save@668228422ae6a00e4ad889ee87cd7109ec5666a7
         continue-on-error: true
         with:
-          # The firebase emulators are pure javascript and java, OS-independent
-          enableCrossOsArchive: true
           key: ${{ steps.firebase-emulator-cache.outputs.cache-primary-key }}
           # Must match the restore path exactly
           path: ~/.cache/firebase/emulators
 
   ios:
     runs-on: macos-15
-    timeout-minutes: 45
+    timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 45 }}
     strategy:
       fail-fast: false
     steps:
@@ -174,18 +175,15 @@ jobs:
       - name: 'Install Tools'
         run: |
           sudo npm i -g firebase-tools
-          echo "FIREBASE_TOOLS_VERSION=$(npm firebase --version)" >> $GITHUB_ENV
+          echo "FIREBASE_TOOLS_VERSION=$(firebase --version)" >> $GITHUB_ENV
       - name: Firebase Emulator Cache
         id: firebase-emulator-cache
         uses: actions/cache/restore@668228422ae6a00e4ad889ee87cd7109ec5666a7
         continue-on-error: true
         with:
-          # The firebase emulators are pure javascript and java, OS-independent
-          enableCrossOsArchive: true
           # Must match the save path exactly
           path: ~/.cache/firebase/emulators
-          key: firebase-emulators-v3-${{ env.FIREBASE_TOOLS_VERSION }}
-          restore-keys: firebase-emulators-v3
+          key: firebase-emulators-v4-${{ runner.os }}-${{ env.FIREBASE_TOOLS_VERSION }}
       - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
         with:
           channel: 'stable'
@@ -213,6 +211,7 @@ jobs:
         run: |
           sudo chown -R 501:20 "/Users/runner/.npm"
           cd ./packages/firebase_data_connect/firebase_data_connect/example
+          pkill -x postgres || true
           unset PGSERVICEFILE
           firebase experiments:enable dataconnect
           ./start-firebase-emulator.sh
@@ -227,10 +226,9 @@ jobs:
         run: |
           # Uncomment following line to have simulator logs printed out for debugging purposes.
           # xcrun simctl spawn booted log stream --predicate 'eventMessage contains "flutter"' &
-          # The iOS simulator sometimes fails to connect the VM Service, hanging for
-          # 12 minutes before timing out. Use a 6-minute limit and retry once with
-          # a simulator reboot. Normal connection takes 30s-5min.
-          perl -e 'alarm 360; exec @ARGV' -- flutter test integration_test/e2e_test.dart -d "$SIMULATOR" --dart-define=CI=true --timeout 10x || {
+          # The iOS simulator sometimes fails to connect the VM Service. Keep a
+          # limit around the full test command and retry once with a simulator reboot.
+          perl -e 'alarm 900; exec @ARGV' -- flutter test integration_test/e2e_test.dart -d "$SIMULATOR" --dart-define=CI=true --timeout 10x || {
             echo "First attempt failed or timed out. Rebooting simulator and retrying..."
             xcrun simctl shutdown "$SIMULATOR" || true
             xcrun simctl boot "$SIMULATOR"
@@ -243,8 +241,6 @@ jobs:
         uses: actions/cache/save@668228422ae6a00e4ad889ee87cd7109ec5666a7
         continue-on-error: true
         with:
-          # The firebase emulators are pure javascript and java, OS-independent
-          enableCrossOsArchive: true
           key: ${{ steps.firebase-emulator-cache.outputs.cache-primary-key }}
           # Must match the restore path exactly
           path: ~/.cache/firebase/emulators
@@ -260,7 +256,7 @@ jobs:
 
   web:
     runs-on: macos-latest
-    timeout-minutes: 15
+    timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 15 }}
     strategy:
       fail-fast: false
     steps:
@@ -290,22 +286,20 @@ jobs:
       - name: 'Install Tools'
         run: |
           sudo npm i -g firebase-tools
-          echo "FIREBASE_TOOLS_VERSION=$(npm firebase --version)" >> $GITHUB_ENV
+          echo "FIREBASE_TOOLS_VERSION=$(firebase --version)" >> $GITHUB_ENV
       - name: Firebase Emulator Cache
         id: firebase-emulator-cache
         uses: actions/cache/restore@668228422ae6a00e4ad889ee87cd7109ec5666a7
         continue-on-error: true
         with:
-          # The firebase emulators are pure javascript and java, OS-independent
-          enableCrossOsArchive: true
           # Must match the save path exactly
           path: ~/.cache/firebase/emulators
-          key: firebase-emulators-v3-${{ env.FIREBASE_TOOLS_VERSION }}
-          restore-keys: firebase-emulators-v3
+          key: firebase-emulators-v4-${{ runner.os }}-${{ env.FIREBASE_TOOLS_VERSION }}
       - name: Start Firebase Emulator
         run: |
           sudo chown -R 501:20 "/Users/runner/.npm"
           cd ./packages/firebase_data_connect/firebase_data_connect/example
+          pkill -x postgres || true
           unset PGSERVICEFILE
           firebase experiments:enable dataconnect
           ./start-firebase-emulator.sh
@@ -331,15 +325,13 @@ jobs:
         uses: actions/cache/save@668228422ae6a00e4ad889ee87cd7109ec5666a7
         continue-on-error: true
         with:
-          # The firebase emulators are pure javascript and java, OS-independent
-          enableCrossOsArchive: true
           key: ${{ steps.firebase-emulator-cache.outputs.cache-primary-key }}
           # Must match the restore path exactly
           path: ~/.cache/firebase/emulators
 
   web-wasm:
     runs-on: macos-latest
-    timeout-minutes: 15
+    timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 15 }}
     strategy:
       fail-fast: false
     steps:
@@ -369,21 +361,19 @@ jobs:
       - name: 'Install Tools'
         run: |
           sudo npm i -g firebase-tools
-          echo "FIREBASE_TOOLS_VERSION=$(npm firebase --version)" >> $GITHUB_ENV
+          echo "FIREBASE_TOOLS_VERSION=$(firebase --version)" >> $GITHUB_ENV
       - name: Firebase Emulator Cache
         id: firebase-emulator-cache
         uses: actions/cache/restore@668228422ae6a00e4ad889ee87cd7109ec5666a7
         continue-on-error: true
         with:
-          # The firebase emulators are pure javascript and java, OS-independent
-          enableCrossOsArchive: true
           # Must match the save path exactly
           path: ~/.cache/firebase/emulators
-          key: firebase-emulators-v3-${{ env.FIREBASE_TOOLS_VERSION }}
-          restore-keys: firebase-emulators-v3
+          key: firebase-emulators-v4-${{ runner.os }}-${{ env.FIREBASE_TOOLS_VERSION }}
       - name: Start Firebase Emulator
         run: |
           cd ./packages/firebase_data_connect/firebase_data_connect/example
+          pkill -x postgres || true
           unset PGSERVICEFILE
           firebase experiments:enable dataconnect
           ./start-firebase-emulator.sh
@@ -410,8 +400,6 @@ jobs:
         uses: actions/cache/save@668228422ae6a00e4ad889ee87cd7109ec5666a7
         continue-on-error: true
         with:
-          # The firebase emulators are pure javascript and java, OS-independent
-          enableCrossOsArchive: true
           key: ${{ steps.firebase-emulator-cache.outputs.cache-primary-key }}
           # Must match the restore path exactly
           path: ~/.cache/firebase/emulators

@@ -16,9 +16,9 @@ class MethodChannelPipelineSnapshot extends PipelineSnapshotPlatform {
   MethodChannelPipelineSnapshot(
     FirebaseFirestorePlatform firestore,
     FirestorePigeonFirebaseApp pigeonApp,
-    PigeonPipelineSnapshot pigeonSnapshot,
+    InternalPipelineSnapshot pigeonSnapshot,
   )   : _results = pigeonSnapshot.results
-            .whereType<PigeonPipelineResult>()
+            .whereType<InternalPipelineResult>()
             .map((result) => MethodChannelPipelineResult(
                   firestore,
                   pigeonApp,

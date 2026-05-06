@@ -6,7 +6,7 @@
 part of '../firebase_auth.dart';
 
 /// The entry point of the Firebase Authentication SDK.
-class FirebaseAuth extends FirebasePluginPlatform {
+class FirebaseAuth extends FirebasePluginPlatform implements FirebaseService {
   // Cached instances of [FirebaseAuth].
   static Map<String, FirebaseAuth> _firebaseAuthInstances = {};
 
@@ -45,7 +45,9 @@ class FirebaseAuth extends FirebasePluginPlatform {
     required FirebaseApp app,
   }) {
     return _firebaseAuthInstances.putIfAbsent(app.name, () {
-      return FirebaseAuth._(app: app);
+      final instance = FirebaseAuth._(app: app);
+      app.registerService<FirebaseAuth>(instance);
+      return instance;
     });
   }
 
@@ -796,6 +798,11 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// Authorization code can be retrieved on the user credential i.e. userCredential.additionalUserInfo.authorizationCode
   Future<void> revokeTokenWithAuthorizationCode(String authorizationCode) {
     return _delegate.revokeTokenWithAuthorizationCode(authorizationCode);
+  }
+
+  /// Android only. Revokes the provided accessToken. Currently supports revoking Apple-issued accessToken only.
+  Future<void> revokeAccessToken(String accessToken) {
+    return _delegate.revokeAccessToken(accessToken);
   }
 
   /// Signs out the current user.

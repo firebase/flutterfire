@@ -39,17 +39,17 @@ import java.util.Objects;
 
 public class PigeonParser {
   static List<Object> manuallyToList(
-      GeneratedAndroidFirebaseAuth.PigeonUserDetails pigeonUserDetails) {
+      GeneratedAndroidFirebaseAuth.InternalUserDetails pigeonUserDetails) {
     List<Object> output = new ArrayList<>();
     output.add(pigeonUserDetails.getUserInfo().toList());
     output.add(pigeonUserDetails.getProviderData());
     return output;
   }
 
-  static GeneratedAndroidFirebaseAuth.PigeonUserCredential parseAuthResult(
+  static GeneratedAndroidFirebaseAuth.InternalUserCredential parseAuthResult(
       @NonNull AuthResult authResult) {
-    GeneratedAndroidFirebaseAuth.PigeonUserCredential.Builder builder =
-        new GeneratedAndroidFirebaseAuth.PigeonUserCredential.Builder();
+    GeneratedAndroidFirebaseAuth.InternalUserCredential.Builder builder =
+        new GeneratedAndroidFirebaseAuth.InternalUserCredential.Builder();
 
     builder.setAdditionalUserInfo(parseAdditionalUserInfo(authResult.getAdditionalUserInfo()));
     builder.setCredential(parseAuthCredential(authResult.getCredential()));
@@ -58,14 +58,14 @@ public class PigeonParser {
     return builder.build();
   }
 
-  private static GeneratedAndroidFirebaseAuth.PigeonAdditionalUserInfo parseAdditionalUserInfo(
+  private static GeneratedAndroidFirebaseAuth.InternalAdditionalUserInfo parseAdditionalUserInfo(
       AdditionalUserInfo additionalUserInfo) {
     if (additionalUserInfo == null) {
       return null;
     }
 
-    GeneratedAndroidFirebaseAuth.PigeonAdditionalUserInfo.Builder builder =
-        new GeneratedAndroidFirebaseAuth.PigeonAdditionalUserInfo.Builder();
+    GeneratedAndroidFirebaseAuth.InternalAdditionalUserInfo.Builder builder =
+        new GeneratedAndroidFirebaseAuth.InternalAdditionalUserInfo.Builder();
 
     builder.setIsNewUser(additionalUserInfo.isNewUser());
     builder.setProfile(additionalUserInfo.getProfile());
@@ -75,7 +75,7 @@ public class PigeonParser {
     return builder.build();
   }
 
-  static GeneratedAndroidFirebaseAuth.PigeonAuthCredential parseAuthCredential(
+  static GeneratedAndroidFirebaseAuth.InternalAuthCredential parseAuthCredential(
       AuthCredential authCredential) {
     if (authCredential == null) {
       return null;
@@ -84,8 +84,8 @@ public class PigeonParser {
     int authCredentialHashCode = authCredential.hashCode();
     FlutterFirebaseAuthPlugin.authCredentials.put(authCredentialHashCode, authCredential);
 
-    GeneratedAndroidFirebaseAuth.PigeonAuthCredential.Builder builder =
-        new GeneratedAndroidFirebaseAuth.PigeonAuthCredential.Builder();
+    GeneratedAndroidFirebaseAuth.InternalAuthCredential.Builder builder =
+        new GeneratedAndroidFirebaseAuth.InternalAuthCredential.Builder();
 
     builder.setProviderId(authCredential.getProvider());
     builder.setSignInMethod(authCredential.getSignInMethod());
@@ -97,17 +97,17 @@ public class PigeonParser {
     return builder.build();
   }
 
-  static GeneratedAndroidFirebaseAuth.PigeonUserDetails parseFirebaseUser(
+  static GeneratedAndroidFirebaseAuth.InternalUserDetails parseFirebaseUser(
       FirebaseUser firebaseUser) {
     if (firebaseUser == null) {
       return null;
     }
 
-    GeneratedAndroidFirebaseAuth.PigeonUserDetails.Builder builder =
-        new GeneratedAndroidFirebaseAuth.PigeonUserDetails.Builder();
+    GeneratedAndroidFirebaseAuth.InternalUserDetails.Builder builder =
+        new GeneratedAndroidFirebaseAuth.InternalUserDetails.Builder();
 
-    GeneratedAndroidFirebaseAuth.PigeonUserInfo.Builder builderInfo =
-        new GeneratedAndroidFirebaseAuth.PigeonUserInfo.Builder();
+    GeneratedAndroidFirebaseAuth.InternalUserInfo.Builder builderInfo =
+        new GeneratedAndroidFirebaseAuth.InternalUserInfo.Builder();
 
     builderInfo.setDisplayName(firebaseUser.getDisplayName());
     builderInfo.setEmail(firebaseUser.getEmail());
@@ -249,7 +249,7 @@ public class PigeonParser {
   }
 
   static ActionCodeSettings getActionCodeSettings(
-      @NonNull GeneratedAndroidFirebaseAuth.PigeonActionCodeSettings pigeonActionCodeSettings) {
+      @NonNull GeneratedAndroidFirebaseAuth.InternalActionCodeSettings pigeonActionCodeSettings) {
     ActionCodeSettings.Builder builder = ActionCodeSettings.newBuilder();
 
     builder.setUrl(pigeonActionCodeSettings.getUrl());
@@ -278,13 +278,13 @@ public class PigeonParser {
     return builder.build();
   }
 
-  static List<GeneratedAndroidFirebaseAuth.PigeonMultiFactorInfo> multiFactorInfoToPigeon(
+  static List<GeneratedAndroidFirebaseAuth.InternalMultiFactorInfo> multiFactorInfoToPigeon(
       List<MultiFactorInfo> hints) {
-    List<GeneratedAndroidFirebaseAuth.PigeonMultiFactorInfo> pigeonHints = new ArrayList<>();
+    List<GeneratedAndroidFirebaseAuth.InternalMultiFactorInfo> pigeonHints = new ArrayList<>();
     for (MultiFactorInfo info : hints) {
       if (info instanceof PhoneMultiFactorInfo) {
         pigeonHints.add(
-            new GeneratedAndroidFirebaseAuth.PigeonMultiFactorInfo.Builder()
+            new GeneratedAndroidFirebaseAuth.InternalMultiFactorInfo.Builder()
                 .setPhoneNumber(((PhoneMultiFactorInfo) info).getPhoneNumber())
                 .setDisplayName(info.getDisplayName())
                 .setEnrollmentTimestamp((double) info.getEnrollmentTimestamp())
@@ -294,7 +294,7 @@ public class PigeonParser {
 
       } else {
         pigeonHints.add(
-            new GeneratedAndroidFirebaseAuth.PigeonMultiFactorInfo.Builder()
+            new GeneratedAndroidFirebaseAuth.InternalMultiFactorInfo.Builder()
                 .setDisplayName(info.getDisplayName())
                 .setEnrollmentTimestamp((double) info.getEnrollmentTimestamp())
                 .setUid(info.getUid())
@@ -307,18 +307,19 @@ public class PigeonParser {
 
   static List<List<Object>> multiFactorInfoToMap(List<MultiFactorInfo> hints) {
     List<List<Object>> pigeonHints = new ArrayList<>();
-    for (GeneratedAndroidFirebaseAuth.PigeonMultiFactorInfo info : multiFactorInfoToPigeon(hints)) {
+    for (GeneratedAndroidFirebaseAuth.InternalMultiFactorInfo info :
+        multiFactorInfoToPigeon(hints)) {
       pigeonHints.add(info.toList());
     }
     return pigeonHints;
   }
 
-  static GeneratedAndroidFirebaseAuth.PigeonActionCodeInfo parseActionCodeResult(
+  static GeneratedAndroidFirebaseAuth.InternalActionCodeInfo parseActionCodeResult(
       @NonNull ActionCodeResult actionCodeResult) {
-    GeneratedAndroidFirebaseAuth.PigeonActionCodeInfo.Builder builder =
-        new GeneratedAndroidFirebaseAuth.PigeonActionCodeInfo.Builder();
-    GeneratedAndroidFirebaseAuth.PigeonActionCodeInfoData.Builder builderData =
-        new GeneratedAndroidFirebaseAuth.PigeonActionCodeInfoData.Builder();
+    GeneratedAndroidFirebaseAuth.InternalActionCodeInfo.Builder builder =
+        new GeneratedAndroidFirebaseAuth.InternalActionCodeInfo.Builder();
+    GeneratedAndroidFirebaseAuth.InternalActionCodeInfoData.Builder builderData =
+        new GeneratedAndroidFirebaseAuth.InternalActionCodeInfoData.Builder();
 
     int operation = actionCodeResult.getOperation();
 
@@ -363,10 +364,10 @@ public class PigeonParser {
     return builder.build();
   }
 
-  static GeneratedAndroidFirebaseAuth.PigeonIdTokenResult parseTokenResult(
+  static GeneratedAndroidFirebaseAuth.InternalIdTokenResult parseTokenResult(
       @NonNull GetTokenResult tokenResult) {
-    final GeneratedAndroidFirebaseAuth.PigeonIdTokenResult.Builder builder =
-        new GeneratedAndroidFirebaseAuth.PigeonIdTokenResult.Builder();
+    final GeneratedAndroidFirebaseAuth.InternalIdTokenResult.Builder builder =
+        new GeneratedAndroidFirebaseAuth.InternalIdTokenResult.Builder();
 
     builder.setToken(tokenResult.getToken());
     builder.setSignInProvider(tokenResult.getSignInProvider());
