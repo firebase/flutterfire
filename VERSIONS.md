@@ -4,6 +4,120 @@ This document is listing all the compatible versions of the FlutterFire plugins.
 
 # Versions
 
+## [Flutter BoM 4.12.0 (2026-04-13)](https://github.com/firebase/flutterfire/blob/main/CHANGELOG.md#2026-04-13)
+
+Install this version using FlutterFire CLI
+
+```bash
+flutterfire install 4.12.0
+```
+
+### Included Native Firebase SDK Versions
+| Firebase SDK | Version | Link |
+|--------------|---------|------|
+| Android SDK | 34.12.0 | [Release Notes](https://firebase.google.com/support/release-notes/android) |
+| iOS SDK | 12.12.0 | [Release Notes](https://firebase.google.com/support/release-notes/ios) |
+| Web SDK | 12.12.0 | [Release Notes](https://firebase.google.com/support/release-notes/js) |
+| Windows SDK | 13.5.0 | [Release Notes](https://firebase.google.com/support/release-notes/cpp-relnotes) |
+
+### FlutterFire Plugin Versions
+| Plugin | Version | Dart Version | Flutter Version |
+|--------|---------|--------------|-----------------|
+| [cloud_firestore](https://pub.dev/packages/cloud_firestore/versions/6.3.0) | 6.3.0 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [cloud_functions](https://pub.dev/packages/cloud_functions/versions/6.2.0) | 6.2.0 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_ai](https://pub.dev/packages/firebase_ai/versions/3.11.0) | 3.11.0 | >=3.2.0 <4.0.0 | >=3.16.0 |
+| [firebase_analytics](https://pub.dev/packages/firebase_analytics/versions/12.3.0) | 12.3.0 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_app_check](https://pub.dev/packages/firebase_app_check/versions/0.4.3) | 0.4.3 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_app_installations](https://pub.dev/packages/firebase_app_installations/versions/0.4.2) | 0.4.2 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_auth](https://pub.dev/packages/firebase_auth/versions/6.4.0) | 6.4.0 | >=3.2.0 <4.0.0 | >=3.16.0 |
+| [firebase_core](https://pub.dev/packages/firebase_core/versions/4.7.0) | 4.7.0 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_crashlytics](https://pub.dev/packages/firebase_crashlytics/versions/5.2.0) | 5.2.0 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_data_connect](https://pub.dev/packages/firebase_data_connect/versions/0.3.0) | 0.3.0 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_database](https://pub.dev/packages/firebase_database/versions/12.3.0) | 12.3.0 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_in_app_messaging](https://pub.dev/packages/firebase_in_app_messaging/versions/0.9.2) | 0.9.2 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_messaging](https://pub.dev/packages/firebase_messaging/versions/16.2.0) | 16.2.0 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_ml_model_downloader](https://pub.dev/packages/firebase_ml_model_downloader/versions/0.4.2) | 0.4.2 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_performance](https://pub.dev/packages/firebase_performance/versions/0.11.3) | 0.11.3 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_remote_config](https://pub.dev/packages/firebase_remote_config/versions/6.4.0) | 6.4.0 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_storage](https://pub.dev/packages/firebase_storage/versions/13.3.0) | 13.3.0 | >=3.2.0 <4.0.0 | >=3.3.0 |
+
+
+## [Flutter BoM 4.11.0 (2026-03-23)](https://github.com/firebase/flutterfire/blob/main/CHANGELOG.md#2026-03-23)
+
+Install this version using FlutterFire CLI
+
+```bash
+flutterfire install 4.11.0
+```
+
+### Included Native Firebase SDK Versions
+| Firebase SDK | Version | Link |
+|--------------|---------|------|
+| Android SDK | 34.9.0 | [Release Notes](https://firebase.google.com/support/release-notes/android) |
+| iOS SDK | 12.9.0 | [Release Notes](https://firebase.google.com/support/release-notes/ios) |
+| Web SDK | 12.9.0 | [Release Notes](https://firebase.google.com/support/release-notes/js) |
+| Windows SDK | 13.5.0 | [Release Notes](https://firebase.google.com/support/release-notes/cpp-relnotes) |
+
+### FlutterFire Plugin Versions
+| Plugin | Version | Dart Version | Flutter Version |
+|--------|---------|--------------|-----------------|
+| [cloud_firestore](https://pub.dev/packages/cloud_firestore/versions/6.2.0) | 6.2.0 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [cloud_functions](https://pub.dev/packages/cloud_functions/versions/6.1.0) | 6.1.0 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_ai](https://pub.dev/packages/firebase_ai/versions/3.10.0) | 3.10.0 | >=3.2.0 <4.0.0 | >=3.16.0 |
+| [firebase_analytics](https://pub.dev/packages/firebase_analytics/versions/12.2.0) | 12.2.0 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_app_check](https://pub.dev/packages/firebase_app_check/versions/0.4.2) | 0.4.2 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_app_installations](https://pub.dev/packages/firebase_app_installations/versions/0.4.1) | 0.4.1 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_auth](https://pub.dev/packages/firebase_auth/versions/6.3.0) | 6.3.0 | >=3.2.0 <4.0.0 | >=3.16.0 |
+| [firebase_core](https://pub.dev/packages/firebase_core/versions/4.6.0) | 4.6.0 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_crashlytics](https://pub.dev/packages/firebase_crashlytics/versions/5.1.0) | 5.1.0 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_data_connect](https://pub.dev/packages/firebase_data_connect/versions/0.2.4) | 0.2.4 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_database](https://pub.dev/packages/firebase_database/versions/12.2.0) | 12.2.0 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_in_app_messaging](https://pub.dev/packages/firebase_in_app_messaging/versions/0.9.1) | 0.9.1 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_messaging](https://pub.dev/packages/firebase_messaging/versions/16.1.3) | 16.1.3 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_ml_model_downloader](https://pub.dev/packages/firebase_ml_model_downloader/versions/0.4.1) | 0.4.1 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_performance](https://pub.dev/packages/firebase_performance/versions/0.11.2) | 0.11.2 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_remote_config](https://pub.dev/packages/firebase_remote_config/versions/6.3.0) | 6.3.0 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_storage](https://pub.dev/packages/firebase_storage/versions/13.2.0) | 13.2.0 | >=3.2.0 <4.0.0 | >=3.3.0 |
+
+
+## [Flutter BoM 4.10.0 (2026-03-02)](https://github.com/firebase/flutterfire/blob/main/CHANGELOG.md#2026-03-02)
+
+Install this version using FlutterFire CLI
+
+```bash
+flutterfire install 4.10.0
+```
+
+### Included Native Firebase SDK Versions
+| Firebase SDK | Version | Link |
+|--------------|---------|------|
+| Android SDK | 34.9.0 | [Release Notes](https://firebase.google.com/support/release-notes/android) |
+| iOS SDK | 12.9.0 | [Release Notes](https://firebase.google.com/support/release-notes/ios) |
+| Web SDK | 12.9.0 | [Release Notes](https://firebase.google.com/support/release-notes/js) |
+| Windows SDK | 13.4.0 | [Release Notes](https://firebase.google.com/support/release-notes/cpp-relnotes) |
+
+### FlutterFire Plugin Versions
+| Plugin | Version | Dart Version | Flutter Version |
+|--------|---------|--------------|-----------------|
+| [cloud_firestore](https://pub.dev/packages/cloud_firestore/versions/6.1.3) | 6.1.3 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [cloud_functions](https://pub.dev/packages/cloud_functions/versions/6.0.7) | 6.0.7 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_ai](https://pub.dev/packages/firebase_ai/versions/3.9.0) | 3.9.0 | >=3.2.0 <4.0.0 | >=3.16.0 |
+| [firebase_analytics](https://pub.dev/packages/firebase_analytics/versions/12.1.3) | 12.1.3 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_app_check](https://pub.dev/packages/firebase_app_check/versions/0.4.1+5) | 0.4.1+5 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_app_installations](https://pub.dev/packages/firebase_app_installations/versions/0.4.0+7) | 0.4.0+7 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_auth](https://pub.dev/packages/firebase_auth/versions/6.2.0) | 6.2.0 | >=3.2.0 <4.0.0 | >=3.16.0 |
+| [firebase_core](https://pub.dev/packages/firebase_core/versions/4.5.0) | 4.5.0 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_crashlytics](https://pub.dev/packages/firebase_crashlytics/versions/5.0.8) | 5.0.8 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_data_connect](https://pub.dev/packages/firebase_data_connect/versions/0.2.3) | 0.2.3 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_database](https://pub.dev/packages/firebase_database/versions/12.1.4) | 12.1.4 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_in_app_messaging](https://pub.dev/packages/firebase_in_app_messaging/versions/0.9.0+7) | 0.9.0+7 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_messaging](https://pub.dev/packages/firebase_messaging/versions/16.1.2) | 16.1.2 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_ml_model_downloader](https://pub.dev/packages/firebase_ml_model_downloader/versions/0.4.0+7) | 0.4.0+7 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_performance](https://pub.dev/packages/firebase_performance/versions/0.11.1+5) | 0.11.1+5 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_remote_config](https://pub.dev/packages/firebase_remote_config/versions/6.2.0) | 6.2.0 | >=3.2.0 <4.0.0 | >=3.3.0 |
+| [firebase_storage](https://pub.dev/packages/firebase_storage/versions/13.1.0) | 13.1.0 | >=3.2.0 <4.0.0 | >=3.3.0 |
+
+
 ## [Flutter BoM 4.9.0 (2026-02-09)](https://github.com/firebase/flutterfire/blob/main/CHANGELOG.md#2026-02-09)
 
 Install this version using FlutterFire CLI

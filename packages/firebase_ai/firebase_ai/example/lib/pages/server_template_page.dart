@@ -14,6 +14,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../utils/function_call_utils.dart';
 import '../widgets/message_widget.dart';
 import 'package:firebase_ai/firebase_ai.dart';
 
@@ -40,8 +41,11 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
 
   // ignore: experimental_member_use
   TemplateGenerativeModel? _templateGenerativeModel;
-  // ignore: experimental_member_use
-  TemplateImagenModel? _templateImagenModel;
+
+  TemplateChatSession? _chatSession;
+  TemplateChatSession? _chatFunctionOverrideSession;
+  TemplateChatSession? _chatAutoFunctionSession;
+  TemplateChatSession? _chatStreamFunctionSession;
 
   @override
   void initState() {
@@ -54,26 +58,89 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
       _templateGenerativeModel =
           // ignore: experimental_member_use
           FirebaseAI.vertexAI(location: 'global').templateGenerativeModel();
-      _templateImagenModel =
-          // ignore: experimental_member_use
-          FirebaseAI.vertexAI(location: 'global').templateImagenModel();
     } else {
       _templateGenerativeModel =
           // ignore: experimental_member_use
           FirebaseAI.googleAI().templateGenerativeModel();
-      _templateImagenModel =
-          // ignore: experimental_member_use
-          FirebaseAI.googleAI().templateImagenModel();
     }
+
+    // Inputs are now provided ONCE here when creating the session
+    _chatSession = _templateGenerativeModel?.startChat(
+      'chat_history.prompt',
+      inputs: {},
+    );
+    _chatFunctionOverrideSession = _templateGenerativeModel?.startChat(
+      'cj-function-calling-weather-override',
+      inputs: {},
+      tools: [
+        TemplateTool.functionDeclarations([
+          TemplateFunctionDeclaration(
+            'fetchWeather',
+            parameters: {
+              'location': JSONSchema.object(
+                description:
+                    'The name of the city and its state for which to get '
+                    'the weather. Only cities in the USA are supported.',
+                properties: {
+                  'city': JSONSchema.string(
+                    description: 'The city of the location.',
+                  ),
+                  'state': JSONSchema.string(
+                    description: 'The state of the location.',
+                  ),
+                  'zipCode': JSONSchema.integer(
+                    description: 'Optional zip code of the location.',
+                    nullable: true,
+                  ),
+                },
+                optionalProperties: ['zipCode'],
+              ),
+              'date': JSONSchema.string(
+                description: 'The date for which to get the weather. '
+                    'Date must be in the format: YYYY-MM-DD.',
+              ),
+              'unit': JSONSchema.enumString(
+                enumValues: ['CELSIUS', 'FAHRENHEIT'],
+                description: 'The temperature unit.',
+                nullable: true,
+              ),
+            },
+            optionalParameters: ['unit'],
+          ),
+        ]),
+      ],
+    );
+    _chatAutoFunctionSession = _templateGenerativeModel?.startChat(
+      'cj-function-calling-weather',
+      inputs: {},
+      tools: [
+        TemplateTool.functionDeclarations([
+          TemplateAutoFunctionDeclaration(
+            name: 'fetchWeather',
+            callable: fetchWeatherCallable,
+          ),
+        ]),
+      ],
+    );
+    _chatStreamFunctionSession = _templateGenerativeModel?.startChat(
+      'cj-function-calling-weather-stream',
+      inputs: {},
+      tools: [
+        TemplateTool.functionDeclarations([
+          TemplateAutoFunctionDeclaration(
+            name: 'fetchWeather',
+            callable: fetchWeatherCallable,
+          ),
+        ]),
+      ],
+    );
   }
 
   void _scrollDown() {
     WidgetsBinding.instance.addPostFrameCallback(
       (_) => _scrollController.animateTo(
         _scrollController.position.maxScrollExtent,
-        duration: const Duration(
-          milliseconds: 750,
-        ),
+        duration: const Duration(milliseconds: 750),
         curve: Curves.easeOutCirc,
       ),
     );
@@ -82,9 +149,7 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
+      appBar: AppBar(title: Text(widget.title)),
       body: Padding(
         padding: const EdgeInsets.all(8),
         child: Column(
@@ -112,10 +177,7 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: 25,
-                horizontal: 15,
-              ),
+              padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 15),
               child: Row(
                 children: [
                   Expanded(
@@ -126,21 +188,58 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
                       onSubmitted: _sendServerTemplateMessage,
                     ),
                   ),
-                  const SizedBox.square(
-                    dimension: 15,
-                  ),
-                  if (!_loading)
-                    IconButton(
-                      onPressed: () async {
-                        await _serverTemplateImagen(_textController.text);
-                      },
-                      icon: Icon(
-                        Icons.image_search,
-                        color: Theme.of(context).colorScheme.primary,
+                  const SizedBox.square(dimension: 15),
+                  if (!_loading) ...[
+                    if (!_loading)
+                      IconButton(
+                        onPressed: () async {
+                          await _serverTemplateAutoFunctionCall(
+                            _textController.text,
+                          );
+                        },
+                        icon: Icon(
+                          Icons.auto_mode,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        tooltip: 'Auto Function Calling',
                       ),
-                      tooltip: 'Imagen',
-                    ),
-                  if (!_loading)
+                    if (!_loading)
+                      IconButton(
+                        onPressed: () async {
+                          await _serverTemplateFunctionCall(
+                            _textController.text,
+                          );
+                        },
+                        icon: Icon(
+                          Icons.functions,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        tooltip: 'Function Calling (client override)',
+                      ),
+                    if (!_loading)
+                      IconButton(
+                        onPressed: () async {
+                          await _serverTemplateAutoStreamFunctionCall(
+                            _textController.text,
+                          );
+                        },
+                        icon: Icon(
+                          Icons.smart_toy,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        tooltip: 'Auto Stream Function Calling',
+                      ),
+                    if (!_loading)
+                      IconButton(
+                        onPressed: () async {
+                          await _serverTemplateChat(_textController.text);
+                        },
+                        icon: Icon(
+                          Icons.chat,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        tooltip: 'Chat',
+                      ),
                     IconButton(
                       onPressed: () async {
                         await _serverTemplateImageInput(_textController.text);
@@ -151,7 +250,6 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
                       ),
                       tooltip: 'Image Input',
                     ),
-                  if (!_loading)
                     IconButton(
                       onPressed: () async {
                         await _serverTemplateUrlContext(_textController.text);
@@ -162,7 +260,18 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
                       ),
                       tooltip: 'URL Context',
                     ),
-                  if (!_loading)
+                    IconButton(
+                      onPressed: () async {
+                        await _serverTemplateMapsGrounding(
+                          _textController.text,
+                        );
+                      },
+                      icon: Icon(
+                        Icons.map,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      tooltip: 'Maps Grounding',
+                    ),
                     IconButton(
                       onPressed: () async {
                         await _sendServerTemplateMessage(_textController.text);
@@ -172,8 +281,16 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
                         color: Theme.of(context).colorScheme.primary,
                       ),
                       tooltip: 'Generate',
-                    )
-                  else
+                    ),
+                    IconButton(
+                      onPressed: _testCodeExecution,
+                      icon: Icon(
+                        Icons.code,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      tooltip: 'Test Code Execution',
+                    ),
+                  ] else
                     const CircularProgressIndicator(),
                 ],
               ),
@@ -184,13 +301,31 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
     );
   }
 
-  Future<void> _serverTemplateUrlContext(String message) async {
+  Future<void> _handleServerTemplateMessage(
+    String message,
+    Future<void> Function(String) generateContent,
+  ) async {
     setState(() {
       _loading = true;
     });
 
     try {
       _messages.add(MessageData(text: message, fromUser: true));
+      await generateContent(message);
+    } catch (e) {
+      _showError(e.toString());
+    } finally {
+      _textController.clear();
+      setState(() {
+        _loading = false;
+      });
+      _textFieldFocus.requestFocus();
+      _scrollDown();
+    }
+  }
+
+  Future<void> _serverTemplateUrlContext(String message) async {
+    await _handleServerTemplateMessage(message, (message) async {
       var response = await _templateGenerativeModel
           // ignore: experimental_member_use
           ?.generateContent('cj-urlcontext', inputs: {'url': message});
@@ -230,93 +365,157 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
         }
         _messages.add(MessageData(text: buffer.toString(), fromUser: false));
       }
-
-      setState(() {
-        _loading = false;
-        _scrollDown();
-      });
-    } catch (e) {
-      _showError(e.toString());
-      setState(() {
-        _loading = false;
-      });
-    } finally {
-      _textController.clear();
-      setState(() {
-        _loading = false;
-      });
-      _textFieldFocus.requestFocus();
-    }
+    });
   }
 
-  Future<void> _serverTemplateImagen(String message) async {
-    setState(() {
-      _loading = true;
-    });
-    MessageData? resultMessage;
-    try {
-      _messages.add(MessageData(text: message, fromUser: true));
-      // ignore: experimental_member_use
-      var response = await _templateImagenModel?.generateImages(
-        'portrait-googleai',
-        inputs: {
-          'animal': message,
-        },
+  Future<void> _serverTemplateMapsGrounding(String message) async {
+    await _handleServerTemplateMessage(message, (message) async {
+      var response = await _templateGenerativeModel
+          // ignore: experimental_member_use
+          ?.generateContent(
+        'cj-googlemaps',
+        inputs: {'question': message},
+        toolConfig: TemplateToolConfig(
+          retrievalConfig: RetrievalConfig(
+            latLng: LatLng(latitude: 37.422, longitude: -122.084), // Googleplex
+          ),
+        ),
       );
 
-      if (response!.images.isNotEmpty) {
-        var imagenImage = response.images[0];
-
-        resultMessage = MessageData(
-          imageBytes: imagenImage.bytesBase64Encoded,
-          text: message,
-          fromUser: false,
-        );
+      final candidate = response?.candidates.first;
+      if (candidate == null) {
+        _messages.add(MessageData(text: 'No response', fromUser: false));
       } else {
-        // Handle the case where no images were generated
-        _showError('Error: No images were generated.');
+        final responseText = candidate.text ?? '';
+        final groundingMetadata = candidate.groundingMetadata;
+
+        final buffer = StringBuffer(responseText);
+        if (groundingMetadata != null) {
+          buffer.writeln('\n\n--- Grounding Metadata ---');
+          buffer.writeln('Grounding Chunks:');
+          for (final chunk in groundingMetadata.groundingChunks) {
+            if (chunk.web != null) {
+              buffer.writeln(' - Web Chunk:');
+              buffer.writeln('   - Title: ${chunk.web!.title}');
+              buffer.writeln('   - URI: ${chunk.web!.uri}');
+            }
+            if (chunk.maps != null) {
+              buffer.writeln(' - Maps Chunk:');
+              buffer.writeln('   - Title: ${chunk.maps!.title}');
+              buffer.writeln('   - URI: ${chunk.maps!.uri}');
+            }
+          }
+        }
+
+        _messages.add(MessageData(text: buffer.toString(), fromUser: false));
+      }
+    });
+  }
+
+  Future<void> _serverTemplateAutoFunctionCall(String message) async {
+    await _handleServerTemplateMessage(message, (message) async {
+      // Inputs are no longer passed during sendMessage
+      var response = await _chatAutoFunctionSession?.sendMessage(
+        Content.text(message),
+      );
+
+      _messages.add(MessageData(text: response?.text, fromUser: false));
+    });
+  }
+
+  Future<void> _serverTemplateFunctionCall(String message) async {
+    await _handleServerTemplateMessage(message, (message) async {
+      // Inputs are no longer passed during sendMessage
+      var response = await _chatFunctionOverrideSession?.sendMessage(
+        Content.text(message),
+      );
+
+      _messages.add(MessageData(text: response?.text, fromUser: false));
+      final functionCalls = response?.functionCalls.toList();
+      if (functionCalls!.isNotEmpty) {
+        final functionCall = functionCalls.first;
+        if (functionCall.name == 'fetchWeather') {
+          final location =
+              functionCall.args['location']! as Map<String, dynamic>;
+          final date = functionCall.args['date']! as String;
+          final city = location['city'] as String;
+          final state = location['state'] as String;
+          final functionResult = await fetchWeather(
+            Location(city, state),
+            date,
+          );
+
+          // Respond to the function call
+          var functionResponse =
+              await _chatFunctionOverrideSession?.sendMessage(
+            Content.functionResponse(functionCall.name, functionResult),
+          );
+          _messages.add(
+            MessageData(text: functionResponse?.text, fromUser: false),
+          );
+        }
+      }
+    });
+  }
+
+  Future<void> _serverTemplateAutoStreamFunctionCall(String message) async {
+    await _handleServerTemplateMessage(message, (message) async {
+      var responseStream = _chatStreamFunctionSession?.sendMessageStream(
+        Content.text(message),
+      );
+
+      var accumulatedText = '';
+      MessageData? modelMessage;
+
+      if (responseStream != null) {
+        await for (final response in responseStream) {
+          if (response.text case final text?) {
+            accumulatedText += text;
+            if (modelMessage == null) {
+              modelMessage = MessageData(
+                text: accumulatedText,
+                fromUser: false,
+              );
+              _messages.add(modelMessage);
+            } else {
+              modelMessage = modelMessage.copyWith(text: accumulatedText);
+              _messages.last = modelMessage;
+            }
+            setState(() {});
+          }
+        }
       }
 
-      setState(() {
-        if (resultMessage != null) {
-          _messages.add(resultMessage);
-        }
-        _loading = false;
-        _scrollDown();
-      });
-    } catch (e) {
-      _showError(e.toString());
-      setState(() {
-        _loading = false;
-      });
-    } finally {
-      _textController.clear();
-      setState(() {
-        _loading = false;
-      });
-      _textFieldFocus.requestFocus();
-    }
+      if (accumulatedText.isEmpty) {
+        _messages.add(
+          MessageData(text: 'No text response from model.', fromUser: false),
+        );
+      }
+    });
+  }
+
+  Future<void> _serverTemplateChat(String message) async {
+    await _handleServerTemplateMessage(message, (message) async {
+      // Inputs are no longer passed during sendMessage
+      var response = await _chatSession?.sendMessage(Content.text(message));
+
+      var text = response?.text;
+
+      _messages.add(MessageData(text: text, fromUser: false));
+    });
   }
 
   Future<void> _serverTemplateImageInput(String message) async {
-    setState(() {
-      _loading = true;
-    });
-
-    try {
+    await _handleServerTemplateMessage(message, (message) async {
       ByteData catBytes = await rootBundle.load('assets/images/cat.jpg');
       var imageBytes = catBytes.buffer.asUint8List();
       _messages.add(
-        MessageData(
-          text: message,
-          imageBytes: imageBytes,
-          fromUser: true,
-        ),
+        MessageData(text: message, imageBytes: imageBytes, fromUser: true),
       );
 
       // ignore: experimental_member_use
       var response = await _templateGenerativeModel?.generateContent(
-        'media.prompt',
+        'media',
         inputs: {
           'imageData': {
             'isInline': true,
@@ -326,23 +525,7 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
         },
       );
       _messages.add(MessageData(text: response?.text, fromUser: false));
-
-      setState(() {
-        _loading = false;
-        _scrollDown();
-      });
-    } catch (e) {
-      _showError(e.toString());
-      setState(() {
-        _loading = false;
-      });
-    } finally {
-      _textController.clear();
-      setState(() {
-        _loading = false;
-      });
-      _textFieldFocus.requestFocus();
-    }
+    });
   }
 
   Future<void> _sendServerTemplateMessage(String message) async {
@@ -357,6 +540,53 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
           ?.generateContent('new-greeting', inputs: {});
 
       _messages.add(MessageData(text: response?.text, fromUser: false));
+    } catch (e) {
+      _showError(e.toString());
+      setState(() {
+        _loading = false;
+      });
+    } finally {
+      _textController.clear();
+      setState(() {
+        _loading = false;
+      });
+      _textFieldFocus.requestFocus();
+    }
+  }
+
+  Future<void> _testCodeExecution() async {
+    setState(() {
+      _loading = true;
+    });
+
+    try {
+      _messages.add(
+        MessageData(text: 'Testing code execution', fromUser: true),
+      );
+      final response = await _templateGenerativeModel
+          // ignore: experimental_member_use
+          ?.generateContent('cj-code-execution', inputs: {});
+
+      final buffer = StringBuffer();
+      for (final part in response!.candidates.first.content.parts) {
+        if (part is ExecutableCodePart) {
+          buffer.writeln('Executable Code:');
+          buffer.writeln('Language: ${part.language}');
+          buffer.writeln('Code:');
+          buffer.writeln(part.code);
+        } else if (part is CodeExecutionResultPart) {
+          buffer.writeln('Code Execution Result:');
+          buffer.writeln('Outcome: ${part.outcome}');
+          buffer.writeln('Output:');
+          buffer.writeln(part.output);
+        } else if (part is TextPart) {
+          buffer.writeln(part.text);
+        }
+      }
+
+      if (buffer.isNotEmpty) {
+        _messages.add(MessageData(text: buffer.toString(), fromUser: false));
+      }
 
       setState(() {
         _loading = false;
@@ -382,9 +612,7 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
       builder: (context) {
         return AlertDialog(
           title: const Text('Something went wrong'),
-          content: SingleChildScrollView(
-            child: SelectableText(message),
-          ),
+          content: SingleChildScrollView(child: SelectableText(message)),
           actions: [
             TextButton(
               onPressed: () {

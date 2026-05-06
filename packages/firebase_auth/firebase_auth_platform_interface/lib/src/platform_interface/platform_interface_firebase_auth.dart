@@ -64,9 +64,9 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
 
     if (currentUser != null) {
       currentUser as List<Object?>;
-      final firstElement = PigeonUserInfo.decode(currentUser[0]!);
+      final firstElement = InternalUserInfo.decode(currentUser[0]!);
       final secondElement = currentUser[1]!;
-      currentUser = PigeonUserDetails.decode([firstElement, secondElement]);
+      currentUser = InternalUserDetails.decode([firstElement, secondElement]);
     }
     return FirebaseAuthPlatform.instance.delegateFor(app: app).setInitialValues(
           languageCode: pluginConstants['APP_LANGUAGE_CODE'],
@@ -107,7 +107,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// calls.
   @protected
   FirebaseAuthPlatform setInitialValues({
-    PigeonUserDetails? currentUser,
+    InternalUserDetails? currentUser,
     String? languageCode,
   }) {
     throw UnimplementedError('setInitialValues() is not implemented');
@@ -514,11 +514,19 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   ///  - Thrown if the email address is not valid.
   /// - **user-disabled**:
   ///  - Thrown if the user corresponding to the given email has been disabled.
-  /// - **user-not-found**:
+  /// - **user-not-found** _(deprecated)_:
   ///  - Thrown if there is no user corresponding to the given email.
-  /// - **wrong-password**:
+  ///    **Note:** This code is no longer returned on projects that have
+  ///    [email enumeration protection](https://cloud.google.com/identity-platform/docs/admin/email-enumeration-protection)
+  ///    enabled (the default for new projects since September 2023).
+  ///    Use **invalid-credential** instead.
+  /// - **wrong-password** _(deprecated)_:
   ///  - Thrown if the password is invalid for the given email, or the account
   ///    corresponding to the email does not have a password set.
+  ///    **Note:** This code is no longer returned on projects that have
+  ///    [email enumeration protection](https://cloud.google.com/identity-platform/docs/admin/email-enumeration-protection)
+  ///    enabled (the default for new projects since September 2023).
+  ///    Use **invalid-credential** instead.
   /// - **too-many-requests**:
   ///  - Thrown if the user sent too many requests at the same time, for security
   ///     the api will not allow too many attempts at the same time, user will have
@@ -529,11 +537,13 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// - **network-request-failed**:
   ///  - Thrown if there was a network request error, for example the user
   ///    doesn't have internet connection
-  /// - **INVALID_LOGIN_CREDENTIALS** or **invalid-credential**:
-  ///  - Thrown if the password is invalid for the given email, or the account
-  ///    corresponding to the email does not have a password set.
-  ///    Depending on if you are using firebase emulator or not the code is
-  ///    different
+  /// - **invalid-credential**:
+  ///  - Thrown if the email or password is incorrect. On projects with
+  ///    [email enumeration protection](https://cloud.google.com/identity-platform/docs/admin/email-enumeration-protection)
+  ///    enabled (the default since September 2023), this replaces
+  ///    **user-not-found** and **wrong-password** to prevent revealing
+  ///    whether an account exists. On the Firebase emulator, the code may
+  ///    appear as **INVALID_LOGIN_CREDENTIALS**.
   /// - **operation-not-allowed**:
   ///  - Thrown if email/password accounts are not enabled. Enable
   ///    email/password accounts in the Firebase Console, under the Auth tab.
@@ -705,6 +715,11 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   Future<void> revokeTokenWithAuthorizationCode(String authorizationCode) {
     throw UnimplementedError(
         'revokeTokenWithAuthorizationCode() is not implemented');
+  }
+
+  /// Android only. Revokes the provided accessToken. Currently supports revoking Apple-issued accessToken only.
+  Future<void> revokeAccessToken(String accessToken) {
+    throw UnimplementedError('revokeAccessToken() is not implemented');
   }
 
   /// Initializes the reCAPTCHA Enterprise client proactively to enhance reCAPTCHA signal collection and

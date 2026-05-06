@@ -4,11 +4,12 @@ homepage: https://github.com/firebase/flutterfire/tree/main/packages/firebase_co
 repository: https://github.com/firebase/flutterfire/tree/main/packages/firebase_core/firebase_core_platform_interface
 # NOTE: We strongly prefer non-breaking changes, even at the expense of a
 # less-clean API. See https://flutter.dev/go/platform-interface-breaking-changes
-version: 6.0.2
+version: 6.0.3
+resolution: workspace
 
 environment:
-  sdk: '>=3.2.0 <4.0.0'
-  flutter: '>=3.3.0'
+  sdk: '^3.6.0'
+  flutter: '>=3.27.0'
 
 dependencies:
   collection: ^1.0.0
@@ -22,4 +23,4 @@ dependencies:
 
 dev_dependencies:
   mockito: ^5.4.0
-  pigeon: 25.3.2
+  pigeon: 26.3.4

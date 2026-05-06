@@ -63,4 +63,14 @@ public class ExceptionConverter {
             exception != null ? exception.getMessage() : null,
             exceptionDetails));
   }
+
+  public static void sendErrorToFlutter(
+      GeneratedAndroidFirebaseFirestore.VoidResult result, Exception exception) {
+    Map<String, String> exceptionDetails = ExceptionConverter.createDetails(exception);
+    result.error(
+        new GeneratedAndroidFirebaseFirestore.FlutterError(
+            DEFAULT_ERROR_CODE,
+            exception != null ? exception.getMessage() : null,
+            exceptionDetails));
+  }
 }

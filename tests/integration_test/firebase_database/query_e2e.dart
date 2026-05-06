@@ -52,6 +52,20 @@ void setupQueryTests() {
         },
       );
 
+      test(
+        'onValue with startAt(value, key) and no orderBy should not crash',
+        () async {
+          await ref.set({
+            't1': {'timestamp': 1, 'value': 'old'},
+            't2': {'timestamp': 1000, 'value': 'current'},
+          });
+
+          final event = await ref.startAt(1000, key: 't2').onValue.first;
+
+          expect(event.type, DatabaseEventType.value);
+        },
+      );
+
       test('starts at the correct value', () async {
         await ref.set({
           'a': 1,
@@ -441,22 +455,21 @@ void setupQueryTests() {
       test(
         'emits an event when a child is added',
         () async {
-          expect(
-            ref.onChildAdded,
-            emitsInOrder([
-              isA<DatabaseEvent>()
-                  .having((s) => s.snapshot.value, 'value', 'foo')
-                  .having((e) => e.type, 'type', DatabaseEventType.childAdded),
-              isA<DatabaseEvent>()
-                  .having((s) => s.snapshot.value, 'value', 'bar')
-                  .having((e) => e.type, 'type', DatabaseEventType.childAdded),
-            ]),
-          );
+          // Set data first, then subscribe. onChildAdded fires for
+          // existing children on initial listen, avoiding race conditions
+          // with native listener registration.
+          // Use keys that sort alphabetically in the expected order,
+          // since onChildAdded returns children in key order.
+          await ref.child('a_first').set('foo');
+          await ref.child('b_second').set('bar');
 
-          await ref.child('foo').set('foo');
-          await ref.child('bar').set('bar');
+          final events = await ref.onChildAdded.take(2).toList();
+
+          expect(events[0].snapshot.value, 'foo');
+          expect(events[0].type, DatabaseEventType.childAdded);
+          expect(events[1].snapshot.value, 'bar');
+          expect(events[1].type, DatabaseEventType.childAdded);
         },
-        retry: 2,
       );
     });
 
@@ -467,24 +480,26 @@ void setupQueryTests() {
           await ref.child('foo').set('foo');
           await ref.child('bar').set('bar');
 
-          expect(
-            ref.onChildRemoved,
-            emitsInOrder([
-              isA<DatabaseEvent>()
-                  .having((s) => s.snapshot.value, 'value', 'bar')
-                  .having(
-                    (e) => e.type,
-                    'type',
-                    DatabaseEventType.childRemoved,
-                  ),
-            ]),
-          );
-          // Give time for listen to be registered on native.
-          // TODO is there a better way to do this?
-          await Future.delayed(const Duration(seconds: 1));
+          final completer = Completer<DatabaseEvent>();
+          final subscription = ref.onChildRemoved.listen((event) {
+            // Skip probe events used for listener registration
+            if (event.snapshot.key == '__probe__') return;
+            if (!completer.isCompleted) completer.complete(event);
+          });
+
+          // Wait for native listener registration by doing a round-trip
+          await ref.child('__probe__').set(true);
+          await ref.child('__probe__').remove();
+
           await ref.child('bar').remove();
+
+          final event =
+              await completer.future.timeout(const Duration(seconds: 10));
+          expect(event.snapshot.value, 'bar');
+          expect(event.type, DatabaseEventType.childRemoved);
+
+          await subscription.cancel();
         },
-        retry: 2,
       );
     });
 
@@ -503,34 +518,33 @@ void setupQueryTests() {
           await childRef.child('foo').set('foo');
           await childRef.child('bar').set('bar');
 
-          expect(
-            childRef.onChildChanged,
-            emitsInOrder([
-              isA<DatabaseEvent>()
-                  .having((s) => s.snapshot.key, 'key', 'bar')
-                  .having((s) => s.snapshot.value, 'value', 'baz')
-                  .having(
-                    (e) => e.type,
-                    'type',
-                    DatabaseEventType.childChanged,
-                  ),
-              isA<DatabaseEvent>()
-                  .having((s) => s.snapshot.key, 'key', 'foo')
-                  .having((s) => s.snapshot.value, 'value', 'bar')
-                  .having(
-                    (e) => e.type,
-                    'type',
-                    DatabaseEventType.childChanged,
-                  ),
-            ]),
-          );
-          // Give time for listen to be registered on native.
-          // TODO is there a better way to do this?
-          await Future.delayed(const Duration(seconds: 1));
+          final events = <DatabaseEvent>[];
+          final receivedTwo = Completer<void>();
+          final subscription = childRef.onChildChanged.listen((event) {
+            events.add(event);
+            if (events.length >= 2 && !receivedTwo.isCompleted) {
+              receivedTwo.complete();
+            }
+          });
+
+          // Wait for native listener registration by doing a round-trip
+          await childRef.child('__probe__').set(true);
+          await childRef.child('__probe__').remove();
+
           await childRef.child('bar').set('baz');
           await childRef.child('foo').set('bar');
+
+          await receivedTwo.future.timeout(const Duration(seconds: 10));
+
+          expect(events[0].snapshot.key, 'bar');
+          expect(events[0].snapshot.value, 'baz');
+          expect(events[0].type, DatabaseEventType.childChanged);
+          expect(events[1].snapshot.key, 'foo');
+          expect(events[1].snapshot.value, 'bar');
+          expect(events[1].type, DatabaseEventType.childChanged);
+
+          await subscription.cancel();
         },
-        retry: 2,
       );
     });
 
@@ -546,24 +560,32 @@ void setupQueryTests() {
             'greg': {'nuggets': 52},
           });
 
-          expect(
-            ref.orderByChild('nuggets').onChildMoved,
-            emitsInOrder([
-              isA<DatabaseEvent>().having((s) => s.snapshot.value, 'value', {
-                'nuggets': 57,
-              }).having((e) => e.type, 'type', DatabaseEventType.childMoved),
-              isA<DatabaseEvent>().having((s) => s.snapshot.value, 'value', {
-                'nuggets': 61,
-              }).having((e) => e.type, 'type', DatabaseEventType.childMoved),
-            ]),
-          );
-          // Give time for listen to be registered on native.
-          // TODO is there a better way to do this?
-          await Future.delayed(const Duration(seconds: 1));
+          final events = <DatabaseEvent>[];
+          final receivedTwo = Completer<void>();
+          final subscription =
+              ref.orderByChild('nuggets').onChildMoved.listen((event) {
+            events.add(event);
+            if (events.length >= 2 && !receivedTwo.isCompleted) {
+              receivedTwo.complete();
+            }
+          });
+
+          // Wait for native listener registration by doing a round-trip
+          await ref.child('__probe__').set(true);
+          await ref.child('__probe__').remove();
+
           await ref.child('greg/nuggets').set(57);
           await ref.child('rob/nuggets').set(61);
+
+          await receivedTwo.future.timeout(const Duration(seconds: 10));
+
+          expect(events[0].snapshot.value, {'nuggets': 57});
+          expect(events[0].type, DatabaseEventType.childMoved);
+          expect(events[1].snapshot.value, {'nuggets': 61});
+          expect(events[1].type, DatabaseEventType.childMoved);
+
+          await subscription.cancel();
         },
-        retry: 2,
       );
     });
 

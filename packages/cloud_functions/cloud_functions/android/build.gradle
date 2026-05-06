@@ -3,7 +3,12 @@ version '1.0-SNAPSHOT'
 
 apply plugin: 'com.android.library'
 apply from: file("local-config.gradle")
-apply plugin: 'kotlin-android'
+
+// AGP 9+ has built-in Kotlin support; older versions need the plugin explicitly.
+def agpMajor = com.android.Version.ANDROID_GRADLE_PLUGIN_VERSION.tokenize('.')[0] as int
+if (agpMajor < 9) {
+  apply plugin: 'kotlin-android'
+}
 
 buildscript {
   ext.kotlin_version = "1.8.22"
@@ -56,6 +61,12 @@ android {
       targetCompatibility project.ext.javaVersion
   }
 
+  if (agpMajor < 9) {
+    kotlinOptions {
+      jvmTarget = project.ext.javaVersion
+    }
+  }
+
   sourceSets {
     main.java.srcDirs += "src/main/kotlin"
     test.java.srcDirs += "src/test/kotlin"
@@ -77,11 +88,6 @@ android {
     implementation 'org.reactivestreams:reactive-streams:1.0.4'
   }
 
-  kotlinOptions {
-    jvmTarget = JavaVersion.VERSION_17
-  }
-  
 }
 
 apply from: file("./user-agent.gradle")
-apply plugin: 'org.jetbrains.kotlin.android'

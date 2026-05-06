@@ -5,7 +5,8 @@
 
 part of '../firebase_app_check.dart';
 
-class FirebaseAppCheck extends FirebasePluginPlatform {
+class FirebaseAppCheck extends FirebasePluginPlatform
+    implements FirebaseService {
   static Map<String, FirebaseAppCheck> _firebaseAppCheckInstances = {};
 
   FirebaseAppCheck._({required this.app})
@@ -41,7 +42,9 @@ class FirebaseAppCheck extends FirebasePluginPlatform {
   /// Returns an instance using a specified [FirebaseApp].
   static FirebaseAppCheck instanceFor({required FirebaseApp app}) {
     return _firebaseAppCheckInstances.putIfAbsent(app.name, () {
-      return FirebaseAppCheck._(app: app);
+      final instance = FirebaseAppCheck._(app: app);
+      app.registerService<FirebaseAppCheck>(instance);
+      return instance;
     });
   }
 
@@ -60,6 +63,13 @@ class FirebaseAppCheck extends FirebasePluginPlatform {
   /// to configure alternative providers such as "app attest", debug providers, or
   /// "app attest with fallback to device check" via `AppleAppCheckProvider`.
   /// Note: App Attest is only available on iOS 14.0+ and macOS 14.0+.
+  ///
+  /// **Windows**: Only the debug provider is supported. You **must** supply a
+  /// debug token — the desktop C++ SDK does not auto-generate one. Either pass
+  /// it via `providerWindows: WindowsDebugProvider(debugToken: 'your-token')`
+  /// or set the `APP_CHECK_DEBUG_TOKEN` environment variable. The token must
+  /// first be registered in the Firebase Console under
+  /// *App Check → Apps → Manage debug tokens*.
   ///
   /// ## Migration Notice
   ///
@@ -89,6 +99,7 @@ class FirebaseAppCheck extends FirebasePluginPlatform {
     AndroidAppCheckProvider providerAndroid =
         const AndroidPlayIntegrityProvider(),
     AppleAppCheckProvider providerApple = const AppleDeviceCheckProvider(),
+    WindowsAppCheckProvider providerWindows = const WindowsDebugProvider(),
   }) {
     return _delegate.activate(
       webProvider: providerWeb ?? webProvider,
@@ -98,6 +109,7 @@ class FirebaseAppCheck extends FirebasePluginPlatform {
       appleProvider: appleProvider,
       providerAndroid: providerAndroid,
       providerApple: providerApple,
+      providerWindows: providerWindows,
     );
   }
 

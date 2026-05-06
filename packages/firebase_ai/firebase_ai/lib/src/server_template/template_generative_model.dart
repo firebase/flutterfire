@@ -69,9 +69,16 @@ final class TemplateGenerativeModel extends BaseTemplateApiClientModel {
   /// Sends a "templateGenerateContent" API request for the configured model.
   @experimental
   Future<GenerateContentResponse> generateContent(String templateId,
-          {required Map<String, Object?> inputs}) =>
-      makeTemplateRequest(TemplateTask.templateGenerateContent, templateId,
-          inputs, null, _serializationStrategy.parseGenerateContentResponse);
+          {required Map<String, Object?> inputs,
+          TemplateToolConfig? toolConfig}) =>
+      makeTemplateRequest(
+          TemplateTask.templateGenerateContent,
+          templateId,
+          inputs,
+          null, // history
+          null, // tools
+          toolConfig,
+          _serializationStrategy.parseGenerateContentResponse);
 
   /// Generates a stream of content responding to [templateId] and [inputs].
   ///
@@ -79,12 +86,49 @@ final class TemplateGenerativeModel extends BaseTemplateApiClientModel {
   /// and waits for the response.
   @experimental
   Stream<GenerateContentResponse> generateContentStream(String templateId,
-      {required Map<String, Object?> inputs}) {
+      {required Map<String, Object?> inputs, TemplateToolConfig? toolConfig}) {
     return streamTemplateRequest(
         TemplateTask.templateStreamGenerateContent,
         templateId,
         inputs,
-        null,
+        null, // history
+        null, // tools
+        toolConfig,
+        _serializationStrategy.parseGenerateContentResponse);
+  }
+
+  /// Generates content from a template with the given [templateId], [inputs] and
+  /// [history].
+  @experimental
+  Future<GenerateContentResponse> templateGenerateContentWithHistory(
+          Iterable<Content> history, String templateId,
+          {required Map<String, Object?> inputs,
+          List<TemplateTool>? tools,
+          TemplateToolConfig? toolConfig}) =>
+      makeTemplateRequest(
+          TemplateTask.templateGenerateContent,
+          templateId,
+          inputs,
+          history,
+          tools,
+          toolConfig,
+          _serializationStrategy.parseGenerateContentResponse);
+
+  /// Generates a stream of content from a template with the given [templateId],
+  /// [inputs] and [history].
+  @experimental
+  Stream<GenerateContentResponse> templateGenerateContentWithHistoryStream(
+      Iterable<Content> history, String templateId,
+      {required Map<String, Object?> inputs,
+      List<TemplateTool>? tools,
+      TemplateToolConfig? toolConfig}) {
+    return streamTemplateRequest(
+        TemplateTask.templateStreamGenerateContent,
+        templateId,
+        inputs,
+        history,
+        tools,
+        toolConfig,
         _serializationStrategy.parseGenerateContentResponse);
   }
 }

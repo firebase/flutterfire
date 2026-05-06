@@ -83,6 +83,32 @@ await FirebaseAnalytics.instance
   );
 ```
 
+## Using Analytics without Ad ID support (iOS) {:#without-ad-id}
+
+If your app doesn't use IDFA, you can use `FirebaseAnalyticsWithoutAdIdSupport`
+instead of the default `FirebaseAnalytics` iOS dependency to avoid App Store
+review questions about advertising identifiers.
+
+### Swift Package Manager
+
+Set the `FIREBASE_ANALYTICS_WITHOUT_ADID` environment variable when building:
+
+```bash
+FIREBASE_ANALYTICS_WITHOUT_ADID=true flutter build ios
+```
+
+You can also add this variable to your Xcode scheme's environment variables
+for persistent configuration.
+
+### CocoaPods
+
+Add this to your app's `Podfile`:
+
+```ruby
+pod 'FirebaseAnalytics', :modular_headers => true
+pod 'FirebaseAnalyticsWithoutAdIdSupport', :modular_headers => true
+```
+
 ## Next steps
 
 * Use the [DebugView](/docs/analytics/debugview) to verify your events.

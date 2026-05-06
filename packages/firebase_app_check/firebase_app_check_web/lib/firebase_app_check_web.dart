@@ -22,6 +22,7 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
   static const String _libraryName = 'flutter-fire-app-check';
   static const recaptchaTypeV3 = 'recaptcha-v3';
   static const recaptchaTypeEnterprise = 'enterprise';
+  static const recaptchaTypeDebug = 'debug';
   static Map<String, StreamController<String?>> _tokenChangesListeners = {};
 
   /// Stub initializer to allow the [registerWith] to create an instance without
@@ -56,14 +57,22 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
               .getItem(_sessionKeyRecaptchaSiteKey(firebaseApp.name));
         }
 
-        if (recaptchaType != null && recaptchaSiteKey != null) {
+        if (recaptchaType != null) {
           final WebProvider provider;
-          if (recaptchaType == recaptchaTypeV3) {
-            provider = ReCaptchaV3Provider(recaptchaSiteKey);
-          } else if (recaptchaType == recaptchaTypeEnterprise) {
-            provider = ReCaptchaEnterpriseProvider(recaptchaSiteKey);
+          if (recaptchaType == recaptchaTypeDebug) {
+            final debugToken =
+                recaptchaSiteKey?.isNotEmpty ?? false ? recaptchaSiteKey : null;
+            provider = WebDebugProvider(debugToken: debugToken);
+          } else if (recaptchaSiteKey != null) {
+            if (recaptchaType == recaptchaTypeV3) {
+              provider = ReCaptchaV3Provider(recaptchaSiteKey);
+            } else if (recaptchaType == recaptchaTypeEnterprise) {
+              provider = ReCaptchaEnterpriseProvider(recaptchaSiteKey);
+            } else {
+              throw Exception('Invalid recaptcha type: $recaptchaType');
+            }
           } else {
-            throw Exception('Invalid recaptcha type: $recaptchaType');
+            return;
           }
           await instance.activate(webProvider: provider);
         }
@@ -123,11 +132,14 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
     AppleProvider? appleProvider,
     AndroidAppCheckProvider? providerAndroid,
     AppleAppCheckProvider? providerApple,
+    WindowsAppCheckProvider? providerWindows,
   }) async {
     // save the recaptcha type and site key for future startups
     if (webProvider != null) {
       final String recaptchaType;
-      if (webProvider is ReCaptchaV3Provider) {
+      if (webProvider is WebDebugProvider) {
+        recaptchaType = recaptchaTypeDebug;
+      } else if (webProvider is ReCaptchaV3Provider) {
         recaptchaType = recaptchaTypeV3;
       } else if (webProvider is ReCaptchaEnterpriseProvider) {
         recaptchaType = recaptchaTypeEnterprise;
@@ -136,8 +148,11 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
       }
       web.window.localStorage
           .setItem(_sessionKeyRecaptchaType(app.name), recaptchaType);
-      web.window.localStorage
-          .setItem(_sessionKeyRecaptchaSiteKey(app.name), webProvider.siteKey);
+      web.window.localStorage.setItem(
+          _sessionKeyRecaptchaSiteKey(app.name),
+          webProvider is WebDebugProvider
+              ? webProvider.debugToken ?? ''
+              : webProvider.siteKey);
     }
 
     // activate API no longer exists, recaptcha key has to be passed on initialization of app-check instance.
@@ -157,9 +172,18 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
           _delegate!.idTokenChangedController?.close();
         },
       );
-      _delegate!.onTokenChanged(app.name).listen((event) {
-        _tokenChangesListeners[app.name]!.add(event.token.toDart);
-      });
+      _delegate!.onTokenChanged(app.name).listen(
+        (event) {
+          _tokenChangesListeners[app.name]!.add(event.token.toDart);
+        },
+        // Forward JS SDK errors (e.g. network failures during background
+        // token refresh) to the broadcast controller instead of letting them
+        // surface as unhandled zone errors. If nobody is listening on the
+        // broadcast stream the error is silently dropped.
+        onError: (Object error) {
+          _tokenChangesListeners[app.name]?.addError(error);
+        },
+      );
     }
   }
 

@@ -290,6 +290,251 @@ final class Schema {
       };
 }
 
+/// The definition of a JSON Schema data type.
+///
+/// This class supports `$ref` and `$defs` for reusable sub-schemas.
+final class JSONSchema extends Schema {
+  // ignore: public_member_api_docs
+  JSONSchema(
+    super.type, {
+    super.format,
+    super.description,
+    super.title,
+    super.nullable,
+    super.enumValues,
+    JSONSchema? items,
+    super.minItems,
+    super.maxItems,
+    super.minimum,
+    super.maximum,
+    Map<String, JSONSchema>? properties,
+    super.optionalProperties,
+    super.propertyOrdering,
+    List<JSONSchema>? anyOf,
+    this.ref,
+    this.defs,
+  }) : super(
+          items: items,
+          properties: properties,
+          anyOf: anyOf,
+        );
+
+  /// Construct a schema for an object with one or more properties.
+  JSONSchema.object({
+    required Map<String, JSONSchema> properties,
+    List<String>? optionalProperties,
+    List<String>? propertyOrdering,
+    String? description,
+    String? title,
+    bool? nullable,
+    Map<String, JSONSchema>? defs,
+  }) : this(
+          SchemaType.object,
+          properties: properties,
+          optionalProperties: optionalProperties,
+          propertyOrdering: propertyOrdering,
+          description: description,
+          title: title,
+          nullable: nullable,
+          defs: defs,
+        );
+
+  /// Construct a schema for an array of values with a specified type.
+  JSONSchema.array({
+    required JSONSchema items,
+    String? description,
+    String? title,
+    bool? nullable,
+    int? minItems,
+    int? maxItems,
+  }) : this(
+          SchemaType.array,
+          description: description,
+          title: title,
+          nullable: nullable,
+          items: items,
+          minItems: minItems,
+          maxItems: maxItems,
+        );
+
+  /// Construct a schema for bool value.
+  JSONSchema.boolean({
+    String? description,
+    String? title,
+    bool? nullable,
+  }) : this(
+          SchemaType.boolean,
+          description: description,
+          title: title,
+          nullable: nullable,
+        );
+
+  /// Construct a schema for an integer number.
+  ///
+  /// Json schema integer doesn't support format.
+  JSONSchema.integer({
+    String? description,
+    String? title,
+    bool? nullable,
+    int? minimum,
+    int? maximum,
+  }) : this(
+          SchemaType.integer,
+          description: description,
+          title: title,
+          nullable: nullable,
+          minimum: minimum?.toDouble(),
+          maximum: maximum?.toDouble(),
+        );
+
+  /// Construct a schema for a non-integer number.
+  ///
+  /// Json schema number doesn't support format.
+  JSONSchema.number({
+    String? description,
+    String? title,
+    bool? nullable,
+    double? minimum,
+    double? maximum,
+  }) : this(
+          SchemaType.number,
+          description: description,
+          title: title,
+          nullable: nullable,
+          minimum: minimum,
+          maximum: maximum,
+        );
+
+  /// Construct a schema for String value with enumerated possible values.
+  JSONSchema.enumString({
+    required List<String> enumValues,
+    String? description,
+    String? title,
+    bool? nullable,
+  }) : this(
+          SchemaType.string,
+          enumValues: enumValues,
+          description: description,
+          title: title,
+          nullable: nullable,
+          format: 'enum',
+        );
+
+  /// Construct a schema for a String value.
+  JSONSchema.string({
+    String? description,
+    String? title,
+    bool? nullable,
+    String? format,
+  }) : this(
+          SchemaType.string,
+          description: description,
+          title: title,
+          nullable: nullable,
+          format: format,
+        );
+
+  /// Construct a schema representing a value that must conform to
+  /// *any* (one or more) of the provided sub-schemas.
+  ///
+  /// This schema instructs the model to produce data that is valid against at
+  /// least one of the schemas listed in the `schemas` array. This is useful
+  /// when a field can accept multiple distinct types or structures.
+  ///
+  /// **Example:** A field that can hold either a simple user ID (integer) or a
+  /// detailed user object.
+  /// ```
+  /// JSONSchema.anyOf(anyOf: [
+  ///   .JSONSchema.integer(description: "User ID"),
+  ///   .JSONSchema.object(properties: [
+  ///     "userId": JSONSchema.integer(),
+  ///     "userName": JSONSchema.string()
+  ///   ], description: "Detailed User Object")
+  /// ])
+  /// ```
+  /// The generated data could be decoded based on which schema it matches.
+  JSONSchema.anyOf({
+    required List<JSONSchema> schemas,
+  }) : this(
+          SchemaType.anyOf, // The type will be ignored in toJson
+          anyOf: schemas,
+        );
+
+  /// Construct a schema referencing another schema.
+  JSONSchema.ref(String ref)
+      : this(
+          SchemaType.ref,
+          ref: ref,
+        );
+
+  /// JSONSchema for the elements if this is a [SchemaType.array].
+  @override
+  JSONSchema? get items => super.items as JSONSchema?;
+
+  @override
+  set items(covariant JSONSchema? value) => super.items = value;
+
+  /// Properties of this type if this is a [SchemaType.object].
+  @override
+  Map<String, JSONSchema>? get properties =>
+      super.properties as Map<String, JSONSchema>?;
+
+  @override
+  set properties(covariant Map<String, JSONSchema>? value) =>
+      super.properties = value;
+
+  /// An array of [Schema] objects to validate generated content.
+  @override
+  List<JSONSchema>? get anyOf => super.anyOf as List<JSONSchema>?;
+
+  @override
+  set anyOf(covariant List<JSONSchema>? value) => super.anyOf = value;
+
+  /// Reference to another schema.
+  String? ref;
+
+  /// JSONSchema definitions for creating reusable sub-schemas.
+  Map<String, JSONSchema>? defs;
+
+  /// Convert to standard JSON JSONSchema object.
+  ///
+  /// Reference: https://ai.google.dev/api/caching#FunctionDeclaration
+  @override
+  Map<String, Object> toJson() => {
+        if (type != SchemaType.anyOf && type != SchemaType.ref)
+          'type': nullable == true ? [type.name, 'null'] : type.name,
+        if (ref case final ref?) r'$ref': ref,
+        if (defs case final defs?)
+          r'$defs': {
+            for (final MapEntry(:key, :value) in defs.entries)
+              key: value.toJson()
+          },
+        if (format case final format?) 'format': format,
+        if (description case final description?) 'description': description,
+        if (title case final title?) 'title': title,
+        if (enumValues case final enumValues?) 'enum': enumValues,
+        if (items case final items?) 'items': items.toJson(),
+        if (minItems case final minItems?) 'minItems': minItems,
+        if (maxItems case final maxItems?) 'maxItems': maxItems,
+        if (minimum case final minimum?) 'minimum': minimum,
+        if (maximum case final maximum?) 'maximum': maximum,
+        if (properties case final properties?)
+          'properties': {
+            for (final MapEntry(:key, :value) in properties.entries)
+              key: value.toJson()
+          },
+        // Calculate required properties based on optionalProperties
+        if (properties != null)
+          'required': optionalProperties != null
+              ? properties!.keys
+                  .where((key) => !optionalProperties!.contains(key))
+                  .toList()
+              : properties!.keys.toList(),
+        if (anyOf case final anyOf?)
+          'anyOf': anyOf.map((e) => e.toJson()).toList(),
+      };
+}
+
 /// The value type of a [Schema].
 enum SchemaType {
   /// string type.
@@ -310,6 +555,9 @@ enum SchemaType {
   /// object type
   object,
 
+  /// This schema is a reference type.
+  ref,
+
   /// This schema is anyOf type.
   anyOf;
 
@@ -321,6 +569,7 @@ enum SchemaType {
         boolean => 'BOOLEAN',
         array => 'ARRAY',
         object => 'OBJECT',
+        ref => 'null',
         anyOf => 'null',
       };
 }

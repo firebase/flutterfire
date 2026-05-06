@@ -10,34 +10,34 @@
 
 @implementation PigeonParser
 
-+ (PigeonUserCredential *)
++ (InternalUserCredential *)
     getPigeonUserCredentialFromAuthResult:(nonnull FIRAuthDataResult *)authResult
                         authorizationCode:(nullable NSString *)authorizationCode {
-  return [PigeonUserCredential
+  return [InternalUserCredential
             makeWithUser:[self getPigeonDetails:authResult.user]
       additionalUserInfo:[self getPigeonAdditionalUserInfo:authResult.additionalUserInfo
                                          authorizationCode:authorizationCode]
               credential:[self getPigeonAuthCredential:authResult.credential token:nil]];
 }
 
-+ (PigeonUserCredential *)getPigeonUserCredentialFromFIRUser:(nonnull FIRUser *)user {
-  return [PigeonUserCredential makeWithUser:[self getPigeonDetails:user]
-                         additionalUserInfo:nil
-                                 credential:nil];
++ (InternalUserCredential *)getPigeonUserCredentialFromFIRUser:(nonnull FIRUser *)user {
+  return [InternalUserCredential makeWithUser:[self getPigeonDetails:user]
+                           additionalUserInfo:nil
+                                   credential:nil];
 }
 
-+ (PigeonUserDetails *)getPigeonDetails:(nonnull FIRUser *)user {
-  return [PigeonUserDetails makeWithUserInfo:[self getPigeonUserInfo:user]
-                                providerData:[self getProviderData:user.providerData]];
++ (InternalUserDetails *)getPigeonDetails:(nonnull FIRUser *)user {
+  return [InternalUserDetails makeWithUserInfo:[self getPigeonUserInfo:user]
+                                  providerData:[self getProviderData:user.providerData]];
 }
 
-+ (PigeonUserInfo *)getPigeonUserInfo:(nonnull FIRUser *)user {
-  return [PigeonUserInfo
++ (InternalUserInfo *)getPigeonUserInfo:(nonnull FIRUser *)user {
+  NSString *photoUrlString = user.photoURL.absoluteString;
+  return [InternalUserInfo
               makeWithUid:user.uid
                     email:user.email
               displayName:user.displayName
-                 photoUrl:(user.photoURL.absoluteString.length > 0) ? user.photoURL.absoluteString
-                                                                    : nil
+                 photoUrl:(photoUrlString.length > 0) ? photoUrlString : nil
               phoneNumber:user.phoneNumber
               isAnonymous:user.isAnonymous
           isEmailVerified:user.emailVerified
@@ -54,6 +54,7 @@
       [NSMutableArray arrayWithCapacity:providerData.count];
 
   for (id<FIRUserInfo> userInfo in providerData) {
+    NSString *photoUrlStr = userInfo.photoURL.absoluteString;
     NSDictionary *dataDict = @{
       @"providerId" : userInfo.providerID,
       // Can be null on emulator
@@ -61,7 +62,7 @@
       @"displayName" : userInfo.displayName ?: [NSNull null],
       @"email" : userInfo.email ?: [NSNull null],
       @"phoneNumber" : userInfo.phoneNumber ?: [NSNull null],
-      @"photoURL" : userInfo.photoURL.absoluteString ?: [NSNull null],
+      @"photoURL" : photoUrlStr ?: [NSNull null],
       // isAnonymous is always false on in a providerData object (the user is not anonymous)
       @"isAnonymous" : @NO,
       // isEmailVerified is always true on in a providerData object (the email is verified by the
@@ -73,25 +74,26 @@
   return [dataArray copy];
 }
 
-+ (PigeonAdditionalUserInfo *)getPigeonAdditionalUserInfo:(nonnull FIRAdditionalUserInfo *)userInfo
-                                        authorizationCode:(nullable NSString *)authorizationCode {
-  return [PigeonAdditionalUserInfo makeWithIsNewUser:userInfo.isNewUser
-                                          providerId:userInfo.providerID
-                                            username:userInfo.username
-                                   authorizationCode:authorizationCode
-                                             profile:userInfo.profile];
++ (InternalAdditionalUserInfo *)getPigeonAdditionalUserInfo:
+                                    (nonnull FIRAdditionalUserInfo *)userInfo
+                                          authorizationCode:(nullable NSString *)authorizationCode {
+  return [InternalAdditionalUserInfo makeWithIsNewUser:userInfo.isNewUser
+                                            providerId:userInfo.providerID
+                                              username:userInfo.username
+                                     authorizationCode:authorizationCode
+                                               profile:userInfo.profile];
 }
 
-+ (PigeonTotpSecret *)getPigeonTotpSecret:(FIRTOTPSecret *)secret {
-  return [PigeonTotpSecret makeWithCodeIntervalSeconds:nil
-                                            codeLength:nil
-                          enrollmentCompletionDeadline:nil
-                                      hashingAlgorithm:nil
-                                             secretKey:secret.sharedSecretKey];
++ (InternalTotpSecret *)getPigeonTotpSecret:(FIRTOTPSecret *)secret {
+  return [InternalTotpSecret makeWithCodeIntervalSeconds:nil
+                                              codeLength:nil
+                            enrollmentCompletionDeadline:nil
+                                        hashingAlgorithm:nil
+                                               secretKey:secret.sharedSecretKey];
 }
 
-+ (PigeonAuthCredential *)getPigeonAuthCredential:(FIRAuthCredential *)authCredential
-                                            token:(NSNumber *_Nullable)token {
++ (InternalAuthCredential *)getPigeonAuthCredential:(FIRAuthCredential *)authCredential
+                                              token:(NSNumber *_Nullable)token {
   if (authCredential == nil) {
     return nil;
   }
@@ -109,14 +111,14 @@
   NSUInteger nativeId =
       token != nil ? [token unsignedLongValue] : (NSUInteger)[authCredential hash];
 
-  return [PigeonAuthCredential makeWithProviderId:authCredential.provider
-                                     signInMethod:authCredential.provider
-                                         nativeId:nativeId
-                                      accessToken:accessToken ?: nil];
+  return [InternalAuthCredential makeWithProviderId:authCredential.provider
+                                       signInMethod:authCredential.provider
+                                           nativeId:nativeId
+                                        accessToken:accessToken ?: nil];
 }
 
 + (FIRActionCodeSettings *_Nullable)parseActionCodeSettings:
-    (nullable PigeonActionCodeSettings *)settings {
+    (nullable InternalActionCodeSettings *)settings {
   if (settings == nil) {
     return nil;
   }
@@ -140,21 +142,21 @@
   return codeSettings;
 }
 
-+ (PigeonIdTokenResult *)parseIdTokenResult:(FIRAuthTokenResult *)tokenResult {
++ (InternalIdTokenResult *)parseIdTokenResult:(FIRAuthTokenResult *)tokenResult {
   long expirationTimestamp = (long)[tokenResult.expirationDate timeIntervalSince1970] * 1000;
   long authTimestamp = (long)[tokenResult.authDate timeIntervalSince1970] * 1000;
   long issuedAtTimestamp = (long)[tokenResult.issuedAtDate timeIntervalSince1970] * 1000;
 
-  return [PigeonIdTokenResult makeWithToken:tokenResult.token
-                        expirationTimestamp:@(expirationTimestamp)
-                              authTimestamp:@(authTimestamp)
-                          issuedAtTimestamp:@(issuedAtTimestamp)
-                             signInProvider:tokenResult.signInProvider
-                                     claims:tokenResult.claims
-                         signInSecondFactor:tokenResult.signInSecondFactor];
+  return [InternalIdTokenResult makeWithToken:tokenResult.token
+                          expirationTimestamp:@(expirationTimestamp)
+                                authTimestamp:@(authTimestamp)
+                            issuedAtTimestamp:@(issuedAtTimestamp)
+                               signInProvider:tokenResult.signInProvider
+                                       claims:tokenResult.claims
+                           signInSecondFactor:tokenResult.signInSecondFactor];
 }
 
-+ (NSArray *_Nonnull)getManualList:(nonnull PigeonUserDetails *)userDetails {
++ (NSArray *_Nonnull)getManualList:(nonnull InternalUserDetails *)userDetails {
   NSMutableArray *output = [NSMutableArray array];
 
   id userInfoList = [[userDetails userInfo] toList];

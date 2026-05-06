@@ -3,14 +3,14 @@
 // found in the LICENSE file.
 #import "FirestoreMessages.g.h"
 
-@interface PigeonDocumentSnapshot (Map)
+@interface InternalDocumentSnapshot (Map)
 - (NSDictionary *)toList;
 @end
 
-@interface PigeonDocumentChange (Map)
+@interface InternalDocumentChange (Map)
 - (NSDictionary *)toList;
 @end
 
-@interface PigeonSnapshotMetadata (Map)
+@interface InternalSnapshotMetadata (Map)
 - (NSDictionary *)toList;
 @end

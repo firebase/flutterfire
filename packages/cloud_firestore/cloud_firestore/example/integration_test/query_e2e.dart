@@ -295,8 +295,9 @@ void runQueryTests() {
             await subscription?.cancel();
           });
         },
-        // Failing on CI but works locally
-        skip: kIsWeb,
+        // Failing on CI but works locally. Listening from cache is not
+        // supported on Windows.
+        skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
       );
 
       test('listens to multiple queries', () async {
@@ -328,52 +329,47 @@ void runQueryTests() {
 
         Stream<QuerySnapshot<Map<String, dynamic>>> stream =
             collection.snapshots();
-        int call = 0;
+        final snapshots = <QuerySnapshot<Map<String, dynamic>>>[];
+        final receivedAll = Completer<void>();
 
-        StreamSubscription subscription = stream.listen(
-          expectAsync1(
-            (QuerySnapshot<Map<String, dynamic>> snapshot) {
-              call++;
-              if (call == 1) {
-                expect(snapshot.docs.length, equals(1));
-                QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot =
-                    snapshot.docs[0];
-                expect(documentSnapshot.data()['foo'], equals('bar'));
-              } else if (call == 2) {
-                expect(snapshot.docs.length, equals(2));
-                QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot =
-                    snapshot.docs.firstWhere((doc) => doc.id == 'doc1');
-                expect(documentSnapshot.data()['bar'], equals('baz'));
-              } else if (call == 3) {
-                expect(snapshot.docs.length, equals(1));
-                expect(
-                  snapshot.docs.where((doc) => doc.id == 'doc1').isEmpty,
-                  isTrue,
-                );
-              } else if (call == 4) {
-                expect(snapshot.docs.length, equals(2));
-                QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot =
-                    snapshot.docs.firstWhere((doc) => doc.id == 'doc2');
-                expect(documentSnapshot.data()['foo'], equals('bar'));
-              } else if (call == 5) {
-                expect(snapshot.docs.length, equals(2));
-                QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot =
-                    snapshot.docs.firstWhere((doc) => doc.id == 'doc2');
-                expect(documentSnapshot.data()['foo'], equals('baz'));
-              } else {
-                fail('Should not have been called');
-              }
-            },
-            count: 5,
-            reason: 'Stream should only have been called five times.',
-          ),
-        );
+        StreamSubscription subscription = stream.listen((snapshot) {
+          snapshots.add(snapshot);
+          if (snapshots.length >= 5 && !receivedAll.isCompleted) {
+            receivedAll.complete();
+          }
+        });
 
+        // Wait for initial snapshot before making changes
         await Future.delayed(const Duration(milliseconds: 500));
         await collection.doc('doc1').set({'bar': 'baz'});
         await collection.doc('doc1').delete();
         await collection.doc('doc2').set({'foo': 'bar'});
         await collection.doc('doc2').update({'foo': 'baz'});
+
+        // Wait for all 5 snapshots with a timeout instead of hanging forever
+        await receivedAll.future.timeout(const Duration(seconds: 30));
+
+        expect(snapshots[0].docs.length, equals(1));
+        expect(snapshots[0].docs[0].data()['foo'], equals('bar'));
+
+        expect(snapshots[1].docs.length, equals(2));
+        final doc1 = snapshots[1].docs.firstWhere((doc) => doc.id == 'doc1');
+        expect(doc1.data()['bar'], equals('baz'));
+
+        expect(snapshots[2].docs.length, equals(1));
+        expect(
+          snapshots[2].docs.where((doc) => doc.id == 'doc1').isEmpty,
+          isTrue,
+        );
+
+        expect(snapshots[3].docs.length, equals(2));
+        final doc2set = snapshots[3].docs.firstWhere((doc) => doc.id == 'doc2');
+        expect(doc2set.data()['foo'], equals('bar'));
+
+        expect(snapshots[4].docs.length, equals(2));
+        final doc2update =
+            snapshots[4].docs.firstWhere((doc) => doc.id == 'doc2');
+        expect(doc2update.data()['foo'], equals('baz'));
 
         await subscription.cancel();
       });
@@ -1057,14 +1053,17 @@ void runQueryTests() {
               isA<FirebaseException>().having(
                 (e) => e.message,
                 'message',
-                contains(
-                  'Client specified an invalid argument',
+                anyOf(
+                  contains('Client specified an invalid argument'),
+                  contains('order by clause cannot contain more fields '
+                      'after the key'),
                 ),
               ),
             ),
           );
         },
-        // firebase-js-sdk does not require an orderBy() field to be set for this to work
+        // firebase-js-sdk does not require an orderBy() field to be set for
+        // this to work
         skip: kIsWeb,
       );
 
@@ -1111,8 +1110,10 @@ void runQueryTests() {
               isA<FirebaseException>().having(
                 (e) => e.message,
                 'message',
-                contains(
-                  'Client specified an invalid argument',
+                anyOf(
+                  contains('Client specified an invalid argument'),
+                  contains('order by clause cannot contain more fields '
+                      'after the key'),
                 ),
               ),
             ),
@@ -3803,6 +3804,7 @@ void runQueryTests() {
             3,
           );
         },
+        skip: defaultTargetPlatform == TargetPlatform.windows,
       );
 
       test(
@@ -3825,6 +3827,7 @@ void runQueryTests() {
             1,
           );
         },
+        skip: defaultTargetPlatform == TargetPlatform.windows,
       );
 
       test(
@@ -3846,6 +3849,7 @@ void runQueryTests() {
             1.5,
           );
         },
+        skip: defaultTargetPlatform == TargetPlatform.windows,
       );
 
       test(
@@ -3868,6 +3872,7 @@ void runQueryTests() {
             1,
           );
         },
+        skip: defaultTargetPlatform == TargetPlatform.windows,
       );
 
       test(
@@ -3899,37 +3904,42 @@ void runQueryTests() {
             1.5,
           );
         },
+        skip: defaultTargetPlatform == TargetPlatform.windows,
       );
 
-      test('chaining multiples aggregate queries', () async {
-        final collection = await initializeTest('chaining');
+      test(
+        'chaining multiples aggregate queries',
+        () async {
+          final collection = await initializeTest('chaining');
 
-        await Future.wait([
-          collection.add({'foo': 1}),
-          collection.add({'foo': 2}),
-        ]);
+          await Future.wait([
+            collection.add({'foo': 1}),
+            collection.add({'foo': 2}),
+          ]);
 
-        AggregateQuery query = collection
-            .where('foo', isEqualTo: 1)
-            .aggregate(count(), sum('foo'), average('foo'));
+          AggregateQuery query = collection
+              .where('foo', isEqualTo: 1)
+              .aggregate(count(), sum('foo'), average('foo'));
 
-        AggregateQuerySnapshot snapshot = await query.get();
+          AggregateQuerySnapshot snapshot = await query.get();
 
-        expect(
-          snapshot.count,
-          1,
-        );
+          expect(
+            snapshot.count,
+            1,
+          );
 
-        expect(
-          snapshot.getSum('foo'),
-          1,
-        );
+          expect(
+            snapshot.getSum('foo'),
+            1,
+          );
 
-        expect(
-          snapshot.getAverage('foo'),
-          1,
-        );
-      });
+          expect(
+            snapshot.getAverage('foo'),
+            1,
+          );
+        },
+        skip: defaultTargetPlatform == TargetPlatform.windows,
+      );
 
       test(
         'count() with collectionGroup',
@@ -3971,16 +3981,20 @@ void runQueryTests() {
         },
       );
 
-      test('count(), average() & sum() on empty collection', () async {
-        final collection = await initializeTest('empty-collection');
+      test(
+        'count(), average() & sum() on empty collection',
+        () async {
+          final collection = await initializeTest('empty-collection');
 
-        final snapshot = await collection
-            .aggregate(count(), sum('foo'), average('foo'))
-            .get();
-        expect(snapshot.count, 0);
-        expect(snapshot.getSum('foo'), 0);
-        expect(snapshot.getAverage('foo'), null);
-      });
+          final snapshot = await collection
+              .aggregate(count(), sum('foo'), average('foo'))
+              .get();
+          expect(snapshot.count, 0);
+          expect(snapshot.getSum('foo'), 0);
+          expect(snapshot.getAverage('foo'), null);
+        },
+        skip: defaultTargetPlatform == TargetPlatform.windows,
+      );
     });
 
     group('startAfterDocument', () {

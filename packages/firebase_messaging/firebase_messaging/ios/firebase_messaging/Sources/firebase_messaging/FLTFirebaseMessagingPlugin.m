@@ -43,6 +43,9 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   // Track if scene delegate connected (for iOS 13+ scene delegate support)
   BOOL _sceneDidConnect;
 
+  // Guard against calling setupNotificationHandling twice
+  BOOL _notificationHandlingSetup;
+
 #ifdef __FF_NOTIFICATIONS_SUPPORTED_PLATFORM
   API_AVAILABLE(ios(10), macosx(10.14))
   __weak id<UNUserNotificationCenterDelegate> _originalNotificationCenterDelegate;
@@ -63,6 +66,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   if (self) {
     _initialNotificationGathered = NO;
     _sceneDidConnect = NO;
+    _notificationHandlingSetup = NO;
     _channel = channel;
     _registrar = registrar;
     // Application
@@ -222,6 +226,32 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 
 - (void)setupNotificationHandlingWithRemoteNotification:
     (nullable NSDictionary *)remoteNotification {
+  // If notification handling was already set up (e.g. from
+  // application_onDidFinishLaunchingNotification) and we're called again (e.g. from
+  // scene:willConnectToSession:), only process the notification but skip delegate/swizzler
+  // re-registration to avoid _originalNotificationCenterDelegate being set to self, which causes
+  // infinite recursion in didReceiveNotificationResponse. See #18037.
+  if (_notificationHandlingSetup) {
+    if (remoteNotification != nil) {
+      _initialNotification =
+          [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:remoteNotification];
+      _initialNotificationID = remoteNotification[@"gcm.message_id"];
+      _initialNotificationGathered = YES;
+      [self initialNotificationCallback];
+    } else if (_sceneDidConnect && !_initialNotificationGathered) {
+      // Scene connected with no notification — delay to allow didReceiveRemoteNotification
+      dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)),
+                     dispatch_get_main_queue(), ^{
+                       if (!self->_initialNotificationGathered) {
+                         self->_initialNotificationGathered = YES;
+                         [self initialNotificationCallback];
+                       }
+                     });
+    }
+    return;
+  }
+  _notificationHandlingSetup = YES;
+
   if (remoteNotification != nil) {
     // If remoteNotification exists, it is the notification that opened the app.
     _initialNotification =
@@ -299,12 +329,12 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
                 respondsToSelector:@selector(userNotificationCenter:openSettingsForNotification:)];
         _originalNotificationCenterDelegateRespondsTo.willPresentNotification =
             (unsigned int)[_originalNotificationCenterDelegate
-                respondsToSelector:@selector(userNotificationCenter:
-                                            willPresentNotification:withCompletionHandler:)];
+                respondsToSelector:@selector(userNotificationCenter:willPresentNotification:
+                                             withCompletionHandler:)];
         _originalNotificationCenterDelegateRespondsTo.didReceiveNotificationResponse =
             (unsigned int)[_originalNotificationCenterDelegate
-                respondsToSelector:@selector(userNotificationCenter:
-                                       didReceiveNotificationResponse:withCompletionHandler:)];
+                respondsToSelector:@selector(userNotificationCenter:didReceiveNotificationResponse:
+                                             withCompletionHandler:)];
       }
     }
 

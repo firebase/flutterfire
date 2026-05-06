@@ -143,8 +143,8 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       final MethodChannelUser user = MethodChannelUser(
         instance,
         multiFactorInstance,
-        PigeonUserDetails.decode(
-          [PigeonUserInfo.decode(userList[0]!), userList[1]],
+        InternalUserDetails.decode(
+          [InternalUserInfo.decode(userList[0]!), userList[1]],
         ),
       );
 
@@ -183,8 +183,8 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       final MethodChannelUser user = MethodChannelUser(
         instance,
         multiFactorInstance,
-        PigeonUserDetails.decode(
-          [PigeonUserInfo.decode(userList[0]!), userList[1]],
+        InternalUserDetails.decode(
+          [InternalUserInfo.decode(userList[0]!), userList[1]],
         ),
       );
 
@@ -207,7 +207,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
 
   @override
   MethodChannelFirebaseAuth setInitialValues({
-    PigeonUserDetails? currentUser,
+    InternalUserDetails? currentUser,
     String? languageCode,
   }) {
     if (currentUser != null) {
@@ -385,7 +385,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
 
       final result = await _api.signInWithProvider(
         pigeonDefault,
-        PigeonSignInProvider(
+        InternalSignInProvider(
           providerId: convertedProvider.providerId,
           scopes: convertedProvider is OAuthProvider
               ? convertedProvider.scopes
@@ -475,7 +475,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
         email,
         actionCodeSettings == null
             ? null
-            : PigeonActionCodeSettings(
+            : InternalActionCodeSettings(
                 url: actionCodeSettings.url,
                 handleCodeInApp: actionCodeSettings.handleCodeInApp,
                 iOSBundleId: actionCodeSettings.iOSBundleId,
@@ -499,7 +499,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       await _api.sendSignInLinkToEmail(
         pigeonDefault,
         email,
-        PigeonActionCodeSettings(
+        InternalActionCodeSettings(
           url: actionCodeSettings.url,
           handleCodeInApp: actionCodeSettings.handleCodeInApp,
           iOSBundleId: actionCodeSettings.iOSBundleId,
@@ -544,7 +544,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     try {
       await _api.setSettings(
           pigeonDefault,
-          PigeonFirebaseAuthSettings(
+          InternalFirebaseAuthSettings(
             appVerificationDisabledForTesting:
                 appVerificationDisabledForTesting,
             userAccessGroup: userAccessGroup,
@@ -597,7 +597,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     try {
       final eventChannelName = await _api.verifyPhoneNumber(
         pigeonDefault,
-        PigeonVerifyPhoneNumberRequest(
+        InternalVerifyPhoneNumberRequest(
           phoneNumber: phoneNumber,
           multiFactorInfoId: multiFactorInfo?.uid,
           timeout: timeout.inMilliseconds,
@@ -661,6 +661,20 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       throw UnimplementedError(
         'revokeTokenWithAuthorizationCode() is only available on apple platforms.',
       );
+    }
+  }
+
+  @override
+  Future<void> revokeAccessToken(String accessToken) async {
+    if (defaultTargetPlatform != TargetPlatform.android) {
+      throw UnimplementedError(
+          'revokeAccessToken() is only available on the Android platform.');
+    }
+
+    try {
+      await _api.revokeAccessToken(pigeonDefault, accessToken);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 

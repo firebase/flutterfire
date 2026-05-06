@@ -1,3 +1,15 @@
+## 5.8.12
+
+ - Update a dependency to the latest release.
+
+## 5.8.11
+
+ - **FIX**(functions): prevent collision when listening multiple times to the same stream ([#18052](https://github.com/firebase/flutterfire/issues/18052)). ([c13040e1](https://github.com/firebase/flutterfire/commit/c13040e15a42deddbf61b3180bbd002d58edca29))
+
+## 5.8.10
+
+ - Update a dependency to the latest release.
+
 ## 5.8.9
 
  - Update a dependency to the latest release.

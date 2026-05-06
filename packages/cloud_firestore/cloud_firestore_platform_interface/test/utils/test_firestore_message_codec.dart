@@ -73,7 +73,7 @@ class TestFirestoreMessageCodec extends FirestoreMessageCodec {
           values['path'],
           FirestorePigeonFirebaseApp(
             appName: 'test',
-            settings: PigeonFirebaseSettings(
+            settings: InternalFirebaseSettings(
               ignoreUndefinedProperties: false,
             ),
             databaseURL: '',

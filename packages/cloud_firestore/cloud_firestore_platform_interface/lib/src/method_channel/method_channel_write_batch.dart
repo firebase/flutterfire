@@ -24,7 +24,7 @@ class MethodChannelWriteBatch extends WriteBatchPlatform {
   final FirestorePigeonFirebaseApp pigeonApp;
 
   /// Keeps track of all batch writes in order.
-  List<PigeonTransactionCommand> _writes = [];
+  List<InternalTransactionCommand> _writes = [];
 
   /// The committed state of this batch.
   ///
@@ -52,9 +52,9 @@ class MethodChannelWriteBatch extends WriteBatchPlatform {
   @override
   void delete(String documentPath) {
     _assertNotCommitted();
-    _writes.add(PigeonTransactionCommand(
+    _writes.add(InternalTransactionCommand(
       path: documentPath,
-      type: PigeonTransactionType.deleteType,
+      type: InternalTransactionType.deleteType,
     ));
   }
 
@@ -62,11 +62,11 @@ class MethodChannelWriteBatch extends WriteBatchPlatform {
   void set(String documentPath, Map<String, dynamic> data,
       [SetOptions? options]) {
     _assertNotCommitted();
-    _writes.add(PigeonTransactionCommand(
+    _writes.add(InternalTransactionCommand(
       path: documentPath,
-      type: PigeonTransactionType.set,
+      type: InternalTransactionType.set,
       data: data,
-      option: PigeonDocumentOption(
+      option: InternalDocumentOption(
         merge: options?.merge,
         mergeFields: options?.mergeFields?.map((e) => e.components).toList(),
       ),
@@ -76,12 +76,12 @@ class MethodChannelWriteBatch extends WriteBatchPlatform {
   @override
   void update(
     String documentPath,
-    Map<String, dynamic> data,
+    Map<FieldPath, dynamic> data,
   ) {
     _assertNotCommitted();
-    _writes.add(PigeonTransactionCommand(
+    _writes.add(InternalTransactionCommand(
       path: documentPath,
-      type: PigeonTransactionType.update,
+      type: InternalTransactionType.update,
       data: data,
     ));
   }

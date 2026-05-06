@@ -6,9 +6,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:tests/firebase_options.dart';
 
 import './test_utils.dart';
 
@@ -49,8 +52,9 @@ void setupTaskTests() {
 
         // TODO(Salakar): Known issue with iOS SDK where pausing immediately will cause an 'unknown' error.
         if (defaultTargetPlatform == TargetPlatform.iOS) {
+          // Wait for the first snapshot event to confirm the task is running
+          // before attempting to pause.
           await task!.snapshotEvents.first;
-          await Future.delayed(const Duration(milliseconds: 750));
         }
 
         // TODO(Salakar): Known issue with iOS where pausing/resuming doesn't immediately return as paused/resumed 'true'.
@@ -58,8 +62,6 @@ void setupTaskTests() {
           bool? paused = await task!.pause();
           expect(paused, isTrue);
           expect(task!.snapshot.state, TaskState.paused);
-
-          await Future.delayed(const Duration(milliseconds: 500));
 
           bool? resumed = await task!.resume();
           expect(resumed, isTrue);
@@ -106,14 +108,13 @@ void setupTaskTests() {
           }
           await _testPauseTask('Download');
         },
-        retry: 3,
+        retry: 2,
         // TODO(russellwheatley): Windows works on example app, but fails on tests.
         // Clue is in bytesTransferred + totalBytes which both equal: -3617008641903833651
-        skip: !kIsWeb && (
-            defaultTargetPlatform == TargetPlatform.windows ||
-            defaultTargetPlatform == TargetPlatform.android ||
-            defaultTargetPlatform == TargetPlatform.macOS
-          ),
+        skip: !kIsWeb &&
+            (defaultTargetPlatform == TargetPlatform.windows ||
+                defaultTargetPlatform == TargetPlatform.android ||
+                defaultTargetPlatform == TargetPlatform.macOS),
       );
 
       // TODO(Salakar): Test is flaky on CI - needs investigating ('[firebase_storage/unknown] An unknown error occurred, please check the server response.')
@@ -123,15 +124,14 @@ void setupTaskTests() {
           task = uploadRef.putString('This is an upload task!');
           await _testPauseTask('Upload');
         },
-        retry: 3,
+        retry: 2,
         // This task is flaky on mac, skip for now.
         // TODO(russellwheatley): Windows works on example app, but fails on tests.
         // Clue is in bytesTransferred + totalBytes which both equal: -3617008641903833651
-        skip: !kIsWeb && (
-            defaultTargetPlatform == TargetPlatform.macOS ||
-            defaultTargetPlatform == TargetPlatform.windows ||
-            defaultTargetPlatform == TargetPlatform.android
-          ),
+        skip: !kIsWeb &&
+            (defaultTargetPlatform == TargetPlatform.macOS ||
+                defaultTargetPlatform == TargetPlatform.windows ||
+                defaultTargetPlatform == TargetPlatform.android),
       );
 
       test(
@@ -348,6 +348,38 @@ void setupTaskTests() {
           retry: 2,
           // Windows `task.cancel()` is returning "false", same code on example app works as intended
           skip: defaultTargetPlatform == TargetPlatform.windows,
+        );
+
+        test(
+          'cancels multiple in-progress Android tasks during core reinitialization',
+          () async {
+            final tasks = <UploadTask>[
+              for (var i = 0; i < 3; i++)
+                storage
+                    .ref('flutter-tests/regression-18240-$i.txt')
+                    .putString('A' * 20000000),
+            ];
+            final completions = tasks
+                .map(
+                  (task) => task.then<void>(
+                    (_) {},
+                    onError: (_) {},
+                  ),
+                )
+                .toList();
+
+            try {
+              MethodChannelFirebase.isCoreInitialized = false;
+              await Firebase.initializeApp(
+                options: DefaultFirebaseOptions.currentPlatform,
+              ).timeout(const Duration(seconds: 30));
+            } finally {
+              MethodChannelFirebase.isCoreInitialized = true;
+              completions.forEach(unawaited);
+            }
+          },
+          retry: 2,
+          skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android,
         );
       },
     );

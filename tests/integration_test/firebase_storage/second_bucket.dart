@@ -24,9 +24,7 @@ void setupSecondBucketTests() {
         app: Firebase.app(),
         bucket: secondStorageBucket,
       );
-      if (defaultTargetPlatform != TargetPlatform.windows) {
-        await storage.useStorageEmulator(testEmulatorHost, testEmulatorPort);
-      }
+      await storage.useStorageEmulator(testEmulatorHost, testEmulatorPort);
       // Cannot putFile as it will fail on web e2e tests
       const string = 'some text for creating new files';
       final Reference ref = storage.ref('flutter-tests').child('flt-ok.txt');
@@ -212,22 +210,30 @@ void setupSecondBucketTests() {
           expect(result.prefixes, isA<List<Reference>>());
         });
 
-        test('errors if permission denied', () async {
-          Reference ref = storage.ref('flutter-tests');
+        test(
+          'errors if permission denied',
+          () async {
+            Reference ref = storage.ref('flutter-tests');
 
-          await expectLater(
-            () => ref.list(const ListOptions(maxResults: 25)),
-            throwsA(
-              isA<FirebaseException>()
-                  .having((e) => e.code, 'code', 'unauthorized')
-                  .having(
-                    (e) => e.message,
-                    'message',
-                    'User is not authorized to perform the desired action.',
-                  ),
-            ),
-          );
-        });
+            await expectLater(
+              () => ref.list(const ListOptions(maxResults: 25)),
+              throwsA(
+                isA<FirebaseException>()
+                    .having((e) => e.code, 'code', 'unauthorized')
+                    .having(
+                      (e) => e.message,
+                      'message',
+                      'User is not authorized to perform the desired action.',
+                    ),
+              ),
+            );
+          },
+          // Web: Firebase JS SDK / emulator never returns the permission error,
+          // causing a consistent 30s timeout.
+          // Windows: C++ SDK / emulator does not enforce permissions for list
+          // operations on the second bucket (returns results instead of error).
+          skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
+        );
 
         test('errors if maxResults is less than 0 ', () async {
           Reference ref = storage.ref('/list');

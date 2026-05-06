@@ -1,7 +1,7 @@
 name: e2e-iOS
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}-ios
   cancel-in-progress: true
 
 on:
@@ -23,16 +23,23 @@ on:
       - '!**/example/integration_test/**'
       - '**/flutterfire_ui/**'
       - '**.md'
+  workflow_call:
+    inputs:
+      nightly_test_mode:
+        type: boolean
+        default: false
 
 jobs:
   ios:
     runs-on: macos-15
-    timeout-minutes: 60
+    timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 60 }}
     strategy:
       fail-fast: false
       matrix:
         working_directory:
           ['tests', 'packages/cloud_firestore/cloud_firestore/example']
+        exclude:
+          - working_directory: ${{ inputs.nightly_test_mode && 'packages/cloud_firestore/cloud_firestore/example' || 'none' }}
     steps:
       - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
       - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
@@ -45,13 +52,13 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '21'
-      - uses: hendrikmuhs/ccache-action@c92f40bee50034e84c763e33b317c77adaa81c92
+      - uses: hendrikmuhs/ccache-action@5ebbd400eff9e74630f759d94ddd7b6c26299639
         name: Xcode Compile Cache
         with:
           key: xcode-cache-${{ runner.os }}
           save: "${{ github.ref == 'refs/heads/main' }}"
           max-size: 700M
-      - uses: actions/cache/restore@1bd1e32a3bdc45362d1e726936510720a7c30a57
+      - uses: actions/cache/restore@668228422ae6a00e4ad889ee87cd7109ec5666a7
         continue-on-error: true
         name: Pods Cache
         id: pods-cache
@@ -66,7 +73,7 @@ jobs:
           echo "FIREBASE_TOOLS_VERSION=$(npm firebase --version)" >> $GITHUB_ENV
       - name: Firebase Emulator Cache
         id: firebase-emulator-cache
-        uses: actions/cache/restore@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        uses: actions/cache/restore@668228422ae6a00e4ad889ee87cd7109ec5666a7
         continue-on-error: true
         with:
           # The firebase emulators are pure javascript and java, OS-independent
@@ -81,7 +88,7 @@ jobs:
           cache: true
           cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
           pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
-      - uses: bluefireteam/melos-action@c7dcb921b23cc520cace360b95d02b37bf09cdaa
+      - uses: bluefireteam/melos-action@705015c3d2bc4ab94201ac24accb2bbe070cf533
         with:
           run-bootstrap: false
           melos-version: '5.3.0'
@@ -114,7 +121,7 @@ jobs:
           ccache -s
       - name: Start Firebase Emulator
         run: sudo chown -R 501:20 "/Users/runner/.npm" && cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
-      - uses: futureware-tech/simulator-action@9150831bad21ed25e472017a746f49ccbd0e674a
+      - uses: futureware-tech/simulator-action@e89aa8f93d3aec35083ff49d2854d07f7186f7f5
         id: simulator
         with:
           # List of available simulators: https://github.com/actions/runner-images/blob/main/images/macos/macos-14-Readme.md#installed-simulators
@@ -126,11 +133,20 @@ jobs:
         run: |
           # Uncomment following line to have simulator logs printed out for debugging purposes.
           # xcrun simctl spawn booted log stream --predicate 'eventMessage contains "flutter"' &
-          flutter test integration_test/e2e_test.dart -d "$SIMULATOR" --ignore-timeouts --dart-define=CI=true
+          # The iOS simulator sometimes fails to connect the VM Service, hanging for
+          # 12 minutes before timing out. Use a 6-minute limit and retry once with
+          # a simulator reboot. Normal connection takes 30s-5min.
+          perl -e 'alarm 360; exec @ARGV' -- flutter test integration_test/e2e_test.dart -d "$SIMULATOR" --timeout 10x --dart-define=CI=true || {
+            echo "First attempt failed or timed out. Rebooting simulator and retrying..."
+            xcrun simctl shutdown "$SIMULATOR" || true
+            xcrun simctl boot "$SIMULATOR"
+            xcrun simctl bootstatus "$SIMULATOR" -b
+            flutter test integration_test/e2e_test.dart -d "$SIMULATOR" --timeout 10x --dart-define=CI=true
+          }
       - name: Save Firestore Emulator Cache
         # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
         if: github.ref == 'refs/heads/main'
-        uses: actions/cache/save@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        uses: actions/cache/save@668228422ae6a00e4ad889ee87cd7109ec5666a7
         continue-on-error: true
         with:
           # The firebase emulators are pure javascript and java, OS-independent
@@ -141,7 +157,7 @@ jobs:
       - name: Save Pods Cache
         # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
         if: github.ref == 'refs/heads/main'
-        uses: actions/cache/save@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        uses: actions/cache/save@668228422ae6a00e4ad889ee87cd7109ec5666a7
         continue-on-error: true
         with:
           key: ${{ steps.pods-cache.outputs.cache-primary-key }}

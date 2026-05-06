@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import 'dart:convert';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:http/http.dart' as http;
@@ -21,9 +22,92 @@ import 'package:firebase_ai/src/api.dart';
 import 'package:firebase_ai/src/developer/api.dart';
 import 'package:firebase_ai/src/imagen/imagen_content.dart';
 import 'package:tests/firebase_options.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+
+  group('firebase_ai', () {
+    group('platform security headers', () {
+      const _channel = MethodChannel('plugins.flutter.io/firebase_ai');
+      testWidgets(
+        'returns non-empty headers on mobile platforms',
+        skip: kIsWeb,
+        (WidgetTester tester) async {
+          final headers = await _channel.invokeMapMethod<String, String>(
+            'getPlatformHeaders',
+          );
+
+          expect(
+            headers,
+            isNotNull,
+            reason: 'Native plugin should return platform headers',
+          );
+          expect(
+            headers,
+            isNotEmpty,
+            reason: 'Native plugin should return non-empty platform headers',
+          );
+        },
+      );
+
+      testWidgets(
+        'returns correct Android headers',
+        skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android,
+        (WidgetTester tester) async {
+          final headers = await _channel.invokeMapMethod<String, String>(
+            'getPlatformHeaders',
+          );
+
+          expect(headers, isNotNull);
+          expect(headers, contains('X-Android-Package'));
+          expect(
+            headers!['X-Android-Package'],
+            isNotEmpty,
+            reason: 'Package name should not be empty',
+          );
+          // Cert may be empty in some emulator environments, but key must exist.
+          expect(headers, contains('X-Android-Cert'));
+        },
+      );
+
+      testWidgets(
+        'returns correct iOS/macOS headers',
+        skip: kIsWeb ||
+            (defaultTargetPlatform != TargetPlatform.iOS &&
+                defaultTargetPlatform != TargetPlatform.macOS),
+        (WidgetTester tester) async {
+          final headers = await _channel.invokeMapMethod<String, String>(
+            'getPlatformHeaders',
+          );
+
+          expect(headers, isNotNull);
+          expect(headers, contains('x-ios-bundle-identifier'));
+          expect(
+            headers!['x-ios-bundle-identifier'],
+            isNotEmpty,
+            reason: 'Bundle identifier should not be empty',
+          );
+        },
+      );
+
+      testWidgets(
+        'returns empty headers on web',
+        skip: !kIsWeb,
+        (WidgetTester tester) async {
+          // On web, no native plugin is registered, so the channel call
+          // should throw a MissingPluginException.
+          expect(
+            () => _channel.invokeMapMethod<String, String>(
+              'getPlatformHeaders',
+            ),
+            throwsA(isA<MissingPluginException>()),
+          );
+        },
+      );
+    });
+  });
 
   group('firebase_ai e2e', () {
     setUpAll(() async {

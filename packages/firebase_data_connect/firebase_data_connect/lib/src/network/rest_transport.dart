@@ -116,10 +116,12 @@ class RestTransport implements DataConnectTransport {
         headers: headers,
       );
       Map<String, dynamic> bodyJson =
-          jsonDecode(r.body) as Map<String, dynamic>;
+          jsonDecode(utf8.decode(r.bodyBytes)) as Map<String, dynamic>;
+
       if (r.statusCode != 200) {
-        String message =
-            bodyJson.containsKey('message') ? bodyJson['message']! : r.body;
+        String message = bodyJson.containsKey('message')
+            ? bodyJson['message']!
+            : utf8.decode(r.bodyBytes);
         throw DataConnectError(
           r.statusCode == 401
               ? DataConnectErrorCode.unauthorized
@@ -127,7 +129,13 @@ class RestTransport implements DataConnectTransport {
           "Received a status code of ${r.statusCode} with a message '$message'",
         );
       }
-      return ServerResponse(bodyJson);
+      final Map<String, dynamic>? extensions =
+          bodyJson['extensions'] as Map<String, dynamic>?;
+      final serverResponse = ServerResponse(bodyJson, extensions: extensions);
+      if (extensions != null && extensions.containsKey('ttl')) {
+        serverResponse.ttl = Duration(seconds: extensions['ttl'] as int);
+      }
+      return serverResponse;
     } on Exception catch (e) {
       if (e is DataConnectError) {
         rethrow;
@@ -142,6 +150,7 @@ class RestTransport implements DataConnectTransport {
   /// Invokes query REST endpoint.
   @override
   Future<ServerResponse> invokeQuery<Data, Variables>(
+    String operationId,
     String queryName,
     Deserializer<Data> deserializer,
     Serializer<Variables>? serializer,
@@ -161,6 +170,7 @@ class RestTransport implements DataConnectTransport {
   /// Invokes mutation REST endpoint.
   @override
   Future<ServerResponse> invokeMutation<Data, Variables>(
+    String operationId,
     String queryName,
     Deserializer<Data> deserializer,
     Serializer<Variables>? serializer,
@@ -175,6 +185,20 @@ class RestTransport implements DataConnectTransport {
       vars,
       token,
     );
+  }
+
+  /// WebSockets are now handled by WebSocketTransport in FirebaseDataConnect.
+  @override
+  Stream<ServerResponse> invokeStreamQuery<Data, Variables>(
+    String operationId,
+    String queryName,
+    Deserializer<Data> deserializer,
+    Serializer<Variables>? serializer,
+    Variables? vars,
+    String? token,
+  ) {
+    throw UnsupportedError(
+        'Streaming should be routed through WebSocketTransport');
   }
 }
 

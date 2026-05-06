@@ -14,6 +14,7 @@
 
 import 'content.dart';
 import 'error.dart';
+import 'image_config.dart';
 import 'schema.dart';
 import 'tool.dart' show Tool, ToolConfig;
 
@@ -347,6 +348,23 @@ final class WebGroundingChunk {
   final String? domain;
 }
 
+/// A grounding chunk sourced from Google Maps.
+final class GoogleMapsGroundingChunk {
+  // ignore: public_member_api_docs
+  GoogleMapsGroundingChunk({this.uri, this.title, this.placeId});
+
+  /// The URI of the place.
+  final String? uri;
+
+  /// The title of the place.
+  final String? title;
+
+  /// This Place's resource name, in `places/{place_id}` format.
+  ///
+  /// This can be used to look up the place using the Google Maps API.
+  final String? placeId;
+}
+
 /// Represents a chunk of retrieved data that supports a claim in the model's
 /// response.
 ///
@@ -354,10 +372,13 @@ final class WebGroundingChunk {
 /// enabled.
 final class GroundingChunk {
   // ignore: public_member_api_docs
-  GroundingChunk({this.web});
+  GroundingChunk({this.web, this.maps});
 
   /// Contains details if the grounding chunk is from a web source.
   final WebGroundingChunk? web;
+
+  /// Contains details if the grounding chunk is from a Google Maps source.
+  final GoogleMapsGroundingChunk? maps;
 }
 
 /// Provides information about how a specific segment of the model's response
@@ -606,7 +627,19 @@ enum HarmCategory {
   sexuallyExplicit('HARM_CATEGORY_SEXUALLY_EXPLICIT'),
 
   /// Promotes or enables access to harmful goods, services, and activities.
-  dangerousContent('HARM_CATEGORY_DANGEROUS_CONTENT');
+  dangerousContent('HARM_CATEGORY_DANGEROUS_CONTENT'),
+
+  /// Image content containing hate speech.
+  imageHate('HARM_CATEGORY_IMAGE_HATE'),
+
+  /// Image content that is dangerous.
+  imageDangerousContent('HARM_CATEGORY_IMAGE_DANGEROUS_CONTENT'),
+
+  /// Image content containing harassment.
+  imageHarassment('HARM_CATEGORY_IMAGE_HARASSMENT'),
+
+  /// Image content that is sexually explicit.
+  imageSexuallyExplicit('HARM_CATEGORY_IMAGE_SEXUALLY_EXPLICIT');
 
   const HarmCategory(this._jsonString);
 
@@ -618,6 +651,12 @@ enum HarmCategory {
       'HARM_CATEGORY_HATE_SPEECH' => HarmCategory.hateSpeech,
       'HARM_CATEGORY_SEXUALLY_EXPLICIT' => HarmCategory.sexuallyExplicit,
       'HARM_CATEGORY_DANGEROUS_CONTENT' => HarmCategory.dangerousContent,
+      'HARM_CATEGORY_IMAGE_HATE' => HarmCategory.imageHate,
+      'HARM_CATEGORY_IMAGE_DANGEROUS_CONTENT' =>
+        HarmCategory.imageDangerousContent,
+      'HARM_CATEGORY_IMAGE_HARASSMENT' => HarmCategory.imageHarassment,
+      'HARM_CATEGORY_IMAGE_SEXUALLY_EXPLICIT' =>
+        HarmCategory.imageSexuallyExplicit,
       _ => HarmCategory.unknown,
     };
   }
@@ -769,6 +808,45 @@ enum FinishReason {
   /// The candidate content was flagged for malformed function call reasons.
   malformedFunctionCall('MALFORMED_FUNCTION_CALL'),
 
+  /// Token generation was stopped because the response contained forbidden terms.
+  blocklist('BLOCKLIST'),
+
+  /// Token generation was stopped because the response contained potentially prohibited content.
+  prohibitedContent('PROHIBITED_CONTENT'),
+
+  /// Token generation was stopped because of Sensitive Personally Identifiable Information (SPII).
+  spii('SPII'),
+
+  /// Token generation stopped because generated images contain safety violations.
+  imageSafety('IMAGE_SAFETY'),
+
+  /// Image generation stopped because generated images have other prohibited content.
+  imageProhibitedContent('IMAGE_PROHIBITED_CONTENT'),
+
+  /// Image generation stopped because of other miscellaneous issues.
+  imageOther('IMAGE_OTHER'),
+
+  /// The model was expected to generate an image, but none was generated.
+  noImage('NO_IMAGE'),
+
+  /// Image generation stopped due to recitation.
+  imageRecitation('IMAGE_RECITATION'),
+
+  /// The response candidate content was flagged for using an unsupported language.
+  language('LANGUAGE'),
+
+  /// Model generated a tool call but no tools were enabled in the request.
+  unexpectedToolCall('UNEXPECTED_TOOL_CALL'),
+
+  /// Model called too many tools consecutively, thus the system exited execution.
+  tooManyToolCalls('TOO_MANY_TOOL_CALLS'),
+
+  /// Request has at least one thought signature missing.
+  missingThoughtSignature('MISSING_THOUGHT_SIGNATURE'),
+
+  /// Finished due to malformed response.
+  malformedResponse('MALFORMED_RESPONSE'),
+
   /// Unknown reason.
   other('OTHER');
 
@@ -789,7 +867,21 @@ enum FinishReason {
       'RECITATION' => FinishReason.recitation,
       'OTHER' => FinishReason.other,
       'MALFORMED_FUNCTION_CALL' => FinishReason.malformedFunctionCall,
-      _ => FinishReason.other,
+      'BLOCKLIST' => FinishReason.blocklist,
+      'PROHIBITED_CONTENT' => FinishReason.prohibitedContent,
+      'SPII' => FinishReason.spii,
+      'IMAGE_SAFETY' => FinishReason.imageSafety,
+      'IMAGE_PROHIBITED_CONTENT' => FinishReason.imageProhibitedContent,
+      'IMAGE_OTHER' => FinishReason.imageOther,
+      'NO_IMAGE' => FinishReason.noImage,
+      'IMAGE_RECITATION' => FinishReason.imageRecitation,
+      'LANGUAGE' => FinishReason.language,
+      'UNEXPECTED_TOOL_CALL' => FinishReason.unexpectedToolCall,
+      'TOO_MANY_TOOL_CALLS' => FinishReason.tooManyToolCalls,
+      'MISSING_THOUGHT_SIGNATURE' => FinishReason.missingThoughtSignature,
+      'MALFORMED_RESPONSE' => FinishReason.malformedResponse,
+      'UNKNOWN' => FinishReason.unknown,
+      _ => FinishReason.unknown,
     };
   }
 
@@ -1193,6 +1285,7 @@ final class GenerationConfig extends BaseGenerationConfig {
     this.responseSchema,
     this.responseJsonSchema,
     this.thinkingConfig,
+    this.imageConfig,
   }) : assert(responseSchema == null || responseJsonSchema == null,
             'responseSchema and responseJsonSchema cannot both be set.');
 
@@ -1241,6 +1334,9 @@ final class GenerationConfig extends BaseGenerationConfig {
   /// support thinking.
   final ThinkingConfig? thinkingConfig;
 
+  /// Configuration options for generating images with Gemini models.
+  final ImageConfig? imageConfig;
+
   @override
   Map<String, Object?> toJson() => {
         ...super.toJson(),
@@ -1255,6 +1351,8 @@ final class GenerationConfig extends BaseGenerationConfig {
           'responseJsonSchema': responseJsonSchema,
         if (thinkingConfig case final thinkingConfig?)
           'thinkingConfig': thinkingConfig.toJson(),
+        if (imageConfig case final imageConfig?)
+          'imageConfig': imageConfig.toJson(),
       };
 }
 
@@ -1686,6 +1784,18 @@ WebGroundingChunk _parseWebGroundingChunk(Object? jsonObject) {
   );
 }
 
+GoogleMapsGroundingChunk _parseGoogleMapsGroundingChunk(Object? jsonObject) {
+  if (jsonObject is! Map) {
+    throw unhandledFormat('GoogleMapsGroundingChunk', jsonObject);
+  }
+
+  return GoogleMapsGroundingChunk(
+    uri: jsonObject['uri'] as String?,
+    title: jsonObject['title'] as String?,
+    placeId: jsonObject['placeId'] as String?,
+  );
+}
+
 GroundingChunk _parseGroundingChunk(Object? jsonObject) {
   if (jsonObject is! Map) {
     throw unhandledFormat('GroundingChunk', jsonObject);
@@ -1694,6 +1804,9 @@ GroundingChunk _parseGroundingChunk(Object? jsonObject) {
   return GroundingChunk(
     web: jsonObject['web'] != null
         ? _parseWebGroundingChunk(jsonObject['web'])
+        : null,
+    maps: jsonObject['maps'] != null
+        ? _parseGoogleMapsGroundingChunk(jsonObject['maps'])
         : null,
   );
 }

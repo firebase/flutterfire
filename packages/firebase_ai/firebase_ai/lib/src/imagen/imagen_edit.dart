@@ -18,6 +18,11 @@ import 'package:meta/meta.dart';
 
 /// The desired outcome of the image editing.
 @experimental
+@Deprecated(
+  'All Imagen models are deprecated and will shut down as early as June 2026. '
+  'As a replacement, you can migrate your apps to use Gemini Image models (the '
+  '"Nano Banana" models)(https://firebase.google.com/docs/ai-logic/imagen-models-migration).',
+)
 enum ImagenEditMode {
   /// The result of the editing will be an insertion of the prompt in the masked
   /// region.
@@ -37,6 +42,11 @@ enum ImagenEditMode {
 
 /// The type of the subject in the image.
 @experimental
+@Deprecated(
+  'All Imagen models are deprecated and will shut down as early as June 2026. '
+  'As a replacement, you can migrate your apps to use Gemini Image models (the '
+  '"Nano Banana" models)(https://firebase.google.com/docs/ai-logic/imagen-models-migration).',
+)
 enum ImagenSubjectReferenceType {
   /// The subject is a person.
   person('SUBJECT_TYPE_PERSON'),
@@ -56,6 +66,11 @@ enum ImagenSubjectReferenceType {
 
 /// The type of control image.
 @experimental
+@Deprecated(
+  'All Imagen models are deprecated and will shut down as early as June 2026. '
+  'As a replacement, you can migrate your apps to use Gemini Image models (the '
+  '"Nano Banana" models)(https://firebase.google.com/docs/ai-logic/imagen-models-migration).',
+)
 enum ImagenControlType {
   /// Use edge detection to ensure the new image follow the same outlines.
   canny('CONTROL_TYPE_CANNY'),
@@ -81,6 +96,11 @@ enum ImagenControlType {
 
 /// The mode of the mask.
 @experimental
+@Deprecated(
+  'All Imagen models are deprecated and will shut down as early as June 2026. '
+  'As a replacement, you can migrate your apps to use Gemini Image models (the '
+  '"Nano Banana" models)(https://firebase.google.com/docs/ai-logic/imagen-models-migration).',
+)
 enum ImagenMaskMode {
   /// The mask is user provided.
   userProvided('MASK_MODE_USER_PROVIDED'),
@@ -108,6 +128,11 @@ sealed class ImagenReferenceConfig {
 
 /// The configuration for the mask.
 @experimental
+@Deprecated(
+  'All Imagen models are deprecated and will shut down as early as June 2026. '
+  'As a replacement, you can migrate your apps to use Gemini Image models (the '
+  '"Nano Banana" models)(https://firebase.google.com/docs/ai-logic/imagen-models-migration).',
+)
 final class ImagenMaskConfig extends ImagenReferenceConfig {
   // ignore: public_member_api_docs
   ImagenMaskConfig({
@@ -137,6 +162,11 @@ final class ImagenMaskConfig extends ImagenReferenceConfig {
 
 /// The configuration for the subject.
 @experimental
+@Deprecated(
+  'All Imagen models are deprecated and will shut down as early as June 2026. '
+  'As a replacement, you can migrate your apps to use Gemini Image models (the '
+  '"Nano Banana" models)(https://firebase.google.com/docs/ai-logic/imagen-models-migration).',
+)
 final class ImagenSubjectConfig extends ImagenReferenceConfig {
   // ignore: public_member_api_docs
   ImagenSubjectConfig({
@@ -161,6 +191,11 @@ final class ImagenSubjectConfig extends ImagenReferenceConfig {
 
 /// The configuration for the style.
 @experimental
+@Deprecated(
+  'All Imagen models are deprecated and will shut down as early as June 2026. '
+  'As a replacement, you can migrate your apps to use Gemini Image models (the '
+  '"Nano Banana" models)(https://firebase.google.com/docs/ai-logic/imagen-models-migration).',
+)
 final class ImagenStyleConfig extends ImagenReferenceConfig {
   // ignore: public_member_api_docs
   ImagenStyleConfig({
@@ -179,6 +214,11 @@ final class ImagenStyleConfig extends ImagenReferenceConfig {
 
 /// The configuration for the control.
 @experimental
+@Deprecated(
+  'All Imagen models are deprecated and will shut down as early as June 2026. '
+  'As a replacement, you can migrate your apps to use Gemini Image models (the '
+  '"Nano Banana" models)(https://firebase.google.com/docs/ai-logic/imagen-models-migration).',
+)
 final class ImagenControlConfig extends ImagenReferenceConfig {
   // ignore: public_member_api_docs
   ImagenControlConfig({
@@ -214,6 +254,11 @@ final class ImagenControlConfig extends ImagenReferenceConfig {
 
 /// The configuration for image editing.
 @experimental
+@Deprecated(
+  'All Imagen models are deprecated and will shut down as early as June 2026. '
+  'As a replacement, you can migrate your apps to use Gemini Image models (the '
+  '"Nano Banana" models)(https://firebase.google.com/docs/ai-logic/imagen-models-migration).',
+)
 final class ImagenEditingConfig {
   // ignore: public_member_api_docs
   ImagenEditingConfig({
@@ -230,6 +275,11 @@ final class ImagenEditingConfig {
 
 /// The dimensions of an image.
 @experimental
+@Deprecated(
+  'All Imagen models are deprecated and will shut down as early as June 2026. '
+  'As a replacement, you can migrate your apps to use Gemini Image models (the '
+  '"Nano Banana" models)(https://firebase.google.com/docs/ai-logic/imagen-models-migration).',
+)
 final class ImagenDimensions {
   // ignore: public_member_api_docs
   ImagenDimensions({
@@ -246,6 +296,11 @@ final class ImagenDimensions {
 
 /// The placement of an image.
 @experimental
+@Deprecated(
+  'All Imagen models are deprecated and will shut down as early as June 2026. '
+  'As a replacement, you can migrate your apps to use Gemini Image models (the '
+  '"Nano Banana" models)(https://firebase.google.com/docs/ai-logic/imagen-models-migration).',
+)
 final class ImagenImagePlacement {
   const ImagenImagePlacement._(this.x, this.y);
 

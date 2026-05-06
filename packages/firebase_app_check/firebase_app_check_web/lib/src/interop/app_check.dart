@@ -18,7 +18,24 @@ export 'app_check_interop.dart';
 AppCheck? getAppCheckInstance([App? app, WebProvider? provider]) {
   late app_check_interop.ReCaptchaProvider jsProvider;
 
-  if (provider is ReCaptchaV3Provider) {
+  if (provider is WebDebugProvider) {
+    // Set the debug token global before initializing App Check.
+    // The Firebase JS SDK reads this and creates a DebugProvider internally.
+    if (provider.debugToken != null) {
+      globalContext.setProperty(
+        'FIREBASE_APPCHECK_DEBUG_TOKEN'.toJS,
+        provider.debugToken!.toJS,
+      );
+    } else {
+      globalContext.setProperty(
+        'FIREBASE_APPCHECK_DEBUG_TOKEN'.toJS,
+        true.toJS,
+      );
+    }
+    // A provider is still required by initializeAppCheck, but the debug
+    // token global overrides it.
+    jsProvider = app_check_interop.ReCaptchaV3Provider('debug'.toJS);
+  } else if (provider is ReCaptchaV3Provider) {
     jsProvider = app_check_interop.ReCaptchaV3Provider(provider.siteKey.toJS);
   } else if (provider is ReCaptchaEnterpriseProvider) {
     jsProvider =

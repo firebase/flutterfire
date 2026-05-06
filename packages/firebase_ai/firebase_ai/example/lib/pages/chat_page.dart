@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_ai/firebase_ai.dart';
 import '../widgets/message_widget.dart';
@@ -50,19 +49,19 @@ class _ChatPageState extends State<ChatPage> {
   void _initializeChat() {
     final generationConfig = GenerationConfig(
       thinkingConfig: _enableThinking
-          ? ThinkingConfig.withThinkingLevel(
-              ThinkingLevel.high,
+          ? ThinkingConfig.withThinkingBudget(
+              null,
               includeThoughts: true,
-            )
+            ) // Using thinkingBudget since we are testing with gemini 2.5
           : null,
     );
     if (widget.useVertexBackend) {
-      _model = FirebaseAI.vertexAI(auth: FirebaseAuth.instance).generativeModel(
+      _model = FirebaseAI.vertexAI().generativeModel(
         model: 'gemini-2.5-flash',
         generationConfig: generationConfig,
       );
     } else {
-      _model = FirebaseAI.googleAI(auth: FirebaseAuth.instance).generativeModel(
+      _model = FirebaseAI.googleAI().generativeModel(
         model: 'gemini-2.5-flash',
         generationConfig: generationConfig,
       );
@@ -143,14 +142,29 @@ class _ChatPageState extends State<ChatPage> {
                     dimension: 15,
                   ),
                   if (!_loading)
-                    IconButton(
-                      onPressed: () async {
-                        await _sendChatMessage(_textController.text);
-                      },
-                      icon: Icon(
-                        Icons.send,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
+                    Row(
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            _sendChatMessage(_textController.text);
+                          },
+                          icon: Icon(
+                            Icons.send,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                          tooltip: 'Send',
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            _sendStreamingChatMessage(_textController.text);
+                          },
+                          icon: Icon(
+                            Icons.stream,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                          tooltip: 'Send Stream',
+                        ),
+                      ],
                     )
                   else
                     const CircularProgressIndicator(),
@@ -161,6 +175,55 @@ class _ChatPageState extends State<ChatPage> {
         ),
       ),
     );
+  }
+
+  Future<void> _sendStreamingChatMessage(String message) async {
+    setState(() {
+      _loading = true;
+    });
+
+    try {
+      _messages.add(MessageData(text: message, fromUser: true));
+      final responseStream = _chat?.sendMessageStream(
+        Content.text(message),
+      );
+
+      if (responseStream == null) {
+        _showError('No response from API.');
+        return;
+      }
+      final textBuffer = StringBuffer();
+      _messages.add(MessageData(text: textBuffer.toString(), fromUser: false));
+
+      await for (final response in responseStream) {
+        final thought = response.thoughtSummary;
+        if (thought != null) {
+          _messages.insert(
+            _messages.length - 1,
+            MessageData(text: thought, fromUser: false, isThought: true),
+          );
+        }
+        textBuffer.write(response.text ?? '');
+        setState(() {
+          _messages.last =
+              MessageData(text: textBuffer.toString(), fromUser: false);
+        });
+        _scrollDown();
+      }
+
+      if (textBuffer.isEmpty) {
+        _showError('No response from API.');
+        return;
+      }
+    } catch (e) {
+      _showError(e.toString());
+    } finally {
+      _textController.clear();
+      setState(() {
+        _loading = false;
+      });
+      _textFieldFocus.requestFocus();
+    }
   }
 
   Future<void> _sendChatMessage(String message) async {

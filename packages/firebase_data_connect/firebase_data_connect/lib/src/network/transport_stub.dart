@@ -50,6 +50,7 @@ class TransportStub implements DataConnectTransport {
   /// Stub for invoking a mutation.
   @override
   Future<ServerResponse> invokeMutation<Data, Variables>(
+    String operationId,
     String queryName,
     Deserializer<Data> deserializer,
     Serializer<Variables>? serializer,
@@ -60,9 +61,24 @@ class TransportStub implements DataConnectTransport {
     throw UnimplementedError();
   }
 
+  /// Stub for subscribing to a query.
+  @override
+  Stream<ServerResponse> invokeStreamQuery<Data, Variables>(
+    String operationId,
+    String queryName,
+    Deserializer<Data> deserializer,
+    Serializer<Variables>? serializer,
+    Variables? vars,
+    String? token,
+  ) {
+    // TODO: implement invokeStreamQuery
+    throw UnimplementedError();
+  }
+
   /// Stub for invoking a query.
   @override
   Future<ServerResponse> invokeQuery<Data, Variables>(
+    String operationId,
     String queryName,
     Deserializer<Data> deserializer,
     Serializer<Variables>? serialize,

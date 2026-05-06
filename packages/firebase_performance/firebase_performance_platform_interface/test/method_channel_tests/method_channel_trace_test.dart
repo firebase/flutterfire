@@ -166,5 +166,5 @@ void main() {
 }
 
 class TestMethodChannelTrace extends MethodChannelTrace {
-  TestMethodChannelTrace(name) : super(name);
+  TestMethodChannelTrace(String name) : super(name);
 }

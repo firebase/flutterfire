@@ -1,7 +1,7 @@
 name: e2e-web
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}-web
   cancel-in-progress: true
 
 on:
@@ -23,16 +23,23 @@ on:
       - '!**/example/integration_test/**'
       - '**/flutterfire_ui/**'
       - '**.md'
+  workflow_call:
+    inputs:
+      nightly_test_mode:
+        type: boolean
+        default: false
 
 jobs:
   web:
     runs-on: macos-latest
-    timeout-minutes: 15
+    timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 15 }}
     strategy:
       fail-fast: false
       matrix:
         working_directory:
           ['tests', 'packages/cloud_firestore/cloud_firestore/example']
+        exclude:
+          - working_directory: ${{ inputs.nightly_test_mode && 'packages/cloud_firestore/cloud_firestore/example' || 'none' }}
     steps:
       - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
       - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
@@ -49,7 +56,7 @@ jobs:
           cache: true
           cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
           pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
-      - uses: bluefireteam/melos-action@c7dcb921b23cc520cace360b95d02b37bf09cdaa
+      - uses: bluefireteam/melos-action@705015c3d2bc4ab94201ac24accb2bbe070cf533
         with:
           run-bootstrap: false
           melos-version: '5.3.0'
@@ -61,7 +68,7 @@ jobs:
           echo "FIREBASE_TOOLS_VERSION=$(npm firebase --version)" >> $GITHUB_ENV
       - name: Firebase Emulator Cache
         id: firebase-emulator-cache
-        uses: actions/cache/restore@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        uses: actions/cache/restore@668228422ae6a00e4ad889ee87cd7109ec5666a7
         continue-on-error: true
         with:
           # The firebase emulators are pure javascript and java, OS-independent
@@ -92,7 +99,7 @@ jobs:
         # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
         if: github.ref == 'refs/heads/main'
         continue-on-error: true
-        uses: actions/cache/save@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        uses: actions/cache/save@668228422ae6a00e4ad889ee87cd7109ec5666a7
         with:
           # The firebase emulators are pure javascript and java, OS-independent
           enableCrossOsArchive: true
@@ -119,7 +126,7 @@ jobs:
           cache: true
           cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
           pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
-      - uses: bluefireteam/melos-action@c7dcb921b23cc520cace360b95d02b37bf09cdaa
+      - uses: bluefireteam/melos-action@705015c3d2bc4ab94201ac24accb2bbe070cf533
         with:
           run-bootstrap: false
           melos-version: '5.3.0'
@@ -131,7 +138,7 @@ jobs:
           echo "FIREBASE_TOOLS_VERSION=$(npm firebase --version)" >> $GITHUB_ENV
       - name: Firebase Emulator Cache
         id: firebase-emulator-cache
-        uses: actions/cache/restore@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        uses: actions/cache/restore@668228422ae6a00e4ad889ee87cd7109ec5666a7
         continue-on-error: true
         with:
           # The firebase emulators are pure javascript and java, OS-independent
@@ -147,21 +154,26 @@ jobs:
         # Web devices are not supported for the `flutter test` command yet. As a
         # workaround we can use the `flutter drive` command. Tracking issue:
         # https://github.com/flutter/flutter/issues/66264
+        # Chrome debug service can fail with AppConnectionException. Retry once.
         run: |
           chromedriver --port=4444 --trace-buffer-size=100000 &
-          flutter drive --target=./integration_test/e2e_test.dart --driver=./test_driver/integration_test.dart -d chrome --dart-define=CI=true --dart-define=APP_CHECK_E2E=true | tee output.log
-          # We have to check the output for failed tests matching the string "[E]"
-          output=$(<output.log)
-          if [[ "$output" =~ \[E\] ]]; then
-          # You will see "All tests passed." in the logs even when tests failed.
-          echo "All tests did not pass. Please check the logs for more information."
-          exit 1
-          fi
+          run_tests() {
+            flutter drive --target=./integration_test/e2e_test.dart --driver=./test_driver/integration_test.dart -d chrome --dart-define=CI=true --dart-define=APP_CHECK_E2E=true | tee output.log
+            output=$(<output.log)
+            if [[ "$output" =~ \[E\] ]]; then
+              echo "All tests did not pass. Please check the logs for more information."
+              return 1
+            fi
+          }
+          run_tests || {
+            echo "First attempt failed. Retrying..."
+            run_tests
+          }
         shell: bash
       - name: Save Firestore Emulator Cache
         # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
         if: github.ref == 'refs/heads/main'
-        uses: actions/cache/save@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        uses: actions/cache/save@668228422ae6a00e4ad889ee87cd7109ec5666a7
         continue-on-error: true
         with:
           # The firebase emulators are pure javascript and java, OS-independent
@@ -172,12 +184,14 @@ jobs:
 
   web-wasm:
     runs-on: macos-latest
-    timeout-minutes: 15
+    timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 15 }}
     strategy:
       fail-fast: false
       matrix:
         working_directory:
           ['tests', 'packages/cloud_firestore/cloud_firestore/example']
+        exclude:
+          - working_directory: ${{ inputs.nightly_test_mode && 'packages/cloud_firestore/cloud_firestore/example' || 'none' }}
     steps:
       - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
       - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
@@ -194,7 +208,7 @@ jobs:
           cache: true
           cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
           pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
-      - uses: bluefireteam/melos-action@c7dcb921b23cc520cace360b95d02b37bf09cdaa
+      - uses: bluefireteam/melos-action@705015c3d2bc4ab94201ac24accb2bbe070cf533
         with:
           run-bootstrap: false
           melos-version: '5.3.0'
@@ -206,7 +220,7 @@ jobs:
           echo "FIREBASE_TOOLS_VERSION=$(npm firebase --version)" >> $GITHUB_ENV
       - name: Firebase Emulator Cache
         id: firebase-emulator-cache
-        uses: actions/cache/restore@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        uses: actions/cache/restore@668228422ae6a00e4ad889ee87cd7109ec5666a7
         continue-on-error: true
         with:
           # The firebase emulators are pure javascript and java, OS-independent
@@ -237,7 +251,7 @@ jobs:
       - name: Save Firestore Emulator Cache
         # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
         if: github.ref == 'refs/heads/main'
-        uses: actions/cache/save@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        uses: actions/cache/save@668228422ae6a00e4ad889ee87cd7109ec5666a7
         continue-on-error: true
         with:
           # The firebase emulators are pure javascript and java, OS-independent

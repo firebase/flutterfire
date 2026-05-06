@@ -172,12 +172,32 @@ ActionCodeInfo? convertWebActionCodeInfo(
   }
 
   return ActionCodeInfo(
-    operation: ActionCodeInfoOperation.passwordReset,
+    operation:
+        _convertWebActionCodeOperation(webActionCodeInfo.operation.toDart),
     data: ActionCodeInfoData(
       email: webActionCodeInfo.data.email?.toDart,
       previousEmail: webActionCodeInfo.data.previousEmail?.toDart,
     ),
   );
+}
+
+ActionCodeInfoOperation _convertWebActionCodeOperation(String operation) {
+  switch (operation) {
+    case 'EMAIL_SIGNIN':
+      return ActionCodeInfoOperation.emailSignIn;
+    case 'PASSWORD_RESET':
+      return ActionCodeInfoOperation.passwordReset;
+    case 'RECOVER_EMAIL':
+      return ActionCodeInfoOperation.recoverEmail;
+    case 'REVERT_SECOND_FACTOR_ADDITION':
+      return ActionCodeInfoOperation.revertSecondFactorAddition;
+    case 'VERIFY_AND_CHANGE_EMAIL':
+      return ActionCodeInfoOperation.verifyAndChangeEmail;
+    case 'VERIFY_EMAIL':
+      return ActionCodeInfoOperation.verifyEmail;
+    default:
+      return ActionCodeInfoOperation.unknown;
+  }
 }
 
 /// Converts a [auth_interop.AdditionalUserInfo] into a [AdditionalUserInfo].
@@ -201,7 +221,7 @@ IdTokenResult convertWebIdTokenResult(
   auth_interop.IdTokenResult webIdTokenResult,
 ) {
   return IdTokenResult(
-    PigeonIdTokenResult(
+    InternalIdTokenResult(
       claims: webIdTokenResult.claims,
       token: webIdTokenResult.token,
       authTimestamp: webIdTokenResult.authTime.millisecondsSinceEpoch,

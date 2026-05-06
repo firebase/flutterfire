@@ -60,6 +60,10 @@ public class FirebaseRemoteConfigPlugin: NSObject, FlutterPlugin, FlutterStreamH
   }
 
   public func didReinitializeFirebaseCore(_ completion: @escaping () -> Void) {
+    for listener in listenersMap.values {
+      listener.remove()
+    }
+    listenersMap.removeAll()
     completion()
   }
 

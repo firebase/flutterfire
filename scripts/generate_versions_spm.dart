@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// ignore_for_file: avoid_print
+
 import 'package:melos/melos.dart' as melos;
 import 'package:glob/glob.dart';
 import 'dart:io';
@@ -22,20 +24,16 @@ void main(List<String> args) async {
 
   final firebaseiOSVersion = getFirebaseiOSVersion(firebaseCoreIosVersionFile);
 
-  for (final package in workspace.filteredPackages.values) {
-    final packageSwiftFile =
-        File('${package.path}/ios/${package.name}/Package.swift');
-
-    // only want to write this for plugins that support Swift
-    // ignore core as it already has canonical firebase_sdk_version.rb
-    if (packageSwiftFile.existsSync() && package.name != 'firebase_core') {
-      final versionFile =
-          File('${package.path}/ios/generated_firebase_sdk_version.txt');
-      versionFile.writeAsStringSync(firebaseiOSVersion);
-    }
-  }
-  // Update the versions in root Package.swift
-  updateVersionsPackageSwift(firebaseiOSVersion);
+  // Update hard-coded versions in all plugin Package.swift files
+  final firebaseCoreVersion = loadYaml(
+    File('${firebaseCorePackage.path}/pubspec.yaml').readAsStringSync(),
+  )['version']
+      .toString();
+  updatePluginPackageSwiftVersions(
+    workspace,
+    firebaseiOSVersion,
+    firebaseCoreVersion,
+  );
   // Update plugin version in Constants.swift for pure Swift plugins. Unable to pass macros in pure Swift implementations
   updateLibraryVersionPureSwiftPlugins();
 }
@@ -54,7 +52,6 @@ Future<melos.MelosWorkspace> getMelosWorkspace() async {
     logger: melos.MelosLogger(logging.Logger.standard()),
     packageFilters: packageFilters,
   );
-
   return workspace;
 }
 
@@ -75,63 +72,65 @@ String getFirebaseiOSVersion(File firebaseCoreIosSdkVersion) {
   }
 }
 
-void updateVersionsPackageSwift(String firebaseiOSVersion) {
-  // Define the path to the pubspec.yaml file
-  const pubspecPath = 'packages/firebase_core/firebase_core/pubspec.yaml';
+void updatePluginPackageSwiftVersions(
+  melos.MelosWorkspace workspace,
+  String firebaseiOSVersion,
+  String firebaseCoreVersion,
+) {
+  for (final package in workspace.filteredPackages.values) {
+    for (final platform in ['ios', 'macos']) {
+      final packageSwiftFile =
+          File('${package.path}/$platform/${package.name}/Package.swift');
 
-  // Read the pubspec.yaml file
-  final pubspecFile = File(pubspecPath);
-  if (!pubspecFile.existsSync()) {
-    print('Error: pubspec.yaml file not found at $pubspecPath');
-    return;
+      if (!packageSwiftFile.existsSync()) continue;
+
+      var content = packageSwiftFile.readAsStringSync();
+
+      // Update firebase_sdk_version
+      content = content.replaceAll(
+        RegExp('let firebase_sdk_version: Version = "[^"]+"'),
+        'let firebase_sdk_version: Version = "$firebaseiOSVersion"',
+      );
+
+      // Update shared_spm_version
+      content = content.replaceAll(
+        RegExp('let shared_spm_version: Version = "[^"]+"'),
+        'let shared_spm_version: Version = "$firebaseCoreVersion-firebase-core-swift"',
+      );
+
+      // Update library_version or library_version_string from pubspec version
+      final pubspecFile = File('${package.path}/pubspec.yaml');
+      if (pubspecFile.existsSync()) {
+        final pubspecYaml = loadYaml(pubspecFile.readAsStringSync());
+        final version = pubspecYaml['version']?.toString();
+        if (version != null) {
+          final spmVersion = version.replaceAll('+', '-');
+          content = content.replaceAll(
+            RegExp('let library_version_string = "[^"]+"'),
+            'let library_version_string = "$spmVersion"',
+          );
+          content = content.replaceAll(
+            RegExp('let library_version = "[^"]+"'),
+            'let library_version = "$spmVersion"',
+          );
+        }
+      }
+
+      packageSwiftFile.writeAsStringSync(content);
+      print('Updated ${package.name}/$platform/Package.swift');
+    }
   }
-
-  // Parse the YAML content
-  final pubspecContent = pubspecFile.readAsStringSync();
-  final pubspecYaml = loadYaml(pubspecContent);
-
-  // Extract the version
-  final version = pubspecYaml['version'];
-  if (version == null) {
-    print('Error: Version not found in pubspec.yaml');
-    return;
-  }
-
-  // Define the path to the Package.swift file
-  const packageSwiftPath = 'Package.swift';
-
-  // Read the Package.swift file
-  final packageSwiftFile = File(packageSwiftPath);
-  if (!packageSwiftFile.existsSync()) {
-    print('Error: Package.swift file not found at $packageSwiftPath');
-    return;
-  }
-
-  // Read the content of Package.swift
-  final packageSwiftContent = packageSwiftFile.readAsStringSync();
-
-  // Update the library_version_string with the new version
-  final updatedFirebaseCoreVersion = packageSwiftContent.replaceAll(
-    RegExp('let firebase_core_version: String = "[^"]+"'),
-    'let firebase_core_version: String = "$version"',
-  );
-
-  final updatedFirebaseIosVersion = updatedFirebaseCoreVersion.replaceAll(
-    RegExp('let firebase_ios_sdk_version: String = "[^"]+"'),
-    'let firebase_ios_sdk_version: String = "$firebaseiOSVersion"',
-  );
-
-  // Write the updated content back to Package.swift
-  packageSwiftFile.writeAsStringSync(updatedFirebaseIosVersion);
-
-  print(
-    'Updated Package.swift with firebase_core version: $version & firebase-ios-sdk version: $firebaseiOSVersion',
-  );
 }
 
 void updateLibraryVersionPureSwiftPlugins() {
   // Packages that require updating library versions
-  const packages = ['firebase_ml_model_downloader', 'firebase_app_installations', 'cloud_functions'];
+  const packages = [
+    'firebase_ml_model_downloader',
+    'firebase_app_installations',
+    'cloud_functions',
+    'firebase_remote_config',
+    'firebase_app_check',
+  ];
 
   for (final package in packages) {
     final pubspecPath = 'packages/$package/$package/pubspec.yaml';

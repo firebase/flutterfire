@@ -44,7 +44,11 @@ def getRootProjectExtOrCoreProperty(name, firebaseCoreProject) {
     return rootProject.ext.get('FlutterFire').get(name)
 }
 
-apply plugin: 'kotlin-android'
+// AGP 9+ has built-in Kotlin support; older versions need the plugin explicitly.
+def agpMajor = com.android.Version.ANDROID_GRADLE_PLUGIN_VERSION.tokenize('.')[0] as int
+if (agpMajor < 9) {
+    apply plugin: 'kotlin-android'
+}
 
 android {
     // Conditional for compatibility with AGP <4.2.
@@ -59,8 +63,10 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    kotlinOptions {
-        jvmTarget = project.ext.javaVersion
+    if (agpMajor < 9) {
+        kotlinOptions {
+            jvmTarget = project.ext.javaVersion
+        }
     }
 
     compileOptions {

@@ -64,6 +64,30 @@ void main() {
         mock.app(testAppName),
       ]);
     });
+
+    test('.registerService() and .getService()', () {
+      FirebaseApp app = Firebase.app(testAppName);
+
+      final testService = TestService();
+      app.registerService<TestService>(testService);
+
+      expect(app.getService<TestService>(), testService);
+    });
+
+    test('.getService() returns null when registry is null', () {
+      String nullAppName = 'nullApp';
+      final FirebaseAppPlatform nullPlatformApp =
+          FirebaseAppPlatform(nullAppName, testOptions);
+      when(mock.app(nullAppName)).thenReturn(nullPlatformApp);
+
+      FirebaseApp app = Firebase.app(nullAppName);
+      expect(app.getService<TestService>(), isNull);
+    });
+
+    test('.getService() returns null when service is not registered', () {
+      FirebaseApp app = Firebase.app(testAppName);
+      expect(app.getService<AnotherTestService>(), isNull);
+    });
   });
 
   test('.initializeApp() with demoProjectId', () async {
@@ -152,3 +176,7 @@ class MockFirebaseCore extends Mock
 
 // ignore: avoid_implementing_value_types
 class FakeFirebaseAppPlatform extends Fake implements FirebaseAppPlatform {}
+
+class TestService implements FirebaseService {}
+
+class AnotherTestService implements FirebaseService {}
