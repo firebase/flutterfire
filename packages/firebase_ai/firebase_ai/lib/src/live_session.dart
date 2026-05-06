@@ -47,6 +47,17 @@ class LiveSession {
     _listenToWebSocket();
   }
 
+  /// Internal constructor for testing.
+  @visibleForTesting
+  factory LiveSession.forTesting(WebSocketChannel ws) {
+    return LiveSession._(
+      ws,
+      uri: '',
+      headers: {},
+      modelString: '',
+    );
+  }
+
   /// Establishes a connection to a live generation service.
   ///
   /// This function handles the WebSocket connection setup and returns an [LiveSession]
@@ -142,7 +153,8 @@ class LiveSession {
     _wsSubscription = _ws.stream.listen(
       (message) {
         try {
-          var jsonString = utf8.decode(message);
+          final String jsonString =
+              message is String ? message : utf8.decode(message as List<int>);
           var response = json.decode(jsonString);
 
           if (!_messageController.isClosed) {
@@ -333,16 +345,18 @@ class LiveSession {
     try {
       await _wsSubscription.cancel().timeout(const Duration(seconds: 1),
           onTimeout: () {
-        log('live_session.close: cancel timed out');
+        log('live_session.close: cancel timed out',
+            error: TimeoutException('Cancel timed out'));
       });
       if (!_messageController.isClosed) {
         await _messageController.close();
       }
       await _ws.sink.close().timeout(const Duration(seconds: 1), onTimeout: () {
-        log('live_session.close: sink close timed out');
+        log('live_session.close: sink close timed out',
+            error: TimeoutException('Sink close timed out'));
       });
     } catch (e) {
-      log('live_session.close: error during close: $e');
+      log('live_session.close: error during close', error: e);
     }
   }
 

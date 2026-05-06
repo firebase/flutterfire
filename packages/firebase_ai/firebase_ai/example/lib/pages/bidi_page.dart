@@ -516,7 +516,7 @@ class BidiSessionController extends ChangeNotifier {
 
         // Mock Tool Execution
         final functionResult = {
-          'colorTemprature':
+          'colorTemperature':
               color, // original had a typo, keeping to preserve functionality intent
           'brightness': brightness,
         };
