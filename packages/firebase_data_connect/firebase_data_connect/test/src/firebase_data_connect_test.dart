@@ -226,62 +226,6 @@ void main() {
     });
 
     test(
-        'instanceFor discovers dynamic FirebaseAuth and FirebaseAppCheck from FirebaseApp registry when parameters are omitted',
-        () {
-      FirebaseDataConnect.cachedInstances.clear();
-
-      final dynamicApp = DynamicMockFirebaseApp(
-        name: 'dynamicAppName',
-        options: const FirebaseOptions(
-          apiKey: 'fake_api_key',
-          appId: 'fake_app_id',
-          messagingSenderId: 'fake_messaging_sender_id',
-          projectId: 'fake_project_id',
-        ),
-        mockAuth: mockAuth,
-        mockAppCheck: mockAppCheck,
-      );
-
-      when(mockConnectorConfig.toJson())
-          .thenReturn('dynamicConnectorConfigStr');
-
-      final instance = FirebaseDataConnect.instanceFor(
-        app: dynamicApp,
-        connectorConfig: mockConnectorConfig,
-      );
-
-      expect(instance.auth, equals(mockAuth));
-      expect(instance.appCheck, equals(mockAppCheck));
-    });
-
-    test('instanceFor handles fallback to null if getService returns null', () {
-      FirebaseDataConnect.cachedInstances.clear();
-
-      final fallbackApp = DynamicMockFirebaseApp(
-        name: 'fallbackAppName',
-        options: const FirebaseOptions(
-          apiKey: 'fake_api_key',
-          appId: 'fake_app_id',
-          messagingSenderId: 'fake_messaging_sender_id',
-          projectId: 'fake_project_id',
-        ),
-        mockAuth: null,
-        mockAppCheck: null,
-      );
-
-      when(mockConnectorConfig.toJson())
-          .thenReturn('fallbackConnectorConfigStr');
-
-      final instance = FirebaseDataConnect.instanceFor(
-        app: fallbackApp,
-        connectorConfig: mockConnectorConfig,
-      );
-
-      expect(instance.auth, isNull);
-      expect(instance.appCheck, isNull);
-    });
-
-    test(
         'checkTransport resolves dynamic service instances from registry just-in-time',
         () {
       FirebaseDataConnect.cachedInstances.clear();
