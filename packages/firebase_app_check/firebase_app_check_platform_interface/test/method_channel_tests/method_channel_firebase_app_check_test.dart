@@ -5,6 +5,7 @@
 import 'package:firebase_app_check_platform_interface/firebase_app_check_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter/services.dart';
 
 import '../mock.dart';
 
@@ -42,6 +43,33 @@ void main() {
         final appCheck = MethodChannelFirebaseAppCheck.instance;
         // ignore: invalid_use_of_protected_member
         expect(appCheck.setInitialValues(), appCheck);
+      });
+    });
+
+    group('activate()', () {
+      test('passes recaptchaEnterpriseSiteKey on Android', () async {
+        final appCheck = MethodChannelFirebaseAppCheck(app: Firebase.app());
+        
+        final List<dynamic> log = <dynamic>[];
+        
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMessageHandler(
+          'dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.activate',
+          (message) async {
+            final list = const StandardMessageCodec().decodeMessage(message) as List<dynamic>;
+            log.add(list);
+            return const StandardMessageCodec().encodeMessage([null]); // Return success
+          },
+        );
+
+        await appCheck.activate(
+          providerAndroid: const AndroidReCaptchaEnterpriseProvider(siteKey: 'my-site-key'),
+        );
+
+        expect(log.length, 1);
+        expect(log[0][0], '[DEFAULT]'); // appName
+        expect(log[0][1], 'recaptchaEnterprise'); // androidProvider
+        expect(log[0][4], 'my-site-key'); // recaptchaEnterpriseSiteKey
       });
     });
   });
