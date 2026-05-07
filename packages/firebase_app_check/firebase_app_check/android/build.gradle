@@ -80,7 +80,7 @@ android {
     implementation platform("com.google.firebase:firebase-bom:${getRootProjectExtOrCoreProperty("FirebaseSDKVersion", firebaseCoreProject)}")
     implementation 'com.google.firebase:firebase-appcheck-debug'
     implementation 'com.google.firebase:firebase-appcheck-playintegrity'
-    implementation 'com.google.firebase:firebase-appcheck-recaptchaenterprise'
+    implementation 'com.google.firebase:firebase-appcheck-recaptchaenterprise:16.0.0-beta01'
     implementation 'androidx.annotation:annotation:1.7.0'
   }
 }
