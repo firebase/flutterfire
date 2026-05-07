@@ -33,7 +33,11 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
   FirebaseDataConnect(
       {required this.app,
       required this.connectorConfig,
+      @Deprecated(
+          'Passing an explicit instance is deprecated, internal handling is now automatic.')
       this.auth,
+      @Deprecated(
+          'Passing an explicit instance is deprecated, internal handling is now automatic.')
       this.appCheck,
       CallerSDKType? sdkType,
       this.cacheSettings})
@@ -94,20 +98,23 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
     }
     transportOptions ??=
         TransportOptions('firebasedataconnect.googleapis.com', null, true);
+    final effectiveAuth = auth ?? app.getService<FirebaseAuth>();
+    final effectiveAppCheck = appCheck ?? app.getService<FirebaseAppCheck>();
+
     final rest = RestTransport(
       transportOptions!,
       options,
       app.options.appId,
       _sdkType,
-      appCheck,
+      effectiveAppCheck,
     );
     final ws = WebSocketTransport(
       transportOptions!,
       options,
       app.options.appId,
       _sdkType,
-      appCheck,
-      auth,
+      effectiveAppCheck,
+      effectiveAuth,
     );
     transport = _RoutingTransport(rest, ws);
   }
@@ -198,14 +205,18 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
   /// If pass in [appCheck], request session will get protected from abusing.
   static FirebaseDataConnect instanceFor(
       {FirebaseApp? app,
+      @Deprecated(
+          'Passing an explicit instance is deprecated, internal handling is now automatic.')
       FirebaseAuth? auth,
+      @Deprecated(
+          'Passing an explicit instance is deprecated, internal handling is now automatic.')
       FirebaseAppCheck? appCheck,
       CallerSDKType? sdkType,
       required ConnectorConfig connectorConfig,
       CacheSettings? cacheSettings}) {
     app ??= Firebase.app();
-    auth ??= FirebaseAuth.instanceFor(app: app);
-    appCheck ??= FirebaseAppCheck.instanceFor(app: app);
+    auth ??= app.getService<FirebaseAuth>();
+    appCheck ??= app.getService<FirebaseAppCheck>();
 
     if (cachedInstances[app.name] != null &&
         cachedInstances[app.name]![connectorConfig.toJson()] != null) {
