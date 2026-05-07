@@ -215,8 +215,8 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
       required ConnectorConfig connectorConfig,
       CacheSettings? cacheSettings}) {
     app ??= Firebase.app();
-    auth ??= app.getService<FirebaseAuth>();
-    appCheck ??= app.getService<FirebaseAppCheck>();
+    auth ??= FirebaseAuth.instanceFor(app: app);
+    appCheck ??= FirebaseAppCheck.instanceFor(app: app);
 
     if (cachedInstances[app.name] != null &&
         cachedInstances[app.name]![connectorConfig.toJson()] != null) {
