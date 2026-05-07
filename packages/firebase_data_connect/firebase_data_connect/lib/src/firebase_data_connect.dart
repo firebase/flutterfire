@@ -98,23 +98,23 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
     }
     transportOptions ??=
         TransportOptions('firebasedataconnect.googleapis.com', null, true);
-    final effectiveAuth = auth ?? app.getService<FirebaseAuth>();
-    final effectiveAppCheck = appCheck ?? app.getService<FirebaseAppCheck>();
+    auth ??= app.getService<FirebaseAuth>();
+    appCheck ??= app.getService<FirebaseAppCheck>();
 
     final rest = RestTransport(
       transportOptions!,
       options,
       app.options.appId,
       _sdkType,
-      effectiveAppCheck,
+      appCheck,
     );
     final ws = WebSocketTransport(
       transportOptions!,
       options,
       app.options.appId,
       _sdkType,
-      effectiveAppCheck,
-      effectiveAuth,
+      appCheck,
+      auth,
     );
     transport = _RoutingTransport(rest, ws);
   }
