@@ -104,6 +104,11 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
         debugToken = providerWindows.debugToken;
       }
 
+      String? recaptchaEnterpriseSiteKey;
+      if (providerAndroid is AndroidReCaptchaEnterpriseProvider) {
+        recaptchaEnterpriseSiteKey = providerAndroid.siteKey;
+      }
+
       await _pigeonApi.activate(
         app.name,
         defaultTargetPlatform == TargetPlatform.android || kDebugMode
@@ -121,6 +126,7 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
               )
             : null,
         debugToken,
+        recaptchaEnterpriseSiteKey,
       );
     } on PlatformException catch (e, s) {
       convertPlatformException(e, s);
