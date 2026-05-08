@@ -12,14 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:flutter_test/flutter_test.dart';
-import 'package:firebase_ai/src/hybrid_generative_model.dart';
+// ignore_for_file: avoid_redundant_argument_values
+
+import 'dart:async';
+
 import 'package:firebase_ai/src/api.dart';
-import 'package:firebase_ai/src/content.dart';
-import 'package:firebase_ai/src/generated/local_ai.g.dart';
 import 'package:firebase_ai/src/base_model.dart';
 import 'package:firebase_ai/src/client.dart';
+import 'package:firebase_ai/src/content.dart';
+import 'package:firebase_ai/src/generated/local_ai.g.dart';
+import 'package:firebase_ai/src/hybrid_generative_model.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 class MockApiClient implements ApiClient {
   bool shouldFail = false;
@@ -28,8 +32,6 @@ class MockApiClient implements ApiClient {
   @override
   Future<Map<String, Object?>> makeRequest(Uri uri, Map<String, Object?> body) async {
     if (shouldFail) throw Exception('Cloud Failed');
-    // Return a minimal valid JSON response that parseGenerateContentResponse can handle.
-    // We need to mock the response structure.
     return {
       'candidates': [
         {
@@ -78,14 +80,20 @@ class MockLocalApi extends LocalAIApi {
 
   @override
   Future<void> warmup() async {}
+  
+  @override
+  Future<void> startStreaming(String prompt) async {
+    if (shouldFail) throw Exception('Local Failed');
+  }
 }
 
+// ignore: avoid_implementing_value_types
 class MockFirebaseApp implements FirebaseApp {
   @override
   String get name => '[DEFAULT]';
 
   @override
-  FirebaseOptions get options => FirebaseOptions(
+  FirebaseOptions get options => const FirebaseOptions(
         apiKey: 'dummy_api_key',
         appId: 'dummy_app_id',
         messagingSenderId: 'dummy_sender_id',
@@ -185,7 +193,7 @@ void main() {
 
     final mockLocalStream = Stream.fromIterable([
       GenerateContentResponse([
-        Candidate(Content('model', [TextPart('Local Response')]), null, null, null, null)
+        Candidate(Content('model', [const TextPart('Local Response')]), null, null, null, null)
       ], null)
     ]);
 
@@ -203,14 +211,14 @@ void main() {
 }
 
 class TestHybridGenerativeModel extends HybridGenerativeModel {
-  Stream<GenerateContentResponse>? mockLocalStream;
-
   TestHybridGenerativeModel({
     required super.cloudModel,
     required super.localApi,
     super.mode,
     this.mockLocalStream,
   });
+
+  Stream<GenerateContentResponse>? mockLocalStream;
 
   @override
   Stream<GenerateContentResponse> generateLocalStream(Iterable<Content> prompt) {

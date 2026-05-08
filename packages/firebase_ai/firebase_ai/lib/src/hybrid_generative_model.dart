@@ -13,31 +13,46 @@
 // limitations under the License.
 
 import 'dart:async';
+
 import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
+
 import 'api.dart';
-import 'content.dart';
 import 'base_model.dart';
+import 'content.dart';
 import 'generated/local_ai.g.dart';
 
+/// Modes for hybrid inference.
 enum InferenceMode {
+  /// Prefer cloud, fallback to local on failure.
   preferCloud,
+  /// Prefer local, fallback to cloud on failure.
   preferLocal,
+  /// Only use local model.
   onlyLocal,
+  /// Only use cloud model.
   onlyCloud,
 }
 
+/// A generative model that supports hybrid inference (local and cloud).
 class HybridGenerativeModel {
-  final GenerativeModel cloudModel;
-  final LocalAIApi localApi;
-  final InferenceMode mode;
-
+  /// Creates a [HybridGenerativeModel].
   HybridGenerativeModel({
     required this.cloudModel,
     required this.localApi,
     this.mode = InferenceMode.preferCloud,
   });
 
+  /// The cloud model to use.
+  final GenerativeModel cloudModel;
+  
+  /// The local AI API bridge.
+  final LocalAIApi localApi;
+  
+  /// The inference mode.
+  final InferenceMode mode;
+
+  /// Generates content responding to [prompt].
   Future<GenerateContentResponse> generateContent(Iterable<Content> prompt) async {
     switch (mode) {
       case InferenceMode.onlyCloud:
@@ -80,10 +95,12 @@ class HybridGenerativeModel {
     ], null); // promptFeedback
   }
 
+  /// Warms up the local model (e.g., triggers download on Web).
   Future<void> warmup() async {
     await localApi.warmup();
   }
 
+  /// Generates a stream of content responding to [prompt].
   Stream<GenerateContentResponse> generateContentStream(Iterable<Content> prompt) {
     switch (mode) {
       case InferenceMode.onlyCloud:
@@ -109,7 +126,7 @@ class HybridGenerativeModel {
                 );
               } else {
                 controller.addError(e);
-                controller.close();
+                unawaited(controller.close());
               }
             },
             onDone: controller.close,
@@ -124,7 +141,7 @@ class HybridGenerativeModel {
               );
             } else {
               controller.addError(e);
-              controller.close();
+              unawaited(controller.close());
             }
           });
         }
@@ -151,7 +168,7 @@ class HybridGenerativeModel {
                   );
                 } else {
                   controller.addError(e);
-                  controller.close();
+                  unawaited(controller.close());
                 }
               },
               onDone: controller.close,
@@ -169,24 +186,33 @@ class HybridGenerativeModel {
     }
   }
 
+  /// Generates a stream of content from the local model.
   @visibleForTesting
   Stream<GenerateContentResponse> generateLocalStream(Iterable<Content> prompt) {
     final promptString = prompt.map((c) => c.parts.whereType<TextPart>().map((p) => p.text).join()).join();
     
-    localApi.startStreaming(promptString);
+    final controller = StreamController<GenerateContentResponse>();
     
-    final channel = EventChannel('dev.flutter.pigeon.firebase_ai.LocalAIApi.stream');
-    return channel.receiveBroadcastStream().map((event) {
-      final responseText = event as String;
-      return GenerateContentResponse([
-        Candidate(
-          Content('model', [TextPart(responseText)]),
-          null,
-          null,
-          null,
-          null,
-        )
-      ], null);
+    localApi.startStreaming(promptString).then((_) {
+      const channel = EventChannel('dev.flutter.pigeon.firebase_ai.LocalAIApi.stream');
+      channel.receiveBroadcastStream().map((event) {
+        final responseText = event as String;
+        // ignore: prefer_const_constructors
+        return GenerateContentResponse([
+          Candidate(
+            Content('model', [TextPart(responseText)]),
+            null,
+            null,
+            null,
+            null,
+          )
+        ], null);
+      }).listen(controller.add, onError: controller.addError, onDone: controller.close);
+    }).catchError((e) {
+      controller.addError(e);
+      unawaited(controller.close());
     });
+    
+    return controller.stream;
   }
 }
