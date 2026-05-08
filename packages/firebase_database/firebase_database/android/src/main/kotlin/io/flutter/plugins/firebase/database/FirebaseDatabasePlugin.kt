@@ -516,7 +516,9 @@ class FirebaseDatabasePlugin :
   override fun setPersistenceEnabled(app: DatabasePigeonFirebaseApp, enabled: Boolean, callback: (KotlinResult<Unit>) -> Unit) {
     try {
       val database = getDatabaseFromPigeonApp(app)
-      database.setPersistenceEnabled(enabled)
+      if (app.settings.persistenceEnabled == null) {
+        database.setPersistenceEnabled(enabled)
+      }
       callback(KotlinResult.success(Unit))
     } catch (e: Exception) {
       callback(KotlinResult.failure(e))
@@ -526,7 +528,9 @@ class FirebaseDatabasePlugin :
   override fun setPersistenceCacheSizeBytes(app: DatabasePigeonFirebaseApp, cacheSize: Long, callback: (KotlinResult<Unit>) -> Unit) {
     try {
       val database = getDatabaseFromPigeonApp(app)
-      database.setPersistenceCacheSizeBytes(cacheSize)
+      if (app.settings.cacheSizeBytes == null) {
+        database.setPersistenceCacheSizeBytes(cacheSize)
+      }
       callback(KotlinResult.success(Unit))
     } catch (e: Exception) {
       callback(KotlinResult.failure(e))

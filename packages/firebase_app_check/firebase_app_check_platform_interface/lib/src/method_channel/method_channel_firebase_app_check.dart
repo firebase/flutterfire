@@ -92,18 +92,6 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
     WindowsAppCheckProvider? providerWindows,
   }) async {
     try {
-      String? debugToken;
-      if (providerAndroid is AndroidDebugProvider &&
-          providerAndroid.debugToken != null) {
-        debugToken = providerAndroid.debugToken;
-      } else if (providerApple is AppleDebugProvider &&
-          providerApple.debugToken != null) {
-        debugToken = providerApple.debugToken;
-      } else if (providerWindows is WindowsDebugProvider &&
-          providerWindows.debugToken != null) {
-        debugToken = providerWindows.debugToken;
-      }
-
       await _pigeonApi.activate(
         app.name,
         defaultTargetPlatform == TargetPlatform.android || kDebugMode
@@ -120,7 +108,11 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
                 newProvider: providerApple,
               )
             : null,
-        debugToken,
+        _getDebugToken(
+          providerAndroid: providerAndroid,
+          providerApple: providerApple,
+          providerWindows: providerWindows,
+        ),
       );
     } on PlatformException catch (e, s) {
       convertPlatformException(e, s);
@@ -162,5 +154,30 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
     } on PlatformException catch (e, s) {
       convertPlatformException(e, s);
     }
+  }
+}
+
+String? _getDebugToken({
+  AndroidAppCheckProvider? providerAndroid,
+  AppleAppCheckProvider? providerApple,
+  WindowsAppCheckProvider? providerWindows,
+}) {
+  switch (defaultTargetPlatform) {
+    case TargetPlatform.android:
+      return providerAndroid is AndroidDebugProvider
+          ? providerAndroid.debugToken
+          : null;
+    case TargetPlatform.iOS:
+    case TargetPlatform.macOS:
+      return providerApple is AppleDebugProvider
+          ? providerApple.debugToken
+          : null;
+    case TargetPlatform.windows:
+      return providerWindows is WindowsDebugProvider
+          ? providerWindows.debugToken
+          : null;
+    case TargetPlatform.fuchsia:
+    case TargetPlatform.linux:
+      return null;
   }
 }
