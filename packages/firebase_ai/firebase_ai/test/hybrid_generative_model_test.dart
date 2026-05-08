@@ -1,0 +1,125 @@
+import 'package:flutter_test/flutter_test.dart';
+import 'package:firebase_ai/src/hybrid_generative_model.dart';
+import 'package:firebase_ai/src/api.dart';
+import 'package:firebase_ai/src/content.dart';
+import 'package:firebase_ai/src/generated/local_ai.g.dart';
+import 'package:firebase_ai/src/base_model.dart';
+import 'package:firebase_ai/src/client.dart';
+import 'package:firebase_core/firebase_core.dart';
+
+class MockApiClient implements ApiClient {
+  bool shouldFail = false;
+  String responseText = 'Cloud Response';
+
+  @override
+  Future<Map<String, Object?>> makeRequest(Uri uri, Map<String, Object?> body) async {
+    if (shouldFail) throw Exception('Cloud Failed');
+    // Return a minimal valid JSON response that parseGenerateContentResponse can handle.
+    // We need to mock the response structure.
+    return {
+      'candidates': [
+        {
+          'content': {
+            'parts': [
+              {'text': responseText}
+            ]
+          }
+        }
+      ]
+    };
+  }
+
+  @override
+  Stream<Map<String, Object?>> streamRequest(Uri uri, Map<String, Object?> body) {
+    throw UnimplementedError();
+  }
+}
+
+class MockLocalApi extends LocalAIApi {
+  bool available = true;
+  bool shouldFail = false;
+  String responseText = 'Local Response';
+
+  @override
+  Future<bool> isAvailable() async => available;
+
+  @override
+  Future<String> generateContent(String prompt) async {
+    if (shouldFail) throw Exception('Local Failed');
+    return responseText;
+  }
+
+  @override
+  Future<void> warmup() async {}
+}
+
+class MockFirebaseApp implements FirebaseApp {
+  @override
+  String get name => '[DEFAULT]';
+
+  @override
+  FirebaseOptions get options => FirebaseOptions(
+        apiKey: 'dummy_api_key',
+        appId: 'dummy_app_id',
+        messagingSenderId: 'dummy_sender_id',
+        projectId: 'dummy_project_id',
+      );
+      
+  @override
+  bool get isAutomaticDataCollectionEnabled => false;
+
+  @override
+  Future<void> delete() async {}
+
+  @override
+  Future<void> setAutomaticDataCollectionEnabled(bool enabled) async {}
+
+  @override
+  Future<void> setAutomaticResourceManagementEnabled(bool enabled) async {}
+
+  @override
+  T? getService<T extends FirebaseService>() => null;
+
+  @override
+  void registerService<T extends FirebaseService>(T service) {}
+}
+
+void main() {
+  test('preferCloud succeeds on cloud', () async {
+    final apiClient = MockApiClient();
+    final local = MockLocalApi();
+    final app = MockFirebaseApp();
+    
+    final cloud = createModelWithClient(
+      app: app,
+      location: 'us-central1',
+      model: 'gemini-pro',
+      client: apiClient,
+      useVertexBackend: false,
+    );
+
+    final model = HybridGenerativeModel(cloudModel: cloud, localApi: local, mode: InferenceMode.preferCloud);
+
+    final response = await model.generateContent([Content.text('hello')]);
+    expect(response.text, 'Cloud Response');
+  });
+
+  test('preferCloud falls back to local on cloud failure', () async {
+    final apiClient = MockApiClient()..shouldFail = true;
+    final local = MockLocalApi();
+    final app = MockFirebaseApp();
+    
+    final cloud = createModelWithClient(
+      app: app,
+      location: 'us-central1',
+      model: 'gemini-pro',
+      client: apiClient,
+      useVertexBackend: false,
+    );
+
+    final model = HybridGenerativeModel(cloudModel: cloud, localApi: local, mode: InferenceMode.preferCloud);
+
+    final response = await model.generateContent([Content.text('hello')]);
+    expect(response.text, 'Local Response');
+  });
+}
