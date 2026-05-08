@@ -308,6 +308,7 @@ class WebSocketTransport implements DataConnectTransport {
 
   void _scheduleReconnect() {
     if (_isReconnecting || _isExpectedDisconnect) return;
+    if (_streamListeners.isEmpty && _unaryListeners.isEmpty) return;
     _isReconnecting = true;
 
     if (_reconnectAttempts >= _maxReconnectAttempts) {
