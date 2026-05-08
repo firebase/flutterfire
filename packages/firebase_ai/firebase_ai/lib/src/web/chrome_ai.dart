@@ -31,6 +31,27 @@ extension LanguageModelExtension on JSObject {
 extension ModelInstanceExtension on JSObject {
   @JS('prompt')
   external JSPromise<JSString> prompt(JSString input);
+
+  @JS('promptStreaming')
+  external JSObject promptStreaming(JSString input);
+}
+
+extension ReadableStreamExtension on JSObject {
+  @JS('getReader')
+  external JSObject getReader();
+}
+
+extension ReadableStreamDefaultReaderExtension on JSObject {
+  @JS('read')
+  external JSPromise<JSObject> read();
+}
+
+extension ReadableStreamDefaultReadResultExtension on JSObject {
+  @JS('done')
+  external bool get done;
+
+  @JS('value')
+  external JSString get value;
 }
 
 class ChromeAI {
@@ -53,5 +74,35 @@ class ChromeAI {
     }
     final response = await _model!.prompt(prompt.toJS).toDart;
     return response.toDart;
+  }
+
+  Stream<String> generateContentStream(String prompt) {
+    final controller = StreamController<String>();
+    
+    warmup().then((_) {
+      final stream = _model!.promptStreaming(prompt.toJS);
+      final reader = stream.getReader();
+      
+      void readNext() {
+        reader.read().toDart.then((result) {
+          if (result.done) {
+            controller.close();
+            return;
+          }
+          controller.add(result.value.toDart);
+          readNext();
+        }).catchError((e) {
+          controller.addError(e);
+          controller.close();
+        });
+      }
+      
+      readNext();
+    }).catchError((e) {
+      controller.addError(e);
+      controller.close();
+    });
+    
+    return controller.stream;
   }
 }

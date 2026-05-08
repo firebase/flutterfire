@@ -32,6 +32,11 @@ class FirebaseAIPlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
         context = binding.applicationContext
         channel = MethodChannel(binding.binaryMessenger, "plugins.flutter.io/firebase_ai")
         channel.setMethodCallHandler(this)
+
+        LocalAIApi.setUp(binding.binaryMessenger, LocalAIImpl())
+
+        val eventChannel = io.flutter.plugin.common.EventChannel(binding.binaryMessenger, "dev.flutter.pigeon.firebase_ai.LocalAIApi.stream")
+        eventChannel.setStreamHandler(LocalAIStreamHandler.shared)
     }
 
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
@@ -97,5 +102,24 @@ class FirebaseAIPlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
 
     companion object {
         private const val TAG = "FirebaseAIPlugin"
+    }
+}
+
+class LocalAIStreamHandler : io.flutter.plugin.common.EventChannel.StreamHandler {
+    companion object {
+        val shared = LocalAIStreamHandler()
+    }
+    private var eventSink: io.flutter.plugin.common.EventChannel.EventSink? = null
+
+    override fun onListen(arguments: Any?, events: io.flutter.plugin.common.EventChannel.EventSink?) {
+        eventSink = events
+    }
+
+    override fun onCancel(arguments: Any?) {
+        eventSink = null
+    }
+
+    fun sendEvent(event: String) {
+        eventSink?.success(event)
     }
 }

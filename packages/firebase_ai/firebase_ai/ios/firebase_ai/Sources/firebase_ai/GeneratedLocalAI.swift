@@ -104,6 +104,7 @@ protocol LocalAIApi {
   func isAvailable(completion: @escaping (Result<Bool, Error>) -> Void)
   func generateContent(prompt: String, completion: @escaping (Result<String, Error>) -> Void)
   func warmup(completion: @escaping (Result<Void, Error>) -> Void)
+  func startStreaming(prompt: String, completion: @escaping (Result<Void, Error>) -> Void)
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -158,6 +159,23 @@ class LocalAIApiSetup {
       }
     } else {
       warmupChannel.setMessageHandler(nil)
+    }
+    let startStreamingChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_ai.LocalAIApi.startStreaming\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      startStreamingChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let promptArg = args[0] as! String
+        api.startStreaming(prompt: promptArg) { result in
+          switch result {
+          case .success:
+            reply(wrapResult(nil))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      startStreamingChannel.setMessageHandler(nil)
     }
   }
 }

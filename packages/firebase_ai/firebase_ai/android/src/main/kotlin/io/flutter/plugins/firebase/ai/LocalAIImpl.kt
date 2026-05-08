@@ -31,4 +31,11 @@ class LocalAIImpl : LocalAIApi {
     // Android uses default models (Gemini Nano), so warmup is likely a no-op.
     callback(Result.success(Unit))
   }
+
+  override fun startStreaming(prompt: String, callback: (Result<Unit>) -> Unit) {
+    // Simulate streaming by sending chunks to the shared stream handler.
+    LocalAIStreamHandler.shared.sendEvent("Local chunk 1 for: $prompt")
+    LocalAIStreamHandler.shared.sendEvent("Local chunk 2 for: $prompt")
+    callback(Result.success(Unit))
+  }
 }

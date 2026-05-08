@@ -45,7 +45,20 @@ class MockApiClient implements ApiClient {
 
   @override
   Stream<Map<String, Object?>> streamRequest(Uri uri, Map<String, Object?> body) {
-    throw UnimplementedError();
+    if (shouldFail) throw Exception('Cloud Failed');
+    return Stream.fromIterable([
+      {
+        'candidates': [
+          {
+            'content': {
+              'parts': [
+                {'text': responseText}
+              ]
+            }
+          }
+        ]
+      }
+    ]);
   }
 }
 
@@ -136,4 +149,72 @@ void main() {
     final response = await model.generateContent([Content.text('hello')]);
     expect(response.text, 'Local Response');
   });
+
+  test('preferCloud streaming succeeds on cloud', () async {
+    final apiClient = MockApiClient();
+    final local = MockLocalApi();
+    final app = MockFirebaseApp();
+    
+    final cloud = createModelWithClient(
+      app: app,
+      location: 'us-central1',
+      model: 'gemini-pro',
+      client: apiClient,
+      useVertexBackend: false,
+    );
+
+    final model = HybridGenerativeModel(cloudModel: cloud, localApi: local, mode: InferenceMode.preferCloud);
+
+    final responses = model.generateContentStream([Content.text('hello')]);
+    final textList = await responses.map((r) => r.text).toList();
+    expect(textList, ['Cloud Response']);
+  });
+
+  test('preferCloud streaming falls back to local on cloud failure before data', () async {
+    final apiClient = MockApiClient()..shouldFail = true;
+    final local = MockLocalApi();
+    final app = MockFirebaseApp();
+    
+    final cloud = createModelWithClient(
+      app: app,
+      location: 'us-central1',
+      model: 'gemini-pro',
+      client: apiClient,
+      useVertexBackend: false,
+    );
+
+    final mockLocalStream = Stream.fromIterable([
+      GenerateContentResponse([
+        Candidate(Content('model', [TextPart('Local Response')]), null, null, null, null)
+      ], null)
+    ]);
+
+    final model = TestHybridGenerativeModel(
+      cloudModel: cloud,
+      localApi: local,
+      mode: InferenceMode.preferCloud,
+      mockLocalStream: mockLocalStream,
+    );
+
+    final responses = model.generateContentStream([Content.text('hello')]);
+    final textList = await responses.map((r) => r.text).toList();
+    expect(textList, ['Local Response']);
+  });
+}
+
+class TestHybridGenerativeModel extends HybridGenerativeModel {
+  Stream<GenerateContentResponse>? mockLocalStream;
+
+  TestHybridGenerativeModel({
+    required super.cloudModel,
+    required super.localApi,
+    super.mode,
+    this.mockLocalStream,
+  });
+
+  @override
+  Stream<GenerateContentResponse> generateLocalStream(Iterable<Content> prompt) {
+    if (mockLocalStream != null) return mockLocalStream!;
+    return super.generateLocalStream(prompt);
+  }
 }

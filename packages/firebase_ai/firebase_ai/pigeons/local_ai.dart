@@ -19,7 +19,7 @@ import 'package:pigeon/pigeon.dart';
   dartOptions: DartOptions(),
   kotlinOut: 'android/src/main/kotlin/io/flutter/plugins/firebase/ai/GeneratedLocalAI.kt',
   kotlinOptions: KotlinOptions(),
-  swiftOut: 'ios/Classes/GeneratedLocalAI.swift',
+  swiftOut: 'ios/firebase_ai/Sources/firebase_ai/GeneratedLocalAI.swift',
   swiftOptions: SwiftOptions(),
   dartPackageName: 'firebase_ai',
   copyrightHeader: 'pigeons/copyright.txt',
@@ -35,4 +35,7 @@ abstract class LocalAIApi {
   
   @async
   void warmup();
+  
+  @async
+  void startStreaming(String prompt);
 }

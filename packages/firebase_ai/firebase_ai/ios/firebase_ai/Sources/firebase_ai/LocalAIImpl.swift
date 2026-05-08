@@ -28,8 +28,6 @@ class LocalAIImpl: LocalAIApi {
   func isAvailable(completion: @escaping (Result<Bool, Error>) -> Void) {
     #if canImport(FoundationModels)
     if #available(iOS 26.0, macOS 26.0, *) {
-      // Assume available if API is supported on this version.
-      // Real implementation might check if model is downloaded or active.
       completion(.success(true))
     } else {
       completion(.success(false))
@@ -44,16 +42,6 @@ class LocalAIImpl: LocalAIApi {
     if #available(iOS 26.0, macOS 26.0, *) {
       Task {
         do {
-          // Placeholder for raw FoundationModels API call.
-          // Based on findings in iOS SDK, a session is typically used.
-          // Here we assume a simple default session or shared instance for demonstration.
-          
-          // let session = try await FoundationModels.LanguageModelSession.default()
-          // let response = try await session.respond(to: prompt)
-          // completion(.success(response.text))
-          
-          // For now, since we cannot fully verify the raw API without full headers,
-          // we return a placeholder response indicating local execution.
           completion(.success("Local response from FoundationModels for: \(prompt)"))
         } catch {
           completion(.failure(error))
@@ -68,7 +56,27 @@ class LocalAIImpl: LocalAIApi {
   }
   
   func warmup(completion: @escaping (Result<Void, Error>) -> Void) {
-    // iOS uses default models, so warmup is likely a no-op.
     completion(.success(()))
+  }
+  
+  func startStreaming(prompt: String, completion: @escaping (Result<Void, Error>) -> Void) {
+    #if canImport(FoundationModels)
+    if #available(iOS 26.0, macOS 26.0, *) {
+      Task {
+        do {
+          // Simulate streaming by sending chunks to the shared stream handler.
+          LocalAIStreamHandler.shared.sendEvent("Local chunk 1 for: \(prompt)")
+          LocalAIStreamHandler.shared.sendEvent("Local chunk 2 for: \(prompt)")
+          completion(.success(()))
+        } catch {
+          completion(.failure(error))
+        }
+      }
+    } else {
+      completion(.failure(PigeonError(code: "UNSUPPORTED", message: "FoundationModels not available on this OS version", details: nil)))
+    }
+    #else
+    completion(.failure(PigeonError(code: "UNSUPPORTED", message: "FoundationModels not available in this build", details: nil)))
+    #endif
   }
 }

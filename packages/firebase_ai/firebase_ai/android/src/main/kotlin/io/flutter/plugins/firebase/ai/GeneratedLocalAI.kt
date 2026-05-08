@@ -74,6 +74,7 @@ interface LocalAIApi {
   fun isAvailable(callback: (Result<Boolean>) -> Unit)
   fun generateContent(prompt: String, callback: (Result<String>) -> Unit)
   fun warmup(callback: (Result<Unit>) -> Unit)
+  fun startStreaming(prompt: String, callback: (Result<Unit>) -> Unit)
 
   companion object {
     /** The codec used by LocalAIApi. */
@@ -127,6 +128,25 @@ interface LocalAIApi {
         if (api != null) {
           channel.setMessageHandler { _, reply ->
             api.warmup{ result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedLocalAIPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(GeneratedLocalAIPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_ai.LocalAIApi.startStreaming$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val promptArg = args[0] as String
+            api.startStreaming(promptArg) { result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedLocalAIPigeonUtils.wrapError(error))

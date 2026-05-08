@@ -13,6 +13,8 @@
 // limitations under the License.
 
 import 'dart:async';
+import 'package:flutter/services.dart';
+import 'package:meta/meta.dart';
 import 'api.dart';
 import 'content.dart';
 import 'base_model.dart';
@@ -80,5 +82,111 @@ class HybridGenerativeModel {
 
   Future<void> warmup() async {
     await localApi.warmup();
+  }
+
+  Stream<GenerateContentResponse> generateContentStream(Iterable<Content> prompt) {
+    switch (mode) {
+      case InferenceMode.onlyCloud:
+        return cloudModel.generateContentStream(prompt);
+      case InferenceMode.onlyLocal:
+        return generateLocalStream(prompt);
+      case InferenceMode.preferCloud:
+        final controller = StreamController<GenerateContentResponse>();
+        var yieldedData = false;
+        
+        try {
+          cloudModel.generateContentStream(prompt).listen(
+            (response) {
+              yieldedData = true;
+              controller.add(response);
+            },
+            onError: (e) async {
+              if (!yieldedData && await localApi.isAvailable()) {
+                generateLocalStream(prompt).listen(
+                  controller.add,
+                  onError: controller.addError,
+                  onDone: controller.close,
+                );
+              } else {
+                controller.addError(e);
+                controller.close();
+              }
+            },
+            onDone: controller.close,
+          );
+        } catch (e) {
+          localApi.isAvailable().then((available) {
+            if (available) {
+              generateLocalStream(prompt).listen(
+                controller.add,
+                onError: controller.addError,
+                onDone: controller.close,
+              );
+            } else {
+              controller.addError(e);
+              controller.close();
+            }
+          });
+        }
+        
+        return controller.stream;
+        
+      case InferenceMode.preferLocal:
+        final controller = StreamController<GenerateContentResponse>();
+        
+        localApi.isAvailable().then((available) {
+          if (available) {
+            var yieldedData = false;
+            generateLocalStream(prompt).listen(
+              (response) {
+                yieldedData = true;
+                controller.add(response);
+              },
+              onError: (e) {
+                if (!yieldedData) {
+                  cloudModel.generateContentStream(prompt).listen(
+                    controller.add,
+                    onError: controller.addError,
+                    onDone: controller.close,
+                  );
+                } else {
+                  controller.addError(e);
+                  controller.close();
+                }
+              },
+              onDone: controller.close,
+            );
+          } else {
+            cloudModel.generateContentStream(prompt).listen(
+              controller.add,
+              onError: controller.addError,
+              onDone: controller.close,
+            );
+          }
+        });
+        
+        return controller.stream;
+    }
+  }
+
+  @visibleForTesting
+  Stream<GenerateContentResponse> generateLocalStream(Iterable<Content> prompt) {
+    final promptString = prompt.map((c) => c.parts.whereType<TextPart>().map((p) => p.text).join()).join();
+    
+    localApi.startStreaming(promptString);
+    
+    final channel = EventChannel('dev.flutter.pigeon.firebase_ai.LocalAIApi.stream');
+    return channel.receiveBroadcastStream().map((event) {
+      final responseText = event as String;
+      return GenerateContentResponse([
+        Candidate(
+          Content('model', [TextPart(responseText)]),
+          null,
+          null,
+          null,
+          null,
+        )
+      ], null);
+    });
   }
 }

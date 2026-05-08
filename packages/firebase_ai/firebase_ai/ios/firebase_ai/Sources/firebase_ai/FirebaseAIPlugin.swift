@@ -32,6 +32,11 @@ public class FirebaseAIPlugin: NSObject, FlutterPlugin {
     )
     let instance = FirebaseAIPlugin()
     registrar.addMethodCallDelegate(instance, channel: channel)
+
+    LocalAIApiSetup.setUp(binaryMessenger: messenger, api: LocalAIImpl())
+
+    let eventChannel = FlutterEventChannel(name: "dev.flutter.pigeon.firebase_ai.LocalAIApi.stream", binaryMessenger: messenger)
+    eventChannel.setStreamHandler(LocalAIStreamHandler.shared)
   }
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
@@ -45,5 +50,24 @@ public class FirebaseAIPlugin: NSObject, FlutterPlugin {
     default:
       result(FlutterMethodNotImplemented)
     }
+  }
+}
+
+class LocalAIStreamHandler: NSObject, FlutterStreamHandler {
+  static let shared = LocalAIStreamHandler()
+  private var eventSink: FlutterEventSink?
+
+  func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
+    self.eventSink = events
+    return nil
+  }
+
+  func onCancel(withArguments arguments: Any?) -> FlutterError? {
+    self.eventSink = nil
+    return nil
+  }
+
+  func sendEvent(_ event: String) {
+    eventSink?(event)
   }
 }
