@@ -2,8 +2,11 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:tests/firebase_options.dart';
 
 import 'firebase_database_e2e_test.dart';
 
@@ -37,5 +40,31 @@ void setupConfigurationTests() {
     test('setLoggingEnabled to false', () {
       database.setLoggingEnabled(false);
     });
+
+    test(
+      'setPersistenceEnabled can be followed immediately by goOnline',
+      () async {
+        for (var i = 0; i < 5; i++) {
+          final app = await Firebase.initializeApp(
+            name:
+                'firebase-database-persistence-${DateTime.now().microsecondsSinceEpoch}-$i',
+            options: DefaultFirebaseOptions.currentPlatform,
+          );
+          addTearDown(app.delete);
+
+          final database = FirebaseDatabase.instanceFor(app: app);
+
+          database.setPersistenceEnabled(true);
+          await database.goOnline();
+
+          await database.ref('persistence-enabled-regression').keepSynced(true);
+          await database
+              .ref('persistence-enabled-regression')
+              .keepSynced(false);
+          await database.goOffline();
+        }
+      },
+      skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android,
+    );
   });
 }
