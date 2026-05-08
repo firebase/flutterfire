@@ -245,6 +245,43 @@ void runWebSocketTests() {
 
         expect(ws.isConnected, isFalse);
       });
+
+      testWidgets(
+          'should not reconnect if there are no active subscribers or pending unary requests',
+          (WidgetTester tester) async {
+        final Completer<void> isReady = Completer<void>();
+        int count = 0;
+
+        final sub = MoviesConnector.instance
+            .listMovies()
+            .ref()
+            .subscribe()
+            .listen((value) {
+          if (count == 0) {
+            if (!isReady.isCompleted) isReady.complete();
+          }
+          count++;
+        });
+
+        await _waitForStreamEvent(isReady.future, 'listMovies subscription');
+
+        final dataConnect = MoviesConnector.instance.dataConnect;
+        final transport = (dataConnect as dynamic).transport;
+        final ws = (transport as dynamic).websocket;
+
+        expect(ws.isConnected, isTrue);
+
+        // Cancel the subscription so there are no active subscriptions
+        await sub.cancel();
+        expect(ws.isConnected, isFalse);
+
+        // Trigger _scheduleReconnect and verify that it does not reconnect
+        (ws as dynamic)._scheduleReconnect();
+
+        // Wait for a moment to see if a reconnection gets scheduled/attempted
+        await Future.delayed(const Duration(seconds: 2));
+        expect(ws.isConnected, isFalse);
+      });
     },
   );
 }
