@@ -78,8 +78,10 @@ JSAny? jsify(Object? dartObject) {
   }
 
   if (dartObject is Timestamp) {
-    return TimestampJsImpl.fromMillis(dartObject.millisecondsSinceEpoch.toJS)
-        as JSAny;
+    return TimestampJsImpl(
+      dartObject.seconds.toJS,
+      dartObject.nanoseconds.toJS,
+    ) as JSAny;
   }
 
   if (dartObject is DocumentReference) {
