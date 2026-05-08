@@ -24,13 +24,14 @@ import 'package:flutter/material.dart';
 import 'pages/bidi_page.dart';
 import 'pages/chat_page.dart';
 import 'pages/function_calling_page.dart';
+import 'pages/grounding_page.dart';
+import 'pages/hybrid_page.dart';
 import 'pages/image_generation_page.dart';
 import 'pages/image_prompt_page.dart';
 import 'pages/json_schema_page.dart';
 import 'pages/multimodal_page.dart';
 import 'pages/schema_page.dart';
 import 'pages/server_template_page.dart';
-import 'pages/grounding_page.dart';
 import 'pages/token_count_page.dart';
 
 void main() async {
@@ -179,6 +180,11 @@ class _HomeScreenState extends State<HomeScreen> {
           title: 'Grounding',
           useVertexBackend: useVertexBackend,
         );
+      case 11:
+        return HybridPage(
+          title: 'Hybrid Mode',
+          model: currentModel,
+        );
 
       default:
         // Fallback to the first page in case of an unexpected index
@@ -312,6 +318,13 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             label: 'Grounding',
             tooltip: 'Search & Maps Grounding',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.auto_awesome,
+            ),
+            label: 'Hybrid',
+            tooltip: 'Hybrid Mode',
           ),
         ],
         currentIndex: _selectedIndex,

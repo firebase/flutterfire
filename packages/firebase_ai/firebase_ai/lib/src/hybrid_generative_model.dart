@@ -39,9 +39,9 @@ class HybridGenerativeModel {
   /// Creates a [HybridGenerativeModel].
   HybridGenerativeModel({
     required this.cloudModel,
-    required this.localApi,
+    LocalAIApi? localApi,
     this.mode = InferenceMode.preferCloud,
-  });
+  }) : localApi = localApi ?? LocalAIApi();
 
   /// The cloud model to use.
   final GenerativeModel cloudModel;
