@@ -51,7 +51,11 @@ try {
 } on FirebaseAuthException catch (e) {
   if (e.code == 'account-exists-with-different-credential') {
     // The account already exists with a different credential
-    String email = e.email!;
+    final email = e.email;
+    if(email == null) {
+    print('Email not provided in error')
+    return;
+    }
     AuthCredential pendingCredential = e.credential!;
 
     // Note: fetchSignInMethodsForEmail() is deprecated.
