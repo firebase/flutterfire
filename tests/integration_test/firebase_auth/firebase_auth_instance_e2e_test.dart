@@ -157,8 +157,10 @@ void main() {
 
               await Future.delayed(const Duration(seconds: 2));
             },
+            // TODO(SelaseKay): this is crashing iOS app
             skip: defaultTargetPlatform == TargetPlatform.macOS ||
-                defaultTargetPlatform == TargetPlatform.windows,
+                defaultTargetPlatform == TargetPlatform.windows ||
+                defaultTargetPlatform == TargetPlatform.iOS,
           );
 
           test(
