@@ -1023,6 +1023,33 @@ void runQueryTests() {
         expect(snapshot.docs[1].id, equals('doc4'));
       });
 
+      test(
+        'startAfterDocument() preserves Timestamp cursor precision',
+        () async {
+          CollectionReference<Map<String, dynamic>> collection =
+              await initializeTest('startAfter-document-timestamp-precision');
+          await collection.doc('doc1').set({
+            'createdAt': Timestamp(1, 123456789),
+          });
+
+          Query<Map<String, dynamic>> baseQuery =
+              collection.orderBy('createdAt');
+          QuerySnapshot<Map<String, dynamic>> firstPage =
+              await baseQuery.limit(50).get();
+
+          expect(firstPage.docs.length, equals(1));
+          expect(firstPage.docs.first.id, equals('doc1'));
+
+          QuerySnapshot<Map<String, dynamic>> nextPage = await baseQuery
+              .startAfterDocument(firstPage.docs.last)
+              .limit(50)
+              .get();
+
+          expect(nextPage.docs, isEmpty);
+        },
+        skip: !kIsWeb,
+      );
+
       testWidgets(
         'throws exception without orderBy() on field used for inequality query',
         (_) async {
