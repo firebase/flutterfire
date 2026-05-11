@@ -898,7 +898,7 @@ void main() {
               fail(e.toString());
             }
           },
-          // TODO(russellwheatley): this is crashing iOS/macOS app (reinit
+          // TODO(SelaseKay): this is crashing iOS/macOS app (reinit
           // app), and Android can race plugin listener setup in shared E2E.
           skip: defaultTargetPlatform == TargetPlatform.iOS ||
               defaultTargetPlatform == TargetPlatform.macOS,
