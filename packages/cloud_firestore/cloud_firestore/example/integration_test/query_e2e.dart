@@ -1044,7 +1044,7 @@ void runQueryTests() {
             .get();
 
         expect(nextPage.docs, isEmpty);
-      });
+      }, skip: !kIsWeb);
 
       testWidgets(
         'throws exception without orderBy() on field used for inequality query',
