@@ -122,11 +122,15 @@ class MockFirebaseApp extends _i1.Mock implements _i3.FirebaseApp {
       ) as _i5.Future<void>);
 
   @override
-  void registerService<T extends _i3.FirebaseService>(T? service) =>
+  void registerService<T extends _i3.FirebaseService>(
+    T service, {
+    _i5.Future<void> Function(T)? dispose,
+  }) =>
       super.noSuchMethod(
         Invocation.method(
           #registerService,
           [service],
+          {#dispose: dispose},
         ),
         returnValueForMissingStub: null,
       );
