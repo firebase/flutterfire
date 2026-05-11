@@ -113,6 +113,9 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
     throw UnimplementedError('setInitialValues() is not implemented');
   }
 
+  /// Disposes resources tied to this platform auth instance.
+  Future<void> dispose() async {}
+
   /// Returns the current [User] if they are currently signed-in, or `null` if
   /// not.
   ///
