@@ -38,6 +38,35 @@ class MockFirebaseAuth extends Mock implements FirebaseAuth {
 
 class MockFirebaseAppCheck extends Mock implements FirebaseAppCheck {}
 
+class DynamicMockFirebaseApp extends Mock implements FirebaseApp {
+  DynamicMockFirebaseApp({
+    required this.name,
+    required this.options,
+    this.mockAuth,
+    this.mockAppCheck,
+  });
+
+  @override
+  final String name;
+
+  @override
+  final FirebaseOptions options;
+
+  final FirebaseAuth? mockAuth;
+  final FirebaseAppCheck? mockAppCheck;
+
+  @override
+  T? getService<T extends FirebaseService>() {
+    if (T == FirebaseAppCheck) {
+      return mockAppCheck as T?;
+    }
+    if (T == FirebaseAuth) {
+      return mockAuth as T?;
+    }
+    return null;
+  }
+}
+
 class MockTransportOptions extends Mock implements TransportOptions {}
 
 class MockDataConnectTransport extends Mock implements DataConnectTransport {}
@@ -194,6 +223,36 @@ void main() {
         FirebaseDataConnect.cachedInstances['appName']!['connectorConfigStr'],
         equals(instance),
       );
+    });
+
+    test(
+        'checkTransport resolves dynamic service instances from registry just-in-time',
+        () {
+      FirebaseDataConnect.cachedInstances.clear();
+
+      final dynamicApp = DynamicMockFirebaseApp(
+        name: 'transportAppName',
+        options: const FirebaseOptions(
+          apiKey: 'fake_api_key',
+          appId: 'fake_app_id',
+          messagingSenderId: 'fake_messaging_sender_id',
+          projectId: 'fake_project_id',
+        ),
+        mockAuth: mockAuth,
+        mockAppCheck: mockAppCheck,
+      );
+
+      final instance = FirebaseDataConnect(
+        app: dynamicApp,
+        connectorConfig: mockConnectorConfig,
+      );
+
+      instance.checkTransport();
+
+      final dynamic routingTransport = instance.transport;
+      expect(routingTransport.rest.appCheck, equals(mockAppCheck));
+      expect(routingTransport.websocket.auth, equals(mockAuth));
+      expect(routingTransport.websocket.appCheck, equals(mockAppCheck));
     });
   });
 }
