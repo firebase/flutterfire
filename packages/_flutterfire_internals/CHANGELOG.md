@@ -1,3 +1,7 @@
+## 1.3.70
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+
 ## 1.3.69
 
  - **FIX**: improve error handling in _firebaseExceptionFromCoreFirebaseError ([#18177](https://github.com/firebase/flutterfire/issues/18177)). ([3c29048a](https://github.com/firebase/flutterfire/commit/3c29048a859b62f3f224b1fa3c8db61f78f63374))

@@ -1,3 +1,9 @@
+## 13.4.0
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+ - **FIX**(storage,android): fix an issue that could happen when app would get detached from the engine ([#18255](https://github.com/firebase/flutterfire/issues/18255)). ([2771f550](https://github.com/firebase/flutterfire/commit/2771f5505ff0a53cc1bfb41afec3a0eb8781b8f8))
+ - **FEAT**: upgrade pigeon to version 26.3.4 ([#18205](https://github.com/firebase/flutterfire/issues/18205)). ([cb6b4aef](https://github.com/firebase/flutterfire/commit/cb6b4aeffc568755ea3eebe32b998f00237bf5ad))
+
 ## 13.3.0
 
  - **FEAT**: use local firebase_core instead of remote SPM dependency ([#18141](https://github.com/firebase/flutterfire/issues/18141)). ([995caf40](https://github.com/firebase/flutterfire/commit/995caf400df80c0fde7151c651ccc6c0f756e381))

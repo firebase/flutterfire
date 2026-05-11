@@ -1,3 +1,7 @@
+## 3.6.1
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+
 ## 3.6.0
 
  - **FEAT**: support for Firestore Pipelines ([#18183](https://github.com/firebase/flutterfire/issues/18183)). ([d734cf08](https://github.com/firebase/flutterfire/commit/d734cf0885f6d9403c2fb3ac48d6c52e14199309))

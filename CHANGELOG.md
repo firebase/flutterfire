@@ -3,6 +3,320 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2026-05-11
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`cloud_firestore_platform_interface` - `v8.0.0`](#cloud_firestore_platform_interface---v800)
+ - [`cloud_functions_platform_interface` - `v6.0.0`](#cloud_functions_platform_interface---v600)
+ - [`firebase_analytics_platform_interface` - `v6.0.0`](#firebase_analytics_platform_interface---v600)
+ - [`firebase_app_check_platform_interface` - `v0.4.0`](#firebase_app_check_platform_interface---v040)
+ - [`firebase_auth_platform_interface` - `v9.0.0`](#firebase_auth_platform_interface---v900)
+ - [`firebase_core_platform_interface` - `v7.0.0`](#firebase_core_platform_interface---v700)
+ - [`firebase_database_platform_interface` - `v0.4.0`](#firebase_database_platform_interface---v040)
+ - [`firebase_performance_platform_interface` - `v0.2.0`](#firebase_performance_platform_interface---v020)
+ - [`firebase_remote_config_platform_interface` - `v3.0.0`](#firebase_remote_config_platform_interface---v300)
+ - [`firebase_storage_platform_interface` - `v6.0.0`](#firebase_storage_platform_interface---v600)
+ - [`_flutterfire_internals` - `v1.3.70`](#_flutterfire_internals---v1370)
+ - [`cloud_firestore` - `v6.4.0`](#cloud_firestore---v640)
+ - [`cloud_firestore_web` - `v5.4.0`](#cloud_firestore_web---v540)
+ - [`cloud_functions` - `v6.3.0`](#cloud_functions---v630)
+ - [`cloud_functions_web` - `v5.1.6`](#cloud_functions_web---v516)
+ - [`firebase_ai` - `v3.12.0`](#firebase_ai---v3120)
+ - [`firebase_analytics` - `v12.4.0`](#firebase_analytics---v1240)
+ - [`firebase_analytics_web` - `v0.6.1+6`](#firebase_analytics_web---v0616)
+ - [`firebase_app_check` - `v0.4.4`](#firebase_app_check---v044)
+ - [`firebase_app_check_web` - `v0.2.4+1`](#firebase_app_check_web---v0241)
+ - [`firebase_app_installations` - `v0.4.2+1`](#firebase_app_installations---v0421)
+ - [`firebase_app_installations_platform_interface` - `v0.1.4+69`](#firebase_app_installations_platform_interface---v01469)
+ - [`firebase_app_installations_web` - `v0.1.7+6`](#firebase_app_installations_web---v0176)
+ - [`firebase_auth` - `v6.5.0`](#firebase_auth---v650)
+ - [`firebase_auth_web` - `v6.2.0`](#firebase_auth_web---v620)
+ - [`firebase_core` - `v4.8.0`](#firebase_core---v480)
+ - [`firebase_core_web` - `v3.6.1`](#firebase_core_web---v361)
+ - [`firebase_crashlytics` - `v5.2.1`](#firebase_crashlytics---v521)
+ - [`firebase_crashlytics_platform_interface` - `v3.8.21`](#firebase_crashlytics_platform_interface---v3821)
+ - [`firebase_data_connect` - `v0.3.0+1`](#firebase_data_connect---v0301)
+ - [`firebase_database` - `v12.4.0`](#firebase_database---v1240)
+ - [`firebase_database_web` - `v0.2.7+7`](#firebase_database_web---v0277)
+ - [`firebase_in_app_messaging` - `v0.9.2+1`](#firebase_in_app_messaging---v0921)
+ - [`firebase_in_app_messaging_platform_interface` - `v0.2.5+21`](#firebase_in_app_messaging_platform_interface---v02521)
+ - [`firebase_messaging` - `v16.2.1`](#firebase_messaging---v1621)
+ - [`firebase_messaging_platform_interface` - `v4.7.10`](#firebase_messaging_platform_interface---v4710)
+ - [`firebase_messaging_web` - `v4.1.6`](#firebase_messaging_web---v416)
+ - [`firebase_ml_model_downloader` - `v0.4.2+1`](#firebase_ml_model_downloader---v0421)
+ - [`firebase_ml_model_downloader_platform_interface` - `v0.1.5+21`](#firebase_ml_model_downloader_platform_interface---v01521)
+ - [`firebase_performance` - `v0.11.4`](#firebase_performance---v0114)
+ - [`firebase_performance_web` - `v0.1.8+6`](#firebase_performance_web---v0186)
+ - [`firebase_remote_config` - `v6.5.0`](#firebase_remote_config---v650)
+ - [`firebase_remote_config_web` - `v1.10.7`](#firebase_remote_config_web---v1107)
+ - [`firebase_storage` - `v13.4.0`](#firebase_storage---v1340)
+ - [`firebase_storage_web` - `v3.11.6`](#firebase_storage_web---v3116)
+
+---
+
+#### `cloud_firestore_platform_interface` - `v8.0.0`
+
+ - Bump platform interface a major version due to pigeon dependency update
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+ - **FEAT**: upgrade pigeon to version 26.3.4 ([#18205](https://github.com/firebase/flutterfire/issues/18205)). ([cb6b4aef](https://github.com/firebase/flutterfire/commit/cb6b4aeffc568755ea3eebe32b998f00237bf5ad))
+
+#### `cloud_functions_platform_interface` - `v6.0.0`
+
+ - Bump platform interface a major version due to pigeon dependency update
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+ - **FEAT**: upgrade pigeon to version 26.3.4 ([#18205](https://github.com/firebase/flutterfire/issues/18205)). ([cb6b4aef](https://github.com/firebase/flutterfire/commit/cb6b4aeffc568755ea3eebe32b998f00237bf5ad))
+
+#### `firebase_analytics_platform_interface` - `v6.0.0`
+
+ - Bump platform interface a major version due to pigeon dependency update
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+ - **FEAT**: upgrade pigeon to version 26.3.4 ([#18205](https://github.com/firebase/flutterfire/issues/18205)). ([cb6b4aef](https://github.com/firebase/flutterfire/commit/cb6b4aeffc568755ea3eebe32b998f00237bf5ad))
+
+#### `firebase_app_check_platform_interface` - `v0.4.0`
+
+ - Bump platform interface a major version due to pigeon dependency update
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+ - **FIX**: update core, auth and app-check logic so internal resources on method channels are properly disposed ([#18268](https://github.com/firebase/flutterfire/issues/18268)). ([a0de4ed8](https://github.com/firebase/flutterfire/commit/a0de4ed86b0dff89bb9e557f2a54f38cd2546016))
+ - **FIX**(app_check): fix an issue with debug token that would sometime not be passed properly ([#18258](https://github.com/firebase/flutterfire/issues/18258)). ([b0bc6e8f](https://github.com/firebase/flutterfire/commit/b0bc6e8f0e92aed2f3da99725eff85b3cf358282))
+ - **FEAT**: upgrade pigeon to version 26.3.4 ([#18205](https://github.com/firebase/flutterfire/issues/18205)). ([cb6b4aef](https://github.com/firebase/flutterfire/commit/cb6b4aeffc568755ea3eebe32b998f00237bf5ad))
+
+#### `firebase_auth_platform_interface` - `v9.0.0`
+
+ - Bump platform interface a major version due to pigeon dependency update
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+ - **FIX**: update core, auth and app-check logic so internal resources on method channels are properly disposed ([#18268](https://github.com/firebase/flutterfire/issues/18268)). ([a0de4ed8](https://github.com/firebase/flutterfire/commit/a0de4ed86b0dff89bb9e557f2a54f38cd2546016))
+ - **FEAT**: upgrade pigeon to version 26.3.4 ([#18205](https://github.com/firebase/flutterfire/issues/18205)). ([cb6b4aef](https://github.com/firebase/flutterfire/commit/cb6b4aeffc568755ea3eebe32b998f00237bf5ad))
+ - **FEAT**(auth,android): add revokeAccessToken support for Android ([#18206](https://github.com/firebase/flutterfire/issues/18206)) ([#18207](https://github.com/firebase/flutterfire/issues/18207)). ([7e0a2227](https://github.com/firebase/flutterfire/commit/7e0a222700178a57d064c27b4ef62cefdda1e253))
+
+#### `firebase_core_platform_interface` - `v7.0.0`
+
+ - Bump platform interface a major version due to pigeon dependency update
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+ - **FEAT**: upgrade pigeon to version 26.3.4 ([#18205](https://github.com/firebase/flutterfire/issues/18205)). ([cb6b4aef](https://github.com/firebase/flutterfire/commit/cb6b4aeffc568755ea3eebe32b998f00237bf5ad))
+
+#### `firebase_database_platform_interface` - `v0.4.0`
+
+ - Bump platform interface a major version due to pigeon dependency update
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+ - **FEAT**: upgrade pigeon to version 26.3.4 ([#18205](https://github.com/firebase/flutterfire/issues/18205)). ([cb6b4aef](https://github.com/firebase/flutterfire/commit/cb6b4aeffc568755ea3eebe32b998f00237bf5ad))
+
+#### `firebase_performance_platform_interface` - `v0.2.0`
+
+ - Bump platform interface a major version due to pigeon dependency update
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+ - **FEAT**: upgrade pigeon to version 26.3.4 ([#18205](https://github.com/firebase/flutterfire/issues/18205)). ([cb6b4aef](https://github.com/firebase/flutterfire/commit/cb6b4aeffc568755ea3eebe32b998f00237bf5ad))
+
+#### `firebase_remote_config_platform_interface` - `v3.0.0`
+
+ - Bump platform interface a major version due to pigeon dependency update
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+ - **FEAT**: upgrade pigeon to version 26.3.4 ([#18205](https://github.com/firebase/flutterfire/issues/18205)). ([cb6b4aef](https://github.com/firebase/flutterfire/commit/cb6b4aeffc568755ea3eebe32b998f00237bf5ad))
+
+#### `firebase_storage_platform_interface` - `v6.0.0`
+
+ - Bump platform interface a major version due to pigeon dependency update
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+ - **FEAT**: upgrade pigeon to version 26.3.4 ([#18205](https://github.com/firebase/flutterfire/issues/18205)). ([cb6b4aef](https://github.com/firebase/flutterfire/commit/cb6b4aeffc568755ea3eebe32b998f00237bf5ad))
+
+#### `_flutterfire_internals` - `v1.3.70`
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+
+#### `cloud_firestore` - `v6.4.0`
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+ - **FIX**(firestore,web): update Timestamp handling in jsify and EncodeUtility ([#18264](https://github.com/firebase/flutterfire/issues/18264)). ([9783a448](https://github.com/firebase/flutterfire/commit/9783a448ff532568a5e46ecb927e7b1bc77a164c))
+ - **FIX**(firestore,windows): fix CI issue ([#18218](https://github.com/firebase/flutterfire/issues/18218)). ([b9c8a9e2](https://github.com/firebase/flutterfire/commit/b9c8a9e2993187c782c94398136aac9bf5418061))
+ - **FEAT**: upgrade pigeon to version 26.3.4 ([#18205](https://github.com/firebase/flutterfire/issues/18205)). ([cb6b4aef](https://github.com/firebase/flutterfire/commit/cb6b4aeffc568755ea3eebe32b998f00237bf5ad))
+
+#### `cloud_firestore_web` - `v5.4.0`
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+ - **FIX**(firestore,web): update Timestamp handling in jsify and EncodeUtility ([#18264](https://github.com/firebase/flutterfire/issues/18264)). ([9783a448](https://github.com/firebase/flutterfire/commit/9783a448ff532568a5e46ecb927e7b1bc77a164c))
+ - **FEAT**: upgrade pigeon to version 26.3.4 ([#18205](https://github.com/firebase/flutterfire/issues/18205)). ([cb6b4aef](https://github.com/firebase/flutterfire/commit/cb6b4aeffc568755ea3eebe32b998f00237bf5ad))
+
+#### `cloud_functions` - `v6.3.0`
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+ - **FEAT**: upgrade pigeon to version 26.3.4 ([#18205](https://github.com/firebase/flutterfire/issues/18205)). ([cb6b4aef](https://github.com/firebase/flutterfire/commit/cb6b4aeffc568755ea3eebe32b998f00237bf5ad))
+
+#### `cloud_functions_web` - `v5.1.6`
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+ - **FIX**(functions,web): dartify results from cloud function stream ([#18212](https://github.com/firebase/flutterfire/issues/18212)). ([9f32c614](https://github.com/firebase/flutterfire/commit/9f32c614a9fee53ceebc5540d91c76ba4fd91d8b))
+
+#### `firebase_ai` - `v3.12.0`
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+ - **FEAT**(firebaseai): ImageConfig and FinishReasons ([#18180](https://github.com/firebase/flutterfire/issues/18180)). ([7d1a8b1d](https://github.com/firebase/flutterfire/commit/7d1a8b1db4c5f585ba38d46df37330d3d17de774))
+ - **FEAT**(firebaseai): live session resumption ([#18038](https://github.com/firebase/flutterfire/issues/18038)). ([829fd949](https://github.com/firebase/flutterfire/commit/829fd949bf1644ad9ce73dfb8ed416d89654f989))
+ - **FEAT**(core): Add Auth and AppCheck as App's registered service. ([#18237](https://github.com/firebase/flutterfire/issues/18237)). ([7ce191cb](https://github.com/firebase/flutterfire/commit/7ce191cbd598b299cd0ec64b45d1366914367a5d))
+ - **FEAT**(ai): add missing enum types ([#18198](https://github.com/firebase/flutterfire/issues/18198)). ([889af7c7](https://github.com/firebase/flutterfire/commit/889af7c7b8f7705a55cdd90e39d306858a2e9fd4))
+ - **FEAT**(firebaseai): add Google Maps Grounding support ([#18144](https://github.com/firebase/flutterfire/issues/18144)). ([385d9337](https://github.com/firebase/flutterfire/commit/385d93372f749843ee3d8ac409a878fa149ba7ed))
+ - **FEAT**(ai): add unexpectedToolCall finish reason and corresponding tests ([#18188](https://github.com/firebase/flutterfire/issues/18188)). ([27852720](https://github.com/firebase/flutterfire/commit/278527207a4fb35a5854dd3f0a9405da9f80877c))
+
+#### `firebase_analytics` - `v12.4.0`
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+ - **FEAT**: upgrade pigeon to version 26.3.4 ([#18205](https://github.com/firebase/flutterfire/issues/18205)). ([cb6b4aef](https://github.com/firebase/flutterfire/commit/cb6b4aeffc568755ea3eebe32b998f00237bf5ad))
+
+#### `firebase_analytics_web` - `v0.6.1+6`
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+
+#### `firebase_app_check` - `v0.4.4`
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+ - **FIX**: update core, auth and app-check logic so internal resources on method channels are properly disposed ([#18268](https://github.com/firebase/flutterfire/issues/18268)). ([a0de4ed8](https://github.com/firebase/flutterfire/commit/a0de4ed86b0dff89bb9e557f2a54f38cd2546016))
+ - **FEAT**(core): Add Auth and AppCheck as App's registered service. ([#18237](https://github.com/firebase/flutterfire/issues/18237)). ([7ce191cb](https://github.com/firebase/flutterfire/commit/7ce191cbd598b299cd0ec64b45d1366914367a5d))
+
+#### `firebase_app_check_web` - `v0.2.4+1`
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+
+#### `firebase_app_installations` - `v0.4.2+1`
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+
+#### `firebase_app_installations_platform_interface` - `v0.1.4+69`
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+
+#### `firebase_app_installations_web` - `v0.1.7+6`
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+
+#### `firebase_auth` - `v6.5.0`
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+ - **FIX**: update core, auth and app-check logic so internal resources on method channels are properly disposed ([#18268](https://github.com/firebase/flutterfire/issues/18268)). ([a0de4ed8](https://github.com/firebase/flutterfire/commit/a0de4ed86b0dff89bb9e557f2a54f38cd2546016))
+ - **FIX**(auth,apple): remove incorrect paths in Package.swift files search paths ([#18239](https://github.com/firebase/flutterfire/issues/18239)). ([7c2fa5b8](https://github.com/firebase/flutterfire/commit/7c2fa5b83201f2f68e031476dc37ad41809215f2))
+ - **FIX**(auth,iOS): update import path for autogenerated messages ([#18227](https://github.com/firebase/flutterfire/issues/18227)). ([4351179d](https://github.com/firebase/flutterfire/commit/4351179d357eeab6b23ec66f45d558c02d3fde69))
+ - **FEAT**(core): Add Auth and AppCheck as App's registered service. ([#18237](https://github.com/firebase/flutterfire/issues/18237)). ([7ce191cb](https://github.com/firebase/flutterfire/commit/7ce191cbd598b299cd0ec64b45d1366914367a5d))
+ - **FEAT**: upgrade pigeon to version 26.3.4 ([#18205](https://github.com/firebase/flutterfire/issues/18205)). ([cb6b4aef](https://github.com/firebase/flutterfire/commit/cb6b4aeffc568755ea3eebe32b998f00237bf5ad))
+ - **FEAT**(auth,android): add revokeAccessToken support for Android ([#18206](https://github.com/firebase/flutterfire/issues/18206)) ([#18207](https://github.com/firebase/flutterfire/issues/18207)). ([7e0a2227](https://github.com/firebase/flutterfire/commit/7e0a222700178a57d064c27b4ef62cefdda1e253))
+
+#### `firebase_auth_web` - `v6.2.0`
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+ - **FEAT**: upgrade pigeon to version 26.3.4 ([#18205](https://github.com/firebase/flutterfire/issues/18205)). ([cb6b4aef](https://github.com/firebase/flutterfire/commit/cb6b4aeffc568755ea3eebe32b998f00237bf5ad))
+
+#### `firebase_core` - `v4.8.0`
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+ - **FIX**: update core, auth and app-check logic so internal resources on method channels are properly disposed ([#18268](https://github.com/firebase/flutterfire/issues/18268)). ([a0de4ed8](https://github.com/firebase/flutterfire/commit/a0de4ed86b0dff89bb9e557f2a54f38cd2546016))
+ - **FEAT**(core): Add Auth and AppCheck as App's registered service. ([#18237](https://github.com/firebase/flutterfire/issues/18237)). ([7ce191cb](https://github.com/firebase/flutterfire/commit/7ce191cbd598b299cd0ec64b45d1366914367a5d))
+ - **FEAT**: upgrade pigeon to version 26.3.4 ([#18205](https://github.com/firebase/flutterfire/issues/18205)). ([cb6b4aef](https://github.com/firebase/flutterfire/commit/cb6b4aeffc568755ea3eebe32b998f00237bf5ad))
+
+#### `firebase_core_web` - `v3.6.1`
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+
+#### `firebase_crashlytics` - `v5.2.1`
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+
+#### `firebase_crashlytics_platform_interface` - `v3.8.21`
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+
+#### `firebase_data_connect` - `v0.3.0+1`
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+ - **FIX**: update core, auth and app-check logic so internal resources on method channels are properly disposed ([#18268](https://github.com/firebase/flutterfire/issues/18268)). ([a0de4ed8](https://github.com/firebase/flutterfire/commit/a0de4ed86b0dff89bb9e557f2a54f38cd2546016))
+ - **FIX**(fdc): block reconnecting if there are no active subscribers or pending unary calls. ([#18265](https://github.com/firebase/flutterfire/issues/18265)). ([330bbb83](https://github.com/firebase/flutterfire/commit/330bbb83399f37911f938a59dc660ed84a0c83a3))
+ - **FIX**(fdc): remove unused logs ([#18197](https://github.com/firebase/flutterfire/issues/18197)). ([4c17ca87](https://github.com/firebase/flutterfire/commit/4c17ca870a78ae6afeaad6006ca68e7999711ffd))
+
+#### `firebase_database` - `v12.4.0`
+
+ - **REFACTOR**(database,android): simplify query handling by extracting queryFromModifiers method ([#18221](https://github.com/firebase/flutterfire/issues/18221)). ([65d9bb71](https://github.com/firebase/flutterfire/commit/65d9bb7104f59de82010e3e82fd0ddddbf9a2e23))
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+ - **FIX**(database,android): fix a regression where rapidly opening and closing query streams on the same path could throw ([#18262](https://github.com/firebase/flutterfire/issues/18262)). ([e23347b6](https://github.com/firebase/flutterfire/commit/e23347b6ae96d2174c4c2b93fd60f40d31a221c7))
+ - **FIX**(database,android): fix an issue where setPersistenceEnabled needed to be called first ([#18259](https://github.com/firebase/flutterfire/issues/18259)). ([11bdedfb](https://github.com/firebase/flutterfire/commit/11bdedfb356d2c84e352e26abfc79de4c5653089))
+ - **FIX**(database): fix a regression with database localEvents handling ([#18257](https://github.com/firebase/flutterfire/issues/18257)). ([40fd2904](https://github.com/firebase/flutterfire/commit/40fd2904e4634d9257241c1c2e779aa5bfc61624))
+ - **FEAT**: upgrade pigeon to version 26.3.4 ([#18205](https://github.com/firebase/flutterfire/issues/18205)). ([cb6b4aef](https://github.com/firebase/flutterfire/commit/cb6b4aeffc568755ea3eebe32b998f00237bf5ad))
+
+#### `firebase_database_web` - `v0.2.7+7`
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+
+#### `firebase_in_app_messaging` - `v0.9.2+1`
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+
+#### `firebase_in_app_messaging_platform_interface` - `v0.2.5+21`
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+
+#### `firebase_messaging` - `v16.2.1`
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+ - **FIX**(messaging,android): fix call race that could happen when using requestPermission ([#18256](https://github.com/firebase/flutterfire/issues/18256)). ([57d4c3d0](https://github.com/firebase/flutterfire/commit/57d4c3d050c6a9252390de6cac91a0ca1d5461e3))
+
+#### `firebase_messaging_platform_interface` - `v4.7.10`
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+
+#### `firebase_messaging_web` - `v4.1.6`
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+
+#### `firebase_ml_model_downloader` - `v0.4.2+1`
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+
+#### `firebase_ml_model_downloader_platform_interface` - `v0.1.5+21`
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+
+#### `firebase_performance` - `v0.11.4`
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+ - **FEAT**: upgrade pigeon to version 26.3.4 ([#18205](https://github.com/firebase/flutterfire/issues/18205)). ([cb6b4aef](https://github.com/firebase/flutterfire/commit/cb6b4aeffc568755ea3eebe32b998f00237bf5ad))
+
+#### `firebase_performance_web` - `v0.1.8+6`
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+
+#### `firebase_remote_config` - `v6.5.0`
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+ - **FEAT**: upgrade pigeon to version 26.3.4 ([#18205](https://github.com/firebase/flutterfire/issues/18205)). ([cb6b4aef](https://github.com/firebase/flutterfire/commit/cb6b4aeffc568755ea3eebe32b998f00237bf5ad))
+
+#### `firebase_remote_config_web` - `v1.10.7`
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+
+#### `firebase_storage` - `v13.4.0`
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+ - **FIX**(storage,android): fix an issue that could happen when app would get detached from the engine ([#18255](https://github.com/firebase/flutterfire/issues/18255)). ([2771f550](https://github.com/firebase/flutterfire/commit/2771f5505ff0a53cc1bfb41afec3a0eb8781b8f8))
+ - **FEAT**: upgrade pigeon to version 26.3.4 ([#18205](https://github.com/firebase/flutterfire/issues/18205)). ([cb6b4aef](https://github.com/firebase/flutterfire/commit/cb6b4aeffc568755ea3eebe32b998f00237bf5ad))
+
+#### `firebase_storage_web` - `v3.11.6`
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+
+
 ## 2026-04-13 - [BoM 4.12.0](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-4120-2026-04-13)
 
 ### Changes
