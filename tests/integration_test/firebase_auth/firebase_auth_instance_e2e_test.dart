@@ -886,6 +886,7 @@ void main() {
                 name: appName,
                 options: DefaultFirebaseOptions.currentPlatform,
               );
+              addTearDown(app2.delete);
 
               final auth2 = FirebaseAuth.instanceFor(app: app2);
 
@@ -897,7 +898,8 @@ void main() {
               fail(e.toString());
             }
           },
-          // TODO(russellwheatley): this is crashing iOS/macOS app (reinit app), but does not when running as app.
+          // TODO(russellwheatley): this is crashing iOS/macOS app (reinit
+          // app), and Android can race plugin listener setup in shared E2E.
           skip: defaultTargetPlatform == TargetPlatform.iOS ||
               defaultTargetPlatform == TargetPlatform.macOS,
         );
