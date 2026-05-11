@@ -4,6 +4,8 @@
 
 @TestOn('chrome')
 
+import 'dart:js_interop';
+
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_web/src/interop/firestore_interop.dart';
 import 'package:cloud_firestore_web/src/utils/encode_utility.dart';
