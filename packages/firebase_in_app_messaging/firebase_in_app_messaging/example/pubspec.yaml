@@ -8,10 +8,10 @@ environment:
   flutter: '>=3.27.0'
 
 dependencies:
-  firebase_analytics: ^12.3.0
-  firebase_core: ^4.7.0
-  firebase_in_app_messaging: ^0.9.2
-  firebase_in_app_messaging_platform_interface: ^0.2.5+20
+  firebase_analytics: ^12.4.0
+  firebase_core: ^4.8.0
+  firebase_in_app_messaging: ^0.9.2+1
+  firebase_in_app_messaging_platform_interface: ^0.2.5+21
   flutter:
     sdk: flutter
 
