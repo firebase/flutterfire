@@ -73,11 +73,12 @@ class _GroundingPageState extends State<GroundingPage> {
       }
     }
 
-    final aiProvider =
-        widget.useVertexBackend ? FirebaseAI.vertexAI() : FirebaseAI.googleAI();
+    final aiProvider = widget.useVertexBackend
+        ? FirebaseAI.vertexAI(location: 'global')
+        : FirebaseAI.googleAI();
 
     _model = aiProvider.generativeModel(
-      model: 'gemini-2.5-flash',
+      model: 'gemini-3.1-flash-lite',
       tools: tools.isNotEmpty ? tools : null,
       toolConfig: toolConfig,
     );
