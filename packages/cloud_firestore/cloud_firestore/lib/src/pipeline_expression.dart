@@ -875,9 +875,6 @@ abstract class Expression implements PipelineSerializable {
   /// Creates a field reference expression from a field path string
   static Field field(String fieldPath) => Field(fieldPath);
 
-  /// Creates a variable reference expression from a variable name.
-  static Variable variable(String name) => Variable(name);
-
   /// Creates a field reference expression from a FieldPath object
   static Field fieldPath(FieldPath fieldPath) => Field(fieldPath.toString());
 
@@ -1768,26 +1765,6 @@ class Field extends Selectable {
   }
 }
 
-/// Represents a variable reference in a pipeline expression.
-class Variable extends Expression {
-  final String variableName;
-
-  Variable(this.variableName);
-
-  @override
-  String get name => 'variable';
-
-  @override
-  Map<String, dynamic> toMap() {
-    return {
-      'name': name,
-      'args': {
-        'name': variableName,
-      },
-    };
-  }
-}
-
 /// Represents a null value expression
 class _NullExpression extends Expression {
   _NullExpression();
@@ -2531,9 +2508,9 @@ class _ArraySumExpression extends FunctionExpression {
 class _ArraySliceExpression extends FunctionExpression {
   final Expression expression;
   final Expression offset;
-  final Expression? length;
+  final Expression? sliceLength;
 
-  _ArraySliceExpression(this.expression, this.offset, this.length);
+  _ArraySliceExpression(this.expression, this.offset, this.sliceLength);
 
   @override
   String get name => 'array_slice';
@@ -2544,8 +2521,8 @@ class _ArraySliceExpression extends FunctionExpression {
       'expression': expression.toMap(),
       'offset': offset.toMap(),
     };
-    if (length != null) {
-      args['length'] = length!.toMap();
+    if (sliceLength != null) {
+      args['length'] = sliceLength!.toMap();
     }
     return {
       'name': name,
@@ -2557,10 +2534,10 @@ class _ArraySliceExpression extends FunctionExpression {
 /// Represents an array filter expression.
 class _ArrayFilterExpression extends FunctionExpression {
   final Expression expression;
-  final String alias;
+  final String elementAlias;
   final BooleanExpression filter;
 
-  _ArrayFilterExpression(this.expression, this.alias, this.filter);
+  _ArrayFilterExpression(this.expression, this.elementAlias, this.filter);
 
   @override
   String get name => 'array_filter';
@@ -2571,7 +2548,7 @@ class _ArrayFilterExpression extends FunctionExpression {
       'name': name,
       'args': {
         'expression': expression.toMap(),
-        'alias': alias,
+        'alias': elementAlias,
         'filter': filter.toMap(),
       },
     };

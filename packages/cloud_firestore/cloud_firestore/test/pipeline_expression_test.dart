@@ -685,44 +685,40 @@ void main() {
     });
 
     test('arrayFilter serializes correctly', () {
-      final item = Expression.variable('item');
       final expr = Field('scores').arrayFilter(
         'item',
-        item.greaterThanValue(10),
+        Field('item').greaterThanValue(10),
       );
       expect(expr.toMap(), {
         'name': 'array_filter',
         'args': {
           'expression': Field('scores').toMap(),
           'alias': 'item',
-          'filter': item.greaterThanValue(10).toMap(),
+          'filter': Field('item').greaterThanValue(10).toMap(),
         },
       });
     });
 
     test('arrayTransform serializes correctly', () {
-      final score = Expression.variable('score');
       final expr = Field('scores').arrayTransform(
         'score',
-        score.multiplyValue(10),
+        Field('score').multiplyNumber(10),
       );
       expect(expr.toMap(), {
         'name': 'array_transform',
         'args': {
           'expression': Field('scores').toMap(),
           'element_alias': 'score',
-          'transform': score.multiplyValue(10).toMap(),
+          'transform': Field('score').multiplyNumber(10).toMap(),
         },
       });
     });
 
     test('arrayTransformWithIndex serializes correctly', () {
-      final score = Expression.variable('score');
-      final index = Expression.variable('i');
       final expr = Field('scores').arrayTransformWithIndex(
         'score',
         'i',
-        score.add(index),
+        Field('score').add(Field('i')),
       );
       expect(expr.toMap(), {
         'name': 'array_transform_with_index',
@@ -730,15 +726,8 @@ void main() {
           'expression': Field('scores').toMap(),
           'element_alias': 'score',
           'index_alias': 'i',
-          'transform': score.add(index).toMap(),
+          'transform': Field('score').add(Field('i')).toMap(),
         },
-      });
-    });
-
-    test('variable serializes correctly', () {
-      expect(Expression.variable('item').toMap(), {
-        'name': 'variable',
-        'args': {'name': 'item'},
       });
     });
   });
