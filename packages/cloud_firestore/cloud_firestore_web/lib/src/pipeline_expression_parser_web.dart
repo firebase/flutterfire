@@ -40,6 +40,8 @@ class PipelineExpressionParserWeb {
     switch (name) {
       case 'field':
         return _pipelines.field(((argsMap[_kField] as String?) ?? '').toJS);
+      case 'variable':
+        return _pipelines.variable(((argsMap[_kName] as String?) ?? '').toJS);
       case 'add':
         return _binaryArithmetic(argsMap, (l, r) => l.add(r));
       case 'subtract':
@@ -360,6 +362,41 @@ class PipelineExpressionParserWeb {
       case 'array_index_of_all':
         return (_expr(argsMap, _kExpression) as interop.ExpressionJsImpl)
             .arrayIndexOfAll(_expr(argsMap, 'element'));
+      case 'array_slice':
+        {
+          final base = _expr(argsMap, _kExpression) as interop.ExpressionJsImpl;
+          final length = argsMap['length'];
+          if (length == null) {
+            return base.arraySlice(_expr(argsMap, 'offset'));
+          }
+          return base.arraySlice(
+            _expr(argsMap, 'offset'),
+            toExpression(length as Map<String, dynamic>),
+          );
+        }
+      case 'array_filter':
+        {
+          final filter =
+              toBooleanExpression(argsMap['filter'] as Map<String, dynamic>);
+          if (filter == null) {
+            throw UnsupportedError('array_filter requires a boolean filter');
+          }
+          return (_expr(argsMap, _kExpression) as interop.ExpressionJsImpl)
+              .arrayFilter((argsMap['alias'] as String).toJS, filter);
+        }
+      case 'array_transform':
+        return (_expr(argsMap, _kExpression) as interop.ExpressionJsImpl)
+            .arrayTransform(
+          (argsMap['element_alias'] as String).toJS,
+          _expr(argsMap, 'transform'),
+        );
+      case 'array_transform_with_index':
+        return (_expr(argsMap, _kExpression) as interop.ExpressionJsImpl)
+            .arrayTransformWithIndex(
+          (argsMap['element_alias'] as String).toJS,
+          (argsMap['index_alias'] as String).toJS,
+          _expr(argsMap, 'transform'),
+        );
       default:
         throw FirebaseException(
           plugin: 'cloud_firestore',

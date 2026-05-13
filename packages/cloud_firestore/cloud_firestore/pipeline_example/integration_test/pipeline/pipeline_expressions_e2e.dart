@@ -821,6 +821,43 @@ void runPipelineExpressionsTests() {
     });
 
     test(
+      'addFields with new array pipeline expressions returns values',
+      () async {
+        final value = Expression.variable('value');
+        final index = Expression.variable('index');
+        final snapshot = await firestore
+            .pipeline()
+            .collection('pipeline-e2e')
+            .where(Expression.field('test').equalValue('expressions'))
+            .where(Expression.field('score').equalValue(50))
+            .addFields(
+              Expression.field('arr').arraySlice(1, 2).as('arr_slice'),
+              Expression.field('arr')
+                  .arrayFilter('value', value.greaterThanValue(3))
+                  .as('arr_filtered'),
+              Expression.field('arr')
+                  .arrayTransform('value', value.multiplyValue(10))
+                  .as('arr_transformed'),
+              Expression.field('arr')
+                  .arrayTransformWithIndex('value', 'index', value.add(index))
+                  .as('arr_with_index'),
+            )
+            .limit(1)
+            .execute();
+
+        expectResultCount(snapshot, 1);
+        expectResultsData(snapshot, [
+          {
+            'arr_slice': [4, 6],
+            'arr_filtered': [4, 6],
+            'arr_transformed': [20, 40, 60],
+            'arr_with_index': [2, 5, 8],
+          },
+        ]);
+      },
+    );
+
+    test(
       'arraySum addFields succeeds on Android',
       () async {
         final snapshot = await firestore

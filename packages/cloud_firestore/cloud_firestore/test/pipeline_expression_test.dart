@@ -660,6 +660,87 @@ void main() {
       expect(expr.toMap()['name'], 'array_reverse');
       expect(expr.toMap()['args']['expression']['args']['field'], 'order');
     });
+
+    test('arraySlice serializes correctly', () {
+      final expr = Field('items').arraySlice(1, Field('count'));
+      expect(expr.toMap(), {
+        'name': 'array_slice',
+        'args': {
+          'expression': Field('items').toMap(),
+          'offset': Constant(1).toMap(),
+          'length': Field('count').toMap(),
+        },
+      });
+    });
+
+    test('arraySlice without length serializes correctly', () {
+      final expr = Field('items').arraySlice(1);
+      expect(expr.toMap(), {
+        'name': 'array_slice',
+        'args': {
+          'expression': Field('items').toMap(),
+          'offset': Constant(1).toMap(),
+        },
+      });
+    });
+
+    test('arrayFilter serializes correctly', () {
+      final item = Expression.variable('item');
+      final expr = Field('scores').arrayFilter(
+        'item',
+        item.greaterThanValue(10),
+      );
+      expect(expr.toMap(), {
+        'name': 'array_filter',
+        'args': {
+          'expression': Field('scores').toMap(),
+          'alias': 'item',
+          'filter': item.greaterThanValue(10).toMap(),
+        },
+      });
+    });
+
+    test('arrayTransform serializes correctly', () {
+      final score = Expression.variable('score');
+      final expr = Field('scores').arrayTransform(
+        'score',
+        score.multiplyValue(10),
+      );
+      expect(expr.toMap(), {
+        'name': 'array_transform',
+        'args': {
+          'expression': Field('scores').toMap(),
+          'element_alias': 'score',
+          'transform': score.multiplyValue(10).toMap(),
+        },
+      });
+    });
+
+    test('arrayTransformWithIndex serializes correctly', () {
+      final score = Expression.variable('score');
+      final index = Expression.variable('i');
+      final expr = Field('scores').arrayTransformWithIndex(
+        'score',
+        'i',
+        score.add(index),
+      );
+      expect(expr.toMap(), {
+        'name': 'array_transform_with_index',
+        'args': {
+          'expression': Field('scores').toMap(),
+          'element_alias': 'score',
+          'index_alias': 'i',
+          'transform': score.add(index).toMap(),
+        },
+      });
+    });
+
+    test('variable serializes correctly', () {
+      expect(Expression.variable('item').toMap(), {
+        'name': 'variable',
+        'args': {'name': 'item'},
+      });
+    });
   });
 
   group('Numeric expressions', () {

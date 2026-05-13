@@ -116,6 +116,16 @@ static NSError *parseError(NSString *message) {
     return [[FIRFieldBridge alloc] initWithName:field];
   }
 
+  if ([name isEqualToString:@"variable"]) {
+    NSString *variableName = args[@"name"];
+    if (![variableName isKindOfClass:[NSString class]] || variableName.length == 0) {
+      if (error) *error = parseError(@"Variable expression requires 'name' argument");
+      return nil;
+    }
+    return FLTNewFunctionExprBridge(@"variable",
+                                    @[ [[FIRConstantBridge alloc] init:variableName] ]);
+  }
+
   if ([name isEqualToString:@"constant"]) {
     id value = args[@"value"];
     if (value == nil) {
@@ -484,6 +494,86 @@ static NSError *parseError(NSString *message) {
       return nil;
     }
     return FLTNewFunctionExprBridge(@"array_concat", all);
+  }
+
+  // -------------------------------------------------------------------------
+  // expression + offset (+ optional length): array_slice
+  // -------------------------------------------------------------------------
+  if ([name isEqualToString:@"array_slice"]) {
+    id exprMap = args[@"expression"];
+    id offsetMap = args[@"offset"];
+    id lengthMap = args[@"length"];
+    if (![exprMap isKindOfClass:[NSDictionary class]] ||
+        ![offsetMap isKindOfClass:[NSDictionary class]]) {
+      if (error) *error = parseError(@"array_slice requires expression and offset");
+      return nil;
+    }
+    FIRExprBridge *expr = [self parseExpression:exprMap error:error];
+    FIRExprBridge *offset = [self parseExpression:offsetMap error:error];
+    if (!expr || !offset) return nil;
+    NSMutableArray<FIRExprBridge *> *sliceArgs =
+        [NSMutableArray arrayWithObjects:expr, offset, nil];
+    if ([lengthMap isKindOfClass:[NSDictionary class]]) {
+      FIRExprBridge *length = [self parseExpression:lengthMap error:error];
+      if (!length) return nil;
+      [sliceArgs addObject:length];
+    }
+    return FLTNewFunctionExprBridge(@"array_slice", sliceArgs);
+  }
+
+  // -------------------------------------------------------------------------
+  // expression + alias + filter: array_filter
+  // -------------------------------------------------------------------------
+  if ([name isEqualToString:@"array_filter"]) {
+    id exprMap = args[@"expression"];
+    NSString *alias = args[@"alias"];
+    id filterMap = args[@"filter"];
+    if (![exprMap isKindOfClass:[NSDictionary class]] || ![alias isKindOfClass:[NSString class]] ||
+        ![filterMap isKindOfClass:[NSDictionary class]]) {
+      if (error) *error = parseError(@"array_filter requires expression, alias, and filter");
+      return nil;
+    }
+    FIRExprBridge *expr = [self parseExpression:exprMap error:error];
+    FIRExprBridge *filter = [self parseBooleanExpression:filterMap error:error];
+    if (!expr || !filter) return nil;
+    return FLTNewFunctionExprBridge(@"array_filter",
+                                    @[ expr, [[FIRConstantBridge alloc] init:alias], filter ]);
+  }
+
+  // -------------------------------------------------------------------------
+  // expression + aliases + transform: array_transform / array_transform_with_index
+  // -------------------------------------------------------------------------
+  if ([name isEqualToString:@"array_transform"] ||
+      [name isEqualToString:@"array_transform_with_index"]) {
+    id exprMap = args[@"expression"];
+    NSString *elementAlias = args[@"element_alias"];
+    NSString *indexAlias = args[@"index_alias"];
+    id transformMap = args[@"transform"];
+    BOOL withIndex = [name isEqualToString:@"array_transform_with_index"];
+    if (![exprMap isKindOfClass:[NSDictionary class]] ||
+        ![elementAlias isKindOfClass:[NSString class]] ||
+        (withIndex && ![indexAlias isKindOfClass:[NSString class]]) ||
+        ![transformMap isKindOfClass:[NSDictionary class]]) {
+      if (error) {
+        NSString *message =
+            withIndex
+                ? @"array_transform_with_index requires expression, element_alias, index_alias, "
+                  @"and transform"
+                : @"array_transform requires expression, element_alias, and transform";
+        *error = parseError(message);
+      }
+      return nil;
+    }
+    FIRExprBridge *expr = [self parseExpression:exprMap error:error];
+    FIRExprBridge *transform = [self parseExpression:transformMap error:error];
+    if (!expr || !transform) return nil;
+    NSMutableArray<FIRExprBridge *> *transformArgs =
+        [NSMutableArray arrayWithObjects:expr, [[FIRConstantBridge alloc] init:elementAlias], nil];
+    if (withIndex) {
+      [transformArgs addObject:[[FIRConstantBridge alloc] init:indexAlias]];
+    }
+    [transformArgs addObject:transform];
+    return FLTNewFunctionExprBridge(name, transformArgs);
   }
 
   // -------------------------------------------------------------------------

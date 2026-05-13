@@ -136,6 +136,14 @@ class ExpressionParsers {
           }
           return Expression.field(fieldName);
         }
+      case "variable":
+        {
+          String variableName = (String) args.get("name");
+          if (variableName == null) {
+            throw new IllegalArgumentException("Variable expression must have a 'name' argument");
+          }
+          return Expression.variable(variableName);
+        }
       case "constant":
         {
           Object value = args.get("value");
@@ -274,8 +282,49 @@ class ExpressionParsers {
       case "array_sum":
         return Expression.arraySum(parseChild(args, "expression"));
       case "array_slice":
-        throw new UnsupportedOperationException(
-            "Expression type 'array_slice' is not supported on Android Firestore pipeline API");
+        {
+          Expression array = parseChild(args, "expression");
+          Expression offset = parseChild(args, "offset");
+          Map<String, Object> lengthMap = (Map<String, Object>) args.get("length");
+          if (lengthMap == null) {
+            return array.arraySliceToEnd(offset);
+          }
+          return array.arraySlice(offset, parseExpression(lengthMap));
+        }
+      case "array_filter":
+        {
+          Expression array = parseChild(args, "expression");
+          String alias = (String) args.get("alias");
+          Map<String, Object> filterMap = (Map<String, Object>) args.get("filter");
+          if (alias == null || filterMap == null) {
+            throw new IllegalArgumentException("array_filter requires alias and filter");
+          }
+          return array.arrayFilter(alias, parseBooleanExpression(filterMap));
+        }
+      case "array_transform":
+        {
+          Expression array = parseChild(args, "expression");
+          String elementAlias = (String) args.get("element_alias");
+          Map<String, Object> transformMap = (Map<String, Object>) args.get("transform");
+          if (elementAlias == null || transformMap == null) {
+            throw new IllegalArgumentException(
+                "array_transform requires element_alias and transform");
+          }
+          return array.arrayTransform(elementAlias, parseExpression(transformMap));
+        }
+      case "array_transform_with_index":
+        {
+          Expression array = parseChild(args, "expression");
+          String elementAlias = (String) args.get("element_alias");
+          String indexAlias = (String) args.get("index_alias");
+          Map<String, Object> transformMap = (Map<String, Object>) args.get("transform");
+          if (elementAlias == null || indexAlias == null || transformMap == null) {
+            throw new IllegalArgumentException(
+                "array_transform_with_index requires element_alias, index_alias, and transform");
+          }
+          return array.arrayTransformWithIndex(
+              elementAlias, indexAlias, parseExpression(transformMap));
+        }
       case "if_absent":
         {
           Map<String, Object> exprMap = (Map<String, Object>) args.get("expression");
