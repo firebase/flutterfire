@@ -45,9 +45,7 @@ class BidiMediaManager {
   String? get selectedCameraId => _videoInput.selectedCameraId;
   bool get controllerInitialized => _videoInput.controllerInitialized;
 
-  void setMacOSController(dynamic controller) {
-    _videoInput.setMacOSController(controller);
-  }
+
 
   Future<void> init() async {
     try {
@@ -98,25 +96,12 @@ class BidiMediaManager {
   }
 
   Future<void> startVideo(void Function(Uint8List, String) onData) async {
+    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.macOS) return;
     if (!videoIsInitialized) return;
 
     if (!_videoInput.controllerInitialized ||
         _videoInput.cameraController == null) {
       await _videoInput.initializeCameraController();
-    }
-
-    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.macOS) {
-      int attempts = 0;
-      while (_videoInput.cameraController == null) {
-        if (attempts > 50) {
-          developer.log(
-            'BidiMediaManager.startVideo(): macOS camera controller initialization timed out after 50 attempts.',
-          );
-          break; // 5 second timeout safety
-        }
-        await Future.delayed(const Duration(milliseconds: 100));
-        attempts++;
-      }
     }
 
     // Wait for Mac Camera to Settle (Prevent audio hijack)
@@ -125,11 +110,6 @@ class BidiMediaManager {
     _videoSubscription = _videoInput.startStreamingImages().listen(
       (data) {
         String mimeType = 'image/jpeg';
-        if (!kIsWeb && defaultTargetPlatform == TargetPlatform.macOS) {
-          if (data.length > 3 && data[0] == 0x89 && data[1] == 0x50) {
-            mimeType = 'image/png';
-          }
-        }
         onData(data, mimeType);
       },
       onError: (e) => developer.log('Video Stream Error: $e'),
@@ -174,6 +154,14 @@ class BidiSessionController extends ChangeNotifier {
   bool isSessionActive = false;
   bool isMicOn = false;
   bool isCameraOn = false;
+  bool _isDisposed = false;
+
+  @override
+  void notifyListeners() {
+    if (!_isDisposed) {
+      super.notifyListeners();
+    }
+  }
 
   // Intention state for robust stream reconnection
   bool _intendedMicOn = false;
@@ -545,6 +533,7 @@ class BidiSessionController extends ChangeNotifier {
 
   @override
   void dispose() {
+    _isDisposed = true;
     _stopSession(explicit: true);
     super.dispose();
   }
@@ -675,26 +664,16 @@ class _BidiPageState extends State<BidiPage> {
                   height: 200,
                   color: Colors.black,
                   alignment: Alignment.center,
-                  child: (!kIsWeb &&
-                          defaultTargetPlatform == TargetPlatform.macOS)
+                  child: (_controller.mediaManager.cameraController != null &&
+                          _controller.mediaManager.controllerInitialized)
                       ? FullCameraPreview(
-                          controller: _controller.mediaManager.cameraController,
-                          deviceId: _controller.mediaManager.selectedCameraId,
-                          onInitialized: (controller) {
-                            _controller.mediaManager
-                                .setMacOSController(controller);
-                          },
+                          controller:
+                              _controller.mediaManager.cameraController,
+                          deviceId:
+                              _controller.mediaManager.selectedCameraId,
+                          onInitialized: (controller) {},
                         )
-                      : (_controller.mediaManager.cameraController != null &&
-                              _controller.mediaManager.controllerInitialized)
-                          ? FullCameraPreview(
-                              controller:
-                                  _controller.mediaManager.cameraController,
-                              deviceId:
-                                  _controller.mediaManager.selectedCameraId,
-                              onInitialized: (controller) {},
-                            )
-                          : const Center(child: CircularProgressIndicator()),
+                      : const Center(child: CircularProgressIndicator()),
                 ),
               Expanded(
                 child: ListView.builder(
@@ -762,20 +741,21 @@ class _BidiPageState extends State<BidiPage> {
                             : Theme.of(context).colorScheme.primary,
                       ),
                     ),
-                    IconButton(
-                      tooltip: 'Toggle Camera',
-                      onPressed: !_controller.isLoading
-                          ? () => _controller.toggleCamera()
-                          : null,
-                      icon: Icon(
-                        _controller.isCameraOn
-                            ? Icons.videocam_off
-                            : Icons.videocam,
-                        color: _controller.isLoading
-                            ? Theme.of(context).colorScheme.secondary
-                            : Theme.of(context).colorScheme.primary,
+                    if (!(!kIsWeb && defaultTargetPlatform == TargetPlatform.macOS))
+                      IconButton(
+                        tooltip: 'Toggle Camera',
+                        onPressed: !_controller.isLoading
+                            ? () => _controller.toggleCamera()
+                            : null,
+                        icon: Icon(
+                          _controller.isCameraOn
+                              ? Icons.videocam_off
+                              : Icons.videocam,
+                          color: _controller.isLoading
+                              ? Theme.of(context).colorScheme.secondary
+                              : Theme.of(context).colorScheme.primary,
+                        ),
                       ),
-                    ),
                     if (!_controller.isLoading)
                       IconButton(
                         tooltip: 'Send Text',
