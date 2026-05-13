@@ -56,13 +56,13 @@ class _ChatPageState extends State<ChatPage> {
           : null,
     );
     if (widget.useVertexBackend) {
-      _model = FirebaseAI.vertexAI().generativeModel(
-        model: 'gemini-2.5-flash',
+      _model = FirebaseAI.vertexAI(location: 'global').generativeModel(
+        model: 'gemini-3.1-flash-lite',
         generationConfig: generationConfig,
       );
     } else {
       _model = FirebaseAI.googleAI().generativeModel(
-        model: 'gemini-2.5-flash',
+        model: 'gemini-3.1-flash-lite',
         generationConfig: generationConfig,
       );
     }
