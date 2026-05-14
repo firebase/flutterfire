@@ -2,7 +2,7 @@ name: firebase_analytics_web
 description: The web implementation of firebase_analytics
 homepage: https://github.com/firebase/flutterfire/tree/main/packages/firebase_analytics/firebase_analytics_web
 repository: https://github.com/firebase/flutterfire/tree/main/packages/firebase_analytics/firebase_analytics_web
-version: 0.6.1+6
+version: 0.6.1+7
 resolution: workspace
 
 environment:
@@ -10,10 +10,10 @@ environment:
   flutter: '>=3.22.0'
 
 dependencies:
-  _flutterfire_internals: ^1.3.70
-  firebase_analytics_platform_interface: ^6.0.0
-  firebase_core: ^4.8.0
-  firebase_core_web: ^3.6.1
+  _flutterfire_internals: ^1.3.71
+  firebase_analytics_platform_interface: ^6.0.1
+  firebase_core: ^4.9.0
+  firebase_core_web: ^3.7.0
   flutter:
     sdk: flutter
   flutter_web_plugins:
