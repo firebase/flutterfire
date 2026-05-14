@@ -365,6 +365,7 @@ extension type PipelinesJsImpl._(JSObject _) implements JSObject {
   external JSAny and(JSAny a, JSAny b);
   external JSAny or(JSAny a, JSAny b);
   external JSAny xor(JSAny a, JSAny b);
+  external JSAny nor(JSAny a, JSAny b);
   external JSAny not(JSAny expr);
 
   // --- Existence / type checks ---
@@ -404,6 +405,15 @@ extension type PipelinesJsImpl._(JSObject _) implements JSObject {
       JSAny timestamp, JSString unit, JSAny amount);
   external ExpressionJsImpl timestampTruncate(JSAny timestamp, JSString unit,
       [JSString? timezone]);
+  external ExpressionJsImpl timestampDiff(JSAny end, JSAny start, JSAny unit);
+  external ExpressionJsImpl timestampExtract(JSAny timestamp, JSAny part,
+      [JSAny? timezone]);
+  external ExpressionJsImpl parent(JSAny documentRefOrExpression);
+  external ExpressionJsImpl ifNull(JSAny ifExpr, JSAny elseExpr);
+  external ExpressionJsImpl coalesce(
+      JSAny first, JSAny second, JSArray<JSAny> more);
+  @JS('switchOn')
+  external JSFunction get switchOnJs;
   external ExpressionJsImpl abs(JSAny expr);
   external ExpressionJsImpl arrayLength(JSAny array);
   external ExpressionJsImpl arraySum(JSAny expression);
