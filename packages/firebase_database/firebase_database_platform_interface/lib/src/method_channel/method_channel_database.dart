@@ -143,10 +143,10 @@ class MethodChannelDatabase extends DatabasePlatform {
   }
 
   @override
-  void setPersistenceEnabled(bool enabled) {
+  Future<void> setPersistenceEnabled(bool enabled) async {
     _persistenceEnabled = enabled;
     // Call the Pigeon method to set persistence
-    _api.setPersistenceEnabled(pigeonApp, enabled);
+    await _api.setPersistenceEnabled(pigeonApp, enabled);
   }
 
   @override
