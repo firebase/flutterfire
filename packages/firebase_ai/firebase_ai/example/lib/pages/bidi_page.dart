@@ -45,8 +45,6 @@ class BidiMediaManager {
   String? get selectedCameraId => _videoInput.selectedCameraId;
   bool get controllerInitialized => _videoInput.controllerInitialized;
 
-
-
   Future<void> init() async {
     try {
       await _audioOutput.init();
@@ -667,10 +665,8 @@ class _BidiPageState extends State<BidiPage> {
                   child: (_controller.mediaManager.cameraController != null &&
                           _controller.mediaManager.controllerInitialized)
                       ? FullCameraPreview(
-                          controller:
-                              _controller.mediaManager.cameraController,
-                          deviceId:
-                              _controller.mediaManager.selectedCameraId,
+                          controller: _controller.mediaManager.cameraController,
+                          deviceId: _controller.mediaManager.selectedCameraId,
                           onInitialized: (controller) {},
                         )
                       : const Center(child: CircularProgressIndicator()),
@@ -741,7 +737,8 @@ class _BidiPageState extends State<BidiPage> {
                             : Theme.of(context).colorScheme.primary,
                       ),
                     ),
-                    if (!(!kIsWeb && defaultTargetPlatform == TargetPlatform.macOS))
+                    if (!(!kIsWeb &&
+                        defaultTargetPlatform == TargetPlatform.macOS))
                       IconButton(
                         tooltip: 'Toggle Camera',
                         onPressed: !_controller.isLoading
