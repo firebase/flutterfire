@@ -1,3 +1,7 @@
+## 12.4.1
+
+ - Update a dependency to the latest release.
+
 ## 12.4.0
 
  - **REFACTOR**(database,android): simplify query handling by extracting queryFromModifiers method ([#18221](https://github.com/firebase/flutterfire/issues/18221)). ([65d9bb71](https://github.com/firebase/flutterfire/commit/65d9bb7104f59de82010e3e82fd0ddddbf9a2e23))
