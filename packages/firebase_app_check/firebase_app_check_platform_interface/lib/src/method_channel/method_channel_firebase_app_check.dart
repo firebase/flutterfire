@@ -10,14 +10,32 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import '../../firebase_app_check_platform_interface.dart';
-import '../pigeon/messages.pigeon.dart';
+import '../pigeon/messages.pigeon.dart' as pigeon;
 import 'utils/exception.dart';
 import 'utils/provider_to_string.dart';
+
+class _WindowsCustomProviderFlutterApi
+    extends pigeon.FirebaseAppCheckFlutterApi {
+  @override
+  Future<pigeon.CustomAppCheckToken> getCustomToken() async {
+    final provider = MethodChannelFirebaseAppCheck._windowsCustomProvider;
+    if (provider == null) {
+      throw StateError('No WindowsCustomProvider has been activated.');
+    }
+
+    final token = await provider.fetchToken();
+    return pigeon.CustomAppCheckToken(
+      token: token.token,
+      expireTimeMillis: token.expireTimeMillis,
+    );
+  }
+}
 
 class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
   /// Create an instance of [MethodChannelFirebaseAppCheck].
   MethodChannelFirebaseAppCheck({required FirebaseApp app})
       : super(appInstance: app) {
+    pigeon.FirebaseAppCheckFlutterApi.setUp(_windowsCustomProviderFlutterApi);
     _tokenChangesListeners[app.name] = StreamController<String?>.broadcast();
     _listenerRegistration = _registerTokenListener(app);
   }
@@ -55,7 +73,11 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
       <String, MethodChannelFirebaseAppCheck>{};
 
   /// The Pigeon API used for platform communication.
-  final FirebaseAppCheckHostApi _pigeonApi = FirebaseAppCheckHostApi();
+  final pigeon.FirebaseAppCheckHostApi _pigeonApi =
+      pigeon.FirebaseAppCheckHostApi();
+  static final _windowsCustomProviderFlutterApi =
+      _WindowsCustomProviderFlutterApi();
+  static WindowsCustomProvider? _windowsCustomProvider;
   late final Future<void> _listenerRegistration;
   StreamSubscription<dynamic>? _subscription;
   bool _isDisposed = false;
@@ -112,6 +134,7 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
     WindowsAppCheckProvider? providerWindows,
   }) async {
     try {
+      _setWindowsCustomProvider(providerWindows);
       await _pigeonApi.activate(
         app.name,
         defaultTargetPlatform == TargetPlatform.android || kDebugMode
@@ -138,6 +161,13 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
     } on PlatformException catch (e, s) {
       convertPlatformException(e, s);
     }
+  }
+
+  static void _setWindowsCustomProvider(
+    WindowsAppCheckProvider? providerWindows,
+  ) {
+    _windowsCustomProvider =
+        providerWindows is WindowsCustomProvider ? providerWindows : null;
   }
 
   @override
