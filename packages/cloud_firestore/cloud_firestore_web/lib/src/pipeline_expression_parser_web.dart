@@ -40,8 +40,6 @@ class PipelineExpressionParserWeb {
     switch (name) {
       case 'field':
         return _pipelines.field(((argsMap[_kField] as String?) ?? '').toJS);
-      case 'variable':
-        return _pipelines.variable(((argsMap[_kName] as String?) ?? '').toJS);
       case 'add':
         return _binaryArithmetic(argsMap, (l, r) => l.add(r));
       case 'subtract':

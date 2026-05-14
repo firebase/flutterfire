@@ -353,7 +353,6 @@ extension type PipelinesJsImpl._(JSObject _) implements JSObject {
 
   // --- Expression builders ---
   external ExpressionJsImpl field(JSString path);
-  external ExpressionJsImpl variable(JSString name);
   external ExpressionJsImpl constant(JSAny? value);
 
   // --- Boolean / comparison ---

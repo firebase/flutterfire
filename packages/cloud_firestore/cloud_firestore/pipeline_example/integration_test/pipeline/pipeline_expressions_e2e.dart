@@ -820,28 +820,23 @@ void runPipelineExpressionsTests() {
       expect(snapshot.result[0].data()!['tags_rev'], ['q', 'p']);
     });
 
-    test(
-      'addFields with arraySlice returns sliced array',
-      () async {
-        final snapshot = await firestore
-            .pipeline()
-            .collection('pipeline-e2e')
-            .where(Expression.field('test').equalValue('expressions'))
-            .where(Expression.field('score').equalValue(50))
-            .addFields(
-              Expression.field('arr').arraySlice(1, 2).as('arr_slice'),
-            )
-            .limit(1)
-            .execute();
+    test('addFields with arraySlice returns sliced array', () async {
+      final snapshot = await firestore
+          .pipeline()
+          .collection('pipeline-e2e')
+          .where(Expression.field('test').equalValue('expressions'))
+          .where(Expression.field('score').equalValue(50))
+          .addFields(Expression.field('arr').arraySlice(1, 2).as('arr_slice'))
+          .limit(1)
+          .execute();
 
-        expectResultCount(snapshot, 1);
-        expectResultsData(snapshot, [
-          {
-            'arr_slice': [4, 6],
-          },
-        ]);
-      },
-    );
+      expectResultCount(snapshot, 1);
+      expectResultsData(snapshot, [
+        {
+          'arr_slice': [4, 6],
+        },
+      ]);
+    });
 
     test(
       'arraySum addFields succeeds on Android',

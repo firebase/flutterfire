@@ -116,16 +116,6 @@ static NSError *parseError(NSString *message) {
     return [[FIRFieldBridge alloc] initWithName:field];
   }
 
-  if ([name isEqualToString:@"variable"]) {
-    NSString *variableName = args[@"name"];
-    if (![variableName isKindOfClass:[NSString class]] || variableName.length == 0) {
-      if (error) *error = parseError(@"Variable expression requires 'name' argument");
-      return nil;
-    }
-    return FLTNewFunctionExprBridge(@"variable",
-                                    @[ [[FIRConstantBridge alloc] init:variableName] ]);
-  }
-
   if ([name isEqualToString:@"constant"]) {
     id value = args[@"value"];
     if (value == nil) {

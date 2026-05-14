@@ -136,14 +136,6 @@ class ExpressionParsers {
           }
           return Expression.field(fieldName);
         }
-      case "variable":
-        {
-          String variableName = (String) args.get("name");
-          if (variableName == null) {
-            throw new IllegalArgumentException("Variable expression must have a 'name' argument");
-          }
-          return Expression.variable(variableName);
-        }
       case "constant":
         {
           Object value = args.get("value");
