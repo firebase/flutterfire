@@ -1,3 +1,16 @@
+## 4.9.0
+
+ - **FIX**(core,iOS): use namespaced iOS Pigeon header import ([#18281](https://github.com/firebase/flutterfire/issues/18281)). ([7c1257e7](https://github.com/firebase/flutterfire/commit/7c1257e7295f9ba67f3f5820493f105a14d34d52))
+ - **FEAT**: bump Firebase iOS SDK to 12.13.0 ([#18273](https://github.com/firebase/flutterfire/issues/18273)). ([78e10f02](https://github.com/firebase/flutterfire/commit/78e10f0222f4e23c96b636c63c29935ba5aa82e6))
+ - **FEAT**: bump Firebase android SDK to 34.13.0 ([#18272](https://github.com/firebase/flutterfire/issues/18272)). ([d10e0ffa](https://github.com/firebase/flutterfire/commit/d10e0ffa2980a21a5899dbe67952fc772a3c6c01))
+
+## 4.8.0
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+ - **FIX**: update core, auth and app-check logic so internal resources on method channels are properly disposed ([#18268](https://github.com/firebase/flutterfire/issues/18268)). ([a0de4ed8](https://github.com/firebase/flutterfire/commit/a0de4ed86b0dff89bb9e557f2a54f38cd2546016))
+ - **FEAT**(core): Add Auth and AppCheck as App's registered service. ([#18237](https://github.com/firebase/flutterfire/issues/18237)). ([7ce191cb](https://github.com/firebase/flutterfire/commit/7ce191cbd598b299cd0ec64b45d1366914367a5d))
+ - **FEAT**: upgrade pigeon to version 26.3.4 ([#18205](https://github.com/firebase/flutterfire/issues/18205)). ([cb6b4aef](https://github.com/firebase/flutterfire/commit/cb6b4aeffc568755ea3eebe32b998f00237bf5ad))
+
 ## 4.7.0
 
  - **FEAT**(core): bump Firebase Android SDK to 34.12.0 ([#18185](https://github.com/firebase/flutterfire/issues/18185)). ([346a048f](https://github.com/firebase/flutterfire/commit/346a048f098090e6848fdd0f61a8bf7d01394676))

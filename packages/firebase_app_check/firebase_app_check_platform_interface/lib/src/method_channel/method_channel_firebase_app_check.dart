@@ -19,25 +19,32 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
   MethodChannelFirebaseAppCheck({required FirebaseApp app})
       : super(appInstance: app) {
     _tokenChangesListeners[app.name] = StreamController<String?>.broadcast();
+    _listenerRegistration = _registerTokenListener(app);
+  }
 
-    _pigeonApi.registerTokenListener(app.name).then((channelName) {
+  Future<void> _registerTokenListener(FirebaseApp app) async {
+    try {
+      final channelName = await _pigeonApi.registerTokenListener(app.name);
+      if (_isDisposed) {
+        return;
+      }
+
       final events = EventChannel(channelName);
-      events
+      _subscription = events
           .receiveGuardedBroadcastStream(onError: convertPlatformException)
-          .listen(
-        (arguments) {
-          // ignore: close_sinks
-          StreamController<String?> controller =
-              _tokenChangesListeners[app.name]!;
+          .listen((arguments) {
+        // ignore: close_sinks
+        final controller = _tokenChangesListeners[app.name];
+        if (!_isDisposed && controller != null) {
           Map<dynamic, dynamic> result = arguments;
           controller.add(result['token'] as String?);
-        },
-      );
+        }
+      });
       // ignore: avoid_catches_without_on_clauses
-    }).catchError((_) {
+    } catch (_) {
       // Silently ignore errors during token listener registration.
       // This can happen in test environments where the host API is not set up.
-    });
+    }
   }
 
   static final Map<String, StreamController<String?>> _tokenChangesListeners =
@@ -49,6 +56,9 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
 
   /// The Pigeon API used for platform communication.
   final FirebaseAppCheckHostApi _pigeonApi = FirebaseAppCheckHostApi();
+  late final Future<void> _listenerRegistration;
+  StreamSubscription<dynamic>? _subscription;
+  bool _isDisposed = false;
 
   /// Returns a stub instance to allow the platform interface to access
   /// the class instance statically.
@@ -67,6 +77,16 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
     return _methodChannelFirebaseAppCheckInstances.putIfAbsent(app.name, () {
       return MethodChannelFirebaseAppCheck(app: app);
     });
+  }
+
+  @override
+  Future<void> dispose() async {
+    _isDisposed = true;
+    await _listenerRegistration;
+    await _subscription?.cancel();
+    _subscription = null;
+    await _tokenChangesListeners.remove(app.name)?.close();
+    _methodChannelFirebaseAppCheckInstances.remove(app.name);
   }
 
   @override
@@ -92,22 +112,6 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
     WindowsAppCheckProvider? providerWindows,
   }) async {
     try {
-      String? debugToken;
-      String? windowsProvider;
-      if (providerAndroid is AndroidDebugProvider &&
-          providerAndroid.debugToken != null) {
-        debugToken = providerAndroid.debugToken;
-      } else if (providerApple is AppleDebugProvider &&
-          providerApple.debugToken != null) {
-        debugToken = providerApple.debugToken;
-      } else if (providerWindows is WindowsDebugProvider &&
-          providerWindows.debugToken != null) {
-        debugToken = providerWindows.debugToken;
-      }
-      if (!kIsWeb && defaultTargetPlatform == TargetPlatform.windows) {
-        windowsProvider = providerWindows?.type;
-      }
-
       await _pigeonApi.activate(
         app.name,
         defaultTargetPlatform == TargetPlatform.android || kDebugMode
@@ -124,8 +128,12 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
                 newProvider: providerApple,
               )
             : null,
-        debugToken,
-        windowsProvider,
+        _getDebugToken(
+          providerAndroid: providerAndroid,
+          providerApple: providerApple,
+          providerWindows: providerWindows,
+        ),
+        _getWindowsProvider(providerWindows),
       );
     } on PlatformException catch (e, s) {
       convertPlatformException(e, s);
@@ -168,4 +176,37 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
       convertPlatformException(e, s);
     }
   }
+}
+
+String? _getDebugToken({
+  AndroidAppCheckProvider? providerAndroid,
+  AppleAppCheckProvider? providerApple,
+  WindowsAppCheckProvider? providerWindows,
+}) {
+  switch (defaultTargetPlatform) {
+    case TargetPlatform.android:
+      return providerAndroid is AndroidDebugProvider
+          ? providerAndroid.debugToken
+          : null;
+    case TargetPlatform.iOS:
+    case TargetPlatform.macOS:
+      return providerApple is AppleDebugProvider
+          ? providerApple.debugToken
+          : null;
+    case TargetPlatform.windows:
+      return providerWindows is WindowsDebugProvider
+          ? providerWindows.debugToken
+          : null;
+    case TargetPlatform.fuchsia:
+    case TargetPlatform.linux:
+      return null;
+  }
+}
+
+String? _getWindowsProvider(WindowsAppCheckProvider? providerWindows) {
+  if (!kIsWeb && defaultTargetPlatform == TargetPlatform.windows) {
+    return providerWindows?.type;
+  }
+
+  return null;
 }

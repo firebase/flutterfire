@@ -152,8 +152,7 @@ class CloudFirestorePlugin : public flutter::Plugin,
       event_channels_;
   static std::map<std::string, std::unique_ptr<flutter::StreamHandler<>>>
       stream_handlers_;
-  static std::map<std::string, std::unique_ptr<flutter::StreamHandler<>>>
-      transaction_handlers_;
+  static std::map<std::string, flutter::StreamHandler<>*> transaction_handlers_;
   static std::map<std::string,
                   std::shared_ptr<firebase::firestore::Transaction>>
       transactions_;

@@ -1,7 +1,7 @@
 name: e2e-iOS
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}-ios
   cancel-in-progress: true
 
 on:
@@ -23,16 +23,23 @@ on:
       - '!**/example/integration_test/**'
       - '**/flutterfire_ui/**'
       - '**.md'
+  workflow_call:
+    inputs:
+      nightly_test_mode:
+        type: boolean
+        default: false
 
 jobs:
   ios:
     runs-on: macos-15
-    timeout-minutes: 60
+    timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 60 }}
     strategy:
       fail-fast: false
       matrix:
         working_directory:
           ['tests', 'packages/cloud_firestore/cloud_firestore/example']
+        exclude:
+          - working_directory: ${{ inputs.nightly_test_mode && 'packages/cloud_firestore/cloud_firestore/example' || 'none' }}
     steps:
       - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
       - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
@@ -41,7 +48,7 @@ jobs:
           node-version: '20'
       - name: Xcode
         run: sudo xcode-select -s /Applications/Xcode_16.4.app/Contents/Developer
-      - uses: actions/setup-java@8df1039502a15bceb9433410b1a100fbe190c53b
+      - uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654
         with:
           distribution: 'temurin'
           java-version: '21'
@@ -51,7 +58,7 @@ jobs:
           key: xcode-cache-${{ runner.os }}
           save: "${{ github.ref == 'refs/heads/main' }}"
           max-size: 700M
-      - uses: actions/cache/restore@668228422ae6a00e4ad889ee87cd7109ec5666a7
+      - uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
         continue-on-error: true
         name: Pods Cache
         id: pods-cache
@@ -66,7 +73,7 @@ jobs:
           echo "FIREBASE_TOOLS_VERSION=$(npm firebase --version)" >> $GITHUB_ENV
       - name: Firebase Emulator Cache
         id: firebase-emulator-cache
-        uses: actions/cache/restore@668228422ae6a00e4ad889ee87cd7109ec5666a7
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
         continue-on-error: true
         with:
           # The firebase emulators are pure javascript and java, OS-independent
@@ -126,20 +133,13 @@ jobs:
         run: |
           # Uncomment following line to have simulator logs printed out for debugging purposes.
           # xcrun simctl spawn booted log stream --predicate 'eventMessage contains "flutter"' &
-          # The iOS simulator sometimes fails to connect the VM Service, hanging for
-          # 12 minutes before timing out. Use a 6-minute limit and retry once with
-          # a simulator reboot. Normal connection takes 30s-5min.
-          perl -e 'alarm 360; exec @ARGV' -- flutter test integration_test/e2e_test.dart -d "$SIMULATOR" --timeout 10x --dart-define=CI=true || {
-            echo "First attempt failed or timed out. Rebooting simulator and retrying..."
-            xcrun simctl shutdown "$SIMULATOR" || true
-            xcrun simctl boot "$SIMULATOR"
-            xcrun simctl bootstatus "$SIMULATOR" -b
-            flutter test integration_test/e2e_test.dart -d "$SIMULATOR" --timeout 10x --dart-define=CI=true
-          }
+          # Once the integration test runner has launched, leave it running rather
+          # than starting a second app instance from a retry.
+          flutter test integration_test/e2e_test.dart -d "$SIMULATOR" --timeout 10x --dart-define=CI=true
       - name: Save Firestore Emulator Cache
         # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
         if: github.ref == 'refs/heads/main'
-        uses: actions/cache/save@668228422ae6a00e4ad889ee87cd7109ec5666a7
+        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
         continue-on-error: true
         with:
           # The firebase emulators are pure javascript and java, OS-independent
@@ -150,7 +150,7 @@ jobs:
       - name: Save Pods Cache
         # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
         if: github.ref == 'refs/heads/main'
-        uses: actions/cache/save@668228422ae6a00e4ad889ee87cd7109ec5666a7
+        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
         continue-on-error: true
         with:
           key: ${{ steps.pods-cache.outputs.cache-primary-key }}

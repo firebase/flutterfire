@@ -14,7 +14,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_ai/firebase_ai.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import '../utils/function_call_utils.dart';
 import '../widgets/message_widget.dart';
 
@@ -236,25 +236,25 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
     );
 
     final aiClient = widget.useVertexBackend
-        ? FirebaseAI.vertexAI(auth: FirebaseAuth.instance)
-        : FirebaseAI.googleAI(auth: FirebaseAuth.instance);
+        ? FirebaseAI.vertexAI(location: 'global')
+        : FirebaseAI.googleAI();
 
     _functionCallModel = aiClient.generativeModel(
-      model: 'gemini-2.5-flash',
+      model: 'gemini-3.1-flash-lite',
       generationConfig: generationConfig,
       tools: [
         Tool.functionDeclarations([fetchWeatherTool]),
       ],
     );
     _autoFunctionCallModel = aiClient.generativeModel(
-      model: 'gemini-2.5-flash',
+      model: 'gemini-3.1-flash-lite',
       generationConfig: generationConfig,
       tools: [
         Tool.functionDeclarations([_autoFetchWeatherTool]),
       ],
     );
     _parallelAutoFunctionCallModel = aiClient.generativeModel(
-      model: 'gemini-2.5-flash',
+      model: 'gemini-3.1-flash-lite',
       generationConfig: generationConfig,
       tools: [
         Tool.functionDeclarations(
@@ -263,21 +263,21 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
       ],
     );
     _codeExecutionModel = aiClient.generativeModel(
-      model: 'gemini-2.5-flash',
+      model: 'gemini-3.1-flash-lite',
       generationConfig: generationConfig,
       tools: [
         Tool.codeExecution(),
       ],
     );
     _complexSchemaModel = aiClient.generativeModel(
-      model: 'gemini-2.5-flash',
+      model: 'gemini-3.1-flash-lite',
       generationConfig: generationConfig,
       tools: [
         Tool.functionDeclarations([_autoPlanVacationTool]),
       ],
     );
     _refDefJsonSchemaModel = aiClient.generativeModel(
-      model: 'gemini-2.5-flash',
+      model: 'gemini-3.1-flash-lite',
       generationConfig: generationConfig,
       tools: [
         Tool.functionDeclarations([_autoProcessTransactionTool]),

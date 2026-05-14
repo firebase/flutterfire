@@ -1,3 +1,11 @@
+## 0.2.7+8
+
+ - Update a dependency to the latest release.
+
+## 0.2.7+7
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+
 ## 0.2.7+6
 
  - Update a dependency to the latest release.

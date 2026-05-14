@@ -7,8 +7,8 @@
 
 import PackageDescription
 
-let library_version = "6.4.0"
-let firebase_sdk_version: Version = "12.12.0"
+let library_version = "6.5.1"
+let firebase_sdk_version: Version = "12.13.0"
 
 let package = Package(
   name: "firebase_auth",
@@ -33,8 +33,8 @@ let package = Package(
         .process("Resources"),
       ],
       cSettings: [
-        .headerSearchPath("include/firebase_auth/Private"),
-        .headerSearchPath("include/firebase_auth/Public"),
+        .headerSearchPath("include/Private"),
+        .headerSearchPath("include/Public"),
         .define("LIBRARY_VERSION", to: "\"\(library_version)\""),
         .define("LIBRARY_NAME", to: "\"flutter-fire-auth\""),
       ]

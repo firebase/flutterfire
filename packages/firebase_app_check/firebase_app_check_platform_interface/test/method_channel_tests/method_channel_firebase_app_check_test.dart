@@ -15,6 +15,9 @@ void main() {
   setupFirebaseAppCheckMocks();
   late FirebaseApp secondaryApp;
 
+  const activateChannelName =
+      'dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.activate';
+
   group('$MethodChannelFirebaseAppCheck', () {
     setUpAll(() async {
       await Firebase.initializeApp();
@@ -26,6 +29,15 @@ void main() {
           projectId: '123',
           messagingSenderId: '1234567890',
         ),
+      );
+    });
+
+    tearDown(() {
+      debugDefaultTargetPlatformOverride = null;
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMessageHandler(
+        activateChannelName,
+        null,
       );
     });
 
@@ -48,88 +60,153 @@ void main() {
       });
     });
 
-    group('activate() on Windows', () {
-      late BasicMessageChannel<Object?> activateChannel;
-      late List<Object?> activateMessages;
-
-      setUp(() {
-        debugDefaultTargetPlatformOverride = TargetPlatform.windows;
-        activateChannel = const BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.activate',
-          FirebaseAppCheckHostApi.pigeonChannelCodec,
+    group('activate()', () {
+      test('passes the Apple debug token on Apple platforms', () async {
+        debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+        final calls = <List<Object?>>[];
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMessageHandler(
+          activateChannelName,
+          (ByteData? message) async {
+            calls.add(
+              FirebaseAppCheckHostApi.pigeonChannelCodec.decodeMessage(message)!
+                  as List<Object?>,
+            );
+            return FirebaseAppCheckHostApi.pigeonChannelCodec.encodeMessage(
+              <Object?>[],
+            );
+          },
         );
-        activateMessages = <Object?>[];
-        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(activateChannel,
-                (Object? message) async {
-          activateMessages.add(message);
-          return <Object?>[];
-        });
-      });
 
-      tearDown(() {
-        debugDefaultTargetPlatformOverride = null;
-        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(activateChannel, null);
-      });
-
-      test('forwards WindowsCustomProvider over Pigeon', () async {
         final appCheck = MethodChannelFirebaseAppCheck(app: secondaryApp);
 
         await appCheck.activate(
-          providerWindows: const WindowsCustomProvider(),
-        );
-
-        // Android/Apple slots carry method-channel defaults even on Windows.
-        expect(activateMessages, hasLength(1));
-        expect(activateMessages.single, <Object?>[
-          'secondaryApp',
-          'playIntegrity',
-          'deviceCheck',
-          null,
-          'custom',
-        ]);
-      });
-
-      test(
-          'forwards WindowsDebugProvider with an explicit debug token over Pigeon',
-          () async {
-        final appCheck = MethodChannelFirebaseAppCheck(app: secondaryApp);
-
-        await appCheck.activate(
-          providerWindows: const WindowsDebugProvider(
-            debugToken: 'debug-token',
+          providerAndroid: const AndroidDebugProvider(
+            debugToken: 'android-debug-token',
+          ),
+          providerApple: const AppleDebugProvider(
+            debugToken: 'apple-debug-token',
           ),
         );
 
-        expect(activateMessages, hasLength(1));
-        expect(activateMessages.single, <Object?>[
-          'secondaryApp',
-          'playIntegrity',
-          'deviceCheck',
-          'debug-token',
-          'debug',
-        ]);
+        expect(calls, hasLength(1));
+        expect(calls.single[3], 'apple-debug-token');
       });
 
-      test(
-          'forwards WindowsDebugProvider with no explicit token as null '
-          '(env-var fallback path)', () async {
-        final appCheck = MethodChannelFirebaseAppCheck(app: secondaryApp);
-
-        // Null debugToken triggers the native APP_CHECK_DEBUG_TOKEN fallback.
-        await appCheck.activate(
-          providerWindows: const WindowsDebugProvider(),
+      test('passes the Android debug token on Android', () async {
+        debugDefaultTargetPlatformOverride = TargetPlatform.android;
+        final calls = <List<Object?>>[];
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMessageHandler(
+          activateChannelName,
+          (ByteData? message) async {
+            calls.add(
+              FirebaseAppCheckHostApi.pigeonChannelCodec.decodeMessage(message)!
+                  as List<Object?>,
+            );
+            return FirebaseAppCheckHostApi.pigeonChannelCodec.encodeMessage(
+              <Object?>[],
+            );
+          },
         );
 
-        expect(activateMessages, hasLength(1));
-        expect(activateMessages.single, <Object?>[
-          'secondaryApp',
-          'playIntegrity',
-          'deviceCheck',
-          null,
-          'debug',
-        ]);
+        final appCheck = MethodChannelFirebaseAppCheck(app: secondaryApp);
+
+        await appCheck.activate(
+          providerAndroid: const AndroidDebugProvider(
+            debugToken: 'android-debug-token',
+          ),
+          providerApple: const AppleDebugProvider(
+            debugToken: 'apple-debug-token',
+          ),
+        );
+
+        expect(calls, hasLength(1));
+        expect(calls.single[3], 'android-debug-token');
+      });
+
+      group('on Windows', () {
+        late BasicMessageChannel<Object?> activateChannel;
+        late List<Object?> activateMessages;
+
+        setUp(() {
+          debugDefaultTargetPlatformOverride = TargetPlatform.windows;
+          activateChannel = const BasicMessageChannel<Object?>(
+            activateChannelName,
+            FirebaseAppCheckHostApi.pigeonChannelCodec,
+          );
+          activateMessages = <Object?>[];
+          TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+              .setMockDecodedMessageHandler<Object?>(activateChannel,
+                  (Object? message) async {
+            activateMessages.add(message);
+            return <Object?>[];
+          });
+        });
+
+        tearDown(() {
+          TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+              .setMockDecodedMessageHandler<Object?>(activateChannel, null);
+        });
+
+        test('forwards WindowsCustomProvider over Pigeon', () async {
+          final appCheck = MethodChannelFirebaseAppCheck(app: secondaryApp);
+
+          await appCheck.activate(
+            providerWindows: const WindowsCustomProvider(),
+          );
+
+          // Android/Apple slots carry method-channel defaults even on Windows.
+          expect(activateMessages, hasLength(1));
+          expect(activateMessages.single, <Object?>[
+            'secondaryApp',
+            'playIntegrity',
+            'deviceCheck',
+            null,
+            'custom',
+          ]);
+        });
+
+        test(
+            'forwards WindowsDebugProvider with an explicit debug token over Pigeon',
+            () async {
+          final appCheck = MethodChannelFirebaseAppCheck(app: secondaryApp);
+
+          await appCheck.activate(
+            providerWindows: const WindowsDebugProvider(
+              debugToken: 'debug-token',
+            ),
+          );
+
+          expect(activateMessages, hasLength(1));
+          expect(activateMessages.single, <Object?>[
+            'secondaryApp',
+            'playIntegrity',
+            'deviceCheck',
+            'debug-token',
+            'debug',
+          ]);
+        });
+
+        test(
+            'forwards WindowsDebugProvider with no explicit token as null '
+            '(env-var fallback path)', () async {
+          final appCheck = MethodChannelFirebaseAppCheck(app: secondaryApp);
+
+          // Null debugToken triggers the native APP_CHECK_DEBUG_TOKEN fallback.
+          await appCheck.activate(
+            providerWindows: const WindowsDebugProvider(),
+          );
+
+          expect(activateMessages, hasLength(1));
+          expect(activateMessages.single, <Object?>[
+            'secondaryApp',
+            'playIntegrity',
+            'deviceCheck',
+            null,
+            'debug',
+          ]);
+        });
       });
     });
   });

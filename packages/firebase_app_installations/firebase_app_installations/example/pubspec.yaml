@@ -11,13 +11,13 @@ environment:
   flutter: '>=3.27.0'
 
 dependencies:
-  firebase_core: ^4.7.0
-  firebase_app_installations: ^0.4.2
+  firebase_core: ^4.9.0
+  firebase_app_installations: ^0.4.2+2
   flutter:
     sdk: flutter
 
 dev_dependencies:
-  flutter_lints: ^4.0.0
+  flutter_lints: ^6.0.0
 
 flutter:
   uses-material-design: true

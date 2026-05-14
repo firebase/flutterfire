@@ -13,16 +13,12 @@
 // limitations under the License.
 
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
-import 'package:web_socket_channel/io.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
 
 import 'api.dart';
 import 'client.dart';
@@ -282,19 +278,23 @@ abstract class BaseModel {
   ) {
     return () async {
       Map<String, String> headers = {};
+
+      final effectiveAppCheck = appCheck ?? app?.getService<FirebaseAppCheck>();
+      final effectiveAuth = auth ?? app?.getService<FirebaseAuth>();
+
       // Override the client name in Google AI SDK
       headers['x-goog-api-client'] =
           'gl-dart/$packageVersion fire/$packageVersion';
-      if (appCheck != null) {
+      if (effectiveAppCheck != null) {
         final appCheckToken = useLimitedUseAppCheckTokens == true
-            ? await appCheck.getLimitedUseToken()
-            : await appCheck.getToken();
+            ? await effectiveAppCheck.getLimitedUseToken()
+            : await effectiveAppCheck.getToken();
         if (appCheckToken != null) {
           headers['X-Firebase-AppCheck'] = appCheckToken;
         }
       }
-      if (auth != null) {
-        final idToken = await auth.currentUser?.getIdToken();
+      if (effectiveAuth != null) {
+        final idToken = await effectiveAuth.currentUser?.getIdToken();
         if (idToken != null) {
           headers['Authorization'] = 'Firebase $idToken';
         }

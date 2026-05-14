@@ -1,7 +1,7 @@
 name: e2e-android
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}-android
   cancel-in-progress: true
 
 on:
@@ -23,16 +23,23 @@ on:
       - '!**/example/integration_test/**'
       - '**/flutterfire_ui/**'
       - '**.md'
+  workflow_call:
+    inputs:
+      nightly_test_mode:
+        type: boolean
+        default: false
 
 jobs:
   android:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 45 }}
     strategy:
       fail-fast: false
       matrix:
         working_directory:
           ['tests', 'packages/cloud_firestore/cloud_firestore/example']
+        exclude:
+          - working_directory: ${{ inputs.nightly_test_mode && 'packages/cloud_firestore/cloud_firestore/example' || 'none' }}
     env:
       AVD_ARCH: x86_64
       AVD_API_LEVEL: 34
@@ -43,7 +50,7 @@ jobs:
         name: Install Node.js 20
         with:
           node-version: '20'
-      - uses: actions/setup-java@8df1039502a15bceb9433410b1a100fbe190c53b
+      - uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654
         with:
           distribution: 'temurin'
           java-version: '21'
@@ -53,7 +60,7 @@ jobs:
           echo "FIREBASE_TOOLS_VERSION=$(npm firebase --version)" >> $GITHUB_ENV
       - name: Firebase Emulator Cache
         id: firebase-emulator-cache
-        uses: actions/cache/restore@668228422ae6a00e4ad889ee87cd7109ec5666a7
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
         continue-on-error: true
         with:
           # The firebase emulators are pure javascript and java, OS-independent
@@ -92,7 +99,7 @@ jobs:
           remove-docker-images: true
           remove-large-packages: true
       - name: AVD cache
-        uses: actions/cache/restore@668228422ae6a00e4ad889ee87cd7109ec5666a7
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
         continue-on-error: true
         id: avd-cache
         with:
@@ -102,7 +109,7 @@ jobs:
             ~/.android/adb*
           key: avd-${{ runner.os }}-${{ env.AVD_API_LEVEL }}-${{ env.AVD_TARGET }}-${{ env.AVD_ARCH }}
       - name: Start AVD then run E2E tests
-        uses: reactivecircus/android-emulator-runner@b530d96654c385303d652368551fb075bc2f0b6b
+        uses: reactivecircus/android-emulator-runner@e89f39f1abbbd05b1113a29cf4db69e7540cae5a
         with:
           api-level: ${{ env.AVD_API_LEVEL }}
           target: ${{ env.AVD_TARGET }}
@@ -119,7 +126,7 @@ jobs:
       - name: Save Firestore Emulator Cache
         # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
         if: github.ref == 'refs/heads/main'
-        uses: actions/cache/save@668228422ae6a00e4ad889ee87cd7109ec5666a7
+        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
         with:
           # The firebase emulators are pure javascript and java, OS-independent
           enableCrossOsArchive: true
@@ -129,7 +136,7 @@ jobs:
       - name: Save Android Emulator Cache
         # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
         if: github.ref == 'refs/heads/main'
-        uses: actions/cache/save@668228422ae6a00e4ad889ee87cd7109ec5666a7
+        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
         with:
           key: ${{ steps.avd-cache.outputs.cache-primary-key }}
           # Must match the restore path exactly

@@ -1,3 +1,16 @@
+## 0.4.0+1
+
+ - Update a dependency to the latest release.
+
+## 0.4.0
+
+ - Bump platform interface a major version due to pigeon dependency update
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+ - **FIX**: update core, auth and app-check logic so internal resources on method channels are properly disposed ([#18268](https://github.com/firebase/flutterfire/issues/18268)). ([a0de4ed8](https://github.com/firebase/flutterfire/commit/a0de4ed86b0dff89bb9e557f2a54f38cd2546016))
+ - **FIX**(app_check): fix an issue with debug token that would sometime not be passed properly ([#18258](https://github.com/firebase/flutterfire/issues/18258)). ([b0bc6e8f](https://github.com/firebase/flutterfire/commit/b0bc6e8f0e92aed2f3da99725eff85b3cf358282))
+ - **FEAT**: upgrade pigeon to version 26.3.4 ([#18205](https://github.com/firebase/flutterfire/issues/18205)). ([cb6b4aef](https://github.com/firebase/flutterfire/commit/cb6b4aeffc568755ea3eebe32b998f00237bf5ad))
+
 ## 0.3.0
 
  - **FEAT**(app_check,windows): add support for AppCheck for Windows ([#18140](https://github.com/firebase/flutterfire/issues/18140)). ([81f30325](https://github.com/firebase/flutterfire/commit/81f30325fc926fe94b630e49f56b795c781a4cbe))

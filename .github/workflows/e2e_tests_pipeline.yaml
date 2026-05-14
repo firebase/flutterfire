@@ -1,7 +1,7 @@
 name: e2e-pipeline
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}-pipeline
   cancel-in-progress: true
 
 on:
@@ -19,6 +19,7 @@ on:
       - 'website/**'
       - '**/example/**'
       - '**.md'
+  workflow_call:
 
 permissions:
   contents: read
@@ -37,7 +38,7 @@ jobs:
         name: Install Node.js 20
         with:
           node-version: '20'
-      - uses: actions/setup-java@8df1039502a15bceb9433410b1a100fbe190c53b
+      - uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654
         with:
           distribution: 'temurin'
           java-version: '21'
@@ -78,7 +79,7 @@ jobs:
           remove-docker-images: true
           remove-large-packages: true
       - name: AVD cache
-        uses: actions/cache/restore@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
         continue-on-error: true
         id: avd-cache
         with:
@@ -87,7 +88,7 @@ jobs:
             ~/.android/adb*
           key: avd-${{ runner.os }}-${{ env.AVD_API_LEVEL }}-${{ env.AVD_TARGET }}-${{ env.AVD_ARCH }}
       - name: Start AVD then run pipeline E2E tests
-        uses: reactivecircus/android-emulator-runner@b530d96654c385303d652368551fb075bc2f0b6b
+        uses: reactivecircus/android-emulator-runner@e89f39f1abbbd05b1113a29cf4db69e7540cae5a
         with:
           api-level: ${{ env.AVD_API_LEVEL }}
           target: ${{ env.AVD_TARGET }}
@@ -101,7 +102,7 @@ jobs:
           pgrep -f appium && pkill -f appium || echo "No Appium process found"
       - name: Save Android Emulator Cache
         if: github.ref == 'refs/heads/main'
-        uses: actions/cache/save@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
         continue-on-error: true
         with:
           key: ${{ steps.avd-cache.outputs.cache-primary-key }}
@@ -165,7 +166,7 @@ jobs:
           node-version: '20'
       - name: Xcode
         run: sudo xcode-select -s /Applications/Xcode_16.4.app/Contents/Developer
-      - uses: actions/setup-java@8df1039502a15bceb9433410b1a100fbe190c53b
+      - uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654
         with:
           distribution: 'temurin'
           java-version: '21'
