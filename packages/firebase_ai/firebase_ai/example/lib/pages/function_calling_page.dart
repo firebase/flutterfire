@@ -235,25 +235,26 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
           : null,
     );
 
-    final aiClient =
-        widget.useVertexBackend ? FirebaseAI.vertexAI() : FirebaseAI.googleAI();
+    final aiClient = widget.useVertexBackend
+        ? FirebaseAI.vertexAI(location: 'global')
+        : FirebaseAI.googleAI();
 
     _functionCallModel = aiClient.generativeModel(
-      model: 'gemini-2.5-flash',
+      model: 'gemini-3.1-flash-lite',
       generationConfig: generationConfig,
       tools: [
         Tool.functionDeclarations([fetchWeatherTool]),
       ],
     );
     _autoFunctionCallModel = aiClient.generativeModel(
-      model: 'gemini-2.5-flash',
+      model: 'gemini-3.1-flash-lite',
       generationConfig: generationConfig,
       tools: [
         Tool.functionDeclarations([_autoFetchWeatherTool]),
       ],
     );
     _parallelAutoFunctionCallModel = aiClient.generativeModel(
-      model: 'gemini-2.5-flash',
+      model: 'gemini-3.1-flash-lite',
       generationConfig: generationConfig,
       tools: [
         Tool.functionDeclarations(
@@ -262,21 +263,21 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
       ],
     );
     _codeExecutionModel = aiClient.generativeModel(
-      model: 'gemini-2.5-flash',
+      model: 'gemini-3.1-flash-lite',
       generationConfig: generationConfig,
       tools: [
         Tool.codeExecution(),
       ],
     );
     _complexSchemaModel = aiClient.generativeModel(
-      model: 'gemini-2.5-flash',
+      model: 'gemini-3.1-flash-lite',
       generationConfig: generationConfig,
       tools: [
         Tool.functionDeclarations([_autoPlanVacationTool]),
       ],
     );
     _refDefJsonSchemaModel = aiClient.generativeModel(
-      model: 'gemini-2.5-flash',
+      model: 'gemini-3.1-flash-lite',
       generationConfig: generationConfig,
       tools: [
         Tool.functionDeclarations([_autoProcessTransactionTool]),
