@@ -47,6 +47,11 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       _userChangesListeners =
       <String, StreamController<_ValueWrapper<UserPlatform>>>{};
 
+  final List<Future<void>> _listenerRegistrations = <Future<void>>[];
+  final List<StreamSubscription<dynamic>> _subscriptions =
+      <StreamSubscription<dynamic>>[];
+  bool _isDisposed = false;
+
   StreamController<T> _createBroadcastStream<T>() {
     return StreamController<T>.broadcast();
   }
@@ -74,28 +79,6 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   /// Creates a new instance with a given [FirebaseApp].
   MethodChannelFirebaseAuth({required FirebaseApp app})
       : super(appInstance: app) {
-    _api.registerIdTokenListener(pigeonDefault).then((channelName) {
-      final events = EventChannel(channelName, channel.codec);
-      events
-          .receiveGuardedBroadcastStream(onError: convertPlatformException)
-          .listen(
-        (arguments) {
-          _handleIdTokenChangesListener(app.name, arguments);
-        },
-      );
-    });
-
-    _api.registerAuthStateListener(pigeonDefault).then((channelName) {
-      final events = EventChannel(channelName, channel.codec);
-      events
-          .receiveGuardedBroadcastStream(onError: convertPlatformException)
-          .listen(
-        (arguments) {
-          _handleAuthStateChangesListener(app.name, arguments);
-        },
-      );
-    });
-
     // Create a app instance broadcast stream for native listener events
     _authStateChangesListeners[app.name] =
         _createBroadcastStream<_ValueWrapper<UserPlatform>>();
@@ -103,6 +86,57 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
         _createBroadcastStream<_ValueWrapper<UserPlatform>>();
     _userChangesListeners[app.name] =
         _createBroadcastStream<_ValueWrapper<UserPlatform>>();
+
+    _listenerRegistrations.add(_registerIdTokenListener(app));
+    _listenerRegistrations.add(_registerAuthStateListener(app));
+  }
+
+  Future<void> _registerIdTokenListener(FirebaseApp app) async {
+    try {
+      final channelName = await _api.registerIdTokenListener(pigeonDefault);
+      if (_isDisposed) {
+        return;
+      }
+
+      final events = EventChannel(channelName, channel.codec);
+      _subscriptions.add(
+        events
+            .receiveGuardedBroadcastStream(onError: convertPlatformException)
+            .listen((arguments) {
+          if (!_isDisposed) {
+            _handleIdTokenChangesListener(app.name, arguments);
+          }
+        }),
+      );
+      // ignore: avoid_catches_without_on_clauses
+    } catch (_) {
+      // Silently ignore errors during listener registration. This can happen
+      // in test environments where the host API is not set up.
+    }
+  }
+
+  Future<void> _registerAuthStateListener(FirebaseApp app) async {
+    try {
+      final channelName = await _api.registerAuthStateListener(pigeonDefault);
+      if (_isDisposed) {
+        return;
+      }
+
+      final events = EventChannel(channelName, channel.codec);
+      _subscriptions.add(
+        events
+            .receiveGuardedBroadcastStream(onError: convertPlatformException)
+            .listen((arguments) {
+          if (!_isDisposed) {
+            _handleAuthStateChangesListener(app.name, arguments);
+          }
+        }),
+      );
+      // ignore: avoid_catches_without_on_clauses
+    } catch (_) {
+      // Silently ignore errors during listener registration. This can happen
+      // in test environments where the host API is not set up.
+    }
   }
 
   @override
@@ -124,9 +158,13 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   Future<void> _handleAuthStateChangesListener(
       String appName, Map<dynamic, dynamic> arguments) async {
     // ignore: close_sinks
-    final streamController = _authStateChangesListeners[appName]!;
-    MethodChannelFirebaseAuth instance =
-        methodChannelFirebaseAuthInstances[appName]!;
+    final streamController = _authStateChangesListeners[appName];
+    MethodChannelFirebaseAuth? instance =
+        methodChannelFirebaseAuthInstances[appName];
+
+    if (streamController == null || instance == null) {
+      return;
+    }
 
     MethodChannelMultiFactor? multiFactorInstance =
         _multiFactorInstances[appName];
@@ -159,14 +197,18 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   /// to any [userChanges] stream subscribers.
   Future<void> _handleIdTokenChangesListener(
       String appName, Map<dynamic, dynamic> arguments) async {
-    final StreamController<_ValueWrapper<UserPlatform>>
-        // ignore: close_sinks
-        idTokenStreamController = _idTokenChangesListeners[appName]!;
-    final StreamController<_ValueWrapper<UserPlatform>>
-        // ignore: close_sinks
-        userChangesStreamController = _userChangesListeners[appName]!;
-    MethodChannelFirebaseAuth instance =
-        methodChannelFirebaseAuthInstances[appName]!;
+    // ignore: close_sinks
+    final idTokenStreamController = _idTokenChangesListeners[appName];
+    // ignore: close_sinks
+    final userChangesStreamController = _userChangesListeners[appName];
+    MethodChannelFirebaseAuth? instance =
+        methodChannelFirebaseAuthInstances[appName];
+
+    if (idTokenStreamController == null ||
+        userChangesStreamController == null ||
+        instance == null) {
+      return;
+    }
     MethodChannelMultiFactor? multiFactorInstance =
         _multiFactorInstances[appName];
     if (multiFactorInstance == null) {
@@ -203,6 +245,29 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     return methodChannelFirebaseAuthInstances.putIfAbsent(app.name, () {
       return MethodChannelFirebaseAuth(app: app);
     });
+  }
+
+  @override
+  Future<void> dispose() async {
+    _isDisposed = true;
+
+    await Future.wait(
+      _listenerRegistrations.map((registration) {
+        return registration.catchError((_) {});
+      }),
+    );
+
+    await Future.wait(
+      _subscriptions.map((subscription) => subscription.cancel()),
+    );
+    _subscriptions.clear();
+
+    await _authStateChangesListeners.remove(app.name)?.close();
+    await _idTokenChangesListeners.remove(app.name)?.close();
+    await _userChangesListeners.remove(app.name)?.close();
+    _multiFactorInstances.remove(app.name);
+    methodChannelFirebaseAuthInstances.remove(app.name);
+    currentUser = null;
   }
 
   @override

@@ -1,3 +1,16 @@
+## 9.0.1
+
+ - Update a dependency to the latest release.
+
+## 9.0.0
+
+ - Bump platform interface a major version due to pigeon dependency update
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+ - **FIX**: update core, auth and app-check logic so internal resources on method channels are properly disposed ([#18268](https://github.com/firebase/flutterfire/issues/18268)). ([a0de4ed8](https://github.com/firebase/flutterfire/commit/a0de4ed86b0dff89bb9e557f2a54f38cd2546016))
+ - **FEAT**: upgrade pigeon to version 26.3.4 ([#18205](https://github.com/firebase/flutterfire/issues/18205)). ([cb6b4aef](https://github.com/firebase/flutterfire/commit/cb6b4aeffc568755ea3eebe32b998f00237bf5ad))
+ - **FEAT**(auth,android): add revokeAccessToken support for Android ([#18206](https://github.com/firebase/flutterfire/issues/18206)) ([#18207](https://github.com/firebase/flutterfire/issues/18207)). ([7e0a2227](https://github.com/firebase/flutterfire/commit/7e0a222700178a57d064c27b4ef62cefdda1e253))
+
 ## 8.1.9
 
  - Update a dependency to the latest release.
