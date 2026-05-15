@@ -37,6 +37,7 @@ dev_dependencies:
     sdk: flutter
   matcher: ^0.12.16
   mockito: ^5.0.0
+  pigeon: 26.3.4
   plugin_platform_interface: ^2.1.3
 
 flutter:

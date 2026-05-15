@@ -19,27 +19,28 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 // Import after file is generated through flutterfire_cli.
-// import 'package:firebase_ai_example/firebase_options.dart';
+import 'package:firebase_ai_example/firebase_options.dart';
 
 import 'pages/bidi_page.dart';
 import 'pages/chat_page.dart';
 import 'pages/function_calling_page.dart';
+import 'pages/grounding_page.dart';
+import 'pages/hybrid_page.dart';
 import 'pages/image_generation_page.dart';
 import 'pages/image_prompt_page.dart';
 import 'pages/json_schema_page.dart';
 import 'pages/multimodal_page.dart';
 import 'pages/schema_page.dart';
 import 'pages/server_template_page.dart';
-import 'pages/grounding_page.dart';
 import 'pages/token_count_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Enable this line instead once have the firebase_options.dart generated and
   // imported through flutterfire_cli.
-  // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await Firebase.initializeApp();
-  await FirebaseAuth.instance.signInAnonymously();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  // await Firebase.initializeApp();
+  // await FirebaseAuth.instance.signInAnonymously();
   runApp(const GenerativeAISample());
 }
 
@@ -180,6 +181,11 @@ class _HomeScreenState extends State<HomeScreen> {
           title: 'Grounding',
           useVertexBackend: useVertexBackend,
         );
+      case 11:
+        return HybridPage(
+          title: 'Hybrid Mode',
+          model: currentModel,
+        );
 
       default:
         // Fallback to the first page in case of an unexpected index
@@ -313,6 +319,13 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             label: 'Grounding',
             tooltip: 'Search & Maps Grounding',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.auto_awesome,
+            ),
+            label: 'Hybrid',
+            tooltip: 'Hybrid Mode',
           ),
         ],
         currentIndex: _selectedIndex,
