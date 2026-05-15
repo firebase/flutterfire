@@ -17,6 +17,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
     show FirebasePluginPlatform;
+import 'package:flutter_gemma/flutter_gemma.dart' as gemma;
 import 'package:meta/meta.dart';
 
 import '../firebase_ai.dart';
@@ -131,6 +132,16 @@ class FirebaseAI extends FirebasePluginPlatform {
     return newInstance;
   }
 
+  /// Initialize the local on-device model framework (flutter_gemma).
+  /// Must be called before loading local models or switching preferences to local.
+  static Future<void> initializeLocal({
+    String? huggingFaceToken,
+  }) async {
+    await gemma.FlutterGemma.initialize(
+      huggingFaceToken: huggingFaceToken,
+    );
+  }
+
   /// Create a [GenerativeModel] backed by the generative model named [model].
   ///
   /// The [model] argument can be a model name (such as `'gemini-pro'`) or a
@@ -149,6 +160,7 @@ class FirebaseAI extends FirebasePluginPlatform {
     List<Tool>? tools,
     ToolConfig? toolConfig,
     Content? systemInstruction,
+    HybridConfig? hybridConfig,
   }) {
     return createGenerativeModel(
       model: model,
@@ -163,6 +175,7 @@ class FirebaseAI extends FirebasePluginPlatform {
       toolConfig: toolConfig,
       systemInstruction: systemInstruction,
       useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
+      hybridConfig: hybridConfig,
     );
   }
 
