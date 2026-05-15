@@ -166,7 +166,7 @@ class _HybridPageState extends State<HybridPage> {
             const SizedBox(height: 16),
             Expanded(
               child: SingleChildScrollView(
-                child: Text(_response),
+                child: SelectableText(_response),
               ),
             ),
           ],

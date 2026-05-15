@@ -25,10 +25,35 @@ import FoundationModels
 #endif
 
 class LocalAIImpl: LocalAIApi {
+  private static var _isModelReady: Bool?
+
   func isAvailable(completion: @escaping (Result<Bool, Error>) -> Void) {
     #if canImport(FoundationModels)
     if #available(iOS 26.0, macOS 26.0, *) {
-      completion(.success(true))
+      if let ready = LocalAIImpl._isModelReady {
+        completion(.success(ready))
+        return
+      }
+
+      let model = FoundationModels.SystemLanguageModel.default
+      guard model.isAvailable else {
+        LocalAIImpl._isModelReady = false
+        completion(.success(false))
+        return
+      }
+
+      // Perform a lightweight check to verify the model is actually loadable and functional
+      Task {
+        do {
+          let session = FoundationModels.LanguageModelSession(model: model)
+          _ = try await session.respond(to: Prompt("Hello"))
+          LocalAIImpl._isModelReady = true
+          completion(.success(true))
+        } catch {
+          LocalAIImpl._isModelReady = false
+          completion(.success(false))
+        }
+      }
     } else {
       completion(.success(false))
     }
@@ -42,7 +67,22 @@ class LocalAIImpl: LocalAIApi {
     if #available(iOS 26.0, macOS 26.0, *) {
       Task {
         do {
-          completion(.success("Local response from FoundationModels for: \(prompt)"))
+          let model = FoundationModels.SystemLanguageModel.default
+          guard model.isAvailable else {
+            completion(.failure(PigeonError(code: "UNAVAILABLE", message: "SystemLanguageModel is not available on this device", details: nil)))
+            return
+          }
+          let session = FoundationModels.LanguageModelSession(model: model)
+          let response = try await session.respond(to: Prompt(prompt))
+          let content = response.rawContent
+          
+          let responseText: String
+          if case let .string(text) = content.kind {
+            responseText = text
+          } else {
+            responseText = content.jsonString
+          }
+          completion(.success(responseText))
         } catch {
           completion(.failure(error))
         }
@@ -64,9 +104,24 @@ class LocalAIImpl: LocalAIApi {
     if #available(iOS 26.0, macOS 26.0, *) {
       Task {
         do {
-          // Simulate streaming by sending chunks to the shared stream handler.
-          LocalAIStreamHandler.shared.sendEvent("Local chunk 1 for: \(prompt)")
-          LocalAIStreamHandler.shared.sendEvent("Local chunk 2 for: \(prompt)")
+          let model = FoundationModels.SystemLanguageModel.default
+          guard model.isAvailable else {
+            completion(.failure(PigeonError(code: "UNAVAILABLE", message: "SystemLanguageModel is not available on this device", details: nil)))
+            return
+          }
+          let session = FoundationModels.LanguageModelSession(model: model)
+          let stream = session.streamResponse(to: Prompt(prompt))
+          
+          for try await snapshot in stream {
+            let content = snapshot.rawContent
+            let chunkText: String
+            if case let .string(text) = content.kind {
+              chunkText = text
+            } else {
+              chunkText = content.jsonString
+            }
+            LocalAIStreamHandler.shared.sendEvent(chunkText)
+          }
           LocalAIStreamHandler.shared.closeStream()
           completion(.success(()))
         } catch {
