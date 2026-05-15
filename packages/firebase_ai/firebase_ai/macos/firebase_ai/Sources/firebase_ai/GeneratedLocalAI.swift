@@ -1,1 +1,1 @@
-../../../../../ios/firebase_ai/Sources/firebase_ai/GeneratedLocalAI.swift
+../../../../ios/firebase_ai/Sources/firebase_ai/GeneratedLocalAI.swift
