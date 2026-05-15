@@ -192,10 +192,11 @@ class HybridGenerativeModel {
     final promptString = prompt.map((c) => c.parts.whereType<TextPart>().map((p) => p.text).join()).join();
     
     final controller = StreamController<GenerateContentResponse>();
-    
-    localApi.startStreaming(promptString).then((_) {
-      const channel = EventChannel('dev.flutter.pigeon.firebase_ai.LocalAIApi.stream');
-      channel.receiveBroadcastStream().map((event) {
+    const channel = EventChannel('dev.flutter.pigeon.firebase_ai.LocalAIApi.stream');
+    StreamSubscription? subscription;
+
+    controller.onListen = () {
+      subscription = channel.receiveBroadcastStream().map((event) {
         final responseText = event as String;
         // ignore: prefer_const_constructors
         return GenerateContentResponse([
@@ -207,11 +208,21 @@ class HybridGenerativeModel {
             null,
           )
         ], null);
-      }).listen(controller.add, onError: controller.addError, onDone: controller.close);
-    }).catchError((e) {
-      controller.addError(e);
-      unawaited(controller.close());
-    });
+      }).listen(
+        controller.add,
+        onError: controller.addError,
+        onDone: controller.close,
+      );
+
+      localApi.startStreaming(promptString).catchError((e) {
+        controller.addError(e);
+        unawaited(controller.close());
+      });
+    };
+
+    controller.onCancel = () {
+      subscription?.cancel();
+    };
     
     return controller.stream;
   }

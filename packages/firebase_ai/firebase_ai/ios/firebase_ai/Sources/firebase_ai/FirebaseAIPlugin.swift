@@ -70,4 +70,8 @@ class LocalAIStreamHandler: NSObject, FlutterStreamHandler {
   func sendEvent(_ event: String) {
     eventSink?(event)
   }
+
+  func closeStream() {
+    eventSink?(FlutterEndOfEventStream)
+  }
 }

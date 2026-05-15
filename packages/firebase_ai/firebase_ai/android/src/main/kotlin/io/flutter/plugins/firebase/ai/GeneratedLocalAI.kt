@@ -15,6 +15,7 @@
 // See also: https://pub.dev/packages/pigeon
 @file:Suppress("UNCHECKED_CAST", "ArrayInDataClass")
 
+package io.flutter.plugins.firebase.ai
 
 import android.util.Log
 import io.flutter.plugin.common.BasicMessageChannel

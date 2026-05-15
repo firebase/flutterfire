@@ -14,28 +14,73 @@
 
 package io.flutter.plugins.firebase.ai
 
+import com.google.mlkit.genai.prompt.Generation
+import com.google.mlkit.genai.prompt.GenerateContentRequest
+import com.google.mlkit.genai.prompt.TextPart
+import com.google.mlkit.genai.common.FeatureStatus
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.catch
+
 class LocalAIImpl : LocalAIApi {
+  private val coroutineScope = CoroutineScope(Dispatchers.Main)
+  private val mlkitModel by lazy { Generation.getClient() }
+
   override fun isAvailable(callback: (Result<Boolean>) -> Unit) {
-    // Placeholder for AICore availability check.
-    // Assumes Gemini Nano is available on supported devices.
-    callback(Result.success(true))
+    coroutineScope.launch {
+      try {
+        val status = mlkitModel.checkStatus()
+        callback(Result.success(status == FeatureStatus.AVAILABLE))
+      } catch (e: Exception) {
+        callback(Result.success(false))
+      }
+    }
   }
 
   override fun generateContent(prompt: String, callback: (Result<String>) -> Unit) {
-    // Placeholder for raw AICore API call.
-    // In a real implementation, this would interact with the system's AI service.
-    callback(Result.success("Local response from AICore for: $prompt"))
+    coroutineScope.launch {
+      try {
+        val request = GenerateContentRequest.builder(TextPart(prompt)).build()
+        val response = mlkitModel.generateContent(request)
+        val text = response.candidates.firstOrNull()?.text ?: ""
+        callback(Result.success(text))
+      } catch (e: Exception) {
+        callback(Result.failure(e))
+      }
+    }
   }
 
   override fun warmup(callback: (Result<Unit>) -> Unit) {
-    // Android uses default models (Gemini Nano), so warmup is likely a no-op.
-    callback(Result.success(Unit))
+    coroutineScope.launch {
+      try {
+        mlkitModel.warmup()
+        callback(Result.success(Unit))
+      } catch (e: Exception) {
+        callback(Result.failure(e))
+      }
+    }
   }
 
   override fun startStreaming(prompt: String, callback: (Result<Unit>) -> Unit) {
-    // Simulate streaming by sending chunks to the shared stream handler.
-    LocalAIStreamHandler.shared.sendEvent("Local chunk 1 for: $prompt")
-    LocalAIStreamHandler.shared.sendEvent("Local chunk 2 for: $prompt")
-    callback(Result.success(Unit))
+    coroutineScope.launch {
+      try {
+        val request = GenerateContentRequest.builder(TextPart(prompt)).build()
+        mlkitModel.generateContentStream(request)
+          .catch { e ->
+            callback(Result.failure(e))
+          }
+          .collect { chunk ->
+            val text = chunk.candidates.firstOrNull()?.text ?: ""
+            if (text.isNotEmpty()) {
+              LocalAIStreamHandler.shared.sendEvent(text)
+            }
+          }
+        LocalAIStreamHandler.shared.closeStream()
+        callback(Result.success(Unit))
+      } catch (e: Exception) {
+        callback(Result.failure(e))
+      }
+    }
   }
 }

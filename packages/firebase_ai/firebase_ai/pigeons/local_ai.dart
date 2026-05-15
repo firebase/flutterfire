@@ -18,7 +18,7 @@ import 'package:pigeon/pigeon.dart';
   dartOut: 'lib/src/generated/local_ai.g.dart',
   dartOptions: DartOptions(),
   kotlinOut: 'android/src/main/kotlin/io/flutter/plugins/firebase/ai/GeneratedLocalAI.kt',
-  kotlinOptions: KotlinOptions(),
+  kotlinOptions: KotlinOptions(package: 'io.flutter.plugins.firebase.ai'),
   swiftOut: 'ios/firebase_ai/Sources/firebase_ai/GeneratedLocalAI.swift',
   swiftOptions: SwiftOptions(),
   dartPackageName: 'firebase_ai',

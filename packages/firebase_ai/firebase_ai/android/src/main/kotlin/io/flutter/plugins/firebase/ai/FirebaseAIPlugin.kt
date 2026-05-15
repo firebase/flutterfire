@@ -122,4 +122,8 @@ class LocalAIStreamHandler : io.flutter.plugin.common.EventChannel.StreamHandler
     fun sendEvent(event: String) {
         eventSink?.success(event)
     }
+
+    fun closeStream() {
+        eventSink?.endOfStream()
+    }
 }

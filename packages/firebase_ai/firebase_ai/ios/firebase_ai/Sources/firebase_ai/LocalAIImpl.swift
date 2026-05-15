@@ -67,6 +67,7 @@ class LocalAIImpl: LocalAIApi {
           // Simulate streaming by sending chunks to the shared stream handler.
           LocalAIStreamHandler.shared.sendEvent("Local chunk 1 for: \(prompt)")
           LocalAIStreamHandler.shared.sendEvent("Local chunk 2 for: \(prompt)")
+          LocalAIStreamHandler.shared.closeStream()
           completion(.success(()))
         } catch {
           completion(.failure(error))

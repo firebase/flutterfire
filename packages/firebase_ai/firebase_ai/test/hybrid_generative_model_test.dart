@@ -116,7 +116,7 @@ class MockFirebaseApp implements FirebaseApp {
   T? getService<T extends FirebaseService>() => null;
 
   @override
-  void registerService<T extends FirebaseService>(T service) {}
+  void registerService<T extends FirebaseService>(T service, {Future<void> Function(T)? dispose}) {}
 }
 
 void main() {
