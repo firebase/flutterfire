@@ -34,6 +34,22 @@ void main() {
       expect(speechConfigWithoutVoice.toJson(), {});
     });
 
+    test('SpeechConfig with languageCode toJson() returns correct JSON', () {
+      final speechConfigWithLanguage =
+          SpeechConfig(voiceName: 'Aoede', languageCode: 'en-US');
+      expect(speechConfigWithLanguage.toJson(), {
+        'voice_config': {
+          'prebuilt_voice_config': {'voice_name': 'Aoede'}
+        },
+        'language_code': 'en-US',
+      });
+
+      final speechConfigLanguageOnly = SpeechConfig(languageCode: 'fr-FR');
+      expect(speechConfigLanguageOnly.toJson(), {
+        'language_code': 'fr-FR',
+      });
+    });
+
     test('ResponseModalities enum toJson() returns correct value', () {
       expect(ResponseModalities.text.toJson(), 'TEXT');
       expect(ResponseModalities.image.toJson(), 'IMAGE');
