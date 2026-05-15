@@ -52,10 +52,45 @@ class ErrorOr {
 
  private:
   friend class FirebaseAppCheckHostApi;
+  friend class FirebaseAppCheckFlutterApi;
   ErrorOr() = default;
   T TakeValue() && { return std::get<T>(std::move(v_)); }
 
   std::variant<T, FlutterError> v_;
+};
+
+// Carries a minted App Check token plus the wall-clock expiry the Firebase
+// SDK should associate with it. Returning the expiry alongside the token lets
+// backends mint tokens with arbitrary lifetimes (short TTLs for a stricter
+// security posture, longer TTLs for fewer round-trips) without the plugin
+// hardcoding a refresh window.
+//
+// Generated class from Pigeon that represents data sent in messages.
+class CustomAppCheckToken {
+ public:
+  // Constructs an object setting all fields.
+  explicit CustomAppCheckToken(const std::string& token,
+                               int64_t expire_time_millis);
+
+  // The App Check token string to send with Firebase requests.
+  const std::string& token() const;
+  void set_token(std::string_view value_arg);
+
+  // Absolute expiry as Unix epoch milliseconds (UTC). The Firebase SDK uses
+  // this to decide when to refresh; a token returned with an expiry in the
+  // past is treated as immediately expired.
+  int64_t expire_time_millis() const;
+  void set_expire_time_millis(int64_t value_arg);
+
+ private:
+  static CustomAppCheckToken FromEncodableList(
+      const flutter::EncodableList& list);
+  flutter::EncodableList ToEncodableList() const;
+  friend class FirebaseAppCheckHostApi;
+  friend class FirebaseAppCheckFlutterApi;
+  friend class PigeonInternalCodecSerializer;
+  std::string token_;
+  int64_t expire_time_millis_;
 };
 
 class PigeonInternalCodecSerializer : public flutter::StandardCodecSerializer {
@@ -84,6 +119,7 @@ class FirebaseAppCheckHostApi {
   virtual void Activate(
       const std::string& app_name, const std::string* android_provider,
       const std::string* apple_provider, const std::string* debug_token,
+      const std::string* windows_provider,
       std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void GetToken(
       const std::string& app_name, bool force_refresh,
@@ -114,5 +150,29 @@ class FirebaseAppCheckHostApi {
  protected:
   FirebaseAppCheckHostApi() = default;
 };
+// Dart-side handler invoked by the native plugin when the Firebase SDK needs
+// a fresh App Check token. Implementations typically call a backend service
+// (for example a Cloud Function with `enforceAppCheck: false`) that mints a
+// token using the Firebase Admin SDK. The native side awaits the future,
+// then hands the token to the Firebase SDK, which attaches it to subsequent
+// Firebase backend requests (Firestore, Functions, Storage, Auth, RTDB).
+//
+// Generated class from Pigeon that represents Flutter messages that can be
+// called from C++.
+class FirebaseAppCheckFlutterApi {
+ public:
+  FirebaseAppCheckFlutterApi(flutter::BinaryMessenger* binary_messenger);
+  FirebaseAppCheckFlutterApi(flutter::BinaryMessenger* binary_messenger,
+                             const std::string& message_channel_suffix);
+  static const flutter::StandardMessageCodec& GetCodec();
+  void GetCustomToken(
+      std::function<void(const CustomAppCheckToken&)>&& on_success,
+      std::function<void(const FlutterError&)>&& on_error);
+
+ private:
+  flutter::BinaryMessenger* binary_messenger_;
+  std::string message_channel_suffix_;
+};
+
 }  // namespace firebase_app_check_windows
 #endif  // PIGEON_MESSAGES_G_H_
