@@ -7,9 +7,35 @@ import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:tests/firebase_options.dart';
+
+/// Test helper that uses [UiAutomation.grantRuntimePermission] to grant
+/// Android runtime permissions programmatically during integration tests.
+/// Falls back gracefully on platforms that don't support it.
+const _permissionsChannel = MethodChannel('tests/permissions');
+
+Future<bool> grantAndroidPermission(String permission) async {
+  try {
+    return await _permissionsChannel
+            .invokeMethod<bool>('grant', {'permission': permission}) ??
+        false;
+  } catch (_) {
+    return false;
+  }
+}
+
+Future<bool> clearSharedPrefs([String name = 'FlutterFirebaseMessaging']) async {
+  try {
+    return await _permissionsChannel
+            .invokeMethod<bool>('clearSharedPrefs', {'name': name}) ??
+        false;
+  } catch (_) {
+    return false;
+  }
+}
 
 // ignore: do_not_use_environment
 const bool skipTestsOnCI = bool.fromEnvironment('CI');
@@ -85,16 +111,62 @@ void main() {
         });
       });
 
+      group('getNotificationSettings', () {
+        test(
+          'returns notDetermined on Android before requestPermission() is called',
+          () async {
+            // On Android 13+, getNotificationSettings() should return
+            // notDetermined when requestPermission() has never been called,
+            // allowing callers to decide whether to show the OS prompt or
+            // direct the user to app settings.
+            final settings = await messaging.getNotificationSettings();
+            expect(settings, isA<NotificationSettings>());
+            expect(
+              settings.authorizationStatus,
+              AuthorizationStatus.notDetermined,
+            );
+          },
+          skip: defaultTargetPlatform != TargetPlatform.android,
+        );
+
+        test(
+          'returns authorized on Android after permission is granted',
+          () async {
+            // Use UiAutomation.grantRuntimePermission() to grant the
+            // notification permission without showing a dialog.
+            final granted = await grantAndroidPermission(
+              'android.permission.POST_NOTIFICATIONS',
+            );
+            if (!granted) {
+              fail('Could not grant POST_NOTIFICATIONS via UiAutomation');
+            }
+
+            final settings = await messaging.getNotificationSettings();
+            expect(settings, isA<NotificationSettings>());
+            expect(
+              settings.authorizationStatus,
+              AuthorizationStatus.authorized,
+            );
+          },
+          skip: defaultTargetPlatform != TargetPlatform.android,
+        );
+      });
+
       group('requestPermission', () {
         test(
           'authorizationStatus returns AuthorizationStatus.authorized on Android',
           () async {
+            // Pre-grant the permission so requestPermission() returns
+            // authorized without showing a system dialog.
+            await grantAndroidPermission(
+              'android.permission.POST_NOTIFICATIONS',
+            );
+
             final result = await messaging.requestPermission();
             expect(result, isA<NotificationSettings>());
             expect(result.authorizationStatus, AuthorizationStatus.authorized);
           },
-          // TODO(Lyokone): since moving to SDK 33+ on Android, this test fails, we need to integrate with patrol to control native permissions
-          skip: true,
+          skip: defaultTargetPlatform != TargetPlatform.android,
         );
       });
 
