@@ -27,6 +27,7 @@ dependencies:
   firebase_core_platform_interface: ^7.0.1
   flutter:
     sdk: flutter
+  flutter_gemma: ^0.15.1
   http: ^1.1.0
   meta: ^1.15.0
   web_socket_channel: ^3.0.1

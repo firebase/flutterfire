@@ -66,6 +66,8 @@ export 'src/error.dart'
         QuotaExceeded,
         UnsupportedUserLocation;
 export 'src/firebase_ai.dart' show FirebaseAI;
+export 'src/hybrid_config.dart'
+    show HybridConfig, HybridPreference, LocalModelConfig;
 export 'src/image_config.dart' show ImageConfig, ImageAspectRatio, ImageSize;
 export 'src/imagen/imagen_api.dart'
     show

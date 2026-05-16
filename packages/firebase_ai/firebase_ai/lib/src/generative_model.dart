@@ -46,10 +46,14 @@ final class GenerativeModel extends BaseApiClientModel {
     ToolConfig? toolConfig,
     Content? systemInstruction,
     http.Client? httpClient,
+    HybridConfig? hybridConfig,
   })  : _safetySettings = safetySettings ?? [],
         _generationConfig = generationConfig,
         _toolConfig = toolConfig,
         _systemInstruction = systemInstruction,
+        _hybridConfig = hybridConfig,
+        _preference =
+            hybridConfig?.initialPreference ?? HybridPreference.onlyCloud,
         super(
             serializationStrategy: useVertexBackend
                 ? VertexSerialization()
@@ -61,7 +65,11 @@ final class GenerativeModel extends BaseApiClientModel {
                 apiKey: app.options.apiKey,
                 httpClient: httpClient,
                 requestHeaders: BaseModel.firebaseTokens(
-                    appCheck, auth, app, useLimitedUseAppCheckTokens)));
+                    appCheck, auth, app, useLimitedUseAppCheckTokens))) {
+    if (hybridConfig != null) {
+      _localRunner = LocalModelRunner(hybridConfig.localConfig);
+    }
+  }
 
   GenerativeModel._constructTestModel({
     required String model,
@@ -77,10 +85,14 @@ final class GenerativeModel extends BaseApiClientModel {
     ToolConfig? toolConfig,
     Content? systemInstruction,
     ApiClient? apiClient,
+    HybridConfig? hybridConfig,
   })  : _safetySettings = safetySettings ?? [],
         _generationConfig = generationConfig,
         _toolConfig = toolConfig,
         _systemInstruction = systemInstruction,
+        _hybridConfig = hybridConfig,
+        _preference =
+            hybridConfig?.initialPreference ?? HybridPreference.onlyCloud,
         super(
             serializationStrategy: useVertexBackend
                 ? VertexSerialization()
@@ -92,7 +104,11 @@ final class GenerativeModel extends BaseApiClientModel {
                 HttpApiClient(
                     apiKey: app.options.apiKey,
                     requestHeaders: BaseModel.firebaseTokens(
-                        appCheck, auth, app, useLimitedUseAppCheckTokens)));
+                        appCheck, auth, app, useLimitedUseAppCheckTokens))) {
+    if (hybridConfig != null) {
+      _localRunner = LocalModelRunner(hybridConfig.localConfig);
+    }
+  }
 
   final List<SafetySetting> _safetySettings;
   final GenerationConfig? _generationConfig;
@@ -103,52 +119,281 @@ final class GenerativeModel extends BaseApiClientModel {
   final ToolConfig? _toolConfig;
   final Content? _systemInstruction;
 
-  /// Generates content responding to [prompt].
-  ///
-  /// Sends a "generateContent" API request for the configured model,
-  /// and waits for the response.
-  ///
-  /// Example:
-  /// ```dart
-  /// final response = await model.generateContent([Content.text(prompt)]);
-  /// print(response.text);
-  /// ```
+  // Hybrid Fields
+  final HybridConfig? _hybridConfig;
+  HybridPreference _preference;
+  LocalModelRunner? _localRunner;
+
+  /// Test-only setter to allow mocking the local runner.
+  @visibleForTesting
+  // ignore: avoid_setters_without_getters
+  set localRunner(LocalModelRunner? runner) {
+    _localRunner = runner;
+  }
+
+  /// Get the current hybrid preference policy.
+  HybridPreference get preference => _preference;
+
+  /// Update the hybrid preference policy at runtime.
+  Future<void> setPreference(HybridPreference preference) async {
+    if (_hybridConfig == null && preference != HybridPreference.onlyCloud) {
+      throw StateError(
+        'Cannot set preference to $preference because hybridConfig was not '
+        'provided during model initialization.',
+      );
+    }
+    _preference = preference;
+    if (preference == HybridPreference.onlyLocal) {
+      await _localRunner!.initialize();
+    } else if (preference == HybridPreference.preferLocal) {
+      if (await isLocalModelInstalled()) {
+        await _localRunner!.initialize();
+      }
+    }
+  }
+
+  /// Checks if the local on-device model is installed and ready.
+  Future<bool> isLocalModelInstalled() async {
+    if (_localRunner == null) return false;
+    return _localRunner!.isInstalled();
+  }
+
+  /// Initiates the download of the on-device local model.
+  Future<void> downloadLocalModel(
+      {void Function(int progress)? onProgress}) async {
+    if (_localRunner == null) {
+      throw StateError(
+          'Cannot download local model: hybridConfig was not provided during model initialization.');
+    }
+    await _localRunner!.download(onProgress: onProgress);
+  }
+
+  /// Generates content responding to [prompt], automatically routing to
+  /// either Cloud or Local based on preference policies.
   Future<GenerateContentResponse> generateContent(Iterable<Content> prompt,
-          {List<SafetySetting>? safetySettings,
-          GenerationConfig? generationConfig,
-          List<Tool>? tools,
-          ToolConfig? toolConfig}) =>
-      makeRequest(
-          Task.generateContent,
-          _serializationStrategy.generateContentRequest(
+      {List<SafetySetting>? safetySettings,
+      GenerationConfig? generationConfig,
+      List<Tool>? tools,
+      ToolConfig? toolConfig}) async {
+    if (_hybridConfig == null) {
+      return _generateContentCloud(
+        prompt,
+        safetySettings: safetySettings,
+        generationConfig: generationConfig,
+        tools: tools,
+        toolConfig: toolConfig,
+      );
+    }
+    final runLocal = await _shouldRunLocal();
+    if (runLocal) {
+      try {
+        await _localRunner!.initialize();
+        return await _localRunner!.generateContent(
+          prompt,
+          tools: tools ?? this.tools,
+          toolConfig: toolConfig ?? _toolConfig,
+          systemInstruction: _systemInstruction,
+        );
+      } catch (e) {
+        if (_preference == HybridPreference.preferLocal) {
+          debugPrint(
+              'LocalModelRunner: On-device generation failed ($e). Falling back to Cloud backend...');
+          return _generateContentCloud(
             prompt,
-            model,
-            safetySettings ?? _safetySettings,
-            generationConfig ?? _generationConfig,
-            tools ?? this.tools,
-            toolConfig ?? _toolConfig,
-            _systemInstruction,
-          ),
-          _serializationStrategy.parseGenerateContentResponse);
+            safetySettings: safetySettings,
+            generationConfig: generationConfig,
+            tools: tools,
+            toolConfig: toolConfig,
+          );
+        }
+        rethrow;
+      }
+    } else {
+      try {
+        return await _generateContentCloud(
+          prompt,
+          safetySettings: safetySettings,
+          generationConfig: generationConfig,
+          tools: tools,
+          toolConfig: toolConfig,
+        );
+      } catch (e) {
+        if (_preference == HybridPreference.preferCloud &&
+            await isLocalModelInstalled()) {
+          debugPrint(
+              'LocalModelRunner: Cloud generation failed ($e). Falling back to local on-device backend...');
+          await _localRunner!.initialize();
+          return _localRunner!.generateContent(
+            prompt,
+            tools: tools ?? this.tools,
+            toolConfig: toolConfig ?? _toolConfig,
+            systemInstruction: _systemInstruction,
+          );
+        }
+        rethrow;
+      }
+    }
+  }
 
   /// Generates a stream of content responding to [prompt].
-  ///
-  /// Sends a "streamGenerateContent" API request for the configured model,
-  /// and waits for the response.
-  ///
-  /// Example:
-  /// ```dart
-  /// final responses = await model.generateContent([Content.text(prompt)]);
-  /// await for (final response in responses) {
-  ///   print(response.text);
-  /// }
-  /// ```
   Stream<GenerateContentResponse> generateContentStream(
       Iterable<Content> prompt,
       {List<SafetySetting>? safetySettings,
       GenerationConfig? generationConfig,
       List<Tool>? tools,
       ToolConfig? toolConfig}) {
+    if (_hybridConfig == null) {
+      return _generateContentStreamCloud(
+        prompt,
+        safetySettings: safetySettings,
+        generationConfig: generationConfig,
+        tools: tools,
+        toolConfig: toolConfig,
+      );
+    }
+    return _generateContentStreamHybrid(
+      prompt,
+      safetySettings: safetySettings,
+      generationConfig: generationConfig,
+      tools: tools,
+      toolConfig: toolConfig,
+    );
+  }
+
+  Stream<GenerateContentResponse> _generateContentStreamHybrid(
+      Iterable<Content> prompt,
+      {List<SafetySetting>? safetySettings,
+      GenerationConfig? generationConfig,
+      List<Tool>? tools,
+      ToolConfig? toolConfig}) async* {
+    final runLocal = await _shouldRunLocal();
+    if (runLocal) {
+      try {
+        await _localRunner!.initialize();
+        await for (final response in _localRunner!.generateContentStream(
+          prompt,
+          tools: tools ?? this.tools,
+          toolConfig: toolConfig ?? _toolConfig,
+          systemInstruction: _systemInstruction,
+        )) {
+          yield response;
+        }
+      } catch (e) {
+        if (_preference == HybridPreference.preferLocal) {
+          debugPrint(
+              'LocalModelRunner: On-device stream failed ($e). Falling back to Cloud backend...');
+          yield* _generateContentStreamCloud(
+            prompt,
+            safetySettings: safetySettings,
+            generationConfig: generationConfig,
+            tools: tools,
+            toolConfig: toolConfig,
+          );
+        } else {
+          rethrow;
+        }
+      }
+    } else {
+      try {
+        await for (final response in _generateContentStreamCloud(
+          prompt,
+          safetySettings: safetySettings,
+          generationConfig: generationConfig,
+          tools: tools,
+          toolConfig: toolConfig,
+        )) {
+          yield response;
+        }
+      } catch (e) {
+        if (_preference == HybridPreference.preferCloud &&
+            await isLocalModelInstalled()) {
+          debugPrint(
+              'LocalModelRunner: Cloud stream failed ($e). Falling back to local on-device backend...');
+          await _localRunner!.initialize();
+          yield* _localRunner!.generateContentStream(
+            prompt,
+            tools: tools ?? this.tools,
+            toolConfig: toolConfig ?? _toolConfig,
+            systemInstruction: _systemInstruction,
+          );
+        } else {
+          rethrow;
+        }
+      }
+    }
+  }
+
+  /// Counts the total number of tokens in [contents].
+  Future<CountTokensResponse> countTokens(
+    Iterable<Content> contents,
+  ) async {
+    if (_hybridConfig == null) {
+      return _countTokensCloud(contents);
+    }
+    final runLocal = await _shouldRunLocal();
+    if (runLocal) {
+      try {
+        await _localRunner!.initialize();
+        return await _localRunner!.countTokens(contents);
+      } catch (e) {
+        if (_preference == HybridPreference.preferLocal) {
+          return _countTokensCloud(contents);
+        }
+        rethrow;
+      }
+    } else {
+      try {
+        return await _countTokensCloud(contents);
+      } catch (e) {
+        if (_preference == HybridPreference.preferCloud &&
+            await isLocalModelInstalled()) {
+          await _localRunner!.initialize();
+          return _localRunner!.countTokens(contents);
+        }
+        rethrow;
+      }
+    }
+  }
+
+  // === Private Fallback Helpers ===
+
+  Future<bool> _shouldRunLocal() async {
+    if (_preference == HybridPreference.onlyLocal) return true;
+    if (_preference == HybridPreference.onlyCloud) return false;
+    if (_preference == HybridPreference.preferLocal) {
+      return isLocalModelInstalled();
+    }
+    return false; // preferCloud defaults to cloud first
+  }
+
+  Future<GenerateContentResponse> _generateContentCloud(
+    Iterable<Content> prompt, {
+    List<SafetySetting>? safetySettings,
+    GenerationConfig? generationConfig,
+    List<Tool>? tools,
+    ToolConfig? toolConfig,
+  }) {
+    return makeRequest(
+        Task.generateContent,
+        _serializationStrategy.generateContentRequest(
+          prompt,
+          model,
+          safetySettings ?? _safetySettings,
+          generationConfig ?? _generationConfig,
+          tools ?? this.tools,
+          toolConfig ?? _toolConfig,
+          _systemInstruction,
+        ),
+        _serializationStrategy.parseGenerateContentResponse);
+  }
+
+  Stream<GenerateContentResponse> _generateContentStreamCloud(
+    Iterable<Content> prompt, {
+    List<SafetySetting>? safetySettings,
+    GenerationConfig? generationConfig,
+    List<Tool>? tools,
+    ToolConfig? toolConfig,
+  }) {
     final response = client.streamRequest(
         taskUri(Task.streamGenerateContent),
         _serializationStrategy.generateContentRequest(
@@ -163,26 +408,8 @@ final class GenerativeModel extends BaseApiClientModel {
     return response.map(_serializationStrategy.parseGenerateContentResponse);
   }
 
-  /// Counts the total number of tokens in [contents].
-  ///
-  /// Sends a "countTokens" API request for the configured model,
-  /// and waits for the response.
-  ///
-  /// Example:
-  /// ```dart
-  /// final promptContent = [Content.text(prompt)];
-  /// final totalTokens =
-  ///     (await model.countTokens(promptContent)).totalTokens;
-  /// if (totalTokens > maxPromptSize) {
-  ///   print('Prompt is too long!');
-  /// } else {
-  ///   final response = await model.generateContent(promptContent);
-  ///   print(response.text);
-  /// }
-  /// ```
-  Future<CountTokensResponse> countTokens(
-    Iterable<Content> contents,
-  ) async {
+  Future<CountTokensResponse> _countTokensCloud(
+      Iterable<Content> contents) async {
     final parameters = _serializationStrategy.countTokensRequest(
       contents,
       model,
@@ -210,6 +437,7 @@ GenerativeModel createGenerativeModel({
   List<Tool>? tools,
   ToolConfig? toolConfig,
   Content? systemInstruction,
+  HybridConfig? hybridConfig,
 }) =>
     GenerativeModel._(
       model: model,
@@ -224,6 +452,7 @@ GenerativeModel createGenerativeModel({
       tools: tools,
       toolConfig: toolConfig,
       systemInstruction: systemInstruction,
+      hybridConfig: hybridConfig,
     );
 
 /// Creates a model with an overridden [ApiClient] for testing.
@@ -243,6 +472,7 @@ GenerativeModel createModelWithClient({
   List<SafetySetting>? safetySettings,
   List<Tool>? tools,
   ToolConfig? toolConfig,
+  HybridConfig? hybridConfig,
 }) =>
     GenerativeModel._constructTestModel(
         model: model,
@@ -257,4 +487,5 @@ GenerativeModel createModelWithClient({
         systemInstruction: systemInstruction,
         tools: tools,
         toolConfig: toolConfig,
-        apiClient: client);
+        apiClient: client,
+        hybridConfig: hybridConfig);

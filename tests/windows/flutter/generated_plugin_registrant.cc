@@ -12,6 +12,7 @@
 #include <firebase_database/firebase_database_plugin_c_api.h>
 #include <firebase_remote_config/firebase_remote_config_plugin_c_api.h>
 #include <firebase_storage/firebase_storage_plugin_c_api.h>
+#include <flutter_gemma/flutter_gemma_plugin.h>
 
 void RegisterPlugins(flutter::PluginRegistry* registry) {
   FirebaseAppCheckPluginCApiRegisterWithRegistrar(
@@ -26,4 +27,6 @@ void RegisterPlugins(flutter::PluginRegistry* registry) {
       registry->GetRegistrarForPlugin("FirebaseRemoteConfigPluginCApi"));
   FirebaseStoragePluginCApiRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("FirebaseStoragePluginCApi"));
+  FlutterGemmaPluginRegisterWithRegistrar(
+      registry->GetRegistrarForPlugin("FlutterGemmaPlugin"));
 }
