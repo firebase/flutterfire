@@ -70,7 +70,12 @@ try {
         password: password,
       );
       // Link the pending credential with the existing account
-      await userCredential.user!.linkWithCredential(pendingCredential);
+      final user = userCredential.user;
+      if (user == null) {
+        print('User not available after sign-in');
+        return;
+      }
+      await user.linkWithCredential(pendingCredential);
       // Success! Go back to your application flow
       return goToApplication();
     } on FirebaseAuthException catch (_) {
@@ -86,7 +91,12 @@ try {
         await auth.signInWithCredential(facebookAuthCredential);
 
     // Link the pending credential with the existing account
-    await userCredential.user!.linkWithCredential(pendingCredential);
+    final user = userCredential.user;
+    if (user == null) {
+      print('User not available after Facebook sign-in');
+      return;
+    }
+    await user.linkWithCredential(pendingCredential);
 
     // Success! Go back to your application flow
     return goToApplication();
