@@ -8,7 +8,6 @@ environment:
 
 dependencies:
   barcode_widget: ^2.0.4
-  crypto: ^3.0.6
   firebase_auth: ^6.5.1
   firebase_core: ^4.9.0
   firebase_messaging: ^16.2.2
@@ -19,7 +18,6 @@ dependencies:
   font_awesome_flutter: ^11.0.0
   google_sign_in: ^6.1.0
   google_sign_in_dartio: ^0.3.0
-  sign_in_with_apple: ^7.0.1
 
 dev_dependencies:
   http: ^1.0.0
