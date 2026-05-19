@@ -33,13 +33,12 @@ class CapabilitiesPage extends StatefulWidget {
   State<CapabilitiesPage> createState() => _CapabilitiesPageState();
 }
 
-class _CapabilitiesPageState extends State<CapabilitiesPage> with TickerProviderStateMixin {
+class _CapabilitiesPageState extends State<CapabilitiesPage>
+    with TickerProviderStateMixin {
   late final TabController _tabController;
 
   // Multimodal Tab State
   final ScrollController _multimodalScrollController = ScrollController();
-  final TextEditingController _multimodalTextController = TextEditingController();
-  final FocusNode _multimodalTextFieldFocus = FocusNode();
   final List<MessageData> _multimodalMessages = <MessageData>[];
   bool _multimodalLoading = false;
   bool _recording = false;
@@ -64,8 +63,6 @@ class _CapabilitiesPageState extends State<CapabilitiesPage> with TickerProvider
   void dispose() {
     _tabController.dispose();
     _multimodalScrollController.dispose();
-    _multimodalTextController.dispose();
-    _multimodalTextFieldFocus.dispose();
     _structuredScrollController.dispose();
     _tokensScrollController.dispose();
     super.dispose();
@@ -85,13 +82,15 @@ class _CapabilitiesPageState extends State<CapabilitiesPage> with TickerProvider
           ],
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          _buildMultimodalTab(),
-          _buildStructuredTab(),
-          _buildTokensTab(),
-        ],
+      body: SelectionArea(
+        child: TabBarView(
+          controller: _tabController,
+          children: [
+            _buildMultimodalTab(),
+            _buildStructuredTab(),
+            _buildTokensTab(),
+          ],
+        ),
       ),
     );
   }
@@ -136,16 +135,18 @@ class _CapabilitiesPageState extends State<CapabilitiesPage> with TickerProvider
   // MULTIMODAL TAB LOGIC
   // ==========================================
 
-  Future<void> _sendImagePrompt(String message) async {
+  Future<void> _sendImagePrompt() async {
     setState(() {
       _multimodalLoading = true;
     });
     try {
       ByteData catBytes = await rootBundle.load('assets/images/cat.jpg');
       ByteData sconeBytes = await rootBundle.load('assets/images/scones.jpg');
+      const promptText =
+          "describe the two pictures and compare what's in common";
       final content = [
         Content.multi([
-          TextPart(message),
+          const TextPart(promptText),
           InlineDataPart('image/jpeg', catBytes.buffer.asUint8List()),
           InlineDataPart('image/jpeg', sconeBytes.buffer.asUint8List()),
         ]),
@@ -153,7 +154,7 @@ class _CapabilitiesPageState extends State<CapabilitiesPage> with TickerProvider
       _multimodalMessages.add(
         MessageData(
           imageBytes: catBytes.buffer.asUint8List(),
-          text: message,
+          text: promptText,
           fromUser: true,
         ),
       );
@@ -182,29 +183,28 @@ class _CapabilitiesPageState extends State<CapabilitiesPage> with TickerProvider
         _multimodalLoading = false;
       });
     } finally {
-      _multimodalTextController.clear();
       setState(() {
         _multimodalLoading = false;
       });
-      _multimodalTextFieldFocus.requestFocus();
     }
   }
 
-  Future<void> _sendStorageUriPrompt(String message) async {
+  Future<void> _sendStorageUriPrompt() async {
     setState(() {
       _multimodalLoading = true;
     });
     try {
+      const promptText = 'Describe this image';
       final content = [
         Content.multi([
-          TextPart(message),
+          const TextPart(promptText),
           const FileData(
             'image/jpeg',
             'gs://vertex-ai-example-ef5a2.appspot.com/foodpic.jpg',
           ),
         ]),
       ];
-      _multimodalMessages.add(MessageData(text: message, fromUser: true));
+      _multimodalMessages.add(MessageData(text: promptText, fromUser: true));
 
       var response = await widget.model.generateContent(content);
       var text = response.text;
@@ -224,11 +224,9 @@ class _CapabilitiesPageState extends State<CapabilitiesPage> with TickerProvider
         _multimodalLoading = false;
       });
     } finally {
-      _multimodalTextController.clear();
       setState(() {
         _multimodalLoading = false;
       });
-      _multimodalTextFieldFocus.requestFocus();
     }
   }
 
@@ -296,7 +294,8 @@ class _CapabilitiesPageState extends State<CapabilitiesPage> with TickerProvider
       ]);
 
       setState(() {
-        _multimodalMessages.add(MessageData(text: response.text, fromUser: false));
+        _multimodalMessages
+            .add(MessageData(text: response.text, fromUser: false));
         _multimodalLoading = false;
       });
 
@@ -332,7 +331,8 @@ class _CapabilitiesPageState extends State<CapabilitiesPage> with TickerProvider
       ]);
 
       setState(() {
-        _multimodalMessages.add(MessageData(text: response.text, fromUser: false));
+        _multimodalMessages
+            .add(MessageData(text: response.text, fromUser: false));
         _multimodalLoading = false;
       });
 
@@ -369,7 +369,8 @@ class _CapabilitiesPageState extends State<CapabilitiesPage> with TickerProvider
       ]);
 
       setState(() {
-        _multimodalMessages.add(MessageData(text: response.text, fromUser: false));
+        _multimodalMessages
+            .add(MessageData(text: response.text, fromUser: false));
         _multimodalLoading = false;
       });
 
@@ -413,48 +414,11 @@ class _CapabilitiesPageState extends State<CapabilitiesPage> with TickerProvider
               child: CircularProgressIndicator(),
             ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    autofocus: true,
-                    focusNode: _multimodalTextFieldFocus,
-                    controller: _multimodalTextController,
-                    decoration: const InputDecoration(
-                      hintText: 'Enter prompt for image...',
-                    ),
-                  ),
-                ),
-                IconButton(
-                  onPressed: _multimodalLoading
-                      ? null
-                      : () async {
-                          if (_multimodalTextController.text.isNotEmpty) {
-                            await _sendImagePrompt(_multimodalTextController.text);
-                          }
-                        },
-                  icon: const Icon(Icons.image),
-                  tooltip: 'Send Image Prompt',
-                ),
-                IconButton(
-                  onPressed: _multimodalLoading
-                      ? null
-                      : () async {
-                          if (_multimodalTextController.text.isNotEmpty) {
-                            await _sendStorageUriPrompt(_multimodalTextController.text);
-                          }
-                        },
-                  icon: const Icon(Icons.storage),
-                  tooltip: 'Send GCS Image Prompt',
-                ),
-              ],
-            ),
-          ),
-          Padding(
             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            child: Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              alignment: WrapAlignment.spaceEvenly,
               children: [
                 ElevatedButton.icon(
                   onPressed: _multimodalLoading
@@ -474,6 +438,16 @@ class _CapabilitiesPageState extends State<CapabilitiesPage> with TickerProvider
                     color: _recording ? Colors.red : null,
                   ),
                   label: Text(_recording ? 'Stop Rec' : 'Record Audio'),
+                ),
+                ElevatedButton.icon(
+                  onPressed: _multimodalLoading ? null : _sendImagePrompt,
+                  icon: const Icon(Icons.image),
+                  label: const Text('Test Images'),
+                ),
+                ElevatedButton.icon(
+                  onPressed: _multimodalLoading ? null : _sendStorageUriPrompt,
+                  icon: const Icon(Icons.storage),
+                  label: const Text('Test GCS Image'),
                 ),
                 ElevatedButton.icon(
                   onPressed: _multimodalLoading ? null : _testVideo,
@@ -514,15 +488,40 @@ class _CapabilitiesPageState extends State<CapabilitiesPage> with TickerProvider
           'characters': Schema.array(
             items: Schema.object(
               properties: {
-                'name': Schema.string(),
-                'age': Schema.integer(),
-                'species': Schema.string(),
-                'accessory':
-                    Schema.enumString(enumValues: ['hat', 'belt', 'shoes']),
+                'name':
+                    Schema.string(description: 'The name of the character.'),
+                'species': Schema.string(description: 'The animal species.'),
+                'age': Schema.integer(
+                  description: 'The age of the character in years.',
+                  minimum: 1,
+                  maximum: 1000,
+                ),
+                'isMythical': Schema.boolean(
+                  description: 'Whether the animal is a mythical creature.',
+                ),
+                'powerLevel': Schema.number(
+                  description: 'Power level from 0.0 to 10.0.',
+                  minimum: 0,
+                  maximum: 10,
+                ),
+                'accessory': Schema.enumString(
+                  enumValues: ['hat', 'belt', 'shoes'],
+                  description: 'Optional accessory.',
+                  nullable: true,
+                ),
               },
+              propertyOrdering: [
+                'name',
+                'species',
+                'age',
+                'isMythical',
+                'powerLevel',
+                'accessory',
+              ],
             ),
           ),
         },
+        description: 'A list of characters for a card game.',
         optionalProperties: ['accessory'],
       );
 
@@ -572,43 +571,38 @@ class _CapabilitiesPageState extends State<CapabilitiesPage> with TickerProvider
         ),
       ];
 
-      final jsonSchema = {
-        r'$defs': {
-          'text_widget': {
-            r'$anchor': 'text_widget',
-            'type': 'object',
-            'properties': {
-              'type': {'const': 'Text'},
-              'text': {'type': 'string'},
-            },
-            'required': ['type', 'text'],
-          },
+      final textWidgetSchema = JSONSchema.object(
+        properties: {
+          'type': JSONSchema.enumString(enumValues: ['Text']),
+          'text': JSONSchema.string(),
         },
-        'type': 'object',
-        'properties': {
-          'type': {'const': 'Column'},
-          'children': {
-            'type': 'array',
-            'items': {
-              'anyOf': [
-                {r'$ref': '#text_widget'},
-                {
-                  'type': 'object',
-                  'properties': {
-                    'type': {'const': 'Row'},
-                    'children': {
-                      'type': 'array',
-                      'items': {r'$ref': '#text_widget'},
-                    },
-                  },
-                  'required': ['type', 'children'],
-                }
+      );
+
+      final rowWidgetSchema = JSONSchema.object(
+        properties: {
+          'type': JSONSchema.enumString(enumValues: ['Row']),
+          'children': JSONSchema.array(
+            items: JSONSchema.ref(r'#/$defs/text_widget'),
+          ),
+        },
+      );
+
+      final jsonSchema = JSONSchema.object(
+        defs: {
+          'text_widget': textWidgetSchema,
+        },
+        properties: {
+          'type': JSONSchema.enumString(enumValues: ['Column']),
+          'children': JSONSchema.array(
+            items: JSONSchema.anyOf(
+              schemas: [
+                JSONSchema.ref(r'#/$defs/text_widget'),
+                rowWidgetSchema,
               ],
-            },
-          },
+            ),
+          ),
         },
-        'required': ['type', 'children'],
-      };
+      );
 
       _structuredMessages.add(
         MessageData(
@@ -621,13 +615,14 @@ class _CapabilitiesPageState extends State<CapabilitiesPage> with TickerProvider
         content,
         generationConfig: GenerationConfig(
           responseMimeType: 'application/json',
-          responseJsonSchema: jsonSchema,
+          responseJsonSchema: jsonSchema.toJson(),
         ),
       );
 
       var text = const JsonEncoder.withIndent('  ')
           .convert(json.decode(response.text ?? '') as Object?);
-      _structuredMessages.add(MessageData(text: '```json\n$text\n```', fromUser: false));
+      _structuredMessages
+          .add(MessageData(text: '```json\n$text\n```', fromUser: false));
 
       setState(() {
         _structuredLoading = false;
@@ -693,14 +688,56 @@ class _CapabilitiesPageState extends State<CapabilitiesPage> with TickerProvider
       _tokensLoading = true;
     });
 
-    const prompt = 'tell a short story';
-    _tokensMessages.add(MessageData(text: 'Count tokens for: "$prompt"', fromUser: true));
-
     try {
+      // 1. Text only
+      const prompt = 'tell a short story';
+      _tokensMessages.add(
+        MessageData(
+          text: 'Count tokens for text: "$prompt"',
+          fromUser: true,
+        ),
+      );
+
       final content = Content.text(prompt);
       final tokenResponse = await widget.model.countTokens([content]);
-      final tokenResult = 'Token Count: ${tokenResponse.totalTokens}';
-      _tokensMessages.add(MessageData(text: tokenResult, fromUser: false));
+      _tokensMessages.add(
+        MessageData(
+          text: 'Token Count (Text): ${tokenResponse.totalTokens}',
+          fromUser: false,
+        ),
+      );
+
+      // 2. Multimodal (Text + Image + PDF)
+      _tokensMessages.add(
+        MessageData(
+          text:
+              'Count tokens for Multimodal (Text + cat.jpg + gemini_summary.pdf)',
+          fromUser: true,
+        ),
+      );
+      ByteData catBytes = await rootBundle.load('assets/images/cat.jpg');
+      ByteData docBytes =
+          await rootBundle.load('assets/documents/gemini_summary.pdf');
+      final multimodalContent = Content.multi([
+        const TextPart('Describe this cat and summarize this document.'),
+        InlineDataPart('image/jpeg', catBytes.buffer.asUint8List()),
+        InlineDataPart('application/pdf', docBytes.buffer.asUint8List()),
+      ]);
+
+      final multimodalTokenResponse =
+          await widget.model.countTokens([multimodalContent]);
+      final promptDetails = multimodalTokenResponse.promptTokensDetails
+          ?.map((d) => '${d.modality.name}: ${d.tokenCount}')
+          .join(', ');
+
+      _tokensMessages.add(
+        MessageData(
+          text:
+              'Token Count (Multimodal): ${multimodalTokenResponse.totalTokens}\n'
+              'Details: $promptDetails',
+          fromUser: false,
+        ),
+      );
     } catch (e) {
       _showError(e.toString());
     } finally {
@@ -716,32 +753,78 @@ class _CapabilitiesPageState extends State<CapabilitiesPage> with TickerProvider
       _tokensLoading = true;
     });
 
-    const prompt = 'Tell a story about a magic backpack and the person who found it.';
-    _tokensMessages.add(MessageData(text: prompt, fromUser: true));
+    _tokensMessages.add(
+      MessageData(
+        text:
+            'Generate content with text + cat.jpg (with Thinking enabled) and check Usage Metadata details',
+        fromUser: true,
+      ),
+    );
 
     try {
-      final content = [Content.text(prompt)];
-      final response = await widget.model.generateContent(content);
+      ByteData catBytes = await rootBundle.load('assets/images/cat.jpg');
+      final content = [
+        Content.multi([
+          const TextPart('Describe this image in detail.'),
+          InlineDataPart('image/jpeg', catBytes.buffer.asUint8List()),
+        ]),
+      ];
+
+      final response = await widget.model.generateContent(
+        content,
+        generationConfig: GenerationConfig(
+          thinkingConfig:
+              ThinkingConfig.withThinkingBudget(2048, includeThoughts: true),
+        ),
+      );
+
+      // Extract thoughts if any
+      final thoughts = response.candidates.firstOrNull?.content.parts
+          .whereType<TextPart>()
+          .where((p) => p.isThought ?? false)
+          .map((p) => p.text)
+          .join();
+
+      if (thoughts != null && thoughts.isNotEmpty) {
+        _tokensMessages.add(
+          MessageData(
+            text: thoughts,
+            fromUser: false,
+            isThought: true,
+          ),
+        );
+      }
+
       final usageMetadata = response.usageMetadata;
 
       if (usageMetadata != null) {
+        final promptDetails = usageMetadata.promptTokensDetails
+            ?.map((d) => '${d.modality.name}: ${d.tokenCount}')
+            .join(', ');
+        final candidateDetails = usageMetadata.candidatesTokensDetails
+            ?.map((d) => '${d.modality.name}: ${d.tokenCount}')
+            .join(', ');
+
         final message = '''
 Usage Metadata:
-- promptTokenCount: ${usageMetadata.promptTokenCount}
-- candidatesTokenCount: ${usageMetadata.candidatesTokenCount}
+- promptTokenCount: ${usageMetadata.promptTokenCount} (Details: $promptDetails)
+- candidatesTokenCount: ${usageMetadata.candidatesTokenCount} (Details: $candidateDetails)
 - totalTokenCount: ${usageMetadata.totalTokenCount}
 - thoughtsTokenCount: ${usageMetadata.thoughtsTokenCount}
-- toolUsePromptTokenCount: ${usageMetadata.toolUsePromptTokenCount}
 - cachedContentTokenCount: ${usageMetadata.cachedContentTokenCount}
-- promptTokensDetails: ${usageMetadata.promptTokensDetails?.map((d) => '${d.modality}: ${d.tokenCount}')}
-- candidatesTokensDetails: ${usageMetadata.candidatesTokensDetails?.map((d) => '${d.modality}: ${d.tokenCount}')}
-- toolUsePromptTokensDetails: ${usageMetadata.toolUsePromptTokensDetails?.map((d) => '${d.modality}: ${d.tokenCount}')}
-- cacheTokensDetails: ${usageMetadata.cacheTokensDetails?.map((d) => '${d.modality}: ${d.tokenCount}')}
 ''';
-        _tokensMessages.add(MessageData(text: message, fromUser: false));
+        _tokensMessages.add(
+          MessageData(
+            text: message,
+            fromUser: false,
+          ),
+        );
       } else {
         _tokensMessages.add(
-          MessageData(text: 'No usage metadata available.', fromUser: false),
+          MessageData(
+            text: 'No usage metadata available.',
+            fromUser: false,
+          ),
         );
       }
     } catch (e) {
@@ -763,9 +846,11 @@ Usage Metadata:
             child: ListView.builder(
               controller: _tokensScrollController,
               itemBuilder: (context, idx) {
+                final msg = _tokensMessages[idx];
                 return MessageWidget(
-                  text: _tokensMessages[idx].text,
-                  isFromUser: _tokensMessages[idx].fromUser ?? false,
+                  text: msg.text,
+                  isFromUser: msg.fromUser ?? false,
+                  isThought: msg.isThought,
                 );
               },
               itemCount: _tokensMessages.length,
