@@ -102,7 +102,8 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
             return TestResult(
                 status: TestStatus.passed,
                 logs: logger.toString(),
-                responseJson: response.text);
+              responseJson: response.text,
+            );
           } else {
             return TestResult(
               status: TestStatus.failed,
@@ -130,7 +131,8 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
             return TestResult(
                 status: TestStatus.passed,
                 logs: logger.toString(),
-                responseJson: response.text);
+              responseJson: response.text,
+            );
           } else {
             return TestResult(
               status: TestStatus.failed,
@@ -151,7 +153,8 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
           final model = provider.generativeModel(
             model: 'gemini-3.1-flash-lite',
             systemInstruction: Content.text(
-                'You are a medieval knight. Respond only with Shakespearean knightly terms.'),
+              'You are a medieval knight. Respond only with Shakespearean knightly terms.',
+            ),
           );
           const prompt = 'Who are you?';
           logger.log('Sending prompt: "$prompt"');
@@ -169,7 +172,8 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
             return TestResult(
                 status: TestStatus.passed,
                 logs: logger.toString(),
-                responseJson: response.text);
+              responseJson: response.text,
+            );
           } else {
             return TestResult(
               status: TestStatus.failed,
@@ -226,7 +230,8 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
             'Verifies automatic function/tool call execution via AutoFunctionDeclaration.',
         run: (provider, logger) async {
           logger.log(
-              'Declaring AutoFunctionDeclaration for getSuperHeroPower...');
+            'Declaring AutoFunctionDeclaration for getSuperHeroPower...',
+          );
           final autoPowerTool = AutoFunctionDeclaration(
             name: 'getSuperHeroPower',
             description: 'Returns the superpower of a given superhero by name.',
@@ -237,7 +242,8 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
             callable: (args) async {
               final hero = args['heroName'] as String?;
               logger.log(
-                  'CALLBACK TRIGGERED: getSuperHeroPower called for "$hero"');
+                'CALLBACK TRIGGERED: getSuperHeroPower called for "$hero"',
+              );
               if (hero?.toLowerCase().contains('laserman') ?? false) {
                 return {'power': 'Laser Eyes'};
               }
@@ -248,7 +254,7 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
           final model = provider.generativeModel(
             model: 'gemini-3.1-flash-lite',
             tools: [
-              Tool.functionDeclarations([autoPowerTool])
+              Tool.functionDeclarations([autoPowerTool]),
             ],
           );
           final chat = model.startChat();
@@ -262,7 +268,8 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
             return TestResult(
                 status: TestStatus.passed,
                 logs: logger.toString(),
-                responseJson: response.text);
+              responseJson: response.text,
+            );
           } else {
             return TestResult(
               status: TestStatus.failed,
@@ -293,7 +300,7 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
           final model = provider.generativeModel(
             model: 'gemini-3.1-flash-lite',
             tools: [
-              Tool.functionDeclarations([powerTool])
+              Tool.functionDeclarations([powerTool]),
             ],
           );
 
@@ -303,7 +310,8 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
           final functionCalls = response.functionCalls;
 
           logger.log(
-              'Function calls predicted: ${functionCalls.map((c) => c.name).toList()}');
+            'Function calls predicted: ${functionCalls.map((c) => c.name).toList()}',
+          );
 
           if (functionCalls.isEmpty) {
             return TestResult(
@@ -316,7 +324,8 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
 
           final call = functionCalls.first;
           logger.log(
-              'Intercepted call details: name=${call.name}, args=${call.args}');
+            'Intercepted call details: name=${call.name}, args=${call.args}',
+          );
           final hero = call.args['heroName'] as String?;
           String power = 'Super Strength';
           if (hero?.toLowerCase().contains('laserman') ?? false) {
@@ -324,7 +333,8 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
           }
 
           logger.log(
-              'Manually constructing FunctionResponse: {"power": "$power"}');
+            'Manually constructing FunctionResponse: {"power": "$power"}',
+          );
           final manualResponse = FunctionResponse(call.name, {'power': power});
 
           logger
@@ -340,7 +350,8 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
             return TestResult(
                 status: TestStatus.passed,
                 logs: logger.toString(),
-                responseJson: nextResponse.text);
+              responseJson: nextResponse.text,
+            );
           } else {
             return TestResult(
               status: TestStatus.failed,
@@ -358,7 +369,8 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
             'Verifies Tool.codeExecution() internal code execution and parts extraction.',
         run: (provider, logger) async {
           logger.log(
-              'Initializing model gemini-3.5-flash with Tool.codeExecution()...');
+            'Initializing model gemini-3.5-flash with Tool.codeExecution()...',
+          );
           final model = provider.generativeModel(
             model: 'gemini-3.5-flash',
             tools: [Tool.codeExecution()],
@@ -388,7 +400,8 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
             return TestResult(
                 status: TestStatus.passed,
                 logs: logger.toString(),
-                responseJson: response.text);
+              responseJson: response.text,
+            );
           } else {
             return TestResult(
               status: TestStatus.failed,
@@ -407,7 +420,8 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
             'Verifies Google Search Grounding tool configuration and grounding metadata.',
         run: (provider, logger) async {
           logger.log(
-              'Initializing model gemini-3.5-flash with Tool.googleSearch()...');
+            'Initializing model gemini-3.5-flash with Tool.googleSearch()...',
+          );
           final model = provider.generativeModel(
             model: 'gemini-3.5-flash',
             tools: [Tool.googleSearch()],
@@ -465,17 +479,20 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
           }
 
           logger.log(
-              'Stream finished. Total chunks=$chunkCount, aggregated length=${textBuffer.length}');
+            'Stream finished. Total chunks=$chunkCount, aggregated length=${textBuffer.length}',
+          );
           if (textBuffer.isNotEmpty) {
             return TestResult(
                 status: TestStatus.passed,
                 logs: logger.toString(),
-                responseJson: textBuffer.toString());
+              responseJson: textBuffer.toString(),
+            );
           } else {
             return TestResult(
                 status: TestStatus.failed,
                 logs: logger.toString(),
-                errorMessage: 'Stream aggregated output was empty.');
+              errorMessage: 'Stream aggregated output was empty.',
+            );
           }
         },
       ),
@@ -507,12 +524,14 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
             return TestResult(
                 status: TestStatus.passed,
                 logs: logger.toString(),
-                responseJson: 'Total Tokens: ${response.totalTokens}');
+              responseJson: 'Total Tokens: ${response.totalTokens}',
+            );
           } else {
             return TestResult(
                 status: TestStatus.failed,
                 logs: logger.toString(),
-                errorMessage: 'Expected token count > 0');
+              errorMessage: 'Expected token count > 0',
+            );
           }
         },
       ),
@@ -523,12 +542,14 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
             'Verifies extraction of thought logs and usage metadata with ThinkingConfig.',
         run: (provider, logger) async {
           logger.log(
-              'Initializing model gemini-3.5-flash with ThinkingConfig...');
+            'Initializing model gemini-3.5-flash with ThinkingConfig...',
+          );
           final model = provider.generativeModel(
             model: 'gemini-3.5-flash',
             generationConfig: GenerationConfig(
               thinkingConfig: ThinkingConfig.withThinkingBudget(2048,
-                  includeThoughts: true),
+                includeThoughts: true,
+              ),
             ),
           );
 
@@ -542,7 +563,8 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
           logger.log('Response text: "${response.text}"');
           logger.log('Thoughts extracted: "$thoughts"');
           logger.log(
-              'Usage Details: prompt=${usage?.promptTokenCount}, candidates=${usage?.candidatesTokenCount}, total=${usage?.totalTokenCount}, thoughts=${usage?.thoughtsTokenCount}');
+            'Usage Details: prompt=${usage?.promptTokenCount}, candidates=${usage?.candidatesTokenCount}, total=${usage?.totalTokenCount}, thoughts=${usage?.thoughtsTokenCount}',
+          );
 
           if (usage != null && usage.totalTokenCount! > 0) {
             return TestResult(
@@ -555,7 +577,8 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
             return TestResult(
                 status: TestStatus.failed,
                 logs: logger.toString(),
-                errorMessage: 'Usage metadata was null or invalid.');
+              errorMessage: 'Usage metadata was null or invalid.',
+            );
           }
         },
       ),
@@ -566,13 +589,14 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
             'Verifies text + image response output generation via gemini-2.5-flash-image model.',
         run: (provider, logger) async {
           logger.log(
-              'Initializing gemini-2.5-flash-image with dual response modalities...');
+            'Initializing gemini-2.5-flash-image with dual response modalities...',
+          );
           final model = provider.generativeModel(
             model: 'gemini-2.5-flash-image',
             generationConfig: GenerationConfig(
               responseModalities: [
                 ResponseModalities.text,
-                ResponseModalities.image
+                ResponseModalities.image,
               ],
             ),
           );
@@ -589,7 +613,8 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
           if (imageParts.isNotEmpty) {
             final img = imageParts.first;
             logger.log(
-                'Generated Image: mime=${img.mimeType}, size=${img.bytes.length} bytes');
+              'Generated Image: mime=${img.mimeType}, size=${img.bytes.length} bytes',
+            );
             return TestResult(
               status: TestStatus.passed,
               logs: logger.toString(),
@@ -628,7 +653,8 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
 
     try {
       logger.log(
-          'Starting execution for ${item.name} (${isVertex ? 'Vertex AI' : 'Google AI'})...');
+        'Starting execution for ${item.name} (${isVertex ? 'Vertex AI' : 'Google AI'})...',
+      );
       final result = await item.run(provider, logger);
       setState(() {
         if (isVertex) {
@@ -714,16 +740,20 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
           children: [
             Text(title,
                 style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('Pass: $passed/$total',
-                    style: TextStyle(color: Colors.green.shade300)),
+                  style: TextStyle(color: Colors.green.shade300),
+                ),
                 Text('Fail: $failed',
                     style: TextStyle(
-                        color: failed > 0 ? Colors.red.shade300 : Colors.grey)),
+                    color: failed > 0 ? Colors.red.shade300 : Colors.grey,
+                  ),
+                ),
               ],
             ),
           ],
@@ -737,7 +767,8 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
       case TestStatus.pending:
         return Chip(
           label: const Text('PENDING',
-              style: TextStyle(fontSize: 10, color: Colors.grey)),
+            style: TextStyle(fontSize: 10, color: Colors.grey),
+          ),
           backgroundColor: Colors.grey.shade800,
           padding: EdgeInsets.zero,
           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -754,7 +785,9 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
               style: TextStyle(
                   fontSize: 10,
                   color: Colors.green,
-                  fontWeight: FontWeight.bold)),
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           backgroundColor: Colors.green.withAlpha(40),
           padding: EdgeInsets.zero,
           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -765,7 +798,9 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
               style: TextStyle(
                   fontSize: 10,
                   color: Colors.red,
-                  fontWeight: FontWeight.bold)),
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           backgroundColor: Colors.red.withAlpha(40),
           padding: EdgeInsets.zero,
           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -788,38 +823,55 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
               style: const TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
-                  color: Colors.blue)),
+              color: Colors.blue,
+            ),
+          ),
           const Divider(height: 8),
           if (result.errorMessage != null) ...[
             Text('ERROR:',
                 style: TextStyle(
-                    fontWeight: FontWeight.bold, color: Colors.red.shade300)),
+                fontWeight: FontWeight.bold,
+                color: Colors.red.shade300,
+              ),
+            ),
             SelectableText(result.errorMessage!,
                 style: TextStyle(
                     fontFamily: 'monospace',
                     fontSize: 11,
-                    color: Colors.red.shade200)),
+                color: Colors.red.shade200,
+              ),
+            ),
             const SizedBox(height: 8),
           ],
           if (result.responseJson != null) ...[
             const Text('RESPONSE:',
                 style: TextStyle(
-                    fontWeight: FontWeight.bold, color: Colors.purpleAccent)),
+                fontWeight: FontWeight.bold,
+                color: Colors.purpleAccent,
+              ),
+            ),
             SelectableText(result.responseJson!,
                 style: const TextStyle(
                     fontFamily: 'monospace',
                     fontSize: 11,
-                    color: Colors.purpleAccent)),
+                color: Colors.purpleAccent,
+              ),
+            ),
             const SizedBox(height: 8),
           ],
           const Text('EXECUTION LOGS:',
               style: TextStyle(
-                  fontWeight: FontWeight.bold, color: Colors.white70)),
+              fontWeight: FontWeight.bold,
+              color: Colors.white70,
+            ),
+          ),
           SelectableText(result.logs,
               style: const TextStyle(
                   fontFamily: 'monospace',
                   fontSize: 11,
-                  color: Colors.white70)),
+              color: Colors.white70,
+            ),
+          ),
         ],
       ),
     );
@@ -849,7 +901,9 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
                 width: 20,
                 height: 20,
                 child: CircularProgressIndicator(
-                    strokeWidth: 2, color: Colors.cyanAccent),
+                  strokeWidth: 2,
+                  color: Colors.cyanAccent,
+                ),
               ),
             ),
         ],
@@ -858,18 +912,27 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
         children: [
           if (_isRunning)
             LinearProgressIndicator(
-                value: _progress, minHeight: 6, color: Colors.cyanAccent),
+              value: _progress,
+              minHeight: 6,
+              color: Colors.cyanAccent,
+            ),
           Padding(
             padding: const EdgeInsets.all(12),
             child: Row(
               children: [
                 Expanded(
                     child: _buildProviderSummary(
-                        'Google AI Suite', googleAIResults)),
+                    'Google AI Suite',
+                    googleAIResults,
+                  ),
+                ),
                 const SizedBox(width: 8),
                 Expanded(
                     child: _buildProviderSummary(
-                        'Vertex AI Suite', vertexAIResults)),
+                    'Vertex AI Suite',
+                    vertexAIResults,
+                  ),
+                ),
               ],
             ),
           ),
@@ -885,13 +948,16 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
                     leading: CircleAvatar(
                       backgroundColor: Colors.grey.shade800,
                       child: Text(item.id,
-                          style: const TextStyle(fontWeight: FontWeight.bold)),
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     ),
                     title: Text(item.name,
-                        style: const TextStyle(fontWeight: FontWeight.bold)),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
                     subtitle: Text(item.description,
                         style:
-                            const TextStyle(fontSize: 12, color: Colors.grey)),
+                            const TextStyle(fontSize: 12, color: Colors.grey),
+                    ),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -899,7 +965,10 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
                           children: [
                             const Text('G: ',
                                 style: TextStyle(
-                                    fontSize: 10, color: Colors.grey)),
+                                fontSize: 10,
+                                color: Colors.grey,
+                              ),
+                            ),
                             _buildStatusBadge(item.googleAIResult),
                           ],
                         ),
@@ -908,7 +977,10 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
                           children: [
                             const Text('V: ',
                                 style: TextStyle(
-                                    fontSize: 10, color: Colors.grey)),
+                                fontSize: 10,
+                                color: Colors.grey,
+                              ),
+                            ),
                             _buildStatusBadge(item.vertexAIResult),
                           ],
                         ),
@@ -925,12 +997,16 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
                                 Expanded(
                                     child: _buildLogsConsole(
                                         'Google AI Details',
-                                        item.googleAIResult)),
+                                    item.googleAIResult,
+                                  ),
+                                ),
                                 const SizedBox(width: 8),
                                 Expanded(
                                     child: _buildLogsConsole(
                                         'Vertex AI Details',
-                                        item.vertexAIResult)),
+                                    item.vertexAIResult,
+                                  ),
+                                ),
                               ],
                             ),
                           ],
