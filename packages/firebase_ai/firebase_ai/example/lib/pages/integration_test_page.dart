@@ -100,8 +100,8 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
           if (response.text?.trim().toUpperCase().contains('SUCCESS') ??
               false) {
             return TestResult(
-                status: TestStatus.passed,
-                logs: logger.toString(),
+              status: TestStatus.passed,
+              logs: logger.toString(),
               responseJson: response.text,
             );
           } else {
@@ -129,8 +129,8 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
           if (response.text?.trim().toUpperCase().contains('SUCCESS') ??
               false) {
             return TestResult(
-                status: TestStatus.passed,
-                logs: logger.toString(),
+              status: TestStatus.passed,
+              logs: logger.toString(),
               responseJson: response.text,
             );
           } else {
@@ -170,8 +170,8 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
               responseText.contains('doth');
           if (containsKnightTerms) {
             return TestResult(
-                status: TestStatus.passed,
-                logs: logger.toString(),
+              status: TestStatus.passed,
+              logs: logger.toString(),
               responseJson: response.text,
             );
           } else {
@@ -266,8 +266,8 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
 
           if (response.text?.toLowerCase().contains('laser') ?? false) {
             return TestResult(
-                status: TestStatus.passed,
-                logs: logger.toString(),
+              status: TestStatus.passed,
+              logs: logger.toString(),
               responseJson: response.text,
             );
           } else {
@@ -348,8 +348,8 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
           logger.log('Final response: "${nextResponse.text}"');
           if (nextResponse.text?.toLowerCase().contains('laser') ?? false) {
             return TestResult(
-                status: TestStatus.passed,
-                logs: logger.toString(),
+              status: TestStatus.passed,
+              logs: logger.toString(),
               responseJson: nextResponse.text,
             );
           } else {
@@ -398,8 +398,8 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
 
           if (hasExecutableCode && hasCodeResult) {
             return TestResult(
-                status: TestStatus.passed,
-                logs: logger.toString(),
+              status: TestStatus.passed,
+              logs: logger.toString(),
               responseJson: response.text,
             );
           } else {
@@ -483,14 +483,14 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
           );
           if (textBuffer.isNotEmpty) {
             return TestResult(
-                status: TestStatus.passed,
-                logs: logger.toString(),
+              status: TestStatus.passed,
+              logs: logger.toString(),
               responseJson: textBuffer.toString(),
             );
           } else {
             return TestResult(
-                status: TestStatus.failed,
-                logs: logger.toString(),
+              status: TestStatus.failed,
+              logs: logger.toString(),
               errorMessage: 'Stream aggregated output was empty.',
             );
           }
@@ -522,14 +522,14 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
 
           if (response.totalTokens > 0) {
             return TestResult(
-                status: TestStatus.passed,
-                logs: logger.toString(),
+              status: TestStatus.passed,
+              logs: logger.toString(),
               responseJson: 'Total Tokens: ${response.totalTokens}',
             );
           } else {
             return TestResult(
-                status: TestStatus.failed,
-                logs: logger.toString(),
+              status: TestStatus.failed,
+              logs: logger.toString(),
               errorMessage: 'Expected token count > 0',
             );
           }
@@ -547,7 +547,8 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
           final model = provider.generativeModel(
             model: 'gemini-3.5-flash',
             generationConfig: GenerationConfig(
-              thinkingConfig: ThinkingConfig.withThinkingBudget(2048,
+              thinkingConfig: ThinkingConfig.withThinkingBudget(
+                2048,
                 includeThoughts: true,
               ),
             ),
@@ -575,8 +576,8 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
             );
           } else {
             return TestResult(
-                status: TestStatus.failed,
-                logs: logger.toString(),
+              status: TestStatus.failed,
+              logs: logger.toString(),
               errorMessage: 'Usage metadata was null or invalid.',
             );
           }
@@ -738,19 +739,21 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(title,
-                style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            Text(
+              title,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Pass: $passed/$total',
+                Text(
+                  'Pass: $passed/$total',
                   style: TextStyle(color: Colors.green.shade300),
                 ),
-                Text('Fail: $failed',
-                    style: TextStyle(
+                Text(
+                  'Fail: $failed',
+                  style: TextStyle(
                     color: failed > 0 ? Colors.red.shade300 : Colors.grey,
                   ),
                 ),
@@ -766,7 +769,8 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
     switch (result.status) {
       case TestStatus.pending:
         return Chip(
-          label: const Text('PENDING',
+          label: const Text(
+            'PENDING',
             style: TextStyle(fontSize: 10, color: Colors.grey),
           ),
           backgroundColor: Colors.grey.shade800,
@@ -781,10 +785,11 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
         );
       case TestStatus.passed:
         return Chip(
-          label: const Text('PASS',
-              style: TextStyle(
-                  fontSize: 10,
-                  color: Colors.green,
+          label: const Text(
+            'PASS',
+            style: TextStyle(
+              fontSize: 10,
+              color: Colors.green,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -794,10 +799,11 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
         );
       case TestStatus.failed:
         return Chip(
-          label: const Text('FAIL',
-              style: TextStyle(
-                  fontSize: 10,
-                  color: Colors.red,
+          label: const Text(
+            'FAIL',
+            style: TextStyle(
+              fontSize: 10,
+              color: Colors.red,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -819,56 +825,63 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title,
-              style: const TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
               color: Colors.blue,
             ),
           ),
           const Divider(height: 8),
           if (result.errorMessage != null) ...[
-            Text('ERROR:',
-                style: TextStyle(
+            Text(
+              'ERROR:',
+              style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.red.shade300,
               ),
             ),
-            SelectableText(result.errorMessage!,
-                style: TextStyle(
-                    fontFamily: 'monospace',
-                    fontSize: 11,
+            SelectableText(
+              result.errorMessage!,
+              style: TextStyle(
+                fontFamily: 'monospace',
+                fontSize: 11,
                 color: Colors.red.shade200,
               ),
             ),
             const SizedBox(height: 8),
           ],
           if (result.responseJson != null) ...[
-            const Text('RESPONSE:',
-                style: TextStyle(
+            const Text(
+              'RESPONSE:',
+              style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.purpleAccent,
               ),
             ),
-            SelectableText(result.responseJson!,
-                style: const TextStyle(
-                    fontFamily: 'monospace',
-                    fontSize: 11,
+            SelectableText(
+              result.responseJson!,
+              style: const TextStyle(
+                fontFamily: 'monospace',
+                fontSize: 11,
                 color: Colors.purpleAccent,
               ),
             ),
             const SizedBox(height: 8),
           ],
-          const Text('EXECUTION LOGS:',
-              style: TextStyle(
+          const Text(
+            'EXECUTION LOGS:',
+            style: TextStyle(
               fontWeight: FontWeight.bold,
               color: Colors.white70,
             ),
           ),
-          SelectableText(result.logs,
-              style: const TextStyle(
-                  fontFamily: 'monospace',
-                  fontSize: 11,
+          SelectableText(
+            result.logs,
+            style: const TextStyle(
+              fontFamily: 'monospace',
+              fontSize: 11,
               color: Colors.white70,
             ),
           ),
@@ -921,14 +934,14 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
             child: Row(
               children: [
                 Expanded(
-                    child: _buildProviderSummary(
+                  child: _buildProviderSummary(
                     'Google AI Suite',
                     googleAIResults,
                   ),
                 ),
                 const SizedBox(width: 8),
                 Expanded(
-                    child: _buildProviderSummary(
+                  child: _buildProviderSummary(
                     'Vertex AI Suite',
                     vertexAIResults,
                   ),
@@ -947,24 +960,27 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
                   child: ExpansionTile(
                     leading: CircleAvatar(
                       backgroundColor: Colors.grey.shade800,
-                      child: Text(item.id,
+                      child: Text(
+                        item.id,
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
-                    title: Text(item.name,
+                    title: Text(
+                      item.name,
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    subtitle: Text(item.description,
-                        style:
-                            const TextStyle(fontSize: 12, color: Colors.grey),
+                    subtitle: Text(
+                      item.description,
+                      style: const TextStyle(fontSize: 12, color: Colors.grey),
                     ),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Row(
                           children: [
-                            const Text('G: ',
-                                style: TextStyle(
+                            const Text(
+                              'G: ',
+                              style: TextStyle(
                                 fontSize: 10,
                                 color: Colors.grey,
                               ),
@@ -975,8 +991,9 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
                         const SizedBox(width: 8),
                         Row(
                           children: [
-                            const Text('V: ',
-                                style: TextStyle(
+                            const Text(
+                              'V: ',
+                              style: TextStyle(
                                 fontSize: 10,
                                 color: Colors.grey,
                               ),
@@ -995,15 +1012,15 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Expanded(
-                                    child: _buildLogsConsole(
-                                        'Google AI Details',
+                                  child: _buildLogsConsole(
+                                    'Google AI Details',
                                     item.googleAIResult,
                                   ),
                                 ),
                                 const SizedBox(width: 8),
                                 Expanded(
-                                    child: _buildLogsConsole(
-                                        'Vertex AI Details',
+                                  child: _buildLogsConsole(
+                                    'Vertex AI Details',
                                     item.vertexAIResult,
                                   ),
                                 ),
