@@ -86,6 +86,7 @@ jobs:
         with:
           channel: 'stable'
           cache: true
+          flutter-version: '3.41.6'
           cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
           pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
       - uses: bluefireteam/melos-action@705015c3d2bc4ab94201ac24accb2bbe070cf533
