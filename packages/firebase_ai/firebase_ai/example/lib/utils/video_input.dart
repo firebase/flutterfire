@@ -15,7 +15,6 @@
 import 'dart:developer';
 import 'dart:async';
 import 'package:camera/camera.dart';
-import 'package:camera_macos/camera_macos.dart';
 import 'package:flutter/foundation.dart';
 
 class VideoInput extends ChangeNotifier {
@@ -34,8 +33,7 @@ class VideoInput extends ChangeNotifier {
   Future<void> init() async {
     try {
       if (!kIsWeb && defaultTargetPlatform == TargetPlatform.macOS) {
-        //await camera_macos_lib.loadLibrary();
-        _cameras = await CameraMacOS.instance.listDevices();
+        _cameras = [];
       } else {
         _cameras = await availableCameras();
       }
@@ -53,7 +51,7 @@ class VideoInput extends ChangeNotifier {
     stopStreamingImages();
     if (controllerInitialized && _cameraController != null) {
       if (!kIsWeb && defaultTargetPlatform == TargetPlatform.macOS) {
-        (_cameraController as CameraMacOSController).destroy();
+        // No-op on macOS
       } else {
         (_cameraController as CameraController).dispose();
       }
@@ -63,7 +61,7 @@ class VideoInput extends ChangeNotifier {
   String? get selectedCameraId {
     if (_selectedCamera == null) return null;
     if (!kIsWeb && defaultTargetPlatform == TargetPlatform.macOS) {
-      return _selectedCamera.deviceId;
+      return null;
     }
     return null;
   }
@@ -77,7 +75,7 @@ class VideoInput extends ChangeNotifier {
   Future<void> initializeCameraController() async {
     if (controllerInitialized && _cameraController != null) {
       if (!kIsWeb && defaultTargetPlatform == TargetPlatform.macOS) {
-        await (_cameraController as CameraMacOSController).destroy();
+        // No-op on macOS
       } else {
         await (_cameraController as CameraController).dispose();
       }
@@ -142,13 +140,7 @@ class VideoInput extends ChangeNotifier {
 
         try {
           if (!kIsWeb && defaultTargetPlatform == TargetPlatform.macOS) {
-            final controller = _cameraController as CameraMacOSController;
-            final CameraMacOSFile? image = await controller.takePicture();
-            if (image != null && image.bytes != null) {
-              if (!_imageStreamController.isClosed) {
-                _imageStreamController.add(image.bytes!);
-              }
-            }
+            // No-op on macOS
           } else {
             final controller = _cameraController as CameraController;
             if (controller.value.isTakingPicture) return;
@@ -197,12 +189,7 @@ class VideoInput extends ChangeNotifier {
   Future<void> flipCamera() async {
     if (_cameras.length > 1) {
       if (!kIsWeb && defaultTargetPlatform == TargetPlatform.macOS) {
-        final currentSelected = _selectedCamera;
-        final otherCamera = _cameras.firstWhere(
-          (camera) => camera.deviceId != currentSelected.deviceId,
-          orElse: () => _cameras[0],
-        );
-        _selectedCamera = otherCamera;
+        // No-op on macOS
       } else {
         final currentSelected = _selectedCamera as CameraDescription;
         final otherCamera = _cameras.firstWhere(

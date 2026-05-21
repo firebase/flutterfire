@@ -126,6 +126,41 @@ void setupDatabaseReferenceTests() {
         expect(result.snapshot.value, 5);
       });
 
+      test('does not emit local transaction events when disabled', () async {
+        final ref = database.ref('tests/transaction-apply-locally-false');
+        await ref.set({'count': 0});
+
+        final initialEvent = Completer<void>();
+        final events = <Object?>[];
+        final subscription = ref.onValue.listen((event) {
+          if (!initialEvent.isCompleted) {
+            initialEvent.complete();
+            return;
+          }
+
+          events.add(event.snapshot.value);
+        });
+
+        try {
+          await initialEvent.future.timeout(const Duration(seconds: 5));
+
+          await ref.runTransaction(
+            (value) => Transaction.success({
+              'count': ((value as Map?)?['count'] as int? ?? 0) + 1,
+              'timestamp': ServerValue.timestamp,
+            }),
+            applyLocally: false,
+          );
+
+          await Future<void>.delayed(const Duration(seconds: 1));
+
+          expect(events, hasLength(1));
+        } finally {
+          await database.goOnline();
+          await subscription.cancel();
+        }
+      });
+
       test('executes transaction', () async {
         final ref = database.ref('tests/transaction-exec');
         await ref.set(0);

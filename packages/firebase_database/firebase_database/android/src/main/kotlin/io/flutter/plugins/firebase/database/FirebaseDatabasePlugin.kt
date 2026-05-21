@@ -4,7 +4,6 @@
 
 package io.flutter.plugins.firebase.database
 
-import android.util.Log
 import androidx.annotation.NonNull
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.TaskCompletionSource
@@ -485,7 +484,7 @@ class FirebaseDatabasePlugin :
   }
 
   private fun removeEventStreamHandlers() {
-    for ((eventChannel, streamHandler) in streamHandlers) {
+    for ((eventChannel, streamHandler) in streamHandlers.toMap()) {
       streamHandler?.onCancel(null)
       eventChannel.setStreamHandler(null)
     }
@@ -516,7 +515,9 @@ class FirebaseDatabasePlugin :
   override fun setPersistenceEnabled(app: DatabasePigeonFirebaseApp, enabled: Boolean, callback: (KotlinResult<Unit>) -> Unit) {
     try {
       val database = getDatabaseFromPigeonApp(app)
-      database.setPersistenceEnabled(enabled)
+      if (app.settings.persistenceEnabled == null) {
+        database.setPersistenceEnabled(enabled)
+      }
       callback(KotlinResult.success(Unit))
     } catch (e: Exception) {
       callback(KotlinResult.failure(e))
@@ -526,7 +527,9 @@ class FirebaseDatabasePlugin :
   override fun setPersistenceCacheSizeBytes(app: DatabasePigeonFirebaseApp, cacheSize: Long, callback: (KotlinResult<Unit>) -> Unit) {
     try {
       val database = getDatabaseFromPigeonApp(app)
-      database.setPersistenceCacheSizeBytes(cacheSize)
+      if (app.settings.cacheSizeBytes == null) {
+        database.setPersistenceCacheSizeBytes(cacheSize)
+      }
       callback(KotlinResult.success(Unit))
     } catch (e: Exception) {
       callback(KotlinResult.failure(e))
@@ -770,7 +773,7 @@ class FirebaseDatabasePlugin :
             callback(KotlinResult.success(Unit))
           }
         }
-      })
+      }, request.applyLocally)
     } catch (e: Exception) {
       // Convert generic exceptions to FlutterFirebaseDatabaseException for proper error handling
       val flutterException = if (e is FlutterFirebaseDatabaseException) e else FlutterFirebaseDatabaseException.unknown(e.message ?: "Unknown transaction error")
@@ -847,20 +850,21 @@ class FirebaseDatabasePlugin :
 
   override fun queryObserve(app: DatabasePigeonFirebaseApp, request: QueryRequest, callback: (KotlinResult<String>) -> Unit) {
     try {
-      Log.d("FirebaseDatabase", "🔍 Kotlin: Setting up query observe for path=${request.path}")
       val database = getDatabaseFromPigeonApp(app)
       val reference = database.getReference(request.path)
       val query = queryFromModifiers(reference, request.modifiers)
 
       // Generate a unique channel name
-      val channelName = "firebase_database_query_${System.currentTimeMillis()}_${request.path.hashCode()}"
+      val channelName =
+        synchronized(this) { "firebase_database_query_${listenerCount++}" }
 
       // Set up the event channel
       val eventChannel = EventChannel(messenger, channelName)
       val streamHandler = EventStreamHandler(query, object : OnDispose {
         override fun run() {
           // Clean up when the stream is disposed
-         eventChannel.setStreamHandler(null)
+          eventChannel.setStreamHandler(null)
+          streamHandlers.remove(eventChannel)
         }
       })
       eventChannel.setStreamHandler(streamHandler)

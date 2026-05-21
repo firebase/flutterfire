@@ -1,3 +1,17 @@
+## 3.12.1
+
+ - Update a dependency to the latest release.
+
+## 3.12.0
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+ - **FEAT**(firebaseai): ImageConfig and FinishReasons ([#18180](https://github.com/firebase/flutterfire/issues/18180)). ([7d1a8b1d](https://github.com/firebase/flutterfire/commit/7d1a8b1db4c5f585ba38d46df37330d3d17de774))
+ - **FEAT**(firebaseai): live session resumption ([#18038](https://github.com/firebase/flutterfire/issues/18038)). ([829fd949](https://github.com/firebase/flutterfire/commit/829fd949bf1644ad9ce73dfb8ed416d89654f989))
+ - **FEAT**(core): Add Auth and AppCheck as App's registered service. ([#18237](https://github.com/firebase/flutterfire/issues/18237)). ([7ce191cb](https://github.com/firebase/flutterfire/commit/7ce191cbd598b299cd0ec64b45d1366914367a5d))
+ - **FEAT**(ai): add missing enum types ([#18198](https://github.com/firebase/flutterfire/issues/18198)). ([889af7c7](https://github.com/firebase/flutterfire/commit/889af7c7b8f7705a55cdd90e39d306858a2e9fd4))
+ - **FEAT**(firebaseai): add Google Maps Grounding support ([#18144](https://github.com/firebase/flutterfire/issues/18144)). ([385d9337](https://github.com/firebase/flutterfire/commit/385d93372f749843ee3d8ac409a878fa149ba7ed))
+ - **FEAT**(ai): add unexpectedToolCall finish reason and corresponding tests ([#18188](https://github.com/firebase/flutterfire/issues/18188)). ([27852720](https://github.com/firebase/flutterfire/commit/278527207a4fb35a5854dd3f0a9405da9f80877c))
+
 ## 3.11.0
 
  - **FEAT**(firebaseai): server prompt chat and function calling ([#17972](https://github.com/firebase/flutterfire/issues/17972)). ([4b8f2288](https://github.com/firebase/flutterfire/commit/4b8f22889808c0a55f4fc2abc52c72aa2d932379))

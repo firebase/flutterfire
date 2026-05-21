@@ -46,9 +46,19 @@ class FirebaseAuth extends FirebasePluginPlatform implements FirebaseService {
   }) {
     return _firebaseAuthInstances.putIfAbsent(app.name, () {
       final instance = FirebaseAuth._(app: app);
-      app.registerService<FirebaseAuth>(instance);
+      app.registerService<FirebaseAuth>(
+        instance,
+        dispose: (auth) => auth._dispose(),
+      );
       return instance;
     });
+  }
+
+  Future<void> _dispose() async {
+    _firebaseAuthInstances.remove(app.name);
+    final delegate = _delegatePackingProperty;
+    _delegatePackingProperty = null;
+    await delegate?.dispose();
   }
 
   /// Returns the current [User] if they are currently signed-in, or `null` if

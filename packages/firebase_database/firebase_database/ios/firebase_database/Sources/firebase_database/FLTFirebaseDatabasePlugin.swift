@@ -251,7 +251,7 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
     let database = getDatabaseFromPigeonApp(app)
     let reference = database.reference(withPath: request.path)
 
-    reference.runTransactionBlock { currentData in
+    reference.runTransactionBlock({ currentData in
       let semaphore = DispatchSemaphore(value: 0)
       var transactionResult: TransactionHandlerResult?
 
@@ -284,7 +284,7 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
 
       currentData.value = result.value
       return TransactionResult.success(withValue: currentData)
-    } andCompletionBlock: { error, committed, snapshot in
+    }, andCompletionBlock: { error, committed, snapshot in
       if let error {
         completion(.failure(self.createFlutterError(error)))
         return
@@ -304,7 +304,7 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
       ]
 
       completion(.success(()))
-    }
+    }, withLocalEvents: request.applyLocally)
   }
 
   func databaseReferenceGetTransactionResult(app: DatabasePigeonFirebaseApp, transactionKey: Int64,

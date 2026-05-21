@@ -88,6 +88,33 @@ void main() {
       FirebaseApp app = Firebase.app(testAppName);
       expect(app.getService<AnotherTestService>(), isNull);
     });
+
+    test('.delete() disposes registered services before deleting app',
+        () async {
+      final calls = <String>[];
+      final platformApp = TestFirebaseAppPlatform(
+        testAppName,
+        testOptions,
+        onDelete: () async {
+          calls.add('app');
+        },
+      );
+      when(mock.app(testAppName)).thenReturn(platformApp);
+
+      FirebaseApp app = Firebase.app(testAppName);
+      final testService = TestService();
+      app.registerService<TestService>(
+        testService,
+        dispose: (_) async {
+          calls.add('service');
+        },
+      );
+
+      await app.delete();
+
+      expect(calls, <String>['service', 'app']);
+      expect(app.getService<TestService>(), isNull);
+    });
   });
 
   test('.initializeApp() with demoProjectId', () async {
@@ -176,6 +203,21 @@ class MockFirebaseCore extends Mock
 
 // ignore: avoid_implementing_value_types
 class FakeFirebaseAppPlatform extends Fake implements FirebaseAppPlatform {}
+
+class TestFirebaseAppPlatform extends FirebaseAppPlatform {
+  TestFirebaseAppPlatform(
+    super.name,
+    super.options, {
+    this.onDelete,
+  });
+
+  final Future<void> Function()? onDelete;
+
+  @override
+  Future<void> delete() async {
+    await onDelete?.call();
+  }
+}
 
 class TestService implements FirebaseService {}
 

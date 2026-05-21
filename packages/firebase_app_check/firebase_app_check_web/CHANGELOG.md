@@ -1,3 +1,11 @@
+## 0.2.4+2
+
+ - Update a dependency to the latest release.
+
+## 0.2.4+1
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+
 ## 0.2.4
 
  - **FIX**(app_check,web): fix an error that could occur when refreshing a token ([#18135](https://github.com/firebase/flutterfire/issues/18135)). ([6998e512](https://github.com/firebase/flutterfire/commit/6998e512ea5404a20ad81a0306aafaa607babc2a))

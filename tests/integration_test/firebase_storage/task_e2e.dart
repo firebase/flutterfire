@@ -378,8 +378,10 @@ void setupTaskTests() {
               completions.forEach(unawaited);
             }
           },
-          retry: 2,
-          skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android,
+          // TODO(SelaseKay): move this white-box core reinitialization
+          // regression to an isolated test. Forcing global core reinit in the
+          // shared E2E process can race unrelated plugin app lifecycle tests.
+          skip: true,
         );
       },
     );

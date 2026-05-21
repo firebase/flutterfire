@@ -1,3 +1,14 @@
+## 0.3.0+2
+
+ - Update a dependency to the latest release.
+
+## 0.3.0+1
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+ - **FIX**: update core, auth and app-check logic so internal resources on method channels are properly disposed ([#18268](https://github.com/firebase/flutterfire/issues/18268)). ([a0de4ed8](https://github.com/firebase/flutterfire/commit/a0de4ed86b0dff89bb9e557f2a54f38cd2546016))
+ - **FIX**(fdc): block reconnecting if there are no active subscribers or pending unary calls. ([#18265](https://github.com/firebase/flutterfire/issues/18265)). ([330bbb83](https://github.com/firebase/flutterfire/commit/330bbb83399f37911f938a59dc660ed84a0c83a3))
+ - **FIX**(fdc): remove unused logs ([#18197](https://github.com/firebase/flutterfire/issues/18197)). ([4c17ca87](https://github.com/firebase/flutterfire/commit/4c17ca870a78ae6afeaad6006ca68e7999711ffd))
+
 ## 0.3.0
 
  - **FEAT**(fdc): Streaming implementation for data connect ([#18174](https://github.com/firebase/flutterfire/issues/18174)). ([6ce6f6b2](https://github.com/firebase/flutterfire/commit/6ce6f6b2369b9d43e69b24b284d8ef816c430e31))

@@ -43,9 +43,19 @@ class FirebaseAppCheck extends FirebasePluginPlatform
   static FirebaseAppCheck instanceFor({required FirebaseApp app}) {
     return _firebaseAppCheckInstances.putIfAbsent(app.name, () {
       final instance = FirebaseAppCheck._(app: app);
-      app.registerService<FirebaseAppCheck>(instance);
+      app.registerService<FirebaseAppCheck>(
+        instance,
+        dispose: (appCheck) => appCheck._dispose(),
+      );
       return instance;
     });
+  }
+
+  Future<void> _dispose() async {
+    _firebaseAppCheckInstances.remove(app.name);
+    final delegate = _delegatePackingProperty;
+    _delegatePackingProperty = null;
+    await delegate?.dispose();
   }
 
   /// Activates the Firebase App Check service.
