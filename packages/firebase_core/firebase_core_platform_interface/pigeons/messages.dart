@@ -19,6 +19,9 @@ import 'package:pigeon/pigeon.dart';
         '../firebase_core/ios/firebase_core/Sources/firebase_core/include/firebase_core/messages.g.h',
     objcSourceOut:
         '../firebase_core/ios/firebase_core/Sources/firebase_core/messages.g.m',
+    objcOptions: ObjcOptions(
+      headerIncludePath: 'include/firebase_core/messages.g.h',
+    ),
     cppHeaderOut: '../firebase_core/windows/messages.g.h',
     cppSourceOut: '../firebase_core/windows/messages.g.cpp',
     cppOptions: CppOptions(namespace: 'firebase_core_windows'),

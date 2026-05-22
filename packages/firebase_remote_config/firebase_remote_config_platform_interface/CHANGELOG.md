@@ -1,3 +1,7 @@
+## 3.0.1
+
+ - Update a dependency to the latest release.
+
 ## 3.0.0
 
  - Bump platform interface a major version due to pigeon dependency update

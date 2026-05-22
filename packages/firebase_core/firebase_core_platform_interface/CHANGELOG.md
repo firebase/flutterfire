@@ -1,3 +1,7 @@
+## 7.0.1
+
+ - **FIX**(core,iOS): use namespaced iOS Pigeon header import ([#18281](https://github.com/firebase/flutterfire/issues/18281)). ([7c1257e7](https://github.com/firebase/flutterfire/commit/7c1257e7295f9ba67f3f5820493f105a14d34d52))
+
 ## 7.0.0
 
  - Bump platform interface a major version due to pigeon dependency update
