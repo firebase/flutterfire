@@ -127,6 +127,8 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
       String? recaptchaEnterpriseSiteKey;
       if (providerAndroid is AndroidReCaptchaEnterpriseProvider) {
         recaptchaEnterpriseSiteKey = providerAndroid.siteKey;
+      } else if (providerApple is AppleReCaptchaEnterpriseProvider) {
+        recaptchaEnterpriseSiteKey = providerApple.siteKey;
       }
 
       await _pigeonApi.activate(

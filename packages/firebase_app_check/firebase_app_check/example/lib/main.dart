@@ -202,6 +202,13 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
               ),
               child: const Text('activate(Android reCAPTCHA Enterprise)'),
             ),
+            if (!kIsWeb && defaultTargetPlatform == TargetPlatform.iOS)
+              ElevatedButton(
+                onPressed: () => _activate(
+                  apple: AppleReCaptchaEnterpriseProvider(siteKey: _siteKeyController.text),
+                ),
+                child: const Text('activate(Apple reCAPTCHA Enterprise)'),
+              ),
             ElevatedButton(
               onPressed: () => _activate(
                 webProviderType: 'enterprise',
