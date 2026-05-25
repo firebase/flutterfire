@@ -846,6 +846,12 @@ abstract class Expression implements PipelineSerializable {
   /// Creates a null value expression
   static Expression nullValue() => _NullExpression();
 
+  /// Creates a search expression that matches the whole document against
+  /// [query].
+  static BooleanExpression documentMatches(String query) {
+    return _DocumentMatchesExpression(query);
+  }
+
   /// Creates a conditional (ternary) expression
   static Expression conditional(
     BooleanExpression condition,
@@ -1961,6 +1967,26 @@ class _TrimExpression extends FunctionExpression {
 
 /// Base class for boolean expressions used in filtering
 abstract class BooleanExpression extends Expression {}
+
+/// Represents a document_matches search expression.
+class _DocumentMatchesExpression extends BooleanExpression {
+  final String query;
+
+  _DocumentMatchesExpression(this.query);
+
+  @override
+  String get name => 'document_matches';
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'args': {
+        'query': query,
+      },
+    };
+  }
+}
 
 // ============================================================================
 // PATTERN DEMONSTRATION - Concrete Function Expression Classes
