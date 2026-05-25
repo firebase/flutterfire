@@ -84,7 +84,7 @@ final class SearchStage implements PipelineSerializable {
   Map<String, dynamic> toMap() {
     final args = <String, dynamic>{
       'query_type': _queryType.name,
-      'query': _query is Expression ? (_query as Expression).toMap() : _query,
+      'query': _query is Expression ? _query.toMap() : _query,
     };
 
     if (_sort != null) {
