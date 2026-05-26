@@ -99,18 +99,9 @@ Future<void> seedPipelineE2ECollections(FirebaseFirestore firestore) async {
       },
     ]),
     ..._withTest('search', [
-      {
-        'name': 'Pancake House',
-        'description': 'waffles pancakes breakfast',
-      },
-      {
-        'name': 'Burger Diner',
-        'description': 'burgers fries lunch',
-      },
-      {
-        'name': 'Coffee Bar',
-        'description': 'coffee breakfast pastries',
-      },
+      {'name': 'Pancake House', 'description': 'waffles pancakes breakfast'},
+      {'name': 'Burger Diner', 'description': 'burgers fries lunch'},
+      {'name': 'Coffee Bar', 'description': 'coffee breakfast pastries'},
     ]),
     ..._withTest('expressions', [
       {

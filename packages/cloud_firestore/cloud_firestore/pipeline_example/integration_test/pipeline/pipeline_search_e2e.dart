@@ -28,6 +28,34 @@ void runPipelineSearchTests() {
       expect(_resultNames(snapshot), contains('Pancake House'));
     });
 
+    test('withQuery passes options and returns expected result list', () async {
+      final snapshot = await firestore
+          .pipeline()
+          .collection('pipeline-e2e')
+          .search(
+            SearchStage.withQuery(
+              'breakfast',
+              languageCode: 'en',
+              retrievalDepth: 10,
+              offset: 0,
+              limit: 10,
+              addFields: [Field('name').as('resultName')],
+            ),
+          )
+          .where(Expression.field('test').equalValue('search'))
+          .execute();
+
+      expect(_sortedResultValues(snapshot, 'name'), [
+        'Coffee Bar',
+        'Pancake House',
+      ]);
+      expect(_sortedResultValues(snapshot, 'resultName'), [
+        'Coffee Bar',
+        'Pancake House',
+      ]);
+      expect(_resultNames(snapshot), isNot(contains('Burger Diner')));
+    });
+
     test('withQueryExpression returns matching search results', () async {
       final snapshot = await firestore
           .pipeline()
@@ -44,28 +72,49 @@ void runPipelineSearchTests() {
       expect(_resultNames(snapshot), contains('Pancake House'));
     });
 
-    test('withQueryExpression supports combined document match queries',
-        () async {
+    test(
+      'withQueryExpression supports combined document match queries',
+      () async {
+        final snapshot = await firestore
+            .pipeline()
+            .collection('pipeline-e2e')
+            .search(
+              SearchStage.withQueryExpression(
+                Expression.and(
+                  Expression.documentMatches('pancakes'),
+                  Expression.documentMatches('breakfast'),
+                ),
+                limit: 10,
+              ),
+            )
+            .where(Expression.field('test').equalValue('search'))
+            .execute();
+
+        expect(_resultNames(snapshot), contains('Pancake House'));
+      },
+    );
+
+    test('withQuery returns empty results when nothing matches', () async {
       final snapshot = await firestore
           .pipeline()
           .collection('pipeline-e2e')
-          .search(
-            SearchStage.withQueryExpression(
-              Expression.and(
-                Expression.documentMatches('pancakes'),
-                Expression.documentMatches('breakfast'),
-              ),
-              limit: 10,
-            ),
-          )
+          .search(SearchStage.withQuery('No match', limit: 10))
           .where(Expression.field('test').equalValue('search'))
           .execute();
 
-      expect(_resultNames(snapshot), contains('Pancake House'));
+      expect(snapshot.result, isEmpty);
     });
   });
 }
 
 List<Object?> _resultNames(PipelineSnapshot snapshot) {
   return snapshot.result.map((result) => result.data()?['name']).toList();
+}
+
+List<String> _sortedResultValues(PipelineSnapshot snapshot, String field) {
+  return snapshot.result
+      .map((result) => result.data()?[field])
+      .whereType<String>()
+      .toList()
+    ..sort();
 }

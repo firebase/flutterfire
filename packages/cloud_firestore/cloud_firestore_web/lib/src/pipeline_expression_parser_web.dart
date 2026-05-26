@@ -426,6 +426,12 @@ class PipelineExpressionParserWeb {
           throw UnsupportedError('not requires a boolean expression');
         }
         return _pipelines.not(boolExpr);
+      case 'document_matches':
+        final query = argsMap['query'] as String?;
+        if (query == null) {
+          throw UnsupportedError('document_matches requires query');
+        }
+        return _pipelines.documentMatches(query.toJS);
       case 'exists':
         return _pipelines.exists(_expr(argsMap, _kExpression));
       case 'is_absent':
@@ -470,17 +476,7 @@ class PipelineExpressionParserWeb {
   ///
   /// Each item shape: `{ expression: Map, order_direction: 'asc' | 'desc' }`.
   JSAny toSortOptions(List<dynamic> orderings) {
-    final list = <JSAny>[];
-    for (final o in orderings) {
-      final m = o is Map<String, dynamic> ? o : <String, dynamic>{};
-      final expr = m[_kExpression];
-      if (expr == null) continue;
-      final exprJs = toExpression(expr as Map<String, dynamic>);
-      final dir = m['order_direction'] as String?;
-      list.add(dir == 'desc'
-          ? _pipelines.descending(exprJs)
-          : _pipelines.ascending(exprJs));
-    }
+    final list = _toOrderingList(orderings);
     if (list.isEmpty) {
       throw UnsupportedError(
         'Pipeline sort() on web requires the Firebase JS pipeline expression API '
@@ -616,6 +612,48 @@ class PipelineExpressionParserWeb {
       ..distanceMeasure = distanceMeasure.toJS;
     if (limit != null) opts.limit = limit.toJS;
     if (distanceField != null) opts.distanceField = distanceField.toJS;
+    return opts;
+  }
+
+  /// Converts search stage args to JS SearchStageOptions.
+  interop.SearchStageOptionsJsImpl toSearchOptions(Map<String, dynamic> map) {
+    final queryType = map['query_type'] as String?;
+    final query = map['query'];
+    final opts = interop.SearchStageOptionsJsImpl();
+
+    if (queryType == 'string') {
+      opts.query = (query as String).toJS;
+    } else if (queryType == 'expression') {
+      opts.query = toBooleanExpression(query as Map<String, dynamic>)!;
+    } else {
+      throw UnsupportedError(
+        "Pipeline search() on web requires query_type 'string' or 'expression'.",
+      );
+    }
+
+    final languageCode = map['language_code'] as String?;
+    if (languageCode != null) opts.languageCode = languageCode.toJS;
+
+    final retrievalDepth = map['retrieval_depth'] as int?;
+    if (retrievalDepth != null) opts.retrievalDepth = retrievalDepth.toJS;
+
+    final offset = map['offset'] as int?;
+    if (offset != null) opts.offset = offset.toJS;
+
+    final limit = map['limit'] as int?;
+    if (limit != null) opts.limit = limit.toJS;
+
+    final sort = map['sort'] as List<dynamic>?;
+    if (sort != null && sort.isNotEmpty) {
+      final orderings = _toOrderingList(sort);
+      if (orderings.isNotEmpty) opts.sort = orderings.toJS;
+    }
+
+    final addFields = map['add_fields'] as List<dynamic>?;
+    if (addFields != null && addFields.isNotEmpty) {
+      opts.addFields = _toSelectableList(addFields).toJS;
+    }
+
     return opts;
   }
 
@@ -772,6 +810,21 @@ class PipelineExpressionParserWeb {
           toSelectable(e is Map<String, dynamic> ? e : <String, dynamic>{}))
       .whereType<JSAny>()
       .toList();
+
+  List<JSAny> _toOrderingList(List<dynamic> orderings) {
+    final list = <JSAny>[];
+    for (final ordering in orderings) {
+      final orderingMap = Map<String, dynamic>.from(ordering as Map);
+      final expr = orderingMap[_kExpression];
+      if (expr == null) continue;
+      final exprJs = toExpression(expr as Map<String, dynamic>);
+      final dir = orderingMap['order_direction'] as String?;
+      list.add(dir == 'desc'
+          ? _pipelines.descending(exprJs)
+          : _pipelines.ascending(exprJs));
+    }
+    return list;
+  }
 
   interop.AggregateStageOptionsJsImpl _buildAccumulators(
     List<dynamic> items, {
