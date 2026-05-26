@@ -15,6 +15,31 @@ To get started with Firebase AI Logic Flutter, please [see the documentation](ht
 
 To start use this plugin, please visit the [Text only prompt documentation](https://firebase.google.com/docs/ai-logic/generate-text?platform=flutter)
 
+## App Check Integration
+
+If your app uses [Firebase App Check](https://firebase.google.com/docs/app-check), you can pass
+the `AppCheck` instance directly to `FirebaseAI` to protect your Gemini API calls from unauthorized clients.
+
+Add `firebase_app_check` to your `pubspec.yaml`:
+
+```yaml
+dependencies:
+  firebase_app_check: latest_version
+```
+
+Then initialize `FirebaseAI` with App Check:
+
+```dart
+import 'package:firebase_ai/firebase_ai.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
+
+final model = FirebaseAI.instanceFor(
+  appCheck: FirebaseAppCheck.instance,
+).generativeModel(model: 'gemini-2.0-flash');
+```
+
+For more details, see the [App Check documentation](https://firebase.google.com/docs/app-check).
+
 ## Issues and feedback
 
 Please file FlutterFire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/firebase/flutterfire/issues/new).
