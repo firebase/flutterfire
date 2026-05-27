@@ -86,6 +86,7 @@ jobs:
         # workaround we can use the `flutter drive` command. Tracking issue:
         # https://github.com/flutter/flutter/issues/66264
         run: |
+          flutter --version
           chromedriver --version
           "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --version
           chromedriver --port=4444 --trace-buffer-size=100000 &
