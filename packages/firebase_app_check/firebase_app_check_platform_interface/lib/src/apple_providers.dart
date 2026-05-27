@@ -66,5 +66,3 @@ class AppleReCaptchaEnterpriseProvider extends AppleAppCheckProvider {
   /// The reCAPTCHA Enterprise site key.
   final String siteKey;
 }
-
-
