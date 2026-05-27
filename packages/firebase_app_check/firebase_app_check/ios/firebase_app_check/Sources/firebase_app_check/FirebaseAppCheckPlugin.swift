@@ -60,7 +60,7 @@ public class FirebaseAppCheckPlugin: NSObject, FlutterPlugin,
   private var binaryMessenger: FlutterBinaryMessenger?
 
   func activate(appName: String, androidProvider: String?, appleProvider: String?,
-                debugToken: String?,
+                debugToken: String?, recaptchaEnterpriseSiteKey: String?,
                 completion: @escaping (Result<Void, Error>) -> Void) {
     guard let app = FLTFirebasePlugin.firebaseAppNamed(appName) else {
       completion(.failure(FlutterError(
@@ -70,7 +70,12 @@ public class FirebaseAppCheckPlugin: NSObject, FlutterPlugin,
     }
     let provider = appleProvider ?? "deviceCheck"
 
-    providerFactory?.configure(app: app, providerName: provider, debugToken: debugToken)
+    providerFactory?.configure(
+      app: app,
+      providerName: provider,
+      debugToken: debugToken,
+      recaptchaEnterpriseSiteKey: recaptchaEnterpriseSiteKey
+    )
 
     completion(.success(()))
   }
@@ -242,24 +247,44 @@ class FlutterAppCheckProviderFactory: NSObject, AppCheckProviderFactory {
     if providers[app.name] == nil {
       let wrapper = AppCheckProviderWrapper()
       // Default to deviceCheck. activate() will reconfigure with the correct provider.
-      wrapper.configure(app: app, providerName: "deviceCheck", debugToken: nil)
+      wrapper.configure(
+        app: app,
+        providerName: "deviceCheck",
+        debugToken: nil,
+        recaptchaEnterpriseSiteKey: nil
+      )
       providers[app.name] = wrapper
     }
     return providers[app.name]
   }
 
-  func configure(app: FirebaseApp, providerName: String, debugToken: String?) {
+  func configure(
+    app: FirebaseApp,
+    providerName: String,
+    debugToken: String?,
+    recaptchaEnterpriseSiteKey: String?
+  ) {
     if providers[app.name] == nil {
       providers[app.name] = AppCheckProviderWrapper()
     }
-    providers[app.name]?.configure(app: app, providerName: providerName, debugToken: debugToken)
+    providers[app.name]?.configure(
+      app: app,
+      providerName: providerName,
+      debugToken: debugToken,
+      recaptchaEnterpriseSiteKey: recaptchaEnterpriseSiteKey
+    )
   }
 }
 
 class AppCheckProviderWrapper: NSObject, AppCheckProvider {
   private var delegateProvider: (any AppCheckProvider)?
 
-  func configure(app: FirebaseApp, providerName: String, debugToken: String?) {
+  func configure(
+    app: FirebaseApp,
+    providerName: String,
+    debugToken: String?,
+    recaptchaEnterpriseSiteKey: String?
+  ) {
     switch providerName {
     case "debug":
       if let debugToken {
@@ -281,6 +306,16 @@ class AppCheckProviderWrapper: NSObject, AppCheckProvider {
       } else {
         delegateProvider = DeviceCheckProvider(app: app)
       }
+    case "recaptchaEnterprise":
+      #if os(iOS)
+        if let siteKey = recaptchaEnterpriseSiteKey {
+          delegateProvider = RecaptchaEnterpriseProvider(app: app, siteKey: siteKey)
+        } else {
+          print("Firebase App Check: siteKey is missing for reCAPTCHA Enterprise provider.")
+        }
+      #else
+        print("Firebase App Check: reCAPTCHA Enterprise is only supported on iOS.")
+      #endif
     default:
       // deviceCheck
       delegateProvider = DeviceCheckProvider(app: app)
