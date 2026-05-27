@@ -112,18 +112,6 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
     WindowsAppCheckProvider? providerWindows,
   }) async {
     try {
-      String? debugToken;
-      if (providerAndroid is AndroidDebugProvider &&
-          providerAndroid.debugToken != null) {
-        debugToken = providerAndroid.debugToken;
-      } else if (providerApple is AppleDebugProvider &&
-          providerApple.debugToken != null) {
-        debugToken = providerApple.debugToken;
-      } else if (providerWindows is WindowsDebugProvider &&
-          providerWindows.debugToken != null) {
-        debugToken = providerWindows.debugToken;
-      }
-
       String? recaptchaEnterpriseSiteKey;
       if (providerAndroid is AndroidReCaptchaEnterpriseProvider) {
         recaptchaEnterpriseSiteKey = providerAndroid.siteKey;
