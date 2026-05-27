@@ -156,24 +156,6 @@ jobs:
           restore-keys: firebase-emulators-v3
       - name: Start Firebase Emulator
         run: sudo chown -R 501:20 "/Users/runner/.npm" && cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
-      - name: Install Chrome for Testing
-        run: |
-          chrome_version="147.0.7727.117"
-          case "$(uname -m)" in
-            arm64) chrome_platform="mac-arm64" ;;
-            x86_64) chrome_platform="mac-x64" ;;
-            *) echo "Unsupported architecture: $(uname -m)" && exit 1 ;;
-          esac
-
-          chrome_dir="$RUNNER_TEMP/chrome-for-testing-$chrome_version"
-          mkdir -p "$chrome_dir"
-          curl --retry 3 -fsSLo "$chrome_dir/chrome.zip" "https://storage.googleapis.com/chrome-for-testing-public/$chrome_version/$chrome_platform/chrome-$chrome_platform.zip"
-          curl --retry 3 -fsSLo "$chrome_dir/chromedriver.zip" "https://storage.googleapis.com/chrome-for-testing-public/$chrome_version/$chrome_platform/chromedriver-$chrome_platform.zip"
-          unzip -q "$chrome_dir/chrome.zip" -d "$chrome_dir"
-          unzip -q "$chrome_dir/chromedriver.zip" -d "$chrome_dir"
-
-          echo "$chrome_dir/chromedriver-$chrome_platform" >> "$GITHUB_PATH"
-          echo "CHROME_EXECUTABLE=$chrome_dir/chrome-$chrome_platform/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing" >> "$GITHUB_ENV"
       - name: 'E2E Tests'
         working-directory: tests
         # Web devices are not supported for the `flutter test` command yet. As a
@@ -182,7 +164,6 @@ jobs:
         # Chrome debug service can fail with AppConnectionException. Retry once.
         run: |
           chromedriver --version
-          "$CHROME_EXECUTABLE" --version
           chromedriver --port=4444 --trace-buffer-size=100000 &
           run_tests() {
             flutter drive --target=./integration_test/e2e_test.dart --driver=./test_driver/integration_test.dart -d chrome --dart-define=CI=true --dart-define=APP_CHECK_E2E=true | tee output.log
