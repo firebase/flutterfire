@@ -148,8 +148,10 @@ jobs:
         # workaround we use the `flutter drive` command. Tracking issue:
         # https://github.com/flutter/flutter/issues/66264
         run: |
+          chromedriver --version
+          "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --version
           chromedriver --port=4444 --trace-buffer-size=100000 &
-          flutter drive --verbose --target=./integration_test/pipeline/pipeline_live_test.dart --driver=./test_driver/integration_test.dart -d chrome --dart-define=CI=true | tee output.log
+          flutter drive --target=./integration_test/pipeline/pipeline_live_test.dart --driver=./test_driver/integration_test.dart -d chrome --dart-define=CI=true | tee output.log
           output=$(<output.log)
           if [[ "$output" =~ \[E\] ]]; then
             echo "All tests did not pass. Please check the logs for more information."
