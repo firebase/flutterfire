@@ -38,7 +38,8 @@ class IdChangedStreamHandler: NSObject, FlutterStreamHandler {
             code: "unknown",
             message: error.localizedDescription,
             details: ["code": "unknown", "message": error.localizedDescription]
-          ))
+          )
+        )
       } else if let newId, newId != self.installationsId {
         self.installationsId = newId
         self.eventSink?(["token": self.installationsId])
@@ -46,10 +47,8 @@ class IdChangedStreamHandler: NSObject, FlutterStreamHandler {
     }
   }
 
-  func onListen(
-    withArguments _: Any?,
-    eventSink events: @escaping FlutterEventSink
-  ) -> FlutterError? {
+  func onListen(withArguments _: Any?,
+                eventSink events: @escaping FlutterEventSink) -> FlutterError? {
     eventSink = events
 
     installationIDObserver = NotificationCenter.default.addObserver(

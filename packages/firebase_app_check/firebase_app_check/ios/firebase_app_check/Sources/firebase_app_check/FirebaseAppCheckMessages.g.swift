@@ -89,19 +89,15 @@ class FirebaseAppCheckMessagesPigeonCodec: FlutterStandardMessageCodec, @uncheck
 
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol FirebaseAppCheckHostApi {
-  func activate(
-    appName: String, androidProvider: String?, appleProvider: String?,
-    debugToken: String?, completion: @escaping (Result<Void, Error>) -> Void)
-  func getToken(
-    appName: String, forceRefresh: Bool,
-    completion: @escaping (Result<String?, Error>) -> Void)
-  func setTokenAutoRefreshEnabled(
-    appName: String, isTokenAutoRefreshEnabled: Bool,
-    completion: @escaping (Result<Void, Error>) -> Void)
+  func activate(appName: String, androidProvider: String?, appleProvider: String?,
+                debugToken: String?, completion: @escaping (Result<Void, Error>) -> Void)
+  func getToken(appName: String, forceRefresh: Bool,
+                completion: @escaping (Result<String?, Error>) -> Void)
+  func setTokenAutoRefreshEnabled(appName: String, isTokenAutoRefreshEnabled: Bool,
+                                  completion: @escaping (Result<Void, Error>) -> Void)
   func registerTokenListener(appName: String, completion: @escaping (Result<String, Error>) -> Void)
-  func getLimitedUseAppCheckToken(
-    appName: String,
-    completion: @escaping (Result<String, Error>) -> Void)
+  func getLimitedUseAppCheckToken(appName: String,
+                                  completion: @escaping (Result<String, Error>) -> Void)
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -112,14 +108,12 @@ class FirebaseAppCheckHostApiSetup {
 
   /// Sets up an instance of `FirebaseAppCheckHostApi` to handle messages through the
   /// `binaryMessenger`.
-  static func setUp(
-    binaryMessenger: FlutterBinaryMessenger, api: FirebaseAppCheckHostApi?,
-    messageChannelSuffix: String = ""
-  ) {
+  static func setUp(binaryMessenger: FlutterBinaryMessenger, api: FirebaseAppCheckHostApi?,
+                    messageChannelSuffix: String = "") {
     let channelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
     let activateChannel = FlutterBasicMessageChannel(
       name:
-        "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.activate\(channelSuffix)",
+      "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.activate\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -139,7 +133,7 @@ class FirebaseAppCheckHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case .failure(let error):
+          case let .failure(error):
             reply(wrapError(error))
           }
         }
@@ -149,7 +143,7 @@ class FirebaseAppCheckHostApiSetup {
     }
     let getTokenChannel = FlutterBasicMessageChannel(
       name:
-        "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.getToken\(channelSuffix)",
+      "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.getToken\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -160,9 +154,9 @@ class FirebaseAppCheckHostApiSetup {
         let forceRefreshArg = args[1] as! Bool
         api.getToken(appName: appNameArg, forceRefresh: forceRefreshArg) { result in
           switch result {
-          case .success(let res):
+          case let .success(res):
             reply(wrapResult(res))
-          case .failure(let error):
+          case let .failure(error):
             reply(wrapError(error))
           }
         }
@@ -172,7 +166,7 @@ class FirebaseAppCheckHostApiSetup {
     }
     let setTokenAutoRefreshEnabledChannel = FlutterBasicMessageChannel(
       name:
-        "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.setTokenAutoRefreshEnabled\(channelSuffix)",
+      "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.setTokenAutoRefreshEnabled\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -188,7 +182,7 @@ class FirebaseAppCheckHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case .failure(let error):
+          case let .failure(error):
             reply(wrapError(error))
           }
         }
@@ -198,7 +192,7 @@ class FirebaseAppCheckHostApiSetup {
     }
     let registerTokenListenerChannel = FlutterBasicMessageChannel(
       name:
-        "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.registerTokenListener\(channelSuffix)",
+      "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.registerTokenListener\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -208,9 +202,9 @@ class FirebaseAppCheckHostApiSetup {
         let appNameArg = args[0] as! String
         api.registerTokenListener(appName: appNameArg) { result in
           switch result {
-          case .success(let res):
+          case let .success(res):
             reply(wrapResult(res))
-          case .failure(let error):
+          case let .failure(error):
             reply(wrapError(error))
           }
         }
@@ -220,7 +214,7 @@ class FirebaseAppCheckHostApiSetup {
     }
     let getLimitedUseAppCheckTokenChannel = FlutterBasicMessageChannel(
       name:
-        "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.getLimitedUseAppCheckToken\(channelSuffix)",
+      "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.getLimitedUseAppCheckToken\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -230,9 +224,9 @@ class FirebaseAppCheckHostApiSetup {
         let appNameArg = args[0] as! String
         api.getLimitedUseAppCheckToken(appName: appNameArg) { result in
           switch result {
-          case .success(let res):
+          case let .success(res):
             reply(wrapResult(res))
-          case .failure(let error):
+          case let .failure(error):
             reply(wrapError(error))
           }
         }

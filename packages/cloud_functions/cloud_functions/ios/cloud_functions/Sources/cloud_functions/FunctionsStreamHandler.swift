@@ -19,10 +19,8 @@ class FunctionsStreamHandler: NSObject, FlutterStreamHandler {
     super.init()
   }
 
-  func onListen(
-    withArguments arguments: Any?,
-    eventSink events: @escaping FlutterEventSink
-  ) -> FlutterError? {
+  func onListen(withArguments arguments: Any?,
+                eventSink events: @escaping FlutterEventSink) -> FlutterError? {
     streamTask = Task {
       await httpsStreamCall(arguments: arguments, events: events)
     }
@@ -41,7 +39,9 @@ class FunctionsStreamHandler: NSObject, FlutterStreamHandler {
           FlutterError(
             code: "invalid_arguments",
             message: "Invalid arguments",
-            details: nil))
+            details: nil
+          )
+        )
       }
       return
     }
@@ -53,10 +53,9 @@ class FunctionsStreamHandler: NSObject, FlutterStreamHandler {
     let limitedUseAppCheckToken = arguments["limitedUseAppCheckToken"] as? Bool ?? false
 
     if let origin,
-      let url = URL(string: origin),
-      let host = url.host,
-      let port = url.port
-    {
+       let url = URL(string: origin),
+       let host = url.host,
+       let port = url.port {
       functions.useEmulator(withHost: host, port: port)
     }
 
@@ -76,7 +75,9 @@ class FunctionsStreamHandler: NSObject, FlutterStreamHandler {
             FlutterError(
               code: "IllegalArgumentException",
               message: "Either functionName or functionUri must be set",
-              details: nil))
+              details: nil
+            )
+          )
         }
         return
       }
@@ -93,9 +94,9 @@ class FunctionsStreamHandler: NSObject, FlutterStreamHandler {
         for try await response in stream {
           await MainActor.run {
             switch response {
-            case .message(let message):
+            case let .message(message):
               events(["message": message.value])
-            case .result(let result):
+            case let .result(result):
               events(["result": result.value])
               events(FlutterEndOfEventStream)
             }
@@ -107,7 +108,9 @@ class FunctionsStreamHandler: NSObject, FlutterStreamHandler {
             FlutterError(
               code: "unknown",
               message: error.localizedDescription,
-              details: ["code": "unknown", "message": error.localizedDescription]))
+              details: ["code": "unknown", "message": error.localizedDescription]
+            )
+          )
         }
       }
     } else {
@@ -116,7 +119,9 @@ class FunctionsStreamHandler: NSObject, FlutterStreamHandler {
           FlutterError(
             code: "unknown",
             message: "Streaming requires iOS 15+ or macOS 12+",
-            details: nil))
+            details: nil
+          )
+        )
       }
     }
   }

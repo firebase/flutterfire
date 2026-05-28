@@ -12,10 +12,10 @@ let firebaseSdkVersion: Version = "12.13.0"
 let package = Package(
   name: "firebase_app_check",
   platforms: [
-    .macOS("10.15")
+    .macOS("10.15"),
   ],
   products: [
-    .library(name: "firebase-app-check", targets: ["firebase_app_check"])
+    .library(name: "firebase-app-check", targets: ["firebase_app_check"]),
   ],
   dependencies: [
     .package(url: "https://github.com/firebase/firebase-ios-sdk", exact: firebaseSdkVersion),
@@ -29,8 +29,8 @@ let package = Package(
         .product(name: "firebase-core", package: "firebase_core"),
       ],
       resources: [
-        .process("Resources")
+        .process("Resources"),
       ]
-    )
+    ),
   ]
 )

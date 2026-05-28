@@ -10,10 +10,10 @@ import PackageDescription
 let package = Package(
   name: "firebase_ai",
   platforms: [
-    .macOS("10.15")
+    .macOS("10.15"),
   ],
   products: [
-    .library(name: "firebase-ai", targets: ["firebase_ai"])
+    .library(name: "firebase-ai", targets: ["firebase_ai"]),
   ],
   dependencies: [],
   targets: [
@@ -21,8 +21,8 @@ let package = Package(
       name: "firebase_ai",
       dependencies: [],
       resources: [
-        .process("Resources")
+        .process("Resources"),
       ]
-    )
+    ),
   ]
 )

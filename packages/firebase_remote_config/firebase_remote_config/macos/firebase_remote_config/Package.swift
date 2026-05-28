@@ -12,10 +12,10 @@ let firebaseSdkVersion: Version = "12.13.0"
 let package = Package(
   name: "firebase_remote_config",
   platforms: [
-    .macOS("10.15")
+    .macOS("10.15"),
   ],
   products: [
-    .library(name: "firebase-remote-config", targets: ["firebase_remote_config"])
+    .library(name: "firebase-remote-config", targets: ["firebase_remote_config"]),
   ],
   dependencies: [
     .package(url: "https://github.com/firebase/firebase-ios-sdk", exact: firebaseSdkVersion),
@@ -29,8 +29,8 @@ let package = Package(
         .product(name: "firebase-core", package: "firebase_core"),
       ],
       resources: [
-        .process("Resources")
+        .process("Resources"),
       ]
-    )
+    ),
   ]
 )
