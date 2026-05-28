@@ -259,20 +259,25 @@ class FirebaseAnalyticsMessagesPigeonCodec: FlutterStandardMessageCodec, @unchec
 protocol FirebaseAnalyticsHostApi {
   func logEvent(event: [String: Any?], completion: @escaping (Result<Void, Error>) -> Void)
   func setUserId(userId: String?, completion: @escaping (Result<Void, Error>) -> Void)
-  func setUserProperty(name: String, value: String?,
-                       completion: @escaping (Result<Void, Error>) -> Void)
-  func setAnalyticsCollectionEnabled(enabled: Bool,
-                                     completion: @escaping (Result<Void, Error>) -> Void)
+  func setUserProperty(
+    name: String, value: String?,
+    completion: @escaping (Result<Void, Error>) -> Void)
+  func setAnalyticsCollectionEnabled(
+    enabled: Bool,
+    completion: @escaping (Result<Void, Error>) -> Void)
   func resetAnalyticsData(completion: @escaping (Result<Void, Error>) -> Void)
-  func setSessionTimeoutDuration(timeout: Int64,
-                                 completion: @escaping (Result<Void, Error>) -> Void)
+  func setSessionTimeoutDuration(
+    timeout: Int64,
+    completion: @escaping (Result<Void, Error>) -> Void)
   func setConsent(consent: [String: Bool?], completion: @escaping (Result<Void, Error>) -> Void)
-  func setDefaultEventParameters(parameters: [String: Any?]?,
-                                 completion: @escaping (Result<Void, Error>) -> Void)
+  func setDefaultEventParameters(
+    parameters: [String: Any?]?,
+    completion: @escaping (Result<Void, Error>) -> Void)
   func getAppInstanceId(completion: @escaping (Result<String?, Error>) -> Void)
   func getSessionId(completion: @escaping (Result<Int64?, Error>) -> Void)
-  func initiateOnDeviceConversionMeasurement(arguments: [String: String?],
-                                             completion: @escaping (Result<Void, Error>) -> Void)
+  func initiateOnDeviceConversionMeasurement(
+    arguments: [String: String?],
+    completion: @escaping (Result<Void, Error>) -> Void)
   func logTransaction(transactionId: String, completion: @escaping (Result<Void, Error>) -> Void)
 }
 
@@ -284,12 +289,14 @@ class FirebaseAnalyticsHostApiSetup {
 
   /// Sets up an instance of `FirebaseAnalyticsHostApi` to handle messages through the
   /// `binaryMessenger`.
-  static func setUp(binaryMessenger: FlutterBinaryMessenger, api: FirebaseAnalyticsHostApi?,
-                    messageChannelSuffix: String = "") {
+  static func setUp(
+    binaryMessenger: FlutterBinaryMessenger, api: FirebaseAnalyticsHostApi?,
+    messageChannelSuffix: String = ""
+  ) {
     let channelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
     let logEventChannel = FlutterBasicMessageChannel(
       name:
-      "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.logEvent\(channelSuffix)",
+        "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.logEvent\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -311,7 +318,7 @@ class FirebaseAnalyticsHostApiSetup {
     }
     let setUserIdChannel = FlutterBasicMessageChannel(
       name:
-      "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.setUserId\(channelSuffix)",
+        "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.setUserId\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -333,7 +340,7 @@ class FirebaseAnalyticsHostApiSetup {
     }
     let setUserPropertyChannel = FlutterBasicMessageChannel(
       name:
-      "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.setUserProperty\(channelSuffix)",
+        "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.setUserProperty\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -356,7 +363,7 @@ class FirebaseAnalyticsHostApiSetup {
     }
     let setAnalyticsCollectionEnabledChannel = FlutterBasicMessageChannel(
       name:
-      "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.setAnalyticsCollectionEnabled\(channelSuffix)",
+        "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.setAnalyticsCollectionEnabled\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -378,7 +385,7 @@ class FirebaseAnalyticsHostApiSetup {
     }
     let resetAnalyticsDataChannel = FlutterBasicMessageChannel(
       name:
-      "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.resetAnalyticsData\(channelSuffix)",
+        "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.resetAnalyticsData\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -398,7 +405,7 @@ class FirebaseAnalyticsHostApiSetup {
     }
     let setSessionTimeoutDurationChannel = FlutterBasicMessageChannel(
       name:
-      "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.setSessionTimeoutDuration\(channelSuffix)",
+        "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.setSessionTimeoutDuration\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -420,7 +427,7 @@ class FirebaseAnalyticsHostApiSetup {
     }
     let setConsentChannel = FlutterBasicMessageChannel(
       name:
-      "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.setConsent\(channelSuffix)",
+        "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.setConsent\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -442,7 +449,7 @@ class FirebaseAnalyticsHostApiSetup {
     }
     let setDefaultEventParametersChannel = FlutterBasicMessageChannel(
       name:
-      "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.setDefaultEventParameters\(channelSuffix)",
+        "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.setDefaultEventParameters\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -464,7 +471,7 @@ class FirebaseAnalyticsHostApiSetup {
     }
     let getAppInstanceIdChannel = FlutterBasicMessageChannel(
       name:
-      "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.getAppInstanceId\(channelSuffix)",
+        "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.getAppInstanceId\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -484,7 +491,7 @@ class FirebaseAnalyticsHostApiSetup {
     }
     let getSessionIdChannel = FlutterBasicMessageChannel(
       name:
-      "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.getSessionId\(channelSuffix)",
+        "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.getSessionId\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -504,7 +511,7 @@ class FirebaseAnalyticsHostApiSetup {
     }
     let initiateOnDeviceConversionMeasurementChannel = FlutterBasicMessageChannel(
       name:
-      "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.initiateOnDeviceConversionMeasurement\(channelSuffix)",
+        "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.initiateOnDeviceConversionMeasurement\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -526,7 +533,7 @@ class FirebaseAnalyticsHostApiSetup {
     }
     let logTransactionChannel = FlutterBasicMessageChannel(
       name:
-      "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.logTransaction\(channelSuffix)",
+        "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.logTransaction\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )

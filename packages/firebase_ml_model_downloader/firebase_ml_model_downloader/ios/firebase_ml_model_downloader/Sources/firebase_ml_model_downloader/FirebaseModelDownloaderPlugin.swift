@@ -87,7 +87,7 @@ public class FirebaseModelDownloaderPlugin: NSObject, FLTFirebasePluginProtocol,
       errorDetails["code"] = code ?? self.mapErrorCodes(error: error! as NSError)
       errorDetails["message"] =
         message ?? error?
-          .localizedDescription ?? "An unknown error has occurred."
+        .localizedDescription ?? "An unknown error has occurred."
       errorDetails["additionalData"] =
         details ?? ["code": errorDetails["code"], "message": errorDetails["message"]]
 
@@ -119,8 +119,10 @@ public class FirebaseModelDownloaderPlugin: NSObject, FLTFirebasePluginProtocol,
     }
   }
 
-  func listDownloadedModels(arguments: [String: Any],
-                            result: FLTFirebaseMethodCallResult) {
+  func listDownloadedModels(
+    arguments: [String: Any],
+    result: FLTFirebaseMethodCallResult
+  ) {
     let modelDownloader = modelDownloaderFromArguments(arguments: arguments)
 
     modelDownloader?.listDownloadedModels { response in
@@ -178,8 +180,10 @@ public class FirebaseModelDownloaderPlugin: NSObject, FLTFirebasePluginProtocol,
     }
   }
 
-  func deleteDownloadedModel(arguments: [String: Any],
-                             result: FLTFirebaseMethodCallResult) {
+  func deleteDownloadedModel(
+    arguments: [String: Any],
+    result: FLTFirebaseMethodCallResult
+  ) {
     let modelDownloader = modelDownloaderFromArguments(arguments: arguments)
     let modelName = arguments["modelName"]
 

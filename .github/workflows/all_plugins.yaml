@@ -109,15 +109,15 @@ jobs:
         run: |
           clang-format --version
           swiftformat --version
-      - name: 'Dart, Java and Objective-C '
+      - name: 'Dart, Java, Objective-C and Swift'
         run: |
           flutter pub global run flutter_plugin_tools format --base-branch=origin/main
           ./.github/workflows/scripts/validate-formatting.sh
-      - name: 'Swift'
-        if: ${{ success() || failure() }}
-        run: |
-          swiftformat . --exclude Pods,**/Pods/**,**/build/**,**/SourcePackages/**,**/.symlinks/**,**/Flutter/ephemeral/**
-          ./.github/workflows/scripts/validate-formatting.sh
+      # - name: 'Swift'
+      #   if: ${{ success() || failure() }}
+      #   run: |
+      #     swiftformat . --exclude Pods,**/Pods/**,**/build/**,**/SourcePackages/**,**/.symlinks/**,**/Flutter/ephemeral/**
+      #     ./.github/workflows/scripts/validate-formatting.sh
 
   build_examples_dart:
     timeout-minutes: 30

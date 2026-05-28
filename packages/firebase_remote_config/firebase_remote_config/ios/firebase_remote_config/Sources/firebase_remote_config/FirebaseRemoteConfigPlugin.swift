@@ -22,7 +22,8 @@ let kFirebaseRemoteConfigUpdatedChannelName = "plugins.flutter.io/firebase_remot
 extension FlutterError: Error {}
 
 public class FirebaseRemoteConfigPlugin: NSObject, FlutterPlugin, FlutterStreamHandler,
-  FLTFirebasePluginProtocol, FirebaseRemoteConfigHostApi {
+  FLTFirebasePluginProtocol, FirebaseRemoteConfigHostApi
+{
   private var listenersMap: [String: ConfigUpdateListenerRegistration] = [:]
   private var fetchAndActivateRetry = false
 
@@ -107,8 +108,10 @@ public class FirebaseRemoteConfigPlugin: NSObject, FlutterPlugin, FlutterStreamH
     }
   }
 
-  func setConfigSettings(appName: String, settings: RemoteConfigPigeonSettings,
-                         completion: @escaping (Result<Void, any Error>) -> Void) {
+  func setConfigSettings(
+    appName: String, settings: RemoteConfigPigeonSettings,
+    completion: @escaping (Result<Void, any Error>) -> Void
+  ) {
     let fetchTimeout = settings.fetchTimeoutSeconds
     let minFetchInterval = settings.minimumFetchIntervalSeconds
     let configSettings = RemoteConfigSettings()
@@ -118,8 +121,10 @@ public class FirebaseRemoteConfigPlugin: NSObject, FlutterPlugin, FlutterStreamH
     completion(.success(()))
   }
 
-  func setDefaults(appName: String, defaultParameters: [String: Any?],
-                   completion: @escaping (Result<Void, any Error>) -> Void) {
+  func setDefaults(
+    appName: String, defaultParameters: [String: Any?],
+    completion: @escaping (Result<Void, any Error>) -> Void
+  ) {
     var filtered: [String: NSObject] = [:]
 
     for (key, value) in defaultParameters {
@@ -142,8 +147,10 @@ public class FirebaseRemoteConfigPlugin: NSObject, FlutterPlugin, FlutterStreamH
     }
   }
 
-  func setCustomSignals(appName: String, customSignals: [String: Any?],
-                        completion: @escaping (Result<Void, any Error>) -> Void) {
+  func setCustomSignals(
+    appName: String, customSignals: [String: Any?],
+    completion: @escaping (Result<Void, any Error>) -> Void
+  ) {
     let signalValues = convertToCustomSignalValues(customSignals)
     Task {
       do {
@@ -172,8 +179,10 @@ public class FirebaseRemoteConfigPlugin: NSObject, FlutterPlugin, FlutterStreamH
     completion(.success(parameters))
   }
 
-  func getProperties(appName: String,
-                     completion: @escaping (Result<[String: Any], any Error>) -> Void) {
+  func getProperties(
+    appName: String,
+    completion: @escaping (Result<[String: Any], any Error>) -> Void
+  ) {
     let config = getRemoteConfig(from: appName)
     completion(.success(configProperties(for: config)))
   }
@@ -190,8 +199,10 @@ public class FirebaseRemoteConfigPlugin: NSObject, FlutterPlugin, FlutterStreamH
     kFirebaseRemoteConfigChannelName
   }
 
-  public func onListen(withArguments arguments: Any?,
-                       eventSink events: @escaping FlutterEventSink) -> FlutterError? {
+  public func onListen(
+    withArguments arguments: Any?,
+    eventSink events: @escaping FlutterEventSink
+  ) -> FlutterError? {
     guard let args = arguments as? [String: Any], let appName = args["appName"] as? String else {
       return nil
     }
@@ -237,7 +248,8 @@ public class FirebaseRemoteConfigPlugin: NSObject, FlutterPlugin, FlutterStreamH
   }
 
   private func createRemoteConfigValueDict(_ remoteConfigValue: RemoteConfigValue)
-    -> [String: Any] {
+    -> [String: Any]
+  {
     [
       "value": FlutterStandardTypedData(bytes: remoteConfigValue.dataValue),
       "source": mapSource(remoteConfigValue.source),
