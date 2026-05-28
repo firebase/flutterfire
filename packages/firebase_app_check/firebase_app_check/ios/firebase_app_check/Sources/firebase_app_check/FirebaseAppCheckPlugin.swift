@@ -20,6 +20,7 @@ import FirebaseCore
 let kFirebaseAppCheckChannelName = "plugins.flutter.io/firebase_app_check"
 let kFirebaseAppCheckTokenChannelPrefix = "plugins.flutter.io/firebase_app_check/token/"
 
+// swift-format-ignore: AvoidRetroactiveConformances
 extension FlutterError: @retroactive Error {}
 
 public class FirebaseAppCheckPlugin: NSObject, FlutterPlugin,

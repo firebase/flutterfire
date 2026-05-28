@@ -19,6 +19,7 @@ import Foundation
 #endif
 
 /// Channel name constant to match macOS implementation
+// swift-format-ignore: AlwaysUseLowerCamelCase
 let FLTFirebaseDatabaseChannelName = "plugins.flutter.io/firebase_database"
 
 @objc(FLTFirebaseDatabasePlugin)

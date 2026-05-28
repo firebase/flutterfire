@@ -7,8 +7,8 @@
 
 import PackageDescription
 
-let library_version_string = "4.9.0"
-let firebase_sdk_version: Version = "12.13.0"
+let libraryVersionString = "4.9.0"
+let firebaseSdkVersion: Version = "12.13.0"
 
 let package = Package(
   name: "firebase_core",
@@ -19,7 +19,7 @@ let package = Package(
     .library(name: "firebase-core", targets: ["firebase_core"])
   ],
   dependencies: [
-    .package(url: "https://github.com/firebase/firebase-ios-sdk", from: firebase_sdk_version)
+    .package(url: "https://github.com/firebase/firebase-ios-sdk", from: firebaseSdkVersion)
   ],
   targets: [
     .target(
@@ -33,7 +33,7 @@ let package = Package(
       ],
       cSettings: [
         .headerSearchPath("include/firebase_core"),
-        .define("LIBRARY_VERSION", to: "\"\(library_version_string)\""),
+        .define("LIBRARY_VERSION", to: "\"\(libraryVersionString)\""),
         .define("LIBRARY_NAME", to: "\"flutter-fire-core\""),
       ]
     )

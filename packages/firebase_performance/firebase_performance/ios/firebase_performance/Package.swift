@@ -7,8 +7,8 @@
 
 import PackageDescription
 
-let library_version = "0.11.4-1"
-let firebase_sdk_version: Version = "12.13.0"
+let libraryVersion = "0.11.4-1"
+let firebaseSdkVersion: Version = "12.13.0"
 
 let package = Package(
   name: "firebase_performance",
@@ -19,7 +19,7 @@ let package = Package(
     .library(name: "firebase-performance", targets: ["firebase_performance"])
   ],
   dependencies: [
-    .package(url: "https://github.com/firebase/firebase-ios-sdk", from: firebase_sdk_version),
+    .package(url: "https://github.com/firebase/firebase-ios-sdk", from: firebaseSdkVersion),
     .package(name: "firebase_core", path: "../firebase_core"),
   ],
   targets: [
@@ -34,7 +34,7 @@ let package = Package(
       ],
       cSettings: [
         .headerSearchPath("include"),
-        .define("LIBRARY_VERSION", to: "\"\(library_version)\""),
+        .define("LIBRARY_VERSION", to: "\"\(libraryVersion)\""),
         .define("LIBRARY_NAME", to: "\"flutter-fire-perf\""),
       ]
     )

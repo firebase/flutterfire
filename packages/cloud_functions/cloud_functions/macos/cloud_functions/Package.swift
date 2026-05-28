@@ -7,7 +7,7 @@
 
 import PackageDescription
 
-let firebase_sdk_version: Version = "12.13.0"
+let firebaseSdkVersion: Version = "12.13.0"
 
 let package = Package(
   name: "cloud_functions",
@@ -18,7 +18,7 @@ let package = Package(
     .library(name: "cloud-functions", targets: ["cloud_functions"])
   ],
   dependencies: [
-    .package(url: "https://github.com/firebase/firebase-ios-sdk", from: firebase_sdk_version),
+    .package(url: "https://github.com/firebase/firebase-ios-sdk", from: firebaseSdkVersion),
     .package(name: "firebase_core", path: "../firebase_core"),
   ],
   targets: [

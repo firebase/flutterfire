@@ -28,6 +28,7 @@ let kFLTFirebaseAdPersonalizationSignalsConsentGranted = "adPersonalizationSigna
 let kFLTFirebaseAdUserDataConsentGranted = "adUserDataConsentGranted"
 let kFLTFirebaseAnalyticsUserId = "userId"
 
+// swift-format-ignore: AlwaysUseLowerCamelCase
 let FLTFirebaseAnalyticsChannelName = "plugins.flutter.io/firebase_analytics"
 
 extension FlutterError: Error {}

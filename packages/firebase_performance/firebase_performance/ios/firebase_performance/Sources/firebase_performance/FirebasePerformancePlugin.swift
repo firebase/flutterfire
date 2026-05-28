@@ -16,6 +16,7 @@ import FirebasePerformance
   import firebase_core_shared
 #endif
 
+// swift-format-ignore: AlwaysUseLowerCamelCase
 let FirebasePerformanceChannelName = "plugins.flutter.io/firebase_performance"
 
 extension FlutterError: Error {}
