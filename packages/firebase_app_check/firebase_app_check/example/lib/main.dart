@@ -13,6 +13,8 @@ import 'package:flutter/material.dart';
 import 'firebase_options.dart';
 
 const kWebRecaptchaSiteKey = '6Lemcn0dAAAAABLkf6aiiHvpGD6x-zF3nOSDU2M8';
+const kAndroidRecaptchaSiteKey = '6LfQpf4sAAAAAJnxnEmtVMpjkwuLpDZnxxcLbjxb';
+const kAppleRecaptchaSiteKey = '6LeJev4sAAAAADbZGhkk_kkxSEzxRjzzZRC4R1R-';
 
 // Windows: create a debug token in the Firebase Console
 // (App Check > Apps > Manage debug tokens), then paste it here
@@ -79,18 +81,26 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
   final appCheck = FirebaseAppCheck.instance;
   String _message = '';
   String _eventToken = 'not yet';
-  late final TextEditingController _siteKeyController;
+  late final TextEditingController _webSiteKeyController;
+  late final TextEditingController _androidSiteKeyController;
+  late final TextEditingController _appleSiteKeyController;
 
   @override
   void initState() {
-    _siteKeyController = TextEditingController(text: kWebRecaptchaSiteKey);
+    _webSiteKeyController = TextEditingController(text: kWebRecaptchaSiteKey);
+    _androidSiteKeyController =
+        TextEditingController(text: kAndroidRecaptchaSiteKey);
+    _appleSiteKeyController =
+        TextEditingController(text: kAppleRecaptchaSiteKey);
     appCheck.onTokenChange.listen(setEventToken);
     super.initState();
   }
 
   @override
   void dispose() {
-    _siteKeyController.dispose();
+    _webSiteKeyController.dispose();
+    _androidSiteKeyController.dispose();
+    _appleSiteKeyController.dispose();
     super.dispose();
   }
 
@@ -115,9 +125,9 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
     try {
       dynamic providerWeb;
       if (webProviderType == 'enterprise') {
-        providerWeb = ReCaptchaEnterpriseProvider(_siteKeyController.text);
+        providerWeb = ReCaptchaEnterpriseProvider(_webSiteKeyController.text);
       } else if (webProviderType == 'v3') {
-        providerWeb = ReCaptchaV3Provider(_siteKeyController.text);
+        providerWeb = ReCaptchaV3Provider(_webSiteKeyController.text);
       }
 
       await appCheck.activate(
@@ -153,68 +163,121 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
-            ElevatedButton(
-              onPressed: () => _activate(
-                android: const AndroidDebugProvider(),
-                apple: const AppleDebugProvider(),
-                windows: WindowsDebugProvider(
-                  debugToken:
-                      kWindowsDebugToken.isNotEmpty ? kWindowsDebugToken : null,
+            if (kIsWeb) ...[
+              ElevatedButton(
+                onPressed: () => _activate(
+                  webProviderType: 'v3',
+                ),
+                child: const Text('activate(Web reCAPTCHA v3)'),
+              ),
+              const SizedBox(height: 8),
+              TextField(
+                controller: _webSiteKeyController,
+                decoration: const InputDecoration(
+                  labelText: 'Web reCAPTCHA Site Key',
+                  border: OutlineInputBorder(),
                 ),
               ),
-              child: const Text('activate(Debug)'),
-            ),
-            ElevatedButton(
-              onPressed: () => _activate(
-                android: const AndroidPlayIntegrityProvider(),
-                apple: const AppleDeviceCheckProvider(),
+              const SizedBox(height: 8),
+              ElevatedButton(
+                onPressed: () => _activate(
+                  webProviderType: 'enterprise',
+                ),
+                child: const Text('activate(Web reCAPTCHA Enterprise)'),
               ),
-              child: const Text('activate(PlayIntegrity / DeviceCheck)'),
-            ),
-            if (!kIsWeb)
+            ],
+            if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) ...[
+              ElevatedButton(
+                onPressed: () => _activate(
+                  android: const AndroidDebugProvider(),
+                ),
+                child: const Text('activate(Android Debug)'),
+              ),
+              ElevatedButton(
+                onPressed: () => _activate(
+                  android: const AndroidPlayIntegrityProvider(),
+                ),
+                child: const Text('activate(Android Play Integrity)'),
+              ),
+              const SizedBox(height: 8),
+              TextField(
+                controller: _androidSiteKeyController,
+                decoration: const InputDecoration(
+                  labelText: 'Android reCAPTCHA Site Key',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 8),
+              ElevatedButton(
+                onPressed: () => _activate(
+                  android: AndroidReCaptchaEnterpriseProvider(
+                    siteKey: _androidSiteKeyController.text,
+                  ),
+                ),
+                child: const Text('activate(Android reCAPTCHA Enterprise)'),
+              ),
+            ],
+            if (!kIsWeb &&
+                (defaultTargetPlatform == TargetPlatform.iOS ||
+                    defaultTargetPlatform == TargetPlatform.macOS)) ...[
+              ElevatedButton(
+                onPressed: () => _activate(
+                  apple: const AppleDebugProvider(),
+                ),
+                child: const Text('activate(Apple Debug)'),
+              ),
+              ElevatedButton(
+                onPressed: () => _activate(
+                  apple: const AppleDeviceCheckProvider(),
+                ),
+                child: const Text('activate(Apple DeviceCheck)'),
+              ),
               ElevatedButton(
                 onPressed: () => _activate(
                   apple: const AppleAppAttestProvider(),
                 ),
-                child: const Text('activate(AppAttest)'),
+                child: const Text('activate(Apple AppAttest)'),
               ),
-            if (!kIsWeb)
               ElevatedButton(
                 onPressed: () => _activate(
                   apple: const AppleAppAttestWithDeviceCheckFallbackProvider(),
                 ),
                 child: const Text(
-                  'activate(AppAttest + DeviceCheck fallback)',
+                  'activate(Apple AppAttest + DeviceCheck fallback)',
                 ),
               ),
-            const SizedBox(height: 8),
-            TextField(
-              controller: _siteKeyController,
-              decoration: const InputDecoration(
-                labelText: 'reCAPTCHA Site Key',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 8),
-            ElevatedButton(
-              onPressed: () => _activate(
-                android: AndroidReCaptchaEnterpriseProvider(siteKey: _siteKeyController.text),
-              ),
-              child: const Text('activate(Android reCAPTCHA Enterprise)'),
-            ),
-            if (!kIsWeb && defaultTargetPlatform == TargetPlatform.iOS)
+              if (defaultTargetPlatform == TargetPlatform.iOS) ...[
+                const SizedBox(height: 8),
+                TextField(
+                  controller: _appleSiteKeyController,
+                  decoration: const InputDecoration(
+                    labelText: 'Apple reCAPTCHA Site Key',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                ElevatedButton(
+                  onPressed: () => _activate(
+                    apple: AppleReCaptchaEnterpriseProvider(
+                      siteKey: _appleSiteKeyController.text,
+                    ),
+                  ),
+                  child: const Text('activate(Apple reCAPTCHA Enterprise)'),
+                ),
+              ],
+            ],
+            if (!kIsWeb && defaultTargetPlatform == TargetPlatform.windows) ...[
               ElevatedButton(
                 onPressed: () => _activate(
-                  apple: AppleReCaptchaEnterpriseProvider(siteKey: _siteKeyController.text),
+                  windows: WindowsDebugProvider(
+                    debugToken: kWindowsDebugToken.isNotEmpty
+                        ? kWindowsDebugToken
+                        : null,
+                  ),
                 ),
-                child: const Text('activate(Apple reCAPTCHA Enterprise)'),
+                child: const Text('activate(Windows Debug)'),
               ),
-            ElevatedButton(
-              onPressed: () => _activate(
-                webProviderType: 'enterprise',
-              ),
-              child: const Text('activate(Web reCAPTCHA Enterprise)'),
-            ),
+            ],
             const SizedBox(height: 16),
             const Text(
               'Actions',
@@ -271,7 +334,7 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
               child: const Text('Test Firestore with App Check'),
             ),
             const SizedBox(height: 20),
-            Text(
+            SelectableText(
               _message,
               style: const TextStyle(
                 color: Color.fromRGBO(47, 79, 79, 1),
@@ -279,7 +342,7 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
               ),
             ),
             const SizedBox(height: 20),
-            Text(
+            SelectableText(
               'Token from onTokenChange: $_eventToken',
               style: const TextStyle(
                 color: Color.fromRGBO(128, 0, 128, 1),
