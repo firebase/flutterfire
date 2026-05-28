@@ -94,9 +94,9 @@ class FunctionsStreamHandler: NSObject, FlutterStreamHandler {
         for try await response in stream {
           await MainActor.run {
             switch response {
-            case let .message(message):
+            case .message(let message):
               events(["message": message.value])
-            case let .result(result):
+            case .result(let result):
               events(["result": result.value])
               events(FlutterEndOfEventStream)
             }

@@ -115,9 +115,9 @@ class CloudFunctionsHostApiSetup {
         let argumentsArg = args[0] as! [String: Any?]
         api.call(arguments: argumentsArg) { result in
           switch result {
-          case let .success(res):
+          case .success(let res):
             reply(wrapResult(res))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -139,7 +139,7 @@ class CloudFunctionsHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }

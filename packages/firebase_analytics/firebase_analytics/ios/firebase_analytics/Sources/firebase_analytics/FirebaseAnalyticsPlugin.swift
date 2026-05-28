@@ -206,7 +206,7 @@ public class FirebaseAnalyticsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
         var foundTransaction: Transaction?
         for await result in Transaction.all {
           switch result {
-          case let .verified(transaction):
+          case .verified(let transaction):
             if transaction.id == id {
               foundTransaction = transaction
               break

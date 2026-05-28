@@ -133,7 +133,7 @@ class FirebaseAppCheckHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -154,9 +154,9 @@ class FirebaseAppCheckHostApiSetup {
         let forceRefreshArg = args[1] as! Bool
         api.getToken(appName: appNameArg, forceRefresh: forceRefreshArg) { result in
           switch result {
-          case let .success(res):
+          case .success(let res):
             reply(wrapResult(res))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -182,7 +182,7 @@ class FirebaseAppCheckHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -202,9 +202,9 @@ class FirebaseAppCheckHostApiSetup {
         let appNameArg = args[0] as! String
         api.registerTokenListener(appName: appNameArg) { result in
           switch result {
-          case let .success(res):
+          case .success(let res):
             reply(wrapResult(res))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -224,9 +224,9 @@ class FirebaseAppCheckHostApiSetup {
         let appNameArg = args[0] as! String
         api.getLimitedUseAppCheckToken(appName: appNameArg) { result in
           switch result {
-          case let .success(res):
+          case .success(let res):
             reply(wrapResult(res))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }

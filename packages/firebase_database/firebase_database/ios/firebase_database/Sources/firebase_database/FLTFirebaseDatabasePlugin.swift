@@ -263,9 +263,9 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
             snapshotValue: currentData.value
           ) { result in
             switch result {
-            case let .success(handlerResult):
+            case .success(let handlerResult):
               transactionResult = handlerResult
-            case let .failure(error):
+            case .failure(let error):
               print("Transaction handler error: \(error)")
               transactionResult = TransactionHandlerResult(
                 value: nil, aborted: true, exception: true

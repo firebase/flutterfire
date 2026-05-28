@@ -125,7 +125,7 @@ public class FirebaseModelDownloaderPlugin: NSObject, FLTFirebasePluginProtocol,
 
     modelDownloader?.listDownloadedModels { response in
       switch response {
-      case let .success(customModel):
+      case .success(let customModel):
         let responseList: [[String: Any]] = customModel.map {
           [
             "filePath": $0.path,
@@ -135,7 +135,7 @@ public class FirebaseModelDownloaderPlugin: NSObject, FLTFirebasePluginProtocol,
           ]
         }
         result.success(responseList)
-      case let .failure(error):
+      case .failure(let error):
         result.error(nil, nil, nil, error)
       }
     }
@@ -165,14 +165,14 @@ public class FirebaseModelDownloaderPlugin: NSObject, FLTFirebasePluginProtocol,
       conditions: modelDownloadConditions
     ) { response in
       switch response {
-      case let .success(customModel):
+      case .success(let customModel):
         result.success([
           "filePath": customModel.path,
           "size": customModel.size,
           "hash": customModel.hash,
           "name": customModel.name,
         ])
-      case let .failure(error):
+      case .failure(let error):
         result.error(nil, nil, nil, error)
       }
     }
@@ -187,7 +187,7 @@ public class FirebaseModelDownloaderPlugin: NSObject, FLTFirebasePluginProtocol,
       switch response {
       case .success():
         result.success(nil)
-      case let .failure(error):
+      case .failure(let error):
         result.error(nil, nil, nil, error)
       }
     }

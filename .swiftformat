@@ -1,6 +1,7 @@
 --indent 2
 --maxwidth 100
 --wrapparameters afterfirst
---disable sortedImports,unusedArguments,wrapMultilineStatementBraces
+# Apple swift-format from flutter_plugin_tools requires `case .success(let value)` instead of `case let .success(value)`.
+--disable sortedImports,unusedArguments,wrapMultilineStatementBraces,hoistPatternLet
 --exclude Pods,**/MainFlutterWindow.swift,**/AppDelegate.swift,**/.symlinks/**
 --swiftversion 5.7

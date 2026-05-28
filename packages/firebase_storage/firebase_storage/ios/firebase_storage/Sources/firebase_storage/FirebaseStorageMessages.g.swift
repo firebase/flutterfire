@@ -89,7 +89,7 @@ func deepEqualsFirebaseStorageMessages(_ lhs: Any?, _ rhs: Any?) -> Bool {
   case (nil, _), (_, nil):
     return false
 
-  case let (lhs as AnyObject, rhs as AnyObject) where lhs === rhs:
+  case (let lhs as AnyObject, let rhs as AnyObject) where lhs === rhs:
     return true
 
   case is (Void, Void):
@@ -131,7 +131,7 @@ func deepEqualsFirebaseStorageMessages(_ lhs: Any?, _ rhs: Any?) -> Bool {
     }
     return true
 
-  case let (lhs as Double, rhs as Double):
+  case (let lhs as Double, let rhs as Double):
     return doubleEqualsFirebaseStorageMessages(lhs, rhs)
 
   case let (lhsHashable, rhsHashable) as (AnyHashable, AnyHashable):
@@ -699,9 +699,9 @@ class FirebaseStorageHostApiSetup {
         let bucketArg: String? = nilOrValue(args[2])
         api.getReferencebyPath(app: appArg, path: pathArg, bucket: bucketArg) { result in
           switch result {
-          case let .success(res):
+          case .success(let res):
             reply(wrapResult(res))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -724,7 +724,7 @@ class FirebaseStorageHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -747,7 +747,7 @@ class FirebaseStorageHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -770,7 +770,7 @@ class FirebaseStorageHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -794,7 +794,7 @@ class FirebaseStorageHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -817,7 +817,7 @@ class FirebaseStorageHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -838,9 +838,9 @@ class FirebaseStorageHostApiSetup {
         let referenceArg = args[1] as! InternalStorageReference
         api.referenceGetDownloadURL(app: appArg, reference: referenceArg) { result in
           switch result {
-          case let .success(res):
+          case .success(let res):
             reply(wrapResult(res))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -861,9 +861,9 @@ class FirebaseStorageHostApiSetup {
         let referenceArg = args[1] as! InternalStorageReference
         api.referenceGetMetaData(app: appArg, reference: referenceArg) { result in
           switch result {
-          case let .success(res):
+          case .success(let res):
             reply(wrapResult(res))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -885,9 +885,9 @@ class FirebaseStorageHostApiSetup {
         let optionsArg = args[2] as! InternalListOptions
         api.referenceList(app: appArg, reference: referenceArg, options: optionsArg) { result in
           switch result {
-          case let .success(res):
+          case .success(let res):
             reply(wrapResult(res))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -908,9 +908,9 @@ class FirebaseStorageHostApiSetup {
         let referenceArg = args[1] as! InternalStorageReference
         api.referenceListAll(app: appArg, reference: referenceArg) { result in
           switch result {
-          case let .success(res):
+          case .success(let res):
             reply(wrapResult(res))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -932,9 +932,9 @@ class FirebaseStorageHostApiSetup {
         let maxSizeArg = args[2] as! Int64
         api.referenceGetData(app: appArg, reference: referenceArg, maxSize: maxSizeArg) { result in
           switch result {
-          case let .success(res):
+          case .success(let res):
             reply(wrapResult(res))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -964,9 +964,9 @@ class FirebaseStorageHostApiSetup {
           handle: handleArg
         ) { result in
           switch result {
-          case let .success(res):
+          case .success(let res):
             reply(wrapResult(res))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -998,9 +998,9 @@ class FirebaseStorageHostApiSetup {
           handle: handleArg
         ) { result in
           switch result {
-          case let .success(res):
+          case .success(let res):
             reply(wrapResult(res))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -1030,9 +1030,9 @@ class FirebaseStorageHostApiSetup {
           handle: handleArg
         ) { result in
           switch result {
-          case let .success(res):
+          case .success(let res):
             reply(wrapResult(res))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -1060,9 +1060,9 @@ class FirebaseStorageHostApiSetup {
           handle: handleArg
         ) { result in
           switch result {
-          case let .success(res):
+          case .success(let res):
             reply(wrapResult(res))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -1088,9 +1088,9 @@ class FirebaseStorageHostApiSetup {
             metadata: metadataArg
           ) { result in
             switch result {
-            case let .success(res):
+            case .success(let res):
               reply(wrapResult(res))
-            case let .failure(error):
+            case .failure(let error):
               reply(wrapError(error))
             }
           }
@@ -1111,9 +1111,9 @@ class FirebaseStorageHostApiSetup {
         let handleArg = args[1] as! Int64
         api.taskPause(app: appArg, handle: handleArg) { result in
           switch result {
-          case let .success(res):
+          case .success(let res):
             reply(wrapResult(res))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -1134,9 +1134,9 @@ class FirebaseStorageHostApiSetup {
         let handleArg = args[1] as! Int64
         api.taskResume(app: appArg, handle: handleArg) { result in
           switch result {
-          case let .success(res):
+          case .success(let res):
             reply(wrapResult(res))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -1157,9 +1157,9 @@ class FirebaseStorageHostApiSetup {
         let handleArg = args[1] as! Int64
         api.taskCancel(app: appArg, handle: handleArg) { result in
           switch result {
-          case let .success(res):
+          case .success(let res):
             reply(wrapResult(res))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }

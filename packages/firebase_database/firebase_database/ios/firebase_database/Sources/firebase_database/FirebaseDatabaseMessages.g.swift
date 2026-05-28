@@ -97,7 +97,7 @@ func deepEqualsFirebaseDatabaseMessages(_ lhs: Any?, _ rhs: Any?) -> Bool {
   case (nil, _), (_, nil):
     return false
 
-  case let (lhs as AnyObject, rhs as AnyObject) where lhs === rhs:
+  case (let lhs as AnyObject, let rhs as AnyObject) where lhs === rhs:
     return true
 
   case is (Void, Void):
@@ -139,7 +139,7 @@ func deepEqualsFirebaseDatabaseMessages(_ lhs: Any?, _ rhs: Any?) -> Bool {
     }
     return true
 
-  case let (lhs as Double, rhs as Double):
+  case (let lhs as Double, let rhs as Double):
     return doubleEqualsFirebaseDatabaseMessages(lhs, rhs)
 
   case let (lhsHashable, rhsHashable) as (AnyHashable, AnyHashable):
@@ -697,7 +697,7 @@ class FirebaseDatabaseHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -719,7 +719,7 @@ class FirebaseDatabaseHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -742,7 +742,7 @@ class FirebaseDatabaseHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -765,7 +765,7 @@ class FirebaseDatabaseHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -788,7 +788,7 @@ class FirebaseDatabaseHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -812,7 +812,7 @@ class FirebaseDatabaseHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -833,9 +833,9 @@ class FirebaseDatabaseHostApiSetup {
         let pathArg: String? = nilOrValue(args[1])
         api.ref(app: appArg, path: pathArg) { result in
           switch result {
-          case let .success(res):
+          case .success(let res):
             reply(wrapResult(res))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -856,9 +856,9 @@ class FirebaseDatabaseHostApiSetup {
         let urlArg = args[1] as! String
         api.refFromURL(app: appArg, url: urlArg) { result in
           switch result {
-          case let .success(res):
+          case .success(let res):
             reply(wrapResult(res))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -880,7 +880,7 @@ class FirebaseDatabaseHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -903,7 +903,7 @@ class FirebaseDatabaseHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -926,7 +926,7 @@ class FirebaseDatabaseHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -949,7 +949,7 @@ class FirebaseDatabaseHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -972,7 +972,7 @@ class FirebaseDatabaseHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -995,7 +995,7 @@ class FirebaseDatabaseHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -1020,9 +1020,9 @@ class FirebaseDatabaseHostApiSetup {
             transactionKey: transactionKeyArg
           ) { result in
             switch result {
-            case let .success(res):
+            case .success(let res):
               reply(wrapResult(res))
-            case let .failure(error):
+            case .failure(let error):
               reply(wrapError(error))
             }
           }
@@ -1045,7 +1045,7 @@ class FirebaseDatabaseHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -1068,7 +1068,7 @@ class FirebaseDatabaseHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -1091,7 +1091,7 @@ class FirebaseDatabaseHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -1114,7 +1114,7 @@ class FirebaseDatabaseHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -1135,9 +1135,9 @@ class FirebaseDatabaseHostApiSetup {
         let requestArg = args[1] as! QueryRequest
         api.queryObserve(app: appArg, request: requestArg) { result in
           switch result {
-          case let .success(res):
+          case .success(let res):
             reply(wrapResult(res))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -1160,7 +1160,7 @@ class FirebaseDatabaseHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -1181,9 +1181,9 @@ class FirebaseDatabaseHostApiSetup {
         let requestArg = args[1] as! QueryRequest
         api.queryGet(app: appArg, request: requestArg) { result in
           switch result {
-          case let .success(res):
+          case .success(let res):
             reply(wrapResult(res))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
