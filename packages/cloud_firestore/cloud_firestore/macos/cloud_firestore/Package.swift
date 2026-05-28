@@ -19,7 +19,7 @@ let package = Package(
     .library(name: "cloud-firestore", targets: ["cloud_firestore"]),
   ],
   dependencies: [
-    .package(url: "https://github.com/firebase/firebase-ios-sdk", from: firebase_sdk_version),
+    .package(url: "https://github.com/firebase/firebase-ios-sdk", exact: firebase_sdk_version),
     .package(name: "firebase_core", path: "../firebase_core"),
   ],
   targets: [
