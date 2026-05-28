@@ -5,7 +5,6 @@ apply plugin: 'com.android.library'
 apply from: file("local-config.gradle")
 
 buildscript {
-    ext.kotlin_version = "1.8.22"
     repositories {
         google()
         mavenCentral()
