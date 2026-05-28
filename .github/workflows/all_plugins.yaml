@@ -86,6 +86,8 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
+        with:
+          fetch-depth: 0
       - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
         with:
           channel: 'stable'
@@ -109,7 +111,7 @@ jobs:
           swiftformat --version
       - name: 'Dart, Java and Objective-C '
         run: |
-          flutter pub global run flutter_plugin_tools format
+          flutter pub global run flutter_plugin_tools format --base-branch=origin/main
           ./.github/workflows/scripts/validate-formatting.sh
       - name: 'Swift'
         if: ${{ success() || failure() }}

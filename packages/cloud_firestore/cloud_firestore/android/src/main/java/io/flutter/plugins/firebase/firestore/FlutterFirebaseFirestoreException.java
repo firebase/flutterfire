@@ -10,30 +10,41 @@ import java.util.regex.Pattern;
 
 public class FlutterFirebaseFirestoreException extends Exception {
   private static final String ERROR_ABORTED =
-      "The operation was aborted, typically due to a concurrency issue like transaction aborts, etc.";
+      "The operation was aborted, typically due to a concurrency issue like transaction aborts,"
+          + " etc.";
   private static final String ERROR_ALREADY_EXISTS =
       "Some document that we attempted to create already exists.";
   private static final String ERROR_CANCELLED =
       "The operation was cancelled (typically by the caller).";
   private static final String ERROR_DATA_LOSS = "Unrecoverable data loss or corruption.";
   private static final String ERROR_DEADLINE_EXCEEDED =
-      "Deadline expired before operation could complete. For operations that change the state of the system, this error may be returned even if the operation has completed successfully. For example, a successful response from a server could have been delayed long enough for the deadline to expire.";
+      "Deadline expired before operation could complete. For operations that change the state of"
+          + " the system, this error may be returned even if the operation has completed"
+          + " successfully. For example, a successful response from a server could have been"
+          + " delayed long enough for the deadline to expire.";
   private static final String ERROR_FAILED_PRECONDITION =
-      "Operation was rejected because the system is not in a state required for the operation's execution. If performing a query, ensure it has been indexed via the Firebase console.";
+      "Operation was rejected because the system is not in a state required for the operation's"
+          + " execution. If performing a query, ensure it has been indexed via the Firebase"
+          + " console.";
   private static final String ERROR_INTERNAL =
-      "Internal errors. Means some invariants expected by underlying system has been broken. If you see one of these errors, something is very broken.";
+      "Internal errors. Means some invariants expected by underlying system has been broken. If you"
+          + " see one of these errors, something is very broken.";
   private static final String ERROR_INVALID_ARGUMENT =
-      "Client specified an invalid argument. Note that this differs from failed-precondition. invalid-argument indicates arguments that are problematic regardless of the state of the system (e.g., an invalid field name).";
+      "Client specified an invalid argument. Note that this differs from failed-precondition."
+          + " invalid-argument indicates arguments that are problematic regardless of the state of"
+          + " the system (e.g., an invalid field name).";
   private static final String ERROR_NOT_FOUND = "Some requested document was not found.";
   private static final String ERROR_OUT_OF_RANGE = "Operation was attempted past the valid range.";
   private static final String ERROR_PERMISSION_DENIED =
       "The caller does not have permission to execute the specified operation.";
   private static final String ERROR_RESOURCE_EXHAUSTED =
-      "Some resource has been exhausted, perhaps a per-user quota, or perhaps the entire file system is out of space.";
+      "Some resource has been exhausted, perhaps a per-user quota, or perhaps the entire file"
+          + " system is out of space.";
   private static final String ERROR_UNAUTHENTICATED =
       "The request does not have valid authentication credentials for the operation.";
   private static final String ERROR_UNAVAILABLE =
-      "The service is currently unavailable. This is a most likely a transient condition and may be corrected by retrying with a backoff.";
+      "The service is currently unavailable. This is a most likely a transient condition and may be"
+          + " corrected by retrying with a backoff.";
   private static final String ERROR_UNIMPLEMENTED =
       "Operation is not implemented or not supported/enabled.";
   private static final String ERROR_UNKNOWN =

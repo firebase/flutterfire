@@ -13,10 +13,10 @@ let firebase_sdk_version: Version = "12.13.0"
 let package = Package(
   name: "firebase_storage",
   platforms: [
-    .macOS("10.15"),
+    .macOS("10.15")
   ],
   products: [
-    .library(name: "firebase-storage", targets: ["firebase_storage"]),
+    .library(name: "firebase-storage", targets: ["firebase_storage"])
   ],
   dependencies: [
     .package(url: "https://github.com/firebase/firebase-ios-sdk", from: firebase_sdk_version),
@@ -30,13 +30,13 @@ let package = Package(
         .product(name: "firebase-core", package: "firebase_core"),
       ],
       resources: [
-        .process("Resources"),
+        .process("Resources")
       ],
       cSettings: [
         .headerSearchPath("include"),
         .define("LIBRARY_VERSION", to: "\"\(library_version)\""),
         .define("LIBRARY_NAME", to: "\"flutter-fire-gcs\""),
       ]
-    ),
+    )
   ]
 )

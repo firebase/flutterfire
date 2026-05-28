@@ -19,87 +19,89 @@ import com.google.firebase.database.Transaction.Handler
 import io.flutter.plugin.common.MethodChannel
 
 class TransactionHandler
-  @JvmOverloads
-  constructor(
+@JvmOverloads
+constructor(
     @NonNull private val channel: MethodChannel,
     private val transactionKey: Int,
-  ) : Handler {
-    private val transactionCompletionSource = TaskCompletionSource<Map<String, Any?>>()
+) : Handler {
+  private val transactionCompletionSource = TaskCompletionSource<Map<String, Any?>>()
 
-    fun getTask(): Task<Map<String, Any?>> = transactionCompletionSource.task
+  fun getTask(): Task<Map<String, Any?>> = transactionCompletionSource.task
 
-    @NonNull
-    override fun doTransaction(
+  @NonNull
+  override fun doTransaction(
       @NonNull currentData: MutableData,
-    ): Transaction.Result {
-      val snapshotMap =
+  ): Transaction.Result {
+    val snapshotMap =
         mapOf(
-          Constants.KEY to (currentData.key ?: ""),
-          Constants.VALUE to currentData.value,
+            Constants.KEY to (currentData.key ?: ""),
+            Constants.VALUE to currentData.value,
         )
 
-      val transactionArgs =
+    val transactionArgs =
         mapOf(
-          Constants.SNAPSHOT to snapshotMap,
-          Constants.TRANSACTION_KEY to transactionKey,
+            Constants.SNAPSHOT to snapshotMap,
+            Constants.TRANSACTION_KEY to transactionKey,
         )
 
-      return try {
-        val executor = TransactionExecutor(channel)
-        val updatedData: Any? = executor.execute(transactionArgs)
+    return try {
+      val executor = TransactionExecutor(channel)
+      val updatedData: Any? = executor.execute(transactionArgs)
 
-        @Suppress("UNCHECKED_CAST")
-        val transactionHandlerResult: Map<String, Any?> =
+      @Suppress("UNCHECKED_CAST")
+      val transactionHandlerResult: Map<String, Any?> =
           when (updatedData) {
             is Map<*, *> -> updatedData as Map<String, Any?>
             null -> emptyMap()
             else -> {
-              Log.e("firebase_database", "Unexpected transaction result type: ${updatedData::class.java}")
+              Log.e(
+                  "firebase_database",
+                  "Unexpected transaction result type: ${updatedData::class.java}")
               emptyMap()
             }
           }
 
-        val aborted: Boolean = (transactionHandlerResult["aborted"] as? Boolean) ?: false
-        val exception: Boolean = (transactionHandlerResult["exception"] as? Boolean) ?: false
+      val aborted: Boolean = (transactionHandlerResult["aborted"] as? Boolean) ?: false
+      val exception: Boolean = (transactionHandlerResult["exception"] as? Boolean) ?: false
 
-        if (aborted || exception) {
-          Transaction.abort()
-        } else {
-          if (transactionHandlerResult.containsKey("value")) {
-            currentData.value = transactionHandlerResult["value"]
-          }
-          Transaction.success(currentData)
-        }
-      } catch (e: Exception) {
-        Log.e("firebase_database", "An unexpected exception occurred for a transaction.", e)
+      if (aborted || exception) {
         Transaction.abort()
+      } else {
+        if (transactionHandlerResult.containsKey("value")) {
+          currentData.value = transactionHandlerResult["value"]
+        }
+        Transaction.success(currentData)
       }
+    } catch (e: Exception) {
+      Log.e("firebase_database", "An unexpected exception occurred for a transaction.", e)
+      Transaction.abort()
     }
+  }
 
-    override fun onComplete(
+  override fun onComplete(
       @Nullable error: DatabaseError?,
       committed: Boolean,
       @Nullable currentData: DataSnapshot?,
-    ) {
-      when {
-        error != null -> {
-          transactionCompletionSource.setException(
+  ) {
+    when {
+      error != null -> {
+        transactionCompletionSource.setException(
             FlutterFirebaseDatabaseException.fromDatabaseError(error),
-          )
-        }
-        currentData != null -> {
-          val payload = FlutterDataSnapshotPayload(currentData)
-          val additionalParams: MutableMap<String, Any> =
+        )
+      }
+      currentData != null -> {
+        val payload = FlutterDataSnapshotPayload(currentData)
+        val additionalParams: MutableMap<String, Any> =
             mutableMapOf(
-              Constants.COMMITTED to committed,
+                Constants.COMMITTED to committed,
             )
-          transactionCompletionSource.setResult(
+        transactionCompletionSource.setResult(
             payload.withAdditionalParams(additionalParams).toMap(),
-          )
-        }
-        else -> {
-          transactionCompletionSource.setResult(emptyMap())
-        }
+        )
+      }
+      else -> {
+        transactionCompletionSource.setResult(emptyMap())
       }
     }
   }
+}

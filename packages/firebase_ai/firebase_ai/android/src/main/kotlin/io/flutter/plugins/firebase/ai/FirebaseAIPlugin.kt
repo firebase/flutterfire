@@ -25,77 +25,74 @@ import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 
 class FirebaseAIPlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
-    private lateinit var channel: MethodChannel
-    private lateinit var context: Context
+  private lateinit var channel: MethodChannel
+  private lateinit var context: Context
 
-    override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
-        context = binding.applicationContext
-        channel = MethodChannel(binding.binaryMessenger, "plugins.flutter.io/firebase_ai")
-        channel.setMethodCallHandler(this)
+  override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
+    context = binding.applicationContext
+    channel = MethodChannel(binding.binaryMessenger, "plugins.flutter.io/firebase_ai")
+    channel.setMethodCallHandler(this)
+  }
+
+  override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
+    channel.setMethodCallHandler(null)
+  }
+
+  override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
+    when (call.method) {
+      "getPlatformHeaders" -> {
+        val headers =
+            mapOf(
+                "X-Android-Package" to context.packageName,
+                "X-Android-Cert" to (getSigningCertFingerprint() ?: ""))
+        result.success(headers)
+      }
+      else -> result.notImplemented()
     }
+  }
 
-    override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
-        channel.setMethodCallHandler(null)
-    }
-
-    override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
-        when (call.method) {
-            "getPlatformHeaders" -> {
-                val headers = mapOf(
-                    "X-Android-Package" to context.packageName,
-                    "X-Android-Cert" to (getSigningCertFingerprint() ?: "")
-                )
-                result.success(headers)
-            }
-            else -> result.notImplemented()
-        }
-    }
-
-    @OptIn(ExperimentalStdlibApi::class)
-    private fun getSigningCertFingerprint(): String? {
-        val packageName = context.packageName
-        val signature = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            val packageInfo = try {
+  @OptIn(ExperimentalStdlibApi::class)
+  private fun getSigningCertFingerprint(): String? {
+    val packageName = context.packageName
+    val signature =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+          val packageInfo =
+              try {
                 context.packageManager.getPackageInfo(
-                    packageName,
-                    PackageManager.GET_SIGNING_CERTIFICATES
-                )
-            } catch (e: PackageManager.NameNotFoundException) {
+                    packageName, PackageManager.GET_SIGNING_CERTIFICATES)
+              } catch (e: PackageManager.NameNotFoundException) {
                 Log.e(TAG, "PackageManager couldn't find the package \"$packageName\"", e)
                 return null
-            }
-            val signingInfo = packageInfo?.signingInfo ?: return null
-            if (signingInfo.hasMultipleSigners()) {
-                signingInfo.apkContentsSigners.firstOrNull()
-            } else {
-                signingInfo.signingCertificateHistory.lastOrNull()
-            }
+              }
+          val signingInfo = packageInfo?.signingInfo ?: return null
+          if (signingInfo.hasMultipleSigners()) {
+            signingInfo.apkContentsSigners.firstOrNull()
+          } else {
+            signingInfo.signingCertificateHistory.lastOrNull()
+          }
         } else {
-            @Suppress("DEPRECATION")
-            val packageInfo = try {
-                context.packageManager.getPackageInfo(
-                    packageName,
-                    PackageManager.GET_SIGNATURES
-                )
-            } catch (e: PackageManager.NameNotFoundException) {
+          @Suppress("DEPRECATION")
+          val packageInfo =
+              try {
+                context.packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNATURES)
+              } catch (e: PackageManager.NameNotFoundException) {
                 Log.e(TAG, "PackageManager couldn't find the package \"$packageName\"", e)
                 return null
-            }
-            @Suppress("DEPRECATION")
-            packageInfo?.signatures?.firstOrNull()
+              }
+          @Suppress("DEPRECATION") packageInfo?.signatures?.firstOrNull()
         } ?: return null
 
-        return try {
-            val messageDigest = MessageDigest.getInstance("SHA-1")
-            val digest = messageDigest.digest(signature.toByteArray())
-            digest.toHexString(HexFormat.UpperCase)
-        } catch (e: NoSuchAlgorithmException) {
-            Log.w(TAG, "No support for SHA-1 algorithm found.", e)
-            null
-        }
+    return try {
+      val messageDigest = MessageDigest.getInstance("SHA-1")
+      val digest = messageDigest.digest(signature.toByteArray())
+      digest.toHexString(HexFormat.UpperCase)
+    } catch (e: NoSuchAlgorithmException) {
+      Log.w(TAG, "No support for SHA-1 algorithm found.", e)
+      null
     }
+  }
 
-    companion object {
-        private const val TAG = "FirebaseAIPlugin"
-    }
+  companion object {
+    private const val TAG = "FirebaseAIPlugin"
+  }
 }

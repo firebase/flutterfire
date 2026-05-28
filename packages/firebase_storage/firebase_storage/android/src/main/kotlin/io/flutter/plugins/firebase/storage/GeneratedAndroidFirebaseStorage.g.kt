@@ -10,12 +10,11 @@ package io.flutter.plugins.firebase.storage
 import android.util.Log
 import io.flutter.plugin.common.BasicMessageChannel
 import io.flutter.plugin.common.BinaryMessenger
-import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MessageCodec
-import io.flutter.plugin.common.StandardMethodCodec
 import io.flutter.plugin.common.StandardMessageCodec
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
+
 private object GeneratedAndroidFirebaseStoragePigeonUtils {
 
   fun wrapResult(result: Any?): List<Any?> {
@@ -24,19 +23,15 @@ private object GeneratedAndroidFirebaseStoragePigeonUtils {
 
   fun wrapError(exception: Throwable): List<Any?> {
     return if (exception is FlutterError) {
-      listOf(
-        exception.code,
-        exception.message,
-        exception.details
-      )
+      listOf(exception.code, exception.message, exception.details)
     } else {
       listOf(
-        exception.javaClass.simpleName,
-        exception.toString(),
-        "Cause: " + exception.cause + ", Stacktrace: " + Log.getStackTraceString(exception)
-      )
+          exception.javaClass.simpleName,
+          exception.toString(),
+          "Cause: " + exception.cause + ", Stacktrace: " + Log.getStackTraceString(exception))
     }
   }
+
   fun doubleEquals(a: Double, b: Double): Boolean {
     // Normalize -0.0 to 0.0 and handle NaN equality.
     return (if (a == 0.0) 0.0 else a) == (if (b == 0.0) 0.0 else b) || (a.isNaN() && b.isNaN())
@@ -180,25 +175,22 @@ private object GeneratedAndroidFirebaseStoragePigeonUtils {
       else -> value.hashCode()
     }
   }
-
 }
 
 /**
  * Error class for passing custom error details to Flutter via a thrown PlatformException.
+ *
  * @property code The error code.
  * @property message The error message.
  * @property details The error details. Must be a datatype supported by the api codec.
  */
-class FlutterError (
-  val code: String,
-  override val message: String? = null,
-  val details: Any? = null
+class FlutterError(
+    val code: String,
+    override val message: String? = null,
+    val details: Any? = null
 ) : RuntimeException()
 
-/**
- * The type of operation that generated the action code from calling
- * [TaskState].
- */
+/** The type of operation that generated the action code from calling [TaskState]. */
 enum class InternalStorageTaskState(val raw: Int) {
   /** Indicates the task has been paused by the user. */
   PAUSED(0),
@@ -219,12 +211,11 @@ enum class InternalStorageTaskState(val raw: Int) {
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
-data class InternalStorageFirebaseApp (
-  val appName: String,
-  val tenantId: String? = null,
-  val bucket: String
-)
- {
+data class InternalStorageFirebaseApp(
+    val appName: String,
+    val tenantId: String? = null,
+    val bucket: String
+) {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): InternalStorageFirebaseApp {
       val appName = pigeonVar_list[0] as String
@@ -233,13 +224,15 @@ data class InternalStorageFirebaseApp (
       return InternalStorageFirebaseApp(appName, tenantId, bucket)
     }
   }
+
   fun toList(): List<Any?> {
     return listOf(
-      appName,
-      tenantId,
-      bucket,
+        appName,
+        tenantId,
+        bucket,
     )
   }
+
   override fun equals(other: Any?): Boolean {
     if (other == null || other.javaClass != javaClass) {
       return false
@@ -248,7 +241,9 @@ data class InternalStorageFirebaseApp (
       return true
     }
     val other = other as InternalStorageFirebaseApp
-    return GeneratedAndroidFirebaseStoragePigeonUtils.deepEquals(this.appName, other.appName) && GeneratedAndroidFirebaseStoragePigeonUtils.deepEquals(this.tenantId, other.tenantId) && GeneratedAndroidFirebaseStoragePigeonUtils.deepEquals(this.bucket, other.bucket)
+    return GeneratedAndroidFirebaseStoragePigeonUtils.deepEquals(this.appName, other.appName) &&
+        GeneratedAndroidFirebaseStoragePigeonUtils.deepEquals(this.tenantId, other.tenantId) &&
+        GeneratedAndroidFirebaseStoragePigeonUtils.deepEquals(this.bucket, other.bucket)
   }
 
   override fun hashCode(): Int {
@@ -261,12 +256,7 @@ data class InternalStorageFirebaseApp (
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
-data class InternalStorageReference (
-  val bucket: String,
-  val fullPath: String,
-  val name: String
-)
- {
+data class InternalStorageReference(val bucket: String, val fullPath: String, val name: String) {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): InternalStorageReference {
       val bucket = pigeonVar_list[0] as String
@@ -275,13 +265,15 @@ data class InternalStorageReference (
       return InternalStorageReference(bucket, fullPath, name)
     }
   }
+
   fun toList(): List<Any?> {
     return listOf(
-      bucket,
-      fullPath,
-      name,
+        bucket,
+        fullPath,
+        name,
     )
   }
+
   override fun equals(other: Any?): Boolean {
     if (other == null || other.javaClass != javaClass) {
       return false
@@ -290,7 +282,9 @@ data class InternalStorageReference (
       return true
     }
     val other = other as InternalStorageReference
-    return GeneratedAndroidFirebaseStoragePigeonUtils.deepEquals(this.bucket, other.bucket) && GeneratedAndroidFirebaseStoragePigeonUtils.deepEquals(this.fullPath, other.fullPath) && GeneratedAndroidFirebaseStoragePigeonUtils.deepEquals(this.name, other.name)
+    return GeneratedAndroidFirebaseStoragePigeonUtils.deepEquals(this.bucket, other.bucket) &&
+        GeneratedAndroidFirebaseStoragePigeonUtils.deepEquals(this.fullPath, other.fullPath) &&
+        GeneratedAndroidFirebaseStoragePigeonUtils.deepEquals(this.name, other.name)
   }
 
   override fun hashCode(): Int {
@@ -303,21 +297,20 @@ data class InternalStorageReference (
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
-data class InternalFullMetaData (
-  val metadata: Map<String?, Any?>? = null
-)
- {
+data class InternalFullMetaData(val metadata: Map<String?, Any?>? = null) {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): InternalFullMetaData {
       val metadata = pigeonVar_list[0] as Map<String?, Any?>?
       return InternalFullMetaData(metadata)
     }
   }
+
   fun toList(): List<Any?> {
     return listOf(
-      metadata,
+        metadata,
     )
   }
+
   override fun equals(other: Any?): Boolean {
     if (other == null || other.javaClass != javaClass) {
       return false
@@ -337,21 +330,20 @@ data class InternalFullMetaData (
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
-data class InternalListOptions (
-  /**
-   * If set, limits the total number of `prefixes` and `items` to return.
-   *
-   * The default and maximum maxResults is 1000.
-   */
-  val maxResults: Long,
-  /**
-   * The nextPageToken from a previous call to list().
-   *
-   * If provided, listing is resumed from the previous position.
-   */
-  val pageToken: String? = null
-)
- {
+data class InternalListOptions(
+    /**
+     * If set, limits the total number of `prefixes` and `items` to return.
+     *
+     * The default and maximum maxResults is 1000.
+     */
+    val maxResults: Long,
+    /**
+     * The nextPageToken from a previous call to list().
+     *
+     * If provided, listing is resumed from the previous position.
+     */
+    val pageToken: String? = null
+) {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): InternalListOptions {
       val maxResults = pigeonVar_list[0] as Long
@@ -359,12 +351,14 @@ data class InternalListOptions (
       return InternalListOptions(maxResults, pageToken)
     }
   }
+
   fun toList(): List<Any?> {
     return listOf(
-      maxResults,
-      pageToken,
+        maxResults,
+        pageToken,
     )
   }
+
   override fun equals(other: Any?): Boolean {
     if (other == null || other.javaClass != javaClass) {
       return false
@@ -373,7 +367,9 @@ data class InternalListOptions (
       return true
     }
     val other = other as InternalListOptions
-    return GeneratedAndroidFirebaseStoragePigeonUtils.deepEquals(this.maxResults, other.maxResults) && GeneratedAndroidFirebaseStoragePigeonUtils.deepEquals(this.pageToken, other.pageToken)
+    return GeneratedAndroidFirebaseStoragePigeonUtils.deepEquals(
+        this.maxResults, other.maxResults) &&
+        GeneratedAndroidFirebaseStoragePigeonUtils.deepEquals(this.pageToken, other.pageToken)
   }
 
   override fun hashCode(): Int {
@@ -385,41 +381,40 @@ data class InternalListOptions (
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
-data class InternalSettableMetadata (
-  /**
-   * Served as the 'Cache-Control' header on object download.
-   *
-   * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control.
-   */
-  val cacheControl: String? = null,
-  /**
-   * Served as the 'Content-Disposition' header on object download.
-   *
-   * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Disposition.
-   */
-  val contentDisposition: String? = null,
-  /**
-   * Served as the 'Content-Encoding' header on object download.
-   *
-   * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Encoding.
-   */
-  val contentEncoding: String? = null,
-  /**
-   * Served as the 'Content-Language' header on object download.
-   *
-   * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Language.
-   */
-  val contentLanguage: String? = null,
-  /**
-   * Served as the 'Content-Type' header on object download.
-   *
-   * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type.
-   */
-  val contentType: String? = null,
-  /** Additional user-defined custom metadata. */
-  val customMetadata: Map<String?, String?>? = null
-)
- {
+data class InternalSettableMetadata(
+    /**
+     * Served as the 'Cache-Control' header on object download.
+     *
+     * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control.
+     */
+    val cacheControl: String? = null,
+    /**
+     * Served as the 'Content-Disposition' header on object download.
+     *
+     * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Disposition.
+     */
+    val contentDisposition: String? = null,
+    /**
+     * Served as the 'Content-Encoding' header on object download.
+     *
+     * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Encoding.
+     */
+    val contentEncoding: String? = null,
+    /**
+     * Served as the 'Content-Language' header on object download.
+     *
+     * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Language.
+     */
+    val contentLanguage: String? = null,
+    /**
+     * Served as the 'Content-Type' header on object download.
+     *
+     * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type.
+     */
+    val contentType: String? = null,
+    /** Additional user-defined custom metadata. */
+    val customMetadata: Map<String?, String?>? = null
+) {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): InternalSettableMetadata {
       val cacheControl = pigeonVar_list[0] as String?
@@ -428,19 +423,27 @@ data class InternalSettableMetadata (
       val contentLanguage = pigeonVar_list[3] as String?
       val contentType = pigeonVar_list[4] as String?
       val customMetadata = pigeonVar_list[5] as Map<String?, String?>?
-      return InternalSettableMetadata(cacheControl, contentDisposition, contentEncoding, contentLanguage, contentType, customMetadata)
+      return InternalSettableMetadata(
+          cacheControl,
+          contentDisposition,
+          contentEncoding,
+          contentLanguage,
+          contentType,
+          customMetadata)
     }
   }
+
   fun toList(): List<Any?> {
     return listOf(
-      cacheControl,
-      contentDisposition,
-      contentEncoding,
-      contentLanguage,
-      contentType,
-      customMetadata,
+        cacheControl,
+        contentDisposition,
+        contentEncoding,
+        contentLanguage,
+        contentType,
+        customMetadata,
     )
   }
+
   override fun equals(other: Any?): Boolean {
     if (other == null || other.javaClass != javaClass) {
       return false
@@ -449,13 +452,25 @@ data class InternalSettableMetadata (
       return true
     }
     val other = other as InternalSettableMetadata
-    return GeneratedAndroidFirebaseStoragePigeonUtils.deepEquals(this.cacheControl, other.cacheControl) && GeneratedAndroidFirebaseStoragePigeonUtils.deepEquals(this.contentDisposition, other.contentDisposition) && GeneratedAndroidFirebaseStoragePigeonUtils.deepEquals(this.contentEncoding, other.contentEncoding) && GeneratedAndroidFirebaseStoragePigeonUtils.deepEquals(this.contentLanguage, other.contentLanguage) && GeneratedAndroidFirebaseStoragePigeonUtils.deepEquals(this.contentType, other.contentType) && GeneratedAndroidFirebaseStoragePigeonUtils.deepEquals(this.customMetadata, other.customMetadata)
+    return GeneratedAndroidFirebaseStoragePigeonUtils.deepEquals(
+        this.cacheControl, other.cacheControl) &&
+        GeneratedAndroidFirebaseStoragePigeonUtils.deepEquals(
+            this.contentDisposition, other.contentDisposition) &&
+        GeneratedAndroidFirebaseStoragePigeonUtils.deepEquals(
+            this.contentEncoding, other.contentEncoding) &&
+        GeneratedAndroidFirebaseStoragePigeonUtils.deepEquals(
+            this.contentLanguage, other.contentLanguage) &&
+        GeneratedAndroidFirebaseStoragePigeonUtils.deepEquals(
+            this.contentType, other.contentType) &&
+        GeneratedAndroidFirebaseStoragePigeonUtils.deepEquals(
+            this.customMetadata, other.customMetadata)
   }
 
   override fun hashCode(): Int {
     var result = javaClass.hashCode()
     result = 31 * result + GeneratedAndroidFirebaseStoragePigeonUtils.deepHash(this.cacheControl)
-    result = 31 * result + GeneratedAndroidFirebaseStoragePigeonUtils.deepHash(this.contentDisposition)
+    result =
+        31 * result + GeneratedAndroidFirebaseStoragePigeonUtils.deepHash(this.contentDisposition)
     result = 31 * result + GeneratedAndroidFirebaseStoragePigeonUtils.deepHash(this.contentEncoding)
     result = 31 * result + GeneratedAndroidFirebaseStoragePigeonUtils.deepHash(this.contentLanguage)
     result = 31 * result + GeneratedAndroidFirebaseStoragePigeonUtils.deepHash(this.contentType)
@@ -465,13 +480,12 @@ data class InternalSettableMetadata (
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
-data class InternalStorageTaskSnapShot (
-  val bytesTransferred: Long,
-  val metadata: InternalFullMetaData? = null,
-  val state: InternalStorageTaskState,
-  val totalBytes: Long
-)
- {
+data class InternalStorageTaskSnapShot(
+    val bytesTransferred: Long,
+    val metadata: InternalFullMetaData? = null,
+    val state: InternalStorageTaskState,
+    val totalBytes: Long
+) {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): InternalStorageTaskSnapShot {
       val bytesTransferred = pigeonVar_list[0] as Long
@@ -481,14 +495,16 @@ data class InternalStorageTaskSnapShot (
       return InternalStorageTaskSnapShot(bytesTransferred, metadata, state, totalBytes)
     }
   }
+
   fun toList(): List<Any?> {
     return listOf(
-      bytesTransferred,
-      metadata,
-      state,
-      totalBytes,
+        bytesTransferred,
+        metadata,
+        state,
+        totalBytes,
     )
   }
+
   override fun equals(other: Any?): Boolean {
     if (other == null || other.javaClass != javaClass) {
       return false
@@ -497,12 +513,17 @@ data class InternalStorageTaskSnapShot (
       return true
     }
     val other = other as InternalStorageTaskSnapShot
-    return GeneratedAndroidFirebaseStoragePigeonUtils.deepEquals(this.bytesTransferred, other.bytesTransferred) && GeneratedAndroidFirebaseStoragePigeonUtils.deepEquals(this.metadata, other.metadata) && GeneratedAndroidFirebaseStoragePigeonUtils.deepEquals(this.state, other.state) && GeneratedAndroidFirebaseStoragePigeonUtils.deepEquals(this.totalBytes, other.totalBytes)
+    return GeneratedAndroidFirebaseStoragePigeonUtils.deepEquals(
+        this.bytesTransferred, other.bytesTransferred) &&
+        GeneratedAndroidFirebaseStoragePigeonUtils.deepEquals(this.metadata, other.metadata) &&
+        GeneratedAndroidFirebaseStoragePigeonUtils.deepEquals(this.state, other.state) &&
+        GeneratedAndroidFirebaseStoragePigeonUtils.deepEquals(this.totalBytes, other.totalBytes)
   }
 
   override fun hashCode(): Int {
     var result = javaClass.hashCode()
-    result = 31 * result + GeneratedAndroidFirebaseStoragePigeonUtils.deepHash(this.bytesTransferred)
+    result =
+        31 * result + GeneratedAndroidFirebaseStoragePigeonUtils.deepHash(this.bytesTransferred)
     result = 31 * result + GeneratedAndroidFirebaseStoragePigeonUtils.deepHash(this.metadata)
     result = 31 * result + GeneratedAndroidFirebaseStoragePigeonUtils.deepHash(this.state)
     result = 31 * result + GeneratedAndroidFirebaseStoragePigeonUtils.deepHash(this.totalBytes)
@@ -511,12 +532,11 @@ data class InternalStorageTaskSnapShot (
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
-data class InternalListResult (
-  val items: List<InternalStorageReference?>,
-  val pageToken: String? = null,
-  val prefixs: List<InternalStorageReference?>
-)
- {
+data class InternalListResult(
+    val items: List<InternalStorageReference?>,
+    val pageToken: String? = null,
+    val prefixs: List<InternalStorageReference?>
+) {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): InternalListResult {
       val items = pigeonVar_list[0] as List<InternalStorageReference?>
@@ -525,13 +545,15 @@ data class InternalListResult (
       return InternalListResult(items, pageToken, prefixs)
     }
   }
+
   fun toList(): List<Any?> {
     return listOf(
-      items,
-      pageToken,
-      prefixs,
+        items,
+        pageToken,
+        prefixs,
     )
   }
+
   override fun equals(other: Any?): Boolean {
     if (other == null || other.javaClass != javaClass) {
       return false
@@ -540,7 +562,9 @@ data class InternalListResult (
       return true
     }
     val other = other as InternalListResult
-    return GeneratedAndroidFirebaseStoragePigeonUtils.deepEquals(this.items, other.items) && GeneratedAndroidFirebaseStoragePigeonUtils.deepEquals(this.pageToken, other.pageToken) && GeneratedAndroidFirebaseStoragePigeonUtils.deepEquals(this.prefixs, other.prefixs)
+    return GeneratedAndroidFirebaseStoragePigeonUtils.deepEquals(this.items, other.items) &&
+        GeneratedAndroidFirebaseStoragePigeonUtils.deepEquals(this.pageToken, other.pageToken) &&
+        GeneratedAndroidFirebaseStoragePigeonUtils.deepEquals(this.prefixs, other.prefixs)
   }
 
   override fun hashCode(): Int {
@@ -551,53 +575,39 @@ data class InternalListResult (
     return result
   }
 }
+
 private open class GeneratedAndroidFirebaseStoragePigeonCodec : StandardMessageCodec() {
   override fun readValueOfType(type: Byte, buffer: ByteBuffer): Any? {
     return when (type) {
       129.toByte() -> {
-        return (readValue(buffer) as Long?)?.let {
-          InternalStorageTaskState.ofRaw(it.toInt())
-        }
+        return (readValue(buffer) as Long?)?.let { InternalStorageTaskState.ofRaw(it.toInt()) }
       }
       130.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          InternalStorageFirebaseApp.fromList(it)
-        }
+        return (readValue(buffer) as? List<Any?>)?.let { InternalStorageFirebaseApp.fromList(it) }
       }
       131.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          InternalStorageReference.fromList(it)
-        }
+        return (readValue(buffer) as? List<Any?>)?.let { InternalStorageReference.fromList(it) }
       }
       132.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          InternalFullMetaData.fromList(it)
-        }
+        return (readValue(buffer) as? List<Any?>)?.let { InternalFullMetaData.fromList(it) }
       }
       133.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          InternalListOptions.fromList(it)
-        }
+        return (readValue(buffer) as? List<Any?>)?.let { InternalListOptions.fromList(it) }
       }
       134.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          InternalSettableMetadata.fromList(it)
-        }
+        return (readValue(buffer) as? List<Any?>)?.let { InternalSettableMetadata.fromList(it) }
       }
       135.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          InternalStorageTaskSnapShot.fromList(it)
-        }
+        return (readValue(buffer) as? List<Any?>)?.let { InternalStorageTaskSnapShot.fromList(it) }
       }
       136.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          InternalListResult.fromList(it)
-        }
+        return (readValue(buffer) as? List<Any?>)?.let { InternalListResult.fromList(it) }
       }
       else -> super.readValueOfType(type, buffer)
     }
   }
-  override fun writeValue(stream: ByteArrayOutputStream, value: Any?)   {
+
+  override fun writeValue(stream: ByteArrayOutputStream, value: Any?) {
     when (value) {
       is InternalStorageTaskState -> {
         stream.write(129)
@@ -636,47 +646,168 @@ private open class GeneratedAndroidFirebaseStoragePigeonCodec : StandardMessageC
   }
 }
 
-
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface FirebaseStorageHostApi {
-  fun getReferencebyPath(app: InternalStorageFirebaseApp, path: String, bucket: String?, callback: (Result<InternalStorageReference>) -> Unit)
-  fun setMaxOperationRetryTime(app: InternalStorageFirebaseApp, time: Long, callback: (Result<Unit>) -> Unit)
-  fun setMaxUploadRetryTime(app: InternalStorageFirebaseApp, time: Long, callback: (Result<Unit>) -> Unit)
-  fun setMaxDownloadRetryTime(app: InternalStorageFirebaseApp, time: Long, callback: (Result<Unit>) -> Unit)
-  fun useStorageEmulator(app: InternalStorageFirebaseApp, host: String, port: Long, callback: (Result<Unit>) -> Unit)
-  fun referenceDelete(app: InternalStorageFirebaseApp, reference: InternalStorageReference, callback: (Result<Unit>) -> Unit)
-  fun referenceGetDownloadURL(app: InternalStorageFirebaseApp, reference: InternalStorageReference, callback: (Result<String>) -> Unit)
-  fun referenceGetMetaData(app: InternalStorageFirebaseApp, reference: InternalStorageReference, callback: (Result<InternalFullMetaData>) -> Unit)
-  fun referenceList(app: InternalStorageFirebaseApp, reference: InternalStorageReference, options: InternalListOptions, callback: (Result<InternalListResult>) -> Unit)
-  fun referenceListAll(app: InternalStorageFirebaseApp, reference: InternalStorageReference, callback: (Result<InternalListResult>) -> Unit)
-  fun referenceGetData(app: InternalStorageFirebaseApp, reference: InternalStorageReference, maxSize: Long, callback: (Result<ByteArray?>) -> Unit)
-  fun referencePutData(app: InternalStorageFirebaseApp, reference: InternalStorageReference, data: ByteArray, settableMetaData: InternalSettableMetadata, handle: Long, callback: (Result<String>) -> Unit)
-  fun referencePutString(app: InternalStorageFirebaseApp, reference: InternalStorageReference, data: String, format: Long, settableMetaData: InternalSettableMetadata, handle: Long, callback: (Result<String>) -> Unit)
-  fun referencePutFile(app: InternalStorageFirebaseApp, reference: InternalStorageReference, filePath: String, settableMetaData: InternalSettableMetadata?, handle: Long, callback: (Result<String>) -> Unit)
-  fun referenceDownloadFile(app: InternalStorageFirebaseApp, reference: InternalStorageReference, filePath: String, handle: Long, callback: (Result<String>) -> Unit)
-  fun referenceUpdateMetadata(app: InternalStorageFirebaseApp, reference: InternalStorageReference, metadata: InternalSettableMetadata, callback: (Result<InternalFullMetaData>) -> Unit)
-  fun taskPause(app: InternalStorageFirebaseApp, handle: Long, callback: (Result<Map<String, Any>>) -> Unit)
-  fun taskResume(app: InternalStorageFirebaseApp, handle: Long, callback: (Result<Map<String, Any>>) -> Unit)
-  fun taskCancel(app: InternalStorageFirebaseApp, handle: Long, callback: (Result<Map<String, Any>>) -> Unit)
+  fun getReferencebyPath(
+      app: InternalStorageFirebaseApp,
+      path: String,
+      bucket: String?,
+      callback: (Result<InternalStorageReference>) -> Unit
+  )
+
+  fun setMaxOperationRetryTime(
+      app: InternalStorageFirebaseApp,
+      time: Long,
+      callback: (Result<Unit>) -> Unit
+  )
+
+  fun setMaxUploadRetryTime(
+      app: InternalStorageFirebaseApp,
+      time: Long,
+      callback: (Result<Unit>) -> Unit
+  )
+
+  fun setMaxDownloadRetryTime(
+      app: InternalStorageFirebaseApp,
+      time: Long,
+      callback: (Result<Unit>) -> Unit
+  )
+
+  fun useStorageEmulator(
+      app: InternalStorageFirebaseApp,
+      host: String,
+      port: Long,
+      callback: (Result<Unit>) -> Unit
+  )
+
+  fun referenceDelete(
+      app: InternalStorageFirebaseApp,
+      reference: InternalStorageReference,
+      callback: (Result<Unit>) -> Unit
+  )
+
+  fun referenceGetDownloadURL(
+      app: InternalStorageFirebaseApp,
+      reference: InternalStorageReference,
+      callback: (Result<String>) -> Unit
+  )
+
+  fun referenceGetMetaData(
+      app: InternalStorageFirebaseApp,
+      reference: InternalStorageReference,
+      callback: (Result<InternalFullMetaData>) -> Unit
+  )
+
+  fun referenceList(
+      app: InternalStorageFirebaseApp,
+      reference: InternalStorageReference,
+      options: InternalListOptions,
+      callback: (Result<InternalListResult>) -> Unit
+  )
+
+  fun referenceListAll(
+      app: InternalStorageFirebaseApp,
+      reference: InternalStorageReference,
+      callback: (Result<InternalListResult>) -> Unit
+  )
+
+  fun referenceGetData(
+      app: InternalStorageFirebaseApp,
+      reference: InternalStorageReference,
+      maxSize: Long,
+      callback: (Result<ByteArray?>) -> Unit
+  )
+
+  fun referencePutData(
+      app: InternalStorageFirebaseApp,
+      reference: InternalStorageReference,
+      data: ByteArray,
+      settableMetaData: InternalSettableMetadata,
+      handle: Long,
+      callback: (Result<String>) -> Unit
+  )
+
+  fun referencePutString(
+      app: InternalStorageFirebaseApp,
+      reference: InternalStorageReference,
+      data: String,
+      format: Long,
+      settableMetaData: InternalSettableMetadata,
+      handle: Long,
+      callback: (Result<String>) -> Unit
+  )
+
+  fun referencePutFile(
+      app: InternalStorageFirebaseApp,
+      reference: InternalStorageReference,
+      filePath: String,
+      settableMetaData: InternalSettableMetadata?,
+      handle: Long,
+      callback: (Result<String>) -> Unit
+  )
+
+  fun referenceDownloadFile(
+      app: InternalStorageFirebaseApp,
+      reference: InternalStorageReference,
+      filePath: String,
+      handle: Long,
+      callback: (Result<String>) -> Unit
+  )
+
+  fun referenceUpdateMetadata(
+      app: InternalStorageFirebaseApp,
+      reference: InternalStorageReference,
+      metadata: InternalSettableMetadata,
+      callback: (Result<InternalFullMetaData>) -> Unit
+  )
+
+  fun taskPause(
+      app: InternalStorageFirebaseApp,
+      handle: Long,
+      callback: (Result<Map<String, Any>>) -> Unit
+  )
+
+  fun taskResume(
+      app: InternalStorageFirebaseApp,
+      handle: Long,
+      callback: (Result<Map<String, Any>>) -> Unit
+  )
+
+  fun taskCancel(
+      app: InternalStorageFirebaseApp,
+      handle: Long,
+      callback: (Result<Map<String, Any>>) -> Unit
+  )
 
   companion object {
     /** The codec used by FirebaseStorageHostApi. */
-    val codec: MessageCodec<Any?> by lazy {
-      GeneratedAndroidFirebaseStoragePigeonCodec()
-    }
-    /** Sets up an instance of `FirebaseStorageHostApi` to handle messages through the `binaryMessenger`. */
+    val codec: MessageCodec<Any?> by lazy { GeneratedAndroidFirebaseStoragePigeonCodec() }
+    /**
+     * Sets up an instance of `FirebaseStorageHostApi` to handle messages through the
+     * `binaryMessenger`.
+     */
     @JvmOverloads
-    fun setUp(binaryMessenger: BinaryMessenger, api: FirebaseStorageHostApi?, messageChannelSuffix: String = "") {
-      val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    fun setUp(
+        binaryMessenger: BinaryMessenger,
+        api: FirebaseStorageHostApi?,
+        messageChannelSuffix: String = ""
+    ) {
+      val separatedMessageChannelSuffix =
+          if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.getReferencebyPath$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.getReferencebyPath$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val appArg = args[0] as InternalStorageFirebaseApp
             val pathArg = args[1] as String
             val bucketArg = args[2] as String?
-            api.getReferencebyPath(appArg, pathArg, bucketArg) { result: Result<InternalStorageReference> ->
+            api.getReferencebyPath(appArg, pathArg, bucketArg) {
+                result: Result<InternalStorageReference> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidFirebaseStoragePigeonUtils.wrapError(error))
@@ -691,7 +822,11 @@ interface FirebaseStorageHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxOperationRetryTime$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxOperationRetryTime$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -711,7 +846,11 @@ interface FirebaseStorageHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxUploadRetryTime$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxUploadRetryTime$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -731,7 +870,11 @@ interface FirebaseStorageHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxDownloadRetryTime$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxDownloadRetryTime$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -751,7 +894,11 @@ interface FirebaseStorageHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.useStorageEmulator$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.useStorageEmulator$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -772,7 +919,11 @@ interface FirebaseStorageHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceDelete$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceDelete$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -792,7 +943,11 @@ interface FirebaseStorageHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetDownloadURL$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetDownloadURL$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -813,7 +968,11 @@ interface FirebaseStorageHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetMetaData$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetMetaData$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -834,14 +993,19 @@ interface FirebaseStorageHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceList$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceList$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val appArg = args[0] as InternalStorageFirebaseApp
             val referenceArg = args[1] as InternalStorageReference
             val optionsArg = args[2] as InternalListOptions
-            api.referenceList(appArg, referenceArg, optionsArg) { result: Result<InternalListResult> ->
+            api.referenceList(appArg, referenceArg, optionsArg) { result: Result<InternalListResult>
+              ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidFirebaseStoragePigeonUtils.wrapError(error))
@@ -856,7 +1020,11 @@ interface FirebaseStorageHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceListAll$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceListAll$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -877,7 +1045,11 @@ interface FirebaseStorageHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetData$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetData$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -899,7 +1071,11 @@ interface FirebaseStorageHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutData$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutData$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -908,7 +1084,8 @@ interface FirebaseStorageHostApi {
             val dataArg = args[2] as ByteArray
             val settableMetaDataArg = args[3] as InternalSettableMetadata
             val handleArg = args[4] as Long
-            api.referencePutData(appArg, referenceArg, dataArg, settableMetaDataArg, handleArg) { result: Result<String> ->
+            api.referencePutData(appArg, referenceArg, dataArg, settableMetaDataArg, handleArg) {
+                result: Result<String> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidFirebaseStoragePigeonUtils.wrapError(error))
@@ -923,7 +1100,11 @@ interface FirebaseStorageHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutString$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutString$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -933,22 +1114,28 @@ interface FirebaseStorageHostApi {
             val formatArg = args[3] as Long
             val settableMetaDataArg = args[4] as InternalSettableMetadata
             val handleArg = args[5] as Long
-            api.referencePutString(appArg, referenceArg, dataArg, formatArg, settableMetaDataArg, handleArg) { result: Result<String> ->
-              val error = result.exceptionOrNull()
-              if (error != null) {
-                reply.reply(GeneratedAndroidFirebaseStoragePigeonUtils.wrapError(error))
-              } else {
-                val data = result.getOrNull()
-                reply.reply(GeneratedAndroidFirebaseStoragePigeonUtils.wrapResult(data))
-              }
-            }
+            api.referencePutString(
+                appArg, referenceArg, dataArg, formatArg, settableMetaDataArg, handleArg) {
+                    result: Result<String> ->
+                  val error = result.exceptionOrNull()
+                  if (error != null) {
+                    reply.reply(GeneratedAndroidFirebaseStoragePigeonUtils.wrapError(error))
+                  } else {
+                    val data = result.getOrNull()
+                    reply.reply(GeneratedAndroidFirebaseStoragePigeonUtils.wrapResult(data))
+                  }
+                }
           }
         } else {
           channel.setMessageHandler(null)
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutFile$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutFile$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -957,22 +1144,28 @@ interface FirebaseStorageHostApi {
             val filePathArg = args[2] as String
             val settableMetaDataArg = args[3] as InternalSettableMetadata?
             val handleArg = args[4] as Long
-            api.referencePutFile(appArg, referenceArg, filePathArg, settableMetaDataArg, handleArg) { result: Result<String> ->
-              val error = result.exceptionOrNull()
-              if (error != null) {
-                reply.reply(GeneratedAndroidFirebaseStoragePigeonUtils.wrapError(error))
-              } else {
-                val data = result.getOrNull()
-                reply.reply(GeneratedAndroidFirebaseStoragePigeonUtils.wrapResult(data))
-              }
-            }
+            api.referencePutFile(
+                appArg, referenceArg, filePathArg, settableMetaDataArg, handleArg) {
+                    result: Result<String> ->
+                  val error = result.exceptionOrNull()
+                  if (error != null) {
+                    reply.reply(GeneratedAndroidFirebaseStoragePigeonUtils.wrapError(error))
+                  } else {
+                    val data = result.getOrNull()
+                    reply.reply(GeneratedAndroidFirebaseStoragePigeonUtils.wrapResult(data))
+                  }
+                }
           }
         } else {
           channel.setMessageHandler(null)
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceDownloadFile$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceDownloadFile$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -980,7 +1173,8 @@ interface FirebaseStorageHostApi {
             val referenceArg = args[1] as InternalStorageReference
             val filePathArg = args[2] as String
             val handleArg = args[3] as Long
-            api.referenceDownloadFile(appArg, referenceArg, filePathArg, handleArg) { result: Result<String> ->
+            api.referenceDownloadFile(appArg, referenceArg, filePathArg, handleArg) {
+                result: Result<String> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidFirebaseStoragePigeonUtils.wrapError(error))
@@ -995,14 +1189,19 @@ interface FirebaseStorageHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceUpdateMetadata$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceUpdateMetadata$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val appArg = args[0] as InternalStorageFirebaseApp
             val referenceArg = args[1] as InternalStorageReference
             val metadataArg = args[2] as InternalSettableMetadata
-            api.referenceUpdateMetadata(appArg, referenceArg, metadataArg) { result: Result<InternalFullMetaData> ->
+            api.referenceUpdateMetadata(appArg, referenceArg, metadataArg) {
+                result: Result<InternalFullMetaData> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidFirebaseStoragePigeonUtils.wrapError(error))
@@ -1017,7 +1216,11 @@ interface FirebaseStorageHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskPause$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskPause$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -1038,7 +1241,11 @@ interface FirebaseStorageHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskResume$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskResume$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -1059,7 +1266,11 @@ interface FirebaseStorageHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskCancel$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskCancel$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>

@@ -10,12 +10,11 @@ package io.flutter.plugins.firebase.performance
 import android.util.Log
 import io.flutter.plugin.common.BasicMessageChannel
 import io.flutter.plugin.common.BinaryMessenger
-import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MessageCodec
-import io.flutter.plugin.common.StandardMethodCodec
 import io.flutter.plugin.common.StandardMessageCodec
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
+
 private object GeneratedAndroidFirebasePerformancePigeonUtils {
 
   fun wrapResult(result: Any?): List<Any?> {
@@ -24,19 +23,15 @@ private object GeneratedAndroidFirebasePerformancePigeonUtils {
 
   fun wrapError(exception: Throwable): List<Any?> {
     return if (exception is FlutterError) {
-      listOf(
-        exception.code,
-        exception.message,
-        exception.details
-      )
+      listOf(exception.code, exception.message, exception.details)
     } else {
       listOf(
-        exception.javaClass.simpleName,
-        exception.toString(),
-        "Cause: " + exception.cause + ", Stacktrace: " + Log.getStackTraceString(exception)
-      )
+          exception.javaClass.simpleName,
+          exception.toString(),
+          "Cause: " + exception.cause + ", Stacktrace: " + Log.getStackTraceString(exception))
     }
   }
+
   fun doubleEquals(a: Double, b: Double): Boolean {
     // Normalize -0.0 to 0.0 and handle NaN equality.
     return (if (a == 0.0) 0.0 else a) == (if (b == 0.0) 0.0 else b) || (a.isNaN() && b.isNaN())
@@ -180,19 +175,19 @@ private object GeneratedAndroidFirebasePerformancePigeonUtils {
       else -> value.hashCode()
     }
   }
-
 }
 
 /**
  * Error class for passing custom error details to Flutter via a thrown PlatformException.
+ *
  * @property code The error code.
  * @property message The error message.
  * @property details The error details. Must be a datatype supported by the api codec.
  */
-class FlutterError (
-  val code: String,
-  override val message: String? = null,
-  val details: Any? = null
+class FlutterError(
+    val code: String,
+    override val message: String? = null,
+    val details: Any? = null
 ) : RuntimeException()
 
 enum class HttpMethod(val raw: Int) {
@@ -214,11 +209,7 @@ enum class HttpMethod(val raw: Int) {
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
-data class HttpMetricOptions (
-  val url: String,
-  val httpMethod: HttpMethod
-)
- {
+data class HttpMetricOptions(val url: String, val httpMethod: HttpMethod) {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): HttpMetricOptions {
       val url = pigeonVar_list[0] as String
@@ -226,12 +217,14 @@ data class HttpMetricOptions (
       return HttpMetricOptions(url, httpMethod)
     }
   }
+
   fun toList(): List<Any?> {
     return listOf(
-      url,
-      httpMethod,
+        url,
+        httpMethod,
     )
   }
+
   override fun equals(other: Any?): Boolean {
     if (other == null || other.javaClass != javaClass) {
       return false
@@ -240,7 +233,8 @@ data class HttpMetricOptions (
       return true
     }
     val other = other as HttpMetricOptions
-    return GeneratedAndroidFirebasePerformancePigeonUtils.deepEquals(this.url, other.url) && GeneratedAndroidFirebasePerformancePigeonUtils.deepEquals(this.httpMethod, other.httpMethod)
+    return GeneratedAndroidFirebasePerformancePigeonUtils.deepEquals(this.url, other.url) &&
+        GeneratedAndroidFirebasePerformancePigeonUtils.deepEquals(this.httpMethod, other.httpMethod)
   }
 
   override fun hashCode(): Int {
@@ -252,14 +246,13 @@ data class HttpMetricOptions (
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
-data class HttpMetricAttributes (
-  val httpResponseCode: Long? = null,
-  val requestPayloadSize: Long? = null,
-  val responsePayloadSize: Long? = null,
-  val responseContentType: String? = null,
-  val attributes: Map<String, String>? = null
-)
- {
+data class HttpMetricAttributes(
+    val httpResponseCode: Long? = null,
+    val requestPayloadSize: Long? = null,
+    val responsePayloadSize: Long? = null,
+    val responseContentType: String? = null,
+    val attributes: Map<String, String>? = null
+) {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): HttpMetricAttributes {
       val httpResponseCode = pigeonVar_list[0] as Long?
@@ -267,18 +260,25 @@ data class HttpMetricAttributes (
       val responsePayloadSize = pigeonVar_list[2] as Long?
       val responseContentType = pigeonVar_list[3] as String?
       val attributes = pigeonVar_list[4] as Map<String, String>?
-      return HttpMetricAttributes(httpResponseCode, requestPayloadSize, responsePayloadSize, responseContentType, attributes)
+      return HttpMetricAttributes(
+          httpResponseCode,
+          requestPayloadSize,
+          responsePayloadSize,
+          responseContentType,
+          attributes)
     }
   }
+
   fun toList(): List<Any?> {
     return listOf(
-      httpResponseCode,
-      requestPayloadSize,
-      responsePayloadSize,
-      responseContentType,
-      attributes,
+        httpResponseCode,
+        requestPayloadSize,
+        responsePayloadSize,
+        responseContentType,
+        attributes,
     )
   }
+
   override fun equals(other: Any?): Boolean {
     if (other == null || other.javaClass != javaClass) {
       return false
@@ -287,26 +287,40 @@ data class HttpMetricAttributes (
       return true
     }
     val other = other as HttpMetricAttributes
-    return GeneratedAndroidFirebasePerformancePigeonUtils.deepEquals(this.httpResponseCode, other.httpResponseCode) && GeneratedAndroidFirebasePerformancePigeonUtils.deepEquals(this.requestPayloadSize, other.requestPayloadSize) && GeneratedAndroidFirebasePerformancePigeonUtils.deepEquals(this.responsePayloadSize, other.responsePayloadSize) && GeneratedAndroidFirebasePerformancePigeonUtils.deepEquals(this.responseContentType, other.responseContentType) && GeneratedAndroidFirebasePerformancePigeonUtils.deepEquals(this.attributes, other.attributes)
+    return GeneratedAndroidFirebasePerformancePigeonUtils.deepEquals(
+        this.httpResponseCode, other.httpResponseCode) &&
+        GeneratedAndroidFirebasePerformancePigeonUtils.deepEquals(
+            this.requestPayloadSize, other.requestPayloadSize) &&
+        GeneratedAndroidFirebasePerformancePigeonUtils.deepEquals(
+            this.responsePayloadSize, other.responsePayloadSize) &&
+        GeneratedAndroidFirebasePerformancePigeonUtils.deepEquals(
+            this.responseContentType, other.responseContentType) &&
+        GeneratedAndroidFirebasePerformancePigeonUtils.deepEquals(this.attributes, other.attributes)
   }
 
   override fun hashCode(): Int {
     var result = javaClass.hashCode()
-    result = 31 * result + GeneratedAndroidFirebasePerformancePigeonUtils.deepHash(this.httpResponseCode)
-    result = 31 * result + GeneratedAndroidFirebasePerformancePigeonUtils.deepHash(this.requestPayloadSize)
-    result = 31 * result + GeneratedAndroidFirebasePerformancePigeonUtils.deepHash(this.responsePayloadSize)
-    result = 31 * result + GeneratedAndroidFirebasePerformancePigeonUtils.deepHash(this.responseContentType)
+    result =
+        31 * result + GeneratedAndroidFirebasePerformancePigeonUtils.deepHash(this.httpResponseCode)
+    result =
+        31 * result +
+            GeneratedAndroidFirebasePerformancePigeonUtils.deepHash(this.requestPayloadSize)
+    result =
+        31 * result +
+            GeneratedAndroidFirebasePerformancePigeonUtils.deepHash(this.responsePayloadSize)
+    result =
+        31 * result +
+            GeneratedAndroidFirebasePerformancePigeonUtils.deepHash(this.responseContentType)
     result = 31 * result + GeneratedAndroidFirebasePerformancePigeonUtils.deepHash(this.attributes)
     return result
   }
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
-data class TraceAttributes (
-  val metrics: Map<String, Long>? = null,
-  val attributes: Map<String, String>? = null
-)
- {
+data class TraceAttributes(
+    val metrics: Map<String, Long>? = null,
+    val attributes: Map<String, String>? = null
+) {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): TraceAttributes {
       val metrics = pigeonVar_list[0] as Map<String, Long>?
@@ -314,12 +328,14 @@ data class TraceAttributes (
       return TraceAttributes(metrics, attributes)
     }
   }
+
   fun toList(): List<Any?> {
     return listOf(
-      metrics,
-      attributes,
+        metrics,
+        attributes,
     )
   }
+
   override fun equals(other: Any?): Boolean {
     if (other == null || other.javaClass != javaClass) {
       return false
@@ -328,7 +344,8 @@ data class TraceAttributes (
       return true
     }
     val other = other as TraceAttributes
-    return GeneratedAndroidFirebasePerformancePigeonUtils.deepEquals(this.metrics, other.metrics) && GeneratedAndroidFirebasePerformancePigeonUtils.deepEquals(this.attributes, other.attributes)
+    return GeneratedAndroidFirebasePerformancePigeonUtils.deepEquals(this.metrics, other.metrics) &&
+        GeneratedAndroidFirebasePerformancePigeonUtils.deepEquals(this.attributes, other.attributes)
   }
 
   override fun hashCode(): Int {
@@ -338,33 +355,27 @@ data class TraceAttributes (
     return result
   }
 }
+
 private open class GeneratedAndroidFirebasePerformancePigeonCodec : StandardMessageCodec() {
   override fun readValueOfType(type: Byte, buffer: ByteBuffer): Any? {
     return when (type) {
       129.toByte() -> {
-        return (readValue(buffer) as Long?)?.let {
-          HttpMethod.ofRaw(it.toInt())
-        }
+        return (readValue(buffer) as Long?)?.let { HttpMethod.ofRaw(it.toInt()) }
       }
       130.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          HttpMetricOptions.fromList(it)
-        }
+        return (readValue(buffer) as? List<Any?>)?.let { HttpMetricOptions.fromList(it) }
       }
       131.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          HttpMetricAttributes.fromList(it)
-        }
+        return (readValue(buffer) as? List<Any?>)?.let { HttpMetricAttributes.fromList(it) }
       }
       132.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          TraceAttributes.fromList(it)
-        }
+        return (readValue(buffer) as? List<Any?>)?.let { TraceAttributes.fromList(it) }
       }
       else -> super.readValueOfType(type, buffer)
     }
   }
-  override fun writeValue(stream: ByteArrayOutputStream, value: Any?)   {
+
+  override fun writeValue(stream: ByteArrayOutputStream, value: Any?) {
     when (value) {
       is HttpMethod -> {
         stream.write(129)
@@ -387,27 +398,45 @@ private open class GeneratedAndroidFirebasePerformancePigeonCodec : StandardMess
   }
 }
 
-
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface FirebasePerformanceHostApi {
   fun setPerformanceCollectionEnabled(enabled: Boolean, callback: (Result<Unit>) -> Unit)
+
   fun isPerformanceCollectionEnabled(callback: (Result<Boolean>) -> Unit)
+
   fun startTrace(name: String, callback: (Result<Long>) -> Unit)
+
   fun stopTrace(handle: Long, attributes: TraceAttributes, callback: (Result<Unit>) -> Unit)
+
   fun startHttpMetric(options: HttpMetricOptions, callback: (Result<Long>) -> Unit)
-  fun stopHttpMetric(handle: Long, attributes: HttpMetricAttributes, callback: (Result<Unit>) -> Unit)
+
+  fun stopHttpMetric(
+      handle: Long,
+      attributes: HttpMetricAttributes,
+      callback: (Result<Unit>) -> Unit
+  )
 
   companion object {
     /** The codec used by FirebasePerformanceHostApi. */
-    val codec: MessageCodec<Any?> by lazy {
-      GeneratedAndroidFirebasePerformancePigeonCodec()
-    }
-    /** Sets up an instance of `FirebasePerformanceHostApi` to handle messages through the `binaryMessenger`. */
+    val codec: MessageCodec<Any?> by lazy { GeneratedAndroidFirebasePerformancePigeonCodec() }
+    /**
+     * Sets up an instance of `FirebasePerformanceHostApi` to handle messages through the
+     * `binaryMessenger`.
+     */
     @JvmOverloads
-    fun setUp(binaryMessenger: BinaryMessenger, api: FirebasePerformanceHostApi?, messageChannelSuffix: String = "") {
-      val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    fun setUp(
+        binaryMessenger: BinaryMessenger,
+        api: FirebasePerformanceHostApi?,
+        messageChannelSuffix: String = ""
+    ) {
+      val separatedMessageChannelSuffix =
+          if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.setPerformanceCollectionEnabled$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.setPerformanceCollectionEnabled$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -426,10 +455,14 @@ interface FirebasePerformanceHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.isPerformanceCollectionEnabled$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.isPerformanceCollectionEnabled$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { _, reply ->
-            api.isPerformanceCollectionEnabled{ result: Result<Boolean> ->
+            api.isPerformanceCollectionEnabled { result: Result<Boolean> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidFirebasePerformancePigeonUtils.wrapError(error))
@@ -444,7 +477,11 @@ interface FirebasePerformanceHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.startTrace$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.startTrace$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -464,7 +501,11 @@ interface FirebasePerformanceHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.stopTrace$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.stopTrace$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -484,7 +525,11 @@ interface FirebasePerformanceHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.startHttpMetric$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.startHttpMetric$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -504,7 +549,11 @@ interface FirebasePerformanceHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.stopHttpMetric$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.stopHttpMetric$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>

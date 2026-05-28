@@ -12,10 +12,10 @@ let firebase_sdk_version: Version = "12.13.0"
 let package = Package(
   name: "firebase_ml_model_downloader",
   platforms: [
-    .iOS("15.0"),
+    .iOS("15.0")
   ],
   products: [
-    .library(name: "firebase-ml-model-downloader", targets: ["firebase_ml_model_downloader"]),
+    .library(name: "firebase-ml-model-downloader", targets: ["firebase_ml_model_downloader"])
   ],
   dependencies: [
     .package(url: "https://github.com/firebase/firebase-ios-sdk", from: firebase_sdk_version),
@@ -29,8 +29,8 @@ let package = Package(
         .product(name: "firebase-core", package: "firebase_core"),
       ],
       resources: [
-        .process("Resources"),
+        .process("Resources")
       ]
-    ),
+    )
   ]
 )

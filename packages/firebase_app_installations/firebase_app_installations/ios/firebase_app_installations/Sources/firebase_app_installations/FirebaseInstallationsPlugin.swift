@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import FirebaseInstallations
+
 #if canImport(FlutterMacOS)
   import FlutterMacOS
 #else
@@ -13,7 +15,6 @@
 #else
   import firebase_core_shared
 #endif
-import FirebaseInstallations
 
 let kFLTFirebaseInstallationsChannelName = "plugins.flutter.io/firebase_app_installations"
 
@@ -75,8 +76,10 @@ public class FirebaseInstallationsPlugin: NSObject, FLTFirebasePluginProtocol, F
   /// - Parameter arguments: the arguments passed by the Dart calling method
   /// - Parameter result: the result instance used to send the result to Dart.
   /// - Parameter errorBlock: the error block used to send the error to Dart.
-  private func getId(arguments: NSDictionary, result: @escaping FlutterResult,
-                     errorBlock: @escaping FLTFirebaseMethodCallErrorBlock) {
+  private func getId(
+    arguments: NSDictionary, result: @escaping FlutterResult,
+    errorBlock: @escaping FLTFirebaseMethodCallErrorBlock
+  ) {
     let instance = getInstallations(appName: arguments["appName"] as! String)
     instance.installationID { (id: String?, error: Error?) in
       if let error {
@@ -91,8 +94,10 @@ public class FirebaseInstallationsPlugin: NSObject, FLTFirebasePluginProtocol, F
   /// - Parameter arguments: the arguments passed by the Dart calling method
   /// - Parameter result: the result instance used to send the result to Dart.
   /// - Parameter errorBlock: the error block used to send the error to Dart.
-  private func deleteId(arguments: NSDictionary, result: @escaping FlutterResult,
-                        errorBlock: @escaping FLTFirebaseMethodCallErrorBlock) {
+  private func deleteId(
+    arguments: NSDictionary, result: @escaping FlutterResult,
+    errorBlock: @escaping FLTFirebaseMethodCallErrorBlock
+  ) {
     let instance = getInstallations(appName: arguments["appName"] as! String)
     instance.delete { (error: Error?) in
       if let error {
@@ -107,18 +112,23 @@ public class FirebaseInstallationsPlugin: NSObject, FLTFirebasePluginProtocol, F
   /// - Parameter arguments: the arguments passed by the Dart calling method
   /// - Parameter result: the result instance used to send the result to Dart.
   /// - Parameter errorBlock: the error block used to send the error to Dart.
-  private func getToken(arguments: NSDictionary, result: @escaping FlutterResult,
-                        errorBlock: @escaping FLTFirebaseMethodCallErrorBlock) {
+  private func getToken(
+    arguments: NSDictionary, result: @escaping FlutterResult,
+    errorBlock: @escaping FLTFirebaseMethodCallErrorBlock
+  ) {
     let instance = getInstallations(appName: arguments["appName"] as! String)
     let forceRefresh = arguments["forceRefresh"] as? Bool ?? false
     instance
-      .authTokenForcingRefresh(forceRefresh) { (tokenResult: InstallationsAuthTokenResult?,
-                                                error: Error?) in
-          if let error {
-            errorBlock(nil, nil, nil, error)
-          } else {
-            result(tokenResult?.authToken)
-          }
+      .authTokenForcingRefresh(forceRefresh) {
+        (
+          tokenResult: InstallationsAuthTokenResult?,
+          error: Error?
+        ) in
+        if let error {
+          errorBlock(nil, nil, nil, error)
+        } else {
+          result(tokenResult?.authToken)
+        }
       }
   }
 
@@ -126,8 +136,10 @@ public class FirebaseInstallationsPlugin: NSObject, FLTFirebasePluginProtocol, F
   /// - Parameter arguments: the arguments passed by the Dart calling method
   /// - Parameter result: the result instance used to send the result to Dart.
   /// - Parameter errorBlock: the error block used to send the error to Dart.
-  private func registerIdChangeListener(arguments: NSDictionary, result: @escaping FlutterResult,
-                                        errorBlock: @escaping FLTFirebaseMethodCallErrorBlock) {
+  private func registerIdChangeListener(
+    arguments: NSDictionary, result: @escaping FlutterResult,
+    errorBlock: @escaping FLTFirebaseMethodCallErrorBlock
+  ) {
     let instance = getInstallations(appName: arguments["appName"] as! String)
     let appName = arguments["appName"] as! String
     let eventChannelName = kFLTFirebaseInstallationsChannelName + "/token/" + appName
@@ -144,8 +156,9 @@ public class FirebaseInstallationsPlugin: NSObject, FLTFirebasePluginProtocol, F
   }
 
   private func mapInstallationsErrorCodes(code: UInt) -> NSString {
-    let error = InstallationsErrorCode(InstallationsErrorCode
-      .Code(rawValue: Int(code)) ?? InstallationsErrorCode.unknown)
+    let error = InstallationsErrorCode(
+      InstallationsErrorCode
+        .Code(rawValue: Int(code)) ?? InstallationsErrorCode.unknown)
 
     switch error {
     case InstallationsErrorCode.invalidConfiguration:
@@ -163,37 +176,46 @@ public class FirebaseInstallationsPlugin: NSObject, FLTFirebasePluginProtocol, F
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
     guard let args = call.arguments as? NSDictionary else {
-      result(FlutterError(
-        code: "invalid-arguments",
-        message: "Arguments are not a dictionary",
-        details: nil
-      ))
+      result(
+        FlutterError(
+          code: "invalid-arguments",
+          message: "Arguments are not a dictionary",
+          details: nil
+        ))
       return
     }
 
-    let errorBlock: FLTFirebaseMethodCallErrorBlock = { (code, message, details,
-                                                         error: Error?) in
-        var errorDetails = [String: Any?]()
+    let errorBlock: FLTFirebaseMethodCallErrorBlock = {
+      (
+        code, message, details,
+        error: Error?
+      ) in
+      var errorDetails = [String: Any?]()
 
-        errorDetails["code"] = code ?? self
-          .mapInstallationsErrorCodes(code: UInt((error! as NSError).code))
-        errorDetails["message"] = message ?? error?
-          .localizedDescription ?? "An unknown error has occurred."
-        errorDetails["additionalData"] = details
+      errorDetails["code"] =
+        code
+        ?? self
+        .mapInstallationsErrorCodes(code: UInt((error! as NSError).code))
+      errorDetails["message"] =
+        message ?? error?
+        .localizedDescription ?? "An unknown error has occurred."
+      errorDetails["additionalData"] = details
 
-        if code == "unknown" {
-          NSLog(
-            "FLTFirebaseInstallations: An error occurred while calling method %@",
-            call.method
-          )
-        }
+      if code == "unknown" {
+        NSLog(
+          "FLTFirebaseInstallations: An error occurred while calling method %@",
+          call.method
+        )
+      }
 
-        result(FLTFirebasePlugin.createFlutterError(fromCode: errorDetails["code"] as! String,
-                                                    message: errorDetails["message"] as! String,
-                                                    optionalDetails: errorDetails[
-                                                      "additionalData"
-                                                    ] as? [AnyHashable: Any],
-                                                    andOptionalNSError: error))
+      result(
+        FLTFirebasePlugin.createFlutterError(
+          fromCode: errorDetails["code"] as! String,
+          message: errorDetails["message"] as! String,
+          optionalDetails: errorDetails[
+            "additionalData"
+          ] as? [AnyHashable: Any],
+          andOptionalNSError: error))
     }
 
     switch call.method {

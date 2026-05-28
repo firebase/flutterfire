@@ -89,7 +89,7 @@ func deepEqualsFirebaseStorageMessages(_ lhs: Any?, _ rhs: Any?) -> Bool {
   case (nil, _), (_, nil):
     return false
 
-  case let (lhs as AnyObject, rhs as AnyObject) where lhs === rhs:
+  case (let lhs as AnyObject, let rhs as AnyObject) where lhs === rhs:
     return true
 
   case is (Void, Void):
@@ -131,7 +131,7 @@ func deepEqualsFirebaseStorageMessages(_ lhs: Any?, _ rhs: Any?) -> Bool {
     }
     return true
 
-  case let (lhs as Double, rhs as Double):
+  case (let lhs as Double, let rhs as Double):
     return doubleEqualsFirebaseStorageMessages(lhs, rhs)
 
   case let (lhsHashable, rhsHashable) as (AnyHashable, AnyHashable):
@@ -221,8 +221,8 @@ struct InternalStorageFirebaseApp: Hashable {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return deepEqualsFirebaseStorageMessages(lhs.appName, rhs.appName) &&
-      deepEqualsFirebaseStorageMessages(
+    return deepEqualsFirebaseStorageMessages(lhs.appName, rhs.appName)
+      && deepEqualsFirebaseStorageMessages(
         lhs.tenantId,
         rhs.tenantId
       ) && deepEqualsFirebaseStorageMessages(lhs.bucket, rhs.bucket)
@@ -267,8 +267,8 @@ struct InternalStorageReference: Hashable {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return deepEqualsFirebaseStorageMessages(lhs.bucket, rhs.bucket) &&
-      deepEqualsFirebaseStorageMessages(
+    return deepEqualsFirebaseStorageMessages(lhs.bucket, rhs.bucket)
+      && deepEqualsFirebaseStorageMessages(
         lhs.fullPath,
         rhs.fullPath
       ) && deepEqualsFirebaseStorageMessages(lhs.name, rhs.name)
@@ -297,7 +297,7 @@ struct InternalFullMetaData: Hashable {
 
   func toList() -> [Any?] {
     [
-      metadata,
+      metadata
     ]
   }
 
@@ -347,8 +347,8 @@ struct InternalListOptions: Hashable {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return deepEqualsFirebaseStorageMessages(lhs.maxResults, rhs.maxResults) &&
-      deepEqualsFirebaseStorageMessages(
+    return deepEqualsFirebaseStorageMessages(lhs.maxResults, rhs.maxResults)
+      && deepEqualsFirebaseStorageMessages(
         lhs.pageToken,
         rhs.pageToken
       )
@@ -420,16 +420,16 @@ struct InternalSettableMetadata: Hashable {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return deepEqualsFirebaseStorageMessages(lhs.cacheControl, rhs.cacheControl) &&
-      deepEqualsFirebaseStorageMessages(
+    return deepEqualsFirebaseStorageMessages(lhs.cacheControl, rhs.cacheControl)
+      && deepEqualsFirebaseStorageMessages(
         lhs.contentDisposition,
         rhs.contentDisposition
-      ) && deepEqualsFirebaseStorageMessages(lhs.contentEncoding, rhs.contentEncoding) &&
-      deepEqualsFirebaseStorageMessages(
+      ) && deepEqualsFirebaseStorageMessages(lhs.contentEncoding, rhs.contentEncoding)
+      && deepEqualsFirebaseStorageMessages(
         lhs.contentLanguage,
         rhs.contentLanguage
-      ) && deepEqualsFirebaseStorageMessages(lhs.contentType, rhs.contentType) &&
-      deepEqualsFirebaseStorageMessages(
+      ) && deepEqualsFirebaseStorageMessages(lhs.contentType, rhs.contentType)
+      && deepEqualsFirebaseStorageMessages(
         lhs.customMetadata,
         rhs.customMetadata
       )
@@ -481,12 +481,12 @@ struct InternalStorageTaskSnapShot: Hashable {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return deepEqualsFirebaseStorageMessages(lhs.bytesTransferred, rhs.bytesTransferred) &&
-      deepEqualsFirebaseStorageMessages(
+    return deepEqualsFirebaseStorageMessages(lhs.bytesTransferred, rhs.bytesTransferred)
+      && deepEqualsFirebaseStorageMessages(
         lhs.metadata,
         rhs.metadata
-      ) && deepEqualsFirebaseStorageMessages(lhs.state, rhs.state) &&
-      deepEqualsFirebaseStorageMessages(
+      ) && deepEqualsFirebaseStorageMessages(lhs.state, rhs.state)
+      && deepEqualsFirebaseStorageMessages(
         lhs.totalBytes,
         rhs.totalBytes
       )
@@ -532,8 +532,8 @@ struct InternalListResult: Hashable {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return deepEqualsFirebaseStorageMessages(lhs.items, rhs.items) &&
-      deepEqualsFirebaseStorageMessages(
+    return deepEqualsFirebaseStorageMessages(lhs.items, rhs.items)
+      && deepEqualsFirebaseStorageMessages(
         lhs.pageToken,
         rhs.pageToken
       ) && deepEqualsFirebaseStorageMessages(lhs.prefixs, rhs.prefixs)
@@ -627,51 +627,70 @@ class FirebaseStorageMessagesPigeonCodec: FlutterStandardMessageCodec, @unchecke
 
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol FirebaseStorageHostApi {
-  func getReferencebyPath(app: InternalStorageFirebaseApp, path: String, bucket: String?,
-                          completion: @escaping (Result<InternalStorageReference, Error>) -> Void)
-  func setMaxOperationRetryTime(app: InternalStorageFirebaseApp, time: Int64,
-                                completion: @escaping (Result<Void, Error>) -> Void)
-  func setMaxUploadRetryTime(app: InternalStorageFirebaseApp, time: Int64,
-                             completion: @escaping (Result<Void, Error>) -> Void)
-  func setMaxDownloadRetryTime(app: InternalStorageFirebaseApp, time: Int64,
-                               completion: @escaping (Result<Void, Error>) -> Void)
-  func useStorageEmulator(app: InternalStorageFirebaseApp, host: String, port: Int64,
-                          completion: @escaping (Result<Void, Error>) -> Void)
-  func referenceDelete(app: InternalStorageFirebaseApp, reference: InternalStorageReference,
-                       completion: @escaping (Result<Void, Error>) -> Void)
-  func referenceGetDownloadURL(app: InternalStorageFirebaseApp, reference: InternalStorageReference,
-                               completion: @escaping (Result<String, Error>) -> Void)
-  func referenceGetMetaData(app: InternalStorageFirebaseApp, reference: InternalStorageReference,
-                            completion: @escaping (Result<InternalFullMetaData, Error>) -> Void)
-  func referenceList(app: InternalStorageFirebaseApp, reference: InternalStorageReference,
-                     options: InternalListOptions,
-                     completion: @escaping (Result<InternalListResult, Error>) -> Void)
-  func referenceListAll(app: InternalStorageFirebaseApp, reference: InternalStorageReference,
-                        completion: @escaping (Result<InternalListResult, Error>) -> Void)
-  func referenceGetData(app: InternalStorageFirebaseApp, reference: InternalStorageReference,
-                        maxSize: Int64,
-                        completion: @escaping (Result<FlutterStandardTypedData?, Error>) -> Void)
-  func referencePutData(app: InternalStorageFirebaseApp, reference: InternalStorageReference,
-                        data: FlutterStandardTypedData, settableMetaData: InternalSettableMetadata,
-                        handle: Int64, completion: @escaping (Result<String, Error>) -> Void)
-  func referencePutString(app: InternalStorageFirebaseApp, reference: InternalStorageReference,
-                          data: String, format: Int64, settableMetaData: InternalSettableMetadata,
-                          handle: Int64, completion: @escaping (Result<String, Error>) -> Void)
-  func referencePutFile(app: InternalStorageFirebaseApp, reference: InternalStorageReference,
-                        filePath: String, settableMetaData: InternalSettableMetadata?,
-                        handle: Int64, completion: @escaping (Result<String, Error>) -> Void)
-  func referenceDownloadFile(app: InternalStorageFirebaseApp, reference: InternalStorageReference,
-                             filePath: String, handle: Int64,
-                             completion: @escaping (Result<String, Error>) -> Void)
-  func referenceUpdateMetadata(app: InternalStorageFirebaseApp, reference: InternalStorageReference,
-                               metadata: InternalSettableMetadata,
-                               completion: @escaping (Result<InternalFullMetaData, Error>) -> Void)
-  func taskPause(app: InternalStorageFirebaseApp, handle: Int64,
-                 completion: @escaping (Result<[String: Any], Error>) -> Void)
-  func taskResume(app: InternalStorageFirebaseApp, handle: Int64,
-                  completion: @escaping (Result<[String: Any], Error>) -> Void)
-  func taskCancel(app: InternalStorageFirebaseApp, handle: Int64,
-                  completion: @escaping (Result<[String: Any], Error>) -> Void)
+  func getReferencebyPath(
+    app: InternalStorageFirebaseApp, path: String, bucket: String?,
+    completion: @escaping (Result<InternalStorageReference, Error>) -> Void)
+  func setMaxOperationRetryTime(
+    app: InternalStorageFirebaseApp, time: Int64,
+    completion: @escaping (Result<Void, Error>) -> Void)
+  func setMaxUploadRetryTime(
+    app: InternalStorageFirebaseApp, time: Int64,
+    completion: @escaping (Result<Void, Error>) -> Void)
+  func setMaxDownloadRetryTime(
+    app: InternalStorageFirebaseApp, time: Int64,
+    completion: @escaping (Result<Void, Error>) -> Void)
+  func useStorageEmulator(
+    app: InternalStorageFirebaseApp, host: String, port: Int64,
+    completion: @escaping (Result<Void, Error>) -> Void)
+  func referenceDelete(
+    app: InternalStorageFirebaseApp, reference: InternalStorageReference,
+    completion: @escaping (Result<Void, Error>) -> Void)
+  func referenceGetDownloadURL(
+    app: InternalStorageFirebaseApp, reference: InternalStorageReference,
+    completion: @escaping (Result<String, Error>) -> Void)
+  func referenceGetMetaData(
+    app: InternalStorageFirebaseApp, reference: InternalStorageReference,
+    completion: @escaping (Result<InternalFullMetaData, Error>) -> Void)
+  func referenceList(
+    app: InternalStorageFirebaseApp, reference: InternalStorageReference,
+    options: InternalListOptions,
+    completion: @escaping (Result<InternalListResult, Error>) -> Void)
+  func referenceListAll(
+    app: InternalStorageFirebaseApp, reference: InternalStorageReference,
+    completion: @escaping (Result<InternalListResult, Error>) -> Void)
+  func referenceGetData(
+    app: InternalStorageFirebaseApp, reference: InternalStorageReference,
+    maxSize: Int64,
+    completion: @escaping (Result<FlutterStandardTypedData?, Error>) -> Void)
+  func referencePutData(
+    app: InternalStorageFirebaseApp, reference: InternalStorageReference,
+    data: FlutterStandardTypedData, settableMetaData: InternalSettableMetadata,
+    handle: Int64, completion: @escaping (Result<String, Error>) -> Void)
+  func referencePutString(
+    app: InternalStorageFirebaseApp, reference: InternalStorageReference,
+    data: String, format: Int64, settableMetaData: InternalSettableMetadata,
+    handle: Int64, completion: @escaping (Result<String, Error>) -> Void)
+  func referencePutFile(
+    app: InternalStorageFirebaseApp, reference: InternalStorageReference,
+    filePath: String, settableMetaData: InternalSettableMetadata?,
+    handle: Int64, completion: @escaping (Result<String, Error>) -> Void)
+  func referenceDownloadFile(
+    app: InternalStorageFirebaseApp, reference: InternalStorageReference,
+    filePath: String, handle: Int64,
+    completion: @escaping (Result<String, Error>) -> Void)
+  func referenceUpdateMetadata(
+    app: InternalStorageFirebaseApp, reference: InternalStorageReference,
+    metadata: InternalSettableMetadata,
+    completion: @escaping (Result<InternalFullMetaData, Error>) -> Void)
+  func taskPause(
+    app: InternalStorageFirebaseApp, handle: Int64,
+    completion: @escaping (Result<[String: Any], Error>) -> Void)
+  func taskResume(
+    app: InternalStorageFirebaseApp, handle: Int64,
+    completion: @escaping (Result<[String: Any], Error>) -> Void)
+  func taskCancel(
+    app: InternalStorageFirebaseApp, handle: Int64,
+    completion: @escaping (Result<[String: Any], Error>) -> Void)
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -682,11 +701,14 @@ class FirebaseStorageHostApiSetup {
 
   /// Sets up an instance of `FirebaseStorageHostApi` to handle messages through the
   /// `binaryMessenger`.
-  static func setUp(binaryMessenger: FlutterBinaryMessenger, api: FirebaseStorageHostApi?,
-                    messageChannelSuffix: String = "") {
+  static func setUp(
+    binaryMessenger: FlutterBinaryMessenger, api: FirebaseStorageHostApi?,
+    messageChannelSuffix: String = ""
+  ) {
     let channelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
     let getReferencebyPathChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.getReferencebyPath\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.getReferencebyPath\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -698,9 +720,9 @@ class FirebaseStorageHostApiSetup {
         let bucketArg: String? = nilOrValue(args[2])
         api.getReferencebyPath(app: appArg, path: pathArg, bucket: bucketArg) { result in
           switch result {
-          case let .success(res):
+          case .success(let res):
             reply(wrapResult(res))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -709,7 +731,8 @@ class FirebaseStorageHostApiSetup {
       getReferencebyPathChannel.setMessageHandler(nil)
     }
     let setMaxOperationRetryTimeChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxOperationRetryTime\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxOperationRetryTime\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -722,7 +745,7 @@ class FirebaseStorageHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -731,7 +754,8 @@ class FirebaseStorageHostApiSetup {
       setMaxOperationRetryTimeChannel.setMessageHandler(nil)
     }
     let setMaxUploadRetryTimeChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxUploadRetryTime\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxUploadRetryTime\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -744,7 +768,7 @@ class FirebaseStorageHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -753,7 +777,8 @@ class FirebaseStorageHostApiSetup {
       setMaxUploadRetryTimeChannel.setMessageHandler(nil)
     }
     let setMaxDownloadRetryTimeChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxDownloadRetryTime\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxDownloadRetryTime\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -766,7 +791,7 @@ class FirebaseStorageHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -775,7 +800,8 @@ class FirebaseStorageHostApiSetup {
       setMaxDownloadRetryTimeChannel.setMessageHandler(nil)
     }
     let useStorageEmulatorChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.useStorageEmulator\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.useStorageEmulator\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -789,7 +815,7 @@ class FirebaseStorageHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -798,7 +824,8 @@ class FirebaseStorageHostApiSetup {
       useStorageEmulatorChannel.setMessageHandler(nil)
     }
     let referenceDeleteChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceDelete\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceDelete\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -811,7 +838,7 @@ class FirebaseStorageHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -820,7 +847,8 @@ class FirebaseStorageHostApiSetup {
       referenceDeleteChannel.setMessageHandler(nil)
     }
     let referenceGetDownloadURLChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetDownloadURL\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetDownloadURL\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -831,9 +859,9 @@ class FirebaseStorageHostApiSetup {
         let referenceArg = args[1] as! InternalStorageReference
         api.referenceGetDownloadURL(app: appArg, reference: referenceArg) { result in
           switch result {
-          case let .success(res):
+          case .success(let res):
             reply(wrapResult(res))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -842,7 +870,8 @@ class FirebaseStorageHostApiSetup {
       referenceGetDownloadURLChannel.setMessageHandler(nil)
     }
     let referenceGetMetaDataChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetMetaData\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetMetaData\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -853,9 +882,9 @@ class FirebaseStorageHostApiSetup {
         let referenceArg = args[1] as! InternalStorageReference
         api.referenceGetMetaData(app: appArg, reference: referenceArg) { result in
           switch result {
-          case let .success(res):
+          case .success(let res):
             reply(wrapResult(res))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -864,7 +893,8 @@ class FirebaseStorageHostApiSetup {
       referenceGetMetaDataChannel.setMessageHandler(nil)
     }
     let referenceListChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceList\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceList\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -876,9 +906,9 @@ class FirebaseStorageHostApiSetup {
         let optionsArg = args[2] as! InternalListOptions
         api.referenceList(app: appArg, reference: referenceArg, options: optionsArg) { result in
           switch result {
-          case let .success(res):
+          case .success(let res):
             reply(wrapResult(res))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -887,7 +917,8 @@ class FirebaseStorageHostApiSetup {
       referenceListChannel.setMessageHandler(nil)
     }
     let referenceListAllChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceListAll\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceListAll\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -898,9 +929,9 @@ class FirebaseStorageHostApiSetup {
         let referenceArg = args[1] as! InternalStorageReference
         api.referenceListAll(app: appArg, reference: referenceArg) { result in
           switch result {
-          case let .success(res):
+          case .success(let res):
             reply(wrapResult(res))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -909,7 +940,8 @@ class FirebaseStorageHostApiSetup {
       referenceListAllChannel.setMessageHandler(nil)
     }
     let referenceGetDataChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetData\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetData\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -921,9 +953,9 @@ class FirebaseStorageHostApiSetup {
         let maxSizeArg = args[2] as! Int64
         api.referenceGetData(app: appArg, reference: referenceArg, maxSize: maxSizeArg) { result in
           switch result {
-          case let .success(res):
+          case .success(let res):
             reply(wrapResult(res))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -932,7 +964,8 @@ class FirebaseStorageHostApiSetup {
       referenceGetDataChannel.setMessageHandler(nil)
     }
     let referencePutDataChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutData\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutData\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -952,9 +985,9 @@ class FirebaseStorageHostApiSetup {
           handle: handleArg
         ) { result in
           switch result {
-          case let .success(res):
+          case .success(let res):
             reply(wrapResult(res))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -963,7 +996,8 @@ class FirebaseStorageHostApiSetup {
       referencePutDataChannel.setMessageHandler(nil)
     }
     let referencePutStringChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutString\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutString\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -985,9 +1019,9 @@ class FirebaseStorageHostApiSetup {
           handle: handleArg
         ) { result in
           switch result {
-          case let .success(res):
+          case .success(let res):
             reply(wrapResult(res))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -996,7 +1030,8 @@ class FirebaseStorageHostApiSetup {
       referencePutStringChannel.setMessageHandler(nil)
     }
     let referencePutFileChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutFile\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutFile\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -1016,9 +1051,9 @@ class FirebaseStorageHostApiSetup {
           handle: handleArg
         ) { result in
           switch result {
-          case let .success(res):
+          case .success(let res):
             reply(wrapResult(res))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -1027,7 +1062,8 @@ class FirebaseStorageHostApiSetup {
       referencePutFileChannel.setMessageHandler(nil)
     }
     let referenceDownloadFileChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceDownloadFile\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceDownloadFile\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -1045,9 +1081,9 @@ class FirebaseStorageHostApiSetup {
           handle: handleArg
         ) { result in
           switch result {
-          case let .success(res):
+          case .success(let res):
             reply(wrapResult(res))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -1056,7 +1092,8 @@ class FirebaseStorageHostApiSetup {
       referenceDownloadFileChannel.setMessageHandler(nil)
     }
     let referenceUpdateMetadataChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceUpdateMetadata\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceUpdateMetadata\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -1067,12 +1104,14 @@ class FirebaseStorageHostApiSetup {
         let referenceArg = args[1] as! InternalStorageReference
         let metadataArg = args[2] as! InternalSettableMetadata
         api
-          .referenceUpdateMetadata(app: appArg, reference: referenceArg,
-                                   metadata: metadataArg) { result in
+          .referenceUpdateMetadata(
+            app: appArg, reference: referenceArg,
+            metadata: metadataArg
+          ) { result in
             switch result {
-            case let .success(res):
+            case .success(let res):
               reply(wrapResult(res))
-            case let .failure(error):
+            case .failure(let error):
               reply(wrapError(error))
             }
           }
@@ -1081,7 +1120,8 @@ class FirebaseStorageHostApiSetup {
       referenceUpdateMetadataChannel.setMessageHandler(nil)
     }
     let taskPauseChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskPause\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskPause\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -1092,9 +1132,9 @@ class FirebaseStorageHostApiSetup {
         let handleArg = args[1] as! Int64
         api.taskPause(app: appArg, handle: handleArg) { result in
           switch result {
-          case let .success(res):
+          case .success(let res):
             reply(wrapResult(res))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -1103,7 +1143,8 @@ class FirebaseStorageHostApiSetup {
       taskPauseChannel.setMessageHandler(nil)
     }
     let taskResumeChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskResume\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskResume\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -1114,9 +1155,9 @@ class FirebaseStorageHostApiSetup {
         let handleArg = args[1] as! Int64
         api.taskResume(app: appArg, handle: handleArg) { result in
           switch result {
-          case let .success(res):
+          case .success(let res):
             reply(wrapResult(res))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -1125,7 +1166,8 @@ class FirebaseStorageHostApiSetup {
       taskResumeChannel.setMessageHandler(nil)
     }
     let taskCancelChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskCancel\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskCancel\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -1136,9 +1178,9 @@ class FirebaseStorageHostApiSetup {
         let handleArg = args[1] as! Int64
         api.taskCancel(app: appArg, handle: handleArg) { result in
           switch result {
-          case let .success(res):
+          case .success(let res):
             reply(wrapResult(res))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
