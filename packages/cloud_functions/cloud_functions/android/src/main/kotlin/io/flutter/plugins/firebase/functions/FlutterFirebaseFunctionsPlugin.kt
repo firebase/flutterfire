@@ -125,7 +125,7 @@ class FlutterFirebaseFunctionsPlugin : FlutterPlugin, FlutterFirebasePlugin, Clo
         message = FirebaseFunctionsException.Code.DEADLINE_EXCEEDED.name
       } else if (functionsException.cause is
           InterruptedIOException // return DEADLINE_EXCEEDED for InterruptedIOException errors, to
-                                 // match iOS & Web
+      // match iOS & Web
       && "timeout" == (functionsException.cause as InterruptedIOException).message) {
         code = FirebaseFunctionsException.Code.DEADLINE_EXCEEDED.name
         message = FirebaseFunctionsException.Code.DEADLINE_EXCEEDED.name

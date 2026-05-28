@@ -83,7 +83,7 @@ jobs:
   format:
     # switch back to ubuntu-latest when swiftformat is working again
     runs-on: macos-latest
-    timeout-minutes: 30
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
         with:
