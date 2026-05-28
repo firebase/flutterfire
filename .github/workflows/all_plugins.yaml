@@ -114,7 +114,7 @@ jobs:
       - name: 'Swift'
         if: ${{ success() || failure() }}
         run: |
-          swiftformat .
+          swiftformat . --exclude Pods,**/Pods/**,**/build/**,**/SourcePackages/**,**/.symlinks/**,**/Flutter/ephemeral/**
           ./.github/workflows/scripts/validate-formatting.sh
 
   build_examples_dart:
