@@ -2,6 +2,9 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import FirebaseAppCheck
+import FirebaseCore
+
 #if canImport(FlutterMacOS)
   import FlutterMacOS
 #else
@@ -13,16 +16,16 @@
 #else
   import firebase_core_shared
 #endif
-import FirebaseAppCheck
-import FirebaseCore
 
 let kFirebaseAppCheckChannelName = "plugins.flutter.io/firebase_app_check"
 let kFirebaseAppCheckTokenChannelPrefix = "plugins.flutter.io/firebase_app_check/token/"
 
+// swift-format-ignore: AvoidRetroactiveConformances
 extension FlutterError: @retroactive Error {}
 
 public class FirebaseAppCheckPlugin: NSObject, FlutterPlugin,
-  FLTFirebasePluginProtocol, FirebaseAppCheckHostApi {
+  FLTFirebasePluginProtocol, FirebaseAppCheckHostApi
+{
   private var eventChannels: [String: FlutterEventChannel] = [:]
   private var streamHandlers: [String: AppCheckTokenStreamHandler] = [:]
   private var providerFactory: FlutterAppCheckProviderFactory?
@@ -59,13 +62,19 @@ public class FirebaseAppCheckPlugin: NSObject, FlutterPlugin,
 
   private var binaryMessenger: FlutterBinaryMessenger?
 
-  func activate(appName: String, androidProvider: String?, appleProvider: String?,
-                debugToken: String?,
-                completion: @escaping (Result<Void, Error>) -> Void) {
+  func activate(
+    appName: String, androidProvider: String?, appleProvider: String?,
+    debugToken: String?,
+    completion: @escaping (Result<Void, Error>) -> Void
+  ) {
     guard let app = FLTFirebasePlugin.firebaseAppNamed(appName) else {
-      completion(.failure(FlutterError(
-        code: "unknown", message: "Firebase app not found: \(appName)", details: nil
-      )))
+      completion(
+        .failure(
+          FlutterError(
+            code: "unknown", message: "Firebase app not found: \(appName)", details: nil
+          )
+        )
+      )
       return
     }
     let provider = appleProvider ?? "deviceCheck"
@@ -79,14 +88,20 @@ public class FirebaseAppCheckPlugin: NSObject, FlutterPlugin,
     completion(.success(()))
   }
 
-  func getToken(appName: String, forceRefresh: Bool,
-                completion: @escaping (Result<String?, Error>) -> Void) {
+  func getToken(
+    appName: String, forceRefresh: Bool,
+    completion: @escaping (Result<String?, Error>) -> Void
+  ) {
     guard let app = FLTFirebasePlugin.firebaseAppNamed(appName),
-          let appCheck = AppCheck.appCheck(app: app)
+      let appCheck = AppCheck.appCheck(app: app)
     else {
-      completion(.failure(FlutterError(
-        code: "unknown", message: "App Check not available for app: \(appName)", details: nil
-      )))
+      completion(
+        .failure(
+          FlutterError(
+            code: "unknown", message: "App Check not available for app: \(appName)", details: nil
+          )
+        )
+      )
       return
     }
 
@@ -99,30 +114,42 @@ public class FirebaseAppCheckPlugin: NSObject, FlutterPlugin,
     }
   }
 
-  func setTokenAutoRefreshEnabled(appName: String, isTokenAutoRefreshEnabled: Bool,
-                                  completion: @escaping (Result<Void, Error>) -> Void) {
+  func setTokenAutoRefreshEnabled(
+    appName: String, isTokenAutoRefreshEnabled: Bool,
+    completion: @escaping (Result<Void, Error>) -> Void
+  ) {
     guard let app = FLTFirebasePlugin.firebaseAppNamed(appName),
-          let appCheck = AppCheck.appCheck(app: app)
+      let appCheck = AppCheck.appCheck(app: app)
     else {
-      completion(.failure(FlutterError(
-        code: "unknown", message: "App Check not available for app: \(appName)", details: nil
-      )))
+      completion(
+        .failure(
+          FlutterError(
+            code: "unknown", message: "App Check not available for app: \(appName)", details: nil
+          )
+        )
+      )
       return
     }
     appCheck.isTokenAutoRefreshEnabled = isTokenAutoRefreshEnabled
     completion(.success(()))
   }
 
-  func registerTokenListener(appName: String,
-                             completion: @escaping (Result<String, Error>) -> Void) {
+  func registerTokenListener(
+    appName: String,
+    completion: @escaping (Result<String, Error>) -> Void
+  ) {
     let name = kFirebaseAppCheckTokenChannelPrefix + appName
 
     guard let messenger = binaryMessenger else {
-      completion(.failure(FlutterError(
-        code: "no-messenger",
-        message: "Binary messenger not available",
-        details: nil
-      )))
+      completion(
+        .failure(
+          FlutterError(
+            code: "no-messenger",
+            message: "Binary messenger not available",
+            details: nil
+          )
+        )
+      )
       return
     }
 
@@ -136,14 +163,20 @@ public class FirebaseAppCheckPlugin: NSObject, FlutterPlugin,
     completion(.success(name))
   }
 
-  func getLimitedUseAppCheckToken(appName: String,
-                                  completion: @escaping (Result<String, Error>) -> Void) {
+  func getLimitedUseAppCheckToken(
+    appName: String,
+    completion: @escaping (Result<String, Error>) -> Void
+  ) {
     guard let app = FLTFirebasePlugin.firebaseAppNamed(appName),
-          let appCheck = AppCheck.appCheck(app: app)
+      let appCheck = AppCheck.appCheck(app: app)
     else {
-      completion(.failure(FlutterError(
-        code: "unknown", message: "App Check not available for app: \(appName)", details: nil
-      )))
+      completion(
+        .failure(
+          FlutterError(
+            code: "unknown", message: "App Check not available for app: \(appName)", details: nil
+          )
+        )
+      )
       return
     }
 
@@ -190,13 +223,13 @@ public class FirebaseAppCheckPlugin: NSObject, FlutterPlugin,
     let nsError = error as NSError
     var code = "unknown"
     switch nsError.code {
-    case 0: // FIRAppCheckErrorCodeServerUnreachable
+    case 0:  // FIRAppCheckErrorCodeServerUnreachable
       code = "server-unreachable"
-    case 1: // FIRAppCheckErrorCodeInvalidConfiguration
+    case 1:  // FIRAppCheckErrorCodeInvalidConfiguration
       code = "invalid-configuration"
-    case 2: // FIRAppCheckErrorCodeKeychain
+    case 2:  // FIRAppCheckErrorCodeKeychain
       code = "code-keychain"
-    case 3: // FIRAppCheckErrorCodeUnsupported
+    case 3:  // FIRAppCheckErrorCodeUnsupported
       code = "code-unsupported"
     default:
       code = "unknown"
@@ -214,8 +247,10 @@ public class FirebaseAppCheckPlugin: NSObject, FlutterPlugin,
 class AppCheckTokenStreamHandler: NSObject, FlutterStreamHandler {
   private var observer: NSObjectProtocol?
 
-  func onListen(withArguments arguments: Any?,
-                eventSink events: @escaping FlutterEventSink) -> FlutterError? {
+  func onListen(
+    withArguments arguments: Any?,
+    eventSink events: @escaping FlutterEventSink
+  ) -> FlutterError? {
     observer = NotificationCenter.default.addObserver(
       forName: NSNotification.Name("FIRAppCheckAppCheckTokenDidChangeNotification"),
       object: nil,
@@ -318,10 +353,13 @@ class AppCheckProviderWrapper: NSObject, AppCheckProvider {
 
   func getToken(completion handler: @escaping (AppCheckToken?, Error?) -> Void) {
     guard let delegateProvider else {
-      handler(nil, NSError(
-        domain: "firebase_app_check", code: -1,
-        userInfo: [NSLocalizedDescriptionKey: "Provider not configured"]
-      ))
+      handler(
+        nil,
+        NSError(
+          domain: "firebase_app_check", code: -1,
+          userInfo: [NSLocalizedDescriptionKey: "Provider not configured"]
+        )
+      )
       return
     }
     delegateProvider.getToken(completion: handler)

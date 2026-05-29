@@ -5,7 +5,7 @@ apply plugin: 'com.android.library'
 apply from: file("local-config.gradle")
 
 buildscript {
-  ext.kotlin_version = "1.8.22"
+  ext.kotlin_version = "2.0.0"
   repositories {
     mavenLocal()
     google()
@@ -21,9 +21,13 @@ rootProject.allprojects {
   }
 }
 
-// AGP 9+ has built-in Kotlin support; older versions need the plugin explicitly.
+// AGP 9+ has built-in Kotlin support unless Flutter opts out via android.builtInKotlin=false.
 def agpMajor = com.android.Version.ANDROID_GRADLE_PLUGIN_VERSION.tokenize('.')[0] as int
-if (agpMajor < 9) {
+def builtInKotlin = providers.gradleProperty("android.builtInKotlin")
+        .map { it.toBoolean() }
+        .orElse(agpMajor >= 9)
+        .get()
+if (agpMajor < 9 || !builtInKotlin) {
     apply plugin: 'kotlin-android'
 }
 
@@ -53,12 +57,6 @@ android {
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
   }
 
-  if (agpMajor < 9) {
-    kotlinOptions {
-      jvmTarget = project.ext.javaVersion
-    }
-  }
-
   compileOptions {
     sourceCompatibility project.ext.javaVersion
     targetCompatibility project.ext.javaVersion
@@ -84,6 +82,14 @@ android {
     implementation 'com.google.firebase:firebase-appcheck-playintegrity'
     implementation 'com.google.firebase:firebase-appcheck-recaptcha:16.0.0-beta01'
     implementation 'androidx.annotation:annotation:1.7.0'
+  }
+}
+
+plugins.withId("org.jetbrains.kotlin.android") {
+  kotlin {
+    compilerOptions {
+      jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.fromTarget(project.ext.javaVersion.toString())
+    }
   }
 }
 

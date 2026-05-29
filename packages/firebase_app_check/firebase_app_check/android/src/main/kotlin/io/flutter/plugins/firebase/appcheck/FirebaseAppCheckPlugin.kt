@@ -5,6 +5,8 @@ package io.flutter.plugins.firebase.appcheck
 
 import android.os.Handler
 import android.os.Looper
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.TaskCompletionSource
 import com.google.firebase.FirebaseApp
 import com.google.firebase.appcheck.FirebaseAppCheck
 import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory
@@ -14,15 +16,10 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.EventChannel
-import io.flutter.plugin.common.EventChannel.EventSink
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin
 import io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry
-import com.google.android.gms.tasks.Task
-import com.google.android.gms.tasks.TaskCompletionSource
-import com.google.android.gms.tasks.Tasks
 
-class FirebaseAppCheckPlugin :
-  FlutterFirebasePlugin, FlutterPlugin, FirebaseAppCheckHostApi {
+class FirebaseAppCheckPlugin : FlutterFirebasePlugin, FlutterPlugin, FirebaseAppCheckHostApi {
 
   private val streamHandlers: MutableMap<String, TokenChannelStreamHandler> = HashMap()
   private val eventChannels: MutableMap<String, EventChannel> = HashMap()
@@ -52,11 +49,11 @@ class FirebaseAppCheckPlugin :
   }
 
   override fun activate(
-    appName: String,
-    androidProvider: String?,
-    appleProvider: String?,
-    debugToken: String?,
-    callback: (Result<Unit>) -> Unit
+      appName: String,
+      androidProvider: String?,
+      appleProvider: String?,
+      debugToken: String?,
+      callback: (Result<Unit>) -> Unit
   ) {
     try {
       val firebaseAppCheck = getAppCheck(appName)
@@ -64,8 +61,7 @@ class FirebaseAppCheckPlugin :
         "debug" -> {
           FlutterFirebaseAppRegistrar.debugToken = debugToken
           firebaseAppCheck.installAppCheckProviderFactory(
-            DebugAppCheckProviderFactory.getInstance()
-          )
+              DebugAppCheckProviderFactory.getInstance())
         }
         "recaptcha" -> {
           firebaseAppCheck.installAppCheckProviderFactory(
@@ -74,8 +70,7 @@ class FirebaseAppCheckPlugin :
         }
         else -> {
           firebaseAppCheck.installAppCheckProviderFactory(
-            PlayIntegrityAppCheckProviderFactory.getInstance()
-          )
+              PlayIntegrityAppCheckProviderFactory.getInstance())
         }
       }
       callback(Result.success(Unit))
@@ -85,26 +80,24 @@ class FirebaseAppCheckPlugin :
   }
 
   override fun getToken(
-    appName: String,
-    forceRefresh: Boolean,
-    callback: (Result<String?>) -> Unit
+      appName: String,
+      forceRefresh: Boolean,
+      callback: (Result<String?>) -> Unit
   ) {
     val firebaseAppCheck = getAppCheck(appName)
     firebaseAppCheck.getAppCheckToken(forceRefresh).addOnCompleteListener { task ->
       if (task.isSuccessful) {
         callback(Result.success(task.result?.token))
       } else {
-        callback(Result.failure(
-          FlutterError("firebase_app_check", task.exception?.message, null)
-        ))
+        callback(Result.failure(FlutterError("firebase_app_check", task.exception?.message, null)))
       }
     }
   }
 
   override fun setTokenAutoRefreshEnabled(
-    appName: String,
-    isTokenAutoRefreshEnabled: Boolean,
-    callback: (Result<Unit>) -> Unit
+      appName: String,
+      isTokenAutoRefreshEnabled: Boolean,
+      callback: (Result<Unit>) -> Unit
   ) {
     try {
       val firebaseAppCheck = getAppCheck(appName)
@@ -115,10 +108,7 @@ class FirebaseAppCheckPlugin :
     }
   }
 
-  override fun registerTokenListener(
-    appName: String,
-    callback: (Result<String>) -> Unit
-  ) {
+  override fun registerTokenListener(appName: String, callback: (Result<String>) -> Unit) {
     try {
       val firebaseAppCheck = getAppCheck(appName)
       val name = EVENT_CHANNEL_PREFIX + appName
@@ -135,25 +125,18 @@ class FirebaseAppCheckPlugin :
     }
   }
 
-  override fun getLimitedUseAppCheckToken(
-    appName: String,
-    callback: (Result<String>) -> Unit
-  ) {
+  override fun getLimitedUseAppCheckToken(appName: String, callback: (Result<String>) -> Unit) {
     val firebaseAppCheck = getAppCheck(appName)
     firebaseAppCheck.limitedUseAppCheckToken.addOnCompleteListener { task ->
       if (task.isSuccessful) {
         callback(Result.success(task.result?.token ?: ""))
       } else {
-        callback(Result.failure(
-          FlutterError("firebase_app_check", task.exception?.message, null)
-        ))
+        callback(Result.failure(FlutterError("firebase_app_check", task.exception?.message, null)))
       }
     }
   }
 
-  override fun getPluginConstantsForFirebaseApp(
-    firebaseApp: FirebaseApp
-  ): Task<Map<String, Any>> {
+  override fun getPluginConstantsForFirebaseApp(firebaseApp: FirebaseApp): Task<Map<String, Any>> {
     val taskCompletionSource = TaskCompletionSource<Map<String, Any>>()
     taskCompletionSource.setResult(HashMap())
     return taskCompletionSource.task
