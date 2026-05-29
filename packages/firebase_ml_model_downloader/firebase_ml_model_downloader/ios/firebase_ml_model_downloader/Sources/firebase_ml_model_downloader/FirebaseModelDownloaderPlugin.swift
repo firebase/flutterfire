@@ -2,14 +2,14 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import FirebaseCore
+import FirebaseMLModelDownloader
+
 #if canImport(FlutterMacOS)
   import FlutterMacOS
 #else
   import Flutter
 #endif
-
-import FirebaseCore
-import FirebaseMLModelDownloader
 
 #if canImport(firebase_core)
   import firebase_core
@@ -85,21 +85,26 @@ public class FirebaseModelDownloaderPlugin: NSObject, FLTFirebasePluginProtocol,
       var errorDetails = [String: Any?]()
 
       errorDetails["code"] = code ?? self.mapErrorCodes(error: error! as NSError)
-      errorDetails["message"] = message ?? error?
+      errorDetails["message"] =
+        message ?? error?
         .localizedDescription ?? "An unknown error has occurred."
-      errorDetails["additionalData"] = details ??
-        ["code": errorDetails["code"], "message": errorDetails["message"]]
+      errorDetails["additionalData"] =
+        details ?? ["code": errorDetails["code"], "message": errorDetails["message"]]
 
       if code == "unknown" {
         NSLog("FLTFirebaseModelDownloader: An error occurred while calling method %@", call.method)
       }
 
-      result(FLTFirebasePlugin.createFlutterError(fromCode: errorDetails["code"] as! String,
-                                                  message: errorDetails["message"] as! String,
-                                                  optionalDetails: errorDetails[
-                                                    "additionalData"
-                                                  ] as? [AnyHashable: Any],
-                                                  andOptionalNSError: nil))
+      result(
+        FLTFirebasePlugin.createFlutterError(
+          fromCode: errorDetails["code"] as! String,
+          message: errorDetails["message"] as! String,
+          optionalDetails: errorDetails[
+            "additionalData"
+          ] as? [AnyHashable: Any],
+          andOptionalNSError: nil
+        )
+      )
     }
 
     let result = FLTFirebaseMethodCallResult.create(success: result, andErrorBlock: errorBlock)
@@ -114,13 +119,15 @@ public class FirebaseModelDownloaderPlugin: NSObject, FLTFirebasePluginProtocol,
     }
   }
 
-  func listDownloadedModels(arguments: [String: Any],
-                            result: FLTFirebaseMethodCallResult) {
+  func listDownloadedModels(
+    arguments: [String: Any],
+    result: FLTFirebaseMethodCallResult
+  ) {
     let modelDownloader = modelDownloaderFromArguments(arguments: arguments)
 
     modelDownloader?.listDownloadedModels { response in
       switch response {
-      case let .success(customModel):
+      case .success(let customModel):
         let responseList: [[String: Any]] = customModel.map {
           [
             "filePath": $0.path,
@@ -130,7 +137,7 @@ public class FirebaseModelDownloaderPlugin: NSObject, FLTFirebasePluginProtocol,
           ]
         }
         result.success(responseList)
-      case let .failure(error):
+      case .failure(let error):
         result.error(nil, nil, nil, error)
       }
     }
@@ -160,21 +167,23 @@ public class FirebaseModelDownloaderPlugin: NSObject, FLTFirebasePluginProtocol,
       conditions: modelDownloadConditions
     ) { response in
       switch response {
-      case let .success(customModel):
+      case .success(let customModel):
         result.success([
           "filePath": customModel.path,
           "size": customModel.size,
           "hash": customModel.hash,
           "name": customModel.name,
         ])
-      case let .failure(error):
+      case .failure(let error):
         result.error(nil, nil, nil, error)
       }
     }
   }
 
-  func deleteDownloadedModel(arguments: [String: Any],
-                             result: FLTFirebaseMethodCallResult) {
+  func deleteDownloadedModel(
+    arguments: [String: Any],
+    result: FLTFirebaseMethodCallResult
+  ) {
     let modelDownloader = modelDownloaderFromArguments(arguments: arguments)
     let modelName = arguments["modelName"]
 
@@ -182,7 +191,7 @@ public class FirebaseModelDownloaderPlugin: NSObject, FLTFirebasePluginProtocol,
       switch response {
       case .success():
         result.success(nil)
-      case let .failure(error):
+      case .failure(let error):
         result.error(nil, nil, nil, error)
       }
     }
