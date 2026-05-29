@@ -113,6 +113,12 @@ jobs:
         run: |
           flutter pub global run flutter_plugin_tools format --base-branch=origin/main
           ./.github/workflows/scripts/validate-formatting.sh
+
+      - name: Clean generated build artifacts
+        if: ${{ always() }}
+        run: |
+          rm -rf build
+          find packages -type d -name build -prune -exec rm -rf {} +
       # - name: 'Swift'
       #   if: ${{ success() || failure() }}
       #   run: |
