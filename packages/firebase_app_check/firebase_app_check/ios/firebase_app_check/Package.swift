@@ -7,18 +7,18 @@
 
 import PackageDescription
 
-let firebase_sdk_version: Version = "12.13.0"
+let firebaseSdkVersion: Version = "12.13.0"
 
 let package = Package(
   name: "firebase_app_check",
   platforms: [
-    .iOS("15.0"),
+    .iOS("15.0")
   ],
   products: [
-    .library(name: "firebase-app-check", targets: ["firebase_app_check"]),
+    .library(name: "firebase-app-check", targets: ["firebase_app_check"])
   ],
   dependencies: [
-    .package(url: "https://github.com/firebase/firebase-ios-sdk", exact: firebase_sdk_version),
+    .package(url: "https://github.com/firebase/firebase-ios-sdk", exact: firebaseSdkVersion),
     .package(name: "firebase_core", path: "../firebase_core"),
   ],
   targets: [
@@ -29,8 +29,8 @@ let package = Package(
         .product(name: "firebase-core", package: "firebase_core"),
       ],
       resources: [
-        .process("Resources"),
+        .process("Resources")
       ]
-    ),
+    )
   ]
 )

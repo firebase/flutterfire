@@ -7,18 +7,18 @@
 
 import PackageDescription
 
-let firebase_sdk_version: Version = "12.13.0"
+let firebaseSdkVersion: Version = "12.13.0"
 
 let package = Package(
   name: "firebase_analytics",
   platforms: [
-    .macOS("10.15"),
+    .macOS("10.15")
   ],
   products: [
-    .library(name: "firebase-analytics", targets: ["firebase_analytics"]),
+    .library(name: "firebase-analytics", targets: ["firebase_analytics"])
   ],
   dependencies: [
-    .package(url: "https://github.com/firebase/firebase-ios-sdk", exact: firebase_sdk_version),
+    .package(url: "https://github.com/firebase/firebase-ios-sdk", exact: firebaseSdkVersion),
     .package(name: "firebase_core", path: "../firebase_core"),
   ],
   targets: [
@@ -29,8 +29,8 @@ let package = Package(
         .product(name: "firebase-core", package: "firebase_core"),
       ],
       resources: [
-        .process("Resources"),
+        .process("Resources")
       ]
-    ),
+    )
   ]
 )
