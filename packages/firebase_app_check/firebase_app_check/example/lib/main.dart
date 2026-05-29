@@ -13,8 +13,6 @@ import 'package:flutter/material.dart';
 import 'firebase_options.dart';
 
 const kWebRecaptchaSiteKey = '6Lemcn0dAAAAABLkf6aiiHvpGD6x-zF3nOSDU2M8';
-const kAndroidRecaptchaSiteKey = '6LfQpf4sAAAAAJnxnEmtVMpjkwuLpDZnxxcLbjxb';
-const kAppleRecaptchaSiteKey = '6LeJev4sAAAAADbZGhkk_kkxSEzxRjzzZRC4R1R-';
 
 // Windows: create a debug token in the Firebase Console
 // (App Check > Apps > Manage debug tokens), then paste it here
@@ -82,16 +80,10 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
   String _message = '';
   String _eventToken = 'not yet';
   late final TextEditingController _webSiteKeyController;
-  late final TextEditingController _androidSiteKeyController;
-  late final TextEditingController _appleSiteKeyController;
 
   @override
   void initState() {
     _webSiteKeyController = TextEditingController(text: kWebRecaptchaSiteKey);
-    _androidSiteKeyController =
-        TextEditingController(text: kAndroidRecaptchaSiteKey);
-    _appleSiteKeyController =
-        TextEditingController(text: kAppleRecaptchaSiteKey);
     appCheck.onTokenChange.listen(setEventToken);
     super.initState();
   }
@@ -99,8 +91,6 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
   @override
   void dispose() {
     _webSiteKeyController.dispose();
-    _androidSiteKeyController.dispose();
-    _appleSiteKeyController.dispose();
     super.dispose();
   }
 
@@ -199,22 +189,13 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
                 ),
                 child: const Text('activate(Android Play Integrity)'),
               ),
-              const SizedBox(height: 8),
-              TextField(
-                controller: _androidSiteKeyController,
-                decoration: const InputDecoration(
-                  labelText: 'Android reCAPTCHA Site Key',
-                  border: OutlineInputBorder(),
-                ),
-              ),
+
               const SizedBox(height: 8),
               ElevatedButton(
                 onPressed: () => _activate(
-                  android: AndroidReCaptchaEnterpriseProvider(
-                    siteKey: _androidSiteKeyController.text,
-                  ),
+                  android: const AndroidReCaptchaProvider(),
                 ),
-                child: const Text('activate(Android reCAPTCHA Enterprise)'),
+                child: const Text('activate(Android reCAPTCHA)'),
               ),
             ],
             if (!kIsWeb &&
@@ -247,22 +228,13 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
                 ),
               ),
               if (defaultTargetPlatform == TargetPlatform.iOS) ...[
-                const SizedBox(height: 8),
-                TextField(
-                  controller: _appleSiteKeyController,
-                  decoration: const InputDecoration(
-                    labelText: 'Apple reCAPTCHA Site Key',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
+                
                 const SizedBox(height: 8),
                 ElevatedButton(
                   onPressed: () => _activate(
-                    apple: AppleReCaptchaEnterpriseProvider(
-                      siteKey: _appleSiteKeyController.text,
-                    ),
+                    apple: const AppleReCaptchaProvider(),
                   ),
-                  child: const Text('activate(Apple reCAPTCHA Enterprise)'),
+                  child: const Text('activate(Apple reCAPTCHA)'),
                 ),
               ],
             ],

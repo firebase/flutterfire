@@ -62,7 +62,7 @@ private open class GeneratedAndroidFirebaseAppCheckPigeonCodec : StandardMessage
 
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface FirebaseAppCheckHostApi {
-  fun activate(appName: String, androidProvider: String?, appleProvider: String?, debugToken: String?, recaptchaEnterpriseSiteKey: String?, callback: (Result<Unit>) -> Unit)
+  fun activate(appName: String, androidProvider: String?, appleProvider: String?, debugToken: String?, callback: (Result<Unit>) -> Unit)
   fun getToken(appName: String, forceRefresh: Boolean, callback: (Result<String?>) -> Unit)
   fun setTokenAutoRefreshEnabled(appName: String, isTokenAutoRefreshEnabled: Boolean, callback: (Result<Unit>) -> Unit)
   fun registerTokenListener(appName: String, callback: (Result<String>) -> Unit)
@@ -86,8 +86,7 @@ interface FirebaseAppCheckHostApi {
             val androidProviderArg = args[1] as String?
             val appleProviderArg = args[2] as String?
             val debugTokenArg = args[3] as String?
-            val recaptchaEnterpriseSiteKeyArg = args[4] as String?
-            api.activate(appNameArg, androidProviderArg, appleProviderArg, debugTokenArg, recaptchaEnterpriseSiteKeyArg) { result: Result<Unit> ->
+            api.activate(appNameArg, androidProviderArg, appleProviderArg, debugTokenArg) { result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidFirebaseAppCheckPigeonUtils.wrapError(error))

@@ -13,9 +13,9 @@ import 'package:flutter/services.dart';
 import 'package:meta/meta.dart' show immutable, protected, visibleForTesting;
 
 Object? _extractReplyValueOrThrow(
-    List<Object?>? replyList,
-    String channelName, {
-    required bool isNullValid,
+  List<Object?>? replyList,
+  String channelName, {
+  required bool isNullValid,
 }) {
   if (replyList == null) {
     throw PlatformException(
@@ -36,8 +36,6 @@ Object? _extractReplyValueOrThrow(
   }
   return replyList.firstOrNull;
 }
-
-
 
 class _PigeonCodec extends StandardMessageCodec {
   const _PigeonCodec();
@@ -64,105 +62,114 @@ class FirebaseAppCheckHostApi {
   /// Constructor for [FirebaseAppCheckHostApi].  The [binaryMessenger] named argument is
   /// available for dependency injection.  If it is left null, the default
   /// BinaryMessenger will be used which routes to the host platform.
-  FirebaseAppCheckHostApi({BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
+  FirebaseAppCheckHostApi(
+      {BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
       : pigeonVar_binaryMessenger = binaryMessenger,
-        pigeonVar_messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+        pigeonVar_messageChannelSuffix =
+            messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
   final BinaryMessenger? pigeonVar_binaryMessenger;
 
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
 
   final String pigeonVar_messageChannelSuffix;
 
-  Future<void> activate(String appName, String? androidProvider, String? appleProvider, String? debugToken, String? recaptchaEnterpriseSiteKey) async {
-    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.activate$pigeonVar_messageChannelSuffix';
+  Future<void> activate(String appName, String? androidProvider,
+      String? appleProvider, String? debugToken) async {
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.activate$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[appName, androidProvider, appleProvider, debugToken, recaptchaEnterpriseSiteKey]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel
+        .send(<Object?>[appName, androidProvider, appleProvider, debugToken]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
-        pigeonVar_replyList,
-        pigeonVar_channelName,
-        isNullValid: true,
-    )
-    ;
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: true,
+    );
   }
 
   Future<String?> getToken(String appName, bool forceRefresh) async {
-    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.getToken$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.getToken$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[appName, forceRefresh]);
+    final Future<Object?> pigeonVar_sendFuture =
+        pigeonVar_channel.send(<Object?>[appName, forceRefresh]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-        pigeonVar_replyList,
-        pigeonVar_channelName,
-        isNullValid: true,
-    )
-    ;
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: true,
+    );
     return pigeonVar_replyValue as String?;
   }
 
-  Future<void> setTokenAutoRefreshEnabled(String appName, bool isTokenAutoRefreshEnabled) async {
-    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.setTokenAutoRefreshEnabled$pigeonVar_messageChannelSuffix';
+  Future<void> setTokenAutoRefreshEnabled(
+      String appName, bool isTokenAutoRefreshEnabled) async {
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.setTokenAutoRefreshEnabled$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[appName, isTokenAutoRefreshEnabled]);
+    final Future<Object?> pigeonVar_sendFuture =
+        pigeonVar_channel.send(<Object?>[appName, isTokenAutoRefreshEnabled]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
-        pigeonVar_replyList,
-        pigeonVar_channelName,
-        isNullValid: true,
-    )
-    ;
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: true,
+    );
   }
 
   Future<String> registerTokenListener(String appName) async {
-    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.registerTokenListener$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.registerTokenListener$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[appName]);
+    final Future<Object?> pigeonVar_sendFuture =
+        pigeonVar_channel.send(<Object?>[appName]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-        pigeonVar_replyList,
-        pigeonVar_channelName,
-        isNullValid: false,
-    )
-    ;
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: false,
+    );
     return pigeonVar_replyValue! as String;
   }
 
   Future<String> getLimitedUseAppCheckToken(String appName) async {
-    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.getLimitedUseAppCheckToken$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.getLimitedUseAppCheckToken$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[appName]);
+    final Future<Object?> pigeonVar_sendFuture =
+        pigeonVar_channel.send(<Object?>[appName]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-        pigeonVar_replyList,
-        pigeonVar_channelName,
-        isNullValid: false,
-    )
-    ;
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: false,
+    );
     return pigeonVar_replyValue! as String;
   }
 }

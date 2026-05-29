@@ -55,14 +55,9 @@ class AppleAppAttestWithDeviceCheckFallbackProvider
       : super('appAttestWithDeviceCheckFallback');
 }
 
-/// reCAPTCHA Enterprise provider for Apple platforms.
+/// reCAPTCHA provider for Apple platforms.
 ///
-/// See documentation: https://firebase.google.com/docs/app-check/ios/recaptcha-enterprise-provider
-class AppleReCaptchaEnterpriseProvider extends AppleAppCheckProvider {
-  /// Creates an Apple reCAPTCHA Enterprise provider with a site key.
-  const AppleReCaptchaEnterpriseProvider({required this.siteKey})
-      : super('recaptchaEnterprise');
-
-  /// The reCAPTCHA Enterprise site key.
-  final String siteKey;
+/// The site key is retrieved automatically from GoogleService-Info.plist.
+class AppleReCaptchaProvider extends AppleAppCheckProvider {
+  const AppleReCaptchaProvider() : super('recaptcha');
 }

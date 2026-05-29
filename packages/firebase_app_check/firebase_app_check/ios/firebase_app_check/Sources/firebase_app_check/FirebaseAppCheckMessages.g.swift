@@ -91,7 +91,7 @@ class FirebaseAppCheckMessagesPigeonCodec: FlutterStandardMessageCodec, @uncheck
 
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol FirebaseAppCheckHostApi {
-  func activate(appName: String, androidProvider: String?, appleProvider: String?, debugToken: String?, recaptchaEnterpriseSiteKey: String?, completion: @escaping (Result<Void, Error>) -> Void)
+  func activate(appName: String, androidProvider: String?, appleProvider: String?, debugToken: String?, completion: @escaping (Result<Void, Error>) -> Void)
   func getToken(appName: String, forceRefresh: Bool, completion: @escaping (Result<String?, Error>) -> Void)
   func setTokenAutoRefreshEnabled(appName: String, isTokenAutoRefreshEnabled: Bool, completion: @escaping (Result<Void, Error>) -> Void)
   func registerTokenListener(appName: String, completion: @escaping (Result<String, Error>) -> Void)
@@ -112,8 +112,7 @@ class FirebaseAppCheckHostApiSetup {
         let androidProviderArg: String? = nilOrValue(args[1])
         let appleProviderArg: String? = nilOrValue(args[2])
         let debugTokenArg: String? = nilOrValue(args[3])
-        let recaptchaEnterpriseSiteKeyArg: String? = nilOrValue(args[4])
-        api.activate(appName: appNameArg, androidProvider: androidProviderArg, appleProvider: appleProviderArg, debugToken: debugTokenArg, recaptchaEnterpriseSiteKey: recaptchaEnterpriseSiteKeyArg) { result in
+        api.activate(appName: appNameArg, androidProvider: androidProviderArg, appleProvider: appleProviderArg, debugToken: debugTokenArg) { result in
           switch result {
           case .success:
             reply(wrapResult(nil))

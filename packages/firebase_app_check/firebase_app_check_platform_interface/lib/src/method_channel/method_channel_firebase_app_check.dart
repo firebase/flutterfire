@@ -112,13 +112,6 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
     WindowsAppCheckProvider? providerWindows,
   }) async {
     try {
-      String? recaptchaEnterpriseSiteKey;
-      if (providerAndroid is AndroidReCaptchaEnterpriseProvider) {
-        recaptchaEnterpriseSiteKey = providerAndroid.siteKey;
-      } else if (providerApple is AppleReCaptchaEnterpriseProvider) {
-        recaptchaEnterpriseSiteKey = providerApple.siteKey;
-      }
-
       await _pigeonApi.activate(
         app.name,
         defaultTargetPlatform == TargetPlatform.android || kDebugMode
@@ -140,7 +133,6 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
           providerApple: providerApple,
           providerWindows: providerWindows,
         ),
-        recaptchaEnterpriseSiteKey,
       );
     } on PlatformException catch (e, s) {
       convertPlatformException(e, s);

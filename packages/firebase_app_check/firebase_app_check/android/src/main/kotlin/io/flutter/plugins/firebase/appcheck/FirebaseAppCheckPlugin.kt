@@ -9,7 +9,7 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.appcheck.FirebaseAppCheck
 import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory
 import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory
-import com.google.firebase.appcheck.recaptchaenterprise.RecaptchaEnterpriseAppCheckProviderFactory
+import com.google.firebase.appcheck.recaptcha.RecaptchaAppCheckProviderFactory
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import io.flutter.plugin.common.BinaryMessenger
@@ -56,7 +56,6 @@ class FirebaseAppCheckPlugin :
     androidProvider: String?,
     appleProvider: String?,
     debugToken: String?,
-    recaptchaEnterpriseSiteKey: String?,
     callback: (Result<Unit>) -> Unit
   ) {
     try {
@@ -68,15 +67,10 @@ class FirebaseAppCheckPlugin :
             DebugAppCheckProviderFactory.getInstance()
           )
         }
-        "recaptchaEnterprise" -> {
-          if (recaptchaEnterpriseSiteKey != null) {
-            firebaseAppCheck.installAppCheckProviderFactory(
-              RecaptchaEnterpriseAppCheckProviderFactory.getInstance(recaptchaEnterpriseSiteKey)
-            )
-          } else {
-            callback(Result.failure(FlutterError("invalid-argument", "Site key is required for reCAPTCHA Enterprise", null)))
-            return
-          }
+        "recaptcha" -> {
+          firebaseAppCheck.installAppCheckProviderFactory(
+            RecaptchaAppCheckProviderFactory.getInstance()
+          )
         }
         else -> {
           firebaseAppCheck.installAppCheckProviderFactory(

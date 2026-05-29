@@ -29,9 +29,7 @@ abstract class FirebaseAppCheckHostApi {
     String? androidProvider,
     String? appleProvider,
     String? debugToken,
-    String? recaptchaEnterpriseSiteKey,
   );
-
 
   @async
   String? getToken(String appName, bool forceRefresh);
