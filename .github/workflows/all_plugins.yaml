@@ -20,7 +20,7 @@ on:
 
 jobs:
   analyze:
-    timeout-minutes: 50
+    timeout-minutes: 40
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
@@ -114,16 +114,12 @@ jobs:
           flutter pub global run flutter_plugin_tools format --base-branch=origin/main
           ./.github/workflows/scripts/validate-formatting.sh
 
+      # Clean generated build artificats(from format step) to prevent post run jobs from timing out
       - name: Clean generated build artifacts
         if: ${{ always() }}
         run: |
           rm -rf build
           find packages -type d -name build -prune -exec rm -rf {} +
-      # - name: 'Swift'
-      #   if: ${{ success() || failure() }}
-      #   run: |
-      #     swiftformat . --exclude Pods,**/Pods/**,**/build/**,**/SourcePackages/**,**/.symlinks/**,**/Flutter/ephemeral/**
-      #     ./.github/workflows/scripts/validate-formatting.sh
 
   build_examples_dart:
     timeout-minutes: 30
