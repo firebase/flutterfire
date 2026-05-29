@@ -53,7 +53,6 @@ jobs:
       - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
         with:
           channel: 'stable'
-          flutter-version: '3.41.6'
           cache: true
           cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
           pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
@@ -86,9 +85,6 @@ jobs:
         # workaround we can use the `flutter drive` command. Tracking issue:
         # https://github.com/flutter/flutter/issues/66264
         run: |
-          flutter --version
-          chromedriver --version
-          "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --version
           chromedriver --port=4444 --trace-buffer-size=100000 &
           flutter drive --target=./integration_test/e2e_test.dart --driver=./test_driver/integration_test.dart -d chrome --dart-define=CI=true | tee output.log
           # We have to check the output for failed tests matching the string "[E]"
@@ -127,9 +123,6 @@ jobs:
       - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
         with:
           channel: 'stable'
-          # TODO: Remove this pin once Flutter stable no longer fails non-WASM
-          # web e2e with DWDS AppConnectionException.
-          flutter-version: '3.41.6'
           cache: true
           cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
           pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
@@ -163,7 +156,6 @@ jobs:
         # https://github.com/flutter/flutter/issues/66264
         # Chrome debug service can fail with AppConnectionException. Retry once.
         run: |
-          chromedriver --version
           chromedriver --port=4444 --trace-buffer-size=100000 &
           run_tests() {
             flutter drive --target=./integration_test/e2e_test.dart --driver=./test_driver/integration_test.dart -d chrome --dart-define=CI=true --dart-define=APP_CHECK_E2E=true | tee output.log
