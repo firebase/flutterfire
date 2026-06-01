@@ -261,7 +261,8 @@ public class PigeonParser {
     } catch (Exception exception) {
       Log.e(
           "FLTFirestoreMsgCodec",
-          "An error occurred while parsing query arguments, this is most likely an error with this SDK.",
+          "An error occurred while parsing query arguments, this is most likely an error with this"
+              + " SDK.",
           exception);
       return null;
     }

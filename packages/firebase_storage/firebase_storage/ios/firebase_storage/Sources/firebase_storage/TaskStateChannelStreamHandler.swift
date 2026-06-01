@@ -27,11 +27,13 @@ final class TaskStateChannelStreamHandler: NSObject, FlutterStreamHandler {
     self.identifier = identifier
   }
 
-  func onListen(withArguments arguments: Any?,
-                eventSink events: @escaping FlutterEventSink) -> FlutterError? {
+  func onListen(
+    withArguments arguments: Any?,
+    eventSink events: @escaping FlutterEventSink
+  ) -> FlutterError? {
     successHandle = task.observe(.success) { snapshot in
       events([
-        "taskState": 2, // success
+        "taskState": 2,  // success
         "appName": self.storage.app.name,
         "snapshot": self.parseTaskSnapshot(snapshot),
       ])
@@ -41,7 +43,7 @@ final class TaskStateChannelStreamHandler: NSObject, FlutterStreamHandler {
       let err = snapshot.error as NSError?
       let errorDict: [String: Any] = self.errorDict(err)
       events([
-        "taskState": 4, // error (including cancellations as errors per platform contract)
+        "taskState": 4,  // error (including cancellations as errors per platform contract)
         "appName": self.storage.app.name,
         "error": errorDict,
       ])
@@ -49,14 +51,14 @@ final class TaskStateChannelStreamHandler: NSObject, FlutterStreamHandler {
     }
     pausedHandle = task.observe(.pause) { snapshot in
       events([
-        "taskState": 0, // paused
+        "taskState": 0,  // paused
         "appName": self.storage.app.name,
         "snapshot": self.parseTaskSnapshot(snapshot),
       ])
     }
     progressHandle = task.observe(.progress) { snapshot in
       events([
-        "taskState": 1, // running
+        "taskState": 1,  // running
         "appName": self.storage.app.name,
         "snapshot": self.parseTaskSnapshot(snapshot),
       ])
@@ -105,7 +107,8 @@ final class TaskStateChannelStreamHandler: NSObject, FlutterStreamHandler {
     }
     let code: String
     if error.domain == StorageErrorDomain,
-       let storageCode = StorageErrorCode(rawValue: error.code) {
+      let storageCode = StorageErrorCode(rawValue: error.code)
+    {
       switch storageCode {
       case .objectNotFound: code = "object-not-found"
       case .bucketNotFound: code = "bucket-not-found"

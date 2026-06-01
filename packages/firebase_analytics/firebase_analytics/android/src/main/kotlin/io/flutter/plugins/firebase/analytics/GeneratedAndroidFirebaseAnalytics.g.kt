@@ -10,12 +10,11 @@ package io.flutter.plugins.firebase.analytics
 import android.util.Log
 import io.flutter.plugin.common.BasicMessageChannel
 import io.flutter.plugin.common.BinaryMessenger
-import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MessageCodec
-import io.flutter.plugin.common.StandardMethodCodec
 import io.flutter.plugin.common.StandardMessageCodec
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
+
 private object GeneratedAndroidFirebaseAnalyticsPigeonUtils {
 
   fun wrapResult(result: Any?): List<Any?> {
@@ -24,19 +23,15 @@ private object GeneratedAndroidFirebaseAnalyticsPigeonUtils {
 
   fun wrapError(exception: Throwable): List<Any?> {
     return if (exception is FlutterError) {
-      listOf(
-        exception.code,
-        exception.message,
-        exception.details
-      )
+      listOf(exception.code, exception.message, exception.details)
     } else {
       listOf(
-        exception.javaClass.simpleName,
-        exception.toString(),
-        "Cause: " + exception.cause + ", Stacktrace: " + Log.getStackTraceString(exception)
-      )
+          exception.javaClass.simpleName,
+          exception.toString(),
+          "Cause: " + exception.cause + ", Stacktrace: " + Log.getStackTraceString(exception))
     }
   }
+
   fun doubleEquals(a: Double, b: Double): Boolean {
     // Normalize -0.0 to 0.0 and handle NaN equality.
     return (if (a == 0.0) 0.0 else a) == (if (b == 0.0) 0.0 else b) || (a.isNaN() && b.isNaN())
@@ -180,27 +175,23 @@ private object GeneratedAndroidFirebaseAnalyticsPigeonUtils {
       else -> value.hashCode()
     }
   }
-
 }
 
 /**
  * Error class for passing custom error details to Flutter via a thrown PlatformException.
+ *
  * @property code The error code.
  * @property message The error message.
  * @property details The error details. Must be a datatype supported by the api codec.
  */
-class FlutterError (
-  val code: String,
-  override val message: String? = null,
-  val details: Any? = null
+class FlutterError(
+    val code: String,
+    override val message: String? = null,
+    val details: Any? = null
 ) : RuntimeException()
 
 /** Generated class from Pigeon that represents data sent in messages. */
-data class AnalyticsEvent (
-  val name: String,
-  val parameters: Map<String?, Any?>? = null
-)
- {
+data class AnalyticsEvent(val name: String, val parameters: Map<String?, Any?>? = null) {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): AnalyticsEvent {
       val name = pigeonVar_list[0] as String
@@ -208,12 +199,14 @@ data class AnalyticsEvent (
       return AnalyticsEvent(name, parameters)
     }
   }
+
   fun toList(): List<Any?> {
     return listOf(
-      name,
-      parameters,
+        name,
+        parameters,
     )
   }
+
   override fun equals(other: Any?): Boolean {
     if (other == null || other.javaClass != javaClass) {
       return false
@@ -222,7 +215,8 @@ data class AnalyticsEvent (
       return true
     }
     val other = other as AnalyticsEvent
-    return GeneratedAndroidFirebaseAnalyticsPigeonUtils.deepEquals(this.name, other.name) && GeneratedAndroidFirebaseAnalyticsPigeonUtils.deepEquals(this.parameters, other.parameters)
+    return GeneratedAndroidFirebaseAnalyticsPigeonUtils.deepEquals(this.name, other.name) &&
+        GeneratedAndroidFirebaseAnalyticsPigeonUtils.deepEquals(this.parameters, other.parameters)
   }
 
   override fun hashCode(): Int {
@@ -232,18 +226,18 @@ data class AnalyticsEvent (
     return result
   }
 }
+
 private open class GeneratedAndroidFirebaseAnalyticsPigeonCodec : StandardMessageCodec() {
   override fun readValueOfType(type: Byte, buffer: ByteBuffer): Any? {
     return when (type) {
       129.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          AnalyticsEvent.fromList(it)
-        }
+        return (readValue(buffer) as? List<Any?>)?.let { AnalyticsEvent.fromList(it) }
       }
       else -> super.readValueOfType(type, buffer)
     }
   }
-  override fun writeValue(stream: ByteArrayOutputStream, value: Any?)   {
+
+  override fun writeValue(stream: ByteArrayOutputStream, value: Any?) {
     when (value) {
       is AnalyticsEvent -> {
         stream.write(129)
@@ -254,33 +248,56 @@ private open class GeneratedAndroidFirebaseAnalyticsPigeonCodec : StandardMessag
   }
 }
 
-
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface FirebaseAnalyticsHostApi {
   fun logEvent(event: Map<String, Any?>, callback: (Result<Unit>) -> Unit)
+
   fun setUserId(userId: String?, callback: (Result<Unit>) -> Unit)
+
   fun setUserProperty(name: String, value: String?, callback: (Result<Unit>) -> Unit)
+
   fun setAnalyticsCollectionEnabled(enabled: Boolean, callback: (Result<Unit>) -> Unit)
+
   fun resetAnalyticsData(callback: (Result<Unit>) -> Unit)
+
   fun setSessionTimeoutDuration(timeout: Long, callback: (Result<Unit>) -> Unit)
+
   fun setConsent(consent: Map<String, Boolean?>, callback: (Result<Unit>) -> Unit)
+
   fun setDefaultEventParameters(parameters: Map<String, Any?>?, callback: (Result<Unit>) -> Unit)
+
   fun getAppInstanceId(callback: (Result<String?>) -> Unit)
+
   fun getSessionId(callback: (Result<Long?>) -> Unit)
-  fun initiateOnDeviceConversionMeasurement(arguments: Map<String, String?>, callback: (Result<Unit>) -> Unit)
+
+  fun initiateOnDeviceConversionMeasurement(
+      arguments: Map<String, String?>,
+      callback: (Result<Unit>) -> Unit
+  )
+
   fun logTransaction(transactionId: String, callback: (Result<Unit>) -> Unit)
 
   companion object {
     /** The codec used by FirebaseAnalyticsHostApi. */
-    val codec: MessageCodec<Any?> by lazy {
-      GeneratedAndroidFirebaseAnalyticsPigeonCodec()
-    }
-    /** Sets up an instance of `FirebaseAnalyticsHostApi` to handle messages through the `binaryMessenger`. */
+    val codec: MessageCodec<Any?> by lazy { GeneratedAndroidFirebaseAnalyticsPigeonCodec() }
+    /**
+     * Sets up an instance of `FirebaseAnalyticsHostApi` to handle messages through the
+     * `binaryMessenger`.
+     */
     @JvmOverloads
-    fun setUp(binaryMessenger: BinaryMessenger, api: FirebaseAnalyticsHostApi?, messageChannelSuffix: String = "") {
-      val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    fun setUp(
+        binaryMessenger: BinaryMessenger,
+        api: FirebaseAnalyticsHostApi?,
+        messageChannelSuffix: String = ""
+    ) {
+      val separatedMessageChannelSuffix =
+          if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.logEvent$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.logEvent$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -299,7 +316,11 @@ interface FirebaseAnalyticsHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.setUserId$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.setUserId$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -318,7 +339,11 @@ interface FirebaseAnalyticsHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.setUserProperty$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.setUserProperty$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -338,7 +363,11 @@ interface FirebaseAnalyticsHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.setAnalyticsCollectionEnabled$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.setAnalyticsCollectionEnabled$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -357,10 +386,14 @@ interface FirebaseAnalyticsHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.resetAnalyticsData$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.resetAnalyticsData$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { _, reply ->
-            api.resetAnalyticsData{ result: Result<Unit> ->
+            api.resetAnalyticsData { result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidFirebaseAnalyticsPigeonUtils.wrapError(error))
@@ -374,7 +407,11 @@ interface FirebaseAnalyticsHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.setSessionTimeoutDuration$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.setSessionTimeoutDuration$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -393,7 +430,11 @@ interface FirebaseAnalyticsHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.setConsent$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.setConsent$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -412,7 +453,11 @@ interface FirebaseAnalyticsHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.setDefaultEventParameters$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.setDefaultEventParameters$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -431,10 +476,14 @@ interface FirebaseAnalyticsHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.getAppInstanceId$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.getAppInstanceId$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { _, reply ->
-            api.getAppInstanceId{ result: Result<String?> ->
+            api.getAppInstanceId { result: Result<String?> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidFirebaseAnalyticsPigeonUtils.wrapError(error))
@@ -449,10 +498,14 @@ interface FirebaseAnalyticsHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.getSessionId$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.getSessionId$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { _, reply ->
-            api.getSessionId{ result: Result<Long?> ->
+            api.getSessionId { result: Result<Long?> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidFirebaseAnalyticsPigeonUtils.wrapError(error))
@@ -467,7 +520,11 @@ interface FirebaseAnalyticsHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.initiateOnDeviceConversionMeasurement$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.initiateOnDeviceConversionMeasurement$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -486,7 +543,11 @@ interface FirebaseAnalyticsHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.logTransaction$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.logTransaction$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>

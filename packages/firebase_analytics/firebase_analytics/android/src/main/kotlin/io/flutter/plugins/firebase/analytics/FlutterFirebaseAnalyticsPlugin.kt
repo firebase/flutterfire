@@ -22,13 +22,12 @@ import io.flutter.plugins.firebase.core.FlutterFirebasePlugin.cachedThreadPool
 import io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry
 import java.util.Objects
 
-class FlutterFirebaseAnalyticsPlugin : FlutterFirebasePlugin,
-  FlutterPlugin, FirebaseAnalyticsHostApi {
+class FlutterFirebaseAnalyticsPlugin :
+    FlutterFirebasePlugin, FlutterPlugin, FirebaseAnalyticsHostApi {
   private lateinit var analytics: FirebaseAnalytics
   private var channel: MethodChannel? = null
 
   private var messenger: BinaryMessenger? = null
-
 
   private fun initInstance(messenger: BinaryMessenger, context: Context) {
     analytics = FirebaseAnalytics.getInstance(context)
@@ -39,7 +38,9 @@ class FlutterFirebaseAnalyticsPlugin : FlutterFirebasePlugin,
     this.messenger = messenger
   }
 
-  override fun getPluginConstantsForFirebaseApp(firebaseApp: FirebaseApp?): Task<MutableMap<String, Any>> {
+  override fun getPluginConstantsForFirebaseApp(
+      firebaseApp: FirebaseApp?
+  ): Task<MutableMap<String, Any>> {
     val taskCompletionSource = TaskCompletionSource<MutableMap<String, Any>>()
 
     cachedThreadPool.execute {
@@ -86,11 +87,7 @@ class FlutterFirebaseAnalyticsPlugin : FlutterFirebasePlugin,
 
     cachedThreadPool.execute {
       try {
-        taskCompletionSource.setResult(
-          Tasks.await(
-            analytics.sessionId
-          )
-        )
+        taskCompletionSource.setResult(Tasks.await(analytics.sessionId))
       } catch (e: java.lang.Exception) {
         taskCompletionSource.setException(e)
       }
@@ -104,14 +101,9 @@ class FlutterFirebaseAnalyticsPlugin : FlutterFirebasePlugin,
 
     cachedThreadPool.execute {
       try {
-        val eventName =
-          Objects.requireNonNull(arguments[Constants.EVENT_NAME]) as String
-        val map =
-          arguments[Constants.PARAMETERS] as Map<String, Any>?
-        val parameterBundle: Bundle? =
-          createBundleFromMap(
-            map
-          )
+        val eventName = Objects.requireNonNull(arguments[Constants.EVENT_NAME]) as String
+        val map = arguments[Constants.PARAMETERS] as Map<String, Any>?
+        val parameterBundle: Bundle? = createBundleFromMap(map)
         analytics.logEvent(eventName, parameterBundle)
         taskCompletionSource.setResult(null)
       } catch (e: java.lang.Exception) {
@@ -202,44 +194,31 @@ class FlutterFirebaseAnalyticsPlugin : FlutterFirebasePlugin,
 
     cachedThreadPool.execute {
       try {
-        val adStorageGranted =
-          arguments[Constants.AD_STORAGE_CONSENT_GRANTED]
-        val analyticsStorageGranted =
-          arguments[Constants.ANALYTICS_STORAGE_CONSENT_GRANTED]
+        val adStorageGranted = arguments[Constants.AD_STORAGE_CONSENT_GRANTED]
+        val analyticsStorageGranted = arguments[Constants.ANALYTICS_STORAGE_CONSENT_GRANTED]
         val adPersonalizationSignalsGranted =
-          arguments[Constants.AD_PERSONALIZATION_SIGNALS_CONSENT_GRANTED]
-        val adUserDataGranted =
-          arguments[Constants.AD_USER_DATA_CONSENT_GRANTED]
-        val parameters =
-          java.util.HashMap<ConsentType, ConsentStatus>()
+            arguments[Constants.AD_PERSONALIZATION_SIGNALS_CONSENT_GRANTED]
+        val adUserDataGranted = arguments[Constants.AD_USER_DATA_CONSENT_GRANTED]
+        val parameters = java.util.HashMap<ConsentType, ConsentStatus>()
 
         if (adStorageGranted != null) {
-          parameters[ConsentType.AD_STORAGE] = if (adStorageGranted)
-            ConsentStatus.GRANTED
-          else
-            ConsentStatus.DENIED
+          parameters[ConsentType.AD_STORAGE] =
+              if (adStorageGranted) ConsentStatus.GRANTED else ConsentStatus.DENIED
         }
 
         if (analyticsStorageGranted != null) {
-          parameters[ConsentType.ANALYTICS_STORAGE] = if (analyticsStorageGranted)
-            ConsentStatus.GRANTED
-          else
-            ConsentStatus.DENIED
+          parameters[ConsentType.ANALYTICS_STORAGE] =
+              if (analyticsStorageGranted) ConsentStatus.GRANTED else ConsentStatus.DENIED
         }
 
         if (adPersonalizationSignalsGranted != null) {
           parameters[ConsentType.AD_PERSONALIZATION] =
-            if (adPersonalizationSignalsGranted)
-              ConsentStatus.GRANTED
-            else
-              ConsentStatus.DENIED
+              if (adPersonalizationSignalsGranted) ConsentStatus.GRANTED else ConsentStatus.DENIED
         }
 
         if (adUserDataGranted != null) {
-          parameters[ConsentType.AD_USER_DATA] = if (adUserDataGranted)
-            ConsentStatus.GRANTED
-          else
-            ConsentStatus.DENIED
+          parameters[ConsentType.AD_USER_DATA] =
+              if (adUserDataGranted) ConsentStatus.GRANTED else ConsentStatus.DENIED
         }
 
         analytics.setConsent(parameters)
@@ -257,11 +236,7 @@ class FlutterFirebaseAnalyticsPlugin : FlutterFirebasePlugin,
 
     cachedThreadPool.execute {
       try {
-        analytics.setDefaultEventParameters(
-          createBundleFromMap(
-            parameters
-          )
-        )
+        analytics.setDefaultEventParameters(createBundleFromMap(parameters))
         taskCompletionSource.setResult(null)
       } catch (e: java.lang.Exception) {
         taskCompletionSource.setException(e)
@@ -276,11 +251,7 @@ class FlutterFirebaseAnalyticsPlugin : FlutterFirebasePlugin,
 
     cachedThreadPool.execute {
       try {
-        taskCompletionSource.setResult(
-          Tasks.await(
-            analytics.appInstanceId
-          )
-        )
+        taskCompletionSource.setResult(Tasks.await(analytics.appInstanceId))
       } catch (e: java.lang.Exception) {
         taskCompletionSource.setException(e)
       }
@@ -299,7 +270,8 @@ class FlutterFirebaseAnalyticsPlugin : FlutterFirebasePlugin,
       if (value is String) {
         bundle.putString(key, value)
       } else if (value is Int) {
-        // FirebaseAnalytics default event parameters only support long and double types, so we convert the int to a long.
+        // FirebaseAnalytics default event parameters only support long and double types, so we
+        // convert the int to a long.
         bundle.putLong(key, value.toLong())
       } else if (value is Long) {
         bundle.putLong(key, value)
@@ -318,11 +290,10 @@ class FlutterFirebaseAnalyticsPlugin : FlutterFirebasePlugin,
           } else {
             if (item != null) {
               throw IllegalArgumentException(
-                ("Unsupported value type: "
-                  + item.javaClass.canonicalName
-                  + " in list at key "
-                  + key)
-              )
+                  ("Unsupported value type: " +
+                      item.javaClass.canonicalName +
+                      " in list at key " +
+                      key))
             }
           }
         }
@@ -331,18 +302,13 @@ class FlutterFirebaseAnalyticsPlugin : FlutterFirebasePlugin,
       } else if (value is Map<*, *>) {
         bundle.putParcelable(key, createBundleFromMap(value as Map<String, Any>))
       } else {
-        throw IllegalArgumentException(
-          "Unsupported value type: " + value.javaClass.canonicalName
-        )
+        throw IllegalArgumentException("Unsupported value type: " + value.javaClass.canonicalName)
       }
     }
     return bundle
   }
 
-  private fun handleVoidTaskResult(
-    task: Task<Void?>,
-    callback: (Result<Unit>) -> Unit
-  ) {
+  private fun handleVoidTaskResult(task: Task<Void?>, callback: (Result<Unit>) -> Unit) {
     if (task.isSuccessful) {
       callback(Result.success(Unit))
     } else {
@@ -351,10 +317,7 @@ class FlutterFirebaseAnalyticsPlugin : FlutterFirebasePlugin,
     }
   }
 
-  private fun <T> handleTypedTaskResult(
-    task: Task<T>,
-    callback: (Result<T?>) -> Unit
-  ) {
+  private fun <T> handleTypedTaskResult(task: Task<T>, callback: (Result<T?>) -> Unit) {
     if (task.isSuccessful) {
       callback(Result.success(task.result))
     } else {
@@ -364,16 +327,11 @@ class FlutterFirebaseAnalyticsPlugin : FlutterFirebasePlugin,
   }
 
   override fun logEvent(event: Map<String, Any?>, callback: (Result<Unit>) -> Unit) {
-    handleLogEvent(event).addOnCompleteListener { task ->
-      handleVoidTaskResult(task, callback)
-    }
+    handleLogEvent(event).addOnCompleteListener { task -> handleVoidTaskResult(task, callback) }
   }
 
-
   override fun setUserId(userId: String?, callback: (Result<Unit>) -> Unit) {
-    handleSetUserId(userId).addOnCompleteListener { task ->
-      handleVoidTaskResult(task, callback)
-    }
+    handleSetUserId(userId).addOnCompleteListener { task -> handleVoidTaskResult(task, callback) }
   }
 
   override fun setUserProperty(name: String, value: String?, callback: (Result<Unit>) -> Unit) {
@@ -401,58 +359,41 @@ class FlutterFirebaseAnalyticsPlugin : FlutterFirebasePlugin,
   }
 
   override fun setConsent(consent: Map<String, Boolean?>, callback: (Result<Unit>) -> Unit) {
-    handleSetConsent(consent).addOnCompleteListener { task ->
-      handleVoidTaskResult(task, callback)
-    }
-
+    handleSetConsent(consent).addOnCompleteListener { task -> handleVoidTaskResult(task, callback) }
   }
 
   override fun setDefaultEventParameters(
-    parameters: Map<String, Any?>?,
-    callback: (Result<Unit>) -> Unit
+      parameters: Map<String, Any?>?,
+      callback: (Result<Unit>) -> Unit
   ) {
     handleSetDefaultEventParameters(parameters).addOnCompleteListener { task ->
       handleVoidTaskResult(task, callback)
     }
   }
 
-
   override fun getAppInstanceId(callback: (Result<String?>) -> Unit) {
-    handleGetAppInstanceId().addOnCompleteListener { task ->
-      handleTypedTaskResult(task, callback)
-    }
+    handleGetAppInstanceId().addOnCompleteListener { task -> handleTypedTaskResult(task, callback) }
   }
 
   override fun getSessionId(callback: (Result<Long?>) -> Unit) {
-    handleGetSessionId().addOnCompleteListener { task ->
-      handleTypedTaskResult(task, callback)
-    }
+    handleGetSessionId().addOnCompleteListener { task -> handleTypedTaskResult(task, callback) }
   }
 
   override fun initiateOnDeviceConversionMeasurement(
-    arguments: Map<String, String?>,
-    callback: (Result<Unit>) -> Unit
+      arguments: Map<String, String?>,
+      callback: (Result<Unit>) -> Unit
   ) {
     callback(
-      Result.failure(
-        FlutterError(
-          "unimplemented",
-          "initiateOnDeviceConversionMeasurement is only available on iOS.",
-          null
-        )
-      )
-    )
+        Result.failure(
+            FlutterError(
+                "unimplemented",
+                "initiateOnDeviceConversionMeasurement is only available on iOS.",
+                null)))
   }
 
   override fun logTransaction(transactionId: String, callback: (Result<Unit>) -> Unit) {
     callback(
-      Result.failure(
-        FlutterError(
-          "unimplemented",
-          "logTransaction is only available on iOS.",
-          null
-        )
-      )
-    )
+        Result.failure(
+            FlutterError("unimplemented", "logTransaction is only available on iOS.", null)))
   }
 }

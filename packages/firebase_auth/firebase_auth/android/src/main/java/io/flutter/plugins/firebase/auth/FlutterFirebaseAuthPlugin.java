@@ -142,7 +142,8 @@ public class FlutterFirebaseAuthPlugin
       auth.setCustomAuthDomain(customDomain);
     }
 
-    // Auth's `getCustomAuthDomain` supersedes value from `customAuthDomain` map set by `initializeApp`
+    // Auth's `getCustomAuthDomain` supersedes value from `customAuthDomain` map set by
+    // `initializeApp`
     if (pigeonApp.getCustomAuthDomain() != null) {
       auth.setCustomAuthDomain(pigeonApp.getCustomAuthDomain());
     }

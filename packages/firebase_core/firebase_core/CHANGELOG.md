@@ -1,3 +1,9 @@
+## 4.9.0
+
+ - **FIX**(core,iOS): use namespaced iOS Pigeon header import ([#18281](https://github.com/firebase/flutterfire/issues/18281)). ([7c1257e7](https://github.com/firebase/flutterfire/commit/7c1257e7295f9ba67f3f5820493f105a14d34d52))
+ - **FEAT**: bump Firebase iOS SDK to 12.13.0 ([#18273](https://github.com/firebase/flutterfire/issues/18273)). ([78e10f02](https://github.com/firebase/flutterfire/commit/78e10f0222f4e23c96b636c63c29935ba5aa82e6))
+ - **FEAT**: bump Firebase android SDK to 34.13.0 ([#18272](https://github.com/firebase/flutterfire/issues/18272)). ([d10e0ffa](https://github.com/firebase/flutterfire/commit/d10e0ffa2980a21a5899dbe67952fc772a3c6c01))
+
 ## 4.8.0
 
  - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
