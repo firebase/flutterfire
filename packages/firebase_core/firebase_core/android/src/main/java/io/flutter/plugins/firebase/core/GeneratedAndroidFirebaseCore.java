@@ -377,6 +377,16 @@ public class GeneratedAndroidFirebaseCore {
       this.appGroupId = setterArg;
     }
 
+    private @Nullable String recaptchaSiteKey;
+
+    public @Nullable String getRecaptchaSiteKey() {
+      return recaptchaSiteKey;
+    }
+
+    public void setRecaptchaSiteKey(@Nullable String setterArg) {
+      this.recaptchaSiteKey = setterArg;
+    }
+
     /** Constructor is non-public to enforce null safety; use Builder. */
     CoreFirebaseOptions() {}
 
@@ -402,7 +412,8 @@ public class GeneratedAndroidFirebaseCore {
           && pigeonDeepEquals(androidClientId, that.androidClientId)
           && pigeonDeepEquals(iosClientId, that.iosClientId)
           && pigeonDeepEquals(iosBundleId, that.iosBundleId)
-          && pigeonDeepEquals(appGroupId, that.appGroupId);
+          && pigeonDeepEquals(appGroupId, that.appGroupId)
+          && pigeonDeepEquals(recaptchaSiteKey, that.recaptchaSiteKey);
     }
 
     @Override
@@ -423,7 +434,8 @@ public class GeneratedAndroidFirebaseCore {
             androidClientId,
             iosClientId,
             iosBundleId,
-            appGroupId
+            appGroupId,
+            recaptchaSiteKey
           };
       return pigeonDeepHashCode(fields);
     }
@@ -542,6 +554,14 @@ public class GeneratedAndroidFirebaseCore {
         return this;
       }
 
+      private @Nullable String recaptchaSiteKey;
+
+      @CanIgnoreReturnValue
+      public @NonNull Builder setRecaptchaSiteKey(@Nullable String setterArg) {
+        this.recaptchaSiteKey = setterArg;
+        return this;
+      }
+
       public @NonNull CoreFirebaseOptions build() {
         CoreFirebaseOptions pigeonReturn = new CoreFirebaseOptions();
         pigeonReturn.setApiKey(apiKey);
@@ -558,13 +578,14 @@ public class GeneratedAndroidFirebaseCore {
         pigeonReturn.setIosClientId(iosClientId);
         pigeonReturn.setIosBundleId(iosBundleId);
         pigeonReturn.setAppGroupId(appGroupId);
+        pigeonReturn.setRecaptchaSiteKey(recaptchaSiteKey);
         return pigeonReturn;
       }
     }
 
     @NonNull
-    ArrayList<Object> toList() {
-      ArrayList<Object> toListResult = new ArrayList<>(14);
+    public ArrayList<Object> toList() {
+      ArrayList<Object> toListResult = new ArrayList<>(15);
       toListResult.add(apiKey);
       toListResult.add(appId);
       toListResult.add(messagingSenderId);
@@ -579,6 +600,7 @@ public class GeneratedAndroidFirebaseCore {
       toListResult.add(iosClientId);
       toListResult.add(iosBundleId);
       toListResult.add(appGroupId);
+      toListResult.add(recaptchaSiteKey);
       return toListResult;
     }
 
@@ -612,6 +634,8 @@ public class GeneratedAndroidFirebaseCore {
       pigeonResult.setIosBundleId((String) iosBundleId);
       Object appGroupId = pigeonVar_list.get(13);
       pigeonResult.setAppGroupId((String) appGroupId);
+      Object recaptchaSiteKey = pigeonVar_list.get(14);
+      pigeonResult.setRecaptchaSiteKey((String) recaptchaSiteKey);
       return pigeonResult;
     }
   }
@@ -740,7 +764,7 @@ public class GeneratedAndroidFirebaseCore {
     }
 
     @NonNull
-    ArrayList<Object> toList() {
+    public ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<>(4);
       toListResult.add(name);
       toListResult.add(options);
@@ -802,7 +826,6 @@ public class GeneratedAndroidFirebaseCore {
     /** Failure case callback method for handling errors. */
     void error(@NonNull Throwable error);
   }
-
   /** Asynchronous error handling return type for nullable API method returns. */
   public interface NullableResult<T> {
     /** Success case callback method for handling returns. */
@@ -811,7 +834,6 @@ public class GeneratedAndroidFirebaseCore {
     /** Failure case callback method for handling errors. */
     void error(@NonNull Throwable error);
   }
-
   /** Asynchronous error handling return type for void API method returns. */
   public interface VoidResult {
     /** Success case callback method for handling returns. */
@@ -820,7 +842,6 @@ public class GeneratedAndroidFirebaseCore {
     /** Failure case callback method for handling errors. */
     void error(@NonNull Throwable error);
   }
-
   /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
   public interface FirebaseCoreHostApi {
 
@@ -837,7 +858,6 @@ public class GeneratedAndroidFirebaseCore {
     static @NonNull MessageCodec<Object> getCodec() {
       return PigeonCodec.INSTANCE;
     }
-
     /**
      * Sets up an instance of `FirebaseCoreHostApi` to handle messages through the
      * `binaryMessenger`.
@@ -946,7 +966,6 @@ public class GeneratedAndroidFirebaseCore {
       }
     }
   }
-
   /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
   public interface FirebaseAppHostApi {
 
@@ -962,7 +981,6 @@ public class GeneratedAndroidFirebaseCore {
     static @NonNull MessageCodec<Object> getCodec() {
       return PigeonCodec.INSTANCE;
     }
-
     /**
      * Sets up an instance of `FirebaseAppHostApi` to handle messages through the `binaryMessenger`.
      */
