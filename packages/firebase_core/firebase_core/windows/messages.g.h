@@ -17,16 +17,17 @@
 
 namespace firebase_core_windows {
 
+
 // Generated class from Pigeon.
 
 class FlutterError {
  public:
-  explicit FlutterError(const std::string& code) : code_(code) {}
+  explicit FlutterError(const std::string& code)
+    : code_(code) {}
   explicit FlutterError(const std::string& code, const std::string& message)
-      : code_(code), message_(message) {}
-  explicit FlutterError(const std::string& code, const std::string& message,
-                        const ::flutter::EncodableValue& details)
-      : code_(code), message_(message), details_(details) {}
+    : code_(code), message_(message) {}
+  explicit FlutterError(const std::string& code, const std::string& message, const ::flutter::EncodableValue& details)
+    : code_(code), message_(message), details_(details) {}
 
   const std::string& code() const { return code_; }
   const std::string& message() const { return message_; }
@@ -38,8 +39,7 @@ class FlutterError {
   ::flutter::EncodableValue details_;
 };
 
-template <class T>
-class ErrorOr {
+template<class T> class ErrorOr {
  public:
   ErrorOr(const T& rhs) : v_(rhs) {}
   ErrorOr(const T&& rhs) : v_(std::move(rhs)) {}
@@ -59,14 +59,17 @@ class ErrorOr {
   std::variant<T, FlutterError> v_;
 };
 
+
+
 // Generated class from Pigeon that represents data sent in messages.
 class CoreFirebaseOptions {
  public:
   // Constructs an object setting all non-nullable fields.
-  explicit CoreFirebaseOptions(const std::string& api_key,
-                               const std::string& app_id,
-                               const std::string& messaging_sender_id,
-                               const std::string& project_id);
+  explicit CoreFirebaseOptions(
+    const std::string& api_key,
+    const std::string& app_id,
+    const std::string& messaging_sender_id,
+    const std::string& project_id);
 
   // Constructs an object setting all fields.
   explicit CoreFirebaseOptions(
@@ -137,10 +140,8 @@ class CoreFirebaseOptions {
 
   bool operator==(const CoreFirebaseOptions& other) const;
   bool operator!=(const CoreFirebaseOptions& other) const;
-  /// Returns a hash code value for the object. This method is supported for the
-  /// benefit of hash tables.
+  /// Returns a hash code value for the object. This method is supported for the benefit of hash tables.
   size_t Hash() const;
-
  private:
   static CoreFirebaseOptions FromEncodableList(
       const ::flutter::EncodableList& list);
@@ -168,26 +169,28 @@ class CoreFirebaseOptions {
   std::optional<std::string> recaptcha_site_key_;
 };
 
+
 // Generated class from Pigeon that represents data sent in messages.
 class CoreInitializeResponse {
  public:
   // Constructs an object setting all non-nullable fields.
   explicit CoreInitializeResponse(
-      const std::string& name, const CoreFirebaseOptions& options,
-      const ::flutter::EncodableMap& plugin_constants);
+    const std::string& name,
+    const CoreFirebaseOptions& options,
+    const ::flutter::EncodableMap& plugin_constants);
 
   // Constructs an object setting all fields.
   explicit CoreInitializeResponse(
-      const std::string& name, const CoreFirebaseOptions& options,
-      const bool* is_automatic_data_collection_enabled,
-      const ::flutter::EncodableMap& plugin_constants);
+    const std::string& name,
+    const CoreFirebaseOptions& options,
+    const bool* is_automatic_data_collection_enabled,
+    const ::flutter::EncodableMap& plugin_constants);
 
   ~CoreInitializeResponse() = default;
   CoreInitializeResponse(const CoreInitializeResponse& other);
   CoreInitializeResponse& operator=(const CoreInitializeResponse& other);
   CoreInitializeResponse(CoreInitializeResponse&& other) = default;
-  CoreInitializeResponse& operator=(CoreInitializeResponse&& other) noexcept =
-      default;
+  CoreInitializeResponse& operator=(CoreInitializeResponse&& other) noexcept = default;
   const std::string& name() const;
   void set_name(std::string_view value_arg);
 
@@ -203,10 +206,8 @@ class CoreInitializeResponse {
 
   bool operator==(const CoreInitializeResponse& other) const;
   bool operator!=(const CoreInitializeResponse& other) const;
-  /// Returns a hash code value for the object. This method is supported for the
-  /// benefit of hash tables.
+  /// Returns a hash code value for the object. This method is supported for the benefit of hash tables.
   size_t Hash() const;
-
  private:
   static CoreInitializeResponse FromEncodableList(
       const ::flutter::EncodableList& list);
@@ -222,8 +223,8 @@ class CoreInitializeResponse {
   ::flutter::EncodableMap plugin_constants_;
 };
 
-class PigeonInternalCodecSerializer
-    : public ::flutter::StandardCodecSerializer {
+
+class PigeonInternalCodecSerializer : public ::flutter::StandardCodecSerializer {
  public:
   PigeonInternalCodecSerializer();
   inline static PigeonInternalCodecSerializer& GetInstance() {
@@ -231,74 +232,73 @@ class PigeonInternalCodecSerializer
     return sInstance;
   }
 
-  void WriteValue(const ::flutter::EncodableValue& value,
-                  ::flutter::ByteStreamWriter* stream) const override;
-
+  void WriteValue(
+    const ::flutter::EncodableValue& value,
+    ::flutter::ByteStreamWriter* stream) const override;
  protected:
   ::flutter::EncodableValue ReadValueOfType(
-      uint8_t type, ::flutter::ByteStreamReader* stream) const override;
+    uint8_t type,
+    ::flutter::ByteStreamReader* stream) const override;
 };
 
-// Generated interface from Pigeon that represents a handler of messages from
-// Flutter.
+// Generated interface from Pigeon that represents a handler of messages from Flutter.
 class FirebaseCoreHostApi {
  public:
   FirebaseCoreHostApi(const FirebaseCoreHostApi&) = delete;
   FirebaseCoreHostApi& operator=(const FirebaseCoreHostApi&) = delete;
   virtual ~FirebaseCoreHostApi() {}
   virtual void InitializeApp(
-      const std::string& app_name,
-      const CoreFirebaseOptions& initialize_app_request,
-      std::function<void(ErrorOr<CoreInitializeResponse> reply)> result) = 0;
-  virtual void InitializeCore(
-      std::function<void(ErrorOr<::flutter::EncodableList> reply)> result) = 0;
-  virtual void OptionsFromResource(
-      std::function<void(ErrorOr<CoreFirebaseOptions> reply)> result) = 0;
+    const std::string& app_name,
+    const CoreFirebaseOptions& initialize_app_request,
+    std::function<void(ErrorOr<CoreInitializeResponse> reply)> result) = 0;
+  virtual void InitializeCore(std::function<void(ErrorOr<::flutter::EncodableList> reply)> result) = 0;
+  virtual void OptionsFromResource(std::function<void(ErrorOr<CoreFirebaseOptions> reply)> result) = 0;
 
   // The codec used by FirebaseCoreHostApi.
   static const ::flutter::StandardMessageCodec& GetCodec();
-  // Sets up an instance of `FirebaseCoreHostApi` to handle messages through the
-  // `binary_messenger`.
-  static void SetUp(::flutter::BinaryMessenger* binary_messenger,
-                    FirebaseCoreHostApi* api);
-  static void SetUp(::flutter::BinaryMessenger* binary_messenger,
-                    FirebaseCoreHostApi* api,
-                    const std::string& message_channel_suffix);
+  // Sets up an instance of `FirebaseCoreHostApi` to handle messages through the `binary_messenger`.
+  static void SetUp(
+    ::flutter::BinaryMessenger* binary_messenger,
+    FirebaseCoreHostApi* api);
+  static void SetUp(
+    ::flutter::BinaryMessenger* binary_messenger,
+    FirebaseCoreHostApi* api,
+    const std::string& message_channel_suffix);
   static ::flutter::EncodableValue WrapError(std::string_view error_message);
   static ::flutter::EncodableValue WrapError(const FlutterError& error);
-
  protected:
   FirebaseCoreHostApi() = default;
 };
-// Generated interface from Pigeon that represents a handler of messages from
-// Flutter.
+// Generated interface from Pigeon that represents a handler of messages from Flutter.
 class FirebaseAppHostApi {
  public:
   FirebaseAppHostApi(const FirebaseAppHostApi&) = delete;
   FirebaseAppHostApi& operator=(const FirebaseAppHostApi&) = delete;
   virtual ~FirebaseAppHostApi() {}
   virtual void SetAutomaticDataCollectionEnabled(
-      const std::string& app_name, bool enabled,
-      std::function<void(std::optional<FlutterError> reply)> result) = 0;
+    const std::string& app_name,
+    bool enabled,
+    std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void SetAutomaticResourceManagementEnabled(
-      const std::string& app_name, bool enabled,
-      std::function<void(std::optional<FlutterError> reply)> result) = 0;
+    const std::string& app_name,
+    bool enabled,
+    std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void Delete(
-      const std::string& app_name,
-      std::function<void(std::optional<FlutterError> reply)> result) = 0;
+    const std::string& app_name,
+    std::function<void(std::optional<FlutterError> reply)> result) = 0;
 
   // The codec used by FirebaseAppHostApi.
   static const ::flutter::StandardMessageCodec& GetCodec();
-  // Sets up an instance of `FirebaseAppHostApi` to handle messages through the
-  // `binary_messenger`.
-  static void SetUp(::flutter::BinaryMessenger* binary_messenger,
-                    FirebaseAppHostApi* api);
-  static void SetUp(::flutter::BinaryMessenger* binary_messenger,
-                    FirebaseAppHostApi* api,
-                    const std::string& message_channel_suffix);
+  // Sets up an instance of `FirebaseAppHostApi` to handle messages through the `binary_messenger`.
+  static void SetUp(
+    ::flutter::BinaryMessenger* binary_messenger,
+    FirebaseAppHostApi* api);
+  static void SetUp(
+    ::flutter::BinaryMessenger* binary_messenger,
+    FirebaseAppHostApi* api,
+    const std::string& message_channel_suffix);
   static ::flutter::EncodableValue WrapError(std::string_view error_message);
   static ::flutter::EncodableValue WrapError(const FlutterError& error);
-
  protected:
   FirebaseAppHostApi() = default;
 };
