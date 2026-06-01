@@ -179,7 +179,7 @@ public class PigeonParser {
   static AuthCredential getCredential(Map<String, Object> credentialMap) {
     // If the credential map contains a token, it means a native one has been stored
     if (credentialMap.get(Constants.TOKEN) != null) {
-      int token = (int) credentialMap.get(Constants.TOKEN);
+      int token = ((Number) credentialMap.get(Constants.TOKEN)).intValue();
       AuthCredential credential = FlutterFirebaseAuthPlugin.authCredentials.get(token);
 
       if (credential == null) {
