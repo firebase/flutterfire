@@ -8,7 +8,7 @@
 import Foundation
 import PackageDescription
 
-let firebaseSdkVersion: Version = "12.13.0"
+let firebaseSdkVersion: Version = "12.14.0"
 
 // Set FIREBASE_ANALYTICS_WITHOUT_ADID=true to use FirebaseAnalyticsWithoutAdIdSupport
 // e.g. FIREBASE_ANALYTICS_WITHOUT_ADID=true flutter build ios
