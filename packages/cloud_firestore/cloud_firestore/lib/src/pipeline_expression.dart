@@ -701,6 +701,41 @@ abstract class Expression implements PipelineSerializable {
     return _ArrayIndexOfAllExpression(this, _toExpression(element));
   }
 
+  /// Returns a slice of this array starting at [offset].
+  ///
+  /// When [length] is provided, at most [length] elements are returned.
+  Expression arraySlice(Object? offset, [Object? length]) {
+    return _ArraySliceExpression(
+      this,
+      _toExpression(offset),
+      length == null ? null : _toExpression(length),
+    );
+  }
+
+  /// Filters this array by evaluating [filter] for each element bound to [alias].
+  Expression arrayFilter(String alias, BooleanExpression filter) {
+    return _ArrayFilterExpression(this, alias, filter);
+  }
+
+  /// Transforms each element of this array bound to [elementAlias].
+  Expression arrayTransform(String elementAlias, Expression transform) {
+    return _ArrayTransformExpression(this, elementAlias, null, transform);
+  }
+
+  /// Transforms each element of this array with both element and index aliases.
+  Expression arrayTransformWithIndex(
+    String elementAlias,
+    String indexAlias,
+    Expression transform,
+  ) {
+    return _ArrayTransformExpression(
+      this,
+      elementAlias,
+      indexAlias,
+      transform,
+    );
+  }
+
   // ============================================================================
   // AGGREGATE FUNCTIONS
   // ============================================================================
@@ -1596,6 +1631,52 @@ abstract class Expression implements PipelineSerializable {
     );
   }
 
+  /// Returns a slice of [array] starting at [offset].
+  static Expression arraySliceStatic(
+    Expression array,
+    Object? offset, [
+    Object? length,
+  ]) {
+    return _ArraySliceExpression(
+      array,
+      _toExpression(offset),
+      length == null ? null : _toExpression(length),
+    );
+  }
+
+  /// Filters [array] by evaluating [filter] for each element bound to [alias].
+  static Expression arrayFilterStatic(
+    Expression array,
+    String alias,
+    BooleanExpression filter,
+  ) {
+    return _ArrayFilterExpression(array, alias, filter);
+  }
+
+  /// Transforms each element of [array] bound to [elementAlias].
+  static Expression arrayTransformStatic(
+    Expression array,
+    String elementAlias,
+    Expression transform,
+  ) {
+    return _ArrayTransformExpression(array, elementAlias, null, transform);
+  }
+
+  /// Transforms each element of [array] with both element and index aliases.
+  static Expression arrayTransformWithIndexStatic(
+    Expression array,
+    String elementAlias,
+    String indexAlias,
+    Expression transform,
+  ) {
+    return _ArrayTransformExpression(
+      array,
+      elementAlias,
+      indexAlias,
+      transform,
+    );
+  }
+
   /// Creates a raw/custom function expression
   static Expression rawFunction(
     String name,
@@ -2419,6 +2500,92 @@ class _ArraySumExpression extends FunctionExpression {
       'args': {
         'expression': expression.toMap(),
       },
+    };
+  }
+}
+
+/// Represents an array slice expression.
+class _ArraySliceExpression extends FunctionExpression {
+  final Expression expression;
+  final Expression offset;
+  final Expression? sliceLength;
+
+  _ArraySliceExpression(this.expression, this.offset, this.sliceLength);
+
+  @override
+  String get name => 'array_slice';
+
+  @override
+  Map<String, dynamic> toMap() {
+    final args = <String, dynamic>{
+      'expression': expression.toMap(),
+      'offset': offset.toMap(),
+    };
+    if (sliceLength != null) {
+      args['length'] = sliceLength!.toMap();
+    }
+    return {
+      'name': name,
+      'args': args,
+    };
+  }
+}
+
+/// Represents an array filter expression.
+class _ArrayFilterExpression extends FunctionExpression {
+  final Expression expression;
+  final String elementAlias;
+  final BooleanExpression filter;
+
+  _ArrayFilterExpression(this.expression, this.elementAlias, this.filter);
+
+  @override
+  String get name => 'array_filter';
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'args': {
+        'expression': expression.toMap(),
+        'alias': elementAlias,
+        'filter': filter.toMap(),
+      },
+    };
+  }
+}
+
+/// Represents an array transform expression.
+class _ArrayTransformExpression extends FunctionExpression {
+  final Expression expression;
+  final String elementAlias;
+  final String? indexAlias;
+  final Expression transform;
+
+  _ArrayTransformExpression(
+    this.expression,
+    this.elementAlias,
+    this.indexAlias,
+    this.transform,
+  );
+
+  @override
+  String get name =>
+      indexAlias == null ? 'array_transform' : 'array_transform_with_index';
+
+  @override
+  Map<String, dynamic> toMap() {
+    final args = <String, dynamic>{
+      'expression': expression.toMap(),
+      'element_alias': elementAlias,
+      'transform': transform.toMap(),
+    };
+    if (indexAlias != null) {
+      args['index_alias'] = indexAlias;
+    }
+    return {
+      'name': name,
+      'args': args,
     };
   }
 }

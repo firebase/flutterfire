@@ -7,8 +7,6 @@ package io.flutter.plugins.firebase.storage
 
 import android.net.Uri
 import android.util.Base64
-import androidx.annotation.NonNull
-import androidx.annotation.Nullable
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.TaskCompletionSource
 import com.google.firebase.FirebaseApp
@@ -53,7 +51,11 @@ class FlutterFirebaseStoragePlugin : FlutterFirebasePlugin, FlutterPlugin, Fireb
     this.messenger = messenger
   }
 
-  private fun registerEventChannel(prefix: String, identifier: String, handler: StreamHandler): String {
+  private fun registerEventChannel(
+      prefix: String,
+      identifier: String,
+      handler: StreamHandler
+  ): String {
     val channelName = "$prefix/$identifier"
     val channel = EventChannel(messenger, channelName)
     channel.setStreamHandler(handler)
@@ -87,8 +89,8 @@ class FlutterFirebaseStoragePlugin : FlutterFirebasePlugin, FlutterPlugin, Fireb
   }
 
   private fun getReferenceFromPigeon(
-    app: InternalStorageFirebaseApp,
-    reference: InternalStorageReference
+      app: InternalStorageFirebaseApp,
+      reference: InternalStorageReference
   ): StorageReference {
     val androidStorage = getStorageFromPigeon(app)
     return androidStorage.getReference(reference.fullPath)
@@ -96,10 +98,7 @@ class FlutterFirebaseStoragePlugin : FlutterFirebasePlugin, FlutterPlugin, Fireb
 
   private fun convertToPigeonReference(reference: StorageReference): InternalStorageReference {
     return InternalStorageReference(
-      bucket = reference.bucket,
-      fullPath = reference.path,
-      name = reference.name
-    )
+        bucket = reference.bucket, fullPath = reference.path, name = reference.name)
   }
 
   private fun convertToPigeonMetaData(storageMetadata: StorageMetadata?): InternalFullMetaData {
@@ -112,14 +111,18 @@ class FlutterFirebaseStoragePlugin : FlutterFirebasePlugin, FlutterPlugin, Fireb
     return InternalListResult(items = items, pageToken = listResult.pageToken, prefixs = prefixes)
   }
 
-  private fun getMetaDataFromPigeon(pigeonSettableMetatdata: InternalSettableMetadata): StorageMetadata {
+  private fun getMetaDataFromPigeon(
+      pigeonSettableMetatdata: InternalSettableMetadata
+  ): StorageMetadata {
     val builder = StorageMetadata.Builder()
     pigeonSettableMetatdata.contentType?.let { builder.setContentType(it) }
     pigeonSettableMetatdata.cacheControl?.let { builder.setCacheControl(it) }
     pigeonSettableMetatdata.contentDisposition?.let { builder.setContentDisposition(it) }
     pigeonSettableMetatdata.contentEncoding?.let { builder.setContentEncoding(it) }
     pigeonSettableMetatdata.contentLanguage?.let { builder.setContentLanguage(it) }
-    pigeonSettableMetatdata.customMetadata?.forEach { (k, v) -> if (k != null && v != null) builder.setCustomMetadata(k, v) }
+    pigeonSettableMetatdata.customMetadata?.forEach { (k, v) ->
+      if (k != null && v != null) builder.setCustomMetadata(k, v)
+    }
     return builder.build()
   }
 
@@ -132,20 +135,20 @@ class FlutterFirebaseStoragePlugin : FlutterFirebasePlugin, FlutterPlugin, Fireb
   }
 
   override fun getReferencebyPath(
-    app: InternalStorageFirebaseApp,
-    path: String,
-    bucket: String?,
-    callback: (Result<InternalStorageReference>) -> Unit
+      app: InternalStorageFirebaseApp,
+      path: String,
+      bucket: String?,
+      callback: (Result<InternalStorageReference>) -> Unit
   ) {
     val androidReference = getStorageFromPigeon(app).getReference(path)
     callback(Result.success(convertToPigeonReference(androidReference)))
   }
 
   override fun useStorageEmulator(
-    app: InternalStorageFirebaseApp,
-    host: String,
-    port: Long,
-    callback: (Result<Unit>) -> Unit
+      app: InternalStorageFirebaseApp,
+      host: String,
+      port: Long,
+      callback: (Result<Unit>) -> Unit
   ) {
     try {
       val storage = getStorageFromPigeon(app)
@@ -157,185 +160,223 @@ class FlutterFirebaseStoragePlugin : FlutterFirebasePlugin, FlutterPlugin, Fireb
   }
 
   override fun referenceDelete(
-    app: InternalStorageFirebaseApp,
-    reference: InternalStorageReference,
-    callback: (Result<Unit>) -> Unit
+      app: InternalStorageFirebaseApp,
+      reference: InternalStorageReference,
+      callback: (Result<Unit>) -> Unit
   ) {
     val androidReference = getStorageFromPigeon(app).getReference(reference.fullPath)
     androidReference.delete().addOnCompleteListener { task ->
       if (task.isSuccessful) callback(Result.success(Unit))
-      else callback(Result.failure(FlutterFirebaseStorageException.parserExceptionToFlutter(task.exception)))
+      else
+          callback(
+              Result.failure(
+                  FlutterFirebaseStorageException.parserExceptionToFlutter(task.exception)))
     }
   }
 
   override fun referenceGetDownloadURL(
-    app: InternalStorageFirebaseApp,
-    reference: InternalStorageReference,
-    callback: (Result<String>) -> Unit
+      app: InternalStorageFirebaseApp,
+      reference: InternalStorageReference,
+      callback: (Result<String>) -> Unit
   ) {
     val androidReference = getStorageFromPigeon(app).getReference(reference.fullPath)
     androidReference.downloadUrl.addOnCompleteListener { task ->
       if (task.isSuccessful) callback(Result.success(task.result.toString()))
-      else callback(Result.failure(FlutterFirebaseStorageException.parserExceptionToFlutter(task.exception)))
+      else
+          callback(
+              Result.failure(
+                  FlutterFirebaseStorageException.parserExceptionToFlutter(task.exception)))
     }
   }
 
   override fun referenceGetData(
-    app: InternalStorageFirebaseApp,
-    reference: InternalStorageReference,
-    maxSize: Long,
-    callback: (Result<ByteArray?>) -> Unit
+      app: InternalStorageFirebaseApp,
+      reference: InternalStorageReference,
+      maxSize: Long,
+      callback: (Result<ByteArray?>) -> Unit
   ) {
     val androidReference = getStorageFromPigeon(app).getReference(reference.fullPath)
     androidReference.getBytes(maxSize).addOnCompleteListener { task ->
       if (task.isSuccessful) callback(Result.success(task.result))
-      else callback(Result.failure(FlutterFirebaseStorageException.parserExceptionToFlutter(task.exception)))
+      else
+          callback(
+              Result.failure(
+                  FlutterFirebaseStorageException.parserExceptionToFlutter(task.exception)))
     }
   }
 
   override fun referenceGetMetaData(
-    app: InternalStorageFirebaseApp,
-    reference: InternalStorageReference,
-    callback: (Result<InternalFullMetaData>) -> Unit
+      app: InternalStorageFirebaseApp,
+      reference: InternalStorageReference,
+      callback: (Result<InternalFullMetaData>) -> Unit
   ) {
     val androidReference = getStorageFromPigeon(app).getReference(reference.fullPath)
     androidReference.metadata.addOnCompleteListener { task ->
       if (task.isSuccessful) callback(Result.success(convertToPigeonMetaData(task.result)))
-      else callback(Result.failure(FlutterFirebaseStorageException.parserExceptionToFlutter(task.exception)))
+      else
+          callback(
+              Result.failure(
+                  FlutterFirebaseStorageException.parserExceptionToFlutter(task.exception)))
     }
   }
 
   override fun referenceList(
-    app: InternalStorageFirebaseApp,
-    reference: InternalStorageReference,
-    options: InternalListOptions,
-    callback: (Result<InternalListResult>) -> Unit
+      app: InternalStorageFirebaseApp,
+      reference: InternalStorageReference,
+      options: InternalListOptions,
+      callback: (Result<InternalListResult>) -> Unit
   ) {
     val androidReference = getStorageFromPigeon(app).getReference(reference.fullPath)
-    val task = if (options.pageToken != null) {
-      androidReference.list(options.maxResults.toInt(), options.pageToken)
-    } else {
-      androidReference.list(options.maxResults.toInt())
-    }
+    val task =
+        if (options.pageToken != null) {
+          androidReference.list(options.maxResults.toInt(), options.pageToken)
+        } else {
+          androidReference.list(options.maxResults.toInt())
+        }
     task.addOnCompleteListener { t ->
       if (t.isSuccessful) callback(Result.success(convertToPigeonListResult(t.result)))
-      else callback(Result.failure(FlutterFirebaseStorageException.parserExceptionToFlutter(t.exception)))
+      else
+          callback(
+              Result.failure(FlutterFirebaseStorageException.parserExceptionToFlutter(t.exception)))
     }
   }
 
   override fun referenceListAll(
-    app: InternalStorageFirebaseApp,
-    reference: InternalStorageReference,
-    callback: (Result<InternalListResult>) -> Unit
+      app: InternalStorageFirebaseApp,
+      reference: InternalStorageReference,
+      callback: (Result<InternalListResult>) -> Unit
   ) {
     val androidReference = getStorageFromPigeon(app).getReference(reference.fullPath)
     androidReference.listAll().addOnCompleteListener { task ->
       if (task.isSuccessful) callback(Result.success(convertToPigeonListResult(task.result)))
-      else callback(Result.failure(FlutterFirebaseStorageException.parserExceptionToFlutter(task.exception)))
+      else
+          callback(
+              Result.failure(
+                  FlutterFirebaseStorageException.parserExceptionToFlutter(task.exception)))
     }
   }
 
   override fun referenceUpdateMetadata(
-    app: InternalStorageFirebaseApp,
-    reference: InternalStorageReference,
-    metadata: InternalSettableMetadata,
-    callback: (Result<InternalFullMetaData>) -> Unit
+      app: InternalStorageFirebaseApp,
+      reference: InternalStorageReference,
+      metadata: InternalSettableMetadata,
+      callback: (Result<InternalFullMetaData>) -> Unit
   ) {
     val androidReference = getStorageFromPigeon(app).getReference(reference.fullPath)
     androidReference.updateMetadata(getMetaDataFromPigeon(metadata)).addOnCompleteListener { task ->
       if (task.isSuccessful) callback(Result.success(convertToPigeonMetaData(task.result)))
-      else callback(Result.failure(FlutterFirebaseStorageException.parserExceptionToFlutter(task.exception)))
+      else
+          callback(
+              Result.failure(
+                  FlutterFirebaseStorageException.parserExceptionToFlutter(task.exception)))
     }
   }
 
   override fun referencePutData(
-    app: InternalStorageFirebaseApp,
-    reference: InternalStorageReference,
-    data: ByteArray,
-    settableMetaData: InternalSettableMetadata,
-    handle: Long,
-    callback: (Result<String>) -> Unit
+      app: InternalStorageFirebaseApp,
+      reference: InternalStorageReference,
+      data: ByteArray,
+      settableMetaData: InternalSettableMetadata,
+      handle: Long,
+      callback: (Result<String>) -> Unit
   ) {
     val androidReference = getReferenceFromPigeon(app, reference)
     val androidMetaData = getMetaDataFromPigeon(settableMetaData)
-    val storageTask = FlutterFirebaseStorageTask.uploadBytes(handle.toInt(), androidReference, data, androidMetaData)
+    val storageTask =
+        FlutterFirebaseStorageTask.uploadBytes(
+            handle.toInt(), androidReference, data, androidMetaData)
     try {
       val identifier = UUID.randomUUID().toString().lowercase(Locale.US)
       val handler = storageTask.startTaskWithMethodChannel(channel!!, identifier)
-      callback(Result.success(registerEventChannel("$STORAGE_METHOD_CHANNEL_NAME/$STORAGE_TASK_EVENT_NAME", identifier, handler)))
+      callback(
+          Result.success(
+              registerEventChannel(
+                  "$STORAGE_METHOD_CHANNEL_NAME/$STORAGE_TASK_EVENT_NAME", identifier, handler)))
     } catch (e: Exception) {
       callback(Result.failure(FlutterFirebaseStorageException.parserExceptionToFlutter(e)))
     }
   }
 
   override fun referencePutString(
-    app: InternalStorageFirebaseApp,
-    reference: InternalStorageReference,
-    data: String,
-    format: Long,
-    settableMetaData: InternalSettableMetadata,
-    handle: Long,
-    callback: (Result<String>) -> Unit
+      app: InternalStorageFirebaseApp,
+      reference: InternalStorageReference,
+      data: String,
+      format: Long,
+      settableMetaData: InternalSettableMetadata,
+      handle: Long,
+      callback: (Result<String>) -> Unit
   ) {
     val androidReference = getReferenceFromPigeon(app, reference)
     val androidMetaData = getMetaDataFromPigeon(settableMetaData)
     val bytes = stringToByteData(data, format.toInt())
-    val storageTask = FlutterFirebaseStorageTask.uploadBytes(handle.toInt(), androidReference, bytes!!, androidMetaData)
+    val storageTask =
+        FlutterFirebaseStorageTask.uploadBytes(
+            handle.toInt(), androidReference, bytes!!, androidMetaData)
     try {
       val identifier = UUID.randomUUID().toString().lowercase(Locale.US)
       val handler = storageTask.startTaskWithMethodChannel(channel!!, identifier)
-      callback(Result.success(registerEventChannel("$STORAGE_METHOD_CHANNEL_NAME/$STORAGE_TASK_EVENT_NAME", identifier, handler)))
+      callback(
+          Result.success(
+              registerEventChannel(
+                  "$STORAGE_METHOD_CHANNEL_NAME/$STORAGE_TASK_EVENT_NAME", identifier, handler)))
     } catch (e: Exception) {
       callback(Result.failure(FlutterFirebaseStorageException.parserExceptionToFlutter(e)))
     }
   }
 
   override fun referencePutFile(
-    app: InternalStorageFirebaseApp,
-    reference: InternalStorageReference,
-    filePath: String,
-    settableMetaData: InternalSettableMetadata?,
-    handle: Long,
-    callback: (Result<String>) -> Unit
+      app: InternalStorageFirebaseApp,
+      reference: InternalStorageReference,
+      filePath: String,
+      settableMetaData: InternalSettableMetadata?,
+      handle: Long,
+      callback: (Result<String>) -> Unit
   ) {
     val androidReference = getReferenceFromPigeon(app, reference)
-    val storageTask = FlutterFirebaseStorageTask.uploadFile(
-      handle.toInt(),
-      androidReference,
-      Uri.fromFile(File(filePath)),
-      settableMetaData?.let { getMetaDataFromPigeon(it) }
-    )
+    val storageTask =
+        FlutterFirebaseStorageTask.uploadFile(
+            handle.toInt(),
+            androidReference,
+            Uri.fromFile(File(filePath)),
+            settableMetaData?.let { getMetaDataFromPigeon(it) })
     try {
       val identifier = UUID.randomUUID().toString().lowercase(Locale.US)
       val handler = storageTask.startTaskWithMethodChannel(channel!!, identifier)
-      callback(Result.success(registerEventChannel("$STORAGE_METHOD_CHANNEL_NAME/$STORAGE_TASK_EVENT_NAME", identifier, handler)))
+      callback(
+          Result.success(
+              registerEventChannel(
+                  "$STORAGE_METHOD_CHANNEL_NAME/$STORAGE_TASK_EVENT_NAME", identifier, handler)))
     } catch (e: Exception) {
       callback(Result.failure(FlutterFirebaseStorageException.parserExceptionToFlutter(e)))
     }
   }
 
   override fun referenceDownloadFile(
-    app: InternalStorageFirebaseApp,
-    reference: InternalStorageReference,
-    filePath: String,
-    handle: Long,
-    callback: (Result<String>) -> Unit
+      app: InternalStorageFirebaseApp,
+      reference: InternalStorageReference,
+      filePath: String,
+      handle: Long,
+      callback: (Result<String>) -> Unit
   ) {
     val androidReference = getReferenceFromPigeon(app, reference)
-    val storageTask = FlutterFirebaseStorageTask.downloadFile(handle.toInt(), androidReference, File(filePath))
+    val storageTask =
+        FlutterFirebaseStorageTask.downloadFile(handle.toInt(), androidReference, File(filePath))
     try {
       val identifier = UUID.randomUUID().toString().lowercase(Locale.US)
       val handler = storageTask.startTaskWithMethodChannel(channel!!, identifier)
-      callback(Result.success(registerEventChannel("$STORAGE_METHOD_CHANNEL_NAME/$STORAGE_TASK_EVENT_NAME", identifier, handler)))
+      callback(
+          Result.success(
+              registerEventChannel(
+                  "$STORAGE_METHOD_CHANNEL_NAME/$STORAGE_TASK_EVENT_NAME", identifier, handler)))
     } catch (e: Exception) {
       callback(Result.failure(FlutterFirebaseStorageException.parserExceptionToFlutter(e)))
     }
   }
 
   override fun taskPause(
-    app: InternalStorageFirebaseApp,
-    handle: Long,
-    callback: (Result<Map<String, Any>>) -> Unit
+      app: InternalStorageFirebaseApp,
+      handle: Long,
+      callback: (Result<Map<String, Any>>) -> Unit
   ) {
     val storageTask = FlutterFirebaseStorageTask.getInProgressTaskForHandle(handle.toInt())
     if (storageTask == null) {
@@ -352,7 +393,8 @@ class FlutterFirebaseStoragePlugin : FlutterFirebasePlugin, FlutterPlugin, Fireb
       val statusMap = HashMap<String, Any>()
       statusMap["status"] = paused
       if (paused) {
-        statusMap["snapshot"] = FlutterFirebaseStorageTask.parseTaskSnapshot(storageTask.getSnapshot())
+        statusMap["snapshot"] =
+            FlutterFirebaseStorageTask.parseTaskSnapshot(storageTask.getSnapshot())
       }
       callback(Result.success(statusMap))
     } catch (e: Exception) {
@@ -361,9 +403,9 @@ class FlutterFirebaseStoragePlugin : FlutterFirebasePlugin, FlutterPlugin, Fireb
   }
 
   override fun taskResume(
-    app: InternalStorageFirebaseApp,
-    handle: Long,
-    callback: (Result<Map<String, Any>>) -> Unit
+      app: InternalStorageFirebaseApp,
+      handle: Long,
+      callback: (Result<Map<String, Any>>) -> Unit
   ) {
     val storageTask = FlutterFirebaseStorageTask.getInProgressTaskForHandle(handle.toInt())
     if (storageTask == null) {
@@ -380,7 +422,8 @@ class FlutterFirebaseStoragePlugin : FlutterFirebasePlugin, FlutterPlugin, Fireb
       val statusMap = HashMap<String, Any>()
       statusMap["status"] = resumed
       if (resumed) {
-        statusMap["snapshot"] = FlutterFirebaseStorageTask.parseTaskSnapshot(storageTask.getSnapshot())
+        statusMap["snapshot"] =
+            FlutterFirebaseStorageTask.parseTaskSnapshot(storageTask.getSnapshot())
       }
       callback(Result.success(statusMap))
     } catch (e: Exception) {
@@ -389,9 +432,9 @@ class FlutterFirebaseStoragePlugin : FlutterFirebasePlugin, FlutterPlugin, Fireb
   }
 
   override fun taskCancel(
-    app: InternalStorageFirebaseApp,
-    handle: Long,
-    callback: (Result<Map<String, Any>>) -> Unit
+      app: InternalStorageFirebaseApp,
+      handle: Long,
+      callback: (Result<Map<String, Any>>) -> Unit
   ) {
     val storageTask = FlutterFirebaseStorageTask.getInProgressTaskForHandle(handle.toInt())
     if (storageTask == null) {
@@ -405,7 +448,8 @@ class FlutterFirebaseStoragePlugin : FlutterFirebasePlugin, FlutterPlugin, Fireb
       val statusMap = HashMap<String, Any>()
       statusMap["status"] = canceled
       if (canceled) {
-        statusMap["snapshot"] = FlutterFirebaseStorageTask.parseTaskSnapshot(storageTask.getSnapshot())
+        statusMap["snapshot"] =
+            FlutterFirebaseStorageTask.parseTaskSnapshot(storageTask.getSnapshot())
       }
       callback(Result.success(statusMap))
     } catch (e: Exception) {
@@ -414,9 +458,9 @@ class FlutterFirebaseStoragePlugin : FlutterFirebasePlugin, FlutterPlugin, Fireb
   }
 
   override fun setMaxOperationRetryTime(
-    app: InternalStorageFirebaseApp,
-    time: Long,
-    callback: (Result<Unit>) -> Unit
+      app: InternalStorageFirebaseApp,
+      time: Long,
+      callback: (Result<Unit>) -> Unit
   ) {
     val storage = getStorageFromPigeon(app)
     storage.maxOperationRetryTimeMillis = time
@@ -424,9 +468,9 @@ class FlutterFirebaseStoragePlugin : FlutterFirebasePlugin, FlutterPlugin, Fireb
   }
 
   override fun setMaxUploadRetryTime(
-    app: InternalStorageFirebaseApp,
-    time: Long,
-    callback: (Result<Unit>) -> Unit
+      app: InternalStorageFirebaseApp,
+      time: Long,
+      callback: (Result<Unit>) -> Unit
   ) {
     val storage = getStorageFromPigeon(app)
     storage.maxUploadRetryTimeMillis = time
@@ -434,16 +478,18 @@ class FlutterFirebaseStoragePlugin : FlutterFirebasePlugin, FlutterPlugin, Fireb
   }
 
   override fun setMaxDownloadRetryTime(
-    app: InternalStorageFirebaseApp,
-    time: Long,
-    callback: (Result<Unit>) -> Unit
+      app: InternalStorageFirebaseApp,
+      time: Long,
+      callback: (Result<Unit>) -> Unit
   ) {
     val storage = getStorageFromPigeon(app)
     storage.maxDownloadRetryTimeMillis = time
     callback(Result.success(Unit))
   }
 
-  override fun getPluginConstantsForFirebaseApp(firebaseApp: FirebaseApp?): Task<MutableMap<String, Any>> {
+  override fun getPluginConstantsForFirebaseApp(
+      firebaseApp: FirebaseApp?
+  ): Task<MutableMap<String, Any>> {
     val taskCompletionSource = TaskCompletionSource<MutableMap<String, Any>>()
     cachedThreadPool.execute {
       val obj = HashMap<String, Any>()
@@ -504,5 +550,3 @@ class FlutterFirebaseStoragePlugin : FlutterFirebasePlugin, FlutterPlugin, Fireb
     }
   }
 }
-
-

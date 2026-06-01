@@ -14,9 +14,6 @@ import com.google.firebase.platforminfo.LibraryVersionComponent
 class FlutterFirebaseAppRegistrar : ComponentRegistrar {
   override fun getComponents(): List<Component<*>> {
     return listOf(
-      LibraryVersionComponent.create(BuildConfig.LIBRARY_NAME, BuildConfig.LIBRARY_VERSION)
-    )
+        LibraryVersionComponent.create(BuildConfig.LIBRARY_NAME, BuildConfig.LIBRARY_VERSION))
   }
 }
-
-

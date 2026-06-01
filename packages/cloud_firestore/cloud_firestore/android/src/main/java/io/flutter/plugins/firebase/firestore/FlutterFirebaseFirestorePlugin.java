@@ -369,7 +369,8 @@ public class FlutterFirebaseFirestorePlugin
             if (query == null) {
               result.error(
                   new NullPointerException(
-                      "Named query has not been found. Please check it has been loaded properly via loadBundle()."));
+                      "Named query has not been found. Please check it has been loaded properly via"
+                          + " loadBundle()."));
               return;
             }
 
@@ -764,7 +765,8 @@ public class FlutterFirebaseFirestorePlugin
               result.error(
                   new GeneratedAndroidFirebaseFirestore.FlutterError(
                       "invalid_query",
-                      "An error occurred while parsing query arguments, see native logs for more information. Please report this issue.",
+                      "An error occurred while parsing query arguments, see native logs for more"
+                          + " information. Please report this issue.",
                       null));
               return;
             }
@@ -973,7 +975,8 @@ public class FlutterFirebaseFirestorePlugin
       result.error(
           new GeneratedAndroidFirebaseFirestore.FlutterError(
               "invalid_query",
-              "An error occurred while parsing query arguments, see native logs for more information. Please report this issue.",
+              "An error occurred while parsing query arguments, see native logs for more"
+                  + " information. Please report this issue.",
               null));
       return;
     }

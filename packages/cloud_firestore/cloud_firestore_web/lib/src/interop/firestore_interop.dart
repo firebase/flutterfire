@@ -483,6 +483,12 @@ extension type ExpressionJsImpl._(JSObject _) implements JSObject {
   external ExpressionJsImpl arrayIndexOf(JSAny element);
   external ExpressionJsImpl arrayLastIndexOf(JSAny element);
   external ExpressionJsImpl arrayIndexOfAll(JSAny element);
+  external ExpressionJsImpl arraySlice(JSAny offset, [JSAny? length]);
+  external ExpressionJsImpl arrayFilter(JSString alias, JSAny filter);
+  external ExpressionJsImpl arrayTransform(
+      JSString elementAlias, JSAny transform);
+  external ExpressionJsImpl arrayTransformWithIndex(
+      JSString elementAlias, JSString indexAlias, JSAny transform);
   external ExpressionJsImpl mapSet(JSAny key, JSAny value);
   external ExpressionJsImpl mapEntries();
 }
