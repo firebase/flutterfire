@@ -55,37 +55,51 @@ NS_ASSUME_NONNULL_BEGIN
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)makeWithName:(NSString *)name
-    options:(CoreFirebaseOptions *)options
+                             options:(CoreFirebaseOptions *)options
     isAutomaticDataCollectionEnabled:(nullable NSNumber *)isAutomaticDataCollectionEnabled
-    pluginConstants:(NSDictionary<NSString *, id> *)pluginConstants;
-@property(nonatomic, copy) NSString * name;
-@property(nonatomic, strong) CoreFirebaseOptions * options;
-@property(nonatomic, strong, nullable) NSNumber * isAutomaticDataCollectionEnabled;
-@property(nonatomic, copy) NSDictionary<NSString *, id> * pluginConstants;
+                     pluginConstants:(NSDictionary<NSString *, id> *)pluginConstants;
+@property(nonatomic, copy) NSString *name;
+@property(nonatomic, strong) CoreFirebaseOptions *options;
+@property(nonatomic, strong, nullable) NSNumber *isAutomaticDataCollectionEnabled;
+@property(nonatomic, copy) NSDictionary<NSString *, id> *pluginConstants;
 @end
 
 /// The codec used by all APIs.
 NSObject<FlutterMessageCodec> *nullGetMessagesCodec(void);
 
 @protocol FirebaseCoreHostApi
-- (void)initializeAppAppName:(NSString *)appName initializeAppRequest:(CoreFirebaseOptions *)initializeAppRequest completion:(void (^)(CoreInitializeResponse *_Nullable, FlutterError *_Nullable))completion;
-- (void)initializeCoreWithCompletion:(void (^)(NSArray<CoreInitializeResponse *> *_Nullable, FlutterError *_Nullable))completion;
-- (void)optionsFromResourceWithCompletion:(void (^)(CoreFirebaseOptions *_Nullable, FlutterError *_Nullable))completion;
+- (void)initializeAppAppName:(NSString *)appName
+        initializeAppRequest:(CoreFirebaseOptions *)initializeAppRequest
+                  completion:(void (^)(CoreInitializeResponse *_Nullable,
+                                       FlutterError *_Nullable))completion;
+- (void)initializeCoreWithCompletion:(void (^)(NSArray<CoreInitializeResponse *> *_Nullable,
+                                               FlutterError *_Nullable))completion;
+- (void)optionsFromResourceWithCompletion:(void (^)(CoreFirebaseOptions *_Nullable,
+                                                    FlutterError *_Nullable))completion;
 @end
 
-extern void SetUpFirebaseCoreHostApi(id<FlutterBinaryMessenger> binaryMessenger, NSObject<FirebaseCoreHostApi> *_Nullable api);
+extern void SetUpFirebaseCoreHostApi(id<FlutterBinaryMessenger> binaryMessenger,
+                                     NSObject<FirebaseCoreHostApi> *_Nullable api);
 
-extern void SetUpFirebaseCoreHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMessenger, NSObject<FirebaseCoreHostApi> *_Nullable api, NSString *messageChannelSuffix);
-
+extern void SetUpFirebaseCoreHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMessenger,
+                                               NSObject<FirebaseCoreHostApi> *_Nullable api,
+                                               NSString *messageChannelSuffix);
 
 @protocol FirebaseAppHostApi
-- (void)setAutomaticDataCollectionEnabledAppName:(NSString *)appName enabled:(BOOL)enabled completion:(void (^)(FlutterError *_Nullable))completion;
-- (void)setAutomaticResourceManagementEnabledAppName:(NSString *)appName enabled:(BOOL)enabled completion:(void (^)(FlutterError *_Nullable))completion;
+- (void)setAutomaticDataCollectionEnabledAppName:(NSString *)appName
+                                         enabled:(BOOL)enabled
+                                      completion:(void (^)(FlutterError *_Nullable))completion;
+- (void)setAutomaticResourceManagementEnabledAppName:(NSString *)appName
+                                             enabled:(BOOL)enabled
+                                          completion:(void (^)(FlutterError *_Nullable))completion;
 - (void)deleteAppName:(NSString *)appName completion:(void (^)(FlutterError *_Nullable))completion;
 @end
 
-extern void SetUpFirebaseAppHostApi(id<FlutterBinaryMessenger> binaryMessenger, NSObject<FirebaseAppHostApi> *_Nullable api);
+extern void SetUpFirebaseAppHostApi(id<FlutterBinaryMessenger> binaryMessenger,
+                                    NSObject<FirebaseAppHostApi> *_Nullable api);
 
-extern void SetUpFirebaseAppHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMessenger, NSObject<FirebaseAppHostApi> *_Nullable api, NSString *messageChannelSuffix);
+extern void SetUpFirebaseAppHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMessenger,
+                                              NSObject<FirebaseAppHostApi> *_Nullable api,
+                                              NSString *messageChannelSuffix);
 
 NS_ASSUME_NONNULL_END

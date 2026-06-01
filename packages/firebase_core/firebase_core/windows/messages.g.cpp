@@ -34,32 +34,36 @@ FlutterError CreateConnectionError(const std::string channel_name) {
 }
 
 namespace {
-template<typename T>
+template <typename T>
 bool PigeonInternalDeepEquals(const T& a, const T& b);
 
 bool PigeonInternalDeepEquals(const double& a, const double& b);
 
-template<typename T>
+template <typename T>
 bool PigeonInternalDeepEquals(const std::vector<T>& a, const std::vector<T>& b);
 
-template<typename K, typename V>
+template <typename K, typename V>
 bool PigeonInternalDeepEquals(const std::map<K, V>& a, const std::map<K, V>& b);
 
-template<typename T>
-bool PigeonInternalDeepEquals(const std::optional<T>& a, const std::optional<T>& b);
+template <typename T>
+bool PigeonInternalDeepEquals(const std::optional<T>& a,
+                              const std::optional<T>& b);
 
-template<typename T>
-bool PigeonInternalDeepEquals(const std::unique_ptr<T>& a, const std::unique_ptr<T>& b);
+template <typename T>
+bool PigeonInternalDeepEquals(const std::unique_ptr<T>& a,
+                              const std::unique_ptr<T>& b);
 
-bool PigeonInternalDeepEquals(const ::flutter::EncodableValue& a, const ::flutter::EncodableValue& b);
+bool PigeonInternalDeepEquals(const ::flutter::EncodableValue& a,
+                              const ::flutter::EncodableValue& b);
 
-template<typename T>
+template <typename T>
 bool PigeonInternalDeepEquals(const T& a, const T& b) {
   return a == b;
 }
 
-template<typename T>
-bool PigeonInternalDeepEquals(const std::vector<T>& a, const std::vector<T>& b) {
+template <typename T>
+bool PigeonInternalDeepEquals(const std::vector<T>& a,
+                              const std::vector<T>& b) {
   if (a.size() != b.size()) {
     return false;
   }
@@ -72,7 +76,8 @@ bool PigeonInternalDeepEquals(const std::vector<T>& a, const std::vector<T>& b) 
 }
 
 template <typename K, typename V>
-bool PigeonInternalDeepEquals(const std::map<K, V>& a, const std::map<K, V>& b) {
+bool PigeonInternalDeepEquals(const std::map<K, V>& a,
+                              const std::map<K, V>& b) {
   if (a.size() != b.size()) {
     return false;
   }
@@ -100,8 +105,9 @@ bool PigeonInternalDeepEquals(const double& a, const double& b) {
   return (a == b) || (std::isnan(a) && std::isnan(b));
 }
 
-template<typename T>
-bool PigeonInternalDeepEquals(const std::optional<T>& a, const std::optional<T>& b) {
+template <typename T>
+bool PigeonInternalDeepEquals(const std::optional<T>& a,
+                              const std::optional<T>& b) {
   if (!a && !b) {
     return true;
   }
@@ -111,8 +117,9 @@ bool PigeonInternalDeepEquals(const std::optional<T>& a, const std::optional<T>&
   return PigeonInternalDeepEquals(*a, *b);
 }
 
-template<typename T>
-bool PigeonInternalDeepEquals(const std::unique_ptr<T>& a, const std::unique_ptr<T>& b) {
+template <typename T>
+bool PigeonInternalDeepEquals(const std::unique_ptr<T>& a,
+                              const std::unique_ptr<T>& b) {
   if (a.get() == b.get()) {
     return true;
   }
@@ -122,15 +129,18 @@ bool PigeonInternalDeepEquals(const std::unique_ptr<T>& a, const std::unique_ptr
   return PigeonInternalDeepEquals(*a, *b);
 }
 
-bool PigeonInternalDeepEquals(const ::flutter::EncodableValue& a, const ::flutter::EncodableValue& b) {
+bool PigeonInternalDeepEquals(const ::flutter::EncodableValue& a,
+                              const ::flutter::EncodableValue& b) {
   if (a.index() != b.index()) {
     return false;
   }
   if (const double* da = std::get_if<double>(&a)) {
     return PigeonInternalDeepEquals(*da, std::get<double>(b));
-  } else if (const ::flutter::EncodableList* la = std::get_if<::flutter::EncodableList>(&a)) {
+  } else if (const ::flutter::EncodableList* la =
+                 std::get_if<::flutter::EncodableList>(&a)) {
     return PigeonInternalDeepEquals(*la, std::get<::flutter::EncodableList>(b));
-  } else if (const ::flutter::EncodableMap* ma = std::get_if<::flutter::EncodableMap>(&a)) {
+  } else if (const ::flutter::EncodableMap* ma =
+                 std::get_if<::flutter::EncodableMap>(&a)) {
     return PigeonInternalDeepEquals(*ma, std::get<::flutter::EncodableMap>(b));
   }
   return a == b;
@@ -173,7 +183,8 @@ template <typename K, typename V>
 size_t PigeonInternalDeepHash(const std::map<K, V>& v) {
   size_t result = 0;
   for (const auto& kv : v) {
-    result += ((PigeonInternalDeepHash(kv.first) * 31) ^ PigeonInternalDeepHash(kv.second));
+    result += ((PigeonInternalDeepHash(kv.first) * 31) ^
+               PigeonInternalDeepHash(kv.second));
   }
   return result;
 }
@@ -230,15 +241,14 @@ size_t PigeonInternalDeepHash(const ::flutter::EncodableValue& v) {
 }  // namespace
 // CoreFirebaseOptions
 
-CoreFirebaseOptions::CoreFirebaseOptions(
-  const std::string& api_key,
-  const std::string& app_id,
-  const std::string& messaging_sender_id,
-  const std::string& project_id)
- : api_key_(api_key),
-    app_id_(app_id),
-    messaging_sender_id_(messaging_sender_id),
-    project_id_(project_id) {}
+CoreFirebaseOptions::CoreFirebaseOptions(const std::string& api_key,
+                                         const std::string& app_id,
+                                         const std::string& messaging_sender_id,
+                                         const std::string& project_id)
+    : api_key_(api_key),
+      app_id_(app_id),
+      messaging_sender_id_(messaging_sender_id),
+      project_id_(project_id) {}
 
 CoreFirebaseOptions::CoreFirebaseOptions(
     const std::string& api_key, const std::string& app_id,
@@ -283,23 +293,17 @@ CoreFirebaseOptions::CoreFirebaseOptions(
                               ? std::optional<std::string>(*recaptcha_site_key)
                               : std::nullopt) {}
 
-const std::string& CoreFirebaseOptions::api_key() const {
-  return api_key_;
-}
+const std::string& CoreFirebaseOptions::api_key() const { return api_key_; }
 
 void CoreFirebaseOptions::set_api_key(std::string_view value_arg) {
   api_key_ = value_arg;
 }
 
-
-const std::string& CoreFirebaseOptions::app_id() const {
-  return app_id_;
-}
+const std::string& CoreFirebaseOptions::app_id() const { return app_id_; }
 
 void CoreFirebaseOptions::set_app_id(std::string_view value_arg) {
   app_id_ = value_arg;
 }
-
 
 const std::string& CoreFirebaseOptions::messaging_sender_id() const {
   return messaging_sender_id_;
@@ -309,7 +313,6 @@ void CoreFirebaseOptions::set_messaging_sender_id(std::string_view value_arg) {
   messaging_sender_id_ = value_arg;
 }
 
-
 const std::string& CoreFirebaseOptions::project_id() const {
   return project_id_;
 }
@@ -318,130 +321,136 @@ void CoreFirebaseOptions::set_project_id(std::string_view value_arg) {
   project_id_ = value_arg;
 }
 
-
 const std::string* CoreFirebaseOptions::auth_domain() const {
   return auth_domain_ ? &(*auth_domain_) : nullptr;
 }
 
 void CoreFirebaseOptions::set_auth_domain(const std::string_view* value_arg) {
-  auth_domain_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+  auth_domain_ =
+      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
 void CoreFirebaseOptions::set_auth_domain(std::string_view value_arg) {
   auth_domain_ = value_arg;
 }
 
-
 const std::string* CoreFirebaseOptions::database_u_r_l() const {
   return database_u_r_l_ ? &(*database_u_r_l_) : nullptr;
 }
 
-void CoreFirebaseOptions::set_database_u_r_l(const std::string_view* value_arg) {
-  database_u_r_l_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+void CoreFirebaseOptions::set_database_u_r_l(
+    const std::string_view* value_arg) {
+  database_u_r_l_ =
+      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
 void CoreFirebaseOptions::set_database_u_r_l(std::string_view value_arg) {
   database_u_r_l_ = value_arg;
 }
 
-
 const std::string* CoreFirebaseOptions::storage_bucket() const {
   return storage_bucket_ ? &(*storage_bucket_) : nullptr;
 }
 
-void CoreFirebaseOptions::set_storage_bucket(const std::string_view* value_arg) {
-  storage_bucket_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+void CoreFirebaseOptions::set_storage_bucket(
+    const std::string_view* value_arg) {
+  storage_bucket_ =
+      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
 void CoreFirebaseOptions::set_storage_bucket(std::string_view value_arg) {
   storage_bucket_ = value_arg;
 }
 
-
 const std::string* CoreFirebaseOptions::measurement_id() const {
   return measurement_id_ ? &(*measurement_id_) : nullptr;
 }
 
-void CoreFirebaseOptions::set_measurement_id(const std::string_view* value_arg) {
-  measurement_id_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+void CoreFirebaseOptions::set_measurement_id(
+    const std::string_view* value_arg) {
+  measurement_id_ =
+      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
 void CoreFirebaseOptions::set_measurement_id(std::string_view value_arg) {
   measurement_id_ = value_arg;
 }
 
-
 const std::string* CoreFirebaseOptions::tracking_id() const {
   return tracking_id_ ? &(*tracking_id_) : nullptr;
 }
 
 void CoreFirebaseOptions::set_tracking_id(const std::string_view* value_arg) {
-  tracking_id_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+  tracking_id_ =
+      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
 void CoreFirebaseOptions::set_tracking_id(std::string_view value_arg) {
   tracking_id_ = value_arg;
 }
 
-
 const std::string* CoreFirebaseOptions::deep_link_u_r_l_scheme() const {
   return deep_link_u_r_l_scheme_ ? &(*deep_link_u_r_l_scheme_) : nullptr;
 }
 
-void CoreFirebaseOptions::set_deep_link_u_r_l_scheme(const std::string_view* value_arg) {
-  deep_link_u_r_l_scheme_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+void CoreFirebaseOptions::set_deep_link_u_r_l_scheme(
+    const std::string_view* value_arg) {
+  deep_link_u_r_l_scheme_ =
+      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
-void CoreFirebaseOptions::set_deep_link_u_r_l_scheme(std::string_view value_arg) {
+void CoreFirebaseOptions::set_deep_link_u_r_l_scheme(
+    std::string_view value_arg) {
   deep_link_u_r_l_scheme_ = value_arg;
 }
-
 
 const std::string* CoreFirebaseOptions::android_client_id() const {
   return android_client_id_ ? &(*android_client_id_) : nullptr;
 }
 
-void CoreFirebaseOptions::set_android_client_id(const std::string_view* value_arg) {
-  android_client_id_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+void CoreFirebaseOptions::set_android_client_id(
+    const std::string_view* value_arg) {
+  android_client_id_ =
+      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
 void CoreFirebaseOptions::set_android_client_id(std::string_view value_arg) {
   android_client_id_ = value_arg;
 }
 
-
 const std::string* CoreFirebaseOptions::ios_client_id() const {
   return ios_client_id_ ? &(*ios_client_id_) : nullptr;
 }
 
 void CoreFirebaseOptions::set_ios_client_id(const std::string_view* value_arg) {
-  ios_client_id_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+  ios_client_id_ =
+      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
 void CoreFirebaseOptions::set_ios_client_id(std::string_view value_arg) {
   ios_client_id_ = value_arg;
 }
 
-
 const std::string* CoreFirebaseOptions::ios_bundle_id() const {
   return ios_bundle_id_ ? &(*ios_bundle_id_) : nullptr;
 }
 
 void CoreFirebaseOptions::set_ios_bundle_id(const std::string_view* value_arg) {
-  ios_bundle_id_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+  ios_bundle_id_ =
+      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
 void CoreFirebaseOptions::set_ios_bundle_id(std::string_view value_arg) {
   ios_bundle_id_ = value_arg;
 }
 
-
 const std::string* CoreFirebaseOptions::app_group_id() const {
   return app_group_id_ ? &(*app_group_id_) : nullptr;
 }
 
 void CoreFirebaseOptions::set_app_group_id(const std::string_view* value_arg) {
-  app_group_id_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+  app_group_id_ =
+      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
 void CoreFirebaseOptions::set_app_group_id(std::string_view value_arg) {
@@ -495,12 +504,11 @@ EncodableList CoreFirebaseOptions::ToEncodableList() const {
   return list;
 }
 
-CoreFirebaseOptions CoreFirebaseOptions::FromEncodableList(const EncodableList& list) {
+CoreFirebaseOptions CoreFirebaseOptions::FromEncodableList(
+    const EncodableList& list) {
   CoreFirebaseOptions decoded(
-    std::get<std::string>(list[0]),
-    std::get<std::string>(list[1]),
-    std::get<std::string>(list[2]),
-    std::get<std::string>(list[3]));
+      std::get<std::string>(list[0]), std::get<std::string>(list[1]),
+      std::get<std::string>(list[2]), std::get<std::string>(list[3]));
   auto& encodable_auth_domain = list[4];
   if (!encodable_auth_domain.IsNull()) {
     decoded.set_auth_domain(std::get<std::string>(encodable_auth_domain));
@@ -523,11 +531,13 @@ CoreFirebaseOptions CoreFirebaseOptions::FromEncodableList(const EncodableList& 
   }
   auto& encodable_deep_link_u_r_l_scheme = list[9];
   if (!encodable_deep_link_u_r_l_scheme.IsNull()) {
-    decoded.set_deep_link_u_r_l_scheme(std::get<std::string>(encodable_deep_link_u_r_l_scheme));
+    decoded.set_deep_link_u_r_l_scheme(
+        std::get<std::string>(encodable_deep_link_u_r_l_scheme));
   }
   auto& encodable_android_client_id = list[10];
   if (!encodable_android_client_id.IsNull()) {
-    decoded.set_android_client_id(std::get<std::string>(encodable_android_client_id));
+    decoded.set_android_client_id(
+        std::get<std::string>(encodable_android_client_id));
   }
   auto& encodable_ios_client_id = list[11];
   if (!encodable_ios_client_id.IsNull()) {
@@ -595,52 +605,55 @@ size_t CoreFirebaseOptions::Hash() const {
   return result;
 }
 
-size_t PigeonInternalDeepHash(const CoreFirebaseOptions& v) {
-  return v.Hash();
-}
+size_t PigeonInternalDeepHash(const CoreFirebaseOptions& v) { return v.Hash(); }
 
 // CoreInitializeResponse
 
 CoreInitializeResponse::CoreInitializeResponse(
-  const std::string& name,
-  const CoreFirebaseOptions& options,
-  const EncodableMap& plugin_constants)
- : name_(name),
-    options_(std::make_unique<CoreFirebaseOptions>(options)),
-    plugin_constants_(plugin_constants) {}
+    const std::string& name, const CoreFirebaseOptions& options,
+    const EncodableMap& plugin_constants)
+    : name_(name),
+      options_(std::make_unique<CoreFirebaseOptions>(options)),
+      plugin_constants_(plugin_constants) {}
 
 CoreInitializeResponse::CoreInitializeResponse(
-  const std::string& name,
-  const CoreFirebaseOptions& options,
-  const bool* is_automatic_data_collection_enabled,
-  const EncodableMap& plugin_constants)
- : name_(name),
-    options_(std::make_unique<CoreFirebaseOptions>(options)),
-    is_automatic_data_collection_enabled_(is_automatic_data_collection_enabled ? std::optional<bool>(*is_automatic_data_collection_enabled) : std::nullopt),
-    plugin_constants_(plugin_constants) {}
+    const std::string& name, const CoreFirebaseOptions& options,
+    const bool* is_automatic_data_collection_enabled,
+    const EncodableMap& plugin_constants)
+    : name_(name),
+      options_(std::make_unique<CoreFirebaseOptions>(options)),
+      is_automatic_data_collection_enabled_(
+          is_automatic_data_collection_enabled
+              ? std::optional<bool>(*is_automatic_data_collection_enabled)
+              : std::nullopt),
+      plugin_constants_(plugin_constants) {}
 
-CoreInitializeResponse::CoreInitializeResponse(const CoreInitializeResponse& other)
- : name_(other.name_),
-    options_(std::make_unique<CoreFirebaseOptions>(*other.options_)),
-    is_automatic_data_collection_enabled_(other.is_automatic_data_collection_enabled_ ? std::optional<bool>(*other.is_automatic_data_collection_enabled_) : std::nullopt),
-    plugin_constants_(other.plugin_constants_) {}
+CoreInitializeResponse::CoreInitializeResponse(
+    const CoreInitializeResponse& other)
+    : name_(other.name_),
+      options_(std::make_unique<CoreFirebaseOptions>(*other.options_)),
+      is_automatic_data_collection_enabled_(
+          other.is_automatic_data_collection_enabled_
+              ? std::optional<bool>(
+                    *other.is_automatic_data_collection_enabled_)
+              : std::nullopt),
+      plugin_constants_(other.plugin_constants_) {}
 
-CoreInitializeResponse& CoreInitializeResponse::operator=(const CoreInitializeResponse& other) {
+CoreInitializeResponse& CoreInitializeResponse::operator=(
+    const CoreInitializeResponse& other) {
   name_ = other.name_;
   options_ = std::make_unique<CoreFirebaseOptions>(*other.options_);
-  is_automatic_data_collection_enabled_ = other.is_automatic_data_collection_enabled_;
+  is_automatic_data_collection_enabled_ =
+      other.is_automatic_data_collection_enabled_;
   plugin_constants_ = other.plugin_constants_;
   return *this;
 }
 
-const std::string& CoreInitializeResponse::name() const {
-  return name_;
-}
+const std::string& CoreInitializeResponse::name() const { return name_; }
 
 void CoreInitializeResponse::set_name(std::string_view value_arg) {
   name_ = value_arg;
 }
-
 
 const CoreFirebaseOptions& CoreInitializeResponse::options() const {
   return *options_;
@@ -650,56 +663,71 @@ void CoreInitializeResponse::set_options(const CoreFirebaseOptions& value_arg) {
   options_ = std::make_unique<CoreFirebaseOptions>(value_arg);
 }
 
-
-const bool* CoreInitializeResponse::is_automatic_data_collection_enabled() const {
-  return is_automatic_data_collection_enabled_ ? &(*is_automatic_data_collection_enabled_) : nullptr;
+const bool* CoreInitializeResponse::is_automatic_data_collection_enabled()
+    const {
+  return is_automatic_data_collection_enabled_
+             ? &(*is_automatic_data_collection_enabled_)
+             : nullptr;
 }
 
-void CoreInitializeResponse::set_is_automatic_data_collection_enabled(const bool* value_arg) {
-  is_automatic_data_collection_enabled_ = value_arg ? std::optional<bool>(*value_arg) : std::nullopt;
+void CoreInitializeResponse::set_is_automatic_data_collection_enabled(
+    const bool* value_arg) {
+  is_automatic_data_collection_enabled_ =
+      value_arg ? std::optional<bool>(*value_arg) : std::nullopt;
 }
 
-void CoreInitializeResponse::set_is_automatic_data_collection_enabled(bool value_arg) {
+void CoreInitializeResponse::set_is_automatic_data_collection_enabled(
+    bool value_arg) {
   is_automatic_data_collection_enabled_ = value_arg;
 }
-
 
 const EncodableMap& CoreInitializeResponse::plugin_constants() const {
   return plugin_constants_;
 }
 
-void CoreInitializeResponse::set_plugin_constants(const EncodableMap& value_arg) {
+void CoreInitializeResponse::set_plugin_constants(
+    const EncodableMap& value_arg) {
   plugin_constants_ = value_arg;
 }
-
 
 EncodableList CoreInitializeResponse::ToEncodableList() const {
   EncodableList list;
   list.reserve(4);
   list.push_back(EncodableValue(name_));
   list.push_back(CustomEncodableValue(*options_));
-  list.push_back(is_automatic_data_collection_enabled_ ? EncodableValue(*is_automatic_data_collection_enabled_) : EncodableValue());
+  list.push_back(is_automatic_data_collection_enabled_
+                     ? EncodableValue(*is_automatic_data_collection_enabled_)
+                     : EncodableValue());
   list.push_back(EncodableValue(plugin_constants_));
   return list;
 }
 
-CoreInitializeResponse CoreInitializeResponse::FromEncodableList(const EncodableList& list) {
-  CoreInitializeResponse decoded(
-    std::get<std::string>(list[0]),
-    std::any_cast<const CoreFirebaseOptions&>(std::get<CustomEncodableValue>(list[1])),
-    std::get<EncodableMap>(list[3]));
+CoreInitializeResponse CoreInitializeResponse::FromEncodableList(
+    const EncodableList& list) {
+  CoreInitializeResponse decoded(std::get<std::string>(list[0]),
+                                 std::any_cast<const CoreFirebaseOptions&>(
+                                     std::get<CustomEncodableValue>(list[1])),
+                                 std::get<EncodableMap>(list[3]));
   auto& encodable_is_automatic_data_collection_enabled = list[2];
   if (!encodable_is_automatic_data_collection_enabled.IsNull()) {
-    decoded.set_is_automatic_data_collection_enabled(std::get<bool>(encodable_is_automatic_data_collection_enabled));
+    decoded.set_is_automatic_data_collection_enabled(
+        std::get<bool>(encodable_is_automatic_data_collection_enabled));
   }
   return decoded;
 }
 
-bool CoreInitializeResponse::operator==(const CoreInitializeResponse& other) const {
-  return PigeonInternalDeepEquals(name_, other.name_) && PigeonInternalDeepEquals(options_, other.options_) && PigeonInternalDeepEquals(is_automatic_data_collection_enabled_, other.is_automatic_data_collection_enabled_) && PigeonInternalDeepEquals(plugin_constants_, other.plugin_constants_);
+bool CoreInitializeResponse::operator==(
+    const CoreInitializeResponse& other) const {
+  return PigeonInternalDeepEquals(name_, other.name_) &&
+         PigeonInternalDeepEquals(options_, other.options_) &&
+         PigeonInternalDeepEquals(
+             is_automatic_data_collection_enabled_,
+             other.is_automatic_data_collection_enabled_) &&
+         PigeonInternalDeepEquals(plugin_constants_, other.plugin_constants_);
 }
 
-bool CoreInitializeResponse::operator!=(const CoreInitializeResponse& other) const {
+bool CoreInitializeResponse::operator!=(
+    const CoreInitializeResponse& other) const {
   return !(*this == other);
 }
 
@@ -707,7 +735,8 @@ size_t CoreInitializeResponse::Hash() const {
   size_t result = 1;
   result = result * 31 + PigeonInternalDeepHash(name_);
   result = result * 31 + PigeonInternalDeepHash(options_);
-  result = result * 31 + PigeonInternalDeepHash(is_automatic_data_collection_enabled_);
+  result = result * 31 +
+           PigeonInternalDeepHash(is_automatic_data_collection_enabled_);
   result = result * 31 + PigeonInternalDeepHash(plugin_constants_);
   return result;
 }
@@ -716,36 +745,42 @@ size_t PigeonInternalDeepHash(const CoreInitializeResponse& v) {
   return v.Hash();
 }
 
-
 PigeonInternalCodecSerializer::PigeonInternalCodecSerializer() {}
 
 EncodableValue PigeonInternalCodecSerializer::ReadValueOfType(
-  uint8_t type,
-  ::flutter::ByteStreamReader* stream) const {
+    uint8_t type, ::flutter::ByteStreamReader* stream) const {
   switch (type) {
     case 129: {
-        return CustomEncodableValue(CoreFirebaseOptions::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
-      }
+      return CustomEncodableValue(CoreFirebaseOptions::FromEncodableList(
+          std::get<EncodableList>(ReadValue(stream))));
+    }
     case 130: {
-        return CustomEncodableValue(CoreInitializeResponse::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
-      }
+      return CustomEncodableValue(CoreInitializeResponse::FromEncodableList(
+          std::get<EncodableList>(ReadValue(stream))));
+    }
     default:
       return ::flutter::StandardCodecSerializer::ReadValueOfType(type, stream);
-    }
+  }
 }
 
 void PigeonInternalCodecSerializer::WriteValue(
-  const EncodableValue& value,
-  ::flutter::ByteStreamWriter* stream) const {
-  if (const CustomEncodableValue* custom_value = std::get_if<CustomEncodableValue>(&value)) {
+    const EncodableValue& value, ::flutter::ByteStreamWriter* stream) const {
+  if (const CustomEncodableValue* custom_value =
+          std::get_if<CustomEncodableValue>(&value)) {
     if (custom_value->type() == typeid(CoreFirebaseOptions)) {
       stream->WriteByte(129);
-      WriteValue(EncodableValue(std::any_cast<CoreFirebaseOptions>(*custom_value).ToEncodableList()), stream);
+      WriteValue(
+          EncodableValue(std::any_cast<CoreFirebaseOptions>(*custom_value)
+                             .ToEncodableList()),
+          stream);
       return;
     }
     if (custom_value->type() == typeid(CoreInitializeResponse)) {
       stream->WriteByte(130);
-      WriteValue(EncodableValue(std::any_cast<CoreInitializeResponse>(*custom_value).ToEncodableList()), stream);
+      WriteValue(
+          EncodableValue(std::any_cast<CoreInitializeResponse>(*custom_value)
+                             .ToEncodableList()),
+          stream);
       return;
     }
   }
@@ -754,96 +789,131 @@ void PigeonInternalCodecSerializer::WriteValue(
 
 /// The codec used by FirebaseCoreHostApi.
 const ::flutter::StandardMessageCodec& FirebaseCoreHostApi::GetCodec() {
-  return ::flutter::StandardMessageCodec::GetInstance(&PigeonInternalCodecSerializer::GetInstance());
+  return ::flutter::StandardMessageCodec::GetInstance(
+      &PigeonInternalCodecSerializer::GetInstance());
 }
 
-// Sets up an instance of `FirebaseCoreHostApi` to handle messages through the `binary_messenger`.
-void FirebaseCoreHostApi::SetUp(
-  ::flutter::BinaryMessenger* binary_messenger,
-  FirebaseCoreHostApi* api) {
+// Sets up an instance of `FirebaseCoreHostApi` to handle messages through the
+// `binary_messenger`.
+void FirebaseCoreHostApi::SetUp(::flutter::BinaryMessenger* binary_messenger,
+                                FirebaseCoreHostApi* api) {
   FirebaseCoreHostApi::SetUp(binary_messenger, api, "");
 }
 
-void FirebaseCoreHostApi::SetUp(
-  ::flutter::BinaryMessenger* binary_messenger,
-  FirebaseCoreHostApi* api,
-  const std::string& message_channel_suffix) {
-  const std::string prepended_suffix = message_channel_suffix.length() > 0 ? std::string(".") + message_channel_suffix : "";
+void FirebaseCoreHostApi::SetUp(::flutter::BinaryMessenger* binary_messenger,
+                                FirebaseCoreHostApi* api,
+                                const std::string& message_channel_suffix) {
+  const std::string prepended_suffix =
+      message_channel_suffix.length() > 0
+          ? std::string(".") + message_channel_suffix
+          : "";
   {
-    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseCoreHostApi.initializeApp" + prepended_suffix, &GetCodec());
+    BasicMessageChannel<> channel(
+        binary_messenger,
+        "dev.flutter.pigeon.firebase_core_platform_interface."
+        "FirebaseCoreHostApi.initializeApp" +
+            prepended_suffix,
+        &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
-        try {
-          const auto& args = std::get<EncodableList>(message);
-          const auto& encodable_app_name_arg = args.at(0);
-          if (encodable_app_name_arg.IsNull()) {
-            reply(WrapError("app_name_arg unexpectedly null."));
-            return;
-          }
-          const auto& app_name_arg = std::get<std::string>(encodable_app_name_arg);
-          const auto& encodable_initialize_app_request_arg = args.at(1);
-          if (encodable_initialize_app_request_arg.IsNull()) {
-            reply(WrapError("initialize_app_request_arg unexpectedly null."));
-            return;
-          }
-          const auto& initialize_app_request_arg = std::any_cast<const CoreFirebaseOptions&>(std::get<CustomEncodableValue>(encodable_initialize_app_request_arg));
-          api->InitializeApp(app_name_arg, initialize_app_request_arg, [reply](ErrorOr<CoreInitializeResponse>&& output) {
-            if (output.has_error()) {
-              reply(WrapError(output.error()));
-              return;
+      channel.SetMessageHandler(
+          [api](const EncodableValue& message,
+                const ::flutter::MessageReply<EncodableValue>& reply) {
+            try {
+              const auto& args = std::get<EncodableList>(message);
+              const auto& encodable_app_name_arg = args.at(0);
+              if (encodable_app_name_arg.IsNull()) {
+                reply(WrapError("app_name_arg unexpectedly null."));
+                return;
+              }
+              const auto& app_name_arg =
+                  std::get<std::string>(encodable_app_name_arg);
+              const auto& encodable_initialize_app_request_arg = args.at(1);
+              if (encodable_initialize_app_request_arg.IsNull()) {
+                reply(
+                    WrapError("initialize_app_request_arg unexpectedly null."));
+                return;
+              }
+              const auto& initialize_app_request_arg =
+                  std::any_cast<const CoreFirebaseOptions&>(
+                      std::get<CustomEncodableValue>(
+                          encodable_initialize_app_request_arg));
+              api->InitializeApp(
+                  app_name_arg, initialize_app_request_arg,
+                  [reply](ErrorOr<CoreInitializeResponse>&& output) {
+                    if (output.has_error()) {
+                      reply(WrapError(output.error()));
+                      return;
+                    }
+                    EncodableList wrapped;
+                    wrapped.push_back(
+                        CustomEncodableValue(std::move(output).TakeValue()));
+                    reply(EncodableValue(std::move(wrapped)));
+                  });
+            } catch (const std::exception& exception) {
+              reply(WrapError(exception.what()));
             }
-            EncodableList wrapped;
-            wrapped.push_back(CustomEncodableValue(std::move(output).TakeValue()));
-            reply(EncodableValue(std::move(wrapped)));
           });
-        } catch (const std::exception& exception) {
-          reply(WrapError(exception.what()));
-        }
-      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
   {
-    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseCoreHostApi.initializeCore" + prepended_suffix, &GetCodec());
+    BasicMessageChannel<> channel(
+        binary_messenger,
+        "dev.flutter.pigeon.firebase_core_platform_interface."
+        "FirebaseCoreHostApi.initializeCore" +
+            prepended_suffix,
+        &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
-        try {
-          api->InitializeCore([reply](ErrorOr<EncodableList>&& output) {
-            if (output.has_error()) {
-              reply(WrapError(output.error()));
-              return;
+      channel.SetMessageHandler(
+          [api](const EncodableValue& message,
+                const ::flutter::MessageReply<EncodableValue>& reply) {
+            try {
+              api->InitializeCore([reply](ErrorOr<EncodableList>&& output) {
+                if (output.has_error()) {
+                  reply(WrapError(output.error()));
+                  return;
+                }
+                EncodableList wrapped;
+                wrapped.push_back(
+                    EncodableValue(std::move(output).TakeValue()));
+                reply(EncodableValue(std::move(wrapped)));
+              });
+            } catch (const std::exception& exception) {
+              reply(WrapError(exception.what()));
             }
-            EncodableList wrapped;
-            wrapped.push_back(EncodableValue(std::move(output).TakeValue()));
-            reply(EncodableValue(std::move(wrapped)));
           });
-        } catch (const std::exception& exception) {
-          reply(WrapError(exception.what()));
-        }
-      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
   {
-    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseCoreHostApi.optionsFromResource" + prepended_suffix, &GetCodec());
+    BasicMessageChannel<> channel(
+        binary_messenger,
+        "dev.flutter.pigeon.firebase_core_platform_interface."
+        "FirebaseCoreHostApi.optionsFromResource" +
+            prepended_suffix,
+        &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
-        try {
-          api->OptionsFromResource([reply](ErrorOr<CoreFirebaseOptions>&& output) {
-            if (output.has_error()) {
-              reply(WrapError(output.error()));
-              return;
+      channel.SetMessageHandler(
+          [api](const EncodableValue& message,
+                const ::flutter::MessageReply<EncodableValue>& reply) {
+            try {
+              api->OptionsFromResource(
+                  [reply](ErrorOr<CoreFirebaseOptions>&& output) {
+                    if (output.has_error()) {
+                      reply(WrapError(output.error()));
+                      return;
+                    }
+                    EncodableList wrapped;
+                    wrapped.push_back(
+                        CustomEncodableValue(std::move(output).TakeValue()));
+                    reply(EncodableValue(std::move(wrapped)));
+                  });
+            } catch (const std::exception& exception) {
+              reply(WrapError(exception.what()));
             }
-            EncodableList wrapped;
-            wrapped.push_back(CustomEncodableValue(std::move(output).TakeValue()));
-            reply(EncodableValue(std::move(wrapped)));
           });
-        } catch (const std::exception& exception) {
-          reply(WrapError(exception.what()));
-        }
-      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
@@ -851,133 +921,160 @@ void FirebaseCoreHostApi::SetUp(
 }
 
 EncodableValue FirebaseCoreHostApi::WrapError(std::string_view error_message) {
-  return EncodableValue(EncodableList{
-    EncodableValue(std::string(error_message)),
-    EncodableValue("Error"),
-    EncodableValue()
-  });
+  return EncodableValue(
+      EncodableList{EncodableValue(std::string(error_message)),
+                    EncodableValue("Error"), EncodableValue()});
 }
 
 EncodableValue FirebaseCoreHostApi::WrapError(const FlutterError& error) {
-  return EncodableValue(EncodableList{
-    EncodableValue(error.code()),
-    EncodableValue(error.message()),
-    error.details()
-  });
+  return EncodableValue(EncodableList{EncodableValue(error.code()),
+                                      EncodableValue(error.message()),
+                                      error.details()});
 }
 
 /// The codec used by FirebaseAppHostApi.
 const ::flutter::StandardMessageCodec& FirebaseAppHostApi::GetCodec() {
-  return ::flutter::StandardMessageCodec::GetInstance(&PigeonInternalCodecSerializer::GetInstance());
+  return ::flutter::StandardMessageCodec::GetInstance(
+      &PigeonInternalCodecSerializer::GetInstance());
 }
 
-// Sets up an instance of `FirebaseAppHostApi` to handle messages through the `binary_messenger`.
-void FirebaseAppHostApi::SetUp(
-  ::flutter::BinaryMessenger* binary_messenger,
-  FirebaseAppHostApi* api) {
+// Sets up an instance of `FirebaseAppHostApi` to handle messages through the
+// `binary_messenger`.
+void FirebaseAppHostApi::SetUp(::flutter::BinaryMessenger* binary_messenger,
+                               FirebaseAppHostApi* api) {
   FirebaseAppHostApi::SetUp(binary_messenger, api, "");
 }
 
-void FirebaseAppHostApi::SetUp(
-  ::flutter::BinaryMessenger* binary_messenger,
-  FirebaseAppHostApi* api,
-  const std::string& message_channel_suffix) {
-  const std::string prepended_suffix = message_channel_suffix.length() > 0 ? std::string(".") + message_channel_suffix : "";
+void FirebaseAppHostApi::SetUp(::flutter::BinaryMessenger* binary_messenger,
+                               FirebaseAppHostApi* api,
+                               const std::string& message_channel_suffix) {
+  const std::string prepended_suffix =
+      message_channel_suffix.length() > 0
+          ? std::string(".") + message_channel_suffix
+          : "";
   {
-    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseAppHostApi.setAutomaticDataCollectionEnabled" + prepended_suffix, &GetCodec());
+    BasicMessageChannel<> channel(
+        binary_messenger,
+        "dev.flutter.pigeon.firebase_core_platform_interface."
+        "FirebaseAppHostApi.setAutomaticDataCollectionEnabled" +
+            prepended_suffix,
+        &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
-        try {
-          const auto& args = std::get<EncodableList>(message);
-          const auto& encodable_app_name_arg = args.at(0);
-          if (encodable_app_name_arg.IsNull()) {
-            reply(WrapError("app_name_arg unexpectedly null."));
-            return;
-          }
-          const auto& app_name_arg = std::get<std::string>(encodable_app_name_arg);
-          const auto& encodable_enabled_arg = args.at(1);
-          if (encodable_enabled_arg.IsNull()) {
-            reply(WrapError("enabled_arg unexpectedly null."));
-            return;
-          }
-          const auto& enabled_arg = std::get<bool>(encodable_enabled_arg);
-          api->SetAutomaticDataCollectionEnabled(app_name_arg, enabled_arg, [reply](std::optional<FlutterError>&& output) {
-            if (output.has_value()) {
-              reply(WrapError(output.value()));
-              return;
+      channel.SetMessageHandler(
+          [api](const EncodableValue& message,
+                const ::flutter::MessageReply<EncodableValue>& reply) {
+            try {
+              const auto& args = std::get<EncodableList>(message);
+              const auto& encodable_app_name_arg = args.at(0);
+              if (encodable_app_name_arg.IsNull()) {
+                reply(WrapError("app_name_arg unexpectedly null."));
+                return;
+              }
+              const auto& app_name_arg =
+                  std::get<std::string>(encodable_app_name_arg);
+              const auto& encodable_enabled_arg = args.at(1);
+              if (encodable_enabled_arg.IsNull()) {
+                reply(WrapError("enabled_arg unexpectedly null."));
+                return;
+              }
+              const auto& enabled_arg = std::get<bool>(encodable_enabled_arg);
+              api->SetAutomaticDataCollectionEnabled(
+                  app_name_arg, enabled_arg,
+                  [reply](std::optional<FlutterError>&& output) {
+                    if (output.has_value()) {
+                      reply(WrapError(output.value()));
+                      return;
+                    }
+                    EncodableList wrapped;
+                    wrapped.push_back(EncodableValue());
+                    reply(EncodableValue(std::move(wrapped)));
+                  });
+            } catch (const std::exception& exception) {
+              reply(WrapError(exception.what()));
             }
-            EncodableList wrapped;
-            wrapped.push_back(EncodableValue());
-            reply(EncodableValue(std::move(wrapped)));
           });
-        } catch (const std::exception& exception) {
-          reply(WrapError(exception.what()));
-        }
-      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
   {
-    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseAppHostApi.setAutomaticResourceManagementEnabled" + prepended_suffix, &GetCodec());
+    BasicMessageChannel<> channel(
+        binary_messenger,
+        "dev.flutter.pigeon.firebase_core_platform_interface."
+        "FirebaseAppHostApi.setAutomaticResourceManagementEnabled" +
+            prepended_suffix,
+        &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
-        try {
-          const auto& args = std::get<EncodableList>(message);
-          const auto& encodable_app_name_arg = args.at(0);
-          if (encodable_app_name_arg.IsNull()) {
-            reply(WrapError("app_name_arg unexpectedly null."));
-            return;
-          }
-          const auto& app_name_arg = std::get<std::string>(encodable_app_name_arg);
-          const auto& encodable_enabled_arg = args.at(1);
-          if (encodable_enabled_arg.IsNull()) {
-            reply(WrapError("enabled_arg unexpectedly null."));
-            return;
-          }
-          const auto& enabled_arg = std::get<bool>(encodable_enabled_arg);
-          api->SetAutomaticResourceManagementEnabled(app_name_arg, enabled_arg, [reply](std::optional<FlutterError>&& output) {
-            if (output.has_value()) {
-              reply(WrapError(output.value()));
-              return;
+      channel.SetMessageHandler(
+          [api](const EncodableValue& message,
+                const ::flutter::MessageReply<EncodableValue>& reply) {
+            try {
+              const auto& args = std::get<EncodableList>(message);
+              const auto& encodable_app_name_arg = args.at(0);
+              if (encodable_app_name_arg.IsNull()) {
+                reply(WrapError("app_name_arg unexpectedly null."));
+                return;
+              }
+              const auto& app_name_arg =
+                  std::get<std::string>(encodable_app_name_arg);
+              const auto& encodable_enabled_arg = args.at(1);
+              if (encodable_enabled_arg.IsNull()) {
+                reply(WrapError("enabled_arg unexpectedly null."));
+                return;
+              }
+              const auto& enabled_arg = std::get<bool>(encodable_enabled_arg);
+              api->SetAutomaticResourceManagementEnabled(
+                  app_name_arg, enabled_arg,
+                  [reply](std::optional<FlutterError>&& output) {
+                    if (output.has_value()) {
+                      reply(WrapError(output.value()));
+                      return;
+                    }
+                    EncodableList wrapped;
+                    wrapped.push_back(EncodableValue());
+                    reply(EncodableValue(std::move(wrapped)));
+                  });
+            } catch (const std::exception& exception) {
+              reply(WrapError(exception.what()));
             }
-            EncodableList wrapped;
-            wrapped.push_back(EncodableValue());
-            reply(EncodableValue(std::move(wrapped)));
           });
-        } catch (const std::exception& exception) {
-          reply(WrapError(exception.what()));
-        }
-      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
   {
-    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseAppHostApi.delete" + prepended_suffix, &GetCodec());
+    BasicMessageChannel<> channel(binary_messenger,
+                                  "dev.flutter.pigeon.firebase_core_platform_"
+                                  "interface.FirebaseAppHostApi.delete" +
+                                      prepended_suffix,
+                                  &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
-        try {
-          const auto& args = std::get<EncodableList>(message);
-          const auto& encodable_app_name_arg = args.at(0);
-          if (encodable_app_name_arg.IsNull()) {
-            reply(WrapError("app_name_arg unexpectedly null."));
-            return;
-          }
-          const auto& app_name_arg = std::get<std::string>(encodable_app_name_arg);
-          api->Delete(app_name_arg, [reply](std::optional<FlutterError>&& output) {
-            if (output.has_value()) {
-              reply(WrapError(output.value()));
-              return;
+      channel.SetMessageHandler(
+          [api](const EncodableValue& message,
+                const ::flutter::MessageReply<EncodableValue>& reply) {
+            try {
+              const auto& args = std::get<EncodableList>(message);
+              const auto& encodable_app_name_arg = args.at(0);
+              if (encodable_app_name_arg.IsNull()) {
+                reply(WrapError("app_name_arg unexpectedly null."));
+                return;
+              }
+              const auto& app_name_arg =
+                  std::get<std::string>(encodable_app_name_arg);
+              api->Delete(app_name_arg,
+                          [reply](std::optional<FlutterError>&& output) {
+                            if (output.has_value()) {
+                              reply(WrapError(output.value()));
+                              return;
+                            }
+                            EncodableList wrapped;
+                            wrapped.push_back(EncodableValue());
+                            reply(EncodableValue(std::move(wrapped)));
+                          });
+            } catch (const std::exception& exception) {
+              reply(WrapError(exception.what()));
             }
-            EncodableList wrapped;
-            wrapped.push_back(EncodableValue());
-            reply(EncodableValue(std::move(wrapped)));
           });
-        } catch (const std::exception& exception) {
-          reply(WrapError(exception.what()));
-        }
-      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
@@ -985,19 +1082,15 @@ void FirebaseAppHostApi::SetUp(
 }
 
 EncodableValue FirebaseAppHostApi::WrapError(std::string_view error_message) {
-  return EncodableValue(EncodableList{
-    EncodableValue(std::string(error_message)),
-    EncodableValue("Error"),
-    EncodableValue()
-  });
+  return EncodableValue(
+      EncodableList{EncodableValue(std::string(error_message)),
+                    EncodableValue("Error"), EncodableValue()});
 }
 
 EncodableValue FirebaseAppHostApi::WrapError(const FlutterError& error) {
-  return EncodableValue(EncodableList{
-    EncodableValue(error.code()),
-    EncodableValue(error.message()),
-    error.details()
-  });
+  return EncodableValue(EncodableList{EncodableValue(error.code()),
+                                      EncodableValue(error.message()),
+                                      error.details()});
 }
 
 }  // namespace firebase_core_windows
