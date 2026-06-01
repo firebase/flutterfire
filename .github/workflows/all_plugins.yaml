@@ -20,7 +20,7 @@ on:
 
 jobs:
   analyze:
-    timeout-minutes: 45
+    timeout-minutes: 50
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
@@ -83,9 +83,11 @@ jobs:
   format:
     # switch back to ubuntu-latest when swiftformat is working again
     runs-on: macos-latest
-    timeout-minutes: 20
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
+        with:
+          fetch-depth: 0
       - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
         with:
           channel: 'stable'
@@ -107,15 +109,17 @@ jobs:
         run: |
           clang-format --version
           swiftformat --version
-      - name: 'Dart, Java and Objective-C '
+      - name: 'Dart, Java, Objective-C and Swift'
         run: |
-          flutter pub global run flutter_plugin_tools format
+          flutter pub global run flutter_plugin_tools format --base-branch=origin/main
           ./.github/workflows/scripts/validate-formatting.sh
-      - name: 'Swift'
-        if: ${{ success() || failure() }}
+
+      # Clean generated build artificats(from format step) to prevent post run jobs from timing out
+      - name: Clean generated build artifacts
+        if: ${{ always() }}
         run: |
-          swiftformat .
-          ./.github/workflows/scripts/validate-formatting.sh
+          rm -rf build
+          find packages -type d -name build -prune -exec rm -rf {} +
 
   build_examples_dart:
     timeout-minutes: 30
@@ -125,6 +129,7 @@ jobs:
       - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
         with:
           channel: 'stable'
+          flutter-version: '3.41.9'
           cache: true
           cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
           pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
@@ -146,6 +151,7 @@ jobs:
       - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
         with:
           channel: 'stable'
+          flutter-version: '3.41.9'
           cache: true
           cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
           pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
