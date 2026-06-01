@@ -942,14 +942,17 @@ static NSError *parseError(NSString *message) {
           return nil;
         }
         FIRCollectionReference *ref = [firestore collectionWithPath:path];
-        stage = [[FIRCollectionSourceStageBridge alloc] initWithRef:ref firestore:firestore];
+        stage = [[FIRCollectionSourceStageBridge alloc] initWithRef:ref
+                                                          firestore:firestore
+                                                         forceIndex:nil];
       } else if ([stageName isEqualToString:@"collection_group"]) {
         NSString *path = args[@"path"];
         if (!path) {
           if (error) *error = parseError(@"collection_group requires 'path'");
           return nil;
         }
-        stage = [[FIRCollectionGroupSourceStageBridge alloc] initWithCollectionId:path];
+        stage = [[FIRCollectionGroupSourceStageBridge alloc] initWithCollectionId:path
+                                                                       forceIndex:nil];
       } else if ([stageName isEqualToString:@"database"]) {
         stage = [[FIRDatabaseSourceStageBridge alloc] init];
       } else if ([stageName isEqualToString:@"documents"]) {
