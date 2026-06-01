@@ -91,6 +91,7 @@ void main() {
         iosClientId: 'newIosClientId',
         iosBundleId: 'newIosBundleId',
         appGroupId: 'newAppGroupId',
+        recaptchaSiteKey: 'newRecaptchaSiteKey',
       );
 
       expect(
@@ -110,6 +111,7 @@ void main() {
           iosClientId: 'newIosClientId',
           iosBundleId: 'newIosBundleId',
           appGroupId: 'newAppGroupId',
+          recaptchaSiteKey: 'newRecaptchaSiteKey',
         ),
       );
     });
@@ -130,6 +132,7 @@ void main() {
         iosBundleId: 'iosBundleId',
         iosClientId: 'iosClientId',
         appGroupId: 'appGroupId',
+        recaptchaSiteKey: 'recaptchaSiteKey',
       );
 
       expect(options.asMap, {
@@ -147,6 +150,7 @@ void main() {
         'iosBundleId': 'iosBundleId',
         'iosClientId': 'iosClientId',
         'appGroupId': 'appGroupId',
+        'recaptchaSiteKey': 'recaptchaSiteKey',
       });
     });
   });

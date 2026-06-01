@@ -13,9 +13,9 @@ import 'package:flutter/services.dart';
 import 'package:meta/meta.dart' show immutable, protected, visibleForTesting;
 
 Object? _extractReplyValueOrThrow(
-  List<Object?>? replyList,
-  String channelName, {
-  required bool isNullValid,
+    List<Object?>? replyList,
+    String channelName, {
+    required bool isNullValid,
 }) {
   if (replyList == null) {
     throw PlatformException(
@@ -37,8 +37,8 @@ Object? _extractReplyValueOrThrow(
   return replyList.firstOrNull;
 }
 
-List<Object?> wrapResponse(
-    {Object? result, PlatformException? error, bool empty = false}) {
+
+List<Object?> wrapResponse({Object? result, PlatformException? error, bool empty = false}) {
   if (empty) {
     return <Object?>[];
   }
@@ -47,7 +47,6 @@ List<Object?> wrapResponse(
   }
   return <Object?>[error.code, error.message, error.details];
 }
-
 bool _deepEquals(Object? a, Object? b) {
   if (identical(a, b)) {
     return true;
@@ -110,6 +109,7 @@ int _deepHash(Object? value) {
   return value.hashCode;
 }
 
+
 class CoreFirebaseOptions {
   CoreFirebaseOptions({
     required this.apiKey,
@@ -126,6 +126,7 @@ class CoreFirebaseOptions {
     this.iosClientId,
     this.iosBundleId,
     this.appGroupId,
+    this.recaptchaSiteKey,
   });
 
   String apiKey;
@@ -156,6 +157,8 @@ class CoreFirebaseOptions {
 
   String? appGroupId;
 
+  String? recaptchaSiteKey;
+
   List<Object?> _toList() {
     return <Object?>[
       apiKey,
@@ -172,12 +175,12 @@ class CoreFirebaseOptions {
       iosClientId,
       iosBundleId,
       appGroupId,
+      recaptchaSiteKey,
     ];
   }
 
   Object encode() {
-    return _toList();
-  }
+    return _toList();  }
 
   static CoreFirebaseOptions decode(Object result) {
     result as List<Object?>;
@@ -196,6 +199,7 @@ class CoreFirebaseOptions {
       iosClientId: result[11] as String?,
       iosBundleId: result[12] as String?,
       appGroupId: result[13] as String?,
+      recaptchaSiteKey: result[14] as String?,
     );
   }
 
@@ -208,20 +212,7 @@ class CoreFirebaseOptions {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(apiKey, other.apiKey) &&
-        _deepEquals(appId, other.appId) &&
-        _deepEquals(messagingSenderId, other.messagingSenderId) &&
-        _deepEquals(projectId, other.projectId) &&
-        _deepEquals(authDomain, other.authDomain) &&
-        _deepEquals(databaseURL, other.databaseURL) &&
-        _deepEquals(storageBucket, other.storageBucket) &&
-        _deepEquals(measurementId, other.measurementId) &&
-        _deepEquals(trackingId, other.trackingId) &&
-        _deepEquals(deepLinkURLScheme, other.deepLinkURLScheme) &&
-        _deepEquals(androidClientId, other.androidClientId) &&
-        _deepEquals(iosClientId, other.iosClientId) &&
-        _deepEquals(iosBundleId, other.iosBundleId) &&
-        _deepEquals(appGroupId, other.appGroupId);
+    return _deepEquals(apiKey, other.apiKey) && _deepEquals(appId, other.appId) && _deepEquals(messagingSenderId, other.messagingSenderId) && _deepEquals(projectId, other.projectId) && _deepEquals(authDomain, other.authDomain) && _deepEquals(databaseURL, other.databaseURL) && _deepEquals(storageBucket, other.storageBucket) && _deepEquals(measurementId, other.measurementId) && _deepEquals(trackingId, other.trackingId) && _deepEquals(deepLinkURLScheme, other.deepLinkURLScheme) && _deepEquals(androidClientId, other.androidClientId) && _deepEquals(iosClientId, other.iosClientId) && _deepEquals(iosBundleId, other.iosBundleId) && _deepEquals(appGroupId, other.appGroupId) && _deepEquals(recaptchaSiteKey, other.recaptchaSiteKey);
   }
 
   @override
@@ -255,8 +246,7 @@ class CoreInitializeResponse {
   }
 
   Object encode() {
-    return _toList();
-  }
+    return _toList();  }
 
   static CoreInitializeResponse decode(Object result) {
     result as List<Object?>;
@@ -264,8 +254,7 @@ class CoreInitializeResponse {
       name: result[0]! as String,
       options: result[1]! as CoreFirebaseOptions,
       isAutomaticDataCollectionEnabled: result[2] as bool?,
-      pluginConstants:
-          (result[3]! as Map<Object?, Object?>).cast<String?, Object?>(),
+      pluginConstants: (result[3]! as Map<Object?, Object?>).cast<String?, Object?>(),
     );
   }
 
@@ -278,17 +267,14 @@ class CoreInitializeResponse {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(name, other.name) &&
-        _deepEquals(options, other.options) &&
-        _deepEquals(isAutomaticDataCollectionEnabled,
-            other.isAutomaticDataCollectionEnabled) &&
-        _deepEquals(pluginConstants, other.pluginConstants);
+    return _deepEquals(name, other.name) && _deepEquals(options, other.options) && _deepEquals(isAutomaticDataCollectionEnabled, other.isAutomaticDataCollectionEnabled) && _deepEquals(pluginConstants, other.pluginConstants);
   }
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
 }
+
 
 class _PigeonCodec extends StandardMessageCodec {
   const _PigeonCodec();
@@ -297,10 +283,10 @@ class _PigeonCodec extends StandardMessageCodec {
     if (value is int) {
       buffer.putUint8(4);
       buffer.putInt64(value);
-    } else if (value is CoreFirebaseOptions) {
+    }    else if (value is CoreFirebaseOptions) {
       buffer.putUint8(129);
       writeValue(buffer, value.encode());
-    } else if (value is CoreInitializeResponse) {
+    }    else if (value is CoreInitializeResponse) {
       buffer.putUint8(130);
       writeValue(buffer, value.encode());
     } else {
@@ -325,41 +311,36 @@ class FirebaseCoreHostApi {
   /// Constructor for [FirebaseCoreHostApi].  The [binaryMessenger] named argument is
   /// available for dependency injection.  If it is left null, the default
   /// BinaryMessenger will be used which routes to the host platform.
-  FirebaseCoreHostApi(
-      {BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
+  FirebaseCoreHostApi({BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
       : pigeonVar_binaryMessenger = binaryMessenger,
-        pigeonVar_messageChannelSuffix =
-            messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+        pigeonVar_messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
   final BinaryMessenger? pigeonVar_binaryMessenger;
 
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
 
   final String pigeonVar_messageChannelSuffix;
 
-  Future<CoreInitializeResponse> initializeApp(
-      String appName, CoreFirebaseOptions initializeAppRequest) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_core_platform_interface.FirebaseCoreHostApi.initializeApp$pigeonVar_messageChannelSuffix';
+  Future<CoreInitializeResponse> initializeApp(String appName, CoreFirebaseOptions initializeAppRequest) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_core_platform_interface.FirebaseCoreHostApi.initializeApp$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[appName, initializeAppRequest]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[appName, initializeAppRequest]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: false,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
     return pigeonVar_replyValue! as CoreInitializeResponse;
   }
 
   Future<List<CoreInitializeResponse>> initializeCore() async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_core_platform_interface.FirebaseCoreHostApi.initializeCore$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_core_platform_interface.FirebaseCoreHostApi.initializeCore$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -369,17 +350,16 @@ class FirebaseCoreHostApi {
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: false,
-    );
-    return (pigeonVar_replyValue! as List<Object?>)
-        .cast<CoreInitializeResponse>();
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
+    return (pigeonVar_replyValue! as List<Object?>).cast<CoreInitializeResponse>();
   }
 
   Future<CoreFirebaseOptions> optionsFromResource() async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_core_platform_interface.FirebaseCoreHostApi.optionsFromResource$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_core_platform_interface.FirebaseCoreHostApi.optionsFromResource$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -389,10 +369,11 @@ class FirebaseCoreHostApi {
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: false,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
     return pigeonVar_replyValue! as CoreFirebaseOptions;
   }
 }
@@ -401,73 +382,66 @@ class FirebaseAppHostApi {
   /// Constructor for [FirebaseAppHostApi].  The [binaryMessenger] named argument is
   /// available for dependency injection.  If it is left null, the default
   /// BinaryMessenger will be used which routes to the host platform.
-  FirebaseAppHostApi(
-      {BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
+  FirebaseAppHostApi({BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
       : pigeonVar_binaryMessenger = binaryMessenger,
-        pigeonVar_messageChannelSuffix =
-            messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+        pigeonVar_messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
   final BinaryMessenger? pigeonVar_binaryMessenger;
 
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
 
   final String pigeonVar_messageChannelSuffix;
 
-  Future<void> setAutomaticDataCollectionEnabled(
-      String appName, bool enabled) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_core_platform_interface.FirebaseAppHostApi.setAutomaticDataCollectionEnabled$pigeonVar_messageChannelSuffix';
+  Future<void> setAutomaticDataCollectionEnabled(String appName, bool enabled) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_core_platform_interface.FirebaseAppHostApi.setAutomaticDataCollectionEnabled$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[appName, enabled]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[appName, enabled]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: true,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: true,
+    )
+    ;
   }
 
-  Future<void> setAutomaticResourceManagementEnabled(
-      String appName, bool enabled) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_core_platform_interface.FirebaseAppHostApi.setAutomaticResourceManagementEnabled$pigeonVar_messageChannelSuffix';
+  Future<void> setAutomaticResourceManagementEnabled(String appName, bool enabled) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_core_platform_interface.FirebaseAppHostApi.setAutomaticResourceManagementEnabled$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[appName, enabled]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[appName, enabled]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: true,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: true,
+    )
+    ;
   }
 
   Future<void> delete(String appName) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_core_platform_interface.FirebaseAppHostApi.delete$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_core_platform_interface.FirebaseAppHostApi.delete$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[appName]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[appName]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: true,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: true,
+    )
+    ;
   }
 }
