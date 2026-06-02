@@ -1,3 +1,8 @@
+## 6.5.2
+
+ - **FIX**(auth,android): update token retrieval in PigeonParser to handle Number type correctly ([#18328](https://github.com/firebase/flutterfire/issues/18328)). ([3b77147b](https://github.com/firebase/flutterfire/commit/3b77147bc00bb19af5f4821436a1a4cdd8ff6791))
+ - **DOCS**(auth): clarify behavior of password reset email with email enumeration protection enabled ([#18296](https://github.com/firebase/flutterfire/issues/18296)). ([0bcce87a](https://github.com/firebase/flutterfire/commit/0bcce87a17830797dae6ff3c1a8ba4ce210c2c0d))
+
 ## 6.5.1
 
  - Update a dependency to the latest release.

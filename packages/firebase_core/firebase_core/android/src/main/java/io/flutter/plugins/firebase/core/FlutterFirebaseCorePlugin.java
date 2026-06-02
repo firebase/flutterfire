@@ -63,6 +63,7 @@ public class FlutterFirebaseCorePlugin
     firebaseOptions.setDatabaseURL(options.getDatabaseUrl());
     firebaseOptions.setStorageBucket(options.getStorageBucket());
     firebaseOptions.setTrackingId(options.getGaTrackingId());
+    // TODO(recaptchaSiteKey): Map recaptchaSiteKey if stored.
 
     return firebaseOptions.build();
   }
@@ -164,6 +165,8 @@ public class FlutterFirebaseCorePlugin
             if (initializeAppRequest.getAuthDomain() != null) {
               customAuthDomain.put(appName, initializeAppRequest.getAuthDomain());
             }
+
+            // TODO(recaptchaSiteKey): Store or use recaptchaSiteKey if needed.
 
             FirebaseApp firebaseApp =
                 FirebaseApp.initializeApp(applicationContext, options, appName);

@@ -660,6 +660,76 @@ void main() {
       expect(expr.toMap()['name'], 'array_reverse');
       expect(expr.toMap()['args']['expression']['args']['field'], 'order');
     });
+
+    test('arraySlice serializes correctly', () {
+      final expr = Field('items').arraySlice(1, Field('count'));
+      expect(expr.toMap(), {
+        'name': 'array_slice',
+        'args': {
+          'expression': Field('items').toMap(),
+          'offset': Constant(1).toMap(),
+          'length': Field('count').toMap(),
+        },
+      });
+    });
+
+    test('arraySlice without length serializes correctly', () {
+      final expr = Field('items').arraySlice(1);
+      expect(expr.toMap(), {
+        'name': 'array_slice',
+        'args': {
+          'expression': Field('items').toMap(),
+          'offset': Constant(1).toMap(),
+        },
+      });
+    });
+
+    test('arrayFilter serializes correctly', () {
+      final expr = Field('scores').arrayFilter(
+        'item',
+        Field('item').greaterThanValue(10),
+      );
+      expect(expr.toMap(), {
+        'name': 'array_filter',
+        'args': {
+          'expression': Field('scores').toMap(),
+          'alias': 'item',
+          'filter': Field('item').greaterThanValue(10).toMap(),
+        },
+      });
+    });
+
+    test('arrayTransform serializes correctly', () {
+      final expr = Field('scores').arrayTransform(
+        'score',
+        Field('score').multiplyNumber(10),
+      );
+      expect(expr.toMap(), {
+        'name': 'array_transform',
+        'args': {
+          'expression': Field('scores').toMap(),
+          'element_alias': 'score',
+          'transform': Field('score').multiplyNumber(10).toMap(),
+        },
+      });
+    });
+
+    test('arrayTransformWithIndex serializes correctly', () {
+      final expr = Field('scores').arrayTransformWithIndex(
+        'score',
+        'i',
+        Field('score').add(Field('i')),
+      );
+      expect(expr.toMap(), {
+        'name': 'array_transform_with_index',
+        'args': {
+          'expression': Field('scores').toMap(),
+          'element_alias': 'score',
+          'index_alias': 'i',
+          'transform': Field('score').add(Field('i')).toMap(),
+        },
+      });
+    });
   });
 
   group('Numeric expressions', () {

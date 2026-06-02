@@ -1,3 +1,7 @@
+## 13.4.2
+
+ - Update a dependency to the latest release.
+
 ## 13.4.1
 
  - Update a dependency to the latest release.
