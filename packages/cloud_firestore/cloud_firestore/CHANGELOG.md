@@ -1,3 +1,8 @@
+## 6.5.0
+
+ - **FIX**(firestore,ios): add forceIndex parameter to collection source stage initializations ([#18332](https://github.com/firebase/flutterfire/issues/18332)). ([1bf50d2f](https://github.com/firebase/flutterfire/commit/1bf50d2f5bbdcac29797268632e2ed8b7e344c7d))
+ - **FEAT**(firestore): add support for new array expressions ([#18283](https://github.com/firebase/flutterfire/issues/18283)). ([2293dee0](https://github.com/firebase/flutterfire/commit/2293dee00767cc6eebd57a340eb2b72bdab41d52))
+
 ## 6.4.1
 
  - Update a dependency to the latest release.

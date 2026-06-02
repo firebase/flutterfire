@@ -3,7 +3,7 @@ description: The web implementation of cloud_functions
 homepage: https://github.com/firebase/flutterfire/tree/main/packages/cloud_functions/cloud_functions_web
 repository: https://github.com/firebase/flutterfire/tree/main/packages/cloud_functions/cloud_functions_web
 
-version: 5.1.7
+version: 5.1.8
 resolution: workspace
 
 environment:
@@ -11,9 +11,9 @@ environment:
   flutter: '>=3.22.0'
 
 dependencies:
-  cloud_functions_platform_interface: ^6.0.1
-  firebase_core: ^4.9.0
-  firebase_core_web: ^3.7.0
+  cloud_functions_platform_interface: ^6.0.2
+  firebase_core: ^4.10.0
+  firebase_core_web: ^3.8.0
   flutter:
     sdk: flutter
   flutter_web_plugins:

@@ -7,7 +7,7 @@
 
 import PackageDescription
 
-let firebaseSdkVersion: Version = "12.13.0"
+let firebaseSdkVersion: Version = "12.14.0"
 
 let package = Package(
   name: "firebase_analytics",
