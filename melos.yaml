@@ -55,8 +55,7 @@ scripts:
 
   format-ci:
     run: |
-      dart pub global run flutter_plugin_tools format && \
-      swiftformat .
+      dart pub global run flutter_plugin_tools format
     description: |
       Formats the code of all packages (Java, Objective-C, and Dart).
        - Requires `flutter_plugin_tools` (`pub global activate flutter_plugin_tools`).
