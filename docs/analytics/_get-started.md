@@ -85,9 +85,10 @@ await FirebaseAnalytics.instance
 
 ## Using Analytics without Ad ID support (iOS) {:#without-ad-id}
 
-If your app doesn't use IDFA, you can use `FirebaseAnalyticsWithoutAdIdSupport`
-instead of the default `FirebaseAnalytics` iOS dependency to avoid App Store
-review questions about advertising identifiers.
+If your app doesn't use IDFA, use the IDFA-free Analytics iOS dependency
+(`FirebaseAnalyticsCore` under SPM, or `FirebaseAnalytics/Core` under CocoaPods)
+instead of the default `FirebaseAnalytics` dependency to avoid App Store review
+questions about advertising identifiers.
 
 ### Swift Package Manager
 
