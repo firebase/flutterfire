@@ -826,6 +826,7 @@ public class GeneratedAndroidFirebaseCore {
     /** Failure case callback method for handling errors. */
     void error(@NonNull Throwable error);
   }
+
   /** Asynchronous error handling return type for nullable API method returns. */
   public interface NullableResult<T> {
     /** Success case callback method for handling returns. */
@@ -834,6 +835,7 @@ public class GeneratedAndroidFirebaseCore {
     /** Failure case callback method for handling errors. */
     void error(@NonNull Throwable error);
   }
+
   /** Asynchronous error handling return type for void API method returns. */
   public interface VoidResult {
     /** Success case callback method for handling returns. */
@@ -842,6 +844,7 @@ public class GeneratedAndroidFirebaseCore {
     /** Failure case callback method for handling errors. */
     void error(@NonNull Throwable error);
   }
+
   /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
   public interface FirebaseCoreHostApi {
 
@@ -858,6 +861,7 @@ public class GeneratedAndroidFirebaseCore {
     static @NonNull MessageCodec<Object> getCodec() {
       return PigeonCodec.INSTANCE;
     }
+
     /**
      * Sets up an instance of `FirebaseCoreHostApi` to handle messages through the
      * `binaryMessenger`.
@@ -966,6 +970,7 @@ public class GeneratedAndroidFirebaseCore {
       }
     }
   }
+
   /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
   public interface FirebaseAppHostApi {
 
@@ -981,6 +986,7 @@ public class GeneratedAndroidFirebaseCore {
     static @NonNull MessageCodec<Object> getCodec() {
       return PigeonCodec.INSTANCE;
     }
+
     /**
      * Sets up an instance of `FirebaseAppHostApi` to handle messages through the `binaryMessenger`.
      */

@@ -144,8 +144,10 @@ class CoreFirebaseOptions {
  private:
   static CoreFirebaseOptions FromEncodableList(
       const ::flutter::EncodableList& list);
+
  public:
   ::flutter::EncodableList ToEncodableList() const;
+
  private:
   friend class CoreInitializeResponse;
   friend class FirebaseCoreHostApi;
@@ -210,8 +212,10 @@ class CoreInitializeResponse {
  private:
   static CoreInitializeResponse FromEncodableList(
       const ::flutter::EncodableList& list);
+
  public:
   ::flutter::EncodableList ToEncodableList() const;
+
  private:
   friend class FirebaseCoreHostApi;
   friend class FirebaseAppHostApi;
