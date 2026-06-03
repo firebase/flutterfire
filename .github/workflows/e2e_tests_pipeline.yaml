@@ -42,7 +42,7 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '21'
-      - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
         with:
           channel: 'stable'
           flutter-version: '3.41.9'
@@ -120,7 +120,7 @@ jobs:
         name: Install Node.js 20
         with:
           node-version: '20'
-      - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
         with:
           channel: 'stable'
           cache: true
@@ -171,7 +171,7 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '21'
-      - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
         with:
           channel: 'stable'
           flutter-version: '3.41.9'

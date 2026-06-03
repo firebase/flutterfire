@@ -62,7 +62,7 @@ jobs:
     needs: [e2e-android, e2e-ios, e2e-macos, e2e-web, e2e-windows, e2e-fdc, e2e-pipeline]
     steps:
       - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
-      - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
         with:
           channel: 'stable'
       - name: Update Dashboard Issue
