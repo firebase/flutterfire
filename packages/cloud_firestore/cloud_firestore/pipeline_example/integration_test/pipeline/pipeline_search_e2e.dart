@@ -6,6 +6,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+const String _searchCollection = 'pipeline-search-e2e';
+
 void runPipelineSearchTests() {
   group('Pipeline search', () {
     late FirebaseFirestore firestore;
@@ -20,9 +22,8 @@ void runPipelineSearchTests() {
     test('withQuery returns matching search results', () async {
       final snapshot = await firestore
           .pipeline()
-          .collection('pipeline-e2e')
+          .collection(_searchCollection)
           .search(SearchStage.withQuery('pancakes', limit: 10))
-          .where(Expression.field('test').equalValue('search'))
           .execute();
 
       expect(_resultNames(snapshot), contains('Pancake House'));
@@ -31,7 +32,7 @@ void runPipelineSearchTests() {
     test('withQuery passes options and returns expected result list', () async {
       final snapshot = await firestore
           .pipeline()
-          .collection('pipeline-e2e')
+          .collection(_searchCollection)
           .search(
             SearchStage.withQuery(
               'breakfast',
@@ -42,7 +43,6 @@ void runPipelineSearchTests() {
               addFields: [Field('name').as('resultName')],
             ),
           )
-          .where(Expression.field('test').equalValue('search'))
           .execute();
 
       expect(_sortedResultValues(snapshot, 'name'), [
@@ -59,14 +59,13 @@ void runPipelineSearchTests() {
     test('withQueryExpression returns matching search results', () async {
       final snapshot = await firestore
           .pipeline()
-          .collection('pipeline-e2e')
+          .collection(_searchCollection)
           .search(
             SearchStage.withQueryExpression(
               Expression.documentMatches('pancakes'),
               limit: 10,
             ),
           )
-          .where(Expression.field('test').equalValue('search'))
           .execute();
 
       expect(_resultNames(snapshot), contains('Pancake House'));
@@ -77,7 +76,7 @@ void runPipelineSearchTests() {
       () async {
         final snapshot = await firestore
             .pipeline()
-            .collection('pipeline-e2e')
+            .collection(_searchCollection)
             .search(
               SearchStage.withQueryExpression(
                 Expression.and(
@@ -87,7 +86,6 @@ void runPipelineSearchTests() {
                 limit: 10,
               ),
             )
-            .where(Expression.field('test').equalValue('search'))
             .execute();
 
         expect(_resultNames(snapshot), contains('Pancake House'));
@@ -97,9 +95,8 @@ void runPipelineSearchTests() {
     test('withQuery returns empty results when nothing matches', () async {
       final snapshot = await firestore
           .pipeline()
-          .collection('pipeline-e2e')
+          .collection(_searchCollection)
           .search(SearchStage.withQuery('No match', limit: 10))
-          .where(Expression.field('test').equalValue('search'))
           .execute();
 
       expect(snapshot.result, isEmpty);

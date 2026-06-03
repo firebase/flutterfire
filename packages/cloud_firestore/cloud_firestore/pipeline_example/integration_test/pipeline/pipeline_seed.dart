@@ -5,6 +5,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 const String _col = 'pipeline-e2e';
+const String _searchCol = 'pipeline-search-e2e';
 const int _maxBatchSize = 500;
 
 Future<void> seedPipelineE2ECollections(FirebaseFirestore firestore) async {
@@ -98,11 +99,6 @@ Future<void> seedPipelineE2ECollections(FirebaseFirestore firestore) async {
         'label': 'far',
       },
     ]),
-    ..._withTest('search', [
-      {'name': 'Pancake House', 'description': 'waffles pancakes breakfast'},
-      {'name': 'Burger Diner', 'description': 'burgers fries lunch'},
-      {'name': 'Coffee Bar', 'description': 'coffee breakfast pastries'},
-    ]),
     ..._withTest('expressions', [
       {
         'score': 60,
@@ -147,6 +143,15 @@ Future<void> seedPipelineE2ECollections(FirebaseFirestore firestore) async {
     ]),
   ];
   await _clearAndSeed(firestore, _col, docs);
+}
+
+Future<void> seedPipelineSearchE2ECollection(FirebaseFirestore firestore) async {
+  final docs = <Map<String, dynamic>>[
+    {'name': 'Pancake House', 'description': 'waffles pancakes breakfast'},
+    {'name': 'Burger Diner', 'description': 'burgers fries lunch'},
+    {'name': 'Coffee Bar', 'description': 'coffee breakfast pastries'},
+  ];
+  await _clearAndSeed(firestore, _searchCol, docs);
 }
 
 List<Map<String, dynamic>> _withTest(

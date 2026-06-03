@@ -37,6 +37,7 @@ void main() {
       );
       firestore.settings = const Settings(persistenceEnabled: true);
       await seedPipelineE2ECollections(firestore);
+      await seedPipelineSearchE2ECollection(firestore);
     });
 
     runPipelineFilterSortTests();
