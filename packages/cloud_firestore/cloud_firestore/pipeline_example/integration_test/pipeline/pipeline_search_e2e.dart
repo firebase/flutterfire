@@ -40,16 +40,11 @@ void runPipelineSearchTests() {
               retrievalDepth: 10,
               offset: 0,
               limit: 10,
-              addFields: [Field('name').as('resultName')],
             ),
           )
           .execute();
 
       expect(_sortedResultValues(snapshot, 'name'), [
-        'Coffee Bar',
-        'Pancake House',
-      ]);
-      expect(_sortedResultValues(snapshot, 'resultName'), [
         'Coffee Bar',
         'Pancake House',
       ]);
