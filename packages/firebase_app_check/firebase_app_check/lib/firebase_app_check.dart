@@ -24,6 +24,7 @@ export 'package:firebase_app_check_platform_interface/firebase_app_check_platfor
         ReCaptchaEnterpriseProvider,
         ReCaptchaV3Provider,
         WebDebugProvider,
+        WebProvider,
         WebReCaptchaProvider,
         WindowsAppCheckProvider,
         WindowsDebugProvider;

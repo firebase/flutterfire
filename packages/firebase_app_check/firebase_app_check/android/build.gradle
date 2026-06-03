@@ -7,7 +7,6 @@ apply from: file("local-config.gradle")
 buildscript {
   ext.kotlin_version = "2.0.0"
   repositories {
-    mavenLocal()
     google()
     mavenCentral()
   }
@@ -15,7 +14,6 @@ buildscript {
 
 rootProject.allprojects {
   repositories {
-    mavenLocal()
     google()
     mavenCentral()
   }

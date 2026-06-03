@@ -4,6 +4,7 @@
 
 // ignore_for_file: do_not_use_environment
 
+import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -80,6 +81,7 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
   String _message = '';
   String _eventToken = 'not yet';
   late final TextEditingController _webSiteKeyController;
+  StreamSubscription<String?>? _tokenSubscription;
 
   @override
   void initState() {
@@ -91,6 +93,7 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
   @override
   void dispose() {
     _webSiteKeyController.dispose();
+    _tokenSubscription?.cancel();
     super.dispose();
   }
 
@@ -118,6 +121,8 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
         providerWeb = ReCaptchaEnterpriseProvider(_webSiteKeyController.text);
       } else if (webProviderType == 'v3') {
         providerWeb = ReCaptchaV3Provider(_webSiteKeyController.text);
+      } else if (webProviderType == 'web-recaptcha') {
+        providerWeb = WebReCaptchaProvider();
       }
 
       await appCheck.activate(
@@ -126,6 +131,8 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
         providerWeb: providerWeb,
         providerWindows: windows ?? const WindowsDebugProvider(),
       );
+      _tokenSubscription?.cancel();
+      _tokenSubscription = appCheck.onTokenChange.listen(setEventToken);
       final providerName = windows?.runtimeType.toString() ??
           webProviderType ??
           apple?.runtimeType.toString() ??
@@ -154,6 +161,13 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
             ),
             const SizedBox(height: 8),
             if (kIsWeb) ...[
+              ElevatedButton(
+                onPressed: () => _activate(
+                  webProviderType: 'web-recaptcha',
+                ),
+                child: const Text('activate(Web reCAPTCHA from options)'),
+              ),
+              const SizedBox(height: 8),
               ElevatedButton(
                 onPressed: () => _activate(
                   webProviderType: 'v3',
@@ -189,7 +203,6 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
                 ),
                 child: const Text('activate(Android Play Integrity)'),
               ),
-
               const SizedBox(height: 8),
               ElevatedButton(
                 onPressed: () => _activate(

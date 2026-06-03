@@ -28,8 +28,8 @@ FirebaseAppPlatform _createFromJsApp(firebase.App jsApp) {
 }
 
 String? _safeToDart(JSString? jsString) {
-  if (jsString.isUndefinedOrNull) return null;
-  return jsString!.toDart;
+  if (jsString == null || jsString.isUndefinedOrNull) return null;
+  return jsString.toDart;
 }
 
 /// Returns a [FirebaseOptions] instance from [firebase.FirebaseOptions].
