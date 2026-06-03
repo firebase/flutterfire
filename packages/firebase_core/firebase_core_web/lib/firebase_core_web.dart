@@ -27,17 +27,23 @@ FirebaseAppPlatform _createFromJsApp(firebase.App jsApp) {
   return FirebaseAppWeb._(jsApp.name, _createFromJsOptions(jsApp.options));
 }
 
+String? _safeToDart(JSString? jsString) {
+  if (jsString.isUndefinedOrNull) return null;
+  return jsString!.toDart;
+}
+
 /// Returns a [FirebaseOptions] instance from [firebase.FirebaseOptions].
 FirebaseOptions _createFromJsOptions(firebase.FirebaseOptions options) {
   return FirebaseOptions(
-    apiKey: options.apiKey?.toDart ?? '',
-    projectId: options.projectId?.toDart ?? '',
-    authDomain: options.authDomain?.toDart,
-    databaseURL: options.databaseURL?.toDart,
-    storageBucket: options.storageBucket?.toDart,
-    messagingSenderId: options.messagingSenderId?.toDart ?? '',
-    appId: options.appId?.toDart ?? '',
-    measurementId: options.measurementId?.toDart,
+    apiKey: _safeToDart(options.apiKey) ?? '',
+    projectId: _safeToDart(options.projectId) ?? '',
+    authDomain: _safeToDart(options.authDomain),
+    databaseURL: _safeToDart(options.databaseURL),
+    storageBucket: _safeToDart(options.storageBucket),
+    messagingSenderId: _safeToDart(options.messagingSenderId) ?? '',
+    appId: _safeToDart(options.appId) ?? '',
+    measurementId: _safeToDart(options.measurementId),
+    recaptchaSiteKey: _safeToDart(options.recaptchaSiteKey),
   );
 }
 
