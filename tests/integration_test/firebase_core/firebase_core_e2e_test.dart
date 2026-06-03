@@ -78,5 +78,36 @@ void main() {
 
       await app.setAutomaticResourceManagementEnabled(true);
     });
+
+    test('Firebase.initializeApp with recaptchaSiteKey', () async {
+      String appName = 'recaptcha-test-app';
+      FirebaseOptions options = DefaultFirebaseOptions.currentPlatform.copyWith(
+        recaptchaSiteKey: 'test-recaptcha-site-key',
+      );
+
+      await Firebase.initializeApp(
+        name: appName,
+        options: options,
+      );
+
+      FirebaseApp app = Firebase.app(appName);
+      expect(app.options.recaptchaSiteKey, 'test-recaptcha-site-key');
+
+      await app.delete();
+    });
+
+    test('Default app recaptchaSiteKey precedence test', () async {
+      // Natively initialized default app has no recaptchaSiteKey.
+      // Trying to initialize it again with different recaptchaSiteKey in Dart.
+      FirebaseApp app = await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform.copyWith(
+          recaptchaSiteKey: 'dart-recaptcha-key',
+        ),
+      );
+
+      // It should NOT update the key, because native initializeApp was skipped.
+      // (It returns the natively initialized app which has null key).
+      expect(app.options.recaptchaSiteKey, isNull);
+    });
   });
 }
