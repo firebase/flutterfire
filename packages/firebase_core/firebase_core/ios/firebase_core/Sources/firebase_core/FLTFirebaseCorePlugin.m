@@ -93,7 +93,7 @@ static NSMutableDictionary<NSString *, NSString *> *customAuthDomains;
   pigeonOptions.iosBundleId = (id)options.bundleID ?: [NSNull null];
   pigeonOptions.iosClientId = (id)options.clientID ?: [NSNull null];
   pigeonOptions.appGroupId = (id)options.appGroupID ?: [NSNull null];
-  // TODO(recaptchaSiteKey): Map recaptchaSiteKey if stored.
+  pigeonOptions.recaptchaSiteKey = (id)options.recaptchaSiteKey ?: [NSNull null];
   return pigeonOptions;
 }
 
@@ -179,7 +179,9 @@ static NSMutableDictionary<NSString *, NSString *> *customAuthDomains;
     options.appGroupID = initializeAppRequest.appGroupId;
   }
 
-  // TODO(recaptchaSiteKey): Store or use recaptchaSiteKey if needed.
+  if (![initializeAppRequest.recaptchaSiteKey isEqual:[NSNull null]]) {
+    options.recaptchaSiteKey = initializeAppRequest.recaptchaSiteKey;
+  }
 
   if (initializeAppRequest.authDomain != nil) {
     customAuthDomains[appNameIos] = initializeAppRequest.authDomain;
