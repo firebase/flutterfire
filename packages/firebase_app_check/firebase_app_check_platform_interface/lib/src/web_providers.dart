@@ -5,15 +5,15 @@
 abstract class WebProvider {
   final String siteKey;
 
-  WebProvider(this.siteKey);
+  const WebProvider(this.siteKey);
 }
 
 class ReCaptchaV3Provider extends WebProvider {
-  ReCaptchaV3Provider(String siteKey) : super(siteKey);
+  const ReCaptchaV3Provider(String siteKey) : super(siteKey);
 }
 
 class ReCaptchaEnterpriseProvider extends WebProvider {
-  ReCaptchaEnterpriseProvider(String siteKey) : super(siteKey);
+  const ReCaptchaEnterpriseProvider(String siteKey) : super(siteKey);
 }
 
 /// Debug provider for Web.
@@ -26,7 +26,7 @@ class ReCaptchaEnterpriseProvider extends WebProvider {
 /// See documentation: https://firebase.google.com/docs/app-check/web/debug-provider
 class WebDebugProvider extends WebProvider {
   /// Creates a web debug provider with an optional debug token.
-  WebDebugProvider({this.debugToken}) : super('');
+  const WebDebugProvider({this.debugToken}) : super('');
 
   /// The debug token for this provider.
   final String? debugToken;
@@ -34,5 +34,5 @@ class WebDebugProvider extends WebProvider {
 
 /// reCAPTCHA Enterprise provider for Web that does not use the enterprise name and does not take in a siteKey.
 class WebReCaptchaProvider extends WebProvider {
-  WebReCaptchaProvider() : super('');
+  const WebReCaptchaProvider() : super('');
 }

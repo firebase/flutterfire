@@ -13,8 +13,6 @@ import 'package:flutter/material.dart';
 
 import 'firebase_options.dart';
 
-const kWebRecaptchaSiteKey = '6Lemcn0dAAAAABLkf6aiiHvpGD6x-zF3nOSDU2M8';
-
 // Windows: create a debug token in the Firebase Console
 // (App Check > Apps > Manage debug tokens), then paste it here
 // or set the APP_CHECK_DEBUG_TOKEN environment variable.
@@ -33,9 +31,7 @@ Future<void> main() async {
   // Activate app check after initialization, but before
   // usage of any Firebase services.
   await FirebaseAppCheck.instance.activate(
-    providerWeb: kDebugMode
-        ? WebDebugProvider()
-        : ReCaptchaV3Provider(kWebRecaptchaSiteKey),
+    providerWeb: kDebugMode ? WebDebugProvider() : WebReCaptchaProvider(),
     providerAndroid: const AndroidDebugProvider(),
     providerApple: const AppleDebugProvider(),
     // On Windows, only the debug provider is available.
@@ -85,7 +81,7 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
 
   @override
   void initState() {
-    _webSiteKeyController = TextEditingController(text: kWebRecaptchaSiteKey);
+    _webSiteKeyController = TextEditingController();
     appCheck.onTokenChange.listen(setEventToken);
     super.initState();
   }
@@ -112,29 +108,20 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
   Future<void> _activate({
     AndroidAppCheckProvider? android,
     AppleAppCheckProvider? apple,
-    String? webProviderType,
+    WebProvider? web,
     WindowsAppCheckProvider? windows,
   }) async {
     try {
-      dynamic providerWeb;
-      if (webProviderType == 'enterprise') {
-        providerWeb = ReCaptchaEnterpriseProvider(_webSiteKeyController.text);
-      } else if (webProviderType == 'v3') {
-        providerWeb = ReCaptchaV3Provider(_webSiteKeyController.text);
-      } else if (webProviderType == 'web-recaptcha') {
-        providerWeb = WebReCaptchaProvider();
-      }
-
       await appCheck.activate(
         providerAndroid: android ?? const AndroidPlayIntegrityProvider(),
         providerApple: apple ?? const AppleDeviceCheckProvider(),
-        providerWeb: providerWeb,
+        providerWeb: web ?? const WebReCaptchaProvider(),
         providerWindows: windows ?? const WindowsDebugProvider(),
       );
-      _tokenSubscription?.cancel();
+      await _tokenSubscription?.cancel();
       _tokenSubscription = appCheck.onTokenChange.listen(setEventToken);
       final providerName = windows?.runtimeType.toString() ??
-          webProviderType ??
+          web?.runtimeType.toString() ??
           apple?.runtimeType.toString() ??
           android?.runtimeType.toString() ??
           'default';
@@ -163,14 +150,14 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
             if (kIsWeb) ...[
               ElevatedButton(
                 onPressed: () => _activate(
-                  webProviderType: 'web-recaptcha',
+                  web: const WebReCaptchaProvider(),
                 ),
                 child: const Text('activate(Web reCAPTCHA from options)'),
               ),
               const SizedBox(height: 8),
               ElevatedButton(
                 onPressed: () => _activate(
-                  webProviderType: 'v3',
+                  web: ReCaptchaV3Provider(_webSiteKeyController.text),
                 ),
                 child: const Text('activate(Web reCAPTCHA v3)'),
               ),
@@ -185,7 +172,7 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
               const SizedBox(height: 8),
               ElevatedButton(
                 onPressed: () => _activate(
-                  webProviderType: 'enterprise',
+                  web: ReCaptchaEnterpriseProvider(_webSiteKeyController.text),
                 ),
                 child: const Text('activate(Web reCAPTCHA Enterprise)'),
               ),
@@ -241,7 +228,6 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
                 ),
               ),
               if (defaultTargetPlatform == TargetPlatform.iOS) ...[
-                
                 const SizedBox(height: 8),
                 ElevatedButton(
                   onPressed: () => _activate(
