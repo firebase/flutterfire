@@ -59,7 +59,7 @@ void main() {
     });
 
     test('activate with WebReCaptchaProvider', () async {
-      final provider = WebReCaptchaProvider();
+      const provider = WebReCaptchaProvider();
       await appCheck.activate(
         webProvider: provider,
       );
@@ -70,7 +70,6 @@ void main() {
       );
       verifyNoMoreInteractions(appCheck);
     });
-
 
     test('getToken', () async {
       await appCheck.getToken(true);

@@ -31,7 +31,7 @@ Future<void> main() async {
   // Activate app check after initialization, but before
   // usage of any Firebase services.
   await FirebaseAppCheck.instance.activate(
-    providerWeb: kDebugMode ? WebDebugProvider() : WebReCaptchaProvider(),
+    providerWeb: kDebugMode ? WebDebugProvider() : const WebReCaptchaProvider(),
     providerAndroid: const AndroidDebugProvider(),
     providerApple: const AppleDebugProvider(),
     // On Windows, only the debug provider is available.
