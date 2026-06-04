@@ -173,6 +173,16 @@ static NSError *parseError(NSString *message) {
     return [self parseExpression:(NSDictionary *)exprMap error:error];
   }
 
+  if ([name isEqualToString:@"document_matches"]) {
+    NSString *query = args[@"query"];
+    if (![query isKindOfClass:[NSString class]]) {
+      if (error) *error = parseError(@"document_matches requires query");
+      return nil;
+    }
+    FIRExprBridge *queryExpr = [[FIRConstantBridge alloc] init:query];
+    return FLTNewFunctionExprBridge(@"document_matches", @[ queryExpr ]);
+  }
+
   // Map Dart names to iOS SDK names where they differ
   NSString *sdkName = name;
   if ([name isEqualToString:@"bit_xor"]) sdkName = @"xor";
@@ -828,6 +838,111 @@ static NSError *parseError(NSString *message) {
   return nil;
 }
 
++ (NSDictionary<NSString *, FIRExprBridge *> *)
+    parseSearchFieldsWithExpressionMaps:(NSArray<NSDictionary<NSString *, id> *> *)exprMaps
+                             exprParser:(FLTPipelineExpressionParser *)exprParser
+                                  error:(NSError **)error {
+  NSMutableDictionary<NSString *, FIRExprBridge *> *fields = [NSMutableDictionary dictionary];
+  NSError *parseErr = nil;
+
+  for (id em in exprMaps) {
+    if (![em isKindOfClass:[NSDictionary class]]) continue;
+
+    FIRExprBridge *expr = [exprParser parseExpression:em error:&parseErr];
+    if (!expr) {
+      if (error) *error = parseErr;
+      return nil;
+    }
+
+    NSString *key = [self keyForExpressionMap:em error:error];
+    if (![key isKindOfClass:[NSString class]] || key.length == 0) return nil;
+    fields[key] = expr;
+  }
+
+  return fields;
+}
+
++ (FIRStageBridge *)parseSearchStageWithArgs:(NSDictionary *)args
+                                  exprParser:(FLTPipelineExpressionParser *)exprParser
+                                       error:(NSError **)error {
+  NSString *queryType = args[@"query_type"];
+  id query = args[@"query"];
+  NSMutableDictionary<NSString *, FIRExprBridge *> *options = [NSMutableDictionary dictionary];
+  NSError *parseErr = nil;
+
+  if ([queryType isEqualToString:@"string"]) {
+    if (![query isKindOfClass:[NSString class]]) {
+      if (error) *error = parseError(@"search query_type 'string' requires string query");
+      return nil;
+    }
+    options[@"query"] = [[FIRConstantBridge alloc] init:query];
+  } else if ([queryType isEqualToString:@"expression"]) {
+    if (![query isKindOfClass:[NSDictionary class]]) {
+      if (error) *error = parseError(@"search query_type 'expression' requires expression query");
+      return nil;
+    }
+    FIRExprBridge *queryExpr = [exprParser parseBooleanExpression:query error:&parseErr];
+    if (!queryExpr) {
+      if (error) *error = parseErr;
+      return nil;
+    }
+    options[@"query"] = queryExpr;
+  } else {
+    if (error) *error = parseError(@"search requires query_type to be 'string' or 'expression'");
+    return nil;
+  }
+
+  NSNumber *limit = [args[@"limit"] isKindOfClass:[NSNumber class]] ? args[@"limit"] : nil;
+  if (limit) options[@"limit"] = [[FIRConstantBridge alloc] init:limit];
+
+  NSNumber *offset = [args[@"offset"] isKindOfClass:[NSNumber class]] ? args[@"offset"] : nil;
+  if (offset) options[@"offset"] = [[FIRConstantBridge alloc] init:offset];
+
+  NSNumber *retrievalDepth =
+      [args[@"retrieval_depth"] isKindOfClass:[NSNumber class]] ? args[@"retrieval_depth"] : nil;
+  if (retrievalDepth) {
+    options[@"retrievalDepth"] = [[FIRConstantBridge alloc] init:retrievalDepth];
+  }
+
+  NSString *languageCode =
+      [args[@"language_code"] isKindOfClass:[NSString class]] ? args[@"language_code"] : nil;
+  if (languageCode) {
+    options[@"languageCode"] = [[FIRConstantBridge alloc] init:languageCode];
+  }
+
+  NSMutableArray<FIROrderingBridge *> *sort = [NSMutableArray array];
+  NSArray *orderingMaps = args[@"sort"];
+  if ([orderingMaps isKindOfClass:[NSArray class]]) {
+    for (id om in orderingMaps) {
+      if (![om isKindOfClass:[NSDictionary class]]) continue;
+      id exprMap = ((NSDictionary *)om)[@"expression"];
+      NSString *dir = ((NSDictionary *)om)[@"order_direction"];
+      if (![exprMap isKindOfClass:[NSDictionary class]]) continue;
+      FIRExprBridge *expr = [exprParser parseExpression:exprMap error:&parseErr];
+      if (!expr) {
+        if (error) *error = parseErr;
+        return nil;
+      }
+      NSString *direction = [dir isEqualToString:@"asc"] ? @"ascending" : @"descending";
+      [sort addObject:[[FIROrderingBridge alloc] initWithExpr:expr Direction:direction]];
+    }
+  }
+
+  NSDictionary<NSString *, FIRExprBridge *> *addFields = @{};
+  NSArray *addFieldMaps = args[@"add_fields"];
+  if ([addFieldMaps isKindOfClass:[NSArray class]] && addFieldMaps.count > 0) {
+    addFields = [self parseSearchFieldsWithExpressionMaps:addFieldMaps
+                                               exprParser:exprParser
+                                                    error:error];
+    if (!addFields) return nil;
+  }
+
+  return [[FIRSearchStageBridge alloc] initWithOptions:options
+                                             addFields:addFields
+                                                select:@{}
+                                                  sort:sort];
+}
+
 + (NSArray<FIRStageBridge *> *)
     parseStagesWithFirestore:(FIRFirestore *)firestore
                       stages:(NSArray<NSDictionary<NSString *, id> *> *)stages
@@ -906,6 +1021,9 @@ static NSError *parseError(NSString *message) {
           return nil;
         }
         stage = [[FIRWhereStageBridge alloc] initWithExpr:expr];
+      } else if ([stageName isEqualToString:@"search"]) {
+        stage = [self parseSearchStageWithArgs:args exprParser:exprParser error:error];
+        if (!stage) return nil;
       } else if ([stageName isEqualToString:@"limit"]) {
         NSNumber *limit = args[@"limit"];
         if (![limit isKindOfClass:[NSNumber class]]) {
