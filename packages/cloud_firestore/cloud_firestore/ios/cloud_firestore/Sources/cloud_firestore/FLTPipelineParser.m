@@ -875,7 +875,8 @@ static NSError *parseError(NSString *message) {
       if (error) *error = parseError(@"search query_type 'string' requires string query");
       return nil;
     }
-    options[@"query"] = [[FIRConstantBridge alloc] init:query];
+    FIRExprBridge *queryExpr = [[FIRConstantBridge alloc] init:query];
+    options[@"query"] = FLTNewFunctionExprBridge(@"document_matches", @[ queryExpr ]);
   } else if ([queryType isEqualToString:@"expression"]) {
     if (![query isKindOfClass:[NSDictionary class]]) {
       if (error) *error = parseError(@"search query_type 'expression' requires expression query");
@@ -901,13 +902,13 @@ static NSError *parseError(NSString *message) {
   NSNumber *retrievalDepth =
       [args[@"retrieval_depth"] isKindOfClass:[NSNumber class]] ? args[@"retrieval_depth"] : nil;
   if (retrievalDepth) {
-    options[@"retrievalDepth"] = [[FIRConstantBridge alloc] init:retrievalDepth];
+    options[@"retrieval_depth"] = [[FIRConstantBridge alloc] init:retrievalDepth];
   }
 
   NSString *languageCode =
       [args[@"language_code"] isKindOfClass:[NSString class]] ? args[@"language_code"] : nil;
   if (languageCode) {
-    options[@"languageCode"] = [[FIRConstantBridge alloc] init:languageCode];
+    options[@"language_code"] = [[FIRConstantBridge alloc] init:languageCode];
   }
 
   NSMutableArray<FIROrderingBridge *> *sort = [NSMutableArray array];
