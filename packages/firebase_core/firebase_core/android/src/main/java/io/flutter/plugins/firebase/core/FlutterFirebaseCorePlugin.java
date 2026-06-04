@@ -63,6 +63,7 @@ public class FlutterFirebaseCorePlugin
     firebaseOptions.setDatabaseURL(options.getDatabaseUrl());
     firebaseOptions.setStorageBucket(options.getStorageBucket());
     firebaseOptions.setTrackingId(options.getGaTrackingId());
+    // TODO(recaptchaSiteKey): Map recaptchaSiteKey if stored.
 
     return firebaseOptions.build();
   }
@@ -151,8 +152,10 @@ public class FlutterFirebaseCorePlugin
                     .setGaTrackingId(initializeAppRequest.getTrackingId())
                     .build();
             // TODO(Salakar) hacky workaround a bug with FirebaseInAppMessaging causing the error:
-            //    Can't create handler inside thread Thread[pool-3-thread-1,5,main] that has not called Looper.prepare()
-            //     at com.google.firebase.inappmessaging.internal.ForegroundNotifier.<init>(ForegroundNotifier.java:61)
+            //    Can't create handler inside thread Thread[pool-3-thread-1,5,main] that has not
+            // called Looper.prepare()
+            //     at
+            // com.google.firebase.inappmessaging.internal.ForegroundNotifier.<init>(ForegroundNotifier.java:61)
             try {
               Looper.prepare();
             } catch (Exception e) {
@@ -162,6 +165,8 @@ public class FlutterFirebaseCorePlugin
             if (initializeAppRequest.getAuthDomain() != null) {
               customAuthDomain.put(appName, initializeAppRequest.getAuthDomain());
             }
+
+            // TODO(recaptchaSiteKey): Store or use recaptchaSiteKey if needed.
 
             FirebaseApp firebaseApp =
                 FirebaseApp.initializeApp(applicationContext, options, appName);
@@ -221,7 +226,8 @@ public class FlutterFirebaseCorePlugin
             if (options == null) {
               taskCompletionSource.setException(
                   new Exception(
-                      "Failed to load FirebaseOptions from resource. Check that you have defined values.xml correctly."));
+                      "Failed to load FirebaseOptions from resource. Check that you have defined"
+                          + " values.xml correctly."));
               return;
             }
             taskCompletionSource.setResult(firebaseOptionsToMap(options));

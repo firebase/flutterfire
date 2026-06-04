@@ -257,7 +257,8 @@ CoreFirebaseOptions::CoreFirebaseOptions(
     const std::string* storage_bucket, const std::string* measurement_id,
     const std::string* tracking_id, const std::string* deep_link_u_r_l_scheme,
     const std::string* android_client_id, const std::string* ios_client_id,
-    const std::string* ios_bundle_id, const std::string* app_group_id)
+    const std::string* ios_bundle_id, const std::string* app_group_id,
+    const std::string* recaptcha_site_key)
     : api_key_(api_key),
       app_id_(app_id),
       messaging_sender_id_(messaging_sender_id),
@@ -287,7 +288,10 @@ CoreFirebaseOptions::CoreFirebaseOptions(
       ios_bundle_id_(ios_bundle_id ? std::optional<std::string>(*ios_bundle_id)
                                    : std::nullopt),
       app_group_id_(app_group_id ? std::optional<std::string>(*app_group_id)
-                                 : std::nullopt) {}
+                                 : std::nullopt),
+      recaptcha_site_key_(recaptcha_site_key
+                              ? std::optional<std::string>(*recaptcha_site_key)
+                              : std::nullopt) {}
 
 const std::string& CoreFirebaseOptions::api_key() const { return api_key_; }
 
@@ -453,9 +457,23 @@ void CoreFirebaseOptions::set_app_group_id(std::string_view value_arg) {
   app_group_id_ = value_arg;
 }
 
+const std::string* CoreFirebaseOptions::recaptcha_site_key() const {
+  return recaptcha_site_key_ ? &(*recaptcha_site_key_) : nullptr;
+}
+
+void CoreFirebaseOptions::set_recaptcha_site_key(
+    const std::string_view* value_arg) {
+  recaptcha_site_key_ =
+      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+}
+
+void CoreFirebaseOptions::set_recaptcha_site_key(std::string_view value_arg) {
+  recaptcha_site_key_ = value_arg;
+}
+
 EncodableList CoreFirebaseOptions::ToEncodableList() const {
   EncodableList list;
-  list.reserve(14);
+  list.reserve(15);
   list.push_back(EncodableValue(api_key_));
   list.push_back(EncodableValue(app_id_));
   list.push_back(EncodableValue(messaging_sender_id_));
@@ -481,6 +499,8 @@ EncodableList CoreFirebaseOptions::ToEncodableList() const {
                                 : EncodableValue());
   list.push_back(app_group_id_ ? EncodableValue(*app_group_id_)
                                : EncodableValue());
+  list.push_back(recaptcha_site_key_ ? EncodableValue(*recaptcha_site_key_)
+                                     : EncodableValue());
   return list;
 }
 
@@ -531,6 +551,11 @@ CoreFirebaseOptions CoreFirebaseOptions::FromEncodableList(
   if (!encodable_app_group_id.IsNull()) {
     decoded.set_app_group_id(std::get<std::string>(encodable_app_group_id));
   }
+  auto& encodable_recaptcha_site_key = list[14];
+  if (!encodable_recaptcha_site_key.IsNull()) {
+    decoded.set_recaptcha_site_key(
+        std::get<std::string>(encodable_recaptcha_site_key));
+  }
   return decoded;
 }
 
@@ -551,7 +576,9 @@ bool CoreFirebaseOptions::operator==(const CoreFirebaseOptions& other) const {
                                   other.android_client_id_) &&
          PigeonInternalDeepEquals(ios_client_id_, other.ios_client_id_) &&
          PigeonInternalDeepEquals(ios_bundle_id_, other.ios_bundle_id_) &&
-         PigeonInternalDeepEquals(app_group_id_, other.app_group_id_);
+         PigeonInternalDeepEquals(app_group_id_, other.app_group_id_) &&
+         PigeonInternalDeepEquals(recaptcha_site_key_,
+                                  other.recaptcha_site_key_);
 }
 
 bool CoreFirebaseOptions::operator!=(const CoreFirebaseOptions& other) const {
@@ -574,6 +601,7 @@ size_t CoreFirebaseOptions::Hash() const {
   result = result * 31 + PigeonInternalDeepHash(ios_client_id_);
   result = result * 31 + PigeonInternalDeepHash(ios_bundle_id_);
   result = result * 31 + PigeonInternalDeepHash(app_group_id_);
+  result = result * 31 + PigeonInternalDeepHash(recaptcha_site_key_);
   return result;
 }
 

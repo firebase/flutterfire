@@ -89,15 +89,19 @@ class FirebaseAppCheckMessagesPigeonCodec: FlutterStandardMessageCodec, @uncheck
 
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol FirebaseAppCheckHostApi {
-  func activate(appName: String, androidProvider: String?, appleProvider: String?,
-                debugToken: String?, completion: @escaping (Result<Void, Error>) -> Void)
-  func getToken(appName: String, forceRefresh: Bool,
-                completion: @escaping (Result<String?, Error>) -> Void)
-  func setTokenAutoRefreshEnabled(appName: String, isTokenAutoRefreshEnabled: Bool,
-                                  completion: @escaping (Result<Void, Error>) -> Void)
+  func activate(
+    appName: String, androidProvider: String?, appleProvider: String?,
+    debugToken: String?, completion: @escaping (Result<Void, Error>) -> Void)
+  func getToken(
+    appName: String, forceRefresh: Bool,
+    completion: @escaping (Result<String?, Error>) -> Void)
+  func setTokenAutoRefreshEnabled(
+    appName: String, isTokenAutoRefreshEnabled: Bool,
+    completion: @escaping (Result<Void, Error>) -> Void)
   func registerTokenListener(appName: String, completion: @escaping (Result<String, Error>) -> Void)
-  func getLimitedUseAppCheckToken(appName: String,
-                                  completion: @escaping (Result<String, Error>) -> Void)
+  func getLimitedUseAppCheckToken(
+    appName: String,
+    completion: @escaping (Result<String, Error>) -> Void)
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -108,11 +112,14 @@ class FirebaseAppCheckHostApiSetup {
 
   /// Sets up an instance of `FirebaseAppCheckHostApi` to handle messages through the
   /// `binaryMessenger`.
-  static func setUp(binaryMessenger: FlutterBinaryMessenger, api: FirebaseAppCheckHostApi?,
-                    messageChannelSuffix: String = "") {
+  static func setUp(
+    binaryMessenger: FlutterBinaryMessenger, api: FirebaseAppCheckHostApi?,
+    messageChannelSuffix: String = ""
+  ) {
     let channelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
     let activateChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.activate\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.activate\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -132,7 +139,7 @@ class FirebaseAppCheckHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -141,7 +148,8 @@ class FirebaseAppCheckHostApiSetup {
       activateChannel.setMessageHandler(nil)
     }
     let getTokenChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.getToken\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.getToken\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -152,9 +160,9 @@ class FirebaseAppCheckHostApiSetup {
         let forceRefreshArg = args[1] as! Bool
         api.getToken(appName: appNameArg, forceRefresh: forceRefreshArg) { result in
           switch result {
-          case let .success(res):
+          case .success(let res):
             reply(wrapResult(res))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -163,7 +171,8 @@ class FirebaseAppCheckHostApiSetup {
       getTokenChannel.setMessageHandler(nil)
     }
     let setTokenAutoRefreshEnabledChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.setTokenAutoRefreshEnabled\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.setTokenAutoRefreshEnabled\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -179,7 +188,7 @@ class FirebaseAppCheckHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -188,7 +197,8 @@ class FirebaseAppCheckHostApiSetup {
       setTokenAutoRefreshEnabledChannel.setMessageHandler(nil)
     }
     let registerTokenListenerChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.registerTokenListener\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.registerTokenListener\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -198,9 +208,9 @@ class FirebaseAppCheckHostApiSetup {
         let appNameArg = args[0] as! String
         api.registerTokenListener(appName: appNameArg) { result in
           switch result {
-          case let .success(res):
+          case .success(let res):
             reply(wrapResult(res))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -209,7 +219,8 @@ class FirebaseAppCheckHostApiSetup {
       registerTokenListenerChannel.setMessageHandler(nil)
     }
     let getLimitedUseAppCheckTokenChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.getLimitedUseAppCheckToken\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.getLimitedUseAppCheckToken\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -219,9 +230,9 @@ class FirebaseAppCheckHostApiSetup {
         let appNameArg = args[0] as! String
         api.getLimitedUseAppCheckToken(appName: appNameArg) { result in
           switch result {
-          case let .success(res):
+          case .success(let res):
             reply(wrapResult(res))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
