@@ -26,6 +26,7 @@ export 'src/api.dart'
         GroundingChunk,
         ThinkingConfig,
         ThinkingLevel,
+        MediaResolution,
         HarmBlockThreshold,
         HarmCategory,
         HarmProbability,

@@ -168,7 +168,8 @@ final class LiveGenerationConfig extends BaseGenerationConfig {
       super.topP,
       super.topK,
       super.presencePenalty,
-      super.frequencyPenalty});
+      super.frequencyPenalty,
+      super.mediaResolution});
 
   /// The speech configuration.
   final SpeechConfig? speechConfig;
