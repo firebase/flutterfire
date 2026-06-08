@@ -3,8 +3,8 @@ description: Demonstrates how to use the firebase_remote_config plugin.
 resolution: workspace
 
 environment:
-  sdk: ^3.12.0
-  flutter: '>=3.44.0'
+  sdk: '^3.6.0'
+  flutter: '>=3.27.0'
 
 dependencies:
   # The following adds the Cupertino Icons font to your application.
