@@ -50,13 +50,16 @@ class VoiceConfig {
 
 /// Configures speech synthesis settings.
 ///
-/// Allows specifying the desired voice for speech synthesis.
+/// Allows specifying the desired voice and language for speech synthesis.
 class SpeechConfig {
   /// Creates a [SpeechConfig] instance.
   ///
   /// [voiceName] See https://cloud.google.com/text-to-speech/docs/chirp3-hd
   /// for names and sound demos.
-  SpeechConfig({String? voiceName})
+  ///
+  /// [languageCode] The language code (BCP-47) for the speech synthesis,
+  /// e.g. "en-US", "fr-FR", "de-DE".
+  SpeechConfig({String? voiceName, this.languageCode})
       : voiceConfig = voiceName != null
             ? VoiceConfig(
                 prebuiltVoiceConfig: PrebuiltVoiceConfig(voiceName: voiceName))
@@ -64,10 +67,16 @@ class SpeechConfig {
 
   /// The voice config to use for speech synthesis.
   final VoiceConfig? voiceConfig;
+
+  /// The language code (BCP-47) for speech synthesis,
+  /// e.g. "en-US", "fr-FR", "de-DE".
+  final String? languageCode;
   // ignore: public_member_api_docs
   Map<String, Object?> toJson() => {
         if (voiceConfig case final voiceConfig?)
-          'voice_config': voiceConfig.toJson()
+          'voice_config': voiceConfig.toJson(),
+        if (languageCode case final languageCode?)
+          'language_code': languageCode,
       };
 }
 
