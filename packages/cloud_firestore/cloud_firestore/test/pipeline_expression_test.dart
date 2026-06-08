@@ -194,6 +194,14 @@ void main() {
         'args': {'value': 100},
       });
     });
+
+    test('Expression.documentMatches() serializes search query', () {
+      final expr = Expression.documentMatches('breakfast -diner');
+      expect(expr.toMap(), {
+        'name': 'document_matches',
+        'args': {'query': 'breakfast -diner'},
+      });
+    });
   });
 
   group('BooleanExpression from Field', () {
