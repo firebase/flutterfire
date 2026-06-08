@@ -48,6 +48,7 @@ void main() {
         temperature: 0.8,
         topP: 0.95,
         topK: 40,
+        mediaResolution: MediaResolution.low,
       );
 
       expect(liveGenerationConfig.toJson(), {
@@ -61,6 +62,7 @@ void main() {
           }
         },
         'responseModalities': ['TEXT', 'AUDIO'],
+        'mediaResolution': 'MEDIA_RESOLUTION_LOW',
       });
 
       final liveGenerationConfigWithoutOptionals = LiveGenerationConfig();

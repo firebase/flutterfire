@@ -516,6 +516,23 @@ void main() {
   });
 
   group('GenerationConfig & BaseGenerationConfig', () {
+    test('GenerationConfig serializes mediaResolution', () {
+      final config = GenerationConfig(
+        mediaResolution: MediaResolution.high,
+      );
+
+      expect(config.toJson(), {
+        'mediaResolution': 'MEDIA_RESOLUTION_HIGH',
+      });
+    });
+
+    test('GenerationConfig rejects ultraHigh mediaResolution', () {
+      expect(
+        () => GenerationConfig(mediaResolution: MediaResolution.ultraHigh),
+        throwsA(isA<AssertionError>()),
+      );
+    });
+
     test('GenerationConfig toJson with all fields', () {
       final schema = Schema.object(properties: {});
       final thinkingConfig = ThinkingConfig(thinkingBudget: 100);
@@ -532,6 +549,7 @@ void main() {
         frequencyPenalty: 0.4,
         responseMimeType: 'application/json',
         responseSchema: schema,
+        mediaResolution: MediaResolution.medium,
         thinkingConfig: thinkingConfig,
         imageConfig: imageConfig,
       );
@@ -546,6 +564,7 @@ void main() {
         'stopSequences': ['\n', 'stop'],
         'responseMimeType': 'application/json',
         'responseSchema': schema.toJson(),
+        'mediaResolution': 'MEDIA_RESOLUTION_MEDIUM',
         'thinkingConfig': {'thinkingBudget': 100},
         'imageConfig': {
           'aspectRatio': '1:1',
