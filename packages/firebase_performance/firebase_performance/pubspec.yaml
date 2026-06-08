@@ -17,8 +17,8 @@ false_secrets:
   - example/**
 
 environment:
-  sdk: '^3.6.0'
-  flutter: '>=3.27.0'
+  sdk: ^3.12.0
+  flutter: '>=3.44.0'
 
 dependencies:
   firebase_core: ^4.10.0
