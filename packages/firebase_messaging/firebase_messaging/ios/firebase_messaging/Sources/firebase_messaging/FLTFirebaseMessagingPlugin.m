@@ -263,17 +263,22 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     // For scene delegates, if no notification was found in connectionOptions,
     // delay marking as gathered to allow didReceiveRemoteNotification to fire first
     // for contentAvailable notifications that caused the app to launch
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)),
-                   dispatch_get_main_queue(), ^{
-                     if (!self->_initialNotificationGathered) {
-                       self->_initialNotificationGathered = YES;
-                       [self initialNotificationCallback];
-                     }
-                   });
+    [self markInitialNotificationGatheredAfterDelay];
   } else {
-    // For non-scene delegate apps, mark as gathered immediately
-    _initialNotificationGathered = YES;
-    [self initialNotificationCallback];
+#if !TARGET_OS_OSX
+    if (@available(iOS 13.0, *)) {
+      // Scene delegate launch notification responses arrive after didFinishLaunching.
+      // Give scene:willConnectToSession:options: a chance to provide the tapped notification
+      // before resolving getInitialMessage() as nil.
+      [self markInitialNotificationGatheredAfterDelay];
+    } else {
+#endif
+      // For non-scene delegate apps, mark as gathered immediately
+      _initialNotificationGathered = YES;
+      [self initialNotificationCallback];
+#if !TARGET_OS_OSX
+    }
+#endif
   }
 
   [GULAppDelegateSwizzler registerAppDelegateInterceptor:self];
@@ -355,6 +360,16 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 #else
   [[UIApplication sharedApplication] registerForRemoteNotifications];
 #endif
+}
+
+- (void)markInitialNotificationGatheredAfterDelay {
+  dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)),
+                 dispatch_get_main_queue(), ^{
+                   if (!self->_initialNotificationGathered) {
+                     self->_initialNotificationGathered = YES;
+                     [self initialNotificationCallback];
+                   }
+                 });
 }
 
 - (void)application_onDidFinishLaunchingNotification:(nonnull NSNotification *)notification {
@@ -631,6 +646,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     // User tapped the notification.
     remoteNotification =
         connectionOptions.notificationResponse.notification.request.content.userInfo;
+    _notificationOpenedAppID = remoteNotification[@"gcm.message_id"];
   }
 
   [self setupNotificationHandlingWithRemoteNotification:remoteNotification];
