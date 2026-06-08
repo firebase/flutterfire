@@ -50,7 +50,7 @@ def builtInKotlin = providers.gradleProperty("android.builtInKotlin")
         .map { it.toBoolean() }
         .orElse(agpMajor >= 9)
         .get()
-if (agpMajor < 9 || !builtInKotlin) {
+if (!builtInKotlin) {
     apply plugin: 'kotlin-android'
 }
 
