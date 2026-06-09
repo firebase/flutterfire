@@ -117,8 +117,6 @@ export 'src/live_api.dart'
         SessionResumptionUpdate,
         SlidingWindow,
         Transcription;
-export 'src/speech_config.dart'
-    show SpeechConfig, MultiSpeakerVoiceConfig, SpeakerVoiceConfig;
 export 'src/live_session.dart' show LiveSession;
 export 'src/schema.dart' show JSONSchema, Schema, SchemaType;
 export 'src/server_template/template_chat.dart'
@@ -129,6 +127,8 @@ export 'src/server_template/template_tool.dart'
         TemplateFunctionDeclaration,
         TemplateTool,
         TemplateToolConfig;
+export 'src/speech_config.dart'
+    show SpeechConfig, MultiSpeakerVoiceConfig, SpeakerVoiceConfig;
 export 'src/tool.dart'
     show
         AutoFunctionDeclaration,

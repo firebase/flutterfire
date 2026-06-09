@@ -16,6 +16,15 @@ import 'package:meta/meta.dart';
 
 /// Speech configuration class for controlling the model's speech and audio generation behaviors.
 class SpeechConfig {
+  /// Constructs a [SpeechConfig] for a single-speaker setup.
+  SpeechConfig({this.voiceName, this.languageCode})
+      : multiSpeakerVoiceConfig = null;
+
+  /// Constructs a [SpeechConfig] for a multi-speaker setup.
+  SpeechConfig.multiSpeaker(
+      {required this.multiSpeakerVoiceConfig, this.languageCode})
+      : voiceName = null;
+
   /// The voice name to use for a single-speaker setup.
   final String? voiceName;
 
@@ -24,14 +33,6 @@ class SpeechConfig {
 
   /// The optional IETF BCP-47 language code.
   final String? languageCode;
-
-  /// Constructs a [SpeechConfig] for a single-speaker setup.
-  SpeechConfig({this.voiceName, this.languageCode})
-      : multiSpeakerVoiceConfig = null;
-
-  /// Constructs a [SpeechConfig] for a multi-speaker setup.
-  SpeechConfig.multiSpeaker({required this.multiSpeakerVoiceConfig, this.languageCode})
-      : voiceName = null;
 
   /// Convert to json format.
   @internal
@@ -49,11 +50,11 @@ class SpeechConfig {
 
 /// Configuration for a multi-speaker audio generation setup.
 class MultiSpeakerVoiceConfig {
-  /// A list of voice configurations for the participating speakers.
-  final List<SpeakerVoiceConfig> speakerVoiceConfigs;
-
   /// Constructor
   MultiSpeakerVoiceConfig({required this.speakerVoiceConfigs});
+
+  /// A list of voice configurations for the participating speakers.
+  final List<SpeakerVoiceConfig> speakerVoiceConfigs;
 
   /// Convert to json format.
   Map<String, Object?> toJson() => {
@@ -64,14 +65,14 @@ class MultiSpeakerVoiceConfig {
 
 /// Configures a participating speaker within a multi-speaker setup.
 class SpeakerVoiceConfig {
+  /// Constructor
+  SpeakerVoiceConfig({required this.speaker, required this.voiceName});
+
   /// The unique name/identifier of the speaker.
   final String speaker;
 
   /// The specific voice assigned to this speaker.
   final String voiceName;
-
-  /// Constructor
-  SpeakerVoiceConfig({required this.speaker, required this.voiceName});
 
   /// Convert to json format.
   Map<String, Object?> toJson() => {

@@ -245,7 +245,7 @@ class _TTSPageState extends State<TTSPage> {
         ),
         const SizedBox(height: 16),
         DropdownButtonFormField<String>(
-          value: _selectedVoice,
+          initialValue: _selectedVoice,
           decoration: const InputDecoration(
             labelText: 'Voice Name',
             border: OutlineInputBorder(),
@@ -296,7 +296,7 @@ class _TTSPageState extends State<TTSPage> {
             const SizedBox(width: 8),
             Expanded(
               child: DropdownButtonFormField<String>(
-                value: _speaker1Voice,
+                initialValue: _speaker1Voice,
                 decoration: const InputDecoration(
                   labelText: 'Speaker 1 Voice',
                   border: OutlineInputBorder(),
@@ -333,7 +333,7 @@ class _TTSPageState extends State<TTSPage> {
             const SizedBox(width: 8),
             Expanded(
               child: DropdownButtonFormField<String>(
-                value: _speaker2Voice,
+                initialValue: _speaker2Voice,
                 decoration: const InputDecoration(
                   labelText: 'Speaker 2 Voice',
                   border: OutlineInputBorder(),
@@ -362,7 +362,7 @@ class _TTSPageState extends State<TTSPage> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16),
       child: Column(
         children: [
           SegmentedButton<bool>(
@@ -433,7 +433,7 @@ class MockAmplitudeGenerator {
 
     _timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
       double current = -60.0 + _random.nextDouble() * 60.0;
-      _controller?.add(Amplitude(current: current, max: 0.0));
+      _controller?.add(Amplitude(current: current, max: 0));
     });
 
     return _controller!.stream;
