@@ -15,7 +15,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_ai/firebase_ai.dart';
 import '../widgets/message_widget.dart';
-import '../utils/audio_output.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({
@@ -40,49 +39,27 @@ class _ChatPageState extends State<ChatPage> {
   final List<MessageData> _messages = <MessageData>[];
   bool _loading = false;
   bool _enableThinking = false;
-  bool _enableTTS = false;
-  final AudioOutput _audioOutput = AudioOutput();
 
   @override
   void initState() {
     super.initState();
-    _audioOutput.init();
     _initializeChat();
-  }
-
-  @override
-  void dispose() {
-    _audioOutput.dispose();
-    _scrollController.dispose();
-    _textController.dispose();
-    _textFieldFocus.dispose();
-    super.dispose();
   }
 
   void _initializeChat() {
     final generationConfig = GenerationConfig(
       thinkingConfig: _enableThinking
-          ? ThinkingConfig.withThinkingBudget(
-              null,
-              includeThoughts: true,
-            ) // Using thinkingBudget since we are testing with gemini 2.5
-          : null,
-      responseModalities: _enableTTS
-          ? [ResponseModalities.text, ResponseModalities.audio]
-          : null,
-      speechConfig: _enableTTS
-          ? SpeechConfig(voiceName: 'Kore', languageCode: 'en-US')
+          ? ThinkingConfig.withThinkingLevel(ThinkingLevel.medium)
           : null,
     );
-    final modelName = _enableTTS ? 'gemini-3.1-flash-tts-preview' : 'gemini-3.1-flash-lite';
     if (widget.useVertexBackend) {
       _model = FirebaseAI.vertexAI(location: 'global').generativeModel(
-        model: modelName,
+        model: 'gemini-3.1-flash-lite',
         generationConfig: generationConfig,
       );
     } else {
       _model = FirebaseAI.googleAI().generativeModel(
-        model: modelName,
+        model: 'gemini-3.1-flash-lite',
         generationConfig: generationConfig,
       );
     }
@@ -119,16 +96,6 @@ class _ChatPageState extends State<ChatPage> {
               onChanged: (bool value) {
                 setState(() {
                   _enableThinking = value;
-                  _initializeChat();
-                });
-              },
-            ),
-            SwitchListTile(
-              title: const Text('Enable TTS (gemini-3.1-flash-tts-preview)'),
-              value: _enableTTS,
-              onChanged: (bool value) {
-                setState(() {
-                  _enableTTS = value;
                   _initializeChat();
                 });
               },
@@ -225,9 +192,6 @@ class _ChatPageState extends State<ChatPage> {
       final textBuffer = StringBuffer();
       _messages.add(MessageData(text: textBuffer.toString(), fromUser: false));
 
-      if (_enableTTS) {
-        await _audioOutput.playStream();
-      }
       await for (final response in responseStream) {
         final thought = response.thoughtSummary;
         if (thought != null) {
@@ -241,19 +205,7 @@ class _ChatPageState extends State<ChatPage> {
           _messages.last =
               MessageData(text: textBuffer.toString(), fromUser: false);
         });
-        if (_enableTTS) {
-          for (final candidate in response.candidates) {
-            for (final part in candidate.content.parts) {
-              if (part is InlineDataPart && part.mimeType.startsWith('audio/')) {
-                _audioOutput.addDataToAudioStream(part.bytes);
-              }
-            }
-          }
-        }
         _scrollDown();
-      }
-      if (_enableTTS) {
-        _audioOutput.finishStream();
       }
 
       if (textBuffer.isEmpty) {
@@ -289,19 +241,7 @@ class _ChatPageState extends State<ChatPage> {
       var text = response?.text;
       _messages.add(MessageData(text: text, fromUser: false));
 
-      if (_enableTTS && response != null) {
-        await _audioOutput.playStream();
-        for (final candidate in response.candidates) {
-          for (final part in candidate.content.parts) {
-            if (part is InlineDataPart && part.mimeType.startsWith('audio/')) {
-              _audioOutput.addDataToAudioStream(part.bytes);
-            }
-          }
-        }
-        _audioOutput.finishStream();
-      }
-
-      if (text == null && !_enableTTS) {
+      if (text == null) {
         _showError('No response from API.');
         return;
       } else {

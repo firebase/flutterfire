@@ -1,0 +1,448 @@
+// Copyright 2026 Google LLC
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+import 'dart:async';
+import 'dart:math';
+import 'dart:typed_data';
+import 'package:flutter/material.dart';
+import 'package:firebase_ai/firebase_ai.dart';
+import 'package:waveform_flutter/waveform_flutter.dart';
+import '../utils/audio_output.dart';
+import '../widgets/audio_visualizer.dart';
+
+class TTSPage extends StatefulWidget {
+  const TTSPage({
+    super.key,
+    required this.title,
+    required this.useVertexBackend,
+  });
+
+  final String title;
+  final bool useVertexBackend;
+
+  @override
+  State<TTSPage> createState() => _TTSPageState();
+}
+
+class _TTSPageState extends State<TTSPage> {
+  final AudioOutput _audioOutput = AudioOutput();
+  final MockAmplitudeGenerator _mockAmpGen = MockAmplitudeGenerator();
+
+  bool _isMultiSpeaker = false;
+  bool _loading = false;
+  bool _isPlaying = false;
+  String? _responseText;
+
+  // Single Speaker Controller
+  final TextEditingController _singlePromptController = TextEditingController(
+    text: 'Say cheerfully: Have a wonderful day!',
+  );
+  String _selectedVoice = 'Kore';
+
+  // Multi Speaker Controllers
+  final TextEditingController _multiScriptController = TextEditingController(
+    text: "Joe: How's it going today Jane?\nJane: Not too bad, how about you?",
+  );
+  final TextEditingController _speaker1NameController =
+      TextEditingController(text: 'Joe');
+  String _speaker1Voice = 'Kore';
+  final TextEditingController _speaker2NameController =
+      TextEditingController(text: 'Jane');
+  String _speaker2Voice = 'Puck';
+
+  final List<String> _availableVoices = [
+    'Kore',
+    'Puck',
+    'Fenrir',
+    'Aoede',
+    'Charon',
+    'Leda',
+  ];
+
+  Stream<Amplitude>? _amplitudeStream;
+  Timer? _playbackTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    _audioOutput.init();
+  }
+
+  @override
+  void dispose() {
+    _audioOutput.dispose();
+    _mockAmpGen.stop();
+    _playbackTimer?.cancel();
+    _singlePromptController.dispose();
+    _multiScriptController.dispose();
+    _speaker1NameController.dispose();
+    _speaker2NameController.dispose();
+    super.dispose();
+  }
+
+  void _showError(String message) {
+    showDialog<void>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Something went wrong'),
+          content: SingleChildScrollView(
+            child: SelectableText(message),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _generateAndPlay() async {
+    setState(() {
+      _loading = true;
+      _responseText = null;
+    });
+
+    try {
+      final GenerationConfig config;
+      final String prompt;
+
+      if (_isMultiSpeaker) {
+        prompt = _multiScriptController.text;
+        config = GenerationConfig(
+          responseModalities: [ResponseModalities.audio],
+          speechConfig: SpeechConfig.multiSpeaker(
+            multiSpeakerVoiceConfig: MultiSpeakerVoiceConfig(
+              speakerVoiceConfigs: [
+                SpeakerVoiceConfig(
+                  speaker: _speaker1NameController.text,
+                  voiceName: _speaker1Voice,
+                ),
+                SpeakerVoiceConfig(
+                  speaker: _speaker2NameController.text,
+                  voiceName: _speaker2Voice,
+                ),
+              ],
+            ),
+          ),
+        );
+      } else {
+        prompt = _singlePromptController.text;
+        config = GenerationConfig(
+          responseModalities: [ResponseModalities.audio],
+          speechConfig: SpeechConfig(
+            voiceName: _selectedVoice,
+            languageCode: 'en-US',
+          ),
+        );
+      }
+
+      // Use the preview model for TTS
+      final modelName = widget.useVertexBackend
+          ? 'gemini-2.5-flash-tts'
+          : 'gemini-3.1-flash-tts-preview';
+      final GenerativeModel model;
+      if (widget.useVertexBackend) {
+        model = FirebaseAI.vertexAI(location: 'global').generativeModel(
+          model: modelName,
+          generationConfig: config,
+        );
+      } else {
+        model = FirebaseAI.googleAI().generativeModel(
+          model: modelName,
+          generationConfig: config,
+        );
+      }
+
+      final response = await model.generateContent([Content.text(prompt)]);
+
+      // Extract text response
+      _responseText = response.text;
+
+      // Find audio bytes
+      Uint8List? audioBytes;
+      for (final candidate in response.candidates) {
+        for (final part in candidate.content.parts) {
+          if (part is InlineDataPart && part.mimeType.startsWith('audio/')) {
+            audioBytes = part.bytes;
+            break;
+          }
+        }
+        if (audioBytes != null) break;
+      }
+
+      if (audioBytes == null || audioBytes.isEmpty) {
+        throw Exception('No audio received from the model.');
+      }
+
+      // Play audio and start visualizer
+      await _audioOutput.playStream();
+      _audioOutput.addDataToAudioStream(audioBytes);
+      _audioOutput.finishStream();
+
+      // Calculate duration: 24000 Hz, 1 channel, 16-bit (2 bytes) = 48000 bytes/sec
+      final durationMs = (audioBytes.length / 48.0).round();
+      final duration = Duration(milliseconds: durationMs);
+
+      setState(() {
+        _loading = false;
+        _isPlaying = true;
+        _amplitudeStream = _mockAmpGen.start(duration);
+      });
+
+      _playbackTimer = Timer(duration, () {
+        setState(() {
+          _isPlaying = false;
+          _amplitudeStream = null;
+        });
+      });
+    } catch (e) {
+      setState(() {
+        _loading = false;
+      });
+      _showError(e.toString());
+    }
+  }
+
+  void _stopPlayback() {
+    _audioOutput.stopStream();
+    _mockAmpGen.stop();
+    _playbackTimer?.cancel();
+    setState(() {
+      _isPlaying = false;
+      _amplitudeStream = null;
+    });
+  }
+
+  Widget _buildSingleSpeakerForm() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextField(
+          controller: _singlePromptController,
+          decoration: const InputDecoration(
+            labelText: 'Prompt',
+            hintText: 'Enter text to generate speech from',
+            border: OutlineInputBorder(),
+          ),
+          maxLines: 3,
+        ),
+        const SizedBox(height: 16),
+        DropdownButtonFormField<String>(
+          value: _selectedVoice,
+          decoration: const InputDecoration(
+            labelText: 'Voice Name',
+            border: OutlineInputBorder(),
+          ),
+          items: _availableVoices.map((voice) {
+            return DropdownMenuItem(
+              value: voice,
+              child: Text(voice),
+            );
+          }).toList(),
+          onChanged: (value) {
+            if (value != null) {
+              setState(() {
+                _selectedVoice = value;
+              });
+            }
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMultiSpeakerForm() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextField(
+          controller: _multiScriptController,
+          decoration: const InputDecoration(
+            labelText: 'Script',
+            hintText: 'Format: Name: text to say',
+            border: OutlineInputBorder(),
+          ),
+          maxLines: 5,
+        ),
+        const SizedBox(height: 16),
+        Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: _speaker1NameController,
+                decoration: const InputDecoration(
+                  labelText: 'Speaker 1 Name',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: DropdownButtonFormField<String>(
+                value: _speaker1Voice,
+                decoration: const InputDecoration(
+                  labelText: 'Speaker 1 Voice',
+                  border: OutlineInputBorder(),
+                ),
+                items: _availableVoices.map((voice) {
+                  return DropdownMenuItem(
+                    value: voice,
+                    child: Text(voice),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  if (value != null) {
+                    setState(() {
+                      _speaker1Voice = value;
+                    });
+                  }
+                },
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: _speaker2NameController,
+                decoration: const InputDecoration(
+                  labelText: 'Speaker 2 Name',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: DropdownButtonFormField<String>(
+                value: _speaker2Voice,
+                decoration: const InputDecoration(
+                  labelText: 'Speaker 2 Voice',
+                  border: OutlineInputBorder(),
+                ),
+                items: _availableVoices.map((voice) {
+                  return DropdownMenuItem(
+                    value: voice,
+                    child: Text(voice),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  if (value != null) {
+                    setState(() {
+                      _speaker2Voice = value;
+                    });
+                  }
+                },
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        children: [
+          SegmentedButton<bool>(
+            segments: const [
+              ButtonSegment(value: false, label: Text('Single Speaker')),
+              ButtonSegment(value: true, label: Text('Multi Speaker')),
+            ],
+            selected: {_isMultiSpeaker},
+            onSelectionChanged: (value) {
+              setState(() {
+                _isMultiSpeaker = value.first;
+              });
+            },
+          ),
+          const SizedBox(height: 16),
+          Expanded(
+            child: SingleChildScrollView(
+              child: _isMultiSpeaker
+                  ? _buildMultiSpeakerForm()
+                  : _buildSingleSpeakerForm(),
+            ),
+          ),
+          const Divider(),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+            child: Row(
+              children: [
+                if (_loading)
+                  const CircularProgressIndicator()
+                else
+                  IconButton(
+                    icon: Icon(_isPlaying ? Icons.stop : Icons.play_arrow),
+                    iconSize: 36,
+                    color: Theme.of(context).colorScheme.primary,
+                    onPressed: _isPlaying ? _stopPlayback : _generateAndPlay,
+                  ),
+                const SizedBox(width: 16),
+                AudioVisualizer(
+                  audioStreamIsActive: _isPlaying,
+                  amplitudeStream: _amplitudeStream,
+                ),
+                if (!_isPlaying && !_loading && _responseText != null)
+                  Expanded(
+                    child: Text(
+                      _responseText!,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class MockAmplitudeGenerator {
+  StreamController<Amplitude>? _controller;
+  Timer? _timer;
+  final Random _random = Random();
+
+  Stream<Amplitude> start(Duration duration) {
+    stop();
+    _controller = StreamController<Amplitude>.broadcast();
+
+    _timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
+      double current = -60.0 + _random.nextDouble() * 60.0;
+      _controller?.add(Amplitude(current: current, max: 0.0));
+    });
+
+    return _controller!.stream;
+  }
+
+  void stop() {
+    _timer?.cancel();
+    _timer = null;
+    _controller?.close();
+    _controller = null;
+  }
+}
