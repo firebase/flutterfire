@@ -45,7 +45,6 @@ jobs:
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
         with:
           channel: 'stable'
-          flutter-version: '3.41.9'
           cache: true
           cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
           pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
