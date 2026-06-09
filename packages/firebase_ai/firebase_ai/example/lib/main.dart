@@ -25,13 +25,10 @@ import 'pages/bidi_page.dart';
 import 'pages/chat_page.dart';
 import 'pages/function_calling_page.dart';
 import 'pages/image_generation_page.dart';
-import 'pages/image_prompt_page.dart';
-import 'pages/json_schema_page.dart';
-import 'pages/multimodal_page.dart';
-import 'pages/schema_page.dart';
+import 'pages/capabilities_page.dart';
 import 'pages/server_template_page.dart';
 import 'pages/grounding_page.dart';
-import 'pages/token_count_page.dart';
+import 'pages/integration_test_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -144,38 +141,33 @@ class _HomeScreenState extends State<HomeScreen> {
           useVertexBackend: useVertexBackend,
         );
       case 1:
-        return MultimodalPage(title: 'Multimodal', model: currentModel);
+        return CapabilitiesPage(
+          title: 'Capabilities',
+          model: currentModel,
+        );
       case 2:
-        return TokenCountPage(title: 'Token Count', model: currentModel);
-      case 3:
         // FunctionCallingPage initializes its own model as per original design
         return FunctionCallingPage(
           title: 'Function Calling',
           useVertexBackend: useVertexBackend,
         );
-      case 4:
-        return ImagePromptPage(title: 'Image Prompt', model: currentModel);
-      case 5:
+      case 3:
         return ImageGenerationPage(
           title: 'Image Gen',
           useVertexBackend: useVertexBackend,
         );
-      case 6:
-        return SchemaPromptPage(title: 'Schema Prompt', model: currentModel);
-      case 7:
-        return JsonSchemaPage(title: 'JSON Schema', model: currentModel);
-      case 8:
+      case 4:
         return BidiPage(
           title: 'Live Stream',
           model: currentModel,
           useVertexBackend: useVertexBackend,
         );
-      case 9:
+      case 5:
         return ServerTemplatePage(
           title: 'Server Template',
           useVertexBackend: useVertexBackend,
         );
-      case 10:
+      case 6:
         return GroundingPage(
           title: 'Grounding',
           useVertexBackend: useVertexBackend,
@@ -198,6 +190,18 @@ class _HomeScreenState extends State<HomeScreen> {
           'Flutter + ${widget.useVertexBackend ? 'Vertex AI' : 'Google AI'}',
         ),
         actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.playlist_play),
+            tooltip: 'Run Integration Tests',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const IntegrationTestPage(),
+                ),
+              );
+            },
+          ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
@@ -259,14 +263,9 @@ class _HomeScreenState extends State<HomeScreen> {
             tooltip: 'Chat',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.perm_media),
-            label: 'Multimodal',
-            tooltip: 'Multimodal Prompt',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.numbers),
-            label: 'Tokens',
-            tooltip: 'Token Count',
+            icon: Icon(Icons.star),
+            label: 'Capabilities',
+            tooltip: 'Model Capabilities',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.functions),
@@ -274,24 +273,9 @@ class _HomeScreenState extends State<HomeScreen> {
             tooltip: 'Function Calling',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.image),
-            label: 'Image',
-            tooltip: 'Image Prompt',
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.brush),
             label: 'NanoBanana',
             tooltip: 'Image Generation',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.schema),
-            label: 'Schema',
-            tooltip: 'Schema Prompt',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.data_object),
-            label: 'JSON',
-            tooltip: 'JSON Schema',
           ),
           BottomNavigationBarItem(
             icon: Icon(
