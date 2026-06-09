@@ -118,7 +118,8 @@ void main() {
       expect(liveGenerationConfigWithoutOptionals.toJson(), {});
     });
 
-    test('GenerationConfig with SpeechConfig toJson() returns correct JSON', () {
+    test('GenerationConfig with SpeechConfig toJson() returns correct JSON',
+        () {
       final config = GenerationConfig(
         speechConfig: SpeechConfig(voiceName: 'Aoede', languageCode: 'en-US'),
       );

@@ -19,7 +19,6 @@ import 'schema.dart';
 import 'speech_config.dart';
 import 'tool.dart' show Tool, ToolConfig;
 
-
 /// Response for Count Tokens
 final class CountTokensResponse {
   // ignore: public_member_api_docs
