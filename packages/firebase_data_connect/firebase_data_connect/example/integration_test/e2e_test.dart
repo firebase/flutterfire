@@ -16,6 +16,36 @@ import 'listen_e2e.dart';
 import 'query_e2e.dart';
 import 'websocket_e2e.dart';
 
+Future<void> _signInTestUser() async {
+  final auth = FirebaseAuth.instance;
+  const password = 'password';
+  final email = 'fdc-test-${DateTime.now().microsecondsSinceEpoch}@mail.com';
+
+  for (var attempt = 0; attempt < 5; attempt++) {
+    try {
+      await auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      return;
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'email-already-in-use') {
+        await auth.signInWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+        return;
+      }
+
+      if (attempt == 4) {
+        rethrow;
+      }
+    }
+
+    await Future<void>.delayed(Duration(seconds: attempt + 1));
+  }
+}
+
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
@@ -31,8 +61,7 @@ void main() {
           .useDataConnectEmulator('127.0.0.1', 9399);
       await FirebaseAuth.instance.useAuthEmulator('127.0.0.1', 9099);
 
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: 'test@mail.com', password: 'password');
+      await _signInTestUser();
     });
 
     runInstanceTests();

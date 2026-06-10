@@ -7,19 +7,19 @@
 
 import PackageDescription
 
-let library_version = "5.2.0"
-let firebase_sdk_version: Version = "12.12.0"
+let libraryVersion = "5.2.2"
+let firebaseSdkVersion: Version = "12.14.0"
 
 let package = Package(
   name: "firebase_crashlytics",
   platforms: [
-    .macOS("10.15"),
+    .macOS("10.15")
   ],
   products: [
-    .library(name: "firebase-crashlytics", targets: ["firebase_crashlytics"]),
+    .library(name: "firebase-crashlytics", targets: ["firebase_crashlytics"])
   ],
   dependencies: [
-    .package(url: "https://github.com/firebase/firebase-ios-sdk", from: firebase_sdk_version),
+    .package(url: "https://github.com/firebase/firebase-ios-sdk", exact: firebaseSdkVersion),
     .package(name: "firebase_core", path: "../firebase_core"),
   ],
   targets: [
@@ -30,13 +30,13 @@ let package = Package(
         .product(name: "firebase-core", package: "firebase_core"),
       ],
       resources: [
-        .process("Resources"),
+        .process("Resources")
       ],
       cSettings: [
         .headerSearchPath("include"),
-        .define("LIBRARY_VERSION", to: "\"\(library_version)\""),
+        .define("LIBRARY_VERSION", to: "\"\(libraryVersion)\""),
         .define("LIBRARY_NAME", to: "\"flutter-fire-cls\""),
       ]
-    ),
+    )
   ]
 )

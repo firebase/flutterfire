@@ -274,8 +274,49 @@ class ExpressionParsers {
       case "array_sum":
         return Expression.arraySum(parseChild(args, "expression"));
       case "array_slice":
-        throw new UnsupportedOperationException(
-            "Expression type 'array_slice' is not supported on Android Firestore pipeline API");
+        {
+          Expression array = parseChild(args, "expression");
+          Expression offset = parseChild(args, "offset");
+          Map<String, Object> lengthMap = (Map<String, Object>) args.get("length");
+          if (lengthMap == null) {
+            return array.arraySliceToEnd(offset);
+          }
+          return array.arraySlice(offset, parseExpression(lengthMap));
+        }
+      case "array_filter":
+        {
+          Expression array = parseChild(args, "expression");
+          String alias = (String) args.get("alias");
+          Map<String, Object> filterMap = (Map<String, Object>) args.get("filter");
+          if (alias == null || filterMap == null) {
+            throw new IllegalArgumentException("array_filter requires alias and filter");
+          }
+          return array.arrayFilter(alias, parseBooleanExpression(filterMap));
+        }
+      case "array_transform":
+        {
+          Expression array = parseChild(args, "expression");
+          String elementAlias = (String) args.get("element_alias");
+          Map<String, Object> transformMap = (Map<String, Object>) args.get("transform");
+          if (elementAlias == null || transformMap == null) {
+            throw new IllegalArgumentException(
+                "array_transform requires element_alias and transform");
+          }
+          return array.arrayTransform(elementAlias, parseExpression(transformMap));
+        }
+      case "array_transform_with_index":
+        {
+          Expression array = parseChild(args, "expression");
+          String elementAlias = (String) args.get("element_alias");
+          String indexAlias = (String) args.get("index_alias");
+          Map<String, Object> transformMap = (Map<String, Object>) args.get("transform");
+          if (elementAlias == null || indexAlias == null || transformMap == null) {
+            throw new IllegalArgumentException(
+                "array_transform_with_index requires element_alias, index_alias, and transform");
+          }
+          return array.arrayTransformWithIndex(
+              elementAlias, indexAlias, parseExpression(transformMap));
+        }
       case "if_absent":
         {
           Map<String, Object> exprMap = (Map<String, Object>) args.get("expression");
@@ -423,6 +464,8 @@ class ExpressionParsers {
         return parseArrayContainsAll(args);
       case "array_contains_any":
         return parseArrayContainsAny(args);
+      case "document_matches":
+        return parseDocumentMatches(args);
       default:
         Log.w(TAG, "Unsupported expression type: " + name);
         throw new UnsupportedOperationException("Expression type not yet implemented: " + name);
@@ -542,6 +585,8 @@ class ExpressionParsers {
         return parseNotEqualAny(args);
       case "as_boolean":
         return parseAsBoolean(args);
+      case "document_matches":
+        return parseDocumentMatches(args);
       default:
         Expression expr = parseExpression(expressionMap);
         if (expr instanceof BooleanExpression) {
@@ -562,6 +607,14 @@ class ExpressionParsers {
               + expressionMap.get("name"));
     }
     return (Selectable) expr;
+  }
+
+  private BooleanExpression parseDocumentMatches(@NonNull Map<String, Object> args) {
+    String query = (String) args.get("query");
+    if (query == null) {
+      throw new IllegalArgumentException("document_matches requires a 'query' argument");
+    }
+    return Expression.documentMatches(query);
   }
 
   @SuppressWarnings("unchecked")

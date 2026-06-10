@@ -231,6 +231,38 @@ void main() {
       });
     });
 
+    test('creates a fresh instance after app delete and reinitialize',
+        () async {
+      final appName = 'delete-reinit-$testCount';
+      const options = FirebaseOptions(
+        apiKey: 'apiKey',
+        appId: 'appId',
+        messagingSenderId: 'messagingSenderId',
+        projectId: 'projectId',
+      );
+      final app = await Firebase.initializeApp(
+        name: appName,
+        options: options,
+      );
+      final auth1 = FirebaseAuth.instanceFor(app: app);
+
+      expect(app.getService<FirebaseAuth>(), same(auth1));
+
+      await app.delete();
+
+      final app2 = await Firebase.initializeApp(
+        name: appName,
+        options: options,
+      );
+      addTearDown(app2.delete);
+
+      final auth2 = FirebaseAuth.instanceFor(app: app2);
+
+      expect(auth2, isNot(same(auth1)));
+      expect(auth2.app, app2);
+      expect(app2.getService<FirebaseAuth>(), same(auth2));
+    });
+
     group('tenantId', () {
       test('set tenantId should call delegate method', () async {
         // Each test uses a unique FirebaseApp instance to avoid sharing state

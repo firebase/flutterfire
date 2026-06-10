@@ -11,7 +11,8 @@ class FLTFirebaseRemoteConfigUtils {
     switch error.code {
     case RemoteConfigError.internalError.rawValue:
       if let description = error.userInfo[NSLocalizedDescriptionKey] as? String,
-         description.contains("403") {
+        description.contains("403")
+      {
         // See PR for details: https://github.com/firebase/flutterfire/pull/9629
         codeAndMessage["code"] = "forbidden"
         let updateMessage =
@@ -19,7 +20,8 @@ class FLTFirebaseRemoteConfigUtils {
         codeAndMessage["message"] = updateMessage
       } else {
         codeAndMessage["code"] = "internal"
-        codeAndMessage["message"] = error
+        codeAndMessage["message"] =
+          error
           .userInfo[NSLocalizedDescriptionKey] as? String ?? "Internal error"
       }
 

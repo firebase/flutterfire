@@ -15,9 +15,11 @@
 #include <windows.h>
 
 #include <condition_variable>
+#include <functional>
 #include <future>
 #include <memory>
 #include <mutex>
+#include <queue>
 #include <sstream>
 
 #include "cloud_firestore/plugin_version.h"
@@ -40,9 +42,160 @@ using flutter::EncodableValue;
 namespace cloud_firestore_windows {
 
 static std::string kLibraryName = "flutter-fire-fst";
+
+namespace {
+
+constexpr wchar_t kTaskRunnerWindowClassName[] =
+    L"CloudFirestoreWindowsTaskRunnerWindow";
+constexpr UINT kTaskRunnerWindowMessage = WM_APP + 0x4673;
+
+class PlatformThreadDispatcher {
+ public:
+  static PlatformThreadDispatcher& GetInstance() {
+    static PlatformThreadDispatcher instance;
+    return instance;
+  }
+
+  void Initialize() {
+    std::lock_guard<std::mutex> lock(mutex_);
+    if (window_ != nullptr) {
+      return;
+    }
+
+    platform_thread_id_ = GetCurrentThreadId();
+
+    WNDCLASSW window_class = {};
+    window_class.lpfnWndProc = PlatformThreadDispatcher::WindowProc;
+    window_class.hInstance = GetModuleHandle(nullptr);
+    window_class.lpszClassName = kTaskRunnerWindowClassName;
+
+    RegisterClassW(&window_class);
+    window_ =
+        CreateWindowExW(0, kTaskRunnerWindowClassName, L"", 0, 0, 0, 0, 0,
+                        HWND_MESSAGE, nullptr, window_class.hInstance, this);
+  }
+
+  void Post(std::function<void()> task) {
+    if (GetCurrentThreadId() == platform_thread_id_) {
+      task();
+      return;
+    }
+
+    {
+      std::lock_guard<std::mutex> lock(mutex_);
+      tasks_.push(std::move(task));
+    }
+    PostMessageW(window_, kTaskRunnerWindowMessage, 0, 0);
+  }
+
+ private:
+  static LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wparam,
+                                     LPARAM lparam) {
+    if (message == WM_NCCREATE) {
+      auto create_struct = reinterpret_cast<CREATESTRUCT*>(lparam);
+      SetWindowLongPtr(
+          window, GWLP_USERDATA,
+          reinterpret_cast<LONG_PTR>(create_struct->lpCreateParams));
+      return TRUE;
+    }
+
+    auto dispatcher = reinterpret_cast<PlatformThreadDispatcher*>(
+        GetWindowLongPtr(window, GWLP_USERDATA));
+    if (dispatcher != nullptr && message == kTaskRunnerWindowMessage) {
+      dispatcher->ProcessTasks();
+      return 0;
+    }
+
+    return DefWindowProc(window, message, wparam, lparam);
+  }
+
+  void ProcessTasks() {
+    std::queue<std::function<void()>> tasks;
+    {
+      std::lock_guard<std::mutex> lock(mutex_);
+      tasks.swap(tasks_);
+    }
+
+    while (!tasks.empty()) {
+      tasks.front()();
+      tasks.pop();
+    }
+  }
+
+  PlatformThreadDispatcher() = default;
+
+  HWND window_ = nullptr;
+  DWORD platform_thread_id_ = 0;
+  std::mutex mutex_;
+  std::queue<std::function<void()>> tasks_;
+};
+
+struct EventSinkState {
+  std::mutex mutex;
+  std::unique_ptr<flutter::EventSink<flutter::EncodableValue>> events;
+  bool active = true;
+};
+
+void SendSuccessOnPlatformThread(std::shared_ptr<EventSinkState> state,
+                                 flutter::EncodableValue value) {
+  if (!state) {
+    return;
+  }
+
+  PlatformThreadDispatcher::GetInstance().Post(
+      [state, value = std::move(value)]() mutable {
+        std::lock_guard<std::mutex> lock(state->mutex);
+        if (state->active && state->events) {
+          state->events->Success(value);
+        }
+      });
+}
+
+void SendErrorOnPlatformThread(std::shared_ptr<EventSinkState> state,
+                               const std::string& code,
+                               const std::string& message,
+                               flutter::EncodableValue details,
+                               bool end_stream = false) {
+  if (!state) {
+    return;
+  }
+
+  PlatformThreadDispatcher::GetInstance().Post(
+      [state, code, message, details = std::move(details), end_stream]() {
+        std::lock_guard<std::mutex> lock(state->mutex);
+        if (!state->active || !state->events) {
+          return;
+        }
+
+        state->events->Error(code, message, details);
+        if (end_stream) {
+          state->events->EndOfStream();
+          state->active = false;
+        }
+      });
+}
+
+void EndStreamOnPlatformThread(std::shared_ptr<EventSinkState> state) {
+  if (!state) {
+    return;
+  }
+
+  PlatformThreadDispatcher::GetInstance().Post([state]() {
+    std::lock_guard<std::mutex> lock(state->mutex);
+    if (state->active && state->events) {
+      state->events->EndOfStream();
+      state->active = false;
+    }
+  });
+}
+
+}  // namespace
+
 // static
 void CloudFirestorePlugin::RegisterWithRegistrar(
     flutter::PluginRegistrarWindows* registrar) {
+  PlatformThreadDispatcher::GetInstance().Initialize();
+
   auto channel =
       std::make_unique<flutter::MethodChannel<flutter::EncodableValue>>(
           registrar->messenger(), "cloud_firestore",
@@ -130,8 +283,7 @@ std::map<std::string,
     event_channels_;
 std::map<std::string, std::unique_ptr<flutter::StreamHandler<>>>
     stream_handlers_;
-std::map<std::string,
-         std::unique_ptr<flutter::StreamHandler<flutter::EncodableValue>>>
+std::map<std::string, flutter::StreamHandler<flutter::EncodableValue>*>
     cloud_firestore_windows::CloudFirestorePlugin::transaction_handlers_;
 std::map<std::string, std::shared_ptr<firebase::firestore::Transaction>>
     cloud_firestore_windows::CloudFirestorePlugin::transactions_;
@@ -542,10 +694,12 @@ class LoadBundleStreamHandler
       const flutter::EncodableValue* arguments,
       std::unique_ptr<flutter::EventSink<flutter::EncodableValue>>&& events)
       override {
-    events_ = std::move(events);
+    events_state_ = std::make_shared<EventSinkState>();
+    events_state_->events = std::move(events);
     events.reset();
     firestore_->LoadBundle(
-        bundle_, [this](const LoadBundleTaskProgress& progress) {
+        bundle_,
+        [events_state = events_state_](const LoadBundleTaskProgress& progress) {
           flutter::EncodableMap map;
           map[flutter::EncodableValue("bytesLoaded")] =
               flutter::EncodableValue(progress.bytes_loaded());
@@ -563,9 +717,9 @@ class LoadBundleStreamHandler
               details[EncodableValue("message")] =
                   EncodableValue("Error loading the bundle");
 
-              events_->Error("firebase_firestore", "Error loading the bundle",
-                             details);
-              events_->EndOfStream();
+              SendErrorOnPlatformThread(events_state, "firebase_firestore",
+                                        "Error loading the bundle",
+                                        EncodableValue(details), true);
               return;
             }
             case LoadBundleTaskProgress::State::kInProgress: {
@@ -574,7 +728,7 @@ class LoadBundleStreamHandler
               map[flutter::EncodableValue("taskState")] =
                   flutter::EncodableValue("running");
 
-              events_->Success(map);
+              SendSuccessOnPlatformThread(events_state, EncodableValue(map));
               break;
             }
             case LoadBundleTaskProgress::State::kSuccess: {
@@ -582,8 +736,8 @@ class LoadBundleStreamHandler
               map[flutter::EncodableValue("taskState")] =
                   flutter::EncodableValue("success");
 
-              events_->Success(map);
-              events_->EndOfStream();
+              SendSuccessOnPlatformThread(events_state, EncodableValue(map));
+              EndStreamOnPlatformThread(events_state);
               break;
             }
           }
@@ -593,13 +747,13 @@ class LoadBundleStreamHandler
 
   std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
   OnCancelInternal(const flutter::EncodableValue* arguments) override {
-    events_->EndOfStream();
+    EndStreamOnPlatformThread(events_state_);
     return nullptr;
   }
 
  private:
   Firestore* firestore_;
-  std::unique_ptr<flutter::EventSink<flutter::EncodableValue>> events_;
+  std::shared_ptr<EventSinkState> events_state_;
   std::string bundle_;
 };
 
@@ -762,7 +916,8 @@ class SnapshotInSyncStreamHandler
       const flutter::EncodableValue* arguments,
       std::unique_ptr<flutter::EventSink<flutter::EncodableValue>>&& events)
       override {
-    events_ = std::move(events);
+    events_state_ = std::make_shared<EventSinkState>();
+    events_state_->events = std::move(events);
     events.reset();
     // We do this to bind the event to the main channel
     auto boundSendEvent =
@@ -778,7 +933,7 @@ class SnapshotInSyncStreamHandler
   std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
   OnCancelInternal(const flutter::EncodableValue* arguments) override {
     listener_.Remove();
-    events_->EndOfStream();
+    EndStreamOnPlatformThread(events_state_);
     return nullptr;
   }
 
@@ -786,12 +941,14 @@ class SnapshotInSyncStreamHandler
     sendEventFunc_ = func;
   }
 
-  void SendEvent() { events_->Success(flutter::EncodableValue()); }
+  void SendEvent() {
+    SendSuccessOnPlatformThread(events_state_, flutter::EncodableValue());
+  }
 
  private:
   Firestore* firestore_;
   ListenerRegistration listener_;
-  std::unique_ptr<flutter::EventSink<flutter::EncodableValue>> events_;
+  std::shared_ptr<EventSinkState> events_state_;
   std::function<void()> sendEventFunc_;
 };
 
@@ -838,7 +995,8 @@ class TransactionStreamHandler
       const flutter::EncodableValue* arguments,
       std::unique_ptr<flutter::EventSink<flutter::EncodableValue>>&& events)
       override {
-    events_ = std::move(events);
+    events_state_ = std::make_shared<EventSinkState>();
+    events_state_->events = std::move(events);
     events.reset();
     TransactionOptions options;
     options.set_max_attempts(maxAttempts_);
@@ -854,17 +1012,22 @@ class TransactionStreamHandler
 
               flutter::EncodableMap map;
               map.emplace("appName", firestore_->app()->name());
-              events_->Success(flutter::EncodableValue(map));
+              SendSuccessOnPlatformThread(events_state_,
+                                          flutter::EncodableValue(map));
 
               std::unique_lock<std::mutex> lock(mtx_);
               if (cv_.wait_for(lock, std::chrono::milliseconds(timeout_)) ==
                   std::cv_status::timeout) {
-                events_->Error("Timeout", "Transaction timed out.");
-                events_->EndOfStream();
+                SendErrorOnPlatformThread(events_state_, "Timeout",
+                                          "Transaction timed out.",
+                                          flutter::EncodableValue(), true);
                 return Error::kErrorDeadlineExceeded;
               }
 
               std::lock_guard<std::mutex> command_lock(commands_mutex_);
+              if (resultType_ == InternalTransactionResult::kFailure) {
+                return Error::kErrorAborted;
+              }
               if (commands_.empty()) return Error::kErrorOk;
 
               for (InternalTransactionCommand& command : commands_) {
@@ -924,12 +1087,14 @@ class TransactionStreamHandler
           if (completed_future.error() == firebase::firestore::kErrorOk) {
             result.insert(std::make_pair(flutter::EncodableValue("complete"),
                                          flutter::EncodableValue(true)));
-            events_->Success(result);
+            SendSuccessOnPlatformThread(events_state_,
+                                        flutter::EncodableValue(result));
           } else {
-            events_->Error("transaction_error",
-                           completed_future.error_message());
+            SendErrorOnPlatformThread(events_state_, "transaction_error",
+                                      completed_future.error_message(),
+                                      flutter::EncodableValue());
           }
-          events_->EndOfStream();
+          EndStreamOnPlatformThread(events_state_);
         });
 
     return nullptr;
@@ -939,7 +1104,7 @@ class TransactionStreamHandler
   OnCancelInternal(const flutter::EncodableValue* arguments) override {
     std::unique_lock<std::mutex> lock(mtx_);
     cv_.notify_one();
-    events_->EndOfStream();
+    EndStreamOnPlatformThread(events_state_);
     return nullptr;
   }
 
@@ -949,11 +1114,11 @@ class TransactionStreamHandler
   int maxAttempts_;
   std::string transactionId_;
   std::vector<InternalTransactionCommand> commands_;
-  InternalTransactionResult resultType_;
+  InternalTransactionResult resultType_ = InternalTransactionResult::kSuccess;
   std::mutex mtx_;
   std::mutex commands_mutex_;
   std::condition_variable cv_;
-  std::unique_ptr<flutter::EventSink<flutter::EncodableValue>> events_;
+  std::shared_ptr<EventSinkState> events_state_;
 };
 
 void CloudFirestorePlugin::TransactionCreate(
@@ -971,16 +1136,13 @@ void CloudFirestorePlugin::TransactionCreate(
   auto handler = std::make_unique<TransactionStreamHandler>(
       firestore, static_cast<long>(timeout), static_cast<int>(max_attempts),
       transactionId);
-
-  // Temporarily release the ownership.
-  TransactionStreamHandler* raw_handler = handler.release();
-  CloudFirestorePlugin::transaction_handlers_[transactionId] =
-      std::unique_ptr<TransactionStreamHandler>(raw_handler);
+  TransactionStreamHandler* raw_handler = handler.get();
+  CloudFirestorePlugin::transaction_handlers_[transactionId] = raw_handler;
 
   // Register the event channel.
   std::string channelName = RegisterEventChannelWithUUID(
       "plugins.flutter.io/firebase_firestore/transaction/", transactionId,
-      std::unique_ptr<TransactionStreamHandler>(raw_handler));
+      std::move(handler));
 
   // Return the result (assumed to be transaction ID in this example).
   result(transactionId);
@@ -993,15 +1155,20 @@ void CloudFirestorePlugin::TransactionStoreResult(
     const InternalTransactionResult& result_type,
     const flutter::EncodableList* commands,
     std::function<void(std::optional<FlutterError> reply)> result) {
-  if (CloudFirestorePlugin::transaction_handlers_[transaction_id]) {
-    TransactionStreamHandler& handler = *static_cast<TransactionStreamHandler*>(
-        CloudFirestorePlugin::transaction_handlers_[transaction_id].get());
+  auto handler_it =
+      CloudFirestorePlugin::transaction_handlers_.find(transaction_id);
+  if (handler_it != CloudFirestorePlugin::transaction_handlers_.end() &&
+      handler_it->second) {
+    TransactionStreamHandler& handler =
+        *static_cast<TransactionStreamHandler*>(handler_it->second);
     std::vector<InternalTransactionCommand> commandVector;
-    for (const auto& element : *commands) {
-      const InternalTransactionCommand& command =
-          std::any_cast<InternalTransactionCommand>(
-              std::get<CustomEncodableValue>(element));
-      commandVector.push_back(command);
+    if (commands) {
+      for (const auto& element : *commands) {
+        const InternalTransactionCommand& command =
+            std::any_cast<InternalTransactionCommand>(
+                std::get<CustomEncodableValue>(element));
+        commandVector.push_back(command);
+      }
     }
     handler.ReceiveTransactionResponse(result_type, commandVector);
     result(std::nullopt);
@@ -1557,49 +1724,41 @@ class QuerySnapshotStreamHandler
                                           ? MetadataChanges::kInclude
                                           : MetadataChanges::kExclude;
 
-    events_ = std::move(events);
+    events_state_ = std::make_shared<EventSinkState>();
+    events_state_->events = std::move(events);
     events.reset();
 
     listener_ = query_->AddSnapshotListener(
         metadataChanges,
-        [this, serverTimestampBehavior = serverTimestampBehavior_,
+        [events_state = events_state_,
+         serverTimestampBehavior = serverTimestampBehavior_,
          metadataChanges](const firebase::firestore::QuerySnapshot& snapshot,
                           firebase::firestore::Error error,
                           const std::string& errorMessage) mutable {
           if (error == firebase::firestore::kErrorOk) {
-            flutter::EncodableList toListResult(3);
-            std::vector<flutter::EncodableValue> documents;
-            std::vector<flutter::EncodableValue> documentChanges;
-
-            for (const auto& documentSnapshot : snapshot.documents()) {
-              documents.push_back(ParseDocumentSnapshot(documentSnapshot,
-                                                        serverTimestampBehavior)
-                                      .ToEncodableList());
-            }
-
-            // Assuming querySnapshot.getDocumentChanges() returns an iterable
-            // collection
-            for (const auto& documentChange :
-                 snapshot.DocumentChanges(metadataChanges)) {
-              documentChanges.push_back(
-                  ParseDocumentChange(documentChange, serverTimestampBehavior)
-                      .ToEncodableList());
-            }
-
-            toListResult[0] = documents;
-            toListResult[1] = documentChanges;
-            toListResult[2] =
-                ParseSnapshotMetadata(snapshot.metadata()).ToEncodableList();
-
-            events_->Success(toListResult);
+            // Emit the Pigeon object directly so the Pigeon-aware codec on
+            // the EventChannel serializes it end-to-end. Pigeon 26 no longer
+            // flattens nested types, so sending a raw list here would cause
+            // the Dart side to receive a List<Object?> it can no longer
+            // decode into InternalQuerySnapshot.
+            SendSuccessOnPlatformThread(
+                events_state,
+                CustomEncodableValue(InternalQuerySnapshot(
+                    ParseDocumentSnapshots(snapshot.documents(),
+                                           serverTimestampBehavior),
+                    ParseDocumentChanges(
+                        snapshot.DocumentChanges(metadataChanges),
+                        serverTimestampBehavior),
+                    ParseSnapshotMetadata(snapshot.metadata()))));
           } else {
             EncodableMap details;
             details[EncodableValue("code")] =
                 EncodableValue(CloudFirestorePlugin::GetErrorCode(error));
             details[EncodableValue("message")] = EncodableValue(errorMessage);
 
-            events_->Error("firebase_firestore", errorMessage, details);
-            events_->EndOfStream();
+            SendErrorOnPlatformThread(events_state, "firebase_firestore",
+                                      errorMessage, EncodableValue(details),
+                                      true);
           }
         });
     return nullptr;
@@ -1608,14 +1767,14 @@ class QuerySnapshotStreamHandler
   std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
   OnCancelInternal(const flutter::EncodableValue* arguments) override {
     listener_.Remove();
-    events_->EndOfStream();
+    EndStreamOnPlatformThread(events_state_);
     return nullptr;
   }
 
  private:
   ListenerRegistration listener_;
   std::unique_ptr<Query> query_;
-  std::unique_ptr<flutter::EventSink<flutter::EncodableValue>> events_;
+  std::shared_ptr<EventSinkState> events_state_;
   bool includeMetadataChanges_;
   firebase::firestore::DocumentSnapshot::ServerTimestampBehavior
       serverTimestampBehavior_;
@@ -1669,27 +1828,35 @@ class DocumentSnapshotStreamHandler
                                           ? MetadataChanges::kInclude
                                           : MetadataChanges::kExclude;
 
-    events_ = std::move(events);
+    events_state_ = std::make_shared<EventSinkState>();
+    events_state_->events = std::move(events);
     events.reset();
 
     listener_ = reference_->AddSnapshotListener(
         metadataChanges,
-        [this, serverTimestampBehavior = serverTimestampBehavior_,
-         metadataChanges](const firebase::firestore::DocumentSnapshot& snapshot,
-                          firebase::firestore::Error error,
-                          const std::string& errorMessage) mutable {
+        [events_state = events_state_,
+         serverTimestampBehavior = serverTimestampBehavior_](
+            const firebase::firestore::DocumentSnapshot& snapshot,
+            firebase::firestore::Error error,
+            const std::string& errorMessage) mutable {
           if (error == firebase::firestore::kErrorOk) {
-            events_->Success(
-                ParseDocumentSnapshot(snapshot, serverTimestampBehavior)
-                    .ToEncodableList());
+            // Emit the Pigeon object directly so the Pigeon-aware codec on
+            // the EventChannel serializes it end-to-end. Pigeon 26 no longer
+            // flattens nested types, so sending a raw list here would cause
+            // the Dart side to receive a List<Object?> it can no longer
+            // decode into InternalDocumentSnapshot.
+            SendSuccessOnPlatformThread(
+                events_state, CustomEncodableValue(ParseDocumentSnapshot(
+                                  snapshot, serverTimestampBehavior)));
           } else {
             EncodableMap details;
             details[EncodableValue("code")] =
                 EncodableValue(CloudFirestorePlugin::GetErrorCode(error));
             details[EncodableValue("message")] = EncodableValue(errorMessage);
 
-            events_->Error("firebase_firestore", errorMessage, details);
-            events_->EndOfStream();
+            SendErrorOnPlatformThread(events_state, "firebase_firestore",
+                                      errorMessage, EncodableValue(details),
+                                      true);
           }
         });
     return nullptr;
@@ -1698,14 +1865,14 @@ class DocumentSnapshotStreamHandler
   std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
   OnCancelInternal(const flutter::EncodableValue* arguments) override {
     listener_.Remove();
-    events_->EndOfStream();
+    EndStreamOnPlatformThread(events_state_);
     return nullptr;
   }
 
  private:
   firebase::firestore::ListenerRegistration listener_;
   std::unique_ptr<DocumentReference> reference_;
-  std::unique_ptr<flutter::EventSink<flutter::EncodableValue>> events_;
+  std::shared_ptr<EventSinkState> events_state_;
   bool includeMetadataChanges_;
   firebase::firestore::DocumentSnapshot::ServerTimestampBehavior
       serverTimestampBehavior_;

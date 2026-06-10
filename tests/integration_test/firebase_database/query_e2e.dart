@@ -609,6 +609,43 @@ void setupQueryTests() {
       });
 
       test(
+        'cancels overlapping query streams without missing plugin',
+        () async {
+          const subscriptionCount = 128;
+          final queryRef = ref.child('overlapping-query-streams');
+          await queryRef.set({'value': 1});
+
+          final errors = <Object>[];
+          final subscriptions = <StreamSubscription<DatabaseEvent>>[];
+          final firstEventsReceived = Completer<void>();
+          var firstEventCount = 0;
+
+          for (var i = 0; i < subscriptionCount; i++) {
+            subscriptions.add(
+              queryRef.onValue.listen(
+                (_) {
+                  firstEventCount++;
+                  if (firstEventCount >= subscriptionCount &&
+                      !firstEventsReceived.isCompleted) {
+                    firstEventsReceived.complete();
+                  }
+                },
+                onError: errors.add,
+              ),
+            );
+          }
+
+          await firstEventsReceived.future.timeout(const Duration(seconds: 10));
+          await Future.wait(
+            subscriptions.map((subscription) => subscription.cancel()),
+          );
+
+          expect(errors, isEmpty);
+        },
+        skip: defaultTargetPlatform != TargetPlatform.android,
+      );
+
+      test(
           'throw a `permission-denied` exception when accessing restricted data',
           () async {
         final Completer<FirebaseException> errorReceived =

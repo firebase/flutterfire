@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:firebase_ai/firebase_ai.dart';
 import 'package:firebase_ai/src/base_model.dart';
@@ -83,6 +84,33 @@ void main() {
       final model = createModel(mockHttp);
       final response = await model
           .generateContent(templateId, inputs: {'prompt': 'Some prompt'});
+      expect(response.text, 'Some response');
+    });
+
+    test('generateContent serializes inline image inputs', () async {
+      final mockHttp = MockClient((request) async {
+        final body = jsonDecode(request.body) as Map<String, Object?>;
+        expect(body['inputs'], {
+          'screenshot': {
+            'isInline': true,
+            'mimeType': 'image/jpeg',
+            'contents': base64Encode([1, 2, 3]),
+          },
+        });
+        return http.Response(jsonEncode(_arbitraryGenerateContentResponse), 200,
+            headers: {'content-type': 'application/json'});
+      });
+
+      final model = createModel(mockHttp);
+      final response = await model.generateContent(
+        templateId,
+        inputs: {
+          'screenshot': InlineDataPart(
+            'image/jpeg',
+            Uint8List.fromList([1, 2, 3]),
+          ),
+        },
+      );
       expect(response.text, 'Some response');
     });
 

@@ -26,6 +26,7 @@ export 'src/api.dart'
         GroundingChunk,
         ThinkingConfig,
         ThinkingLevel,
+        MediaResolution,
         HarmBlockThreshold,
         HarmCategory,
         HarmProbability,
@@ -66,6 +67,7 @@ export 'src/error.dart'
         QuotaExceeded,
         UnsupportedUserLocation;
 export 'src/firebase_ai.dart' show FirebaseAI;
+export 'src/image_config.dart' show ImageConfig, ImageAspectRatio, ImageSize;
 export 'src/imagen/imagen_api.dart'
     show
         ImagenSafetySettings,
@@ -102,15 +104,19 @@ export 'src/imagen/imagen_reference.dart'
         ImagenControlReference;
 export 'src/live_api.dart'
     show
-        LiveGenerationConfig,
-        SpeechConfig,
         AudioTranscriptionConfig,
+        ContextWindowCompressionConfig,
+        GoingAwayNotice,
+        LiveGenerationConfig,
         LiveServerMessage,
         LiveServerContent,
         LiveServerToolCall,
         LiveServerToolCallCancellation,
         LiveServerResponse,
-        GoingAwayNotice,
+        SessionResumptionConfig,
+        SessionResumptionUpdate,
+        SlidingWindow,
+        SpeechConfig,
         Transcription;
 export 'src/live_session.dart' show LiveSession;
 export 'src/schema.dart' show JSONSchema, Schema, SchemaType;

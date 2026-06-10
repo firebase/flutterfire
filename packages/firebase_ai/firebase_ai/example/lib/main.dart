@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import 'package:firebase_ai/firebase_ai.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -70,11 +71,12 @@ class _GenerativeAISampleState extends State<GenerativeAISample> {
 
   void _initializeModel(bool useVertexBackend) {
     if (useVertexBackend) {
-      final vertexInstance = FirebaseAI.vertexAI(auth: FirebaseAuth.instance);
-      _currentModel = vertexInstance.generativeModel(model: 'gemini-2.5-flash');
+      final vertexInstance = FirebaseAI.vertexAI(location: 'global');
+      _currentModel =
+          vertexInstance.generativeModel(model: 'gemini-3.1-flash-lite');
     } else {
-      final googleAI = FirebaseAI.googleAI(auth: FirebaseAuth.instance);
-      _currentModel = googleAI.generativeModel(model: 'gemini-2.5-flash');
+      final googleAI = FirebaseAI.googleAI();
+      _currentModel = googleAI.generativeModel(model: 'gemini-3.1-flash-lite');
     }
   }
 

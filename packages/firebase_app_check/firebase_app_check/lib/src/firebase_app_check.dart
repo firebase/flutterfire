@@ -5,7 +5,8 @@
 
 part of '../firebase_app_check.dart';
 
-class FirebaseAppCheck extends FirebasePluginPlatform {
+class FirebaseAppCheck extends FirebasePluginPlatform
+    implements FirebaseService {
   static Map<String, FirebaseAppCheck> _firebaseAppCheckInstances = {};
 
   FirebaseAppCheck._({required this.app})
@@ -41,8 +42,20 @@ class FirebaseAppCheck extends FirebasePluginPlatform {
   /// Returns an instance using a specified [FirebaseApp].
   static FirebaseAppCheck instanceFor({required FirebaseApp app}) {
     return _firebaseAppCheckInstances.putIfAbsent(app.name, () {
-      return FirebaseAppCheck._(app: app);
+      final instance = FirebaseAppCheck._(app: app);
+      app.registerService<FirebaseAppCheck>(
+        instance,
+        dispose: (appCheck) => appCheck._dispose(),
+      );
+      return instance;
     });
+  }
+
+  Future<void> _dispose() async {
+    _firebaseAppCheckInstances.remove(app.name);
+    final delegate = _delegatePackingProperty;
+    _delegatePackingProperty = null;
+    await delegate?.dispose();
   }
 
   /// Activates the Firebase App Check service.

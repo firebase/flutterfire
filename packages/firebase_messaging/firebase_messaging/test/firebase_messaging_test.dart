@@ -99,12 +99,35 @@ void main() {
     group('getToken', () {
       test('verify delegate method is called with correct args', () async {
         const vapidKey = 'test-vapid-key';
-        when(kMockMessagingPlatform.getToken(vapidKey: anyNamed('vapidKey')))
-            .thenAnswer((_) => Future.value(''));
+        when(kMockMessagingPlatform.getToken(
+          vapidKey: anyNamed('vapidKey'),
+          serviceWorkerScriptPath: anyNamed('serviceWorkerScriptPath'),
+        )).thenAnswer((_) => Future.value(''));
 
         await messaging!.getToken(vapidKey: vapidKey);
 
-        verify(kMockMessagingPlatform.getToken(vapidKey: vapidKey));
+        verify(kMockMessagingPlatform.getToken(
+          vapidKey: vapidKey,
+          serviceWorkerScriptPath: null,
+        ));
+      });
+
+      test('verify delegate method is called with service worker path',
+          () async {
+        const serviceWorkerScriptPath = 'custom-messaging-sw.js';
+        when(kMockMessagingPlatform.getToken(
+          vapidKey: anyNamed('vapidKey'),
+          serviceWorkerScriptPath: anyNamed('serviceWorkerScriptPath'),
+        )).thenAnswer((_) => Future.value(''));
+
+        await messaging!.getToken(
+          serviceWorkerScriptPath: serviceWorkerScriptPath,
+        );
+
+        verify(kMockMessagingPlatform.getToken(
+          vapidKey: null,
+          serviceWorkerScriptPath: serviceWorkerScriptPath,
+        ));
       });
     });
 

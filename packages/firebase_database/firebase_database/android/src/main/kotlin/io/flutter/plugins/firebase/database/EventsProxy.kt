@@ -15,35 +15,35 @@ import java.util.*
 
 @RestrictTo(RestrictTo.Scope.LIBRARY)
 abstract class EventsProxy
-  @JvmOverloads
-  constructor(
+@JvmOverloads
+constructor(
     protected val eventSink: EventChannel.EventSink,
     private val eventType: String,
-  ) {
-    fun buildAdditionalParams(
+) {
+  fun buildAdditionalParams(
       @NonNull eventType: String,
       @Nullable previousChildName: String?,
-    ): Map<String, Any?> {
-      val params = mutableMapOf<String, Any?>()
-      params[Constants.EVENT_TYPE] = eventType
+  ): Map<String, Any?> {
+    val params = mutableMapOf<String, Any?>()
+    params[Constants.EVENT_TYPE] = eventType
 
-      if (previousChildName != null) {
-        params[Constants.PREVIOUS_CHILD_NAME] = previousChildName
-      }
-
-      return params
+    if (previousChildName != null) {
+      params[Constants.PREVIOUS_CHILD_NAME] = previousChildName
     }
 
-    protected fun sendEvent(
+    return params
+  }
+
+  protected fun sendEvent(
       @NonNull eventType: String,
       snapshot: DataSnapshot,
       @Nullable previousChildName: String?,
-    ) {
-      if (this.eventType != eventType) return
+  ) {
+    if (this.eventType != eventType) return
 
-      val payload = FlutterDataSnapshotPayload(snapshot)
-      val additionalParams = buildAdditionalParams(eventType, previousChildName)
+    val payload = FlutterDataSnapshotPayload(snapshot)
+    val additionalParams = buildAdditionalParams(eventType, previousChildName)
 
-      eventSink.success(payload.withAdditionalParams(additionalParams).toMap())
-    }
+    eventSink.success(payload.withAdditionalParams(additionalParams).toMap())
   }
+}

@@ -14,4 +14,22 @@ void setupFirebaseAppCheckMocks([Callback? customHandlers]) {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   setupFirebaseCoreMocks();
+  TestFirebaseAppHostApi.setUp(MockFirebaseAppHostApi());
+}
+
+class MockFirebaseAppHostApi implements TestFirebaseAppHostApi {
+  @override
+  Future<void> delete(String appName) async {}
+
+  @override
+  Future<void> setAutomaticDataCollectionEnabled(
+    String appName,
+    bool enabled,
+  ) async {}
+
+  @override
+  Future<void> setAutomaticResourceManagementEnabled(
+    String appName,
+    bool enabled,
+  ) async {}
 }

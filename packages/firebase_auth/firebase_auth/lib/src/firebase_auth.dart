@@ -6,7 +6,7 @@
 part of '../firebase_auth.dart';
 
 /// The entry point of the Firebase Authentication SDK.
-class FirebaseAuth extends FirebasePluginPlatform {
+class FirebaseAuth extends FirebasePluginPlatform implements FirebaseService {
   // Cached instances of [FirebaseAuth].
   static Map<String, FirebaseAuth> _firebaseAuthInstances = {};
 
@@ -45,8 +45,20 @@ class FirebaseAuth extends FirebasePluginPlatform {
     required FirebaseApp app,
   }) {
     return _firebaseAuthInstances.putIfAbsent(app.name, () {
-      return FirebaseAuth._(app: app);
+      final instance = FirebaseAuth._(app: app);
+      app.registerService<FirebaseAuth>(
+        instance,
+        dispose: (auth) => auth._dispose(),
+      );
+      return instance;
     });
+  }
+
+  Future<void> _dispose() async {
+    _firebaseAuthInstances.remove(app.name);
+    final delegate = _delegatePackingProperty;
+    _delegatePackingProperty = null;
+    await delegate?.dispose();
   }
 
   /// Returns the current [User] if they are currently signed-in, or `null` if
@@ -285,6 +297,10 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// To complete the password reset, call [confirmPasswordReset] with the code supplied
   /// in the email sent to the user, along with the new password specified by the user.
   ///
+  /// If email enumeration protection is enabled for the Firebase project, this
+  /// method may complete successfully even when the email does not correspond
+  /// to an existing user.
+  ///
   /// May throw a [FirebaseAuthException] with the following error codes:
   ///
   /// - **auth/invalid-email**\
@@ -300,7 +316,8 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// - **auth/unauthorized-continue-uri**\
   ///   The domain of the continue URL is not whitelisted. Whitelist the domain in the Firebase console.
   /// - **auth/user-not-found**\
-  ///   Thrown if there is no user corresponding to the email address. Note: This exception is no longer thrown when enabling email enumeration protection.
+  ///   Thrown if there is no user corresponding to the email address. Note: This
+  ///   exception is not thrown when email enumeration protection is enabled.
   Future<void> sendPasswordResetEmail({
     required String email,
     ActionCodeSettings? actionCodeSettings,

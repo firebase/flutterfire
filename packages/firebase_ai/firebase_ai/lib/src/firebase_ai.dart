@@ -17,6 +17,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
     show FirebasePluginPlatform;
+import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
 
 import '../firebase_ai.dart';
@@ -62,12 +63,18 @@ class FirebaseAI extends FirebasePluginPlatform {
   /// If pass in [appCheck], request session will get protected from abusing.
   static FirebaseAI vertexAI({
     FirebaseApp? app,
+    @Deprecated(
+        'Passing an explicit instance is deprecated, internal handling is now automatic.')
     FirebaseAppCheck? appCheck,
+    @Deprecated(
+        'Passing an explicit instance is deprecated, internal handling is now automatic.')
     FirebaseAuth? auth,
     String? location,
     bool? useLimitedUseAppCheckTokens,
   }) {
     app ??= Firebase.app();
+    appCheck ??= app.getService<FirebaseAppCheck>();
+    auth ??= app.getService<FirebaseAuth>();
     var instanceKey = '${app.name}::vertexai::$location';
 
     if (_cachedInstances.containsKey(instanceKey)) {
@@ -95,11 +102,17 @@ class FirebaseAI extends FirebasePluginPlatform {
   /// If pass in [appCheck], request session will get protected from abusing.
   static FirebaseAI googleAI({
     FirebaseApp? app,
+    @Deprecated(
+        'Passing an explicit instance is deprecated, internal handling is now automatic.')
     FirebaseAppCheck? appCheck,
+    @Deprecated(
+        'Passing an explicit instance is deprecated, internal handling is now automatic.')
     FirebaseAuth? auth,
     bool? useLimitedUseAppCheckTokens,
   }) {
     app ??= Firebase.app();
+    appCheck ??= app.getService<FirebaseAppCheck>();
+    auth ??= app.getService<FirebaseAuth>();
     var instanceKey = '${app.name}::googleai';
 
     if (_cachedInstances.containsKey(instanceKey)) {
@@ -130,6 +143,9 @@ class FirebaseAI extends FirebasePluginPlatform {
   /// The optional [safetySettings] and [generationConfig] can be used to
   /// control and guide the generation. See [SafetySetting] and
   /// [GenerationConfig] for details.
+  ///
+  /// The optional [httpClient] can be used to customize HTTP request handling,
+  /// such as adding support for cancelling in-flight requests.
   GenerativeModel generativeModel({
     required String model,
     List<SafetySetting>? safetySettings,
@@ -137,6 +153,7 @@ class FirebaseAI extends FirebasePluginPlatform {
     List<Tool>? tools,
     ToolConfig? toolConfig,
     Content? systemInstruction,
+    http.Client? httpClient,
   }) {
     return createGenerativeModel(
       model: model,
@@ -151,6 +168,7 @@ class FirebaseAI extends FirebasePluginPlatform {
       toolConfig: toolConfig,
       systemInstruction: systemInstruction,
       useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
+      httpClient: httpClient,
     );
   }
 

@@ -173,6 +173,7 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   /// Returns the default FCM token for this device and optionally [senderId].
   Future<String?> getToken({
     String? vapidKey,
+    String? serviceWorkerScriptPath,
   }) {
     throw UnimplementedError('getToken() is not implemented');
   }

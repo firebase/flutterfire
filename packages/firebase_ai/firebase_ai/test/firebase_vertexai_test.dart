@@ -12,10 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:convert';
+
 import 'package:firebase_ai/firebase_ai.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:http/http.dart' as http;
 
 import 'mock.dart';
 
@@ -28,6 +33,7 @@ void main() {
   late FirebaseApp customApp;
   late FirebaseApp limitTokenApp;
   late FirebaseAppCheck customAppCheck;
+  late FirebaseAuth customAuth;
   late FirebaseAppCheck limitTokenAppCheck;
 
   group('FirebaseAI Tests', () {
@@ -47,6 +53,17 @@ void main() {
       appCheck = FirebaseAppCheck.instance;
       customAppCheck = FirebaseAppCheck.instanceFor(app: customApp);
       limitTokenAppCheck = FirebaseAppCheck.instanceFor(app: limitTokenApp);
+      customAuth = FirebaseAuth.instanceFor(app: customApp);
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMessageHandler(
+        'dev.flutter.pigeon.firebase_app_check_platform_interface.'
+        'FirebaseAppCheckHostApi.getToken',
+        (_) async {
+          return const StandardMessageCodec().encodeMessage(
+            <Object?>['app-check-token'],
+          );
+        },
+      );
     });
 
     test('Singleton behavior', () {
@@ -96,6 +113,20 @@ void main() {
       expect(vertexAIAppCheck.useLimitedUseAppCheckTokens, true);
     });
 
+    test('Instance creation with auto-injected AppCheck', () {
+      final vertexAI = FirebaseAI.vertexAI(app: customApp);
+
+      expect(vertexAI.app, equals(customApp));
+      expect(vertexAI.appCheck, equals(customAppCheck));
+    });
+
+    test('Instance creation with auto-injected Auth', () {
+      final vertexAI = FirebaseAI.vertexAI(app: customApp);
+
+      expect(vertexAI.app, equals(customApp));
+      expect(vertexAI.auth, equals(customAuth));
+    });
+
     test('generativeModel creation with Grounding tools', () {
       final ai = FirebaseAI.googleAI();
 
@@ -112,5 +143,67 @@ void main() {
 
       expect(model, isA<GenerativeModel>());
     });
+
+    test('generativeModel uses provided HTTP client', () async {
+      final requests = <http.BaseRequest>[];
+      final client = _RecordingClient((request) {
+        requests.add(request);
+
+        if (request.url.path.endsWith(':streamGenerateContent')) {
+          return http.StreamedResponse(
+            Stream.value(utf8.encode('data: ${jsonEncode(_response)}\n\n')),
+            200,
+          );
+        }
+
+        return http.StreamedResponse(
+          Stream.value(utf8.encode(jsonEncode(_response))),
+          200,
+        );
+      });
+      final ai = FirebaseAI.googleAI(app: app);
+
+      final model = ai.generativeModel(
+        model: 'gemini-pro',
+        httpClient: client,
+      );
+
+      await model.generateContent([Content.text('prompt')]);
+      await model.generateContentStream([Content.text('prompt')]).drain<void>();
+
+      expect(requests, hasLength(2));
+      expect(
+        requests.first.url.path,
+        endsWith('/models/gemini-pro:generateContent'),
+      );
+      expect(
+        requests.last.url.path,
+        endsWith('/models/gemini-pro:streamGenerateContent'),
+      );
+    });
   });
 }
+
+class _RecordingClient extends http.BaseClient {
+  _RecordingClient(this._handler);
+
+  final http.StreamedResponse Function(http.BaseRequest request) _handler;
+
+  @override
+  Future<http.StreamedResponse> send(http.BaseRequest request) async {
+    return _handler(request);
+  }
+}
+
+const _response = {
+  'candidates': [
+    {
+      'content': {
+        'role': 'model',
+        'parts': [
+          {'text': 'Some Response'},
+        ],
+      },
+    },
+  ],
+};

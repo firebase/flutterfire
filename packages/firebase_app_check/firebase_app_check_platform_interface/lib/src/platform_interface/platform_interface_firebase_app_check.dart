@@ -147,4 +147,7 @@ abstract class FirebaseAppCheckPlatform extends PlatformInterface {
   FirebaseAppCheckPlatform setInitialValues() {
     throw UnimplementedError('setInitialValues() is not implemented');
   }
+
+  /// Disposes resources tied to this platform App Check instance.
+  Future<void> dispose() async {}
 }

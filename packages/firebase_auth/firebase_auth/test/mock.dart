@@ -12,6 +12,7 @@ void setupFirebaseAuthMocks([Callback? customHandlers]) {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   setupFirebaseCoreMocks();
+  TestFirebaseAppHostApi.setUp(MockFirebaseAppHostApi());
 }
 
 Future<T> neverEndingFuture<T>() async {
@@ -19,4 +20,21 @@ Future<T> neverEndingFuture<T>() async {
   while (true) {
     await Future.delayed(const Duration(minutes: 5));
   }
+}
+
+class MockFirebaseAppHostApi implements TestFirebaseAppHostApi {
+  @override
+  Future<void> delete(String appName) async {}
+
+  @override
+  Future<void> setAutomaticDataCollectionEnabled(
+    String appName,
+    bool enabled,
+  ) async {}
+
+  @override
+  Future<void> setAutomaticResourceManagementEnabled(
+    String appName,
+    bool enabled,
+  ) async {}
 }

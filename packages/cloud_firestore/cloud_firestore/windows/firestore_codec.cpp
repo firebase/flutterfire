@@ -194,7 +194,7 @@ cloud_firestore_windows::FirestoreCodec::ReadValueOfType(
     }
 
     case DATA_TYPE_INCREMENT_INTEGER: {
-      int incrementValue = std::get<int>(FirestoreCodec::ReadValue(stream));
+      int64_t incrementValue = FirestoreCodec::ReadValue(stream).LongValue();
       return CustomEncodableValue(FieldValue::Increment(incrementValue));
     }
 

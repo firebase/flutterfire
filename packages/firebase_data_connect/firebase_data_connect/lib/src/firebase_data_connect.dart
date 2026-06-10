@@ -33,7 +33,11 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
   FirebaseDataConnect(
       {required this.app,
       required this.connectorConfig,
+      @Deprecated(
+          'Passing an explicit instance is deprecated, internal handling is now automatic.')
       this.auth,
+      @Deprecated(
+          'Passing an explicit instance is deprecated, internal handling is now automatic.')
       this.appCheck,
       CallerSDKType? sdkType,
       this.cacheSettings})
@@ -94,6 +98,9 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
     }
     transportOptions ??=
         TransportOptions('firebasedataconnect.googleapis.com', null, true);
+    auth ??= app.getService<FirebaseAuth>();
+    appCheck ??= app.getService<FirebaseAppCheck>();
+
     final rest = RestTransport(
       transportOptions!,
       options,
@@ -198,7 +205,11 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
   /// If pass in [appCheck], request session will get protected from abusing.
   static FirebaseDataConnect instanceFor(
       {FirebaseApp? app,
+      @Deprecated(
+          'Passing an explicit instance is deprecated, internal handling is now automatic.')
       FirebaseAuth? auth,
+      @Deprecated(
+          'Passing an explicit instance is deprecated, internal handling is now automatic.')
       FirebaseAppCheck? appCheck,
       CallerSDKType? sdkType,
       required ConnectorConfig connectorConfig,

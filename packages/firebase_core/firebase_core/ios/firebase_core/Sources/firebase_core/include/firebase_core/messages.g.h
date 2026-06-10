@@ -32,7 +32,8 @@ NS_ASSUME_NONNULL_BEGIN
                androidClientId:(nullable NSString *)androidClientId
                    iosClientId:(nullable NSString *)iosClientId
                    iosBundleId:(nullable NSString *)iosBundleId
-                    appGroupId:(nullable NSString *)appGroupId;
+                    appGroupId:(nullable NSString *)appGroupId
+              recaptchaSiteKey:(nullable NSString *)recaptchaSiteKey;
 @property(nonatomic, copy) NSString *apiKey;
 @property(nonatomic, copy) NSString *appId;
 @property(nonatomic, copy) NSString *messagingSenderId;
@@ -47,6 +48,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy, nullable) NSString *iosClientId;
 @property(nonatomic, copy, nullable) NSString *iosBundleId;
 @property(nonatomic, copy, nullable) NSString *appGroupId;
+@property(nonatomic, copy, nullable) NSString *recaptchaSiteKey;
 @end
 
 @interface CoreInitializeResponse : NSObject

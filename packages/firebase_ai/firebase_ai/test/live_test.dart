@@ -34,6 +34,22 @@ void main() {
       expect(speechConfigWithoutVoice.toJson(), {});
     });
 
+    test('SpeechConfig with languageCode toJson() returns correct JSON', () {
+      final speechConfigWithLanguage =
+          SpeechConfig(voiceName: 'Aoede', languageCode: 'en-US');
+      expect(speechConfigWithLanguage.toJson(), {
+        'voice_config': {
+          'prebuilt_voice_config': {'voice_name': 'Aoede'}
+        },
+        'language_code': 'en-US',
+      });
+
+      final speechConfigLanguageOnly = SpeechConfig(languageCode: 'fr-FR');
+      expect(speechConfigLanguageOnly.toJson(), {
+        'language_code': 'fr-FR',
+      });
+    });
+
     test('ResponseModalities enum toJson() returns correct value', () {
       expect(ResponseModalities.text.toJson(), 'TEXT');
       expect(ResponseModalities.image.toJson(), 'IMAGE');
@@ -48,6 +64,7 @@ void main() {
         temperature: 0.8,
         topP: 0.95,
         topK: 40,
+        mediaResolution: MediaResolution.low,
       );
 
       expect(liveGenerationConfig.toJson(), {
@@ -61,10 +78,19 @@ void main() {
           }
         },
         'responseModalities': ['TEXT', 'AUDIO'],
+        'mediaResolution': 'MEDIA_RESOLUTION_LOW',
       });
 
       final liveGenerationConfigWithoutOptionals = LiveGenerationConfig();
       expect(liveGenerationConfigWithoutOptionals.toJson(), {});
+    });
+
+    test('SessionResumptionConfig toJson() returns correct JSON', () {
+      final resumableConfig = SessionResumptionConfig();
+      expect(resumableConfig.toJson(), {});
+
+      final resumeConfig = SessionResumptionConfig.resume('some_handle');
+      expect(resumeConfig.toJson(), {'handle': 'some_handle'});
     });
 
     test('LiveServerContent constructor and properties', () {
