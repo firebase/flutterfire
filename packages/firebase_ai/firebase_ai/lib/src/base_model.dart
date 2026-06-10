@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -375,7 +376,7 @@ abstract class BaseTemplateApiClientModel extends BaseApiClientModel {
       T Function(Map<String, Object?>) parse) {
     Map<String, Object?> body = {};
     if (inputs != null) {
-      body['inputs'] = inputs;
+      body['inputs'] = _serializeTemplateInputs(inputs);
     }
     if (history != null) {
       body['history'] = history.map((c) => c.toJson()).toList();
@@ -405,7 +406,7 @@ abstract class BaseTemplateApiClientModel extends BaseApiClientModel {
       T Function(Map<String, Object?>) parse) {
     Map<String, Object?> body = {};
     if (inputs != null) {
-      body['inputs'] = inputs;
+      body['inputs'] = _serializeTemplateInputs(inputs);
     }
     if (history != null) {
       body['history'] = history.map((c) => c.toJson()).toList();
@@ -428,4 +429,26 @@ abstract class BaseTemplateApiClientModel extends BaseApiClientModel {
   /// Returns the template name for the given [templateId].
   String templateName(String templateId) =>
       _templateUri.templateName(templateId);
+
+  Map<String, Object?> _serializeTemplateInputs(Map<String, Object?> inputs) {
+    return inputs.map((key, value) {
+      return MapEntry(key, _serializeTemplateInputValue(value));
+    });
+  }
+
+  Object? _serializeTemplateInputValue(Object? value) {
+    return switch (value) {
+      InlineDataPart(:final mimeType, :final bytes) => {
+          'isInline': true,
+          'mimeType': mimeType,
+          'contents': base64Encode(bytes),
+        },
+      Map<Object?, Object?>() => value.map((key, nestedValue) {
+          return MapEntry(key, _serializeTemplateInputValue(nestedValue));
+        }),
+      List<Object?>() =>
+        value.map(_serializeTemplateInputValue).toList(growable: false),
+      _ => value,
+    };
+  }
 }

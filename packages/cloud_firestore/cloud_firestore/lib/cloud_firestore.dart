@@ -65,6 +65,7 @@ part 'src/pipeline_execute_options.dart';
 part 'src/pipeline_expression.dart';
 part 'src/pipeline_ordering.dart';
 part 'src/pipeline_sample.dart';
+part 'src/pipeline_search.dart';
 part 'src/pipeline_source.dart';
 part 'src/pipeline_stage.dart';
 part 'src/query.dart';

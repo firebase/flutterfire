@@ -10,10 +10,10 @@ import PackageDescription
 
 let firebaseSdkVersion: Version = "12.14.0"
 
-// Set FIREBASE_ANALYTICS_WITHOUT_ADID=true to use FirebaseAnalyticsWithoutAdIdSupport
+// Set FIREBASE_ANALYTICS_WITHOUT_ADID=true to use FirebaseAnalyticsCore.
 // e.g. FIREBASE_ANALYTICS_WITHOUT_ADID=true flutter build ios
 let useWithoutAdId = ProcessInfo.processInfo.environment["FIREBASE_ANALYTICS_WITHOUT_ADID"] != nil
-let analyticsProduct = useWithoutAdId ? "FirebaseAnalyticsWithoutAdIdSupport" : "FirebaseAnalytics"
+let analyticsProduct = useWithoutAdId ? "FirebaseAnalyticsCore" : "FirebaseAnalytics"
 
 let package = Package(
   name: "firebase_analytics",

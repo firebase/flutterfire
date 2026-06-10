@@ -464,6 +464,8 @@ class ExpressionParsers {
         return parseArrayContainsAll(args);
       case "array_contains_any":
         return parseArrayContainsAny(args);
+      case "document_matches":
+        return parseDocumentMatches(args);
       default:
         Log.w(TAG, "Unsupported expression type: " + name);
         throw new UnsupportedOperationException("Expression type not yet implemented: " + name);
@@ -583,6 +585,8 @@ class ExpressionParsers {
         return parseNotEqualAny(args);
       case "as_boolean":
         return parseAsBoolean(args);
+      case "document_matches":
+        return parseDocumentMatches(args);
       default:
         Expression expr = parseExpression(expressionMap);
         if (expr instanceof BooleanExpression) {
@@ -603,6 +607,14 @@ class ExpressionParsers {
               + expressionMap.get("name"));
     }
     return (Selectable) expr;
+  }
+
+  private BooleanExpression parseDocumentMatches(@NonNull Map<String, Object> args) {
+    String query = (String) args.get("query");
+    if (query == null) {
+      throw new IllegalArgumentException("document_matches requires a 'query' argument");
+    }
+    return Expression.documentMatches(query);
   }
 
   @SuppressWarnings("unchecked")
