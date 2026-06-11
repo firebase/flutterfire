@@ -16,6 +16,7 @@ import 'content.dart';
 import 'error.dart';
 import 'image_config.dart';
 import 'schema.dart';
+import 'speech_config.dart';
 import 'tool.dart' show Tool, ToolConfig;
 
 /// Response for Count Tokens
@@ -1206,6 +1207,7 @@ abstract class BaseGenerationConfig {
     this.frequencyPenalty,
     this.responseModalities,
     this.mediaResolution,
+    this.speechConfig,
   }) : assert(mediaResolution != MediaResolution.ultraHigh,
             'MediaResolution.ultraHigh is only supported on individual media parts.');
 
@@ -1294,6 +1296,9 @@ abstract class BaseGenerationConfig {
   /// [MediaResolution.ultraHigh] is only supported on individual media parts.
   final MediaResolution? mediaResolution;
 
+  /// The configuration parameters controlling the model's speech and audio generation.
+  final SpeechConfig? speechConfig;
+
   // ignore: public_member_api_docs
   Map<String, Object?> toJson() => {
         if (candidateCount case final candidateCount?)
@@ -1312,6 +1317,8 @@ abstract class BaseGenerationConfig {
               responseModalities.map((modality) => modality.toJson()).toList(),
         if (mediaResolution case final mediaResolution?)
           'mediaResolution': mediaResolution.toJson(),
+        if (speechConfig case final speechConfig?)
+          'speechConfig': speechConfig.toJson(),
       };
 }
 
@@ -1329,6 +1336,7 @@ final class GenerationConfig extends BaseGenerationConfig {
     super.frequencyPenalty,
     super.responseModalities,
     super.mediaResolution,
+    super.speechConfig,
     this.responseMimeType,
     this.responseSchema,
     this.responseJsonSchema,
