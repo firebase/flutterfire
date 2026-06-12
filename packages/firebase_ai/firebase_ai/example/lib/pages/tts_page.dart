@@ -128,7 +128,8 @@ class _TTSPageState extends State<TTSPage> {
       final String prompt;
 
       if (_isMultiSpeaker) {
-        prompt = '${_speaker1NameController.text}: ${_speaker1LineController.text}\n'
+        prompt =
+            '${_speaker1NameController.text}: ${_speaker1LineController.text}\n'
             '${_speaker2NameController.text}: ${_speaker2LineController.text}';
         config = GenerationConfig(
           responseModalities: [ResponseModalities.audio],
