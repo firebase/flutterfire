@@ -51,14 +51,17 @@ class _TTSPageState extends State<TTSPage> {
   String _selectedVoice = 'Kore';
 
   // Multi Speaker Controllers
-  final TextEditingController _multiScriptController = TextEditingController(
-    text: "Joe: How's it going today Jane?\nJane: Not too bad, how about you?",
-  );
   final TextEditingController _speaker1NameController =
       TextEditingController(text: 'Joe');
+  final TextEditingController _speaker1LineController = TextEditingController(
+    text: "How's it going today Jane?",
+  );
   String _speaker1Voice = 'Kore';
   final TextEditingController _speaker2NameController =
       TextEditingController(text: 'Jane');
+  final TextEditingController _speaker2LineController = TextEditingController(
+    text: 'Not too bad, how about you?',
+  );
   String _speaker2Voice = 'Puck';
 
   final List<String> _availableVoices = [
@@ -85,9 +88,10 @@ class _TTSPageState extends State<TTSPage> {
     _mockAmpGen.stop();
     _playbackTimer?.cancel();
     _singlePromptController.dispose();
-    _multiScriptController.dispose();
     _speaker1NameController.dispose();
+    _speaker1LineController.dispose();
     _speaker2NameController.dispose();
+    _speaker2LineController.dispose();
     super.dispose();
   }
 
@@ -124,7 +128,9 @@ class _TTSPageState extends State<TTSPage> {
       final String prompt;
 
       if (_isMultiSpeaker) {
-        prompt = _multiScriptController.text;
+        prompt =
+            '${_speaker1NameController.text}: ${_speaker1LineController.text}\n'
+            '${_speaker2NameController.text}: ${_speaker2LineController.text}';
         config = GenerationConfig(
           responseModalities: [ResponseModalities.audio],
           speechConfig: SpeechConfig.multiSpeaker(
@@ -154,12 +160,10 @@ class _TTSPageState extends State<TTSPage> {
       }
 
       // Use the preview model for TTS
-      final modelName = widget.useVertexBackend
-          ? 'gemini-2.5-flash-tts'
-          : 'gemini-3.1-flash-tts-preview';
+      const modelName = 'gemini-3.1-flash-tts-preview';
       final GenerativeModel model;
       if (widget.useVertexBackend) {
-        model = FirebaseAI.vertexAI(location: 'global').generativeModel(
+        model = FirebaseAI.vertexAI().generativeModel(
           model: modelName,
           generationConfig: config,
         );
@@ -268,92 +272,127 @@ class _TTSPageState extends State<TTSPage> {
     );
   }
 
+  Widget _buildSpeakerCard({
+    required String title,
+    required TextEditingController nameController,
+    required String selectedVoice,
+    required ValueChanged<String?> onVoiceChanged,
+    required TextEditingController lineController,
+    required Color accentColor,
+  }) {
+    return Card(
+      elevation: 2,
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(
+          color: accentColor.withAlpha(80),
+          width: 1.5,
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.person, color: accentColor),
+                const SizedBox(width: 8),
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: accentColor,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: TextField(
+                    controller: nameController,
+                    decoration: const InputDecoration(
+                      labelText: 'Speaker Name',
+                      prefixIcon: Icon(Icons.badge_outlined),
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  flex: 3,
+                  child: DropdownButtonFormField<String>(
+                    initialValue: selectedVoice,
+                    decoration: const InputDecoration(
+                      labelText: 'Voice Name',
+                      prefixIcon: Icon(Icons.settings_voice_outlined),
+                      border: OutlineInputBorder(),
+                    ),
+                    items: _availableVoices.map((voice) {
+                      return DropdownMenuItem(
+                        value: voice,
+                        child: Text(voice),
+                      );
+                    }).toList(),
+                    onChanged: onVoiceChanged,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: lineController,
+              decoration: const InputDecoration(
+                labelText: 'Speech Line',
+                prefixIcon: Icon(Icons.chat_bubble_outline),
+                hintText: 'Enter what this speaker will say',
+                border: OutlineInputBorder(),
+              ),
+              maxLines: 2,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildMultiSpeakerForm() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TextField(
-          controller: _multiScriptController,
-          decoration: const InputDecoration(
-            labelText: 'Script',
-            hintText: 'Format: Name: text to say',
-            border: OutlineInputBorder(),
-          ),
-          maxLines: 5,
+        _buildSpeakerCard(
+          title: 'Speaker 1',
+          nameController: _speaker1NameController,
+          selectedVoice: _speaker1Voice,
+          onVoiceChanged: (value) {
+            if (value != null) {
+              setState(() {
+                _speaker1Voice = value;
+              });
+            }
+          },
+          lineController: _speaker1LineController,
+          accentColor: Theme.of(context).colorScheme.primary,
         ),
-        const SizedBox(height: 16),
-        Row(
-          children: [
-            Expanded(
-              child: TextField(
-                controller: _speaker1NameController,
-                decoration: const InputDecoration(
-                  labelText: 'Speaker 1 Name',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: DropdownButtonFormField<String>(
-                initialValue: _speaker1Voice,
-                decoration: const InputDecoration(
-                  labelText: 'Speaker 1 Voice',
-                  border: OutlineInputBorder(),
-                ),
-                items: _availableVoices.map((voice) {
-                  return DropdownMenuItem(
-                    value: voice,
-                    child: Text(voice),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  if (value != null) {
-                    setState(() {
-                      _speaker1Voice = value;
-                    });
-                  }
-                },
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 16),
-        Row(
-          children: [
-            Expanded(
-              child: TextField(
-                controller: _speaker2NameController,
-                decoration: const InputDecoration(
-                  labelText: 'Speaker 2 Name',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: DropdownButtonFormField<String>(
-                initialValue: _speaker2Voice,
-                decoration: const InputDecoration(
-                  labelText: 'Speaker 2 Voice',
-                  border: OutlineInputBorder(),
-                ),
-                items: _availableVoices.map((voice) {
-                  return DropdownMenuItem(
-                    value: voice,
-                    child: Text(voice),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  if (value != null) {
-                    setState(() {
-                      _speaker2Voice = value;
-                    });
-                  }
-                },
-              ),
-            ),
-          ],
+        const SizedBox(height: 8),
+        _buildSpeakerCard(
+          title: 'Speaker 2',
+          nameController: _speaker2NameController,
+          selectedVoice: _speaker2Voice,
+          onVoiceChanged: (value) {
+            if (value != null) {
+              setState(() {
+                _speaker2Voice = value;
+              });
+            }
+          },
+          lineController: _speaker2LineController,
+          accentColor: Theme.of(context).colorScheme.secondary,
         ),
       ],
     );
