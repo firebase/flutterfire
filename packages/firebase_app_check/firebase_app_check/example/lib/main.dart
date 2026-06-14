@@ -4,7 +4,6 @@
 
 // ignore_for_file: do_not_use_environment
 
-import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -12,6 +11,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'firebase_options.dart';
+
+const kWebRecaptchaSiteKey = '6Lemcn0dAAAAABLkf6aiiHvpGD6x-zF3nOSDU2M8';
 
 // Windows: create a debug token in the Firebase Console
 // (App Check > Apps > Manage debug tokens), then paste it here
@@ -31,7 +32,9 @@ Future<void> main() async {
   // Activate app check after initialization, but before
   // usage of any Firebase services.
   await FirebaseAppCheck.instance.activate(
-    providerWeb: kDebugMode ? WebDebugProvider() : const WebReCaptchaProvider(),
+    providerWeb: kDebugMode
+        ? WebDebugProvider()
+        : ReCaptchaV3Provider(kWebRecaptchaSiteKey),
     providerAndroid: const AndroidDebugProvider(),
     providerApple: const AppleDebugProvider(),
     // On Windows, only the debug provider is available.
@@ -76,21 +79,11 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
   final appCheck = FirebaseAppCheck.instance;
   String _message = '';
   String _eventToken = 'not yet';
-  late final TextEditingController _webSiteKeyController;
-  StreamSubscription<String?>? _tokenSubscription;
 
   @override
   void initState() {
-    _webSiteKeyController = TextEditingController();
     appCheck.onTokenChange.listen(setEventToken);
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    _webSiteKeyController.dispose();
-    _tokenSubscription?.cancel();
-    super.dispose();
   }
 
   void setMessage(String message) {
@@ -108,20 +101,16 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
   Future<void> _activate({
     AndroidAppCheckProvider? android,
     AppleAppCheckProvider? apple,
-    WebProvider? web,
     WindowsAppCheckProvider? windows,
   }) async {
     try {
       await appCheck.activate(
         providerAndroid: android ?? const AndroidPlayIntegrityProvider(),
         providerApple: apple ?? const AppleDeviceCheckProvider(),
-        providerWeb: web ?? const WebReCaptchaProvider(),
+        providerWeb: ReCaptchaV3Provider(kWebRecaptchaSiteKey),
         providerWindows: windows ?? const WindowsDebugProvider(),
       );
-      await _tokenSubscription?.cancel();
-      _tokenSubscription = appCheck.onTokenChange.listen(setEventToken);
       final providerName = windows?.runtimeType.toString() ??
-          web?.runtimeType.toString() ??
           apple?.runtimeType.toString() ??
           android?.runtimeType.toString() ??
           'default';
@@ -147,108 +136,40 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
-            if (kIsWeb) ...[
-              ElevatedButton(
-                onPressed: () => _activate(
-                  web: const WebReCaptchaProvider(),
-                ),
-                child: const Text('activate(Web reCAPTCHA from options)'),
-              ),
-              const SizedBox(height: 8),
-              ElevatedButton(
-                onPressed: () => _activate(
-                  web: ReCaptchaV3Provider(_webSiteKeyController.text),
-                ),
-                child: const Text('activate(Web reCAPTCHA v3)'),
-              ),
-              const SizedBox(height: 8),
-              TextField(
-                controller: _webSiteKeyController,
-                decoration: const InputDecoration(
-                  labelText: 'Web reCAPTCHA Site Key',
-                  border: OutlineInputBorder(),
+            ElevatedButton(
+              onPressed: () => _activate(
+                android: const AndroidDebugProvider(),
+                apple: const AppleDebugProvider(),
+                windows: WindowsDebugProvider(
+                  debugToken:
+                      kWindowsDebugToken.isNotEmpty ? kWindowsDebugToken : null,
                 ),
               ),
-              const SizedBox(height: 8),
-              ElevatedButton(
-                onPressed: () => _activate(
-                  web: ReCaptchaEnterpriseProvider(_webSiteKeyController.text),
-                ),
-                child: const Text('activate(Web reCAPTCHA Enterprise)'),
+              child: const Text('activate(Debug)'),
+            ),
+            ElevatedButton(
+              onPressed: () => _activate(
+                android: const AndroidPlayIntegrityProvider(),
+                apple: const AppleDeviceCheckProvider(),
               ),
-            ],
-            if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) ...[
-              ElevatedButton(
-                onPressed: () => _activate(
-                  android: const AndroidDebugProvider(),
-                ),
-                child: const Text('activate(Android Debug)'),
-              ),
-              ElevatedButton(
-                onPressed: () => _activate(
-                  android: const AndroidPlayIntegrityProvider(),
-                ),
-                child: const Text('activate(Android Play Integrity)'),
-              ),
-              const SizedBox(height: 8),
-              ElevatedButton(
-                onPressed: () => _activate(
-                  android: const AndroidReCaptchaProvider(),
-                ),
-                child: const Text('activate(Android reCAPTCHA)'),
-              ),
-            ],
-            if (!kIsWeb &&
-                (defaultTargetPlatform == TargetPlatform.iOS ||
-                    defaultTargetPlatform == TargetPlatform.macOS)) ...[
-              ElevatedButton(
-                onPressed: () => _activate(
-                  apple: const AppleDebugProvider(),
-                ),
-                child: const Text('activate(Apple Debug)'),
-              ),
-              ElevatedButton(
-                onPressed: () => _activate(
-                  apple: const AppleDeviceCheckProvider(),
-                ),
-                child: const Text('activate(Apple DeviceCheck)'),
-              ),
+              child: const Text('activate(PlayIntegrity / DeviceCheck)'),
+            ),
+            if (!kIsWeb)
               ElevatedButton(
                 onPressed: () => _activate(
                   apple: const AppleAppAttestProvider(),
                 ),
-                child: const Text('activate(Apple AppAttest)'),
+                child: const Text('activate(AppAttest)'),
               ),
+            if (!kIsWeb)
               ElevatedButton(
                 onPressed: () => _activate(
                   apple: const AppleAppAttestWithDeviceCheckFallbackProvider(),
                 ),
                 child: const Text(
-                  'activate(Apple AppAttest + DeviceCheck fallback)',
+                  'activate(AppAttest + DeviceCheck fallback)',
                 ),
               ),
-              if (defaultTargetPlatform == TargetPlatform.iOS) ...[
-                const SizedBox(height: 8),
-                ElevatedButton(
-                  onPressed: () => _activate(
-                    apple: const AppleReCaptchaProvider(),
-                  ),
-                  child: const Text('activate(Apple reCAPTCHA)'),
-                ),
-              ],
-            ],
-            if (!kIsWeb && defaultTargetPlatform == TargetPlatform.windows) ...[
-              ElevatedButton(
-                onPressed: () => _activate(
-                  windows: WindowsDebugProvider(
-                    debugToken: kWindowsDebugToken.isNotEmpty
-                        ? kWindowsDebugToken
-                        : null,
-                  ),
-                ),
-                child: const Text('activate(Windows Debug)'),
-              ),
-            ],
             const SizedBox(height: 16),
             const Text(
               'Actions',
@@ -305,7 +226,7 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
               child: const Text('Test Firestore with App Check'),
             ),
             const SizedBox(height: 20),
-            SelectableText(
+            Text(
               _message,
               style: const TextStyle(
                 color: Color.fromRGBO(47, 79, 79, 1),
@@ -313,7 +234,7 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
               ),
             ),
             const SizedBox(height: 20),
-            SelectableText(
+            Text(
               'Token from onTokenChange: $_eventToken',
               style: const TextStyle(
                 color: Color.fromRGBO(128, 0, 128, 1),
