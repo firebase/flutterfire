@@ -4,16 +4,6 @@ version '1.0-SNAPSHOT'
 apply plugin: 'com.android.library'
 apply from: file("local-config.gradle")
 
-// AGP 9+ has built-in Kotlin support unless Flutter opts out via android.builtInKotlin=false.
-def agpMajor = com.android.Version.ANDROID_GRADLE_PLUGIN_VERSION.tokenize('.')[0] as int
-def builtInKotlin = providers.gradleProperty("android.builtInKotlin")
-        .map { it.toBoolean() }
-        .orElse(agpMajor >= 9)
-        .get()
-if (agpMajor < 9 || !builtInKotlin) {
-  apply plugin: 'kotlin-android'
-}
-
 buildscript {
     repositories {
         google()
@@ -46,10 +36,8 @@ android {
     }
 }
 
-plugins.withId("org.jetbrains.kotlin.android") {
-  kotlin {
+kotlin {
     compilerOptions {
-      jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.fromTarget(project.ext.javaVersion.toString())
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.fromTarget(project.ext.javaVersion.toString())
     }
-  }
 }
