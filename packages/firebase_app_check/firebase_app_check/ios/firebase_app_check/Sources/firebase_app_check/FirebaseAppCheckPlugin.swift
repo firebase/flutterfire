@@ -340,7 +340,9 @@ class AppCheckProviderWrapper: NSObject, AppCheckProvider {
       #if os(iOS)
         delegateProvider = RecaptchaProvider(app: app)
         if delegateProvider == nil {
-          print("Firebase App Check: failed to initialize RecaptchaProvider. Ensure site key is in GoogleService-Info.plist.")
+          print(
+            "Firebase App Check: failed to initialize RecaptchaProvider. Ensure site key is in GoogleService-Info.plist."
+          )
         }
       #else
         print("Firebase App Check: reCAPTCHA is only supported on iOS.")

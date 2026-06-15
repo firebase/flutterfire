@@ -65,8 +65,7 @@ class FirebaseAppCheckPlugin : FlutterFirebasePlugin, FlutterPlugin, FirebaseApp
         }
         "recaptcha" -> {
           firebaseAppCheck.installAppCheckProviderFactory(
-            RecaptchaAppCheckProviderFactory.getInstance()
-          )
+              RecaptchaAppCheckProviderFactory.getInstance())
         }
         else -> {
           firebaseAppCheck.installAppCheckProviderFactory(
