@@ -89,7 +89,7 @@ void main() {
 }
 
 void runAllTests() {
-  firebase_core.main();
+  firebase_core.main(includeRecaptchaTests: false);
   firebase_ai.main();
   firebase_auth.main();
   firebase_database.main();
@@ -103,4 +103,5 @@ void runAllTests() {
   firebase_remote_config.main();
   firebase_storage.main();
   firebase_app_check.main();
+  firebase_core.recaptchaMain();
 }

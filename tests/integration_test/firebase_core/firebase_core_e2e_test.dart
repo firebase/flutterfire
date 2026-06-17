@@ -9,7 +9,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:tests/firebase_options.dart';
 
-void main() {
+void main({bool includeRecaptchaTests = true}) {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('firebase_core', () {
@@ -81,6 +81,22 @@ void main() {
       } finally {
         await app.setAutomaticResourceManagementEnabled(false);
       }
+    });
+  });
+
+  if (includeRecaptchaTests) {
+    recaptchaMain();
+  }
+}
+
+void recaptchaMain() {
+  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+
+  group('firebase_core recaptcha', () {
+    setUpAll(() async {
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
     });
 
     test('Firebase.initializeApp with recaptchaSiteKey', () async {
