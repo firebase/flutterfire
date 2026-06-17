@@ -101,7 +101,12 @@ void recaptchaMain() {
 
     test('Firebase.initializeApp with recaptchaSiteKey', () async {
       String appName = 'recaptcha-test-app';
-      FirebaseOptions options = DefaultFirebaseOptions.currentPlatform.copyWith(
+      FirebaseOptions options = (defaultTargetPlatform == TargetPlatform.android
+              ? DefaultFirebaseOptions.currentPlatform.copyWith(
+                  appId: '1:1234567890:android:fedcba0987654321fedcba',
+                )
+              : DefaultFirebaseOptions.currentPlatform)
+          .copyWith(
         recaptchaSiteKey: 'test-recaptcha-site-key',
       );
 
