@@ -1,3 +1,9 @@
+## 3.9.0
+
+ - **FEAT**(appcheck): appcheck reCAPTCHA mobile support (gradually rolling out) ([#18261](https://github.com/firebase/flutterfire/issues/18261)). ([036a860a](https://github.com/firebase/flutterfire/commit/036a860a0e66d46b5c57eb3df3a0f9e5846ef00b))
+ - **FEAT**(core): bump Firebase web SDK to 12.15.0 ([#18376](https://github.com/firebase/flutterfire/issues/18376)). ([22eb4d5d](https://github.com/firebase/flutterfire/commit/22eb4d5d0f3f14207e080e9c9fc8373052258ef4))
+ - **FEAT**(core): Add Recaptcha Site Key to FirebaseOptions ([#18334](https://github.com/firebase/flutterfire/issues/18334)). ([57be7027](https://github.com/firebase/flutterfire/commit/57be702778d34b9b7e86b40817d93acaec4c3ca4))
+
 ## 3.8.0
 
  - **FEAT**(core): bump Firebase web SDK to 12.14.0 ([#18331](https://github.com/firebase/flutterfire/issues/18331)). ([3f31a88a](https://github.com/firebase/flutterfire/commit/3f31a88ab6ad96914f427e292b919b6465cf4996))

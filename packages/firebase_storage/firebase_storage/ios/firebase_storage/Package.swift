@@ -7,7 +7,7 @@
 
 import PackageDescription
 
-let libraryVersion = "13.4.2"
+let libraryVersion = "13.4.3"
 let firebaseSdkVersion: Version = "12.15.0"
 
 let package = Package(

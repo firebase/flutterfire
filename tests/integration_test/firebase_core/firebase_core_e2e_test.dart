@@ -9,7 +9,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:tests/firebase_options.dart';
 
-void main() {
+void main({bool includeRecaptchaTests = true}) {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('firebase_core', () {
@@ -76,12 +76,37 @@ void main() {
     test('FirebaseApp.setAutomaticResourceManagementEnabled()', () async {
       FirebaseApp app = Firebase.app(testAppName);
 
-      await app.setAutomaticResourceManagementEnabled(true);
+      try {
+        await app.setAutomaticResourceManagementEnabled(true);
+      } finally {
+        await app.setAutomaticResourceManagementEnabled(false);
+      }
+    });
+  });
+
+  if (includeRecaptchaTests) {
+    recaptchaMain();
+  }
+}
+
+void recaptchaMain() {
+  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+
+  group('firebase_core recaptcha', () {
+    setUpAll(() async {
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
     });
 
     test('Firebase.initializeApp with recaptchaSiteKey', () async {
       String appName = 'recaptcha-test-app';
-      FirebaseOptions options = DefaultFirebaseOptions.currentPlatform.copyWith(
+      FirebaseOptions options = (defaultTargetPlatform == TargetPlatform.android
+              ? DefaultFirebaseOptions.currentPlatform.copyWith(
+                  appId: '1:1234567890:android:fedcba0987654321fedcba',
+                )
+              : DefaultFirebaseOptions.currentPlatform)
+          .copyWith(
         recaptchaSiteKey: 'test-recaptcha-site-key',
       );
 

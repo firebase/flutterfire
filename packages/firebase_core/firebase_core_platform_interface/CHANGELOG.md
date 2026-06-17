@@ -1,3 +1,8 @@
+## 7.1.0
+
+ - **FEAT**(appcheck): appcheck reCAPTCHA mobile support (gradually rolling out) ([#18261](https://github.com/firebase/flutterfire/issues/18261)). ([036a860a](https://github.com/firebase/flutterfire/commit/036a860a0e66d46b5c57eb3df3a0f9e5846ef00b))
+ - **FEAT**(core): Add Recaptcha Site Key to FirebaseOptions ([#18334](https://github.com/firebase/flutterfire/issues/18334)). ([57be7027](https://github.com/firebase/flutterfire/commit/57be702778d34b9b7e86b40817d93acaec4c3ca4))
+
 ## 7.0.1
 
  - **FIX**(core,iOS): use namespaced iOS Pigeon header import ([#18281](https://github.com/firebase/flutterfire/issues/18281)). ([7c1257e7](https://github.com/firebase/flutterfire/commit/7c1257e7295f9ba67f3f5820493f105a14d34d52))
