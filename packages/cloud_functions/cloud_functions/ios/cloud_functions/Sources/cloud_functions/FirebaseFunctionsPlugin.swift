@@ -21,8 +21,7 @@ extension FlutterError: Error {}
 let kFLTFirebaseFunctionsChannelName = "plugins.flutter.io/firebase_functions"
 
 public class FirebaseFunctionsPlugin: NSObject, FLTFirebasePluginProtocol, FlutterPlugin,
-  CloudFunctionsHostApi
-{
+  CloudFunctionsHostApi {
   func call(arguments: [String: Any?], completion: @escaping (Result<Any?, any Error>) -> Void) {
     httpsFunctionCall(arguments: arguments) { result, error in
       if let error {
@@ -33,10 +32,8 @@ public class FirebaseFunctionsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
     }
   }
 
-  func registerEventChannel(
-    arguments: [String: Any],
-    completion: @escaping (Result<Void, any Error>) -> Void
-  ) {
+  func registerEventChannel(arguments: [String: Any],
+                            completion: @escaping (Result<Void, any Error>) -> Void) {
     let eventChannelId = arguments["eventChannelId"]!
     let eventChannelName = "\(kFLTFirebaseFunctionsChannelName)/\(eventChannelId)"
     let eventChannel = FlutterEventChannel(name: eventChannelName, binaryMessenger: binaryMessenger)
@@ -84,10 +81,8 @@ public class FirebaseFunctionsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
     CloudFunctionsHostApiSetup.setUp(binaryMessenger: binaryMessenger, api: instance)
   }
 
-  private func httpsFunctionCall(
-    arguments: [String: Any],
-    completion: @escaping (Any?, FlutterError?) -> Void
-  ) {
+  private func httpsFunctionCall(arguments: [String: Any],
+                                 completion: @escaping (Any?, FlutterError?) -> Void) {
     let appName = arguments["appName"] as? String ?? ""
     let functionName = arguments["functionName"] as? String
     let functionUri = arguments["functionUri"] as? String
@@ -102,10 +97,9 @@ public class FirebaseFunctionsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
     let functions = Functions.functions(app: app, region: region ?? "")
 
     if let origin, !origin.isEmpty,
-      let url = URL(string: origin),
-      let host = url.host,
-      let port = url.port
-    {
+       let url = URL(string: origin),
+       let host = url.host,
+       let port = url.port {
       functions.useEmulator(withHost: host, port: port)
     }
 
@@ -116,8 +110,7 @@ public class FirebaseFunctionsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
     if let functionName, !functionName.isEmpty {
       function = functions.httpsCallable(functionName, options: options)
     } else if let functionUri, !functionUri.isEmpty,
-      let url = URL(string: functionUri)
-    {
+              let url = URL(string: functionUri) {
       function = functions.httpsCallable(url, options: options)
     } else {
       completion(

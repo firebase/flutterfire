@@ -263,16 +263,13 @@ protocol FirebaseRemoteConfigHostApi {
   func fetch(appName: String, completion: @escaping (Result<Void, Error>) -> Void)
   func fetchAndActivate(appName: String, completion: @escaping (Result<Bool, Error>) -> Void)
   func activate(appName: String, completion: @escaping (Result<Bool, Error>) -> Void)
-  func setConfigSettings(
-    appName: String, settings: RemoteConfigPigeonSettings,
-    completion: @escaping (Result<Void, Error>) -> Void)
-  func setDefaults(
-    appName: String, defaultParameters: [String: Any?],
-    completion: @escaping (Result<Void, Error>) -> Void)
+  func setConfigSettings(appName: String, settings: RemoteConfigPigeonSettings,
+                         completion: @escaping (Result<Void, Error>) -> Void)
+  func setDefaults(appName: String, defaultParameters: [String: Any?],
+                   completion: @escaping (Result<Void, Error>) -> Void)
   func ensureInitialized(appName: String, completion: @escaping (Result<Void, Error>) -> Void)
-  func setCustomSignals(
-    appName: String, customSignals: [String: Any?],
-    completion: @escaping (Result<Void, Error>) -> Void)
+  func setCustomSignals(appName: String, customSignals: [String: Any?],
+                        completion: @escaping (Result<Void, Error>) -> Void)
   func getAll(appName: String, completion: @escaping (Result<[String: Any?], Error>) -> Void)
   func getProperties(appName: String, completion: @escaping (Result<[String: Any], Error>) -> Void)
 }
@@ -285,14 +282,12 @@ class FirebaseRemoteConfigHostApiSetup {
 
   /// Sets up an instance of `FirebaseRemoteConfigHostApi` to handle messages through the
   /// `binaryMessenger`.
-  static func setUp(
-    binaryMessenger: FlutterBinaryMessenger, api: FirebaseRemoteConfigHostApi?,
-    messageChannelSuffix: String = ""
-  ) {
+  static func setUp(binaryMessenger: FlutterBinaryMessenger, api: FirebaseRemoteConfigHostApi?,
+                    messageChannelSuffix: String = "") {
     let channelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
     let fetchChannel = FlutterBasicMessageChannel(
       name:
-        "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.fetch\(channelSuffix)",
+      "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.fetch\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -314,7 +309,7 @@ class FirebaseRemoteConfigHostApiSetup {
     }
     let fetchAndActivateChannel = FlutterBasicMessageChannel(
       name:
-        "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.fetchAndActivate\(channelSuffix)",
+      "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.fetchAndActivate\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -336,7 +331,7 @@ class FirebaseRemoteConfigHostApiSetup {
     }
     let activateChannel = FlutterBasicMessageChannel(
       name:
-        "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.activate\(channelSuffix)",
+      "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.activate\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -358,7 +353,7 @@ class FirebaseRemoteConfigHostApiSetup {
     }
     let setConfigSettingsChannel = FlutterBasicMessageChannel(
       name:
-        "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.setConfigSettings\(channelSuffix)",
+      "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.setConfigSettings\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -381,7 +376,7 @@ class FirebaseRemoteConfigHostApiSetup {
     }
     let setDefaultsChannel = FlutterBasicMessageChannel(
       name:
-        "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.setDefaults\(channelSuffix)",
+      "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.setDefaults\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -404,7 +399,7 @@ class FirebaseRemoteConfigHostApiSetup {
     }
     let ensureInitializedChannel = FlutterBasicMessageChannel(
       name:
-        "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.ensureInitialized\(channelSuffix)",
+      "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.ensureInitialized\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -426,7 +421,7 @@ class FirebaseRemoteConfigHostApiSetup {
     }
     let setCustomSignalsChannel = FlutterBasicMessageChannel(
       name:
-        "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.setCustomSignals\(channelSuffix)",
+      "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.setCustomSignals\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -449,7 +444,7 @@ class FirebaseRemoteConfigHostApiSetup {
     }
     let getAllChannel = FlutterBasicMessageChannel(
       name:
-        "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.getAll\(channelSuffix)",
+      "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.getAll\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -471,7 +466,7 @@ class FirebaseRemoteConfigHostApiSetup {
     }
     let getPropertiesChannel = FlutterBasicMessageChannel(
       name:
-        "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.getProperties\(channelSuffix)",
+      "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.getProperties\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )

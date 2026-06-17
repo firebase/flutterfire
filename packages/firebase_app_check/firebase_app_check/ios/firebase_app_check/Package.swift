@@ -12,14 +12,17 @@ let firebaseSdkVersion: Version = "12.14.0"
 let package = Package(
   name: "firebase_app_check",
   platforms: [
-    .iOS("15.0")
+    .iOS("15.0"),
   ],
   products: [
-    .library(name: "firebase-app-check", targets: ["firebase_app_check"])
+    .library(name: "firebase-app-check", targets: ["firebase_app_check"]),
   ],
   dependencies: [
     .package(url: "https://github.com/firebase/firebase-ios-sdk", exact: firebaseSdkVersion),
-    .package(url: "https://github.com/GoogleCloudPlatform/recaptcha-enterprise-mobile-sdk.git", from: "18.0.0"),
+    .package(
+      url: "https://github.com/GoogleCloudPlatform/recaptcha-enterprise-mobile-sdk.git",
+      from: "18.0.0"
+    ),
     .package(name: "firebase_core", path: "../firebase_core"),
   ],
   targets: [
@@ -31,8 +34,8 @@ let package = Package(
         .product(name: "firebase-core", package: "firebase_core"),
       ],
       resources: [
-        .process("Resources")
+        .process("Resources"),
       ]
-    )
+    ),
   ]
 )

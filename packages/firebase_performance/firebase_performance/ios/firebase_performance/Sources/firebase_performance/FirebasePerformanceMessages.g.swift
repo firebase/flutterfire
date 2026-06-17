@@ -393,20 +393,16 @@ class FirebasePerformanceMessagesPigeonCodec: FlutterStandardMessageCodec, @unch
 
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol FirebasePerformanceHostApi {
-  func setPerformanceCollectionEnabled(
-    enabled: Bool,
-    completion: @escaping (Result<Void, Error>) -> Void)
+  func setPerformanceCollectionEnabled(enabled: Bool,
+                                       completion: @escaping (Result<Void, Error>) -> Void)
   func isPerformanceCollectionEnabled(completion: @escaping (Result<Bool, Error>) -> Void)
   func startTrace(name: String, completion: @escaping (Result<Int64, Error>) -> Void)
-  func stopTrace(
-    handle: Int64, attributes: TraceAttributes,
-    completion: @escaping (Result<Void, Error>) -> Void)
-  func startHttpMetric(
-    options: HttpMetricOptions,
-    completion: @escaping (Result<Int64, Error>) -> Void)
-  func stopHttpMetric(
-    handle: Int64, attributes: HttpMetricAttributes,
-    completion: @escaping (Result<Void, Error>) -> Void)
+  func stopTrace(handle: Int64, attributes: TraceAttributes,
+                 completion: @escaping (Result<Void, Error>) -> Void)
+  func startHttpMetric(options: HttpMetricOptions,
+                       completion: @escaping (Result<Int64, Error>) -> Void)
+  func stopHttpMetric(handle: Int64, attributes: HttpMetricAttributes,
+                      completion: @escaping (Result<Void, Error>) -> Void)
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -417,14 +413,12 @@ class FirebasePerformanceHostApiSetup {
 
   /// Sets up an instance of `FirebasePerformanceHostApi` to handle messages through the
   /// `binaryMessenger`.
-  static func setUp(
-    binaryMessenger: FlutterBinaryMessenger, api: FirebasePerformanceHostApi?,
-    messageChannelSuffix: String = ""
-  ) {
+  static func setUp(binaryMessenger: FlutterBinaryMessenger, api: FirebasePerformanceHostApi?,
+                    messageChannelSuffix: String = "") {
     let channelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
     let setPerformanceCollectionEnabledChannel = FlutterBasicMessageChannel(
       name:
-        "dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.setPerformanceCollectionEnabled\(channelSuffix)",
+      "dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.setPerformanceCollectionEnabled\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -446,7 +440,7 @@ class FirebasePerformanceHostApiSetup {
     }
     let isPerformanceCollectionEnabledChannel = FlutterBasicMessageChannel(
       name:
-        "dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.isPerformanceCollectionEnabled\(channelSuffix)",
+      "dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.isPerformanceCollectionEnabled\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -466,7 +460,7 @@ class FirebasePerformanceHostApiSetup {
     }
     let startTraceChannel = FlutterBasicMessageChannel(
       name:
-        "dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.startTrace\(channelSuffix)",
+      "dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.startTrace\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -488,7 +482,7 @@ class FirebasePerformanceHostApiSetup {
     }
     let stopTraceChannel = FlutterBasicMessageChannel(
       name:
-        "dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.stopTrace\(channelSuffix)",
+      "dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.stopTrace\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -511,7 +505,7 @@ class FirebasePerformanceHostApiSetup {
     }
     let startHttpMetricChannel = FlutterBasicMessageChannel(
       name:
-        "dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.startHttpMetric\(channelSuffix)",
+      "dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.startHttpMetric\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -533,7 +527,7 @@ class FirebasePerformanceHostApiSetup {
     }
     let stopHttpMetricChannel = FlutterBasicMessageChannel(
       name:
-        "dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.stopHttpMetric\(channelSuffix)",
+      "dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.stopHttpMetric\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )

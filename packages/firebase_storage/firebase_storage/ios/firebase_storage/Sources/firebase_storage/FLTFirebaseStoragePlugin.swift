@@ -63,10 +63,8 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
     return Storage.storage(app: firApp, url: base)
   }
 
-  private func ref(
-    app: InternalStorageFirebaseApp,
-    reference: InternalStorageReference
-  ) -> StorageReference {
+  private func ref(app: InternalStorageFirebaseApp,
+                   reference: InternalStorageReference) -> StorageReference {
     storage(app: app).reference(withPath: reference.fullPath)
   }
 
@@ -74,10 +72,8 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
     InternalStorageReference(bucket: ref.bucket, fullPath: ref.fullPath, name: ref.name)
   }
 
-  func getReferencebyPath(
-    app: InternalStorageFirebaseApp, path: String, bucket: String?,
-    completion: @escaping (Result<InternalStorageReference, Error>) -> Void
-  ) {
+  func getReferencebyPath(app: InternalStorageFirebaseApp, path: String, bucket: String?,
+                          completion: @escaping (Result<InternalStorageReference, Error>) -> Void) {
     let r = storage(app: app).reference(withPath: path)
     completion(
       .success(
@@ -90,34 +86,26 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
     )
   }
 
-  func setMaxOperationRetryTime(
-    app: InternalStorageFirebaseApp, time: Int64,
-    completion: @escaping (Result<Void, Error>) -> Void
-  ) {
+  func setMaxOperationRetryTime(app: InternalStorageFirebaseApp, time: Int64,
+                                completion: @escaping (Result<Void, Error>) -> Void) {
     storage(app: app).maxOperationRetryTime = TimeInterval(Double(time) / 1000.0)
     completion(.success(()))
   }
 
-  func setMaxUploadRetryTime(
-    app: InternalStorageFirebaseApp, time: Int64,
-    completion: @escaping (Result<Void, Error>) -> Void
-  ) {
+  func setMaxUploadRetryTime(app: InternalStorageFirebaseApp, time: Int64,
+                             completion: @escaping (Result<Void, Error>) -> Void) {
     storage(app: app).maxUploadRetryTime = TimeInterval(Double(time) / 1000.0)
     completion(.success(()))
   }
 
-  func setMaxDownloadRetryTime(
-    app: InternalStorageFirebaseApp, time: Int64,
-    completion: @escaping (Result<Void, Error>) -> Void
-  ) {
+  func setMaxDownloadRetryTime(app: InternalStorageFirebaseApp, time: Int64,
+                               completion: @escaping (Result<Void, Error>) -> Void) {
     storage(app: app).maxDownloadRetryTime = TimeInterval(Double(time) / 1000.0)
     completion(.success(()))
   }
 
-  func useStorageEmulator(
-    app: InternalStorageFirebaseApp, host: String, port: Int64,
-    completion: @escaping (Result<Void, Error>) -> Void
-  ) {
+  func useStorageEmulator(app: InternalStorageFirebaseApp, host: String, port: Int64,
+                          completion: @escaping (Result<Void, Error>) -> Void) {
     guard emulatorBooted[app.bucket] == nil else {
       completion(.success(()))
       return
@@ -128,10 +116,8 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
     completion(.success(()))
   }
 
-  func referenceDelete(
-    app: InternalStorageFirebaseApp, reference: InternalStorageReference,
-    completion: @escaping (Result<Void, Error>) -> Void
-  ) {
+  func referenceDelete(app: InternalStorageFirebaseApp, reference: InternalStorageReference,
+                       completion: @escaping (Result<Void, Error>) -> Void) {
     ref(app: app, reference: reference).delete { error in
       if let e = error {
         completion(.failure(self.toFlutterError(e)))
@@ -141,10 +127,8 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
     }
   }
 
-  func referenceGetDownloadURL(
-    app: InternalStorageFirebaseApp, reference: InternalStorageReference,
-    completion: @escaping (Result<String, Error>) -> Void
-  ) {
+  func referenceGetDownloadURL(app: InternalStorageFirebaseApp, reference: InternalStorageReference,
+                               completion: @escaping (Result<String, Error>) -> Void) {
     ref(app: app, reference: reference).downloadURL { url, error in
       if let e = error {
         completion(.failure(self.toFlutterError(e)))
@@ -161,10 +145,8 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
     }
   }
 
-  func referenceGetMetaData(
-    app: InternalStorageFirebaseApp, reference: InternalStorageReference,
-    completion: @escaping (Result<InternalFullMetaData, Error>) -> Void
-  ) {
+  func referenceGetMetaData(app: InternalStorageFirebaseApp, reference: InternalStorageReference,
+                            completion: @escaping (Result<InternalFullMetaData, Error>) -> Void) {
     ref(app: app, reference: reference).getMetadata { md, error in
       if let e = error {
         completion(.failure(self.toFlutterError(e)))
@@ -174,11 +156,9 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
     }
   }
 
-  func referenceList(
-    app: InternalStorageFirebaseApp, reference: InternalStorageReference,
-    options: InternalListOptions,
-    completion: @escaping (Result<InternalListResult, Error>) -> Void
-  ) {
+  func referenceList(app: InternalStorageFirebaseApp, reference: InternalStorageReference,
+                     options: InternalListOptions,
+                     completion: @escaping (Result<InternalListResult, Error>) -> Void) {
     let r = ref(app: app, reference: reference)
     let block: (StorageListResult?, Error?) -> Void = { list, error in
       if let e = error {
@@ -194,10 +174,8 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
     }
   }
 
-  func referenceListAll(
-    app: InternalStorageFirebaseApp, reference: InternalStorageReference,
-    completion: @escaping (Result<InternalListResult, Error>) -> Void
-  ) {
+  func referenceListAll(app: InternalStorageFirebaseApp, reference: InternalStorageReference,
+                        completion: @escaping (Result<InternalListResult, Error>) -> Void) {
     ref(app: app, reference: reference).listAll { list, error in
       if let e = error {
         completion(.failure(self.toFlutterError(e)))
@@ -207,11 +185,9 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
     }
   }
 
-  func referenceGetData(
-    app: InternalStorageFirebaseApp, reference: InternalStorageReference,
-    maxSize: Int64,
-    completion: @escaping (Result<FlutterStandardTypedData?, Error>) -> Void
-  ) {
+  func referenceGetData(app: InternalStorageFirebaseApp, reference: InternalStorageReference,
+                        maxSize: Int64,
+                        completion: @escaping (Result<FlutterStandardTypedData?, Error>) -> Void) {
     ref(app: app, reference: reference).getData(maxSize: maxSize) { data, error in
       if let e = error {
         completion(.failure(self.toFlutterError(e)))
@@ -223,11 +199,9 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
     }
   }
 
-  func referencePutData(
-    app: InternalStorageFirebaseApp, reference: InternalStorageReference,
-    data: FlutterStandardTypedData, settableMetaData: InternalSettableMetadata,
-    handle: Int64, completion: @escaping (Result<String, Error>) -> Void
-  ) {
+  func referencePutData(app: InternalStorageFirebaseApp, reference: InternalStorageReference,
+                        data: FlutterStandardTypedData, settableMetaData: InternalSettableMetadata,
+                        handle: Int64, completion: @escaping (Result<String, Error>) -> Void) {
     let r = ref(app: app, reference: reference)
     let task = r.putData(data.data, metadata: toMeta(settableMetaData))
     completion(
@@ -242,11 +216,9 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
     )
   }
 
-  func referencePutString(
-    app: InternalStorageFirebaseApp, reference: InternalStorageReference,
-    data: String, format: Int64, settableMetaData: InternalSettableMetadata,
-    handle: Int64, completion: @escaping (Result<String, Error>) -> Void
-  ) {
+  func referencePutString(app: InternalStorageFirebaseApp, reference: InternalStorageReference,
+                          data: String, format: Int64, settableMetaData: InternalSettableMetadata,
+                          handle: Int64, completion: @escaping (Result<String, Error>) -> Void) {
     let r = ref(app: app, reference: reference)
     let d: Data
     if format == 1 {
@@ -274,12 +246,10 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
     )
   }
 
-  func referencePutFile(
-    app: InternalStorageFirebaseApp, reference: InternalStorageReference,
-    filePath: String, settableMetaData: InternalSettableMetadata?,
-    handle: Int64,
-    completion: @escaping (Result<String, Error>) -> Void
-  ) {
+  func referencePutFile(app: InternalStorageFirebaseApp, reference: InternalStorageReference,
+                        filePath: String, settableMetaData: InternalSettableMetadata?,
+                        handle: Int64,
+                        completion: @escaping (Result<String, Error>) -> Void) {
     let r = ref(app: app, reference: reference)
     let url = URL(fileURLWithPath: filePath)
     let task: StorageUploadTask
@@ -300,11 +270,9 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
     )
   }
 
-  func referenceDownloadFile(
-    app: InternalStorageFirebaseApp, reference: InternalStorageReference,
-    filePath: String, handle: Int64,
-    completion: @escaping (Result<String, Error>) -> Void
-  ) {
+  func referenceDownloadFile(app: InternalStorageFirebaseApp, reference: InternalStorageReference,
+                             filePath: String, handle: Int64,
+                             completion: @escaping (Result<String, Error>) -> Void) {
     let r = ref(app: app, reference: reference)
     let url = URL(fileURLWithPath: filePath)
     let task = r.write(toFile: url)
@@ -320,13 +288,11 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
     )
   }
 
-  func referenceUpdateMetadata(
-    app: InternalStorageFirebaseApp, reference: InternalStorageReference,
-    metadata: InternalSettableMetadata,
-    completion:
-      @escaping (Result<InternalFullMetaData, Error>)
-      -> Void
-  ) {
+  func referenceUpdateMetadata(app: InternalStorageFirebaseApp, reference: InternalStorageReference,
+                               metadata: InternalSettableMetadata,
+                               completion:
+                               @escaping (Result<InternalFullMetaData, Error>)
+                                 -> Void) {
     ref(app: app, reference: reference).updateMetadata(toMeta(metadata)) { md, error in
       if let e = error {
         completion(.failure(self.toFlutterError(e)))
@@ -336,10 +302,8 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
     }
   }
 
-  func taskPause(
-    app: InternalStorageFirebaseApp, handle: Int64,
-    completion: @escaping (Result<[String: Any], Error>) -> Void
-  ) {
+  func taskPause(app: InternalStorageFirebaseApp, handle: Int64,
+                 completion: @escaping (Result<[String: Any], Error>) -> Void) {
     if let task = handleToTask[handle] as? StorageUploadTask {
       task.pause()
       completion(.success(["status": true, "snapshot": currentSnapshot(handle: handle)]))
@@ -351,10 +315,8 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
     }
   }
 
-  func taskResume(
-    app: InternalStorageFirebaseApp, handle: Int64,
-    completion: @escaping (Result<[String: Any], Error>) -> Void
-  ) {
+  func taskResume(app: InternalStorageFirebaseApp, handle: Int64,
+                  completion: @escaping (Result<[String: Any], Error>) -> Void) {
     if let task = handleToTask[handle] as? StorageUploadTask {
       task.resume()
       completion(.success(["status": true, "snapshot": currentSnapshot(handle: handle)]))
@@ -366,10 +328,8 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
     }
   }
 
-  func taskCancel(
-    app: InternalStorageFirebaseApp, handle: Int64,
-    completion: @escaping (Result<[String: Any], Error>) -> Void
-  ) {
+  func taskCancel(app: InternalStorageFirebaseApp, handle: Int64,
+                  completion: @escaping (Result<[String: Any], Error>) -> Void) {
     if let task = handleToTask[handle] as? StorageUploadTask {
       task.cancel()
       if let id = handleToIdentifier[handle] {
@@ -427,10 +387,8 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
     return InternalListResult(items: itemsOpt, pageToken: list.pageToken, prefixs: prefixesOpt)
   }
 
-  private func registerTask(
-    task: StorageObservableTask, appName: String, handle: Int64,
-    path: String
-  ) -> String {
+  private func registerTask(task: StorageObservableTask, appName: String, handle: Int64,
+                            path: String) -> String {
     let uuid = UUID().uuidString
     let channelName = "plugins.flutter.io/firebase_storage/taskEvent/\(uuid)"
     let channel = FlutterEventChannel(name: channelName, binaryMessenger: messenger!)

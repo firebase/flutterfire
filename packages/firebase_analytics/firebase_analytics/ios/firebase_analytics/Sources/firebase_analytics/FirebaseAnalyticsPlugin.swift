@@ -34,8 +34,7 @@ let FLTFirebaseAnalyticsChannelName = "plugins.flutter.io/firebase_analytics"
 extension FlutterError: Error {}
 
 public class FirebaseAnalyticsPlugin: NSObject, FLTFirebasePluginProtocol, FlutterPlugin,
-  FirebaseAnalyticsHostApi
-{
+  FirebaseAnalyticsHostApi {
   public static func register(with registrar: any FlutterPluginRegistrar) {
     let binaryMessenger: FlutterBinaryMessenger
 
@@ -64,18 +63,14 @@ public class FirebaseAnalyticsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
     completion(.success(()))
   }
 
-  func setUserProperty(
-    name: String, value: String?,
-    completion: @escaping (Result<Void, any Error>) -> Void
-  ) {
+  func setUserProperty(name: String, value: String?,
+                       completion: @escaping (Result<Void, any Error>) -> Void) {
     Analytics.setUserProperty(value, forName: name)
     completion(.success(()))
   }
 
-  func setAnalyticsCollectionEnabled(
-    enabled: Bool,
-    completion: @escaping (Result<Void, any Error>) -> Void
-  ) {
+  func setAnalyticsCollectionEnabled(enabled: Bool,
+                                     completion: @escaping (Result<Void, any Error>) -> Void) {
     Analytics.setAnalyticsCollectionEnabled(enabled)
     completion(.success(()))
   }
@@ -85,18 +80,14 @@ public class FirebaseAnalyticsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
     completion(.success(()))
   }
 
-  func setSessionTimeoutDuration(
-    timeout: Int64,
-    completion: @escaping (Result<Void, any Error>) -> Void
-  ) {
+  func setSessionTimeoutDuration(timeout: Int64,
+                                 completion: @escaping (Result<Void, any Error>) -> Void) {
     Analytics.setSessionTimeoutInterval(TimeInterval(timeout))
     completion(.success(()))
   }
 
-  func setConsent(
-    consent: [String: Bool?],
-    completion: @escaping (Result<Void, any Error>) -> Void
-  ) {
+  func setConsent(consent: [String: Bool?],
+                  completion: @escaping (Result<Void, any Error>) -> Void) {
     var parameters: [ConsentType: ConsentStatus] = [:]
     if let adStorage = consent[kFLTFirebaseAnalyticsAdStorageConsentGranted] as? Bool {
       parameters[.adStorage] = adStorage ? .granted : .denied
@@ -105,8 +96,7 @@ public class FirebaseAnalyticsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
       parameters[.analyticsStorage] = analyticsStorage ? .granted : .denied
     }
     if let adPersonalization =
-      consent[kFLTFirebaseAdPersonalizationSignalsConsentGranted] as? Bool
-    {
+      consent[kFLTFirebaseAdPersonalizationSignalsConsentGranted] as? Bool {
       parameters[.adPersonalization] = adPersonalization ? .granted : .denied
     }
     if let adUserData = consent[kFLTFirebaseAdUserDataConsentGranted] as? Bool {
@@ -116,10 +106,8 @@ public class FirebaseAnalyticsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
     completion(.success(()))
   }
 
-  func setDefaultEventParameters(
-    parameters: [String: Any?]?,
-    completion: @escaping (Result<Void, any Error>) -> Void
-  ) {
+  func setDefaultEventParameters(parameters: [String: Any?]?,
+                                 completion: @escaping (Result<Void, any Error>) -> Void) {
     Analytics.setDefaultEventParameters(parameters)
     completion(.success(()))
   }
@@ -139,12 +127,10 @@ public class FirebaseAnalyticsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
     }
   }
 
-  func initiateOnDeviceConversionMeasurement(
-    arguments: [String: String?],
-    completion:
-      @escaping (Result<Void, any Error>)
-      -> Void
-  ) {
+  func initiateOnDeviceConversionMeasurement(arguments: [String: String?],
+                                             completion:
+                                             @escaping (Result<Void, any Error>)
+                                               -> Void) {
     if let emailAddress = arguments["emailAddress"] as? String {
       Analytics.initiateOnDeviceConversionMeasurement(emailAddress: emailAddress)
     }
@@ -152,22 +138,18 @@ public class FirebaseAnalyticsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
       Analytics.initiateOnDeviceConversionMeasurement(phoneNumber: phoneNumber)
     }
     if let hashedEmailAddress = arguments["hashedEmailAddress"] as? String,
-      let data = hexStringToData(hashedEmailAddress)
-    {
+       let data = hexStringToData(hashedEmailAddress) {
       Analytics.initiateOnDeviceConversionMeasurement(hashedEmailAddress: data)
     }
     if let hashedPhoneNumber = arguments["hashedPhoneNumber"] as? String,
-      let data = hexStringToData(hashedPhoneNumber)
-    {
+       let data = hexStringToData(hashedPhoneNumber) {
       Analytics.initiateOnDeviceConversionMeasurement(hashedPhoneNumber: data)
     }
     completion(.success(()))
   }
 
-  func logTransaction(
-    transactionId: String,
-    completion: @escaping (Result<Void, any Error>) -> Void
-  ) {
+  func logTransaction(transactionId: String,
+                      completion: @escaping (Result<Void, any Error>) -> Void) {
     #if os(macOS)
       if #available(macOS 12.0, *) {
         logTransactionWithStoreKit(transactionId: transactionId, completion: completion)
@@ -204,10 +186,8 @@ public class FirebaseAnalyticsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
   #else
     @available(iOS 15.0, *)
   #endif
-  private func logTransactionWithStoreKit(
-    transactionId: String,
-    completion: @escaping (Result<Void, any Error>) -> Void
-  ) {
+  private func logTransactionWithStoreKit(transactionId: String,
+                                          completion: @escaping (Result<Void, any Error>) -> Void) {
     Task {
       do {
         guard let id = UInt64(transactionId) else {
@@ -264,9 +244,9 @@ public class FirebaseAnalyticsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
     var data = Data(capacity: length / 2)
     var index = hexString.startIndex
 
-    for _ in 0..<(length / 2) {
+    for _ in 0 ..< (length / 2) {
       let nextIndex = hexString.index(index, offsetBy: 2)
-      guard let byte = UInt8(hexString[index..<nextIndex], radix: 16) else {
+      guard let byte = UInt8(hexString[index ..< nextIndex], radix: 16) else {
         return nil
       }
       data.append(byte)

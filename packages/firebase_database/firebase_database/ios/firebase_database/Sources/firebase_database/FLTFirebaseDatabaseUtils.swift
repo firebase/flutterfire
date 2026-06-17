@@ -55,8 +55,7 @@ import Foundation
     }
 
     if let emulatorHost = arguments["emulatorHost"] as? String,
-      let emulatorPort = arguments["emulatorPort"] as? Int
-    {
+       let emulatorPort = arguments["emulatorPort"] as? Int {
       database.useEmulator(withHost: emulatorHost, port: emulatorPort)
     }
 
@@ -70,10 +69,8 @@ import Foundation
     return database.reference(withPath: path)
   }
 
-  private static func databaseQuery(
-    _ query: DatabaseQuery,
-    applyLimitModifier modifier: [String: Any]
-  ) -> DatabaseQuery {
+  private static func databaseQuery(_ query: DatabaseQuery,
+                                    applyLimitModifier modifier: [String: Any]) -> DatabaseQuery {
     let name = modifier["name"] as? String ?? ""
     let limit = modifier["limit"] as? UInt ?? 0
 
@@ -87,10 +84,8 @@ import Foundation
     }
   }
 
-  private static func databaseQuery(
-    _ query: DatabaseQuery,
-    applyOrderModifier modifier: [String: Any]
-  ) -> DatabaseQuery {
+  private static func databaseQuery(_ query: DatabaseQuery,
+                                    applyOrderModifier modifier: [String: Any]) -> DatabaseQuery {
     let name = modifier["name"] as? String ?? ""
 
     switch name {
@@ -108,10 +103,8 @@ import Foundation
     }
   }
 
-  private static func databaseQuery(
-    _ query: DatabaseQuery,
-    applyCursorModifier modifier: [String: Any]
-  ) -> DatabaseQuery {
+  private static func databaseQuery(_ query: DatabaseQuery,
+                                    applyCursorModifier modifier: [String: Any]) -> DatabaseQuery {
     let name = modifier["name"] as? String ?? ""
     let key = modifier["key"] as? String
     let value = modifier["value"]
@@ -168,10 +161,8 @@ import Foundation
     return query
   }
 
-  static func dictionary(
-    from snapshot: DataSnapshot,
-    withPreviousChildKey previousChildKey: String?
-  ) -> [String: Any] {
+  static func dictionary(from snapshot: DataSnapshot,
+                         withPreviousChildKey previousChildKey: String?) -> [String: Any] {
     [
       "snapshot": dictionary(from: snapshot),
       "previousChildKey": previousChildKey ?? NSNull(),

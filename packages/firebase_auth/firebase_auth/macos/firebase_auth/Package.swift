@@ -13,10 +13,10 @@ let firebaseSdkVersion: Version = "12.14.0"
 let package = Package(
   name: "firebase_auth",
   platforms: [
-    .macOS("10.15")
+    .macOS("10.15"),
   ],
   products: [
-    .library(name: "firebase-auth", targets: ["firebase_auth"])
+    .library(name: "firebase-auth", targets: ["firebase_auth"]),
   ],
   dependencies: [
     .package(url: "https://github.com/firebase/firebase-ios-sdk", exact: firebaseSdkVersion),
@@ -30,7 +30,7 @@ let package = Package(
         .product(name: "firebase-core", package: "firebase_core"),
       ],
       resources: [
-        .process("Resources")
+        .process("Resources"),
       ],
       cSettings: [
         .headerSearchPath("include/Private"),
@@ -38,6 +38,6 @@ let package = Package(
         .define("LIBRARY_VERSION", to: "\"\(libraryVersion)\""),
         .define("LIBRARY_NAME", to: "\"flutter-fire-auth\""),
       ]
-    )
+    ),
   ]
 )

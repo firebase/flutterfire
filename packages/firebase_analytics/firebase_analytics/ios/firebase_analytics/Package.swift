@@ -18,10 +18,10 @@ let analyticsProduct = useWithoutAdId ? "FirebaseAnalyticsCore" : "FirebaseAnaly
 let package = Package(
   name: "firebase_analytics",
   platforms: [
-    .iOS("15.0")
+    .iOS("15.0"),
   ],
   products: [
-    .library(name: "firebase-analytics", targets: ["firebase_analytics"])
+    .library(name: "firebase-analytics", targets: ["firebase_analytics"]),
   ],
   dependencies: [
     .package(url: "https://github.com/firebase/firebase-ios-sdk", exact: firebaseSdkVersion),
@@ -35,8 +35,8 @@ let package = Package(
         .product(name: "firebase-core", package: "firebase_core"),
       ],
       resources: [
-        .process("Resources")
+        .process("Resources"),
       ]
-    )
+    ),
   ]
 )
