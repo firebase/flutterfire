@@ -76,7 +76,11 @@ void main() {
     test('FirebaseApp.setAutomaticResourceManagementEnabled()', () async {
       FirebaseApp app = Firebase.app(testAppName);
 
-      await app.setAutomaticResourceManagementEnabled(true);
+      try {
+        await app.setAutomaticResourceManagementEnabled(true);
+      } finally {
+        await app.setAutomaticResourceManagementEnabled(false);
+      }
     });
 
     test('Firebase.initializeApp with recaptchaSiteKey', () async {
