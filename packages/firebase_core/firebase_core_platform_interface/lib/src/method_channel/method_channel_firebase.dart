@@ -107,6 +107,7 @@ class MethodChannelFirebase extends FirebasePlatform {
               iosClientId: _options.iosClientId,
               iosBundleId: _options.iosBundleId,
               appGroupId: _options.appGroupId,
+              recaptchaSiteKey: _options.recaptchaSiteKey,
             )));
         defaultApp = appInstances[defaultFirebaseAppName];
       }
@@ -173,6 +174,7 @@ class MethodChannelFirebase extends FirebasePlatform {
           iosClientId: options.iosClientId,
           iosBundleId: options.iosBundleId,
           appGroupId: options.appGroupId,
+          recaptchaSiteKey: options.recaptchaSiteKey,
         )));
     return appInstances[name]!;
   }

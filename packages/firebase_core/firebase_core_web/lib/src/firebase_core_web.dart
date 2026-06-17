@@ -334,7 +334,6 @@ class FirebaseCoreWeb extends FirebasePlatform {
 
         // At this point, there is no default app so we need to create it with
         // the users options.
-        // TODO(recaptchaSiteKey): Pass recaptchaSiteKey if supported.
         app = firebase.initializeApp(
           apiKey: options!.apiKey,
           authDomain: options.authDomain,
@@ -344,6 +343,7 @@ class FirebaseCoreWeb extends FirebasePlatform {
           messagingSenderId: options.messagingSenderId,
           appId: options.appId,
           measurementId: options.measurementId,
+          recaptchaSiteKey: options.recaptchaSiteKey,
         );
       }
     }
@@ -356,7 +356,6 @@ class FirebaseCoreWeb extends FirebasePlatform {
       );
 
       try {
-        // TODO(recaptchaSiteKey): Pass recaptchaSiteKey if supported.
         app = firebase.initializeApp(
           name: name,
           apiKey: options!.apiKey,
@@ -367,6 +366,7 @@ class FirebaseCoreWeb extends FirebasePlatform {
           messagingSenderId: options.messagingSenderId,
           appId: options.appId,
           measurementId: options.measurementId,
+          recaptchaSiteKey: options.recaptchaSiteKey,
         );
       } catch (e) {
         if (_getJSErrorCode(e as JSError) == 'app/duplicate-app') {
