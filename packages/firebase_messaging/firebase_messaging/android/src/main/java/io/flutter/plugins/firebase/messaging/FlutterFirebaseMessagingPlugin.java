@@ -424,12 +424,12 @@ public class FlutterFirebaseMessagingPlugin
     Task<?> methodCallTask;
 
     switch (call.method) {
-        // This message is sent when the Dart side of this plugin is told to initialize.
-        // In response, this (native) side of the plugin needs to spin up a background
-        // Dart isolate by using the given pluginCallbackHandle, and then setup a background
-        // method channel to communicate with the new background isolate. Once completed,
-        // this onMethodCall() method will receive messages from both the primary and background
-        // method channels.
+      // This message is sent when the Dart side of this plugin is told to initialize.
+      // In response, this (native) side of the plugin needs to spin up a background
+      // Dart isolate by using the given pluginCallbackHandle, and then setup a background
+      // method channel to communicate with the new background isolate. Once completed,
+      // this onMethodCall() method will receive messages from both the primary and background
+      // method channels.
       case "Messaging#startBackgroundIsolate":
         @SuppressWarnings("unchecked")
         Map<String, Object> arguments = ((Map<String, Object>) call.arguments);

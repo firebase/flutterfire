@@ -7,35 +7,35 @@
 
 import PackageDescription
 
-let libraryVersionString = "4.9.0"
-let firebaseSdkVersion: Version = "12.14.0"
+let libraryVersionString = "4.10.0"
+let firebaseSdkVersion: Version = "12.15.0"
 
 let package = Package(
   name: "firebase_core",
   platforms: [
-    .macOS("10.15"),
+    .macOS("10.15")
   ],
   products: [
-    .library(name: "firebase-core", targets: ["firebase_core"]),
+    .library(name: "firebase-core", targets: ["firebase_core"])
   ],
   dependencies: [
-    .package(url: "https://github.com/firebase/firebase-ios-sdk", exact: firebaseSdkVersion),
+    .package(url: "https://github.com/firebase/firebase-ios-sdk", exact: firebaseSdkVersion)
   ],
   targets: [
     .target(
       name: "firebase_core",
       dependencies: [
         // No product for firebase-core so we pull in the smallest one
-        .product(name: "FirebaseInstallations", package: "firebase-ios-sdk"),
+        .product(name: "FirebaseInstallations", package: "firebase-ios-sdk")
       ],
       resources: [
-        .process("Resources"),
+        .process("Resources")
       ],
       cSettings: [
         .headerSearchPath("include/firebase_core"),
         .define("LIBRARY_VERSION", to: "\"\(libraryVersionString)\""),
         .define("LIBRARY_NAME", to: "\"flutter-fire-core\""),
       ]
-    ),
+    )
   ]
 )

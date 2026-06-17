@@ -47,8 +47,10 @@ class IdChangedStreamHandler: NSObject, FlutterStreamHandler {
     }
   }
 
-  func onListen(withArguments _: Any?,
-                eventSink events: @escaping FlutterEventSink) -> FlutterError? {
+  func onListen(
+    withArguments _: Any?,
+    eventSink events: @escaping FlutterEventSink
+  ) -> FlutterError? {
     eventSink = events
 
     installationIDObserver = NotificationCenter.default.addObserver(

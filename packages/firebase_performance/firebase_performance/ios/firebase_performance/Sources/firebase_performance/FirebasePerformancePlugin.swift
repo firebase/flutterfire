@@ -22,7 +22,8 @@ let FirebasePerformanceChannelName = "plugins.flutter.io/firebase_performance"
 extension FlutterError: Error {}
 
 public class FirebasePerformancePlugin: NSObject, FlutterPlugin, FLTFirebasePluginProtocol,
-  FirebasePerformanceHostApi {
+  FirebasePerformanceHostApi
+{
   public func didReinitializeFirebaseCore(_ completion: @escaping () -> Void) {
     completion()
   }
@@ -60,8 +61,10 @@ public class FirebasePerformancePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
     FirebasePerformanceHostApiSetup.setUp(binaryMessenger: binaryMessenger, api: instance)
   }
 
-  public func setPerformanceCollectionEnabled(enabled: Bool,
-                                              completion: @escaping (Result<Void, Error>) -> Void) {
+  public func setPerformanceCollectionEnabled(
+    enabled: Bool,
+    completion: @escaping (Result<Void, Error>) -> Void
+  ) {
     Performance.sharedInstance().isDataCollectionEnabled = enabled
     completion(.success(()))
   }
@@ -79,8 +82,10 @@ public class FirebasePerformancePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
     completion(.success(Int64(traceHandle)))
   }
 
-  func stopTrace(handle: Int64, attributes: TraceAttributes,
-                 completion: @escaping (Result<Void, Error>) -> Void) {
+  func stopTrace(
+    handle: Int64, attributes: TraceAttributes,
+    completion: @escaping (Result<Void, Error>) -> Void
+  ) {
     guard let trace = traces[Int(handle)] else {
       completion(.success(()))
       return
@@ -103,8 +108,10 @@ public class FirebasePerformancePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
     completion(.success(()))
   }
 
-  func startHttpMetric(options: HttpMetricOptions,
-                       completion: @escaping (Result<Int64, Error>) -> Void) {
+  func startHttpMetric(
+    options: HttpMetricOptions,
+    completion: @escaping (Result<Int64, Error>) -> Void
+  ) {
     guard let url = URL(string: options.url) else {
       completion(.failure(FlutterError(code: "invalid-url", message: "Invalid url", details: nil)))
       return
@@ -130,8 +137,10 @@ public class FirebasePerformancePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
     completion(.success(Int64(httpMetricHandle)))
   }
 
-  func stopHttpMetric(handle: Int64, attributes: HttpMetricAttributes,
-                      completion: @escaping (Result<Void, Error>) -> Void) {
+  func stopHttpMetric(
+    handle: Int64, attributes: HttpMetricAttributes,
+    completion: @escaping (Result<Void, Error>) -> Void
+  ) {
     guard let httpMetric = httpMetrics[Int(handle)] else {
       completion(.success(()))
       return

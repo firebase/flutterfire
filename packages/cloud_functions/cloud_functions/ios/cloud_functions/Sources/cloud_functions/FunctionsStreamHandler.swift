@@ -19,8 +19,10 @@ class FunctionsStreamHandler: NSObject, FlutterStreamHandler {
     super.init()
   }
 
-  func onListen(withArguments arguments: Any?,
-                eventSink events: @escaping FlutterEventSink) -> FlutterError? {
+  func onListen(
+    withArguments arguments: Any?,
+    eventSink events: @escaping FlutterEventSink
+  ) -> FlutterError? {
     streamTask = Task {
       await httpsStreamCall(arguments: arguments, events: events)
     }
@@ -53,9 +55,10 @@ class FunctionsStreamHandler: NSObject, FlutterStreamHandler {
     let limitedUseAppCheckToken = arguments["limitedUseAppCheckToken"] as? Bool ?? false
 
     if let origin,
-       let url = URL(string: origin),
-       let host = url.host,
-       let port = url.port {
+      let url = URL(string: origin),
+      let host = url.host,
+      let port = url.port
+    {
       functions.useEmulator(withHost: host, port: port)
     }
 

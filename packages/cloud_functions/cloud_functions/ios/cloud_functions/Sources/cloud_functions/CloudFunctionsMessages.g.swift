@@ -88,8 +88,9 @@ class CloudFunctionsMessagesPigeonCodec: FlutterStandardMessageCodec, @unchecked
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol CloudFunctionsHostApi {
   func call(arguments: [String: Any?], completion: @escaping (Result<Any?, Error>) -> Void)
-  func registerEventChannel(arguments: [String: Any],
-                            completion: @escaping (Result<Void, Error>) -> Void)
+  func registerEventChannel(
+    arguments: [String: Any],
+    completion: @escaping (Result<Void, Error>) -> Void)
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -100,12 +101,14 @@ class CloudFunctionsHostApiSetup {
 
   /// Sets up an instance of `CloudFunctionsHostApi` to handle messages through the
   /// `binaryMessenger`.
-  static func setUp(binaryMessenger: FlutterBinaryMessenger, api: CloudFunctionsHostApi?,
-                    messageChannelSuffix: String = "") {
+  static func setUp(
+    binaryMessenger: FlutterBinaryMessenger, api: CloudFunctionsHostApi?,
+    messageChannelSuffix: String = ""
+  ) {
     let channelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
     let callChannel = FlutterBasicMessageChannel(
       name:
-      "dev.flutter.pigeon.cloud_functions_platform_interface.CloudFunctionsHostApi.call\(channelSuffix)",
+        "dev.flutter.pigeon.cloud_functions_platform_interface.CloudFunctionsHostApi.call\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -127,7 +130,7 @@ class CloudFunctionsHostApiSetup {
     }
     let registerEventChannelChannel = FlutterBasicMessageChannel(
       name:
-      "dev.flutter.pigeon.cloud_functions_platform_interface.CloudFunctionsHostApi.registerEventChannel\(channelSuffix)",
+        "dev.flutter.pigeon.cloud_functions_platform_interface.CloudFunctionsHostApi.registerEventChannel\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )

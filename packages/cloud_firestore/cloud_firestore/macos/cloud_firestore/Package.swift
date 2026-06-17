@@ -7,16 +7,16 @@
 
 import PackageDescription
 
-let libraryVersion = "6.4.1"
-let firebaseSdkVersion: Version = "12.14.0"
+let libraryVersion = "6.5.0"
+let firebaseSdkVersion: Version = "12.15.0"
 
 let package = Package(
   name: "cloud_firestore",
   platforms: [
-    .macOS("10.15"),
+    .macOS("10.15")
   ],
   products: [
-    .library(name: "cloud-firestore", targets: ["cloud_firestore"]),
+    .library(name: "cloud-firestore", targets: ["cloud_firestore"])
   ],
   dependencies: [
     .package(url: "https://github.com/firebase/firebase-ios-sdk", exact: firebaseSdkVersion),
@@ -30,7 +30,7 @@ let package = Package(
         .product(name: "firebase-core", package: "firebase_core"),
       ],
       resources: [
-        .process("Resources"),
+        .process("Resources")
       ],
       cSettings: [
         .headerSearchPath("include/cloud_firestore/Private"),
@@ -38,6 +38,6 @@ let package = Package(
         .define("LIBRARY_VERSION", to: "\"\(libraryVersion)\""),
         .define("LIBRARY_NAME", to: "\"flutter-fire-fst\""),
       ]
-    ),
+    )
   ]
 )
