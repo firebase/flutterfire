@@ -51,7 +51,7 @@ void main() {
       return;
     }
     if (kIsWeb) {
-      firebase_core.main();
+      firebase_core.main(includeRecaptchaTests: false);
       firebase_ai.main();
       firebase_auth.main();
       firebase_database.main();
@@ -64,6 +64,7 @@ void main() {
       firebase_performance.main();
       firebase_remote_config.main();
       firebase_storage.main();
+      firebase_core.recaptchaMain();
       return;
     }
 
