@@ -204,11 +204,17 @@ jobs:
       - uses: futureware-tech/simulator-action@e89aa8f93d3aec35083ff49d2854d07f7186f7f5
         id: simulator
         with:
+          # https://github.com/actions/runner-images/blob/main/images/macos/macos-15-Readme.md#installed-simulators
           model: "iPhone 16"
       - name: Build iOS (simulator)
         working-directory: packages/cloud_firestore/cloud_firestore/pipeline_example
         run: |
           flutter build ios --no-codesign --simulator --debug --target=./integration_test/pipeline/pipeline_live_test.dart --dart-define=CI=true
+      - name: Ensure Simulator Ready
+        env:
+          SIMULATOR: ${{ steps.simulator.outputs.udid }}
+          ENSURE_BOOT_IF_NEEDED: "0"
+        run: .github/workflows/scripts/ensure-simulator-ready.sh
       - name: Run pipeline E2E tests (iOS)
         working-directory: packages/cloud_firestore/cloud_firestore/pipeline_example
         env:

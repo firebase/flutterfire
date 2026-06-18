@@ -125,8 +125,13 @@ jobs:
       - uses: futureware-tech/simulator-action@e89aa8f93d3aec35083ff49d2854d07f7186f7f5
         id: simulator
         with:
-          # List of available simulators: https://github.com/actions/runner-images/blob/main/images/macos/macos-14-Readme.md#installed-simulators
+          # List of available simulators: https://github.com/actions/runner-images/blob/main/images/macos/macos-15-Readme.md#installed-simulators
           model: "iPhone 16"
+      - name: Ensure Simulator Ready
+        env:
+          SIMULATOR: ${{ steps.simulator.outputs.udid }}
+          ENSURE_BOOT_IF_NEEDED: "0"
+        run: .github/workflows/scripts/ensure-simulator-ready.sh
       - name: 'E2E Tests'
         working-directory: ${{ matrix.working_directory }}
         env:
