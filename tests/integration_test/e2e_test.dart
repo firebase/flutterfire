@@ -92,8 +92,9 @@ void main() {
 }
 
 void runAllTests() {
-  // Native platforms run the full suite, including App Check, in the standard
-  // package order.
+  // Native platforms run the full suite in package order, but keep the
+  // recaptcha core tests before App Check because Android App Check activation
+  // changes native recaptcha configuration for later secondary app checks.
   firebase_core.main(includeRecaptchaTests: false);
   firebase_ai.main();
   firebase_auth.main();
@@ -107,6 +108,6 @@ void runAllTests() {
   firebase_performance.main();
   firebase_remote_config.main();
   firebase_storage.main();
-  firebase_app_check.main();
   firebase_core.recaptchaMain();
+  firebase_app_check.main();
 }
