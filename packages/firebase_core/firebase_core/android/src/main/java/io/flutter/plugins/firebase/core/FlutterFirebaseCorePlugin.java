@@ -292,12 +292,10 @@ public class FlutterFirebaseCorePlugin
         () -> {
           try {
             FirebaseApp firebaseApp = FirebaseApp.getInstance(appName);
-            try {
-              firebaseApp.delete();
-            } catch (IllegalStateException appNotFoundException) {
-              // Ignore app not found exceptions.
-            }
-
+            firebaseApp.delete();
+            taskCompletionSource.setResult(null);
+          } catch (IllegalStateException appNotFoundException) {
+            // Ignore app not found exceptions.
             taskCompletionSource.setResult(null);
           } catch (Exception e) {
             taskCompletionSource.setException(e);
