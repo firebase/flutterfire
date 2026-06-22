@@ -1,3 +1,7 @@
+## 3.13.1
+
+ - Update a dependency to the latest release.
+
 ## 3.13.0
 
  - **FIX**(ai): firebase_ai server template image inputs passed as InlineDataPart were serialized as normal generative inlineData ([#18350](https://github.com/firebase/flutterfire/issues/18350)). ([f3c53792](https://github.com/firebase/flutterfire/commit/f3c53792f1acf19ab1c2c7c3d157fca3a183b5d1))
