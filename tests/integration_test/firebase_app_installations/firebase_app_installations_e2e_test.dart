@@ -20,6 +20,11 @@ void main() {
         await Firebase.initializeApp(
           options: DefaultFirebaseOptions.currentPlatform,
         );
+        if (defaultTargetPlatform == TargetPlatform.android) {
+          // Android Installations can deadlock if token/id APIs race native
+          // heartbeat initialization immediately after manual app init.
+          await Future<void>.delayed(const Duration(seconds: 2));
+        }
       });
 
       test(
@@ -45,6 +50,16 @@ void main() {
           expect(ids, isNotNull);
         },
         skip: defaultTargetPlatform == TargetPlatform.macOS && isCI,
+      );
+
+      test(
+        '.getToken',
+        () async {
+          final token = await FirebaseInstallations.instance.getToken();
+          expect(token, isNotEmpty);
+          // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
+        },
+        skip: defaultTargetPlatform == TargetPlatform.macOS,
       );
 
       test(
@@ -75,16 +90,6 @@ void main() {
             }
           }
           expect(newId, isNot(equals(id)));
-          // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
-        },
-        skip: defaultTargetPlatform == TargetPlatform.macOS,
-      );
-
-      test(
-        '.getToken',
-        () async {
-          final token = await FirebaseInstallations.instance.getToken();
-          expect(token, isNotEmpty);
           // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
         },
         skip: defaultTargetPlatform == TargetPlatform.macOS,
