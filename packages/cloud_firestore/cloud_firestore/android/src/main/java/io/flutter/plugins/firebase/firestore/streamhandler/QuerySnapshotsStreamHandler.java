@@ -19,6 +19,7 @@ import io.flutter.plugin.common.EventChannel.StreamHandler;
 import io.flutter.plugins.firebase.firestore.utils.ExceptionConverter;
 import io.flutter.plugins.firebase.firestore.utils.PigeonParser;
 import java.util.Map;
+import java.util.concurrent.Executor;
 
 public class QuerySnapshotsStreamHandler implements StreamHandler {
 
@@ -29,17 +30,20 @@ public class QuerySnapshotsStreamHandler implements StreamHandler {
   DocumentSnapshot.ServerTimestampBehavior serverTimestampBehavior;
 
   ListenSource source;
+  Executor snapshotExecutor;
 
   public QuerySnapshotsStreamHandler(
       Query query,
       Boolean includeMetadataChanges,
       DocumentSnapshot.ServerTimestampBehavior serverTimestampBehavior,
-      ListenSource source) {
+      ListenSource source,
+      Executor snapshotExecutor) {
     this.query = query;
     this.metadataChanges =
         includeMetadataChanges ? MetadataChanges.INCLUDE : MetadataChanges.EXCLUDE;
     this.serverTimestampBehavior = serverTimestampBehavior;
     this.source = source;
+    this.snapshotExecutor = snapshotExecutor;
   }
 
   @Override
@@ -47,6 +51,7 @@ public class QuerySnapshotsStreamHandler implements StreamHandler {
     SnapshotListenOptions.Builder optionsBuilder = new SnapshotListenOptions.Builder();
     optionsBuilder.setMetadataChanges(metadataChanges);
     optionsBuilder.setSource(source);
+    optionsBuilder.setExecutor(snapshotExecutor);
 
     listenerRegistration =
         query.addSnapshotListener(
@@ -63,8 +68,9 @@ public class QuerySnapshotsStreamHandler implements StreamHandler {
                 // nested `InternalDocumentSnapshot` / `InternalDocumentChange` /
                 // `InternalSnapshotMetadata` with their proper type codes. Pigeon 26
                 // no longer flattens nested types via `.toList()`.
-                events.success(
-                    PigeonParser.toPigeonQuerySnapshot(querySnapshot, serverTimestampBehavior));
+                Object pigeonSnapshot =
+                    PigeonParser.toPigeonQuerySnapshot(querySnapshot, serverTimestampBehavior);
+                events.success(pigeonSnapshot);
               }
             });
   }

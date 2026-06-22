@@ -16,6 +16,7 @@
 
 @interface FLTDocumentSnapshotStreamHandler ()
 @property(readwrite, strong) id<FIRListenerRegistration> listenerRegistration;
+@property(nonatomic) dispatch_queue_t snapshotQueue;
 @end
 
 @implementation FLTDocumentSnapshotStreamHandler
@@ -32,6 +33,8 @@
     self.includeMetadataChanges = includeMetadataChanges;
     self.serverTimestampBehavior = serverTimestampBehavior;
     self.source = source;
+    self.snapshotQueue = dispatch_queue_create(
+        "io.flutter.plugins.firebase.firestore.document_snapshot", DISPATCH_QUEUE_SERIAL);
   }
   return self;
 }
@@ -54,12 +57,14 @@
                                           andOptionalNSError:error]);
       });
     } else {
-      dispatch_async(dispatch_get_main_queue(), ^{
+      dispatch_async(self.snapshotQueue, ^{
         // Emit the Pigeon object directly; the Pigeon-aware codec on the
         // MessageChannel serializes it end-to-end. Pigeon 26 no longer flattens
         // nested types via `toList`.
-        events([FirestorePigeonParser toPigeonDocumentSnapshot:snapshot
-                                       serverTimestampBehavior:self.serverTimestampBehavior]);
+        InternalDocumentSnapshot *pigeonSnapshot =
+            [FirestorePigeonParser toPigeonDocumentSnapshot:snapshot
+                                    serverTimestampBehavior:self.serverTimestampBehavior];
+        events(pigeonSnapshot);
       });
     }
   };

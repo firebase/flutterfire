@@ -8,6 +8,7 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void runQueryTests() {
@@ -373,6 +374,88 @@ void runQueryTests() {
 
         await subscription.cancel();
       });
+
+      testWidgets(
+        'large snapshots do not block frame scheduling',
+        (WidgetTester tester) async {
+          CollectionReference<Map<String, dynamic>> collection =
+              await initializeTest('large-snapshot-listener');
+          const int documentCount = 1000;
+          final String payload = List.filled(1024, 'x').join();
+
+          for (int start = 0; start < documentCount; start += 400) {
+            final WriteBatch batch = firestore.batch();
+            final int end = min(start + 400, documentCount);
+            for (int index = start; index < end; index++) {
+              batch.set(collection.doc('doc-$index'), <String, Object?>{
+                'index': index,
+                'payload': payload,
+              });
+            }
+            await batch.commit();
+          }
+
+          final Completer<void> initialSnapshot = Completer<void>();
+          final Completer<void> receivedUpdates = Completer<void>();
+          var initialSnapshotReceived = false;
+          var updateSnapshots = 0;
+
+          final StreamSubscription<QuerySnapshot<Map<String, dynamic>>>
+              subscription = collection.snapshots().listen((snapshot) {
+            if (!initialSnapshotReceived && snapshot.size == documentCount) {
+              initialSnapshotReceived = true;
+              initialSnapshot.complete();
+              return;
+            }
+
+            if (initialSnapshotReceived && snapshot.docChanges.isNotEmpty) {
+              updateSnapshots++;
+              if (updateSnapshots >= 3 && !receivedUpdates.isCompleted) {
+                receivedUpdates.complete();
+              }
+            }
+          });
+          addTearDown(subscription.cancel);
+
+          await initialSnapshot.future.timeout(const Duration(seconds: 30));
+          await tester.pumpWidget(
+            const Directionality(
+              textDirection: TextDirection.ltr,
+              child: Center(child: CircularProgressIndicator()),
+            ),
+          );
+
+          var updatesDone = false;
+          final updateFuture = Future<void>(() async {
+            for (int index = 0; index < 3; index++) {
+              await collection.doc('doc-0').update(<String, Object?>{
+                'counter': index,
+                'payload': payload,
+              });
+            }
+            await receivedUpdates.future.timeout(const Duration(seconds: 30));
+          }).whenComplete(() {
+            updatesDone = true;
+          });
+
+          final pumpDurations = <Duration>[];
+          while (!updatesDone) {
+            final Stopwatch stopwatch = Stopwatch()..start();
+            await tester.pump(const Duration(milliseconds: 16));
+            stopwatch.stop();
+            pumpDurations.add(stopwatch.elapsed);
+          }
+          await updateFuture;
+
+          expect(pumpDurations, isNotEmpty);
+          final Duration longestPump = pumpDurations.reduce(
+            (current, next) => current > next ? current : next,
+          );
+          expect(longestPump, lessThan(const Duration(milliseconds: 250)));
+        },
+        timeout: const Timeout.factor(10),
+        skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
+      );
 
       test(
         'listeners throws a [FirebaseException] with Query',

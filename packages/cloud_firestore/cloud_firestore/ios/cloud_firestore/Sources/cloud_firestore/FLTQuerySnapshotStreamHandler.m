@@ -16,6 +16,7 @@
 
 @interface FLTQuerySnapshotStreamHandler ()
 @property(readwrite, strong) id<FIRListenerRegistration> listenerRegistration;
+@property(nonatomic) dispatch_queue_t snapshotQueue;
 @end
 
 @implementation FLTQuerySnapshotStreamHandler
@@ -32,6 +33,8 @@
     _includeMetadataChanges = includeMetadataChanges;
     _serverTimestampBehavior = serverTimestampBehavior;
     _source = source;
+    _snapshotQueue = dispatch_queue_create("io.flutter.plugins.firebase.firestore.query_snapshot",
+                                           DISPATCH_QUEUE_SERIAL);
   }
   return self;
 }
@@ -64,13 +67,15 @@
                                           andOptionalNSError:error]);
       });
     } else {
-      dispatch_async(dispatch_get_main_queue(), ^{
+      dispatch_async(self.snapshotQueue, ^{
         // Emit the Pigeon object directly; the Pigeon-aware codec serializes nested
         // `InternalDocumentSnapshot` / `InternalDocumentChange` / `InternalSnapshotMetadata`
         // with their proper type codes. Pigeon 26 no longer flattens nested types
         // via `toList`.
-        events([FirestorePigeonParser toPigeonQuerySnapshot:snapshot
-                                    serverTimestampBehavior:self.serverTimestampBehavior]);
+        InternalQuerySnapshot *pigeonSnapshot =
+            [FirestorePigeonParser toPigeonQuerySnapshot:snapshot
+                                 serverTimestampBehavior:self.serverTimestampBehavior];
+        events(pigeonSnapshot);
       });
     }
   };

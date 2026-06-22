@@ -20,6 +20,7 @@ import io.flutter.plugin.common.EventChannel.StreamHandler;
 import io.flutter.plugins.firebase.firestore.utils.ExceptionConverter;
 import io.flutter.plugins.firebase.firestore.utils.PigeonParser;
 import java.util.Map;
+import java.util.concurrent.Executor;
 
 public class DocumentSnapshotsStreamHandler implements StreamHandler {
 
@@ -30,19 +31,22 @@ public class DocumentSnapshotsStreamHandler implements StreamHandler {
 
   DocumentSnapshot.ServerTimestampBehavior serverTimestampBehavior;
   ListenSource source;
+  Executor snapshotExecutor;
 
   public DocumentSnapshotsStreamHandler(
       FirebaseFirestore firestore,
       DocumentReference documentReference,
       Boolean includeMetadataChanges,
       DocumentSnapshot.ServerTimestampBehavior serverTimestampBehavior,
-      ListenSource source) {
+      ListenSource source,
+      Executor snapshotExecutor) {
     this.firestore = firestore;
     this.documentReference = documentReference;
     this.metadataChanges =
         includeMetadataChanges ? MetadataChanges.INCLUDE : MetadataChanges.EXCLUDE;
     this.serverTimestampBehavior = serverTimestampBehavior;
     this.source = source;
+    this.snapshotExecutor = snapshotExecutor;
   }
 
   @Override
@@ -50,6 +54,7 @@ public class DocumentSnapshotsStreamHandler implements StreamHandler {
     SnapshotListenOptions.Builder optionsBuilder = new SnapshotListenOptions.Builder();
     optionsBuilder.setMetadataChanges(metadataChanges);
     optionsBuilder.setSource(source);
+    optionsBuilder.setExecutor(snapshotExecutor);
 
     listenerRegistration =
         documentReference.addSnapshotListener(
@@ -66,9 +71,10 @@ public class DocumentSnapshotsStreamHandler implements StreamHandler {
                 // MessageChannel serializes it end-to-end. Pigeon 26 no longer flattens
                 // nested types via `.toList()`, so calling `.toList()` here would send a
                 // raw list that the Dart side can no longer decode.
-                events.success(
+                Object pigeonSnapshot =
                     PigeonParser.toPigeonDocumentSnapshot(
-                        documentSnapshot, serverTimestampBehavior));
+                        documentSnapshot, serverTimestampBehavior);
+                events.success(pigeonSnapshot);
               }
             });
   }

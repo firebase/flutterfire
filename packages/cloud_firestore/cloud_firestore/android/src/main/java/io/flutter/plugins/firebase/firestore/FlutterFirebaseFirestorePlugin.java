@@ -989,7 +989,8 @@ public class FlutterFirebaseFirestorePlugin
                 includeMetadataChanges,
                 PigeonParser.parsePigeonServerTimestampBehavior(
                     options.getServerTimestampBehavior()),
-                PigeonParser.parseListenSource(source))));
+                PigeonParser.parseListenSource(source),
+                cachedThreadPool)));
   }
 
   @Override
@@ -1012,7 +1013,8 @@ public class FlutterFirebaseFirestorePlugin
                 includeMetadataChanges,
                 PigeonParser.parsePigeonServerTimestampBehavior(
                     parameters.getServerTimestampBehavior()),
-                PigeonParser.parseListenSource(source))));
+                PigeonParser.parseListenSource(source),
+                cachedThreadPool)));
   }
 
   @Override
