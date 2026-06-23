@@ -4,7 +4,7 @@
 
 part of '../firebase_ml_model_downloader.dart';
 
-class FirebaseModelDownloader extends FirebasePluginPlatform {
+class FirebaseModelDownloader extends FirebasePlugin {
   FirebaseModelDownloader._({required this.app})
       : super(app.name, 'plugins.flutter.io/firebase_ml_model_downloader');
 
