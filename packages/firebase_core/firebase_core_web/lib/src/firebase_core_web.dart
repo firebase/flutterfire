@@ -343,6 +343,7 @@ class FirebaseCoreWeb extends FirebasePlatform {
           messagingSenderId: options.messagingSenderId,
           appId: options.appId,
           measurementId: options.measurementId,
+          recaptchaSiteKey: options.recaptchaSiteKey,
         );
       }
     }
@@ -365,6 +366,7 @@ class FirebaseCoreWeb extends FirebasePlatform {
           messagingSenderId: options.messagingSenderId,
           appId: options.appId,
           measurementId: options.measurementId,
+          recaptchaSiteKey: options.recaptchaSiteKey,
         );
       } catch (e) {
         if (_getJSErrorCode(e as JSError) == 'app/duplicate-app') {

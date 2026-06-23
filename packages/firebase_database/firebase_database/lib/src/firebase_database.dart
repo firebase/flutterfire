@@ -6,7 +6,7 @@ part of '../firebase_database.dart';
 
 /// The entry point for accessing a Firebase Database. You can get an instance
 /// by calling `FirebaseDatabase.instance` or `FirebaseDatabase.instanceFor()`.
-class FirebaseDatabase extends FirebasePluginPlatform {
+class FirebaseDatabase extends FirebasePlugin {
   FirebaseDatabase._({required this.app, this.databaseURL})
       : super(app.name, 'plugins.flutter.io/firebase_database') {
     if (databaseURL != null && databaseURL!.endsWith('/')) {

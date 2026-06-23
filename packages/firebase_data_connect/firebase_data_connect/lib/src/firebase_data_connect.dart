@@ -27,7 +27,7 @@ import 'cache/cache_data_types.dart';
 import 'cache/cache.dart';
 
 /// DataConnect class
-class FirebaseDataConnect extends FirebasePluginPlatform {
+class FirebaseDataConnect extends FirebasePlugin {
   /// Constructor for initializing Data Connect
   @visibleForTesting
   FirebaseDataConnect(

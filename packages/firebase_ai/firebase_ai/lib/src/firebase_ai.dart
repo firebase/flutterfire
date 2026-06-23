@@ -16,7 +16,8 @@ import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
-    show FirebasePluginPlatform;
+    show FirebasePlugin;
+import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
 
 import '../firebase_ai.dart';
@@ -25,7 +26,7 @@ import 'base_model.dart';
 const _defaultLocation = 'us-central1';
 
 /// The entrypoint for generative models.
-class FirebaseAI extends FirebasePluginPlatform {
+class FirebaseAI extends FirebasePlugin {
   FirebaseAI._({
     required this.app,
     required this.location,
@@ -142,6 +143,9 @@ class FirebaseAI extends FirebasePluginPlatform {
   /// The optional [safetySettings] and [generationConfig] can be used to
   /// control and guide the generation. See [SafetySetting] and
   /// [GenerationConfig] for details.
+  ///
+  /// The optional [httpClient] can be used to customize HTTP request handling,
+  /// such as adding support for cancelling in-flight requests.
   GenerativeModel generativeModel({
     required String model,
     List<SafetySetting>? safetySettings,
@@ -149,6 +153,7 @@ class FirebaseAI extends FirebasePluginPlatform {
     List<Tool>? tools,
     ToolConfig? toolConfig,
     Content? systemInstruction,
+    http.Client? httpClient,
   }) {
     return createGenerativeModel(
       model: model,
@@ -163,6 +168,7 @@ class FirebaseAI extends FirebasePluginPlatform {
       toolConfig: toolConfig,
       systemInstruction: systemInstruction,
       useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
+      httpClient: httpClient,
     );
   }
 

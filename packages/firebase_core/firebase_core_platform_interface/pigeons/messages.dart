@@ -44,6 +44,7 @@ class CoreFirebaseOptions {
     required this.databaseURL,
     required this.storageBucket,
     required this.trackingId,
+    required this.recaptchaSiteKey,
   });
 
   final String apiKey;
@@ -73,6 +74,8 @@ class CoreFirebaseOptions {
   final String? iosBundleId;
 
   final String? appGroupId;
+
+  final String? recaptchaSiteKey;
 }
 
 class CoreInitializeResponse {

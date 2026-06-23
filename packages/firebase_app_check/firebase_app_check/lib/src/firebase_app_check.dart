@@ -5,8 +5,7 @@
 
 part of '../firebase_app_check.dart';
 
-class FirebaseAppCheck extends FirebasePluginPlatform
-    implements FirebaseService {
+class FirebaseAppCheck extends FirebasePlugin implements FirebaseService {
   static Map<String, FirebaseAppCheck> _firebaseAppCheckInstances = {};
 
   FirebaseAppCheck._({required this.app})

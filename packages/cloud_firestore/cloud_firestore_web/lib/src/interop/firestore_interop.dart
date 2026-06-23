@@ -366,6 +366,7 @@ extension type PipelinesJsImpl._(JSObject _) implements JSObject {
   external JSAny or(JSAny a, JSAny b);
   external JSAny xor(JSAny a, JSAny b);
   external JSAny not(JSAny expr);
+  external JSAny documentMatches(JSString query);
 
   // --- Existence / type checks ---
   external JSAny exists(JSAny expr);
@@ -483,6 +484,12 @@ extension type ExpressionJsImpl._(JSObject _) implements JSObject {
   external ExpressionJsImpl arrayIndexOf(JSAny element);
   external ExpressionJsImpl arrayLastIndexOf(JSAny element);
   external ExpressionJsImpl arrayIndexOfAll(JSAny element);
+  external ExpressionJsImpl arraySlice(JSAny offset, [JSAny? length]);
+  external ExpressionJsImpl arrayFilter(JSString alias, JSAny filter);
+  external ExpressionJsImpl arrayTransform(
+      JSString elementAlias, JSAny transform);
+  external ExpressionJsImpl arrayTransformWithIndex(
+      JSString elementAlias, JSString indexAlias, JSAny transform);
   external ExpressionJsImpl mapSet(JSAny key, JSAny value);
   external ExpressionJsImpl mapEntries();
 }
@@ -1234,6 +1241,7 @@ extension type PipelineJsImpl._(JSObject _) implements JSObject {
   external PipelineJsImpl removeFields(JSAny fieldOrOptions);
   external PipelineJsImpl replaceWith(JSAny fieldNameOrOptions);
   external PipelineJsImpl findNearest(JSAny options);
+  external PipelineJsImpl search(JSAny options);
   external PipelineJsImpl union(JSAny otherOrOptions);
   external PipelineJsImpl rawStage(JSString name, JSArray params,
       [JSAny? options]);
@@ -1329,6 +1337,25 @@ extension type FindNearestStageOptionsJsImpl._(JSObject _) implements JSObject {
   external set limit(JSNumber value);
   // ignore: avoid_setters_without_getters
   external set distanceField(JSString value);
+}
+
+extension type SearchStageOptionsJsImpl._(JSObject _) implements JSObject {
+  SearchStageOptionsJsImpl() : this._(JSObject.new());
+
+  // ignore: avoid_setters_without_getters
+  external set query(JSAny value);
+  // ignore: avoid_setters_without_getters
+  external set languageCode(JSString value);
+  // ignore: avoid_setters_without_getters
+  external set retrievalDepth(JSNumber value);
+  // ignore: avoid_setters_without_getters
+  external set sort(JSAny value);
+  // ignore: avoid_setters_without_getters
+  external set offset(JSNumber value);
+  // ignore: avoid_setters_without_getters
+  external set limit(JSNumber value);
+  // ignore: avoid_setters_without_getters
+  external set addFields(JSAny value);
 }
 
 extension type PipelineExecuteOptionsJsImpl._(JSObject _) implements JSObject {

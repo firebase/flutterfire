@@ -8,7 +8,6 @@ package io.flutter.plugins.firebase.storage
 import android.net.Uri
 import android.util.SparseArray
 import androidx.annotation.NonNull
-import androidx.annotation.Nullable
 import com.google.firebase.storage.FileDownloadTask
 import com.google.firebase.storage.StorageMetadata
 import com.google.firebase.storage.StorageReference
@@ -18,13 +17,14 @@ import io.flutter.plugin.common.MethodChannel
 import java.io.File
 import java.util.HashMap
 
-internal class FlutterFirebaseStorageTask private constructor(
-  private val type: FlutterFirebaseStorageTaskType,
-  private val handle: Int,
-  private val reference: StorageReference,
-  private val bytes: ByteArray?,
-  private val fileUri: Uri?,
-  private val metadata: StorageMetadata?
+internal class FlutterFirebaseStorageTask
+private constructor(
+    private val type: FlutterFirebaseStorageTaskType,
+    private val handle: Int,
+    private val reference: StorageReference,
+    private val bytes: ByteArray?,
+    private val fileUri: Uri?,
+    private val metadata: StorageMetadata?
 ) {
   private val pauseSyncObject = Object()
   private val resumeSyncObject = Object()
@@ -36,12 +36,20 @@ internal class FlutterFirebaseStorageTask private constructor(
     synchronized(inProgressTasks) { inProgressTasks.put(handle, this) }
   }
 
-  fun startTaskWithMethodChannel(@NonNull channel: MethodChannel, @NonNull identifier: String): TaskStateChannelStreamHandler {
-    storageTask = when (type) {
-      FlutterFirebaseStorageTaskType.BYTES -> if (metadata == null) reference.putBytes(bytes!!) else reference.putBytes(bytes!!, metadata)
-      FlutterFirebaseStorageTaskType.FILE -> if (metadata == null) reference.putFile(fileUri!!) else reference.putFile(fileUri!!, metadata)
-      FlutterFirebaseStorageTaskType.DOWNLOAD -> reference.getFile(fileUri!!)
-    }
+  fun startTaskWithMethodChannel(
+      @NonNull channel: MethodChannel,
+      @NonNull identifier: String
+  ): TaskStateChannelStreamHandler {
+    storageTask =
+        when (type) {
+          FlutterFirebaseStorageTaskType.BYTES ->
+              if (metadata == null) reference.putBytes(bytes!!)
+              else reference.putBytes(bytes!!, metadata)
+          FlutterFirebaseStorageTaskType.FILE ->
+              if (metadata == null) reference.putFile(fileUri!!)
+              else reference.putFile(fileUri!!, metadata)
+          FlutterFirebaseStorageTaskType.DOWNLOAD -> reference.getFile(fileUri!!)
+        }
 
     return TaskStateChannelStreamHandler(this, reference.storage, storageTask as Any, identifier)
   }
@@ -62,9 +70,17 @@ internal class FlutterFirebaseStorageTask private constructor(
 
   fun isDestroyed(): Boolean = destroyed
 
-  fun notifyResumeObjects() { synchronized(resumeSyncObject) { resumeSyncObject.notifyAll() } }
-  fun notifyCancelObjects() { synchronized(cancelSyncObject) { cancelSyncObject.notifyAll() } }
-  fun notifyPauseObjects() { synchronized(pauseSyncObject) { pauseSyncObject.notifyAll() } }
+  fun notifyResumeObjects() {
+    synchronized(resumeSyncObject) { resumeSyncObject.notifyAll() }
+  }
+
+  fun notifyCancelObjects() {
+    synchronized(cancelSyncObject) { cancelSyncObject.notifyAll() }
+  }
+
+  fun notifyPauseObjects() {
+    synchronized(pauseSyncObject) { pauseSyncObject.notifyAll() }
+  }
 
   // Intentionally do not expose the StorageTask generic type outside this class
 
@@ -89,7 +105,9 @@ internal class FlutterFirebaseStorageTask private constructor(
 
     @JvmStatic
     fun getInProgressTaskForHandle(handle: Int): FlutterFirebaseStorageTask? {
-      synchronized(inProgressTasks) { return inProgressTasks.get(handle) }
+      synchronized(inProgressTasks) {
+        return inProgressTasks.get(handle)
+      }
     }
 
     @JvmStatic
@@ -106,18 +124,40 @@ internal class FlutterFirebaseStorageTask private constructor(
     }
 
     @JvmStatic
-    fun uploadBytes(handle: Int, reference: StorageReference, data: ByteArray, metadata: StorageMetadata?): FlutterFirebaseStorageTask {
-      return FlutterFirebaseStorageTask(FlutterFirebaseStorageTaskType.BYTES, handle, reference, data, null, metadata)
+    fun uploadBytes(
+        handle: Int,
+        reference: StorageReference,
+        data: ByteArray,
+        metadata: StorageMetadata?
+    ): FlutterFirebaseStorageTask {
+      return FlutterFirebaseStorageTask(
+          FlutterFirebaseStorageTaskType.BYTES, handle, reference, data, null, metadata)
     }
 
     @JvmStatic
-    fun uploadFile(handle: Int, reference: StorageReference, fileUri: Uri, metadata: StorageMetadata?): FlutterFirebaseStorageTask {
-      return FlutterFirebaseStorageTask(FlutterFirebaseStorageTaskType.FILE, handle, reference, null, fileUri, metadata)
+    fun uploadFile(
+        handle: Int,
+        reference: StorageReference,
+        fileUri: Uri,
+        metadata: StorageMetadata?
+    ): FlutterFirebaseStorageTask {
+      return FlutterFirebaseStorageTask(
+          FlutterFirebaseStorageTaskType.FILE, handle, reference, null, fileUri, metadata)
     }
 
     @JvmStatic
-    fun downloadFile(handle: Int, reference: StorageReference, file: File): FlutterFirebaseStorageTask {
-      return FlutterFirebaseStorageTask(FlutterFirebaseStorageTaskType.DOWNLOAD, handle, reference, null, Uri.fromFile(file), null)
+    fun downloadFile(
+        handle: Int,
+        reference: StorageReference,
+        file: File
+    ): FlutterFirebaseStorageTask {
+      return FlutterFirebaseStorageTask(
+          FlutterFirebaseStorageTaskType.DOWNLOAD,
+          handle,
+          reference,
+          null,
+          Uri.fromFile(file),
+          null)
     }
 
     @JvmStatic
@@ -137,7 +177,8 @@ internal class FlutterFirebaseStorageTask private constructor(
       val out: MutableMap<String, Any?> = HashMap()
       out["path"] = snapshot.storage.path
       // Workaround: sometimes getBytesTransferred != getTotalByteCount when completed
-      out["bytesTransferred"] = if (snapshot.task.isSuccessful) snapshot.totalByteCount else snapshot.bytesTransferred
+      out["bytesTransferred"] =
+          if (snapshot.task.isSuccessful) snapshot.totalByteCount else snapshot.bytesTransferred
       out["totalBytes"] = snapshot.totalByteCount
       return out
     }
@@ -158,5 +199,3 @@ internal class FlutterFirebaseStorageTask private constructor(
     DOWNLOAD
   }
 }
-
-

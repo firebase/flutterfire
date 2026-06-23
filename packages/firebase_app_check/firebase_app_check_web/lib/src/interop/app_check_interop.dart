@@ -74,14 +74,14 @@ extension type AppCheckTokenResultJsImpl._(JSObject _) implements JSObject {
 class AppCheckOptions {
   external factory AppCheckOptions({
     JSBoolean? isTokenAutoRefreshEnabled,
-    ReCaptchaProvider provider,
+    ReCaptchaProvider? provider,
   });
 }
 
 extension AppCheckOptionsJsImplX on AppCheckOptions {
   external JSBoolean? get isTokenAutoRefreshEnabled;
 
-  external ReCaptchaProvider get provider;
+  external ReCaptchaProvider? get provider;
 }
 
 extension type AppCheckJsImpl._(JSObject _) implements JSObject {

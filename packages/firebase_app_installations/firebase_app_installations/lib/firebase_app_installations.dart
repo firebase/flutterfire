@@ -5,6 +5,6 @@
 import 'package:firebase_app_installations_platform_interface/firebase_app_installations_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
-    show FirebasePluginPlatform;
+    show FirebasePlugin;
 
 part 'src/firebase_app_installations.dart';

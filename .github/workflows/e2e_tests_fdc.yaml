@@ -40,7 +40,7 @@ jobs:
       AVD_API_LEVEL: 34
       AVD_TARGET: google_apis
     steps:
-      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
       - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
         name: Install Node.js 20
         with:
@@ -61,7 +61,7 @@ jobs:
           # Must match the save path exactly
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v4-${{ runner.os }}-${{ env.FIREBASE_TOOLS_VERSION }}
-      - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
         with:
           channel: 'stable'
           cache: true
@@ -88,7 +88,7 @@ jobs:
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
       - name: Gradle cache
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v6
       - name: Free Disk Space (Ubuntu)
         uses: AdityaGarg8/remove-unwanted-software@90e01b21170618765a73370fcc3abbd1684a7793
         with:
@@ -144,7 +144,7 @@ jobs:
     strategy:
       fail-fast: false
     steps:
-      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
       - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
         name: Install Node.js 20
         with:
@@ -157,7 +157,7 @@ jobs:
           java-version: '21'
       - name: Setup PostgreSQL for Linux/macOS/Windows
         uses: ikalnytskyi/action-setup-postgres@v8
-      - uses: hendrikmuhs/ccache-action@5ebbd400eff9e74630f759d94ddd7b6c26299639
+      - uses: hendrikmuhs/ccache-action@d62db5f07c26379fc4b4e0916f098a92573c3b03
         name: Xcode Compile Cache
         with:
           key: xcode-cache-${{ runner.os }}
@@ -184,7 +184,7 @@ jobs:
           # Must match the save path exactly
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v4-${{ runner.os }}-${{ env.FIREBASE_TOOLS_VERSION }}
-      - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
         with:
           channel: 'stable'
           cache: true
@@ -218,7 +218,13 @@ jobs:
       - uses: futureware-tech/simulator-action@e89aa8f93d3aec35083ff49d2854d07f7186f7f5
         id: simulator
         with:
+          # https://github.com/actions/runner-images/blob/main/images/macos/macos-15-Readme.md#installed-simulators
           model: "iPhone 16"
+      - name: Ensure Simulator Ready
+        env:
+          SIMULATOR: ${{ steps.simulator.outputs.udid }}
+          ENSURE_BOOT_IF_NEEDED: "0"
+        run: .github/workflows/scripts/ensure-simulator-ready.sh
       - name: 'E2E Tests'
         working-directory: 'packages/firebase_data_connect/firebase_data_connect/example'
         env:
@@ -226,13 +232,11 @@ jobs:
         run: |
           # Uncomment following line to have simulator logs printed out for debugging purposes.
           # xcrun simctl spawn booted log stream --predicate 'eventMessage contains "flutter"' &
-          # The iOS simulator sometimes fails to connect the VM Service. Keep a
-          # limit around the full test command and retry once with a simulator reboot.
+          # Retry once after VM Service / simulator flake (reboot + migration-aware wait).
           perl -e 'alarm 900; exec @ARGV' -- flutter test integration_test/e2e_test.dart -d "$SIMULATOR" --dart-define=CI=true --timeout 10x || {
             echo "First attempt failed or timed out. Rebooting simulator and retrying..."
             xcrun simctl shutdown "$SIMULATOR" || true
-            xcrun simctl boot "$SIMULATOR"
-            xcrun simctl bootstatus "$SIMULATOR" -b
+            "${GITHUB_WORKSPACE}/.github/workflows/scripts/ensure-simulator-ready.sh"
             flutter test integration_test/e2e_test.dart -d "$SIMULATOR" --dart-define=CI=true --timeout 10x
           }
       - name: Save Firestore Emulator Cache
@@ -260,7 +264,7 @@ jobs:
     strategy:
       fail-fast: false
     steps:
-      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
       - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
         name: Install Node.js 20
         with:
@@ -271,7 +275,7 @@ jobs:
           java-version: '21'
       - name: Setup PostgreSQL for Linux/macOS/Windows
         uses: ikalnytskyi/action-setup-postgres@v8
-      - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
         with:
           channel: 'stable'
           cache: true
@@ -335,7 +339,7 @@ jobs:
     strategy:
       fail-fast: false
     steps:
-      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
       - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
         name: Install Node.js 20
         with:
@@ -346,7 +350,7 @@ jobs:
           java-version: '21'
       - name: Setup PostgreSQL for Linux/macOS/Windows
         uses: ikalnytskyi/action-setup-postgres@v8
-      - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
         with:
           channel: 'stable'
           cache: true

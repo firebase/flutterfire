@@ -15,19 +15,18 @@ class FlutterFirebaseAppRegistrar : ComponentRegistrar, InternalDebugSecretProvi
   companion object {
     private const val DEBUG_SECRET_NAME = "fire-app-check-debug-secret"
 
-    @JvmStatic
-    var debugToken: String? = null
+    @JvmStatic var debugToken: String? = null
   }
 
   override fun getComponents(): List<Component<*>> {
-    val library = LibraryVersionComponent.create(
-      BuildConfig.LIBRARY_NAME, BuildConfig.LIBRARY_VERSION
-    )
+    val library =
+        LibraryVersionComponent.create(BuildConfig.LIBRARY_NAME, BuildConfig.LIBRARY_VERSION)
 
-    val debugSecretProvider = Component.builder(InternalDebugSecretProvider::class.java)
-      .name(DEBUG_SECRET_NAME)
-      .factory { this }
-      .build()
+    val debugSecretProvider =
+        Component.builder(InternalDebugSecretProvider::class.java)
+            .name(DEBUG_SECRET_NAME)
+            .factory { this }
+            .build()
 
     return listOf(library, debugSecretProvider)
   }
