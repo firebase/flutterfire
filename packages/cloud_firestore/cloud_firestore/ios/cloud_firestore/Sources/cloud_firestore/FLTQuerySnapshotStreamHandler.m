@@ -75,7 +75,9 @@
         InternalQuerySnapshot *pigeonSnapshot =
             [FirestorePigeonParser toPigeonQuerySnapshot:snapshot
                                  serverTimestampBehavior:self.serverTimestampBehavior];
-        events(pigeonSnapshot);
+        dispatch_async(dispatch_get_main_queue(), ^{
+          events(pigeonSnapshot);
+        });
       });
     }
   };

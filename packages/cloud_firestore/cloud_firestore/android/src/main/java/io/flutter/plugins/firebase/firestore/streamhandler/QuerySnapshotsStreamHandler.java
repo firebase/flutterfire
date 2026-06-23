@@ -8,6 +8,8 @@ package io.flutter.plugins.firebase.firestore.streamhandler;
 
 import static io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestorePlugin.DEFAULT_ERROR_CODE;
 
+import android.os.Handler;
+import android.os.Looper;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.ListenSource;
 import com.google.firebase.firestore.ListenerRegistration;
@@ -24,6 +26,7 @@ import java.util.concurrent.Executor;
 public class QuerySnapshotsStreamHandler implements StreamHandler {
 
   ListenerRegistration listenerRegistration;
+  private final Handler mainHandler = new Handler(Looper.getMainLooper());
 
   Query query;
   MetadataChanges metadataChanges;
@@ -59,8 +62,11 @@ public class QuerySnapshotsStreamHandler implements StreamHandler {
             (querySnapshot, exception) -> {
               if (exception != null) {
                 Map<String, String> exceptionDetails = ExceptionConverter.createDetails(exception);
-                events.error(DEFAULT_ERROR_CODE, exception.getMessage(), exceptionDetails);
-                events.endOfStream();
+                mainHandler.post(
+                    () -> {
+                      events.error(DEFAULT_ERROR_CODE, exception.getMessage(), exceptionDetails);
+                      events.endOfStream();
+                    });
 
                 onCancel(null);
               } else {
@@ -70,7 +76,7 @@ public class QuerySnapshotsStreamHandler implements StreamHandler {
                 // no longer flattens nested types via `.toList()`.
                 Object pigeonSnapshot =
                     PigeonParser.toPigeonQuerySnapshot(querySnapshot, serverTimestampBehavior);
-                events.success(pigeonSnapshot);
+                mainHandler.post(() -> events.success(pigeonSnapshot));
               }
             });
   }
