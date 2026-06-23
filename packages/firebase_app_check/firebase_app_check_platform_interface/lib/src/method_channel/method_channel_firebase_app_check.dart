@@ -16,11 +16,18 @@ import 'utils/provider_to_string.dart';
 
 class _WindowsCustomProviderFlutterApi
     extends pigeon.FirebaseAppCheckFlutterApi {
+  _WindowsCustomProviderFlutterApi(this.appName);
+
+  final String appName;
+
   @override
   Future<pigeon.CustomAppCheckToken> getCustomToken() async {
-    final provider = MethodChannelFirebaseAppCheck._windowsCustomProvider;
+    final provider =
+        MethodChannelFirebaseAppCheck._windowsCustomProviders[appName];
     if (provider == null) {
-      throw StateError('No WindowsCustomProvider has been activated.');
+      throw StateError(
+        'No WindowsCustomProvider has been activated for app $appName.',
+      );
     }
 
     final token = await provider.fetchToken();
@@ -35,7 +42,14 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
   /// Create an instance of [MethodChannelFirebaseAppCheck].
   MethodChannelFirebaseAppCheck({required FirebaseApp app})
       : super(appInstance: app) {
-    pigeon.FirebaseAppCheckFlutterApi.setUp(_windowsCustomProviderFlutterApi);
+    final flutterApi = _windowsCustomProviderFlutterApis.putIfAbsent(
+      app.name,
+      () => _WindowsCustomProviderFlutterApi(app.name),
+    );
+    pigeon.FirebaseAppCheckFlutterApi.setUp(
+      flutterApi,
+      messageChannelSuffix: app.name,
+    );
     _tokenChangesListeners[app.name] = StreamController<String?>.broadcast();
     _listenerRegistration = _registerTokenListener(app);
   }
@@ -75,9 +89,9 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
   /// The Pigeon API used for platform communication.
   final pigeon.FirebaseAppCheckHostApi _pigeonApi =
       pigeon.FirebaseAppCheckHostApi();
-  static final _windowsCustomProviderFlutterApi =
-      _WindowsCustomProviderFlutterApi();
-  static WindowsCustomProvider? _windowsCustomProvider;
+  static final Map<String, _WindowsCustomProviderFlutterApi>
+      _windowsCustomProviderFlutterApis = {};
+  static final Map<String, WindowsCustomProvider> _windowsCustomProviders = {};
   late final Future<void> _listenerRegistration;
   StreamSubscription<dynamic>? _subscription;
   bool _isDisposed = false;
@@ -108,6 +122,13 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
     await _subscription?.cancel();
     _subscription = null;
     await _tokenChangesListeners.remove(app.name)?.close();
+    _windowsCustomProviders.remove(app.name);
+    if (_windowsCustomProviderFlutterApis.remove(app.name) != null) {
+      pigeon.FirebaseAppCheckFlutterApi.setUp(
+        null,
+        messageChannelSuffix: app.name,
+      );
+    }
     _methodChannelFirebaseAppCheckInstances.remove(app.name);
   }
 
@@ -163,11 +184,14 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
     }
   }
 
-  static void _setWindowsCustomProvider(
+  void _setWindowsCustomProvider(
     WindowsAppCheckProvider? providerWindows,
   ) {
-    _windowsCustomProvider =
-        providerWindows is WindowsCustomProvider ? providerWindows : null;
+    if (providerWindows is WindowsCustomProvider) {
+      _windowsCustomProviders[app.name] = providerWindows;
+    } else {
+      _windowsCustomProviders.remove(app.name);
+    }
   }
 
   @override

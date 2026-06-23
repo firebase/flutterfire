@@ -33,7 +33,7 @@ class FlutterCustomAppCheckProvider
     : public firebase::app_check::AppCheckProvider {
  public:
   explicit FlutterCustomAppCheckProvider(
-      flutter::BinaryMessenger* binary_messenger);
+      flutter::BinaryMessenger* binary_messenger, const std::string& app_name);
   void GetToken(std::function<void(firebase::app_check::AppCheckToken, int,
                                    const std::string&)>
                     completion_callback) override;
@@ -53,7 +53,8 @@ class FlutterCustomAppCheckProviderFactory
 
  private:
   flutter::BinaryMessenger* binary_messenger_;
-  std::unique_ptr<FlutterCustomAppCheckProvider> provider_;
+  std::map<std::string, std::unique_ptr<FlutterCustomAppCheckProvider>>
+      providers_;
 };
 
 class FirebaseAppCheckPlugin : public flutter::Plugin,

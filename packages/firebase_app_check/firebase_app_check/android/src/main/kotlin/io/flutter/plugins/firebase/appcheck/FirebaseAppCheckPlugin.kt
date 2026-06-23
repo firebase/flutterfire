@@ -49,12 +49,12 @@ class FirebaseAppCheckPlugin : FlutterFirebasePlugin, FlutterPlugin, FirebaseApp
   }
 
   override fun activate(
-    appName: String,
-    androidProvider: String?,
-    appleProvider: String?,
-    debugToken: String?,
-    windowsProvider: String?,
-    callback: (Result<Unit>) -> Unit
+      appName: String,
+      androidProvider: String?,
+      appleProvider: String?,
+      debugToken: String?,
+      windowsProvider: String?,
+      callback: (Result<Unit>) -> Unit
   ) {
     try {
       val firebaseAppCheck = getAppCheck(appName)

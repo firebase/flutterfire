@@ -9,7 +9,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter/services.dart';
 
 import '../mock.dart';
 
@@ -221,11 +220,12 @@ void main() {
   });
 
   group('Windows custom token callback', () {
-    const BasicMessageChannel<Object?> flutterApiChannel =
-        BasicMessageChannel<Object?>(
-      'dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckFlutterApi.getCustomToken',
-      pigeon.FirebaseAppCheckFlutterApi.pigeonChannelCodec,
-    );
+    BasicMessageChannel<Object?> flutterApiChannelFor(String appName) {
+      return BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckFlutterApi.getCustomToken.$appName',
+        pigeon.FirebaseAppCheckFlutterApi.pigeonChannelCodec,
+      );
+    }
 
     setUp(() {
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
@@ -241,7 +241,14 @@ void main() {
     });
 
     tearDown(() {
-      pigeon.FirebaseAppCheckFlutterApi.setUp(null);
+      pigeon.FirebaseAppCheckFlutterApi.setUp(
+        null,
+        messageChannelSuffix: Firebase.app().name,
+      );
+      pigeon.FirebaseAppCheckFlutterApi.setUp(
+        null,
+        messageChannelSuffix: secondaryApp.name,
+      );
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMessageHandler(
         activateChannelName,
@@ -263,6 +270,7 @@ void main() {
         ),
       );
 
+      final flutterApiChannel = flutterApiChannelFor(secondaryApp.name);
       final replyData = await TestDefaultBinaryMessengerBinding
           .instance.defaultBinaryMessenger
           .handlePlatformMessage(
@@ -276,6 +284,62 @@ void main() {
       final customToken = reply!.single! as pigeon.CustomAppCheckToken;
       expect(customToken.token, 'app-check-token');
       expect(customToken.expireTimeMillis, 1735689600000);
+    });
+
+    test('uses the provider registered for the requested app', () async {
+      final defaultAppCheck =
+          MethodChannelFirebaseAppCheck(app: Firebase.app());
+      final secondaryAppCheck =
+          MethodChannelFirebaseAppCheck(app: secondaryApp);
+
+      await defaultAppCheck.activate(
+        providerWindows: WindowsCustomProvider(
+          fetchToken: () async => const CustomAppCheckToken(
+            token: 'default-app-token',
+            expireTimeMillis: 1735689600000,
+          ),
+        ),
+      );
+      await secondaryAppCheck.activate(
+        providerWindows: WindowsCustomProvider(
+          fetchToken: () async => const CustomAppCheckToken(
+            token: 'secondary-app-token',
+            expireTimeMillis: 1735689700000,
+          ),
+        ),
+      );
+
+      final defaultChannel = flutterApiChannelFor(Firebase.app().name);
+      final secondaryChannel = flutterApiChannelFor(secondaryApp.name);
+
+      final defaultReplyData = await TestDefaultBinaryMessengerBinding
+          .instance.defaultBinaryMessenger
+          .handlePlatformMessage(
+        defaultChannel.name,
+        defaultChannel.codec.encodeMessage(null),
+        null,
+      );
+      final secondaryReplyData = await TestDefaultBinaryMessengerBinding
+          .instance.defaultBinaryMessenger
+          .handlePlatformMessage(
+        secondaryChannel.name,
+        secondaryChannel.codec.encodeMessage(null),
+        null,
+      );
+
+      final defaultReply = defaultChannel.codec.decodeMessage(defaultReplyData)
+          as List<Object?>?;
+      final secondaryReply = secondaryChannel.codec
+          .decodeMessage(secondaryReplyData) as List<Object?>?;
+
+      final defaultToken = defaultReply!.single! as pigeon.CustomAppCheckToken;
+      final secondaryToken =
+          secondaryReply!.single! as pigeon.CustomAppCheckToken;
+
+      expect(defaultToken.token, 'default-app-token');
+      expect(defaultToken.expireTimeMillis, 1735689600000);
+      expect(secondaryToken.token, 'secondary-app-token');
+      expect(secondaryToken.expireTimeMillis, 1735689700000);
     });
 
     test('returns a PlatformException envelope when fetchToken throws',
@@ -294,6 +358,7 @@ void main() {
         ),
       );
 
+      final flutterApiChannel = flutterApiChannelFor(secondaryApp.name);
       final replyData = await TestDefaultBinaryMessengerBinding
           .instance.defaultBinaryMessenger
           .handlePlatformMessage(

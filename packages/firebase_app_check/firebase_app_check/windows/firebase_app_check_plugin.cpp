@@ -104,9 +104,9 @@ class TokenStreamHandler
 // expiry, so the C++ SDK can cache for the exact lifetime the backend minted
 // rather than a hardcoded refresh window.
 FlutterCustomAppCheckProvider::FlutterCustomAppCheckProvider(
-    flutter::BinaryMessenger* binary_messenger)
-    : flutter_api_(
-          std::make_unique<FirebaseAppCheckFlutterApi>(binary_messenger)) {}
+    flutter::BinaryMessenger* binary_messenger, const std::string& app_name)
+    : flutter_api_(std::make_unique<FirebaseAppCheckFlutterApi>(
+          binary_messenger, app_name)) {}
 
 void FlutterCustomAppCheckProvider::GetToken(
     std::function<void(firebase::app_check::AppCheckToken, int,
@@ -137,11 +137,13 @@ FlutterCustomAppCheckProviderFactory::FlutterCustomAppCheckProviderFactory(
 
 firebase::app_check::AppCheckProvider*
 FlutterCustomAppCheckProviderFactory::CreateProvider(firebase::App* app) {
-  if (!provider_) {
-    provider_ =
-        std::make_unique<FlutterCustomAppCheckProvider>(binary_messenger_);
+  const std::string app_name = app == nullptr ? "" : app->name();
+  auto& provider = providers_[app_name];
+  if (!provider) {
+    provider = std::make_unique<FlutterCustomAppCheckProvider>(
+        binary_messenger_, app_name);
   }
-  return provider_.get();
+  return provider.get();
 }
 
 static AppCheck* GetAppCheckFromPigeon(const std::string& app_name) {
@@ -280,12 +282,8 @@ void FirebaseAppCheckPlugin::RegisterTokenListener(
 void FirebaseAppCheckPlugin::GetLimitedUseAppCheckToken(
     const std::string& app_name,
     std::function<void(ErrorOr<std::string> reply)> result) {
-  // GetLimitedUseAppCheckToken was added to the Firebase C++ SDK after the
-  // version currently bundled with this plugin. Fall back to GetAppCheckToken,
-  // which is functionally equivalent for our custom Windows provider since it
-  // does not cache — it calls getWindowsAppCheckToken on every invocation.
   AppCheck* app_check = GetAppCheckFromPigeon(app_name);
-  Future<AppCheckToken> future = app_check->GetAppCheckToken(false);
+  Future<AppCheckToken> future = app_check->GetLimitedUseAppCheckToken();
   future.OnCompletion([result](const Future<AppCheckToken>& completed_future) {
     if (completed_future.error() != 0) {
       result(ParseError(completed_future));

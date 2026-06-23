@@ -34,32 +34,36 @@ FlutterError CreateConnectionError(const std::string channel_name) {
 }
 
 namespace {
-template<typename T>
+template <typename T>
 bool PigeonInternalDeepEquals(const T& a, const T& b);
 
 bool PigeonInternalDeepEquals(const double& a, const double& b);
 
-template<typename T>
+template <typename T>
 bool PigeonInternalDeepEquals(const std::vector<T>& a, const std::vector<T>& b);
 
-template<typename K, typename V>
+template <typename K, typename V>
 bool PigeonInternalDeepEquals(const std::map<K, V>& a, const std::map<K, V>& b);
 
-template<typename T>
-bool PigeonInternalDeepEquals(const std::optional<T>& a, const std::optional<T>& b);
+template <typename T>
+bool PigeonInternalDeepEquals(const std::optional<T>& a,
+                              const std::optional<T>& b);
 
-template<typename T>
-bool PigeonInternalDeepEquals(const std::unique_ptr<T>& a, const std::unique_ptr<T>& b);
+template <typename T>
+bool PigeonInternalDeepEquals(const std::unique_ptr<T>& a,
+                              const std::unique_ptr<T>& b);
 
-bool PigeonInternalDeepEquals(const ::flutter::EncodableValue& a, const ::flutter::EncodableValue& b);
+bool PigeonInternalDeepEquals(const ::flutter::EncodableValue& a,
+                              const ::flutter::EncodableValue& b);
 
-template<typename T>
+template <typename T>
 bool PigeonInternalDeepEquals(const T& a, const T& b) {
   return a == b;
 }
 
-template<typename T>
-bool PigeonInternalDeepEquals(const std::vector<T>& a, const std::vector<T>& b) {
+template <typename T>
+bool PigeonInternalDeepEquals(const std::vector<T>& a,
+                              const std::vector<T>& b) {
   if (a.size() != b.size()) {
     return false;
   }
@@ -72,7 +76,8 @@ bool PigeonInternalDeepEquals(const std::vector<T>& a, const std::vector<T>& b) 
 }
 
 template <typename K, typename V>
-bool PigeonInternalDeepEquals(const std::map<K, V>& a, const std::map<K, V>& b) {
+bool PigeonInternalDeepEquals(const std::map<K, V>& a,
+                              const std::map<K, V>& b) {
   if (a.size() != b.size()) {
     return false;
   }
@@ -100,8 +105,9 @@ bool PigeonInternalDeepEquals(const double& a, const double& b) {
   return (a == b) || (std::isnan(a) && std::isnan(b));
 }
 
-template<typename T>
-bool PigeonInternalDeepEquals(const std::optional<T>& a, const std::optional<T>& b) {
+template <typename T>
+bool PigeonInternalDeepEquals(const std::optional<T>& a,
+                              const std::optional<T>& b) {
   if (!a && !b) {
     return true;
   }
@@ -111,8 +117,9 @@ bool PigeonInternalDeepEquals(const std::optional<T>& a, const std::optional<T>&
   return PigeonInternalDeepEquals(*a, *b);
 }
 
-template<typename T>
-bool PigeonInternalDeepEquals(const std::unique_ptr<T>& a, const std::unique_ptr<T>& b) {
+template <typename T>
+bool PigeonInternalDeepEquals(const std::unique_ptr<T>& a,
+                              const std::unique_ptr<T>& b) {
   if (a.get() == b.get()) {
     return true;
   }
@@ -122,15 +129,18 @@ bool PigeonInternalDeepEquals(const std::unique_ptr<T>& a, const std::unique_ptr
   return PigeonInternalDeepEquals(*a, *b);
 }
 
-bool PigeonInternalDeepEquals(const ::flutter::EncodableValue& a, const ::flutter::EncodableValue& b) {
+bool PigeonInternalDeepEquals(const ::flutter::EncodableValue& a,
+                              const ::flutter::EncodableValue& b) {
   if (a.index() != b.index()) {
     return false;
   }
   if (const double* da = std::get_if<double>(&a)) {
     return PigeonInternalDeepEquals(*da, std::get<double>(b));
-  } else if (const ::flutter::EncodableList* la = std::get_if<::flutter::EncodableList>(&a)) {
+  } else if (const ::flutter::EncodableList* la =
+                 std::get_if<::flutter::EncodableList>(&a)) {
     return PigeonInternalDeepEquals(*la, std::get<::flutter::EncodableList>(b));
-  } else if (const ::flutter::EncodableMap* ma = std::get_if<::flutter::EncodableMap>(&a)) {
+  } else if (const ::flutter::EncodableMap* ma =
+                 std::get_if<::flutter::EncodableMap>(&a)) {
     return PigeonInternalDeepEquals(*ma, std::get<::flutter::EncodableMap>(b));
   }
   return a == b;
@@ -173,7 +183,8 @@ template <typename K, typename V>
 size_t PigeonInternalDeepHash(const std::map<K, V>& v) {
   size_t result = 0;
   for (const auto& kv : v) {
-    result += ((PigeonInternalDeepHash(kv.first) * 31) ^ PigeonInternalDeepHash(kv.second));
+    result += ((PigeonInternalDeepHash(kv.first) * 31) ^
+               PigeonInternalDeepHash(kv.second));
   }
   return result;
 }
@@ -230,20 +241,15 @@ size_t PigeonInternalDeepHash(const ::flutter::EncodableValue& v) {
 }  // namespace
 // CustomAppCheckToken
 
-CustomAppCheckToken::CustomAppCheckToken(
-  const std::string& token,
-  int64_t expire_time_millis)
- : token_(token),
-    expire_time_millis_(expire_time_millis) {}
+CustomAppCheckToken::CustomAppCheckToken(const std::string& token,
+                                         int64_t expire_time_millis)
+    : token_(token), expire_time_millis_(expire_time_millis) {}
 
-const std::string& CustomAppCheckToken::token() const {
-  return token_;
-}
+const std::string& CustomAppCheckToken::token() const { return token_; }
 
 void CustomAppCheckToken::set_token(std::string_view value_arg) {
   token_ = value_arg;
 }
-
 
 int64_t CustomAppCheckToken::expire_time_millis() const {
   return expire_time_millis_;
@@ -253,7 +259,6 @@ void CustomAppCheckToken::set_expire_time_millis(int64_t value_arg) {
   expire_time_millis_ = value_arg;
 }
 
-
 EncodableList CustomAppCheckToken::ToEncodableList() const {
   EncodableList list;
   list.reserve(2);
@@ -262,15 +267,17 @@ EncodableList CustomAppCheckToken::ToEncodableList() const {
   return list;
 }
 
-CustomAppCheckToken CustomAppCheckToken::FromEncodableList(const EncodableList& list) {
-  CustomAppCheckToken decoded(
-    std::get<std::string>(list[0]),
-    std::get<int64_t>(list[1]));
+CustomAppCheckToken CustomAppCheckToken::FromEncodableList(
+    const EncodableList& list) {
+  CustomAppCheckToken decoded(std::get<std::string>(list[0]),
+                              std::get<int64_t>(list[1]));
   return decoded;
 }
 
 bool CustomAppCheckToken::operator==(const CustomAppCheckToken& other) const {
-  return PigeonInternalDeepEquals(token_, other.token_) && PigeonInternalDeepEquals(expire_time_millis_, other.expire_time_millis_);
+  return PigeonInternalDeepEquals(token_, other.token_) &&
+         PigeonInternalDeepEquals(expire_time_millis_,
+                                  other.expire_time_millis_);
 }
 
 bool CustomAppCheckToken::operator!=(const CustomAppCheckToken& other) const {
@@ -284,32 +291,32 @@ size_t CustomAppCheckToken::Hash() const {
   return result;
 }
 
-size_t PigeonInternalDeepHash(const CustomAppCheckToken& v) {
-  return v.Hash();
-}
-
+size_t PigeonInternalDeepHash(const CustomAppCheckToken& v) { return v.Hash(); }
 
 PigeonInternalCodecSerializer::PigeonInternalCodecSerializer() {}
 
 EncodableValue PigeonInternalCodecSerializer::ReadValueOfType(
-  uint8_t type,
-  ::flutter::ByteStreamReader* stream) const {
+    uint8_t type, ::flutter::ByteStreamReader* stream) const {
   switch (type) {
     case 129: {
-        return CustomEncodableValue(CustomAppCheckToken::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
-      }
+      return CustomEncodableValue(CustomAppCheckToken::FromEncodableList(
+          std::get<EncodableList>(ReadValue(stream))));
+    }
     default:
       return ::flutter::StandardCodecSerializer::ReadValueOfType(type, stream);
-    }
+  }
 }
 
 void PigeonInternalCodecSerializer::WriteValue(
-  const EncodableValue& value,
-  ::flutter::ByteStreamWriter* stream) const {
-  if (const CustomEncodableValue* custom_value = std::get_if<CustomEncodableValue>(&value)) {
+    const EncodableValue& value, ::flutter::ByteStreamWriter* stream) const {
+  if (const CustomEncodableValue* custom_value =
+          std::get_if<CustomEncodableValue>(&value)) {
     if (custom_value->type() == typeid(CustomAppCheckToken)) {
       stream->WriteByte(129);
-      WriteValue(EncodableValue(std::any_cast<CustomAppCheckToken>(*custom_value).ToEncodableList()), stream);
+      WriteValue(
+          EncodableValue(std::any_cast<CustomAppCheckToken>(*custom_value)
+                             .ToEncodableList()),
+          stream);
       return;
     }
   }
@@ -318,239 +325,316 @@ void PigeonInternalCodecSerializer::WriteValue(
 
 /// The codec used by FirebaseAppCheckHostApi.
 const ::flutter::StandardMessageCodec& FirebaseAppCheckHostApi::GetCodec() {
-  return ::flutter::StandardMessageCodec::GetInstance(&PigeonInternalCodecSerializer::GetInstance());
+  return ::flutter::StandardMessageCodec::GetInstance(
+      &PigeonInternalCodecSerializer::GetInstance());
 }
 
-// Sets up an instance of `FirebaseAppCheckHostApi` to handle messages through the `binary_messenger`.
+// Sets up an instance of `FirebaseAppCheckHostApi` to handle messages through
+// the `binary_messenger`.
 void FirebaseAppCheckHostApi::SetUp(
-  ::flutter::BinaryMessenger* binary_messenger,
-  FirebaseAppCheckHostApi* api) {
+    ::flutter::BinaryMessenger* binary_messenger,
+    FirebaseAppCheckHostApi* api) {
   FirebaseAppCheckHostApi::SetUp(binary_messenger, api, "");
 }
 
 void FirebaseAppCheckHostApi::SetUp(
-  ::flutter::BinaryMessenger* binary_messenger,
-  FirebaseAppCheckHostApi* api,
-  const std::string& message_channel_suffix) {
-  const std::string prepended_suffix = message_channel_suffix.length() > 0 ? std::string(".") + message_channel_suffix : "";
+    ::flutter::BinaryMessenger* binary_messenger, FirebaseAppCheckHostApi* api,
+    const std::string& message_channel_suffix) {
+  const std::string prepended_suffix =
+      message_channel_suffix.length() > 0
+          ? std::string(".") + message_channel_suffix
+          : "";
   {
-    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.activate" + prepended_suffix, &GetCodec());
+    BasicMessageChannel<> channel(
+        binary_messenger,
+        "dev.flutter.pigeon.firebase_app_check_platform_interface."
+        "FirebaseAppCheckHostApi.activate" +
+            prepended_suffix,
+        &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
-        try {
-          const auto& args = std::get<EncodableList>(message);
-          const auto& encodable_app_name_arg = args.at(0);
-          if (encodable_app_name_arg.IsNull()) {
-            reply(WrapError("app_name_arg unexpectedly null."));
-            return;
-          }
-          const auto& app_name_arg = std::get<std::string>(encodable_app_name_arg);
-          const auto& encodable_android_provider_arg = args.at(1);
-          const auto* android_provider_arg = std::get_if<std::string>(&encodable_android_provider_arg);
-          const auto& encodable_apple_provider_arg = args.at(2);
-          const auto* apple_provider_arg = std::get_if<std::string>(&encodable_apple_provider_arg);
-          const auto& encodable_debug_token_arg = args.at(3);
-          const auto* debug_token_arg = std::get_if<std::string>(&encodable_debug_token_arg);
-          const auto& encodable_windows_provider_arg = args.at(4);
-          const auto* windows_provider_arg = std::get_if<std::string>(&encodable_windows_provider_arg);
-          api->Activate(app_name_arg, android_provider_arg, apple_provider_arg, debug_token_arg, windows_provider_arg, [reply](std::optional<FlutterError>&& output) {
-            if (output.has_value()) {
-              reply(WrapError(output.value()));
-              return;
+      channel.SetMessageHandler(
+          [api](const EncodableValue& message,
+                const ::flutter::MessageReply<EncodableValue>& reply) {
+            try {
+              const auto& args = std::get<EncodableList>(message);
+              const auto& encodable_app_name_arg = args.at(0);
+              if (encodable_app_name_arg.IsNull()) {
+                reply(WrapError("app_name_arg unexpectedly null."));
+                return;
+              }
+              const auto& app_name_arg =
+                  std::get<std::string>(encodable_app_name_arg);
+              const auto& encodable_android_provider_arg = args.at(1);
+              const auto* android_provider_arg =
+                  std::get_if<std::string>(&encodable_android_provider_arg);
+              const auto& encodable_apple_provider_arg = args.at(2);
+              const auto* apple_provider_arg =
+                  std::get_if<std::string>(&encodable_apple_provider_arg);
+              const auto& encodable_debug_token_arg = args.at(3);
+              const auto* debug_token_arg =
+                  std::get_if<std::string>(&encodable_debug_token_arg);
+              const auto& encodable_windows_provider_arg = args.at(4);
+              const auto* windows_provider_arg =
+                  std::get_if<std::string>(&encodable_windows_provider_arg);
+              api->Activate(app_name_arg, android_provider_arg,
+                            apple_provider_arg, debug_token_arg,
+                            windows_provider_arg,
+                            [reply](std::optional<FlutterError>&& output) {
+                              if (output.has_value()) {
+                                reply(WrapError(output.value()));
+                                return;
+                              }
+                              EncodableList wrapped;
+                              wrapped.push_back(EncodableValue());
+                              reply(EncodableValue(std::move(wrapped)));
+                            });
+            } catch (const std::exception& exception) {
+              reply(WrapError(exception.what()));
             }
-            EncodableList wrapped;
-            wrapped.push_back(EncodableValue());
-            reply(EncodableValue(std::move(wrapped)));
           });
-        } catch (const std::exception& exception) {
-          reply(WrapError(exception.what()));
-        }
-      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
   {
-    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.getToken" + prepended_suffix, &GetCodec());
+    BasicMessageChannel<> channel(
+        binary_messenger,
+        "dev.flutter.pigeon.firebase_app_check_platform_interface."
+        "FirebaseAppCheckHostApi.getToken" +
+            prepended_suffix,
+        &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
-        try {
-          const auto& args = std::get<EncodableList>(message);
-          const auto& encodable_app_name_arg = args.at(0);
-          if (encodable_app_name_arg.IsNull()) {
-            reply(WrapError("app_name_arg unexpectedly null."));
-            return;
-          }
-          const auto& app_name_arg = std::get<std::string>(encodable_app_name_arg);
-          const auto& encodable_force_refresh_arg = args.at(1);
-          if (encodable_force_refresh_arg.IsNull()) {
-            reply(WrapError("force_refresh_arg unexpectedly null."));
-            return;
-          }
-          const auto& force_refresh_arg = std::get<bool>(encodable_force_refresh_arg);
-          api->GetToken(app_name_arg, force_refresh_arg, [reply](ErrorOr<std::optional<std::string>>&& output) {
-            if (output.has_error()) {
-              reply(WrapError(output.error()));
-              return;
+      channel.SetMessageHandler(
+          [api](const EncodableValue& message,
+                const ::flutter::MessageReply<EncodableValue>& reply) {
+            try {
+              const auto& args = std::get<EncodableList>(message);
+              const auto& encodable_app_name_arg = args.at(0);
+              if (encodable_app_name_arg.IsNull()) {
+                reply(WrapError("app_name_arg unexpectedly null."));
+                return;
+              }
+              const auto& app_name_arg =
+                  std::get<std::string>(encodable_app_name_arg);
+              const auto& encodable_force_refresh_arg = args.at(1);
+              if (encodable_force_refresh_arg.IsNull()) {
+                reply(WrapError("force_refresh_arg unexpectedly null."));
+                return;
+              }
+              const auto& force_refresh_arg =
+                  std::get<bool>(encodable_force_refresh_arg);
+              api->GetToken(
+                  app_name_arg, force_refresh_arg,
+                  [reply](ErrorOr<std::optional<std::string>>&& output) {
+                    if (output.has_error()) {
+                      reply(WrapError(output.error()));
+                      return;
+                    }
+                    EncodableList wrapped;
+                    auto output_optional = std::move(output).TakeValue();
+                    if (output_optional) {
+                      wrapped.push_back(
+                          EncodableValue(std::move(output_optional).value()));
+                    } else {
+                      wrapped.push_back(EncodableValue());
+                    }
+                    reply(EncodableValue(std::move(wrapped)));
+                  });
+            } catch (const std::exception& exception) {
+              reply(WrapError(exception.what()));
             }
-            EncodableList wrapped;
-            auto output_optional = std::move(output).TakeValue();
-            if (output_optional) {
-              wrapped.push_back(EncodableValue(std::move(output_optional).value()));
-            } else {
-              wrapped.push_back(EncodableValue());
-            }
-            reply(EncodableValue(std::move(wrapped)));
           });
-        } catch (const std::exception& exception) {
-          reply(WrapError(exception.what()));
-        }
-      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
   {
-    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.setTokenAutoRefreshEnabled" + prepended_suffix, &GetCodec());
+    BasicMessageChannel<> channel(
+        binary_messenger,
+        "dev.flutter.pigeon.firebase_app_check_platform_interface."
+        "FirebaseAppCheckHostApi.setTokenAutoRefreshEnabled" +
+            prepended_suffix,
+        &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
-        try {
-          const auto& args = std::get<EncodableList>(message);
-          const auto& encodable_app_name_arg = args.at(0);
-          if (encodable_app_name_arg.IsNull()) {
-            reply(WrapError("app_name_arg unexpectedly null."));
-            return;
-          }
-          const auto& app_name_arg = std::get<std::string>(encodable_app_name_arg);
-          const auto& encodable_is_token_auto_refresh_enabled_arg = args.at(1);
-          if (encodable_is_token_auto_refresh_enabled_arg.IsNull()) {
-            reply(WrapError("is_token_auto_refresh_enabled_arg unexpectedly null."));
-            return;
-          }
-          const auto& is_token_auto_refresh_enabled_arg = std::get<bool>(encodable_is_token_auto_refresh_enabled_arg);
-          api->SetTokenAutoRefreshEnabled(app_name_arg, is_token_auto_refresh_enabled_arg, [reply](std::optional<FlutterError>&& output) {
-            if (output.has_value()) {
-              reply(WrapError(output.value()));
-              return;
+      channel.SetMessageHandler(
+          [api](const EncodableValue& message,
+                const ::flutter::MessageReply<EncodableValue>& reply) {
+            try {
+              const auto& args = std::get<EncodableList>(message);
+              const auto& encodable_app_name_arg = args.at(0);
+              if (encodable_app_name_arg.IsNull()) {
+                reply(WrapError("app_name_arg unexpectedly null."));
+                return;
+              }
+              const auto& app_name_arg =
+                  std::get<std::string>(encodable_app_name_arg);
+              const auto& encodable_is_token_auto_refresh_enabled_arg =
+                  args.at(1);
+              if (encodable_is_token_auto_refresh_enabled_arg.IsNull()) {
+                reply(WrapError(
+                    "is_token_auto_refresh_enabled_arg unexpectedly null."));
+                return;
+              }
+              const auto& is_token_auto_refresh_enabled_arg =
+                  std::get<bool>(encodable_is_token_auto_refresh_enabled_arg);
+              api->SetTokenAutoRefreshEnabled(
+                  app_name_arg, is_token_auto_refresh_enabled_arg,
+                  [reply](std::optional<FlutterError>&& output) {
+                    if (output.has_value()) {
+                      reply(WrapError(output.value()));
+                      return;
+                    }
+                    EncodableList wrapped;
+                    wrapped.push_back(EncodableValue());
+                    reply(EncodableValue(std::move(wrapped)));
+                  });
+            } catch (const std::exception& exception) {
+              reply(WrapError(exception.what()));
             }
-            EncodableList wrapped;
-            wrapped.push_back(EncodableValue());
-            reply(EncodableValue(std::move(wrapped)));
           });
-        } catch (const std::exception& exception) {
-          reply(WrapError(exception.what()));
-        }
-      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
   {
-    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.registerTokenListener" + prepended_suffix, &GetCodec());
+    BasicMessageChannel<> channel(
+        binary_messenger,
+        "dev.flutter.pigeon.firebase_app_check_platform_interface."
+        "FirebaseAppCheckHostApi.registerTokenListener" +
+            prepended_suffix,
+        &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
-        try {
-          const auto& args = std::get<EncodableList>(message);
-          const auto& encodable_app_name_arg = args.at(0);
-          if (encodable_app_name_arg.IsNull()) {
-            reply(WrapError("app_name_arg unexpectedly null."));
-            return;
-          }
-          const auto& app_name_arg = std::get<std::string>(encodable_app_name_arg);
-          api->RegisterTokenListener(app_name_arg, [reply](ErrorOr<std::string>&& output) {
-            if (output.has_error()) {
-              reply(WrapError(output.error()));
-              return;
+      channel.SetMessageHandler(
+          [api](const EncodableValue& message,
+                const ::flutter::MessageReply<EncodableValue>& reply) {
+            try {
+              const auto& args = std::get<EncodableList>(message);
+              const auto& encodable_app_name_arg = args.at(0);
+              if (encodable_app_name_arg.IsNull()) {
+                reply(WrapError("app_name_arg unexpectedly null."));
+                return;
+              }
+              const auto& app_name_arg =
+                  std::get<std::string>(encodable_app_name_arg);
+              api->RegisterTokenListener(
+                  app_name_arg, [reply](ErrorOr<std::string>&& output) {
+                    if (output.has_error()) {
+                      reply(WrapError(output.error()));
+                      return;
+                    }
+                    EncodableList wrapped;
+                    wrapped.push_back(
+                        EncodableValue(std::move(output).TakeValue()));
+                    reply(EncodableValue(std::move(wrapped)));
+                  });
+            } catch (const std::exception& exception) {
+              reply(WrapError(exception.what()));
             }
-            EncodableList wrapped;
-            wrapped.push_back(EncodableValue(std::move(output).TakeValue()));
-            reply(EncodableValue(std::move(wrapped)));
           });
-        } catch (const std::exception& exception) {
-          reply(WrapError(exception.what()));
-        }
-      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
   {
-    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.getLimitedUseAppCheckToken" + prepended_suffix, &GetCodec());
+    BasicMessageChannel<> channel(
+        binary_messenger,
+        "dev.flutter.pigeon.firebase_app_check_platform_interface."
+        "FirebaseAppCheckHostApi.getLimitedUseAppCheckToken" +
+            prepended_suffix,
+        &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler([api](const EncodableValue& message, const ::flutter::MessageReply<EncodableValue>& reply) {
-        try {
-          const auto& args = std::get<EncodableList>(message);
-          const auto& encodable_app_name_arg = args.at(0);
-          if (encodable_app_name_arg.IsNull()) {
-            reply(WrapError("app_name_arg unexpectedly null."));
-            return;
-          }
-          const auto& app_name_arg = std::get<std::string>(encodable_app_name_arg);
-          api->GetLimitedUseAppCheckToken(app_name_arg, [reply](ErrorOr<std::string>&& output) {
-            if (output.has_error()) {
-              reply(WrapError(output.error()));
-              return;
+      channel.SetMessageHandler(
+          [api](const EncodableValue& message,
+                const ::flutter::MessageReply<EncodableValue>& reply) {
+            try {
+              const auto& args = std::get<EncodableList>(message);
+              const auto& encodable_app_name_arg = args.at(0);
+              if (encodable_app_name_arg.IsNull()) {
+                reply(WrapError("app_name_arg unexpectedly null."));
+                return;
+              }
+              const auto& app_name_arg =
+                  std::get<std::string>(encodable_app_name_arg);
+              api->GetLimitedUseAppCheckToken(
+                  app_name_arg, [reply](ErrorOr<std::string>&& output) {
+                    if (output.has_error()) {
+                      reply(WrapError(output.error()));
+                      return;
+                    }
+                    EncodableList wrapped;
+                    wrapped.push_back(
+                        EncodableValue(std::move(output).TakeValue()));
+                    reply(EncodableValue(std::move(wrapped)));
+                  });
+            } catch (const std::exception& exception) {
+              reply(WrapError(exception.what()));
             }
-            EncodableList wrapped;
-            wrapped.push_back(EncodableValue(std::move(output).TakeValue()));
-            reply(EncodableValue(std::move(wrapped)));
           });
-        } catch (const std::exception& exception) {
-          reply(WrapError(exception.what()));
-        }
-      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
 }
 
-EncodableValue FirebaseAppCheckHostApi::WrapError(std::string_view error_message) {
-  return EncodableValue(EncodableList{
-    EncodableValue(std::string(error_message)),
-    EncodableValue("Error"),
-    EncodableValue()
-  });
+EncodableValue FirebaseAppCheckHostApi::WrapError(
+    std::string_view error_message) {
+  return EncodableValue(
+      EncodableList{EncodableValue(std::string(error_message)),
+                    EncodableValue("Error"), EncodableValue()});
 }
 
 EncodableValue FirebaseAppCheckHostApi::WrapError(const FlutterError& error) {
-  return EncodableValue(EncodableList{
-    EncodableValue(error.code()),
-    EncodableValue(error.message()),
-    error.details()
-  });
+  return EncodableValue(EncodableList{EncodableValue(error.code()),
+                                      EncodableValue(error.message()),
+                                      error.details()});
 }
 
-// Generated class from Pigeon that represents Flutter messages that can be called from C++.
-FirebaseAppCheckFlutterApi::FirebaseAppCheckFlutterApi(::flutter::BinaryMessenger* binary_messenger)
- : binary_messenger_(binary_messenger),
-    message_channel_suffix_("") {}
+// Generated class from Pigeon that represents Flutter messages that can be
+// called from C++.
+FirebaseAppCheckFlutterApi::FirebaseAppCheckFlutterApi(
+    ::flutter::BinaryMessenger* binary_messenger)
+    : binary_messenger_(binary_messenger), message_channel_suffix_("") {}
 
 FirebaseAppCheckFlutterApi::FirebaseAppCheckFlutterApi(
-  ::flutter::BinaryMessenger* binary_messenger,
-  const std::string& message_channel_suffix)
- : binary_messenger_(binary_messenger),
-    message_channel_suffix_(message_channel_suffix.length() > 0 ? std::string(".") + message_channel_suffix : "") {}
+    ::flutter::BinaryMessenger* binary_messenger,
+    const std::string& message_channel_suffix)
+    : binary_messenger_(binary_messenger),
+      message_channel_suffix_(message_channel_suffix.length() > 0
+                                  ? std::string(".") + message_channel_suffix
+                                  : "") {}
 
 const ::flutter::StandardMessageCodec& FirebaseAppCheckFlutterApi::GetCodec() {
-  return ::flutter::StandardMessageCodec::GetInstance(&PigeonInternalCodecSerializer::GetInstance());
+  return ::flutter::StandardMessageCodec::GetInstance(
+      &PigeonInternalCodecSerializer::GetInstance());
 }
 
 void FirebaseAppCheckFlutterApi::GetCustomToken(
-  std::function<void(const CustomAppCheckToken&)>&& on_success,
-  std::function<void(const FlutterError&)>&& on_error) {
-  const std::string channel_name = "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckFlutterApi.getCustomToken" + message_channel_suffix_;
+    std::function<void(const CustomAppCheckToken&)>&& on_success,
+    std::function<void(const FlutterError&)>&& on_error) {
+  const std::string channel_name =
+      "dev.flutter.pigeon.firebase_app_check_platform_interface."
+      "FirebaseAppCheckFlutterApi.getCustomToken" +
+      message_channel_suffix_;
   BasicMessageChannel<> channel(binary_messenger_, channel_name, &GetCodec());
   EncodableValue encoded_api_arguments = EncodableValue();
-  channel.Send(encoded_api_arguments, [channel_name, on_success = std::move(on_success), on_error = std::move(on_error)](const uint8_t* reply, size_t reply_size) {
-    std::unique_ptr<EncodableValue> response = GetCodec().DecodeMessage(reply, reply_size);
+  channel.Send(encoded_api_arguments, [channel_name,
+                                       on_success = std::move(on_success),
+                                       on_error = std::move(on_error)](
+                                          const uint8_t* reply,
+                                          size_t reply_size) {
+    std::unique_ptr<EncodableValue> response =
+        GetCodec().DecodeMessage(reply, reply_size);
     const auto& encodable_return_value = *response;
-    const auto* list_return_value = std::get_if<EncodableList>(&encodable_return_value);
+    const auto* list_return_value =
+        std::get_if<EncodableList>(&encodable_return_value);
     if (list_return_value) {
       if (list_return_value->size() > 1) {
-        on_error(FlutterError(std::get<std::string>(list_return_value->at(0)), std::get<std::string>(list_return_value->at(1)), list_return_value->at(2)));
+        on_error(FlutterError(std::get<std::string>(list_return_value->at(0)),
+                              std::get<std::string>(list_return_value->at(1)),
+                              list_return_value->at(2)));
       } else {
-        const auto& return_value = std::any_cast<const CustomAppCheckToken&>(std::get<CustomEncodableValue>(list_return_value->at(0)));
+        const auto& return_value = std::any_cast<const CustomAppCheckToken&>(
+            std::get<CustomEncodableValue>(list_return_value->at(0)));
         on_success(return_value);
       }
     } else {
