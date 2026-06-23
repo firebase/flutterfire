@@ -37,4 +37,3 @@ abstract class FirebasePlugin {
     return {};
   }
 }
-
