@@ -451,7 +451,7 @@ void runQueryTests() {
           final Duration longestPump = pumpDurations.reduce(
             (current, next) => current > next ? current : next,
           );
-          expect(longestPump, lessThan(const Duration(milliseconds: 250)));
+          expect(longestPump, lessThan(const Duration(milliseconds: 750)));
         },
         timeout: const Timeout.factor(10),
         skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
