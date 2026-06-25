@@ -202,15 +202,22 @@ be shown to the user to force them to open the link on the same device. Some
 state can be passed in the link to provide information on the type of operation
 and the user uid.
 
-## Deprecated: Differentiating email-password from email link {:#differentiating_emailpassword_from_email_link}
+## Differentiating email-password from email link {:#differentiating_emailpassword_from_email_link}
+
+> **Deprecated:** The `fetchSignInMethodsForEmail()` method has been removed
+> for security reasons. It enabled
+> [email enumeration](https://cloud.google.com/identity-platform/docs/admin/email-enumeration-protection),
+> which allows attackers to determine whether an email address is registered
+> with your project.
 
 If you created your project on or after September 15, 2023, email enumeration
 protection is enabled by default. This feature improves the security of your
-project's user accounts, but it disables the `fetchSignInMethodsForEmail()`
-method, which we formerly recommended to implement identifier-first flows.
+project's user accounts by preventing the use of `fetchSignInMethodsForEmail()`.
 
 Although you can disable email enumeration protection for your project, we
-recommend against doing so.
+recommend against doing so. Instead, use identifier-first sign-in flows that
+prompt users for their email and then present the appropriate authentication
+method based on your app's configuration.
 
 See the documentation on [email enumeration protection](https://cloud.google.com/identity-platform/docs/admin/email-enumeration-protection)
 for more details.

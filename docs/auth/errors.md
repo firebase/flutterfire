@@ -54,49 +54,34 @@ try {
     String email = e.email;
     AuthCredential pendingCredential = e.credential;
 
-    // Fetch a list of what sign-in methods exist for the conflicting user
-    List<String> userSignInMethods = await auth.fetchSignInMethodsForEmail(email);
+    // fetchSignInMethodsForEmail() has been removed for security
+    // reasons (email enumeration). Instead, prompt the user to sign in
+    // with the provider they originally registered with, then link the
+    // pending credential to that account.
 
-    // If the user has several sign-in methods,
-    // the first method in the list will be the "recommended" method to use.
-    if (userSignInMethods.first == 'password') {
-      // Prompt the user to enter their password
-      String password = '...';
+    // Example: prompt the user to sign in with their email/password
+    String password = '...'; // collect from the user
+    UserCredential userCredential = await auth.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
 
-      // Sign the user in to their account with the password
-      UserCredential userCredential = await auth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+    // Link the pending credential with the existing account
+    await userCredential.user.linkWithCredential(pendingCredential);
 
-      // Link the pending credential with the existing account
-      await userCredential.user.linkWithCredential(pendingCredential);
-
-      // Success! Go back to your application flow
-      return goToApplication();
-    }
-
-    // Since other providers are now external, you must now sign the user in with another
-    // auth provider, such as Facebook.
-    if (userSignInMethods.first == 'facebook.com') {
-      // Create a new Facebook credential
-      String accessToken = await triggerFacebookAuthentication();
-      var facebookAuthCredential = FacebookAuthProvider.credential(accessToken);
-
-      // Sign the user in with the credential
-      UserCredential userCredential = await auth.signInWithCredential(facebookAuthCredential);
-
-      // Link the pending credential with the existing account
-      await userCredential.user.linkWithCredential(pendingCredential);
-
-      // Success! Go back to your application flow
-      return goToApplication();
-    }
-
-    // Handle other OAuth providers...
+    // Success! Go back to your application flow
+    return goToApplication();
   }
 }
 ```
+
+> **Note:** `fetchSignInMethodsForEmail()` was removed because it enables
+> [email enumeration](https://cloud.google.com/identity-platform/docs/admin/email-enumeration-protection),
+> which is a security risk. The recommended approach is to ask the user which
+> provider they originally used, sign in with that provider, and then link the
+> pending credential. See the
+> [account linking](/docs/auth/flutter/account-linking) guide for a full
+> example.
 
 ## `recaptcha-sdk-not-linked` (iOS phone auth)
 
