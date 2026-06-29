@@ -124,6 +124,9 @@ class _PipelineExamplePageState extends State<PipelineExamplePage> {
           'b': 2,
           's': '  AbC  ',
           'm': {'x': 10, 'y': 20},
+          'title': 'Expressions seed doc',
+          't_start': Timestamp.fromDate(DateTime.utc(2025, 1, 1, 12)),
+          't_end': Timestamp.fromDate(DateTime.utc(2025, 1, 3, 12)),
         },
         {
           'test': 'expressions',
@@ -228,6 +231,9 @@ class _PipelineExamplePageState extends State<PipelineExamplePage> {
           'b': 2,
           's': '  AbC  ',
           'm': {'x': 10, 'y': 20},
+          'title': 'Expressions seed doc',
+          't_start': Timestamp.fromDate(DateTime.utc(2025, 1, 1, 12)),
+          't_end': Timestamp.fromDate(DateTime.utc(2025, 1, 3, 12)),
         },
         {
           'test': 'expressions',
@@ -823,12 +829,16 @@ class _PipelineExamplePageState extends State<PipelineExamplePage> {
 
   // 34: map_get, map_keys, map_values
   Future<void> _runPipeline34() => _runPipeline(
-    'Pipeline 34: where(has items) → addFields mapGet, mapKeys, mapValues',
+    'Pipeline 34: where(has items) → mapGet, mapKeys, mapValues',
     () => _firestore
         .pipeline()
         .collection(_collectionId)
         .where(Expression.field('items').exists())
-        .addFields(Expression.field('items').mapGetLiteral('a').as('items_a'))
+        .addFields(
+          Expression.field('items').mapGetLiteral('a').as('items_a'),
+          Expression.field('items').mapKeys().as('items_keys'),
+          Expression.field('items').mapValues().as('items_vals'),
+        )
         .limit(2)
         .execute(),
   );
@@ -1211,6 +1221,158 @@ class _PipelineExamplePageState extends State<PipelineExamplePage> {
         .execute(),
   );
 
+  /// map_keys, timestamp_diff, nor, switchOn, if_null, coalesce, parent — expressions row score 60.
+  Future<void> _runPipeline63() => _runPipeline(
+    'Pipeline 63: test=expressions score=60 → maps, ts diff/extract, nor, switchOn, ifNull, coalesce, parent',
+    () => _firestore
+        .pipeline()
+        .collection(_collectionId)
+        .where(Expression.field('test').equalValue('expressions'))
+        .where(Expression.field('score').equalValue(60))
+        .addFields(
+          Expression.field('m').mapKeys().as('m_keys'),
+          Expression.field('m').mapValues().as('m_vals'),
+          Expression.field('t_end')
+              .timestampDiff(Expression.field('t_start'), 'day')
+              .as('diff_days_field'),
+          Expression.timestampDiffStatic(
+            Expression.field('t_end'),
+            Expression.field('t_start'),
+            'hour',
+          ).as('diff_hours_static'),
+          Expression.field('t_end').timestampExtract('month').as('end_month'),
+          Expression.currentTimestamp().timestampExtract('year').as('now_year'),
+          Expression.currentTimestamp()
+              .timestampExtract('hour', 'UTC')
+              .as('now_hour_utc'),
+          Expression.field('nope').ifNullValue(-1).as('if_null_n'),
+          Expression.coalesce(
+            Expression.field('title'),
+            Expression.field('missing'),
+            Expression.constant('fb'),
+          ).as('coalesce_title'),
+          Expression.nor(
+            Expression.field('score').lessThanValue(0),
+            Expression.field('a').equalValue(9999),
+          ).as('nor_ok'),
+          Expression.switchOn(
+            Expression.field('a').greaterThanValue(50),
+            Expression.constant('high'),
+            Expression.field('a').greaterThanValue(5),
+            Expression.constant('mid'),
+            Expression.constant('low'),
+          ).as('bucket'),
+          Expression.parentFromRef(
+            _firestore.collection(_collectionId).doc('demo_parent'),
+          ).as('parent_from_ref'),
+          Constant(
+            _firestore.collection(_collectionId).doc('demo_parent'),
+          ).parent().as('parent_of_const_ref'),
+        )
+        .limit(5)
+        .execute(),
+  );
+
+  Future<void> _runPipeline64() => _runPipeline(
+    'Pipeline 64: test=expressions score=60 → mapKeys, mapValues only',
+    () => _firestore
+        .pipeline()
+        .collection(_collectionId)
+        .where(Expression.field('test').equalValue('expressions'))
+        .where(Expression.field('score').equalValue(60))
+        .addFields(
+          Expression.field('m').mapKeys().as('m_keys'),
+          Expression.field('m').mapValues().as('m_vals'),
+        )
+        .limit(3)
+        .execute(),
+  );
+
+  Future<void> _runPipeline65() => _runPipeline(
+    'Pipeline 65: test=expressions score=60 → timestampDiff + timestampExtract',
+    () => _firestore
+        .pipeline()
+        .collection(_collectionId)
+        .where(Expression.field('test').equalValue('expressions'))
+        .where(Expression.field('score').equalValue(60))
+        .addFields(
+          Expression.field(
+            't_end',
+          ).timestampDiff(Expression.field('t_start'), 'day').as('diff_days'),
+          Expression.timestampDiffStatic(
+            Expression.field('t_end'),
+            Expression.field('t_start'),
+            'hour',
+          ).as('diff_hours'),
+          Expression.field('t_end').timestampExtract('day').as('end_day'),
+          Expression.currentTimestamp().timestampExtract('year').as('now_year'),
+        )
+        .limit(3)
+        .execute(),
+  );
+
+  Future<void> _runPipeline66() => _runPipeline(
+    'Pipeline 66: test=expressions score=60 → Expression.nor only (two falsey arms → true)',
+    () => _firestore
+        .pipeline()
+        .collection(_collectionId)
+        .where(Expression.field('test').equalValue('expressions'))
+        .where(Expression.field('score').equalValue(60))
+        .addFields(
+          Expression.nor(
+            Expression.field('score').lessThanValue(0),
+            Expression.field('a').equalValue(9999),
+          ).as('nor_ok'),
+        )
+        .limit(3)
+        .execute(),
+  );
+
+  Future<void> _runPipeline67() => _runPipeline(
+    'Pipeline 67: test=expressions score=60 → Expression.switchOn only (a=1 → low)',
+    () => _firestore
+        .pipeline()
+        .collection(_collectionId)
+        .where(Expression.field('test').equalValue('expressions'))
+        .where(Expression.field('score').equalValue(60))
+        .addFields(
+          Expression.switchOn(
+            Expression.field('a').greaterThanValue(50),
+            Expression.constant('high'),
+            Expression.field('a').greaterThanValue(5),
+            Expression.constant('mid'),
+            Expression.constant('low'),
+          ).as('bucket'),
+        )
+        .limit(3)
+        .execute(),
+  );
+
+  Future<void> _runPipeline68() => _runPipeline(
+    'Pipeline 68: test=expressions score=60 → ifNull, coalesce, parentFromRef, parent(expr)',
+    () => _firestore
+        .pipeline()
+        .collection(_collectionId)
+        .where(Expression.field('test').equalValue('expressions'))
+        .where(Expression.field('score').equalValue(60))
+        .addFields(
+          Expression.field('nope').ifNullValue(-1).as('if_null_n'),
+          Expression.coalesce(
+            Expression.field('title'),
+            Expression.field('missing'),
+            Expression.constant('fb'),
+          ).as('coalesce_title'),
+          Expression.parentFromRef(
+            _firestore.collection(_collectionId).doc('demo_parent'),
+          ).as('parent_from_ref'),
+          Constant(
+            _firestore.collection(_collectionId).doc('demo_parent'),
+          ).parent().as('parent_of_const_ref'),
+        )
+        .limit(3)
+        .execute(),
+  );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -1325,6 +1487,12 @@ class _PipelineExamplePageState extends State<PipelineExamplePage> {
                   _btn('60: agg first/last', _runPipeline60),
                   _btn('61: agg array_agg', _runPipeline61),
                   _btn('62: agg array_agg_dist', _runPipeline62),
+                  _btn('63: Option A (all)', _runPipeline63),
+                  _btn('64: OA map keys/vals', _runPipeline64),
+                  _btn('65: OA timestamps', _runPipeline65),
+                  _btn('66: OA nor', _runPipeline66),
+                  _btn('67: OA switchOn', _runPipeline67),
+                  _btn('68: OA ifNull/parent', _runPipeline68),
                 ],
               ),
             ),
