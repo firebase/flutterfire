@@ -210,6 +210,7 @@ GenerativeModel createGenerativeModel({
   List<Tool>? tools,
   ToolConfig? toolConfig,
   Content? systemInstruction,
+  http.Client? httpClient,
 }) =>
     GenerativeModel._(
       model: model,
@@ -224,6 +225,7 @@ GenerativeModel createGenerativeModel({
       tools: tools,
       toolConfig: toolConfig,
       systemInstruction: systemInstruction,
+      httpClient: httpClient,
     );
 
 /// Creates a model with an overridden [ApiClient] for testing.

@@ -1,3 +1,21 @@
+## 5.6.0
+
+ - **FEAT**(firestore): add support for search in firestore pipeline ([#18312](https://github.com/firebase/flutterfire/issues/18312)). ([b3c835f7](https://github.com/firebase/flutterfire/commit/b3c835f7bae8684d4c98167d78a071d9ed88f980))
+
+## 5.5.0
+
+ - **FEAT**(firestore): add support for new array expressions ([#18283](https://github.com/firebase/flutterfire/issues/18283)). ([2293dee0](https://github.com/firebase/flutterfire/commit/2293dee00767cc6eebd57a340eb2b72bdab41d52))
+
+## 5.4.1
+
+ - Update a dependency to the latest release.
+
+## 5.4.0
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+ - **FIX**(firestore,web): update Timestamp handling in jsify and EncodeUtility ([#18264](https://github.com/firebase/flutterfire/issues/18264)). ([9783a448](https://github.com/firebase/flutterfire/commit/9783a448ff532568a5e46ecb927e7b1bc77a164c))
+ - **FEAT**: upgrade pigeon to version 26.3.4 ([#18205](https://github.com/firebase/flutterfire/issues/18205)). ([cb6b4aef](https://github.com/firebase/flutterfire/commit/cb6b4aeffc568755ea3eebe32b998f00237bf5ad))
+
 ## 5.3.0
 
  - **FEAT**: support for Firestore Pipelines ([#18183](https://github.com/firebase/flutterfire/issues/18183)). ([d734cf08](https://github.com/firebase/flutterfire/commit/d734cf0885f6d9403c2fb3ac48d6c52e14199309))

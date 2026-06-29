@@ -31,7 +31,7 @@ abstract class TransactionPlatform extends PlatformInterface {
   }
 
   /// Returns all transaction commands for the current instance.
-  List<PigeonTransactionCommand> get commands {
+  List<InternalTransactionCommand> get commands {
     throw UnimplementedError('commands is not implemented');
   }
 

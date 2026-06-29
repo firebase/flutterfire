@@ -69,7 +69,7 @@ class AudioOutput {
       return null;
     }
     // Play audio stream
-    handle = await SoLoud.instance.play(myStream);
+    handle = SoLoud.instance.play(myStream);
     return stream = myStream;
   }
 
@@ -93,5 +93,12 @@ class AudioOutput {
     // End data to stream & stop currently playing sound from handle
     SoLoud.instance.setDataIsEnded(currentStream);
     await SoLoud.instance.stop(currentHandle);
+  }
+
+  void finishStream() {
+    var currentStream = stream;
+    if (currentStream != null) {
+      SoLoud.instance.setDataIsEnded(currentStream);
+    }
   }
 }

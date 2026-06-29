@@ -25,12 +25,28 @@ class GetMovieVariablesBuilder {
   }
 }
 
+@immutable
 class GetMovieMovie {
-  String id;
-  String title;
+  final String id;
+  final String title;
   GetMovieMovie.fromJson(dynamic json)
       : id = nativeFromJson<String>(json['id']),
         title = nativeFromJson<String>(json['title']);
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+
+    final GetMovieMovie otherTyped = other as GetMovieMovie;
+    return id == otherTyped.id && title == otherTyped.title;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id.hashCode, title.hashCode]);
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -45,12 +61,28 @@ class GetMovieMovie {
   });
 }
 
+@immutable
 class GetMovieData {
-  GetMovieMovie? movie;
+  final GetMovieMovie? movie;
   GetMovieData.fromJson(dynamic json)
       : movie = json['movie'] == null
             ? null
             : GetMovieMovie.fromJson(json['movie']);
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+
+    final GetMovieData otherTyped = other as GetMovieData;
+    return movie == otherTyped.movie;
+  }
+
+  @override
+  int get hashCode => movie.hashCode;
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -65,10 +97,26 @@ class GetMovieData {
   });
 }
 
+@immutable
 class GetMovieVariablesKey {
-  String id;
+  final String id;
   GetMovieVariablesKey.fromJson(dynamic json)
       : id = nativeFromJson<String>(json['id']);
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+
+    final GetMovieVariablesKey otherTyped = other as GetMovieVariablesKey;
+    return id == otherTyped.id;
+  }
+
+  @override
+  int get hashCode => id.hashCode;
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -81,12 +129,28 @@ class GetMovieVariablesKey {
   });
 }
 
+@immutable
 class GetMovieVariables {
-  GetMovieVariablesKey key;
+  final GetMovieVariablesKey key;
   @Deprecated(
       'fromJson is deprecated for Variable classes as they are no longer required for deserialization.')
   GetMovieVariables.fromJson(Map<String, dynamic> json)
       : key = GetMovieVariablesKey.fromJson(json['key']);
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+
+    final GetMovieVariables otherTyped = other as GetMovieVariables;
+    return key == otherTyped.key;
+  }
+
+  @override
+  int get hashCode => key.hashCode;
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};

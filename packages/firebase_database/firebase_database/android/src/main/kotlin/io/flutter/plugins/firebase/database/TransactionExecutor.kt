@@ -15,8 +15,9 @@ import io.flutter.plugin.common.MethodChannel
 import java.util.*
 import java.util.concurrent.ExecutionException
 
-class TransactionExecutor constructor(
-  private val channel: MethodChannel,
+class TransactionExecutor
+constructor(
+    private val channel: MethodChannel,
 ) {
   private val completion = TaskCompletionSource<Any>()
 
@@ -24,46 +25,46 @@ class TransactionExecutor constructor(
   fun execute(arguments: Map<String, Any>): Any {
     Handler(Looper.getMainLooper()).post {
       channel.invokeMethod(
-        Constants.METHOD_CALL_TRANSACTION_HANDLER,
-        arguments,
-        object : MethodChannel.Result {
-          override fun success(
-            @Nullable result: Any?,
-          ) {
-            completion.setResult(result)
-          }
-
-          @Suppress("UNCHECKED_CAST")
-          override fun error(
-            errorCode: String,
-            @Nullable errorMessage: String?,
-            @Nullable errorDetails: Any?,
-          ) {
-            var message = errorMessage
-            val additionalData = mutableMapOf<String, Any>()
-
-            if (message == null) {
-              message = FlutterFirebaseDatabaseException.UNKNOWN_ERROR_MESSAGE
+          Constants.METHOD_CALL_TRANSACTION_HANDLER,
+          arguments,
+          object : MethodChannel.Result {
+            override fun success(
+                @Nullable result: Any?,
+            ) {
+              completion.setResult(result)
             }
 
-            if (errorDetails is Map<*, *>) {
-              additionalData.putAll(errorDetails as Map<String, Any>)
+            @Suppress("UNCHECKED_CAST")
+            override fun error(
+                errorCode: String,
+                @Nullable errorMessage: String?,
+                @Nullable errorDetails: Any?,
+            ) {
+              var message = errorMessage
+              val additionalData = mutableMapOf<String, Any>()
+
+              if (message == null) {
+                message = FlutterFirebaseDatabaseException.UNKNOWN_ERROR_MESSAGE
+              }
+
+              if (errorDetails is Map<*, *>) {
+                additionalData.putAll(errorDetails as Map<String, Any>)
+              }
+
+              val e =
+                  FlutterFirebaseDatabaseException(
+                      errorCode,
+                      message,
+                      additionalData,
+                  )
+
+              completion.setException(e)
             }
 
-            val e =
-              FlutterFirebaseDatabaseException(
-                errorCode,
-                message,
-                additionalData,
-              )
-
-            completion.setException(e)
-          }
-
-          override fun notImplemented() {
-            // never called
-          }
-        },
+            override fun notImplemented() {
+              // never called
+            }
+          },
       )
     }
 

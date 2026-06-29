@@ -120,7 +120,10 @@ class EncodeUtility {
     } else if (value == FieldPath.documentId) {
       return firestore_interop.documentId();
     } else if (value is Timestamp) {
-      return value.toDate();
+      return firestore_interop.TimestampJsImpl(
+        value.seconds.toJS,
+        value.nanoseconds.toJS,
+      );
     } else if (value is GeoPoint) {
       return firestore_interop.GeoPointJsImpl(
           value.latitude.toJS, value.longitude.toJS);

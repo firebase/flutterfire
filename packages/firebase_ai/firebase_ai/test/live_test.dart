@@ -18,6 +18,7 @@ import 'package:firebase_ai/src/api.dart';
 import 'package:firebase_ai/src/content.dart';
 import 'package:firebase_ai/src/error.dart';
 import 'package:firebase_ai/src/live_api.dart';
+import 'package:firebase_ai/src/speech_config.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -34,6 +35,54 @@ void main() {
       expect(speechConfigWithoutVoice.toJson(), {});
     });
 
+    test('SpeechConfig with languageCode toJson() returns correct JSON', () {
+      final speechConfigWithLanguage =
+          SpeechConfig(voiceName: 'Aoede', languageCode: 'en-US');
+      expect(speechConfigWithLanguage.toJson(), {
+        'voice_config': {
+          'prebuilt_voice_config': {'voice_name': 'Aoede'}
+        },
+        'language_code': 'en-US',
+      });
+
+      final speechConfigLanguageOnly = SpeechConfig(languageCode: 'fr-FR');
+      expect(speechConfigLanguageOnly.toJson(), {
+        'language_code': 'fr-FR',
+      });
+    });
+
+    test('SpeechConfig.multiSpeaker toJson() returns correct JSON', () {
+      final multiSpeechConfig = SpeechConfig.multiSpeaker(
+        multiSpeakerVoiceConfig: MultiSpeakerVoiceConfig(
+          speakerVoiceConfigs: [
+            SpeakerVoiceConfig(speaker: 'Joe', voiceName: 'Kore'),
+            SpeakerVoiceConfig(speaker: 'Jane', voiceName: 'Puck'),
+          ],
+        ),
+        languageCode: 'en-US',
+      );
+
+      expect(multiSpeechConfig.toJson(), {
+        'multi_speaker_voice_config': {
+          'speaker_voice_configs': [
+            {
+              'speaker': 'Joe',
+              'voice_config': {
+                'prebuilt_voice_config': {'voice_name': 'Kore'}
+              }
+            },
+            {
+              'speaker': 'Jane',
+              'voice_config': {
+                'prebuilt_voice_config': {'voice_name': 'Puck'}
+              }
+            }
+          ]
+        },
+        'language_code': 'en-US',
+      });
+    });
+
     test('ResponseModalities enum toJson() returns correct value', () {
       expect(ResponseModalities.text.toJson(), 'TEXT');
       expect(ResponseModalities.image.toJson(), 'IMAGE');
@@ -48,6 +97,7 @@ void main() {
         temperature: 0.8,
         topP: 0.95,
         topK: 40,
+        mediaResolution: MediaResolution.low,
       );
 
       expect(liveGenerationConfig.toJson(), {
@@ -61,10 +111,60 @@ void main() {
           }
         },
         'responseModalities': ['TEXT', 'AUDIO'],
+        'mediaResolution': 'MEDIA_RESOLUTION_LOW',
       });
 
       final liveGenerationConfigWithoutOptionals = LiveGenerationConfig();
       expect(liveGenerationConfigWithoutOptionals.toJson(), {});
+    });
+
+    test('GenerationConfig with SpeechConfig toJson() returns correct JSON',
+        () {
+      final config = GenerationConfig(
+        speechConfig: SpeechConfig(voiceName: 'Aoede', languageCode: 'en-US'),
+      );
+
+      expect(config.toJson(), {
+        'speechConfig': {
+          'voice_config': {
+            'prebuilt_voice_config': {'voice_name': 'Aoede'}
+          },
+          'language_code': 'en-US',
+        }
+      });
+
+      final multiConfig = GenerationConfig(
+        speechConfig: SpeechConfig.multiSpeaker(
+          multiSpeakerVoiceConfig: MultiSpeakerVoiceConfig(
+            speakerVoiceConfigs: [
+              SpeakerVoiceConfig(speaker: 'Joe', voiceName: 'Kore'),
+            ],
+          ),
+        ),
+      );
+
+      expect(multiConfig.toJson(), {
+        'speechConfig': {
+          'multi_speaker_voice_config': {
+            'speaker_voice_configs': [
+              {
+                'speaker': 'Joe',
+                'voice_config': {
+                  'prebuilt_voice_config': {'voice_name': 'Kore'}
+                }
+              }
+            ]
+          }
+        }
+      });
+    });
+
+    test('SessionResumptionConfig toJson() returns correct JSON', () {
+      final resumableConfig = SessionResumptionConfig();
+      expect(resumableConfig.toJson(), {});
+
+      final resumeConfig = SessionResumptionConfig.resume('some_handle');
+      expect(resumeConfig.toJson(), {'handle': 'some_handle'});
     });
 
     test('LiveServerContent constructor and properties', () {

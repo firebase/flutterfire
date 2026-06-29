@@ -18,7 +18,7 @@ void main() {
     'claim1': 'value1',
   };
 
-  final kMockData = PigeonIdTokenResult(
+  final kMockData = InternalIdTokenResult(
       claims: kMockClaims,
       issuedAtTimestamp: kMockIssuedAtTimestamp,
       authTimestamp: kMockAuthTimestamp,
@@ -52,7 +52,7 @@ void main() {
       });
 
       test('returns null when data[claims] is null', () {
-        final kMockData = PigeonIdTokenResult(
+        final kMockData = InternalIdTokenResult(
             issuedAtTimestamp: kMockIssuedAtTimestamp,
             authTimestamp: kMockAuthTimestamp,
             expirationTimestamp: kMockExpirationTimestamp,

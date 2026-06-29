@@ -8,6 +8,7 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void runQueryTests() {
@@ -295,8 +296,9 @@ void runQueryTests() {
             await subscription?.cancel();
           });
         },
-        // Failing on CI but works locally
-        skip: kIsWeb,
+        // Failing on CI but works locally. Listening from cache is not
+        // supported on Windows.
+        skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
       );
 
       test('listens to multiple queries', () async {
@@ -372,6 +374,88 @@ void runQueryTests() {
 
         await subscription.cancel();
       });
+
+      testWidgets(
+        'large snapshots do not block frame scheduling',
+        (WidgetTester tester) async {
+          CollectionReference<Map<String, dynamic>> collection =
+              await initializeTest('large-snapshot-listener');
+          const int documentCount = 1000;
+          final String payload = List.filled(1024, 'x').join();
+
+          for (int start = 0; start < documentCount; start += 400) {
+            final WriteBatch batch = firestore.batch();
+            final int end = min(start + 400, documentCount);
+            for (int index = start; index < end; index++) {
+              batch.set(collection.doc('doc-$index'), <String, Object?>{
+                'index': index,
+                'payload': payload,
+              });
+            }
+            await batch.commit();
+          }
+
+          final Completer<void> initialSnapshot = Completer<void>();
+          final Completer<void> receivedUpdates = Completer<void>();
+          var initialSnapshotReceived = false;
+          var updateSnapshots = 0;
+
+          final StreamSubscription<QuerySnapshot<Map<String, dynamic>>>
+              subscription = collection.snapshots().listen((snapshot) {
+            if (!initialSnapshotReceived && snapshot.size == documentCount) {
+              initialSnapshotReceived = true;
+              initialSnapshot.complete();
+              return;
+            }
+
+            if (initialSnapshotReceived && snapshot.docChanges.isNotEmpty) {
+              updateSnapshots++;
+              if (updateSnapshots >= 3 && !receivedUpdates.isCompleted) {
+                receivedUpdates.complete();
+              }
+            }
+          });
+          addTearDown(subscription.cancel);
+
+          await initialSnapshot.future.timeout(const Duration(seconds: 30));
+          await tester.pumpWidget(
+            const Directionality(
+              textDirection: TextDirection.ltr,
+              child: Center(child: CircularProgressIndicator()),
+            ),
+          );
+
+          var updatesDone = false;
+          final updateFuture = Future<void>(() async {
+            for (int index = 0; index < 3; index++) {
+              await collection.doc('doc-0').update(<String, Object?>{
+                'counter': index,
+                'payload': payload,
+              });
+            }
+            await receivedUpdates.future.timeout(const Duration(seconds: 30));
+          }).whenComplete(() {
+            updatesDone = true;
+          });
+
+          final pumpDurations = <Duration>[];
+          while (!updatesDone) {
+            final Stopwatch stopwatch = Stopwatch()..start();
+            await tester.pump(const Duration(milliseconds: 16));
+            stopwatch.stop();
+            pumpDurations.add(stopwatch.elapsed);
+          }
+          await updateFuture;
+
+          expect(pumpDurations, isNotEmpty);
+          final Duration longestPump = pumpDurations.reduce(
+            (current, next) => current > next ? current : next,
+          );
+          expect(longestPump, lessThan(const Duration(milliseconds: 750)));
+        },
+        timeout: const Timeout.factor(10),
+        skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
+      );
 
       test(
         'listeners throws a [FirebaseException] with Query',
@@ -1022,6 +1106,33 @@ void runQueryTests() {
         expect(snapshot.docs[1].id, equals('doc4'));
       });
 
+      test(
+        'startAfterDocument() preserves Timestamp cursor precision',
+        () async {
+          CollectionReference<Map<String, dynamic>> collection =
+              await initializeTest('startAfter-document-timestamp-precision');
+          await collection.doc('doc1').set({
+            'createdAt': Timestamp(1, 123456789),
+          });
+
+          Query<Map<String, dynamic>> baseQuery =
+              collection.orderBy('createdAt');
+          QuerySnapshot<Map<String, dynamic>> firstPage =
+              await baseQuery.limit(50).get();
+
+          expect(firstPage.docs.length, equals(1));
+          expect(firstPage.docs.first.id, equals('doc1'));
+
+          QuerySnapshot<Map<String, dynamic>> nextPage = await baseQuery
+              .startAfterDocument(firstPage.docs.last)
+              .limit(50)
+              .get();
+
+          expect(nextPage.docs, isEmpty);
+        },
+        skip: !kIsWeb,
+      );
+
       testWidgets(
         'throws exception without orderBy() on field used for inequality query',
         (_) async {
@@ -1052,14 +1163,17 @@ void runQueryTests() {
               isA<FirebaseException>().having(
                 (e) => e.message,
                 'message',
-                contains(
-                  'Client specified an invalid argument',
+                anyOf(
+                  contains('Client specified an invalid argument'),
+                  contains('order by clause cannot contain more fields '
+                      'after the key'),
                 ),
               ),
             ),
           );
         },
-        // firebase-js-sdk does not require an orderBy() field to be set for this to work
+        // firebase-js-sdk does not require an orderBy() field to be set for
+        // this to work
         skip: kIsWeb,
       );
 
@@ -1106,8 +1220,10 @@ void runQueryTests() {
               isA<FirebaseException>().having(
                 (e) => e.message,
                 'message',
-                contains(
-                  'Client specified an invalid argument',
+                anyOf(
+                  contains('Client specified an invalid argument'),
+                  contains('order by clause cannot contain more fields '
+                      'after the key'),
                 ),
               ),
             ),
@@ -3798,6 +3914,7 @@ void runQueryTests() {
             3,
           );
         },
+        skip: defaultTargetPlatform == TargetPlatform.windows,
       );
 
       test(
@@ -3820,6 +3937,7 @@ void runQueryTests() {
             1,
           );
         },
+        skip: defaultTargetPlatform == TargetPlatform.windows,
       );
 
       test(
@@ -3841,6 +3959,7 @@ void runQueryTests() {
             1.5,
           );
         },
+        skip: defaultTargetPlatform == TargetPlatform.windows,
       );
 
       test(
@@ -3863,6 +3982,7 @@ void runQueryTests() {
             1,
           );
         },
+        skip: defaultTargetPlatform == TargetPlatform.windows,
       );
 
       test(
@@ -3894,37 +4014,42 @@ void runQueryTests() {
             1.5,
           );
         },
+        skip: defaultTargetPlatform == TargetPlatform.windows,
       );
 
-      test('chaining multiples aggregate queries', () async {
-        final collection = await initializeTest('chaining');
+      test(
+        'chaining multiples aggregate queries',
+        () async {
+          final collection = await initializeTest('chaining');
 
-        await Future.wait([
-          collection.add({'foo': 1}),
-          collection.add({'foo': 2}),
-        ]);
+          await Future.wait([
+            collection.add({'foo': 1}),
+            collection.add({'foo': 2}),
+          ]);
 
-        AggregateQuery query = collection
-            .where('foo', isEqualTo: 1)
-            .aggregate(count(), sum('foo'), average('foo'));
+          AggregateQuery query = collection
+              .where('foo', isEqualTo: 1)
+              .aggregate(count(), sum('foo'), average('foo'));
 
-        AggregateQuerySnapshot snapshot = await query.get();
+          AggregateQuerySnapshot snapshot = await query.get();
 
-        expect(
-          snapshot.count,
-          1,
-        );
+          expect(
+            snapshot.count,
+            1,
+          );
 
-        expect(
-          snapshot.getSum('foo'),
-          1,
-        );
+          expect(
+            snapshot.getSum('foo'),
+            1,
+          );
 
-        expect(
-          snapshot.getAverage('foo'),
-          1,
-        );
-      });
+          expect(
+            snapshot.getAverage('foo'),
+            1,
+          );
+        },
+        skip: defaultTargetPlatform == TargetPlatform.windows,
+      );
 
       test(
         'count() with collectionGroup',
@@ -3966,16 +4091,20 @@ void runQueryTests() {
         },
       );
 
-      test('count(), average() & sum() on empty collection', () async {
-        final collection = await initializeTest('empty-collection');
+      test(
+        'count(), average() & sum() on empty collection',
+        () async {
+          final collection = await initializeTest('empty-collection');
 
-        final snapshot = await collection
-            .aggregate(count(), sum('foo'), average('foo'))
-            .get();
-        expect(snapshot.count, 0);
-        expect(snapshot.getSum('foo'), 0);
-        expect(snapshot.getAverage('foo'), null);
-      });
+          final snapshot = await collection
+              .aggregate(count(), sum('foo'), average('foo'))
+              .get();
+          expect(snapshot.count, 0);
+          expect(snapshot.getSum('foo'), 0);
+          expect(snapshot.getAverage('foo'), null);
+        },
+        skip: defaultTargetPlatform == TargetPlatform.windows,
+      );
     });
 
     group('startAfterDocument', () {

@@ -18,10 +18,26 @@ class SeedDataVariablesBuilder {
   }
 }
 
+@immutable
 class SeedDataTheMatrix {
-  String id;
+  final String id;
   SeedDataTheMatrix.fromJson(dynamic json)
       : id = nativeFromJson<String>(json['id']);
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+
+    final SeedDataTheMatrix otherTyped = other as SeedDataTheMatrix;
+    return id == otherTyped.id;
+  }
+
+  @override
+  int get hashCode => id.hashCode;
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -34,10 +50,26 @@ class SeedDataTheMatrix {
   });
 }
 
+@immutable
 class SeedDataData {
-  SeedDataTheMatrix the_matrix;
+  final SeedDataTheMatrix the_matrix;
   SeedDataData.fromJson(dynamic json)
       : the_matrix = SeedDataTheMatrix.fromJson(json['the_matrix']);
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+
+    final SeedDataData otherTyped = other as SeedDataData;
+    return the_matrix == otherTyped.the_matrix;
+  }
+
+  @override
+  int get hashCode => the_matrix.hashCode;
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};

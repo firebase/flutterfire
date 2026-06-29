@@ -93,6 +93,8 @@ static NSMutableDictionary<NSString *, NSString *> *customAuthDomains;
   pigeonOptions.iosBundleId = (id)options.bundleID ?: [NSNull null];
   pigeonOptions.iosClientId = (id)options.clientID ?: [NSNull null];
   pigeonOptions.appGroupId = (id)options.appGroupID ?: [NSNull null];
+  // recaptchaSiteKey is currently only exposed by Firebase JS options.
+  pigeonOptions.recaptchaSiteKey = [NSNull null];
   return pigeonOptions;
 }
 

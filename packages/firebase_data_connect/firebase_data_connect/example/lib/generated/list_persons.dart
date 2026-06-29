@@ -18,12 +18,28 @@ class ListPersonsVariablesBuilder {
   }
 }
 
+@immutable
 class ListPersonsPeople {
-  String id;
-  String name;
+  final String id;
+  final String name;
   ListPersonsPeople.fromJson(dynamic json)
       : id = nativeFromJson<String>(json['id']),
         name = nativeFromJson<String>(json['name']);
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+
+    final ListPersonsPeople otherTyped = other as ListPersonsPeople;
+    return id == otherTyped.id && name == otherTyped.name;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id.hashCode, name.hashCode]);
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -38,12 +54,28 @@ class ListPersonsPeople {
   });
 }
 
+@immutable
 class ListPersonsData {
-  List<ListPersonsPeople> people;
+  final List<ListPersonsPeople> people;
   ListPersonsData.fromJson(dynamic json)
       : people = (json['people'] as List<dynamic>)
             .map((e) => ListPersonsPeople.fromJson(e))
             .toList();
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+
+    final ListPersonsData otherTyped = other as ListPersonsData;
+    return people == otherTyped.people;
+  }
+
+  @override
+  int get hashCode => people.hashCode;
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};

@@ -221,7 +221,7 @@ IdTokenResult convertWebIdTokenResult(
   auth_interop.IdTokenResult webIdTokenResult,
 ) {
   return IdTokenResult(
-    PigeonIdTokenResult(
+    InternalIdTokenResult(
       claims: webIdTokenResult.claims,
       token: webIdTokenResult.token,
       authTimestamp: webIdTokenResult.authTime.millisecondsSinceEpoch,

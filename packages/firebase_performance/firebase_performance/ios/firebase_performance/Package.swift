@@ -7,19 +7,19 @@
 
 import PackageDescription
 
-let library_version = "0.11.3"
-let firebase_sdk_version: Version = "12.12.0"
+let libraryVersion = "0.11.4-3"
+let firebaseSdkVersion: Version = "12.15.0"
 
 let package = Package(
   name: "firebase_performance",
   platforms: [
-    .iOS("15.0"),
+    .iOS("15.0")
   ],
   products: [
-    .library(name: "firebase-performance", targets: ["firebase_performance"]),
+    .library(name: "firebase-performance", targets: ["firebase_performance"])
   ],
   dependencies: [
-    .package(url: "https://github.com/firebase/firebase-ios-sdk", from: firebase_sdk_version),
+    .package(url: "https://github.com/firebase/firebase-ios-sdk", exact: firebaseSdkVersion),
     .package(name: "firebase_core", path: "../firebase_core"),
   ],
   targets: [
@@ -30,13 +30,13 @@ let package = Package(
         .product(name: "firebase-core", package: "firebase_core"),
       ],
       resources: [
-        .process("Resources"),
+        .process("Resources")
       ],
       cSettings: [
         .headerSearchPath("include"),
-        .define("LIBRARY_VERSION", to: "\"\(library_version)\""),
+        .define("LIBRARY_VERSION", to: "\"\(libraryVersion)\""),
         .define("LIBRARY_NAME", to: "\"flutter-fire-perf\""),
       ]
-    ),
+    )
   ]
 )

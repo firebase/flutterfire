@@ -18,11 +18,8 @@ import 'dart:convert';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
-import 'package:web_socket_channel/io.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
 
 import 'api.dart';
 import 'client.dart';
@@ -282,19 +279,23 @@ abstract class BaseModel {
   ) {
     return () async {
       Map<String, String> headers = {};
+
+      final effectiveAppCheck = appCheck ?? app?.getService<FirebaseAppCheck>();
+      final effectiveAuth = auth ?? app?.getService<FirebaseAuth>();
+
       // Override the client name in Google AI SDK
       headers['x-goog-api-client'] =
           'gl-dart/$packageVersion fire/$packageVersion';
-      if (appCheck != null) {
+      if (effectiveAppCheck != null) {
         final appCheckToken = useLimitedUseAppCheckTokens == true
-            ? await appCheck.getLimitedUseToken()
-            : await appCheck.getToken();
+            ? await effectiveAppCheck.getLimitedUseToken()
+            : await effectiveAppCheck.getToken();
         if (appCheckToken != null) {
           headers['X-Firebase-AppCheck'] = appCheckToken;
         }
       }
-      if (auth != null) {
-        final idToken = await auth.currentUser?.getIdToken();
+      if (effectiveAuth != null) {
+        final idToken = await effectiveAuth.currentUser?.getIdToken();
         if (idToken != null) {
           headers['Authorization'] = 'Firebase $idToken';
         }
@@ -375,7 +376,7 @@ abstract class BaseTemplateApiClientModel extends BaseApiClientModel {
       T Function(Map<String, Object?>) parse) {
     Map<String, Object?> body = {};
     if (inputs != null) {
-      body['inputs'] = inputs;
+      body['inputs'] = _serializeTemplateInputs(inputs);
     }
     if (history != null) {
       body['history'] = history.map((c) => c.toJson()).toList();
@@ -405,7 +406,7 @@ abstract class BaseTemplateApiClientModel extends BaseApiClientModel {
       T Function(Map<String, Object?>) parse) {
     Map<String, Object?> body = {};
     if (inputs != null) {
-      body['inputs'] = inputs;
+      body['inputs'] = _serializeTemplateInputs(inputs);
     }
     if (history != null) {
       body['history'] = history.map((c) => c.toJson()).toList();
@@ -428,4 +429,26 @@ abstract class BaseTemplateApiClientModel extends BaseApiClientModel {
   /// Returns the template name for the given [templateId].
   String templateName(String templateId) =>
       _templateUri.templateName(templateId);
+
+  Map<String, Object?> _serializeTemplateInputs(Map<String, Object?> inputs) {
+    return inputs.map((key, value) {
+      return MapEntry(key, _serializeTemplateInputValue(value));
+    });
+  }
+
+  Object? _serializeTemplateInputValue(Object? value) {
+    return switch (value) {
+      InlineDataPart(:final mimeType, :final bytes) => {
+          'isInline': true,
+          'mimeType': mimeType,
+          'contents': base64Encode(bytes),
+        },
+      Map<Object?, Object?>() => value.map((key, nestedValue) {
+          return MapEntry(key, _serializeTemplateInputValue(nestedValue));
+        }),
+      List<Object?>() =>
+        value.map(_serializeTemplateInputValue).toList(growable: false),
+      _ => value,
+    };
+  }
 }

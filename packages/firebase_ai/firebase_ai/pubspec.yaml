@@ -1,6 +1,7 @@
 name: firebase_ai
 description: Firebase AI Logic SDK.
-version: 3.11.0
+version: 3.13.1
+resolution: workspace
 homepage: https://firebase.google.com/docs/vertex-ai/get-started?platform=flutter
 topics:
   - firebase
@@ -16,14 +17,14 @@ platforms:
   web:
 
 environment:
-  sdk: '>=3.2.0 <4.0.0'
+  sdk: '^3.6.0'
   flutter: ">=3.16.0"
 
 dependencies:
-  firebase_app_check: ^0.4.3
-  firebase_auth: ^6.4.0
-  firebase_core: ^4.7.0
-  firebase_core_platform_interface: ^6.0.3
+  firebase_app_check: ^0.4.5
+  firebase_auth: ^6.5.4
+  firebase_core: ^4.11.0
+  firebase_core_platform_interface: ^7.1.0
   flutter:
     sdk: flutter
   http: ^1.1.0
@@ -31,7 +32,7 @@ dependencies:
   web_socket_channel: ^3.0.1
 
 dev_dependencies:
-  flutter_lints: ^4.0.0
+  flutter_lints: ^6.0.0
   flutter_test:
     sdk: flutter
   matcher: ^0.12.16

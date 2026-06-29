@@ -9,3 +9,4 @@ analyzer:
   exclude:
     - firebase_auth_platform_interface/lib/src/pigeon/messages.pigeon.dart
     - firebase_auth_platform_interface/test/pigeon/test_api.dart
+    - firebase_auth_platform_interface/pigeons/messages.dart

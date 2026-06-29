@@ -25,15 +25,7 @@ void main(List<String> args) async {
   final firebaseiOSVersion = getFirebaseiOSVersion(firebaseCoreIosVersionFile);
 
   // Update hard-coded versions in all plugin Package.swift files
-  final firebaseCoreVersion = loadYaml(
-          File('${firebaseCorePackage.path}/pubspec.yaml')
-              .readAsStringSync())['version']
-      .toString();
-  updatePluginPackageSwiftVersions(
-    workspace,
-    firebaseiOSVersion,
-    firebaseCoreVersion,
-  );
+  updatePluginPackageSwiftVersions(workspace, firebaseiOSVersion);
   // Update plugin version in Constants.swift for pure Swift plugins. Unable to pass macros in pure Swift implementations
   updateLibraryVersionPureSwiftPlugins();
 }
@@ -52,7 +44,6 @@ Future<melos.MelosWorkspace> getMelosWorkspace() async {
     logger: melos.MelosLogger(logging.Logger.standard()),
     packageFilters: packageFilters,
   );
-
   return workspace;
 }
 
@@ -76,7 +67,6 @@ String getFirebaseiOSVersion(File firebaseCoreIosSdkVersion) {
 void updatePluginPackageSwiftVersions(
   melos.MelosWorkspace workspace,
   String firebaseiOSVersion,
-  String firebaseCoreVersion,
 ) {
   for (final package in workspace.filteredPackages.values) {
     for (final platform in ['ios', 'macos']) {
@@ -87,19 +77,13 @@ void updatePluginPackageSwiftVersions(
 
       var content = packageSwiftFile.readAsStringSync();
 
-      // Update firebase_sdk_version
+      // Update firebaseSdkVersion (matches Package.swift naming).
       content = content.replaceAll(
-        RegExp('let firebase_sdk_version: Version = "[^"]+"'),
-        'let firebase_sdk_version: Version = "$firebaseiOSVersion"',
+        RegExp(r'let firebaseSdkVersion: Version = "[^"]+"'),
+        'let firebaseSdkVersion: Version = "$firebaseiOSVersion"',
       );
 
-      // Update shared_spm_version
-      content = content.replaceAll(
-        RegExp('let shared_spm_version: Version = "[^"]+"'),
-        'let shared_spm_version: Version = "$firebaseCoreVersion-firebase-core-swift"',
-      );
-
-      // Update library_version or library_version_string from pubspec version
+      // Update libraryVersion / libraryVersionString from pubspec version.
       final pubspecFile = File('${package.path}/pubspec.yaml');
       if (pubspecFile.existsSync()) {
         final pubspecYaml = loadYaml(pubspecFile.readAsStringSync());
@@ -107,12 +91,12 @@ void updatePluginPackageSwiftVersions(
         if (version != null) {
           final spmVersion = version.replaceAll('+', '-');
           content = content.replaceAll(
-            RegExp('let library_version_string = "[^"]+"'),
-            'let library_version_string = "$spmVersion"',
+            RegExp(r'let libraryVersionString = "[^"]+"'),
+            'let libraryVersionString = "$spmVersion"',
           );
           content = content.replaceAll(
-            RegExp('let library_version = "[^"]+"'),
-            'let library_version = "$spmVersion"',
+            RegExp(r'let libraryVersion = "[^"]+"'),
+            'let libraryVersion = "$spmVersion"',
           );
         }
       }

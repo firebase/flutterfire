@@ -39,12 +39,30 @@ class AddDirectorToMovieVariablesBuilder {
   }
 }
 
+@immutable
 class AddDirectorToMovieDirectedByInsert {
-  String directedbyId;
-  String movieId;
+  final String directedbyId;
+  final String movieId;
   AddDirectorToMovieDirectedByInsert.fromJson(dynamic json)
       : directedbyId = nativeFromJson<String>(json['directedbyId']),
         movieId = nativeFromJson<String>(json['movieId']);
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+
+    final AddDirectorToMovieDirectedByInsert otherTyped =
+        other as AddDirectorToMovieDirectedByInsert;
+    return directedbyId == otherTyped.directedbyId &&
+        movieId == otherTyped.movieId;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([directedbyId.hashCode, movieId.hashCode]);
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -59,11 +77,27 @@ class AddDirectorToMovieDirectedByInsert {
   });
 }
 
+@immutable
 class AddDirectorToMovieData {
-  AddDirectorToMovieDirectedByInsert directedBy_insert;
+  final AddDirectorToMovieDirectedByInsert directedBy_insert;
   AddDirectorToMovieData.fromJson(dynamic json)
       : directedBy_insert = AddDirectorToMovieDirectedByInsert.fromJson(
             json['directedBy_insert']);
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+
+    final AddDirectorToMovieData otherTyped = other as AddDirectorToMovieData;
+    return directedBy_insert == otherTyped.directedBy_insert;
+  }
+
+  @override
+  int get hashCode => directedBy_insert.hashCode;
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -76,10 +110,27 @@ class AddDirectorToMovieData {
   });
 }
 
+@immutable
 class AddDirectorToMovieVariablesPersonId {
-  String id;
+  final String id;
   AddDirectorToMovieVariablesPersonId.fromJson(dynamic json)
       : id = nativeFromJson<String>(json['id']);
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+
+    final AddDirectorToMovieVariablesPersonId otherTyped =
+        other as AddDirectorToMovieVariablesPersonId;
+    return id == otherTyped.id;
+  }
+
+  @override
+  int get hashCode => id.hashCode;
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -92,9 +143,10 @@ class AddDirectorToMovieVariablesPersonId {
   });
 }
 
+@immutable
 class AddDirectorToMovieVariables {
-  late Optional<AddDirectorToMovieVariablesPersonId> personId;
-  late Optional<String> movieId;
+  late final Optional<AddDirectorToMovieVariablesPersonId> personId;
+  late final Optional<String> movieId;
   @Deprecated(
       'fromJson is deprecated for Variable classes as they are no longer required for deserialization.')
   AddDirectorToMovieVariables.fromJson(Map<String, dynamic> json) {
@@ -109,6 +161,22 @@ class AddDirectorToMovieVariables {
         ? null
         : nativeFromJson<String>(json['movieId']);
   }
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+
+    final AddDirectorToMovieVariables otherTyped =
+        other as AddDirectorToMovieVariables;
+    return personId == otherTyped.personId && movieId == otherTyped.movieId;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([personId.hashCode, movieId.hashCode]);
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};

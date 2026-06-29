@@ -1,94 +1,30 @@
-// Copyright 2026, the Chromium project authors.  Please see the AUTHORS file
-// for details. All rights reserved. Use of this source code is governed by a
-// BSD-style license that can be found in the LICENSE file.
+// Copyright 2026 Google LLC
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
-const _channel = MethodChannel('plugins.flutter.io/firebase_ai');
+import 'firebase_ai_headers_e2e_test.dart' as headers_tests;
+import 'firebase_ai_response_parsing_e2e_test.dart' as parsing_tests;
+import 'firebase_ai_mock_test.dart' as mock_tests;
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('firebase_ai', () {
-    group('platform security headers', () {
-      testWidgets(
-        'returns non-empty headers on mobile platforms',
-        skip: kIsWeb,
-        (WidgetTester tester) async {
-          final headers = await _channel.invokeMapMethod<String, String>(
-            'getPlatformHeaders',
-          );
-
-          expect(
-            headers,
-            isNotNull,
-            reason: 'Native plugin should return platform headers',
-          );
-          expect(
-            headers,
-            isNotEmpty,
-            reason: 'Native plugin should return non-empty platform headers',
-          );
-        },
-      );
-
-      testWidgets(
-        'returns correct Android headers',
-        skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android,
-        (WidgetTester tester) async {
-          final headers = await _channel.invokeMapMethod<String, String>(
-            'getPlatformHeaders',
-          );
-
-          expect(headers, isNotNull);
-          expect(headers, contains('X-Android-Package'));
-          expect(
-            headers!['X-Android-Package'],
-            isNotEmpty,
-            reason: 'Package name should not be empty',
-          );
-          // Cert may be empty in some emulator environments, but key must exist.
-          expect(headers, contains('X-Android-Cert'));
-        },
-      );
-
-      testWidgets(
-        'returns correct iOS/macOS headers',
-        skip: kIsWeb ||
-            (defaultTargetPlatform != TargetPlatform.iOS &&
-                defaultTargetPlatform != TargetPlatform.macOS),
-        (WidgetTester tester) async {
-          final headers = await _channel.invokeMapMethod<String, String>(
-            'getPlatformHeaders',
-          );
-
-          expect(headers, isNotNull);
-          expect(headers, contains('x-ios-bundle-identifier'));
-          expect(
-            headers!['x-ios-bundle-identifier'],
-            isNotEmpty,
-            reason: 'Bundle identifier should not be empty',
-          );
-        },
-      );
-
-      testWidgets(
-        'returns empty headers on web',
-        skip: !kIsWeb,
-        (WidgetTester tester) async {
-          // On web, no native plugin is registered, so the channel call
-          // should throw a MissingPluginException.
-          expect(
-            () => _channel.invokeMapMethod<String, String>(
-              'getPlatformHeaders',
-            ),
-            throwsA(isA<MissingPluginException>()),
-          );
-        },
-      );
-    });
+    headers_tests.main();
+    parsing_tests.main();
+    mock_tests.main();
   });
 }

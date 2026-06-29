@@ -9,7 +9,7 @@ part of '../firebase_remote_config.dart';
 /// You can get an instance by calling [FirebaseRemoteConfig.instance]. Note
 /// [FirebaseRemoteConfig.instance] is async.
 // ignore: prefer_mixin
-class FirebaseRemoteConfig extends FirebasePluginPlatform {
+class FirebaseRemoteConfig extends FirebasePlugin {
   FirebaseRemoteConfig._({required this.app})
       : super(app.name, 'plugins.flutter.io/firebase_remote_config');
 

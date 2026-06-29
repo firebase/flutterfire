@@ -73,7 +73,7 @@ public class FlutterFirebaseAuthUser
       @NonNull GeneratedAndroidFirebaseAuth.AuthPigeonFirebaseApp app,
       @NonNull Boolean forceRefresh,
       @NonNull
-          GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonIdTokenResult>
+          GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.InternalIdTokenResult>
               result) {
     cachedThreadPool.execute(
         () -> {
@@ -97,7 +97,7 @@ public class FlutterFirebaseAuthUser
       @NonNull GeneratedAndroidFirebaseAuth.AuthPigeonFirebaseApp app,
       @NonNull Map<String, Object> input,
       @NonNull
-          GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserCredential>
+          GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.InternalUserCredential>
               result) {
     FirebaseUser firebaseUser = getCurrentUserFromPigeon(app);
     AuthCredential credential = PigeonParser.getCredential(input);
@@ -129,9 +129,9 @@ public class FlutterFirebaseAuthUser
   @Override
   public void linkWithProvider(
       @NonNull GeneratedAndroidFirebaseAuth.AuthPigeonFirebaseApp app,
-      @NonNull GeneratedAndroidFirebaseAuth.PigeonSignInProvider signInProvider,
+      @NonNull GeneratedAndroidFirebaseAuth.InternalSignInProvider signInProvider,
       @NonNull
-          GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserCredential>
+          GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.InternalUserCredential>
               result) {
     FirebaseUser firebaseUser = getCurrentUserFromPigeon(app);
 
@@ -162,7 +162,7 @@ public class FlutterFirebaseAuthUser
       @NonNull GeneratedAndroidFirebaseAuth.AuthPigeonFirebaseApp app,
       @NonNull Map<String, Object> input,
       @NonNull
-          GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserCredential>
+          GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.InternalUserCredential>
               result) {
     FirebaseUser firebaseUser = getCurrentUserFromPigeon(app);
     AuthCredential credential = PigeonParser.getCredential(input);
@@ -194,9 +194,9 @@ public class FlutterFirebaseAuthUser
   @Override
   public void reauthenticateWithProvider(
       @NonNull GeneratedAndroidFirebaseAuth.AuthPigeonFirebaseApp app,
-      @NonNull GeneratedAndroidFirebaseAuth.PigeonSignInProvider signInProvider,
+      @NonNull GeneratedAndroidFirebaseAuth.InternalSignInProvider signInProvider,
       @NonNull
-          GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserCredential>
+          GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.InternalUserCredential>
               result) {
     FirebaseUser firebaseUser = getCurrentUserFromPigeon(app);
 
@@ -226,7 +226,7 @@ public class FlutterFirebaseAuthUser
   public void reload(
       @NonNull GeneratedAndroidFirebaseAuth.AuthPigeonFirebaseApp app,
       @NonNull
-          GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserDetails>
+          GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.InternalUserDetails>
               result) {
     FirebaseUser firebaseUser = getCurrentUserFromPigeon(app);
 
@@ -252,7 +252,7 @@ public class FlutterFirebaseAuthUser
   @Override
   public void sendEmailVerification(
       @NonNull GeneratedAndroidFirebaseAuth.AuthPigeonFirebaseApp app,
-      @Nullable GeneratedAndroidFirebaseAuth.PigeonActionCodeSettings actionCodeSettings,
+      @Nullable GeneratedAndroidFirebaseAuth.InternalActionCodeSettings actionCodeSettings,
       @NonNull GeneratedAndroidFirebaseAuth.VoidResult result) {
     FirebaseUser firebaseUser = getCurrentUserFromPigeon(app);
 
@@ -296,7 +296,7 @@ public class FlutterFirebaseAuthUser
       @NonNull GeneratedAndroidFirebaseAuth.AuthPigeonFirebaseApp app,
       @NonNull String providerId,
       @NonNull
-          GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserCredential>
+          GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.InternalUserCredential>
               result) {
     FirebaseUser firebaseUser = getCurrentUserFromPigeon(app);
 
@@ -330,7 +330,7 @@ public class FlutterFirebaseAuthUser
       @NonNull GeneratedAndroidFirebaseAuth.AuthPigeonFirebaseApp app,
       @NonNull String newEmail,
       @NonNull
-          GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserDetails>
+          GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.InternalUserDetails>
               result) {
     FirebaseUser firebaseUser = getCurrentUserFromPigeon(app);
 
@@ -369,7 +369,7 @@ public class FlutterFirebaseAuthUser
       @NonNull GeneratedAndroidFirebaseAuth.AuthPigeonFirebaseApp app,
       @NonNull String newPassword,
       @NonNull
-          GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserDetails>
+          GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.InternalUserDetails>
               result) {
     FirebaseUser firebaseUser = getCurrentUserFromPigeon(app);
 
@@ -408,7 +408,7 @@ public class FlutterFirebaseAuthUser
       @NonNull GeneratedAndroidFirebaseAuth.AuthPigeonFirebaseApp app,
       @NonNull Map<String, Object> input,
       @NonNull
-          GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserDetails>
+          GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.InternalUserDetails>
               result) {
     FirebaseUser firebaseUser = getCurrentUserFromPigeon(app);
 
@@ -453,9 +453,9 @@ public class FlutterFirebaseAuthUser
   @Override
   public void updateProfile(
       @NonNull GeneratedAndroidFirebaseAuth.AuthPigeonFirebaseApp app,
-      @NonNull GeneratedAndroidFirebaseAuth.PigeonUserProfile profile,
+      @NonNull GeneratedAndroidFirebaseAuth.InternalUserProfile profile,
       @NonNull
-          GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserDetails>
+          GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.InternalUserDetails>
               result) {
     FirebaseUser firebaseUser = getCurrentUserFromPigeon(app);
 
@@ -507,7 +507,7 @@ public class FlutterFirebaseAuthUser
   public void verifyBeforeUpdateEmail(
       @NonNull GeneratedAndroidFirebaseAuth.AuthPigeonFirebaseApp app,
       @NonNull String newEmail,
-      @Nullable GeneratedAndroidFirebaseAuth.PigeonActionCodeSettings actionCodeSettings,
+      @Nullable GeneratedAndroidFirebaseAuth.InternalActionCodeSettings actionCodeSettings,
       @NonNull GeneratedAndroidFirebaseAuth.VoidResult result) {
     FirebaseUser firebaseUser = getCurrentUserFromPigeon(app);
 

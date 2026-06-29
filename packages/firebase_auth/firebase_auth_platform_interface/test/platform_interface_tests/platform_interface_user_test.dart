@@ -40,13 +40,13 @@ void main() {
     },
   ];
   group('$UserPlatform()', () {
-    PigeonUserDetails kMockUser;
+    InternalUserDetails kMockUser;
     setUpAll(() async {
       await Firebase.initializeApp();
       auth = FirebaseAuthPlatform.instance;
 
-      kMockUser = PigeonUserDetails(
-        userInfo: PigeonUserInfo(
+      kMockUser = InternalUserDetails(
+        userInfo: InternalUserInfo(
           uid: kMockUid,
           isAnonymous: true,
           email: kMockEmail,
@@ -289,6 +289,6 @@ void main() {
 
 class TestUserPlatform extends UserPlatform {
   TestUserPlatform(FirebaseAuthPlatform auth, MultiFactorPlatform multiFactor,
-      PigeonUserDetails data)
+      InternalUserDetails data)
       : super(auth, multiFactor, data);
 }

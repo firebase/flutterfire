@@ -112,7 +112,8 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
   }
 
   @override
-  Future<String?> getToken({String? vapidKey}) async {
+  Future<String?> getToken(
+      {String? vapidKey, String? serviceWorkerScriptPath}) async {
     _delegate;
 
     if (!_initialized) {
@@ -121,7 +122,8 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
     }
 
     return convertWebExceptions(
-      () => _delegate.getToken(vapidKey: vapidKey),
+      () => _delegate.getToken(
+          vapidKey: vapidKey, serviceWorkerScriptPath: serviceWorkerScriptPath),
     );
   }
 

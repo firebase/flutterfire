@@ -1,3 +1,21 @@
+## 3.9.0
+
+ - **FEAT**(appcheck): appcheck reCAPTCHA mobile support (gradually rolling out) ([#18261](https://github.com/firebase/flutterfire/issues/18261)). ([036a860a](https://github.com/firebase/flutterfire/commit/036a860a0e66d46b5c57eb3df3a0f9e5846ef00b))
+ - **FEAT**(core): bump Firebase web SDK to 12.15.0 ([#18376](https://github.com/firebase/flutterfire/issues/18376)). ([22eb4d5d](https://github.com/firebase/flutterfire/commit/22eb4d5d0f3f14207e080e9c9fc8373052258ef4))
+ - **FEAT**(core): Add Recaptcha Site Key to FirebaseOptions ([#18334](https://github.com/firebase/flutterfire/issues/18334)). ([57be7027](https://github.com/firebase/flutterfire/commit/57be702778d34b9b7e86b40817d93acaec4c3ca4))
+
+## 3.8.0
+
+ - **FEAT**(core): bump Firebase web SDK to 12.14.0 ([#18331](https://github.com/firebase/flutterfire/issues/18331)). ([3f31a88a](https://github.com/firebase/flutterfire/commit/3f31a88ab6ad96914f427e292b919b6465cf4996))
+
+## 3.7.0
+
+ - **FEAT**: bump Firebase JS SDK to 12.13.0 ([#18274](https://github.com/firebase/flutterfire/issues/18274)). ([bb8ad546](https://github.com/firebase/flutterfire/commit/bb8ad546f114146b6e1cd26c3296825e2964745d))
+
+## 3.6.1
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+
 ## 3.6.0
 
  - **FEAT**: support for Firestore Pipelines ([#18183](https://github.com/firebase/flutterfire/issues/18183)). ([d734cf08](https://github.com/firebase/flutterfire/commit/d734cf0885f6d9403c2fb3ac48d6c52e14199309))

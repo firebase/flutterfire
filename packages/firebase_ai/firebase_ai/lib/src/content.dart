@@ -41,8 +41,10 @@ final class Content {
   static Content text(String text) => Content('user', [TextPart(text)]);
 
   /// Return a [Content] with [InlineDataPart].
-  static Content inlineData(String mimeType, Uint8List bytes) =>
-      Content('user', [InlineDataPart(mimeType, bytes)]);
+  static Content inlineData(String mimeType, Uint8List bytes,
+          {MediaResolution? mediaResolution}) =>
+      Content('user',
+          [InlineDataPart(mimeType, bytes, mediaResolution: mediaResolution)]);
 
   /// Return a [Content] with multiple [Part]s.
   static Content multi(Iterable<Part> parts) => Content('user', [...parts]);
@@ -100,15 +102,19 @@ Part parsePart(Object? jsonObject) {
   final thoughtSignature = jsonObject.containsKey('thoughtSignature')
       ? jsonObject['thoughtSignature']! as String
       : null;
+  final mediaResolution = switch (jsonObject['mediaResolution']) {
+    {'level': final String level} => MediaResolution.parseValue(level),
+    _ => null,
+  };
 
   if (jsonObject.containsKey('functionCall')) {
     final functionCall = jsonObject['functionCall'];
-    if (functionCall is Map &&
-        functionCall.containsKey('name') &&
-        functionCall.containsKey('args')) {
+    if (functionCall is Map && functionCall.containsKey('name')) {
       return FunctionCall._(
         functionCall['name'] as String,
-        functionCall['args'] as Map<String, Object?>,
+        functionCall.containsKey('args')
+            ? functionCall['args'] as Map<String, Object?>
+            : <String, Object?>{},
         id: functionCall['id'] as String?,
         isThought: isThought,
         thoughtSignature: thoughtSignature,
@@ -157,6 +163,7 @@ Part parsePart(Object? jsonObject) {
         inlineDataResult['mimeType'] as String,
         base64Decode(inlineDataResult['data'] as String),
         willContinue: inlineDataResult['willContinue'] as bool?,
+        mediaResolution: mediaResolution,
         isThought: isThought,
         thoughtSignature: thoughtSignature,
       );
@@ -174,7 +181,9 @@ Part parsePart(Object? jsonObject) {
       }
     } =>
       FileData._(mimeType, fileUri,
-          isThought: isThought, thoughtSignature: thoughtSignature),
+          mediaResolution: mediaResolution,
+          isThought: isThought,
+          thoughtSignature: thoughtSignature),
     _ => () {
         log('unhandled part format: $jsonObject');
         return UnknownPart(jsonObject);
@@ -261,6 +270,7 @@ final class InlineDataPart extends Part {
     this.mimeType,
     this.bytes, {
     this.willContinue,
+    this.mediaResolution,
     bool? isThought,
   }) : super(
           isThought: isThought,
@@ -273,6 +283,7 @@ final class InlineDataPart extends Part {
     this.mimeType,
     this.bytes, {
     this.willContinue,
+    this.mediaResolution,
     bool? isThought,
     String? thoughtSignature,
   }) : super(
@@ -284,6 +295,7 @@ final class InlineDataPart extends Part {
     this.mimeType,
     this.bytes, {
     this.willContinue,
+    this.mediaResolution,
     bool? isThought,
     String? thoughtSignature,
   }) : super(
@@ -300,6 +312,12 @@ final class InlineDataPart extends Part {
 
   /// Whether there's more inline data coming for streaming.
   final bool? willContinue;
+
+  /// The resolution to use for this media part.
+  ///
+  /// This overrides the request-level media resolution for this part.
+  final MediaResolution? mediaResolution;
+
   @override
   Object toJson() {
     final superJson = super.toJson() as Map<String, Object?>;
@@ -310,6 +328,8 @@ final class InlineDataPart extends Part {
         'mimeType': mimeType,
         if (willContinue != null) 'willContinue': willContinue,
       },
+      if (mediaResolution != null)
+        'mediaResolution': {'level': mediaResolution!.toJson()},
     };
   }
 
@@ -433,6 +453,7 @@ final class FileData extends Part {
   const FileData(
     this.mimeType,
     this.fileUri, {
+    this.mediaResolution,
     bool? isThought,
   }) : super(
           isThought: isThought,
@@ -444,6 +465,7 @@ final class FileData extends Part {
   const FileData.forTest(
     this.mimeType,
     this.fileUri, {
+    this.mediaResolution,
     bool? isThought,
     String? thoughtSignature,
   }) : super(
@@ -454,6 +476,7 @@ final class FileData extends Part {
   const FileData._(
     this.mimeType,
     this.fileUri, {
+    this.mediaResolution,
     bool? isThought,
     String? thoughtSignature,
   }) : super(
@@ -468,12 +491,19 @@ final class FileData extends Part {
   /// The gs link for Firebase Storage reference
   final String fileUri;
 
+  /// The resolution to use for this media part.
+  ///
+  /// This overrides the request-level media resolution for this part.
+  final MediaResolution? mediaResolution;
+
   @override
   Object toJson() {
     final superJson = super.toJson() as Map<String, Object?>;
     return <String, Object?>{
       ...superJson,
       'file_data': {'file_uri': fileUri, 'mime_type': mimeType},
+      if (mediaResolution != null)
+        'mediaResolution': {'level': mediaResolution!.toJson()},
     };
   }
 }

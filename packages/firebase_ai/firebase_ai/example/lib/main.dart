@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import 'package:firebase_ai/firebase_ai.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -31,6 +32,7 @@ import 'pages/schema_page.dart';
 import 'pages/server_template_page.dart';
 import 'pages/grounding_page.dart';
 import 'pages/token_count_page.dart';
+import 'pages/tts_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -70,11 +72,12 @@ class _GenerativeAISampleState extends State<GenerativeAISample> {
 
   void _initializeModel(bool useVertexBackend) {
     if (useVertexBackend) {
-      final vertexInstance = FirebaseAI.vertexAI(auth: FirebaseAuth.instance);
-      _currentModel = vertexInstance.generativeModel(model: 'gemini-2.5-flash');
+      final vertexInstance = FirebaseAI.vertexAI(location: 'global');
+      _currentModel =
+          vertexInstance.generativeModel(model: 'gemini-3.1-flash-lite');
     } else {
-      final googleAI = FirebaseAI.googleAI(auth: FirebaseAuth.instance);
-      _currentModel = googleAI.generativeModel(model: 'gemini-2.5-flash');
+      final googleAI = FirebaseAI.googleAI();
+      _currentModel = googleAI.generativeModel(model: 'gemini-3.1-flash-lite');
     }
   }
 
@@ -176,6 +179,11 @@ class _HomeScreenState extends State<HomeScreen> {
       case 10:
         return GroundingPage(
           title: 'Grounding',
+          useVertexBackend: useVertexBackend,
+        );
+      case 11:
+        return TTSPage(
+          title: 'TTS Test',
           useVertexBackend: useVertexBackend,
         );
 
@@ -311,6 +319,13 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             label: 'Grounding',
             tooltip: 'Search & Maps Grounding',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.record_voice_over,
+            ),
+            label: 'TTS',
+            tooltip: 'Text to Speech',
           ),
         ],
         currentIndex: _selectedIndex,

@@ -219,7 +219,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
 
   @override
   FirebaseAuthWeb setInitialValues({
-    PigeonUserDetails? currentUser,
+    InternalUserDetails? currentUser,
     String? languageCode,
   }) {
     // Values are already set on web
