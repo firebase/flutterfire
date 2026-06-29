@@ -1,3 +1,15 @@
+## 3.13.1
+
+ - Update a dependency to the latest release.
+
+## 3.13.0
+
+ - **FIX**(ai): firebase_ai server template image inputs passed as InlineDataPart were serialized as normal generative inlineData ([#18350](https://github.com/firebase/flutterfire/issues/18350)). ([f3c53792](https://github.com/firebase/flutterfire/commit/f3c53792f1acf19ab1c2c7c3d157fca3a183b5d1))
+ - **FEAT**(firebaseai): Add speech config and TTS sample page ([#18358](https://github.com/firebase/flutterfire/issues/18358)). ([0af51b50](https://github.com/firebase/flutterfire/commit/0af51b501603a611c7c6800efd9d98c478abab4d))
+ - **FEAT**(ai): add language code support for SpeechConfig ([#18353](https://github.com/firebase/flutterfire/issues/18353)). ([3471afc7](https://github.com/firebase/flutterfire/commit/3471afc7ffa7bae58981683982d58d669ac71d50))
+ - **FEAT**(ai): add mediaResolution parameter ([#18354](https://github.com/firebase/flutterfire/issues/18354)). ([79547569](https://github.com/firebase/flutterfire/commit/795475692384385a17511b295640ad6f8ab625f6))
+ - **FEAT**(ai): add support for cancellable clients for in-flight requests ([#18349](https://github.com/firebase/flutterfire/issues/18349)). ([566cfed4](https://github.com/firebase/flutterfire/commit/566cfed42599318cf0f24eefc5d696223e46128c))
+
 ## 3.12.2
 
  - Update a dependency to the latest release.

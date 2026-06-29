@@ -7,7 +7,7 @@
 
 import PackageDescription
 
-let firebaseSdkVersion: Version = "12.14.0"
+let firebaseSdkVersion: Version = "12.15.0"
 
 let package = Package(
   name: "firebase_app_check",
@@ -19,6 +19,10 @@ let package = Package(
   ],
   dependencies: [
     .package(url: "https://github.com/firebase/firebase-ios-sdk", exact: firebaseSdkVersion),
+    .package(
+      url: "https://github.com/GoogleCloudPlatform/recaptcha-enterprise-mobile-sdk.git",
+      from: "18.0.0"
+    ),
     .package(name: "firebase_core", path: "../firebase_core"),
   ],
   targets: [
@@ -26,6 +30,7 @@ let package = Package(
       name: "firebase_app_check",
       dependencies: [
         .product(name: "FirebaseAppCheck", package: "firebase-ios-sdk"),
+        .product(name: "RecaptchaEnterprise", package: "recaptcha-enterprise-mobile-sdk"),
         .product(name: "firebase-core", package: "firebase_core"),
       ],
       resources: [

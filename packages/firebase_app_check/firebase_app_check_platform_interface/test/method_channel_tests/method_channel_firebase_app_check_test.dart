@@ -7,6 +7,7 @@ import 'package:firebase_app_check_platform_interface/src/pigeon/messages.pigeon
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter/services.dart';
 
 import '../mock.dart';
 
@@ -119,6 +120,61 @@ void main() {
 
         expect(calls, hasLength(1));
         expect(calls.single[3], 'android-debug-token');
+      });
+    });
+
+    group('activate() with Recaptcha', () {
+      test('passes recaptcha on Android', () async {
+        final appCheck = MethodChannelFirebaseAppCheck(app: Firebase.app());
+
+        final List<dynamic> log = <dynamic>[];
+
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMessageHandler(
+          'dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.activate',
+          (message) async {
+            final list = const StandardMessageCodec().decodeMessage(message)
+                as List<dynamic>;
+            log.add(list);
+            return const StandardMessageCodec()
+                .encodeMessage([null]); // Return success
+          },
+        );
+
+        await appCheck.activate(
+          providerAndroid: const AndroidReCaptchaProvider(),
+        );
+
+        expect(log.length, 1);
+        expect(log[0][0], '[DEFAULT]'); // appName
+        expect(log[0][1], 'recaptcha'); // androidProvider
+      });
+
+      test('passes recaptcha on iOS', () async {
+        debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+        final appCheck = MethodChannelFirebaseAppCheck(app: Firebase.app());
+
+        final List<dynamic> log = <dynamic>[];
+
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMessageHandler(
+          'dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.activate',
+          (message) async {
+            final list = const StandardMessageCodec().decodeMessage(message)
+                as List<dynamic>;
+            log.add(list);
+            return const StandardMessageCodec()
+                .encodeMessage([null]); // Return success
+          },
+        );
+
+        await appCheck.activate(
+          providerApple: const AppleReCaptchaProvider(),
+        );
+
+        expect(log.length, 1);
+        expect(log[0][0], '[DEFAULT]'); // appName
+        expect(log[0][2], 'recaptcha'); // appleProvider
       });
     });
   });

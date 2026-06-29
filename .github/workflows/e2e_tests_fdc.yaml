@@ -219,7 +219,13 @@ jobs:
       - uses: futureware-tech/simulator-action@e89aa8f93d3aec35083ff49d2854d07f7186f7f5
         id: simulator
         with:
+          # https://github.com/actions/runner-images/blob/main/images/macos/macos-15-Readme.md#installed-simulators
           model: "iPhone 16"
+      - name: Ensure Simulator Ready
+        env:
+          SIMULATOR: ${{ steps.simulator.outputs.udid }}
+          ENSURE_BOOT_IF_NEEDED: "0"
+        run: .github/workflows/scripts/ensure-simulator-ready.sh
       - name: 'E2E Tests'
         working-directory: 'packages/firebase_data_connect/firebase_data_connect/example'
         env:
@@ -227,13 +233,11 @@ jobs:
         run: |
           # Uncomment following line to have simulator logs printed out for debugging purposes.
           # xcrun simctl spawn booted log stream --predicate 'eventMessage contains "flutter"' &
-          # The iOS simulator sometimes fails to connect the VM Service. Keep a
-          # limit around the full test command and retry once with a simulator reboot.
+          # Retry once after VM Service / simulator flake (reboot + migration-aware wait).
           perl -e 'alarm 900; exec @ARGV' -- flutter test integration_test/e2e_test.dart -d "$SIMULATOR" --dart-define=CI=true --timeout 10x || {
             echo "First attempt failed or timed out. Rebooting simulator and retrying..."
             xcrun simctl shutdown "$SIMULATOR" || true
-            xcrun simctl boot "$SIMULATOR"
-            xcrun simctl bootstatus "$SIMULATOR" -b
+            "${GITHUB_WORKSPACE}/.github/workflows/scripts/ensure-simulator-ready.sh"
             flutter test integration_test/e2e_test.dart -d "$SIMULATOR" --dart-define=CI=true --timeout 10x
           }
       - name: Save Firestore Emulator Cache

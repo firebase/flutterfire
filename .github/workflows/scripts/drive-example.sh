@@ -13,12 +13,11 @@ fi
 
 if [ "$ACTION" == "ios" ]
 then
-  SIMULATOR="iPhone 14"
-  # Boot simulator and wait for System app to be ready.
-  xcrun simctl bootstatus "$SIMULATOR" -b
+  SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  SIMULATOR="${SIMULATOR:-iPhone 16}"
+  export SIMULATOR
+  "${SCRIPT_DIR}/ensure-simulator-ready.sh"
   xcrun simctl logverbose "$SIMULATOR" enable
-  # Sleep to allow simulator to settle.
-  sleep 15
   # Uncomment following line to have simulator logs printed out for debugging purposes.
   # xcrun simctl spawn booted log stream --predicate 'eventMessage contains "flutter"' &
   melos exec -c 1 --fail-fast --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" --dir-exists=integration_test -- \
