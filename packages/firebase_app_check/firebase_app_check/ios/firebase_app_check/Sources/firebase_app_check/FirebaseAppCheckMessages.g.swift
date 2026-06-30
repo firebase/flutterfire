@@ -27,12 +27,13 @@ final class PigeonError: Error {
   }
 
   var localizedDescription: String {
-    "PigeonError(code: \(code), message: \(message ?? "<nil>"), details: \(details ?? "<nil>")"
+    return
+      "PigeonError(code: \(code), message: \(message ?? "<nil>"), details: \(details ?? "<nil>")"
   }
 }
 
 private func wrapResult(_ result: Any?) -> [Any?] {
-  [result]
+  return [result]
 }
 
 private func wrapError(_ error: Any) -> [Any?] {
@@ -57,8 +58,12 @@ private func wrapError(_ error: Any) -> [Any?] {
   ]
 }
 
+private func createConnectionError(withChannelName channelName: String) -> PigeonError {
+  return PigeonError(code: "channel-error", message: "Unable to establish connection on channel: '\(channelName)'.", details: "")
+}
+
 private func isNullish(_ value: Any?) -> Bool {
-  value is NSNull || value == nil
+  return value is NSNull || value == nil
 }
 
 private func nilOrValue<T>(_ value: Any?) -> T? {
@@ -66,73 +71,224 @@ private func nilOrValue<T>(_ value: Any?) -> T? {
   return value as! T?
 }
 
-private class FirebaseAppCheckMessagesPigeonCodecReader: FlutterStandardReader {}
+private func doubleEqualsFirebaseAppCheckMessages(_ lhs: Double, _ rhs: Double) -> Bool {
+  return (lhs.isNaN && rhs.isNaN) || lhs == rhs
+}
 
-private class FirebaseAppCheckMessagesPigeonCodecWriter: FlutterStandardWriter {}
+private func doubleHashFirebaseAppCheckMessages(_ value: Double, _ hasher: inout Hasher) {
+  if value.isNaN {
+    hasher.combine(0x7FF8000000000000)
+  } else {
+    // Normalize -0.0 to 0.0
+    hasher.combine(value == 0 ? 0 : value)
+  }
+}
+
+func deepEqualsFirebaseAppCheckMessages(_ lhs: Any?, _ rhs: Any?) -> Bool {
+  let cleanLhs = nilOrValue(lhs) as Any?
+  let cleanRhs = nilOrValue(rhs) as Any?
+  switch (cleanLhs, cleanRhs) {
+  case (nil, nil):
+    return true
+
+  case (nil, _), (_, nil):
+    return false
+
+  case (let lhs as AnyObject, let rhs as AnyObject) where lhs === rhs:
+    return true
+
+  case is (Void, Void):
+    return true
+
+  case (let lhsArray, let rhsArray) as ([Any?], [Any?]):
+    guard lhsArray.count == rhsArray.count else { return false }
+    for (index, element) in lhsArray.enumerated() {
+      if !deepEqualsFirebaseAppCheckMessages(element, rhsArray[index]) {
+        return false
+      }
+    }
+    return true
+
+  case (let lhsArray, let rhsArray) as ([Double], [Double]):
+    guard lhsArray.count == rhsArray.count else { return false }
+    for (index, element) in lhsArray.enumerated() {
+      if !doubleEqualsFirebaseAppCheckMessages(element, rhsArray[index]) {
+        return false
+      }
+    }
+    return true
+
+  case (let lhsDictionary, let rhsDictionary) as ([AnyHashable: Any?], [AnyHashable: Any?]):
+    guard lhsDictionary.count == rhsDictionary.count else { return false }
+    for (lhsKey, lhsValue) in lhsDictionary {
+      var found = false
+      for (rhsKey, rhsValue) in rhsDictionary {
+        if deepEqualsFirebaseAppCheckMessages(lhsKey, rhsKey) {
+          if deepEqualsFirebaseAppCheckMessages(lhsValue, rhsValue) {
+            found = true
+            break
+          } else {
+            return false
+          }
+        }
+      }
+      if !found { return false }
+    }
+    return true
+
+  case (let lhs as Double, let rhs as Double):
+    return doubleEqualsFirebaseAppCheckMessages(lhs, rhs)
+
+  case (let lhsHashable, let rhsHashable) as (AnyHashable, AnyHashable):
+    return lhsHashable == rhsHashable
+
+  default:
+    return false
+  }
+}
+
+func deepHashFirebaseAppCheckMessages(value: Any?, hasher: inout Hasher) {
+  let cleanValue = nilOrValue(value) as Any?
+  if let cleanValue = cleanValue {
+    if let doubleValue = cleanValue as? Double {
+      doubleHashFirebaseAppCheckMessages(doubleValue, &hasher)
+    } else if let valueList = cleanValue as? [Any?] {
+      for item in valueList {
+        deepHashFirebaseAppCheckMessages(value: item, hasher: &hasher)
+      }
+    } else if let valueList = cleanValue as? [Double] {
+      for item in valueList {
+        doubleHashFirebaseAppCheckMessages(item, &hasher)
+      }
+    } else if let valueDict = cleanValue as? [AnyHashable: Any?] {
+      var result = 0
+      for (key, value) in valueDict {
+        var entryKeyHasher = Hasher()
+        deepHashFirebaseAppCheckMessages(value: key, hasher: &entryKeyHasher)
+        var entryValueHasher = Hasher()
+        deepHashFirebaseAppCheckMessages(value: value, hasher: &entryValueHasher)
+        result = result &+ ((entryKeyHasher.finalize() &* 31) ^ entryValueHasher.finalize())
+      }
+      hasher.combine(result)
+    } else if let hashableValue = cleanValue as? AnyHashable {
+      hasher.combine(hashableValue)
+    } else {
+      hasher.combine(String(describing: cleanValue))
+    }
+  } else {
+    hasher.combine(0)
+  }
+}
+
+
+/// Carries a minted App Check token plus the wall-clock expiry the Firebase
+/// SDK should associate with it. Returning the expiry alongside the token lets
+/// backends mint tokens with arbitrary lifetimes (short TTLs for a stricter
+/// security posture, longer TTLs for fewer round-trips) without the plugin
+/// hardcoding a refresh window.
+///
+/// Generated class from Pigeon that represents data sent in messages.
+struct CustomAppCheckToken: Hashable {
+  /// The App Check token string to send with Firebase requests.
+  var token: String
+  /// Absolute expiry as Unix epoch milliseconds (UTC). The Firebase SDK uses
+  /// this to decide when to refresh; a token returned with an expiry in the
+  /// past is treated as immediately expired.
+  var expireTimeMillis: Int64
+
+
+  // swift-format-ignore: AlwaysUseLowerCamelCase
+  static func fromList(_ pigeonVar_list: [Any?]) -> CustomAppCheckToken? {
+    let token = pigeonVar_list[0] as! String
+    let expireTimeMillis = pigeonVar_list[1] as! Int64
+
+    return CustomAppCheckToken(
+      token: token,
+      expireTimeMillis: expireTimeMillis
+    )
+  }
+  func toList() -> [Any?] {
+    return [
+      token,
+      expireTimeMillis,
+    ]
+  }
+  static func == (lhs: CustomAppCheckToken, rhs: CustomAppCheckToken) -> Bool {
+    if Swift.type(of: lhs) != Swift.type(of: rhs) {
+      return false
+    }
+    return deepEqualsFirebaseAppCheckMessages(lhs.token, rhs.token) && deepEqualsFirebaseAppCheckMessages(lhs.expireTimeMillis, rhs.expireTimeMillis)
+  }
+
+  func hash(into hasher: inout Hasher) {
+    hasher.combine("CustomAppCheckToken")
+    deepHashFirebaseAppCheckMessages(value: token, hasher: &hasher)
+    deepHashFirebaseAppCheckMessages(value: expireTimeMillis, hasher: &hasher)
+  }
+}
+
+private class FirebaseAppCheckMessagesPigeonCodecReader: FlutterStandardReader {
+  override func readValue(ofType type: UInt8) -> Any? {
+    switch type {
+    case 129:
+      return CustomAppCheckToken.fromList(self.readValue() as! [Any?])
+    default:
+      return super.readValue(ofType: type)
+    }
+  }
+}
+
+private class FirebaseAppCheckMessagesPigeonCodecWriter: FlutterStandardWriter {
+  override func writeValue(_ value: Any) {
+    if let value = value as? CustomAppCheckToken {
+      super.writeByte(129)
+      super.writeValue(value.toList())
+    } else {
+      super.writeValue(value)
+    }
+  }
+}
 
 private class FirebaseAppCheckMessagesPigeonCodecReaderWriter: FlutterStandardReaderWriter {
   override func reader(with data: Data) -> FlutterStandardReader {
-    FirebaseAppCheckMessagesPigeonCodecReader(data: data)
+    return FirebaseAppCheckMessagesPigeonCodecReader(data: data)
   }
 
   override func writer(with data: NSMutableData) -> FlutterStandardWriter {
-    FirebaseAppCheckMessagesPigeonCodecWriter(data: data)
+    return FirebaseAppCheckMessagesPigeonCodecWriter(data: data)
   }
 }
 
 class FirebaseAppCheckMessagesPigeonCodec: FlutterStandardMessageCodec, @unchecked Sendable {
-  static let shared = FirebaseAppCheckMessagesPigeonCodec(
-    readerWriter: FirebaseAppCheckMessagesPigeonCodecReaderWriter()
-  )
+  static let shared = FirebaseAppCheckMessagesPigeonCodec(readerWriter: FirebaseAppCheckMessagesPigeonCodecReaderWriter())
 }
+
 
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol FirebaseAppCheckHostApi {
-  func activate(
-    appName: String, androidProvider: String?, appleProvider: String?,
-    debugToken: String?,
-    completion: @escaping (Result<Void, Error>) -> Void)
-  func getToken(
-    appName: String, forceRefresh: Bool,
-    completion: @escaping (Result<String?, Error>) -> Void)
-  func setTokenAutoRefreshEnabled(
-    appName: String, isTokenAutoRefreshEnabled: Bool,
-    completion: @escaping (Result<Void, Error>) -> Void)
+  func activate(appName: String, androidProvider: String?, appleProvider: String?, debugToken: String?, windowsProvider: String?, completion: @escaping (Result<Void, Error>) -> Void)
+  func getToken(appName: String, forceRefresh: Bool, completion: @escaping (Result<String?, Error>) -> Void)
+  func setTokenAutoRefreshEnabled(appName: String, isTokenAutoRefreshEnabled: Bool, completion: @escaping (Result<Void, Error>) -> Void)
   func registerTokenListener(appName: String, completion: @escaping (Result<String, Error>) -> Void)
-  func getLimitedUseAppCheckToken(
-    appName: String,
-    completion: @escaping (Result<String, Error>) -> Void)
+  func getLimitedUseAppCheckToken(appName: String, completion: @escaping (Result<String, Error>) -> Void)
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
 class FirebaseAppCheckHostApiSetup {
-  static var codec: FlutterStandardMessageCodec {
-    FirebaseAppCheckMessagesPigeonCodec.shared
-  }
-
-  /// Sets up an instance of `FirebaseAppCheckHostApi` to handle messages through the
-  /// `binaryMessenger`.
-  static func setUp(
-    binaryMessenger: FlutterBinaryMessenger, api: FirebaseAppCheckHostApi?,
-    messageChannelSuffix: String = ""
-  ) {
+  static var codec: FlutterStandardMessageCodec { FirebaseAppCheckMessagesPigeonCodec.shared }
+  /// Sets up an instance of `FirebaseAppCheckHostApi` to handle messages through the `binaryMessenger`.
+  static func setUp(binaryMessenger: FlutterBinaryMessenger, api: FirebaseAppCheckHostApi?, messageChannelSuffix: String = "") {
     let channelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
-    let activateChannel = FlutterBasicMessageChannel(
-      name:
-        "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.activate\(channelSuffix)",
-      binaryMessenger: binaryMessenger, codec: codec
-    )
-    if let api {
+    let activateChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.activate\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
       activateChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let appNameArg = args[0] as! String
         let androidProviderArg: String? = nilOrValue(args[1])
         let appleProviderArg: String? = nilOrValue(args[2])
         let debugTokenArg: String? = nilOrValue(args[3])
-        api.activate(
-          appName: appNameArg, androidProvider: androidProviderArg, appleProvider: appleProviderArg,
-          debugToken: debugTokenArg
-        ) { result in
+        let windowsProviderArg: String? = nilOrValue(args[4])
+        api.activate(appName: appNameArg, androidProvider: androidProviderArg, appleProvider: appleProviderArg, debugToken: debugTokenArg, windowsProvider: windowsProviderArg) { result in
           switch result {
           case .success:
             reply(wrapResult(nil))
@@ -144,12 +300,8 @@ class FirebaseAppCheckHostApiSetup {
     } else {
       activateChannel.setMessageHandler(nil)
     }
-    let getTokenChannel = FlutterBasicMessageChannel(
-      name:
-        "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.getToken\(channelSuffix)",
-      binaryMessenger: binaryMessenger, codec: codec
-    )
-    if let api {
+    let getTokenChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.getToken\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
       getTokenChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let appNameArg = args[0] as! String
@@ -166,19 +318,13 @@ class FirebaseAppCheckHostApiSetup {
     } else {
       getTokenChannel.setMessageHandler(nil)
     }
-    let setTokenAutoRefreshEnabledChannel = FlutterBasicMessageChannel(
-      name:
-        "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.setTokenAutoRefreshEnabled\(channelSuffix)",
-      binaryMessenger: binaryMessenger, codec: codec
-    )
-    if let api {
+    let setTokenAutoRefreshEnabledChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.setTokenAutoRefreshEnabled\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
       setTokenAutoRefreshEnabledChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let appNameArg = args[0] as! String
         let isTokenAutoRefreshEnabledArg = args[1] as! Bool
-        api.setTokenAutoRefreshEnabled(
-          appName: appNameArg, isTokenAutoRefreshEnabled: isTokenAutoRefreshEnabledArg
-        ) { result in
+        api.setTokenAutoRefreshEnabled(appName: appNameArg, isTokenAutoRefreshEnabled: isTokenAutoRefreshEnabledArg) { result in
           switch result {
           case .success:
             reply(wrapResult(nil))
@@ -190,12 +336,8 @@ class FirebaseAppCheckHostApiSetup {
     } else {
       setTokenAutoRefreshEnabledChannel.setMessageHandler(nil)
     }
-    let registerTokenListenerChannel = FlutterBasicMessageChannel(
-      name:
-        "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.registerTokenListener\(channelSuffix)",
-      binaryMessenger: binaryMessenger, codec: codec
-    )
-    if let api {
+    let registerTokenListenerChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.registerTokenListener\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
       registerTokenListenerChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let appNameArg = args[0] as! String
@@ -211,12 +353,8 @@ class FirebaseAppCheckHostApiSetup {
     } else {
       registerTokenListenerChannel.setMessageHandler(nil)
     }
-    let getLimitedUseAppCheckTokenChannel = FlutterBasicMessageChannel(
-      name:
-        "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.getLimitedUseAppCheckToken\(channelSuffix)",
-      binaryMessenger: binaryMessenger, codec: codec
-    )
-    if let api {
+    let getLimitedUseAppCheckTokenChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.getLimitedUseAppCheckToken\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
       getLimitedUseAppCheckTokenChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let appNameArg = args[0] as! String
@@ -231,6 +369,49 @@ class FirebaseAppCheckHostApiSetup {
       }
     } else {
       getLimitedUseAppCheckTokenChannel.setMessageHandler(nil)
+    }
+  }
+}
+/// Dart-side handler invoked by the native plugin when the Firebase SDK needs
+/// a fresh App Check token. Implementations typically call a backend service
+/// (for example a Cloud Function with `enforceAppCheck: false`) that mints a
+/// token using the Firebase Admin SDK. The native side awaits the future,
+/// then hands the token to the Firebase SDK, which attaches it to subsequent
+/// Firebase backend requests (Firestore, Functions, Storage, Auth, RTDB).
+///
+/// Generated protocol from Pigeon that represents Flutter messages that can be called from Swift.
+protocol FirebaseAppCheckFlutterApiProtocol {
+  func getCustomToken(completion: @escaping (Result<CustomAppCheckToken, PigeonError>) -> Void)
+}
+class FirebaseAppCheckFlutterApi: FirebaseAppCheckFlutterApiProtocol {
+  private let binaryMessenger: FlutterBinaryMessenger
+  private let messageChannelSuffix: String
+  init(binaryMessenger: FlutterBinaryMessenger, messageChannelSuffix: String = "") {
+    self.binaryMessenger = binaryMessenger
+    self.messageChannelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
+  }
+  var codec: FirebaseAppCheckMessagesPigeonCodec {
+    return FirebaseAppCheckMessagesPigeonCodec.shared
+  }
+  func getCustomToken(completion: @escaping (Result<CustomAppCheckToken, PigeonError>) -> Void) {
+    let channelName: String = "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckFlutterApi.getCustomToken\(messageChannelSuffix)"
+    let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
+    channel.sendMessage(nil) { response in
+      guard let listResponse = response as? [Any?] else {
+        completion(.failure(createConnectionError(withChannelName: channelName)))
+        return
+      }
+      if listResponse.count > 1 {
+        let code: String = listResponse[0] as! String
+        let message: String? = nilOrValue(listResponse[1])
+        let details: String? = nilOrValue(listResponse[2])
+        completion(.failure(PigeonError(code: code, message: message, details: details)))
+      } else if listResponse[0] == nil {
+        completion(.failure(PigeonError(code: "null-error", message: "Flutter api returned null value for non-null return value.", details: "")))
+      } else {
+        let result = listResponse[0] as! CustomAppCheckToken
+        completion(.success(result))
+      }
     }
   }
 }
