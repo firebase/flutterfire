@@ -39,6 +39,7 @@ void main() {
             };
           case 'Messaging#hasPermission':
           case 'Messaging#requestPermission':
+          case 'Messaging#getNotificationSettings':
             return {
               'authorizationStatus': 1,
               'alert': 1,
@@ -166,6 +167,90 @@ void main() {
           },
         ),
       ]);
+    });
+
+    test('getNotificationSettings', () async {
+      final settings = await messaging.getNotificationSettings();
+      expect(settings, isA<NotificationSettings>());
+      expect(
+          settings.authorizationStatus, equals(AuthorizationStatus.authorized));
+
+      // check native method was called
+      expect(log, <Matcher>[
+        isMethodCall(
+          'Messaging#getNotificationSettings',
+          arguments: <String, dynamic>{
+            'appName': defaultFirebaseAppName,
+          },
+        ),
+      ]);
+    });
+
+    test(
+        'getNotificationSettings returns notDetermined when authorizationStatus is -1',
+        () async {
+      // Override the method handler to return notDetermined (-1)
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(MethodChannelFirebaseMessaging.channel,
+              (call) async {
+        log.add(call);
+        if (call.method == 'Messaging#getNotificationSettings') {
+          return {
+            'authorizationStatus': -1,
+            'alert': -1,
+            'announcement': -1,
+            'badge': -1,
+            'carPlay': -1,
+            'criticalAlert': -1,
+            'provisional': -1,
+            'sound': -1,
+            'providesAppNotificationSettings': -1,
+          };
+        }
+        return <String, dynamic>{};
+      });
+
+      final settings = await messaging.getNotificationSettings();
+      expect(settings.authorizationStatus,
+          equals(AuthorizationStatus.notDetermined));
+
+      // Restore original handler
+      handleMethodCall((call) async {
+        log.add(call);
+        switch (call.method) {
+          case 'Messaging#deleteToken':
+          case 'Messaging#subscribeToTopic':
+          case 'Messaging#unsubscribeFromTopic':
+            return null;
+          case 'Messaging#getAPNSToken':
+          case 'Messaging#getToken':
+            return {
+              'token': 'test_token',
+            };
+          case 'Messaging#hasPermission':
+          case 'Messaging#requestPermission':
+          case 'Messaging#getNotificationSettings':
+            return {
+              'authorizationStatus': 1,
+              'alert': 1,
+              'announcement': 0,
+              'badge': 1,
+              'carPlay': 0,
+              'criticalAlert': 0,
+              'provisional': 0,
+              'sound': 1,
+              'providesAppNotificationSettings': 0,
+            };
+          case 'Messaging#setAutoInitEnabled':
+            return {
+              'isAutoInitEnabled': call.arguments['enabled'],
+            };
+          case 'Messaging#deleteInstanceID':
+            return true;
+          default:
+            return <String, dynamic>{};
+        }
+      });
     });
 
     test('requestPermission', () async {
