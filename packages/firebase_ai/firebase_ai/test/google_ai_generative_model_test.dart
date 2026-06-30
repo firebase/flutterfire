@@ -336,6 +336,55 @@ void main() {
         );
       });
 
+      test(
+          'throws ArgumentError when mixing functionDeclarations with googleSearch',
+          () async {
+        final (_, model) = createModel(
+          tools: [
+            Tool.functionDeclarations([
+              FunctionDeclaration(
+                'someFunction',
+                'Some cool function.',
+                parameters: {
+                  'param': Schema.string(description: 'Some parameter.'),
+                },
+              ),
+            ]),
+            Tool.googleSearch(),
+          ],
+        );
+        const prompt = 'Some prompt';
+        expect(
+          () => model.generateContent([Content.text(prompt)]),
+          throwsArgumentError,
+        );
+      });
+
+      test(
+          'throws ArgumentError when mixing functionDeclarations with googleSearch via override',
+          () async {
+        final (_, model) = createModel();
+        const prompt = 'Some prompt';
+        expect(
+          () => model.generateContent(
+            [Content.text(prompt)],
+            tools: [
+              Tool.functionDeclarations([
+                FunctionDeclaration(
+                  'someFunction',
+                  'Some cool function.',
+                  parameters: {
+                    'param': Schema.string(description: 'Some parameter.'),
+                  },
+                ),
+              ]),
+              Tool.googleSearch(),
+            ],
+          ),
+          throwsArgumentError,
+        );
+      });
+
       test('can pass a url context tool', () async {
         final (client, model) = createModel(
           tools: [Tool.urlContext()],
@@ -509,6 +558,30 @@ void main() {
           responses: [arbitraryGenerateContentResponse],
         );
         await responses.drain<void>();
+      });
+
+      test(
+          'throws ArgumentError when mixing functionDeclarations with googleSearch',
+          () async {
+        final (_, model) = createModel(
+          tools: [
+            Tool.functionDeclarations([
+              FunctionDeclaration(
+                'someFunction',
+                'Some cool function.',
+                parameters: {
+                  'param': Schema.string(description: 'Some parameter.'),
+                },
+              ),
+            ]),
+            Tool.googleSearch(),
+          ],
+        );
+        const prompt = 'Some prompt';
+        expect(
+          () => model.generateContentStream([Content.text(prompt)]),
+          throwsArgumentError,
+        );
       });
     });
 

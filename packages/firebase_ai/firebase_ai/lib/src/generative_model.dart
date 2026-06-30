@@ -114,22 +114,27 @@ final class GenerativeModel extends BaseApiClientModel {
   /// print(response.text);
   /// ```
   Future<GenerateContentResponse> generateContent(Iterable<Content> prompt,
-          {List<SafetySetting>? safetySettings,
-          GenerationConfig? generationConfig,
-          List<Tool>? tools,
-          ToolConfig? toolConfig}) =>
-      makeRequest(
-          Task.generateContent,
-          _serializationStrategy.generateContentRequest(
-            prompt,
-            model,
-            safetySettings ?? _safetySettings,
-            generationConfig ?? _generationConfig,
-            tools ?? this.tools,
-            toolConfig ?? _toolConfig,
-            _systemInstruction,
-          ),
-          _serializationStrategy.parseGenerateContentResponse);
+      {List<SafetySetting>? safetySettings,
+      GenerationConfig? generationConfig,
+      List<Tool>? tools,
+      ToolConfig? toolConfig}) {
+    final resolvedTools = tools ?? this.tools;
+    if (resolvedTools != null) {
+      Tool.validateToolCombination(resolvedTools);
+    }
+    return makeRequest(
+        Task.generateContent,
+        _serializationStrategy.generateContentRequest(
+          prompt,
+          model,
+          safetySettings ?? _safetySettings,
+          generationConfig ?? _generationConfig,
+          resolvedTools,
+          toolConfig ?? _toolConfig,
+          _systemInstruction,
+        ),
+        _serializationStrategy.parseGenerateContentResponse);
+  }
 
   /// Generates a stream of content responding to [prompt].
   ///
@@ -149,6 +154,10 @@ final class GenerativeModel extends BaseApiClientModel {
       GenerationConfig? generationConfig,
       List<Tool>? tools,
       ToolConfig? toolConfig}) {
+    final resolvedTools = tools ?? this.tools;
+    if (resolvedTools != null) {
+      Tool.validateToolCombination(resolvedTools);
+    }
     final response = client.streamRequest(
         taskUri(Task.streamGenerateContent),
         _serializationStrategy.generateContentRequest(
@@ -156,7 +165,7 @@ final class GenerativeModel extends BaseApiClientModel {
           model,
           safetySettings ?? _safetySettings,
           generationConfig ?? _generationConfig,
-          tools ?? this.tools,
+          resolvedTools,
           toolConfig ?? _toolConfig,
           _systemInstruction,
         ));
@@ -183,6 +192,9 @@ final class GenerativeModel extends BaseApiClientModel {
   Future<CountTokensResponse> countTokens(
     Iterable<Content> contents,
   ) async {
+    if (tools != null) {
+      Tool.validateToolCombination(tools!);
+    }
     final parameters = _serializationStrategy.countTokensRequest(
       contents,
       model,
