@@ -97,6 +97,11 @@ jobs:
           remove-codeql: true
           remove-docker-images: true
           remove-large-packages: true
+      - name: Prepare AVD home on /mnt
+        run: |
+          sudo mkdir -p /mnt/avd
+          sudo chown "$USER:$USER" /mnt/avd
+          df -h / /mnt
       - name: AVD cache
         uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
         id: avd-cache
@@ -104,11 +109,18 @@ jobs:
         with:
           # Must match the save path exactly
           path: |
-            ~/.android/avd/*
+            /mnt/avd/*
             ~/.android/adb*
           key: avd-${{ runner.os }}-${{ env.AVD_API_LEVEL }}-${{ env.AVD_TARGET }}-${{ env.AVD_ARCH }}
+      - name: Link AVD home to /mnt
+        run: |
+          mkdir -p "$HOME/.android"
+          rm -rf "$HOME/.android/avd"
+          ln -s /mnt/avd "$HOME/.android/avd"
       - name: Start AVD then run E2E tests
         uses: reactivecircus/android-emulator-runner@e89f39f1abbbd05b1113a29cf4db69e7540cae5a
+        env:
+          ANDROID_AVD_HOME: /mnt/avd
         with:
           api-level: ${{ env.AVD_API_LEVEL }}
           target: ${{ env.AVD_TARGET }}
@@ -126,7 +138,7 @@ jobs:
           key: ${{ steps.avd-cache.outputs.cache-primary-key }}
           # Must match the restore path exactly
           path: |
-            ~/.android/avd/*
+            /mnt/avd/*
             ~/.android/adb*
       - name: Save Firestore Emulator Cache
         # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.

@@ -51,10 +51,12 @@ void main() {
       return;
     }
     if (kIsWeb) {
-      firebase_core.main();
+      // Web has its own ordering because App Check runs in a separate job and
+      // Auth can leave emulator state that interferes with Database tests.
+      firebase_core.main(includeRecaptchaTests: false);
       firebase_ai.main();
-      firebase_auth.main();
       firebase_database.main();
+      firebase_auth.main();
       firebase_crashlytics.main();
       firebase_analytics.main();
       cloud_functions.main();
@@ -64,6 +66,7 @@ void main() {
       firebase_performance.main();
       firebase_remote_config.main();
       firebase_storage.main();
+      firebase_core.recaptchaMain();
       return;
     }
 
@@ -89,6 +92,9 @@ void main() {
 }
 
 void runAllTests() {
+  // Native platforms run the full suite in package order, but keep the
+  // recaptcha core tests before App Check because Android App Check activation
+  // changes native recaptcha configuration for later secondary app checks.
   firebase_core.main(includeRecaptchaTests: false);
   firebase_ai.main();
   firebase_auth.main();
@@ -102,6 +108,6 @@ void runAllTests() {
   firebase_performance.main();
   firebase_remote_config.main();
   firebase_storage.main();
-  firebase_app_check.main();
   firebase_core.recaptchaMain();
+  firebase_app_check.main();
 }
