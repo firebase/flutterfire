@@ -242,7 +242,7 @@ static NSMutableDictionary<NSNumber *, FIRAuthCredential *> *credentialsMap;
     additionalData[@"underlyingNativeErrorCode"] = underlyingErrorCode;
 
     underlyingMessage =
-        [NSString stringWithFormat:@", Underlying: Domain=%@ Code=%ld", underlyingErrorDomain,
+        [NSString stringWithFormat:@", Underlying Domain=%@ Code=%ld", underlyingErrorDomain,
                                    (long)underlyingError.code];
   }
 
