@@ -62,6 +62,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class FlutterFirebaseFirestorePlugin
@@ -83,7 +84,9 @@ public class FlutterFirebaseFirestorePlugin
 
   private final AtomicReference<Activity> activity = new AtomicReference<>(null);
 
-  private final Map<String, Transaction> transactions = new HashMap<>();
+  // Written from Firestore's transaction worker threads and read from the plugin's
+  // cached thread pool, so this must be a thread-safe map (see #18417).
+  private final Map<String, Transaction> transactions = new ConcurrentHashMap<>();
   private final Map<String, EventChannel> eventChannels = new HashMap<>();
   private final Map<String, StreamHandler> streamHandlers = new HashMap<>();
   private final Map<String, OnTransactionResultListener> transactionHandlers = new HashMap<>();
