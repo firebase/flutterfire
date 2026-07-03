@@ -32,6 +32,7 @@ void main() {
     });
 
     setUp(() async {
+      // Reset users on emulator.
       await emulatorClearAllUsers();
 
       try {
