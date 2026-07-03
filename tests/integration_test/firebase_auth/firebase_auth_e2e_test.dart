@@ -32,9 +32,10 @@ void main() {
     });
 
     setUp(() async {
-      // Reset users on emulator.
-      await emulatorClearAllUsers();
+      // Sign out before clearing emulator users so the client does not retain
+      // credentials for an account that no longer exists server-side.
       await ensureSignedOut();
+      await emulatorClearAllUsers();
 
       try {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
