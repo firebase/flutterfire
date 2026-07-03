@@ -4,6 +4,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-android
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 on:
   pull_request:
     paths-ignore:
@@ -31,6 +34,8 @@ on:
 
 jobs:
   android:
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 45 }}
     strategy:
@@ -160,6 +165,8 @@ jobs:
             ~/.android/adb*
 
   agp9-compatibility:
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:

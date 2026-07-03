@@ -4,6 +4,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-macos
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 on:
   pull_request:
     paths-ignore:
@@ -31,6 +34,8 @@ on:
 
 jobs:
   macos:
+    permissions:
+      contents: read
     runs-on: macos-15
     timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 45 }}
     strategy:

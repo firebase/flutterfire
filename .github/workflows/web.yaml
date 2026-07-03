@@ -4,6 +4,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-web
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 on:
   pull_request:
     paths-ignore:
@@ -31,6 +34,8 @@ on:
 
 jobs:
   web:
+    permissions:
+      contents: read
     runs-on: macos-latest
     timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 15 }}
     strategy:
@@ -108,6 +113,8 @@ jobs:
           path: ~/.cache/firebase/emulators
 
   web-app-check:
+    permissions:
+      contents: read
     runs-on: macos-latest
     timeout-minutes: 15
     steps:
@@ -183,6 +190,8 @@ jobs:
           path: ~/.cache/firebase/emulators
 
   web-wasm:
+    permissions:
+      contents: read
     runs-on: macos-latest
     timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 15 }}
     strategy:
