@@ -21,7 +21,7 @@ dependencies:
 
   cupertino_icons: ^1.0.6
   flutter_rating_bar: ^4.0.1
-  protobuf: ^3.1.0
+  protobuf: ^6.0.0
   firebase_app_check: ^0.4.5
 
 dev_dependencies:
