@@ -24,8 +24,9 @@ abstract class CollectionReference<T extends Object?> implements Query<T> {
   /// Returns a `DocumentReference` with an auto-generated ID, after
   /// populating it with provided [data].
   ///
-  /// The unique key generated is prefixed with a client-generated timestamp
-  /// so that the resulting list will be chronologically-sorted.
+  /// The auto-generated ID is a random string that does not contain a
+  /// timestamp, so documents will not be chronologically ordered by their
+  /// IDs.
   Future<DocumentReference<T>> add(T data);
 
   /// {@template cloud_firestore.collection_reference.doc}
@@ -33,8 +34,9 @@ abstract class CollectionReference<T extends Object?> implements Query<T> {
   ///
   /// If no [path] is provided, an auto-generated ID is used.
   ///
-  /// The unique key generated is prefixed with a client-generated timestamp
-  /// so that the resulting list will be chronologically-sorted.
+  /// The auto-generated ID is a random string that does not contain a
+  /// timestamp, so documents will not be chronologically ordered by their
+  /// IDs.
   /// {@endtemplate}
   DocumentReference<T> doc([String? path]);
 
