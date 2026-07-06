@@ -4,6 +4,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-web
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 on:
   pull_request:
     paths-ignore:
@@ -29,8 +32,13 @@ on:
         type: boolean
         default: false
 
+permissions:
+  contents: read
+
 jobs:
   web:
+    permissions:
+      contents: read
     runs-on: macos-latest
     timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 15 }}
     strategy:
@@ -46,7 +54,7 @@ jobs:
         name: Install Node.js 20
         with:
           node-version: '20'
-      - uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654
+      - uses: actions/setup-java@1bcf9fb12cf4aa7d266a90ae39939e61372fe520
         with:
           distribution: 'temurin'
           java-version: '21'
@@ -68,7 +76,7 @@ jobs:
           echo "FIREBASE_TOOLS_VERSION=$(npm firebase --version)" >> $GITHUB_ENV
       - name: Firebase Emulator Cache
         id: firebase-emulator-cache
-        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         continue-on-error: true
         with:
           # The firebase emulators are pure javascript and java, OS-independent
@@ -108,6 +116,8 @@ jobs:
           path: ~/.cache/firebase/emulators
 
   web-app-check:
+    permissions:
+      contents: read
     runs-on: macos-latest
     timeout-minutes: 15
     steps:
@@ -116,7 +126,7 @@ jobs:
         name: Install Node.js 20
         with:
           node-version: '20'
-      - uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654
+      - uses: actions/setup-java@1bcf9fb12cf4aa7d266a90ae39939e61372fe520
         with:
           distribution: 'temurin'
           java-version: '21'
@@ -138,7 +148,7 @@ jobs:
           echo "FIREBASE_TOOLS_VERSION=$(npm firebase --version)" >> $GITHUB_ENV
       - name: Firebase Emulator Cache
         id: firebase-emulator-cache
-        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         continue-on-error: true
         with:
           # The firebase emulators are pure javascript and java, OS-independent
@@ -183,6 +193,8 @@ jobs:
           path: ~/.cache/firebase/emulators
 
   web-wasm:
+    permissions:
+      contents: read
     runs-on: macos-latest
     timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 15 }}
     strategy:
@@ -198,7 +210,7 @@ jobs:
         name: Install Node.js 20
         with:
           node-version: '20'
-      - uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654
+      - uses: actions/setup-java@1bcf9fb12cf4aa7d266a90ae39939e61372fe520
         with:
           distribution: 'temurin'
           java-version: '21'
@@ -220,7 +232,7 @@ jobs:
           echo "FIREBASE_TOOLS_VERSION=$(npm firebase --version)" >> $GITHUB_ENV
       - name: Firebase Emulator Cache
         id: firebase-emulator-cache
-        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         continue-on-error: true
         with:
           # The firebase emulators are pure javascript and java, OS-independent

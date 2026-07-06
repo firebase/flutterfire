@@ -28,7 +28,9 @@ public class FlutterFirebasePluginRegistry {
    */
   public static void registerPlugin(
       String channelName, FlutterFirebasePlugin flutterFirebasePlugin) {
-    registeredPlugins.put(channelName, flutterFirebasePlugin);
+    synchronized (registeredPlugins) {
+      registeredPlugins.put(channelName, flutterFirebasePlugin);
+    }
   }
 
   /**
@@ -46,9 +48,15 @@ public class FlutterFirebasePluginRegistry {
     cachedThreadPool.execute(
         () -> {
           try {
-            Map<String, Object> pluginConstants = new HashMap<>(registeredPlugins.size());
+            Map<String, FlutterFirebasePlugin> registeredPluginsSnapshot;
+            synchronized (registeredPlugins) {
+              registeredPluginsSnapshot = new HashMap<>(registeredPlugins);
+            }
 
-            for (Map.Entry<String, FlutterFirebasePlugin> entry : registeredPlugins.entrySet()) {
+            Map<String, Object> pluginConstants = new HashMap<>(registeredPluginsSnapshot.size());
+
+            for (Map.Entry<String, FlutterFirebasePlugin> entry :
+                registeredPluginsSnapshot.entrySet()) {
               String channelName = entry.getKey();
               FlutterFirebasePlugin plugin = entry.getValue();
               pluginConstants.put(
@@ -77,7 +85,13 @@ public class FlutterFirebasePluginRegistry {
     cachedThreadPool.execute(
         () -> {
           try {
-            for (Map.Entry<String, FlutterFirebasePlugin> entry : registeredPlugins.entrySet()) {
+            Map<String, FlutterFirebasePlugin> registeredPluginsSnapshot;
+            synchronized (registeredPlugins) {
+              registeredPluginsSnapshot = new HashMap<>(registeredPlugins);
+            }
+
+            for (Map.Entry<String, FlutterFirebasePlugin> entry :
+                registeredPluginsSnapshot.entrySet()) {
               FlutterFirebasePlugin plugin = entry.getValue();
               Tasks.await(plugin.didReinitializeFirebaseCore());
             }
