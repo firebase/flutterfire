@@ -31,6 +31,8 @@ on:
 
 jobs:
   ios:
+    permissions:
+      contents: read
     runs-on: macos-15
     timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 60 }}
     strategy:
