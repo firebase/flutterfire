@@ -219,6 +219,40 @@ static NSMutableDictionary<NSNumber *, FIRAuthCredential *> *credentialsMap;
   return [FlutterError errorWithCode:code message:message details:additionalData];
 }
 
++ (FlutterError *)convertAppleAuthorizationErrorToFlutterError:(NSError *)error {
+  NSString *message = @"An unknown error has occurred.";
+  if (error.localizedDescription.length > 0) {
+    message = error.localizedDescription;
+  }
+
+  NSMutableDictionary *additionalData = [NSMutableDictionary dictionary];
+  NSString *nativeErrorDomain = error.domain ?: @"unknown";
+  NSNumber *nativeErrorCode = @((long)error.code);
+
+  additionalData[@"nativeErrorDomain"] = nativeErrorDomain;
+  additionalData[@"nativeErrorCode"] = nativeErrorCode;
+
+  NSError *underlyingError = error.userInfo[NSUnderlyingErrorKey];
+  NSString *underlyingMessage = @"";
+  if (underlyingError != nil) {
+    NSString *underlyingErrorDomain = underlyingError.domain ?: @"unknown";
+    NSNumber *underlyingErrorCode = @((long)underlyingError.code);
+
+    additionalData[@"underlyingNativeErrorDomain"] = underlyingErrorDomain;
+    additionalData[@"underlyingNativeErrorCode"] = underlyingErrorCode;
+
+    underlyingMessage =
+        [NSString stringWithFormat:@", Underlying Domain=%@ Code=%ld", underlyingErrorDomain,
+                                   (long)underlyingError.code];
+  }
+
+  NSString *detailMessage =
+      [NSString stringWithFormat:@"%@ (Domain=%@ Code=%ld%@)", message, nativeErrorDomain,
+                                 (long)error.code, underlyingMessage];
+
+  return [FlutterError errorWithCode:@"unknown" message:detailMessage details:additionalData];
+}
+
 + (id)getNSDictionaryFromAuthCredential:(FIRAuthCredential *)authCredential {
   if (authCredential == nil) {
     return [NSNull null];
@@ -532,7 +566,7 @@ static void handleSignInWithApple(FLTFirebaseAuthPlugin *object, FIRAuthDataResu
 
     case ASAuthorizationErrorUnknown:
     default:
-      completion(nil, [FLTFirebaseAuthPlugin convertToFlutterError:error]);
+      completion(nil, [FLTFirebaseAuthPlugin convertAppleAuthorizationErrorToFlutterError:error]);
       break;
   }
 }
