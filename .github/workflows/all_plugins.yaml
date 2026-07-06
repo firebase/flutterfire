@@ -18,6 +18,9 @@ on:
       - 'website/**'
       - '**.md'
 
+permissions:
+  contents: read
+
 jobs:
   analyze:
     timeout-minutes: 50
