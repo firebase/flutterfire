@@ -94,4 +94,11 @@ class AudioOutput {
     SoLoud.instance.setDataIsEnded(currentStream);
     await SoLoud.instance.stop(currentHandle);
   }
+
+  void finishStream() {
+    var currentStream = stream;
+    if (currentStream != null) {
+      SoLoud.instance.setDataIsEnded(currentStream);
+    }
+  }
 }

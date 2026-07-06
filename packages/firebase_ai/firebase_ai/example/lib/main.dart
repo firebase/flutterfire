@@ -32,6 +32,7 @@ import 'pages/schema_page.dart';
 import 'pages/server_template_page.dart';
 import 'pages/grounding_page.dart';
 import 'pages/token_count_page.dart';
+import 'pages/tts_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -180,6 +181,11 @@ class _HomeScreenState extends State<HomeScreen> {
           title: 'Grounding',
           useVertexBackend: useVertexBackend,
         );
+      case 11:
+        return TTSPage(
+          title: 'TTS Test',
+          useVertexBackend: useVertexBackend,
+        );
 
       default:
         // Fallback to the first page in case of an unexpected index
@@ -313,6 +319,13 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             label: 'Grounding',
             tooltip: 'Search & Maps Grounding',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.record_voice_over,
+            ),
+            label: 'TTS',
+            tooltip: 'Text to Speech',
           ),
         ],
         currentIndex: _selectedIndex,

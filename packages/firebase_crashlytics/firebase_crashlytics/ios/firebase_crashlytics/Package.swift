@@ -7,8 +7,8 @@
 
 import PackageDescription
 
-let libraryVersion = "5.2.2"
-let firebaseSdkVersion: Version = "12.14.0"
+let libraryVersion = "5.2.4"
+let firebaseSdkVersion: Version = "12.15.0"
 
 let package = Package(
   name: "firebase_crashlytics",

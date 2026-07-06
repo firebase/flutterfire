@@ -55,6 +55,7 @@ void main() {
           appId: 'appId',
           messagingSenderId: 'messagingSenderId',
           projectId: 'projectId',
+          recaptchaSiteKey: 'recaptchaSiteKey',
         ),
       );
 
@@ -63,6 +64,7 @@ void main() {
         appId: 'appId',
         messagingSenderId: 'messagingSenderId',
         projectId: 'projectId',
+        recaptchaSiteKey: 'recaptchaSiteKey',
       );
 
       expect(options1 == options2, isTrue);

@@ -135,7 +135,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
             );
           }
         }).listen((UserWeb? webUser) {
-          _authStateChangesListeners[app.name]!.add(webUser);
+          _authStateChangesListeners[app.name]?.add(webUser);
         });
         break;
       case StateListener.idTokenChange:
@@ -174,8 +174,8 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
             );
           }
         }).listen((UserWeb? webUser) {
-          _idTokenChangesListeners[app.name]!.add(webUser);
-          _userChangesListeners[app.name]!.add(webUser);
+          _idTokenChangesListeners[app.name]?.add(webUser);
+          _userChangesListeners[app.name]?.add(webUser);
         });
         break;
       case StateListener.userStateChange:

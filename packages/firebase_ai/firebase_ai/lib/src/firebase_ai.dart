@@ -16,7 +16,7 @@ import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
-    show FirebasePluginPlatform;
+    show FirebasePlugin;
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
 
@@ -26,7 +26,7 @@ import 'base_model.dart';
 const _defaultLocation = 'us-central1';
 
 /// The entrypoint for generative models.
-class FirebaseAI extends FirebasePluginPlatform {
+class FirebaseAI extends FirebasePlugin {
   FirebaseAI._({
     required this.app,
     required this.location,

@@ -5,7 +5,7 @@
 abstract class WebProvider {
   final String siteKey;
 
-  WebProvider(this.siteKey);
+  const WebProvider(this.siteKey);
 }
 
 class ReCaptchaV3Provider extends WebProvider {
@@ -30,4 +30,9 @@ class WebDebugProvider extends WebProvider {
 
   /// The debug token for this provider.
   final String? debugToken;
+}
+
+/// reCAPTCHA Enterprise provider for Web that does not use the enterprise name and does not take in a siteKey.
+class WebReCaptchaProvider extends WebProvider {
+  const WebReCaptchaProvider() : super('');
 }

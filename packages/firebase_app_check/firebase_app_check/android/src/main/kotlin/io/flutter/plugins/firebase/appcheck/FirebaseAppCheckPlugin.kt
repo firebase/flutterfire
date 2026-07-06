@@ -11,6 +11,7 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.appcheck.FirebaseAppCheck
 import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory
 import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory
+import com.google.firebase.appcheck.recaptcha.RecaptchaAppCheckProviderFactory
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import io.flutter.plugin.common.BinaryMessenger
@@ -61,6 +62,10 @@ class FirebaseAppCheckPlugin : FlutterFirebasePlugin, FlutterPlugin, FirebaseApp
           FlutterFirebaseAppRegistrar.debugToken = debugToken
           firebaseAppCheck.installAppCheckProviderFactory(
               DebugAppCheckProviderFactory.getInstance())
+        }
+        "recaptcha" -> {
+          firebaseAppCheck.installAppCheckProviderFactory(
+              RecaptchaAppCheckProviderFactory.getInstance())
         }
         else -> {
           firebaseAppCheck.installAppCheckProviderFactory(

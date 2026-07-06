@@ -26,6 +26,7 @@ export 'src/api.dart'
         GroundingChunk,
         ThinkingConfig,
         ThinkingLevel,
+        MediaResolution,
         HarmBlockThreshold,
         HarmCategory,
         HarmProbability,
@@ -115,7 +116,6 @@ export 'src/live_api.dart'
         SessionResumptionConfig,
         SessionResumptionUpdate,
         SlidingWindow,
-        SpeechConfig,
         Transcription;
 export 'src/live_session.dart' show LiveSession;
 export 'src/schema.dart' show JSONSchema, Schema, SchemaType;
@@ -127,6 +127,8 @@ export 'src/server_template/template_tool.dart'
         TemplateFunctionDeclaration,
         TemplateTool,
         TemplateToolConfig;
+export 'src/speech_config.dart'
+    show SpeechConfig, MultiSpeakerVoiceConfig, SpeakerVoiceConfig;
 export 'src/tool.dart'
     show
         AutoFunctionDeclaration,

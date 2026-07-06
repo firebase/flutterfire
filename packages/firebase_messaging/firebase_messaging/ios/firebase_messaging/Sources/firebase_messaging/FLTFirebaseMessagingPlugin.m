@@ -226,6 +226,11 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 
 - (void)setupNotificationHandlingWithRemoteNotification:
     (nullable NSDictionary *)remoteNotification {
+  [self setupNotificationHandlingWithRemoteNotification:remoteNotification actionIdentifier:nil];
+}
+
+- (void)setupNotificationHandlingWithRemoteNotification:(nullable NSDictionary *)remoteNotification
+                                       actionIdentifier:(nullable NSString *)actionIdentifier {
   // If notification handling was already set up (e.g. from
   // application_onDidFinishLaunchingNotification) and we're called again (e.g. from
   // scene:willConnectToSession:), only process the notification but skip delegate/swizzler
@@ -234,7 +239,8 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   if (_notificationHandlingSetup) {
     if (remoteNotification != nil) {
       _initialNotification =
-          [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:remoteNotification];
+          [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:remoteNotification
+                                             withActionIdentifier:actionIdentifier];
       _initialNotificationID = remoteNotification[@"gcm.message_id"];
       _initialNotificationGathered = YES;
       [self initialNotificationCallback];
@@ -255,7 +261,8 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   if (remoteNotification != nil) {
     // If remoteNotification exists, it is the notification that opened the app.
     _initialNotification =
-        [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:remoteNotification];
+        [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:remoteNotification
+                                           withActionIdentifier:actionIdentifier];
     _initialNotificationID = remoteNotification[@"gcm.message_id"];
     _initialNotificationGathered = YES;
     [self initialNotificationCallback];
@@ -458,12 +465,20 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     API_AVAILABLE(macos(10.14), ios(10.0)) {
   NSDictionary *remoteNotification = response.notification.request.content.userInfo;
   _notificationOpenedAppID = remoteNotification[@"gcm.message_id"];
+  NSDictionary *notificationDict =
+      [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:remoteNotification
+                                         withActionIdentifier:response.actionIdentifier];
+
+  if (_initialNotification != nil &&
+      [_initialNotificationID isEqualToString:_notificationOpenedAppID]) {
+    _initialNotification = notificationDict;
+    [self initialNotificationCallback];
+  }
+
   // We only want to handle FCM notifications and stop firing `onMessageOpenedApp()` when app is
   // coming from a terminated state.
   if (_notificationOpenedAppID != nil &&
       ![_initialNotificationID isEqualToString:_notificationOpenedAppID]) {
-    NSDictionary *notificationDict =
-        [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:remoteNotification];
     [_channel invokeMethod:@"Messaging#onMessageOpenedApp" arguments:notificationDict];
   }
 
@@ -642,14 +657,17 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   _sceneDidConnect = YES;
 
   NSDictionary *remoteNotification = nil;
+  NSString *actionIdentifier = nil;
   if (connectionOptions.notificationResponse != nil) {
     // User tapped the notification.
     remoteNotification =
         connectionOptions.notificationResponse.notification.request.content.userInfo;
+    actionIdentifier = connectionOptions.notificationResponse.actionIdentifier;
     _notificationOpenedAppID = remoteNotification[@"gcm.message_id"];
   }
 
-  [self setupNotificationHandlingWithRemoteNotification:remoteNotification];
+  [self setupNotificationHandlingWithRemoteNotification:remoteNotification
+                                       actionIdentifier:actionIdentifier];
 }
 #endif
 
@@ -960,10 +978,20 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 }
 
 + (NSDictionary *)remoteMessageUserInfoToDict:(NSDictionary *)userInfo {
+  return [self remoteMessageUserInfoToDict:userInfo withActionIdentifier:nil];
+}
+
++ (NSDictionary *)remoteMessageUserInfoToDict:(NSDictionary *)userInfo
+                         withActionIdentifier:(nullable NSString *)actionIdentifier {
   NSMutableDictionary *message = [[NSMutableDictionary alloc] init];
   NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
   NSMutableDictionary *notification = [[NSMutableDictionary alloc] init];
   NSMutableDictionary *notificationIOS = [[NSMutableDictionary alloc] init];
+
+  // message.actionIdentifier
+  if (actionIdentifier != nil) {
+    message[@"actionIdentifier"] = actionIdentifier;
+  }
 
   // message.data
   for (id key in userInfo) {
