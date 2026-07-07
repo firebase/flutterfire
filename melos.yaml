@@ -296,7 +296,6 @@ scripts:
         --ignore "**/Runner/AppDelegate.h" \
         --ignore "**/Runner/AppDelegate.m" \
         --ignore "**/Runner/main.m" \
-        --ignore "**/Runner/SceneDelegate.swift" \
         --ignore "**/MainActivity.kt" \
         --ignore "**/MainActivity.java" \
         --ignore "**/FlutterMultiDexApplication.java" \
@@ -338,7 +337,6 @@ scripts:
         --ignore "**/Runner/AppDelegate.h" \
         --ignore "**/Runner/AppDelegate.m" \
         --ignore "**/Runner/main.m" \
-        --ignore "**/Runner/SceneDelegate.swift" \
         --ignore "**/MainActivity.kt" \
         --ignore "**/MainActivity.java" \
         --ignore "**/FlutterMultiDexApplication.java" \
