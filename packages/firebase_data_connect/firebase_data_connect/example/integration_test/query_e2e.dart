@@ -7,26 +7,15 @@ import 'package:firebase_data_connect_example/generated/movies.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Future<void> deleteAllMovies() async {
-  for (var attempt = 0; attempt < 5; attempt++) {
-    final value = await MoviesConnector.instance
-        .listMovies()
-        .ref()
-        .execute(fetchPolicy: QueryFetchPolicy.serverOnly);
-    final movies = value.data.movies;
-    if (movies.isEmpty) {
-      return;
-    }
+  for (var attempt = 0; attempt < 3; attempt++) {
+    await MoviesConnector.instance.deleteAllMovieData().ref().execute();
 
-    for (final movie in movies) {
-      await MoviesConnector.instance.deleteMovie(id: movie.id).ref().execute();
-    }
+    final movies = await listMoviesFromServer();
+    if (movies.isEmpty) return;
   }
 
-  final value = await MoviesConnector.instance
-      .listMovies()
-      .ref()
-      .execute(fetchPolicy: QueryFetchPolicy.serverOnly);
-  expect(value.data.movies, isEmpty);
+  final movies = await listMoviesFromServer();
+  expect(movies, isEmpty);
 }
 
 Future<List<ListMoviesMovies>> listMoviesFromServer() async {
