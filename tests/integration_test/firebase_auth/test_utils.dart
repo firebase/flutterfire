@@ -217,24 +217,36 @@ String emulatorCreateCustomToken(
 }
 
 Future<void> ensureSignedIn(String testEmail) async {
-  if (FirebaseAuth.instance.currentUser == null) {
+  final currentUser = FirebaseAuth.instance.currentUser;
+  if (currentUser?.email == testEmail) {
     try {
+      await currentUser!.getIdToken();
+      return;
+    } on FirebaseAuthException catch (e) {
+      if (e.code != 'user-token-expired' && e.code != 'user-not-found') {
+        rethrow;
+      }
+    }
+  }
+
+  try {
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: testEmail,
+      password: testPassword,
+    );
+  } on FirebaseAuthException catch (e) {
+    // The Windows error codes are not consistent
+    if (e.code == 'user-not-found') {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: testEmail,
         password: testPassword,
       );
-    } on FirebaseAuthException catch (e) {
-      // The Windows error codes are not consistent
-      if (e.code == 'email-already-in-use') {
-        await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: testEmail,
-          password: testPassword,
-        );
-      }
-    } catch (e) {
-      // ignore: avoid_print
-      print('ensureSignedIn Error $e');
+    } else if (e.code != 'email-already-in-use') {
+      rethrow;
     }
+  } catch (e) {
+    // ignore: avoid_print
+    print('ensureSignedIn Error $e');
   }
 }
 
@@ -246,6 +258,14 @@ Future<void> ensureSignedOut() async {
       if (e.code != 'user-token-expired') {
         rethrow;
       }
+
+      // Web can keep a deleted emulator user in memory. Replacing it with a
+      // temporary user gives signOut a valid session to clear local state.
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: generateRandomEmail(prefix: 'signout-'),
+        password: testPassword,
+      );
+      await FirebaseAuth.instance.signOut();
     }
   }
 }

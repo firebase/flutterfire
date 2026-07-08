@@ -97,6 +97,13 @@ jobs:
           import subprocess
           import sys
 
+          def normalize_output(output):
+              if output is None:
+                  return ''
+              if isinstance(output, bytes):
+                  return output.decode(errors='replace')
+              return output
+
           command = [
               'flutter',
               'drive',
@@ -117,16 +124,17 @@ jobs:
                   timeout=180,
               )
           except subprocess.TimeoutExpired as error:
-              output = error.stdout or ''
+              output = normalize_output(error.stdout)
               print(output, end='')
               with open('output.log', 'w') as file:
                   file.write(output)
               print('flutter drive timed out before connecting to Chrome.')
               sys.exit(124)
 
-          print(completed.stdout, end='')
+          output = normalize_output(completed.stdout)
+          print(output, end='')
           with open('output.log', 'w') as file:
-              file.write(completed.stdout)
+              file.write(output)
           sys.exit(completed.returncode)
           PY
             exit_code=$?
@@ -208,12 +216,58 @@ jobs:
         run: |
           chromedriver --port=4444 --trace-buffer-size=100000 &
           run_tests() {
-            flutter drive --target=./integration_test/e2e_test.dart --driver=./test_driver/integration_test.dart -d chrome --dart-define=CI=true --dart-define=APP_CHECK_E2E=true | tee output.log
+            python3 - <<'PY'
+          import subprocess
+          import sys
+
+          def normalize_output(output):
+              if output is None:
+                  return ''
+              if isinstance(output, bytes):
+                  return output.decode(errors='replace')
+              return output
+
+          command = [
+              'flutter',
+              'drive',
+              '--target=./integration_test/e2e_test.dart',
+              '--driver=./test_driver/integration_test.dart',
+              '-d',
+              'chrome',
+              '--dart-define=CI=true',
+              '--dart-define=APP_CHECK_E2E=true',
+          ]
+
+          try:
+              completed = subprocess.run(
+                  command,
+                  check=False,
+                  stdout=subprocess.PIPE,
+                  stderr=subprocess.STDOUT,
+                  text=True,
+                  timeout=180,
+              )
+          except subprocess.TimeoutExpired as error:
+              output = normalize_output(error.stdout)
+              print(output, end='')
+              with open('output.log', 'w') as file:
+                  file.write(output)
+              print('flutter drive timed out before connecting to Chrome.')
+              sys.exit(124)
+
+          output = normalize_output(completed.stdout)
+          print(output, end='')
+          with open('output.log', 'w') as file:
+              file.write(output)
+          sys.exit(completed.returncode)
+          PY
+            exit_code=$?
             output=$(<output.log)
             if [[ "$output" =~ \[E\] ]]; then
               echo "All tests did not pass. Please check the logs for more information."
               return 1
             fi
+            return $exit_code
           }
           run_tests || {
             echo "First attempt failed. Retrying..."
