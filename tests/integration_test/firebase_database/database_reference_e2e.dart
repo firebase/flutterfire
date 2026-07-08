@@ -128,6 +128,7 @@ void setupDatabaseReferenceTests() {
 
       test('does not emit local transaction events when disabled', () async {
         final ref = database.ref('tests/transaction-apply-locally-false');
+        await ref.remove();
         await ref.set({'count': 0});
 
         final initialEvent = Completer<void>();
