@@ -89,10 +89,25 @@ jobs:
         # Web devices are not supported for the `flutter test` command yet. As a
         # workaround we can use the `flutter drive` command. Tracking issue:
         # https://github.com/flutter/flutter/issues/66264
-        # Chrome debug service can fail with AppConnectionException. Retry once.
+        # Chrome debug service can fail with AppConnectionException. Retry with
+        # a clean browser/driver process set so stale children cannot poison
+        # the next attempt.
         run: |
-          chromedriver --port=4444 --trace-buffer-size=100000 &
+          cleanup_web_processes() {
+            pkill -f "Google Chrome" || true
+            pkill -f chrome_crashpad || true
+            pkill -x chromedriver || true
+            pkill -x dartvm || true
+            pkill -x dartaotruntime || true
+          }
+
           run_tests() {
+            rm -f output.log
+            cleanup_web_processes
+            chromedriver --port=4444 --trace-buffer-size=100000 &
+            chromedriver_pid=$!
+            sleep 2
+
             python3 - <<'PY'
           import subprocess
           import sys
@@ -138,18 +153,30 @@ jobs:
           sys.exit(completed.returncode)
           PY
             exit_code=$?
+            kill "$chromedriver_pid" 2>/dev/null || true
+            wait "$chromedriver_pid" 2>/dev/null || true
+            cleanup_web_processes
+
             output=$(<output.log)
             if [[ "$output" =~ \[E\] ]]; then
               # You will see "All tests passed." in the logs even when tests failed.
               echo "All tests did not pass. Please check the logs for more information."
-              return 1
+              return 2
             fi
             return $exit_code
           }
-          run_tests || {
-            echo "First attempt failed. Retrying..."
-            run_tests
-          }
+
+          max_attempts=4
+          for attempt in $(seq 1 "$max_attempts"); do
+            if run_tests; then
+              exit 0
+            fi
+            exit_code=$?
+            if [[ "$exit_code" == "2" || "$attempt" == "$max_attempts" ]]; then
+              exit "$exit_code"
+            fi
+            echo "Attempt $attempt failed before tests completed. Retrying..."
+          done
         shell: bash
       - name: Save Firestore Emulator Cache
         # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
@@ -212,10 +239,25 @@ jobs:
         # Web devices are not supported for the `flutter test` command yet. As a
         # workaround we can use the `flutter drive` command. Tracking issue:
         # https://github.com/flutter/flutter/issues/66264
-        # Chrome debug service can fail with AppConnectionException. Retry once.
+        # Chrome debug service can fail with AppConnectionException. Retry with
+        # a clean browser/driver process set so stale children cannot poison
+        # the next attempt.
         run: |
-          chromedriver --port=4444 --trace-buffer-size=100000 &
+          cleanup_web_processes() {
+            pkill -f "Google Chrome" || true
+            pkill -f chrome_crashpad || true
+            pkill -x chromedriver || true
+            pkill -x dartvm || true
+            pkill -x dartaotruntime || true
+          }
+
           run_tests() {
+            rm -f output.log
+            cleanup_web_processes
+            chromedriver --port=4444 --trace-buffer-size=100000 &
+            chromedriver_pid=$!
+            sleep 2
+
             python3 - <<'PY'
           import subprocess
           import sys
@@ -262,17 +304,29 @@ jobs:
           sys.exit(completed.returncode)
           PY
             exit_code=$?
+            kill "$chromedriver_pid" 2>/dev/null || true
+            wait "$chromedriver_pid" 2>/dev/null || true
+            cleanup_web_processes
+
             output=$(<output.log)
             if [[ "$output" =~ \[E\] ]]; then
               echo "All tests did not pass. Please check the logs for more information."
-              return 1
+              return 2
             fi
             return $exit_code
           }
-          run_tests || {
-            echo "First attempt failed. Retrying..."
-            run_tests
-          }
+
+          max_attempts=4
+          for attempt in $(seq 1 "$max_attempts"); do
+            if run_tests; then
+              exit 0
+            fi
+            exit_code=$?
+            if [[ "$exit_code" == "2" || "$attempt" == "$max_attempts" ]]; then
+              exit "$exit_code"
+            fi
+            echo "Attempt $attempt failed before tests completed. Retrying..."
+          done
         shell: bash
       - name: Save Firestore Emulator Cache
         # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
