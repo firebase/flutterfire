@@ -144,9 +144,8 @@ void runWebSocketTests() {
           await _waitForStreamEvent(isReady.future, 'listMovies subscription');
 
           // Now perform a query, which should go over WebSocket if connected
-          final result =
-              await MoviesConnector.instance.listMovies().ref().execute();
-          expect(result.data.movies.length, 0);
+          final movies = await listMoviesFromServer();
+          expect(movies, isEmpty);
 
           // Perform a mutation
           await MoviesConnector.instance

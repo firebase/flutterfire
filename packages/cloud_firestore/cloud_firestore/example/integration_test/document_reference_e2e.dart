@@ -630,7 +630,7 @@ void runDocumentReferenceTests() {
             ),
           );
           await expectLater(
-            fooConverter.get(),
+            fooConverter.get(const GetOptions(source: Source.server)),
             completion(
               isA<DocumentSnapshot<int>>().having((e) => e.data(), 'data', 42),
             ),
@@ -647,7 +647,7 @@ void runDocumentReferenceTests() {
           );
 
           await expectLater(
-            fooConverter.get(),
+            fooConverter.get(const GetOptions(source: Source.server)),
             completion(
               isA<DocumentSnapshot<int>>().having((e) => e.data(), 'data', 21),
             ),

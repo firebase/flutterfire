@@ -7,11 +7,34 @@ import 'package:firebase_data_connect_example/generated/movies.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Future<void> deleteAllMovies() async {
-  final value = await MoviesConnector.instance.listMovies().ref().execute();
-  final result = value.data;
-  for (var movie in result.movies) {
-    await MoviesConnector.instance.deleteMovie(id: movie.id).ref().execute();
+  for (var attempt = 0; attempt < 5; attempt++) {
+    final value = await MoviesConnector.instance
+        .listMovies()
+        .ref()
+        .execute(fetchPolicy: QueryFetchPolicy.serverOnly);
+    final movies = value.data.movies;
+    if (movies.isEmpty) {
+      return;
+    }
+
+    for (final movie in movies) {
+      await MoviesConnector.instance.deleteMovie(id: movie.id).ref().execute();
+    }
   }
+
+  final value = await MoviesConnector.instance
+      .listMovies()
+      .ref()
+      .execute(fetchPolicy: QueryFetchPolicy.serverOnly);
+  expect(value.data.movies, isEmpty);
+}
+
+Future<List<ListMoviesMovies>> listMoviesFromServer() async {
+  final value = await MoviesConnector.instance
+      .listMovies()
+      .ref()
+      .execute(fetchPolicy: QueryFetchPolicy.serverOnly);
+  return value.data.movies;
 }
 
 void runQueryTests() {
@@ -23,11 +46,8 @@ void runQueryTests() {
       });
 
       testWidgets('can query', (WidgetTester tester) async {
-        final value =
-            await MoviesConnector.instance.listMovies().ref().execute();
-
-        final result = value.data;
-        expect(result.movies.length, 0);
+        final movies = await listMoviesFromServer();
+        expect(movies, isEmpty);
       });
 
       testWidgets('can add a movie', (WidgetTester tester) async {
@@ -61,10 +81,8 @@ void runQueryTests() {
                 .people[0]
                 .id;
 
-        final value =
-            await MoviesConnector.instance.listMovies().ref().execute();
-        final result = value.data;
-        expect(result.movies.length, 0);
+        final movies = await listMoviesFromServer();
+        expect(movies, isEmpty);
 
         ref = MoviesConnector.instance
             .createMovie(
@@ -123,10 +141,8 @@ void runQueryTests() {
 
         await ref.execute();
 
-        final value2 =
-            await MoviesConnector.instance.listMovies().ref().execute();
-        final result2 = value2.data;
-        expect(result2.movies.length, 0);
+        final movies = await listMoviesFromServer();
+        expect(movies, isEmpty);
       });
     },
   );
