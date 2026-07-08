@@ -4,9 +4,6 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-web
   cancel-in-progress: true
 
-permissions:
-  contents: read
-
 on:
   pull_request:
     paths-ignore:
@@ -92,16 +89,59 @@ jobs:
         # Web devices are not supported for the `flutter test` command yet. As a
         # workaround we can use the `flutter drive` command. Tracking issue:
         # https://github.com/flutter/flutter/issues/66264
+        # Chrome debug service can fail with AppConnectionException. Retry once.
         run: |
           chromedriver --port=4444 --trace-buffer-size=100000 &
-          flutter drive --target=./integration_test/e2e_test.dart --driver=./test_driver/integration_test.dart -d chrome --dart-define=CI=true | tee output.log
-          # We have to check the output for failed tests matching the string "[E]"
-          output=$(<output.log)
-          if [[ "$output" =~ \[E\] ]]; then
-          # You will see "All tests passed." in the logs even when tests failed.
-          echo "All tests did not pass. Please check the logs for more information."
-          exit 1
-          fi
+          run_tests() {
+            python3 - <<'PY'
+          import subprocess
+          import sys
+
+          command = [
+              'flutter',
+              'drive',
+              '--target=./integration_test/e2e_test.dart',
+              '--driver=./test_driver/integration_test.dart',
+              '-d',
+              'chrome',
+              '--dart-define=CI=true',
+          ]
+
+          try:
+              completed = subprocess.run(
+                  command,
+                  check=False,
+                  stdout=subprocess.PIPE,
+                  stderr=subprocess.STDOUT,
+                  text=True,
+                  timeout=180,
+              )
+          except subprocess.TimeoutExpired as error:
+              output = error.stdout or ''
+              print(output, end='')
+              with open('output.log', 'w') as file:
+                  file.write(output)
+              print('flutter drive timed out before connecting to Chrome.')
+              sys.exit(124)
+
+          print(completed.stdout, end='')
+          with open('output.log', 'w') as file:
+              file.write(completed.stdout)
+          sys.exit(completed.returncode)
+          PY
+            exit_code=$?
+            output=$(<output.log)
+            if [[ "$output" =~ \[E\] ]]; then
+              # You will see "All tests passed." in the logs even when tests failed.
+              echo "All tests did not pass. Please check the logs for more information."
+              return 1
+            fi
+            return $exit_code
+          }
+          run_tests || {
+            echo "First attempt failed. Retrying..."
+            run_tests
+          }
         shell: bash
       - name: Save Firestore Emulator Cache
         # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
