@@ -240,7 +240,13 @@ Future<void> ensureSignedIn(String testEmail) async {
 
 Future<void> ensureSignedOut() async {
   if (FirebaseAuth.instance.currentUser != null) {
-    await FirebaseAuth.instance.signOut();
+    try {
+      await FirebaseAuth.instance.signOut();
+    } on FirebaseAuthException catch (e) {
+      if (e.code != 'user-token-expired') {
+        rethrow;
+      }
+    }
   }
 }
 

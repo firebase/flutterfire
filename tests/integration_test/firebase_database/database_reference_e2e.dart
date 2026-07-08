@@ -11,6 +11,12 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'firebase_database_e2e_test.dart';
 
+DatabaseReference _uniqueRef(String name) {
+  return database.ref(
+    'tests/$name-${DateTime.now().microsecondsSinceEpoch}',
+  );
+}
+
 void setupDatabaseReferenceTests() {
   group('DatabaseReference', () {
     group('set()', () {
@@ -127,8 +133,7 @@ void setupDatabaseReferenceTests() {
       });
 
       test('does not emit local transaction events when disabled', () async {
-        final ref = database.ref('tests/transaction-apply-locally-false');
-        await ref.remove();
+        final ref = _uniqueRef('transaction-apply-locally-false');
         await ref.set({'count': 0});
 
         final initialEvent = Completer<void>();
@@ -209,8 +214,7 @@ void setupDatabaseReferenceTests() {
       });
 
       test('Server.increment', () async {
-        final FirebaseDatabase database = FirebaseDatabase.instance;
-        final DatabaseReference ref = database.ref('tests/server-increment');
+        final DatabaseReference ref = _uniqueRef('server-increment');
         await ref.set(ServerValue.increment(1.5));
 
         final snap = await ref.get();
