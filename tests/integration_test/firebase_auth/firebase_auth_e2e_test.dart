@@ -32,9 +32,10 @@ void main() {
     });
 
     setUp(() async {
+      await ensureSignedOut();
+
       // Reset users on emulator.
       await emulatorClearAllUsers();
-      await ensureSignedOut();
 
       try {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(

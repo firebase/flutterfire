@@ -4,9 +4,6 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-web
   cancel-in-progress: true
 
-permissions:
-  contents: read
-
 on:
   pull_request:
     paths-ignore:
@@ -92,16 +89,94 @@ jobs:
         # Web devices are not supported for the `flutter test` command yet. As a
         # workaround we can use the `flutter drive` command. Tracking issue:
         # https://github.com/flutter/flutter/issues/66264
+        # Chrome debug service can fail with AppConnectionException. Retry with
+        # a clean browser/driver process set so stale children cannot poison
+        # the next attempt.
         run: |
-          chromedriver --port=4444 --trace-buffer-size=100000 &
-          flutter drive --target=./integration_test/e2e_test.dart --driver=./test_driver/integration_test.dart -d chrome --dart-define=CI=true | tee output.log
-          # We have to check the output for failed tests matching the string "[E]"
-          output=$(<output.log)
-          if [[ "$output" =~ \[E\] ]]; then
-          # You will see "All tests passed." in the logs even when tests failed.
-          echo "All tests did not pass. Please check the logs for more information."
-          exit 1
-          fi
+          cleanup_web_processes() {
+            pkill -f "Google Chrome" || true
+            pkill -f chrome_crashpad || true
+            pkill -x chromedriver || true
+            pkill -x dartvm || true
+            pkill -x dartaotruntime || true
+          }
+
+          run_tests() {
+            rm -f output.log
+            cleanup_web_processes
+            chromedriver --port=4444 --trace-buffer-size=100000 &
+            chromedriver_pid=$!
+            sleep 2
+
+            python3 - <<'PY'
+          import subprocess
+          import sys
+
+          def normalize_output(output):
+              if output is None:
+                  return ''
+              if isinstance(output, bytes):
+                  return output.decode(errors='replace')
+              return output
+
+          command = [
+              'flutter',
+              'drive',
+              '--target=./integration_test/e2e_test.dart',
+              '--driver=./test_driver/integration_test.dart',
+              '-d',
+              'chrome',
+              '--dart-define=CI=true',
+          ]
+
+          try:
+              completed = subprocess.run(
+                  command,
+                  check=False,
+                  stdout=subprocess.PIPE,
+                  stderr=subprocess.STDOUT,
+                  text=True,
+                  timeout=180,
+              )
+          except subprocess.TimeoutExpired as error:
+              output = normalize_output(error.stdout)
+              print(output, end='')
+              with open('output.log', 'w') as file:
+                  file.write(output)
+              print('flutter drive timed out before connecting to Chrome.')
+              sys.exit(124)
+
+          output = normalize_output(completed.stdout)
+          print(output, end='')
+          with open('output.log', 'w') as file:
+              file.write(output)
+          sys.exit(completed.returncode)
+          PY
+            exit_code=$?
+            kill "$chromedriver_pid" 2>/dev/null || true
+            wait "$chromedriver_pid" 2>/dev/null || true
+            cleanup_web_processes
+
+            output=$(<output.log)
+            if [[ "$output" =~ \[E\] ]]; then
+              # You will see "All tests passed." in the logs even when tests failed.
+              echo "All tests did not pass. Please check the logs for more information."
+              return 2
+            fi
+            return $exit_code
+          }
+
+          max_attempts=4
+          for attempt in $(seq 1 "$max_attempts"); do
+            if run_tests; then
+              exit 0
+            fi
+            exit_code=$?
+            if [[ "$exit_code" == "2" || "$attempt" == "$max_attempts" ]]; then
+              exit "$exit_code"
+            fi
+            echo "Attempt $attempt failed before tests completed. Retrying..."
+          done
         shell: bash
       - name: Save Firestore Emulator Cache
         # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
@@ -164,21 +239,94 @@ jobs:
         # Web devices are not supported for the `flutter test` command yet. As a
         # workaround we can use the `flutter drive` command. Tracking issue:
         # https://github.com/flutter/flutter/issues/66264
-        # Chrome debug service can fail with AppConnectionException. Retry once.
+        # Chrome debug service can fail with AppConnectionException. Retry with
+        # a clean browser/driver process set so stale children cannot poison
+        # the next attempt.
         run: |
-          chromedriver --port=4444 --trace-buffer-size=100000 &
+          cleanup_web_processes() {
+            pkill -f "Google Chrome" || true
+            pkill -f chrome_crashpad || true
+            pkill -x chromedriver || true
+            pkill -x dartvm || true
+            pkill -x dartaotruntime || true
+          }
+
           run_tests() {
-            flutter drive --target=./integration_test/e2e_test.dart --driver=./test_driver/integration_test.dart -d chrome --dart-define=CI=true --dart-define=APP_CHECK_E2E=true | tee output.log
+            rm -f output.log
+            cleanup_web_processes
+            chromedriver --port=4444 --trace-buffer-size=100000 &
+            chromedriver_pid=$!
+            sleep 2
+
+            python3 - <<'PY'
+          import subprocess
+          import sys
+
+          def normalize_output(output):
+              if output is None:
+                  return ''
+              if isinstance(output, bytes):
+                  return output.decode(errors='replace')
+              return output
+
+          command = [
+              'flutter',
+              'drive',
+              '--target=./integration_test/e2e_test.dart',
+              '--driver=./test_driver/integration_test.dart',
+              '-d',
+              'chrome',
+              '--dart-define=CI=true',
+              '--dart-define=APP_CHECK_E2E=true',
+          ]
+
+          try:
+              completed = subprocess.run(
+                  command,
+                  check=False,
+                  stdout=subprocess.PIPE,
+                  stderr=subprocess.STDOUT,
+                  text=True,
+                  timeout=180,
+              )
+          except subprocess.TimeoutExpired as error:
+              output = normalize_output(error.stdout)
+              print(output, end='')
+              with open('output.log', 'w') as file:
+                  file.write(output)
+              print('flutter drive timed out before connecting to Chrome.')
+              sys.exit(124)
+
+          output = normalize_output(completed.stdout)
+          print(output, end='')
+          with open('output.log', 'w') as file:
+              file.write(output)
+          sys.exit(completed.returncode)
+          PY
+            exit_code=$?
+            kill "$chromedriver_pid" 2>/dev/null || true
+            wait "$chromedriver_pid" 2>/dev/null || true
+            cleanup_web_processes
+
             output=$(<output.log)
             if [[ "$output" =~ \[E\] ]]; then
               echo "All tests did not pass. Please check the logs for more information."
-              return 1
+              return 2
             fi
+            return $exit_code
           }
-          run_tests || {
-            echo "First attempt failed. Retrying..."
-            run_tests
-          }
+
+          max_attempts=4
+          for attempt in $(seq 1 "$max_attempts"); do
+            if run_tests; then
+              exit 0
+            fi
+            exit_code=$?
+            if [[ "$exit_code" == "2" || "$attempt" == "$max_attempts" ]]; then
+              exit "$exit_code"
+            fi
+            echo "Attempt $attempt failed before tests completed. Retrying..."
+          done
         shell: bash
       - name: Save Firestore Emulator Cache
         # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
@@ -248,17 +396,95 @@ jobs:
         # Web devices are not supported for the `flutter test` command yet. As a
         # workaround we can use the `flutter drive` command. Tracking issue:
         # https://github.com/flutter/flutter/issues/66264
+        # WASM web runs can hang after building but before the test harness
+        # connects. Retry from a clean browser/driver process set.
         run: |
-          chromedriver --port=4444 --trace-buffer-size=100000 &
           mv ./web/wasm_index.html ./web/index.html
-          flutter drive --target=./integration_test/e2e_test.dart --driver=./test_driver/integration_test.dart -d chrome --wasm --dart-define=CI=true | tee output.log
-          # We have to check the output for failed tests matching the string "[E]"
-          output=$(<output.log)
-          if [[ "$output" =~ \[E\] ]]; then
-          # You will see "All tests passed." in the logs even when tests failed.
-          echo "All tests did not pass. Please check the logs for more information."
-          exit 1
-          fi
+          cleanup_web_processes() {
+            pkill -f "Google Chrome" || true
+            pkill -f chrome_crashpad || true
+            pkill -x chromedriver || true
+            pkill -x dartvm || true
+            pkill -x dartaotruntime || true
+          }
+
+          run_tests() {
+            rm -f output.log
+            cleanup_web_processes
+            chromedriver --port=4444 --trace-buffer-size=100000 &
+            chromedriver_pid=$!
+            sleep 2
+
+            python3 - <<'PY'
+          import subprocess
+          import sys
+
+          def normalize_output(output):
+              if output is None:
+                  return ''
+              if isinstance(output, bytes):
+                  return output.decode(errors='replace')
+              return output
+
+          command = [
+              'flutter',
+              'drive',
+              '--target=./integration_test/e2e_test.dart',
+              '--driver=./test_driver/integration_test.dart',
+              '-d',
+              'chrome',
+              '--wasm',
+              '--dart-define=CI=true',
+          ]
+
+          try:
+              completed = subprocess.run(
+                  command,
+                  check=False,
+                  stdout=subprocess.PIPE,
+                  stderr=subprocess.STDOUT,
+                  text=True,
+                  timeout=300,
+              )
+          except subprocess.TimeoutExpired as error:
+              output = normalize_output(error.stdout)
+              print(output, end='')
+              with open('output.log', 'w') as file:
+                  file.write(output)
+              print('flutter drive timed out before completing WASM web tests.')
+              sys.exit(124)
+
+          output = normalize_output(completed.stdout)
+          print(output, end='')
+          with open('output.log', 'w') as file:
+              file.write(output)
+          sys.exit(completed.returncode)
+          PY
+            exit_code=$?
+            kill "$chromedriver_pid" 2>/dev/null || true
+            wait "$chromedriver_pid" 2>/dev/null || true
+            cleanup_web_processes
+
+            output=$(<output.log)
+            if [[ "$output" =~ \[E\] ]]; then
+              # You will see "All tests passed." in the logs even when tests failed.
+              echo "All tests did not pass. Please check the logs for more information."
+              return 2
+            fi
+            return $exit_code
+          }
+
+          max_attempts=2
+          for attempt in $(seq 1 "$max_attempts"); do
+            if run_tests; then
+              exit 0
+            fi
+            exit_code=$?
+            if [[ "$exit_code" == "2" || "$attempt" == "$max_attempts" ]]; then
+              exit "$exit_code"
+            fi
+            echo "Attempt $attempt failed before WASM tests completed. Retrying..."
+          done
         shell: bash
       - name: Save Firestore Emulator Cache
         # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.

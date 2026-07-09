@@ -91,7 +91,17 @@ jobs:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
         with:
           fetch-depth: 0
-      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
+      - id: setup-flutter-format
+        uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
+        continue-on-error: true
+        with:
+          channel: 'stable'
+          cache: true
+          cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
+          pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
+      - name: Retry Flutter setup
+        if: steps.setup-flutter-format.outcome == 'failure'
+        uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
         with:
           channel: 'stable'
           cache: true
