@@ -13,16 +13,20 @@ void runCacheTests() {
     '$FirebaseDataConnect cache',
     () {
       setUp(() async {
-        // Enable cache with memory storage and a large TTL for testing.
         final dataConnect = MoviesConnector.instance.dataConnect;
+        // Temporarily disable cache during database cleanup to prevent populating it
+        dataConnect.cacheSettings = null;
+        dataConnect.useDataConnectEmulator('127.0.0.1', 9399);
+
+        await deleteAllMovies();
+
+        // Enable cache with memory storage and a large TTL for testing.
         dataConnect.cacheSettings = CacheSettings(
           storage: CacheStorage.memory,
           maxAge: const Duration(minutes: 5),
         );
         // Re-apply emulator to force cache manager recreation with new settings
         dataConnect.useDataConnectEmulator('127.0.0.1', 9399);
-
-        await deleteAllMovies();
       });
 
       testWidgets('test cache flow: serverOnly, cacheOnly, preferCache',
