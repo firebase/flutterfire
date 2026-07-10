@@ -375,7 +375,7 @@ void main() {
       final cache = dataConnect.cacheManager!;
 
       int timerTicks = 0;
-      final timer = Timer.periodic(const Duration(milliseconds: 2), (t) {
+      final timer = Timer.periodic(const Duration(milliseconds: 1), (t) {
         timerTicks++;
       });
 

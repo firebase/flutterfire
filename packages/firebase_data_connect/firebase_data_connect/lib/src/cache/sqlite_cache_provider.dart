@@ -26,6 +26,8 @@ class SQLite3CacheProvider implements CacheProvider {
   final bool memory;
   final String? customDbPath;
   bool _inTransaction = false;
+  bool _dbOpened = false;
+  final List<PreparedStatement> _openedStatements = [];
 
   @override
   Future<T> runInTransaction<T>(FutureOr<T> Function() action) async {
@@ -72,6 +74,7 @@ class SQLite3CacheProvider implements CacheProvider {
         }
         _db = sqlite3.open(pathStr);
       }
+      _dbOpened = true;
 
       int curVersion = _getDatabaseVersion();
       if (curVersion == 0) {
@@ -85,14 +88,25 @@ class SQLite3CacheProvider implements CacheProvider {
         }
       }
 
-      _selectEntityStmt = _db
+      final selectEntityStmt = _db
           .prepare('SELECT data FROM $entityDataTable WHERE entity_guid = ?');
-      _insertEntityStmt = _db.prepare(
+      _openedStatements.add(selectEntityStmt);
+      _selectEntityStmt = selectEntityStmt;
+
+      final insertEntityStmt = _db.prepare(
           'INSERT OR REPLACE INTO $entityDataTable (entity_guid, data) VALUES (?, ?)');
-      _selectResultStmt =
+      _openedStatements.add(insertEntityStmt);
+      _insertEntityStmt = insertEntityStmt;
+
+      final selectResultStmt =
           _db.prepare('SELECT data FROM $resultTreeTable WHERE query_id = ?');
-      _insertResultStmt = _db.prepare(
+      _openedStatements.add(selectResultStmt);
+      _selectResultStmt = selectResultStmt;
+
+      final insertResultStmt = _db.prepare(
           'INSERT OR REPLACE INTO $resultTreeTable (query_id, last_accessed, data) VALUES (?, ?, ?)');
+      _openedStatements.add(insertResultStmt);
+      _insertResultStmt = insertResultStmt;
 
       return true;
     } catch (e) {
@@ -226,11 +240,18 @@ class SQLite3CacheProvider implements CacheProvider {
   @override
   Future<void> dispose() async {
     try {
-      _selectEntityStmt.close();
-      _insertEntityStmt.close();
-      _selectResultStmt.close();
-      _insertResultStmt.close();
-      _db.close();
+      for (final stmt in _openedStatements) {
+        try {
+          stmt.close();
+        } catch (e) {
+          developer.log('Error closing prepared statement: $e');
+        }
+      }
+      _openedStatements.clear();
+
+      if (_dbOpened) {
+        _db.close();
+      }
     } catch (e) {
       developer.log('Error disposing SQLite3 resources: $e');
     }

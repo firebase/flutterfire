@@ -98,16 +98,21 @@ class Cache {
 
   void _startIsolate() async {
     try {
-      final receivePort = ReceivePort();
-      _isolate = await Isolate.spawn(_cacheIsolateEntry, receivePort.sendPort);
+      _isolate =
+          await Isolate.spawn(_cacheIsolateEntry, _fromIsolatePort.sendPort);
 
-      final mainReceivePortStream = receivePort.asBroadcastStream();
-      _toIsolatePort = await mainReceivePortStream.first as SendPort;
-      _toIsolatePortCompleter.complete(_toIsolatePort!);
+      _fromIsolatePort.listen((message) {
+        if (_toIsolatePort == null) {
+          _toIsolatePort = message as SendPort;
+          _toIsolatePortCompleter.complete(_toIsolatePort!);
+        } else {
+          _handleIsolateMessage(message);
+        }
+      });
 
-      mainReceivePortStream.listen(_handleIsolateMessage);
-
-      _updateIsolateProvider();
+      _updateIsolateProvider().catchError((e) {
+        developer.log('Failed to initialize isolate provider on startup: $e');
+      });
     } catch (e, stackTrace) {
       developer.log(
           'Failed to spawn background cache Isolate: $e. Falling back to local mode.',
@@ -125,7 +130,7 @@ class Cache {
     }
   }
 
-  void _updateIsolateProvider() async {
+  Future<void> _updateIsolateProvider() async {
     final identifier = _constructCacheIdentifier();
     if (_currentIdentifier == identifier) {
       return;
@@ -168,6 +173,8 @@ class Cache {
       'isMemory': isMemory,
       'dbPath': dbPath,
     });
+
+    return completer.future;
   }
 
   void _listenForAuthChanges() {
@@ -181,7 +188,9 @@ class Cache {
       if (kIsWeb || _isolateFallbackMode) {
         _initializeLocalProvider();
       } else {
-        _updateIsolateProvider();
+        _updateIsolateProvider().catchError((e) {
+          developer.log('Failed to update isolate provider on auth change: $e');
+        });
       }
     });
   }
@@ -323,7 +332,7 @@ class Cache {
 }
 
 /// Entry point function for the background isolate.
-void _cacheIsolateEntry(SendPort mainSendPort) {
+void _cacheIsolateEntry(SendPort mainSendPort) async {
   final isolateReceivePort = ReceivePort();
   mainSendPort.send(isolateReceivePort.sendPort);
 
@@ -331,8 +340,8 @@ void _cacheIsolateEntry(SendPort mainSendPort) {
   final ResultTreeProcessor resultTreeProcessor = ResultTreeProcessor();
   Future<bool>? providerInitialization;
 
-  isolateReceivePort.listen((message) async {
-    if (message is! Map) return;
+  await for (final message in isolateReceivePort) {
+    if (message is! Map) continue;
 
     final op = message['op'] as String?;
     final requestId = message['requestId'] as int?;
@@ -360,13 +369,13 @@ void _cacheIsolateEntry(SendPort mainSendPort) {
 
         cacheProvider =
             cacheImplementation(identifier, isMemory, customDbPath: dbPath);
-        providerInitialization = cacheProvider?.initialize();
+        providerInitialization = cacheProvider.initialize();
 
         final success = await providerInitialization;
         mainSendPort.send({
           'op': 'initAck',
           'requestId': requestId,
-          'success': success ?? false,
+          'success': success,
         });
         break;
 
@@ -460,7 +469,7 @@ void _cacheIsolateEntry(SendPort mainSendPort) {
         isolateReceivePort.close();
         break;
     }
-  });
+  }
 }
 
 /// Core dehydration and caching logic shared between proxy cache and background isolate.
