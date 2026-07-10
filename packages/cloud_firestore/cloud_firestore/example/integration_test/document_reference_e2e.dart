@@ -268,6 +268,30 @@ void runDocumentReferenceTests() {
     });
 
     group('DocumentReference.get()', () {
+      test(
+        'preserves native error messages when offline',
+        () async {
+          final document =
+              await initializeTest('document-get-server-while-offline');
+          await firestore.disableNetwork();
+          addTearDown(firestore.enableNetwork);
+
+          await expectLater(
+            document.get(const GetOptions(source: Source.server)),
+            throwsA(
+              isA<FirebaseException>()
+                  .having((error) => error.code, 'code', 'unavailable')
+                  .having(
+                    (error) => error.message,
+                    'message',
+                    contains('offline'),
+                  ),
+            ),
+          );
+        },
+        skip: kIsWeb,
+      );
+
       test('gets a document from server', () async {
         DocumentReference<Map<String, dynamic>> document =
             await initializeTest('document-get-server');
