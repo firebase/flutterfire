@@ -43,8 +43,8 @@ class Cache {
   // Non-web isolate handling
   Isolate? _isolate;
   SendPort? _toIsolatePort;
-  final Completer<SendPort> _toIsolatePortCompleter = Completer<SendPort>();
-  final ReceivePort _fromIsolatePort = ReceivePort();
+  Completer<SendPort>? _toIsolatePortCompleter;
+  ReceivePort? _fromIsolatePort;
   final Map<int, Completer<dynamic>> _pendingRequests = {};
 
   int _requestIdCounter = 0;
@@ -97,14 +97,16 @@ class Cache {
   }
 
   void _startIsolate() async {
+    _toIsolatePortCompleter = Completer<SendPort>();
+    _fromIsolatePort = ReceivePort();
     try {
       _isolate =
-          await Isolate.spawn(_cacheIsolateEntry, _fromIsolatePort.sendPort);
+          await Isolate.spawn(_cacheIsolateEntry, _fromIsolatePort!.sendPort);
 
-      _fromIsolatePort.listen((message) {
+      _fromIsolatePort!.listen((message) {
         if (_toIsolatePort == null) {
           _toIsolatePort = message as SendPort;
-          _toIsolatePortCompleter.complete(_toIsolatePort!);
+          _toIsolatePortCompleter!.complete(_toIsolatePort!);
         } else {
           _handleIsolateMessage(message);
         }
@@ -120,7 +122,7 @@ class Cache {
           stackTrace: stackTrace);
       // Fallback to local mode on failure
       _isolateFallbackMode = true;
-      _toIsolatePortCompleter.completeError(e);
+      _toIsolatePortCompleter!.completeError(e);
       _localCacheProvider = null;
       _initializeLocalProvider();
       if (!_startupCompleted) {
@@ -141,7 +143,7 @@ class Cache {
 
     SendPort? toIsolatePort;
     try {
-      toIsolatePort = await _toIsolatePortCompleter.future;
+      toIsolatePort = await _toIsolatePortCompleter?.future;
     } catch (_) {}
 
     if (toIsolatePort == null || _isolateFallbackMode) {
@@ -324,7 +326,7 @@ class Cache {
       if (_toIsolatePort != null) {
         _toIsolatePort!.send({'op': 'dispose'});
       }
-      _fromIsolatePort.close();
+      _fromIsolatePort?.close();
       _isolate = null;
     }
     _localCacheProvider?.dispose();
