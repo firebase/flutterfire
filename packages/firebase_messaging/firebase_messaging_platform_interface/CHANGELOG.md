@@ -1,3 +1,7 @@
+## 4.9.1
+
+ - Update a dependency to the latest release.
+
 ## 4.9.0
 
  - **FEAT**(messaging,ios): add support for actionIdentifier on iOS devices ([#18357](https://github.com/firebase/flutterfire/issues/18357)). ([d60af4d9](https://github.com/firebase/flutterfire/commit/d60af4d9e1345c113490e875c85bd9ac62dad935))
