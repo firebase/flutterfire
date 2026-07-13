@@ -48,12 +48,12 @@ class Cache {
   final Map<int, Completer<dynamic>> _pendingRequests = {};
 
   int _requestIdCounter = 0;
-  final Completer<void> _startupCompleter = Completer<void>();
-  bool _startupCompleted = false;
+  Future<void>? _isolateInitFuture;
+  Completer<void>? _isolateInitCompleter;
+  bool _lastInitFailed = false;
+  bool _localInitFailed = false;
   String? _currentIdentifier;
   bool _isolateFallbackMode = false;
-
-  Future<void> get _initialized => _startupCompleter.future;
 
   factory Cache(CacheSettings settings, FirebaseDataConnect dataConnect) {
     Cache c = Cache._internal(settings, dataConnect);
@@ -86,14 +86,25 @@ class Cache {
   void _initializeLocalProvider() {
     String identifier = _constructCacheIdentifier();
     if (_localCacheProvider != null &&
-        _localCacheProvider!.identifier() == identifier) {
+        _localCacheProvider!.identifier() == identifier &&
+        !_localInitFailed) {
       return;
     }
 
+    _localInitFailed = false;
     bool memory = _settings.storage == CacheStorage.memory;
     _localCacheProvider = cacheImplementation(identifier, memory);
 
-    _localProviderInitialization = _localCacheProvider?.initialize();
+    _localProviderInitialization =
+        _localCacheProvider!.initialize().then((success) {
+      if (!success) {
+        _localInitFailed = true;
+      }
+      return success;
+    }).catchError((e) {
+      _localInitFailed = true;
+      return false;
+    });
   }
 
   void _startIsolate() async {
@@ -125,21 +136,20 @@ class Cache {
       _toIsolatePortCompleter!.completeError(e);
       _localCacheProvider = null;
       _initializeLocalProvider();
-      if (!_startupCompleted) {
-        _startupCompleted = true;
-        _startupCompleter.complete();
-      }
+      _isolateInitCompleter?.complete();
     }
   }
 
   Future<void> _updateIsolateProvider() async {
     final identifier = _constructCacheIdentifier();
-    if (_currentIdentifier == identifier) {
-      return;
+    if (_currentIdentifier == identifier && !_lastInitFailed) {
+      return _isolateInitFuture ?? Future.value();
     }
     _currentIdentifier = identifier;
+    _lastInitFailed = false;
 
-    final completer = Completer<void>();
+    _isolateInitCompleter = Completer<void>();
+    _isolateInitFuture = _isolateInitCompleter!.future;
 
     SendPort? toIsolatePort;
     try {
@@ -149,7 +159,8 @@ class Cache {
     if (toIsolatePort == null || _isolateFallbackMode) {
       _localCacheProvider = null;
       _initializeLocalProvider();
-      return;
+      _isolateInitCompleter!.complete();
+      return _isolateInitFuture!;
     }
 
     String? dbPath;
@@ -166,7 +177,7 @@ class Cache {
     final isMemory = _settings.storage == CacheStorage.memory;
 
     final requestId = _requestIdCounter++;
-    _pendingRequests[requestId] = completer;
+    _pendingRequests[requestId] = _isolateInitCompleter!;
 
     toIsolatePort.send({
       'op': 'init',
@@ -176,7 +187,7 @@ class Cache {
       'dbPath': dbPath,
     });
 
-    return completer.future;
+    return _isolateInitFuture!;
   }
 
   void _listenForAuthChanges() {
@@ -204,29 +215,26 @@ class Cache {
     final requestId = message['requestId'] as int?;
 
     if (op == 'initAck') {
-      final completer = _pendingRequests.remove(requestId);
+      final completer = _pendingRequests.remove(requestId) as Completer<void>?;
       final success = message['success'] as bool? ?? false;
       if (completer != null) {
         if (success) {
+          _lastInitFailed = false;
           completer.complete();
         } else {
+          _lastInitFailed = true;
           completer.completeError(StateError(
               'CacheProvider failed to initialize in background isolate.'));
-        }
-      }
-      if (!_startupCompleted) {
-        _startupCompleted = true;
-        if (success) {
-          _startupCompleter.complete();
-        } else {
-          _startupCompleter
-              .completeError(StateError('CacheProvider failed to initialize.'));
         }
       }
     } else if (op == 'updateResponse') {
       final completer = _pendingRequests.remove(requestId);
       if (completer != null) {
-        completer.complete();
+        if (message['error'] != null) {
+          completer.completeError(StateError(message['error'] as String));
+        } else {
+          completer.complete();
+        }
       }
       final impacted = message['impactedQueryIds'] as List<dynamic>?;
       if (impacted != null) {
@@ -235,8 +243,12 @@ class Cache {
     } else if (op == 'resultTreeResponse') {
       final completer = _pendingRequests.remove(requestId);
       if (completer != null) {
-        final data = message['data'] as Map<String, dynamic>?;
-        completer.complete(data);
+        if (message['error'] != null) {
+          completer.completeError(StateError(message['error'] as String));
+        } else {
+          final data = message['data'] as Map<String, dynamic>?;
+          completer.complete(data);
+        }
       }
     }
   }
@@ -244,6 +256,7 @@ class Cache {
   /// Caches a server response.
   Future<void> update(String queryId, ServerResponse serverResponse) async {
     if (kIsWeb || _isolateFallbackMode) {
+      _initializeLocalProvider();
       if (_localCacheProvider == null) {
         developer.log('cache update: no provider available');
         return;
@@ -265,7 +278,12 @@ class Cache {
       );
       _impactedQueryController.add(impactedQueryIds);
     } else {
-      await _initialized;
+      try {
+        await _updateIsolateProvider();
+      } catch (e) {
+        developer.log('Cache update failed due to initialization error: $e');
+        return;
+      }
       final requestId = _requestIdCounter++;
       final completer = Completer<void>();
       _pendingRequests[requestId] = completer;
@@ -287,6 +305,7 @@ class Cache {
   Future<Map<String, dynamic>?> resultTree(
       String queryId, bool allowStale) async {
     if (kIsWeb || _isolateFallbackMode) {
+      _initializeLocalProvider();
       if (_localCacheProvider == null) {
         return null;
       }
@@ -304,7 +323,12 @@ class Cache {
         processor: _localResultTreeProcessor,
       );
     } else {
-      await _initialized;
+      try {
+        await _updateIsolateProvider();
+      } catch (e) {
+        developer.log('Cache read failed due to initialization error: $e');
+        return null;
+      }
       final requestId = _requestIdCounter++;
       final completer = Completer<Map<String, dynamic>?>();
       _pendingRequests[requestId] = completer;
@@ -411,20 +435,29 @@ void _cacheIsolateEntry(SendPort mainSendPort) async {
             ? Duration(microseconds: ttlMicroseconds)
             : Duration.zero;
 
-        final impactedQueryIds = await dehydrateAndUpdateCache(
-          queryId: queryId,
-          data: data,
-          extensions: extensions,
-          maxAge: maxAge,
-          provider: provider,
-          processor: resultTreeProcessor,
-        );
+        try {
+          final impactedQueryIds = await dehydrateAndUpdateCache(
+            queryId: queryId,
+            data: data,
+            extensions: extensions,
+            maxAge: maxAge,
+            provider: provider,
+            processor: resultTreeProcessor,
+          );
 
-        mainSendPort.send({
-          'op': 'updateResponse',
-          'requestId': requestId,
-          'impactedQueryIds': impactedQueryIds.toList(),
-        });
+          mainSendPort.send({
+            'op': 'updateResponse',
+            'requestId': requestId,
+            'impactedQueryIds': impactedQueryIds.toList(),
+          });
+        } catch (e) {
+          mainSendPort.send({
+            'op': 'updateResponse',
+            'requestId': requestId,
+            'impactedQueryIds': <String>[],
+            'error': e.toString(),
+          });
+        }
         break;
 
       case 'resultTree':
@@ -450,18 +483,27 @@ void _cacheIsolateEntry(SendPort mainSendPort) async {
         final queryId = message['queryId'] as String;
         final allowStale = message['allowStale'] as bool;
 
-        final hydratedJson = await fetchAndHydrateCache(
-          queryId: queryId,
-          allowStale: allowStale,
-          provider: provider,
-          processor: resultTreeProcessor,
-        );
+        try {
+          final hydratedJson = await fetchAndHydrateCache(
+            queryId: queryId,
+            allowStale: allowStale,
+            provider: provider,
+            processor: resultTreeProcessor,
+          );
 
-        mainSendPort.send({
-          'op': 'resultTreeResponse',
-          'requestId': requestId,
-          'data': hydratedJson,
-        });
+          mainSendPort.send({
+            'op': 'resultTreeResponse',
+            'requestId': requestId,
+            'data': hydratedJson,
+          });
+        } catch (e) {
+          mainSendPort.send({
+            'op': 'resultTreeResponse',
+            'requestId': requestId,
+            'data': null,
+            'error': e.toString(),
+          });
+        }
         break;
 
       case 'dispose':
