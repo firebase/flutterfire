@@ -13,7 +13,6 @@
 #include "firebase/app.h"
 #include "firebase/auth.h"
 #include "firebase/future.h"
-#include "firebase/log.h"
 #include "firebase/util.h"
 #include "firebase/variant.h"
 #include "firebase_auth/plugin_version.h"
@@ -65,9 +64,7 @@ void FirebaseAuthPlugin::RegisterWithRegistrar(
                        nullptr);
 }
 
-FirebaseAuthPlugin::FirebaseAuthPlugin() {
-  firebase::SetLogLevel(firebase::kLogLevelVerbose);
-}
+FirebaseAuthPlugin::FirebaseAuthPlugin() = default;
 
 FirebaseAuthPlugin::~FirebaseAuthPlugin() = default;
 
