@@ -48,7 +48,7 @@ void runTimestampTests() {
       final timestamp = snapshot.data()!['foo'] as Timestamp;
 
       expect(timestamp, Timestamp.fromDate(date));
-      expect(timestamp.toDate(), date);
+      expect(timestamp.microsecondsSinceEpoch, date.microsecondsSinceEpoch);
     });
 
     test('updates a $Timestamp & returns', () async {
