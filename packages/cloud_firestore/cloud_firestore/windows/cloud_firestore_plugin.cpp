@@ -500,7 +500,7 @@ EncodableValue CloudFirestorePlugin::ConvertFieldValueToEncodableValue(
         bytes.assign(fieldValue.blob_value(),
                      fieldValue.blob_value() + fieldValue.blob_size());
       }
-      return EncodableValue(bytes);
+      return CustomEncodableValue(bytes);
     }
 
     case FieldValue::Type::kMap: {
