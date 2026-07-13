@@ -27,6 +27,8 @@ class CloudFirestorePlugin : public flutter::Plugin,
   static void RegisterWithRegistrar(flutter::PluginRegistrarWindows* registrar);
   static firebase::firestore::FieldValue ConvertToFieldValue(
       const flutter::EncodableValue& variant);
+  static flutter::EncodableValue ConvertFieldValueToEncodableValue(
+      const firebase::firestore::FieldValue& fieldValue);
 
   CloudFirestorePlugin();
 

@@ -268,6 +268,16 @@ void runDocumentReferenceTests() {
     });
 
     group('DocumentReference.get()', () {
+      test('gets blob data', () async {
+        final document = await initializeTest('document-get-blob');
+        final blob = Blob(Uint8List.fromList(<int>[0, 127, 255]));
+        await document.set(<String, Object?>{'blob': blob});
+
+        final snapshot = await document.get();
+
+        expect(snapshot.get('blob'), blob);
+      });
+
       test(
         'preserves native error messages when offline',
         () async {

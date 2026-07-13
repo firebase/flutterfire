@@ -21,6 +21,7 @@
 #include <mutex>
 #include <queue>
 #include <sstream>
+#include <vector>
 
 #include "cloud_firestore/plugin_version.h"
 #include "firebase/app.h"
@@ -470,7 +471,8 @@ GetServerTimestampBehaviorFromPigeon(
   }
 }
 
-EncodableValue ConvertFieldValueToEncodableValue(const FieldValue& fieldValue) {
+EncodableValue CloudFirestorePlugin::ConvertFieldValueToEncodableValue(
+    const FieldValue& fieldValue) {
   switch (fieldValue.type()) {
     case FieldValue::Type::kNull:
       return EncodableValue();
@@ -491,6 +493,15 @@ EncodableValue ConvertFieldValueToEncodableValue(const FieldValue& fieldValue) {
 
     case FieldValue::Type::kString:
       return EncodableValue(fieldValue.string_value());
+
+    case FieldValue::Type::kBlob: {
+      std::vector<uint8_t> bytes;
+      if (fieldValue.blob_size() > 0) {
+        bytes.assign(fieldValue.blob_value(),
+                     fieldValue.blob_value() + fieldValue.blob_size());
+      }
+      return EncodableValue(bytes);
+    }
 
     case FieldValue::Type::kMap: {
       EncodableMap encodableMap;
@@ -527,8 +538,9 @@ flutter::EncodableMap ConvertToEncodableMap(
   EncodableMap convertedMap;
   for (const auto& kv : originalMap) {
     EncodableValue key = EncodableValue(kv.first);
-    EncodableValue value = ConvertFieldValueToEncodableValue(
-        kv.second);             // convert FieldValue to EncodableValue
+    EncodableValue value =
+        CloudFirestorePlugin::ConvertFieldValueToEncodableValue(
+            kv.second);         // convert FieldValue to EncodableValue
     convertedMap[key] = value;  // insert into the new map
   }
   return convertedMap;
