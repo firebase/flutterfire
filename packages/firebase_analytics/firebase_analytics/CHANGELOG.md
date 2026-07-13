@@ -1,3 +1,7 @@
+## 12.4.4
+
+ - Update a dependency to the latest release.
+
 ## 12.4.3
 
  - **FIX**(analytics,iOS): update iOS dependency instructions for IDFA-free usage ([#18337](https://github.com/firebase/flutterfire/issues/18337)). ([c21fc77b](https://github.com/firebase/flutterfire/commit/c21fc77b68a87b9691fc1615454c5dac39dd4ed4))

@@ -1,3 +1,7 @@
+## 16.4.2
+
+ - Update a dependency to the latest release.
+
 ## 16.4.1
 
  - **FIX**: resolve FlutterSceneLifeCycleDelegate conformance guard ([#18385](https://github.com/firebase/flutterfire/issues/18385)). ([48d67196](https://github.com/firebase/flutterfire/commit/48d67196a10affe09724529df5f67cf40b62bccf))

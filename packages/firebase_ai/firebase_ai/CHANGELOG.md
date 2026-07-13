@@ -1,3 +1,7 @@
+## 3.14.0
+
+ - **FEAT**(ai): add a list of the MIME types supported by AI Logic ([#18429](https://github.com/firebase/flutterfire/issues/18429)). ([755bf69b](https://github.com/firebase/flutterfire/commit/755bf69b0add6152426d6c899b9fa262c8e4f809))
+
 ## 3.13.1
 
  - Update a dependency to the latest release.
