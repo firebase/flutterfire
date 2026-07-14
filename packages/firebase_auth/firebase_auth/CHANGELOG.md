@@ -1,3 +1,7 @@
+## 6.5.6
+
+ - Update a dependency to the latest release.
+
 ## 6.5.5
 
  - **FIX**(auth,iOS): add detailed error handling for Apple authorization failures ([#18415](https://github.com/firebase/flutterfire/issues/18415)). ([1df97bb0](https://github.com/firebase/flutterfire/commit/1df97bb018e0f72ce8f7cbabf016438010a5bdfe))
