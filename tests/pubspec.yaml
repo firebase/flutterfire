@@ -29,7 +29,7 @@ dependencies:
   firebase_auth_web: ^6.2.5
   firebase_core: ^4.12.1
   firebase_core_platform_interface: ^8.0.0
-  firebase_core_web: ^3.9.0
+  firebase_core_web: ^3.9.1
   firebase_crashlytics: ^5.2.6
   firebase_crashlytics_platform_interface: ^3.8.26
   firebase_database: ^12.4.6

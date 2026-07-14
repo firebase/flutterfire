@@ -11,7 +11,7 @@ environment:
 dependencies:
   collection: ^1.18.0
   firebase_core: ^4.12.1
-  firebase_core_web: ^3.9.0
+  firebase_core_web: ^3.9.1
   firebase_database_platform_interface: ^0.4.0+5
   flutter:
     sdk: flutter
