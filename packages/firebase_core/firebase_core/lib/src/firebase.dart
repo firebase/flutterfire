@@ -29,8 +29,8 @@ class Firebase {
   }
 
   /// Initializes a new [FirebaseApp] instance by [name] and [options] and
-  /// returns the created app. This method should be called before any usage of
-  /// FlutterFire plugins.
+  /// returns the created app. This method should be called before any usage of FlutterFire
+  /// plugins.
   ///
   /// If a [demoProjectId] is provided, a new [FirebaseApp] instance will be
   /// initialized with a set of default options for demo projects, overriding
