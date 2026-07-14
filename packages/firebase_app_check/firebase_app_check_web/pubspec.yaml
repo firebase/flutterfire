@@ -21,7 +21,7 @@ dependencies:
 
 dev_dependencies:
   build_runner: ^2.3.3
-  firebase_core_platform_interface: ^7.1.0
+  firebase_core_platform_interface: ^8.0.0
   flutter_test:
     sdk: flutter
   mockito: ^5.0.0

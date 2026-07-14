@@ -21,7 +21,7 @@ environment:
 
 dependencies:
   firebase_core: ^4.12.0
-  firebase_core_platform_interface: ^7.1.0
+  firebase_core_platform_interface: ^8.0.0
   firebase_crashlytics_platform_interface: ^3.8.25
   flutter:
     sdk: flutter

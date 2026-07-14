@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2026-07-14
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`firebase_core_platform_interface` - `v8.0.0`](#firebase_core_platform_interface---v800)
+
+---
+
+#### `firebase_core_platform_interface` - `v8.0.0`
+
+
 ## 2026-07-13 - [BoM 4.17.0](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-4170-2026-07-13)
 
 ### Changes
