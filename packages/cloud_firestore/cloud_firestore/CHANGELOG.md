@@ -1,3 +1,7 @@
+## 6.7.1
+
+ - Update a dependency to the latest release.
+
 ## 6.7.0
 
  - **FIX**(firestore): preserve detailed native Firestore error messages ([#18428](https://github.com/firebase/flutterfire/issues/18428)). ([b23c3267](https://github.com/firebase/flutterfire/commit/b23c32678d131799793827b1eaed179e168707e0))

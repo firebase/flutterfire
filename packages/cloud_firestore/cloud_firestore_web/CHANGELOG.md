@@ -1,3 +1,7 @@
+## 5.7.1
+
+ - Update a dependency to the latest release.
+
 ## 5.7.0
 
  - **FEAT**(firestore): add support for new expressions including nor, coalesce, switch_on, timestamp_diff, and timestamp_extract ([#18200](https://github.com/firebase/flutterfire/issues/18200)). ([2612eb2c](https://github.com/firebase/flutterfire/commit/2612eb2c72fd6606fa10837075ff7ff95a846aa4))
