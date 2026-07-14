@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## 2026-07-14
+## 2026-07-14 - [BoM 4.17.1](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-4171-2026-07-14)
 
 ### Changes
 
@@ -113,7 +113,7 @@ Packages with dependency updates only:
  - **FIX**(core): clarify initialization requirement ([#18441](https://github.com/firebase/flutterfire/issues/18441)). ([9cfde82a](https://github.com/firebase/flutterfire/commit/9cfde82af1872c485e7b2f8fb091195e2287666d))
 
 
-## 2026-07-14
+## 2026-07-14 - [BoM 4.17.1](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-4171-2026-07-14)
 
 ### Changes
 
