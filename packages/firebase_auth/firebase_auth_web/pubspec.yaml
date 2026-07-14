@@ -12,7 +12,7 @@ environment:
 dependencies:
   firebase_auth_platform_interface: ^9.0.5
   firebase_core: ^4.12.1
-  firebase_core_web: ^3.9.0
+  firebase_core_web: ^3.9.1
   flutter:
     sdk: flutter
   flutter_web_plugins:

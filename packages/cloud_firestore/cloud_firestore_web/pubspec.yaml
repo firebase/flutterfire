@@ -15,7 +15,7 @@ dependencies:
   cloud_firestore_platform_interface: ^8.0.5
   collection: ^1.0.0
   firebase_core: ^4.12.1
-  firebase_core_web: ^3.9.0
+  firebase_core_web: ^3.9.1
   flutter:
     sdk: flutter
   flutter_web_plugins:
