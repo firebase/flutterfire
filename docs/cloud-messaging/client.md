@@ -120,24 +120,32 @@ see [Application server keys](https://developers.google.com/web/fundamentals/pus
 
 To send a message to a specific device, you need to know the device
 registration token. To retrieve the current registration token for an app instance, call
-`getToken()`. If notification permission has not been granted, this method will
-ask the user for notification permissions. Otherwise, it returns a token or
-rejects the future due to an error.
-
-Warning: In iOS SDK 10.4.0 and higher, it is required that the APNs token
-is available before making API requests. The APNs token is not guaranteed to
-have been received before making FCM plugin API requests.
+`getToken()`. This method does not request notification permission. If your app
+displays notifications, request permission explicitly:
 
 ```dart
-// You may set the permission requests to "provisional" which allows the user to choose what type
-// of notifications they would like to receive once the user receives a notification.
-final notificationSettings = await FirebaseMessaging.instance.requestPermission(provisional: true);
+final notificationSettings =
+    await FirebaseMessaging.instance.requestPermission(provisional: true);
+```
 
-// For apple platforms, ensure the APNS token is available before making any FCM plugin API calls
+Warning: In iOS SDK 10.4.0 and higher, it is required that the APNs token
+is available before retrieving the FCM token. The APNs token is not guaranteed
+to be available immediately after permission is granted. If `getAPNSToken()`
+returns `null`, wait for APNs registration to complete and try again later.
+
+```dart
+// On Apple platforms, ensure the APNs token is available before retrieving
+// the FCM token.
 final apnsToken = await FirebaseMessaging.instance.getAPNSToken();
 if (apnsToken != null) {
- // APNS token is available, make FCM plugin API requests...
+  final fcmToken = await FirebaseMessaging.instance.getToken();
 }
+```
+
+On other native platforms, retrieve the token directly:
+
+```dart
+final fcmToken = await FirebaseMessaging.instance.getToken();
 ```
 
 On web platforms, pass your VAPID public key to `getToken()`:
@@ -154,8 +162,7 @@ FirebaseMessaging.instance.onTokenRefresh
     .listen((fcmToken) {
       // TODO: If necessary send token to application server.
 
-      // Note: This callback is fired at each app startup and whenever a new
-      // token is generated.
+      // This callback is fired whenever a new token is generated.
     })
     .onError((err) {
       // Error getting token.
