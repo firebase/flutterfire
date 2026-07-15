@@ -11,7 +11,11 @@
 #include <flutter/method_channel.h>
 #include <flutter/plugin_registrar_windows.h>
 
+#include <chrono>
+#include <condition_variable>
 #include <memory>
+#include <mutex>
+#include <vector>
 
 #include "firebase/app.h"
 #include "firebase/firestore.h"
@@ -20,6 +24,31 @@
 #include "messages.g.h"
 
 namespace cloud_firestore_windows {
+
+enum class TransactionResponseStatus {
+  kReceived,
+  kTimedOut,
+  kCancelled,
+};
+
+class TransactionResponse {
+ public:
+  void Reset();
+  void Complete(InternalTransactionResult result,
+                std::vector<InternalTransactionCommand> commands);
+  TransactionResponseStatus WaitFor(
+      std::chrono::milliseconds timeout, InternalTransactionResult& result,
+      std::vector<InternalTransactionCommand>& commands);
+  void Cancel();
+
+ private:
+  std::mutex mutex_;
+  std::condition_variable condition_;
+  bool response_received_ = false;
+  bool cancelled_ = false;
+  InternalTransactionResult result_ = InternalTransactionResult::kSuccess;
+  std::vector<InternalTransactionCommand> commands_;
+};
 
 class CloudFirestorePlugin : public flutter::Plugin,
                              public FirebaseFirestoreHostApi {
