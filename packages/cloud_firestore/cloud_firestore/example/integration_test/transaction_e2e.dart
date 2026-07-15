@@ -69,6 +69,27 @@ void runTransactionTests() {
         expect(response, equals(randomValue));
       });
 
+      test(
+        'runs after reading a document',
+        () async {
+          final documentReference =
+              await initializeTest('transaction-after-get');
+          await documentReference.set({'value': 0});
+          await documentReference.get();
+
+          await firestore.runTransaction((transaction) async {
+            final snapshot = await transaction.get(documentReference);
+            transaction.update(documentReference, {
+              'value': snapshot.data()!['value'] + 1,
+            });
+          });
+
+          final snapshot = await documentReference.get();
+          expect(snapshot.data()!['value'], 1);
+        },
+        skip: defaultTargetPlatform != TargetPlatform.windows,
+      );
+
       test('should abort if thrown and not continue', () async {
         DocumentReference<Map<String, dynamic>> documentReference =
             await initializeTest('transaction-abort');
