@@ -62,8 +62,10 @@ class FirestoreMessageCodec extends StandardMessageCodec {
   @override
   void writeValue(WriteBuffer buffer, dynamic value) {
     if (value is DateTime) {
-      buffer.putUint8(_kDateTime);
-      buffer.putInt64(value.millisecondsSinceEpoch);
+      final Timestamp timestamp = Timestamp.fromDate(value);
+      buffer.putUint8(_kTimestamp);
+      buffer.putInt64(timestamp.seconds);
+      buffer.putInt32(timestamp.nanoseconds);
     } else if (value is Timestamp) {
       buffer.putUint8(_kTimestamp);
       buffer.putInt64(value.seconds);
