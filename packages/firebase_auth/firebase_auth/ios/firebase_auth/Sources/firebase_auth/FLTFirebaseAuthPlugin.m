@@ -896,11 +896,18 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
   // OAuth
   if ([signInMethod isEqualToString:kSignInMethodOAuth]) {
     NSString *providerId = arguments[kArgumentProviderId];
-    completion([FIROAuthProvider credentialWithProviderID:providerId
-                                                  IDToken:idToken
-                                                 rawNonce:rawNonce
-                                              accessToken:accessToken],
-               nil);
+    FIRAuthCredential *credential;
+    if (accessToken == nil) {
+      credential = [FIROAuthProvider credentialWithProviderID:providerId
+                                                      IDToken:idToken
+                                                     rawNonce:rawNonce];
+    } else {
+      credential = [FIROAuthProvider credentialWithProviderID:providerId
+                                                      IDToken:idToken
+                                                     rawNonce:rawNonce
+                                                  accessToken:accessToken];
+    }
+    completion(credential, nil);
     return;
   }
 
