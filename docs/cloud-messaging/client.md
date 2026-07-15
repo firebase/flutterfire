@@ -120,13 +120,19 @@ see [Application server keys](https://developers.google.com/web/fundamentals/pus
 
 To send a message to a specific device, you need to know the device
 registration token. To retrieve the current registration token for an app instance, call
-`getToken()`. This method does not request notification permission. If your app
-displays notifications, request permission explicitly:
+`getToken()`.
+
+On Apple and Android platforms, `getToken()` does not request notification
+permission. If your app displays notifications, request permission explicitly:
 
 ```dart
 final notificationSettings =
     await FirebaseMessaging.instance.requestPermission(provisional: true);
 ```
+
+On web, `getToken()` asks for notification permission if it has not already
+been granted. You can call `requestPermission()` first if you want to control
+when the browser displays the permission prompt.
 
 Warning: In iOS SDK 10.4.0 and higher, it is required that the APNs token
 is available before retrieving the FCM token. The APNs token is not guaranteed
@@ -154,15 +160,16 @@ On web platforms, pass your VAPID public key to `getToken()`:
 final fcmToken = await FirebaseMessaging.instance.getToken(vapidKey: "BKagOny0KF_2pCJQ3m....moL0ewzQ8rZu");
 ```
 
-To be notified whenever the token is updated, subscribe to the `onTokenRefresh`
-stream:
+On Apple and Android platforms, subscribe to the `onTokenRefresh` stream to be
+notified whenever a token is generated or refreshed. The stream does not emit
+at every app startup. On web, `onTokenRefresh` is a no-op stream.
 
 ```dart
 FirebaseMessaging.instance.onTokenRefresh
     .listen((fcmToken) {
       // TODO: If necessary send token to application server.
 
-      // This callback is fired whenever a new token is generated.
+      // This callback is fired whenever a token is generated or refreshed.
     })
     .onError((err) {
       // Error getting token.

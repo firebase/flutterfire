@@ -53,10 +53,12 @@ Notifications console to complete this tutorial, make sure to copy the token
 or securely store it after you retrieve it.
 
 To retrieve the current registration token for an app instance, call
-`getToken()`. This method does not request notification permission. Call
-`requestPermission()` explicitly before retrieving the token if your app
-displays notifications. On Apple platforms, also ensure that `getAPNSToken()`
-returns a non-null APNs token before calling `getToken()`.
+`getToken()`. On Apple and Android platforms, this method does not request
+notification permission. On web, it requests permission if permission has not
+already been granted. To keep the flow explicit and consistent across
+platforms, call `requestPermission()` before retrieving the token. On Apple
+platforms, also ensure that `getAPNSToken()` returns a non-null APNs token
+before calling `getToken()`.
 
 ```dart
 await FirebaseMessaging.instance.requestPermission();
