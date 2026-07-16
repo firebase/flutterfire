@@ -4,8 +4,7 @@ plugins {
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
     // END: FlutterFire Configuration
-    id "kotlin-android"
-    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
+    // The Flutter Gradle Plugin must be applied after the Android Gradle plugin.
     id "dev.flutter.flutter-gradle-plugin"
 }
 apply from: file("../../../android/local-config.gradle")
@@ -38,10 +37,6 @@ android {
         targetCompatibility = project.ext.javaVersion
     }
 
-    kotlinOptions {
-        jvmTarget = "17"
-    }
-
     defaultConfig {
         applicationId = "io.flutter.plugins.firebasecrashlyticsexample"
         // You can update the following values to match your application needs.
@@ -63,4 +58,10 @@ android {
 
 flutter {
     source = "../.."
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
+    }
 }

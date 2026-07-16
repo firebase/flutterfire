@@ -5,15 +5,13 @@ apply plugin: 'com.android.library'
 apply from: file("local-config.gradle")
 
 buildscript {
-    ext.kotlin_version = "2.0.0"
     repositories {
         google()
         mavenCentral()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.1.4'
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
+        classpath 'com.android.tools.build:gradle:9.0.0'
     }
 }
 
@@ -25,16 +23,6 @@ rootProject.allprojects {
 }
 
 apply plugin: 'com.android.library'
-
-// AGP 9+ has built-in Kotlin support unless Flutter opts out via android.builtInKotlin=false.
-def agpMajor = com.android.Version.ANDROID_GRADLE_PLUGIN_VERSION.tokenize('.')[0] as int
-def builtInKotlin = providers.gradleProperty("android.builtInKotlin")
-        .map { it.toBoolean() }
-        .orElse(agpMajor >= 9)
-        .get()
-if (agpMajor < 9 || !builtInKotlin) {
-    apply plugin: 'kotlin-android'
-}
 
 def firebaseCoreProject = findProject(':firebase_core')
 if (firebaseCoreProject == null) {
@@ -88,11 +76,9 @@ android {
     }
 }
 
-plugins.withId("org.jetbrains.kotlin.android") {
-    kotlin {
-        compilerOptions {
-            jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.fromTarget(project.ext.javaVersion.toString())
-        }
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.fromTarget(project.ext.javaVersion.toString())
     }
 }
 
