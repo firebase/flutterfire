@@ -1821,19 +1821,22 @@ size_t PigeonInternalDeepHash(const InternalActionCodeSettings& v) {
 // InternalFirebaseAuthSettings
 
 InternalFirebaseAuthSettings::InternalFirebaseAuthSettings(
-    bool app_verification_disabled_for_testing)
+    bool app_verification_disabled_for_testing, bool migrate_current_user)
     : app_verification_disabled_for_testing_(
-          app_verification_disabled_for_testing) {}
+          app_verification_disabled_for_testing),
+      migrate_current_user_(migrate_current_user) {}
 
 InternalFirebaseAuthSettings::InternalFirebaseAuthSettings(
     bool app_verification_disabled_for_testing,
-    const std::string* user_access_group, const std::string* phone_number,
-    const std::string* sms_code, const bool* force_recaptcha_flow)
+    const std::string* user_access_group, bool migrate_current_user,
+    const std::string* phone_number, const std::string* sms_code,
+    const bool* force_recaptcha_flow)
     : app_verification_disabled_for_testing_(
           app_verification_disabled_for_testing),
       user_access_group_(user_access_group
                              ? std::optional<std::string>(*user_access_group)
                              : std::nullopt),
+      migrate_current_user_(migrate_current_user),
       phone_number_(phone_number ? std::optional<std::string>(*phone_number)
                                  : std::nullopt),
       sms_code_(sms_code ? std::optional<std::string>(*sms_code)
@@ -1865,6 +1868,14 @@ void InternalFirebaseAuthSettings::set_user_access_group(
 void InternalFirebaseAuthSettings::set_user_access_group(
     std::string_view value_arg) {
   user_access_group_ = value_arg;
+}
+
+bool InternalFirebaseAuthSettings::migrate_current_user() const {
+  return migrate_current_user_;
+}
+
+void InternalFirebaseAuthSettings::set_migrate_current_user(bool value_arg) {
+  migrate_current_user_ = value_arg;
 }
 
 const std::string* InternalFirebaseAuthSettings::phone_number() const {
@@ -1911,10 +1922,11 @@ void InternalFirebaseAuthSettings::set_force_recaptcha_flow(bool value_arg) {
 
 EncodableList InternalFirebaseAuthSettings::ToEncodableList() const {
   EncodableList list;
-  list.reserve(5);
+  list.reserve(6);
   list.push_back(EncodableValue(app_verification_disabled_for_testing_));
   list.push_back(user_access_group_ ? EncodableValue(*user_access_group_)
                                     : EncodableValue());
+  list.push_back(EncodableValue(migrate_current_user_));
   list.push_back(phone_number_ ? EncodableValue(*phone_number_)
                                : EncodableValue());
   list.push_back(sms_code_ ? EncodableValue(*sms_code_) : EncodableValue());
@@ -1925,21 +1937,22 @@ EncodableList InternalFirebaseAuthSettings::ToEncodableList() const {
 
 InternalFirebaseAuthSettings InternalFirebaseAuthSettings::FromEncodableList(
     const EncodableList& list) {
-  InternalFirebaseAuthSettings decoded(std::get<bool>(list[0]));
+  InternalFirebaseAuthSettings decoded(std::get<bool>(list[0]),
+                                       std::get<bool>(list[2]));
   auto& encodable_user_access_group = list[1];
   if (!encodable_user_access_group.IsNull()) {
     decoded.set_user_access_group(
         std::get<std::string>(encodable_user_access_group));
   }
-  auto& encodable_phone_number = list[2];
+  auto& encodable_phone_number = list[3];
   if (!encodable_phone_number.IsNull()) {
     decoded.set_phone_number(std::get<std::string>(encodable_phone_number));
   }
-  auto& encodable_sms_code = list[3];
+  auto& encodable_sms_code = list[4];
   if (!encodable_sms_code.IsNull()) {
     decoded.set_sms_code(std::get<std::string>(encodable_sms_code));
   }
-  auto& encodable_force_recaptcha_flow = list[4];
+  auto& encodable_force_recaptcha_flow = list[5];
   if (!encodable_force_recaptcha_flow.IsNull()) {
     decoded.set_force_recaptcha_flow(
         std::get<bool>(encodable_force_recaptcha_flow));
@@ -1954,6 +1967,8 @@ bool InternalFirebaseAuthSettings::operator==(
              other.app_verification_disabled_for_testing_) &&
          PigeonInternalDeepEquals(user_access_group_,
                                   other.user_access_group_) &&
+         PigeonInternalDeepEquals(migrate_current_user_,
+                                  other.migrate_current_user_) &&
          PigeonInternalDeepEquals(phone_number_, other.phone_number_) &&
          PigeonInternalDeepEquals(sms_code_, other.sms_code_) &&
          PigeonInternalDeepEquals(force_recaptcha_flow_,
@@ -1970,6 +1985,7 @@ size_t InternalFirebaseAuthSettings::Hash() const {
   result = result * 31 +
            PigeonInternalDeepHash(app_verification_disabled_for_testing_);
   result = result * 31 + PigeonInternalDeepHash(user_access_group_);
+  result = result * 31 + PigeonInternalDeepHash(migrate_current_user_);
   result = result * 31 + PigeonInternalDeepHash(phone_number_);
   result = result * 31 + PigeonInternalDeepHash(sms_code_);
   result = result * 31 + PigeonInternalDeepHash(force_recaptcha_flow_);

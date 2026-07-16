@@ -595,10 +595,17 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   Future<void> setSettings({
     bool appVerificationDisabledForTesting = false,
     String? userAccessGroup,
+    bool migrateCurrentUser = false,
     String? phoneNumber,
     String? smsCode,
     bool? forceRecaptchaFlow,
   }) async {
+    if (migrateCurrentUser && userAccessGroup == null) {
+      throw ArgumentError(
+        'The [userAccessGroup] must be set when [migrateCurrentUser] is true.',
+      );
+    }
+
     if (phoneNumber != null && smsCode == null ||
         phoneNumber == null && smsCode != null) {
       throw ArgumentError(
@@ -613,6 +620,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
             appVerificationDisabledForTesting:
                 appVerificationDisabledForTesting,
             userAccessGroup: userAccessGroup,
+            migrateCurrentUser: migrateCurrentUser,
             phoneNumber: phoneNumber,
             smsCode: smsCode,
             forceRecaptchaFlow: forceRecaptchaFlow,

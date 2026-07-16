@@ -1533,6 +1533,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
               settings:(nonnull InternalFirebaseAuthSettings *)settings
             completion:(nonnull void (^)(FlutterError *_Nullable))completion {
   FIRAuth *auth = [self getFIRAuthFromAppNameFromPigeon:app];
+  FIRUser *userToMigrate = settings.migrateCurrentUser ? auth.currentUser : nil;
 
   if (settings.userAccessGroup != nil) {
     BOOL useUserAccessGroupSuccessful;
@@ -1553,6 +1554,15 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
   NSLog(@"FIRAuthSettings.appVerificationDisabledForTesting is not supported "
         @"on MacOS.");
 #endif
+
+  if (userToMigrate != nil) {
+    [auth updateCurrentUser:userToMigrate
+                 completion:^(NSError *_Nullable error) {
+                   completion(error == nil ? nil
+                                           : [FLTFirebaseAuthPlugin convertToFlutterError:error]);
+                 }];
+    return;
+  }
 
   completion(nil);
 }

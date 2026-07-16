@@ -1031,6 +1031,35 @@ void main() {
 
       group('setSettings()', () {
         test(
+          'migrates the current user when changing access groups',
+          () async {
+            final app = await Firebase.initializeApp(
+              name: 'auth-access-group-migration',
+              options: DefaultFirebaseOptions.currentPlatform,
+            );
+            final auth = FirebaseAuth.instanceFor(app: app);
+            await auth.useAuthEmulator(testEmulatorHost, testEmulatorPort);
+
+            addTearDown(() async {
+              await auth.signOut();
+              await app.delete();
+            });
+
+            await auth.signOut();
+            final credential = await auth.signInAnonymously();
+            final uid = credential.user!.uid;
+
+            await auth.setSettings(
+              userAccessGroup: 'YYX2P3XVJ7.io.flutter.plugins.firebase.tests',
+              migrateCurrentUser: true,
+            );
+
+            expect(auth.currentUser?.uid, uid);
+          },
+          skip: kIsWeb || defaultTargetPlatform != TargetPlatform.iOS,
+        );
+
+        test(
           'throws argument error if phoneNumber & smsCode have not been set simultaneously',
           () async {
             String message =

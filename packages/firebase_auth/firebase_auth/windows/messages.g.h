@@ -812,13 +812,14 @@ class InternalFirebaseAuthSettings {
  public:
   // Constructs an object setting all non-nullable fields.
   explicit InternalFirebaseAuthSettings(
-      bool app_verification_disabled_for_testing);
+      bool app_verification_disabled_for_testing, bool migrate_current_user);
 
   // Constructs an object setting all fields.
   explicit InternalFirebaseAuthSettings(
       bool app_verification_disabled_for_testing,
-      const std::string* user_access_group, const std::string* phone_number,
-      const std::string* sms_code, const bool* force_recaptcha_flow);
+      const std::string* user_access_group, bool migrate_current_user,
+      const std::string* phone_number, const std::string* sms_code,
+      const bool* force_recaptcha_flow);
 
   bool app_verification_disabled_for_testing() const;
   void set_app_verification_disabled_for_testing(bool value_arg);
@@ -826,6 +827,9 @@ class InternalFirebaseAuthSettings {
   const std::string* user_access_group() const;
   void set_user_access_group(const std::string_view* value_arg);
   void set_user_access_group(std::string_view value_arg);
+
+  bool migrate_current_user() const;
+  void set_migrate_current_user(bool value_arg);
 
   const std::string* phone_number() const;
   void set_phone_number(const std::string_view* value_arg);
@@ -863,6 +867,7 @@ class InternalFirebaseAuthSettings {
   friend class PigeonInternalCodecSerializer;
   bool app_verification_disabled_for_testing_;
   std::optional<std::string> user_access_group_;
+  bool migrate_current_user_;
   std::optional<std::string> phone_number_;
   std::optional<std::string> sms_code_;
   std::optional<bool> force_recaptcha_flow_;

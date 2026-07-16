@@ -396,9 +396,15 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   ///   Key Sharing capabilities must be enabled for your app via XCode (Project
   ///   settings > Capabilities). To learn more, visit the
   ///   [Apple documentation](https://developer.apple.com/documentation/security/keychain_services/keychain_items/sharing_access_to_keychain_items_among_a_collection_of_apps).
+  ///
+  /// [migrateCurrentUser] This setting only applies to iOS and macOS platforms.
+  ///   When `true`, the currently signed-in user is migrated to
+  ///   [userAccessGroup]. This may replace a user already stored in that access
+  ///   group.
   Future<void> setSettings({
     bool appVerificationDisabledForTesting = false,
     String? userAccessGroup,
+    bool migrateCurrentUser = false,
     String? phoneNumber,
     String? smsCode,
     bool? forceRecaptchaFlow,
