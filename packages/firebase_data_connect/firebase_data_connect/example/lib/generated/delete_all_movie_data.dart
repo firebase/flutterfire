@@ -20,19 +20,14 @@ class DeleteAllMovieDataVariablesBuilder {
 
 @immutable
 class DeleteAllMovieDataData {
-  final int directedByDeleteMany;
-  final int movieDeleteMany;
-  final int personDeleteMany;
+  final int directedBy_deleteMany;
+  final int movie_deleteMany;
+  final int person_deleteMany;
   DeleteAllMovieDataData.fromJson(dynamic json)
-      : directedByDeleteMany = nativeFromJson<int>(
-          json['directedBy_deleteMany'],
-        ),
-        movieDeleteMany = nativeFromJson<int>(
-          json['movie_deleteMany'],
-        ),
-        personDeleteMany = nativeFromJson<int>(
-          json['person_deleteMany'],
-        );
+      : directedBy_deleteMany =
+            nativeFromJson<int>(json['directedBy_deleteMany']),
+        movie_deleteMany = nativeFromJson<int>(json['movie_deleteMany']),
+        person_deleteMany = nativeFromJson<int>(json['person_deleteMany']);
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) {
@@ -43,29 +38,29 @@ class DeleteAllMovieDataData {
     }
 
     final DeleteAllMovieDataData otherTyped = other as DeleteAllMovieDataData;
-    return directedByDeleteMany == otherTyped.directedByDeleteMany &&
-        movieDeleteMany == otherTyped.movieDeleteMany &&
-        personDeleteMany == otherTyped.personDeleteMany;
+    return directedBy_deleteMany == otherTyped.directedBy_deleteMany &&
+        movie_deleteMany == otherTyped.movie_deleteMany &&
+        person_deleteMany == otherTyped.person_deleteMany;
   }
 
   @override
   int get hashCode => Object.hashAll([
-        directedByDeleteMany.hashCode,
-        movieDeleteMany.hashCode,
-        personDeleteMany.hashCode,
+        directedBy_deleteMany.hashCode,
+        movie_deleteMany.hashCode,
+        person_deleteMany.hashCode
       ]);
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
-    json['directedBy_deleteMany'] = nativeToJson<int>(directedByDeleteMany);
-    json['movie_deleteMany'] = nativeToJson<int>(movieDeleteMany);
-    json['person_deleteMany'] = nativeToJson<int>(personDeleteMany);
+    json['directedBy_deleteMany'] = nativeToJson<int>(directedBy_deleteMany);
+    json['movie_deleteMany'] = nativeToJson<int>(movie_deleteMany);
+    json['person_deleteMany'] = nativeToJson<int>(person_deleteMany);
     return json;
   }
 
-  const DeleteAllMovieDataData({
-    required this.directedByDeleteMany,
-    required this.movieDeleteMany,
-    required this.personDeleteMany,
+  DeleteAllMovieDataData({
+    required this.directedBy_deleteMany,
+    required this.movie_deleteMany,
+    required this.person_deleteMany,
   });
 }
