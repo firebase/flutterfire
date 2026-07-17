@@ -223,6 +223,35 @@ final auth = FirebaseAuth.instanceFor(app: Firebase.app(), persistence: Persiste
 await auth.setPersistence(Persistence.LOCAL);
 ```
 
+## Share authentication state between Apple apps
+
+On Apple platforms, you can share authentication state between apps in the same
+developer account by storing it in a shared Keychain access group. First, enable
+the Keychain Sharing capability for each app and add the same access group.
+Then configure Firebase Auth with the fully qualified access group:
+
+```dart
+await FirebaseAuth.instance.setSettings(
+  userAccessGroup: 'TEAMID.com.example.group1',
+);
+```
+
+Changing from the default Keychain to a shared access group signs out an
+existing user unless the user is migrated. To preserve the current session,
+including an anonymous session, opt into migration when setting the access
+group:
+
+```dart
+await FirebaseAuth.instance.setSettings(
+  userAccessGroup: 'TEAMID.com.example.group1',
+  migrateCurrentUser: true,
+);
+```
+
+Migration can replace a user already stored in the destination access group.
+For more information about configuring access groups, see
+[Enabling cross-app authentication with shared Apple Keychain](https://firebase.google.com/docs/auth/ios/single-sign-on).
+
 ## Next Steps
 
 Explore the guides on signing in and signing up users with the supported
