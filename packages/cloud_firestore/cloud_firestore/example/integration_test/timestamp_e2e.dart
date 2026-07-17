@@ -37,6 +37,20 @@ void runTimestampTests() {
       );
     });
 
+    test('implicitly converts a DateTime without losing microseconds',
+        () async {
+      final doc = await initializeTest('datetime-microseconds');
+      final date = DateTime.utc(2023, 11, 1, 0, 0, 0, 999, 999);
+
+      await doc.set(<String, Object?>{'foo': date});
+
+      final snapshot = await doc.get();
+      final timestamp = snapshot.data()!['foo'] as Timestamp;
+
+      expect(timestamp, Timestamp.fromDate(date));
+      expect(timestamp.microsecondsSinceEpoch, date.microsecondsSinceEpoch);
+    });
+
     test('updates a $Timestamp & returns', () async {
       DocumentReference<Map<String, dynamic>> doc =
           await initializeTest('geo-point-update');

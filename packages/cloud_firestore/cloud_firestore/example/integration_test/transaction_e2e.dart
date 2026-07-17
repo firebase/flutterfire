@@ -69,6 +69,27 @@ void runTransactionTests() {
         expect(response, equals(randomValue));
       });
 
+      test(
+        'runs after reading a document',
+        () async {
+          final documentReference =
+              await initializeTest('transaction-after-get');
+          await documentReference.set({'value': 0});
+          await documentReference.get();
+
+          await firestore.runTransaction((transaction) async {
+            final snapshot = await transaction.get(documentReference);
+            transaction.update(documentReference, {
+              'value': snapshot.data()!['value'] + 1,
+            });
+          });
+
+          final snapshot = await documentReference.get();
+          expect(snapshot.data()!['value'], 1);
+        },
+        skip: defaultTargetPlatform != TargetPlatform.windows,
+      );
+
       test('should abort if thrown and not continue', () async {
         DocumentReference<Map<String, dynamic>> documentReference =
             await initializeTest('transaction-abort');
@@ -480,6 +501,39 @@ void runTransactionTests() {
             await documentReference2.get();
         expect(snapshot2.exists, isFalse);
       });
+
+      test(
+        'runs many transactions concurrently without corrupting native state',
+        () async {
+          // Regression test for
+          // https://github.com/firebase/flutterfire/issues/18417: concurrent
+          // transactions used to mutate the plugin's shared transaction map
+          // from multiple threads without synchronization, which could crash
+          // iOS with a heap-corruption SIGABRT.
+          const int count = 30;
+
+          final refs = [
+            for (var i = 0; i < count; i++)
+              firestore.doc('flutter-tests/transaction-concurrent-$i'),
+          ];
+
+          await Future.wait([
+            for (final ref in refs)
+              firestore.runTransaction((Transaction transaction) async {
+                final snapshot = await transaction.get(ref);
+                transaction.set(ref, {
+                  'value': ((snapshot.data()?['value'] as int?) ?? 0) + 1,
+                });
+              }),
+          ]);
+
+          final snapshots = await Future.wait(refs.map((ref) => ref.get()));
+          for (final snapshot in snapshots) {
+            expect(snapshot.exists, isTrue);
+            expect(snapshot.data()!['value'], isA<int>());
+          }
+        },
+      );
 
       // TODO(Lyokone): adding auth make some tests fails in macOS
       // test(

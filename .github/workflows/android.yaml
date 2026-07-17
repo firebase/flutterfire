@@ -4,6 +4,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-android
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 on:
   pull_request:
     paths-ignore:
@@ -31,6 +34,8 @@ on:
 
 jobs:
   android:
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 45 }}
     strategy:
@@ -50,7 +55,7 @@ jobs:
         name: Install Node.js 20
         with:
           node-version: '20'
-      - uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654
+      - uses: actions/setup-java@1bcf9fb12cf4aa7d266a90ae39939e61372fe520
         with:
           distribution: 'temurin'
           java-version: '21'
@@ -60,7 +65,7 @@ jobs:
           echo "FIREBASE_TOOLS_VERSION=$(npm firebase --version)" >> $GITHUB_ENV
       - name: Firebase Emulator Cache
         id: firebase-emulator-cache
-        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         continue-on-error: true
         with:
           # The firebase emulators are pure javascript and java, OS-independent
@@ -89,7 +94,7 @@ jobs:
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
       - name: Gradle cache
-        uses: gradle/actions/setup-gradle@v6
+        uses: gradle/actions/setup-gradle@90ddb51e90a5fd9ba75f40cf85156b7b41bf76a3
       - name: Free Disk Space (Ubuntu)
         uses: AdityaGarg8/remove-unwanted-software@90e01b21170618765a73370fcc3abbd1684a7793
         with:
@@ -98,18 +103,33 @@ jobs:
           remove-codeql: true
           remove-docker-images: true
           remove-large-packages: true
+      - name: Prepare AVD home on /mnt
+        # GitHub-hosted runners mount a ~74GB volume at /mnt. Create it before AVD cache
+        # restore and android-emulator-runner (avdmanager needs the space at create time).
+        run: |
+          sudo mkdir -p /mnt/avd
+          sudo chown "$USER:$USER" /mnt/avd
+          df -h / /mnt
       - name: AVD cache
-        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         continue-on-error: true
         id: avd-cache
         with:
           # Must match the save path exactly
           path: |
-            ~/.android/avd/*
+            /mnt/avd/*
             ~/.android/adb*
           key: avd-${{ runner.os }}-${{ env.AVD_API_LEVEL }}-${{ env.AVD_TARGET }}-${{ env.AVD_ARCH }}
+      - name: Link AVD home to /mnt
+        # android-emulator-runner exportVariables ANDROID_AVD_HOME to $HOME/.android/avd
+        run: |
+          mkdir -p "$HOME/.android"
+          rm -rf "$HOME/.android/avd"
+          ln -s /mnt/avd "$HOME/.android/avd"
       - name: Start AVD then run E2E tests
         uses: reactivecircus/android-emulator-runner@e89f39f1abbbd05b1113a29cf4db69e7540cae5a
+        env:
+          ANDROID_AVD_HOME: /mnt/avd
         with:
           api-level: ${{ env.AVD_API_LEVEL }}
           target: ${{ env.AVD_TARGET }}
@@ -141,19 +161,21 @@ jobs:
           key: ${{ steps.avd-cache.outputs.cache-primary-key }}
           # Must match the restore path exactly
           path: |
-            ~/.android/avd/*
+            /mnt/avd/*
             ~/.android/adb*
 
   agp9-compatibility:
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
-      - uses: actions/setup-java@8df1039502a15bceb9433410b1a100fbe190c53b
+      - uses: actions/setup-java@1bcf9fb12cf4aa7d266a90ae39939e61372fe520
         with:
           distribution: 'temurin'
           java-version: '21'
-      - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
         with:
           channel: 'stable'
           cache: true
@@ -166,6 +188,6 @@ jobs:
       - name: 'Bootstrap tests package'
         run: melos bootstrap --scope tests
       - name: Gradle cache
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@0b6dd653ba04f4f93bf581ec31e66cbd7dcb644d
       - name: 'Build tests app with AGP 9'
         run: bash ./.github/workflows/scripts/agp9-compatibility.sh

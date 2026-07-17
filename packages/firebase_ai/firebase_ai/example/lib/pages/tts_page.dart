@@ -117,6 +117,98 @@ class _TTSPageState extends State<TTSPage> {
     );
   }
 
+  ({GenerativeModel model, String prompt}) _setupModelAndPrompt() {
+    final GenerationConfig config;
+    final String prompt;
+
+    if (_isMultiSpeaker) {
+      prompt =
+          '${_speaker1NameController.text}: ${_speaker1LineController.text}\n'
+          '${_speaker2NameController.text}: ${_speaker2LineController.text}';
+      config = GenerationConfig(
+        responseModalities: [ResponseModalities.audio],
+        speechConfig: SpeechConfig.multiSpeaker(
+          multiSpeakerVoiceConfig: MultiSpeakerVoiceConfig(
+            speakerVoiceConfigs: [
+              SpeakerVoiceConfig(
+                speaker: _speaker1NameController.text,
+                voiceName: _speaker1Voice,
+              ),
+              SpeakerVoiceConfig(
+                speaker: _speaker2NameController.text,
+                voiceName: _speaker2Voice,
+              ),
+            ],
+          ),
+        ),
+      );
+    } else {
+      prompt = _singlePromptController.text;
+      config = GenerationConfig(
+        responseModalities: [ResponseModalities.audio],
+        speechConfig: SpeechConfig(
+          voiceName: _selectedVoice,
+          languageCode: 'en-US',
+        ),
+      );
+    }
+
+    // Use the preview model for TTS
+    const modelName = 'gemini-3.1-flash-tts-preview';
+    final GenerativeModel model;
+    if (widget.useVertexBackend) {
+      model = FirebaseAI.vertexAI().generativeModel(
+        model: modelName,
+        generationConfig: config,
+      );
+    } else {
+      model = FirebaseAI.googleAI().generativeModel(
+        model: modelName,
+        generationConfig: config,
+      );
+    }
+
+    return (model: model, prompt: prompt);
+  }
+
+  Future<void> _startPlayback({
+    Duration duration = const Duration(minutes: 10),
+  }) async {
+    await _audioOutput.playStream();
+    setState(() {
+      _loading = false;
+      _isPlaying = true;
+      _amplitudeStream = _mockAmpGen.start(duration);
+    });
+  }
+
+  void _schedulePlaybackCompletion(int totalBytes, [DateTime? startTime]) {
+    _audioOutput.finishStream();
+
+    // Calculate duration: 24000 Hz, 1 channel, 16-bit (2 bytes) = 48000 bytes/sec
+    final durationMs = (totalBytes / 48.0).round();
+    final duration = Duration(milliseconds: durationMs);
+    final elapsed = startTime != null
+        ? DateTime.now().difference(startTime)
+        : Duration.zero;
+    final remaining = duration - elapsed;
+
+    if (remaining > Duration.zero) {
+      _playbackTimer?.cancel();
+      _playbackTimer = Timer(remaining, () {
+        setState(() {
+          _isPlaying = false;
+          _amplitudeStream = null;
+        });
+      });
+    } else {
+      setState(() {
+        _isPlaying = false;
+        _amplitudeStream = null;
+      });
+    }
+  }
+
   Future<void> _generateAndPlay() async {
     setState(() {
       _loading = true;
@@ -124,56 +216,7 @@ class _TTSPageState extends State<TTSPage> {
     });
 
     try {
-      final GenerationConfig config;
-      final String prompt;
-
-      if (_isMultiSpeaker) {
-        prompt =
-            '${_speaker1NameController.text}: ${_speaker1LineController.text}\n'
-            '${_speaker2NameController.text}: ${_speaker2LineController.text}';
-        config = GenerationConfig(
-          responseModalities: [ResponseModalities.audio],
-          speechConfig: SpeechConfig.multiSpeaker(
-            multiSpeakerVoiceConfig: MultiSpeakerVoiceConfig(
-              speakerVoiceConfigs: [
-                SpeakerVoiceConfig(
-                  speaker: _speaker1NameController.text,
-                  voiceName: _speaker1Voice,
-                ),
-                SpeakerVoiceConfig(
-                  speaker: _speaker2NameController.text,
-                  voiceName: _speaker2Voice,
-                ),
-              ],
-            ),
-          ),
-        );
-      } else {
-        prompt = _singlePromptController.text;
-        config = GenerationConfig(
-          responseModalities: [ResponseModalities.audio],
-          speechConfig: SpeechConfig(
-            voiceName: _selectedVoice,
-            languageCode: 'en-US',
-          ),
-        );
-      }
-
-      // Use the preview model for TTS
-      const modelName = 'gemini-3.1-flash-tts-preview';
-      final GenerativeModel model;
-      if (widget.useVertexBackend) {
-        model = FirebaseAI.vertexAI().generativeModel(
-          model: modelName,
-          generationConfig: config,
-        );
-      } else {
-        model = FirebaseAI.googleAI().generativeModel(
-          model: modelName,
-          generationConfig: config,
-        );
-      }
-
+      final (:model, :prompt) = _setupModelAndPrompt();
       final response = await model.generateContent([Content.text(prompt)]);
 
       // Extract text response
@@ -196,26 +239,11 @@ class _TTSPageState extends State<TTSPage> {
       }
 
       // Play audio and start visualizer
-      await _audioOutput.playStream();
+      final duration =
+          Duration(milliseconds: (audioBytes.length / 48.0).round());
+      await _startPlayback(duration: duration);
       _audioOutput.addDataToAudioStream(audioBytes);
-      _audioOutput.finishStream();
-
-      // Calculate duration: 24000 Hz, 1 channel, 16-bit (2 bytes) = 48000 bytes/sec
-      final durationMs = (audioBytes.length / 48.0).round();
-      final duration = Duration(milliseconds: durationMs);
-
-      setState(() {
-        _loading = false;
-        _isPlaying = true;
-        _amplitudeStream = _mockAmpGen.start(duration);
-      });
-
-      _playbackTimer = Timer(duration, () {
-        setState(() {
-          _isPlaying = false;
-          _amplitudeStream = null;
-        });
-      });
+      _schedulePlaybackCompletion(audioBytes.length);
     } catch (e) {
       setState(() {
         _loading = false;
@@ -232,6 +260,69 @@ class _TTSPageState extends State<TTSPage> {
       _isPlaying = false;
       _amplitudeStream = null;
     });
+  }
+
+  Future<void> _generateStreamAndPlay() async {
+    setState(() {
+      _loading = true;
+      _responseText = null;
+    });
+
+    try {
+      final (:model, :prompt) = _setupModelAndPrompt();
+      final responseStream =
+          model.generateContentStream([Content.text(prompt)]);
+
+      final textBuffer = StringBuffer();
+      int totalAudioBytes = 0;
+      bool streamStarted = false;
+      DateTime? startTime;
+
+      await for (final response in responseStream) {
+        if (streamStarted && !_isPlaying) {
+          break;
+        }
+
+        if (response.text != null) {
+          textBuffer.write(response.text);
+        }
+
+        for (final candidate in response.candidates) {
+          for (final part in candidate.content.parts) {
+            if (part is InlineDataPart && part.mimeType.startsWith('audio/')) {
+              if (!streamStarted) {
+                await _startPlayback();
+                streamStarted = true;
+                startTime = DateTime.now();
+              }
+              _audioOutput.addDataToAudioStream(part.bytes);
+              totalAudioBytes += part.bytes.length;
+            }
+          }
+        }
+
+        if (textBuffer.isNotEmpty) {
+          setState(() {
+            _responseText = textBuffer.toString();
+          });
+        }
+      }
+
+      if (streamStarted && !_isPlaying) {
+        return;
+      }
+
+      if (!streamStarted || totalAudioBytes == 0) {
+        throw Exception('No audio received from the model.');
+      }
+
+      _schedulePlaybackCompletion(totalAudioBytes, startTime);
+    } catch (e) {
+      setState(() {
+        _loading = false;
+      });
+      _showError(e.toString());
+    }
   }
 
   Widget _buildSingleSpeakerForm() {
@@ -431,12 +522,33 @@ class _TTSPageState extends State<TTSPage> {
               children: [
                 if (_loading)
                   const CircularProgressIndicator()
-                else
+                else if (_isPlaying)
                   IconButton(
-                    icon: Icon(_isPlaying ? Icons.stop : Icons.play_arrow),
+                    icon: const Icon(Icons.stop),
                     iconSize: 36,
                     color: Theme.of(context).colorScheme.primary,
-                    onPressed: _isPlaying ? _stopPlayback : _generateAndPlay,
+                    tooltip: 'Stop Playback',
+                    onPressed: _stopPlayback,
+                  )
+                else
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.play_arrow),
+                        iconSize: 36,
+                        color: Theme.of(context).colorScheme.primary,
+                        tooltip: 'Generate and Play',
+                        onPressed: _generateAndPlay,
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.stream),
+                        iconSize: 36,
+                        color: Theme.of(context).colorScheme.primary,
+                        tooltip: 'Generate Stream and Play',
+                        onPressed: _generateStreamAndPlay,
+                      ),
+                    ],
                   ),
                 const SizedBox(width: 16),
                 AudioVisualizer(

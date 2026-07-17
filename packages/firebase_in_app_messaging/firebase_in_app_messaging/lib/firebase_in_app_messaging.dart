@@ -4,10 +4,10 @@
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
-    show FirebasePluginPlatform;
+    show FirebasePlugin;
 import 'package:firebase_in_app_messaging_platform_interface/firebase_in_app_messaging_platform_interface.dart';
 
-class FirebaseInAppMessaging extends FirebasePluginPlatform {
+class FirebaseInAppMessaging extends FirebasePlugin {
   FirebaseInAppMessaging._({required this.app})
       : super(app.name, 'plugins.flutter.io/firebase_in_app_messaging');
 

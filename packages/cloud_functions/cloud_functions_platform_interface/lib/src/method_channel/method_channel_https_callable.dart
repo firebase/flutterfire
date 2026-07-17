@@ -11,6 +11,18 @@ import '../../cloud_functions_platform_interface.dart';
 import 'method_channel_firebase_functions.dart';
 import 'utils/exception.dart';
 
+dynamic _convertNested(Object? value) {
+  if (value is List) {
+    return value.map(_convertNested).toList();
+  }
+  if (value is Map) {
+    return value.map<String, dynamic>(
+      (key, value) => MapEntry(key as String, _convertNested(value)),
+    );
+  }
+  return value;
+}
+
 /// Method Channel delegate for [HttpsCallablePlatform].
 class MethodChannelHttpsCallable extends HttpsCallablePlatform {
   /// Creates a new [MethodChannelHttpsCallable] instance.
@@ -38,11 +50,7 @@ class MethodChannelHttpsCallable extends HttpsCallablePlatform {
         'limitedUseAppCheckToken': options.limitedUseAppCheckToken,
       });
 
-      if (result is Map) {
-        return Map<String, dynamic>.from(result);
-      } else {
-        return result;
-      }
+      return _convertNested(result);
     } catch (e, s) {
       convertPlatformException(e, s);
     }
@@ -70,12 +78,7 @@ class MethodChannelHttpsCallable extends HttpsCallablePlatform {
         'limitedUseAppCheckToken': options.limitedUseAppCheckToken,
         'timeout': options.timeout.inMilliseconds,
       };
-      yield* channel.receiveBroadcastStream(eventData).map((message) {
-        if (message is Map) {
-          return Map<String, dynamic>.from(message);
-        }
-        return message;
-      });
+      yield* channel.receiveBroadcastStream(eventData).map(_convertNested);
     } catch (e, s) {
       convertPlatformException(e, s);
     }
