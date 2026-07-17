@@ -19,6 +19,8 @@ list(APPEND PLUGIN_SOURCES
   "firebase_storage_plugin.h"
   "messages.g.cpp"
   "messages.g.h"
+  "../src/firebase_storage_utils.cpp"
+  "../src/firebase_storage_utils.h"
 )
 
 # Read version from pubspec.yaml

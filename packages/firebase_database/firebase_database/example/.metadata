@@ -18,6 +18,9 @@ migration:
     - platform: ios
       create_revision: 5874a72aa4c779a02553007c47dacbefba2374dc
       base_revision: 5874a72aa4c779a02553007c47dacbefba2374dc
+    - platform: linux
+      create_revision: ad70ec4617166f1c38e5d2bfd388af71fda14f06
+      base_revision: ad70ec4617166f1c38e5d2bfd388af71fda14f06
 
   # User provided section
 

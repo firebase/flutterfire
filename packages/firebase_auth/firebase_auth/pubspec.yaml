@@ -43,6 +43,8 @@ flutter:
         pluginClass: FlutterFirebaseAuthPlugin
       ios:
         pluginClass: FLTFirebaseAuthPlugin
+      linux:
+        pluginClass: FirebaseAuthPlugin
       macos:
         pluginClass: FLTFirebaseAuthPlugin
       web:

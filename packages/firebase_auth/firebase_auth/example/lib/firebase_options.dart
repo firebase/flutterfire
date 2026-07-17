@@ -32,11 +32,9 @@ class DefaultFirebaseOptions {
         return macos;
       case TargetPlatform.windows:
         return macos;
+      // TODO: Remove when FlutterFire CLI supports Linux
       case TargetPlatform.linux:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for linux - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return android;
       default:
         throw UnsupportedError(
           'DefaultFirebaseOptions are not supported for this platform.',

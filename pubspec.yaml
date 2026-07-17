@@ -311,6 +311,7 @@ melos:
         melos exec -- "flutter pub run pigeon --input ./pigeons/messages.dart" && \
         melos run generate:pigeon:macos --no-select && \
         melos run generate:pigeon:android --no-select && \
+        melos run generate:pigeon:linux --no-select && \
         melos run format-ci --no-select
       packageFilters:
         fileExists: 'pigeons/messages.dart'
@@ -330,6 +331,14 @@ melos:
       packageFilters:
         dirExists: 'android'
       description: Transform the method toList() into a public one to be used in EventChannel
+
+    generate:pigeon:linux:
+      run: ./scripts/generate_pigeon_linux.sh
+      description: |
+        Re-apply the mechanical patches required on the Pigeon GObject output for Linux:
+        the `delete` -> `delete_` reserved-word rename (firebase_auth), the dispatch-local
+        `handle` -> `response_handle_` rename (firebase_storage), and the Firestore codec
+        fallback delegation plus exposed codec constructor (cloud_firestore). Idempotent.
 
     # Additional cleanup lifecycle script, executed when `melos clean` is run.
     postclean: >

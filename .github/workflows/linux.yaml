@@ -1,0 +1,50 @@
+name: build-linux
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-linux
+  cancel-in-progress: true
+
+on:
+  pull_request:
+    paths-ignore:
+      - 'docs/**'
+      - 'website/**'
+      - '**/example/**'
+      - '!**/example/integration_test/**'
+      - '**/flutterfire_ui/**'
+      - '**.md'
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'docs/**'
+      - 'website/**'
+      - '**/example/**'
+      - '!**/example/integration_test/**'
+      - '**/flutterfire_ui/**'
+      - '**.md'
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
+      - name: "Install Linux desktop build dependencies"
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build libgtk-3-dev libsecret-1-dev
+      - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
+        with:
+          channel: 'stable'
+          cache: true
+          cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
+          pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
+      - uses: bluefireteam/melos-action@705015c3d2bc4ab94201ac24accb2bbe070cf533
+        with:
+          run-bootstrap: false
+          melos-version: '3.0.0'
+      - name: "Bootstrap package"
+        run: melos bootstrap --scope "firebase_core*"
+      - name: "Build Linux (Release)"
+        run: cd packages/firebase_core/firebase_core/example && flutter build linux --release

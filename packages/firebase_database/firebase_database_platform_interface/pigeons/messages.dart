@@ -19,6 +19,12 @@ import 'package:pigeon/pigeon.dart';
     cppHeaderOut: '../firebase_database/windows/messages.g.h',
     cppSourceOut: '../firebase_database/windows/messages.g.cpp',
     cppOptions: CppOptions(namespace: 'firebase_database_windows'),
+    gobjectHeaderOut: '../firebase_database/linux/messages.g.h',
+    gobjectSourceOut: '../firebase_database/linux/messages.g.cc',
+    gobjectOptions: GObjectOptions(
+      headerIncludePath: 'messages.g.h',
+      module: 'FirebaseDatabase',
+    ),
     copyrightHeader: 'pigeons/copyright.txt',
   ),
 )

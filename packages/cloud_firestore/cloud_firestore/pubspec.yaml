@@ -43,6 +43,8 @@ flutter:
         pluginClass: FlutterFirebaseFirestorePlugin
       ios:
         pluginClass: FLTFirebaseFirestorePlugin
+      linux:
+        pluginClass: CloudFirestorePlugin
       macos:
         pluginClass: FLTFirebaseFirestorePlugin
       web:

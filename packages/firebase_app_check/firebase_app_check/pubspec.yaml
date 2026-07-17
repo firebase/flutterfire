@@ -40,6 +40,8 @@ flutter:
         pluginClass: FirebaseAppCheckPlugin
       ios:
         pluginClass: FirebaseAppCheckPlugin
+      linux:
+        pluginClass: FirebaseAppCheckPlugin
       macos:
         pluginClass: FirebaseAppCheckPlugin
       web:

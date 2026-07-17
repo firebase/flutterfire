@@ -41,6 +41,8 @@ flutter:
         pluginClass: FirebaseRemoteConfigPlugin
       ios:
         pluginClass: FirebaseRemoteConfigPlugin
+      linux:
+        pluginClass: FirebaseRemoteConfigPlugin
       macos:
         pluginClass: FirebaseRemoteConfigPlugin
       web:

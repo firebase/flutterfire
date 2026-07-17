@@ -23,6 +23,12 @@ import 'package:pigeon/pigeon.dart';
     cppHeaderOut: '../cloud_firestore/windows/messages.g.h',
     cppSourceOut: '../cloud_firestore/windows/messages.g.cpp',
     cppOptions: CppOptions(namespace: 'cloud_firestore_windows'),
+    gobjectHeaderOut: '../cloud_firestore/linux/messages.g.h',
+    gobjectSourceOut: '../cloud_firestore/linux/messages.g.cc',
+    gobjectOptions: GObjectOptions(
+      headerIncludePath: 'messages.g.h',
+      module: 'CloudFirestore',
+    ),
     copyrightHeader: 'pigeons/copyright.txt',
   ),
 )

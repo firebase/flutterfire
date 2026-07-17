@@ -37,6 +37,8 @@ flutter:
         pluginClass: FlutterFirebaseCorePlugin
       ios:
         pluginClass: FLTFirebaseCorePlugin
+      linux:
+        pluginClass: FirebaseCorePlugin
       macos:
         pluginClass: FLTFirebaseCorePlugin
       web:
