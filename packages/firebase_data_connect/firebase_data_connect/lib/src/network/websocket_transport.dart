@@ -128,11 +128,47 @@ class WebSocketTransport implements DataConnectTransport {
   bool _isReconnecting = false;
   int _reconnectAttempts = 0;
   bool _isExpectedDisconnect = false;
+  String? _hotRestartKey;
+  String? _hotRestartToken;
+
+  bool get _shouldUseHotRestartGuard => kIsWeb && kDebugMode;
+
+  String get _webSocketTransportKey {
+    return 'flutterfire_dataconnect_ws_${appId}_${options.projectId}_'
+        '${options.location}_${options.serviceId}_${options.connector}_$_url';
+  }
+
+  bool get _isCurrentWebSocketTransport {
+    if (!_shouldUseHotRestartGuard) {
+      return true;
+    }
+
+    final key = _hotRestartKey;
+    if (key == null) {
+      return true;
+    }
+    return isCurrentDataConnectWebSocketTransport(key, _hotRestartToken);
+  }
+
+  void _claimWebSocketTransport() {
+    if (!_shouldUseHotRestartGuard) {
+      return;
+    }
+
+    _hotRestartKey = _webSocketTransportKey;
+    _hotRestartToken = claimDataConnectWebSocketTransport(_hotRestartKey!);
+  }
+
+  void _closeStaleWebSocketTransport() {
+    _isExpectedDisconnect = true;
+    _disconnect();
+  }
 
   void _checkIdleAndDisconnect() {
     if (_streamListeners.isEmpty && _unaryListeners.isEmpty) {
       _isExpectedDisconnect = true;
       _disconnect();
+      _releaseWebSocketTransport();
       _clearState();
     }
   }
@@ -192,6 +228,8 @@ class WebSocketTransport implements DataConnectTransport {
 
     final headers = _buildHeaders(authToken, appCheckToken);
 
+    _claimWebSocketTransport();
+
     _channel = WebSocketChannel.connect(Uri.parse(_url));
     _channelSubscription = _channel?.stream.listen(
       _onMessage,
@@ -207,6 +245,7 @@ class WebSocketTransport implements DataConnectTransport {
     } catch (e) {
       developer.log('WebSocket connection failed to become ready: $e');
       _channel = null;
+      _releaseWebSocketTransport();
       throw DataConnectError(
           DataConnectErrorCode.other, 'WebSocket connection failed: $e');
     }
@@ -221,6 +260,11 @@ class WebSocketTransport implements DataConnectTransport {
 
   // called when a message is received from the stream
   void _onMessage(dynamic message) {
+    if (!_isCurrentWebSocketTransport) {
+      _closeStaleWebSocketTransport();
+      return;
+    }
+
     try {
       var bodyString = '';
       if (message is List<int>) {
@@ -307,6 +351,10 @@ class WebSocketTransport implements DataConnectTransport {
   Timer? _reconnectTimer;
 
   void _scheduleReconnect() {
+    if (!_isCurrentWebSocketTransport) {
+      _closeStaleWebSocketTransport();
+      return;
+    }
     if (_isReconnecting || _isExpectedDisconnect) return;
     if (_streamListeners.isEmpty && _unaryListeners.isEmpty) return;
     _isReconnecting = true;
@@ -393,6 +441,11 @@ class WebSocketTransport implements DataConnectTransport {
   }
 
   Future<void> _performReconnect() async {
+    if (!_isCurrentWebSocketTransport) {
+      _closeStaleWebSocketTransport();
+      return;
+    }
+
     _channel?.sink.close();
     _channel = null;
     _reconnectAttempts++;
@@ -415,6 +468,10 @@ class WebSocketTransport implements DataConnectTransport {
   }
 
   void _onError(dynamic error) {
+    if (!_isCurrentWebSocketTransport) {
+      _closeStaleWebSocketTransport();
+      return;
+    }
     if (_channel == null) return;
     developer.log('WebSocket error: $error');
     _channel = null;
@@ -432,15 +489,34 @@ class WebSocketTransport implements DataConnectTransport {
   void disconnect() {
     _isExpectedDisconnect = true;
     _disconnect();
+    _releaseWebSocketTransport();
   }
 
   void _onDone() {
+    if (!_isCurrentWebSocketTransport) {
+      _closeStaleWebSocketTransport();
+      return;
+    }
     if (_channel == null) return;
     _channel = null;
     _isReconnecting = false;
     if (!_isExpectedDisconnect) {
       _scheduleReconnect();
     }
+  }
+
+  void _releaseWebSocketTransport() {
+    if (!_shouldUseHotRestartGuard) {
+      return;
+    }
+
+    final key = _hotRestartKey;
+    if (key == null) {
+      return;
+    }
+    releaseDataConnectWebSocketTransport(key, _hotRestartToken);
+    _hotRestartKey = null;
+    _hotRestartToken = null;
   }
 
   @override
