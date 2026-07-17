@@ -46,6 +46,11 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   // Guard against calling setupNotificationHandling twice
   BOOL _notificationHandlingSetup;
 
+#if TARGET_OS_OSX
+  // Tracks when plugin registration occurred after the macOS launch notification.
+  BOOL _missedApplicationDidFinishLaunchingNotification;
+#endif
+
 #ifdef __FF_NOTIFICATIONS_SUPPORTED_PLATFORM
   API_AVAILABLE(ios(10), macosx(10.14))
   __weak id<UNUserNotificationCenterDelegate> _originalNotificationCenterDelegate;
@@ -89,13 +94,19 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   FlutterMethodChannel *channel =
       [FlutterMethodChannel methodChannelWithName:kFLTFirebaseMessagingChannelName
                                   binaryMessenger:[registrar messenger]];
-  id instance = [[FLTFirebaseMessagingPlugin alloc] initWithFlutterMethodChannel:channel
-                                                       andFlutterPluginRegistrar:registrar];
+  FLTFirebaseMessagingPlugin *instance =
+      [[FLTFirebaseMessagingPlugin alloc] initWithFlutterMethodChannel:channel
+                                             andFlutterPluginRegistrar:registrar];
   // Register with internal FlutterFire plugin registry.
   [[FLTFirebasePluginRegistry sharedInstance] registerFirebasePlugin:instance];
 
   [registrar addMethodCallDelegate:instance channel:channel];
-#if !TARGET_OS_OSX
+#if TARGET_OS_OSX
+  if ([[NSApplication sharedApplication] isRunning]) {
+    instance->_missedApplicationDidFinishLaunchingNotification = YES;
+    [instance setupNotificationHandlingWithRemoteNotification:nil];
+  }
+#else
   [registrar publish:instance];  // iOS only supported
   if (@available(iOS 13.0, *)) {
     if ([registrar respondsToSelector:@selector(addSceneDelegate:)]) {
@@ -382,7 +393,13 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 - (void)application_onDidFinishLaunchingNotification:(nonnull NSNotification *)notification {
   // Setup UIApplicationDelegate.
 #if TARGET_OS_OSX
-  NSDictionary *remoteNotification = notification.userInfo[NSApplicationLaunchUserNotificationKey];
+  id launchNotification = notification.userInfo[NSApplicationLaunchUserNotificationKey];
+  NSDictionary *remoteNotification = nil;
+  if ([launchNotification isKindOfClass:[NSDictionary class]]) {
+    remoteNotification = launchNotification;
+  } else if ([launchNotification respondsToSelector:@selector(userInfo)]) {
+    remoteNotification = [launchNotification userInfo];
+  }
 #else
   NSDictionary *remoteNotification =
       notification.userInfo[UIApplicationLaunchOptionsRemoteNotificationKey];
@@ -468,6 +485,14 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   NSDictionary *notificationDict =
       [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:remoteNotification
                                          withActionIdentifier:response.actionIdentifier];
+
+#if TARGET_OS_OSX
+  if (_missedApplicationDidFinishLaunchingNotification && _initialNotification == nil) {
+    _initialNotification = notificationDict;
+    _initialNotificationID = _notificationOpenedAppID;
+    _initialNotificationGathered = YES;
+  }
+#endif
 
   if (_initialNotification != nil &&
       [_initialNotificationID isEqualToString:_notificationOpenedAppID]) {
@@ -1194,6 +1219,9 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 
 - (nullable NSDictionary *)copyInitialNotification {
   @synchronized(self) {
+#if TARGET_OS_OSX
+    _missedApplicationDidFinishLaunchingNotification = NO;
+#endif
     // Only return if initial notification was sent when app is terminated. Also ensure that
     // it was the initial notification that was tapped to open the app.
     if (_initialNotification != nil &&
