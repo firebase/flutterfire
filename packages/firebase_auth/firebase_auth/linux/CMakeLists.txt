@@ -74,7 +74,11 @@ target_compile_definitions(${PLUGIN_NAME} PRIVATE -DINTERNAL_EXPERIMENTAL=1)
 # The firebase_auth SDK target carries its own Linux-specific interface
 # dependencies (libsecret-1 for credential persistence) via the SDK's own
 # CMakeLists.txt, so they do not need to be repeated here.
-set(firebase_libs firebase_core_plugin firebase_auth)
+# NOTE: the Firebase SDK product archives are linked exclusively by the
+# firebase_core_plugin target, which wraps all of them in a single
+# -Wl,--start-group/--end-group (the archives have circular symbol
+# dependencies that an ordered per-plugin link line cannot satisfy).
+set(firebase_libs firebase_core_plugin)
 set(ADDITIONAL_LIBS pthread)
 target_link_libraries(${PLUGIN_NAME} PRIVATE "${firebase_libs}" "${ADDITIONAL_LIBS}")
 

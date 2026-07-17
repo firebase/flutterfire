@@ -68,7 +68,11 @@ target_compile_definitions(${PLUGIN_NAME} PRIVATE -DINTERNAL_EXPERIMENTAL=1)
 
 # Source include directories and library dependencies. Add any plugin-specific
 # dependencies here.
-set(firebase_libs firebase_core_plugin firebase_remote_config)
+# NOTE: the Firebase SDK product archives are linked exclusively by the
+# firebase_core_plugin target, which wraps all of them in a single
+# -Wl,--start-group/--end-group (the archives have circular symbol
+# dependencies that an ordered per-plugin link line cannot satisfy).
+set(firebase_libs firebase_core_plugin)
 set(ADDITIONAL_LIBS pthread)
 target_link_libraries(${PLUGIN_NAME} PRIVATE "${firebase_libs}" "${ADDITIONAL_LIBS}")
 

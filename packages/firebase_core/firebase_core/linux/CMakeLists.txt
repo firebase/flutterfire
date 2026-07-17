@@ -139,10 +139,66 @@ target_include_directories(${PLUGIN_NAME} INTERFACE
 # CMakeLists.txt selects the correct library variant
 # (libs/linux/<arch>/<abi>/*.a) when consumed via add_subdirectory.
 
-set(FIREBASE_LIBS firebase_app)
-set(ADDITIONAL_LIBS pthread)
+# --- Firebase SDK link strategy ---------------------------------------------
+# The prebuilt Firebase static archives have circular symbol dependencies:
+#  - the product libraries (app_check, remote_config, storage, ...) call
+#    firebase::rest::* helpers that live in libfirebase_app.a, and
+#  - libfirebase_firestore.a references firebase::g_auth_initializer defined
+#    in libfirebase_auth.a.
+# A plain ordered link line cannot satisfy every plugin combination, so this
+# target - which every FlutterFire Linux plugin links against - owns the SDK
+# link and wraps ALL desktop product archives in a single
+# --start-group/--end-group so the linker rescans the group until every
+# reference resolves, regardless of order. Archives that no plugin actually
+# references contribute nothing to the final binary.
+set(FIREBASE_SDK_TARGETS
+  firebase_auth
+  firebase_app_check
+  firebase_database
+  firebase_firestore
+  firebase_functions
+  firebase_remote_config
+  firebase_storage
+  firebase_app
+)
+set(firebase_sdk_lib_paths "")
+foreach(firebase_lib IN LISTS FIREBASE_SDK_TARGETS)
+  if(TARGET ${firebase_lib})
+    get_target_property(firebase_lib_path ${firebase_lib} IMPORTED_LOCATION)
+    if(firebase_lib_path)
+      list(APPEND firebase_sdk_lib_paths "${firebase_lib_path}")
+    endif()
+  endif()
+endforeach()
 
-target_link_libraries(${PLUGIN_NAME} PUBLIC "${FIREBASE_LIBS}" "${ADDITIONAL_LIBS}")
+target_link_libraries(${PLUGIN_NAME} PUBLIC
+  "-Wl,--start-group" ${firebase_sdk_lib_paths} "-Wl,--end-group")
+
+# System library dependencies of the archives above, placed after the group:
+#  - libsecret for Auth credential persistence. The SDK's CMakeLists attaches
+#    it to the imported firebase_auth target as INTERFACE_LINK_LIBRARIES, so
+#    forward that usage requirement here (the imported targets themselves are
+#    only used to resolve archive paths and are not linked directly).
+#  - OpenSSL for Realtime Database (TLS websockets) and Firestore (LevelDB
+#    encryption); the prebuilt Linux archives reference system OpenSSL
+#    symbols, matching the Firebase desktop setup documentation.
+if(TARGET firebase_auth)
+  get_target_property(firebase_auth_iface_libs firebase_auth
+    INTERFACE_LINK_LIBRARIES)
+  if(firebase_auth_iface_libs)
+    target_link_libraries(${PLUGIN_NAME} PUBLIC ${firebase_auth_iface_libs})
+  endif()
+endif()
+find_package(OpenSSL QUIET)
+if(OPENSSL_FOUND)
+  target_link_libraries(${PLUGIN_NAME} PUBLIC OpenSSL::SSL OpenSSL::Crypto)
+else()
+  message(WARNING "OpenSSL development libraries not found; linking may fail \
+for apps using firebase_database or cloud_firestore. Install libssl-dev \
+(Debian/Ubuntu) or openssl (Arch/Fedora).")
+endif()
+
+target_link_libraries(${PLUGIN_NAME} PUBLIC pthread)
 
 target_include_directories(${PLUGIN_NAME} INTERFACE
   "${CMAKE_CURRENT_SOURCE_DIR}/include")
