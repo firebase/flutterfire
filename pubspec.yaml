@@ -78,6 +78,17 @@ dev_dependencies:
   pub_semver: ^2.1.4
   yaml: ^3.1.2
 
+dependency_overrides:
+  # font_awesome_flutter 11 (required since Flutter 3.44 made IconData final)
+  # turned FontAwesomeIcons entries into FaIconData, which no released
+  # flutter_signin_button supports yet. Temporary override onto a patched
+  # fork until https://github.com/ZaynJarvis/Flutter-Sign-in-Button ships
+  # font_awesome_flutter 11 support.
+  flutter_signin_button:
+    git:
+      url: https://github.com/akshaynexus/Flutter-Sign-in-Button.git
+      ref: fa11-compat
+
 melos:
   repository: https://github.com/firebase/flutterfire
   resolution: workspace
