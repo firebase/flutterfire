@@ -130,7 +130,10 @@ target_compile_definitions(${PLUGIN_NAME} PUBLIC FLUTTER_PLUGIN_IMPL)
 target_compile_definitions(${PLUGIN_NAME} PRIVATE -DINTERNAL_EXPERIMENTAL=1)
 
 add_subdirectory(${FIREBASE_CPP_SDK_DIR} bin/ EXCLUDE_FROM_ALL)
-target_include_directories(${PLUGIN_NAME} INTERFACE
+# PUBLIC (not INTERFACE): this target's own sources need the SDK headers too,
+# since the imported SDK targets (which carry INTERFACE_INCLUDE_DIRECTORIES)
+# are no longer linked directly - see the link strategy note below.
+target_include_directories(${PLUGIN_NAME} PUBLIC
   "${FIREBASE_CPP_SDK_DIR}/include")
 
 # Note: unlike the Windows CMakeLists there is no Debug->Release
