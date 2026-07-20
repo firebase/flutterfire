@@ -1033,17 +1033,7 @@ void main() {
         test(
           'migrates the current user when changing access groups',
           () async {
-            final app = await Firebase.initializeApp(
-              name: 'auth-access-group-migration',
-              options: DefaultFirebaseOptions.currentPlatform,
-            );
-            final auth = FirebaseAuth.instanceFor(app: app);
-            await auth.useAuthEmulator(testEmulatorHost, testEmulatorPort);
-
-            addTearDown(() async {
-              await auth.signOut();
-              await app.delete();
-            });
+            final auth = FirebaseAuth.instance;
 
             await auth.signOut();
             final credential = await auth.signInAnonymously();
