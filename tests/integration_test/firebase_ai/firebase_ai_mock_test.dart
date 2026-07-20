@@ -30,14 +30,18 @@ class MockApiClient implements ApiClient {
 
   @override
   Future<Map<String, Object?>> makeRequest(
-      Uri uri, Map<String, Object?> body,) async {
+    Uri uri,
+    Map<String, Object?> body,
+  ) async {
     requests.add({'uri': uri, 'body': body});
     return mockResponse;
   }
 
   @override
   Stream<Map<String, Object?>> streamRequest(
-      Uri uri, Map<String, Object?> body,) async* {
+    Uri uri,
+    Map<String, Object?> body,
+  ) async* {
     requests.add({'uri': uri, 'body': body});
     yield mockResponse;
   }
@@ -76,7 +80,7 @@ void main() {
         location: 'us-central1',
         model: 'gemini-pro',
         client: mockClient,
-        useVertexBackend: true,
+        useAgentPlatform: true,
       );
 
       // We need to construct a request that uses Grounding.
@@ -111,7 +115,7 @@ void main() {
         location: 'us-central1',
         model: 'gemini-pro',
         client: mockClient,
-        useVertexBackend: true,
+        useAgentPlatform: true,
       );
 
       final schema = {
@@ -132,10 +136,12 @@ void main() {
       );
 
       expect(mockClient.requests, hasLength(1));
-      final requestBody = mockClient.requests.first['body']! as Map<String, Object?>;
+      final requestBody =
+          mockClient.requests.first['body']! as Map<String, Object?>;
       expect(requestBody, contains('generationConfig'));
-      
-      final genConfig = requestBody['generationConfig']! as Map<String, Object?>;
+
+      final genConfig =
+          requestBody['generationConfig']! as Map<String, Object?>;
       expect(genConfig['responseMimeType'], equals('application/json'));
       expect(genConfig['responseJsonSchema'], equals(schema));
     });
@@ -161,7 +167,7 @@ void main() {
         location: 'us-central1',
         model: 'gemini-pro',
         client: mockClient,
-        useVertexBackend: true,
+        useAgentPlatform: true,
       );
 
       final chat = model.startChat();
@@ -188,18 +194,20 @@ void main() {
 
       // Verify that the second request contains the history
       expect(mockClient.requests, hasLength(2));
-      
-      final secondRequest = mockClient.requests[1]['body']! as Map<String, Object?>;
+
+      final secondRequest =
+          mockClient.requests[1]['body']! as Map<String, Object?>;
       expect(secondRequest, contains('contents'));
-      
+
       final contents = secondRequest['contents']! as List;
-      expect(contents, hasLength(3)); // User 'Hi', Model 'Hello!', User 'How are you?'
-      
+      expect(contents,
+          hasLength(3)); // User 'Hi', Model 'Hello!', User 'How are you?'
+
       // Verify roles and text
       expect(contents[0]['role'], equals('user'));
       expect(contents[1]['role'], equals('model'));
       expect(contents[2]['role'], equals('user'));
-      
+
       expect(contents[0]['parts'][0]['text'], equals('Hi'));
       expect(contents[1]['parts'][0]['text'], equals('Hello!'));
       expect(contents[2]['parts'][0]['text'], equals('How are you?'));

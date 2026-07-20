@@ -204,9 +204,6 @@ final class ImagenGenerationConfig {
   final ImagenFormat? imageFormat;
 
   /// Whether to add an invisible watermark to generated images.
-  ///
-  /// Default value for each imagen model can be found in
-  /// https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/imagen-api#generate_images
   final bool? addWatermark;
 
   // ignore: public_member_api_docs
