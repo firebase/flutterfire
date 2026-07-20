@@ -240,6 +240,16 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   [self setupNotificationHandlingWithRemoteNotification:remoteNotification actionIdentifier:nil];
 }
 
+- (void)registerForRemoteNotifications {
+#if TARGET_OS_OSX
+  if (@available(macOS 10.14, *)) {
+    [[NSApplication sharedApplication] registerForRemoteNotifications];
+  }
+#else
+  [[UIApplication sharedApplication] registerForRemoteNotifications];
+#endif
+}
+
 - (void)setupNotificationHandlingWithRemoteNotification:(nullable NSDictionary *)remoteNotification
                                        actionIdentifier:(nullable NSString *)actionIdentifier {
   // If notification handling was already set up (e.g. from
@@ -370,14 +380,11 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   // We automatically register for remote notifications as
   // application:didReceiveRemoteNotification:fetchCompletionHandler: will not get called unless
   // registerForRemoteNotifications is called early on during app initialization, calling this from
-  // Dart would be too late.
-#if TARGET_OS_OSX
-  if (@available(macOS 10.14, *)) {
-    [[NSApplication sharedApplication] registerForRemoteNotifications];
+  // Dart would be too late. Defer registration when auto-init is disabled so the APNs token cannot
+  // trigger FCM registration before the user opts in.
+  if ([FIRMessaging messaging].isAutoInitEnabled) {
+    [self registerForRemoteNotifications];
   }
-#else
-  [[UIApplication sharedApplication] registerForRemoteNotifications];
-#endif
 }
 
 - (void)markInitialNotificationGatheredAfterDelay {
@@ -546,13 +553,15 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 - (void)application:(UIApplication *)application
     didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
 #endif
-  if ([FIRMessaging messaging] == nil) {
+  FIRMessaging *messaging = [FIRMessaging messaging];
+  if (!messaging.isAutoInitEnabled) {
     _apnsToken = deviceToken;
+    return;
   }
 #ifdef DEBUG
-  [[FIRMessaging messaging] setAPNSToken:deviceToken type:FIRMessagingAPNSTokenTypeSandbox];
+  [messaging setAPNSToken:deviceToken type:FIRMessagingAPNSTokenTypeSandbox];
 #else
-  [[FIRMessaging messaging] setAPNSToken:deviceToken type:FIRMessagingAPNSTokenTypeProd];
+  [messaging setAPNSToken:deviceToken type:FIRMessagingAPNSTokenTypeProd];
 #endif
 }
 
@@ -729,7 +738,12 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 - (void)messagingSetAutoInitEnabled:(id)arguments
                withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   FIRMessaging *messaging = [FIRMessaging messaging];
-  messaging.autoInitEnabled = [arguments[@"enabled"] boolValue];
+  BOOL enabled = [arguments[@"enabled"] boolValue];
+  messaging.autoInitEnabled = enabled;
+  if (enabled) {
+    [self registerForRemoteNotifications];
+    [self ensureAPNSTokenSetting];
+  }
   result.success(@{
     @"isAutoInitEnabled" : @(messaging.isAutoInitEnabled),
   });
@@ -1207,11 +1221,11 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 - (void)ensureAPNSTokenSetting {
   FIRMessaging *messaging = [FIRMessaging messaging];
 
-  if (messaging.APNSToken == nil && _apnsToken != nil) {
+  if (messaging.isAutoInitEnabled && messaging.APNSToken == nil && _apnsToken != nil) {
 #ifdef DEBUG
-    [[FIRMessaging messaging] setAPNSToken:_apnsToken type:FIRMessagingAPNSTokenTypeSandbox];
+    [messaging setAPNSToken:_apnsToken type:FIRMessagingAPNSTokenTypeSandbox];
 #else
-    [[FIRMessaging messaging] setAPNSToken:_apnsToken type:FIRMessagingAPNSTokenTypeProd];
+    [messaging setAPNSToken:_apnsToken type:FIRMessagingAPNSTokenTypeProd];
 #endif
     _apnsToken = nil;
   }
