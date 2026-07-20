@@ -19,6 +19,12 @@ import 'package:pigeon/pigeon.dart';
     cppHeaderOut: '../cloud_functions/windows/messages.g.h',
     cppSourceOut: '../cloud_functions/windows/messages.g.cpp',
     cppOptions: CppOptions(namespace: 'cloud_functions_windows'),
+    gobjectHeaderOut: '../cloud_functions/linux/messages.g.h',
+    gobjectSourceOut: '../cloud_functions/linux/messages.g.cc',
+    gobjectOptions: GObjectOptions(
+      headerIncludePath: 'messages.g.h',
+      module: 'CloudFunctions',
+    ),
     copyrightHeader: 'pigeons/copyright.txt',
   ),
 )

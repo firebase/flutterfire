@@ -38,6 +38,8 @@ flutter:
         pluginClass: FlutterFirebaseFunctionsPlugin
       ios:
         pluginClass: FirebaseFunctionsPlugin
+      linux:
+        pluginClass: CloudFunctionsPlugin
       macos:
         pluginClass: FirebaseFunctionsPlugin
       web:
