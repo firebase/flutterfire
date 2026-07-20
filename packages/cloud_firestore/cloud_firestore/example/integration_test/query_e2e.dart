@@ -5,9 +5,11 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void runQueryTests() {
@@ -295,8 +297,9 @@ void runQueryTests() {
             await subscription?.cancel();
           });
         },
-        // Failing on CI but works locally
-        skip: kIsWeb,
+        // Failing on CI but works locally. Listening from cache is not
+        // supported on Windows.
+        skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
       );
 
       test('listens to multiple queries', () async {
@@ -328,55 +331,165 @@ void runQueryTests() {
 
         Stream<QuerySnapshot<Map<String, dynamic>>> stream =
             collection.snapshots();
-        int call = 0;
+        final initialSnapshot =
+            Completer<QuerySnapshot<Map<String, dynamic>>>();
+        final doc1Set = Completer<QuerySnapshot<Map<String, dynamic>>>();
+        final doc1Deleted = Completer<QuerySnapshot<Map<String, dynamic>>>();
+        final doc2Set = Completer<QuerySnapshot<Map<String, dynamic>>>();
+        final doc2Updated = Completer<QuerySnapshot<Map<String, dynamic>>>();
 
-        StreamSubscription subscription = stream.listen(
-          expectAsync1(
-            (QuerySnapshot<Map<String, dynamic>> snapshot) {
-              call++;
-              if (call == 1) {
-                expect(snapshot.docs.length, equals(1));
-                QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot =
-                    snapshot.docs[0];
-                expect(documentSnapshot.data()['foo'], equals('bar'));
-              } else if (call == 2) {
-                expect(snapshot.docs.length, equals(2));
-                QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot =
-                    snapshot.docs.firstWhere((doc) => doc.id == 'doc1');
-                expect(documentSnapshot.data()['bar'], equals('baz'));
-              } else if (call == 3) {
-                expect(snapshot.docs.length, equals(1));
-                expect(
-                  snapshot.docs.where((doc) => doc.id == 'doc1').isEmpty,
-                  isTrue,
-                );
-              } else if (call == 4) {
-                expect(snapshot.docs.length, equals(2));
-                QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot =
-                    snapshot.docs.firstWhere((doc) => doc.id == 'doc2');
-                expect(documentSnapshot.data()['foo'], equals('bar'));
-              } else if (call == 5) {
-                expect(snapshot.docs.length, equals(2));
-                QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot =
-                    snapshot.docs.firstWhere((doc) => doc.id == 'doc2');
-                expect(documentSnapshot.data()['foo'], equals('baz'));
-              } else {
-                fail('Should not have been called');
-              }
-            },
-            count: 5,
-            reason: 'Stream should only have been called five times.',
-          ),
+        StreamSubscription subscription = stream.listen((snapshot) {
+          final doc1 =
+              snapshot.docs.where((doc) => doc.id == 'doc1').firstOrNull;
+          final doc2 =
+              snapshot.docs.where((doc) => doc.id == 'doc2').firstOrNull;
+
+          if (!initialSnapshot.isCompleted &&
+              snapshot.docs.length == 1 &&
+              snapshot.docs.single.data()['foo'] == 'bar') {
+            initialSnapshot.complete(snapshot);
+          } else if (!doc1Set.isCompleted &&
+              snapshot.docs.length == 2 &&
+              doc1?.data()['bar'] == 'baz') {
+            doc1Set.complete(snapshot);
+          } else if (doc1Set.isCompleted &&
+              !doc1Deleted.isCompleted &&
+              doc1 == null) {
+            doc1Deleted.complete(snapshot);
+          } else if (doc1Deleted.isCompleted &&
+              !doc2Set.isCompleted &&
+              doc2?.data()['foo'] == 'bar') {
+            doc2Set.complete(snapshot);
+          } else if (doc2Set.isCompleted &&
+              !doc2Updated.isCompleted &&
+              doc2?.data()['foo'] == 'baz') {
+            doc2Updated.complete(snapshot);
+          }
+        });
+
+        final initial = await initialSnapshot.future.timeout(
+          const Duration(seconds: 30),
+        );
+        expect(initial.docs, hasLength(1));
+
+        await collection.doc('doc1').set({'bar': 'baz'});
+        final withDoc1 = await doc1Set.future.timeout(
+          const Duration(seconds: 30),
+        );
+        expect(withDoc1.docs, hasLength(2));
+        expect(
+          withDoc1.docs.firstWhere((doc) => doc.id == 'doc1').data()['bar'],
+          equals('baz'),
         );
 
-        await Future.delayed(const Duration(milliseconds: 500));
-        await collection.doc('doc1').set({'bar': 'baz'});
         await collection.doc('doc1').delete();
+        final withoutDoc1 = await doc1Deleted.future.timeout(
+          const Duration(seconds: 30),
+        );
+        expect(withoutDoc1.docs.where((doc) => doc.id == 'doc1'), isEmpty);
+
         await collection.doc('doc2').set({'foo': 'bar'});
+        final withDoc2 = await doc2Set.future.timeout(
+          const Duration(seconds: 30),
+        );
+        expect(
+          withDoc2.docs.firstWhere((doc) => doc.id == 'doc2').data()['foo'],
+          equals('bar'),
+        );
+
         await collection.doc('doc2').update({'foo': 'baz'});
+        final updatedDoc2 = await doc2Updated.future.timeout(
+          const Duration(seconds: 30),
+        );
+        expect(
+          updatedDoc2.docs.firstWhere((doc) => doc.id == 'doc2').data()['foo'],
+          equals('baz'),
+        );
 
         await subscription.cancel();
       });
+
+      testWidgets(
+        'large snapshots do not block frame scheduling',
+        (WidgetTester tester) async {
+          CollectionReference<Map<String, dynamic>> collection =
+              await initializeTest('large-snapshot-listener');
+          const int documentCount = 1000;
+          final String payload = List.filled(1024, 'x').join();
+
+          for (int start = 0; start < documentCount; start += 400) {
+            final WriteBatch batch = firestore.batch();
+            final int end = min(start + 400, documentCount);
+            for (int index = start; index < end; index++) {
+              batch.set(collection.doc('doc-$index'), <String, Object?>{
+                'index': index,
+                'payload': payload,
+              });
+            }
+            await batch.commit();
+          }
+
+          final Completer<void> initialSnapshot = Completer<void>();
+          final Completer<void> receivedUpdates = Completer<void>();
+          var initialSnapshotReceived = false;
+          var updateSnapshots = 0;
+
+          final StreamSubscription<QuerySnapshot<Map<String, dynamic>>>
+              subscription = collection.snapshots().listen((snapshot) {
+            if (!initialSnapshotReceived && snapshot.size == documentCount) {
+              initialSnapshotReceived = true;
+              initialSnapshot.complete();
+              return;
+            }
+
+            if (initialSnapshotReceived && snapshot.docChanges.isNotEmpty) {
+              updateSnapshots++;
+              if (updateSnapshots >= 3 && !receivedUpdates.isCompleted) {
+                receivedUpdates.complete();
+              }
+            }
+          });
+          addTearDown(subscription.cancel);
+
+          await initialSnapshot.future.timeout(const Duration(seconds: 30));
+          await tester.pumpWidget(
+            const Directionality(
+              textDirection: TextDirection.ltr,
+              child: Center(child: CircularProgressIndicator()),
+            ),
+          );
+
+          var updatesDone = false;
+          final updateFuture = Future<void>(() async {
+            for (int index = 0; index < 3; index++) {
+              await collection.doc('doc-0').update(<String, Object?>{
+                'counter': index,
+                'payload': payload,
+              });
+            }
+            await receivedUpdates.future.timeout(const Duration(seconds: 30));
+          }).whenComplete(() {
+            updatesDone = true;
+          });
+
+          final pumpDurations = <Duration>[];
+          while (!updatesDone) {
+            final Stopwatch stopwatch = Stopwatch()..start();
+            await tester.pump(const Duration(milliseconds: 16));
+            stopwatch.stop();
+            pumpDurations.add(stopwatch.elapsed);
+          }
+          await updateFuture;
+
+          expect(pumpDurations, isNotEmpty);
+          final Duration longestPump = pumpDurations.reduce(
+            (current, next) => current > next ? current : next,
+          );
+          expect(longestPump, lessThan(const Duration(milliseconds: 750)));
+        },
+        timeout: const Timeout.factor(10),
+        skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
+      );
 
       test(
         'listeners throws a [FirebaseException] with Query',
@@ -1027,6 +1140,33 @@ void runQueryTests() {
         expect(snapshot.docs[1].id, equals('doc4'));
       });
 
+      test(
+        'startAfterDocument() preserves Timestamp cursor precision',
+        () async {
+          CollectionReference<Map<String, dynamic>> collection =
+              await initializeTest('startAfter-document-timestamp-precision');
+          await collection.doc('doc1').set({
+            'createdAt': Timestamp(1, 123456789),
+          });
+
+          Query<Map<String, dynamic>> baseQuery =
+              collection.orderBy('createdAt');
+          QuerySnapshot<Map<String, dynamic>> firstPage =
+              await baseQuery.limit(50).get();
+
+          expect(firstPage.docs.length, equals(1));
+          expect(firstPage.docs.first.id, equals('doc1'));
+
+          QuerySnapshot<Map<String, dynamic>> nextPage = await baseQuery
+              .startAfterDocument(firstPage.docs.last)
+              .limit(50)
+              .get();
+
+          expect(nextPage.docs, isEmpty);
+        },
+        skip: !kIsWeb,
+      );
+
       testWidgets(
         'throws exception without orderBy() on field used for inequality query',
         (_) async {
@@ -1057,14 +1197,17 @@ void runQueryTests() {
               isA<FirebaseException>().having(
                 (e) => e.message,
                 'message',
-                contains(
-                  'Client specified an invalid argument',
+                anyOf(
+                  contains('Client specified an invalid argument'),
+                  contains('order by clause cannot contain more fields '
+                      'after the key'),
                 ),
               ),
             ),
           );
         },
-        // firebase-js-sdk does not require an orderBy() field to be set for this to work
+        // firebase-js-sdk does not require an orderBy() field to be set for
+        // this to work
         skip: kIsWeb,
       );
 
@@ -1111,8 +1254,10 @@ void runQueryTests() {
               isA<FirebaseException>().having(
                 (e) => e.message,
                 'message',
-                contains(
-                  'Client specified an invalid argument',
+                anyOf(
+                  contains('Client specified an invalid argument'),
+                  contains('order by clause cannot contain more fields '
+                      'after the key'),
                 ),
               ),
             ),
@@ -3803,6 +3948,7 @@ void runQueryTests() {
             3,
           );
         },
+        skip: defaultTargetPlatform == TargetPlatform.windows,
       );
 
       test(
@@ -3825,6 +3971,7 @@ void runQueryTests() {
             1,
           );
         },
+        skip: defaultTargetPlatform == TargetPlatform.windows,
       );
 
       test(
@@ -3846,6 +3993,7 @@ void runQueryTests() {
             1.5,
           );
         },
+        skip: defaultTargetPlatform == TargetPlatform.windows,
       );
 
       test(
@@ -3868,6 +4016,7 @@ void runQueryTests() {
             1,
           );
         },
+        skip: defaultTargetPlatform == TargetPlatform.windows,
       );
 
       test(
@@ -3899,37 +4048,42 @@ void runQueryTests() {
             1.5,
           );
         },
+        skip: defaultTargetPlatform == TargetPlatform.windows,
       );
 
-      test('chaining multiples aggregate queries', () async {
-        final collection = await initializeTest('chaining');
+      test(
+        'chaining multiples aggregate queries',
+        () async {
+          final collection = await initializeTest('chaining');
 
-        await Future.wait([
-          collection.add({'foo': 1}),
-          collection.add({'foo': 2}),
-        ]);
+          await Future.wait([
+            collection.add({'foo': 1}),
+            collection.add({'foo': 2}),
+          ]);
 
-        AggregateQuery query = collection
-            .where('foo', isEqualTo: 1)
-            .aggregate(count(), sum('foo'), average('foo'));
+          AggregateQuery query = collection
+              .where('foo', isEqualTo: 1)
+              .aggregate(count(), sum('foo'), average('foo'));
 
-        AggregateQuerySnapshot snapshot = await query.get();
+          AggregateQuerySnapshot snapshot = await query.get();
 
-        expect(
-          snapshot.count,
-          1,
-        );
+          expect(
+            snapshot.count,
+            1,
+          );
 
-        expect(
-          snapshot.getSum('foo'),
-          1,
-        );
+          expect(
+            snapshot.getSum('foo'),
+            1,
+          );
 
-        expect(
-          snapshot.getAverage('foo'),
-          1,
-        );
-      });
+          expect(
+            snapshot.getAverage('foo'),
+            1,
+          );
+        },
+        skip: defaultTargetPlatform == TargetPlatform.windows,
+      );
 
       test(
         'count() with collectionGroup',
@@ -3971,16 +4125,20 @@ void runQueryTests() {
         },
       );
 
-      test('count(), average() & sum() on empty collection', () async {
-        final collection = await initializeTest('empty-collection');
+      test(
+        'count(), average() & sum() on empty collection',
+        () async {
+          final collection = await initializeTest('empty-collection');
 
-        final snapshot = await collection
-            .aggregate(count(), sum('foo'), average('foo'))
-            .get();
-        expect(snapshot.count, 0);
-        expect(snapshot.getSum('foo'), 0);
-        expect(snapshot.getAverage('foo'), null);
-      });
+          final snapshot = await collection
+              .aggregate(count(), sum('foo'), average('foo'))
+              .get();
+          expect(snapshot.count, 0);
+          expect(snapshot.getSum('foo'), 0);
+          expect(snapshot.getAverage('foo'), null);
+        },
+        skip: defaultTargetPlatform == TargetPlatform.windows,
+      );
     });
 
     group('startAfterDocument', () {

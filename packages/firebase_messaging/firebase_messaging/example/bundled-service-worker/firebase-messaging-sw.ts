@@ -13,6 +13,22 @@ self.addEventListener('install', (event) => {
   console.log(event);
 });
 
+// Focus the existing app tab when a notification is clicked.
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  event.waitUntil(
+    self.clients
+      .matchAll({ type: 'window', includeUncontrolled: true })
+      .then((clientList) => {
+        for (const client of clientList) {
+          if (!client.focused) {
+            return client.focus();
+          }
+        }
+      })
+  );
+});
+
 const app = initializeApp({
   apiKey: 'AIzaSyB7wZb2tO1-Fs6GbDADUSTs2Qs3w08Hovw',
   appId: '1:406099696497:web:87e25e51afe982cd3574d0',

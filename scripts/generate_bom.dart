@@ -203,7 +203,7 @@ Future<void> appendStaticText(
   // Adding rows for each package
   for (final package in packages.entries) {
     sink.writeln(
-      '| [${package.key}](https://pub.dev/packages/${package.key}/versions/${package.value.version}) | ${package.value.version} | ${package.value.pubSpec.environment?.sdkConstraint.toString() ?? ''} | ${package.value.pubSpec.environment?.toJson()['flutter'] ?? ''} |',
+      '| [${package.key}](https://pub.dev/packages/${package.key}/versions/${package.value.version}) | ${package.value.version} | ${package.value.pubspec.environment['sdk']?.toString() ?? ''} | ${package.value.pubspec.environment['flutter']?.toString() ?? ''} |',
     );
   }
 

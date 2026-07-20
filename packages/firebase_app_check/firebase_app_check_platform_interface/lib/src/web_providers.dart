@@ -5,7 +5,7 @@
 abstract class WebProvider {
   final String siteKey;
 
-  WebProvider(this.siteKey);
+  const WebProvider(this.siteKey);
 }
 
 class ReCaptchaV3Provider extends WebProvider {
@@ -14,4 +14,25 @@ class ReCaptchaV3Provider extends WebProvider {
 
 class ReCaptchaEnterpriseProvider extends WebProvider {
   ReCaptchaEnterpriseProvider(String siteKey) : super(siteKey);
+}
+
+/// Debug provider for Web.
+///
+/// Sets `self.FIREBASE_APPCHECK_DEBUG_TOKEN` before initializing App Check.
+/// If [debugToken] is provided, that token is used. Otherwise the Firebase JS
+/// SDK auto-generates one and prints it to the browser console — you then
+/// register that token in the Firebase Console.
+///
+/// See documentation: https://firebase.google.com/docs/app-check/web/debug-provider
+class WebDebugProvider extends WebProvider {
+  /// Creates a web debug provider with an optional debug token.
+  WebDebugProvider({this.debugToken}) : super('');
+
+  /// The debug token for this provider.
+  final String? debugToken;
+}
+
+/// reCAPTCHA Enterprise provider for Web that does not use the enterprise name and does not take in a siteKey.
+class WebReCaptchaProvider extends WebProvider {
+  const WebReCaptchaProvider() : super('');
 }

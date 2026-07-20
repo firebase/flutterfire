@@ -5,7 +5,7 @@
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
-    show FirebasePluginPlatform;
+    show FirebasePlugin;
 import 'package:firebase_crashlytics_platform_interface/firebase_crashlytics_platform_interface.dart';
 import 'package:flutter/foundation.dart'
     show DiagnosticLevel, FlutterError, FlutterErrorDetails, kDebugMode;

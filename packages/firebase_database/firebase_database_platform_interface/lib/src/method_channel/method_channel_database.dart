@@ -6,6 +6,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
 import 'package:firebase_database_platform_interface/src/method_channel/utils/utils.dart';
 import 'package:flutter/services.dart';
+import 'package:firebase_database_platform_interface/src/pigeon/messages.pigeon.dart'
+    hide DatabaseReferencePlatform;
 
 import 'method_channel_database_reference.dart';
 import 'utils/exception.dart';
@@ -16,54 +18,71 @@ class MethodChannelArguments {
   FirebaseApp app;
 }
 
+class _TransactionHandlerFlutterApi extends FirebaseDatabaseFlutterApi {
+  @override
+  Future<TransactionHandlerResult> callTransactionHandler(
+    int transactionKey,
+    Object? snapshotValue,
+  ) async {
+    Object? value;
+    bool aborted = false;
+    bool exception = false;
+
+    try {
+      final handler = MethodChannelDatabase.transactions[transactionKey];
+      if (handler == null) {
+        // This shouldn't happen but on the off chance that it does, e.g.
+        // as a side effect of Hot Reloading/Restarting, then we should
+        // just abort the transaction.
+        aborted = true;
+      } else {
+        Transaction transaction = handler(snapshotValue);
+        aborted = transaction.aborted;
+        value = transaction.value;
+      }
+    } catch (e) {
+      exception = true;
+      // We store thrown errors so we can rethrow when the runTransaction
+      // Future completes from native code - to avoid serializing the error
+      // and sending it to native only to have to send it back again.
+      MethodChannelDatabase.transactionErrors[transactionKey] = e;
+    }
+
+    return TransactionHandlerResult(
+      value: value != null ? transformValue(value) : null,
+      aborted: aborted,
+      exception: exception,
+    );
+  }
+}
+
 /// The entry point for accessing a FirebaseDatabase.
 ///
 /// You can get an instance by calling [FirebaseDatabase.instance].
 class MethodChannelDatabase extends DatabasePlatform {
+  static final _api = FirebaseDatabaseHostApi();
+
+  /// Creates a DatabasePigeonFirebaseApp object with current settings
+  DatabasePigeonFirebaseApp get pigeonApp {
+    return DatabasePigeonFirebaseApp(
+      appName: app!.name,
+      databaseURL: databaseURL,
+      settings: DatabasePigeonSettings(
+        persistenceEnabled: _persistenceEnabled,
+        cacheSizeBytes: _cacheSizeBytes,
+        loggingEnabled: _loggingEnabled,
+        emulatorHost: _emulatorHost,
+        emulatorPort: _emulatorPort,
+      ),
+    );
+  }
+
   MethodChannelDatabase({FirebaseApp? app, String? databaseURL})
       : super(app: app, databaseURL: databaseURL) {
     if (_initialized) return;
 
-    channel.setMethodCallHandler((MethodCall call) async {
-      switch (call.method) {
-        case 'FirebaseDatabase#callTransactionHandler':
-          Object? value;
-          bool aborted = false;
-          bool exception = false;
-          final key = call.arguments['transactionKey'];
-
-          try {
-            final handler = transactions[key];
-            if (handler == null) {
-              // This shouldn't happen but on the off chance that it does, e.g.
-              // as a side effect of Hot Reloading/Restarting, then we should
-              // just abort the transaction.
-              aborted = true;
-            } else {
-              Transaction transaction =
-                  handler(call.arguments['snapshot']['value']);
-              aborted = transaction.aborted;
-              value = transaction.value;
-            }
-          } catch (e) {
-            exception = true;
-            // We store thrown errors so we can rethrow when the runTransaction
-            // Future completes from native code - to avoid serializing the error
-            // and sending it to native only to have to send it back again.
-            transactionErrors[key] = e;
-          }
-
-          return {
-            if (value != null) 'value': transformValue(value),
-            'aborted': aborted,
-            'exception': exception,
-          };
-        default:
-          throw MissingPluginException(
-            '${call.method} method not implemented on the Dart side.',
-          );
-      }
-    });
+    // Set up the Pigeon FlutterApi for transaction handler callbacks
+    FirebaseDatabaseFlutterApi.setUp(_TransactionHandlerFlutterApi());
     _initialized = true;
   }
 
@@ -103,6 +122,7 @@ class MethodChannelDatabase extends DatabasePlatform {
   }
 
   /// The [MethodChannel] used to communicate with the native plugin
+  /// This is kept for backward compatibility with query operations
   static const MethodChannel channel =
       MethodChannel('plugins.flutter.io/firebase_database');
 
@@ -110,6 +130,8 @@ class MethodChannelDatabase extends DatabasePlatform {
   void useDatabaseEmulator(String host, int port) {
     _emulatorHost = host;
     _emulatorPort = port;
+    // Call the Pigeon method to set up the emulator
+    _api.useDatabaseEmulator(pigeonApp, host, port);
   }
 
   @override
@@ -123,25 +145,28 @@ class MethodChannelDatabase extends DatabasePlatform {
   @override
   void setPersistenceEnabled(bool enabled) {
     _persistenceEnabled = enabled;
+    // Call the Pigeon method to set persistence
+    _api.setPersistenceEnabled(pigeonApp, enabled);
   }
 
   @override
   void setPersistenceCacheSizeBytes(int cacheSize) {
     _cacheSizeBytes = cacheSize;
+    // Call the Pigeon method to set cache size
+    _api.setPersistenceCacheSizeBytes(pigeonApp, cacheSize);
   }
 
   @override
   void setLoggingEnabled(bool enabled) {
     _loggingEnabled = enabled;
+    // Call the Pigeon method to set logging
+    _api.setLoggingEnabled(pigeonApp, enabled);
   }
 
   @override
   Future<void> goOnline() {
     try {
-      return channel.invokeMethod<void>(
-        'FirebaseDatabase#goOnline',
-        getChannelArguments(),
-      );
+      return _api.goOnline(pigeonApp);
     } catch (e, s) {
       convertPlatformException(e, s);
     }
@@ -152,10 +177,7 @@ class MethodChannelDatabase extends DatabasePlatform {
   @override
   Future<void> goOffline() {
     try {
-      return channel.invokeMethod<void>(
-        'FirebaseDatabase#goOffline',
-        getChannelArguments(),
-      );
+      return _api.goOffline(pigeonApp);
     } catch (e, s) {
       convertPlatformException(e, s);
     }
@@ -174,10 +196,7 @@ class MethodChannelDatabase extends DatabasePlatform {
   @override
   Future<void> purgeOutstandingWrites() {
     try {
-      return channel.invokeMethod<void>(
-        'FirebaseDatabase#purgeOutstandingWrites',
-        getChannelArguments(),
-      );
+      return _api.purgeOutstandingWrites(pigeonApp);
     } catch (e, s) {
       convertPlatformException(e, s);
     }

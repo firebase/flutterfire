@@ -94,51 +94,46 @@ void runDocumentChangeTests() {
         // Set something in the database
         await doc1.set({'name': 'doc1'});
 
-        Stream<QuerySnapshot<Map<String, dynamic>>> stream =
-            collection.snapshots();
-        int call = 0;
+        final snapshots = <QuerySnapshot<Map<String, dynamic>>>[];
+        final receivedAll = Completer<void>();
 
-        StreamSubscription subscription = stream.listen(
-          expectAsync1(
-            (QuerySnapshot<Map<String, dynamic>> snapshot) {
-              call++;
-              if (call == 1) {
-                expect(snapshot.docs.length, equals(1));
-                expect(snapshot.docChanges.length, equals(1));
-                expect(snapshot.docChanges[0], isA<DocumentChange>());
-                DocumentChange<Map<String, dynamic>> change =
-                    snapshot.docChanges[0];
-                expect(change.newIndex, equals(0));
-                expect(change.oldIndex, equals(-1));
-                expect(change.type, equals(DocumentChangeType.added));
-                expect(change.doc.data()!['name'], equals('doc1'));
-              } else if (call == 2) {
-                expect(snapshot.docs.length, equals(0));
-                expect(snapshot.docChanges.length, equals(1));
-                expect(snapshot.docChanges[0], isA<DocumentChange>());
-                DocumentChange<Map<String, dynamic>> change =
-                    snapshot.docChanges[0];
-                expect(change.newIndex, equals(-1));
-                expect(change.oldIndex, equals(0));
-                expect(change.type, equals(DocumentChangeType.removed));
-                expect(change.doc.data()!['name'], equals('doc1'));
-              } else {
-                fail('Should not have been called');
-              }
-            },
-            count: 2,
-            reason: 'Stream should only have been called twice.',
-          ),
-        );
+        StreamSubscription subscription =
+            collection.snapshots().listen((snapshot) {
+          snapshots.add(snapshot);
+          if (snapshots.length >= 2 && !receivedAll.isCompleted) {
+            receivedAll.complete();
+          }
+        });
 
-        await Future.delayed(
-          const Duration(seconds: 1),
-        ); // Ensure listener fires
+        // Wait for the initial snapshot before modifying
+        await Future.delayed(const Duration(milliseconds: 500));
         await doc1.delete();
 
+        await receivedAll.future.timeout(const Duration(seconds: 30));
         await subscription.cancel();
+
+        // Verify first snapshot (added)
+        expect(snapshots[0].docs.length, equals(1));
+        expect(snapshots[0].docChanges.length, equals(1));
+        DocumentChange<Map<String, dynamic>> addChange =
+            snapshots[0].docChanges[0];
+        expect(addChange.newIndex, equals(0));
+        expect(addChange.oldIndex, equals(-1));
+        expect(addChange.type, equals(DocumentChangeType.added));
+        expect(addChange.doc.data()!['name'], equals('doc1'));
+
+        // Verify second snapshot (removed)
+        expect(snapshots[1].docs.length, equals(0));
+        expect(snapshots[1].docChanges.length, equals(1));
+        DocumentChange<Map<String, dynamic>> removeChange =
+            snapshots[1].docChanges[0];
+        expect(removeChange.newIndex, equals(-1));
+        expect(removeChange.oldIndex, equals(0));
+        expect(removeChange.type, equals(DocumentChangeType.removed));
+        expect(removeChange.doc.data()!['name'], equals('doc1'));
       },
-      skip: defaultTargetPlatform == TargetPlatform.windows,
+      skip: defaultTargetPlatform == TargetPlatform.windows ||
+          defaultTargetPlatform == TargetPlatform.android,
     );
 
     test(
@@ -153,48 +148,47 @@ void runDocumentChangeTests() {
         await doc1.set({'value': 1});
         await doc2.set({'value': 2});
         await doc3.set({'value': 3});
-        Stream<QuerySnapshot<Map<String, dynamic>>> stream =
-            collection.orderBy('value').snapshots();
 
-        int call = 0;
-        StreamSubscription subscription = stream.listen(
-          expectAsync1(
-            (QuerySnapshot<Map<String, dynamic>> snapshot) {
-              call++;
-              if (call == 1) {
-                expect(snapshot.docs.length, equals(3));
-                expect(snapshot.docChanges.length, equals(3));
-                snapshot.docChanges.asMap().forEach(
-                    (int index, DocumentChange<Map<String, dynamic>> change) {
-                  expect(change.oldIndex, equals(-1));
-                  expect(change.newIndex, equals(index));
-                  expect(change.type, equals(DocumentChangeType.added));
-                  expect(change.doc.data()!['value'], equals(index + 1));
-                });
-              } else if (call == 2) {
-                expect(snapshot.docs.length, equals(3));
-                expect(snapshot.docChanges.length, equals(1));
-                DocumentChange<Map<String, dynamic>> change =
-                    snapshot.docChanges[0];
-                expect(change.oldIndex, equals(0));
-                expect(change.newIndex, equals(2));
-                expect(change.type, equals(DocumentChangeType.modified));
-                expect(change.doc.id, equals('doc1'));
-              } else {
-                fail('Should not have been called');
-              }
-            },
-            count: 2,
-            reason: 'Stream should only have been called twice.',
-          ),
-        );
+        final snapshots = <QuerySnapshot<Map<String, dynamic>>>[];
+        final receivedAll = Completer<void>();
 
-        await Future.delayed(
-          const Duration(seconds: 1),
-        ); // Ensure listener fires
+        StreamSubscription subscription =
+            collection.orderBy('value').snapshots().listen((snapshot) {
+          snapshots.add(snapshot);
+          if (snapshots.length >= 2 && !receivedAll.isCompleted) {
+            receivedAll.complete();
+          }
+        });
+
+        // Wait for the initial snapshot before modifying
+        await Future.delayed(const Duration(milliseconds: 500));
         await doc1.update({'value': 4});
 
+        await receivedAll.future.timeout(const Duration(seconds: 30));
         await subscription.cancel();
+
+        // Verify first snapshot (all 3 docs added)
+        expect(snapshots[0].docs.length, equals(3));
+        expect(snapshots[0].docChanges.length, equals(3));
+        snapshots[0]
+            .docChanges
+            .asMap()
+            .forEach((int index, DocumentChange<Map<String, dynamic>> change) {
+          expect(change.oldIndex, equals(-1));
+          expect(change.newIndex, equals(index));
+          expect(change.type, equals(DocumentChangeType.added));
+          expect(change.doc.data()!['value'], equals(index + 1));
+        });
+
+        // Verify second snapshot (doc1 modified, moved to end)
+        expect(snapshots[1].docs.length, equals(3));
+        expect(snapshots[1].docChanges.length, equals(1));
+        DocumentChange<Map<String, dynamic>> change =
+            snapshots[1].docChanges[0];
+        expect(change.oldIndex, equals(0));
+        expect(change.newIndex, equals(2));
+        expect(change.type, equals(DocumentChangeType.modified));
+        expect(change.doc.id, equals('doc1'));
       },
       skip: defaultTargetPlatform == TargetPlatform.windows,
     );

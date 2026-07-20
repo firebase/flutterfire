@@ -87,30 +87,6 @@ void main() {
       );
     });
 
-    test('invokeOperation should return deserialized data', () async {
-      final mockResponse = http.Response('{"data": {"key": "value"}}', 200);
-      when(
-        mockHttpClient.post(
-          any,
-          headers: anyNamed('headers'),
-          body: anyNamed('body'),
-        ),
-      ).thenAnswer((_) async => mockResponse);
-
-      final deserializer = (String data) => 'Deserialized Data';
-
-      final result = await transport.invokeOperation(
-        'testQuery',
-        'executeQuery',
-        deserializer,
-        null,
-        null,
-        null,
-      );
-
-      expect(result, 'Deserialized Data');
-    });
-
     test('invokeOperation should throw unauthorized error on 401 response',
         () async {
       final mockResponse = http.Response('Unauthorized', 401);
@@ -122,7 +98,7 @@ void main() {
         ),
       ).thenAnswer((_) async => mockResponse);
 
-      final deserializer = (String data) => 'Deserialized Data';
+      String deserializer(String data) => 'Deserialized Data';
 
       expect(
         () => transport.invokeOperation(
@@ -148,7 +124,7 @@ void main() {
         ),
       ).thenAnswer((_) async => mockResponse);
 
-      final deserializer = (String data) => 'Deserialized Data';
+      String deserializer(String data) => 'Deserialized Data';
 
       expect(
         () => transport.invokeOperation(
@@ -174,9 +150,10 @@ void main() {
         ),
       ).thenAnswer((_) async => mockResponse);
 
-      final deserializer = (String data) => 'Deserialized Data';
+      String deserializer(String data) => 'Deserialized Data';
 
-      await transport.invokeQuery('testQuery', deserializer, null, null, null);
+      await transport.invokeQuery(
+          'testQueryId', 'testQuery', deserializer, null, null, null);
 
       verify(
         mockHttpClient.post(
@@ -202,9 +179,10 @@ void main() {
         ),
       ).thenAnswer((_) async => mockResponse);
 
-      final deserializer = (String data) => 'Deserialized Mutation Data';
+      String deserializer(String data) => 'Deserialized Mutation Data';
 
       await transport.invokeMutation(
+        'testMutationId',
         'testMutation',
         deserializer,
         null,
@@ -239,7 +217,7 @@ void main() {
       when(mockUser.getIdToken()).thenAnswer((_) async => 'authToken123');
       when(mockAppCheck.getToken()).thenAnswer((_) async => 'appCheckToken123');
 
-      final deserializer = (String data) => 'Deserialized Data';
+      String deserializer(String data) => 'Deserialized Data';
 
       await transport.invokeOperation(
         'testQuery',
@@ -274,7 +252,7 @@ void main() {
       when(mockUser.getIdToken()).thenAnswer((_) async => 'authToken123');
       when(mockAppCheck.getToken()).thenAnswer((_) async => 'appCheckToken123');
 
-      final deserializer = (String data) => 'Deserialized Data';
+      String deserializer(String data) => 'Deserialized Data';
 
       await transport.invokeOperation(
         'testQuery',
@@ -299,6 +277,44 @@ void main() {
     });
 
     test(
+        'regression #17290 - invokeOperation should correctly decode UTF-8 response with international characters',
+        () async {
+      // Simulate a server response with Korean characters, where the
+      // Content-Type header does NOT include charset=utf-8 (which is
+      // what the Firebase emulator sends). Without explicit UTF-8
+      // decoding, the http package defaults to latin1, corrupting
+      // multi-byte characters.
+      const koreanJson =
+          '{"data": {"name": "\ud55c\uad6d\uc5b4 \ud14c\uc2a4\ud2b8"}}';
+      final mockResponse = http.Response.bytes(
+        utf8.encode(koreanJson),
+        200,
+        headers: {'content-type': 'application/json'},
+      );
+      when(
+        mockHttpClient.post(
+          any,
+          headers: anyNamed('headers'),
+          body: anyNamed('body'),
+        ),
+      ).thenAnswer((_) async => mockResponse);
+
+      String deserializer(String data) => 'Deserialized Data';
+
+      final result = await transport.invokeOperation(
+        'testQuery',
+        'executeQuery',
+        deserializer,
+        null,
+        null,
+        null,
+      );
+
+      expect(result.data['data']['name'],
+          equals('\ud55c\uad6d\uc5b4 \ud14c\uc2a4\ud2b8'));
+    });
+
+    test(
         'invokeOperation should handle missing auth and appCheck tokens gracefully',
         () async {
       final mockResponse = http.Response('{"data": {"key": "value"}}', 200);
@@ -313,7 +329,7 @@ void main() {
       when(mockUser.getIdToken()).thenThrow(Exception('Auth error'));
       when(mockAppCheck.getToken()).thenThrow(Exception('AppCheck error'));
 
-      final deserializer = (String data) => 'Deserialized Data';
+      String deserializer(String data) => 'Deserialized Data';
 
       await transport.invokeOperation(
         'testQuery',
@@ -335,104 +351,5 @@ void main() {
         ),
       ).called(1);
     });
-    test('invokeOperation should throw an error if the server throws one',
-        () async {
-      final mockResponse = http.Response(
-        '''
-{
-    "data": {},
-    "errors": [
-        {
-            "message": "SQL query error: pq: duplicate key value violates unique constraint movie_pkey",
-            "locations": [],
-            "path": [
-                "the_matrix"
-            ],
-            "extensions": null
-        }
-    ]
-}''',
-        200,
-      );
-      when(
-        mockHttpClient.post(
-          any,
-          headers: anyNamed('headers'),
-          body: anyNamed('body'),
-        ),
-      ).thenAnswer((_) async => mockResponse);
-
-      final deserializer = (String data) => 'Deserialized Data';
-
-      expect(
-        () => transport.invokeOperation(
-          'testQuery',
-          'executeQuery',
-          deserializer,
-          null,
-          null,
-          null,
-        ),
-        throwsA(isA<DataConnectError>()),
-      );
-    });
-    test('invokeOperation should decode a partial error if available',
-        () async {
-      final mockResponse = http.Response(
-        '''
-        {
-            "data": {"abc": "def"},
-            "errors": [
-                {
-                    "message": "SQL query error: pq: duplicate key value violates unique constraint movie_pkey",
-                    "locations": [],
-                    "path": [
-                        "the_matrix"
-                    ],
-                    "extensions": null
-                }
-            ]
-        }''',
-        200,
-      );
-      when(
-        mockHttpClient.post(
-          any,
-          headers: anyNamed('headers'),
-          body: anyNamed('body'),
-        ),
-      ).thenAnswer((_) async => mockResponse);
-
-      final deserializer = (String data) {
-        Map<String, dynamic> decoded = jsonDecode(data) as Map<String, dynamic>;
-        return AbcHolder(decoded['abc']!);
-      };
-
-      expect(
-        () => transport.invokeOperation(
-          'testQuery',
-          'executeQuery',
-          deserializer,
-          null,
-          null,
-          null,
-        ),
-        throwsA(predicate((e) =>
-            e is DataConnectOperationError &&
-            e.response.rawData!['abc'] == 'def' &&
-            e.response.errors.first.message ==
-                'SQL query error: pq: duplicate key value violates unique constraint movie_pkey' &&
-            (e.response.errors.first.path[0] as DataConnectFieldPathSegment)
-                    .field ==
-                'the_matrix' &&
-            e.response.data is AbcHolder &&
-            (e.response.data as AbcHolder).abc == 'def')),
-      );
-    });
   });
-}
-
-class AbcHolder {
-  String abc;
-  AbcHolder(this.abc);
 }

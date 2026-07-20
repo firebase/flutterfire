@@ -20,6 +20,7 @@ class Settings {
     this.webExperimentalAutoDetectLongPolling,
     this.webExperimentalLongPollingOptions,
     this.ignoreUndefinedProperties = false,
+    this.webPersistentTabManager,
   });
 
   /// Constant used to indicate the LRU garbage collection should be disabled.
@@ -75,6 +76,18 @@ class Settings {
   /// Otherwise, these options have no effect.
   final WebExperimentalLongPollingOptions? webExperimentalLongPollingOptions;
 
+  /// Configures how multiple browser tabs are managed when using persistent
+  /// cache on web.
+  ///
+  /// When `null` (the default), the SDK uses single-tab mode. Set to
+  /// [WebPersistentMultipleTabManager] for multi-tab synchronization, or
+  /// [WebPersistentSingleTabManager] with [WebPersistentSingleTabManager.forceOwnership]
+  /// for Web Worker support.
+  ///
+  /// This setting only applies to Flutter Web with [persistenceEnabled] set
+  /// to `true`. It is ignored on other platforms.
+  final WebPersistentTabManager? webPersistentTabManager;
+
   /// Returns the settings as a [Map]
   Map<String, dynamic> get asMap {
     return {
@@ -88,6 +101,7 @@ class Settings {
       'webExperimentalLongPollingOptions':
           webExperimentalLongPollingOptions?.asMap,
       if (kIsWeb) 'ignoreUndefinedProperties': ignoreUndefinedProperties,
+      if (kIsWeb) 'webPersistentTabManager': webPersistentTabManager,
     };
   }
 
@@ -100,6 +114,7 @@ class Settings {
     bool? webExperimentalAutoDetectLongPolling,
     bool? ignoreUndefinedProperties,
     WebExperimentalLongPollingOptions? webExperimentalLongPollingOptions,
+    WebPersistentTabManager? webPersistentTabManager,
   }) {
     assert(
         cacheSizeBytes == null ||
@@ -122,6 +137,8 @@ class Settings {
           this.webExperimentalLongPollingOptions,
       ignoreUndefinedProperties:
           ignoreUndefinedProperties ?? this.ignoreUndefinedProperties,
+      webPersistentTabManager:
+          webPersistentTabManager ?? this.webPersistentTabManager,
     );
   }
 
@@ -139,7 +156,8 @@ class Settings {
           webExperimentalAutoDetectLongPolling &&
       other.webExperimentalLongPollingOptions ==
           webExperimentalLongPollingOptions &&
-      other.ignoreUndefinedProperties == ignoreUndefinedProperties;
+      other.ignoreUndefinedProperties == ignoreUndefinedProperties &&
+      other.webPersistentTabManager == webPersistentTabManager;
 
   @override
   int get hashCode => Object.hash(
@@ -152,10 +170,84 @@ class Settings {
         webExperimentalAutoDetectLongPolling,
         webExperimentalLongPollingOptions,
         ignoreUndefinedProperties,
+        webPersistentTabManager,
       );
 
   @override
   String toString() => 'Settings($asMap)';
+}
+
+/// Configures how multiple browser tabs are managed by the Firestore SDK
+/// when using persistent cache on web.
+///
+/// This setting only applies to Flutter Web with [Settings.persistenceEnabled]
+/// set to `true`. It is ignored on other platforms.
+///
+/// See also:
+/// - [WebPersistentMultipleTabManager] for multi-tab synchronization
+/// - [WebPersistentSingleTabManager] for single-tab mode with optional
+///   force ownership (Web Workers)
+sealed class WebPersistentTabManager {
+  const WebPersistentTabManager();
+}
+
+/// Enables multi-tab synchronization for Firestore’s persistent cache.
+///
+/// The SDK will synchronize queries and mutations across all open browser
+/// tabs that use the same Firestore instance.
+///
+/// Example:
+/// ```dart
+/// FirebaseFirestore.instance.settings = const Settings(
+///   persistenceEnabled: true,
+///   webPersistentTabManager: WebPersistentMultipleTabManager(),
+/// );
+/// ```
+@immutable
+class WebPersistentMultipleTabManager extends WebPersistentTabManager {
+  const WebPersistentMultipleTabManager();
+
+  @override
+  bool operator ==(Object other) =>
+      other is WebPersistentMultipleTabManager &&
+      other.runtimeType == runtimeType;
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+}
+
+/// Configures the Firestore SDK to operate in single-tab mode.
+///
+/// When [forceOwnership] is `true`, this tab forcibly acquires the
+/// IndexedDB lock, which is useful for Web Workers but will cause other
+/// tabs using persistence to fail.
+///
+/// Example:
+/// ```dart
+/// FirebaseFirestore.instance.settings = const Settings(
+///   persistenceEnabled: true,
+///   webPersistentTabManager: WebPersistentSingleTabManager(forceOwnership: true),
+/// );
+/// ```
+@immutable
+class WebPersistentSingleTabManager extends WebPersistentTabManager {
+  const WebPersistentSingleTabManager({this.forceOwnership = false});
+
+  /// Whether to force-enable persistent (IndexedDB) cache for this tab.
+  ///
+  /// This cannot be used with multi-tab synchronization and is primarily
+  /// intended for use with Web Workers. Setting this to `true` will enable
+  /// IndexedDB, but cause other tabs using IndexedDB cache to fail.
+  final bool forceOwnership;
+
+  @override
+  bool operator ==(Object other) =>
+      other is WebPersistentSingleTabManager &&
+      other.runtimeType == runtimeType &&
+      other.forceOwnership == forceOwnership;
+
+  @override
+  int get hashCode => Object.hash(runtimeType, forceOwnership);
 }
 
 /// Options that configure the SDK’s underlying network transport (WebChannel) when long-polling is used.

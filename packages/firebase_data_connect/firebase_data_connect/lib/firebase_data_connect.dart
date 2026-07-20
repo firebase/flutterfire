@@ -28,7 +28,13 @@ export 'src/common/common_library.dart'
         CallerSDKType;
 export 'src/core/empty_serializer.dart' show emptySerializer;
 export 'src/core/ref.dart'
-    show MutationRef, OperationRef, OperationResult, QueryRef, QueryResult;
+    show
+        MutationRef,
+        OperationRef,
+        OperationResult,
+        QueryRef,
+        QueryResult,
+        DataSource;
 export 'src/firebase_data_connect.dart';
 export 'src/optional.dart'
     show
@@ -39,3 +45,5 @@ export 'src/optional.dart'
         listDeserializer,
         listSerializer;
 export 'src/timestamp.dart' show Timestamp;
+export 'src/cache/cache_data_types.dart'
+    show CacheSettings, QueryFetchPolicy, CacheStorage;

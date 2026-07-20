@@ -79,6 +79,8 @@ void setupReferenceTests() {
       test('should delete a file', () async {
         Reference ref = storage.ref('flutter-tests/deleteMe.jpeg');
         await ref.putString('To Be Deleted :)');
+        // Verify the file exists before attempting delete
+        await ref.getMetadata();
         await ref.delete();
 
         await expectLater(
@@ -223,6 +225,28 @@ void setupReferenceTests() {
     );
 
     test(
+      'list operations report that they are unsupported on Windows',
+      () async {
+        final Reference ref = storage.ref('flutter-tests/list');
+        final unsupportedError = isA<FirebaseException>()
+            .having((error) => error.code, 'code', 'unimplemented')
+            .having(
+              (error) => error.message,
+              'message',
+              'Listing files is not supported by the Firebase C++ SDK on '
+                  'Windows.',
+            );
+
+        await expectLater(
+          ref.list(const ListOptions(maxResults: 25)),
+          throwsA(unsupportedError),
+        );
+        await expectLater(ref.listAll(), throwsA(unsupportedError));
+      },
+      skip: defaultTargetPlatform != TargetPlatform.windows,
+    );
+
+    test(
       'listAll',
       () async {
         Reference ref = storage.ref('flutter-tests/list');
@@ -250,7 +274,7 @@ void setupReferenceTests() {
             Uint8List data = Uint8List.fromList(list);
 
             final Reference ref =
-                storage.ref('flutter-tests').child('flt-ok.txt');
+                storage.ref('flutter-tests').child('flt-put-data.txt');
 
             final TaskSnapshot complete = await ref.putData(
               data,
@@ -305,6 +329,46 @@ void setupReferenceTests() {
             expect(complete.metadata?.contentType, 'application/json');
           },
         );
+
+        test(
+          'infers contentType from .json ref path when no contentType set',
+          () async {
+            final Uint8List jsonData =
+                utf8.encode(jsonEncode({'key': 'value'}));
+            final Reference ref =
+                storage.ref('flutter-tests').child('flt-infer.json');
+            final TaskSnapshot complete = await ref.putData(jsonData);
+            expect(complete.metadata?.contentType, 'application/json');
+          },
+        );
+
+        test(
+          'infers contentType from .txt ref path and preserves customMetadata',
+          () async {
+            final Uint8List txtData = utf8.encode('hello world');
+            final Reference ref =
+                storage.ref('flutter-tests').child('flt-infer.txt');
+            final TaskSnapshot complete = await ref.putData(
+              txtData,
+              SettableMetadata(
+                customMetadata: {'activity': 'test'},
+              ),
+            );
+            expect(complete.metadata?.contentType, 'text/plain');
+            expect(complete.metadata?.customMetadata?['activity'], 'test');
+          },
+        );
+
+        test(
+          'infers contentType from .jpg ref path when no metadata provided',
+          () async {
+            final Uint8List imgData = Uint8List.fromList([0xFF, 0xD8, 0xFF]);
+            final Reference ref =
+                storage.ref('flutter-tests').child('flt-infer.jpg');
+            final TaskSnapshot complete = await ref.putData(imgData);
+            expect(complete.metadata?.contentType, 'image/jpeg');
+          },
+        );
       },
     );
 
@@ -312,9 +376,9 @@ void setupReferenceTests() {
       test(
         'throws [UnimplementedError] for native platforms',
         () async {
-          final File file = await createFile('flt-ok.txt');
+          final File file = await createFile('flt-put-blob.txt');
           final Reference ref =
-              storage.ref('flutter-tests').child('flt-ok.txt');
+              storage.ref('flutter-tests').child('flt-put-blob.txt');
 
           await expectLater(
             () => ref.putBlob(
@@ -344,10 +408,13 @@ void setupReferenceTests() {
         test(
           'uploads a file',
           () async {
-            final File file = await createFile('flt-ok.txt');
+            final File file = await createFile(
+              'flt-put-file.txt',
+              string: kTestString,
+            );
 
             final Reference ref =
-                storage.ref('flutter-tests').child('flt-ok.txt');
+                storage.ref('flutter-tests').child('flt-put-file.txt');
 
             final TaskSnapshot complete = await ref.putFile(
               file,
@@ -381,7 +448,7 @@ void setupReferenceTests() {
               'put file some text to compare with uploaded and downloaded';
           final File file = await createFile(
             'read-and-write.txt',
-            largeString: text,
+            string: text,
           );
 
           final Reference ref =
@@ -426,7 +493,8 @@ void setupReferenceTests() {
       test('uploads a string and downloads to check its content', () async {
         const text =
             'put string some text to compare with uploaded and downloaded';
-        final Reference ref = storage.ref('flutter-tests').child('flt-ok.txt');
+        final Reference ref =
+            storage.ref('flutter-tests').child('flt-put-string.txt');
         final TaskSnapshot complete = await ref.putString(text);
         expect(complete.totalBytes, greaterThan(0));
         expect(complete.state, TaskState.success);
@@ -459,12 +527,21 @@ void setupReferenceTests() {
     });
 
     group('updateMetadata', () {
-      test('updates metadata', () async {
-        Reference ref = storage.ref('flutter-tests').child('flt-ok.txt');
-        FullMetadata fullMetadata = await ref
-            .updateMetadata(SettableMetadata(customMetadata: {'foo': 'bar'}));
-        expect(fullMetadata.customMetadata!['foo'], 'bar');
-      });
+      test(
+        'updates metadata',
+        () async {
+          Reference ref =
+              storage.ref('flutter-tests').child('flt-update-metadata.txt');
+          // Ensure the file exists before updating metadata
+          await ref.putString('metadata test content');
+          // Verify the file is visible before updating metadata
+          await ref.getMetadata();
+          FullMetadata fullMetadata = await ref
+              .updateMetadata(SettableMetadata(customMetadata: {'foo': 'bar'}));
+          expect(fullMetadata.customMetadata!['foo'], 'bar');
+        },
+        timeout: const Timeout(Duration(minutes: 2)),
+      );
 
       test(
         'errors if property does not exist',

@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+@import FirebaseAuth;
+
 #import "include/Private/FLTPhoneNumberVerificationStreamHandler.h"
 #import "include/Public/FLTFirebaseAuthPlugin.h"
 
@@ -16,7 +18,7 @@
 }
 
 #if TARGET_OS_OSX
-- (instancetype)initWithAuth:(id)auth request:(PigeonVerifyPhoneNumberRequest *)request {
+- (instancetype)initWithAuth:(id)auth request:(InternalVerifyPhoneNumberRequest *)request {
   self = [super init];
   if (self) {
     _auth = auth;
@@ -26,7 +28,7 @@
 }
 #else
 - (instancetype)initWithAuth:(id)auth
-                     request:(PigeonVerifyPhoneNumberRequest *)request
+                     request:(InternalVerifyPhoneNumberRequest *)request
                      session:(FIRMultiFactorSession *)session
                   factorInfo:(FIRPhoneMultiFactorInfo *)factorInfo {
   self = [super init];

@@ -1,17 +1,8 @@
 library movies;
 
 import 'package:firebase_data_connect/firebase_data_connect.dart';
+import 'package:flutter/foundation.dart';
 import 'dart:convert';
-
-part 'list_movies.dart';
-
-part 'list_movies_by_partial_title.dart';
-
-part 'list_persons.dart';
-
-part 'list_thing.dart';
-
-part 'list_timestamps.dart';
 
 part 'add_person.dart';
 
@@ -27,44 +18,25 @@ part 'create_movie.dart';
 
 part 'delete_movie.dart';
 
+part 'delete_all_movie_data.dart';
+
 part 'thing.dart';
 
 part 'seed_data.dart';
 
+part 'list_movies.dart';
+
+part 'get_movie.dart';
+
+part 'list_movies_by_partial_title.dart';
+
+part 'list_persons.dart';
+
+part 'list_thing.dart';
+
+part 'list_timestamps.dart';
+
 class MoviesConnector {
-  ListMoviesVariablesBuilder listMovies() {
-    return ListMoviesVariablesBuilder(
-      dataConnect,
-    );
-  }
-
-  ListMoviesByPartialTitleVariablesBuilder listMoviesByPartialTitle({
-    required String input,
-  }) {
-    return ListMoviesByPartialTitleVariablesBuilder(
-      dataConnect,
-      input: input,
-    );
-  }
-
-  ListPersonsVariablesBuilder listPersons() {
-    return ListPersonsVariablesBuilder(
-      dataConnect,
-    );
-  }
-
-  ListThingVariablesBuilder listThing() {
-    return ListThingVariablesBuilder(
-      dataConnect,
-    );
-  }
-
-  ListTimestampsVariablesBuilder listTimestamps() {
-    return ListTimestampsVariablesBuilder(
-      dataConnect,
-    );
-  }
-
   AddPersonVariablesBuilder addPerson() {
     return AddPersonVariablesBuilder(
       dataConnect,
@@ -125,6 +97,12 @@ class MoviesConnector {
     );
   }
 
+  DeleteAllMovieDataVariablesBuilder deleteAllMovieData() {
+    return DeleteAllMovieDataVariablesBuilder(
+      dataConnect,
+    );
+  }
+
   ThingVariablesBuilder thing() {
     return ThingVariablesBuilder(
       dataConnect,
@@ -133,6 +111,48 @@ class MoviesConnector {
 
   SeedDataVariablesBuilder seedData() {
     return SeedDataVariablesBuilder(
+      dataConnect,
+    );
+  }
+
+  ListMoviesVariablesBuilder listMovies() {
+    return ListMoviesVariablesBuilder(
+      dataConnect,
+    );
+  }
+
+  GetMovieVariablesBuilder getMovie({
+    required GetMovieVariablesKey key,
+  }) {
+    return GetMovieVariablesBuilder(
+      dataConnect,
+      key: key,
+    );
+  }
+
+  ListMoviesByPartialTitleVariablesBuilder listMoviesByPartialTitle({
+    required String input,
+  }) {
+    return ListMoviesByPartialTitleVariablesBuilder(
+      dataConnect,
+      input: input,
+    );
+  }
+
+  ListPersonsVariablesBuilder listPersons() {
+    return ListPersonsVariablesBuilder(
+      dataConnect,
+    );
+  }
+
+  ListThingVariablesBuilder listThing() {
+    return ListThingVariablesBuilder(
+      dataConnect,
+    );
+  }
+
+  ListTimestampsVariablesBuilder listTimestamps() {
+    return ListTimestampsVariablesBuilder(
       dataConnect,
     );
   }

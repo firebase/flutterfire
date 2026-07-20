@@ -1,14 +1,14 @@
 group 'io.flutter.plugins.firebase.appcheck'
 version '1.0-SNAPSHOT'
 
+apply plugin: 'com.android.library'
+apply from: file("local-config.gradle")
+
 buildscript {
+  ext.kotlin_version = "2.0.0"
   repositories {
     google()
     mavenCentral()
-  }
-
-  dependencies {
-    classpath 'com.android.tools.build:gradle:8.1.2'
   }
 }
 
@@ -19,7 +19,15 @@ rootProject.allprojects {
   }
 }
 
-apply plugin: 'com.android.library'
+// AGP 9+ has built-in Kotlin support unless Flutter opts out via android.builtInKotlin=false.
+def agpMajor = com.android.Version.ANDROID_GRADLE_PLUGIN_VERSION.tokenize('.')[0] as int
+def builtInKotlin = providers.gradleProperty("android.builtInKotlin")
+        .map { it.toBoolean() }
+        .orElse(agpMajor >= 9)
+        .get()
+if (agpMajor < 9 || !builtInKotlin) {
+    apply plugin: 'kotlin-android'
+}
 
 def firebaseCoreProject = findProject(':firebase_core')
 if (firebaseCoreProject == null) {
@@ -40,16 +48,21 @@ android {
     namespace 'io.flutter.plugins.firebase.appcheck'
   }
 
-  compileSdk 35
+  compileSdkVersion project.ext.compileSdk
 
   defaultConfig {
-    minSdk 21
+    minSdkVersion project.ext.minSdk
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
   }
 
   compileOptions {
-    sourceCompatibility JavaVersion.VERSION_17
-    targetCompatibility JavaVersion.VERSION_17
+    sourceCompatibility project.ext.javaVersion
+    targetCompatibility project.ext.javaVersion
+  }
+
+  sourceSets {
+    main.java.srcDirs += "src/main/kotlin"
+    test.java.srcDirs += "src/test/kotlin"
   }
 
   buildFeatures {
@@ -65,10 +78,16 @@ android {
     implementation platform("com.google.firebase:firebase-bom:${getRootProjectExtOrCoreProperty("FirebaseSDKVersion", firebaseCoreProject)}")
     implementation 'com.google.firebase:firebase-appcheck-debug'
     implementation 'com.google.firebase:firebase-appcheck-playintegrity'
+    implementation 'com.google.firebase:firebase-appcheck-recaptcha'
     implementation 'androidx.annotation:annotation:1.7.0'
-    // SafetyNet is deprecated and not part of Firebase BOM
-    implementation 'com.google.firebase:firebase-appcheck-safetynet:16.1.2'
+  }
+}
 
+plugins.withId("org.jetbrains.kotlin.android") {
+  kotlin {
+    compilerOptions {
+      jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.fromTarget(project.ext.javaVersion.toString())
+    }
   }
 }
 

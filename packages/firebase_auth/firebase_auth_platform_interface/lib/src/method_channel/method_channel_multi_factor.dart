@@ -55,7 +55,7 @@ class MethodChannelMultiFactor extends MultiFactorPlatform {
       try {
         await _api.enrollPhone(
           pigeonDefault,
-          PigeonPhoneMultiFactorAssertion(
+          InternalPhoneMultiFactorAssertion(
             verificationId: verificationId,
             verificationCode: verificationCode,
           ),
@@ -150,7 +150,7 @@ class MethodChannelMultiFactorResolver extends MultiFactorResolverPlatform {
       try {
         final result = await _api.resolveSignIn(
           _resolverId,
-          PigeonPhoneMultiFactorAssertion(
+          InternalPhoneMultiFactorAssertion(
             verificationId: verificationId,
             verificationCode: verificationCode,
           ),

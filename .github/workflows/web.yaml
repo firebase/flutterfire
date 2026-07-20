@@ -1,7 +1,7 @@
 name: e2e-web
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}-web
   cancel-in-progress: true
 
 on:
@@ -23,45 +23,64 @@ on:
       - '!**/example/integration_test/**'
       - '**/flutterfire_ui/**'
       - '**.md'
+  workflow_call:
+    inputs:
+      nightly_test_mode:
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
 
 jobs:
   web:
+    permissions:
+      contents: read
     runs-on: macos-latest
-    timeout-minutes: 15
+    timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 15 }}
     strategy:
       fail-fast: false
       matrix:
         working_directory:
           ['tests', 'packages/cloud_firestore/cloud_firestore/example']
+        exclude:
+          - working_directory: ${{ inputs.nightly_test_mode && 'packages/cloud_firestore/cloud_firestore/example' || 'none' }}
     steps:
-      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
       - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
         name: Install Node.js 20
         with:
           node-version: '20'
-      - uses: actions/setup-java@8df1039502a15bceb9433410b1a100fbe190c53b
+      - uses: actions/setup-java@1bcf9fb12cf4aa7d266a90ae39939e61372fe520
         with:
           distribution: 'temurin'
-          java-version: '17'
-      - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
+          java-version: '21'
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
         with:
           channel: 'stable'
           cache: true
-          cache-key: flutter-${{ runner.os }}
-          pub-cache-key: pub-${{ runner.os }}
-      - uses: bluefireteam/melos-action@c7dcb921b23cc520cace360b95d02b37bf09cdaa
+          cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
+          pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
+      - uses: bluefireteam/melos-action@705015c3d2bc4ab94201ac24accb2bbe070cf533
         with:
           run-bootstrap: false
           melos-version: '5.3.0'
       - name: 'Bootstrap package'
         run: melos bootstrap --scope tests && melos bootstrap --scope "cloud_firestore*"
       - name: 'Install Tools'
-        run: sudo npm i -g firebase-tools
-      - name: Cache Firebase Emulator
-        uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        run: |
+          sudo npm i -g firebase-tools
+          echo "FIREBASE_TOOLS_VERSION=$(npm firebase --version)" >> $GITHUB_ENV
+      - name: Firebase Emulator Cache
+        id: firebase-emulator-cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        continue-on-error: true
         with:
+          # The firebase emulators are pure javascript and java, OS-independent
+          enableCrossOsArchive: true
+          # Must match the save path exactly
           path: ~/.cache/firebase/emulators
-          key: firebase-emulators-v3-${{ runner.os }}
+          key: firebase-emulators-v3-${{ env.FIREBASE_TOOLS_VERSION }}
           restore-keys: firebase-emulators-v3
       - name: Start Firebase Emulator
         run: sudo chown -R 501:20 "/Users/runner/.npm" && cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
@@ -70,50 +89,148 @@ jobs:
         # Web devices are not supported for the `flutter test` command yet. As a
         # workaround we can use the `flutter drive` command. Tracking issue:
         # https://github.com/flutter/flutter/issues/66264
+        # Chrome debug service can fail with AppConnectionException. Retry with
+        # a clean browser/driver process set so stale children cannot poison
+        # the next attempt.
         run: |
-          chromedriver --port=4444 --trace-buffer-size=100000 &
-          flutter drive --target=./integration_test/e2e_test.dart --driver=./test_driver/integration_test.dart -d chrome --dart-define=CI=true | tee output.log
-          # We have to check the output for failed tests matching the string "[E]"
-          output=$(<output.log)
-          if [[ "$output" =~ \[E\] ]]; then
-          # You will see "All tests passed." in the logs even when tests failed.
-          echo "All tests did not pass. Please check the logs for more information."
-          exit 1
-          fi
+          cleanup_web_processes() {
+            pkill -f "Google Chrome" || true
+            pkill -f chrome_crashpad || true
+            pkill -x chromedriver || true
+            pkill -x dartvm || true
+            pkill -x dartaotruntime || true
+          }
+
+          run_tests() {
+            rm -f output.log
+            cleanup_web_processes
+            chromedriver --port=4444 --trace-buffer-size=100000 &
+            chromedriver_pid=$!
+            sleep 2
+
+            python3 - <<'PY'
+          import subprocess
+          import sys
+
+          def normalize_output(output):
+              if output is None:
+                  return ''
+              if isinstance(output, bytes):
+                  return output.decode(errors='replace')
+              return output
+
+          command = [
+              'flutter',
+              'drive',
+              '--target=./integration_test/e2e_test.dart',
+              '--driver=./test_driver/integration_test.dart',
+              '-d',
+              'chrome',
+              '--dart-define=CI=true',
+          ]
+
+          try:
+              completed = subprocess.run(
+                  command,
+                  check=False,
+                  stdout=subprocess.PIPE,
+                  stderr=subprocess.STDOUT,
+                  text=True,
+                  timeout=180,
+              )
+          except subprocess.TimeoutExpired as error:
+              output = normalize_output(error.stdout)
+              print(output, end='')
+              with open('output.log', 'w') as file:
+                  file.write(output)
+              print('flutter drive timed out before connecting to Chrome.')
+              sys.exit(124)
+
+          output = normalize_output(completed.stdout)
+          print(output, end='')
+          with open('output.log', 'w') as file:
+              file.write(output)
+          sys.exit(completed.returncode)
+          PY
+            exit_code=$?
+            kill "$chromedriver_pid" 2>/dev/null || true
+            wait "$chromedriver_pid" 2>/dev/null || true
+            cleanup_web_processes
+
+            output=$(<output.log)
+            if [[ "$output" =~ \[E\] ]]; then
+              # You will see "All tests passed." in the logs even when tests failed.
+              echo "All tests did not pass. Please check the logs for more information."
+              return 2
+            fi
+            return $exit_code
+          }
+
+          max_attempts=4
+          for attempt in $(seq 1 "$max_attempts"); do
+            if run_tests; then
+              exit 0
+            fi
+            exit_code=$?
+            if [[ "$exit_code" == "2" || "$attempt" == "$max_attempts" ]]; then
+              exit "$exit_code"
+            fi
+            echo "Attempt $attempt failed before tests completed. Retrying..."
+          done
         shell: bash
+      - name: Save Firestore Emulator Cache
+        # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
+        if: github.ref == 'refs/heads/main'
+        continue-on-error: true
+        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          # The firebase emulators are pure javascript and java, OS-independent
+          enableCrossOsArchive: true
+          key: ${{ steps.firebase-emulator-cache.outputs.cache-primary-key }}
+          # Must match the restore path exactly
+          path: ~/.cache/firebase/emulators
 
   web-app-check:
+    permissions:
+      contents: read
     runs-on: macos-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
       - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
         name: Install Node.js 20
         with:
           node-version: '20'
-      - uses: actions/setup-java@8df1039502a15bceb9433410b1a100fbe190c53b
+      - uses: actions/setup-java@1bcf9fb12cf4aa7d266a90ae39939e61372fe520
         with:
           distribution: 'temurin'
-          java-version: '17'
-      - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
+          java-version: '21'
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
         with:
           channel: 'stable'
           cache: true
-          cache-key: flutter-${{ runner.os }}
-          pub-cache-key: pub-${{ runner.os }}
-      - uses: bluefireteam/melos-action@c7dcb921b23cc520cace360b95d02b37bf09cdaa
+          cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
+          pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
+      - uses: bluefireteam/melos-action@705015c3d2bc4ab94201ac24accb2bbe070cf533
         with:
           run-bootstrap: false
           melos-version: '5.3.0'
       - name: 'Bootstrap package'
         run: melos bootstrap --scope tests
       - name: 'Install Tools'
-        run: sudo npm i -g firebase-tools
-      - name: Cache Firebase Emulator
-        uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        run: |
+          sudo npm i -g firebase-tools
+          echo "FIREBASE_TOOLS_VERSION=$(npm firebase --version)" >> $GITHUB_ENV
+      - name: Firebase Emulator Cache
+        id: firebase-emulator-cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        continue-on-error: true
         with:
+          # The firebase emulators are pure javascript and java, OS-independent
+          enableCrossOsArchive: true
+          # Must match the save path exactly
           path: ~/.cache/firebase/emulators
-          key: firebase-emulators-v3-${{ runner.os }}
+          key: firebase-emulators-v3-${{ env.FIREBASE_TOOLS_VERSION }}
           restore-keys: firebase-emulators-v3
       - name: Start Firebase Emulator
         run: sudo chown -R 501:20 "/Users/runner/.npm" && cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
@@ -122,55 +239,155 @@ jobs:
         # Web devices are not supported for the `flutter test` command yet. As a
         # workaround we can use the `flutter drive` command. Tracking issue:
         # https://github.com/flutter/flutter/issues/66264
+        # Chrome debug service can fail with AppConnectionException. Retry with
+        # a clean browser/driver process set so stale children cannot poison
+        # the next attempt.
         run: |
-          chromedriver --port=4444 --trace-buffer-size=100000 &
-          flutter drive --target=./integration_test/e2e_test.dart --driver=./test_driver/integration_test.dart -d chrome --dart-define=CI=true --dart-define=APP_CHECK_E2E=true | tee output.log
-          # We have to check the output for failed tests matching the string "[E]"
-          output=$(<output.log)
-          if [[ "$output" =~ \[E\] ]]; then
-          # You will see "All tests passed." in the logs even when tests failed.
-          echo "All tests did not pass. Please check the logs for more information."
-          exit 1
-          fi
+          cleanup_web_processes() {
+            pkill -f "Google Chrome" || true
+            pkill -f chrome_crashpad || true
+            pkill -x chromedriver || true
+            pkill -x dartvm || true
+            pkill -x dartaotruntime || true
+          }
+
+          run_tests() {
+            rm -f output.log
+            cleanup_web_processes
+            chromedriver --port=4444 --trace-buffer-size=100000 &
+            chromedriver_pid=$!
+            sleep 2
+
+            python3 - <<'PY'
+          import subprocess
+          import sys
+
+          def normalize_output(output):
+              if output is None:
+                  return ''
+              if isinstance(output, bytes):
+                  return output.decode(errors='replace')
+              return output
+
+          command = [
+              'flutter',
+              'drive',
+              '--target=./integration_test/e2e_test.dart',
+              '--driver=./test_driver/integration_test.dart',
+              '-d',
+              'chrome',
+              '--dart-define=CI=true',
+              '--dart-define=APP_CHECK_E2E=true',
+          ]
+
+          try:
+              completed = subprocess.run(
+                  command,
+                  check=False,
+                  stdout=subprocess.PIPE,
+                  stderr=subprocess.STDOUT,
+                  text=True,
+                  timeout=180,
+              )
+          except subprocess.TimeoutExpired as error:
+              output = normalize_output(error.stdout)
+              print(output, end='')
+              with open('output.log', 'w') as file:
+                  file.write(output)
+              print('flutter drive timed out before connecting to Chrome.')
+              sys.exit(124)
+
+          output = normalize_output(completed.stdout)
+          print(output, end='')
+          with open('output.log', 'w') as file:
+              file.write(output)
+          sys.exit(completed.returncode)
+          PY
+            exit_code=$?
+            kill "$chromedriver_pid" 2>/dev/null || true
+            wait "$chromedriver_pid" 2>/dev/null || true
+            cleanup_web_processes
+
+            output=$(<output.log)
+            if [[ "$output" =~ \[E\] ]]; then
+              echo "All tests did not pass. Please check the logs for more information."
+              return 2
+            fi
+            return $exit_code
+          }
+
+          max_attempts=4
+          for attempt in $(seq 1 "$max_attempts"); do
+            if run_tests; then
+              exit 0
+            fi
+            exit_code=$?
+            if [[ "$exit_code" == "2" || "$attempt" == "$max_attempts" ]]; then
+              exit "$exit_code"
+            fi
+            echo "Attempt $attempt failed before tests completed. Retrying..."
+          done
         shell: bash
+      - name: Save Firestore Emulator Cache
+        # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
+        if: github.ref == 'refs/heads/main'
+        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        continue-on-error: true
+        with:
+          # The firebase emulators are pure javascript and java, OS-independent
+          enableCrossOsArchive: true
+          key: ${{ steps.firebase-emulator-cache.outputs.cache-primary-key }}
+          # Must match the restore path exactly
+          path: ~/.cache/firebase/emulators
 
   web-wasm:
+    permissions:
+      contents: read
     runs-on: macos-latest
-    timeout-minutes: 15
+    timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 15 }}
     strategy:
       fail-fast: false
       matrix:
         working_directory:
           ['tests', 'packages/cloud_firestore/cloud_firestore/example']
+        exclude:
+          - working_directory: ${{ inputs.nightly_test_mode && 'packages/cloud_firestore/cloud_firestore/example' || 'none' }}
     steps:
-      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
       - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
         name: Install Node.js 20
         with:
           node-version: '20'
-      - uses: actions/setup-java@8df1039502a15bceb9433410b1a100fbe190c53b
+      - uses: actions/setup-java@1bcf9fb12cf4aa7d266a90ae39939e61372fe520
         with:
           distribution: 'temurin'
-          java-version: '17'
-      - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
+          java-version: '21'
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
         with:
           channel: 'stable'
           cache: true
-          cache-key: flutter-${{ runner.os }}
-          pub-cache-key: pub-${{ runner.os }}
-      - uses: bluefireteam/melos-action@c7dcb921b23cc520cace360b95d02b37bf09cdaa
+          cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
+          pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
+      - uses: bluefireteam/melos-action@705015c3d2bc4ab94201ac24accb2bbe070cf533
         with:
           run-bootstrap: false
           melos-version: '5.3.0'
       - name: 'Bootstrap package'
         run: melos bootstrap --scope tests && melos bootstrap --scope "cloud_firestore*"
       - name: 'Install Tools'
-        run: sudo npm i -g firebase-tools
-      - name: Cache Firebase Emulator
-        uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        run: |
+          sudo npm i -g firebase-tools
+          echo "FIREBASE_TOOLS_VERSION=$(npm firebase --version)" >> $GITHUB_ENV
+      - name: Firebase Emulator Cache
+        id: firebase-emulator-cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        continue-on-error: true
         with:
+          # The firebase emulators are pure javascript and java, OS-independent
+          enableCrossOsArchive: true
+          # Must match the save path exactly
           path: ~/.cache/firebase/emulators
-          key: firebase-emulators-v3-${{ runner.os }}
+          key: firebase-emulators-v3-${{ env.FIREBASE_TOOLS_VERSION }}
           restore-keys: firebase-emulators-v3
       - name: Start Firebase Emulator
         run: sudo chown -R 501:20 "/Users/runner/.npm" && cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
@@ -179,15 +396,104 @@ jobs:
         # Web devices are not supported for the `flutter test` command yet. As a
         # workaround we can use the `flutter drive` command. Tracking issue:
         # https://github.com/flutter/flutter/issues/66264
+        # WASM web runs can hang after building but before the test harness
+        # connects. Retry from a clean browser/driver process set.
         run: |
-          chromedriver --port=4444 --trace-buffer-size=100000 &
           mv ./web/wasm_index.html ./web/index.html
-          flutter drive --target=./integration_test/e2e_test.dart --driver=./test_driver/integration_test.dart -d chrome --wasm --dart-define=CI=true | tee output.log
-          # We have to check the output for failed tests matching the string "[E]"
-          output=$(<output.log)
-          if [[ "$output" =~ \[E\] ]]; then
-          # You will see "All tests passed." in the logs even when tests failed.
-          echo "All tests did not pass. Please check the logs for more information."
-          exit 1
-          fi
+          cleanup_web_processes() {
+            pkill -f "Google Chrome" || true
+            pkill -f chrome_crashpad || true
+            pkill -x chromedriver || true
+            pkill -x dartvm || true
+            pkill -x dartaotruntime || true
+          }
+
+          run_tests() {
+            rm -f output.log
+            cleanup_web_processes
+            chromedriver --port=4444 --trace-buffer-size=100000 &
+            chromedriver_pid=$!
+            sleep 2
+
+            python3 - <<'PY'
+          import subprocess
+          import sys
+
+          def normalize_output(output):
+              if output is None:
+                  return ''
+              if isinstance(output, bytes):
+                  return output.decode(errors='replace')
+              return output
+
+          command = [
+              'flutter',
+              'drive',
+              '--target=./integration_test/e2e_test.dart',
+              '--driver=./test_driver/integration_test.dart',
+              '-d',
+              'chrome',
+              '--wasm',
+              '--dart-define=CI=true',
+          ]
+
+          try:
+              completed = subprocess.run(
+                  command,
+                  check=False,
+                  stdout=subprocess.PIPE,
+                  stderr=subprocess.STDOUT,
+                  text=True,
+                  timeout=300,
+              )
+          except subprocess.TimeoutExpired as error:
+              output = normalize_output(error.stdout)
+              print(output, end='')
+              with open('output.log', 'w') as file:
+                  file.write(output)
+              print('flutter drive timed out before completing WASM web tests.')
+              sys.exit(124)
+
+          output = normalize_output(completed.stdout)
+          print(output, end='')
+          with open('output.log', 'w') as file:
+              file.write(output)
+          sys.exit(completed.returncode)
+          PY
+            exit_code=$?
+            kill "$chromedriver_pid" 2>/dev/null || true
+            wait "$chromedriver_pid" 2>/dev/null || true
+            cleanup_web_processes
+
+            output=$(<output.log)
+            if [[ "$output" =~ \[E\] ]]; then
+              # You will see "All tests passed." in the logs even when tests failed.
+              echo "All tests did not pass. Please check the logs for more information."
+              return 2
+            fi
+            return $exit_code
+          }
+
+          max_attempts=2
+          for attempt in $(seq 1 "$max_attempts"); do
+            if run_tests; then
+              exit 0
+            fi
+            exit_code=$?
+            if [[ "$exit_code" == "2" || "$attempt" == "$max_attempts" ]]; then
+              exit "$exit_code"
+            fi
+            echo "Attempt $attempt failed before WASM tests completed. Retrying..."
+          done
         shell: bash
+      - name: Save Firestore Emulator Cache
+        # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
+        if: github.ref == 'refs/heads/main'
+        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        continue-on-error: true
+        with:
+          # The firebase emulators are pure javascript and java, OS-independent
+          enableCrossOsArchive: true
+          key: ${{ steps.firebase-emulator-cache.outputs.cache-primary-key }}
+          # Must match the restore path exactly
+          path: ~/.cache/firebase/emulators

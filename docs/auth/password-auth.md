@@ -73,13 +73,27 @@ try {
     password: password
   );
 } on FirebaseAuthException catch (e) {
-  if (e.code == 'user-not-found') {
+  if (e.code == 'invalid-credential') {
+    // Email or password is incorrect. Projects with email enumeration
+    // protection enabled (the default since September 2023) return this
+    // code instead of 'user-not-found' or 'wrong-password'.
+    print('Invalid email or password.');
+  } else if (e.code == 'user-not-found') {
+    // Only returned when email enumeration protection is disabled.
     print('No user found for that email.');
   } else if (e.code == 'wrong-password') {
+    // Only returned when email enumeration protection is disabled.
     print('Wrong password provided for that user.');
   }
 }
 ```
+
+Note: Since September 2023, Firebase enables
+[email enumeration protection](https://cloud.google.com/identity-platform/docs/admin/email-enumeration-protection)
+by default on new projects. With this feature enabled, `user-not-found` and
+`wrong-password` error codes are replaced by `invalid-credential` to prevent
+revealing whether an email address is registered. You can manage this setting in
+the Firebase console under **Authentication > Settings**.
 
 Caution: When a user uninstalls your app on iOS or macOS, the user's authentication
 state can persist between app re-installs, as the Firebase iOS SDK persists

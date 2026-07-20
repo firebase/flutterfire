@@ -5,6 +5,7 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:tests/firebase_options.dart';
@@ -101,11 +102,33 @@ void main() {
           parameters: {
             'foo': 'bar',
             'baz': 500,
-            // Lists are not supported
+            // Lists are not supported in parameters
             'items': [analyticsEventItem],
           },
         ),
         throwsA(isA<AssertionError>()),
+      );
+
+      // test logEvent with typed items parameter
+      await expectLater(
+        FirebaseAnalytics.instance.logEvent(
+          name: 'testing-items',
+          items: [analyticsEventItem],
+        ),
+        completes,
+      );
+
+      // test logEvent with both items and parameters
+      await expectLater(
+        FirebaseAnalytics.instance.logEvent(
+          name: 'testing-items-and-parameters',
+          items: [analyticsEventItem],
+          parameters: {
+            'foo': 'bar',
+            'baz': 500,
+          },
+        ),
+        completes,
       );
 
       // test 3 reserved events
@@ -170,6 +193,27 @@ void main() {
       );
     });
 
+    test(
+      'logInAppPurchase',
+      () async {
+        await expectLater(
+          FirebaseAnalytics.instance.logInAppPurchase(
+            currency: 'USD',
+            freeTrial: false,
+            price: 4.99,
+            priceIsDiscounted: false,
+            productID: 'com.example.product',
+            productName: 'Example Product',
+            quantity: 1,
+            subscription: true,
+            value: 4.99,
+          ),
+          completes,
+        );
+      },
+      skip: defaultTargetPlatform != TargetPlatform.iOS,
+    );
+
     test('setUserId', () async {
       await expectLater(
         FirebaseAnalytics.instance.setUserId(id: 'foo'),
@@ -177,10 +221,12 @@ void main() {
       );
     });
 
-    test('setCurrentScreen', () async {
+    test('logScreenView', () async {
       await expectLater(
-        // ignore: deprecated_member_use
-        FirebaseAnalytics.instance.setCurrentScreen(screenName: 'screen-name'),
+        FirebaseAnalytics.instance.logScreenView(
+          screenName: 'screen-name',
+          screenClass: 'TestScreen',
+        ),
         completes,
       );
     });
@@ -333,5 +379,45 @@ void main() {
       },
       skip: kIsWeb || defaultTargetPlatform != TargetPlatform.iOS,
     );
+
+    group('logTransaction', () {
+      test(
+        'throws when transactionId is not a valid numeric string',
+        () async {
+          await expectLater(
+            FirebaseAnalytics.instance.logTransaction('not_a_number'),
+            throwsA(
+              isA<PlatformException>().having(
+                (e) => e.message,
+                'message',
+                'Invalid transactionId',
+              ),
+            ),
+          );
+        },
+        skip: kIsWeb ||
+            (defaultTargetPlatform != TargetPlatform.iOS &&
+                defaultTargetPlatform != TargetPlatform.macOS),
+      );
+
+      test(
+        'throws when transactionId is valid format but transaction not found in StoreKit',
+        () async {
+          await expectLater(
+            FirebaseAnalytics.instance.logTransaction('12345'),
+            throwsA(
+              isA<PlatformException>().having(
+                (e) => e.message,
+                'message',
+                'Transaction not found',
+              ),
+            ),
+          );
+        },
+        skip: kIsWeb ||
+            (defaultTargetPlatform != TargetPlatform.iOS &&
+                defaultTargetPlatform != TargetPlatform.macOS),
+      );
+    });
   });
 }

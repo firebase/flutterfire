@@ -35,22 +35,22 @@ public class FlutterFirebaseCorePlugin
 
   @Override
   public void onAttachedToEngine(FlutterPluginBinding binding) {
-    GeneratedAndroidFirebaseCore.FirebaseCoreHostApi.setup(binding.getBinaryMessenger(), this);
-    GeneratedAndroidFirebaseCore.FirebaseAppHostApi.setup(binding.getBinaryMessenger(), this);
+    GeneratedAndroidFirebaseCore.FirebaseCoreHostApi.setUp(binding.getBinaryMessenger(), this);
+    GeneratedAndroidFirebaseCore.FirebaseAppHostApi.setUp(binding.getBinaryMessenger(), this);
     applicationContext = binding.getApplicationContext();
   }
 
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
     applicationContext = null;
-    GeneratedAndroidFirebaseCore.FirebaseCoreHostApi.setup(binding.getBinaryMessenger(), null);
-    GeneratedAndroidFirebaseCore.FirebaseAppHostApi.setup(binding.getBinaryMessenger(), null);
+    GeneratedAndroidFirebaseCore.FirebaseCoreHostApi.setUp(binding.getBinaryMessenger(), null);
+    GeneratedAndroidFirebaseCore.FirebaseAppHostApi.setUp(binding.getBinaryMessenger(), null);
   }
 
-  private GeneratedAndroidFirebaseCore.PigeonFirebaseOptions firebaseOptionsToMap(
+  private GeneratedAndroidFirebaseCore.CoreFirebaseOptions firebaseOptionsToMap(
       FirebaseOptions options) {
-    GeneratedAndroidFirebaseCore.PigeonFirebaseOptions.Builder firebaseOptions =
-        new GeneratedAndroidFirebaseCore.PigeonFirebaseOptions.Builder();
+    GeneratedAndroidFirebaseCore.CoreFirebaseOptions.Builder firebaseOptions =
+        new GeneratedAndroidFirebaseCore.CoreFirebaseOptions.Builder();
 
     firebaseOptions.setApiKey(options.getApiKey());
     firebaseOptions.setAppId(options.getApplicationId());
@@ -63,20 +63,23 @@ public class FlutterFirebaseCorePlugin
     firebaseOptions.setDatabaseURL(options.getDatabaseUrl());
     firebaseOptions.setStorageBucket(options.getStorageBucket());
     firebaseOptions.setTrackingId(options.getGaTrackingId());
+    if (options.getRecaptchaSiteKey() != null) {
+      firebaseOptions.setRecaptchaSiteKey(options.getRecaptchaSiteKey());
+    }
 
     return firebaseOptions.build();
   }
 
-  private Task<GeneratedAndroidFirebaseCore.PigeonInitializeResponse> firebaseAppToMap(
+  private Task<GeneratedAndroidFirebaseCore.CoreInitializeResponse> firebaseAppToMap(
       FirebaseApp firebaseApp) {
-    TaskCompletionSource<GeneratedAndroidFirebaseCore.PigeonInitializeResponse>
-        taskCompletionSource = new TaskCompletionSource<>();
+    TaskCompletionSource<GeneratedAndroidFirebaseCore.CoreInitializeResponse> taskCompletionSource =
+        new TaskCompletionSource<>();
 
     cachedThreadPool.execute(
         () -> {
           try {
-            GeneratedAndroidFirebaseCore.PigeonInitializeResponse.Builder initializeResponse =
-                new GeneratedAndroidFirebaseCore.PigeonInitializeResponse.Builder();
+            GeneratedAndroidFirebaseCore.CoreInitializeResponse.Builder initializeResponse =
+                new GeneratedAndroidFirebaseCore.CoreInitializeResponse.Builder();
 
             initializeResponse.setName(firebaseApp.getName());
             initializeResponse.setOptions(firebaseOptionsToMap(firebaseApp.getOptions()));
@@ -111,14 +114,30 @@ public class FlutterFirebaseCorePlugin
             });
   }
 
+  private void listenToVoidResponse(
+      TaskCompletionSource<Void> taskCompletionSource,
+      GeneratedAndroidFirebaseCore.VoidResult result) {
+    taskCompletionSource
+        .getTask()
+        .addOnCompleteListener(
+            task -> {
+              if (task.isSuccessful()) {
+                result.success();
+              } else {
+                Exception exception = task.getException();
+                result.error(exception);
+              }
+            });
+  }
+
   @Override
   public void initializeApp(
       @NonNull String appName,
-      @NonNull GeneratedAndroidFirebaseCore.PigeonFirebaseOptions initializeAppRequest,
-      GeneratedAndroidFirebaseCore.Result<GeneratedAndroidFirebaseCore.PigeonInitializeResponse>
+      @NonNull GeneratedAndroidFirebaseCore.CoreFirebaseOptions initializeAppRequest,
+      GeneratedAndroidFirebaseCore.Result<GeneratedAndroidFirebaseCore.CoreInitializeResponse>
           result) {
-    TaskCompletionSource<GeneratedAndroidFirebaseCore.PigeonInitializeResponse>
-        taskCompletionSource = new TaskCompletionSource<>();
+    TaskCompletionSource<GeneratedAndroidFirebaseCore.CoreInitializeResponse> taskCompletionSource =
+        new TaskCompletionSource<>();
 
     cachedThreadPool.execute(
         () -> {
@@ -133,10 +152,13 @@ public class FlutterFirebaseCorePlugin
                     .setProjectId(initializeAppRequest.getProjectId())
                     .setStorageBucket(initializeAppRequest.getStorageBucket())
                     .setGaTrackingId(initializeAppRequest.getTrackingId())
+                    .setRecaptchaSiteKey(initializeAppRequest.getRecaptchaSiteKey())
                     .build();
             // TODO(Salakar) hacky workaround a bug with FirebaseInAppMessaging causing the error:
-            //    Can't create handler inside thread Thread[pool-3-thread-1,5,main] that has not called Looper.prepare()
-            //     at com.google.firebase.inappmessaging.internal.ForegroundNotifier.<init>(ForegroundNotifier.java:61)
+            //    Can't create handler inside thread Thread[pool-3-thread-1,5,main] that has not
+            // called Looper.prepare()
+            //     at
+            // com.google.firebase.inappmessaging.internal.ForegroundNotifier.<init>(ForegroundNotifier.java:61)
             try {
               Looper.prepare();
             } catch (Exception e) {
@@ -160,10 +182,9 @@ public class FlutterFirebaseCorePlugin
 
   @Override
   public void initializeCore(
-      GeneratedAndroidFirebaseCore.Result<
-              List<GeneratedAndroidFirebaseCore.PigeonInitializeResponse>>
+      GeneratedAndroidFirebaseCore.Result<List<GeneratedAndroidFirebaseCore.CoreInitializeResponse>>
           result) {
-    TaskCompletionSource<List<GeneratedAndroidFirebaseCore.PigeonInitializeResponse>>
+    TaskCompletionSource<List<GeneratedAndroidFirebaseCore.CoreInitializeResponse>>
         taskCompletionSource = new TaskCompletionSource<>();
 
     cachedThreadPool.execute(
@@ -176,7 +197,7 @@ public class FlutterFirebaseCorePlugin
             }
 
             List<FirebaseApp> firebaseApps = FirebaseApp.getApps(applicationContext);
-            List<GeneratedAndroidFirebaseCore.PigeonInitializeResponse> firebaseAppsList =
+            List<GeneratedAndroidFirebaseCore.CoreInitializeResponse> firebaseAppsList =
                 new ArrayList<>(firebaseApps.size());
 
             for (FirebaseApp firebaseApp : firebaseApps) {
@@ -194,9 +215,9 @@ public class FlutterFirebaseCorePlugin
 
   @Override
   public void optionsFromResource(
-      GeneratedAndroidFirebaseCore.Result<GeneratedAndroidFirebaseCore.PigeonFirebaseOptions>
+      GeneratedAndroidFirebaseCore.Result<GeneratedAndroidFirebaseCore.CoreFirebaseOptions>
           result) {
-    TaskCompletionSource<GeneratedAndroidFirebaseCore.PigeonFirebaseOptions> taskCompletionSource =
+    TaskCompletionSource<GeneratedAndroidFirebaseCore.CoreFirebaseOptions> taskCompletionSource =
         new TaskCompletionSource<>();
 
     cachedThreadPool.execute(
@@ -206,7 +227,8 @@ public class FlutterFirebaseCorePlugin
             if (options == null) {
               taskCompletionSource.setException(
                   new Exception(
-                      "Failed to load FirebaseOptions from resource. Check that you have defined values.xml correctly."));
+                      "Failed to load FirebaseOptions from resource. Check that you have defined"
+                          + " values.xml correctly."));
               return;
             }
             taskCompletionSource.setResult(firebaseOptionsToMap(options));
@@ -222,7 +244,7 @@ public class FlutterFirebaseCorePlugin
   public void setAutomaticDataCollectionEnabled(
       @NonNull String appName,
       @NonNull Boolean enabled,
-      GeneratedAndroidFirebaseCore.Result<Void> result) {
+      GeneratedAndroidFirebaseCore.VoidResult result) {
     TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
 
     cachedThreadPool.execute(
@@ -237,14 +259,14 @@ public class FlutterFirebaseCorePlugin
           }
         });
 
-    listenToResponse(taskCompletionSource, result);
+    listenToVoidResponse(taskCompletionSource, result);
   }
 
   @Override
   public void setAutomaticResourceManagementEnabled(
       @NonNull String appName,
       @NonNull Boolean enabled,
-      GeneratedAndroidFirebaseCore.Result<Void> result) {
+      GeneratedAndroidFirebaseCore.VoidResult result) {
     TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
 
     cachedThreadPool.execute(
@@ -259,29 +281,27 @@ public class FlutterFirebaseCorePlugin
           }
         });
 
-    listenToResponse(taskCompletionSource, result);
+    listenToVoidResponse(taskCompletionSource, result);
   }
 
   @Override
-  public void delete(@NonNull String appName, GeneratedAndroidFirebaseCore.Result<Void> result) {
+  public void delete(@NonNull String appName, GeneratedAndroidFirebaseCore.VoidResult result) {
     TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
 
     cachedThreadPool.execute(
         () -> {
           try {
             FirebaseApp firebaseApp = FirebaseApp.getInstance(appName);
-            try {
-              firebaseApp.delete();
-            } catch (IllegalStateException appNotFoundException) {
-              // Ignore app not found exceptions.
-            }
-
+            firebaseApp.delete();
+            taskCompletionSource.setResult(null);
+          } catch (IllegalStateException appNotFoundException) {
+            // Ignore app not found exceptions.
             taskCompletionSource.setResult(null);
           } catch (Exception e) {
             taskCompletionSource.setException(e);
           }
         });
 
-    listenToResponse(taskCompletionSource, result);
+    listenToVoidResponse(taskCompletionSource, result);
   }
 }

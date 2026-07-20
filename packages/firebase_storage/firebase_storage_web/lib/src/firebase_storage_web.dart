@@ -11,6 +11,7 @@ import 'package:firebase_storage_platform_interface/firebase_storage_platform_in
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:meta/meta.dart';
 
+import 'firebase_storage_version.dart';
 import 'interop/storage.dart' as storage_interop;
 import 'reference_web.dart';
 import 'utils/errors.dart';
@@ -27,17 +28,18 @@ class FirebaseStorageWeb extends FirebaseStoragePlatform {
       : _bucket = bucket,
         super(appInstance: app, bucket: bucket);
 
-  // Empty constructor. This is only used by the registerWith method.
-  // superclass also needs to be initialized and 'bucket' param is required.
-  FirebaseStorageWeb._nullInstance()
-      : _webStorage = null,
-        super(bucket: '');
-
   /// Create a FirebaseStorageWeb injecting a [fb.Storage] object.
   @visibleForTesting
   FirebaseStorageWeb.forMock(this._webStorage,
       {required String bucket, FirebaseApp? app})
       : super(appInstance: app, bucket: bucket);
+
+  // Empty constructor. This is only used by the registerWith method.
+  // superclass also needs to be initialized and 'bucket' param is required.
+  FirebaseStorageWeb._nullInstance()
+      : _webStorage = null,
+        super(bucket: '');
+  static const String _libraryName = 'flutter-fire-gcs';
 
   /// The js-interop layer for Firebase Storage
   storage_interop.Storage? _webStorage;
@@ -59,6 +61,8 @@ class FirebaseStorageWeb extends FirebaseStoragePlatform {
 
   /// Called by PluginRegistry to register this plugin for Flutter Web.
   static void registerWith(Registrar registrar) {
+    FirebaseCoreWeb.registerLibraryVersion(_libraryName, packageVersion);
+
     FirebaseCoreWeb.registerService('storage');
     FirebaseStoragePlatform.instance = FirebaseStorageWeb._nullInstance();
   }

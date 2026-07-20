@@ -44,15 +44,53 @@ void main() {
         () => convertPlatformException(platformException, StackTrace.empty),
         throwsA(
           isA<FirebaseAuthException>()
-              .having((e) => e.code, 'code', 'BLOCKING_FUNCTION_ERROR_RESPONSE')
+              .having((e) => e.code, 'code', 'blocking-function-error-response')
               .having((e) => e.message, 'message',
                   '{"error":{"details":"The user is not allowed to log in","message":"","status":"PERMISSION_DENIED"}}'),
+        ),
+      );
+    });
+
+    test('should catch a [PlatformException] with non-Map details', () async {
+      PlatformException platformException = PlatformException(
+        code: 'ERROR_INTERNAL_ERROR',
+        message: 'An internal error has occurred',
+        details: 'Native error details',
+      );
+
+      expect(
+        () => convertPlatformException(platformException, StackTrace.empty),
+        throwsA(
+          isA<FirebaseAuthException>()
+              .having((e) => e.code, 'code', 'internal-error')
+              .having(
+                (e) => e.message,
+                'message',
+                'An internal error has occurred',
+              ),
         ),
       );
     });
   });
 
   group('platformExceptionToFirebaseAuthException()', () {
+    test('handles non-Map pigeon details', () {
+      PlatformException platformException = PlatformException(
+        code: 'ERROR_INTERNAL_ERROR',
+        message: 'An internal error has occurred',
+        details: 'Native error details',
+      );
+
+      FirebaseAuthException result = platformExceptionToFirebaseAuthException(
+        platformException,
+      ) as FirebaseAuthException;
+
+      expect(result.code, equals('internal-error'));
+      expect(result.message, equals('An internal error has occurred'));
+      expect(result.email, isNull);
+      expect(result.credential, isNull);
+    });
+
     test('sets code to default value', () {
       AuthCredential authCredential = const AuthCredential(
         providerId: 'testProviderId',

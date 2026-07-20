@@ -1,0 +1,768 @@
+// Copyright 2025 Google LLC
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+import 'package:flutter/material.dart';
+import 'package:firebase_ai/firebase_ai.dart';
+
+import '../utils/function_call_utils.dart';
+import '../widgets/message_widget.dart';
+
+class FunctionCallingPage extends StatefulWidget {
+  const FunctionCallingPage({
+    super.key,
+    required this.title,
+    required this.useVertexBackend,
+  });
+
+  final String title;
+  final bool useVertexBackend;
+
+  @override
+  State<FunctionCallingPage> createState() => _FunctionCallingPageState();
+}
+
+class _FunctionCallingPageState extends State<FunctionCallingPage> {
+  late GenerativeModel _functionCallModel;
+  late GenerativeModel _autoFunctionCallModel;
+  late GenerativeModel _parallelAutoFunctionCallModel;
+  late GenerativeModel _complexSchemaModel;
+  late GenerativeModel _refDefJsonSchemaModel;
+  late GenerativeModel _codeExecutionModel;
+  late final AutoFunctionDeclaration _autoFetchWeatherTool;
+  late final AutoFunctionDeclaration _autoPlanVacationTool;
+  late final AutoFunctionDeclaration _autoProcessTransactionTool;
+  final List<MessageData> _messages = <MessageData>[];
+  bool _loading = false;
+  bool _enableThinking = false;
+
+  late final AutoFunctionDeclaration _autoFindRestaurantsTool;
+  late final AutoFunctionDeclaration _autoGetRestaurantMenuTool;
+
+  @override
+  void initState() {
+    super.initState();
+    _autoFetchWeatherTool = AutoFunctionDeclaration(
+      name: 'autofetchWeather',
+      description:
+          'Get the weather conditions for a specific city on a specific date.',
+      parameters: {
+        'location': Schema.object(
+          description:
+              'The name of the city and its state for which to get the weather. Only cities in the USA are supported.',
+          properties: {
+            'city': Schema.string(
+              description: 'The city of the location.',
+            ),
+            'state': Schema.string(
+              description: 'The state of the location.',
+            ),
+          },
+        ),
+        'date': Schema.string(
+          description:
+              'The date for which to get the weather. Date must be in the format: YYYY-MM-DD.',
+        ),
+      },
+      callable: fetchWeatherCallable,
+    );
+    _autoFindRestaurantsTool = AutoFunctionDeclaration(
+      name: 'findRestaurants',
+      description: 'Find restaurants of a certain cuisine in a given location.',
+      parameters: {
+        'cuisine': Schema.string(
+          description: 'The cuisine of the restaurant.',
+        ),
+        'location': Schema.string(
+          description:
+              'The location to search for restaurants. e.g. San Francisco, CA',
+        ),
+      },
+      callable: (args) async {
+        final cuisine = args['cuisine'];
+        final location = args['location'];
+        if (cuisine is String && location is String) {
+          return findRestaurants(cuisine, location);
+        }
+        // It's good practice to handle cases where arguments are missing or have the wrong type.
+        throw Exception('Missing or invalid arguments for findRestaurants');
+      },
+    );
+    _autoGetRestaurantMenuTool = AutoFunctionDeclaration(
+      name: 'getRestaurantMenu',
+      description: 'Get the menu for a specific restaurant.',
+      parameters: {
+        'restaurantName': Schema.string(
+          description: 'The name of the restaurant.',
+        ),
+      },
+      callable: (args) async {
+        final restaurantName = args['restaurantName']! as String;
+        return getRestaurantMenu(restaurantName);
+      },
+    );
+    _autoPlanVacationTool = AutoFunctionDeclaration(
+      name: 'planVacation',
+      description:
+          'Plans a complex vacation itinerary combining flights, hotels, and activities.',
+      parameters: {
+        'destination':
+            Schema.string(description: 'The city or country to travel to.'),
+        'travelers': Schema.integer(
+          description: 'Number of travelers.',
+          minimum: 1,
+          maximum: 10,
+        ),
+        'travelClass': Schema.enumString(
+          enumValues: ['ECONOMY', 'BUSINESS', 'FIRST'],
+          description: 'The preferred travel class.',
+        ),
+        'budget':
+            Schema.number(description: 'Total budget for the trip in USD.'),
+        'activities': Schema.array(
+          items: Schema.string(),
+          description: 'A list of preferred activities.',
+          minItems: 1,
+        ),
+        'accommodations': Schema.object(
+          description: 'Hotel preferences.',
+          properties: {
+            'hotelType': Schema.string(),
+            'stars': Schema.integer(minimum: 1, maximum: 5),
+            'amenities': Schema.array(items: Schema.string()),
+          },
+          optionalProperties: ['amenities'],
+        ),
+      },
+      callable: (args) async {
+        return {
+          'status': 'SUCCESS',
+          'itineraryId': 'TRIP-98765',
+          'destination': args['destination'],
+          'estimatedCost': 3500.0,
+          'message': 'Vacation planned successfully!',
+        };
+      },
+    );
+    _autoProcessTransactionTool = AutoFunctionDeclaration(
+      name: 'processTransactions',
+      description:
+          'Processes a list of financial transactions using a predefined transaction model reference.',
+      parameters: {
+        'transactionsBlock': JSONSchema.object(
+          description: 'A block containing a list of transactions.',
+          properties: {
+            'transactionsList': JSONSchema.array(
+              items: JSONSchema.ref(
+                r'#/properties/transactionsBlock/$defs/transactionDef',
+              ),
+            ),
+          },
+          defs: {
+            'transactionDef': JSONSchema.object(
+              properties: {
+                'amount': JSONSchema.number(),
+                'transactionId': JSONSchema.integer(),
+                'currency': JSONSchema.string(),
+              },
+            ),
+          },
+        ),
+      },
+      callable: (args) async {
+        final block = args['transactionsBlock'] as Map<String, dynamic>?;
+        final list = block?['transactionsList'] as List<dynamic>?;
+        return {
+          'status': 'SUCCESS',
+          'transactionsProcessed': list?.length ?? 0,
+          'message':
+              'Transactions processed successfully using the reference schema!',
+        };
+      },
+    );
+    _initializeModel();
+  }
+
+  Future<Map<String, Object?>> findRestaurants(
+    String cuisine,
+    String location,
+  ) async {
+    // This is a mock response.
+    return {
+      'restaurants': [
+        {
+          'name': 'The Golden Spoon',
+          'cuisine': 'Vegetarian',
+          'location': 'San Francisco, CA',
+        },
+        {
+          'name': 'Green Leaf Bistro',
+          'cuisine': 'Vegetarian',
+          'location': 'San Francisco, CA',
+        },
+      ],
+    };
+  }
+
+  Future<Map<String, Object?>> getRestaurantMenu(String restaurantName) async {
+    // This is a mock response.
+    return {
+      'menu': [
+        {'name': 'Lentil Soup', 'price': '8.99'},
+        {'name': 'Garden Salad', 'price': '10.99'},
+        {'name': 'Mushroom Risotto', 'price': '15.99'},
+      ],
+    };
+  }
+
+  void _initializeModel() {
+    final generationConfig = GenerationConfig(
+      thinkingConfig: _enableThinking
+          ? ThinkingConfig.withThinkingLevel(
+              ThinkingLevel.high,
+              includeThoughts: true,
+            )
+          : null,
+    );
+
+    final aiClient = widget.useVertexBackend
+        ? FirebaseAI.vertexAI(location: 'global')
+        : FirebaseAI.googleAI();
+
+    _functionCallModel = aiClient.generativeModel(
+      model: 'gemini-3.1-flash-lite',
+      generationConfig: generationConfig,
+      tools: [
+        Tool.functionDeclarations([fetchWeatherTool]),
+      ],
+    );
+    _autoFunctionCallModel = aiClient.generativeModel(
+      model: 'gemini-3.1-flash-lite',
+      generationConfig: generationConfig,
+      tools: [
+        Tool.functionDeclarations([_autoFetchWeatherTool]),
+      ],
+    );
+    _parallelAutoFunctionCallModel = aiClient.generativeModel(
+      model: 'gemini-3.1-flash-lite',
+      generationConfig: generationConfig,
+      tools: [
+        Tool.functionDeclarations(
+          [_autoFindRestaurantsTool, _autoGetRestaurantMenuTool],
+        ),
+      ],
+    );
+    _codeExecutionModel = aiClient.generativeModel(
+      model: 'gemini-3.1-flash-lite',
+      generationConfig: generationConfig,
+      tools: [
+        Tool.codeExecution(),
+      ],
+    );
+    _complexSchemaModel = aiClient.generativeModel(
+      model: 'gemini-3.1-flash-lite',
+      generationConfig: generationConfig,
+      tools: [
+        Tool.functionDeclarations([_autoPlanVacationTool]),
+      ],
+    );
+    _refDefJsonSchemaModel = aiClient.generativeModel(
+      model: 'gemini-3.1-flash-lite',
+      generationConfig: generationConfig,
+      tools: [
+        Tool.functionDeclarations([_autoProcessTransactionTool]),
+      ],
+    );
+  }
+
+  /// Actual function to demonstrate the function calling feature.
+  final fetchWeatherTool = FunctionDeclaration(
+    'fetchWeather',
+    'Get the weather conditions for a specific city on a specific date.',
+    parameters: {
+      'location': Schema.object(
+        description: 'The name of the city and its state for which to get '
+            'the weather. Only cities in the USA are supported.',
+        properties: {
+          'city': Schema.string(
+            description: 'The city of the location.',
+          ),
+          'state': Schema.string(
+            description: 'The state of the location.',
+          ),
+        },
+      ),
+      'date': Schema.string(
+        description: 'The date for which to get the weather. '
+            'Date must be in the format: YYYY-MM-DD.',
+      ),
+    },
+  );
+
+  Future<Map<String, Object?>> _executeFunctionCall(FunctionCall call) async {
+    if (call.name == 'fetchWeather') {
+      final location = call.args['location']! as Map<String, dynamic>;
+      final date = call.args['date']! as String;
+      final city = location['city'] as String;
+      final state = location['state'] as String;
+      return fetchWeather(Location(city, state), date);
+    }
+    throw UnimplementedError(
+      'Function not declared to the model: ${call.name}',
+    );
+  }
+
+  Future<void> _runTest(Future<void> Function() testBody) async {
+    if (_loading) return;
+    setState(() {
+      _loading = true;
+      _messages.clear();
+    });
+    try {
+      await testBody();
+    } catch (e) {
+      _showError(e.toString());
+    } finally {
+      setState(() {
+        _loading = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SwitchListTile(
+              title: const Text('Enable Thinking'),
+              value: _enableThinking,
+              onChanged: (bool value) {
+                setState(() {
+                  _enableThinking = value;
+                  _initializeModel();
+                });
+              },
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemBuilder: (context, idx) {
+                  final message = _messages[idx];
+                  return MessageWidget(
+                    text: message.text,
+                    isFromUser: message.fromUser ?? false,
+                    isThought: message.isThought,
+                  );
+                },
+                itemCount: _messages.length,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: 25,
+                horizontal: 15,
+              ),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: !_loading ? _testFunctionCalling : null,
+                          child: const Text('Manual FC'),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: !_loading ? _testCodeExecution : null,
+                          child: const Text('Code Execution'),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed:
+                              !_loading ? _testAutoFunctionCalling : null,
+                          child: const Text('Auto Function Calling'),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: !_loading
+                              ? () => _testAutoFunctionCalling(parallel: true)
+                              : null,
+                          child: const Text('Parallel Auto FC'),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed:
+                              !_loading ? _testStreamFunctionCalling : null,
+                          child: const Text('Stream FC'),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed:
+                              !_loading ? _testAutoStreamFunctionCalling : null,
+                          child: const Text('Auto Stream FC'),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: !_loading
+                              ? _testComplexSchemaAutoFunctionCalling
+                              : null,
+                          child: const Text('Complex Schema Auto FC'),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: !_loading
+                              ? _testRefDefJsonSchemaAutoFunctionCalling
+                              : null,
+                          child: const Text('Ref Def JSON Schema Auto FC'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _testAutoFunctionCalling({bool parallel = false}) async {
+    await _runTest(() async {
+      final model =
+          parallel ? _parallelAutoFunctionCallModel : _autoFunctionCallModel;
+      final prompt = parallel
+          ? 'Find me a good vegetarian restaurant in San Francisco and get its menu.'
+          : 'What is the weather like in Boston, MA on 10/02 in year 2024?';
+
+      final autoFunctionCallChat = model.startChat();
+
+      _messages.add(MessageData(text: prompt, fromUser: true));
+      setState(() {});
+
+      // Send the message to the generative model.
+      final response = await autoFunctionCallChat.sendMessage(
+        Content.text(prompt),
+      );
+
+      final thought = response.thoughtSummary;
+      if (thought != null) {
+        _messages
+            .add(MessageData(text: thought, fromUser: false, isThought: true));
+      }
+
+      // The SDK should have handled the function call automatically.
+      // The final response should contain the text from the model.
+      if (response.text case final text?) {
+        _messages.add(MessageData(text: text));
+      } else {
+        _messages.add(MessageData(text: 'No text response from model.'));
+      }
+    });
+  }
+
+  Future<void> _testStreamFunctionCalling() async {
+    await _runTest(() async {
+      final functionCallChat = _functionCallModel.startChat();
+      const prompt =
+          'What is the weather like in Boston, MA on 10/02 in year 2024?';
+
+      _messages.add(MessageData(text: prompt, fromUser: true));
+      setState(() {});
+
+      // Send the message to the generative model.
+      final responseStream = functionCallChat.sendMessageStream(
+        Content.text(prompt),
+      );
+
+      GenerateContentResponse? lastResponse;
+      await for (final response in responseStream) {
+        lastResponse = response;
+        final thought = response.thoughtSummary;
+        if (thought != null) {
+          _messages.add(
+            MessageData(text: thought, fromUser: false, isThought: true),
+          );
+          setState(() {});
+        }
+      }
+
+      final functionCalls = lastResponse?.functionCalls.toList();
+      // When the model response with a function call, invoke the function.
+      if (functionCalls != null && functionCalls.isNotEmpty) {
+        final functionCall = functionCalls.first;
+        final functionResult = await _executeFunctionCall(functionCall);
+        // Send the response to the model so that it can use the result to
+        // generate text for the user.
+        final responseStream2 = functionCallChat.sendMessageStream(
+          Content.functionResponse(functionCall.name, functionResult),
+        );
+
+        var accumulatedText = '';
+        _messages.add(MessageData(text: accumulatedText));
+        setState(() {});
+
+        await for (final response in responseStream2) {
+          if (response.text case final text?) {
+            accumulatedText += text;
+            _messages.last = _messages.last.copyWith(text: accumulatedText);
+            setState(() {});
+          }
+        }
+      } else if (lastResponse?.text case final text?) {
+        // This would be if no function call was returned.
+        _messages.add(MessageData(text: text));
+        setState(() {});
+      } else {
+        _messages.add(MessageData(text: 'No text response from model.'));
+      }
+    });
+  }
+
+  Future<void> _testAutoStreamFunctionCalling() async {
+    await _runTest(() async {
+      final autoFunctionCallChat = _autoFunctionCallModel.startChat();
+      const prompt =
+          'Tell a bedtime story, and in the end show what is the weather like in Boston, MA on 10/02 in year 2024?';
+
+      _messages.add(MessageData(text: prompt, fromUser: true));
+      setState(() {});
+
+      // Send the message to the generative model.
+      final responseStream = autoFunctionCallChat.sendMessageStream(
+        Content.text(prompt),
+      );
+
+      var accumulatedText = '';
+      MessageData? modelMessage;
+
+      await for (final response in responseStream) {
+        final thought = response.thoughtSummary;
+        if (thought != null) {
+          _messages.add(
+            MessageData(text: thought, fromUser: false, isThought: true),
+          );
+          setState(() {});
+        }
+
+        // The SDK should have handled the function call automatically.
+        // The final response should contain the text from the model.
+        if (response.text case final text?) {
+          accumulatedText += text;
+          if (modelMessage == null) {
+            modelMessage = MessageData(text: accumulatedText);
+            _messages.add(modelMessage);
+          } else {
+            modelMessage = modelMessage.copyWith(text: accumulatedText);
+            _messages.last = modelMessage;
+          }
+          setState(() {});
+        }
+      }
+
+      if (accumulatedText.isEmpty) {
+        _messages.add(MessageData(text: 'No text response from model.'));
+        setState(() {});
+      }
+    });
+  }
+
+  Future<void> _testFunctionCalling() async {
+    await _runTest(() async {
+      final functionCallChat = _functionCallModel.startChat();
+      const prompt =
+          'What is the weather like in Boston, MA on 10/02 in year 2024?';
+
+      _messages.add(MessageData(text: prompt, fromUser: true));
+      setState(() {});
+
+      // Send the message to the generative model.
+      var response = await functionCallChat.sendMessage(
+        Content.text(prompt),
+      );
+
+      final thought = response.thoughtSummary;
+      if (thought != null) {
+        _messages
+            .add(MessageData(text: thought, fromUser: false, isThought: true));
+      }
+
+      final functionCalls = response.functionCalls.toList();
+      // When the model response with a function call, invoke the function.
+      if (functionCalls.isNotEmpty) {
+        final functionCall = functionCalls.first;
+        final functionResult = await _executeFunctionCall(functionCall);
+        // Send the response to the model so that it can use the result to
+        // generate text for the user.
+        response = await functionCallChat.sendMessage(
+          Content.functionResponse(functionCall.name, functionResult),
+        );
+      }
+      // When the model responds with non-null text content, print it.
+      if (response.text case final text?) {
+        _messages.add(MessageData(text: text));
+      }
+    });
+  }
+
+  Future<void> _testCodeExecution() async {
+    await _runTest(() async {
+      final codeExecutionChat = _codeExecutionModel.startChat();
+      const prompt = 'What is the sum of the first 50 prime numbers? '
+          'Generate and run code for the calculation, and make sure you get all 50.';
+
+      _messages.add(MessageData(text: prompt, fromUser: true));
+      setState(() {});
+
+      final response =
+          await codeExecutionChat.sendMessage(Content.text(prompt));
+
+      final thought = response.thoughtSummary;
+      if (thought != null) {
+        _messages
+            .add(MessageData(text: thought, fromUser: false, isThought: true));
+      }
+
+      final buffer = StringBuffer();
+      for (final part in response.candidates.first.content.parts) {
+        if (part is ExecutableCodePart) {
+          buffer.writeln('Executable Code:');
+          buffer.writeln('Language: ${part.language}');
+          buffer.writeln('Code:');
+          buffer.writeln(part.code);
+        } else if (part is CodeExecutionResultPart) {
+          buffer.writeln('Code Execution Result:');
+          buffer.writeln('Outcome: ${part.outcome}');
+          buffer.writeln('Output:');
+          buffer.writeln(part.output);
+        } else if (part is TextPart) {
+          buffer.writeln(part.text);
+        }
+      }
+
+      if (buffer.isNotEmpty) {
+        _messages.add(
+          MessageData(
+            text: buffer.toString(),
+            fromUser: false,
+          ),
+        );
+      }
+    });
+  }
+
+  Future<void> _testComplexSchemaAutoFunctionCalling() async {
+    await _runTest(() async {
+      final chat = _complexSchemaModel.startChat();
+      const prompt =
+          'I want to plan a vacation to Paris for 2 people. We want to fly Business class, our budget is 5500 USD. We want to do wine tasting and museum tours. We prefer a 4-star boutique hotel with free breakfast.';
+
+      _messages.add(MessageData(text: prompt, fromUser: true));
+      setState(() {});
+
+      final response = await chat.sendMessage(Content.text(prompt));
+
+      final thought = response.thoughtSummary;
+      if (thought != null) {
+        _messages
+            .add(MessageData(text: thought, fromUser: false, isThought: true));
+      }
+
+      if (response.text case final text?) {
+        _messages.add(MessageData(text: text));
+      } else {
+        _messages.add(MessageData(text: 'No text response from model.'));
+      }
+    });
+  }
+
+  Future<void> _testRefDefJsonSchemaAutoFunctionCalling() async {
+    await _runTest(() async {
+      final chat = _refDefJsonSchemaModel.startChat();
+      const prompt =
+          r'Process two transactions. The first is $50.00 in USD (ID 98765) and the second is €30.00 in EUR (ID 98766).';
+
+      _messages.add(MessageData(text: prompt, fromUser: true));
+      setState(() {});
+
+      final response = await chat.sendMessage(Content.text(prompt));
+
+      final thought = response.thoughtSummary;
+      if (thought != null) {
+        _messages
+            .add(MessageData(text: thought, fromUser: false, isThought: true));
+      }
+
+      if (response.text case final text?) {
+        _messages.add(MessageData(text: text));
+      } else {
+        _messages.add(MessageData(text: 'No text response from model.'));
+      }
+    });
+  }
+
+  void _showError(String message) {
+    showDialog<void>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Something went wrong'),
+          content: SingleChildScrollView(
+            child: SelectableText(message),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}

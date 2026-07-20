@@ -6,7 +6,7 @@
 part of '../firebase_auth.dart';
 
 /// The entry point of the Firebase Authentication SDK.
-class FirebaseAuth extends FirebasePluginPlatform {
+class FirebaseAuth extends FirebasePlugin implements FirebaseService {
   // Cached instances of [FirebaseAuth].
   static Map<String, FirebaseAuth> _firebaseAuthInstances = {};
 
@@ -43,14 +43,22 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// Returns an instance using a specified [FirebaseApp].
   factory FirebaseAuth.instanceFor({
     required FirebaseApp app,
-    @Deprecated(
-      'Will be removed in future release. Use setPersistence() instead.',
-    )
-    Persistence? persistence,
   }) {
     return _firebaseAuthInstances.putIfAbsent(app.name, () {
-      return FirebaseAuth._(app: app);
+      final instance = FirebaseAuth._(app: app);
+      app.registerService<FirebaseAuth>(
+        instance,
+        dispose: (auth) => auth._dispose(),
+      );
+      return instance;
     });
+  }
+
+  Future<void> _dispose() async {
+    _firebaseAuthInstances.remove(app.name);
+    final delegate = _delegatePackingProperty;
+    _delegatePackingProperty = null;
+    await delegate?.dispose();
   }
 
   /// Returns the current [User] if they are currently signed-in, or `null` if
@@ -214,14 +222,14 @@ class FirebaseAuth extends FirebasePluginPlatform {
   ///  - Thrown if the password is not strong enough.
   /// - **too-many-requests**:
   ///  - Thrown if the user sent too many requests at the same time, for security
-  ///     the api will not allow too many attemps at the same time, user will have
+  ///     the api will not allow too many attempts at the same time, user will have
   ///     to wait for some time
   /// - **user-token-expired**:
   ///  - Thrown if the user is no longer authenticated since his refresh token
   ///    has been expired
   /// - **network-request-failed**:
-  ///  - Thrown if there was a network request error, for example the user don't
-  ///    don't have internet connection
+  ///  - Thrown if there was a network request error, for example the user
+  ///    doesn't have internet connection
   /// - **operation-not-allowed**:
   ///  - Thrown if email/password accounts are not enabled. Enable
   ///    email/password accounts in the Firebase Console, under the Auth tab.
@@ -233,24 +241,6 @@ class FirebaseAuth extends FirebasePluginPlatform {
       this,
       await _delegate.createUserWithEmailAndPassword(email, password),
     );
-  }
-
-  /// Returns a list of sign-in methods that can be used to sign in a given
-  /// user (identified by its main email address).
-  ///
-  /// This method is useful when you support multiple authentication mechanisms
-  /// if you want to implement an email-first authentication flow.
-  ///
-  /// An empty `List` is returned if the user could not be found.
-  ///
-  /// A [FirebaseAuthException] maybe thrown with the following error code:
-  /// - **invalid-email**:
-  ///  - Thrown if the email address is not valid.
-  @Deprecated('fetchSignInMethodsForEmail() has been deprecated. '
-      'Migrating off of this method is recommended as a security best-practice. Learn more in the Identity Platform documentation: '
-      ' https://cloud.google.com/identity-platform/docs/admin/email-enumeration-protection.')
-  Future<List<String>> fetchSignInMethodsForEmail(String email) {
-    return _delegate.fetchSignInMethodsForEmail(email);
   }
 
   /// Returns a UserCredential from the redirect-based sign-in flow.
@@ -307,6 +297,10 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// To complete the password reset, call [confirmPasswordReset] with the code supplied
   /// in the email sent to the user, along with the new password specified by the user.
   ///
+  /// If email enumeration protection is enabled for the Firebase project, this
+  /// method may complete successfully even when the email does not correspond
+  /// to an existing user.
+  ///
   /// May throw a [FirebaseAuthException] with the following error codes:
   ///
   /// - **auth/invalid-email**\
@@ -322,7 +316,8 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// - **auth/unauthorized-continue-uri**\
   ///   The domain of the continue URL is not whitelisted. Whitelist the domain in the Firebase console.
   /// - **auth/user-not-found**\
-  ///   Thrown if there is no user corresponding to the email address. Note: This exception is no longer thrown when enabling email enumeration protection.
+  ///   Thrown if there is no user corresponding to the email address. Note: This
+  ///   exception is not thrown when email enumeration protection is enabled.
   Future<void> sendPasswordResetEmail({
     required String email,
     ActionCodeSettings? actionCodeSettings,
@@ -473,7 +468,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
   ///  - Thrown if there already exists an account with the email address
   ///    asserted by the credential.
   // ignore: deprecated_member_use_from_same_package
-  ///    Resolve this by calling [fetchSignInMethodsForEmail] and then asking
+  ///    Resolve this by asking
   ///    the user to sign in using one of the returned providers.
   ///    Once the user is signed in, the original credential can be linked to
   ///    the user with [linkWithCredential].
@@ -498,7 +493,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
   ///    verification code of the credential is not valid.
   /// - **invalid-verification-id**:
   ///  - Thrown if the credential is a [PhoneAuthProvider.credential] and the
-  ///    verification ID of the credential is not valid.id.
+  ///    verification ID of the credential is not valid.
   Future<UserCredential> signInWithCredential(AuthCredential credential) async {
     try {
       return UserCredential._(
@@ -557,26 +552,36 @@ class FirebaseAuth extends FirebasePluginPlatform {
   ///  - Thrown if the email address is not valid.
   /// - **user-disabled**:
   ///  - Thrown if the user corresponding to the given email has been disabled.
-  /// - **user-not-found**:
+  /// - **user-not-found** _(deprecated)_:
   ///  - Thrown if there is no user corresponding to the given email.
-  /// - **wrong-password**:
+  ///    **Note:** This code is no longer returned on projects that have
+  ///    [email enumeration protection](https://cloud.google.com/identity-platform/docs/admin/email-enumeration-protection)
+  ///    enabled (the default for new projects since September 2023).
+  ///    Use **invalid-credential** instead.
+  /// - **wrong-password** _(deprecated)_:
   ///  - Thrown if the password is invalid for the given email, or the account
   ///    corresponding to the email does not have a password set.
+  ///    **Note:** This code is no longer returned on projects that have
+  ///    [email enumeration protection](https://cloud.google.com/identity-platform/docs/admin/email-enumeration-protection)
+  ///    enabled (the default for new projects since September 2023).
+  ///    Use **invalid-credential** instead.
   /// - **too-many-requests**:
   ///  - Thrown if the user sent too many requests at the same time, for security
-  ///     the api will not allow too many attemps at the same time, user will have
+  ///     the api will not allow too many attempts at the same time, user will have
   ///     to wait for some time
   /// - **user-token-expired**:
   ///  - Thrown if the user is no longer authenticated since his refresh token
   ///    has been expired
   /// - **network-request-failed**:
-  ///  - Thrown if there was a network request error, for example the user don't
-  ///    don't have internet connection
-  /// - **INVALID_LOGIN_CREDENTIALS** or **invalid-credential**:
-  ///  - Thrown if the password is invalid for the given email, or the account
-  ///    corresponding to the email does not have a password set.
-  ///    depending on if you are using firebase emulator or not the code is
-  ///    different
+  ///  - Thrown if there was a network request error, for example the user
+  ///    doesn't have internet connection
+  /// - **invalid-credential**:
+  ///  - Thrown if the email or password is incorrect. On projects with
+  ///    [email enumeration protection](https://cloud.google.com/identity-platform/docs/admin/email-enumeration-protection)
+  ///    enabled (the default since September 2023), this replaces
+  ///    **user-not-found** and **wrong-password** to prevent revealing
+  ///    whether an account exists. On the Firebase emulator, the code may
+  ///    appear as **INVALID_LOGIN_CREDENTIALS**.
   /// - **operation-not-allowed**:
   ///  - Thrown if email/password accounts are not enabled. Enable
   ///    email/password accounts in the Firebase Console, under the Auth tab.
@@ -704,15 +709,6 @@ class FirebaseAuth extends FirebasePluginPlatform {
     }
   }
 
-  /// Signs out the current user.
-  ///
-  /// If successful, it also updates
-  /// any [authStateChanges], [idTokenChanges] or [userChanges] stream
-  /// listeners.
-  Future<void> signOut() async {
-    await _delegate.signOut();
-  }
-
   /// Checks a password reset code sent to the user by email or other
   /// out-of-band mechanism.
   ///
@@ -817,6 +813,77 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// Authorization code can be retrieved on the user credential i.e. userCredential.additionalUserInfo.authorizationCode
   Future<void> revokeTokenWithAuthorizationCode(String authorizationCode) {
     return _delegate.revokeTokenWithAuthorizationCode(authorizationCode);
+  }
+
+  /// Android only. Revokes the provided accessToken. Currently supports revoking Apple-issued accessToken only.
+  Future<void> revokeAccessToken(String accessToken) {
+    return _delegate.revokeAccessToken(accessToken);
+  }
+
+  /// Signs out the current user.
+  ///
+  /// If successful, it also updates
+  /// any [authStateChanges], [idTokenChanges] or [userChanges] stream
+  /// listeners.
+  Future<void> signOut() async {
+    await _delegate.signOut();
+  }
+
+  /// Initializes the reCAPTCHA Enterprise client proactively to enhance reCAPTCHA signal collection and
+  /// to complete reCAPTCHA-protected flows in a single attempt.
+  Future<void> initializeRecaptchaConfig() {
+    return _delegate.initializeRecaptchaConfig();
+  }
+
+  /// Validates a password against the password policy configured for the project or tenant.
+  ///
+  /// If no tenant ID is set on the Auth instance, then this method will use the password policy configured for the project.
+  /// Otherwise, this method will use the policy configured for the tenant. If a password policy has not been configured,
+  /// then the default policy configured for all projects will be used.
+  ///
+  /// If an auth flow fails because a submitted password does not meet the password policy requirements and this method has previously been called,
+  /// then this method will use the most recent policy available when called again.
+  ///
+  /// Returns a map with the following keys:
+  /// - **status**: A boolean indicating if the password is valid.
+  /// - **passwordPolicy**: The password policy used to validate the password.
+  /// - **meetsMinPasswordLength**: A boolean indicating if the password meets the minimum length requirement.
+  /// - **meetsMaxPasswordLength**: A boolean indicating if the password meets the maximum length requirement.
+  /// - **meetsLowercaseRequirement**: A boolean indicating if the password meets the lowercase requirement.
+  /// - **meetsUppercaseRequirement**: A boolean indicating if the password meets the uppercase requirement.
+  /// - **meetsDigitsRequirement**: A boolean indicating if the password meets the digits requirement.
+  /// - **meetsSymbolsRequirement**: A boolean indicating if the password meets the symbols requirement.
+  ///
+  /// A [FirebaseAuthException] maybe thrown with the following error code:
+  /// - **invalid-password**:
+  ///  - Thrown if the password is invalid.
+  /// - **network-request-failed**:
+  ///  - Thrown if there was a network request error, for example the user
+  ///    doesn't have internet connection
+  /// - **INVALID_LOGIN_CREDENTIALS** or **invalid-credential**:
+  ///  - Thrown if the password is invalid for the given email, or the account
+  ///    corresponding to the email does not have a password set.
+  ///    Depending on if you are using firebase emulator or not the code is
+  ///    different
+  /// - **operation-not-allowed**:
+  ///  - Thrown if email/password accounts are not enabled. Enable
+  ///    email/password accounts in the Firebase Console, under the Auth tab.
+  Future<PasswordValidationStatus> validatePassword(
+    FirebaseAuth auth,
+    String? password,
+  ) async {
+    if (password == null || password.isEmpty) {
+      throw FirebaseAuthException(
+        code: 'invalid-password',
+        message: 'Password cannot be null or empty',
+      );
+    }
+    PasswordPolicyApi passwordPolicyApi =
+        PasswordPolicyApi(auth.app.options.apiKey);
+    PasswordPolicy passwordPolicy =
+        await passwordPolicyApi.fetchPasswordPolicy();
+    PasswordPolicyImpl passwordPolicyImpl = PasswordPolicyImpl(passwordPolicy);
+    return passwordPolicyImpl.isPasswordValid(password);
   }
 
   @override

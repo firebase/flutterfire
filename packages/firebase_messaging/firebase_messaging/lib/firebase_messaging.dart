@@ -7,7 +7,7 @@ import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
-    show FirebasePluginPlatform;
+    show FirebasePlugin;
 import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
 
 export 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart'

@@ -103,7 +103,7 @@ class HttpsCallable extends JsObjectWrapper<JSFunction> {
     }
 
     final result = await streamResult.data.toDart;
-    yield {'result': result};
+    yield {'result': _dartify(result)};
   }
 }
 

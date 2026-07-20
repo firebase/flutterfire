@@ -15,6 +15,8 @@
 #endif
 
 NSString *const kFLTFirebaseCrashlyticsChannelName = @"plugins.flutter.io/firebase_crashlytics";
+NSString *const kFLTFirebaseCrashlyticsTestChannelName =
+    @"plugins.flutter.io/firebase_crashlytics_test_stream";
 
 // Argument Keys
 NSString *const kCrashlyticsArgumentException = @"exception";
@@ -33,6 +35,11 @@ NSString *const kCrashlyticsArgumentMethod = @"method";
 NSString *const kCrashlyticsArgumentEnabled = @"enabled";
 NSString *const kCrashlyticsArgumentUnsentReports = @"unsentReports";
 NSString *const kCrashlyticsArgumentDidCrashOnPreviousExecution = @"didCrashOnPreviousExecution";
+
+@interface FLTFirebaseCrashlyticsPlugin () <FlutterStreamHandler>
+@property(nonatomic, strong) FlutterEventChannel *testEventChannel;
+@property(nonatomic, strong) FlutterEventSink testEventSink;
+@end
 
 @implementation FLTFirebaseCrashlyticsPlugin
 
@@ -61,6 +68,10 @@ NSString *const kCrashlyticsArgumentDidCrashOnPreviousExecution = @"didCrashOnPr
                                   binaryMessenger:[registrar messenger]];
   FLTFirebaseCrashlyticsPlugin *instance = [FLTFirebaseCrashlyticsPlugin sharedInstance];
   [registrar addMethodCallDelegate:instance channel:channel];
+  instance.testEventChannel =
+      [FlutterEventChannel eventChannelWithName:kFLTFirebaseCrashlyticsTestChannelName
+                                binaryMessenger:[registrar messenger]];
+  [instance.testEventChannel setStreamHandler:instance];
 }
 
 - (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)flutterResult {
@@ -126,10 +137,15 @@ NSString *const kCrashlyticsArgumentDidCrashOnPreviousExecution = @"didCrashOnPr
   }
 
   if (![reason isEqual:[NSNull null]]) {
-    reason = [NSString stringWithFormat:@"%@. Error thrown %@.", dartExceptionMessage, reason];
+    NSString *crashlyticsErrorReason = [NSString stringWithFormat:@"thrown %@", reason];
+
+    if (self.testEventSink) {
+      self.testEventSink(crashlyticsErrorReason);
+    }
     // Log additional custom value to match Android.
-    [[FIRCrashlytics crashlytics] setCustomValue:[NSString stringWithFormat:@"thrown %@", reason]
+    [[FIRCrashlytics crashlytics] setCustomValue:crashlyticsErrorReason
                                           forKey:@"flutter_error_reason"];
+    reason = [NSString stringWithFormat:@"%@. Error thrown %@.", dartExceptionMessage, reason];
   } else {
     reason = dartExceptionMessage;
   }
@@ -245,6 +261,17 @@ NSString *const kCrashlyticsArgumentDidCrashOnPreviousExecution = @"didCrashOnPr
 
 - (NSString *_Nonnull)flutterChannelName {
   return kFLTFirebaseCrashlyticsChannelName;
+}
+
+- (FlutterError *_Nullable)onCancelWithArguments:(id _Nullable)arguments {
+  self.testEventSink = nil;
+  return nil;
+}
+
+- (FlutterError *_Nullable)onListenWithArguments:(id _Nullable)arguments
+                                       eventSink:(nonnull FlutterEventSink)events {
+  self.testEventSink = events;
+  return nil;
 }
 
 @end

@@ -11,27 +11,35 @@ import '../../cloud_functions_platform_interface.dart';
 import 'method_channel_firebase_functions.dart';
 import 'utils/exception.dart';
 
+dynamic _convertNested(Object? value) {
+  if (value is List) {
+    return value.map(_convertNested).toList();
+  }
+  if (value is Map) {
+    return value.map<String, dynamic>(
+      (key, value) => MapEntry(key as String, _convertNested(value)),
+    );
+  }
+  return value;
+}
+
 /// Method Channel delegate for [HttpsCallablePlatform].
 class MethodChannelHttpsCallable extends HttpsCallablePlatform {
   /// Creates a new [MethodChannelHttpsCallable] instance.
   MethodChannelHttpsCallable(FirebaseFunctionsPlatform functions,
       String? origin, String? name, HttpsCallableOptions options, Uri? uri)
-      : _transformedUri = uri?.pathSegments.join('_').replaceAll('.', '_'),
-        super(functions, origin, name, options, uri) {
-    _eventChannelId = name ?? _transformedUri ?? '';
-    _channel =
-        EventChannel('plugins.flutter.io/firebase_functions/$_eventChannelId');
-  }
+      : _baseEventChannelId =
+            name ?? uri?.pathSegments.join('_').replaceAll('.', '_') ?? '',
+        super(functions, origin, name, options, uri);
 
-  late final EventChannel _channel;
-  final String? _transformedUri;
-  late String _eventChannelId;
+  static int _streamIdCounter = 0;
+  final String _baseEventChannelId;
 
   @override
   Future<dynamic> call([Object? parameters]) async {
     try {
-      Object? result = await MethodChannelFirebaseFunctions.channel
-          .invokeMethod('FirebaseFunctions#call', <String, dynamic>{
+      Object? result = await MethodChannelFirebaseFunctions.pigeonChannel
+          .call(<String, dynamic>{
         'appName': functions.app!.name,
         'functionName': name,
         'functionUri': uri?.toString(),
@@ -42,11 +50,7 @@ class MethodChannelHttpsCallable extends HttpsCallablePlatform {
         'limitedUseAppCheckToken': options.limitedUseAppCheckToken,
       });
 
-      if (result is Map) {
-        return Map<String, dynamic>.from(result);
-      } else {
-        return result;
-      }
+      return _convertNested(result);
     } catch (e, s) {
       convertPlatformException(e, s);
     }
@@ -54,8 +58,18 @@ class MethodChannelHttpsCallable extends HttpsCallablePlatform {
 
   @override
   Stream<dynamic> stream(Object? parameters) async* {
+    // Each stream() call gets a unique channel ID to prevent collisions
+    // when invoking the same function concurrently. See #18036.
+    final eventChannelId = '${_baseEventChannelId}_${_streamIdCounter++}';
+    final channel =
+        EventChannel('plugins.flutter.io/firebase_functions/$eventChannelId');
     try {
-      await _registerEventChannelOnNative();
+      await MethodChannelFirebaseFunctions.pigeonChannel
+          .registerEventChannel(<String, Object>{
+        'eventChannelId': eventChannelId,
+        'appName': functions.app!.name,
+        'region': functions.region,
+      });
       final eventData = {
         'functionName': name,
         'functionUri': uri?.toString(),
@@ -64,23 +78,9 @@ class MethodChannelHttpsCallable extends HttpsCallablePlatform {
         'limitedUseAppCheckToken': options.limitedUseAppCheckToken,
         'timeout': options.timeout.inMilliseconds,
       };
-      yield* _channel.receiveBroadcastStream(eventData).map((message) {
-        if (message is Map) {
-          return Map<String, dynamic>.from(message);
-        }
-        return message;
-      });
+      yield* channel.receiveBroadcastStream(eventData).map(_convertNested);
     } catch (e, s) {
       convertPlatformException(e, s);
     }
-  }
-
-  Future<void> _registerEventChannelOnNative() async {
-    await MethodChannelFirebaseFunctions.channel.invokeMethod(
-        'FirebaseFunctions#registerEventChannel', <String, dynamic>{
-      'eventChannelId': _eventChannelId,
-      'appName': functions.app!.name,
-      'region': functions.region,
-    });
   }
 }

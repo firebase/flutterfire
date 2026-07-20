@@ -12,8 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:async';
+import 'dart:convert';
+import 'dart:developer' as developer;
+import 'dart:math';
 import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../common/common_library.dart';
+import '../dataconnect_version.dart';
+import 'hot_restart_guard_stub.dart'
+    if (dart.library.js_interop) 'hot_restart_guard_web.dart';
+import 'stream_protocol.dart';
 
 part 'transport_stub.dart';
+part 'websocket_transport.dart';

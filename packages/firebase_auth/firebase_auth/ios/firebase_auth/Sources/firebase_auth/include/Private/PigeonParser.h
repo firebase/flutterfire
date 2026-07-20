@@ -4,31 +4,30 @@
  * BSD-style license that can be found in the LICENSE file.
  */
 
-#if TARGET_OS_OSX
-#import <FirebaseAuth/FirebaseAuth.h>
-#else
-@import FirebaseAuth;
-#endif
-
 #import <Foundation/Foundation.h>
 #import "../Public/firebase_auth_messages.g.h"
 
+@class FIRAuthDataResult;
+@class FIRUser;
+@class FIRActionCodeSettings;
+@class FIRAuthTokenResult;
+@class FIRTOTPSecret;
+@class FIRAuthCredential;
+
 @interface PigeonParser : NSObject
 
-+ (NSArray *_Nonnull)getManualList:(nonnull PigeonUserDetails *)userDetails;
-+ (PigeonUserCredential *_Nullable)
++ (NSArray *_Nonnull)getManualList:(nonnull InternalUserDetails *)userDetails;
++ (InternalUserCredential *_Nullable)
     getPigeonUserCredentialFromAuthResult:(nonnull FIRAuthDataResult *)authResult
                         authorizationCode:(nullable NSString *)authorizationCode;
-+ (PigeonUserDetails *_Nullable)getPigeonDetails:(nonnull FIRUser *)user;
-+ (PigeonUserInfo *_Nullable)getPigeonUserInfo:(nonnull FIRUser *)user;
++ (InternalUserDetails *_Nullable)getPigeonDetails:(nonnull FIRUser *)user;
++ (InternalUserInfo *_Nullable)getPigeonUserInfo:(nonnull FIRUser *)user;
 + (FIRActionCodeSettings *_Nullable)parseActionCodeSettings:
-    (nullable PigeonActionCodeSettings *)settings;
-+ (PigeonUserCredential *_Nullable)getPigeonUserCredentialFromFIRUser:(nonnull FIRUser *)user;
-+ (PigeonIdTokenResult *_Nonnull)parseIdTokenResult:(nonnull FIRAuthTokenResult *)tokenResult;
-#if TARGET_OS_IPHONE
-+ (PigeonTotpSecret *_Nonnull)getPigeonTotpSecret:(nonnull FIRTOTPSecret *)secret;
-#endif
-+ (PigeonAuthCredential *_Nullable)getPigeonAuthCredential:
-                                       (FIRAuthCredential *_Nullable)authCredentialToken
-                                                     token:(NSNumber *_Nullable)token;
+    (nullable InternalActionCodeSettings *)settings;
++ (InternalUserCredential *_Nullable)getPigeonUserCredentialFromFIRUser:(nonnull FIRUser *)user;
++ (InternalIdTokenResult *_Nonnull)parseIdTokenResult:(nonnull FIRAuthTokenResult *)tokenResult;
++ (InternalTotpSecret *_Nonnull)getPigeonTotpSecret:(nonnull FIRTOTPSecret *)secret;
++ (InternalAuthCredential *_Nullable)getPigeonAuthCredential:
+                                         (FIRAuthCredential *_Nullable)authCredentialToken
+                                                       token:(NSNumber *_Nullable)token;
 @end

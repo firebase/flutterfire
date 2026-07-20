@@ -18,7 +18,7 @@ class MethodChannelFirebaseApp extends FirebaseAppPlatform {
   MethodChannelFirebaseApp(
     String name,
     FirebaseOptions options, {
-    isAutomaticDataCollectionEnabled,
+    bool? isAutomaticDataCollectionEnabled,
   })  : _isAutomaticDataCollectionEnabled =
             isAutomaticDataCollectionEnabled ?? false,
         super(name, options);
@@ -52,7 +52,7 @@ class MethodChannelFirebaseApp extends FirebaseAppPlatform {
     await _api.delete(name);
 
     MethodChannelFirebase.appInstances.remove(name);
-    FirebasePluginPlatform._constantsForPluginApps.remove(name);
+    FirebasePlugin._constantsForPluginApps.remove(name);
     _isDeleted = true;
   }
 

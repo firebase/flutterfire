@@ -4,12 +4,7 @@
 
 part of 'database_interop.dart';
 
-@JS('DataSnapshot')
-@staticInterop
-@anonymous
-abstract class DataSnapshotJsImpl {}
-
-extension DataSnapshotJsImpl$ on DataSnapshotJsImpl {
+extension type DataSnapshotJsImpl._(JSObject _) implements JSObject {
   external JSString? get key;
 
   external JSAny? /* JSString | num | null*/ get priority;

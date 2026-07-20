@@ -3,50 +3,50 @@ name: tests
 description: A an app for FlutterFire testing (e2e).
 publish_to: 'none'
 version: 1.0.0+1
+resolution: workspace
 
 environment:
-  sdk: '>=3.4.0 <4.0.0'
+  sdk: '^3.6.0'
   flutter: '>=3.22.0'
 
 dependencies:
-  cloud_functions: ^5.5.0
-  cloud_functions_platform_interface: ^5.7.0
-  cloud_functions_web: ^4.11.0
+  cloud_functions: ^6.3.5
+  cloud_functions_platform_interface: ^6.0.5
+  cloud_functions_web: ^5.1.11
   collection: ^1.15.0
-  firebase_analytics: ^11.4.5
-  firebase_analytics_platform_interface: ^4.3.5
-  firebase_analytics_web: ^0.5.10+11
-  firebase_app_check: ^0.3.2+5
-  firebase_app_check_platform_interface: ^0.1.1+5
-  firebase_app_check_web: ^0.2.0+9
-  firebase_app_installations: ^0.3.2+5
-  firebase_app_installations_platform_interface: ^0.1.4+53
-  firebase_app_installations_web: ^0.1.6+11
-  firebase_auth: ^5.5.3
-  firebase_auth_platform_interface: ^7.6.2
-  firebase_auth_web: ^5.14.2
-  firebase_core: ^3.13.0
-  firebase_core_platform_interface: ^5.4.0
-  firebase_core_web: ^2.22.0
-  firebase_crashlytics: ^4.3.5
-  firebase_crashlytics_platform_interface: ^3.8.5
-  firebase_database: ^11.3.5
-  firebase_database_platform_interface: ^0.2.6+5
-  firebase_database_web: ^0.2.6+11
-  firebase_dynamic_links: ^6.1.5
-  firebase_dynamic_links_platform_interface: ^0.2.7+5
-  firebase_messaging: ^15.2.5
-  firebase_messaging_platform_interface: ^4.6.5
-  firebase_messaging_web: ^3.10.5
-  firebase_ml_model_downloader: ^0.3.3+3
-  firebase_ml_model_downloader_platform_interface: ^0.1.5+5
-  firebase_performance: ^0.10.1+5
-  firebase_remote_config: ^5.4.3
-  firebase_remote_config_platform_interface: ^1.5.3
-  firebase_remote_config_web: ^1.8.3
-  firebase_storage: ^12.4.5
-  firebase_storage_platform_interface: ^5.2.5
-  firebase_storage_web: ^3.10.12
+  firebase_ai: ^3.14.1
+  firebase_analytics: ^12.4.5
+  firebase_analytics_platform_interface: ^6.0.5
+  firebase_analytics_web: ^0.6.1+11
+  firebase_app_check: ^0.4.5+2
+  firebase_app_check_platform_interface: ^0.4.1+2
+  firebase_app_check_web: ^0.2.5+2
+  firebase_app_installations: ^0.4.2+6
+  firebase_app_installations_platform_interface: ^0.1.4+74
+  firebase_app_installations_web: ^0.1.7+11
+  firebase_auth: ^6.5.6
+  firebase_auth_platform_interface: ^9.0.5
+  firebase_auth_web: ^6.2.5
+  firebase_core: ^4.12.1
+  firebase_core_platform_interface: ^8.0.0
+  firebase_core_web: ^3.9.1
+  firebase_crashlytics: ^5.2.6
+  firebase_crashlytics_platform_interface: ^3.8.26
+  firebase_database: ^12.4.6
+  firebase_database_platform_interface: ^0.4.0+5
+  firebase_database_web: ^0.2.7+12
+  firebase_messaging: ^16.4.3
+  firebase_messaging_platform_interface: ^4.9.2
+  firebase_messaging_web: ^4.2.3
+  firebase_ml_model_downloader: ^0.4.2+6
+  firebase_ml_model_downloader_platform_interface: ^0.1.5+26
+  firebase_performance: ^0.11.4+5
+  firebase_remote_config: ^6.5.5
+  firebase_remote_config_platform_interface: ^3.0.5
+  firebase_remote_config_web: ^1.10.12
+  firebase_storage: ^13.4.5
+  firebase_storage_platform_interface: ^6.0.5
+  firebase_storage_web: ^3.11.11
   flutter:
     sdk: flutter
   http: ^1.0.0

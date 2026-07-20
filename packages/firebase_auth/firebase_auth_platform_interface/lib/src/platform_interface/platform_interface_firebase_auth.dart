@@ -64,9 +64,9 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
 
     if (currentUser != null) {
       currentUser as List<Object?>;
-      final firstElement = PigeonUserInfo.decode(currentUser[0]!);
+      final firstElement = InternalUserInfo.decode(currentUser[0]!);
       final secondElement = currentUser[1]!;
-      currentUser = PigeonUserDetails.decode([firstElement, secondElement]);
+      currentUser = InternalUserDetails.decode([firstElement, secondElement]);
     }
     return FirebaseAuthPlatform.instance.delegateFor(app: app).setInitialValues(
           languageCode: pluginConstants['APP_LANGUAGE_CODE'],
@@ -107,11 +107,14 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// calls.
   @protected
   FirebaseAuthPlatform setInitialValues({
-    PigeonUserDetails? currentUser,
+    InternalUserDetails? currentUser,
     String? languageCode,
   }) {
     throw UnimplementedError('setInitialValues() is not implemented');
   }
+
+  /// Disposes resources tied to this platform auth instance.
+  Future<void> dispose() async {}
 
   /// Returns the current [User] if they are currently signed-in, or `null` if
   /// not.
@@ -230,14 +233,14 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   ///  - Thrown if the password is not strong enough.
   /// - **too-many-requests**:
   ///  - Thrown if the user sent too many requests at the same time, for security
-  ///     the api will not allow too many attemps at the same time, user will have
+  ///     the api will not allow too many attempts at the same time, user will have
   ///     to wait for some time
   /// - **user-token-expired**:
   ///  - Thrown if the user is no longer authenticated since his refresh token
   ///    has been expired
   /// - **network-request-failed**:
-  ///  - Thrown if there was a network request error, for example the user don't
-  ///    don't have internet connection
+  ///  - Thrown if there was a network request error, for example the user
+  ///    doesn't have internet connection
   /// - **operation-not-allowed**:
   ///  - Thrown if email/password accounts are not enabled. Enable
   ///    email/password accounts in the Firebase Console, under the Auth tab.
@@ -310,8 +313,12 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   }
 
   /// Triggers the Firebase Authentication backend to send a password-reset
-  /// email to the given email address, which must correspond to an existing
-  /// user of your app.
+  /// email to the given email address.
+  ///
+  /// If email enumeration protection is enabled for the Firebase project, this
+  /// method may complete successfully even when the email does not correspond
+  /// to an existing user. This prevents apps from using password reset requests
+  /// to discover registered email addresses.
   Future<void> sendPasswordResetEmail(
     String email, [
     ActionCodeSettings? actionCodeSettings,
@@ -476,7 +483,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   ///    verification code of the credential is not valid.
   /// - **invalid-verification-id**:
   ///  - Thrown if the credential is a [PhoneAuthProvider.credential] and the
-  ///    verification ID of the credential is not valid.id.
+  ///    verification ID of the credential is not valid.
   Future<UserCredentialPlatform> signInWithCredential(
     AuthCredential credential,
   ) async {
@@ -514,26 +521,36 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   ///  - Thrown if the email address is not valid.
   /// - **user-disabled**:
   ///  - Thrown if the user corresponding to the given email has been disabled.
-  /// - **user-not-found**:
+  /// - **user-not-found** _(deprecated)_:
   ///  - Thrown if there is no user corresponding to the given email.
-  /// - **wrong-password**:
+  ///    **Note:** This code is no longer returned on projects that have
+  ///    [email enumeration protection](https://cloud.google.com/identity-platform/docs/admin/email-enumeration-protection)
+  ///    enabled (the default for new projects since September 2023).
+  ///    Use **invalid-credential** instead.
+  /// - **wrong-password** _(deprecated)_:
   ///  - Thrown if the password is invalid for the given email, or the account
   ///    corresponding to the email does not have a password set.
+  ///    **Note:** This code is no longer returned on projects that have
+  ///    [email enumeration protection](https://cloud.google.com/identity-platform/docs/admin/email-enumeration-protection)
+  ///    enabled (the default for new projects since September 2023).
+  ///    Use **invalid-credential** instead.
   /// - **too-many-requests**:
   ///  - Thrown if the user sent too many requests at the same time, for security
-  ///     the api will not allow too many attemps at the same time, user will have
+  ///     the api will not allow too many attempts at the same time, user will have
   ///     to wait for some time
   /// - **user-token-expired**:
   ///  - Thrown if the user is no longer authenticated since his refresh token
   ///    has been expired
   /// - **network-request-failed**:
-  ///  - Thrown if there was a network request error, for example the user don't
-  ///    don't have internet connection
-  /// - **INVALID_LOGIN_CREDENTIALS** or **invalid-credential**:
-  ///  - Thrown if the password is invalid for the given email, or the account
-  ///    corresponding to the email does not have a password set.
-  ///    depending on if you are using firebase emulator or not the code is
-  ///    different
+  ///  - Thrown if there was a network request error, for example the user
+  ///    doesn't have internet connection
+  /// - **invalid-credential**:
+  ///  - Thrown if the email or password is incorrect. On projects with
+  ///    [email enumeration protection](https://cloud.google.com/identity-platform/docs/admin/email-enumeration-protection)
+  ///    enabled (the default since September 2023), this replaces
+  ///    **user-not-found** and **wrong-password** to prevent revealing
+  ///    whether an account exists. On the Firebase emulator, the code may
+  ///    appear as **INVALID_LOGIN_CREDENTIALS**.
   /// - **operation-not-allowed**:
   ///  - Thrown if email/password accounts are not enabled. Enable
   ///    email/password accounts in the Firebase Console, under the Auth tab.
@@ -705,5 +722,16 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   Future<void> revokeTokenWithAuthorizationCode(String authorizationCode) {
     throw UnimplementedError(
         'revokeTokenWithAuthorizationCode() is not implemented');
+  }
+
+  /// Android only. Revokes the provided accessToken. Currently supports revoking Apple-issued accessToken only.
+  Future<void> revokeAccessToken(String accessToken) {
+    throw UnimplementedError('revokeAccessToken() is not implemented');
+  }
+
+  /// Initializes the reCAPTCHA Enterprise client proactively to enhance reCAPTCHA signal collection and
+  /// to complete reCAPTCHA-protected flows in a single attempt.
+  Future<void> initializeRecaptchaConfig() {
+    throw UnimplementedError('initializeRecaptchaConfig() is not implemented');
   }
 }

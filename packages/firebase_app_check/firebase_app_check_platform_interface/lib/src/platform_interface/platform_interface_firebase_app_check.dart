@@ -53,19 +53,50 @@ abstract class FirebaseAppCheckPlatform extends PlatformInterface {
 
   /// Activates the Firebase App Check service.
   ///
-  /// On web, provide the reCAPTCHA v3 Site Key which can be found in the
-  /// Firebase Console.
+  /// ## Platform Configuration
   ///
-  /// On Android, the default provider is "play integrity". If you wish to set the provider to "safety net" or "debug", you may set the `androidProvider` property using the `AndroidProvider` enum
+  /// **Web**: Provide the reCAPTCHA v3 Site Key using `webProvider`, which can be
+  /// found in the Firebase Console.
   ///
-  /// On iOS or macOS, the default provider is "device check". If you wish to set the provider to "app attest", "debug" or "app attest with fallback to device check"
-  /// ("app attest" is only available on iOS 14.0+, macOS 14.0+), you may set the `appleProvider` property using the `AppleProvider` enum
+  /// **Android**: The default provider is "play integrity". Use `providerAndroid`
+  /// to configure alternative providers such as "safety net", debug providers, or
+  /// custom implementations via `AndroidAppCheckProvider`.
+  ///
+  /// **iOS/macOS**: The default provider is "device check". Use `providerApple`
+  /// to configure alternative providers such as "app attest", debug providers, or
+  /// "app attest with fallback to device check" via `AppleAppCheckProvider`.
+  /// Note: App Attest is only available on iOS 14.0+ and macOS 14.0+.
+  ///
+  /// **Windows**: Only the debug provider is supported. You **must** supply a
+  /// debug token — the desktop C++ SDK does not auto-generate one. Either pass
+  /// it via `providerWindows: WindowsDebugProvider(debugToken: 'your-token')`
+  /// or set the `APP_CHECK_DEBUG_TOKEN` environment variable. The token must
+  /// first be registered in the Firebase Console under
+  /// *App Check → Apps → Manage debug tokens*.
+  ///
+  /// ## Migration Notice
+  ///
+  /// The `androidProvider` and `appleProvider` parameters will be deprecated
+  /// in a future release. Use `providerAndroid` and `providerApple` instead,
+  /// which support the new provider classes including `AndroidDebugProvider`
+  /// and `AppleDebugProvider` for passing debug tokens directly.
   ///
   /// For more information, see [the Firebase Documentation](https://firebase.google.com/docs/app-check)
   Future<void> activate({
     WebProvider? webProvider,
+    @Deprecated(
+      'Use providerAndroid instead. '
+      'This parameter will be removed in a future major release.',
+    )
     AndroidProvider? androidProvider,
+    @Deprecated(
+      'Use providerApple instead. '
+      'This parameter will be removed in a future major release.',
+    )
     AppleProvider? appleProvider,
+    AndroidAppCheckProvider? providerAndroid,
+    AppleAppCheckProvider? providerApple,
+    WindowsAppCheckProvider? providerWindows,
   }) {
     throw UnimplementedError('activate() is not implemented');
   }
@@ -116,4 +147,7 @@ abstract class FirebaseAppCheckPlatform extends PlatformInterface {
   FirebaseAppCheckPlatform setInitialValues() {
     throw UnimplementedError('setInitialValues() is not implemented');
   }
+
+  /// Disposes resources tied to this platform App Check instance.
+  Future<void> dispose() async {}
 }

@@ -40,6 +40,45 @@ void runSettingsTest() {
           settings.webExperimentalLongPollingOptions,
         );
       });
+
+      test('can apply WebPersistentMultipleTabManager setting', () async {
+        const settings = Settings(
+          persistenceEnabled: true,
+          webPersistentTabManager: WebPersistentMultipleTabManager(),
+        );
+
+        firestore.settings = settings;
+
+        expect(
+          firestore.settings.webPersistentTabManager,
+          isA<WebPersistentMultipleTabManager>(),
+        );
+      });
+
+      test('can apply WebPersistentSingleTabManager setting', () async {
+        const settings = Settings(
+          persistenceEnabled: true,
+          webPersistentTabManager:
+              WebPersistentSingleTabManager(forceOwnership: true),
+        );
+
+        firestore.settings = settings;
+
+        final tabManager = firestore.settings.webPersistentTabManager;
+        expect(tabManager, isA<WebPersistentSingleTabManager>());
+        expect(
+          (tabManager! as WebPersistentSingleTabManager).forceOwnership,
+          true,
+        );
+      });
+
+      test('webPersistentTabManager defaults to null', () async {
+        const settings = Settings(
+          persistenceEnabled: true,
+        );
+
+        expect(settings.webPersistentTabManager, isNull);
+      });
     },
   );
 }

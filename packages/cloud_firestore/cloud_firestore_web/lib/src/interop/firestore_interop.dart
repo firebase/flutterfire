@@ -27,7 +27,7 @@ external FirestoreJsImpl initializeFirestore(
 @staticInterop
 
 /// Type DocumentReferenceJsImpl
-external JSPromise addDoc(
+external JSPromise<DocumentReferenceJsImpl> addDoc(
   CollectionReferenceJsImpl reference,
   JSAny data,
 );
@@ -113,16 +113,6 @@ external FieldPath documentId();
 
 @JS()
 @staticInterop
-@Deprecated(
-  'This function will be removed in a future major release. Instead, set FirestoreSettings.localCache to an instance of PersistentLocalCache to turn on IndexedDb cache.',
-)
-external JSPromise enableIndexedDbPersistence(
-  FirestoreJsImpl firestore, [
-  PersistenceSettings? settings,
-]);
-
-@JS()
-@staticInterop
 external JSPromise enableMultiTabIndexedDbPersistence(
   FirestoreJsImpl firestore,
 );
@@ -133,37 +123,37 @@ external JSPromise enableNetwork(FirestoreJsImpl firestore);
 
 @JS()
 @staticInterop
-external JSPromise getDoc(
+external JSPromise<DocumentSnapshotJsImpl> getDoc(
   DocumentReferenceJsImpl reference,
 );
 
 @JS()
 @staticInterop
-external JSPromise getDocFromCache(
+external JSPromise<DocumentSnapshotJsImpl> getDocFromCache(
   DocumentReferenceJsImpl reference,
 );
 
 @JS()
 @staticInterop
-external JSPromise getDocFromServer(
+external JSPromise<DocumentSnapshotJsImpl> getDocFromServer(
   DocumentReferenceJsImpl reference,
 );
 
 @JS()
 @staticInterop
-external JSPromise getDocs(
+external JSPromise<QuerySnapshotJsImpl> getDocs(
   QueryJsImpl query,
 );
 
 @JS()
 @staticInterop
-external JSPromise getDocsFromCache(
+external JSPromise<QuerySnapshotJsImpl> getDocsFromCache(
   QueryJsImpl query,
 );
 
 @JS()
 @staticInterop
-external JSPromise getDocsFromServer(
+external JSPromise<QuerySnapshotJsImpl> getDocsFromServer(
   QueryJsImpl query,
 );
 
@@ -244,9 +234,7 @@ external PersistentSingleTabManager persistentSingleTabManager(
 
 @JS()
 @staticInterop
-external PersistentMultipleTabManager persistentMultipleTabManager(
-  PersistentSingleTabManagerSettings? settings,
-);
+external PersistentMultipleTabManager persistentMultipleTabManager();
 
 @JS()
 @staticInterop
@@ -345,20 +333,220 @@ external JSObject get and;
 @staticInterop
 external WriteBatchJsImpl writeBatch(FirestoreJsImpl firestore);
 
-@JS('Firestore')
-@staticInterop
-abstract class FirestoreJsImpl {}
-
-extension FirestoreJsImplExtension on FirestoreJsImpl {
+extension type FirestoreJsImpl._(JSObject _) implements JSObject {
   external AppJsImpl get app;
   external JSString get type;
+
+  /// Returns the pipeline source for building and executing pipelines.
+  external JSAny pipeline();
 }
 
-@JS('WriteBatch')
+@JS()
 @staticInterop
-abstract class WriteBatchJsImpl {}
+external PipelinesJsImpl get pipelines;
 
-extension WriteBatchJsImplExtension on WriteBatchJsImpl {
+/// Pipeline expression API — mirrors the Firebase JS SDK pipelines module.
+/// Use these to build expressions for where(), sort(), addFields(), aggregate(), etc.
+extension type PipelinesJsImpl._(JSObject _) implements JSObject {
+  external JSPromise<PipelineSnapshotJsImpl> execute(
+      PipelineExecuteOptionsJsImpl pipeline);
+
+  // --- Expression builders ---
+  external ExpressionJsImpl field(JSString path);
+  external ExpressionJsImpl constant(JSAny? value);
+
+  // --- Boolean / comparison ---
+  external JSAny equal(JSAny left, JSAny right);
+  external JSAny notEqual(JSAny left, JSAny right);
+  external JSAny greaterThan(JSAny left, JSAny right);
+  external JSAny greaterThanOrEqual(JSAny left, JSAny right);
+  external JSAny lessThan(JSAny left, JSAny right);
+  external JSAny lessThanOrEqual(JSAny left, JSAny right);
+  external JSAny and(JSAny a, JSAny b);
+  external JSAny or(JSAny a, JSAny b);
+  external JSAny xor(JSAny a, JSAny b);
+  external JSAny nor(JSAny a, JSAny b);
+  external JSAny not(JSAny expr);
+  external JSAny documentMatches(JSString query);
+
+  // --- Existence / type checks ---
+  external JSAny exists(JSAny expr);
+  external JSAny isAbsent(JSAny expr);
+  external JSAny isError(JSAny expr);
+
+  // --- Array ---
+  external JSAny arrayContains(JSAny array, JSAny element);
+  external JSAny arrayContainsAny(JSAny array, JSArray<JSAny> values);
+  external JSAny arrayContainsAll(JSAny array, JSAny valuesOrArray);
+
+  // --- IN / NOT IN (boolean) ---
+  external JSAny equalAny(JSAny element, JSAny valuesArray);
+  external JSAny notEqualAny(JSAny element, JSAny valuesArray);
+
+  // --- String / value expressions (global) ---
+  external ExpressionJsImpl split(JSAny expression, JSAny delimiter);
+  external ExpressionJsImpl join(JSAny arrayExpression, JSAny delimiter);
+  external ExpressionJsImpl substring(
+      JSAny input, JSAny position, JSAny length);
+  external ExpressionJsImpl stringReplaceAll(
+      JSAny expression, JSAny find, JSAny replacement);
+  external ExpressionJsImpl ifAbsent(JSAny expression, JSAny elseExpr);
+  external ExpressionJsImpl ifError(JSAny expression, JSAny catchExpr);
+  external ExpressionJsImpl conditional(
+      JSAny condition, JSAny thenExpr, JSAny elseExpr);
+  external ExpressionJsImpl documentId(JSAny path);
+  external ExpressionJsImpl collectionId(JSAny expression);
+  external ExpressionJsImpl mapGet(JSAny mapExpr, JSString key);
+  external ExpressionJsImpl mapKeys(JSAny mapExpr);
+  external ExpressionJsImpl mapValues(JSAny mapExpr);
+  external ExpressionJsImpl currentTimestamp();
+  external ExpressionJsImpl timestampAdd(
+      JSAny timestamp, JSString unit, JSAny amount);
+  external ExpressionJsImpl timestampSubtract(
+      JSAny timestamp, JSString unit, JSAny amount);
+  external ExpressionJsImpl timestampTruncate(JSAny timestamp, JSString unit,
+      [JSString? timezone]);
+  external ExpressionJsImpl timestampDiff(JSAny end, JSAny start, JSAny unit);
+  external ExpressionJsImpl timestampExtract(JSAny timestamp, JSAny part,
+      [JSAny? timezone]);
+  external ExpressionJsImpl parent(JSAny documentRefOrExpression);
+  external ExpressionJsImpl ifNull(JSAny ifExpr, JSAny elseExpr);
+  external ExpressionJsImpl coalesce(
+      JSAny first, JSAny second, JSArray<JSAny> more);
+  @JS('switchOn')
+  external JSFunction get switchOnJs;
+  external ExpressionJsImpl abs(JSAny expr);
+  external ExpressionJsImpl arrayLength(JSAny array);
+  external ExpressionJsImpl arraySum(JSAny expression);
+  external ExpressionJsImpl arrayConcat(JSAny first, JSAny second);
+  external ExpressionJsImpl array(JSArray<JSAny> elements);
+  external ExpressionJsImpl map(JSObject keyValuePairs);
+  external ExpressionJsImpl rand();
+
+  @JS('isType')
+  external JSAny isTypeExpr(JSAny expression, JSAny typeValue);
+
+  // --- Ordering (for sort stage) ---
+  external JSAny ascending(JSAny expr);
+  external JSAny descending(JSAny expr);
+
+  // --- Aggregates ---
+  external AggregateFunctionJsImpl sum(JSAny expr);
+  external AggregateFunctionJsImpl average(JSAny expr);
+  external AggregateFunctionJsImpl count(JSAny expr);
+  external AggregateFunctionJsImpl countDistinct(JSAny expr);
+  external AggregateFunctionJsImpl minimum(JSAny expr);
+  external AggregateFunctionJsImpl maximum(JSAny expr);
+  external AggregateFunctionJsImpl first(JSAny expr);
+  external AggregateFunctionJsImpl last(JSAny expr);
+  external AggregateFunctionJsImpl arrayAgg(JSAny expr);
+  external AggregateFunctionJsImpl arrayAggDistinct(JSAny expr);
+  external AggregateFunctionJsImpl countAll();
+
+  // --- Aliased (for select/addFields/aggregate output names) ---
+  external JSAny aliased(JSAny expr, JSString alias);
+}
+
+/// Aggregate function (result of sum(), average(), count(), etc. on pipelines).
+/// Has .as(alias) to create an aliased aggregate for accumulators.
+extension type AggregateFunctionJsImpl._(JSObject _) implements JSObject {
+  @JS('as')
+  external JSAny asAlias(JSString alias);
+}
+
+extension type ExpressionJsImpl._(JSObject _) implements JSObject {
+  @JS('as')
+  external JSAny asAlias(JSString alias);
+
+  external ExpressionJsImpl add(JSAny right);
+  external ExpressionJsImpl subtract(JSAny right);
+  external ExpressionJsImpl multiply(JSAny right);
+  external ExpressionJsImpl divide(JSAny right);
+  @JS('mod')
+  external ExpressionJsImpl modulo(JSAny right);
+  external ExpressionJsImpl length();
+  external ExpressionJsImpl concat(JSAny right);
+  external ExpressionJsImpl toLower();
+  external ExpressionJsImpl toUpper();
+  external ExpressionJsImpl trim();
+  external ExpressionJsImpl arrayReverse();
+  external ExpressionJsImpl asBoolean();
+  external ExpressionJsImpl isError();
+  external ExpressionJsImpl isAbsent();
+
+  external ExpressionJsImpl regexFind(JSAny pattern);
+  external ExpressionJsImpl regexFindAll(JSAny pattern);
+  external ExpressionJsImpl stringReplaceOne(JSAny find, JSAny replacement);
+  external ExpressionJsImpl stringIndexOf(JSAny search);
+  external ExpressionJsImpl stringRepeat(JSAny repetitions);
+  external ExpressionJsImpl ltrim([JSAny? valueToTrim]);
+  external ExpressionJsImpl rtrim([JSAny? valueToTrim]);
+  external ExpressionJsImpl type();
+  external ExpressionJsImpl trunc([JSAny? decimals]);
+  external ExpressionJsImpl arrayFirst();
+  external ExpressionJsImpl arrayFirstN(JSAny n);
+  external ExpressionJsImpl arrayLast();
+  external ExpressionJsImpl arrayLastN(JSAny n);
+  external ExpressionJsImpl arrayMaximum();
+  external ExpressionJsImpl arrayMaximumN(JSAny n);
+  external ExpressionJsImpl arrayMinimum();
+  external ExpressionJsImpl arrayMinimumN(JSAny n);
+  external ExpressionJsImpl arrayIndexOf(JSAny element);
+  external ExpressionJsImpl arrayLastIndexOf(JSAny element);
+  external ExpressionJsImpl arrayIndexOfAll(JSAny element);
+  external ExpressionJsImpl arraySlice(JSAny offset, [JSAny? length]);
+  external ExpressionJsImpl arrayFilter(JSString alias, JSAny filter);
+  external ExpressionJsImpl arrayTransform(
+      JSString elementAlias, JSAny transform);
+  external ExpressionJsImpl arrayTransformWithIndex(
+      JSString elementAlias, JSString indexAlias, JSAny transform);
+  external ExpressionJsImpl mapSet(JSAny key, JSAny value);
+  external ExpressionJsImpl mapEntries();
+}
+
+extension type SelectableJsImpl._(JSObject _) implements JSObject {
+  @JS('as')
+  external JSAny asAlias(JSString alias);
+}
+
+/// Aliased aggregate for use in aggregate() stage accumulators.
+/// Mirrors Firebase JS SDK: constructor(aggregate, alias, _methodName?).
+@JS('AliasedAggregate')
+@staticInterop
+abstract class AliasedAggregateJsImpl {
+  external factory AliasedAggregateJsImpl(
+    JSAny aggregate,
+    JSString alias, [
+    JSString? methodName,
+  ]);
+}
+
+/// Options for the aggregate() pipeline stage.
+/// Mirrors Firebase JS SDK AggregateStageOptions: { accumulators, groups? }.
+extension type AggregateStageOptionsJsImpl._(JSObject _) implements JSObject {
+  AggregateStageOptionsJsImpl() : this._(JSObject.new());
+
+  // ignore: avoid_setters_without_getters
+  external set accumulators(JSAny value);
+  // ignore: avoid_setters_without_getters
+  external set groups(JSAny value);
+}
+
+extension type SelectStageOptionsJsImpl._(JSObject _) implements JSObject {
+  SelectStageOptionsJsImpl() : this._(JSObject.new());
+
+  // ignore: avoid_setters_without_getters
+  external set selections(JSArray<JSAny> value);
+}
+
+extension type AddFieldsOptionsJsImpl._(JSObject _) implements JSObject {
+  AddFieldsOptionsJsImpl() : this._(JSObject.new());
+
+  // ignore: avoid_setters_without_getters
+  external set fields(JSAny value);
+}
+
+extension type WriteBatchJsImpl._(JSObject _) implements JSObject {
   external JSPromise commit();
 
   external WriteBatchJsImpl delete(DocumentReferenceJsImpl documentRef);
@@ -373,13 +561,7 @@ extension WriteBatchJsImplExtension on WriteBatchJsImpl {
   );
 }
 
-@JS('CollectionReference')
-@staticInterop
-class CollectionReferenceJsImpl extends QueryJsImpl {
-  external factory CollectionReferenceJsImpl();
-}
-
-extension CollectionReferenceJsImplExtension on CollectionReferenceJsImpl {
+extension type CollectionReferenceJsImpl._(JSObject _) implements QueryJsImpl {
   external JSString get id;
   external DocumentReferenceJsImpl get parent;
   external JSString get path;
@@ -440,11 +622,7 @@ extension GeoPointJsImplExtension on GeoPointJsImpl {
 @staticInterop
 external VectorValueJsImpl get VectorValueConstructor;
 
-@JS('VectorValue')
-@staticInterop
-class VectorValueJsImpl {}
-
-extension VectorValueJsImplExtension on VectorValueJsImpl {
+extension type VectorValueJsImpl._(JSObject _) implements JSObject {
   external JSArray toArray();
 }
 
@@ -474,12 +652,7 @@ extension BytesJsImplExtension on BytesJsImpl {
   external JSBoolean isEqual(JSObject other);
 }
 
-@anonymous
-@JS()
-@staticInterop
-abstract class DocumentChangeJsImpl {}
-
-extension DocumentChangeJsImplExtension on DocumentChangeJsImpl {
+extension type DocumentChangeJsImpl._(JSObject _) implements JSObject {
   external JSString /*'added'|'removed'|'modified'*/ get type;
 
   external set type(JSString /*'added'|'removed'|'modified'*/ v);
@@ -501,11 +674,7 @@ extension DocumentChangeJsImplExtension on DocumentChangeJsImpl {
 @staticInterop
 external DocumentReferenceJsImpl get DocumentReferenceJsConstructor;
 
-@JS('DocumentReference')
-@staticInterop
-abstract class DocumentReferenceJsImpl {}
-
-extension DocumentReferenceJsImplExtension on DocumentReferenceJsImpl {
+extension type DocumentReferenceJsImpl._(JSObject _) implements JSObject {
   external FirestoreJsImpl get firestore;
   external JSString get id;
   external CollectionReferenceJsImpl get parent;
@@ -521,11 +690,7 @@ extension QueryConstraintJsImplExtension on QueryConstraintJsImpl {
   external JSString get type;
 }
 
-@JS('LoadBundleTask')
-@staticInterop
-abstract class LoadBundleTaskJsImpl {}
-
-extension LoadBundleTaskJsImplExtension on LoadBundleTaskJsImpl {
+extension type LoadBundleTaskJsImpl._(JSObject _) implements JSObject {
   external void onProgress(
     JSFunction? next,
   );
@@ -536,13 +701,7 @@ extension LoadBundleTaskJsImplExtension on LoadBundleTaskJsImpl {
   ]);
 }
 
-@JS()
-@staticInterop
-@anonymous
-abstract class LoadBundleTaskProgressJsImpl {}
-
-extension LoadBundleTaskProgressJsImplExtension
-    on LoadBundleTaskProgressJsImpl {
+extension type LoadBundleTaskProgressJsImpl._(JSObject _) implements JSObject {
 // int or String?
   external JSAny get bytesLoaded;
 
@@ -556,11 +715,7 @@ extension LoadBundleTaskProgressJsImplExtension
   external JSNumber get totalDocuments;
 }
 
-@JS('DocumentSnapshot')
-@staticInterop
-abstract class DocumentSnapshotJsImpl {}
-
-extension DocumentSnapshotJsImplExtension on DocumentSnapshotJsImpl {
+extension type DocumentSnapshotJsImpl._(JSObject _) implements JSObject {
   external JSString get id;
   external SnapshotMetadata get metadata;
   external DocumentReferenceJsImpl get ref;
@@ -574,12 +729,7 @@ extension DocumentSnapshotJsImplExtension on DocumentSnapshotJsImpl {
 /// [set()] or [update()].
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.firestore.FieldValue>.
-@JS()
-@staticInterop
-@anonymous
-abstract class FieldValue {}
-
-extension FieldValueExtension on FieldValue {
+extension type FieldValue._(JSObject _) implements JSObject {
   /// Returns `true` if this [FieldValue] is equal to the provided [other].
   external JSBoolean isEqual(FieldValue other);
 }
@@ -589,20 +739,12 @@ extension FieldValueExtension on FieldValue {
 @staticInterop
 external JSObject get fieldValues;
 
-@JS('Query')
-@staticInterop
-abstract class QueryJsImpl {}
-
-extension QueryJsImplExtension on QueryJsImpl {
+extension type QueryJsImpl._(JSObject _) implements JSObject {
   external FirestoreJsImpl get firestore;
   external JSString get type;
 }
 
-@JS('QuerySnapshot')
-@staticInterop
-abstract class QuerySnapshotJsImpl {}
-
-extension QuerySnapshotJsImplExtension on QuerySnapshotJsImpl {
+extension type QuerySnapshotJsImpl._(JSObject _) implements JSObject {
   external JSArray get docs;
   external JSBoolean get empty;
   external SnapshotMetadata get metadata;
@@ -617,11 +759,7 @@ extension QuerySnapshotJsImplExtension on QuerySnapshotJsImpl {
   ]);
 }
 
-@JS('Transaction')
-@staticInterop
-abstract class TransactionJsImpl {}
-
-extension TransactionJsImplExtension on TransactionJsImpl {
+extension type TransactionJsImpl._(JSObject _) implements JSObject {
   external TransactionJsImpl delete(DocumentReferenceJsImpl documentRef);
 
   external JSPromise get(DocumentReferenceJsImpl documentRef);
@@ -743,10 +881,6 @@ abstract class FirestoreSettings {
 }
 
 extension FirestoreSettingsExtension on FirestoreSettings {
-  @Deprecated('Use FirestoreSettings.localCache instead.')
-  //ignore: avoid_setters_without_getters
-  external set cacheSizeBytes(JSNumber i);
-
   //ignore: avoid_setters_without_getters
   external set host(JSString h);
 
@@ -810,53 +944,28 @@ abstract class FirestoreLocalCache {}
 ///
 /// To use, create an instance using the factory function , then set the instance to FirestoreSettings.cache
 /// and call initializeFirestore using the settings object.
-@anonymous
-@JS()
-@staticInterop
-abstract class MemoryLocalCache extends FirestoreLocalCache {}
-
-extension MemoryLocalCacheExtension on MemoryLocalCache {
+extension type MemoryLocalCache._(JSObject _) implements JSObject {
   external JSString get kind;
 }
 
-/// A tab manager supportting only one tab, no synchronization will be performed across tabs.
-@anonymous
-@JS()
-@staticInterop
-abstract class PersistentSingleTabManager {}
-
-extension PersistentSingleTabManagerExtension on PersistentSingleTabManager {
+/// A tab manager supporting only one tab, no synchronization will be performed across tabs.
+extension type PersistentSingleTabManager._(JSObject _) implements JSObject {
   external JSString get kind;
 }
 
 /// A tab manager supporting multiple tabs. SDK will synchronize queries and mutations done across all tabs using the SDK.
-@anonymous
-@JS()
-@staticInterop
-abstract class PersistentMultipleTabManager {}
-
-extension PersistentMultipleTabManagerExtension
-    on PersistentMultipleTabManager {
+extension type PersistentMultipleTabManager._(JSObject _) implements JSObject {
   external JSString get kind;
 }
 
 /// A garbage collector deletes documents whenever they are not part of any active queries, and have no local mutations attached to them.
-@anonymous
-@JS()
-@staticInterop
-abstract class MemoryEagerGarbageCollector {}
-
-extension MemoryEagerGarbageCollectorExtension on MemoryEagerGarbageCollector {
+///
+extension type MemoryEagerGarbageCollector._(JSObject _) implements JSObject {
   external JSString get kind;
 }
 
 /// A garbage collector deletes Least-Recently-Used documents in multiple batches.
-@anonymous
-@JS()
-@staticInterop
-abstract class MemoryLruGarbageCollector {}
-
-extension MemoryLruGarbageCollectorExtension on MemoryLruGarbageCollector {
+extension type MemoryLruGarbageCollector._(JSObject _) implements JSObject {
   external JSString get kind;
 }
 
@@ -864,12 +973,7 @@ extension MemoryLruGarbageCollectorExtension on MemoryLruGarbageCollector {
 ///
 /// To use, create an instance using the factory function , then set the instance to FirestoreSettings.cache
 /// and call initializeFirestore using the settings object.
-@anonymous
-@JS()
-@staticInterop
-abstract class PersistentLocalCache extends FirestoreLocalCache {}
-
-extension PersistentLocalCacheExtension on PersistentLocalCache {
+extension type PersistentLocalCache._(JSObject _) implements JSObject {
   external JSString get kind;
 }
 
@@ -923,12 +1027,17 @@ extension PersistentCacheSettingsExtension on PersistentCacheSettings {
   external set tabManager(JSObject v);
 }
 
-/// An settings object to configure an PersistentLocalCache instance.
+/// Settings to configure a PersistentSingleTabManager instance.
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firestore_.persistentsingletabmanagersettings>.
+@anonymous
 @JS()
 @staticInterop
-abstract class PersistentSingleTabManagerSettings {}
+abstract class PersistentSingleTabManagerSettings {
+  external factory PersistentSingleTabManagerSettings({
+    JSBoolean? forceOwnership,
+  });
+}
 
 extension PersistentSingleTabManagerSettingsExtension
     on PersistentSingleTabManagerSettings {
@@ -945,11 +1054,7 @@ extension PersistentSingleTabManagerSettingsExtension
 /// Metadata about a snapshot, describing the state of the snapshot.
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.firestore.SnapshotMetadata>.
-@JS()
-@staticInterop
-abstract class SnapshotMetadata {}
-
-extension SnapshotMetadataExtension on SnapshotMetadata {
+extension type SnapshotMetadata._(JSObject _) implements JSObject {
   /// [:true:] if the snapshot includes local writes (set() or update() calls)
   /// that haven't been committed to the backend yet. If your listener has opted
   /// into metadata updates via onDocumentMetadataSnapshot,
@@ -1105,12 +1210,7 @@ external JSPromise getAggregateFromServer(
   JSObject specs,
 );
 
-@JS('AggregateQuerySnapshot')
-@staticInterop
-abstract class AggregateQuerySnapshotJsImpl {}
-
-extension AggregateQuerySnapshotJsImplExtension
-    on AggregateQuerySnapshotJsImpl {
+extension type AggregateQuerySnapshotJsImpl._(JSObject _) implements JSObject {
   external JSObject data();
 }
 
@@ -1118,3 +1218,161 @@ extension AggregateQuerySnapshotJsImplExtension
 @JS()
 @staticInterop
 abstract class PersistentCacheIndexManager {}
+
+/// Entry point for defining the data source of a Firestore Pipeline.
+/// Use .collection(), .collectionGroup(), .database(), or .documents().
+extension type PipelineSourceJsImpl._(JSObject _) implements JSObject {
+  /// Returns all documents from the entire collection (can be nested).
+  external PipelineJsImpl collection(JSString collectionPath);
+
+  /// Returns all documents from a collection ID regardless of parent.
+  external PipelineJsImpl collectionGroup(JSString collectionId);
+
+  /// Returns all documents from the entire database.
+  external PipelineJsImpl database();
+
+  /// Sets the pipeline source to the given document paths or references.
+  external PipelineJsImpl documents(JSArray docs);
+}
+
+/// Pipeline returned by PipelineSource methods; chain stages and call execute().
+/// See: https://firebase.google.com/docs/reference/js/firestore_pipelines.pipeline
+extension type PipelineJsImpl._(JSObject _) implements JSObject {
+  external PipelineJsImpl limit(JSNumber limit);
+  external PipelineJsImpl offset(JSNumber offset);
+  external PipelineJsImpl where(JSAny condition);
+  external PipelineJsImpl sort(JSAny orderingOrOptions);
+  external PipelineJsImpl addFields(JSAny fieldOrOptions);
+  external PipelineJsImpl select(JSAny selectionOrOptions);
+  external PipelineJsImpl distinct(JSAny groupOrOptions);
+  external PipelineJsImpl aggregate(AggregateStageOptionsJsImpl options);
+  external PipelineJsImpl sample(JSAny documentsOrOptions);
+  external PipelineJsImpl unnest(JSAny selectableOrOptions);
+  external PipelineJsImpl removeFields(JSAny fieldOrOptions);
+  external PipelineJsImpl replaceWith(JSAny fieldNameOrOptions);
+  external PipelineJsImpl findNearest(JSAny options);
+  external PipelineJsImpl search(JSAny options);
+  external PipelineJsImpl union(JSAny otherOrOptions);
+  external PipelineJsImpl rawStage(JSString name, JSArray params,
+      [JSAny? options]);
+}
+
+/// Options for pipeline execution (e.g. index mode).
+@anonymous
+@JS()
+@staticInterop
+abstract class PipelineExecuteOptions {
+  external factory PipelineExecuteOptions({JSString? indexMode});
+}
+
+extension PipelineExecuteOptionsExtension on PipelineExecuteOptions {
+  external JSString? get indexMode;
+  external set indexMode(JSString? v);
+}
+
+/// Snapshot of pipeline execution results.
+extension type PipelineSnapshotJsImpl._(JSObject _) implements JSObject {
+  /// Array of [PipelineResultJsImpl].
+  external JSArray get results;
+
+  /// Execution time (if provided by SDK).
+  external JSAny? get executionTime;
+}
+
+/// Single result in a pipeline snapshot (document + data).
+extension type PipelineResultJsImpl._(JSObject _) implements JSObject {
+  external DocumentReferenceJsImpl? get ref;
+  external JSObject? data();
+  external JSAny? get createTime;
+  external JSAny? get updateTime;
+}
+
+extension type SampleStageOptionsJsImpl._(JSObject _) implements JSObject {
+  SampleStageOptionsJsImpl() : this._(JSObject.new());
+
+  // ignore: avoid_setters_without_getters
+  external set documents(JSAny value);
+  // ignore: avoid_setters_without_getters
+  external set percentage(JSAny value);
+}
+
+extension type SortStageOptionsJsImpl._(JSObject _) implements JSObject {
+  SortStageOptionsJsImpl() : this._(JSObject.new());
+
+  // ignore: avoid_setters_without_getters
+  external set orderings(JSAny value);
+}
+
+extension type DistinctStageOptionsJsImpl._(JSObject _) implements JSObject {
+  DistinctStageOptionsJsImpl() : this._(JSObject.new());
+
+  // ignore: avoid_setters_without_getters
+  external set groups(JSAny value);
+}
+
+extension type UnnestStageOptionsJsImpl._(JSObject _) implements JSObject {
+  UnnestStageOptionsJsImpl() : this._(JSObject.new());
+
+  // ignore: avoid_setters_without_getters
+  external set selectable(JSAny value);
+  // ignore: avoid_setters_without_getters
+  external set indexField(JSString? value);
+}
+
+extension type RemoveFieldsStageOptionsJsImpl._(JSObject _)
+    implements JSObject {
+  RemoveFieldsStageOptionsJsImpl() : this._(JSObject.new());
+
+  // ignore: avoid_setters_without_getters
+  external set fields(JSArray<JSString> value);
+}
+
+extension type ReplaceWithStageOptionsJsImpl._(JSObject _) implements JSObject {
+  ReplaceWithStageOptionsJsImpl() : this._(JSObject.new());
+
+  // ignore: avoid_setters_without_getters
+  external set map(JSAny value);
+}
+
+extension type FindNearestStageOptionsJsImpl._(JSObject _) implements JSObject {
+  FindNearestStageOptionsJsImpl() : this._(JSObject.new());
+
+  // ignore: avoid_setters_without_getters
+  external set field(JSAny value);
+  // ignore: avoid_setters_without_getters
+  external set vectorValue(JSAny value);
+  // ignore: avoid_setters_without_getters
+  external set distanceMeasure(JSString value);
+  // ignore: avoid_setters_without_getters
+  external set limit(JSNumber value);
+  // ignore: avoid_setters_without_getters
+  external set distanceField(JSString value);
+}
+
+extension type SearchStageOptionsJsImpl._(JSObject _) implements JSObject {
+  SearchStageOptionsJsImpl() : this._(JSObject.new());
+
+  // ignore: avoid_setters_without_getters
+  external set query(JSAny value);
+  // ignore: avoid_setters_without_getters
+  external set languageCode(JSString value);
+  // ignore: avoid_setters_without_getters
+  external set retrievalDepth(JSNumber value);
+  // ignore: avoid_setters_without_getters
+  external set sort(JSAny value);
+  // ignore: avoid_setters_without_getters
+  external set offset(JSNumber value);
+  // ignore: avoid_setters_without_getters
+  external set limit(JSNumber value);
+  // ignore: avoid_setters_without_getters
+  external set addFields(JSAny value);
+}
+
+extension type PipelineExecuteOptionsJsImpl._(JSObject _) implements JSObject {
+  PipelineExecuteOptionsJsImpl() : this._(JSObject.new());
+
+  // ignore: avoid_setters_without_getters
+  external set indexMode(JSString value);
+  // ignore: avoid_setters_without_getters
+  external set pipeline(JSAny value);
+}

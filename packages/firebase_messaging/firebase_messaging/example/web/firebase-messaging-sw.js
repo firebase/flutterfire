@@ -1,3 +1,15 @@
+// ⚠️ WARNING: This file uses the legacy Firebase compat SDK loaded via importScripts.
+// This approach is deprecated and not recommended for production use.
+//
+// Instead, use the bundled service worker with the modular Firebase JS SDK:
+//   See: ../bundled-service-worker/
+//
+// To build:
+//   cd bundled-service-worker
+//   yarn install && yarn build
+//
+// This outputs a bundled firebase-messaging-sw.js into this directory.
+
 importScripts("https://www.gstatic.com/firebasejs/9.10.0/firebase-app-compat.js");
 importScripts("https://www.gstatic.com/firebasejs/9.10.0/firebase-messaging-compat.js");
 

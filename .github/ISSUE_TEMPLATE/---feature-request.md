@@ -1,7 +1,7 @@
 ---
-name: "🚀Feature Request"
+name: "🚀 Feature Request"
 about: Make a feature request for FlutterFire.
-title: "\U0001F41B [PLUGIN_NAME_HERE] Your feature request title here"
+title: "\U0001F680 [PLUGIN_NAME_HERE] Your feature request title here"
 labels: 'Needs Attention, type: enhancement'
 assignees: ''
 

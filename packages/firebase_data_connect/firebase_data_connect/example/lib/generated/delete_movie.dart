@@ -25,10 +25,26 @@ class DeleteMovieVariablesBuilder {
   }
 }
 
+@immutable
 class DeleteMovieMovieDelete {
-  String id;
+  final String id;
   DeleteMovieMovieDelete.fromJson(dynamic json)
       : id = nativeFromJson<String>(json['id']);
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+
+    final DeleteMovieMovieDelete otherTyped = other as DeleteMovieMovieDelete;
+    return id == otherTyped.id;
+  }
+
+  @override
+  int get hashCode => id.hashCode;
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -41,12 +57,28 @@ class DeleteMovieMovieDelete {
   });
 }
 
+@immutable
 class DeleteMovieData {
-  DeleteMovieMovieDelete? movie_delete;
+  final DeleteMovieMovieDelete? movie_delete;
   DeleteMovieData.fromJson(dynamic json)
       : movie_delete = json['movie_delete'] == null
             ? null
             : DeleteMovieMovieDelete.fromJson(json['movie_delete']);
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+
+    final DeleteMovieData otherTyped = other as DeleteMovieData;
+    return movie_delete == otherTyped.movie_delete;
+  }
+
+  @override
+  int get hashCode => movie_delete.hashCode;
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -61,12 +93,28 @@ class DeleteMovieData {
   });
 }
 
+@immutable
 class DeleteMovieVariables {
-  String id;
+  final String id;
   @Deprecated(
       'fromJson is deprecated for Variable classes as they are no longer required for deserialization.')
   DeleteMovieVariables.fromJson(Map<String, dynamic> json)
       : id = nativeFromJson<String>(json['id']);
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+
+    final DeleteMovieVariables otherTyped = other as DeleteMovieVariables;
+    return id == otherTyped.id;
+  }
+
+  @override
+  int get hashCode => id.hashCode;
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};

@@ -35,15 +35,14 @@ end
 # Path to the Xcode project to modify
 project_path = File.join(options_dict[:project_dir], options_dict[:project_name])
 
-unless (File.exist?(project_path)) 
+unless (File.exist?(project_path))
    abort("Project at #{project_path} does not exist. Please check paths or incorporate Crashlytics upload symbols manually.\n");
 end
 
 # If this is a Flutter project, upload-symbols will use the firebase_app_id_file.json to get the app's ID. If this file doesn't exist, upload-symbols may not be
-# able to upload symbols correctly. 
+# able to upload symbols correctly.
 if(options_dict[:flutter_project])
     unless File.exist?("#{options_dict[:project_dir]}/firebase_app_id_file.json")
-        puts("Warning: firebase_app_id_file.json file does not exist. This may cause issues in upload-symbols. If this error is unexpected, try running flutterfire configure again.")
         exit(0)
     end
 end
@@ -57,9 +56,9 @@ end
 # Actually open and modify the project
 project = Xcodeproj::Project.open(project_path)
 project.targets.each do |target|
-    if (target.name == "Runner") 
+    if (target.name == "Runner")
         # We need to make sure that we're not adding more than one run script to upload-symbols (or overwriting custom upload-symbols scripts).
-        target.shell_script_build_phases().each { |phase| 
+        target.shell_script_build_phases().each { |phase|
             if (phase.shell_script.include? "FirebaseCrashlytics/upload-symbols")
                 puts("Run script to upload symbols already exists.")
                 exit(0)

@@ -15,6 +15,8 @@ import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 import 'src/interop/database.dart' as database_interop;
 
+import 'src/firebase_database_version.dart';
+
 part './src/data_snapshot_web.dart';
 part './src/database_event_web.dart';
 part './src/database_reference_web.dart';
@@ -27,6 +29,8 @@ part './src/utils/snapshot_utils.dart';
 /// Web implementation for [DatabasePlatform]
 /// delegates calls to firebase web plugin
 class FirebaseDatabaseWeb extends DatabasePlatform {
+  static const String _libraryName = 'flutter-fire-rtdb';
+
   /// Instance of Database from web plugin
   database_interop.Database? _firebaseDatabase;
 
@@ -41,6 +45,8 @@ class FirebaseDatabaseWeb extends DatabasePlatform {
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
+    FirebaseCoreWeb.registerLibraryVersion(_libraryName, packageVersion);
+
     FirebaseCoreWeb.registerService('database');
     DatabasePlatform.instance = FirebaseDatabaseWeb();
   }

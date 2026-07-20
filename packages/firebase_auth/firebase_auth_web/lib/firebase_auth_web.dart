@@ -17,6 +17,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:web/web.dart' as web;
 
+import 'src/firebase_auth_version.dart';
+
 import 'src/firebase_auth_web_confirmation_result.dart';
 import 'src/firebase_auth_web_recaptcha_verifier_factory.dart';
 import 'src/firebase_auth_web_user.dart';
@@ -28,6 +30,8 @@ enum StateListener { authStateChange, userStateChange, idTokenChange }
 
 /// The web delegate implementation for [FirebaseAuth].
 class FirebaseAuthWeb extends FirebaseAuthPlatform {
+  static const String _libraryName = 'flutter-fire-auth';
+
   /// Stub initializer to allow the [registerWith] to create an instance without
   /// registering the web delegates or listeners.
   FirebaseAuthWeb._()
@@ -46,6 +50,8 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
+    FirebaseCoreWeb.registerLibraryVersion(_libraryName, packageVersion);
+
     FirebaseCoreWeb.registerService(
       'auth',
       ensurePluginInitialized: (firebaseApp) async {
@@ -129,7 +135,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
             );
           }
         }).listen((UserWeb? webUser) {
-          _authStateChangesListeners[app.name]!.add(webUser);
+          _authStateChangesListeners[app.name]?.add(webUser);
         });
         break;
       case StateListener.idTokenChange:
@@ -168,8 +174,8 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
             );
           }
         }).listen((UserWeb? webUser) {
-          _idTokenChangesListeners[app.name]!.add(webUser);
-          _userChangesListeners[app.name]!.add(webUser);
+          _idTokenChangesListeners[app.name]?.add(webUser);
+          _userChangesListeners[app.name]?.add(webUser);
         });
         break;
       case StateListener.userStateChange:
@@ -213,7 +219,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
 
   @override
   FirebaseAuthWeb setInitialValues({
-    PigeonUserDetails? currentUser,
+    InternalUserDetails? currentUser,
     String? languageCode,
   }) {
     // Values are already set on web
@@ -631,6 +637,13 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       String authorizationCode) async {
     throw UnimplementedError(
       'revokeTokenWithAuthorizationCode() is only available on apple platforms.',
+    );
+  }
+
+  @override
+  Future<void> initializeRecaptchaConfig() async {
+    await guardAuthExceptions(
+      () => delegate.initializeRecaptchaConfig(),
     );
   }
 }

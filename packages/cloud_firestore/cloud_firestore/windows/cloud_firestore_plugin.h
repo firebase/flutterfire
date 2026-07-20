@@ -11,7 +11,11 @@
 #include <flutter/method_channel.h>
 #include <flutter/plugin_registrar_windows.h>
 
+#include <chrono>
+#include <condition_variable>
 #include <memory>
+#include <mutex>
+#include <vector>
 
 #include "firebase/app.h"
 #include "firebase/firestore.h"
@@ -21,12 +25,39 @@
 
 namespace cloud_firestore_windows {
 
+enum class TransactionResponseStatus {
+  kReceived,
+  kTimedOut,
+  kCancelled,
+};
+
+class TransactionResponse {
+ public:
+  void Reset();
+  void Complete(InternalTransactionResult result,
+                std::vector<InternalTransactionCommand> commands);
+  TransactionResponseStatus WaitFor(
+      std::chrono::milliseconds timeout, InternalTransactionResult& result,
+      std::vector<InternalTransactionCommand>& commands);
+  void Cancel();
+
+ private:
+  std::mutex mutex_;
+  std::condition_variable condition_;
+  bool response_received_ = false;
+  bool cancelled_ = false;
+  InternalTransactionResult result_ = InternalTransactionResult::kSuccess;
+  std::vector<InternalTransactionCommand> commands_;
+};
+
 class CloudFirestorePlugin : public flutter::Plugin,
                              public FirebaseFirestoreHostApi {
  public:
   static void RegisterWithRegistrar(flutter::PluginRegistrarWindows* registrar);
   static firebase::firestore::FieldValue ConvertToFieldValue(
       const flutter::EncodableValue& variant);
+  static flutter::EncodableValue ConvertFieldValueToEncodableValue(
+      const firebase::firestore::FieldValue& fieldValue);
 
   CloudFirestorePlugin();
 
@@ -48,8 +79,9 @@ class CloudFirestorePlugin : public flutter::Plugin,
       std::function<void(ErrorOr<std::string> reply)> result) override;
   virtual void NamedQueryGet(
       const FirestorePigeonFirebaseApp& app, const std::string& name,
-      const PigeonGetOptions& options,
-      std::function<void(ErrorOr<PigeonQuerySnapshot> reply)> result) override;
+      const InternalGetOptions& options,
+      std::function<void(ErrorOr<InternalQuerySnapshot> reply)> result)
+      override;
   virtual void ClearPersistence(
       const FirestorePigeonFirebaseApp& app,
       std::function<void(std::optional<FlutterError> reply)> result) override;
@@ -81,13 +113,13 @@ class CloudFirestorePlugin : public flutter::Plugin,
       std::function<void(ErrorOr<std::string> reply)> result) override;
   virtual void TransactionStoreResult(
       const std::string& transaction_id,
-      const PigeonTransactionResult& result_type,
+      const InternalTransactionResult& result_type,
       const flutter::EncodableList* commands,
       std::function<void(std::optional<FlutterError> reply)> result) override;
   virtual void TransactionGet(
       const FirestorePigeonFirebaseApp& app, const std::string& transaction_id,
       const std::string& path,
-      std::function<void(ErrorOr<PigeonDocumentSnapshot> reply)> result)
+      std::function<void(ErrorOr<InternalDocumentSnapshot> reply)> result)
       override;
   virtual void DocumentReferenceSet(
       const FirestorePigeonFirebaseApp& app,
@@ -100,7 +132,7 @@ class CloudFirestorePlugin : public flutter::Plugin,
   virtual void DocumentReferenceGet(
       const FirestorePigeonFirebaseApp& app,
       const DocumentReferenceRequest& request,
-      std::function<void(ErrorOr<PigeonDocumentSnapshot> reply)> result)
+      std::function<void(ErrorOr<InternalDocumentSnapshot> reply)> result)
       override;
   virtual void DocumentReferenceDelete(
       const FirestorePigeonFirebaseApp& app,
@@ -108,12 +140,13 @@ class CloudFirestorePlugin : public flutter::Plugin,
       std::function<void(std::optional<FlutterError> reply)> result) override;
   virtual void QueryGet(
       const FirestorePigeonFirebaseApp& app, const std::string& path,
-      bool is_collection_group, const PigeonQueryParameters& parameters,
-      const PigeonGetOptions& options,
-      std::function<void(ErrorOr<PigeonQuerySnapshot> reply)> result) override;
+      bool is_collection_group, const InternalQueryParameters& parameters,
+      const InternalGetOptions& options,
+      std::function<void(ErrorOr<InternalQuerySnapshot> reply)> result)
+      override;
   virtual void AggregateQuery(
       const FirestorePigeonFirebaseApp& app, const std::string& path,
-      const PigeonQueryParameters& parameters, const AggregateSource& source,
+      const InternalQueryParameters& parameters, const AggregateSource& source,
       const flutter::EncodableList& queries, bool is_collection_group,
       std::function<void(ErrorOr<flutter::EncodableList> reply)> result)
       override;
@@ -123,8 +156,8 @@ class CloudFirestorePlugin : public flutter::Plugin,
       std::function<void(std::optional<FlutterError> reply)> result) override;
   virtual void QuerySnapshot(
       const FirestorePigeonFirebaseApp& app, const std::string& path,
-      bool is_collection_group, const PigeonQueryParameters& parameters,
-      const PigeonGetOptions& options, bool include_metadata_changes,
+      bool is_collection_group, const InternalQueryParameters& parameters,
+      const InternalGetOptions& options, bool include_metadata_changes,
       const ListenSource& source,
       std::function<void(ErrorOr<std::string> reply)> result) override;
   virtual void DocumentReferenceSnapshot(
@@ -136,6 +169,12 @@ class CloudFirestorePlugin : public flutter::Plugin,
       const FirestorePigeonFirebaseApp& app,
       const PersistenceCacheIndexManagerRequestEnum& request,
       std::function<void(std::optional<FlutterError> reply)> result) override;
+  virtual void ExecutePipeline(
+      const FirestorePigeonFirebaseApp& app,
+      const ::flutter::EncodableList& stages,
+      const ::flutter::EncodableMap* options,
+      std::function<void(ErrorOr<InternalPipelineSnapshot> reply)> result)
+      override;
 
   static flutter::BinaryMessenger* messenger_;
   static std::map<
@@ -144,8 +183,7 @@ class CloudFirestorePlugin : public flutter::Plugin,
       event_channels_;
   static std::map<std::string, std::unique_ptr<flutter::StreamHandler<>>>
       stream_handlers_;
-  static std::map<std::string, std::unique_ptr<flutter::StreamHandler<>>>
-      transaction_handlers_;
+  static std::map<std::string, flutter::StreamHandler<>*> transaction_handlers_;
   static std::map<std::string,
                   std::shared_ptr<firebase::firestore::Transaction>>
       transactions_;

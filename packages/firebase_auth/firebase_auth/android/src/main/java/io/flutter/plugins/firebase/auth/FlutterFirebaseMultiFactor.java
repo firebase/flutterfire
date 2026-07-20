@@ -60,7 +60,7 @@ public class FlutterFirebaseMultiFactor
   @Override
   public void enrollPhone(
       @NonNull GeneratedAndroidFirebaseAuth.AuthPigeonFirebaseApp app,
-      @NonNull GeneratedAndroidFirebaseAuth.PigeonPhoneMultiFactorAssertion assertion,
+      @NonNull GeneratedAndroidFirebaseAuth.InternalPhoneMultiFactorAssertion assertion,
       @Nullable String displayName,
       @NonNull GeneratedAndroidFirebaseAuth.VoidResult result) {
     final MultiFactor multiFactor;
@@ -126,7 +126,8 @@ public class FlutterFirebaseMultiFactor
   public void getSession(
       @NonNull GeneratedAndroidFirebaseAuth.AuthPigeonFirebaseApp app,
       @NonNull
-          GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonMultiFactorSession>
+          GeneratedAndroidFirebaseAuth.Result<
+                  GeneratedAndroidFirebaseAuth.InternalMultiFactorSession>
               result) {
     final MultiFactor multiFactor;
     try {
@@ -145,7 +146,7 @@ public class FlutterFirebaseMultiFactor
                 final String id = UUID.randomUUID().toString();
                 multiFactorSessionMap.put(id, sessionResult);
                 result.success(
-                    new GeneratedAndroidFirebaseAuth.PigeonMultiFactorSession.Builder()
+                    new GeneratedAndroidFirebaseAuth.InternalMultiFactorSession.Builder()
                         .setId(id)
                         .build());
               } else {
@@ -188,7 +189,7 @@ public class FlutterFirebaseMultiFactor
       @NonNull GeneratedAndroidFirebaseAuth.AuthPigeonFirebaseApp app,
       @NonNull
           GeneratedAndroidFirebaseAuth.Result<
-                  List<GeneratedAndroidFirebaseAuth.PigeonMultiFactorInfo>>
+                  List<GeneratedAndroidFirebaseAuth.InternalMultiFactorInfo>>
               result) {
     final MultiFactor multiFactor;
     try {
@@ -200,7 +201,7 @@ public class FlutterFirebaseMultiFactor
 
     final List<MultiFactorInfo> factors = multiFactor.getEnrolledFactors();
 
-    final List<GeneratedAndroidFirebaseAuth.PigeonMultiFactorInfo> resultFactors =
+    final List<GeneratedAndroidFirebaseAuth.InternalMultiFactorInfo> resultFactors =
         PigeonParser.multiFactorInfoToPigeon(factors);
 
     result.success(resultFactors);
@@ -209,10 +210,10 @@ public class FlutterFirebaseMultiFactor
   @Override
   public void resolveSignIn(
       @NonNull String resolverId,
-      @Nullable GeneratedAndroidFirebaseAuth.PigeonPhoneMultiFactorAssertion assertion,
+      @Nullable GeneratedAndroidFirebaseAuth.InternalPhoneMultiFactorAssertion assertion,
       @Nullable String totpAssertionId,
       @NonNull
-          GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonUserCredential>
+          GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.InternalUserCredential>
               result) {
     final MultiFactorResolver resolver = multiFactorResolverMap.get(resolverId);
 

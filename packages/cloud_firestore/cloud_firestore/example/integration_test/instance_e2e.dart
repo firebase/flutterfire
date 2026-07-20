@@ -148,92 +148,43 @@ void runInstanceTests() {
           await firestore.terminate();
           await firestore.clearPersistence();
         },
-        skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
+        skip: kIsWeb,
       );
 
       test(
-        'setIndexConfiguration()',
+        'terminate() then use Firestore again',
         () async {
-          Index index1 = Index(
-            collectionGroup: 'bar',
-            queryScope: QueryScope.collectionGroup,
-            fields: [
-              IndexField(
-                fieldPath: 'fieldPath',
-                order: Order.ascending,
-                arrayConfig: ArrayConfig.contains,
-              ),
-            ],
+          // Regression test for https://github.com/firebase/flutterfire/issues/17781
+          // On Windows, terminate() did not remove the instance from the native
+          // cache, so subsequent usage would crash with "The client has already
+          // been terminated".
+          final instance = FirebaseFirestore.instanceFor(
+            app: Firebase.app(),
+            databaseId: 'flutterfire-2',
           );
 
-          Index index2 = Index(
-            collectionGroup: 'baz',
-            queryScope: QueryScope.collection,
-            fields: [
-              IndexField(
-                fieldPath: 'foo',
-                arrayConfig: ArrayConfig.contains,
-              ),
-              IndexField(
-                fieldPath: 'bar',
-                order: Order.descending,
-                arrayConfig: ArrayConfig.contains,
-              ),
-              IndexField(
-                fieldPath: 'baz',
-                order: Order.descending,
-                arrayConfig: ArrayConfig.contains,
-              ),
-            ],
+          instance.useFirestoreEmulator('localhost', 8080);
+
+          // Use Firestore so it is fully initialized
+          await instance.collection('flutterfire-2').doc('terminate-test').set(
+            {'foo': 'bar'},
           );
 
-          FieldOverrides fieldOverride1 = FieldOverrides(
-            fieldPath: 'fieldPath',
-            indexes: [
-              FieldOverrideIndex(
-                queryScope: 'foo',
-                order: Order.ascending,
-                arrayConfig: ArrayConfig.contains,
-              ),
-              FieldOverrideIndex(
-                queryScope: 'bar',
-                order: Order.descending,
-                arrayConfig: ArrayConfig.contains,
-              ),
-              FieldOverrideIndex(
-                queryScope: 'baz',
-                order: Order.descending,
-              ),
-            ],
-            collectionGroup: 'bar',
-          );
-          FieldOverrides fieldOverride2 = FieldOverrides(
-            fieldPath: 'anotherField',
-            indexes: [
-              FieldOverrideIndex(
-                queryScope: 'foo',
-                order: Order.ascending,
-                arrayConfig: ArrayConfig.contains,
-              ),
-              FieldOverrideIndex(
-                queryScope: 'bar',
-                order: Order.descending,
-                arrayConfig: ArrayConfig.contains,
-              ),
-              FieldOverrideIndex(
-                queryScope: 'baz',
-                order: Order.descending,
-              ),
-            ],
-            collectionGroup: 'collectiongroup',
-          );
-          // ignore_for_file: deprecated_member_use
-          await firestore.setIndexConfiguration(
-            indexes: [index1, index2],
-            fieldOverrides: [fieldOverride1, fieldOverride2],
-          );
+          await instance.terminate();
+          await instance.clearPersistence();
+
+          // After terminate + clearPersistence, we should be able to use
+          // Firestore again without crashing.
+          await instance
+              .collection('flutterfire-2')
+              .doc('terminate-test')
+              .get();
+
+          // Clean up: terminate so the native instance cache is cleared
+          // for subsequent tests that may use the same databaseId.
+          await instance.terminate();
         },
-        skip: defaultTargetPlatform == TargetPlatform.windows,
+        skip: kIsWeb,
       );
 
       test(
@@ -259,6 +210,7 @@ void runInstanceTests() {
             ],
           });
 
+          // ignore: experimental_member_use
           await firestore.setIndexConfigurationFromJSON(json);
         },
         skip: defaultTargetPlatform == TargetPlatform.windows,
@@ -372,8 +324,8 @@ void runInstanceTests() {
               databaseId: 'web-disabled-2',
             );
 
-            // Now try using `enablePersistence()`, web only API
-            await firestore2.enablePersistence();
+            // Enable persistence using settings instead of deprecated enablePersistence()
+            firestore2.settings = const Settings(persistenceEnabled: true);
 
             PersistentCacheIndexManager? indexManager2 =
                 firestore2.persistentCacheIndexManager();

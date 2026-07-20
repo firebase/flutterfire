@@ -1,3 +1,87 @@
+## 4.9.2
+
+ - Update a dependency to the latest release.
+
+## 4.9.1
+
+ - Update a dependency to the latest release.
+
+## 4.9.0
+
+ - **FEAT**(messaging,ios): add support for actionIdentifier on iOS devices ([#18357](https://github.com/firebase/flutterfire/issues/18357)). ([d60af4d9](https://github.com/firebase/flutterfire/commit/d60af4d9e1345c113490e875c85bd9ac62dad935))
+
+## 4.8.0
+
+ - **FEAT**(messaging,web): add support for custom service worker script path in `getToken` method ([#18290](https://github.com/firebase/flutterfire/issues/18290)). ([b37722db](https://github.com/firebase/flutterfire/commit/b37722db13548aca57b3a24ba0f27b5de021be02))
+
+## 4.7.11
+
+ - Update a dependency to the latest release.
+
+## 4.7.10
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+
+## 4.7.9
+
+ - Update a dependency to the latest release.
+
+## 4.7.8
+
+ - Update a dependency to the latest release.
+
+## 4.7.7
+
+ - Update a dependency to the latest release.
+
+## 4.7.6
+
+ - Update a dependency to the latest release.
+
+## 4.7.5
+
+ - Update a dependency to the latest release.
+
+## 4.7.4
+
+ - Update a dependency to the latest release.
+
+## 4.7.3
+
+ - **FIX**(firebase_messaging): update APNS token error message for clarity ([#17763](https://github.com/firebase/flutterfire/issues/17763)). ([08a04332](https://github.com/firebase/flutterfire/commit/08a0433264f9797451dea1804257e439be11e64a))
+
+## 4.7.2
+
+ - Update a dependency to the latest release.
+
+## 4.7.1
+
+ - Update a dependency to the latest release.
+
+## 4.7.0
+
+ - **FEAT**(messaging): remove deprecated functions ([#17563](https://github.com/firebase/flutterfire/issues/17563)). ([1b716261](https://github.com/firebase/flutterfire/commit/1b7162619311e24b7f13a3e3b8c603fb1e05477b))
+
+## 4.6.10
+
+ - Update a dependency to the latest release.
+
+## 4.6.9
+
+ - Update a dependency to the latest release.
+
+## 4.6.8
+
+ - Update a dependency to the latest release.
+
+## 4.6.7
+
+ - Update a dependency to the latest release.
+
+## 4.6.6
+
+ - Update a dependency to the latest release.
+
 ## 4.6.5
 
  - Update a dependency to the latest release.
@@ -221,7 +305,7 @@
 ## 4.5.0
 
  - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
- - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+ - **FEAT**: update libraries to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
 
 ## 4.4.0
 

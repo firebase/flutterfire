@@ -36,16 +36,6 @@ class MicrosoftAuthProvider extends AuthProvider {
   /// Creates a new instance.
   MicrosoftAuthProvider() : super(_kProviderId);
 
-  /// Create a new [MicrosoftAuthCredential] from a provided [accessToken];
-  @Deprecated(
-    '`credential()` has been deprecated. Sign-in cannot be directly achieved with OAuth access token based credentials for Microsoft. Please use `signInWithProvider(MicrosoftAuthProvider)` instead.',
-  )
-  static OAuthCredential credential(String accessToken) {
-    return MicrosoftAuthCredential._credential(
-      accessToken,
-    );
-  }
-
   /// This corresponds to the sign-in method identifier.
   static String get MICROSOFT_SIGN_IN_METHOD {
     return _kProviderId;
@@ -82,19 +72,5 @@ class MicrosoftAuthProvider extends AuthProvider {
   ) {
     _parameters = customOAuthParameters;
     return this;
-  }
-}
-
-// ignore: deprecated_member_use_from_same_package
-/// [MicrosoftAuthProvider.credential] returns a [MicrosoftAuthCredential] instance.
-class MicrosoftAuthCredential extends OAuthCredential {
-  MicrosoftAuthCredential._({
-    required String accessToken,
-  }) : super(
-            providerId: _kProviderId,
-            signInMethod: _kProviderId,
-            accessToken: accessToken);
-  factory MicrosoftAuthCredential._credential(String accessToken) {
-    return MicrosoftAuthCredential._(accessToken: accessToken);
   }
 }

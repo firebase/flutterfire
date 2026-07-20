@@ -12,11 +12,7 @@ import 'dart:js_interop';
 
 import 'core_interop.dart';
 
-@JS('FirebaseApp')
-@staticInterop
-abstract class AppJsImpl {}
-
-extension AppJsImplExtension on AppJsImpl {
+extension type AppJsImpl._(JSObject _) implements JSObject {
   external JSString get name;
   external FirebaseOptions get options;
 }

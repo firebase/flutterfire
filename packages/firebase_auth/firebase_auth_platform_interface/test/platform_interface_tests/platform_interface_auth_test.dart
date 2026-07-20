@@ -353,6 +353,13 @@ void main() {
         throwsUnimplementedError,
       );
     });
+
+    test('throws if revokeAccessToken()', () async {
+      await expectLater(
+        () => firebaseAuthPlatform.revokeAccessToken('token'),
+        throwsUnimplementedError,
+      );
+    });
   });
 }
 

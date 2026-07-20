@@ -2,20 +2,18 @@ Project: /docs/storage/_project.yaml
 Book: /docs/_book.yaml
 page_type: guide
 
+{# The following is at site root, /third_party/devsite/firebase/en/ #}
+{% include "_local_variables.html" %}
+
+{% include "docs/storage/_local_variables.html" %}
+
 <link rel="stylesheet" type="text/css" href="/styles/docs.css" />
 
 # Delete files with Cloud Storage on Flutter
 
 After uploading files to Cloud Storage, you can also delete them.
 
-Note: By default, a Cloud Storage bucket requires Firebase Authentication to
-perform any action on the bucket's data or files. You can
-[change your Firebase Security Rules for Cloud Storage](/docs/storage/security/rules-conditions#public)
-to allow unauthenticated access. Since Firebase and your project's default
-App Engine app share this bucket, configuring public access may make newly
-uploaded App Engine files publicly accessible, as well. Be sure to restrict
-access to your Cloud Storage bucket again when you set up Authentication.
-
+<<../_includes/_restrict_access_to_bucket_note.md>>
 
 ## Delete a File
 

@@ -12,7 +12,7 @@ import 'method_channel_document_change.dart';
 class MethodChannelQuerySnapshot extends QuerySnapshotPlatform {
   /// Creates a [MethodChannelQuerySnapshot] from the given [data]
   MethodChannelQuerySnapshot(
-      FirebaseFirestorePlatform firestore, PigeonQuerySnapshot data)
+      FirebaseFirestorePlatform firestore, InternalQuerySnapshot data)
       : super(
             data.documents
                 .map<DocumentSnapshotPlatform?>((document) {

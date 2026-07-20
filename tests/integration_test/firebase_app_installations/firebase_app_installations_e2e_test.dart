@@ -20,6 +20,11 @@ void main() {
         await Firebase.initializeApp(
           options: DefaultFirebaseOptions.currentPlatform,
         );
+        if (defaultTargetPlatform == TargetPlatform.android) {
+          // Android Installations can deadlock if token/id APIs race native
+          // heartbeat initialization immediately after manual app init.
+          await Future<void>.delayed(const Duration(seconds: 2));
+        }
       });
 
       test(
@@ -48,30 +53,43 @@ void main() {
       );
 
       test(
-        '.delete',
+        '.getToken',
         () async {
-          final id = await FirebaseInstallations.instance.getId();
-
-          // Wait a little so we don't get a delete-pending exception
-          await Future.delayed(const Duration(seconds: 8));
-
-          await FirebaseInstallations.instance.delete();
-
-          // Wait a little so we don't get a delete-pending exception
-          await Future.delayed(const Duration(seconds: 8));
-
-          final newId = await FirebaseInstallations.instance.getId();
-          expect(newId, isNot(equals(id)));
+          final token = await FirebaseInstallations.instance.getToken();
+          expect(token, isNotEmpty);
           // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
         },
         skip: defaultTargetPlatform == TargetPlatform.macOS,
       );
 
       test(
-        '.getToken',
+        '.delete',
         () async {
-          final token = await FirebaseInstallations.instance.getToken();
-          expect(token, isNotEmpty);
+          final id = await FirebaseInstallations.instance.getId();
+
+          // Retry delete in case of delete-pending state
+          for (var attempt = 0; attempt < 5; attempt++) {
+            try {
+              await FirebaseInstallations.instance.delete();
+              break;
+            } catch (e) {
+              if (attempt == 4) rethrow;
+              await Future.delayed(const Duration(seconds: 2));
+            }
+          }
+
+          // Retry getId in case of delete-pending state
+          String? newId;
+          for (var attempt = 0; attempt < 5; attempt++) {
+            try {
+              newId = await FirebaseInstallations.instance.getId();
+              break;
+            } catch (e) {
+              if (attempt == 4) rethrow;
+              await Future.delayed(const Duration(seconds: 2));
+            }
+          }
+          expect(newId, isNot(equals(id)));
           // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
         },
         skip: defaultTargetPlatform == TargetPlatform.macOS,

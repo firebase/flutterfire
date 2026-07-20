@@ -1,14 +1,29 @@
 group 'io.flutter.plugins.firebase.cloudfunctions'
 version '1.0-SNAPSHOT'
 
+apply plugin: 'com.android.library'
+apply from: file("local-config.gradle")
+
+// AGP 9+ has built-in Kotlin support unless Flutter opts out via android.builtInKotlin=false.
+def agpMajor = com.android.Version.ANDROID_GRADLE_PLUGIN_VERSION.tokenize('.')[0] as int
+def builtInKotlin = providers.gradleProperty("android.builtInKotlin")
+        .map { it.toBoolean() }
+        .orElse(agpMajor >= 9)
+        .get()
+if (agpMajor < 9 || !builtInKotlin) {
+  apply plugin: 'kotlin-android'
+}
+
 buildscript {
+  ext.kotlin_version = "2.0.0"
   repositories {
     google()
     mavenCentral()
   }
 
   dependencies {
-    classpath 'com.android.tools.build:gradle:8.1.2'
+      classpath 'com.android.tools.build:gradle:8.3.0'
+      classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
   }
 }
 
@@ -18,8 +33,6 @@ rootProject.allprojects {
     mavenCentral()
   }
 }
-
-apply plugin: 'com.android.library'
 
 def firebaseCoreProject = findProject(':firebase_core')
 if (firebaseCoreProject == null) {
@@ -40,17 +53,23 @@ android {
     namespace 'io.flutter.plugins.firebase.functions'
   }
 
-  compileSdk 35
+  compileSdkVersion project.ext.compileSdk
 
   defaultConfig {
-    minSdk 21
-    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+      minSdkVersion project.ext.minSdk
+      testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
   }
 
   compileOptions {
-    sourceCompatibility JavaVersion.VERSION_17
-    targetCompatibility JavaVersion.VERSION_17
+      sourceCompatibility project.ext.javaVersion
+      targetCompatibility project.ext.javaVersion
   }
+
+  sourceSets {
+    main.java.srcDirs += "src/main/kotlin"
+    test.java.srcDirs += "src/test/kotlin"
+  }
+
   buildFeatures {
     buildConfig = true
   }
@@ -65,6 +84,15 @@ android {
     implementation 'com.google.firebase:firebase-functions'
     implementation 'androidx.annotation:annotation:1.7.0'
     implementation 'org.reactivestreams:reactive-streams:1.0.4'
+  }
+
+}
+
+plugins.withId("org.jetbrains.kotlin.android") {
+  kotlin {
+    compilerOptions {
+      jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.fromTarget(project.ext.javaVersion.toString())
+    }
   }
 }
 

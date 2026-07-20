@@ -8,7 +8,7 @@ part of '../firebase_messaging.dart';
 /// The [FirebaseMessaging] entry point.
 ///
 /// To get a new instance, call [FirebaseMessaging.instance].
-class FirebaseMessaging extends FirebasePluginPlatform {
+class FirebaseMessaging extends FirebasePlugin {
   // Cached and lazily loaded instance of [FirebaseMessagingPlatform] to avoid
   // creating a [MethodChannelFirebaseMessaging] when not needed or creating an
   // instance with the default app before a user specifies an app.
@@ -114,11 +114,17 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   /// Returns the default FCM token for this device.
   ///
   /// On web, a [vapidKey] is required.
+  ///
+  /// On web, a custom messaging service worker can be registered with
+  /// [serviceWorkerScriptPath]. This must point to a JavaScript file in the
+  /// root of the app's `web` directory.
   Future<String?> getToken({
     String? vapidKey,
+    String? serviceWorkerScriptPath,
   }) {
     return _delegate.getToken(
       vapidKey: vapidKey,
+      serviceWorkerScriptPath: serviceWorkerScriptPath,
     );
   }
 
@@ -212,31 +218,6 @@ class FirebaseMessaging extends FirebasePluginPlatform {
     );
   }
 
-  /// Send a new [RemoteMessage] to the FCM server. Android only.
-  /// Firebase will decommission in June 2024: https://firebase.google.com/docs/reference/android/com/google/firebase/messaging/FirebaseMessaging#send
-  @Deprecated(
-      'This will be removed in a future release. Firebase will decommission in June 2024')
-  Future<void> sendMessage({
-    String? to,
-    Map<String, String>? data,
-    String? collapseKey,
-    String? messageId,
-    String? messageType,
-    int? ttl,
-  }) {
-    if (ttl != null) {
-      assert(ttl >= 0);
-    }
-    return _delegate.sendMessage(
-      to: to ?? '${app.options.messagingSenderId}@fcm.googleapis.com',
-      data: data,
-      collapseKey: collapseKey,
-      messageId: messageId,
-      messageType: messageType,
-      ttl: ttl,
-    );
-  }
-
   /// Enable or disable auto-initialization of Firebase Cloud Messaging.
   Future<void> setAutoInitEnabled(bool enabled) async {
     return _delegate.setAutoInitEnabled(enabled);
@@ -270,6 +251,11 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   ///
   /// If all arguments are `false` or are omitted, a notification will not be displayed in the
   /// foreground, however you will still receive events relating to the notification.
+  ///
+  /// Important: Options set to `true` are persisted. If you
+  /// later remove or comment out this call, those values remain in effect—they are not reset to
+  /// `false`. To turn off foreground display after having set it to `true`, call this method
+  /// explicitly with `alert: false` (and `badge`/`sound` as desired).
   Future<void> setForegroundNotificationPresentationOptions({
     bool alert = false,
     bool badge = false,

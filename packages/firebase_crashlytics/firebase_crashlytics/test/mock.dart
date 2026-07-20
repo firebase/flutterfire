@@ -15,13 +15,13 @@ final List<MethodCall> methodCallLog = <MethodCall>[];
 
 class MockFirebaseAppWithCollectionEnabled implements TestFirebaseCoreHostApi {
   @override
-  Future<PigeonInitializeResponse> initializeApp(
+  Future<CoreInitializeResponse> initializeApp(
     String appName,
-    PigeonFirebaseOptions initializeAppRequest,
+    CoreFirebaseOptions initializeAppRequest,
   ) async {
-    return PigeonInitializeResponse(
+    return CoreInitializeResponse(
       name: appName,
-      options: PigeonFirebaseOptions(
+      options: CoreFirebaseOptions(
         apiKey: '123',
         projectId: '123',
         appId: '123',
@@ -36,11 +36,11 @@ class MockFirebaseAppWithCollectionEnabled implements TestFirebaseCoreHostApi {
   }
 
   @override
-  Future<List<PigeonInitializeResponse?>> initializeCore() async {
+  Future<List<CoreInitializeResponse>> initializeCore() async {
     return [
-      PigeonInitializeResponse(
+      CoreInitializeResponse(
         name: defaultFirebaseAppName,
-        options: PigeonFirebaseOptions(
+        options: CoreFirebaseOptions(
           apiKey: '123',
           projectId: '123',
           appId: '123',
@@ -56,8 +56,8 @@ class MockFirebaseAppWithCollectionEnabled implements TestFirebaseCoreHostApi {
   }
 
   @override
-  Future<PigeonFirebaseOptions> optionsFromResource() async {
-    return PigeonFirebaseOptions(
+  Future<CoreFirebaseOptions> optionsFromResource() async {
+    return CoreFirebaseOptions(
       apiKey: '123',
       projectId: '123',
       appId: '123',
@@ -69,7 +69,7 @@ class MockFirebaseAppWithCollectionEnabled implements TestFirebaseCoreHostApi {
 void setupFirebaseCrashlyticsMocks([Callback? customHandlers]) {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  TestFirebaseCoreHostApi.setup(MockFirebaseAppWithCollectionEnabled());
+  TestFirebaseCoreHostApi.setUp(MockFirebaseAppWithCollectionEnabled());
 
   TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
       .setMockMethodCallHandler(MethodChannelFirebaseCrashlytics.channel,

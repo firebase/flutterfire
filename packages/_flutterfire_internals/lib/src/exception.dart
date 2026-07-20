@@ -38,21 +38,27 @@ FirebaseException platformExceptionToFirebaseException(
   PlatformException platformException, {
   required String plugin,
 }) {
-  Map<String, Object>? details = platformException.details != null
-      ? Map<String, Object>.from(platformException.details)
-      : null;
+  Map<String, Object>? details;
+
+  final rawDetails = platformException.details;
+
+  if (rawDetails is Map) {
+    details = Map<String, Object>.from(rawDetails);
+  }
 
   String? code;
   String message = platformException.message ?? '';
 
   if (details != null) {
-    code = (details['code'] as String?) ?? code;
-    message = (details['message'] as String?) ?? message;
+    code = details['code'] as String?;
+    message = details['message'] as String? ?? message;
+  } else if (rawDetails != null) {
+    message = rawDetails.toString();
   }
 
   return FirebaseException(
     plugin: plugin,
-    code: code,
+    code: code ?? 'unknown',
     message: message,
   );
 }

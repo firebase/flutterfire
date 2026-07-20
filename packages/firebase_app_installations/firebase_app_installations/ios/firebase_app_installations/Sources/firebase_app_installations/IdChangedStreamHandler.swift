@@ -2,14 +2,14 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import FirebaseInstallations
+import Foundation
+
 #if canImport(FlutterMacOS)
   import FlutterMacOS
 #else
   import Flutter
 #endif
-
-import FirebaseInstallations
-import Foundation
 
 class IdChangedStreamHandler: NSObject, FlutterStreamHandler {
   var eventSink: FlutterEventSink?
@@ -33,11 +33,13 @@ class IdChangedStreamHandler: NSObject, FlutterStreamHandler {
       guard let self else { return }
 
       if let error {
-        self.eventSink?(FlutterError(
-          code: "unknown",
-          message: error.localizedDescription,
-          details: ["code": "unknown", "message": error.localizedDescription]
-        ))
+        self.eventSink?(
+          FlutterError(
+            code: "unknown",
+            message: error.localizedDescription,
+            details: ["code": "unknown", "message": error.localizedDescription]
+          )
+        )
       } else if let newId, newId != self.installationsId {
         self.installationsId = newId
         self.eventSink?(["token": self.installationsId])
@@ -45,8 +47,10 @@ class IdChangedStreamHandler: NSObject, FlutterStreamHandler {
     }
   }
 
-  public func onListen(withArguments _: Any?,
-                       eventSink events: @escaping FlutterEventSink) -> FlutterError? {
+  func onListen(
+    withArguments _: Any?,
+    eventSink events: @escaping FlutterEventSink
+  ) -> FlutterError? {
     eventSink = events
 
     installationIDObserver = NotificationCenter.default.addObserver(
@@ -63,7 +67,7 @@ class IdChangedStreamHandler: NSObject, FlutterStreamHandler {
     return nil
   }
 
-  public func onCancel(withArguments _: Any?) -> FlutterError? {
+  func onCancel(withArguments _: Any?) -> FlutterError? {
     if let observer = installationIDObserver {
       NotificationCenter.default.removeObserver(observer)
       installationIDObserver = nil

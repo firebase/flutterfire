@@ -31,11 +31,11 @@ class MethodChannelTransaction extends TransactionPlatform {
         app: Firebase.app(appName), databaseId: databaseId);
   }
 
-  List<PigeonTransactionCommand> _commands = [];
+  List<InternalTransactionCommand> _commands = [];
 
   /// Returns all transaction commands for the current instance.
   @override
-  List<PigeonTransactionCommand> get commands {
+  List<InternalTransactionCommand> get commands {
     return _commands;
   }
 
@@ -63,8 +63,8 @@ class MethodChannelTransaction extends TransactionPlatform {
 
   @override
   MethodChannelTransaction delete(String documentPath) {
-    _commands.add(PigeonTransactionCommand(
-      type: PigeonTransactionType.deleteType,
+    _commands.add(InternalTransactionCommand(
+      type: InternalTransactionType.deleteType,
       path: documentPath,
     ));
 
@@ -74,10 +74,10 @@ class MethodChannelTransaction extends TransactionPlatform {
   @override
   MethodChannelTransaction update(
     String documentPath,
-    Map<String, dynamic> data,
+    Map<FieldPath, dynamic> data,
   ) {
-    _commands.add(PigeonTransactionCommand(
-      type: PigeonTransactionType.update,
+    _commands.add(InternalTransactionCommand(
+      type: InternalTransactionType.update,
       path: documentPath,
       data: data,
     ));
@@ -88,11 +88,11 @@ class MethodChannelTransaction extends TransactionPlatform {
   @override
   MethodChannelTransaction set(String documentPath, Map<String, dynamic> data,
       [SetOptions? options]) {
-    _commands.add(PigeonTransactionCommand(
-        type: PigeonTransactionType.set,
+    _commands.add(InternalTransactionCommand(
+        type: InternalTransactionType.set,
         path: documentPath,
         data: data,
-        option: PigeonDocumentOption(
+        option: InternalDocumentOption(
           merge: options?.merge,
           mergeFields: options?.mergeFields?.map((e) => e.components).toList(),
         )));

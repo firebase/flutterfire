@@ -8,6 +8,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
 
 import 'firebase_options.dart';
 import 'tabs_page.dart';
@@ -62,6 +63,44 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   String _message = '';
+  StreamSubscription<List<PurchaseDetails>>? _purchaseSubscription;
+
+  static const String _testProductId = '123456';
+
+  @override
+  void initState() {
+    super.initState();
+    _purchaseSubscription =
+        InAppPurchase.instance.purchaseStream.listen(_onPurchaseUpdate);
+  }
+
+  @override
+  void dispose() {
+    _purchaseSubscription?.cancel();
+    super.dispose();
+  }
+
+  void _onPurchaseUpdate(List<PurchaseDetails> purchases) {
+    for (final purchase in purchases) {
+      if (purchase.pendingCompletePurchase) {
+        InAppPurchase.instance.completePurchase(purchase);
+      }
+      if (purchase.status == PurchaseStatus.purchased ||
+          purchase.status == PurchaseStatus.restored) {
+        final transactionId = purchase.purchaseID;
+        print('transactionId: $transactionId');
+        if (transactionId != null) {
+          widget.analytics.logTransaction(transactionId).then((_) {
+            setMessage('logTransaction succeeded with ID: $transactionId');
+          }).catchError((e) {
+            setMessage('logTransaction failed: $e');
+          });
+        }
+      } else if (purchase.status == PurchaseStatus.error) {
+        setMessage('Purchase error: ${purchase.error?.message}');
+      }
+    }
+  }
 
   void setMessage(String message) {
     setState(() {
@@ -156,6 +195,40 @@ class _MyHomePageState extends State<MyHomePage> {
     await widget.analytics
         .initiateOnDeviceConversionMeasurementWithEmailAddress('test@mail.com');
     setMessage('initiateOnDeviceConversionMeasurement succeeded');
+  }
+
+  Future<void> _testLogTransaction() async {
+    if (kIsWeb ||
+        (defaultTargetPlatform != TargetPlatform.iOS &&
+            defaultTargetPlatform != TargetPlatform.macOS)) {
+      setMessage('logTransaction() is only supported on iOS and macOS');
+      return;
+    }
+
+    setMessage('Loading product $_testProductId...');
+
+    final response =
+        await InAppPurchase.instance.queryProductDetails({_testProductId});
+
+    if (response.error != null) {
+      setMessage('Failed to load product: ${response.error!.message}');
+      return;
+    }
+
+    if (response.productDetails.isEmpty) {
+      setMessage(
+        'Product "$_testProductId" not found. '
+        'Make sure your StoreKit config file is set up correctly.',
+      );
+      return;
+    }
+
+    final product = response.productDetails.first;
+    setMessage('Initiating purchase for "${product.id}"...');
+
+    await InAppPurchase.instance.buyNonConsumable(
+      purchaseParam: PurchaseParam(productDetails: product),
+    );
   }
 
   AnalyticsEventItem itemCreator() {
@@ -365,6 +438,13 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: _testInitiateOnDeviceConversionMeasurement,
               child: const Text('Test initiateOnDeviceConversionMeasurement'),
             ),
+            if (!kIsWeb &&
+                (defaultTargetPlatform == TargetPlatform.iOS ||
+                    defaultTargetPlatform == TargetPlatform.macOS))
+              MaterialButton(
+                onPressed: _testLogTransaction,
+                child: const Text('Test logTransaction (product: 123456)'),
+              ),
             Text(
               _message,
               style: const TextStyle(color: Color.fromARGB(255, 0, 155, 0)),

@@ -17,13 +17,11 @@ command:
     workspaceChangelog: true
     hooks:
       preCommit: |
-        dart run scripts/generate_vertexai_version.dart && \
+        dart run scripts/generate_firebaseai_version.dart && \
         dart run scripts/generate_dataconnect_version.dart && \
+        dart run scripts/generate_versions_web.dart && \
         dart run scripts/generate_versions_spm.dart && \
-        git add packages/firebase_vertexai/firebase_vertexai/lib/src/vertex_version.dart && \
-        git add packages/firebase_data_connect/firebase_data_connect/lib/src/dataconnect_version.dart
-      post: |
-        dart run scripts/generate_tag_spm_firebase_core.dart
+        git add packages/firebase_data_connect/firebase_data_connect/lib/src/dataconnect_version.dart && git add packages/*/*_web/lib/src/*_version.dart && git add packages/*/*/ios/*/Package.swift packages/*/*/macos/*/Package.swift && git add packages/*/*/ios/*/Sources/*/Constants.swift
 
   bootstrap:
     # It seems so that running "pub get" in parallel has some issues (like
@@ -57,8 +55,7 @@ scripts:
 
   format-ci:
     run: |
-      dart pub global run flutter_plugin_tools format && \
-      swiftformat .
+      dart pub global run flutter_plugin_tools format
     description: |
       Formats the code of all packages (Java, Objective-C, and Dart).
        - Requires `flutter_plugin_tools` (`pub global activate flutter_plugin_tools`).
@@ -172,6 +169,13 @@ scripts:
     description: |
       Run all e2e tests for cloud_firestore.
 
+  test:e2e:pipeline:
+    run: |
+      cd packages/cloud_firestore/cloud_firestore/pipeline_example
+      flutter test integration_test/pipeline/pipeline_live_test.dart
+    description: |
+      Run pipeline e2e tests.
+
   test:e2e:firebase_performance:
     run: |
       cd packages/firebase_performance/firebase_performance/example
@@ -234,6 +238,7 @@ scripts:
       melos exec -- "flutter pub run pigeon --input ./pigeons/messages.dart" && \
       melos run generate:pigeon:macos --no-select && \
       melos run generate:pigeon:android --no-select && \
+      melos run generate:pigeon:windows --no-select && \
       melos run format-ci --no-select
     packageFilters:
       fileExists: 'pigeons/messages.dart'
@@ -254,6 +259,13 @@ scripts:
       dirExists: 'android'
     description: Transform the method toList() into a public one to be used in EventChannel
 
+  generate:pigeon:windows:
+    run: |
+      melos exec -- "perl -i -pe 's{^(\s+::flutter::EncodableList ToEncodableList\(\) const;)\n}{ public:\n\$1\n private:\n}' ./windows/messages.g.h"
+    packageFilters:
+      fileExists: 'windows/messages.g.h'
+    description: Make ToEncodableList public so it can be called from plugin code.
+
   # Additional cleanup lifecycle script, executed when `melos clean` is run.
   postclean: >
     melos exec -c 6 -- "flutter clean"
@@ -263,6 +275,7 @@ scripts:
     # "check-license-header".
     run: |
       addlicense -f header_template.txt \
+        --ignore "**/*.gradle" \
         --ignore "**/*.yml" \
         --ignore "**/*.yaml" \
         --ignore "**/*.xml" \
@@ -290,6 +303,10 @@ scripts:
         --ignore "**/generated/**" \
         --ignore "**/flutter/generated_plugin_registrant.h" \
         --ignore "**/flutter/generated_plugin_registrant.cc" \
+        --ignore "**/android/app/build.gradle.kts" \
+        --ignore "**/android/build.gradle.kts" \
+        --ignore "**/android/settings.gradle.kts" \
+        --ignore "**/RunnerTests/RunnerTests.swift" \
         .
     description: Add a license header to all necessary files.
 
@@ -299,6 +316,7 @@ scripts:
     run: |
       addlicense -f header_template.txt \
         --check \
+        --ignore "**/*.gradle" \
         --ignore "**/*.yml" \
         --ignore "**/*.yaml" \
         --ignore "**/*.xml" \
@@ -326,6 +344,10 @@ scripts:
         --ignore "**/generated/**" \
         --ignore "**/flutter/generated_plugin_registrant.h" \
         --ignore "**/flutter/generated_plugin_registrant.cc" \
+        --ignore "**/android/app/build.gradle.kts" \
+        --ignore "**/android/build.gradle.kts" \
+        --ignore "**/android/settings.gradle.kts" \
+        --ignore "**/RunnerTests/RunnerTests.swift" \
         .
     description: Add a license header to all necessary files.
 

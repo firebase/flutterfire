@@ -69,6 +69,27 @@ void runTransactionTests() {
         expect(response, equals(randomValue));
       });
 
+      test(
+        'runs after reading a document',
+        () async {
+          final documentReference =
+              await initializeTest('transaction-after-get');
+          await documentReference.set({'value': 0});
+          await documentReference.get();
+
+          await firestore.runTransaction((transaction) async {
+            final snapshot = await transaction.get(documentReference);
+            transaction.update(documentReference, {
+              'value': snapshot.data()!['value'] + 1,
+            });
+          });
+
+          final snapshot = await documentReference.get();
+          expect(snapshot.data()!['value'], 1);
+        },
+        skip: defaultTargetPlatform != TargetPlatform.windows,
+      );
+
       test('should abort if thrown and not continue', () async {
         DocumentReference<Map<String, dynamic>> documentReference =
             await initializeTest('transaction-abort');
@@ -126,39 +147,43 @@ void runTransactionTests() {
         retry: 2,
       );
 
-      test('should collide if number of maxAttempts is too low', () async {
-        DocumentReference<Map<String, dynamic>> doc1 =
-            await initializeTest('transaction-maxAttempts-2');
+      test(
+        'should collide if number of maxAttempts is too low',
+        () async {
+          DocumentReference<Map<String, dynamic>> doc1 =
+              await initializeTest('transaction-maxAttempts-2');
 
-        await doc1.set({'test': 0});
+          await doc1.set({'test': 0});
 
-        await expectLater(
-          Future.wait([
-            firestore.runTransaction(
-              (Transaction transaction) async {
-                final value = await transaction.get(doc1);
-                transaction.set(doc1, {
-                  'test': value['test'] + 1,
-                });
-              },
-              maxAttempts: 1,
+          await expectLater(
+            Future.wait([
+              firestore.runTransaction(
+                (Transaction transaction) async {
+                  final value = await transaction.get(doc1);
+                  transaction.set(doc1, {
+                    'test': value['test'] + 1,
+                  });
+                },
+                maxAttempts: 1,
+              ),
+              firestore.runTransaction(
+                (Transaction transaction) async {
+                  final value = await transaction.get(doc1);
+                  transaction.set(doc1, {
+                    'test': value['test'] + 1,
+                  });
+                },
+                maxAttempts: 1,
+              ),
+            ]),
+            throwsA(
+              isA<FirebaseException>()
+                  .having((e) => e.code, 'code', 'failed-precondition'),
             ),
-            firestore.runTransaction(
-              (Transaction transaction) async {
-                final value = await transaction.get(doc1);
-                transaction.set(doc1, {
-                  'test': value['test'] + 1,
-                });
-              },
-              maxAttempts: 1,
-            ),
-          ]),
-          throwsA(
-            isA<FirebaseException>()
-                .having((e) => e.code, 'code', 'failed-precondition'),
-          ),
-        );
-      });
+          );
+        },
+        skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
+      );
 
       test('runs multiple transactions in parallel', () async {
         DocumentReference<Map<String, dynamic>> doc1 =
@@ -188,19 +213,23 @@ void runTransactionTests() {
         expect(snapshot2.data()!['test'], equals('value4'));
       });
 
-      test('should abort if timeout is exceeded', () async {
-        await expectLater(
-          firestore.runTransaction(
-            (Transaction transaction) =>
-                Future.delayed(const Duration(seconds: 2)),
-            timeout: const Duration(seconds: 1),
-          ),
-          throwsA(
-            isA<FirebaseException>()
-                .having((e) => e.code, 'code', 'deadline-exceeded'),
-          ),
-        );
-      });
+      test(
+        'should abort if timeout is exceeded',
+        () async {
+          await expectLater(
+            firestore.runTransaction(
+              (Transaction transaction) =>
+                  Future.delayed(const Duration(seconds: 2)),
+              timeout: const Duration(seconds: 1),
+            ),
+            throwsA(
+              isA<FirebaseException>()
+                  .having((e) => e.code, 'code', 'deadline-exceeded'),
+            ),
+          );
+        },
+        skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
+      );
 
       test('should throw with exception', () async {
         try {
@@ -217,23 +246,26 @@ void runTransactionTests() {
         }
       });
 
-      test('should throw a native error, and convert to a [FirebaseException]',
-          () async {
-        DocumentReference<Map<String, dynamic>> documentReference =
-            firestore.doc('not-allowed/document');
+      test(
+        'should throw a native error, and convert to a [FirebaseException]',
+        () async {
+          DocumentReference<Map<String, dynamic>> documentReference =
+              firestore.doc('not-allowed/document');
 
-        try {
-          await firestore.runTransaction((Transaction transaction) async {
-            transaction.set(documentReference, {'foo': 'bar'});
-          });
-          fail('Transaction should not have resolved');
-        } on FirebaseException catch (e) {
-          expect(e.code, equals('permission-denied'));
-          return;
-        } catch (e) {
-          fail('Transaction threw invalid exception');
-        }
-      });
+          try {
+            await firestore.runTransaction((Transaction transaction) async {
+              transaction.set(documentReference, {'foo': 'bar'});
+            });
+            fail('Transaction should not have resolved');
+          } on FirebaseException catch (e) {
+            expect(e.code, equals('permission-denied'));
+            return;
+          } catch (e) {
+            fail('Transaction threw invalid exception');
+          }
+        },
+        skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
+      );
 
       group('Transaction.get()', () {
         test('should throw if get is called after a command', () async {
@@ -251,23 +283,25 @@ void runTransactionTests() {
         });
 
         test(
-            'should throw a native error, and convert to a [FirebaseException]',
-            () async {
-          DocumentReference<Map<String, dynamic>> documentReference =
-              firestore.doc('not-allowed/document');
+          'should throw a native error, and convert to a [FirebaseException]',
+          () async {
+            DocumentReference<Map<String, dynamic>> documentReference =
+                firestore.doc('not-allowed/document');
 
-          try {
-            await firestore.runTransaction((Transaction transaction) async {
-              await transaction.get(documentReference);
-            });
-            fail('Transaction should not have resolved');
-          } on FirebaseException catch (e) {
-            expect(e.code, equals('permission-denied'));
-            return;
-          } catch (e) {
-            fail('Transaction threw invalid exception');
-          }
-        });
+            try {
+              await firestore.runTransaction((Transaction transaction) async {
+                await transaction.get(documentReference);
+              });
+              fail('Transaction should not have resolved');
+            } on FirebaseException catch (e) {
+              expect(e.code, equals('permission-denied'));
+              return;
+            } catch (e) {
+              fail('Transaction threw invalid exception');
+            }
+          },
+          skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
+        );
 
         // ignore: todo
         // TODO(Salakar): Test seems to fail sometimes. Will look at in a future PR.
@@ -325,6 +359,29 @@ void runTransactionTests() {
           expect(snapshot.exists, isTrue);
           expect(snapshot.data()!['bar'], equals(2));
           expect(snapshot.data()!['foo'], equals('bar'));
+        });
+
+        test('should update a document using FieldPath keys', () async {
+          DocumentReference<Map<String, dynamic>> documentReference =
+              await initializeTest('transaction-update-field-path');
+
+          await documentReference.set({
+            'nested': {'field': 'old_value'},
+            'top': 'value',
+          });
+
+          await firestore.runTransaction((Transaction transaction) async {
+            await transaction.get(documentReference);
+            transaction.update(documentReference, {
+              FieldPath(const ['nested', 'field']): 'new_value',
+            });
+          });
+
+          DocumentSnapshot<Map<String, dynamic>> snapshot =
+              await documentReference.get();
+          expect(snapshot.exists, isTrue);
+          expect(snapshot.data()!['nested']['field'], equals('new_value'));
+          expect(snapshot.data()!['top'], equals('value'));
         });
       });
 
@@ -444,6 +501,39 @@ void runTransactionTests() {
             await documentReference2.get();
         expect(snapshot2.exists, isFalse);
       });
+
+      test(
+        'runs many transactions concurrently without corrupting native state',
+        () async {
+          // Regression test for
+          // https://github.com/firebase/flutterfire/issues/18417: concurrent
+          // transactions used to mutate the plugin's shared transaction map
+          // from multiple threads without synchronization, which could crash
+          // iOS with a heap-corruption SIGABRT.
+          const int count = 30;
+
+          final refs = [
+            for (var i = 0; i < count; i++)
+              firestore.doc('flutter-tests/transaction-concurrent-$i'),
+          ];
+
+          await Future.wait([
+            for (final ref in refs)
+              firestore.runTransaction((Transaction transaction) async {
+                final snapshot = await transaction.get(ref);
+                transaction.set(ref, {
+                  'value': ((snapshot.data()?['value'] as int?) ?? 0) + 1,
+                });
+              }),
+          ]);
+
+          final snapshots = await Future.wait(refs.map((ref) => ref.get()));
+          for (final snapshot in snapshots) {
+            expect(snapshot.exists, isTrue);
+            expect(snapshot.data()!['value'], isA<int>());
+          }
+        },
+      );
 
       // TODO(Lyokone): adding auth make some tests fails in macOS
       // test(

@@ -35,8 +35,31 @@ void main() {
   const String kMockSmsCode = '123456';
   const String kMockLanguage = 'en';
   const String kMockOobCode = 'oobcode';
+  const String kMockAuthToken = '12460';
   const String kMockURL = 'http://www.example.com';
   const String kMockHost = 'www.example.com';
+  const String kMockValidPassword =
+      'Password123!'; // For password policy impl testing
+  const String kMockInvalidPassword = 'Pa1!';
+  const String kMockInvalidPassword2 = 'password123!';
+  const String kMockInvalidPassword3 = 'PASSWORD123!';
+  const String kMockInvalidPassword4 = 'password!';
+  const String kMockInvalidPassword5 = 'Password123';
+  const Map<String, dynamic> kMockPasswordPolicy = {
+    'customStrengthOptions': {
+      'minPasswordLength': 6,
+      'maxPasswordLength': 12,
+      'containsLowercaseCharacter': true,
+      'containsUppercaseCharacter': true,
+      'containsNumericCharacter': true,
+      'containsNonAlphanumericCharacter': true,
+    },
+    'allowedNonAlphanumericCharacters': ['!'],
+    'schemaVersion': 1,
+    'enforcement': 'OFF',
+  };
+  final PasswordPolicy kMockPasswordPolicyObject =
+      PasswordPolicy(kMockPasswordPolicy);
   const int kMockPort = 31337;
 
   final TestAuthProvider testAuthProvider = TestAuthProvider();
@@ -45,8 +68,8 @@ void main() {
   final int kMockLastSignInTimestamp =
       DateTime.now().subtract(const Duration(days: 1)).millisecondsSinceEpoch;
 
-  final kMockUser = PigeonUserDetails(
-    userInfo: PigeonUserInfo(
+  final kMockUser = InternalUserDetails(
+    userInfo: InternalUserInfo(
       uid: '12345',
       displayName: 'displayName',
       creationTimestamp: kMockCreationTimestamp,
@@ -75,7 +98,7 @@ void main() {
   MockFirebaseAuth mockAuthPlatform = MockFirebaseAuth();
 
   group('$FirebaseAuth', () {
-    PigeonUserDetails user;
+    InternalUserDetails user;
     // used to generate a unique application name for each test
     var testCount = 0;
 
@@ -208,6 +231,38 @@ void main() {
       });
     });
 
+    test('creates a fresh instance after app delete and reinitialize',
+        () async {
+      final appName = 'delete-reinit-$testCount';
+      const options = FirebaseOptions(
+        apiKey: 'apiKey',
+        appId: 'appId',
+        messagingSenderId: 'messagingSenderId',
+        projectId: 'projectId',
+      );
+      final app = await Firebase.initializeApp(
+        name: appName,
+        options: options,
+      );
+      final auth1 = FirebaseAuth.instanceFor(app: app);
+
+      expect(app.getService<FirebaseAuth>(), same(auth1));
+
+      await app.delete();
+
+      final app2 = await Firebase.initializeApp(
+        name: appName,
+        options: options,
+      );
+      addTearDown(app2.delete);
+
+      final auth2 = FirebaseAuth.instanceFor(app: app2);
+
+      expect(auth2, isNot(same(auth1)));
+      expect(auth2.app, app2);
+      expect(app2.getService<FirebaseAuth>(), same(auth2));
+    });
+
     group('tenantId', () {
       test('set tenantId should call delegate method', () async {
         // Each test uses a unique FirebaseApp instance to avoid sharing state
@@ -323,17 +378,6 @@ void main() {
           kMockEmail,
           kMockPassword,
         ));
-      });
-    });
-
-    group('fetchSignInMethodsForEmail()', () {
-      test('should call delegate method', () async {
-        // Necessary as we otherwise get a "null is not a Future<void>" error
-        when(mockAuthPlatform.fetchSignInMethodsForEmail(any))
-            .thenAnswer((i) async => []);
-        // ignore: deprecated_member_use_from_same_package
-        await auth.fetchSignInMethodsForEmail(kMockEmail);
-        verify(mockAuthPlatform.fetchSignInMethodsForEmail(kMockEmail));
       });
     });
 
@@ -767,6 +811,72 @@ void main() {
       });
     });
 
+    group('revokeAccessToken()', () {
+      test('should call delegate method', () async {
+        // Necessary as we otherwise get a "null is not a Future<void>" error
+        when(mockAuthPlatform.revokeAccessToken(kMockAuthToken))
+            .thenAnswer((i) async {});
+
+        await auth.revokeAccessToken(kMockAuthToken);
+        verify(mockAuthPlatform.revokeAccessToken(kMockAuthToken));
+      });
+    });
+
+    group('passwordPolicy', () {
+      test('passwordPolicy should be initialized with correct parameters',
+          () async {
+        PasswordPolicyImpl passwordPolicy =
+            PasswordPolicyImpl(kMockPasswordPolicyObject);
+        expect(passwordPolicy.policy, equals(kMockPasswordPolicyObject));
+      });
+
+      PasswordPolicyImpl passwordPolicy =
+          PasswordPolicyImpl(kMockPasswordPolicyObject);
+
+      test('should return true for valid password', () async {
+        final PasswordValidationStatus status =
+            passwordPolicy.isPasswordValid(kMockValidPassword);
+        expect(status.isValid, isTrue);
+      });
+
+      test('should return false for invalid password that is too short',
+          () async {
+        final PasswordValidationStatus status =
+            passwordPolicy.isPasswordValid(kMockInvalidPassword);
+        expect(status.isValid, isFalse);
+      });
+
+      test(
+          'should return false for invalid password with no capital characters',
+          () async {
+        final PasswordValidationStatus status =
+            passwordPolicy.isPasswordValid(kMockInvalidPassword2);
+        expect(status.isValid, isFalse);
+      });
+
+      test(
+          'should return false for invalid password with no lowercase characters',
+          () async {
+        final PasswordValidationStatus status =
+            passwordPolicy.isPasswordValid(kMockInvalidPassword3);
+        expect(status.isValid, isFalse);
+      });
+
+      test('should return false for invalid password with no numbers',
+          () async {
+        final PasswordValidationStatus status =
+            passwordPolicy.isPasswordValid(kMockInvalidPassword4);
+        expect(status.isValid, isFalse);
+      });
+
+      test('should return false for invalid password with no symbols',
+          () async {
+        final PasswordValidationStatus status =
+            passwordPolicy.isPasswordValid(kMockInvalidPassword5);
+        expect(status.isValid, isFalse);
+      });
+    });
+
     test('toString()', () async {
       expect(
         auth.toString(),
@@ -917,7 +1027,7 @@ class MockFirebaseAuth extends Mock
 
   @override
   FirebaseAuthPlatform setInitialValues({
-    PigeonUserDetails? currentUser,
+    InternalUserDetails? currentUser,
     String? languageCode,
   }) {
     return super.noSuchMethod(
@@ -972,15 +1082,6 @@ class MockFirebaseAuth extends Mock
       Invocation.method(#confirmPasswordReset, [code, newPassword]),
       returnValue: neverEndingFuture<void>(),
       returnValueForMissingStub: neverEndingFuture<void>(),
-    );
-  }
-
-  @override
-  Future<List<String>> fetchSignInMethodsForEmail(String? email) {
-    return super.noSuchMethod(
-      Invocation.method(#checkActionCode, [email]),
-      returnValue: neverEndingFuture<List<String>>(),
-      returnValueForMissingStub: neverEndingFuture<List<String>>(),
     );
   }
 
@@ -1093,6 +1194,15 @@ class MockFirebaseAuth extends Mock
       returnValueForMissingStub: neverEndingFuture<String>(),
     );
   }
+
+  @override
+  Future<void> revokeAccessToken(String accessToken) {
+    return super.noSuchMethod(
+      Invocation.method(#revokeAccessToken, [accessToken]),
+      returnValue: neverEndingFuture<void>(),
+      returnValueForMissingStub: neverEndingFuture<void>(),
+    );
+  }
 }
 
 class FakeFirebaseAuthPlatform extends Fake
@@ -1114,7 +1224,7 @@ class FakeFirebaseAuthPlatform extends Fake
 
   @override
   FirebaseAuthPlatform setInitialValues({
-    PigeonUserDetails? currentUser,
+    InternalUserDetails? currentUser,
     String? languageCode,
   }) {
     return this;
@@ -1125,7 +1235,7 @@ class MockUserPlatform extends Mock
     with MockPlatformInterfaceMixin
     implements TestUserPlatform {
   MockUserPlatform(FirebaseAuthPlatform auth, MultiFactorPlatform multiFactor,
-      PigeonUserDetails _user) {
+      InternalUserDetails _user) {
     TestUserPlatform(auth, multiFactor, _user);
   }
 }
@@ -1176,7 +1286,7 @@ class TestFirebaseAuthPlatform extends FirebaseAuthPlatform {
 
   @override
   FirebaseAuthPlatform setInitialValues({
-    PigeonUserDetails? currentUser,
+    InternalUserDetails? currentUser,
     String? languageCode,
   }) {
     return this;
@@ -1245,7 +1355,7 @@ class TestAuthProvider extends AuthProvider {
 
 class TestUserPlatform extends UserPlatform {
   TestUserPlatform(FirebaseAuthPlatform auth, MultiFactorPlatform multiFactor,
-      PigeonUserDetails data)
+      InternalUserDetails data)
       : super(auth, multiFactor, data);
 }
 

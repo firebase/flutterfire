@@ -16,7 +16,7 @@ import 'utils/exception.dart';
 class MethodChannelUser extends UserPlatform {
   /// Constructs a new [MethodChannelUser] instance.
   MethodChannelUser(FirebaseAuthPlatform auth, MultiFactorPlatform multiFactor,
-      PigeonUserDetails data)
+      InternalUserDetails data)
       : super(auth, multiFactor, data);
 
   final _api = FirebaseAuthUserHostApi();
@@ -96,7 +96,7 @@ class MethodChannelUser extends UserPlatform {
 
       final result = await _api.linkWithProvider(
         pigeonDefault,
-        PigeonSignInProvider(
+        InternalSignInProvider(
           providerId: convertedProvider.providerId,
           scopes: convertedProvider is OAuthProvider
               ? convertedProvider.scopes
@@ -147,7 +147,7 @@ class MethodChannelUser extends UserPlatform {
 
       final result = await _api.reauthenticateWithProvider(
         pigeonDefault,
-        PigeonSignInProvider(
+        InternalSignInProvider(
           providerId: convertedProvider.providerId,
           scopes: convertedProvider is OAuthProvider
               ? convertedProvider.scopes
@@ -191,15 +191,13 @@ class MethodChannelUser extends UserPlatform {
         pigeonDefault,
         actionCodeSettings == null
             ? null
-            : PigeonActionCodeSettings(
+            : InternalActionCodeSettings(
                 url: actionCodeSettings.url,
                 handleCodeInApp: actionCodeSettings.handleCodeInApp,
                 iOSBundleId: actionCodeSettings.iOSBundleId,
                 androidPackageName: actionCodeSettings.androidPackageName,
                 androidInstallApp: actionCodeSettings.androidInstallApp,
                 androidMinimumVersion: actionCodeSettings.androidMinimumVersion,
-                // ignore: deprecated_member_use_from_same_package
-                dynamicLinkDomain: actionCodeSettings.dynamicLinkDomain,
                 linkDomain: actionCodeSettings.linkDomain,
               ),
       );
@@ -276,7 +274,7 @@ class MethodChannelUser extends UserPlatform {
     try {
       final result = await _api.updateProfile(
         pigeonDefault,
-        PigeonUserProfile(
+        InternalUserProfile(
           displayName: profile['displayName'],
           photoUrl: profile['photoURL'],
           displayNameChanged: profile.containsKey('displayName'),
@@ -303,15 +301,13 @@ class MethodChannelUser extends UserPlatform {
         newEmail,
         actionCodeSettings == null
             ? null
-            : PigeonActionCodeSettings(
+            : InternalActionCodeSettings(
                 url: actionCodeSettings.url,
                 handleCodeInApp: actionCodeSettings.handleCodeInApp,
                 iOSBundleId: actionCodeSettings.iOSBundleId,
                 androidPackageName: actionCodeSettings.androidPackageName,
                 androidInstallApp: actionCodeSettings.androidInstallApp,
                 androidMinimumVersion: actionCodeSettings.androidMinimumVersion,
-                // ignore: deprecated_member_use_from_same_package
-                dynamicLinkDomain: actionCodeSettings.dynamicLinkDomain,
                 linkDomain: actionCodeSettings.linkDomain,
               ),
       );

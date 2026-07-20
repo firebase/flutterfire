@@ -21,6 +21,7 @@ import com.google.firebase.crashlytics.FlutterFirebaseCrashlyticsInternal;
 import com.google.firebase.crashlytics.internal.Logger;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.BinaryMessenger;
+import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
@@ -34,9 +35,18 @@ import java.util.Objects;
 
 /** FlutterFirebaseCrashlyticsPlugin */
 public class FlutterFirebaseCrashlyticsPlugin
-    implements FlutterFirebasePlugin, FlutterPlugin, MethodCallHandler {
+    implements FlutterFirebasePlugin, FlutterPlugin, MethodCallHandler, EventChannel.StreamHandler {
   public static final String TAG = "FLTFirebaseCrashlytics";
   private MethodChannel channel;
+  private EventChannel testEventChannel;
+  private EventChannel.EventSink testEventSink;
+  private Context applicationContext;
+
+  // Cached ELF build ID read from libapp.so at startup. This is the build ID that the
+  // firebase-crashlytics-buildtools JAR extracts from .symbols files during upload, so using
+  // it ensures crash reports match uploaded symbols (even when the Dart VM's internal snapshot
+  // build ID differs, which happens with AAB + flavor + obfuscation builds).
+  private String elfBuildId;
 
   private static final String FIREBASE_CRASHLYTICS_COLLECTION_ENABLED =
       "firebase_crashlytics_collection_enabled";
@@ -46,10 +56,15 @@ public class FlutterFirebaseCrashlyticsPlugin
     channel = new MethodChannel(messenger, channelName);
     channel.setMethodCallHandler(this);
     FlutterFirebasePluginRegistry.registerPlugin(channelName, this);
+    testEventChannel =
+        new EventChannel(messenger, "plugins.flutter.io/firebase_crashlytics_test_stream");
+    testEventChannel.setStreamHandler(this);
   }
 
   @Override
   public void onAttachedToEngine(FlutterPluginBinding binding) {
+    applicationContext = binding.getApplicationContext();
+    elfBuildId = ElfBuildIdReader.readBuildId(applicationContext);
     initInstance(binding.getBinaryMessenger());
   }
 
@@ -58,6 +73,10 @@ public class FlutterFirebaseCrashlyticsPlugin
     if (channel != null) {
       channel.setMethodCallHandler(null);
       channel = null;
+    }
+    if (testEventChannel != null) {
+      testEventChannel.setStreamHandler(null);
+      testEventChannel = null;
     }
   }
 
@@ -134,6 +153,7 @@ public class FlutterFirebaseCrashlyticsPlugin
 
   private Task<Void> recordError(final Map<String, Object> arguments) {
     TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+    Handler mainHandler = new Handler(Looper.getMainLooper());
 
     cachedThreadPool.execute(
         () -> {
@@ -146,22 +166,30 @@ public class FlutterFirebaseCrashlyticsPlugin
             final String information =
                 (String) Objects.requireNonNull(arguments.get(Constants.INFORMATION));
             final boolean fatal = (boolean) Objects.requireNonNull(arguments.get(Constants.FATAL));
-            final String buildId =
+            final String dartBuildId =
                 (String) Objects.requireNonNull(arguments.get(Constants.BUILD_ID));
             @SuppressWarnings("unchecked")
             final List<String> loadingUnits =
                 (List<String>) Objects.requireNonNull(arguments.get(Constants.LOADING_UNITS));
 
-            if (buildId.length() > 0) {
-              FlutterFirebaseCrashlyticsInternal.setFlutterBuildId(buildId);
+            // Prefer the ELF build ID from libapp.so over the Dart VM's snapshot build ID.
+            // The firebase-crashlytics-buildtools JAR uses the ELF build ID when uploading
+            // symbols, so we must report the same ID for Crashlytics to match them.
+            String effectiveBuildId = elfBuildId != null ? elfBuildId : dartBuildId;
+            if (effectiveBuildId.length() > 0) {
+              FlutterFirebaseCrashlyticsInternal.setFlutterBuildId(effectiveBuildId);
             }
 
             FlutterFirebaseCrashlyticsInternal.setLoadingUnits(loadingUnits);
 
             Exception exception;
             if (reason != null) {
+              final String crashlyticsErrorReason = "thrown " + reason;
+              if (testEventSink != null) {
+                mainHandler.post(() -> testEventSink.success(crashlyticsErrorReason));
+              }
               // Set a "reason" (to match iOS) to show where the exception was thrown.
-              crashlytics.setCustomKey(Constants.FLUTTER_ERROR_REASON, "thrown " + reason);
+              crashlytics.setCustomKey(Constants.FLUTTER_ERROR_REASON, crashlyticsErrorReason);
               exception =
                   new FlutterError(dartExceptionMessage + ". " + "Error thrown " + reason + ".");
             } else {
@@ -465,5 +493,15 @@ public class FlutterFirebaseCrashlyticsPlugin
         });
 
     return taskCompletionSource.getTask();
+  }
+
+  @Override
+  public void onListen(Object arguments, EventChannel.EventSink events) {
+    testEventSink = events;
+  }
+
+  @Override
+  public void onCancel(Object arguments) {
+    testEventSink = null;
   }
 }

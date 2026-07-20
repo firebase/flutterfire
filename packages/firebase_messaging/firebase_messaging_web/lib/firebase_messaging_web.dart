@@ -18,9 +18,13 @@ import 'src/internals.dart';
 import 'src/interop/messaging.dart' as messaging_interop;
 import 'src/utils.dart' as utils;
 
+import 'src/firebase_messaging_version.dart';
+
 /// Web implementation for [FirebaseMessagingPlatform]
 /// delegates calls to messaging web plugin.
 class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
+  static const String _libraryName = 'flutter-fire-fcm';
+
   /// Instance of Messaging from the web plugin
   messaging_interop.Messaging? _webMessaging;
 
@@ -44,6 +48,8 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
+    FirebaseCoreWeb.registerLibraryVersion(_libraryName, packageVersion);
+
     FirebaseCoreWeb.registerService('messaging');
     FirebaseMessagingPlatform.instance = FirebaseMessagingWeb();
   }
@@ -106,7 +112,8 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
   }
 
   @override
-  Future<String?> getToken({String? vapidKey}) async {
+  Future<String?> getToken(
+      {String? vapidKey, String? serviceWorkerScriptPath}) async {
     _delegate;
 
     if (!_initialized) {
@@ -115,7 +122,8 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
     }
 
     return convertWebExceptions(
-      () => _delegate.getToken(vapidKey: vapidKey),
+      () => _delegate.getToken(
+          vapidKey: vapidKey, serviceWorkerScriptPath: serviceWorkerScriptPath),
     );
   }
 

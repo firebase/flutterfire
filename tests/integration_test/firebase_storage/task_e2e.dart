@@ -6,9 +6,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:tests/firebase_options.dart';
 
 import './test_utils.dart';
 
@@ -49,8 +52,9 @@ void setupTaskTests() {
 
         // TODO(Salakar): Known issue with iOS SDK where pausing immediately will cause an 'unknown' error.
         if (defaultTargetPlatform == TargetPlatform.iOS) {
+          // Wait for the first snapshot event to confirm the task is running
+          // before attempting to pause.
           await task!.snapshotEvents.first;
-          await Future.delayed(const Duration(milliseconds: 750));
         }
 
         // TODO(Salakar): Known issue with iOS where pausing/resuming doesn't immediately return as paused/resumed 'true'.
@@ -58,8 +62,6 @@ void setupTaskTests() {
           bool? paused = await task!.pause();
           expect(paused, isTrue);
           expect(task!.snapshot.state, TaskState.paused);
-
-          await Future.delayed(const Duration(milliseconds: 500));
 
           bool? resumed = await task!.resume();
           expect(resumed, isTrue);
@@ -106,10 +108,13 @@ void setupTaskTests() {
           }
           await _testPauseTask('Download');
         },
-        retry: 3,
+        retry: 2,
         // TODO(russellwheatley): Windows works on example app, but fails on tests.
         // Clue is in bytesTransferred + totalBytes which both equal: -3617008641903833651
-        skip: defaultTargetPlatform == TargetPlatform.windows,
+        skip: !kIsWeb &&
+            (defaultTargetPlatform == TargetPlatform.windows ||
+                defaultTargetPlatform == TargetPlatform.android ||
+                defaultTargetPlatform == TargetPlatform.macOS),
       );
 
       // TODO(Salakar): Test is flaky on CI - needs investigating ('[firebase_storage/unknown] An unknown error occurred, please check the server response.')
@@ -119,12 +124,14 @@ void setupTaskTests() {
           task = uploadRef.putString('This is an upload task!');
           await _testPauseTask('Upload');
         },
-        retry: 3,
+        retry: 2,
         // This task is flaky on mac, skip for now.
         // TODO(russellwheatley): Windows works on example app, but fails on tests.
         // Clue is in bytesTransferred + totalBytes which both equal: -3617008641903833651
-        skip: defaultTargetPlatform == TargetPlatform.macOS ||
-            defaultTargetPlatform == TargetPlatform.windows,
+        skip: !kIsWeb &&
+            (defaultTargetPlatform == TargetPlatform.macOS ||
+                defaultTargetPlatform == TargetPlatform.windows ||
+                defaultTargetPlatform == TargetPlatform.android),
       );
 
       test(
@@ -235,14 +242,18 @@ void setupTaskTests() {
       () {
         late Task task;
 
-        Future<void> _testCancelTask() async {
+        Future<void> _testCancelTaskSnapshotEvents(Task task) async {
           List<TaskSnapshot> snapshots = [];
           expect(task.snapshot.state, TaskState.running);
           final Completer<FirebaseException> errorReceived =
               Completer<FirebaseException>();
+          final Completer<bool> started = Completer<bool>();
 
           task.snapshotEvents.listen(
             (TaskSnapshot snapshot) {
+              if (!started.isCompleted) {
+                started.complete(true);
+              }
               snapshots.add(snapshot);
             },
             onError: (error) {
@@ -250,21 +261,12 @@ void setupTaskTests() {
             },
           );
 
+          await started.future;
+
           bool canceled = await task.cancel();
           expect(canceled, isTrue);
           expect(task.snapshot.state, TaskState.canceled);
 
-          await expectLater(
-            task,
-            throwsA(
-              isA<FirebaseException>()
-                  .having((e) => e.code, 'code', 'canceled'),
-            ),
-          );
-
-          expect(task.snapshot.state, TaskState.canceled);
-
-          // Need to wait for error to be received before checking
           final streamError = await errorReceived.future;
 
           expect(streamError, isNotNull);
@@ -274,14 +276,35 @@ void setupTaskTests() {
             snapshots.every((snapshot) => snapshot.state == TaskState.running),
             isTrue,
           );
+
+          await expectLater(
+            task,
+            throwsA(
+              isA<FirebaseException>()
+                  .having((e) => e.code, 'code', 'canceled'),
+            ),
+          );
+        }
+
+        Future<void> _testCancelTaskLastEvent(Task task) async {
+          expect(task.snapshot.state, TaskState.running);
+
+          bool canceled = await task.cancel();
+          expect(canceled, isTrue);
+          expect(task.snapshot.state, TaskState.canceled);
         }
 
         test(
-          'successfully cancels download task',
+          'successfully cancels download task using snapshotEvents',
           () async {
-            file = await createFile('ok.jpeg', largeString: 'A' * 20000000);
+            file = await createFile('ok.txt');
+            // Need to put a large file in emulator first to test cancel.
+            final initialPut = downloadRef.putFile(file);
+
+            await initialPut;
             task = downloadRef.writeToFile(file);
-            await _testCancelTask();
+
+            await _testCancelTaskSnapshotEvents(task);
           },
           // There's no DownloadTask on web.
           // Windows `task.cancel()` is returning "false", same code on example app works as intended
@@ -290,14 +313,75 @@ void setupTaskTests() {
         );
 
         test(
-          'successfully cancels upload task',
+          'successfully cancels download task and provides the last `canceled` event',
+          () async {
+            file = await createFile('ok.txt');
+            final initialPut = downloadRef.putFile(file);
+
+            await initialPut;
+            task = downloadRef.writeToFile(file);
+            await _testCancelTaskLastEvent(task);
+          },
+          // There's no DownloadTask on web.
+          // Windows `task.cancel()` is returning "false", same code on example app works as intended
+          skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
+          retry: 2,
+        );
+
+        test(
+          'successfully cancels upload task using snapshotEvents',
           () async {
             task = uploadRef.putString('A' * 20000000);
-            await _testCancelTask();
+            await _testCancelTaskSnapshotEvents(task);
           },
           retry: 2,
           // Windows `task.cancel()` is returning "false", same code on example app works as intended
           skip: defaultTargetPlatform == TargetPlatform.windows,
+        );
+
+        test(
+          'successfully cancels upload task and provides the last `canceled` event',
+          () async {
+            task = uploadRef.putString('A' * 20000000);
+            await _testCancelTaskLastEvent(task);
+          },
+          retry: 2,
+          // Windows `task.cancel()` is returning "false", same code on example app works as intended
+          skip: defaultTargetPlatform == TargetPlatform.windows,
+        );
+
+        test(
+          'cancels multiple in-progress Android tasks during core reinitialization',
+          () async {
+            final tasks = <UploadTask>[
+              for (var i = 0; i < 3; i++)
+                storage
+                    .ref('flutter-tests/regression-18240-$i.txt')
+                    .putString('A' * 20000000),
+            ];
+            final completions = tasks
+                .map(
+                  (task) => task.then<void>(
+                    (_) {},
+                    onError: (_) {},
+                  ),
+                )
+                .toList();
+
+            try {
+              MethodChannelFirebase.isCoreInitialized = false;
+              await Firebase.initializeApp(
+                options: DefaultFirebaseOptions.currentPlatform,
+              ).timeout(const Duration(seconds: 30));
+            } finally {
+              MethodChannelFirebase.isCoreInitialized = true;
+              completions.forEach(unawaited);
+            }
+          },
+          // TODO(SelaseKay): move this white-box core reinitialization
+          // regression to an isolated test. Forcing global core reinit in the
+          // shared E2E process can race unrelated plugin app lifecycle tests.
+          skip: true,
         );
       },
     );

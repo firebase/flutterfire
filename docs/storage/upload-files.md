@@ -4,10 +4,11 @@ page_type: guide
 
 {% include "_shared/apis/console/_local_variables.html" %}
 
-<!-- The following is at site root, /third_party/devsite/firebase/en/ -->
+{# The following is at site root, /third_party/devsite/firebase/en/ #}
 {% include "_local_variables.html" %}
 
 {% include "docs/flutter/_local_variables.html" %}
+{% include "docs/storage/_local_variables.html" %}
 
 <link rel="stylesheet" type="text/css" href="/styles/docs.css" />
 

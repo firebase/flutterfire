@@ -1,3 +1,89 @@
+## 0.2.5+2
+
+ - Update a dependency to the latest release.
+
+## 0.2.5+1
+
+ - Update a dependency to the latest release.
+
+## 0.2.5
+
+ - **FEAT**(appcheck): appcheck reCAPTCHA mobile support (gradually rolling out) ([#18261](https://github.com/firebase/flutterfire/issues/18261)). ([036a860a](https://github.com/firebase/flutterfire/commit/036a860a0e66d46b5c57eb3df3a0f9e5846ef00b))
+
+## 0.2.4+3
+
+ - Update a dependency to the latest release.
+
+## 0.2.4+2
+
+ - Update a dependency to the latest release.
+
+## 0.2.4+1
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+
+## 0.2.4
+
+ - **FIX**(app_check,web): fix an error that could occur when refreshing a token ([#18135](https://github.com/firebase/flutterfire/issues/18135)). ([6998e512](https://github.com/firebase/flutterfire/commit/6998e512ea5404a20ad81a0306aafaa607babc2a))
+ - **FEAT**(app_check,windows): add support for AppCheck for Windows ([#18140](https://github.com/firebase/flutterfire/issues/18140)). ([81f30325](https://github.com/firebase/flutterfire/commit/81f30325fc926fe94b630e49f56b795c781a4cbe))
+
+## 0.2.3
+
+ - **FEAT**(messaging,web): add support for debug tokens on Web ([#18057](https://github.com/firebase/flutterfire/issues/18057)). ([b853386e](https://github.com/firebase/flutterfire/commit/b853386e987d686eab4b8fd9b8dad14eda97479c))
+
+## 0.2.2+3
+
+ - Update a dependency to the latest release.
+
+## 0.2.2+2
+
+ - Update a dependency to the latest release.
+
+## 0.2.2+1
+
+ - **FIX**(app-check): token not available on new session ([#17872](https://github.com/firebase/flutterfire/issues/17872)). ([702de52e](https://github.com/firebase/flutterfire/commit/702de52e2245006ae5a07a61a7571bd271d8423c))
+
+## 0.2.2
+
+ - **FIX**(app-check,web): More explicit interop types ([#17810](https://github.com/firebase/flutterfire/issues/17810)). ([f9ca8193](https://github.com/firebase/flutterfire/commit/f9ca81939f541004e8c34935ec8f314821ef6d05))
+ - **FEAT**(web): add `registerVersion` support for packages ([#17780](https://github.com/firebase/flutterfire/issues/17780)). ([3c8c83d4](https://github.com/firebase/flutterfire/commit/3c8c83d4251f2965ae6fb1fe7b64c21dcb94e9ec))
+
+## 0.2.1+1
+
+ - Update a dependency to the latest release.
+
+## 0.2.1
+
+ - **FEAT**(app-check): Debug token support for the activate method ([#17723](https://github.com/firebase/flutterfire/issues/17723)). ([3c638264](https://github.com/firebase/flutterfire/commit/3c638264565d902ddbe4dff5bb027aef9e1c2140))
+
+## 0.2.0+16
+
+ - Update a dependency to the latest release.
+
+## 0.2.0+15
+
+ - Update a dependency to the latest release.
+
+## 0.2.0+14
+
+ - Update a dependency to the latest release.
+
+## 0.2.0+13
+
+ - Update a dependency to the latest release.
+
+## 0.2.0+12
+
+ - Update a dependency to the latest release.
+
+## 0.2.0+11
+
+ - Update a dependency to the latest release.
+
+## 0.2.0+10
+
+ - Update a dependency to the latest release.
+
 ## 0.2.0+9
 
  - **FIX**(appcheck,web): replace deprecated members ([#17168](https://github.com/firebase/flutterfire/issues/17168)). ([bb13127a](https://github.com/firebase/flutterfire/commit/bb13127ab6e1a00bb4694fd7e06e3b25643da26e))

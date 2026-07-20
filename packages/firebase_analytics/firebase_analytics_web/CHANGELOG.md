@@ -1,3 +1,90 @@
+## 0.6.1+11
+
+ - Update a dependency to the latest release.
+
+## 0.6.1+10
+
+ - Update a dependency to the latest release.
+
+## 0.6.1+9
+
+ - Update a dependency to the latest release.
+
+## 0.6.1+8
+
+ - Update a dependency to the latest release.
+
+## 0.6.1+7
+
+ - Update a dependency to the latest release.
+
+## 0.6.1+6
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+
+## 0.6.1+5
+
+ - Update a dependency to the latest release.
+
+## 0.6.1+4
+
+ - Update a dependency to the latest release.
+
+## 0.6.1+3
+
+ - Update a dependency to the latest release.
+
+## 0.6.1+2
+
+ - Update a dependency to the latest release.
+
+## 0.6.1+1
+
+ - Update a dependency to the latest release.
+
+## 0.6.1
+
+ - **FIX**(analytics,web): More explicit interop types ([#17811](https://github.com/firebase/flutterfire/issues/17811)). ([311a57cb](https://github.com/firebase/flutterfire/commit/311a57cbb3fd36b9979d652a9105d64e01556620))
+ - **FEAT**(web): add `registerVersion` support for packages ([#17780](https://github.com/firebase/flutterfire/issues/17780)). ([3c8c83d4](https://github.com/firebase/flutterfire/commit/3c8c83d4251f2965ae6fb1fe7b64c21dcb94e9ec))
+
+## 0.6.0+3
+
+ - Update a dependency to the latest release.
+
+## 0.6.0+2
+
+ - Update a dependency to the latest release.
+
+## 0.6.0+1
+
+ - Update a dependency to the latest release.
+
+## 0.6.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**(analytics): remove deprecated methods for breaking change release ([#17560](https://github.com/firebase/flutterfire/issues/17560)). ([ea3034d8](https://github.com/firebase/flutterfire/commit/ea3034d88215d0b99dda9079fd9134afb5fee496))
+
+## 0.5.10+16
+
+ - Update a dependency to the latest release.
+
+## 0.5.10+15
+
+ - Update a dependency to the latest release.
+
+## 0.5.10+14
+
+ - Update a dependency to the latest release.
+
+## 0.5.10+13
+
+ - Update a dependency to the latest release.
+
+## 0.5.10+12
+
+ - Update a dependency to the latest release.
+
 ## 0.5.10+11
 
  - Update a dependency to the latest release.

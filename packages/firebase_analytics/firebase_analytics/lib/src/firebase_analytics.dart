@@ -5,7 +5,7 @@
 part of '../firebase_analytics.dart';
 
 /// Firebase Analytics API.
-class FirebaseAnalytics extends FirebasePluginPlatform {
+class FirebaseAnalytics extends FirebasePlugin {
   FirebaseAnalytics._({
     required this.app,
     this.webOptions,
@@ -100,15 +100,27 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   Future<void> logEvent({
     required String name,
     Map<String, Object>? parameters,
+    List<AnalyticsEventItem>? items,
     AnalyticsCallOptions? callOptions,
   }) async {
     _logEventNameValidation(name);
 
     _assertParameterTypesAreCorrect(parameters);
+    _assertItemsParameterTypesAreCorrect(items);
+
+    final Map<String, Object>? effectiveParameters;
+    if (items != null) {
+      effectiveParameters = filterOutNulls(<String, Object?>{
+        _ITEMS: _marshalItems(items),
+        if (parameters != null) ...parameters,
+      });
+    } else {
+      effectiveParameters = parameters;
+    }
 
     await _delegate.logEvent(
       name: name,
-      parameters: parameters,
+      parameters: effectiveParameters,
       callOptions: callOptions,
     );
   }
@@ -186,40 +198,6 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     AnalyticsCallOptions? callOptions,
   }) async {
     await _delegate.setUserId(id: id, callOptions: callOptions);
-  }
-
-  /// Sets the current [screenName], which specifies the current visual context
-  /// in your app.
-  ///
-  /// This helps identify the areas in your app where users spend their time
-  /// and how they interact with your app.
-  ///
-  /// The class name can optionally be overridden by the [screenClassOverride]
-  /// parameter.
-  ///
-  /// The [screenName] and [screenClassOverride] remain in effect until the
-  /// current `Activity` (in Android) or `UIViewController` (in iOS) changes or
-  /// a new call to [setCurrentScreen] is made.
-  ///
-  /// Setting a null [screenName] clears the current screen name.
-  ///
-  /// See also:
-  ///
-  ///  * https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.html#setCurrentScreen(android.app.Activity, java.lang.String, java.lang.String)
-  ///  * https://firebase.google.com/docs/reference/ios/firebaseanalytics/api/reference/Classes/FIRAnalytics#setscreennamescreenclass
-  @Deprecated(
-    'setCurrentScreen() has been deprecated. Please use logScreenView()',
-  )
-  Future<void> setCurrentScreen({
-    required String? screenName,
-    String screenClassOverride = 'Flutter',
-    AnalyticsCallOptions? callOptions,
-  }) async {
-    await _delegate.setCurrentScreen(
-      screenName: screenName,
-      screenClassOverride: screenClassOverride,
-      callOptions: callOptions,
-    );
   }
 
   static final RegExp _nonAlphaNumeric = RegExp('[^a-zA-Z0-9_]');
@@ -658,26 +636,6 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
         if (parameters != null) ...parameters,
       }),
       callOptions: callOptions,
-    );
-  }
-
-  /// Logs the standard `set_checkout_option` event. This event has been deprecated and is unsupported in updated Enhanced Ecommerce reports.
-  /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#SET_CHECKOUT_OPTION
-  @Deprecated('logSetCheckoutOption() has been deprecated.')
-  Future<void> logSetCheckoutOption({
-    required int checkoutStep,
-    required String checkoutOption,
-    Map<String, Object>? parameters,
-  }) {
-    _assertParameterTypesAreCorrect(parameters);
-
-    return _delegate.logEvent(
-      name: 'set_checkout_option',
-      parameters: filterOutNulls(<String, Object?>{
-        _CHECKOUT_STEP: checkoutStep,
-        _CHECKOUT_OPTION: checkoutOption,
-        if (parameters != null) ...parameters,
-      }),
     );
   }
 
@@ -1259,6 +1217,62 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     );
   }
 
+  /// Logs the standard `in_app_purchase` event.
+  ///
+  /// This event signifies that an item(s) was purchased by a user.
+  ///
+  /// This API is intended for manually logging in-app purchase events on iOS,
+  /// particularly for purchases that occur in WebView or non-native billing flows.
+  /// For StoreKit 2 transactions, use [logTransaction] instead.
+  ///
+  /// Only available on iOS.
+  Future<void> logInAppPurchase({
+    String? currency,
+    bool? freeTrial,
+    double? price,
+    bool? priceIsDiscounted,
+    String? productID,
+    String? productName,
+    int? quantity,
+    bool? subscription,
+    num? value,
+  }) {
+    if (defaultTargetPlatform != TargetPlatform.iOS) {
+      throw UnimplementedError('logInAppPurchase() is only supported on iOS.');
+    }
+    return _delegate.logEvent(
+      name: 'in_app_purchase',
+      parameters: filterOutNulls(<String, Object?>{
+        _CURRENCY: currency,
+        _FREE_TRIAL: freeTrial,
+        _PRICE: price,
+        _PRICE_IS_DISCOUNTED: priceIsDiscounted,
+        _PRODUCT_ID: productID,
+        _PRODUCT_NAME: productName,
+        _QUANTITY: quantity,
+        _SUBSCRIPTION: subscription,
+        _VALUE: value,
+      }),
+    );
+  }
+
+  /// Logs verified in-app purchase events in Google Analytics for Firebase
+  /// after a purchase is successful.
+  ///
+  /// Only available on iOS.
+  ///
+  /// You can obtain the [transactionId] from the
+  /// [in_app_purchase](https://pub.dev/packages/in_app_purchase) package.
+  Future<void> logTransaction(String transactionId) async {
+    if (defaultTargetPlatform != TargetPlatform.iOS &&
+        defaultTargetPlatform != TargetPlatform.macOS) {
+      throw UnimplementedError(
+        'logTransaction() is only supported on iOS and macOS.',
+      );
+    }
+    return _delegate.logTransaction(transactionId: transactionId);
+  }
+
   /// Sets the duration of inactivity that terminates the current session.
   ///
   /// The default value is 1800000 milliseconds (30 minutes).
@@ -1267,7 +1281,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   }
 
   /// Initiates on-device conversion measurement given a user email address.
-  /// Requires dependency GoogleAppMeasurementOnDeviceConversion to be linked in, otherwise it is a no-op.
+  /// Requires Firebase iOS SDK 12.0.0+ with FirebaseAnalytics dependency, otherwise it is a no-op.
   ///
   /// Only available on iOS.
   Future<void> initiateOnDeviceConversionMeasurementWithEmailAddress(
@@ -1284,7 +1298,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   }
 
   /// Initiates on-device conversion measurement given a user phone number in E.164 format.
-  /// Requires dependency GoogleAppMeasurementOnDeviceConversion to be linked in, otherwise it is a no-op.
+  /// Requires Firebase iOS SDK 12.0.0+ with FirebaseAnalytics dependency, otherwise it is a no-op.
   ///
   /// Only available on iOS.
   Future<void> initiateOnDeviceConversionMeasurementWithPhoneNumber(
@@ -1301,7 +1315,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   }
 
   /// Initiates on-device conversion measurement given a sha256-hashed, UTF8 encoded, user email address.
-  /// Requires dependency GoogleAppMeasurementOnDeviceConversion to be linked in, otherwise it is a no-op.
+  /// Requires Firebase iOS SDK 12.0.0+ with FirebaseAnalytics dependency, otherwise it is a no-op.
   ///
   /// Only available on iOS.
   Future<void> initiateOnDeviceConversionMeasurementWithHashedEmailAddress(
@@ -1318,7 +1332,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   }
 
   /// Initiates on-device conversion measurement given a sha256-hashed, UTF8 encoded, phone number in E.164 format.
-  /// Requires dependency GoogleAppMeasurementOnDeviceConversion to be linked in, otherwise it is a no-op.
+  /// Requires Firebase iOS SDK 12.0.0+ with FirebaseAnalytics dependency, otherwise it is a no-op.
   ///
   /// Only available on iOS.
   Future<void> initiateOnDeviceConversionMeasurementWithHashedPhoneNumber(
@@ -1602,8 +1616,23 @@ const String _PROMOTION_ID = 'promotion_id';
 /// The name of a product promotion
 const String _PROMOTION_NAME = 'promotion_name';
 
-/// The checkout step (1..N).
-const String _CHECKOUT_STEP = 'checkout_step';
+/// Whether the purchase is a free trial
+const String _FREE_TRIAL = 'free_trial';
 
-/// Some option on a step in an ecommerce flow.
-const String _CHECKOUT_OPTION = 'checkout_option';
+/// The price of the item
+const String _PRICE = 'price';
+
+/// Whether the price is discounted
+const String _PRICE_IS_DISCOUNTED = 'price_is_discounted';
+
+/// The ID of the product
+const String _PRODUCT_ID = 'product_id';
+
+/// The name of the product
+const String _PRODUCT_NAME = 'product_name';
+
+/// The quantity of the product
+const String _QUANTITY = 'quantity';
+
+/// Whether the purchase is a subscription
+const String _SUBSCRIPTION = 'subscription';

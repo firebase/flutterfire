@@ -1,3 +1,90 @@
+## 6.0.5
+
+ - Update a dependency to the latest release.
+
+## 6.0.4
+
+ - **FIX**(functions): cloud functions results only converted top-level maps ([#18427](https://github.com/firebase/flutterfire/issues/18427)). ([e9039eec](https://github.com/firebase/flutterfire/commit/e9039eec5b9e6a5aa7368f463d79725e1add1945))
+
+## 6.0.3
+
+ - Update a dependency to the latest release.
+
+## 6.0.2
+
+ - Update a dependency to the latest release.
+
+## 6.0.1
+
+ - Update a dependency to the latest release.
+
+## 6.0.0
+
+ - Bump platform interface a major version due to pigeon dependency update
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+ - **FEAT**: upgrade pigeon to version 26.3.4 ([#18205](https://github.com/firebase/flutterfire/issues/18205)). ([cb6b4aef](https://github.com/firebase/flutterfire/commit/cb6b4aeffc568755ea3eebe32b998f00237bf5ad))
+
+## 5.8.12
+
+ - Update a dependency to the latest release.
+
+## 5.8.11
+
+ - **FIX**(functions): prevent collision when listening multiple times to the same stream ([#18052](https://github.com/firebase/flutterfire/issues/18052)). ([c13040e1](https://github.com/firebase/flutterfire/commit/c13040e15a42deddbf61b3180bbd002d58edca29))
+
+## 5.8.10
+
+ - Update a dependency to the latest release.
+
+## 5.8.9
+
+ - Update a dependency to the latest release.
+
+## 5.8.8
+
+ - Update a dependency to the latest release.
+
+## 5.8.7
+
+ - Update a dependency to the latest release.
+
+## 5.8.6
+
+ - Update a dependency to the latest release.
+
+## 5.8.5
+
+ - Update a dependency to the latest release.
+
+## 5.8.4
+
+ - Update a dependency to the latest release.
+
+## 5.8.3
+
+ - Update a dependency to the latest release.
+
+## 5.8.2
+
+ - Update a dependency to the latest release.
+
+## 5.8.1
+
+ - Update a dependency to the latest release.
+
+## 5.8.0
+
+ - **FEAT**(functions): add support for Pigeon. Update android to Kotlin. ([#17433](https://github.com/firebase/flutterfire/issues/17433)). ([f852df87](https://github.com/firebase/flutterfire/commit/f852df87a5b53356c1e15f67c3eda8e9aa8fb529))
+
+## 5.7.2
+
+ - Update a dependency to the latest release.
+
+## 5.7.1
+
+ - Update a dependency to the latest release.
+
 ## 5.7.0
 
  - **FEAT**(cloud_functions): add support for cloud functions stream ([#17214](https://github.com/firebase/flutterfire/issues/17214)). ([509e0f3c](https://github.com/firebase/flutterfire/commit/509e0f3cc984a7b56a67979b4b27aff72defdd55))
@@ -209,7 +296,7 @@
 ## 5.4.0
 
  - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
- - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+ - **FEAT**: update libraries to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
 
 ## 5.3.0
 

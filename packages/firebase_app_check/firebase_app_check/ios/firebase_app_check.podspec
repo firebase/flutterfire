@@ -24,9 +24,8 @@ Pod::Spec.new do |s|
   s.license          = { :file => '../LICENSE' }
   s.authors           = 'The Chromium Authors'
   s.source           = { :path => '.' }
-  s.source_files     = 'firebase_app_check/Sources/firebase_app_check/**/*.{h,m}'
-  s.public_header_files = 'firebase_app_check/Sources/firebase_app_check/include/*.h'
-  s.ios.deployment_target = '13.0'
+  s.source_files     = 'firebase_app_check/Sources/firebase_app_check/**/*.swift'
+  s.ios.deployment_target = '15.0'
 
   # Flutter dependencies
   s.dependency 'Flutter'

@@ -2,6 +2,11 @@ Project: /docs/storage/_project.yaml
 Book: /docs/_book.yaml
 page_type: guide
 
+{# The following is at site root, /third_party/devsite/firebase/en/ #}
+{% include "_local_variables.html" %}
+
+{% include "docs/storage/_local_variables.html" %}
+
 <link rel="stylesheet" type="text/css" href="/styles/docs.css" />
 
 # Create a Cloud Storage reference on Flutter

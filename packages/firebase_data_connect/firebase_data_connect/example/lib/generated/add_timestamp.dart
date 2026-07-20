@@ -25,10 +25,27 @@ class AddTimestampVariablesBuilder {
   }
 }
 
+@immutable
 class AddTimestampTimestampHolderInsert {
-  String id;
+  final String id;
   AddTimestampTimestampHolderInsert.fromJson(dynamic json)
       : id = nativeFromJson<String>(json['id']);
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+
+    final AddTimestampTimestampHolderInsert otherTyped =
+        other as AddTimestampTimestampHolderInsert;
+    return id == otherTyped.id;
+  }
+
+  @override
+  int get hashCode => id.hashCode;
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -41,11 +58,27 @@ class AddTimestampTimestampHolderInsert {
   });
 }
 
+@immutable
 class AddTimestampData {
-  AddTimestampTimestampHolderInsert timestampHolder_insert;
+  final AddTimestampTimestampHolderInsert timestampHolder_insert;
   AddTimestampData.fromJson(dynamic json)
       : timestampHolder_insert = AddTimestampTimestampHolderInsert.fromJson(
             json['timestampHolder_insert']);
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+
+    final AddTimestampData otherTyped = other as AddTimestampData;
+    return timestampHolder_insert == otherTyped.timestampHolder_insert;
+  }
+
+  @override
+  int get hashCode => timestampHolder_insert.hashCode;
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -58,12 +91,28 @@ class AddTimestampData {
   });
 }
 
+@immutable
 class AddTimestampVariables {
-  Timestamp timestamp;
+  final Timestamp timestamp;
   @Deprecated(
       'fromJson is deprecated for Variable classes as they are no longer required for deserialization.')
   AddTimestampVariables.fromJson(Map<String, dynamic> json)
       : timestamp = Timestamp.fromJson(json['timestamp']);
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+
+    final AddTimestampVariables otherTyped = other as AddTimestampVariables;
+    return timestamp == otherTyped.timestamp;
+  }
+
+  @override
+  int get hashCode => timestamp.hashCode;
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};

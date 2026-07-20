@@ -8,7 +8,7 @@ import 'method_channel_firestore.dart';
 /// An implementation of [AggregateQueryPlatform] for the [MethodChannel]
 class MethodChannelAggregateQuery extends AggregateQueryPlatform {
   MethodChannelAggregateQuery(
-    query,
+    QueryPlatform query,
     this._pigeonParameters,
     this._path,
     this._pigeonApp,
@@ -18,7 +18,7 @@ class MethodChannelAggregateQuery extends AggregateQueryPlatform {
 
   final FirestorePigeonFirebaseApp _pigeonApp;
   final String _path;
-  final PigeonQueryParameters _pigeonParameters;
+  final InternalQueryParameters _pigeonParameters;
   final bool _isCollectionGroupQuery;
 
   final List<AggregateQuery> _aggregateQueries;

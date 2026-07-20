@@ -1,3 +1,87 @@
+## 0.1.5+26
+
+ - Update a dependency to the latest release.
+
+## 0.1.5+25
+
+ - Update a dependency to the latest release.
+
+## 0.1.5+24
+
+ - Update a dependency to the latest release.
+
+## 0.1.5+23
+
+ - Update a dependency to the latest release.
+
+## 0.1.5+22
+
+ - Update a dependency to the latest release.
+
+## 0.1.5+21
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+
+## 0.1.5+20
+
+ - Update a dependency to the latest release.
+
+## 0.1.5+19
+
+ - Update a dependency to the latest release.
+
+## 0.1.5+18
+
+ - Update a dependency to the latest release.
+
+## 0.1.5+17
+
+ - Update a dependency to the latest release.
+
+## 0.1.5+16
+
+ - Update a dependency to the latest release.
+
+## 0.1.5+15
+
+ - Update a dependency to the latest release.
+
+## 0.1.5+14
+
+ - Update a dependency to the latest release.
+
+## 0.1.5+13
+
+ - Update a dependency to the latest release.
+
+## 0.1.5+12
+
+ - Update a dependency to the latest release.
+
+## 0.1.5+11
+
+ - Update a dependency to the latest release.
+
+## 0.1.5+10
+
+ - Update a dependency to the latest release.
+
+## 0.1.5+9
+
+ - Update a dependency to the latest release.
+
+## 0.1.5+8
+
+ - Update a dependency to the latest release.
+
+## 0.1.5+7
+
+ - Update a dependency to the latest release.
+
+## 0.1.5+6
+
+ - Update a dependency to the latest release.
+
 ## 0.1.5+5
 
  - Update a dependency to the latest release.
@@ -205,7 +289,7 @@
 ## 0.1.4
 
  - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
- - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+ - **FEAT**: update libraries to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
 
 ## 0.1.3
 

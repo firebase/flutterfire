@@ -74,6 +74,27 @@ class _HomePageState extends State<HomePage> {
             buttonText: 'Fetch Activate',
           ),
           _ButtonAndText(
+            defaultText: 'No data',
+            buttonText: 'Get All',
+            onPressed: () async {
+              try {
+                final FirebaseRemoteConfig remoteConfig =
+                    FirebaseRemoteConfig.instance;
+                final allParams = remoteConfig.getAll();
+                if (allParams.isEmpty) {
+                  return 'No parameters found';
+                }
+                final entries = allParams.entries
+                    .map((e) => '${e.key}: ${e.value.asString()}')
+                    .join(', ');
+                return 'All: $entries';
+              } catch (exception) {
+                print(exception);
+                return 'Error: $exception';
+              }
+            },
+          ),
+          _ButtonAndText(
             defaultText: update != null
                 ? 'Updated keys: ${update?.updatedKeys}'
                 : 'No data',
@@ -155,8 +176,8 @@ class _ButtonAndTextState extends State<_ButtonAndText> {
       padding: const EdgeInsets.all(8),
       child: Row(
         children: [
-          Text(_text ?? widget.defaultText),
-          const Spacer(),
+          Expanded(child: Text(_text ?? widget.defaultText)),
+          const SizedBox(width: 8),
           ElevatedButton(
             onPressed: () async {
               final result = await widget.onPressed();

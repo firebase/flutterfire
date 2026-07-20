@@ -1,3 +1,88 @@
+## 3.11.11
+
+ - Update a dependency to the latest release.
+
+## 3.11.10
+
+ - Update a dependency to the latest release.
+
+## 3.11.9
+
+ - Update a dependency to the latest release.
+
+## 3.11.8
+
+ - Update a dependency to the latest release.
+
+## 3.11.7
+
+ - Update a dependency to the latest release.
+
+## 3.11.6
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+
+## 3.11.5
+
+ - Update a dependency to the latest release.
+
+## 3.11.4
+
+ - **REFACTOR**: fix formatting and analysis issues across the repo ([#18124](https://github.com/firebase/flutterfire/issues/18124)). ([ab79fd93](https://github.com/firebase/flutterfire/commit/ab79fd93ee4ccfeb478687623134b1cf8ab71c74))
+
+## 3.11.3
+
+ - Update a dependency to the latest release.
+
+## 3.11.2
+
+ - Update a dependency to the latest release.
+
+## 3.11.1
+
+ - Update a dependency to the latest release.
+
+## 3.11.0
+
+ - **FIX**(storage,web): More explicit interop types ([#17828](https://github.com/firebase/flutterfire/issues/17828)). ([65a441e7](https://github.com/firebase/flutterfire/commit/65a441e7cd08d4803a7a28834c069743af2dcf4d))
+ - **FEAT**(web): add `registerVersion` support for packages ([#17780](https://github.com/firebase/flutterfire/issues/17780)). ([3c8c83d4](https://github.com/firebase/flutterfire/commit/3c8c83d4251f2965ae6fb1fe7b64c21dcb94e9ec))
+
+## 3.10.21
+
+ - Update a dependency to the latest release.
+
+## 3.10.20
+
+ - Update a dependency to the latest release.
+
+## 3.10.19
+
+ - Update a dependency to the latest release.
+
+## 3.10.18
+
+ - Update a dependency to the latest release.
+
+## 3.10.17
+
+ - Update a dependency to the latest release.
+
+## 3.10.16
+
+ - Update a dependency to the latest release.
+
+## 3.10.15
+
+ - Update a dependency to the latest release.
+
+## 3.10.14
+
+ - Update a dependency to the latest release.
+
+## 3.10.13
+
+ - Update a dependency to the latest release.
+
 ## 3.10.12
 
  - Update a dependency to the latest release.
@@ -477,7 +562,7 @@
 
 ## 1.0.4
 
- - **REFACTOR**: Share guard functions accross plugins (#5783).
+ - **REFACTOR**: Share guard functions across plugins (#5783).
 
 ## 1.0.3
 

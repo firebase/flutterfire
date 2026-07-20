@@ -138,8 +138,6 @@ void main() {
 
           await configSubscription.cancel();
         },
-        // This feature is not supported on Web
-        skip: kIsWeb,
       );
 
       test('default values', () async {
@@ -156,17 +154,34 @@ void main() {
         expect(FirebaseRemoteConfig.instance.getDouble('does-not-exist'), 0.0);
       });
 
-      group('setCustomSignals()', () {
-        test('valid signal values; `string`, `number` & `null`', () async {
-          const signals = <String, Object?>{
-            'signal1': 'string',
-            'signal2': 204953,
-            'signal3': 3.24,
-            'signal4': null,
-          };
+      test(
+        'getAll() returns without throwing',
+        () async {
+          try {
+            await FirebaseRemoteConfig.instance.fetchAndActivate();
+            FirebaseRemoteConfig.instance.getAll();
+          } on UnimplementedError catch (e) {
+            fail('getAll() threw an exception: $e');
+          }
+        },
+        skip: !kIsWeb,
+      );
 
-          await FirebaseRemoteConfig.instance.setCustomSignals(signals);
-        });
+      group('setCustomSignals()', () {
+        test(
+          'valid signal values; `string`, `number` & `null`',
+          () async {
+            const signals = <String, Object?>{
+              'signal1': 'string',
+              'signal2': 204953,
+              'signal3': 3.24,
+              'signal4': null,
+            };
+
+            await FirebaseRemoteConfig.instance.setCustomSignals(signals);
+          },
+          skip: defaultTargetPlatform == TargetPlatform.windows,
+        );
 
         test('invalid signal values throws assertion', () async {
           const signals = <String, Object?>{

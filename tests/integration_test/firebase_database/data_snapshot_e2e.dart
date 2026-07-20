@@ -9,11 +9,15 @@ void setupDataSnapshotTests() {
   group('DataSnapshot', () {
     late DatabaseReference ref;
     DatabaseReference getRef(String path) {
-      return FirebaseDatabase.instance.ref('tests').child(path);
+      return ref.child(path);
     }
 
+    var testCount = 0;
+
     setUp(() async {
-      ref = FirebaseDatabase.instance.ref('tests');
+      ref = FirebaseDatabase.instance.ref(
+        'tests/data-snapshot-${DateTime.now().microsecondsSinceEpoch}-${testCount++}',
+      );
 
       // Wipe the database before each test
       await ref.remove();
@@ -164,9 +168,11 @@ void setupDataSnapshotTests() {
         'b': 2,
         'c': 1,
       });
-      final s = await ref.orderByValue().get();
+      // Use .once() instead of .get() because the REST API used by .get()
+      // does not guarantee ordered results from the emulator.
+      final event = await ref.orderByValue().once();
 
-      List<DataSnapshot> children = s.children.toList();
+      List<DataSnapshot> children = event.snapshot.children.toList();
       expect(children[0].value, 1);
       expect(children[1].value, 2);
       expect(children[2].value, 3);

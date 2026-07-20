@@ -102,18 +102,6 @@ class Analytics extends JsObjectWrapper<analytics_interop.AnalyticsJsImpl> {
     );
   }
 
-  void setCurrentScreen({
-    String? screenName,
-    AnalyticsCallOptions? callOptions,
-  }) {
-    return analytics_interop.logEvent(
-      jsObject,
-      'screen_view'.toJS,
-      {'firebase_screen': screenName}.jsify(),
-      callOptions?.asMap().jsify() as JSObject?,
-    );
-  }
-
   void setUserId({
     String? id,
     AnalyticsCallOptions? callOptions,

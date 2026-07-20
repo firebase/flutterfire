@@ -4,6 +4,8 @@
 
 import 'package:_flutterfire_internals/_flutterfire_internals.dart';
 import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
+import 'package:firebase_database_platform_interface/src/pigeon/messages.pigeon.dart'
+    hide DatabaseReferencePlatform;
 import 'package:flutter/services.dart';
 
 import 'method_channel_data_snapshot.dart';
@@ -11,6 +13,8 @@ import 'method_channel_database.dart';
 import 'method_channel_database_event.dart';
 import 'method_channel_database_reference.dart';
 import 'utils/exception.dart';
+
+final _api = FirebaseDatabaseHostApi();
 
 /// Represents a query over the data at a particular location.
 class MethodChannelQuery extends QueryPlatform {
@@ -23,6 +27,12 @@ class MethodChannelQuery extends QueryPlatform {
   static Map<String, Stream<DatabaseEventPlatform>> observers = {};
 
   final List<String> pathComponents;
+
+  /// Gets the Pigeon app object from the database
+  DatabasePigeonFirebaseApp get _pigeonApp {
+    final methodChannelDatabase = database as MethodChannelDatabase;
+    return methodChannelDatabase.pigeonApp;
+  }
 
   @override
   String get path {
@@ -37,24 +47,18 @@ class MethodChannelQuery extends QueryPlatform {
     QueryModifiers modifiers,
     DatabaseEventType eventType,
   ) async* {
-    const channel = MethodChannelDatabase.channel;
     List<Map<String, Object?>> modifierList = modifiers.toList();
-    // Create a unique event channel naming prefix using path, app name,
-    // databaseUrl, event type and ordered modifier list
-    String eventChannelNamePrefix =
-        '$path-${database.app!.name}-${database.databaseURL}-$eventType-$modifierList';
 
-    // Create the EventChannel on native.
-    final channelName = await channel.invokeMethod<String>(
-      'Query#observe',
-      database.getChannelArguments({
-        'path': path,
-        'modifiers': modifierList,
-        'eventChannelNamePrefix': eventChannelNamePrefix,
-      }),
+    // Create the EventChannel on native using Pigeon.
+    final channelName = await _api.queryObserve(
+      _pigeonApp,
+      QueryRequest(
+        path: path,
+        modifiers: modifierList,
+      ),
     );
 
-    yield* EventChannel(channelName!).receiveGuardedBroadcastStream(
+    yield* EventChannel(channelName).receiveGuardedBroadcastStream(
       arguments: <String, Object?>{'eventType': eventTypeToString(eventType)},
       onError: convertPlatformException,
     ).map(
@@ -67,16 +71,28 @@ class MethodChannelQuery extends QueryPlatform {
   @override
   Future<DataSnapshotPlatform> get(QueryModifiers modifiers) async {
     try {
-      final result = await channel.invokeMapMethod(
-        'Query#get',
-        database.getChannelArguments({
-          'path': path,
-          'modifiers': modifiers.toList(),
-        }),
+      final result = await _api.queryGet(
+        _pigeonApp,
+        QueryRequest(
+          path: path,
+          modifiers: modifiers.toList(),
+        ),
       );
+      final snapshotData = result['snapshot'];
+      if (snapshotData == null) {
+        return MethodChannelDataSnapshot(
+          ref,
+          <String, dynamic>{
+            'key': ref.key,
+            'value': null,
+            'priority': null,
+            'childKeys': [],
+          },
+        );
+      }
       return MethodChannelDataSnapshot(
         ref,
-        Map<String, dynamic>.from(result!['snapshot']),
+        Map<String, dynamic>.from(snapshotData as Map),
       );
     } catch (e, s) {
       convertPlatformException(e, s);
@@ -99,10 +115,12 @@ class MethodChannelQuery extends QueryPlatform {
   @override
   Future<void> keepSynced(QueryModifiers modifiers, bool value) async {
     try {
-      await channel.invokeMethod<void>(
-        'Query#keepSynced',
-        database.getChannelArguments(
-          {'path': path, 'modifiers': modifiers.toList(), 'value': value},
+      await _api.queryKeepSynced(
+        _pigeonApp,
+        QueryRequest(
+          path: path,
+          modifiers: modifiers.toList(),
+          value: value,
         ),
       );
     } catch (e, s) {

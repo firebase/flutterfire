@@ -59,5 +59,28 @@ void main() {
       final any = AnyValue(map);
       expect(any.toJson(), equals(map));
     });
+    test('constructor serializes List of map', () {
+      final listOfMap = [
+        {'a': 1, 'b': 2.0},
+        {'c': 3, 'd': 4.0},
+        {'e': 5, 'f': null},
+      ];
+      final any = AnyValue(listOfMap);
+      expect(any.toJson(), equals(listOfMap));
+    });
+    test('constructor serializes List of primitive type', () {
+      final cases = [
+        [1, 2, 3, 4, 5],
+        [1.0, 2.0, 3.0, 4.0, 5.0],
+        ['a', 'b', 'c', 'd', 'e'],
+        [true, false, true, false],
+        [1, 2.0, null, 4],
+      ];
+
+      for (final list in cases) {
+        final any = AnyValue(list);
+        expect(any.toJson(), equals(list));
+      }
+    });
   });
 }

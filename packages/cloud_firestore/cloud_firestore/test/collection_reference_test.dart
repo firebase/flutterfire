@@ -31,7 +31,7 @@ void main() {
     });
 
     test('extends $Query', () {
-      // The `firestore` property is publically accessible via Query.
+      // The `firestore` property is publicly accessible via Query.
       // Is there a better way to test this?
       CollectionReference ref = firestore.collection('foo');
 

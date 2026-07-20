@@ -1,3 +1,88 @@
+## 0.1.7+11
+
+ - Update a dependency to the latest release.
+
+## 0.1.7+10
+
+ - Update a dependency to the latest release.
+
+## 0.1.7+9
+
+ - Update a dependency to the latest release.
+
+## 0.1.7+8
+
+ - Update a dependency to the latest release.
+
+## 0.1.7+7
+
+ - Update a dependency to the latest release.
+
+## 0.1.7+6
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+
+## 0.1.7+5
+
+ - Update a dependency to the latest release.
+
+## 0.1.7+4
+
+ - Update a dependency to the latest release.
+
+## 0.1.7+3
+
+ - Update a dependency to the latest release.
+
+## 0.1.7+2
+
+ - Update a dependency to the latest release.
+
+## 0.1.7+1
+
+ - Update a dependency to the latest release.
+
+## 0.1.7
+
+ - **FIX**(installations,web): More explicit interop types ([#17819](https://github.com/firebase/flutterfire/issues/17819)). ([64986b1b](https://github.com/firebase/flutterfire/commit/64986b1b8128359ed66965f9342f2465007fc1cd))
+ - **FEAT**(web): add `registerVersion` support for packages ([#17780](https://github.com/firebase/flutterfire/issues/17780)). ([3c8c83d4](https://github.com/firebase/flutterfire/commit/3c8c83d4251f2965ae6fb1fe7b64c21dcb94e9ec))
+
+## 0.1.6+20
+
+ - Update a dependency to the latest release.
+
+## 0.1.6+19
+
+ - Update a dependency to the latest release.
+
+## 0.1.6+18
+
+ - Update a dependency to the latest release.
+
+## 0.1.6+17
+
+ - Update a dependency to the latest release.
+
+## 0.1.6+16
+
+ - Update a dependency to the latest release.
+
+## 0.1.6+15
+
+ - Update a dependency to the latest release.
+
+## 0.1.6+14
+
+ - Update a dependency to the latest release.
+
+## 0.1.6+13
+
+ - Update a dependency to the latest release.
+
+## 0.1.6+12
+
+ - Update a dependency to the latest release.
+
 ## 0.1.6+11
 
  - **FIX**(app_installations,web): resolve type cast error in `getId` and `getToken` for wasm ([#17181](https://github.com/firebase/flutterfire/issues/17181)). ([14bd67f3](https://github.com/firebase/flutterfire/commit/14bd67f3e9c6a1dc18ef2daf79053cd906d44d88))

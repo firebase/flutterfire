@@ -18,8 +18,12 @@ class EncodeUtility {
     if (data == null) {
       return null;
     }
-    Map<String, dynamic> output = Map.from(data);
-    output.updateAll((key, value) => valueEncode(value));
+    final output = <String, dynamic>{};
+    data.forEach((key, value) {
+      final stringKey =
+          key is DocumentReferencePlatform ? key.path : key as String;
+      output[stringKey] = valueEncode(value);
+    });
     return output;
   }
 
@@ -116,7 +120,10 @@ class EncodeUtility {
     } else if (value == FieldPath.documentId) {
       return firestore_interop.documentId();
     } else if (value is Timestamp) {
-      return value.toDate();
+      return firestore_interop.TimestampJsImpl(
+        value.seconds.toJS,
+        value.nanoseconds.toJS,
+      );
     } else if (value is GeoPoint) {
       return firestore_interop.GeoPointJsImpl(
           value.latitude.toJS, value.longitude.toJS);
@@ -126,8 +133,8 @@ class EncodeUtility {
       return firestore_interop.BytesJsImpl.fromUint8Array(value.bytes.toJS);
     } else if (value is DocumentReferenceWeb) {
       return value.firestoreWeb.doc(value.path);
-    } else if (value is Map<String, dynamic>) {
-      return encodeMapData(value);
+    } else if (value is Map) {
+      return encodeMapData(value.cast<Object, dynamic>());
     } else if (value is List<dynamic>) {
       return encodeArrayData(value);
     } else if (value is Iterable<dynamic>) {

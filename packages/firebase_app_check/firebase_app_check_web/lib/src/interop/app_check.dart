@@ -16,9 +16,28 @@ export 'app_check_interop.dart';
 
 /// Given an AppJSImp, return the AppCheck instance.
 AppCheck? getAppCheckInstance([App? app, WebProvider? provider]) {
-  late app_check_interop.ReCaptchaProvider jsProvider;
+  app_check_interop.ReCaptchaProvider? jsProvider;
 
-  if (provider is ReCaptchaV3Provider) {
+  if (provider == null || provider is WebReCaptchaProvider) {
+    jsProvider = null;
+  } else if (provider is WebDebugProvider) {
+    // Set the debug token global before initializing App Check.
+    // The Firebase JS SDK reads this and creates a DebugProvider internally.
+    if (provider.debugToken != null) {
+      globalContext.setProperty(
+        'FIREBASE_APPCHECK_DEBUG_TOKEN'.toJS,
+        provider.debugToken!.toJS,
+      );
+    } else {
+      globalContext.setProperty(
+        'FIREBASE_APPCHECK_DEBUG_TOKEN'.toJS,
+        true.toJS,
+      );
+    }
+    // A provider is still required by initializeAppCheck, but the debug
+    // token global overrides it.
+    jsProvider = app_check_interop.ReCaptchaV3Provider('debug'.toJS);
+  } else if (provider is ReCaptchaV3Provider) {
     jsProvider = app_check_interop.ReCaptchaV3Provider(provider.siteKey.toJS);
   } else if (provider is ReCaptchaEnterpriseProvider) {
     jsProvider =
@@ -58,22 +77,20 @@ class AppCheck extends JsObjectWrapper<app_check_interop.AppCheckJsImpl> {
         isTokenAutoRefreshEnabled.toJS,
       );
 
-  Future<app_check_interop.AppCheckTokenResult> getToken(bool? forceRefresh) =>
-      app_check_interop.getToken(jsObject, forceRefresh?.toJS).toDart.then(
-            (value) => value! as app_check_interop.AppCheckTokenResult,
-          );
+  Future<app_check_interop.AppCheckTokenResultJsImpl> getToken(
+    bool? forceRefresh,
+  ) =>
+      app_check_interop.getToken(jsObject, forceRefresh?.toJS).toDart;
 
-  Future<app_check_interop.AppCheckTokenResult> getLimitedUseToken() =>
-      app_check_interop.getLimitedUseToken(jsObject).toDart.then(
-            (value) => value! as app_check_interop.AppCheckTokenResult,
-          );
+  Future<app_check_interop.AppCheckTokenResultJsImpl> getLimitedUseToken() =>
+      app_check_interop.getLimitedUseToken(jsObject).toDart;
 
   JSFunction? _idTokenChangedUnsubscribe;
 
-  StreamController<app_check_interop.AppCheckTokenResult>?
+  StreamController<app_check_interop.AppCheckTokenResultJsImpl>?
       get idTokenChangedController => _idTokenChangedController;
 
-  StreamController<app_check_interop.AppCheckTokenResult>?
+  StreamController<app_check_interop.AppCheckTokenResultJsImpl>?
       // ignore: close_sinks
       _idTokenChangedController;
 
@@ -92,11 +109,14 @@ class AppCheck extends JsObjectWrapper<app_check_interop.AppCheckJsImpl> {
     return 'no-op';
   }
 
-  Stream<app_check_interop.AppCheckTokenResult> onTokenChanged(String appName) {
+  Stream<app_check_interop.AppCheckTokenResultJsImpl> onTokenChanged(
+    String appName,
+  ) {
     final appCheckWindowsKey = _appCheckWindowsKey(appName);
     unsubscribeWindowsListener(appCheckWindowsKey);
     if (_idTokenChangedController == null) {
-      final nextWrapper = ((app_check_interop.AppCheckTokenResult result) {
+      final nextWrapper =
+          ((app_check_interop.AppCheckTokenResultJsImpl result) {
         _idTokenChangedController!.add(result);
       }).toJS;
 
@@ -119,8 +139,8 @@ class AppCheck extends JsObjectWrapper<app_check_interop.AppCheckJsImpl> {
         removeWindowsListener(appCheckWindowsKey);
       }
 
-      _idTokenChangedController =
-          StreamController<app_check_interop.AppCheckTokenResult>.broadcast(
+      _idTokenChangedController = StreamController<
+          app_check_interop.AppCheckTokenResultJsImpl>.broadcast(
         onListen: startListen,
         onCancel: stopListen,
         sync: true,

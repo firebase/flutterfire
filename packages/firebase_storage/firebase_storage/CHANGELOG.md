@@ -1,3 +1,95 @@
+## 13.4.5
+
+ - Update a dependency to the latest release.
+
+## 13.4.4
+
+ - Update a dependency to the latest release.
+
+## 13.4.3
+
+ - Update a dependency to the latest release.
+
+## 13.4.2
+
+ - Update a dependency to the latest release.
+
+## 13.4.1
+
+ - Update a dependency to the latest release.
+
+## 13.4.0
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+ - **FIX**(storage,android): fix an issue that could happen when app would get detached from the engine ([#18255](https://github.com/firebase/flutterfire/issues/18255)). ([2771f550](https://github.com/firebase/flutterfire/commit/2771f5505ff0a53cc1bfb41afec3a0eb8781b8f8))
+ - **FEAT**: upgrade pigeon to version 26.3.4 ([#18205](https://github.com/firebase/flutterfire/issues/18205)). ([cb6b4aef](https://github.com/firebase/flutterfire/commit/cb6b4aeffc568755ea3eebe32b998f00237bf5ad))
+
+## 13.3.0
+
+ - **FEAT**: use local firebase_core instead of remote SPM dependency ([#18141](https://github.com/firebase/flutterfire/issues/18141)). ([995caf40](https://github.com/firebase/flutterfire/commit/995caf400df80c0fde7151c651ccc6c0f756e381))
+
+## 13.2.0
+
+ - **FIX**(storage,iOS): guard `useStorageEmulator` to prevent crash on hot restart ([#18116](https://github.com/firebase/flutterfire/issues/18116)). ([9919bf03](https://github.com/firebase/flutterfire/commit/9919bf035226a4b066ac1ef52859d5349eff61c6))
+ - **FIX**(storage,web): contentType inference for web ([#18078](https://github.com/firebase/flutterfire/issues/18078)). ([a1fad454](https://github.com/firebase/flutterfire/commit/a1fad454a7a613c6376ddbce6fbd0d8832688d80))
+ - **FIX**(android): remove kotlin-android since AGP 9 supports it ([#18059](https://github.com/firebase/flutterfire/issues/18059)). ([1e39ad1f](https://github.com/firebase/flutterfire/commit/1e39ad1f146ce23742731ceeb30ff36c440b816f))
+ - **FEAT**(ios): migrate iOS to UIScene lifecycle ([#18054](https://github.com/firebase/flutterfire/issues/18054)). ([3ffa4110](https://github.com/firebase/flutterfire/commit/3ffa411098132fd5182a84be4e7a226106bc7451))
+
+## 13.1.0
+
+ - **FEAT**(storage,windows): add emulator support ([#18030](https://github.com/firebase/flutterfire/issues/18030)). ([461dfa43](https://github.com/firebase/flutterfire/commit/461dfa43764469b518984052cb7bbc0a2a2675eb))
+
+## 13.0.6
+
+ - Update a dependency to the latest release.
+
+## 13.0.5
+
+ - Update a dependency to the latest release.
+
+## 13.0.4
+
+ - **REFACTOR**(storage): Refactor Java and Objc to Kotlin and Swift ([#17795](https://github.com/firebase/flutterfire/issues/17795)). ([9cc9054c](https://github.com/firebase/flutterfire/commit/9cc9054c22feb18f5aec187484da8dfab9b07391))
+
+## 13.0.3
+
+ - Update a dependency to the latest release.
+
+## 13.0.2
+
+ - Update a dependency to the latest release.
+
+## 13.0.1
+
+ - Update a dependency to the latest release.
+
+## 13.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: bump iOS SDK to version 12.0.0 ([#17549](https://github.com/firebase/flutterfire/issues/17549)). ([b2619e68](https://github.com/firebase/flutterfire/commit/b2619e685fec897513483df1d7be347b64f95606))
+ - **BREAKING** **FEAT**: bump Android SDK to version 34.0.0 ([#17554](https://github.com/firebase/flutterfire/issues/17554)). ([a5bdc051](https://github.com/firebase/flutterfire/commit/a5bdc051d40ee44e39cf0b8d2a7801bc6f618b67))
+
+## 12.4.10
+
+ - Update a dependency to the latest release.
+
+## 12.4.9
+
+ - Update a dependency to the latest release.
+
+## 12.4.8
+
+ - **FIX**(core): bump Pigeon to v25.3.2 ([#17438](https://github.com/firebase/flutterfire/issues/17438)). ([4d24ef53](https://github.com/firebase/flutterfire/commit/4d24ef534464b39dcaef4151c83c78f87b36fb78))
+
+## 12.4.7
+
+ - Update a dependency to the latest release.
+
+## 12.4.6
+
+ - Update a dependency to the latest release.
+
 ## 12.4.5
 
  - Update a dependency to the latest release.

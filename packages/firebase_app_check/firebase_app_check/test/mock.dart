@@ -2,7 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:firebase_app_check_platform_interface/firebase_app_check_platform_interface.dart';
 import 'package:firebase_core_platform_interface/test.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -15,21 +14,22 @@ void setupFirebaseAppCheckMocks([Callback? customHandlers]) {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   setupFirebaseCoreMocks();
+  TestFirebaseAppHostApi.setUp(MockFirebaseAppHostApi());
+}
 
-  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-      .setMockMethodCallHandler(MethodChannelFirebaseAppCheck.channel,
-          (MethodCall methodCall) async {
-    if (methodCall.method != 'FirebaseAppCheck#registerTokenListener') {
-      methodCallLog.add(methodCall);
-    }
+class MockFirebaseAppHostApi implements TestFirebaseAppHostApi {
+  @override
+  Future<void> delete(String appName) async {}
 
-    switch (methodCall.method) {
-      case 'FirebaseAppCheck#registerTokenListener':
-        return 'channelName';
-      case 'FirebaseAppCheck#getToken':
-        return 'test-token';
-      default:
-        return false;
-    }
-  });
+  @override
+  Future<void> setAutomaticDataCollectionEnabled(
+    String appName,
+    bool enabled,
+  ) async {}
+
+  @override
+  Future<void> setAutomaticResourceManagementEnabled(
+    String appName,
+    bool enabled,
+  ) async {}
 }

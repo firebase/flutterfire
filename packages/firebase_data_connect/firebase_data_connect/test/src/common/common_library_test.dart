@@ -103,8 +103,10 @@ void main() {
 
     test('should handle invokeQuery with proper deserializer', () async {
       const queryName = 'testQuery';
-      final deserializer = (json) => json;
+      const queryId = 'testQueryId';
+      deserializer(json) => json;
       final result = await transport.invokeQuery(
+        queryId,
         queryName,
         deserializer,
         emptySerializer,
@@ -117,8 +119,10 @@ void main() {
 
     test('should handle invokeMutation with proper deserializer', () async {
       const queryName = 'testMutation';
-      final deserializer = (json) => json;
+      const operationId = 'testMutationId';
+      deserializer(json) => json;
       final result = await transport.invokeMutation(
+        operationId,
         queryName,
         deserializer,
         emptySerializer,
@@ -134,17 +138,18 @@ void main() {
 // Test class extending DataConnectTransport for testing purposes
 class TestDataConnectTransport extends DataConnectTransport {
   TestDataConnectTransport(
-    TransportOptions transportOptions,
-    DataConnectOptions options,
-    String appId,
-    CallerSDKType sdkType, {
+    super.transportOptions,
+    super.options,
+    super.appId,
+    super.sdkType, {
     FirebaseAppCheck? appCheck,
-  }) : super(transportOptions, options, appId, sdkType) {
+  }) {
     this.appCheck = appCheck;
   }
 
   @override
-  Future<Data> invokeQuery<Data, Variables>(
+  Future<ServerResponse> invokeQuery<Data, Variables>(
+    String operationId,
     String queryName,
     Deserializer<Data> deserializer,
     Serializer<Variables>? serializer,
@@ -152,11 +157,12 @@ class TestDataConnectTransport extends DataConnectTransport {
     String? authToken,
   ) async {
     // Simulate query invocation logic here
-    return deserializer('{}');
+    return ServerResponse({});
   }
 
   @override
-  Future<Data> invokeMutation<Data, Variables>(
+  Future<ServerResponse> invokeMutation<Data, Variables>(
+    String operationId,
     String queryName,
     Deserializer<Data> deserializer,
     Serializer<Variables>? serializer,
@@ -164,6 +170,18 @@ class TestDataConnectTransport extends DataConnectTransport {
     String? authToken,
   ) async {
     // Simulate mutation invocation logic here
-    return deserializer('{}');
+    return ServerResponse({});
+  }
+
+  @override
+  Stream<ServerResponse> invokeStreamQuery<Data, Variables>(
+    String operationId,
+    String queryName,
+    Deserializer<Data> deserializer,
+    Serializer<Variables>? serializer,
+    Variables? vars,
+    String? authToken,
+  ) {
+    return Stream.value(ServerResponse({}));
   }
 }

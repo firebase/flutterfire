@@ -50,6 +50,7 @@ class FirebaseOptions {
     this.iosClientId,
     this.iosBundleId,
     this.appGroupId,
+    this.recaptchaSiteKey,
   });
 
   /// Named constructor to create [FirebaseOptions] from a the response of Pigeon channel.
@@ -57,7 +58,7 @@ class FirebaseOptions {
   /// This constructor is used when platforms cannot directly return a
   /// [FirebaseOptions] instance, for example when data is sent back from a
   /// [MethodChannel].
-  FirebaseOptions.fromPigeon(PigeonFirebaseOptions options)
+  FirebaseOptions.fromPigeon(CoreFirebaseOptions options)
       : apiKey = options.apiKey,
         appId = options.appId,
         messagingSenderId = options.messagingSenderId,
@@ -71,7 +72,8 @@ class FirebaseOptions {
         androidClientId = options.androidClientId,
         iosClientId = options.iosClientId,
         iosBundleId = options.iosBundleId,
-        appGroupId = options.appGroupId;
+        appGroupId = options.appGroupId,
+        recaptchaSiteKey = options.recaptchaSiteKey;
 
   /// Returns a copy of this FirebaseOptions with the given fields replaced with
   /// the new values.
@@ -90,6 +92,7 @@ class FirebaseOptions {
     String? iosClientId,
     String? iosBundleId,
     String? appGroupId,
+    String? recaptchaSiteKey,
   }) {
     return FirebaseOptions(
       apiKey: apiKey ?? this.apiKey,
@@ -106,6 +109,7 @@ class FirebaseOptions {
       iosClientId: iosClientId ?? this.iosClientId,
       iosBundleId: iosBundleId ?? this.iosBundleId,
       appGroupId: appGroupId ?? this.appGroupId,
+      recaptchaSiteKey: recaptchaSiteKey ?? this.recaptchaSiteKey,
     );
   }
 
@@ -147,10 +151,10 @@ class FirebaseOptions {
   /// The URL scheme used by iOS secondary apps for Dynamic Links.
   final String? deepLinkURLScheme;
 
-  /// The Android client ID from the Firebase Console, for example
+  /// The Android OAuth client ID from the Firebase Console, for example
   /// "12345.apps.googleusercontent.com."
   ///
-  /// This value is used by iOS only.
+  /// This value is used on Android only.
   final String? androidClientId;
 
   /// The iOS client ID from the Firebase Console, for example
@@ -174,6 +178,9 @@ class FirebaseOptions {
   /// This property is used on iOS only.
   final String? appGroupId;
 
+  /// The reCAPTCHA site key used for App Check.
+  final String? recaptchaSiteKey;
+
   /// The current instance as a [Map].
   Map<String, String?> get asMap {
     return <String, String?>{
@@ -191,6 +198,7 @@ class FirebaseOptions {
       'iosClientId': iosClientId,
       'iosBundleId': iosBundleId,
       'appGroupId': appGroupId,
+      'recaptchaSiteKey': recaptchaSiteKey,
     };
   }
 

@@ -5,6 +5,9 @@
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
+import 'package:firebase_core_platform_interface/src/pigeon/messages.pigeon.dart'
+    as pigeon;
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
@@ -64,6 +67,163 @@ void main() {
         mock.app(testAppName),
       ]);
     });
+
+    test('.registerService() and .getService()', () {
+      FirebaseApp app = Firebase.app(testAppName);
+
+      final testService = TestService();
+      app.registerService<TestService>(testService);
+
+      expect(app.getService<TestService>(), testService);
+    });
+
+    test('.getService() returns null when registry is null', () {
+      String nullAppName = 'nullApp';
+      final FirebaseAppPlatform nullPlatformApp =
+          FirebaseAppPlatform(nullAppName, testOptions);
+      when(mock.app(nullAppName)).thenReturn(nullPlatformApp);
+
+      FirebaseApp app = Firebase.app(nullAppName);
+      expect(app.getService<TestService>(), isNull);
+    });
+
+    test('.getService() returns null when service is not registered', () {
+      FirebaseApp app = Firebase.app(testAppName);
+      expect(app.getService<AnotherTestService>(), isNull);
+    });
+
+    test('.delete() disposes registered services before deleting app',
+        () async {
+      final calls = <String>[];
+      final platformApp = TestFirebaseAppPlatform(
+        testAppName,
+        testOptions,
+        onDelete: () async {
+          calls.add('app');
+        },
+      );
+      when(mock.app(testAppName)).thenReturn(platformApp);
+
+      FirebaseApp app = Firebase.app(testAppName);
+      final testService = TestService();
+      app.registerService<TestService>(
+        testService,
+        dispose: (_) async {
+          calls.add('service');
+        },
+      );
+
+      await app.delete();
+
+      expect(calls, <String>['service', 'app']);
+      expect(app.getService<TestService>(), isNull);
+    });
+  });
+
+  test('.initializeApp() with demoProjectId', () async {
+    const String demoProjectId = 'demo-project-id';
+    const String expectedName = demoProjectId;
+    const FirebaseOptions expectedOptions = FirebaseOptions(
+      apiKey: '12345',
+      // Flutter tests use android as the default platform.
+      appId: '1:1:android:1',
+      messagingSenderId: '',
+      projectId: demoProjectId,
+    );
+
+    final mock = MockFirebaseCore();
+    Firebase.delegatePackingProperty = mock;
+
+    final FirebaseAppPlatform platformApp =
+        FirebaseAppPlatform(expectedName, expectedOptions);
+
+    when(mock.apps).thenReturn([platformApp]);
+    when(mock.app(expectedName)).thenReturn(platformApp);
+    when(mock.initializeApp(name: expectedName, options: expectedOptions))
+        .thenAnswer((_) => Future.value(platformApp));
+
+    // Initialize the app with only a demo project id. The implementation will
+    // set the name and options accordingly.
+    FirebaseApp initializedApp = await Firebase.initializeApp(
+      demoProjectId: demoProjectId,
+    );
+    FirebaseApp app = Firebase.app(expectedName);
+
+    expect(initializedApp, app);
+    verifyInOrder([
+      mock.initializeApp(
+        name: expectedName,
+        options: expectedOptions,
+      ),
+      mock.app(expectedName),
+    ]);
+  });
+
+  test('.initializeApp() preserves recaptchaSiteKey if native drops it',
+      () async {
+    Firebase.delegatePackingProperty = null;
+    MethodChannelFirebase.appInstances.clear();
+    MethodChannelFirebase.isCoreInitialized = false;
+
+    const String appName = 'recaptcha-test-app';
+    const FirebaseOptions options = FirebaseOptions(
+      apiKey: 'apiKey',
+      appId: 'appId',
+      messagingSenderId: 'messagingSenderId',
+      projectId: 'projectId',
+      recaptchaSiteKey: 'test-recaptcha-site-key',
+    );
+
+    final TestDefaultBinaryMessenger messenger =
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+
+    messenger.setMockMessageHandler(
+      'dev.flutter.pigeon.firebase_core_platform_interface.FirebaseCoreHostApi.initializeCore',
+      (ByteData? message) async {
+        return pigeon.FirebaseCoreHostApi.pigeonChannelCodec.encodeMessage(
+          <Object?>[<pigeon.CoreInitializeResponse>[]],
+        );
+      },
+    );
+    messenger.setMockMessageHandler(
+      'dev.flutter.pigeon.firebase_core_platform_interface.FirebaseCoreHostApi.initializeApp',
+      (ByteData? message) async {
+        return pigeon.FirebaseCoreHostApi.pigeonChannelCodec.encodeMessage(
+          <Object?>[
+            pigeon.CoreInitializeResponse(
+              name: appName,
+              options: pigeon.CoreFirebaseOptions(
+                apiKey: options.apiKey,
+                appId: options.appId,
+                messagingSenderId: options.messagingSenderId,
+                projectId: options.projectId,
+              ),
+              pluginConstants: const <String, Object?>{},
+            ),
+          ],
+        );
+      },
+    );
+    addTearDown(() {
+      messenger.setMockMessageHandler(
+        'dev.flutter.pigeon.firebase_core_platform_interface.FirebaseCoreHostApi.initializeCore',
+        null,
+      );
+      messenger.setMockMessageHandler(
+        'dev.flutter.pigeon.firebase_core_platform_interface.FirebaseCoreHostApi.initializeApp',
+        null,
+      );
+      MethodChannelFirebase.appInstances.clear();
+      MethodChannelFirebase.isCoreInitialized = false;
+      Firebase.delegatePackingProperty = null;
+    });
+
+    final FirebaseApp app = await Firebase.initializeApp(
+      name: appName,
+      options: options,
+    );
+
+    expect(app.options.recaptchaSiteKey, 'test-recaptcha-site-key');
   });
 }
 
@@ -113,3 +273,22 @@ class MockFirebaseCore extends Mock
 
 // ignore: avoid_implementing_value_types
 class FakeFirebaseAppPlatform extends Fake implements FirebaseAppPlatform {}
+
+class TestFirebaseAppPlatform extends FirebaseAppPlatform {
+  TestFirebaseAppPlatform(
+    super.name,
+    super.options, {
+    this.onDelete,
+  });
+
+  final Future<void> Function()? onDelete;
+
+  @override
+  Future<void> delete() async {
+    await onDelete?.call();
+  }
+}
+
+class TestService implements FirebaseService {}
+
+class AnotherTestService implements FirebaseService {}

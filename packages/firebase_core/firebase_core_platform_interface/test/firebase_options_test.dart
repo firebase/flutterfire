@@ -50,11 +50,12 @@ void main() {
 
     test('should construct an instance from a Map', () {
       FirebaseOptions options1 = FirebaseOptions.fromPigeon(
-        PigeonFirebaseOptions(
+        CoreFirebaseOptions(
           apiKey: 'apiKey',
           appId: 'appId',
           messagingSenderId: 'messagingSenderId',
           projectId: 'projectId',
+          recaptchaSiteKey: 'recaptchaSiteKey',
         ),
       );
 
@@ -63,6 +64,7 @@ void main() {
         appId: 'appId',
         messagingSenderId: 'messagingSenderId',
         projectId: 'projectId',
+        recaptchaSiteKey: 'recaptchaSiteKey',
       );
 
       expect(options1 == options2, isTrue);
@@ -91,6 +93,7 @@ void main() {
         iosClientId: 'newIosClientId',
         iosBundleId: 'newIosBundleId',
         appGroupId: 'newAppGroupId',
+        recaptchaSiteKey: 'newRecaptchaSiteKey',
       );
 
       expect(
@@ -110,6 +113,7 @@ void main() {
           iosClientId: 'newIosClientId',
           iosBundleId: 'newIosBundleId',
           appGroupId: 'newAppGroupId',
+          recaptchaSiteKey: 'newRecaptchaSiteKey',
         ),
       );
     });
@@ -130,6 +134,7 @@ void main() {
         iosBundleId: 'iosBundleId',
         iosClientId: 'iosClientId',
         appGroupId: 'appGroupId',
+        recaptchaSiteKey: 'recaptchaSiteKey',
       );
 
       expect(options.asMap, {
@@ -147,6 +152,7 @@ void main() {
         'iosBundleId': 'iosBundleId',
         'iosClientId': 'iosClientId',
         'appGroupId': 'appGroupId',
+        'recaptchaSiteKey': 'recaptchaSiteKey',
       });
     });
   });

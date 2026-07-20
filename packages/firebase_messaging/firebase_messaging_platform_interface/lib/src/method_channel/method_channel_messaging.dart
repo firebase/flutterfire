@@ -139,7 +139,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
           plugin: 'firebase_messaging',
           code: 'apns-token-not-set',
           message:
-              'APNS token has not been set yet. Please ensure the APNS token is available by calling `getAPNSToken()`.',
+              'APNS token has not been received on the device yet. Please ensure the APNS token is available before calling `getAPNSToken()`.',
         );
       }
     }
@@ -240,6 +240,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
   @override
   Future<String?> getToken({
     String? vapidKey, // not used yet; web only property
+    String? serviceWorkerScriptPath, // web only property
   }) async {
     await _APNSTokenCheck();
 
@@ -352,35 +353,6 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
         'alert': alert,
         'badge': badge,
         'sound': sound,
-      });
-    } catch (e, stack) {
-      convertPlatformException(e, stack);
-    }
-  }
-
-  @override
-  Future<void> sendMessage({
-    required String to,
-    Map<String, String>? data,
-    String? collapseKey,
-    String? messageId,
-    String? messageType,
-    int? ttl,
-  }) async {
-    if (defaultTargetPlatform != TargetPlatform.android) {
-      throw UnimplementedError(
-          'Sending of messages from the Firebase Messaging SDK is only supported on Android devices.');
-    }
-
-    try {
-      await channel.invokeMapMethod('Messaging#sendMessage', {
-        'appName': app.name,
-        'to': to,
-        'data': data,
-        'collapseKey': collapseKey,
-        'messageId': messageId,
-        'messageType': messageType,
-        'ttl': ttl,
       });
     } catch (e, stack) {
       convertPlatformException(e, stack);

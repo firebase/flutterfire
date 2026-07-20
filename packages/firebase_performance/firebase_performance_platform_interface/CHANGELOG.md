@@ -1,3 +1,90 @@
+## 0.2.0+5
+
+ - Update a dependency to the latest release.
+
+## 0.2.0+4
+
+ - Update a dependency to the latest release.
+
+## 0.2.0+3
+
+ - Update a dependency to the latest release.
+
+## 0.2.0+2
+
+ - Update a dependency to the latest release.
+
+## 0.2.0+1
+
+ - Update a dependency to the latest release.
+
+## 0.2.0
+
+ - Bump platform interface a major version due to pigeon dependency update
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+ - **FEAT**: upgrade pigeon to version 26.3.4 ([#18205](https://github.com/firebase/flutterfire/issues/18205)). ([cb6b4aef](https://github.com/firebase/flutterfire/commit/cb6b4aeffc568755ea3eebe32b998f00237bf5ad))
+
+## 0.1.6+7
+
+ - Update a dependency to the latest release.
+
+## 0.1.6+6
+
+ - **REFACTOR**: fix formatting and analysis issues across the repo ([#18124](https://github.com/firebase/flutterfire/issues/18124)). ([ab79fd93](https://github.com/firebase/flutterfire/commit/ab79fd93ee4ccfeb478687623134b1cf8ab71c74))
+
+## 0.1.6+5
+
+ - Update a dependency to the latest release.
+
+## 0.1.6+4
+
+ - Update a dependency to the latest release.
+
+## 0.1.6+3
+
+ - Update a dependency to the latest release.
+
+## 0.1.6+2
+
+ - Update a dependency to the latest release.
+
+## 0.1.6+1
+
+ - Update a dependency to the latest release.
+
+## 0.1.6
+
+ - **FEAT**(performance): add support for Pigeon. Update iOS to Swift and Android to Kotlin ([#17676](https://github.com/firebase/flutterfire/issues/17676)). ([9c2ab08a](https://github.com/firebase/flutterfire/commit/9c2ab08a41edd1ddb2e08aaf19d17fe85f64a7d7))
+
+## 0.1.5+12
+
+ - Update a dependency to the latest release.
+
+## 0.1.5+11
+
+ - Update a dependency to the latest release.
+
+## 0.1.5+10
+
+ - Update a dependency to the latest release.
+
+## 0.1.5+9
+
+ - Update a dependency to the latest release.
+
+## 0.1.5+8
+
+ - Update a dependency to the latest release.
+
+## 0.1.5+7
+
+ - Update a dependency to the latest release.
+
+## 0.1.5+6
+
+ - Update a dependency to the latest release.
+
 ## 0.1.5+5
 
  - Update a dependency to the latest release.
@@ -213,7 +300,7 @@
 ## 0.1.4
 
  - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
- - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+ - **FEAT**: update libraries to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
 
 ## 0.1.3
 

@@ -173,6 +173,7 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   /// Returns the default FCM token for this device and optionally [senderId].
   Future<String?> getToken({
     String? vapidKey,
+    String? serviceWorkerScriptPath,
   }) {
     throw UnimplementedError('getToken() is not implemented');
   }
@@ -293,18 +294,6 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   }) {
     throw UnimplementedError(
         'setForegroundNotificationPresentationOptions() is not implemented');
-  }
-
-  /// Send a new [RemoteMessage] to the FCM server.
-  Future<void> sendMessage({
-    required String to,
-    Map<String, String>? data,
-    String? collapseKey,
-    String? messageId,
-    String? messageType,
-    int? ttl,
-  }) {
-    throw UnimplementedError('sendMessage() is not implemented');
   }
 
   /// Subscribe to topic in background.
