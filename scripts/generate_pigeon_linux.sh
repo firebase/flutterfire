@@ -24,6 +24,15 @@ perl -i -pe 's/\(\*delete\)\(/(*delete_)(/' "$AUTH_LINUX/messages.g.h"
 perl -i -pe 's/self->vtable->delete\b/self->vtable->delete_/g' "$AUTH_LINUX/messages.g.cc"
 
 # ---------------------------------------------------------------------------
+# firebase_core: same `delete` C++ keyword collision. The FirebaseAppHostApi
+# Dart method delete() makes pigeon emit a vtable member (and call site)
+# named `delete`. Rename to `delete_`.
+# ---------------------------------------------------------------------------
+CORE_LINUX=packages/firebase_core/firebase_core/linux
+perl -i -pe 's/\(\*delete\)\(/(*delete_)(/' "$CORE_LINUX/messages.g.h"
+perl -i -pe 's/self->vtable->delete\b/self->vtable->delete_/g' "$CORE_LINUX/messages.g.cc"
+
+# ---------------------------------------------------------------------------
 # firebase_storage: several host-API methods take an int64 parameter named
 # `handle` (the task handle), which collides with the generated dispatch
 # functions' local `g_autoptr(...) handle` response-handle variable. Rename

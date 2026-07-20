@@ -36,6 +36,7 @@ G_DECLARE_FINAL_TYPE(FirebaseCoreCoreFirebaseOptions,
  * ios_client_id: field in this object.
  * ios_bundle_id: field in this object.
  * app_group_id: field in this object.
+ * recaptcha_site_key: field in this object.
  *
  * Creates a new #CoreFirebaseOptions object.
  *
@@ -48,7 +49,7 @@ FirebaseCoreCoreFirebaseOptions* firebase_core_core_firebase_options_new(
     const gchar* measurement_id, const gchar* tracking_id,
     const gchar* deep_link_u_r_l_scheme, const gchar* android_client_id,
     const gchar* ios_client_id, const gchar* ios_bundle_id,
-    const gchar* app_group_id);
+    const gchar* app_group_id, const gchar* recaptcha_site_key);
 
 /**
  * firebase_core_core_firebase_options_get_api_key
@@ -202,6 +203,17 @@ const gchar* firebase_core_core_firebase_options_get_ios_bundle_id(
  * Returns: the field value.
  */
 const gchar* firebase_core_core_firebase_options_get_app_group_id(
+    FirebaseCoreCoreFirebaseOptions* object);
+
+/**
+ * firebase_core_core_firebase_options_get_recaptcha_site_key
+ * @object: a #FirebaseCoreCoreFirebaseOptions.
+ *
+ * Gets the value of the recaptchaSiteKey field of @object.
+ *
+ * Returns: the field value.
+ */
+const gchar* firebase_core_core_firebase_options_get_recaptcha_site_key(
     FirebaseCoreCoreFirebaseOptions* object);
 
 /**

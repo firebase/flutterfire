@@ -86,7 +86,8 @@ static FirebaseCoreCoreFirebaseOptions* OptionsFromFIROptions(
       /* measurement_id= */ nullptr, /* tracking_id= */ nullptr,
       /* deep_link_u_r_l_scheme= */ nullptr,
       /* android_client_id= */ nullptr, /* ios_client_id= */ nullptr,
-      /* ios_bundle_id= */ nullptr, /* app_group_id= */ nullptr);
+      /* ios_bundle_id= */ nullptr, /* app_group_id= */ nullptr,
+      /* recaptcha_site_key= */ nullptr);
 }
 
 // Convert a firebase::App to FirebaseCoreCoreInitializeResponse.

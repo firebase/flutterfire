@@ -214,6 +214,7 @@ struct _FirebaseCoreCoreFirebaseOptions {
   gchar* ios_client_id;
   gchar* ios_bundle_id;
   gchar* app_group_id;
+  gchar* recaptcha_site_key;
 };
 
 G_DEFINE_TYPE(FirebaseCoreCoreFirebaseOptions,
@@ -236,6 +237,7 @@ static void firebase_core_core_firebase_options_dispose(GObject* object) {
   g_clear_pointer(&self->ios_client_id, g_free);
   g_clear_pointer(&self->ios_bundle_id, g_free);
   g_clear_pointer(&self->app_group_id, g_free);
+  g_clear_pointer(&self->recaptcha_site_key, g_free);
   G_OBJECT_CLASS(firebase_core_core_firebase_options_parent_class)
       ->dispose(object);
 }
@@ -255,7 +257,7 @@ FirebaseCoreCoreFirebaseOptions* firebase_core_core_firebase_options_new(
     const gchar* measurement_id, const gchar* tracking_id,
     const gchar* deep_link_u_r_l_scheme, const gchar* android_client_id,
     const gchar* ios_client_id, const gchar* ios_bundle_id,
-    const gchar* app_group_id) {
+    const gchar* app_group_id, const gchar* recaptcha_site_key) {
   FirebaseCoreCoreFirebaseOptions* self = FIREBASE_CORE_CORE_FIREBASE_OPTIONS(
       g_object_new(firebase_core_core_firebase_options_get_type(), nullptr));
   self->api_key = g_strdup(api_key);
@@ -311,6 +313,11 @@ FirebaseCoreCoreFirebaseOptions* firebase_core_core_firebase_options_new(
     self->app_group_id = g_strdup(app_group_id);
   } else {
     self->app_group_id = nullptr;
+  }
+  if (recaptcha_site_key != nullptr) {
+    self->recaptcha_site_key = g_strdup(recaptcha_site_key);
+  } else {
+    self->recaptcha_site_key = nullptr;
   }
   return self;
 }
@@ -399,6 +406,12 @@ const gchar* firebase_core_core_firebase_options_get_app_group_id(
   return self->app_group_id;
 }
 
+const gchar* firebase_core_core_firebase_options_get_recaptcha_site_key(
+    FirebaseCoreCoreFirebaseOptions* self) {
+  g_return_val_if_fail(FIREBASE_CORE_IS_CORE_FIREBASE_OPTIONS(self), nullptr);
+  return self->recaptcha_site_key;
+}
+
 static FlValue* firebase_core_core_firebase_options_to_list(
     FirebaseCoreCoreFirebaseOptions* self) {
   FlValue* values = fl_value_new_list();
@@ -438,6 +451,10 @@ static FlValue* firebase_core_core_firebase_options_to_list(
   fl_value_append_take(values, self->app_group_id != nullptr
                                    ? fl_value_new_string(self->app_group_id)
                                    : fl_value_new_null());
+  fl_value_append_take(values,
+                       self->recaptcha_site_key != nullptr
+                           ? fl_value_new_string(self->recaptcha_site_key)
+                           : fl_value_new_null());
   return values;
 }
 
@@ -501,11 +518,16 @@ firebase_core_core_firebase_options_new_from_list(FlValue* values) {
   if (fl_value_get_type(value13) != FL_VALUE_TYPE_NULL) {
     app_group_id = fl_value_get_string(value13);
   }
+  FlValue* value14 = fl_value_get_list_value(values, 14);
+  const gchar* recaptcha_site_key = nullptr;
+  if (fl_value_get_type(value14) != FL_VALUE_TYPE_NULL) {
+    recaptcha_site_key = fl_value_get_string(value14);
+  }
   return firebase_core_core_firebase_options_new(
       api_key, app_id, messaging_sender_id, project_id, auth_domain,
       database_u_r_l, storage_bucket, measurement_id, tracking_id,
       deep_link_u_r_l_scheme, android_client_id, ios_client_id, ios_bundle_id,
-      app_group_id);
+      app_group_id, recaptcha_site_key);
 }
 
 gboolean firebase_core_core_firebase_options_equals(
@@ -558,6 +580,9 @@ gboolean firebase_core_core_firebase_options_equals(
   if (g_strcmp0(a->app_group_id, b->app_group_id) != 0) {
     return FALSE;
   }
+  if (g_strcmp0(a->recaptcha_site_key, b->recaptcha_site_key) != 0) {
+    return FALSE;
+  }
   return TRUE;
 }
 
@@ -601,6 +626,9 @@ guint firebase_core_core_firebase_options_hash(
       (self->ios_bundle_id != nullptr ? g_str_hash(self->ios_bundle_id) : 0);
   result = result * 31 +
            (self->app_group_id != nullptr ? g_str_hash(self->app_group_id) : 0);
+  result = result * 31 + (self->recaptcha_site_key != nullptr
+                              ? g_str_hash(self->recaptcha_site_key)
+                              : 0);
   return result;
 }
 
