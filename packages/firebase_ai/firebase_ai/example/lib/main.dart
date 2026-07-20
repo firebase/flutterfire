@@ -173,7 +173,7 @@ class _HomeScreenState extends State<HomeScreen> {
           title: 'Grounding',
           useVertexBackend: useVertexBackend,
         );
-      case 11:
+      case 7:
         return TTSPage(
           title: 'TTS Test',
           useVertexBackend: useVertexBackend,
