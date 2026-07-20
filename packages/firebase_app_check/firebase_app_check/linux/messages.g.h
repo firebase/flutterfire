@@ -11,23 +11,47 @@
 
 G_BEGIN_DECLS
 
-G_DECLARE_FINAL_TYPE(FirebaseAppCheckMessageCodec, firebase_app_check_message_codec, FIREBASE_APP_CHECK, MESSAGE_CODEC, FlStandardMessageCodec)
+G_DECLARE_FINAL_TYPE(FirebaseAppCheckMessageCodec,
+                     firebase_app_check_message_codec, FIREBASE_APP_CHECK,
+                     MESSAGE_CODEC, FlStandardMessageCodec)
 
-G_DECLARE_FINAL_TYPE(FirebaseAppCheckFirebaseAppCheckHostApi, firebase_app_check_firebase_app_check_host_api, FIREBASE_APP_CHECK, FIREBASE_APP_CHECK_HOST_API, GObject)
+G_DECLARE_FINAL_TYPE(FirebaseAppCheckFirebaseAppCheckHostApi,
+                     firebase_app_check_firebase_app_check_host_api,
+                     FIREBASE_APP_CHECK, FIREBASE_APP_CHECK_HOST_API, GObject)
 
-G_DECLARE_FINAL_TYPE(FirebaseAppCheckFirebaseAppCheckHostApiResponseHandle, firebase_app_check_firebase_app_check_host_api_response_handle, FIREBASE_APP_CHECK, FIREBASE_APP_CHECK_HOST_API_RESPONSE_HANDLE, GObject)
+G_DECLARE_FINAL_TYPE(
+    FirebaseAppCheckFirebaseAppCheckHostApiResponseHandle,
+    firebase_app_check_firebase_app_check_host_api_response_handle,
+    FIREBASE_APP_CHECK, FIREBASE_APP_CHECK_HOST_API_RESPONSE_HANDLE, GObject)
 
 /**
  * FirebaseAppCheckFirebaseAppCheckHostApiVTable:
  *
- * Table of functions exposed by FirebaseAppCheckHostApi to be implemented by the API provider.
+ * Table of functions exposed by FirebaseAppCheckHostApi to be implemented by
+ * the API provider.
  */
 typedef struct {
-  void (*activate)(const gchar* app_name, const gchar* android_provider, const gchar* apple_provider, const gchar* debug_token, FirebaseAppCheckFirebaseAppCheckHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*get_token)(const gchar* app_name, gboolean force_refresh, FirebaseAppCheckFirebaseAppCheckHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*set_token_auto_refresh_enabled)(const gchar* app_name, gboolean is_token_auto_refresh_enabled, FirebaseAppCheckFirebaseAppCheckHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*register_token_listener)(const gchar* app_name, FirebaseAppCheckFirebaseAppCheckHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*get_limited_use_app_check_token)(const gchar* app_name, FirebaseAppCheckFirebaseAppCheckHostApiResponseHandle* response_handle, gpointer user_data);
+  void (*activate)(
+      const gchar* app_name, const gchar* android_provider,
+      const gchar* apple_provider, const gchar* debug_token,
+      FirebaseAppCheckFirebaseAppCheckHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*get_token)(
+      const gchar* app_name, gboolean force_refresh,
+      FirebaseAppCheckFirebaseAppCheckHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*set_token_auto_refresh_enabled)(
+      const gchar* app_name, gboolean is_token_auto_refresh_enabled,
+      FirebaseAppCheckFirebaseAppCheckHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*register_token_listener)(
+      const gchar* app_name,
+      FirebaseAppCheckFirebaseAppCheckHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*get_limited_use_app_check_token)(
+      const gchar* app_name,
+      FirebaseAppCheckFirebaseAppCheckHostApiResponseHandle* response_handle,
+      gpointer user_data);
 } FirebaseAppCheckFirebaseAppCheckHostApiVTable;
 
 /**
@@ -37,11 +61,15 @@ typedef struct {
  * @suffix: (allow-none): a suffix to add to the API or %NULL for none.
  * @vtable: implementations of the methods in this API.
  * @user_data: (closure): user data to pass to the functions in @vtable.
- * @user_data_free_func: (allow-none): a function which gets called to free @user_data, or %NULL.
+ * @user_data_free_func: (allow-none): a function which gets called to free
+ * @user_data, or %NULL.
  *
  * Connects the method handlers in the FirebaseAppCheckHostApi API.
  */
-void firebase_app_check_firebase_app_check_host_api_set_method_handlers(FlBinaryMessenger* messenger, const gchar* suffix, const FirebaseAppCheckFirebaseAppCheckHostApiVTable* vtable, gpointer user_data, GDestroyNotify user_data_free_func);
+void firebase_app_check_firebase_app_check_host_api_set_method_handlers(
+    FlBinaryMessenger* messenger, const gchar* suffix,
+    const FirebaseAppCheckFirebaseAppCheckHostApiVTable* vtable,
+    gpointer user_data, GDestroyNotify user_data_free_func);
 
 /**
  * firebase_app_check_firebase_app_check_host_api_clear_method_handlers:
@@ -51,15 +79,17 @@ void firebase_app_check_firebase_app_check_host_api_set_method_handlers(FlBinary
  *
  * Clears the method handlers in the FirebaseAppCheckHostApi API.
  */
-void firebase_app_check_firebase_app_check_host_api_clear_method_handlers(FlBinaryMessenger* messenger, const gchar* suffix);
+void firebase_app_check_firebase_app_check_host_api_clear_method_handlers(
+    FlBinaryMessenger* messenger, const gchar* suffix);
 
 /**
  * firebase_app_check_firebase_app_check_host_api_respond_activate:
  * @response_handle: a #FirebaseAppCheckFirebaseAppCheckHostApiResponseHandle.
  *
- * Responds to FirebaseAppCheckHostApi.activate. 
+ * Responds to FirebaseAppCheckHostApi.activate.
  */
-void firebase_app_check_firebase_app_check_host_api_respond_activate(FirebaseAppCheckFirebaseAppCheckHostApiResponseHandle* response_handle);
+void firebase_app_check_firebase_app_check_host_api_respond_activate(
+    FirebaseAppCheckFirebaseAppCheckHostApiResponseHandle* response_handle);
 
 /**
  * firebase_app_check_firebase_app_check_host_api_respond_error_activate:
@@ -68,18 +98,22 @@ void firebase_app_check_firebase_app_check_host_api_respond_activate(FirebaseApp
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseAppCheckHostApi.activate. 
+ * Responds with an error to FirebaseAppCheckHostApi.activate.
  */
-void firebase_app_check_firebase_app_check_host_api_respond_error_activate(FirebaseAppCheckFirebaseAppCheckHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_app_check_firebase_app_check_host_api_respond_error_activate(
+    FirebaseAppCheckFirebaseAppCheckHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_app_check_firebase_app_check_host_api_respond_get_token:
  * @response_handle: a #FirebaseAppCheckFirebaseAppCheckHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseAppCheckHostApi.getToken. 
+ * Responds to FirebaseAppCheckHostApi.getToken.
  */
-void firebase_app_check_firebase_app_check_host_api_respond_get_token(FirebaseAppCheckFirebaseAppCheckHostApiResponseHandle* response_handle, const gchar* return_value);
+void firebase_app_check_firebase_app_check_host_api_respond_get_token(
+    FirebaseAppCheckFirebaseAppCheckHostApiResponseHandle* response_handle,
+    const gchar* return_value);
 
 /**
  * firebase_app_check_firebase_app_check_host_api_respond_error_get_token:
@@ -88,17 +122,20 @@ void firebase_app_check_firebase_app_check_host_api_respond_get_token(FirebaseAp
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseAppCheckHostApi.getToken. 
+ * Responds with an error to FirebaseAppCheckHostApi.getToken.
  */
-void firebase_app_check_firebase_app_check_host_api_respond_error_get_token(FirebaseAppCheckFirebaseAppCheckHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_app_check_firebase_app_check_host_api_respond_error_get_token(
+    FirebaseAppCheckFirebaseAppCheckHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_app_check_firebase_app_check_host_api_respond_set_token_auto_refresh_enabled:
  * @response_handle: a #FirebaseAppCheckFirebaseAppCheckHostApiResponseHandle.
  *
- * Responds to FirebaseAppCheckHostApi.setTokenAutoRefreshEnabled. 
+ * Responds to FirebaseAppCheckHostApi.setTokenAutoRefreshEnabled.
  */
-void firebase_app_check_firebase_app_check_host_api_respond_set_token_auto_refresh_enabled(FirebaseAppCheckFirebaseAppCheckHostApiResponseHandle* response_handle);
+void firebase_app_check_firebase_app_check_host_api_respond_set_token_auto_refresh_enabled(
+    FirebaseAppCheckFirebaseAppCheckHostApiResponseHandle* response_handle);
 
 /**
  * firebase_app_check_firebase_app_check_host_api_respond_error_set_token_auto_refresh_enabled:
@@ -107,18 +144,22 @@ void firebase_app_check_firebase_app_check_host_api_respond_set_token_auto_refre
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseAppCheckHostApi.setTokenAutoRefreshEnabled. 
+ * Responds with an error to FirebaseAppCheckHostApi.setTokenAutoRefreshEnabled.
  */
-void firebase_app_check_firebase_app_check_host_api_respond_error_set_token_auto_refresh_enabled(FirebaseAppCheckFirebaseAppCheckHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_app_check_firebase_app_check_host_api_respond_error_set_token_auto_refresh_enabled(
+    FirebaseAppCheckFirebaseAppCheckHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_app_check_firebase_app_check_host_api_respond_register_token_listener:
  * @response_handle: a #FirebaseAppCheckFirebaseAppCheckHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseAppCheckHostApi.registerTokenListener. 
+ * Responds to FirebaseAppCheckHostApi.registerTokenListener.
  */
-void firebase_app_check_firebase_app_check_host_api_respond_register_token_listener(FirebaseAppCheckFirebaseAppCheckHostApiResponseHandle* response_handle, const gchar* return_value);
+void firebase_app_check_firebase_app_check_host_api_respond_register_token_listener(
+    FirebaseAppCheckFirebaseAppCheckHostApiResponseHandle* response_handle,
+    const gchar* return_value);
 
 /**
  * firebase_app_check_firebase_app_check_host_api_respond_error_register_token_listener:
@@ -127,18 +168,22 @@ void firebase_app_check_firebase_app_check_host_api_respond_register_token_liste
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseAppCheckHostApi.registerTokenListener. 
+ * Responds with an error to FirebaseAppCheckHostApi.registerTokenListener.
  */
-void firebase_app_check_firebase_app_check_host_api_respond_error_register_token_listener(FirebaseAppCheckFirebaseAppCheckHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_app_check_firebase_app_check_host_api_respond_error_register_token_listener(
+    FirebaseAppCheckFirebaseAppCheckHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_app_check_firebase_app_check_host_api_respond_get_limited_use_app_check_token:
  * @response_handle: a #FirebaseAppCheckFirebaseAppCheckHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseAppCheckHostApi.getLimitedUseAppCheckToken. 
+ * Responds to FirebaseAppCheckHostApi.getLimitedUseAppCheckToken.
  */
-void firebase_app_check_firebase_app_check_host_api_respond_get_limited_use_app_check_token(FirebaseAppCheckFirebaseAppCheckHostApiResponseHandle* response_handle, const gchar* return_value);
+void firebase_app_check_firebase_app_check_host_api_respond_get_limited_use_app_check_token(
+    FirebaseAppCheckFirebaseAppCheckHostApiResponseHandle* response_handle,
+    const gchar* return_value);
 
 /**
  * firebase_app_check_firebase_app_check_host_api_respond_error_get_limited_use_app_check_token:
@@ -147,9 +192,11 @@ void firebase_app_check_firebase_app_check_host_api_respond_get_limited_use_app_
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseAppCheckHostApi.getLimitedUseAppCheckToken. 
+ * Responds with an error to FirebaseAppCheckHostApi.getLimitedUseAppCheckToken.
  */
-void firebase_app_check_firebase_app_check_host_api_respond_error_get_limited_use_app_check_token(FirebaseAppCheckFirebaseAppCheckHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_app_check_firebase_app_check_host_api_respond_error_get_limited_use_app_check_token(
+    FirebaseAppCheckFirebaseAppCheckHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 G_END_DECLS
 

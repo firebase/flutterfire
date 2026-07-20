@@ -33,12 +33,15 @@ G_BEGIN_DECLS
  */
 typedef enum {
   FIREBASE_AUTH_PLATFORM_INTERFACE_ACTION_CODE_INFO_OPERATION_UNKNOWN = 0,
-  FIREBASE_AUTH_PLATFORM_INTERFACE_ACTION_CODE_INFO_OPERATION_PASSWORD_RESET = 1,
+  FIREBASE_AUTH_PLATFORM_INTERFACE_ACTION_CODE_INFO_OPERATION_PASSWORD_RESET =
+      1,
   FIREBASE_AUTH_PLATFORM_INTERFACE_ACTION_CODE_INFO_OPERATION_VERIFY_EMAIL = 2,
   FIREBASE_AUTH_PLATFORM_INTERFACE_ACTION_CODE_INFO_OPERATION_RECOVER_EMAIL = 3,
   FIREBASE_AUTH_PLATFORM_INTERFACE_ACTION_CODE_INFO_OPERATION_EMAIL_SIGN_IN = 4,
-  FIREBASE_AUTH_PLATFORM_INTERFACE_ACTION_CODE_INFO_OPERATION_VERIFY_AND_CHANGE_EMAIL = 5,
-  FIREBASE_AUTH_PLATFORM_INTERFACE_ACTION_CODE_INFO_OPERATION_REVERT_SECOND_FACTOR_ADDITION = 6
+  FIREBASE_AUTH_PLATFORM_INTERFACE_ACTION_CODE_INFO_OPERATION_VERIFY_AND_CHANGE_EMAIL =
+      5,
+  FIREBASE_AUTH_PLATFORM_INTERFACE_ACTION_CODE_INFO_OPERATION_REVERT_SECOND_FACTOR_ADDITION =
+      6
 } FirebaseAuthActionCodeInfoOperation;
 
 /**
@@ -46,7 +49,9 @@ typedef enum {
  *
  */
 
-G_DECLARE_FINAL_TYPE(FirebaseAuthInternalMultiFactorSession, firebase_auth_internal_multi_factor_session, FIREBASE_AUTH, INTERNAL_MULTI_FACTOR_SESSION, GObject)
+G_DECLARE_FINAL_TYPE(FirebaseAuthInternalMultiFactorSession,
+                     firebase_auth_internal_multi_factor_session, FIREBASE_AUTH,
+                     INTERNAL_MULTI_FACTOR_SESSION, GObject)
 
 /**
  * firebase_auth_internal_multi_factor_session_new:
@@ -56,7 +61,8 @@ G_DECLARE_FINAL_TYPE(FirebaseAuthInternalMultiFactorSession, firebase_auth_inter
  *
  * Returns: a new #FirebaseAuthInternalMultiFactorSession
  */
-FirebaseAuthInternalMultiFactorSession* firebase_auth_internal_multi_factor_session_new(const gchar* id);
+FirebaseAuthInternalMultiFactorSession*
+firebase_auth_internal_multi_factor_session_new(const gchar* id);
 
 /**
  * firebase_auth_internal_multi_factor_session_get_id
@@ -66,7 +72,8 @@ FirebaseAuthInternalMultiFactorSession* firebase_auth_internal_multi_factor_sess
  *
  * Returns: the field value.
  */
-const gchar* firebase_auth_internal_multi_factor_session_get_id(FirebaseAuthInternalMultiFactorSession* object);
+const gchar* firebase_auth_internal_multi_factor_session_get_id(
+    FirebaseAuthInternalMultiFactorSession* object);
 
 /**
  * firebase_auth_internal_multi_factor_session_equals:
@@ -77,7 +84,9 @@ const gchar* firebase_auth_internal_multi_factor_session_get_id(FirebaseAuthInte
  *
  * Returns: TRUE if @a and @b are equal.
  */
-gboolean firebase_auth_internal_multi_factor_session_equals(FirebaseAuthInternalMultiFactorSession* a, FirebaseAuthInternalMultiFactorSession* b);
+gboolean firebase_auth_internal_multi_factor_session_equals(
+    FirebaseAuthInternalMultiFactorSession* a,
+    FirebaseAuthInternalMultiFactorSession* b);
 
 /**
  * firebase_auth_internal_multi_factor_session_hash:
@@ -87,14 +96,18 @@ gboolean firebase_auth_internal_multi_factor_session_equals(FirebaseAuthInternal
  *
  * Returns: the hash code.
  */
-guint firebase_auth_internal_multi_factor_session_hash(FirebaseAuthInternalMultiFactorSession* object);
+guint firebase_auth_internal_multi_factor_session_hash(
+    FirebaseAuthInternalMultiFactorSession* object);
 
 /**
  * FirebaseAuthInternalPhoneMultiFactorAssertion:
  *
  */
 
-G_DECLARE_FINAL_TYPE(FirebaseAuthInternalPhoneMultiFactorAssertion, firebase_auth_internal_phone_multi_factor_assertion, FIREBASE_AUTH, INTERNAL_PHONE_MULTI_FACTOR_ASSERTION, GObject)
+G_DECLARE_FINAL_TYPE(FirebaseAuthInternalPhoneMultiFactorAssertion,
+                     firebase_auth_internal_phone_multi_factor_assertion,
+                     FIREBASE_AUTH, INTERNAL_PHONE_MULTI_FACTOR_ASSERTION,
+                     GObject)
 
 /**
  * firebase_auth_internal_phone_multi_factor_assertion_new:
@@ -105,7 +118,9 @@ G_DECLARE_FINAL_TYPE(FirebaseAuthInternalPhoneMultiFactorAssertion, firebase_aut
  *
  * Returns: a new #FirebaseAuthInternalPhoneMultiFactorAssertion
  */
-FirebaseAuthInternalPhoneMultiFactorAssertion* firebase_auth_internal_phone_multi_factor_assertion_new(const gchar* verification_id, const gchar* verification_code);
+FirebaseAuthInternalPhoneMultiFactorAssertion*
+firebase_auth_internal_phone_multi_factor_assertion_new(
+    const gchar* verification_id, const gchar* verification_code);
 
 /**
  * firebase_auth_internal_phone_multi_factor_assertion_get_verification_id
@@ -115,7 +130,9 @@ FirebaseAuthInternalPhoneMultiFactorAssertion* firebase_auth_internal_phone_mult
  *
  * Returns: the field value.
  */
-const gchar* firebase_auth_internal_phone_multi_factor_assertion_get_verification_id(FirebaseAuthInternalPhoneMultiFactorAssertion* object);
+const gchar*
+firebase_auth_internal_phone_multi_factor_assertion_get_verification_id(
+    FirebaseAuthInternalPhoneMultiFactorAssertion* object);
 
 /**
  * firebase_auth_internal_phone_multi_factor_assertion_get_verification_code
@@ -125,35 +142,44 @@ const gchar* firebase_auth_internal_phone_multi_factor_assertion_get_verificatio
  *
  * Returns: the field value.
  */
-const gchar* firebase_auth_internal_phone_multi_factor_assertion_get_verification_code(FirebaseAuthInternalPhoneMultiFactorAssertion* object);
+const gchar*
+firebase_auth_internal_phone_multi_factor_assertion_get_verification_code(
+    FirebaseAuthInternalPhoneMultiFactorAssertion* object);
 
 /**
  * firebase_auth_internal_phone_multi_factor_assertion_equals:
  * @a: a #FirebaseAuthInternalPhoneMultiFactorAssertion.
  * @b: another #FirebaseAuthInternalPhoneMultiFactorAssertion.
  *
- * Checks if two #FirebaseAuthInternalPhoneMultiFactorAssertion objects are equal.
+ * Checks if two #FirebaseAuthInternalPhoneMultiFactorAssertion objects are
+ * equal.
  *
  * Returns: TRUE if @a and @b are equal.
  */
-gboolean firebase_auth_internal_phone_multi_factor_assertion_equals(FirebaseAuthInternalPhoneMultiFactorAssertion* a, FirebaseAuthInternalPhoneMultiFactorAssertion* b);
+gboolean firebase_auth_internal_phone_multi_factor_assertion_equals(
+    FirebaseAuthInternalPhoneMultiFactorAssertion* a,
+    FirebaseAuthInternalPhoneMultiFactorAssertion* b);
 
 /**
  * firebase_auth_internal_phone_multi_factor_assertion_hash:
  * @object: a #FirebaseAuthInternalPhoneMultiFactorAssertion.
  *
- * Calculates a hash code for a #FirebaseAuthInternalPhoneMultiFactorAssertion object.
+ * Calculates a hash code for a #FirebaseAuthInternalPhoneMultiFactorAssertion
+ * object.
  *
  * Returns: the hash code.
  */
-guint firebase_auth_internal_phone_multi_factor_assertion_hash(FirebaseAuthInternalPhoneMultiFactorAssertion* object);
+guint firebase_auth_internal_phone_multi_factor_assertion_hash(
+    FirebaseAuthInternalPhoneMultiFactorAssertion* object);
 
 /**
  * FirebaseAuthInternalMultiFactorInfo:
  *
  */
 
-G_DECLARE_FINAL_TYPE(FirebaseAuthInternalMultiFactorInfo, firebase_auth_internal_multi_factor_info, FIREBASE_AUTH, INTERNAL_MULTI_FACTOR_INFO, GObject)
+G_DECLARE_FINAL_TYPE(FirebaseAuthInternalMultiFactorInfo,
+                     firebase_auth_internal_multi_factor_info, FIREBASE_AUTH,
+                     INTERNAL_MULTI_FACTOR_INFO, GObject)
 
 /**
  * firebase_auth_internal_multi_factor_info_new:
@@ -167,7 +193,12 @@ G_DECLARE_FINAL_TYPE(FirebaseAuthInternalMultiFactorInfo, firebase_auth_internal
  *
  * Returns: a new #FirebaseAuthInternalMultiFactorInfo
  */
-FirebaseAuthInternalMultiFactorInfo* firebase_auth_internal_multi_factor_info_new(const gchar* display_name, double enrollment_timestamp, const gchar* factor_id, const gchar* uid, const gchar* phone_number);
+FirebaseAuthInternalMultiFactorInfo*
+firebase_auth_internal_multi_factor_info_new(const gchar* display_name,
+                                             double enrollment_timestamp,
+                                             const gchar* factor_id,
+                                             const gchar* uid,
+                                             const gchar* phone_number);
 
 /**
  * firebase_auth_internal_multi_factor_info_get_display_name
@@ -177,7 +208,8 @@ FirebaseAuthInternalMultiFactorInfo* firebase_auth_internal_multi_factor_info_ne
  *
  * Returns: the field value.
  */
-const gchar* firebase_auth_internal_multi_factor_info_get_display_name(FirebaseAuthInternalMultiFactorInfo* object);
+const gchar* firebase_auth_internal_multi_factor_info_get_display_name(
+    FirebaseAuthInternalMultiFactorInfo* object);
 
 /**
  * firebase_auth_internal_multi_factor_info_get_enrollment_timestamp
@@ -187,7 +219,8 @@ const gchar* firebase_auth_internal_multi_factor_info_get_display_name(FirebaseA
  *
  * Returns: the field value.
  */
-double firebase_auth_internal_multi_factor_info_get_enrollment_timestamp(FirebaseAuthInternalMultiFactorInfo* object);
+double firebase_auth_internal_multi_factor_info_get_enrollment_timestamp(
+    FirebaseAuthInternalMultiFactorInfo* object);
 
 /**
  * firebase_auth_internal_multi_factor_info_get_factor_id
@@ -197,7 +230,8 @@ double firebase_auth_internal_multi_factor_info_get_enrollment_timestamp(Firebas
  *
  * Returns: the field value.
  */
-const gchar* firebase_auth_internal_multi_factor_info_get_factor_id(FirebaseAuthInternalMultiFactorInfo* object);
+const gchar* firebase_auth_internal_multi_factor_info_get_factor_id(
+    FirebaseAuthInternalMultiFactorInfo* object);
 
 /**
  * firebase_auth_internal_multi_factor_info_get_uid
@@ -207,7 +241,8 @@ const gchar* firebase_auth_internal_multi_factor_info_get_factor_id(FirebaseAuth
  *
  * Returns: the field value.
  */
-const gchar* firebase_auth_internal_multi_factor_info_get_uid(FirebaseAuthInternalMultiFactorInfo* object);
+const gchar* firebase_auth_internal_multi_factor_info_get_uid(
+    FirebaseAuthInternalMultiFactorInfo* object);
 
 /**
  * firebase_auth_internal_multi_factor_info_get_phone_number
@@ -217,7 +252,8 @@ const gchar* firebase_auth_internal_multi_factor_info_get_uid(FirebaseAuthIntern
  *
  * Returns: the field value.
  */
-const gchar* firebase_auth_internal_multi_factor_info_get_phone_number(FirebaseAuthInternalMultiFactorInfo* object);
+const gchar* firebase_auth_internal_multi_factor_info_get_phone_number(
+    FirebaseAuthInternalMultiFactorInfo* object);
 
 /**
  * firebase_auth_internal_multi_factor_info_equals:
@@ -228,7 +264,9 @@ const gchar* firebase_auth_internal_multi_factor_info_get_phone_number(FirebaseA
  *
  * Returns: TRUE if @a and @b are equal.
  */
-gboolean firebase_auth_internal_multi_factor_info_equals(FirebaseAuthInternalMultiFactorInfo* a, FirebaseAuthInternalMultiFactorInfo* b);
+gboolean firebase_auth_internal_multi_factor_info_equals(
+    FirebaseAuthInternalMultiFactorInfo* a,
+    FirebaseAuthInternalMultiFactorInfo* b);
 
 /**
  * firebase_auth_internal_multi_factor_info_hash:
@@ -238,14 +276,17 @@ gboolean firebase_auth_internal_multi_factor_info_equals(FirebaseAuthInternalMul
  *
  * Returns: the hash code.
  */
-guint firebase_auth_internal_multi_factor_info_hash(FirebaseAuthInternalMultiFactorInfo* object);
+guint firebase_auth_internal_multi_factor_info_hash(
+    FirebaseAuthInternalMultiFactorInfo* object);
 
 /**
  * FirebaseAuthAuthPigeonFirebaseApp:
  *
  */
 
-G_DECLARE_FINAL_TYPE(FirebaseAuthAuthPigeonFirebaseApp, firebase_auth_auth_pigeon_firebase_app, FIREBASE_AUTH, AUTH_PIGEON_FIREBASE_APP, GObject)
+G_DECLARE_FINAL_TYPE(FirebaseAuthAuthPigeonFirebaseApp,
+                     firebase_auth_auth_pigeon_firebase_app, FIREBASE_AUTH,
+                     AUTH_PIGEON_FIREBASE_APP, GObject)
 
 /**
  * firebase_auth_auth_pigeon_firebase_app_new:
@@ -257,7 +298,9 @@ G_DECLARE_FINAL_TYPE(FirebaseAuthAuthPigeonFirebaseApp, firebase_auth_auth_pigeo
  *
  * Returns: a new #FirebaseAuthAuthPigeonFirebaseApp
  */
-FirebaseAuthAuthPigeonFirebaseApp* firebase_auth_auth_pigeon_firebase_app_new(const gchar* app_name, const gchar* tenant_id, const gchar* custom_auth_domain);
+FirebaseAuthAuthPigeonFirebaseApp* firebase_auth_auth_pigeon_firebase_app_new(
+    const gchar* app_name, const gchar* tenant_id,
+    const gchar* custom_auth_domain);
 
 /**
  * firebase_auth_auth_pigeon_firebase_app_get_app_name
@@ -267,7 +310,8 @@ FirebaseAuthAuthPigeonFirebaseApp* firebase_auth_auth_pigeon_firebase_app_new(co
  *
  * Returns: the field value.
  */
-const gchar* firebase_auth_auth_pigeon_firebase_app_get_app_name(FirebaseAuthAuthPigeonFirebaseApp* object);
+const gchar* firebase_auth_auth_pigeon_firebase_app_get_app_name(
+    FirebaseAuthAuthPigeonFirebaseApp* object);
 
 /**
  * firebase_auth_auth_pigeon_firebase_app_get_tenant_id
@@ -277,7 +321,8 @@ const gchar* firebase_auth_auth_pigeon_firebase_app_get_app_name(FirebaseAuthAut
  *
  * Returns: the field value.
  */
-const gchar* firebase_auth_auth_pigeon_firebase_app_get_tenant_id(FirebaseAuthAuthPigeonFirebaseApp* object);
+const gchar* firebase_auth_auth_pigeon_firebase_app_get_tenant_id(
+    FirebaseAuthAuthPigeonFirebaseApp* object);
 
 /**
  * firebase_auth_auth_pigeon_firebase_app_get_custom_auth_domain
@@ -287,7 +332,8 @@ const gchar* firebase_auth_auth_pigeon_firebase_app_get_tenant_id(FirebaseAuthAu
  *
  * Returns: the field value.
  */
-const gchar* firebase_auth_auth_pigeon_firebase_app_get_custom_auth_domain(FirebaseAuthAuthPigeonFirebaseApp* object);
+const gchar* firebase_auth_auth_pigeon_firebase_app_get_custom_auth_domain(
+    FirebaseAuthAuthPigeonFirebaseApp* object);
 
 /**
  * firebase_auth_auth_pigeon_firebase_app_equals:
@@ -298,7 +344,8 @@ const gchar* firebase_auth_auth_pigeon_firebase_app_get_custom_auth_domain(Fireb
  *
  * Returns: TRUE if @a and @b are equal.
  */
-gboolean firebase_auth_auth_pigeon_firebase_app_equals(FirebaseAuthAuthPigeonFirebaseApp* a, FirebaseAuthAuthPigeonFirebaseApp* b);
+gboolean firebase_auth_auth_pigeon_firebase_app_equals(
+    FirebaseAuthAuthPigeonFirebaseApp* a, FirebaseAuthAuthPigeonFirebaseApp* b);
 
 /**
  * firebase_auth_auth_pigeon_firebase_app_hash:
@@ -308,14 +355,17 @@ gboolean firebase_auth_auth_pigeon_firebase_app_equals(FirebaseAuthAuthPigeonFir
  *
  * Returns: the hash code.
  */
-guint firebase_auth_auth_pigeon_firebase_app_hash(FirebaseAuthAuthPigeonFirebaseApp* object);
+guint firebase_auth_auth_pigeon_firebase_app_hash(
+    FirebaseAuthAuthPigeonFirebaseApp* object);
 
 /**
  * FirebaseAuthInternalActionCodeInfoData:
  *
  */
 
-G_DECLARE_FINAL_TYPE(FirebaseAuthInternalActionCodeInfoData, firebase_auth_internal_action_code_info_data, FIREBASE_AUTH, INTERNAL_ACTION_CODE_INFO_DATA, GObject)
+G_DECLARE_FINAL_TYPE(FirebaseAuthInternalActionCodeInfoData,
+                     firebase_auth_internal_action_code_info_data,
+                     FIREBASE_AUTH, INTERNAL_ACTION_CODE_INFO_DATA, GObject)
 
 /**
  * firebase_auth_internal_action_code_info_data_new:
@@ -326,7 +376,9 @@ G_DECLARE_FINAL_TYPE(FirebaseAuthInternalActionCodeInfoData, firebase_auth_inter
  *
  * Returns: a new #FirebaseAuthInternalActionCodeInfoData
  */
-FirebaseAuthInternalActionCodeInfoData* firebase_auth_internal_action_code_info_data_new(const gchar* email, const gchar* previous_email);
+FirebaseAuthInternalActionCodeInfoData*
+firebase_auth_internal_action_code_info_data_new(const gchar* email,
+                                                 const gchar* previous_email);
 
 /**
  * firebase_auth_internal_action_code_info_data_get_email
@@ -336,7 +388,8 @@ FirebaseAuthInternalActionCodeInfoData* firebase_auth_internal_action_code_info_
  *
  * Returns: the field value.
  */
-const gchar* firebase_auth_internal_action_code_info_data_get_email(FirebaseAuthInternalActionCodeInfoData* object);
+const gchar* firebase_auth_internal_action_code_info_data_get_email(
+    FirebaseAuthInternalActionCodeInfoData* object);
 
 /**
  * firebase_auth_internal_action_code_info_data_get_previous_email
@@ -346,7 +399,8 @@ const gchar* firebase_auth_internal_action_code_info_data_get_email(FirebaseAuth
  *
  * Returns: the field value.
  */
-const gchar* firebase_auth_internal_action_code_info_data_get_previous_email(FirebaseAuthInternalActionCodeInfoData* object);
+const gchar* firebase_auth_internal_action_code_info_data_get_previous_email(
+    FirebaseAuthInternalActionCodeInfoData* object);
 
 /**
  * firebase_auth_internal_action_code_info_data_equals:
@@ -357,7 +411,9 @@ const gchar* firebase_auth_internal_action_code_info_data_get_previous_email(Fir
  *
  * Returns: TRUE if @a and @b are equal.
  */
-gboolean firebase_auth_internal_action_code_info_data_equals(FirebaseAuthInternalActionCodeInfoData* a, FirebaseAuthInternalActionCodeInfoData* b);
+gboolean firebase_auth_internal_action_code_info_data_equals(
+    FirebaseAuthInternalActionCodeInfoData* a,
+    FirebaseAuthInternalActionCodeInfoData* b);
 
 /**
  * firebase_auth_internal_action_code_info_data_hash:
@@ -367,14 +423,17 @@ gboolean firebase_auth_internal_action_code_info_data_equals(FirebaseAuthInterna
  *
  * Returns: the hash code.
  */
-guint firebase_auth_internal_action_code_info_data_hash(FirebaseAuthInternalActionCodeInfoData* object);
+guint firebase_auth_internal_action_code_info_data_hash(
+    FirebaseAuthInternalActionCodeInfoData* object);
 
 /**
  * FirebaseAuthInternalActionCodeInfo:
  *
  */
 
-G_DECLARE_FINAL_TYPE(FirebaseAuthInternalActionCodeInfo, firebase_auth_internal_action_code_info, FIREBASE_AUTH, INTERNAL_ACTION_CODE_INFO, GObject)
+G_DECLARE_FINAL_TYPE(FirebaseAuthInternalActionCodeInfo,
+                     firebase_auth_internal_action_code_info, FIREBASE_AUTH,
+                     INTERNAL_ACTION_CODE_INFO, GObject)
 
 /**
  * firebase_auth_internal_action_code_info_new:
@@ -385,7 +444,9 @@ G_DECLARE_FINAL_TYPE(FirebaseAuthInternalActionCodeInfo, firebase_auth_internal_
  *
  * Returns: a new #FirebaseAuthInternalActionCodeInfo
  */
-FirebaseAuthInternalActionCodeInfo* firebase_auth_internal_action_code_info_new(FirebaseAuthActionCodeInfoOperation operation, FirebaseAuthInternalActionCodeInfoData* data);
+FirebaseAuthInternalActionCodeInfo* firebase_auth_internal_action_code_info_new(
+    FirebaseAuthActionCodeInfoOperation operation,
+    FirebaseAuthInternalActionCodeInfoData* data);
 
 /**
  * firebase_auth_internal_action_code_info_get_operation
@@ -395,7 +456,9 @@ FirebaseAuthInternalActionCodeInfo* firebase_auth_internal_action_code_info_new(
  *
  * Returns: the field value.
  */
-FirebaseAuthActionCodeInfoOperation firebase_auth_internal_action_code_info_get_operation(FirebaseAuthInternalActionCodeInfo* object);
+FirebaseAuthActionCodeInfoOperation
+firebase_auth_internal_action_code_info_get_operation(
+    FirebaseAuthInternalActionCodeInfo* object);
 
 /**
  * firebase_auth_internal_action_code_info_get_data
@@ -405,7 +468,9 @@ FirebaseAuthActionCodeInfoOperation firebase_auth_internal_action_code_info_get_
  *
  * Returns: the field value.
  */
-FirebaseAuthInternalActionCodeInfoData* firebase_auth_internal_action_code_info_get_data(FirebaseAuthInternalActionCodeInfo* object);
+FirebaseAuthInternalActionCodeInfoData*
+firebase_auth_internal_action_code_info_get_data(
+    FirebaseAuthInternalActionCodeInfo* object);
 
 /**
  * firebase_auth_internal_action_code_info_equals:
@@ -416,7 +481,9 @@ FirebaseAuthInternalActionCodeInfoData* firebase_auth_internal_action_code_info_
  *
  * Returns: TRUE if @a and @b are equal.
  */
-gboolean firebase_auth_internal_action_code_info_equals(FirebaseAuthInternalActionCodeInfo* a, FirebaseAuthInternalActionCodeInfo* b);
+gboolean firebase_auth_internal_action_code_info_equals(
+    FirebaseAuthInternalActionCodeInfo* a,
+    FirebaseAuthInternalActionCodeInfo* b);
 
 /**
  * firebase_auth_internal_action_code_info_hash:
@@ -426,14 +493,17 @@ gboolean firebase_auth_internal_action_code_info_equals(FirebaseAuthInternalActi
  *
  * Returns: the hash code.
  */
-guint firebase_auth_internal_action_code_info_hash(FirebaseAuthInternalActionCodeInfo* object);
+guint firebase_auth_internal_action_code_info_hash(
+    FirebaseAuthInternalActionCodeInfo* object);
 
 /**
  * FirebaseAuthInternalAdditionalUserInfo:
  *
  */
 
-G_DECLARE_FINAL_TYPE(FirebaseAuthInternalAdditionalUserInfo, firebase_auth_internal_additional_user_info, FIREBASE_AUTH, INTERNAL_ADDITIONAL_USER_INFO, GObject)
+G_DECLARE_FINAL_TYPE(FirebaseAuthInternalAdditionalUserInfo,
+                     firebase_auth_internal_additional_user_info, FIREBASE_AUTH,
+                     INTERNAL_ADDITIONAL_USER_INFO, GObject)
 
 /**
  * firebase_auth_internal_additional_user_info_new:
@@ -447,7 +517,12 @@ G_DECLARE_FINAL_TYPE(FirebaseAuthInternalAdditionalUserInfo, firebase_auth_inter
  *
  * Returns: a new #FirebaseAuthInternalAdditionalUserInfo
  */
-FirebaseAuthInternalAdditionalUserInfo* firebase_auth_internal_additional_user_info_new(gboolean is_new_user, const gchar* provider_id, const gchar* username, const gchar* authorization_code, FlValue* profile);
+FirebaseAuthInternalAdditionalUserInfo*
+firebase_auth_internal_additional_user_info_new(gboolean is_new_user,
+                                                const gchar* provider_id,
+                                                const gchar* username,
+                                                const gchar* authorization_code,
+                                                FlValue* profile);
 
 /**
  * firebase_auth_internal_additional_user_info_get_is_new_user
@@ -457,7 +532,8 @@ FirebaseAuthInternalAdditionalUserInfo* firebase_auth_internal_additional_user_i
  *
  * Returns: the field value.
  */
-gboolean firebase_auth_internal_additional_user_info_get_is_new_user(FirebaseAuthInternalAdditionalUserInfo* object);
+gboolean firebase_auth_internal_additional_user_info_get_is_new_user(
+    FirebaseAuthInternalAdditionalUserInfo* object);
 
 /**
  * firebase_auth_internal_additional_user_info_get_provider_id
@@ -467,7 +543,8 @@ gboolean firebase_auth_internal_additional_user_info_get_is_new_user(FirebaseAut
  *
  * Returns: the field value.
  */
-const gchar* firebase_auth_internal_additional_user_info_get_provider_id(FirebaseAuthInternalAdditionalUserInfo* object);
+const gchar* firebase_auth_internal_additional_user_info_get_provider_id(
+    FirebaseAuthInternalAdditionalUserInfo* object);
 
 /**
  * firebase_auth_internal_additional_user_info_get_username
@@ -477,7 +554,8 @@ const gchar* firebase_auth_internal_additional_user_info_get_provider_id(Firebas
  *
  * Returns: the field value.
  */
-const gchar* firebase_auth_internal_additional_user_info_get_username(FirebaseAuthInternalAdditionalUserInfo* object);
+const gchar* firebase_auth_internal_additional_user_info_get_username(
+    FirebaseAuthInternalAdditionalUserInfo* object);
 
 /**
  * firebase_auth_internal_additional_user_info_get_authorization_code
@@ -487,7 +565,8 @@ const gchar* firebase_auth_internal_additional_user_info_get_username(FirebaseAu
  *
  * Returns: the field value.
  */
-const gchar* firebase_auth_internal_additional_user_info_get_authorization_code(FirebaseAuthInternalAdditionalUserInfo* object);
+const gchar* firebase_auth_internal_additional_user_info_get_authorization_code(
+    FirebaseAuthInternalAdditionalUserInfo* object);
 
 /**
  * firebase_auth_internal_additional_user_info_get_profile
@@ -497,7 +576,8 @@ const gchar* firebase_auth_internal_additional_user_info_get_authorization_code(
  *
  * Returns: the field value.
  */
-FlValue* firebase_auth_internal_additional_user_info_get_profile(FirebaseAuthInternalAdditionalUserInfo* object);
+FlValue* firebase_auth_internal_additional_user_info_get_profile(
+    FirebaseAuthInternalAdditionalUserInfo* object);
 
 /**
  * firebase_auth_internal_additional_user_info_equals:
@@ -508,7 +588,9 @@ FlValue* firebase_auth_internal_additional_user_info_get_profile(FirebaseAuthInt
  *
  * Returns: TRUE if @a and @b are equal.
  */
-gboolean firebase_auth_internal_additional_user_info_equals(FirebaseAuthInternalAdditionalUserInfo* a, FirebaseAuthInternalAdditionalUserInfo* b);
+gboolean firebase_auth_internal_additional_user_info_equals(
+    FirebaseAuthInternalAdditionalUserInfo* a,
+    FirebaseAuthInternalAdditionalUserInfo* b);
 
 /**
  * firebase_auth_internal_additional_user_info_hash:
@@ -518,14 +600,17 @@ gboolean firebase_auth_internal_additional_user_info_equals(FirebaseAuthInternal
  *
  * Returns: the hash code.
  */
-guint firebase_auth_internal_additional_user_info_hash(FirebaseAuthInternalAdditionalUserInfo* object);
+guint firebase_auth_internal_additional_user_info_hash(
+    FirebaseAuthInternalAdditionalUserInfo* object);
 
 /**
  * FirebaseAuthInternalAuthCredential:
  *
  */
 
-G_DECLARE_FINAL_TYPE(FirebaseAuthInternalAuthCredential, firebase_auth_internal_auth_credential, FIREBASE_AUTH, INTERNAL_AUTH_CREDENTIAL, GObject)
+G_DECLARE_FINAL_TYPE(FirebaseAuthInternalAuthCredential,
+                     firebase_auth_internal_auth_credential, FIREBASE_AUTH,
+                     INTERNAL_AUTH_CREDENTIAL, GObject)
 
 /**
  * firebase_auth_internal_auth_credential_new:
@@ -538,7 +623,9 @@ G_DECLARE_FINAL_TYPE(FirebaseAuthInternalAuthCredential, firebase_auth_internal_
  *
  * Returns: a new #FirebaseAuthInternalAuthCredential
  */
-FirebaseAuthInternalAuthCredential* firebase_auth_internal_auth_credential_new(const gchar* provider_id, const gchar* sign_in_method, int64_t native_id, const gchar* access_token);
+FirebaseAuthInternalAuthCredential* firebase_auth_internal_auth_credential_new(
+    const gchar* provider_id, const gchar* sign_in_method, int64_t native_id,
+    const gchar* access_token);
 
 /**
  * firebase_auth_internal_auth_credential_get_provider_id
@@ -548,7 +635,8 @@ FirebaseAuthInternalAuthCredential* firebase_auth_internal_auth_credential_new(c
  *
  * Returns: the field value.
  */
-const gchar* firebase_auth_internal_auth_credential_get_provider_id(FirebaseAuthInternalAuthCredential* object);
+const gchar* firebase_auth_internal_auth_credential_get_provider_id(
+    FirebaseAuthInternalAuthCredential* object);
 
 /**
  * firebase_auth_internal_auth_credential_get_sign_in_method
@@ -558,7 +646,8 @@ const gchar* firebase_auth_internal_auth_credential_get_provider_id(FirebaseAuth
  *
  * Returns: the field value.
  */
-const gchar* firebase_auth_internal_auth_credential_get_sign_in_method(FirebaseAuthInternalAuthCredential* object);
+const gchar* firebase_auth_internal_auth_credential_get_sign_in_method(
+    FirebaseAuthInternalAuthCredential* object);
 
 /**
  * firebase_auth_internal_auth_credential_get_native_id
@@ -568,7 +657,8 @@ const gchar* firebase_auth_internal_auth_credential_get_sign_in_method(FirebaseA
  *
  * Returns: the field value.
  */
-int64_t firebase_auth_internal_auth_credential_get_native_id(FirebaseAuthInternalAuthCredential* object);
+int64_t firebase_auth_internal_auth_credential_get_native_id(
+    FirebaseAuthInternalAuthCredential* object);
 
 /**
  * firebase_auth_internal_auth_credential_get_access_token
@@ -578,7 +668,8 @@ int64_t firebase_auth_internal_auth_credential_get_native_id(FirebaseAuthInterna
  *
  * Returns: the field value.
  */
-const gchar* firebase_auth_internal_auth_credential_get_access_token(FirebaseAuthInternalAuthCredential* object);
+const gchar* firebase_auth_internal_auth_credential_get_access_token(
+    FirebaseAuthInternalAuthCredential* object);
 
 /**
  * firebase_auth_internal_auth_credential_equals:
@@ -589,7 +680,9 @@ const gchar* firebase_auth_internal_auth_credential_get_access_token(FirebaseAut
  *
  * Returns: TRUE if @a and @b are equal.
  */
-gboolean firebase_auth_internal_auth_credential_equals(FirebaseAuthInternalAuthCredential* a, FirebaseAuthInternalAuthCredential* b);
+gboolean firebase_auth_internal_auth_credential_equals(
+    FirebaseAuthInternalAuthCredential* a,
+    FirebaseAuthInternalAuthCredential* b);
 
 /**
  * firebase_auth_internal_auth_credential_hash:
@@ -599,14 +692,17 @@ gboolean firebase_auth_internal_auth_credential_equals(FirebaseAuthInternalAuthC
  *
  * Returns: the hash code.
  */
-guint firebase_auth_internal_auth_credential_hash(FirebaseAuthInternalAuthCredential* object);
+guint firebase_auth_internal_auth_credential_hash(
+    FirebaseAuthInternalAuthCredential* object);
 
 /**
  * FirebaseAuthInternalUserInfo:
  *
  */
 
-G_DECLARE_FINAL_TYPE(FirebaseAuthInternalUserInfo, firebase_auth_internal_user_info, FIREBASE_AUTH, INTERNAL_USER_INFO, GObject)
+G_DECLARE_FINAL_TYPE(FirebaseAuthInternalUserInfo,
+                     firebase_auth_internal_user_info, FIREBASE_AUTH,
+                     INTERNAL_USER_INFO, GObject)
 
 /**
  * firebase_auth_internal_user_info_new:
@@ -627,7 +723,12 @@ G_DECLARE_FINAL_TYPE(FirebaseAuthInternalUserInfo, firebase_auth_internal_user_i
  *
  * Returns: a new #FirebaseAuthInternalUserInfo
  */
-FirebaseAuthInternalUserInfo* firebase_auth_internal_user_info_new(const gchar* uid, const gchar* email, const gchar* display_name, const gchar* photo_url, const gchar* phone_number, gboolean is_anonymous, gboolean is_email_verified, const gchar* provider_id, const gchar* tenant_id, const gchar* refresh_token, int64_t* creation_timestamp, int64_t* last_sign_in_timestamp);
+FirebaseAuthInternalUserInfo* firebase_auth_internal_user_info_new(
+    const gchar* uid, const gchar* email, const gchar* display_name,
+    const gchar* photo_url, const gchar* phone_number, gboolean is_anonymous,
+    gboolean is_email_verified, const gchar* provider_id,
+    const gchar* tenant_id, const gchar* refresh_token,
+    int64_t* creation_timestamp, int64_t* last_sign_in_timestamp);
 
 /**
  * firebase_auth_internal_user_info_get_uid
@@ -637,7 +738,8 @@ FirebaseAuthInternalUserInfo* firebase_auth_internal_user_info_new(const gchar* 
  *
  * Returns: the field value.
  */
-const gchar* firebase_auth_internal_user_info_get_uid(FirebaseAuthInternalUserInfo* object);
+const gchar* firebase_auth_internal_user_info_get_uid(
+    FirebaseAuthInternalUserInfo* object);
 
 /**
  * firebase_auth_internal_user_info_get_email
@@ -647,7 +749,8 @@ const gchar* firebase_auth_internal_user_info_get_uid(FirebaseAuthInternalUserIn
  *
  * Returns: the field value.
  */
-const gchar* firebase_auth_internal_user_info_get_email(FirebaseAuthInternalUserInfo* object);
+const gchar* firebase_auth_internal_user_info_get_email(
+    FirebaseAuthInternalUserInfo* object);
 
 /**
  * firebase_auth_internal_user_info_get_display_name
@@ -657,7 +760,8 @@ const gchar* firebase_auth_internal_user_info_get_email(FirebaseAuthInternalUser
  *
  * Returns: the field value.
  */
-const gchar* firebase_auth_internal_user_info_get_display_name(FirebaseAuthInternalUserInfo* object);
+const gchar* firebase_auth_internal_user_info_get_display_name(
+    FirebaseAuthInternalUserInfo* object);
 
 /**
  * firebase_auth_internal_user_info_get_photo_url
@@ -667,7 +771,8 @@ const gchar* firebase_auth_internal_user_info_get_display_name(FirebaseAuthInter
  *
  * Returns: the field value.
  */
-const gchar* firebase_auth_internal_user_info_get_photo_url(FirebaseAuthInternalUserInfo* object);
+const gchar* firebase_auth_internal_user_info_get_photo_url(
+    FirebaseAuthInternalUserInfo* object);
 
 /**
  * firebase_auth_internal_user_info_get_phone_number
@@ -677,7 +782,8 @@ const gchar* firebase_auth_internal_user_info_get_photo_url(FirebaseAuthInternal
  *
  * Returns: the field value.
  */
-const gchar* firebase_auth_internal_user_info_get_phone_number(FirebaseAuthInternalUserInfo* object);
+const gchar* firebase_auth_internal_user_info_get_phone_number(
+    FirebaseAuthInternalUserInfo* object);
 
 /**
  * firebase_auth_internal_user_info_get_is_anonymous
@@ -687,7 +793,8 @@ const gchar* firebase_auth_internal_user_info_get_phone_number(FirebaseAuthInter
  *
  * Returns: the field value.
  */
-gboolean firebase_auth_internal_user_info_get_is_anonymous(FirebaseAuthInternalUserInfo* object);
+gboolean firebase_auth_internal_user_info_get_is_anonymous(
+    FirebaseAuthInternalUserInfo* object);
 
 /**
  * firebase_auth_internal_user_info_get_is_email_verified
@@ -697,7 +804,8 @@ gboolean firebase_auth_internal_user_info_get_is_anonymous(FirebaseAuthInternalU
  *
  * Returns: the field value.
  */
-gboolean firebase_auth_internal_user_info_get_is_email_verified(FirebaseAuthInternalUserInfo* object);
+gboolean firebase_auth_internal_user_info_get_is_email_verified(
+    FirebaseAuthInternalUserInfo* object);
 
 /**
  * firebase_auth_internal_user_info_get_provider_id
@@ -707,7 +815,8 @@ gboolean firebase_auth_internal_user_info_get_is_email_verified(FirebaseAuthInte
  *
  * Returns: the field value.
  */
-const gchar* firebase_auth_internal_user_info_get_provider_id(FirebaseAuthInternalUserInfo* object);
+const gchar* firebase_auth_internal_user_info_get_provider_id(
+    FirebaseAuthInternalUserInfo* object);
 
 /**
  * firebase_auth_internal_user_info_get_tenant_id
@@ -717,7 +826,8 @@ const gchar* firebase_auth_internal_user_info_get_provider_id(FirebaseAuthIntern
  *
  * Returns: the field value.
  */
-const gchar* firebase_auth_internal_user_info_get_tenant_id(FirebaseAuthInternalUserInfo* object);
+const gchar* firebase_auth_internal_user_info_get_tenant_id(
+    FirebaseAuthInternalUserInfo* object);
 
 /**
  * firebase_auth_internal_user_info_get_refresh_token
@@ -727,7 +837,8 @@ const gchar* firebase_auth_internal_user_info_get_tenant_id(FirebaseAuthInternal
  *
  * Returns: the field value.
  */
-const gchar* firebase_auth_internal_user_info_get_refresh_token(FirebaseAuthInternalUserInfo* object);
+const gchar* firebase_auth_internal_user_info_get_refresh_token(
+    FirebaseAuthInternalUserInfo* object);
 
 /**
  * firebase_auth_internal_user_info_get_creation_timestamp
@@ -737,7 +848,8 @@ const gchar* firebase_auth_internal_user_info_get_refresh_token(FirebaseAuthInte
  *
  * Returns: the field value.
  */
-int64_t* firebase_auth_internal_user_info_get_creation_timestamp(FirebaseAuthInternalUserInfo* object);
+int64_t* firebase_auth_internal_user_info_get_creation_timestamp(
+    FirebaseAuthInternalUserInfo* object);
 
 /**
  * firebase_auth_internal_user_info_get_last_sign_in_timestamp
@@ -747,7 +859,8 @@ int64_t* firebase_auth_internal_user_info_get_creation_timestamp(FirebaseAuthInt
  *
  * Returns: the field value.
  */
-int64_t* firebase_auth_internal_user_info_get_last_sign_in_timestamp(FirebaseAuthInternalUserInfo* object);
+int64_t* firebase_auth_internal_user_info_get_last_sign_in_timestamp(
+    FirebaseAuthInternalUserInfo* object);
 
 /**
  * firebase_auth_internal_user_info_equals:
@@ -758,7 +871,8 @@ int64_t* firebase_auth_internal_user_info_get_last_sign_in_timestamp(FirebaseAut
  *
  * Returns: TRUE if @a and @b are equal.
  */
-gboolean firebase_auth_internal_user_info_equals(FirebaseAuthInternalUserInfo* a, FirebaseAuthInternalUserInfo* b);
+gboolean firebase_auth_internal_user_info_equals(
+    FirebaseAuthInternalUserInfo* a, FirebaseAuthInternalUserInfo* b);
 
 /**
  * firebase_auth_internal_user_info_hash:
@@ -768,14 +882,17 @@ gboolean firebase_auth_internal_user_info_equals(FirebaseAuthInternalUserInfo* a
  *
  * Returns: the hash code.
  */
-guint firebase_auth_internal_user_info_hash(FirebaseAuthInternalUserInfo* object);
+guint firebase_auth_internal_user_info_hash(
+    FirebaseAuthInternalUserInfo* object);
 
 /**
  * FirebaseAuthInternalUserDetails:
  *
  */
 
-G_DECLARE_FINAL_TYPE(FirebaseAuthInternalUserDetails, firebase_auth_internal_user_details, FIREBASE_AUTH, INTERNAL_USER_DETAILS, GObject)
+G_DECLARE_FINAL_TYPE(FirebaseAuthInternalUserDetails,
+                     firebase_auth_internal_user_details, FIREBASE_AUTH,
+                     INTERNAL_USER_DETAILS, GObject)
 
 /**
  * firebase_auth_internal_user_details_new:
@@ -786,7 +903,8 @@ G_DECLARE_FINAL_TYPE(FirebaseAuthInternalUserDetails, firebase_auth_internal_use
  *
  * Returns: a new #FirebaseAuthInternalUserDetails
  */
-FirebaseAuthInternalUserDetails* firebase_auth_internal_user_details_new(FirebaseAuthInternalUserInfo* user_info, FlValue* provider_data);
+FirebaseAuthInternalUserDetails* firebase_auth_internal_user_details_new(
+    FirebaseAuthInternalUserInfo* user_info, FlValue* provider_data);
 
 /**
  * firebase_auth_internal_user_details_get_user_info
@@ -796,7 +914,8 @@ FirebaseAuthInternalUserDetails* firebase_auth_internal_user_details_new(Firebas
  *
  * Returns: the field value.
  */
-FirebaseAuthInternalUserInfo* firebase_auth_internal_user_details_get_user_info(FirebaseAuthInternalUserDetails* object);
+FirebaseAuthInternalUserInfo* firebase_auth_internal_user_details_get_user_info(
+    FirebaseAuthInternalUserDetails* object);
 
 /**
  * firebase_auth_internal_user_details_get_provider_data
@@ -806,7 +925,8 @@ FirebaseAuthInternalUserInfo* firebase_auth_internal_user_details_get_user_info(
  *
  * Returns: the field value.
  */
-FlValue* firebase_auth_internal_user_details_get_provider_data(FirebaseAuthInternalUserDetails* object);
+FlValue* firebase_auth_internal_user_details_get_provider_data(
+    FirebaseAuthInternalUserDetails* object);
 
 /**
  * firebase_auth_internal_user_details_equals:
@@ -817,7 +937,8 @@ FlValue* firebase_auth_internal_user_details_get_provider_data(FirebaseAuthInter
  *
  * Returns: TRUE if @a and @b are equal.
  */
-gboolean firebase_auth_internal_user_details_equals(FirebaseAuthInternalUserDetails* a, FirebaseAuthInternalUserDetails* b);
+gboolean firebase_auth_internal_user_details_equals(
+    FirebaseAuthInternalUserDetails* a, FirebaseAuthInternalUserDetails* b);
 
 /**
  * firebase_auth_internal_user_details_hash:
@@ -827,14 +948,17 @@ gboolean firebase_auth_internal_user_details_equals(FirebaseAuthInternalUserDeta
  *
  * Returns: the hash code.
  */
-guint firebase_auth_internal_user_details_hash(FirebaseAuthInternalUserDetails* object);
+guint firebase_auth_internal_user_details_hash(
+    FirebaseAuthInternalUserDetails* object);
 
 /**
  * FirebaseAuthInternalUserCredential:
  *
  */
 
-G_DECLARE_FINAL_TYPE(FirebaseAuthInternalUserCredential, firebase_auth_internal_user_credential, FIREBASE_AUTH, INTERNAL_USER_CREDENTIAL, GObject)
+G_DECLARE_FINAL_TYPE(FirebaseAuthInternalUserCredential,
+                     firebase_auth_internal_user_credential, FIREBASE_AUTH,
+                     INTERNAL_USER_CREDENTIAL, GObject)
 
 /**
  * firebase_auth_internal_user_credential_new:
@@ -846,7 +970,10 @@ G_DECLARE_FINAL_TYPE(FirebaseAuthInternalUserCredential, firebase_auth_internal_
  *
  * Returns: a new #FirebaseAuthInternalUserCredential
  */
-FirebaseAuthInternalUserCredential* firebase_auth_internal_user_credential_new(FirebaseAuthInternalUserDetails* user, FirebaseAuthInternalAdditionalUserInfo* additional_user_info, FirebaseAuthInternalAuthCredential* credential);
+FirebaseAuthInternalUserCredential* firebase_auth_internal_user_credential_new(
+    FirebaseAuthInternalUserDetails* user,
+    FirebaseAuthInternalAdditionalUserInfo* additional_user_info,
+    FirebaseAuthInternalAuthCredential* credential);
 
 /**
  * firebase_auth_internal_user_credential_get_user
@@ -856,7 +983,9 @@ FirebaseAuthInternalUserCredential* firebase_auth_internal_user_credential_new(F
  *
  * Returns: the field value.
  */
-FirebaseAuthInternalUserDetails* firebase_auth_internal_user_credential_get_user(FirebaseAuthInternalUserCredential* object);
+FirebaseAuthInternalUserDetails*
+firebase_auth_internal_user_credential_get_user(
+    FirebaseAuthInternalUserCredential* object);
 
 /**
  * firebase_auth_internal_user_credential_get_additional_user_info
@@ -866,7 +995,9 @@ FirebaseAuthInternalUserDetails* firebase_auth_internal_user_credential_get_user
  *
  * Returns: the field value.
  */
-FirebaseAuthInternalAdditionalUserInfo* firebase_auth_internal_user_credential_get_additional_user_info(FirebaseAuthInternalUserCredential* object);
+FirebaseAuthInternalAdditionalUserInfo*
+firebase_auth_internal_user_credential_get_additional_user_info(
+    FirebaseAuthInternalUserCredential* object);
 
 /**
  * firebase_auth_internal_user_credential_get_credential
@@ -876,7 +1007,9 @@ FirebaseAuthInternalAdditionalUserInfo* firebase_auth_internal_user_credential_g
  *
  * Returns: the field value.
  */
-FirebaseAuthInternalAuthCredential* firebase_auth_internal_user_credential_get_credential(FirebaseAuthInternalUserCredential* object);
+FirebaseAuthInternalAuthCredential*
+firebase_auth_internal_user_credential_get_credential(
+    FirebaseAuthInternalUserCredential* object);
 
 /**
  * firebase_auth_internal_user_credential_equals:
@@ -887,7 +1020,9 @@ FirebaseAuthInternalAuthCredential* firebase_auth_internal_user_credential_get_c
  *
  * Returns: TRUE if @a and @b are equal.
  */
-gboolean firebase_auth_internal_user_credential_equals(FirebaseAuthInternalUserCredential* a, FirebaseAuthInternalUserCredential* b);
+gboolean firebase_auth_internal_user_credential_equals(
+    FirebaseAuthInternalUserCredential* a,
+    FirebaseAuthInternalUserCredential* b);
 
 /**
  * firebase_auth_internal_user_credential_hash:
@@ -897,14 +1032,17 @@ gboolean firebase_auth_internal_user_credential_equals(FirebaseAuthInternalUserC
  *
  * Returns: the hash code.
  */
-guint firebase_auth_internal_user_credential_hash(FirebaseAuthInternalUserCredential* object);
+guint firebase_auth_internal_user_credential_hash(
+    FirebaseAuthInternalUserCredential* object);
 
 /**
  * FirebaseAuthInternalAuthCredentialInput:
  *
  */
 
-G_DECLARE_FINAL_TYPE(FirebaseAuthInternalAuthCredentialInput, firebase_auth_internal_auth_credential_input, FIREBASE_AUTH, INTERNAL_AUTH_CREDENTIAL_INPUT, GObject)
+G_DECLARE_FINAL_TYPE(FirebaseAuthInternalAuthCredentialInput,
+                     firebase_auth_internal_auth_credential_input,
+                     FIREBASE_AUTH, INTERNAL_AUTH_CREDENTIAL_INPUT, GObject)
 
 /**
  * firebase_auth_internal_auth_credential_input_new:
@@ -917,7 +1055,11 @@ G_DECLARE_FINAL_TYPE(FirebaseAuthInternalAuthCredentialInput, firebase_auth_inte
  *
  * Returns: a new #FirebaseAuthInternalAuthCredentialInput
  */
-FirebaseAuthInternalAuthCredentialInput* firebase_auth_internal_auth_credential_input_new(const gchar* provider_id, const gchar* sign_in_method, const gchar* token, const gchar* access_token);
+FirebaseAuthInternalAuthCredentialInput*
+firebase_auth_internal_auth_credential_input_new(const gchar* provider_id,
+                                                 const gchar* sign_in_method,
+                                                 const gchar* token,
+                                                 const gchar* access_token);
 
 /**
  * firebase_auth_internal_auth_credential_input_get_provider_id
@@ -927,7 +1069,8 @@ FirebaseAuthInternalAuthCredentialInput* firebase_auth_internal_auth_credential_
  *
  * Returns: the field value.
  */
-const gchar* firebase_auth_internal_auth_credential_input_get_provider_id(FirebaseAuthInternalAuthCredentialInput* object);
+const gchar* firebase_auth_internal_auth_credential_input_get_provider_id(
+    FirebaseAuthInternalAuthCredentialInput* object);
 
 /**
  * firebase_auth_internal_auth_credential_input_get_sign_in_method
@@ -937,7 +1080,8 @@ const gchar* firebase_auth_internal_auth_credential_input_get_provider_id(Fireba
  *
  * Returns: the field value.
  */
-const gchar* firebase_auth_internal_auth_credential_input_get_sign_in_method(FirebaseAuthInternalAuthCredentialInput* object);
+const gchar* firebase_auth_internal_auth_credential_input_get_sign_in_method(
+    FirebaseAuthInternalAuthCredentialInput* object);
 
 /**
  * firebase_auth_internal_auth_credential_input_get_token
@@ -947,7 +1091,8 @@ const gchar* firebase_auth_internal_auth_credential_input_get_sign_in_method(Fir
  *
  * Returns: the field value.
  */
-const gchar* firebase_auth_internal_auth_credential_input_get_token(FirebaseAuthInternalAuthCredentialInput* object);
+const gchar* firebase_auth_internal_auth_credential_input_get_token(
+    FirebaseAuthInternalAuthCredentialInput* object);
 
 /**
  * firebase_auth_internal_auth_credential_input_get_access_token
@@ -957,7 +1102,8 @@ const gchar* firebase_auth_internal_auth_credential_input_get_token(FirebaseAuth
  *
  * Returns: the field value.
  */
-const gchar* firebase_auth_internal_auth_credential_input_get_access_token(FirebaseAuthInternalAuthCredentialInput* object);
+const gchar* firebase_auth_internal_auth_credential_input_get_access_token(
+    FirebaseAuthInternalAuthCredentialInput* object);
 
 /**
  * firebase_auth_internal_auth_credential_input_equals:
@@ -968,7 +1114,9 @@ const gchar* firebase_auth_internal_auth_credential_input_get_access_token(Fireb
  *
  * Returns: TRUE if @a and @b are equal.
  */
-gboolean firebase_auth_internal_auth_credential_input_equals(FirebaseAuthInternalAuthCredentialInput* a, FirebaseAuthInternalAuthCredentialInput* b);
+gboolean firebase_auth_internal_auth_credential_input_equals(
+    FirebaseAuthInternalAuthCredentialInput* a,
+    FirebaseAuthInternalAuthCredentialInput* b);
 
 /**
  * firebase_auth_internal_auth_credential_input_hash:
@@ -978,14 +1126,17 @@ gboolean firebase_auth_internal_auth_credential_input_equals(FirebaseAuthInterna
  *
  * Returns: the hash code.
  */
-guint firebase_auth_internal_auth_credential_input_hash(FirebaseAuthInternalAuthCredentialInput* object);
+guint firebase_auth_internal_auth_credential_input_hash(
+    FirebaseAuthInternalAuthCredentialInput* object);
 
 /**
  * FirebaseAuthInternalActionCodeSettings:
  *
  */
 
-G_DECLARE_FINAL_TYPE(FirebaseAuthInternalActionCodeSettings, firebase_auth_internal_action_code_settings, FIREBASE_AUTH, INTERNAL_ACTION_CODE_SETTINGS, GObject)
+G_DECLARE_FINAL_TYPE(FirebaseAuthInternalActionCodeSettings,
+                     firebase_auth_internal_action_code_settings, FIREBASE_AUTH,
+                     INTERNAL_ACTION_CODE_SETTINGS, GObject)
 
 /**
  * firebase_auth_internal_action_code_settings_new:
@@ -1002,7 +1153,12 @@ G_DECLARE_FINAL_TYPE(FirebaseAuthInternalActionCodeSettings, firebase_auth_inter
  *
  * Returns: a new #FirebaseAuthInternalActionCodeSettings
  */
-FirebaseAuthInternalActionCodeSettings* firebase_auth_internal_action_code_settings_new(const gchar* url, const gchar* dynamic_link_domain, gboolean handle_code_in_app, const gchar* i_o_s_bundle_id, const gchar* android_package_name, gboolean android_install_app, const gchar* android_minimum_version, const gchar* link_domain);
+FirebaseAuthInternalActionCodeSettings*
+firebase_auth_internal_action_code_settings_new(
+    const gchar* url, const gchar* dynamic_link_domain,
+    gboolean handle_code_in_app, const gchar* i_o_s_bundle_id,
+    const gchar* android_package_name, gboolean android_install_app,
+    const gchar* android_minimum_version, const gchar* link_domain);
 
 /**
  * firebase_auth_internal_action_code_settings_get_url
@@ -1012,7 +1168,8 @@ FirebaseAuthInternalActionCodeSettings* firebase_auth_internal_action_code_setti
  *
  * Returns: the field value.
  */
-const gchar* firebase_auth_internal_action_code_settings_get_url(FirebaseAuthInternalActionCodeSettings* object);
+const gchar* firebase_auth_internal_action_code_settings_get_url(
+    FirebaseAuthInternalActionCodeSettings* object);
 
 /**
  * firebase_auth_internal_action_code_settings_get_dynamic_link_domain
@@ -1022,7 +1179,9 @@ const gchar* firebase_auth_internal_action_code_settings_get_url(FirebaseAuthInt
  *
  * Returns: the field value.
  */
-const gchar* firebase_auth_internal_action_code_settings_get_dynamic_link_domain(FirebaseAuthInternalActionCodeSettings* object);
+const gchar*
+firebase_auth_internal_action_code_settings_get_dynamic_link_domain(
+    FirebaseAuthInternalActionCodeSettings* object);
 
 /**
  * firebase_auth_internal_action_code_settings_get_handle_code_in_app
@@ -1032,7 +1191,8 @@ const gchar* firebase_auth_internal_action_code_settings_get_dynamic_link_domain
  *
  * Returns: the field value.
  */
-gboolean firebase_auth_internal_action_code_settings_get_handle_code_in_app(FirebaseAuthInternalActionCodeSettings* object);
+gboolean firebase_auth_internal_action_code_settings_get_handle_code_in_app(
+    FirebaseAuthInternalActionCodeSettings* object);
 
 /**
  * firebase_auth_internal_action_code_settings_get_i_o_s_bundle_id
@@ -1042,7 +1202,8 @@ gboolean firebase_auth_internal_action_code_settings_get_handle_code_in_app(Fire
  *
  * Returns: the field value.
  */
-const gchar* firebase_auth_internal_action_code_settings_get_i_o_s_bundle_id(FirebaseAuthInternalActionCodeSettings* object);
+const gchar* firebase_auth_internal_action_code_settings_get_i_o_s_bundle_id(
+    FirebaseAuthInternalActionCodeSettings* object);
 
 /**
  * firebase_auth_internal_action_code_settings_get_android_package_name
@@ -1052,7 +1213,9 @@ const gchar* firebase_auth_internal_action_code_settings_get_i_o_s_bundle_id(Fir
  *
  * Returns: the field value.
  */
-const gchar* firebase_auth_internal_action_code_settings_get_android_package_name(FirebaseAuthInternalActionCodeSettings* object);
+const gchar*
+firebase_auth_internal_action_code_settings_get_android_package_name(
+    FirebaseAuthInternalActionCodeSettings* object);
 
 /**
  * firebase_auth_internal_action_code_settings_get_android_install_app
@@ -1062,7 +1225,8 @@ const gchar* firebase_auth_internal_action_code_settings_get_android_package_nam
  *
  * Returns: the field value.
  */
-gboolean firebase_auth_internal_action_code_settings_get_android_install_app(FirebaseAuthInternalActionCodeSettings* object);
+gboolean firebase_auth_internal_action_code_settings_get_android_install_app(
+    FirebaseAuthInternalActionCodeSettings* object);
 
 /**
  * firebase_auth_internal_action_code_settings_get_android_minimum_version
@@ -1072,7 +1236,9 @@ gboolean firebase_auth_internal_action_code_settings_get_android_install_app(Fir
  *
  * Returns: the field value.
  */
-const gchar* firebase_auth_internal_action_code_settings_get_android_minimum_version(FirebaseAuthInternalActionCodeSettings* object);
+const gchar*
+firebase_auth_internal_action_code_settings_get_android_minimum_version(
+    FirebaseAuthInternalActionCodeSettings* object);
 
 /**
  * firebase_auth_internal_action_code_settings_get_link_domain
@@ -1082,7 +1248,8 @@ const gchar* firebase_auth_internal_action_code_settings_get_android_minimum_ver
  *
  * Returns: the field value.
  */
-const gchar* firebase_auth_internal_action_code_settings_get_link_domain(FirebaseAuthInternalActionCodeSettings* object);
+const gchar* firebase_auth_internal_action_code_settings_get_link_domain(
+    FirebaseAuthInternalActionCodeSettings* object);
 
 /**
  * firebase_auth_internal_action_code_settings_equals:
@@ -1093,7 +1260,9 @@ const gchar* firebase_auth_internal_action_code_settings_get_link_domain(Firebas
  *
  * Returns: TRUE if @a and @b are equal.
  */
-gboolean firebase_auth_internal_action_code_settings_equals(FirebaseAuthInternalActionCodeSettings* a, FirebaseAuthInternalActionCodeSettings* b);
+gboolean firebase_auth_internal_action_code_settings_equals(
+    FirebaseAuthInternalActionCodeSettings* a,
+    FirebaseAuthInternalActionCodeSettings* b);
 
 /**
  * firebase_auth_internal_action_code_settings_hash:
@@ -1103,14 +1272,17 @@ gboolean firebase_auth_internal_action_code_settings_equals(FirebaseAuthInternal
  *
  * Returns: the hash code.
  */
-guint firebase_auth_internal_action_code_settings_hash(FirebaseAuthInternalActionCodeSettings* object);
+guint firebase_auth_internal_action_code_settings_hash(
+    FirebaseAuthInternalActionCodeSettings* object);
 
 /**
  * FirebaseAuthInternalFirebaseAuthSettings:
  *
  */
 
-G_DECLARE_FINAL_TYPE(FirebaseAuthInternalFirebaseAuthSettings, firebase_auth_internal_firebase_auth_settings, FIREBASE_AUTH, INTERNAL_FIREBASE_AUTH_SETTINGS, GObject)
+G_DECLARE_FINAL_TYPE(FirebaseAuthInternalFirebaseAuthSettings,
+                     firebase_auth_internal_firebase_auth_settings,
+                     FIREBASE_AUTH, INTERNAL_FIREBASE_AUTH_SETTINGS, GObject)
 
 /**
  * firebase_auth_internal_firebase_auth_settings_new:
@@ -1124,7 +1296,11 @@ G_DECLARE_FINAL_TYPE(FirebaseAuthInternalFirebaseAuthSettings, firebase_auth_int
  *
  * Returns: a new #FirebaseAuthInternalFirebaseAuthSettings
  */
-FirebaseAuthInternalFirebaseAuthSettings* firebase_auth_internal_firebase_auth_settings_new(gboolean app_verification_disabled_for_testing, const gchar* user_access_group, const gchar* phone_number, const gchar* sms_code, gboolean* force_recaptcha_flow);
+FirebaseAuthInternalFirebaseAuthSettings*
+firebase_auth_internal_firebase_auth_settings_new(
+    gboolean app_verification_disabled_for_testing,
+    const gchar* user_access_group, const gchar* phone_number,
+    const gchar* sms_code, gboolean* force_recaptcha_flow);
 
 /**
  * firebase_auth_internal_firebase_auth_settings_get_app_verification_disabled_for_testing
@@ -1134,7 +1310,9 @@ FirebaseAuthInternalFirebaseAuthSettings* firebase_auth_internal_firebase_auth_s
  *
  * Returns: the field value.
  */
-gboolean firebase_auth_internal_firebase_auth_settings_get_app_verification_disabled_for_testing(FirebaseAuthInternalFirebaseAuthSettings* object);
+gboolean
+firebase_auth_internal_firebase_auth_settings_get_app_verification_disabled_for_testing(
+    FirebaseAuthInternalFirebaseAuthSettings* object);
 
 /**
  * firebase_auth_internal_firebase_auth_settings_get_user_access_group
@@ -1144,7 +1322,9 @@ gboolean firebase_auth_internal_firebase_auth_settings_get_app_verification_disa
  *
  * Returns: the field value.
  */
-const gchar* firebase_auth_internal_firebase_auth_settings_get_user_access_group(FirebaseAuthInternalFirebaseAuthSettings* object);
+const gchar*
+firebase_auth_internal_firebase_auth_settings_get_user_access_group(
+    FirebaseAuthInternalFirebaseAuthSettings* object);
 
 /**
  * firebase_auth_internal_firebase_auth_settings_get_phone_number
@@ -1154,7 +1334,8 @@ const gchar* firebase_auth_internal_firebase_auth_settings_get_user_access_group
  *
  * Returns: the field value.
  */
-const gchar* firebase_auth_internal_firebase_auth_settings_get_phone_number(FirebaseAuthInternalFirebaseAuthSettings* object);
+const gchar* firebase_auth_internal_firebase_auth_settings_get_phone_number(
+    FirebaseAuthInternalFirebaseAuthSettings* object);
 
 /**
  * firebase_auth_internal_firebase_auth_settings_get_sms_code
@@ -1164,7 +1345,8 @@ const gchar* firebase_auth_internal_firebase_auth_settings_get_phone_number(Fire
  *
  * Returns: the field value.
  */
-const gchar* firebase_auth_internal_firebase_auth_settings_get_sms_code(FirebaseAuthInternalFirebaseAuthSettings* object);
+const gchar* firebase_auth_internal_firebase_auth_settings_get_sms_code(
+    FirebaseAuthInternalFirebaseAuthSettings* object);
 
 /**
  * firebase_auth_internal_firebase_auth_settings_get_force_recaptcha_flow
@@ -1174,7 +1356,9 @@ const gchar* firebase_auth_internal_firebase_auth_settings_get_sms_code(Firebase
  *
  * Returns: the field value.
  */
-gboolean* firebase_auth_internal_firebase_auth_settings_get_force_recaptcha_flow(FirebaseAuthInternalFirebaseAuthSettings* object);
+gboolean*
+firebase_auth_internal_firebase_auth_settings_get_force_recaptcha_flow(
+    FirebaseAuthInternalFirebaseAuthSettings* object);
 
 /**
  * firebase_auth_internal_firebase_auth_settings_equals:
@@ -1185,24 +1369,30 @@ gboolean* firebase_auth_internal_firebase_auth_settings_get_force_recaptcha_flow
  *
  * Returns: TRUE if @a and @b are equal.
  */
-gboolean firebase_auth_internal_firebase_auth_settings_equals(FirebaseAuthInternalFirebaseAuthSettings* a, FirebaseAuthInternalFirebaseAuthSettings* b);
+gboolean firebase_auth_internal_firebase_auth_settings_equals(
+    FirebaseAuthInternalFirebaseAuthSettings* a,
+    FirebaseAuthInternalFirebaseAuthSettings* b);
 
 /**
  * firebase_auth_internal_firebase_auth_settings_hash:
  * @object: a #FirebaseAuthInternalFirebaseAuthSettings.
  *
- * Calculates a hash code for a #FirebaseAuthInternalFirebaseAuthSettings object.
+ * Calculates a hash code for a #FirebaseAuthInternalFirebaseAuthSettings
+ * object.
  *
  * Returns: the hash code.
  */
-guint firebase_auth_internal_firebase_auth_settings_hash(FirebaseAuthInternalFirebaseAuthSettings* object);
+guint firebase_auth_internal_firebase_auth_settings_hash(
+    FirebaseAuthInternalFirebaseAuthSettings* object);
 
 /**
  * FirebaseAuthInternalSignInProvider:
  *
  */
 
-G_DECLARE_FINAL_TYPE(FirebaseAuthInternalSignInProvider, firebase_auth_internal_sign_in_provider, FIREBASE_AUTH, INTERNAL_SIGN_IN_PROVIDER, GObject)
+G_DECLARE_FINAL_TYPE(FirebaseAuthInternalSignInProvider,
+                     firebase_auth_internal_sign_in_provider, FIREBASE_AUTH,
+                     INTERNAL_SIGN_IN_PROVIDER, GObject)
 
 /**
  * firebase_auth_internal_sign_in_provider_new:
@@ -1214,7 +1404,8 @@ G_DECLARE_FINAL_TYPE(FirebaseAuthInternalSignInProvider, firebase_auth_internal_
  *
  * Returns: a new #FirebaseAuthInternalSignInProvider
  */
-FirebaseAuthInternalSignInProvider* firebase_auth_internal_sign_in_provider_new(const gchar* provider_id, FlValue* scopes, FlValue* custom_parameters);
+FirebaseAuthInternalSignInProvider* firebase_auth_internal_sign_in_provider_new(
+    const gchar* provider_id, FlValue* scopes, FlValue* custom_parameters);
 
 /**
  * firebase_auth_internal_sign_in_provider_get_provider_id
@@ -1224,7 +1415,8 @@ FirebaseAuthInternalSignInProvider* firebase_auth_internal_sign_in_provider_new(
  *
  * Returns: the field value.
  */
-const gchar* firebase_auth_internal_sign_in_provider_get_provider_id(FirebaseAuthInternalSignInProvider* object);
+const gchar* firebase_auth_internal_sign_in_provider_get_provider_id(
+    FirebaseAuthInternalSignInProvider* object);
 
 /**
  * firebase_auth_internal_sign_in_provider_get_scopes
@@ -1234,7 +1426,8 @@ const gchar* firebase_auth_internal_sign_in_provider_get_provider_id(FirebaseAut
  *
  * Returns: the field value.
  */
-FlValue* firebase_auth_internal_sign_in_provider_get_scopes(FirebaseAuthInternalSignInProvider* object);
+FlValue* firebase_auth_internal_sign_in_provider_get_scopes(
+    FirebaseAuthInternalSignInProvider* object);
 
 /**
  * firebase_auth_internal_sign_in_provider_get_custom_parameters
@@ -1244,7 +1437,8 @@ FlValue* firebase_auth_internal_sign_in_provider_get_scopes(FirebaseAuthInternal
  *
  * Returns: the field value.
  */
-FlValue* firebase_auth_internal_sign_in_provider_get_custom_parameters(FirebaseAuthInternalSignInProvider* object);
+FlValue* firebase_auth_internal_sign_in_provider_get_custom_parameters(
+    FirebaseAuthInternalSignInProvider* object);
 
 /**
  * firebase_auth_internal_sign_in_provider_equals:
@@ -1255,7 +1449,9 @@ FlValue* firebase_auth_internal_sign_in_provider_get_custom_parameters(FirebaseA
  *
  * Returns: TRUE if @a and @b are equal.
  */
-gboolean firebase_auth_internal_sign_in_provider_equals(FirebaseAuthInternalSignInProvider* a, FirebaseAuthInternalSignInProvider* b);
+gboolean firebase_auth_internal_sign_in_provider_equals(
+    FirebaseAuthInternalSignInProvider* a,
+    FirebaseAuthInternalSignInProvider* b);
 
 /**
  * firebase_auth_internal_sign_in_provider_hash:
@@ -1265,14 +1461,18 @@ gboolean firebase_auth_internal_sign_in_provider_equals(FirebaseAuthInternalSign
  *
  * Returns: the hash code.
  */
-guint firebase_auth_internal_sign_in_provider_hash(FirebaseAuthInternalSignInProvider* object);
+guint firebase_auth_internal_sign_in_provider_hash(
+    FirebaseAuthInternalSignInProvider* object);
 
 /**
  * FirebaseAuthInternalVerifyPhoneNumberRequest:
  *
  */
 
-G_DECLARE_FINAL_TYPE(FirebaseAuthInternalVerifyPhoneNumberRequest, firebase_auth_internal_verify_phone_number_request, FIREBASE_AUTH, INTERNAL_VERIFY_PHONE_NUMBER_REQUEST, GObject)
+G_DECLARE_FINAL_TYPE(FirebaseAuthInternalVerifyPhoneNumberRequest,
+                     firebase_auth_internal_verify_phone_number_request,
+                     FIREBASE_AUTH, INTERNAL_VERIFY_PHONE_NUMBER_REQUEST,
+                     GObject)
 
 /**
  * firebase_auth_internal_verify_phone_number_request_new:
@@ -1287,7 +1487,11 @@ G_DECLARE_FINAL_TYPE(FirebaseAuthInternalVerifyPhoneNumberRequest, firebase_auth
  *
  * Returns: a new #FirebaseAuthInternalVerifyPhoneNumberRequest
  */
-FirebaseAuthInternalVerifyPhoneNumberRequest* firebase_auth_internal_verify_phone_number_request_new(const gchar* phone_number, int64_t timeout, int64_t* force_resending_token, const gchar* auto_retrieved_sms_code_for_testing, const gchar* multi_factor_info_id, const gchar* multi_factor_session_id);
+FirebaseAuthInternalVerifyPhoneNumberRequest*
+firebase_auth_internal_verify_phone_number_request_new(
+    const gchar* phone_number, int64_t timeout, int64_t* force_resending_token,
+    const gchar* auto_retrieved_sms_code_for_testing,
+    const gchar* multi_factor_info_id, const gchar* multi_factor_session_id);
 
 /**
  * firebase_auth_internal_verify_phone_number_request_get_phone_number
@@ -1297,7 +1501,9 @@ FirebaseAuthInternalVerifyPhoneNumberRequest* firebase_auth_internal_verify_phon
  *
  * Returns: the field value.
  */
-const gchar* firebase_auth_internal_verify_phone_number_request_get_phone_number(FirebaseAuthInternalVerifyPhoneNumberRequest* object);
+const gchar*
+firebase_auth_internal_verify_phone_number_request_get_phone_number(
+    FirebaseAuthInternalVerifyPhoneNumberRequest* object);
 
 /**
  * firebase_auth_internal_verify_phone_number_request_get_timeout
@@ -1307,7 +1513,8 @@ const gchar* firebase_auth_internal_verify_phone_number_request_get_phone_number
  *
  * Returns: the field value.
  */
-int64_t firebase_auth_internal_verify_phone_number_request_get_timeout(FirebaseAuthInternalVerifyPhoneNumberRequest* object);
+int64_t firebase_auth_internal_verify_phone_number_request_get_timeout(
+    FirebaseAuthInternalVerifyPhoneNumberRequest* object);
 
 /**
  * firebase_auth_internal_verify_phone_number_request_get_force_resending_token
@@ -1317,7 +1524,9 @@ int64_t firebase_auth_internal_verify_phone_number_request_get_timeout(FirebaseA
  *
  * Returns: the field value.
  */
-int64_t* firebase_auth_internal_verify_phone_number_request_get_force_resending_token(FirebaseAuthInternalVerifyPhoneNumberRequest* object);
+int64_t*
+firebase_auth_internal_verify_phone_number_request_get_force_resending_token(
+    FirebaseAuthInternalVerifyPhoneNumberRequest* object);
 
 /**
  * firebase_auth_internal_verify_phone_number_request_get_auto_retrieved_sms_code_for_testing
@@ -1327,7 +1536,9 @@ int64_t* firebase_auth_internal_verify_phone_number_request_get_force_resending_
  *
  * Returns: the field value.
  */
-const gchar* firebase_auth_internal_verify_phone_number_request_get_auto_retrieved_sms_code_for_testing(FirebaseAuthInternalVerifyPhoneNumberRequest* object);
+const gchar*
+firebase_auth_internal_verify_phone_number_request_get_auto_retrieved_sms_code_for_testing(
+    FirebaseAuthInternalVerifyPhoneNumberRequest* object);
 
 /**
  * firebase_auth_internal_verify_phone_number_request_get_multi_factor_info_id
@@ -1337,7 +1548,9 @@ const gchar* firebase_auth_internal_verify_phone_number_request_get_auto_retriev
  *
  * Returns: the field value.
  */
-const gchar* firebase_auth_internal_verify_phone_number_request_get_multi_factor_info_id(FirebaseAuthInternalVerifyPhoneNumberRequest* object);
+const gchar*
+firebase_auth_internal_verify_phone_number_request_get_multi_factor_info_id(
+    FirebaseAuthInternalVerifyPhoneNumberRequest* object);
 
 /**
  * firebase_auth_internal_verify_phone_number_request_get_multi_factor_session_id
@@ -1347,35 +1560,44 @@ const gchar* firebase_auth_internal_verify_phone_number_request_get_multi_factor
  *
  * Returns: the field value.
  */
-const gchar* firebase_auth_internal_verify_phone_number_request_get_multi_factor_session_id(FirebaseAuthInternalVerifyPhoneNumberRequest* object);
+const gchar*
+firebase_auth_internal_verify_phone_number_request_get_multi_factor_session_id(
+    FirebaseAuthInternalVerifyPhoneNumberRequest* object);
 
 /**
  * firebase_auth_internal_verify_phone_number_request_equals:
  * @a: a #FirebaseAuthInternalVerifyPhoneNumberRequest.
  * @b: another #FirebaseAuthInternalVerifyPhoneNumberRequest.
  *
- * Checks if two #FirebaseAuthInternalVerifyPhoneNumberRequest objects are equal.
+ * Checks if two #FirebaseAuthInternalVerifyPhoneNumberRequest objects are
+ * equal.
  *
  * Returns: TRUE if @a and @b are equal.
  */
-gboolean firebase_auth_internal_verify_phone_number_request_equals(FirebaseAuthInternalVerifyPhoneNumberRequest* a, FirebaseAuthInternalVerifyPhoneNumberRequest* b);
+gboolean firebase_auth_internal_verify_phone_number_request_equals(
+    FirebaseAuthInternalVerifyPhoneNumberRequest* a,
+    FirebaseAuthInternalVerifyPhoneNumberRequest* b);
 
 /**
  * firebase_auth_internal_verify_phone_number_request_hash:
  * @object: a #FirebaseAuthInternalVerifyPhoneNumberRequest.
  *
- * Calculates a hash code for a #FirebaseAuthInternalVerifyPhoneNumberRequest object.
+ * Calculates a hash code for a #FirebaseAuthInternalVerifyPhoneNumberRequest
+ * object.
  *
  * Returns: the hash code.
  */
-guint firebase_auth_internal_verify_phone_number_request_hash(FirebaseAuthInternalVerifyPhoneNumberRequest* object);
+guint firebase_auth_internal_verify_phone_number_request_hash(
+    FirebaseAuthInternalVerifyPhoneNumberRequest* object);
 
 /**
  * FirebaseAuthInternalIdTokenResult:
  *
  */
 
-G_DECLARE_FINAL_TYPE(FirebaseAuthInternalIdTokenResult, firebase_auth_internal_id_token_result, FIREBASE_AUTH, INTERNAL_ID_TOKEN_RESULT, GObject)
+G_DECLARE_FINAL_TYPE(FirebaseAuthInternalIdTokenResult,
+                     firebase_auth_internal_id_token_result, FIREBASE_AUTH,
+                     INTERNAL_ID_TOKEN_RESULT, GObject)
 
 /**
  * firebase_auth_internal_id_token_result_new:
@@ -1391,7 +1613,10 @@ G_DECLARE_FINAL_TYPE(FirebaseAuthInternalIdTokenResult, firebase_auth_internal_i
  *
  * Returns: a new #FirebaseAuthInternalIdTokenResult
  */
-FirebaseAuthInternalIdTokenResult* firebase_auth_internal_id_token_result_new(const gchar* token, int64_t* expiration_timestamp, int64_t* auth_timestamp, int64_t* issued_at_timestamp, const gchar* sign_in_provider, FlValue* claims, const gchar* sign_in_second_factor);
+FirebaseAuthInternalIdTokenResult* firebase_auth_internal_id_token_result_new(
+    const gchar* token, int64_t* expiration_timestamp, int64_t* auth_timestamp,
+    int64_t* issued_at_timestamp, const gchar* sign_in_provider,
+    FlValue* claims, const gchar* sign_in_second_factor);
 
 /**
  * firebase_auth_internal_id_token_result_get_token
@@ -1401,7 +1626,8 @@ FirebaseAuthInternalIdTokenResult* firebase_auth_internal_id_token_result_new(co
  *
  * Returns: the field value.
  */
-const gchar* firebase_auth_internal_id_token_result_get_token(FirebaseAuthInternalIdTokenResult* object);
+const gchar* firebase_auth_internal_id_token_result_get_token(
+    FirebaseAuthInternalIdTokenResult* object);
 
 /**
  * firebase_auth_internal_id_token_result_get_expiration_timestamp
@@ -1411,7 +1637,8 @@ const gchar* firebase_auth_internal_id_token_result_get_token(FirebaseAuthIntern
  *
  * Returns: the field value.
  */
-int64_t* firebase_auth_internal_id_token_result_get_expiration_timestamp(FirebaseAuthInternalIdTokenResult* object);
+int64_t* firebase_auth_internal_id_token_result_get_expiration_timestamp(
+    FirebaseAuthInternalIdTokenResult* object);
 
 /**
  * firebase_auth_internal_id_token_result_get_auth_timestamp
@@ -1421,7 +1648,8 @@ int64_t* firebase_auth_internal_id_token_result_get_expiration_timestamp(Firebas
  *
  * Returns: the field value.
  */
-int64_t* firebase_auth_internal_id_token_result_get_auth_timestamp(FirebaseAuthInternalIdTokenResult* object);
+int64_t* firebase_auth_internal_id_token_result_get_auth_timestamp(
+    FirebaseAuthInternalIdTokenResult* object);
 
 /**
  * firebase_auth_internal_id_token_result_get_issued_at_timestamp
@@ -1431,7 +1659,8 @@ int64_t* firebase_auth_internal_id_token_result_get_auth_timestamp(FirebaseAuthI
  *
  * Returns: the field value.
  */
-int64_t* firebase_auth_internal_id_token_result_get_issued_at_timestamp(FirebaseAuthInternalIdTokenResult* object);
+int64_t* firebase_auth_internal_id_token_result_get_issued_at_timestamp(
+    FirebaseAuthInternalIdTokenResult* object);
 
 /**
  * firebase_auth_internal_id_token_result_get_sign_in_provider
@@ -1441,7 +1670,8 @@ int64_t* firebase_auth_internal_id_token_result_get_issued_at_timestamp(Firebase
  *
  * Returns: the field value.
  */
-const gchar* firebase_auth_internal_id_token_result_get_sign_in_provider(FirebaseAuthInternalIdTokenResult* object);
+const gchar* firebase_auth_internal_id_token_result_get_sign_in_provider(
+    FirebaseAuthInternalIdTokenResult* object);
 
 /**
  * firebase_auth_internal_id_token_result_get_claims
@@ -1451,7 +1681,8 @@ const gchar* firebase_auth_internal_id_token_result_get_sign_in_provider(Firebas
  *
  * Returns: the field value.
  */
-FlValue* firebase_auth_internal_id_token_result_get_claims(FirebaseAuthInternalIdTokenResult* object);
+FlValue* firebase_auth_internal_id_token_result_get_claims(
+    FirebaseAuthInternalIdTokenResult* object);
 
 /**
  * firebase_auth_internal_id_token_result_get_sign_in_second_factor
@@ -1461,7 +1692,8 @@ FlValue* firebase_auth_internal_id_token_result_get_claims(FirebaseAuthInternalI
  *
  * Returns: the field value.
  */
-const gchar* firebase_auth_internal_id_token_result_get_sign_in_second_factor(FirebaseAuthInternalIdTokenResult* object);
+const gchar* firebase_auth_internal_id_token_result_get_sign_in_second_factor(
+    FirebaseAuthInternalIdTokenResult* object);
 
 /**
  * firebase_auth_internal_id_token_result_equals:
@@ -1472,7 +1704,8 @@ const gchar* firebase_auth_internal_id_token_result_get_sign_in_second_factor(Fi
  *
  * Returns: TRUE if @a and @b are equal.
  */
-gboolean firebase_auth_internal_id_token_result_equals(FirebaseAuthInternalIdTokenResult* a, FirebaseAuthInternalIdTokenResult* b);
+gboolean firebase_auth_internal_id_token_result_equals(
+    FirebaseAuthInternalIdTokenResult* a, FirebaseAuthInternalIdTokenResult* b);
 
 /**
  * firebase_auth_internal_id_token_result_hash:
@@ -1482,14 +1715,17 @@ gboolean firebase_auth_internal_id_token_result_equals(FirebaseAuthInternalIdTok
  *
  * Returns: the hash code.
  */
-guint firebase_auth_internal_id_token_result_hash(FirebaseAuthInternalIdTokenResult* object);
+guint firebase_auth_internal_id_token_result_hash(
+    FirebaseAuthInternalIdTokenResult* object);
 
 /**
  * FirebaseAuthInternalUserProfile:
  *
  */
 
-G_DECLARE_FINAL_TYPE(FirebaseAuthInternalUserProfile, firebase_auth_internal_user_profile, FIREBASE_AUTH, INTERNAL_USER_PROFILE, GObject)
+G_DECLARE_FINAL_TYPE(FirebaseAuthInternalUserProfile,
+                     firebase_auth_internal_user_profile, FIREBASE_AUTH,
+                     INTERNAL_USER_PROFILE, GObject)
 
 /**
  * firebase_auth_internal_user_profile_new:
@@ -1502,7 +1738,9 @@ G_DECLARE_FINAL_TYPE(FirebaseAuthInternalUserProfile, firebase_auth_internal_use
  *
  * Returns: a new #FirebaseAuthInternalUserProfile
  */
-FirebaseAuthInternalUserProfile* firebase_auth_internal_user_profile_new(const gchar* display_name, const gchar* photo_url, gboolean display_name_changed, gboolean photo_url_changed);
+FirebaseAuthInternalUserProfile* firebase_auth_internal_user_profile_new(
+    const gchar* display_name, const gchar* photo_url,
+    gboolean display_name_changed, gboolean photo_url_changed);
 
 /**
  * firebase_auth_internal_user_profile_get_display_name
@@ -1512,7 +1750,8 @@ FirebaseAuthInternalUserProfile* firebase_auth_internal_user_profile_new(const g
  *
  * Returns: the field value.
  */
-const gchar* firebase_auth_internal_user_profile_get_display_name(FirebaseAuthInternalUserProfile* object);
+const gchar* firebase_auth_internal_user_profile_get_display_name(
+    FirebaseAuthInternalUserProfile* object);
 
 /**
  * firebase_auth_internal_user_profile_get_photo_url
@@ -1522,7 +1761,8 @@ const gchar* firebase_auth_internal_user_profile_get_display_name(FirebaseAuthIn
  *
  * Returns: the field value.
  */
-const gchar* firebase_auth_internal_user_profile_get_photo_url(FirebaseAuthInternalUserProfile* object);
+const gchar* firebase_auth_internal_user_profile_get_photo_url(
+    FirebaseAuthInternalUserProfile* object);
 
 /**
  * firebase_auth_internal_user_profile_get_display_name_changed
@@ -1532,7 +1772,8 @@ const gchar* firebase_auth_internal_user_profile_get_photo_url(FirebaseAuthInter
  *
  * Returns: the field value.
  */
-gboolean firebase_auth_internal_user_profile_get_display_name_changed(FirebaseAuthInternalUserProfile* object);
+gboolean firebase_auth_internal_user_profile_get_display_name_changed(
+    FirebaseAuthInternalUserProfile* object);
 
 /**
  * firebase_auth_internal_user_profile_get_photo_url_changed
@@ -1542,7 +1783,8 @@ gboolean firebase_auth_internal_user_profile_get_display_name_changed(FirebaseAu
  *
  * Returns: the field value.
  */
-gboolean firebase_auth_internal_user_profile_get_photo_url_changed(FirebaseAuthInternalUserProfile* object);
+gboolean firebase_auth_internal_user_profile_get_photo_url_changed(
+    FirebaseAuthInternalUserProfile* object);
 
 /**
  * firebase_auth_internal_user_profile_equals:
@@ -1553,7 +1795,8 @@ gboolean firebase_auth_internal_user_profile_get_photo_url_changed(FirebaseAuthI
  *
  * Returns: TRUE if @a and @b are equal.
  */
-gboolean firebase_auth_internal_user_profile_equals(FirebaseAuthInternalUserProfile* a, FirebaseAuthInternalUserProfile* b);
+gboolean firebase_auth_internal_user_profile_equals(
+    FirebaseAuthInternalUserProfile* a, FirebaseAuthInternalUserProfile* b);
 
 /**
  * firebase_auth_internal_user_profile_hash:
@@ -1563,14 +1806,17 @@ gboolean firebase_auth_internal_user_profile_equals(FirebaseAuthInternalUserProf
  *
  * Returns: the hash code.
  */
-guint firebase_auth_internal_user_profile_hash(FirebaseAuthInternalUserProfile* object);
+guint firebase_auth_internal_user_profile_hash(
+    FirebaseAuthInternalUserProfile* object);
 
 /**
  * FirebaseAuthInternalTotpSecret:
  *
  */
 
-G_DECLARE_FINAL_TYPE(FirebaseAuthInternalTotpSecret, firebase_auth_internal_totp_secret, FIREBASE_AUTH, INTERNAL_TOTP_SECRET, GObject)
+G_DECLARE_FINAL_TYPE(FirebaseAuthInternalTotpSecret,
+                     firebase_auth_internal_totp_secret, FIREBASE_AUTH,
+                     INTERNAL_TOTP_SECRET, GObject)
 
 /**
  * firebase_auth_internal_totp_secret_new:
@@ -1584,7 +1830,10 @@ G_DECLARE_FINAL_TYPE(FirebaseAuthInternalTotpSecret, firebase_auth_internal_totp
  *
  * Returns: a new #FirebaseAuthInternalTotpSecret
  */
-FirebaseAuthInternalTotpSecret* firebase_auth_internal_totp_secret_new(int64_t* code_interval_seconds, int64_t* code_length, int64_t* enrollment_completion_deadline, const gchar* hashing_algorithm, const gchar* secret_key);
+FirebaseAuthInternalTotpSecret* firebase_auth_internal_totp_secret_new(
+    int64_t* code_interval_seconds, int64_t* code_length,
+    int64_t* enrollment_completion_deadline, const gchar* hashing_algorithm,
+    const gchar* secret_key);
 
 /**
  * firebase_auth_internal_totp_secret_get_code_interval_seconds
@@ -1594,7 +1843,8 @@ FirebaseAuthInternalTotpSecret* firebase_auth_internal_totp_secret_new(int64_t* 
  *
  * Returns: the field value.
  */
-int64_t* firebase_auth_internal_totp_secret_get_code_interval_seconds(FirebaseAuthInternalTotpSecret* object);
+int64_t* firebase_auth_internal_totp_secret_get_code_interval_seconds(
+    FirebaseAuthInternalTotpSecret* object);
 
 /**
  * firebase_auth_internal_totp_secret_get_code_length
@@ -1604,7 +1854,8 @@ int64_t* firebase_auth_internal_totp_secret_get_code_interval_seconds(FirebaseAu
  *
  * Returns: the field value.
  */
-int64_t* firebase_auth_internal_totp_secret_get_code_length(FirebaseAuthInternalTotpSecret* object);
+int64_t* firebase_auth_internal_totp_secret_get_code_length(
+    FirebaseAuthInternalTotpSecret* object);
 
 /**
  * firebase_auth_internal_totp_secret_get_enrollment_completion_deadline
@@ -1614,7 +1865,8 @@ int64_t* firebase_auth_internal_totp_secret_get_code_length(FirebaseAuthInternal
  *
  * Returns: the field value.
  */
-int64_t* firebase_auth_internal_totp_secret_get_enrollment_completion_deadline(FirebaseAuthInternalTotpSecret* object);
+int64_t* firebase_auth_internal_totp_secret_get_enrollment_completion_deadline(
+    FirebaseAuthInternalTotpSecret* object);
 
 /**
  * firebase_auth_internal_totp_secret_get_hashing_algorithm
@@ -1624,7 +1876,8 @@ int64_t* firebase_auth_internal_totp_secret_get_enrollment_completion_deadline(F
  *
  * Returns: the field value.
  */
-const gchar* firebase_auth_internal_totp_secret_get_hashing_algorithm(FirebaseAuthInternalTotpSecret* object);
+const gchar* firebase_auth_internal_totp_secret_get_hashing_algorithm(
+    FirebaseAuthInternalTotpSecret* object);
 
 /**
  * firebase_auth_internal_totp_secret_get_secret_key
@@ -1634,7 +1887,8 @@ const gchar* firebase_auth_internal_totp_secret_get_hashing_algorithm(FirebaseAu
  *
  * Returns: the field value.
  */
-const gchar* firebase_auth_internal_totp_secret_get_secret_key(FirebaseAuthInternalTotpSecret* object);
+const gchar* firebase_auth_internal_totp_secret_get_secret_key(
+    FirebaseAuthInternalTotpSecret* object);
 
 /**
  * firebase_auth_internal_totp_secret_equals:
@@ -1645,7 +1899,8 @@ const gchar* firebase_auth_internal_totp_secret_get_secret_key(FirebaseAuthInter
  *
  * Returns: TRUE if @a and @b are equal.
  */
-gboolean firebase_auth_internal_totp_secret_equals(FirebaseAuthInternalTotpSecret* a, FirebaseAuthInternalTotpSecret* b);
+gboolean firebase_auth_internal_totp_secret_equals(
+    FirebaseAuthInternalTotpSecret* a, FirebaseAuthInternalTotpSecret* b);
 
 /**
  * firebase_auth_internal_totp_secret_hash:
@@ -1655,9 +1910,11 @@ gboolean firebase_auth_internal_totp_secret_equals(FirebaseAuthInternalTotpSecre
  *
  * Returns: the hash code.
  */
-guint firebase_auth_internal_totp_secret_hash(FirebaseAuthInternalTotpSecret* object);
+guint firebase_auth_internal_totp_secret_hash(
+    FirebaseAuthInternalTotpSecret* object);
 
-G_DECLARE_FINAL_TYPE(FirebaseAuthMessageCodec, firebase_auth_message_codec, FIREBASE_AUTH, MESSAGE_CODEC, FlStandardMessageCodec)
+G_DECLARE_FINAL_TYPE(FirebaseAuthMessageCodec, firebase_auth_message_codec,
+                     FIREBASE_AUTH, MESSAGE_CODEC, FlStandardMessageCodec)
 
 /**
  * Custom type ID constants:
@@ -1687,40 +1944,127 @@ extern const int firebase_auth_internal_id_token_result_type_id;
 extern const int firebase_auth_internal_user_profile_type_id;
 extern const int firebase_auth_internal_totp_secret_type_id;
 
-G_DECLARE_FINAL_TYPE(FirebaseAuthFirebaseAuthHostApi, firebase_auth_firebase_auth_host_api, FIREBASE_AUTH, FIREBASE_AUTH_HOST_API, GObject)
+G_DECLARE_FINAL_TYPE(FirebaseAuthFirebaseAuthHostApi,
+                     firebase_auth_firebase_auth_host_api, FIREBASE_AUTH,
+                     FIREBASE_AUTH_HOST_API, GObject)
 
-G_DECLARE_FINAL_TYPE(FirebaseAuthFirebaseAuthHostApiResponseHandle, firebase_auth_firebase_auth_host_api_response_handle, FIREBASE_AUTH, FIREBASE_AUTH_HOST_API_RESPONSE_HANDLE, GObject)
+G_DECLARE_FINAL_TYPE(FirebaseAuthFirebaseAuthHostApiResponseHandle,
+                     firebase_auth_firebase_auth_host_api_response_handle,
+                     FIREBASE_AUTH, FIREBASE_AUTH_HOST_API_RESPONSE_HANDLE,
+                     GObject)
 
 /**
  * FirebaseAuthFirebaseAuthHostApiVTable:
  *
- * Table of functions exposed by FirebaseAuthHostApi to be implemented by the API provider.
+ * Table of functions exposed by FirebaseAuthHostApi to be implemented by the
+ * API provider.
  */
 typedef struct {
-  void (*register_id_token_listener)(FirebaseAuthAuthPigeonFirebaseApp* app, FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*register_auth_state_listener)(FirebaseAuthAuthPigeonFirebaseApp* app, FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*use_emulator)(FirebaseAuthAuthPigeonFirebaseApp* app, const gchar* host, int64_t port, FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*apply_action_code)(FirebaseAuthAuthPigeonFirebaseApp* app, const gchar* code, FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*check_action_code)(FirebaseAuthAuthPigeonFirebaseApp* app, const gchar* code, FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*confirm_password_reset)(FirebaseAuthAuthPigeonFirebaseApp* app, const gchar* code, const gchar* new_password, FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*create_user_with_email_and_password)(FirebaseAuthAuthPigeonFirebaseApp* app, const gchar* email, const gchar* password, FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*sign_in_anonymously)(FirebaseAuthAuthPigeonFirebaseApp* app, FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*sign_in_with_credential)(FirebaseAuthAuthPigeonFirebaseApp* app, FlValue* input, FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*sign_in_with_custom_token)(FirebaseAuthAuthPigeonFirebaseApp* app, const gchar* token, FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*sign_in_with_email_and_password)(FirebaseAuthAuthPigeonFirebaseApp* app, const gchar* email, const gchar* password, FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*sign_in_with_email_link)(FirebaseAuthAuthPigeonFirebaseApp* app, const gchar* email, const gchar* email_link, FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*sign_in_with_provider)(FirebaseAuthAuthPigeonFirebaseApp* app, FirebaseAuthInternalSignInProvider* sign_in_provider, FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*sign_out)(FirebaseAuthAuthPigeonFirebaseApp* app, FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*fetch_sign_in_methods_for_email)(FirebaseAuthAuthPigeonFirebaseApp* app, const gchar* email, FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*send_password_reset_email)(FirebaseAuthAuthPigeonFirebaseApp* app, const gchar* email, FirebaseAuthInternalActionCodeSettings* action_code_settings, FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*send_sign_in_link_to_email)(FirebaseAuthAuthPigeonFirebaseApp* app, const gchar* email, FirebaseAuthInternalActionCodeSettings* action_code_settings, FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*set_language_code)(FirebaseAuthAuthPigeonFirebaseApp* app, const gchar* language_code, FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*set_settings)(FirebaseAuthAuthPigeonFirebaseApp* app, FirebaseAuthInternalFirebaseAuthSettings* settings, FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*verify_password_reset_code)(FirebaseAuthAuthPigeonFirebaseApp* app, const gchar* code, FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*verify_phone_number)(FirebaseAuthAuthPigeonFirebaseApp* app, FirebaseAuthInternalVerifyPhoneNumberRequest* request, FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*revoke_token_with_authorization_code)(FirebaseAuthAuthPigeonFirebaseApp* app, const gchar* authorization_code, FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*revoke_access_token)(FirebaseAuthAuthPigeonFirebaseApp* app, const gchar* access_token, FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*initialize_recaptcha_config)(FirebaseAuthAuthPigeonFirebaseApp* app, FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, gpointer user_data);
+  void (*register_id_token_listener)(
+      FirebaseAuthAuthPigeonFirebaseApp* app,
+      FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*register_auth_state_listener)(
+      FirebaseAuthAuthPigeonFirebaseApp* app,
+      FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*use_emulator)(
+      FirebaseAuthAuthPigeonFirebaseApp* app, const gchar* host, int64_t port,
+      FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*apply_action_code)(
+      FirebaseAuthAuthPigeonFirebaseApp* app, const gchar* code,
+      FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*check_action_code)(
+      FirebaseAuthAuthPigeonFirebaseApp* app, const gchar* code,
+      FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*confirm_password_reset)(
+      FirebaseAuthAuthPigeonFirebaseApp* app, const gchar* code,
+      const gchar* new_password,
+      FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*create_user_with_email_and_password)(
+      FirebaseAuthAuthPigeonFirebaseApp* app, const gchar* email,
+      const gchar* password,
+      FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*sign_in_anonymously)(
+      FirebaseAuthAuthPigeonFirebaseApp* app,
+      FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*sign_in_with_credential)(
+      FirebaseAuthAuthPigeonFirebaseApp* app, FlValue* input,
+      FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*sign_in_with_custom_token)(
+      FirebaseAuthAuthPigeonFirebaseApp* app, const gchar* token,
+      FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*sign_in_with_email_and_password)(
+      FirebaseAuthAuthPigeonFirebaseApp* app, const gchar* email,
+      const gchar* password,
+      FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*sign_in_with_email_link)(
+      FirebaseAuthAuthPigeonFirebaseApp* app, const gchar* email,
+      const gchar* email_link,
+      FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*sign_in_with_provider)(
+      FirebaseAuthAuthPigeonFirebaseApp* app,
+      FirebaseAuthInternalSignInProvider* sign_in_provider,
+      FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*sign_out)(
+      FirebaseAuthAuthPigeonFirebaseApp* app,
+      FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*fetch_sign_in_methods_for_email)(
+      FirebaseAuthAuthPigeonFirebaseApp* app, const gchar* email,
+      FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*send_password_reset_email)(
+      FirebaseAuthAuthPigeonFirebaseApp* app, const gchar* email,
+      FirebaseAuthInternalActionCodeSettings* action_code_settings,
+      FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*send_sign_in_link_to_email)(
+      FirebaseAuthAuthPigeonFirebaseApp* app, const gchar* email,
+      FirebaseAuthInternalActionCodeSettings* action_code_settings,
+      FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*set_language_code)(
+      FirebaseAuthAuthPigeonFirebaseApp* app, const gchar* language_code,
+      FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*set_settings)(
+      FirebaseAuthAuthPigeonFirebaseApp* app,
+      FirebaseAuthInternalFirebaseAuthSettings* settings,
+      FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*verify_password_reset_code)(
+      FirebaseAuthAuthPigeonFirebaseApp* app, const gchar* code,
+      FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*verify_phone_number)(
+      FirebaseAuthAuthPigeonFirebaseApp* app,
+      FirebaseAuthInternalVerifyPhoneNumberRequest* request,
+      FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*revoke_token_with_authorization_code)(
+      FirebaseAuthAuthPigeonFirebaseApp* app, const gchar* authorization_code,
+      FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*revoke_access_token)(
+      FirebaseAuthAuthPigeonFirebaseApp* app, const gchar* access_token,
+      FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*initialize_recaptcha_config)(
+      FirebaseAuthAuthPigeonFirebaseApp* app,
+      FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+      gpointer user_data);
 } FirebaseAuthFirebaseAuthHostApiVTable;
 
 /**
@@ -1730,11 +2074,15 @@ typedef struct {
  * @suffix: (allow-none): a suffix to add to the API or %NULL for none.
  * @vtable: implementations of the methods in this API.
  * @user_data: (closure): user data to pass to the functions in @vtable.
- * @user_data_free_func: (allow-none): a function which gets called to free @user_data, or %NULL.
+ * @user_data_free_func: (allow-none): a function which gets called to free
+ * @user_data, or %NULL.
  *
  * Connects the method handlers in the FirebaseAuthHostApi API.
  */
-void firebase_auth_firebase_auth_host_api_set_method_handlers(FlBinaryMessenger* messenger, const gchar* suffix, const FirebaseAuthFirebaseAuthHostApiVTable* vtable, gpointer user_data, GDestroyNotify user_data_free_func);
+void firebase_auth_firebase_auth_host_api_set_method_handlers(
+    FlBinaryMessenger* messenger, const gchar* suffix,
+    const FirebaseAuthFirebaseAuthHostApiVTable* vtable, gpointer user_data,
+    GDestroyNotify user_data_free_func);
 
 /**
  * firebase_auth_firebase_auth_host_api_clear_method_handlers:
@@ -1744,16 +2092,19 @@ void firebase_auth_firebase_auth_host_api_set_method_handlers(FlBinaryMessenger*
  *
  * Clears the method handlers in the FirebaseAuthHostApi API.
  */
-void firebase_auth_firebase_auth_host_api_clear_method_handlers(FlBinaryMessenger* messenger, const gchar* suffix);
+void firebase_auth_firebase_auth_host_api_clear_method_handlers(
+    FlBinaryMessenger* messenger, const gchar* suffix);
 
 /**
  * firebase_auth_firebase_auth_host_api_respond_register_id_token_listener:
  * @response_handle: a #FirebaseAuthFirebaseAuthHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseAuthHostApi.registerIdTokenListener. 
+ * Responds to FirebaseAuthHostApi.registerIdTokenListener.
  */
-void firebase_auth_firebase_auth_host_api_respond_register_id_token_listener(FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, const gchar* return_value);
+void firebase_auth_firebase_auth_host_api_respond_register_id_token_listener(
+    FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+    const gchar* return_value);
 
 /**
  * firebase_auth_firebase_auth_host_api_respond_error_register_id_token_listener:
@@ -1762,18 +2113,22 @@ void firebase_auth_firebase_auth_host_api_respond_register_id_token_listener(Fir
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseAuthHostApi.registerIdTokenListener. 
+ * Responds with an error to FirebaseAuthHostApi.registerIdTokenListener.
  */
-void firebase_auth_firebase_auth_host_api_respond_error_register_id_token_listener(FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_auth_firebase_auth_host_api_respond_error_register_id_token_listener(
+    FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_auth_firebase_auth_host_api_respond_register_auth_state_listener:
  * @response_handle: a #FirebaseAuthFirebaseAuthHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseAuthHostApi.registerAuthStateListener. 
+ * Responds to FirebaseAuthHostApi.registerAuthStateListener.
  */
-void firebase_auth_firebase_auth_host_api_respond_register_auth_state_listener(FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, const gchar* return_value);
+void firebase_auth_firebase_auth_host_api_respond_register_auth_state_listener(
+    FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+    const gchar* return_value);
 
 /**
  * firebase_auth_firebase_auth_host_api_respond_error_register_auth_state_listener:
@@ -1782,17 +2137,20 @@ void firebase_auth_firebase_auth_host_api_respond_register_auth_state_listener(F
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseAuthHostApi.registerAuthStateListener. 
+ * Responds with an error to FirebaseAuthHostApi.registerAuthStateListener.
  */
-void firebase_auth_firebase_auth_host_api_respond_error_register_auth_state_listener(FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_auth_firebase_auth_host_api_respond_error_register_auth_state_listener(
+    FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_auth_firebase_auth_host_api_respond_use_emulator:
  * @response_handle: a #FirebaseAuthFirebaseAuthHostApiResponseHandle.
  *
- * Responds to FirebaseAuthHostApi.useEmulator. 
+ * Responds to FirebaseAuthHostApi.useEmulator.
  */
-void firebase_auth_firebase_auth_host_api_respond_use_emulator(FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle);
+void firebase_auth_firebase_auth_host_api_respond_use_emulator(
+    FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle);
 
 /**
  * firebase_auth_firebase_auth_host_api_respond_error_use_emulator:
@@ -1801,17 +2159,20 @@ void firebase_auth_firebase_auth_host_api_respond_use_emulator(FirebaseAuthFireb
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseAuthHostApi.useEmulator. 
+ * Responds with an error to FirebaseAuthHostApi.useEmulator.
  */
-void firebase_auth_firebase_auth_host_api_respond_error_use_emulator(FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_auth_firebase_auth_host_api_respond_error_use_emulator(
+    FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_auth_firebase_auth_host_api_respond_apply_action_code:
  * @response_handle: a #FirebaseAuthFirebaseAuthHostApiResponseHandle.
  *
- * Responds to FirebaseAuthHostApi.applyActionCode. 
+ * Responds to FirebaseAuthHostApi.applyActionCode.
  */
-void firebase_auth_firebase_auth_host_api_respond_apply_action_code(FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle);
+void firebase_auth_firebase_auth_host_api_respond_apply_action_code(
+    FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle);
 
 /**
  * firebase_auth_firebase_auth_host_api_respond_error_apply_action_code:
@@ -1820,18 +2181,22 @@ void firebase_auth_firebase_auth_host_api_respond_apply_action_code(FirebaseAuth
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseAuthHostApi.applyActionCode. 
+ * Responds with an error to FirebaseAuthHostApi.applyActionCode.
  */
-void firebase_auth_firebase_auth_host_api_respond_error_apply_action_code(FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_auth_firebase_auth_host_api_respond_error_apply_action_code(
+    FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_auth_firebase_auth_host_api_respond_check_action_code:
  * @response_handle: a #FirebaseAuthFirebaseAuthHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseAuthHostApi.checkActionCode. 
+ * Responds to FirebaseAuthHostApi.checkActionCode.
  */
-void firebase_auth_firebase_auth_host_api_respond_check_action_code(FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, FirebaseAuthInternalActionCodeInfo* return_value);
+void firebase_auth_firebase_auth_host_api_respond_check_action_code(
+    FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+    FirebaseAuthInternalActionCodeInfo* return_value);
 
 /**
  * firebase_auth_firebase_auth_host_api_respond_error_check_action_code:
@@ -1840,17 +2205,20 @@ void firebase_auth_firebase_auth_host_api_respond_check_action_code(FirebaseAuth
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseAuthHostApi.checkActionCode. 
+ * Responds with an error to FirebaseAuthHostApi.checkActionCode.
  */
-void firebase_auth_firebase_auth_host_api_respond_error_check_action_code(FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_auth_firebase_auth_host_api_respond_error_check_action_code(
+    FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_auth_firebase_auth_host_api_respond_confirm_password_reset:
  * @response_handle: a #FirebaseAuthFirebaseAuthHostApiResponseHandle.
  *
- * Responds to FirebaseAuthHostApi.confirmPasswordReset. 
+ * Responds to FirebaseAuthHostApi.confirmPasswordReset.
  */
-void firebase_auth_firebase_auth_host_api_respond_confirm_password_reset(FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle);
+void firebase_auth_firebase_auth_host_api_respond_confirm_password_reset(
+    FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle);
 
 /**
  * firebase_auth_firebase_auth_host_api_respond_error_confirm_password_reset:
@@ -1859,18 +2227,22 @@ void firebase_auth_firebase_auth_host_api_respond_confirm_password_reset(Firebas
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseAuthHostApi.confirmPasswordReset. 
+ * Responds with an error to FirebaseAuthHostApi.confirmPasswordReset.
  */
-void firebase_auth_firebase_auth_host_api_respond_error_confirm_password_reset(FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_auth_firebase_auth_host_api_respond_error_confirm_password_reset(
+    FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_auth_firebase_auth_host_api_respond_create_user_with_email_and_password:
  * @response_handle: a #FirebaseAuthFirebaseAuthHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseAuthHostApi.createUserWithEmailAndPassword. 
+ * Responds to FirebaseAuthHostApi.createUserWithEmailAndPassword.
  */
-void firebase_auth_firebase_auth_host_api_respond_create_user_with_email_and_password(FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, FirebaseAuthInternalUserCredential* return_value);
+void firebase_auth_firebase_auth_host_api_respond_create_user_with_email_and_password(
+    FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+    FirebaseAuthInternalUserCredential* return_value);
 
 /**
  * firebase_auth_firebase_auth_host_api_respond_error_create_user_with_email_and_password:
@@ -1879,18 +2251,22 @@ void firebase_auth_firebase_auth_host_api_respond_create_user_with_email_and_pas
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseAuthHostApi.createUserWithEmailAndPassword. 
+ * Responds with an error to FirebaseAuthHostApi.createUserWithEmailAndPassword.
  */
-void firebase_auth_firebase_auth_host_api_respond_error_create_user_with_email_and_password(FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_auth_firebase_auth_host_api_respond_error_create_user_with_email_and_password(
+    FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_auth_firebase_auth_host_api_respond_sign_in_anonymously:
  * @response_handle: a #FirebaseAuthFirebaseAuthHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseAuthHostApi.signInAnonymously. 
+ * Responds to FirebaseAuthHostApi.signInAnonymously.
  */
-void firebase_auth_firebase_auth_host_api_respond_sign_in_anonymously(FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, FirebaseAuthInternalUserCredential* return_value);
+void firebase_auth_firebase_auth_host_api_respond_sign_in_anonymously(
+    FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+    FirebaseAuthInternalUserCredential* return_value);
 
 /**
  * firebase_auth_firebase_auth_host_api_respond_error_sign_in_anonymously:
@@ -1899,18 +2275,22 @@ void firebase_auth_firebase_auth_host_api_respond_sign_in_anonymously(FirebaseAu
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseAuthHostApi.signInAnonymously. 
+ * Responds with an error to FirebaseAuthHostApi.signInAnonymously.
  */
-void firebase_auth_firebase_auth_host_api_respond_error_sign_in_anonymously(FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_auth_firebase_auth_host_api_respond_error_sign_in_anonymously(
+    FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_auth_firebase_auth_host_api_respond_sign_in_with_credential:
  * @response_handle: a #FirebaseAuthFirebaseAuthHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseAuthHostApi.signInWithCredential. 
+ * Responds to FirebaseAuthHostApi.signInWithCredential.
  */
-void firebase_auth_firebase_auth_host_api_respond_sign_in_with_credential(FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, FirebaseAuthInternalUserCredential* return_value);
+void firebase_auth_firebase_auth_host_api_respond_sign_in_with_credential(
+    FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+    FirebaseAuthInternalUserCredential* return_value);
 
 /**
  * firebase_auth_firebase_auth_host_api_respond_error_sign_in_with_credential:
@@ -1919,18 +2299,22 @@ void firebase_auth_firebase_auth_host_api_respond_sign_in_with_credential(Fireba
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseAuthHostApi.signInWithCredential. 
+ * Responds with an error to FirebaseAuthHostApi.signInWithCredential.
  */
-void firebase_auth_firebase_auth_host_api_respond_error_sign_in_with_credential(FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_auth_firebase_auth_host_api_respond_error_sign_in_with_credential(
+    FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_auth_firebase_auth_host_api_respond_sign_in_with_custom_token:
  * @response_handle: a #FirebaseAuthFirebaseAuthHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseAuthHostApi.signInWithCustomToken. 
+ * Responds to FirebaseAuthHostApi.signInWithCustomToken.
  */
-void firebase_auth_firebase_auth_host_api_respond_sign_in_with_custom_token(FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, FirebaseAuthInternalUserCredential* return_value);
+void firebase_auth_firebase_auth_host_api_respond_sign_in_with_custom_token(
+    FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+    FirebaseAuthInternalUserCredential* return_value);
 
 /**
  * firebase_auth_firebase_auth_host_api_respond_error_sign_in_with_custom_token:
@@ -1939,18 +2323,22 @@ void firebase_auth_firebase_auth_host_api_respond_sign_in_with_custom_token(Fire
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseAuthHostApi.signInWithCustomToken. 
+ * Responds with an error to FirebaseAuthHostApi.signInWithCustomToken.
  */
-void firebase_auth_firebase_auth_host_api_respond_error_sign_in_with_custom_token(FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_auth_firebase_auth_host_api_respond_error_sign_in_with_custom_token(
+    FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_auth_firebase_auth_host_api_respond_sign_in_with_email_and_password:
  * @response_handle: a #FirebaseAuthFirebaseAuthHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseAuthHostApi.signInWithEmailAndPassword. 
+ * Responds to FirebaseAuthHostApi.signInWithEmailAndPassword.
  */
-void firebase_auth_firebase_auth_host_api_respond_sign_in_with_email_and_password(FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, FirebaseAuthInternalUserCredential* return_value);
+void firebase_auth_firebase_auth_host_api_respond_sign_in_with_email_and_password(
+    FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+    FirebaseAuthInternalUserCredential* return_value);
 
 /**
  * firebase_auth_firebase_auth_host_api_respond_error_sign_in_with_email_and_password:
@@ -1959,18 +2347,22 @@ void firebase_auth_firebase_auth_host_api_respond_sign_in_with_email_and_passwor
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseAuthHostApi.signInWithEmailAndPassword. 
+ * Responds with an error to FirebaseAuthHostApi.signInWithEmailAndPassword.
  */
-void firebase_auth_firebase_auth_host_api_respond_error_sign_in_with_email_and_password(FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_auth_firebase_auth_host_api_respond_error_sign_in_with_email_and_password(
+    FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_auth_firebase_auth_host_api_respond_sign_in_with_email_link:
  * @response_handle: a #FirebaseAuthFirebaseAuthHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseAuthHostApi.signInWithEmailLink. 
+ * Responds to FirebaseAuthHostApi.signInWithEmailLink.
  */
-void firebase_auth_firebase_auth_host_api_respond_sign_in_with_email_link(FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, FirebaseAuthInternalUserCredential* return_value);
+void firebase_auth_firebase_auth_host_api_respond_sign_in_with_email_link(
+    FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+    FirebaseAuthInternalUserCredential* return_value);
 
 /**
  * firebase_auth_firebase_auth_host_api_respond_error_sign_in_with_email_link:
@@ -1979,18 +2371,22 @@ void firebase_auth_firebase_auth_host_api_respond_sign_in_with_email_link(Fireba
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseAuthHostApi.signInWithEmailLink. 
+ * Responds with an error to FirebaseAuthHostApi.signInWithEmailLink.
  */
-void firebase_auth_firebase_auth_host_api_respond_error_sign_in_with_email_link(FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_auth_firebase_auth_host_api_respond_error_sign_in_with_email_link(
+    FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_auth_firebase_auth_host_api_respond_sign_in_with_provider:
  * @response_handle: a #FirebaseAuthFirebaseAuthHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseAuthHostApi.signInWithProvider. 
+ * Responds to FirebaseAuthHostApi.signInWithProvider.
  */
-void firebase_auth_firebase_auth_host_api_respond_sign_in_with_provider(FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, FirebaseAuthInternalUserCredential* return_value);
+void firebase_auth_firebase_auth_host_api_respond_sign_in_with_provider(
+    FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+    FirebaseAuthInternalUserCredential* return_value);
 
 /**
  * firebase_auth_firebase_auth_host_api_respond_error_sign_in_with_provider:
@@ -1999,17 +2395,20 @@ void firebase_auth_firebase_auth_host_api_respond_sign_in_with_provider(Firebase
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseAuthHostApi.signInWithProvider. 
+ * Responds with an error to FirebaseAuthHostApi.signInWithProvider.
  */
-void firebase_auth_firebase_auth_host_api_respond_error_sign_in_with_provider(FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_auth_firebase_auth_host_api_respond_error_sign_in_with_provider(
+    FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_auth_firebase_auth_host_api_respond_sign_out:
  * @response_handle: a #FirebaseAuthFirebaseAuthHostApiResponseHandle.
  *
- * Responds to FirebaseAuthHostApi.signOut. 
+ * Responds to FirebaseAuthHostApi.signOut.
  */
-void firebase_auth_firebase_auth_host_api_respond_sign_out(FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle);
+void firebase_auth_firebase_auth_host_api_respond_sign_out(
+    FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle);
 
 /**
  * firebase_auth_firebase_auth_host_api_respond_error_sign_out:
@@ -2018,18 +2417,22 @@ void firebase_auth_firebase_auth_host_api_respond_sign_out(FirebaseAuthFirebaseA
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseAuthHostApi.signOut. 
+ * Responds with an error to FirebaseAuthHostApi.signOut.
  */
-void firebase_auth_firebase_auth_host_api_respond_error_sign_out(FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_auth_firebase_auth_host_api_respond_error_sign_out(
+    FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_auth_firebase_auth_host_api_respond_fetch_sign_in_methods_for_email:
  * @response_handle: a #FirebaseAuthFirebaseAuthHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseAuthHostApi.fetchSignInMethodsForEmail. 
+ * Responds to FirebaseAuthHostApi.fetchSignInMethodsForEmail.
  */
-void firebase_auth_firebase_auth_host_api_respond_fetch_sign_in_methods_for_email(FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, FlValue* return_value);
+void firebase_auth_firebase_auth_host_api_respond_fetch_sign_in_methods_for_email(
+    FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+    FlValue* return_value);
 
 /**
  * firebase_auth_firebase_auth_host_api_respond_error_fetch_sign_in_methods_for_email:
@@ -2038,17 +2441,20 @@ void firebase_auth_firebase_auth_host_api_respond_fetch_sign_in_methods_for_emai
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseAuthHostApi.fetchSignInMethodsForEmail. 
+ * Responds with an error to FirebaseAuthHostApi.fetchSignInMethodsForEmail.
  */
-void firebase_auth_firebase_auth_host_api_respond_error_fetch_sign_in_methods_for_email(FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_auth_firebase_auth_host_api_respond_error_fetch_sign_in_methods_for_email(
+    FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_auth_firebase_auth_host_api_respond_send_password_reset_email:
  * @response_handle: a #FirebaseAuthFirebaseAuthHostApiResponseHandle.
  *
- * Responds to FirebaseAuthHostApi.sendPasswordResetEmail. 
+ * Responds to FirebaseAuthHostApi.sendPasswordResetEmail.
  */
-void firebase_auth_firebase_auth_host_api_respond_send_password_reset_email(FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle);
+void firebase_auth_firebase_auth_host_api_respond_send_password_reset_email(
+    FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle);
 
 /**
  * firebase_auth_firebase_auth_host_api_respond_error_send_password_reset_email:
@@ -2057,17 +2463,20 @@ void firebase_auth_firebase_auth_host_api_respond_send_password_reset_email(Fire
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseAuthHostApi.sendPasswordResetEmail. 
+ * Responds with an error to FirebaseAuthHostApi.sendPasswordResetEmail.
  */
-void firebase_auth_firebase_auth_host_api_respond_error_send_password_reset_email(FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_auth_firebase_auth_host_api_respond_error_send_password_reset_email(
+    FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_auth_firebase_auth_host_api_respond_send_sign_in_link_to_email:
  * @response_handle: a #FirebaseAuthFirebaseAuthHostApiResponseHandle.
  *
- * Responds to FirebaseAuthHostApi.sendSignInLinkToEmail. 
+ * Responds to FirebaseAuthHostApi.sendSignInLinkToEmail.
  */
-void firebase_auth_firebase_auth_host_api_respond_send_sign_in_link_to_email(FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle);
+void firebase_auth_firebase_auth_host_api_respond_send_sign_in_link_to_email(
+    FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle);
 
 /**
  * firebase_auth_firebase_auth_host_api_respond_error_send_sign_in_link_to_email:
@@ -2076,18 +2485,22 @@ void firebase_auth_firebase_auth_host_api_respond_send_sign_in_link_to_email(Fir
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseAuthHostApi.sendSignInLinkToEmail. 
+ * Responds with an error to FirebaseAuthHostApi.sendSignInLinkToEmail.
  */
-void firebase_auth_firebase_auth_host_api_respond_error_send_sign_in_link_to_email(FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_auth_firebase_auth_host_api_respond_error_send_sign_in_link_to_email(
+    FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_auth_firebase_auth_host_api_respond_set_language_code:
  * @response_handle: a #FirebaseAuthFirebaseAuthHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseAuthHostApi.setLanguageCode. 
+ * Responds to FirebaseAuthHostApi.setLanguageCode.
  */
-void firebase_auth_firebase_auth_host_api_respond_set_language_code(FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, const gchar* return_value);
+void firebase_auth_firebase_auth_host_api_respond_set_language_code(
+    FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+    const gchar* return_value);
 
 /**
  * firebase_auth_firebase_auth_host_api_respond_error_set_language_code:
@@ -2096,17 +2509,20 @@ void firebase_auth_firebase_auth_host_api_respond_set_language_code(FirebaseAuth
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseAuthHostApi.setLanguageCode. 
+ * Responds with an error to FirebaseAuthHostApi.setLanguageCode.
  */
-void firebase_auth_firebase_auth_host_api_respond_error_set_language_code(FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_auth_firebase_auth_host_api_respond_error_set_language_code(
+    FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_auth_firebase_auth_host_api_respond_set_settings:
  * @response_handle: a #FirebaseAuthFirebaseAuthHostApiResponseHandle.
  *
- * Responds to FirebaseAuthHostApi.setSettings. 
+ * Responds to FirebaseAuthHostApi.setSettings.
  */
-void firebase_auth_firebase_auth_host_api_respond_set_settings(FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle);
+void firebase_auth_firebase_auth_host_api_respond_set_settings(
+    FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle);
 
 /**
  * firebase_auth_firebase_auth_host_api_respond_error_set_settings:
@@ -2115,18 +2531,22 @@ void firebase_auth_firebase_auth_host_api_respond_set_settings(FirebaseAuthFireb
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseAuthHostApi.setSettings. 
+ * Responds with an error to FirebaseAuthHostApi.setSettings.
  */
-void firebase_auth_firebase_auth_host_api_respond_error_set_settings(FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_auth_firebase_auth_host_api_respond_error_set_settings(
+    FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_auth_firebase_auth_host_api_respond_verify_password_reset_code:
  * @response_handle: a #FirebaseAuthFirebaseAuthHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseAuthHostApi.verifyPasswordResetCode. 
+ * Responds to FirebaseAuthHostApi.verifyPasswordResetCode.
  */
-void firebase_auth_firebase_auth_host_api_respond_verify_password_reset_code(FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, const gchar* return_value);
+void firebase_auth_firebase_auth_host_api_respond_verify_password_reset_code(
+    FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+    const gchar* return_value);
 
 /**
  * firebase_auth_firebase_auth_host_api_respond_error_verify_password_reset_code:
@@ -2135,18 +2555,22 @@ void firebase_auth_firebase_auth_host_api_respond_verify_password_reset_code(Fir
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseAuthHostApi.verifyPasswordResetCode. 
+ * Responds with an error to FirebaseAuthHostApi.verifyPasswordResetCode.
  */
-void firebase_auth_firebase_auth_host_api_respond_error_verify_password_reset_code(FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_auth_firebase_auth_host_api_respond_error_verify_password_reset_code(
+    FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_auth_firebase_auth_host_api_respond_verify_phone_number:
  * @response_handle: a #FirebaseAuthFirebaseAuthHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseAuthHostApi.verifyPhoneNumber. 
+ * Responds to FirebaseAuthHostApi.verifyPhoneNumber.
  */
-void firebase_auth_firebase_auth_host_api_respond_verify_phone_number(FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, const gchar* return_value);
+void firebase_auth_firebase_auth_host_api_respond_verify_phone_number(
+    FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+    const gchar* return_value);
 
 /**
  * firebase_auth_firebase_auth_host_api_respond_error_verify_phone_number:
@@ -2155,17 +2579,20 @@ void firebase_auth_firebase_auth_host_api_respond_verify_phone_number(FirebaseAu
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseAuthHostApi.verifyPhoneNumber. 
+ * Responds with an error to FirebaseAuthHostApi.verifyPhoneNumber.
  */
-void firebase_auth_firebase_auth_host_api_respond_error_verify_phone_number(FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_auth_firebase_auth_host_api_respond_error_verify_phone_number(
+    FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_auth_firebase_auth_host_api_respond_revoke_token_with_authorization_code:
  * @response_handle: a #FirebaseAuthFirebaseAuthHostApiResponseHandle.
  *
- * Responds to FirebaseAuthHostApi.revokeTokenWithAuthorizationCode. 
+ * Responds to FirebaseAuthHostApi.revokeTokenWithAuthorizationCode.
  */
-void firebase_auth_firebase_auth_host_api_respond_revoke_token_with_authorization_code(FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle);
+void firebase_auth_firebase_auth_host_api_respond_revoke_token_with_authorization_code(
+    FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle);
 
 /**
  * firebase_auth_firebase_auth_host_api_respond_error_revoke_token_with_authorization_code:
@@ -2174,17 +2601,21 @@ void firebase_auth_firebase_auth_host_api_respond_revoke_token_with_authorizatio
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseAuthHostApi.revokeTokenWithAuthorizationCode. 
+ * Responds with an error to
+ * FirebaseAuthHostApi.revokeTokenWithAuthorizationCode.
  */
-void firebase_auth_firebase_auth_host_api_respond_error_revoke_token_with_authorization_code(FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_auth_firebase_auth_host_api_respond_error_revoke_token_with_authorization_code(
+    FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_auth_firebase_auth_host_api_respond_revoke_access_token:
  * @response_handle: a #FirebaseAuthFirebaseAuthHostApiResponseHandle.
  *
- * Responds to FirebaseAuthHostApi.revokeAccessToken. 
+ * Responds to FirebaseAuthHostApi.revokeAccessToken.
  */
-void firebase_auth_firebase_auth_host_api_respond_revoke_access_token(FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle);
+void firebase_auth_firebase_auth_host_api_respond_revoke_access_token(
+    FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle);
 
 /**
  * firebase_auth_firebase_auth_host_api_respond_error_revoke_access_token:
@@ -2193,17 +2624,20 @@ void firebase_auth_firebase_auth_host_api_respond_revoke_access_token(FirebaseAu
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseAuthHostApi.revokeAccessToken. 
+ * Responds with an error to FirebaseAuthHostApi.revokeAccessToken.
  */
-void firebase_auth_firebase_auth_host_api_respond_error_revoke_access_token(FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_auth_firebase_auth_host_api_respond_error_revoke_access_token(
+    FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_auth_firebase_auth_host_api_respond_initialize_recaptcha_config:
  * @response_handle: a #FirebaseAuthFirebaseAuthHostApiResponseHandle.
  *
- * Responds to FirebaseAuthHostApi.initializeRecaptchaConfig. 
+ * Responds to FirebaseAuthHostApi.initializeRecaptchaConfig.
  */
-void firebase_auth_firebase_auth_host_api_respond_initialize_recaptcha_config(FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle);
+void firebase_auth_firebase_auth_host_api_respond_initialize_recaptcha_config(
+    FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle);
 
 /**
  * firebase_auth_firebase_auth_host_api_respond_error_initialize_recaptcha_config:
@@ -2212,34 +2646,89 @@ void firebase_auth_firebase_auth_host_api_respond_initialize_recaptcha_config(Fi
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseAuthHostApi.initializeRecaptchaConfig. 
+ * Responds with an error to FirebaseAuthHostApi.initializeRecaptchaConfig.
  */
-void firebase_auth_firebase_auth_host_api_respond_error_initialize_recaptcha_config(FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_auth_firebase_auth_host_api_respond_error_initialize_recaptcha_config(
+    FirebaseAuthFirebaseAuthHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
-G_DECLARE_FINAL_TYPE(FirebaseAuthFirebaseAuthUserHostApi, firebase_auth_firebase_auth_user_host_api, FIREBASE_AUTH, FIREBASE_AUTH_USER_HOST_API, GObject)
+G_DECLARE_FINAL_TYPE(FirebaseAuthFirebaseAuthUserHostApi,
+                     firebase_auth_firebase_auth_user_host_api, FIREBASE_AUTH,
+                     FIREBASE_AUTH_USER_HOST_API, GObject)
 
-G_DECLARE_FINAL_TYPE(FirebaseAuthFirebaseAuthUserHostApiResponseHandle, firebase_auth_firebase_auth_user_host_api_response_handle, FIREBASE_AUTH, FIREBASE_AUTH_USER_HOST_API_RESPONSE_HANDLE, GObject)
+G_DECLARE_FINAL_TYPE(FirebaseAuthFirebaseAuthUserHostApiResponseHandle,
+                     firebase_auth_firebase_auth_user_host_api_response_handle,
+                     FIREBASE_AUTH, FIREBASE_AUTH_USER_HOST_API_RESPONSE_HANDLE,
+                     GObject)
 
 /**
  * FirebaseAuthFirebaseAuthUserHostApiVTable:
  *
- * Table of functions exposed by FirebaseAuthUserHostApi to be implemented by the API provider.
+ * Table of functions exposed by FirebaseAuthUserHostApi to be implemented by
+ * the API provider.
  */
 typedef struct {
-  void (*delete_)(FirebaseAuthAuthPigeonFirebaseApp* app, FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*get_id_token)(FirebaseAuthAuthPigeonFirebaseApp* app, gboolean force_refresh, FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*link_with_credential)(FirebaseAuthAuthPigeonFirebaseApp* app, FlValue* input, FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*link_with_provider)(FirebaseAuthAuthPigeonFirebaseApp* app, FirebaseAuthInternalSignInProvider* sign_in_provider, FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*reauthenticate_with_credential)(FirebaseAuthAuthPigeonFirebaseApp* app, FlValue* input, FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*reauthenticate_with_provider)(FirebaseAuthAuthPigeonFirebaseApp* app, FirebaseAuthInternalSignInProvider* sign_in_provider, FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*reload)(FirebaseAuthAuthPigeonFirebaseApp* app, FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*send_email_verification)(FirebaseAuthAuthPigeonFirebaseApp* app, FirebaseAuthInternalActionCodeSettings* action_code_settings, FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*unlink)(FirebaseAuthAuthPigeonFirebaseApp* app, const gchar* provider_id, FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*update_email)(FirebaseAuthAuthPigeonFirebaseApp* app, const gchar* new_email, FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*update_password)(FirebaseAuthAuthPigeonFirebaseApp* app, const gchar* new_password, FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*update_phone_number)(FirebaseAuthAuthPigeonFirebaseApp* app, FlValue* input, FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*update_profile)(FirebaseAuthAuthPigeonFirebaseApp* app, FirebaseAuthInternalUserProfile* profile, FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*verify_before_update_email)(FirebaseAuthAuthPigeonFirebaseApp* app, const gchar* new_email, FirebaseAuthInternalActionCodeSettings* action_code_settings, FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle, gpointer user_data);
+  void (*delete_)(
+      FirebaseAuthAuthPigeonFirebaseApp* app,
+      FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*get_id_token)(
+      FirebaseAuthAuthPigeonFirebaseApp* app, gboolean force_refresh,
+      FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*link_with_credential)(
+      FirebaseAuthAuthPigeonFirebaseApp* app, FlValue* input,
+      FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*link_with_provider)(
+      FirebaseAuthAuthPigeonFirebaseApp* app,
+      FirebaseAuthInternalSignInProvider* sign_in_provider,
+      FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*reauthenticate_with_credential)(
+      FirebaseAuthAuthPigeonFirebaseApp* app, FlValue* input,
+      FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*reauthenticate_with_provider)(
+      FirebaseAuthAuthPigeonFirebaseApp* app,
+      FirebaseAuthInternalSignInProvider* sign_in_provider,
+      FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*reload)(
+      FirebaseAuthAuthPigeonFirebaseApp* app,
+      FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*send_email_verification)(
+      FirebaseAuthAuthPigeonFirebaseApp* app,
+      FirebaseAuthInternalActionCodeSettings* action_code_settings,
+      FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*unlink)(
+      FirebaseAuthAuthPigeonFirebaseApp* app, const gchar* provider_id,
+      FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*update_email)(
+      FirebaseAuthAuthPigeonFirebaseApp* app, const gchar* new_email,
+      FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*update_password)(
+      FirebaseAuthAuthPigeonFirebaseApp* app, const gchar* new_password,
+      FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*update_phone_number)(
+      FirebaseAuthAuthPigeonFirebaseApp* app, FlValue* input,
+      FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*update_profile)(
+      FirebaseAuthAuthPigeonFirebaseApp* app,
+      FirebaseAuthInternalUserProfile* profile,
+      FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*verify_before_update_email)(
+      FirebaseAuthAuthPigeonFirebaseApp* app, const gchar* new_email,
+      FirebaseAuthInternalActionCodeSettings* action_code_settings,
+      FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle,
+      gpointer user_data);
 } FirebaseAuthFirebaseAuthUserHostApiVTable;
 
 /**
@@ -2249,11 +2738,15 @@ typedef struct {
  * @suffix: (allow-none): a suffix to add to the API or %NULL for none.
  * @vtable: implementations of the methods in this API.
  * @user_data: (closure): user data to pass to the functions in @vtable.
- * @user_data_free_func: (allow-none): a function which gets called to free @user_data, or %NULL.
+ * @user_data_free_func: (allow-none): a function which gets called to free
+ * @user_data, or %NULL.
  *
  * Connects the method handlers in the FirebaseAuthUserHostApi API.
  */
-void firebase_auth_firebase_auth_user_host_api_set_method_handlers(FlBinaryMessenger* messenger, const gchar* suffix, const FirebaseAuthFirebaseAuthUserHostApiVTable* vtable, gpointer user_data, GDestroyNotify user_data_free_func);
+void firebase_auth_firebase_auth_user_host_api_set_method_handlers(
+    FlBinaryMessenger* messenger, const gchar* suffix,
+    const FirebaseAuthFirebaseAuthUserHostApiVTable* vtable, gpointer user_data,
+    GDestroyNotify user_data_free_func);
 
 /**
  * firebase_auth_firebase_auth_user_host_api_clear_method_handlers:
@@ -2263,15 +2756,17 @@ void firebase_auth_firebase_auth_user_host_api_set_method_handlers(FlBinaryMesse
  *
  * Clears the method handlers in the FirebaseAuthUserHostApi API.
  */
-void firebase_auth_firebase_auth_user_host_api_clear_method_handlers(FlBinaryMessenger* messenger, const gchar* suffix);
+void firebase_auth_firebase_auth_user_host_api_clear_method_handlers(
+    FlBinaryMessenger* messenger, const gchar* suffix);
 
 /**
  * firebase_auth_firebase_auth_user_host_api_respond_delete:
  * @response_handle: a #FirebaseAuthFirebaseAuthUserHostApiResponseHandle.
  *
- * Responds to FirebaseAuthUserHostApi.delete. 
+ * Responds to FirebaseAuthUserHostApi.delete.
  */
-void firebase_auth_firebase_auth_user_host_api_respond_delete(FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle);
+void firebase_auth_firebase_auth_user_host_api_respond_delete(
+    FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle);
 
 /**
  * firebase_auth_firebase_auth_user_host_api_respond_error_delete:
@@ -2280,18 +2775,22 @@ void firebase_auth_firebase_auth_user_host_api_respond_delete(FirebaseAuthFireba
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseAuthUserHostApi.delete. 
+ * Responds with an error to FirebaseAuthUserHostApi.delete.
  */
-void firebase_auth_firebase_auth_user_host_api_respond_error_delete(FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_auth_firebase_auth_user_host_api_respond_error_delete(
+    FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_auth_firebase_auth_user_host_api_respond_get_id_token:
  * @response_handle: a #FirebaseAuthFirebaseAuthUserHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseAuthUserHostApi.getIdToken. 
+ * Responds to FirebaseAuthUserHostApi.getIdToken.
  */
-void firebase_auth_firebase_auth_user_host_api_respond_get_id_token(FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle, FirebaseAuthInternalIdTokenResult* return_value);
+void firebase_auth_firebase_auth_user_host_api_respond_get_id_token(
+    FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle,
+    FirebaseAuthInternalIdTokenResult* return_value);
 
 /**
  * firebase_auth_firebase_auth_user_host_api_respond_error_get_id_token:
@@ -2300,18 +2799,22 @@ void firebase_auth_firebase_auth_user_host_api_respond_get_id_token(FirebaseAuth
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseAuthUserHostApi.getIdToken. 
+ * Responds with an error to FirebaseAuthUserHostApi.getIdToken.
  */
-void firebase_auth_firebase_auth_user_host_api_respond_error_get_id_token(FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_auth_firebase_auth_user_host_api_respond_error_get_id_token(
+    FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_auth_firebase_auth_user_host_api_respond_link_with_credential:
  * @response_handle: a #FirebaseAuthFirebaseAuthUserHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseAuthUserHostApi.linkWithCredential. 
+ * Responds to FirebaseAuthUserHostApi.linkWithCredential.
  */
-void firebase_auth_firebase_auth_user_host_api_respond_link_with_credential(FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle, FirebaseAuthInternalUserCredential* return_value);
+void firebase_auth_firebase_auth_user_host_api_respond_link_with_credential(
+    FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle,
+    FirebaseAuthInternalUserCredential* return_value);
 
 /**
  * firebase_auth_firebase_auth_user_host_api_respond_error_link_with_credential:
@@ -2320,18 +2823,22 @@ void firebase_auth_firebase_auth_user_host_api_respond_link_with_credential(Fire
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseAuthUserHostApi.linkWithCredential. 
+ * Responds with an error to FirebaseAuthUserHostApi.linkWithCredential.
  */
-void firebase_auth_firebase_auth_user_host_api_respond_error_link_with_credential(FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_auth_firebase_auth_user_host_api_respond_error_link_with_credential(
+    FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_auth_firebase_auth_user_host_api_respond_link_with_provider:
  * @response_handle: a #FirebaseAuthFirebaseAuthUserHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseAuthUserHostApi.linkWithProvider. 
+ * Responds to FirebaseAuthUserHostApi.linkWithProvider.
  */
-void firebase_auth_firebase_auth_user_host_api_respond_link_with_provider(FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle, FirebaseAuthInternalUserCredential* return_value);
+void firebase_auth_firebase_auth_user_host_api_respond_link_with_provider(
+    FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle,
+    FirebaseAuthInternalUserCredential* return_value);
 
 /**
  * firebase_auth_firebase_auth_user_host_api_respond_error_link_with_provider:
@@ -2340,18 +2847,22 @@ void firebase_auth_firebase_auth_user_host_api_respond_link_with_provider(Fireba
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseAuthUserHostApi.linkWithProvider. 
+ * Responds with an error to FirebaseAuthUserHostApi.linkWithProvider.
  */
-void firebase_auth_firebase_auth_user_host_api_respond_error_link_with_provider(FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_auth_firebase_auth_user_host_api_respond_error_link_with_provider(
+    FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_auth_firebase_auth_user_host_api_respond_reauthenticate_with_credential:
  * @response_handle: a #FirebaseAuthFirebaseAuthUserHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseAuthUserHostApi.reauthenticateWithCredential. 
+ * Responds to FirebaseAuthUserHostApi.reauthenticateWithCredential.
  */
-void firebase_auth_firebase_auth_user_host_api_respond_reauthenticate_with_credential(FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle, FirebaseAuthInternalUserCredential* return_value);
+void firebase_auth_firebase_auth_user_host_api_respond_reauthenticate_with_credential(
+    FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle,
+    FirebaseAuthInternalUserCredential* return_value);
 
 /**
  * firebase_auth_firebase_auth_user_host_api_respond_error_reauthenticate_with_credential:
@@ -2360,18 +2871,23 @@ void firebase_auth_firebase_auth_user_host_api_respond_reauthenticate_with_crede
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseAuthUserHostApi.reauthenticateWithCredential. 
+ * Responds with an error to
+ * FirebaseAuthUserHostApi.reauthenticateWithCredential.
  */
-void firebase_auth_firebase_auth_user_host_api_respond_error_reauthenticate_with_credential(FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_auth_firebase_auth_user_host_api_respond_error_reauthenticate_with_credential(
+    FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_auth_firebase_auth_user_host_api_respond_reauthenticate_with_provider:
  * @response_handle: a #FirebaseAuthFirebaseAuthUserHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseAuthUserHostApi.reauthenticateWithProvider. 
+ * Responds to FirebaseAuthUserHostApi.reauthenticateWithProvider.
  */
-void firebase_auth_firebase_auth_user_host_api_respond_reauthenticate_with_provider(FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle, FirebaseAuthInternalUserCredential* return_value);
+void firebase_auth_firebase_auth_user_host_api_respond_reauthenticate_with_provider(
+    FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle,
+    FirebaseAuthInternalUserCredential* return_value);
 
 /**
  * firebase_auth_firebase_auth_user_host_api_respond_error_reauthenticate_with_provider:
@@ -2380,18 +2896,22 @@ void firebase_auth_firebase_auth_user_host_api_respond_reauthenticate_with_provi
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseAuthUserHostApi.reauthenticateWithProvider. 
+ * Responds with an error to FirebaseAuthUserHostApi.reauthenticateWithProvider.
  */
-void firebase_auth_firebase_auth_user_host_api_respond_error_reauthenticate_with_provider(FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_auth_firebase_auth_user_host_api_respond_error_reauthenticate_with_provider(
+    FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_auth_firebase_auth_user_host_api_respond_reload:
  * @response_handle: a #FirebaseAuthFirebaseAuthUserHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseAuthUserHostApi.reload. 
+ * Responds to FirebaseAuthUserHostApi.reload.
  */
-void firebase_auth_firebase_auth_user_host_api_respond_reload(FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle, FirebaseAuthInternalUserDetails* return_value);
+void firebase_auth_firebase_auth_user_host_api_respond_reload(
+    FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle,
+    FirebaseAuthInternalUserDetails* return_value);
 
 /**
  * firebase_auth_firebase_auth_user_host_api_respond_error_reload:
@@ -2400,17 +2920,20 @@ void firebase_auth_firebase_auth_user_host_api_respond_reload(FirebaseAuthFireba
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseAuthUserHostApi.reload. 
+ * Responds with an error to FirebaseAuthUserHostApi.reload.
  */
-void firebase_auth_firebase_auth_user_host_api_respond_error_reload(FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_auth_firebase_auth_user_host_api_respond_error_reload(
+    FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_auth_firebase_auth_user_host_api_respond_send_email_verification:
  * @response_handle: a #FirebaseAuthFirebaseAuthUserHostApiResponseHandle.
  *
- * Responds to FirebaseAuthUserHostApi.sendEmailVerification. 
+ * Responds to FirebaseAuthUserHostApi.sendEmailVerification.
  */
-void firebase_auth_firebase_auth_user_host_api_respond_send_email_verification(FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle);
+void firebase_auth_firebase_auth_user_host_api_respond_send_email_verification(
+    FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle);
 
 /**
  * firebase_auth_firebase_auth_user_host_api_respond_error_send_email_verification:
@@ -2419,18 +2942,22 @@ void firebase_auth_firebase_auth_user_host_api_respond_send_email_verification(F
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseAuthUserHostApi.sendEmailVerification. 
+ * Responds with an error to FirebaseAuthUserHostApi.sendEmailVerification.
  */
-void firebase_auth_firebase_auth_user_host_api_respond_error_send_email_verification(FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_auth_firebase_auth_user_host_api_respond_error_send_email_verification(
+    FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_auth_firebase_auth_user_host_api_respond_unlink:
  * @response_handle: a #FirebaseAuthFirebaseAuthUserHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseAuthUserHostApi.unlink. 
+ * Responds to FirebaseAuthUserHostApi.unlink.
  */
-void firebase_auth_firebase_auth_user_host_api_respond_unlink(FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle, FirebaseAuthInternalUserCredential* return_value);
+void firebase_auth_firebase_auth_user_host_api_respond_unlink(
+    FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle,
+    FirebaseAuthInternalUserCredential* return_value);
 
 /**
  * firebase_auth_firebase_auth_user_host_api_respond_error_unlink:
@@ -2439,18 +2966,22 @@ void firebase_auth_firebase_auth_user_host_api_respond_unlink(FirebaseAuthFireba
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseAuthUserHostApi.unlink. 
+ * Responds with an error to FirebaseAuthUserHostApi.unlink.
  */
-void firebase_auth_firebase_auth_user_host_api_respond_error_unlink(FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_auth_firebase_auth_user_host_api_respond_error_unlink(
+    FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_auth_firebase_auth_user_host_api_respond_update_email:
  * @response_handle: a #FirebaseAuthFirebaseAuthUserHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseAuthUserHostApi.updateEmail. 
+ * Responds to FirebaseAuthUserHostApi.updateEmail.
  */
-void firebase_auth_firebase_auth_user_host_api_respond_update_email(FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle, FirebaseAuthInternalUserDetails* return_value);
+void firebase_auth_firebase_auth_user_host_api_respond_update_email(
+    FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle,
+    FirebaseAuthInternalUserDetails* return_value);
 
 /**
  * firebase_auth_firebase_auth_user_host_api_respond_error_update_email:
@@ -2459,18 +2990,22 @@ void firebase_auth_firebase_auth_user_host_api_respond_update_email(FirebaseAuth
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseAuthUserHostApi.updateEmail. 
+ * Responds with an error to FirebaseAuthUserHostApi.updateEmail.
  */
-void firebase_auth_firebase_auth_user_host_api_respond_error_update_email(FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_auth_firebase_auth_user_host_api_respond_error_update_email(
+    FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_auth_firebase_auth_user_host_api_respond_update_password:
  * @response_handle: a #FirebaseAuthFirebaseAuthUserHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseAuthUserHostApi.updatePassword. 
+ * Responds to FirebaseAuthUserHostApi.updatePassword.
  */
-void firebase_auth_firebase_auth_user_host_api_respond_update_password(FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle, FirebaseAuthInternalUserDetails* return_value);
+void firebase_auth_firebase_auth_user_host_api_respond_update_password(
+    FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle,
+    FirebaseAuthInternalUserDetails* return_value);
 
 /**
  * firebase_auth_firebase_auth_user_host_api_respond_error_update_password:
@@ -2479,18 +3014,22 @@ void firebase_auth_firebase_auth_user_host_api_respond_update_password(FirebaseA
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseAuthUserHostApi.updatePassword. 
+ * Responds with an error to FirebaseAuthUserHostApi.updatePassword.
  */
-void firebase_auth_firebase_auth_user_host_api_respond_error_update_password(FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_auth_firebase_auth_user_host_api_respond_error_update_password(
+    FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_auth_firebase_auth_user_host_api_respond_update_phone_number:
  * @response_handle: a #FirebaseAuthFirebaseAuthUserHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseAuthUserHostApi.updatePhoneNumber. 
+ * Responds to FirebaseAuthUserHostApi.updatePhoneNumber.
  */
-void firebase_auth_firebase_auth_user_host_api_respond_update_phone_number(FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle, FirebaseAuthInternalUserDetails* return_value);
+void firebase_auth_firebase_auth_user_host_api_respond_update_phone_number(
+    FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle,
+    FirebaseAuthInternalUserDetails* return_value);
 
 /**
  * firebase_auth_firebase_auth_user_host_api_respond_error_update_phone_number:
@@ -2499,18 +3038,22 @@ void firebase_auth_firebase_auth_user_host_api_respond_update_phone_number(Fireb
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseAuthUserHostApi.updatePhoneNumber. 
+ * Responds with an error to FirebaseAuthUserHostApi.updatePhoneNumber.
  */
-void firebase_auth_firebase_auth_user_host_api_respond_error_update_phone_number(FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_auth_firebase_auth_user_host_api_respond_error_update_phone_number(
+    FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_auth_firebase_auth_user_host_api_respond_update_profile:
  * @response_handle: a #FirebaseAuthFirebaseAuthUserHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseAuthUserHostApi.updateProfile. 
+ * Responds to FirebaseAuthUserHostApi.updateProfile.
  */
-void firebase_auth_firebase_auth_user_host_api_respond_update_profile(FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle, FirebaseAuthInternalUserDetails* return_value);
+void firebase_auth_firebase_auth_user_host_api_respond_update_profile(
+    FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle,
+    FirebaseAuthInternalUserDetails* return_value);
 
 /**
  * firebase_auth_firebase_auth_user_host_api_respond_error_update_profile:
@@ -2519,17 +3062,20 @@ void firebase_auth_firebase_auth_user_host_api_respond_update_profile(FirebaseAu
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseAuthUserHostApi.updateProfile. 
+ * Responds with an error to FirebaseAuthUserHostApi.updateProfile.
  */
-void firebase_auth_firebase_auth_user_host_api_respond_error_update_profile(FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_auth_firebase_auth_user_host_api_respond_error_update_profile(
+    FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_auth_firebase_auth_user_host_api_respond_verify_before_update_email:
  * @response_handle: a #FirebaseAuthFirebaseAuthUserHostApiResponseHandle.
  *
- * Responds to FirebaseAuthUserHostApi.verifyBeforeUpdateEmail. 
+ * Responds to FirebaseAuthUserHostApi.verifyBeforeUpdateEmail.
  */
-void firebase_auth_firebase_auth_user_host_api_respond_verify_before_update_email(FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle);
+void firebase_auth_firebase_auth_user_host_api_respond_verify_before_update_email(
+    FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle);
 
 /**
  * firebase_auth_firebase_auth_user_host_api_respond_error_verify_before_update_email:
@@ -2538,25 +3084,51 @@ void firebase_auth_firebase_auth_user_host_api_respond_verify_before_update_emai
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseAuthUserHostApi.verifyBeforeUpdateEmail. 
+ * Responds with an error to FirebaseAuthUserHostApi.verifyBeforeUpdateEmail.
  */
-void firebase_auth_firebase_auth_user_host_api_respond_error_verify_before_update_email(FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_auth_firebase_auth_user_host_api_respond_error_verify_before_update_email(
+    FirebaseAuthFirebaseAuthUserHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
-G_DECLARE_FINAL_TYPE(FirebaseAuthMultiFactorUserHostApi, firebase_auth_multi_factor_user_host_api, FIREBASE_AUTH, MULTI_FACTOR_USER_HOST_API, GObject)
+G_DECLARE_FINAL_TYPE(FirebaseAuthMultiFactorUserHostApi,
+                     firebase_auth_multi_factor_user_host_api, FIREBASE_AUTH,
+                     MULTI_FACTOR_USER_HOST_API, GObject)
 
-G_DECLARE_FINAL_TYPE(FirebaseAuthMultiFactorUserHostApiResponseHandle, firebase_auth_multi_factor_user_host_api_response_handle, FIREBASE_AUTH, MULTI_FACTOR_USER_HOST_API_RESPONSE_HANDLE, GObject)
+G_DECLARE_FINAL_TYPE(FirebaseAuthMultiFactorUserHostApiResponseHandle,
+                     firebase_auth_multi_factor_user_host_api_response_handle,
+                     FIREBASE_AUTH, MULTI_FACTOR_USER_HOST_API_RESPONSE_HANDLE,
+                     GObject)
 
 /**
  * FirebaseAuthMultiFactorUserHostApiVTable:
  *
- * Table of functions exposed by MultiFactorUserHostApi to be implemented by the API provider.
+ * Table of functions exposed by MultiFactorUserHostApi to be implemented by the
+ * API provider.
  */
 typedef struct {
-  void (*enroll_phone)(FirebaseAuthAuthPigeonFirebaseApp* app, FirebaseAuthInternalPhoneMultiFactorAssertion* assertion, const gchar* display_name, FirebaseAuthMultiFactorUserHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*enroll_totp)(FirebaseAuthAuthPigeonFirebaseApp* app, const gchar* assertion_id, const gchar* display_name, FirebaseAuthMultiFactorUserHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*get_session)(FirebaseAuthAuthPigeonFirebaseApp* app, FirebaseAuthMultiFactorUserHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*unenroll)(FirebaseAuthAuthPigeonFirebaseApp* app, const gchar* factor_uid, FirebaseAuthMultiFactorUserHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*get_enrolled_factors)(FirebaseAuthAuthPigeonFirebaseApp* app, FirebaseAuthMultiFactorUserHostApiResponseHandle* response_handle, gpointer user_data);
+  void (*enroll_phone)(
+      FirebaseAuthAuthPigeonFirebaseApp* app,
+      FirebaseAuthInternalPhoneMultiFactorAssertion* assertion,
+      const gchar* display_name,
+      FirebaseAuthMultiFactorUserHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*enroll_totp)(
+      FirebaseAuthAuthPigeonFirebaseApp* app, const gchar* assertion_id,
+      const gchar* display_name,
+      FirebaseAuthMultiFactorUserHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*get_session)(
+      FirebaseAuthAuthPigeonFirebaseApp* app,
+      FirebaseAuthMultiFactorUserHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*unenroll)(
+      FirebaseAuthAuthPigeonFirebaseApp* app, const gchar* factor_uid,
+      FirebaseAuthMultiFactorUserHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*get_enrolled_factors)(
+      FirebaseAuthAuthPigeonFirebaseApp* app,
+      FirebaseAuthMultiFactorUserHostApiResponseHandle* response_handle,
+      gpointer user_data);
 } FirebaseAuthMultiFactorUserHostApiVTable;
 
 /**
@@ -2566,11 +3138,15 @@ typedef struct {
  * @suffix: (allow-none): a suffix to add to the API or %NULL for none.
  * @vtable: implementations of the methods in this API.
  * @user_data: (closure): user data to pass to the functions in @vtable.
- * @user_data_free_func: (allow-none): a function which gets called to free @user_data, or %NULL.
+ * @user_data_free_func: (allow-none): a function which gets called to free
+ * @user_data, or %NULL.
  *
  * Connects the method handlers in the MultiFactorUserHostApi API.
  */
-void firebase_auth_multi_factor_user_host_api_set_method_handlers(FlBinaryMessenger* messenger, const gchar* suffix, const FirebaseAuthMultiFactorUserHostApiVTable* vtable, gpointer user_data, GDestroyNotify user_data_free_func);
+void firebase_auth_multi_factor_user_host_api_set_method_handlers(
+    FlBinaryMessenger* messenger, const gchar* suffix,
+    const FirebaseAuthMultiFactorUserHostApiVTable* vtable, gpointer user_data,
+    GDestroyNotify user_data_free_func);
 
 /**
  * firebase_auth_multi_factor_user_host_api_clear_method_handlers:
@@ -2580,15 +3156,17 @@ void firebase_auth_multi_factor_user_host_api_set_method_handlers(FlBinaryMessen
  *
  * Clears the method handlers in the MultiFactorUserHostApi API.
  */
-void firebase_auth_multi_factor_user_host_api_clear_method_handlers(FlBinaryMessenger* messenger, const gchar* suffix);
+void firebase_auth_multi_factor_user_host_api_clear_method_handlers(
+    FlBinaryMessenger* messenger, const gchar* suffix);
 
 /**
  * firebase_auth_multi_factor_user_host_api_respond_enroll_phone:
  * @response_handle: a #FirebaseAuthMultiFactorUserHostApiResponseHandle.
  *
- * Responds to MultiFactorUserHostApi.enrollPhone. 
+ * Responds to MultiFactorUserHostApi.enrollPhone.
  */
-void firebase_auth_multi_factor_user_host_api_respond_enroll_phone(FirebaseAuthMultiFactorUserHostApiResponseHandle* response_handle);
+void firebase_auth_multi_factor_user_host_api_respond_enroll_phone(
+    FirebaseAuthMultiFactorUserHostApiResponseHandle* response_handle);
 
 /**
  * firebase_auth_multi_factor_user_host_api_respond_error_enroll_phone:
@@ -2597,17 +3175,20 @@ void firebase_auth_multi_factor_user_host_api_respond_enroll_phone(FirebaseAuthM
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to MultiFactorUserHostApi.enrollPhone. 
+ * Responds with an error to MultiFactorUserHostApi.enrollPhone.
  */
-void firebase_auth_multi_factor_user_host_api_respond_error_enroll_phone(FirebaseAuthMultiFactorUserHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_auth_multi_factor_user_host_api_respond_error_enroll_phone(
+    FirebaseAuthMultiFactorUserHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_auth_multi_factor_user_host_api_respond_enroll_totp:
  * @response_handle: a #FirebaseAuthMultiFactorUserHostApiResponseHandle.
  *
- * Responds to MultiFactorUserHostApi.enrollTotp. 
+ * Responds to MultiFactorUserHostApi.enrollTotp.
  */
-void firebase_auth_multi_factor_user_host_api_respond_enroll_totp(FirebaseAuthMultiFactorUserHostApiResponseHandle* response_handle);
+void firebase_auth_multi_factor_user_host_api_respond_enroll_totp(
+    FirebaseAuthMultiFactorUserHostApiResponseHandle* response_handle);
 
 /**
  * firebase_auth_multi_factor_user_host_api_respond_error_enroll_totp:
@@ -2616,18 +3197,22 @@ void firebase_auth_multi_factor_user_host_api_respond_enroll_totp(FirebaseAuthMu
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to MultiFactorUserHostApi.enrollTotp. 
+ * Responds with an error to MultiFactorUserHostApi.enrollTotp.
  */
-void firebase_auth_multi_factor_user_host_api_respond_error_enroll_totp(FirebaseAuthMultiFactorUserHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_auth_multi_factor_user_host_api_respond_error_enroll_totp(
+    FirebaseAuthMultiFactorUserHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_auth_multi_factor_user_host_api_respond_get_session:
  * @response_handle: a #FirebaseAuthMultiFactorUserHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to MultiFactorUserHostApi.getSession. 
+ * Responds to MultiFactorUserHostApi.getSession.
  */
-void firebase_auth_multi_factor_user_host_api_respond_get_session(FirebaseAuthMultiFactorUserHostApiResponseHandle* response_handle, FirebaseAuthInternalMultiFactorSession* return_value);
+void firebase_auth_multi_factor_user_host_api_respond_get_session(
+    FirebaseAuthMultiFactorUserHostApiResponseHandle* response_handle,
+    FirebaseAuthInternalMultiFactorSession* return_value);
 
 /**
  * firebase_auth_multi_factor_user_host_api_respond_error_get_session:
@@ -2636,17 +3221,20 @@ void firebase_auth_multi_factor_user_host_api_respond_get_session(FirebaseAuthMu
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to MultiFactorUserHostApi.getSession. 
+ * Responds with an error to MultiFactorUserHostApi.getSession.
  */
-void firebase_auth_multi_factor_user_host_api_respond_error_get_session(FirebaseAuthMultiFactorUserHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_auth_multi_factor_user_host_api_respond_error_get_session(
+    FirebaseAuthMultiFactorUserHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_auth_multi_factor_user_host_api_respond_unenroll:
  * @response_handle: a #FirebaseAuthMultiFactorUserHostApiResponseHandle.
  *
- * Responds to MultiFactorUserHostApi.unenroll. 
+ * Responds to MultiFactorUserHostApi.unenroll.
  */
-void firebase_auth_multi_factor_user_host_api_respond_unenroll(FirebaseAuthMultiFactorUserHostApiResponseHandle* response_handle);
+void firebase_auth_multi_factor_user_host_api_respond_unenroll(
+    FirebaseAuthMultiFactorUserHostApiResponseHandle* response_handle);
 
 /**
  * firebase_auth_multi_factor_user_host_api_respond_error_unenroll:
@@ -2655,18 +3243,22 @@ void firebase_auth_multi_factor_user_host_api_respond_unenroll(FirebaseAuthMulti
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to MultiFactorUserHostApi.unenroll. 
+ * Responds with an error to MultiFactorUserHostApi.unenroll.
  */
-void firebase_auth_multi_factor_user_host_api_respond_error_unenroll(FirebaseAuthMultiFactorUserHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_auth_multi_factor_user_host_api_respond_error_unenroll(
+    FirebaseAuthMultiFactorUserHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_auth_multi_factor_user_host_api_respond_get_enrolled_factors:
  * @response_handle: a #FirebaseAuthMultiFactorUserHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to MultiFactorUserHostApi.getEnrolledFactors. 
+ * Responds to MultiFactorUserHostApi.getEnrolledFactors.
  */
-void firebase_auth_multi_factor_user_host_api_respond_get_enrolled_factors(FirebaseAuthMultiFactorUserHostApiResponseHandle* response_handle, FlValue* return_value);
+void firebase_auth_multi_factor_user_host_api_respond_get_enrolled_factors(
+    FirebaseAuthMultiFactorUserHostApiResponseHandle* response_handle,
+    FlValue* return_value);
 
 /**
  * firebase_auth_multi_factor_user_host_api_respond_error_get_enrolled_factors:
@@ -2675,21 +3267,34 @@ void firebase_auth_multi_factor_user_host_api_respond_get_enrolled_factors(Fireb
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to MultiFactorUserHostApi.getEnrolledFactors. 
+ * Responds with an error to MultiFactorUserHostApi.getEnrolledFactors.
  */
-void firebase_auth_multi_factor_user_host_api_respond_error_get_enrolled_factors(FirebaseAuthMultiFactorUserHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_auth_multi_factor_user_host_api_respond_error_get_enrolled_factors(
+    FirebaseAuthMultiFactorUserHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
-G_DECLARE_FINAL_TYPE(FirebaseAuthMultiFactoResolverHostApi, firebase_auth_multi_facto_resolver_host_api, FIREBASE_AUTH, MULTI_FACTO_RESOLVER_HOST_API, GObject)
+G_DECLARE_FINAL_TYPE(FirebaseAuthMultiFactoResolverHostApi,
+                     firebase_auth_multi_facto_resolver_host_api, FIREBASE_AUTH,
+                     MULTI_FACTO_RESOLVER_HOST_API, GObject)
 
-G_DECLARE_FINAL_TYPE(FirebaseAuthMultiFactoResolverHostApiResponseHandle, firebase_auth_multi_facto_resolver_host_api_response_handle, FIREBASE_AUTH, MULTI_FACTO_RESOLVER_HOST_API_RESPONSE_HANDLE, GObject)
+G_DECLARE_FINAL_TYPE(
+    FirebaseAuthMultiFactoResolverHostApiResponseHandle,
+    firebase_auth_multi_facto_resolver_host_api_response_handle, FIREBASE_AUTH,
+    MULTI_FACTO_RESOLVER_HOST_API_RESPONSE_HANDLE, GObject)
 
 /**
  * FirebaseAuthMultiFactoResolverHostApiVTable:
  *
- * Table of functions exposed by MultiFactoResolverHostApi to be implemented by the API provider.
+ * Table of functions exposed by MultiFactoResolverHostApi to be implemented by
+ * the API provider.
  */
 typedef struct {
-  void (*resolve_sign_in)(const gchar* resolver_id, FirebaseAuthInternalPhoneMultiFactorAssertion* assertion, const gchar* totp_assertion_id, FirebaseAuthMultiFactoResolverHostApiResponseHandle* response_handle, gpointer user_data);
+  void (*resolve_sign_in)(
+      const gchar* resolver_id,
+      FirebaseAuthInternalPhoneMultiFactorAssertion* assertion,
+      const gchar* totp_assertion_id,
+      FirebaseAuthMultiFactoResolverHostApiResponseHandle* response_handle,
+      gpointer user_data);
 } FirebaseAuthMultiFactoResolverHostApiVTable;
 
 /**
@@ -2699,11 +3304,15 @@ typedef struct {
  * @suffix: (allow-none): a suffix to add to the API or %NULL for none.
  * @vtable: implementations of the methods in this API.
  * @user_data: (closure): user data to pass to the functions in @vtable.
- * @user_data_free_func: (allow-none): a function which gets called to free @user_data, or %NULL.
+ * @user_data_free_func: (allow-none): a function which gets called to free
+ * @user_data, or %NULL.
  *
  * Connects the method handlers in the MultiFactoResolverHostApi API.
  */
-void firebase_auth_multi_facto_resolver_host_api_set_method_handlers(FlBinaryMessenger* messenger, const gchar* suffix, const FirebaseAuthMultiFactoResolverHostApiVTable* vtable, gpointer user_data, GDestroyNotify user_data_free_func);
+void firebase_auth_multi_facto_resolver_host_api_set_method_handlers(
+    FlBinaryMessenger* messenger, const gchar* suffix,
+    const FirebaseAuthMultiFactoResolverHostApiVTable* vtable,
+    gpointer user_data, GDestroyNotify user_data_free_func);
 
 /**
  * firebase_auth_multi_facto_resolver_host_api_clear_method_handlers:
@@ -2713,16 +3322,19 @@ void firebase_auth_multi_facto_resolver_host_api_set_method_handlers(FlBinaryMes
  *
  * Clears the method handlers in the MultiFactoResolverHostApi API.
  */
-void firebase_auth_multi_facto_resolver_host_api_clear_method_handlers(FlBinaryMessenger* messenger, const gchar* suffix);
+void firebase_auth_multi_facto_resolver_host_api_clear_method_handlers(
+    FlBinaryMessenger* messenger, const gchar* suffix);
 
 /**
  * firebase_auth_multi_facto_resolver_host_api_respond_resolve_sign_in:
  * @response_handle: a #FirebaseAuthMultiFactoResolverHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to MultiFactoResolverHostApi.resolveSignIn. 
+ * Responds to MultiFactoResolverHostApi.resolveSignIn.
  */
-void firebase_auth_multi_facto_resolver_host_api_respond_resolve_sign_in(FirebaseAuthMultiFactoResolverHostApiResponseHandle* response_handle, FirebaseAuthInternalUserCredential* return_value);
+void firebase_auth_multi_facto_resolver_host_api_respond_resolve_sign_in(
+    FirebaseAuthMultiFactoResolverHostApiResponseHandle* response_handle,
+    FirebaseAuthInternalUserCredential* return_value);
 
 /**
  * firebase_auth_multi_facto_resolver_host_api_respond_error_resolve_sign_in:
@@ -2731,23 +3343,40 @@ void firebase_auth_multi_facto_resolver_host_api_respond_resolve_sign_in(Firebas
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to MultiFactoResolverHostApi.resolveSignIn. 
+ * Responds with an error to MultiFactoResolverHostApi.resolveSignIn.
  */
-void firebase_auth_multi_facto_resolver_host_api_respond_error_resolve_sign_in(FirebaseAuthMultiFactoResolverHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_auth_multi_facto_resolver_host_api_respond_error_resolve_sign_in(
+    FirebaseAuthMultiFactoResolverHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
-G_DECLARE_FINAL_TYPE(FirebaseAuthMultiFactorTotpHostApi, firebase_auth_multi_factor_totp_host_api, FIREBASE_AUTH, MULTI_FACTOR_TOTP_HOST_API, GObject)
+G_DECLARE_FINAL_TYPE(FirebaseAuthMultiFactorTotpHostApi,
+                     firebase_auth_multi_factor_totp_host_api, FIREBASE_AUTH,
+                     MULTI_FACTOR_TOTP_HOST_API, GObject)
 
-G_DECLARE_FINAL_TYPE(FirebaseAuthMultiFactorTotpHostApiResponseHandle, firebase_auth_multi_factor_totp_host_api_response_handle, FIREBASE_AUTH, MULTI_FACTOR_TOTP_HOST_API_RESPONSE_HANDLE, GObject)
+G_DECLARE_FINAL_TYPE(FirebaseAuthMultiFactorTotpHostApiResponseHandle,
+                     firebase_auth_multi_factor_totp_host_api_response_handle,
+                     FIREBASE_AUTH, MULTI_FACTOR_TOTP_HOST_API_RESPONSE_HANDLE,
+                     GObject)
 
 /**
  * FirebaseAuthMultiFactorTotpHostApiVTable:
  *
- * Table of functions exposed by MultiFactorTotpHostApi to be implemented by the API provider.
+ * Table of functions exposed by MultiFactorTotpHostApi to be implemented by the
+ * API provider.
  */
 typedef struct {
-  void (*generate_secret)(const gchar* session_id, FirebaseAuthMultiFactorTotpHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*get_assertion_for_enrollment)(const gchar* secret_key, const gchar* one_time_password, FirebaseAuthMultiFactorTotpHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*get_assertion_for_sign_in)(const gchar* enrollment_id, const gchar* one_time_password, FirebaseAuthMultiFactorTotpHostApiResponseHandle* response_handle, gpointer user_data);
+  void (*generate_secret)(
+      const gchar* session_id,
+      FirebaseAuthMultiFactorTotpHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*get_assertion_for_enrollment)(
+      const gchar* secret_key, const gchar* one_time_password,
+      FirebaseAuthMultiFactorTotpHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*get_assertion_for_sign_in)(
+      const gchar* enrollment_id, const gchar* one_time_password,
+      FirebaseAuthMultiFactorTotpHostApiResponseHandle* response_handle,
+      gpointer user_data);
 } FirebaseAuthMultiFactorTotpHostApiVTable;
 
 /**
@@ -2757,11 +3386,15 @@ typedef struct {
  * @suffix: (allow-none): a suffix to add to the API or %NULL for none.
  * @vtable: implementations of the methods in this API.
  * @user_data: (closure): user data to pass to the functions in @vtable.
- * @user_data_free_func: (allow-none): a function which gets called to free @user_data, or %NULL.
+ * @user_data_free_func: (allow-none): a function which gets called to free
+ * @user_data, or %NULL.
  *
  * Connects the method handlers in the MultiFactorTotpHostApi API.
  */
-void firebase_auth_multi_factor_totp_host_api_set_method_handlers(FlBinaryMessenger* messenger, const gchar* suffix, const FirebaseAuthMultiFactorTotpHostApiVTable* vtable, gpointer user_data, GDestroyNotify user_data_free_func);
+void firebase_auth_multi_factor_totp_host_api_set_method_handlers(
+    FlBinaryMessenger* messenger, const gchar* suffix,
+    const FirebaseAuthMultiFactorTotpHostApiVTable* vtable, gpointer user_data,
+    GDestroyNotify user_data_free_func);
 
 /**
  * firebase_auth_multi_factor_totp_host_api_clear_method_handlers:
@@ -2771,16 +3404,19 @@ void firebase_auth_multi_factor_totp_host_api_set_method_handlers(FlBinaryMessen
  *
  * Clears the method handlers in the MultiFactorTotpHostApi API.
  */
-void firebase_auth_multi_factor_totp_host_api_clear_method_handlers(FlBinaryMessenger* messenger, const gchar* suffix);
+void firebase_auth_multi_factor_totp_host_api_clear_method_handlers(
+    FlBinaryMessenger* messenger, const gchar* suffix);
 
 /**
  * firebase_auth_multi_factor_totp_host_api_respond_generate_secret:
  * @response_handle: a #FirebaseAuthMultiFactorTotpHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to MultiFactorTotpHostApi.generateSecret. 
+ * Responds to MultiFactorTotpHostApi.generateSecret.
  */
-void firebase_auth_multi_factor_totp_host_api_respond_generate_secret(FirebaseAuthMultiFactorTotpHostApiResponseHandle* response_handle, FirebaseAuthInternalTotpSecret* return_value);
+void firebase_auth_multi_factor_totp_host_api_respond_generate_secret(
+    FirebaseAuthMultiFactorTotpHostApiResponseHandle* response_handle,
+    FirebaseAuthInternalTotpSecret* return_value);
 
 /**
  * firebase_auth_multi_factor_totp_host_api_respond_error_generate_secret:
@@ -2789,18 +3425,22 @@ void firebase_auth_multi_factor_totp_host_api_respond_generate_secret(FirebaseAu
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to MultiFactorTotpHostApi.generateSecret. 
+ * Responds with an error to MultiFactorTotpHostApi.generateSecret.
  */
-void firebase_auth_multi_factor_totp_host_api_respond_error_generate_secret(FirebaseAuthMultiFactorTotpHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_auth_multi_factor_totp_host_api_respond_error_generate_secret(
+    FirebaseAuthMultiFactorTotpHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_auth_multi_factor_totp_host_api_respond_get_assertion_for_enrollment:
  * @response_handle: a #FirebaseAuthMultiFactorTotpHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to MultiFactorTotpHostApi.getAssertionForEnrollment. 
+ * Responds to MultiFactorTotpHostApi.getAssertionForEnrollment.
  */
-void firebase_auth_multi_factor_totp_host_api_respond_get_assertion_for_enrollment(FirebaseAuthMultiFactorTotpHostApiResponseHandle* response_handle, const gchar* return_value);
+void firebase_auth_multi_factor_totp_host_api_respond_get_assertion_for_enrollment(
+    FirebaseAuthMultiFactorTotpHostApiResponseHandle* response_handle,
+    const gchar* return_value);
 
 /**
  * firebase_auth_multi_factor_totp_host_api_respond_error_get_assertion_for_enrollment:
@@ -2809,18 +3449,22 @@ void firebase_auth_multi_factor_totp_host_api_respond_get_assertion_for_enrollme
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to MultiFactorTotpHostApi.getAssertionForEnrollment. 
+ * Responds with an error to MultiFactorTotpHostApi.getAssertionForEnrollment.
  */
-void firebase_auth_multi_factor_totp_host_api_respond_error_get_assertion_for_enrollment(FirebaseAuthMultiFactorTotpHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_auth_multi_factor_totp_host_api_respond_error_get_assertion_for_enrollment(
+    FirebaseAuthMultiFactorTotpHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_auth_multi_factor_totp_host_api_respond_get_assertion_for_sign_in:
  * @response_handle: a #FirebaseAuthMultiFactorTotpHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to MultiFactorTotpHostApi.getAssertionForSignIn. 
+ * Responds to MultiFactorTotpHostApi.getAssertionForSignIn.
  */
-void firebase_auth_multi_factor_totp_host_api_respond_get_assertion_for_sign_in(FirebaseAuthMultiFactorTotpHostApiResponseHandle* response_handle, const gchar* return_value);
+void firebase_auth_multi_factor_totp_host_api_respond_get_assertion_for_sign_in(
+    FirebaseAuthMultiFactorTotpHostApiResponseHandle* response_handle,
+    const gchar* return_value);
 
 /**
  * firebase_auth_multi_factor_totp_host_api_respond_error_get_assertion_for_sign_in:
@@ -2829,22 +3473,36 @@ void firebase_auth_multi_factor_totp_host_api_respond_get_assertion_for_sign_in(
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to MultiFactorTotpHostApi.getAssertionForSignIn. 
+ * Responds with an error to MultiFactorTotpHostApi.getAssertionForSignIn.
  */
-void firebase_auth_multi_factor_totp_host_api_respond_error_get_assertion_for_sign_in(FirebaseAuthMultiFactorTotpHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_auth_multi_factor_totp_host_api_respond_error_get_assertion_for_sign_in(
+    FirebaseAuthMultiFactorTotpHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
-G_DECLARE_FINAL_TYPE(FirebaseAuthMultiFactorTotpSecretHostApi, firebase_auth_multi_factor_totp_secret_host_api, FIREBASE_AUTH, MULTI_FACTOR_TOTP_SECRET_HOST_API, GObject)
+G_DECLARE_FINAL_TYPE(FirebaseAuthMultiFactorTotpSecretHostApi,
+                     firebase_auth_multi_factor_totp_secret_host_api,
+                     FIREBASE_AUTH, MULTI_FACTOR_TOTP_SECRET_HOST_API, GObject)
 
-G_DECLARE_FINAL_TYPE(FirebaseAuthMultiFactorTotpSecretHostApiResponseHandle, firebase_auth_multi_factor_totp_secret_host_api_response_handle, FIREBASE_AUTH, MULTI_FACTOR_TOTP_SECRET_HOST_API_RESPONSE_HANDLE, GObject)
+G_DECLARE_FINAL_TYPE(
+    FirebaseAuthMultiFactorTotpSecretHostApiResponseHandle,
+    firebase_auth_multi_factor_totp_secret_host_api_response_handle,
+    FIREBASE_AUTH, MULTI_FACTOR_TOTP_SECRET_HOST_API_RESPONSE_HANDLE, GObject)
 
 /**
  * FirebaseAuthMultiFactorTotpSecretHostApiVTable:
  *
- * Table of functions exposed by MultiFactorTotpSecretHostApi to be implemented by the API provider.
+ * Table of functions exposed by MultiFactorTotpSecretHostApi to be implemented
+ * by the API provider.
  */
 typedef struct {
-  void (*generate_qr_code_url)(const gchar* secret_key, const gchar* account_name, const gchar* issuer, FirebaseAuthMultiFactorTotpSecretHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*open_in_otp_app)(const gchar* secret_key, const gchar* qr_code_url, FirebaseAuthMultiFactorTotpSecretHostApiResponseHandle* response_handle, gpointer user_data);
+  void (*generate_qr_code_url)(
+      const gchar* secret_key, const gchar* account_name, const gchar* issuer,
+      FirebaseAuthMultiFactorTotpSecretHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*open_in_otp_app)(
+      const gchar* secret_key, const gchar* qr_code_url,
+      FirebaseAuthMultiFactorTotpSecretHostApiResponseHandle* response_handle,
+      gpointer user_data);
 } FirebaseAuthMultiFactorTotpSecretHostApiVTable;
 
 /**
@@ -2854,11 +3512,15 @@ typedef struct {
  * @suffix: (allow-none): a suffix to add to the API or %NULL for none.
  * @vtable: implementations of the methods in this API.
  * @user_data: (closure): user data to pass to the functions in @vtable.
- * @user_data_free_func: (allow-none): a function which gets called to free @user_data, or %NULL.
+ * @user_data_free_func: (allow-none): a function which gets called to free
+ * @user_data, or %NULL.
  *
  * Connects the method handlers in the MultiFactorTotpSecretHostApi API.
  */
-void firebase_auth_multi_factor_totp_secret_host_api_set_method_handlers(FlBinaryMessenger* messenger, const gchar* suffix, const FirebaseAuthMultiFactorTotpSecretHostApiVTable* vtable, gpointer user_data, GDestroyNotify user_data_free_func);
+void firebase_auth_multi_factor_totp_secret_host_api_set_method_handlers(
+    FlBinaryMessenger* messenger, const gchar* suffix,
+    const FirebaseAuthMultiFactorTotpSecretHostApiVTable* vtable,
+    gpointer user_data, GDestroyNotify user_data_free_func);
 
 /**
  * firebase_auth_multi_factor_totp_secret_host_api_clear_method_handlers:
@@ -2868,16 +3530,19 @@ void firebase_auth_multi_factor_totp_secret_host_api_set_method_handlers(FlBinar
  *
  * Clears the method handlers in the MultiFactorTotpSecretHostApi API.
  */
-void firebase_auth_multi_factor_totp_secret_host_api_clear_method_handlers(FlBinaryMessenger* messenger, const gchar* suffix);
+void firebase_auth_multi_factor_totp_secret_host_api_clear_method_handlers(
+    FlBinaryMessenger* messenger, const gchar* suffix);
 
 /**
  * firebase_auth_multi_factor_totp_secret_host_api_respond_generate_qr_code_url:
  * @response_handle: a #FirebaseAuthMultiFactorTotpSecretHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to MultiFactorTotpSecretHostApi.generateQrCodeUrl. 
+ * Responds to MultiFactorTotpSecretHostApi.generateQrCodeUrl.
  */
-void firebase_auth_multi_factor_totp_secret_host_api_respond_generate_qr_code_url(FirebaseAuthMultiFactorTotpSecretHostApiResponseHandle* response_handle, const gchar* return_value);
+void firebase_auth_multi_factor_totp_secret_host_api_respond_generate_qr_code_url(
+    FirebaseAuthMultiFactorTotpSecretHostApiResponseHandle* response_handle,
+    const gchar* return_value);
 
 /**
  * firebase_auth_multi_factor_totp_secret_host_api_respond_error_generate_qr_code_url:
@@ -2886,17 +3551,20 @@ void firebase_auth_multi_factor_totp_secret_host_api_respond_generate_qr_code_ur
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to MultiFactorTotpSecretHostApi.generateQrCodeUrl. 
+ * Responds with an error to MultiFactorTotpSecretHostApi.generateQrCodeUrl.
  */
-void firebase_auth_multi_factor_totp_secret_host_api_respond_error_generate_qr_code_url(FirebaseAuthMultiFactorTotpSecretHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_auth_multi_factor_totp_secret_host_api_respond_error_generate_qr_code_url(
+    FirebaseAuthMultiFactorTotpSecretHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_auth_multi_factor_totp_secret_host_api_respond_open_in_otp_app:
  * @response_handle: a #FirebaseAuthMultiFactorTotpSecretHostApiResponseHandle.
  *
- * Responds to MultiFactorTotpSecretHostApi.openInOtpApp. 
+ * Responds to MultiFactorTotpSecretHostApi.openInOtpApp.
  */
-void firebase_auth_multi_factor_totp_secret_host_api_respond_open_in_otp_app(FirebaseAuthMultiFactorTotpSecretHostApiResponseHandle* response_handle);
+void firebase_auth_multi_factor_totp_secret_host_api_respond_open_in_otp_app(
+    FirebaseAuthMultiFactorTotpSecretHostApiResponseHandle* response_handle);
 
 /**
  * firebase_auth_multi_factor_totp_secret_host_api_respond_error_open_in_otp_app:
@@ -2905,13 +3573,20 @@ void firebase_auth_multi_factor_totp_secret_host_api_respond_open_in_otp_app(Fir
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to MultiFactorTotpSecretHostApi.openInOtpApp. 
+ * Responds with an error to MultiFactorTotpSecretHostApi.openInOtpApp.
  */
-void firebase_auth_multi_factor_totp_secret_host_api_respond_error_open_in_otp_app(FirebaseAuthMultiFactorTotpSecretHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_auth_multi_factor_totp_secret_host_api_respond_error_open_in_otp_app(
+    FirebaseAuthMultiFactorTotpSecretHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
-G_DECLARE_FINAL_TYPE(FirebaseAuthGenerateInterfaces, firebase_auth_generate_interfaces, FIREBASE_AUTH, GENERATE_INTERFACES, GObject)
+G_DECLARE_FINAL_TYPE(FirebaseAuthGenerateInterfaces,
+                     firebase_auth_generate_interfaces, FIREBASE_AUTH,
+                     GENERATE_INTERFACES, GObject)
 
-G_DECLARE_FINAL_TYPE(FirebaseAuthGenerateInterfacesPigeonInterfaceResponse, firebase_auth_generate_interfaces_pigeon_interface_response, FIREBASE_AUTH, GENERATE_INTERFACES_PIGEON_INTERFACE_RESPONSE, GObject)
+G_DECLARE_FINAL_TYPE(
+    FirebaseAuthGenerateInterfacesPigeonInterfaceResponse,
+    firebase_auth_generate_interfaces_pigeon_interface_response, FIREBASE_AUTH,
+    GENERATE_INTERFACES_PIGEON_INTERFACE_RESPONSE, GObject)
 
 /**
  * firebase_auth_generate_interfaces_pigeon_interface_response_new:
@@ -2920,7 +3595,8 @@ G_DECLARE_FINAL_TYPE(FirebaseAuthGenerateInterfacesPigeonInterfaceResponse, fire
  *
  * Returns: a new #FirebaseAuthGenerateInterfacesPigeonInterfaceResponse
  */
-FirebaseAuthGenerateInterfacesPigeonInterfaceResponse* firebase_auth_generate_interfaces_pigeon_interface_response_new();
+FirebaseAuthGenerateInterfacesPigeonInterfaceResponse*
+firebase_auth_generate_interfaces_pigeon_interface_response_new();
 
 /**
  * firebase_auth_generate_interfaces_pigeon_interface_response_new_error:
@@ -2932,15 +3608,19 @@ FirebaseAuthGenerateInterfacesPigeonInterfaceResponse* firebase_auth_generate_in
  *
  * Returns: a new #FirebaseAuthGenerateInterfacesPigeonInterfaceResponse
  */
-FirebaseAuthGenerateInterfacesPigeonInterfaceResponse* firebase_auth_generate_interfaces_pigeon_interface_response_new_error(const gchar* code, const gchar* message, FlValue* details);
+FirebaseAuthGenerateInterfacesPigeonInterfaceResponse*
+firebase_auth_generate_interfaces_pigeon_interface_response_new_error(
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * FirebaseAuthGenerateInterfacesVTable:
  *
- * Table of functions exposed by GenerateInterfaces to be implemented by the API provider.
+ * Table of functions exposed by GenerateInterfaces to be implemented by the API
+ * provider.
  */
 typedef struct {
-  FirebaseAuthGenerateInterfacesPigeonInterfaceResponse* (*pigeon_interface)(FirebaseAuthInternalMultiFactorInfo* info, gpointer user_data);
+  FirebaseAuthGenerateInterfacesPigeonInterfaceResponse* (*pigeon_interface)(
+      FirebaseAuthInternalMultiFactorInfo* info, gpointer user_data);
 } FirebaseAuthGenerateInterfacesVTable;
 
 /**
@@ -2950,11 +3630,15 @@ typedef struct {
  * @suffix: (allow-none): a suffix to add to the API or %NULL for none.
  * @vtable: implementations of the methods in this API.
  * @user_data: (closure): user data to pass to the functions in @vtable.
- * @user_data_free_func: (allow-none): a function which gets called to free @user_data, or %NULL.
+ * @user_data_free_func: (allow-none): a function which gets called to free
+ * @user_data, or %NULL.
  *
  * Connects the method handlers in the GenerateInterfaces API.
  */
-void firebase_auth_generate_interfaces_set_method_handlers(FlBinaryMessenger* messenger, const gchar* suffix, const FirebaseAuthGenerateInterfacesVTable* vtable, gpointer user_data, GDestroyNotify user_data_free_func);
+void firebase_auth_generate_interfaces_set_method_handlers(
+    FlBinaryMessenger* messenger, const gchar* suffix,
+    const FirebaseAuthGenerateInterfacesVTable* vtable, gpointer user_data,
+    GDestroyNotify user_data_free_func);
 
 /**
  * firebase_auth_generate_interfaces_clear_method_handlers:
@@ -2964,7 +3648,8 @@ void firebase_auth_generate_interfaces_set_method_handlers(FlBinaryMessenger* me
  *
  * Clears the method handlers in the GenerateInterfaces API.
  */
-void firebase_auth_generate_interfaces_clear_method_handlers(FlBinaryMessenger* messenger, const gchar* suffix);
+void firebase_auth_generate_interfaces_clear_method_handlers(
+    FlBinaryMessenger* messenger, const gchar* suffix);
 
 G_END_DECLS
 

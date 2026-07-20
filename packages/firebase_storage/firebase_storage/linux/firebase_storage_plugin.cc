@@ -423,9 +423,8 @@ static std::string RegisterEventChannel(
   std::string channel_name = prefix + "/" + uuid;
 
   g_autoptr(FlStandardMethodCodec) codec = fl_standard_method_codec_new();
-  FlEventChannel* channel = fl_event_channel_new(messenger_,
-                                                 channel_name.c_str(),
-                                                 FL_METHOD_CODEC(codec));
+  FlEventChannel* channel = fl_event_channel_new(
+      messenger_, channel_name.c_str(), FL_METHOD_CODEC(codec));
   fl_event_channel_set_stream_handlers(
       channel, TaskStreamHandlerListenCallback, TaskStreamHandlerCancelCallback,
       handler.release(), TaskStreamHandlerDestroyNotify);
@@ -436,10 +435,10 @@ static std::string RegisterEventChannel(
 
 class PutDataStreamHandler : public TaskStreamHandler {
  public:
-  PutDataStreamHandler(Storage* storage, std::string reference_path,
-                       const void* data, size_t buffer_size,
-                       Controller* controller,
-                       FirebaseStorageInternalSettableMetadata* pigeon_meta_data)
+  PutDataStreamHandler(
+      Storage* storage, std::string reference_path, const void* data,
+      size_t buffer_size, Controller* controller,
+      FirebaseStorageInternalSettableMetadata* pigeon_meta_data)
       : storage_(storage),
         reference_path_(std::move(reference_path)),
         controller_(controller) {
@@ -472,22 +471,22 @@ class PutDataStreamHandler : public TaskStreamHandler {
 
     g_usleep(1000);  // timing for c++ sdk grabbing a mutex
 
-    future_result.OnCompletion(
-        [this, channel](const Future<Metadata>& data_result) {
-          if (data_result.error() == firebase::storage::kErrorNone) {
-            SendEventOnMainThread(
-                channel,
-                CreateTaskEvent(
-                    FIREBASE_STORAGE_PLATFORM_INTERFACE_INTERNAL_STORAGE_TASK_STATE_SUCCESS,
-                    storage_->app()->name(), data_result.result()->path(),
-                    data_result.result()->size_bytes(),
-                    data_result.result()->size_bytes(),
-                    ConvertMedadataToPigeon(data_result.result())));
-          } else {
-            SendEventOnMainThread(
-                channel, ErrorStreamEvent(data_result, storage_->app()->name()));
-          }
-        });
+    future_result.OnCompletion([this,
+                                channel](const Future<Metadata>& data_result) {
+      if (data_result.error() == firebase::storage::kErrorNone) {
+        SendEventOnMainThread(
+            channel,
+            CreateTaskEvent(
+                FIREBASE_STORAGE_PLATFORM_INTERFACE_INTERNAL_STORAGE_TASK_STATE_SUCCESS,
+                storage_->app()->name(), data_result.result()->path(),
+                data_result.result()->size_bytes(),
+                data_result.result()->size_bytes(),
+                ConvertMedadataToPigeon(data_result.result())));
+      } else {
+        SendEventOnMainThread(
+            channel, ErrorStreamEvent(data_result, storage_->app()->name()));
+      }
+    });
     return nullptr;
   }
 
@@ -502,9 +501,10 @@ class PutDataStreamHandler : public TaskStreamHandler {
 
 class PutFileStreamHandler : public TaskStreamHandler {
  public:
-  PutFileStreamHandler(Storage* storage, std::string reference_path,
-                       std::string file_path, Controller* controller,
-                       FirebaseStorageInternalSettableMetadata* pigeon_meta_data)
+  PutFileStreamHandler(
+      Storage* storage, std::string reference_path, std::string file_path,
+      Controller* controller,
+      FirebaseStorageInternalSettableMetadata* pigeon_meta_data)
       : storage_(storage),
         reference_path_(std::move(reference_path)),
         file_path_(std::move(file_path)),
@@ -535,22 +535,22 @@ class PutFileStreamHandler : public TaskStreamHandler {
 
     g_usleep(1000);  // timing for c++ sdk grabbing a mutex
 
-    future_result.OnCompletion(
-        [this, channel](const Future<Metadata>& data_result) {
-          if (data_result.error() == firebase::storage::kErrorNone) {
-            SendEventOnMainThread(
-                channel,
-                CreateTaskEvent(
-                    FIREBASE_STORAGE_PLATFORM_INTERFACE_INTERNAL_STORAGE_TASK_STATE_SUCCESS,
-                    storage_->app()->name(), data_result.result()->path(),
-                    data_result.result()->size_bytes(),
-                    data_result.result()->size_bytes(),
-                    ConvertMedadataToPigeon(data_result.result())));
-          } else {
-            SendEventOnMainThread(
-                channel, ErrorStreamEvent(data_result, storage_->app()->name()));
-          }
-        });
+    future_result.OnCompletion([this,
+                                channel](const Future<Metadata>& data_result) {
+      if (data_result.error() == firebase::storage::kErrorNone) {
+        SendEventOnMainThread(
+            channel,
+            CreateTaskEvent(
+                FIREBASE_STORAGE_PLATFORM_INTERFACE_INTERNAL_STORAGE_TASK_STATE_SUCCESS,
+                storage_->app()->name(), data_result.result()->path(),
+                data_result.result()->size_bytes(),
+                data_result.result()->size_bytes(),
+                ConvertMedadataToPigeon(data_result.result())));
+      } else {
+        SendEventOnMainThread(
+            channel, ErrorStreamEvent(data_result, storage_->app()->name()));
+      }
+    });
     return nullptr;
   }
 
@@ -581,21 +581,21 @@ class GetFileStreamHandler : public TaskStreamHandler {
 
     g_usleep(1000);  // timing for c++ sdk grabbing a mutex
 
-    future_result.OnCompletion(
-        [this, channel](const Future<size_t>& data_result) {
-          if (data_result.error() == firebase::storage::kErrorNone) {
-            int64_t data_size = static_cast<int64_t>(*data_result.result());
-            SendEventOnMainThread(
-                channel,
-                CreateTaskEvent(
-                    FIREBASE_STORAGE_PLATFORM_INTERFACE_INTERNAL_STORAGE_TASK_STATE_SUCCESS,
-                    storage_->app()->name(), reference_path_, data_size,
-                    data_size, nullptr));
-          } else {
-            SendEventOnMainThread(
-                channel, ErrorStreamEvent(data_result, storage_->app()->name()));
-          }
-        });
+    future_result.OnCompletion([this,
+                                channel](const Future<size_t>& data_result) {
+      if (data_result.error() == firebase::storage::kErrorNone) {
+        int64_t data_size = static_cast<int64_t>(*data_result.result());
+        SendEventOnMainThread(
+            channel,
+            CreateTaskEvent(
+                FIREBASE_STORAGE_PLATFORM_INTERFACE_INTERNAL_STORAGE_TASK_STATE_SUCCESS,
+                storage_->app()->name(), reference_path_, data_size, data_size,
+                nullptr));
+      } else {
+        SendEventOnMainThread(
+            channel, ErrorStreamEvent(data_result, storage_->app()->name()));
+      }
+    });
     return nullptr;
   }
 
@@ -712,25 +712,25 @@ static void HandleReferenceGetDownloadURL(
   Future<std::string> future_result = cpp_reference.GetDownloadUrl();
   g_usleep(1000);  // timing for c++ sdk grabbing a mutex
   g_object_ref(response_handle);
-  future_result.OnCompletion(
-      [response_handle](const Future<std::string>& string_result) {
-        if (string_result.error() == firebase::storage::kErrorNone) {
-          std::string url = *string_result.result();
-          RunOnMainThread([response_handle, url]() {
-            firebase_storage_firebase_storage_host_api_respond_reference_get_download_u_r_l(
-                response_handle, url.c_str());
-            g_object_unref(response_handle);
-          });
-        } else {
-          std::string code = ParseErrorCode(string_result);
-          std::string message = ParseErrorMessage(string_result);
-          RunOnMainThread([response_handle, code, message]() {
-            firebase_storage_firebase_storage_host_api_respond_error_reference_get_download_u_r_l(
-                response_handle, code.c_str(), message.c_str(), nullptr);
-            g_object_unref(response_handle);
-          });
-        }
+  future_result.OnCompletion([response_handle](
+                                 const Future<std::string>& string_result) {
+    if (string_result.error() == firebase::storage::kErrorNone) {
+      std::string url = *string_result.result();
+      RunOnMainThread([response_handle, url]() {
+        firebase_storage_firebase_storage_host_api_respond_reference_get_download_u_r_l(
+            response_handle, url.c_str());
+        g_object_unref(response_handle);
       });
+    } else {
+      std::string code = ParseErrorCode(string_result);
+      std::string message = ParseErrorMessage(string_result);
+      RunOnMainThread([response_handle, code, message]() {
+        firebase_storage_firebase_storage_host_api_respond_error_reference_get_download_u_r_l(
+            response_handle, code.c_str(), message.c_str(), nullptr);
+        g_object_unref(response_handle);
+      });
+    }
+  });
 }
 
 static void HandleReferenceGetMetaData(
@@ -743,28 +743,28 @@ static void HandleReferenceGetMetaData(
   Future<Metadata> future_result = cpp_reference.GetMetadata();
   g_usleep(1000);  // timing for c++ sdk grabbing a mutex
   g_object_ref(response_handle);
-  future_result.OnCompletion(
-      [response_handle](const Future<Metadata>& metadata_result) {
-        if (metadata_result.error() == firebase::storage::kErrorNone) {
-          Metadata metadata = *metadata_result.result();
-          RunOnMainThread([response_handle, metadata]() {
-            g_autoptr(FlValue) meta_map = ConvertMedadataToPigeon(&metadata);
-            g_autoptr(FirebaseStorageInternalFullMetaData) pigeon_meta =
-                firebase_storage_internal_full_meta_data_new(meta_map);
-            firebase_storage_firebase_storage_host_api_respond_reference_get_meta_data(
-                response_handle, pigeon_meta);
-            g_object_unref(response_handle);
-          });
-        } else {
-          std::string code = ParseErrorCode(metadata_result);
-          std::string message = ParseErrorMessage(metadata_result);
-          RunOnMainThread([response_handle, code, message]() {
-            firebase_storage_firebase_storage_host_api_respond_error_reference_get_meta_data(
-                response_handle, code.c_str(), message.c_str(), nullptr);
-            g_object_unref(response_handle);
-          });
-        }
+  future_result.OnCompletion([response_handle](
+                                 const Future<Metadata>& metadata_result) {
+    if (metadata_result.error() == firebase::storage::kErrorNone) {
+      Metadata metadata = *metadata_result.result();
+      RunOnMainThread([response_handle, metadata]() {
+        g_autoptr(FlValue) meta_map = ConvertMedadataToPigeon(&metadata);
+        g_autoptr(FirebaseStorageInternalFullMetaData) pigeon_meta =
+            firebase_storage_internal_full_meta_data_new(meta_map);
+        firebase_storage_firebase_storage_host_api_respond_reference_get_meta_data(
+            response_handle, pigeon_meta);
+        g_object_unref(response_handle);
       });
+    } else {
+      std::string code = ParseErrorCode(metadata_result);
+      std::string message = ParseErrorMessage(metadata_result);
+      RunOnMainThread([response_handle, code, message]() {
+        firebase_storage_firebase_storage_host_api_respond_error_reference_get_meta_data(
+            response_handle, code.c_str(), message.c_str(), nullptr);
+        g_object_unref(response_handle);
+      });
+    }
+  });
 }
 
 static void HandleReferenceList(
@@ -811,27 +811,27 @@ static void HandleReferenceGetData(
       cpp_reference.GetBytes(byte_buffer->data(), max_size);
   g_usleep(1000);  // timing for c++ sdk grabbing a mutex
   g_object_ref(response_handle);
-  future_result.OnCompletion(
-      [response_handle, byte_buffer](const Future<size_t>& data_result) {
-        if (data_result.error() == firebase::storage::kErrorNone) {
-          size_t vector_size = *data_result.result();
-          auto vector_buffer = std::make_shared<std::vector<uint8_t>>(
-              byte_buffer->begin(), byte_buffer->begin() + vector_size);
-          RunOnMainThread([response_handle, vector_buffer]() {
-            firebase_storage_firebase_storage_host_api_respond_reference_get_data(
-                response_handle, vector_buffer->data(), vector_buffer->size());
-            g_object_unref(response_handle);
-          });
-        } else {
-          std::string code = ParseErrorCode(data_result);
-          std::string message = ParseErrorMessage(data_result);
-          RunOnMainThread([response_handle, code, message]() {
-            firebase_storage_firebase_storage_host_api_respond_error_reference_get_data(
-                response_handle, code.c_str(), message.c_str(), nullptr);
-            g_object_unref(response_handle);
-          });
-        }
+  future_result.OnCompletion([response_handle,
+                              byte_buffer](const Future<size_t>& data_result) {
+    if (data_result.error() == firebase::storage::kErrorNone) {
+      size_t vector_size = *data_result.result();
+      auto vector_buffer = std::make_shared<std::vector<uint8_t>>(
+          byte_buffer->begin(), byte_buffer->begin() + vector_size);
+      RunOnMainThread([response_handle, vector_buffer]() {
+        firebase_storage_firebase_storage_host_api_respond_reference_get_data(
+            response_handle, vector_buffer->data(), vector_buffer->size());
+        g_object_unref(response_handle);
       });
+    } else {
+      std::string code = ParseErrorCode(data_result);
+      std::string message = ParseErrorMessage(data_result);
+      RunOnMainThread([response_handle, code, message]() {
+        firebase_storage_firebase_storage_host_api_respond_error_reference_get_data(
+            response_handle, code.c_str(), message.c_str(), nullptr);
+        g_object_unref(response_handle);
+      });
+    }
+  });
 }
 
 static void HandleReferencePutData(
@@ -950,28 +950,28 @@ static void HandleReferenceUpdateMetadata(
   Future<Metadata> future_result = cpp_reference.UpdateMetadata(*cpp_meta);
   g_usleep(1000);  // timing for c++ sdk grabbing a mutex
   g_object_ref(response_handle);
-  future_result.OnCompletion(
-      [response_handle](const Future<Metadata>& data_result) {
-        if (data_result.error() == firebase::storage::kErrorNone) {
-          Metadata result_meta = *data_result.result();
-          RunOnMainThread([response_handle, result_meta]() {
-            g_autoptr(FlValue) meta_map = ConvertMedadataToPigeon(&result_meta);
-            g_autoptr(FirebaseStorageInternalFullMetaData) pigeon_data =
-                firebase_storage_internal_full_meta_data_new(meta_map);
-            firebase_storage_firebase_storage_host_api_respond_reference_update_metadata(
-                response_handle, pigeon_data);
-            g_object_unref(response_handle);
-          });
-        } else {
-          std::string code = ParseErrorCode(data_result);
-          std::string message = ParseErrorMessage(data_result);
-          RunOnMainThread([response_handle, code, message]() {
-            firebase_storage_firebase_storage_host_api_respond_error_reference_update_metadata(
-                response_handle, code.c_str(), message.c_str(), nullptr);
-            g_object_unref(response_handle);
-          });
-        }
+  future_result.OnCompletion([response_handle](
+                                 const Future<Metadata>& data_result) {
+    if (data_result.error() == firebase::storage::kErrorNone) {
+      Metadata result_meta = *data_result.result();
+      RunOnMainThread([response_handle, result_meta]() {
+        g_autoptr(FlValue) meta_map = ConvertMedadataToPigeon(&result_meta);
+        g_autoptr(FirebaseStorageInternalFullMetaData) pigeon_data =
+            firebase_storage_internal_full_meta_data_new(meta_map);
+        firebase_storage_firebase_storage_host_api_respond_reference_update_metadata(
+            response_handle, pigeon_data);
+        g_object_unref(response_handle);
       });
+    } else {
+      std::string code = ParseErrorCode(data_result);
+      std::string message = ParseErrorMessage(data_result);
+      RunOnMainThread([response_handle, code, message]() {
+        firebase_storage_firebase_storage_host_api_respond_error_reference_update_metadata(
+            response_handle, code.c_str(), message.c_str(), nullptr);
+        g_object_unref(response_handle);
+      });
+    }
+  });
 }
 
 // Builds the {status, snapshot: {bytesTransferred, totalBytes}} map returned
@@ -1046,7 +1046,7 @@ static void HandleTaskCancel(
 
 static const FirebaseStorageFirebaseStorageHostApiVTable
     kFirebaseStorageHostApiVTable = {
-        HandleGetReferencebyPath,      // get_referenceby_path
+        HandleGetReferencebyPath,        // get_referenceby_path
         HandleSetMaxOperationRetryTime,  // set_max_operation_retry_time
         HandleSetMaxUploadRetryTime,     // set_max_upload_retry_time
         HandleSetMaxDownloadRetryTime,   // set_max_download_retry_time

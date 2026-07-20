@@ -60,8 +60,8 @@ static void PostToMainThread(std::function<void()> function) {
 }
 
 static Auth* GetAuthFromPigeon(FirebaseAuthAuthPigeonFirebaseApp* pigeon_app) {
-  App* app =
-      App::GetInstance(firebase_auth_auth_pigeon_firebase_app_get_app_name(pigeon_app));
+  App* app = App::GetInstance(
+      firebase_auth_auth_pigeon_firebase_app_get_app_name(pigeon_app));
   return Auth::GetAuth(app);
 }
 
@@ -267,7 +267,8 @@ static FirebaseAuthInternalUserDetails* ParseUserDetails(
 // Ownership: returns a new reference (transfer full).
 static FirebaseAuthInternalAdditionalUserInfo* ParseAdditionalUserInfo(
     const firebase::auth::AdditionalUserInfo& additional_user_info) {
-  g_autoptr(FlValue) profile = ConvertToFlValueMap(additional_user_info.profile);
+  g_autoptr(FlValue) profile =
+      ConvertToFlValueMap(additional_user_info.profile);
   // Cannot know if the user is new or not with current API.
   return firebase_auth_internal_additional_user_info_new(
       /* is_new_user= */ FALSE, additional_user_info.provider_id.c_str(),
@@ -340,50 +341,47 @@ static void CompleteAuthResultFuture(
     void (*respond)(Handle*, FirebaseAuthInternalUserCredential*),
     ErrorRespondFn<Handle> respond_error) {
   g_object_ref(response_handle);
-  future.OnCompletion(
-      [response_handle, respond, respond_error](
-          const firebase::Future<firebase::auth::AuthResult>&
-              completed_future) {
-        // We are probably in a different thread right now.
-        if (completed_future.error() == 0) {
-          FirebaseAuthInternalUserCredential* credential =
-              ParseAuthResult(completed_future.result());
-          PostToMainThread([response_handle, respond, credential]() {
-            respond(response_handle, credential);
-            g_object_unref(credential);
-            g_object_unref(response_handle);
-          });
-        } else {
-          RespondFutureError(completed_future, response_handle, respond_error);
-        }
+  future.OnCompletion([response_handle, respond, respond_error](
+                          const firebase::Future<firebase::auth::AuthResult>&
+                              completed_future) {
+    // We are probably in a different thread right now.
+    if (completed_future.error() == 0) {
+      FirebaseAuthInternalUserCredential* credential =
+          ParseAuthResult(completed_future.result());
+      PostToMainThread([response_handle, respond, credential]() {
+        respond(response_handle, credential);
+        g_object_unref(credential);
+        g_object_unref(response_handle);
       });
+    } else {
+      RespondFutureError(completed_future, response_handle, respond_error);
+    }
+  });
 }
 
 // Completes a Future<void> with an InternalUserDetails response built from the
 // current user of the given auth instance.
 template <typename Handle>
 static void CompleteUserDetailsFuture(
-    firebase::Future<void> future, Auth* firebase_auth,
-    Handle* response_handle,
+    firebase::Future<void> future, Auth* firebase_auth, Handle* response_handle,
     void (*respond)(Handle*, FirebaseAuthInternalUserDetails*),
     ErrorRespondFn<Handle> respond_error) {
   g_object_ref(response_handle);
-  future.OnCompletion(
-      [response_handle, firebase_auth, respond, respond_error](
-          const firebase::Future<void>& completed_future) {
-        // We are probably in a different thread right now.
-        if (completed_future.error() == 0) {
-          FirebaseAuthInternalUserDetails* user =
-              ParseUserDetails(firebase_auth->current_user());
-          PostToMainThread([response_handle, respond, user]() {
-            respond(response_handle, user);
-            g_object_unref(user);
-            g_object_unref(response_handle);
-          });
-        } else {
-          RespondFutureError(completed_future, response_handle, respond_error);
-        }
+  future.OnCompletion([response_handle, firebase_auth, respond, respond_error](
+                          const firebase::Future<void>& completed_future) {
+    // We are probably in a different thread right now.
+    if (completed_future.error() == 0) {
+      FirebaseAuthInternalUserDetails* user =
+          ParseUserDetails(firebase_auth->current_user());
+      PostToMainThread([response_handle, respond, user]() {
+        respond(response_handle, user);
+        g_object_unref(user);
+        g_object_unref(response_handle);
       });
+    } else {
+      RespondFutureError(completed_future, response_handle, respond_error);
+    }
+  });
 }
 
 // Event channels (auth-state / id-token).
@@ -410,16 +408,16 @@ static FlValue* BuildUserEventPayload(Auth* auth) {
                          fl_value_new_string(user.photo_url().c_str()));
     fl_value_append_take(user_info_list,
                          fl_value_new_string(user.phone_number().c_str()));
-    fl_value_append_take(user_info_list, fl_value_new_bool(user.is_anonymous()));
+    fl_value_append_take(user_info_list,
+                         fl_value_new_bool(user.is_anonymous()));
     fl_value_append_take(user_info_list,
                          fl_value_new_bool(user.is_email_verified()));
     fl_value_append_take(user_info_list,
                          fl_value_new_string(user.provider_id().c_str()));
     fl_value_append_take(user_info_list, fl_value_new_null());  // tenantId
     fl_value_append_take(user_info_list, fl_value_new_null());  // refreshToken
-    fl_value_append_take(
-        user_info_list,
-        fl_value_new_int(user.metadata().creation_timestamp));
+    fl_value_append_take(user_info_list,
+                         fl_value_new_int(user.metadata().creation_timestamp));
     fl_value_append_take(
         user_info_list,
         fl_value_new_int(user.metadata().last_sign_in_timestamp));
@@ -495,8 +493,7 @@ static FlMethodErrorResponse* AuthEventChannelListenCb(FlEventChannel* channel,
     if (event_channel->id_token_listener == nullptr) {
       event_channel->id_token_listener =
           new FlutterIdTokenListener(event_channel);
-      event_channel->auth->AddIdTokenListener(
-          event_channel->id_token_listener);
+      event_channel->auth->AddIdTokenListener(event_channel->id_token_listener);
     }
   } else {
     if (event_channel->auth_state_listener == nullptr) {
@@ -565,13 +562,11 @@ static std::string SetupAuthEventChannel(Auth* auth, const std::string& name,
   event_channel->is_id_token_channel = is_id_token_channel;
 
   g_autoptr(FlStandardMethodCodec) codec = fl_standard_method_codec_new();
-  event_channel->channel = fl_event_channel_new(g_binary_messenger,
-                                                name.c_str(),
-                                                FL_METHOD_CODEC(codec));
-  fl_event_channel_set_stream_handlers(event_channel->channel,
-                                       AuthEventChannelListenCb,
-                                       AuthEventChannelCancelCb, event_channel,
-                                       nullptr);
+  event_channel->channel = fl_event_channel_new(
+      g_binary_messenger, name.c_str(), FL_METHOD_CODEC(codec));
+  fl_event_channel_set_stream_handlers(
+      event_channel->channel, AuthEventChannelListenCb,
+      AuthEventChannelCancelCb, event_channel, nullptr);
 
   (*channels)[name] = event_channel;
   return name;
@@ -669,8 +664,8 @@ static firebase::auth::Credential GetCredentialFromArguments(
       return firebase::auth::OAuthProvider::GetCredential(
           provider_id, id_token, raw_nonce, access_token);
     } else {
-      return firebase::auth::OAuthProvider::GetCredential(
-          provider_id, id_token, access_token);
+      return firebase::auth::OAuthProvider::GetCredential(provider_id, id_token,
+                                                          access_token);
     }
   }
 
@@ -696,8 +691,7 @@ static std::vector<std::string> TransformFlValueList(FlValue* fl_list) {
   return transformed_list;
 }
 
-static std::map<std::string, std::string> TransformFlValueMap(
-    FlValue* fl_map) {
+static std::map<std::string, std::string> TransformFlValueMap(FlValue* fl_map) {
   std::map<std::string, std::string> transformed_map;
   if (fl_map == nullptr || fl_value_get_type(fl_map) != FL_VALUE_TYPE_MAP) {
     return transformed_map;
@@ -717,11 +711,9 @@ static std::map<std::string, std::string> TransformFlValueMap(
 static firebase::auth::FederatedOAuthProviderData GetProviderDataFromArguments(
     FirebaseAuthInternalSignInProvider* sign_in_provider) {
   return firebase::auth::FederatedOAuthProviderData(
-      firebase_auth_internal_sign_in_provider_get_provider_id(
-          sign_in_provider),
+      firebase_auth_internal_sign_in_provider_get_provider_id(sign_in_provider),
       TransformFlValueList(
-          firebase_auth_internal_sign_in_provider_get_scopes(
-              sign_in_provider)),
+          firebase_auth_internal_sign_in_provider_get_scopes(sign_in_provider)),
       TransformFlValueMap(
           firebase_auth_internal_sign_in_provider_get_custom_parameters(
               sign_in_provider)));
@@ -824,33 +816,33 @@ static void HandleSignInWithCredential(
       firebase_auth->SignInWithCredential(GetCredentialFromArguments(input));
 
   g_object_ref(response_handle);
-  sign_in_future.OnCompletion(
-      [response_handle](
-          const firebase::Future<firebase::auth::User>& completed_future) {
-        // We are probably in a different thread right now.
-        if (completed_future.error() == 0) {
-          // TODO: not the right return type from C++ SDK
-          g_autoptr(FirebaseAuthInternalUserInfo) user_info =
-              ParseUserInfo(*completed_future.result());
-          g_autoptr(FlValue) provider_data = fl_value_new_list();
-          g_autoptr(FirebaseAuthInternalUserDetails) user =
-              firebase_auth_internal_user_details_new(user_info, provider_data);
-          FirebaseAuthInternalUserCredential* user_credential =
-              firebase_auth_internal_user_credential_new(
-                  user, /* additional_user_info= */ nullptr,
-                  /* credential= */ nullptr);
-          PostToMainThread([response_handle, user_credential]() {
-            firebase_auth_firebase_auth_host_api_respond_sign_in_with_credential(
-                response_handle, user_credential);
-            g_object_unref(user_credential);
-            g_object_unref(response_handle);
-          });
-        } else {
-          RespondFutureError(
-              completed_future, response_handle,
-              firebase_auth_firebase_auth_host_api_respond_error_sign_in_with_credential);
-        }
+  sign_in_future.OnCompletion([response_handle](
+                                  const firebase::Future<firebase::auth::User>&
+                                      completed_future) {
+    // We are probably in a different thread right now.
+    if (completed_future.error() == 0) {
+      // TODO: not the right return type from C++ SDK
+      g_autoptr(FirebaseAuthInternalUserInfo) user_info =
+          ParseUserInfo(*completed_future.result());
+      g_autoptr(FlValue) provider_data = fl_value_new_list();
+      g_autoptr(FirebaseAuthInternalUserDetails) user =
+          firebase_auth_internal_user_details_new(user_info, provider_data);
+      FirebaseAuthInternalUserCredential* user_credential =
+          firebase_auth_internal_user_credential_new(
+              user, /* additional_user_info= */ nullptr,
+              /* credential= */ nullptr);
+      PostToMainThread([response_handle, user_credential]() {
+        firebase_auth_firebase_auth_host_api_respond_sign_in_with_credential(
+            response_handle, user_credential);
+        g_object_unref(user_credential);
+        g_object_unref(response_handle);
       });
+    } else {
+      RespondFutureError(
+          completed_future, response_handle,
+          firebase_auth_firebase_auth_host_api_respond_error_sign_in_with_credential);
+    }
+  });
 }
 
 static void HandleSignInWithCustomToken(
@@ -905,27 +897,27 @@ static void HandleSignInWithProvider(
       firebase_auth->SignInWithProvider(provider);
 
   g_object_ref(response_handle);
-  sign_in_future.OnCompletion(
-      [response_handle, provider](
-          const firebase::Future<firebase::auth::AuthResult>&
-              completed_future) {
-        delete provider;
-        // We are probably in a different thread right now.
-        if (completed_future.error() == 0) {
-          FirebaseAuthInternalUserCredential* credential =
-              ParseAuthResult(completed_future.result());
-          PostToMainThread([response_handle, credential]() {
-            firebase_auth_firebase_auth_host_api_respond_sign_in_with_provider(
-                response_handle, credential);
-            g_object_unref(credential);
-            g_object_unref(response_handle);
-          });
-        } else {
-          RespondFutureError(
-              completed_future, response_handle,
-              firebase_auth_firebase_auth_host_api_respond_error_sign_in_with_provider);
-        }
+  sign_in_future.OnCompletion([response_handle,
+                               provider](const firebase::Future<
+                                         firebase::auth::AuthResult>&
+                                             completed_future) {
+    delete provider;
+    // We are probably in a different thread right now.
+    if (completed_future.error() == 0) {
+      FirebaseAuthInternalUserCredential* credential =
+          ParseAuthResult(completed_future.result());
+      PostToMainThread([response_handle, credential]() {
+        firebase_auth_firebase_auth_host_api_respond_sign_in_with_provider(
+            response_handle, credential);
+        g_object_unref(credential);
+        g_object_unref(response_handle);
       });
+    } else {
+      RespondFutureError(
+          completed_future, response_handle,
+          firebase_auth_firebase_auth_host_api_respond_error_sign_in_with_provider);
+    }
+  });
 }
 
 static void HandleSignOut(
@@ -947,30 +939,27 @@ static void HandleFetchSignInMethodsForEmail(
       firebase_auth->FetchProvidersForEmail(email);
 
   g_object_ref(response_handle);
-  providers_future.OnCompletion(
-      [response_handle](
-          const firebase::Future<Auth::FetchProvidersResult>&
-              completed_future) {
-        // We are probably in a different thread right now.
-        if (completed_future.error() == 0) {
-          FlValue* providers = fl_value_new_list();
-          for (const std::string& provider :
-               completed_future.result()->providers) {
-            fl_value_append_take(providers,
-                                 fl_value_new_string(provider.c_str()));
-          }
-          PostToMainThread([response_handle, providers]() {
-            firebase_auth_firebase_auth_host_api_respond_fetch_sign_in_methods_for_email(
-                response_handle, providers);
-            fl_value_unref(providers);
-            g_object_unref(response_handle);
-          });
-        } else {
-          RespondFutureError(
-              completed_future, response_handle,
-              firebase_auth_firebase_auth_host_api_respond_error_fetch_sign_in_methods_for_email);
-        }
+  providers_future.OnCompletion([response_handle](const firebase::Future<
+                                                  Auth::FetchProvidersResult>&
+                                                      completed_future) {
+    // We are probably in a different thread right now.
+    if (completed_future.error() == 0) {
+      FlValue* providers = fl_value_new_list();
+      for (const std::string& provider : completed_future.result()->providers) {
+        fl_value_append_take(providers, fl_value_new_string(provider.c_str()));
+      }
+      PostToMainThread([response_handle, providers]() {
+        firebase_auth_firebase_auth_host_api_respond_fetch_sign_in_methods_for_email(
+            response_handle, providers);
+        fl_value_unref(providers);
+        g_object_unref(response_handle);
       });
+    } else {
+      RespondFutureError(
+          completed_future, response_handle,
+          firebase_auth_firebase_auth_host_api_respond_error_fetch_sign_in_methods_for_email);
+    }
+  });
 }
 
 static void HandleSendPasswordResetEmail(
@@ -1097,31 +1086,31 @@ static void HandleGetIdToken(
   firebase::Future<std::string> token_future = user.GetToken(force_refresh);
 
   g_object_ref(response_handle);
-  token_future.OnCompletion(
-      [response_handle](
-          const firebase::Future<std::string>& completed_future) {
-        // We are probably in a different thread right now.
-        if (completed_future.error() == 0) {
-          FirebaseAuthInternalIdTokenResult* token_result =
-              firebase_auth_internal_id_token_result_new(
-                  completed_future.result()->c_str(),
-                  /* expiration_timestamp= */ nullptr,
-                  /* auth_timestamp= */ nullptr,
-                  /* issued_at_timestamp= */ nullptr,
-                  /* sign_in_provider= */ nullptr, /* claims= */ nullptr,
-                  /* sign_in_second_factor= */ nullptr);
-          PostToMainThread([response_handle, token_result]() {
-            firebase_auth_firebase_auth_user_host_api_respond_get_id_token(
-                response_handle, token_result);
-            g_object_unref(token_result);
-            g_object_unref(response_handle);
-          });
-        } else {
-          RespondFutureError(
-              completed_future, response_handle,
-              firebase_auth_firebase_auth_user_host_api_respond_error_get_id_token);
-        }
+  token_future.OnCompletion([response_handle](
+                                const firebase::Future<std::string>&
+                                    completed_future) {
+    // We are probably in a different thread right now.
+    if (completed_future.error() == 0) {
+      FirebaseAuthInternalIdTokenResult* token_result =
+          firebase_auth_internal_id_token_result_new(
+              completed_future.result()->c_str(),
+              /* expiration_timestamp= */ nullptr,
+              /* auth_timestamp= */ nullptr,
+              /* issued_at_timestamp= */ nullptr,
+              /* sign_in_provider= */ nullptr, /* claims= */ nullptr,
+              /* sign_in_second_factor= */ nullptr);
+      PostToMainThread([response_handle, token_result]() {
+        firebase_auth_firebase_auth_user_host_api_respond_get_id_token(
+            response_handle, token_result);
+        g_object_unref(token_result);
+        g_object_unref(response_handle);
       });
+    } else {
+      RespondFutureError(
+          completed_future, response_handle,
+          firebase_auth_firebase_auth_user_host_api_respond_error_get_id_token);
+    }
+  });
 }
 
 static void HandleLinkWithCredential(
@@ -1153,27 +1142,27 @@ static void HandleLinkWithProvider(
       user.LinkWithProvider(provider);
 
   g_object_ref(response_handle);
-  link_future.OnCompletion(
-      [response_handle, provider](
-          const firebase::Future<firebase::auth::AuthResult>&
-              completed_future) {
-        delete provider;
-        // We are probably in a different thread right now.
-        if (completed_future.error() == 0) {
-          FirebaseAuthInternalUserCredential* credential =
-              ParseAuthResult(completed_future.result());
-          PostToMainThread([response_handle, credential]() {
-            firebase_auth_firebase_auth_user_host_api_respond_link_with_provider(
-                response_handle, credential);
-            g_object_unref(credential);
-            g_object_unref(response_handle);
-          });
-        } else {
-          RespondFutureError(
-              completed_future, response_handle,
-              firebase_auth_firebase_auth_user_host_api_respond_error_link_with_provider);
-        }
+  link_future.OnCompletion([response_handle,
+                            provider](const firebase::Future<
+                                      firebase::auth::AuthResult>&
+                                          completed_future) {
+    delete provider;
+    // We are probably in a different thread right now.
+    if (completed_future.error() == 0) {
+      FirebaseAuthInternalUserCredential* credential =
+          ParseAuthResult(completed_future.result());
+      PostToMainThread([response_handle, credential]() {
+        firebase_auth_firebase_auth_user_host_api_respond_link_with_provider(
+            response_handle, credential);
+        g_object_unref(credential);
+        g_object_unref(response_handle);
       });
+    } else {
+      RespondFutureError(
+          completed_future, response_handle,
+          firebase_auth_firebase_auth_user_host_api_respond_error_link_with_provider);
+    }
+  });
 }
 
 static void HandleReauthenticateWithCredential(
@@ -1187,33 +1176,33 @@ static void HandleReauthenticateWithCredential(
       user.Reauthenticate(GetCredentialFromArguments(input));
 
   g_object_ref(response_handle);
-  reauth_future.OnCompletion(
-      [response_handle,
-       firebase_auth](const firebase::Future<void>& completed_future) {
-        // We are probably in a different thread right now.
-        if (completed_future.error() == 0) {
-          // The C++ SDK Reauthenticate() has no result payload, so the
-          // credential is rebuilt from the current user. (The Windows
-          // implementation never responds on success, leaving the Dart future
-          // hanging; responding here is a deliberate improvement.)
-          g_autoptr(FirebaseAuthInternalUserDetails) user_details =
-              ParseUserDetails(firebase_auth->current_user());
-          FirebaseAuthInternalUserCredential* credential =
-              firebase_auth_internal_user_credential_new(
-                  user_details, /* additional_user_info= */ nullptr,
-                  /* credential= */ nullptr);
-          PostToMainThread([response_handle, credential]() {
-            firebase_auth_firebase_auth_user_host_api_respond_reauthenticate_with_credential(
-                response_handle, credential);
-            g_object_unref(credential);
-            g_object_unref(response_handle);
-          });
-        } else {
-          RespondFutureError(
-              completed_future, response_handle,
-              firebase_auth_firebase_auth_user_host_api_respond_error_reauthenticate_with_credential);
-        }
+  reauth_future.OnCompletion([response_handle,
+                              firebase_auth](const firebase::Future<void>&
+                                                 completed_future) {
+    // We are probably in a different thread right now.
+    if (completed_future.error() == 0) {
+      // The C++ SDK Reauthenticate() has no result payload, so the
+      // credential is rebuilt from the current user. (The Windows
+      // implementation never responds on success, leaving the Dart future
+      // hanging; responding here is a deliberate improvement.)
+      g_autoptr(FirebaseAuthInternalUserDetails) user_details =
+          ParseUserDetails(firebase_auth->current_user());
+      FirebaseAuthInternalUserCredential* credential =
+          firebase_auth_internal_user_credential_new(
+              user_details, /* additional_user_info= */ nullptr,
+              /* credential= */ nullptr);
+      PostToMainThread([response_handle, credential]() {
+        firebase_auth_firebase_auth_user_host_api_respond_reauthenticate_with_credential(
+            response_handle, credential);
+        g_object_unref(credential);
+        g_object_unref(response_handle);
       });
+    } else {
+      RespondFutureError(
+          completed_future, response_handle,
+          firebase_auth_firebase_auth_user_host_api_respond_error_reauthenticate_with_credential);
+    }
+  });
 }
 
 static void HandleReauthenticateWithProvider(
@@ -1232,27 +1221,27 @@ static void HandleReauthenticateWithProvider(
       user.ReauthenticateWithProvider(provider);
 
   g_object_ref(response_handle);
-  reauth_future.OnCompletion(
-      [response_handle, provider](
-          const firebase::Future<firebase::auth::AuthResult>&
-              completed_future) {
-        delete provider;
-        // We are probably in a different thread right now.
-        if (completed_future.error() == 0) {
-          FirebaseAuthInternalUserCredential* credential =
-              ParseAuthResult(completed_future.result());
-          PostToMainThread([response_handle, credential]() {
-            firebase_auth_firebase_auth_user_host_api_respond_reauthenticate_with_provider(
-                response_handle, credential);
-            g_object_unref(credential);
-            g_object_unref(response_handle);
-          });
-        } else {
-          RespondFutureError(
-              completed_future, response_handle,
-              firebase_auth_firebase_auth_user_host_api_respond_error_reauthenticate_with_provider);
-        }
+  reauth_future.OnCompletion([response_handle,
+                              provider](const firebase::Future<
+                                        firebase::auth::AuthResult>&
+                                            completed_future) {
+    delete provider;
+    // We are probably in a different thread right now.
+    if (completed_future.error() == 0) {
+      FirebaseAuthInternalUserCredential* credential =
+          ParseAuthResult(completed_future.result());
+      PostToMainThread([response_handle, credential]() {
+        firebase_auth_firebase_auth_user_host_api_respond_reauthenticate_with_provider(
+            response_handle, credential);
+        g_object_unref(credential);
+        g_object_unref(response_handle);
       });
+    } else {
+      RespondFutureError(
+          completed_future, response_handle,
+          firebase_auth_firebase_auth_user_host_api_respond_error_reauthenticate_with_provider);
+    }
+  });
 }
 
 static void HandleReload(
@@ -1371,8 +1360,7 @@ static void HandleVerifyBeforeUpdateEmail(
   }
 
   CompleteVoidFuture(
-      user.SendEmailVerificationBeforeUpdatingEmail(new_email),
-      response_handle,
+      user.SendEmailVerificationBeforeUpdatingEmail(new_email), response_handle,
       firebase_auth_firebase_auth_user_host_api_respond_verify_before_update_email,
       firebase_auth_firebase_auth_user_host_api_respond_error_verify_before_update_email);
 }
@@ -1380,50 +1368,49 @@ static void HandleVerifyBeforeUpdateEmail(
 // Method handler vtables. The entries are in the order the members are
 // declared in the generated vtable structs.
 
-static const FirebaseAuthFirebaseAuthHostApiVTable kFirebaseAuthHostApiVTable =
-    {
-        HandleRegisterIdTokenListener,     // register_id_token_listener
-        HandleRegisterAuthStateListener,   // register_auth_state_listener
-        HandleUseEmulator,                 // use_emulator
-        HandleApplyActionCode,             // apply_action_code
-        HandleCheckActionCode,             // check_action_code
-        HandleConfirmPasswordReset,        // confirm_password_reset
-        HandleCreateUserWithEmailAndPassword,  // create_user_with_email_and_password
-        HandleSignInAnonymously,           // sign_in_anonymously
-        HandleSignInWithCredential,        // sign_in_with_credential
-        HandleSignInWithCustomToken,       // sign_in_with_custom_token
-        HandleSignInWithEmailAndPassword,  // sign_in_with_email_and_password
-        HandleSignInWithEmailLink,         // sign_in_with_email_link
-        HandleSignInWithProvider,          // sign_in_with_provider
-        HandleSignOut,                     // sign_out
-        HandleFetchSignInMethodsForEmail,  // fetch_sign_in_methods_for_email
-        HandleSendPasswordResetEmail,      // send_password_reset_email
-        HandleSendSignInLinkToEmail,       // send_sign_in_link_to_email
-        HandleSetLanguageCode,             // set_language_code
-        HandleSetSettings,                 // set_settings
-        HandleVerifyPasswordResetCode,     // verify_password_reset_code
-        HandleVerifyPhoneNumber,           // verify_phone_number
-        HandleRevokeTokenWithAuthorizationCode,  // revoke_token_with_authorization_code
-        HandleRevokeAccessToken,           // revoke_access_token
-        HandleInitializeRecaptchaConfig,   // initialize_recaptcha_config
+static const FirebaseAuthFirebaseAuthHostApiVTable kFirebaseAuthHostApiVTable = {
+    HandleRegisterIdTokenListener,         // register_id_token_listener
+    HandleRegisterAuthStateListener,       // register_auth_state_listener
+    HandleUseEmulator,                     // use_emulator
+    HandleApplyActionCode,                 // apply_action_code
+    HandleCheckActionCode,                 // check_action_code
+    HandleConfirmPasswordReset,            // confirm_password_reset
+    HandleCreateUserWithEmailAndPassword,  // create_user_with_email_and_password
+    HandleSignInAnonymously,               // sign_in_anonymously
+    HandleSignInWithCredential,            // sign_in_with_credential
+    HandleSignInWithCustomToken,           // sign_in_with_custom_token
+    HandleSignInWithEmailAndPassword,      // sign_in_with_email_and_password
+    HandleSignInWithEmailLink,             // sign_in_with_email_link
+    HandleSignInWithProvider,              // sign_in_with_provider
+    HandleSignOut,                         // sign_out
+    HandleFetchSignInMethodsForEmail,      // fetch_sign_in_methods_for_email
+    HandleSendPasswordResetEmail,          // send_password_reset_email
+    HandleSendSignInLinkToEmail,           // send_sign_in_link_to_email
+    HandleSetLanguageCode,                 // set_language_code
+    HandleSetSettings,                     // set_settings
+    HandleVerifyPasswordResetCode,         // verify_password_reset_code
+    HandleVerifyPhoneNumber,               // verify_phone_number
+    HandleRevokeTokenWithAuthorizationCode,  // revoke_token_with_authorization_code
+    HandleRevokeAccessToken,                 // revoke_access_token
+    HandleInitializeRecaptchaConfig,         // initialize_recaptcha_config
 };
 
 static const FirebaseAuthFirebaseAuthUserHostApiVTable
     kFirebaseAuthUserHostApiVTable = {
-        HandleDelete,                      // delete_
-        HandleGetIdToken,                  // get_id_token
-        HandleLinkWithCredential,          // link_with_credential
-        HandleLinkWithProvider,            // link_with_provider
+        HandleDelete,                        // delete_
+        HandleGetIdToken,                    // get_id_token
+        HandleLinkWithCredential,            // link_with_credential
+        HandleLinkWithProvider,              // link_with_provider
         HandleReauthenticateWithCredential,  // reauthenticate_with_credential
-        HandleReauthenticateWithProvider,  // reauthenticate_with_provider
-        HandleReload,                      // reload
-        HandleSendEmailVerification,       // send_email_verification
-        HandleUnlink,                      // unlink
-        HandleUpdateEmail,                 // update_email
-        HandleUpdatePassword,              // update_password
-        HandleUpdatePhoneNumber,           // update_phone_number
-        HandleUpdateProfile,               // update_profile
-        HandleVerifyBeforeUpdateEmail,     // verify_before_update_email
+        HandleReauthenticateWithProvider,    // reauthenticate_with_provider
+        HandleReload,                        // reload
+        HandleSendEmailVerification,         // send_email_verification
+        HandleUnlink,                        // unlink
+        HandleUpdateEmail,                   // update_email
+        HandleUpdatePassword,                // update_password
+        HandleUpdatePhoneNumber,             // update_phone_number
+        HandleUpdateProfile,                 // update_profile
+        HandleVerifyBeforeUpdateEmail,       // verify_before_update_email
 };
 
 // FlutterFirebasePlugin implementation, mirroring the Windows plugin's
@@ -1495,7 +1482,6 @@ void firebase_auth_plugin_register_with_registrar(
   g_object_unref(plugin);
 
   // Register for platform logging
-  App::RegisterLibrary(kLibraryName,
-                       firebase_auth_linux::getPluginVersion().c_str(),
-                       nullptr);
+  App::RegisterLibrary(
+      kLibraryName, firebase_auth_linux::getPluginVersion().c_str(), nullptr);
 }

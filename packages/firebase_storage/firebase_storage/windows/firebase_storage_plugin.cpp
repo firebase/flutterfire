@@ -7,6 +7,7 @@
 // This must be included before many other Windows headers.
 #include <windows.h>
 
+#include "../src/firebase_storage_utils.h"
 #include "firebase/app.h"
 #include "firebase/future.h"
 #include "firebase/storage.h"
@@ -14,7 +15,6 @@
 #include "firebase/storage/listener.h"
 #include "firebase/storage/metadata.h"
 #include "firebase/storage/storage_reference.h"
-#include "../src/firebase_storage_utils.h"
 #include "firebase_core/firebase_core_plugin_c_api.h"
 #include "firebase_storage/plugin_version.h"
 #include "messages.g.h"

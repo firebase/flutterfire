@@ -33,18 +33,18 @@ typedef enum {
 /**
  * CloudFirestoreSource:
  * CLOUD_FIRESTORE_PLATFORM_INTERFACE_SOURCE_SERVER_AND_CACHE:
- * Causes Firestore to try to retrieve an up-to-date (server-retrieved) snapshot, but fall back to
- * returning cached data if the server can't be reached.
- * CLOUD_FIRESTORE_PLATFORM_INTERFACE_SOURCE_SERVER:
- * Causes Firestore to avoid the cache, generating an error if the server cannot be reached. Note
- * that the cache will still be updated if the server request succeeds. Also note that
- * latency-compensation still takes effect, so any pending write operations will be visible in the
- * returned data (merged into the server-provided data).
- * CLOUD_FIRESTORE_PLATFORM_INTERFACE_SOURCE_CACHE:
- * Causes Firestore to immediately return a value from the cache, ignoring the server completely
- * (implying that the returned value may be stale with respect to the value on the server). If
- * there is no data in the cache to satisfy the `get` call,
- * [DocumentReference.get] will throw a [FirebaseException] and
+ * Causes Firestore to try to retrieve an up-to-date (server-retrieved)
+ * snapshot, but fall back to returning cached data if the server can't be
+ * reached. CLOUD_FIRESTORE_PLATFORM_INTERFACE_SOURCE_SERVER: Causes Firestore
+ * to avoid the cache, generating an error if the server cannot be reached. Note
+ * that the cache will still be updated if the server request succeeds. Also
+ * note that latency-compensation still takes effect, so any pending write
+ * operations will be visible in the returned data (merged into the
+ * server-provided data). CLOUD_FIRESTORE_PLATFORM_INTERFACE_SOURCE_CACHE:
+ * Causes Firestore to immediately return a value from the cache, ignoring the
+ * server completely (implying that the returned value may be stale with respect
+ * to the value on the server). If there is no data in the cache to satisfy the
+ * `get` call, [DocumentReference.get] will throw a [FirebaseException] and
  * [Query.get] will return an empty [QuerySnapshotPlatform] with no documents.
  *
  * An enumeration of firestore source types.
@@ -58,18 +58,22 @@ typedef enum {
 /**
  * CloudFirestoreListenSource:
  * CLOUD_FIRESTORE_PLATFORM_INTERFACE_LISTEN_SOURCE_DEFAULT_SOURCE:
- * The default behavior. The listener attempts to return initial snapshot from cache and retrieve up-to-date snapshots from the Firestore server.
- * Snapshot events will be triggered on local mutations and server side updates.
+ * The default behavior. The listener attempts to return initial snapshot from
+ * cache and retrieve up-to-date snapshots from the Firestore server. Snapshot
+ * events will be triggered on local mutations and server side updates.
  * CLOUD_FIRESTORE_PLATFORM_INTERFACE_LISTEN_SOURCE_CACHE:
- * The listener retrieves data and listens to updates from the local Firestore cache only.
- * If the cache is empty, an empty snapshot will be returned.
- * Snapshot events will be triggered on cache updates, like local mutations or load bundles.
+ * The listener retrieves data and listens to updates from the local Firestore
+ * cache only. If the cache is empty, an empty snapshot will be returned.
+ * Snapshot events will be triggered on cache updates, like local mutations or
+ * load bundles.
  *
- * The listener retrieves data and listens to updates from the local Firestore cache only.
- * If the cache is empty, an empty snapshot will be returned.
- * Snapshot events will be triggered on cache updates, like local mutations or load bundles.
+ * The listener retrieves data and listens to updates from the local Firestore
+ * cache only. If the cache is empty, an empty snapshot will be returned.
+ * Snapshot events will be triggered on cache updates, like local mutations or
+ * load bundles.
  *
- * Note that the data might be stale if the cache hasn't synchronized with recent server-side changes.
+ * Note that the data might be stale if the cache hasn't synchronized with
+ * recent server-side changes.
  */
 typedef enum {
   CLOUD_FIRESTORE_PLATFORM_INTERFACE_LISTEN_SOURCE_DEFAULT_SOURCE = 0,
@@ -81,9 +85,11 @@ typedef enum {
  * CLOUD_FIRESTORE_PLATFORM_INTERFACE_SERVER_TIMESTAMP_BEHAVIOR_NONE:
  * Return null for [FieldValue.serverTimestamp()] values that have not yet
  * CLOUD_FIRESTORE_PLATFORM_INTERFACE_SERVER_TIMESTAMP_BEHAVIOR_ESTIMATE:
- * Return local estimates for [FieldValue.serverTimestamp()] values that have not yet been set to their final value.
+ * Return local estimates for [FieldValue.serverTimestamp()] values that have
+ * not yet been set to their final value.
  * CLOUD_FIRESTORE_PLATFORM_INTERFACE_SERVER_TIMESTAMP_BEHAVIOR_PREVIOUS:
- * Return the previous value for [FieldValue.serverTimestamp()] values that have not yet been set to their final value.
+ * Return the previous value for [FieldValue.serverTimestamp()] values that have
+ * not yet been set to their final value.
  *
  */
 typedef enum {
@@ -109,12 +115,16 @@ typedef enum {
  * CLOUD_FIRESTORE_PLATFORM_INTERFACE_PERSISTENCE_CACHE_INDEX_MANAGER_REQUEST_DISABLE_INDEX_AUTO_CREATION:
  * CLOUD_FIRESTORE_PLATFORM_INTERFACE_PERSISTENCE_CACHE_INDEX_MANAGER_REQUEST_DELETE_ALL_INDEXES:
  *
- * [PersistenceCacheIndexManagerRequest] represents the request types for the persistence cache index manager.
+ * [PersistenceCacheIndexManagerRequest] represents the request types for the
+ * persistence cache index manager.
  */
 typedef enum {
-  CLOUD_FIRESTORE_PLATFORM_INTERFACE_PERSISTENCE_CACHE_INDEX_MANAGER_REQUEST_ENABLE_INDEX_AUTO_CREATION = 0,
-  CLOUD_FIRESTORE_PLATFORM_INTERFACE_PERSISTENCE_CACHE_INDEX_MANAGER_REQUEST_DISABLE_INDEX_AUTO_CREATION = 1,
-  CLOUD_FIRESTORE_PLATFORM_INTERFACE_PERSISTENCE_CACHE_INDEX_MANAGER_REQUEST_DELETE_ALL_INDEXES = 2
+  CLOUD_FIRESTORE_PLATFORM_INTERFACE_PERSISTENCE_CACHE_INDEX_MANAGER_REQUEST_ENABLE_INDEX_AUTO_CREATION =
+      0,
+  CLOUD_FIRESTORE_PLATFORM_INTERFACE_PERSISTENCE_CACHE_INDEX_MANAGER_REQUEST_DISABLE_INDEX_AUTO_CREATION =
+      1,
+  CLOUD_FIRESTORE_PLATFORM_INTERFACE_PERSISTENCE_CACHE_INDEX_MANAGER_REQUEST_DELETE_ALL_INDEXES =
+      2
 } CloudFirestorePersistenceCacheIndexManagerRequest;
 
 /**
@@ -161,7 +171,9 @@ typedef enum {
  *
  */
 
-G_DECLARE_FINAL_TYPE(CloudFirestoreInternalFirebaseSettings, cloud_firestore_internal_firebase_settings, CLOUD_FIRESTORE, INTERNAL_FIREBASE_SETTINGS, GObject)
+G_DECLARE_FINAL_TYPE(CloudFirestoreInternalFirebaseSettings,
+                     cloud_firestore_internal_firebase_settings,
+                     CLOUD_FIRESTORE, INTERNAL_FIREBASE_SETTINGS, GObject)
 
 /**
  * cloud_firestore_internal_firebase_settings_new:
@@ -175,7 +187,10 @@ G_DECLARE_FINAL_TYPE(CloudFirestoreInternalFirebaseSettings, cloud_firestore_int
  *
  * Returns: a new #CloudFirestoreInternalFirebaseSettings
  */
-CloudFirestoreInternalFirebaseSettings* cloud_firestore_internal_firebase_settings_new(gboolean* persistence_enabled, const gchar* host, gboolean* ssl_enabled, int64_t* cache_size_bytes, gboolean ignore_undefined_properties);
+CloudFirestoreInternalFirebaseSettings*
+cloud_firestore_internal_firebase_settings_new(
+    gboolean* persistence_enabled, const gchar* host, gboolean* ssl_enabled,
+    int64_t* cache_size_bytes, gboolean ignore_undefined_properties);
 
 /**
  * cloud_firestore_internal_firebase_settings_get_persistence_enabled
@@ -185,7 +200,8 @@ CloudFirestoreInternalFirebaseSettings* cloud_firestore_internal_firebase_settin
  *
  * Returns: the field value.
  */
-gboolean* cloud_firestore_internal_firebase_settings_get_persistence_enabled(CloudFirestoreInternalFirebaseSettings* object);
+gboolean* cloud_firestore_internal_firebase_settings_get_persistence_enabled(
+    CloudFirestoreInternalFirebaseSettings* object);
 
 /**
  * cloud_firestore_internal_firebase_settings_get_host
@@ -195,7 +211,8 @@ gboolean* cloud_firestore_internal_firebase_settings_get_persistence_enabled(Clo
  *
  * Returns: the field value.
  */
-const gchar* cloud_firestore_internal_firebase_settings_get_host(CloudFirestoreInternalFirebaseSettings* object);
+const gchar* cloud_firestore_internal_firebase_settings_get_host(
+    CloudFirestoreInternalFirebaseSettings* object);
 
 /**
  * cloud_firestore_internal_firebase_settings_get_ssl_enabled
@@ -205,7 +222,8 @@ const gchar* cloud_firestore_internal_firebase_settings_get_host(CloudFirestoreI
  *
  * Returns: the field value.
  */
-gboolean* cloud_firestore_internal_firebase_settings_get_ssl_enabled(CloudFirestoreInternalFirebaseSettings* object);
+gboolean* cloud_firestore_internal_firebase_settings_get_ssl_enabled(
+    CloudFirestoreInternalFirebaseSettings* object);
 
 /**
  * cloud_firestore_internal_firebase_settings_get_cache_size_bytes
@@ -215,7 +233,8 @@ gboolean* cloud_firestore_internal_firebase_settings_get_ssl_enabled(CloudFirest
  *
  * Returns: the field value.
  */
-int64_t* cloud_firestore_internal_firebase_settings_get_cache_size_bytes(CloudFirestoreInternalFirebaseSettings* object);
+int64_t* cloud_firestore_internal_firebase_settings_get_cache_size_bytes(
+    CloudFirestoreInternalFirebaseSettings* object);
 
 /**
  * cloud_firestore_internal_firebase_settings_get_ignore_undefined_properties
@@ -225,7 +244,9 @@ int64_t* cloud_firestore_internal_firebase_settings_get_cache_size_bytes(CloudFi
  *
  * Returns: the field value.
  */
-gboolean cloud_firestore_internal_firebase_settings_get_ignore_undefined_properties(CloudFirestoreInternalFirebaseSettings* object);
+gboolean
+cloud_firestore_internal_firebase_settings_get_ignore_undefined_properties(
+    CloudFirestoreInternalFirebaseSettings* object);
 
 /**
  * cloud_firestore_internal_firebase_settings_equals:
@@ -236,7 +257,9 @@ gboolean cloud_firestore_internal_firebase_settings_get_ignore_undefined_propert
  *
  * Returns: TRUE if @a and @b are equal.
  */
-gboolean cloud_firestore_internal_firebase_settings_equals(CloudFirestoreInternalFirebaseSettings* a, CloudFirestoreInternalFirebaseSettings* b);
+gboolean cloud_firestore_internal_firebase_settings_equals(
+    CloudFirestoreInternalFirebaseSettings* a,
+    CloudFirestoreInternalFirebaseSettings* b);
 
 /**
  * cloud_firestore_internal_firebase_settings_hash:
@@ -246,14 +269,17 @@ gboolean cloud_firestore_internal_firebase_settings_equals(CloudFirestoreInterna
  *
  * Returns: the hash code.
  */
-guint cloud_firestore_internal_firebase_settings_hash(CloudFirestoreInternalFirebaseSettings* object);
+guint cloud_firestore_internal_firebase_settings_hash(
+    CloudFirestoreInternalFirebaseSettings* object);
 
 /**
  * CloudFirestoreFirestorePigeonFirebaseApp:
  *
  */
 
-G_DECLARE_FINAL_TYPE(CloudFirestoreFirestorePigeonFirebaseApp, cloud_firestore_firestore_pigeon_firebase_app, CLOUD_FIRESTORE, FIRESTORE_PIGEON_FIREBASE_APP, GObject)
+G_DECLARE_FINAL_TYPE(CloudFirestoreFirestorePigeonFirebaseApp,
+                     cloud_firestore_firestore_pigeon_firebase_app,
+                     CLOUD_FIRESTORE, FIRESTORE_PIGEON_FIREBASE_APP, GObject)
 
 /**
  * cloud_firestore_firestore_pigeon_firebase_app_new:
@@ -265,7 +291,10 @@ G_DECLARE_FINAL_TYPE(CloudFirestoreFirestorePigeonFirebaseApp, cloud_firestore_f
  *
  * Returns: a new #CloudFirestoreFirestorePigeonFirebaseApp
  */
-CloudFirestoreFirestorePigeonFirebaseApp* cloud_firestore_firestore_pigeon_firebase_app_new(const gchar* app_name, CloudFirestoreInternalFirebaseSettings* settings, const gchar* database_u_r_l);
+CloudFirestoreFirestorePigeonFirebaseApp*
+cloud_firestore_firestore_pigeon_firebase_app_new(
+    const gchar* app_name, CloudFirestoreInternalFirebaseSettings* settings,
+    const gchar* database_u_r_l);
 
 /**
  * cloud_firestore_firestore_pigeon_firebase_app_get_app_name
@@ -275,7 +304,8 @@ CloudFirestoreFirestorePigeonFirebaseApp* cloud_firestore_firestore_pigeon_fireb
  *
  * Returns: the field value.
  */
-const gchar* cloud_firestore_firestore_pigeon_firebase_app_get_app_name(CloudFirestoreFirestorePigeonFirebaseApp* object);
+const gchar* cloud_firestore_firestore_pigeon_firebase_app_get_app_name(
+    CloudFirestoreFirestorePigeonFirebaseApp* object);
 
 /**
  * cloud_firestore_firestore_pigeon_firebase_app_get_settings
@@ -285,7 +315,9 @@ const gchar* cloud_firestore_firestore_pigeon_firebase_app_get_app_name(CloudFir
  *
  * Returns: the field value.
  */
-CloudFirestoreInternalFirebaseSettings* cloud_firestore_firestore_pigeon_firebase_app_get_settings(CloudFirestoreFirestorePigeonFirebaseApp* object);
+CloudFirestoreInternalFirebaseSettings*
+cloud_firestore_firestore_pigeon_firebase_app_get_settings(
+    CloudFirestoreFirestorePigeonFirebaseApp* object);
 
 /**
  * cloud_firestore_firestore_pigeon_firebase_app_get_database_u_r_l
@@ -295,7 +327,8 @@ CloudFirestoreInternalFirebaseSettings* cloud_firestore_firestore_pigeon_firebas
  *
  * Returns: the field value.
  */
-const gchar* cloud_firestore_firestore_pigeon_firebase_app_get_database_u_r_l(CloudFirestoreFirestorePigeonFirebaseApp* object);
+const gchar* cloud_firestore_firestore_pigeon_firebase_app_get_database_u_r_l(
+    CloudFirestoreFirestorePigeonFirebaseApp* object);
 
 /**
  * cloud_firestore_firestore_pigeon_firebase_app_equals:
@@ -306,24 +339,30 @@ const gchar* cloud_firestore_firestore_pigeon_firebase_app_get_database_u_r_l(Cl
  *
  * Returns: TRUE if @a and @b are equal.
  */
-gboolean cloud_firestore_firestore_pigeon_firebase_app_equals(CloudFirestoreFirestorePigeonFirebaseApp* a, CloudFirestoreFirestorePigeonFirebaseApp* b);
+gboolean cloud_firestore_firestore_pigeon_firebase_app_equals(
+    CloudFirestoreFirestorePigeonFirebaseApp* a,
+    CloudFirestoreFirestorePigeonFirebaseApp* b);
 
 /**
  * cloud_firestore_firestore_pigeon_firebase_app_hash:
  * @object: a #CloudFirestoreFirestorePigeonFirebaseApp.
  *
- * Calculates a hash code for a #CloudFirestoreFirestorePigeonFirebaseApp object.
+ * Calculates a hash code for a #CloudFirestoreFirestorePigeonFirebaseApp
+ * object.
  *
  * Returns: the hash code.
  */
-guint cloud_firestore_firestore_pigeon_firebase_app_hash(CloudFirestoreFirestorePigeonFirebaseApp* object);
+guint cloud_firestore_firestore_pigeon_firebase_app_hash(
+    CloudFirestoreFirestorePigeonFirebaseApp* object);
 
 /**
  * CloudFirestoreInternalSnapshotMetadata:
  *
  */
 
-G_DECLARE_FINAL_TYPE(CloudFirestoreInternalSnapshotMetadata, cloud_firestore_internal_snapshot_metadata, CLOUD_FIRESTORE, INTERNAL_SNAPSHOT_METADATA, GObject)
+G_DECLARE_FINAL_TYPE(CloudFirestoreInternalSnapshotMetadata,
+                     cloud_firestore_internal_snapshot_metadata,
+                     CLOUD_FIRESTORE, INTERNAL_SNAPSHOT_METADATA, GObject)
 
 /**
  * cloud_firestore_internal_snapshot_metadata_new:
@@ -334,7 +373,9 @@ G_DECLARE_FINAL_TYPE(CloudFirestoreInternalSnapshotMetadata, cloud_firestore_int
  *
  * Returns: a new #CloudFirestoreInternalSnapshotMetadata
  */
-CloudFirestoreInternalSnapshotMetadata* cloud_firestore_internal_snapshot_metadata_new(gboolean has_pending_writes, gboolean is_from_cache);
+CloudFirestoreInternalSnapshotMetadata*
+cloud_firestore_internal_snapshot_metadata_new(gboolean has_pending_writes,
+                                               gboolean is_from_cache);
 
 /**
  * cloud_firestore_internal_snapshot_metadata_get_has_pending_writes
@@ -344,7 +385,8 @@ CloudFirestoreInternalSnapshotMetadata* cloud_firestore_internal_snapshot_metada
  *
  * Returns: the field value.
  */
-gboolean cloud_firestore_internal_snapshot_metadata_get_has_pending_writes(CloudFirestoreInternalSnapshotMetadata* object);
+gboolean cloud_firestore_internal_snapshot_metadata_get_has_pending_writes(
+    CloudFirestoreInternalSnapshotMetadata* object);
 
 /**
  * cloud_firestore_internal_snapshot_metadata_get_is_from_cache
@@ -354,7 +396,8 @@ gboolean cloud_firestore_internal_snapshot_metadata_get_has_pending_writes(Cloud
  *
  * Returns: the field value.
  */
-gboolean cloud_firestore_internal_snapshot_metadata_get_is_from_cache(CloudFirestoreInternalSnapshotMetadata* object);
+gboolean cloud_firestore_internal_snapshot_metadata_get_is_from_cache(
+    CloudFirestoreInternalSnapshotMetadata* object);
 
 /**
  * cloud_firestore_internal_snapshot_metadata_equals:
@@ -365,7 +408,9 @@ gboolean cloud_firestore_internal_snapshot_metadata_get_is_from_cache(CloudFires
  *
  * Returns: TRUE if @a and @b are equal.
  */
-gboolean cloud_firestore_internal_snapshot_metadata_equals(CloudFirestoreInternalSnapshotMetadata* a, CloudFirestoreInternalSnapshotMetadata* b);
+gboolean cloud_firestore_internal_snapshot_metadata_equals(
+    CloudFirestoreInternalSnapshotMetadata* a,
+    CloudFirestoreInternalSnapshotMetadata* b);
 
 /**
  * cloud_firestore_internal_snapshot_metadata_hash:
@@ -375,14 +420,17 @@ gboolean cloud_firestore_internal_snapshot_metadata_equals(CloudFirestoreInterna
  *
  * Returns: the hash code.
  */
-guint cloud_firestore_internal_snapshot_metadata_hash(CloudFirestoreInternalSnapshotMetadata* object);
+guint cloud_firestore_internal_snapshot_metadata_hash(
+    CloudFirestoreInternalSnapshotMetadata* object);
 
 /**
  * CloudFirestoreInternalDocumentSnapshot:
  *
  */
 
-G_DECLARE_FINAL_TYPE(CloudFirestoreInternalDocumentSnapshot, cloud_firestore_internal_document_snapshot, CLOUD_FIRESTORE, INTERNAL_DOCUMENT_SNAPSHOT, GObject)
+G_DECLARE_FINAL_TYPE(CloudFirestoreInternalDocumentSnapshot,
+                     cloud_firestore_internal_document_snapshot,
+                     CLOUD_FIRESTORE, INTERNAL_DOCUMENT_SNAPSHOT, GObject)
 
 /**
  * cloud_firestore_internal_document_snapshot_new:
@@ -394,7 +442,10 @@ G_DECLARE_FINAL_TYPE(CloudFirestoreInternalDocumentSnapshot, cloud_firestore_int
  *
  * Returns: a new #CloudFirestoreInternalDocumentSnapshot
  */
-CloudFirestoreInternalDocumentSnapshot* cloud_firestore_internal_document_snapshot_new(const gchar* path, FlValue* data, CloudFirestoreInternalSnapshotMetadata* metadata);
+CloudFirestoreInternalDocumentSnapshot*
+cloud_firestore_internal_document_snapshot_new(
+    const gchar* path, FlValue* data,
+    CloudFirestoreInternalSnapshotMetadata* metadata);
 
 /**
  * cloud_firestore_internal_document_snapshot_get_path
@@ -404,7 +455,8 @@ CloudFirestoreInternalDocumentSnapshot* cloud_firestore_internal_document_snapsh
  *
  * Returns: the field value.
  */
-const gchar* cloud_firestore_internal_document_snapshot_get_path(CloudFirestoreInternalDocumentSnapshot* object);
+const gchar* cloud_firestore_internal_document_snapshot_get_path(
+    CloudFirestoreInternalDocumentSnapshot* object);
 
 /**
  * cloud_firestore_internal_document_snapshot_get_data
@@ -414,7 +466,8 @@ const gchar* cloud_firestore_internal_document_snapshot_get_path(CloudFirestoreI
  *
  * Returns: the field value.
  */
-FlValue* cloud_firestore_internal_document_snapshot_get_data(CloudFirestoreInternalDocumentSnapshot* object);
+FlValue* cloud_firestore_internal_document_snapshot_get_data(
+    CloudFirestoreInternalDocumentSnapshot* object);
 
 /**
  * cloud_firestore_internal_document_snapshot_get_metadata
@@ -424,7 +477,9 @@ FlValue* cloud_firestore_internal_document_snapshot_get_data(CloudFirestoreInter
  *
  * Returns: the field value.
  */
-CloudFirestoreInternalSnapshotMetadata* cloud_firestore_internal_document_snapshot_get_metadata(CloudFirestoreInternalDocumentSnapshot* object);
+CloudFirestoreInternalSnapshotMetadata*
+cloud_firestore_internal_document_snapshot_get_metadata(
+    CloudFirestoreInternalDocumentSnapshot* object);
 
 /**
  * cloud_firestore_internal_document_snapshot_equals:
@@ -435,7 +490,9 @@ CloudFirestoreInternalSnapshotMetadata* cloud_firestore_internal_document_snapsh
  *
  * Returns: TRUE if @a and @b are equal.
  */
-gboolean cloud_firestore_internal_document_snapshot_equals(CloudFirestoreInternalDocumentSnapshot* a, CloudFirestoreInternalDocumentSnapshot* b);
+gboolean cloud_firestore_internal_document_snapshot_equals(
+    CloudFirestoreInternalDocumentSnapshot* a,
+    CloudFirestoreInternalDocumentSnapshot* b);
 
 /**
  * cloud_firestore_internal_document_snapshot_hash:
@@ -445,14 +502,17 @@ gboolean cloud_firestore_internal_document_snapshot_equals(CloudFirestoreInterna
  *
  * Returns: the hash code.
  */
-guint cloud_firestore_internal_document_snapshot_hash(CloudFirestoreInternalDocumentSnapshot* object);
+guint cloud_firestore_internal_document_snapshot_hash(
+    CloudFirestoreInternalDocumentSnapshot* object);
 
 /**
  * CloudFirestoreInternalDocumentChange:
  *
  */
 
-G_DECLARE_FINAL_TYPE(CloudFirestoreInternalDocumentChange, cloud_firestore_internal_document_change, CLOUD_FIRESTORE, INTERNAL_DOCUMENT_CHANGE, GObject)
+G_DECLARE_FINAL_TYPE(CloudFirestoreInternalDocumentChange,
+                     cloud_firestore_internal_document_change, CLOUD_FIRESTORE,
+                     INTERNAL_DOCUMENT_CHANGE, GObject)
 
 /**
  * cloud_firestore_internal_document_change_new:
@@ -465,7 +525,11 @@ G_DECLARE_FINAL_TYPE(CloudFirestoreInternalDocumentChange, cloud_firestore_inter
  *
  * Returns: a new #CloudFirestoreInternalDocumentChange
  */
-CloudFirestoreInternalDocumentChange* cloud_firestore_internal_document_change_new(CloudFirestoreDocumentChangeType type_, CloudFirestoreInternalDocumentSnapshot* document, int64_t old_index, int64_t new_index);
+CloudFirestoreInternalDocumentChange*
+cloud_firestore_internal_document_change_new(
+    CloudFirestoreDocumentChangeType type_,
+    CloudFirestoreInternalDocumentSnapshot* document, int64_t old_index,
+    int64_t new_index);
 
 /**
  * cloud_firestore_internal_document_change_get_type_
@@ -475,7 +539,9 @@ CloudFirestoreInternalDocumentChange* cloud_firestore_internal_document_change_n
  *
  * Returns: the field value.
  */
-CloudFirestoreDocumentChangeType cloud_firestore_internal_document_change_get_type_(CloudFirestoreInternalDocumentChange* object);
+CloudFirestoreDocumentChangeType
+cloud_firestore_internal_document_change_get_type_(
+    CloudFirestoreInternalDocumentChange* object);
 
 /**
  * cloud_firestore_internal_document_change_get_document
@@ -485,7 +551,9 @@ CloudFirestoreDocumentChangeType cloud_firestore_internal_document_change_get_ty
  *
  * Returns: the field value.
  */
-CloudFirestoreInternalDocumentSnapshot* cloud_firestore_internal_document_change_get_document(CloudFirestoreInternalDocumentChange* object);
+CloudFirestoreInternalDocumentSnapshot*
+cloud_firestore_internal_document_change_get_document(
+    CloudFirestoreInternalDocumentChange* object);
 
 /**
  * cloud_firestore_internal_document_change_get_old_index
@@ -495,7 +563,8 @@ CloudFirestoreInternalDocumentSnapshot* cloud_firestore_internal_document_change
  *
  * Returns: the field value.
  */
-int64_t cloud_firestore_internal_document_change_get_old_index(CloudFirestoreInternalDocumentChange* object);
+int64_t cloud_firestore_internal_document_change_get_old_index(
+    CloudFirestoreInternalDocumentChange* object);
 
 /**
  * cloud_firestore_internal_document_change_get_new_index
@@ -505,7 +574,8 @@ int64_t cloud_firestore_internal_document_change_get_old_index(CloudFirestoreInt
  *
  * Returns: the field value.
  */
-int64_t cloud_firestore_internal_document_change_get_new_index(CloudFirestoreInternalDocumentChange* object);
+int64_t cloud_firestore_internal_document_change_get_new_index(
+    CloudFirestoreInternalDocumentChange* object);
 
 /**
  * cloud_firestore_internal_document_change_equals:
@@ -516,7 +586,9 @@ int64_t cloud_firestore_internal_document_change_get_new_index(CloudFirestoreInt
  *
  * Returns: TRUE if @a and @b are equal.
  */
-gboolean cloud_firestore_internal_document_change_equals(CloudFirestoreInternalDocumentChange* a, CloudFirestoreInternalDocumentChange* b);
+gboolean cloud_firestore_internal_document_change_equals(
+    CloudFirestoreInternalDocumentChange* a,
+    CloudFirestoreInternalDocumentChange* b);
 
 /**
  * cloud_firestore_internal_document_change_hash:
@@ -526,14 +598,17 @@ gboolean cloud_firestore_internal_document_change_equals(CloudFirestoreInternalD
  *
  * Returns: the hash code.
  */
-guint cloud_firestore_internal_document_change_hash(CloudFirestoreInternalDocumentChange* object);
+guint cloud_firestore_internal_document_change_hash(
+    CloudFirestoreInternalDocumentChange* object);
 
 /**
  * CloudFirestoreInternalQuerySnapshot:
  *
  */
 
-G_DECLARE_FINAL_TYPE(CloudFirestoreInternalQuerySnapshot, cloud_firestore_internal_query_snapshot, CLOUD_FIRESTORE, INTERNAL_QUERY_SNAPSHOT, GObject)
+G_DECLARE_FINAL_TYPE(CloudFirestoreInternalQuerySnapshot,
+                     cloud_firestore_internal_query_snapshot, CLOUD_FIRESTORE,
+                     INTERNAL_QUERY_SNAPSHOT, GObject)
 
 /**
  * cloud_firestore_internal_query_snapshot_new:
@@ -545,7 +620,10 @@ G_DECLARE_FINAL_TYPE(CloudFirestoreInternalQuerySnapshot, cloud_firestore_intern
  *
  * Returns: a new #CloudFirestoreInternalQuerySnapshot
  */
-CloudFirestoreInternalQuerySnapshot* cloud_firestore_internal_query_snapshot_new(FlValue* documents, FlValue* document_changes, CloudFirestoreInternalSnapshotMetadata* metadata);
+CloudFirestoreInternalQuerySnapshot*
+cloud_firestore_internal_query_snapshot_new(
+    FlValue* documents, FlValue* document_changes,
+    CloudFirestoreInternalSnapshotMetadata* metadata);
 
 /**
  * cloud_firestore_internal_query_snapshot_get_documents
@@ -555,7 +633,8 @@ CloudFirestoreInternalQuerySnapshot* cloud_firestore_internal_query_snapshot_new
  *
  * Returns: the field value.
  */
-FlValue* cloud_firestore_internal_query_snapshot_get_documents(CloudFirestoreInternalQuerySnapshot* object);
+FlValue* cloud_firestore_internal_query_snapshot_get_documents(
+    CloudFirestoreInternalQuerySnapshot* object);
 
 /**
  * cloud_firestore_internal_query_snapshot_get_document_changes
@@ -565,7 +644,8 @@ FlValue* cloud_firestore_internal_query_snapshot_get_documents(CloudFirestoreInt
  *
  * Returns: the field value.
  */
-FlValue* cloud_firestore_internal_query_snapshot_get_document_changes(CloudFirestoreInternalQuerySnapshot* object);
+FlValue* cloud_firestore_internal_query_snapshot_get_document_changes(
+    CloudFirestoreInternalQuerySnapshot* object);
 
 /**
  * cloud_firestore_internal_query_snapshot_get_metadata
@@ -575,7 +655,9 @@ FlValue* cloud_firestore_internal_query_snapshot_get_document_changes(CloudFires
  *
  * Returns: the field value.
  */
-CloudFirestoreInternalSnapshotMetadata* cloud_firestore_internal_query_snapshot_get_metadata(CloudFirestoreInternalQuerySnapshot* object);
+CloudFirestoreInternalSnapshotMetadata*
+cloud_firestore_internal_query_snapshot_get_metadata(
+    CloudFirestoreInternalQuerySnapshot* object);
 
 /**
  * cloud_firestore_internal_query_snapshot_equals:
@@ -586,7 +668,9 @@ CloudFirestoreInternalSnapshotMetadata* cloud_firestore_internal_query_snapshot_
  *
  * Returns: TRUE if @a and @b are equal.
  */
-gboolean cloud_firestore_internal_query_snapshot_equals(CloudFirestoreInternalQuerySnapshot* a, CloudFirestoreInternalQuerySnapshot* b);
+gboolean cloud_firestore_internal_query_snapshot_equals(
+    CloudFirestoreInternalQuerySnapshot* a,
+    CloudFirestoreInternalQuerySnapshot* b);
 
 /**
  * cloud_firestore_internal_query_snapshot_hash:
@@ -596,14 +680,17 @@ gboolean cloud_firestore_internal_query_snapshot_equals(CloudFirestoreInternalQu
  *
  * Returns: the hash code.
  */
-guint cloud_firestore_internal_query_snapshot_hash(CloudFirestoreInternalQuerySnapshot* object);
+guint cloud_firestore_internal_query_snapshot_hash(
+    CloudFirestoreInternalQuerySnapshot* object);
 
 /**
  * CloudFirestoreInternalPipelineResult:
  *
  */
 
-G_DECLARE_FINAL_TYPE(CloudFirestoreInternalPipelineResult, cloud_firestore_internal_pipeline_result, CLOUD_FIRESTORE, INTERNAL_PIPELINE_RESULT, GObject)
+G_DECLARE_FINAL_TYPE(CloudFirestoreInternalPipelineResult,
+                     cloud_firestore_internal_pipeline_result, CLOUD_FIRESTORE,
+                     INTERNAL_PIPELINE_RESULT, GObject)
 
 /**
  * cloud_firestore_internal_pipeline_result_new:
@@ -616,7 +703,11 @@ G_DECLARE_FINAL_TYPE(CloudFirestoreInternalPipelineResult, cloud_firestore_inter
  *
  * Returns: a new #CloudFirestoreInternalPipelineResult
  */
-CloudFirestoreInternalPipelineResult* cloud_firestore_internal_pipeline_result_new(const gchar* document_path, int64_t* create_time, int64_t* update_time, FlValue* data);
+CloudFirestoreInternalPipelineResult*
+cloud_firestore_internal_pipeline_result_new(const gchar* document_path,
+                                             int64_t* create_time,
+                                             int64_t* update_time,
+                                             FlValue* data);
 
 /**
  * cloud_firestore_internal_pipeline_result_get_document_path
@@ -626,7 +717,8 @@ CloudFirestoreInternalPipelineResult* cloud_firestore_internal_pipeline_result_n
  *
  * Returns: the field value.
  */
-const gchar* cloud_firestore_internal_pipeline_result_get_document_path(CloudFirestoreInternalPipelineResult* object);
+const gchar* cloud_firestore_internal_pipeline_result_get_document_path(
+    CloudFirestoreInternalPipelineResult* object);
 
 /**
  * cloud_firestore_internal_pipeline_result_get_create_time
@@ -636,7 +728,8 @@ const gchar* cloud_firestore_internal_pipeline_result_get_document_path(CloudFir
  *
  * Returns: the field value.
  */
-int64_t* cloud_firestore_internal_pipeline_result_get_create_time(CloudFirestoreInternalPipelineResult* object);
+int64_t* cloud_firestore_internal_pipeline_result_get_create_time(
+    CloudFirestoreInternalPipelineResult* object);
 
 /**
  * cloud_firestore_internal_pipeline_result_get_update_time
@@ -646,7 +739,8 @@ int64_t* cloud_firestore_internal_pipeline_result_get_create_time(CloudFirestore
  *
  * Returns: the field value.
  */
-int64_t* cloud_firestore_internal_pipeline_result_get_update_time(CloudFirestoreInternalPipelineResult* object);
+int64_t* cloud_firestore_internal_pipeline_result_get_update_time(
+    CloudFirestoreInternalPipelineResult* object);
 
 /**
  * cloud_firestore_internal_pipeline_result_get_data
@@ -656,7 +750,8 @@ int64_t* cloud_firestore_internal_pipeline_result_get_update_time(CloudFirestore
  *
  * Returns: the field value.
  */
-FlValue* cloud_firestore_internal_pipeline_result_get_data(CloudFirestoreInternalPipelineResult* object);
+FlValue* cloud_firestore_internal_pipeline_result_get_data(
+    CloudFirestoreInternalPipelineResult* object);
 
 /**
  * cloud_firestore_internal_pipeline_result_equals:
@@ -667,7 +762,9 @@ FlValue* cloud_firestore_internal_pipeline_result_get_data(CloudFirestoreInterna
  *
  * Returns: TRUE if @a and @b are equal.
  */
-gboolean cloud_firestore_internal_pipeline_result_equals(CloudFirestoreInternalPipelineResult* a, CloudFirestoreInternalPipelineResult* b);
+gboolean cloud_firestore_internal_pipeline_result_equals(
+    CloudFirestoreInternalPipelineResult* a,
+    CloudFirestoreInternalPipelineResult* b);
 
 /**
  * cloud_firestore_internal_pipeline_result_hash:
@@ -677,14 +774,17 @@ gboolean cloud_firestore_internal_pipeline_result_equals(CloudFirestoreInternalP
  *
  * Returns: the hash code.
  */
-guint cloud_firestore_internal_pipeline_result_hash(CloudFirestoreInternalPipelineResult* object);
+guint cloud_firestore_internal_pipeline_result_hash(
+    CloudFirestoreInternalPipelineResult* object);
 
 /**
  * CloudFirestoreInternalPipelineSnapshot:
  *
  */
 
-G_DECLARE_FINAL_TYPE(CloudFirestoreInternalPipelineSnapshot, cloud_firestore_internal_pipeline_snapshot, CLOUD_FIRESTORE, INTERNAL_PIPELINE_SNAPSHOT, GObject)
+G_DECLARE_FINAL_TYPE(CloudFirestoreInternalPipelineSnapshot,
+                     cloud_firestore_internal_pipeline_snapshot,
+                     CLOUD_FIRESTORE, INTERNAL_PIPELINE_SNAPSHOT, GObject)
 
 /**
  * cloud_firestore_internal_pipeline_snapshot_new:
@@ -695,7 +795,9 @@ G_DECLARE_FINAL_TYPE(CloudFirestoreInternalPipelineSnapshot, cloud_firestore_int
  *
  * Returns: a new #CloudFirestoreInternalPipelineSnapshot
  */
-CloudFirestoreInternalPipelineSnapshot* cloud_firestore_internal_pipeline_snapshot_new(FlValue* results, int64_t execution_time);
+CloudFirestoreInternalPipelineSnapshot*
+cloud_firestore_internal_pipeline_snapshot_new(FlValue* results,
+                                               int64_t execution_time);
 
 /**
  * cloud_firestore_internal_pipeline_snapshot_get_results
@@ -705,7 +807,8 @@ CloudFirestoreInternalPipelineSnapshot* cloud_firestore_internal_pipeline_snapsh
  *
  * Returns: the field value.
  */
-FlValue* cloud_firestore_internal_pipeline_snapshot_get_results(CloudFirestoreInternalPipelineSnapshot* object);
+FlValue* cloud_firestore_internal_pipeline_snapshot_get_results(
+    CloudFirestoreInternalPipelineSnapshot* object);
 
 /**
  * cloud_firestore_internal_pipeline_snapshot_get_execution_time
@@ -715,7 +818,8 @@ FlValue* cloud_firestore_internal_pipeline_snapshot_get_results(CloudFirestoreIn
  *
  * Returns: the field value.
  */
-int64_t cloud_firestore_internal_pipeline_snapshot_get_execution_time(CloudFirestoreInternalPipelineSnapshot* object);
+int64_t cloud_firestore_internal_pipeline_snapshot_get_execution_time(
+    CloudFirestoreInternalPipelineSnapshot* object);
 
 /**
  * cloud_firestore_internal_pipeline_snapshot_equals:
@@ -726,7 +830,9 @@ int64_t cloud_firestore_internal_pipeline_snapshot_get_execution_time(CloudFires
  *
  * Returns: TRUE if @a and @b are equal.
  */
-gboolean cloud_firestore_internal_pipeline_snapshot_equals(CloudFirestoreInternalPipelineSnapshot* a, CloudFirestoreInternalPipelineSnapshot* b);
+gboolean cloud_firestore_internal_pipeline_snapshot_equals(
+    CloudFirestoreInternalPipelineSnapshot* a,
+    CloudFirestoreInternalPipelineSnapshot* b);
 
 /**
  * cloud_firestore_internal_pipeline_snapshot_hash:
@@ -736,14 +842,17 @@ gboolean cloud_firestore_internal_pipeline_snapshot_equals(CloudFirestoreInterna
  *
  * Returns: the hash code.
  */
-guint cloud_firestore_internal_pipeline_snapshot_hash(CloudFirestoreInternalPipelineSnapshot* object);
+guint cloud_firestore_internal_pipeline_snapshot_hash(
+    CloudFirestoreInternalPipelineSnapshot* object);
 
 /**
  * CloudFirestoreInternalGetOptions:
  *
  */
 
-G_DECLARE_FINAL_TYPE(CloudFirestoreInternalGetOptions, cloud_firestore_internal_get_options, CLOUD_FIRESTORE, INTERNAL_GET_OPTIONS, GObject)
+G_DECLARE_FINAL_TYPE(CloudFirestoreInternalGetOptions,
+                     cloud_firestore_internal_get_options, CLOUD_FIRESTORE,
+                     INTERNAL_GET_OPTIONS, GObject)
 
 /**
  * cloud_firestore_internal_get_options_new:
@@ -754,7 +863,9 @@ G_DECLARE_FINAL_TYPE(CloudFirestoreInternalGetOptions, cloud_firestore_internal_
  *
  * Returns: a new #CloudFirestoreInternalGetOptions
  */
-CloudFirestoreInternalGetOptions* cloud_firestore_internal_get_options_new(CloudFirestoreSource source, CloudFirestoreServerTimestampBehavior server_timestamp_behavior);
+CloudFirestoreInternalGetOptions* cloud_firestore_internal_get_options_new(
+    CloudFirestoreSource source,
+    CloudFirestoreServerTimestampBehavior server_timestamp_behavior);
 
 /**
  * cloud_firestore_internal_get_options_get_source
@@ -764,7 +875,8 @@ CloudFirestoreInternalGetOptions* cloud_firestore_internal_get_options_new(Cloud
  *
  * Returns: the field value.
  */
-CloudFirestoreSource cloud_firestore_internal_get_options_get_source(CloudFirestoreInternalGetOptions* object);
+CloudFirestoreSource cloud_firestore_internal_get_options_get_source(
+    CloudFirestoreInternalGetOptions* object);
 
 /**
  * cloud_firestore_internal_get_options_get_server_timestamp_behavior
@@ -774,7 +886,9 @@ CloudFirestoreSource cloud_firestore_internal_get_options_get_source(CloudFirest
  *
  * Returns: the field value.
  */
-CloudFirestoreServerTimestampBehavior cloud_firestore_internal_get_options_get_server_timestamp_behavior(CloudFirestoreInternalGetOptions* object);
+CloudFirestoreServerTimestampBehavior
+cloud_firestore_internal_get_options_get_server_timestamp_behavior(
+    CloudFirestoreInternalGetOptions* object);
 
 /**
  * cloud_firestore_internal_get_options_equals:
@@ -785,7 +899,8 @@ CloudFirestoreServerTimestampBehavior cloud_firestore_internal_get_options_get_s
  *
  * Returns: TRUE if @a and @b are equal.
  */
-gboolean cloud_firestore_internal_get_options_equals(CloudFirestoreInternalGetOptions* a, CloudFirestoreInternalGetOptions* b);
+gboolean cloud_firestore_internal_get_options_equals(
+    CloudFirestoreInternalGetOptions* a, CloudFirestoreInternalGetOptions* b);
 
 /**
  * cloud_firestore_internal_get_options_hash:
@@ -795,14 +910,17 @@ gboolean cloud_firestore_internal_get_options_equals(CloudFirestoreInternalGetOp
  *
  * Returns: the hash code.
  */
-guint cloud_firestore_internal_get_options_hash(CloudFirestoreInternalGetOptions* object);
+guint cloud_firestore_internal_get_options_hash(
+    CloudFirestoreInternalGetOptions* object);
 
 /**
  * CloudFirestoreInternalDocumentOption:
  *
  */
 
-G_DECLARE_FINAL_TYPE(CloudFirestoreInternalDocumentOption, cloud_firestore_internal_document_option, CLOUD_FIRESTORE, INTERNAL_DOCUMENT_OPTION, GObject)
+G_DECLARE_FINAL_TYPE(CloudFirestoreInternalDocumentOption,
+                     cloud_firestore_internal_document_option, CLOUD_FIRESTORE,
+                     INTERNAL_DOCUMENT_OPTION, GObject)
 
 /**
  * cloud_firestore_internal_document_option_new:
@@ -813,7 +931,9 @@ G_DECLARE_FINAL_TYPE(CloudFirestoreInternalDocumentOption, cloud_firestore_inter
  *
  * Returns: a new #CloudFirestoreInternalDocumentOption
  */
-CloudFirestoreInternalDocumentOption* cloud_firestore_internal_document_option_new(gboolean* merge, FlValue* merge_fields);
+CloudFirestoreInternalDocumentOption*
+cloud_firestore_internal_document_option_new(gboolean* merge,
+                                             FlValue* merge_fields);
 
 /**
  * cloud_firestore_internal_document_option_get_merge
@@ -823,7 +943,8 @@ CloudFirestoreInternalDocumentOption* cloud_firestore_internal_document_option_n
  *
  * Returns: the field value.
  */
-gboolean* cloud_firestore_internal_document_option_get_merge(CloudFirestoreInternalDocumentOption* object);
+gboolean* cloud_firestore_internal_document_option_get_merge(
+    CloudFirestoreInternalDocumentOption* object);
 
 /**
  * cloud_firestore_internal_document_option_get_merge_fields
@@ -833,7 +954,8 @@ gboolean* cloud_firestore_internal_document_option_get_merge(CloudFirestoreInter
  *
  * Returns: the field value.
  */
-FlValue* cloud_firestore_internal_document_option_get_merge_fields(CloudFirestoreInternalDocumentOption* object);
+FlValue* cloud_firestore_internal_document_option_get_merge_fields(
+    CloudFirestoreInternalDocumentOption* object);
 
 /**
  * cloud_firestore_internal_document_option_equals:
@@ -844,7 +966,9 @@ FlValue* cloud_firestore_internal_document_option_get_merge_fields(CloudFirestor
  *
  * Returns: TRUE if @a and @b are equal.
  */
-gboolean cloud_firestore_internal_document_option_equals(CloudFirestoreInternalDocumentOption* a, CloudFirestoreInternalDocumentOption* b);
+gboolean cloud_firestore_internal_document_option_equals(
+    CloudFirestoreInternalDocumentOption* a,
+    CloudFirestoreInternalDocumentOption* b);
 
 /**
  * cloud_firestore_internal_document_option_hash:
@@ -854,14 +978,17 @@ gboolean cloud_firestore_internal_document_option_equals(CloudFirestoreInternalD
  *
  * Returns: the hash code.
  */
-guint cloud_firestore_internal_document_option_hash(CloudFirestoreInternalDocumentOption* object);
+guint cloud_firestore_internal_document_option_hash(
+    CloudFirestoreInternalDocumentOption* object);
 
 /**
  * CloudFirestoreInternalTransactionCommand:
  *
  */
 
-G_DECLARE_FINAL_TYPE(CloudFirestoreInternalTransactionCommand, cloud_firestore_internal_transaction_command, CLOUD_FIRESTORE, INTERNAL_TRANSACTION_COMMAND, GObject)
+G_DECLARE_FINAL_TYPE(CloudFirestoreInternalTransactionCommand,
+                     cloud_firestore_internal_transaction_command,
+                     CLOUD_FIRESTORE, INTERNAL_TRANSACTION_COMMAND, GObject)
 
 /**
  * cloud_firestore_internal_transaction_command_new:
@@ -874,7 +1001,10 @@ G_DECLARE_FINAL_TYPE(CloudFirestoreInternalTransactionCommand, cloud_firestore_i
  *
  * Returns: a new #CloudFirestoreInternalTransactionCommand
  */
-CloudFirestoreInternalTransactionCommand* cloud_firestore_internal_transaction_command_new(CloudFirestoreInternalTransactionType type_, const gchar* path, FlValue* data, CloudFirestoreInternalDocumentOption* option);
+CloudFirestoreInternalTransactionCommand*
+cloud_firestore_internal_transaction_command_new(
+    CloudFirestoreInternalTransactionType type_, const gchar* path,
+    FlValue* data, CloudFirestoreInternalDocumentOption* option);
 
 /**
  * cloud_firestore_internal_transaction_command_get_type_
@@ -884,7 +1014,9 @@ CloudFirestoreInternalTransactionCommand* cloud_firestore_internal_transaction_c
  *
  * Returns: the field value.
  */
-CloudFirestoreInternalTransactionType cloud_firestore_internal_transaction_command_get_type_(CloudFirestoreInternalTransactionCommand* object);
+CloudFirestoreInternalTransactionType
+cloud_firestore_internal_transaction_command_get_type_(
+    CloudFirestoreInternalTransactionCommand* object);
 
 /**
  * cloud_firestore_internal_transaction_command_get_path
@@ -894,7 +1026,8 @@ CloudFirestoreInternalTransactionType cloud_firestore_internal_transaction_comma
  *
  * Returns: the field value.
  */
-const gchar* cloud_firestore_internal_transaction_command_get_path(CloudFirestoreInternalTransactionCommand* object);
+const gchar* cloud_firestore_internal_transaction_command_get_path(
+    CloudFirestoreInternalTransactionCommand* object);
 
 /**
  * cloud_firestore_internal_transaction_command_get_data
@@ -904,7 +1037,8 @@ const gchar* cloud_firestore_internal_transaction_command_get_path(CloudFirestor
  *
  * Returns: the field value.
  */
-FlValue* cloud_firestore_internal_transaction_command_get_data(CloudFirestoreInternalTransactionCommand* object);
+FlValue* cloud_firestore_internal_transaction_command_get_data(
+    CloudFirestoreInternalTransactionCommand* object);
 
 /**
  * cloud_firestore_internal_transaction_command_get_option
@@ -914,7 +1048,9 @@ FlValue* cloud_firestore_internal_transaction_command_get_data(CloudFirestoreInt
  *
  * Returns: the field value.
  */
-CloudFirestoreInternalDocumentOption* cloud_firestore_internal_transaction_command_get_option(CloudFirestoreInternalTransactionCommand* object);
+CloudFirestoreInternalDocumentOption*
+cloud_firestore_internal_transaction_command_get_option(
+    CloudFirestoreInternalTransactionCommand* object);
 
 /**
  * cloud_firestore_internal_transaction_command_equals:
@@ -925,24 +1061,30 @@ CloudFirestoreInternalDocumentOption* cloud_firestore_internal_transaction_comma
  *
  * Returns: TRUE if @a and @b are equal.
  */
-gboolean cloud_firestore_internal_transaction_command_equals(CloudFirestoreInternalTransactionCommand* a, CloudFirestoreInternalTransactionCommand* b);
+gboolean cloud_firestore_internal_transaction_command_equals(
+    CloudFirestoreInternalTransactionCommand* a,
+    CloudFirestoreInternalTransactionCommand* b);
 
 /**
  * cloud_firestore_internal_transaction_command_hash:
  * @object: a #CloudFirestoreInternalTransactionCommand.
  *
- * Calculates a hash code for a #CloudFirestoreInternalTransactionCommand object.
+ * Calculates a hash code for a #CloudFirestoreInternalTransactionCommand
+ * object.
  *
  * Returns: the hash code.
  */
-guint cloud_firestore_internal_transaction_command_hash(CloudFirestoreInternalTransactionCommand* object);
+guint cloud_firestore_internal_transaction_command_hash(
+    CloudFirestoreInternalTransactionCommand* object);
 
 /**
  * CloudFirestoreDocumentReferenceRequest:
  *
  */
 
-G_DECLARE_FINAL_TYPE(CloudFirestoreDocumentReferenceRequest, cloud_firestore_document_reference_request, CLOUD_FIRESTORE, DOCUMENT_REFERENCE_REQUEST, GObject)
+G_DECLARE_FINAL_TYPE(CloudFirestoreDocumentReferenceRequest,
+                     cloud_firestore_document_reference_request,
+                     CLOUD_FIRESTORE, DOCUMENT_REFERENCE_REQUEST, GObject)
 
 /**
  * cloud_firestore_document_reference_request_new:
@@ -956,7 +1098,11 @@ G_DECLARE_FINAL_TYPE(CloudFirestoreDocumentReferenceRequest, cloud_firestore_doc
  *
  * Returns: a new #CloudFirestoreDocumentReferenceRequest
  */
-CloudFirestoreDocumentReferenceRequest* cloud_firestore_document_reference_request_new(const gchar* path, FlValue* data, CloudFirestoreInternalDocumentOption* option, CloudFirestoreSource* source, CloudFirestoreServerTimestampBehavior* server_timestamp_behavior);
+CloudFirestoreDocumentReferenceRequest*
+cloud_firestore_document_reference_request_new(
+    const gchar* path, FlValue* data,
+    CloudFirestoreInternalDocumentOption* option, CloudFirestoreSource* source,
+    CloudFirestoreServerTimestampBehavior* server_timestamp_behavior);
 
 /**
  * cloud_firestore_document_reference_request_get_path
@@ -966,7 +1112,8 @@ CloudFirestoreDocumentReferenceRequest* cloud_firestore_document_reference_reque
  *
  * Returns: the field value.
  */
-const gchar* cloud_firestore_document_reference_request_get_path(CloudFirestoreDocumentReferenceRequest* object);
+const gchar* cloud_firestore_document_reference_request_get_path(
+    CloudFirestoreDocumentReferenceRequest* object);
 
 /**
  * cloud_firestore_document_reference_request_get_data
@@ -976,7 +1123,8 @@ const gchar* cloud_firestore_document_reference_request_get_path(CloudFirestoreD
  *
  * Returns: the field value.
  */
-FlValue* cloud_firestore_document_reference_request_get_data(CloudFirestoreDocumentReferenceRequest* object);
+FlValue* cloud_firestore_document_reference_request_get_data(
+    CloudFirestoreDocumentReferenceRequest* object);
 
 /**
  * cloud_firestore_document_reference_request_get_option
@@ -986,7 +1134,9 @@ FlValue* cloud_firestore_document_reference_request_get_data(CloudFirestoreDocum
  *
  * Returns: the field value.
  */
-CloudFirestoreInternalDocumentOption* cloud_firestore_document_reference_request_get_option(CloudFirestoreDocumentReferenceRequest* object);
+CloudFirestoreInternalDocumentOption*
+cloud_firestore_document_reference_request_get_option(
+    CloudFirestoreDocumentReferenceRequest* object);
 
 /**
  * cloud_firestore_document_reference_request_get_source
@@ -996,7 +1146,8 @@ CloudFirestoreInternalDocumentOption* cloud_firestore_document_reference_request
  *
  * Returns: the field value.
  */
-CloudFirestoreSource* cloud_firestore_document_reference_request_get_source(CloudFirestoreDocumentReferenceRequest* object);
+CloudFirestoreSource* cloud_firestore_document_reference_request_get_source(
+    CloudFirestoreDocumentReferenceRequest* object);
 
 /**
  * cloud_firestore_document_reference_request_get_server_timestamp_behavior
@@ -1006,7 +1157,9 @@ CloudFirestoreSource* cloud_firestore_document_reference_request_get_source(Clou
  *
  * Returns: the field value.
  */
-CloudFirestoreServerTimestampBehavior* cloud_firestore_document_reference_request_get_server_timestamp_behavior(CloudFirestoreDocumentReferenceRequest* object);
+CloudFirestoreServerTimestampBehavior*
+cloud_firestore_document_reference_request_get_server_timestamp_behavior(
+    CloudFirestoreDocumentReferenceRequest* object);
 
 /**
  * cloud_firestore_document_reference_request_equals:
@@ -1017,7 +1170,9 @@ CloudFirestoreServerTimestampBehavior* cloud_firestore_document_reference_reques
  *
  * Returns: TRUE if @a and @b are equal.
  */
-gboolean cloud_firestore_document_reference_request_equals(CloudFirestoreDocumentReferenceRequest* a, CloudFirestoreDocumentReferenceRequest* b);
+gboolean cloud_firestore_document_reference_request_equals(
+    CloudFirestoreDocumentReferenceRequest* a,
+    CloudFirestoreDocumentReferenceRequest* b);
 
 /**
  * cloud_firestore_document_reference_request_hash:
@@ -1027,14 +1182,17 @@ gboolean cloud_firestore_document_reference_request_equals(CloudFirestoreDocumen
  *
  * Returns: the hash code.
  */
-guint cloud_firestore_document_reference_request_hash(CloudFirestoreDocumentReferenceRequest* object);
+guint cloud_firestore_document_reference_request_hash(
+    CloudFirestoreDocumentReferenceRequest* object);
 
 /**
  * CloudFirestoreInternalQueryParameters:
  *
  */
 
-G_DECLARE_FINAL_TYPE(CloudFirestoreInternalQueryParameters, cloud_firestore_internal_query_parameters, CLOUD_FIRESTORE, INTERNAL_QUERY_PARAMETERS, GObject)
+G_DECLARE_FINAL_TYPE(CloudFirestoreInternalQueryParameters,
+                     cloud_firestore_internal_query_parameters, CLOUD_FIRESTORE,
+                     INTERNAL_QUERY_PARAMETERS, GObject)
 
 /**
  * cloud_firestore_internal_query_parameters_new:
@@ -1052,7 +1210,11 @@ G_DECLARE_FINAL_TYPE(CloudFirestoreInternalQueryParameters, cloud_firestore_inte
  *
  * Returns: a new #CloudFirestoreInternalQueryParameters
  */
-CloudFirestoreInternalQueryParameters* cloud_firestore_internal_query_parameters_new(FlValue* where, FlValue* order_by, int64_t* limit, int64_t* limit_to_last, FlValue* start_at, FlValue* start_after, FlValue* end_at, FlValue* end_before, FlValue* filters);
+CloudFirestoreInternalQueryParameters*
+cloud_firestore_internal_query_parameters_new(
+    FlValue* where, FlValue* order_by, int64_t* limit, int64_t* limit_to_last,
+    FlValue* start_at, FlValue* start_after, FlValue* end_at,
+    FlValue* end_before, FlValue* filters);
 
 /**
  * cloud_firestore_internal_query_parameters_get_where
@@ -1062,7 +1224,8 @@ CloudFirestoreInternalQueryParameters* cloud_firestore_internal_query_parameters
  *
  * Returns: the field value.
  */
-FlValue* cloud_firestore_internal_query_parameters_get_where(CloudFirestoreInternalQueryParameters* object);
+FlValue* cloud_firestore_internal_query_parameters_get_where(
+    CloudFirestoreInternalQueryParameters* object);
 
 /**
  * cloud_firestore_internal_query_parameters_get_order_by
@@ -1072,7 +1235,8 @@ FlValue* cloud_firestore_internal_query_parameters_get_where(CloudFirestoreInter
  *
  * Returns: the field value.
  */
-FlValue* cloud_firestore_internal_query_parameters_get_order_by(CloudFirestoreInternalQueryParameters* object);
+FlValue* cloud_firestore_internal_query_parameters_get_order_by(
+    CloudFirestoreInternalQueryParameters* object);
 
 /**
  * cloud_firestore_internal_query_parameters_get_limit
@@ -1082,7 +1246,8 @@ FlValue* cloud_firestore_internal_query_parameters_get_order_by(CloudFirestoreIn
  *
  * Returns: the field value.
  */
-int64_t* cloud_firestore_internal_query_parameters_get_limit(CloudFirestoreInternalQueryParameters* object);
+int64_t* cloud_firestore_internal_query_parameters_get_limit(
+    CloudFirestoreInternalQueryParameters* object);
 
 /**
  * cloud_firestore_internal_query_parameters_get_limit_to_last
@@ -1092,7 +1257,8 @@ int64_t* cloud_firestore_internal_query_parameters_get_limit(CloudFirestoreInter
  *
  * Returns: the field value.
  */
-int64_t* cloud_firestore_internal_query_parameters_get_limit_to_last(CloudFirestoreInternalQueryParameters* object);
+int64_t* cloud_firestore_internal_query_parameters_get_limit_to_last(
+    CloudFirestoreInternalQueryParameters* object);
 
 /**
  * cloud_firestore_internal_query_parameters_get_start_at
@@ -1102,7 +1268,8 @@ int64_t* cloud_firestore_internal_query_parameters_get_limit_to_last(CloudFirest
  *
  * Returns: the field value.
  */
-FlValue* cloud_firestore_internal_query_parameters_get_start_at(CloudFirestoreInternalQueryParameters* object);
+FlValue* cloud_firestore_internal_query_parameters_get_start_at(
+    CloudFirestoreInternalQueryParameters* object);
 
 /**
  * cloud_firestore_internal_query_parameters_get_start_after
@@ -1112,7 +1279,8 @@ FlValue* cloud_firestore_internal_query_parameters_get_start_at(CloudFirestoreIn
  *
  * Returns: the field value.
  */
-FlValue* cloud_firestore_internal_query_parameters_get_start_after(CloudFirestoreInternalQueryParameters* object);
+FlValue* cloud_firestore_internal_query_parameters_get_start_after(
+    CloudFirestoreInternalQueryParameters* object);
 
 /**
  * cloud_firestore_internal_query_parameters_get_end_at
@@ -1122,7 +1290,8 @@ FlValue* cloud_firestore_internal_query_parameters_get_start_after(CloudFirestor
  *
  * Returns: the field value.
  */
-FlValue* cloud_firestore_internal_query_parameters_get_end_at(CloudFirestoreInternalQueryParameters* object);
+FlValue* cloud_firestore_internal_query_parameters_get_end_at(
+    CloudFirestoreInternalQueryParameters* object);
 
 /**
  * cloud_firestore_internal_query_parameters_get_end_before
@@ -1132,7 +1301,8 @@ FlValue* cloud_firestore_internal_query_parameters_get_end_at(CloudFirestoreInte
  *
  * Returns: the field value.
  */
-FlValue* cloud_firestore_internal_query_parameters_get_end_before(CloudFirestoreInternalQueryParameters* object);
+FlValue* cloud_firestore_internal_query_parameters_get_end_before(
+    CloudFirestoreInternalQueryParameters* object);
 
 /**
  * cloud_firestore_internal_query_parameters_get_filters
@@ -1142,7 +1312,8 @@ FlValue* cloud_firestore_internal_query_parameters_get_end_before(CloudFirestore
  *
  * Returns: the field value.
  */
-FlValue* cloud_firestore_internal_query_parameters_get_filters(CloudFirestoreInternalQueryParameters* object);
+FlValue* cloud_firestore_internal_query_parameters_get_filters(
+    CloudFirestoreInternalQueryParameters* object);
 
 /**
  * cloud_firestore_internal_query_parameters_equals:
@@ -1153,7 +1324,9 @@ FlValue* cloud_firestore_internal_query_parameters_get_filters(CloudFirestoreInt
  *
  * Returns: TRUE if @a and @b are equal.
  */
-gboolean cloud_firestore_internal_query_parameters_equals(CloudFirestoreInternalQueryParameters* a, CloudFirestoreInternalQueryParameters* b);
+gboolean cloud_firestore_internal_query_parameters_equals(
+    CloudFirestoreInternalQueryParameters* a,
+    CloudFirestoreInternalQueryParameters* b);
 
 /**
  * cloud_firestore_internal_query_parameters_hash:
@@ -1163,14 +1336,17 @@ gboolean cloud_firestore_internal_query_parameters_equals(CloudFirestoreInternal
  *
  * Returns: the hash code.
  */
-guint cloud_firestore_internal_query_parameters_hash(CloudFirestoreInternalQueryParameters* object);
+guint cloud_firestore_internal_query_parameters_hash(
+    CloudFirestoreInternalQueryParameters* object);
 
 /**
  * CloudFirestoreAggregateQuery:
  *
  */
 
-G_DECLARE_FINAL_TYPE(CloudFirestoreAggregateQuery, cloud_firestore_aggregate_query, CLOUD_FIRESTORE, AGGREGATE_QUERY, GObject)
+G_DECLARE_FINAL_TYPE(CloudFirestoreAggregateQuery,
+                     cloud_firestore_aggregate_query, CLOUD_FIRESTORE,
+                     AGGREGATE_QUERY, GObject)
 
 /**
  * cloud_firestore_aggregate_query_new:
@@ -1181,7 +1357,8 @@ G_DECLARE_FINAL_TYPE(CloudFirestoreAggregateQuery, cloud_firestore_aggregate_que
  *
  * Returns: a new #CloudFirestoreAggregateQuery
  */
-CloudFirestoreAggregateQuery* cloud_firestore_aggregate_query_new(CloudFirestoreAggregateType type_, const gchar* field);
+CloudFirestoreAggregateQuery* cloud_firestore_aggregate_query_new(
+    CloudFirestoreAggregateType type_, const gchar* field);
 
 /**
  * cloud_firestore_aggregate_query_get_type_
@@ -1191,7 +1368,8 @@ CloudFirestoreAggregateQuery* cloud_firestore_aggregate_query_new(CloudFirestore
  *
  * Returns: the field value.
  */
-CloudFirestoreAggregateType cloud_firestore_aggregate_query_get_type_(CloudFirestoreAggregateQuery* object);
+CloudFirestoreAggregateType cloud_firestore_aggregate_query_get_type_(
+    CloudFirestoreAggregateQuery* object);
 
 /**
  * cloud_firestore_aggregate_query_get_field
@@ -1201,7 +1379,8 @@ CloudFirestoreAggregateType cloud_firestore_aggregate_query_get_type_(CloudFires
  *
  * Returns: the field value.
  */
-const gchar* cloud_firestore_aggregate_query_get_field(CloudFirestoreAggregateQuery* object);
+const gchar* cloud_firestore_aggregate_query_get_field(
+    CloudFirestoreAggregateQuery* object);
 
 /**
  * cloud_firestore_aggregate_query_equals:
@@ -1212,7 +1391,8 @@ const gchar* cloud_firestore_aggregate_query_get_field(CloudFirestoreAggregateQu
  *
  * Returns: TRUE if @a and @b are equal.
  */
-gboolean cloud_firestore_aggregate_query_equals(CloudFirestoreAggregateQuery* a, CloudFirestoreAggregateQuery* b);
+gboolean cloud_firestore_aggregate_query_equals(
+    CloudFirestoreAggregateQuery* a, CloudFirestoreAggregateQuery* b);
 
 /**
  * cloud_firestore_aggregate_query_hash:
@@ -1222,14 +1402,17 @@ gboolean cloud_firestore_aggregate_query_equals(CloudFirestoreAggregateQuery* a,
  *
  * Returns: the hash code.
  */
-guint cloud_firestore_aggregate_query_hash(CloudFirestoreAggregateQuery* object);
+guint cloud_firestore_aggregate_query_hash(
+    CloudFirestoreAggregateQuery* object);
 
 /**
  * CloudFirestoreAggregateQueryResponse:
  *
  */
 
-G_DECLARE_FINAL_TYPE(CloudFirestoreAggregateQueryResponse, cloud_firestore_aggregate_query_response, CLOUD_FIRESTORE, AGGREGATE_QUERY_RESPONSE, GObject)
+G_DECLARE_FINAL_TYPE(CloudFirestoreAggregateQueryResponse,
+                     cloud_firestore_aggregate_query_response, CLOUD_FIRESTORE,
+                     AGGREGATE_QUERY_RESPONSE, GObject)
 
 /**
  * cloud_firestore_aggregate_query_response_new:
@@ -1241,7 +1424,9 @@ G_DECLARE_FINAL_TYPE(CloudFirestoreAggregateQueryResponse, cloud_firestore_aggre
  *
  * Returns: a new #CloudFirestoreAggregateQueryResponse
  */
-CloudFirestoreAggregateQueryResponse* cloud_firestore_aggregate_query_response_new(CloudFirestoreAggregateType type_, const gchar* field, double* value);
+CloudFirestoreAggregateQueryResponse*
+cloud_firestore_aggregate_query_response_new(CloudFirestoreAggregateType type_,
+                                             const gchar* field, double* value);
 
 /**
  * cloud_firestore_aggregate_query_response_get_type_
@@ -1251,7 +1436,8 @@ CloudFirestoreAggregateQueryResponse* cloud_firestore_aggregate_query_response_n
  *
  * Returns: the field value.
  */
-CloudFirestoreAggregateType cloud_firestore_aggregate_query_response_get_type_(CloudFirestoreAggregateQueryResponse* object);
+CloudFirestoreAggregateType cloud_firestore_aggregate_query_response_get_type_(
+    CloudFirestoreAggregateQueryResponse* object);
 
 /**
  * cloud_firestore_aggregate_query_response_get_field
@@ -1261,7 +1447,8 @@ CloudFirestoreAggregateType cloud_firestore_aggregate_query_response_get_type_(C
  *
  * Returns: the field value.
  */
-const gchar* cloud_firestore_aggregate_query_response_get_field(CloudFirestoreAggregateQueryResponse* object);
+const gchar* cloud_firestore_aggregate_query_response_get_field(
+    CloudFirestoreAggregateQueryResponse* object);
 
 /**
  * cloud_firestore_aggregate_query_response_get_value
@@ -1271,7 +1458,8 @@ const gchar* cloud_firestore_aggregate_query_response_get_field(CloudFirestoreAg
  *
  * Returns: the field value.
  */
-double* cloud_firestore_aggregate_query_response_get_value(CloudFirestoreAggregateQueryResponse* object);
+double* cloud_firestore_aggregate_query_response_get_value(
+    CloudFirestoreAggregateQueryResponse* object);
 
 /**
  * cloud_firestore_aggregate_query_response_equals:
@@ -1282,7 +1470,9 @@ double* cloud_firestore_aggregate_query_response_get_value(CloudFirestoreAggrega
  *
  * Returns: TRUE if @a and @b are equal.
  */
-gboolean cloud_firestore_aggregate_query_response_equals(CloudFirestoreAggregateQueryResponse* a, CloudFirestoreAggregateQueryResponse* b);
+gboolean cloud_firestore_aggregate_query_response_equals(
+    CloudFirestoreAggregateQueryResponse* a,
+    CloudFirestoreAggregateQueryResponse* b);
 
 /**
  * cloud_firestore_aggregate_query_response_hash:
@@ -1292,9 +1482,11 @@ gboolean cloud_firestore_aggregate_query_response_equals(CloudFirestoreAggregate
  *
  * Returns: the hash code.
  */
-guint cloud_firestore_aggregate_query_response_hash(CloudFirestoreAggregateQueryResponse* object);
+guint cloud_firestore_aggregate_query_response_hash(
+    CloudFirestoreAggregateQueryResponse* object);
 
-G_DECLARE_FINAL_TYPE(CloudFirestoreMessageCodec, cloud_firestore_message_codec, CLOUD_FIRESTORE, MESSAGE_CODEC, FlStandardMessageCodec)
+G_DECLARE_FINAL_TYPE(CloudFirestoreMessageCodec, cloud_firestore_message_codec,
+                     CLOUD_FIRESTORE, MESSAGE_CODEC, FlStandardMessageCodec)
 
 /**
  * cloud_firestore_message_codec_new:
@@ -1321,7 +1513,8 @@ extern const int cloud_firestore_source_type_id;
 extern const int cloud_firestore_listen_source_type_id;
 extern const int cloud_firestore_server_timestamp_behavior_type_id;
 extern const int cloud_firestore_aggregate_source_type_id;
-extern const int cloud_firestore_persistence_cache_index_manager_request_type_id;
+extern const int
+    cloud_firestore_persistence_cache_index_manager_request_type_id;
 extern const int cloud_firestore_internal_transaction_result_type_id;
 extern const int cloud_firestore_internal_transaction_type_type_id;
 extern const int cloud_firestore_aggregate_type_type_id;
@@ -1341,40 +1534,142 @@ extern const int cloud_firestore_internal_query_parameters_type_id;
 extern const int cloud_firestore_aggregate_query_type_id;
 extern const int cloud_firestore_aggregate_query_response_type_id;
 
-G_DECLARE_FINAL_TYPE(CloudFirestoreFirebaseFirestoreHostApi, cloud_firestore_firebase_firestore_host_api, CLOUD_FIRESTORE, FIREBASE_FIRESTORE_HOST_API, GObject)
+G_DECLARE_FINAL_TYPE(CloudFirestoreFirebaseFirestoreHostApi,
+                     cloud_firestore_firebase_firestore_host_api,
+                     CLOUD_FIRESTORE, FIREBASE_FIRESTORE_HOST_API, GObject)
 
-G_DECLARE_FINAL_TYPE(CloudFirestoreFirebaseFirestoreHostApiResponseHandle, cloud_firestore_firebase_firestore_host_api_response_handle, CLOUD_FIRESTORE, FIREBASE_FIRESTORE_HOST_API_RESPONSE_HANDLE, GObject)
+G_DECLARE_FINAL_TYPE(
+    CloudFirestoreFirebaseFirestoreHostApiResponseHandle,
+    cloud_firestore_firebase_firestore_host_api_response_handle,
+    CLOUD_FIRESTORE, FIREBASE_FIRESTORE_HOST_API_RESPONSE_HANDLE, GObject)
 
 /**
  * CloudFirestoreFirebaseFirestoreHostApiVTable:
  *
- * Table of functions exposed by FirebaseFirestoreHostApi to be implemented by the API provider.
+ * Table of functions exposed by FirebaseFirestoreHostApi to be implemented by
+ * the API provider.
  */
 typedef struct {
-  void (*load_bundle)(CloudFirestoreFirestorePigeonFirebaseApp* app, const uint8_t* bundle, size_t bundle_length, CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*named_query_get)(CloudFirestoreFirestorePigeonFirebaseApp* app, const gchar* name, CloudFirestoreInternalGetOptions* options, CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*clear_persistence)(CloudFirestoreFirestorePigeonFirebaseApp* app, CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*disable_network)(CloudFirestoreFirestorePigeonFirebaseApp* app, CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*enable_network)(CloudFirestoreFirestorePigeonFirebaseApp* app, CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*terminate)(CloudFirestoreFirestorePigeonFirebaseApp* app, CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*wait_for_pending_writes)(CloudFirestoreFirestorePigeonFirebaseApp* app, CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*set_index_configuration)(CloudFirestoreFirestorePigeonFirebaseApp* app, const gchar* index_configuration, CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*set_logging_enabled)(gboolean logging_enabled, CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*snapshots_in_sync_setup)(CloudFirestoreFirestorePigeonFirebaseApp* app, CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*transaction_create)(CloudFirestoreFirestorePigeonFirebaseApp* app, int64_t timeout, int64_t max_attempts, CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*transaction_store_result)(const gchar* transaction_id, CloudFirestoreInternalTransactionResult result_type, FlValue* commands, CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*transaction_get)(CloudFirestoreFirestorePigeonFirebaseApp* app, const gchar* transaction_id, const gchar* path, CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*document_reference_set)(CloudFirestoreFirestorePigeonFirebaseApp* app, CloudFirestoreDocumentReferenceRequest* request, CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*document_reference_update)(CloudFirestoreFirestorePigeonFirebaseApp* app, CloudFirestoreDocumentReferenceRequest* request, CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*document_reference_get)(CloudFirestoreFirestorePigeonFirebaseApp* app, CloudFirestoreDocumentReferenceRequest* request, CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*document_reference_delete)(CloudFirestoreFirestorePigeonFirebaseApp* app, CloudFirestoreDocumentReferenceRequest* request, CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*query_get)(CloudFirestoreFirestorePigeonFirebaseApp* app, const gchar* path, gboolean is_collection_group, CloudFirestoreInternalQueryParameters* parameters, CloudFirestoreInternalGetOptions* options, CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*aggregate_query)(CloudFirestoreFirestorePigeonFirebaseApp* app, const gchar* path, CloudFirestoreInternalQueryParameters* parameters, CloudFirestoreAggregateSource source, FlValue* queries, gboolean is_collection_group, CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*write_batch_commit)(CloudFirestoreFirestorePigeonFirebaseApp* app, FlValue* writes, CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*query_snapshot)(CloudFirestoreFirestorePigeonFirebaseApp* app, const gchar* path, gboolean is_collection_group, CloudFirestoreInternalQueryParameters* parameters, CloudFirestoreInternalGetOptions* options, gboolean include_metadata_changes, CloudFirestoreListenSource source, CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*document_reference_snapshot)(CloudFirestoreFirestorePigeonFirebaseApp* app, CloudFirestoreDocumentReferenceRequest* parameters, gboolean include_metadata_changes, CloudFirestoreListenSource source, CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*persistence_cache_index_manager_request)(CloudFirestoreFirestorePigeonFirebaseApp* app, CloudFirestorePersistenceCacheIndexManagerRequest request, CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*execute_pipeline)(CloudFirestoreFirestorePigeonFirebaseApp* app, FlValue* stages, FlValue* options, CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, gpointer user_data);
+  void (*load_bundle)(
+      CloudFirestoreFirestorePigeonFirebaseApp* app, const uint8_t* bundle,
+      size_t bundle_length,
+      CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*named_query_get)(
+      CloudFirestoreFirestorePigeonFirebaseApp* app, const gchar* name,
+      CloudFirestoreInternalGetOptions* options,
+      CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*clear_persistence)(
+      CloudFirestoreFirestorePigeonFirebaseApp* app,
+      CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*disable_network)(
+      CloudFirestoreFirestorePigeonFirebaseApp* app,
+      CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*enable_network)(
+      CloudFirestoreFirestorePigeonFirebaseApp* app,
+      CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*terminate)(
+      CloudFirestoreFirestorePigeonFirebaseApp* app,
+      CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*wait_for_pending_writes)(
+      CloudFirestoreFirestorePigeonFirebaseApp* app,
+      CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*set_index_configuration)(
+      CloudFirestoreFirestorePigeonFirebaseApp* app,
+      const gchar* index_configuration,
+      CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*set_logging_enabled)(
+      gboolean logging_enabled,
+      CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*snapshots_in_sync_setup)(
+      CloudFirestoreFirestorePigeonFirebaseApp* app,
+      CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*transaction_create)(
+      CloudFirestoreFirestorePigeonFirebaseApp* app, int64_t timeout,
+      int64_t max_attempts,
+      CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*transaction_store_result)(
+      const gchar* transaction_id,
+      CloudFirestoreInternalTransactionResult result_type, FlValue* commands,
+      CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*transaction_get)(
+      CloudFirestoreFirestorePigeonFirebaseApp* app,
+      const gchar* transaction_id, const gchar* path,
+      CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*document_reference_set)(
+      CloudFirestoreFirestorePigeonFirebaseApp* app,
+      CloudFirestoreDocumentReferenceRequest* request,
+      CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*document_reference_update)(
+      CloudFirestoreFirestorePigeonFirebaseApp* app,
+      CloudFirestoreDocumentReferenceRequest* request,
+      CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*document_reference_get)(
+      CloudFirestoreFirestorePigeonFirebaseApp* app,
+      CloudFirestoreDocumentReferenceRequest* request,
+      CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*document_reference_delete)(
+      CloudFirestoreFirestorePigeonFirebaseApp* app,
+      CloudFirestoreDocumentReferenceRequest* request,
+      CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*query_get)(
+      CloudFirestoreFirestorePigeonFirebaseApp* app, const gchar* path,
+      gboolean is_collection_group,
+      CloudFirestoreInternalQueryParameters* parameters,
+      CloudFirestoreInternalGetOptions* options,
+      CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*aggregate_query)(
+      CloudFirestoreFirestorePigeonFirebaseApp* app, const gchar* path,
+      CloudFirestoreInternalQueryParameters* parameters,
+      CloudFirestoreAggregateSource source, FlValue* queries,
+      gboolean is_collection_group,
+      CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*write_batch_commit)(
+      CloudFirestoreFirestorePigeonFirebaseApp* app, FlValue* writes,
+      CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*query_snapshot)(
+      CloudFirestoreFirestorePigeonFirebaseApp* app, const gchar* path,
+      gboolean is_collection_group,
+      CloudFirestoreInternalQueryParameters* parameters,
+      CloudFirestoreInternalGetOptions* options,
+      gboolean include_metadata_changes, CloudFirestoreListenSource source,
+      CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*document_reference_snapshot)(
+      CloudFirestoreFirestorePigeonFirebaseApp* app,
+      CloudFirestoreDocumentReferenceRequest* parameters,
+      gboolean include_metadata_changes, CloudFirestoreListenSource source,
+      CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*persistence_cache_index_manager_request)(
+      CloudFirestoreFirestorePigeonFirebaseApp* app,
+      CloudFirestorePersistenceCacheIndexManagerRequest request,
+      CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*execute_pipeline)(
+      CloudFirestoreFirestorePigeonFirebaseApp* app, FlValue* stages,
+      FlValue* options,
+      CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+      gpointer user_data);
 } CloudFirestoreFirebaseFirestoreHostApiVTable;
 
 /**
@@ -1384,11 +1679,15 @@ typedef struct {
  * @suffix: (allow-none): a suffix to add to the API or %NULL for none.
  * @vtable: implementations of the methods in this API.
  * @user_data: (closure): user data to pass to the functions in @vtable.
- * @user_data_free_func: (allow-none): a function which gets called to free @user_data, or %NULL.
+ * @user_data_free_func: (allow-none): a function which gets called to free
+ * @user_data, or %NULL.
  *
  * Connects the method handlers in the FirebaseFirestoreHostApi API.
  */
-void cloud_firestore_firebase_firestore_host_api_set_method_handlers(FlBinaryMessenger* messenger, const gchar* suffix, const CloudFirestoreFirebaseFirestoreHostApiVTable* vtable, gpointer user_data, GDestroyNotify user_data_free_func);
+void cloud_firestore_firebase_firestore_host_api_set_method_handlers(
+    FlBinaryMessenger* messenger, const gchar* suffix,
+    const CloudFirestoreFirebaseFirestoreHostApiVTable* vtable,
+    gpointer user_data, GDestroyNotify user_data_free_func);
 
 /**
  * cloud_firestore_firebase_firestore_host_api_clear_method_handlers:
@@ -1398,16 +1697,19 @@ void cloud_firestore_firebase_firestore_host_api_set_method_handlers(FlBinaryMes
  *
  * Clears the method handlers in the FirebaseFirestoreHostApi API.
  */
-void cloud_firestore_firebase_firestore_host_api_clear_method_handlers(FlBinaryMessenger* messenger, const gchar* suffix);
+void cloud_firestore_firebase_firestore_host_api_clear_method_handlers(
+    FlBinaryMessenger* messenger, const gchar* suffix);
 
 /**
  * cloud_firestore_firebase_firestore_host_api_respond_load_bundle:
  * @response_handle: a #CloudFirestoreFirebaseFirestoreHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseFirestoreHostApi.loadBundle. 
+ * Responds to FirebaseFirestoreHostApi.loadBundle.
  */
-void cloud_firestore_firebase_firestore_host_api_respond_load_bundle(CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, const gchar* return_value);
+void cloud_firestore_firebase_firestore_host_api_respond_load_bundle(
+    CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+    const gchar* return_value);
 
 /**
  * cloud_firestore_firebase_firestore_host_api_respond_error_load_bundle:
@@ -1416,18 +1718,22 @@ void cloud_firestore_firebase_firestore_host_api_respond_load_bundle(CloudFirest
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseFirestoreHostApi.loadBundle. 
+ * Responds with an error to FirebaseFirestoreHostApi.loadBundle.
  */
-void cloud_firestore_firebase_firestore_host_api_respond_error_load_bundle(CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void cloud_firestore_firebase_firestore_host_api_respond_error_load_bundle(
+    CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * cloud_firestore_firebase_firestore_host_api_respond_named_query_get:
  * @response_handle: a #CloudFirestoreFirebaseFirestoreHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseFirestoreHostApi.namedQueryGet. 
+ * Responds to FirebaseFirestoreHostApi.namedQueryGet.
  */
-void cloud_firestore_firebase_firestore_host_api_respond_named_query_get(CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, CloudFirestoreInternalQuerySnapshot* return_value);
+void cloud_firestore_firebase_firestore_host_api_respond_named_query_get(
+    CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+    CloudFirestoreInternalQuerySnapshot* return_value);
 
 /**
  * cloud_firestore_firebase_firestore_host_api_respond_error_named_query_get:
@@ -1436,17 +1742,20 @@ void cloud_firestore_firebase_firestore_host_api_respond_named_query_get(CloudFi
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseFirestoreHostApi.namedQueryGet. 
+ * Responds with an error to FirebaseFirestoreHostApi.namedQueryGet.
  */
-void cloud_firestore_firebase_firestore_host_api_respond_error_named_query_get(CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void cloud_firestore_firebase_firestore_host_api_respond_error_named_query_get(
+    CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * cloud_firestore_firebase_firestore_host_api_respond_clear_persistence:
  * @response_handle: a #CloudFirestoreFirebaseFirestoreHostApiResponseHandle.
  *
- * Responds to FirebaseFirestoreHostApi.clearPersistence. 
+ * Responds to FirebaseFirestoreHostApi.clearPersistence.
  */
-void cloud_firestore_firebase_firestore_host_api_respond_clear_persistence(CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle);
+void cloud_firestore_firebase_firestore_host_api_respond_clear_persistence(
+    CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle);
 
 /**
  * cloud_firestore_firebase_firestore_host_api_respond_error_clear_persistence:
@@ -1455,17 +1764,20 @@ void cloud_firestore_firebase_firestore_host_api_respond_clear_persistence(Cloud
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseFirestoreHostApi.clearPersistence. 
+ * Responds with an error to FirebaseFirestoreHostApi.clearPersistence.
  */
-void cloud_firestore_firebase_firestore_host_api_respond_error_clear_persistence(CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void cloud_firestore_firebase_firestore_host_api_respond_error_clear_persistence(
+    CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * cloud_firestore_firebase_firestore_host_api_respond_disable_network:
  * @response_handle: a #CloudFirestoreFirebaseFirestoreHostApiResponseHandle.
  *
- * Responds to FirebaseFirestoreHostApi.disableNetwork. 
+ * Responds to FirebaseFirestoreHostApi.disableNetwork.
  */
-void cloud_firestore_firebase_firestore_host_api_respond_disable_network(CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle);
+void cloud_firestore_firebase_firestore_host_api_respond_disable_network(
+    CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle);
 
 /**
  * cloud_firestore_firebase_firestore_host_api_respond_error_disable_network:
@@ -1474,17 +1786,20 @@ void cloud_firestore_firebase_firestore_host_api_respond_disable_network(CloudFi
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseFirestoreHostApi.disableNetwork. 
+ * Responds with an error to FirebaseFirestoreHostApi.disableNetwork.
  */
-void cloud_firestore_firebase_firestore_host_api_respond_error_disable_network(CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void cloud_firestore_firebase_firestore_host_api_respond_error_disable_network(
+    CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * cloud_firestore_firebase_firestore_host_api_respond_enable_network:
  * @response_handle: a #CloudFirestoreFirebaseFirestoreHostApiResponseHandle.
  *
- * Responds to FirebaseFirestoreHostApi.enableNetwork. 
+ * Responds to FirebaseFirestoreHostApi.enableNetwork.
  */
-void cloud_firestore_firebase_firestore_host_api_respond_enable_network(CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle);
+void cloud_firestore_firebase_firestore_host_api_respond_enable_network(
+    CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle);
 
 /**
  * cloud_firestore_firebase_firestore_host_api_respond_error_enable_network:
@@ -1493,17 +1808,20 @@ void cloud_firestore_firebase_firestore_host_api_respond_enable_network(CloudFir
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseFirestoreHostApi.enableNetwork. 
+ * Responds with an error to FirebaseFirestoreHostApi.enableNetwork.
  */
-void cloud_firestore_firebase_firestore_host_api_respond_error_enable_network(CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void cloud_firestore_firebase_firestore_host_api_respond_error_enable_network(
+    CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * cloud_firestore_firebase_firestore_host_api_respond_terminate:
  * @response_handle: a #CloudFirestoreFirebaseFirestoreHostApiResponseHandle.
  *
- * Responds to FirebaseFirestoreHostApi.terminate. 
+ * Responds to FirebaseFirestoreHostApi.terminate.
  */
-void cloud_firestore_firebase_firestore_host_api_respond_terminate(CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle);
+void cloud_firestore_firebase_firestore_host_api_respond_terminate(
+    CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle);
 
 /**
  * cloud_firestore_firebase_firestore_host_api_respond_error_terminate:
@@ -1512,17 +1830,20 @@ void cloud_firestore_firebase_firestore_host_api_respond_terminate(CloudFirestor
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseFirestoreHostApi.terminate. 
+ * Responds with an error to FirebaseFirestoreHostApi.terminate.
  */
-void cloud_firestore_firebase_firestore_host_api_respond_error_terminate(CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void cloud_firestore_firebase_firestore_host_api_respond_error_terminate(
+    CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * cloud_firestore_firebase_firestore_host_api_respond_wait_for_pending_writes:
  * @response_handle: a #CloudFirestoreFirebaseFirestoreHostApiResponseHandle.
  *
- * Responds to FirebaseFirestoreHostApi.waitForPendingWrites. 
+ * Responds to FirebaseFirestoreHostApi.waitForPendingWrites.
  */
-void cloud_firestore_firebase_firestore_host_api_respond_wait_for_pending_writes(CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle);
+void cloud_firestore_firebase_firestore_host_api_respond_wait_for_pending_writes(
+    CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle);
 
 /**
  * cloud_firestore_firebase_firestore_host_api_respond_error_wait_for_pending_writes:
@@ -1531,17 +1852,20 @@ void cloud_firestore_firebase_firestore_host_api_respond_wait_for_pending_writes
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseFirestoreHostApi.waitForPendingWrites. 
+ * Responds with an error to FirebaseFirestoreHostApi.waitForPendingWrites.
  */
-void cloud_firestore_firebase_firestore_host_api_respond_error_wait_for_pending_writes(CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void cloud_firestore_firebase_firestore_host_api_respond_error_wait_for_pending_writes(
+    CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * cloud_firestore_firebase_firestore_host_api_respond_set_index_configuration:
  * @response_handle: a #CloudFirestoreFirebaseFirestoreHostApiResponseHandle.
  *
- * Responds to FirebaseFirestoreHostApi.setIndexConfiguration. 
+ * Responds to FirebaseFirestoreHostApi.setIndexConfiguration.
  */
-void cloud_firestore_firebase_firestore_host_api_respond_set_index_configuration(CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle);
+void cloud_firestore_firebase_firestore_host_api_respond_set_index_configuration(
+    CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle);
 
 /**
  * cloud_firestore_firebase_firestore_host_api_respond_error_set_index_configuration:
@@ -1550,17 +1874,20 @@ void cloud_firestore_firebase_firestore_host_api_respond_set_index_configuration
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseFirestoreHostApi.setIndexConfiguration. 
+ * Responds with an error to FirebaseFirestoreHostApi.setIndexConfiguration.
  */
-void cloud_firestore_firebase_firestore_host_api_respond_error_set_index_configuration(CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void cloud_firestore_firebase_firestore_host_api_respond_error_set_index_configuration(
+    CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * cloud_firestore_firebase_firestore_host_api_respond_set_logging_enabled:
  * @response_handle: a #CloudFirestoreFirebaseFirestoreHostApiResponseHandle.
  *
- * Responds to FirebaseFirestoreHostApi.setLoggingEnabled. 
+ * Responds to FirebaseFirestoreHostApi.setLoggingEnabled.
  */
-void cloud_firestore_firebase_firestore_host_api_respond_set_logging_enabled(CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle);
+void cloud_firestore_firebase_firestore_host_api_respond_set_logging_enabled(
+    CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle);
 
 /**
  * cloud_firestore_firebase_firestore_host_api_respond_error_set_logging_enabled:
@@ -1569,18 +1896,22 @@ void cloud_firestore_firebase_firestore_host_api_respond_set_logging_enabled(Clo
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseFirestoreHostApi.setLoggingEnabled. 
+ * Responds with an error to FirebaseFirestoreHostApi.setLoggingEnabled.
  */
-void cloud_firestore_firebase_firestore_host_api_respond_error_set_logging_enabled(CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void cloud_firestore_firebase_firestore_host_api_respond_error_set_logging_enabled(
+    CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * cloud_firestore_firebase_firestore_host_api_respond_snapshots_in_sync_setup:
  * @response_handle: a #CloudFirestoreFirebaseFirestoreHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseFirestoreHostApi.snapshotsInSyncSetup. 
+ * Responds to FirebaseFirestoreHostApi.snapshotsInSyncSetup.
  */
-void cloud_firestore_firebase_firestore_host_api_respond_snapshots_in_sync_setup(CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, const gchar* return_value);
+void cloud_firestore_firebase_firestore_host_api_respond_snapshots_in_sync_setup(
+    CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+    const gchar* return_value);
 
 /**
  * cloud_firestore_firebase_firestore_host_api_respond_error_snapshots_in_sync_setup:
@@ -1589,18 +1920,22 @@ void cloud_firestore_firebase_firestore_host_api_respond_snapshots_in_sync_setup
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseFirestoreHostApi.snapshotsInSyncSetup. 
+ * Responds with an error to FirebaseFirestoreHostApi.snapshotsInSyncSetup.
  */
-void cloud_firestore_firebase_firestore_host_api_respond_error_snapshots_in_sync_setup(CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void cloud_firestore_firebase_firestore_host_api_respond_error_snapshots_in_sync_setup(
+    CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * cloud_firestore_firebase_firestore_host_api_respond_transaction_create:
  * @response_handle: a #CloudFirestoreFirebaseFirestoreHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseFirestoreHostApi.transactionCreate. 
+ * Responds to FirebaseFirestoreHostApi.transactionCreate.
  */
-void cloud_firestore_firebase_firestore_host_api_respond_transaction_create(CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, const gchar* return_value);
+void cloud_firestore_firebase_firestore_host_api_respond_transaction_create(
+    CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+    const gchar* return_value);
 
 /**
  * cloud_firestore_firebase_firestore_host_api_respond_error_transaction_create:
@@ -1609,17 +1944,20 @@ void cloud_firestore_firebase_firestore_host_api_respond_transaction_create(Clou
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseFirestoreHostApi.transactionCreate. 
+ * Responds with an error to FirebaseFirestoreHostApi.transactionCreate.
  */
-void cloud_firestore_firebase_firestore_host_api_respond_error_transaction_create(CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void cloud_firestore_firebase_firestore_host_api_respond_error_transaction_create(
+    CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * cloud_firestore_firebase_firestore_host_api_respond_transaction_store_result:
  * @response_handle: a #CloudFirestoreFirebaseFirestoreHostApiResponseHandle.
  *
- * Responds to FirebaseFirestoreHostApi.transactionStoreResult. 
+ * Responds to FirebaseFirestoreHostApi.transactionStoreResult.
  */
-void cloud_firestore_firebase_firestore_host_api_respond_transaction_store_result(CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle);
+void cloud_firestore_firebase_firestore_host_api_respond_transaction_store_result(
+    CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle);
 
 /**
  * cloud_firestore_firebase_firestore_host_api_respond_error_transaction_store_result:
@@ -1628,18 +1966,22 @@ void cloud_firestore_firebase_firestore_host_api_respond_transaction_store_resul
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseFirestoreHostApi.transactionStoreResult. 
+ * Responds with an error to FirebaseFirestoreHostApi.transactionStoreResult.
  */
-void cloud_firestore_firebase_firestore_host_api_respond_error_transaction_store_result(CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void cloud_firestore_firebase_firestore_host_api_respond_error_transaction_store_result(
+    CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * cloud_firestore_firebase_firestore_host_api_respond_transaction_get:
  * @response_handle: a #CloudFirestoreFirebaseFirestoreHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseFirestoreHostApi.transactionGet. 
+ * Responds to FirebaseFirestoreHostApi.transactionGet.
  */
-void cloud_firestore_firebase_firestore_host_api_respond_transaction_get(CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, CloudFirestoreInternalDocumentSnapshot* return_value);
+void cloud_firestore_firebase_firestore_host_api_respond_transaction_get(
+    CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+    CloudFirestoreInternalDocumentSnapshot* return_value);
 
 /**
  * cloud_firestore_firebase_firestore_host_api_respond_error_transaction_get:
@@ -1648,17 +1990,20 @@ void cloud_firestore_firebase_firestore_host_api_respond_transaction_get(CloudFi
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseFirestoreHostApi.transactionGet. 
+ * Responds with an error to FirebaseFirestoreHostApi.transactionGet.
  */
-void cloud_firestore_firebase_firestore_host_api_respond_error_transaction_get(CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void cloud_firestore_firebase_firestore_host_api_respond_error_transaction_get(
+    CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * cloud_firestore_firebase_firestore_host_api_respond_document_reference_set:
  * @response_handle: a #CloudFirestoreFirebaseFirestoreHostApiResponseHandle.
  *
- * Responds to FirebaseFirestoreHostApi.documentReferenceSet. 
+ * Responds to FirebaseFirestoreHostApi.documentReferenceSet.
  */
-void cloud_firestore_firebase_firestore_host_api_respond_document_reference_set(CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle);
+void cloud_firestore_firebase_firestore_host_api_respond_document_reference_set(
+    CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle);
 
 /**
  * cloud_firestore_firebase_firestore_host_api_respond_error_document_reference_set:
@@ -1667,17 +2012,20 @@ void cloud_firestore_firebase_firestore_host_api_respond_document_reference_set(
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseFirestoreHostApi.documentReferenceSet. 
+ * Responds with an error to FirebaseFirestoreHostApi.documentReferenceSet.
  */
-void cloud_firestore_firebase_firestore_host_api_respond_error_document_reference_set(CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void cloud_firestore_firebase_firestore_host_api_respond_error_document_reference_set(
+    CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * cloud_firestore_firebase_firestore_host_api_respond_document_reference_update:
  * @response_handle: a #CloudFirestoreFirebaseFirestoreHostApiResponseHandle.
  *
- * Responds to FirebaseFirestoreHostApi.documentReferenceUpdate. 
+ * Responds to FirebaseFirestoreHostApi.documentReferenceUpdate.
  */
-void cloud_firestore_firebase_firestore_host_api_respond_document_reference_update(CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle);
+void cloud_firestore_firebase_firestore_host_api_respond_document_reference_update(
+    CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle);
 
 /**
  * cloud_firestore_firebase_firestore_host_api_respond_error_document_reference_update:
@@ -1686,18 +2034,22 @@ void cloud_firestore_firebase_firestore_host_api_respond_document_reference_upda
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseFirestoreHostApi.documentReferenceUpdate. 
+ * Responds with an error to FirebaseFirestoreHostApi.documentReferenceUpdate.
  */
-void cloud_firestore_firebase_firestore_host_api_respond_error_document_reference_update(CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void cloud_firestore_firebase_firestore_host_api_respond_error_document_reference_update(
+    CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * cloud_firestore_firebase_firestore_host_api_respond_document_reference_get:
  * @response_handle: a #CloudFirestoreFirebaseFirestoreHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseFirestoreHostApi.documentReferenceGet. 
+ * Responds to FirebaseFirestoreHostApi.documentReferenceGet.
  */
-void cloud_firestore_firebase_firestore_host_api_respond_document_reference_get(CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, CloudFirestoreInternalDocumentSnapshot* return_value);
+void cloud_firestore_firebase_firestore_host_api_respond_document_reference_get(
+    CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+    CloudFirestoreInternalDocumentSnapshot* return_value);
 
 /**
  * cloud_firestore_firebase_firestore_host_api_respond_error_document_reference_get:
@@ -1706,17 +2058,20 @@ void cloud_firestore_firebase_firestore_host_api_respond_document_reference_get(
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseFirestoreHostApi.documentReferenceGet. 
+ * Responds with an error to FirebaseFirestoreHostApi.documentReferenceGet.
  */
-void cloud_firestore_firebase_firestore_host_api_respond_error_document_reference_get(CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void cloud_firestore_firebase_firestore_host_api_respond_error_document_reference_get(
+    CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * cloud_firestore_firebase_firestore_host_api_respond_document_reference_delete:
  * @response_handle: a #CloudFirestoreFirebaseFirestoreHostApiResponseHandle.
  *
- * Responds to FirebaseFirestoreHostApi.documentReferenceDelete. 
+ * Responds to FirebaseFirestoreHostApi.documentReferenceDelete.
  */
-void cloud_firestore_firebase_firestore_host_api_respond_document_reference_delete(CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle);
+void cloud_firestore_firebase_firestore_host_api_respond_document_reference_delete(
+    CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle);
 
 /**
  * cloud_firestore_firebase_firestore_host_api_respond_error_document_reference_delete:
@@ -1725,18 +2080,22 @@ void cloud_firestore_firebase_firestore_host_api_respond_document_reference_dele
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseFirestoreHostApi.documentReferenceDelete. 
+ * Responds with an error to FirebaseFirestoreHostApi.documentReferenceDelete.
  */
-void cloud_firestore_firebase_firestore_host_api_respond_error_document_reference_delete(CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void cloud_firestore_firebase_firestore_host_api_respond_error_document_reference_delete(
+    CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * cloud_firestore_firebase_firestore_host_api_respond_query_get:
  * @response_handle: a #CloudFirestoreFirebaseFirestoreHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseFirestoreHostApi.queryGet. 
+ * Responds to FirebaseFirestoreHostApi.queryGet.
  */
-void cloud_firestore_firebase_firestore_host_api_respond_query_get(CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, CloudFirestoreInternalQuerySnapshot* return_value);
+void cloud_firestore_firebase_firestore_host_api_respond_query_get(
+    CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+    CloudFirestoreInternalQuerySnapshot* return_value);
 
 /**
  * cloud_firestore_firebase_firestore_host_api_respond_error_query_get:
@@ -1745,18 +2104,22 @@ void cloud_firestore_firebase_firestore_host_api_respond_query_get(CloudFirestor
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseFirestoreHostApi.queryGet. 
+ * Responds with an error to FirebaseFirestoreHostApi.queryGet.
  */
-void cloud_firestore_firebase_firestore_host_api_respond_error_query_get(CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void cloud_firestore_firebase_firestore_host_api_respond_error_query_get(
+    CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * cloud_firestore_firebase_firestore_host_api_respond_aggregate_query:
  * @response_handle: a #CloudFirestoreFirebaseFirestoreHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseFirestoreHostApi.aggregateQuery. 
+ * Responds to FirebaseFirestoreHostApi.aggregateQuery.
  */
-void cloud_firestore_firebase_firestore_host_api_respond_aggregate_query(CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, FlValue* return_value);
+void cloud_firestore_firebase_firestore_host_api_respond_aggregate_query(
+    CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+    FlValue* return_value);
 
 /**
  * cloud_firestore_firebase_firestore_host_api_respond_error_aggregate_query:
@@ -1765,17 +2128,20 @@ void cloud_firestore_firebase_firestore_host_api_respond_aggregate_query(CloudFi
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseFirestoreHostApi.aggregateQuery. 
+ * Responds with an error to FirebaseFirestoreHostApi.aggregateQuery.
  */
-void cloud_firestore_firebase_firestore_host_api_respond_error_aggregate_query(CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void cloud_firestore_firebase_firestore_host_api_respond_error_aggregate_query(
+    CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * cloud_firestore_firebase_firestore_host_api_respond_write_batch_commit:
  * @response_handle: a #CloudFirestoreFirebaseFirestoreHostApiResponseHandle.
  *
- * Responds to FirebaseFirestoreHostApi.writeBatchCommit. 
+ * Responds to FirebaseFirestoreHostApi.writeBatchCommit.
  */
-void cloud_firestore_firebase_firestore_host_api_respond_write_batch_commit(CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle);
+void cloud_firestore_firebase_firestore_host_api_respond_write_batch_commit(
+    CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle);
 
 /**
  * cloud_firestore_firebase_firestore_host_api_respond_error_write_batch_commit:
@@ -1784,18 +2150,22 @@ void cloud_firestore_firebase_firestore_host_api_respond_write_batch_commit(Clou
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseFirestoreHostApi.writeBatchCommit. 
+ * Responds with an error to FirebaseFirestoreHostApi.writeBatchCommit.
  */
-void cloud_firestore_firebase_firestore_host_api_respond_error_write_batch_commit(CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void cloud_firestore_firebase_firestore_host_api_respond_error_write_batch_commit(
+    CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * cloud_firestore_firebase_firestore_host_api_respond_query_snapshot:
  * @response_handle: a #CloudFirestoreFirebaseFirestoreHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseFirestoreHostApi.querySnapshot. 
+ * Responds to FirebaseFirestoreHostApi.querySnapshot.
  */
-void cloud_firestore_firebase_firestore_host_api_respond_query_snapshot(CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, const gchar* return_value);
+void cloud_firestore_firebase_firestore_host_api_respond_query_snapshot(
+    CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+    const gchar* return_value);
 
 /**
  * cloud_firestore_firebase_firestore_host_api_respond_error_query_snapshot:
@@ -1804,18 +2174,22 @@ void cloud_firestore_firebase_firestore_host_api_respond_query_snapshot(CloudFir
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseFirestoreHostApi.querySnapshot. 
+ * Responds with an error to FirebaseFirestoreHostApi.querySnapshot.
  */
-void cloud_firestore_firebase_firestore_host_api_respond_error_query_snapshot(CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void cloud_firestore_firebase_firestore_host_api_respond_error_query_snapshot(
+    CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * cloud_firestore_firebase_firestore_host_api_respond_document_reference_snapshot:
  * @response_handle: a #CloudFirestoreFirebaseFirestoreHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseFirestoreHostApi.documentReferenceSnapshot. 
+ * Responds to FirebaseFirestoreHostApi.documentReferenceSnapshot.
  */
-void cloud_firestore_firebase_firestore_host_api_respond_document_reference_snapshot(CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, const gchar* return_value);
+void cloud_firestore_firebase_firestore_host_api_respond_document_reference_snapshot(
+    CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+    const gchar* return_value);
 
 /**
  * cloud_firestore_firebase_firestore_host_api_respond_error_document_reference_snapshot:
@@ -1824,17 +2198,20 @@ void cloud_firestore_firebase_firestore_host_api_respond_document_reference_snap
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseFirestoreHostApi.documentReferenceSnapshot. 
+ * Responds with an error to FirebaseFirestoreHostApi.documentReferenceSnapshot.
  */
-void cloud_firestore_firebase_firestore_host_api_respond_error_document_reference_snapshot(CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void cloud_firestore_firebase_firestore_host_api_respond_error_document_reference_snapshot(
+    CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * cloud_firestore_firebase_firestore_host_api_respond_persistence_cache_index_manager_request:
  * @response_handle: a #CloudFirestoreFirebaseFirestoreHostApiResponseHandle.
  *
- * Responds to FirebaseFirestoreHostApi.persistenceCacheIndexManagerRequest. 
+ * Responds to FirebaseFirestoreHostApi.persistenceCacheIndexManagerRequest.
  */
-void cloud_firestore_firebase_firestore_host_api_respond_persistence_cache_index_manager_request(CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle);
+void cloud_firestore_firebase_firestore_host_api_respond_persistence_cache_index_manager_request(
+    CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle);
 
 /**
  * cloud_firestore_firebase_firestore_host_api_respond_error_persistence_cache_index_manager_request:
@@ -1843,18 +2220,23 @@ void cloud_firestore_firebase_firestore_host_api_respond_persistence_cache_index
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseFirestoreHostApi.persistenceCacheIndexManagerRequest. 
+ * Responds with an error to
+ * FirebaseFirestoreHostApi.persistenceCacheIndexManagerRequest.
  */
-void cloud_firestore_firebase_firestore_host_api_respond_error_persistence_cache_index_manager_request(CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void cloud_firestore_firebase_firestore_host_api_respond_error_persistence_cache_index_manager_request(
+    CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * cloud_firestore_firebase_firestore_host_api_respond_execute_pipeline:
  * @response_handle: a #CloudFirestoreFirebaseFirestoreHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseFirestoreHostApi.executePipeline. 
+ * Responds to FirebaseFirestoreHostApi.executePipeline.
  */
-void cloud_firestore_firebase_firestore_host_api_respond_execute_pipeline(CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, CloudFirestoreInternalPipelineSnapshot* return_value);
+void cloud_firestore_firebase_firestore_host_api_respond_execute_pipeline(
+    CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+    CloudFirestoreInternalPipelineSnapshot* return_value);
 
 /**
  * cloud_firestore_firebase_firestore_host_api_respond_error_execute_pipeline:
@@ -1863,9 +2245,11 @@ void cloud_firestore_firebase_firestore_host_api_respond_execute_pipeline(CloudF
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseFirestoreHostApi.executePipeline. 
+ * Responds with an error to FirebaseFirestoreHostApi.executePipeline.
  */
-void cloud_firestore_firebase_firestore_host_api_respond_error_execute_pipeline(CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void cloud_firestore_firebase_firestore_host_api_respond_error_execute_pipeline(
+    CloudFirestoreFirebaseFirestoreHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 G_END_DECLS
 

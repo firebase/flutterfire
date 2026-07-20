@@ -40,7 +40,9 @@ typedef enum {
  *
  */
 
-G_DECLARE_FINAL_TYPE(FirebaseStorageInternalStorageFirebaseApp, firebase_storage_internal_storage_firebase_app, FIREBASE_STORAGE, INTERNAL_STORAGE_FIREBASE_APP, GObject)
+G_DECLARE_FINAL_TYPE(FirebaseStorageInternalStorageFirebaseApp,
+                     firebase_storage_internal_storage_firebase_app,
+                     FIREBASE_STORAGE, INTERNAL_STORAGE_FIREBASE_APP, GObject)
 
 /**
  * firebase_storage_internal_storage_firebase_app_new:
@@ -52,7 +54,10 @@ G_DECLARE_FINAL_TYPE(FirebaseStorageInternalStorageFirebaseApp, firebase_storage
  *
  * Returns: a new #FirebaseStorageInternalStorageFirebaseApp
  */
-FirebaseStorageInternalStorageFirebaseApp* firebase_storage_internal_storage_firebase_app_new(const gchar* app_name, const gchar* tenant_id, const gchar* bucket);
+FirebaseStorageInternalStorageFirebaseApp*
+firebase_storage_internal_storage_firebase_app_new(const gchar* app_name,
+                                                   const gchar* tenant_id,
+                                                   const gchar* bucket);
 
 /**
  * firebase_storage_internal_storage_firebase_app_get_app_name
@@ -62,7 +67,8 @@ FirebaseStorageInternalStorageFirebaseApp* firebase_storage_internal_storage_fir
  *
  * Returns: the field value.
  */
-const gchar* firebase_storage_internal_storage_firebase_app_get_app_name(FirebaseStorageInternalStorageFirebaseApp* object);
+const gchar* firebase_storage_internal_storage_firebase_app_get_app_name(
+    FirebaseStorageInternalStorageFirebaseApp* object);
 
 /**
  * firebase_storage_internal_storage_firebase_app_get_tenant_id
@@ -72,7 +78,8 @@ const gchar* firebase_storage_internal_storage_firebase_app_get_app_name(Firebas
  *
  * Returns: the field value.
  */
-const gchar* firebase_storage_internal_storage_firebase_app_get_tenant_id(FirebaseStorageInternalStorageFirebaseApp* object);
+const gchar* firebase_storage_internal_storage_firebase_app_get_tenant_id(
+    FirebaseStorageInternalStorageFirebaseApp* object);
 
 /**
  * firebase_storage_internal_storage_firebase_app_get_bucket
@@ -82,7 +89,8 @@ const gchar* firebase_storage_internal_storage_firebase_app_get_tenant_id(Fireba
  *
  * Returns: the field value.
  */
-const gchar* firebase_storage_internal_storage_firebase_app_get_bucket(FirebaseStorageInternalStorageFirebaseApp* object);
+const gchar* firebase_storage_internal_storage_firebase_app_get_bucket(
+    FirebaseStorageInternalStorageFirebaseApp* object);
 
 /**
  * firebase_storage_internal_storage_firebase_app_equals:
@@ -93,24 +101,30 @@ const gchar* firebase_storage_internal_storage_firebase_app_get_bucket(FirebaseS
  *
  * Returns: TRUE if @a and @b are equal.
  */
-gboolean firebase_storage_internal_storage_firebase_app_equals(FirebaseStorageInternalStorageFirebaseApp* a, FirebaseStorageInternalStorageFirebaseApp* b);
+gboolean firebase_storage_internal_storage_firebase_app_equals(
+    FirebaseStorageInternalStorageFirebaseApp* a,
+    FirebaseStorageInternalStorageFirebaseApp* b);
 
 /**
  * firebase_storage_internal_storage_firebase_app_hash:
  * @object: a #FirebaseStorageInternalStorageFirebaseApp.
  *
- * Calculates a hash code for a #FirebaseStorageInternalStorageFirebaseApp object.
+ * Calculates a hash code for a #FirebaseStorageInternalStorageFirebaseApp
+ * object.
  *
  * Returns: the hash code.
  */
-guint firebase_storage_internal_storage_firebase_app_hash(FirebaseStorageInternalStorageFirebaseApp* object);
+guint firebase_storage_internal_storage_firebase_app_hash(
+    FirebaseStorageInternalStorageFirebaseApp* object);
 
 /**
  * FirebaseStorageInternalStorageReference:
  *
  */
 
-G_DECLARE_FINAL_TYPE(FirebaseStorageInternalStorageReference, firebase_storage_internal_storage_reference, FIREBASE_STORAGE, INTERNAL_STORAGE_REFERENCE, GObject)
+G_DECLARE_FINAL_TYPE(FirebaseStorageInternalStorageReference,
+                     firebase_storage_internal_storage_reference,
+                     FIREBASE_STORAGE, INTERNAL_STORAGE_REFERENCE, GObject)
 
 /**
  * firebase_storage_internal_storage_reference_new:
@@ -122,7 +136,10 @@ G_DECLARE_FINAL_TYPE(FirebaseStorageInternalStorageReference, firebase_storage_i
  *
  * Returns: a new #FirebaseStorageInternalStorageReference
  */
-FirebaseStorageInternalStorageReference* firebase_storage_internal_storage_reference_new(const gchar* bucket, const gchar* full_path, const gchar* name);
+FirebaseStorageInternalStorageReference*
+firebase_storage_internal_storage_reference_new(const gchar* bucket,
+                                                const gchar* full_path,
+                                                const gchar* name);
 
 /**
  * firebase_storage_internal_storage_reference_get_bucket
@@ -132,7 +149,8 @@ FirebaseStorageInternalStorageReference* firebase_storage_internal_storage_refer
  *
  * Returns: the field value.
  */
-const gchar* firebase_storage_internal_storage_reference_get_bucket(FirebaseStorageInternalStorageReference* object);
+const gchar* firebase_storage_internal_storage_reference_get_bucket(
+    FirebaseStorageInternalStorageReference* object);
 
 /**
  * firebase_storage_internal_storage_reference_get_full_path
@@ -142,7 +160,8 @@ const gchar* firebase_storage_internal_storage_reference_get_bucket(FirebaseStor
  *
  * Returns: the field value.
  */
-const gchar* firebase_storage_internal_storage_reference_get_full_path(FirebaseStorageInternalStorageReference* object);
+const gchar* firebase_storage_internal_storage_reference_get_full_path(
+    FirebaseStorageInternalStorageReference* object);
 
 /**
  * firebase_storage_internal_storage_reference_get_name
@@ -152,7 +171,8 @@ const gchar* firebase_storage_internal_storage_reference_get_full_path(FirebaseS
  *
  * Returns: the field value.
  */
-const gchar* firebase_storage_internal_storage_reference_get_name(FirebaseStorageInternalStorageReference* object);
+const gchar* firebase_storage_internal_storage_reference_get_name(
+    FirebaseStorageInternalStorageReference* object);
 
 /**
  * firebase_storage_internal_storage_reference_equals:
@@ -163,7 +183,9 @@ const gchar* firebase_storage_internal_storage_reference_get_name(FirebaseStorag
  *
  * Returns: TRUE if @a and @b are equal.
  */
-gboolean firebase_storage_internal_storage_reference_equals(FirebaseStorageInternalStorageReference* a, FirebaseStorageInternalStorageReference* b);
+gboolean firebase_storage_internal_storage_reference_equals(
+    FirebaseStorageInternalStorageReference* a,
+    FirebaseStorageInternalStorageReference* b);
 
 /**
  * firebase_storage_internal_storage_reference_hash:
@@ -173,14 +195,17 @@ gboolean firebase_storage_internal_storage_reference_equals(FirebaseStorageInter
  *
  * Returns: the hash code.
  */
-guint firebase_storage_internal_storage_reference_hash(FirebaseStorageInternalStorageReference* object);
+guint firebase_storage_internal_storage_reference_hash(
+    FirebaseStorageInternalStorageReference* object);
 
 /**
  * FirebaseStorageInternalFullMetaData:
  *
  */
 
-G_DECLARE_FINAL_TYPE(FirebaseStorageInternalFullMetaData, firebase_storage_internal_full_meta_data, FIREBASE_STORAGE, INTERNAL_FULL_META_DATA, GObject)
+G_DECLARE_FINAL_TYPE(FirebaseStorageInternalFullMetaData,
+                     firebase_storage_internal_full_meta_data, FIREBASE_STORAGE,
+                     INTERNAL_FULL_META_DATA, GObject)
 
 /**
  * firebase_storage_internal_full_meta_data_new:
@@ -190,7 +215,8 @@ G_DECLARE_FINAL_TYPE(FirebaseStorageInternalFullMetaData, firebase_storage_inter
  *
  * Returns: a new #FirebaseStorageInternalFullMetaData
  */
-FirebaseStorageInternalFullMetaData* firebase_storage_internal_full_meta_data_new(FlValue* metadata);
+FirebaseStorageInternalFullMetaData*
+firebase_storage_internal_full_meta_data_new(FlValue* metadata);
 
 /**
  * firebase_storage_internal_full_meta_data_get_metadata
@@ -200,7 +226,8 @@ FirebaseStorageInternalFullMetaData* firebase_storage_internal_full_meta_data_ne
  *
  * Returns: the field value.
  */
-FlValue* firebase_storage_internal_full_meta_data_get_metadata(FirebaseStorageInternalFullMetaData* object);
+FlValue* firebase_storage_internal_full_meta_data_get_metadata(
+    FirebaseStorageInternalFullMetaData* object);
 
 /**
  * firebase_storage_internal_full_meta_data_equals:
@@ -211,7 +238,9 @@ FlValue* firebase_storage_internal_full_meta_data_get_metadata(FirebaseStorageIn
  *
  * Returns: TRUE if @a and @b are equal.
  */
-gboolean firebase_storage_internal_full_meta_data_equals(FirebaseStorageInternalFullMetaData* a, FirebaseStorageInternalFullMetaData* b);
+gboolean firebase_storage_internal_full_meta_data_equals(
+    FirebaseStorageInternalFullMetaData* a,
+    FirebaseStorageInternalFullMetaData* b);
 
 /**
  * firebase_storage_internal_full_meta_data_hash:
@@ -221,14 +250,17 @@ gboolean firebase_storage_internal_full_meta_data_equals(FirebaseStorageInternal
  *
  * Returns: the hash code.
  */
-guint firebase_storage_internal_full_meta_data_hash(FirebaseStorageInternalFullMetaData* object);
+guint firebase_storage_internal_full_meta_data_hash(
+    FirebaseStorageInternalFullMetaData* object);
 
 /**
  * FirebaseStorageInternalListOptions:
  *
  */
 
-G_DECLARE_FINAL_TYPE(FirebaseStorageInternalListOptions, firebase_storage_internal_list_options, FIREBASE_STORAGE, INTERNAL_LIST_OPTIONS, GObject)
+G_DECLARE_FINAL_TYPE(FirebaseStorageInternalListOptions,
+                     firebase_storage_internal_list_options, FIREBASE_STORAGE,
+                     INTERNAL_LIST_OPTIONS, GObject)
 
 /**
  * firebase_storage_internal_list_options_new:
@@ -239,7 +271,8 @@ G_DECLARE_FINAL_TYPE(FirebaseStorageInternalListOptions, firebase_storage_intern
  *
  * Returns: a new #FirebaseStorageInternalListOptions
  */
-FirebaseStorageInternalListOptions* firebase_storage_internal_list_options_new(int64_t max_results, const gchar* page_token);
+FirebaseStorageInternalListOptions* firebase_storage_internal_list_options_new(
+    int64_t max_results, const gchar* page_token);
 
 /**
  * firebase_storage_internal_list_options_get_max_results
@@ -251,7 +284,8 @@ FirebaseStorageInternalListOptions* firebase_storage_internal_list_options_new(i
  *
  * Returns: the field value.
  */
-int64_t firebase_storage_internal_list_options_get_max_results(FirebaseStorageInternalListOptions* object);
+int64_t firebase_storage_internal_list_options_get_max_results(
+    FirebaseStorageInternalListOptions* object);
 
 /**
  * firebase_storage_internal_list_options_get_page_token
@@ -263,7 +297,8 @@ int64_t firebase_storage_internal_list_options_get_max_results(FirebaseStorageIn
  *
  * Returns: the field value.
  */
-const gchar* firebase_storage_internal_list_options_get_page_token(FirebaseStorageInternalListOptions* object);
+const gchar* firebase_storage_internal_list_options_get_page_token(
+    FirebaseStorageInternalListOptions* object);
 
 /**
  * firebase_storage_internal_list_options_equals:
@@ -274,7 +309,9 @@ const gchar* firebase_storage_internal_list_options_get_page_token(FirebaseStora
  *
  * Returns: TRUE if @a and @b are equal.
  */
-gboolean firebase_storage_internal_list_options_equals(FirebaseStorageInternalListOptions* a, FirebaseStorageInternalListOptions* b);
+gboolean firebase_storage_internal_list_options_equals(
+    FirebaseStorageInternalListOptions* a,
+    FirebaseStorageInternalListOptions* b);
 
 /**
  * firebase_storage_internal_list_options_hash:
@@ -284,14 +321,17 @@ gboolean firebase_storage_internal_list_options_equals(FirebaseStorageInternalLi
  *
  * Returns: the hash code.
  */
-guint firebase_storage_internal_list_options_hash(FirebaseStorageInternalListOptions* object);
+guint firebase_storage_internal_list_options_hash(
+    FirebaseStorageInternalListOptions* object);
 
 /**
  * FirebaseStorageInternalSettableMetadata:
  *
  */
 
-G_DECLARE_FINAL_TYPE(FirebaseStorageInternalSettableMetadata, firebase_storage_internal_settable_metadata, FIREBASE_STORAGE, INTERNAL_SETTABLE_METADATA, GObject)
+G_DECLARE_FINAL_TYPE(FirebaseStorageInternalSettableMetadata,
+                     firebase_storage_internal_settable_metadata,
+                     FIREBASE_STORAGE, INTERNAL_SETTABLE_METADATA, GObject)
 
 /**
  * firebase_storage_internal_settable_metadata_new:
@@ -306,7 +346,11 @@ G_DECLARE_FINAL_TYPE(FirebaseStorageInternalSettableMetadata, firebase_storage_i
  *
  * Returns: a new #FirebaseStorageInternalSettableMetadata
  */
-FirebaseStorageInternalSettableMetadata* firebase_storage_internal_settable_metadata_new(const gchar* cache_control, const gchar* content_disposition, const gchar* content_encoding, const gchar* content_language, const gchar* content_type, FlValue* custom_metadata);
+FirebaseStorageInternalSettableMetadata*
+firebase_storage_internal_settable_metadata_new(
+    const gchar* cache_control, const gchar* content_disposition,
+    const gchar* content_encoding, const gchar* content_language,
+    const gchar* content_type, FlValue* custom_metadata);
 
 /**
  * firebase_storage_internal_settable_metadata_get_cache_control
@@ -318,7 +362,8 @@ FirebaseStorageInternalSettableMetadata* firebase_storage_internal_settable_meta
  *
  * Returns: the field value.
  */
-const gchar* firebase_storage_internal_settable_metadata_get_cache_control(FirebaseStorageInternalSettableMetadata* object);
+const gchar* firebase_storage_internal_settable_metadata_get_cache_control(
+    FirebaseStorageInternalSettableMetadata* object);
 
 /**
  * firebase_storage_internal_settable_metadata_get_content_disposition
@@ -326,11 +371,14 @@ const gchar* firebase_storage_internal_settable_metadata_get_cache_control(Fireb
  *
  * Served as the 'Content-Disposition' header on object download.
  *
- * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Disposition.
+ * See
+ * https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Disposition.
  *
  * Returns: the field value.
  */
-const gchar* firebase_storage_internal_settable_metadata_get_content_disposition(FirebaseStorageInternalSettableMetadata* object);
+const gchar*
+firebase_storage_internal_settable_metadata_get_content_disposition(
+    FirebaseStorageInternalSettableMetadata* object);
 
 /**
  * firebase_storage_internal_settable_metadata_get_content_encoding
@@ -338,11 +386,13 @@ const gchar* firebase_storage_internal_settable_metadata_get_content_disposition
  *
  * Served as the 'Content-Encoding' header on object download.
  *
- * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Encoding.
+ * See
+ * https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Encoding.
  *
  * Returns: the field value.
  */
-const gchar* firebase_storage_internal_settable_metadata_get_content_encoding(FirebaseStorageInternalSettableMetadata* object);
+const gchar* firebase_storage_internal_settable_metadata_get_content_encoding(
+    FirebaseStorageInternalSettableMetadata* object);
 
 /**
  * firebase_storage_internal_settable_metadata_get_content_language
@@ -350,11 +400,13 @@ const gchar* firebase_storage_internal_settable_metadata_get_content_encoding(Fi
  *
  * Served as the 'Content-Language' header on object download.
  *
- * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Language.
+ * See
+ * https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Language.
  *
  * Returns: the field value.
  */
-const gchar* firebase_storage_internal_settable_metadata_get_content_language(FirebaseStorageInternalSettableMetadata* object);
+const gchar* firebase_storage_internal_settable_metadata_get_content_language(
+    FirebaseStorageInternalSettableMetadata* object);
 
 /**
  * firebase_storage_internal_settable_metadata_get_content_type
@@ -366,7 +418,8 @@ const gchar* firebase_storage_internal_settable_metadata_get_content_language(Fi
  *
  * Returns: the field value.
  */
-const gchar* firebase_storage_internal_settable_metadata_get_content_type(FirebaseStorageInternalSettableMetadata* object);
+const gchar* firebase_storage_internal_settable_metadata_get_content_type(
+    FirebaseStorageInternalSettableMetadata* object);
 
 /**
  * firebase_storage_internal_settable_metadata_get_custom_metadata
@@ -376,7 +429,8 @@ const gchar* firebase_storage_internal_settable_metadata_get_content_type(Fireba
  *
  * Returns: the field value.
  */
-FlValue* firebase_storage_internal_settable_metadata_get_custom_metadata(FirebaseStorageInternalSettableMetadata* object);
+FlValue* firebase_storage_internal_settable_metadata_get_custom_metadata(
+    FirebaseStorageInternalSettableMetadata* object);
 
 /**
  * firebase_storage_internal_settable_metadata_equals:
@@ -387,7 +441,9 @@ FlValue* firebase_storage_internal_settable_metadata_get_custom_metadata(Firebas
  *
  * Returns: TRUE if @a and @b are equal.
  */
-gboolean firebase_storage_internal_settable_metadata_equals(FirebaseStorageInternalSettableMetadata* a, FirebaseStorageInternalSettableMetadata* b);
+gboolean firebase_storage_internal_settable_metadata_equals(
+    FirebaseStorageInternalSettableMetadata* a,
+    FirebaseStorageInternalSettableMetadata* b);
 
 /**
  * firebase_storage_internal_settable_metadata_hash:
@@ -397,14 +453,17 @@ gboolean firebase_storage_internal_settable_metadata_equals(FirebaseStorageInter
  *
  * Returns: the hash code.
  */
-guint firebase_storage_internal_settable_metadata_hash(FirebaseStorageInternalSettableMetadata* object);
+guint firebase_storage_internal_settable_metadata_hash(
+    FirebaseStorageInternalSettableMetadata* object);
 
 /**
  * FirebaseStorageInternalStorageTaskSnapShot:
  *
  */
 
-G_DECLARE_FINAL_TYPE(FirebaseStorageInternalStorageTaskSnapShot, firebase_storage_internal_storage_task_snap_shot, FIREBASE_STORAGE, INTERNAL_STORAGE_TASK_SNAP_SHOT, GObject)
+G_DECLARE_FINAL_TYPE(FirebaseStorageInternalStorageTaskSnapShot,
+                     firebase_storage_internal_storage_task_snap_shot,
+                     FIREBASE_STORAGE, INTERNAL_STORAGE_TASK_SNAP_SHOT, GObject)
 
 /**
  * firebase_storage_internal_storage_task_snap_shot_new:
@@ -417,7 +476,10 @@ G_DECLARE_FINAL_TYPE(FirebaseStorageInternalStorageTaskSnapShot, firebase_storag
  *
  * Returns: a new #FirebaseStorageInternalStorageTaskSnapShot
  */
-FirebaseStorageInternalStorageTaskSnapShot* firebase_storage_internal_storage_task_snap_shot_new(int64_t bytes_transferred, FirebaseStorageInternalFullMetaData* metadata, FirebaseStorageInternalStorageTaskState state, int64_t total_bytes);
+FirebaseStorageInternalStorageTaskSnapShot*
+firebase_storage_internal_storage_task_snap_shot_new(
+    int64_t bytes_transferred, FirebaseStorageInternalFullMetaData* metadata,
+    FirebaseStorageInternalStorageTaskState state, int64_t total_bytes);
 
 /**
  * firebase_storage_internal_storage_task_snap_shot_get_bytes_transferred
@@ -427,7 +489,8 @@ FirebaseStorageInternalStorageTaskSnapShot* firebase_storage_internal_storage_ta
  *
  * Returns: the field value.
  */
-int64_t firebase_storage_internal_storage_task_snap_shot_get_bytes_transferred(FirebaseStorageInternalStorageTaskSnapShot* object);
+int64_t firebase_storage_internal_storage_task_snap_shot_get_bytes_transferred(
+    FirebaseStorageInternalStorageTaskSnapShot* object);
 
 /**
  * firebase_storage_internal_storage_task_snap_shot_get_metadata
@@ -437,7 +500,9 @@ int64_t firebase_storage_internal_storage_task_snap_shot_get_bytes_transferred(F
  *
  * Returns: the field value.
  */
-FirebaseStorageInternalFullMetaData* firebase_storage_internal_storage_task_snap_shot_get_metadata(FirebaseStorageInternalStorageTaskSnapShot* object);
+FirebaseStorageInternalFullMetaData*
+firebase_storage_internal_storage_task_snap_shot_get_metadata(
+    FirebaseStorageInternalStorageTaskSnapShot* object);
 
 /**
  * firebase_storage_internal_storage_task_snap_shot_get_state
@@ -447,7 +512,9 @@ FirebaseStorageInternalFullMetaData* firebase_storage_internal_storage_task_snap
  *
  * Returns: the field value.
  */
-FirebaseStorageInternalStorageTaskState firebase_storage_internal_storage_task_snap_shot_get_state(FirebaseStorageInternalStorageTaskSnapShot* object);
+FirebaseStorageInternalStorageTaskState
+firebase_storage_internal_storage_task_snap_shot_get_state(
+    FirebaseStorageInternalStorageTaskSnapShot* object);
 
 /**
  * firebase_storage_internal_storage_task_snap_shot_get_total_bytes
@@ -457,7 +524,8 @@ FirebaseStorageInternalStorageTaskState firebase_storage_internal_storage_task_s
  *
  * Returns: the field value.
  */
-int64_t firebase_storage_internal_storage_task_snap_shot_get_total_bytes(FirebaseStorageInternalStorageTaskSnapShot* object);
+int64_t firebase_storage_internal_storage_task_snap_shot_get_total_bytes(
+    FirebaseStorageInternalStorageTaskSnapShot* object);
 
 /**
  * firebase_storage_internal_storage_task_snap_shot_equals:
@@ -468,24 +536,30 @@ int64_t firebase_storage_internal_storage_task_snap_shot_get_total_bytes(Firebas
  *
  * Returns: TRUE if @a and @b are equal.
  */
-gboolean firebase_storage_internal_storage_task_snap_shot_equals(FirebaseStorageInternalStorageTaskSnapShot* a, FirebaseStorageInternalStorageTaskSnapShot* b);
+gboolean firebase_storage_internal_storage_task_snap_shot_equals(
+    FirebaseStorageInternalStorageTaskSnapShot* a,
+    FirebaseStorageInternalStorageTaskSnapShot* b);
 
 /**
  * firebase_storage_internal_storage_task_snap_shot_hash:
  * @object: a #FirebaseStorageInternalStorageTaskSnapShot.
  *
- * Calculates a hash code for a #FirebaseStorageInternalStorageTaskSnapShot object.
+ * Calculates a hash code for a #FirebaseStorageInternalStorageTaskSnapShot
+ * object.
  *
  * Returns: the hash code.
  */
-guint firebase_storage_internal_storage_task_snap_shot_hash(FirebaseStorageInternalStorageTaskSnapShot* object);
+guint firebase_storage_internal_storage_task_snap_shot_hash(
+    FirebaseStorageInternalStorageTaskSnapShot* object);
 
 /**
  * FirebaseStorageInternalListResult:
  *
  */
 
-G_DECLARE_FINAL_TYPE(FirebaseStorageInternalListResult, firebase_storage_internal_list_result, FIREBASE_STORAGE, INTERNAL_LIST_RESULT, GObject)
+G_DECLARE_FINAL_TYPE(FirebaseStorageInternalListResult,
+                     firebase_storage_internal_list_result, FIREBASE_STORAGE,
+                     INTERNAL_LIST_RESULT, GObject)
 
 /**
  * firebase_storage_internal_list_result_new:
@@ -497,7 +571,8 @@ G_DECLARE_FINAL_TYPE(FirebaseStorageInternalListResult, firebase_storage_interna
  *
  * Returns: a new #FirebaseStorageInternalListResult
  */
-FirebaseStorageInternalListResult* firebase_storage_internal_list_result_new(FlValue* items, const gchar* page_token, FlValue* prefixs);
+FirebaseStorageInternalListResult* firebase_storage_internal_list_result_new(
+    FlValue* items, const gchar* page_token, FlValue* prefixs);
 
 /**
  * firebase_storage_internal_list_result_get_items
@@ -507,7 +582,8 @@ FirebaseStorageInternalListResult* firebase_storage_internal_list_result_new(FlV
  *
  * Returns: the field value.
  */
-FlValue* firebase_storage_internal_list_result_get_items(FirebaseStorageInternalListResult* object);
+FlValue* firebase_storage_internal_list_result_get_items(
+    FirebaseStorageInternalListResult* object);
 
 /**
  * firebase_storage_internal_list_result_get_page_token
@@ -517,7 +593,8 @@ FlValue* firebase_storage_internal_list_result_get_items(FirebaseStorageInternal
  *
  * Returns: the field value.
  */
-const gchar* firebase_storage_internal_list_result_get_page_token(FirebaseStorageInternalListResult* object);
+const gchar* firebase_storage_internal_list_result_get_page_token(
+    FirebaseStorageInternalListResult* object);
 
 /**
  * firebase_storage_internal_list_result_get_prefixs
@@ -527,7 +604,8 @@ const gchar* firebase_storage_internal_list_result_get_page_token(FirebaseStorag
  *
  * Returns: the field value.
  */
-FlValue* firebase_storage_internal_list_result_get_prefixs(FirebaseStorageInternalListResult* object);
+FlValue* firebase_storage_internal_list_result_get_prefixs(
+    FirebaseStorageInternalListResult* object);
 
 /**
  * firebase_storage_internal_list_result_equals:
@@ -538,7 +616,8 @@ FlValue* firebase_storage_internal_list_result_get_prefixs(FirebaseStorageIntern
  *
  * Returns: TRUE if @a and @b are equal.
  */
-gboolean firebase_storage_internal_list_result_equals(FirebaseStorageInternalListResult* a, FirebaseStorageInternalListResult* b);
+gboolean firebase_storage_internal_list_result_equals(
+    FirebaseStorageInternalListResult* a, FirebaseStorageInternalListResult* b);
 
 /**
  * firebase_storage_internal_list_result_hash:
@@ -548,9 +627,12 @@ gboolean firebase_storage_internal_list_result_equals(FirebaseStorageInternalLis
  *
  * Returns: the hash code.
  */
-guint firebase_storage_internal_list_result_hash(FirebaseStorageInternalListResult* object);
+guint firebase_storage_internal_list_result_hash(
+    FirebaseStorageInternalListResult* object);
 
-G_DECLARE_FINAL_TYPE(FirebaseStorageMessageCodec, firebase_storage_message_codec, FIREBASE_STORAGE, MESSAGE_CODEC, FlStandardMessageCodec)
+G_DECLARE_FINAL_TYPE(FirebaseStorageMessageCodec,
+                     firebase_storage_message_codec, FIREBASE_STORAGE,
+                     MESSAGE_CODEC, FlStandardMessageCodec)
 
 /**
  * Custom type ID constants:
@@ -568,35 +650,123 @@ extern const int firebase_storage_internal_settable_metadata_type_id;
 extern const int firebase_storage_internal_storage_task_snap_shot_type_id;
 extern const int firebase_storage_internal_list_result_type_id;
 
-G_DECLARE_FINAL_TYPE(FirebaseStorageFirebaseStorageHostApi, firebase_storage_firebase_storage_host_api, FIREBASE_STORAGE, FIREBASE_STORAGE_HOST_API, GObject)
+G_DECLARE_FINAL_TYPE(FirebaseStorageFirebaseStorageHostApi,
+                     firebase_storage_firebase_storage_host_api,
+                     FIREBASE_STORAGE, FIREBASE_STORAGE_HOST_API, GObject)
 
-G_DECLARE_FINAL_TYPE(FirebaseStorageFirebaseStorageHostApiResponseHandle, firebase_storage_firebase_storage_host_api_response_handle, FIREBASE_STORAGE, FIREBASE_STORAGE_HOST_API_RESPONSE_HANDLE, GObject)
+G_DECLARE_FINAL_TYPE(FirebaseStorageFirebaseStorageHostApiResponseHandle,
+                     firebase_storage_firebase_storage_host_api_response_handle,
+                     FIREBASE_STORAGE,
+                     FIREBASE_STORAGE_HOST_API_RESPONSE_HANDLE, GObject)
 
 /**
  * FirebaseStorageFirebaseStorageHostApiVTable:
  *
- * Table of functions exposed by FirebaseStorageHostApi to be implemented by the API provider.
+ * Table of functions exposed by FirebaseStorageHostApi to be implemented by the
+ * API provider.
  */
 typedef struct {
-  void (*get_referenceby_path)(FirebaseStorageInternalStorageFirebaseApp* app, const gchar* path, const gchar* bucket, FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*set_max_operation_retry_time)(FirebaseStorageInternalStorageFirebaseApp* app, int64_t time, FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*set_max_upload_retry_time)(FirebaseStorageInternalStorageFirebaseApp* app, int64_t time, FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*set_max_download_retry_time)(FirebaseStorageInternalStorageFirebaseApp* app, int64_t time, FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*use_storage_emulator)(FirebaseStorageInternalStorageFirebaseApp* app, const gchar* host, int64_t port, FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*reference_delete)(FirebaseStorageInternalStorageFirebaseApp* app, FirebaseStorageInternalStorageReference* reference, FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*reference_get_download_u_r_l)(FirebaseStorageInternalStorageFirebaseApp* app, FirebaseStorageInternalStorageReference* reference, FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*reference_get_meta_data)(FirebaseStorageInternalStorageFirebaseApp* app, FirebaseStorageInternalStorageReference* reference, FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*reference_list)(FirebaseStorageInternalStorageFirebaseApp* app, FirebaseStorageInternalStorageReference* reference, FirebaseStorageInternalListOptions* options, FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*reference_list_all)(FirebaseStorageInternalStorageFirebaseApp* app, FirebaseStorageInternalStorageReference* reference, FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*reference_get_data)(FirebaseStorageInternalStorageFirebaseApp* app, FirebaseStorageInternalStorageReference* reference, int64_t max_size, FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*reference_put_data)(FirebaseStorageInternalStorageFirebaseApp* app, FirebaseStorageInternalStorageReference* reference, const uint8_t* data, size_t data_length, FirebaseStorageInternalSettableMetadata* settable_meta_data, int64_t handle, FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*reference_put_string)(FirebaseStorageInternalStorageFirebaseApp* app, FirebaseStorageInternalStorageReference* reference, const gchar* data, int64_t format, FirebaseStorageInternalSettableMetadata* settable_meta_data, int64_t handle, FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*reference_put_file)(FirebaseStorageInternalStorageFirebaseApp* app, FirebaseStorageInternalStorageReference* reference, const gchar* file_path, FirebaseStorageInternalSettableMetadata* settable_meta_data, int64_t handle, FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*reference_download_file)(FirebaseStorageInternalStorageFirebaseApp* app, FirebaseStorageInternalStorageReference* reference, const gchar* file_path, int64_t handle, FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*reference_update_metadata)(FirebaseStorageInternalStorageFirebaseApp* app, FirebaseStorageInternalStorageReference* reference, FirebaseStorageInternalSettableMetadata* metadata, FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*task_pause)(FirebaseStorageInternalStorageFirebaseApp* app, int64_t handle, FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*task_resume)(FirebaseStorageInternalStorageFirebaseApp* app, int64_t handle, FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*task_cancel)(FirebaseStorageInternalStorageFirebaseApp* app, int64_t handle, FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, gpointer user_data);
+  void (*get_referenceby_path)(
+      FirebaseStorageInternalStorageFirebaseApp* app, const gchar* path,
+      const gchar* bucket,
+      FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*set_max_operation_retry_time)(
+      FirebaseStorageInternalStorageFirebaseApp* app, int64_t time,
+      FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*set_max_upload_retry_time)(
+      FirebaseStorageInternalStorageFirebaseApp* app, int64_t time,
+      FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*set_max_download_retry_time)(
+      FirebaseStorageInternalStorageFirebaseApp* app, int64_t time,
+      FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*use_storage_emulator)(
+      FirebaseStorageInternalStorageFirebaseApp* app, const gchar* host,
+      int64_t port,
+      FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*reference_delete)(
+      FirebaseStorageInternalStorageFirebaseApp* app,
+      FirebaseStorageInternalStorageReference* reference,
+      FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*reference_get_download_u_r_l)(
+      FirebaseStorageInternalStorageFirebaseApp* app,
+      FirebaseStorageInternalStorageReference* reference,
+      FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*reference_get_meta_data)(
+      FirebaseStorageInternalStorageFirebaseApp* app,
+      FirebaseStorageInternalStorageReference* reference,
+      FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*reference_list)(
+      FirebaseStorageInternalStorageFirebaseApp* app,
+      FirebaseStorageInternalStorageReference* reference,
+      FirebaseStorageInternalListOptions* options,
+      FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*reference_list_all)(
+      FirebaseStorageInternalStorageFirebaseApp* app,
+      FirebaseStorageInternalStorageReference* reference,
+      FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*reference_get_data)(
+      FirebaseStorageInternalStorageFirebaseApp* app,
+      FirebaseStorageInternalStorageReference* reference, int64_t max_size,
+      FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*reference_put_data)(
+      FirebaseStorageInternalStorageFirebaseApp* app,
+      FirebaseStorageInternalStorageReference* reference, const uint8_t* data,
+      size_t data_length,
+      FirebaseStorageInternalSettableMetadata* settable_meta_data,
+      int64_t handle,
+      FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*reference_put_string)(
+      FirebaseStorageInternalStorageFirebaseApp* app,
+      FirebaseStorageInternalStorageReference* reference, const gchar* data,
+      int64_t format,
+      FirebaseStorageInternalSettableMetadata* settable_meta_data,
+      int64_t handle,
+      FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*reference_put_file)(
+      FirebaseStorageInternalStorageFirebaseApp* app,
+      FirebaseStorageInternalStorageReference* reference,
+      const gchar* file_path,
+      FirebaseStorageInternalSettableMetadata* settable_meta_data,
+      int64_t handle,
+      FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*reference_download_file)(
+      FirebaseStorageInternalStorageFirebaseApp* app,
+      FirebaseStorageInternalStorageReference* reference,
+      const gchar* file_path, int64_t handle,
+      FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*reference_update_metadata)(
+      FirebaseStorageInternalStorageFirebaseApp* app,
+      FirebaseStorageInternalStorageReference* reference,
+      FirebaseStorageInternalSettableMetadata* metadata,
+      FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*task_pause)(
+      FirebaseStorageInternalStorageFirebaseApp* app, int64_t handle,
+      FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*task_resume)(
+      FirebaseStorageInternalStorageFirebaseApp* app, int64_t handle,
+      FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*task_cancel)(
+      FirebaseStorageInternalStorageFirebaseApp* app, int64_t handle,
+      FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+      gpointer user_data);
 } FirebaseStorageFirebaseStorageHostApiVTable;
 
 /**
@@ -606,11 +776,15 @@ typedef struct {
  * @suffix: (allow-none): a suffix to add to the API or %NULL for none.
  * @vtable: implementations of the methods in this API.
  * @user_data: (closure): user data to pass to the functions in @vtable.
- * @user_data_free_func: (allow-none): a function which gets called to free @user_data, or %NULL.
+ * @user_data_free_func: (allow-none): a function which gets called to free
+ * @user_data, or %NULL.
  *
  * Connects the method handlers in the FirebaseStorageHostApi API.
  */
-void firebase_storage_firebase_storage_host_api_set_method_handlers(FlBinaryMessenger* messenger, const gchar* suffix, const FirebaseStorageFirebaseStorageHostApiVTable* vtable, gpointer user_data, GDestroyNotify user_data_free_func);
+void firebase_storage_firebase_storage_host_api_set_method_handlers(
+    FlBinaryMessenger* messenger, const gchar* suffix,
+    const FirebaseStorageFirebaseStorageHostApiVTable* vtable,
+    gpointer user_data, GDestroyNotify user_data_free_func);
 
 /**
  * firebase_storage_firebase_storage_host_api_clear_method_handlers:
@@ -620,16 +794,19 @@ void firebase_storage_firebase_storage_host_api_set_method_handlers(FlBinaryMess
  *
  * Clears the method handlers in the FirebaseStorageHostApi API.
  */
-void firebase_storage_firebase_storage_host_api_clear_method_handlers(FlBinaryMessenger* messenger, const gchar* suffix);
+void firebase_storage_firebase_storage_host_api_clear_method_handlers(
+    FlBinaryMessenger* messenger, const gchar* suffix);
 
 /**
  * firebase_storage_firebase_storage_host_api_respond_get_referenceby_path:
  * @response_handle: a #FirebaseStorageFirebaseStorageHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseStorageHostApi.getReferencebyPath. 
+ * Responds to FirebaseStorageHostApi.getReferencebyPath.
  */
-void firebase_storage_firebase_storage_host_api_respond_get_referenceby_path(FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, FirebaseStorageInternalStorageReference* return_value);
+void firebase_storage_firebase_storage_host_api_respond_get_referenceby_path(
+    FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+    FirebaseStorageInternalStorageReference* return_value);
 
 /**
  * firebase_storage_firebase_storage_host_api_respond_error_get_referenceby_path:
@@ -638,17 +815,20 @@ void firebase_storage_firebase_storage_host_api_respond_get_referenceby_path(Fir
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseStorageHostApi.getReferencebyPath. 
+ * Responds with an error to FirebaseStorageHostApi.getReferencebyPath.
  */
-void firebase_storage_firebase_storage_host_api_respond_error_get_referenceby_path(FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_storage_firebase_storage_host_api_respond_error_get_referenceby_path(
+    FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_storage_firebase_storage_host_api_respond_set_max_operation_retry_time:
  * @response_handle: a #FirebaseStorageFirebaseStorageHostApiResponseHandle.
  *
- * Responds to FirebaseStorageHostApi.setMaxOperationRetryTime. 
+ * Responds to FirebaseStorageHostApi.setMaxOperationRetryTime.
  */
-void firebase_storage_firebase_storage_host_api_respond_set_max_operation_retry_time(FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle);
+void firebase_storage_firebase_storage_host_api_respond_set_max_operation_retry_time(
+    FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle);
 
 /**
  * firebase_storage_firebase_storage_host_api_respond_error_set_max_operation_retry_time:
@@ -657,17 +837,20 @@ void firebase_storage_firebase_storage_host_api_respond_set_max_operation_retry_
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseStorageHostApi.setMaxOperationRetryTime. 
+ * Responds with an error to FirebaseStorageHostApi.setMaxOperationRetryTime.
  */
-void firebase_storage_firebase_storage_host_api_respond_error_set_max_operation_retry_time(FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_storage_firebase_storage_host_api_respond_error_set_max_operation_retry_time(
+    FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_storage_firebase_storage_host_api_respond_set_max_upload_retry_time:
  * @response_handle: a #FirebaseStorageFirebaseStorageHostApiResponseHandle.
  *
- * Responds to FirebaseStorageHostApi.setMaxUploadRetryTime. 
+ * Responds to FirebaseStorageHostApi.setMaxUploadRetryTime.
  */
-void firebase_storage_firebase_storage_host_api_respond_set_max_upload_retry_time(FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle);
+void firebase_storage_firebase_storage_host_api_respond_set_max_upload_retry_time(
+    FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle);
 
 /**
  * firebase_storage_firebase_storage_host_api_respond_error_set_max_upload_retry_time:
@@ -676,17 +859,20 @@ void firebase_storage_firebase_storage_host_api_respond_set_max_upload_retry_tim
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseStorageHostApi.setMaxUploadRetryTime. 
+ * Responds with an error to FirebaseStorageHostApi.setMaxUploadRetryTime.
  */
-void firebase_storage_firebase_storage_host_api_respond_error_set_max_upload_retry_time(FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_storage_firebase_storage_host_api_respond_error_set_max_upload_retry_time(
+    FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_storage_firebase_storage_host_api_respond_set_max_download_retry_time:
  * @response_handle: a #FirebaseStorageFirebaseStorageHostApiResponseHandle.
  *
- * Responds to FirebaseStorageHostApi.setMaxDownloadRetryTime. 
+ * Responds to FirebaseStorageHostApi.setMaxDownloadRetryTime.
  */
-void firebase_storage_firebase_storage_host_api_respond_set_max_download_retry_time(FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle);
+void firebase_storage_firebase_storage_host_api_respond_set_max_download_retry_time(
+    FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle);
 
 /**
  * firebase_storage_firebase_storage_host_api_respond_error_set_max_download_retry_time:
@@ -695,17 +881,20 @@ void firebase_storage_firebase_storage_host_api_respond_set_max_download_retry_t
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseStorageHostApi.setMaxDownloadRetryTime. 
+ * Responds with an error to FirebaseStorageHostApi.setMaxDownloadRetryTime.
  */
-void firebase_storage_firebase_storage_host_api_respond_error_set_max_download_retry_time(FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_storage_firebase_storage_host_api_respond_error_set_max_download_retry_time(
+    FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_storage_firebase_storage_host_api_respond_use_storage_emulator:
  * @response_handle: a #FirebaseStorageFirebaseStorageHostApiResponseHandle.
  *
- * Responds to FirebaseStorageHostApi.useStorageEmulator. 
+ * Responds to FirebaseStorageHostApi.useStorageEmulator.
  */
-void firebase_storage_firebase_storage_host_api_respond_use_storage_emulator(FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle);
+void firebase_storage_firebase_storage_host_api_respond_use_storage_emulator(
+    FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle);
 
 /**
  * firebase_storage_firebase_storage_host_api_respond_error_use_storage_emulator:
@@ -714,17 +903,20 @@ void firebase_storage_firebase_storage_host_api_respond_use_storage_emulator(Fir
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseStorageHostApi.useStorageEmulator. 
+ * Responds with an error to FirebaseStorageHostApi.useStorageEmulator.
  */
-void firebase_storage_firebase_storage_host_api_respond_error_use_storage_emulator(FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_storage_firebase_storage_host_api_respond_error_use_storage_emulator(
+    FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_storage_firebase_storage_host_api_respond_reference_delete:
  * @response_handle: a #FirebaseStorageFirebaseStorageHostApiResponseHandle.
  *
- * Responds to FirebaseStorageHostApi.referenceDelete. 
+ * Responds to FirebaseStorageHostApi.referenceDelete.
  */
-void firebase_storage_firebase_storage_host_api_respond_reference_delete(FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle);
+void firebase_storage_firebase_storage_host_api_respond_reference_delete(
+    FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle);
 
 /**
  * firebase_storage_firebase_storage_host_api_respond_error_reference_delete:
@@ -733,18 +925,22 @@ void firebase_storage_firebase_storage_host_api_respond_reference_delete(Firebas
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseStorageHostApi.referenceDelete. 
+ * Responds with an error to FirebaseStorageHostApi.referenceDelete.
  */
-void firebase_storage_firebase_storage_host_api_respond_error_reference_delete(FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_storage_firebase_storage_host_api_respond_error_reference_delete(
+    FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_storage_firebase_storage_host_api_respond_reference_get_download_u_r_l:
  * @response_handle: a #FirebaseStorageFirebaseStorageHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseStorageHostApi.referenceGetDownloadURL. 
+ * Responds to FirebaseStorageHostApi.referenceGetDownloadURL.
  */
-void firebase_storage_firebase_storage_host_api_respond_reference_get_download_u_r_l(FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, const gchar* return_value);
+void firebase_storage_firebase_storage_host_api_respond_reference_get_download_u_r_l(
+    FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+    const gchar* return_value);
 
 /**
  * firebase_storage_firebase_storage_host_api_respond_error_reference_get_download_u_r_l:
@@ -753,18 +949,22 @@ void firebase_storage_firebase_storage_host_api_respond_reference_get_download_u
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseStorageHostApi.referenceGetDownloadURL. 
+ * Responds with an error to FirebaseStorageHostApi.referenceGetDownloadURL.
  */
-void firebase_storage_firebase_storage_host_api_respond_error_reference_get_download_u_r_l(FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_storage_firebase_storage_host_api_respond_error_reference_get_download_u_r_l(
+    FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_storage_firebase_storage_host_api_respond_reference_get_meta_data:
  * @response_handle: a #FirebaseStorageFirebaseStorageHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseStorageHostApi.referenceGetMetaData. 
+ * Responds to FirebaseStorageHostApi.referenceGetMetaData.
  */
-void firebase_storage_firebase_storage_host_api_respond_reference_get_meta_data(FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, FirebaseStorageInternalFullMetaData* return_value);
+void firebase_storage_firebase_storage_host_api_respond_reference_get_meta_data(
+    FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+    FirebaseStorageInternalFullMetaData* return_value);
 
 /**
  * firebase_storage_firebase_storage_host_api_respond_error_reference_get_meta_data:
@@ -773,18 +973,22 @@ void firebase_storage_firebase_storage_host_api_respond_reference_get_meta_data(
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseStorageHostApi.referenceGetMetaData. 
+ * Responds with an error to FirebaseStorageHostApi.referenceGetMetaData.
  */
-void firebase_storage_firebase_storage_host_api_respond_error_reference_get_meta_data(FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_storage_firebase_storage_host_api_respond_error_reference_get_meta_data(
+    FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_storage_firebase_storage_host_api_respond_reference_list:
  * @response_handle: a #FirebaseStorageFirebaseStorageHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseStorageHostApi.referenceList. 
+ * Responds to FirebaseStorageHostApi.referenceList.
  */
-void firebase_storage_firebase_storage_host_api_respond_reference_list(FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, FirebaseStorageInternalListResult* return_value);
+void firebase_storage_firebase_storage_host_api_respond_reference_list(
+    FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+    FirebaseStorageInternalListResult* return_value);
 
 /**
  * firebase_storage_firebase_storage_host_api_respond_error_reference_list:
@@ -793,18 +997,22 @@ void firebase_storage_firebase_storage_host_api_respond_reference_list(FirebaseS
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseStorageHostApi.referenceList. 
+ * Responds with an error to FirebaseStorageHostApi.referenceList.
  */
-void firebase_storage_firebase_storage_host_api_respond_error_reference_list(FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_storage_firebase_storage_host_api_respond_error_reference_list(
+    FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_storage_firebase_storage_host_api_respond_reference_list_all:
  * @response_handle: a #FirebaseStorageFirebaseStorageHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseStorageHostApi.referenceListAll. 
+ * Responds to FirebaseStorageHostApi.referenceListAll.
  */
-void firebase_storage_firebase_storage_host_api_respond_reference_list_all(FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, FirebaseStorageInternalListResult* return_value);
+void firebase_storage_firebase_storage_host_api_respond_reference_list_all(
+    FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+    FirebaseStorageInternalListResult* return_value);
 
 /**
  * firebase_storage_firebase_storage_host_api_respond_error_reference_list_all:
@@ -813,19 +1021,24 @@ void firebase_storage_firebase_storage_host_api_respond_reference_list_all(Fireb
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseStorageHostApi.referenceListAll. 
+ * Responds with an error to FirebaseStorageHostApi.referenceListAll.
  */
-void firebase_storage_firebase_storage_host_api_respond_error_reference_list_all(FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_storage_firebase_storage_host_api_respond_error_reference_list_all(
+    FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_storage_firebase_storage_host_api_respond_reference_get_data:
  * @response_handle: a #FirebaseStorageFirebaseStorageHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
- * @return_value_length: (allow-none): location to write length of @return_value or %NULL to ignore.
+ * @return_value_length: (allow-none): location to write length of @return_value
+ * or %NULL to ignore.
  *
- * Responds to FirebaseStorageHostApi.referenceGetData. 
+ * Responds to FirebaseStorageHostApi.referenceGetData.
  */
-void firebase_storage_firebase_storage_host_api_respond_reference_get_data(FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, const uint8_t* return_value, size_t return_value_length);
+void firebase_storage_firebase_storage_host_api_respond_reference_get_data(
+    FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+    const uint8_t* return_value, size_t return_value_length);
 
 /**
  * firebase_storage_firebase_storage_host_api_respond_error_reference_get_data:
@@ -834,18 +1047,22 @@ void firebase_storage_firebase_storage_host_api_respond_reference_get_data(Fireb
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseStorageHostApi.referenceGetData. 
+ * Responds with an error to FirebaseStorageHostApi.referenceGetData.
  */
-void firebase_storage_firebase_storage_host_api_respond_error_reference_get_data(FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_storage_firebase_storage_host_api_respond_error_reference_get_data(
+    FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_storage_firebase_storage_host_api_respond_reference_put_data:
  * @response_handle: a #FirebaseStorageFirebaseStorageHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseStorageHostApi.referencePutData. 
+ * Responds to FirebaseStorageHostApi.referencePutData.
  */
-void firebase_storage_firebase_storage_host_api_respond_reference_put_data(FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, const gchar* return_value);
+void firebase_storage_firebase_storage_host_api_respond_reference_put_data(
+    FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+    const gchar* return_value);
 
 /**
  * firebase_storage_firebase_storage_host_api_respond_error_reference_put_data:
@@ -854,18 +1071,22 @@ void firebase_storage_firebase_storage_host_api_respond_reference_put_data(Fireb
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseStorageHostApi.referencePutData. 
+ * Responds with an error to FirebaseStorageHostApi.referencePutData.
  */
-void firebase_storage_firebase_storage_host_api_respond_error_reference_put_data(FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_storage_firebase_storage_host_api_respond_error_reference_put_data(
+    FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_storage_firebase_storage_host_api_respond_reference_put_string:
  * @response_handle: a #FirebaseStorageFirebaseStorageHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseStorageHostApi.referencePutString. 
+ * Responds to FirebaseStorageHostApi.referencePutString.
  */
-void firebase_storage_firebase_storage_host_api_respond_reference_put_string(FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, const gchar* return_value);
+void firebase_storage_firebase_storage_host_api_respond_reference_put_string(
+    FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+    const gchar* return_value);
 
 /**
  * firebase_storage_firebase_storage_host_api_respond_error_reference_put_string:
@@ -874,18 +1095,22 @@ void firebase_storage_firebase_storage_host_api_respond_reference_put_string(Fir
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseStorageHostApi.referencePutString. 
+ * Responds with an error to FirebaseStorageHostApi.referencePutString.
  */
-void firebase_storage_firebase_storage_host_api_respond_error_reference_put_string(FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_storage_firebase_storage_host_api_respond_error_reference_put_string(
+    FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_storage_firebase_storage_host_api_respond_reference_put_file:
  * @response_handle: a #FirebaseStorageFirebaseStorageHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseStorageHostApi.referencePutFile. 
+ * Responds to FirebaseStorageHostApi.referencePutFile.
  */
-void firebase_storage_firebase_storage_host_api_respond_reference_put_file(FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, const gchar* return_value);
+void firebase_storage_firebase_storage_host_api_respond_reference_put_file(
+    FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+    const gchar* return_value);
 
 /**
  * firebase_storage_firebase_storage_host_api_respond_error_reference_put_file:
@@ -894,18 +1119,22 @@ void firebase_storage_firebase_storage_host_api_respond_reference_put_file(Fireb
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseStorageHostApi.referencePutFile. 
+ * Responds with an error to FirebaseStorageHostApi.referencePutFile.
  */
-void firebase_storage_firebase_storage_host_api_respond_error_reference_put_file(FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_storage_firebase_storage_host_api_respond_error_reference_put_file(
+    FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_storage_firebase_storage_host_api_respond_reference_download_file:
  * @response_handle: a #FirebaseStorageFirebaseStorageHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseStorageHostApi.referenceDownloadFile. 
+ * Responds to FirebaseStorageHostApi.referenceDownloadFile.
  */
-void firebase_storage_firebase_storage_host_api_respond_reference_download_file(FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, const gchar* return_value);
+void firebase_storage_firebase_storage_host_api_respond_reference_download_file(
+    FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+    const gchar* return_value);
 
 /**
  * firebase_storage_firebase_storage_host_api_respond_error_reference_download_file:
@@ -914,18 +1143,22 @@ void firebase_storage_firebase_storage_host_api_respond_reference_download_file(
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseStorageHostApi.referenceDownloadFile. 
+ * Responds with an error to FirebaseStorageHostApi.referenceDownloadFile.
  */
-void firebase_storage_firebase_storage_host_api_respond_error_reference_download_file(FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_storage_firebase_storage_host_api_respond_error_reference_download_file(
+    FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_storage_firebase_storage_host_api_respond_reference_update_metadata:
  * @response_handle: a #FirebaseStorageFirebaseStorageHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseStorageHostApi.referenceUpdateMetadata. 
+ * Responds to FirebaseStorageHostApi.referenceUpdateMetadata.
  */
-void firebase_storage_firebase_storage_host_api_respond_reference_update_metadata(FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, FirebaseStorageInternalFullMetaData* return_value);
+void firebase_storage_firebase_storage_host_api_respond_reference_update_metadata(
+    FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+    FirebaseStorageInternalFullMetaData* return_value);
 
 /**
  * firebase_storage_firebase_storage_host_api_respond_error_reference_update_metadata:
@@ -934,18 +1167,22 @@ void firebase_storage_firebase_storage_host_api_respond_reference_update_metadat
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseStorageHostApi.referenceUpdateMetadata. 
+ * Responds with an error to FirebaseStorageHostApi.referenceUpdateMetadata.
  */
-void firebase_storage_firebase_storage_host_api_respond_error_reference_update_metadata(FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_storage_firebase_storage_host_api_respond_error_reference_update_metadata(
+    FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_storage_firebase_storage_host_api_respond_task_pause:
  * @response_handle: a #FirebaseStorageFirebaseStorageHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseStorageHostApi.taskPause. 
+ * Responds to FirebaseStorageHostApi.taskPause.
  */
-void firebase_storage_firebase_storage_host_api_respond_task_pause(FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, FlValue* return_value);
+void firebase_storage_firebase_storage_host_api_respond_task_pause(
+    FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+    FlValue* return_value);
 
 /**
  * firebase_storage_firebase_storage_host_api_respond_error_task_pause:
@@ -954,18 +1191,22 @@ void firebase_storage_firebase_storage_host_api_respond_task_pause(FirebaseStora
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseStorageHostApi.taskPause. 
+ * Responds with an error to FirebaseStorageHostApi.taskPause.
  */
-void firebase_storage_firebase_storage_host_api_respond_error_task_pause(FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_storage_firebase_storage_host_api_respond_error_task_pause(
+    FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_storage_firebase_storage_host_api_respond_task_resume:
  * @response_handle: a #FirebaseStorageFirebaseStorageHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseStorageHostApi.taskResume. 
+ * Responds to FirebaseStorageHostApi.taskResume.
  */
-void firebase_storage_firebase_storage_host_api_respond_task_resume(FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, FlValue* return_value);
+void firebase_storage_firebase_storage_host_api_respond_task_resume(
+    FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+    FlValue* return_value);
 
 /**
  * firebase_storage_firebase_storage_host_api_respond_error_task_resume:
@@ -974,18 +1215,22 @@ void firebase_storage_firebase_storage_host_api_respond_task_resume(FirebaseStor
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseStorageHostApi.taskResume. 
+ * Responds with an error to FirebaseStorageHostApi.taskResume.
  */
-void firebase_storage_firebase_storage_host_api_respond_error_task_resume(FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_storage_firebase_storage_host_api_respond_error_task_resume(
+    FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_storage_firebase_storage_host_api_respond_task_cancel:
  * @response_handle: a #FirebaseStorageFirebaseStorageHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseStorageHostApi.taskCancel. 
+ * Responds to FirebaseStorageHostApi.taskCancel.
  */
-void firebase_storage_firebase_storage_host_api_respond_task_cancel(FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, FlValue* return_value);
+void firebase_storage_firebase_storage_host_api_respond_task_cancel(
+    FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+    FlValue* return_value);
 
 /**
  * firebase_storage_firebase_storage_host_api_respond_error_task_cancel:
@@ -994,9 +1239,11 @@ void firebase_storage_firebase_storage_host_api_respond_task_cancel(FirebaseStor
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseStorageHostApi.taskCancel. 
+ * Responds with an error to FirebaseStorageHostApi.taskCancel.
  */
-void firebase_storage_firebase_storage_host_api_respond_error_task_cancel(FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_storage_firebase_storage_host_api_respond_error_task_cancel(
+    FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 G_END_DECLS
 

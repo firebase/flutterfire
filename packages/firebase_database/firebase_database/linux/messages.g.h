@@ -16,7 +16,9 @@ G_BEGIN_DECLS
  *
  */
 
-G_DECLARE_FINAL_TYPE(FirebaseDatabaseDatabasePigeonSettings, firebase_database_database_pigeon_settings, FIREBASE_DATABASE, DATABASE_PIGEON_SETTINGS, GObject)
+G_DECLARE_FINAL_TYPE(FirebaseDatabaseDatabasePigeonSettings,
+                     firebase_database_database_pigeon_settings,
+                     FIREBASE_DATABASE, DATABASE_PIGEON_SETTINGS, GObject)
 
 /**
  * firebase_database_database_pigeon_settings_new:
@@ -30,7 +32,12 @@ G_DECLARE_FINAL_TYPE(FirebaseDatabaseDatabasePigeonSettings, firebase_database_d
  *
  * Returns: a new #FirebaseDatabaseDatabasePigeonSettings
  */
-FirebaseDatabaseDatabasePigeonSettings* firebase_database_database_pigeon_settings_new(gboolean* persistence_enabled, int64_t* cache_size_bytes, gboolean* logging_enabled, const gchar* emulator_host, int64_t* emulator_port);
+FirebaseDatabaseDatabasePigeonSettings*
+firebase_database_database_pigeon_settings_new(gboolean* persistence_enabled,
+                                               int64_t* cache_size_bytes,
+                                               gboolean* logging_enabled,
+                                               const gchar* emulator_host,
+                                               int64_t* emulator_port);
 
 /**
  * firebase_database_database_pigeon_settings_get_persistence_enabled
@@ -40,7 +47,8 @@ FirebaseDatabaseDatabasePigeonSettings* firebase_database_database_pigeon_settin
  *
  * Returns: the field value.
  */
-gboolean* firebase_database_database_pigeon_settings_get_persistence_enabled(FirebaseDatabaseDatabasePigeonSettings* object);
+gboolean* firebase_database_database_pigeon_settings_get_persistence_enabled(
+    FirebaseDatabaseDatabasePigeonSettings* object);
 
 /**
  * firebase_database_database_pigeon_settings_get_cache_size_bytes
@@ -50,7 +58,8 @@ gboolean* firebase_database_database_pigeon_settings_get_persistence_enabled(Fir
  *
  * Returns: the field value.
  */
-int64_t* firebase_database_database_pigeon_settings_get_cache_size_bytes(FirebaseDatabaseDatabasePigeonSettings* object);
+int64_t* firebase_database_database_pigeon_settings_get_cache_size_bytes(
+    FirebaseDatabaseDatabasePigeonSettings* object);
 
 /**
  * firebase_database_database_pigeon_settings_get_logging_enabled
@@ -60,7 +69,8 @@ int64_t* firebase_database_database_pigeon_settings_get_cache_size_bytes(Firebas
  *
  * Returns: the field value.
  */
-gboolean* firebase_database_database_pigeon_settings_get_logging_enabled(FirebaseDatabaseDatabasePigeonSettings* object);
+gboolean* firebase_database_database_pigeon_settings_get_logging_enabled(
+    FirebaseDatabaseDatabasePigeonSettings* object);
 
 /**
  * firebase_database_database_pigeon_settings_get_emulator_host
@@ -70,7 +80,8 @@ gboolean* firebase_database_database_pigeon_settings_get_logging_enabled(Firebas
  *
  * Returns: the field value.
  */
-const gchar* firebase_database_database_pigeon_settings_get_emulator_host(FirebaseDatabaseDatabasePigeonSettings* object);
+const gchar* firebase_database_database_pigeon_settings_get_emulator_host(
+    FirebaseDatabaseDatabasePigeonSettings* object);
 
 /**
  * firebase_database_database_pigeon_settings_get_emulator_port
@@ -80,7 +91,8 @@ const gchar* firebase_database_database_pigeon_settings_get_emulator_host(Fireba
  *
  * Returns: the field value.
  */
-int64_t* firebase_database_database_pigeon_settings_get_emulator_port(FirebaseDatabaseDatabasePigeonSettings* object);
+int64_t* firebase_database_database_pigeon_settings_get_emulator_port(
+    FirebaseDatabaseDatabasePigeonSettings* object);
 
 /**
  * firebase_database_database_pigeon_settings_equals:
@@ -91,7 +103,9 @@ int64_t* firebase_database_database_pigeon_settings_get_emulator_port(FirebaseDa
  *
  * Returns: TRUE if @a and @b are equal.
  */
-gboolean firebase_database_database_pigeon_settings_equals(FirebaseDatabaseDatabasePigeonSettings* a, FirebaseDatabaseDatabasePigeonSettings* b);
+gboolean firebase_database_database_pigeon_settings_equals(
+    FirebaseDatabaseDatabasePigeonSettings* a,
+    FirebaseDatabaseDatabasePigeonSettings* b);
 
 /**
  * firebase_database_database_pigeon_settings_hash:
@@ -101,14 +115,17 @@ gboolean firebase_database_database_pigeon_settings_equals(FirebaseDatabaseDatab
  *
  * Returns: the hash code.
  */
-guint firebase_database_database_pigeon_settings_hash(FirebaseDatabaseDatabasePigeonSettings* object);
+guint firebase_database_database_pigeon_settings_hash(
+    FirebaseDatabaseDatabasePigeonSettings* object);
 
 /**
  * FirebaseDatabaseDatabasePigeonFirebaseApp:
  *
  */
 
-G_DECLARE_FINAL_TYPE(FirebaseDatabaseDatabasePigeonFirebaseApp, firebase_database_database_pigeon_firebase_app, FIREBASE_DATABASE, DATABASE_PIGEON_FIREBASE_APP, GObject)
+G_DECLARE_FINAL_TYPE(FirebaseDatabaseDatabasePigeonFirebaseApp,
+                     firebase_database_database_pigeon_firebase_app,
+                     FIREBASE_DATABASE, DATABASE_PIGEON_FIREBASE_APP, GObject)
 
 /**
  * firebase_database_database_pigeon_firebase_app_new:
@@ -120,7 +137,10 @@ G_DECLARE_FINAL_TYPE(FirebaseDatabaseDatabasePigeonFirebaseApp, firebase_databas
  *
  * Returns: a new #FirebaseDatabaseDatabasePigeonFirebaseApp
  */
-FirebaseDatabaseDatabasePigeonFirebaseApp* firebase_database_database_pigeon_firebase_app_new(const gchar* app_name, const gchar* database_u_r_l, FirebaseDatabaseDatabasePigeonSettings* settings);
+FirebaseDatabaseDatabasePigeonFirebaseApp*
+firebase_database_database_pigeon_firebase_app_new(
+    const gchar* app_name, const gchar* database_u_r_l,
+    FirebaseDatabaseDatabasePigeonSettings* settings);
 
 /**
  * firebase_database_database_pigeon_firebase_app_get_app_name
@@ -130,7 +150,8 @@ FirebaseDatabaseDatabasePigeonFirebaseApp* firebase_database_database_pigeon_fir
  *
  * Returns: the field value.
  */
-const gchar* firebase_database_database_pigeon_firebase_app_get_app_name(FirebaseDatabaseDatabasePigeonFirebaseApp* object);
+const gchar* firebase_database_database_pigeon_firebase_app_get_app_name(
+    FirebaseDatabaseDatabasePigeonFirebaseApp* object);
 
 /**
  * firebase_database_database_pigeon_firebase_app_get_database_u_r_l
@@ -140,7 +161,8 @@ const gchar* firebase_database_database_pigeon_firebase_app_get_app_name(Firebas
  *
  * Returns: the field value.
  */
-const gchar* firebase_database_database_pigeon_firebase_app_get_database_u_r_l(FirebaseDatabaseDatabasePigeonFirebaseApp* object);
+const gchar* firebase_database_database_pigeon_firebase_app_get_database_u_r_l(
+    FirebaseDatabaseDatabasePigeonFirebaseApp* object);
 
 /**
  * firebase_database_database_pigeon_firebase_app_get_settings
@@ -150,7 +172,9 @@ const gchar* firebase_database_database_pigeon_firebase_app_get_database_u_r_l(F
  *
  * Returns: the field value.
  */
-FirebaseDatabaseDatabasePigeonSettings* firebase_database_database_pigeon_firebase_app_get_settings(FirebaseDatabaseDatabasePigeonFirebaseApp* object);
+FirebaseDatabaseDatabasePigeonSettings*
+firebase_database_database_pigeon_firebase_app_get_settings(
+    FirebaseDatabaseDatabasePigeonFirebaseApp* object);
 
 /**
  * firebase_database_database_pigeon_firebase_app_equals:
@@ -161,24 +185,30 @@ FirebaseDatabaseDatabasePigeonSettings* firebase_database_database_pigeon_fireba
  *
  * Returns: TRUE if @a and @b are equal.
  */
-gboolean firebase_database_database_pigeon_firebase_app_equals(FirebaseDatabaseDatabasePigeonFirebaseApp* a, FirebaseDatabaseDatabasePigeonFirebaseApp* b);
+gboolean firebase_database_database_pigeon_firebase_app_equals(
+    FirebaseDatabaseDatabasePigeonFirebaseApp* a,
+    FirebaseDatabaseDatabasePigeonFirebaseApp* b);
 
 /**
  * firebase_database_database_pigeon_firebase_app_hash:
  * @object: a #FirebaseDatabaseDatabasePigeonFirebaseApp.
  *
- * Calculates a hash code for a #FirebaseDatabaseDatabasePigeonFirebaseApp object.
+ * Calculates a hash code for a #FirebaseDatabaseDatabasePigeonFirebaseApp
+ * object.
  *
  * Returns: the hash code.
  */
-guint firebase_database_database_pigeon_firebase_app_hash(FirebaseDatabaseDatabasePigeonFirebaseApp* object);
+guint firebase_database_database_pigeon_firebase_app_hash(
+    FirebaseDatabaseDatabasePigeonFirebaseApp* object);
 
 /**
  * FirebaseDatabaseDatabaseReferencePlatform:
  *
  */
 
-G_DECLARE_FINAL_TYPE(FirebaseDatabaseDatabaseReferencePlatform, firebase_database_database_reference_platform, FIREBASE_DATABASE, DATABASE_REFERENCE_PLATFORM, GObject)
+G_DECLARE_FINAL_TYPE(FirebaseDatabaseDatabaseReferencePlatform,
+                     firebase_database_database_reference_platform,
+                     FIREBASE_DATABASE, DATABASE_REFERENCE_PLATFORM, GObject)
 
 /**
  * firebase_database_database_reference_platform_new:
@@ -188,7 +218,8 @@ G_DECLARE_FINAL_TYPE(FirebaseDatabaseDatabaseReferencePlatform, firebase_databas
  *
  * Returns: a new #FirebaseDatabaseDatabaseReferencePlatform
  */
-FirebaseDatabaseDatabaseReferencePlatform* firebase_database_database_reference_platform_new(const gchar* path);
+FirebaseDatabaseDatabaseReferencePlatform*
+firebase_database_database_reference_platform_new(const gchar* path);
 
 /**
  * firebase_database_database_reference_platform_get_path
@@ -198,7 +229,8 @@ FirebaseDatabaseDatabaseReferencePlatform* firebase_database_database_reference_
  *
  * Returns: the field value.
  */
-const gchar* firebase_database_database_reference_platform_get_path(FirebaseDatabaseDatabaseReferencePlatform* object);
+const gchar* firebase_database_database_reference_platform_get_path(
+    FirebaseDatabaseDatabaseReferencePlatform* object);
 
 /**
  * firebase_database_database_reference_platform_equals:
@@ -209,24 +241,30 @@ const gchar* firebase_database_database_reference_platform_get_path(FirebaseData
  *
  * Returns: TRUE if @a and @b are equal.
  */
-gboolean firebase_database_database_reference_platform_equals(FirebaseDatabaseDatabaseReferencePlatform* a, FirebaseDatabaseDatabaseReferencePlatform* b);
+gboolean firebase_database_database_reference_platform_equals(
+    FirebaseDatabaseDatabaseReferencePlatform* a,
+    FirebaseDatabaseDatabaseReferencePlatform* b);
 
 /**
  * firebase_database_database_reference_platform_hash:
  * @object: a #FirebaseDatabaseDatabaseReferencePlatform.
  *
- * Calculates a hash code for a #FirebaseDatabaseDatabaseReferencePlatform object.
+ * Calculates a hash code for a #FirebaseDatabaseDatabaseReferencePlatform
+ * object.
  *
  * Returns: the hash code.
  */
-guint firebase_database_database_reference_platform_hash(FirebaseDatabaseDatabaseReferencePlatform* object);
+guint firebase_database_database_reference_platform_hash(
+    FirebaseDatabaseDatabaseReferencePlatform* object);
 
 /**
  * FirebaseDatabaseDatabaseReferenceRequest:
  *
  */
 
-G_DECLARE_FINAL_TYPE(FirebaseDatabaseDatabaseReferenceRequest, firebase_database_database_reference_request, FIREBASE_DATABASE, DATABASE_REFERENCE_REQUEST, GObject)
+G_DECLARE_FINAL_TYPE(FirebaseDatabaseDatabaseReferenceRequest,
+                     firebase_database_database_reference_request,
+                     FIREBASE_DATABASE, DATABASE_REFERENCE_REQUEST, GObject)
 
 /**
  * firebase_database_database_reference_request_new:
@@ -238,7 +276,10 @@ G_DECLARE_FINAL_TYPE(FirebaseDatabaseDatabaseReferenceRequest, firebase_database
  *
  * Returns: a new #FirebaseDatabaseDatabaseReferenceRequest
  */
-FirebaseDatabaseDatabaseReferenceRequest* firebase_database_database_reference_request_new(const gchar* path, FlValue* value, FlValue* priority);
+FirebaseDatabaseDatabaseReferenceRequest*
+firebase_database_database_reference_request_new(const gchar* path,
+                                                 FlValue* value,
+                                                 FlValue* priority);
 
 /**
  * firebase_database_database_reference_request_get_path
@@ -248,7 +289,8 @@ FirebaseDatabaseDatabaseReferenceRequest* firebase_database_database_reference_r
  *
  * Returns: the field value.
  */
-const gchar* firebase_database_database_reference_request_get_path(FirebaseDatabaseDatabaseReferenceRequest* object);
+const gchar* firebase_database_database_reference_request_get_path(
+    FirebaseDatabaseDatabaseReferenceRequest* object);
 
 /**
  * firebase_database_database_reference_request_get_value
@@ -258,7 +300,8 @@ const gchar* firebase_database_database_reference_request_get_path(FirebaseDatab
  *
  * Returns: the field value.
  */
-FlValue* firebase_database_database_reference_request_get_value(FirebaseDatabaseDatabaseReferenceRequest* object);
+FlValue* firebase_database_database_reference_request_get_value(
+    FirebaseDatabaseDatabaseReferenceRequest* object);
 
 /**
  * firebase_database_database_reference_request_get_priority
@@ -268,7 +311,8 @@ FlValue* firebase_database_database_reference_request_get_value(FirebaseDatabase
  *
  * Returns: the field value.
  */
-FlValue* firebase_database_database_reference_request_get_priority(FirebaseDatabaseDatabaseReferenceRequest* object);
+FlValue* firebase_database_database_reference_request_get_priority(
+    FirebaseDatabaseDatabaseReferenceRequest* object);
 
 /**
  * firebase_database_database_reference_request_equals:
@@ -279,24 +323,30 @@ FlValue* firebase_database_database_reference_request_get_priority(FirebaseDatab
  *
  * Returns: TRUE if @a and @b are equal.
  */
-gboolean firebase_database_database_reference_request_equals(FirebaseDatabaseDatabaseReferenceRequest* a, FirebaseDatabaseDatabaseReferenceRequest* b);
+gboolean firebase_database_database_reference_request_equals(
+    FirebaseDatabaseDatabaseReferenceRequest* a,
+    FirebaseDatabaseDatabaseReferenceRequest* b);
 
 /**
  * firebase_database_database_reference_request_hash:
  * @object: a #FirebaseDatabaseDatabaseReferenceRequest.
  *
- * Calculates a hash code for a #FirebaseDatabaseDatabaseReferenceRequest object.
+ * Calculates a hash code for a #FirebaseDatabaseDatabaseReferenceRequest
+ * object.
  *
  * Returns: the hash code.
  */
-guint firebase_database_database_reference_request_hash(FirebaseDatabaseDatabaseReferenceRequest* object);
+guint firebase_database_database_reference_request_hash(
+    FirebaseDatabaseDatabaseReferenceRequest* object);
 
 /**
  * FirebaseDatabaseUpdateRequest:
  *
  */
 
-G_DECLARE_FINAL_TYPE(FirebaseDatabaseUpdateRequest, firebase_database_update_request, FIREBASE_DATABASE, UPDATE_REQUEST, GObject)
+G_DECLARE_FINAL_TYPE(FirebaseDatabaseUpdateRequest,
+                     firebase_database_update_request, FIREBASE_DATABASE,
+                     UPDATE_REQUEST, GObject)
 
 /**
  * firebase_database_update_request_new:
@@ -307,7 +357,8 @@ G_DECLARE_FINAL_TYPE(FirebaseDatabaseUpdateRequest, firebase_database_update_req
  *
  * Returns: a new #FirebaseDatabaseUpdateRequest
  */
-FirebaseDatabaseUpdateRequest* firebase_database_update_request_new(const gchar* path, FlValue* value);
+FirebaseDatabaseUpdateRequest* firebase_database_update_request_new(
+    const gchar* path, FlValue* value);
 
 /**
  * firebase_database_update_request_get_path
@@ -317,7 +368,8 @@ FirebaseDatabaseUpdateRequest* firebase_database_update_request_new(const gchar*
  *
  * Returns: the field value.
  */
-const gchar* firebase_database_update_request_get_path(FirebaseDatabaseUpdateRequest* object);
+const gchar* firebase_database_update_request_get_path(
+    FirebaseDatabaseUpdateRequest* object);
 
 /**
  * firebase_database_update_request_get_value
@@ -327,7 +379,8 @@ const gchar* firebase_database_update_request_get_path(FirebaseDatabaseUpdateReq
  *
  * Returns: the field value.
  */
-FlValue* firebase_database_update_request_get_value(FirebaseDatabaseUpdateRequest* object);
+FlValue* firebase_database_update_request_get_value(
+    FirebaseDatabaseUpdateRequest* object);
 
 /**
  * firebase_database_update_request_equals:
@@ -338,7 +391,8 @@ FlValue* firebase_database_update_request_get_value(FirebaseDatabaseUpdateReques
  *
  * Returns: TRUE if @a and @b are equal.
  */
-gboolean firebase_database_update_request_equals(FirebaseDatabaseUpdateRequest* a, FirebaseDatabaseUpdateRequest* b);
+gboolean firebase_database_update_request_equals(
+    FirebaseDatabaseUpdateRequest* a, FirebaseDatabaseUpdateRequest* b);
 
 /**
  * firebase_database_update_request_hash:
@@ -348,14 +402,17 @@ gboolean firebase_database_update_request_equals(FirebaseDatabaseUpdateRequest* 
  *
  * Returns: the hash code.
  */
-guint firebase_database_update_request_hash(FirebaseDatabaseUpdateRequest* object);
+guint firebase_database_update_request_hash(
+    FirebaseDatabaseUpdateRequest* object);
 
 /**
  * FirebaseDatabaseTransactionRequest:
  *
  */
 
-G_DECLARE_FINAL_TYPE(FirebaseDatabaseTransactionRequest, firebase_database_transaction_request, FIREBASE_DATABASE, TRANSACTION_REQUEST, GObject)
+G_DECLARE_FINAL_TYPE(FirebaseDatabaseTransactionRequest,
+                     firebase_database_transaction_request, FIREBASE_DATABASE,
+                     TRANSACTION_REQUEST, GObject)
 
 /**
  * firebase_database_transaction_request_new:
@@ -367,7 +424,8 @@ G_DECLARE_FINAL_TYPE(FirebaseDatabaseTransactionRequest, firebase_database_trans
  *
  * Returns: a new #FirebaseDatabaseTransactionRequest
  */
-FirebaseDatabaseTransactionRequest* firebase_database_transaction_request_new(const gchar* path, int64_t transaction_key, gboolean apply_locally);
+FirebaseDatabaseTransactionRequest* firebase_database_transaction_request_new(
+    const gchar* path, int64_t transaction_key, gboolean apply_locally);
 
 /**
  * firebase_database_transaction_request_get_path
@@ -377,7 +435,8 @@ FirebaseDatabaseTransactionRequest* firebase_database_transaction_request_new(co
  *
  * Returns: the field value.
  */
-const gchar* firebase_database_transaction_request_get_path(FirebaseDatabaseTransactionRequest* object);
+const gchar* firebase_database_transaction_request_get_path(
+    FirebaseDatabaseTransactionRequest* object);
 
 /**
  * firebase_database_transaction_request_get_transaction_key
@@ -387,7 +446,8 @@ const gchar* firebase_database_transaction_request_get_path(FirebaseDatabaseTran
  *
  * Returns: the field value.
  */
-int64_t firebase_database_transaction_request_get_transaction_key(FirebaseDatabaseTransactionRequest* object);
+int64_t firebase_database_transaction_request_get_transaction_key(
+    FirebaseDatabaseTransactionRequest* object);
 
 /**
  * firebase_database_transaction_request_get_apply_locally
@@ -397,7 +457,8 @@ int64_t firebase_database_transaction_request_get_transaction_key(FirebaseDataba
  *
  * Returns: the field value.
  */
-gboolean firebase_database_transaction_request_get_apply_locally(FirebaseDatabaseTransactionRequest* object);
+gboolean firebase_database_transaction_request_get_apply_locally(
+    FirebaseDatabaseTransactionRequest* object);
 
 /**
  * firebase_database_transaction_request_equals:
@@ -408,7 +469,9 @@ gboolean firebase_database_transaction_request_get_apply_locally(FirebaseDatabas
  *
  * Returns: TRUE if @a and @b are equal.
  */
-gboolean firebase_database_transaction_request_equals(FirebaseDatabaseTransactionRequest* a, FirebaseDatabaseTransactionRequest* b);
+gboolean firebase_database_transaction_request_equals(
+    FirebaseDatabaseTransactionRequest* a,
+    FirebaseDatabaseTransactionRequest* b);
 
 /**
  * firebase_database_transaction_request_hash:
@@ -418,14 +481,17 @@ gboolean firebase_database_transaction_request_equals(FirebaseDatabaseTransactio
  *
  * Returns: the hash code.
  */
-guint firebase_database_transaction_request_hash(FirebaseDatabaseTransactionRequest* object);
+guint firebase_database_transaction_request_hash(
+    FirebaseDatabaseTransactionRequest* object);
 
 /**
  * FirebaseDatabaseQueryRequest:
  *
  */
 
-G_DECLARE_FINAL_TYPE(FirebaseDatabaseQueryRequest, firebase_database_query_request, FIREBASE_DATABASE, QUERY_REQUEST, GObject)
+G_DECLARE_FINAL_TYPE(FirebaseDatabaseQueryRequest,
+                     firebase_database_query_request, FIREBASE_DATABASE,
+                     QUERY_REQUEST, GObject)
 
 /**
  * firebase_database_query_request_new:
@@ -437,7 +503,8 @@ G_DECLARE_FINAL_TYPE(FirebaseDatabaseQueryRequest, firebase_database_query_reque
  *
  * Returns: a new #FirebaseDatabaseQueryRequest
  */
-FirebaseDatabaseQueryRequest* firebase_database_query_request_new(const gchar* path, FlValue* modifiers, gboolean* value);
+FirebaseDatabaseQueryRequest* firebase_database_query_request_new(
+    const gchar* path, FlValue* modifiers, gboolean* value);
 
 /**
  * firebase_database_query_request_get_path
@@ -447,7 +514,8 @@ FirebaseDatabaseQueryRequest* firebase_database_query_request_new(const gchar* p
  *
  * Returns: the field value.
  */
-const gchar* firebase_database_query_request_get_path(FirebaseDatabaseQueryRequest* object);
+const gchar* firebase_database_query_request_get_path(
+    FirebaseDatabaseQueryRequest* object);
 
 /**
  * firebase_database_query_request_get_modifiers
@@ -457,7 +525,8 @@ const gchar* firebase_database_query_request_get_path(FirebaseDatabaseQueryReque
  *
  * Returns: the field value.
  */
-FlValue* firebase_database_query_request_get_modifiers(FirebaseDatabaseQueryRequest* object);
+FlValue* firebase_database_query_request_get_modifiers(
+    FirebaseDatabaseQueryRequest* object);
 
 /**
  * firebase_database_query_request_get_value
@@ -467,7 +536,8 @@ FlValue* firebase_database_query_request_get_modifiers(FirebaseDatabaseQueryRequ
  *
  * Returns: the field value.
  */
-gboolean* firebase_database_query_request_get_value(FirebaseDatabaseQueryRequest* object);
+gboolean* firebase_database_query_request_get_value(
+    FirebaseDatabaseQueryRequest* object);
 
 /**
  * firebase_database_query_request_equals:
@@ -478,7 +548,8 @@ gboolean* firebase_database_query_request_get_value(FirebaseDatabaseQueryRequest
  *
  * Returns: TRUE if @a and @b are equal.
  */
-gboolean firebase_database_query_request_equals(FirebaseDatabaseQueryRequest* a, FirebaseDatabaseQueryRequest* b);
+gboolean firebase_database_query_request_equals(
+    FirebaseDatabaseQueryRequest* a, FirebaseDatabaseQueryRequest* b);
 
 /**
  * firebase_database_query_request_hash:
@@ -488,14 +559,17 @@ gboolean firebase_database_query_request_equals(FirebaseDatabaseQueryRequest* a,
  *
  * Returns: the hash code.
  */
-guint firebase_database_query_request_hash(FirebaseDatabaseQueryRequest* object);
+guint firebase_database_query_request_hash(
+    FirebaseDatabaseQueryRequest* object);
 
 /**
  * FirebaseDatabaseTransactionHandlerResult:
  *
  */
 
-G_DECLARE_FINAL_TYPE(FirebaseDatabaseTransactionHandlerResult, firebase_database_transaction_handler_result, FIREBASE_DATABASE, TRANSACTION_HANDLER_RESULT, GObject)
+G_DECLARE_FINAL_TYPE(FirebaseDatabaseTransactionHandlerResult,
+                     firebase_database_transaction_handler_result,
+                     FIREBASE_DATABASE, TRANSACTION_HANDLER_RESULT, GObject)
 
 /**
  * firebase_database_transaction_handler_result_new:
@@ -507,7 +581,10 @@ G_DECLARE_FINAL_TYPE(FirebaseDatabaseTransactionHandlerResult, firebase_database
  *
  * Returns: a new #FirebaseDatabaseTransactionHandlerResult
  */
-FirebaseDatabaseTransactionHandlerResult* firebase_database_transaction_handler_result_new(FlValue* value, gboolean aborted, gboolean exception);
+FirebaseDatabaseTransactionHandlerResult*
+firebase_database_transaction_handler_result_new(FlValue* value,
+                                                 gboolean aborted,
+                                                 gboolean exception);
 
 /**
  * firebase_database_transaction_handler_result_get_value
@@ -517,7 +594,8 @@ FirebaseDatabaseTransactionHandlerResult* firebase_database_transaction_handler_
  *
  * Returns: the field value.
  */
-FlValue* firebase_database_transaction_handler_result_get_value(FirebaseDatabaseTransactionHandlerResult* object);
+FlValue* firebase_database_transaction_handler_result_get_value(
+    FirebaseDatabaseTransactionHandlerResult* object);
 
 /**
  * firebase_database_transaction_handler_result_get_aborted
@@ -527,7 +605,8 @@ FlValue* firebase_database_transaction_handler_result_get_value(FirebaseDatabase
  *
  * Returns: the field value.
  */
-gboolean firebase_database_transaction_handler_result_get_aborted(FirebaseDatabaseTransactionHandlerResult* object);
+gboolean firebase_database_transaction_handler_result_get_aborted(
+    FirebaseDatabaseTransactionHandlerResult* object);
 
 /**
  * firebase_database_transaction_handler_result_get_exception
@@ -537,7 +616,8 @@ gboolean firebase_database_transaction_handler_result_get_aborted(FirebaseDataba
  *
  * Returns: the field value.
  */
-gboolean firebase_database_transaction_handler_result_get_exception(FirebaseDatabaseTransactionHandlerResult* object);
+gboolean firebase_database_transaction_handler_result_get_exception(
+    FirebaseDatabaseTransactionHandlerResult* object);
 
 /**
  * firebase_database_transaction_handler_result_equals:
@@ -548,19 +628,25 @@ gboolean firebase_database_transaction_handler_result_get_exception(FirebaseData
  *
  * Returns: TRUE if @a and @b are equal.
  */
-gboolean firebase_database_transaction_handler_result_equals(FirebaseDatabaseTransactionHandlerResult* a, FirebaseDatabaseTransactionHandlerResult* b);
+gboolean firebase_database_transaction_handler_result_equals(
+    FirebaseDatabaseTransactionHandlerResult* a,
+    FirebaseDatabaseTransactionHandlerResult* b);
 
 /**
  * firebase_database_transaction_handler_result_hash:
  * @object: a #FirebaseDatabaseTransactionHandlerResult.
  *
- * Calculates a hash code for a #FirebaseDatabaseTransactionHandlerResult object.
+ * Calculates a hash code for a #FirebaseDatabaseTransactionHandlerResult
+ * object.
  *
  * Returns: the hash code.
  */
-guint firebase_database_transaction_handler_result_hash(FirebaseDatabaseTransactionHandlerResult* object);
+guint firebase_database_transaction_handler_result_hash(
+    FirebaseDatabaseTransactionHandlerResult* object);
 
-G_DECLARE_FINAL_TYPE(FirebaseDatabaseMessageCodec, firebase_database_message_codec, FIREBASE_DATABASE, MESSAGE_CODEC, FlStandardMessageCodec)
+G_DECLARE_FINAL_TYPE(FirebaseDatabaseMessageCodec,
+                     firebase_database_message_codec, FIREBASE_DATABASE,
+                     MESSAGE_CODEC, FlStandardMessageCodec)
 
 /**
  * Custom type ID constants:
@@ -578,38 +664,122 @@ extern const int firebase_database_transaction_request_type_id;
 extern const int firebase_database_query_request_type_id;
 extern const int firebase_database_transaction_handler_result_type_id;
 
-G_DECLARE_FINAL_TYPE(FirebaseDatabaseFirebaseDatabaseHostApi, firebase_database_firebase_database_host_api, FIREBASE_DATABASE, FIREBASE_DATABASE_HOST_API, GObject)
+G_DECLARE_FINAL_TYPE(FirebaseDatabaseFirebaseDatabaseHostApi,
+                     firebase_database_firebase_database_host_api,
+                     FIREBASE_DATABASE, FIREBASE_DATABASE_HOST_API, GObject)
 
-G_DECLARE_FINAL_TYPE(FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle, firebase_database_firebase_database_host_api_response_handle, FIREBASE_DATABASE, FIREBASE_DATABASE_HOST_API_RESPONSE_HANDLE, GObject)
+G_DECLARE_FINAL_TYPE(
+    FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle,
+    firebase_database_firebase_database_host_api_response_handle,
+    FIREBASE_DATABASE, FIREBASE_DATABASE_HOST_API_RESPONSE_HANDLE, GObject)
 
 /**
  * FirebaseDatabaseFirebaseDatabaseHostApiVTable:
  *
- * Table of functions exposed by FirebaseDatabaseHostApi to be implemented by the API provider.
+ * Table of functions exposed by FirebaseDatabaseHostApi to be implemented by
+ * the API provider.
  */
 typedef struct {
-  void (*go_online)(FirebaseDatabaseDatabasePigeonFirebaseApp* app, FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*go_offline)(FirebaseDatabaseDatabasePigeonFirebaseApp* app, FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*set_persistence_enabled)(FirebaseDatabaseDatabasePigeonFirebaseApp* app, gboolean enabled, FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*set_persistence_cache_size_bytes)(FirebaseDatabaseDatabasePigeonFirebaseApp* app, int64_t cache_size, FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*set_logging_enabled)(FirebaseDatabaseDatabasePigeonFirebaseApp* app, gboolean enabled, FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*use_database_emulator)(FirebaseDatabaseDatabasePigeonFirebaseApp* app, const gchar* host, int64_t port, FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*ref)(FirebaseDatabaseDatabasePigeonFirebaseApp* app, const gchar* path, FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*ref_from_u_r_l)(FirebaseDatabaseDatabasePigeonFirebaseApp* app, const gchar* url, FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*purge_outstanding_writes)(FirebaseDatabaseDatabasePigeonFirebaseApp* app, FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*database_reference_set)(FirebaseDatabaseDatabasePigeonFirebaseApp* app, FirebaseDatabaseDatabaseReferenceRequest* request, FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*database_reference_set_with_priority)(FirebaseDatabaseDatabasePigeonFirebaseApp* app, FirebaseDatabaseDatabaseReferenceRequest* request, FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*database_reference_update)(FirebaseDatabaseDatabasePigeonFirebaseApp* app, FirebaseDatabaseUpdateRequest* request, FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*database_reference_set_priority)(FirebaseDatabaseDatabasePigeonFirebaseApp* app, FirebaseDatabaseDatabaseReferenceRequest* request, FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*database_reference_run_transaction)(FirebaseDatabaseDatabasePigeonFirebaseApp* app, FirebaseDatabaseTransactionRequest* request, FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*database_reference_get_transaction_result)(FirebaseDatabaseDatabasePigeonFirebaseApp* app, int64_t transaction_key, FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*on_disconnect_set)(FirebaseDatabaseDatabasePigeonFirebaseApp* app, FirebaseDatabaseDatabaseReferenceRequest* request, FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*on_disconnect_set_with_priority)(FirebaseDatabaseDatabasePigeonFirebaseApp* app, FirebaseDatabaseDatabaseReferenceRequest* request, FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*on_disconnect_update)(FirebaseDatabaseDatabasePigeonFirebaseApp* app, FirebaseDatabaseUpdateRequest* request, FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*on_disconnect_cancel)(FirebaseDatabaseDatabasePigeonFirebaseApp* app, const gchar* path, FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*query_observe)(FirebaseDatabaseDatabasePigeonFirebaseApp* app, FirebaseDatabaseQueryRequest* request, FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*query_keep_synced)(FirebaseDatabaseDatabasePigeonFirebaseApp* app, FirebaseDatabaseQueryRequest* request, FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle, gpointer user_data);
-  void (*query_get)(FirebaseDatabaseDatabasePigeonFirebaseApp* app, FirebaseDatabaseQueryRequest* request, FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle, gpointer user_data);
+  void (*go_online)(
+      FirebaseDatabaseDatabasePigeonFirebaseApp* app,
+      FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*go_offline)(
+      FirebaseDatabaseDatabasePigeonFirebaseApp* app,
+      FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*set_persistence_enabled)(
+      FirebaseDatabaseDatabasePigeonFirebaseApp* app, gboolean enabled,
+      FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*set_persistence_cache_size_bytes)(
+      FirebaseDatabaseDatabasePigeonFirebaseApp* app, int64_t cache_size,
+      FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*set_logging_enabled)(
+      FirebaseDatabaseDatabasePigeonFirebaseApp* app, gboolean enabled,
+      FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*use_database_emulator)(
+      FirebaseDatabaseDatabasePigeonFirebaseApp* app, const gchar* host,
+      int64_t port,
+      FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*ref)(
+      FirebaseDatabaseDatabasePigeonFirebaseApp* app, const gchar* path,
+      FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*ref_from_u_r_l)(
+      FirebaseDatabaseDatabasePigeonFirebaseApp* app, const gchar* url,
+      FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*purge_outstanding_writes)(
+      FirebaseDatabaseDatabasePigeonFirebaseApp* app,
+      FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*database_reference_set)(
+      FirebaseDatabaseDatabasePigeonFirebaseApp* app,
+      FirebaseDatabaseDatabaseReferenceRequest* request,
+      FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*database_reference_set_with_priority)(
+      FirebaseDatabaseDatabasePigeonFirebaseApp* app,
+      FirebaseDatabaseDatabaseReferenceRequest* request,
+      FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*database_reference_update)(
+      FirebaseDatabaseDatabasePigeonFirebaseApp* app,
+      FirebaseDatabaseUpdateRequest* request,
+      FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*database_reference_set_priority)(
+      FirebaseDatabaseDatabasePigeonFirebaseApp* app,
+      FirebaseDatabaseDatabaseReferenceRequest* request,
+      FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*database_reference_run_transaction)(
+      FirebaseDatabaseDatabasePigeonFirebaseApp* app,
+      FirebaseDatabaseTransactionRequest* request,
+      FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*database_reference_get_transaction_result)(
+      FirebaseDatabaseDatabasePigeonFirebaseApp* app, int64_t transaction_key,
+      FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*on_disconnect_set)(
+      FirebaseDatabaseDatabasePigeonFirebaseApp* app,
+      FirebaseDatabaseDatabaseReferenceRequest* request,
+      FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*on_disconnect_set_with_priority)(
+      FirebaseDatabaseDatabasePigeonFirebaseApp* app,
+      FirebaseDatabaseDatabaseReferenceRequest* request,
+      FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*on_disconnect_update)(
+      FirebaseDatabaseDatabasePigeonFirebaseApp* app,
+      FirebaseDatabaseUpdateRequest* request,
+      FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*on_disconnect_cancel)(
+      FirebaseDatabaseDatabasePigeonFirebaseApp* app, const gchar* path,
+      FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*query_observe)(
+      FirebaseDatabaseDatabasePigeonFirebaseApp* app,
+      FirebaseDatabaseQueryRequest* request,
+      FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*query_keep_synced)(
+      FirebaseDatabaseDatabasePigeonFirebaseApp* app,
+      FirebaseDatabaseQueryRequest* request,
+      FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle,
+      gpointer user_data);
+  void (*query_get)(
+      FirebaseDatabaseDatabasePigeonFirebaseApp* app,
+      FirebaseDatabaseQueryRequest* request,
+      FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle,
+      gpointer user_data);
 } FirebaseDatabaseFirebaseDatabaseHostApiVTable;
 
 /**
@@ -619,11 +789,15 @@ typedef struct {
  * @suffix: (allow-none): a suffix to add to the API or %NULL for none.
  * @vtable: implementations of the methods in this API.
  * @user_data: (closure): user data to pass to the functions in @vtable.
- * @user_data_free_func: (allow-none): a function which gets called to free @user_data, or %NULL.
+ * @user_data_free_func: (allow-none): a function which gets called to free
+ * @user_data, or %NULL.
  *
  * Connects the method handlers in the FirebaseDatabaseHostApi API.
  */
-void firebase_database_firebase_database_host_api_set_method_handlers(FlBinaryMessenger* messenger, const gchar* suffix, const FirebaseDatabaseFirebaseDatabaseHostApiVTable* vtable, gpointer user_data, GDestroyNotify user_data_free_func);
+void firebase_database_firebase_database_host_api_set_method_handlers(
+    FlBinaryMessenger* messenger, const gchar* suffix,
+    const FirebaseDatabaseFirebaseDatabaseHostApiVTable* vtable,
+    gpointer user_data, GDestroyNotify user_data_free_func);
 
 /**
  * firebase_database_firebase_database_host_api_clear_method_handlers:
@@ -633,15 +807,17 @@ void firebase_database_firebase_database_host_api_set_method_handlers(FlBinaryMe
  *
  * Clears the method handlers in the FirebaseDatabaseHostApi API.
  */
-void firebase_database_firebase_database_host_api_clear_method_handlers(FlBinaryMessenger* messenger, const gchar* suffix);
+void firebase_database_firebase_database_host_api_clear_method_handlers(
+    FlBinaryMessenger* messenger, const gchar* suffix);
 
 /**
  * firebase_database_firebase_database_host_api_respond_go_online:
  * @response_handle: a #FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle.
  *
- * Responds to FirebaseDatabaseHostApi.goOnline. 
+ * Responds to FirebaseDatabaseHostApi.goOnline.
  */
-void firebase_database_firebase_database_host_api_respond_go_online(FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle);
+void firebase_database_firebase_database_host_api_respond_go_online(
+    FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle);
 
 /**
  * firebase_database_firebase_database_host_api_respond_error_go_online:
@@ -650,17 +826,20 @@ void firebase_database_firebase_database_host_api_respond_go_online(FirebaseData
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseDatabaseHostApi.goOnline. 
+ * Responds with an error to FirebaseDatabaseHostApi.goOnline.
  */
-void firebase_database_firebase_database_host_api_respond_error_go_online(FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_database_firebase_database_host_api_respond_error_go_online(
+    FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_database_firebase_database_host_api_respond_go_offline:
  * @response_handle: a #FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle.
  *
- * Responds to FirebaseDatabaseHostApi.goOffline. 
+ * Responds to FirebaseDatabaseHostApi.goOffline.
  */
-void firebase_database_firebase_database_host_api_respond_go_offline(FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle);
+void firebase_database_firebase_database_host_api_respond_go_offline(
+    FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle);
 
 /**
  * firebase_database_firebase_database_host_api_respond_error_go_offline:
@@ -669,17 +848,20 @@ void firebase_database_firebase_database_host_api_respond_go_offline(FirebaseDat
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseDatabaseHostApi.goOffline. 
+ * Responds with an error to FirebaseDatabaseHostApi.goOffline.
  */
-void firebase_database_firebase_database_host_api_respond_error_go_offline(FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_database_firebase_database_host_api_respond_error_go_offline(
+    FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_database_firebase_database_host_api_respond_set_persistence_enabled:
  * @response_handle: a #FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle.
  *
- * Responds to FirebaseDatabaseHostApi.setPersistenceEnabled. 
+ * Responds to FirebaseDatabaseHostApi.setPersistenceEnabled.
  */
-void firebase_database_firebase_database_host_api_respond_set_persistence_enabled(FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle);
+void firebase_database_firebase_database_host_api_respond_set_persistence_enabled(
+    FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle);
 
 /**
  * firebase_database_firebase_database_host_api_respond_error_set_persistence_enabled:
@@ -688,17 +870,20 @@ void firebase_database_firebase_database_host_api_respond_set_persistence_enable
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseDatabaseHostApi.setPersistenceEnabled. 
+ * Responds with an error to FirebaseDatabaseHostApi.setPersistenceEnabled.
  */
-void firebase_database_firebase_database_host_api_respond_error_set_persistence_enabled(FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_database_firebase_database_host_api_respond_error_set_persistence_enabled(
+    FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_database_firebase_database_host_api_respond_set_persistence_cache_size_bytes:
  * @response_handle: a #FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle.
  *
- * Responds to FirebaseDatabaseHostApi.setPersistenceCacheSizeBytes. 
+ * Responds to FirebaseDatabaseHostApi.setPersistenceCacheSizeBytes.
  */
-void firebase_database_firebase_database_host_api_respond_set_persistence_cache_size_bytes(FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle);
+void firebase_database_firebase_database_host_api_respond_set_persistence_cache_size_bytes(
+    FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle);
 
 /**
  * firebase_database_firebase_database_host_api_respond_error_set_persistence_cache_size_bytes:
@@ -707,17 +892,21 @@ void firebase_database_firebase_database_host_api_respond_set_persistence_cache_
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseDatabaseHostApi.setPersistenceCacheSizeBytes. 
+ * Responds with an error to
+ * FirebaseDatabaseHostApi.setPersistenceCacheSizeBytes.
  */
-void firebase_database_firebase_database_host_api_respond_error_set_persistence_cache_size_bytes(FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_database_firebase_database_host_api_respond_error_set_persistence_cache_size_bytes(
+    FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_database_firebase_database_host_api_respond_set_logging_enabled:
  * @response_handle: a #FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle.
  *
- * Responds to FirebaseDatabaseHostApi.setLoggingEnabled. 
+ * Responds to FirebaseDatabaseHostApi.setLoggingEnabled.
  */
-void firebase_database_firebase_database_host_api_respond_set_logging_enabled(FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle);
+void firebase_database_firebase_database_host_api_respond_set_logging_enabled(
+    FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle);
 
 /**
  * firebase_database_firebase_database_host_api_respond_error_set_logging_enabled:
@@ -726,17 +915,20 @@ void firebase_database_firebase_database_host_api_respond_set_logging_enabled(Fi
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseDatabaseHostApi.setLoggingEnabled. 
+ * Responds with an error to FirebaseDatabaseHostApi.setLoggingEnabled.
  */
-void firebase_database_firebase_database_host_api_respond_error_set_logging_enabled(FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_database_firebase_database_host_api_respond_error_set_logging_enabled(
+    FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_database_firebase_database_host_api_respond_use_database_emulator:
  * @response_handle: a #FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle.
  *
- * Responds to FirebaseDatabaseHostApi.useDatabaseEmulator. 
+ * Responds to FirebaseDatabaseHostApi.useDatabaseEmulator.
  */
-void firebase_database_firebase_database_host_api_respond_use_database_emulator(FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle);
+void firebase_database_firebase_database_host_api_respond_use_database_emulator(
+    FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle);
 
 /**
  * firebase_database_firebase_database_host_api_respond_error_use_database_emulator:
@@ -745,18 +937,22 @@ void firebase_database_firebase_database_host_api_respond_use_database_emulator(
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseDatabaseHostApi.useDatabaseEmulator. 
+ * Responds with an error to FirebaseDatabaseHostApi.useDatabaseEmulator.
  */
-void firebase_database_firebase_database_host_api_respond_error_use_database_emulator(FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_database_firebase_database_host_api_respond_error_use_database_emulator(
+    FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_database_firebase_database_host_api_respond_ref:
  * @response_handle: a #FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseDatabaseHostApi.ref. 
+ * Responds to FirebaseDatabaseHostApi.ref.
  */
-void firebase_database_firebase_database_host_api_respond_ref(FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle, FirebaseDatabaseDatabaseReferencePlatform* return_value);
+void firebase_database_firebase_database_host_api_respond_ref(
+    FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle,
+    FirebaseDatabaseDatabaseReferencePlatform* return_value);
 
 /**
  * firebase_database_firebase_database_host_api_respond_error_ref:
@@ -765,18 +961,22 @@ void firebase_database_firebase_database_host_api_respond_ref(FirebaseDatabaseFi
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseDatabaseHostApi.ref. 
+ * Responds with an error to FirebaseDatabaseHostApi.ref.
  */
-void firebase_database_firebase_database_host_api_respond_error_ref(FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_database_firebase_database_host_api_respond_error_ref(
+    FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_database_firebase_database_host_api_respond_ref_from_u_r_l:
  * @response_handle: a #FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseDatabaseHostApi.refFromURL. 
+ * Responds to FirebaseDatabaseHostApi.refFromURL.
  */
-void firebase_database_firebase_database_host_api_respond_ref_from_u_r_l(FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle, FirebaseDatabaseDatabaseReferencePlatform* return_value);
+void firebase_database_firebase_database_host_api_respond_ref_from_u_r_l(
+    FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle,
+    FirebaseDatabaseDatabaseReferencePlatform* return_value);
 
 /**
  * firebase_database_firebase_database_host_api_respond_error_ref_from_u_r_l:
@@ -785,17 +985,20 @@ void firebase_database_firebase_database_host_api_respond_ref_from_u_r_l(Firebas
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseDatabaseHostApi.refFromURL. 
+ * Responds with an error to FirebaseDatabaseHostApi.refFromURL.
  */
-void firebase_database_firebase_database_host_api_respond_error_ref_from_u_r_l(FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_database_firebase_database_host_api_respond_error_ref_from_u_r_l(
+    FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_database_firebase_database_host_api_respond_purge_outstanding_writes:
  * @response_handle: a #FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle.
  *
- * Responds to FirebaseDatabaseHostApi.purgeOutstandingWrites. 
+ * Responds to FirebaseDatabaseHostApi.purgeOutstandingWrites.
  */
-void firebase_database_firebase_database_host_api_respond_purge_outstanding_writes(FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle);
+void firebase_database_firebase_database_host_api_respond_purge_outstanding_writes(
+    FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle);
 
 /**
  * firebase_database_firebase_database_host_api_respond_error_purge_outstanding_writes:
@@ -804,17 +1007,20 @@ void firebase_database_firebase_database_host_api_respond_purge_outstanding_writ
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseDatabaseHostApi.purgeOutstandingWrites. 
+ * Responds with an error to FirebaseDatabaseHostApi.purgeOutstandingWrites.
  */
-void firebase_database_firebase_database_host_api_respond_error_purge_outstanding_writes(FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_database_firebase_database_host_api_respond_error_purge_outstanding_writes(
+    FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_database_firebase_database_host_api_respond_database_reference_set:
  * @response_handle: a #FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle.
  *
- * Responds to FirebaseDatabaseHostApi.databaseReferenceSet. 
+ * Responds to FirebaseDatabaseHostApi.databaseReferenceSet.
  */
-void firebase_database_firebase_database_host_api_respond_database_reference_set(FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle);
+void firebase_database_firebase_database_host_api_respond_database_reference_set(
+    FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle);
 
 /**
  * firebase_database_firebase_database_host_api_respond_error_database_reference_set:
@@ -823,17 +1029,20 @@ void firebase_database_firebase_database_host_api_respond_database_reference_set
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseDatabaseHostApi.databaseReferenceSet. 
+ * Responds with an error to FirebaseDatabaseHostApi.databaseReferenceSet.
  */
-void firebase_database_firebase_database_host_api_respond_error_database_reference_set(FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_database_firebase_database_host_api_respond_error_database_reference_set(
+    FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_database_firebase_database_host_api_respond_database_reference_set_with_priority:
  * @response_handle: a #FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle.
  *
- * Responds to FirebaseDatabaseHostApi.databaseReferenceSetWithPriority. 
+ * Responds to FirebaseDatabaseHostApi.databaseReferenceSetWithPriority.
  */
-void firebase_database_firebase_database_host_api_respond_database_reference_set_with_priority(FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle);
+void firebase_database_firebase_database_host_api_respond_database_reference_set_with_priority(
+    FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle);
 
 /**
  * firebase_database_firebase_database_host_api_respond_error_database_reference_set_with_priority:
@@ -842,17 +1051,21 @@ void firebase_database_firebase_database_host_api_respond_database_reference_set
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseDatabaseHostApi.databaseReferenceSetWithPriority. 
+ * Responds with an error to
+ * FirebaseDatabaseHostApi.databaseReferenceSetWithPriority.
  */
-void firebase_database_firebase_database_host_api_respond_error_database_reference_set_with_priority(FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_database_firebase_database_host_api_respond_error_database_reference_set_with_priority(
+    FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_database_firebase_database_host_api_respond_database_reference_update:
  * @response_handle: a #FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle.
  *
- * Responds to FirebaseDatabaseHostApi.databaseReferenceUpdate. 
+ * Responds to FirebaseDatabaseHostApi.databaseReferenceUpdate.
  */
-void firebase_database_firebase_database_host_api_respond_database_reference_update(FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle);
+void firebase_database_firebase_database_host_api_respond_database_reference_update(
+    FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle);
 
 /**
  * firebase_database_firebase_database_host_api_respond_error_database_reference_update:
@@ -861,17 +1074,20 @@ void firebase_database_firebase_database_host_api_respond_database_reference_upd
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseDatabaseHostApi.databaseReferenceUpdate. 
+ * Responds with an error to FirebaseDatabaseHostApi.databaseReferenceUpdate.
  */
-void firebase_database_firebase_database_host_api_respond_error_database_reference_update(FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_database_firebase_database_host_api_respond_error_database_reference_update(
+    FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_database_firebase_database_host_api_respond_database_reference_set_priority:
  * @response_handle: a #FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle.
  *
- * Responds to FirebaseDatabaseHostApi.databaseReferenceSetPriority. 
+ * Responds to FirebaseDatabaseHostApi.databaseReferenceSetPriority.
  */
-void firebase_database_firebase_database_host_api_respond_database_reference_set_priority(FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle);
+void firebase_database_firebase_database_host_api_respond_database_reference_set_priority(
+    FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle);
 
 /**
  * firebase_database_firebase_database_host_api_respond_error_database_reference_set_priority:
@@ -880,17 +1096,21 @@ void firebase_database_firebase_database_host_api_respond_database_reference_set
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseDatabaseHostApi.databaseReferenceSetPriority. 
+ * Responds with an error to
+ * FirebaseDatabaseHostApi.databaseReferenceSetPriority.
  */
-void firebase_database_firebase_database_host_api_respond_error_database_reference_set_priority(FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_database_firebase_database_host_api_respond_error_database_reference_set_priority(
+    FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_database_firebase_database_host_api_respond_database_reference_run_transaction:
  * @response_handle: a #FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle.
  *
- * Responds to FirebaseDatabaseHostApi.databaseReferenceRunTransaction. 
+ * Responds to FirebaseDatabaseHostApi.databaseReferenceRunTransaction.
  */
-void firebase_database_firebase_database_host_api_respond_database_reference_run_transaction(FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle);
+void firebase_database_firebase_database_host_api_respond_database_reference_run_transaction(
+    FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle);
 
 /**
  * firebase_database_firebase_database_host_api_respond_error_database_reference_run_transaction:
@@ -899,18 +1119,23 @@ void firebase_database_firebase_database_host_api_respond_database_reference_run
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseDatabaseHostApi.databaseReferenceRunTransaction. 
+ * Responds with an error to
+ * FirebaseDatabaseHostApi.databaseReferenceRunTransaction.
  */
-void firebase_database_firebase_database_host_api_respond_error_database_reference_run_transaction(FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_database_firebase_database_host_api_respond_error_database_reference_run_transaction(
+    FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_database_firebase_database_host_api_respond_database_reference_get_transaction_result:
  * @response_handle: a #FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseDatabaseHostApi.databaseReferenceGetTransactionResult. 
+ * Responds to FirebaseDatabaseHostApi.databaseReferenceGetTransactionResult.
  */
-void firebase_database_firebase_database_host_api_respond_database_reference_get_transaction_result(FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle, FlValue* return_value);
+void firebase_database_firebase_database_host_api_respond_database_reference_get_transaction_result(
+    FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle,
+    FlValue* return_value);
 
 /**
  * firebase_database_firebase_database_host_api_respond_error_database_reference_get_transaction_result:
@@ -919,17 +1144,21 @@ void firebase_database_firebase_database_host_api_respond_database_reference_get
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseDatabaseHostApi.databaseReferenceGetTransactionResult. 
+ * Responds with an error to
+ * FirebaseDatabaseHostApi.databaseReferenceGetTransactionResult.
  */
-void firebase_database_firebase_database_host_api_respond_error_database_reference_get_transaction_result(FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_database_firebase_database_host_api_respond_error_database_reference_get_transaction_result(
+    FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_database_firebase_database_host_api_respond_on_disconnect_set:
  * @response_handle: a #FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle.
  *
- * Responds to FirebaseDatabaseHostApi.onDisconnectSet. 
+ * Responds to FirebaseDatabaseHostApi.onDisconnectSet.
  */
-void firebase_database_firebase_database_host_api_respond_on_disconnect_set(FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle);
+void firebase_database_firebase_database_host_api_respond_on_disconnect_set(
+    FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle);
 
 /**
  * firebase_database_firebase_database_host_api_respond_error_on_disconnect_set:
@@ -938,17 +1167,20 @@ void firebase_database_firebase_database_host_api_respond_on_disconnect_set(Fire
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseDatabaseHostApi.onDisconnectSet. 
+ * Responds with an error to FirebaseDatabaseHostApi.onDisconnectSet.
  */
-void firebase_database_firebase_database_host_api_respond_error_on_disconnect_set(FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_database_firebase_database_host_api_respond_error_on_disconnect_set(
+    FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_database_firebase_database_host_api_respond_on_disconnect_set_with_priority:
  * @response_handle: a #FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle.
  *
- * Responds to FirebaseDatabaseHostApi.onDisconnectSetWithPriority. 
+ * Responds to FirebaseDatabaseHostApi.onDisconnectSetWithPriority.
  */
-void firebase_database_firebase_database_host_api_respond_on_disconnect_set_with_priority(FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle);
+void firebase_database_firebase_database_host_api_respond_on_disconnect_set_with_priority(
+    FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle);
 
 /**
  * firebase_database_firebase_database_host_api_respond_error_on_disconnect_set_with_priority:
@@ -957,17 +1189,21 @@ void firebase_database_firebase_database_host_api_respond_on_disconnect_set_with
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseDatabaseHostApi.onDisconnectSetWithPriority. 
+ * Responds with an error to
+ * FirebaseDatabaseHostApi.onDisconnectSetWithPriority.
  */
-void firebase_database_firebase_database_host_api_respond_error_on_disconnect_set_with_priority(FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_database_firebase_database_host_api_respond_error_on_disconnect_set_with_priority(
+    FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_database_firebase_database_host_api_respond_on_disconnect_update:
  * @response_handle: a #FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle.
  *
- * Responds to FirebaseDatabaseHostApi.onDisconnectUpdate. 
+ * Responds to FirebaseDatabaseHostApi.onDisconnectUpdate.
  */
-void firebase_database_firebase_database_host_api_respond_on_disconnect_update(FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle);
+void firebase_database_firebase_database_host_api_respond_on_disconnect_update(
+    FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle);
 
 /**
  * firebase_database_firebase_database_host_api_respond_error_on_disconnect_update:
@@ -976,17 +1212,20 @@ void firebase_database_firebase_database_host_api_respond_on_disconnect_update(F
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseDatabaseHostApi.onDisconnectUpdate. 
+ * Responds with an error to FirebaseDatabaseHostApi.onDisconnectUpdate.
  */
-void firebase_database_firebase_database_host_api_respond_error_on_disconnect_update(FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_database_firebase_database_host_api_respond_error_on_disconnect_update(
+    FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_database_firebase_database_host_api_respond_on_disconnect_cancel:
  * @response_handle: a #FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle.
  *
- * Responds to FirebaseDatabaseHostApi.onDisconnectCancel. 
+ * Responds to FirebaseDatabaseHostApi.onDisconnectCancel.
  */
-void firebase_database_firebase_database_host_api_respond_on_disconnect_cancel(FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle);
+void firebase_database_firebase_database_host_api_respond_on_disconnect_cancel(
+    FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle);
 
 /**
  * firebase_database_firebase_database_host_api_respond_error_on_disconnect_cancel:
@@ -995,18 +1234,22 @@ void firebase_database_firebase_database_host_api_respond_on_disconnect_cancel(F
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseDatabaseHostApi.onDisconnectCancel. 
+ * Responds with an error to FirebaseDatabaseHostApi.onDisconnectCancel.
  */
-void firebase_database_firebase_database_host_api_respond_error_on_disconnect_cancel(FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_database_firebase_database_host_api_respond_error_on_disconnect_cancel(
+    FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_database_firebase_database_host_api_respond_query_observe:
  * @response_handle: a #FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseDatabaseHostApi.queryObserve. 
+ * Responds to FirebaseDatabaseHostApi.queryObserve.
  */
-void firebase_database_firebase_database_host_api_respond_query_observe(FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle, const gchar* return_value);
+void firebase_database_firebase_database_host_api_respond_query_observe(
+    FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle,
+    const gchar* return_value);
 
 /**
  * firebase_database_firebase_database_host_api_respond_error_query_observe:
@@ -1015,17 +1258,20 @@ void firebase_database_firebase_database_host_api_respond_query_observe(Firebase
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseDatabaseHostApi.queryObserve. 
+ * Responds with an error to FirebaseDatabaseHostApi.queryObserve.
  */
-void firebase_database_firebase_database_host_api_respond_error_query_observe(FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_database_firebase_database_host_api_respond_error_query_observe(
+    FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_database_firebase_database_host_api_respond_query_keep_synced:
  * @response_handle: a #FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle.
  *
- * Responds to FirebaseDatabaseHostApi.queryKeepSynced. 
+ * Responds to FirebaseDatabaseHostApi.queryKeepSynced.
  */
-void firebase_database_firebase_database_host_api_respond_query_keep_synced(FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle);
+void firebase_database_firebase_database_host_api_respond_query_keep_synced(
+    FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle);
 
 /**
  * firebase_database_firebase_database_host_api_respond_error_query_keep_synced:
@@ -1034,18 +1280,22 @@ void firebase_database_firebase_database_host_api_respond_query_keep_synced(Fire
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseDatabaseHostApi.queryKeepSynced. 
+ * Responds with an error to FirebaseDatabaseHostApi.queryKeepSynced.
  */
-void firebase_database_firebase_database_host_api_respond_error_query_keep_synced(FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_database_firebase_database_host_api_respond_error_query_keep_synced(
+    FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
 /**
  * firebase_database_firebase_database_host_api_respond_query_get:
  * @response_handle: a #FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle.
  * @return_value: location to write the value returned by this method.
  *
- * Responds to FirebaseDatabaseHostApi.queryGet. 
+ * Responds to FirebaseDatabaseHostApi.queryGet.
  */
-void firebase_database_firebase_database_host_api_respond_query_get(FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle, FlValue* return_value);
+void firebase_database_firebase_database_host_api_respond_query_get(
+    FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle,
+    FlValue* return_value);
 
 /**
  * firebase_database_firebase_database_host_api_respond_error_query_get:
@@ -1054,68 +1304,97 @@ void firebase_database_firebase_database_host_api_respond_query_get(FirebaseData
  * @message: error message.
  * @details: (allow-none): error details or %NULL.
  *
- * Responds with an error to FirebaseDatabaseHostApi.queryGet. 
+ * Responds with an error to FirebaseDatabaseHostApi.queryGet.
  */
-void firebase_database_firebase_database_host_api_respond_error_query_get(FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle, const gchar* code, const gchar* message, FlValue* details);
+void firebase_database_firebase_database_host_api_respond_error_query_get(
+    FirebaseDatabaseFirebaseDatabaseHostApiResponseHandle* response_handle,
+    const gchar* code, const gchar* message, FlValue* details);
 
-G_DECLARE_FINAL_TYPE(FirebaseDatabaseFirebaseDatabaseFlutterApiCallTransactionHandlerResponse, firebase_database_firebase_database_flutter_api_call_transaction_handler_response, FIREBASE_DATABASE, FIREBASE_DATABASE_FLUTTER_API_CALL_TRANSACTION_HANDLER_RESPONSE, GObject)
+G_DECLARE_FINAL_TYPE(
+    FirebaseDatabaseFirebaseDatabaseFlutterApiCallTransactionHandlerResponse,
+    firebase_database_firebase_database_flutter_api_call_transaction_handler_response,
+    FIREBASE_DATABASE,
+    FIREBASE_DATABASE_FLUTTER_API_CALL_TRANSACTION_HANDLER_RESPONSE, GObject)
 
 /**
  * firebase_database_firebase_database_flutter_api_call_transaction_handler_response_is_error:
- * @response: a #FirebaseDatabaseFirebaseDatabaseFlutterApiCallTransactionHandlerResponse.
+ * @response: a
+ * #FirebaseDatabaseFirebaseDatabaseFlutterApiCallTransactionHandlerResponse.
  *
- * Checks if a response to FirebaseDatabaseFlutterApi.callTransactionHandler is an error.
+ * Checks if a response to FirebaseDatabaseFlutterApi.callTransactionHandler is
+ * an error.
  *
  * Returns: a %TRUE if this response is an error.
  */
-gboolean firebase_database_firebase_database_flutter_api_call_transaction_handler_response_is_error(FirebaseDatabaseFirebaseDatabaseFlutterApiCallTransactionHandlerResponse* response);
+gboolean
+firebase_database_firebase_database_flutter_api_call_transaction_handler_response_is_error(
+    FirebaseDatabaseFirebaseDatabaseFlutterApiCallTransactionHandlerResponse*
+        response);
 
 /**
  * firebase_database_firebase_database_flutter_api_call_transaction_handler_response_get_error_code:
- * @response: a #FirebaseDatabaseFirebaseDatabaseFlutterApiCallTransactionHandlerResponse.
+ * @response: a
+ * #FirebaseDatabaseFirebaseDatabaseFlutterApiCallTransactionHandlerResponse.
  *
  * Get the error code for this response.
  *
  * Returns: an error code or %NULL if not an error.
  */
-const gchar* firebase_database_firebase_database_flutter_api_call_transaction_handler_response_get_error_code(FirebaseDatabaseFirebaseDatabaseFlutterApiCallTransactionHandlerResponse* response);
+const gchar*
+firebase_database_firebase_database_flutter_api_call_transaction_handler_response_get_error_code(
+    FirebaseDatabaseFirebaseDatabaseFlutterApiCallTransactionHandlerResponse*
+        response);
 
 /**
  * firebase_database_firebase_database_flutter_api_call_transaction_handler_response_get_error_message:
- * @response: a #FirebaseDatabaseFirebaseDatabaseFlutterApiCallTransactionHandlerResponse.
+ * @response: a
+ * #FirebaseDatabaseFirebaseDatabaseFlutterApiCallTransactionHandlerResponse.
  *
  * Get the error message for this response.
  *
  * Returns: an error message.
  */
-const gchar* firebase_database_firebase_database_flutter_api_call_transaction_handler_response_get_error_message(FirebaseDatabaseFirebaseDatabaseFlutterApiCallTransactionHandlerResponse* response);
+const gchar*
+firebase_database_firebase_database_flutter_api_call_transaction_handler_response_get_error_message(
+    FirebaseDatabaseFirebaseDatabaseFlutterApiCallTransactionHandlerResponse*
+        response);
 
 /**
  * firebase_database_firebase_database_flutter_api_call_transaction_handler_response_get_error_details:
- * @response: a #FirebaseDatabaseFirebaseDatabaseFlutterApiCallTransactionHandlerResponse.
+ * @response: a
+ * #FirebaseDatabaseFirebaseDatabaseFlutterApiCallTransactionHandlerResponse.
  *
  * Get the error details for this response.
  *
  * Returns: (allow-none): an error details or %NULL.
  */
-FlValue* firebase_database_firebase_database_flutter_api_call_transaction_handler_response_get_error_details(FirebaseDatabaseFirebaseDatabaseFlutterApiCallTransactionHandlerResponse* response);
+FlValue*
+firebase_database_firebase_database_flutter_api_call_transaction_handler_response_get_error_details(
+    FirebaseDatabaseFirebaseDatabaseFlutterApiCallTransactionHandlerResponse*
+        response);
 
 /**
  * firebase_database_firebase_database_flutter_api_call_transaction_handler_response_get_return_value:
- * @response: a #FirebaseDatabaseFirebaseDatabaseFlutterApiCallTransactionHandlerResponse.
+ * @response: a
+ * #FirebaseDatabaseFirebaseDatabaseFlutterApiCallTransactionHandlerResponse.
  *
  * Get the return value for this response.
  *
  * Returns: a return value.
  */
-FirebaseDatabaseTransactionHandlerResult* firebase_database_firebase_database_flutter_api_call_transaction_handler_response_get_return_value(FirebaseDatabaseFirebaseDatabaseFlutterApiCallTransactionHandlerResponse* response);
+FirebaseDatabaseTransactionHandlerResult*
+firebase_database_firebase_database_flutter_api_call_transaction_handler_response_get_return_value(
+    FirebaseDatabaseFirebaseDatabaseFlutterApiCallTransactionHandlerResponse*
+        response);
 
 /**
  * FirebaseDatabaseFirebaseDatabaseFlutterApi:
  *
  */
 
-G_DECLARE_FINAL_TYPE(FirebaseDatabaseFirebaseDatabaseFlutterApi, firebase_database_firebase_database_flutter_api, FIREBASE_DATABASE, FIREBASE_DATABASE_FLUTTER_API, GObject)
+G_DECLARE_FINAL_TYPE(FirebaseDatabaseFirebaseDatabaseFlutterApi,
+                     firebase_database_firebase_database_flutter_api,
+                     FIREBASE_DATABASE, FIREBASE_DATABASE_FLUTTER_API, GObject)
 
 /**
  * firebase_database_firebase_database_flutter_api_new:
@@ -1126,7 +1405,9 @@ G_DECLARE_FINAL_TYPE(FirebaseDatabaseFirebaseDatabaseFlutterApi, firebase_databa
  *
  * Returns: a new #FirebaseDatabaseFirebaseDatabaseFlutterApi
  */
-FirebaseDatabaseFirebaseDatabaseFlutterApi* firebase_database_firebase_database_flutter_api_new(FlBinaryMessenger* messenger, const gchar* suffix);
+FirebaseDatabaseFirebaseDatabaseFlutterApi*
+firebase_database_firebase_database_flutter_api_new(
+    FlBinaryMessenger* messenger, const gchar* suffix);
 
 /**
  * firebase_database_firebase_database_flutter_api_call_transaction_handler:
@@ -1134,23 +1415,35 @@ FirebaseDatabaseFirebaseDatabaseFlutterApi* firebase_database_firebase_database_
  * @transaction_key: parameter for this method.
  * @snapshot_value: (allow-none): parameter for this method.
  * @cancellable: (allow-none): a #GCancellable or %NULL.
- * @callback: (scope async): (allow-none): a #GAsyncReadyCallback to call when the call is complete or %NULL to ignore the response.
+ * @callback: (scope async): (allow-none): a #GAsyncReadyCallback to call when
+ * the call is complete or %NULL to ignore the response.
  * @user_data: (closure): user data to pass to @callback.
  *
  */
-void firebase_database_firebase_database_flutter_api_call_transaction_handler(FirebaseDatabaseFirebaseDatabaseFlutterApi* api, int64_t transaction_key, FlValue* snapshot_value, GCancellable* cancellable, GAsyncReadyCallback callback, gpointer user_data);
+void firebase_database_firebase_database_flutter_api_call_transaction_handler(
+    FirebaseDatabaseFirebaseDatabaseFlutterApi* api, int64_t transaction_key,
+    FlValue* snapshot_value, GCancellable* cancellable,
+    GAsyncReadyCallback callback, gpointer user_data);
 
 /**
  * firebase_database_firebase_database_flutter_api_call_transaction_handler_finish:
  * @api: a #FirebaseDatabaseFirebaseDatabaseFlutterApi.
  * @result: a #GAsyncResult.
- * @error: (allow-none): #GError location to store the error occurring, or %NULL to ignore.
+ * @error: (allow-none): #GError location to store the error occurring, or %NULL
+ * to ignore.
  *
- * Completes a firebase_database_firebase_database_flutter_api_call_transaction_handler() call.
+ * Completes a
+ * firebase_database_firebase_database_flutter_api_call_transaction_handler()
+ * call.
  *
- * Returns: a #FirebaseDatabaseFirebaseDatabaseFlutterApiCallTransactionHandlerResponse or %NULL on error.
+ * Returns: a
+ * #FirebaseDatabaseFirebaseDatabaseFlutterApiCallTransactionHandlerResponse or
+ * %NULL on error.
  */
-FirebaseDatabaseFirebaseDatabaseFlutterApiCallTransactionHandlerResponse* firebase_database_firebase_database_flutter_api_call_transaction_handler_finish(FirebaseDatabaseFirebaseDatabaseFlutterApi* api, GAsyncResult* result, GError** error);
+FirebaseDatabaseFirebaseDatabaseFlutterApiCallTransactionHandlerResponse*
+firebase_database_firebase_database_flutter_api_call_transaction_handler_finish(
+    FirebaseDatabaseFirebaseDatabaseFlutterApi* api, GAsyncResult* result,
+    GError** error);
 
 G_END_DECLS
 
