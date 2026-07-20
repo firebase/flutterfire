@@ -313,8 +313,12 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   }
 
   /// Triggers the Firebase Authentication backend to send a password-reset
-  /// email to the given email address, which must correspond to an existing
-  /// user of your app.
+  /// email to the given email address.
+  ///
+  /// If email enumeration protection is enabled for the Firebase project, this
+  /// method may complete successfully even when the email does not correspond
+  /// to an existing user. This prevents apps from using password reset requests
+  /// to discover registered email addresses.
   Future<void> sendPasswordResetEmail(
     String email, [
     ActionCodeSettings? actionCodeSettings,

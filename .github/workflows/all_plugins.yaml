@@ -18,13 +18,16 @@ on:
       - 'website/**'
       - '**.md'
 
+permissions:
+  contents: read
+
 jobs:
   analyze:
-    timeout-minutes: 45
+    timeout-minutes: 50
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
-      - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
         with:
           channel: 'stable'
           cache: true
@@ -46,8 +49,8 @@ jobs:
     timeout-minutes: 30
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
-      - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
         with:
           channel: 'stable'
           cache: true
@@ -65,8 +68,8 @@ jobs:
     timeout-minutes: 30
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
-      - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
         with:
           channel: 'stable'
           cache: true
@@ -83,10 +86,22 @@ jobs:
   format:
     # switch back to ubuntu-latest when swiftformat is working again
     runs-on: macos-latest
-    timeout-minutes: 20
+    timeout-minutes: 40
     steps:
-      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
-      - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+        with:
+          fetch-depth: 0
+      - id: setup-flutter-format
+        uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
+        continue-on-error: true
+        with:
+          channel: 'stable'
+          cache: true
+          cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
+          pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
+      - name: Retry Flutter setup
+        if: steps.setup-flutter-format.outcome == 'failure'
+        uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
         with:
           channel: 'stable'
           cache: true
@@ -95,7 +110,7 @@ jobs:
       - uses: bluefireteam/melos-action@705015c3d2bc4ab94201ac24accb2bbe070cf533
         with:
           melos-version: '5.3.0'
-      - uses: Homebrew/actions/setup-homebrew@master
+      - uses: Homebrew/actions/setup-homebrew@097625b28a26ba4b7437926ab03b4d3bd2e6c3d1
       - name: 'Install Tools'
         run: |
           alias python=python3
@@ -107,24 +122,27 @@ jobs:
         run: |
           clang-format --version
           swiftformat --version
-      - name: 'Dart, Java and Objective-C '
+      - name: 'Dart, Java, Objective-C and Swift'
         run: |
-          flutter pub global run flutter_plugin_tools format
+          flutter pub global run flutter_plugin_tools format --base-branch=origin/main
           ./.github/workflows/scripts/validate-formatting.sh
-      - name: 'Swift'
-        if: ${{ success() || failure() }}
+
+      # Clean generated build artificats(from format step) to prevent post run jobs from timing out
+      - name: Clean generated build artifacts
+        if: ${{ always() }}
         run: |
-          swiftformat .
-          ./.github/workflows/scripts/validate-formatting.sh
+          rm -rf build
+          find packages -type d -name build -prune -exec rm -rf {} +
 
   build_examples_dart:
     timeout-minutes: 30
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
-      - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
         with:
           channel: 'stable'
+          flutter-version: '3.41.9'
           cache: true
           cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
           pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
@@ -142,10 +160,11 @@ jobs:
       FLUTTER_DEPENDENCIES: "cloud_firestore firebase_remote_config cloud_functions firebase_database firebase_auth firebase_storage firebase_analytics firebase_messaging firebase_app_check firebase_in_app_messaging firebase_performance firebase_crashlytics firebase_ml_model_downloader firebase_app_installations firebase_ai"
       PR_HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
     steps:
-      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
-      - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
         with:
           channel: 'stable'
+          flutter-version: '3.41.9'
           cache: true
           cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
           pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
@@ -169,8 +188,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
-      - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
         with:
           channel: 'stable'
           cache: true
@@ -188,14 +207,14 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
-      - uses: actions/setup-go@4a3601121dd01d1626a1e23e37211e3254c1c06c
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16
         with:
           go-version: '^1.13.1'
       # Go is used by addlicense command (addlicense is used in melos run
       # check-license-header)
       - run: go install github.com/google/addlicense@latest
-      - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
         with:
           channel: 'stable'
           cache: true

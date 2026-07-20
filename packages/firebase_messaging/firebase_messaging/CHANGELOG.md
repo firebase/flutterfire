@@ -1,3 +1,24 @@
+## 16.4.3
+
+ - Update a dependency to the latest release.
+
+## 16.4.2
+
+ - Update a dependency to the latest release.
+
+## 16.4.1
+
+ - **FIX**: resolve FlutterSceneLifeCycleDelegate conformance guard ([#18385](https://github.com/firebase/flutterfire/issues/18385)). ([48d67196](https://github.com/firebase/flutterfire/commit/48d67196a10affe09724529df5f67cf40b62bccf))
+
+## 16.4.0
+
+ - **FIX**(messaging,ios): fix a race condition that could happen when getting initial message ([#18352](https://github.com/firebase/flutterfire/issues/18352)). ([77396b81](https://github.com/firebase/flutterfire/commit/77396b81ae56943a38c23b429249b0b9cbd4bc21))
+ - **FEAT**(messaging,ios): add support for actionIdentifier on iOS devices ([#18357](https://github.com/firebase/flutterfire/issues/18357)). ([d60af4d9](https://github.com/firebase/flutterfire/commit/d60af4d9e1345c113490e875c85bd9ac62dad935))
+
+## 16.3.0
+
+ - **FEAT**(messaging,web): add support for custom service worker script path in `getToken` method ([#18290](https://github.com/firebase/flutterfire/issues/18290)). ([b37722db](https://github.com/firebase/flutterfire/commit/b37722db13548aca57b3a24ba0f27b5de021be02))
+
 ## 16.2.2
 
  - Update a dependency to the latest release.

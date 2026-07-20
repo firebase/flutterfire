@@ -1,3 +1,24 @@
+## 6.5.6
+
+ - Update a dependency to the latest release.
+
+## 6.5.5
+
+ - **FIX**(auth,iOS): add detailed error handling for Apple authorization failures ([#18415](https://github.com/firebase/flutterfire/issues/18415)). ([1df97bb0](https://github.com/firebase/flutterfire/commit/1df97bb018e0f72ce8f7cbabf016438010a5bdfe))
+
+## 6.5.4
+
+ - **FIX**: resolve FlutterSceneLifeCycleDelegate conformance guard ([#18385](https://github.com/firebase/flutterfire/issues/18385)). ([48d67196](https://github.com/firebase/flutterfire/commit/48d67196a10affe09724529df5f67cf40b62bccf))
+
+## 6.5.3
+
+ - Update a dependency to the latest release.
+
+## 6.5.2
+
+ - **FIX**(auth,android): update token retrieval in PigeonParser to handle Number type correctly ([#18328](https://github.com/firebase/flutterfire/issues/18328)). ([3b77147b](https://github.com/firebase/flutterfire/commit/3b77147bc00bb19af5f4821436a1a4cdd8ff6791))
+ - **DOCS**(auth): clarify behavior of password reset email with email enumeration protection enabled ([#18296](https://github.com/firebase/flutterfire/issues/18296)). ([0bcce87a](https://github.com/firebase/flutterfire/commit/0bcce87a17830797dae6ff3c1a8ba4ce210c2c0d))
+
 ## 6.5.1
 
  - Update a dependency to the latest release.

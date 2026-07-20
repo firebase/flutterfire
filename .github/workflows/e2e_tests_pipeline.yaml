@@ -33,18 +33,19 @@ jobs:
       AVD_API_LEVEL: 34
       AVD_TARGET: google_apis
     steps:
-      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
       - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
         name: Install Node.js 20
         with:
           node-version: '20'
-      - uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654
+      - uses: actions/setup-java@1bcf9fb12cf4aa7d266a90ae39939e61372fe520
         with:
           distribution: 'temurin'
           java-version: '21'
-      - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
         with:
           channel: 'stable'
+          flutter-version: '3.41.9'
           cache: true
           cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
           pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
@@ -69,7 +70,7 @@ jobs:
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
       - name: Gradle cache
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@90ddb51e90a5fd9ba75f40cf85156b7b41bf76a3
       - name: Free Disk Space (Ubuntu)
         uses: AdityaGarg8/remove-unwanted-software@90e01b21170618765a73370fcc3abbd1684a7793
         with:
@@ -78,17 +79,29 @@ jobs:
           remove-codeql: true
           remove-docker-images: true
           remove-large-packages: true
+      - name: Prepare AVD home on /mnt
+        run: |
+          sudo mkdir -p /mnt/avd
+          sudo chown "$USER:$USER" /mnt/avd
+          df -h / /mnt
       - name: AVD cache
-        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         continue-on-error: true
         id: avd-cache
         with:
           path: |
-            ~/.android/avd/*
+            /mnt/avd/*
             ~/.android/adb*
           key: avd-${{ runner.os }}-${{ env.AVD_API_LEVEL }}-${{ env.AVD_TARGET }}-${{ env.AVD_ARCH }}
+      - name: Link AVD home to /mnt
+        run: |
+          mkdir -p "$HOME/.android"
+          rm -rf "$HOME/.android/avd"
+          ln -s /mnt/avd "$HOME/.android/avd"
       - name: Start AVD then run pipeline E2E tests
         uses: reactivecircus/android-emulator-runner@e89f39f1abbbd05b1113a29cf4db69e7540cae5a
+        env:
+          ANDROID_AVD_HOME: /mnt/avd
         with:
           api-level: ${{ env.AVD_API_LEVEL }}
           target: ${{ env.AVD_TARGET }}
@@ -107,19 +120,19 @@ jobs:
         with:
           key: ${{ steps.avd-cache.outputs.cache-primary-key }}
           path: |
-            ~/.android/avd/*
+            /mnt/avd/*
             ~/.android/adb*
 
   pipeline-e2e-web:
     runs-on: macos-latest
     timeout-minutes: 25
     steps:
-      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
       - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
         name: Install Node.js 20
         with:
           node-version: '20'
-      - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
         with:
           channel: 'stable'
           cache: true
@@ -145,34 +158,34 @@ jobs:
         # Web devices are not supported for the `flutter test` command yet. As a
         # workaround we use the `flutter drive` command. Tracking issue:
         # https://github.com/flutter/flutter/issues/66264
+        # Chrome debug service can fail with AppConnectionException before tests
+        # connect. Retry only those infrastructure startup failures.
         run: |
-          chromedriver --port=4444 --trace-buffer-size=100000 &
-          flutter drive --target=./integration_test/pipeline/pipeline_live_test.dart --driver=./test_driver/integration_test.dart -d chrome --dart-define=CI=true | tee output.log
-          output=$(<output.log)
-          if [[ "$output" =~ \[E\] ]]; then
-            echo "All tests did not pass. Please check the logs for more information."
-            exit 1
-          fi
+          FLUTTER_DRIVE_TARGET="./integration_test/pipeline/pipeline_live_test.dart" \
+          FLUTTER_DRIVE_DRIVER="./test_driver/integration_test.dart" \
+          FLUTTER_DRIVE_EXTRA_ARGS="--dart-define=CI=true" \
+          "${GITHUB_WORKSPACE}/.github/workflows/scripts/flutter-drive-web-retry.sh"
         shell: bash
 
   pipeline-e2e-ios:
     runs-on: macos-15
     timeout-minutes: 50
     steps:
-      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
       - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
         name: Install Node.js 20
         with:
           node-version: '20'
       - name: Xcode
         run: sudo xcode-select -s /Applications/Xcode_16.4.app/Contents/Developer
-      - uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654
+      - uses: actions/setup-java@1bcf9fb12cf4aa7d266a90ae39939e61372fe520
         with:
           distribution: 'temurin'
           java-version: '21'
-      - uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
         with:
           channel: 'stable'
+          flutter-version: '3.41.9'
           cache: true
           cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
           pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
@@ -202,11 +215,17 @@ jobs:
       - uses: futureware-tech/simulator-action@e89aa8f93d3aec35083ff49d2854d07f7186f7f5
         id: simulator
         with:
+          # https://github.com/actions/runner-images/blob/main/images/macos/macos-15-Readme.md#installed-simulators
           model: "iPhone 16"
       - name: Build iOS (simulator)
         working-directory: packages/cloud_firestore/cloud_firestore/pipeline_example
         run: |
           flutter build ios --no-codesign --simulator --debug --target=./integration_test/pipeline/pipeline_live_test.dart --dart-define=CI=true
+      - name: Ensure Simulator Ready
+        env:
+          SIMULATOR: ${{ steps.simulator.outputs.udid }}
+          ENSURE_BOOT_IF_NEEDED: "0"
+        run: .github/workflows/scripts/ensure-simulator-ready.sh
       - name: Run pipeline E2E tests (iOS)
         working-directory: packages/cloud_firestore/cloud_firestore/pipeline_example
         env:

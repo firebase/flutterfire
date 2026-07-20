@@ -16,6 +16,7 @@ import 'content.dart';
 import 'error.dart';
 import 'image_config.dart';
 import 'schema.dart';
+import 'speech_config.dart';
 import 'tool.dart' show Tool, ToolConfig;
 
 /// Response for Count Tokens
@@ -1067,6 +1068,41 @@ enum ResponseModalities {
   String toJson() => _jsonString;
 }
 
+/// The media resolution to use for media inputs.
+enum MediaResolution {
+  /// Default media resolution selected by the model.
+  unspecified('MEDIA_RESOLUTION_UNSPECIFIED'),
+
+  /// Lower token count, resulting in faster processing and lower cost.
+  low('MEDIA_RESOLUTION_LOW'),
+
+  /// A balance between detail, cost, and latency.
+  medium('MEDIA_RESOLUTION_MEDIUM'),
+
+  /// Higher token count, providing more detail for media inputs.
+  high('MEDIA_RESOLUTION_HIGH'),
+
+  /// Highest token count for image inputs.
+  ///
+  /// This value is only supported on individual media parts.
+  ultraHigh('MEDIA_RESOLUTION_ULTRA_HIGH');
+
+  const MediaResolution(this._jsonString);
+  final String _jsonString;
+
+  /// Parse a media resolution from a JSON value.
+  static MediaResolution parseValue(String value) => switch (value) {
+        'MEDIA_RESOLUTION_LOW' => MediaResolution.low,
+        'MEDIA_RESOLUTION_MEDIUM' => MediaResolution.medium,
+        'MEDIA_RESOLUTION_HIGH' => MediaResolution.high,
+        'MEDIA_RESOLUTION_ULTRA_HIGH' => MediaResolution.ultraHigh,
+        _ => MediaResolution.unspecified,
+      };
+
+  // ignore: public_member_api_docs
+  String toJson() => _jsonString;
+}
+
 /// A preset that balances the trade-off between reasoning quality and response
 /// speed for a model's "thinking" process.
 ///
@@ -1170,7 +1206,10 @@ abstract class BaseGenerationConfig {
     this.presencePenalty,
     this.frequencyPenalty,
     this.responseModalities,
-  });
+    this.mediaResolution,
+    this.speechConfig,
+  }) : assert(mediaResolution != MediaResolution.ultraHigh,
+            'MediaResolution.ultraHigh is only supported on individual media parts.');
 
   /// Number of generated responses to return.
   ///
@@ -1249,6 +1288,17 @@ abstract class BaseGenerationConfig {
   /// The list of desired response modalities.
   final List<ResponseModalities>? responseModalities;
 
+  /// The resolution to use for media inputs.
+  ///
+  /// Higher resolutions provide more detail to the model, at the cost of
+  /// increased token usage, latency, and cost.
+  ///
+  /// [MediaResolution.ultraHigh] is only supported on individual media parts.
+  final MediaResolution? mediaResolution;
+
+  /// The configuration parameters controlling the model's speech and audio generation.
+  final SpeechConfig? speechConfig;
+
   // ignore: public_member_api_docs
   Map<String, Object?> toJson() => {
         if (candidateCount case final candidateCount?)
@@ -1265,6 +1315,10 @@ abstract class BaseGenerationConfig {
         if (responseModalities case final responseModalities?)
           'responseModalities':
               responseModalities.map((modality) => modality.toJson()).toList(),
+        if (mediaResolution case final mediaResolution?)
+          'mediaResolution': mediaResolution.toJson(),
+        if (speechConfig case final speechConfig?)
+          'speechConfig': speechConfig.toJson(),
       };
 }
 
@@ -1281,6 +1335,8 @@ final class GenerationConfig extends BaseGenerationConfig {
     super.presencePenalty,
     super.frequencyPenalty,
     super.responseModalities,
+    super.mediaResolution,
+    super.speechConfig,
     this.responseMimeType,
     this.responseSchema,
     this.responseJsonSchema,

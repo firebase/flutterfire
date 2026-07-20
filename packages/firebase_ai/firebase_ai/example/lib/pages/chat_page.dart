@@ -49,10 +49,7 @@ class _ChatPageState extends State<ChatPage> {
   void _initializeChat() {
     final generationConfig = GenerationConfig(
       thinkingConfig: _enableThinking
-          ? ThinkingConfig.withThinkingBudget(
-              null,
-              includeThoughts: true,
-            ) // Using thinkingBudget since we are testing with gemini 2.5
+          ? ThinkingConfig.withThinkingLevel(ThinkingLevel.medium)
           : null,
     );
     if (widget.useVertexBackend) {

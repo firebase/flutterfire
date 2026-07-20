@@ -4,6 +4,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:js_interop';
+import 'dart:js_interop_unsafe';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart'
@@ -360,6 +361,103 @@ class PipelineExpressionParserWeb {
       case 'array_index_of_all':
         return (_expr(argsMap, _kExpression) as interop.ExpressionJsImpl)
             .arrayIndexOfAll(_expr(argsMap, 'element'));
+      case 'array_slice':
+        {
+          final base = _expr(argsMap, _kExpression) as interop.ExpressionJsImpl;
+          final length = argsMap['length'];
+          if (length == null) {
+            return base.arraySlice(_expr(argsMap, 'offset'));
+          }
+          return base.arraySlice(
+            _expr(argsMap, 'offset'),
+            toExpression(length as Map<String, dynamic>),
+          );
+        }
+      case 'array_filter':
+        {
+          final filter =
+              toBooleanExpression(argsMap['filter'] as Map<String, dynamic>);
+          if (filter == null) {
+            throw UnsupportedError('array_filter requires a boolean filter');
+          }
+          return (_expr(argsMap, _kExpression) as interop.ExpressionJsImpl)
+              .arrayFilter((argsMap['alias'] as String).toJS, filter);
+        }
+      case 'array_transform':
+        return (_expr(argsMap, _kExpression) as interop.ExpressionJsImpl)
+            .arrayTransform(
+          (argsMap['element_alias'] as String).toJS,
+          _expr(argsMap, 'transform'),
+        );
+      case 'array_transform_with_index':
+        return (_expr(argsMap, _kExpression) as interop.ExpressionJsImpl)
+            .arrayTransformWithIndex(
+          (argsMap['element_alias'] as String).toJS,
+          (argsMap['index_alias'] as String).toJS,
+          _expr(argsMap, 'transform'),
+        );
+      case 'timestamp_diff':
+        return _pipelines.timestampDiff(
+          _expr(argsMap, 'end'),
+          _expr(argsMap, 'start'),
+          _expr(argsMap, 'unit'),
+        );
+      case 'timestamp_extract':
+        {
+          final ts = _expr(argsMap, 'timestamp');
+          final part = _expr(argsMap, 'part');
+          final tzRaw = argsMap['timezone'];
+          if (tzRaw == null) {
+            return _pipelines.timestampExtract(ts, part);
+          }
+          final tzJs = tzRaw is String
+              ? tzRaw.toJS
+              : toExpression(tzRaw as Map<String, dynamic>);
+          return _pipelines.timestampExtract(ts, part, tzJs);
+        }
+      case 'parent':
+        {
+          final docRefPath = argsMap['doc_ref'] as String?;
+          if (docRefPath != null && docRefPath.isNotEmpty) {
+            final docRef = interop.doc(_jsFirestore as JSAny, docRefPath.toJS);
+            return _pipelines.parent(docRef);
+          }
+          return _pipelines.parent(_expr(argsMap, _kExpression));
+        }
+      case 'if_null':
+        return _pipelines.ifNull(
+          _expr(argsMap, _kExpression),
+          _expr(argsMap, 'replacement'),
+        );
+      case 'coalesce':
+        {
+          final exprMaps = argsMap['expressions'] as List<dynamic>?;
+          if (exprMaps == null || exprMaps.length < 2) {
+            throw UnsupportedError(
+                'coalesce requires at least two expressions');
+          }
+          final first = toExpression(exprMaps[0] as Map<String, dynamic>);
+          final second = toExpression(exprMaps[1] as Map<String, dynamic>);
+          if (exprMaps.length == 2) {
+            return _pipelines.coalesce(first, second, <JSAny>[].toJS);
+          }
+          final more = <JSAny>[];
+          for (var i = 2; i < exprMaps.length; i++) {
+            more.add(toExpression(exprMaps[i] as Map<String, dynamic>));
+          }
+          return _pipelines.coalesce(first, second, more.toJS);
+        }
+      case 'switch_on':
+        return _switchOnToExpression(argsMap);
+      // Boolean combinators / `not` — used as value expressions in add_fields,
+      // select, etc. (e.g. `Expression.nor(...).as('x')`). Those stages call
+      // [toExpression] only; [where] uses [toBooleanExpression] directly.
+      case 'and':
+      case 'or':
+      case 'xor':
+      case 'nor':
+      case 'not':
+        return _expressionFromBooleanMap(map);
       default:
         throw FirebaseException(
           plugin: 'cloud_firestore',
@@ -369,6 +467,58 @@ class PipelineExpressionParserWeb {
               'platform. The Firebase JS SDK may not expose this expression.',
         );
     }
+  }
+
+  /// Builds a JS value [Expression] from a serialized boolean expression map.
+  ///
+  /// The Firebase JS pipeline API represents boolean expressions as values
+  /// where needed (e.g. aliased add_fields); [toBooleanExpression] already
+  /// constructs the correct interop objects.
+  interop.ExpressionJsImpl _expressionFromBooleanMap(
+    Map<String, dynamic> map,
+  ) {
+    final boolExpr = toBooleanExpression(map);
+    if (boolExpr == null) {
+      final n = map[_kName] as String? ?? '?';
+      throw UnsupportedError(
+        'Boolean expression $n requires at least one valid sub-expression',
+      );
+    }
+    return boolExpr as interop.ExpressionJsImpl;
+  }
+
+  interop.ExpressionJsImpl _switchOnToExpression(Map<String, dynamic> argsMap) {
+    final exprMaps = argsMap['expressions'] as List<dynamic>?;
+    if (exprMaps == null || exprMaps.length < 2) {
+      throw UnsupportedError('switch_on requires at least two expressions');
+    }
+    final n = exprMaps.length;
+    final first = toBooleanExpression(exprMaps[0] as Map<String, dynamic>);
+    if (first == null) {
+      throw UnsupportedError('switch_on requires a boolean condition');
+    }
+    final second = toExpression(exprMaps[1] as Map<String, dynamic>);
+    final allArgs = <JSAny>[first, second];
+    if (n > 2) {
+      for (var i = 2; i < n; i++) {
+        if (n.isOdd && i == n - 1) {
+          allArgs.add(toExpression(exprMaps[i] as Map<String, dynamic>));
+        } else if (i.isEven) {
+          final b = toBooleanExpression(exprMaps[i] as Map<String, dynamic>);
+          if (b == null) {
+            throw UnsupportedError('switch_on expected a boolean expression');
+          }
+          allArgs.add(b);
+        } else {
+          allArgs.add(toExpression(exprMaps[i] as Map<String, dynamic>));
+        }
+      }
+    }
+    return (_pipelines.switchOnJs as JSObject)
+        .callMethodVarArgs<interop.ExpressionJsImpl>(
+      'apply'.toJS,
+      [_pipelines, allArgs.toJS],
+    );
   }
 
   // ── Boolean expressions ───────────────────────────────────────────────────
@@ -401,6 +551,7 @@ class PipelineExpressionParserWeb {
       case 'and':
       case 'or':
       case 'xor':
+      case 'nor':
         final exprMaps = argsMap['expressions'] as List<dynamic>?;
         if (exprMaps == null || exprMaps.isEmpty) return null;
         final exprs = exprMaps
@@ -414,8 +565,10 @@ class PipelineExpressionParserWeb {
             result = _pipelines.and(result, exprs[i]);
           } else if (name == 'or') {
             result = _pipelines.or(result, exprs[i]);
-          } else {
+          } else if (name == 'xor') {
             result = _pipelines.xor(result, exprs[i]);
+          } else {
+            result = _pipelines.nor(result, exprs[i]);
           }
         }
         return result;
@@ -426,6 +579,12 @@ class PipelineExpressionParserWeb {
           throw UnsupportedError('not requires a boolean expression');
         }
         return _pipelines.not(boolExpr);
+      case 'document_matches':
+        final query = argsMap['query'] as String?;
+        if (query == null) {
+          throw UnsupportedError('document_matches requires query');
+        }
+        return _pipelines.documentMatches(query.toJS);
       case 'exists':
         return _pipelines.exists(_expr(argsMap, _kExpression));
       case 'is_absent':
@@ -470,17 +629,7 @@ class PipelineExpressionParserWeb {
   ///
   /// Each item shape: `{ expression: Map, order_direction: 'asc' | 'desc' }`.
   JSAny toSortOptions(List<dynamic> orderings) {
-    final list = <JSAny>[];
-    for (final o in orderings) {
-      final m = o is Map<String, dynamic> ? o : <String, dynamic>{};
-      final expr = m[_kExpression];
-      if (expr == null) continue;
-      final exprJs = toExpression(expr as Map<String, dynamic>);
-      final dir = m['order_direction'] as String?;
-      list.add(dir == 'desc'
-          ? _pipelines.descending(exprJs)
-          : _pipelines.ascending(exprJs));
-    }
+    final list = _toOrderingList(orderings);
     if (list.isEmpty) {
       throw UnsupportedError(
         'Pipeline sort() on web requires the Firebase JS pipeline expression API '
@@ -616,6 +765,48 @@ class PipelineExpressionParserWeb {
       ..distanceMeasure = distanceMeasure.toJS;
     if (limit != null) opts.limit = limit.toJS;
     if (distanceField != null) opts.distanceField = distanceField.toJS;
+    return opts;
+  }
+
+  /// Converts search stage args to JS SearchStageOptions.
+  interop.SearchStageOptionsJsImpl toSearchOptions(Map<String, dynamic> map) {
+    final queryType = map['query_type'] as String?;
+    final query = map['query'];
+    final opts = interop.SearchStageOptionsJsImpl();
+
+    if (queryType == 'string') {
+      opts.query = (query as String).toJS;
+    } else if (queryType == 'expression') {
+      opts.query = toBooleanExpression(query as Map<String, dynamic>)!;
+    } else {
+      throw UnsupportedError(
+        "Pipeline search() on web requires query_type 'string' or 'expression'.",
+      );
+    }
+
+    final languageCode = map['language_code'] as String?;
+    if (languageCode != null) opts.languageCode = languageCode.toJS;
+
+    final retrievalDepth = map['retrieval_depth'] as int?;
+    if (retrievalDepth != null) opts.retrievalDepth = retrievalDepth.toJS;
+
+    final offset = map['offset'] as int?;
+    if (offset != null) opts.offset = offset.toJS;
+
+    final limit = map['limit'] as int?;
+    if (limit != null) opts.limit = limit.toJS;
+
+    final sort = map['sort'] as List<dynamic>?;
+    if (sort != null && sort.isNotEmpty) {
+      final orderings = _toOrderingList(sort);
+      if (orderings.isNotEmpty) opts.sort = orderings.toJS;
+    }
+
+    final addFields = map['add_fields'] as List<dynamic>?;
+    if (addFields != null && addFields.isNotEmpty) {
+      opts.addFields = _toSelectableList(addFields).toJS;
+    }
+
     return opts;
   }
 
@@ -772,6 +963,21 @@ class PipelineExpressionParserWeb {
           toSelectable(e is Map<String, dynamic> ? e : <String, dynamic>{}))
       .whereType<JSAny>()
       .toList();
+
+  List<JSAny> _toOrderingList(List<dynamic> orderings) {
+    final list = <JSAny>[];
+    for (final ordering in orderings) {
+      final orderingMap = Map<String, dynamic>.from(ordering as Map);
+      final expr = orderingMap[_kExpression];
+      if (expr == null) continue;
+      final exprJs = toExpression(expr as Map<String, dynamic>);
+      final dir = orderingMap['order_direction'] as String?;
+      list.add(dir == 'desc'
+          ? _pipelines.descending(exprJs)
+          : _pipelines.ascending(exprJs));
+    }
+    return list;
+  }
 
   interop.AggregateStageOptionsJsImpl _buildAccumulators(
     List<dynamic> items, {

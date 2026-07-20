@@ -8,9 +8,9 @@ MoviesConnector.instance.addDateAndTimestamp(addDateAndTimestampVariables).execu
 MoviesConnector.instance.seedMovies().execute();
 MoviesConnector.instance.createMovie(createMovieVariables).execute();
 MoviesConnector.instance.deleteMovie(deleteMovieVariables).execute();
+MoviesConnector.instance.deleteAllMovieData().execute();
 MoviesConnector.instance.thing(thingVariables).execute();
 MoviesConnector.instance.seedData().execute();
-MoviesConnector.instance.ListMovies().execute();
 
 ```
 

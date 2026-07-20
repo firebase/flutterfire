@@ -1,3 +1,19 @@
+## 6.0.5
+
+ - Update a dependency to the latest release.
+
+## 6.0.4
+
+ - **FIX**(functions): cloud functions results only converted top-level maps ([#18427](https://github.com/firebase/flutterfire/issues/18427)). ([e9039eec](https://github.com/firebase/flutterfire/commit/e9039eec5b9e6a5aa7368f463d79725e1add1945))
+
+## 6.0.3
+
+ - Update a dependency to the latest release.
+
+## 6.0.2
+
+ - Update a dependency to the latest release.
+
 ## 6.0.1
 
  - Update a dependency to the latest release.

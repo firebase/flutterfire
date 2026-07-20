@@ -28,6 +28,9 @@ import 'package:http/http.dart' as http;
 
 import 'package:flutter_test/flutter_test.dart';
 import 'dart:convert';
+import 'dart:io';
+import 'dart:async';
+import 'dart:developer' as developer;
 
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -319,6 +322,72 @@ void main() {
       expect(values[1], 45);
       expect(values[2], {'embedKey': 'embedVal'});
       expect(values[3], ['A', 'AA']);
+    });
+
+    test('Test Large Result Tree Normalization Performance', () async {
+      final fileTree = File('test/src/cache/resources/large_result_tree.json');
+      final fileExt =
+          File('test/src/cache/resources/large_result_tree_ext.json');
+
+      final String treeStr = await fileTree.readAsString();
+      final String extStr = await fileExt.readAsString();
+
+      final Map<String, dynamic> treeJson =
+          jsonDecode(treeStr) as Map<String, dynamic>;
+      final Map<String, dynamic> extJson =
+          jsonDecode(extStr) as Map<String, dynamic>;
+
+      if (dataConnect.cacheManager == null) {
+        fail('No cache available');
+      }
+      final cache = dataConnect.cacheManager!;
+
+      final stopwatch = Stopwatch()..start();
+
+      await cache.update('largePerformanceQuery',
+          ServerResponse(treeJson, extensions: extJson));
+
+      stopwatch.stop();
+      developer.log(
+          'Large Result Tree Normalization took: ${stopwatch.elapsedMilliseconds}ms');
+
+      final cached = await cache.resultTree('largePerformanceQuery', true);
+      expect(cached, isNotNull);
+      expect(cached!['posts'], isNotNull);
+    });
+
+    test('Test Normalization does not block main thread', () async {
+      final fileTree = File('test/src/cache/resources/large_result_tree.json');
+      final fileExt =
+          File('test/src/cache/resources/large_result_tree_ext.json');
+
+      final String treeStr = await fileTree.readAsString();
+      final String extStr = await fileExt.readAsString();
+
+      final Map<String, dynamic> treeJson =
+          jsonDecode(treeStr) as Map<String, dynamic>;
+      final Map<String, dynamic> extJson =
+          jsonDecode(extStr) as Map<String, dynamic>;
+
+      if (dataConnect.cacheManager == null) {
+        fail('No cache available');
+      }
+      final cache = dataConnect.cacheManager!;
+
+      int timerTicks = 0;
+      final timer = Timer.periodic(const Duration(milliseconds: 1), (t) {
+        timerTicks++;
+      });
+
+      await cache.update('largePerformanceQueryNonBlocking',
+          ServerResponse(treeJson, extensions: extJson));
+
+      timer.cancel();
+
+      developer
+          .log('Main thread timer ticks during normalization: $timerTicks');
+      expect(timerTicks, greaterThan(5),
+          reason: 'Main thread was blocked during normalization');
     });
   }); // test group
 } //main

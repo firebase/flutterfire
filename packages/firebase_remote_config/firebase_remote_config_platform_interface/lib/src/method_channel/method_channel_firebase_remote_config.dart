@@ -94,6 +94,7 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
       case 'failure':
         return RemoteConfigFetchStatus.failure;
       case 'throttle':
+      case 'throttled':
         return RemoteConfigFetchStatus.throttle;
       default:
         return RemoteConfigFetchStatus.noFetchYet;

@@ -185,6 +185,11 @@ class ExpressionParsers {
           List<Map<String, Object>> exprMaps = (List<Map<String, Object>>) args.get("expressions");
           return ExpressionHelpers.parseXorExpression(exprMaps, this);
         }
+      case "nor":
+        {
+          List<Map<String, Object>> exprMaps = (List<Map<String, Object>>) args.get("expressions");
+          return ExpressionHelpers.parseNorExpression(exprMaps, this);
+        }
       case "not":
         {
           Map<String, Object> exprMap = (Map<String, Object>) args.get("expression");
@@ -274,8 +279,49 @@ class ExpressionParsers {
       case "array_sum":
         return Expression.arraySum(parseChild(args, "expression"));
       case "array_slice":
-        throw new UnsupportedOperationException(
-            "Expression type 'array_slice' is not supported on Android Firestore pipeline API");
+        {
+          Expression array = parseChild(args, "expression");
+          Expression offset = parseChild(args, "offset");
+          Map<String, Object> lengthMap = (Map<String, Object>) args.get("length");
+          if (lengthMap == null) {
+            return array.arraySliceToEnd(offset);
+          }
+          return array.arraySlice(offset, parseExpression(lengthMap));
+        }
+      case "array_filter":
+        {
+          Expression array = parseChild(args, "expression");
+          String alias = (String) args.get("alias");
+          Map<String, Object> filterMap = (Map<String, Object>) args.get("filter");
+          if (alias == null || filterMap == null) {
+            throw new IllegalArgumentException("array_filter requires alias and filter");
+          }
+          return array.arrayFilter(alias, parseBooleanExpression(filterMap));
+        }
+      case "array_transform":
+        {
+          Expression array = parseChild(args, "expression");
+          String elementAlias = (String) args.get("element_alias");
+          Map<String, Object> transformMap = (Map<String, Object>) args.get("transform");
+          if (elementAlias == null || transformMap == null) {
+            throw new IllegalArgumentException(
+                "array_transform requires element_alias and transform");
+          }
+          return array.arrayTransform(elementAlias, parseExpression(transformMap));
+        }
+      case "array_transform_with_index":
+        {
+          Expression array = parseChild(args, "expression");
+          String elementAlias = (String) args.get("element_alias");
+          String indexAlias = (String) args.get("index_alias");
+          Map<String, Object> transformMap = (Map<String, Object>) args.get("transform");
+          if (elementAlias == null || indexAlias == null || transformMap == null) {
+            throw new IllegalArgumentException(
+                "array_transform_with_index requires element_alias, index_alias, and transform");
+          }
+          return array.arrayTransformWithIndex(
+              elementAlias, indexAlias, parseExpression(transformMap));
+        }
       case "if_absent":
         {
           Map<String, Object> exprMap = (Map<String, Object>) args.get("expression");
@@ -351,6 +397,68 @@ class ExpressionParsers {
           }
           return Expression.timestampTruncate(parseExpression(timestampMap), unit);
         }
+      case "timestamp_diff":
+        {
+          Map<String, Object> endMap = (Map<String, Object>) args.get("end");
+          Map<String, Object> startMap = (Map<String, Object>) args.get("start");
+          Object unitObj = args.get("unit");
+          Expression endExpr = parseExpression(endMap);
+          Expression startExpr = parseExpression(startMap);
+          if (unitObj instanceof String) {
+            return Expression.timestampDiff(endExpr, startExpr, (String) unitObj);
+          }
+          @SuppressWarnings("unchecked")
+          Map<String, Object> unitMap = (Map<String, Object>) unitObj;
+          return Expression.timestampDiff(endExpr, startExpr, parseExpression(unitMap));
+        }
+      case "timestamp_extract":
+        {
+          Map<String, Object> timestampMap = (Map<String, Object>) args.get("timestamp");
+          Map<String, Object> partMap = (Map<String, Object>) args.get("part");
+          Expression tsExpr = parseExpression(timestampMap);
+          Expression partExpr = parseExpression(partMap);
+          if (!args.containsKey("timezone") || args.get("timezone") == null) {
+            return Expression.timestampExtract(tsExpr, partExpr);
+          }
+          Object tzObj = args.get("timezone");
+          if (tzObj instanceof String) {
+            return Expression.timestampExtractWithTimezone(tsExpr, partExpr, (String) tzObj);
+          }
+          @SuppressWarnings("unchecked")
+          Map<String, Object> tzMap = (Map<String, Object>) tzObj;
+          return Expression.timestampExtractWithTimezone(tsExpr, partExpr, parseExpression(tzMap));
+        }
+      case "parent":
+        {
+          if (args.containsKey("doc_ref")) {
+            String path = (String) args.get("doc_ref");
+            if (path == null) {
+              throw new IllegalArgumentException("parent requires 'doc_ref' argument");
+            }
+            return Expression.parent(firestore.document(path));
+          }
+          return Expression.parent(parseChild(args, "expression"));
+        }
+      case "if_null":
+        {
+          Map<String, Object> exprMap = (Map<String, Object>) args.get("expression");
+          Map<String, Object> replacementMap = (Map<String, Object>) args.get("replacement");
+          return Expression.ifNull(parseExpression(exprMap), parseExpression(replacementMap));
+        }
+      case "coalesce":
+        {
+          List<Map<String, Object>> exprMaps = (List<Map<String, Object>>) args.get("expressions");
+          return ExpressionHelpers.parseCoalesceExpression(exprMaps, this);
+        }
+      case "switch_on":
+        {
+          List<Map<String, Object>> exprMaps = (List<Map<String, Object>>) args.get("expressions");
+          return ExpressionHelpers.parseSwitchOnExpression(exprMaps, this);
+        }
+      case "map_keys":
+        return Expression.mapKeys(parseChild(args, "expression"));
+      case "map_values":
+        return Expression.mapValues(parseChild(args, "expression"));
       case "array":
         {
           List<?> elements = (List<?>) args.get("elements");
@@ -423,6 +531,8 @@ class ExpressionParsers {
         return parseArrayContainsAll(args);
       case "array_contains_any":
         return parseArrayContainsAny(args);
+      case "document_matches":
+        return parseDocumentMatches(args);
       default:
         Log.w(TAG, "Unsupported expression type: " + name);
         throw new UnsupportedOperationException("Expression type not yet implemented: " + name);
@@ -518,6 +628,11 @@ class ExpressionParsers {
           List<Map<String, Object>> exprMaps = (List<Map<String, Object>>) args.get("expressions");
           return ExpressionHelpers.parseXorExpression(exprMaps, this);
         }
+      case "nor":
+        {
+          List<Map<String, Object>> exprMaps = (List<Map<String, Object>>) args.get("expressions");
+          return ExpressionHelpers.parseNorExpression(exprMaps, this);
+        }
       case "not":
         {
           Map<String, Object> exprMap = (Map<String, Object>) args.get("expression");
@@ -542,6 +657,8 @@ class ExpressionParsers {
         return parseNotEqualAny(args);
       case "as_boolean":
         return parseAsBoolean(args);
+      case "document_matches":
+        return parseDocumentMatches(args);
       default:
         Expression expr = parseExpression(expressionMap);
         if (expr instanceof BooleanExpression) {
@@ -562,6 +679,14 @@ class ExpressionParsers {
               + expressionMap.get("name"));
     }
     return (Selectable) expr;
+  }
+
+  private BooleanExpression parseDocumentMatches(@NonNull Map<String, Object> args) {
+    String query = (String) args.get("query");
+    if (query == null) {
+      throw new IllegalArgumentException("document_matches requires a 'query' argument");
+    }
+    return Expression.documentMatches(query);
   }
 
   @SuppressWarnings("unchecked")

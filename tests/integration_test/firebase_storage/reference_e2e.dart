@@ -225,6 +225,28 @@ void setupReferenceTests() {
     );
 
     test(
+      'list operations report that they are unsupported on Windows',
+      () async {
+        final Reference ref = storage.ref('flutter-tests/list');
+        final unsupportedError = isA<FirebaseException>()
+            .having((error) => error.code, 'code', 'unimplemented')
+            .having(
+              (error) => error.message,
+              'message',
+              'Listing files is not supported by the Firebase C++ SDK on '
+                  'Windows.',
+            );
+
+        await expectLater(
+          ref.list(const ListOptions(maxResults: 25)),
+          throwsA(unsupportedError),
+        );
+        await expectLater(ref.listAll(), throwsA(unsupportedError));
+      },
+      skip: defaultTargetPlatform != TargetPlatform.windows,
+    );
+
+    test(
       'listAll',
       () async {
         Reference ref = storage.ref('flutter-tests/list');

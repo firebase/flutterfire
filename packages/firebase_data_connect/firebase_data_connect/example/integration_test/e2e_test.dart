@@ -10,6 +10,7 @@ import 'package:firebase_data_connect_example/generated/movies.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
+import 'cache_e2e.dart';
 import 'generation_e2e.dart';
 import 'instance_e2e.dart';
 import 'listen_e2e.dart';
@@ -69,5 +70,6 @@ void main() {
     runGenerationTest();
     runListenTests();
     runWebSocketTests();
+    runCacheTests();
   });
 }

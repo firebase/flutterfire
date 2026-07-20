@@ -1,3 +1,19 @@
+## 9.0.5
+
+ - Update a dependency to the latest release.
+
+## 9.0.4
+
+ - Update a dependency to the latest release.
+
+## 9.0.3
+
+ - Update a dependency to the latest release.
+
+## 9.0.2
+
+ - **DOCS**(auth): clarify behavior of password reset email with email enumeration protection enabled ([#18296](https://github.com/firebase/flutterfire/issues/18296)). ([0bcce87a](https://github.com/firebase/flutterfire/commit/0bcce87a17830797dae6ff3c1a8ba4ce210c2c0d))
+
 ## 9.0.1
 
  - Update a dependency to the latest release.

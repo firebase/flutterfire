@@ -8,7 +8,7 @@ part of '../firebase_messaging.dart';
 /// The [FirebaseMessaging] entry point.
 ///
 /// To get a new instance, call [FirebaseMessaging.instance].
-class FirebaseMessaging extends FirebasePluginPlatform {
+class FirebaseMessaging extends FirebasePlugin {
   // Cached and lazily loaded instance of [FirebaseMessagingPlatform] to avoid
   // creating a [MethodChannelFirebaseMessaging] when not needed or creating an
   // instance with the default app before a user specifies an app.
@@ -114,11 +114,17 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   /// Returns the default FCM token for this device.
   ///
   /// On web, a [vapidKey] is required.
+  ///
+  /// On web, a custom messaging service worker can be registered with
+  /// [serviceWorkerScriptPath]. This must point to a JavaScript file in the
+  /// root of the app's `web` directory.
   Future<String?> getToken({
     String? vapidKey,
+    String? serviceWorkerScriptPath,
   }) {
     return _delegate.getToken(
       vapidKey: vapidKey,
+      serviceWorkerScriptPath: serviceWorkerScriptPath,
     );
   }
 
