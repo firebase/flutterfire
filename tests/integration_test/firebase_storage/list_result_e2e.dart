@@ -37,6 +37,7 @@ void setupListResultTests() {
         expect(result.prefixes.length, greaterThan(0));
       });
     },
+    // Listing is unimplemented in the Firebase C++ SDK (Windows and Linux).
     skip: isDesktopCppSdk,
   );
 }

@@ -260,6 +260,7 @@ void setupSecondBucketTests() {
           );
         });
       },
+      // Listing is unimplemented in the Firebase C++ SDK (Windows and Linux).
       skip: isDesktopCppSdk,
     );
 
@@ -274,6 +275,7 @@ void setupSecondBucketTests() {
 
         expect(result.prefixes, isA<List<Reference>>());
       },
+      // Listing is unimplemented in the Firebase C++ SDK (Windows and Linux).
       skip: isDesktopCppSdk,
     );
 

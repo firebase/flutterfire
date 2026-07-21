@@ -222,20 +222,24 @@ void setupReferenceTests() {
           );
         });
       },
+      // Listing is unimplemented in the Firebase C++ SDK (Windows and Linux).
       skip: isDesktopCppSdk,
     );
 
     test(
-      'list operations report that they are unsupported on Windows',
+      'list operations report that they are unsupported on desktop',
       () async {
         final Reference ref = storage.ref('flutter-tests/list');
+        final platformName = defaultTargetPlatform == TargetPlatform.windows
+            ? 'Windows'
+            : 'Linux';
         final unsupportedError = isA<FirebaseException>()
             .having((error) => error.code, 'code', 'unimplemented')
             .having(
               (error) => error.message,
               'message',
               'Listing files is not supported by the Firebase C++ SDK on '
-                  'Windows.',
+                  '$platformName.',
             );
 
         await expectLater(

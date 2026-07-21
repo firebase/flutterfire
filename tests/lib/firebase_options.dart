@@ -31,6 +31,9 @@ class DefaultFirebaseOptions {
       case TargetPlatform.macOS:
         return macos;
       case TargetPlatform.windows:
+      case TargetPlatform.linux:
+        // The Firebase C++ desktop SDK (Windows and Linux) uses the Android
+        // app's configuration, matching the official desktop guidance.
         return android;
       default:
         throw UnsupportedError(

@@ -201,7 +201,7 @@ void main() {
             );
           });
         },
-        skip: !kIsWeb && (Platform.isWindows || Platform.isMacOS),
+        skip: !kIsWeb && (isDesktopCppSdk || Platform.isMacOS),
       );
 
       group('test all stream listeners', () {
@@ -263,7 +263,7 @@ void main() {
             }
           });
         },
-        skip: !kIsWeb && Platform.isWindows,
+        skip: !kIsWeb && isDesktopCppSdk,
       );
 
       group(
@@ -333,7 +333,7 @@ void main() {
             );
           });
         },
-        skip: !kIsWeb && Platform.isWindows,
+        skip: !kIsWeb && isDesktopCppSdk,
       );
 
       group(
@@ -353,7 +353,7 @@ void main() {
             }
           });
         },
-        skip: !kIsWeb && Platform.isWindows,
+        skip: !kIsWeb && isDesktopCppSdk,
       );
 
       group('createUserWithEmailAndPassword', () {
@@ -375,7 +375,7 @@ void main() {
 
             var additionalUserInfo = newUserCredential.additionalUserInfo;
             expect(additionalUserInfo, isA<AdditionalUserInfo>());
-            if (!kIsWeb && Platform.isWindows) {
+            if (!kIsWeb && isDesktopCppSdk) {
               // Skip because isNewUser is always false on Windows
             } else {
               expect(additionalUserInfo?.isNewUser, isTrue);
@@ -504,7 +504,7 @@ void main() {
             }
           });
         },
-        skip: !kIsWeb && Platform.isWindows,
+        skip: !kIsWeb && isDesktopCppSdk,
       );
 
       group(
@@ -546,7 +546,7 @@ void main() {
             );
           });
         },
-        skip: !kIsWeb && (Platform.isWindows || Platform.isMacOS),
+        skip: !kIsWeb && (isDesktopCppSdk || Platform.isMacOS),
       );
 
       group('languageCode', () {
@@ -611,7 +611,7 @@ void main() {
             skip: !kIsWeb,
           );
         },
-        skip: !kIsWeb && Platform.isWindows,
+        skip: !kIsWeb && isDesktopCppSdk,
       );
 
       group('signInAnonymously()', () {
@@ -639,7 +639,7 @@ void main() {
             final userCred = await FirebaseAuth.instance.signInAnonymously();
             await successCallback(userCred);
           },
-          skip: !kIsWeb && (Platform.isWindows || Platform.isMacOS),
+          skip: !kIsWeb && (isDesktopCppSdk || Platform.isMacOS),
         );
       });
 
@@ -655,7 +655,7 @@ void main() {
                 .signInWithCredential(credential)
                 .then(commonSuccessCallback);
           },
-          skip: !kIsWeb && (Platform.isWindows || Platform.isMacOS),
+          skip: !kIsWeb && (isDesktopCppSdk || Platform.isMacOS),
         );
 
         test('throws if login user is disabled', () async {
@@ -793,7 +793,7 @@ void main() {
             expect(idTokenResult.claims!['roles'][0]['role'], 'member');
           });
         },
-        skip: !kIsWeb && (Platform.isWindows || Platform.isMacOS),
+        skip: !kIsWeb && (isDesktopCppSdk || Platform.isMacOS),
       );
 
       group('signInWithEmailAndPassword()', () {

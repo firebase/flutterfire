@@ -84,9 +84,11 @@ void main() {
         firebase_app_check.main();
         break;
       case TargetPlatform.linux:
+        // firebase_database is excluded (as on Windows): the desktop C++ SDK
+        // has no UseEmulator API for Realtime Database, so the suite would run
+        // against production and hang on unauthenticated writes.
         firebase_core.main();
         firebase_auth.main();
-        firebase_database.main();
         cloud_functions.main();
         firebase_remote_config.main();
         firebase_storage.main();
