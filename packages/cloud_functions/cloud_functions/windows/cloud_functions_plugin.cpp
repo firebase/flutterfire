@@ -8,6 +8,7 @@
 #include <flutter/standard_method_codec.h>
 
 #include <chrono>
+#include <condition_variable>
 #include <map>
 #include <memory>
 #include <mutex>
@@ -286,6 +287,7 @@ void CloudFunctionsPlugin::Call(
   // destroy the transport mid-request.
   struct CallState {
     std::mutex mutex;
+    std::condition_variable cv;
     bool responded = false;
     HttpsCallableReference* ref;
   };
@@ -303,9 +305,12 @@ void CloudFunctionsPlugin::Call(
   }
   if (timeout_ms > 0) {
     std::thread([state, result, timeout_ms]() {
-      std::this_thread::sleep_for(std::chrono::milliseconds(timeout_ms));
-      std::lock_guard<std::mutex> lock(state->mutex);
-      if (!state->responded) {
+      std::unique_lock<std::mutex> lock(state->mutex);
+      // wait_for returns false only on timeout; a completed request notifies
+      // the condition variable so this thread exits (and releases its
+      // captures) immediately instead of sleeping out the full deadline.
+      if (!state->cv.wait_for(lock, std::chrono::milliseconds(timeout_ms),
+                              [&state] { return state->responded; })) {
         state->responded = true;
         result(MakeFunctionsError("deadline-exceeded",
                                   "The operation timed out."));
@@ -329,6 +334,7 @@ void CloudFunctionsPlugin::Call(
                   std::optional<flutter::EncodableValue>(data)));
             }
           }
+          state->cv.notify_all();
         } else {
           std::string code =
               GetFunctionsErrorCode(static_cast<Error>(future.error()));
@@ -341,6 +347,7 @@ void CloudFunctionsPlugin::Call(
               result(MakeFunctionsError(code, message));
             }
           }
+          state->cv.notify_all();
         }
         delete state->ref;
         state->ref = nullptr;
