@@ -773,13 +773,12 @@ static void HandleReferenceList(
     FirebaseStorageInternalListOptions* options,
     FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
     gpointer user_data) {
-  // C++ doesn't support list yet
-  g_autoptr(FlValue) items = fl_value_new_list();
-  g_autoptr(FlValue) prefixs = fl_value_new_list();
-  g_autoptr(FirebaseStorageInternalListResult) pigeon_result =
-      firebase_storage_internal_list_result_new(items, nullptr, prefixs);
-  firebase_storage_firebase_storage_host_api_respond_reference_list(
-      response_handle, pigeon_result);
+  // The Firebase C++ SDK has no List API; fail explicitly (as on Windows)
+  // rather than returning misleading empty results.
+  firebase_storage_firebase_storage_host_api_respond_error_reference_list(
+      response_handle, "unimplemented",
+      "Listing files is not supported by the Firebase C++ SDK on Linux.",
+      nullptr);
 }
 
 static void HandleReferenceListAll(
@@ -787,13 +786,12 @@ static void HandleReferenceListAll(
     FirebaseStorageInternalStorageReference* reference,
     FirebaseStorageFirebaseStorageHostApiResponseHandle* response_handle,
     gpointer user_data) {
-  // C++ doesn't support listAll yet
-  g_autoptr(FlValue) items = fl_value_new_list();
-  g_autoptr(FlValue) prefixs = fl_value_new_list();
-  g_autoptr(FirebaseStorageInternalListResult) pigeon_result =
-      firebase_storage_internal_list_result_new(items, nullptr, prefixs);
-  firebase_storage_firebase_storage_host_api_respond_reference_list_all(
-      response_handle, pigeon_result);
+  // The Firebase C++ SDK has no List API; fail explicitly (as on Windows)
+  // rather than returning misleading empty results.
+  firebase_storage_firebase_storage_host_api_respond_error_reference_list_all(
+      response_handle, "unimplemented",
+      "Listing files is not supported by the Firebase C++ SDK on Linux.",
+      nullptr);
 }
 
 static void HandleReferenceGetData(

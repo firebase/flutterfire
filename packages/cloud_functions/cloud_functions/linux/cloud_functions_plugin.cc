@@ -275,39 +275,101 @@ static void HandleCall(
   Variant parameters =
       FlValueToVariant(fl_value_lookup_string(arguments, "parameters"));
 
+  // The C++ SDK has no per-call deadline API, so the plugin enforces the
+  // Dart-provided timeout itself. Whichever of the deadline timer and the SDK
+  // completion runs first delivers the response; the loser only cleans up.
+  // Both paths run on the main thread (g_timeout_add / PostToMainThread), so a
+  // plain bool guard is sufficient. Cleanup (handle unref, reference delete)
+  // always happens in the completion path because deleting the reference
+  // while the request is in flight would destroy the transport mid-request.
+  struct CallState {
+    CloudFunctionsCloudFunctionsHostApiResponseHandle* response_handle;
+    HttpsCallableReference* ref;
+    bool responded = false;
+    guint timeout_source_id = 0;
+  };
+  auto* state = new CallState{response_handle, ref};
+
   g_object_ref(response_handle);
+
+  int64_t timeout_ms = 0;
+  FlValue* timeout_value = fl_value_lookup_string(arguments, "timeout");
+  if (timeout_value != nullptr &&
+      fl_value_get_type(timeout_value) == FL_VALUE_TYPE_INT) {
+    timeout_ms = fl_value_get_int(timeout_value);
+  }
+  if (timeout_ms > 0) {
+    state->timeout_source_id = g_timeout_add(
+        static_cast<guint>(timeout_ms),
+        +[](gpointer user_data) -> gboolean {
+          auto* timeout_state = static_cast<CallState*>(user_data);
+          timeout_state->timeout_source_id = 0;
+          if (!timeout_state->responded) {
+            timeout_state->responded = true;
+            FlValue* details = fl_value_new_map();
+            fl_value_set_string_take(details, "code",
+                                     fl_value_new_string("deadline-exceeded"));
+            fl_value_set_string_take(
+                details, "message",
+                fl_value_new_string("The operation timed out."));
+            cloud_functions_cloud_functions_host_api_respond_error_call(
+                timeout_state->response_handle, "deadline-exceeded",
+                "The operation timed out.", details);
+            fl_value_unref(details);
+          }
+          return G_SOURCE_REMOVE;
+        },
+        state);
+  }
+
   ref->Call(parameters)
-      .OnCompletion([response_handle,
-                     ref](const Future<HttpsCallableResult>& future) {
+      .OnCompletion([state](const Future<HttpsCallableResult>& future) {
         if (future.error() == Error::kErrorNone) {
           const HttpsCallableResult* result = future.result();
           FlValue* data = result != nullptr ? VariantToFlValue(result->data())
                                             : fl_value_new_null();
-          PostToMainThread([response_handle, data, ref]() {
-            cloud_functions_cloud_functions_host_api_respond_call(
-                response_handle, data);
+          PostToMainThread([state, data]() {
+            if (state->timeout_source_id != 0) {
+              g_source_remove(state->timeout_source_id);
+              state->timeout_source_id = 0;
+            }
+            if (!state->responded) {
+              state->responded = true;
+              cloud_functions_cloud_functions_host_api_respond_call(
+                  state->response_handle, data);
+            }
             fl_value_unref(data);
-            g_object_unref(response_handle);
-            delete ref;
+            g_object_unref(state->response_handle);
+            delete state->ref;
+            delete state;
           });
         } else {
           std::string code =
               GetFunctionsErrorCode(static_cast<Error>(future.error()));
           std::string message =
               future.error_message() ? future.error_message() : "Unknown error";
-          PostToMainThread([response_handle, code, message, ref]() {
-            // Dart's platformExceptionToFirebaseFunctionsException reads the
-            // canonical code/message out of the error details map.
-            FlValue* details = fl_value_new_map();
-            fl_value_set_string_take(details, "code",
-                                     fl_value_new_string(code.c_str()));
-            fl_value_set_string_take(details, "message",
-                                     fl_value_new_string(message.c_str()));
-            cloud_functions_cloud_functions_host_api_respond_error_call(
-                response_handle, code.c_str(), message.c_str(), details);
-            fl_value_unref(details);
-            g_object_unref(response_handle);
-            delete ref;
+          PostToMainThread([state, code, message]() {
+            if (state->timeout_source_id != 0) {
+              g_source_remove(state->timeout_source_id);
+              state->timeout_source_id = 0;
+            }
+            if (!state->responded) {
+              state->responded = true;
+              // Dart's platformExceptionToFirebaseFunctionsException reads the
+              // canonical code/message out of the error details map.
+              FlValue* details = fl_value_new_map();
+              fl_value_set_string_take(details, "code",
+                                       fl_value_new_string(code.c_str()));
+              fl_value_set_string_take(details, "message",
+                                       fl_value_new_string(message.c_str()));
+              cloud_functions_cloud_functions_host_api_respond_error_call(
+                  state->response_handle, code.c_str(), message.c_str(),
+                  details);
+              fl_value_unref(details);
+            }
+            g_object_unref(state->response_handle);
+            delete state->ref;
+            delete state;
           });
         }
       });
