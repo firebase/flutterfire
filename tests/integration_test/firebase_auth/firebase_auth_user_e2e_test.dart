@@ -9,6 +9,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
+import '../platform_utils.dart';
 import 'test_utils.dart';
 
 void main() {
@@ -98,8 +99,7 @@ void main() {
           });
         },
         skip: !kIsWeb &&
-            (defaultTargetPlatform == TargetPlatform.windows ||
-                defaultTargetPlatform == TargetPlatform.macOS),
+            (isDesktopCppSdk || defaultTargetPlatform == TargetPlatform.macOS),
       );
 
       group('getIdTokenResult()', () {
@@ -126,7 +126,7 @@ void main() {
             expect(idTokenResult.signInProvider, equals('password'));
           },
           skip: !kIsWeb &&
-              (defaultTargetPlatform == TargetPlatform.windows ||
+              (isDesktopCppSdk ||
                   defaultTargetPlatform == TargetPlatform.macOS),
         );
         // TODO add custom claims and tenant id tests for id token result
@@ -251,7 +251,7 @@ void main() {
             },
             skip: kIsWeb ||
                 defaultTargetPlatform == TargetPlatform.macOS ||
-                defaultTargetPlatform == TargetPlatform.windows,
+                isDesktopCppSdk,
           ); // verifyPhoneNumber not supported on web.
 
           test(
@@ -283,12 +283,11 @@ void main() {
               fail('should have thrown an error');
             },
             skip: defaultTargetPlatform == TargetPlatform.macOS ||
-                defaultTargetPlatform == TargetPlatform.windows,
+                isDesktopCppSdk,
           );
         },
         skip: !kIsWeb &&
-            (defaultTargetPlatform == TargetPlatform.windows ||
-                defaultTargetPlatform == TargetPlatform.macOS),
+            (isDesktopCppSdk || defaultTargetPlatform == TargetPlatform.macOS),
       );
 
       group(
@@ -475,8 +474,7 @@ void main() {
           });
         },
         skip: !kIsWeb &&
-            (defaultTargetPlatform == TargetPlatform.windows ||
-                defaultTargetPlatform == TargetPlatform.macOS),
+            (isDesktopCppSdk || defaultTargetPlatform == TargetPlatform.macOS),
       );
 
       group('reload()', () {
@@ -523,7 +521,7 @@ void main() {
           },
           skip: kIsWeb ||
               defaultTargetPlatform == TargetPlatform.macOS ||
-              defaultTargetPlatform == TargetPlatform.windows,
+              isDesktopCppSdk,
         );
 
         test(
@@ -544,7 +542,7 @@ void main() {
           },
           skip: kIsWeb ||
               defaultTargetPlatform == TargetPlatform.macOS ||
-              defaultTargetPlatform == TargetPlatform.windows,
+              isDesktopCppSdk,
         );
       });
 
@@ -589,12 +587,11 @@ void main() {
             // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
             skip: kIsWeb ||
                 defaultTargetPlatform == TargetPlatform.macOS ||
-                defaultTargetPlatform == TargetPlatform.windows,
+                isDesktopCppSdk,
           );
         },
         skip: !kIsWeb &&
-            (defaultTargetPlatform == TargetPlatform.windows ||
-                defaultTargetPlatform == TargetPlatform.macOS),
+            (isDesktopCppSdk || defaultTargetPlatform == TargetPlatform.macOS),
       );
 
       group(
@@ -681,8 +678,7 @@ void main() {
           });
         },
         skip: !kIsWeb &&
-            (defaultTargetPlatform == TargetPlatform.windows ||
-                defaultTargetPlatform == TargetPlatform.macOS),
+            (isDesktopCppSdk || defaultTargetPlatform == TargetPlatform.macOS),
       );
 
       group(
@@ -731,8 +727,7 @@ void main() {
           });
         },
         skip: !kIsWeb &&
-            (defaultTargetPlatform == TargetPlatform.windows ||
-                defaultTargetPlatform == TargetPlatform.macOS),
+            (isDesktopCppSdk || defaultTargetPlatform == TargetPlatform.macOS),
       );
 
       group(
@@ -782,7 +777,7 @@ void main() {
             skip: !kIsWeb,
           );
         },
-        skip: !kIsWeb && defaultTargetPlatform == TargetPlatform.windows,
+        skip: !kIsWeb && isDesktopCppSdk,
       );
 
       group(
@@ -809,8 +804,7 @@ void main() {
           });
         },
         skip: !kIsWeb &&
-            (defaultTargetPlatform == TargetPlatform.windows ||
-                defaultTargetPlatform == TargetPlatform.macOS),
+            (isDesktopCppSdk || defaultTargetPlatform == TargetPlatform.macOS),
       );
 
       group('updateDisplayName', () {
@@ -883,7 +877,7 @@ void main() {
           skip: kIsWeb ||
               defaultTargetPlatform == TargetPlatform.iOS ||
               defaultTargetPlatform == TargetPlatform.macOS ||
-              defaultTargetPlatform == TargetPlatform.windows,
+              isDesktopCppSdk,
         );
       });
 
@@ -960,7 +954,7 @@ void main() {
             // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
             skip: kIsWeb ||
                 defaultTargetPlatform == TargetPlatform.macOS ||
-                defaultTargetPlatform == TargetPlatform.windows,
+                isDesktopCppSdk,
           );
         },
       );
@@ -1041,7 +1035,7 @@ void main() {
           },
           skip: kIsWeb ||
               defaultTargetPlatform == TargetPlatform.macOS ||
-              defaultTargetPlatform == TargetPlatform.windows,
+              isDesktopCppSdk,
         );
 
         // TODO error codes no longer match up on emulator
@@ -1151,8 +1145,7 @@ void main() {
           });
         },
         skip: !kIsWeb &&
-            (defaultTargetPlatform == TargetPlatform.windows ||
-                defaultTargetPlatform == TargetPlatform.macOS),
+            (isDesktopCppSdk || defaultTargetPlatform == TargetPlatform.macOS),
       );
     },
     // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538

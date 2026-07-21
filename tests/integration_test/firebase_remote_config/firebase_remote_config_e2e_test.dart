@@ -9,6 +9,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:tests/firebase_options.dart';
 
+import '../platform_utils.dart';
+
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
@@ -180,7 +182,7 @@ void main() {
 
             await FirebaseRemoteConfig.instance.setCustomSignals(signals);
           },
-          skip: defaultTargetPlatform == TargetPlatform.windows,
+          skip: isDesktopCppSdk,
         );
 
         test('invalid signal values throws assertion', () async {

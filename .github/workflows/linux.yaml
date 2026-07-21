@@ -1,4 +1,4 @@
-name: build-linux
+name: e2e-linux
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-linux
@@ -23,6 +23,11 @@ on:
       - '!**/example/integration_test/**'
       - '**/flutterfire_ui/**'
       - '**.md'
+  workflow_call:
+    inputs:
+      nightly_test_mode:
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -30,13 +35,28 @@ permissions:
 jobs:
   linux:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 45 }}
+    strategy:
+      fail-fast: false
+      matrix:
+        working_directory:
+          ['tests', 'packages/cloud_firestore/cloud_firestore/example']
+        exclude:
+          - working_directory: ${{ inputs.nightly_test_mode && 'packages/cloud_firestore/cloud_firestore/example' || 'none' }}
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - uses: actions/setup-java@1bcf9fb12cf4aa7d266a90ae39939e61372fe520
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+      - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
+        name: Install Node.js 20
+        with:
+          node-version: '20'
       - name: "Install Linux desktop build dependencies"
         run: |
           sudo apt-get update
-          sudo apt-get install -y ninja-build libgtk-3-dev libsecret-1-dev
+          sudo apt-get install -y ninja-build libgtk-3-dev libsecret-1-dev xvfb
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
         with:
           channel: 'stable'
@@ -48,6 +68,16 @@ jobs:
           run-bootstrap: false
           melos-version: '3.0.0'
       - name: "Bootstrap package"
-        run: melos bootstrap --scope "firebase_core*"
-      - name: "Build Linux (Release)"
-        run: cd packages/firebase_core/firebase_core/example && flutter build linux --release
+        run: melos bootstrap --scope tests && melos bootstrap --scope "cloud_firestore*"
+      - name: "Install Tools"
+        run: npm install -g firebase-tools
+      - name: "Build Application"
+        working-directory: ${{ matrix.working_directory }}
+        run: flutter build linux --debug --target=./integration_test/e2e_test.dart --dart-define=CI=true
+      - name: Start Firebase Emulator and run tests
+        working-directory: ./.github/workflows/scripts
+        env:
+          WORKDIR: ${{ matrix.working_directory }}
+        run: |
+          firebase emulators:exec --project flutterfire-e2e-tests \
+            "cd \"$GITHUB_WORKSPACE/$WORKDIR\" && xvfb-run -a flutter test integration_test/e2e_test.dart -d linux --dart-define=CI=true --timeout 10x"

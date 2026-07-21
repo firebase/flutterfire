@@ -8,6 +8,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'platform_utils.dart';
+
 void runDocumentReferenceTests() {
   group('$DocumentReference', () {
     late FirebaseFirestore firestore;
@@ -113,7 +115,7 @@ void runDocumentReferenceTests() {
           },
           // Listening from cache is not supported on Windows (see
           // DocumentReference.snapshots in cloud_firestore).
-          skip: defaultTargetPlatform == TargetPlatform.windows,
+          skip: isDesktopCppSdk,
         );
 
         test(
@@ -142,7 +144,7 @@ void runDocumentReferenceTests() {
             });
           },
           // Listening from cache is not supported on Windows.
-          skip: defaultTargetPlatform == TargetPlatform.windows,
+          skip: isDesktopCppSdk,
         );
 
         test('listens to multiple documents', () async {
@@ -453,8 +455,7 @@ void runDocumentReferenceTests() {
           'null': null,
           'timestamp': Timestamp.now(),
           'geopoint': const GeoPoint(1, 2),
-          if (defaultTargetPlatform != TargetPlatform.windows)
-            'vectorValue': const VectorValue([1, 2, 3]),
+          if (!isDesktopCppSdk) 'vectorValue': const VectorValue([1, 2, 3]),
           'reference': firestore.doc('foo/bar'),
           'nan': double.nan,
           'infinity': double.infinity,
@@ -491,7 +492,7 @@ void runDocumentReferenceTests() {
         expect(data['geopoint'], isA<GeoPoint>());
         expect((data['geopoint'] as GeoPoint).latitude, equals(1));
         expect((data['geopoint'] as GeoPoint).longitude, equals(2));
-        if (defaultTargetPlatform != TargetPlatform.windows) {
+        if (!isDesktopCppSdk) {
           expect(data['vectorValue'], isA<VectorValue>());
           expect(
             (data['vectorValue'] as VectorValue).toArray(),

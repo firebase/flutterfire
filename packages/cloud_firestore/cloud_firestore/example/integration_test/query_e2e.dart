@@ -12,6 +12,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'platform_utils.dart';
+
 void runQueryTests() {
   group('$Query', () {
     late FirebaseFirestore firestore;
@@ -299,7 +301,7 @@ void runQueryTests() {
         },
         // Failing on CI but works locally. Listening from cache is not
         // supported on Windows.
-        skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
+        skip: kIsWeb || isDesktopCppSdk,
       );
 
       test('listens to multiple queries', () async {
@@ -488,7 +490,7 @@ void runQueryTests() {
           expect(longestPump, lessThan(const Duration(milliseconds: 750)));
         },
         timeout: const Timeout.factor(10),
-        skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
+        skip: kIsWeb || isDesktopCppSdk,
       );
 
       test(
@@ -3948,7 +3950,7 @@ void runQueryTests() {
             3,
           );
         },
-        skip: defaultTargetPlatform == TargetPlatform.windows,
+        skip: isDesktopCppSdk,
       );
 
       test(
@@ -3971,7 +3973,7 @@ void runQueryTests() {
             1,
           );
         },
-        skip: defaultTargetPlatform == TargetPlatform.windows,
+        skip: isDesktopCppSdk,
       );
 
       test(
@@ -3993,7 +3995,7 @@ void runQueryTests() {
             1.5,
           );
         },
-        skip: defaultTargetPlatform == TargetPlatform.windows,
+        skip: isDesktopCppSdk,
       );
 
       test(
@@ -4016,7 +4018,7 @@ void runQueryTests() {
             1,
           );
         },
-        skip: defaultTargetPlatform == TargetPlatform.windows,
+        skip: isDesktopCppSdk,
       );
 
       test(
@@ -4048,7 +4050,7 @@ void runQueryTests() {
             1.5,
           );
         },
-        skip: defaultTargetPlatform == TargetPlatform.windows,
+        skip: isDesktopCppSdk,
       );
 
       test(
@@ -4082,7 +4084,7 @@ void runQueryTests() {
             1,
           );
         },
-        skip: defaultTargetPlatform == TargetPlatform.windows,
+        skip: isDesktopCppSdk,
       );
 
       test(
@@ -4137,7 +4139,7 @@ void runQueryTests() {
           expect(snapshot.getSum('foo'), 0);
           expect(snapshot.getAverage('foo'), null);
         },
-        skip: defaultTargetPlatform == TargetPlatform.windows,
+        skip: isDesktopCppSdk,
       );
     });
 

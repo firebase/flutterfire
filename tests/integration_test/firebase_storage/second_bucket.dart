@@ -10,6 +10,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../platform_utils.dart';
 import './test_utils.dart';
 
 const secondStorageBucket = 'flutterfire-e2e-tests-two';
@@ -232,7 +233,7 @@ void setupSecondBucketTests() {
           // causing a consistent 30s timeout.
           // Windows: C++ SDK / emulator does not enforce permissions for list
           // operations on the second bucket (returns results instead of error).
-          skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
+          skip: kIsWeb || isDesktopCppSdk,
         );
 
         test('errors if maxResults is less than 0 ', () async {
@@ -259,7 +260,7 @@ void setupSecondBucketTests() {
           );
         });
       },
-      skip: defaultTargetPlatform == TargetPlatform.windows,
+      skip: isDesktopCppSdk,
     );
 
     test(
@@ -273,7 +274,7 @@ void setupSecondBucketTests() {
 
         expect(result.prefixes, isA<List<Reference>>());
       },
-      skip: defaultTargetPlatform == TargetPlatform.windows,
+      skip: isDesktopCppSdk,
     );
 
     group(
@@ -480,7 +481,7 @@ void setupSecondBucketTests() {
           );
         },
         // TODO(russellwheatley): raise issue on C++ SDK, if object does not exist, it throws "unauthorized" exception
-        skip: defaultTargetPlatform == TargetPlatform.windows,
+        skip: isDesktopCppSdk,
       );
 
       test(

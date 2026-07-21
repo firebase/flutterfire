@@ -4,7 +4,8 @@
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter/foundation.dart';
+
+import '../platform_utils.dart';
 
 void setupListResultTests() {
   group(
@@ -36,6 +37,6 @@ void setupListResultTests() {
         expect(result.prefixes.length, greaterThan(0));
       });
     },
-    skip: defaultTargetPlatform == TargetPlatform.windows,
+    skip: isDesktopCppSdk,
   );
 }

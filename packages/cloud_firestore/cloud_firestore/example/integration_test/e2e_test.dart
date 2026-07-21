@@ -16,6 +16,7 @@ import 'firebase_options.dart';
 import 'geo_point_e2e.dart';
 import 'instance_e2e.dart';
 import 'load_bundle_e2e.dart';
+import 'platform_utils.dart';
 import 'query_e2e.dart';
 import 'second_database.dart';
 import 'settings_e2e.dart';
@@ -61,7 +62,7 @@ void main() {
     runWriteBatchTests();
     runLoadBundleTests();
     runWebSnapshotListenersTests();
-    if (defaultTargetPlatform != TargetPlatform.windows) {
+    if (!isDesktopCppSdk) {
       runSecondDatabaseTests();
     }
     if (kIsWeb) {

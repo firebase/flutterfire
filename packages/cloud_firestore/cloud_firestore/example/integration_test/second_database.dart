@@ -9,6 +9,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'platform_utils.dart';
+
 // ignore: do_not_use_environment
 const bool skipTestsOnCI = bool.fromEnvironment('CI');
 
@@ -19,7 +21,7 @@ String getCurrentPlatform() {
     return 'ios';
   } else if (!kIsWeb && defaultTargetPlatform == TargetPlatform.macOS) {
     return 'macos';
-  } else if (!kIsWeb && defaultTargetPlatform == TargetPlatform.windows) {
+  } else if (!kIsWeb && isDesktopCppSdk) {
     return 'windows';
   } else if (kIsWeb) {
     return 'web';

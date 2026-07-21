@@ -5,8 +5,9 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import 'platform_utils.dart';
 
 void runCollectionReferenceTests() {
   group('$CollectionReference', () {
@@ -80,7 +81,7 @@ void runCollectionReferenceTests() {
           ]),
         );
       },
-      skip: defaultTargetPlatform == TargetPlatform.windows,
+      skip: isDesktopCppSdk,
     );
 
     group(
@@ -205,7 +206,7 @@ void runCollectionReferenceTests() {
           },
         );
       },
-      skip: defaultTargetPlatform == TargetPlatform.windows,
+      skip: isDesktopCppSdk,
     );
   });
 }

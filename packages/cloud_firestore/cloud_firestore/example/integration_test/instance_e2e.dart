@@ -10,6 +10,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'platform_utils.dart';
+
 void runInstanceTests() {
   group(
     '$FirebaseFirestore.instance',
@@ -213,7 +215,7 @@ void runInstanceTests() {
           // ignore: experimental_member_use
           await firestore.setIndexConfigurationFromJSON(json);
         },
-        skip: defaultTargetPlatform == TargetPlatform.windows,
+        skip: isDesktopCppSdk,
       );
 
       test('setLoggingEnabled should resolve without issue', () async {
@@ -266,7 +268,7 @@ void runInstanceTests() {
       test(
         '`PersistenceCacheIndexManager` with default persistence settings for each platform',
         () async {
-          if (defaultTargetPlatform == TargetPlatform.windows) {
+          if (isDesktopCppSdk) {
             try {
               // Windows does not have `PersistenceCacheIndexManager` support
               FirebaseFirestore.instance.persistentCacheIndexManager();
@@ -346,7 +348,7 @@ void runInstanceTests() {
             await indexManager.deleteAllIndexes();
           }
         },
-        skip: defaultTargetPlatform == TargetPlatform.windows,
+        skip: isDesktopCppSdk,
       );
 
       test(
@@ -376,7 +378,7 @@ void runInstanceTests() {
             expect(indexManager, isNull);
           }
         },
-        skip: defaultTargetPlatform == TargetPlatform.windows,
+        skip: isDesktopCppSdk,
       );
     },
   );

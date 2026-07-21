@@ -8,6 +8,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'platform_utils.dart';
+
 void runDocumentChangeTests() {
   group('$DocumentChange', () {
     late FirebaseFirestore firestore;
@@ -81,7 +83,7 @@ void runDocumentChangeTests() {
         );
       },
       timeout: const Timeout.factor(8),
-      skip: defaultTargetPlatform == TargetPlatform.windows,
+      skip: isDesktopCppSdk,
     );
 
     test(
@@ -132,8 +134,7 @@ void runDocumentChangeTests() {
         expect(removeChange.type, equals(DocumentChangeType.removed));
         expect(removeChange.doc.data()!['name'], equals('doc1'));
       },
-      skip: defaultTargetPlatform == TargetPlatform.windows ||
-          defaultTargetPlatform == TargetPlatform.android,
+      skip: isDesktopCppSdk || defaultTargetPlatform == TargetPlatform.android,
     );
 
     test(
@@ -190,7 +191,7 @@ void runDocumentChangeTests() {
         expect(change.type, equals(DocumentChangeType.modified));
         expect(change.doc.id, equals('doc1'));
       },
-      skip: defaultTargetPlatform == TargetPlatform.windows,
+      skip: isDesktopCppSdk,
     );
   });
 }

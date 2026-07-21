@@ -12,6 +12,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:tests/firebase_options.dart';
 
+import '../platform_utils.dart';
 import './test_utils.dart';
 
 void main() {
@@ -158,7 +159,7 @@ void main() {
               await Future.delayed(const Duration(seconds: 2));
             },
             skip: defaultTargetPlatform == TargetPlatform.macOS ||
-                defaultTargetPlatform == TargetPlatform.windows ||
+                isDesktopCppSdk ||
                 // TODO(SelaseKay): this is crashing iOS app when running on CI
                 defaultTargetPlatform == TargetPlatform.iOS,
           );
@@ -930,8 +931,7 @@ void main() {
             }
           });
         },
-        skip: defaultTargetPlatform == TargetPlatform.macOS ||
-            defaultTargetPlatform == TargetPlatform.windows,
+        skip: defaultTargetPlatform == TargetPlatform.macOS || isDesktopCppSdk,
       );
 
       group(
@@ -1025,7 +1025,7 @@ void main() {
           );
         },
         skip: defaultTargetPlatform == TargetPlatform.macOS ||
-            defaultTargetPlatform == TargetPlatform.windows ||
+            isDesktopCppSdk ||
             kIsWeb,
       );
 

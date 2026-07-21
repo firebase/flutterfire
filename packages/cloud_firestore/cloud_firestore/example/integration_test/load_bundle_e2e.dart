@@ -7,6 +7,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 
+import 'platform_utils.dart';
+
 void runLoadBundleTests() {
   group('$DocumentReference', () {
     late FirebaseFirestore firestore;
@@ -134,7 +136,7 @@ void runLoadBundleTests() {
             ),
           );
         },
-        skip: defaultTargetPlatform == TargetPlatform.windows,
+        skip: isDesktopCppSdk,
       );
     });
 
@@ -185,7 +187,7 @@ void runLoadBundleTests() {
             ),
           );
         },
-        skip: defaultTargetPlatform == TargetPlatform.windows,
+        skip: isDesktopCppSdk,
       );
     });
 
@@ -236,7 +238,7 @@ void runLoadBundleTests() {
             ),
           );
         },
-        skip: defaultTargetPlatform == TargetPlatform.windows,
+        skip: isDesktopCppSdk,
       );
     });
   });

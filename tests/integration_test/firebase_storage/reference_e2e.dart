@@ -9,6 +9,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../platform_utils.dart';
 import './test_utils.dart';
 
 void setupReferenceTests() {
@@ -221,7 +222,7 @@ void setupReferenceTests() {
           );
         });
       },
-      skip: defaultTargetPlatform == TargetPlatform.windows,
+      skip: isDesktopCppSdk,
     );
 
     test(
@@ -243,7 +244,7 @@ void setupReferenceTests() {
         );
         await expectLater(ref.listAll(), throwsA(unsupportedError));
       },
-      skip: defaultTargetPlatform != TargetPlatform.windows,
+      skip: !isDesktopCppSdk,
     );
 
     test(
@@ -258,7 +259,7 @@ void setupReferenceTests() {
         expect(result.prefixes, isA<List<Reference>>());
         expect(result.prefixes.length, greaterThan(0));
       },
-      skip: defaultTargetPlatform == TargetPlatform.windows,
+      skip: isDesktopCppSdk,
     );
 
     group(
@@ -562,7 +563,7 @@ void setupReferenceTests() {
           );
         },
         // TODO(russellwheatley): raise issue on C++ SDK, if object does not exist, it throws "unauthorized" exception
-        skip: defaultTargetPlatform == TargetPlatform.windows,
+        skip: isDesktopCppSdk,
       );
 
       test(

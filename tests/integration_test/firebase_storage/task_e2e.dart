@@ -13,6 +13,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tests/firebase_options.dart';
 
+import '../platform_utils.dart';
 import './test_utils.dart';
 
 void setupTaskTests() {
@@ -112,7 +113,7 @@ void setupTaskTests() {
         // TODO(russellwheatley): Windows works on example app, but fails on tests.
         // Clue is in bytesTransferred + totalBytes which both equal: -3617008641903833651
         skip: !kIsWeb &&
-            (defaultTargetPlatform == TargetPlatform.windows ||
+            (isDesktopCppSdk ||
                 defaultTargetPlatform == TargetPlatform.android ||
                 defaultTargetPlatform == TargetPlatform.macOS),
       );
@@ -130,7 +131,7 @@ void setupTaskTests() {
         // Clue is in bytesTransferred + totalBytes which both equal: -3617008641903833651
         skip: !kIsWeb &&
             (defaultTargetPlatform == TargetPlatform.macOS ||
-                defaultTargetPlatform == TargetPlatform.windows ||
+                isDesktopCppSdk ||
                 defaultTargetPlatform == TargetPlatform.android),
       );
 
@@ -308,7 +309,7 @@ void setupTaskTests() {
           },
           // There's no DownloadTask on web.
           // Windows `task.cancel()` is returning "false", same code on example app works as intended
-          skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
+          skip: kIsWeb || isDesktopCppSdk,
           retry: 2,
         );
 
@@ -324,7 +325,7 @@ void setupTaskTests() {
           },
           // There's no DownloadTask on web.
           // Windows `task.cancel()` is returning "false", same code on example app works as intended
-          skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
+          skip: kIsWeb || isDesktopCppSdk,
           retry: 2,
         );
 
@@ -336,7 +337,7 @@ void setupTaskTests() {
           },
           retry: 2,
           // Windows `task.cancel()` is returning "false", same code on example app works as intended
-          skip: defaultTargetPlatform == TargetPlatform.windows,
+          skip: isDesktopCppSdk,
         );
 
         test(
@@ -347,7 +348,7 @@ void setupTaskTests() {
           },
           retry: 2,
           // Windows `task.cancel()` is returning "false", same code on example app works as intended
-          skip: defaultTargetPlatform == TargetPlatform.windows,
+          skip: isDesktopCppSdk,
         );
 
         test(

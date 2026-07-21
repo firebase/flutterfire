@@ -8,6 +8,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'platform_utils.dart';
+
 void runTransactionTests() {
   group(
     '$Transaction',
@@ -87,7 +89,7 @@ void runTransactionTests() {
           final snapshot = await documentReference.get();
           expect(snapshot.data()!['value'], 1);
         },
-        skip: defaultTargetPlatform != TargetPlatform.windows,
+        skip: !isDesktopCppSdk,
       );
 
       test('should abort if thrown and not continue', () async {
@@ -182,7 +184,7 @@ void runTransactionTests() {
             ),
           );
         },
-        skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
+        skip: kIsWeb || isDesktopCppSdk,
       );
 
       test('runs multiple transactions in parallel', () async {
@@ -228,7 +230,7 @@ void runTransactionTests() {
             ),
           );
         },
-        skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
+        skip: kIsWeb || isDesktopCppSdk,
       );
 
       test('should throw with exception', () async {
@@ -264,7 +266,7 @@ void runTransactionTests() {
             fail('Transaction threw invalid exception');
           }
         },
-        skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
+        skip: kIsWeb || isDesktopCppSdk,
       );
 
       group('Transaction.get()', () {
@@ -300,7 +302,7 @@ void runTransactionTests() {
               fail('Transaction threw invalid exception');
             }
           },
-          skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
+          skip: kIsWeb || isDesktopCppSdk,
         );
 
         // ignore: todo
