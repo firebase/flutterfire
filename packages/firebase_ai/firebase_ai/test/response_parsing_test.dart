@@ -192,7 +192,7 @@ void main() {
             (e) => e.message,
             'message',
             startsWith(
-                'The Vertex AI in Firebase SDK requires the Vertex AI in Firebase API'),
+                'Enable Firebase AI Logic in your Firebase project by visiting the Firebase Console'),
           ),
         ),
       );
