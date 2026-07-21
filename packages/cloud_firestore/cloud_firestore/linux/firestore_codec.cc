@@ -174,6 +174,11 @@ FlValue* CustomDocumentReference(const DocumentReference& reference) {
       FirestoreCodec::DATA_TYPE_DOCUMENT_REFERENCE, reference);
 }
 
+FlValue* CustomBlob(const uint8_t* data, size_t size) {
+  return BoxCustom<std::vector<uint8_t>>(
+      FirestoreCodec::DATA_TYPE_BLOB, std::vector<uint8_t>(data, data + size));
+}
+
 const FieldValue& GetCustomFieldValue(FlValue* value) {
   return UnboxCustom<FieldValue>(value);
 }
@@ -333,8 +338,9 @@ FlValue* ConvertFieldValueToFlValue(const FieldValue& field_value) {
       return fl_value_new_string(field_value.string_value().c_str());
 
     case FieldValue::Type::kBlob:
-      return fl_value_new_uint8_list(field_value.blob_value(),
-                                     field_value.blob_size());
+      // Boxed as a custom value so the Dart codec reconstructs a `Blob`
+      // rather than a plain Uint8List.
+      return CustomBlob(field_value.blob_value(), field_value.blob_size());
 
     case FieldValue::Type::kMap: {
       FlValue* map = fl_value_new_map();
@@ -411,6 +417,19 @@ gboolean firestore_codec_write_value(FlStandardMessageCodec* codec,
         cloud_firestore_linux::WriteBytes(buffer, &latitude, sizeof(latitude));
         cloud_firestore_linux::WriteBytes(buffer, &longitude,
                                           sizeof(longitude));
+        return TRUE;
+      }
+      case FirestoreCodec::DATA_TYPE_BLOB: {
+        const std::vector<uint8_t>& bytes =
+            *static_cast<const std::vector<uint8_t>*>(
+                fl_value_get_custom_value(value));
+        uint8_t type_byte = FirestoreCodec::DATA_TYPE_BLOB;
+        g_byte_array_append(buffer, &type_byte, 1);
+        fl_standard_message_codec_write_size(
+            codec, buffer, static_cast<uint32_t>(bytes.size()));
+        if (!bytes.empty()) {
+          cloud_firestore_linux::WriteBytes(buffer, bytes.data(), bytes.size());
+        }
         return TRUE;
       }
       case FirestoreCodec::DATA_TYPE_DOCUMENT_REFERENCE: {

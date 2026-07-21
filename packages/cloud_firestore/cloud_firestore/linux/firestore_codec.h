@@ -9,6 +9,8 @@
 
 #include <flutter_linux/flutter_linux.h>
 
+#include <cstddef>
+#include <cstdint>
 #include <map>
 #include <memory>
 #include <string>
@@ -64,6 +66,7 @@ FlValue* CustomTimestamp(const firebase::Timestamp& timestamp);
 FlValue* CustomGeoPoint(const firebase::firestore::GeoPoint& geo_point);
 FlValue* CustomDocumentReference(
     const firebase::firestore::DocumentReference& reference);
+FlValue* CustomBlob(const uint8_t* data, size_t size);
 
 // Accessors for the FlValue customs above. The FlValue must have the matching
 // custom type id.
