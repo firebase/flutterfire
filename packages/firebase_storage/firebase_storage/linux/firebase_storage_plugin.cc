@@ -62,15 +62,20 @@ static std::map<int64_t, std::unique_ptr<Controller>> controllers_;
 // Flutter Linux embedder (FlBinaryMessenger / FlEventChannel) must only be
 // used from the main thread.
 static gboolean RunOnMainThreadCallback(gpointer user_data) {
-  auto* function = static_cast<std::function<void()>*>(user_data);
-  (*function)();
-  delete function;
+  (*static_cast<std::function<void()>*>(user_data))();
   return G_SOURCE_REMOVE;
 }
 
+static void DeleteMainThreadCallback(gpointer user_data) {
+  delete static_cast<std::function<void()>*>(user_data);
+}
+
 static void RunOnMainThread(std::function<void()> function) {
-  g_idle_add(RunOnMainThreadCallback,
-             new std::function<void()>(std::move(function)));
+  // g_idle_add_full's destroy-notify also frees the closure if the source is
+  // destroyed without running (e.g. main loop teardown), avoiding a leak.
+  g_idle_add_full(G_PRIORITY_DEFAULT, RunOnMainThreadCallback,
+                  new std::function<void()>(std::move(function)),
+                  DeleteMainThreadCallback);
 }
 
 static Storage* GetCPPStorageFromPigeon(

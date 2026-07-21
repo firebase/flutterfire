@@ -199,9 +199,13 @@ static gboolean RespondTokenRequest(gpointer user_data) {
       }
       break;
   }
+  return G_SOURCE_REMOVE;
+}
+
+static void DestroyTokenRequestResult(gpointer user_data) {
+  TokenRequestResult* result = static_cast<TokenRequestResult*>(user_data);
   g_object_unref(result->response_handle);
   delete result;
-  return G_SOURCE_REMOVE;
 }
 
 // FirebaseAppCheckHostApi
@@ -254,7 +258,8 @@ static void HandleGetToken(
         result->has_token = false;
       }
     }
-    g_idle_add(RespondTokenRequest, result);
+    g_idle_add_full(G_PRIORITY_DEFAULT, RespondTokenRequest, result,
+                    DestroyTokenRequestResult);
   });
 }
 
@@ -321,7 +326,8 @@ static void HandleGetLimitedUseAppCheckToken(
         result->error_message = "Failed to get limited use token";
       }
     }
-    g_idle_add(RespondTokenRequest, result);
+    g_idle_add_full(G_PRIORITY_DEFAULT, RespondTokenRequest, result,
+                    DestroyTokenRequestResult);
   });
 }
 

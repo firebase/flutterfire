@@ -47,14 +47,14 @@ G_DEFINE_TYPE(CloudFunctionsPlugin, cloud_functions_plugin, g_object_get_type())
 // every response is marshalled back through the main loop.
 static void PostToMainThread(std::function<void()> fn) {
   auto* boxed = new std::function<void()>(std::move(fn));
-  g_idle_add(
+  g_idle_add_full(
+      G_PRIORITY_DEFAULT,
       [](gpointer data) -> gboolean {
-        auto* callback = static_cast<std::function<void()>*>(data);
-        (*callback)();
-        delete callback;
+        (*static_cast<std::function<void()>*>(data))();
         return G_SOURCE_REMOVE;
       },
-      boxed);
+      boxed,
+      [](gpointer data) { delete static_cast<std::function<void()>*>(data); });
 }
 
 // --- Helper: Convert firebase::Variant to FlValue (transfer full) ---

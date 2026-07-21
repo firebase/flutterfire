@@ -49,14 +49,20 @@ static FlBinaryMessenger* g_binary_messenger = nullptr;
 // complete on SDK worker threads, but the Flutter Linux embedder requires all
 // messenger/event-channel calls to happen on the platform thread.
 static gboolean RunOnMainThreadCb(gpointer user_data) {
-  auto* function = static_cast<std::function<void()>*>(user_data);
-  (*function)();
-  delete function;
+  (*static_cast<std::function<void()>*>(user_data))();
   return G_SOURCE_REMOVE;
 }
 
+static void DeleteMainThreadCb(gpointer user_data) {
+  delete static_cast<std::function<void()>*>(user_data);
+}
+
 static void PostToMainThread(std::function<void()> function) {
-  g_idle_add(RunOnMainThreadCb, new std::function<void()>(std::move(function)));
+  // g_idle_add_full's destroy-notify also frees the closure if the source is
+  // destroyed without running (e.g. main loop teardown), avoiding a leak.
+  g_idle_add_full(G_PRIORITY_DEFAULT, RunOnMainThreadCb,
+                  new std::function<void()>(std::move(function)),
+                  DeleteMainThreadCb);
 }
 
 static Auth* GetAuthFromPigeon(FirebaseAuthAuthPigeonFirebaseApp* pigeon_app) {

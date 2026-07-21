@@ -233,6 +233,10 @@ Firestore* GetFirestoreFromPigeon(
   }
 
   App* app = App::GetInstance(app_name);
+  if (app == nullptr) {
+    g_warning("Firebase app '%s' has not been initialized.", app_name);
+    return nullptr;
+  }
 
   Firestore* firestore = Firestore::GetInstance(app, database_url);
 
@@ -713,6 +717,9 @@ ConvertedTransactionCommand ConvertTransactionCommand(
 }
 
 std::map<std::string, std::shared_ptr<Transaction>> transactions_;
+// Guards transactions_: RunTransaction callbacks write from SDK worker
+// threads while the pigeon handlers read on the platform thread.
+std::mutex transactions_mutex_;
 
 // -----------------------------------------------------------------------------
 // Stream handlers.
@@ -854,7 +861,11 @@ class TransactionStreamHandler : public EventStreamHandler {
             [this](Transaction& transaction, std::string& str) -> Error {
               auto noop_deleter = [](Transaction*) {};
               std::shared_ptr<Transaction> ptr(&transaction, noop_deleter);
-              transactions_[transaction_id_] = std::move(ptr);
+              {
+                std::lock_guard<std::mutex> transactions_lock(
+                    transactions_mutex_);
+                transactions_[transaction_id_] = std::move(ptr);
+              }
 
               FlValue* map = fl_value_new_map();
               fl_value_set_take(map, fl_value_new_string("appName"),
@@ -868,6 +879,11 @@ class TransactionStreamHandler : public EventStreamHandler {
               // Reset for the next attempt: RunTransaction may re-invoke this
               // callback on conflict (up to max_attempts_ times).
               signaled_ = false;
+              if (cancelled_) {
+                // The Dart stream was cancelled; abort instead of committing
+                // an empty transaction.
+                return firebase::firestore::kErrorAborted;
+              }
               if (!signaled) {
                 SendErrorOnPlatformThread(events_state_, "Timeout",
                                           "Transaction timed out.", nullptr,
@@ -941,6 +957,7 @@ class TransactionStreamHandler : public EventStreamHandler {
     {
       std::unique_lock<std::mutex> lock(mtx_);
       signaled_ = true;
+      cancelled_ = true;
     }
     cv_.notify_one();
     EndStreamOnPlatformThread(events_state_);
@@ -958,6 +975,9 @@ class TransactionStreamHandler : public EventStreamHandler {
   // Guarded by mtx_. True once the Dart side stored its result (or the stream
   // was cancelled); consumed by the transaction worker per attempt.
   bool signaled_ = false;
+  // Guarded by mtx_. Set on stream cancel; makes the worker abort the
+  // transaction instead of committing whatever has accumulated.
+  bool cancelled_ = false;
   std::mutex mtx_;
   std::mutex commands_mutex_;
   std::condition_variable cv_;
@@ -1404,15 +1424,22 @@ void HandleTransactionGet(
   Firestore* firestore = GetFirestoreFromPigeon(app);
   DocumentReference reference = firestore->Document(path);
 
-  auto transaction_it = transactions_.find(transaction_id);
-  if (transaction_it == transactions_.end() || !transaction_it->second) {
+  std::shared_ptr<Transaction> found_transaction;
+  {
+    std::lock_guard<std::mutex> transactions_lock(transactions_mutex_);
+    auto transaction_it = transactions_.find(transaction_id);
+    if (transaction_it != transactions_.end()) {
+      found_transaction = transaction_it->second;
+    }
+  }
+  if (!found_transaction) {
     // Improvement over Windows, which would dereference a null transaction.
     cloud_firestore_firebase_firestore_host_api_respond_error_transaction_get(
         response_handle, "transaction_not_found", "Transaction not found",
         nullptr);
     return;
   }
-  std::shared_ptr<Transaction> transaction = transaction_it->second;
+  std::shared_ptr<Transaction> transaction = found_transaction;
 
   Error error_code;
   std::string error_message;
@@ -1926,7 +1953,10 @@ class CloudFirestoreFlutterFirebasePlugin : public FlutterFirebasePlugin {
     // Release all cached Firestore instances on hot restart, mirroring the
     // Android implementation (the Windows one keeps stale instances).
     transaction_handlers_.clear();
-    transactions_.clear();
+    {
+      std::lock_guard<std::mutex> transactions_lock(transactions_mutex_);
+      transactions_.clear();
+    }
     FirestoreInstanceCache().clear();
   }
 };

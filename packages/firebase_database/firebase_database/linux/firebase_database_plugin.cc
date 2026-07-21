@@ -30,6 +30,8 @@
 #include "firebase/future.h"
 #include "firebase/log.h"
 #include "firebase/variant.h"
+#include "firebase_core/firebase_core_plugin.h"
+#include "firebase_core/flutter_firebase_plugin.h"
 #include "firebase_database/plugin_version.h"
 #include "messages.g.h"
 
@@ -74,14 +76,14 @@ static std::map<int64_t, FlValue*> transaction_results_;
 // thread-safe, so every response/event is marshalled through the main loop.
 static void PostToMainThread(std::function<void()> fn) {
   auto* boxed = new std::function<void()>(std::move(fn));
-  g_idle_add(
+  g_idle_add_full(
+      G_PRIORITY_DEFAULT,
       [](gpointer data) -> gboolean {
-        auto* callback = static_cast<std::function<void()>*>(data);
-        (*callback)();
-        delete callback;
+        (*static_cast<std::function<void()>*>(data))();
         return G_SOURCE_REMOVE;
       },
-      boxed);
+      boxed,
+      [](gpointer data) { delete static_cast<std::function<void()>*>(data); });
 }
 
 // --- Helper: Convert firebase::Variant to FlValue ---
@@ -1322,6 +1324,30 @@ static const FirebaseDatabaseFirebaseDatabaseHostApiVTable kHostApiVTable = {
     HandleQueryGet,                     // query_get
 };
 
+namespace {
+
+class FirebaseDatabaseFlutterFirebasePlugin : public FlutterFirebasePlugin {
+ public:
+  FlValue* GetPluginConstantsForFirebaseApp(const firebase::App& app) override {
+    return fl_value_new_map();
+  }
+
+  void DidReinitializeFirebaseCore() override {
+    // Hot restart: tear down listeners and connections exactly like the
+    // atexit path, then drop the cached instances so the restarted Dart app
+    // starts from a clean slate.
+    CleanupBeforeStaticDestruction();
+    database_instances_.clear();
+  }
+};
+
+FirebaseDatabaseFlutterFirebasePlugin* GetFlutterFirebasePlugin() {
+  static FirebaseDatabaseFlutterFirebasePlugin plugin;
+  return &plugin;
+}
+
+}  // namespace
+
 static void firebase_database_plugin_dispose(GObject* object) {
   G_OBJECT_CLASS(firebase_database_plugin_parent_class)->dispose(object);
 }
@@ -1344,6 +1370,9 @@ void firebase_database_plugin_register_with_registrar(
       g_object_unref);
 
   g_object_unref(plugin);
+
+  RegisterFlutterFirebasePlugin("plugins.flutter.io/firebase_database",
+                                GetFlutterFirebasePlugin());
 
   App::RegisterLibrary(kLibraryName,
                        firebase_database_linux::getPluginVersion().c_str(),

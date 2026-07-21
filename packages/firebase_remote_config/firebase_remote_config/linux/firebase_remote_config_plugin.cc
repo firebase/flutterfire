@@ -57,14 +57,14 @@ G_DEFINE_TYPE(FirebaseRemoteConfigPlugin, firebase_remote_config_plugin,
 // and FlEventChannel calls must be made from the main thread.
 static void RunOnMainThread(std::function<void()> function) {
   auto* callback = new std::function<void()>(std::move(function));
-  g_idle_add(
-      [](gpointer user_data) -> gboolean {
-        auto* function = static_cast<std::function<void()>*>(user_data);
-        (*function)();
-        delete function;
+  g_idle_add_full(
+      G_PRIORITY_DEFAULT,
+      [](gpointer data) -> gboolean {
+        (*static_cast<std::function<void()>*>(data))();
         return G_SOURCE_REMOVE;
       },
-      callback);
+      callback,
+      [](gpointer data) { delete static_cast<std::function<void()>*>(data); });
 }
 
 static RemoteConfig* GetRemoteConfigFromPigeon(const std::string& app_name) {
