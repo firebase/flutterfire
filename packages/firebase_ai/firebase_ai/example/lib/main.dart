@@ -49,7 +49,7 @@ class GenerativeAISample extends StatefulWidget {
 }
 
 class _GenerativeAISampleState extends State<GenerativeAISample> {
-  bool _useVertexBackend = false;
+  bool _useAgentPlatform = false;
   late GenerativeModel _currentModel;
 
   static final ThemeData _darkTheme = ThemeData(
@@ -64,14 +64,15 @@ class _GenerativeAISampleState extends State<GenerativeAISample> {
   void initState() {
     super.initState();
 
-    _initializeModel(_useVertexBackend);
+    _initializeModel(_useAgentPlatform);
   }
 
   void _initializeModel(bool useVertexBackend) {
     if (useVertexBackend) {
-      final vertexInstance = FirebaseAI.vertexAI(location: 'global');
+      final agentPlatformInstance =
+          FirebaseAI.agentPlatform(location: 'global');
       _currentModel =
-          vertexInstance.generativeModel(model: 'gemini-3.1-flash-lite');
+          agentPlatformInstance.generativeModel(model: 'gemini-3.1-flash-lite');
     } else {
       final googleAI = FirebaseAI.googleAI();
       _currentModel = googleAI.generativeModel(model: 'gemini-3.1-flash-lite');
@@ -80,24 +81,24 @@ class _GenerativeAISampleState extends State<GenerativeAISample> {
 
   void _toggleBackend(bool value) {
     setState(() {
-      _useVertexBackend = value;
+      _useAgentPlatform = value;
     });
-    _initializeModel(_useVertexBackend);
+    _initializeModel(_useAgentPlatform);
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter + ${_useVertexBackend ? 'Vertex AI' : 'Google AI'}',
+      title: 'Flutter + ${_useAgentPlatform ? 'Agent Platform' : 'Google AI'}',
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.dark,
       theme: _darkTheme,
       home: HomeScreen(
         key: ValueKey(
-          '${_useVertexBackend}_${_currentModel.hashCode}',
+          '${_useAgentPlatform}_${_currentModel.hashCode}',
         ),
         model: _currentModel,
-        useVertexBackend: _useVertexBackend,
+        useAgentPlatform: _useAgentPlatform,
         onBackendChanged: _toggleBackend,
       ),
     );
@@ -106,13 +107,13 @@ class _GenerativeAISampleState extends State<GenerativeAISample> {
 
 class HomeScreen extends StatefulWidget {
   final GenerativeModel model;
-  final bool useVertexBackend;
+  final bool useAgentPlatform;
   final ValueChanged<bool> onBackendChanged;
 
   const HomeScreen({
     super.key,
     required this.model,
-    required this.useVertexBackend,
+    required this.useAgentPlatform,
     required this.onBackendChanged,
   });
 
@@ -133,13 +134,13 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildSelectedPage(
     int index,
     GenerativeModel currentModel,
-    bool useVertexBackend,
+    bool useAgentPlatform,
   ) {
     switch (index) {
       case 0:
         return ChatPage(
           title: 'Chat',
-          useVertexBackend: useVertexBackend,
+          useAgentPlatform: useAgentPlatform,
         );
       case 1:
         return CapabilitiesPage(
@@ -150,40 +151,40 @@ class _HomeScreenState extends State<HomeScreen> {
         // FunctionCallingPage initializes its own model as per original design
         return FunctionCallingPage(
           title: 'Function Calling',
-          useVertexBackend: useVertexBackend,
+          useAgentPlatform: useAgentPlatform,
         );
       case 3:
         return ImageGenerationPage(
           title: 'Image Gen',
-          useVertexBackend: useVertexBackend,
+          useAgentPlatform: useAgentPlatform,
         );
       case 4:
         return BidiPage(
           title: 'Live Stream',
           model: currentModel,
-          useVertexBackend: useVertexBackend,
+          useAgentPlatform: useAgentPlatform,
         );
       case 5:
         return ServerTemplatePage(
           title: 'Server Template',
-          useVertexBackend: useVertexBackend,
+          useAgentPlatform: useAgentPlatform,
         );
       case 6:
         return GroundingPage(
           title: 'Grounding',
-          useVertexBackend: useVertexBackend,
+          useAgentPlatform: useAgentPlatform,
         );
       case 7:
         return TTSPage(
           title: 'TTS Test',
-          useVertexBackend: useVertexBackend,
+          useAgentPlatform: useAgentPlatform,
         );
 
       default:
         // Fallback to the first page in case of an unexpected index
         return ChatPage(
           title: 'Chat',
-          useVertexBackend: useVertexBackend,
+          useAgentPlatform: useAgentPlatform,
         );
     }
   }
@@ -193,7 +194,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Flutter + ${widget.useVertexBackend ? 'Vertex AI' : 'Google AI'}',
+          'Flutter + ${widget.useAgentPlatform ? 'Agent Platform' : 'Google AI'}',
         ),
         actions: <Widget>[
           IconButton(
@@ -217,13 +218,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   'Google AI',
                   style: TextStyle(
                     fontSize: 12,
-                    color: widget.useVertexBackend
+                    color: widget.useAgentPlatform
                         ? Theme.of(context).colorScheme.onSurface.withAlpha(180)
                         : Theme.of(context).colorScheme.primary,
                   ),
                 ),
                 Switch(
-                  value: widget.useVertexBackend,
+                  value: widget.useAgentPlatform,
                   onChanged: widget.onBackendChanged,
                   activeTrackColor: Colors.green.withAlpha(128),
                   inactiveTrackColor: Colors.blueGrey.withAlpha(128),
@@ -231,10 +232,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   inactiveThumbColor: Colors.blueGrey,
                 ),
                 Text(
-                  'Vertex AI',
+                  'Agent Platform',
                   style: TextStyle(
                     fontSize: 12,
-                    color: widget.useVertexBackend
+                    color: widget.useAgentPlatform
                         ? Theme.of(context).colorScheme.primary
                         : Theme.of(context)
                             .colorScheme
@@ -251,7 +252,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: _buildSelectedPage(
           _selectedIndex,
           widget.model,
-          widget.useVertexBackend,
+          widget.useAgentPlatform,
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -259,7 +260,7 @@ class _HomeScreenState extends State<HomeScreen> {
         selectedFontSize: 10,
         unselectedFontSize: 9,
         selectedItemColor: Theme.of(context).colorScheme.primary,
-        unselectedItemColor: widget.useVertexBackend
+        unselectedItemColor: widget.useAgentPlatform
             ? Theme.of(context).colorScheme.onSurface.withAlpha(180)
             : Colors.grey,
         items: const <BottomNavigationBarItem>[

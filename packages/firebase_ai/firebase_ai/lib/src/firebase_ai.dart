@@ -119,6 +119,8 @@ class FirebaseAI extends FirebasePlugin {
     FirebaseAI newInstance = FirebaseAI._(
       app: app,
       location: location,
+      appCheck: app.getService<FirebaseAppCheck>(),
+      auth: app.getService<FirebaseAuth>(),
       useAgentPlatform: true,
       useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens ?? false,
     );

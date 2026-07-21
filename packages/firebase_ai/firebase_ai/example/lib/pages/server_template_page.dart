@@ -22,11 +22,11 @@ class ServerTemplatePage extends StatefulWidget {
   const ServerTemplatePage({
     super.key,
     required this.title,
-    required this.useVertexBackend,
+    required this.useAgentPlatform,
   });
 
   final String title;
-  final bool useVertexBackend;
+  final bool useAgentPlatform;
 
   @override
   State<ServerTemplatePage> createState() => _ServerTemplatePageState();
@@ -54,10 +54,10 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
   }
 
   void _initializeServerTemplate() {
-    if (widget.useVertexBackend) {
+    if (widget.useAgentPlatform) {
       _templateGenerativeModel =
           // ignore: experimental_member_use
-          FirebaseAI.vertexAI(location: 'global').templateGenerativeModel();
+          FirebaseAI.agentPlatform().templateGenerativeModel();
     } else {
       _templateGenerativeModel =
           // ignore: experimental_member_use
