@@ -9,7 +9,6 @@
 #include <chrono>
 #include <condition_variable>
 #include <functional>
-#include <iostream>
 #include <map>
 #include <memory>
 #include <mutex>
@@ -649,7 +648,7 @@ Query ParseQuery(Firestore* firestore, const std::string& path,
 
     return query;
   } catch (const std::exception& e) {
-    std::cerr << "Error: " << e.what() << std::endl;
+    g_warning("Error: %s", e.what());
     // Return a 'null' or 'empty' query based on your C++ Firestore API
     return Query();
   }
@@ -885,7 +884,7 @@ class TransactionStreamHandler : public EventStreamHandler {
 
               for (const ConvertedTransactionCommand& command : commands_) {
                 if (command.path.empty()) {
-                  std::cerr << "Path is invalid: " << command.path << std::endl;
+                  g_warning("Path is invalid: %s", command.path.c_str());
                   continue;  // Skip this iteration.
                 }
 
@@ -1789,7 +1788,7 @@ void HandleWriteBatchCommit(
     });
 
   } catch (const std::exception& e) {
-    std::cerr << "Error: " << e.what() << std::endl;
+    g_warning("Error: %s", e.what());
     cloud_firestore_firebase_firestore_host_api_respond_error_write_batch_commit(
         response_handle, e.what(), e.what(), nullptr);
   }
