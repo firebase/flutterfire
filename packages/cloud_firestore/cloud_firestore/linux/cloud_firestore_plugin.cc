@@ -1666,10 +1666,10 @@ void HandleAggregateQuery(
         aggregate_query = query.Count();
         break;
       case CLOUD_FIRESTORE_PLATFORM_INTERFACE_AGGREGATE_TYPE_SUM:
-        std::cout << "Sum is not supported on C++" << std::endl;
+        g_warning("Sum aggregation is not supported by the C++ SDK.");
         break;
       case CLOUD_FIRESTORE_PLATFORM_INTERFACE_AGGREGATE_TYPE_AVERAGE:
-        std::cout << "Average is not supported on C++" << std::endl;
+        g_warning("Average aggregation is not supported by the C++ SDK.");
         break;
     }
   }
@@ -1703,10 +1703,10 @@ void HandleAggregateQuery(
             break;
           }
           case CLOUD_FIRESTORE_PLATFORM_INTERFACE_AGGREGATE_TYPE_SUM:
-            std::cout << "Sum is not supported on C++" << std::endl;
+            g_warning("Sum aggregation is not supported by the C++ SDK.");
             break;
           case CLOUD_FIRESTORE_PLATFORM_INTERFACE_AGGREGATE_TYPE_AVERAGE:
-            std::cout << "Average is not supported on C++" << std::endl;
+            g_warning("Average aggregation is not supported by the C++ SDK.");
             break;
         }
       }
