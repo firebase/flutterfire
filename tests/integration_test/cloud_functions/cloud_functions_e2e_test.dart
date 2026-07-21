@@ -12,6 +12,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:tests/firebase_options.dart';
 
+import '../platform_utils.dart';
 import 'sample_data.dart' as data;
 
 String kTestFunctionDefaultRegion = 'testFunctionDefaultRegion';
@@ -191,27 +192,33 @@ void main() {
         }
       });
 
-      test('it returns "details" value as part of the exception', () async {
-        try {
-          await callable({
-            'type': 'deepMap',
-            'inputData': data.deepMap,
-            'asError': true,
-          });
-          fail('Should have thrown');
-        } on FirebaseFunctionsException catch (e) {
-          expect(e.code, equals('cancelled'));
-          expect(
-            e.message,
-            equals(
-              'Response data was requested to be sent as part of an Error payload, so here we are!',
-            ),
-          );
-          expect(e.details, equals(data.deepMap));
-        } catch (e) {
-          fail('$e');
-        }
-      });
+      test(
+        'it returns "details" value as part of the exception',
+        () async {
+          try {
+            await callable({
+              'type': 'deepMap',
+              'inputData': data.deepMap,
+              'asError': true,
+            });
+            fail('Should have thrown');
+          } on FirebaseFunctionsException catch (e) {
+            expect(e.code, equals('cancelled'));
+            expect(
+              e.message,
+              equals(
+                'Response data was requested to be sent as part of an Error payload, so here we are!',
+              ),
+            );
+            expect(e.details, equals(data.deepMap));
+          } catch (e) {
+            fail('$e');
+          }
+        },
+        // Desktop C++ SDK skip: exception `details` payloads are not
+        // propagated by the firebase-cpp-sdk.
+        skip: isDesktopCppSdk,
+      );
     });
 
     group('instanceFor', () {
@@ -246,6 +253,12 @@ void main() {
           } catch (e) {
             fail('$e');
           }
+          if (isDesktopCppSdk) {
+            // The C++ SDK cannot cancel the timed-out request; it keeps
+            // running on the transport and delays subsequent calls. Wait for
+            // it to drain so the next test is not queued behind it.
+            await Future.delayed(const Duration(seconds: 4));
+          }
         },
         // Android skip because it's flaky. See:
         // https://github.com/firebase/flutterfire/issues/9652
@@ -271,248 +284,270 @@ void main() {
       );
     });
 
-    group('HttpsCallable Stream', () {
-      test('returns a [StreamResponse]', () {
-        final streamResponseCallable =
-            FirebaseFunctions.instance.httpsCallable(kTestStreamResponse);
-        final stream = streamResponseCallable.stream();
-        expect(stream, emits(isA<StreamResponse>()));
-      });
+    group(
+      'HttpsCallable Stream',
+      () {
+        test('returns a [StreamResponse]', () {
+          final streamResponseCallable =
+              FirebaseFunctions.instance.httpsCallable(kTestStreamResponse);
+          final stream = streamResponseCallable.stream();
+          expect(stream, emits(isA<StreamResponse>()));
+        });
 
-      test('accepts a string value', () async {
-        final stream = callable.stream('foo').where((event) => event is Chunk);
-        await expectLater(
-          stream,
-          emits(
-            isA<Chunk>()
-                .having((e) => e.partialData, 'partialData', equals('string')),
-          ),
-        );
-      });
+        test('accepts a string value', () async {
+          final stream =
+              callable.stream('foo').where((event) => event is Chunk);
+          await expectLater(
+            stream,
+            emits(
+              isA<Chunk>().having(
+                (e) => e.partialData,
+                'partialData',
+                equals('string'),
+              ),
+            ),
+          );
+        });
 
-      test('accepts a number value', () async {
-        final stream = callable
-            .stream(123)
-            .where((event) => event is Chunk)
-            .asBroadcastStream();
-        await expectLater(
-          stream,
-          emits(
-            isA<Chunk>()
-                .having((e) => e.partialData, 'partialData', equals('number')),
-          ),
-        );
-      });
-
-      test('accepts no arguments', () async {
-        final stream = callable
-            .stream()
-            .where((event) => event is Chunk)
-            .asBroadcastStream();
-        await expectLater(
-          stream,
-          emits(
-            isA<Chunk>()
-                .having((e) => e.partialData, 'partialData', equals('null')),
-          ),
-        );
-      });
-
-      test('accepts a false boolean value', () async {
-        final stream = callable.stream(false).where((event) => event is Chunk);
-        await expectLater(
-          stream,
-          emits(
-            isA<Chunk>()
-                .having((e) => e.partialData, 'partialData', equals('boolean')),
-          ),
-        );
-      });
-
-      test('accepts a true boolean value', () async {
-        final stream = callable.stream(true).where((event) => event is Chunk);
-        await expectLater(
-          stream,
-          emits(
-            isA<Chunk>()
-                .having((e) => e.partialData, 'partialData', equals('boolean')),
-          ),
-        );
-      });
-
-      test('can be called using an String url', () async {
-        final localhostMapped =
-            kIsWeb || !Platform.isAndroid ? 'localhost' : '10.0.2.2';
-
-        HttpsCallable callable =
-            FirebaseFunctions.instance.httpsCallableFromUrl(
-          'http://$localhostMapped:5001/flutterfire-e2e-tests/us-central1/listfruits2ndgen',
-        );
-
-        final stream = callable.stream();
-        await expectLater(stream, emits(isA<StreamResponse>()));
-      });
-
-      test('can be called using an Uri url', () async {
-        final localhostMapped =
-            kIsWeb || !Platform.isAndroid ? 'localhost' : '10.0.2.2';
-
-        HttpsCallable callable =
-            FirebaseFunctions.instance.httpsCallableFromUri(
-          Uri.parse(
-            'http://$localhostMapped:5001/flutterfire-e2e-tests/us-central1/listfruits2ndgen',
-          ),
-        );
-
-        final stream = callable.stream();
-        await expectLater(stream, emits(isA<StreamResponse>()));
-      });
-
-      test(
-        'concurrent streams on the same callable do not collide',
-        () async {
-          // Regression test for https://github.com/firebase/flutterfire/issues/18036
-          final stream1 = callable
-              .stream('foo')
-              .where((event) => event is Chunk)
-              .map((event) => (event as Chunk).partialData)
-              .first;
-          final stream2 = callable
+        test('accepts a number value', () async {
+          final stream = callable
               .stream(123)
               .where((event) => event is Chunk)
-              .map((event) => (event as Chunk).partialData)
-              .first;
+              .asBroadcastStream();
+          await expectLater(
+            stream,
+            emits(
+              isA<Chunk>().having(
+                (e) => e.partialData,
+                'partialData',
+                equals('number'),
+              ),
+            ),
+          );
+        });
 
-          final results = await Future.wait([stream1, stream2]);
-          expect(results[0], equals('string'));
-          expect(results[1], equals('number'));
-        },
-      );
+        test('accepts no arguments', () async {
+          final stream = callable
+              .stream()
+              .where((event) => event is Chunk)
+              .asBroadcastStream();
+          await expectLater(
+            stream,
+            emits(
+              isA<Chunk>()
+                  .having((e) => e.partialData, 'partialData', equals('null')),
+            ),
+          );
+        });
 
-      test('should emit a [Result] as last value', () async {
-        final stream = await callable.stream().last;
-        expect(
-          stream,
-          isA<Result>(),
+        test('accepts a false boolean value', () async {
+          final stream =
+              callable.stream(false).where((event) => event is Chunk);
+          await expectLater(
+            stream,
+            emits(
+              isA<Chunk>().having(
+                (e) => e.partialData,
+                'partialData',
+                equals('boolean'),
+              ),
+            ),
+          );
+        });
+
+        test('accepts a true boolean value', () async {
+          final stream = callable.stream(true).where((event) => event is Chunk);
+          await expectLater(
+            stream,
+            emits(
+              isA<Chunk>().having(
+                (e) => e.partialData,
+                'partialData',
+                equals('boolean'),
+              ),
+            ),
+          );
+        });
+
+        test('can be called using an String url', () async {
+          final localhostMapped =
+              kIsWeb || !Platform.isAndroid ? 'localhost' : '10.0.2.2';
+
+          HttpsCallable callable =
+              FirebaseFunctions.instance.httpsCallableFromUrl(
+            'http://$localhostMapped:5001/flutterfire-e2e-tests/us-central1/listfruits2ndgen',
+          );
+
+          final stream = callable.stream();
+          await expectLater(stream, emits(isA<StreamResponse>()));
+        });
+
+        test('can be called using an Uri url', () async {
+          final localhostMapped =
+              kIsWeb || !Platform.isAndroid ? 'localhost' : '10.0.2.2';
+
+          HttpsCallable callable =
+              FirebaseFunctions.instance.httpsCallableFromUri(
+            Uri.parse(
+              'http://$localhostMapped:5001/flutterfire-e2e-tests/us-central1/listfruits2ndgen',
+            ),
+          );
+
+          final stream = callable.stream();
+          await expectLater(stream, emits(isA<StreamResponse>()));
+        });
+
+        test(
+          'concurrent streams on the same callable do not collide',
+          () async {
+            // Regression test for https://github.com/firebase/flutterfire/issues/18036
+            final stream1 = callable
+                .stream('foo')
+                .where((event) => event is Chunk)
+                .map((event) => (event as Chunk).partialData)
+                .first;
+            final stream2 = callable
+                .stream(123)
+                .where((event) => event is Chunk)
+                .map((event) => (event as Chunk).partialData)
+                .first;
+
+            final results = await Future.wait([stream1, stream2]);
+            expect(results[0], equals('string'));
+            expect(results[1], equals('number'));
+          },
         );
-      });
 
-      test(
-        'Result.data is Map<String, dynamic> for object-shaped JSON',
-        () async {
+        test('should emit a [Result] as last value', () async {
+          final stream = await callable.stream().last;
+          expect(
+            stream,
+            isA<Result>(),
+          );
+        });
+
+        test(
+          'Result.data is Map<String, dynamic> for object-shaped JSON',
+          () async {
+            final stream = callable.stream({
+              'type': 'deepMap',
+              'inputData': data.deepMap,
+            });
+            final terminalEvent = await stream.where((e) => e is Result).last;
+            expect(terminalEvent, isA<Result>());
+            final result = (terminalEvent as Result).result;
+            expect(
+              result.data,
+              isA<Map<String, dynamic>>(),
+            );
+          },
+          skip: !kIsWeb,
+        );
+
+        test('accepts a [List]', () async {
+          final stream =
+              callable.stream(data.list).where((event) => event is Chunk);
+          await expectLater(
+            stream,
+            emits(
+              isA<Chunk>()
+                  .having((e) => e.partialData, 'partialData', equals('array')),
+            ),
+          );
+        });
+
+        test('accepts a deeply nested [Map]', () async {
           final stream = callable.stream({
             'type': 'deepMap',
             'inputData': data.deepMap,
-          });
-          final terminalEvent = await stream.where((e) => e is Result).last;
-          expect(terminalEvent, isA<Result>());
-          final result = (terminalEvent as Result).result;
-          expect(
-            result.data,
-            isA<Map<String, dynamic>>(),
+          }).where((event) => event is Chunk);
+          await expectLater(
+            stream,
+            emits(
+              isA<Chunk>().having(
+                (e) => e.partialData,
+                'partialData',
+                equals(data.deepMap),
+              ),
+            ),
           );
-        },
-        skip: !kIsWeb,
-      );
+        });
 
-      test('accepts a [List]', () async {
-        final stream =
-            callable.stream(data.list).where((event) => event is Chunk);
-        await expectLater(
-          stream,
-          emits(
-            isA<Chunk>()
-                .having((e) => e.partialData, 'partialData', equals('array')),
-          ),
+        test(
+          'throws error when aborted with TimeLimit signal',
+          () async {
+            final instance = FirebaseFunctions.instance;
+            instance.useFunctionsEmulator('localhost', 5001);
+
+            final completer = Completer<void>();
+
+            final timeoutCallable = FirebaseFunctions.instance.httpsCallable(
+              kTestFunctionTimeout,
+              options: HttpsCallableOptions(
+                webAbortSignal: TimeLimit(const Duration(seconds: 3)),
+              ),
+            );
+
+            timeoutCallable.stream({
+              'testTimeout':
+                  const Duration(seconds: 6).inMilliseconds.toString(),
+            }).listen(
+              (data) {
+                completer.completeError('Should have thrown');
+              },
+              onError: (error) {
+                if (error is FirebaseFunctionsException) {
+                  expect(error.code, equals('internal'));
+                  completer.complete();
+                } else {
+                  completer.completeError('Unexpected error type: $error');
+                }
+              },
+            );
+            await completer.future;
+          },
+          skip: !kIsWeb,
         );
-      });
 
-      test('accepts a deeply nested [Map]', () async {
-        final stream = callable.stream({
-          'type': 'deepMap',
-          'inputData': data.deepMap,
-        }).where((event) => event is Chunk);
-        await expectLater(
-          stream,
-          emits(
-            isA<Chunk>().having(
-              (e) => e.partialData,
-              'partialData',
-              equals(data.deepMap),
-            ),
-          ),
+        test(
+          'throws error when aborted with Abort signal',
+          () async {
+            final instance = FirebaseFunctions.instance;
+            instance.useFunctionsEmulator('localhost', 5001);
+
+            final completer = Completer<void>();
+
+            final timeoutCallable = FirebaseFunctions.instance.httpsCallable(
+              kTestFunctionTimeout,
+              options: HttpsCallableOptions(
+                webAbortSignal: Abort('aborted'),
+              ),
+            );
+
+            timeoutCallable.stream({
+              'testTimeout':
+                  const Duration(seconds: 6).inMilliseconds.toString(),
+            }).listen(
+              (data) {
+                completer.completeError('Should have thrown');
+              },
+              onError: (error) {
+                if (error is FirebaseFunctionsException) {
+                  expect(error.code, equals('internal'));
+                  completer.complete();
+                } else {
+                  completer.completeError('Unexpected error type: $error');
+                }
+              },
+            );
+            await completer.future;
+          },
+          skip: !kIsWeb,
         );
-      });
-
-      test(
-        'throws error when aborted with TimeLimit signal',
-        () async {
-          final instance = FirebaseFunctions.instance;
-          instance.useFunctionsEmulator('localhost', 5001);
-
-          final completer = Completer<void>();
-
-          final timeoutCallable = FirebaseFunctions.instance.httpsCallable(
-            kTestFunctionTimeout,
-            options: HttpsCallableOptions(
-              webAbortSignal: TimeLimit(const Duration(seconds: 3)),
-            ),
-          );
-
-          timeoutCallable.stream({
-            'testTimeout': const Duration(seconds: 6).inMilliseconds.toString(),
-          }).listen(
-            (data) {
-              completer.completeError('Should have thrown');
-            },
-            onError: (error) {
-              if (error is FirebaseFunctionsException) {
-                expect(error.code, equals('internal'));
-                completer.complete();
-              } else {
-                completer.completeError('Unexpected error type: $error');
-              }
-            },
-          );
-          await completer.future;
-        },
-        skip: !kIsWeb,
-      );
-
-      test(
-        'throws error when aborted with Abort signal',
-        () async {
-          final instance = FirebaseFunctions.instance;
-          instance.useFunctionsEmulator('localhost', 5001);
-
-          final completer = Completer<void>();
-
-          final timeoutCallable = FirebaseFunctions.instance.httpsCallable(
-            kTestFunctionTimeout,
-            options: HttpsCallableOptions(
-              webAbortSignal: Abort('aborted'),
-            ),
-          );
-
-          timeoutCallable.stream({
-            'testTimeout': const Duration(seconds: 6).inMilliseconds.toString(),
-          }).listen(
-            (data) {
-              completer.completeError('Should have thrown');
-            },
-            onError: (error) {
-              if (error is FirebaseFunctionsException) {
-                expect(error.code, equals('internal'));
-                completer.complete();
-              } else {
-                completer.completeError('Unexpected error type: $error');
-              }
-            },
-          );
-          await completer.future;
-        },
-        skip: !kIsWeb,
-      );
-    });
+      },
+      // Desktop C++ SDK skip: streaming callables are not supported by the
+      // firebase-cpp-sdk.
+      skip: isDesktopCppSdk,
+    );
   });
 }
