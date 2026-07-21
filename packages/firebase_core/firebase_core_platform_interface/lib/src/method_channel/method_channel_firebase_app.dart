@@ -11,7 +11,7 @@ part of '../../firebase_core_platform_interface.dart';
 /// instance, for example:
 ///
 /// ```dart
-/// Firebase.app('SecondaryApp`);
+/// Firebase.app('SecondaryApp');
 /// ```
 class MethodChannelFirebaseApp extends FirebaseAppPlatform {
   // ignore: public_member_api_docs
