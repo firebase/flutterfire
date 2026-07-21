@@ -78,7 +78,7 @@ class _GroundingPageState extends State<GroundingPage> {
         : FirebaseAI.googleAI();
 
     _model = aiProvider.generativeModel(
-      model: 'gemini-3.1-flash-lite',
+      model: 'gemini-3.5-flash',
       tools: tools.isNotEmpty ? tools : null,
       toolConfig: toolConfig,
     );
