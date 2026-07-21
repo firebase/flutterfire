@@ -71,6 +71,9 @@ static flutter::EncodableValue VariantToEncodableValue(const Variant& variant) {
     case Variant::kTypeStaticBlob:
     case Variant::kTypeMutableBlob: {
       const uint8_t* data = static_cast<const uint8_t*>(variant.blob_data());
+      if (data == nullptr || variant.blob_size() == 0) {
+        return flutter::EncodableValue(std::vector<uint8_t>());
+      }
       return flutter::EncodableValue(
           std::vector<uint8_t>(data, data + variant.blob_size()));
     }
@@ -312,6 +315,7 @@ void CloudFunctionsPlugin::Call(
       if (!state->cv.wait_for(lock, std::chrono::milliseconds(timeout_ms),
                               [&state] { return state->responded; })) {
         state->responded = true;
+        lock.unlock();
         result(MakeFunctionsError("deadline-exceeded",
                                   "The operation timed out."));
       }
@@ -326,28 +330,36 @@ void CloudFunctionsPlugin::Call(
               callable_result != nullptr
                   ? VariantToEncodableValue(callable_result->data())
                   : flutter::EncodableValue();
+          bool deliver = false;
           {
             std::lock_guard<std::mutex> lock(state->mutex);
             if (!state->responded) {
               state->responded = true;
-              result(ErrorOr<std::optional<flutter::EncodableValue>>(
-                  std::optional<flutter::EncodableValue>(data)));
+              deliver = true;
             }
           }
           state->cv.notify_all();
+          if (deliver) {
+            result(ErrorOr<std::optional<flutter::EncodableValue>>(
+                std::optional<flutter::EncodableValue>(data)));
+          }
         } else {
           std::string code =
               GetFunctionsErrorCode(static_cast<Error>(future.error()));
           std::string message =
               future.error_message() ? future.error_message() : "Unknown error";
+          bool deliver = false;
           {
             std::lock_guard<std::mutex> lock(state->mutex);
             if (!state->responded) {
               state->responded = true;
-              result(MakeFunctionsError(code, message));
+              deliver = true;
             }
           }
           state->cv.notify_all();
+          if (deliver) {
+            result(MakeFunctionsError(code, message));
+          }
         }
         delete state->ref;
         state->ref = nullptr;
