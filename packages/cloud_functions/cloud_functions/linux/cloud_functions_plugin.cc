@@ -41,11 +41,6 @@ struct _CloudFunctionsPlugin {
 
 G_DEFINE_TYPE(CloudFunctionsPlugin, cloud_functions_plugin, g_object_get_type())
 
-// Cache of Functions instances keyed by "<appName>|<region>". The C++ SDK
-// manages their lifetime via App's CleanupNotifier, so these raw pointers are
-// not owned here (mirroring firebase_database / firebase_storage).
-static std::map<std::string, Functions*> functions_instances_;
-
 // --- Helper: Run a closure on the GLib main thread ---
 // Firebase C++ SDK futures fire on SDK-internal threads, but the GObject
 // embedder API (FlBinaryMessenger / pigeon responses) is not thread-safe, so
@@ -192,7 +187,10 @@ static const gchar* GetStringArg(FlValue* map, const char* key) {
   return fl_value_get_string(value);
 }
 
-// --- Helper: resolve (and cache) a Functions instance for app + region ---
+// --- Helper: resolve a Functions instance for app + region ---
+// The C++ SDK caches instances internally per (app, region), so no local
+// cache is kept; a local raw-pointer cache would dangle if an app were
+// deleted and recreated.
 static Functions* GetFunctionsInstance(const gchar* app_name,
                                        const gchar* region) {
   App* app = App::GetInstance(app_name);
@@ -200,21 +198,8 @@ static Functions* GetFunctionsInstance(const gchar* app_name,
     return nullptr;
   }
   std::string region_str = region != nullptr ? region : "";
-  std::string cache_key = std::string(app_name) + "|" + region_str;
-
-  auto it = functions_instances_.find(cache_key);
-  if (it != functions_instances_.end()) {
-    return it->second;
-  }
-
-  Functions* functions = region_str.empty()
-                             ? Functions::GetInstance(app)
-                             : Functions::GetInstance(app, region_str.c_str());
-  if (functions == nullptr) {
-    return nullptr;
-  }
-  functions_instances_[cache_key] = functions;
-  return functions;
+  return region_str.empty() ? Functions::GetInstance(app)
+                            : Functions::GetInstance(app, region_str.c_str());
 }
 
 // --- CloudFunctionsHostApi.call ---
