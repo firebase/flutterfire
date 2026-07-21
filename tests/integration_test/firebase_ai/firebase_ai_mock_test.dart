@@ -200,8 +200,10 @@ void main() {
       expect(secondRequest, contains('contents'));
 
       final contents = secondRequest['contents']! as List;
-      expect(contents,
-          hasLength(3)); // User 'Hi', Model 'Hello!', User 'How are you?'
+      expect(
+        contents,
+        hasLength(3),
+      ); // User 'Hi', Model 'Hello!', User 'How are you?'
 
       // Verify roles and text
       expect(contents[0]['role'], equals('user'));

@@ -63,7 +63,7 @@ class FirebaseAI extends FirebasePlugin {
   /// If [app] is not provided, the default Firebase app will be used.
   /// If pass in [appCheck], request session will get protected from abusing.
   @Deprecated(
-      'Use agentPlatform() instead. Note that the default location is now "global" instead of "us-central1"')
+      'Use agentPlatform() instead. Note that the default location for agentPlatform is now "global" instead of "us-central1"')
   static FirebaseAI vertexAI({
     FirebaseApp? app,
     @Deprecated(
