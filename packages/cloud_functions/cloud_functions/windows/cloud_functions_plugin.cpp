@@ -37,11 +37,6 @@ namespace cloud_functions_windows {
 
 static std::string kLibraryName = "flutter-fire-fn";
 
-// Cache of Functions instances keyed by "<appName>|<region>". The C++ SDK
-// manages their lifetime via App's CleanupNotifier, so these raw pointers are
-// not owned here (mirroring the Linux implementation).
-static std::map<std::string, Functions*> functions_instances_;
-
 // --- Helper: Convert firebase::Variant to EncodableValue ---
 static flutter::EncodableValue VariantToEncodableValue(const Variant& variant) {
   switch (variant.type()) {
@@ -192,28 +187,18 @@ static std::string GetStringArg(const flutter::EncodableMap& map,
   return std::get<std::string>(it->second);
 }
 
-// --- Helper: resolve (and cache) a Functions instance for app + region ---
+// --- Helper: resolve a Functions instance for app + region ---
+// The C++ SDK caches instances internally per (app, region), so no local
+// cache is kept; a local raw-pointer cache would dangle if an app were
+// deleted and recreated.
 static Functions* GetFunctionsInstance(const std::string& app_name,
                                        const std::string& region) {
   App* app = App::GetInstance(app_name.c_str());
   if (app == nullptr) {
     return nullptr;
   }
-  std::string cache_key = app_name + "|" + region;
-
-  auto it = functions_instances_.find(cache_key);
-  if (it != functions_instances_.end()) {
-    return it->second;
-  }
-
-  Functions* functions = region.empty()
-                             ? Functions::GetInstance(app)
-                             : Functions::GetInstance(app, region.c_str());
-  if (functions == nullptr) {
-    return nullptr;
-  }
-  functions_instances_[cache_key] = functions;
-  return functions;
+  return region.empty() ? Functions::GetInstance(app)
+                        : Functions::GetInstance(app, region.c_str());
 }
 
 static FlutterError MakeFunctionsError(const std::string& code,
