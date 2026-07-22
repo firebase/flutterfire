@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// ignore_for_file: close_sinks
+
 import 'dart:async';
 import 'dart:convert';
 
@@ -20,14 +22,38 @@ import 'package:firebase_ai/src/live_session.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
+class FakeWebSocketSink implements WebSocketSink {
+  final List<dynamic> sentMessages = [];
+
+  @override
+  void add(dynamic data) {
+    sentMessages.add(data);
+  }
+
+  @override
+  void addError(Object error, [StackTrace? stackTrace]) {}
+
+  @override
+  Future addStream(Stream stream) async {}
+
+  @override
+  Future close([int? closeCode, String? closeReason]) async {}
+
+  @override
+  Future get done => Future.value();
+}
+
 class FakeWebSocketChannel implements WebSocketChannel {
   final StreamController _controller = StreamController();
+  final FakeWebSocketSink _sink = FakeWebSocketSink();
 
   @override
   Stream get stream => _controller.stream;
 
   @override
-  WebSocketSink get sink => throw UnimplementedError();
+  WebSocketSink get sink => _sink;
+
+  List<dynamic> get sentMessages => _sink.sentMessages;
 
   void emit(dynamic message) => _controller.add(message);
 
@@ -94,6 +120,36 @@ void main() {
 
       await subscription.cancel();
       fakeWs.close();
+    });
+
+    test('sendStartActivityRealtime sends correct activity_start message', () async {
+      final fakeWs = FakeWebSocketChannel();
+      final session = LiveSession.forTesting(fakeWs);
+
+      await session.sendStartActivityRealtime();
+
+      expect(fakeWs.sentMessages.length, 1);
+      final jsonPayload = json.decode(fakeWs.sentMessages.first as String);
+      expect(jsonPayload, {
+        'realtime_input': {
+          'activity_start': {},
+        },
+      });
+    });
+
+    test('sendStopActivityRealtime sends correct activity_end message', () async {
+      final fakeWs = FakeWebSocketChannel();
+      final session = LiveSession.forTesting(fakeWs);
+
+      await session.sendStopActivityRealtime();
+
+      expect(fakeWs.sentMessages.length, 1);
+      final jsonPayload = json.decode(fakeWs.sentMessages.first as String);
+      expect(jsonPayload, {
+        'realtime_input': {
+          'activity_end': {},
+        },
+      });
     });
   });
 }
