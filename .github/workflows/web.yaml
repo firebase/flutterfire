@@ -69,7 +69,7 @@ jobs:
         run: melos bootstrap --scope tests && melos bootstrap --scope "cloud_firestore*"
       - name: 'Install Tools'
         run: |
-          sudo npm i -g firebase-tools
+          sudo npm i -g firebase-tools@14.26.0
           echo "FIREBASE_TOOLS_VERSION=$(npm firebase --version)" >> $GITHUB_ENV
       - name: Firebase Emulator Cache
         id: firebase-emulator-cache
@@ -219,7 +219,7 @@ jobs:
         run: melos bootstrap --scope tests
       - name: 'Install Tools'
         run: |
-          sudo npm i -g firebase-tools
+          sudo npm i -g firebase-tools@14.26.0
           echo "FIREBASE_TOOLS_VERSION=$(npm firebase --version)" >> $GITHUB_ENV
       - name: Firebase Emulator Cache
         id: firebase-emulator-cache
@@ -376,7 +376,7 @@ jobs:
         run: melos bootstrap --scope tests && melos bootstrap --scope "cloud_firestore*"
       - name: 'Install Tools'
         run: |
-          sudo npm i -g firebase-tools
+          sudo npm i -g firebase-tools@14.26.0
           echo "FIREBASE_TOOLS_VERSION=$(npm firebase --version)" >> $GITHUB_ENV
       - name: Firebase Emulator Cache
         id: firebase-emulator-cache
