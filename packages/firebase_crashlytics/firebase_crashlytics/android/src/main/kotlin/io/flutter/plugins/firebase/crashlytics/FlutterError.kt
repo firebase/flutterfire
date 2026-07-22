@@ -12,5 +12,4 @@ import androidx.annotation.Keep
  *
  * Name matches iOS implementation.
  */
-@Keep
-open class FlutterError internal constructor(message: String) : Exception(message)
+@Keep open class FlutterError internal constructor(message: String) : Exception(message)

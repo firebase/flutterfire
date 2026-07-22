@@ -36,8 +36,8 @@ class FlutterFirebaseCrashlyticsInternal private constructor() {
     fun setLoadingUnits(loadingUnits: List<String>) {
       loadingUnits.forEachIndexed { index, loadingUnit ->
         FirebaseCrashlytics.getInstance()
-          .core
-          .setInternalKey("$LOADING_UNIT_KEY${index + 1}", loadingUnit)
+            .core
+            .setInternalKey("$LOADING_UNIT_KEY${index + 1}", loadingUnit)
       }
     }
   }

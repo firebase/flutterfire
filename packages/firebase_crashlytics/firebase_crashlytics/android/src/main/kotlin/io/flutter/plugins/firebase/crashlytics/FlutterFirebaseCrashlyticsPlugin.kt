@@ -28,10 +28,10 @@ import io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry
 
 /** FlutterFirebaseCrashlyticsPlugin */
 class FlutterFirebaseCrashlyticsPlugin :
-  FlutterFirebasePlugin,
-  FlutterPlugin,
-  MethodChannel.MethodCallHandler,
-  EventChannel.StreamHandler {
+    FlutterFirebasePlugin,
+    FlutterPlugin,
+    MethodChannel.MethodCallHandler,
+    EventChannel.StreamHandler {
   private var channel: MethodChannel? = null
   private var testEventChannel: EventChannel? = null
   private var testEventSink: EventChannel.EventSink? = null
@@ -47,7 +47,7 @@ class FlutterFirebaseCrashlyticsPlugin :
     channel = MethodChannel(messenger, CHANNEL_NAME).also { it.setMethodCallHandler(this) }
     FlutterFirebasePluginRegistry.registerPlugin(CHANNEL_NAME, this)
     testEventChannel =
-      EventChannel(messenger, TEST_EVENT_CHANNEL_NAME).also { it.setStreamHandler(this) }
+        EventChannel(messenger, TEST_EVENT_CHANNEL_NAME).also { it.setStreamHandler(this) }
   }
 
   override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
@@ -130,14 +130,16 @@ class FlutterFirebaseCrashlyticsPlugin :
         FlutterFirebaseCrashlyticsInternal.setLoadingUnits(loadingUnits)
 
         val exception =
-          if (reason != null) {
-            val crashlyticsErrorReason = "thrown $reason"
-            testEventSink?.let { sink -> mainHandler.post { sink.success(crashlyticsErrorReason) } }
-            crashlytics.setCustomKey(Constants.FLUTTER_ERROR_REASON, crashlyticsErrorReason)
-            FlutterError("$dartExceptionMessage. Error thrown $reason.")
-          } else {
-            FlutterError(dartExceptionMessage)
-          }
+            if (reason != null) {
+              val crashlyticsErrorReason = "thrown $reason"
+              testEventSink?.let { sink ->
+                mainHandler.post { sink.success(crashlyticsErrorReason) }
+              }
+              crashlytics.setCustomKey(Constants.FLUTTER_ERROR_REASON, crashlyticsErrorReason)
+              FlutterError("$dartExceptionMessage. Error thrown $reason.")
+            } else {
+              FlutterError(dartExceptionMessage)
+            }
 
         crashlytics.setCustomKey(Constants.FLUTTER_ERROR_EXCEPTION, dartExceptionMessage)
         @Suppress("UNCHECKED_CAST")
@@ -194,11 +196,9 @@ class FlutterFirebaseCrashlyticsPlugin :
         val enabled = arguments[Constants.ENABLED]!! as Boolean
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(enabled)
         taskCompletionSource.setResult(
-          mapOf(
-            Constants.IS_CRASHLYTICS_COLLECTION_ENABLED to
-              isCrashlyticsCollectionEnabled(FirebaseApp.getInstance())
-          )
-        )
+            mapOf(
+                Constants.IS_CRASHLYTICS_COLLECTION_ENABLED to
+                    isCrashlyticsCollectionEnabled(FirebaseApp.getInstance())))
       } catch (exception: Exception) {
         taskCompletionSource.setException(exception)
       }
@@ -237,26 +237,26 @@ class FlutterFirebaseCrashlyticsPlugin :
 
   override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
     val task: Task<*> =
-      when (call.method) {
-        "Crashlytics#checkForUnsentReports" -> checkForUnsentReports()
-        "Crashlytics#crash" -> {
-          crash()
-          return
+        when (call.method) {
+          "Crashlytics#checkForUnsentReports" -> checkForUnsentReports()
+          "Crashlytics#crash" -> {
+            crash()
+            return
+          }
+          "Crashlytics#deleteUnsentReports" -> deleteUnsentReports()
+          "Crashlytics#didCrashOnPreviousExecution" -> didCrashOnPreviousExecution()
+          "Crashlytics#recordError" -> recordError(call.arguments<Map<String, Any>>()!!)
+          "Crashlytics#log" -> log(call.arguments<Map<String, Any>>()!!)
+          "Crashlytics#sendUnsentReports" -> sendUnsentReports()
+          "Crashlytics#setCrashlyticsCollectionEnabled" ->
+              setCrashlyticsCollectionEnabled(call.arguments<Map<String, Any>>()!!)
+          "Crashlytics#setUserIdentifier" -> setUserIdentifier(call.arguments<Map<String, Any>>()!!)
+          "Crashlytics#setCustomKey" -> setCustomKey(call.arguments<Map<String, Any>>()!!)
+          else -> {
+            result.notImplemented()
+            return
+          }
         }
-        "Crashlytics#deleteUnsentReports" -> deleteUnsentReports()
-        "Crashlytics#didCrashOnPreviousExecution" -> didCrashOnPreviousExecution()
-        "Crashlytics#recordError" -> recordError(call.arguments<Map<String, Any>>()!!)
-        "Crashlytics#log" -> log(call.arguments<Map<String, Any>>()!!)
-        "Crashlytics#sendUnsentReports" -> sendUnsentReports()
-        "Crashlytics#setCrashlyticsCollectionEnabled" ->
-          setCrashlyticsCollectionEnabled(call.arguments<Map<String, Any>>()!!)
-        "Crashlytics#setUserIdentifier" -> setUserIdentifier(call.arguments<Map<String, Any>>()!!)
-        "Crashlytics#setCustomKey" -> setCustomKey(call.arguments<Map<String, Any>>()!!)
-        else -> {
-          result.notImplemented()
-          return
-        }
-      }
 
     task.addOnCompleteListener { completedTask ->
       if (completedTask.isSuccessful) {
@@ -270,20 +270,19 @@ class FlutterFirebaseCrashlyticsPlugin :
 
   /** Extracts a StackTraceElement from a Dart stack trace element. */
   private fun generateStackTraceElement(errorElement: Map<String, String>): StackTraceElement? =
-    try {
-      StackTraceElement(
-        errorElement[Constants.CLASS] ?: "",
-        errorElement[Constants.METHOD],
-        errorElement[Constants.FILE],
-        errorElement[Constants.LINE]!!.toInt()
-      )
-    } catch (_: Exception) {
-      Log.e(TAG, "Unable to generate stack trace element from Dart error.")
-      null
-    }
+      try {
+        StackTraceElement(
+            errorElement[Constants.CLASS] ?: "",
+            errorElement[Constants.METHOD],
+            errorElement[Constants.FILE],
+            errorElement[Constants.LINE]!!.toInt())
+      } catch (_: Exception) {
+        Log.e(TAG, "Unable to generate stack trace element from Dart error.")
+        null
+      }
 
   private fun getCrashlyticsSharedPrefs(context: Context): SharedPreferences =
-    context.getSharedPreferences("com.google.firebase.crashlytics", 0)
+      context.getSharedPreferences("com.google.firebase.crashlytics", 0)
 
   // TODO remove once Crashlytics public API supports isCrashlyticsCollectionEnabled
   private fun isCrashlyticsCollectionEnabled(app: FirebaseApp): Boolean {
@@ -304,7 +303,7 @@ class FlutterFirebaseCrashlyticsPlugin :
         val constants = HashMap<String, Any>()
         if (firebaseApp.name == "[DEFAULT]") {
           constants[Constants.IS_CRASHLYTICS_COLLECTION_ENABLED] =
-            isCrashlyticsCollectionEnabled(FirebaseApp.getInstance())
+              isCrashlyticsCollectionEnabled(FirebaseApp.getInstance())
         }
         taskCompletionSource.setResult(constants)
       } catch (exception: Exception) {
@@ -338,20 +337,18 @@ class FlutterFirebaseCrashlyticsPlugin :
     const val TAG = "FLTFirebaseCrashlytics"
     private const val CHANNEL_NAME = "plugins.flutter.io/firebase_crashlytics"
     private const val TEST_EVENT_CHANNEL_NAME =
-      "plugins.flutter.io/firebase_crashlytics_test_stream"
+        "plugins.flutter.io/firebase_crashlytics_test_stream"
     private const val FIREBASE_CRASHLYTICS_COLLECTION_ENABLED =
-      "firebase_crashlytics_collection_enabled"
+        "firebase_crashlytics_collection_enabled"
 
     private fun readCrashlyticsDataCollectionEnabledFromManifest(
-      applicationContext: Context
+        applicationContext: Context
     ): Boolean {
       try {
         val packageManager = applicationContext.packageManager
         val applicationInfo =
-          packageManager.getApplicationInfo(
-            applicationContext.packageName,
-            PackageManager.GET_META_DATA
-          )
+            packageManager.getApplicationInfo(
+                applicationContext.packageName, PackageManager.GET_META_DATA)
         val metadata = applicationInfo.metaData
         if (metadata != null && metadata.containsKey(FIREBASE_CRASHLYTICS_COLLECTION_ENABLED)) {
           return metadata.getBoolean(FIREBASE_CRASHLYTICS_COLLECTION_ENABLED)

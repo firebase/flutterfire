@@ -38,17 +38,17 @@ internal object ElfBuildIdReader {
    * @return the build ID as a lowercase hex string, or `null` if it cannot be read.
    */
   fun readBuildId(context: Context): String? =
-    try {
-      val libApp = File(context.applicationInfo.nativeLibraryDir, "libapp.so")
-      if (libApp.exists()) {
-        readBuildIdFromElf(libApp)
-      } else {
-        readBuildIdFromApk(context)
+      try {
+        val libApp = File(context.applicationInfo.nativeLibraryDir, "libapp.so")
+        if (libApp.exists()) {
+          readBuildIdFromElf(libApp)
+        } else {
+          readBuildIdFromApk(context)
+        }
+      } catch (exception: Exception) {
+        Log.d(TAG, "Could not read ELF build ID from libapp.so", exception)
+        null
       }
-    } catch (exception: Exception) {
-      Log.d(TAG, "Could not read ELF build ID from libapp.so", exception)
-      null
-    }
 
   private fun readBuildIdFromApk(context: Context): String? {
     readBuildIdFromZip(context.applicationInfo.sourceDir)?.let {
@@ -85,7 +85,7 @@ internal object ElfBuildIdReader {
   }
 
   private fun readBuildIdFromElf(elfFile: File): String? =
-    RandomAccessFile(elfFile, "r").use(::readBuildIdFromRaf)
+      RandomAccessFile(elfFile, "r").use(::readBuildIdFromRaf)
 
   private fun readBuildIdFromBytes(data: ByteArray): String? {
     return try {
@@ -240,10 +240,10 @@ internal object ElfBuildIdReader {
    * Note format: namesz (4) | descsz (4) | type (4) | name (aligned to 4) | desc (aligned to 4)
    */
   private fun findGnuBuildId(
-    file: RandomAccessFile,
-    offset: Long,
-    size: Long,
-    order: ByteOrder
+      file: RandomAccessFile,
+      offset: Long,
+      size: Long,
+      order: ByteOrder
   ): String? {
     val end = offset + size
     var position = offset
@@ -272,16 +272,16 @@ internal object ElfBuildIdReader {
   private fun align4(value: Int): Int = (value + 3) and 3.inv()
 
   private fun readInt(file: RandomAccessFile, order: ByteOrder): Int =
-    ByteBuffer.wrap(ByteArray(4).also(file::readFully)).order(order).int
+      ByteBuffer.wrap(ByteArray(4).also(file::readFully)).order(order).int
 
   private fun readLong(file: RandomAccessFile, order: ByteOrder): Long =
-    ByteBuffer.wrap(ByteArray(8).also(file::readFully)).order(order).long
+      ByteBuffer.wrap(ByteArray(8).also(file::readFully)).order(order).long
 
   private fun readUnsignedShort(file: RandomAccessFile, order: ByteOrder): Int =
-    ByteBuffer.wrap(ByteArray(2).also(file::readFully)).order(order).short.toInt() and 0xffff
+      ByteBuffer.wrap(ByteArray(2).also(file::readFully)).order(order).short.toInt() and 0xffff
 
   private fun bytesToHex(bytes: ByteArray): String =
-    buildString(bytes.size * 2) {
-      bytes.forEach { byte -> append(String.format("%02x", byte.toInt() and 0xff)) }
-    }
+      buildString(bytes.size * 2) {
+        bytes.forEach { byte -> append(String.format("%02x", byte.toInt() and 0xff)) }
+      }
 }

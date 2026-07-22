@@ -14,4 +14,4 @@ import androidx.annotation.Keep
  */
 @Keep
 open class FirebaseCrashlyticsTestCrash internal constructor() :
-  RuntimeException("This is a test crash caused by calling .crash() in Dart.")
+    RuntimeException("This is a test crash caused by calling .crash() in Dart.")
