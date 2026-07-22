@@ -1,5 +1,11 @@
 # firebase_ml_model_downloader_example
 
+> [!WARNING]
+> Firebase ML is deprecated and will shut down on June 15, 2027. Existing
+> projects should migrate hosted custom models to another solution before that
+> date. See the
+> [Cloud Storage migration guide](https://firebase.google.com/docs/ml/migrate-to-cloud-storage).
+
 Demonstrates how to use the firebase_ml_model_downloader plugin.
 
 ## Getting Started

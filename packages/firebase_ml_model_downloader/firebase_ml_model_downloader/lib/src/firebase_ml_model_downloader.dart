@@ -4,7 +4,17 @@
 
 part of '../firebase_ml_model_downloader.dart';
 
+@Deprecated(
+  'Firebase ML is deprecated and will shut down on June 15, 2027. '
+  'Migrate hosted custom models to another solution, such as Cloud Storage '
+  'for Firebase. See https://firebase.google.com/docs/ml/migrate-to-cloud-storage.',
+)
 class FirebaseModelDownloader extends FirebasePlugin {
+  @Deprecated(
+    'Firebase ML is deprecated and will shut down on June 15, 2027. '
+    'Migrate hosted custom models to another solution, such as Cloud Storage '
+    'for Firebase. See https://firebase.google.com/docs/ml/migrate-to-cloud-storage.',
+  )
   FirebaseModelDownloader._({required this.app})
       : super(app.name, 'plugins.flutter.io/firebase_ml_model_downloader');
 
@@ -34,6 +44,11 @@ class FirebaseModelDownloader extends FirebasePlugin {
   }
 
   /// Returns an instance using a specified [FirebaseApp].
+  @Deprecated(
+    'Firebase ML is deprecated and will shut down on June 15, 2027. '
+    'Migrate hosted custom models to another solution, such as Cloud Storage '
+    'for Firebase. See https://firebase.google.com/docs/ml/migrate-to-cloud-storage.',
+  )
   factory FirebaseModelDownloader.instanceFor({required FirebaseApp app}) {
     return _cachedInstances.putIfAbsent(app.name, () {
       return FirebaseModelDownloader._(app: app);
