@@ -98,6 +98,54 @@ class TokenStreamHandler
   std::unique_ptr<FlutterAppCheckListener> listener_;
 };
 
+// FlutterCustomAppCheckProvider calls into Dart via the FlutterApi and
+// completes the Firebase C++ SDK callback asynchronously when Dart returns a
+// token (or an error). The Dart handler returns the token together with its
+// expiry, so the C++ SDK can cache for the exact lifetime the backend minted
+// rather than a hardcoded refresh window.
+FlutterCustomAppCheckProvider::FlutterCustomAppCheckProvider(
+    flutter::BinaryMessenger* binary_messenger, const std::string& app_name)
+    : flutter_api_(std::make_unique<FirebaseAppCheckFlutterApi>(
+          binary_messenger, app_name)) {}
+
+void FlutterCustomAppCheckProvider::GetToken(
+    std::function<void(firebase::app_check::AppCheckToken, int,
+                       const std::string&)>
+        completion_callback) {
+  auto completion = std::make_shared<std::function<void(
+      firebase::app_check::AppCheckToken, int, const std::string&)>>(
+      std::move(completion_callback));
+
+  flutter_api_->GetCustomToken(
+      [completion](const CustomAppCheckToken& dart_token) {
+        firebase::app_check::AppCheckToken result_token;
+        result_token.token = dart_token.token();
+        result_token.expire_time_millis = dart_token.expire_time_millis();
+        (*completion)(result_token, firebase::app_check::kAppCheckErrorNone,
+                      "");
+      },
+      [completion](const FlutterError& error) {
+        (*completion)(firebase::app_check::AppCheckToken(),
+                      firebase::app_check::kAppCheckErrorUnknown,
+                      error.message().empty() ? "unknown" : error.message());
+      });
+}
+
+FlutterCustomAppCheckProviderFactory::FlutterCustomAppCheckProviderFactory(
+    flutter::BinaryMessenger* binary_messenger)
+    : binary_messenger_(binary_messenger) {}
+
+firebase::app_check::AppCheckProvider*
+FlutterCustomAppCheckProviderFactory::CreateProvider(firebase::App* app) {
+  const std::string app_name = app == nullptr ? "" : app->name();
+  auto& provider = providers_[app_name];
+  if (!provider) {
+    provider = std::make_unique<FlutterCustomAppCheckProvider>(
+        binary_messenger_, app_name);
+  }
+  return provider.get();
+}
+
 static AppCheck* GetAppCheckFromPigeon(const std::string& app_name) {
   App* app = App::GetInstance(app_name.c_str());
   return AppCheck::GetInstance(app);
@@ -166,17 +214,22 @@ FirebaseAppCheckPlugin::~FirebaseAppCheckPlugin() {
 void FirebaseAppCheckPlugin::Activate(
     const std::string& app_name, const std::string* android_provider,
     const std::string* apple_provider, const std::string* debug_token,
+    const std::string* windows_provider,
     std::function<void(std::optional<FlutterError> reply)> result) {
-  // On Windows/desktop, only the Debug provider is available.
-  DebugAppCheckProviderFactory* factory =
-      DebugAppCheckProviderFactory::GetInstance();
+  if (windows_provider != nullptr && *windows_provider == "custom") {
+    custom_provider_factory_ =
+        std::make_unique<FlutterCustomAppCheckProviderFactory>(binaryMessenger);
+    AppCheck::SetAppCheckProviderFactory(custom_provider_factory_.get());
+  } else {
+    DebugAppCheckProviderFactory* factory =
+        DebugAppCheckProviderFactory::GetInstance();
 
-  if (debug_token != nullptr && !debug_token->empty()) {
-    factory->SetDebugToken(*debug_token);
+    if (debug_token != nullptr && !debug_token->empty()) {
+      factory->SetDebugToken(*debug_token);
+    }
+
+    AppCheck::SetAppCheckProviderFactory(factory);
   }
-
-  AppCheck::SetAppCheckProviderFactory(factory);
-
   result(std::nullopt);
 }
 
@@ -230,7 +283,6 @@ void FirebaseAppCheckPlugin::GetLimitedUseAppCheckToken(
     const std::string& app_name,
     std::function<void(ErrorOr<std::string> reply)> result) {
   AppCheck* app_check = GetAppCheckFromPigeon(app_name);
-
   Future<AppCheckToken> future = app_check->GetLimitedUseAppCheckToken();
   future.OnCompletion([result](const Future<AppCheckToken>& completed_future) {
     if (completed_future.error() != 0) {

@@ -17,6 +17,11 @@ import java.nio.ByteBuffer
 
 private object GeneratedAndroidFirebaseAppCheckPigeonUtils {
 
+  fun createConnectionError(channelName: String): FlutterError {
+    return FlutterError(
+        "channel-error", "Unable to establish connection on channel: '$channelName'.", "")
+  }
+
   fun wrapResult(result: Any?): List<Any?> {
     return listOf(result)
   }
@@ -29,6 +34,150 @@ private object GeneratedAndroidFirebaseAppCheckPigeonUtils {
           exception.javaClass.simpleName,
           exception.toString(),
           "Cause: " + exception.cause + ", Stacktrace: " + Log.getStackTraceString(exception))
+    }
+  }
+
+  fun doubleEquals(a: Double, b: Double): Boolean {
+    // Normalize -0.0 to 0.0 and handle NaN equality.
+    return (if (a == 0.0) 0.0 else a) == (if (b == 0.0) 0.0 else b) || (a.isNaN() && b.isNaN())
+  }
+
+  fun floatEquals(a: Float, b: Float): Boolean {
+    // Normalize -0.0 to 0.0 and handle NaN equality.
+    return (if (a == 0.0f) 0.0f else a) == (if (b == 0.0f) 0.0f else b) || (a.isNaN() && b.isNaN())
+  }
+
+  fun doubleHash(d: Double): Int {
+    // Normalize -0.0 to 0.0 and handle NaN to ensure consistent hash codes.
+    val normalized = if (d == 0.0) 0.0 else d
+    val bits = java.lang.Double.doubleToLongBits(normalized)
+    return (bits xor (bits ushr 32)).toInt()
+  }
+
+  fun floatHash(f: Float): Int {
+    // Normalize -0.0 to 0.0 and handle NaN to ensure consistent hash codes.
+    val normalized = if (f == 0.0f) 0.0f else f
+    return java.lang.Float.floatToIntBits(normalized)
+  }
+
+  fun deepEquals(a: Any?, b: Any?): Boolean {
+    if (a === b) {
+      return true
+    }
+    if (a == null || b == null) {
+      return false
+    }
+    if (a is ByteArray && b is ByteArray) {
+      return a.contentEquals(b)
+    }
+    if (a is IntArray && b is IntArray) {
+      return a.contentEquals(b)
+    }
+    if (a is LongArray && b is LongArray) {
+      return a.contentEquals(b)
+    }
+    if (a is DoubleArray && b is DoubleArray) {
+      if (a.size != b.size) return false
+      for (i in a.indices) {
+        if (!doubleEquals(a[i], b[i])) return false
+      }
+      return true
+    }
+    if (a is FloatArray && b is FloatArray) {
+      if (a.size != b.size) return false
+      for (i in a.indices) {
+        if (!floatEquals(a[i], b[i])) return false
+      }
+      return true
+    }
+    if (a is Array<*> && b is Array<*>) {
+      if (a.size != b.size) return false
+      for (i in a.indices) {
+        if (!deepEquals(a[i], b[i])) return false
+      }
+      return true
+    }
+    if (a is List<*> && b is List<*>) {
+      if (a.size != b.size) return false
+      val iterA = a.iterator()
+      val iterB = b.iterator()
+      while (iterA.hasNext() && iterB.hasNext()) {
+        if (!deepEquals(iterA.next(), iterB.next())) return false
+      }
+      return true
+    }
+    if (a is Map<*, *> && b is Map<*, *>) {
+      if (a.size != b.size) return false
+      for (entry in a) {
+        val key = entry.key
+        var found = false
+        for (bEntry in b) {
+          if (deepEquals(key, bEntry.key)) {
+            if (deepEquals(entry.value, bEntry.value)) {
+              found = true
+              break
+            } else {
+              return false
+            }
+          }
+        }
+        if (!found) return false
+      }
+      return true
+    }
+    if (a is Double && b is Double) {
+      return doubleEquals(a, b)
+    }
+    if (a is Float && b is Float) {
+      return floatEquals(a, b)
+    }
+    return a == b
+  }
+
+  fun deepHash(value: Any?): Int {
+    return when (value) {
+      null -> 0
+      is ByteArray -> value.contentHashCode()
+      is IntArray -> value.contentHashCode()
+      is LongArray -> value.contentHashCode()
+      is DoubleArray -> {
+        var result = 1
+        for (item in value) {
+          result = 31 * result + doubleHash(item)
+        }
+        result
+      }
+      is FloatArray -> {
+        var result = 1
+        for (item in value) {
+          result = 31 * result + floatHash(item)
+        }
+        result
+      }
+      is Array<*> -> {
+        var result = 1
+        for (item in value) {
+          result = 31 * result + deepHash(item)
+        }
+        result
+      }
+      is List<*> -> {
+        var result = 1
+        for (item in value) {
+          result = 31 * result + deepHash(item)
+        }
+        result
+      }
+      is Map<*, *> -> {
+        var result = 0
+        for (entry in value) {
+          result += ((deepHash(entry.key) * 31) xor deepHash(entry.value))
+        }
+        result
+      }
+      is Double -> doubleHash(value)
+      is Float -> floatHash(value)
+      else -> value.hashCode()
     }
   }
 }
@@ -46,13 +195,78 @@ class FlutterError(
     val details: Any? = null
 ) : RuntimeException()
 
+/**
+ * Carries a minted App Check token plus the wall-clock expiry the Firebase SDK should associate
+ * with it. Returning the expiry alongside the token lets backends mint tokens with arbitrary
+ * lifetimes (short TTLs for a stricter security posture, longer TTLs for fewer round-trips) without
+ * the plugin hardcoding a refresh window.
+ *
+ * Generated class from Pigeon that represents data sent in messages.
+ */
+data class CustomAppCheckToken(
+    /** The App Check token string to send with Firebase requests. */
+    val token: String,
+    /**
+     * Absolute expiry as Unix epoch milliseconds (UTC). The Firebase SDK uses this to decide when
+     * to refresh; a token returned with an expiry in the past is treated as immediately expired.
+     */
+    val expireTimeMillis: Long
+) {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): CustomAppCheckToken {
+      val token = pigeonVar_list[0] as String
+      val expireTimeMillis = pigeonVar_list[1] as Long
+      return CustomAppCheckToken(token, expireTimeMillis)
+    }
+  }
+
+  fun toList(): List<Any?> {
+    return listOf(
+        token,
+        expireTimeMillis,
+    )
+  }
+
+  override fun equals(other: Any?): Boolean {
+    if (other == null || other.javaClass != javaClass) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    val other = other as CustomAppCheckToken
+    return GeneratedAndroidFirebaseAppCheckPigeonUtils.deepEquals(this.token, other.token) &&
+        GeneratedAndroidFirebaseAppCheckPigeonUtils.deepEquals(
+            this.expireTimeMillis, other.expireTimeMillis)
+  }
+
+  override fun hashCode(): Int {
+    var result = javaClass.hashCode()
+    result = 31 * result + GeneratedAndroidFirebaseAppCheckPigeonUtils.deepHash(this.token)
+    result =
+        31 * result + GeneratedAndroidFirebaseAppCheckPigeonUtils.deepHash(this.expireTimeMillis)
+    return result
+  }
+}
+
 private open class GeneratedAndroidFirebaseAppCheckPigeonCodec : StandardMessageCodec() {
   override fun readValueOfType(type: Byte, buffer: ByteBuffer): Any? {
-    return super.readValueOfType(type, buffer)
+    return when (type) {
+      129.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let { CustomAppCheckToken.fromList(it) }
+      }
+      else -> super.readValueOfType(type, buffer)
+    }
   }
 
   override fun writeValue(stream: ByteArrayOutputStream, value: Any?) {
-    super.writeValue(stream, value)
+    when (value) {
+      is CustomAppCheckToken -> {
+        stream.write(129)
+        writeValue(stream, value.toList())
+      }
+      else -> super.writeValue(stream, value)
+    }
   }
 }
 
@@ -63,6 +277,7 @@ interface FirebaseAppCheckHostApi {
       androidProvider: String?,
       appleProvider: String?,
       debugToken: String?,
+      windowsProvider: String?,
       callback: (Result<Unit>) -> Unit
   )
 
@@ -106,15 +321,20 @@ interface FirebaseAppCheckHostApi {
             val androidProviderArg = args[1] as String?
             val appleProviderArg = args[2] as String?
             val debugTokenArg = args[3] as String?
-            api.activate(appNameArg, androidProviderArg, appleProviderArg, debugTokenArg) {
-                result: Result<Unit> ->
-              val error = result.exceptionOrNull()
-              if (error != null) {
-                reply.reply(GeneratedAndroidFirebaseAppCheckPigeonUtils.wrapError(error))
-              } else {
-                reply.reply(GeneratedAndroidFirebaseAppCheckPigeonUtils.wrapResult(null))
-              }
-            }
+            val windowsProviderArg = args[4] as String?
+            api.activate(
+                appNameArg,
+                androidProviderArg,
+                appleProviderArg,
+                debugTokenArg,
+                windowsProviderArg) { result: Result<Unit> ->
+                  val error = result.exceptionOrNull()
+                  if (error != null) {
+                    reply.reply(GeneratedAndroidFirebaseAppCheckPigeonUtils.wrapError(error))
+                  } else {
+                    reply.reply(GeneratedAndroidFirebaseAppCheckPigeonUtils.wrapResult(null))
+                  }
+                }
           }
         } else {
           channel.setMessageHandler(null)
@@ -217,6 +437,53 @@ interface FirebaseAppCheckHostApi {
         } else {
           channel.setMessageHandler(null)
         }
+      }
+    }
+  }
+}
+/**
+ * Dart-side handler invoked by the native plugin when the Firebase SDK needs a fresh App Check
+ * token. Implementations typically call a backend service (for example a Cloud Function with
+ * `enforceAppCheck: false`) that mints a token using the Firebase Admin SDK. The native side awaits
+ * the future, then hands the token to the Firebase SDK, which attaches it to subsequent Firebase
+ * backend requests (Firestore, Functions, Storage, Auth, RTDB).
+ *
+ * Generated class from Pigeon that represents Flutter messages that can be called from Kotlin.
+ */
+class FirebaseAppCheckFlutterApi(
+    private val binaryMessenger: BinaryMessenger,
+    private val messageChannelSuffix: String = ""
+) {
+  companion object {
+    /** The codec used by FirebaseAppCheckFlutterApi. */
+    val codec: MessageCodec<Any?> by lazy { GeneratedAndroidFirebaseAppCheckPigeonCodec() }
+  }
+
+  fun getCustomToken(callback: (Result<CustomAppCheckToken>) -> Unit) {
+    val separatedMessageChannelSuffix =
+        if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    val channelName =
+        "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckFlutterApi.getCustomToken$separatedMessageChannelSuffix"
+    val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
+    channel.send(null) {
+      if (it is List<*>) {
+        if (it.size > 1) {
+          callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
+        } else if (it[0] == null) {
+          callback(
+              Result.failure(
+                  FlutterError(
+                      "null-error",
+                      "Flutter api returned null value for non-null return value.",
+                      "")))
+        } else {
+          val output = it[0] as CustomAppCheckToken
+          callback(Result.success(output))
+        }
+      } else {
+        callback(
+            Result.failure(
+                GeneratedAndroidFirebaseAppCheckPigeonUtils.createConnectionError(channelName)))
       }
     }
   }
