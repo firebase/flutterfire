@@ -720,7 +720,8 @@ void main() {
             {'modality': 'IMAGE', 'tokenCount': 20}
           ]
         };
-        final response = VertexSerialization().parseCountTokensResponse(json);
+        final response =
+            AgentPlatformSerialization().parseCountTokensResponse(json);
         expect(response.totalTokens, 120);
         expect(response.promptTokensDetails, isNotNull);
         expect(response.promptTokensDetails, hasLength(2));
@@ -733,7 +734,8 @@ void main() {
 
       test('parses valid JSON with minimal fields (only totalTokens)', () {
         final json = {'totalTokens': 50};
-        final response = VertexSerialization().parseCountTokensResponse(json);
+        final response =
+            AgentPlatformSerialization().parseCountTokensResponse(json);
         expect(response.totalTokens, 50);
         expect(response.promptTokensDetails, isNull);
       });
@@ -742,21 +744,23 @@ void main() {
         final json = {
           'error': {'code': 400, 'message': 'Invalid request'}
         };
-        expect(() => VertexSerialization().parseCountTokensResponse(json),
+        expect(
+            () => AgentPlatformSerialization().parseCountTokensResponse(json),
             throwsA(isA<FirebaseAIException>()));
       });
 
       test('throws FormatException for invalid JSON structure (not a Map)', () {
         const json = 'not_a_map';
         expect(
-            () => VertexSerialization().parseCountTokensResponse(json),
+            () => AgentPlatformSerialization().parseCountTokensResponse(json),
             throwsA(isA<FirebaseAISdkException>().having(
                 (e) => e.message, 'message', contains('CountTokensResponse'))));
       });
 
       test('throws if totalTokens is missing', () {
         final json = {'totalBillableCharacters': 100};
-        expect(() => VertexSerialization().parseCountTokensResponse(json),
+        expect(
+            () => AgentPlatformSerialization().parseCountTokensResponse(json),
             throwsA(anything)); // More specific error expected
       });
     });
@@ -807,7 +811,7 @@ void main() {
           }
         };
         final response =
-            VertexSerialization().parseGenerateContentResponse(json);
+            AgentPlatformSerialization().parseGenerateContentResponse(json);
         expect(response.candidates, hasLength(1));
         expect(response.candidates.first.text, 'Hello world');
         expect(response.candidates.first.finishReason, FinishReason.stop);
@@ -870,7 +874,7 @@ void main() {
           ]
         };
         final response =
-            VertexSerialization().parseGenerateContentResponse(json);
+            AgentPlatformSerialization().parseGenerateContentResponse(json);
         final ratings = response.candidates.first.safetyRatings!;
         expect(ratings.map((r) => r.category), [
           HarmCategory.imageDangerousContent,
@@ -901,7 +905,7 @@ void main() {
           ]
         };
         final response =
-            VertexSerialization().parseGenerateContentResponse(json);
+            AgentPlatformSerialization().parseGenerateContentResponse(json);
         expect(response.candidates.first.safetyRatings!.first.category,
             HarmCategory.unknown);
       });
@@ -918,7 +922,7 @@ void main() {
             }
           };
           final response =
-              VertexSerialization().parseGenerateContentResponse(json);
+              AgentPlatformSerialization().parseGenerateContentResponse(json);
           expect(response.usageMetadata, isNotNull);
           expect(response.usageMetadata!.promptTokenCount, 10);
           expect(response.usageMetadata!.candidatesTokenCount, 20);
@@ -936,7 +940,7 @@ void main() {
             }
           };
           final response =
-              VertexSerialization().parseGenerateContentResponse(json);
+              AgentPlatformSerialization().parseGenerateContentResponse(json);
           expect(response.usageMetadata, isNotNull);
           expect(response.usageMetadata!.thoughtsTokenCount, isNull);
         });
@@ -979,8 +983,8 @@ void main() {
             ]
           };
 
-          final response =
-              VertexSerialization().parseGenerateContentResponse(jsonResponse);
+          final response = AgentPlatformSerialization()
+              .parseGenerateContentResponse(jsonResponse);
           final groundingMetadata = response.candidates.first.groundingMetadata;
 
           expect(groundingMetadata, isNotNull);
@@ -1038,8 +1042,8 @@ void main() {
             ]
           };
 
-          final response =
-              VertexSerialization().parseGenerateContentResponse(jsonResponse);
+          final response = AgentPlatformSerialization()
+              .parseGenerateContentResponse(jsonResponse);
           final groundingMetadata = response.candidates.first.groundingMetadata;
 
           expect(groundingMetadata, isNotNull);
@@ -1081,7 +1085,7 @@ void main() {
           };
 
           expect(
-              () => VertexSerialization()
+              () => AgentPlatformSerialization()
                   .parseGenerateContentResponse(jsonResponse),
               throwsA(isA<FirebaseAISdkException>().having(
                   (e) => e.message, 'message', contains('SearchEntryPoint'))));
@@ -1108,8 +1112,8 @@ void main() {
               }
             ]
           };
-          final response =
-              VertexSerialization().parseGenerateContentResponse(jsonResponse);
+          final response = AgentPlatformSerialization()
+              .parseGenerateContentResponse(jsonResponse);
           final groundingMetadata = response.candidates.first.groundingMetadata;
 
           expect(groundingMetadata, isNotNull);
@@ -1130,7 +1134,8 @@ void main() {
             ]
           };
           expect(
-              () => VertexSerialization().parseGenerateContentResponse(json),
+              () => AgentPlatformSerialization()
+                  .parseGenerateContentResponse(json),
               throwsA(isA<FirebaseAISdkException>().having(
                   (e) => e.message, 'message', contains('GroundingChunk'))));
         });
@@ -1147,7 +1152,8 @@ void main() {
             ]
           };
           expect(
-              () => VertexSerialization().parseGenerateContentResponse(json),
+              () => AgentPlatformSerialization()
+                  .parseGenerateContentResponse(json),
               throwsA(isA<FirebaseAISdkException>().having(
                   (e) => e.message, 'message', contains('GroundingSupport'))));
         });
@@ -1162,7 +1168,8 @@ void main() {
             ]
           };
           expect(
-              () => VertexSerialization().parseGenerateContentResponse(json),
+              () => AgentPlatformSerialization()
+                  .parseGenerateContentResponse(json),
               throwsA(isA<FirebaseAISdkException>().having(
                   (e) => e.message, 'message', contains('SearchEntryPoint'))));
         });
@@ -1182,7 +1189,8 @@ void main() {
             ]
           };
           expect(
-              () => VertexSerialization().parseGenerateContentResponse(json),
+              () => AgentPlatformSerialization()
+                  .parseGenerateContentResponse(json),
               throwsA(isA<FirebaseAISdkException>()
                   .having((e) => e.message, 'message', contains('Segment'))));
         });
@@ -1202,7 +1210,8 @@ void main() {
             ]
           };
           expect(
-              () => VertexSerialization().parseGenerateContentResponse(json),
+              () => AgentPlatformSerialization()
+                  .parseGenerateContentResponse(json),
               throwsA(isA<FirebaseAISdkException>().having(
                   (e) => e.message, 'message', contains('WebGroundingChunk'))));
         });
@@ -1213,8 +1222,8 @@ void main() {
               {'finishReason': 'MALFORMED_FUNCTION_CALL'}
             ]
           };
-          final response =
-              VertexSerialization().parseGenerateContentResponse(jsonResponse);
+          final response = AgentPlatformSerialization()
+              .parseGenerateContentResponse(jsonResponse);
           expect(response.candidates.first.finishReason,
               FinishReason.malformedFunctionCall);
         });
@@ -1225,8 +1234,8 @@ void main() {
               {'finishReason': 'UNEXPECTED_TOOL_CALL'}
             ]
           };
-          final response =
-              VertexSerialization().parseGenerateContentResponse(jsonResponse);
+          final response = AgentPlatformSerialization()
+              .parseGenerateContentResponse(jsonResponse);
           expect(response.candidates.first.finishReason,
               FinishReason.unexpectedToolCall);
         });
@@ -1266,8 +1275,8 @@ void main() {
             ]
           };
 
-          final response =
-              VertexSerialization().parseGenerateContentResponse(jsonResponse);
+          final response = AgentPlatformSerialization()
+              .parseGenerateContentResponse(jsonResponse);
           final groundingMetadata = response.candidates.first.groundingMetadata;
 
           expect(groundingMetadata, isNotNull);
@@ -1302,8 +1311,8 @@ void main() {
               }
             ]
           };
-          final response =
-              VertexSerialization().parseGenerateContentResponse(jsonResponse);
+          final response = AgentPlatformSerialization()
+              .parseGenerateContentResponse(jsonResponse);
           final urlContextMetadata =
               response.candidates.first.urlContextMetadata;
           expect(urlContextMetadata, isNotNull);
@@ -1340,8 +1349,8 @@ void main() {
               }
             ]
           };
-          final response =
-              VertexSerialization().parseGenerateContentResponse(jsonResponse);
+          final response = AgentPlatformSerialization()
+              .parseGenerateContentResponse(jsonResponse);
           final urlContextMetadata =
               response.candidates.first.urlContextMetadata;
           expect(urlContextMetadata, isNotNull);
@@ -1369,8 +1378,8 @@ void main() {
               }
             ]
           };
-          final response =
-              VertexSerialization().parseGenerateContentResponse(jsonResponse);
+          final response = AgentPlatformSerialization()
+              .parseGenerateContentResponse(jsonResponse);
           final urlMetadata =
               response.candidates.first.urlContextMetadata!.urlMetadata.first;
           expect(urlMetadata.retrievedUrl, isNull);
@@ -1385,8 +1394,8 @@ void main() {
               }
             ]
           };
-          final response =
-              VertexSerialization().parseGenerateContentResponse(jsonResponse);
+          final response = AgentPlatformSerialization()
+              .parseGenerateContentResponse(jsonResponse);
           final urlContextMetadata =
               response.candidates.first.urlContextMetadata;
           expect(urlContextMetadata, isNotNull);
@@ -1399,8 +1408,8 @@ void main() {
               {'finishReason': 'STOP'}
             ]
           };
-          final response =
-              VertexSerialization().parseGenerateContentResponse(jsonResponse);
+          final response = AgentPlatformSerialization()
+              .parseGenerateContentResponse(jsonResponse);
           final candidate = response.candidates.first;
           expect(candidate.urlContextMetadata, isNull);
         });
@@ -1412,7 +1421,7 @@ void main() {
             ]
           };
           expect(
-              () => VertexSerialization()
+              () => AgentPlatformSerialization()
                   .parseGenerateContentResponse(jsonResponse),
               throwsA(isA<FirebaseAISdkException>().having((e) => e.message,
                   'message', contains('UrlContextMetadata'))));
@@ -1429,7 +1438,7 @@ void main() {
             ]
           };
           expect(
-              () => VertexSerialization()
+              () => AgentPlatformSerialization()
                   .parseGenerateContentResponse(jsonResponse),
               throwsA(isA<FirebaseAISdkException>().having(
                   (e) => e.message, 'message', contains('UrlMetadata'))));
@@ -1439,7 +1448,7 @@ void main() {
       test('parses JSON with no candidates (empty list)', () {
         final json = {'candidates': []};
         final response =
-            VertexSerialization().parseGenerateContentResponse(json);
+            AgentPlatformSerialization().parseGenerateContentResponse(json);
         expect(response.candidates, isEmpty);
         expect(response.promptFeedback, isNull);
         expect(response.usageMetadata, isNull);
@@ -1449,7 +1458,7 @@ void main() {
         // The code defaults to <Candidate>[] if 'candidates' key is missing
         final json = {'promptFeedback': null};
         final response =
-            VertexSerialization().parseGenerateContentResponse(json);
+            AgentPlatformSerialization().parseGenerateContentResponse(json);
         expect(response.candidates, isEmpty);
         expect(response.promptFeedback, isNull);
       });
@@ -1468,7 +1477,7 @@ void main() {
           ]
         };
         final response =
-            VertexSerialization().parseGenerateContentResponse(json);
+            AgentPlatformSerialization().parseGenerateContentResponse(json);
         expect(response.candidates, hasLength(1));
         expect(response.candidates.first.text, 'Minimal');
         expect(response.candidates.first.finishReason, isNull);
@@ -1498,7 +1507,7 @@ void main() {
           }
         };
         final response =
-            VertexSerialization().parseGenerateContentResponse(json);
+            AgentPlatformSerialization().parseGenerateContentResponse(json);
         expect(response.candidates, hasLength(1));
         expect(response.candidates.first.text, 'Hello world');
         expect(response.candidates.first.finishReason, FinishReason.stop);
@@ -1554,7 +1563,7 @@ void main() {
           ]
         };
         final response =
-            VertexSerialization().parseGenerateContentResponse(json);
+            AgentPlatformSerialization().parseGenerateContentResponse(json);
         final candidate = response.candidates.first;
         expect(candidate.citationMetadata, isNotNull);
         expect(candidate.citationMetadata!.citations, hasLength(1));
@@ -1585,7 +1594,7 @@ void main() {
           ]
         };
         final response =
-            VertexSerialization().parseGenerateContentResponse(json);
+            AgentPlatformSerialization().parseGenerateContentResponse(json);
         final candidate = response.candidates.first;
         expect(candidate.citationMetadata, isNotNull);
         expect(candidate.citationMetadata!.citations, hasLength(1));
@@ -1598,7 +1607,9 @@ void main() {
         final json = {
           'error': {'code': 500, 'message': 'Internal server error'}
         };
-        expect(() => VertexSerialization().parseGenerateContentResponse(json),
+        expect(
+            () =>
+                AgentPlatformSerialization().parseGenerateContentResponse(json),
             throwsA(isA<FirebaseAIException>()));
       });
 
@@ -1613,7 +1624,7 @@ void main() {
           ]
         };
         final response =
-            VertexSerialization().parseGenerateContentResponse(json);
+            AgentPlatformSerialization().parseGenerateContentResponse(json);
         expect(response.candidates, hasLength(1));
         expect(response.candidates.first.content.parts, isEmpty);
         expect(response.candidates.first.text, isNull);
@@ -1624,7 +1635,7 @@ void main() {
           'candidates': ['not_a_map_candidate']
         };
         expect(
-            () => VertexSerialization()
+            () => AgentPlatformSerialization()
                 .parseGenerateContentResponse(jsonResponse),
             throwsA(isA<FirebaseAISdkException>()
                 .having((e) => e.message, 'message', contains('Candidate'))));
@@ -1640,7 +1651,7 @@ void main() {
           ]
         };
         expect(
-            () => VertexSerialization()
+            () => AgentPlatformSerialization()
                 .parseGenerateContentResponse(jsonResponse),
             throwsA(isA<FirebaseAISdkException>().having(
                 (e) => e.message, 'message', contains('SafetyRating'))));
@@ -1656,7 +1667,7 @@ void main() {
           ]
         };
         expect(
-            () => VertexSerialization()
+            () => AgentPlatformSerialization()
                 .parseGenerateContentResponse(jsonResponse),
             throwsA(isA<FirebaseAISdkException>().having(
                 (e) => e.message, 'message', contains('CitationMetadata'))));
@@ -1664,7 +1675,7 @@ void main() {
       test('throws FormatException for invalid prompt feedback structure', () {
         final jsonResponse = {'promptFeedback': 'not_a_map_feedback'};
         expect(
-            () => VertexSerialization()
+            () => AgentPlatformSerialization()
                 .parseGenerateContentResponse(jsonResponse),
             throwsA(isA<FirebaseAISdkException>().having(
                 (e) => e.message, 'message', contains('PromptFeedback'))));
@@ -1672,7 +1683,7 @@ void main() {
       test('throws FormatException for invalid usage metadata structure', () {
         final jsonResponse = {'usageMetadata': 'not_a_map_usage'};
         expect(
-            () => VertexSerialization()
+            () => AgentPlatformSerialization()
                 .parseGenerateContentResponse(jsonResponse),
             throwsA(isA<FirebaseAISdkException>().having(
                 (e) => e.message, 'message', contains('UsageMetadata'))));
@@ -1685,7 +1696,7 @@ void main() {
           }
         };
         expect(
-            () => VertexSerialization()
+            () => AgentPlatformSerialization()
                 .parseGenerateContentResponse(jsonResponse),
             throwsA(isA<FirebaseAISdkException>().having(
                 (e) => e.message, 'message', contains('ModalityTokenCount'))));

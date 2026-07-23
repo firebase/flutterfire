@@ -20,11 +20,11 @@ class ChatPage extends StatefulWidget {
   const ChatPage({
     super.key,
     required this.title,
-    required this.useVertexBackend,
+    required this.useAgentPlatform,
   });
 
   final String title;
-  final bool useVertexBackend;
+  final bool useAgentPlatform;
 
   @override
   State<ChatPage> createState() => _ChatPageState();
@@ -52,8 +52,8 @@ class _ChatPageState extends State<ChatPage> {
           ? ThinkingConfig.withThinkingLevel(ThinkingLevel.medium)
           : null,
     );
-    if (widget.useVertexBackend) {
-      _model = FirebaseAI.vertexAI(location: 'global').generativeModel(
+    if (widget.useAgentPlatform) {
+      _model = FirebaseAI.agentPlatform().generativeModel(
         model: 'gemini-3.1-flash-lite',
         generationConfig: generationConfig,
       );

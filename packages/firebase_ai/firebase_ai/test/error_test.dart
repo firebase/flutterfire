@@ -37,10 +37,8 @@ void main() {
       final exception = ServiceApiNotEnabled('projects/test-project');
       expect(
           exception.message,
-          'The Vertex AI in Firebase SDK requires the Vertex AI in Firebase API '
-          '(`firebasevertexai.googleapis.com`) to be enabled in your Firebase project. Enable this API '
-          'by visiting the Firebase Console at '
-          'https://console.firebase.google.com/project/test-project/ailogic '
+          'Enable Firebase AI Logic in your Firebase project by visiting the Firebase Console at '
+          'https://console.firebase.google.com/project/test_project/ailogic '
           'and clicking "Get started". If you enabled this API recently, wait a few minutes for the '
           'action to propagate to our systems and then retry.');
     });
@@ -140,9 +138,7 @@ void main() {
         expect(exception, isInstanceOf<ServiceApiNotEnabled>());
         expect(
             (exception as ServiceApiNotEnabled).message,
-            'The Vertex AI in Firebase SDK requires the Vertex AI in Firebase API '
-            '(`firebasevertexai.googleapis.com`) to be enabled in your Firebase project. Enable this API '
-            'by visiting the Firebase Console at '
+            'Enable Firebase AI Logic in your Firebase project by visiting the Firebase Console at '
             'https://console.firebase.google.com/project/my-project-id/ailogic '
             'and clicking "Get started". If you enabled this API recently, wait a few minutes for the '
             'action to propagate to our systems and then retry.');

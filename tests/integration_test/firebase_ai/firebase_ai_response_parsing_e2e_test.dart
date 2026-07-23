@@ -46,7 +46,7 @@ void main() {
         if (treeResponse.statusCode == 403 || treeResponse.statusCode == 429) {
           // ignore: avoid_print
           print(
-              'Skipping test: Failed to fetch tree due to rate limit (status ${treeResponse.statusCode})',
+            'Skipping test: Failed to fetch tree due to rate limit (status ${treeResponse.statusCode})',
           );
           return;
         }
@@ -74,7 +74,7 @@ void main() {
 
         final isVertex = path.contains('vertexai');
         final serializer =
-            isVertex ? VertexSerialization() : DeveloperSerialization();
+            isVertex ? AgentPlatformSerialization() : DeveloperSerialization();
 
         try {
           if (path.contains('total-tokens') || path.contains('token')) {

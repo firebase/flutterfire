@@ -36,7 +36,7 @@ final class GenerativeModel extends BaseApiClientModel {
     required String model,
     required String location,
     required FirebaseApp app,
-    required bool useVertexBackend,
+    required bool useAgentPlatform,
     bool? useLimitedUseAppCheckTokens,
     FirebaseAppCheck? appCheck,
     FirebaseAuth? auth,
@@ -51,11 +51,11 @@ final class GenerativeModel extends BaseApiClientModel {
         _toolConfig = toolConfig,
         _systemInstruction = systemInstruction,
         super(
-            serializationStrategy: useVertexBackend
-                ? VertexSerialization()
+            serializationStrategy: useAgentPlatform
+                ? AgentPlatformSerialization()
                 : DeveloperSerialization(),
-            modelUri: useVertexBackend
-                ? _VertexUri(app: app, model: model, location: location)
+            modelUri: useAgentPlatform
+                ? _AgentPlatformUri(app: app, model: model, location: location)
                 : _GoogleAIUri(app: app, model: model),
             client: HttpApiClient(
                 apiKey: app.options.apiKey,
@@ -67,7 +67,7 @@ final class GenerativeModel extends BaseApiClientModel {
     required String model,
     required String location,
     required FirebaseApp app,
-    required useVertexBackend,
+    required useAgentPlatform,
     bool? useLimitedUseAppCheckTokens,
     FirebaseAppCheck? appCheck,
     FirebaseAuth? auth,
@@ -82,11 +82,11 @@ final class GenerativeModel extends BaseApiClientModel {
         _toolConfig = toolConfig,
         _systemInstruction = systemInstruction,
         super(
-            serializationStrategy: useVertexBackend
-                ? VertexSerialization()
+            serializationStrategy: useAgentPlatform
+                ? AgentPlatformSerialization()
                 : DeveloperSerialization(),
-            modelUri: useVertexBackend
-                ? _VertexUri(app: app, model: model, location: location)
+            modelUri: useAgentPlatform
+                ? _AgentPlatformUri(app: app, model: model, location: location)
                 : _GoogleAIUri(app: app, model: model),
             client: apiClient ??
                 HttpApiClient(
@@ -201,7 +201,7 @@ GenerativeModel createGenerativeModel({
   required FirebaseApp app,
   required String location,
   required String model,
-  required bool useVertexBackend,
+  required bool useAgentPlatform,
   bool? useLimitedUseAppCheckTokens,
   FirebaseAppCheck? appCheck,
   FirebaseAuth? auth,
@@ -216,7 +216,7 @@ GenerativeModel createGenerativeModel({
       model: model,
       app: app,
       appCheck: appCheck,
-      useVertexBackend: useVertexBackend,
+      useAgentPlatform: useAgentPlatform,
       useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
       auth: auth,
       location: location,
@@ -236,7 +236,7 @@ GenerativeModel createModelWithClient({
   required String location,
   required String model,
   required ApiClient client,
-  required bool useVertexBackend,
+  required bool useAgentPlatform,
   bool? useLimitedUseAppCheckTokens,
   Content? systemInstruction,
   FirebaseAppCheck? appCheck,
@@ -250,7 +250,7 @@ GenerativeModel createModelWithClient({
         model: model,
         app: app,
         appCheck: appCheck,
-        useVertexBackend: useVertexBackend,
+        useAgentPlatform: useAgentPlatform,
         useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
         auth: auth,
         location: location,

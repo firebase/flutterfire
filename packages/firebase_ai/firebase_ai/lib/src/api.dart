@@ -345,7 +345,7 @@ final class WebGroundingChunk {
 
   /// The domain of the original URI from which the content was retrieved.
   ///
-  /// This field is only populated when using the Vertex AI Gemini API.
+  /// This field is only populated when using the Agent Platform Gemini API.
   final String? domain;
 }
 
@@ -425,7 +425,7 @@ final class SearchEntryPoint {
 /// comply with the "Grounding with Google Search" usage requirements for your
 /// chosen API provider:
 /// [Gemini Developer API](https://ai.google.dev/gemini-api/terms#grounding-with-google-search)
-/// or Vertex AI Gemini API (see [Service Terms](https://cloud.google.com/terms/service-terms)
+/// or Agent Platform Gemini API (see [Service Terms](https://cloud.google.com/terms/service-terms)
 /// section within the Service Specific Terms).
 final class GroundingMetadata {
   // ignore: public_member_api_docs
@@ -1482,7 +1482,7 @@ abstract interface class SerializationStrategy {
 }
 
 // ignore: public_member_api_docs
-final class VertexSerialization implements SerializationStrategy {
+final class AgentPlatformSerialization implements SerializationStrategy {
   /// Parse the json to [GenerateContentResponse]
   @override
   GenerateContentResponse parseGenerateContentResponse(Object jsonObject) {
