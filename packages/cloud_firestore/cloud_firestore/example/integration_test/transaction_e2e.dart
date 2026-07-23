@@ -214,6 +214,35 @@ void runTransactionTests() {
       });
 
       test(
+        'runs many sequential transactions with large payloads',
+        () async {
+          DocumentReference<Map<String, dynamic>> doc =
+              await initializeTest('transaction-cleanup-stress');
+          final payload = <String, Object?>{
+            for (var i = 0; i < 100; i++) 'field_$i': 'x' * 100,
+          };
+
+          await doc.set({'count': 0, ...payload});
+
+          for (var i = 0; i < 100; i++) {
+            await firestore.runTransaction((transaction) async {
+              final snapshot = await transaction.get(doc);
+              final count = snapshot.data()!['count'] as int;
+
+              transaction.update(doc, {
+                'count': count + 1,
+                ...payload,
+              });
+            });
+          }
+
+          final snapshot = await doc.get();
+          expect(snapshot.data()!['count'], 100);
+        },
+        skip: kIsWeb,
+      );
+
+      test(
         'should abort if timeout is exceeded',
         () async {
           await expectLater(

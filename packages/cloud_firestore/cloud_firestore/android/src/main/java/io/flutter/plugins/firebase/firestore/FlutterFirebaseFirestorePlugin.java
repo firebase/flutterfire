@@ -277,6 +277,28 @@ public class FlutterFirebaseFirestorePlugin
     return identifier;
   }
 
+  private void removeEventListener(String identifier) {
+    synchronized (eventChannels) {
+      EventChannel eventChannel = eventChannels.remove(identifier);
+      if (eventChannel != null) {
+        eventChannel.setStreamHandler(null);
+      }
+    }
+
+    synchronized (streamHandlers) {
+      StreamHandler streamHandler = streamHandlers.remove(identifier);
+      if (streamHandler != null) {
+        streamHandler.onCancel(null);
+      }
+    }
+  }
+
+  private void removeTransaction(String transactionId) {
+    transactions.remove(transactionId);
+    removeEventListener(transactionId);
+    transactionHandlers.remove(transactionId);
+  }
+
   private void removeEventListeners() {
     synchronized (eventChannels) {
       for (String identifier : eventChannels.keySet()) {
@@ -292,6 +314,7 @@ public class FlutterFirebaseFirestorePlugin
       streamHandlers.clear();
     }
 
+    transactions.clear();
     transactionHandlers.clear();
   }
 
@@ -560,6 +583,7 @@ public class FlutterFirebaseFirestorePlugin
     final TransactionStreamHandler handler =
         new TransactionStreamHandler(
             transaction -> transactions.put(transactionId, transaction),
+            this::removeTransaction,
             firestore,
             transactionId,
             timeout,
@@ -576,8 +600,13 @@ public class FlutterFirebaseFirestorePlugin
       @NonNull GeneratedAndroidFirebaseFirestore.InternalTransactionResult resultType,
       @Nullable List<GeneratedAndroidFirebaseFirestore.InternalTransactionCommand> commands,
       @NonNull GeneratedAndroidFirebaseFirestore.VoidResult result) {
-    Objects.requireNonNull(transactionHandlers.get(transactionId))
-        .receiveTransactionResponse(resultType, commands);
+    OnTransactionResultListener handler = transactionHandlers.get(transactionId);
+    if (handler == null) {
+      result.success();
+      return;
+    }
+
+    handler.receiveTransactionResponse(resultType, commands);
     result.success();
   }
 
