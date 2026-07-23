@@ -5,6 +5,13 @@ Book: /docs/_book.yaml
 
 # Use a custom TensorFlow Lite model with Flutter
 
+<aside class="caution"><b>Firebase ML is deprecated.</b> The Firebase ML
+hosting service will shut down on June 15, 2027, and projects that did not
+previously use Firebase ML can no longer start using it. Existing projects
+should migrate hosted custom models to another solution before that date. See
+<a href="/docs/ml/migrate-to-cloud-storage">Migrate TensorFlow Lite models from
+Firebase ML to Cloud Storage</a>.</aside>
+
 If your app uses custom
 [TensorFlow Lite](https://www.tensorflow.org/lite/){:.external} models, you can
 use Firebase ML to deploy your models. By deploying models with Firebase, you
