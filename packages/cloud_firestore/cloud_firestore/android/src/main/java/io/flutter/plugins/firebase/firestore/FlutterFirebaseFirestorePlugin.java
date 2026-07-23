@@ -600,8 +600,13 @@ public class FlutterFirebaseFirestorePlugin
       @NonNull GeneratedAndroidFirebaseFirestore.InternalTransactionResult resultType,
       @Nullable List<GeneratedAndroidFirebaseFirestore.InternalTransactionCommand> commands,
       @NonNull GeneratedAndroidFirebaseFirestore.VoidResult result) {
-    Objects.requireNonNull(transactionHandlers.get(transactionId))
-        .receiveTransactionResponse(resultType, commands);
+    OnTransactionResultListener handler = transactionHandlers.get(transactionId);
+    if (handler == null) {
+      result.success();
+      return;
+    }
+
+    handler.receiveTransactionResponse(resultType, commands);
     result.success();
   }
 
