@@ -230,11 +230,13 @@ typedef NS_ENUM(NSUInteger, ActionCodeInfoOperation) {
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)makeWithAppVerificationDisabledForTesting:(BOOL)appVerificationDisabledForTesting
                                           userAccessGroup:(nullable NSString *)userAccessGroup
+                                       migrateCurrentUser:(BOOL)migrateCurrentUser
                                               phoneNumber:(nullable NSString *)phoneNumber
                                                   smsCode:(nullable NSString *)smsCode
                                        forceRecaptchaFlow:(nullable NSNumber *)forceRecaptchaFlow;
 @property(nonatomic, assign) BOOL appVerificationDisabledForTesting;
 @property(nonatomic, copy, nullable) NSString *userAccessGroup;
+@property(nonatomic, assign) BOOL migrateCurrentUser;
 @property(nonatomic, copy, nullable) NSString *phoneNumber;
 @property(nonatomic, copy, nullable) NSString *smsCode;
 @property(nonatomic, strong, nullable) NSNumber *forceRecaptchaFlow;

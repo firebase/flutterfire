@@ -2128,6 +2128,19 @@ public class GeneratedAndroidFirebaseAuth {
       this.userAccessGroup = setterArg;
     }
 
+    private @NonNull Boolean migrateCurrentUser;
+
+    public @NonNull Boolean getMigrateCurrentUser() {
+      return migrateCurrentUser;
+    }
+
+    public void setMigrateCurrentUser(@NonNull Boolean setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"migrateCurrentUser\" is null.");
+      }
+      this.migrateCurrentUser = setterArg;
+    }
+
     private @Nullable String phoneNumber;
 
     public @Nullable String getPhoneNumber() {
@@ -2173,6 +2186,7 @@ public class GeneratedAndroidFirebaseAuth {
       return pigeonDeepEquals(
               appVerificationDisabledForTesting, that.appVerificationDisabledForTesting)
           && pigeonDeepEquals(userAccessGroup, that.userAccessGroup)
+          && pigeonDeepEquals(migrateCurrentUser, that.migrateCurrentUser)
           && pigeonDeepEquals(phoneNumber, that.phoneNumber)
           && pigeonDeepEquals(smsCode, that.smsCode)
           && pigeonDeepEquals(forceRecaptchaFlow, that.forceRecaptchaFlow);
@@ -2185,6 +2199,7 @@ public class GeneratedAndroidFirebaseAuth {
             getClass(),
             appVerificationDisabledForTesting,
             userAccessGroup,
+            migrateCurrentUser,
             phoneNumber,
             smsCode,
             forceRecaptchaFlow
@@ -2207,6 +2222,14 @@ public class GeneratedAndroidFirebaseAuth {
       @CanIgnoreReturnValue
       public @NonNull Builder setUserAccessGroup(@Nullable String setterArg) {
         this.userAccessGroup = setterArg;
+        return this;
+      }
+
+      private @Nullable Boolean migrateCurrentUser;
+
+      @CanIgnoreReturnValue
+      public @NonNull Builder setMigrateCurrentUser(@NonNull Boolean setterArg) {
+        this.migrateCurrentUser = setterArg;
         return this;
       }
 
@@ -2238,6 +2261,7 @@ public class GeneratedAndroidFirebaseAuth {
         InternalFirebaseAuthSettings pigeonReturn = new InternalFirebaseAuthSettings();
         pigeonReturn.setAppVerificationDisabledForTesting(appVerificationDisabledForTesting);
         pigeonReturn.setUserAccessGroup(userAccessGroup);
+        pigeonReturn.setMigrateCurrentUser(migrateCurrentUser);
         pigeonReturn.setPhoneNumber(phoneNumber);
         pigeonReturn.setSmsCode(smsCode);
         pigeonReturn.setForceRecaptchaFlow(forceRecaptchaFlow);
@@ -2247,9 +2271,10 @@ public class GeneratedAndroidFirebaseAuth {
 
     @NonNull
     public ArrayList<Object> toList() {
-      ArrayList<Object> toListResult = new ArrayList<>(5);
+      ArrayList<Object> toListResult = new ArrayList<>(6);
       toListResult.add(appVerificationDisabledForTesting);
       toListResult.add(userAccessGroup);
+      toListResult.add(migrateCurrentUser);
       toListResult.add(phoneNumber);
       toListResult.add(smsCode);
       toListResult.add(forceRecaptchaFlow);
@@ -2264,11 +2289,13 @@ public class GeneratedAndroidFirebaseAuth {
           (Boolean) appVerificationDisabledForTesting);
       Object userAccessGroup = pigeonVar_list.get(1);
       pigeonResult.setUserAccessGroup((String) userAccessGroup);
-      Object phoneNumber = pigeonVar_list.get(2);
+      Object migrateCurrentUser = pigeonVar_list.get(2);
+      pigeonResult.setMigrateCurrentUser((Boolean) migrateCurrentUser);
+      Object phoneNumber = pigeonVar_list.get(3);
       pigeonResult.setPhoneNumber((String) phoneNumber);
-      Object smsCode = pigeonVar_list.get(3);
+      Object smsCode = pigeonVar_list.get(4);
       pigeonResult.setSmsCode((String) smsCode);
-      Object forceRecaptchaFlow = pigeonVar_list.get(4);
+      Object forceRecaptchaFlow = pigeonVar_list.get(5);
       pigeonResult.setForceRecaptchaFlow((Boolean) forceRecaptchaFlow);
       return pigeonResult;
     }

@@ -969,12 +969,14 @@ static id GetNullableObjectAtIndex(NSArray<id> *array, NSInteger key) {
 @implementation InternalFirebaseAuthSettings
 + (instancetype)makeWithAppVerificationDisabledForTesting:(BOOL)appVerificationDisabledForTesting
                                           userAccessGroup:(nullable NSString *)userAccessGroup
+                                       migrateCurrentUser:(BOOL)migrateCurrentUser
                                               phoneNumber:(nullable NSString *)phoneNumber
                                                   smsCode:(nullable NSString *)smsCode
                                        forceRecaptchaFlow:(nullable NSNumber *)forceRecaptchaFlow {
   InternalFirebaseAuthSettings *pigeonResult = [[InternalFirebaseAuthSettings alloc] init];
   pigeonResult.appVerificationDisabledForTesting = appVerificationDisabledForTesting;
   pigeonResult.userAccessGroup = userAccessGroup;
+  pigeonResult.migrateCurrentUser = migrateCurrentUser;
   pigeonResult.phoneNumber = phoneNumber;
   pigeonResult.smsCode = smsCode;
   pigeonResult.forceRecaptchaFlow = forceRecaptchaFlow;
@@ -984,9 +986,10 @@ static id GetNullableObjectAtIndex(NSArray<id> *array, NSInteger key) {
   InternalFirebaseAuthSettings *pigeonResult = [[InternalFirebaseAuthSettings alloc] init];
   pigeonResult.appVerificationDisabledForTesting = [GetNullableObjectAtIndex(list, 0) boolValue];
   pigeonResult.userAccessGroup = GetNullableObjectAtIndex(list, 1);
-  pigeonResult.phoneNumber = GetNullableObjectAtIndex(list, 2);
-  pigeonResult.smsCode = GetNullableObjectAtIndex(list, 3);
-  pigeonResult.forceRecaptchaFlow = GetNullableObjectAtIndex(list, 4);
+  pigeonResult.migrateCurrentUser = [GetNullableObjectAtIndex(list, 2) boolValue];
+  pigeonResult.phoneNumber = GetNullableObjectAtIndex(list, 3);
+  pigeonResult.smsCode = GetNullableObjectAtIndex(list, 4);
+  pigeonResult.forceRecaptchaFlow = GetNullableObjectAtIndex(list, 5);
   return pigeonResult;
 }
 + (nullable InternalFirebaseAuthSettings *)nullableFromList:(NSArray<id> *)list {
@@ -996,6 +999,7 @@ static id GetNullableObjectAtIndex(NSArray<id> *array, NSInteger key) {
   return @[
     @(self.appVerificationDisabledForTesting),
     self.userAccessGroup ?: [NSNull null],
+    @(self.migrateCurrentUser),
     self.phoneNumber ?: [NSNull null],
     self.smsCode ?: [NSNull null],
     self.forceRecaptchaFlow ?: [NSNull null],
@@ -1011,6 +1015,7 @@ static id GetNullableObjectAtIndex(NSArray<id> *array, NSInteger key) {
   InternalFirebaseAuthSettings *other = (InternalFirebaseAuthSettings *)object;
   return self.appVerificationDisabledForTesting == other.appVerificationDisabledForTesting &&
          FLTPigeonDeepEquals(self.userAccessGroup, other.userAccessGroup) &&
+         self.migrateCurrentUser == other.migrateCurrentUser &&
          FLTPigeonDeepEquals(self.phoneNumber, other.phoneNumber) &&
          FLTPigeonDeepEquals(self.smsCode, other.smsCode) &&
          FLTPigeonDeepEquals(self.forceRecaptchaFlow, other.forceRecaptchaFlow);
@@ -1020,6 +1025,7 @@ static id GetNullableObjectAtIndex(NSArray<id> *array, NSInteger key) {
   NSUInteger result = [self class].hash;
   result = result * 31 + @(self.appVerificationDisabledForTesting).hash;
   result = result * 31 + FLTPigeonDeepHash(self.userAccessGroup);
+  result = result * 31 + @(self.migrateCurrentUser).hash;
   result = result * 31 + FLTPigeonDeepHash(self.phoneNumber);
   result = result * 31 + FLTPigeonDeepHash(self.smsCode);
   result = result * 31 + FLTPigeonDeepHash(self.forceRecaptchaFlow);

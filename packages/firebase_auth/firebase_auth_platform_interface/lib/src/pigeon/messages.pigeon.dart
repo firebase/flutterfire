@@ -919,6 +919,7 @@ class InternalFirebaseAuthSettings {
   InternalFirebaseAuthSettings({
     required this.appVerificationDisabledForTesting,
     this.userAccessGroup,
+    required this.migrateCurrentUser,
     this.phoneNumber,
     this.smsCode,
     this.forceRecaptchaFlow,
@@ -927,6 +928,8 @@ class InternalFirebaseAuthSettings {
   bool appVerificationDisabledForTesting;
 
   String? userAccessGroup;
+
+  bool migrateCurrentUser;
 
   String? phoneNumber;
 
@@ -938,6 +941,7 @@ class InternalFirebaseAuthSettings {
     return <Object?>[
       appVerificationDisabledForTesting,
       userAccessGroup,
+      migrateCurrentUser,
       phoneNumber,
       smsCode,
       forceRecaptchaFlow,
@@ -953,9 +957,10 @@ class InternalFirebaseAuthSettings {
     return InternalFirebaseAuthSettings(
       appVerificationDisabledForTesting: result[0]! as bool,
       userAccessGroup: result[1] as String?,
-      phoneNumber: result[2] as String?,
-      smsCode: result[3] as String?,
-      forceRecaptchaFlow: result[4] as bool?,
+      migrateCurrentUser: result[2]! as bool,
+      phoneNumber: result[3] as String?,
+      smsCode: result[4] as String?,
+      forceRecaptchaFlow: result[5] as bool?,
     );
   }
 
@@ -972,6 +977,7 @@ class InternalFirebaseAuthSettings {
     return _deepEquals(appVerificationDisabledForTesting,
             other.appVerificationDisabledForTesting) &&
         _deepEquals(userAccessGroup, other.userAccessGroup) &&
+        _deepEquals(migrateCurrentUser, other.migrateCurrentUser) &&
         _deepEquals(phoneNumber, other.phoneNumber) &&
         _deepEquals(smsCode, other.smsCode) &&
         _deepEquals(forceRecaptchaFlow, other.forceRecaptchaFlow);
