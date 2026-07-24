@@ -32,8 +32,9 @@ void main() {
         options: DefaultFirebaseOptions.currentPlatform,
       );
       FirebaseFunctions.instance.useFunctionsEmulator('localhost', 5001);
-      callable =
-          FirebaseFunctions.instance.httpsCallable(kTestFunctionDefaultRegion);
+      callable = FirebaseFunctions.instance.httpsCallable(
+        kTestFunctionDefaultRegion,
+      );
     });
 
     group('HttpsCallable', () {
@@ -139,8 +140,9 @@ void main() {
       test(
         '[HttpsCallableResult.data] should return Map<String, dynamic> type for returned objects',
         () async {
-          HttpsCallable callable =
-              FirebaseFunctions.instance.httpsCallable(kTestMapConvertType);
+          HttpsCallable callable = FirebaseFunctions.instance.httpsCallable(
+            kTestMapConvertType,
+          );
 
           var result = await callable();
 
@@ -149,11 +151,12 @@ void main() {
       );
 
       test('can be called using an String url', () async {
-        final localhostMapped =
-            kIsWeb || !Platform.isAndroid ? 'localhost' : '10.0.2.2';
+        final localhostMapped = kIsWeb || !Platform.isAndroid
+            ? 'localhost'
+            : '10.0.2.2';
 
-        HttpsCallable callable =
-            FirebaseFunctions.instance.httpsCallableFromUrl(
+        HttpsCallable
+        callable = FirebaseFunctions.instance.httpsCallableFromUrl(
           'http://$localhostMapped:5001/flutterfire-e2e-tests/us-central1/listfruits2ndgen',
         );
 
@@ -162,11 +165,12 @@ void main() {
       });
 
       test('can be called using an Uri url', () async {
-        final localhostMapped =
-            kIsWeb || !Platform.isAndroid ? 'localhost' : '10.0.2.2';
+        final localhostMapped = kIsWeb || !Platform.isAndroid
+            ? 'localhost'
+            : '10.0.2.2';
 
-        HttpsCallable callable =
-            FirebaseFunctions.instance.httpsCallableFromUri(
+        HttpsCallable
+        callable = FirebaseFunctions.instance.httpsCallableFromUri(
           Uri.parse(
             'http://$localhostMapped:5001/flutterfire-e2e-tests/us-central1/listfruits2ndgen',
           ),
@@ -178,19 +182,21 @@ void main() {
     });
 
     group('FirebaseFunctionsException', () {
-      test('HttpsCallable returns a FirebaseFunctionsException on error',
-          () async {
-        try {
-          await callable({});
-          fail('Should have thrown');
-        } on FirebaseFunctionsException catch (e) {
-          expect(e.code, equals('invalid-argument'));
-          expect(e.message, equals('Invalid test requested.'));
-          return;
-        } catch (e) {
-          fail('$e');
-        }
-      });
+      test(
+        'HttpsCallable returns a FirebaseFunctionsException on error',
+        () async {
+          try {
+            await callable({});
+            fail('Should have thrown');
+          } on FirebaseFunctionsException catch (e) {
+            expect(e.code, equals('invalid-argument'));
+            expect(e.message, equals('Invalid test requested.'));
+            return;
+          } catch (e) {
+            fail('$e');
+          }
+        },
+      );
 
       test(
         'it returns "details" value as part of the exception',
@@ -225,8 +231,9 @@ void main() {
       test('accepts a custom region', () async {
         final instance = FirebaseFunctions.instanceFor(region: 'europe-west1');
         instance.useFunctionsEmulator('localhost', 5001);
-        final customRegionCallable =
-            instance.httpsCallable(kTestFunctionCustomRegion);
+        final customRegionCallable = instance.httpsCallable(
+          kTestFunctionCustomRegion,
+        );
         final result = await customRegionCallable();
         expect(result.data, equals('europe-west1'));
       });
@@ -244,8 +251,9 @@ void main() {
           );
           try {
             await timeoutCallable({
-              'testTimeout':
-                  const Duration(seconds: 6).inMilliseconds.toString(),
+              'testTimeout': const Duration(
+                seconds: 6,
+              ).inMilliseconds.toString(),
             });
             fail('Should have thrown');
           } on FirebaseFunctionsException catch (e) {
@@ -265,38 +273,36 @@ void main() {
         skip: defaultTargetPlatform == TargetPlatform.android,
       );
 
-      test(
-        'allow passing of `limitedUseAppCheckToken` as option',
-        () async {
-          final instance = FirebaseFunctions.instance;
-          instance.useFunctionsEmulator('localhost', 5001);
-          final timeoutCallable = FirebaseFunctions.instance.httpsCallable(
-            kTestFunctionDefaultRegion,
-            options: HttpsCallableOptions(
-              timeout: const Duration(seconds: 3),
-              limitedUseAppCheckToken: true,
-            ),
-          );
+      test('allow passing of `limitedUseAppCheckToken` as option', () async {
+        final instance = FirebaseFunctions.instance;
+        instance.useFunctionsEmulator('localhost', 5001);
+        final timeoutCallable = FirebaseFunctions.instance.httpsCallable(
+          kTestFunctionDefaultRegion,
+          options: HttpsCallableOptions(
+            timeout: const Duration(seconds: 3),
+            limitedUseAppCheckToken: true,
+          ),
+        );
 
-          HttpsCallableResult results = await timeoutCallable();
-          expect(results.data, equals('null'));
-        },
-      );
+        HttpsCallableResult results = await timeoutCallable();
+        expect(results.data, equals('null'));
+      });
     });
 
     group(
       'HttpsCallable Stream',
       () {
         test('returns a [StreamResponse]', () {
-          final streamResponseCallable =
-              FirebaseFunctions.instance.httpsCallable(kTestStreamResponse);
+          final streamResponseCallable = FirebaseFunctions.instance
+              .httpsCallable(kTestStreamResponse);
           final stream = streamResponseCallable.stream();
           expect(stream, emits(isA<StreamResponse>()));
         });
 
         test('accepts a string value', () async {
-          final stream =
-              callable.stream('foo').where((event) => event is Chunk);
+          final stream = callable
+              .stream('foo')
+              .where((event) => event is Chunk);
           await expectLater(
             stream,
             emits(
@@ -334,15 +340,19 @@ void main() {
           await expectLater(
             stream,
             emits(
-              isA<Chunk>()
-                  .having((e) => e.partialData, 'partialData', equals('null')),
+              isA<Chunk>().having(
+                (e) => e.partialData,
+                'partialData',
+                equals('null'),
+              ),
             ),
           );
         });
 
         test('accepts a false boolean value', () async {
-          final stream =
-              callable.stream(false).where((event) => event is Chunk);
+          final stream = callable
+              .stream(false)
+              .where((event) => event is Chunk);
           await expectLater(
             stream,
             emits(
@@ -370,11 +380,12 @@ void main() {
         });
 
         test('can be called using an String url', () async {
-          final localhostMapped =
-              kIsWeb || !Platform.isAndroid ? 'localhost' : '10.0.2.2';
+          final localhostMapped = kIsWeb || !Platform.isAndroid
+              ? 'localhost'
+              : '10.0.2.2';
 
-          HttpsCallable callable =
-              FirebaseFunctions.instance.httpsCallableFromUrl(
+          HttpsCallable
+          callable = FirebaseFunctions.instance.httpsCallableFromUrl(
             'http://$localhostMapped:5001/flutterfire-e2e-tests/us-central1/listfruits2ndgen',
           );
 
@@ -383,11 +394,12 @@ void main() {
         });
 
         test('can be called using an Uri url', () async {
-          final localhostMapped =
-              kIsWeb || !Platform.isAndroid ? 'localhost' : '10.0.2.2';
+          final localhostMapped = kIsWeb || !Platform.isAndroid
+              ? 'localhost'
+              : '10.0.2.2';
 
-          HttpsCallable callable =
-              FirebaseFunctions.instance.httpsCallableFromUri(
+          HttpsCallable
+          callable = FirebaseFunctions.instance.httpsCallableFromUri(
             Uri.parse(
               'http://$localhostMapped:5001/flutterfire-e2e-tests/us-central1/listfruits2ndgen',
             ),
@@ -397,33 +409,27 @@ void main() {
           await expectLater(stream, emits(isA<StreamResponse>()));
         });
 
-        test(
-          'concurrent streams on the same callable do not collide',
-          () async {
-            // Regression test for https://github.com/firebase/flutterfire/issues/18036
-            final stream1 = callable
-                .stream('foo')
-                .where((event) => event is Chunk)
-                .map((event) => (event as Chunk).partialData)
-                .first;
-            final stream2 = callable
-                .stream(123)
-                .where((event) => event is Chunk)
-                .map((event) => (event as Chunk).partialData)
-                .first;
+        test('concurrent streams on the same callable do not collide', () async {
+          // Regression test for https://github.com/firebase/flutterfire/issues/18036
+          final stream1 = callable
+              .stream('foo')
+              .where((event) => event is Chunk)
+              .map((event) => (event as Chunk).partialData)
+              .first;
+          final stream2 = callable
+              .stream(123)
+              .where((event) => event is Chunk)
+              .map((event) => (event as Chunk).partialData)
+              .first;
 
-            final results = await Future.wait([stream1, stream2]);
-            expect(results[0], equals('string'));
-            expect(results[1], equals('number'));
-          },
-        );
+          final results = await Future.wait([stream1, stream2]);
+          expect(results[0], equals('string'));
+          expect(results[1], equals('number'));
+        });
 
         test('should emit a [Result] as last value', () async {
           final stream = await callable.stream().last;
-          expect(
-            stream,
-            isA<Result>(),
-          );
+          expect(stream, isA<Result>());
         });
 
         test(
@@ -436,31 +442,31 @@ void main() {
             final terminalEvent = await stream.where((e) => e is Result).last;
             expect(terminalEvent, isA<Result>());
             final result = (terminalEvent as Result).result;
-            expect(
-              result.data,
-              isA<Map<String, dynamic>>(),
-            );
+            expect(result.data, isA<Map<String, dynamic>>());
           },
           skip: !kIsWeb,
         );
 
         test('accepts a [List]', () async {
-          final stream =
-              callable.stream(data.list).where((event) => event is Chunk);
+          final stream = callable
+              .stream(data.list)
+              .where((event) => event is Chunk);
           await expectLater(
             stream,
             emits(
-              isA<Chunk>()
-                  .having((e) => e.partialData, 'partialData', equals('array')),
+              isA<Chunk>().having(
+                (e) => e.partialData,
+                'partialData',
+                equals('array'),
+              ),
             ),
           );
         });
 
         test('accepts a deeply nested [Map]', () async {
-          final stream = callable.stream({
-            'type': 'deepMap',
-            'inputData': data.deepMap,
-          }).where((event) => event is Chunk);
+          final stream = callable
+              .stream({'type': 'deepMap', 'inputData': data.deepMap})
+              .where((event) => event is Chunk);
           await expectLater(
             stream,
             emits(
@@ -473,77 +479,73 @@ void main() {
           );
         });
 
-        test(
-          'throws error when aborted with TimeLimit signal',
-          () async {
-            final instance = FirebaseFunctions.instance;
-            instance.useFunctionsEmulator('localhost', 5001);
+        test('throws error when aborted with TimeLimit signal', () async {
+          final instance = FirebaseFunctions.instance;
+          instance.useFunctionsEmulator('localhost', 5001);
 
-            final completer = Completer<void>();
+          final completer = Completer<void>();
 
-            final timeoutCallable = FirebaseFunctions.instance.httpsCallable(
-              kTestFunctionTimeout,
-              options: HttpsCallableOptions(
-                webAbortSignal: TimeLimit(const Duration(seconds: 3)),
-              ),
-            );
+          final timeoutCallable = FirebaseFunctions.instance.httpsCallable(
+            kTestFunctionTimeout,
+            options: HttpsCallableOptions(
+              webAbortSignal: TimeLimit(const Duration(seconds: 3)),
+            ),
+          );
 
-            timeoutCallable.stream({
-              'testTimeout':
-                  const Duration(seconds: 6).inMilliseconds.toString(),
-            }).listen(
-              (data) {
-                completer.completeError('Should have thrown');
-              },
-              onError: (error) {
-                if (error is FirebaseFunctionsException) {
-                  expect(error.code, equals('internal'));
-                  completer.complete();
-                } else {
-                  completer.completeError('Unexpected error type: $error');
-                }
-              },
-            );
-            await completer.future;
-          },
-          skip: !kIsWeb,
-        );
+          timeoutCallable
+              .stream({
+                'testTimeout': const Duration(
+                  seconds: 6,
+                ).inMilliseconds.toString(),
+              })
+              .listen(
+                (data) {
+                  completer.completeError('Should have thrown');
+                },
+                onError: (error) {
+                  if (error is FirebaseFunctionsException) {
+                    expect(error.code, equals('internal'));
+                    completer.complete();
+                  } else {
+                    completer.completeError('Unexpected error type: $error');
+                  }
+                },
+              );
+          await completer.future;
+        }, skip: !kIsWeb);
 
-        test(
-          'throws error when aborted with Abort signal',
-          () async {
-            final instance = FirebaseFunctions.instance;
-            instance.useFunctionsEmulator('localhost', 5001);
+        test('throws error when aborted with Abort signal', () async {
+          final instance = FirebaseFunctions.instance;
+          instance.useFunctionsEmulator('localhost', 5001);
 
-            final completer = Completer<void>();
+          final completer = Completer<void>();
 
-            final timeoutCallable = FirebaseFunctions.instance.httpsCallable(
-              kTestFunctionTimeout,
-              options: HttpsCallableOptions(
-                webAbortSignal: Abort('aborted'),
-              ),
-            );
+          final timeoutCallable = FirebaseFunctions.instance.httpsCallable(
+            kTestFunctionTimeout,
+            options: HttpsCallableOptions(webAbortSignal: Abort('aborted')),
+          );
 
-            timeoutCallable.stream({
-              'testTimeout':
-                  const Duration(seconds: 6).inMilliseconds.toString(),
-            }).listen(
-              (data) {
-                completer.completeError('Should have thrown');
-              },
-              onError: (error) {
-                if (error is FirebaseFunctionsException) {
-                  expect(error.code, equals('internal'));
-                  completer.complete();
-                } else {
-                  completer.completeError('Unexpected error type: $error');
-                }
-              },
-            );
-            await completer.future;
-          },
-          skip: !kIsWeb,
-        );
+          timeoutCallable
+              .stream({
+                'testTimeout': const Duration(
+                  seconds: 6,
+                ).inMilliseconds.toString(),
+              })
+              .listen(
+                (data) {
+                  completer.completeError('Should have thrown');
+                },
+                onError: (error) {
+                  if (error is FirebaseFunctionsException) {
+                    expect(error.code, equals('internal'));
+                    completer.complete();
+                  } else {
+                    completer.completeError('Unexpected error type: $error');
+                  }
+                },
+              );
+          await completer.future;
+        }, skip: !kIsWeb);
       },
       // Desktop C++ SDK skip: streaming callables are not supported by the
       // firebase-cpp-sdk.
