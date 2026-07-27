@@ -94,6 +94,14 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
           MethodChannelFirebaseMessaging.tokenStreamController
               .add(call.arguments as String);
           break;
+        case 'Messaging#onRegistered':
+          MethodChannelFirebaseMessaging.registeredStreamController
+              .add(call.arguments as String);
+          break;
+        case 'Messaging#onUnregistered':
+          MethodChannelFirebaseMessaging.unregisteredStreamController
+              .add(call.arguments as String);
+          break;
         case 'Messaging#onMessage':
           Map<String, dynamic> messageMap =
               Map<String, dynamic>.from(call.arguments);
@@ -124,6 +132,14 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
 
   // ignore: close_sinks, never closed
   static StreamController<String> tokenStreamController =
+      StreamController<String>.broadcast();
+
+  // ignore: close_sinks, never closed
+  static StreamController<String> registeredStreamController =
+      StreamController<String>.broadcast();
+
+  // ignore: close_sinks, never closed
+  static StreamController<String> unregisteredStreamController =
       StreamController<String>.broadcast();
 
   // Created this to check APNS token is available before certain Apple Firebase
@@ -207,6 +223,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
   }
 
   @override
+  @Deprecated('Use unregister() instead.')
   Future<void> deleteToken() async {
     await _APNSTokenCheck();
 
@@ -238,6 +255,36 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
   }
 
   @override
+  Future<void> register({
+    String? vapidKey, // web only property
+    String? serviceWorkerScriptPath, // web only property
+  }) async {
+    await _APNSTokenCheck();
+
+    try {
+      await channel.invokeMapMethod('Messaging#register', {
+        'appName': app.name,
+      });
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
+    }
+  }
+
+  @override
+  Future<void> unregister() async {
+    await _APNSTokenCheck();
+
+    try {
+      await channel.invokeMapMethod('Messaging#unregister', {
+        'appName': app.name,
+      });
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
+    }
+  }
+
+  @override
+  @Deprecated('Use register() and onRegistered instead.')
   Future<String?> getToken({
     String? vapidKey, // not used yet; web only property
     String? serviceWorkerScriptPath, // web only property
@@ -331,8 +378,19 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
   }
 
   @override
+  @Deprecated('Use onRegistered instead.')
   Stream<String> get onTokenRefresh {
     return tokenStreamController.stream;
+  }
+
+  @override
+  Stream<String> get onRegistered {
+    return registeredStreamController.stream;
+  }
+
+  @override
+  Stream<String> get onUnregistered {
+    return unregisteredStreamController.stream;
   }
 
   @override

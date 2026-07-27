@@ -1,4 +1,4 @@
-// ignore_for_file: require_trailing_commas
+// ignore_for_file: deprecated_member_use, require_trailing_commas
 // Copyright 2020 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -96,6 +96,85 @@ void main() {
         verify(kMockMessagingPlatform.getAPNSToken());
       });
     });
+
+    group('register', () {
+      test('verify delegate method is called with correct args', () async {
+        const vapidKey = 'test-vapid-key';
+
+        when(kMockMessagingPlatform.register(
+          vapidKey: anyNamed('vapidKey'),
+          serviceWorkerScriptPath: anyNamed('serviceWorkerScriptPath'),
+        )).thenAnswer((_) => Future.value());
+
+        await messaging!.register(vapidKey: vapidKey);
+
+        verify(kMockMessagingPlatform.register(
+          vapidKey: vapidKey,
+          serviceWorkerScriptPath: null,
+        ));
+      });
+
+      test('verify delegate method is called with service worker path',
+          () async {
+        const serviceWorkerScriptPath = 'custom-messaging-sw.js';
+
+        when(kMockMessagingPlatform.register(
+          vapidKey: anyNamed('vapidKey'),
+          serviceWorkerScriptPath: anyNamed('serviceWorkerScriptPath'),
+        )).thenAnswer((_) => Future.value());
+
+        await messaging!.register(
+          serviceWorkerScriptPath: serviceWorkerScriptPath,
+        );
+
+        verify(kMockMessagingPlatform.register(
+          vapidKey: null,
+          serviceWorkerScriptPath: serviceWorkerScriptPath,
+        ));
+      });
+    });
+
+    group('unregister', () {
+      test('verify delegate method is called', () async {
+        when(kMockMessagingPlatform.unregister())
+            .thenAnswer((_) => Future.value());
+
+        await messaging!.unregister();
+
+        verify(kMockMessagingPlatform.unregister());
+      });
+    });
+
+    group('onRegistered', () {
+      test('verify delegate method is called', () async {
+        const fid = 'test-fid';
+
+        when(kMockMessagingPlatform.onRegistered)
+            .thenAnswer((_) => Stream<String>.fromIterable(<String>[fid]));
+
+        final StreamQueue<String> changes =
+            StreamQueue<String>(messaging!.onRegistered);
+        expect(await changes.next, equals(fid));
+
+        verify(kMockMessagingPlatform.onRegistered);
+      });
+    });
+
+    group('onUnregistered', () {
+      test('verify delegate method is called', () async {
+        const fid = 'test-fid';
+
+        when(kMockMessagingPlatform.onUnregistered)
+            .thenAnswer((_) => Stream<String>.fromIterable(<String>[fid]));
+
+        final StreamQueue<String> changes =
+            StreamQueue<String>(messaging!.onUnregistered);
+        expect(await changes.next, equals(fid));
+
+        verify(kMockMessagingPlatform.onUnregistered);
+      });
+    });
+
     group('getToken', () {
       test('verify delegate method is called with correct args', () async {
         const vapidKey = 'test-vapid-key';
