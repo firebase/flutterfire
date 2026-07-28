@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// ignore_for_file: deprecated_member_use
+
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -164,6 +166,71 @@ void main() {
           // Skipping on Web since we cannot click on authorize notification dialog
           skip: skipTestsOnCI || kIsWeb,
         ); // only run for manual testing
+      });
+
+      group('register()', () {
+        test(
+          'emits a FID through onRegistered',
+          () async {
+            final completer = Completer<String>();
+            late StreamSubscription<String> subscription;
+
+            subscription = messaging.onRegistered.listen((fid) {
+              if (!completer.isCompleted) {
+                completer.complete(fid);
+              }
+            });
+
+            await messaging.register();
+
+            final fid = await completer.future.timeout(
+              const Duration(seconds: 30),
+            );
+            expect(fid, isNotEmpty);
+
+            await subscription.cancel();
+          },
+          skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android,
+        );
+      });
+
+      group('unregister()', () {
+        test(
+          'emits the unregistered FID through onUnregistered',
+          () async {
+            final registeredCompleter = Completer<String>();
+            final unregisteredCompleter = Completer<String>();
+
+            final registeredSubscription = messaging.onRegistered.listen((fid) {
+              if (!registeredCompleter.isCompleted) {
+                registeredCompleter.complete(fid);
+              }
+            });
+            final unregisteredSubscription =
+                messaging.onUnregistered.listen((fid) {
+              if (!unregisteredCompleter.isCompleted) {
+                unregisteredCompleter.complete(fid);
+              }
+            });
+
+            await messaging.register();
+            final registeredFid = await registeredCompleter.future.timeout(
+              const Duration(seconds: 30),
+            );
+
+            await messaging.unregister();
+            final unregisteredFid = await unregisteredCompleter.future.timeout(
+              const Duration(seconds: 30),
+            );
+
+            expect(registeredFid, isNotEmpty);
+            expect(unregisteredFid, registeredFid);
+
+            await registeredSubscription.cancel();
+            await unregisteredSubscription.cancel();
+          },
+          skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android,
+        );
       });
 
       group('subscribeToTopic()', () {
