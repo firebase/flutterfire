@@ -38,7 +38,7 @@ void main() {
       expect(
           exception.message,
           'Enable Firebase AI Logic in your Firebase project by visiting the Firebase Console at '
-          'https://console.firebase.google.com/project/test_project/ailogic '
+          'https://console.firebase.google.com/project/test-project/ailogic '
           'and clicking "Get started". If you enabled this API recently, wait a few minutes for the '
           'action to propagate to our systems and then retry.');
     });
