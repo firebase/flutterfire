@@ -27,6 +27,7 @@ const _firebaseOptionsPaths = <String>[
   'packages/firebase_storage/firebase_storage/example/lib/firebase_options.dart',
 ];
 
+// The project ID must match the emulator fixtures and Firestore bundles.
 const _firebaseOptions = '''
 // Copyright 2026, the Chromium project authors. Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
@@ -57,25 +58,25 @@ class DefaultFirebaseOptions {
     apiKey: 'dummy-api-key',
     appId: '1:123456789012:web:0000000000000000000000',
     messagingSenderId: '123456789012',
-    projectId: 'demo-flutterfire',
-    authDomain: 'demo-flutterfire.firebaseapp.com',
-    storageBucket: 'demo-flutterfire.appspot.com',
+    projectId: 'flutterfire-e2e-tests',
+    authDomain: 'flutterfire-e2e-tests.firebaseapp.com',
+    storageBucket: 'flutterfire-e2e-tests.appspot.com',
   );
 
   static const android = FirebaseOptions(
     apiKey: 'dummy-api-key',
     appId: '1:123456789012:android:0000000000000000000000',
     messagingSenderId: '123456789012',
-    projectId: 'demo-flutterfire',
-    storageBucket: 'demo-flutterfire.appspot.com',
+    projectId: 'flutterfire-e2e-tests',
+    storageBucket: 'flutterfire-e2e-tests.appspot.com',
   );
 
   static const ios = FirebaseOptions(
     apiKey: 'dummy-api-key',
     appId: '1:123456789012:ios:0000000000000000000000',
     messagingSenderId: '123456789012',
-    projectId: 'demo-flutterfire',
-    storageBucket: 'demo-flutterfire.appspot.com',
+    projectId: 'flutterfire-e2e-tests',
+    storageBucket: 'flutterfire-e2e-tests.appspot.com',
   );
 
   static const macos = ios;
@@ -84,9 +85,9 @@ class DefaultFirebaseOptions {
     apiKey: 'dummy-api-key',
     appId: '1:123456789012:web:0000000000000000000000',
     messagingSenderId: '123456789012',
-    projectId: 'demo-flutterfire',
-    authDomain: 'demo-flutterfire.firebaseapp.com',
-    storageBucket: 'demo-flutterfire.appspot.com',
+    projectId: 'flutterfire-e2e-tests',
+    authDomain: 'flutterfire-e2e-tests.firebaseapp.com',
+    storageBucket: 'flutterfire-e2e-tests.appspot.com',
   );
 }
 ''';
@@ -110,8 +111,8 @@ void _writeFirestoreNativeConfigs() {
   final androidConfig = <String, Object>{
     'project_info': <String, String>{
       'project_number': '123456789012',
-      'project_id': 'demo-flutterfire',
-      'storage_bucket': 'demo-flutterfire.appspot.com',
+      'project_id': 'flutterfire-e2e-tests',
+      'storage_bucket': 'flutterfire-e2e-tests.appspot.com',
     },
     'client': <Object>[
       <String, Object>{
@@ -146,9 +147,9 @@ void _writeFirestoreNativeConfigs() {
 \t<key>BUNDLE_ID</key>
 \t<string>$packageName</string>
 \t<key>PROJECT_ID</key>
-\t<string>demo-flutterfire</string>
+\t<string>flutterfire-e2e-tests</string>
 \t<key>STORAGE_BUCKET</key>
-\t<string>demo-flutterfire.appspot.com</string>
+\t<string>flutterfire-e2e-tests.appspot.com</string>
 \t<key>GOOGLE_APP_ID</key>
 \t<string>1:123456789012:ios:0000000000000000000000</string>
 </dict>
