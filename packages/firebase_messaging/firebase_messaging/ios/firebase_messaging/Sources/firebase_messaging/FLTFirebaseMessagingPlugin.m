@@ -162,6 +162,10 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
                                            withMethodCallResult:methodCallResult];
   } else if ([@"Messaging#getToken" isEqualToString:call.method]) {
     [self messagingGetToken:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"Messaging#register" isEqualToString:call.method]) {
+    [self messagingRegister:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"Messaging#unregister" isEqualToString:call.method]) {
+    [self messagingUnregister:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Messaging#getNotificationSettings" isEqualToString:call.method]) {
     if (@available(iOS 10, macOS 10.14, *)) {
       [self messagingGetNotificationSettings:call.arguments withMethodCallResult:methodCallResult];
@@ -230,6 +234,44 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     usersDidReceiveRegistrationTokenIMP([GULAppDelegateSwizzler sharedApplication].delegate,
                                         messaging_didReceiveRegistrationTokenSelector, messaging,
                                         fcmToken);
+  }
+}
+
+- (void)messaging:(nonnull FIRMessaging *)messaging
+    didReceiveRegistration:(nullable NSString *)installationId {
+  if (installationId == nil) {
+    return;
+  }
+
+  [_channel invokeMethod:@"Messaging#onRegistered" arguments:installationId];
+
+  // If the users AppDelegate implements messaging:didReceiveRegistration: then call it as well
+  // so we don't break other libraries.
+  SEL messaging_didReceiveRegistrationSelector =
+      NSSelectorFromString(@"messaging:didReceiveRegistration:");
+  if ([[GULAppDelegateSwizzler sharedApplication].delegate
+          respondsToSelector:messaging_didReceiveRegistrationSelector]) {
+    void (*usersDidReceiveRegistrationIMP)(id, SEL, FIRMessaging *, NSString *) =
+        (typeof(usersDidReceiveRegistrationIMP))&objc_msgSend;
+    usersDidReceiveRegistrationIMP([GULAppDelegateSwizzler sharedApplication].delegate,
+                                   messaging_didReceiveRegistrationSelector, messaging,
+                                   installationId);
+  }
+}
+
+- (void)messaging:(nonnull FIRMessaging *)messaging
+    didUnregister:(nonnull NSString *)installationId {
+  [_channel invokeMethod:@"Messaging#onUnregistered" arguments:installationId];
+
+  // If the users AppDelegate implements messaging:didUnregister: then call it as well
+  // so we don't break other libraries.
+  SEL messaging_didUnregisterSelector = NSSelectorFromString(@"messaging:didUnregister:");
+  if ([[GULAppDelegateSwizzler sharedApplication].delegate
+          respondsToSelector:messaging_didUnregisterSelector]) {
+    void (*usersDidUnregisterIMP)(id, SEL, FIRMessaging *, NSString *) =
+        (typeof(usersDidUnregisterIMP))&objc_msgSend;
+    usersDidUnregisterIMP([GULAppDelegateSwizzler sharedApplication].delegate,
+                          messaging_didUnregisterSelector, messaging, installationId);
   }
 }
 
@@ -856,6 +898,29 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
         withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   FIRMessaging *messaging = [FIRMessaging messaging];
   [messaging deleteTokenWithCompletion:^(NSError *_Nullable error) {
+    if (error != nil) {
+      result.error(nil, nil, nil, error);
+    } else {
+      result.success(nil);
+    }
+  }];
+}
+
+- (void)messagingRegister:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRMessaging *messaging = [FIRMessaging messaging];
+  [messaging registerWithCompletion:^(NSError *_Nullable error) {
+    if (error != nil) {
+      result.error(nil, nil, nil, error);
+    } else {
+      result.success(nil);
+    }
+  }];
+}
+
+- (void)messagingUnregister:(id)arguments
+       withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRMessaging *messaging = [FIRMessaging messaging];
+  [messaging unregisterWithCompletion:^(NSError *_Nullable error) {
     if (error != nil) {
       result.error(nil, nil, nil, error);
     } else {

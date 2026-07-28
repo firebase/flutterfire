@@ -190,7 +190,9 @@ void main() {
 
             await subscription.cancel();
           },
-          skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android,
+          skip: kIsWeb ||
+              (defaultTargetPlatform != TargetPlatform.android &&
+                  defaultTargetPlatform != TargetPlatform.iOS),
         );
       });
 
@@ -229,7 +231,9 @@ void main() {
             await registeredSubscription.cancel();
             await unregisteredSubscription.cancel();
           },
-          skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android,
+          skip: kIsWeb ||
+              (defaultTargetPlatform != TargetPlatform.android &&
+                  defaultTargetPlatform != TargetPlatform.iOS),
         );
       });
 
