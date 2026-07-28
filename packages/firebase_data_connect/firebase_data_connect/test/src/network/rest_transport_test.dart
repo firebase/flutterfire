@@ -276,9 +276,7 @@ void main() {
       ).called(1);
     });
 
-    test(
-        'invokeOperation should include x-client-platform headers',
-        () async {
+    test('invokeOperation should include x-client-platform headers', () async {
       final mockResponse = http.Response('{"data": {"key": "value"}}', 200);
       when(
         mockHttpClient.post(
@@ -313,9 +311,7 @@ void main() {
       ).called(1);
     });
 
-    test(
-        'invokeOperation should include x-client-version headers',
-        () async {
+    test('invokeOperation should include x-client-version headers', () async {
       final mockResponse = http.Response('{"data": {"key": "value"}}', 200);
       when(
         mockHttpClient.post(
