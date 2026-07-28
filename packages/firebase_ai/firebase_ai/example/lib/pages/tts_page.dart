@@ -25,11 +25,11 @@ class TTSPage extends StatefulWidget {
   const TTSPage({
     super.key,
     required this.title,
-    required this.useVertexBackend,
+    required this.useAgentPlatform,
   });
 
   final String title;
-  final bool useVertexBackend;
+  final bool useAgentPlatform;
 
   @override
   State<TTSPage> createState() => _TTSPageState();
@@ -156,8 +156,8 @@ class _TTSPageState extends State<TTSPage> {
     // Use the preview model for TTS
     const modelName = 'gemini-3.1-flash-tts-preview';
     final GenerativeModel model;
-    if (widget.useVertexBackend) {
-      model = FirebaseAI.vertexAI().generativeModel(
+    if (widget.useAgentPlatform) {
+      model = FirebaseAI.agentPlatform().generativeModel(
         model: modelName,
         generationConfig: config,
       );
