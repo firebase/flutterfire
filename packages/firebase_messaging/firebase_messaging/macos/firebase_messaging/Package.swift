@@ -8,7 +8,7 @@
 import PackageDescription
 
 let libraryVersion = "16.4.3"
-let firebaseSdkVersion: Version = "12.15.0"
+let firebaseSdkVersion: Version = "12.16.0"
 
 let package = Package(
   name: "firebase_messaging",
@@ -30,13 +30,13 @@ let package = Package(
         .product(name: "firebase-core", package: "firebase_core"),
       ],
       resources: [
-        .process("Resources")
+        .process("Resources"),
       ],
       cSettings: [
         .headerSearchPath("include"),
         .define("LIBRARY_VERSION", to: "\"\(libraryVersion)\""),
         .define("LIBRARY_NAME", to: "\"flutter-fire-fcm\""),
       ]
-    )
+    ),
   ]
 )

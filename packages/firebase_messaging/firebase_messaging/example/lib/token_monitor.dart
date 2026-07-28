@@ -4,47 +4,74 @@
 
 // ignore_for_file: require_trailing_commas
 
+import 'dart:async';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
-/// Manages & returns the users FCM token.
+/// Web push certificate key used by the example app.
 ///
-/// Also monitors token refreshes and updates state.
-class TokenMonitor extends StatefulWidget {
-  // ignore: public_member_api_docs
-  TokenMonitor(this._builder);
+/// This is only required by web, and is ignored on other platforms.
+const String messagingVapidKey =
+    'BNKkaUWxyP_yC_lki1kYazgca0TNhuzt2drsOrL6WrgGbqnMnr8ZMLzg_rSPDm6HKphABS0KzjPfSqCXHXEd06Y';
 
-  final Widget Function(String? token) _builder;
+/// Manages and returns the app instance FCM registration FID.
+///
+/// Also monitors registration changes and updates state.
+class RegistrationMonitor extends StatefulWidget {
+  // ignore: public_member_api_docs
+  RegistrationMonitor(this._builder);
+
+  final Widget Function(String? fid) _builder;
 
   @override
-  State<StatefulWidget> createState() => _TokenMonitor();
+  State<StatefulWidget> createState() => _RegistrationMonitor();
 }
 
-class _TokenMonitor extends State<TokenMonitor> {
-  String? _token;
-  late Stream<String> _tokenStream;
+class _RegistrationMonitor extends State<RegistrationMonitor> {
+  String? _fid;
+  StreamSubscription<String>? _registeredSubscription;
+  StreamSubscription<String>? _unregisteredSubscription;
 
-  void setToken(String? token) {
-    print('FCM Token: $token');
+  void setRegisteredFid(String fid) {
+    print('FCM registered FID: $fid');
     setState(() {
-      _token = token;
+      _fid = fid;
+    });
+  }
+
+  void setUnregisteredFid(String fid) {
+    print('FCM unregistered FID: $fid');
+    setState(() {
+      if (_fid == fid) {
+        _fid = null;
+      }
     });
   }
 
   @override
   void initState() {
     super.initState();
+    _registeredSubscription =
+        FirebaseMessaging.instance.onRegistered.listen(setRegisteredFid);
+    _unregisteredSubscription =
+        FirebaseMessaging.instance.onUnregistered.listen(setUnregisteredFid);
     FirebaseMessaging.instance
-        .getToken(
-            vapidKey:
-                'BNKkaUWxyP_yC_lki1kYazgca0TNhuzt2drsOrL6WrgGbqnMnr8ZMLzg_rSPDm6HKphABS0KzjPfSqCXHXEd06Y')
-        .then(setToken);
-    _tokenStream = FirebaseMessaging.instance.onTokenRefresh;
-    _tokenStream.listen(setToken);
+        .register(vapidKey: messagingVapidKey)
+        .catchError((Object error) {
+      print('FCM registration failed: $error');
+    });
+  }
+
+  @override
+  void dispose() {
+    _registeredSubscription?.cancel();
+    _unregisteredSubscription?.cancel();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return widget._builder(_token);
+    return widget._builder(_fid);
   }
 }
