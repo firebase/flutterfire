@@ -87,8 +87,8 @@ void runListenTests() {
         expect(initialValue.data.movies.length, 0,
             reason: 'Initial movie list should be empty');
 
-        final Completer<void> isReady = Completer<void>();
-        final Completer<bool> hasBeenListened = Completer<bool>();
+        final initialMovies = Completer<List<ListMoviesMovies>>();
+        final updatedMovies = Completer<List<ListMoviesMovies>>();
         int count = 0;
 
         final listener1 = MoviesConnector.instance
@@ -97,20 +97,14 @@ void runListenTests() {
             .subscribe()
             .listen((value) {
           final movies = value.data.movies;
-
-          if (count == 0) {
-            expect(movies.length, 0,
-                reason: 'First emission should contain an empty list');
-            isReady.complete();
-          } else if (count == 1) {
-            expect(movies.length, 1,
-                reason: 'Second emission should contain one movie');
-            expect(movies[0].title, 'The Matrix',
-                reason: 'The movie should be The Matrix');
-            hasBeenListened.complete(true);
+          if (count == 0 && !initialMovies.isCompleted) {
+            initialMovies.complete(movies);
+          } else if (count == 1 && !updatedMovies.isCompleted) {
+            updatedMovies.complete(movies);
           }
           count++;
         });
+
         int listener2Count = 0;
         final listener2 = MoviesConnector.instance
             .listMovies()
@@ -120,8 +114,10 @@ void runListenTests() {
           listener2Count++;
         });
 
-        // Wait for the listener to be ready
-        await isReady.future;
+        // Wait for the listener to receive initial empty list
+        final initial = await initialMovies.future.timeout(_listenTimeout);
+        expect(initial, isEmpty,
+            reason: 'First emission should contain an empty list');
 
         // Create the movie
         await MoviesConnector.instance
@@ -137,13 +133,16 @@ void runListenTests() {
         await MoviesConnector.instance.listMovies().ref().execute();
 
         // Wait for the listener to receive the movie update
-        final bool hasListenerReceived = await hasBeenListened.future;
+        final movies = await updatedMovies.future.timeout(_listenTimeout);
+        expect(movies, hasLength(1),
+            reason: 'Second emission should contain one movie');
+        expect(movies.single.title, 'The Matrix',
+            reason: 'The movie should be The Matrix');
 
-        // Cancel the listener and wait for it to finish
+        // Cancel listener1 and verify listener1 stops receiving events while listener2 continues
         await listener1.cancel();
-        expect(hasListenerReceived, isTrue,
-            reason: 'The stream should have emitted new data');
-        // Create the movie
+
+        // Create a second movie
         await MoviesConnector.instance
             .createMovie(
               genre: 'Adventure',
@@ -153,9 +152,15 @@ void runListenTests() {
             .rating(4.5)
             .ref()
             .execute();
-        await Future.delayed(const Duration(seconds: 5));
-        expect(count, equals(2));
-        expect(listener2Count, equals(3));
+
+        await MoviesConnector.instance.listMovies().ref().execute();
+        await Future.delayed(const Duration(seconds: 2));
+
+        expect(count, equals(2),
+            reason: 'listener1 should not receive events after cancellation');
+        expect(listener2Count, equals(3),
+            reason: 'listener2 should continue receiving events');
+
         await listener2.cancel();
       });
     },

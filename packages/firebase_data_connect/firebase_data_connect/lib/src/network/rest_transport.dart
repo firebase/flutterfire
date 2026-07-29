@@ -86,8 +86,7 @@ class RestTransport implements DataConnectTransport {
       'Accept': 'application/json',
       'x-goog-api-client': getGoogApiVal(sdkType, packageVersion),
       'x-firebase-client': getFirebaseClientVal(packageVersion),
-      'x-client-platform': 'flutter',
-      'x-client-version': packageVersion,
+      'x-client-version': packageVersion
     };
     String? appCheckToken;
     try {
