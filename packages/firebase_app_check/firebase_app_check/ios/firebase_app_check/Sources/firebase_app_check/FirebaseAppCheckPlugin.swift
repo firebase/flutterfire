@@ -114,6 +114,41 @@ public class FirebaseAppCheckPlugin: NSObject, FlutterPlugin,
     }
   }
 
+  func getTokenResult(
+    appName: String, forceRefresh: Bool,
+    completion: @escaping (Result<InternalAppCheckTokenResult?, Error>) -> Void
+  ) {
+    guard let app = FLTFirebasePlugin.firebaseAppNamed(appName),
+      let appCheck = AppCheck.appCheck(app: app)
+    else {
+      completion(
+        .failure(
+          FlutterError(
+            code: "unknown", message: "App Check not available for app: \(appName)", details: nil
+          )
+        )
+      )
+      return
+    }
+
+    appCheck.token(forcingRefresh: forceRefresh) { token, error in
+      if let error {
+        completion(.failure(self.createFlutterError(error)))
+      } else {
+        completion(
+          .success(
+            token.map {
+              InternalAppCheckTokenResult(
+                token: $0.token,
+                expirationTimestamp: Int64($0.expirationDate.timeIntervalSince1970 * 1000)
+              )
+            }
+          )
+        )
+      }
+    }
+  }
+
   func setTokenAutoRefreshEnabled(
     appName: String, isTokenAutoRefreshEnabled: Bool,
     completion: @escaping (Result<Void, Error>) -> Void
