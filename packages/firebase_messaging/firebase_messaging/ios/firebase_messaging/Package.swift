@@ -30,13 +30,13 @@ let package = Package(
         .product(name: "firebase-core", package: "firebase_core"),
       ],
       resources: [
-        .process("Resources"),
+        .process("Resources")
       ],
       cSettings: [
         .headerSearchPath("include"),
         .define("LIBRARY_VERSION", to: "\"\(libraryVersion)\""),
         .define("LIBRARY_NAME", to: "\"flutter-fire-fcm\""),
       ]
-    ),
+    )
   ]
 )
