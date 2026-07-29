@@ -26,10 +26,9 @@ private object GeneratedAndroidFirebaseAppCheckPigeonUtils {
       listOf(exception.code, exception.message, exception.details)
     } else {
       listOf(
-        exception.javaClass.simpleName,
-        exception.toString(),
-        "Cause: " + exception.cause + ", Stacktrace: " + Log.getStackTraceString(exception)
-      )
+          exception.javaClass.simpleName,
+          exception.toString(),
+          "Cause: " + exception.cause + ", Stacktrace: " + Log.getStackTraceString(exception))
     }
   }
 
@@ -186,9 +185,9 @@ private object GeneratedAndroidFirebaseAppCheckPigeonUtils {
  * @property details The error details. Must be a datatype supported by the api codec.
  */
 class FlutterError(
-  val code: String,
-  override val message: String? = null,
-  val details: Any? = null
+    val code: String,
+    override val message: String? = null,
+    val details: Any? = null
 ) : RuntimeException()
 
 /** Generated class from Pigeon that represents data sent in messages. */
@@ -203,8 +202,8 @@ data class InternalAppCheckTokenResult(val token: String, val expirationTimestam
 
   fun toList(): List<Any?> {
     return listOf(
-      token,
-      expirationTimestamp,
+        token,
+        expirationTimestamp,
     )
   }
 
@@ -217,17 +216,15 @@ data class InternalAppCheckTokenResult(val token: String, val expirationTimestam
     }
     val other = other as InternalAppCheckTokenResult
     return GeneratedAndroidFirebaseAppCheckPigeonUtils.deepEquals(this.token, other.token) &&
-      GeneratedAndroidFirebaseAppCheckPigeonUtils.deepEquals(
-        this.expirationTimestamp,
-        other.expirationTimestamp
-      )
+        GeneratedAndroidFirebaseAppCheckPigeonUtils.deepEquals(
+            this.expirationTimestamp, other.expirationTimestamp)
   }
 
   override fun hashCode(): Int {
     var result = javaClass.hashCode()
     result = 31 * result + GeneratedAndroidFirebaseAppCheckPigeonUtils.deepHash(this.token)
     result =
-      31 * result + GeneratedAndroidFirebaseAppCheckPigeonUtils.deepHash(this.expirationTimestamp)
+        31 * result + GeneratedAndroidFirebaseAppCheckPigeonUtils.deepHash(this.expirationTimestamp)
     return result
   }
 }
@@ -256,25 +253,25 @@ private open class GeneratedAndroidFirebaseAppCheckPigeonCodec : StandardMessage
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface FirebaseAppCheckHostApi {
   fun activate(
-    appName: String,
-    androidProvider: String?,
-    appleProvider: String?,
-    debugToken: String?,
-    callback: (Result<Unit>) -> Unit
+      appName: String,
+      androidProvider: String?,
+      appleProvider: String?,
+      debugToken: String?,
+      callback: (Result<Unit>) -> Unit
   )
 
   fun getToken(appName: String, forceRefresh: Boolean, callback: (Result<String?>) -> Unit)
 
   fun getTokenResult(
-    appName: String,
-    forceRefresh: Boolean,
-    callback: (Result<InternalAppCheckTokenResult?>) -> Unit
+      appName: String,
+      forceRefresh: Boolean,
+      callback: (Result<InternalAppCheckTokenResult?>) -> Unit
   )
 
   fun setTokenAutoRefreshEnabled(
-    appName: String,
-    isTokenAutoRefreshEnabled: Boolean,
-    callback: (Result<Unit>) -> Unit
+      appName: String,
+      isTokenAutoRefreshEnabled: Boolean,
+      callback: (Result<Unit>) -> Unit
   )
 
   fun registerTokenListener(appName: String, callback: (Result<String>) -> Unit)
@@ -290,19 +287,18 @@ interface FirebaseAppCheckHostApi {
      */
     @JvmOverloads
     fun setUp(
-      binaryMessenger: BinaryMessenger,
-      api: FirebaseAppCheckHostApi?,
-      messageChannelSuffix: String = ""
+        binaryMessenger: BinaryMessenger,
+        api: FirebaseAppCheckHostApi?,
+        messageChannelSuffix: String = ""
     ) {
       val separatedMessageChannelSuffix =
-        if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+          if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
       run {
         val channel =
-          BasicMessageChannel<Any?>(
-            binaryMessenger,
-            "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.activate$separatedMessageChannelSuffix",
-            codec
-          )
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.activate$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -311,7 +307,7 @@ interface FirebaseAppCheckHostApi {
             val appleProviderArg = args[2] as String?
             val debugTokenArg = args[3] as String?
             api.activate(appNameArg, androidProviderArg, appleProviderArg, debugTokenArg) {
-              result: Result<Unit> ->
+                result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidFirebaseAppCheckPigeonUtils.wrapError(error))
@@ -326,11 +322,10 @@ interface FirebaseAppCheckHostApi {
       }
       run {
         val channel =
-          BasicMessageChannel<Any?>(
-            binaryMessenger,
-            "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.getToken$separatedMessageChannelSuffix",
-            codec
-          )
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.getToken$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -352,18 +347,17 @@ interface FirebaseAppCheckHostApi {
       }
       run {
         val channel =
-          BasicMessageChannel<Any?>(
-            binaryMessenger,
-            "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.getTokenResult$separatedMessageChannelSuffix",
-            codec
-          )
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.getTokenResult$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val appNameArg = args[0] as String
             val forceRefreshArg = args[1] as Boolean
             api.getTokenResult(appNameArg, forceRefreshArg) {
-              result: Result<InternalAppCheckTokenResult?> ->
+                result: Result<InternalAppCheckTokenResult?> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidFirebaseAppCheckPigeonUtils.wrapError(error))
@@ -379,18 +373,17 @@ interface FirebaseAppCheckHostApi {
       }
       run {
         val channel =
-          BasicMessageChannel<Any?>(
-            binaryMessenger,
-            "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.setTokenAutoRefreshEnabled$separatedMessageChannelSuffix",
-            codec
-          )
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.setTokenAutoRefreshEnabled$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val appNameArg = args[0] as String
             val isTokenAutoRefreshEnabledArg = args[1] as Boolean
             api.setTokenAutoRefreshEnabled(appNameArg, isTokenAutoRefreshEnabledArg) {
-              result: Result<Unit> ->
+                result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidFirebaseAppCheckPigeonUtils.wrapError(error))
@@ -405,11 +398,10 @@ interface FirebaseAppCheckHostApi {
       }
       run {
         val channel =
-          BasicMessageChannel<Any?>(
-            binaryMessenger,
-            "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.registerTokenListener$separatedMessageChannelSuffix",
-            codec
-          )
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.registerTokenListener$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -430,11 +422,10 @@ interface FirebaseAppCheckHostApi {
       }
       run {
         val channel =
-          BasicMessageChannel<Any?>(
-            binaryMessenger,
-            "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.getLimitedUseAppCheckToken$separatedMessageChannelSuffix",
-            codec
-          )
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.getLimitedUseAppCheckToken$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>

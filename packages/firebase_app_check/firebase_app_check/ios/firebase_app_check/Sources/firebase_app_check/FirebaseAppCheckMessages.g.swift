@@ -202,8 +202,8 @@ struct InternalAppCheckTokenResult: Hashable {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return deepEqualsFirebaseAppCheckMessages(lhs.token, rhs.token) &&
-      deepEqualsFirebaseAppCheckMessages(
+    return deepEqualsFirebaseAppCheckMessages(lhs.token, rhs.token)
+      && deepEqualsFirebaseAppCheckMessages(
         lhs.expirationTimestamp,
         rhs.expirationTimestamp
       )
@@ -282,7 +282,8 @@ class FirebaseAppCheckHostApiSetup {
                     messageChannelSuffix: String = "") {
     let channelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
     let activateChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.activate\(channelSuffix)",
+      name:
+      "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.activate\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -311,7 +312,8 @@ class FirebaseAppCheckHostApiSetup {
       activateChannel.setMessageHandler(nil)
     }
     let getTokenChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.getToken\(channelSuffix)",
+      name:
+      "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.getToken\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -333,7 +335,8 @@ class FirebaseAppCheckHostApiSetup {
       getTokenChannel.setMessageHandler(nil)
     }
     let getTokenResultChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.getTokenResult\(channelSuffix)",
+      name:
+      "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.getTokenResult\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -355,7 +358,8 @@ class FirebaseAppCheckHostApiSetup {
       getTokenResultChannel.setMessageHandler(nil)
     }
     let setTokenAutoRefreshEnabledChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.setTokenAutoRefreshEnabled\(channelSuffix)",
+      name:
+      "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.setTokenAutoRefreshEnabled\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -380,7 +384,8 @@ class FirebaseAppCheckHostApiSetup {
       setTokenAutoRefreshEnabledChannel.setMessageHandler(nil)
     }
     let registerTokenListenerChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.registerTokenListener\(channelSuffix)",
+      name:
+      "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.registerTokenListener\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -401,7 +406,8 @@ class FirebaseAppCheckHostApiSetup {
       registerTokenListenerChannel.setMessageHandler(nil)
     }
     let getLimitedUseAppCheckTokenChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.getLimitedUseAppCheckToken\(channelSuffix)",
+      name:
+      "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.getLimitedUseAppCheckToken\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )

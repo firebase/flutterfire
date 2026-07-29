@@ -103,8 +103,8 @@ class FirebaseAppCheckPlugin : FlutterFirebasePlugin, FlutterPlugin, FirebaseApp
       if (task.isSuccessful) {
         val token = task.result
         callback(
-          Result.success(token?.let { InternalAppCheckTokenResult(it.token, it.expireTimeMillis) })
-        )
+            Result.success(
+                token?.let { InternalAppCheckTokenResult(it.token, it.expireTimeMillis) }))
       } else {
         callback(Result.failure(FlutterError("firebase_app_check", task.exception?.message, null)))
       }
