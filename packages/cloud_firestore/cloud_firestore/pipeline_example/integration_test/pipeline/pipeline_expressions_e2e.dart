@@ -930,7 +930,6 @@ void runPipelineExpressionsTests() {
           {'s1': 'Zy', 'iy': 1, 's2': 'xyxy'},
         ]);
       },
-      skip: !kIsWeb,
     );
 
     test('addFields ltrim rtrim on padded s', () async {
@@ -949,7 +948,7 @@ void runPipelineExpressionsTests() {
       expectResultsData(snapshot, [
         {'lt': 'AbC  ', 'rt': '  AbC'},
       ]);
-    }, skip: !kIsWeb);
+    });
 
     test('addFields mapSet and mapEntries on m', () async {
       final snapshot = await firestore
