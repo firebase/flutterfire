@@ -101,6 +101,48 @@ void main() {
       expect(queryManager.trackedQueries.values.contains(ref), isTrue);
       expect(stream, isA<StreamController>());
     });
+
+    test(
+        'addQuery stream controller broadcast should remain active when one subscriber cancels and remove trackedQuery when all subscribers cancel',
+        () {
+      String deserializer(String data) => 'Deserialized Data';
+      String varSerializer(Object? _) => 'varsAsStr';
+
+      QueryRef ref = QueryRef(
+        mockDataConnect,
+        'testQuery',
+        MockDataConnectTransport(),
+        deserializer,
+        queryManager,
+        varSerializer,
+        'variables',
+      );
+
+      final controller = queryManager.addQuery(ref);
+      final stream = controller.stream;
+
+      int eventsReceived1 = 0;
+      int eventsReceived2 = 0;
+
+      final sub1 = stream.listen((_) {
+        eventsReceived1++;
+      });
+      final sub2 = stream.listen((_) {
+        eventsReceived2++;
+      });
+
+      expect(queryManager.trackedQueries[ref.operationId], equals(ref));
+
+      sub1.cancel();
+
+      // trackedQuery should still exist because sub2 is active
+      expect(queryManager.trackedQueries[ref.operationId], equals(ref));
+
+      sub2.cancel();
+
+      // now that all subscribers cancelled, trackedQuery should be removed
+      expect(queryManager.trackedQueries[ref.operationId], isNull);
+    });
   });
 
   group('MutationRef', () {

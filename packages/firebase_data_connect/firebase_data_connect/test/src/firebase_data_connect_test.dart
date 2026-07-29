@@ -127,7 +127,9 @@ void main() {
       expect(dataConnect.transport, isNotNull);
     });
 
-    test('query method returns QueryRef', () {
+    test(
+        'query method returns identical QueryRef instance for same operation and variables',
+        () {
       final dataConnect = FirebaseDataConnect(
         app: mockApp,
         connectorConfig: mockConnectorConfig,
@@ -135,14 +137,22 @@ void main() {
         appCheck: mockAppCheck,
       );
 
-      final queryRef = dataConnect.query(
+      final queryRef1 = dataConnect.query(
         'operationName',
         (json) => json,
         (variables) => variables.toString(),
         null,
       );
 
-      expect(queryRef, isA<QueryRef>());
+      final queryRef2 = dataConnect.query(
+        'operationName',
+        (json) => json,
+        (variables) => variables.toString(),
+        null,
+      );
+
+      expect(queryRef1, isA<QueryRef>());
+      expect(queryRef2, same(queryRef1));
     });
 
     test('mutation method returns MutationRef', () {
