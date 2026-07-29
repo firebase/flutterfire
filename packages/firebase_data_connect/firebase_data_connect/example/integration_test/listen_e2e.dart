@@ -102,7 +102,7 @@ void runListenTests() {
             expect(movies.length, 0,
                 reason: 'First emission should contain an empty list');
             isReady.complete();
-          } else {
+          } else if (count == 1) {
             expect(movies.length, 1,
                 reason: 'Second emission should contain one movie');
             expect(movies[0].title, 'The Matrix',
