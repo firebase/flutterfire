@@ -932,6 +932,23 @@ void runPipelineExpressionsTests() {
       },
     );
 
+    test('addFields stringReplaceAll replaces every match on s', () async {
+      final snapshot = await firestore
+          .pipeline()
+          .collection('pipeline-e2e')
+          .where(Expression.field('test').equalValue('expressions'))
+          .where(Expression.field('score').equalValue(50))
+          .addFields(
+            Expression.field('s').stringReplaceAllLiteral('-', '_').as('s_all'),
+          )
+          .limit(1)
+          .execute();
+      expectResultCount(snapshot, 1);
+      expectResultsData(snapshot, [
+        {'s_all': 'a_b_c'},
+      ]);
+    });
+
     test('addFields ltrim rtrim on padded s', () async {
       final snapshot = await firestore
           .pipeline()
