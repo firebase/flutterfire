@@ -342,6 +342,7 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
     _serverStreamSubscription?.cancel();
     _serverStreamSubscription = null;
     _serverStream = null;
+    _streamController = null;
   }
 
   Stream<QueryResult<Data, Variables>> subscribe() {
