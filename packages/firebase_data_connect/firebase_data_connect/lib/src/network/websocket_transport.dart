@@ -200,8 +200,7 @@ class WebSocketTransport implements DataConnectTransport {
     Map<String, String> headers = {
       'x-goog-api-client': getGoogApiVal(sdkType, packageVersion),
       'x-firebase-client': getFirebaseClientVal(packageVersion),
-      'x-client-platform': 'flutter',
-      'x-client-version': packageVersion
+      'x-client-version': 'flutter/$packageVersion',
     };
     if (authToken != null) {
       headers['X-Firebase-Auth-Token'] = authToken;
