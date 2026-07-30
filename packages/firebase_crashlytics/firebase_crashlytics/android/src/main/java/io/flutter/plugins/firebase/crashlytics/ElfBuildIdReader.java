@@ -7,11 +7,13 @@ package io.flutter.plugins.firebase.crashlytics;
 import android.content.Context;
 import android.util.Log;
 import java.io.File;
-import java.io.FileOutputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
-import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -23,19 +25,52 @@ import java.util.zip.ZipFile;
  * {@code .note.gnu.build-id} section) when uploading symbols. To ensure Crashlytics can match crash
  * reports to uploaded symbols, the plugin must report the same ELF build ID rather than the Dart
  * VM's internal snapshot build ID (which may differ, especially for AAB + flavor builds).
+ *
+ * <p>Only a bounded prefix of the library is ever read into memory: every allocation here is sized
+ * by a constant, never by a value read from the file.
  */
 final class ElfBuildIdReader {
 
   private static final String TAG = "FLTFirebaseCrashlytics";
 
   private static final byte[] ELF_MAGIC = {0x7f, 'E', 'L', 'F'};
+  private static final int ELFCLASS32 = 1;
   private static final int ELFCLASS64 = 2;
+  private static final int ELFDATA2LSB = 1;
+  private static final int ELFDATA2MSB = 2;
   private static final int PT_NOTE = 4;
   private static final int NT_GNU_BUILD_ID = 3;
   private static final String GNU_NOTE_NAME = "GNU";
-  private static final int ZIP_COPY_BUFFER_SIZE_BYTES = 64 * 1024;
+
+  /** First attempt: enough for the ELF header, program header table, and typical notes. */
+  private static final int INITIAL_PREFIX_BYTES = 4 * 1024;
+
+  /** Hard ceiling for a retry if a note sits further into the library. */
+  private static final int MAX_PREFIX_BYTES = 256 * 1024;
+
+  /** GNU build IDs are small; this bounds hostile or corrupt descsz values. */
+  private static final int MAX_DESC_BYTES = 1024;
+
+  private static final int ELF32_HEADER_BYTES = 52;
+  private static final int ELF64_HEADER_BYTES = 64;
+  private static final int ELF32_PHDR_MIN_BYTES = 32;
+  private static final int ELF64_PHDR_MIN_BYTES = 56;
+  private static final int NOTE_HEADER_BYTES = 12;
 
   private ElfBuildIdReader() {}
+
+  /** Parse outcome: either a build ID, or how many prefix bytes would have been needed. */
+  static final class ParseResult {
+    final String buildId;
+    final int bytesNeeded;
+
+    ParseResult(String buildId, int bytesNeeded) {
+      this.buildId = buildId;
+      this.bytesNeeded = bytesNeeded;
+    }
+
+    static final ParseResult NOT_FOUND = new ParseResult(null, 0);
+  }
 
   /**
    * Reads the ELF build ID from libapp.so.
@@ -51,7 +86,7 @@ final class ElfBuildIdReader {
       String nativeLibDir = context.getApplicationInfo().nativeLibraryDir;
       File libApp = new File(nativeLibDir, "libapp.so");
       if (libApp.exists()) {
-        return readBuildIdFromElf(libApp);
+        return readBuildIdFromFile(libApp);
       }
 
       // Fall back to reading from inside the APK (or split APKs for AAB installs).
@@ -68,7 +103,7 @@ final class ElfBuildIdReader {
    */
   private static String readBuildIdFromApk(Context context) throws Exception {
     // Check the base APK first.
-    String result = readBuildIdFromZip(context, context.getApplicationInfo().sourceDir);
+    String result = readBuildIdFromZip(context.getApplicationInfo().sourceDir);
     if (result != null) {
       return result;
     }
@@ -77,7 +112,7 @@ final class ElfBuildIdReader {
     String[] splitDirs = context.getApplicationInfo().splitSourceDirs;
     if (splitDirs != null) {
       for (String splitDir : splitDirs) {
-        result = readBuildIdFromZip(context, splitDir);
+        result = readBuildIdFromZip(splitDir);
         if (result != null) {
           return result;
         }
@@ -86,129 +121,191 @@ final class ElfBuildIdReader {
     return null;
   }
 
-  private static String readBuildIdFromZip(Context context, String apkPath) throws Exception {
+  private static String readBuildIdFromZip(String apkPath) throws Exception {
     try (ZipFile zipFile = new ZipFile(apkPath)) {
       Enumeration<? extends ZipEntry> entries = zipFile.entries();
       while (entries.hasMoreElements()) {
         ZipEntry entry = entries.nextElement();
         if (entry.getName().endsWith("/libapp.so")) {
-          return readBuildIdFromZipEntry(context, zipFile, entry);
+          return readBuildIdFromZipEntry(zipFile, entry);
         }
       }
     }
     return null;
   }
 
-  private static String readBuildIdFromZipEntry(Context context, ZipFile zipFile, ZipEntry entry)
-      throws Exception {
-    File tempElf =
-        File.createTempFile("flutterfire_crashlytics_libapp", ".so", context.getCacheDir());
-    try {
-      try (InputStream is = zipFile.getInputStream(entry);
-          FileOutputStream os = new FileOutputStream(tempElf)) {
-        byte[] buffer = new byte[ZIP_COPY_BUFFER_SIZE_BYTES];
-        int read;
-        while ((read = is.read(buffer)) != -1) {
-          os.write(buffer, 0, read);
-        }
+  private static String readBuildIdFromZipEntry(ZipFile zipFile, ZipEntry entry) throws Exception {
+    int limit = INITIAL_PREFIX_BYTES;
+    while (true) {
+      byte[] prefix;
+      try (InputStream is = zipFile.getInputStream(entry)) {
+        prefix = readPrefix(is, limit);
       }
-      return readBuildIdFromElf(tempElf);
-    } finally {
-      if (!tempElf.delete()) {
-        tempElf.deleteOnExit();
+
+      ParseResult result = readBuildIdFromBytes(prefix);
+      if (result.buildId != null) {
+        return result.buildId;
       }
-    }
-  }
-
-  private static String readBuildIdFromElf(File elfFile) throws Exception {
-    try (RandomAccessFile raf = new RandomAccessFile(elfFile, "r")) {
-      return readBuildIdFromRaf(raf);
-    }
-  }
-
-  private static String readBuildIdFromRaf(RandomAccessFile raf) throws Exception {
-    // Verify ELF magic bytes.
-    byte[] magic = new byte[4];
-    raf.readFully(magic);
-    for (int i = 0; i < 4; i++) {
-      if (magic[i] != ELF_MAGIC[i]) {
+      if (result.bytesNeeded <= prefix.length || limit >= MAX_PREFIX_BYTES) {
         return null;
       }
+      limit = Math.min(MAX_PREFIX_BYTES, result.bytesNeeded);
+    }
+  }
+
+  private static String readBuildIdFromFile(File elfFile) throws Exception {
+    int limit = INITIAL_PREFIX_BYTES;
+    while (true) {
+      byte[] prefix;
+      try (InputStream is = new FileInputStream(elfFile)) {
+        prefix = readPrefix(is, limit);
+      }
+
+      ParseResult result = readBuildIdFromBytes(prefix);
+      if (result.buildId != null) {
+        return result.buildId;
+      }
+      if (result.bytesNeeded <= prefix.length || limit >= MAX_PREFIX_BYTES) {
+        return null;
+      }
+      limit = Math.min(MAX_PREFIX_BYTES, result.bytesNeeded);
+    }
+  }
+
+  /** Reads at most {@code limit} bytes from the start of the stream. */
+  private static byte[] readPrefix(InputStream is, int limit) throws IOException {
+    byte[] buffer = new byte[limit];
+    int offset = 0;
+    while (offset < limit) {
+      int read = is.read(buffer, offset, limit - offset);
+      if (read < 0) {
+        break;
+      }
+      offset += read;
+    }
+    return offset == limit ? buffer : Arrays.copyOf(buffer, offset);
+  }
+
+  /**
+   * Parses an ELF prefix. Visible for testing.
+   *
+   * <p>Every bound is checked against the buffer length, so a truncated prefix reports how many
+   * bytes it would have needed instead of throwing.
+   */
+  static ParseResult readBuildIdFromBytes(byte[] data) {
+    if (data.length < ELF32_HEADER_BYTES) {
+      return new ParseResult(null, ELF32_HEADER_BYTES);
     }
 
-    int elfClass = raf.read(); // 1 = 32-bit, 2 = 64-bit
-    boolean is64 = elfClass == ELFCLASS64;
+    for (int i = 0; i < ELF_MAGIC.length; i++) {
+      if (data[i] != ELF_MAGIC[i]) {
+        return ParseResult.NOT_FOUND;
+      }
+    }
 
-    int dataEncoding = raf.read(); // 1 = little-endian, 2 = big-endian
-    ByteOrder order = dataEncoding == 1 ? ByteOrder.LITTLE_ENDIAN : ByteOrder.BIG_ENDIAN;
-
-    if (is64) {
-      return readBuildIdFromElf64(raf, order);
+    int elfClass = data[4] & 0xFF;
+    boolean is64;
+    if (elfClass == ELFCLASS64) {
+      is64 = true;
+      if (data.length < ELF64_HEADER_BYTES) {
+        return new ParseResult(null, ELF64_HEADER_BYTES);
+      }
+    } else if (elfClass == ELFCLASS32) {
+      is64 = false;
     } else {
-      return readBuildIdFromElf32(raf, order);
+      return ParseResult.NOT_FOUND;
     }
-  }
 
-  private static String readBuildIdFromElf64(RandomAccessFile raf, ByteOrder order)
-      throws Exception {
-    // e_phoff is at offset 32 in the 64-bit ELF header.
-    raf.seek(32);
-    long phoff = readLong(raf, order);
+    int dataEncoding = data[5] & 0xFF;
+    ByteOrder order;
+    if (dataEncoding == ELFDATA2LSB) {
+      order = ByteOrder.LITTLE_ENDIAN;
+    } else if (dataEncoding == ELFDATA2MSB) {
+      order = ByteOrder.BIG_ENDIAN;
+    } else {
+      return ParseResult.NOT_FOUND;
+    }
 
-    // e_phentsize is at offset 54, e_phnum at offset 56.
-    raf.seek(54);
-    int phentsize = readUnsignedShort(raf, order);
-    int phnum = readUnsignedShort(raf, order);
+    ByteBuffer buf = ByteBuffer.wrap(data).order(order);
 
+    long phoff;
+    int phentsize;
+    int phnum;
+    int minPhdrBytes;
+    if (is64) {
+      // e_phoff at 32, e_phentsize at 54, e_phnum at 56.
+      phoff = buf.getLong(32);
+      phentsize = buf.getShort(54) & 0xFFFF;
+      phnum = buf.getShort(56) & 0xFFFF;
+      minPhdrBytes = ELF64_PHDR_MIN_BYTES;
+    } else {
+      // e_phoff at 28, e_phentsize at 42, e_phnum at 44.
+      phoff = buf.getInt(28) & 0xFFFFFFFFL;
+      phentsize = buf.getShort(42) & 0xFFFF;
+      phnum = buf.getShort(44) & 0xFFFF;
+      minPhdrBytes = ELF32_PHDR_MIN_BYTES;
+    }
+
+    if (phoff <= 0 || phentsize < minPhdrBytes || phnum <= 0) {
+      return ParseResult.NOT_FOUND;
+    }
+
+    long tableSize = (long) phnum * phentsize;
+    if (phoff > Long.MAX_VALUE - tableSize) {
+      return ParseResult.NOT_FOUND;
+    }
+    long tableEnd = phoff + tableSize;
+    if (tableEnd > data.length) {
+      return new ParseResult(null, clampToInt(tableEnd));
+    }
+
+    int bytesNeeded = 0;
     for (int i = 0; i < phnum; i++) {
-      long phdr = phoff + (long) i * phentsize;
-      raf.seek(phdr);
-      int type = readInt(raf, order);
-      if (type == PT_NOTE) {
-        // p_offset is at phdr + 8, p_filesz at phdr + 32 for 64-bit.
-        raf.seek(phdr + 8);
-        long noteOffset = readLong(raf, order);
-        raf.seek(phdr + 32);
-        long noteSize = readLong(raf, order);
+      long phdrLong = phoff + (long) i * phentsize;
+      if (phdrLong > Integer.MAX_VALUE) {
+        return ParseResult.NOT_FOUND;
+      }
+      int phdr = (int) phdrLong;
+      if (buf.getInt(phdr) != PT_NOTE) {
+        continue;
+      }
 
-        String buildId = findGnuBuildId(raf, noteOffset, noteSize, order);
-        if (buildId != null) {
-          return buildId;
+      long noteOffset;
+      long noteSize;
+      if (is64) {
+        // p_offset at phdr + 8, p_filesz at phdr + 32.
+        noteOffset = buf.getLong(phdr + 8);
+        noteSize = buf.getLong(phdr + 32);
+      } else {
+        // p_offset at phdr + 4, p_filesz at phdr + 16.
+        noteOffset = buf.getInt(phdr + 4) & 0xFFFFFFFFL;
+        noteSize = buf.getInt(phdr + 16) & 0xFFFFFFFFL;
+      }
+
+      if (noteOffset < 0 || noteSize <= 0 || noteOffset > Long.MAX_VALUE - noteSize) {
+        continue;
+      }
+
+      long noteEnd = noteOffset + noteSize;
+      if (noteEnd > data.length) {
+        // Remember the smallest retry that could still succeed.
+        int needed = clampToInt(noteEnd);
+        if (bytesNeeded == 0 || needed < bytesNeeded) {
+          bytesNeeded = needed;
         }
+        continue;
+      }
+
+      String buildId = findGnuBuildIdInBuffer(buf, (int) noteOffset, (int) noteSize);
+      if (buildId != null) {
+        return new ParseResult(buildId, 0);
       }
     }
-    return null;
+    return bytesNeeded == 0 ? ParseResult.NOT_FOUND : new ParseResult(null, bytesNeeded);
   }
 
-  private static String readBuildIdFromElf32(RandomAccessFile raf, ByteOrder order)
-      throws Exception {
-    // e_phoff is at offset 28 in the 32-bit ELF header.
-    raf.seek(28);
-    long phoff = readInt(raf, order) & 0xFFFFFFFFL;
-
-    // e_phentsize is at offset 42, e_phnum at offset 44.
-    raf.seek(42);
-    int phentsize = readUnsignedShort(raf, order);
-    int phnum = readUnsignedShort(raf, order);
-
-    for (int i = 0; i < phnum; i++) {
-      long phdr = phoff + (long) i * phentsize;
-      raf.seek(phdr);
-      int type = readInt(raf, order);
-      if (type == PT_NOTE) {
-        // p_offset is at phdr + 4, p_filesz at phdr + 16 for 32-bit.
-        raf.seek(phdr + 4);
-        long noteOffset = readInt(raf, order) & 0xFFFFFFFFL;
-        raf.seek(phdr + 16);
-        long noteSize = readInt(raf, order) & 0xFFFFFFFFL;
-
-        String buildId = findGnuBuildId(raf, noteOffset, noteSize, order);
-        if (buildId != null) {
-          return buildId;
-        }
-      }
-    }
-    return null;
+  private static int clampToInt(long value) {
+    return (int) Math.min(value, (long) MAX_PREFIX_BYTES);
   }
 
   /**
@@ -216,35 +313,36 @@ final class ElfBuildIdReader {
    *
    * <p>Note format: namesz (4) | descsz (4) | type (4) | name (aligned to 4) | desc (aligned to 4)
    */
-  private static String findGnuBuildId(
-      RandomAccessFile raf, long offset, long size, ByteOrder order) throws Exception {
-    long end = offset + size;
-    long pos = offset;
+  private static String findGnuBuildIdInBuffer(ByteBuffer buf, int offset, int size) {
+    int end = offset + size;
+    int pos = offset;
 
-    while (pos + 12 <= end) {
-      raf.seek(pos);
-      int namesz = readInt(raf, order);
-      int descsz = readInt(raf, order);
-      int type = readInt(raf, order);
+    while (pos <= end - NOTE_HEADER_BYTES) {
+      int namesz = buf.getInt(pos);
+      int descsz = buf.getInt(pos + 4);
+      int type = buf.getInt(pos + 8);
 
-      if (namesz < 0 || descsz < 0 || namesz > 256) {
+      if (namesz < 0 || descsz < 0 || namesz > 256 || descsz > MAX_DESC_BYTES) {
         break;
       }
 
       int nameAligned = align4(namesz);
-      long descPos = pos + 12 + nameAligned;
+      int descPos = pos + NOTE_HEADER_BYTES + nameAligned;
 
       if (namesz > 0 && type == NT_GNU_BUILD_ID && descPos + descsz <= end) {
         byte[] nameBytes = new byte[namesz];
-        raf.readFully(nameBytes);
+        for (int i = 0; i < namesz; i++) {
+          nameBytes[i] = buf.get(pos + NOTE_HEADER_BYTES + i);
+        }
         // Name is null-terminated.
         String name =
-            namesz > 0 ? new String(nameBytes, 0, Math.max(0, namesz - 1), "US-ASCII") : "";
+            new String(nameBytes, 0, Math.max(0, namesz - 1), StandardCharsets.US_ASCII);
 
         if (GNU_NOTE_NAME.equals(name) && descsz > 0) {
-          raf.seek(descPos);
           byte[] desc = new byte[descsz];
-          raf.readFully(desc);
+          for (int i = 0; i < descsz; i++) {
+            desc[i] = buf.get(descPos + i);
+          }
           return bytesToHex(desc);
         }
       }
@@ -256,24 +354,6 @@ final class ElfBuildIdReader {
 
   private static int align4(int value) {
     return (value + 3) & ~3;
-  }
-
-  private static int readInt(RandomAccessFile raf, ByteOrder order) throws Exception {
-    byte[] buf = new byte[4];
-    raf.readFully(buf);
-    return ByteBuffer.wrap(buf).order(order).getInt();
-  }
-
-  private static long readLong(RandomAccessFile raf, ByteOrder order) throws Exception {
-    byte[] buf = new byte[8];
-    raf.readFully(buf);
-    return ByteBuffer.wrap(buf).order(order).getLong();
-  }
-
-  private static int readUnsignedShort(RandomAccessFile raf, ByteOrder order) throws Exception {
-    byte[] buf = new byte[2];
-    raf.readFully(buf);
-    return ByteBuffer.wrap(buf).order(order).getShort() & 0xFFFF;
   }
 
   private static String bytesToHex(byte[] bytes) {
