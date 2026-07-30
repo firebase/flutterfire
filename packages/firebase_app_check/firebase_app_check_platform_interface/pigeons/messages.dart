@@ -4,6 +4,17 @@
 
 import 'package:pigeon/pigeon.dart';
 
+class InternalAppCheckTokenResult {
+  InternalAppCheckTokenResult({
+    required this.token,
+    this.expirationTimestamp,
+  });
+
+  String token;
+
+  int? expirationTimestamp;
+}
+
 @ConfigurePigeon(
   PigeonOptions(
     dartOut: 'lib/src/pigeon/messages.pigeon.dart',
@@ -33,6 +44,12 @@ abstract class FirebaseAppCheckHostApi {
 
   @async
   String? getToken(String appName, bool forceRefresh);
+
+  @async
+  InternalAppCheckTokenResult? getTokenResult(
+    String appName,
+    bool forceRefresh,
+  );
 
   @async
   void setTokenAutoRefreshEnabled(

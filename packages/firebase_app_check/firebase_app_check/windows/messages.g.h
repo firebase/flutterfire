@@ -58,6 +58,39 @@ class ErrorOr {
   std::variant<T, FlutterError> v_;
 };
 
+// Generated class from Pigeon that represents data sent in messages.
+class InternalAppCheckTokenResult {
+ public:
+  // Constructs an object setting all non-nullable fields.
+  explicit InternalAppCheckTokenResult(const std::string& token);
+
+  // Constructs an object setting all fields.
+  explicit InternalAppCheckTokenResult(const std::string& token,
+                                       const int64_t* expiration_timestamp);
+
+  const std::string& token() const;
+  void set_token(std::string_view value_arg);
+
+  const int64_t* expiration_timestamp() const;
+  void set_expiration_timestamp(const int64_t* value_arg);
+  void set_expiration_timestamp(int64_t value_arg);
+
+  bool operator==(const InternalAppCheckTokenResult& other) const;
+  bool operator!=(const InternalAppCheckTokenResult& other) const;
+  /// Returns a hash code value for the object. This method is supported for the
+  /// benefit of hash tables.
+  size_t Hash() const;
+
+ private:
+  static InternalAppCheckTokenResult FromEncodableList(
+      const ::flutter::EncodableList& list);
+  ::flutter::EncodableList ToEncodableList() const;
+  friend class FirebaseAppCheckHostApi;
+  friend class PigeonInternalCodecSerializer;
+  std::string token_;
+  std::optional<int64_t> expiration_timestamp_;
+};
+
 class PigeonInternalCodecSerializer
     : public ::flutter::StandardCodecSerializer {
  public:
@@ -89,6 +122,11 @@ class FirebaseAppCheckHostApi {
   virtual void GetToken(
       const std::string& app_name, bool force_refresh,
       std::function<void(ErrorOr<std::optional<std::string>> reply)>
+          result) = 0;
+  virtual void GetTokenResult(
+      const std::string& app_name, bool force_refresh,
+      std::function<
+          void(ErrorOr<std::optional<InternalAppCheckTokenResult>> reply)>
           result) = 0;
   virtual void SetTokenAutoRefreshEnabled(
       const std::string& app_name, bool is_token_auto_refresh_enabled,
