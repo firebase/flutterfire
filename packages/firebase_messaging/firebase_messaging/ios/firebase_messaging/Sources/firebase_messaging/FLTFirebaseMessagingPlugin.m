@@ -192,6 +192,13 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     methodCallResult.success(FlutterMethodNotImplemented);
   }
 }
+
+- (FIRMessaging *)messagingWithDelegate {
+  FIRMessaging *messaging = [FIRMessaging messaging];
+  messaging.delegate = self;
+  return messaging;
+}
+
 - (void)messagingSetForegroundNotificationPresentationOptions:(id)arguments
                                          withMethodCallResult:
                                              (FLTFirebaseMethodCallResult *)result {
@@ -907,7 +914,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 }
 
 - (void)messagingRegister:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRMessaging *messaging = [FIRMessaging messaging];
+  FIRMessaging *messaging = [self messagingWithDelegate];
   [messaging registerWithCompletion:^(NSError *_Nullable error) {
     if (error != nil) {
       result.error(nil, nil, nil, error);
@@ -919,7 +926,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 
 - (void)messagingUnregister:(id)arguments
        withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRMessaging *messaging = [FIRMessaging messaging];
+  FIRMessaging *messaging = [self messagingWithDelegate];
   [messaging unregisterWithCompletion:^(NSError *_Nullable error) {
     if (error != nil) {
       result.error(nil, nil, nil, error);
@@ -936,8 +943,9 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 }
 
 - (NSDictionary *_Nonnull)pluginConstantsForFIRApp:(FIRApp *)firebase_app {
+  FIRMessaging *messaging = [self messagingWithDelegate];
   return @{
-    @"AUTO_INIT_ENABLED" : @([FIRMessaging messaging].isAutoInitEnabled),
+    @"AUTO_INIT_ENABLED" : @(messaging.isAutoInitEnabled),
   };
 }
 
