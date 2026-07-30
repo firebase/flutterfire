@@ -7,7 +7,7 @@
 
 import PackageDescription
 
-let firebaseSdkVersion: Version = "12.15.0"
+let firebaseSdkVersion: Version = "12.16.0"
 
 let package = Package(
   name: "firebase_remote_config",
