@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// ignore_for_file: one_member_abstracts
+
 import 'package:pigeon/pigeon.dart';
 
 @ConfigurePigeon(
@@ -29,6 +31,7 @@ abstract class FirebaseAppCheckHostApi {
     String? androidProvider,
     String? appleProvider,
     String? debugToken,
+    String? windowsProvider,
   );
 
   @async
@@ -45,4 +48,36 @@ abstract class FirebaseAppCheckHostApi {
 
   @async
   String getLimitedUseAppCheckToken(String appName);
+}
+
+/// Carries a minted App Check token plus the wall-clock expiry the Firebase
+/// SDK should associate with it. Returning the expiry alongside the token lets
+/// backends mint tokens with arbitrary lifetimes (short TTLs for a stricter
+/// security posture, longer TTLs for fewer round-trips) without the plugin
+/// hardcoding a refresh window.
+class CustomAppCheckToken {
+  CustomAppCheckToken({
+    required this.token,
+    required this.expireTimeMillis,
+  });
+
+  /// The App Check token string to send with Firebase requests.
+  final String token;
+
+  /// Absolute expiry as Unix epoch milliseconds (UTC). The Firebase SDK uses
+  /// this to decide when to refresh; a token returned with an expiry in the
+  /// past is treated as immediately expired.
+  final int expireTimeMillis;
+}
+
+/// Dart-side handler invoked by the native plugin when the Firebase SDK needs
+/// a fresh App Check token. Implementations typically call a backend service
+/// (for example a Cloud Function with `enforceAppCheck: false`) that mints a
+/// token using the Firebase Admin SDK. The native side awaits the future,
+/// then hands the token to the Firebase SDK, which attaches it to subsequent
+/// Firebase backend requests (Firestore, Functions, Storage, Auth, RTDB).
+@FlutterApi()
+abstract class FirebaseAppCheckFlutterApi {
+  @async
+  CustomAppCheckToken getCustomToken();
 }
