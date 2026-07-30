@@ -190,7 +190,9 @@ void main() {
 
             await subscription.cancel();
           },
+          // iOS CI does not have the push/APNs setup needed for FID registration.
           skip: kIsWeb ||
+              (defaultTargetPlatform == TargetPlatform.iOS && skipTestsOnCI) ||
               (defaultTargetPlatform != TargetPlatform.android &&
                   defaultTargetPlatform != TargetPlatform.iOS),
         );
@@ -231,7 +233,9 @@ void main() {
             await registeredSubscription.cancel();
             await unregisteredSubscription.cancel();
           },
+          // iOS CI does not have the push/APNs setup needed for FID registration.
           skip: kIsWeb ||
+              (defaultTargetPlatform == TargetPlatform.iOS && skipTestsOnCI) ||
               (defaultTargetPlatform != TargetPlatform.android &&
                   defaultTargetPlatform != TargetPlatform.iOS),
         );
