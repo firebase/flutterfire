@@ -259,8 +259,6 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
     String? vapidKey, // web only property
     String? serviceWorkerScriptPath, // web only property
   }) async {
-    await _APNSTokenCheck();
-
     try {
       await channel.invokeMapMethod('Messaging#register', {
         'appName': app.name,
@@ -272,8 +270,6 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
 
   @override
   Future<void> unregister() async {
-    await _APNSTokenCheck();
-
     try {
       await channel.invokeMapMethod('Messaging#unregister', {
         'appName': app.name,
