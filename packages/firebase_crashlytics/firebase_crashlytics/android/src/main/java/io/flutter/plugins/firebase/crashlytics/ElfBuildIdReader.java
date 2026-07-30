@@ -335,8 +335,7 @@ final class ElfBuildIdReader {
           nameBytes[i] = buf.get(pos + NOTE_HEADER_BYTES + i);
         }
         // Name is null-terminated.
-        String name =
-            new String(nameBytes, 0, Math.max(0, namesz - 1), StandardCharsets.US_ASCII);
+        String name = new String(nameBytes, 0, Math.max(0, namesz - 1), StandardCharsets.US_ASCII);
 
         if (GNU_NOTE_NAME.equals(name) && descsz > 0) {
           byte[] desc = new byte[descsz];
