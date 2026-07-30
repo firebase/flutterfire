@@ -69,11 +69,8 @@ extension type Observer._(JSObject _) implements JSObject {
 }
 
 extension type GetTokenOptions._(JSObject _) implements JSObject {
-  // TODO - I imagine we won't be implementing serviceWorkerRegistration type as it extends EventTarget class
-  // external String get serviceWorkerRegistration
   external factory GetTokenOptions({
     JSString? vapidKey,
-    /*dynamic serviceWorkerRegistration */
     web.ServiceWorkerRegistration? serviceWorkerRegistration,
   });
   external JSString get vapidKey;
@@ -81,11 +78,8 @@ extension type GetTokenOptions._(JSObject _) implements JSObject {
 }
 
 extension type RegisterOptions._(JSObject _) implements JSObject {
-  // TODO - I imagine we won't be implementing serviceWorkerRegistration type as it extends EventTarget class
-  // external String get serviceWorkerRegistration
   external factory RegisterOptions({
     JSString? vapidKey,
-    /*dynamic serviceWorkerRegistration */
     web.ServiceWorkerRegistration? serviceWorkerRegistration,
   });
   external JSString get vapidKey;

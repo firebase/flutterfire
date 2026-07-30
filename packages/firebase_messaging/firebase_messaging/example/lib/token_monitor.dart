@@ -12,8 +12,7 @@ import 'package:flutter/material.dart';
 /// Web push certificate key used by the example app.
 ///
 /// This is only required by web, and is ignored on other platforms.
-const String messagingVapidKey =
-    'BNKkaUWxyP_yC_lki1kYazgca0TNhuzt2drsOrL6WrgGbqnMnr8ZMLzg_rSPDm6HKphABS0KzjPfSqCXHXEd06Y';
+const String messagingVapidKey = 'VAPID_KEY';
 
 /// Manages and returns the app instance FCM registration FID.
 ///
