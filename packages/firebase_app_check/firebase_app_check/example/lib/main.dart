@@ -77,6 +77,8 @@ class FirebaseAppCheckExample extends StatefulWidget {
 
 class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
   final appCheck = FirebaseAppCheck.instance;
+  final TextEditingController _recaptchaSiteKeyController =
+      TextEditingController(text: 'recaptcha-site-key');
   String _message = '';
   String _eventToken = 'not yet';
 
@@ -84,6 +86,12 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
   void initState() {
     appCheck.onTokenChange.listen(setEventToken);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _recaptchaSiteKeyController.dispose();
+    super.dispose();
   }
 
   void setMessage(String message) {
@@ -101,18 +109,20 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
   Future<void> _activate({
     AndroidAppCheckProvider? android,
     AppleAppCheckProvider? apple,
+    WebProvider? web,
     WindowsAppCheckProvider? windows,
   }) async {
     try {
       await appCheck.activate(
         providerAndroid: android ?? const AndroidPlayIntegrityProvider(),
         providerApple: apple ?? const AppleDeviceCheckProvider(),
-        providerWeb: ReCaptchaV3Provider(kWebRecaptchaSiteKey),
+        providerWeb: web ?? ReCaptchaV3Provider(kWebRecaptchaSiteKey),
         providerWindows: windows ?? const WindowsDebugProvider(),
       );
       final providerName = windows?.runtimeType.toString() ??
           apple?.runtimeType.toString() ??
           android?.runtimeType.toString() ??
+          web?.runtimeType.toString() ??
           'default';
       setMessage('Activated with $providerName');
     } catch (e) {
@@ -170,6 +180,29 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
                   'activate(AppAttest + DeviceCheck fallback)',
                 ),
               ),
+            const SizedBox(height: 8),
+            TextField(
+              controller: _recaptchaSiteKeyController,
+              decoration: const InputDecoration(
+                labelText: 'reCAPTCHA Enterprise Site Key',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 8),
+            ElevatedButton(
+              onPressed: () => _activate(
+                android: AndroidReCaptchaProvider(
+                  _recaptchaSiteKeyController.text,
+                ),
+                apple: AppleReCaptchaProvider(
+                  _recaptchaSiteKeyController.text,
+                ),
+                web: ReCaptchaEnterpriseProvider(
+                  _recaptchaSiteKeyController.text,
+                ),
+              ),
+              child: const Text('activate(ReCaptcha)'),
+            ),
             const SizedBox(height: 16),
             const Text(
               'Actions',
