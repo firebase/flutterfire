@@ -3372,7 +3372,7 @@ public class GeneratedAndroidFirebaseAuth {
     void setSettings(
         @NonNull AuthPigeonFirebaseApp app,
         @NonNull InternalFirebaseAuthSettings settings,
-        @NonNull VoidResult result);
+        @NonNull NullableResult<InternalUserDetails> result);
 
     void verifyPasswordResetCode(
         @NonNull AuthPigeonFirebaseApp app, @NonNull String code, @NonNull Result<String> result);
@@ -4026,10 +4026,10 @@ public class GeneratedAndroidFirebaseAuth {
                 AuthPigeonFirebaseApp appArg = (AuthPigeonFirebaseApp) args.get(0);
                 InternalFirebaseAuthSettings settingsArg =
                     (InternalFirebaseAuthSettings) args.get(1);
-                VoidResult resultCallback =
-                    new VoidResult() {
-                      public void success() {
-                        wrapped.add(0, null);
+                NullableResult<InternalUserDetails> resultCallback =
+                    new NullableResult<InternalUserDetails>() {
+                      public void success(InternalUserDetails result) {
+                        wrapped.add(0, result);
                         reply.reply(wrapped);
                       }
 

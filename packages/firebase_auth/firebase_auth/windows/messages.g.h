@@ -1268,7 +1268,8 @@ class FirebaseAuthHostApi {
   virtual void SetSettings(
       const AuthPigeonFirebaseApp& app,
       const InternalFirebaseAuthSettings& settings,
-      std::function<void(std::optional<FlutterError> reply)> result) = 0;
+      std::function<void(ErrorOr<std::optional<InternalUserDetails>> reply)>
+          result) = 0;
   virtual void VerifyPasswordResetCode(
       const AuthPigeonFirebaseApp& app, const std::string& code,
       std::function<void(ErrorOr<std::string> reply)> result) = 0;

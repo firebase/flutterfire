@@ -2044,8 +2044,9 @@ void SetUpFirebaseAuthHostApiWithSuffix(id<FlutterBinaryMessenger> binaryMesseng
         InternalFirebaseAuthSettings *arg_settings = GetNullableObjectAtIndex(args, 1);
         [api setSettingsApp:arg_app
                    settings:arg_settings
-                 completion:^(FlutterError *_Nullable error) {
-                   callback(wrapResult(nil, error));
+                 completion:^(InternalUserDetails *_Nullable output,
+                              FlutterError *_Nullable error) {
+                   callback(wrapResult(output, error));
                  }];
       }];
     } else {

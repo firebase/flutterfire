@@ -1531,7 +1531,8 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
 
 - (void)setSettingsApp:(nonnull AuthPigeonFirebaseApp *)app
               settings:(nonnull InternalFirebaseAuthSettings *)settings
-            completion:(nonnull void (^)(FlutterError *_Nullable))completion {
+            completion:(nonnull void (^)(InternalUserDetails *_Nullable,
+                                         FlutterError *_Nullable))completion {
   FIRAuth *auth = [self getFIRAuthFromAppNameFromPigeon:app];
   FIRUser *userToMigrate = settings.migrateCurrentUser ? auth.currentUser : nil;
 
@@ -1541,7 +1542,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
     useUserAccessGroupSuccessful = [auth useUserAccessGroup:settings.userAccessGroup
                                                       error:&useUserAccessGroupErrorPtr];
     if (!useUserAccessGroupSuccessful) {
-      completion([FLTFirebaseAuthPlugin convertToFlutterError:useUserAccessGroupErrorPtr]);
+      completion(nil, [FLTFirebaseAuthPlugin convertToFlutterError:useUserAccessGroupErrorPtr]);
       return;
     }
   }
@@ -1558,13 +1559,19 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
   if (userToMigrate != nil) {
     [auth updateCurrentUser:userToMigrate
                  completion:^(NSError *_Nullable error) {
-                   completion(error == nil ? nil
-                                           : [FLTFirebaseAuthPlugin convertToFlutterError:error]);
+                   if (error != nil) {
+                     completion(nil, [FLTFirebaseAuthPlugin convertToFlutterError:error]);
+                     return;
+                   }
+                   FIRUser *migratedUser = auth.currentUser;
+                   completion(migratedUser != nil ? [PigeonParser getPigeonDetails:migratedUser]
+                                                  : nil,
+                              nil);
                  }];
     return;
   }
 
-  completion(nil);
+  completion(nil, nil);
 }
 
 - (void)signInAnonymouslyApp:(nonnull AuthPigeonFirebaseApp *)app

@@ -614,7 +614,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     }
 
     try {
-      await _api.setSettings(
+      final InternalUserDetails? migratedUser = await _api.setSettings(
           pigeonDefault,
           InternalFirebaseAuthSettings(
             appVerificationDisabledForTesting:
@@ -625,6 +625,22 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
             smsCode: smsCode,
             forceRecaptchaFlow: forceRecaptchaFlow,
           ));
+
+      // Native migration completes before this Future resolves, but auth-state
+      // events are delivered asynchronously. Assign [currentUser] from the
+      // returned user (same pattern as sign-in APIs) so callers don't observe a
+      // stale or transiently-null cache.
+      if (migratedUser != null) {
+        MethodChannelMultiFactor? multiFactorInstance =
+            _multiFactorInstances[app.name];
+        if (multiFactorInstance == null) {
+          multiFactorInstance = MethodChannelMultiFactor(this);
+          _multiFactorInstances[app.name] = multiFactorInstance;
+        }
+        final user = MethodChannelUser(this, multiFactorInstance, migratedUser);
+        currentUser = user;
+        sendAuthChangesEvent(app.name, user);
+      }
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }

@@ -390,7 +390,8 @@ NSObject<FlutterMessageCodec> *nullGetFirebaseAuthMessagesCodec(void);
                 completion:(void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
 - (void)setSettingsApp:(AuthPigeonFirebaseApp *)app
               settings:(InternalFirebaseAuthSettings *)settings
-            completion:(void (^)(FlutterError *_Nullable))completion;
+            completion:
+                (void (^)(InternalUserDetails *_Nullable, FlutterError *_Nullable))completion;
 - (void)verifyPasswordResetCodeApp:(AuthPigeonFirebaseApp *)app
                               code:(NSString *)code
                         completion:

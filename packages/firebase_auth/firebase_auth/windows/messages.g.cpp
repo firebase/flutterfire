@@ -3928,16 +3928,23 @@ void FirebaseAuthHostApi::SetUp(::flutter::BinaryMessenger* binary_messenger,
               const auto& settings_arg =
                   std::any_cast<const InternalFirebaseAuthSettings&>(
                       std::get<CustomEncodableValue>(encodable_settings_arg));
-              api->SetSettings(app_arg, settings_arg,
-                               [reply](std::optional<FlutterError>&& output) {
-                                 if (output.has_value()) {
-                                   reply(WrapError(output.value()));
-                                   return;
-                                 }
-                                 EncodableList wrapped;
-                                 wrapped.push_back(EncodableValue());
-                                 reply(EncodableValue(std::move(wrapped)));
-                               });
+              api->SetSettings(
+                  app_arg, settings_arg,
+                  [reply](ErrorOr<std::optional<InternalUserDetails>>&& output) {
+                    if (output.has_error()) {
+                      reply(WrapError(output.error()));
+                      return;
+                    }
+                    EncodableList wrapped;
+                    auto output_optional = std::move(output).TakeValue();
+                    if (output_optional) {
+                      wrapped.push_back(CustomEncodableValue(
+                          std::move(output_optional).value()));
+                    } else {
+                      wrapped.push_back(EncodableValue());
+                    }
+                    reply(EncodableValue(std::move(wrapped)));
+                  });
             } catch (const std::exception& exception) {
               reply(WrapError(exception.what()));
             }

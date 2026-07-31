@@ -1822,7 +1822,7 @@ class FirebaseAuthHostApi {
     return pigeonVar_replyValue! as String;
   }
 
-  Future<void> setSettings(
+  Future<InternalUserDetails?> setSettings(
       AuthPigeonFirebaseApp app, InternalFirebaseAuthSettings settings) async {
     final pigeonVar_channelName =
         'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.setSettings$pigeonVar_messageChannelSuffix';
@@ -1835,11 +1835,12 @@ class FirebaseAuthHostApi {
         pigeonVar_channel.send(<Object?>[app, settings]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
-    _extractReplyValueOrThrow(
+    final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
       pigeonVar_replyList,
       pigeonVar_channelName,
       isNullValid: true,
     );
+    return pigeonVar_replyValue as InternalUserDetails?;
   }
 
   Future<String> verifyPasswordResetCode(

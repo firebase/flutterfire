@@ -399,8 +399,11 @@ abstract class FirebaseAuthHostApi {
     String? languageCode,
   );
 
+  /// Applies auth settings. When [InternalFirebaseAuthSettings.migrateCurrentUser]
+  /// is true and a user was migrated, returns that user so Dart can reconcile
+  /// [currentUser] before auth-state events arrive. Otherwise returns null.
   @async
-  void setSettings(
+  InternalUserDetails? setSettings(
     AuthPigeonFirebaseApp app,
     InternalFirebaseAuthSettings settings,
   );

@@ -1039,12 +1039,24 @@ void main() {
             final credential = await auth.signInAnonymously();
             final uid = credential.user!.uid;
 
-            await auth.setSettings(
-              userAccessGroup: 'YYX2P3XVJ7.io.flutter.plugins.firebase.tests',
-              migrateCurrentUser: true,
-            );
+            try {
+              await auth.setSettings(
+                userAccessGroup: 'YYX2P3XVJ7.io.flutter.plugins.firebase.tests',
+                migrateCurrentUser: true,
+              );
 
-            expect(auth.currentUser?.uid, uid);
+              // Prefer the reconciled Dart cache from setSettings, then prove
+              // the native session survived with a token round-trip.
+              expect(auth.currentUser, isNotNull);
+              expect(auth.currentUser!.uid, uid);
+              expect(auth.currentUser!.isAnonymous, isTrue);
+              final token = await auth.currentUser!.getIdToken();
+              expect(token, isNotEmpty);
+            } finally {
+              // Leave later tests without this anonymous session. Access-group
+              // resets are not supported via null today (pre-existing).
+              await auth.signOut();
+            }
           },
           skip: kIsWeb || defaultTargetPlatform != TargetPlatform.iOS,
         );

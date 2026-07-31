@@ -400,8 +400,8 @@ class FirebaseAuth extends FirebasePlugin implements FirebaseService {
   ///
   /// [migrateCurrentUser] This setting only applies to iOS and macOS platforms.
   ///   When `true`, the currently signed-in user is migrated to
-  ///   [userAccessGroup]. This may replace a user already stored in that access
-  ///   group.
+  ///   [userAccessGroup]. [userAccessGroup] must be non-null when this is
+  ///   `true`. This may replace a user already stored in that access group.
   Future<void> setSettings({
     bool appVerificationDisabledForTesting = false,
     String? userAccessGroup,
