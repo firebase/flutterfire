@@ -36,6 +36,16 @@ void main() {
         'dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.activate',
         null,
       );
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMessageHandler(
+        'dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.getToken',
+        null,
+      );
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMessageHandler(
+        'dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.getTokenResult',
+        null,
+      );
     });
 
     group('delegateFor()', () {
@@ -54,6 +64,55 @@ void main() {
         final appCheck = MethodChannelFirebaseAppCheck.instance;
         // ignore: invalid_use_of_protected_member
         expect(appCheck.setInitialValues(), appCheck);
+      });
+    });
+
+    group('getToken()', () {
+      const expirationTimestamp = 1234567890;
+
+      setUp(() {
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMessageHandler(
+          'dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.getToken',
+          (ByteData? message) async {
+            return FirebaseAppCheckHostApi.pigeonChannelCodec.encodeMessage(
+              <Object?>['test-token'],
+            );
+          },
+        );
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMessageHandler(
+          'dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.getTokenResult',
+          (ByteData? message) async {
+            return FirebaseAppCheckHostApi.pigeonChannelCodec.encodeMessage(
+              <Object?>[
+                InternalAppCheckTokenResult(
+                  token: 'test-token',
+                  expirationTimestamp: expirationTimestamp,
+                ),
+              ],
+            );
+          },
+        );
+      });
+
+      test('returns the token string without changing the existing API',
+          () async {
+        final appCheck = MethodChannelFirebaseAppCheck(app: secondaryApp);
+
+        expect(await appCheck.getToken(true), 'test-token');
+      });
+
+      test('returns token metadata', () async {
+        final appCheck = MethodChannelFirebaseAppCheck(app: secondaryApp);
+
+        final result = await appCheck.getTokenResult(true);
+
+        expect(result?.token, 'test-token');
+        expect(
+          result?.expirationTime?.millisecondsSinceEpoch,
+          expirationTimestamp,
+        );
       });
     });
 

@@ -438,6 +438,70 @@ static NSError *parseError(NSString *message) {
   }
 
   // -------------------------------------------------------------------------
+  // expression + find + replacement: string_replace_one / string_replace_all
+  // -------------------------------------------------------------------------
+  if ([name isEqualToString:@"string_replace_one"] ||
+      [name isEqualToString:@"string_replace_all"]) {
+    id exprMap = args[@"expression"];
+    id findMap = args[@"find"];
+    id replacementMap = args[@"replacement"];
+    if (![exprMap isKindOfClass:[NSDictionary class]] ||
+        ![findMap isKindOfClass:[NSDictionary class]] ||
+        ![replacementMap isKindOfClass:[NSDictionary class]]) {
+      if (error)
+        *error = parseError(
+            [NSString stringWithFormat:@"%@ requires expression, find, and replacement", name]);
+      return nil;
+    }
+    FIRExprBridge *expr = [self parseExpression:exprMap error:error];
+    FIRExprBridge *find = [self parseExpression:findMap error:error];
+    FIRExprBridge *replacement = [self parseExpression:replacementMap error:error];
+    if (!expr || !find || !replacement) return nil;
+    return FLTNewFunctionExprBridge(name, @[ expr, find, replacement ]);
+  }
+
+  // -------------------------------------------------------------------------
+  // expression + search/repetitions: string_index_of / string_repeat
+  // -------------------------------------------------------------------------
+  if ([name isEqualToString:@"string_index_of"] || [name isEqualToString:@"string_repeat"]) {
+    id exprMap = args[@"expression"];
+    NSString *argumentName = [name isEqualToString:@"string_index_of"] ? @"search" : @"repetitions";
+    id argumentMap = args[argumentName];
+    if (![exprMap isKindOfClass:[NSDictionary class]] ||
+        ![argumentMap isKindOfClass:[NSDictionary class]]) {
+      if (error)
+        *error = parseError(
+            [NSString stringWithFormat:@"%@ requires expression and %@", name, argumentName]);
+      return nil;
+    }
+    FIRExprBridge *expr = [self parseExpression:exprMap error:error];
+    FIRExprBridge *argument = [self parseExpression:argumentMap error:error];
+    if (!expr || !argument) return nil;
+    return FLTNewFunctionExprBridge(name, @[ expr, argument ]);
+  }
+
+  // -------------------------------------------------------------------------
+  // expression + optional value: ltrim / rtrim
+  // -------------------------------------------------------------------------
+  if ([name isEqualToString:@"ltrim"] || [name isEqualToString:@"rtrim"]) {
+    id exprMap = args[@"expression"];
+    if (![exprMap isKindOfClass:[NSDictionary class]]) {
+      if (error) *error = parseError([NSString stringWithFormat:@"%@ requires expression", name]);
+      return nil;
+    }
+    FIRExprBridge *expr = [self parseExpression:exprMap error:error];
+    if (!expr) return nil;
+
+    id valueMap = args[@"value"];
+    if (![valueMap isKindOfClass:[NSDictionary class]]) {
+      return FLTNewFunctionExprBridge(name, @[ expr ]);
+    }
+    FIRExprBridge *value = [self parseExpression:valueMap error:error];
+    if (!value) return nil;
+    return FLTNewFunctionExprBridge(name, @[ expr, value ]);
+  }
+
+  // -------------------------------------------------------------------------
   // expression + delimiter: split, join (SDK: split, join)
   // -------------------------------------------------------------------------
   if ([name isEqualToString:@"split"] || [name isEqualToString:@"join"]) {

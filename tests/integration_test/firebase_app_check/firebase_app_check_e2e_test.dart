@@ -55,6 +55,25 @@ void main() {
       );
 
       test(
+        'getTokenResult',
+        () async {
+          try {
+            final result = await FirebaseAppCheck.instance.getTokenResult(true);
+            if (result != null) {
+              expect(result.token, isNotEmpty);
+              if (!kIsWeb) {
+                expect(result.expirationTime, isNotNull);
+                expect(result.expirationTime!.isAfter(DateTime.now()), isTrue);
+              }
+            }
+          } catch (exception) {
+            // Needs a debug token pasted in the Firebase console to work so we catch the exception.
+            expect(exception, isA<FirebaseException>());
+          }
+        },
+      );
+
+      test(
         'setTokenAutoRefreshEnabled',
         () async {
           await expectLater(

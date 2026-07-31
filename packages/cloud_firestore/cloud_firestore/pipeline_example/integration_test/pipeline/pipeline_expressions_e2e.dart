@@ -930,8 +930,24 @@ void runPipelineExpressionsTests() {
           {'s1': 'Zy', 'iy': 1, 's2': 'xyxy'},
         ]);
       },
-      skip: !kIsWeb,
     );
+
+    test('addFields stringReplaceAll replaces every match on s', () async {
+      final snapshot = await firestore
+          .pipeline()
+          .collection('pipeline-e2e')
+          .where(Expression.field('test').equalValue('expressions'))
+          .where(Expression.field('score').equalValue(50))
+          .addFields(
+            Expression.field('s').stringReplaceAllLiteral('-', '_').as('s_all'),
+          )
+          .limit(1)
+          .execute();
+      expectResultCount(snapshot, 1);
+      expectResultsData(snapshot, [
+        {'s_all': 'a_b_c'},
+      ]);
+    });
 
     test('addFields ltrim rtrim on padded s', () async {
       final snapshot = await firestore
@@ -949,7 +965,7 @@ void runPipelineExpressionsTests() {
       expectResultsData(snapshot, [
         {'lt': 'AbC  ', 'rt': '  AbC'},
       ]);
-    }, skip: !kIsWeb);
+    });
 
     test('addFields mapSet and mapEntries on m', () async {
       final snapshot = await firestore
