@@ -147,6 +147,7 @@ void main() {
 
         expect(calls, hasLength(1));
         expect(calls.single[3], 'apple-debug-token');
+        expect(calls.single[4], isNull);
       });
 
       test('passes the Android debug token on Android', () async {
@@ -179,6 +180,7 @@ void main() {
 
         expect(calls, hasLength(1));
         expect(calls.single[3], 'android-debug-token');
+        expect(calls.single[4], isNull);
       });
     });
 
@@ -207,6 +209,7 @@ void main() {
         expect(log.length, 1);
         expect(log[0][0], '[DEFAULT]'); // appName
         expect(log[0][1], 'recaptcha'); // androidProvider
+        expect(log[0][4], isNull); // appleProviderSiteKey
       });
 
       test('passes recaptcha on iOS', () async {
@@ -228,12 +231,13 @@ void main() {
         );
 
         await appCheck.activate(
-          providerApple: const AppleReCaptchaProvider(),
+          providerApple: const AppleReCaptchaProvider('apple-site-key'),
         );
 
         expect(log.length, 1);
         expect(log[0][0], '[DEFAULT]'); // appName
         expect(log[0][2], 'recaptcha'); // appleProvider
+        expect(log[0][4], 'apple-site-key'); // appleProviderSiteKey
       });
     });
   });

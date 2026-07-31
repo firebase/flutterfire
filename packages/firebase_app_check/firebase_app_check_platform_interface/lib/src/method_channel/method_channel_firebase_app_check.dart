@@ -133,6 +133,7 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
           providerApple: providerApple,
           providerWindows: providerWindows,
         ),
+        providerApple is AppleReCaptchaProvider ? providerApple.siteKey : null,
       );
     } on PlatformException catch (e, s) {
       convertPlatformException(e, s);

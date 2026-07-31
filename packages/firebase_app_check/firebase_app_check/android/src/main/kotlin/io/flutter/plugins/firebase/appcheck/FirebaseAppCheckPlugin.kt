@@ -53,6 +53,7 @@ class FirebaseAppCheckPlugin : FlutterFirebasePlugin, FlutterPlugin, FirebaseApp
       androidProvider: String?,
       appleProvider: String?,
       debugToken: String?,
+      appleProviderSiteKey: String?,
       callback: (Result<Unit>) -> Unit
   ) {
     try {

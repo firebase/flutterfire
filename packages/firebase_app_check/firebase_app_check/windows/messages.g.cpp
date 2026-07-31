@@ -396,8 +396,13 @@ void FirebaseAppCheckHostApi::SetUp(
               const auto& encodable_debug_token_arg = args.at(3);
               const auto* debug_token_arg =
                   std::get_if<std::string>(&encodable_debug_token_arg);
+              const auto& encodable_apple_provider_site_key_arg = args.at(4);
+              const auto* apple_provider_site_key_arg =
+                  std::get_if<std::string>(
+                      &encodable_apple_provider_site_key_arg);
               api->Activate(app_name_arg, android_provider_arg,
                             apple_provider_arg, debug_token_arg,
+                            apple_provider_site_key_arg,
                             [reply](std::optional<FlutterError>&& output) {
                               if (output.has_value()) {
                                 reply(WrapError(output.value()));

@@ -257,6 +257,7 @@ interface FirebaseAppCheckHostApi {
       androidProvider: String?,
       appleProvider: String?,
       debugToken: String?,
+      appleProviderSiteKey: String?,
       callback: (Result<Unit>) -> Unit
   )
 
@@ -306,15 +307,20 @@ interface FirebaseAppCheckHostApi {
             val androidProviderArg = args[1] as String?
             val appleProviderArg = args[2] as String?
             val debugTokenArg = args[3] as String?
-            api.activate(appNameArg, androidProviderArg, appleProviderArg, debugTokenArg) {
-                result: Result<Unit> ->
-              val error = result.exceptionOrNull()
-              if (error != null) {
-                reply.reply(GeneratedAndroidFirebaseAppCheckPigeonUtils.wrapError(error))
-              } else {
-                reply.reply(GeneratedAndroidFirebaseAppCheckPigeonUtils.wrapResult(null))
-              }
-            }
+            val appleProviderSiteKeyArg = args[4] as String?
+            api.activate(
+                appNameArg,
+                androidProviderArg,
+                appleProviderArg,
+                debugTokenArg,
+                appleProviderSiteKeyArg) { result: Result<Unit> ->
+                  val error = result.exceptionOrNull()
+                  if (error != null) {
+                    reply.reply(GeneratedAndroidFirebaseAppCheckPigeonUtils.wrapError(error))
+                  } else {
+                    reply.reply(GeneratedAndroidFirebaseAppCheckPigeonUtils.wrapResult(null))
+                  }
+                }
           }
         } else {
           channel.setMessageHandler(null)

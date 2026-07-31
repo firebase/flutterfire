@@ -40,6 +40,7 @@ abstract class FirebaseAppCheckHostApi {
     String? androidProvider,
     String? appleProvider,
     String? debugToken,
+    String? appleProviderSiteKey,
   );
 
   @async

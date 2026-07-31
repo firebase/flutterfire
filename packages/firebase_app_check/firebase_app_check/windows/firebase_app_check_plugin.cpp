@@ -166,6 +166,7 @@ FirebaseAppCheckPlugin::~FirebaseAppCheckPlugin() {
 void FirebaseAppCheckPlugin::Activate(
     const std::string& app_name, const std::string* android_provider,
     const std::string* apple_provider, const std::string* debug_token,
+    const std::string* apple_provider_site_key,
     std::function<void(std::optional<FlutterError> reply)> result) {
   // On Windows/desktop, only the Debug provider is available.
   DebugAppCheckProviderFactory* factory =

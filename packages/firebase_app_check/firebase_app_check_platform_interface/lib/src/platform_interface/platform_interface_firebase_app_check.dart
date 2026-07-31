@@ -65,6 +65,7 @@ abstract class FirebaseAppCheckPlatform extends PlatformInterface {
   /// **iOS/macOS**: The default provider is "device check". Use `providerApple`
   /// to configure alternative providers such as "app attest", debug providers, or
   /// "app attest with fallback to device check" via `AppleAppCheckProvider`.
+  /// Apple reCAPTCHA requires passing a site key to `AppleReCaptchaProvider`.
   /// Note: App Attest is only available on iOS 14.0+ and macOS 14.0+.
   ///
   /// **Windows**: Only the debug provider is supported. You **must** supply a

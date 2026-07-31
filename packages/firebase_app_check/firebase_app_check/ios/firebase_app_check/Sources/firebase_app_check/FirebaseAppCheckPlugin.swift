@@ -64,7 +64,7 @@ public class FirebaseAppCheckPlugin: NSObject, FlutterPlugin,
 
   func activate(
     appName: String, androidProvider: String?, appleProvider: String?,
-    debugToken: String?,
+    debugToken: String?, appleProviderSiteKey: String?,
     completion: @escaping (Result<Void, Error>) -> Void
   ) {
     guard let app = FLTFirebasePlugin.firebaseAppNamed(appName) else {
@@ -79,10 +79,24 @@ public class FirebaseAppCheckPlugin: NSObject, FlutterPlugin,
     }
     let provider = appleProvider ?? "deviceCheck"
 
+    if provider == "recaptcha", appleProviderSiteKey?.isEmpty ?? true {
+      completion(
+        .failure(
+          FlutterError(
+            code: "invalid-argument",
+            message: "A siteKey must be provided when using AppleReCaptchaProvider.",
+            details: nil
+          )
+        )
+      )
+      return
+    }
+
     providerFactory?.configure(
       app: app,
       providerName: provider,
-      debugToken: debugToken
+      debugToken: debugToken,
+      siteKey: appleProviderSiteKey
     )
 
     completion(.success(()))
@@ -319,7 +333,8 @@ class FlutterAppCheckProviderFactory: NSObject, AppCheckProviderFactory {
       wrapper.configure(
         app: app,
         providerName: "deviceCheck",
-        debugToken: nil
+        debugToken: nil,
+        siteKey: nil
       )
       providers[app.name] = wrapper
     }
@@ -329,7 +344,8 @@ class FlutterAppCheckProviderFactory: NSObject, AppCheckProviderFactory {
   func configure(
     app: FirebaseApp,
     providerName: String,
-    debugToken: String?
+    debugToken: String?,
+    siteKey: String?
   ) {
     if providers[app.name] == nil {
       providers[app.name] = AppCheckProviderWrapper()
@@ -337,7 +353,8 @@ class FlutterAppCheckProviderFactory: NSObject, AppCheckProviderFactory {
     providers[app.name]?.configure(
       app: app,
       providerName: providerName,
-      debugToken: debugToken
+      debugToken: debugToken,
+      siteKey: siteKey
     )
   }
 }
@@ -348,7 +365,8 @@ class AppCheckProviderWrapper: NSObject, AppCheckProvider {
   func configure(
     app: FirebaseApp,
     providerName: String,
-    debugToken: String?
+    debugToken: String?,
+    siteKey: String?
   ) {
     switch providerName {
     case "debug":
@@ -373,10 +391,12 @@ class AppCheckProviderWrapper: NSObject, AppCheckProvider {
       }
     case "recaptcha":
       #if os(iOS)
-        delegateProvider = RecaptchaProvider(app: app)
+        if let siteKey {
+          delegateProvider = RecaptchaProvider(app: app, siteKey: siteKey)
+        }
         if delegateProvider == nil {
           print(
-            "Firebase App Check: failed to initialize RecaptchaProvider. Ensure site key is in GoogleService-Info.plist."
+            "Firebase App Check: failed to initialize RecaptchaProvider. Ensure a valid site key is provided."
           )
         }
       #else
