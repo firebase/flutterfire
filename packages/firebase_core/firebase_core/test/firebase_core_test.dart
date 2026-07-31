@@ -5,6 +5,9 @@
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
+import 'package:firebase_core_platform_interface/src/pigeon/messages.pigeon.dart'
+    as pigeon;
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
@@ -154,6 +157,73 @@ void main() {
       ),
       mock.app(expectedName),
     ]);
+  });
+
+  test('.initializeApp() preserves recaptchaSiteKey if native drops it',
+      () async {
+    Firebase.delegatePackingProperty = null;
+    MethodChannelFirebase.appInstances.clear();
+    MethodChannelFirebase.isCoreInitialized = false;
+
+    const String appName = 'recaptcha-test-app';
+    const FirebaseOptions options = FirebaseOptions(
+      apiKey: 'apiKey',
+      appId: 'appId',
+      messagingSenderId: 'messagingSenderId',
+      projectId: 'projectId',
+      recaptchaSiteKey: 'test-recaptcha-site-key',
+    );
+
+    final TestDefaultBinaryMessenger messenger =
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+
+    messenger.setMockMessageHandler(
+      'dev.flutter.pigeon.firebase_core_platform_interface.FirebaseCoreHostApi.initializeCore',
+      (ByteData? message) async {
+        return pigeon.FirebaseCoreHostApi.pigeonChannelCodec.encodeMessage(
+          <Object?>[<pigeon.CoreInitializeResponse>[]],
+        );
+      },
+    );
+    messenger.setMockMessageHandler(
+      'dev.flutter.pigeon.firebase_core_platform_interface.FirebaseCoreHostApi.initializeApp',
+      (ByteData? message) async {
+        return pigeon.FirebaseCoreHostApi.pigeonChannelCodec.encodeMessage(
+          <Object?>[
+            pigeon.CoreInitializeResponse(
+              name: appName,
+              options: pigeon.CoreFirebaseOptions(
+                apiKey: options.apiKey,
+                appId: options.appId,
+                messagingSenderId: options.messagingSenderId,
+                projectId: options.projectId,
+              ),
+              pluginConstants: const <String, Object?>{},
+            ),
+          ],
+        );
+      },
+    );
+    addTearDown(() {
+      messenger.setMockMessageHandler(
+        'dev.flutter.pigeon.firebase_core_platform_interface.FirebaseCoreHostApi.initializeCore',
+        null,
+      );
+      messenger.setMockMessageHandler(
+        'dev.flutter.pigeon.firebase_core_platform_interface.FirebaseCoreHostApi.initializeApp',
+        null,
+      );
+      MethodChannelFirebase.appInstances.clear();
+      MethodChannelFirebase.isCoreInitialized = false;
+      Firebase.delegatePackingProperty = null;
+    });
+
+    final FirebaseApp app = await Firebase.initializeApp(
+      name: appName,
+      options: options,
+    );
+
+    expect(app.options.recaptchaSiteKey, 'test-recaptcha-site-key');
   });
 }
 

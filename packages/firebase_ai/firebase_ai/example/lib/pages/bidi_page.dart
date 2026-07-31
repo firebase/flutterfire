@@ -184,7 +184,7 @@ class BidiSessionController extends ChangeNotifier {
     ];
 
     _liveModel = useVertexBackend
-        ? FirebaseAI.vertexAI().liveGenerativeModel(
+        ? FirebaseAI.agentPlatform().liveGenerativeModel(
             model: 'gemini-live-2.5-flash-preview-native-audio-09-2025',
             liveGenerationConfig: config,
             tools: tools,
@@ -561,12 +561,12 @@ class BidiPage extends StatefulWidget {
     super.key,
     required this.title,
     required this.model,
-    required this.useVertexBackend,
+    required this.useAgentPlatform,
   });
 
   final String title;
   final GenerativeModel model;
-  final bool useVertexBackend;
+  final bool useAgentPlatform;
 
   @override
   State<BidiPage> createState() => _BidiPageState();
@@ -583,7 +583,7 @@ class _BidiPageState extends State<BidiPage> {
     super.initState();
     _controller = BidiSessionController(
       model: widget.model,
-      useVertexBackend: widget.useVertexBackend,
+      useVertexBackend: widget.useAgentPlatform,
       onShowError: _showError,
       onScrollDown: _scrollDown,
     );

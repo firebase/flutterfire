@@ -8,7 +8,7 @@ part of '../cloud_functions.dart';
 /// The entry point for accessing FirebaseFunctions.
 ///
 /// You can get an instance by calling [FirebaseFunctions.instance].
-class FirebaseFunctions extends FirebasePluginPlatform {
+class FirebaseFunctions extends FirebasePlugin {
   FirebaseFunctions._({required this.app, String? region})
       : _region = region ??= 'us-central1',
         super(app.name, 'plugins.flutter.io/firebase_functions');

@@ -54,7 +54,7 @@ API_AVAILABLE(ios(10.0))
                                                            FLTFirebasePlugin,
                                                            FIRMessagingDelegate,
                                                            UIApplicationDelegate
-#if __has_include(<Flutter/FlutterSceneLifeCycleDelegate.h>) || defined(FlutterSceneLifeCycleDelegate)
+#if __has_include(<Flutter/FlutterSceneLifeCycle.h>)
                                                            ,
                                                            FlutterSceneLifeCycleDelegate
 #endif
@@ -63,7 +63,7 @@ API_AVAILABLE(ios(10.0))
 @interface FLTFirebaseMessagingPlugin : FLTFirebasePlugin <FlutterPlugin,
                                                            FLTFirebasePlugin,
                                                            FIRMessagingDelegate
-#if __has_include(<Flutter/FlutterSceneLifeCycleDelegate.h>) || defined(FlutterSceneLifeCycleDelegate)
+#if __has_include(<Flutter/FlutterSceneLifeCycle.h>)
                                                            ,
                                                            FlutterSceneLifeCycleDelegate
 #endif

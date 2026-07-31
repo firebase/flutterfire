@@ -9,6 +9,9 @@
 #import "include/cloud_firestore/Private/FLTFirebaseFirestoreUtils.h"
 #import "include/cloud_firestore/Public/FLTFirebaseFirestorePlugin.h"
 
+static const UInt8 FLTStandardFieldList = 12;
+static const UInt8 FLTStandardFieldMap = 13;
+
 @implementation FLTFirebaseFirestoreWriter : FlutterStandardWriter
 - (void)writeValue:(id)value {
   if ([value isKindOfClass:[NSDate class]]) {
@@ -51,15 +54,30 @@
     [self writeValue:extension.databaseURL];
 
   } else if ([value isKindOfClass:[FIRDocumentSnapshot class]]) {
-    [super writeValue:[self FIRDocumentSnapshot:value]];
+    [self writeValue:[self FIRDocumentSnapshot:value]];
   } else if ([value isKindOfClass:[FIRLoadBundleTaskProgress class]]) {
-    [super writeValue:[self FIRLoadBundleTaskProgress:value]];
+    [self writeValue:[self FIRLoadBundleTaskProgress:value]];
   } else if ([value isKindOfClass:[FIRQuerySnapshot class]]) {
-    [super writeValue:[self FIRQuerySnapshot:value]];
+    [self writeValue:[self FIRQuerySnapshot:value]];
   } else if ([value isKindOfClass:[FIRDocumentChange class]]) {
-    [super writeValue:[self FIRDocumentChange:value]];
+    [self writeValue:[self FIRDocumentChange:value]];
   } else if ([value isKindOfClass:[FIRSnapshotMetadata class]]) {
-    [super writeValue:[self FIRSnapshotMetadata:value]];
+    [self writeValue:[self FIRSnapshotMetadata:value]];
+  } else if ([value isKindOfClass:[NSArray class]]) {
+    NSArray *list = value;
+    [self writeByte:FLTStandardFieldList];
+    [self writeSize:(UInt32)list.count];
+    for (id item in list) {
+      [self writeValue:item];
+    }
+  } else if ([value isKindOfClass:[NSDictionary class]]) {
+    NSDictionary *map = value;
+    [self writeByte:FLTStandardFieldMap];
+    [self writeSize:(UInt32)map.count];
+    for (id key in map) {
+      [self writeValue:key];
+      [self writeValue:map[key]];
+    }
   } else if ([value isKindOfClass:[NSNumber class]]) {
     NSNumber *number = (NSNumber *)value;
 

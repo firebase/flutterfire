@@ -32,6 +32,12 @@
         ".read": true,
         ".write": true,
         ".indexOn": [".value"]
+      },
+      "$test": {
+        ".indexOn": [
+          ".value",
+          "number"
+        ]
       }
     }
   }

@@ -34,8 +34,7 @@
                          ASAuthorizationControllerDelegate,
                          ASAuthorizationControllerPresentationContextProviding
 #if !TARGET_OS_OSX
-#if __has_include(<Flutter/FlutterSceneLifeCycleDelegate.h>) || \
-    defined(FlutterSceneLifeCycleDelegate)
+#if __has_include(<Flutter/FlutterSceneLifeCycle.h>)
                          ,
                          FlutterSceneLifeCycleDelegate
 #endif

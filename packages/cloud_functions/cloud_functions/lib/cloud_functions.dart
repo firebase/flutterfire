@@ -11,7 +11,7 @@ import 'dart:typed_data';
 import 'package:cloud_functions_platform_interface/cloud_functions_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
-    show FirebasePluginPlatform;
+    show FirebasePlugin;
 import 'package:flutter/foundation.dart';
 
 export 'package:cloud_functions_platform_interface/cloud_functions_platform_interface.dart'

@@ -12,9 +12,12 @@ import 'package:flutter_test/flutter_test.dart';
 void setupQueryTests() {
   group('Query', () {
     late DatabaseReference ref;
+    var testCount = 0;
 
     setUp(() async {
-      ref = FirebaseDatabase.instance.ref('tests');
+      ref = FirebaseDatabase.instance.ref(
+        'tests/query-${DateTime.now().microsecondsSinceEpoch}-${testCount++}',
+      );
 
       // Wipe the database before each test
       await ref.remove();

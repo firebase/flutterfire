@@ -11,6 +11,7 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.appcheck.FirebaseAppCheck
 import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory
 import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory
+import com.google.firebase.appcheck.recaptcha.RecaptchaAppCheckProviderFactory
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import io.flutter.plugin.common.BinaryMessenger
@@ -62,6 +63,10 @@ class FirebaseAppCheckPlugin : FlutterFirebasePlugin, FlutterPlugin, FirebaseApp
           firebaseAppCheck.installAppCheckProviderFactory(
               DebugAppCheckProviderFactory.getInstance())
         }
+        "recaptcha" -> {
+          firebaseAppCheck.installAppCheckProviderFactory(
+              RecaptchaAppCheckProviderFactory.getInstance())
+        }
         else -> {
           firebaseAppCheck.installAppCheckProviderFactory(
               PlayIntegrityAppCheckProviderFactory.getInstance())
@@ -82,6 +87,24 @@ class FirebaseAppCheckPlugin : FlutterFirebasePlugin, FlutterPlugin, FirebaseApp
     firebaseAppCheck.getAppCheckToken(forceRefresh).addOnCompleteListener { task ->
       if (task.isSuccessful) {
         callback(Result.success(task.result?.token))
+      } else {
+        callback(Result.failure(FlutterError("firebase_app_check", task.exception?.message, null)))
+      }
+    }
+  }
+
+  override fun getTokenResult(
+      appName: String,
+      forceRefresh: Boolean,
+      callback: (Result<InternalAppCheckTokenResult?>) -> Unit
+  ) {
+    val firebaseAppCheck = getAppCheck(appName)
+    firebaseAppCheck.getAppCheckToken(forceRefresh).addOnCompleteListener { task ->
+      if (task.isSuccessful) {
+        val token = task.result
+        callback(
+            Result.success(
+                token?.let { InternalAppCheckTokenResult(it.token, it.expireTimeMillis) }))
       } else {
         callback(Result.failure(FlutterError("firebase_app_check", task.exception?.message, null)))
       }

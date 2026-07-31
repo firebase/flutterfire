@@ -79,7 +79,11 @@ public class FirebaseAppCheckPlugin: NSObject, FlutterPlugin,
     }
     let provider = appleProvider ?? "deviceCheck"
 
-    providerFactory?.configure(app: app, providerName: provider, debugToken: debugToken)
+    providerFactory?.configure(
+      app: app,
+      providerName: provider,
+      debugToken: debugToken
+    )
 
     completion(.success(()))
   }
@@ -106,6 +110,41 @@ public class FirebaseAppCheckPlugin: NSObject, FlutterPlugin,
         completion(.failure(self.createFlutterError(error)))
       } else {
         completion(.success(token?.token))
+      }
+    }
+  }
+
+  func getTokenResult(
+    appName: String, forceRefresh: Bool,
+    completion: @escaping (Result<InternalAppCheckTokenResult?, Error>) -> Void
+  ) {
+    guard let app = FLTFirebasePlugin.firebaseAppNamed(appName),
+      let appCheck = AppCheck.appCheck(app: app)
+    else {
+      completion(
+        .failure(
+          FlutterError(
+            code: "unknown", message: "App Check not available for app: \(appName)", details: nil
+          )
+        )
+      )
+      return
+    }
+
+    appCheck.token(forcingRefresh: forceRefresh) { token, error in
+      if let error {
+        completion(.failure(self.createFlutterError(error)))
+      } else {
+        completion(
+          .success(
+            token.map {
+              InternalAppCheckTokenResult(
+                token: $0.token,
+                expirationTimestamp: Int64($0.expirationDate.timeIntervalSince1970 * 1000)
+              )
+            }
+          )
+        )
       }
     }
   }
@@ -192,7 +231,7 @@ public class FirebaseAppCheckPlugin: NSObject, FlutterPlugin,
       channel.setStreamHandler(nil)
     }
     for (_, handler) in streamHandlers {
-      handler.onCancel(withArguments: nil)
+      _ = handler.onCancel(withArguments: nil)
     }
     eventChannels.removeAll()
     streamHandlers.removeAll()
@@ -277,24 +316,40 @@ class FlutterAppCheckProviderFactory: NSObject, AppCheckProviderFactory {
     if providers[app.name] == nil {
       let wrapper = AppCheckProviderWrapper()
       // Default to deviceCheck. activate() will reconfigure with the correct provider.
-      wrapper.configure(app: app, providerName: "deviceCheck", debugToken: nil)
+      wrapper.configure(
+        app: app,
+        providerName: "deviceCheck",
+        debugToken: nil
+      )
       providers[app.name] = wrapper
     }
     return providers[app.name]
   }
 
-  func configure(app: FirebaseApp, providerName: String, debugToken: String?) {
+  func configure(
+    app: FirebaseApp,
+    providerName: String,
+    debugToken: String?
+  ) {
     if providers[app.name] == nil {
       providers[app.name] = AppCheckProviderWrapper()
     }
-    providers[app.name]?.configure(app: app, providerName: providerName, debugToken: debugToken)
+    providers[app.name]?.configure(
+      app: app,
+      providerName: providerName,
+      debugToken: debugToken
+    )
   }
 }
 
 class AppCheckProviderWrapper: NSObject, AppCheckProvider {
   private var delegateProvider: (any AppCheckProvider)?
 
-  func configure(app: FirebaseApp, providerName: String, debugToken: String?) {
+  func configure(
+    app: FirebaseApp,
+    providerName: String,
+    debugToken: String?
+  ) {
     switch providerName {
     case "debug":
       if let debugToken {
@@ -316,6 +371,17 @@ class AppCheckProviderWrapper: NSObject, AppCheckProvider {
       } else {
         delegateProvider = DeviceCheckProvider(app: app)
       }
+    case "recaptcha":
+      #if os(iOS)
+        delegateProvider = RecaptchaProvider(app: app)
+        if delegateProvider == nil {
+          print(
+            "Firebase App Check: failed to initialize RecaptchaProvider. Ensure site key is in GoogleService-Info.plist."
+          )
+        }
+      #else
+        print("Firebase App Check: reCAPTCHA is only supported on iOS.")
+      #endif
     default:
       // deviceCheck
       delegateProvider = DeviceCheckProvider(app: app)
