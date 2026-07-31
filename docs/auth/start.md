@@ -239,7 +239,7 @@ await FirebaseAuth.instance.setSettings(
 Changing from the default Keychain to a shared access group signs out an
 existing user unless the user is migrated. To preserve the current session,
 including an anonymous session, opt into migration when setting the access
-group:
+group. `migrateCurrentUser: true` requires a non-null `userAccessGroup`:
 
 ```dart
 await FirebaseAuth.instance.setSettings(
