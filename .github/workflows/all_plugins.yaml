@@ -37,7 +37,9 @@ jobs:
         with:
           melos-version: '5.3.0'
       - name: 'Run Analyze'
-        run: melos analyze-ci
+        run: |
+          dart ./.github/workflows/scripts/generate-dummy-firebase-configs.dart
+          melos analyze-ci
       - name: 'Validate Workspace'
         if: always()
         run: melos run validate:workspace
@@ -151,6 +153,7 @@ jobs:
           melos-version: '5.3.0'
       - name: 'Build Examples'
         run: |
+          dart ./.github/workflows/scripts/generate-dummy-firebase-configs.dart
           melos exec -c 1 --scope="*example*" --dir-exists="web" -- \
             "flutter build web"
   swift-integration:
@@ -182,7 +185,9 @@ jobs:
       - name: 'Swift Integration Setup'
         run: flutter config --enable-swift-package-manager
       - name: 'Build Apps with Swift Package Manager'
-        run: dart ./.github/workflows/scripts/swift-integration.dart $FLUTTER_DEPENDENCIES
+        run: |
+          dart ./.github/workflows/scripts/generate-dummy-firebase-configs.dart
+          dart ./.github/workflows/scripts/swift-integration.dart $FLUTTER_DEPENDENCIES
 
   test:
     runs-on: ubuntu-latest
