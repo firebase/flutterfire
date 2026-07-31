@@ -169,6 +169,12 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
     app: DatabasePigeonFirebaseApp, host: String, port: Int64,
     completion: @escaping (Result<Void, Error>) -> Void
   ) {
+    let instanceKey = databaseInstanceKey(app)
+    guard Self.cachedDatabaseInstances[instanceKey] == nil else {
+      completion(.success(()))
+      return
+    }
+
     let database = getDatabaseFromPigeonApp(app)
     database.useEmulator(withHost: host, port: Int(port))
     completion(.success(()))
@@ -733,8 +739,12 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
 
   // MARK: - Helper Methods
 
+  private func databaseInstanceKey(_ app: DatabasePigeonFirebaseApp) -> String {
+    app.appName + (app.databaseURL ?? "")
+  }
+
   private func getDatabaseFromPigeonApp(_ app: DatabasePigeonFirebaseApp) -> Database {
-    let instanceKey = app.appName + (app.databaseURL ?? "")
+    let instanceKey = databaseInstanceKey(app)
 
     if let cachedInstance = Self.cachedDatabaseInstances[instanceKey] {
       return cachedInstance

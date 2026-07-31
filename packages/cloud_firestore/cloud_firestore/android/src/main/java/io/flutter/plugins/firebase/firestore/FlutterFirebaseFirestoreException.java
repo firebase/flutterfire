@@ -219,6 +219,12 @@ public class FlutterFirebaseFirestoreException extends Exception {
       }
     }
 
+    if (nativeException != null
+        && nativeException.getMessage() != null
+        && !nativeException.getMessage().isEmpty()) {
+      message = nativeException.getMessage();
+    }
+
     this.code = code;
     this.message = message;
   }

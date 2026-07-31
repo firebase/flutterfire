@@ -11,13 +11,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../mock.dart';
+import '../pigeon/test_api.dart';
 
 void main() {
   setupFirebaseFunctionsMocks();
 
   MethodChannelFirebaseFunctions? functions;
   MethodChannelHttpsCallable? httpsCallable;
-  final List<MethodCall> logger = <MethodCall>[];
 
   // mock props
   bool mockPlatformExceptionThrown = false;
@@ -32,22 +32,15 @@ void main() {
     setUpAll(() async {
       FirebaseApp app = await Firebase.initializeApp();
 
-      handleMethodCall((call) async {
-        logger.add(call);
+      TestCloudFunctionsHostApi.setUp(_TestCloudFunctionsHostApi(() async {
         if (mockExceptionThrown) {
           throw Exception();
         } else if (mockPlatformExceptionThrown) {
           throw PlatformException(
               code: 'UNKNOWN', message: kPlatformExceptionMessage);
         }
-
-        switch (call.method) {
-          case 'FirebaseFunctions#call':
-            return kParameters;
-          default:
-            return null;
-        }
-      });
+        return kParameters;
+      }));
 
       functions =
           MethodChannelFirebaseFunctions(app: app, region: 'us-central1');
@@ -64,8 +57,6 @@ void main() {
       mockPlatformExceptionThrown = false;
       mockExceptionThrown = false;
       httpsCallable!.options = kOptions;
-
-      logger.clear();
     });
 
     group('constructor', () {
@@ -101,6 +92,22 @@ void main() {
     });
 
     group('call', () {
+      test('converts maps nested in lists', () async {
+        final originalParameters = kParameters;
+        addTearDown(() => kParameters = originalParameters);
+        kParameters = <Object?>[
+          <Object?, Object?>{'name': 'value'},
+        ];
+
+        final result = await httpsCallable!.call();
+
+        expect(result, isA<List<dynamic>>());
+        expect((result as List<dynamic>).single, isA<Map<String, dynamic>>());
+        expect(result, <dynamic>[
+          <String, dynamic>{'name': 'value'},
+        ]);
+      });
+
       test('catch an [Exception] error', () async {
         mockExceptionThrown = true;
         await testExceptionHandling('EXCEPTION', httpsCallable!.call);
@@ -114,4 +121,16 @@ void main() {
       });
     });
   });
+}
+
+class _TestCloudFunctionsHostApi implements TestCloudFunctionsHostApi {
+  _TestCloudFunctionsHostApi(this.callHandler);
+
+  final Future<Object?> Function() callHandler;
+
+  @override
+  Future<Object?> call(Map<String, Object?> arguments) => callHandler();
+
+  @override
+  Future<void> registerEventChannel(Map<String, Object> arguments) async {}
 }

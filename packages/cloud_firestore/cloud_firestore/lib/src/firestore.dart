@@ -15,7 +15,7 @@ part of '../cloud_firestore.dart';
 ///
 /// FirebaseFirestore firestore = FirebaseFirestore.instanceFor(app: secondaryApp);
 /// ```
-class FirebaseFirestore extends FirebasePluginPlatform {
+class FirebaseFirestore extends FirebasePlugin {
   FirebaseFirestore._({
     required this.app,
     required this.databaseId,

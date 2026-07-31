@@ -15,72 +15,6 @@ import 'api.dart';
 import 'content.dart';
 import 'error.dart';
 
-/// Configuration for a prebuilt voice.
-///
-/// This class allows specifying a voice by its name.
-class PrebuiltVoiceConfig {
-  // ignore: public_member_api_docs
-  const PrebuiltVoiceConfig({this.voiceName});
-
-  /// The voice name to use for speech synthesis.
-  ///
-  /// See https://cloud.google.com/text-to-speech/docs/chirp3-hd for names and
-  /// sound demos.
-  final String? voiceName;
-  // ignore: public_member_api_docs
-  Map<String, Object?> toJson() =>
-      {if (voiceName case final voiceName?) 'voice_name': voiceName};
-}
-
-/// Configuration for the voice to be used in speech synthesis.
-///
-/// This class currently supports using a prebuilt voice configuration.
-class VoiceConfig {
-  // ignore: public_member_api_docs
-  VoiceConfig({this.prebuiltVoiceConfig});
-
-  // ignore: public_member_api_docs
-  final PrebuiltVoiceConfig? prebuiltVoiceConfig;
-  // ignore: public_member_api_docs
-  Map<String, Object?> toJson() => {
-        if (prebuiltVoiceConfig case final prebuiltVoiceConfig?)
-          'prebuilt_voice_config': prebuiltVoiceConfig.toJson()
-      };
-}
-
-/// Configures speech synthesis settings.
-///
-/// Allows specifying the desired voice and language for speech synthesis.
-class SpeechConfig {
-  /// Creates a [SpeechConfig] instance.
-  ///
-  /// [voiceName] See https://cloud.google.com/text-to-speech/docs/chirp3-hd
-  /// for names and sound demos.
-  ///
-  /// [languageCode] The language code (BCP-47) for speech synthesis,
-  /// e.g. "en-US", "fr-FR", "de-DE".
-  SpeechConfig({String? voiceName, this.languageCode})
-      : voiceConfig = voiceName != null
-            ? VoiceConfig(
-                prebuiltVoiceConfig: PrebuiltVoiceConfig(voiceName: voiceName))
-            : null;
-
-  /// The voice config to use for speech synthesis.
-  final VoiceConfig? voiceConfig;
-
-  /// The language code (BCP-47) for speech synthesis,
-  /// e.g. "en-US", "fr-FR", "de-DE".
-  final String? languageCode;
-
-  // ignore: public_member_api_docs
-  Map<String, Object?> toJson() => {
-        if (voiceConfig case final voiceConfig?)
-          'voice_config': voiceConfig.toJson(),
-        if (languageCode case final languageCode?)
-          'language_code': languageCode,
-      };
-}
-
 /// The audio transcription configuration.
 class AudioTranscriptionConfig {
   // ignore: public_member_api_docs
@@ -168,7 +102,7 @@ class SessionResumptionConfig {
 final class LiveGenerationConfig extends BaseGenerationConfig {
   // ignore: public_member_api_docs
   LiveGenerationConfig(
-      {this.speechConfig,
+      {super.speechConfig,
       this.inputAudioTranscription,
       this.outputAudioTranscription,
       this.contextWindowCompression,
@@ -180,9 +114,6 @@ final class LiveGenerationConfig extends BaseGenerationConfig {
       super.presencePenalty,
       super.frequencyPenalty,
       super.mediaResolution});
-
-  /// The speech configuration.
-  final SpeechConfig? speechConfig;
 
   /// The transcription of the input aligns with the input audio language.
   final AudioTranscriptionConfig? inputAudioTranscription;
@@ -197,8 +128,6 @@ final class LiveGenerationConfig extends BaseGenerationConfig {
   @override
   Map<String, Object?> toJson() => {
         ...super.toJson(),
-        if (speechConfig case final speechConfig?)
-          'speechConfig': speechConfig.toJson(),
       };
 }
 

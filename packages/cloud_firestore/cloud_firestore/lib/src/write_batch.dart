@@ -68,14 +68,23 @@ class WriteBatch {
   /// If the document does not yet exist, an exception will be thrown.
   ///
   /// Objects key can be a String or a FieldPath.
-  void update(DocumentReference document, Map<Object, Object?> data) {
+  void update<T>(DocumentReference<T> document, T data) {
     assert(
       document.firestore == _firestore,
       'the document provided is from a different Firestore instance',
     );
+
+    Map<Object, Object?> firestoreData;
+    if (data is Map<Object, Object?>) {
+      firestoreData = data;
+    } else {
+      final withConverterDoc = document as _WithConverterDocumentReference<T>;
+      firestoreData = withConverterDoc._toFirestore(data, null);
+    }
+
     return _delegate.update(
       document.path,
-      _CodecUtility.replaceValueWithDelegatesInMapFieldPath(data)!,
+      _CodecUtility.replaceValueWithDelegatesInMapFieldPath(firestoreData)!,
     );
   }
 }

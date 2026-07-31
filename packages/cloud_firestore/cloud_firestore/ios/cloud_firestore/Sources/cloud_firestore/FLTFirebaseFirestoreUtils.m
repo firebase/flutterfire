@@ -253,6 +253,10 @@ const NSInteger FLTFirebaseFirestoreErrorCodePipelineParse = -1;
       break;
   }
 
+  if (error.localizedDescription.length > 0) {
+    message = error.localizedDescription;
+  }
+
   return @[ code, message ];
 }
 

@@ -5,7 +5,7 @@
 part of '../firebase_analytics.dart';
 
 /// Firebase Analytics API.
-class FirebaseAnalytics extends FirebasePluginPlatform {
+class FirebaseAnalytics extends FirebasePlugin {
   FirebaseAnalytics._({
     required this.app,
     this.webOptions,

@@ -1,3 +1,15 @@
+## 4.2.3
+
+ - Update a dependency to the latest release.
+
+## 4.2.2
+
+ - Update a dependency to the latest release.
+
+## 4.2.1
+
+ - Update a dependency to the latest release.
+
 ## 4.2.0
 
  - **FEAT**(messaging,web): add support for custom service worker script path in `getToken` method ([#18290](https://github.com/firebase/flutterfire/issues/18290)). ([b37722db](https://github.com/firebase/flutterfire/commit/b37722db13548aca57b3a24ba0f27b5de021be02))

@@ -39,6 +39,12 @@ void main() {
       FirebasePlatform.instance = mock;
     });
   });
+
+  group('$FirebasePlugin', () {
+    test('is not a platform interface', () {
+      expect(TestFirebasePlugin(), isNot(isA<PlatformInterface>()));
+    });
+  });
 }
 
 class ImplementsFirebasePlatform implements FirebasePlatform {
@@ -70,3 +76,7 @@ class FirebaseCoreMockPlatform extends Mock
         MockPlatformInterfaceMixin
     implements
         FirebasePlatform {}
+
+class TestFirebasePlugin extends FirebasePlugin {
+  TestFirebasePlugin() : super(defaultFirebaseAppName, 'test_plugin');
+}

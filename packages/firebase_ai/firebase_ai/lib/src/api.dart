@@ -16,6 +16,7 @@ import 'content.dart';
 import 'error.dart';
 import 'image_config.dart';
 import 'schema.dart';
+import 'speech_config.dart';
 import 'tool.dart' show Tool, ToolConfig;
 
 /// Response for Count Tokens
@@ -344,7 +345,7 @@ final class WebGroundingChunk {
 
   /// The domain of the original URI from which the content was retrieved.
   ///
-  /// This field is only populated when using the Vertex AI Gemini API.
+  /// This field is only populated when using the Agent Platform Gemini API.
   final String? domain;
 }
 
@@ -424,7 +425,7 @@ final class SearchEntryPoint {
 /// comply with the "Grounding with Google Search" usage requirements for your
 /// chosen API provider:
 /// [Gemini Developer API](https://ai.google.dev/gemini-api/terms#grounding-with-google-search)
-/// or Vertex AI Gemini API (see [Service Terms](https://cloud.google.com/terms/service-terms)
+/// or Agent Platform Gemini API (see [Service Terms](https://cloud.google.com/terms/service-terms)
 /// section within the Service Specific Terms).
 final class GroundingMetadata {
   // ignore: public_member_api_docs
@@ -1206,6 +1207,7 @@ abstract class BaseGenerationConfig {
     this.frequencyPenalty,
     this.responseModalities,
     this.mediaResolution,
+    this.speechConfig,
   }) : assert(mediaResolution != MediaResolution.ultraHigh,
             'MediaResolution.ultraHigh is only supported on individual media parts.');
 
@@ -1294,6 +1296,9 @@ abstract class BaseGenerationConfig {
   /// [MediaResolution.ultraHigh] is only supported on individual media parts.
   final MediaResolution? mediaResolution;
 
+  /// The configuration parameters controlling the model's speech and audio generation.
+  final SpeechConfig? speechConfig;
+
   // ignore: public_member_api_docs
   Map<String, Object?> toJson() => {
         if (candidateCount case final candidateCount?)
@@ -1312,6 +1317,8 @@ abstract class BaseGenerationConfig {
               responseModalities.map((modality) => modality.toJson()).toList(),
         if (mediaResolution case final mediaResolution?)
           'mediaResolution': mediaResolution.toJson(),
+        if (speechConfig case final speechConfig?)
+          'speechConfig': speechConfig.toJson(),
       };
 }
 
@@ -1329,6 +1336,7 @@ final class GenerationConfig extends BaseGenerationConfig {
     super.frequencyPenalty,
     super.responseModalities,
     super.mediaResolution,
+    super.speechConfig,
     this.responseMimeType,
     this.responseSchema,
     this.responseJsonSchema,
@@ -1474,7 +1482,7 @@ abstract interface class SerializationStrategy {
 }
 
 // ignore: public_member_api_docs
-final class VertexSerialization implements SerializationStrategy {
+final class AgentPlatformSerialization implements SerializationStrategy {
   /// Parse the json to [GenerateContentResponse]
   @override
   GenerateContentResponse parseGenerateContentResponse(Object jsonObject) {

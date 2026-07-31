@@ -144,9 +144,8 @@ void runWebSocketTests() {
           await _waitForStreamEvent(isReady.future, 'listMovies subscription');
 
           // Now perform a query, which should go over WebSocket if connected
-          final result =
-              await MoviesConnector.instance.listMovies().ref().execute();
-          expect(result.data.movies.length, 0);
+          final movies = await listMoviesFromServer();
+          expect(movies, isEmpty);
 
           // Perform a mutation
           await MoviesConnector.instance
@@ -188,31 +187,35 @@ void runWebSocketTests() {
           count++;
         });
 
-        await _waitForStreamEvent(isReady.future, 'listMovies subscription');
-
-        // Cancel the subscription
-        await sub.cancel();
-
-        // Create a movie
-        await MoviesConnector.instance
-            .createMovie(
-              genre: 'Action',
-              title: 'Avatar',
-              releaseYear: 2009,
-            )
-            .rating(4.7)
-            .ref()
-            .execute();
-
-        // Wait a bit to ensure no event is received
-        bool received = true;
         try {
-          await receivedUpdate.future.timeout(const Duration(seconds: 2));
-        } on TimeoutException {
-          received = false;
+          await _waitForStreamEvent(isReady.future, 'listMovies subscription');
+
+          // Cancel the subscription
+          await sub.cancel();
+
+          // Create a movie
+          await MoviesConnector.instance
+              .createMovie(
+                genre: 'Action',
+                title: 'Avatar',
+                releaseYear: 2009,
+              )
+              .rating(4.7)
+              .ref()
+              .execute();
+
+          // Wait a bit to ensure no event is received
+          bool received = true;
+          try {
+            await receivedUpdate.future.timeout(const Duration(seconds: 2));
+          } on TimeoutException {
+            received = false;
+          }
+          expect(received, isFalse,
+              reason: 'Should not receive events after cancel');
+        } finally {
+          await sub.cancel();
         }
-        expect(received, isFalse,
-            reason: 'Should not receive events after cancel');
       });
 
       testWidgets(
@@ -232,18 +235,22 @@ void runWebSocketTests() {
           count++;
         });
 
-        await _waitForStreamEvent(isReady.future, 'listMovies subscription');
+        try {
+          await _waitForStreamEvent(isReady.future, 'listMovies subscription');
 
-        final dataConnect = MoviesConnector.instance.dataConnect;
-        final transport = (dataConnect as dynamic).transport;
-        final ws = (transport as dynamic).websocket;
+          final dataConnect = MoviesConnector.instance.dataConnect;
+          final transport = (dataConnect as dynamic).transport;
+          final ws = (transport as dynamic).websocket;
 
-        expect(ws.isConnected, isTrue);
+          expect(ws.isConnected, isTrue);
 
-        // Cancel the subscription
-        await sub.cancel();
+          // Cancel the subscription
+          await sub.cancel();
 
-        expect(ws.isConnected, isFalse);
+          expect(ws.isConnected, isFalse);
+        } finally {
+          await sub.cancel();
+        }
       });
     },
   );

@@ -5,14 +5,13 @@
 
 part of '../../firebase_core_platform_interface.dart';
 
-/// The interface that other FlutterFire plugins must extend.
+/// The base class that other FlutterFire plugins must extend.
 ///
 /// This class provides access to common plugin properties and constants which
 /// are available once the user has initialized FlutterFire.
-abstract class FirebasePluginPlatform extends PlatformInterface {
+abstract class FirebasePlugin {
   // ignore: public_member_api_docs
-  FirebasePluginPlatform(this._appName, this._methodChannelName)
-      : super(token: _token);
+  FirebasePlugin(this._appName, this._methodChannelName);
 
   /// The global data store for all constants, for each plugin and [FirebaseAppPlatform] instance.
   ///
@@ -25,13 +24,6 @@ abstract class FirebasePluginPlatform extends PlatformInterface {
   final String _appName;
 
   final String _methodChannelName;
-
-  static final Object _token = Object();
-
-  // ignore: public_member_api_docs
-  static void verify(FirebasePluginPlatform instance) {
-    PlatformInterface.verify(instance, _token);
-  }
 
   /// Returns any plugin constants this plugin app instance has initialized.
   Map<dynamic, dynamic> get pluginConstants {

@@ -8,6 +8,7 @@
 #include <memory>
 #include <optional>
 #include <string>
+#include <vector>
 
 #include "cloud_firestore_plugin.h"
 #include "firebase/app.h"
@@ -65,6 +66,14 @@ void cloud_firestore_windows::FirestoreCodec::WriteValue(
       flutter::StandardCodecSerializer::WriteValue(appName, stream);
       flutter::StandardCodecSerializer::WriteValue(reference.path(), stream);
       flutter::StandardCodecSerializer::WriteValue(databaseUrl, stream);
+    } else if (custom_value.type() == typeid(std::vector<uint8_t>)) {
+      const std::vector<uint8_t>& bytes =
+          std::any_cast<const std::vector<uint8_t>&>(custom_value);
+      stream->WriteByte(DATA_TYPE_BLOB);
+      WriteSize(bytes.size(), stream);
+      if (!bytes.empty()) {
+        stream->WriteBytes(bytes.data(), bytes.size());
+      }
     } else if (custom_value.type() ==
                typeid(double)) {  // Assuming Double is standard C++ double
       const double& myDouble = std::any_cast<double>(custom_value);

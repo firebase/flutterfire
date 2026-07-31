@@ -10,6 +10,8 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'query_e2e.dart';
 
+const _listenTimeout = Duration(seconds: 30);
+
 void runListenTests() {
   group(
     '$FirebaseDataConnect.instance listen',
@@ -25,9 +27,8 @@ void runListenTests() {
         expect(initialValue.data.movies.length, 0,
             reason: 'Initial movie list should be empty');
 
-        final Completer<void> isReady = Completer<void>();
-        final Completer<bool> hasBeenListened = Completer<bool>();
-        int count = 0;
+        final initialMovies = Completer<List<ListMoviesMovies>>();
+        final updatedMovies = Completer<List<ListMoviesMovies>>();
 
         final listener = MoviesConnector.instance
             .listMovies()
@@ -36,47 +37,140 @@ void runListenTests() {
             .listen((value) {
           final movies = value.data.movies;
 
-          if (count == 0) {
-            expect(movies.length, 0,
-                reason: 'First emission should contain an empty list');
-            isReady.complete();
-          } else {
-            expect(movies.length, 1,
-                reason: 'Second emission should contain one movie');
-            expect(movies[0].title, 'The Matrix',
-                reason: 'The movie should be The Matrix');
-            hasBeenListened.complete(true);
+          if (!initialMovies.isCompleted && movies.isEmpty) {
+            initialMovies.complete(movies);
+          } else if (!updatedMovies.isCompleted &&
+              movies.length == 1 &&
+              movies.single.title == 'The Matrix') {
+            updatedMovies.complete(movies);
           }
-          count++;
         });
 
-        // Wait for the listener to be ready
-        await isReady.future;
+        try {
+          // Wait for the listener to be ready
+          final initial = await initialMovies.future.timeout(_listenTimeout);
+          expect(initial, isEmpty,
+              reason: 'First emission should contain an empty list');
 
-        // Create the movie
-        await MoviesConnector.instance
-            .createMovie(
-              genre: 'Action',
-              title: 'The Matrix',
-              releaseYear: 1999,
-            )
-            .rating(4.5)
-            .ref()
-            .execute();
+          // Create the movie
+          await MoviesConnector.instance
+              .createMovie(
+                genre: 'Action',
+                title: 'The Matrix',
+                releaseYear: 1999,
+              )
+              .rating(4.5)
+              .ref()
+              .execute();
 
-        await MoviesConnector.instance
+          await MoviesConnector.instance
+              .listMovies()
+              .ref()
+              .execute(fetchPolicy: QueryFetchPolicy.serverOnly);
+
+          // Wait for the listener to receive the movie update
+          final movies = await updatedMovies.future.timeout(_listenTimeout);
+
+          expect(movies, hasLength(1),
+              reason: 'Second emission should contain one movie');
+          expect(movies.single.title, 'The Matrix',
+              reason: 'The movie should be The Matrix');
+        } finally {
+          // Cancel the listener and wait for it to finish
+          await listener.cancel();
+        }
+      });
+      testWidgets('should be able to gracefully cancel',
+          (WidgetTester tester) async {
+        final initialValue =
+            await MoviesConnector.instance.listMovies().ref().execute();
+        expect(initialValue.data.movies.length, 0,
+            reason: 'Initial movie list should be empty');
+
+        final listener1Ready = Completer<void>();
+        final listener2Ready = Completer<void>();
+        final listener1ReceivedUpdate = Completer<void>();
+        final listener2ReceivedUpdate = Completer<void>();
+
+        int count1 = 0;
+        int count2 = 0;
+
+        final listener1 = MoviesConnector.instance
             .listMovies()
             .ref()
-            .execute(fetchPolicy: QueryFetchPolicy.serverOnly);
+            .subscribe()
+            .listen((value) {
+          count1++;
+          if (count1 == 1 && !listener1Ready.isCompleted) {
+            listener1Ready.complete();
+          } else if (count1 == 2 && !listener1ReceivedUpdate.isCompleted) {
+            listener1ReceivedUpdate.complete();
+          }
+        });
 
-        // Wait for the listener to receive the movie update
-        final bool hasListenerReceived = await hasBeenListened.future;
+        final listener2 = MoviesConnector.instance
+            .listMovies()
+            .ref()
+            .subscribe()
+            .listen((value) {
+          count2++;
+          if (count2 == 1 && !listener2Ready.isCompleted) {
+            listener2Ready.complete();
+          } else if (count2 == 3 && !listener2ReceivedUpdate.isCompleted) {
+            listener2ReceivedUpdate.complete();
+          }
+        });
 
-        // Cancel the listener and wait for it to finish
-        await listener.cancel();
+        try {
+          // Wait for both listeners to be ready with initial emission
+          await Future.wait([
+            listener1Ready.future,
+            listener2Ready.future,
+          ]).timeout(_listenTimeout);
 
-        expect(hasListenerReceived, isTrue,
-            reason: 'The stream should have emitted new data');
+          // Create first movie
+          await MoviesConnector.instance
+              .createMovie(
+                genre: 'Action',
+                title: 'The Matrix',
+                releaseYear: 1999,
+              )
+              .rating(4.5)
+              .ref()
+              .execute();
+
+          await MoviesConnector.instance.listMovies().ref().execute();
+
+          // Wait for listener1 to receive the update
+          await listener1ReceivedUpdate.future.timeout(_listenTimeout);
+
+          // Cancel listener1
+          await listener1.cancel();
+
+          // Create second movie
+          await MoviesConnector.instance
+              .createMovie(
+                genre: 'Adventure',
+                title: 'Raiders of the Lost Arc',
+                releaseYear: 1999,
+              )
+              .rating(4.5)
+              .ref()
+              .execute();
+
+          await MoviesConnector.instance.listMovies().ref().execute();
+
+          // Wait deterministically for listener2's 3rd emission
+          await listener2ReceivedUpdate.future.timeout(_listenTimeout);
+
+          expect(count1, equals(2),
+              reason: 'Canceled listener should not receive further updates');
+          expect(count2, equals(3),
+              reason: 'Active listener should receive all updates');
+        } finally {
+          await listener1.cancel();
+          await listener2.cancel();
+        }
       });
     },
   );

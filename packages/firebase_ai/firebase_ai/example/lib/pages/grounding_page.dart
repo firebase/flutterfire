@@ -20,11 +20,11 @@ class GroundingPage extends StatefulWidget {
   const GroundingPage({
     super.key,
     required this.title,
-    required this.useVertexBackend,
+    required this.useAgentPlatform,
   });
 
   final String title;
-  final bool useVertexBackend;
+  final bool useAgentPlatform;
 
   @override
   State<GroundingPage> createState() => _GroundingPageState();
@@ -73,12 +73,12 @@ class _GroundingPageState extends State<GroundingPage> {
       }
     }
 
-    final aiProvider = widget.useVertexBackend
-        ? FirebaseAI.vertexAI(location: 'global')
+    final aiProvider = widget.useAgentPlatform
+        ? FirebaseAI.agentPlatform()
         : FirebaseAI.googleAI();
 
     _model = aiProvider.generativeModel(
-      model: 'gemini-3.1-flash-lite',
+      model: 'gemini-3.5-flash',
       tools: tools.isNotEmpty ? tools : null,
       toolConfig: toolConfig,
     );
