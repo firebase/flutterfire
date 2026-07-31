@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 
 import 'firebase_options.dart';
 
-const kWebRecaptchaSiteKey = '6LcB120tAAAAALKQNKclit9f4k-gEZgC0ZmFihOD';
+const kWebRecaptchaSiteKey = 'put-default-web-sitekey';
 const kIOSRecaptchaSiteKey = 'put-default-ios-sitekey';
 const kAndroidRecaptchaSitekey = 'put-default-android-sitekey';
 
