@@ -3930,7 +3930,8 @@ void FirebaseAuthHostApi::SetUp(::flutter::BinaryMessenger* binary_messenger,
                       std::get<CustomEncodableValue>(encodable_settings_arg));
               api->SetSettings(
                   app_arg, settings_arg,
-                  [reply](ErrorOr<std::optional<InternalUserDetails>>&& output) {
+                  [reply](
+                      ErrorOr<std::optional<InternalUserDetails>>&& output) {
                     if (output.has_error()) {
                       reply(WrapError(output.error()));
                       return;

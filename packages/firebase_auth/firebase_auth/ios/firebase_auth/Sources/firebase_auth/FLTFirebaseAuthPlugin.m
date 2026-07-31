@@ -1564,9 +1564,8 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
                      return;
                    }
                    FIRUser *migratedUser = auth.currentUser;
-                   completion(migratedUser != nil ? [PigeonParser getPigeonDetails:migratedUser]
-                                                  : nil,
-                              nil);
+                   completion(
+                       migratedUser != nil ? [PigeonParser getPigeonDetails:migratedUser] : nil, nil);
                  }];
     return;
   }
