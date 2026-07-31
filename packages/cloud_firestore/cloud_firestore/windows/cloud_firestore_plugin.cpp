@@ -173,6 +173,15 @@ class PlatformThreadDispatcher {
   std::queue<std::function<void()>> tasks_;
 };
 
+template <typename T>
+void ReplyOnPlatformThread(std::function<void(ErrorOr<T>)> result,
+                           ErrorOr<T> reply) {
+  PlatformThreadDispatcher::GetInstance().Post(
+      [result = std::move(result), reply = std::move(reply)]() mutable {
+        result(std::move(reply));
+      });
+}
+
 struct EventSinkState {
   std::mutex mutex;
   std::unique_ptr<flutter::EventSink<flutter::EncodableValue>> events;
@@ -1603,11 +1612,14 @@ void CloudFirestorePlugin::QueryGet(
         if (completed_future.error() == firebase::firestore::kErrorOk) {
           const firebase::firestore::QuerySnapshot* querySnapshot =
               completed_future.result();
-          result(ParseQuerySnapshot(querySnapshot,
-                                    GetServerTimestampBehaviorFromPigeon(
-                                        options.server_timestamp_behavior())));
+          ReplyOnPlatformThread<InternalQuerySnapshot>(
+              result,
+              ParseQuerySnapshot(querySnapshot,
+                                 GetServerTimestampBehaviorFromPigeon(
+                                     options.server_timestamp_behavior())));
         } else {
-          result(CloudFirestorePlugin::ParseError(completed_future));
+          ReplyOnPlatformThread<InternalQuerySnapshot>(
+              result, CloudFirestorePlugin::ParseError(completed_future));
         }
       });
 }

@@ -149,6 +149,25 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
   }
 
   @override
+  Future<AppCheckTokenResult?> getTokenResult(bool forceRefresh) async {
+    try {
+      final result = await _pigeonApi.getTokenResult(app.name, forceRefresh);
+      if (result == null) {
+        return null;
+      }
+
+      return AppCheckTokenResult(
+        token: result.token,
+        expirationTime: result.expirationTimestamp == null
+            ? null
+            : DateTime.fromMillisecondsSinceEpoch(result.expirationTimestamp!),
+      );
+    } on PlatformException catch (e, s) {
+      convertPlatformException(e, s);
+    }
+  }
+
+  @override
   Future<void> setTokenAutoRefreshEnabled(
     bool isTokenAutoRefreshEnabled,
   ) async {

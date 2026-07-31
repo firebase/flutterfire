@@ -38,7 +38,13 @@ public class TransactionStreamHandler implements OnTransactionResultListener, St
     void onStarted(Transaction transaction);
   }
 
+  /** Callback when the transaction has reached a terminal state. */
+  public interface OnTransactionCompleteListener {
+    void onComplete(String transactionId);
+  }
+
   final OnTransactionStartedListener onTransactionStartedListener;
+  final OnTransactionCompleteListener onTransactionCompleteListener;
   final FirebaseFirestore firestore;
   final String transactionId;
   final Long timeout;
@@ -47,11 +53,13 @@ public class TransactionStreamHandler implements OnTransactionResultListener, St
 
   public TransactionStreamHandler(
       OnTransactionStartedListener onTransactionStartedListener,
+      OnTransactionCompleteListener onTransactionCompleteListener,
       FirebaseFirestore firestore,
       String transactionId,
       Long timeout,
       Long maxAttempts) {
     this.onTransactionStartedListener = onTransactionStartedListener;
+    this.onTransactionCompleteListener = onTransactionCompleteListener;
     this.firestore = firestore;
     this.transactionId = transactionId;
     this.timeout = timeout;
@@ -178,6 +186,7 @@ public class TransactionStreamHandler implements OnTransactionResultListener, St
                   () -> {
                     events.success(map);
                     events.endOfStream();
+                    onTransactionCompleteListener.onComplete(transactionId);
                   });
             });
   }

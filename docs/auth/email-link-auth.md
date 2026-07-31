@@ -99,7 +99,6 @@ To initiate the authentication flow, present an interface that prompts the user 
             email: emailAuth, actionCodeSettings: acs)
         .catchError((onError) => print('Error sending email verification $onError'))
         .then((value) => print('Successfully sent email verification'));
-    });
     ```
 
 

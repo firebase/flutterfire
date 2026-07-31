@@ -80,6 +80,98 @@ void runListenTests() {
           await listener.cancel();
         }
       });
+      testWidgets('should be able to gracefully cancel',
+          (WidgetTester tester) async {
+        final initialValue =
+            await MoviesConnector.instance.listMovies().ref().execute();
+        expect(initialValue.data.movies.length, 0,
+            reason: 'Initial movie list should be empty');
+
+        final listener1Ready = Completer<void>();
+        final listener2Ready = Completer<void>();
+        final listener1ReceivedUpdate = Completer<void>();
+        final listener2ReceivedUpdate = Completer<void>();
+
+        int count1 = 0;
+        int count2 = 0;
+
+        final listener1 = MoviesConnector.instance
+            .listMovies()
+            .ref()
+            .subscribe()
+            .listen((value) {
+          count1++;
+          if (count1 == 1 && !listener1Ready.isCompleted) {
+            listener1Ready.complete();
+          } else if (count1 == 2 && !listener1ReceivedUpdate.isCompleted) {
+            listener1ReceivedUpdate.complete();
+          }
+        });
+
+        final listener2 = MoviesConnector.instance
+            .listMovies()
+            .ref()
+            .subscribe()
+            .listen((value) {
+          count2++;
+          if (count2 == 1 && !listener2Ready.isCompleted) {
+            listener2Ready.complete();
+          } else if (count2 == 3 && !listener2ReceivedUpdate.isCompleted) {
+            listener2ReceivedUpdate.complete();
+          }
+        });
+
+        try {
+          // Wait for both listeners to be ready with initial emission
+          await Future.wait([
+            listener1Ready.future,
+            listener2Ready.future,
+          ]).timeout(_listenTimeout);
+
+          // Create first movie
+          await MoviesConnector.instance
+              .createMovie(
+                genre: 'Action',
+                title: 'The Matrix',
+                releaseYear: 1999,
+              )
+              .rating(4.5)
+              .ref()
+              .execute();
+
+          await MoviesConnector.instance.listMovies().ref().execute();
+
+          // Wait for listener1 to receive the update
+          await listener1ReceivedUpdate.future.timeout(_listenTimeout);
+
+          // Cancel listener1
+          await listener1.cancel();
+
+          // Create second movie
+          await MoviesConnector.instance
+              .createMovie(
+                genre: 'Adventure',
+                title: 'Raiders of the Lost Arc',
+                releaseYear: 1999,
+              )
+              .rating(4.5)
+              .ref()
+              .execute();
+
+          await MoviesConnector.instance.listMovies().ref().execute();
+
+          // Wait deterministically for listener2's 3rd emission
+          await listener2ReceivedUpdate.future.timeout(_listenTimeout);
+
+          expect(count1, equals(2),
+              reason: 'Canceled listener should not receive further updates');
+          expect(count2, equals(3),
+              reason: 'Active listener should receive all updates');
+        } finally {
+          await listener1.cancel();
+          await listener2.cancel();
+        }
+      });
     },
   );
 }

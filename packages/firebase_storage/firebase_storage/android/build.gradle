@@ -11,7 +11,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.1.4'
+        classpath 'com.android.tools.build:gradle:8.3.0'
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
     }
 }
@@ -50,7 +50,7 @@ def builtInKotlin = providers.gradleProperty("android.builtInKotlin")
         .map { it.toBoolean() }
         .orElse(agpMajor >= 9)
         .get()
-if (agpMajor < 9 || !builtInKotlin) {
+if (!builtInKotlin) {
     apply plugin: 'kotlin-android'
 }
 
