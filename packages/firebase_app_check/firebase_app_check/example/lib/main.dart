@@ -12,7 +12,9 @@ import 'package:flutter/material.dart';
 
 import 'firebase_options.dart';
 
-const kWebRecaptchaSiteKey = '6Lemcn0dAAAAABLkf6aiiHvpGD6x-zF3nOSDU2M8';
+const kWebRecaptchaSiteKey = '6LcB120tAAAAALKQNKclit9f4k-gEZgC0ZmFihOD';
+const kIOSRecaptchaSiteKey = 'put-default-ios-sitekey';
+const kAndroidRecaptchaSitekey = 'put-default-android-sitekey';
 
 // Windows: create a debug token in the Firebase Console
 // (App Check > Apps > Manage debug tokens), then paste it here
@@ -78,9 +80,22 @@ class FirebaseAppCheckExample extends StatefulWidget {
 class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
   final appCheck = FirebaseAppCheck.instance;
   final TextEditingController _recaptchaSiteKeyController =
-      TextEditingController(text: 'recaptcha-site-key');
+      TextEditingController();
   String _message = '';
   String _eventToken = 'not yet';
+
+  String get _recaptchaSiteKey {
+    final text = _recaptchaSiteKeyController.text.trim();
+    if (text.isNotEmpty) return text;
+    if (kIsWeb) return kWebRecaptchaSiteKey;
+    if (defaultTargetPlatform == TargetPlatform.iOS) {
+      return kIOSRecaptchaSiteKey;
+    }
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      return kAndroidRecaptchaSitekey;
+    }
+    return '';
+  }
 
   @override
   void initState() {
@@ -184,22 +199,17 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
             TextField(
               controller: _recaptchaSiteKeyController,
               decoration: const InputDecoration(
-                labelText: 'reCAPTCHA Enterprise Site Key',
+                labelText: 'reCAPTCHA Enterprise Site Key (optional)',
+                hintText: 'Leave empty to use default site key',
                 border: OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 8),
             ElevatedButton(
               onPressed: () => _activate(
-                android: AndroidReCaptchaProvider(
-                  _recaptchaSiteKeyController.text,
-                ),
-                apple: AppleReCaptchaProvider(
-                  _recaptchaSiteKeyController.text,
-                ),
-                web: ReCaptchaEnterpriseProvider(
-                  _recaptchaSiteKeyController.text,
-                ),
+                android: AndroidReCaptchaProvider(_recaptchaSiteKey),
+                apple: AppleReCaptchaProvider(_recaptchaSiteKey),
+                web: ReCaptchaEnterpriseProvider(_recaptchaSiteKey),
               ),
               child: const Text('activate(ReCaptcha)'),
             ),
