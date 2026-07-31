@@ -43,7 +43,6 @@ FirebaseOptions _createFromJsOptions(firebase.FirebaseOptions options) {
     messagingSenderId: _safeToDart(options.messagingSenderId) ?? '',
     appId: _safeToDart(options.appId) ?? '',
     measurementId: _safeToDart(options.measurementId),
-    recaptchaSiteKey: _safeToDart(options.recaptchaSiteKey),
   );
 }
 

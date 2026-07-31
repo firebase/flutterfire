@@ -50,7 +50,6 @@ class FirebaseOptions {
     this.iosClientId,
     this.iosBundleId,
     this.appGroupId,
-    this.recaptchaSiteKey,
   });
 
   /// Named constructor to create [FirebaseOptions] from a the response of Pigeon channel.
@@ -72,8 +71,7 @@ class FirebaseOptions {
         androidClientId = options.androidClientId,
         iosClientId = options.iosClientId,
         iosBundleId = options.iosBundleId,
-        appGroupId = options.appGroupId,
-        recaptchaSiteKey = options.recaptchaSiteKey;
+        appGroupId = options.appGroupId;
 
   /// Returns a copy of this FirebaseOptions with the given fields replaced with
   /// the new values.
@@ -92,7 +90,6 @@ class FirebaseOptions {
     String? iosClientId,
     String? iosBundleId,
     String? appGroupId,
-    String? recaptchaSiteKey,
   }) {
     return FirebaseOptions(
       apiKey: apiKey ?? this.apiKey,
@@ -109,7 +106,6 @@ class FirebaseOptions {
       iosClientId: iosClientId ?? this.iosClientId,
       iosBundleId: iosBundleId ?? this.iosBundleId,
       appGroupId: appGroupId ?? this.appGroupId,
-      recaptchaSiteKey: recaptchaSiteKey ?? this.recaptchaSiteKey,
     );
   }
 
@@ -178,9 +174,6 @@ class FirebaseOptions {
   /// This property is used on iOS only.
   final String? appGroupId;
 
-  /// The reCAPTCHA site key used for App Check.
-  final String? recaptchaSiteKey;
-
   /// The current instance as a [Map].
   Map<String, String?> get asMap {
     return <String, String?>{
@@ -198,7 +191,6 @@ class FirebaseOptions {
       'iosClientId': iosClientId,
       'iosBundleId': iosBundleId,
       'appGroupId': appGroupId,
-      'recaptchaSiteKey': recaptchaSiteKey,
     };
   }
 
