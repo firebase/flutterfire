@@ -64,7 +64,7 @@ public class FirebaseAppCheckPlugin: NSObject, FlutterPlugin,
 
   func activate(
     appName: String, androidProvider: String?, appleProvider: String?,
-    debugToken: String?,
+    debugToken: String?, recaptchaSiteKey: String?,
     completion: @escaping (Result<Void, Error>) -> Void
   ) {
     guard let app = FLTFirebasePlugin.firebaseAppNamed(appName) else {
@@ -82,7 +82,8 @@ public class FirebaseAppCheckPlugin: NSObject, FlutterPlugin,
     providerFactory?.configure(
       app: app,
       providerName: provider,
-      debugToken: debugToken
+      debugToken: debugToken,
+      recaptchaSiteKey: recaptchaSiteKey
     )
 
     completion(.success(()))
@@ -319,7 +320,8 @@ class FlutterAppCheckProviderFactory: NSObject, AppCheckProviderFactory {
       wrapper.configure(
         app: app,
         providerName: "deviceCheck",
-        debugToken: nil
+        debugToken: nil,
+        recaptchaSiteKey: nil
       )
       providers[app.name] = wrapper
     }
@@ -329,7 +331,8 @@ class FlutterAppCheckProviderFactory: NSObject, AppCheckProviderFactory {
   func configure(
     app: FirebaseApp,
     providerName: String,
-    debugToken: String?
+    debugToken: String?,
+    recaptchaSiteKey: String?
   ) {
     if providers[app.name] == nil {
       providers[app.name] = AppCheckProviderWrapper()
@@ -337,7 +340,8 @@ class FlutterAppCheckProviderFactory: NSObject, AppCheckProviderFactory {
     providers[app.name]?.configure(
       app: app,
       providerName: providerName,
-      debugToken: debugToken
+      debugToken: debugToken,
+      recaptchaSiteKey: recaptchaSiteKey
     )
   }
 }
@@ -348,7 +352,8 @@ class AppCheckProviderWrapper: NSObject, AppCheckProvider {
   func configure(
     app: FirebaseApp,
     providerName: String,
-    debugToken: String?
+    debugToken: String?,
+    recaptchaSiteKey: String?
   ) {
     switch providerName {
     case "debug":
@@ -373,10 +378,14 @@ class AppCheckProviderWrapper: NSObject, AppCheckProvider {
       }
     case "recaptcha":
       #if os(iOS)
-        delegateProvider = RecaptchaProvider(app: app)
+        if let recaptchaSiteKey {
+          delegateProvider = RecaptchaProvider(app: app, siteKey: recaptchaSiteKey)
+        } else {
+          delegateProvider = nil
+        }
         if delegateProvider == nil {
           print(
-            "Firebase App Check: failed to initialize RecaptchaProvider. Ensure site key is in GoogleService-Info.plist."
+            "Firebase App Check: failed to initialize RecaptchaProvider. Ensure site key is provided."
           )
         }
       #else

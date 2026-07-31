@@ -26,7 +26,6 @@ export 'package:firebase_app_check_platform_interface/firebase_app_check_platfor
         ReCaptchaV3Provider,
         WebDebugProvider,
         WebProvider,
-        WebReCaptchaProvider,
         WindowsAppCheckProvider,
         WindowsDebugProvider;
 export 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
