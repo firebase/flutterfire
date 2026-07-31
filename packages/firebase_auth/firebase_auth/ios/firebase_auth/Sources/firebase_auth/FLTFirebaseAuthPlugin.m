@@ -1557,16 +1557,17 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
 #endif
 
   if (userToMigrate != nil) {
-    [auth updateCurrentUser:userToMigrate
-                 completion:^(NSError *_Nullable error) {
-                   if (error != nil) {
-                     completion(nil, [FLTFirebaseAuthPlugin convertToFlutterError:error]);
-                     return;
-                   }
-                   FIRUser *migratedUser = auth.currentUser;
-                   completion(
-                       migratedUser != nil ? [PigeonParser getPigeonDetails:migratedUser] : nil, nil);
-                 }];
+    [auth
+        updateCurrentUser:userToMigrate
+               completion:^(NSError *_Nullable error) {
+                 if (error != nil) {
+                   completion(nil, [FLTFirebaseAuthPlugin convertToFlutterError:error]);
+                   return;
+                 }
+                 FIRUser *migratedUser = auth.currentUser;
+                 completion(
+                     migratedUser != nil ? [PigeonParser getPigeonDetails:migratedUser] : nil, nil);
+               }];
     return;
   }
 
