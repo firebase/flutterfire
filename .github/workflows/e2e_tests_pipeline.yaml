@@ -115,7 +115,7 @@ jobs:
           pgrep -f appium && pkill -f appium || echo "No Appium process found"
       - name: Save Android Emulator Cache
         if: github.ref == 'refs/heads/main'
-        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         continue-on-error: true
         with:
           key: ${{ steps.avd-cache.outputs.cache-primary-key }}
