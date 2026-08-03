@@ -36,6 +36,10 @@ jobs:
       - uses: bluefireteam/melos-action@705015c3d2bc4ab94201ac24accb2bbe070cf533
         with:
           melos-version: '5.3.0'
+      - name: 'Validate Generated SPM Versions'
+        run: |
+          dart run scripts/generate_versions_spm.dart
+          git diff --exit-code -- ':(glob)packages/**/Package.swift'
       - name: 'Run Analyze'
         run: |
           dart ./.github/workflows/scripts/generate-dummy-firebase-configs.dart
