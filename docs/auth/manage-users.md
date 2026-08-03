@@ -162,6 +162,11 @@ await FirebaseAuth.instance
     .sendPasswordResetEmail(email: "user@example.com");
 ```
 
+Note: If
+[email enumeration protection](https://cloud.google.com/identity-platform/docs/admin/email-enumeration-protection)
+is enabled for your Firebase project, `sendPasswordResetEmail()` may complete
+without throwing an error even when the email address is not registered. This is
+expected Firebase Auth behavior to prevent revealing whether an email exists.
 You can customize the email template that is used in Authentication section of
 the [Firebase console](https://console.firebase.google.com/), on the Email Templates page.
 See [Email Templates](https://support.google.com/firebase/answer/7000714) in

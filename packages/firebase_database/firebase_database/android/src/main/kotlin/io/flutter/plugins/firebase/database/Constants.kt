@@ -49,8 +49,7 @@ object Constants {
   const val CHILD_KEYS = "childKeys"
   const val PREVIOUS_CHILD_NAME = "previousChildKey"
 
-  const val METHOD_CALL_TRANSACTION_HANDLER =
-    "FirebaseDatabase#callTransactionHandler"
+  const val METHOD_CALL_TRANSACTION_HANDLER = "FirebaseDatabase#callTransactionHandler"
   const val TRANSACTION_KEY = "transactionKey"
   const val TRANSACTION_APPLY_LOCALLY = "transactionApplyLocally"
 

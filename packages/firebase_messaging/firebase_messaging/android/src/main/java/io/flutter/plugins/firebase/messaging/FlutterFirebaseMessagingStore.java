@@ -55,8 +55,10 @@ public class FlutterFirebaseMessagingStore {
     setPreferencesStringValue(remoteMessage.getMessageId(), remoteMessageString);
 
     // Save new notification id.
-    // Note that this is using a comma delimited string to preserve ordering. We could use a String Set
-    // on SharedPreferences but this won't guarantee ordering when we want to remove the oldest added ids.
+    // Note that this is using a comma delimited string to preserve ordering. We could use a String
+    // Set
+    // on SharedPreferences but this won't guarantee ordering when we want to remove the oldest
+    // added ids.
     String notifications = getPreferencesStringValue(KEY_NOTIFICATION_IDS, "");
     notifications += remoteMessage.getMessageId() + DELIMITER; // append to last
 

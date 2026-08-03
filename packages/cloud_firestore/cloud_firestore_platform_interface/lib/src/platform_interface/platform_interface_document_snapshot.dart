@@ -38,7 +38,7 @@ class DocumentSnapshotPlatform extends PlatformInterface {
 
   final Map<String?, Object?>? _data;
 
-  final PigeonSnapshotMetadata _metadata;
+  final InternalSnapshotMetadata _metadata;
 
   /// The database ID of the snapshot's document.
   String get id => _pointer.id;

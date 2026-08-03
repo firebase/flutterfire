@@ -25,7 +25,6 @@ final _storageUrlPrefix = RegExp(r'^(?:gs|https?):\//');
 /// The web implementation of a Firebase Storage 'ref'
 class ReferenceWeb extends ReferencePlatform {
   /// Constructor for this ref
-  @override
   ReferenceWeb(FirebaseStorageWeb storage, String path)
       : _path = path,
         super(storage, path) {

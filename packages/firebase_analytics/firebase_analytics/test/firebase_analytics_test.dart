@@ -189,6 +189,21 @@ void main() {
           value: 123.90,
         );
       });
+
+      test('logEvent with items rejects invalid item parameter types', () {
+        expect(
+          () => analytics!.logEvent(
+            name: 'custom_event',
+            items: [
+              AnalyticsEventItem(
+                itemId: 'id',
+                parameters: {'invalid': true},
+              ),
+            ],
+          ),
+          throwsA(isA<AssertionError>()),
+        );
+      });
     });
 
     group('filter out nulls', () {

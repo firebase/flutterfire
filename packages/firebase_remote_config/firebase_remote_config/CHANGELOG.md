@@ -1,3 +1,38 @@
+## 6.5.5
+
+ - Update a dependency to the latest release.
+
+## 6.5.4
+
+ - Update a dependency to the latest release.
+
+## 6.5.3
+
+ - Update a dependency to the latest release.
+
+## 6.5.2
+
+ - Update a dependency to the latest release.
+
+## 6.5.1
+
+ - Update a dependency to the latest release.
+
+## 6.5.0
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+ - **FEAT**: upgrade pigeon to version 26.3.4 ([#18205](https://github.com/firebase/flutterfire/issues/18205)). ([cb6b4aef](https://github.com/firebase/flutterfire/commit/cb6b4aeffc568755ea3eebe32b998f00237bf5ad))
+
+## 6.4.0
+
+ - **FEAT**: use local firebase_core instead of remote SPM dependency ([#18141](https://github.com/firebase/flutterfire/issues/18141)). ([995caf40](https://github.com/firebase/flutterfire/commit/995caf400df80c0fde7151c651ccc6c0f756e381))
+
+## 6.3.0
+
+ - **FIX**(remote-config,ios): fix hot reload issue ([#18062](https://github.com/firebase/flutterfire/issues/18062)). ([5db57711](https://github.com/firebase/flutterfire/commit/5db577116139d469bcdf38dd58f69c1e5f61c87e))
+ - **FIX**(android): remove kotlin-android since AGP 9 supports it ([#18059](https://github.com/firebase/flutterfire/issues/18059)). ([1e39ad1f](https://github.com/firebase/flutterfire/commit/1e39ad1f146ce23742731ceeb30ff36c440b816f))
+ - **FEAT**(ios): migrate iOS to UIScene lifecycle ([#18054](https://github.com/firebase/flutterfire/issues/18054)). ([3ffa4110](https://github.com/firebase/flutterfire/commit/3ffa411098132fd5182a84be4e7a226106bc7451))
+
 ## 6.2.0
 
  - **FIX**(remote_config): correct `lastFetchTime` calculation ([#18004](https://github.com/firebase/flutterfire/issues/18004)). ([92f03e08](https://github.com/firebase/flutterfire/commit/92f03e08e9b5362c180da16d60d869568daf2c55))

@@ -12,9 +12,12 @@ import 'package:flutter_test/flutter_test.dart';
 void setupQueryTests() {
   group('Query', () {
     late DatabaseReference ref;
+    var testCount = 0;
 
     setUp(() async {
-      ref = FirebaseDatabase.instance.ref('tests');
+      ref = FirebaseDatabase.instance.ref(
+        'tests/query-${DateTime.now().microsecondsSinceEpoch}-${testCount++}',
+      );
 
       // Wipe the database before each test
       await ref.remove();
@@ -49,6 +52,20 @@ void setupQueryTests() {
 
           expect(events.single.snapshot.key, 't2');
           expect(events.single.snapshot.child('value').value, 'current');
+        },
+      );
+
+      test(
+        'onValue with startAt(value, key) and no orderBy should not crash',
+        () async {
+          await ref.set({
+            't1': {'timestamp': 1, 'value': 'old'},
+            't2': {'timestamp': 1000, 'value': 'current'},
+          });
+
+          final event = await ref.startAt(1000, key: 't2').onValue.first;
+
+          expect(event.type, DatabaseEventType.value);
         },
       );
 
@@ -593,6 +610,43 @@ void setupQueryTests() {
           ]),
         );
       });
+
+      test(
+        'cancels overlapping query streams without missing plugin',
+        () async {
+          const subscriptionCount = 128;
+          final queryRef = ref.child('overlapping-query-streams');
+          await queryRef.set({'value': 1});
+
+          final errors = <Object>[];
+          final subscriptions = <StreamSubscription<DatabaseEvent>>[];
+          final firstEventsReceived = Completer<void>();
+          var firstEventCount = 0;
+
+          for (var i = 0; i < subscriptionCount; i++) {
+            subscriptions.add(
+              queryRef.onValue.listen(
+                (_) {
+                  firstEventCount++;
+                  if (firstEventCount >= subscriptionCount &&
+                      !firstEventsReceived.isCompleted) {
+                    firstEventsReceived.complete();
+                  }
+                },
+                onError: errors.add,
+              ),
+            );
+          }
+
+          await firstEventsReceived.future.timeout(const Duration(seconds: 10));
+          await Future.wait(
+            subscriptions.map((subscription) => subscription.cancel()),
+          );
+
+          expect(errors, isEmpty);
+        },
+        skip: defaultTargetPlatform != TargetPlatform.android,
+      );
 
       test(
           'throw a `permission-denied` exception when accessing restricted data',

@@ -60,11 +60,11 @@ class TransactionWeb extends TransactionPlatform {
   @override
   TransactionWeb update(
     String documentPath,
-    Map<String, dynamic> data,
+    Map<FieldPath, dynamic> data,
   ) {
     _webTransactionDelegate.update(
       _webFirestoreDelegate.doc(documentPath),
-      EncodeUtility.encodeMapData(data)!,
+      EncodeUtility.encodeMapDataFieldPath(data)!,
     );
     return this;
   }

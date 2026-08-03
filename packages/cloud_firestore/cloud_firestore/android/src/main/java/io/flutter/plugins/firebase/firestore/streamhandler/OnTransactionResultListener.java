@@ -12,6 +12,6 @@ import java.util.List;
 /** callback when a transaction result has been computed. */
 public interface OnTransactionResultListener {
   void receiveTransactionResponse(
-      GeneratedAndroidFirebaseFirestore.PigeonTransactionResult resultType,
-      List<GeneratedAndroidFirebaseFirestore.PigeonTransactionCommand> commands);
+      GeneratedAndroidFirebaseFirestore.InternalTransactionResult resultType,
+      List<GeneratedAndroidFirebaseFirestore.InternalTransactionCommand> commands);
 }

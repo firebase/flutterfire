@@ -85,7 +85,8 @@ class RestTransport implements DataConnectTransport {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       'x-goog-api-client': getGoogApiVal(sdkType, packageVersion),
-      'x-firebase-client': getFirebaseClientVal(packageVersion)
+      'x-firebase-client': getFirebaseClientVal(packageVersion),
+      'x-client-version': 'flutter/$packageVersion',
     };
     String? appCheckToken;
     try {
@@ -116,11 +117,12 @@ class RestTransport implements DataConnectTransport {
         headers: headers,
       );
       Map<String, dynamic> bodyJson =
-          jsonDecode(r.body) as Map<String, dynamic>;
+          jsonDecode(utf8.decode(r.bodyBytes)) as Map<String, dynamic>;
 
       if (r.statusCode != 200) {
-        String message =
-            bodyJson.containsKey('message') ? bodyJson['message']! : r.body;
+        String message = bodyJson.containsKey('message')
+            ? bodyJson['message']!
+            : utf8.decode(r.bodyBytes);
         throw DataConnectError(
           r.statusCode == 401
               ? DataConnectErrorCode.unauthorized
@@ -149,6 +151,7 @@ class RestTransport implements DataConnectTransport {
   /// Invokes query REST endpoint.
   @override
   Future<ServerResponse> invokeQuery<Data, Variables>(
+    String operationId,
     String queryName,
     Deserializer<Data> deserializer,
     Serializer<Variables>? serializer,
@@ -168,6 +171,7 @@ class RestTransport implements DataConnectTransport {
   /// Invokes mutation REST endpoint.
   @override
   Future<ServerResponse> invokeMutation<Data, Variables>(
+    String operationId,
     String queryName,
     Deserializer<Data> deserializer,
     Serializer<Variables>? serializer,
@@ -182,6 +186,20 @@ class RestTransport implements DataConnectTransport {
       vars,
       token,
     );
+  }
+
+  /// WebSockets are now handled by WebSocketTransport in FirebaseDataConnect.
+  @override
+  Stream<ServerResponse> invokeStreamQuery<Data, Variables>(
+    String operationId,
+    String queryName,
+    Deserializer<Data> deserializer,
+    Serializer<Variables>? serializer,
+    Variables? vars,
+    String? token,
+  ) {
+    throw UnsupportedError(
+        'Streaming should be routed through WebSocketTransport');
   }
 }
 

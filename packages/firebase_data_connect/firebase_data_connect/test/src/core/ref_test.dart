@@ -82,7 +82,7 @@ void main() {
     test(
         'addQuery should create a new StreamController if query does not exist',
         () {
-      final deserializer = (String data) => 'Deserialized Data';
+      String deserializer(String data) => 'Deserialized Data';
       String varSerializer(Object? _) {
         return 'varsAsStr';
       }
@@ -98,8 +98,7 @@ void main() {
       );
       final stream = queryManager.addQuery(ref);
 
-      //expect(queryManager.trackedQueries['testQuery'], isNotNull);
-      expect(queryManager.trackedQueries['testQuery::varsAsStr'], isNotNull);
+      expect(queryManager.trackedQueries.values.contains(ref), isTrue);
       expect(stream, isA<StreamController>());
     });
   });
@@ -149,7 +148,7 @@ void main() {
       mockDataConnect.transport = transport;
     });
     test('executeQuery should gracefully handle getIdToken failures', () async {
-      final deserializer = (String data) => 'Deserialized Data';
+      String deserializer(String data) => 'Deserialized Data';
       final mockResponseSuccess = http.Response('{"success": true}', 200);
       when(mockUser.getIdToken()).thenThrow(Exception('Auth error'));
       QueryRef ref = QueryRef(
@@ -175,7 +174,7 @@ void main() {
         () async {
       final mockResponse = http.Response('{"error": "Unauthorized"}', 401);
       final mockResponseSuccess = http.Response('{"success": true}', 200);
-      final deserializer = (String data) => 'Deserialized Data';
+      String deserializer(String data) => 'Deserialized Data';
       int count = 0;
       int idTokenCount = 0;
       QueryRef ref = QueryRef(
@@ -219,7 +218,7 @@ void main() {
     });
 
     test('throw Error if server throws one', () {
-      final deserializer = (String data) => 'Deserialized Data';
+      String deserializer(String data) => 'Deserialized Data';
       final mockResponse = http.Response(
         '''
 {
@@ -285,10 +284,10 @@ void main() {
         ),
       ).thenAnswer((_) async => mockResponse);
 
-      final deserializer = (String data) {
+      AbcHolder deserializer(String data) {
         Map<String, dynamic> decoded = jsonDecode(data) as Map<String, dynamic>;
         return AbcHolder(decoded['abc']!);
-      };
+      }
 
       QueryRef ref = QueryRef(
         mockDataConnect,
@@ -339,10 +338,10 @@ void main() {
         ),
       ).thenAnswer((_) async => mockResponse);
 
-      final deserializer = (String data) {
+      AbcHolder deserializer(String data) {
         Map<String, dynamic> decoded = jsonDecode(data) as Map<String, dynamic>;
         return AbcHolder(decoded['abc']!);
-      };
+      }
 
       QueryRef ref = QueryRef(
         mockDataConnect,
@@ -390,10 +389,10 @@ void main() {
         ),
       ).thenAnswer((_) async => mockResponse);
 
-      final deserializer = (String data) {
+      AbcHolder deserializer(String data) {
         Map<String, dynamic> decoded = jsonDecode(data) as Map<String, dynamic>;
         return AbcHolder(decoded['abc']!);
-      };
+      }
 
       QueryRef ref = QueryRef(
         mockDataConnect,

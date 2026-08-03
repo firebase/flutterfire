@@ -28,6 +28,8 @@ import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.MemoryCacheSettings;
 import com.google.firebase.firestore.PersistentCacheIndexManager;
 import com.google.firebase.firestore.PersistentCacheSettings;
+import com.google.firebase.firestore.Pipeline;
+import com.google.firebase.firestore.PipelineResult;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
@@ -52,6 +54,7 @@ import io.flutter.plugins.firebase.firestore.streamhandler.SnapshotsInSyncStream
 import io.flutter.plugins.firebase.firestore.streamhandler.TransactionStreamHandler;
 import io.flutter.plugins.firebase.firestore.utils.ExceptionConverter;
 import io.flutter.plugins.firebase.firestore.utils.PigeonParser;
+import io.flutter.plugins.firebase.firestore.utils.PipelineParser;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -59,6 +62,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class FlutterFirebaseFirestorePlugin
@@ -74,14 +78,15 @@ public class FlutterFirebaseFirestorePlugin
   private static final String METHOD_CHANNEL_NAME = "plugins.flutter.io/firebase_firestore";
 
   final StandardMethodCodec MESSAGE_CODEC =
-      new StandardMethodCodec(
-          io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestoreMessageCodec.INSTANCE);
+      new StandardMethodCodec(GeneratedAndroidFirebaseFirestore.PigeonCodec.INSTANCE);
 
   private BinaryMessenger binaryMessenger;
 
   private final AtomicReference<Activity> activity = new AtomicReference<>(null);
 
-  private final Map<String, Transaction> transactions = new HashMap<>();
+  // Written from Firestore's transaction worker threads and read from the plugin's
+  // cached thread pool, so this must be a thread-safe map (see #18417).
+  private final Map<String, Transaction> transactions = new ConcurrentHashMap<>();
   private final Map<String, EventChannel> eventChannels = new HashMap<>();
   private final Map<String, StreamHandler> streamHandlers = new HashMap<>();
   private final Map<String, OnTransactionResultListener> transactionHandlers = new HashMap<>();
@@ -180,7 +185,7 @@ public class FlutterFirebaseFirestorePlugin
 
     FlutterFirebasePluginRegistry.registerPlugin(METHOD_CHANNEL_NAME, this);
 
-    GeneratedAndroidFirebaseFirestore.FirebaseFirestoreHostApi.setup(binaryMessenger, this);
+    GeneratedAndroidFirebaseFirestore.FirebaseFirestoreHostApi.setUp(binaryMessenger, this);
   }
 
   @Override
@@ -272,6 +277,28 @@ public class FlutterFirebaseFirestorePlugin
     return identifier;
   }
 
+  private void removeEventListener(String identifier) {
+    synchronized (eventChannels) {
+      EventChannel eventChannel = eventChannels.remove(identifier);
+      if (eventChannel != null) {
+        eventChannel.setStreamHandler(null);
+      }
+    }
+
+    synchronized (streamHandlers) {
+      StreamHandler streamHandler = streamHandlers.remove(identifier);
+      if (streamHandler != null) {
+        streamHandler.onCancel(null);
+      }
+    }
+  }
+
+  private void removeTransaction(String transactionId) {
+    transactions.remove(transactionId);
+    removeEventListener(transactionId);
+    transactionHandlers.remove(transactionId);
+  }
+
   private void removeEventListeners() {
     synchronized (eventChannels) {
       for (String identifier : eventChannels.keySet()) {
@@ -287,6 +314,7 @@ public class FlutterFirebaseFirestorePlugin
       streamHandlers.clear();
     }
 
+    transactions.clear();
     transactionHandlers.clear();
   }
 
@@ -352,10 +380,10 @@ public class FlutterFirebaseFirestorePlugin
   public void namedQueryGet(
       @NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app,
       @NonNull String name,
-      @NonNull GeneratedAndroidFirebaseFirestore.PigeonGetOptions options,
+      @NonNull GeneratedAndroidFirebaseFirestore.InternalGetOptions options,
       @NonNull
           GeneratedAndroidFirebaseFirestore.Result<
-                  GeneratedAndroidFirebaseFirestore.PigeonQuerySnapshot>
+                  GeneratedAndroidFirebaseFirestore.InternalQuerySnapshot>
               result) {
 
     cachedThreadPool.execute(
@@ -367,7 +395,8 @@ public class FlutterFirebaseFirestorePlugin
             if (query == null) {
               result.error(
                   new NullPointerException(
-                      "Named query has not been found. Please check it has been loaded properly via loadBundle()."));
+                      "Named query has not been found. Please check it has been loaded properly via"
+                          + " loadBundle()."));
               return;
             }
 
@@ -388,13 +417,13 @@ public class FlutterFirebaseFirestorePlugin
   @Override
   public void clearPersistence(
       @NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app,
-      @NonNull GeneratedAndroidFirebaseFirestore.Result<Void> result) {
+      @NonNull GeneratedAndroidFirebaseFirestore.VoidResult result) {
     cachedThreadPool.execute(
         () -> {
           try {
             FirebaseFirestore firestore = getFirestoreFromPigeon(app);
             Tasks.await(firestore.clearPersistence());
-            result.success(null);
+            result.success();
           } catch (Exception e) {
             ExceptionConverter.sendErrorToFlutter(result, e);
           }
@@ -404,13 +433,13 @@ public class FlutterFirebaseFirestorePlugin
   @Override
   public void disableNetwork(
       @NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app,
-      @NonNull GeneratedAndroidFirebaseFirestore.Result<Void> result) {
+      @NonNull GeneratedAndroidFirebaseFirestore.VoidResult result) {
     cachedThreadPool.execute(
         () -> {
           try {
             FirebaseFirestore firestore = getFirestoreFromPigeon(app);
             Tasks.await(firestore.disableNetwork());
-            result.success(null);
+            result.success();
           } catch (Exception e) {
             ExceptionConverter.sendErrorToFlutter(result, e);
           }
@@ -420,13 +449,13 @@ public class FlutterFirebaseFirestorePlugin
   @Override
   public void enableNetwork(
       @NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app,
-      @NonNull GeneratedAndroidFirebaseFirestore.Result<Void> result) {
+      @NonNull GeneratedAndroidFirebaseFirestore.VoidResult result) {
     cachedThreadPool.execute(
         () -> {
           try {
             FirebaseFirestore firestore = getFirestoreFromPigeon(app);
             Tasks.await(firestore.enableNetwork());
-            result.success(null);
+            result.success();
           } catch (Exception e) {
             ExceptionConverter.sendErrorToFlutter(result, e);
           }
@@ -436,14 +465,14 @@ public class FlutterFirebaseFirestorePlugin
   @Override
   public void terminate(
       @NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app,
-      @NonNull GeneratedAndroidFirebaseFirestore.Result<Void> result) {
+      @NonNull GeneratedAndroidFirebaseFirestore.VoidResult result) {
     cachedThreadPool.execute(
         () -> {
           try {
             FirebaseFirestore firestore = getFirestoreFromPigeon(app);
             Tasks.await(firestore.terminate());
             destroyCachedFirebaseFirestoreInstanceForKey(firestore);
-            result.success(null);
+            result.success();
           } catch (Exception e) {
             ExceptionConverter.sendErrorToFlutter(result, e);
           }
@@ -453,13 +482,13 @@ public class FlutterFirebaseFirestorePlugin
   @Override
   public void waitForPendingWrites(
       @NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app,
-      @NonNull GeneratedAndroidFirebaseFirestore.Result<Void> result) {
+      @NonNull GeneratedAndroidFirebaseFirestore.VoidResult result) {
     cachedThreadPool.execute(
         () -> {
           try {
             FirebaseFirestore firestore = getFirestoreFromPigeon(app);
             Tasks.await(firestore.waitForPendingWrites());
-            result.success(null);
+            result.success();
           } catch (Exception e) {
             ExceptionConverter.sendErrorToFlutter(result, e);
           }
@@ -472,14 +501,14 @@ public class FlutterFirebaseFirestorePlugin
   public void setIndexConfiguration(
       @NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app,
       @NonNull String indexConfiguration,
-      @NonNull GeneratedAndroidFirebaseFirestore.Result<Void> result) {
+      @NonNull GeneratedAndroidFirebaseFirestore.VoidResult result) {
     cachedThreadPool.execute(
         () -> {
           try {
             FirebaseFirestore firestore = getFirestoreFromPigeon(app);
             Tasks.await(firestore.setIndexConfiguration(indexConfiguration));
 
-            result.success(null);
+            result.success();
           } catch (Exception e) {
             ExceptionConverter.sendErrorToFlutter(result, e);
           }
@@ -490,7 +519,7 @@ public class FlutterFirebaseFirestorePlugin
   public void persistenceCacheIndexManagerRequest(
       @NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app,
       @NonNull GeneratedAndroidFirebaseFirestore.PersistenceCacheIndexManagerRequest request,
-      @NonNull GeneratedAndroidFirebaseFirestore.Result<Void> result) {
+      @NonNull GeneratedAndroidFirebaseFirestore.VoidResult result) {
     cachedThreadPool.execute(
         () -> {
           PersistentCacheIndexManager indexManager =
@@ -511,20 +540,20 @@ public class FlutterFirebaseFirestorePlugin
             Log.d(TAG, "`PersistentCacheIndexManager` is not available.");
           }
 
-          result.success(null);
+          result.success();
         });
   }
 
   @Override
   public void setLoggingEnabled(
       @NonNull Boolean loggingEnabled,
-      @NonNull GeneratedAndroidFirebaseFirestore.Result<Void> result) {
+      @NonNull GeneratedAndroidFirebaseFirestore.VoidResult result) {
     cachedThreadPool.execute(
         () -> {
           try {
             FirebaseFirestore.setLoggingEnabled(loggingEnabled);
 
-            result.success(null);
+            result.success();
           } catch (Exception e) {
             ExceptionConverter.sendErrorToFlutter(result, e);
           }
@@ -554,6 +583,7 @@ public class FlutterFirebaseFirestorePlugin
     final TransactionStreamHandler handler =
         new TransactionStreamHandler(
             transaction -> transactions.put(transactionId, transaction),
+            this::removeTransaction,
             firestore,
             transactionId,
             timeout,
@@ -567,12 +597,17 @@ public class FlutterFirebaseFirestorePlugin
   @Override
   public void transactionStoreResult(
       @NonNull String transactionId,
-      @NonNull GeneratedAndroidFirebaseFirestore.PigeonTransactionResult resultType,
-      @Nullable List<GeneratedAndroidFirebaseFirestore.PigeonTransactionCommand> commands,
-      @NonNull GeneratedAndroidFirebaseFirestore.Result<Void> result) {
-    Objects.requireNonNull(transactionHandlers.get(transactionId))
-        .receiveTransactionResponse(resultType, commands);
-    result.success(null);
+      @NonNull GeneratedAndroidFirebaseFirestore.InternalTransactionResult resultType,
+      @Nullable List<GeneratedAndroidFirebaseFirestore.InternalTransactionCommand> commands,
+      @NonNull GeneratedAndroidFirebaseFirestore.VoidResult result) {
+    OnTransactionResultListener handler = transactionHandlers.get(transactionId);
+    if (handler == null) {
+      result.success();
+      return;
+    }
+
+    handler.receiveTransactionResponse(resultType, commands);
+    result.success();
   }
 
   @Override
@@ -582,7 +617,7 @@ public class FlutterFirebaseFirestorePlugin
       @NonNull String path,
       @NonNull
           GeneratedAndroidFirebaseFirestore.Result<
-                  GeneratedAndroidFirebaseFirestore.PigeonDocumentSnapshot>
+                  GeneratedAndroidFirebaseFirestore.InternalDocumentSnapshot>
               result) {
     cachedThreadPool.execute(
         () -> {
@@ -613,7 +648,7 @@ public class FlutterFirebaseFirestorePlugin
   public void documentReferenceSet(
       @NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app,
       @NonNull GeneratedAndroidFirebaseFirestore.DocumentReferenceRequest request,
-      @NonNull GeneratedAndroidFirebaseFirestore.Result<Void> result) {
+      @NonNull GeneratedAndroidFirebaseFirestore.VoidResult result) {
     cachedThreadPool.execute(
         () -> {
           try {
@@ -636,7 +671,8 @@ public class FlutterFirebaseFirestorePlugin
               setTask = documentReference.set(data);
             }
 
-            result.success(Tasks.await(setTask));
+            Tasks.await(setTask);
+            result.success();
           } catch (Exception e) {
             ExceptionConverter.sendErrorToFlutter(result, e);
           }
@@ -647,7 +683,7 @@ public class FlutterFirebaseFirestorePlugin
   public void documentReferenceUpdate(
       @NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app,
       @NonNull GeneratedAndroidFirebaseFirestore.DocumentReferenceRequest request,
-      @NonNull GeneratedAndroidFirebaseFirestore.Result<Void> result) {
+      @NonNull GeneratedAndroidFirebaseFirestore.VoidResult result) {
     cachedThreadPool.execute(
         () -> {
           try {
@@ -680,9 +716,9 @@ public class FlutterFirebaseFirestorePlugin
               flattenData.add(fieldPath);
               flattenData.add(data.get(fieldPath));
             }
-            result.success(
-                Tasks.await(
-                    documentReference.update(firstFieldPath, firstObject, flattenData.toArray())));
+            Tasks.await(
+                documentReference.update(firstFieldPath, firstObject, flattenData.toArray()));
+            result.success();
           } catch (Exception e) {
             ExceptionConverter.sendErrorToFlutter(result, e);
           }
@@ -695,7 +731,7 @@ public class FlutterFirebaseFirestorePlugin
       @NonNull GeneratedAndroidFirebaseFirestore.DocumentReferenceRequest request,
       @NonNull
           GeneratedAndroidFirebaseFirestore.Result<
-                  GeneratedAndroidFirebaseFirestore.PigeonDocumentSnapshot>
+                  GeneratedAndroidFirebaseFirestore.InternalDocumentSnapshot>
               result) {
     cachedThreadPool.execute(
         () -> {
@@ -723,14 +759,15 @@ public class FlutterFirebaseFirestorePlugin
   public void documentReferenceDelete(
       @NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app,
       @NonNull GeneratedAndroidFirebaseFirestore.DocumentReferenceRequest request,
-      @NonNull GeneratedAndroidFirebaseFirestore.Result<Void> result) {
+      @NonNull GeneratedAndroidFirebaseFirestore.VoidResult result) {
     cachedThreadPool.execute(
         () -> {
           try {
             DocumentReference documentReference =
                 getFirestoreFromPigeon(app).document(request.getPath());
 
-            result.success(Tasks.await(documentReference.delete()));
+            Tasks.await(documentReference.delete());
+            result.success();
           } catch (Exception e) {
             ExceptionConverter.sendErrorToFlutter(result, e);
           }
@@ -742,11 +779,11 @@ public class FlutterFirebaseFirestorePlugin
       @NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app,
       @NonNull String path,
       @NonNull Boolean isCollectionGroup,
-      @NonNull GeneratedAndroidFirebaseFirestore.PigeonQueryParameters parameters,
-      @NonNull GeneratedAndroidFirebaseFirestore.PigeonGetOptions options,
+      @NonNull GeneratedAndroidFirebaseFirestore.InternalQueryParameters parameters,
+      @NonNull GeneratedAndroidFirebaseFirestore.InternalGetOptions options,
       @NonNull
           GeneratedAndroidFirebaseFirestore.Result<
-                  GeneratedAndroidFirebaseFirestore.PigeonQuerySnapshot>
+                  GeneratedAndroidFirebaseFirestore.InternalQuerySnapshot>
               result) {
     cachedThreadPool.execute(
         () -> {
@@ -760,7 +797,8 @@ public class FlutterFirebaseFirestorePlugin
               result.error(
                   new GeneratedAndroidFirebaseFirestore.FlutterError(
                       "invalid_query",
-                      "An error occurred while parsing query arguments, see native logs for more information. Please report this issue.",
+                      "An error occurred while parsing query arguments, see native logs for more"
+                          + " information. Please report this issue.",
                       null));
               return;
             }
@@ -781,7 +819,7 @@ public class FlutterFirebaseFirestorePlugin
   public void aggregateQuery(
       @NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app,
       @NonNull String path,
-      @NonNull GeneratedAndroidFirebaseFirestore.PigeonQueryParameters parameters,
+      @NonNull GeneratedAndroidFirebaseFirestore.InternalQueryParameters parameters,
       @NonNull GeneratedAndroidFirebaseFirestore.AggregateSource source,
       @NonNull List<GeneratedAndroidFirebaseFirestore.AggregateQuery> queries,
       @NonNull Boolean isCollectionGroup,
@@ -873,20 +911,18 @@ public class FlutterFirebaseFirestorePlugin
   @Override
   public void writeBatchCommit(
       @NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app,
-      @NonNull List<GeneratedAndroidFirebaseFirestore.PigeonTransactionCommand> writes,
-      @NonNull GeneratedAndroidFirebaseFirestore.Result<Void> result) {
+      @NonNull List<GeneratedAndroidFirebaseFirestore.InternalTransactionCommand> writes,
+      @NonNull GeneratedAndroidFirebaseFirestore.VoidResult result) {
     cachedThreadPool.execute(
         () -> {
           try {
             FirebaseFirestore firestore = getFirestoreFromPigeon(app);
             WriteBatch batch = firestore.batch();
 
-            for (GeneratedAndroidFirebaseFirestore.PigeonTransactionCommand write : writes) {
-              GeneratedAndroidFirebaseFirestore.PigeonTransactionType type =
+            for (GeneratedAndroidFirebaseFirestore.InternalTransactionCommand write : writes) {
+              GeneratedAndroidFirebaseFirestore.InternalTransactionType type =
                   Objects.requireNonNull(write.getType());
               String path = Objects.requireNonNull(write.getPath());
-              Map<String, Object> data = write.getData();
-
               DocumentReference documentReference = firestore.document(path);
 
               switch (type) {
@@ -894,34 +930,60 @@ public class FlutterFirebaseFirestorePlugin
                   batch = batch.delete(documentReference);
                   break;
                 case UPDATE:
-                  batch = batch.update(documentReference, Objects.requireNonNull(data));
-                  break;
-                case SET:
-                  GeneratedAndroidFirebaseFirestore.PigeonDocumentOption options =
-                      Objects.requireNonNull(write.getOption());
-
-                  if (options.getMerge() != null && options.getMerge()) {
+                  {
+                    Map<Object, Object> rawData = Objects.requireNonNull(write.getData());
+                    Map<FieldPath, Object> updateData = new HashMap<>();
+                    for (Object key : rawData.keySet()) {
+                      if (key instanceof String) {
+                        updateData.put(FieldPath.of((String) key), rawData.get(key));
+                      } else if (key instanceof FieldPath) {
+                        updateData.put((FieldPath) key, rawData.get(key));
+                      }
+                    }
+                    FieldPath firstFieldPath = updateData.keySet().iterator().next();
+                    Object firstObject = updateData.get(firstFieldPath);
+                    ArrayList<Object> flattenData = new ArrayList<>();
+                    for (FieldPath fieldPath : updateData.keySet()) {
+                      if (fieldPath.equals(firstFieldPath)) {
+                        continue;
+                      }
+                      flattenData.add(fieldPath);
+                      flattenData.add(updateData.get(fieldPath));
+                    }
                     batch =
-                        batch.set(
-                            documentReference, Objects.requireNonNull(data), SetOptions.merge());
-                  } else if (options.getMergeFields() != null) {
-                    List<FieldPath> fieldPathList =
-                        PigeonParser.parseFieldPath(
-                            Objects.requireNonNull(options.getMergeFields()));
-                    batch =
-                        batch.set(
-                            documentReference,
-                            Objects.requireNonNull(data),
-                            SetOptions.mergeFieldPaths(fieldPathList));
-                  } else {
-                    batch = batch.set(documentReference, Objects.requireNonNull(data));
+                        batch.update(
+                            documentReference, firstFieldPath, firstObject, flattenData.toArray());
+                    break;
                   }
-                  break;
+                case SET:
+                  {
+                    @SuppressWarnings("unchecked")
+                    Map<String, Object> setData =
+                        (Map<String, Object>) (Map<?, ?>) Objects.requireNonNull(write.getData());
+                    GeneratedAndroidFirebaseFirestore.InternalDocumentOption options =
+                        Objects.requireNonNull(write.getOption());
+
+                    if (options.getMerge() != null && options.getMerge()) {
+                      batch = batch.set(documentReference, setData, SetOptions.merge());
+                    } else if (options.getMergeFields() != null) {
+                      List<FieldPath> fieldPathList =
+                          PigeonParser.parseFieldPath(
+                              Objects.requireNonNull(options.getMergeFields()));
+                      batch =
+                          batch.set(
+                              documentReference,
+                              setData,
+                              SetOptions.mergeFieldPaths(fieldPathList));
+                    } else {
+                      batch = batch.set(documentReference, setData);
+                    }
+                    break;
+                  }
               }
             }
 
             Tasks.await(batch.commit());
-            result.success(null);
+            result.success();
           } catch (Exception e) {
             ExceptionConverter.sendErrorToFlutter(result, e);
           }
@@ -933,8 +995,8 @@ public class FlutterFirebaseFirestorePlugin
       @NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app,
       @NonNull String path,
       @NonNull Boolean isCollectionGroup,
-      @NonNull GeneratedAndroidFirebaseFirestore.PigeonQueryParameters parameters,
-      @NonNull GeneratedAndroidFirebaseFirestore.PigeonGetOptions options,
+      @NonNull GeneratedAndroidFirebaseFirestore.InternalQueryParameters parameters,
+      @NonNull GeneratedAndroidFirebaseFirestore.InternalGetOptions options,
       @NonNull Boolean includeMetadataChanges,
       @NonNull GeneratedAndroidFirebaseFirestore.ListenSource source,
       @NonNull GeneratedAndroidFirebaseFirestore.Result<String> result) {
@@ -945,7 +1007,8 @@ public class FlutterFirebaseFirestorePlugin
       result.error(
           new GeneratedAndroidFirebaseFirestore.FlutterError(
               "invalid_query",
-              "An error occurred while parsing query arguments, see native logs for more information. Please report this issue.",
+              "An error occurred while parsing query arguments, see native logs for more"
+                  + " information. Please report this issue.",
               null));
       return;
     }
@@ -958,7 +1021,8 @@ public class FlutterFirebaseFirestorePlugin
                 includeMetadataChanges,
                 PigeonParser.parsePigeonServerTimestampBehavior(
                     options.getServerTimestampBehavior()),
-                PigeonParser.parseListenSource(source))));
+                PigeonParser.parseListenSource(source),
+                cachedThreadPool)));
   }
 
   @Override
@@ -982,5 +1046,66 @@ public class FlutterFirebaseFirestorePlugin
                 PigeonParser.parsePigeonServerTimestampBehavior(
                     parameters.getServerTimestampBehavior()),
                 PigeonParser.parseListenSource(source))));
+  }
+
+  @Override
+  public void executePipeline(
+      @NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app,
+      @NonNull List<Map<String, Object>> stages,
+      @Nullable Map<String, Object> options,
+      @NonNull
+          GeneratedAndroidFirebaseFirestore.Result<
+                  GeneratedAndroidFirebaseFirestore.InternalPipelineSnapshot>
+              result) {
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            FirebaseFirestore firestore = getFirestoreFromPigeon(app);
+
+            // Execute pipeline using Android Firestore SDK
+            Pipeline.Snapshot snapshot = PipelineParser.executePipeline(firestore, stages, options);
+
+            // Convert Pipeline.Snapshot to InternalPipelineSnapshot
+            List<GeneratedAndroidFirebaseFirestore.InternalPipelineResult> pipelineResults =
+                new ArrayList<>();
+
+            // Iterate through snapshot results
+            for (PipelineResult pipelineResult : snapshot.getResults()) {
+              GeneratedAndroidFirebaseFirestore.InternalPipelineResult.Builder resultBuilder =
+                  new GeneratedAndroidFirebaseFirestore.InternalPipelineResult.Builder();
+              if (pipelineResult.getRef() != null) {
+                resultBuilder.setDocumentPath(pipelineResult.getRef().getPath());
+              }
+
+              if (pipelineResult.getCreateTime() != null) {
+                resultBuilder.setCreateTime(pipelineResult.getCreateTime().toDate().getTime());
+              }
+              if (pipelineResult.getUpdateTime() != null) {
+                resultBuilder.setUpdateTime(pipelineResult.getUpdateTime().toDate().getTime());
+              }
+
+              Map<String, Object> data = pipelineResult.getData();
+              if (data != null) {
+                resultBuilder.setData(data);
+              }
+
+              pipelineResults.add(resultBuilder.build());
+            }
+
+            // Build the snapshot
+            GeneratedAndroidFirebaseFirestore.InternalPipelineSnapshot.Builder snapshotBuilder =
+                new GeneratedAndroidFirebaseFirestore.InternalPipelineSnapshot.Builder();
+            snapshotBuilder.setResults(pipelineResults);
+
+            // Set execution time when available. Do not fabricate a value when null.
+            if (snapshot.getExecutionTime() != null) {
+              snapshotBuilder.setExecutionTime(snapshot.getExecutionTime().toDate().getTime());
+            }
+
+            result.success(snapshotBuilder.build());
+          } catch (Exception e) {
+            ExceptionConverter.sendErrorToFlutter(result, e);
+          }
+        });
   }
 }

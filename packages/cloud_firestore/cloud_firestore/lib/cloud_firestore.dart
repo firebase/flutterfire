@@ -5,7 +5,7 @@
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
-    show FirebasePluginPlatform;
+    show FirebasePlugin;
 import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
 
@@ -56,7 +56,18 @@ part 'src/filters.dart';
 part 'src/firestore.dart';
 part 'src/load_bundle_task.dart';
 part 'src/load_bundle_task_snapshot.dart';
+part 'src/pipeline_snapshot.dart';
 part 'src/persistent_cache_index_manager.dart';
+part 'src/pipeline.dart';
+part 'src/pipeline_aggregate.dart';
+part 'src/pipeline_distance.dart';
+part 'src/pipeline_execute_options.dart';
+part 'src/pipeline_expression.dart';
+part 'src/pipeline_ordering.dart';
+part 'src/pipeline_sample.dart';
+part 'src/pipeline_search.dart';
+part 'src/pipeline_source.dart';
+part 'src/pipeline_stage.dart';
 part 'src/query.dart';
 part 'src/query_document_snapshot.dart';
 part 'src/query_snapshot.dart';

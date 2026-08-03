@@ -104,6 +104,19 @@ void main() {
       );
     });
 
+    test('throws if .getTokenResult() not implemented', () async {
+      await expectLater(
+        () => firebaseAppCheckPlatform.getTokenResult(true),
+        throwsA(
+          isA<UnimplementedError>().having(
+            (e) => e.message,
+            'message',
+            'getTokenResult() is not implemented',
+          ),
+        ),
+      );
+    });
+
     test('throws if .tokenChanges() not implemented', () async {
       await expectLater(
         () => firebaseAppCheckPlatform.onTokenChange,

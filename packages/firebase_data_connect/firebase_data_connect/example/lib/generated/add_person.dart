@@ -29,10 +29,26 @@ class AddPersonVariablesBuilder {
   }
 }
 
+@immutable
 class AddPersonPersonInsert {
-  String id;
+  final String id;
   AddPersonPersonInsert.fromJson(dynamic json)
       : id = nativeFromJson<String>(json['id']);
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+
+    final AddPersonPersonInsert otherTyped = other as AddPersonPersonInsert;
+    return id == otherTyped.id;
+  }
+
+  @override
+  int get hashCode => id.hashCode;
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -45,10 +61,26 @@ class AddPersonPersonInsert {
   });
 }
 
+@immutable
 class AddPersonData {
-  AddPersonPersonInsert person_insert;
+  final AddPersonPersonInsert person_insert;
   AddPersonData.fromJson(dynamic json)
       : person_insert = AddPersonPersonInsert.fromJson(json['person_insert']);
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+
+    final AddPersonData otherTyped = other as AddPersonData;
+    return person_insert == otherTyped.person_insert;
+  }
+
+  @override
+  int get hashCode => person_insert.hashCode;
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -61,8 +93,9 @@ class AddPersonData {
   });
 }
 
+@immutable
 class AddPersonVariables {
-  late Optional<String> name;
+  late final Optional<String> name;
   @Deprecated(
       'fromJson is deprecated for Variable classes as they are no longer required for deserialization.')
   AddPersonVariables.fromJson(Map<String, dynamic> json) {
@@ -70,6 +103,21 @@ class AddPersonVariables {
     name.value =
         json['name'] == null ? null : nativeFromJson<String>(json['name']);
   }
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+
+    final AddPersonVariables otherTyped = other as AddPersonVariables;
+    return name == otherTyped.name;
+  }
+
+  @override
+  int get hashCode => name.hashCode;
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};

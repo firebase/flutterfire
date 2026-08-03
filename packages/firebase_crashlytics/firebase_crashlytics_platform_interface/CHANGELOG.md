@@ -1,3 +1,35 @@
+## 3.8.26
+
+ - Update a dependency to the latest release.
+
+## 3.8.25
+
+ - Update a dependency to the latest release.
+
+## 3.8.24
+
+ - Update a dependency to the latest release.
+
+## 3.8.23
+
+ - Update a dependency to the latest release.
+
+## 3.8.22
+
+ - Update a dependency to the latest release.
+
+## 3.8.21
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+
+## 3.8.20
+
+ - Update a dependency to the latest release.
+
+## 3.8.19
+
+ - Update a dependency to the latest release.
+
 ## 3.8.18
 
  - Update a dependency to the latest release.

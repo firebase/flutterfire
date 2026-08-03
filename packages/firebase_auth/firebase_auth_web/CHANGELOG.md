@@ -1,3 +1,36 @@
+## 6.2.5
+
+ - Update a dependency to the latest release.
+
+## 6.2.4
+
+ - Update a dependency to the latest release.
+
+## 6.2.3
+
+ - Update a dependency to the latest release.
+
+## 6.2.2
+
+ - Update a dependency to the latest release.
+
+## 6.2.1
+
+ - Update a dependency to the latest release.
+
+## 6.2.0
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+ - **FEAT**: upgrade pigeon to version 26.3.4 ([#18205](https://github.com/firebase/flutterfire/issues/18205)). ([cb6b4aef](https://github.com/firebase/flutterfire/commit/cb6b4aeffc568755ea3eebe32b998f00237bf5ad))
+
+## 6.1.5
+
+ - Update a dependency to the latest release.
+
+## 6.1.4
+
+ - **FIX**(auth): fix inconsistence in casing in the native iOS SDK and Web SDK ([#18086](https://github.com/firebase/flutterfire/issues/18086)). ([60b5cd5c](https://github.com/firebase/flutterfire/commit/60b5cd5c7888fa932124958125e87bd39e1c323c))
+
 ## 6.1.3
 
  - Update a dependency to the latest release.

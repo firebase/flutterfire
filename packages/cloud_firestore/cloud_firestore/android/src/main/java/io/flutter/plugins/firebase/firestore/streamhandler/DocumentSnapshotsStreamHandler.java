@@ -62,9 +62,13 @@ public class DocumentSnapshotsStreamHandler implements StreamHandler {
 
                 onCancel(null);
               } else {
+                // Emit the Pigeon object directly; the Pigeon-aware codec on the
+                // MessageChannel serializes it end-to-end. Pigeon 26 no longer flattens
+                // nested types via `.toList()`, so calling `.toList()` here would send a
+                // raw list that the Dart side can no longer decode.
                 events.success(
-                    PigeonParser.toPigeonDocumentSnapshot(documentSnapshot, serverTimestampBehavior)
-                        .toList());
+                    PigeonParser.toPigeonDocumentSnapshot(
+                        documentSnapshot, serverTimestampBehavior));
               }
             });
   }

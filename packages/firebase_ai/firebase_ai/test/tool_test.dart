@@ -113,6 +113,120 @@ void main() {
       expect(resultWithName, {'message': 'Hello, Bob!'});
     });
 
+    test('AutoFunctionDeclaration with JSONSchema', () async {
+      final parametersSchema = {
+        'count': JSONSchema.integer(),
+      };
+
+      final autoDeclaration = AutoFunctionDeclaration(
+        name: 'testSchema',
+        description: 'Tests JSON Schema output.',
+        parameters: parametersSchema,
+        callable: (args) async => {'result': args['count']},
+      );
+
+      expect(autoDeclaration.toJson(), {
+        'name': 'testSchema',
+        'description': 'Tests JSON Schema output.',
+        'parametersJsonSchema': {
+          'type': 'object',
+          'properties': {
+            'count': {'type': 'integer'},
+          },
+          'required': ['count'],
+        },
+      });
+    });
+
+    test('FunctionDeclaration with JSONSchema', () {
+      final parametersSchema = {
+        'count': JSONSchema.integer(),
+      };
+
+      final declaration = FunctionDeclaration(
+        'testSchema',
+        'Tests JSON Schema output.',
+        parameters: parametersSchema,
+      );
+
+      expect(declaration.toJson(), {
+        'name': 'testSchema',
+        'description': 'Tests JSON Schema output.',
+        'parametersJsonSchema': {
+          'type': 'object',
+          'properties': {
+            'count': {'type': 'integer'},
+          },
+          'required': ['count'],
+        },
+      });
+    });
+
+    test(
+        'FunctionDeclaration mixing Schema and JSONSchema throws TypeError on toJson',
+        () {
+      final mixedParametersSchema = {
+        'count': Schema.integer(),
+        'mixed': JSONSchema.string(),
+      };
+
+      final declaration = FunctionDeclaration(
+        'testMixedSchema',
+        'Tests mixed schemas.',
+        parameters: mixedParametersSchema,
+      );
+
+      expect(declaration.toJson, throwsA(isA<TypeError>()));
+    });
+
+    test('FunctionDeclaration with JSONSchema defs and ref', () {
+      final parametersSchema = {
+        'metadataContainer': JSONSchema.object(
+          properties: {
+            'metadata': JSONSchema.ref('#/metadata_schema'),
+          },
+          defs: {
+            'metadata_schema': JSONSchema.object(properties: {
+              'id': JSONSchema.string(),
+            }),
+          },
+        ),
+      };
+
+      final declaration = FunctionDeclaration(
+        'testDefsRef',
+        'Tests defs and ref.',
+        parameters: parametersSchema,
+      );
+
+      expect(declaration.toJson(), {
+        'name': 'testDefsRef',
+        'description': 'Tests defs and ref.',
+        'parametersJsonSchema': {
+          'type': 'object',
+          'properties': {
+            'metadataContainer': {
+              'type': 'object',
+              'properties': {
+                'metadata': {r'$ref': '#/metadata_schema'},
+              },
+              'required': ['metadata'],
+              r'$defs': {
+                'metadata_schema': {
+                  'type': 'object',
+                  'properties': {
+                    'id': {'type': 'string'},
+                  },
+                  'required': ['id'],
+                }
+              }
+            }
+          },
+          'required': ['metadataContainer'],
+        },
+      });
+    });
+
     // Test FunctionCallingConfig
     test('FunctionCallingConfig.auto()', () {
       final config = FunctionCallingConfig.auto();
@@ -200,6 +314,14 @@ void main() {
       });
     });
 
+    // Test Tool.googleMaps()
+    test('Tool.googleMaps()', () {
+      final tool = Tool.googleMaps();
+      expect(tool.toJson(), {
+        'googleMaps': {},
+      });
+    });
+
     // Test ToolConfig
     test('ToolConfig with FunctionCallingConfig', () {
       final config = ToolConfig(
@@ -215,7 +337,50 @@ void main() {
       expect(config.toJson(), {});
     });
 
-    // Test GoogleSearch, CodeExecution, UrlContext toJson()
+    test('ToolConfig with RetrievalConfig', () {
+      final config = ToolConfig(
+        retrievalConfig: RetrievalConfig(
+          latLng: LatLng(latitude: 37.422, longitude: -122.084),
+          languageCode: 'en-US',
+        ),
+      );
+      expect(config.toJson(), {
+        'retrievalConfig': {
+          'latLng': {'latitude': 37.422, 'longitude': -122.084},
+          'languageCode': 'en-US',
+        },
+      });
+    });
+
+    // Test LatLng and RetrievalConfig
+    test('LatLng.toJson()', () {
+      final latLng = LatLng(latitude: 37.42, longitude: -122.08);
+      expect(latLng.toJson(), {'latitude': 37.42, 'longitude': -122.08});
+    });
+
+    test('RetrievalConfig.toJson() with all fields', () {
+      final config = RetrievalConfig(
+        latLng: LatLng(latitude: 1.2, longitude: 2.1),
+        languageCode: 'fr',
+      );
+      expect(config.toJson(), {
+        'latLng': {'latitude': 1.2, 'longitude': 2.1},
+        'languageCode': 'fr',
+      });
+    });
+
+    test('RetrievalConfig.toJson() with partial fields', () {
+      final config1 =
+          RetrievalConfig(latLng: LatLng(latitude: 1.2, longitude: 2.1));
+      expect(config1.toJson(), {
+        'latLng': {'latitude': 1.2, 'longitude': 2.1}
+      });
+
+      final config2 = RetrievalConfig(languageCode: 'fr');
+      expect(config2.toJson(), {'languageCode': 'fr'});
+    });
+
+    // Test GoogleSearch, CodeExecution, UrlContext, GoogleMaps toJson()
     test('GoogleSearch.toJson()', () {
       const search = GoogleSearch();
       expect(search.toJson(), {});
@@ -229,6 +394,11 @@ void main() {
     test('UrlContext.toJson()', () {
       const context = UrlContext();
       expect(context.toJson(), {});
+    });
+
+    test('GoogleMaps.toJson()', () {
+      const maps = GoogleMaps();
+      expect(maps.toJson(), {});
     });
   });
 }

@@ -16,6 +16,7 @@ void main() {
       mockMessageMap = {
         'senderId': 'senderId',
         'category': 'category',
+        'actionIdentifier': 'actionIdentifier',
         'collapseKey': 'collapseKey',
         'contentAvailable': true,
         'data': {
@@ -38,6 +39,7 @@ void main() {
       mockNullableMessageMap = {
         'senderId': null,
         'category': null,
+        'actionIdentifier': null,
         'collapseKey': null,
         'data': null,
         'from': null,
@@ -55,6 +57,7 @@ void main() {
 
       expect(message.senderId, mockMessageMap!['senderId']);
       expect(message.category, mockMessageMap!['category']);
+      expect(message.actionIdentifier, mockMessageMap!['actionIdentifier']);
       expect(message.collapseKey, mockMessageMap!['collapseKey']);
       expect(message.contentAvailable, mockMessageMap!['contentAvailable']);
       expect(message.data, mockMessageMap!['data']);
@@ -85,6 +88,8 @@ void main() {
 
       expect(message.senderId, mockNullableMessageMap['senderId']);
       expect(message.category, mockNullableMessageMap['category']);
+      expect(
+          message.actionIdentifier, mockNullableMessageMap['actionIdentifier']);
       expect(message.collapseKey, mockNullableMessageMap['collapseKey']);
       expect(message.contentAvailable, false);
       expect(message.data, {});
@@ -105,6 +110,7 @@ void main() {
       final message = RemoteMessage(
         senderId: mockMessageMap!['senderId'],
         category: mockMessageMap!['category'],
+        actionIdentifier: mockMessageMap!['actionIdentifier'],
         collapseKey: mockMessageMap!['collapseKey'],
         contentAvailable: mockMessageMap!['contentAvailable'],
         data: mockMessageMap!['data'],
@@ -120,6 +126,7 @@ void main() {
 
       expect(message.senderId, mockMessageMap!['senderId']);
       expect(message.category, mockMessageMap!['category']);
+      expect(message.actionIdentifier, mockMessageMap!['actionIdentifier']);
       expect(message.collapseKey, mockMessageMap!['collapseKey']);
       expect(message.contentAvailable, mockMessageMap!['contentAvailable']);
       expect(message.data, mockMessageMap!['data']);
@@ -141,6 +148,7 @@ void main() {
       mockNullableMessageMap = {
         'senderId': null,
         'category': null,
+        'actionIdentifier': null,
         'collapseKey': null,
         'data': null,
         'from': null,
@@ -156,6 +164,8 @@ void main() {
 
       expect(message.senderId, mockNullableMessageMap['senderId']);
       expect(message.category, mockNullableMessageMap['category']);
+      expect(
+          message.actionIdentifier, mockNullableMessageMap['actionIdentifier']);
       expect(message.collapseKey, mockNullableMessageMap['collapseKey']);
       expect(message.contentAvailable, false);
       expect(message.data, {});
@@ -173,6 +183,7 @@ void main() {
       final RemoteMessage remoteMessage = RemoteMessage(
         senderId: 'senderId',
         category: 'category',
+        actionIdentifier: 'actionIdentifier',
         collapseKey: 'collapseKey',
         contentAvailable: true,
         data: {},
@@ -193,6 +204,7 @@ void main() {
 
       expect(map['senderId'], remoteMessage.senderId);
       expect(map['category'], remoteMessage.category);
+      expect(map['actionIdentifier'], remoteMessage.actionIdentifier);
       expect(map['collapseKey'], remoteMessage.collapseKey);
       expect(map['contentAvailable'], remoteMessage.contentAvailable);
       expect(map['data'], remoteMessage.data);

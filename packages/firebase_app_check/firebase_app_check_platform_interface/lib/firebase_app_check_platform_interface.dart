@@ -5,8 +5,10 @@
 
 export 'src/android_provider.dart';
 export 'src/android_providers.dart';
+export 'src/app_check_token_result.dart';
 export 'src/apple_provider.dart';
 export 'src/apple_providers.dart';
 export 'src/method_channel/method_channel_firebase_app_check.dart';
 export 'src/platform_interface/platform_interface_firebase_app_check.dart';
 export 'src/web_providers.dart';
+export 'src/windows_providers.dart';

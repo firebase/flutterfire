@@ -1,3 +1,48 @@
+## 12.4.6
+
+ - Update a dependency to the latest release.
+
+## 12.4.5
+
+ - Update a dependency to the latest release.
+
+## 12.4.4
+
+ - **FIX**(database,iOS): prevent duplicate database instance initialization in `FLTFirebaseDatabasePlugin` ([#18373](https://github.com/firebase/flutterfire/issues/18373)). ([bad45287](https://github.com/firebase/flutterfire/commit/bad452875def7ec070ef3c11261eb8063f11f7de))
+
+## 12.4.3
+
+ - Update a dependency to the latest release.
+
+## 12.4.2
+
+ - Update a dependency to the latest release.
+
+## 12.4.1
+
+ - Update a dependency to the latest release.
+
+## 12.4.0
+
+ - **REFACTOR**(database,android): simplify query handling by extracting queryFromModifiers method ([#18221](https://github.com/firebase/flutterfire/issues/18221)). ([65d9bb71](https://github.com/firebase/flutterfire/commit/65d9bb7104f59de82010e3e82fd0ddddbf9a2e23))
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+ - **FIX**(database,android): fix a regression where rapidly opening and closing query streams on the same path could throw ([#18262](https://github.com/firebase/flutterfire/issues/18262)). ([e23347b6](https://github.com/firebase/flutterfire/commit/e23347b6ae96d2174c4c2b93fd60f40d31a221c7))
+ - **FIX**(database,android): fix an issue where setPersistenceEnabled needed to be called first ([#18259](https://github.com/firebase/flutterfire/issues/18259)). ([11bdedfb](https://github.com/firebase/flutterfire/commit/11bdedfb356d2c84e352e26abfc79de4c5653089))
+ - **FIX**(database): fix a regression with database localEvents handling ([#18257](https://github.com/firebase/flutterfire/issues/18257)). ([40fd2904](https://github.com/firebase/flutterfire/commit/40fd2904e4634d9257241c1c2e779aa5bfc61624))
+ - **FEAT**: upgrade pigeon to version 26.3.4 ([#18205](https://github.com/firebase/flutterfire/issues/18205)). ([cb6b4aef](https://github.com/firebase/flutterfire/commit/cb6b4aeffc568755ea3eebe32b998f00237bf5ad))
+
+## 12.3.0
+
+ - **FEAT**(database,android): fix order issue ([#18142](https://github.com/firebase/flutterfire/issues/18142)). ([5dd661cb](https://github.com/firebase/flutterfire/commit/5dd661cb7b9efa9e02c1bc9233222860be8be7bd))
+ - **FEAT**: use local firebase_core instead of remote SPM dependency ([#18141](https://github.com/firebase/flutterfire/issues/18141)). ([995caf40](https://github.com/firebase/flutterfire/commit/995caf400df80c0fde7151c651ccc6c0f756e381))
+
+## 12.2.0
+
+ - **FIX**(database,iOS): remove unnecessary order modifier checks in query construction ([#18134](https://github.com/firebase/flutterfire/issues/18134)). ([4fa10c36](https://github.com/firebase/flutterfire/commit/4fa10c36d195d4cd67c39d89984cfe5a1eee5d85))
+ - **FIX**(android): remove kotlin-android since AGP 9 supports it ([#18059](https://github.com/firebase/flutterfire/issues/18059)). ([1e39ad1f](https://github.com/firebase/flutterfire/commit/1e39ad1f146ce23742731ceeb30ff36c440b816f))
+ - **FEAT**(database,windows): add support for Realtime Database to windows ([#18079](https://github.com/firebase/flutterfire/issues/18079)). ([007689f9](https://github.com/firebase/flutterfire/commit/007689f99866582828a063d174c52ebba13ac0ef))
+ - **FEAT**(ios): migrate iOS to UIScene lifecycle ([#18054](https://github.com/firebase/flutterfire/issues/18054)). ([3ffa4110](https://github.com/firebase/flutterfire/commit/3ffa411098132fd5182a84be4e7a226106bc7451))
+
 ## 12.1.4
 
  - Update a dependency to the latest release.

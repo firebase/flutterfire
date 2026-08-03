@@ -1,3 +1,42 @@
+## 9.0.5
+
+ - Update a dependency to the latest release.
+
+## 9.0.4
+
+ - Update a dependency to the latest release.
+
+## 9.0.3
+
+ - Update a dependency to the latest release.
+
+## 9.0.2
+
+ - **DOCS**(auth): clarify behavior of password reset email with email enumeration protection enabled ([#18296](https://github.com/firebase/flutterfire/issues/18296)). ([0bcce87a](https://github.com/firebase/flutterfire/commit/0bcce87a17830797dae6ff3c1a8ba4ce210c2c0d))
+
+## 9.0.1
+
+ - Update a dependency to the latest release.
+
+## 9.0.0
+
+ - Bump platform interface a major version due to pigeon dependency update
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+ - **FIX**: update core, auth and app-check logic so internal resources on method channels are properly disposed ([#18268](https://github.com/firebase/flutterfire/issues/18268)). ([a0de4ed8](https://github.com/firebase/flutterfire/commit/a0de4ed86b0dff89bb9e557f2a54f38cd2546016))
+ - **FEAT**: upgrade pigeon to version 26.3.4 ([#18205](https://github.com/firebase/flutterfire/issues/18205)). ([cb6b4aef](https://github.com/firebase/flutterfire/commit/cb6b4aeffc568755ea3eebe32b998f00237bf5ad))
+ - **FEAT**(auth,android): add revokeAccessToken support for Android ([#18206](https://github.com/firebase/flutterfire/issues/18206)) ([#18207](https://github.com/firebase/flutterfire/issues/18207)). ([7e0a2227](https://github.com/firebase/flutterfire/commit/7e0a222700178a57d064c27b4ef62cefdda1e253))
+
+## 8.1.9
+
+ - Update a dependency to the latest release.
+
+## 8.1.8
+
+ - **REFACTOR**: fix formatting and analysis issues across the repo ([#18124](https://github.com/firebase/flutterfire/issues/18124)). ([ab79fd93](https://github.com/firebase/flutterfire/commit/ab79fd93ee4ccfeb478687623134b1cf8ab71c74))
+ - **FIX**(auth,android): fix an error casing that wasn't consistent accross platforms ([#18056](https://github.com/firebase/flutterfire/issues/18056)). ([a6a0554d](https://github.com/firebase/flutterfire/commit/a6a0554d011d0490e6ed22d576aabdbc40a9364b))
+ - **DOCS**(auth): add documentation about errors code when Email Enumeration Protection is activated ([#18084](https://github.com/firebase/flutterfire/issues/18084)). ([476ba53f](https://github.com/firebase/flutterfire/commit/476ba53f016f20009fd571ad6ab359631f97094b))
+
 ## 8.1.7
 
  - Update a dependency to the latest release.

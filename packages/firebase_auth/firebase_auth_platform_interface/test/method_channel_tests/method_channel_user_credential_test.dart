@@ -24,9 +24,9 @@ void main() {
 
   group('$MethodChannelUserCredential()', () {
     late MethodChannelUserCredential userCredential;
-    PigeonUserCredential userData = PigeonUserCredential(
-      user: PigeonUserDetails(
-        userInfo: PigeonUserInfo(
+    InternalUserCredential userData = InternalUserCredential(
+      user: InternalUserDetails(
+        userInfo: InternalUserInfo(
           uid: kMockUid,
           email: kMockEmail,
           isAnonymous: false,
@@ -34,13 +34,13 @@ void main() {
         ),
         providerData: [],
       ),
-      additionalUserInfo: PigeonAdditionalUserInfo(
+      additionalUserInfo: InternalAdditionalUserInfo(
         isNewUser: true,
         profile: {'foo': 'bar'},
         providerId: 'info$kMockProviderId',
         username: 'info$kMockUsername',
       ),
-      credential: PigeonAuthCredential(
+      credential: InternalAuthCredential(
         providerId: 'auth$kMockProviderId',
         signInMethod: kMockSignInMethod,
         nativeId: 0,
@@ -55,9 +55,9 @@ void main() {
     });
 
     setUp(() {
-      final kMockInitialUserData = PigeonUserCredential(
-        user: PigeonUserDetails(
-          userInfo: PigeonUserInfo(
+      final kMockInitialUserData = InternalUserCredential(
+        user: InternalUserDetails(
+          userInfo: InternalUserInfo(
             uid: kMockUid,
             email: kMockEmail,
             isAnonymous: false,
@@ -65,13 +65,13 @@ void main() {
           ),
           providerData: [],
         ),
-        additionalUserInfo: PigeonAdditionalUserInfo(
+        additionalUserInfo: InternalAdditionalUserInfo(
           isNewUser: true,
           profile: {'foo': 'bar'},
           providerId: 'info$kMockProviderId',
           username: 'info$kMockUsername',
         ),
-        credential: PigeonAuthCredential(
+        credential: InternalAuthCredential(
           providerId: 'auth$kMockProviderId',
           signInMethod: kMockSignInMethod,
           nativeId: 0,

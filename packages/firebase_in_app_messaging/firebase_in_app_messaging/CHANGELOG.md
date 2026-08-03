@@ -1,3 +1,35 @@
+## 0.9.2+6
+
+ - Update a dependency to the latest release.
+
+## 0.9.2+5
+
+ - Update a dependency to the latest release.
+
+## 0.9.2+4
+
+ - Update a dependency to the latest release.
+
+## 0.9.2+3
+
+ - Update a dependency to the latest release.
+
+## 0.9.2+2
+
+ - Update a dependency to the latest release.
+
+## 0.9.2+1
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+
+## 0.9.2
+
+ - **FEAT**: use local firebase_core instead of remote SPM dependency ([#18141](https://github.com/firebase/flutterfire/issues/18141)). ([995caf40](https://github.com/firebase/flutterfire/commit/995caf400df80c0fde7151c651ccc6c0f756e381))
+
+## 0.9.1
+
+ - **FEAT**(ios): migrate iOS to UIScene lifecycle ([#18054](https://github.com/firebase/flutterfire/issues/18054)). ([3ffa4110](https://github.com/firebase/flutterfire/commit/3ffa411098132fd5182a84be4e7a226106bc7451))
+
 ## 0.9.0+7
 
  - Update a dependency to the latest release.

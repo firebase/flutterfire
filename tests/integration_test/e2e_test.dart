@@ -7,6 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
 import 'cloud_functions/cloud_functions_e2e_test.dart' as cloud_functions;
+import 'firebase_ai/firebase_ai_e2e_test.dart' as firebase_ai;
 import 'firebase_analytics/firebase_analytics_e2e_test.dart'
     as firebase_analytics;
 import 'firebase_app_check/firebase_app_check_e2e_test.dart'
@@ -50,9 +51,12 @@ void main() {
       return;
     }
     if (kIsWeb) {
-      firebase_core.main();
-      firebase_auth.main();
+      // Web has its own ordering because App Check runs in a separate job and
+      // Auth can leave emulator state that interferes with Database tests.
+      firebase_core.main(includeRecaptchaTests: false);
+      firebase_ai.main();
       firebase_database.main();
+      firebase_auth.main();
       firebase_crashlytics.main();
       firebase_analytics.main();
       cloud_functions.main();
@@ -62,6 +66,7 @@ void main() {
       firebase_performance.main();
       firebase_remote_config.main();
       firebase_storage.main();
+      firebase_core.recaptchaMain();
       return;
     }
 
@@ -76,6 +81,7 @@ void main() {
         firebase_auth.main();
         firebase_remote_config.main();
         firebase_storage.main();
+        firebase_app_check.main();
         break;
       default:
         throw UnsupportedError(
@@ -86,7 +92,11 @@ void main() {
 }
 
 void runAllTests() {
-  firebase_core.main();
+  // Native platforms run the full suite in package order, but keep the
+  // recaptcha core tests before App Check because Android App Check activation
+  // changes native recaptcha configuration for later secondary app checks.
+  firebase_core.main(includeRecaptchaTests: false);
+  firebase_ai.main();
   firebase_auth.main();
   firebase_database.main();
   firebase_crashlytics.main();
@@ -98,5 +108,6 @@ void runAllTests() {
   firebase_performance.main();
   firebase_remote_config.main();
   firebase_storage.main();
+  firebase_core.recaptchaMain();
   firebase_app_check.main();
 }

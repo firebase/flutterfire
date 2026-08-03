@@ -10,8 +10,7 @@ import io.flutter.plugin.common.EventChannel.EventSink
 import org.reactivestreams.Subscriber
 import org.reactivestreams.Subscription
 
-class StreamResponseSubscriber(private val eventSink: EventSink?) :
-  Subscriber<StreamResponse> {
+class StreamResponseSubscriber(private val eventSink: EventSink?) : Subscriber<StreamResponse> {
   private var subscription: Subscription? = null
 
   private val mainThreadHandler = Handler(Looper.getMainLooper())

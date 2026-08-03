@@ -59,7 +59,7 @@ abstract class WriteBatchPlatform extends PlatformInterface {
   /// If the document does not exist, the operation will fail.
   void update(
     String documentPath,
-    Map<String, dynamic> data,
+    Map<FieldPath, dynamic> data,
   ) {
     throw UnimplementedError('update() is not implemented');
   }
