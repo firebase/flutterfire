@@ -47,19 +47,15 @@ jobs:
         run: melos bootstrap --scope tests
       - name: Gradle cache
         uses: gradle/actions/setup-gradle@90ddb51e90a5fd9ba75f40cf85156b7b41bf76a3
-      - name: 'Configure Flutter SDK path'
-        # tests/android/settings.gradle requires flutter.sdk, and local.properties is
-        # gitignored, so it has to be written before Gradle is invoked directly.
-        run: |
-          FLUTTER_SDK="${FLUTTER_ROOT:-$(dirname "$(dirname "$(command -v flutter)")")}"
-          echo "flutter.sdk=$FLUTTER_SDK" > tests/android/local.properties
+      - name: 'Generate Gradle build files'
+        # The Gradle wrapper and local.properties are gitignored, and Flutter injects
+        # both. --config-only does that without building any Dart artifacts.
+        run: cd tests && flutter build apk --debug --config-only
       - name: 'Run Android unit tests'
         # Tasks are listed per package rather than using the root testDebugUnitTest
         # task, which would also build the Dart sources of the aggregate test app.
         # Add a task here when a package gains an android/src/test directory.
-        run: |
-          cd tests/android && ./gradlew \
-            :firebase_crashlytics:testDebugUnitTest
+        run: cd tests/android && ./gradlew :firebase_crashlytics:testDebugUnitTest
       - name: 'Upload test reports'
         if: failure()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
