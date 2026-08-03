@@ -70,14 +70,6 @@ void main() {
         }
       });
 
-      bool get isAndroid13Plus =>
-          !kIsWeb &&
-          defaultTargetPlatform == TargetPlatform.android &&
-          (sdkInt ?? 0) >= 33;
-
-      bool get skipNonAndroid =>
-          kIsWeb || defaultTargetPlatform != TargetPlatform.android;
-
       test('instance', () {
         expect(messaging, isA<FirebaseMessaging>());
         expect(messaging.app, isA<FirebaseApp>());
@@ -134,8 +126,13 @@ void main() {
       });
 
       group('getNotificationSettings', () {
+        bool android13Plus() =>
+            !kIsWeb &&
+            defaultTargetPlatform == TargetPlatform.android &&
+            (sdkInt ?? 0) >= 33;
+
         setUp(() async {
-          if (!isAndroid13Plus) {
+          if (!android13Plus()) {
             return;
           }
           // Ensure a true "never asked" state between tests and runs.
@@ -149,7 +146,7 @@ void main() {
         test(
           'returns notDetermined on Android 13+ before permission is granted',
           () async {
-            if (!isAndroid13Plus) {
+            if (!android13Plus()) {
               markTestSkipped('Requires Android API 33+');
               return;
             }
@@ -164,13 +161,13 @@ void main() {
               AuthorizationStatus.notDetermined,
             );
           },
-          skip: skipNonAndroid,
+          skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android,
         );
 
         test(
           'returns authorized on Android 13+ after permission is granted',
           () async {
-            if (!isAndroid13Plus) {
+            if (!android13Plus()) {
               markTestSkipped('Requires Android API 33+');
               return;
             }
@@ -186,7 +183,7 @@ void main() {
               AuthorizationStatus.authorized,
             );
           },
-          skip: skipNonAndroid,
+          skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android,
         );
       });
 
@@ -194,6 +191,9 @@ void main() {
         test(
           'authorizationStatus returns AuthorizationStatus.authorized on Android 13+',
           () async {
+            final isAndroid13Plus = !kIsWeb &&
+                defaultTargetPlatform == TargetPlatform.android &&
+                (sdkInt ?? 0) >= 33;
             if (!isAndroid13Plus) {
               markTestSkipped('Requires Android API 33+');
               return;
@@ -209,7 +209,7 @@ void main() {
             expect(result, isA<NotificationSettings>());
             expect(result.authorizationStatus, AuthorizationStatus.authorized);
           },
-          skip: skipNonAndroid,
+          skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android,
         );
       });
 
