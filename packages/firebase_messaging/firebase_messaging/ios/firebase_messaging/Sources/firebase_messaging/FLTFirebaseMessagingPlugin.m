@@ -45,6 +45,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 
   // Guard against calling setupNotificationHandling twice
   BOOL _notificationHandlingSetup;
+  BOOL _applicationObserverRegistered;
 
 #if TARGET_OS_OSX
   // Tracks when plugin registration occurred after the macOS launch notification.
@@ -65,15 +66,39 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 
 #pragma mark - FlutterPlugin
 
-- (instancetype)initWithFlutterMethodChannel:(FlutterMethodChannel *)channel
-                   andFlutterPluginRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
+- (instancetype)init {
   self = [super init];
   if (self) {
     _initialNotificationGathered = NO;
     _sceneDidConnect = NO;
     _notificationHandlingSetup = NO;
-    _channel = channel;
-    _registrar = registrar;
+    _applicationObserverRegistered = NO;
+  }
+  return self;
+}
+
++ (instancetype)sharedInstance {
+  static FLTFirebaseMessagingPlugin *sharedInstance = nil;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    sharedInstance = [[FLTFirebaseMessagingPlugin alloc] init];
+  });
+  return sharedInstance;
+}
+
++ (void)configureNotificationCenterDelegate {
+#ifdef __FF_NOTIFICATIONS_SUPPORTED_PLATFORM
+  [[FLTFirebaseMessagingPlugin sharedInstance] configureNotificationCenterDelegate];
+#endif
+}
+
+- (void)configureWithFlutterMethodChannel:(FlutterMethodChannel *)channel
+                andFlutterPluginRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
+  _channel = channel;
+  _registrar = registrar;
+
+  if (!_applicationObserverRegistered) {
+    _applicationObserverRegistered = YES;
     // Application
     // Dart -> `getInitialNotification`
     // ObjC -> Initialize other delegates & observers
@@ -87,16 +112,14 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 #endif
              object:nil];
   }
-  return self;
 }
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
   FlutterMethodChannel *channel =
       [FlutterMethodChannel methodChannelWithName:kFLTFirebaseMessagingChannelName
                                   binaryMessenger:[registrar messenger]];
-  FLTFirebaseMessagingPlugin *instance =
-      [[FLTFirebaseMessagingPlugin alloc] initWithFlutterMethodChannel:channel
-                                             andFlutterPluginRegistrar:registrar];
+  FLTFirebaseMessagingPlugin *instance = [FLTFirebaseMessagingPlugin sharedInstance];
+  [instance configureWithFlutterMethodChannel:channel andFlutterPluginRegistrar:registrar];
   // Register with internal FlutterFire plugin registry.
   [[FLTFirebasePluginRegistry sharedInstance] registerFirebasePlugin:instance];
 
@@ -250,6 +273,57 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 #endif
 }
 
+#ifdef __FF_NOTIFICATIONS_SUPPORTED_PLATFORM
+- (void)configureNotificationCenterDelegate {
+  // Set UNUserNotificationCenter but preserve original delegate if necessary.
+  if (@available(iOS 10.0, macOS 10.14, *)) {
+    BOOL shouldReplaceDelegate = YES;
+    UNUserNotificationCenter *notificationCenter =
+        [UNUserNotificationCenter currentNotificationCenter];
+    id<UNUserNotificationCenterDelegate> currentDelegate = notificationCenter.delegate;
+
+    if (currentDelegate == self) {
+      return;
+    }
+
+    if (currentDelegate != nil) {
+#if !TARGET_OS_OSX
+      // If a UNUserNotificationCenterDelegate is set and it conforms to
+      // FlutterAppLifeCycleProvider then we don't want to replace it on iOS as the earlier
+      // call to `[_registrar addApplicationDelegate:self];` will automatically delegate calls
+      // to this plugin. If we replace it, it will cause a stack overflow as our original
+      // delegate forwarding handler below causes an infinite loop of forwarding. See
+      // https://github.com/firebasefire/issues/4026.
+      if ([currentDelegate conformsToProtocol:@protocol(FlutterAppLifeCycleProvider)]) {
+        // Note this one only executes if Firebase swizzling is **enabled**.
+        shouldReplaceDelegate = NO;
+      }
+#endif
+
+      if (shouldReplaceDelegate) {
+        _originalNotificationCenterDelegate = currentDelegate;
+        _originalNotificationCenterDelegateRespondsTo.openSettingsForNotification =
+            (unsigned int)[_originalNotificationCenterDelegate
+                respondsToSelector:@selector(userNotificationCenter:openSettingsForNotification:)];
+        _originalNotificationCenterDelegateRespondsTo.willPresentNotification =
+            (unsigned int)[_originalNotificationCenterDelegate
+                respondsToSelector:@selector(userNotificationCenter:willPresentNotification:
+                                             withCompletionHandler:)];
+        _originalNotificationCenterDelegateRespondsTo.didReceiveNotificationResponse =
+            (unsigned int)[_originalNotificationCenterDelegate
+                respondsToSelector:@selector(userNotificationCenter:didReceiveNotificationResponse:
+                                             withCompletionHandler:)];
+      }
+    }
+
+    if (shouldReplaceDelegate) {
+      __strong FLTFirebasePlugin<UNUserNotificationCenterDelegate> *strongSelf = self;
+      notificationCenter.delegate = strongSelf;
+    }
+  }
+}
+#endif
+
 - (void)setupNotificationHandlingWithRemoteNotification:(nullable NSDictionary *)remoteNotification
                                        actionIdentifier:(nullable NSString *)actionIdentifier {
   // If notification handling was already set up (e.g. from
@@ -335,47 +409,9 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   [_registrar addApplicationDelegate:self];
 #endif
 
-  // Set UNUserNotificationCenter but preserve original delegate if necessary.
-  if (@available(iOS 10.0, macOS 10.14, *)) {
-    BOOL shouldReplaceDelegate = YES;
-    UNUserNotificationCenter *notificationCenter =
-        [UNUserNotificationCenter currentNotificationCenter];
-
-    if (notificationCenter.delegate != nil) {
-#if !TARGET_OS_OSX
-      // If a UNUserNotificationCenterDelegate is set and it conforms to
-      // FlutterAppLifeCycleProvider then we don't want to replace it on iOS as the earlier
-      // call to `[_registrar addApplicationDelegate:self];` will automatically delegate calls
-      // to this plugin. If we replace it, it will cause a stack overflow as our original
-      // delegate forwarding handler below causes an infinite loop of forwarding. See
-      // https://github.com/firebasefire/issues/4026.
-      if ([notificationCenter.delegate conformsToProtocol:@protocol(FlutterAppLifeCycleProvider)]) {
-        // Note this one only executes if Firebase swizzling is **enabled**.
-        shouldReplaceDelegate = NO;
-      }
+#ifdef __FF_NOTIFICATIONS_SUPPORTED_PLATFORM
+  [self configureNotificationCenterDelegate];
 #endif
-
-      if (shouldReplaceDelegate) {
-        _originalNotificationCenterDelegate = notificationCenter.delegate;
-        _originalNotificationCenterDelegateRespondsTo.openSettingsForNotification =
-            (unsigned int)[_originalNotificationCenterDelegate
-                respondsToSelector:@selector(userNotificationCenter:openSettingsForNotification:)];
-        _originalNotificationCenterDelegateRespondsTo.willPresentNotification =
-            (unsigned int)[_originalNotificationCenterDelegate
-                respondsToSelector:@selector(userNotificationCenter:willPresentNotification:
-                                             withCompletionHandler:)];
-        _originalNotificationCenterDelegateRespondsTo.didReceiveNotificationResponse =
-            (unsigned int)[_originalNotificationCenterDelegate
-                respondsToSelector:@selector(userNotificationCenter:didReceiveNotificationResponse:
-                                             withCompletionHandler:)];
-      }
-    }
-
-    if (shouldReplaceDelegate) {
-      __strong FLTFirebasePlugin<UNUserNotificationCenterDelegate> *strongSelf = self;
-      notificationCenter.delegate = strongSelf;
-    }
-  }
 
   // We automatically register for remote notifications as
   // application:didReceiveRemoteNotification:fetchCompletionHandler: will not get called unless
