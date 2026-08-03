@@ -35,13 +35,16 @@ Future<bool> grantAndroidPermission(String permission) async {
   }
 }
 
-/// Revokes [permission] and clears user-set/user-fixed flags so Android
-/// reports the permission as never asked again.
+/// Revokes [permission], clears its user-set/user-fixed flags, and clears the
+/// prompt state firebase_messaging records, so the permission is reported as
+/// never asked again.
 Future<bool> resetAndroidPermission(String permission) async {
   try {
-    return await _permissionsChannel
-            .invokeMethod<bool>('resetPermission', {'permission': permission}) ??
-        false;
+    final reset = await _permissionsChannel.invokeMethod<bool>(
+      'resetPermission',
+      {'permission': permission},
+    );
+    return reset ?? false;
   } catch (_) {
     return false;
   }

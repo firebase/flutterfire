@@ -10,9 +10,9 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.os.Process;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -366,6 +366,10 @@ public class FlutterFirebaseMessagingPlugin
   private static final int AUTH_AUTHORIZED = 1;
   private static final int AUTH_DENIED_PERMANENTLY = 3;
 
+  private static final String PERMISSIONS_PREFERENCES_FILE =
+      "io.flutter.plugins.firebase.messaging.permissions";
+  private static final String KEY_PERMISSION_REQUESTED = "notification_permission_requested";
+
   @RequiresApi(api = 33)
   private Task<Map<String, Integer>> requestPermissions() {
     TaskCompletionSource<Map<String, Integer>> taskCompletionSource = new TaskCompletionSource<>();
@@ -379,6 +383,10 @@ public class FlutterFirebaseMessagingPlugin
               permissionManager.requestPermissions(
                   mainActivity,
                   (grantResult) -> {
+                    // Record that the OS has now asked the user, so a later
+                    // getNotificationSettings() can tell a permanent denial apart from
+                    // "never asked".
+                    markNotificationPermissionRequested();
                     // After the OS dialog, resolve the full status (soft vs permanent deny)
                     // instead of returning only the raw grant result.
                     int status =
@@ -410,18 +418,34 @@ public class FlutterFirebaseMessagingPlugin
         == PackageManager.PERMISSION_GRANTED;
   }
 
+  private SharedPreferences getPermissionsPreferences() {
+    return ContextHolder.getApplicationContext()
+        .getSharedPreferences(PERMISSIONS_PREFERENCES_FILE, Context.MODE_PRIVATE);
+  }
+
+  private void markNotificationPermissionRequested() {
+    getPermissionsPreferences().edit().putBoolean(KEY_PERMISSION_REQUESTED, true).apply();
+  }
+
   /**
    * Resolves Android 13+ notification permission into Dart authorization codes.
    *
-   * <p>Uses {@link PackageManager#getPermissionFlags} so the result is correct even when another
-   * plugin requested {@code POST_NOTIFICATIONS} (no SharedPreferences bookkeeping).
+   * <p>A denied {@code POST_NOTIFICATIONS} is ambiguous: Android reports the same state for "never
+   * asked" and "permanently denied", and it exposes no public API for reading the underlying
+   * permission flags. {@link ActivityCompat#shouldShowRequestPermissionRationale} combined with a
+   * SharedPreferences record of whether we ever showed the prompt breaks the tie. This mirrors how
+   * {@code permission_handler} solves the same problem.
    *
    * <ul>
    *   <li>granted → authorized (1)
    *   <li>never asked → notDetermined (-1)
-   *   <li>soft deny (can show rationale) → denied (0)
-   *   <li>user-fixed / no-rationale after a decision → deniedPermanently (3)
+   *   <li>soft deny (rationale can be shown) → denied (0)
+   *   <li>asked before, no rationale → deniedPermanently (3)
    * </ul>
+   *
+   * <p>Known limitation: if another plugin requested {@code POST_NOTIFICATIONS} and the user denied
+   * it permanently, we have no record of the prompt and report notDetermined. Calling {@link
+   * #requestPermissions()} in that state is a no-op that resolves to the correct status.
    */
   @RequiresApi(api = 33)
   private int resolveNotificationAuthorizationStatus() {
@@ -429,43 +453,21 @@ public class FlutterFirebaseMessagingPlugin
       return AUTH_AUTHORIZED;
     }
 
-    Context context = ContextHolder.getApplicationContext();
-    int flags =
-        context
-            .getPackageManager()
-            .getPermissionFlags(
-                Manifest.permission.POST_NOTIFICATIONS,
-                context.getPackageName(),
-                Process.myUserHandle());
-
-    boolean userFixed = (flags & PackageManager.FLAG_PERMISSION_USER_FIXED) != 0;
-    boolean userSet = (flags & PackageManager.FLAG_PERMISSION_USER_SET) != 0;
-
-    if (userFixed) {
-      return AUTH_DENIED_PERMANENTLY;
-    }
-
-    boolean shouldShowRationale =
-        mainActivity != null
-            && ActivityCompat.shouldShowRequestPermissionRationale(
-                mainActivity, Manifest.permission.POST_NOTIFICATIONS);
-
-    if (shouldShowRationale) {
-      // Denied once; the OS will still show another prompt.
+    if (mainActivity != null
+        && ActivityCompat.shouldShowRequestPermissionRationale(
+            mainActivity, Manifest.permission.POST_NOTIFICATIONS)) {
+      // Denied at least once, but the OS will still show another prompt.
       return AUTH_DENIED;
     }
 
-    if (userSet) {
-      // User already decided and rationale is not shown. Without an Activity we cannot
-      // confirm permanence via shouldShowRationale, so keep this as soft denied so callers
-      // may still attempt requestPermission() when an Activity is available.
-      if (mainActivity == null) {
-        return AUTH_DENIED;
-      }
-      return AUTH_DENIED_PERMANENTLY;
+    if (!getPermissionsPreferences().getBoolean(KEY_PERMISSION_REQUESTED, false)) {
+      return AUTH_NOT_DETERMINED;
     }
 
-    return AUTH_NOT_DETERMINED;
+    // Asked before and no rationale is available. Without an Activity we cannot call
+    // shouldShowRequestPermissionRationale at all, so report the softer status and let
+    // callers retry once an Activity is attached.
+    return mainActivity == null ? AUTH_DENIED : AUTH_DENIED_PERMANENTLY;
   }
 
   private Task<Map<String, Integer>> getPermissions() {
@@ -482,8 +484,7 @@ public class FlutterFirebaseMessagingPlugin
                   NotificationManagerCompat.from(ContextHolder.getApplicationContext())
                       .areNotificationsEnabled();
               permissions.put(
-                  "authorizationStatus",
-                  areNotificationsEnabled ? AUTH_AUTHORIZED : AUTH_DENIED);
+                  "authorizationStatus", areNotificationsEnabled ? AUTH_AUTHORIZED : AUTH_DENIED);
             }
             taskCompletionSource.setResult(permissions);
           } catch (Exception e) {

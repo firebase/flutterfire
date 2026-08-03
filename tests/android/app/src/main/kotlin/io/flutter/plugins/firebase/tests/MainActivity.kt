@@ -1,5 +1,6 @@
 package io.flutter.plugins.firebase.tests
 
+import android.content.Context
 import android.os.Build
 import android.os.ParcelFileDescriptor
 import io.flutter.embedding.android.FlutterActivity
@@ -57,6 +58,12 @@ class MainActivity : FlutterActivity() {
                             executeShell(
                                 "pm clear-permission-flags $packageName $permission user-set user-fixed",
                             )
+                            // firebase_messaging also records whether it ever showed the
+                            // prompt; clear it so "never asked" is reproducible across tests.
+                            getSharedPreferences(
+                                MESSAGING_PERMISSIONS_PREFERENCES,
+                                Context.MODE_PRIVATE,
+                            ).edit().clear().commit()
                             result.success(true)
                         } catch (e: Exception) {
                             result.error("RESET_FAILED", e.message, null)
@@ -98,5 +105,11 @@ class MainActivity : FlutterActivity() {
         val registry = Class.forName("androidx.test.platform.app.InstrumentationRegistry")
         val instrumentation = registry.getMethod("getInstrumentation").invoke(null)
         return instrumentation.javaClass.getMethod("getUiAutomation").invoke(instrumentation)
+    }
+
+    private companion object {
+        // Keep in sync with FlutterFirebaseMessagingPlugin.PERMISSIONS_PREFERENCES_FILE.
+        const val MESSAGING_PERMISSIONS_PREFERENCES =
+            "io.flutter.plugins.firebase.messaging.permissions"
     }
 }
