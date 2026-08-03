@@ -33,7 +33,7 @@ jobs:
           cache: true
           cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
           pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
-      - uses: bluefireteam/melos-action@705015c3d2bc4ab94201ac24accb2bbe070cf533
+      - uses: bluefireteam/melos-action@2982f8e4fc92440a219490009d6d05195cb1a6a5
         with:
           melos-version: '5.3.0'
       - name: 'Run Analyze'
@@ -58,7 +58,7 @@ jobs:
           cache: true
           cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
           pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
-      - uses: bluefireteam/melos-action@705015c3d2bc4ab94201ac24accb2bbe070cf533
+      - uses: bluefireteam/melos-action@2982f8e4fc92440a219490009d6d05195cb1a6a5
         with:
           melos-version: '5.3.0'
       - name: 'Pub Check'
@@ -77,7 +77,7 @@ jobs:
           cache: true
           cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
           pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
-      - uses: bluefireteam/melos-action@705015c3d2bc4ab94201ac24accb2bbe070cf533
+      - uses: bluefireteam/melos-action@2982f8e4fc92440a219490009d6d05195cb1a6a5
         with:
           melos-version: '5.3.0'
       - name: 'Flutter Pub Get'
@@ -109,7 +109,7 @@ jobs:
           cache: true
           cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
           pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
-      - uses: bluefireteam/melos-action@705015c3d2bc4ab94201ac24accb2bbe070cf533
+      - uses: bluefireteam/melos-action@2982f8e4fc92440a219490009d6d05195cb1a6a5
         with:
           melos-version: '5.3.0'
       - uses: Homebrew/actions/setup-homebrew@097625b28a26ba4b7437926ab03b4d3bd2e6c3d1
@@ -148,7 +148,7 @@ jobs:
           cache: true
           cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
           pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
-      - uses: bluefireteam/melos-action@705015c3d2bc4ab94201ac24accb2bbe070cf533
+      - uses: bluefireteam/melos-action@2982f8e4fc92440a219490009d6d05195cb1a6a5
         with:
           melos-version: '5.3.0'
       - name: 'Build Examples'
@@ -173,7 +173,7 @@ jobs:
           pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
       - name: Xcode
         run: sudo xcode-select -s /Applications/Xcode_16.4.app/Contents/Developer
-      - uses: bluefireteam/melos-action@705015c3d2bc4ab94201ac24accb2bbe070cf533
+      - uses: bluefireteam/melos-action@2982f8e4fc92440a219490009d6d05195cb1a6a5
         with:
           melos-version: '5.3.0'
       - name: Setup firebase_core example app to test Swift integration
@@ -200,7 +200,7 @@ jobs:
           cache: true
           cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
           pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
-      - uses: bluefireteam/melos-action@705015c3d2bc4ab94201ac24accb2bbe070cf533
+      - uses: bluefireteam/melos-action@2982f8e4fc92440a219490009d6d05195cb1a6a5
         with:
           melos-version: '5.3.0'
       - name: 'Flutter Test'
@@ -226,7 +226,7 @@ jobs:
           cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
           pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
       - name: Install Melos
-        uses: bluefireteam/melos-action@705015c3d2bc4ab94201ac24accb2bbe070cf533
+        uses: bluefireteam/melos-action@2982f8e4fc92440a219490009d6d05195cb1a6a5
         with:
           # Running `melos bootstrap` is not needed because we use Melos just
           # for the `check-license-header` script.
