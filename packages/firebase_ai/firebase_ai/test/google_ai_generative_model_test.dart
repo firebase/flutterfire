@@ -39,7 +39,7 @@ void main() {
     }) {
       final client = ClientController();
       final model = createModelWithClient(
-          useVertexBackend: false,
+          useAgentPlatform: false,
           app: app,
           model: modelName,
           client: client.client,

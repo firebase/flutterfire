@@ -33,7 +33,6 @@ App initializeApp({
   String? name,
   String? measurementId,
   String? appId,
-  String? recaptchaSiteKey,
 }) {
   name ??= defaultFirebaseAppName;
 
@@ -48,7 +47,6 @@ App initializeApp({
         messagingSenderId: messagingSenderId?.toJS,
         measurementId: measurementId?.toJS,
         appId: appId?.toJS,
-        recaptchaSiteKey: recaptchaSiteKey?.toJS,
       ),
       name.toJS,
     ),

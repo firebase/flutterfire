@@ -23,7 +23,6 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
   static const recaptchaTypeV3 = 'recaptcha-v3';
   static const recaptchaTypeEnterprise = 'enterprise';
   static const recaptchaTypeDebug = 'debug';
-  static const recaptchaTypeWebRecaptcha = 'web-recaptcha';
   static Map<String, StreamController<String?>> _tokenChangesListeners = {};
 
   /// Stub initializer to allow the [registerWith] to create an instance without
@@ -64,8 +63,6 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
             final debugToken =
                 recaptchaSiteKey?.isNotEmpty ?? false ? recaptchaSiteKey : null;
             provider = WebDebugProvider(debugToken: debugToken);
-          } else if (recaptchaType == recaptchaTypeWebRecaptcha) {
-            provider = const WebReCaptchaProvider();
           } else if (recaptchaSiteKey != null) {
             if (recaptchaType == recaptchaTypeV3) {
               provider = ReCaptchaV3Provider(recaptchaSiteKey);
@@ -146,8 +143,6 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
         recaptchaType = recaptchaTypeV3;
       } else if (webProvider is ReCaptchaEnterpriseProvider) {
         recaptchaType = recaptchaTypeEnterprise;
-      } else if (webProvider is WebReCaptchaProvider) {
-        recaptchaType = recaptchaTypeWebRecaptcha;
       } else {
         throw Exception('Invalid web provider: $webProvider');
       }
@@ -194,10 +189,15 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
 
   @override
   Future<String?> getToken(bool forceRefresh) async {
-    return convertWebExceptions<Future<String?>>(() async {
+    return (await getTokenResult(forceRefresh))?.token;
+  }
+
+  @override
+  Future<AppCheckTokenResult?> getTokenResult(bool forceRefresh) async {
+    return convertWebExceptions<Future<AppCheckTokenResult?>>(() async {
       app_check_interop.AppCheckTokenResultJsImpl result =
           await _delegate!.getToken(forceRefresh);
-      return result.token.toDart;
+      return AppCheckTokenResult(token: result.token.toDart);
     });
   }
 

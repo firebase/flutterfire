@@ -244,6 +244,42 @@ class ExpressionParsers {
           Map<String, Object> delimiterMap = (Map<String, Object>) args.get("delimiter");
           return Expression.join(parseExpression(arrayMap), parseExpression(delimiterMap));
         }
+      case "string_index_of":
+        return parseChild(args, "expression").stringIndexOf(parseChild(args, "search"));
+      case "string_repeat":
+        return parseChild(args, "expression").stringRepeat(parseChild(args, "repetitions"));
+      case "string_replace_one":
+        {
+          Expression expression = parseChild(args, "expression");
+          Expression find = parseChild(args, "find");
+          Expression replacement = parseChild(args, "replacement");
+          return expression.stringReplaceOne(find, replacement);
+        }
+      case "string_replace_all":
+        {
+          Expression expression = parseChild(args, "expression");
+          Expression find = parseChild(args, "find");
+          Expression replacement = parseChild(args, "replacement");
+          return expression.stringReplaceAll(find, replacement);
+        }
+      case "ltrim":
+        {
+          Expression expression = parseChild(args, "expression");
+          Map<String, Object> valueMap = (Map<String, Object>) args.get("value");
+          if (valueMap == null) {
+            return expression.ltrim();
+          }
+          return expression.ltrimValue(parseExpression(valueMap));
+        }
+      case "rtrim":
+        {
+          Expression expression = parseChild(args, "expression");
+          Map<String, Object> valueMap = (Map<String, Object>) args.get("value");
+          if (valueMap == null) {
+            return expression.rtrim();
+          }
+          return expression.rtrimValue(parseExpression(valueMap));
+        }
       case "abs":
         return Expression.abs(parseChild(args, "expression"));
       case "negate":

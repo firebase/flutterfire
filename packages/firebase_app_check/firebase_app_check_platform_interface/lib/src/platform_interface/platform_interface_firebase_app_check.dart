@@ -111,6 +111,14 @@ abstract class FirebaseAppCheckPlatform extends PlatformInterface {
     throw UnimplementedError('getToken() is not implemented');
   }
 
+  /// Get the current App Check token and its associated metadata.
+  ///
+  /// If `forceRefresh` is true, will always try to fetch a fresh token. If
+  /// false, will use a cached token if found in storage.
+  Future<AppCheckTokenResult?> getTokenResult(bool forceRefresh) async {
+    throw UnimplementedError('getTokenResult() is not implemented');
+  }
+
   /// If true, the SDK automatically refreshes App Check tokens as needed.
   Future<void> setTokenAutoRefreshEnabled(bool isTokenAutoRefreshEnabled) {
     throw UnimplementedError('setTokenAutoRefreshEnabled() is not implemented');

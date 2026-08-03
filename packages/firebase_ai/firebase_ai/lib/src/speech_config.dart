@@ -21,6 +21,8 @@ class SpeechConfig {
       : multiSpeakerVoiceConfig = null;
 
   /// Constructs a [SpeechConfig] for a multi-speaker setup.
+  ///
+  /// This feature is in Public Preview.
   SpeechConfig.multiSpeaker(
       {required this.multiSpeakerVoiceConfig, this.languageCode})
       : voiceName = null;
@@ -49,6 +51,8 @@ class SpeechConfig {
 }
 
 /// Configuration for a multi-speaker audio generation setup.
+///
+/// This feature is in Public Preview.
 class MultiSpeakerVoiceConfig {
   /// Constructor
   MultiSpeakerVoiceConfig({required this.speakerVoiceConfigs});
@@ -64,6 +68,8 @@ class MultiSpeakerVoiceConfig {
 }
 
 /// Configures a participating speaker within a multi-speaker setup.
+///
+/// This feature is in Public Preview.
 class SpeakerVoiceConfig {
   /// Constructor
   SpeakerVoiceConfig({required this.speaker, required this.voiceName});

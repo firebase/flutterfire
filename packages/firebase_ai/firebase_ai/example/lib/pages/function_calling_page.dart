@@ -22,11 +22,11 @@ class FunctionCallingPage extends StatefulWidget {
   const FunctionCallingPage({
     super.key,
     required this.title,
-    required this.useVertexBackend,
+    required this.useAgentPlatform,
   });
 
   final String title;
-  final bool useVertexBackend;
+  final bool useAgentPlatform;
 
   @override
   State<FunctionCallingPage> createState() => _FunctionCallingPageState();
@@ -235,8 +235,8 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
           : null,
     );
 
-    final aiClient = widget.useVertexBackend
-        ? FirebaseAI.vertexAI(location: 'global')
+    final aiClient = widget.useAgentPlatform
+        ? FirebaseAI.agentPlatform()
         : FirebaseAI.googleAI();
 
     _functionCallModel = aiClient.generativeModel(

@@ -276,6 +276,41 @@ void main() {
       ).called(1);
     });
 
+    test('invokeOperation should include x-client-version headers', () async {
+      final mockResponse = http.Response('{"data": {"key": "value"}}', 200);
+      when(
+        mockHttpClient.post(
+          any,
+          headers: anyNamed('headers'),
+          body: anyNamed('body'),
+        ),
+      ).thenAnswer((_) async => mockResponse);
+
+      String deserializer(String data) => 'Deserialized Data';
+
+      await transport.invokeOperation(
+        'testQuery',
+        'executeQuery',
+        deserializer,
+        null,
+        null,
+        'authToken123',
+      );
+
+      verify(
+        mockHttpClient.post(
+          any,
+          headers: argThat(
+            allOf(
+              containsPair('x-client-version', 'flutter/$packageVersion'),
+            ),
+            named: 'headers',
+          ),
+          body: anyNamed('body'),
+        ),
+      ).called(1);
+    });
+
     test(
         'regression #17290 - invokeOperation should correctly decode UTF-8 response with international characters',
         () async {
