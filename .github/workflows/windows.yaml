@@ -63,6 +63,8 @@ jobs:
           npm install -g firebase-tools
       - name: "Build Windows (Release)"
         run: cd tests && flutter build windows --release
+      - name: "Build Windows (Profile)"
+        run: cd tests && flutter build windows --profile
       - name: Start Firebase Emulator and run tests
         run: cd ./.github/workflows/scripts && firebase emulators:exec --project flutterfire-e2e-tests "cd ../../../tests && flutter test .\integration_test\e2e_test.dart -d windows --verbose"
 
