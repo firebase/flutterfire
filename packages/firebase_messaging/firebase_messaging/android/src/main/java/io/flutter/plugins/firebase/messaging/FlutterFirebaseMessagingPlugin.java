@@ -10,9 +10,9 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Process;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -360,6 +360,12 @@ public class FlutterFirebaseMessagingPlugin
     return taskCompletionSource.getTask();
   }
 
+  // Wire values for Dart AuthorizationStatus (see convertToAuthorizationStatus).
+  private static final int AUTH_NOT_DETERMINED = -1;
+  private static final int AUTH_DENIED = 0;
+  private static final int AUTH_AUTHORIZED = 1;
+  private static final int AUTH_DENIED_PERMANENTLY = 3;
+
   @RequiresApi(api = 33)
   private Task<Map<String, Integer>> requestPermissions() {
     TaskCompletionSource<Map<String, Integer>> taskCompletionSource = new TaskCompletionSource<>();
@@ -372,23 +378,20 @@ public class FlutterFirebaseMessagingPlugin
             if (!areNotificationsEnabled) {
               permissionManager.requestPermissions(
                   mainActivity,
-                  (notificationsEnabled) -> {
-                    if (notificationsEnabled == 0) {
-                      // User denied — record this so getNotificationSettings()
-                      // can later distinguish "permanently denied" from "never asked".
-                      SharedPreferences prefs =
-                          ContextHolder.getApplicationContext()
-                              .getSharedPreferences(
-                                  "FlutterFirebaseMessaging", Context.MODE_PRIVATE);
-                      prefs.edit().putBoolean("notification_permission_denied", true).apply();
-                    }
-                    permissions.put("authorizationStatus", notificationsEnabled);
+                  (grantResult) -> {
+                    // After the OS dialog, resolve the full status (soft vs permanent deny)
+                    // instead of returning only the raw grant result.
+                    int status =
+                        grantResult == 1
+                            ? AUTH_AUTHORIZED
+                            : resolveNotificationAuthorizationStatus();
+                    permissions.put("authorizationStatus", status);
                     taskCompletionSource.setResult(permissions);
                   },
                   (String errorDescription) ->
                       taskCompletionSource.setException(new Exception(errorDescription)));
             } else {
-              permissions.put("authorizationStatus", 1);
+              permissions.put("authorizationStatus", AUTH_AUTHORIZED);
               taskCompletionSource.setResult(permissions);
             }
 
@@ -407,6 +410,64 @@ public class FlutterFirebaseMessagingPlugin
         == PackageManager.PERMISSION_GRANTED;
   }
 
+  /**
+   * Resolves Android 13+ notification permission into Dart authorization codes.
+   *
+   * <p>Uses {@link PackageManager#getPermissionFlags} so the result is correct even when another
+   * plugin requested {@code POST_NOTIFICATIONS} (no SharedPreferences bookkeeping).
+   *
+   * <ul>
+   *   <li>granted → authorized (1)
+   *   <li>never asked → notDetermined (-1)
+   *   <li>soft deny (can show rationale) → denied (0)
+   *   <li>user-fixed / no-rationale after a decision → deniedPermanently (3)
+   * </ul>
+   */
+  @RequiresApi(api = 33)
+  private int resolveNotificationAuthorizationStatus() {
+    if (checkPermissions()) {
+      return AUTH_AUTHORIZED;
+    }
+
+    Context context = ContextHolder.getApplicationContext();
+    int flags =
+        context
+            .getPackageManager()
+            .getPermissionFlags(
+                Manifest.permission.POST_NOTIFICATIONS,
+                context.getPackageName(),
+                Process.myUserHandle());
+
+    boolean userFixed = (flags & PackageManager.FLAG_PERMISSION_USER_FIXED) != 0;
+    boolean userSet = (flags & PackageManager.FLAG_PERMISSION_USER_SET) != 0;
+
+    if (userFixed) {
+      return AUTH_DENIED_PERMANENTLY;
+    }
+
+    boolean shouldShowRationale =
+        mainActivity != null
+            && ActivityCompat.shouldShowRequestPermissionRationale(
+                mainActivity, Manifest.permission.POST_NOTIFICATIONS);
+
+    if (shouldShowRationale) {
+      // Denied once; the OS will still show another prompt.
+      return AUTH_DENIED;
+    }
+
+    if (userSet) {
+      // User already decided and rationale is not shown. Without an Activity we cannot
+      // confirm permanence via shouldShowRationale, so keep this as soft denied so callers
+      // may still attempt requestPermission() when an Activity is available.
+      if (mainActivity == null) {
+        return AUTH_DENIED;
+      }
+      return AUTH_DENIED_PERMANENTLY;
+    }
+
+    return AUTH_NOT_DETERMINED;
+  }
+
   private Task<Map<String, Integer>> getPermissions() {
     TaskCompletionSource<Map<String, Integer>> taskCompletionSource = new TaskCompletionSource<>();
 
@@ -415,49 +476,14 @@ public class FlutterFirebaseMessagingPlugin
           try {
             final Map<String, Integer> permissions = new HashMap<>();
             if (Build.VERSION.SDK_INT >= 33) {
-              final boolean areNotificationsEnabled = checkPermissions();
-              if (areNotificationsEnabled) {
-                permissions.put("authorizationStatus", 1);
-              } else {
-                // Permission is not granted. Use shouldShowRequestPermissionRationale
-                // combined with a SharedPreferences flag to distinguish three states:
-                //
-                // 1. shouldShowRationale=true  → user denied once, can still prompt
-                // 2. shouldShowRationale=false + wasDeniedBefore=false → never asked
-                // 3. shouldShowRationale=false + wasDeniedBefore=true  → permanently denied
-                //
-                // This mirrors how permission_handler solves the same ambiguity.
-                boolean shouldShowRationale =
-                    mainActivity != null
-                        && ActivityCompat.shouldShowRequestPermissionRationale(
-                            mainActivity, Manifest.permission.POST_NOTIFICATIONS);
-
-                SharedPreferences prefs =
-                    ContextHolder.getApplicationContext()
-                        .getSharedPreferences("FlutterFirebaseMessaging", Context.MODE_PRIVATE);
-                boolean wasDeniedBefore = prefs.getBoolean("notification_permission_denied", false);
-
-                if (shouldShowRationale) {
-                  // User denied at least once but didn't select "Don't ask again".
-                  // Record the denial if not already recorded.
-                  if (!wasDeniedBefore) {
-                    prefs.edit().putBoolean("notification_permission_denied", true).apply();
-                  }
-                  // Denied but can still be prompted again.
-                  permissions.put("authorizationStatus", 0);
-                } else if (wasDeniedBefore) {
-                  // No rationale + previously denied = permanently denied.
-                  permissions.put("authorizationStatus", 0);
-                } else {
-                  // No rationale + never denied = never asked.
-                  permissions.put("authorizationStatus", -1);
-                }
-              }
+              permissions.put("authorizationStatus", resolveNotificationAuthorizationStatus());
             } else {
               final boolean areNotificationsEnabled =
                   NotificationManagerCompat.from(ContextHolder.getApplicationContext())
                       .areNotificationsEnabled();
-              permissions.put("authorizationStatus", areNotificationsEnabled ? 1 : 0);
+              permissions.put(
+                  "authorizationStatus",
+                  areNotificationsEnabled ? AUTH_AUTHORIZED : AUTH_DENIED);
             }
             taskCompletionSource.setResult(permissions);
           } catch (Exception e) {

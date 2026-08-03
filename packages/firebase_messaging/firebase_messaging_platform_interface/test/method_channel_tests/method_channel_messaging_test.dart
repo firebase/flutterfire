@@ -253,6 +253,72 @@ void main() {
       });
     });
 
+    test(
+        'getNotificationSettings returns deniedPermanently when authorizationStatus is 3',
+        () async {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(MethodChannelFirebaseMessaging.channel,
+              (call) async {
+        log.add(call);
+        if (call.method == 'Messaging#getNotificationSettings') {
+          return {
+            'authorizationStatus': 3,
+            'alert': 0,
+            'announcement': 0,
+            'badge': 0,
+            'carPlay': 0,
+            'criticalAlert': 0,
+            'provisional': 0,
+            'sound': 0,
+            'providesAppNotificationSettings': 0,
+          };
+        }
+        return <String, dynamic>{};
+      });
+
+      final settings = await messaging.getNotificationSettings();
+      expect(settings.authorizationStatus,
+          equals(AuthorizationStatus.deniedPermanently));
+
+      // Restore original handler
+      handleMethodCall((call) async {
+        log.add(call);
+        switch (call.method) {
+          case 'Messaging#deleteToken':
+          case 'Messaging#subscribeToTopic':
+          case 'Messaging#unsubscribeFromTopic':
+            return null;
+          case 'Messaging#getAPNSToken':
+          case 'Messaging#getToken':
+            return {
+              'token': 'test_token',
+            };
+          case 'Messaging#hasPermission':
+          case 'Messaging#requestPermission':
+          case 'Messaging#getNotificationSettings':
+            return {
+              'authorizationStatus': 1,
+              'alert': 1,
+              'announcement': 0,
+              'badge': 1,
+              'carPlay': 0,
+              'criticalAlert': 0,
+              'provisional': 0,
+              'sound': 1,
+              'providesAppNotificationSettings': 0,
+            };
+          case 'Messaging#setAutoInitEnabled':
+            return {
+              'isAutoInitEnabled': call.arguments['enabled'],
+            };
+          case 'Messaging#deleteInstanceID':
+            return true;
+          default:
+            return <String, dynamic>{};
+        }
+      });
+    });
+
     test('requestPermission', () async {
       // test android response
       final androidPermissions = await messaging.requestPermission();
