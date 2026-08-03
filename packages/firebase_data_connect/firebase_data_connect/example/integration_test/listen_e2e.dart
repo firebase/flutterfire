@@ -6,9 +6,20 @@ import 'dart:async';
 
 import 'package:firebase_data_connect/firebase_data_connect.dart';
 import 'package:firebase_data_connect_example/generated/movies.dart';
+import 'package:flutter/foundation.dart' show kIsWasm;
 import 'package:flutter_test/flutter_test.dart';
 
 import 'query_e2e.dart';
+
+/// Subscription delivery over the multiplexed WebSocket is not stable under
+/// dart2wasm: cancelling one listener does not reliably stop delivery to it,
+/// and later subscriptions can then never receive a first event. The same
+/// tests pass under dart2js. Skipped rather than retried so the suite stays
+/// deterministic.
+///
+/// See https://github.com/firebase/flutterfire/issues/18518
+const _wasmSkipReason =
+    'Subscriptions over the multiplexed WebSocket are unstable under dart2wasm';
 
 const _listenTimeout = Duration(seconds: 30);
 
@@ -173,5 +184,6 @@ void runListenTests() {
         }
       });
     },
+    skip: kIsWasm ? _wasmSkipReason : null,
   );
 }
