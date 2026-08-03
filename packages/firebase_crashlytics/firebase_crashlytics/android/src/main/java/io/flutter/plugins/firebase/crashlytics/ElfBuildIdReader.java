@@ -6,6 +6,7 @@ package io.flutter.plugins.firebase.crashlytics;
 
 import android.content.Context;
 import android.util.Log;
+import androidx.annotation.VisibleForTesting;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -45,7 +46,10 @@ final class ElfBuildIdReader {
   /** First attempt: enough for the ELF header, program header table, and typical notes. */
   private static final int INITIAL_PREFIX_BYTES = 4 * 1024;
 
-  /** Hard ceiling for a retry if a note sits further into the library. */
+  /**
+   * Hard ceiling for a retry if a note sits further into the library. A library whose build ID note
+   * starts beyond this reports no build ID at all, which costs symbol matching but never memory.
+   */
   private static final int MAX_PREFIX_BYTES = 256 * 1024;
 
   /** GNU build IDs are small; this bounds hostile or corrupt descsz values. */
@@ -60,6 +64,7 @@ final class ElfBuildIdReader {
   private ElfBuildIdReader() {}
 
   /** Parse outcome: either a build ID, or how many prefix bytes would have been needed. */
+  @VisibleForTesting
   static final class ParseResult {
     final String buildId;
     final int bytesNeeded;
@@ -70,6 +75,17 @@ final class ElfBuildIdReader {
     }
 
     static final ParseResult NOT_FOUND = new ParseResult(null, 0);
+  }
+
+  /**
+   * Opens a stream positioned at the start of the library.
+   *
+   * <p>Retrying with a larger prefix re-reads from the beginning, so the source must be able to
+   * hand out a fresh stream on each call.
+   */
+  @VisibleForTesting
+  interface StreamSource {
+    InputStream open() throws IOException;
   }
 
   /**
@@ -127,37 +143,30 @@ final class ElfBuildIdReader {
       while (entries.hasMoreElements()) {
         ZipEntry entry = entries.nextElement();
         if (entry.getName().endsWith("/libapp.so")) {
-          return readBuildIdFromZipEntry(zipFile, entry);
+          return readBuildIdFromSource(() -> zipFile.getInputStream(entry));
         }
       }
     }
     return null;
   }
 
-  private static String readBuildIdFromZipEntry(ZipFile zipFile, ZipEntry entry) throws Exception {
-    int limit = INITIAL_PREFIX_BYTES;
-    while (true) {
-      byte[] prefix;
-      try (InputStream is = zipFile.getInputStream(entry)) {
-        prefix = readPrefix(is, limit);
-      }
-
-      ParseResult result = readBuildIdFromBytes(prefix);
-      if (result.buildId != null) {
-        return result.buildId;
-      }
-      if (result.bytesNeeded <= prefix.length || limit >= MAX_PREFIX_BYTES) {
-        return null;
-      }
-      limit = Math.min(MAX_PREFIX_BYTES, result.bytesNeeded);
-    }
+  private static String readBuildIdFromFile(File elfFile) throws Exception {
+    return readBuildIdFromSource(() -> new FileInputStream(elfFile));
   }
 
-  private static String readBuildIdFromFile(File elfFile) throws Exception {
+  /**
+   * Parses successively larger prefixes until the build ID is found or the source runs out.
+   *
+   * <p>Each retry strictly increases the prefix size and stops at {@link #MAX_PREFIX_BYTES}, so the
+   * loop always terminates: a truncated or malformed library returns {@code null} rather than
+   * asking for bytes the source can never supply.
+   */
+  @VisibleForTesting
+  static String readBuildIdFromSource(StreamSource source) throws IOException {
     int limit = INITIAL_PREFIX_BYTES;
     while (true) {
       byte[] prefix;
-      try (InputStream is = new FileInputStream(elfFile)) {
+      try (InputStream is = source.open()) {
         prefix = readPrefix(is, limit);
       }
 
@@ -165,10 +174,20 @@ final class ElfBuildIdReader {
       if (result.buildId != null) {
         return result.buildId;
       }
-      if (result.bytesNeeded <= prefix.length || limit >= MAX_PREFIX_BYTES) {
+
+      // A short read means the source is exhausted, so a larger prefix cannot reveal anything new.
+      if (result.bytesNeeded <= prefix.length || prefix.length < limit) {
         return null;
       }
-      limit = Math.min(MAX_PREFIX_BYTES, result.bytesNeeded);
+      if (result.bytesNeeded > MAX_PREFIX_BYTES) {
+        Log.w(
+            TAG,
+            "The ELF build ID of libapp.so lies beyond the first "
+                + MAX_PREFIX_BYTES
+                + " bytes; Crashlytics may not match symbols for this build.");
+        return null;
+      }
+      limit = result.bytesNeeded;
     }
   }
 
@@ -187,11 +206,12 @@ final class ElfBuildIdReader {
   }
 
   /**
-   * Parses an ELF prefix. Visible for testing.
+   * Parses an ELF prefix.
    *
    * <p>Every bound is checked against the buffer length, so a truncated prefix reports how many
    * bytes it would have needed instead of throwing.
    */
+  @VisibleForTesting
   static ParseResult readBuildIdFromBytes(byte[] data) {
     if (data.length < ELF32_HEADER_BYTES) {
       return new ParseResult(null, ELF32_HEADER_BYTES);
@@ -256,7 +276,7 @@ final class ElfBuildIdReader {
     }
     long tableEnd = phoff + tableSize;
     if (tableEnd > data.length) {
-      return new ParseResult(null, clampToInt(tableEnd));
+      return new ParseResult(null, saturateToInt(tableEnd));
     }
 
     int bytesNeeded = 0;
@@ -289,7 +309,7 @@ final class ElfBuildIdReader {
       long noteEnd = noteOffset + noteSize;
       if (noteEnd > data.length) {
         // Remember the smallest retry that could still succeed.
-        int needed = clampToInt(noteEnd);
+        int needed = saturateToInt(noteEnd);
         if (bytesNeeded == 0 || needed < bytesNeeded) {
           bytesNeeded = needed;
         }
@@ -304,8 +324,15 @@ final class ElfBuildIdReader {
     return bytesNeeded == 0 ? ParseResult.NOT_FOUND : new ParseResult(null, bytesNeeded);
   }
 
-  private static int clampToInt(long value) {
-    return (int) Math.min(value, (long) MAX_PREFIX_BYTES);
+  /**
+   * Narrows a file offset to an {@code int}, saturating rather than wrapping.
+   *
+   * <p>The caller decides whether the result exceeds {@link #MAX_PREFIX_BYTES}; saturating here
+   * instead of clamping keeps "needs more than we are willing to read" distinguishable from "needs
+   * exactly the cap".
+   */
+  private static int saturateToInt(long value) {
+    return (int) Math.min(value, (long) Integer.MAX_VALUE);
   }
 
   /**
