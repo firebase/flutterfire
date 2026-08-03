@@ -56,8 +56,10 @@ class AppleAppAttestWithDeviceCheckFallbackProvider
 }
 
 /// reCAPTCHA provider for Apple platforms.
-///
-/// The site key is retrieved automatically from GoogleService-Info.plist.
 class AppleReCaptchaProvider extends AppleAppCheckProvider {
-  const AppleReCaptchaProvider() : super('recaptcha');
+  /// Creates an Apple reCAPTCHA provider with a required [siteKey].
+  const AppleReCaptchaProvider(this.siteKey) : super('recaptcha');
+
+  /// The reCAPTCHA site key for this provider.
+  final String siteKey;
 }

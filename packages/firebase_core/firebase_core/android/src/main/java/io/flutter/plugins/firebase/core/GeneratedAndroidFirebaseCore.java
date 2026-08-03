@@ -377,16 +377,6 @@ public class GeneratedAndroidFirebaseCore {
       this.appGroupId = setterArg;
     }
 
-    private @Nullable String recaptchaSiteKey;
-
-    public @Nullable String getRecaptchaSiteKey() {
-      return recaptchaSiteKey;
-    }
-
-    public void setRecaptchaSiteKey(@Nullable String setterArg) {
-      this.recaptchaSiteKey = setterArg;
-    }
-
     /** Constructor is non-public to enforce null safety; use Builder. */
     CoreFirebaseOptions() {}
 
@@ -412,8 +402,7 @@ public class GeneratedAndroidFirebaseCore {
           && pigeonDeepEquals(androidClientId, that.androidClientId)
           && pigeonDeepEquals(iosClientId, that.iosClientId)
           && pigeonDeepEquals(iosBundleId, that.iosBundleId)
-          && pigeonDeepEquals(appGroupId, that.appGroupId)
-          && pigeonDeepEquals(recaptchaSiteKey, that.recaptchaSiteKey);
+          && pigeonDeepEquals(appGroupId, that.appGroupId);
     }
 
     @Override
@@ -434,8 +423,7 @@ public class GeneratedAndroidFirebaseCore {
             androidClientId,
             iosClientId,
             iosBundleId,
-            appGroupId,
-            recaptchaSiteKey
+            appGroupId
           };
       return pigeonDeepHashCode(fields);
     }
@@ -554,14 +542,6 @@ public class GeneratedAndroidFirebaseCore {
         return this;
       }
 
-      private @Nullable String recaptchaSiteKey;
-
-      @CanIgnoreReturnValue
-      public @NonNull Builder setRecaptchaSiteKey(@Nullable String setterArg) {
-        this.recaptchaSiteKey = setterArg;
-        return this;
-      }
-
       public @NonNull CoreFirebaseOptions build() {
         CoreFirebaseOptions pigeonReturn = new CoreFirebaseOptions();
         pigeonReturn.setApiKey(apiKey);
@@ -578,14 +558,13 @@ public class GeneratedAndroidFirebaseCore {
         pigeonReturn.setIosClientId(iosClientId);
         pigeonReturn.setIosBundleId(iosBundleId);
         pigeonReturn.setAppGroupId(appGroupId);
-        pigeonReturn.setRecaptchaSiteKey(recaptchaSiteKey);
         return pigeonReturn;
       }
     }
 
     @NonNull
-    public ArrayList<Object> toList() {
-      ArrayList<Object> toListResult = new ArrayList<>(15);
+    ArrayList<Object> toList() {
+      ArrayList<Object> toListResult = new ArrayList<>(14);
       toListResult.add(apiKey);
       toListResult.add(appId);
       toListResult.add(messagingSenderId);
@@ -600,7 +579,6 @@ public class GeneratedAndroidFirebaseCore {
       toListResult.add(iosClientId);
       toListResult.add(iosBundleId);
       toListResult.add(appGroupId);
-      toListResult.add(recaptchaSiteKey);
       return toListResult;
     }
 
@@ -634,8 +612,6 @@ public class GeneratedAndroidFirebaseCore {
       pigeonResult.setIosBundleId((String) iosBundleId);
       Object appGroupId = pigeonVar_list.get(13);
       pigeonResult.setAppGroupId((String) appGroupId);
-      Object recaptchaSiteKey = pigeonVar_list.get(14);
-      pigeonResult.setRecaptchaSiteKey((String) recaptchaSiteKey);
       return pigeonResult;
     }
   }
@@ -764,7 +740,7 @@ public class GeneratedAndroidFirebaseCore {
     }
 
     @NonNull
-    public ArrayList<Object> toList() {
+    ArrayList<Object> toList() {
       ArrayList<Object> toListResult = new ArrayList<>(4);
       toListResult.add(name);
       toListResult.add(options);
