@@ -52,9 +52,7 @@ class FirebaseInAppMessagingPlugin : FlutterFirebasePlugin, FlutterPlugin, Metho
     }
   }
 
-  override fun getPluginConstantsForFirebaseApp(
-      firebaseApp: FirebaseApp
-  ): Task<Map<String, Any>?> {
+  override fun getPluginConstantsForFirebaseApp(firebaseApp: FirebaseApp): Task<Map<String, Any>?> {
     val taskCompletionSource = TaskCompletionSource<Map<String, Any>?>()
 
     FlutterFirebasePlugin.cachedThreadPool.execute {
