@@ -116,8 +116,8 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
    * intent via {@code FlutterShellArgs}, but that class is deprecated and slated for removal (see
    * flutter/flutter#180686), and the isolate is now started lazily from a service where no activity
    * is available. Engine flags should instead be declared as {@code <application>} metadata in
-   * AndroidManifest.xml, which {@link FlutterLoader#ensureInitializationComplete} applies on its own
-   * -- so they reach this background engine without any plugin plumbing.
+   * AndroidManifest.xml, which {@link FlutterLoader#ensureInitializationComplete} applies on its
+   * own -- so they reach this background engine without any plugin plumbing.
    */
   public void startBackgroundIsolate(long callbackHandle) {
     if (backgroundFlutterEngine != null) {
