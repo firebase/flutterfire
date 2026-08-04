@@ -727,8 +727,9 @@ class WebSocketTransport implements DataConnectTransport {
             _PendingSubscription(operationId, queryName, variables);
 
         if (!isConnected) {
-          // we are not connected -
-          // keep pending sub to use for retry
+          // A new listener supersedes an idle disconnect that may have raced
+          // with setup. Keep this subscription pending and reconnect for it.
+          _isExpectedDisconnect = false;
           _scheduleReconnect();
           return;
         }
