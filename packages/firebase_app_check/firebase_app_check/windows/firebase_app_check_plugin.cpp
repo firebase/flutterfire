@@ -200,6 +200,30 @@ void FirebaseAppCheckPlugin::GetToken(
   });
 }
 
+void FirebaseAppCheckPlugin::GetTokenResult(
+    const std::string& app_name, bool force_refresh,
+    std::function<
+        void(ErrorOr<std::optional<InternalAppCheckTokenResult>> reply)>
+        result) {
+  AppCheck* app_check = GetAppCheckFromPigeon(app_name);
+
+  Future<AppCheckToken> future = app_check->GetAppCheckToken(force_refresh);
+  future.OnCompletion([result](const Future<AppCheckToken>& completed_future) {
+    if (completed_future.error() != 0) {
+      result(ParseError(completed_future));
+    } else {
+      const AppCheckToken* token = completed_future.result();
+      if (token) {
+        int64_t expiration_timestamp = token->expire_time_millis;
+        result(std::optional<InternalAppCheckTokenResult>(
+            InternalAppCheckTokenResult(token->token, &expiration_timestamp)));
+      } else {
+        result(std::optional<InternalAppCheckTokenResult>(std::nullopt));
+      }
+    }
+  });
+}
+
 void FirebaseAppCheckPlugin::SetTokenAutoRefreshEnabled(
     const std::string& app_name, bool is_token_auto_refresh_enabled,
     std::function<void(std::optional<FlutterError> reply)> result) {
