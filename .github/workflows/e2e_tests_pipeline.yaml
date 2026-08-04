@@ -177,8 +177,9 @@ jobs:
         with:
           node-version: '20'
       - name: Xcode
-        run: sudo xcode-select -s /Applications/Xcode_16.4.app/Contents/Developer
-      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961
+        # Firebase iOS SDK: minimum Xcode 26.2.
+        run: sudo xcode-select -s /Applications/Xcode_26.2.app/Contents/Developer
+      - uses: actions/setup-java@8df1039502a15bceb9433410b1a100fbe190c53b
         with:
           distribution: 'temurin'
           java-version: '21'
