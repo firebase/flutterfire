@@ -78,6 +78,7 @@ void main() {
       case TargetPlatform.windows:
         firebase_core.main();
         firebase_auth.main();
+        cloud_functions.main();
         firebase_remote_config.main();
         firebase_storage.main();
         firebase_app_check.main();
