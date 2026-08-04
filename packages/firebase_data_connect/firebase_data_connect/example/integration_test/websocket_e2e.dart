@@ -45,6 +45,10 @@ void runWebSocketTests() {
     () {
       setUp(() async {
         await deleteAllMovies();
+        // Allow native WebSocket teardown from the previous test to settle.
+        // Android/iOS can otherwise race the next subscribe against a closing
+        // multiplexed socket and never deliver the first event.
+        await Future<void>.delayed(const Duration(seconds: 1));
       });
 
       testWidgets('should support multiplexing multiple subscriptions',

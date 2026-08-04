@@ -339,9 +339,13 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
   StreamSubscription<ServerResponse>? _serverStreamSubscription;
 
   void _onAllSubscribersCancelled() {
-    _serverStreamSubscription?.cancel();
+    final subscription = _serverStreamSubscription;
     _serverStreamSubscription = null;
     _serverStream = null;
+    // Allow the next subscribe() to create a fresh broadcast controller.
+    _streamController = null;
+    // Transport stream onCancel runs synchronously when cancel() is invoked.
+    subscription?.cancel();
   }
 
   Stream<QueryResult<Data, Variables>> subscribe() {

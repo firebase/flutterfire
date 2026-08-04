@@ -215,8 +215,11 @@ class WebSocketTransport implements DataConnectTransport {
   Future<void>? _connectionFuture;
 
   Future<void> _ensureConnected(String? authToken) {
-    if (_channel != null) return Future.value();
+    // Prefer an in-flight handshake over a channel that may still be waiting
+    // on ready/init. Checking `_channel` first can return early mid-connect and
+    // let callers send subscribe before the connection is initialized.
     if (_connectionFuture != null) return _connectionFuture!;
+    if (_channel != null) return Future.value();
 
     late final Future<void> connectionFuture;
     connectionFuture = _doConnect(authToken).whenComplete(() {
@@ -264,19 +267,34 @@ class WebSocketTransport implements DataConnectTransport {
     _isExpectedDisconnect = false;
 
     try {
-      await channel.ready;
+      await channel.ready.timeout(const Duration(seconds: 10));
     } catch (e) {
       developer.log('WebSocket connection failed to become ready: $e');
       if (identical(_channel, channel)) {
         _channel = null;
+        _channelSubscription = null;
         _releaseWebSocketTransport();
+      }
+      try {
+        await channel.sink.close();
+      } catch (_) {
+        // Ignored: best-effort cleanup of a failed handshake.
       }
       throw DataConnectError(
           DataConnectErrorCode.other, 'WebSocket connection failed: $e');
     }
 
     // The connection may have been explicitly replaced while awaiting ready.
-    if (!identical(_channel, channel)) return;
+    // Fail the handshake so callers reconnect instead of treating this as success.
+    if (!identical(_channel, channel)) {
+      try {
+        await channel.sink.close();
+      } catch (_) {
+        // Ignored
+      }
+      throw DataConnectError(DataConnectErrorCode.other,
+          'WebSocket connection superseded during setup');
+    }
 
     final initRequest = StreamRequest(
       name:
@@ -514,11 +532,10 @@ class WebSocketTransport implements DataConnectTransport {
 
     // Clear the active channel before closing it. Its asynchronous onDone
     // callback must not clear a replacement channel opened in the meantime.
-    // Do not await native close/cancel: on Android/iOS that can hang and block
-    // the next connect for the full subscription timeout.
+    // Leave `_connectionFuture` alone so in-flight handshakes still coalesce
+    // waiters instead of starting a second concurrent connect.
     _channel = null;
     _channelSubscription = null;
-    _connectionFuture = null;
     channel?.sink.close();
   }
 
@@ -698,7 +715,16 @@ class WebSocketTransport implements DataConnectTransport {
 
         if (!isConnected) {
           // A new listener supersedes an idle disconnect that may have raced
-          // with setup. Keep this subscription pending and reconnect for it.
+          // with setup. Retry once immediately, then fall back to reconnect.
+          _isExpectedDisconnect = false;
+          try {
+            await _ensureConnected(authToken);
+          } catch (e) {
+            developer.log('Error retrying subscribe connection $e');
+          }
+        }
+
+        if (!isConnected) {
           _isExpectedDisconnect = false;
           _scheduleReconnect();
           return;
