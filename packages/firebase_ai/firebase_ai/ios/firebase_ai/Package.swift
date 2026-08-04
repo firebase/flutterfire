@@ -16,13 +16,13 @@ let package = Package(
     .library(name: "firebase-ai", targets: ["firebase_ai"])
   ],
   dependencies: [
-    .package(name: "FlutterFramework", path: "../FlutterFramework"),
+    .package(name: "FlutterFramework", path: "../FlutterFramework")
   ],
   targets: [
     .target(
       name: "firebase_ai",
       dependencies: [
-        .product(name: "FlutterFramework", package: "FlutterFramework"),
+        .product(name: "FlutterFramework", package: "FlutterFramework")
       ],
       resources: [
         .process("Resources")
