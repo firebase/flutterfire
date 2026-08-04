@@ -19,14 +19,16 @@ let package = Package(
     .library(name: "firebase-core", targets: ["firebase_core"])
   ],
   dependencies: [
-    .package(url: "https://github.com/firebase/firebase-ios-sdk", exact: firebaseSdkVersion)
+    .package(url: "https://github.com/firebase/firebase-ios-sdk", exact: firebaseSdkVersion),
+    .package(name: "FlutterFramework", path: "../FlutterFramework"),
   ],
   targets: [
     .target(
       name: "firebase_core",
       dependencies: [
         // No product for firebase-core so we pull in the smallest one
-        .product(name: "FirebaseInstallations", package: "firebase-ios-sdk")
+        .product(name: "FirebaseInstallations", package: "firebase-ios-sdk"),
+        .product(name: "FlutterFramework", package: "FlutterFramework"),
       ],
       resources: [
         .process("Resources")
