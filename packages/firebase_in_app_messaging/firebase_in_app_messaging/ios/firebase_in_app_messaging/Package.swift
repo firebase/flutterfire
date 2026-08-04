@@ -7,16 +7,15 @@
 
 import PackageDescription
 
-let libraryVersion = "0.9.2-7"
 let firebaseSdkVersion: Version = "12.17.0"
 
 let package = Package(
   name: "firebase_in_app_messaging",
   platforms: [
-    .iOS("15.0")
+    .iOS("15.0"),
   ],
   products: [
-    .library(name: "firebase-in-app-messaging", targets: ["firebase_in_app_messaging"])
+    .library(name: "firebase-in-app-messaging", targets: ["firebase_in_app_messaging"]),
   ],
   dependencies: [
     .package(url: "https://github.com/firebase/firebase-ios-sdk", exact: firebaseSdkVersion),
@@ -30,13 +29,8 @@ let package = Package(
         .product(name: "firebase-core", package: "firebase_core"),
       ],
       resources: [
-        .process("Resources")
-      ],
-      cSettings: [
-        .headerSearchPath("include"),
-        .define("LIBRARY_VERSION", to: "\"\(libraryVersion)\""),
-        .define("LIBRARY_NAME", to: "\"flutter-fire-fiam\""),
+        .process("Resources"),
       ]
-    )
+    ),
   ]
 )
