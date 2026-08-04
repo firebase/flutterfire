@@ -60,9 +60,8 @@ class WebSocketTransport implements DataConnectTransport {
       scheme: protocol,
       host: host,
       port: port,
-      path:
-          '/ws/google.firebase.dataconnect.v1.ConnectorStreamService.Connect/' +
-              '$projectId/locations/$location/services/$serviceId',
+      path: '/ws/google.firebase.dataconnect.v1.ConnectorStreamService.Connect/'
+          '$projectId/locations/$location/services/$serviceId',
     ).toString();
 
     _currentUid = auth?.currentUser?.uid;
