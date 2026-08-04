@@ -215,20 +215,12 @@ class WebSocketTransport implements DataConnectTransport {
   Future<void>? _connectionFuture;
 
   Future<void> _ensureConnected(String? authToken) {
-    // Prefer an in-flight handshake over a channel that may still be waiting
-    // on ready/init. Checking `_channel` first can return early mid-connect and
-    // let callers send subscribe before the connection is initialized.
-    if (_connectionFuture != null) return _connectionFuture!;
     if (_channel != null) return Future.value();
-
-    late final Future<void> connectionFuture;
-    connectionFuture = _doConnect(authToken).whenComplete(() {
-      if (identical(_connectionFuture, connectionFuture)) {
-        _connectionFuture = null;
-      }
+    if (_connectionFuture != null) return _connectionFuture!;
+    _connectionFuture = _doConnect(authToken).whenComplete(() {
+      _connectionFuture = null;
     });
-    _connectionFuture = connectionFuture;
-    return connectionFuture;
+    return _connectionFuture!;
   }
 
   Future<void> _doConnect(String? authToken) async {
@@ -243,57 +235,24 @@ class WebSocketTransport implements DataConnectTransport {
 
     _claimWebSocketTransport();
 
-    final channel = WebSocketChannel.connect(Uri.parse(_url));
-    _channel = channel;
-    _channelSubscription = channel.stream.listen(
-      (message) {
-        if (identical(_channel, channel)) {
-          _onMessage(message);
-        }
-      },
-      onError: (error) {
-        if (identical(_channel, channel)) {
-          _onError(error);
-        }
-      },
-      onDone: () {
-        if (identical(_channel, channel)) {
-          _onDone();
-        }
-      },
+    _channel = WebSocketChannel.connect(Uri.parse(_url));
+    _channelSubscription = _channel?.stream.listen(
+      _onMessage,
+      onError: _onError,
+      onDone: _onDone,
     );
 
     // reset this since an explicit connect was requested
     _isExpectedDisconnect = false;
 
     try {
-      await channel.ready.timeout(const Duration(seconds: 10));
+      await _channel?.ready;
     } catch (e) {
       developer.log('WebSocket connection failed to become ready: $e');
-      if (identical(_channel, channel)) {
-        _channel = null;
-        _channelSubscription = null;
-        _releaseWebSocketTransport();
-      }
-      try {
-        await channel.sink.close();
-      } catch (_) {
-        // Ignored: best-effort cleanup of a failed handshake.
-      }
+      _channel = null;
+      _releaseWebSocketTransport();
       throw DataConnectError(
           DataConnectErrorCode.other, 'WebSocket connection failed: $e');
-    }
-
-    // The connection may have been explicitly replaced while awaiting ready.
-    // Fail the handshake so callers reconnect instead of treating this as success.
-    if (!identical(_channel, channel)) {
-      try {
-        await channel.sink.close();
-      } catch (_) {
-        // Ignored
-      }
-      throw DataConnectError(DataConnectErrorCode.other,
-          'WebSocket connection superseded during setup');
     }
 
     final initRequest = StreamRequest(
@@ -492,7 +451,8 @@ class WebSocketTransport implements DataConnectTransport {
       return;
     }
 
-    _disconnect();
+    _channel?.sink.close();
+    _channel = null;
     _reconnectAttempts++;
 
     final authToken = await _refreshAuthToken();
@@ -527,16 +487,8 @@ class WebSocketTransport implements DataConnectTransport {
   void _disconnect() {
     _reconnectTimer?.cancel();
     _reconnectTimer = null;
-
-    final channel = _channel;
-
-    // Clear the active channel before closing it. Its asynchronous onDone
-    // callback must not clear a replacement channel opened in the meantime.
-    // Leave `_connectionFuture` alone so in-flight handshakes still coalesce
-    // waiters instead of starting a second concurrent connect.
+    _channel?.sink.close();
     _channel = null;
-    _channelSubscription = null;
-    channel?.sink.close();
   }
 
   void disconnect() {
@@ -714,18 +666,8 @@ class WebSocketTransport implements DataConnectTransport {
             _PendingSubscription(operationId, queryName, variables);
 
         if (!isConnected) {
-          // A new listener supersedes an idle disconnect that may have raced
-          // with setup. Retry once immediately, then fall back to reconnect.
-          _isExpectedDisconnect = false;
-          try {
-            await _ensureConnected(authToken);
-          } catch (e) {
-            developer.log('Error retrying subscribe connection $e');
-          }
-        }
-
-        if (!isConnected) {
-          _isExpectedDisconnect = false;
+          // we are not connected -
+          // keep pending sub to use for retry
           _scheduleReconnect();
           return;
         }
