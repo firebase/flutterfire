@@ -16,6 +16,11 @@ part of '../base_model.dart';
 
 /// An image model that connects to a remote server template.
 @experimental
+@Deprecated(
+  'All Imagen models are deprecated and will shut down as early as June 2026. '
+  'As a replacement, you can migrate your apps to use Gemini Image models (the '
+  '"Nano Banana" models)(https://firebase.google.com/docs/ai-logic/imagen-models-migration).',
+)
 final class TemplateImagenModel extends BaseTemplateApiClientModel {
   TemplateImagenModel._testModel(
       {required FirebaseApp app,
@@ -23,16 +28,16 @@ final class TemplateImagenModel extends BaseTemplateApiClientModel {
       required bool useVertexBackend,
       http.Client? httpClient})
       : super(
-          serializationStrategy: VertexSerialization(),
+          serializationStrategy: AgentPlatformSerialization(),
           modelUri: useVertexBackend
-              ? _VertexUri(app: app, model: '', location: location)
+              ? _AgentPlatformUri(app: app, model: '', location: location)
               : _GoogleAIUri(app: app, model: ''),
           client: HttpApiClient(
               apiKey: app.options.apiKey,
               httpClient: httpClient,
               requestHeaders: BaseModel.firebaseTokens(null, null, app, false)),
           templateUri: useVertexBackend
-              ? _TemplateVertexUri(app: app, location: location)
+              ? _TemplateAgentPlatformUri(app: app, location: location)
               : _TemplateGoogleAIUri(app: app),
         );
 
@@ -45,17 +50,17 @@ final class TemplateImagenModel extends BaseTemplateApiClientModel {
       FirebaseAuth? auth})
       : super(
           serializationStrategy: useVertexBackend
-              ? VertexSerialization()
+              ? AgentPlatformSerialization()
               : DeveloperSerialization(),
           modelUri: useVertexBackend
-              ? _VertexUri(app: app, model: '', location: location)
+              ? _AgentPlatformUri(app: app, model: '', location: location)
               : _GoogleAIUri(app: app, model: ''),
           client: HttpApiClient(
               apiKey: app.options.apiKey,
               requestHeaders: BaseModel.firebaseTokens(
                   appCheck, auth, app, useLimitedUseAppCheckTokens)),
           templateUri: useVertexBackend
-              ? _TemplateVertexUri(app: app, location: location)
+              ? _TemplateAgentPlatformUri(app: app, location: location)
               : _TemplateGoogleAIUri(app: app),
         );
 
@@ -68,7 +73,9 @@ final class TemplateImagenModel extends BaseTemplateApiClientModel {
         TemplateTask.templatePredict,
         templateId,
         inputs,
-        null,
+        null, // history
+        null, // tools
+        null, // toolConfig
         (jsonObject) =>
             parseImagenGenerationResponse<ImagenInlineImage>(jsonObject),
       );
@@ -80,7 +87,7 @@ final class TemplateImagenModel extends BaseTemplateApiClientModel {
 TemplateImagenModel createTemplateImagenModel({
   required FirebaseApp app,
   required String location,
-  required bool useVertexBackend,
+  required bool useAgentPlatform,
   bool? useLimitedUseAppCheckTokens,
   FirebaseAppCheck? appCheck,
   FirebaseAuth? auth,
@@ -90,7 +97,7 @@ TemplateImagenModel createTemplateImagenModel({
       appCheck: appCheck,
       auth: auth,
       location: location,
-      useVertexBackend: useVertexBackend,
+      useVertexBackend: useAgentPlatform,
       useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
     );
 

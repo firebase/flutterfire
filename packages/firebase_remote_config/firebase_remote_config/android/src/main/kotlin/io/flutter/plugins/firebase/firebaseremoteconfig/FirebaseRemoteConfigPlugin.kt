@@ -20,7 +20,6 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigFetchThrottledExcept
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigServerException
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigValue
-import io.flutter.Log
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import io.flutter.plugin.common.BinaryMessenger
@@ -30,11 +29,9 @@ import io.flutter.plugins.firebase.core.FlutterFirebasePlugin
 import io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry
 import java.util.Objects
 
-/** FirebaseRemoteConfigPlugin  */
-class FirebaseRemoteConfigPlugin
-
-  : FlutterFirebasePlugin, FlutterPlugin,
-  EventChannel.StreamHandler, FirebaseRemoteConfigHostApi {
+/** FirebaseRemoteConfigPlugin */
+class FirebaseRemoteConfigPlugin :
+    FlutterFirebasePlugin, FlutterPlugin, EventChannel.StreamHandler, FirebaseRemoteConfigHostApi {
 
   private val listenersMap: MutableMap<String, ConfigUpdateListenerRegistration> = HashMap()
   private var eventChannel: EventChannel? = null
@@ -56,8 +53,7 @@ class FirebaseRemoteConfigPlugin
       try {
         val remoteConfig = FirebaseRemoteConfig.getInstance(firebaseApp)
         val configProperties = getConfigProperties(remoteConfig)
-        val configValues: MutableMap<String, Any> =
-          HashMap(configProperties)
+        val configValues: MutableMap<String, Any> = HashMap(configProperties)
         configValues["parameters"] = parseParameters(remoteConfig.all)
 
         taskCompletionSource.setResult(configValues)
@@ -73,7 +69,7 @@ class FirebaseRemoteConfigPlugin
     val configProperties: MutableMap<String, Any> = HashMap()
     configProperties["fetchTimeout"] = remoteConfig.info.configSettings.fetchTimeoutInSeconds
     configProperties["minimumFetchInterval"] =
-      remoteConfig.info.configSettings.minimumFetchIntervalInSeconds
+        remoteConfig.info.configSettings.minimumFetchIntervalInSeconds
     configProperties["lastFetchTime"] = remoteConfig.info.fetchTimeMillis
     configProperties["lastFetchStatus"] = mapLastFetchStatus(remoteConfig.info.lastFetchStatus)
     return configProperties
@@ -96,10 +92,7 @@ class FirebaseRemoteConfigPlugin
 
   private fun setupChannel(messenger: BinaryMessenger) {
     FirebaseRemoteConfigHostApi.setUp(messenger, this)
-    FlutterFirebasePluginRegistry.registerPlugin(
-      METHOD_CHANNEL,
-      this
-    )
+    FlutterFirebasePluginRegistry.registerPlugin(METHOD_CHANNEL, this)
 
     eventChannel = EventChannel(messenger, EVENT_CHANNEL)
     eventChannel!!.setStreamHandler(this)
@@ -122,7 +115,8 @@ class FirebaseRemoteConfigPlugin
   }
 
   private fun setCustomSignals(
-    remoteConfig: FirebaseRemoteConfig, customSignalsArguments: Map<String, Any?>
+      remoteConfig: FirebaseRemoteConfig,
+      customSignalsArguments: Map<String, Any?>
   ): Task<Void> {
     val taskCompletionSource = TaskCompletionSource<Void>()
     FlutterFirebasePlugin.cachedThreadPool.execute {
@@ -150,18 +144,18 @@ class FirebaseRemoteConfigPlugin
     return taskCompletionSource.task
   }
 
-  private fun parseParameters(parameters: Map<String, FirebaseRemoteConfigValue>): Map<String, Any> {
+  private fun parseParameters(
+      parameters: Map<String, FirebaseRemoteConfigValue>
+  ): Map<String, Any> {
     val parsedParameters: MutableMap<String, Any> = HashMap()
     for (key in parameters.keys) {
-      parsedParameters[key] = createRemoteConfigValueMap(
-          parameters[key]!!
-      )
+      parsedParameters[key] = createRemoteConfigValueMap(parameters[key]!!)
     }
     return parsedParameters
   }
 
   private fun createRemoteConfigValueMap(
-    remoteConfigValue: FirebaseRemoteConfigValue
+      remoteConfigValue: FirebaseRemoteConfigValue
   ): Map<String, Any> {
     val valueMap: MutableMap<String, Any> = HashMap()
     valueMap["value"] = remoteConfigValue.asByteArray()
@@ -193,23 +187,24 @@ class FirebaseRemoteConfigPlugin
     val appName = Objects.requireNonNull(argumentsMap["appName"]) as String
     val remoteConfig = getRemoteConfig(appName)
 
-    listenersMap[appName] = remoteConfig.addOnConfigUpdateListener(
-      object : ConfigUpdateListener {
-        override fun onUpdate(configUpdate: ConfigUpdate) {
-          val updatedKeys = ArrayList(configUpdate.updatedKeys)
-          mainThreadHandler.post { events.success(updatedKeys) }
-        }
+    listenersMap[appName] =
+        remoteConfig.addOnConfigUpdateListener(
+            object : ConfigUpdateListener {
+              override fun onUpdate(configUpdate: ConfigUpdate) {
+                val updatedKeys = ArrayList(configUpdate.updatedKeys)
+                mainThreadHandler.post { events.success(updatedKeys) }
+              }
 
-        override fun onError(error: FirebaseRemoteConfigException) {
-          events.error("firebase_remote_config", error.message, null)
-        }
-      })
+              override fun onError(error: FirebaseRemoteConfigException) {
+                events.error("firebase_remote_config", error.message, null)
+              }
+            })
   }
 
   override fun onCancel(arguments: Any?) {
-    // arguments will be null on hot restart, so we will clean up listeners in didReinitializeFirebaseCore()
-    val argumentsMap = arguments as? Map<String, Any>
-      ?: return
+    // arguments will be null on hot restart, so we will clean up listeners in
+    // didReinitializeFirebaseCore()
+    val argumentsMap = arguments as? Map<String, Any> ?: return
     val appName = Objects.requireNonNull(argumentsMap["appName"]) as String
 
     val listener = listenersMap[appName]
@@ -219,7 +214,7 @@ class FirebaseRemoteConfigPlugin
     }
   }
 
-  /** Remove all registered listeners.  */
+  /** Remove all registered listeners. */
   private fun removeEventListeners() {
     for (listener in listenersMap.values) {
       listener.remove()
@@ -227,9 +222,8 @@ class FirebaseRemoteConfigPlugin
     listenersMap.clear()
   }
 
-  private fun <T> handleFailure (callback: (Result<T>) -> Unit, exception: Exception?) {
-    val details: MutableMap<String, Any?> =
-      HashMap()
+  private fun <T> handleFailure(callback: (Result<T>) -> Unit, exception: Exception?) {
+    val details: MutableMap<String, Any?> = HashMap()
     if (exception is FirebaseRemoteConfigFetchThrottledException) {
       details["code"] = "throttled"
       details["message"] = "frequency of requests exceeds throttled limits"
@@ -252,9 +246,7 @@ class FirebaseRemoteConfigPlugin
       details["code"] = "unknown"
       details["message"] = "unknown remote config error"
     }
-    callback(Result.failure(FlutterError(  "firebase_remote_config",
-      exception?.message,
-      details)))
+    callback(Result.failure(FlutterError("firebase_remote_config", exception?.message, details)))
   }
 
   companion object {
@@ -265,10 +257,9 @@ class FirebaseRemoteConfigPlugin
 
   override fun fetch(appName: String, callback: (Result<Unit>) -> Unit) {
     getRemoteConfig(appName).fetch().addOnCompleteListener { task ->
-      if(task.isSuccessful){
+      if (task.isSuccessful) {
         callback(Result.success(Unit))
-      }
-      else {
+      } else {
         handleFailure(callback, task.exception)
       }
     }
@@ -276,10 +267,9 @@ class FirebaseRemoteConfigPlugin
 
   override fun fetchAndActivate(appName: String, callback: (Result<Boolean>) -> Unit) {
     getRemoteConfig(appName).fetchAndActivate().addOnCompleteListener { task ->
-      if(task.isSuccessful){
+      if (task.isSuccessful) {
         callback(Result.success(task.result))
-      }
-      else {
+      } else {
         handleFailure(callback, task.exception)
       }
     }
@@ -287,43 +277,42 @@ class FirebaseRemoteConfigPlugin
 
   override fun activate(appName: String, callback: (Result<Boolean>) -> Unit) {
     getRemoteConfig(appName).activate().addOnCompleteListener { task ->
-      if(task.isSuccessful){
+      if (task.isSuccessful) {
         callback(Result.success(task.result))
-      }
-      else {
+      } else {
         handleFailure(callback, task.exception)
       }
     }
   }
 
   override fun setConfigSettings(
-    appName: String,
-    settings: RemoteConfigPigeonSettings,
-    callback: (Result<Unit>) -> Unit
+      appName: String,
+      settings: RemoteConfigPigeonSettings,
+      callback: (Result<Unit>) -> Unit
   ) {
     val configSettings =
-      FirebaseRemoteConfigSettings.Builder()
-        .setFetchTimeoutInSeconds(settings.fetchTimeoutSeconds)
-        .setMinimumFetchIntervalInSeconds(settings.minimumFetchIntervalSeconds)
-        .build()
+        FirebaseRemoteConfigSettings.Builder()
+            .setFetchTimeoutInSeconds(settings.fetchTimeoutSeconds)
+            .setMinimumFetchIntervalInSeconds(settings.minimumFetchIntervalSeconds)
+            .build()
     getRemoteConfig(appName).setConfigSettingsAsync(configSettings).addOnCompleteListener { task ->
-      if(task.isSuccessful){
+      if (task.isSuccessful) {
         callback(Result.success(Unit))
-      }
-      else {
+      } else {
         handleFailure(callback, task.exception)
       }
     }
   }
 
-  override fun setDefaults(appName: String, defaultParameters: Map<String, Any?>, callback: (Result<Unit>) -> Unit) {
-    getRemoteConfig(
-      appName
-    ).setDefaultsAsync(defaultParameters).addOnCompleteListener { task ->
-      if(task.isSuccessful){
+  override fun setDefaults(
+      appName: String,
+      defaultParameters: Map<String, Any?>,
+      callback: (Result<Unit>) -> Unit
+  ) {
+    getRemoteConfig(appName).setDefaultsAsync(defaultParameters).addOnCompleteListener { task ->
+      if (task.isSuccessful) {
         callback(Result.success(Unit))
-      }
-      else {
+      } else {
         handleFailure(callback, task.exception)
       }
     }
@@ -331,22 +320,24 @@ class FirebaseRemoteConfigPlugin
 
   override fun ensureInitialized(appName: String, callback: (Result<Unit>) -> Unit) {
     getRemoteConfig(appName).ensureInitialized().addOnCompleteListener { task ->
-      if(task.isSuccessful){
+      if (task.isSuccessful) {
         callback(Result.success(Unit))
-      }
-      else {
+      } else {
         handleFailure(callback, task.exception)
       }
     }
   }
 
-  override fun setCustomSignals(appName: String, customSignals: Map<String, Any?>, callback: (Result<Unit>) -> Unit) {
+  override fun setCustomSignals(
+      appName: String,
+      customSignals: Map<String, Any?>,
+      callback: (Result<Unit>) -> Unit
+  ) {
     val remoteConfig = getRemoteConfig(appName)
-    setCustomSignals(remoteConfig, customSignals).addOnCompleteListener {task->
-      if(task.isSuccessful){
+    setCustomSignals(remoteConfig, customSignals).addOnCompleteListener { task ->
+      if (task.isSuccessful) {
         callback(Result.success(Unit))
-      }
-      else {
+      } else {
         handleFailure(callback, task.exception)
       }
     }
@@ -357,10 +348,7 @@ class FirebaseRemoteConfigPlugin
     callback(Result.success(parseParameters(remoteConfig.all)))
   }
 
-  override fun getProperties(
-    appName: String,
-    callback: (Result<Map<String, Any>>) -> Unit
-  ) {
+  override fun getProperties(appName: String, callback: (Result<Map<String, Any>>) -> Unit) {
     val remoteConfig = getRemoteConfig(appName)
     val configProperties = getConfigProperties(remoteConfig)
     callback(Result.success(configProperties))

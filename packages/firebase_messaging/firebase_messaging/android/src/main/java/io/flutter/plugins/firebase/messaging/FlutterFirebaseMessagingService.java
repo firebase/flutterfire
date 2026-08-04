@@ -17,6 +17,7 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
   @Override
   public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
     // Added for commenting purposes;
-    // We don't handle the message here as we already handle it in the receiver and don't want to duplicate.
+    // We don't handle the message here as we already handle it in the receiver and don't want to
+    // duplicate.
   }
 }

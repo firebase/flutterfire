@@ -70,7 +70,8 @@ public class FlutterFirebaseAuthPluginException {
             && nativeException.getCause() instanceof FirebaseNetworkException)) {
       return new GeneratedAndroidFirebaseAuth.FlutterError(
           "network-request-failed",
-          "A network error (such as timeout, interrupted connection or unreachable host) has occurred.",
+          "A network error (such as timeout, interrupted connection or unreachable host) has"
+              + " occurred.",
           null);
     }
 

@@ -6,7 +6,7 @@
 part of firebase_storage;
 
 /// The entrypoint for [FirebaseStorage].
-class FirebaseStorage extends FirebasePluginPlatform {
+class FirebaseStorage extends FirebasePlugin {
   FirebaseStorage._({required this.app, required this.bucket})
       : super(app.name, 'plugins.flutter.io/firebase_storage');
 

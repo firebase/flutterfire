@@ -15,7 +15,7 @@ class AggregateQueryWeb extends AggregateQueryPlatform {
   /// without retrieving the actual documents.
   AggregateQueryWeb(
     QueryPlatform query,
-    _webQuery,
+    firestore_interop.Query _webQuery,
     this._aggregateQueries,
   )   : _delegate = firestore_interop.AggregateQuery(_webQuery),
         _webQuery = _webQuery,

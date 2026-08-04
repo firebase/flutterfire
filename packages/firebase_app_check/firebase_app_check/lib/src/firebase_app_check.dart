@@ -5,7 +5,7 @@
 
 part of '../firebase_app_check.dart';
 
-class FirebaseAppCheck extends FirebasePluginPlatform {
+class FirebaseAppCheck extends FirebasePlugin implements FirebaseService {
   static Map<String, FirebaseAppCheck> _firebaseAppCheckInstances = {};
 
   FirebaseAppCheck._({required this.app})
@@ -41,8 +41,20 @@ class FirebaseAppCheck extends FirebasePluginPlatform {
   /// Returns an instance using a specified [FirebaseApp].
   static FirebaseAppCheck instanceFor({required FirebaseApp app}) {
     return _firebaseAppCheckInstances.putIfAbsent(app.name, () {
-      return FirebaseAppCheck._(app: app);
+      final instance = FirebaseAppCheck._(app: app);
+      app.registerService<FirebaseAppCheck>(
+        instance,
+        dispose: (appCheck) => appCheck._dispose(),
+      );
+      return instance;
     });
+  }
+
+  Future<void> _dispose() async {
+    _firebaseAppCheckInstances.remove(app.name);
+    final delegate = _delegatePackingProperty;
+    _delegatePackingProperty = null;
+    await delegate?.dispose();
   }
 
   /// Activates the Firebase App Check service.
@@ -60,6 +72,13 @@ class FirebaseAppCheck extends FirebasePluginPlatform {
   /// to configure alternative providers such as "app attest", debug providers, or
   /// "app attest with fallback to device check" via `AppleAppCheckProvider`.
   /// Note: App Attest is only available on iOS 14.0+ and macOS 14.0+.
+  ///
+  /// **Windows**: Only the debug provider is supported. You **must** supply a
+  /// debug token — the desktop C++ SDK does not auto-generate one. Either pass
+  /// it via `providerWindows: WindowsDebugProvider(debugToken: 'your-token')`
+  /// or set the `APP_CHECK_DEBUG_TOKEN` environment variable. The token must
+  /// first be registered in the Firebase Console under
+  /// *App Check → Apps → Manage debug tokens*.
   ///
   /// ## Migration Notice
   ///
@@ -89,6 +108,7 @@ class FirebaseAppCheck extends FirebasePluginPlatform {
     AndroidAppCheckProvider providerAndroid =
         const AndroidPlayIntegrityProvider(),
     AppleAppCheckProvider providerApple = const AppleDeviceCheckProvider(),
+    WindowsAppCheckProvider providerWindows = const WindowsDebugProvider(),
   }) {
     return _delegate.activate(
       webProvider: providerWeb ?? webProvider,
@@ -98,6 +118,7 @@ class FirebaseAppCheck extends FirebasePluginPlatform {
       appleProvider: appleProvider,
       providerAndroid: providerAndroid,
       providerApple: providerApple,
+      providerWindows: providerWindows,
     );
   }
 
@@ -110,6 +131,17 @@ class FirebaseAppCheck extends FirebasePluginPlatform {
   /// false, will use a cached token if found in storage.
   Future<String?> getToken([bool? forceRefresh]) async {
     return _delegate.getToken(forceRefresh ?? false);
+  }
+
+  /// Get the current App Check token and its associated metadata.
+  ///
+  /// Attaches to the most recent in-flight request if one is present. Returns
+  /// null if no token is present and no token requests are in-flight.
+  ///
+  /// If `forceRefresh` is true, will always try to fetch a fresh token. If
+  /// false, will use a cached token if found in storage.
+  Future<AppCheckTokenResult?> getTokenResult([bool? forceRefresh]) {
+    return _delegate.getTokenResult(forceRefresh ?? false);
   }
 
   /// If true, the SDK automatically refreshes App Check tokens as needed.

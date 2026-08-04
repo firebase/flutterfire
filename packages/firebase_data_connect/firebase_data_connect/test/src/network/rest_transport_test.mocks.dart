@@ -778,6 +778,8 @@ class MockFirebaseAppCheck extends _i1.Mock implements _i10.FirebaseAppCheck {
         const _i11.AndroidPlayIntegrityProvider(),
     _i11.AppleAppCheckProvider? providerApple =
         const _i11.AppleDeviceCheckProvider(),
+    _i11.WindowsAppCheckProvider? providerWindows =
+        const _i11.WindowsDebugProvider(),
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -790,6 +792,7 @@ class MockFirebaseAppCheck extends _i1.Mock implements _i10.FirebaseAppCheck {
             #appleProvider: appleProvider,
             #providerAndroid: providerAndroid,
             #providerApple: providerApple,
+            #providerWindows: providerWindows,
           },
         ),
         returnValue: _i6.Future<void>.value(),

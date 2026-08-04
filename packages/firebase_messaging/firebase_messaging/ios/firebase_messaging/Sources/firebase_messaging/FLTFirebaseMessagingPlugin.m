@@ -45,6 +45,12 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 
   // Guard against calling setupNotificationHandling twice
   BOOL _notificationHandlingSetup;
+  BOOL _applicationObserverRegistered;
+
+#if TARGET_OS_OSX
+  // Tracks when plugin registration occurred after the macOS launch notification.
+  BOOL _missedApplicationDidFinishLaunchingNotification;
+#endif
 
 #ifdef __FF_NOTIFICATIONS_SUPPORTED_PLATFORM
   API_AVAILABLE(ios(10), macosx(10.14))
@@ -60,15 +66,39 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 
 #pragma mark - FlutterPlugin
 
-- (instancetype)initWithFlutterMethodChannel:(FlutterMethodChannel *)channel
-                   andFlutterPluginRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
+- (instancetype)init {
   self = [super init];
   if (self) {
     _initialNotificationGathered = NO;
     _sceneDidConnect = NO;
     _notificationHandlingSetup = NO;
-    _channel = channel;
-    _registrar = registrar;
+    _applicationObserverRegistered = NO;
+  }
+  return self;
+}
+
++ (instancetype)sharedInstance {
+  static FLTFirebaseMessagingPlugin *sharedInstance = nil;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    sharedInstance = [[FLTFirebaseMessagingPlugin alloc] init];
+  });
+  return sharedInstance;
+}
+
++ (void)configureNotificationCenterDelegate {
+#ifdef __FF_NOTIFICATIONS_SUPPORTED_PLATFORM
+  [[FLTFirebaseMessagingPlugin sharedInstance] configureNotificationCenterDelegate];
+#endif
+}
+
+- (void)configureWithFlutterMethodChannel:(FlutterMethodChannel *)channel
+                andFlutterPluginRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
+  _channel = channel;
+  _registrar = registrar;
+
+  if (!_applicationObserverRegistered) {
+    _applicationObserverRegistered = YES;
     // Application
     // Dart -> `getInitialNotification`
     // ObjC -> Initialize other delegates & observers
@@ -82,20 +112,24 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 #endif
              object:nil];
   }
-  return self;
 }
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
   FlutterMethodChannel *channel =
       [FlutterMethodChannel methodChannelWithName:kFLTFirebaseMessagingChannelName
                                   binaryMessenger:[registrar messenger]];
-  id instance = [[FLTFirebaseMessagingPlugin alloc] initWithFlutterMethodChannel:channel
-                                                       andFlutterPluginRegistrar:registrar];
+  FLTFirebaseMessagingPlugin *instance = [FLTFirebaseMessagingPlugin sharedInstance];
+  [instance configureWithFlutterMethodChannel:channel andFlutterPluginRegistrar:registrar];
   // Register with internal FlutterFire plugin registry.
   [[FLTFirebasePluginRegistry sharedInstance] registerFirebasePlugin:instance];
 
   [registrar addMethodCallDelegate:instance channel:channel];
-#if !TARGET_OS_OSX
+#if TARGET_OS_OSX
+  if ([[NSApplication sharedApplication] isRunning]) {
+    instance->_missedApplicationDidFinishLaunchingNotification = YES;
+    [instance setupNotificationHandlingWithRemoteNotification:nil];
+  }
+#else
   [registrar publish:instance];  // iOS only supported
   if (@available(iOS 13.0, *)) {
     if ([registrar respondsToSelector:@selector(addSceneDelegate:)]) {
@@ -226,6 +260,72 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 
 - (void)setupNotificationHandlingWithRemoteNotification:
     (nullable NSDictionary *)remoteNotification {
+  [self setupNotificationHandlingWithRemoteNotification:remoteNotification actionIdentifier:nil];
+}
+
+- (void)registerForRemoteNotifications {
+#if TARGET_OS_OSX
+  if (@available(macOS 10.14, *)) {
+    [[NSApplication sharedApplication] registerForRemoteNotifications];
+  }
+#else
+  [[UIApplication sharedApplication] registerForRemoteNotifications];
+#endif
+}
+
+#ifdef __FF_NOTIFICATIONS_SUPPORTED_PLATFORM
+- (void)configureNotificationCenterDelegate {
+  // Set UNUserNotificationCenter but preserve original delegate if necessary.
+  if (@available(iOS 10.0, macOS 10.14, *)) {
+    BOOL shouldReplaceDelegate = YES;
+    UNUserNotificationCenter *notificationCenter =
+        [UNUserNotificationCenter currentNotificationCenter];
+    id<UNUserNotificationCenterDelegate> currentDelegate = notificationCenter.delegate;
+
+    if (currentDelegate == self) {
+      return;
+    }
+
+    if (currentDelegate != nil) {
+#if !TARGET_OS_OSX
+      // If a UNUserNotificationCenterDelegate is set and it conforms to
+      // FlutterAppLifeCycleProvider then we don't want to replace it on iOS as the earlier
+      // call to `[_registrar addApplicationDelegate:self];` will automatically delegate calls
+      // to this plugin. If we replace it, it will cause a stack overflow as our original
+      // delegate forwarding handler below causes an infinite loop of forwarding. See
+      // https://github.com/firebasefire/issues/4026.
+      if ([currentDelegate conformsToProtocol:@protocol(FlutterAppLifeCycleProvider)]) {
+        // Note this one only executes if Firebase swizzling is **enabled**.
+        shouldReplaceDelegate = NO;
+      }
+#endif
+
+      if (shouldReplaceDelegate) {
+        _originalNotificationCenterDelegate = currentDelegate;
+        _originalNotificationCenterDelegateRespondsTo.openSettingsForNotification =
+            (unsigned int)[_originalNotificationCenterDelegate
+                respondsToSelector:@selector(userNotificationCenter:openSettingsForNotification:)];
+        _originalNotificationCenterDelegateRespondsTo.willPresentNotification =
+            (unsigned int)[_originalNotificationCenterDelegate
+                respondsToSelector:@selector(userNotificationCenter:willPresentNotification:
+                                             withCompletionHandler:)];
+        _originalNotificationCenterDelegateRespondsTo.didReceiveNotificationResponse =
+            (unsigned int)[_originalNotificationCenterDelegate
+                respondsToSelector:@selector(userNotificationCenter:didReceiveNotificationResponse:
+                                             withCompletionHandler:)];
+      }
+    }
+
+    if (shouldReplaceDelegate) {
+      __strong FLTFirebasePlugin<UNUserNotificationCenterDelegate> *strongSelf = self;
+      notificationCenter.delegate = strongSelf;
+    }
+  }
+}
+#endif
+
+- (void)setupNotificationHandlingWithRemoteNotification:(nullable NSDictionary *)remoteNotification
+                                       actionIdentifier:(nullable NSString *)actionIdentifier {
   // If notification handling was already set up (e.g. from
   // application_onDidFinishLaunchingNotification) and we're called again (e.g. from
   // scene:willConnectToSession:), only process the notification but skip delegate/swizzler
@@ -234,7 +334,8 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   if (_notificationHandlingSetup) {
     if (remoteNotification != nil) {
       _initialNotification =
-          [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:remoteNotification];
+          [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:remoteNotification
+                                             withActionIdentifier:actionIdentifier];
       _initialNotificationID = remoteNotification[@"gcm.message_id"];
       _initialNotificationGathered = YES;
       [self initialNotificationCallback];
@@ -255,7 +356,8 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   if (remoteNotification != nil) {
     // If remoteNotification exists, it is the notification that opened the app.
     _initialNotification =
-        [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:remoteNotification];
+        [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:remoteNotification
+                                           withActionIdentifier:actionIdentifier];
     _initialNotificationID = remoteNotification[@"gcm.message_id"];
     _initialNotificationGathered = YES;
     [self initialNotificationCallback];
@@ -263,17 +365,22 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     // For scene delegates, if no notification was found in connectionOptions,
     // delay marking as gathered to allow didReceiveRemoteNotification to fire first
     // for contentAvailable notifications that caused the app to launch
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)),
-                   dispatch_get_main_queue(), ^{
-                     if (!self->_initialNotificationGathered) {
-                       self->_initialNotificationGathered = YES;
-                       [self initialNotificationCallback];
-                     }
-                   });
+    [self markInitialNotificationGatheredAfterDelay];
   } else {
-    // For non-scene delegate apps, mark as gathered immediately
-    _initialNotificationGathered = YES;
-    [self initialNotificationCallback];
+#if !TARGET_OS_OSX
+    if (@available(iOS 13.0, *)) {
+      // Scene delegate launch notification responses arrive after didFinishLaunching.
+      // Give scene:willConnectToSession:options: a chance to provide the tapped notification
+      // before resolving getInitialMessage() as nil.
+      [self markInitialNotificationGatheredAfterDelay];
+    } else {
+#endif
+      // For non-scene delegate apps, mark as gathered immediately
+      _initialNotificationGathered = YES;
+      [self initialNotificationCallback];
+#if !TARGET_OS_OSX
+    }
+#endif
   }
 
   [GULAppDelegateSwizzler registerAppDelegateInterceptor:self];
@@ -302,65 +409,40 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   [_registrar addApplicationDelegate:self];
 #endif
 
-  // Set UNUserNotificationCenter but preserve original delegate if necessary.
-  if (@available(iOS 10.0, macOS 10.14, *)) {
-    BOOL shouldReplaceDelegate = YES;
-    UNUserNotificationCenter *notificationCenter =
-        [UNUserNotificationCenter currentNotificationCenter];
-
-    if (notificationCenter.delegate != nil) {
-#if !TARGET_OS_OSX
-      // If a UNUserNotificationCenterDelegate is set and it conforms to
-      // FlutterAppLifeCycleProvider then we don't want to replace it on iOS as the earlier
-      // call to `[_registrar addApplicationDelegate:self];` will automatically delegate calls
-      // to this plugin. If we replace it, it will cause a stack overflow as our original
-      // delegate forwarding handler below causes an infinite loop of forwarding. See
-      // https://github.com/firebasefire/issues/4026.
-      if ([notificationCenter.delegate conformsToProtocol:@protocol(FlutterAppLifeCycleProvider)]) {
-        // Note this one only executes if Firebase swizzling is **enabled**.
-        shouldReplaceDelegate = NO;
-      }
+#ifdef __FF_NOTIFICATIONS_SUPPORTED_PLATFORM
+  [self configureNotificationCenterDelegate];
 #endif
-
-      if (shouldReplaceDelegate) {
-        _originalNotificationCenterDelegate = notificationCenter.delegate;
-        _originalNotificationCenterDelegateRespondsTo.openSettingsForNotification =
-            (unsigned int)[_originalNotificationCenterDelegate
-                respondsToSelector:@selector(userNotificationCenter:openSettingsForNotification:)];
-        _originalNotificationCenterDelegateRespondsTo.willPresentNotification =
-            (unsigned int)[_originalNotificationCenterDelegate
-                respondsToSelector:@selector(userNotificationCenter:willPresentNotification:
-                                             withCompletionHandler:)];
-        _originalNotificationCenterDelegateRespondsTo.didReceiveNotificationResponse =
-            (unsigned int)[_originalNotificationCenterDelegate
-                respondsToSelector:@selector(userNotificationCenter:didReceiveNotificationResponse:
-                                             withCompletionHandler:)];
-      }
-    }
-
-    if (shouldReplaceDelegate) {
-      __strong FLTFirebasePlugin<UNUserNotificationCenterDelegate> *strongSelf = self;
-      notificationCenter.delegate = strongSelf;
-    }
-  }
 
   // We automatically register for remote notifications as
   // application:didReceiveRemoteNotification:fetchCompletionHandler: will not get called unless
   // registerForRemoteNotifications is called early on during app initialization, calling this from
-  // Dart would be too late.
-#if TARGET_OS_OSX
-  if (@available(macOS 10.14, *)) {
-    [[NSApplication sharedApplication] registerForRemoteNotifications];
+  // Dart would be too late. Defer registration when auto-init is disabled so the APNs token cannot
+  // trigger FCM registration before the user opts in.
+  if ([FIRMessaging messaging].isAutoInitEnabled) {
+    [self registerForRemoteNotifications];
   }
-#else
-  [[UIApplication sharedApplication] registerForRemoteNotifications];
-#endif
+}
+
+- (void)markInitialNotificationGatheredAfterDelay {
+  dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)),
+                 dispatch_get_main_queue(), ^{
+                   if (!self->_initialNotificationGathered) {
+                     self->_initialNotificationGathered = YES;
+                     [self initialNotificationCallback];
+                   }
+                 });
 }
 
 - (void)application_onDidFinishLaunchingNotification:(nonnull NSNotification *)notification {
   // Setup UIApplicationDelegate.
 #if TARGET_OS_OSX
-  NSDictionary *remoteNotification = notification.userInfo[NSApplicationLaunchUserNotificationKey];
+  id launchNotification = notification.userInfo[NSApplicationLaunchUserNotificationKey];
+  NSDictionary *remoteNotification = nil;
+  if ([launchNotification isKindOfClass:[NSDictionary class]]) {
+    remoteNotification = launchNotification;
+  } else if ([launchNotification respondsToSelector:@selector(userInfo)]) {
+    remoteNotification = [launchNotification userInfo];
+  }
 #else
   NSDictionary *remoteNotification =
       notification.userInfo[UIApplicationLaunchOptionsRemoteNotificationKey];
@@ -443,12 +525,28 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     API_AVAILABLE(macos(10.14), ios(10.0)) {
   NSDictionary *remoteNotification = response.notification.request.content.userInfo;
   _notificationOpenedAppID = remoteNotification[@"gcm.message_id"];
+  NSDictionary *notificationDict =
+      [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:remoteNotification
+                                         withActionIdentifier:response.actionIdentifier];
+
+#if TARGET_OS_OSX
+  if (_missedApplicationDidFinishLaunchingNotification && _initialNotification == nil) {
+    _initialNotification = notificationDict;
+    _initialNotificationID = _notificationOpenedAppID;
+    _initialNotificationGathered = YES;
+  }
+#endif
+
+  if (_initialNotification != nil &&
+      [_initialNotificationID isEqualToString:_notificationOpenedAppID]) {
+    _initialNotification = notificationDict;
+    [self initialNotificationCallback];
+  }
+
   // We only want to handle FCM notifications and stop firing `onMessageOpenedApp()` when app is
   // coming from a terminated state.
   if (_notificationOpenedAppID != nil &&
       ![_initialNotificationID isEqualToString:_notificationOpenedAppID]) {
-    NSDictionary *notificationDict =
-        [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:remoteNotification];
     [_channel invokeMethod:@"Messaging#onMessageOpenedApp" arguments:notificationDict];
   }
 
@@ -491,13 +589,15 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 - (void)application:(UIApplication *)application
     didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
 #endif
-  if ([FIRMessaging messaging] == nil) {
+  FIRMessaging *messaging = [FIRMessaging messaging];
+  if (!messaging.isAutoInitEnabled) {
     _apnsToken = deviceToken;
+    return;
   }
 #ifdef DEBUG
-  [[FIRMessaging messaging] setAPNSToken:deviceToken type:FIRMessagingAPNSTokenTypeSandbox];
+  [messaging setAPNSToken:deviceToken type:FIRMessagingAPNSTokenTypeSandbox];
 #else
-  [[FIRMessaging messaging] setAPNSToken:deviceToken type:FIRMessagingAPNSTokenTypeProd];
+  [messaging setAPNSToken:deviceToken type:FIRMessagingAPNSTokenTypeProd];
 #endif
 }
 
@@ -627,13 +727,17 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   _sceneDidConnect = YES;
 
   NSDictionary *remoteNotification = nil;
+  NSString *actionIdentifier = nil;
   if (connectionOptions.notificationResponse != nil) {
     // User tapped the notification.
     remoteNotification =
         connectionOptions.notificationResponse.notification.request.content.userInfo;
+    actionIdentifier = connectionOptions.notificationResponse.actionIdentifier;
+    _notificationOpenedAppID = remoteNotification[@"gcm.message_id"];
   }
 
-  [self setupNotificationHandlingWithRemoteNotification:remoteNotification];
+  [self setupNotificationHandlingWithRemoteNotification:remoteNotification
+                                       actionIdentifier:actionIdentifier];
 }
 #endif
 
@@ -670,7 +774,12 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 - (void)messagingSetAutoInitEnabled:(id)arguments
                withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   FIRMessaging *messaging = [FIRMessaging messaging];
-  messaging.autoInitEnabled = [arguments[@"enabled"] boolValue];
+  BOOL enabled = [arguments[@"enabled"] boolValue];
+  messaging.autoInitEnabled = enabled;
+  if (enabled) {
+    [self registerForRemoteNotifications];
+    [self ensureAPNSTokenSetting];
+  }
   result.success(@{
     @"isAutoInitEnabled" : @(messaging.isAutoInitEnabled),
   });
@@ -944,10 +1053,20 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 }
 
 + (NSDictionary *)remoteMessageUserInfoToDict:(NSDictionary *)userInfo {
+  return [self remoteMessageUserInfoToDict:userInfo withActionIdentifier:nil];
+}
+
++ (NSDictionary *)remoteMessageUserInfoToDict:(NSDictionary *)userInfo
+                         withActionIdentifier:(nullable NSString *)actionIdentifier {
   NSMutableDictionary *message = [[NSMutableDictionary alloc] init];
   NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
   NSMutableDictionary *notification = [[NSMutableDictionary alloc] init];
   NSMutableDictionary *notificationIOS = [[NSMutableDictionary alloc] init];
+
+  // message.actionIdentifier
+  if (actionIdentifier != nil) {
+    message[@"actionIdentifier"] = actionIdentifier;
+  }
 
   // message.data
   for (id key in userInfo) {
@@ -1138,11 +1257,11 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 - (void)ensureAPNSTokenSetting {
   FIRMessaging *messaging = [FIRMessaging messaging];
 
-  if (messaging.APNSToken == nil && _apnsToken != nil) {
+  if (messaging.isAutoInitEnabled && messaging.APNSToken == nil && _apnsToken != nil) {
 #ifdef DEBUG
-    [[FIRMessaging messaging] setAPNSToken:_apnsToken type:FIRMessagingAPNSTokenTypeSandbox];
+    [messaging setAPNSToken:_apnsToken type:FIRMessagingAPNSTokenTypeSandbox];
 #else
-    [[FIRMessaging messaging] setAPNSToken:_apnsToken type:FIRMessagingAPNSTokenTypeProd];
+    [messaging setAPNSToken:_apnsToken type:FIRMessagingAPNSTokenTypeProd];
 #endif
     _apnsToken = nil;
   }
@@ -1150,6 +1269,9 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 
 - (nullable NSDictionary *)copyInitialNotification {
   @synchronized(self) {
+#if TARGET_OS_OSX
+    _missedApplicationDidFinishLaunchingNotification = NO;
+#endif
     // Only return if initial notification was sent when app is terminated. Also ensure that
     // it was the initial notification that was tapped to open the app.
     if (_initialNotification != nil &&

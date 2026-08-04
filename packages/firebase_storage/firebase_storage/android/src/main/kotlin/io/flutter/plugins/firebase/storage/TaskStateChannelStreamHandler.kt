@@ -8,16 +8,15 @@ import androidx.annotation.Nullable
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageException
 import com.google.firebase.storage.StorageTask
-import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.EventChannel.EventSink
 import io.flutter.plugin.common.EventChannel.StreamHandler
 import java.util.HashMap
 
 internal class TaskStateChannelStreamHandler(
-  private val flutterTask: FlutterFirebaseStorageTask,
-  private val androidStorage: FirebaseStorage,
-  task: Any,
-  private val identifier: String
+    private val flutterTask: FlutterFirebaseStorageTask,
+    private val androidStorage: FirebaseStorage,
+    task: Any,
+    private val identifier: String
 ) : StreamHandler {
 
   private val androidTask: StorageTask<*> = task as StorageTask<*>
@@ -31,7 +30,7 @@ internal class TaskStateChannelStreamHandler(
     androidTask.addOnProgressListener { taskSnapshot ->
       if (flutterTask.isDestroyed()) return@addOnProgressListener
       val event = getTaskEventMap(taskSnapshot, null)
-      event[TASK_STATE_NAME] = PigeonStorageTaskState.RUNNING.raw
+      event[TASK_STATE_NAME] = InternalStorageTaskState.RUNNING.raw
       events.success(event)
       flutterTask.notifyResumeObjects()
     }
@@ -39,7 +38,7 @@ internal class TaskStateChannelStreamHandler(
     androidTask.addOnPausedListener { taskSnapshot ->
       if (flutterTask.isDestroyed()) return@addOnPausedListener
       val event = getTaskEventMap(taskSnapshot, null)
-      event[TASK_STATE_NAME] = PigeonStorageTaskState.PAUSED.raw
+      event[TASK_STATE_NAME] = InternalStorageTaskState.PAUSED.raw
       events.success(event)
       flutterTask.notifyPauseObjects()
     }
@@ -47,7 +46,7 @@ internal class TaskStateChannelStreamHandler(
     androidTask.addOnSuccessListener { taskSnapshot ->
       if (flutterTask.isDestroyed()) return@addOnSuccessListener
       val event = getTaskEventMap(taskSnapshot, null)
-      event[TASK_STATE_NAME] = PigeonStorageTaskState.SUCCESS.raw
+      event[TASK_STATE_NAME] = InternalStorageTaskState.SUCCESS.raw
       events.success(event)
       flutterTask.destroy()
     }
@@ -55,10 +54,12 @@ internal class TaskStateChannelStreamHandler(
     androidTask.addOnCanceledListener {
       if (flutterTask.isDestroyed()) return@addOnCanceledListener
       val event = getTaskEventMap(null, null)
-      event[TASK_STATE_NAME] = PigeonStorageTaskState.ERROR.raw
+      event[TASK_STATE_NAME] = InternalStorageTaskState.ERROR.raw
       val syntheticException: MutableMap<String, Any> = HashMap()
-      syntheticException["code"] = FlutterFirebaseStorageException.getCode(StorageException.ERROR_CANCELED)
-      syntheticException["message"] = FlutterFirebaseStorageException.getMessage(StorageException.ERROR_CANCELED)
+      syntheticException["code"] =
+          FlutterFirebaseStorageException.getCode(StorageException.ERROR_CANCELED)
+      syntheticException["message"] =
+          FlutterFirebaseStorageException.getMessage(StorageException.ERROR_CANCELED)
       event[TASK_ERROR] = syntheticException
       events.success(event)
       flutterTask.notifyCancelObjects()
@@ -68,7 +69,7 @@ internal class TaskStateChannelStreamHandler(
     androidTask.addOnFailureListener { exception ->
       if (flutterTask.isDestroyed()) return@addOnFailureListener
       val event = getTaskEventMap(null, exception)
-      event[TASK_STATE_NAME] = PigeonStorageTaskState.ERROR.raw
+      event[TASK_STATE_NAME] = InternalStorageTaskState.ERROR.raw
       events.success(event)
       flutterTask.destroy()
     }
@@ -87,7 +88,10 @@ internal class TaskStateChannelStreamHandler(
     }
   }
 
-  private fun getTaskEventMap(@Nullable snapshot: Any?, @Nullable exception: Exception?): MutableMap<String, Any?> {
+  private fun getTaskEventMap(
+      @Nullable snapshot: Any?,
+      @Nullable exception: Exception?
+  ): MutableMap<String, Any?> {
     val arguments: MutableMap<String, Any?> = HashMap()
     arguments[TASK_APP_NAME] = androidStorage.app.name
     if (snapshot != null) {
@@ -99,5 +103,3 @@ internal class TaskStateChannelStreamHandler(
     return arguments
   }
 }
-
-

@@ -1,3 +1,46 @@
+## 12.4.6
+
+ - **FIX**(app_check): sync SPM pins to 12.17.0 and fix Windows Activate override after [#18505](https://github.com/firebase/flutterfire/issues/18505) ([#18515](https://github.com/firebase/flutterfire/issues/18515)). ([ce1f6e05](https://github.com/firebase/flutterfire/commit/ce1f6e05e2d2645c414f8e731d3d082436caa012))
+
+## 12.4.5
+
+ - Update a dependency to the latest release.
+
+## 12.4.4
+
+ - Update a dependency to the latest release.
+
+## 12.4.3
+
+ - **FIX**(analytics,iOS): update iOS dependency instructions for IDFA-free usage ([#18337](https://github.com/firebase/flutterfire/issues/18337)). ([c21fc77b](https://github.com/firebase/flutterfire/commit/c21fc77b68a87b9691fc1615454c5dac39dd4ed4))
+
+## 12.4.2
+
+ - Update a dependency to the latest release.
+
+## 12.4.1
+
+ - Update a dependency to the latest release.
+
+## 12.4.0
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+ - **FEAT**: upgrade pigeon to version 26.3.4 ([#18205](https://github.com/firebase/flutterfire/issues/18205)). ([cb6b4aef](https://github.com/firebase/flutterfire/commit/cb6b4aeffc568755ea3eebe32b998f00237bf5ad))
+
+## 12.3.0
+
+ - **FEAT**: use local firebase_core instead of remote SPM dependency ([#18141](https://github.com/firebase/flutterfire/issues/18141)). ([995caf40](https://github.com/firebase/flutterfire/commit/995caf400df80c0fde7151c651ccc6c0f756e381))
+
+## 12.2.0
+
+ - **FIX**(analytics,iOS): Update hashedEmailAddress handling to use hex string conversion ([#18060](https://github.com/firebase/flutterfire/issues/18060)). ([80c6cff2](https://github.com/firebase/flutterfire/commit/80c6cff2836ef102c716d1e54eda8114b8ee629b))
+ - **FIX**(android): remove kotlin-android since AGP 9 supports it ([#18059](https://github.com/firebase/flutterfire/issues/18059)). ([1e39ad1f](https://github.com/firebase/flutterfire/commit/1e39ad1f146ce23742731ceeb30ff36c440b816f))
+ - **FEAT**(analytics): add support for items in logEvent ([#18097](https://github.com/firebase/flutterfire/issues/18097)). ([2b8517c8](https://github.com/firebase/flutterfire/commit/2b8517c88e4d4006119fd997982b895f1493ba0c))
+ - **FEAT**(analytics,iOS): add support for `logTransaction` ([#17995](https://github.com/firebase/flutterfire/issues/17995)). ([103d7ffa](https://github.com/firebase/flutterfire/commit/103d7ffa9343c654ec23c782a802b929dbf37d01))
+ - **FEAT**(analytics,ios): add support for FirebaseAnalyticsWithoutAdIdSupport with SPM ([#18061](https://github.com/firebase/flutterfire/issues/18061)). ([65dbd4bd](https://github.com/firebase/flutterfire/commit/65dbd4bd3995411a14d4efcf35c945cf344e56a9))
+ - **FEAT**(ios): migrate iOS to UIScene lifecycle ([#18054](https://github.com/firebase/flutterfire/issues/18054)). ([3ffa4110](https://github.com/firebase/flutterfire/commit/3ffa411098132fd5182a84be4e7a226106bc7451))
+ - **DOCS**(analytics): clarify `logInAppPurchase` API documentation for iOS usage ([#18087](https://github.com/firebase/flutterfire/issues/18087)). ([8a2ed9f7](https://github.com/firebase/flutterfire/commit/8a2ed9f7588232a80df06077ef3489114de68af3))
+
 ## 12.1.3
 
  - **FIX**(analytics,iOS): Update hashedPhoneNumber handling to use hex string conversion ([#17807](https://github.com/firebase/flutterfire/issues/17807)). ([407c2490](https://github.com/firebase/flutterfire/commit/407c2490602484499d1ab5b2ce6860af00a218c8))

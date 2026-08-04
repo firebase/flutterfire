@@ -88,51 +88,62 @@ void runDocumentReferenceTests() {
           });
         });
 
-        test('listens to a single response from cache', () async {
-          DocumentReference<Map<String, dynamic>> document =
-              await initializeTest('document-snapshot');
-          Stream<DocumentSnapshot<Map<String, dynamic>>> stream =
-              document.snapshots(source: ListenSource.cache);
-          StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>?
-              subscription;
+        test(
+          'listens to a single response from cache',
+          () async {
+            DocumentReference<Map<String, dynamic>> document =
+                await initializeTest('document-snapshot');
+            Stream<DocumentSnapshot<Map<String, dynamic>>> stream =
+                document.snapshots(source: ListenSource.cache);
+            StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>?
+                subscription;
 
-          subscription = stream.listen(
-            expectAsync1(
-              (DocumentSnapshot<Map<String, dynamic>> snapshot) {
-                expect(snapshot.exists, isFalse);
-              },
-              reason: 'Stream should only have been called once.',
-            ),
-          );
+            subscription = stream.listen(
+              expectAsync1(
+                (DocumentSnapshot<Map<String, dynamic>> snapshot) {
+                  expect(snapshot.exists, isFalse);
+                },
+                reason: 'Stream should only have been called once.',
+              ),
+            );
 
-          addTearDown(() async {
-            await subscription?.cancel();
-          });
-        });
+            addTearDown(() async {
+              await subscription?.cancel();
+            });
+          },
+          // Listening from cache is not supported on Windows (see
+          // DocumentReference.snapshots in cloud_firestore).
+          skip: defaultTargetPlatform == TargetPlatform.windows,
+        );
 
-        test('listens to a document from cache', () async {
-          DocumentReference<Map<String, dynamic>> document =
-              await initializeTest('document-snapshot-cache');
-          await document.set({'foo': 'bar'});
-          Stream<DocumentSnapshot<Map<String, dynamic>>> stream =
-              document.snapshots(source: ListenSource.cache);
-          StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>?
-              subscription;
+        test(
+          'listens to a document from cache',
+          () async {
+            DocumentReference<Map<String, dynamic>> document =
+                await initializeTest('document-snapshot-cache');
+            await document.set({'foo': 'bar'});
+            Stream<DocumentSnapshot<Map<String, dynamic>>> stream =
+                document.snapshots(source: ListenSource.cache);
+            StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>?
+                subscription;
 
-          subscription = stream.listen(
-            expectAsync1(
-              (DocumentSnapshot<Map<String, dynamic>> snapshot) {
-                expect(snapshot.exists, isTrue);
-                expect(snapshot.data(), equals({'foo': 'bar'}));
-              },
-              reason: 'Stream should only have been called once.',
-            ),
-          );
+            subscription = stream.listen(
+              expectAsync1(
+                (DocumentSnapshot<Map<String, dynamic>> snapshot) {
+                  expect(snapshot.exists, isTrue);
+                  expect(snapshot.data(), equals({'foo': 'bar'}));
+                },
+                reason: 'Stream should only have been called once.',
+              ),
+            );
 
-          addTearDown(() async {
-            await subscription?.cancel();
-          });
-        });
+            addTearDown(() async {
+              await subscription?.cancel();
+            });
+          },
+          // Listening from cache is not supported on Windows.
+          skip: defaultTargetPlatform == TargetPlatform.windows,
+        );
 
         test('listens to multiple documents', () async {
           DocumentReference<Map<String, dynamic>> doc1 =
@@ -257,6 +268,40 @@ void runDocumentReferenceTests() {
     });
 
     group('DocumentReference.get()', () {
+      test('gets blob data', () async {
+        final document = await initializeTest('document-get-blob');
+        final blob = Blob(Uint8List.fromList(<int>[0, 127, 255]));
+        await document.set(<String, Object?>{'blob': blob});
+
+        final snapshot = await document.get();
+
+        expect(snapshot.get('blob'), blob);
+      });
+
+      test(
+        'preserves native error messages when offline',
+        () async {
+          final document =
+              await initializeTest('document-get-server-while-offline');
+          await firestore.disableNetwork();
+          addTearDown(firestore.enableNetwork);
+
+          await expectLater(
+            document.get(const GetOptions(source: Source.server)),
+            throwsA(
+              isA<FirebaseException>()
+                  .having((error) => error.code, 'code', 'unavailable')
+                  .having(
+                    (error) => error.message,
+                    'message',
+                    contains('offline'),
+                  ),
+            ),
+          );
+        },
+        skip: kIsWeb,
+      );
+
       test('gets a document from server', () async {
         DocumentReference<Map<String, dynamic>> document =
             await initializeTest('document-get-server');
@@ -408,7 +453,8 @@ void runDocumentReferenceTests() {
           'null': null,
           'timestamp': Timestamp.now(),
           'geopoint': const GeoPoint(1, 2),
-          'vectorValue': const VectorValue([1, 2, 3]),
+          if (defaultTargetPlatform != TargetPlatform.windows)
+            'vectorValue': const VectorValue([1, 2, 3]),
           'reference': firestore.doc('foo/bar'),
           'nan': double.nan,
           'infinity': double.infinity,
@@ -445,11 +491,13 @@ void runDocumentReferenceTests() {
         expect(data['geopoint'], isA<GeoPoint>());
         expect((data['geopoint'] as GeoPoint).latitude, equals(1));
         expect((data['geopoint'] as GeoPoint).longitude, equals(2));
-        expect(data['vectorValue'], isA<VectorValue>());
-        expect(
-          (data['vectorValue'] as VectorValue).toArray(),
-          equals([1, 2, 3]),
-        );
+        if (defaultTargetPlatform != TargetPlatform.windows) {
+          expect(data['vectorValue'], isA<VectorValue>());
+          expect(
+            (data['vectorValue'] as VectorValue).toArray(),
+            equals([1, 2, 3]),
+          );
+        }
         expect(data['reference'], isA<DocumentReference>());
         expect((data['reference'] as DocumentReference).id, equals('bar'));
         expect(data['nan'].isNaN, equals(true));
@@ -616,7 +664,7 @@ void runDocumentReferenceTests() {
             ),
           );
           await expectLater(
-            fooConverter.get(),
+            fooConverter.get(const GetOptions(source: Source.server)),
             completion(
               isA<DocumentSnapshot<int>>().having((e) => e.data(), 'data', 42),
             ),
@@ -633,7 +681,7 @@ void runDocumentReferenceTests() {
           );
 
           await expectLater(
-            fooConverter.get(),
+            fooConverter.get(const GetOptions(source: Source.server)),
             completion(
               isA<DocumentSnapshot<int>>().having((e) => e.data(), 'data', 21),
             ),

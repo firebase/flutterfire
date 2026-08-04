@@ -16,18 +16,18 @@
 
 @interface PigeonParser : NSObject
 
-+ (NSArray *_Nonnull)getManualList:(nonnull PigeonUserDetails *)userDetails;
-+ (PigeonUserCredential *_Nullable)
++ (NSArray *_Nonnull)getManualList:(nonnull InternalUserDetails *)userDetails;
++ (InternalUserCredential *_Nullable)
     getPigeonUserCredentialFromAuthResult:(nonnull FIRAuthDataResult *)authResult
                         authorizationCode:(nullable NSString *)authorizationCode;
-+ (PigeonUserDetails *_Nullable)getPigeonDetails:(nonnull FIRUser *)user;
-+ (PigeonUserInfo *_Nullable)getPigeonUserInfo:(nonnull FIRUser *)user;
++ (InternalUserDetails *_Nullable)getPigeonDetails:(nonnull FIRUser *)user;
++ (InternalUserInfo *_Nullable)getPigeonUserInfo:(nonnull FIRUser *)user;
 + (FIRActionCodeSettings *_Nullable)parseActionCodeSettings:
-    (nullable PigeonActionCodeSettings *)settings;
-+ (PigeonUserCredential *_Nullable)getPigeonUserCredentialFromFIRUser:(nonnull FIRUser *)user;
-+ (PigeonIdTokenResult *_Nonnull)parseIdTokenResult:(nonnull FIRAuthTokenResult *)tokenResult;
-+ (PigeonTotpSecret *_Nonnull)getPigeonTotpSecret:(nonnull FIRTOTPSecret *)secret;
-+ (PigeonAuthCredential *_Nullable)getPigeonAuthCredential:
-                                       (FIRAuthCredential *_Nullable)authCredentialToken
-                                                     token:(NSNumber *_Nullable)token;
+    (nullable InternalActionCodeSettings *)settings;
++ (InternalUserCredential *_Nullable)getPigeonUserCredentialFromFIRUser:(nonnull FIRUser *)user;
++ (InternalIdTokenResult *_Nonnull)parseIdTokenResult:(nonnull FIRAuthTokenResult *)tokenResult;
++ (InternalTotpSecret *_Nonnull)getPigeonTotpSecret:(nonnull FIRTOTPSecret *)secret;
++ (InternalAuthCredential *_Nullable)getPigeonAuthCredential:
+                                         (FIRAuthCredential *_Nullable)authCredentialToken
+                                                       token:(NSNumber *_Nullable)token;
 @end

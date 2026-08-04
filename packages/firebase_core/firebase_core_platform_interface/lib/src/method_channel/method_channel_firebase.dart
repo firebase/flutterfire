@@ -33,7 +33,7 @@ class MethodChannelFirebase extends FirebasePlatform {
   }
 
   /// Creates and attaches a new [MethodChannelFirebaseApp] to the [MethodChannelFirebase]
-  /// and adds any constants to the [FirebasePluginPlatform] class.
+  /// and adds any constants to the [FirebasePlugin] class.
   void _initializeFirebaseAppFromMap(CoreInitializeResponse response) {
     MethodChannelFirebaseApp methodChannelFirebaseApp =
         MethodChannelFirebaseApp(
@@ -45,8 +45,7 @@ class MethodChannelFirebase extends FirebasePlatform {
 
     appInstances[methodChannelFirebaseApp.name] = methodChannelFirebaseApp;
 
-    FirebasePluginPlatform
-            ._constantsForPluginApps[methodChannelFirebaseApp.name] =
+    FirebasePlugin._constantsForPluginApps[methodChannelFirebaseApp.name] =
         response.pluginConstants;
   }
 
@@ -91,23 +90,24 @@ class MethodChannelFirebase extends FirebasePlatform {
       // trying to initialize default from Dart
       if (defaultApp == null && _options != null) {
         _initializeFirebaseAppFromMap(await api.initializeApp(
-            defaultFirebaseAppName,
-            CoreFirebaseOptions(
-              apiKey: _options.apiKey,
-              appId: _options.appId,
-              messagingSenderId: _options.messagingSenderId,
-              projectId: _options.projectId,
-              authDomain: _options.authDomain,
-              databaseURL: _options.databaseURL,
-              storageBucket: _options.storageBucket,
-              measurementId: _options.measurementId,
-              trackingId: _options.trackingId,
-              deepLinkURLScheme: _options.deepLinkURLScheme,
-              androidClientId: _options.androidClientId,
-              iosClientId: _options.iosClientId,
-              iosBundleId: _options.iosBundleId,
-              appGroupId: _options.appGroupId,
-            )));
+          defaultFirebaseAppName,
+          CoreFirebaseOptions(
+            apiKey: _options.apiKey,
+            appId: _options.appId,
+            messagingSenderId: _options.messagingSenderId,
+            projectId: _options.projectId,
+            authDomain: _options.authDomain,
+            databaseURL: _options.databaseURL,
+            storageBucket: _options.storageBucket,
+            measurementId: _options.measurementId,
+            trackingId: _options.trackingId,
+            deepLinkURLScheme: _options.deepLinkURLScheme,
+            androidClientId: _options.androidClientId,
+            iosClientId: _options.iosClientId,
+            iosBundleId: _options.iosBundleId,
+            appGroupId: _options.appGroupId,
+          ),
+        ));
         defaultApp = appInstances[defaultFirebaseAppName];
       }
 
@@ -157,23 +157,24 @@ class MethodChannelFirebase extends FirebasePlatform {
     }
 
     _initializeFirebaseAppFromMap(await api.initializeApp(
-        name,
-        CoreFirebaseOptions(
-          apiKey: options!.apiKey,
-          appId: options.appId,
-          messagingSenderId: options.messagingSenderId,
-          projectId: options.projectId,
-          authDomain: options.authDomain,
-          databaseURL: options.databaseURL,
-          storageBucket: options.storageBucket,
-          measurementId: options.measurementId,
-          trackingId: options.trackingId,
-          deepLinkURLScheme: options.deepLinkURLScheme,
-          androidClientId: options.androidClientId,
-          iosClientId: options.iosClientId,
-          iosBundleId: options.iosBundleId,
-          appGroupId: options.appGroupId,
-        )));
+      name,
+      CoreFirebaseOptions(
+        apiKey: options!.apiKey,
+        appId: options.appId,
+        messagingSenderId: options.messagingSenderId,
+        projectId: options.projectId,
+        authDomain: options.authDomain,
+        databaseURL: options.databaseURL,
+        storageBucket: options.storageBucket,
+        measurementId: options.measurementId,
+        trackingId: options.trackingId,
+        deepLinkURLScheme: options.deepLinkURLScheme,
+        androidClientId: options.androidClientId,
+        iosClientId: options.iosClientId,
+        iosBundleId: options.iosBundleId,
+        appGroupId: options.appGroupId,
+      ),
+    ));
     return appInstances[name]!;
   }
 

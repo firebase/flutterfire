@@ -56,12 +56,17 @@ android {
   lintOptions {
     disable 'InvalidPackage'
   }
+
+  testOptions {
+    unitTests.returnDefaultValues = true
+  }
 }
 
 dependencies {
   implementation platform("com.google.firebase:firebase-bom:${getRootProjectExtOrCoreProperty("FirebaseSDKVersion", firebaseCoreProject)}")
   implementation 'com.google.firebase:firebase-crashlytics'
   implementation 'androidx.annotation:annotation:1.7.0'
+  testImplementation 'junit:junit:4.13.2'
 }
 
 apply from: file("./user-agent.gradle")

@@ -43,9 +43,6 @@ abstract class CollectionReferencePlatform extends QueryPlatform {
   /// Returns a [DocumentReferencePlatform] with the provided [path].
   ///
   /// If no [path] is provided, an auto-generated ID is used.
-  ///
-  /// The unique key generated is prefixed with a client-generated timestamp
-  /// so that the resulting list will be chronologically-sorted.
   DocumentReferencePlatform doc([String? path]) {
     throw UnimplementedError('doc() is not implemented');
   }

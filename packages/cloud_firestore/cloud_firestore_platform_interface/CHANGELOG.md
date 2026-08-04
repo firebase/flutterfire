@@ -1,3 +1,45 @@
+## 8.0.6
+
+ - **FIX**(firestore,android): clean up Android transaction listeners on completion ([#18475](https://github.com/firebase/flutterfire/issues/18475)). ([ae002c7c](https://github.com/firebase/flutterfire/commit/ae002c7ca8ae405ebc901bfe17e6724a48075bca))
+ - **FIX**(firestore): Preserves microseconds when serializing implicit DateTime values ([#18435](https://github.com/firebase/flutterfire/issues/18435)). ([068c3094](https://github.com/firebase/flutterfire/commit/068c30946912d8a3d5f24455fcb4bc00202e60ee))
+
+## 8.0.5
+
+ - Update a dependency to the latest release.
+
+## 8.0.4
+
+ - **DOCS**(cloud_firestore): Remove Incorrect API Documentation ([#18423](https://github.com/firebase/flutterfire/issues/18423)). ([4b1056fd](https://github.com/firebase/flutterfire/commit/4b1056fdbf9da95f630d35ecd3ae605839cdb010))
+
+## 8.0.3
+
+ - Update a dependency to the latest release.
+
+## 8.0.2
+
+ - Update a dependency to the latest release.
+
+## 8.0.1
+
+ - Update a dependency to the latest release.
+
+## 8.0.0
+
+ - Bump platform interface a major version due to pigeon dependency update
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+ - **FEAT**: upgrade pigeon to version 26.3.4 ([#18205](https://github.com/firebase/flutterfire/issues/18205)). ([cb6b4aef](https://github.com/firebase/flutterfire/commit/cb6b4aeffc568755ea3eebe32b998f00237bf5ad))
+
+## 7.2.0
+
+ - **FEAT**: support for Firestore Pipelines ([#18183](https://github.com/firebase/flutterfire/issues/18183)). ([d734cf08](https://github.com/firebase/flutterfire/commit/d734cf0885f6d9403c2fb3ac48d6c52e14199309))
+
+## 7.1.0
+
+ - **REFACTOR**: fix formatting and analysis issues across the repo ([#18124](https://github.com/firebase/flutterfire/issues/18124)). ([ab79fd93](https://github.com/firebase/flutterfire/commit/ab79fd93ee4ccfeb478687623134b1cf8ab71c74))
+ - **FEAT**(firestore): add support for FieldPath in update transactions ([#18121](https://github.com/firebase/flutterfire/issues/18121)). ([aa1f17a5](https://github.com/firebase/flutterfire/commit/aa1f17a554af0938c13f8500e3cfcd586377f3b0))
+ - **FEAT**(firestore,web): add webPersistentTabManager settings support ([#18067](https://github.com/firebase/flutterfire/issues/18067)). ([397ba523](https://github.com/firebase/flutterfire/commit/397ba523df968e8deb92e679f54ea837f28b23e3))
+
 ## 7.0.7
 
  - Update a dependency to the latest release.

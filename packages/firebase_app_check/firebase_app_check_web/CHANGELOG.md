@@ -1,3 +1,41 @@
+## 0.2.6
+
+ - **FEAT**(appcheck): rCE provider api update ([#18505](https://github.com/firebase/flutterfire/issues/18505)). ([a56649a4](https://github.com/firebase/flutterfire/commit/a56649a41539c559a08e4f566128db8de390c284))
+ - **FEAT**(appcheck): getTokenResult ([#18492](https://github.com/firebase/flutterfire/issues/18492)). ([361f7199](https://github.com/firebase/flutterfire/commit/361f7199a1a6f930a7ad298c7f4eb3f1d5e6bb0d))
+
+## 0.2.5+2
+
+ - Update a dependency to the latest release.
+
+## 0.2.5+1
+
+ - Update a dependency to the latest release.
+
+## 0.2.5
+
+ - **FEAT**(appcheck): appcheck reCAPTCHA mobile support (gradually rolling out) ([#18261](https://github.com/firebase/flutterfire/issues/18261)). ([036a860a](https://github.com/firebase/flutterfire/commit/036a860a0e66d46b5c57eb3df3a0f9e5846ef00b))
+
+## 0.2.4+3
+
+ - Update a dependency to the latest release.
+
+## 0.2.4+2
+
+ - Update a dependency to the latest release.
+
+## 0.2.4+1
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+
+## 0.2.4
+
+ - **FIX**(app_check,web): fix an error that could occur when refreshing a token ([#18135](https://github.com/firebase/flutterfire/issues/18135)). ([6998e512](https://github.com/firebase/flutterfire/commit/6998e512ea5404a20ad81a0306aafaa607babc2a))
+ - **FEAT**(app_check,windows): add support for AppCheck for Windows ([#18140](https://github.com/firebase/flutterfire/issues/18140)). ([81f30325](https://github.com/firebase/flutterfire/commit/81f30325fc926fe94b630e49f56b795c781a4cbe))
+
+## 0.2.3
+
+ - **FEAT**(messaging,web): add support for debug tokens on Web ([#18057](https://github.com/firebase/flutterfire/issues/18057)). ([b853386e](https://github.com/firebase/flutterfire/commit/b853386e987d686eab4b8fd9b8dad14eda97479c))
+
 ## 0.2.2+3
 
  - Update a dependency to the latest release.

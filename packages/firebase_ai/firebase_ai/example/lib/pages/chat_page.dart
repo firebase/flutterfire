@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_ai/firebase_ai.dart';
 import '../widgets/message_widget.dart';
@@ -21,11 +20,11 @@ class ChatPage extends StatefulWidget {
   const ChatPage({
     super.key,
     required this.title,
-    required this.useVertexBackend,
+    required this.useAgentPlatform,
   });
 
   final String title;
-  final bool useVertexBackend;
+  final bool useAgentPlatform;
 
   @override
   State<ChatPage> createState() => _ChatPageState();
@@ -50,20 +49,17 @@ class _ChatPageState extends State<ChatPage> {
   void _initializeChat() {
     final generationConfig = GenerationConfig(
       thinkingConfig: _enableThinking
-          ? ThinkingConfig.withThinkingBudget(
-              null,
-              includeThoughts: true,
-            ) // Using thinkingBudget since we are testing with gemini 2.5
+          ? ThinkingConfig.withThinkingLevel(ThinkingLevel.medium)
           : null,
     );
-    if (widget.useVertexBackend) {
-      _model = FirebaseAI.vertexAI(auth: FirebaseAuth.instance).generativeModel(
-        model: 'gemini-2.5-flash',
+    if (widget.useAgentPlatform) {
+      _model = FirebaseAI.agentPlatform().generativeModel(
+        model: 'gemini-3.1-flash-lite',
         generationConfig: generationConfig,
       );
     } else {
-      _model = FirebaseAI.googleAI(auth: FirebaseAuth.instance).generativeModel(
-        model: 'gemini-2.5-flash',
+      _model = FirebaseAI.googleAI().generativeModel(
+        model: 'gemini-3.1-flash-lite',
         generationConfig: generationConfig,
       );
     }
@@ -153,6 +149,7 @@ class _ChatPageState extends State<ChatPage> {
                             Icons.send,
                             color: Theme.of(context).colorScheme.primary,
                           ),
+                          tooltip: 'Send',
                         ),
                         IconButton(
                           onPressed: () {
@@ -162,6 +159,7 @@ class _ChatPageState extends State<ChatPage> {
                             Icons.stream,
                             color: Theme.of(context).colorScheme.primary,
                           ),
+                          tooltip: 'Send Stream',
                         ),
                       ],
                     )

@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// ignore_for_file: avoid_print
+
 import 'dart:io';
 
 import 'package:cli_util/cli_logging.dart' as logging;
@@ -36,11 +38,11 @@ void main() async {
 
   // Define files using paths
   final globalConfig = File(globalConfigPath);
-  
+
   // Check if the files exist
   if (!globalConfig.existsSync()) {
     throw Exception(
-    'global_config.gradle file not found in the expected location.',
+      'global_config.gradle file not found in the expected location.',
     );
   }
 
@@ -60,14 +62,16 @@ void main() async {
       case 'firebase_performance':
       case 'firebase_remote_config':
       case 'firebase_storage':
-        final localConfigGradleFilePath = '${package.path}/android/local-config.gradle';
+        final localConfigGradleFilePath =
+            '${package.path}/android/local-config.gradle';
 
         final copiedConfig = await globalConfig.copy(
-        localConfigGradleFilePath,
+          localConfigGradleFilePath,
         );
         print('File copied to: ${copiedConfig.path}');
 
-        final gradlePropertiesFilePath = '${package.path}/example/android/gradle.properties';
+        final gradlePropertiesFilePath =
+            '${package.path}/example/android/gradle.properties';
         extractAndWriteProperty(
           globalConfig: globalConfig,
           gradlePropertiesFile: File(gradlePropertiesFilePath),
@@ -76,14 +80,15 @@ void main() async {
         break;
       case 'firebase_data_connect':
         // Only has gradle in the example application.
-        final localConfigGradleFilePath = '${package.path}/example/android/app/local-config.gradle';
+        final localConfigGradleFilePath =
+            '${package.path}/example/android/app/local-config.gradle';
         final copiedConfig = await globalConfig.copy(
-        localConfigGradleFilePath,
+          localConfigGradleFilePath,
         );
-        // ignore: avoid_print
         print('File copied to: ${copiedConfig.path}');
-        
-        final gradlePropertiesFilePath = '${package.path}/example/android/gradle.properties';
+
+        final gradlePropertiesFilePath =
+            '${package.path}/example/android/gradle.properties';
         extractAndWriteProperty(
           globalConfig: globalConfig,
           gradlePropertiesFile: File(gradlePropertiesFilePath),
@@ -117,18 +122,17 @@ Future<melos.MelosWorkspace> getMelosWorkspace() async {
   return workspace;
 }
 
-Future<void> extractAndWriteProperty({
+void extractAndWriteProperty({
   required File globalConfig,
   required File gradlePropertiesFile,
-}) async {
-
+}) {
   const String propertyName = 'androidGradlePluginVersion';
-  if (!await globalConfig.exists()) {
+  if (!globalConfig.existsSync()) {
     print('Global config file not found: ${globalConfig.path}');
     return;
   }
 
-  final globalContent = await globalConfig.readAsString();
+  final globalContent = globalConfig.readAsStringSync();
 
   // Extract the property from the ext block
   final regex = RegExp('$propertyName\\s*=\\s*[\'"]?([^\\n\'"]+)[\'"]?');
@@ -141,9 +145,9 @@ Future<void> extractAndWriteProperty({
 
   final value = match.group(1);
 
-  final lines = await gradlePropertiesFile.exists()
-      ? await gradlePropertiesFile.readAsLines()
-      : [];
+  final lines = gradlePropertiesFile.existsSync()
+      ? gradlePropertiesFile.readAsLinesSync()
+      : <String>[];
 
   bool updated = false;
 
@@ -159,7 +163,7 @@ Future<void> extractAndWriteProperty({
     updatedLines.add('$propertyName=$value');
   }
 
-  await gradlePropertiesFile.writeAsString(updatedLines.join('\n'));
+  gradlePropertiesFile.writeAsStringSync(updatedLines.join('\n'));
 
   print('Wrote $propertyName=$value to ${gradlePropertiesFile.path}');
 }

@@ -110,8 +110,6 @@ class AudioInput extends ChangeNotifier {
       sampleRate: 24000,
       device: selectedDevice,
       numChannels: 1,
-      echoCancel: true,
-      noiseSuppress: true,
       androidConfig: const AndroidRecordConfig(
         audioSource: AndroidAudioSource.voiceCommunication,
       ),

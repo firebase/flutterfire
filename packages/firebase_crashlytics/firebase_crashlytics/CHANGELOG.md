@@ -1,3 +1,41 @@
+## 5.2.7
+
+ - **FIX**(crashlytics,android): avoid heap-loading libapp.so for build ID ([#18483](https://github.com/firebase/flutterfire/issues/18483)). ([8d0afcdd](https://github.com/firebase/flutterfire/commit/8d0afcdd9d8d7353a47a6339b09c7964d8eabf84))
+ - **FIX**(app_check): sync SPM pins to 12.17.0 and fix Windows Activate override after [#18505](https://github.com/firebase/flutterfire/issues/18505) ([#18515](https://github.com/firebase/flutterfire/issues/18515)). ([ce1f6e05](https://github.com/firebase/flutterfire/commit/ce1f6e05e2d2645c414f8e731d3d082436caa012))
+
+## 5.2.6
+
+ - Update a dependency to the latest release.
+
+## 5.2.5
+
+ - Update a dependency to the latest release.
+
+## 5.2.4
+
+ - Update a dependency to the latest release.
+
+## 5.2.3
+
+ - Update a dependency to the latest release.
+
+## 5.2.2
+
+ - Update a dependency to the latest release.
+
+## 5.2.1
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+
+## 5.2.0
+
+ - **FIX**(crashlytics,android): fix an issue with deobfuscating flavored builds ([#18085](https://github.com/firebase/flutterfire/issues/18085)). ([55a7f6ff](https://github.com/firebase/flutterfire/commit/55a7f6ff17940487e29d8bc78779ca4cfce24b0c))
+ - **FEAT**: use local firebase_core instead of remote SPM dependency ([#18141](https://github.com/firebase/flutterfire/issues/18141)). ([995caf40](https://github.com/firebase/flutterfire/commit/995caf400df80c0fde7151c651ccc6c0f756e381))
+
+## 5.1.0
+
+ - **FEAT**(ios): migrate iOS to UIScene lifecycle ([#18054](https://github.com/firebase/flutterfire/issues/18054)). ([3ffa4110](https://github.com/firebase/flutterfire/commit/3ffa411098132fd5182a84be4e7a226106bc7451))
+
 ## 5.0.8
 
  - Update a dependency to the latest release.

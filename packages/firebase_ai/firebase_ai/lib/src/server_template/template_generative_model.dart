@@ -21,46 +21,46 @@ final class TemplateGenerativeModel extends BaseTemplateApiClientModel {
   TemplateGenerativeModel._test({
     required String location,
     required FirebaseApp app,
-    required bool useVertexBackend,
+    required bool useAgentPlatform,
     http.Client? httpClient,
   }) : super(
-          serializationStrategy: useVertexBackend
-              ? VertexSerialization()
+          serializationStrategy: useAgentPlatform
+              ? AgentPlatformSerialization()
               : DeveloperSerialization(),
-          modelUri: useVertexBackend
-              ? _VertexUri(app: app, model: '', location: location)
+          modelUri: useAgentPlatform
+              ? _AgentPlatformUri(app: app, model: '', location: location)
               : _GoogleAIUri(app: app, model: ''),
           client: HttpApiClient(
               apiKey: app.options.apiKey,
               httpClient: httpClient,
               requestHeaders: BaseModel.firebaseTokens(null, null, app, false)),
-          templateUri: useVertexBackend
-              ? _TemplateVertexUri(app: app, location: location)
+          templateUri: useAgentPlatform
+              ? _TemplateAgentPlatformUri(app: app, location: location)
               : _TemplateGoogleAIUri(app: app),
         );
 
   TemplateGenerativeModel._({
     required String location,
     required FirebaseApp app,
-    required bool useVertexBackend,
+    required bool useAgentPlatform,
     bool? useLimitedUseAppCheckTokens,
     FirebaseAppCheck? appCheck,
     FirebaseAuth? auth,
     http.Client? httpClient,
   }) : super(
-          serializationStrategy: useVertexBackend
-              ? VertexSerialization()
+          serializationStrategy: useAgentPlatform
+              ? AgentPlatformSerialization()
               : DeveloperSerialization(),
-          modelUri: useVertexBackend
-              ? _VertexUri(app: app, model: '', location: location)
+          modelUri: useAgentPlatform
+              ? _AgentPlatformUri(app: app, model: '', location: location)
               : _GoogleAIUri(app: app, model: ''),
           client: HttpApiClient(
               apiKey: app.options.apiKey,
               httpClient: httpClient,
               requestHeaders: BaseModel.firebaseTokens(
                   appCheck, auth, app, useLimitedUseAppCheckTokens)),
-          templateUri: useVertexBackend
-              ? _TemplateVertexUri(app: app, location: location)
+          templateUri: useAgentPlatform
+              ? _TemplateAgentPlatformUri(app: app, location: location)
               : _TemplateGoogleAIUri(app: app),
         );
 
@@ -69,9 +69,16 @@ final class TemplateGenerativeModel extends BaseTemplateApiClientModel {
   /// Sends a "templateGenerateContent" API request for the configured model.
   @experimental
   Future<GenerateContentResponse> generateContent(String templateId,
-          {required Map<String, Object?> inputs}) =>
-      makeTemplateRequest(TemplateTask.templateGenerateContent, templateId,
-          inputs, null, _serializationStrategy.parseGenerateContentResponse);
+          {required Map<String, Object?> inputs,
+          TemplateToolConfig? toolConfig}) =>
+      makeTemplateRequest(
+          TemplateTask.templateGenerateContent,
+          templateId,
+          inputs,
+          null, // history
+          null, // tools
+          toolConfig,
+          _serializationStrategy.parseGenerateContentResponse);
 
   /// Generates a stream of content responding to [templateId] and [inputs].
   ///
@@ -79,12 +86,49 @@ final class TemplateGenerativeModel extends BaseTemplateApiClientModel {
   /// and waits for the response.
   @experimental
   Stream<GenerateContentResponse> generateContentStream(String templateId,
-      {required Map<String, Object?> inputs}) {
+      {required Map<String, Object?> inputs, TemplateToolConfig? toolConfig}) {
     return streamTemplateRequest(
         TemplateTask.templateStreamGenerateContent,
         templateId,
         inputs,
-        null,
+        null, // history
+        null, // tools
+        toolConfig,
+        _serializationStrategy.parseGenerateContentResponse);
+  }
+
+  /// Generates content from a template with the given [templateId], [inputs] and
+  /// [history].
+  @experimental
+  Future<GenerateContentResponse> templateGenerateContentWithHistory(
+          Iterable<Content> history, String templateId,
+          {required Map<String, Object?> inputs,
+          List<TemplateTool>? tools,
+          TemplateToolConfig? toolConfig}) =>
+      makeTemplateRequest(
+          TemplateTask.templateGenerateContent,
+          templateId,
+          inputs,
+          history,
+          tools,
+          toolConfig,
+          _serializationStrategy.parseGenerateContentResponse);
+
+  /// Generates a stream of content from a template with the given [templateId],
+  /// [inputs] and [history].
+  @experimental
+  Stream<GenerateContentResponse> templateGenerateContentWithHistoryStream(
+      Iterable<Content> history, String templateId,
+      {required Map<String, Object?> inputs,
+      List<TemplateTool>? tools,
+      TemplateToolConfig? toolConfig}) {
+    return streamTemplateRequest(
+        TemplateTask.templateStreamGenerateContent,
+        templateId,
+        inputs,
+        history,
+        tools,
+        toolConfig,
         _serializationStrategy.parseGenerateContentResponse);
   }
 }
@@ -95,7 +139,7 @@ final class TemplateGenerativeModel extends BaseTemplateApiClientModel {
 TemplateGenerativeModel createTemplateGenerativeModel({
   required FirebaseApp app,
   required String location,
-  required bool useVertexBackend,
+  required bool useAgentPlatform,
   bool? useLimitedUseAppCheckTokens,
   FirebaseAppCheck? appCheck,
   FirebaseAuth? auth,
@@ -103,7 +147,7 @@ TemplateGenerativeModel createTemplateGenerativeModel({
     TemplateGenerativeModel._(
       app: app,
       appCheck: appCheck,
-      useVertexBackend: useVertexBackend,
+      useAgentPlatform: useAgentPlatform,
       useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
       auth: auth,
       location: location,
@@ -115,12 +159,12 @@ TemplateGenerativeModel createTemplateGenerativeModel({
 TemplateGenerativeModel createTestTemplateGenerativeModel({
   required FirebaseApp app,
   required String location,
-  required bool useVertexBackend,
+  required bool useAgentPlatform,
   required http.Client client,
 }) =>
     TemplateGenerativeModel._test(
       app: app,
-      useVertexBackend: useVertexBackend,
+      useAgentPlatform: useAgentPlatform,
       location: location,
       httpClient: client,
     );

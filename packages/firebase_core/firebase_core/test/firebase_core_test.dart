@@ -64,6 +64,57 @@ void main() {
         mock.app(testAppName),
       ]);
     });
+
+    test('.registerService() and .getService()', () {
+      FirebaseApp app = Firebase.app(testAppName);
+
+      final testService = TestService();
+      app.registerService<TestService>(testService);
+
+      expect(app.getService<TestService>(), testService);
+    });
+
+    test('.getService() returns null when registry is null', () {
+      String nullAppName = 'nullApp';
+      final FirebaseAppPlatform nullPlatformApp =
+          FirebaseAppPlatform(nullAppName, testOptions);
+      when(mock.app(nullAppName)).thenReturn(nullPlatformApp);
+
+      FirebaseApp app = Firebase.app(nullAppName);
+      expect(app.getService<TestService>(), isNull);
+    });
+
+    test('.getService() returns null when service is not registered', () {
+      FirebaseApp app = Firebase.app(testAppName);
+      expect(app.getService<AnotherTestService>(), isNull);
+    });
+
+    test('.delete() disposes registered services before deleting app',
+        () async {
+      final calls = <String>[];
+      final platformApp = TestFirebaseAppPlatform(
+        testAppName,
+        testOptions,
+        onDelete: () async {
+          calls.add('app');
+        },
+      );
+      when(mock.app(testAppName)).thenReturn(platformApp);
+
+      FirebaseApp app = Firebase.app(testAppName);
+      final testService = TestService();
+      app.registerService<TestService>(
+        testService,
+        dispose: (_) async {
+          calls.add('service');
+        },
+      );
+
+      await app.delete();
+
+      expect(calls, <String>['service', 'app']);
+      expect(app.getService<TestService>(), isNull);
+    });
   });
 
   test('.initializeApp() with demoProjectId', () async {
@@ -152,3 +203,22 @@ class MockFirebaseCore extends Mock
 
 // ignore: avoid_implementing_value_types
 class FakeFirebaseAppPlatform extends Fake implements FirebaseAppPlatform {}
+
+class TestFirebaseAppPlatform extends FirebaseAppPlatform {
+  TestFirebaseAppPlatform(
+    super.name,
+    super.options, {
+    this.onDelete,
+  });
+
+  final Future<void> Function()? onDelete;
+
+  @override
+  Future<void> delete() async {
+    await onDelete?.call();
+  }
+}
+
+class TestService implements FirebaseService {}
+
+class AnotherTestService implements FirebaseService {}

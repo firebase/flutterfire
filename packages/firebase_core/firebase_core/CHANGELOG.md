@@ -1,3 +1,63 @@
+## 4.13.0
+
+ - **FIX**(firestore,core,windows): per-engine BinaryMessenger, Firestore/Auth link order, Profile builds ([#18516](https://github.com/firebase/flutterfire/issues/18516)). ([5dfd289e](https://github.com/firebase/flutterfire/commit/5dfd289ea45260c15d73894dcf2cb092fc8ddb9d))
+ - **FIX**(app_check): sync SPM pins to 12.17.0 and fix Windows Activate override after [#18505](https://github.com/firebase/flutterfire/issues/18505) ([#18515](https://github.com/firebase/flutterfire/issues/18515)). ([ce1f6e05](https://github.com/firebase/flutterfire/commit/ce1f6e05e2d2645c414f8e731d3d082436caa012))
+ - **FIX**(remote_config,windows): move CMake dependency from Core to Remote Config ([#18498](https://github.com/firebase/flutterfire/issues/18498)). ([d6ef43f6](https://github.com/firebase/flutterfire/commit/d6ef43f616d03a57b76469b77f4cfd3d8325075a))
+ - **FEAT**(appcheck): rCE provider api update ([#18505](https://github.com/firebase/flutterfire/issues/18505)). ([a56649a4](https://github.com/firebase/flutterfire/commit/a56649a41539c559a08e4f566128db8de390c284))
+ - **FEAT**(core): bump Firebase android SDK to 34.16.0 ([#18465](https://github.com/firebase/flutterfire/issues/18465)). ([fc599349](https://github.com/firebase/flutterfire/commit/fc5993493fbaaf405680eb1e0c8cc0b2604ef1a0))
+ - **FEAT**(core): bump Firebase iOS SDK to 12.16.0 ([#18464](https://github.com/firebase/flutterfire/issues/18464)). ([07c1bbe8](https://github.com/firebase/flutterfire/commit/07c1bbe82a8becd5ab673101a8a6561e0af725af))
+
+## 4.12.1
+
+ - **FIX**(core): clarify initialization requirement ([#18441](https://github.com/firebase/flutterfire/issues/18441)). ([9cfde82a](https://github.com/firebase/flutterfire/commit/9cfde82af1872c485e7b2f8fb091195e2287666d))
+
+## 4.12.0
+
+ - **FIX**(core,android): synchronize access to registeredPlugins in FlutterFirebasePluginRegistry ([#18406](https://github.com/firebase/flutterfire/issues/18406)). ([b40d972a](https://github.com/firebase/flutterfire/commit/b40d972a9a82e7da9611d6967379cbede085f4f3))
+ - **FEAT**(windows): bump Windows C++ SDK to version 13.9.0 ([#18400](https://github.com/firebase/flutterfire/issues/18400)). ([734fcd8a](https://github.com/firebase/flutterfire/commit/734fcd8a6a3a905c057724285e082974e690d9a2))
+
+## 4.11.0
+
+ - **FEAT**(appcheck): appcheck reCAPTCHA mobile support (gradually rolling out) ([#18261](https://github.com/firebase/flutterfire/issues/18261)). ([036a860a](https://github.com/firebase/flutterfire/commit/036a860a0e66d46b5c57eb3df3a0f9e5846ef00b))
+ - **FEAT**(core): bump Firebase ios SDK to 12.15.0 ([#18375](https://github.com/firebase/flutterfire/issues/18375)). ([4d083764](https://github.com/firebase/flutterfire/commit/4d083764c3abd94d6e4590a170fbdaaa4b161202))
+ - **FEAT**(core): bump Firebase android SDK to 34.15.0 ([#18374](https://github.com/firebase/flutterfire/issues/18374)). ([1cd3a0bd](https://github.com/firebase/flutterfire/commit/1cd3a0bd76fd594139356519fabee0e0d2b12f31))
+ - **FEAT**(core): Add Recaptcha Site Key to FirebaseOptions ([#18334](https://github.com/firebase/flutterfire/issues/18334)). ([57be7027](https://github.com/firebase/flutterfire/commit/57be702778d34b9b7e86b40817d93acaec4c3ca4))
+
+## 4.10.0
+
+ - **FEAT**(core): bump Firebase ios SDK to 12.14.0 ([#18330](https://github.com/firebase/flutterfire/issues/18330)). ([b1cfe745](https://github.com/firebase/flutterfire/commit/b1cfe745d221f09665943762c83cdd64684c6e6c))
+ - **FEAT**(core): bump Firebase android SDK to 34.14.0 ([#18329](https://github.com/firebase/flutterfire/issues/18329)). ([1562eace](https://github.com/firebase/flutterfire/commit/1562eace5196227ad0058df9b5426950b0094f83))
+
+## 4.9.0
+
+ - **FIX**(core,iOS): use namespaced iOS Pigeon header import ([#18281](https://github.com/firebase/flutterfire/issues/18281)). ([7c1257e7](https://github.com/firebase/flutterfire/commit/7c1257e7295f9ba67f3f5820493f105a14d34d52))
+ - **FEAT**: bump Firebase iOS SDK to 12.13.0 ([#18273](https://github.com/firebase/flutterfire/issues/18273)). ([78e10f02](https://github.com/firebase/flutterfire/commit/78e10f0222f4e23c96b636c63c29935ba5aa82e6))
+ - **FEAT**: bump Firebase android SDK to 34.13.0 ([#18272](https://github.com/firebase/flutterfire/issues/18272)). ([d10e0ffa](https://github.com/firebase/flutterfire/commit/d10e0ffa2980a21a5899dbe67952fc772a3c6c01))
+
+## 4.8.0
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+ - **FIX**: update core, auth and app-check logic so internal resources on method channels are properly disposed ([#18268](https://github.com/firebase/flutterfire/issues/18268)). ([a0de4ed8](https://github.com/firebase/flutterfire/commit/a0de4ed86b0dff89bb9e557f2a54f38cd2546016))
+ - **FEAT**(core): Add Auth and AppCheck as App's registered service. ([#18237](https://github.com/firebase/flutterfire/issues/18237)). ([7ce191cb](https://github.com/firebase/flutterfire/commit/7ce191cbd598b299cd0ec64b45d1366914367a5d))
+ - **FEAT**: upgrade pigeon to version 26.3.4 ([#18205](https://github.com/firebase/flutterfire/issues/18205)). ([cb6b4aef](https://github.com/firebase/flutterfire/commit/cb6b4aeffc568755ea3eebe32b998f00237bf5ad))
+
+## 4.7.0
+
+ - **FEAT**(core): bump Firebase Android SDK to 34.12.0 ([#18185](https://github.com/firebase/flutterfire/issues/18185)). ([346a048f](https://github.com/firebase/flutterfire/commit/346a048f098090e6848fdd0f61a8bf7d01394676))
+ - **FEAT**: bump Firebase iOS SDK to 12.12.0 ([#18187](https://github.com/firebase/flutterfire/issues/18187)). ([cc063bd9](https://github.com/firebase/flutterfire/commit/cc063bd9df1c59dd3bb8c25d067f8655bc268523))
+ - **FEAT**: bump iOS SDK to version 12.11.0 ([#18161](https://github.com/firebase/flutterfire/issues/18161)). ([2664b2c2](https://github.com/firebase/flutterfire/commit/2664b2c2dab4d0147461ce4d3f7862267e880542))
+ - **FEAT**(app_check,windows): add support for AppCheck for Windows ([#18140](https://github.com/firebase/flutterfire/issues/18140)). ([81f30325](https://github.com/firebase/flutterfire/commit/81f30325fc926fe94b630e49f56b795c781a4cbe))
+ - **FEAT**: bump Firebase android SDK to 34.11.0 ([#18146](https://github.com/firebase/flutterfire/issues/18146)). ([2b50061a](https://github.com/firebase/flutterfire/commit/2b50061a689634957efba8bd17c196dd548a08a2))
+ - **FEAT**: use local firebase_core instead of remote SPM dependency ([#18141](https://github.com/firebase/flutterfire/issues/18141)). ([995caf40](https://github.com/firebase/flutterfire/commit/995caf400df80c0fde7151c651ccc6c0f756e381))
+
+## 4.6.0
+
+ - **FIX**(remote_config,windows): release mode wasn't linking properly for windows ([#18073](https://github.com/firebase/flutterfire/issues/18073)). ([ea1f309a](https://github.com/firebase/flutterfire/commit/ea1f309a33075fc06c082819f0653976c6d5214b))
+ - **FIX**(core): bump Firebase C++ SDK to 13.5.0 (CMake deprecation fix) ([#18071](https://github.com/firebase/flutterfire/issues/18071)). ([3afd4101](https://github.com/firebase/flutterfire/commit/3afd41019bf931b95ae039394fc866528ff13f96))
+ - **FIX**(auth,windows): add pluginregistry to properly restore state on Windows ([#18049](https://github.com/firebase/flutterfire/issues/18049)). ([8d715a77](https://github.com/firebase/flutterfire/commit/8d715a777a4827bff59f820d9978007bd7568a7d))
+ - **FEAT**(database,windows): add support for Realtime Database to windows ([#18079](https://github.com/firebase/flutterfire/issues/18079)). ([007689f9](https://github.com/firebase/flutterfire/commit/007689f99866582828a063d174c52ebba13ac0ef))
+ - **FEAT**(ios): migrate iOS to UIScene lifecycle ([#18054](https://github.com/firebase/flutterfire/issues/18054)). ([3ffa4110](https://github.com/firebase/flutterfire/commit/3ffa411098132fd5182a84be4e7a226106bc7451))
+
 ## 4.5.0
 
  - **FEAT**(core,windows): update C++ Desktop SDK to 13.4.0. This may require updating your Visual Studio version and C++ build tools. ([#18006](https://github.com/firebase/flutterfire/issues/18006)). ([a6ec167f](https://github.com/firebase/flutterfire/commit/a6ec167f4ece9c9b455a916366781f482cc380b3))

@@ -98,7 +98,7 @@ void main() {
         ),
       ).thenAnswer((_) async => mockResponse);
 
-      final deserializer = (String data) => 'Deserialized Data';
+      String deserializer(String data) => 'Deserialized Data';
 
       expect(
         () => transport.invokeOperation(
@@ -124,7 +124,7 @@ void main() {
         ),
       ).thenAnswer((_) async => mockResponse);
 
-      final deserializer = (String data) => 'Deserialized Data';
+      String deserializer(String data) => 'Deserialized Data';
 
       expect(
         () => transport.invokeOperation(
@@ -150,9 +150,10 @@ void main() {
         ),
       ).thenAnswer((_) async => mockResponse);
 
-      final deserializer = (String data) => 'Deserialized Data';
+      String deserializer(String data) => 'Deserialized Data';
 
-      await transport.invokeQuery('testQuery', deserializer, null, null, null);
+      await transport.invokeQuery(
+          'testQueryId', 'testQuery', deserializer, null, null, null);
 
       verify(
         mockHttpClient.post(
@@ -178,9 +179,10 @@ void main() {
         ),
       ).thenAnswer((_) async => mockResponse);
 
-      final deserializer = (String data) => 'Deserialized Mutation Data';
+      String deserializer(String data) => 'Deserialized Mutation Data';
 
       await transport.invokeMutation(
+        'testMutationId',
         'testMutation',
         deserializer,
         null,
@@ -215,7 +217,7 @@ void main() {
       when(mockUser.getIdToken()).thenAnswer((_) async => 'authToken123');
       when(mockAppCheck.getToken()).thenAnswer((_) async => 'appCheckToken123');
 
-      final deserializer = (String data) => 'Deserialized Data';
+      String deserializer(String data) => 'Deserialized Data';
 
       await transport.invokeOperation(
         'testQuery',
@@ -250,7 +252,7 @@ void main() {
       when(mockUser.getIdToken()).thenAnswer((_) async => 'authToken123');
       when(mockAppCheck.getToken()).thenAnswer((_) async => 'appCheckToken123');
 
-      final deserializer = (String data) => 'Deserialized Data';
+      String deserializer(String data) => 'Deserialized Data';
 
       await transport.invokeOperation(
         'testQuery',
@@ -267,6 +269,41 @@ void main() {
           headers: argThat(
             containsPair(
                 'x-firebase-client', getFirebaseClientVal(packageVersion)),
+            named: 'headers',
+          ),
+          body: anyNamed('body'),
+        ),
+      ).called(1);
+    });
+
+    test('invokeOperation should include x-client-version headers', () async {
+      final mockResponse = http.Response('{"data": {"key": "value"}}', 200);
+      when(
+        mockHttpClient.post(
+          any,
+          headers: anyNamed('headers'),
+          body: anyNamed('body'),
+        ),
+      ).thenAnswer((_) async => mockResponse);
+
+      String deserializer(String data) => 'Deserialized Data';
+
+      await transport.invokeOperation(
+        'testQuery',
+        'executeQuery',
+        deserializer,
+        null,
+        null,
+        'authToken123',
+      );
+
+      verify(
+        mockHttpClient.post(
+          any,
+          headers: argThat(
+            allOf(
+              containsPair('x-client-version', 'flutter/$packageVersion'),
+            ),
             named: 'headers',
           ),
           body: anyNamed('body'),
@@ -297,7 +334,7 @@ void main() {
         ),
       ).thenAnswer((_) async => mockResponse);
 
-      final deserializer = (String data) => 'Deserialized Data';
+      String deserializer(String data) => 'Deserialized Data';
 
       final result = await transport.invokeOperation(
         'testQuery',
@@ -327,7 +364,7 @@ void main() {
       when(mockUser.getIdToken()).thenThrow(Exception('Auth error'));
       when(mockAppCheck.getToken()).thenThrow(Exception('AppCheck error'));
 
-      final deserializer = (String data) => 'Deserialized Data';
+      String deserializer(String data) => 'Deserialized Data';
 
       await transport.invokeOperation(
         'testQuery',

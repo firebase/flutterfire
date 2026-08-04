@@ -55,9 +55,11 @@
       });
     } else {
       dispatch_async(dispatch_get_main_queue(), ^{
-        events(
-            [[FirestorePigeonParser toPigeonDocumentSnapshot:snapshot
-                                     serverTimestampBehavior:self.serverTimestampBehavior] toList]);
+        // Emit the Pigeon object directly; the Pigeon-aware codec on the
+        // MessageChannel serializes it end-to-end. Pigeon 26 no longer flattens
+        // nested types via `toList`.
+        events([FirestorePigeonParser toPigeonDocumentSnapshot:snapshot
+                                       serverTimestampBehavior:self.serverTimestampBehavior]);
       });
     }
   };

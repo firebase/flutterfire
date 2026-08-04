@@ -1,3 +1,40 @@
+## 0.4.3
+
+ - **FIX**(app_check): sync SPM pins to 12.17.0 and fix Windows Activate override after [#18505](https://github.com/firebase/flutterfire/issues/18505) ([#18515](https://github.com/firebase/flutterfire/issues/18515)). ([ce1f6e05](https://github.com/firebase/flutterfire/commit/ce1f6e05e2d2645c414f8e731d3d082436caa012))
+ - **FEAT**(ml): adding depreciation notice to ML plugin ([#18472](https://github.com/firebase/flutterfire/issues/18472)). ([fb20da9c](https://github.com/firebase/flutterfire/commit/fb20da9c88d0e7ac20b89fc27000ae4eeb50654d))
+
+## 0.4.2+6
+
+ - Update a dependency to the latest release.
+
+## 0.4.2+5
+
+ - Update a dependency to the latest release.
+
+## 0.4.2+4
+
+ - Update a dependency to the latest release.
+
+## 0.4.2+3
+
+ - Update a dependency to the latest release.
+
+## 0.4.2+2
+
+ - Update a dependency to the latest release.
+
+## 0.4.2+1
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+
+## 0.4.2
+
+ - **FEAT**: use local firebase_core instead of remote SPM dependency ([#18141](https://github.com/firebase/flutterfire/issues/18141)). ([995caf40](https://github.com/firebase/flutterfire/commit/995caf400df80c0fde7151c651ccc6c0f756e381))
+
+## 0.4.1
+
+ - **FEAT**(ios): migrate iOS to UIScene lifecycle ([#18054](https://github.com/firebase/flutterfire/issues/18054)). ([3ffa4110](https://github.com/firebase/flutterfire/commit/3ffa411098132fd5182a84be4e7a226106bc7451))
+
 ## 0.4.0+7
 
  - Update a dependency to the latest release.

@@ -1,3 +1,42 @@
+## 6.0.6
+
+ - Update a dependency to the latest release.
+
+## 6.0.5
+
+ - Update a dependency to the latest release.
+
+## 6.0.4
+
+ - **FIX**(functions): cloud functions results only converted top-level maps ([#18427](https://github.com/firebase/flutterfire/issues/18427)). ([e9039eec](https://github.com/firebase/flutterfire/commit/e9039eec5b9e6a5aa7368f463d79725e1add1945))
+
+## 6.0.3
+
+ - Update a dependency to the latest release.
+
+## 6.0.2
+
+ - Update a dependency to the latest release.
+
+## 6.0.1
+
+ - Update a dependency to the latest release.
+
+## 6.0.0
+
+ - Bump platform interface a major version due to pigeon dependency update
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+ - **FEAT**: upgrade pigeon to version 26.3.4 ([#18205](https://github.com/firebase/flutterfire/issues/18205)). ([cb6b4aef](https://github.com/firebase/flutterfire/commit/cb6b4aeffc568755ea3eebe32b998f00237bf5ad))
+
+## 5.8.12
+
+ - Update a dependency to the latest release.
+
+## 5.8.11
+
+ - **FIX**(functions): prevent collision when listening multiple times to the same stream ([#18052](https://github.com/firebase/flutterfire/issues/18052)). ([c13040e1](https://github.com/firebase/flutterfire/commit/c13040e15a42deddbf61b3180bbd002d58edca29))
+
 ## 5.8.10
 
  - Update a dependency to the latest release.

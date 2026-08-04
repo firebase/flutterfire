@@ -229,6 +229,7 @@ extension type ListResultJsImpl._(JSObject _) implements JSObject {
 /// See: <https://firebase.google.com/docs/reference/js/firebase.storage#stringformat>
 @JS()
 @staticInterop
+// ignore: avoid_classes_with_only_static_members
 class StringFormat {
   /// Indicates the string should be interpreted 'raw', that is, as normal text.
   /// The string will be interpreted as UTF-16, then uploaded as a UTF-8 byte

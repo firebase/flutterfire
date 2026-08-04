@@ -15,86 +15,105 @@ import 'api.dart';
 import 'content.dart';
 import 'error.dart';
 
-/// Configuration for a prebuilt voice.
-///
-/// This class allows specifying a voice by its name.
-class PrebuiltVoiceConfig {
-  // ignore: public_member_api_docs
-  const PrebuiltVoiceConfig({this.voiceName});
-
-  /// The voice name to use for speech synthesis.
-  ///
-  /// See https://cloud.google.com/text-to-speech/docs/chirp3-hd for names and
-  /// sound demos.
-  final String? voiceName;
-  // ignore: public_member_api_docs
-  Map<String, Object?> toJson() =>
-      {if (voiceName case final voiceName?) 'voice_name': voiceName};
-}
-
-/// Configuration for the voice to be used in speech synthesis.
-///
-/// This class currently supports using a prebuilt voice configuration.
-class VoiceConfig {
-  // ignore: public_member_api_docs
-  VoiceConfig({this.prebuiltVoiceConfig});
-
-  // ignore: public_member_api_docs
-  final PrebuiltVoiceConfig? prebuiltVoiceConfig;
-  // ignore: public_member_api_docs
-  Map<String, Object?> toJson() => {
-        if (prebuiltVoiceConfig case final prebuiltVoiceConfig?)
-          'prebuilt_voice_config': prebuiltVoiceConfig.toJson()
-      };
-}
-
-/// Configures speech synthesis settings.
-///
-/// Allows specifying the desired voice for speech synthesis.
-class SpeechConfig {
-  /// Creates a [SpeechConfig] instance.
-  ///
-  /// [voiceName] See https://cloud.google.com/text-to-speech/docs/chirp3-hd
-  /// for names and sound demos.
-  SpeechConfig({String? voiceName})
-      : voiceConfig = voiceName != null
-            ? VoiceConfig(
-                prebuiltVoiceConfig: PrebuiltVoiceConfig(voiceName: voiceName))
-            : null;
-
-  /// The voice config to use for speech synthesis.
-  final VoiceConfig? voiceConfig;
-  // ignore: public_member_api_docs
-  Map<String, Object?> toJson() => {
-        if (voiceConfig case final voiceConfig?)
-          'voice_config': voiceConfig.toJson()
-      };
-}
-
 /// The audio transcription configuration.
 class AudioTranscriptionConfig {
   // ignore: public_member_api_docs
   Map<String, Object?> toJson() => {};
 }
 
+/// Configures the sliding window context compression mechanism.
+///
+/// The SlidingWindow method operates by discarding content at the beginning of
+/// the context window. The resulting context will always begin at the start of
+/// a USER role turn. System instructions will always remain at the start of the
+/// result.
+class SlidingWindow {
+  /// Creates a [SlidingWindow] instance.
+  ///
+  /// [targetTokens] (optional): The target number of tokens to keep in the
+  /// context window.
+  SlidingWindow({this.targetTokens});
+
+  /// The session reduction target, i.e., how many tokens we should keep.
+  final int? targetTokens;
+  // ignore: public_member_api_docs
+  Map<String, Object?> toJson() =>
+      {if (targetTokens case final targetTokens?) 'targetTokens': targetTokens};
+}
+
+/// Enables context window compression to manage the model's context window.
+///
+/// This mechanism prevents the context from exceeding a given length.
+class ContextWindowCompressionConfig {
+  /// Creates a [ContextWindowCompressionConfig] instance.
+  ///
+  /// [triggerTokens] (optional): The number of tokens that triggers the
+  /// compression mechanism.
+  /// [slidingWindow] (optional): The sliding window compression mechanism to
+  /// use.
+  ContextWindowCompressionConfig({this.triggerTokens, this.slidingWindow});
+
+  /// The number of tokens (before running a turn) that triggers the context
+  /// window compression.
+  final int? triggerTokens;
+
+  /// The sliding window compression mechanism.
+  final SlidingWindow? slidingWindow;
+  // ignore: public_member_api_docs
+  Map<String, Object?> toJson() => {
+        if (triggerTokens case final triggerTokens?)
+          'triggerTokens': triggerTokens,
+        if (slidingWindow case final slidingWindow?)
+          'slidingWindow': slidingWindow.toJson()
+      };
+}
+
+/// Configuration for the session resumption mechanism.
+///
+/// When included in the session setup, the server will send
+/// [SessionResumptionUpdate] messages.
+class SessionResumptionConfig {
+  /// Creates a [SessionResumptionConfig] to start a new resumable session.
+  ///
+  /// When this is included in the session setup, the server will send
+  /// [SessionResumptionUpdate] messages with handles that can be used to
+  /// resume the session later.
+  SessionResumptionConfig() : handle = null;
+
+  /// Creates a [SessionResumptionConfig] to resume a previous session.
+  ///
+  /// [handle] is the session resumption handle received in a previous session's
+  /// [SessionResumptionUpdate].
+  SessionResumptionConfig.resume(String this.handle);
+
+  /// The session resumption handle of the previous session to restore.
+  ///
+  /// If null, a new session will be started (and will be resumable if this
+  /// config was included).
+  final String? handle;
+
+  // ignore: public_member_api_docs
+  Map<String, Object?> toJson() => {
+        if (handle case final handle?) 'handle': handle,
+      };
+}
+
 /// Configures live generation settings.
 final class LiveGenerationConfig extends BaseGenerationConfig {
   // ignore: public_member_api_docs
-  LiveGenerationConfig({
-    this.speechConfig,
-    this.inputAudioTranscription,
-    this.outputAudioTranscription,
-    super.responseModalities,
-    super.maxOutputTokens,
-    super.temperature,
-    super.topP,
-    super.topK,
-    super.presencePenalty,
-    super.frequencyPenalty,
-  });
-
-  /// The speech configuration.
-  final SpeechConfig? speechConfig;
+  LiveGenerationConfig(
+      {super.speechConfig,
+      this.inputAudioTranscription,
+      this.outputAudioTranscription,
+      this.contextWindowCompression,
+      super.responseModalities,
+      super.maxOutputTokens,
+      super.temperature,
+      super.topP,
+      super.topK,
+      super.presencePenalty,
+      super.frequencyPenalty,
+      super.mediaResolution});
 
   /// The transcription of the input aligns with the input audio language.
   final AudioTranscriptionConfig? inputAudioTranscription;
@@ -103,11 +122,12 @@ final class LiveGenerationConfig extends BaseGenerationConfig {
   /// the output audio.
   final AudioTranscriptionConfig? outputAudioTranscription;
 
+  /// The context window compression configuration.
+  final ContextWindowCompressionConfig? contextWindowCompression;
+
   @override
   Map<String, Object?> toJson() => {
         ...super.toJson(),
-        if (speechConfig case final speechConfig?)
-          'speechConfig': speechConfig.toJson(),
       };
 }
 
@@ -220,6 +240,34 @@ class GoingAwayNotice implements LiveServerMessage {
 
   /// The remaining time before the connection will be terminated as ABORTED.
   final String? timeLeft;
+}
+
+/// An update of the session resumption state.
+///
+/// This message is only sent if [SessionResumptionConfig] was set in the
+/// session setup.
+class SessionResumptionUpdate implements LiveServerMessage {
+  /// Creates a [SessionResumptionUpdate] instance.
+  ///
+  /// [newHandle] (optional): The new handle that represents the state that can
+  /// be resumed.
+  /// [resumable] (optional): Indicates if the session can be resumed at this
+  /// point.
+  /// [lastConsumedClientMessageIndex] (optional): The index of the last client
+  /// message that is included in the state represented by this update.
+  SessionResumptionUpdate(
+      {this.newHandle, this.resumable, this.lastConsumedClientMessageIndex});
+
+  /// The new handle that represents the state that can be resumed. Empty if
+  /// `resumable` is false.
+  final String? newHandle;
+
+  /// Indicates if the session can be resumed at this point.
+  final bool? resumable;
+
+  /// The index of the last client message that is included in the state
+  /// represented by this update.
+  final int? lastConsumedClientMessageIndex;
 }
 
 /// A single response chunk received during a live content generation.
@@ -449,8 +497,17 @@ LiveServerMessage _parseServerMessage(Object jsonObject) {
   } else if (json.containsKey('setupComplete')) {
     return LiveServerSetupComplete();
   } else if (json.containsKey('goAway')) {
-    final goAwayJson = json['goAway'] as Map;
+    final goAwayJson = json['goAway'] as Map<String, dynamic>;
     return GoingAwayNotice(timeLeft: goAwayJson['timeLeft'] as String?);
+  } else if (json.containsKey('sessionResumptionUpdate')) {
+    final sessionResumptionUpdateJson =
+        json['sessionResumptionUpdate'] as Map<String, dynamic>;
+    return SessionResumptionUpdate(
+      newHandle: sessionResumptionUpdateJson['newHandle'] as String?,
+      resumable: sessionResumptionUpdateJson['resumable'] as bool?,
+      lastConsumedClientMessageIndex:
+          sessionResumptionUpdateJson['lastConsumedClientMessageIndex'] as int?,
+    );
   } else {
     throw unhandledFormat('LiveServerMessage', json);
   }

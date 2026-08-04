@@ -5,7 +5,7 @@
 abstract class WebProvider {
   final String siteKey;
 
-  WebProvider(this.siteKey);
+  const WebProvider(this.siteKey);
 }
 
 class ReCaptchaV3Provider extends WebProvider {

@@ -82,7 +82,8 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
       writeValue(stream, appName);
       writeValue(stream, ((DocumentReference) value).getPath());
       String databaseURL;
-      // There is no way of getting database URL from Firebase android SDK API so we cache it ourselves
+      // There is no way of getting database URL from Firebase android SDK API so we cache it
+      // ourselves
       synchronized (FlutterFirebaseFirestorePlugin.firestoreInstanceCache) {
         databaseURL =
             FlutterFirebaseFirestorePlugin.getCachedFirebaseFirestoreInstanceForKey(firestore)
@@ -534,7 +535,8 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
     } catch (Exception exception) {
       Log.e(
           "FLTFirestoreMsgCodec",
-          "An error occurred while parsing query arguments, this is most likely an error with this SDK.",
+          "An error occurred while parsing query arguments, this is most likely an error with this"
+              + " SDK.",
           exception);
       return null;
     }
