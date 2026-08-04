@@ -67,7 +67,7 @@ class WebSocketTransport implements DataConnectTransport {
       final newUid = user?.uid;
       // Disconnect and reconnect on any fundamental user change (login, logout, switch).
       if (_currentUid != newUid) {
-        _disconnect();
+        await _disconnect();
         _scheduleReconnect();
       } else if (newUid != null && isConnected) {
         // Token refreshed for the same user, push the new token natively down the socket.
@@ -161,13 +161,13 @@ class WebSocketTransport implements DataConnectTransport {
 
   void _closeStaleWebSocketTransport() {
     _isExpectedDisconnect = true;
-    _disconnect();
+    unawaited(_disconnect());
   }
 
   void _checkIdleAndDisconnect() {
     if (_streamListeners.isEmpty && _unaryListeners.isEmpty) {
       _isExpectedDisconnect = true;
-      _disconnect();
+      unawaited(_disconnect());
       _releaseWebSocketTransport();
       _clearState();
     }
@@ -213,14 +213,27 @@ class WebSocketTransport implements DataConnectTransport {
   }
 
   Future<void>? _connectionFuture;
+  Future<void>? _disconnectFuture;
 
-  Future<void> _ensureConnected(String? authToken) {
+  Future<void> _ensureConnected(String? authToken) async {
+    // Closing a native socket is asynchronous. Wait for it before opening a
+    // replacement so the previous connection cannot race the new subscription.
+    final disconnectFuture = _disconnectFuture;
+    if (disconnectFuture != null) {
+      await disconnectFuture;
+    }
+
     if (_channel != null) return Future.value();
     if (_connectionFuture != null) return _connectionFuture!;
-    _connectionFuture = _doConnect(authToken).whenComplete(() {
-      _connectionFuture = null;
+
+    late final Future<void> connectionFuture;
+    connectionFuture = _doConnect(authToken).whenComplete(() {
+      if (identical(_connectionFuture, connectionFuture)) {
+        _connectionFuture = null;
+      }
     });
-    return _connectionFuture!;
+    _connectionFuture = connectionFuture;
+    return connectionFuture;
   }
 
   Future<void> _doConnect(String? authToken) async {
@@ -469,7 +482,7 @@ class WebSocketTransport implements DataConnectTransport {
       return;
     }
 
-    _disconnect();
+    await _disconnect();
     _reconnectAttempts++;
 
     final authToken = await _refreshAuthToken();
@@ -501,20 +514,47 @@ class WebSocketTransport implements DataConnectTransport {
     _scheduleReconnect();
   }
 
-  void _disconnect() {
+  Future<void> _disconnect() {
+    final pendingDisconnect = _disconnectFuture;
+    if (pendingDisconnect != null) return pendingDisconnect;
+
     _reconnectTimer?.cancel();
     _reconnectTimer = null;
+
     final channel = _channel;
+    final channelSubscription = _channelSubscription;
+
     // Clear the active channel before closing it. Its asynchronous onDone
     // callback must not clear a replacement channel opened in the meantime.
     _channel = null;
     _channelSubscription = null;
-    channel?.sink.close();
+    _connectionFuture = null;
+
+    late final Future<void> disconnectFuture;
+    disconnectFuture = (() async {
+      try {
+        await channelSubscription?.cancel();
+      } catch (e) {
+        developer.log('Failed to cancel WebSocket subscription: $e');
+      }
+      try {
+        await channel?.sink.close();
+      } catch (e) {
+        developer.log('Failed to close WebSocket channel: $e');
+      }
+    })()
+        .whenComplete(() {
+      if (identical(_disconnectFuture, disconnectFuture)) {
+        _disconnectFuture = null;
+      }
+    });
+    _disconnectFuture = disconnectFuture;
+    return disconnectFuture;
   }
 
   void disconnect() {
     _isExpectedDisconnect = true;
-    _disconnect();
+    unawaited(_disconnect());
     _releaseWebSocketTransport();
   }
 
