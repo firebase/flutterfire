@@ -25,10 +25,13 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.view.FlutterCallbackInformation;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
+import org.json.JSONArray;
+import org.json.JSONException;
 
 /**
  * An background execution abstraction which handles initializing a background isolate running a
@@ -38,6 +41,7 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
   private static final String TAG = "FLTFireBGExecutor";
   private static final String CALLBACK_HANDLE_KEY = "callback_handle";
   private static final String USER_CALLBACK_HANDLE_KEY = "user_callback_handle";
+  private static final String SHELL_ARGS_KEY = "shell_args";
 
   private final AtomicBoolean isCallbackDispatcherReady = new AtomicBoolean(false);
 
@@ -104,13 +108,13 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
     if (isNotRunning()) {
       long callbackHandle = getPluginCallbackHandle();
       if (callbackHandle != 0) {
-        startBackgroundIsolate(callbackHandle);
+        startBackgroundIsolate(callbackHandle, getShellArgs());
       }
     }
   }
 
   /** Starts running a background Dart isolate within a new {@link FlutterEngine}. */
-  public void startBackgroundIsolate(long callbackHandle) {
+  public void startBackgroundIsolate(long callbackHandle, String[] shellArgs) {
     if (backgroundFlutterEngine != null) {
       Log.e(TAG, "Background isolate already started.");
       return;
@@ -129,9 +133,18 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
                 String appBundlePath = loader.findAppBundlePath();
                 AssetManager assets = ContextHolder.getApplicationContext().getAssets();
                 if (isNotRunning()) {
-                  Log.i(TAG, "Creating background FlutterEngine instance.");
-                  backgroundFlutterEngine =
-                      new FlutterEngine(ContextHolder.getApplicationContext());
+                  if (shellArgs != null && shellArgs.length > 0) {
+                    Log.i(
+                        TAG,
+                        "Creating background FlutterEngine instance, with args: "
+                            + Arrays.toString(shellArgs));
+                    backgroundFlutterEngine =
+                        new FlutterEngine(ContextHolder.getApplicationContext(), shellArgs);
+                  } else {
+                    Log.i(TAG, "Creating background FlutterEngine instance.");
+                    backgroundFlutterEngine =
+                        new FlutterEngine(ContextHolder.getApplicationContext());
+                  }
                   // We need to create an instance of `FlutterEngine` before looking up the
                   // callback. If we don't, the callback cache won't be initialized and the
                   // lookup will fail.
@@ -251,6 +264,54 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
     SharedPreferences prefs =
         context.getSharedPreferences(FlutterFirebaseMessagingUtils.SHARED_PREFERENCES_KEY, 0);
     prefs.edit().putLong(USER_CALLBACK_HANDLE_KEY, callbackHandle).apply();
+  }
+
+  /**
+   * Persists the Flutter shell args the app was launched with, so that a background isolate started
+   * later -- when no activity is available to read them from -- can be created with the same engine
+   * flags.
+   *
+   * <p>Passing null or an empty array clears any previously stored args.
+   */
+  public static void setShellArgs(String[] shellArgs) {
+    Context context = ContextHolder.getApplicationContext();
+    if (context == null) {
+      Log.e(TAG, "Context is null, cannot continue.");
+      return;
+    }
+    SharedPreferences prefs =
+        context.getSharedPreferences(FlutterFirebaseMessagingUtils.SHARED_PREFERENCES_KEY, 0);
+    if (shellArgs == null || shellArgs.length == 0) {
+      prefs.edit().remove(SHELL_ARGS_KEY).apply();
+      return;
+    }
+    // Stored as JSON rather than a String set because arg order is significant.
+    prefs
+        .edit()
+        .putString(SHELL_ARGS_KEY, new JSONArray(Arrays.asList(shellArgs)).toString())
+        .apply();
+  }
+
+  /** Get the persisted Flutter shell args, or null if none were stored. */
+  private String[] getShellArgs() {
+    SharedPreferences prefs =
+        ContextHolder.getApplicationContext()
+            .getSharedPreferences(FlutterFirebaseMessagingUtils.SHARED_PREFERENCES_KEY, 0);
+    String encoded = prefs.getString(SHELL_ARGS_KEY, null);
+    if (encoded == null) {
+      return null;
+    }
+    try {
+      JSONArray json = new JSONArray(encoded);
+      String[] shellArgs = new String[json.length()];
+      for (int i = 0; i < json.length(); i++) {
+        shellArgs[i] = json.getString(i);
+      }
+      return shellArgs;
+    } catch (JSONException e) {
+      Log.e(TAG, "Failed to read the persisted Flutter shell args, ignoring them.", e);
+      return null;
+    }
   }
 
   /** Get the registered Dart callback handle for the messaging plugin. Returns 0 if not set. */

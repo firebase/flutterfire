@@ -72,6 +72,14 @@ public class FlutterFirebaseMessagingBackgroundService extends JobIntentService 
     FlutterFirebaseMessagingBackgroundExecutor.setUserCallbackHandle(callbackHandle);
   }
 
+  /**
+   * Persists the Flutter shell args the app was launched with, so the background isolate can be
+   * started with the same engine flags once a message arrives.
+   */
+  public static void setShellArgs(String[] shellArgs) {
+    FlutterFirebaseMessagingBackgroundExecutor.setShellArgs(shellArgs);
+  }
+
   @Override
   public void onCreate() {
     super.onCreate();
