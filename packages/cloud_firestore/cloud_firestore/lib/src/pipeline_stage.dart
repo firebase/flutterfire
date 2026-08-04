@@ -207,6 +207,24 @@ final class _FindNearestStage extends PipelineStage {
   }
 }
 
+/// Stage for full-text or geo search.
+final class _SearchStage extends PipelineStage {
+  final SearchStage searchStage;
+
+  _SearchStage(this.searchStage);
+
+  @override
+  String get name => 'search';
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'stage': name,
+      'args': searchStage.toMap(),
+    };
+  }
+}
+
 /// Stage for limiting results
 final class _LimitStage extends PipelineStage {
   final int limit;

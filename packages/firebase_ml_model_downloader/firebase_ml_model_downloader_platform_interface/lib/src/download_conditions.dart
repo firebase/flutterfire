@@ -3,8 +3,18 @@
 // found in the LICENSE file.
 
 /// Download conditions for downloading a model via the [getModel] API.
+@Deprecated(
+  'Firebase ML is deprecated and will shut down on June 15, 2027. '
+  'Migrate hosted custom models to another solution, such as Cloud Storage '
+  'for Firebase. See https://firebase.google.com/docs/ml/migrate-to-cloud-storage.',
+)
 class FirebaseModelDownloadConditions {
   /// Creates a new [DownloadConditions] instance.
+  @Deprecated(
+    'Firebase ML is deprecated and will shut down on June 15, 2027. '
+    'Migrate hosted custom models to another solution, such as Cloud Storage '
+    'for Firebase. See https://firebase.google.com/docs/ml/migrate-to-cloud-storage.',
+  )
   FirebaseModelDownloadConditions({
     this.iosAllowsCellularAccess = true,
     this.iosAllowsBackgroundDownloading = false,

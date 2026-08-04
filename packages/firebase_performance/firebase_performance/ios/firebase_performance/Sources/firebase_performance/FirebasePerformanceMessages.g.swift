@@ -89,7 +89,7 @@ func deepEqualsFirebasePerformanceMessages(_ lhs: Any?, _ rhs: Any?) -> Bool {
   case (nil, _), (_, nil):
     return false
 
-  case let (lhs as AnyObject, rhs as AnyObject) where lhs === rhs:
+  case (let lhs as AnyObject, let rhs as AnyObject) where lhs === rhs:
     return true
 
   case is (Void, Void):
@@ -131,7 +131,7 @@ func deepEqualsFirebasePerformanceMessages(_ lhs: Any?, _ rhs: Any?) -> Bool {
     }
     return true
 
-  case let (lhs as Double, rhs as Double):
+  case (let lhs as Double, let rhs as Double):
     return doubleEqualsFirebasePerformanceMessages(lhs, rhs)
 
   case let (lhsHashable, rhsHashable) as (AnyHashable, AnyHashable):
@@ -214,8 +214,8 @@ struct HttpMetricOptions: Hashable {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return deepEqualsFirebasePerformanceMessages(lhs.url, rhs.url) &&
-      deepEqualsFirebasePerformanceMessages(
+    return deepEqualsFirebasePerformanceMessages(lhs.url, rhs.url)
+      && deepEqualsFirebasePerformanceMessages(
         lhs.httpMethod,
         rhs.httpMethod
       )
@@ -267,15 +267,16 @@ struct HttpMetricAttributes: Hashable {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return deepEqualsFirebasePerformanceMessages(lhs.httpResponseCode, rhs.httpResponseCode) &&
-      deepEqualsFirebasePerformanceMessages(
+    return deepEqualsFirebasePerformanceMessages(lhs.httpResponseCode, rhs.httpResponseCode)
+      && deepEqualsFirebasePerformanceMessages(
         lhs.requestPayloadSize,
         rhs.requestPayloadSize
-      ) && deepEqualsFirebasePerformanceMessages(
+      )
+      && deepEqualsFirebasePerformanceMessages(
         lhs.responsePayloadSize,
         rhs.responsePayloadSize
-      ) &&
-      deepEqualsFirebasePerformanceMessages(
+      )
+      && deepEqualsFirebasePerformanceMessages(
         lhs.responseContentType,
         rhs.responseContentType
       ) && deepEqualsFirebasePerformanceMessages(lhs.attributes, rhs.attributes)
@@ -318,8 +319,8 @@ struct TraceAttributes: Hashable {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return deepEqualsFirebasePerformanceMessages(lhs.metrics, rhs.metrics) &&
-      deepEqualsFirebasePerformanceMessages(
+    return deepEqualsFirebasePerformanceMessages(lhs.metrics, rhs.metrics)
+      && deepEqualsFirebasePerformanceMessages(
         lhs.attributes,
         rhs.attributes
       )
@@ -392,16 +393,20 @@ class FirebasePerformanceMessagesPigeonCodec: FlutterStandardMessageCodec, @unch
 
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol FirebasePerformanceHostApi {
-  func setPerformanceCollectionEnabled(enabled: Bool,
-                                       completion: @escaping (Result<Void, Error>) -> Void)
+  func setPerformanceCollectionEnabled(
+    enabled: Bool,
+    completion: @escaping (Result<Void, Error>) -> Void)
   func isPerformanceCollectionEnabled(completion: @escaping (Result<Bool, Error>) -> Void)
   func startTrace(name: String, completion: @escaping (Result<Int64, Error>) -> Void)
-  func stopTrace(handle: Int64, attributes: TraceAttributes,
-                 completion: @escaping (Result<Void, Error>) -> Void)
-  func startHttpMetric(options: HttpMetricOptions,
-                       completion: @escaping (Result<Int64, Error>) -> Void)
-  func stopHttpMetric(handle: Int64, attributes: HttpMetricAttributes,
-                      completion: @escaping (Result<Void, Error>) -> Void)
+  func stopTrace(
+    handle: Int64, attributes: TraceAttributes,
+    completion: @escaping (Result<Void, Error>) -> Void)
+  func startHttpMetric(
+    options: HttpMetricOptions,
+    completion: @escaping (Result<Int64, Error>) -> Void)
+  func stopHttpMetric(
+    handle: Int64, attributes: HttpMetricAttributes,
+    completion: @escaping (Result<Void, Error>) -> Void)
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -412,11 +417,14 @@ class FirebasePerformanceHostApiSetup {
 
   /// Sets up an instance of `FirebasePerformanceHostApi` to handle messages through the
   /// `binaryMessenger`.
-  static func setUp(binaryMessenger: FlutterBinaryMessenger, api: FirebasePerformanceHostApi?,
-                    messageChannelSuffix: String = "") {
+  static func setUp(
+    binaryMessenger: FlutterBinaryMessenger, api: FirebasePerformanceHostApi?,
+    messageChannelSuffix: String = ""
+  ) {
     let channelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
     let setPerformanceCollectionEnabledChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.setPerformanceCollectionEnabled\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.setPerformanceCollectionEnabled\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -428,7 +436,7 @@ class FirebasePerformanceHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -437,7 +445,8 @@ class FirebasePerformanceHostApiSetup {
       setPerformanceCollectionEnabledChannel.setMessageHandler(nil)
     }
     let isPerformanceCollectionEnabledChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.isPerformanceCollectionEnabled\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.isPerformanceCollectionEnabled\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -445,9 +454,9 @@ class FirebasePerformanceHostApiSetup {
       isPerformanceCollectionEnabledChannel.setMessageHandler { _, reply in
         api.isPerformanceCollectionEnabled { result in
           switch result {
-          case let .success(res):
+          case .success(let res):
             reply(wrapResult(res))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -456,7 +465,8 @@ class FirebasePerformanceHostApiSetup {
       isPerformanceCollectionEnabledChannel.setMessageHandler(nil)
     }
     let startTraceChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.startTrace\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.startTrace\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -466,9 +476,9 @@ class FirebasePerformanceHostApiSetup {
         let nameArg = args[0] as! String
         api.startTrace(name: nameArg) { result in
           switch result {
-          case let .success(res):
+          case .success(let res):
             reply(wrapResult(res))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -477,7 +487,8 @@ class FirebasePerformanceHostApiSetup {
       startTraceChannel.setMessageHandler(nil)
     }
     let stopTraceChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.stopTrace\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.stopTrace\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -490,7 +501,7 @@ class FirebasePerformanceHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -499,7 +510,8 @@ class FirebasePerformanceHostApiSetup {
       stopTraceChannel.setMessageHandler(nil)
     }
     let startHttpMetricChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.startHttpMetric\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.startHttpMetric\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -509,9 +521,9 @@ class FirebasePerformanceHostApiSetup {
         let optionsArg = args[0] as! HttpMetricOptions
         api.startHttpMetric(options: optionsArg) { result in
           switch result {
-          case let .success(res):
+          case .success(let res):
             reply(wrapResult(res))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -520,7 +532,8 @@ class FirebasePerformanceHostApiSetup {
       startHttpMetricChannel.setMessageHandler(nil)
     }
     let stopHttpMetricChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.stopHttpMetric\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.stopHttpMetric\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -533,7 +546,7 @@ class FirebasePerformanceHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }

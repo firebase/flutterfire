@@ -40,7 +40,7 @@ The `@auth` directive defines the authentication policy for a query or mutation.
 It must be added to any operation that you wish to be accessible from a client
 application. If not specified, the operation defaults to `@auth(level: NO_ACCESS)`.
 
-Refer to [Data Connect Auth Guide](https://firebase.google.com/docs/data-connect/authorization-and-security) for the best practices.
+Refer to [SQL Connect Auth Guide](https://firebase.google.com/docs/sql-connect/authorization-and-security) for the best practices.
 """
 directive @auth(
   """
@@ -152,7 +152,7 @@ directive @check(
 
 """
 Marks an element of a GraphQL operation as no longer supported for client use.
-The Firebase Data Connect backend will continue supporting this element,
+The Firebase SQL Connect backend will continue supporting this element,
 but it will no longer be visible in the generated SDKs.
 """
 directive @retired(
@@ -883,31 +883,45 @@ type _Metadata {
 
 """
 **SQL_Query**: A scalar representing a PostgreSQL SQL Data Query Language (DQL) statement.
+Values can also be expressions using `_expr` (e.g., `{_expr: "vars.my_query"}`)
+to inject dynamic server values.
 
-To guard against SQL injection, the SQL statement must be a **string literal** embedded directly within the GraphQL operation. It **cannot** be provided as a GraphQL variable.
+To guard against SQL injection, the SQL statement must be a **string literal**
+embedded directly within the GraphQL operation. It **cannot** be provided as a
+GraphQL variable.
 
 **Constraints:**
 
 *   Only Data Query Language (DQL) statements (e.g., `SELECT`, `TABLE`) are permitted.
-*   Data Definition Language (DDL) statements (e.g., `CREATE`, `ALTER`, `DROP`) are **not** allowed.
-*   Data Manipulation Language (DML) statements (e.g., `INSERT`, `UPDATE`, `DELETE`) are **not** allowed.
+*   Data Definition Language (DDL) statements (e.g., `CREATE`, `ALTER`, `DROP`)
+    are **not** allowed.
+*   Data Manipulation Language (DML) statements (e.g., `INSERT`, `UPDATE`,
+    `DELETE`) are **not** allowed.
 """
 scalar SQL_Query
   @fdc_sqlExpression
   @fdc_forbiddenAsVariableType
   @fdc_forbiddenAsFieldType
-  @fdc_example(value: "SELECT id, content FROM items WHERE id = $1", description: "Select items by ID.")
+  @fdc_example(value: "SELECT id, content FROM items WHERE id = $1", description: "Select by ID.")
   @fdc_example(value: "TABLE items", description: "Select all from items.")
 
 """
-**SQL_Mutation**: A scalar representing a PostgreSQL SQL Data Manipulation Language (DML) statement.
+**SQL_Mutation**: A scalar representing a PostgreSQL SQL Data Manipulation
+Language (DML) statement.
+Values can also be expressions using `_expr` (e.g., `{_expr: "vars.my_mutation"}`
+or `{_expr: "response.step1.id"}`)
+to inject dynamic server values or reference results from previous steps in a mutation transaction.
 
-To guard against SQL injection, the SQL statement must be a **string literal** embedded directly within the GraphQL operation. It **cannot** be provided as a GraphQL variable.
+To guard against SQL injection, the SQL statement must be a **string literal**
+embedded directly within the GraphQL operation. It **cannot** be provided as a
+GraphQL variable.
 
 **Constraints:**
 
-*   Only Data Manipulation Language (DML) statements (e.g., `INSERT`, `UPDATE`, `DELETE`) are permitted.
-*   Data Definition Language (DDL) statements (e.g., `CREATE`, `ALTER`, `DROP`) are **not** allowed.
+*   Only Data Manipulation Language (DML) statements (e.g., `INSERT`, `UPDATE`,
+    `DELETE`) are permitted.
+*   Data Definition Language (DDL) statements (e.g., `CREATE`, `ALTER`, `DROP`)
+    are **not** allowed.
 """
 scalar SQL_Mutation
   @fdc_sqlExpression
@@ -917,12 +931,17 @@ scalar SQL_Mutation
   @fdc_example(value: "INSERT INTO new_table (col1, col2) VALUES ($1, $2) RETURNING *", description: "Insert and return all columns.")
 
 """
-A list of values to bind to the `$1`, `$2`, etc. placeholders in the SQL statement, in order.
+A list of values to bind to the `$1`, `$2`, etc. placeholders in the SQL
+statement, in order. Values can also be expressions using `_expr`
+(e.g., `{_expr: "auth.uid"}` or `{_expr: "response.step1.id"}`) to inject
+dynamic server values.
 """
 scalar SQL_Params
   @fdc_forbiddenAsVariableType
   @fdc_forbiddenAsFieldType
   @fdc_example(value: ["user123", "active"], description: "List of values for $1, $2, etc.")
+  @fdc_example(value: [{_expr: "auth.uid"}, "active"], description: "List of values using an expression for the first parameter.")
+  @fdc_example(value: [{_expr: "response.step1.id"}, "active"], description: "Reference results from previous steps.")
 
 extend type Query {
   """
@@ -941,15 +960,21 @@ extend type Query {
   }
   ```
 
-  **Returns:** A JSON array of objects. The structure is derived from the `SELECT` statement's columns.
+  **Returns:** A JSON array of objects. The structure is derived from the
+  `SELECT` statement's columns.
   """
   _select(
     """
-    The SQL DQL statement to execute. This must be a **string literal** defined directly in the GraphQL operation. Use `$1`, `$2`, etc. as placeholders for values provided in the `params` argument.
+    The SQL DQL statement to execute. This must be a **string literal** defined
+    directly in the GraphQL operation. Use `$1`, `$2`, etc. as placeholders for
+    the values provided in the `params` argument.
     """
     sql: SQL_Query!,
     """
-    A list of values to bind to the `$1`, `$2`, etc. placeholders in the `sql`, in order. Values can also be expressions using `_expr` (e.g., `{_expr: "auth.uid"}`) to inject dynamic values.
+    A list of values to bind to the `$1`, `$2`, etc. placeholders in the `sql`,
+    in order. Values can also be expressions using `_expr` (e.g.,
+    `{_expr: "auth.uid"}` or `{_expr: "response.step1.id"}`) to inject dynamic
+    values.
     """
     params: SQL_Params
   ): [Any]
@@ -979,7 +1004,10 @@ extend type Query {
     """
     sql: SQL_Query!,
     """
-    A list of values to bind to the `$1`, `$2`, etc. placeholders in the `sql`, in order. Values can also be expressions using `_expr` (e.g., `{_expr: "auth.uid"}`) to inject dynamic values.
+    A list of values to bind to the `$1`, `$2`, etc. placeholders in the `sql`,
+    in order. Values can also be expressions using `_expr` (e.g.,
+    `{_expr: "auth.uid"}` or `{_expr: "response.step1.id"}`) to inject dynamic
+    values.
     """
     params: SQL_Params
   ): Any
@@ -1005,11 +1033,16 @@ extend type Mutation {
   """
   _executeReturning(
     """
-    The SQL statement to execute. This must be a **string literal** defined directly in the GraphQL operation. Use `$1`, `$2`, etc. as placeholders for values provided in the `params` argument.
+    The SQL statement to execute. This must be a **string literal** defined
+    directly in the GraphQL operation. Use `$1`, `$2`, etc. as placeholders for
+    values provided in the `params` argument.
     """
     sql: SQL_Mutation!,
     """
-    A list of values to bind to the `$1`, `$2`, etc. placeholders in the `sql`, in order. Values can also be expressions using `_expr` (e.g., `{_expr: "auth.uid"}`) to inject dynamic values.
+    A list of values to bind to the `$1`, `$2`, etc. placeholders in the `sql`,
+    in order. Values can also be expressions using `_expr` (e.g.,
+    `{_expr: "auth.uid"}` or `{_expr: "response.step1.id"}`) to inject dynamic
+    values.
     """
     params: SQL_Params
   ): [Any]
@@ -1024,28 +1057,36 @@ extend type Mutation {
   ```graphql
   mutation MyCustomUpdate {
     _executeReturningFirst(
-      sql: "UPDATE my_table SET status = $1 WHERE id = $2 AND user_id = $3 RETURNING *",
+      sql: "UPDATE my_table SET status = $1 WHERE id = $2 AND user_id = $3
+      RETURNING *",
       params: ["inactive", 123, {_expr: "auth.uid"}]
     )
   }
   ```
 
-  **Returns:** A single JSON object or `null`, representing a row from the `RETURNING` clause.
+  **Returns:** A single JSON object or `null`, representing a row from the
+  `RETURNING` clause.
   """
   _executeReturningFirst(
     """
-    The SQL DML statement with a `RETURNING *` clause. This must be a **string literal** defined directly in the GraphQL operation. Use `$1`, `$2`, etc. as placeholders for values provided in the `params` argument.
+    The SQL DML statement with a `RETURNING *` clause. This must be a **string
+    literal** defined directly in the GraphQL operation. Use `$1`, `$2`, etc.
+    as placeholders for values provided in the `params` argument.
     """
     sql: SQL_Mutation!,
     """
-    A list of values to bind to the `$1`, `$2`, etc. placeholders in the `sql`, in order. Values can also be expressions using `_expr` (e.g., `{_expr: "auth.uid"}`) to inject dynamic values.
+    A list of values to bind to the `$1`, `$2`, etc. placeholders in the `sql`,
+    in order. Values can also be expressions using `_expr` (e.g.,
+    `{_expr: "auth.uid"}` or `{_expr: "response.step1.id"}`) to inject dynamic
+    values.
     """
     params: SQL_Params
   ): Any
 
   """
-  Executes a SQL DML statement (e.g., INSERT, UPDATE, DELETE) where the primary result is the number of affected rows.
-  RETURNING clauses in the SQL will be ignored in the output of this field.
+  Executes a SQL DML statement (e.g., INSERT, UPDATE, DELETE) where the primary
+  result is the number of affected rows.RETURNING clauses in the SQL will be
+  ignored in the output of this field.
 
   **Usage:**
 
@@ -1062,11 +1103,16 @@ extend type Mutation {
   """
   _execute(
     """
-    The SQL statement to execute. This must be a **string literal** defined directly in the GraphQL operation. Use `$1`, `$2`, etc. as placeholders for values provided in the `params` argument.
+    The SQL statement to execute. This must be a **string literal** defined
+    directly in the GraphQL operation. Use `$1`, `$2`, etc. as placeholders for
+    values provided in the `params` argument.
     """
     sql: SQL_Mutation!,
     """
-    A list of values to bind to the `$1`, `$2`, etc. placeholders in the `sql`, in order. Values can also be expressions using `_expr` (e.g., `{_expr: "auth.uid"}`) to inject dynamic values.
+    A list of values to bind to the `$1`, `$2`, etc. placeholders in the `sql`,
+    in order. Values can also be expressions using `_expr` (e.g.,
+    `{_expr: "auth.uid"}` or `{_expr: "response.step1.id"}`) to inject dynamic
+    values.
     """
     params: SQL_Params
   ): Int
@@ -1377,7 +1423,7 @@ type TableName @table {
   myField: String
 }
 ```
-Data Connect adds an implicit `id` primary key column. So the above schema is equivalent to:
+SQL Connect adds an implicit `id` primary key column. So the above schema is equivalent to:
 
 ```graphql
 type TableName @table(key: "id") {
@@ -1386,7 +1432,7 @@ type TableName @table(key: "id") {
 }
 ```
 
-Data Connect generates the following SQL table and CRUD operations to use it.
+SQL Connect generates the following SQL table and CRUD operations to use it.
 
 ```sql
 CREATE TABLE "public"."table_name" (
@@ -1445,7 +1491,7 @@ directive @table(
   plural: String
   """
   Defines the primary key of the table. Defaults to a single field named `id`.
-  If not present already, Data Connect adds an implicit field `id: UUID! @default(expr: "uuidV4()")`.
+  If not present already, SQL Connect adds an implicit field `id: UUID! @default(expr: "uuidV4()")`.
   """
   key: [String!]
 ) on OBJECT
@@ -1453,10 +1499,10 @@ directive @table(
 """
 Defines a relational database SQL view.
 
-Data Connect generates GraphQL queries with WHERE and ORDER BY clauses.
+SQL Connect generates GraphQL queries with WHERE and ORDER BY clauses.
 However, not all SQL features have a native GraphQL equivalent.
 
-With `@view`, you can write **arbitrary SQL SELECT statements** and Data Connect
+With `@view`, you can write **arbitrary SQL SELECT statements** and SQL Connect
 maps GraphQL fields on `@view` type to columns in your SELECT statement.
 
 * Scalar GQL fields (camelCase) should match SQL columns (snake_case)
@@ -1578,10 +1624,10 @@ SQL views doesn't have a primary key, so they don't support lookup. Other
 A view cannot be mutated. You can perform CRUD operations on the underlying
 table to alter its content.
 
-**Important: Data Connect doesn't parse and validate SQL**
+**Important: SQL Connect doesn't parse and validate SQL**
 
 - If the SQL view is invalid or undefined, related requests may fail.
-- If the SQL view return incompatible types. Firebase Data Connect may surface
+- If the SQL view return incompatible types. Firebase SQL Connect may surface
   errors.
 - If a field doesn't have a corresponding column in the SQL SELECT statement,
   it will always be `null`.
@@ -1618,7 +1664,7 @@ directive @view(
 """
 Customizes a field that represents a SQL database table column.
 
-Data Connect maps scalar Fields on `@table` type to a SQL column of
+SQL Connect maps scalar Fields on `@table` type to a SQL column of
 corresponding data type.
 
 - scalar `UUID` maps to [`uuid`](https://www.postgresql.org/docs/current/datatype-uuid.html).
@@ -1644,7 +1690,7 @@ type Post @table {
 }
 ```
 
-Data Connect converts it to the following SQL table schema.
+SQL Connect converts it to the following SQL table schema.
 
 ```sql
 CREATE TABLE "public"."post" (
@@ -1698,7 +1744,7 @@ type OneTable @table {
   someField: String!
 }
 ```
-Data Connect adds implicit foreign key column and relation query field. So the
+SQL Connect adds implicit foreign key column and relation query field. So the
 above schema is equivalent to the following schema.
 
 ```graphql
@@ -1714,7 +1760,7 @@ type OneTable @table {
   # manyTables_on_refField: [ManyTable!]!
 }
 ```
-Data Connect generates the necessary foreign key constraint.
+SQL Connect generates the necessary foreign key constraint.
 
 ```sql
 CREATE TABLE "public"."many_table" (
@@ -1794,7 +1840,7 @@ type Group @table { name: String! }
 type User @table { name: String! }
 ```
 
-When Data Connect sees a table with two reference field as its primary key, it
+When SQL Connect sees a table with two reference field as its primary key, it
 knows this is a join table, so expands the many-to-many query field.
 
 ```graphql
@@ -1965,7 +2011,7 @@ directive @index(
   """
   Configure the SQL database index id.
 
-  If not overridden, Data Connect generates the index name:
+  If not overridden, SQL Connect generates the index name:
   - `{table_name}_{first_field}_{second_field}_aa_idx`
   - `{table_name}_{field_name}_idx`
   """
@@ -2043,7 +2089,7 @@ directive @unique(
   """
   Configures the SQL database unique constraint name.
 
-  If not overridden, Data Connect generates the unique constraint name:
+  If not overridden, SQL Connect generates the unique constraint name:
   - `table_name_first_field_second_field_uidx`
   - `table_name_only_field_name_uidx`
   """
@@ -2353,7 +2399,7 @@ Create a vector embedding of text using the given model on Vertex AI.
 Cloud SQL for Postgresql natively integrates with [Vertex AI Text embeddings API](https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/text-embeddings-api)
 to effectively generate text embeddings.
 
-If you uses [`Vector`](scalar.md#Vector) in your schema, Firebase Data Connect automatically installs
+If you use [`Vector`](scalar.md#Vector) in your schema, Firebase SQL Connect automatically installs
 [`pgvector`](https://github.com/pgvector/pgvector) and [`google_ml_integration`](https://cloud.google.com/sql/docs/postgres/integrate-cloud-sql-with-vertex-ai)
 Postgres extensions in your Cloud SQL database.
 
@@ -2415,5 +2461,123 @@ scalar Vector_Embed_Model
   @fdc_example(value: "textembedding-gecko@001", description: "An older version of the textembedding-gecko model")
   @fdc_example(value: "text-embedding-004", description: "Another text embedding model")
 
+"""
+Locks down the allowed fields for a `_Data` input variable.
+When a `_Data` input type is used as a variable in an operation, this directive is REQUIRED.
+
+###### Example: Batch Inserting Movies
+
+To allow clients to batch insert movies but restrict them to only providing the `title`, `genre`, and `releaseYear` fields.
+To prevent risk of overwhelming the database, you can restrict the maximum number of items a client can submit in a single batch request using `maxCount`:
+```graphql
+mutation BatchInsertMovies(
+  $data: [Movie_Data!]! @allow(fields: "title genre releaseYear", maxCount: 10)
+) @auth(level: PUBLIC) {
+  movie_insertMany(data: $data)
+}
+```
+"""
+directive @allow(
+  """
+  A space-separated string mimicking a GraphQL selection set.
+  Example: "title genre releaseYear"
+  """
+  fields: String!
+  """
+   Optional limit on the maximum size or complexity of the variable.
+   - For lists: limits the number of items.
+   - For nested structures: limits the total number of entities processed.
+   - For filters: limits the number of conditions to evaluate.
+   Prevents payload-based abuse and resource exhaustion.
+  """
+  maxCount: Int! = 100
+) on VARIABLE_DEFINITION
+
 # Intentionally left blank.
+
+"""
+Make the query reactive with customized refresh policy.
+
+###### Example: Refresh Stock Price Periodically
+
+Periodically refresh the Stock graph every minute.
+
+```graphql
+query Stock($ticker: String!) @refresh(every: { minutes: 1 }) {
+  stock(key: {ticker: $ticker}) {
+    name
+    latestPrice
+    prices { time price }
+  }
+}
+```
+
+###### Example: Realtime User Profile
+
+You can configure the `UserProfile` query to be refreshed after `UpdateUser`
+mutation.
+
+```graphql
+mutation UpdateUser($newName: String!) @auth(level: USER)
+{
+  user_update(id_expr: "auth.uid", data: { name: $newName })
+}
+
+query MyProfile @auth(level: USER)
+  @refresh(onMutationExecuted: {
+    operation: "UpdateUser",
+    condition: "mutation.auth.uid == request.auth.uid"
+  })
+{
+  user(uid_expr: "auth.uid") { id name }
+}
+```
+
+###### Example: Realtime Chat Room
+
+Refresh the last 50 messages in the chat room after each `SendMessage`.
+
+```graphql
+query ChatRoom($roomId: UUID!) @auth(level: PUBLIC)
+  @refresh(onMutationExecuted: {
+    operation: "SendMessage",
+    condition: "mutation.variables.roomId == request.variables.roomId"
+  })
+{
+  messages(where: {roomId: {eq: $roomId}}, orderBy: [{createTime: DESC}], limit: 50) {
+    author content createTime
+  }
+}
+
+mutation SendMessage($roomId: UUID!, $message: String) @auth(level: PUBLIC)
+{
+  message_insert(data: {roomId: $roomId, message: $message})
+}
+```
+
+"""
+directive @refresh(
+  """
+  Define the interval to periodically refresh the query.
+  """
+  every: Timestamp_Duration
+  """
+  Define the mutations that will trigger this query to refresh.
+  """
+  onMutationExecuted: [OnMutationExecuted_Event!]
+) repeatable on QUERY
+
+"""
+Defines the mutation events that will trigger the query to refresh.
+"""
+input OnMutationExecuted_Event {
+  """
+  The name of the mutation.
+  """
+  operation: String!
+  """
+  Additional conditions for a mutation event to trigger refresh.
+  """
+  condition: Boolean_Expr
+}
 

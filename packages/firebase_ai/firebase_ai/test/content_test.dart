@@ -15,6 +15,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:firebase_ai/src/api.dart';
 import 'package:firebase_ai/src/content.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -44,6 +45,29 @@ void main() {
       final content =
           Content('user', [InlineDataPart('image/png', Uint8List(0))]);
       expect(content.parts[0], isA<InlineDataPart>());
+    });
+
+    test('inlineData() accepts mediaResolution', () {
+      final content = Content.inlineData(
+        'image/png',
+        Uint8List(0),
+        mediaResolution: MediaResolution.high,
+      );
+
+      expect(content.toJson(), {
+        'role': 'user',
+        'parts': [
+          {
+            'inlineData': {
+              'mimeType': 'image/png',
+              'data': '',
+            },
+            'mediaResolution': {
+              'level': 'MEDIA_RESOLUTION_HIGH',
+            },
+          }
+        ],
+      });
     });
 
     test('multi()', () {
@@ -125,6 +149,24 @@ void main() {
       expect(inlineData['willContinue'], true);
     });
 
+    test('InlineDataPart serializes mediaResolution', () {
+      final part = InlineDataPart(
+        'image/png',
+        Uint8List(0),
+        mediaResolution: MediaResolution.ultraHigh,
+      );
+
+      expect(part.toJson(), {
+        'inlineData': {
+          'mimeType': 'image/png',
+          'data': '',
+        },
+        'mediaResolution': {
+          'level': 'MEDIA_RESOLUTION_ULTRA_HIGH',
+        },
+      });
+    });
+
     test('FunctionCall with isThought and thoughtSignature toJson', () {
       const part = FunctionCall.forTest(
           'myFunction',
@@ -181,6 +223,24 @@ void main() {
       expect(fileData['mime_type'], 'image/png');
       expect(fileData['file_uri'], 'gs://bucket-name/path');
       expect(json['thought'], true);
+    });
+
+    test('FileData serializes mediaResolution', () {
+      const part = FileData(
+        'image/png',
+        'gs://bucket-name/path',
+        mediaResolution: MediaResolution.high,
+      );
+
+      expect(part.toJson(), {
+        'file_data': {
+          'mime_type': 'image/png',
+          'file_uri': 'gs://bucket-name/path',
+        },
+        'mediaResolution': {
+          'level': 'MEDIA_RESOLUTION_HIGH',
+        },
+      });
     });
   });
 

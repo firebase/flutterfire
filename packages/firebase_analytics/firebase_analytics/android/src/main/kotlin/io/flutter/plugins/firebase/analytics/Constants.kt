@@ -8,7 +8,7 @@ object Constants {
   const val AD_STORAGE_CONSENT_GRANTED: String = "adStorageConsentGranted"
   const val ANALYTICS_STORAGE_CONSENT_GRANTED: String = "analyticsStorageConsentGranted"
   const val AD_PERSONALIZATION_SIGNALS_CONSENT_GRANTED: String =
-    "adPersonalizationSignalsConsentGranted"
+      "adPersonalizationSignalsConsentGranted"
   const val AD_USER_DATA_CONSENT_GRANTED: String = "adUserDataConsentGranted"
   const val USER_ID: String = "userId"
   const val EVENT_NAME: String = "eventName"

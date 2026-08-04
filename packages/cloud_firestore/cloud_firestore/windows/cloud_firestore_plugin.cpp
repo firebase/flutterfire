@@ -21,6 +21,7 @@
 #include <mutex>
 #include <queue>
 #include <sstream>
+#include <vector>
 
 #include "cloud_firestore/plugin_version.h"
 #include "firebase/app.h"
@@ -42,6 +43,48 @@ using flutter::EncodableValue;
 namespace cloud_firestore_windows {
 
 static std::string kLibraryName = "flutter-fire-fst";
+
+void TransactionResponse::Reset() {
+  std::lock_guard<std::mutex> lock(mutex_);
+  response_received_ = false;
+  commands_.clear();
+}
+
+void TransactionResponse::Complete(
+    InternalTransactionResult result,
+    std::vector<InternalTransactionCommand> commands) {
+  {
+    std::lock_guard<std::mutex> lock(mutex_);
+    result_ = result;
+    commands_ = std::move(commands);
+    response_received_ = true;
+  }
+  condition_.notify_one();
+}
+
+TransactionResponseStatus TransactionResponse::WaitFor(
+    std::chrono::milliseconds timeout, InternalTransactionResult& result,
+    std::vector<InternalTransactionCommand>& commands) {
+  std::unique_lock<std::mutex> lock(mutex_);
+  if (!condition_.wait_for(
+          lock, timeout, [this] { return response_received_ || cancelled_; })) {
+    return TransactionResponseStatus::kTimedOut;
+  }
+  if (cancelled_) {
+    return TransactionResponseStatus::kCancelled;
+  }
+  result = result_;
+  commands = std::move(commands_);
+  return TransactionResponseStatus::kReceived;
+}
+
+void TransactionResponse::Cancel() {
+  {
+    std::lock_guard<std::mutex> lock(mutex_);
+    cancelled_ = true;
+  }
+  condition_.notify_one();
+}
 
 namespace {
 
@@ -130,6 +173,15 @@ class PlatformThreadDispatcher {
   std::queue<std::function<void()>> tasks_;
 };
 
+template <typename T>
+void ReplyOnPlatformThread(std::function<void(ErrorOr<T>)> result,
+                           ErrorOr<T> reply) {
+  PlatformThreadDispatcher::GetInstance().Post(
+      [result = std::move(result), reply = std::move(reply)]() mutable {
+        result(std::move(reply));
+      });
+}
+
 struct EventSinkState {
   std::mutex mutex;
   std::unique_ptr<flutter::EventSink<flutter::EncodableValue>> events;
@@ -203,7 +255,7 @@ void CloudFirestorePlugin::RegisterWithRegistrar(
 
   auto plugin = std::make_unique<CloudFirestorePlugin>();
 
-  messenger_ = registrar->messenger();
+  plugin->messenger_ = registrar->messenger();
 
   FirebaseFirestoreHostApi::SetUp(registrar->messenger(), plugin.get());
 
@@ -275,9 +327,6 @@ firebase::firestore::FieldValue CloudFirestorePlugin::ConvertToFieldValue(
   }
 }
 
-flutter::BinaryMessenger*
-    cloud_firestore_windows::CloudFirestorePlugin::messenger_ = nullptr;
-
 std::map<std::string,
          std::unique_ptr<flutter::EventChannel<flutter::EncodableValue>>>
     event_channels_;
@@ -291,12 +340,12 @@ std::map<std::string, std::unique_ptr<firebase::firestore::Firestore>>
     cloud_firestore_windows::CloudFirestorePlugin::firestoreInstances_;
 
 std::string RegisterEventChannelWithUUID(
-    std::string prefix, std::string uuid,
+    flutter::BinaryMessenger* messenger, std::string prefix, std::string uuid,
     std::unique_ptr<flutter::StreamHandler<flutter::EncodableValue>> handler) {
   std::string channelName = prefix + uuid;
   event_channels_[channelName] =
       std::make_unique<flutter::EventChannel<flutter::EncodableValue>>(
-          CloudFirestorePlugin::messenger_, channelName,
+          messenger, channelName,
           &flutter::StandardMethodCodec::GetInstance(
               &FirebaseFirestoreHostApiCodecSerializer::GetInstance()));
 
@@ -309,7 +358,7 @@ std::string RegisterEventChannelWithUUID(
 }
 
 std::string RegisterEventChannel(
-    std::string prefix,
+    flutter::BinaryMessenger* messenger, std::string prefix,
     std::unique_ptr<flutter::StreamHandler<flutter::EncodableValue>> handler) {
   UUID uuid;
   UuidCreate(&uuid);
@@ -319,7 +368,7 @@ std::string RegisterEventChannel(
   std::string channelName = prefix + str;
   event_channels_[channelName] =
       std::make_unique<flutter::EventChannel<flutter::EncodableValue>>(
-          CloudFirestorePlugin::messenger_, channelName,
+          messenger, channelName,
           &flutter::StandardMethodCodec::GetInstance(
               &FirebaseFirestoreHostApiCodecSerializer::GetInstance()));
   stream_handlers_[channelName] = std::move(handler);
@@ -470,7 +519,8 @@ GetServerTimestampBehaviorFromPigeon(
   }
 }
 
-EncodableValue ConvertFieldValueToEncodableValue(const FieldValue& fieldValue) {
+EncodableValue CloudFirestorePlugin::ConvertFieldValueToEncodableValue(
+    const FieldValue& fieldValue) {
   switch (fieldValue.type()) {
     case FieldValue::Type::kNull:
       return EncodableValue();
@@ -491,6 +541,15 @@ EncodableValue ConvertFieldValueToEncodableValue(const FieldValue& fieldValue) {
 
     case FieldValue::Type::kString:
       return EncodableValue(fieldValue.string_value());
+
+    case FieldValue::Type::kBlob: {
+      std::vector<uint8_t> bytes;
+      if (fieldValue.blob_size() > 0) {
+        bytes.assign(fieldValue.blob_value(),
+                     fieldValue.blob_value() + fieldValue.blob_size());
+      }
+      return CustomEncodableValue(bytes);
+    }
 
     case FieldValue::Type::kMap: {
       EncodableMap encodableMap;
@@ -527,8 +586,9 @@ flutter::EncodableMap ConvertToEncodableMap(
   EncodableMap convertedMap;
   for (const auto& kv : originalMap) {
     EncodableValue key = EncodableValue(kv.first);
-    EncodableValue value = ConvertFieldValueToEncodableValue(
-        kv.second);             // convert FieldValue to EncodableValue
+    EncodableValue value =
+        CloudFirestorePlugin::ConvertFieldValueToEncodableValue(
+            kv.second);         // convert FieldValue to EncodableValue
     convertedMap[key] = value;  // insert into the new map
   }
   return convertedMap;
@@ -768,7 +828,8 @@ void CloudFirestorePlugin::LoadBundle(
       std::make_unique<LoadBundleStreamHandler>(firestore, bundleConverted);
 
   std::string channelName = RegisterEventChannel(
-      "plugins.flutter.io/firebase_firestore/loadBundle/", std::move(handler));
+      messenger_, "plugins.flutter.io/firebase_firestore/loadBundle/",
+      std::move(handler));
 
   result(channelName);
 }
@@ -966,7 +1027,7 @@ void CloudFirestorePlugin::SnapshotsInSyncSetup(
   std::string snapshotInSyncId(str);
 
   std::string channelName = RegisterEventChannelWithUUID(
-      "plugins.flutter.io/firebase_firestore/snapshotsInSync/",
+      messenger_, "plugins.flutter.io/firebase_firestore/snapshotsInSync/",
       snapshotInSyncId, std::move(handler));
   result(snapshotInSyncId);
 }
@@ -984,10 +1045,7 @@ class TransactionStreamHandler
   void ReceiveTransactionResponse(
       InternalTransactionResult resultType,
       std::vector<InternalTransactionCommand> commands) {
-    std::lock_guard<std::mutex> lock(commands_mutex_);
-    resultType_ = resultType;
-    commands_ = commands;
-    cv_.notify_one();
+    response_.Complete(resultType, std::move(commands));
   }
 
   std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
@@ -1012,25 +1070,31 @@ class TransactionStreamHandler
 
               flutter::EncodableMap map;
               map.emplace("appName", firestore_->app()->name());
+              response_.Reset();
               SendSuccessOnPlatformThread(events_state_,
                                           flutter::EncodableValue(map));
 
-              std::unique_lock<std::mutex> lock(mtx_);
-              if (cv_.wait_for(lock, std::chrono::milliseconds(timeout_)) ==
-                  std::cv_status::timeout) {
-                SendErrorOnPlatformThread(events_state_, "Timeout",
-                                          "Transaction timed out.",
-                                          flutter::EncodableValue(), true);
-                return Error::kErrorDeadlineExceeded;
+              InternalTransactionResult resultType;
+              std::vector<InternalTransactionCommand> commands;
+              switch (response_.WaitFor(std::chrono::milliseconds(timeout_),
+                                        resultType, commands)) {
+                case TransactionResponseStatus::kTimedOut:
+                  SendErrorOnPlatformThread(events_state_, "Timeout",
+                                            "Transaction timed out.",
+                                            flutter::EncodableValue(), true);
+                  return Error::kErrorDeadlineExceeded;
+                case TransactionResponseStatus::kCancelled:
+                  return Error::kErrorCancelled;
+                case TransactionResponseStatus::kReceived:
+                  break;
               }
 
-              std::lock_guard<std::mutex> command_lock(commands_mutex_);
-              if (resultType_ == InternalTransactionResult::kFailure) {
+              if (resultType == InternalTransactionResult::kFailure) {
                 return Error::kErrorAborted;
               }
-              if (commands_.empty()) return Error::kErrorOk;
+              if (commands.empty()) return Error::kErrorOk;
 
-              for (InternalTransactionCommand& command : commands_) {
+              for (InternalTransactionCommand& command : commands) {
                 std::string path = command.path();
                 InternalTransactionType type = command.type();
                 if (path.empty() /* or some other invalid condition */) {
@@ -1102,8 +1166,7 @@ class TransactionStreamHandler
 
   std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
   OnCancelInternal(const flutter::EncodableValue* arguments) override {
-    std::unique_lock<std::mutex> lock(mtx_);
-    cv_.notify_one();
+    response_.Cancel();
     EndStreamOnPlatformThread(events_state_);
     return nullptr;
   }
@@ -1113,11 +1176,7 @@ class TransactionStreamHandler
   long timeout_;
   int maxAttempts_;
   std::string transactionId_;
-  std::vector<InternalTransactionCommand> commands_;
-  InternalTransactionResult resultType_ = InternalTransactionResult::kSuccess;
-  std::mutex mtx_;
-  std::mutex commands_mutex_;
-  std::condition_variable cv_;
+  TransactionResponse response_;
   std::shared_ptr<EventSinkState> events_state_;
 };
 
@@ -1141,8 +1200,8 @@ void CloudFirestorePlugin::TransactionCreate(
 
   // Register the event channel.
   std::string channelName = RegisterEventChannelWithUUID(
-      "plugins.flutter.io/firebase_firestore/transaction/", transactionId,
-      std::move(handler));
+      messenger_, "plugins.flutter.io/firebase_firestore/transaction/",
+      transactionId, std::move(handler));
 
   // Return the result (assumed to be transaction ID in this example).
   result(transactionId);
@@ -1551,11 +1610,14 @@ void CloudFirestorePlugin::QueryGet(
         if (completed_future.error() == firebase::firestore::kErrorOk) {
           const firebase::firestore::QuerySnapshot* querySnapshot =
               completed_future.result();
-          result(ParseQuerySnapshot(querySnapshot,
-                                    GetServerTimestampBehaviorFromPigeon(
-                                        options.server_timestamp_behavior())));
+          ReplyOnPlatformThread<InternalQuerySnapshot>(
+              result,
+              ParseQuerySnapshot(querySnapshot,
+                                 GetServerTimestampBehaviorFromPigeon(
+                                     options.server_timestamp_behavior())));
         } else {
-          result(CloudFirestorePlugin::ParseError(completed_future));
+          ReplyOnPlatformThread<InternalQuerySnapshot>(
+              result, CloudFirestorePlugin::ParseError(completed_future));
         }
       });
 }
@@ -1800,9 +1862,9 @@ void CloudFirestorePlugin::QuerySnapshot(
       GetServerTimestampBehaviorFromPigeon(
           options.server_timestamp_behavior()));
 
-  std::string channelName =
-      RegisterEventChannel("plugins.flutter.io/firebase_firestore/query/",
-                           std::move(query_snapshot_handler));
+  std::string channelName = RegisterEventChannel(
+      messenger_, "plugins.flutter.io/firebase_firestore/query/",
+      std::move(query_snapshot_handler));
 
   result(channelName);
 }
@@ -1898,9 +1960,9 @@ void CloudFirestorePlugin::DocumentReferenceSnapshot(
           GetServerTimestampBehaviorFromPigeon(
               *parameters.server_timestamp_behavior()));
 
-  std::string channelName =
-      RegisterEventChannel("plugins.flutter.io/firebase_firestore/document/",
-                           std::move(document_snapshot_handler));
+  std::string channelName = RegisterEventChannel(
+      messenger_, "plugins.flutter.io/firebase_firestore/document/",
+      std::move(document_snapshot_handler));
   result(channelName);
 }
 

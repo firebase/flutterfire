@@ -9,11 +9,15 @@ void setupDataSnapshotTests() {
   group('DataSnapshot', () {
     late DatabaseReference ref;
     DatabaseReference getRef(String path) {
-      return FirebaseDatabase.instance.ref('tests').child(path);
+      return ref.child(path);
     }
 
+    var testCount = 0;
+
     setUp(() async {
-      ref = FirebaseDatabase.instance.ref('tests');
+      ref = FirebaseDatabase.instance.ref(
+        'tests/data-snapshot-${DateTime.now().microsecondsSinceEpoch}-${testCount++}',
+      );
 
       // Wipe the database before each test
       await ref.remove();

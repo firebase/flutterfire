@@ -62,6 +62,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class FlutterFirebaseFirestorePlugin
@@ -83,7 +84,9 @@ public class FlutterFirebaseFirestorePlugin
 
   private final AtomicReference<Activity> activity = new AtomicReference<>(null);
 
-  private final Map<String, Transaction> transactions = new HashMap<>();
+  // Written from Firestore's transaction worker threads and read from the plugin's
+  // cached thread pool, so this must be a thread-safe map (see #18417).
+  private final Map<String, Transaction> transactions = new ConcurrentHashMap<>();
   private final Map<String, EventChannel> eventChannels = new HashMap<>();
   private final Map<String, StreamHandler> streamHandlers = new HashMap<>();
   private final Map<String, OnTransactionResultListener> transactionHandlers = new HashMap<>();
@@ -274,6 +277,28 @@ public class FlutterFirebaseFirestorePlugin
     return identifier;
   }
 
+  private void removeEventListener(String identifier) {
+    synchronized (eventChannels) {
+      EventChannel eventChannel = eventChannels.remove(identifier);
+      if (eventChannel != null) {
+        eventChannel.setStreamHandler(null);
+      }
+    }
+
+    synchronized (streamHandlers) {
+      StreamHandler streamHandler = streamHandlers.remove(identifier);
+      if (streamHandler != null) {
+        streamHandler.onCancel(null);
+      }
+    }
+  }
+
+  private void removeTransaction(String transactionId) {
+    transactions.remove(transactionId);
+    removeEventListener(transactionId);
+    transactionHandlers.remove(transactionId);
+  }
+
   private void removeEventListeners() {
     synchronized (eventChannels) {
       for (String identifier : eventChannels.keySet()) {
@@ -289,6 +314,7 @@ public class FlutterFirebaseFirestorePlugin
       streamHandlers.clear();
     }
 
+    transactions.clear();
     transactionHandlers.clear();
   }
 
@@ -369,7 +395,8 @@ public class FlutterFirebaseFirestorePlugin
             if (query == null) {
               result.error(
                   new NullPointerException(
-                      "Named query has not been found. Please check it has been loaded properly via loadBundle()."));
+                      "Named query has not been found. Please check it has been loaded properly via"
+                          + " loadBundle()."));
               return;
             }
 
@@ -556,6 +583,7 @@ public class FlutterFirebaseFirestorePlugin
     final TransactionStreamHandler handler =
         new TransactionStreamHandler(
             transaction -> transactions.put(transactionId, transaction),
+            this::removeTransaction,
             firestore,
             transactionId,
             timeout,
@@ -572,8 +600,13 @@ public class FlutterFirebaseFirestorePlugin
       @NonNull GeneratedAndroidFirebaseFirestore.InternalTransactionResult resultType,
       @Nullable List<GeneratedAndroidFirebaseFirestore.InternalTransactionCommand> commands,
       @NonNull GeneratedAndroidFirebaseFirestore.VoidResult result) {
-    Objects.requireNonNull(transactionHandlers.get(transactionId))
-        .receiveTransactionResponse(resultType, commands);
+    OnTransactionResultListener handler = transactionHandlers.get(transactionId);
+    if (handler == null) {
+      result.success();
+      return;
+    }
+
+    handler.receiveTransactionResponse(resultType, commands);
     result.success();
   }
 
@@ -764,7 +797,8 @@ public class FlutterFirebaseFirestorePlugin
               result.error(
                   new GeneratedAndroidFirebaseFirestore.FlutterError(
                       "invalid_query",
-                      "An error occurred while parsing query arguments, see native logs for more information. Please report this issue.",
+                      "An error occurred while parsing query arguments, see native logs for more"
+                          + " information. Please report this issue.",
                       null));
               return;
             }
@@ -973,7 +1007,8 @@ public class FlutterFirebaseFirestorePlugin
       result.error(
           new GeneratedAndroidFirebaseFirestore.FlutterError(
               "invalid_query",
-              "An error occurred while parsing query arguments, see native logs for more information. Please report this issue.",
+              "An error occurred while parsing query arguments, see native logs for more"
+                  + " information. Please report this issue.",
               null));
       return;
     }
@@ -986,7 +1021,8 @@ public class FlutterFirebaseFirestorePlugin
                 includeMetadataChanges,
                 PigeonParser.parsePigeonServerTimestampBehavior(
                     options.getServerTimestampBehavior()),
-                PigeonParser.parseListenSource(source))));
+                PigeonParser.parseListenSource(source),
+                cachedThreadPool)));
   }
 
   @Override

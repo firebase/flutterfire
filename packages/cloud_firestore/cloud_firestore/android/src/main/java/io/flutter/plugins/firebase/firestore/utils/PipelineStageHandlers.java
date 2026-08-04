@@ -20,6 +20,7 @@ import com.google.firebase.firestore.pipeline.FindNearestOptions;
 import com.google.firebase.firestore.pipeline.FindNearestStage;
 import com.google.firebase.firestore.pipeline.Ordering;
 import com.google.firebase.firestore.pipeline.SampleStage;
+import com.google.firebase.firestore.pipeline.SearchStage;
 import com.google.firebase.firestore.pipeline.Selectable;
 import com.google.firebase.firestore.pipeline.UnnestOptions;
 import java.util.List;
@@ -71,6 +72,8 @@ class PipelineStageHandlers {
         return handleSample(pipeline, args);
       case "find_nearest":
         return handleFindNearest(pipeline, args);
+      case "search":
+        return handleSearch(pipeline, args);
       default:
         throw new IllegalArgumentException("Unknown pipeline stage: " + stageName);
     }
@@ -334,5 +337,84 @@ class PipelineStageHandlers {
     } else {
       return pipeline.findNearest(fieldExpr, vectorArray, distanceMeasure);
     }
+  }
+
+  @SuppressWarnings("unchecked")
+  private Pipeline handleSearch(@NonNull Pipeline pipeline, @Nullable Map<String, Object> args) {
+    if (args == null) {
+      throw new IllegalArgumentException("'search' requires arguments");
+    }
+
+    String queryType = (String) args.get("query_type");
+    Object query = args.get("query");
+    SearchStage searchStage;
+    if ("string".equals(queryType)) {
+      searchStage = SearchStage.withQuery((String) query);
+    } else if ("expression".equals(queryType)) {
+      BooleanExpression expressionQuery =
+          parsers.parseBooleanExpression((Map<String, Object>) query);
+      searchStage = SearchStage.withQuery(expressionQuery);
+    } else {
+      throw new IllegalArgumentException(
+          "'search' requires query_type to be either 'string' or 'expression'");
+    }
+
+    List<Map<String, Object>> sortMaps = (List<Map<String, Object>>) args.get("sort");
+    if (sortMaps != null && !sortMaps.isEmpty()) {
+      Ordering firstOrdering = parseOrdering(sortMaps.get(0));
+      if (sortMaps.size() == 1) {
+        searchStage = searchStage.withSort(firstOrdering);
+      } else {
+        Ordering[] additionalOrderings = new Ordering[sortMaps.size() - 1];
+        for (int i = 1; i < sortMaps.size(); i++) {
+          additionalOrderings[i - 1] = parseOrdering(sortMaps.get(i));
+        }
+        searchStage = searchStage.withSort(firstOrdering, additionalOrderings);
+      }
+    }
+
+    List<Map<String, Object>> addFieldMaps = (List<Map<String, Object>>) args.get("add_fields");
+    if (addFieldMaps != null && !addFieldMaps.isEmpty()) {
+      Selectable firstField = parsers.parseSelectable(addFieldMaps.get(0));
+      if (addFieldMaps.size() == 1) {
+        searchStage = searchStage.withAddFields(firstField);
+      } else {
+        Selectable[] additionalFields = new Selectable[addFieldMaps.size() - 1];
+        for (int i = 1; i < addFieldMaps.size(); i++) {
+          additionalFields[i - 1] = parsers.parseSelectable(addFieldMaps.get(i));
+        }
+        searchStage = searchStage.withAddFields(firstField, additionalFields);
+      }
+    }
+
+    String languageCode = (String) args.get("language_code");
+    if (languageCode != null) {
+      searchStage = searchStage.withLanguageCode(languageCode);
+    }
+
+    Number limit = (Number) args.get("limit");
+    if (limit != null) {
+      searchStage = searchStage.withLimit(limit.longValue());
+    }
+
+    Number offset = (Number) args.get("offset");
+    if (offset != null) {
+      searchStage = searchStage.withOffset(offset.longValue());
+    }
+
+    Number retrievalDepth = (Number) args.get("retrieval_depth");
+    if (retrievalDepth != null) {
+      searchStage = searchStage.withRetrievalDepth(retrievalDepth.longValue());
+    }
+
+    return pipeline.search(searchStage);
+  }
+
+  @SuppressWarnings("unchecked")
+  private Ordering parseOrdering(@NonNull Map<String, Object> orderingMap) {
+    Expression expression =
+        parsers.parseExpression((Map<String, Object>) orderingMap.get("expression"));
+    String direction = (String) orderingMap.get("order_direction");
+    return "asc".equals(direction) ? expression.ascending() : expression.descending();
   }
 }

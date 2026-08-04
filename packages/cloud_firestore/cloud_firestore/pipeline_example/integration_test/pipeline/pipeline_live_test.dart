@@ -18,6 +18,7 @@ import 'pipeline_find_nearest_e2e.dart';
 import 'pipeline_remove_fields_e2e.dart';
 import 'pipeline_replace_with_e2e.dart';
 import 'pipeline_sample_e2e.dart';
+import 'pipeline_search_e2e.dart';
 import 'pipeline_seed.dart';
 import 'pipeline_select_e2e.dart';
 import 'pipeline_unnest_union_e2e.dart';
@@ -36,6 +37,7 @@ void main() {
       );
       firestore.settings = const Settings(persistenceEnabled: true);
       await seedPipelineE2ECollections(firestore);
+      await seedPipelineSearchE2ECollection(firestore);
     });
 
     runPipelineFilterSortTests();
@@ -47,6 +49,7 @@ void main() {
     runPipelineUnnestUnionTests();
     runPipelineSampleTests();
     runPipelineFindNearestTests();
+    runPipelineSearchTests();
     runPipelineExpressionsTests();
   });
 }

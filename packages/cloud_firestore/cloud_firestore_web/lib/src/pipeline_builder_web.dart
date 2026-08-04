@@ -122,6 +122,8 @@ interop.PipelineJsImpl _applyStage(
           converter.toReplaceWithOptions(expression as Map<String, dynamic>));
     case 'find_nearest':
       return pipeline.findNearest(converter.toFindNearestOptions(map));
+    case 'search':
+      return pipeline.search(converter.toSearchOptions(map));
     case 'union':
       final pipelineStages = map['pipeline'] as List<Map<String, dynamic>>;
       final otherPipeline =

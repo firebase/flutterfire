@@ -7,19 +7,19 @@
 
 import PackageDescription
 
-let library_version = "16.2.2"
-let firebase_sdk_version: Version = "12.13.0"
+let libraryVersion = "16.5.0"
+let firebaseSdkVersion: Version = "12.17.0"
 
 let package = Package(
   name: "firebase_messaging",
   platforms: [
-    .macOS("10.15"),
+    .macOS("10.15")
   ],
   products: [
-    .library(name: "firebase-messaging", targets: ["firebase_messaging"]),
+    .library(name: "firebase-messaging", targets: ["firebase_messaging"])
   ],
   dependencies: [
-    .package(url: "https://github.com/firebase/firebase-ios-sdk", from: firebase_sdk_version),
+    .package(url: "https://github.com/firebase/firebase-ios-sdk", exact: firebaseSdkVersion),
     .package(name: "firebase_core", path: "../firebase_core"),
     .package(name: "FlutterFramework", path: "../FlutterFramework"),
   ],
@@ -32,13 +32,13 @@ let package = Package(
         .product(name: "FlutterFramework", package: "FlutterFramework"),
       ],
       resources: [
-        .process("Resources"),
+        .process("Resources")
       ],
       cSettings: [
         .headerSearchPath("include"),
-        .define("LIBRARY_VERSION", to: "\"\(library_version)\""),
+        .define("LIBRARY_VERSION", to: "\"\(libraryVersion)\""),
         .define("LIBRARY_NAME", to: "\"flutter-fire-fcm\""),
       ]
-    ),
+    )
   ]
 )

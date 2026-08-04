@@ -58,7 +58,7 @@ apply_standard_settings(${PLUGIN_NAME})
 set_target_properties(${PLUGIN_NAME} PROPERTIES
   CXX_VISIBILITY_PRESET hidden)
 target_compile_definitions(${PLUGIN_NAME} PUBLIC FLUTTER_PLUGIN_IMPL)
-# Enable firebase-cpp-sdk's platform logging api.
+# Enable Firebase C++ SDK internal APIs used by App::RegisterLibrary.
 target_compile_definitions(${PLUGIN_NAME} PRIVATE -DINTERNAL_EXPERIMENTAL=1)
 
 # Source include directories and library dependencies. Add any plugin-specific

@@ -5,8 +5,7 @@
 
 part of '../firebase_app_check.dart';
 
-class FirebaseAppCheck extends FirebasePluginPlatform
-    implements FirebaseService {
+class FirebaseAppCheck extends FirebasePlugin implements FirebaseService {
   static Map<String, FirebaseAppCheck> _firebaseAppCheckInstances = {};
 
   FirebaseAppCheck._({required this.app})
@@ -132,6 +131,17 @@ class FirebaseAppCheck extends FirebasePluginPlatform
   /// false, will use a cached token if found in storage.
   Future<String?> getToken([bool? forceRefresh]) async {
     return _delegate.getToken(forceRefresh ?? false);
+  }
+
+  /// Get the current App Check token and its associated metadata.
+  ///
+  /// Attaches to the most recent in-flight request if one is present. Returns
+  /// null if no token is present and no token requests are in-flight.
+  ///
+  /// If `forceRefresh` is true, will always try to fetch a fresh token. If
+  /// false, will use a cached token if found in storage.
+  Future<AppCheckTokenResult?> getTokenResult([bool? forceRefresh]) {
+    return _delegate.getTokenResult(forceRefresh ?? false);
   }
 
   /// If true, the SDK automatically refreshes App Check tokens as needed.

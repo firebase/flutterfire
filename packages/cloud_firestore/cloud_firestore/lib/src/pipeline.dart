@@ -433,6 +433,31 @@ class Pipeline {
     );
   }
 
+  /// Adds a search stage to this pipeline.
+  ///
+  /// Search stages execute full-text search or geo search operations. A search
+  /// stage must be the first stage after the pipeline source.
+  ///
+  /// Example:
+  /// ```dart
+  /// firestore.pipeline().collection('restaurants').search(
+  ///   SearchStage.withQuery('breakfast -diner', limit: 10),
+  /// );
+  /// ```
+  Pipeline search(SearchStage searchStage) {
+    if (_delegate.stages.length != 1) {
+      throw StateError(
+        'A search stage must be the first stage after the pipeline source.',
+      );
+    }
+
+    final stage = _SearchStage(searchStage);
+    return Pipeline._(
+      _firestore,
+      _delegate.addStage(stage.toMap()),
+    );
+  }
+
   /// Limits the maximum number of documents returned by previous stages to
   /// [limit].
   ///

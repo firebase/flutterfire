@@ -139,13 +139,7 @@ class CoreFirebaseOptions {
  private:
   static CoreFirebaseOptions FromEncodableList(
       const ::flutter::EncodableList& list);
-
- public:
- public:
   ::flutter::EncodableList ToEncodableList() const;
-
- private:
- private:
   friend class CoreInitializeResponse;
   friend class FirebaseCoreHostApi;
   friend class FirebaseAppHostApi;
@@ -208,13 +202,7 @@ class CoreInitializeResponse {
  private:
   static CoreInitializeResponse FromEncodableList(
       const ::flutter::EncodableList& list);
-
- public:
- public:
   ::flutter::EncodableList ToEncodableList() const;
-
- private:
- private:
   friend class FirebaseCoreHostApi;
   friend class FirebaseAppHostApi;
   friend class PigeonInternalCodecSerializer;

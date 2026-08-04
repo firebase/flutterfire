@@ -5,9 +5,11 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void runQueryTests() {
@@ -329,50 +331,165 @@ void runQueryTests() {
 
         Stream<QuerySnapshot<Map<String, dynamic>>> stream =
             collection.snapshots();
-        final snapshots = <QuerySnapshot<Map<String, dynamic>>>[];
-        final receivedAll = Completer<void>();
+        final initialSnapshot =
+            Completer<QuerySnapshot<Map<String, dynamic>>>();
+        final doc1Set = Completer<QuerySnapshot<Map<String, dynamic>>>();
+        final doc1Deleted = Completer<QuerySnapshot<Map<String, dynamic>>>();
+        final doc2Set = Completer<QuerySnapshot<Map<String, dynamic>>>();
+        final doc2Updated = Completer<QuerySnapshot<Map<String, dynamic>>>();
 
         StreamSubscription subscription = stream.listen((snapshot) {
-          snapshots.add(snapshot);
-          if (snapshots.length >= 5 && !receivedAll.isCompleted) {
-            receivedAll.complete();
+          final doc1 =
+              snapshot.docs.where((doc) => doc.id == 'doc1').firstOrNull;
+          final doc2 =
+              snapshot.docs.where((doc) => doc.id == 'doc2').firstOrNull;
+
+          if (!initialSnapshot.isCompleted &&
+              snapshot.docs.length == 1 &&
+              snapshot.docs.single.data()['foo'] == 'bar') {
+            initialSnapshot.complete(snapshot);
+          } else if (!doc1Set.isCompleted &&
+              snapshot.docs.length == 2 &&
+              doc1?.data()['bar'] == 'baz') {
+            doc1Set.complete(snapshot);
+          } else if (doc1Set.isCompleted &&
+              !doc1Deleted.isCompleted &&
+              doc1 == null) {
+            doc1Deleted.complete(snapshot);
+          } else if (doc1Deleted.isCompleted &&
+              !doc2Set.isCompleted &&
+              doc2?.data()['foo'] == 'bar') {
+            doc2Set.complete(snapshot);
+          } else if (doc2Set.isCompleted &&
+              !doc2Updated.isCompleted &&
+              doc2?.data()['foo'] == 'baz') {
+            doc2Updated.complete(snapshot);
           }
         });
 
-        // Wait for initial snapshot before making changes
-        await Future.delayed(const Duration(milliseconds: 500));
+        final initial = await initialSnapshot.future.timeout(
+          const Duration(seconds: 30),
+        );
+        expect(initial.docs, hasLength(1));
+
         await collection.doc('doc1').set({'bar': 'baz'});
-        await collection.doc('doc1').delete();
-        await collection.doc('doc2').set({'foo': 'bar'});
-        await collection.doc('doc2').update({'foo': 'baz'});
-
-        // Wait for all 5 snapshots with a timeout instead of hanging forever
-        await receivedAll.future.timeout(const Duration(seconds: 30));
-
-        expect(snapshots[0].docs.length, equals(1));
-        expect(snapshots[0].docs[0].data()['foo'], equals('bar'));
-
-        expect(snapshots[1].docs.length, equals(2));
-        final doc1 = snapshots[1].docs.firstWhere((doc) => doc.id == 'doc1');
-        expect(doc1.data()['bar'], equals('baz'));
-
-        expect(snapshots[2].docs.length, equals(1));
+        final withDoc1 = await doc1Set.future.timeout(
+          const Duration(seconds: 30),
+        );
+        expect(withDoc1.docs, hasLength(2));
         expect(
-          snapshots[2].docs.where((doc) => doc.id == 'doc1').isEmpty,
-          isTrue,
+          withDoc1.docs.firstWhere((doc) => doc.id == 'doc1').data()['bar'],
+          equals('baz'),
         );
 
-        expect(snapshots[3].docs.length, equals(2));
-        final doc2set = snapshots[3].docs.firstWhere((doc) => doc.id == 'doc2');
-        expect(doc2set.data()['foo'], equals('bar'));
+        await collection.doc('doc1').delete();
+        final withoutDoc1 = await doc1Deleted.future.timeout(
+          const Duration(seconds: 30),
+        );
+        expect(withoutDoc1.docs.where((doc) => doc.id == 'doc1'), isEmpty);
 
-        expect(snapshots[4].docs.length, equals(2));
-        final doc2update =
-            snapshots[4].docs.firstWhere((doc) => doc.id == 'doc2');
-        expect(doc2update.data()['foo'], equals('baz'));
+        await collection.doc('doc2').set({'foo': 'bar'});
+        final withDoc2 = await doc2Set.future.timeout(
+          const Duration(seconds: 30),
+        );
+        expect(
+          withDoc2.docs.firstWhere((doc) => doc.id == 'doc2').data()['foo'],
+          equals('bar'),
+        );
+
+        await collection.doc('doc2').update({'foo': 'baz'});
+        final updatedDoc2 = await doc2Updated.future.timeout(
+          const Duration(seconds: 30),
+        );
+        expect(
+          updatedDoc2.docs.firstWhere((doc) => doc.id == 'doc2').data()['foo'],
+          equals('baz'),
+        );
 
         await subscription.cancel();
       });
+
+      testWidgets(
+        'large snapshots do not block frame scheduling',
+        (WidgetTester tester) async {
+          CollectionReference<Map<String, dynamic>> collection =
+              await initializeTest('large-snapshot-listener');
+          const int documentCount = 1000;
+          final String payload = List.filled(1024, 'x').join();
+
+          for (int start = 0; start < documentCount; start += 400) {
+            final WriteBatch batch = firestore.batch();
+            final int end = min(start + 400, documentCount);
+            for (int index = start; index < end; index++) {
+              batch.set(collection.doc('doc-$index'), <String, Object?>{
+                'index': index,
+                'payload': payload,
+              });
+            }
+            await batch.commit();
+          }
+
+          final Completer<void> initialSnapshot = Completer<void>();
+          final Completer<void> receivedUpdates = Completer<void>();
+          var initialSnapshotReceived = false;
+          var updateSnapshots = 0;
+
+          final StreamSubscription<QuerySnapshot<Map<String, dynamic>>>
+              subscription = collection.snapshots().listen((snapshot) {
+            if (!initialSnapshotReceived && snapshot.size == documentCount) {
+              initialSnapshotReceived = true;
+              initialSnapshot.complete();
+              return;
+            }
+
+            if (initialSnapshotReceived && snapshot.docChanges.isNotEmpty) {
+              updateSnapshots++;
+              if (updateSnapshots >= 3 && !receivedUpdates.isCompleted) {
+                receivedUpdates.complete();
+              }
+            }
+          });
+          addTearDown(subscription.cancel);
+
+          await initialSnapshot.future.timeout(const Duration(seconds: 30));
+          await tester.pumpWidget(
+            const Directionality(
+              textDirection: TextDirection.ltr,
+              child: Center(child: CircularProgressIndicator()),
+            ),
+          );
+
+          var updatesDone = false;
+          final updateFuture = Future<void>(() async {
+            for (int index = 0; index < 3; index++) {
+              await collection.doc('doc-0').update(<String, Object?>{
+                'counter': index,
+                'payload': payload,
+              });
+            }
+            await receivedUpdates.future.timeout(const Duration(seconds: 30));
+          }).whenComplete(() {
+            updatesDone = true;
+          });
+
+          final pumpDurations = <Duration>[];
+          while (!updatesDone) {
+            final Stopwatch stopwatch = Stopwatch()..start();
+            await tester.pump(const Duration(milliseconds: 16));
+            stopwatch.stop();
+            pumpDurations.add(stopwatch.elapsed);
+          }
+          await updateFuture;
+
+          expect(pumpDurations, isNotEmpty);
+          final Duration longestPump = pumpDurations.reduce(
+            (current, next) => current > next ? current : next,
+          );
+          expect(longestPump, lessThan(const Duration(milliseconds: 750)));
+        },
+        timeout: const Timeout.factor(10),
+        skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
+      );
 
       test(
         'listeners throws a [FirebaseException] with Query',

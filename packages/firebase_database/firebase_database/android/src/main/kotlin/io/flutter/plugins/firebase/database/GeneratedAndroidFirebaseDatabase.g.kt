@@ -10,16 +10,17 @@ package io.flutter.plugins.firebase.database
 import android.util.Log
 import io.flutter.plugin.common.BasicMessageChannel
 import io.flutter.plugin.common.BinaryMessenger
-import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MessageCodec
-import io.flutter.plugin.common.StandardMethodCodec
 import io.flutter.plugin.common.StandardMessageCodec
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
+
 private object GeneratedAndroidFirebaseDatabasePigeonUtils {
 
   fun createConnectionError(channelName: String): FlutterError {
-    return FlutterError("channel-error",  "Unable to establish connection on channel: '$channelName'.", "")  }
+    return FlutterError(
+        "channel-error", "Unable to establish connection on channel: '$channelName'.", "")
+  }
 
   fun wrapResult(result: Any?): List<Any?> {
     return listOf(result)
@@ -27,19 +28,15 @@ private object GeneratedAndroidFirebaseDatabasePigeonUtils {
 
   fun wrapError(exception: Throwable): List<Any?> {
     return if (exception is FlutterError) {
-      listOf(
-        exception.code,
-        exception.message,
-        exception.details
-      )
+      listOf(exception.code, exception.message, exception.details)
     } else {
       listOf(
-        exception.javaClass.simpleName,
-        exception.toString(),
-        "Cause: " + exception.cause + ", Stacktrace: " + Log.getStackTraceString(exception)
-      )
+          exception.javaClass.simpleName,
+          exception.toString(),
+          "Cause: " + exception.cause + ", Stacktrace: " + Log.getStackTraceString(exception))
     }
   }
+
   fun doubleEquals(a: Double, b: Double): Boolean {
     // Normalize -0.0 to 0.0 and handle NaN equality.
     return (if (a == 0.0) 0.0 else a) == (if (b == 0.0) 0.0 else b) || (a.isNaN() && b.isNaN())
@@ -183,30 +180,29 @@ private object GeneratedAndroidFirebaseDatabasePigeonUtils {
       else -> value.hashCode()
     }
   }
-
 }
 
 /**
  * Error class for passing custom error details to Flutter via a thrown PlatformException.
+ *
  * @property code The error code.
  * @property message The error message.
  * @property details The error details. Must be a datatype supported by the api codec.
  */
-class FlutterError (
-  val code: String,
-  override val message: String? = null,
-  val details: Any? = null
+class FlutterError(
+    val code: String,
+    override val message: String? = null,
+    val details: Any? = null
 ) : RuntimeException()
 
 /** Generated class from Pigeon that represents data sent in messages. */
-data class DatabasePigeonSettings (
-  val persistenceEnabled: Boolean? = null,
-  val cacheSizeBytes: Long? = null,
-  val loggingEnabled: Boolean? = null,
-  val emulatorHost: String? = null,
-  val emulatorPort: Long? = null
-)
- {
+data class DatabasePigeonSettings(
+    val persistenceEnabled: Boolean? = null,
+    val cacheSizeBytes: Long? = null,
+    val loggingEnabled: Boolean? = null,
+    val emulatorHost: String? = null,
+    val emulatorPort: Long? = null
+) {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): DatabasePigeonSettings {
       val persistenceEnabled = pigeonVar_list[0] as Boolean?
@@ -214,18 +210,21 @@ data class DatabasePigeonSettings (
       val loggingEnabled = pigeonVar_list[2] as Boolean?
       val emulatorHost = pigeonVar_list[3] as String?
       val emulatorPort = pigeonVar_list[4] as Long?
-      return DatabasePigeonSettings(persistenceEnabled, cacheSizeBytes, loggingEnabled, emulatorHost, emulatorPort)
+      return DatabasePigeonSettings(
+          persistenceEnabled, cacheSizeBytes, loggingEnabled, emulatorHost, emulatorPort)
     }
   }
+
   fun toList(): List<Any?> {
     return listOf(
-      persistenceEnabled,
-      cacheSizeBytes,
-      loggingEnabled,
-      emulatorHost,
-      emulatorPort,
+        persistenceEnabled,
+        cacheSizeBytes,
+        loggingEnabled,
+        emulatorHost,
+        emulatorPort,
     )
   }
+
   override fun equals(other: Any?): Boolean {
     if (other == null || other.javaClass != javaClass) {
       return false
@@ -234,12 +233,22 @@ data class DatabasePigeonSettings (
       return true
     }
     val other = other as DatabasePigeonSettings
-    return GeneratedAndroidFirebaseDatabasePigeonUtils.deepEquals(this.persistenceEnabled, other.persistenceEnabled) && GeneratedAndroidFirebaseDatabasePigeonUtils.deepEquals(this.cacheSizeBytes, other.cacheSizeBytes) && GeneratedAndroidFirebaseDatabasePigeonUtils.deepEquals(this.loggingEnabled, other.loggingEnabled) && GeneratedAndroidFirebaseDatabasePigeonUtils.deepEquals(this.emulatorHost, other.emulatorHost) && GeneratedAndroidFirebaseDatabasePigeonUtils.deepEquals(this.emulatorPort, other.emulatorPort)
+    return GeneratedAndroidFirebaseDatabasePigeonUtils.deepEquals(
+        this.persistenceEnabled, other.persistenceEnabled) &&
+        GeneratedAndroidFirebaseDatabasePigeonUtils.deepEquals(
+            this.cacheSizeBytes, other.cacheSizeBytes) &&
+        GeneratedAndroidFirebaseDatabasePigeonUtils.deepEquals(
+            this.loggingEnabled, other.loggingEnabled) &&
+        GeneratedAndroidFirebaseDatabasePigeonUtils.deepEquals(
+            this.emulatorHost, other.emulatorHost) &&
+        GeneratedAndroidFirebaseDatabasePigeonUtils.deepEquals(
+            this.emulatorPort, other.emulatorPort)
   }
 
   override fun hashCode(): Int {
     var result = javaClass.hashCode()
-    result = 31 * result + GeneratedAndroidFirebaseDatabasePigeonUtils.deepHash(this.persistenceEnabled)
+    result =
+        31 * result + GeneratedAndroidFirebaseDatabasePigeonUtils.deepHash(this.persistenceEnabled)
     result = 31 * result + GeneratedAndroidFirebaseDatabasePigeonUtils.deepHash(this.cacheSizeBytes)
     result = 31 * result + GeneratedAndroidFirebaseDatabasePigeonUtils.deepHash(this.loggingEnabled)
     result = 31 * result + GeneratedAndroidFirebaseDatabasePigeonUtils.deepHash(this.emulatorHost)
@@ -249,12 +258,11 @@ data class DatabasePigeonSettings (
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
-data class DatabasePigeonFirebaseApp (
-  val appName: String,
-  val databaseURL: String? = null,
-  val settings: DatabasePigeonSettings
-)
- {
+data class DatabasePigeonFirebaseApp(
+    val appName: String,
+    val databaseURL: String? = null,
+    val settings: DatabasePigeonSettings
+) {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): DatabasePigeonFirebaseApp {
       val appName = pigeonVar_list[0] as String
@@ -263,13 +271,15 @@ data class DatabasePigeonFirebaseApp (
       return DatabasePigeonFirebaseApp(appName, databaseURL, settings)
     }
   }
+
   fun toList(): List<Any?> {
     return listOf(
-      appName,
-      databaseURL,
-      settings,
+        appName,
+        databaseURL,
+        settings,
     )
   }
+
   override fun equals(other: Any?): Boolean {
     if (other == null || other.javaClass != javaClass) {
       return false
@@ -278,7 +288,10 @@ data class DatabasePigeonFirebaseApp (
       return true
     }
     val other = other as DatabasePigeonFirebaseApp
-    return GeneratedAndroidFirebaseDatabasePigeonUtils.deepEquals(this.appName, other.appName) && GeneratedAndroidFirebaseDatabasePigeonUtils.deepEquals(this.databaseURL, other.databaseURL) && GeneratedAndroidFirebaseDatabasePigeonUtils.deepEquals(this.settings, other.settings)
+    return GeneratedAndroidFirebaseDatabasePigeonUtils.deepEquals(this.appName, other.appName) &&
+        GeneratedAndroidFirebaseDatabasePigeonUtils.deepEquals(
+            this.databaseURL, other.databaseURL) &&
+        GeneratedAndroidFirebaseDatabasePigeonUtils.deepEquals(this.settings, other.settings)
   }
 
   override fun hashCode(): Int {
@@ -291,21 +304,20 @@ data class DatabasePigeonFirebaseApp (
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
-data class DatabaseReferencePlatform (
-  val path: String
-)
- {
+data class DatabaseReferencePlatform(val path: String) {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): DatabaseReferencePlatform {
       val path = pigeonVar_list[0] as String
       return DatabaseReferencePlatform(path)
     }
   }
+
   fun toList(): List<Any?> {
     return listOf(
-      path,
+        path,
     )
   }
+
   override fun equals(other: Any?): Boolean {
     if (other == null || other.javaClass != javaClass) {
       return false
@@ -325,12 +337,11 @@ data class DatabaseReferencePlatform (
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
-data class DatabaseReferenceRequest (
-  val path: String,
-  val value: Any? = null,
-  val priority: Any? = null
-)
- {
+data class DatabaseReferenceRequest(
+    val path: String,
+    val value: Any? = null,
+    val priority: Any? = null
+) {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): DatabaseReferenceRequest {
       val path = pigeonVar_list[0] as String
@@ -339,13 +350,15 @@ data class DatabaseReferenceRequest (
       return DatabaseReferenceRequest(path, value, priority)
     }
   }
+
   fun toList(): List<Any?> {
     return listOf(
-      path,
-      value,
-      priority,
+        path,
+        value,
+        priority,
     )
   }
+
   override fun equals(other: Any?): Boolean {
     if (other == null || other.javaClass != javaClass) {
       return false
@@ -354,7 +367,9 @@ data class DatabaseReferenceRequest (
       return true
     }
     val other = other as DatabaseReferenceRequest
-    return GeneratedAndroidFirebaseDatabasePigeonUtils.deepEquals(this.path, other.path) && GeneratedAndroidFirebaseDatabasePigeonUtils.deepEquals(this.value, other.value) && GeneratedAndroidFirebaseDatabasePigeonUtils.deepEquals(this.priority, other.priority)
+    return GeneratedAndroidFirebaseDatabasePigeonUtils.deepEquals(this.path, other.path) &&
+        GeneratedAndroidFirebaseDatabasePigeonUtils.deepEquals(this.value, other.value) &&
+        GeneratedAndroidFirebaseDatabasePigeonUtils.deepEquals(this.priority, other.priority)
   }
 
   override fun hashCode(): Int {
@@ -367,11 +382,7 @@ data class DatabaseReferenceRequest (
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
-data class UpdateRequest (
-  val path: String,
-  val value: Map<String, Any?>
-)
- {
+data class UpdateRequest(val path: String, val value: Map<String, Any?>) {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): UpdateRequest {
       val path = pigeonVar_list[0] as String
@@ -379,12 +390,14 @@ data class UpdateRequest (
       return UpdateRequest(path, value)
     }
   }
+
   fun toList(): List<Any?> {
     return listOf(
-      path,
-      value,
+        path,
+        value,
     )
   }
+
   override fun equals(other: Any?): Boolean {
     if (other == null || other.javaClass != javaClass) {
       return false
@@ -393,7 +406,8 @@ data class UpdateRequest (
       return true
     }
     val other = other as UpdateRequest
-    return GeneratedAndroidFirebaseDatabasePigeonUtils.deepEquals(this.path, other.path) && GeneratedAndroidFirebaseDatabasePigeonUtils.deepEquals(this.value, other.value)
+    return GeneratedAndroidFirebaseDatabasePigeonUtils.deepEquals(this.path, other.path) &&
+        GeneratedAndroidFirebaseDatabasePigeonUtils.deepEquals(this.value, other.value)
   }
 
   override fun hashCode(): Int {
@@ -405,12 +419,11 @@ data class UpdateRequest (
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
-data class TransactionRequest (
-  val path: String,
-  val transactionKey: Long,
-  val applyLocally: Boolean
-)
- {
+data class TransactionRequest(
+    val path: String,
+    val transactionKey: Long,
+    val applyLocally: Boolean
+) {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): TransactionRequest {
       val path = pigeonVar_list[0] as String
@@ -419,13 +432,15 @@ data class TransactionRequest (
       return TransactionRequest(path, transactionKey, applyLocally)
     }
   }
+
   fun toList(): List<Any?> {
     return listOf(
-      path,
-      transactionKey,
-      applyLocally,
+        path,
+        transactionKey,
+        applyLocally,
     )
   }
+
   override fun equals(other: Any?): Boolean {
     if (other == null || other.javaClass != javaClass) {
       return false
@@ -434,7 +449,11 @@ data class TransactionRequest (
       return true
     }
     val other = other as TransactionRequest
-    return GeneratedAndroidFirebaseDatabasePigeonUtils.deepEquals(this.path, other.path) && GeneratedAndroidFirebaseDatabasePigeonUtils.deepEquals(this.transactionKey, other.transactionKey) && GeneratedAndroidFirebaseDatabasePigeonUtils.deepEquals(this.applyLocally, other.applyLocally)
+    return GeneratedAndroidFirebaseDatabasePigeonUtils.deepEquals(this.path, other.path) &&
+        GeneratedAndroidFirebaseDatabasePigeonUtils.deepEquals(
+            this.transactionKey, other.transactionKey) &&
+        GeneratedAndroidFirebaseDatabasePigeonUtils.deepEquals(
+            this.applyLocally, other.applyLocally)
   }
 
   override fun hashCode(): Int {
@@ -447,12 +466,11 @@ data class TransactionRequest (
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
-data class QueryRequest (
-  val path: String,
-  val modifiers: List<Map<String, Any?>>,
-  val value: Boolean? = null
-)
- {
+data class QueryRequest(
+    val path: String,
+    val modifiers: List<Map<String, Any?>>,
+    val value: Boolean? = null
+) {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): QueryRequest {
       val path = pigeonVar_list[0] as String
@@ -461,13 +479,15 @@ data class QueryRequest (
       return QueryRequest(path, modifiers, value)
     }
   }
+
   fun toList(): List<Any?> {
     return listOf(
-      path,
-      modifiers,
-      value,
+        path,
+        modifiers,
+        value,
     )
   }
+
   override fun equals(other: Any?): Boolean {
     if (other == null || other.javaClass != javaClass) {
       return false
@@ -476,7 +496,9 @@ data class QueryRequest (
       return true
     }
     val other = other as QueryRequest
-    return GeneratedAndroidFirebaseDatabasePigeonUtils.deepEquals(this.path, other.path) && GeneratedAndroidFirebaseDatabasePigeonUtils.deepEquals(this.modifiers, other.modifiers) && GeneratedAndroidFirebaseDatabasePigeonUtils.deepEquals(this.value, other.value)
+    return GeneratedAndroidFirebaseDatabasePigeonUtils.deepEquals(this.path, other.path) &&
+        GeneratedAndroidFirebaseDatabasePigeonUtils.deepEquals(this.modifiers, other.modifiers) &&
+        GeneratedAndroidFirebaseDatabasePigeonUtils.deepEquals(this.value, other.value)
   }
 
   override fun hashCode(): Int {
@@ -489,12 +511,11 @@ data class QueryRequest (
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
-data class TransactionHandlerResult (
-  val value: Any? = null,
-  val aborted: Boolean,
-  val exception: Boolean
-)
- {
+data class TransactionHandlerResult(
+    val value: Any? = null,
+    val aborted: Boolean,
+    val exception: Boolean
+) {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): TransactionHandlerResult {
       val value = pigeonVar_list[0]
@@ -503,13 +524,15 @@ data class TransactionHandlerResult (
       return TransactionHandlerResult(value, aborted, exception)
     }
   }
+
   fun toList(): List<Any?> {
     return listOf(
-      value,
-      aborted,
-      exception,
+        value,
+        aborted,
+        exception,
     )
   }
+
   override fun equals(other: Any?): Boolean {
     if (other == null || other.javaClass != javaClass) {
       return false
@@ -518,7 +541,9 @@ data class TransactionHandlerResult (
       return true
     }
     val other = other as TransactionHandlerResult
-    return GeneratedAndroidFirebaseDatabasePigeonUtils.deepEquals(this.value, other.value) && GeneratedAndroidFirebaseDatabasePigeonUtils.deepEquals(this.aborted, other.aborted) && GeneratedAndroidFirebaseDatabasePigeonUtils.deepEquals(this.exception, other.exception)
+    return GeneratedAndroidFirebaseDatabasePigeonUtils.deepEquals(this.value, other.value) &&
+        GeneratedAndroidFirebaseDatabasePigeonUtils.deepEquals(this.aborted, other.aborted) &&
+        GeneratedAndroidFirebaseDatabasePigeonUtils.deepEquals(this.exception, other.exception)
   }
 
   override fun hashCode(): Int {
@@ -529,53 +554,39 @@ data class TransactionHandlerResult (
     return result
   }
 }
+
 private open class GeneratedAndroidFirebaseDatabasePigeonCodec : StandardMessageCodec() {
   override fun readValueOfType(type: Byte, buffer: ByteBuffer): Any? {
     return when (type) {
       129.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          DatabasePigeonSettings.fromList(it)
-        }
+        return (readValue(buffer) as? List<Any?>)?.let { DatabasePigeonSettings.fromList(it) }
       }
       130.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          DatabasePigeonFirebaseApp.fromList(it)
-        }
+        return (readValue(buffer) as? List<Any?>)?.let { DatabasePigeonFirebaseApp.fromList(it) }
       }
       131.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          DatabaseReferencePlatform.fromList(it)
-        }
+        return (readValue(buffer) as? List<Any?>)?.let { DatabaseReferencePlatform.fromList(it) }
       }
       132.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          DatabaseReferenceRequest.fromList(it)
-        }
+        return (readValue(buffer) as? List<Any?>)?.let { DatabaseReferenceRequest.fromList(it) }
       }
       133.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          UpdateRequest.fromList(it)
-        }
+        return (readValue(buffer) as? List<Any?>)?.let { UpdateRequest.fromList(it) }
       }
       134.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          TransactionRequest.fromList(it)
-        }
+        return (readValue(buffer) as? List<Any?>)?.let { TransactionRequest.fromList(it) }
       }
       135.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          QueryRequest.fromList(it)
-        }
+        return (readValue(buffer) as? List<Any?>)?.let { QueryRequest.fromList(it) }
       }
       136.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          TransactionHandlerResult.fromList(it)
-        }
+        return (readValue(buffer) as? List<Any?>)?.let { TransactionHandlerResult.fromList(it) }
       }
       else -> super.readValueOfType(type, buffer)
     }
   }
-  override fun writeValue(stream: ByteArrayOutputStream, value: Any?)   {
+
+  override fun writeValue(stream: ByteArrayOutputStream, value: Any?) {
     when (value) {
       is DatabasePigeonSettings -> {
         stream.write(129)
@@ -614,43 +625,150 @@ private open class GeneratedAndroidFirebaseDatabasePigeonCodec : StandardMessage
   }
 }
 
-
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface FirebaseDatabaseHostApi {
   fun goOnline(app: DatabasePigeonFirebaseApp, callback: (Result<Unit>) -> Unit)
+
   fun goOffline(app: DatabasePigeonFirebaseApp, callback: (Result<Unit>) -> Unit)
-  fun setPersistenceEnabled(app: DatabasePigeonFirebaseApp, enabled: Boolean, callback: (Result<Unit>) -> Unit)
-  fun setPersistenceCacheSizeBytes(app: DatabasePigeonFirebaseApp, cacheSize: Long, callback: (Result<Unit>) -> Unit)
-  fun setLoggingEnabled(app: DatabasePigeonFirebaseApp, enabled: Boolean, callback: (Result<Unit>) -> Unit)
-  fun useDatabaseEmulator(app: DatabasePigeonFirebaseApp, host: String, port: Long, callback: (Result<Unit>) -> Unit)
-  fun ref(app: DatabasePigeonFirebaseApp, path: String?, callback: (Result<DatabaseReferencePlatform>) -> Unit)
-  fun refFromURL(app: DatabasePigeonFirebaseApp, url: String, callback: (Result<DatabaseReferencePlatform>) -> Unit)
+
+  fun setPersistenceEnabled(
+      app: DatabasePigeonFirebaseApp,
+      enabled: Boolean,
+      callback: (Result<Unit>) -> Unit
+  )
+
+  fun setPersistenceCacheSizeBytes(
+      app: DatabasePigeonFirebaseApp,
+      cacheSize: Long,
+      callback: (Result<Unit>) -> Unit
+  )
+
+  fun setLoggingEnabled(
+      app: DatabasePigeonFirebaseApp,
+      enabled: Boolean,
+      callback: (Result<Unit>) -> Unit
+  )
+
+  fun useDatabaseEmulator(
+      app: DatabasePigeonFirebaseApp,
+      host: String,
+      port: Long,
+      callback: (Result<Unit>) -> Unit
+  )
+
+  fun ref(
+      app: DatabasePigeonFirebaseApp,
+      path: String?,
+      callback: (Result<DatabaseReferencePlatform>) -> Unit
+  )
+
+  fun refFromURL(
+      app: DatabasePigeonFirebaseApp,
+      url: String,
+      callback: (Result<DatabaseReferencePlatform>) -> Unit
+  )
+
   fun purgeOutstandingWrites(app: DatabasePigeonFirebaseApp, callback: (Result<Unit>) -> Unit)
-  fun databaseReferenceSet(app: DatabasePigeonFirebaseApp, request: DatabaseReferenceRequest, callback: (Result<Unit>) -> Unit)
-  fun databaseReferenceSetWithPriority(app: DatabasePigeonFirebaseApp, request: DatabaseReferenceRequest, callback: (Result<Unit>) -> Unit)
-  fun databaseReferenceUpdate(app: DatabasePigeonFirebaseApp, request: UpdateRequest, callback: (Result<Unit>) -> Unit)
-  fun databaseReferenceSetPriority(app: DatabasePigeonFirebaseApp, request: DatabaseReferenceRequest, callback: (Result<Unit>) -> Unit)
-  fun databaseReferenceRunTransaction(app: DatabasePigeonFirebaseApp, request: TransactionRequest, callback: (Result<Unit>) -> Unit)
-  fun databaseReferenceGetTransactionResult(app: DatabasePigeonFirebaseApp, transactionKey: Long, callback: (Result<Map<String, Any?>>) -> Unit)
-  fun onDisconnectSet(app: DatabasePigeonFirebaseApp, request: DatabaseReferenceRequest, callback: (Result<Unit>) -> Unit)
-  fun onDisconnectSetWithPriority(app: DatabasePigeonFirebaseApp, request: DatabaseReferenceRequest, callback: (Result<Unit>) -> Unit)
-  fun onDisconnectUpdate(app: DatabasePigeonFirebaseApp, request: UpdateRequest, callback: (Result<Unit>) -> Unit)
-  fun onDisconnectCancel(app: DatabasePigeonFirebaseApp, path: String, callback: (Result<Unit>) -> Unit)
-  fun queryObserve(app: DatabasePigeonFirebaseApp, request: QueryRequest, callback: (Result<String>) -> Unit)
-  fun queryKeepSynced(app: DatabasePigeonFirebaseApp, request: QueryRequest, callback: (Result<Unit>) -> Unit)
-  fun queryGet(app: DatabasePigeonFirebaseApp, request: QueryRequest, callback: (Result<Map<String, Any?>>) -> Unit)
+
+  fun databaseReferenceSet(
+      app: DatabasePigeonFirebaseApp,
+      request: DatabaseReferenceRequest,
+      callback: (Result<Unit>) -> Unit
+  )
+
+  fun databaseReferenceSetWithPriority(
+      app: DatabasePigeonFirebaseApp,
+      request: DatabaseReferenceRequest,
+      callback: (Result<Unit>) -> Unit
+  )
+
+  fun databaseReferenceUpdate(
+      app: DatabasePigeonFirebaseApp,
+      request: UpdateRequest,
+      callback: (Result<Unit>) -> Unit
+  )
+
+  fun databaseReferenceSetPriority(
+      app: DatabasePigeonFirebaseApp,
+      request: DatabaseReferenceRequest,
+      callback: (Result<Unit>) -> Unit
+  )
+
+  fun databaseReferenceRunTransaction(
+      app: DatabasePigeonFirebaseApp,
+      request: TransactionRequest,
+      callback: (Result<Unit>) -> Unit
+  )
+
+  fun databaseReferenceGetTransactionResult(
+      app: DatabasePigeonFirebaseApp,
+      transactionKey: Long,
+      callback: (Result<Map<String, Any?>>) -> Unit
+  )
+
+  fun onDisconnectSet(
+      app: DatabasePigeonFirebaseApp,
+      request: DatabaseReferenceRequest,
+      callback: (Result<Unit>) -> Unit
+  )
+
+  fun onDisconnectSetWithPriority(
+      app: DatabasePigeonFirebaseApp,
+      request: DatabaseReferenceRequest,
+      callback: (Result<Unit>) -> Unit
+  )
+
+  fun onDisconnectUpdate(
+      app: DatabasePigeonFirebaseApp,
+      request: UpdateRequest,
+      callback: (Result<Unit>) -> Unit
+  )
+
+  fun onDisconnectCancel(
+      app: DatabasePigeonFirebaseApp,
+      path: String,
+      callback: (Result<Unit>) -> Unit
+  )
+
+  fun queryObserve(
+      app: DatabasePigeonFirebaseApp,
+      request: QueryRequest,
+      callback: (Result<String>) -> Unit
+  )
+
+  fun queryKeepSynced(
+      app: DatabasePigeonFirebaseApp,
+      request: QueryRequest,
+      callback: (Result<Unit>) -> Unit
+  )
+
+  fun queryGet(
+      app: DatabasePigeonFirebaseApp,
+      request: QueryRequest,
+      callback: (Result<Map<String, Any?>>) -> Unit
+  )
 
   companion object {
     /** The codec used by FirebaseDatabaseHostApi. */
-    val codec: MessageCodec<Any?> by lazy {
-      GeneratedAndroidFirebaseDatabasePigeonCodec()
-    }
-    /** Sets up an instance of `FirebaseDatabaseHostApi` to handle messages through the `binaryMessenger`. */
+    val codec: MessageCodec<Any?> by lazy { GeneratedAndroidFirebaseDatabasePigeonCodec() }
+    /**
+     * Sets up an instance of `FirebaseDatabaseHostApi` to handle messages through the
+     * `binaryMessenger`.
+     */
     @JvmOverloads
-    fun setUp(binaryMessenger: BinaryMessenger, api: FirebaseDatabaseHostApi?, messageChannelSuffix: String = "") {
-      val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    fun setUp(
+        binaryMessenger: BinaryMessenger,
+        api: FirebaseDatabaseHostApi?,
+        messageChannelSuffix: String = ""
+    ) {
+      val separatedMessageChannelSuffix =
+          if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.goOnline$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.goOnline$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -669,7 +787,11 @@ interface FirebaseDatabaseHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.goOffline$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.goOffline$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -688,7 +810,11 @@ interface FirebaseDatabaseHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.setPersistenceEnabled$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.setPersistenceEnabled$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -708,7 +834,11 @@ interface FirebaseDatabaseHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.setPersistenceCacheSizeBytes$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.setPersistenceCacheSizeBytes$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -728,7 +858,11 @@ interface FirebaseDatabaseHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.setLoggingEnabled$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.setLoggingEnabled$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -748,7 +882,11 @@ interface FirebaseDatabaseHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.useDatabaseEmulator$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.useDatabaseEmulator$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -769,7 +907,11 @@ interface FirebaseDatabaseHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.ref$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.ref$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -790,7 +932,11 @@ interface FirebaseDatabaseHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.refFromURL$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.refFromURL$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -811,7 +957,11 @@ interface FirebaseDatabaseHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.purgeOutstandingWrites$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.purgeOutstandingWrites$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -830,7 +980,11 @@ interface FirebaseDatabaseHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceSet$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceSet$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -850,7 +1004,11 @@ interface FirebaseDatabaseHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceSetWithPriority$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceSetWithPriority$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -870,7 +1028,11 @@ interface FirebaseDatabaseHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceUpdate$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceUpdate$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -890,7 +1052,11 @@ interface FirebaseDatabaseHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceSetPriority$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceSetPriority$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -910,7 +1076,11 @@ interface FirebaseDatabaseHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceRunTransaction$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceRunTransaction$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -930,13 +1100,18 @@ interface FirebaseDatabaseHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceGetTransactionResult$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceGetTransactionResult$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val appArg = args[0] as DatabasePigeonFirebaseApp
             val transactionKeyArg = args[1] as Long
-            api.databaseReferenceGetTransactionResult(appArg, transactionKeyArg) { result: Result<Map<String, Any?>> ->
+            api.databaseReferenceGetTransactionResult(appArg, transactionKeyArg) {
+                result: Result<Map<String, Any?>> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidFirebaseDatabasePigeonUtils.wrapError(error))
@@ -951,7 +1126,11 @@ interface FirebaseDatabaseHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectSet$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectSet$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -971,7 +1150,11 @@ interface FirebaseDatabaseHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectSetWithPriority$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectSetWithPriority$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -991,7 +1174,11 @@ interface FirebaseDatabaseHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectUpdate$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectUpdate$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -1011,7 +1198,11 @@ interface FirebaseDatabaseHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectCancel$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectCancel$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -1031,7 +1222,11 @@ interface FirebaseDatabaseHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.queryObserve$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.queryObserve$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -1052,7 +1247,11 @@ interface FirebaseDatabaseHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.queryKeepSynced$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.queryKeepSynced$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -1072,7 +1271,11 @@ interface FirebaseDatabaseHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.queryGet$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.queryGet$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -1096,31 +1299,45 @@ interface FirebaseDatabaseHostApi {
   }
 }
 /** Generated class from Pigeon that represents Flutter messages that can be called from Kotlin. */
-class FirebaseDatabaseFlutterApi(private val binaryMessenger: BinaryMessenger, private val messageChannelSuffix: String = "") {
+class FirebaseDatabaseFlutterApi(
+    private val binaryMessenger: BinaryMessenger,
+    private val messageChannelSuffix: String = ""
+) {
   companion object {
     /** The codec used by FirebaseDatabaseFlutterApi. */
-    val codec: MessageCodec<Any?> by lazy {
-      GeneratedAndroidFirebaseDatabasePigeonCodec()
-    }
+    val codec: MessageCodec<Any?> by lazy { GeneratedAndroidFirebaseDatabasePigeonCodec() }
   }
-  fun callTransactionHandler(transactionKeyArg: Long, snapshotValueArg: Any?, callback: (Result<TransactionHandlerResult>) -> Unit)
-{
-    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
-    val channelName = "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseFlutterApi.callTransactionHandler$separatedMessageChannelSuffix"
+
+  fun callTransactionHandler(
+      transactionKeyArg: Long,
+      snapshotValueArg: Any?,
+      callback: (Result<TransactionHandlerResult>) -> Unit
+  ) {
+    val separatedMessageChannelSuffix =
+        if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    val channelName =
+        "dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseFlutterApi.callTransactionHandler$separatedMessageChannelSuffix"
     val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
     channel.send(listOf(transactionKeyArg, snapshotValueArg)) {
       if (it is List<*>) {
         if (it.size > 1) {
           callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
         } else if (it[0] == null) {
-          callback(Result.failure(FlutterError("null-error", "Flutter api returned null value for non-null return value.", "")))
+          callback(
+              Result.failure(
+                  FlutterError(
+                      "null-error",
+                      "Flutter api returned null value for non-null return value.",
+                      "")))
         } else {
           val output = it[0] as TransactionHandlerResult
           callback(Result.success(output))
         }
       } else {
-        callback(Result.failure(GeneratedAndroidFirebaseDatabasePigeonUtils.createConnectionError(channelName)))
-      } 
+        callback(
+            Result.failure(
+                GeneratedAndroidFirebaseDatabasePigeonUtils.createConnectionError(channelName)))
+      }
     }
   }
 }

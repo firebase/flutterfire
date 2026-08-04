@@ -6,18 +6,18 @@ package io.flutter.plugins.firebase.appcheck
 import com.google.firebase.appcheck.FirebaseAppCheck
 import io.flutter.plugin.common.EventChannel
 
-class TokenChannelStreamHandler(
-  private val firebaseAppCheck: FirebaseAppCheck
-) : EventChannel.StreamHandler {
+class TokenChannelStreamHandler(private val firebaseAppCheck: FirebaseAppCheck) :
+    EventChannel.StreamHandler {
 
   private var listener: FirebaseAppCheck.AppCheckListener? = null
 
   override fun onListen(arguments: Any?, events: EventChannel.EventSink) {
-    listener = FirebaseAppCheck.AppCheckListener { result ->
-      val event = HashMap<String, Any?>()
-      event["token"] = result.token
-      events.success(event)
-    }
+    listener =
+        FirebaseAppCheck.AppCheckListener { result ->
+          val event = HashMap<String, Any?>()
+          event["token"] = result.token
+          events.success(event)
+        }
     firebaseAppCheck.addAppCheckListener(listener!!)
   }
 

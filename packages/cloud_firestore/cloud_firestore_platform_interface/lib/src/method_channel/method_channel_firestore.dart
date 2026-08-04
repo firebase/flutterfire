@@ -246,16 +246,20 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
     ).listen(
       (event) async {
         if (event['error'] != null) {
-          completer.completeError(
-            FirebaseException(
-              plugin: 'cloud_firestore',
-              code: event['error']['code'],
-              message: event['error']['message'],
-            ),
-          );
+          if (!completer.isCompleted) {
+            completer.completeError(
+              FirebaseException(
+                plugin: 'cloud_firestore',
+                code: event['error']['code'],
+                message: event['error']['message'],
+              ),
+            );
+          }
           return;
         } else if (event['complete'] == true) {
-          completer.complete(result);
+          if (!completer.isCompleted) {
+            completer.complete(result);
+          }
           return;
         }
 
@@ -271,6 +275,10 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
         try {
           result = await transactionHandler(transaction) as T;
         } catch (error, stack) {
+          if (completer.isCompleted) {
+            return;
+          }
+
           // Signal native that a user error occurred, and finish the
           // transaction
           await pigeonChannel.transactionStoreResult(
@@ -283,6 +291,10 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
 
           completer.completeError(error, stack);
 
+          return;
+        }
+
+        if (completer.isCompleted) {
           return;
         }
 

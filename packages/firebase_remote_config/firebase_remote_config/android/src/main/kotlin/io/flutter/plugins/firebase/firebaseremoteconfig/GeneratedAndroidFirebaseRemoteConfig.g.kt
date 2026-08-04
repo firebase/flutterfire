@@ -10,12 +10,11 @@ package io.flutter.plugins.firebase.firebaseremoteconfig
 import android.util.Log
 import io.flutter.plugin.common.BasicMessageChannel
 import io.flutter.plugin.common.BinaryMessenger
-import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MessageCodec
-import io.flutter.plugin.common.StandardMethodCodec
 import io.flutter.plugin.common.StandardMessageCodec
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
+
 private object GeneratedAndroidFirebaseRemoteConfigPigeonUtils {
 
   fun wrapResult(result: Any?): List<Any?> {
@@ -24,19 +23,15 @@ private object GeneratedAndroidFirebaseRemoteConfigPigeonUtils {
 
   fun wrapError(exception: Throwable): List<Any?> {
     return if (exception is FlutterError) {
-      listOf(
-        exception.code,
-        exception.message,
-        exception.details
-      )
+      listOf(exception.code, exception.message, exception.details)
     } else {
       listOf(
-        exception.javaClass.simpleName,
-        exception.toString(),
-        "Cause: " + exception.cause + ", Stacktrace: " + Log.getStackTraceString(exception)
-      )
+          exception.javaClass.simpleName,
+          exception.toString(),
+          "Cause: " + exception.cause + ", Stacktrace: " + Log.getStackTraceString(exception))
     }
   }
+
   fun doubleEquals(a: Double, b: Double): Boolean {
     // Normalize -0.0 to 0.0 and handle NaN equality.
     return (if (a == 0.0) 0.0 else a) == (if (b == 0.0) 0.0 else b) || (a.isNaN() && b.isNaN())
@@ -180,27 +175,26 @@ private object GeneratedAndroidFirebaseRemoteConfigPigeonUtils {
       else -> value.hashCode()
     }
   }
-
 }
 
 /**
  * Error class for passing custom error details to Flutter via a thrown PlatformException.
+ *
  * @property code The error code.
  * @property message The error message.
  * @property details The error details. Must be a datatype supported by the api codec.
  */
-class FlutterError (
-  val code: String,
-  override val message: String? = null,
-  val details: Any? = null
+class FlutterError(
+    val code: String,
+    override val message: String? = null,
+    val details: Any? = null
 ) : RuntimeException()
 
 /** Generated class from Pigeon that represents data sent in messages. */
-data class RemoteConfigPigeonSettings (
-  val fetchTimeoutSeconds: Long,
-  val minimumFetchIntervalSeconds: Long
-)
- {
+data class RemoteConfigPigeonSettings(
+    val fetchTimeoutSeconds: Long,
+    val minimumFetchIntervalSeconds: Long
+) {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): RemoteConfigPigeonSettings {
       val fetchTimeoutSeconds = pigeonVar_list[0] as Long
@@ -208,12 +202,14 @@ data class RemoteConfigPigeonSettings (
       return RemoteConfigPigeonSettings(fetchTimeoutSeconds, minimumFetchIntervalSeconds)
     }
   }
+
   fun toList(): List<Any?> {
     return listOf(
-      fetchTimeoutSeconds,
-      minimumFetchIntervalSeconds,
+        fetchTimeoutSeconds,
+        minimumFetchIntervalSeconds,
     )
   }
+
   override fun equals(other: Any?): Boolean {
     if (other == null || other.javaClass != javaClass) {
       return false
@@ -222,28 +218,36 @@ data class RemoteConfigPigeonSettings (
       return true
     }
     val other = other as RemoteConfigPigeonSettings
-    return GeneratedAndroidFirebaseRemoteConfigPigeonUtils.deepEquals(this.fetchTimeoutSeconds, other.fetchTimeoutSeconds) && GeneratedAndroidFirebaseRemoteConfigPigeonUtils.deepEquals(this.minimumFetchIntervalSeconds, other.minimumFetchIntervalSeconds)
+    return GeneratedAndroidFirebaseRemoteConfigPigeonUtils.deepEquals(
+        this.fetchTimeoutSeconds, other.fetchTimeoutSeconds) &&
+        GeneratedAndroidFirebaseRemoteConfigPigeonUtils.deepEquals(
+            this.minimumFetchIntervalSeconds, other.minimumFetchIntervalSeconds)
   }
 
   override fun hashCode(): Int {
     var result = javaClass.hashCode()
-    result = 31 * result + GeneratedAndroidFirebaseRemoteConfigPigeonUtils.deepHash(this.fetchTimeoutSeconds)
-    result = 31 * result + GeneratedAndroidFirebaseRemoteConfigPigeonUtils.deepHash(this.minimumFetchIntervalSeconds)
+    result =
+        31 * result +
+            GeneratedAndroidFirebaseRemoteConfigPigeonUtils.deepHash(this.fetchTimeoutSeconds)
+    result =
+        31 * result +
+            GeneratedAndroidFirebaseRemoteConfigPigeonUtils.deepHash(
+                this.minimumFetchIntervalSeconds)
     return result
   }
 }
+
 private open class GeneratedAndroidFirebaseRemoteConfigPigeonCodec : StandardMessageCodec() {
   override fun readValueOfType(type: Byte, buffer: ByteBuffer): Any? {
     return when (type) {
       129.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          RemoteConfigPigeonSettings.fromList(it)
-        }
+        return (readValue(buffer) as? List<Any?>)?.let { RemoteConfigPigeonSettings.fromList(it) }
       }
       else -> super.readValueOfType(type, buffer)
     }
   }
-  override fun writeValue(stream: ByteArrayOutputStream, value: Any?)   {
+
+  override fun writeValue(stream: ByteArrayOutputStream, value: Any?) {
     when (value) {
       is RemoteConfigPigeonSettings -> {
         stream.write(129)
@@ -254,30 +258,59 @@ private open class GeneratedAndroidFirebaseRemoteConfigPigeonCodec : StandardMes
   }
 }
 
-
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface FirebaseRemoteConfigHostApi {
   fun fetch(appName: String, callback: (Result<Unit>) -> Unit)
+
   fun fetchAndActivate(appName: String, callback: (Result<Boolean>) -> Unit)
+
   fun activate(appName: String, callback: (Result<Boolean>) -> Unit)
-  fun setConfigSettings(appName: String, settings: RemoteConfigPigeonSettings, callback: (Result<Unit>) -> Unit)
-  fun setDefaults(appName: String, defaultParameters: Map<String, Any?>, callback: (Result<Unit>) -> Unit)
+
+  fun setConfigSettings(
+      appName: String,
+      settings: RemoteConfigPigeonSettings,
+      callback: (Result<Unit>) -> Unit
+  )
+
+  fun setDefaults(
+      appName: String,
+      defaultParameters: Map<String, Any?>,
+      callback: (Result<Unit>) -> Unit
+  )
+
   fun ensureInitialized(appName: String, callback: (Result<Unit>) -> Unit)
-  fun setCustomSignals(appName: String, customSignals: Map<String, Any?>, callback: (Result<Unit>) -> Unit)
+
+  fun setCustomSignals(
+      appName: String,
+      customSignals: Map<String, Any?>,
+      callback: (Result<Unit>) -> Unit
+  )
+
   fun getAll(appName: String, callback: (Result<Map<String, Any?>>) -> Unit)
+
   fun getProperties(appName: String, callback: (Result<Map<String, Any>>) -> Unit)
 
   companion object {
     /** The codec used by FirebaseRemoteConfigHostApi. */
-    val codec: MessageCodec<Any?> by lazy {
-      GeneratedAndroidFirebaseRemoteConfigPigeonCodec()
-    }
-    /** Sets up an instance of `FirebaseRemoteConfigHostApi` to handle messages through the `binaryMessenger`. */
+    val codec: MessageCodec<Any?> by lazy { GeneratedAndroidFirebaseRemoteConfigPigeonCodec() }
+    /**
+     * Sets up an instance of `FirebaseRemoteConfigHostApi` to handle messages through the
+     * `binaryMessenger`.
+     */
     @JvmOverloads
-    fun setUp(binaryMessenger: BinaryMessenger, api: FirebaseRemoteConfigHostApi?, messageChannelSuffix: String = "") {
-      val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    fun setUp(
+        binaryMessenger: BinaryMessenger,
+        api: FirebaseRemoteConfigHostApi?,
+        messageChannelSuffix: String = ""
+    ) {
+      val separatedMessageChannelSuffix =
+          if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.fetch$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.fetch$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -296,7 +329,11 @@ interface FirebaseRemoteConfigHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.fetchAndActivate$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.fetchAndActivate$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -316,7 +353,11 @@ interface FirebaseRemoteConfigHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.activate$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.activate$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -336,7 +377,11 @@ interface FirebaseRemoteConfigHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.setConfigSettings$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.setConfigSettings$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -356,7 +401,11 @@ interface FirebaseRemoteConfigHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.setDefaults$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.setDefaults$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -376,7 +425,11 @@ interface FirebaseRemoteConfigHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.ensureInitialized$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.ensureInitialized$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -395,7 +448,11 @@ interface FirebaseRemoteConfigHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.setCustomSignals$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.setCustomSignals$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -415,7 +472,11 @@ interface FirebaseRemoteConfigHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.getAll$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.getAll$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -435,7 +496,11 @@ interface FirebaseRemoteConfigHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.getProperties$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.getProperties$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>

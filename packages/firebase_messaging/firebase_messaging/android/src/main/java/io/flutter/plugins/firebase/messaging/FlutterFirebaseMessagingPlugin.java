@@ -23,7 +23,6 @@ import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.RemoteMessage;
-import io.flutter.embedding.engine.FlutterShellArgs;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
@@ -200,6 +199,7 @@ public class FlutterFirebaseMessagingPlugin
 
     return taskCompletionSource.getTask();
   }
+
   // This API will be removed in a future release. Slated to be removed by June 2024 by Firebase.
   // https://firebase.google.com/docs/reference/android/com/google/firebase/messaging/FirebaseMessaging#send
   @SuppressWarnings("deprecation")
@@ -312,7 +312,8 @@ public class FlutterFirebaseMessagingPlugin
                 FlutterFirebaseMessagingReceiver.notifications.get(messageId);
             Map<String, Object> notificationMap = null;
 
-            // If we can't find a copy of the remote message in memory then check from our persisted store.
+            // If we can't find a copy of the remote message in memory then check from our persisted
+            // store.
             if (remoteMessage == null) {
               Map<String, Object> messageMap =
                   FlutterFirebaseMessagingStore.getInstance().getFirebaseMessageMap(messageId);
@@ -339,7 +340,8 @@ public class FlutterFirebaseMessagingPlugin
             Map<String, Object> remoteMessageMap =
                 FlutterFirebaseMessagingUtils.remoteMessageToMap(remoteMessage);
 
-            // If no notification map is available in the remote message we override with the one we got
+            // If no notification map is available in the remote message we override with the one we
+            // got
             if (remoteMessage.getNotification() == null && notificationMap != null) {
               remoteMessageMap.put("notification", notificationMap);
             }
@@ -421,12 +423,9 @@ public class FlutterFirebaseMessagingPlugin
     Task<?> methodCallTask;
 
     switch (call.method) {
-        // This message is sent when the Dart side of this plugin is told to initialize.
-        // In response, this (native) side of the plugin needs to spin up a background
-        // Dart isolate by using the given pluginCallbackHandle, and then setup a background
-        // method channel to communicate with the new background isolate. Once completed,
-        // this onMethodCall() method will receive messages from both the primary and background
-        // method channels.
+      // This message is sent when the Dart side of this plugin registers a background
+      // message handler. We persist the callback handles to SharedPreferences so
+      // the background service can start the isolate later when a message arrives.
       case "Messaging#startBackgroundIsolate":
         @SuppressWarnings("unchecked")
         Map<String, Object> arguments = ((Map<String, Object>) call.arguments);
@@ -455,19 +454,13 @@ public class FlutterFirebaseMessagingPlugin
               "Expected 'Long' or 'Integer' type for 'userCallbackHandle'.");
         }
 
-        FlutterShellArgs shellArgs = null;
-        if (mainActivity != null) {
-          // Supports both Flutter Activity types:
-          //    io.flutter.embedding.android.FlutterFragmentActivity
-          //    io.flutter.embedding.android.FlutterActivity
-          // We could use `getFlutterShellArgs()` but this is only available on `FlutterActivity`.
-          shellArgs = FlutterShellArgs.fromIntent(mainActivity.getIntent());
-        }
-
+        // Only save the callback handles to SharedPreferences. Don't start the
+        // background isolate here — it will be started lazily in
+        // FlutterFirebaseMessagingBackgroundService.onCreate() when a background
+        // message actually arrives and the service is started. Starting it eagerly
+        // caused a duplicate Dart main() to appear in the call stack (#17163).
         FlutterFirebaseMessagingBackgroundService.setCallbackDispatcher(pluginCallbackHandle);
         FlutterFirebaseMessagingBackgroundService.setUserCallbackHandle(userCallbackHandle);
-        FlutterFirebaseMessagingBackgroundService.startBackgroundIsolate(
-            pluginCallbackHandle, shellArgs);
         methodCallTask = Tasks.forResult(null);
         break;
       case "Messaging#getInitialMessage":
@@ -496,7 +489,8 @@ public class FlutterFirebaseMessagingPlugin
         break;
       case "Messaging#requestPermission":
         if (Build.VERSION.SDK_INT >= 33) {
-          // Android version >= Android 13 requires user input if notification permission not set/granted
+          // Android version >= Android 13 requires user input if notification permission not
+          // set/granted
           methodCallTask = requestPermissions();
         } else {
           // Android version < Android 13 doesn't require asking for runtime permissions.

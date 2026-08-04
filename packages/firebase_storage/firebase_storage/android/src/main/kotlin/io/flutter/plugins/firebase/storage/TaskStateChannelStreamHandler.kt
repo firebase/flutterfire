@@ -8,16 +8,15 @@ import androidx.annotation.Nullable
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageException
 import com.google.firebase.storage.StorageTask
-import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.EventChannel.EventSink
 import io.flutter.plugin.common.EventChannel.StreamHandler
 import java.util.HashMap
 
 internal class TaskStateChannelStreamHandler(
-  private val flutterTask: FlutterFirebaseStorageTask,
-  private val androidStorage: FirebaseStorage,
-  task: Any,
-  private val identifier: String
+    private val flutterTask: FlutterFirebaseStorageTask,
+    private val androidStorage: FirebaseStorage,
+    task: Any,
+    private val identifier: String
 ) : StreamHandler {
 
   private val androidTask: StorageTask<*> = task as StorageTask<*>
@@ -57,8 +56,10 @@ internal class TaskStateChannelStreamHandler(
       val event = getTaskEventMap(null, null)
       event[TASK_STATE_NAME] = InternalStorageTaskState.ERROR.raw
       val syntheticException: MutableMap<String, Any> = HashMap()
-      syntheticException["code"] = FlutterFirebaseStorageException.getCode(StorageException.ERROR_CANCELED)
-      syntheticException["message"] = FlutterFirebaseStorageException.getMessage(StorageException.ERROR_CANCELED)
+      syntheticException["code"] =
+          FlutterFirebaseStorageException.getCode(StorageException.ERROR_CANCELED)
+      syntheticException["message"] =
+          FlutterFirebaseStorageException.getMessage(StorageException.ERROR_CANCELED)
       event[TASK_ERROR] = syntheticException
       events.success(event)
       flutterTask.notifyCancelObjects()
@@ -87,7 +88,10 @@ internal class TaskStateChannelStreamHandler(
     }
   }
 
-  private fun getTaskEventMap(@Nullable snapshot: Any?, @Nullable exception: Exception?): MutableMap<String, Any?> {
+  private fun getTaskEventMap(
+      @Nullable snapshot: Any?,
+      @Nullable exception: Exception?
+  ): MutableMap<String, Any?> {
     val arguments: MutableMap<String, Any?> = HashMap()
     arguments[TASK_APP_NAME] = androidStorage.app.name
     if (snapshot != null) {
@@ -99,5 +103,3 @@ internal class TaskStateChannelStreamHandler(
     return arguments
   }
 }
-
-

@@ -10,7 +10,7 @@ import com.google.firebase.database.DataSnapshot
 import java.util.*
 
 class FlutterDataSnapshotPayload(
-  snapshot: DataSnapshot,
+    snapshot: DataSnapshot,
 ) {
   private var payloadMap: MutableMap<String, Any?> = mutableMapOf()
 

@@ -1,3 +1,24 @@
+## 0.4.3
+
+ - **FIX**(app_check): sync SPM pins to 12.17.0 and fix Windows Activate override after [#18505](https://github.com/firebase/flutterfire/issues/18505) ([#18515](https://github.com/firebase/flutterfire/issues/18515)). ([ce1f6e05](https://github.com/firebase/flutterfire/commit/ce1f6e05e2d2645c414f8e731d3d082436caa012))
+ - **FEAT**(ml): adding depreciation notice to ML plugin ([#18472](https://github.com/firebase/flutterfire/issues/18472)). ([fb20da9c](https://github.com/firebase/flutterfire/commit/fb20da9c88d0e7ac20b89fc27000ae4eeb50654d))
+
+## 0.4.2+6
+
+ - Update a dependency to the latest release.
+
+## 0.4.2+5
+
+ - Update a dependency to the latest release.
+
+## 0.4.2+4
+
+ - Update a dependency to the latest release.
+
+## 0.4.2+3
+
+ - Update a dependency to the latest release.
+
 ## 0.4.2+2
 
  - Update a dependency to the latest release.

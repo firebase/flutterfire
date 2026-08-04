@@ -32,3 +32,12 @@ class AndroidDebugProvider extends AndroidAppCheckProvider {
 class AndroidPlayIntegrityProvider extends AndroidAppCheckProvider {
   const AndroidPlayIntegrityProvider() : super('playIntegrity');
 }
+
+/// reCAPTCHA provider for Android.
+class AndroidReCaptchaProvider extends AndroidAppCheckProvider {
+  /// Creates an Android reCAPTCHA provider with a required [siteKey].
+  const AndroidReCaptchaProvider(this.siteKey) : super('recaptcha');
+
+  /// The reCAPTCHA site key for this provider.
+  final String siteKey;
+}

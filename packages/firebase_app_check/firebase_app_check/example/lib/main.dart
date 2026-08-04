@@ -12,7 +12,9 @@ import 'package:flutter/material.dart';
 
 import 'firebase_options.dart';
 
-const kWebRecaptchaSiteKey = '6Lemcn0dAAAAABLkf6aiiHvpGD6x-zF3nOSDU2M8';
+const kWebRecaptchaSiteKey = 'put-default-web-sitekey';
+const kIOSRecaptchaSiteKey = 'put-default-ios-sitekey';
+const kAndroidRecaptchaSitekey = 'put-default-android-sitekey';
 
 // Windows: create a debug token in the Firebase Console
 // (App Check > Apps > Manage debug tokens), then paste it here
@@ -77,13 +79,34 @@ class FirebaseAppCheckExample extends StatefulWidget {
 
 class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
   final appCheck = FirebaseAppCheck.instance;
+  final TextEditingController _recaptchaSiteKeyController =
+      TextEditingController();
   String _message = '';
   String _eventToken = 'not yet';
+
+  String get _recaptchaSiteKey {
+    final text = _recaptchaSiteKeyController.text.trim();
+    if (text.isNotEmpty) return text;
+    if (kIsWeb) return kWebRecaptchaSiteKey;
+    if (defaultTargetPlatform == TargetPlatform.iOS) {
+      return kIOSRecaptchaSiteKey;
+    }
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      return kAndroidRecaptchaSitekey;
+    }
+    return '';
+  }
 
   @override
   void initState() {
     appCheck.onTokenChange.listen(setEventToken);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _recaptchaSiteKeyController.dispose();
+    super.dispose();
   }
 
   void setMessage(String message) {
@@ -101,18 +124,20 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
   Future<void> _activate({
     AndroidAppCheckProvider? android,
     AppleAppCheckProvider? apple,
+    WebProvider? web,
     WindowsAppCheckProvider? windows,
   }) async {
     try {
       await appCheck.activate(
         providerAndroid: android ?? const AndroidPlayIntegrityProvider(),
         providerApple: apple ?? const AppleDeviceCheckProvider(),
-        providerWeb: ReCaptchaV3Provider(kWebRecaptchaSiteKey),
+        providerWeb: web ?? ReCaptchaV3Provider(kWebRecaptchaSiteKey),
         providerWindows: windows ?? const WindowsDebugProvider(),
       );
       final providerName = windows?.runtimeType.toString() ??
           apple?.runtimeType.toString() ??
           android?.runtimeType.toString() ??
+          web?.runtimeType.toString() ??
           'default';
       setMessage('Activated with $providerName');
     } catch (e) {
@@ -170,6 +195,24 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
                   'activate(AppAttest + DeviceCheck fallback)',
                 ),
               ),
+            const SizedBox(height: 8),
+            TextField(
+              controller: _recaptchaSiteKeyController,
+              decoration: const InputDecoration(
+                labelText: 'reCAPTCHA Enterprise Site Key (optional)',
+                hintText: 'Leave empty to use default site key',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 8),
+            ElevatedButton(
+              onPressed: () => _activate(
+                android: AndroidReCaptchaProvider(_recaptchaSiteKey),
+                apple: AppleReCaptchaProvider(_recaptchaSiteKey),
+                web: ReCaptchaEnterpriseProvider(_recaptchaSiteKey),
+              ),
+              child: const Text('activate(ReCaptcha)'),
+            ),
             const SizedBox(height: 16),
             const Text(
               'Actions',

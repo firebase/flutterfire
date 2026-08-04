@@ -10,10 +10,10 @@ import PackageDescription
 let package = Package(
   name: "firebase_ai",
   platforms: [
-    .macOS("10.15"),
+    .macOS("10.15")
   ],
   products: [
-    .library(name: "firebase-ai", targets: ["firebase_ai"]),
+    .library(name: "firebase-ai", targets: ["firebase_ai"])
   ],
   dependencies: [
     .package(name: "FlutterFramework", path: "../FlutterFramework"),
@@ -25,8 +25,8 @@ let package = Package(
         .product(name: "FlutterFramework", package: "FlutterFramework"),
       ],
       resources: [
-        .process("Resources"),
+        .process("Resources")
       ]
-    ),
+    )
   ]
 )

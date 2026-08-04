@@ -208,28 +208,47 @@ class FirebaseCoreWeb extends FirebasePlatform {
     String version = firebaseSDKVersion;
     List<String> ignored = _ignoredServiceScripts;
 
-    await Future.wait(
-      _services.values.map((service) {
-        if (ignored.contains(service.override ?? service.name)) {
-          return Future.value();
-        }
+    Future<void> injectService(FirebaseWebService service) {
+      if (ignored.contains(service.override ?? service.name)) {
+        return Future.value();
+      }
 
-        const firestoreServiceName = 'firestore';
+      const firestoreServiceName = 'firestore';
 
-        if (service.name == firestoreServiceName) {
-          // Inject the Firestore Pipelines script. This bundle supports both
-          // Pipeline operations (Enterprise edition) and standard Firestore queries.
-          return injectSrcScript(
-            'https://www.gstatic.com/firebasejs/$version/firebase-firestore-pipelines.js',
-            'firebase_$firestoreServiceName',
-          );
-        }
-
+      if (service.name == firestoreServiceName) {
+        // Inject the Firestore Pipelines script. This bundle supports both
+        // Pipeline operations (Enterprise edition) and standard Firestore queries.
         return injectSrcScript(
-          'https://www.gstatic.com/firebasejs/$version/firebase-${service.name}.js',
-          'firebase_${service.override ?? service.name}',
+          'https://www.gstatic.com/firebasejs/$version/firebase-firestore-pipelines.js',
+          'firebase_$firestoreServiceName',
         );
-      }),
+      }
+
+      return injectSrcScript(
+        'https://www.gstatic.com/firebasejs/$version/firebase-${service.name}.js',
+        'firebase_${service.override ?? service.name}',
+      );
+    }
+
+    // Every component bundle (firebase-auth.js, firebase-messaging.js, ...)
+    // statically imports from firebase-app.js. Loading all services with
+    // concurrent dynamic import()s makes those imports race on the shared
+    // firebase-app.js module, which trips a WebKit module-evaluation defect:
+    // the returned namespace can still have its top-level bindings in the
+    // temporal dead zone, so reading firebase.SDK_VERSION right afterwards
+    // throws "ReferenceError: Cannot access 'SDK_VERSION' before
+    // initialization" (Safari/WKWebView only). Load firebase-app.js first,
+    // then fan out to the component bundles in parallel.
+    // https://github.com/firebase/flutterfire/issues/18436
+    final coreService = _services['core'];
+    if (coreService != null) {
+      await injectService(coreService);
+    }
+
+    await Future.wait(
+      _services.values
+          .where((service) => !identical(service, coreService))
+          .map(injectService),
     );
     registerLibraryVersion(_libraryName, packageVersion);
     _registerAllLibraryVersions();

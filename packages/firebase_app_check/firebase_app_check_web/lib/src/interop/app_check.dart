@@ -16,9 +16,11 @@ export 'app_check_interop.dart';
 
 /// Given an AppJSImp, return the AppCheck instance.
 AppCheck? getAppCheckInstance([App? app, WebProvider? provider]) {
-  late app_check_interop.ReCaptchaProvider jsProvider;
+  app_check_interop.ReCaptchaProvider? jsProvider;
 
-  if (provider is WebDebugProvider) {
+  if (provider == null) {
+    jsProvider = null;
+  } else if (provider is WebDebugProvider) {
     // Set the debug token global before initializing App Check.
     // The Firebase JS SDK reads this and creates a DebugProvider internally.
     if (provider.debugToken != null) {

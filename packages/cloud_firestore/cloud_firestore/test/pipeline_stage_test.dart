@@ -398,6 +398,80 @@ void main() {
       });
     });
 
+    group('_SearchStage', () {
+      test('serializes search with string query', () {
+        final pipeline = firestore.pipeline().collection('restaurants').search(
+              SearchStage.withQuery(
+                'breakfast -diner',
+                limit: 10,
+                offset: 2,
+                retrievalDepth: 100,
+                languageCode: 'en',
+              ),
+            );
+        final stage = pipeline.stages.last;
+        expect(stage['stage'], 'search');
+        expect(stage['args']['query_type'], 'string');
+        expect(stage['args']['query'], 'breakfast -diner');
+        expect(stage['args']['limit'], 10);
+        expect(stage['args']['offset'], 2);
+        expect(stage['args']['retrieval_depth'], 100);
+        expect(stage['args']['language_code'], 'en');
+      });
+
+      test('serializes search with query expression', () {
+        final pipeline = firestore.pipeline().collection('restaurants').search(
+              SearchStage.withQueryExpression(
+                Expression.documentMatches('waffles OR pancakes'),
+              ),
+            );
+        final stage = pipeline.stages.last;
+        expect(stage['stage'], 'search');
+        expect(stage['args']['query_type'], 'expression');
+        expect(stage['args']['query'], {
+          'name': 'document_matches',
+          'args': {'query': 'waffles OR pancakes'},
+        });
+      });
+
+      test('serializes search sort and add fields', () {
+        final pipeline = firestore.pipeline().collection('restaurants').search(
+              SearchStage.withQuery(
+                'breakfast',
+                sort: [Field('rating').descending()],
+                addFields: [Field('name')],
+              ),
+            );
+        final stage = pipeline.stages.last;
+        expect(stage['args']['sort'], [
+          {
+            'expression': {
+              'name': 'field',
+              'args': {'field': 'rating'},
+            },
+            'order_direction': 'desc',
+          },
+        ]);
+        expect(stage['args']['add_fields'], [
+          {
+            'name': 'field',
+            'args': {'field': 'name'},
+          },
+        ]);
+      });
+
+      test('throws if search is not first stage after source', () {
+        expect(
+          () => firestore
+              .pipeline()
+              .collection('restaurants')
+              .limit(10)
+              .search(SearchStage.withQuery('breakfast')),
+          throwsStateError,
+        );
+      });
+    });
+
     group('_UnionStage', () {
       test('serializes union stage with nested pipeline stages', () {
         final innerPipeline = firestore.pipeline().collection('archived_users');

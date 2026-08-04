@@ -42,9 +42,12 @@ FirebaseException platformExceptionToFirebaseAuthException(
         .replaceAll('ERROR_', '')
         .toLowerCase()
         .replaceAll('_', '-');
+    final details = platformException.details is Map
+        ? platformException.details as Map
+        : null;
 
     final customCode = _getCustomCode(
-      platformException.details,
+      details,
       platformException.message,
     );
     if (customCode != null) {
@@ -60,12 +63,10 @@ FirebaseException platformExceptionToFirebaseAuthException(
     AuthCredential? credential;
     String? email;
 
-    if (platformException.details != null) {
-      if (platformException.details['authCredential'] != null &&
-          platformException.details['authCredential']
-              is InternalAuthCredential) {
-        InternalAuthCredential pigeonAuthCredential =
-            platformException.details['authCredential'];
+    if (details != null) {
+      if (details['authCredential'] != null &&
+          details['authCredential'] is InternalAuthCredential) {
+        InternalAuthCredential pigeonAuthCredential = details['authCredential'];
 
         credential = AuthCredential(
           providerId: pigeonAuthCredential.providerId,
@@ -75,8 +76,8 @@ FirebaseException platformExceptionToFirebaseAuthException(
         );
       }
 
-      if (platformException.details['email'] != null) {
-        email = platformException.details['email'];
+      if (details['email'] != null) {
+        email = details['email'];
       }
     }
 

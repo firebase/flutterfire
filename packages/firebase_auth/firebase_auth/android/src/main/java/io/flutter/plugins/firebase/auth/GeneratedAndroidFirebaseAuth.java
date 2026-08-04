@@ -3234,6 +3234,7 @@ public class GeneratedAndroidFirebaseAuth {
     /** Failure case callback method for handling errors. */
     void error(@NonNull Throwable error);
   }
+
   /** Asynchronous error handling return type for nullable API method returns. */
   public interface NullableResult<T> {
     /** Success case callback method for handling returns. */
@@ -3242,6 +3243,7 @@ public class GeneratedAndroidFirebaseAuth {
     /** Failure case callback method for handling errors. */
     void error(@NonNull Throwable error);
   }
+
   /** Asynchronous error handling return type for void API method returns. */
   public interface VoidResult {
     /** Success case callback method for handling returns. */
@@ -3250,6 +3252,7 @@ public class GeneratedAndroidFirebaseAuth {
     /** Failure case callback method for handling errors. */
     void error(@NonNull Throwable error);
   }
+
   /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
   public interface FirebaseAuthHostApi {
 
@@ -3368,6 +3371,7 @@ public class GeneratedAndroidFirebaseAuth {
     static @NonNull MessageCodec<Object> getCodec() {
       return PigeonCodec.INSTANCE;
     }
+
     /**
      * Sets up an instance of `FirebaseAuthHostApi` to handle messages through the
      * `binaryMessenger`.
@@ -4181,6 +4185,7 @@ public class GeneratedAndroidFirebaseAuth {
       }
     }
   }
+
   /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
   public interface FirebaseAuthUserHostApi {
 
@@ -4253,6 +4258,7 @@ public class GeneratedAndroidFirebaseAuth {
     static @NonNull MessageCodec<Object> getCodec() {
       return PigeonCodec.INSTANCE;
     }
+
     /**
      * Sets up an instance of `FirebaseAuthUserHostApi` to handle messages through the
      * `binaryMessenger`.
@@ -4733,6 +4739,7 @@ public class GeneratedAndroidFirebaseAuth {
       }
     }
   }
+
   /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
   public interface MultiFactorUserHostApi {
 
@@ -4761,6 +4768,7 @@ public class GeneratedAndroidFirebaseAuth {
     static @NonNull MessageCodec<Object> getCodec() {
       return PigeonCodec.INSTANCE;
     }
+
     /**
      * Sets up an instance of `MultiFactorUserHostApi` to handle messages through the
      * `binaryMessenger`.
@@ -4943,6 +4951,7 @@ public class GeneratedAndroidFirebaseAuth {
       }
     }
   }
+
   /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
   public interface MultiFactoResolverHostApi {
 
@@ -4956,6 +4965,7 @@ public class GeneratedAndroidFirebaseAuth {
     static @NonNull MessageCodec<Object> getCodec() {
       return PigeonCodec.INSTANCE;
     }
+
     /**
      * Sets up an instance of `MultiFactoResolverHostApi` to handle messages through the
      * `binaryMessenger`.
@@ -5007,6 +5017,7 @@ public class GeneratedAndroidFirebaseAuth {
       }
     }
   }
+
   /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
   public interface MultiFactorTotpHostApi {
 
@@ -5024,6 +5035,7 @@ public class GeneratedAndroidFirebaseAuth {
     static @NonNull MessageCodec<Object> getCodec() {
       return PigeonCodec.INSTANCE;
     }
+
     /**
      * Sets up an instance of `MultiFactorTotpHostApi` to handle messages through the
      * `binaryMessenger`.
@@ -5138,6 +5150,7 @@ public class GeneratedAndroidFirebaseAuth {
       }
     }
   }
+
   /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
   public interface MultiFactorTotpSecretHostApi {
 
@@ -5154,6 +5167,7 @@ public class GeneratedAndroidFirebaseAuth {
     static @NonNull MessageCodec<Object> getCodec() {
       return PigeonCodec.INSTANCE;
     }
+
     /**
      * Sets up an instance of `MultiFactorTotpSecretHostApi` to handle messages through the
      * `binaryMessenger`.
@@ -5237,6 +5251,7 @@ public class GeneratedAndroidFirebaseAuth {
       }
     }
   }
+
   /**
    * Only used to generate the object interface that are use outside of the Pigeon interface
    *
@@ -5250,6 +5265,7 @@ public class GeneratedAndroidFirebaseAuth {
     static @NonNull MessageCodec<Object> getCodec() {
       return PigeonCodec.INSTANCE;
     }
+
     /**
      * Sets up an instance of `GenerateInterfaces` to handle messages through the `binaryMessenger`.
      */
