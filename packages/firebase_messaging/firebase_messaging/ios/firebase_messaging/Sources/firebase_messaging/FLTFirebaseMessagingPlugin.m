@@ -440,7 +440,15 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   NSDictionary *remoteNotification = nil;
   if ([launchNotification isKindOfClass:[NSDictionary class]]) {
     remoteNotification = launchNotification;
+  } else if ([launchNotification isKindOfClass:[UNNotificationResponse class]]) {
+    // UNNotificationResponse exposes the payload via its content, not a top-level `userInfo`,
+    // so it has to be unwrapped explicitly. Without this the payload is dropped and
+    // getInitialMessage() resolves with null when the app is launched by tapping a
+    // notification.
+    remoteNotification =
+        ((UNNotificationResponse *)launchNotification).notification.request.content.userInfo;
   } else if ([launchNotification respondsToSelector:@selector(userInfo)]) {
+    // Covers the deprecated NSUserNotification, which does expose `userInfo` directly.
     remoteNotification = [launchNotification userInfo];
   }
 #else
