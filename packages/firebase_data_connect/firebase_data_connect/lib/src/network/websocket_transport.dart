@@ -235,25 +235,43 @@ class WebSocketTransport implements DataConnectTransport {
 
     _claimWebSocketTransport();
 
-    _channel = WebSocketChannel.connect(Uri.parse(_url));
-    _channelSubscription = _channel?.stream.listen(
-      _onMessage,
-      onError: _onError,
-      onDone: _onDone,
+    final channel = WebSocketChannel.connect(Uri.parse(_url));
+    _channel = channel;
+    _channelSubscription = channel.stream.listen(
+      (message) {
+        if (identical(_channel, channel)) {
+          _onMessage(message);
+        }
+      },
+      onError: (error) {
+        if (identical(_channel, channel)) {
+          _onError(error);
+        }
+      },
+      onDone: () {
+        if (identical(_channel, channel)) {
+          _onDone();
+        }
+      },
     );
 
     // reset this since an explicit connect was requested
     _isExpectedDisconnect = false;
 
     try {
-      await _channel?.ready;
+      await channel.ready;
     } catch (e) {
       developer.log('WebSocket connection failed to become ready: $e');
-      _channel = null;
-      _releaseWebSocketTransport();
+      if (identical(_channel, channel)) {
+        _channel = null;
+        _releaseWebSocketTransport();
+      }
       throw DataConnectError(
           DataConnectErrorCode.other, 'WebSocket connection failed: $e');
     }
+
+    // The connection may have been explicitly replaced while awaiting ready.
+    if (!identical(_channel, channel)) return;
 
     final initRequest = StreamRequest(
       name:
@@ -451,8 +469,7 @@ class WebSocketTransport implements DataConnectTransport {
       return;
     }
 
-    _channel?.sink.close();
-    _channel = null;
+    _disconnect();
     _reconnectAttempts++;
 
     final authToken = await _refreshAuthToken();
@@ -487,8 +504,12 @@ class WebSocketTransport implements DataConnectTransport {
   void _disconnect() {
     _reconnectTimer?.cancel();
     _reconnectTimer = null;
-    _channel?.sink.close();
+    final channel = _channel;
+    // Clear the active channel before closing it. Its asynchronous onDone
+    // callback must not clear a replacement channel opened in the meantime.
     _channel = null;
+    _channelSubscription = null;
+    channel?.sink.close();
   }
 
   void disconnect() {

@@ -100,11 +100,11 @@ void runListenTests() {
 
         final listener1Ready = Completer<void>();
         final listener2Ready = Completer<void>();
-        final listener1ReceivedUpdate = Completer<void>();
-        final listener2ReceivedUpdate = Completer<void>();
+        final listener1ReceivedFirstMovie = Completer<void>();
+        final listener2ReceivedFirstMovie = Completer<void>();
+        final listener2ReceivedSecondMovie = Completer<void>();
 
         int count1 = 0;
-        int count2 = 0;
 
         final listener1 = MoviesConnector.instance
             .listMovies()
@@ -112,10 +112,13 @@ void runListenTests() {
             .subscribe()
             .listen((value) {
           count1++;
-          if (count1 == 1 && !listener1Ready.isCompleted) {
+          final movies = value.data.movies;
+          if (movies.isEmpty && !listener1Ready.isCompleted) {
             listener1Ready.complete();
-          } else if (count1 == 2 && !listener1ReceivedUpdate.isCompleted) {
-            listener1ReceivedUpdate.complete();
+          } else if (movies.length == 1 &&
+              movies.single.title == 'The Matrix' &&
+              !listener1ReceivedFirstMovie.isCompleted) {
+            listener1ReceivedFirstMovie.complete();
           }
         });
 
@@ -124,11 +127,18 @@ void runListenTests() {
             .ref()
             .subscribe()
             .listen((value) {
-          count2++;
-          if (count2 == 1 && !listener2Ready.isCompleted) {
+          final movies = value.data.movies;
+          if (movies.isEmpty && !listener2Ready.isCompleted) {
             listener2Ready.complete();
-          } else if (count2 == 3 && !listener2ReceivedUpdate.isCompleted) {
-            listener2ReceivedUpdate.complete();
+          } else if (movies.length == 1 &&
+              movies.single.title == 'The Matrix' &&
+              !listener2ReceivedFirstMovie.isCompleted) {
+            listener2ReceivedFirstMovie.complete();
+          } else if (movies.length == 2 &&
+              movies.any((movie) => movie.title == 'The Matrix') &&
+              movies.any((movie) => movie.title == 'Raiders of the Lost Arc') &&
+              !listener2ReceivedSecondMovie.isCompleted) {
+            listener2ReceivedSecondMovie.complete();
           }
         });
 
@@ -150,13 +160,22 @@ void runListenTests() {
               .ref()
               .execute();
 
-          await MoviesConnector.instance.listMovies().ref().execute();
+          // Force a server result so the test does not depend on emulator push
+          // timing. This may duplicate an automatic WebSocket emission, so
+          // synchronize on result contents rather than event counts.
+          await MoviesConnector.instance
+              .listMovies()
+              .ref()
+              .execute(fetchPolicy: QueryFetchPolicy.serverOnly);
 
-          // Wait for listener1 to receive the update
-          await listener1ReceivedUpdate.future.timeout(_listenTimeout);
+          await Future.wait([
+            listener1ReceivedFirstMovie.future,
+            listener2ReceivedFirstMovie.future,
+          ]).timeout(_listenTimeout);
 
           // Cancel listener1
           await listener1.cancel();
+          final listener1CountAfterCancel = count1;
 
           // Create second movie
           await MoviesConnector.instance
@@ -169,15 +188,15 @@ void runListenTests() {
               .ref()
               .execute();
 
-          await MoviesConnector.instance.listMovies().ref().execute();
+          await MoviesConnector.instance
+              .listMovies()
+              .ref()
+              .execute(fetchPolicy: QueryFetchPolicy.serverOnly);
 
-          // Wait deterministically for listener2's 3rd emission
-          await listener2ReceivedUpdate.future.timeout(_listenTimeout);
+          await listener2ReceivedSecondMovie.future.timeout(_listenTimeout);
 
-          expect(count1, equals(2),
+          expect(count1, equals(listener1CountAfterCancel),
               reason: 'Canceled listener should not receive further updates');
-          expect(count2, equals(3),
-              reason: 'Active listener should receive all updates');
         } finally {
           await listener1.cancel();
           await listener2.cancel();
