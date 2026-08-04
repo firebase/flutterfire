@@ -1,3 +1,21 @@
+## 4.13.0
+
+ - **FIX**(firestore,core,windows): per-engine BinaryMessenger, Firestore/Auth link order, Profile builds ([#18516](https://github.com/firebase/flutterfire/issues/18516)). ([5dfd289e](https://github.com/firebase/flutterfire/commit/5dfd289ea45260c15d73894dcf2cb092fc8ddb9d))
+ - **FIX**(app_check): sync SPM pins to 12.17.0 and fix Windows Activate override after [#18505](https://github.com/firebase/flutterfire/issues/18505) ([#18515](https://github.com/firebase/flutterfire/issues/18515)). ([ce1f6e05](https://github.com/firebase/flutterfire/commit/ce1f6e05e2d2645c414f8e731d3d082436caa012))
+ - **FIX**(remote_config,windows): move CMake dependency from Core to Remote Config ([#18498](https://github.com/firebase/flutterfire/issues/18498)). ([d6ef43f6](https://github.com/firebase/flutterfire/commit/d6ef43f616d03a57b76469b77f4cfd3d8325075a))
+ - **FEAT**(appcheck): rCE provider api update ([#18505](https://github.com/firebase/flutterfire/issues/18505)). ([a56649a4](https://github.com/firebase/flutterfire/commit/a56649a41539c559a08e4f566128db8de390c284))
+ - **FEAT**(core): bump Firebase android SDK to 34.16.0 ([#18465](https://github.com/firebase/flutterfire/issues/18465)). ([fc599349](https://github.com/firebase/flutterfire/commit/fc5993493fbaaf405680eb1e0c8cc0b2604ef1a0))
+ - **FEAT**(core): bump Firebase iOS SDK to 12.16.0 ([#18464](https://github.com/firebase/flutterfire/issues/18464)). ([07c1bbe8](https://github.com/firebase/flutterfire/commit/07c1bbe82a8becd5ab673101a8a6561e0af725af))
+
+## 4.12.1
+
+ - **FIX**(core): clarify initialization requirement ([#18441](https://github.com/firebase/flutterfire/issues/18441)). ([9cfde82a](https://github.com/firebase/flutterfire/commit/9cfde82af1872c485e7b2f8fb091195e2287666d))
+
+## 4.12.0
+
+ - **FIX**(core,android): synchronize access to registeredPlugins in FlutterFirebasePluginRegistry ([#18406](https://github.com/firebase/flutterfire/issues/18406)). ([b40d972a](https://github.com/firebase/flutterfire/commit/b40d972a9a82e7da9611d6967379cbede085f4f3))
+ - **FEAT**(windows): bump Windows C++ SDK to version 13.9.0 ([#18400](https://github.com/firebase/flutterfire/issues/18400)). ([734fcd8a](https://github.com/firebase/flutterfire/commit/734fcd8a6a3a905c057724285e082974e690d9a2))
+
 ## 4.11.0
 
  - **FEAT**(appcheck): appcheck reCAPTCHA mobile support (gradually rolling out) ([#18261](https://github.com/firebase/flutterfire/issues/18261)). ([036a860a](https://github.com/firebase/flutterfire/commit/036a860a0e66d46b5c57eb3df3a0f9e5846ef00b))

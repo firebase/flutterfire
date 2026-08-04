@@ -151,7 +151,7 @@ Note the following:
   not use this type of custom attribute in your app):
 
   ```dart
-  customTrace.putAttribute(("email", user.getEmailAddress());  // Don't do this!
+  customTrace.putAttribute("email", user.getEmailAddress());  // Don't do this!
   ```
 
   Data that exposes any personally identifiable information is subject to

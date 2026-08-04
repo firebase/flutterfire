@@ -1,3 +1,14 @@
+## 3.10.0
+
+ - **FIX**(core,web): load firebase-app.js before component bundles to avoid WebKit import race ([#18443](https://github.com/firebase/flutterfire/issues/18443)). ([4b731aed](https://github.com/firebase/flutterfire/commit/4b731aed0a1346070d8548c342e2e4b012844d58))
+ - **FEAT**(appcheck): rCE provider api update ([#18505](https://github.com/firebase/flutterfire/issues/18505)). ([a56649a4](https://github.com/firebase/flutterfire/commit/a56649a41539c559a08e4f566128db8de390c284))
+ - **FEAT**(core): bump Firebase web SDK to 12.16.0 ([#18466](https://github.com/firebase/flutterfire/issues/18466)). ([ff707788](https://github.com/firebase/flutterfire/commit/ff707788d48cf73e23e25b8c66205d6758a5022e))
+ - **DOCS**: fix code snippets that do not compile ([#18468](https://github.com/firebase/flutterfire/issues/18468)). ([85cbdcab](https://github.com/firebase/flutterfire/commit/85cbdcabe0f0f6230f63ebc4018c7358353b15a4))
+
+## 3.9.1
+
+ - **FIX**: update `firebase_core_platform_interface` constraint to support `8.0.0`.
+
 ## 3.9.0
 
  - **FEAT**(appcheck): appcheck reCAPTCHA mobile support (gradually rolling out) ([#18261](https://github.com/firebase/flutterfire/issues/18261)). ([036a860a](https://github.com/firebase/flutterfire/commit/036a860a0e66d46b5c57eb3df3a0f9e5846ef00b))

@@ -11,7 +11,11 @@
 #include <flutter/method_channel.h>
 #include <flutter/plugin_registrar_windows.h>
 
+#include <chrono>
+#include <condition_variable>
 #include <memory>
+#include <mutex>
+#include <vector>
 
 #include "firebase/app.h"
 #include "firebase/firestore.h"
@@ -21,12 +25,39 @@
 
 namespace cloud_firestore_windows {
 
+enum class TransactionResponseStatus {
+  kReceived,
+  kTimedOut,
+  kCancelled,
+};
+
+class TransactionResponse {
+ public:
+  void Reset();
+  void Complete(InternalTransactionResult result,
+                std::vector<InternalTransactionCommand> commands);
+  TransactionResponseStatus WaitFor(
+      std::chrono::milliseconds timeout, InternalTransactionResult& result,
+      std::vector<InternalTransactionCommand>& commands);
+  void Cancel();
+
+ private:
+  std::mutex mutex_;
+  std::condition_variable condition_;
+  bool response_received_ = false;
+  bool cancelled_ = false;
+  InternalTransactionResult result_ = InternalTransactionResult::kSuccess;
+  std::vector<InternalTransactionCommand> commands_;
+};
+
 class CloudFirestorePlugin : public flutter::Plugin,
                              public FirebaseFirestoreHostApi {
  public:
   static void RegisterWithRegistrar(flutter::PluginRegistrarWindows* registrar);
   static firebase::firestore::FieldValue ConvertToFieldValue(
       const flutter::EncodableValue& variant);
+  static flutter::EncodableValue ConvertFieldValueToEncodableValue(
+      const firebase::firestore::FieldValue& fieldValue);
 
   CloudFirestorePlugin();
 
@@ -145,7 +176,12 @@ class CloudFirestorePlugin : public flutter::Plugin,
       std::function<void(ErrorOr<InternalPipelineSnapshot> reply)> result)
       override;
 
-  static flutter::BinaryMessenger* messenger_;
+  // Per-registration messenger. A Windows app can host several Flutter engines
+  // in the same process (e.g. via `desktop_multi_window`), and each one
+  // registers the plugin with its own registrar. Keeping this per instance
+  // means every channel is built on the messenger of the engine that asked for
+  // it, instead of whichever engine registered last.
+  flutter::BinaryMessenger* messenger_ = nullptr;
   static std::map<
       std::string,
       std::unique_ptr<flutter::EventChannel<flutter::EncodableValue>>>

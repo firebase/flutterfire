@@ -1,3 +1,27 @@
+## 6.8.0
+
+ - **FIX**(firestore,core,windows): per-engine BinaryMessenger, Firestore/Auth link order, Profile builds ([#18516](https://github.com/firebase/flutterfire/issues/18516)). ([5dfd289e](https://github.com/firebase/flutterfire/commit/5dfd289ea45260c15d73894dcf2cb092fc8ddb9d))
+ - **FIX**(app_check): sync SPM pins to 12.17.0 and fix Windows Activate override after [#18505](https://github.com/firebase/flutterfire/issues/18505) ([#18515](https://github.com/firebase/flutterfire/issues/18515)). ([ce1f6e05](https://github.com/firebase/flutterfire/commit/ce1f6e05e2d2645c414f8e731d3d082436caa012))
+ - **FIX**(firestore,android): clean up Android transaction listeners on completion ([#18475](https://github.com/firebase/flutterfire/issues/18475)). ([ae002c7c](https://github.com/firebase/flutterfire/commit/ae002c7ca8ae405ebc901bfe17e6724a48075bca))
+ - **FIX**(firestore,windows): reply on platform thread to prevent warnings ([#18459](https://github.com/firebase/flutterfire/issues/18459)). ([cfeddb1b](https://github.com/firebase/flutterfire/commit/cfeddb1b4e2a519d77440a8ec4799eb9b9c12a37))
+ - **FIX**(firestore,windows): Prevents lost Windows transaction responses ([#18448](https://github.com/firebase/flutterfire/issues/18448)). ([ed1a551d](https://github.com/firebase/flutterfire/commit/ed1a551d41bc3303e66985e30d4d2b570606bc7f))
+ - **FIX**(firestore): Preserves microseconds when serializing implicit DateTime values ([#18435](https://github.com/firebase/flutterfire/issues/18435)). ([068c3094](https://github.com/firebase/flutterfire/commit/068c30946912d8a3d5f24455fcb4bc00202e60ee))
+ - **FEAT**(firestore): add string manipulation functions for Android and iOS ([#18493](https://github.com/firebase/flutterfire/issues/18493)). ([b3bd7e9d](https://github.com/firebase/flutterfire/commit/b3bd7e9ddd61942530883501f285ed32b55f9953))
+
+## 6.7.1
+
+ - Update a dependency to the latest release.
+
+## 6.7.0
+
+ - **FIX**(firestore): preserve detailed native Firestore error messages ([#18428](https://github.com/firebase/flutterfire/issues/18428)). ([b23c3267](https://github.com/firebase/flutterfire/commit/b23c32678d131799793827b1eaed179e168707e0))
+ - **FIX**(cloud_firestore): guard shared transactions map against concurrent access ([#18421](https://github.com/firebase/flutterfire/issues/18421)). ([e81cb6db](https://github.com/firebase/flutterfire/commit/e81cb6db46a87e932cbff3c1fb3a93fedbcb9a3b))
+ - **FIX**(firestore): large snapshots do not block frame scheduling ([#18390](https://github.com/firebase/flutterfire/issues/18390)). ([0ce3c202](https://github.com/firebase/flutterfire/commit/0ce3c202c011ccc1f7ed1d1ecd4d8ed431b0de59))
+ - **FEAT**(firestore,windows): add support for Blob decoding on Windows ([#18432](https://github.com/firebase/flutterfire/issues/18432)). ([068db515](https://github.com/firebase/flutterfire/commit/068db5156840e18a1ded68110b8afec2f8dd9eb8))
+ - **FEAT**(firestore): add support for new expressions including nor, coalesce, switch_on, timestamp_diff, and timestamp_extract ([#18200](https://github.com/firebase/flutterfire/issues/18200)). ([2612eb2c](https://github.com/firebase/flutterfire/commit/2612eb2c72fd6606fa10837075ff7ff95a846aa4))
+ - **FEAT**(firestore): add support for withConverter on Writebatch ([#18394](https://github.com/firebase/flutterfire/issues/18394)). ([ac200e4f](https://github.com/firebase/flutterfire/commit/ac200e4fccfe851ff80689e3814d1793a7bb893e))
+ - **DOCS**(cloud_firestore): Remove Incorrect API Documentation ([#18423](https://github.com/firebase/flutterfire/issues/18423)). ([4b1056fd](https://github.com/firebase/flutterfire/commit/4b1056fdbf9da95f630d35ecd3ae605839cdb010))
+
 ## 6.6.0
 
  - **FEAT**(firestore): add support for search in firestore pipeline ([#18312](https://github.com/firebase/flutterfire/issues/18312)). ([b3c835f7](https://github.com/firebase/flutterfire/commit/b3c835f7bae8684d4c98167d78a071d9ed88f980))

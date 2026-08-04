@@ -289,7 +289,7 @@ public class FirebaseRemoteConfigPlugin: NSObject, FlutterPlugin, FlutterStreamH
     return FlutterError(
       code: "firebase_remote_config",
       message: nsError.localizedDescription,
-      details: nsError.userInfo["details"]
+      details: FLTFirebaseRemoteConfigUtils.errorCodeAndMessage(from: nsError)
     )
   }
 

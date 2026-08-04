@@ -1,3 +1,16 @@
+## 8.0.6
+
+ - **FIX**(firestore,android): clean up Android transaction listeners on completion ([#18475](https://github.com/firebase/flutterfire/issues/18475)). ([ae002c7c](https://github.com/firebase/flutterfire/commit/ae002c7ca8ae405ebc901bfe17e6724a48075bca))
+ - **FIX**(firestore): Preserves microseconds when serializing implicit DateTime values ([#18435](https://github.com/firebase/flutterfire/issues/18435)). ([068c3094](https://github.com/firebase/flutterfire/commit/068c30946912d8a3d5f24455fcb4bc00202e60ee))
+
+## 8.0.5
+
+ - Update a dependency to the latest release.
+
+## 8.0.4
+
+ - **DOCS**(cloud_firestore): Remove Incorrect API Documentation ([#18423](https://github.com/firebase/flutterfire/issues/18423)). ([4b1056fd](https://github.com/firebase/flutterfire/commit/4b1056fdbf9da95f630d35ecd3ae605839cdb010))
+
 ## 8.0.3
 
  - Update a dependency to the latest release.

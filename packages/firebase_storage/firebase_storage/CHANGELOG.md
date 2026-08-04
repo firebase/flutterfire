@@ -1,3 +1,17 @@
+## 13.4.6
+
+ - **FIX**(app_check): sync SPM pins to 12.17.0 and fix Windows Activate override after [#18505](https://github.com/firebase/flutterfire/issues/18505) ([#18515](https://github.com/firebase/flutterfire/issues/18515)). ([ce1f6e05](https://github.com/firebase/flutterfire/commit/ce1f6e05e2d2645c414f8e731d3d082436caa012))
+ - **FIX**(storage,android): firebase_storage now respects android.builtInKotlin=true and only applies kotlin-android when built-in Kotlin is disabled ([#18351](https://github.com/firebase/flutterfire/issues/18351)). ([d8a79f77](https://github.com/firebase/flutterfire/commit/d8a79f774ef956e3f081df51907fa896b29590c2))
+ - **FIX**(storage,windows): Windows list()/listAll() now throw unimplemented instead of returning misleading empty results ([#18449](https://github.com/firebase/flutterfire/issues/18449)). ([ef0a4ffa](https://github.com/firebase/flutterfire/commit/ef0a4ffad2f7ccd8df3f9e2919fd2834187d117c))
+
+## 13.4.5
+
+ - Update a dependency to the latest release.
+
+## 13.4.4
+
+ - Update a dependency to the latest release.
+
 ## 13.4.3
 
  - Update a dependency to the latest release.

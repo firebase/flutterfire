@@ -61,12 +61,12 @@ void main() {
     const location = 'us-central1';
 
     TemplateGenerativeModel createModel(http.Client client,
-        {bool useVertexBackend = true}) {
+        {bool useAgentPlatform = true}) {
       // ignore: invalid_use_of_internal_member
       return createTestTemplateGenerativeModel(
         app: app,
         location: location,
-        useVertexBackend: useVertexBackend,
+        useAgentPlatform: useAgentPlatform,
         client: client,
       );
     }

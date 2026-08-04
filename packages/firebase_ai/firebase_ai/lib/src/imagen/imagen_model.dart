@@ -17,11 +17,7 @@ part of '../base_model.dart';
 /// Represents a remote Imagen model with the ability to generate images using
 /// text prompts.
 ///
-/// See the [Cloud
-/// documentation](https://cloud.google.com/vertex-ai/generative-ai/docs/image/generate-images)
-/// for more details about the image generation capabilities offered by the Imagen model.
-///
-/// > Warning: For Vertex AI in Firebase, image generation using Imagen 3 models
+/// > Warning: For Firebase AI Logic, image generation using Imagen 3 models
 /// is in Public Preview, which means that the feature is not subject to any SLA
 /// or deprecation policy and could change in backwards-incompatible ways.
 @Deprecated(
@@ -45,10 +41,10 @@ final class ImagenModel extends BaseApiClientModel {
         _useVertexBackend = useVertexBackend,
         super(
             serializationStrategy: useVertexBackend
-                ? VertexSerialization()
+                ? AgentPlatformSerialization()
                 : DeveloperSerialization(),
             modelUri: useVertexBackend
-                ? _VertexUri(app: app, model: model, location: location)
+                ? _AgentPlatformUri(app: app, model: model, location: location)
                 : _GoogleAIUri(app: app, model: model),
             client: HttpApiClient(
                 apiKey: app.options.apiKey,
@@ -203,7 +199,7 @@ ImagenModel createImagenModel({
   required FirebaseApp app,
   required String location,
   required String model,
-  required bool useVertexBackend,
+  required bool useAgentPlatform,
   bool? useLimitedUseAppCheckTokens,
   FirebaseAppCheck? appCheck,
   FirebaseAuth? auth,
@@ -216,7 +212,7 @@ ImagenModel createImagenModel({
       appCheck: appCheck,
       auth: auth,
       location: location,
-      useVertexBackend: useVertexBackend,
+      useVertexBackend: useAgentPlatform,
       useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
       safetySettings: safetySettings,
       generationConfig: generationConfig,

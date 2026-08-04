@@ -33,10 +33,16 @@ const int testEmulatorPort = 9199;
 
 // Creates a test file with a specified name to
 // a locally directory
+//
+// The default size is deliberately large so download tasks are still running
+// when a test cancels or pauses them, but it has to stay under the storage
+// emulator's resumable upload limit. The emulator rejects a resumable upload
+// body over ~128MB with `413`, which surfaces as
+// `[firebase_storage/unknown] Unexpected 413 code from backend`.
 Future<File> createFile(
   String name, {
   String? string,
-  int sizeInBytes = 209715200,
+  int sizeInBytes = 104857600,
 }) async {
   final Directory systemTempDir = Directory.systemTemp;
   final File file = await File('${systemTempDir.path}/$name').create();
@@ -46,7 +52,7 @@ Future<File> createFile(
     return file;
   }
 
-  // Create a 200MB file by writing data in chunks to avoid memory issues
+  // Write the file in chunks to avoid memory issues
   const chunkSize = 1024 * 1024; // 1MB chunks
   final chunk = Uint8List(chunkSize);
 

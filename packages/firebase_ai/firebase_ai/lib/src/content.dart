@@ -304,7 +304,8 @@ final class InlineDataPart extends Part {
         );
 
   /// File type of the [InlineDataPart].
-  /// https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/send-multimodal-prompts#media_requirements
+  ///
+  /// Can find details in [FirebaseAIMimeTypes]
   final String mimeType;
 
   /// Data contents in bytes.
@@ -485,7 +486,8 @@ final class FileData extends Part {
         );
 
   /// File type of the [FileData].
-  /// https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/send-multimodal-prompts#media_requirements
+  ///
+  /// Can find details in [FirebaseAIMimeTypes]
   final String mimeType;
 
   /// The gs link for Firebase Storage reference

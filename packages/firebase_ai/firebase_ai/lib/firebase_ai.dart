@@ -118,6 +118,7 @@ export 'src/live_api.dart'
         SlidingWindow,
         Transcription;
 export 'src/live_session.dart' show LiveSession;
+export 'src/mime_types.dart' show FirebaseAIMimeTypes;
 export 'src/schema.dart' show JSONSchema, Schema, SchemaType;
 export 'src/server_template/template_chat.dart'
     show TemplateChatSession, StartTemplateChatExtension;

@@ -1,3 +1,16 @@
+## 6.5.7
+
+ - **FIX**(app_check): sync SPM pins to 12.17.0 and fix Windows Activate override after [#18505](https://github.com/firebase/flutterfire/issues/18505) ([#18515](https://github.com/firebase/flutterfire/issues/18515)). ([ce1f6e05](https://github.com/firebase/flutterfire/commit/ce1f6e05e2d2645c414f8e731d3d082436caa012))
+ - **FIX**(auth,ios): Generic OAuth credentials on iOS passed a missing access token through a non-nullable Firebase SDK selector ([#18450](https://github.com/firebase/flutterfire/issues/18450)). ([32ae2701](https://github.com/firebase/flutterfire/commit/32ae2701f5ff9e132a6ac95a9520d24c12cce769))
+
+## 6.5.6
+
+ - Update a dependency to the latest release.
+
+## 6.5.5
+
+ - **FIX**(auth,iOS): add detailed error handling for Apple authorization failures ([#18415](https://github.com/firebase/flutterfire/issues/18415)). ([1df97bb0](https://github.com/firebase/flutterfire/commit/1df97bb018e0f72ce8f7cbabf016438010a5bdfe))
+
 ## 6.5.4
 
  - **FIX**: resolve FlutterSceneLifeCycleDelegate conformance guard ([#18385](https://github.com/firebase/flutterfire/issues/18385)). ([48d67196](https://github.com/firebase/flutterfire/commit/48d67196a10affe09724529df5f67cf40b62bccf))

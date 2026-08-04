@@ -470,22 +470,18 @@ void FirebaseStoragePlugin::ReferenceList(
     const InternalStorageReference& reference,
     const InternalListOptions& options,
     std::function<void(ErrorOr<InternalListResult> reply)> result) {
-  // C++ doesn't support list yet
-  flutter::EncodableList items = flutter::EncodableList();
-  flutter::EncodableList prefixs = flutter::EncodableList();
-  InternalListResult pigeon_result = InternalListResult(items, prefixs);
-  result(pigeon_result);
+  result(FlutterError(
+      "unimplemented",
+      "Listing files is not supported by the Firebase C++ SDK on Windows."));
 }
 
 void FirebaseStoragePlugin::ReferenceListAll(
     const InternalStorageFirebaseApp& app,
     const InternalStorageReference& reference,
     std::function<void(ErrorOr<InternalListResult> reply)> result) {
-  // C++ doesn't support listAll yet
-  flutter::EncodableList items = flutter::EncodableList();
-  flutter::EncodableList prefixs = flutter::EncodableList();
-  InternalListResult pigeon_result = InternalListResult(items, prefixs);
-  result(pigeon_result);
+  result(FlutterError(
+      "unimplemented",
+      "Listing files is not supported by the Firebase C++ SDK on Windows."));
 }
 
 void FirebaseStoragePlugin::ReferenceGetData(

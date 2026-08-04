@@ -7,8 +7,8 @@
 
 import PackageDescription
 
-let libraryVersion = "6.6.0"
-let firebaseSdkVersion: Version = "12.15.0"
+let libraryVersion = "6.8.0"
+let firebaseSdkVersion: Version = "12.17.0"
 
 let package = Package(
   name: "cloud_firestore",

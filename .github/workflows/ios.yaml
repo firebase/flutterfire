@@ -4,6 +4,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-ios
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 on:
   pull_request:
     paths-ignore:
@@ -31,6 +34,8 @@ on:
 
 jobs:
   ios:
+    permissions:
+      contents: read
     runs-on: macos-15
     timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 60 }}
     strategy:
@@ -59,7 +64,7 @@ jobs:
           key: xcode-cache-${{ runner.os }}
           save: "${{ github.ref == 'refs/heads/main' }}"
           max-size: 700M
-      - uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
+      - uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         continue-on-error: true
         name: Pods Cache
         id: pods-cache
@@ -74,7 +79,7 @@ jobs:
           echo "FIREBASE_TOOLS_VERSION=$(npm firebase --version)" >> $GITHUB_ENV
       - name: Firebase Emulator Cache
         id: firebase-emulator-cache
-        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         continue-on-error: true
         with:
           # The firebase emulators are pure javascript and java, OS-independent
@@ -90,10 +95,12 @@ jobs:
           flutter-version: '3.41.9'
           cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
           pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
-      - uses: bluefireteam/melos-action@705015c3d2bc4ab94201ac24accb2bbe070cf533
+      - uses: bluefireteam/melos-action@2982f8e4fc92440a219490009d6d05195cb1a6a5
         with:
           run-bootstrap: false
           melos-version: '5.3.0'
+      - name: Generate dummy Firebase configs
+        run: dart ./.github/workflows/scripts/generate-dummy-firebase-configs.dart --firestore-native
       - name: 'Bootstrap package'
         run: melos bootstrap --scope tests && melos bootstrap --scope "cloud_firestore*"
       - name: 'Free up space'
@@ -146,7 +153,7 @@ jobs:
       - name: Save Firestore Emulator Cache
         # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
         if: github.ref == 'refs/heads/main'
-        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         continue-on-error: true
         with:
           # The firebase emulators are pure javascript and java, OS-independent
@@ -157,7 +164,7 @@ jobs:
       - name: Save Pods Cache
         # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
         if: github.ref == 'refs/heads/main'
-        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         continue-on-error: true
         with:
           key: ${{ steps.pods-cache.outputs.cache-primary-key }}

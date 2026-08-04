@@ -213,8 +213,12 @@ String _appendRow(String currentBody, String newRow) {
 
   tableRows.add(newRow);
 
+  tableRows.sort((a, b) {
+    return _getDateFromRow(b).compareTo(_getDateFromRow(a));
+  });
+
   if (tableRows.length > 30) {
-    tableRows.removeRange(0, tableRows.length - 30);
+    tableRows.removeRange(30, tableRows.length);
   }
 
   final newBodyLines = <String>[];
@@ -263,3 +267,12 @@ void _addHeaders(HttpClientRequest request, String token) {
   request.headers.add('User-Agent', 'dart-script');
   request.headers.contentType = ContentType.json;
 }
+
+String _getDateFromRow(String row) {
+  final parts = row.split('|');
+  if (parts.length > 1) {
+    return parts[1].trim();
+  }
+  return '';
+}
+

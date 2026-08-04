@@ -1,3 +1,17 @@
+## 6.5.6
+
+ - **FIX**(app_check): sync SPM pins to 12.17.0 and fix Windows Activate override after [#18505](https://github.com/firebase/flutterfire/issues/18505) ([#18515](https://github.com/firebase/flutterfire/issues/18515)). ([ce1f6e05](https://github.com/firebase/flutterfire/commit/ce1f6e05e2d2645c414f8e731d3d082436caa012))
+ - **FIX**(remote_config,windows): move CMake dependency from Core to Remote Config ([#18498](https://github.com/firebase/flutterfire/issues/18498)). ([d6ef43f6](https://github.com/firebase/flutterfire/commit/d6ef43f616d03a57b76469b77f4cfd3d8325075a))
+ - **FIX**(remote_config): restores the Apple error mapping and accepts both throttling status spellings ([#18458](https://github.com/firebase/flutterfire/issues/18458)). ([523d985a](https://github.com/firebase/flutterfire/commit/523d985a8219fd20a7071915ee539c19692975fa))
+
+## 6.5.5
+
+ - Update a dependency to the latest release.
+
+## 6.5.4
+
+ - Update a dependency to the latest release.
+
 ## 6.5.3
 
  - Update a dependency to the latest release.

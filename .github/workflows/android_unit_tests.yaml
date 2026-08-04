@@ -1,0 +1,65 @@
+name: android-unit-tests
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    paths:
+      - 'packages/**/android/**'
+      - 'tests/android/**'
+      - '.github/workflows/android_unit_tests.yaml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'packages/**/android/**'
+      - 'tests/android/**'
+      - '.github/workflows/android_unit_tests.yaml'
+
+jobs:
+  android-unit-tests:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - uses: actions/setup-java@1bcf9fb12cf4aa7d266a90ae39939e61372fe520
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
+        with:
+          channel: 'stable'
+          cache: true
+          cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
+          pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
+      - uses: bluefireteam/melos-action@705015c3d2bc4ab94201ac24accb2bbe070cf533
+        with:
+          run-bootstrap: false
+          melos-version: '5.3.0'
+      - name: 'Bootstrap tests package'
+        run: melos bootstrap --scope tests
+      - name: Gradle cache
+        uses: gradle/actions/setup-gradle@90ddb51e90a5fd9ba75f40cf85156b7b41bf76a3
+      - name: 'Generate Gradle build files'
+        # The Gradle wrapper and local.properties are gitignored, and Flutter injects
+        # both. --config-only does that without building any Dart artifacts.
+        run: cd tests && flutter build apk --debug --config-only
+      - name: 'Run Android unit tests'
+        # Tasks are listed per package rather than using the root testDebugUnitTest
+        # task, which would also build the Dart sources of the aggregate test app.
+        # Add a task here when a package gains an android/src/test directory.
+        run: cd tests/android && ./gradlew :firebase_crashlytics:testDebugUnitTest
+      - name: 'Upload test reports'
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: android-unit-test-reports
+          path: tests/build/*/reports/tests/
+          retention-days: 5
