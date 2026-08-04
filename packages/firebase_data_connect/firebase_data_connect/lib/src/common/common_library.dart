@@ -102,6 +102,7 @@ abstract class DataConnectTransport {
 
   /// Invokes corresponding query endpoint.
   Future<ServerResponse> invokeQuery<Data, Variables>(
+    String operationId,
     String queryName,
     Deserializer<Data> deserializer,
     Serializer<Variables> serializer,
@@ -111,6 +112,17 @@ abstract class DataConnectTransport {
 
   /// Invokes corresponding mutation endpoint.
   Future<ServerResponse> invokeMutation<Data, Variables>(
+    String operationId,
+    String queryName,
+    Deserializer<Data> deserializer,
+    Serializer<Variables> serializer,
+    Variables? vars,
+    String? token,
+  );
+
+  /// Invokes corresponding stream query endpoint.
+  Stream<ServerResponse> invokeStreamQuery<Data, Variables>(
+    String operationId,
     String queryName,
     Deserializer<Data> deserializer,
     Serializer<Variables> serializer,

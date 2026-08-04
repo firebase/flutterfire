@@ -91,12 +91,14 @@ FirebaseException _firebaseExceptionFromCoreFirebaseError(
 ///
 /// See also https://github.com/dart-lang/sdk/issues/30741
 bool _testException(Object? objectException) {
-  final exception = objectException! as core_interop.JSError;
+  if (objectException is! core_interop.JSError) {
+    return false;
+  }
 
-  final message = _safeConvertFromPossibleJSObject(exception.message);
+  final message = _safeConvertFromPossibleJSObject(objectException.message);
   // Firestore web does not contain `Firebase` in the message so we check the exception itself.
   return message.contains('Firebase') ||
-      exception.toString().contains('FirebaseError');
+      objectException.toString().contains('FirebaseError');
 }
 
 /// Transforms internal errors in something more readable for end-users.

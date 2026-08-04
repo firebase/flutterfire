@@ -50,7 +50,7 @@ public class PhoneNumberVerificationStreamHandler implements StreamHandler {
   public PhoneNumberVerificationStreamHandler(
       Activity activity,
       @NonNull GeneratedAndroidFirebaseAuth.AuthPigeonFirebaseApp app,
-      @NonNull GeneratedAndroidFirebaseAuth.PigeonVerifyPhoneNumberRequest request,
+      @NonNull GeneratedAndroidFirebaseAuth.InternalVerifyPhoneNumberRequest request,
       @Nullable MultiFactorSession multiFactorSession,
       @Nullable PhoneMultiFactorInfo multiFactorInfo,
       OnCredentialsListener onCredentialsListener) {

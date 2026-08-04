@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'dart:async';
-
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -13,7 +11,6 @@ import './mock.dart';
 void main() {
   setupFirebaseAppCheckMocks();
   late FirebaseApp secondaryApp;
-  late FirebaseAppCheck appCheck;
 
   group('$FirebaseAppCheck', () {
     setUpAll(() async {
@@ -27,14 +24,7 @@ void main() {
           messagingSenderId: '1234567890',
         ),
       );
-      appCheck = FirebaseAppCheck.instance;
     });
-
-    setUp(() async {
-      methodCallLog.clear();
-    });
-
-    tearDown(methodCallLog.clear);
 
     group('instance', () {
       test('successful call', () async {
@@ -52,80 +42,37 @@ void main() {
         expect(appCheck, isA<FirebaseAppCheck>());
         expect(appCheck.app.name, 'secondaryApp');
       });
-    });
 
-    group('activate', () {
-      test('successful call', () async {
-        await appCheck.activate(
-          providerWeb: ReCaptchaV3Provider('key'),
-          providerAndroid: const AndroidDebugProvider(
-            debugToken: 'androidDebug',
-          ),
-          providerApple: const AppleDebugProvider(
-            debugToken: 'appleDebug',
-          ),
+      test('creates a fresh instance after app delete and reinitialize',
+          () async {
+        const appName = 'delete-reinit-app-check';
+        const options = FirebaseOptions(
+          appId: '1:1234567890:ios:42424242424242',
+          apiKey: '123',
+          projectId: '123',
+          messagingSenderId: '1234567890',
         );
-
-        expect(
-          methodCallLog,
-          <Matcher>[
-            isMethodCall(
-              'FirebaseAppCheck#activate',
-              arguments: <String, dynamic>{
-                'appName': defaultFirebaseAppName,
-                'androidProvider': 'debug',
-                'appleProvider': 'debug',
-                'androidDebugToken': 'androidDebug',
-                'appleDebugToken': 'appleDebug',
-              },
-            ),
-          ],
+        final app = await Firebase.initializeApp(
+          name: appName,
+          options: options,
         );
-      });
-    });
-    group('getToken', () {
-      test('successful call', () async {
-        await appCheck.getToken(true);
+        final appCheck1 = FirebaseAppCheck.instanceFor(app: app);
 
-        expect(
-          methodCallLog,
-          <Matcher>[
-            isMethodCall(
-              'FirebaseAppCheck#getToken',
-              arguments: <String, dynamic>{
-                'appName': defaultFirebaseAppName,
-                'forceRefresh': true,
-              },
-            ),
-          ],
+        expect(app.getService<FirebaseAppCheck>(), same(appCheck1));
+
+        await app.delete();
+
+        final app2 = await Firebase.initializeApp(
+          name: appName,
+          options: options,
         );
-      });
-    });
+        addTearDown(app2.delete);
 
-    group('setTokenAutoRefreshEnabled', () {
-      test('successful call', () async {
-        await appCheck.setTokenAutoRefreshEnabled(false);
+        final appCheck2 = FirebaseAppCheck.instanceFor(app: app2);
 
-        expect(
-          methodCallLog,
-          <Matcher>[
-            isMethodCall(
-              'FirebaseAppCheck#setTokenAutoRefreshEnabled',
-              arguments: <String, dynamic>{
-                'appName': defaultFirebaseAppName,
-                'isTokenAutoRefreshEnabled': false,
-              },
-            ),
-          ],
-        );
-      });
-    });
-
-    group('tokenChanges', () {
-      test('successful call', () async {
-        final stream = appCheck.onTokenChange;
-
-        expect(stream, isA<Stream<String?>>());
+        expect(appCheck2, isNot(same(appCheck1)));
+        expect(appCheck2.app, app2);
+        expect(app2.getService<FirebaseAppCheck>(), same(appCheck2));
       });
     });
   });

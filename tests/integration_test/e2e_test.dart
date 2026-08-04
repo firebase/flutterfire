@@ -51,10 +51,12 @@ void main() {
       return;
     }
     if (kIsWeb) {
+      // Web has its own ordering because App Check runs in a separate job and
+      // Auth can leave emulator state that interferes with Database tests.
       firebase_core.main();
       firebase_ai.main();
-      firebase_auth.main();
       firebase_database.main();
+      firebase_auth.main();
       firebase_crashlytics.main();
       firebase_analytics.main();
       cloud_functions.main();
@@ -78,6 +80,7 @@ void main() {
         firebase_auth.main();
         firebase_remote_config.main();
         firebase_storage.main();
+        firebase_app_check.main();
         break;
       default:
         throw UnsupportedError(
@@ -88,6 +91,7 @@ void main() {
 }
 
 void runAllTests() {
+  // Native platforms run the full suite in package order.
   firebase_core.main();
   firebase_ai.main();
   firebase_auth.main();

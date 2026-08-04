@@ -41,6 +41,16 @@
                                                            FIRMessagingDelegate,
                                                            NSApplicationDelegate,
                                                            UNUserNotificationCenterDelegate>
+
+/// Returns the shared Firebase Messaging plugin instance.
++ (instancetype)sharedInstance;
+
+/// Configures Firebase Messaging as the `UNUserNotificationCenter` delegate.
+///
+/// Apps that adopt the UIScene lifecycle should call this from
+/// `application:didFinishLaunchingWithOptions:` before returning, because Apple requires the
+/// notification center delegate to be assigned before application launch completes.
++ (void)configureNotificationCenterDelegate;
 #else
 @interface FLTFirebaseMessagingPlugin : FLTFirebasePlugin <FlutterPlugin,
                                                            FLTFirebasePlugin,
@@ -54,16 +64,26 @@ API_AVAILABLE(ios(10.0))
                                                            FLTFirebasePlugin,
                                                            FIRMessagingDelegate,
                                                            UIApplicationDelegate
-#if __has_include(<Flutter/FlutterSceneLifeCycleDelegate.h>) || defined(FlutterSceneLifeCycleDelegate)
+#if __has_include(<Flutter/FlutterSceneLifeCycle.h>)
                                                            ,
                                                            FlutterSceneLifeCycleDelegate
 #endif
                                                            >
+
+/// Returns the shared Firebase Messaging plugin instance.
++ (instancetype)sharedInstance;
+
+/// Configures Firebase Messaging as the `UNUserNotificationCenter` delegate.
+///
+/// Apps that adopt the UIScene lifecycle should call this from
+/// `application:didFinishLaunchingWithOptions:` before returning, because Apple requires the
+/// notification center delegate to be assigned before application launch completes.
++ (void)configureNotificationCenterDelegate;
 #else
 @interface FLTFirebaseMessagingPlugin : FLTFirebasePlugin <FlutterPlugin,
                                                            FLTFirebasePlugin,
                                                            FIRMessagingDelegate
-#if __has_include(<Flutter/FlutterSceneLifeCycleDelegate.h>) || defined(FlutterSceneLifeCycleDelegate)
+#if __has_include(<Flutter/FlutterSceneLifeCycle.h>)
                                                            ,
                                                            FlutterSceneLifeCycleDelegate
 #endif

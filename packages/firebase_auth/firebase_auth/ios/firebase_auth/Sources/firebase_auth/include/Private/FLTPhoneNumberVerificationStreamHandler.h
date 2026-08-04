@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithAuth:(FIRAuth *)auth arguments:(NSDictionary *)arguments;
 #else
 - (instancetype)initWithAuth:(FIRAuth *)auth
-                     request:(PigeonVerifyPhoneNumberRequest *)request
+                     request:(InternalVerifyPhoneNumberRequest *)request
                      session:(FIRMultiFactorSession *)session
                   factorInfo:(FIRPhoneMultiFactorInfo *)factorInfo;
 #endif

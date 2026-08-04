@@ -26,11 +26,63 @@ Before starting with Phone Authentication, ensure you have followed these steps:
    your APNs authentication key is [configured with Firebase Cloud Messaging (FCM)](/docs/cloud-messaging/ios/certs). Additionally, you must
    [enable background modes](https://help.apple.com/xcode/mac/current/#/deve49d0ba96) for remote notifications.
    To view an in-depth explanation of this step, view the [Firebase iOS Phone Auth](/docs/auth/ios/phone-auth) documentation.
+   If verification fails with **`recaptcha-sdk-not-linked`** (*The reCAPTCHA SDK is not linked to your app*), see
+   [iOS: reCAPTCHA SDK and Identity Platform](#ios-recaptcha-sdk-and-identity-platform).
 4. **Web**: Ensure that you have added your applications domain on the [Firebase console](https://console.firebase.google.com/), under
    **OAuth redirect domains**.
 
 **Note**; Phone number sign-in is only available for use on real devices and the web. To test your authentication flow on device emulators,
 please see [Testing](#testing).
+
+## iOS: reCAPTCHA SDK and Identity Platform
+
+On **iOS**, phone sign-in can fail with `FirebaseAuthException` code **`recaptcha-sdk-not-linked`** (for example: *The reCAPTCHA SDK is not linked to your app*).
+That error is raised by the **native Firebase iOS Auth** SDK when your Firebase / **Identity Platform** configuration expects **reCAPTCHA Enterprise**
+for SMS-related verification, but the **reCAPTCHA Enterprise iOS SDK** is not linked in your Xcode project.
+
+The `firebase_auth` plugin does not inject a reCAPTCHA client from Dart—you must fix this in **native iOS** setup or in **Google Cloud / Firebase** configuration.
+
+### Recommended: Link reCAPTCHA Enterprise on iOS
+
+Add the **reCAPTCHA Enterprise** client to your app using Google’s guide:
+[Instrument your iOS app with reCAPTCHA Enterprise](https://cloud.google.com/recaptcha-enterprise/docs/instrument-ios-apps)
+(CocoaPods or Swift Package Manager), so Firebase Auth can satisfy the Enterprise requirement.
+
+### Safari-hosted challenge (`SFSafariViewController`)
+
+If the SDK uses a **Safari view controller**-hosted challenge instead of the Enterprise SDK, your app must handle the **return URL**
+(for example with **`uni_links`** / **`app_links`**, or **`onOpenUrl`** / **`application:openURL:`** in the iOS runner), following standard
+Flutter + Firebase iOS setup for OAuth-style callbacks.
+
+### When you don’t need reCAPTCHA Enterprise for phone auth
+
+[Google’s guide to reCAPTCHA SMS defense](https://cloud.google.com/identity-platform/docs/recaptcha-tfp) describes an **optional** Identity Platform
+feature that depends on the **reCAPTCHA Enterprise API** and (on iOS) linking the [reCAPTCHA Enterprise client](https://cloud.google.com/recaptcha-enterprise/docs/instrument-ios-apps).
+Standard Firebase phone authentication often **does not** require that flow—turning **reCAPTCHA Enterprise** on in Firebase / Google Cloud without also
+shipping the native SDK can surface **`recaptcha-sdk-not-linked`**.
+
+### Disable reCAPTCHA SMS defense (Google-documented REST update)
+
+To **disable** reCAPTCHA SMS defense (for example when you cannot or won’t link the Enterprise SDK), Google documents a **`projects.updateConfig`** call
+on **`projects/{project_id}/config`** with **`updateMask=recaptchaConfig`** and:
+
+- `recaptchaConfig.phoneEnforcementState`: **`OFF`**
+- `recaptchaConfig.useSmsTollFraudProtection`: **`false`**
+
+Use Google’s **official steps** (including the **APIs Explorer** URL with `PROJECT_ID` replaced by your project ID):
+
+- [Disable reCAPTCHA SMS defense](https://cloud.google.com/identity-platform/docs/recaptcha-tfp#disable_recaptcha_sms_defense)
+- REST reference: [`projects.updateConfig`](https://cloud.google.com/identity-platform/docs/reference/rest/v2/projects/updateConfig)
+
+Some developers report that **enabling then disabling** *Manage reCAPTCHA* / **reCAPTCHA Enterprise API** in the Firebase or Google Cloud UI can leave
+**`recaptchaConfig`** expecting Enterprise until the **`OFF` / `false`** update is applied; see
+[flutterfire#18171 (comment)](https://github.com/firebase/flutterfire/issues/18171#issuecomment-4195461765).
+
+**Caution:** Disabling SMS defense **reduces fraud protection**. Prefer keeping defense **on** and [linking reCAPTCHA Enterprise on iOS](#recommended-link-recaptcha-enterprise-on-ios) when your product allows.
+
+More context: [flutterfire#18171](https://github.com/firebase/flutterfire/issues/18171),
+[flutterfire#17557](https://github.com/firebase/flutterfire/issues/17557),
+[firebase-ios-sdk#15345](https://github.com/firebase/firebase-ios-sdk/issues/15345).
 
 ## Usage
 

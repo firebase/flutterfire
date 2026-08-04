@@ -7,38 +7,36 @@
 
 import PackageDescription
 
-let library_version = "0.11.1-5"
-let firebase_sdk_version: Version = "12.9.0"
-let shared_spm_version: Version = "4.5.0-firebase-core-swift"
+let libraryVersion = "0.11.4-6"
+let firebaseSdkVersion: Version = "12.17.0"
 
 let package = Package(
   name: "firebase_performance",
   platforms: [
-    .iOS("15.0"),
+    .iOS("15.0")
   ],
   products: [
-    .library(name: "firebase-performance", targets: ["firebase_performance"]),
+    .library(name: "firebase-performance", targets: ["firebase_performance"])
   ],
   dependencies: [
-    .package(url: "https://github.com/firebase/firebase-ios-sdk", from: firebase_sdk_version),
-    .package(url: "https://github.com/firebase/flutterfire", exact: shared_spm_version),
+    .package(url: "https://github.com/firebase/firebase-ios-sdk", exact: firebaseSdkVersion),
+    .package(name: "firebase_core", path: "../firebase_core"),
   ],
   targets: [
     .target(
       name: "firebase_performance",
       dependencies: [
         .product(name: "FirebasePerformance", package: "firebase-ios-sdk"),
-        // Wrapper dependency
-        .product(name: "firebase-core-shared", package: "flutterfire"),
+        .product(name: "firebase-core", package: "firebase_core"),
       ],
       resources: [
-        .process("Resources"),
+        .process("Resources")
       ],
       cSettings: [
         .headerSearchPath("include"),
-        .define("LIBRARY_VERSION", to: "\"\(library_version)\""),
+        .define("LIBRARY_VERSION", to: "\"\(libraryVersion)\""),
         .define("LIBRARY_NAME", to: "\"flutter-fire-perf\""),
       ]
-    ),
+    )
   ]
 )

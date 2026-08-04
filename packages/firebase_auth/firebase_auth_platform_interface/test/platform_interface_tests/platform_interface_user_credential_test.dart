@@ -19,8 +19,8 @@ void main() {
   const String kMockEmail = 'test@example.com';
   const String kMockPassword = 'test-password';
 
-  final kMockUserData = PigeonUserDetails(
-    userInfo: PigeonUserInfo(
+  final kMockUserData = InternalUserDetails(
+    userInfo: InternalUserInfo(
       uid: kMockUid,
       email: kMockEmail,
       isAnonymous: false,
@@ -103,7 +103,7 @@ void main() {
 
 class TestUserPlatform extends UserPlatform {
   TestUserPlatform(FirebaseAuthPlatform auth,
-      MultiFactorPlatform multiFactorPlatform, PigeonUserDetails data)
+      MultiFactorPlatform multiFactorPlatform, InternalUserDetails data)
       : super(auth, multiFactorPlatform, data);
 }
 

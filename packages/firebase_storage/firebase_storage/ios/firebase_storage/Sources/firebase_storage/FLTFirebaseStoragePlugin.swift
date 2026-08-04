@@ -57,51 +57,67 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
     result(FlutterMethodNotImplemented)
   }
 
-  private func storage(app: PigeonStorageFirebaseApp) -> Storage {
+  private func storage(app: InternalStorageFirebaseApp) -> Storage {
     let base = "gs://" + app.bucket
     let firApp = FLTFirebasePlugin.firebaseAppNamed(app.appName)!
     return Storage.storage(app: firApp, url: base)
   }
 
-  private func ref(app: PigeonStorageFirebaseApp,
-                   reference: PigeonStorageReference) -> StorageReference {
+  private func ref(
+    app: InternalStorageFirebaseApp,
+    reference: InternalStorageReference
+  ) -> StorageReference {
     storage(app: app).reference(withPath: reference.fullPath)
   }
 
-  private func toPigeon(_ ref: StorageReference) -> PigeonStorageReference {
-    PigeonStorageReference(bucket: ref.bucket, fullPath: ref.fullPath, name: ref.name)
+  private func toPigeon(_ ref: StorageReference) -> InternalStorageReference {
+    InternalStorageReference(bucket: ref.bucket, fullPath: ref.fullPath, name: ref.name)
   }
 
-  func getReferencebyPath(app: PigeonStorageFirebaseApp, path: String, bucket: String?,
-                          completion: @escaping (Result<PigeonStorageReference, Error>) -> Void) {
+  func getReferencebyPath(
+    app: InternalStorageFirebaseApp, path: String, bucket: String?,
+    completion: @escaping (Result<InternalStorageReference, Error>) -> Void
+  ) {
     let r = storage(app: app).reference(withPath: path)
-    completion(.success(PigeonStorageReference(
-      bucket: r.bucket,
-      fullPath: r.fullPath,
-      name: r.name
-    )))
+    completion(
+      .success(
+        InternalStorageReference(
+          bucket: r.bucket,
+          fullPath: r.fullPath,
+          name: r.name
+        )
+      )
+    )
   }
 
-  func setMaxOperationRetryTime(app: PigeonStorageFirebaseApp, time: Int64,
-                                completion: @escaping (Result<Void, Error>) -> Void) {
+  func setMaxOperationRetryTime(
+    app: InternalStorageFirebaseApp, time: Int64,
+    completion: @escaping (Result<Void, Error>) -> Void
+  ) {
     storage(app: app).maxOperationRetryTime = TimeInterval(Double(time) / 1000.0)
     completion(.success(()))
   }
 
-  func setMaxUploadRetryTime(app: PigeonStorageFirebaseApp, time: Int64,
-                             completion: @escaping (Result<Void, Error>) -> Void) {
+  func setMaxUploadRetryTime(
+    app: InternalStorageFirebaseApp, time: Int64,
+    completion: @escaping (Result<Void, Error>) -> Void
+  ) {
     storage(app: app).maxUploadRetryTime = TimeInterval(Double(time) / 1000.0)
     completion(.success(()))
   }
 
-  func setMaxDownloadRetryTime(app: PigeonStorageFirebaseApp, time: Int64,
-                               completion: @escaping (Result<Void, Error>) -> Void) {
+  func setMaxDownloadRetryTime(
+    app: InternalStorageFirebaseApp, time: Int64,
+    completion: @escaping (Result<Void, Error>) -> Void
+  ) {
     storage(app: app).maxDownloadRetryTime = TimeInterval(Double(time) / 1000.0)
     completion(.success(()))
   }
 
-  func useStorageEmulator(app: PigeonStorageFirebaseApp, host: String, port: Int64,
-                          completion: @escaping (Result<Void, Error>) -> Void) {
+  func useStorageEmulator(
+    app: InternalStorageFirebaseApp, host: String, port: Int64,
+    completion: @escaping (Result<Void, Error>) -> Void
+  ) {
     guard emulatorBooted[app.bucket] == nil else {
       completion(.success(()))
       return
@@ -112,40 +128,62 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
     completion(.success(()))
   }
 
-  func referenceDelete(app: PigeonStorageFirebaseApp, reference: PigeonStorageReference,
-                       completion: @escaping (Result<Void, Error>) -> Void) {
+  func referenceDelete(
+    app: InternalStorageFirebaseApp, reference: InternalStorageReference,
+    completion: @escaping (Result<Void, Error>) -> Void
+  ) {
     ref(app: app, reference: reference).delete { error in
-      if let e = error { completion(.failure(self.toFlutterError(e))) }
-      else { completion(.success(())) }
-    }
-  }
-
-  func referenceGetDownloadURL(app: PigeonStorageFirebaseApp, reference: PigeonStorageReference,
-                               completion: @escaping (Result<String, Error>) -> Void) {
-    ref(app: app, reference: reference).downloadURL { url, error in
-      if let e = error { completion(.failure(self.toFlutterError(e))) }
-      else { completion(.success(url!.absoluteString.replacingOccurrences(
-        of: ":443",
-        with: ""
-      ))) }
-    }
-  }
-
-  func referenceGetMetaData(app: PigeonStorageFirebaseApp, reference: PigeonStorageReference,
-                            completion: @escaping (Result<PigeonFullMetaData, Error>) -> Void) {
-    ref(app: app, reference: reference).getMetadata { md, error in
-      if let e = error { completion(.failure(self.toFlutterError(e))) } else {
-        completion(.success(PigeonFullMetaData(metadata: self.metaToDict(md))))
+      if let e = error {
+        completion(.failure(self.toFlutterError(e)))
+      } else {
+        completion(.success(()))
       }
     }
   }
 
-  func referenceList(app: PigeonStorageFirebaseApp, reference: PigeonStorageReference,
-                     options: PigeonListOptions,
-                     completion: @escaping (Result<PigeonListResult, Error>) -> Void) {
+  func referenceGetDownloadURL(
+    app: InternalStorageFirebaseApp, reference: InternalStorageReference,
+    completion: @escaping (Result<String, Error>) -> Void
+  ) {
+    ref(app: app, reference: reference).downloadURL { url, error in
+      if let e = error {
+        completion(.failure(self.toFlutterError(e)))
+      } else {
+        completion(
+          .success(
+            url!.absoluteString.replacingOccurrences(
+              of: ":443",
+              with: ""
+            )
+          )
+        )
+      }
+    }
+  }
+
+  func referenceGetMetaData(
+    app: InternalStorageFirebaseApp, reference: InternalStorageReference,
+    completion: @escaping (Result<InternalFullMetaData, Error>) -> Void
+  ) {
+    ref(app: app, reference: reference).getMetadata { md, error in
+      if let e = error {
+        completion(.failure(self.toFlutterError(e)))
+      } else {
+        completion(.success(InternalFullMetaData(metadata: self.metaToDict(md))))
+      }
+    }
+  }
+
+  func referenceList(
+    app: InternalStorageFirebaseApp, reference: InternalStorageReference,
+    options: InternalListOptions,
+    completion: @escaping (Result<InternalListResult, Error>) -> Void
+  ) {
     let r = ref(app: app, reference: reference)
     let block: (StorageListResult?, Error?) -> Void = { list, error in
-      if let e = error { completion(.failure(self.toFlutterError(e))) } else {
+      if let e = error {
+        completion(.failure(self.toFlutterError(e)))
+      } else {
         completion(.success(self.listToPigeon(list!)))
       }
     }
@@ -156,17 +194,24 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
     }
   }
 
-  func referenceListAll(app: PigeonStorageFirebaseApp, reference: PigeonStorageReference,
-                        completion: @escaping (Result<PigeonListResult, Error>) -> Void) {
+  func referenceListAll(
+    app: InternalStorageFirebaseApp, reference: InternalStorageReference,
+    completion: @escaping (Result<InternalListResult, Error>) -> Void
+  ) {
     ref(app: app, reference: reference).listAll { list, error in
-      if let e = error { completion(.failure(self.toFlutterError(e))) }
-      else { completion(.success(self.listToPigeon(list!))) }
+      if let e = error {
+        completion(.failure(self.toFlutterError(e)))
+      } else {
+        completion(.success(self.listToPigeon(list!)))
+      }
     }
   }
 
-  func referenceGetData(app: PigeonStorageFirebaseApp, reference: PigeonStorageReference,
-                        maxSize: Int64,
-                        completion: @escaping (Result<FlutterStandardTypedData?, Error>) -> Void) {
+  func referenceGetData(
+    app: InternalStorageFirebaseApp, reference: InternalStorageReference,
+    maxSize: Int64,
+    completion: @escaping (Result<FlutterStandardTypedData?, Error>) -> Void
+  ) {
     ref(app: app, reference: reference).getData(maxSize: maxSize) { data, error in
       if let e = error {
         completion(.failure(self.toFlutterError(e)))
@@ -178,81 +223,123 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
     }
   }
 
-  func referencePutData(app: PigeonStorageFirebaseApp, reference: PigeonStorageReference,
-                        data: FlutterStandardTypedData, settableMetaData: PigeonSettableMetadata,
-                        handle: Int64, completion: @escaping (Result<String, Error>) -> Void) {
+  func referencePutData(
+    app: InternalStorageFirebaseApp, reference: InternalStorageReference,
+    data: FlutterStandardTypedData, settableMetaData: InternalSettableMetadata,
+    handle: Int64, completion: @escaping (Result<String, Error>) -> Void
+  ) {
     let r = ref(app: app, reference: reference)
     let task = r.putData(data.data, metadata: toMeta(settableMetaData))
-    completion(.success(registerTask(
-      task: task,
-      appName: r.storage.app.name,
-      handle: handle,
-      path: r.fullPath
-    )))
+    completion(
+      .success(
+        registerTask(
+          task: task,
+          appName: r.storage.app.name,
+          handle: handle,
+          path: r.fullPath
+        )
+      )
+    )
   }
 
-  func referencePutString(app: PigeonStorageFirebaseApp, reference: PigeonStorageReference,
-                          data: String, format: Int64, settableMetaData: PigeonSettableMetadata,
-                          handle: Int64, completion: @escaping (Result<String, Error>) -> Void) {
+  func referencePutString(
+    app: InternalStorageFirebaseApp, reference: InternalStorageReference,
+    data: String, format: Int64, settableMetaData: InternalSettableMetadata,
+    handle: Int64, completion: @escaping (Result<String, Error>) -> Void
+  ) {
     let r = ref(app: app, reference: reference)
     let d: Data
-    if format == 1 { d = Data(base64Encoded: data) ?? Data() }
-    else if format ==
-      2 {
-      d = Data(base64Encoded: data.replacingOccurrences(of: "-", with: "+")
-        .replacingOccurrences(of: "_", with: "/")
-        .padding(toLength: ((data.count + 3) / 4) * 4, withPad: "=", startingAt: 0)) ?? Data()
-    } else { d = Data() }
+    if format == 1 {
+      d = Data(base64Encoded: data) ?? Data()
+    } else if format == 2 {
+      d =
+        Data(
+          base64Encoded: data.replacingOccurrences(of: "-", with: "+")
+            .replacingOccurrences(of: "_", with: "/")
+            .padding(toLength: ((data.count + 3) / 4) * 4, withPad: "=", startingAt: 0)
+        ) ?? Data()
+    } else {
+      d = Data()
+    }
     let task = r.putData(d, metadata: toMeta(settableMetaData))
-    completion(.success(registerTask(
-      task: task,
-      appName: r.storage.app.name,
-      handle: handle,
-      path: r.fullPath
-    )))
+    completion(
+      .success(
+        registerTask(
+          task: task,
+          appName: r.storage.app.name,
+          handle: handle,
+          path: r.fullPath
+        )
+      )
+    )
   }
 
-  func referencePutFile(app: PigeonStorageFirebaseApp, reference: PigeonStorageReference,
-                        filePath: String, settableMetaData: PigeonSettableMetadata?, handle: Int64,
-                        completion: @escaping (Result<String, Error>) -> Void) {
+  func referencePutFile(
+    app: InternalStorageFirebaseApp, reference: InternalStorageReference,
+    filePath: String, settableMetaData: InternalSettableMetadata?,
+    handle: Int64,
+    completion: @escaping (Result<String, Error>) -> Void
+  ) {
     let r = ref(app: app, reference: reference)
     let url = URL(fileURLWithPath: filePath)
     let task: StorageUploadTask
-    if let md = settableMetaData { task = r.putFile(from: url, metadata: toMeta(md)) }
-    else { task = r.putFile(from: url) }
-    completion(.success(registerTask(
-      task: task,
-      appName: r.storage.app.name,
-      handle: handle,
-      path: r.fullPath
-    )))
+    if let md = settableMetaData {
+      task = r.putFile(from: url, metadata: toMeta(md))
+    } else {
+      task = r.putFile(from: url)
+    }
+    completion(
+      .success(
+        registerTask(
+          task: task,
+          appName: r.storage.app.name,
+          handle: handle,
+          path: r.fullPath
+        )
+      )
+    )
   }
 
-  func referenceDownloadFile(app: PigeonStorageFirebaseApp, reference: PigeonStorageReference,
-                             filePath: String, handle: Int64,
-                             completion: @escaping (Result<String, Error>) -> Void) {
+  func referenceDownloadFile(
+    app: InternalStorageFirebaseApp, reference: InternalStorageReference,
+    filePath: String, handle: Int64,
+    completion: @escaping (Result<String, Error>) -> Void
+  ) {
     let r = ref(app: app, reference: reference)
     let url = URL(fileURLWithPath: filePath)
     let task = r.write(toFile: url)
-    completion(.success(registerTask(
-      task: task,
-      appName: r.storage.app.name,
-      handle: handle,
-      path: r.fullPath
-    )))
+    completion(
+      .success(
+        registerTask(
+          task: task,
+          appName: r.storage.app.name,
+          handle: handle,
+          path: r.fullPath
+        )
+      )
+    )
   }
 
-  func referenceUpdateMetadata(app: PigeonStorageFirebaseApp, reference: PigeonStorageReference,
-                               metadata: PigeonSettableMetadata,
-                               completion: @escaping (Result<PigeonFullMetaData, Error>) -> Void) {
+  func referenceUpdateMetadata(
+    app: InternalStorageFirebaseApp, reference: InternalStorageReference,
+    metadata: InternalSettableMetadata,
+    completion:
+      @escaping (Result<InternalFullMetaData, Error>)
+      -> Void
+  ) {
     ref(app: app, reference: reference).updateMetadata(toMeta(metadata)) { md, error in
-      if let e = error { completion(.failure(self.toFlutterError(e))) }
-      else { completion(.success(PigeonFullMetaData(metadata: self.metaToDict(md)))) }
+      if let e = error {
+        completion(.failure(self.toFlutterError(e)))
+      } else {
+        completion(.success(InternalFullMetaData(metadata: self.metaToDict(md))))
+      }
     }
   }
 
-  func taskPause(app: PigeonStorageFirebaseApp, handle: Int64,
-                 completion: @escaping (Result<[String: Any], Error>) -> Void) {
+  func taskPause(
+    app: InternalStorageFirebaseApp, handle: Int64,
+    completion: @escaping (Result<[String: Any], Error>) -> Void
+  ) {
     if let task = handleToTask[handle] as? StorageUploadTask {
       task.pause()
       completion(.success(["status": true, "snapshot": currentSnapshot(handle: handle)]))
@@ -264,8 +351,10 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
     }
   }
 
-  func taskResume(app: PigeonStorageFirebaseApp, handle: Int64,
-                  completion: @escaping (Result<[String: Any], Error>) -> Void) {
+  func taskResume(
+    app: InternalStorageFirebaseApp, handle: Int64,
+    completion: @escaping (Result<[String: Any], Error>) -> Void
+  ) {
     if let task = handleToTask[handle] as? StorageUploadTask {
       task.resume()
       completion(.success(["status": true, "snapshot": currentSnapshot(handle: handle)]))
@@ -277,8 +366,10 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
     }
   }
 
-  func taskCancel(app: PigeonStorageFirebaseApp, handle: Int64,
-                  completion: @escaping (Result<[String: Any], Error>) -> Void) {
+  func taskCancel(
+    app: InternalStorageFirebaseApp, handle: Int64,
+    completion: @escaping (Result<[String: Any], Error>) -> Void
+  ) {
     if let task = handleToTask[handle] as? StorageUploadTask {
       task.cancel()
       if let id = handleToIdentifier[handle] {
@@ -296,7 +387,7 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
     }
   }
 
-  private func toMeta(_ m: PigeonSettableMetadata) -> StorageMetadata {
+  private func toMeta(_ m: InternalSettableMetadata) -> StorageMetadata {
     let md = StorageMetadata()
     if let v = m.cacheControl { md.cacheControl = v }
     if let v = m.contentType { md.contentType = v }
@@ -328,25 +419,29 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
     return out
   }
 
-  private func listToPigeon(_ list: StorageListResult) -> PigeonListResult {
+  private func listToPigeon(_ list: StorageListResult) -> InternalListResult {
     let items = list.items.map { toPigeon($0) }
     let prefixes = list.prefixes.map { toPigeon($0) }
-    let itemsOpt: [PigeonStorageReference?] = items.map { Optional($0) }
-    let prefixesOpt: [PigeonStorageReference?] = prefixes.map { Optional($0) }
-    return PigeonListResult(items: itemsOpt, pageToken: list.pageToken, prefixs: prefixesOpt)
+    let itemsOpt: [InternalStorageReference?] = items.map { Optional($0) }
+    let prefixesOpt: [InternalStorageReference?] = prefixes.map { Optional($0) }
+    return InternalListResult(items: itemsOpt, pageToken: list.pageToken, prefixs: prefixesOpt)
   }
 
-  private func registerTask(task: StorageObservableTask, appName: String, handle: Int64,
-                            path: String) -> String {
+  private func registerTask(
+    task: StorageObservableTask, appName: String, handle: Int64,
+    path: String
+  ) -> String {
     let uuid = UUID().uuidString
     let channelName = "plugins.flutter.io/firebase_storage/taskEvent/\(uuid)"
     let channel = FlutterEventChannel(name: channelName, binaryMessenger: messenger!)
     let storageInstance = Storage.storage(app: FLTFirebasePlugin.firebaseAppNamed(appName)!)
-    channel.setStreamHandler(TaskStateChannelStreamHandler(
-      task: task,
-      storage: storageInstance,
-      identifier: channelName
-    ))
+    channel.setStreamHandler(
+      TaskStateChannelStreamHandler(
+        task: task,
+        storage: storageInstance,
+        identifier: channelName
+      )
+    )
     eventChannels[channelName] = channel
     handleToTask[handle] = task as AnyObject
     handleToPath[handle] = path

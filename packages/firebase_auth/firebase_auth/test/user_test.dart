@@ -31,7 +31,7 @@ void main() {
 
   late FirebaseAuth auth;
 
-  final kMockIdTokenResult = PigeonIdTokenResult(
+  final kMockIdTokenResult = InternalIdTokenResult(
     token: '12345',
     expirationTimestamp: 123456,
     authTimestamp: 1234567,
@@ -47,8 +47,8 @@ void main() {
   final int kMockLastSignInTimestamp =
       DateTime.now().subtract(const Duration(days: 1)).millisecondsSinceEpoch;
 
-  final kMockUser = PigeonUserDetails(
-    userInfo: PigeonUserInfo(
+  final kMockUser = InternalUserDetails(
+    userInfo: InternalUserInfo(
       uid: '12345',
       displayName: 'displayName',
       creationTimestamp: kMockCreationTimestamp,
@@ -85,7 +85,7 @@ void main() {
   var mockAuthPlatform = MockFirebaseAuth();
 
   group('$User', () {
-    late PigeonUserDetails user;
+    late InternalUserDetails user;
 
     // used to generate a unique application name for each test
     var testCount = 0;
@@ -376,7 +376,7 @@ class MockFirebaseAuth extends Mock
 
   @override
   FirebaseAuthPlatform setInitialValues({
-    PigeonUserDetails? currentUser,
+    InternalUserDetails? currentUser,
     String? languageCode,
   }) {
     return super.noSuchMethod(
@@ -393,7 +393,7 @@ class MockFirebaseAuth extends Mock
 class MockUserPlatform extends Mock
     with MockPlatformInterfaceMixin
     implements TestUserPlatform {
-  MockUserPlatform(FirebaseAuthPlatform auth, PigeonUserDetails _user) {
+  MockUserPlatform(FirebaseAuthPlatform auth, InternalUserDetails _user) {
     TestUserPlatform(auth, TestMultiFactorPlatform(auth), _user);
   }
 
@@ -544,7 +544,7 @@ class TestFirebaseAuthPlatform extends FirebaseAuthPlatform {
 
   @override
   FirebaseAuthPlatform setInitialValues({
-    PigeonUserDetails? currentUser,
+    InternalUserDetails? currentUser,
     String? languageCode,
   }) {
     return this;
@@ -553,7 +553,7 @@ class TestFirebaseAuthPlatform extends FirebaseAuthPlatform {
 
 class TestUserPlatform extends UserPlatform {
   TestUserPlatform(FirebaseAuthPlatform auth, MultiFactorPlatform multiFactor,
-      PigeonUserDetails data)
+      InternalUserDetails data)
       : super(auth, multiFactor, data);
 }
 

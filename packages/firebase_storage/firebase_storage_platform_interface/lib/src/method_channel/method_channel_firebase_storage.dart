@@ -43,8 +43,8 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
   static final FirebaseStorageHostApi pigeonChannel = FirebaseStorageHostApi();
 
   /// FirebaseApp pigeon instance
-  PigeonStorageFirebaseApp get pigeonFirebaseApp {
-    return PigeonStorageFirebaseApp(
+  InternalStorageFirebaseApp get pigeonFirebaseApp {
+    return InternalStorageFirebaseApp(
       appName: app.name,
       bucket: bucket,
     );
@@ -71,28 +71,28 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
     return MethodChannelFirebaseStorage._();
   }
 
-  /// Return an instance of a [PigeonStorageReference]
-  static PigeonStorageReference getPigeonReference(
+  /// Return an instance of a [InternalStorageReference]
+  static InternalStorageReference getPigeonReference(
       String bucket, String fullPath, String name) {
-    return PigeonStorageReference(
+    return InternalStorageReference(
         bucket: bucket, fullPath: fullPath, name: name);
   }
 
-  /// Return an instance of a [PigeonStorageFirebaseApp]
-  PigeonStorageFirebaseApp getPigeonFirebaseApp(String appName) {
-    return PigeonStorageFirebaseApp(
+  /// Return an instance of a [InternalStorageFirebaseApp]
+  InternalStorageFirebaseApp getPigeonFirebaseApp(String appName) {
+    return InternalStorageFirebaseApp(
       appName: appName,
       bucket: bucket,
     );
   }
 
-  /// Convert a [SettableMetadata] to [PigeonSettableMetadata]
-  static PigeonSettableMetadata getPigeonSettableMetaData(
+  /// Convert a [SettableMetadata] to [InternalSettableMetadata]
+  static InternalSettableMetadata getPigeonSettableMetaData(
       SettableMetadata? metaData) {
     if (metaData == null) {
-      return PigeonSettableMetadata();
+      return InternalSettableMetadata();
     }
-    return PigeonSettableMetadata(
+    return InternalSettableMetadata(
         cacheControl: metaData.cacheControl,
         contentDisposition: metaData.contentDisposition,
         contentEncoding: metaData.contentEncoding,

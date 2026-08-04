@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
+
 /**
  * An background execution abstraction which handles initializing a background isolate running a
  * callback dispatcher, used to invoke Dart callbacks while backgrounded.
@@ -41,6 +42,7 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
   private static final String USER_CALLBACK_HANDLE_KEY = "user_callback_handle";
 
   private final AtomicBoolean isCallbackDispatcherReady = new AtomicBoolean(false);
+
   /**
    * The {@link MethodChannel} that connects the Android side of this plugin with the background
    * Dart isolate that was created by this plugin.
@@ -180,7 +182,8 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
     if (backgroundFlutterEngine == null) {
       Log.i(
           TAG,
-          "A background message could not be handled in Dart as no onBackgroundMessage handler has been registered.");
+          "A background message could not be handled in Dart as no onBackgroundMessage handler has"
+              + " been registered.");
       return;
     }
 
@@ -190,7 +193,8 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
           new Result() {
             @Override
             public void success(Object result) {
-              // If another thread is waiting, then wake that thread when the callback returns a result.
+              // If another thread is waiting, then wake that thread when the callback returns a
+              // result.
               latch.countDown();
             }
 

@@ -18,11 +18,12 @@ class ListMoviesVariablesBuilder {
   }
 }
 
+@immutable
 class ListMoviesMovies {
-  String id;
-  String title;
-  List<ListMoviesMoviesDirectedBy> directed_by;
-  double? rating;
+  final String id;
+  final String title;
+  final List<ListMoviesMoviesDirectedBy> directed_by;
+  final double? rating;
   ListMoviesMovies.fromJson(dynamic json)
       : id = nativeFromJson<String>(json['id']),
         title = nativeFromJson<String>(json['title']),
@@ -32,6 +33,25 @@ class ListMoviesMovies {
         rating = json['rating'] == null
             ? null
             : nativeFromJson<double>(json['rating']);
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+
+    final ListMoviesMovies otherTyped = other as ListMoviesMovies;
+    return id == otherTyped.id &&
+        title == otherTyped.title &&
+        directed_by == otherTyped.directed_by &&
+        rating == otherTyped.rating;
+  }
+
+  @override
+  int get hashCode => Object.hashAll(
+      [id.hashCode, title.hashCode, directed_by.hashCode, rating.hashCode]);
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -52,10 +72,27 @@ class ListMoviesMovies {
   });
 }
 
+@immutable
 class ListMoviesMoviesDirectedBy {
-  String name;
+  final String name;
   ListMoviesMoviesDirectedBy.fromJson(dynamic json)
       : name = nativeFromJson<String>(json['name']);
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+
+    final ListMoviesMoviesDirectedBy otherTyped =
+        other as ListMoviesMoviesDirectedBy;
+    return name == otherTyped.name;
+  }
+
+  @override
+  int get hashCode => name.hashCode;
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -68,12 +105,28 @@ class ListMoviesMoviesDirectedBy {
   });
 }
 
+@immutable
 class ListMoviesData {
-  List<ListMoviesMovies> movies;
+  final List<ListMoviesMovies> movies;
   ListMoviesData.fromJson(dynamic json)
       : movies = (json['movies'] as List<dynamic>)
             .map((e) => ListMoviesMovies.fromJson(e))
             .toList();
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+
+    final ListMoviesData otherTyped = other as ListMoviesData;
+    return movies == otherTyped.movies;
+  }
+
+  @override
+  int get hashCode => movies.hashCode;
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};

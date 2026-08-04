@@ -3,7 +3,7 @@
 // found in the LICENSE file.
 
 @JS('firebase_installations')
-library firebase_interop.installations;
+library;
 
 import 'dart:js_interop';
 

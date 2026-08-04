@@ -18,7 +18,7 @@ class MethodChannelAggregateQuery extends AggregateQueryPlatform {
 
   final FirestorePigeonFirebaseApp _pigeonApp;
   final String _path;
-  final PigeonQueryParameters _pigeonParameters;
+  final InternalQueryParameters _pigeonParameters;
   final bool _isCollectionGroupQuery;
 
   final List<AggregateQuery> _aggregateQueries;

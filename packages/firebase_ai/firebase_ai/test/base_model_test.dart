@@ -31,6 +31,20 @@ class MockFirebaseApp extends Mock implements FirebaseApp {
 
   @override
   bool get isAutomaticDataCollectionEnabled => true;
+
+  FirebaseAppCheck? mockAppCheck;
+  FirebaseAuth? mockAuth;
+
+  @override
+  T? getService<T extends FirebaseService>() {
+    if (T == FirebaseAppCheck) {
+      return mockAppCheck as T?;
+    }
+    if (T == FirebaseAuth) {
+      return mockAuth as T?;
+    }
+    return null;
+  }
 }
 
 // Mock FirebaseOptions
@@ -129,6 +143,84 @@ void main() {
       expect(headers['x-goog-api-client'], contains('gl-dart'));
       expect(headers['x-goog-api-client'], contains('fire'));
       expect(headers.length, 2);
+    });
+
+    test('firebaseTokens discovers App Check token dynamically at request time',
+        () async {
+      final mockApp = MockFirebaseApp();
+      final mockAppCheck = MockFirebaseAppCheck();
+      when(mockAppCheck.getToken())
+          .thenAnswer((_) async => 'dynamic-app-check-token');
+      mockApp.mockAppCheck = mockAppCheck;
+
+      final tokenFunction =
+          BaseModel.firebaseTokens(null, null, mockApp, false);
+      final headers = await tokenFunction();
+
+      expect(headers['X-Firebase-AppCheck'], 'dynamic-app-check-token');
+      expect(headers['X-Firebase-AppId'], 'test-app-id');
+      expect(headers.length, 3);
+    });
+
+    test('firebaseTokens discovers Auth ID token dynamically at request time',
+        () async {
+      final mockApp = MockFirebaseApp();
+      final mockAuth = MockFirebaseAuth();
+      final mockUser = MockUser();
+      when(mockUser.getIdToken()).thenAnswer((_) async => 'dynamic-id-token');
+      when(mockAuth.currentUser).thenReturn(mockUser);
+      mockApp.mockAuth = mockAuth;
+
+      final tokenFunction =
+          BaseModel.firebaseTokens(null, null, mockApp, false);
+      final headers = await tokenFunction();
+
+      expect(headers['Authorization'], 'Firebase dynamic-id-token');
+      expect(headers['X-Firebase-AppId'], 'test-app-id');
+      expect(headers.length, 3);
+    });
+
+    test('firebaseTokens discovers both tokens dynamically at request time',
+        () async {
+      final mockApp = MockFirebaseApp();
+      final mockAppCheck = MockFirebaseAppCheck();
+      final mockAuth = MockFirebaseAuth();
+      final mockUser = MockUser();
+
+      when(mockAppCheck.getToken())
+          .thenAnswer((_) async => 'dynamic-app-check-token');
+      when(mockUser.getIdToken()).thenAnswer((_) async => 'dynamic-id-token');
+      when(mockAuth.currentUser).thenReturn(mockUser);
+
+      mockApp.mockAppCheck = mockAppCheck;
+      mockApp.mockAuth = mockAuth;
+
+      final tokenFunction =
+          BaseModel.firebaseTokens(null, null, mockApp, false);
+      final headers = await tokenFunction();
+
+      expect(headers['X-Firebase-AppCheck'], 'dynamic-app-check-token');
+      expect(headers['Authorization'], 'Firebase dynamic-id-token');
+      expect(headers['X-Firebase-AppId'], 'test-app-id');
+      expect(headers.length, 4);
+    });
+
+    test(
+        'firebaseTokens discovers App Check token dynamically with limited use',
+        () async {
+      final mockApp = MockFirebaseApp();
+      final mockAppCheck = MockFirebaseAppCheck();
+
+      when(mockAppCheck.getLimitedUseToken())
+          .thenAnswer((_) async => 'dynamic-limited-use-token');
+      mockApp.mockAppCheck = mockAppCheck;
+
+      final tokenFunction = BaseModel.firebaseTokens(null, null, mockApp, true);
+      final headers = await tokenFunction();
+
+      expect(headers['X-Firebase-AppCheck'], 'dynamic-limited-use-token');
+      expect(headers['X-Firebase-AppId'], 'test-app-id');
+      expect(headers.length, 3);
     });
 
     test('firebaseTokens includes all tokens if available', () async {

@@ -22,8 +22,11 @@ export 'src/api.dart'
         FinishReason,
         GenerateContentResponse,
         GenerationConfig,
+        GoogleMapsGroundingChunk,
+        GroundingChunk,
         ThinkingConfig,
         ThinkingLevel,
+        MediaResolution,
         HarmBlockThreshold,
         HarmCategory,
         HarmProbability,
@@ -32,7 +35,8 @@ export 'src/api.dart'
         ResponseModalities,
         SafetyRating,
         SafetySetting,
-        UsageMetadata;
+        UsageMetadata,
+        WebGroundingChunk;
 export 'src/base_model.dart'
     show
         GenerativeModel,
@@ -63,6 +67,7 @@ export 'src/error.dart'
         QuotaExceeded,
         UnsupportedUserLocation;
 export 'src/firebase_ai.dart' show FirebaseAI;
+export 'src/image_config.dart' show ImageConfig, ImageAspectRatio, ImageSize;
 export 'src/imagen/imagen_api.dart'
     show
         ImagenSafetySettings,
@@ -99,19 +104,32 @@ export 'src/imagen/imagen_reference.dart'
         ImagenControlReference;
 export 'src/live_api.dart'
     show
-        LiveGenerationConfig,
-        SpeechConfig,
         AudioTranscriptionConfig,
+        ContextWindowCompressionConfig,
+        GoingAwayNotice,
+        LiveGenerationConfig,
         LiveServerMessage,
         LiveServerContent,
         LiveServerToolCall,
         LiveServerToolCallCancellation,
         LiveServerResponse,
-        GoingAwayNotice,
+        SessionResumptionConfig,
+        SessionResumptionUpdate,
+        SlidingWindow,
         Transcription;
 export 'src/live_session.dart' show LiveSession;
-export 'src/schema.dart' show Schema, SchemaType;
-
+export 'src/mime_types.dart' show FirebaseAIMimeTypes;
+export 'src/schema.dart' show JSONSchema, Schema, SchemaType;
+export 'src/server_template/template_chat.dart'
+    show TemplateChatSession, StartTemplateChatExtension;
+export 'src/server_template/template_tool.dart'
+    show
+        TemplateAutoFunctionDeclaration,
+        TemplateFunctionDeclaration,
+        TemplateTool,
+        TemplateToolConfig;
+export 'src/speech_config.dart'
+    show SpeechConfig, MultiSpeakerVoiceConfig, SpeakerVoiceConfig;
 export 'src/tool.dart'
     show
         AutoFunctionDeclaration,
@@ -121,5 +139,8 @@ export 'src/tool.dart'
         Tool,
         ToolConfig,
         GoogleSearch,
+        GoogleMaps,
         CodeExecution,
-        UrlContext;
+        UrlContext,
+        LatLng,
+        RetrievalConfig;

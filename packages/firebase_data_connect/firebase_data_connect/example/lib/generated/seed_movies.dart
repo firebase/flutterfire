@@ -18,10 +18,26 @@ class SeedMoviesVariablesBuilder {
   }
 }
 
+@immutable
 class SeedMoviesTheMatrix {
-  String id;
+  final String id;
   SeedMoviesTheMatrix.fromJson(dynamic json)
       : id = nativeFromJson<String>(json['id']);
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+
+    final SeedMoviesTheMatrix otherTyped = other as SeedMoviesTheMatrix;
+    return id == otherTyped.id;
+  }
+
+  @override
+  int get hashCode => id.hashCode;
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -34,10 +50,26 @@ class SeedMoviesTheMatrix {
   });
 }
 
+@immutable
 class SeedMoviesJurassicPark {
-  String id;
+  final String id;
   SeedMoviesJurassicPark.fromJson(dynamic json)
       : id = nativeFromJson<String>(json['id']);
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+
+    final SeedMoviesJurassicPark otherTyped = other as SeedMoviesJurassicPark;
+    return id == otherTyped.id;
+  }
+
+  @override
+  int get hashCode => id.hashCode;
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -50,12 +82,30 @@ class SeedMoviesJurassicPark {
   });
 }
 
+@immutable
 class SeedMoviesData {
-  SeedMoviesTheMatrix the_matrix;
-  SeedMoviesJurassicPark jurassic_park;
+  final SeedMoviesTheMatrix the_matrix;
+  final SeedMoviesJurassicPark jurassic_park;
   SeedMoviesData.fromJson(dynamic json)
       : the_matrix = SeedMoviesTheMatrix.fromJson(json['the_matrix']),
         jurassic_park = SeedMoviesJurassicPark.fromJson(json['jurassic_park']);
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+
+    final SeedMoviesData otherTyped = other as SeedMoviesData;
+    return the_matrix == otherTyped.the_matrix &&
+        jurassic_park == otherTyped.jurassic_park;
+  }
+
+  @override
+  int get hashCode =>
+      Object.hashAll([the_matrix.hashCode, jurassic_park.hashCode]);
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};

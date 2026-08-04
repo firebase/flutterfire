@@ -8,7 +8,7 @@ part of '../firebase_crashlytics.dart';
 /// The entry point for accessing a [FirebaseCrashlytics].
 ///
 /// You can get an instance by calling [FirebaseCrashlytics.instance].
-class FirebaseCrashlytics extends FirebasePluginPlatform {
+class FirebaseCrashlytics extends FirebasePlugin {
   FirebaseCrashlytics._({required this.app})
       : super(app.name, 'plugins.flutter.io/firebase_crashlytics');
 

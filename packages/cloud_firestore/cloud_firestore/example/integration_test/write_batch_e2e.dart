@@ -70,6 +70,94 @@ void runWriteBatchTests() {
       expect(snapshot.exists, false);
     });
 
+    test('updates with typed data through withConverter', () async {
+      CollectionReference<Map<String, dynamic>> collection =
+          await initializeTest('with-converter-batch-update');
+      WriteBatch batch = firestore.batch();
+
+      DocumentReference<int> doc = collection.doc('doc1').withConverter(
+            fromFirestore: (snapshot, options) {
+              return snapshot.data()!['value'] as int;
+            },
+            toFirestore: (value, options) => {'value': value},
+          );
+
+      await doc.set(42);
+
+      batch.update<int>(doc, 21);
+
+      await batch.commit();
+
+      DocumentSnapshot<int> snapshot = await doc.get();
+      expect(snapshot.exists, isTrue);
+      expect(snapshot.data(), 21);
+    });
+
+    test('updates complex typed data through withConverter', () async {
+      CollectionReference<Map<String, dynamic>> collection =
+          await initializeTest('with-converter-complex-batch-update');
+      DocumentReference<Map<String, dynamic>> rawDoc = collection.doc('doc1');
+      DocumentReference<_WriteBatchProfile> doc = rawDoc.withConverter(
+        fromFirestore: (snapshot, options) {
+          return _WriteBatchProfile.fromFirestore(snapshot.data()!);
+        },
+        toFirestore: (value, options) => value.toFirestore(),
+      );
+
+      await rawDoc.set({
+        'existing': 'preserved',
+        'name': 'before',
+      });
+
+      WriteBatch batch = firestore.batch();
+      batch.update<_WriteBatchProfile>(
+        doc,
+        _WriteBatchProfile(
+          name: 'Ada',
+          score: 42,
+          address: _WriteBatchAddress(city: 'London', postcode: 'NW1'),
+          tags: ['admin', 'tester'],
+          preferences: {
+            'email': true,
+            'theme': 'dark',
+          },
+          nickname: null,
+        ),
+      );
+
+      await batch.commit();
+
+      DocumentSnapshot<Map<String, dynamic>> rawSnapshot = await rawDoc.get();
+      expect(rawSnapshot.data(), {
+        'existing': 'preserved',
+        'name': 'Ada',
+        'score': 42,
+        'address': {
+          'city': 'London',
+          'postcode': 'NW1',
+        },
+        'tags': ['admin', 'tester'],
+        'preferences': {
+          'email': true,
+          'theme': 'dark',
+        },
+        'nickname': null,
+      });
+
+      DocumentSnapshot<_WriteBatchProfile> snapshot = await doc.get();
+      _WriteBatchProfile profile = snapshot.data()!;
+      expect(profile.name, 'Ada');
+      expect(profile.score, 42);
+      expect(profile.address.city, 'London');
+      expect(profile.address.postcode, 'NW1');
+      expect(profile.tags, ['admin', 'tester']);
+      expect(profile.preferences, {
+        'email': true,
+        'theme': 'dark',
+      });
+      expect(profile.nickname, isNull);
+    });
+
     test('should update a document using FieldPath keys', () async {
       CollectionReference<Map<String, dynamic>> collection =
           await initializeTest('write-batch-field-path');
@@ -152,4 +240,70 @@ void runWriteBatchTests() {
       );
     });
   });
+}
+
+class _WriteBatchProfile {
+  _WriteBatchProfile({
+    required this.name,
+    required this.score,
+    required this.address,
+    required this.tags,
+    required this.preferences,
+    required this.nickname,
+  });
+
+  factory _WriteBatchProfile.fromFirestore(Map<String, dynamic> data) {
+    return _WriteBatchProfile(
+      name: data['name'] as String,
+      score: data['score'] as int,
+      address: _WriteBatchAddress.fromFirestore(
+        data['address'] as Map<String, dynamic>,
+      ),
+      tags: (data['tags'] as List<dynamic>).cast<String>(),
+      preferences: Map<String, Object?>.from(data['preferences'] as Map),
+      nickname: data['nickname'] as String?,
+    );
+  }
+
+  final String name;
+  final int score;
+  final _WriteBatchAddress address;
+  final List<String> tags;
+  final Map<String, Object?> preferences;
+  final String? nickname;
+
+  Map<String, Object?> toFirestore() {
+    return {
+      'name': name,
+      'score': score,
+      'address': address.toFirestore(),
+      'tags': tags,
+      'preferences': preferences,
+      'nickname': nickname,
+    };
+  }
+}
+
+class _WriteBatchAddress {
+  _WriteBatchAddress({
+    required this.city,
+    required this.postcode,
+  });
+
+  factory _WriteBatchAddress.fromFirestore(Map<String, dynamic> data) {
+    return _WriteBatchAddress(
+      city: data['city'] as String,
+      postcode: data['postcode'] as String,
+    );
+  }
+
+  final String city;
+  final String postcode;
+
+  Map<String, Object?> toFirestore() {
+    return {
+      'city': city,
+      'postcode': postcode,
+    };
+  }
 }

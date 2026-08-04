@@ -3,14 +3,14 @@
 // found in the LICENSE file.
 #import "firebase_auth_messages.g.h"
 
-@interface PigeonMultiFactorInfo (Map)
+@interface InternalMultiFactorInfo (Map)
 - (NSDictionary *)toList;
 @end
 
-@interface PigeonUserDetails (Map)
+@interface InternalUserDetails (Map)
 - (NSDictionary *)toList;
 @end
 
-@interface PigeonUserInfo (Map)
+@interface InternalUserInfo (Map)
 - (NSDictionary *)toList;
 @end

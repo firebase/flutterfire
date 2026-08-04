@@ -18,11 +18,8 @@ import 'dart:convert';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
-import 'package:web_socket_channel/io.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
 
 import 'api.dart';
 import 'client.dart';
@@ -37,6 +34,7 @@ import 'imagen/imagen_reference.dart';
 import 'live_api.dart';
 import 'live_session.dart';
 import 'platform_header_helper.dart';
+import 'server_template/template_tool.dart';
 import 'tool.dart';
 
 part 'generative_model.dart';
@@ -79,13 +77,13 @@ abstract interface class _ModelUri {
   ({String prefix, String name}) get model;
 }
 
-final class _VertexUri implements _ModelUri {
-  _VertexUri(
+final class _AgentPlatformUri implements _ModelUri {
+  _AgentPlatformUri(
       {required String model,
       required String location,
       required FirebaseApp app})
       : model = _normalizeModelName(model),
-        _projectUri = _vertexUri(app, location);
+        _projectUri = _agentPlatformUri(app, location);
 
   static const _baseAuthority = 'firebasevertexai.googleapis.com';
   static const _apiVersion = 'v1beta';
@@ -100,7 +98,7 @@ final class _VertexUri implements _ModelUri {
     return (prefix: parts.first, name: parts.skip(1).join('/'));
   }
 
-  static Uri _vertexUri(FirebaseApp app, String location) {
+  static Uri _agentPlatformUri(FirebaseApp app, String location) {
     var projectId = app.options.projectId;
     return Uri.https(
       _baseAuthority,
@@ -176,10 +174,11 @@ abstract interface class _TemplateUri {
   String templateName(String templateId);
 }
 
-final class _TemplateVertexUri implements _TemplateUri {
-  _TemplateVertexUri({required String location, required FirebaseApp app})
-      : _templateUri = _vertexTemplateUri(app, location),
-        _templateName = _vertexTemplateName(app, location);
+final class _TemplateAgentPlatformUri implements _TemplateUri {
+  _TemplateAgentPlatformUri(
+      {required String location, required FirebaseApp app})
+      : _templateUri = _agentPlatformTemplateUri(app, location),
+        _templateName = _agentPlatformTemplateName(app, location);
 
   static const _baseAuthority = 'firebasevertexai.googleapis.com';
   static const _apiVersion = 'v1beta';
@@ -187,7 +186,7 @@ final class _TemplateVertexUri implements _TemplateUri {
   final Uri _templateUri;
   final String _templateName;
 
-  static Uri _vertexTemplateUri(FirebaseApp app, String location) {
+  static Uri _agentPlatformTemplateUri(FirebaseApp app, String location) {
     var projectId = app.options.projectId;
     return Uri.https(
       _baseAuthority,
@@ -195,7 +194,7 @@ final class _TemplateVertexUri implements _TemplateUri {
     );
   }
 
-  static String _vertexTemplateName(FirebaseApp app, String location) {
+  static String _agentPlatformTemplateName(FirebaseApp app, String location) {
     var projectId = app.options.projectId;
     return 'projects/$projectId/locations/$location';
   }
@@ -281,19 +280,23 @@ abstract class BaseModel {
   ) {
     return () async {
       Map<String, String> headers = {};
+
+      final effectiveAppCheck = appCheck ?? app?.getService<FirebaseAppCheck>();
+      final effectiveAuth = auth ?? app?.getService<FirebaseAuth>();
+
       // Override the client name in Google AI SDK
       headers['x-goog-api-client'] =
           'gl-dart/$packageVersion fire/$packageVersion';
-      if (appCheck != null) {
+      if (effectiveAppCheck != null) {
         final appCheckToken = useLimitedUseAppCheckTokens == true
-            ? await appCheck.getLimitedUseToken()
-            : await appCheck.getToken();
+            ? await effectiveAppCheck.getLimitedUseToken()
+            : await effectiveAppCheck.getToken();
         if (appCheckToken != null) {
           headers['X-Firebase-AppCheck'] = appCheckToken;
         }
       }
-      if (auth != null) {
-        final idToken = await auth.currentUser?.getIdToken();
+      if (effectiveAuth != null) {
+        final idToken = await effectiveAuth.currentUser?.getIdToken();
         if (idToken != null) {
           headers['Authorization'] = 'Firebase $idToken';
         }
@@ -369,13 +372,21 @@ abstract class BaseTemplateApiClientModel extends BaseApiClientModel {
       String templateId,
       Map<String, Object?>? inputs,
       Iterable<Content>? history,
+      List<TemplateTool>? tools,
+      TemplateToolConfig? toolConfig,
       T Function(Map<String, Object?>) parse) {
     Map<String, Object?> body = {};
     if (inputs != null) {
-      body['inputs'] = inputs;
+      body['inputs'] = _serializeTemplateInputs(inputs);
     }
     if (history != null) {
       body['history'] = history.map((c) => c.toJson()).toList();
+    }
+    if (tools != null) {
+      body['tools'] = tools.map((t) => t.toJson()).toList();
+    }
+    if (toolConfig != null) {
+      body['toolConfig'] = toolConfig.toJson();
     }
     return _client
         .makeRequest(templateTaskUri(task, templateId), body)
@@ -391,13 +402,21 @@ abstract class BaseTemplateApiClientModel extends BaseApiClientModel {
       String templateId,
       Map<String, Object?>? inputs,
       Iterable<Content>? history,
+      List<TemplateTool>? tools,
+      TemplateToolConfig? toolConfig,
       T Function(Map<String, Object?>) parse) {
     Map<String, Object?> body = {};
     if (inputs != null) {
-      body['inputs'] = inputs;
+      body['inputs'] = _serializeTemplateInputs(inputs);
     }
     if (history != null) {
       body['history'] = history.map((c) => c.toJson()).toList();
+    }
+    if (tools != null) {
+      body['tools'] = tools.map((t) => t.toJson()).toList();
+    }
+    if (toolConfig != null) {
+      body['toolConfig'] = toolConfig.toJson();
     }
     final response =
         _client.streamRequest(templateTaskUri(task, templateId), body);
@@ -411,4 +430,26 @@ abstract class BaseTemplateApiClientModel extends BaseApiClientModel {
   /// Returns the template name for the given [templateId].
   String templateName(String templateId) =>
       _templateUri.templateName(templateId);
+
+  Map<String, Object?> _serializeTemplateInputs(Map<String, Object?> inputs) {
+    return inputs.map((key, value) {
+      return MapEntry(key, _serializeTemplateInputValue(value));
+    });
+  }
+
+  Object? _serializeTemplateInputValue(Object? value) {
+    return switch (value) {
+      InlineDataPart(:final mimeType, :final bytes) => {
+          'isInline': true,
+          'mimeType': mimeType,
+          'contents': base64Encode(bytes),
+        },
+      Map<Object?, Object?>() => value.map((key, nestedValue) {
+          return MapEntry(key, _serializeTemplateInputValue(nestedValue));
+        }),
+      List<Object?>() =>
+        value.map(_serializeTemplateInputValue).toList(growable: false),
+      _ => value,
+    };
+  }
 }

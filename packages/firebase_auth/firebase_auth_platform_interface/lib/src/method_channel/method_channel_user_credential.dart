@@ -12,7 +12,7 @@ import 'package:firebase_auth_platform_interface/src/pigeon/messages.pigeon.dart
 class MethodChannelUserCredential extends UserCredentialPlatform {
   // ignore: public_member_api_docs
   MethodChannelUserCredential(
-      FirebaseAuthPlatform auth, PigeonUserCredential data)
+      FirebaseAuthPlatform auth, InternalUserCredential data)
       : super(
           auth: auth,
           additionalUserInfo: data.additionalUserInfo == null

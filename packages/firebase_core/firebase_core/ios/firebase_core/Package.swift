@@ -7,49 +7,35 @@
 
 import PackageDescription
 
-let library_version_string = "4.5.0"
-let firebase_sdk_version: Version = "12.9.0"
-let shared_spm_version: Version = "4.5.0-firebase-core-swift"
+let libraryVersionString = "4.13.0"
+let firebaseSdkVersion: Version = "12.17.0"
 
 let package = Package(
   name: "firebase_core",
   platforms: [
-    .iOS("15.0"),
+    .iOS("15.0")
   ],
   products: [
-    .library(name: "firebase-core", targets: ["firebase_core"]),
+    .library(name: "firebase-core", targets: ["firebase_core"])
   ],
   dependencies: [
-    .package(url: "https://github.com/firebase/firebase-ios-sdk", from: firebase_sdk_version),
-    .package(url: "https://github.com/firebase/flutterfire", exact: shared_spm_version),
+    .package(url: "https://github.com/firebase/firebase-ios-sdk", exact: firebaseSdkVersion)
   ],
   targets: [
     .target(
       name: "firebase_core",
       dependencies: [
         // No product for firebase-core so we pull in the smallest one
-        .product(name: "FirebaseInstallations", package: "firebase-ios-sdk"),
-        .product(name: "firebase-core-shared", package: "flutterfire"),
-      ],
-      exclude: [
-        // These are now pulled in as a remote dependency from FlutterFire repo
-        "FLTFirebaseCorePlugin.m",
-        "FLTFirebasePlugin.m",
-        "FLTFirebasePluginRegistry.m",
-        "messages.g.m",
-        "include/firebase_core/FLTFirebaseCorePlugin.h",
-        "include/firebase_core/messages.g.h",
-        "include/firebase_core/FLTFirebasePlugin.h",
-        "include/firebase_core/FLTFirebasePluginRegistry.h",
+        .product(name: "FirebaseInstallations", package: "firebase-ios-sdk")
       ],
       resources: [
-        .process("Resources"),
+        .process("Resources")
       ],
       cSettings: [
         .headerSearchPath("include/firebase_core"),
-        .define("LIBRARY_VERSION", to: "\"\(library_version_string)\""),
+        .define("LIBRARY_VERSION", to: "\"\(libraryVersionString)\""),
         .define("LIBRARY_NAME", to: "\"flutter-fire-core\""),
       ]
-    ),
+    )
   ]
 )

@@ -13,10 +13,10 @@ export 'src/firebase_auth_multi_factor_exception.dart';
 export 'src/id_token_result.dart';
 export 'src/pigeon/messages.pigeon.dart'
     show
-        PigeonUserDetails,
-        PigeonUserInfo,
+        InternalUserDetails,
+        InternalUserInfo,
         ActionCodeInfoOperation,
-        PigeonIdTokenResult;
+        InternalIdTokenResult;
 export 'src/platform_interface/platform_interface_confirmation_result.dart';
 export 'src/platform_interface/platform_interface_firebase_auth.dart';
 export 'src/platform_interface/platform_interface_multi_factor.dart';

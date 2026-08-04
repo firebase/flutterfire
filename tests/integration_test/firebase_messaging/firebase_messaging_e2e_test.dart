@@ -127,7 +127,12 @@ void main() {
 
       group('getInitialMessage', () {
         test('returns null when no initial message', () async {
-          expect(await messaging.getInitialMessage(), null);
+          expect(
+            await messaging
+                .getInitialMessage()
+                .timeout(const Duration(seconds: 5)),
+            null,
+          );
         });
       });
 

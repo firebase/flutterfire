@@ -1,6 +1,7 @@
 library movies;
 
 import 'package:firebase_data_connect/firebase_data_connect.dart';
+import 'package:flutter/foundation.dart';
 import 'dart:convert';
 
 part 'add_person.dart';
@@ -16,6 +17,8 @@ part 'seed_movies.dart';
 part 'create_movie.dart';
 
 part 'delete_movie.dart';
+
+part 'delete_all_movie_data.dart';
 
 part 'thing.dart';
 
@@ -91,6 +94,12 @@ class MoviesConnector {
     return DeleteMovieVariablesBuilder(
       dataConnect,
       id: id,
+    );
+  }
+
+  DeleteAllMovieDataVariablesBuilder deleteAllMovieData() {
+    return DeleteAllMovieDataVariablesBuilder(
+      dataConnect,
     );
   }
 

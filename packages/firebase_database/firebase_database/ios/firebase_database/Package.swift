@@ -7,38 +7,36 @@
 
 import PackageDescription
 
-let library_version = "12.1.4"
-let firebase_sdk_version: Version = "12.9.0"
-let shared_spm_version: Version = "4.5.0-firebase-core-swift"
+let libraryVersion = "12.4.7"
+let firebaseSdkVersion: Version = "12.17.0"
 
 let package = Package(
   name: "firebase_database",
   platforms: [
-    .iOS("15.0"),
+    .iOS("15.0")
   ],
   products: [
-    .library(name: "firebase-database", targets: ["firebase_database"]),
+    .library(name: "firebase-database", targets: ["firebase_database"])
   ],
   dependencies: [
-    .package(url: "https://github.com/firebase/firebase-ios-sdk", from: firebase_sdk_version),
-    .package(url: "https://github.com/firebase/flutterfire", exact: shared_spm_version),
+    .package(url: "https://github.com/firebase/firebase-ios-sdk", exact: firebaseSdkVersion),
+    .package(name: "firebase_core", path: "../firebase_core"),
   ],
   targets: [
     .target(
       name: "firebase_database",
       dependencies: [
         .product(name: "FirebaseDatabase", package: "firebase-ios-sdk"),
-        // Wrapper dependency
-        .product(name: "firebase-core-shared", package: "flutterfire"),
+        .product(name: "firebase-core", package: "firebase_core"),
       ],
       resources: [
-        .process("Resources"),
+        .process("Resources")
       ],
       cSettings: [
         .headerSearchPath("include"),
-        .define("LIBRARY_VERSION", to: "\"\(library_version)\""),
+        .define("LIBRARY_VERSION", to: "\"\(libraryVersion)\""),
         .define("LIBRARY_NAME", to: "\"flutter-fire-rtdb\""),
       ]
-    ),
+    )
   ]
 )

@@ -122,7 +122,8 @@ public class FlutterFirebaseMessagingBackgroundService extends JobIntentService 
     if (!flutterBackgroundExecutor.isDartBackgroundHandlerRegistered()) {
       Log.w(
           TAG,
-          "A background message could not be handled in Dart as no onBackgroundMessage handler has been registered.");
+          "A background message could not be handled in Dart as no onBackgroundMessage handler has"
+              + " been registered.");
       return;
     }
 

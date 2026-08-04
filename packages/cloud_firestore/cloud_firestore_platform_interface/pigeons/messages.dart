@@ -26,8 +26,8 @@ import 'package:pigeon/pigeon.dart';
     copyrightHeader: 'pigeons/copyright.txt',
   ),
 )
-class PigeonFirebaseSettings {
-  const PigeonFirebaseSettings({
+class InternalFirebaseSettings {
+  const InternalFirebaseSettings({
     required this.persistenceEnabled,
     required this.host,
     required this.sslEnabled,
@@ -52,12 +52,12 @@ class FirestorePigeonFirebaseApp {
   });
 
   final String appName;
-  final PigeonFirebaseSettings settings;
+  final InternalFirebaseSettings settings;
   final String databaseURL;
 }
 
-class PigeonSnapshotMetadata {
-  const PigeonSnapshotMetadata({
+class InternalSnapshotMetadata {
+  const InternalSnapshotMetadata({
     required this.hasPendingWrites,
     required this.isFromCache,
   });
@@ -66,8 +66,8 @@ class PigeonSnapshotMetadata {
   final bool isFromCache;
 }
 
-class PigeonDocumentSnapshot {
-  const PigeonDocumentSnapshot({
+class InternalDocumentSnapshot {
+  const InternalDocumentSnapshot({
     required this.path,
     required this.data,
     required this.metadata,
@@ -75,7 +75,7 @@ class PigeonDocumentSnapshot {
 
   final String path;
   final Map<String?, Object?>? data;
-  final PigeonSnapshotMetadata metadata;
+  final InternalSnapshotMetadata metadata;
 }
 
 /// An enumeration of document change types.
@@ -92,8 +92,8 @@ enum DocumentChangeType {
   removed,
 }
 
-class PigeonDocumentChange {
-  const PigeonDocumentChange({
+class InternalDocumentChange {
+  const InternalDocumentChange({
     required this.type,
     required this.document,
     required this.oldIndex,
@@ -101,21 +101,46 @@ class PigeonDocumentChange {
   });
 
   final DocumentChangeType type;
-  final PigeonDocumentSnapshot document;
+  final InternalDocumentSnapshot document;
   final int oldIndex;
   final int newIndex;
 }
 
-class PigeonQuerySnapshot {
-  const PigeonQuerySnapshot({
+class InternalQuerySnapshot {
+  const InternalQuerySnapshot({
     required this.documents,
     required this.documentChanges,
     required this.metadata,
   });
 
-  final List<PigeonDocumentSnapshot?> documents;
-  final List<PigeonDocumentChange?> documentChanges;
-  final PigeonSnapshotMetadata metadata;
+  final List<InternalDocumentSnapshot?> documents;
+  final List<InternalDocumentChange?> documentChanges;
+  final InternalSnapshotMetadata metadata;
+}
+
+class InternalPipelineResult {
+  const InternalPipelineResult({
+    this.documentPath,
+    this.createTime,
+    this.updateTime,
+    this.data,
+  });
+
+  final String? documentPath;
+  final int? createTime; // Timestamp in milliseconds since epoch
+  final int? updateTime; // Timestamp in milliseconds since epoch
+  /// All fields in the result (from PipelineResult.data() on Android).
+  final Map<String?, Object?>? data;
+}
+
+class InternalPipelineSnapshot {
+  const InternalPipelineSnapshot({
+    required this.results,
+    required this.executionTime,
+  });
+
+  final List<InternalPipelineResult?> results;
+  final int executionTime; // Timestamp in milliseconds since epoch
 }
 
 /// An enumeration of firestore source types.
@@ -178,8 +203,8 @@ enum PersistenceCacheIndexManagerRequest {
   deleteAllIndexes
 }
 
-class PigeonGetOptions {
-  const PigeonGetOptions({
+class InternalGetOptions {
+  const InternalGetOptions({
     required this.source,
     required this.serverTimestampBehavior,
   });
@@ -188,12 +213,12 @@ class PigeonGetOptions {
   final ServerTimestampBehavior serverTimestampBehavior;
 }
 
-enum PigeonTransactionResult {
+enum InternalTransactionResult {
   success,
   failure,
 }
 
-enum PigeonTransactionType {
+enum InternalTransactionType {
   get,
   update,
   set,
@@ -201,8 +226,8 @@ enum PigeonTransactionType {
   deleteType,
 }
 
-class PigeonDocumentOption {
-  const PigeonDocumentOption({
+class InternalDocumentOption {
+  const InternalDocumentOption({
     required this.merge,
     required this.mergeFields,
   });
@@ -211,18 +236,18 @@ class PigeonDocumentOption {
   final List<List<String?>?>? mergeFields;
 }
 
-class PigeonTransactionCommand {
-  const PigeonTransactionCommand({
+class InternalTransactionCommand {
+  const InternalTransactionCommand({
     required this.type,
     required this.path,
     required this.data,
     this.option,
   });
 
-  final PigeonTransactionType type;
+  final InternalTransactionType type;
   final String path;
   final Map<Object?, Object?>? data;
-  final PigeonDocumentOption? option;
+  final InternalDocumentOption? option;
 }
 
 class DocumentReferenceRequest {
@@ -235,13 +260,13 @@ class DocumentReferenceRequest {
   });
   final String path;
   final Map<Object?, Object?>? data;
-  final PigeonDocumentOption? option;
+  final InternalDocumentOption? option;
   final Source? source;
   final ServerTimestampBehavior? serverTimestampBehavior;
 }
 
-class PigeonQueryParameters {
-  const PigeonQueryParameters({
+class InternalQueryParameters {
+  const InternalQueryParameters({
     this.where,
     this.orderBy,
     this.limit,
@@ -301,10 +326,10 @@ abstract class FirebaseFirestoreHostApi {
   );
 
   @async
-  PigeonQuerySnapshot namedQueryGet(
+  InternalQuerySnapshot namedQueryGet(
     FirestorePigeonFirebaseApp app,
     String name,
-    PigeonGetOptions options,
+    InternalGetOptions options,
   );
 
   @async
@@ -358,12 +383,12 @@ abstract class FirebaseFirestoreHostApi {
   @async
   void transactionStoreResult(
     String transactionId,
-    PigeonTransactionResult resultType,
-    List<PigeonTransactionCommand?>? commands,
+    InternalTransactionResult resultType,
+    List<InternalTransactionCommand?>? commands,
   );
 
   @async
-  PigeonDocumentSnapshot transactionGet(
+  InternalDocumentSnapshot transactionGet(
     FirestorePigeonFirebaseApp app,
     String transactionId,
     String path,
@@ -382,7 +407,7 @@ abstract class FirebaseFirestoreHostApi {
   );
 
   @async
-  PigeonDocumentSnapshot documentReferenceGet(
+  InternalDocumentSnapshot documentReferenceGet(
     FirestorePigeonFirebaseApp app,
     DocumentReferenceRequest request,
   );
@@ -394,19 +419,19 @@ abstract class FirebaseFirestoreHostApi {
   );
 
   @async
-  PigeonQuerySnapshot queryGet(
+  InternalQuerySnapshot queryGet(
     FirestorePigeonFirebaseApp app,
     String path,
     bool isCollectionGroup,
-    PigeonQueryParameters parameters,
-    PigeonGetOptions options,
+    InternalQueryParameters parameters,
+    InternalGetOptions options,
   );
 
   @async
   List<AggregateQueryResponse?> aggregateQuery(
     FirestorePigeonFirebaseApp app,
     String path,
-    PigeonQueryParameters parameters,
+    InternalQueryParameters parameters,
     AggregateSource source,
     List<AggregateQuery?> queries,
     bool isCollectionGroup,
@@ -415,7 +440,7 @@ abstract class FirebaseFirestoreHostApi {
   @async
   void writeBatchCommit(
     FirestorePigeonFirebaseApp app,
-    List<PigeonTransactionCommand?> writes,
+    List<InternalTransactionCommand?> writes,
   );
 
   @async
@@ -423,8 +448,8 @@ abstract class FirebaseFirestoreHostApi {
     FirestorePigeonFirebaseApp app,
     String path,
     bool isCollectionGroup,
-    PigeonQueryParameters parameters,
-    PigeonGetOptions options,
+    InternalQueryParameters parameters,
+    InternalGetOptions options,
     bool includeMetadataChanges,
     ListenSource source,
   );
@@ -441,5 +466,12 @@ abstract class FirebaseFirestoreHostApi {
   void persistenceCacheIndexManagerRequest(
     FirestorePigeonFirebaseApp app,
     PersistenceCacheIndexManagerRequest request,
+  );
+
+  @async
+  InternalPipelineSnapshot executePipeline(
+    FirestorePigeonFirebaseApp app,
+    List<Map<String?, Object?>?> stages,
+    Map<String?, Object?>? options,
   );
 }

@@ -332,11 +332,11 @@ class EntityNode {
       srcListMap.forEach((key, value) {
         List<EntityNode> enodeList = [];
         List<dynamic> jsonList = value as List<dynamic>;
-        jsonList.forEach((jsonObj) {
+        for (var jsonObj in jsonList) {
           Map<String, dynamic> jmap = jsonObj as Map<String, dynamic>;
           EntityNode en = EntityNode.fromJson(jmap, cacheProvider);
           enodeList.add(en);
-        });
+        }
         objLists?[key] = enodeList;
       });
     }
@@ -367,9 +367,9 @@ class EntityNode {
       if (nestedObjectLists != null) {
         nestedObjectLists!.forEach((key, edoList) {
           List<Map<String, dynamic>> jsonList = [];
-          edoList.forEach((edo) {
+          for (var edo in edoList) {
             jsonList.add(edo.toJson(mode: mode));
-          });
+          }
           jsonData[key] = jsonList;
         });
       }
@@ -396,9 +396,9 @@ class EntityNode {
         Map<String, dynamic> nestedObjectListsJson = {};
         nestedObjectLists!.forEach((key, edoList) {
           List<Map<String, dynamic>> jsonList = [];
-          edoList.forEach((edo) {
+          for (var edo in edoList) {
             jsonList.add(edo.toJson(mode: mode));
-          });
+          }
           nestedObjectListsJson[key] = jsonList;
         });
         jsonData[listsKey] = nestedObjectListsJson;

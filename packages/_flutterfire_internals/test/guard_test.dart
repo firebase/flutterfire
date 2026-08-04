@@ -52,6 +52,19 @@ void main() {
         expect(stack, current);
       }
     });
+
+    test(
+        'propagates plain Dart errors from Futures (e.g. ArgumentError on web)',
+        () async {
+      await expectLater(
+        guardWebExceptions(
+          () => Future<void>.error(ArgumentError('test')),
+          plugin: 'test',
+          codeParser: (c) => c,
+        ),
+        throwsA(isA<ArgumentError>()),
+      );
+    });
   });
 }
 

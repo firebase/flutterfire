@@ -2,13 +2,13 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import FirebaseFunctions
+
 #if canImport(FlutterMacOS)
   import FlutterMacOS
 #else
   import Flutter
 #endif
-
-import FirebaseFunctions
 
 class FunctionsStreamHandler: NSObject, FlutterStreamHandler {
   var functions: Functions
@@ -19,8 +19,10 @@ class FunctionsStreamHandler: NSObject, FlutterStreamHandler {
     super.init()
   }
 
-  func onListen(withArguments arguments: Any?,
-                eventSink events: @escaping FlutterEventSink) -> FlutterError? {
+  func onListen(
+    withArguments arguments: Any?,
+    eventSink events: @escaping FlutterEventSink
+  ) -> FlutterError? {
     streamTask = Task {
       await httpsStreamCall(arguments: arguments, events: events)
     }
@@ -35,9 +37,13 @@ class FunctionsStreamHandler: NSObject, FlutterStreamHandler {
   private func httpsStreamCall(arguments: Any?, events: @escaping FlutterEventSink) async {
     guard let arguments = arguments as? [String: Any] else {
       await MainActor.run {
-        events(FlutterError(code: "invalid_arguments",
-                            message: "Invalid arguments",
-                            details: nil))
+        events(
+          FlutterError(
+            code: "invalid_arguments",
+            message: "Invalid arguments",
+            details: nil
+          )
+        )
       }
       return
     }
@@ -49,9 +55,10 @@ class FunctionsStreamHandler: NSObject, FlutterStreamHandler {
     let limitedUseAppCheckToken = arguments["limitedUseAppCheckToken"] as? Bool ?? false
 
     if let origin,
-       let url = URL(string: origin),
-       let host = url.host,
-       let port = url.port {
+      let url = URL(string: origin),
+      let host = url.host,
+      let port = url.port
+    {
       functions.useEmulator(withHost: host, port: port)
     }
 
@@ -67,9 +74,13 @@ class FunctionsStreamHandler: NSObject, FlutterStreamHandler {
         function = functions.httpsCallable(url, options: options)
       } else {
         await MainActor.run {
-          events(FlutterError(code: "IllegalArgumentException",
-                              message: "Either functionName or functionUri must be set",
-                              details: nil))
+          events(
+            FlutterError(
+              code: "IllegalArgumentException",
+              message: "Either functionName or functionUri must be set",
+              details: nil
+            )
+          )
         }
         return
       }
@@ -86,9 +97,9 @@ class FunctionsStreamHandler: NSObject, FlutterStreamHandler {
         for try await response in stream {
           await MainActor.run {
             switch response {
-            case let .message(message):
+            case .message(let message):
               events(["message": message.value])
-            case let .result(result):
+            case .result(let result):
               events(["result": result.value])
               events(FlutterEndOfEventStream)
             }
@@ -96,16 +107,24 @@ class FunctionsStreamHandler: NSObject, FlutterStreamHandler {
         }
       } catch {
         await MainActor.run {
-          events(FlutterError(code: "unknown",
-                              message: error.localizedDescription,
-                              details: ["code": "unknown", "message": error.localizedDescription]))
+          events(
+            FlutterError(
+              code: "unknown",
+              message: error.localizedDescription,
+              details: ["code": "unknown", "message": error.localizedDescription]
+            )
+          )
         }
       }
     } else {
       await MainActor.run {
-        events(FlutterError(code: "unknown",
-                            message: "Streaming requires iOS 15+ or macOS 12+",
-                            details: nil))
+        events(
+          FlutterError(
+            code: "unknown",
+            message: "Streaming requires iOS 15+ or macOS 12+",
+            details: nil
+          )
+        )
       }
     }
   }

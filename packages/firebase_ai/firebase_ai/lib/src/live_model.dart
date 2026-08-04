@@ -15,7 +15,8 @@
 part of 'base_model.dart';
 
 const _apiUrl = 'ws/google.firebase.vertexai';
-const _apiUrlSuffixVertexAI = 'LlmBidiService/BidiGenerateContent/locations';
+const _apiUrlSuffixAgentPlatform =
+    'LlmBidiService/BidiGenerateContent/locations';
 const _apiUrlSuffixGoogleAI = 'GenerativeService/BidiGenerateContent';
 
 /// A live, generative AI model for real-time interaction.
@@ -33,7 +34,7 @@ final class LiveGenerativeModel extends BaseModel {
       {required String model,
       required String location,
       required FirebaseApp app,
-      required bool useVertexBackend,
+      required bool useAgentPlatform,
       bool? useLimitedUseAppCheckTokens,
       FirebaseAppCheck? appCheck,
       FirebaseAuth? auth,
@@ -42,7 +43,7 @@ final class LiveGenerativeModel extends BaseModel {
       Content? systemInstruction})
       : _app = app,
         _location = location,
-        _useVertexBackend = useVertexBackend,
+        _useAgentPlatform = useAgentPlatform,
         _appCheck = appCheck,
         _auth = auth,
         _liveGenerationConfig = liveGenerationConfig,
@@ -50,9 +51,9 @@ final class LiveGenerativeModel extends BaseModel {
         _systemInstruction = systemInstruction,
         _useLimitedUseAppCheckTokens = useLimitedUseAppCheckTokens,
         super._(
-          serializationStrategy: VertexSerialization(),
-          modelUri: useVertexBackend
-              ? _VertexUri(
+          serializationStrategy: AgentPlatformSerialization(),
+          modelUri: useAgentPlatform
+              ? _AgentPlatformUri(
                   model: model,
                   app: app,
                   location: location,
@@ -65,7 +66,7 @@ final class LiveGenerativeModel extends BaseModel {
 
   final FirebaseApp _app;
   final String _location;
-  final bool _useVertexBackend;
+  final bool _useAgentPlatform;
   final FirebaseAppCheck? _appCheck;
   final FirebaseAuth? _auth;
   final LiveGenerationConfig? _liveGenerationConfig;
@@ -73,11 +74,11 @@ final class LiveGenerativeModel extends BaseModel {
   final Content? _systemInstruction;
   final bool? _useLimitedUseAppCheckTokens;
 
-  String _vertexAIUri() => 'wss://${_modelUri.baseAuthority}/'
-      '$_apiUrl.${_modelUri.apiVersion}.$_apiUrlSuffixVertexAI/'
+  String _agentPlatformUri() => 'wss://${_modelUri.baseAuthority}/'
+      '$_apiUrl.${_modelUri.apiVersion}.$_apiUrlSuffixAgentPlatform/'
       '$_location?key=${_app.options.apiKey}';
 
-  String _vertexAIModelString() => 'projects/${_app.options.projectId}/'
+  String _agentPlatformModelString() => 'projects/${_app.options.projectId}/'
       'locations/$_location/publishers/google/models/${model.name}';
 
   String _googleAIUri() => 'wss://${_modelUri.baseAuthority}/'
@@ -90,33 +91,18 @@ final class LiveGenerativeModel extends BaseModel {
   ///
   /// This function handles the WebSocket connection setup and returns an [LiveSession]
   /// object that can be used to communicate with the service.
+  /// [sessionResumption] (optional): The configuration for session resumption,
+  /// such as the handle to the previous session state to restore.
   ///
   /// Returns a [Future] that resolves to an [LiveSession] object upon successful
   /// connection.
-  Future<LiveSession> connect() async {
-    final uri = _useVertexBackend ? _vertexAIUri() : _googleAIUri();
-    final modelString =
-        _useVertexBackend ? _vertexAIModelString() : _googleAIModelString();
+  Future<LiveSession> connect(
+      {SessionResumptionConfig? sessionResumption}) async {
+    final uri = _useAgentPlatform ? _agentPlatformUri() : _googleAIUri();
+    final modelString = _useAgentPlatform
+        ? _agentPlatformModelString()
+        : _googleAIModelString();
 
-    final setupJson = {
-      'setup': {
-        'model': modelString,
-        if (_systemInstruction != null)
-          'system_instruction': _systemInstruction.toJson(),
-        if (_tools != null) 'tools': _tools.map((t) => t.toJson()).toList(),
-        if (_liveGenerationConfig != null) ...{
-          'generation_config': _liveGenerationConfig.toJson(),
-          if (_liveGenerationConfig.inputAudioTranscription != null)
-            'input_audio_transcription':
-                _liveGenerationConfig.inputAudioTranscription!.toJson(),
-          if (_liveGenerationConfig.outputAudioTranscription != null)
-            'output_audio_transcription':
-                _liveGenerationConfig.outputAudioTranscription!.toJson(),
-        },
-      }
-    };
-
-    final request = jsonEncode(setupJson);
     final headers = await BaseModel.firebaseTokens(
       _appCheck,
       _auth,
@@ -124,14 +110,15 @@ final class LiveGenerativeModel extends BaseModel {
       _useLimitedUseAppCheckTokens,
     )();
 
-    var ws = kIsWeb
-        ? WebSocketChannel.connect(Uri.parse(uri))
-        : IOWebSocketChannel.connect(Uri.parse(uri), headers: headers);
-    await ws.ready;
-
-    ws.sink.add(request);
-
-    return LiveSession(ws);
+    return LiveSession.create(
+      uri: uri,
+      headers: headers,
+      modelString: modelString,
+      systemInstruction: _systemInstruction,
+      tools: _tools,
+      sessionResumption: sessionResumption,
+      liveGenerationConfig: _liveGenerationConfig,
+    );
   }
 }
 
@@ -140,7 +127,7 @@ LiveGenerativeModel createLiveGenerativeModel({
   required FirebaseApp app,
   required String location,
   required String model,
-  required bool useVertexBackend,
+  required bool useAgentPlatform,
   bool? useLimitedUseAppCheckTokens,
   FirebaseAppCheck? appCheck,
   FirebaseAuth? auth,
@@ -154,7 +141,7 @@ LiveGenerativeModel createLiveGenerativeModel({
       appCheck: appCheck,
       auth: auth,
       location: location,
-      useVertexBackend: useVertexBackend,
+      useAgentPlatform: useAgentPlatform,
       useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
       liveGenerationConfig: liveGenerationConfig,
       tools: tools,

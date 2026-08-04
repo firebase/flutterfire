@@ -8,37 +8,35 @@
 import Foundation
 import PackageDescription
 
-let firebase_sdk_version: Version = "12.9.0"
-let shared_spm_version: Version = "4.5.0-firebase-core-swift"
+let firebaseSdkVersion: Version = "12.17.0"
 
-// Set FIREBASE_ANALYTICS_WITHOUT_ADID=true to use FirebaseAnalyticsWithoutAdIdSupport
+// Set FIREBASE_ANALYTICS_WITHOUT_ADID=true to use FirebaseAnalyticsCore.
 // e.g. FIREBASE_ANALYTICS_WITHOUT_ADID=true flutter build ios
 let useWithoutAdId = ProcessInfo.processInfo.environment["FIREBASE_ANALYTICS_WITHOUT_ADID"] != nil
-let analyticsProduct = useWithoutAdId ? "FirebaseAnalyticsWithoutAdIdSupport" : "FirebaseAnalytics"
+let analyticsProduct = useWithoutAdId ? "FirebaseAnalyticsCore" : "FirebaseAnalytics"
 
 let package = Package(
   name: "firebase_analytics",
   platforms: [
-    .iOS("15.0"),
+    .iOS("15.0")
   ],
   products: [
-    .library(name: "firebase-analytics", targets: ["firebase_analytics"]),
+    .library(name: "firebase-analytics", targets: ["firebase_analytics"])
   ],
   dependencies: [
-    .package(url: "https://github.com/firebase/firebase-ios-sdk", from: firebase_sdk_version),
-    .package(url: "https://github.com/firebase/flutterfire", exact: shared_spm_version),
+    .package(url: "https://github.com/firebase/firebase-ios-sdk", exact: firebaseSdkVersion),
+    .package(name: "firebase_core", path: "../firebase_core"),
   ],
   targets: [
     .target(
       name: "firebase_analytics",
       dependencies: [
         .product(name: analyticsProduct, package: "firebase-ios-sdk"),
-        // Wrapper dependency
-        .product(name: "firebase-core-shared", package: "flutterfire"),
+        .product(name: "firebase-core", package: "firebase_core"),
       ],
       resources: [
-        .process("Resources"),
+        .process("Resources")
       ]
-    ),
+    )
   ]
 )

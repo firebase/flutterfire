@@ -18,18 +18,14 @@ import io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry
 /**
  * Flutter plugin accessing Firebase Performance API.
  *
- *
  * Instantiate this in an add to app scenario to gracefully handle activity and context changes.
  */
-class FlutterFirebasePerformancePlugin
-  : FlutterFirebasePlugin, FlutterPlugin, FirebasePerformanceHostApi {
+class FlutterFirebasePerformancePlugin :
+    FlutterFirebasePlugin, FlutterPlugin, FirebasePerformanceHostApi {
   private var binaryMessenger: BinaryMessenger? = null
 
   private fun initInstance(messenger: BinaryMessenger) {
-    FlutterFirebasePluginRegistry.registerPlugin(
-      METHOD_CHANNEL_NAME,
-      this
-    )
+    FlutterFirebasePluginRegistry.registerPlugin(METHOD_CHANNEL_NAME, this)
     binaryMessenger = messenger
     FirebasePerformanceHostApi.setUp(messenger, this)
   }
@@ -79,7 +75,11 @@ class FlutterFirebasePerformancePlugin
     }
   }
 
-  override fun stopTrace(handle: Long, attributes: TraceAttributes, callback: (Result<Unit>) -> Unit) {
+  override fun stopTrace(
+      handle: Long,
+      attributes: TraceAttributes,
+      callback: (Result<Unit>) -> Unit
+  ) {
     FlutterFirebasePlugin.cachedThreadPool.execute {
       try {
         val trace = _traces[handle.toInt()]
@@ -88,13 +88,9 @@ class FlutterFirebasePerformancePlugin
           return@execute
         }
 
-        attributes.attributes?.forEach { (key, value) ->
-          trace.putAttribute(key, value)
-        }
+        attributes.attributes?.forEach { (key, value) -> trace.putAttribute(key, value) }
 
-        attributes.metrics?.forEach { (key, value) ->
-          trace.putMetric(key, value)
-        }
+        attributes.metrics?.forEach { (key, value) -> trace.putMetric(key, value) }
 
         trace.stop()
         _traces.remove(handle.toInt())
@@ -109,10 +105,7 @@ class FlutterFirebasePerformancePlugin
     FlutterFirebasePlugin.cachedThreadPool.execute {
       try {
         val httpMethod = parseHttpMethod(options.httpMethod)
-        val httpMetric = FirebasePerformance.getInstance().newHttpMetric(
-          options.url,
-          httpMethod
-        )
+        val httpMetric = FirebasePerformance.getInstance().newHttpMetric(options.url, httpMethod)
         httpMetric.start()
         val httpMetricHandle = _httpMetricHandle++
         _httpMetrics[httpMetricHandle] = httpMetric
@@ -123,7 +116,11 @@ class FlutterFirebasePerformancePlugin
     }
   }
 
-  override fun stopHttpMetric(handle: Long, attributes: HttpMetricAttributes, callback: (Result<Unit>) -> Unit) {
+  override fun stopHttpMetric(
+      handle: Long,
+      attributes: HttpMetricAttributes,
+      callback: (Result<Unit>) -> Unit
+  ) {
     FlutterFirebasePlugin.cachedThreadPool.execute {
       try {
         val httpMetric = _httpMetrics[handle.toInt()]
@@ -137,9 +134,7 @@ class FlutterFirebasePerformancePlugin
         attributes.responseContentType?.let { httpMetric.setResponseContentType(it) }
         attributes.responsePayloadSize?.let { httpMetric.setResponsePayloadSize(it) }
 
-        attributes.attributes?.forEach { (key, value) ->
-          httpMetric.putAttribute(key, value)
-        }
+        attributes.attributes?.forEach { (key, value) -> httpMetric.putAttribute(key, value) }
 
         httpMetric.stop()
         _httpMetrics.remove(handle.toInt())
@@ -150,9 +145,8 @@ class FlutterFirebasePerformancePlugin
     }
   }
 
-  private fun <T> handleFailure (callback: (Result<T>) -> Unit, exception: Exception?) {
-    val message =
-      if (exception != null) exception.message else "An unknown error occurred"
+  private fun <T> handleFailure(callback: (Result<T>) -> Unit, exception: Exception?) {
+    val message = if (exception != null) exception.message else "An unknown error occurred"
     callback(Result.failure(FlutterError("firebase_performance", message, null)))
   }
 
