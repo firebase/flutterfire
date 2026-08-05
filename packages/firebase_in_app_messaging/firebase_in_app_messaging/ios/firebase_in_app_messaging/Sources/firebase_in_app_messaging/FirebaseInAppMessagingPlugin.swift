@@ -18,7 +18,9 @@ import FirebaseInAppMessaging
 
 let kFLTFirebaseInAppMessagingChannelName = "plugins.flutter.io/firebase_in_app_messaging"
 
-public class FirebaseInAppMessagingPlugin: NSObject, FLTFirebasePluginProtocol, FlutterPlugin {
+public class FirebaseInAppMessagingPlugin: NSObject, FLTFirebasePluginProtocol, FlutterPlugin,
+  FirebaseInAppMessagingHostApi
+{
   public static func register(with registrar: FlutterPluginRegistrar) {
     let binaryMessenger: FlutterBinaryMessenger
 
@@ -28,13 +30,9 @@ public class FirebaseInAppMessagingPlugin: NSObject, FLTFirebasePluginProtocol, 
       binaryMessenger = registrar.messenger()
     #endif
 
-    let channel = FlutterMethodChannel(
-      name: kFLTFirebaseInAppMessagingChannelName,
-      binaryMessenger: binaryMessenger
-    )
     let instance = FirebaseInAppMessagingPlugin()
     FLTFirebasePluginRegistry.sharedInstance().register(instance)
-    registrar.addMethodCallDelegate(instance, channel: channel)
+    FirebaseInAppMessagingHostApiSetup.setUp(binaryMessenger: binaryMessenger, api: instance)
   }
 
   public func firebaseLibraryVersion() -> String {
@@ -57,25 +55,35 @@ public class FirebaseInAppMessagingPlugin: NSObject, FLTFirebasePluginProtocol, 
     kFLTFirebaseInAppMessagingChannelName
   }
 
-  public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-    let arguments = call.arguments as! NSDictionary
+  public func triggerEvent(
+    appName: String,
+    eventName: String,
+    completion: @escaping (Result<Void, Error>) -> Void
+  ) {
     let inAppMessaging = InAppMessaging.inAppMessaging()
+    inAppMessaging.triggerEvent(eventName)
+    completion(.success(()))
+  }
 
-    switch call.method {
-    case "FirebaseInAppMessaging#triggerEvent":
-      let eventName = arguments["eventName"] as! String
-      inAppMessaging.triggerEvent(eventName)
-      result(nil)
-    case "FirebaseInAppMessaging#setMessagesSuppressed":
-      let suppress = arguments["suppress"] as? Bool ?? false
-      inAppMessaging.messageDisplaySuppressed = suppress
-      result(nil)
-    case "FirebaseInAppMessaging#setAutomaticDataCollectionEnabled":
-      let enabled = arguments["enabled"] as? Bool ?? false
-      inAppMessaging.automaticDataCollectionEnabled = enabled
-      result(nil)
-    default:
-      result(FlutterMethodNotImplemented)
-    }
+  public func setMessagesSuppressed(
+    appName: String,
+    suppress: Bool,
+    completion: @escaping (Result<Void, Error>) -> Void
+  ) {
+    let inAppMessaging = InAppMessaging.inAppMessaging()
+    inAppMessaging.messageDisplaySuppressed = suppress
+    completion(.success(()))
+  }
+
+  public func setAutomaticDataCollectionEnabled(
+    appName: String,
+    enabled: Bool,
+    completion:
+      @escaping (Result<Void, Error>)
+      -> Void
+  ) {
+    let inAppMessaging = InAppMessaging.inAppMessaging()
+    inAppMessaging.automaticDataCollectionEnabled = enabled
+    completion(.success(()))
   }
 }
