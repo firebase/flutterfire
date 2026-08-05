@@ -10,7 +10,11 @@ FLUTTER_DRIVE_MAX_ATTEMPTS="${FLUTTER_DRIVE_MAX_ATTEMPTS:-4}"
 FLUTTER_DRIVE_EXTRA_ARGS="${FLUTTER_DRIVE_EXTRA_ARGS:-}"
 
 cleanup_web_processes() {
+  # Chrome's process name differs per OS: "Google Chrome" on macOS,
+  # "chrome"/"google-chrome" on Linux.
   pkill -f "Google Chrome" || true
+  pkill -f "google-chrome" || true
+  pkill -x chrome || true
   pkill -f chrome_crashpad || true
   pkill -x chromedriver || true
   pkill -x dartvm || true
@@ -23,7 +27,17 @@ run_tests() {
 
   chromedriver --port=4444 --trace-buffer-size=100000 &
   chromedriver_pid=$!
-  sleep 2
+  # Wait for chromedriver to accept connections instead of a fixed sleep.
+  for _ in $(seq 1 30); do
+    if curl --output /dev/null --silent --fail http://localhost:4444/status; then
+      break
+    fi
+    if ! kill -0 "$chromedriver_pid" 2>/dev/null; then
+      echo "chromedriver exited before becoming ready."
+      return 3
+    fi
+    sleep 1
+  done
 
   set +e
   python3 - <<'PY'
