@@ -10,7 +10,7 @@ import 'package:firebase_ml_model_downloader/firebase_ml_model_downloader.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:tests/firebase_options.dart';
+import 'package:firebase_ml_model_downloader_example/firebase_options.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();

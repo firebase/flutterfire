@@ -1,0 +1,490 @@
+name: e2e-ai
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-ai
+  cancel-in-progress: true
+
+# Live-tier suite: these products have no emulator, so every job talks to the
+# real `flutterfire-e2e-tests` Firebase project. That is also why the whole
+# workflow is path-filtered - it runs when this package or firebase_core
+# changes, and nightly through `nightly.yaml`.
+#
+# Platform coverage: Android, iOS, macOS and web: the suite gates individual tests per
+# platform but runs on all four.
+on:
+  pull_request:
+    paths:
+      - 'packages/firebase_ai/**'
+      - 'packages/firebase_core/**'
+      - '.github/workflows/e2e_tests_ai.yaml'
+      - '.github/actions/setup-flutterfire/**'
+      - '.github/workflows/scripts/**'
+  push:
+    branches:
+      - main
+    paths:
+      - 'packages/firebase_ai/**'
+      - 'packages/firebase_core/**'
+      - '.github/workflows/e2e_tests_ai.yaml'
+      - '.github/actions/setup-flutterfire/**'
+      - '.github/workflows/scripts/**'
+  workflow_call:
+    inputs:
+      nightly_test_mode:
+        type: boolean
+        default: false
+    secrets:
+      TESTS_E2E_FIREBASE_OPTIONS_DART:
+        required: true
+      TESTS_E2E_GOOGLE_SERVICES_JSON:
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  # Maps changed paths to affected platforms so a Kotlin-only change runs only
+  # the android job, a Swift-only change only ios/macos, etc. Dart code, the
+  # tests themselves, firebase_core and CI plumbing affect every platform.
+  # Non-PR events (push to main, the nightly workflow_call) always run
+  # everything: the filter step is skipped and its empty outputs fall back to
+  # 'true' below.
+  changes:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    # Requires the live-project secrets, which fork and dependabot PRs do not
+    # receive.
+    if: >-
+      (github.event_name != 'pull_request' ||
+       (github.event.pull_request.head.repo.full_name == github.repository &&
+        github.actor != 'dependabot[bot]'))
+    outputs:
+      android: ${{ steps.filter.outputs.android || 'true' }}
+      ios: ${{ steps.filter.outputs.ios || 'true' }}
+      macos: ${{ steps.filter.outputs.macos || 'true' }}
+      web: ${{ steps.filter.outputs.web || 'true' }}
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+        if: github.event_name == 'pull_request'
+      - uses: dorny/paths-filter@d1c1ffe0248fe513906c8e24db8ea791d46f8590
+        if: github.event_name == 'pull_request'
+        id: filter
+        with:
+          filters: |
+            shared: &shared
+              - 'packages/firebase_core/**'
+              - 'packages/firebase_ai/firebase_ai/lib/**'
+              - 'packages/firebase_ai/firebase_ai/pubspec.yaml'
+              - 'packages/firebase_ai/firebase_ai/example/integration_test/**'
+              - 'packages/firebase_ai/firebase_ai/example/lib/**'
+              - 'packages/firebase_ai/firebase_ai/example/pubspec.yaml'
+              - '.github/workflows/e2e_tests_ai.yaml'
+              - '.github/actions/setup-flutterfire/**'
+              - '.github/workflows/scripts/**'
+            android:
+              - *shared
+              - 'packages/firebase_ai/firebase_ai/android/**'
+              - 'packages/firebase_ai/firebase_ai/example/android/**'
+            ios:
+              - *shared
+              - 'packages/firebase_ai/firebase_ai/ios/**'
+              - 'packages/firebase_ai/firebase_ai/example/ios/**'
+            macos:
+              - *shared
+              - 'packages/firebase_ai/firebase_ai/macos/**'
+              - 'packages/firebase_ai/firebase_ai/example/macos/**'
+            web:
+              - *shared
+              - 'packages/firebase_ai/firebase_ai/example/web/**'
+
+  android:
+    needs: changes
+    # Requires the live-project secrets, which fork and dependabot PRs do not
+    # receive.
+    if: >-
+      needs.changes.outputs.android == 'true' &&
+      (github.event_name != 'pull_request' ||
+       (github.event.pull_request.head.repo.full_name == github.repository &&
+        github.actor != 'dependabot[bot]'))
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 25 }}
+    env:
+      AVD_ARCH: x86_64
+      AVD_API_LEVEL: 34
+      AVD_TARGET: google_apis
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - uses: ./.github/actions/setup-flutterfire
+        with:
+          # No emulator suite here, so no firebase-tools and no Node.
+          node: 'false'
+          bootstrap-scope: 'firebase_ai*'
+      - name: Inject Firebase config
+        # The `flutterfire-e2e-tests` project config lives in repository
+        # secrets rather than in the tree: this is a public repo and these are
+        # live backends. Same shape as `e2e_tests_pipeline.yaml`.
+        env:
+          FIREBASE_OPTIONS_DART: ${{ secrets.TESTS_E2E_FIREBASE_OPTIONS_DART }}
+          GOOGLE_SERVICES_JSON: ${{ secrets.TESTS_E2E_GOOGLE_SERVICES_JSON }}
+        run: |
+          if [ -z "$FIREBASE_OPTIONS_DART" ]; then
+            echo "::error::TESTS_E2E_FIREBASE_OPTIONS_DART is empty — secrets are unavailable (fork/dependabot PR?). Failing early instead of producing a broken build."
+            exit 1
+          fi
+          echo "$FIREBASE_OPTIONS_DART" > packages/firebase_ai/firebase_ai/example/lib/firebase_options.dart
+          echo "$GOOGLE_SERVICES_JSON" > packages/firebase_ai/firebase_ai/example/android/app/google-services.json
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Gradle cache
+        uses: gradle/actions/setup-gradle@90ddb51e90a5fd9ba75f40cf85156b7b41bf76a3
+      - name: Free Disk Space (Ubuntu)
+        uses: AdityaGarg8/remove-unwanted-software@90e01b21170618765a73370fcc3abbd1684a7793
+        with:
+          remove-dotnet: true
+          remove-haskell: true
+          remove-codeql: true
+          remove-docker-images: true
+          remove-large-packages: true
+      - name: Prepare AVD home on /mnt
+        # GitHub-hosted runners mount a ~74GB volume at /mnt. Create it before AVD cache
+        # restore and android-emulator-runner (avdmanager needs the space at create time).
+        run: |
+          sudo mkdir -p /mnt/avd
+          sudo chown "$USER:$USER" /mnt/avd
+          df -h / /mnt
+      - name: AVD cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        continue-on-error: true
+        id: avd-cache
+        with:
+          # Must match the save path exactly
+          path: |
+            /mnt/avd/*
+            ~/.android/adb*
+          # Same AVD as the platform workflows, so deliberately the same key -
+          # this job reuses their image instead of building a second copy.
+          key: avd-${{ runner.os }}-${{ env.AVD_API_LEVEL }}-${{ env.AVD_TARGET }}-${{ env.AVD_ARCH }}-14214601
+      - name: Link AVD home to /mnt
+        # android-emulator-runner exportVariables ANDROID_AVD_HOME to $HOME/.android/avd
+        run: |
+          mkdir -p "$HOME/.android"
+          rm -rf "$HOME/.android/avd"
+          ln -s /mnt/avd "$HOME/.android/avd"
+      - name: Pre-build APK
+        # Build outside the emulator so the AVD does not boot and idle through the
+        # whole Gradle build. `flutter test` below reuses this warm build cache.
+        working-directory: packages/firebase_ai/firebase_ai/example
+        timeout-minutes: 25
+        run: flutter build apk --debug --target=integration_test/e2e_test.dart --android-skip-build-dependency-validation
+      - name: Start AVD then run E2E tests
+        uses: reactivecircus/android-emulator-runner@e89f39f1abbbd05b1113a29cf4db69e7540cae5a
+        timeout-minutes: 20
+        env:
+          ANDROID_AVD_HOME: /mnt/avd
+        with:
+          api-level: ${{ env.AVD_API_LEVEL }}
+          target: ${{ env.AVD_TARGET }}
+          arch: ${{ env.AVD_ARCH }}
+          emulator-build: 14214601
+          # The default (true) wipes and recreates the AVD, making the cache above useless.
+          force-avd-creation: false
+          working-directory: packages/firebase_ai/firebase_ai/example
+          script: |
+            flutter test integration_test/e2e_test.dart --timeout 10x --dart-define=CI=true -d emulator-5554
+      - name: Ensure Appium is shut down
+      # Required because of below issue where emulator failing to shut down properly causes tests to fail
+      # https://github.com/ReactiveCircus/android-emulator-runner/issues/385
+        run: |
+          pgrep -f appium && pkill -f appium || echo "No Appium process found"
+      - name: Save Android Emulator Cache
+        # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
+        # Skip on a cache hit: the AVD image is multi-GB and re-uploading it unchanged on
+        # every main run is pure waste.
+        if: github.ref == 'refs/heads/main' && steps.avd-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        continue-on-error: true
+        with:
+          key: ${{ steps.avd-cache.outputs.cache-primary-key }}
+          # Must match the restore path exactly
+          path: |
+            /mnt/avd/*
+            ~/.android/adb*
+
+  ios:
+    needs: changes
+    # Requires the live-project secrets, which fork and dependabot PRs do not
+    # receive.
+    if: >-
+      needs.changes.outputs.ios == 'true' &&
+      (github.event_name != 'pull_request' ||
+       (github.event.pull_request.head.repo.full_name == github.repository &&
+        github.actor != 'dependabot[bot]'))
+    permissions:
+      contents: read
+    runs-on: macos-15
+    timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 35 }}
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - name: Xcode
+        # Firebase iOS SDK: minimum Xcode 26.2.
+        run: sudo xcode-select -s /Applications/Xcode_26.2.app/Contents/Developer
+      - uses: ./.github/actions/setup-flutterfire
+        with:
+          node: 'false'
+          java: 'false'
+          flutter-version: '3.41.9'
+          bootstrap-scope: 'firebase_ai*'
+      # This job is the repository's iOS Swift Package Manager coverage for
+      # firebase_ai. Every plugin the example depends on (firebase_ai, firebase_core,
+      # firebase_storage, camera_avfoundation, flutter_soloud,
+      # image_picker_ios, record_ios) ships a Package.swift, so the whole app
+      # resolves under SPM.
+      # The macOS job stays on CocoaPods, so both dependency managers are
+      # exercised.
+      - name: Enable Swift Package Manager for iOS
+        run: flutter config --enable-swift-package-manager
+      - uses: hendrikmuhs/ccache-action@d62db5f07c26379fc4b4e0916f098a92573c3b03
+        name: Xcode Compile Cache
+        with:
+          # Distinct from every other macos-15 job's key, otherwise the workflows
+          # clobber each other's cache.
+          key: xcode-ccache-ai-ios
+          save: "${{ github.ref == 'refs/heads/main' }}"
+          max-size: 700M
+      - name: Inject Firebase config
+        # The `flutterfire-e2e-tests` project config lives in repository
+        # secrets rather than in the tree: this is a public repo and these are
+        # live backends. Same shape as `e2e_tests_pipeline.yaml`.
+        env:
+          FIREBASE_OPTIONS_DART: ${{ secrets.TESTS_E2E_FIREBASE_OPTIONS_DART }}
+          GOOGLE_SERVICES_JSON: ${{ secrets.TESTS_E2E_GOOGLE_SERVICES_JSON }}
+        run: |
+          if [ -z "$FIREBASE_OPTIONS_DART" ]; then
+            echo "::error::TESTS_E2E_FIREBASE_OPTIONS_DART is empty — secrets are unavailable (fork/dependabot PR?). Failing early instead of producing a broken build."
+            exit 1
+          fi
+          echo "$FIREBASE_OPTIONS_DART" > packages/firebase_ai/firebase_ai/example/lib/firebase_options.dart
+          echo "$GOOGLE_SERVICES_JSON" > packages/firebase_ai/firebase_ai/example/android/app/google-services.json
+      - name: Generate placeholder GoogleService-Info.plist
+        # The example's Xcode project lists the file in a Resources build
+        # phase, so the build fails outright when it is missing. It is only
+        # there to satisfy the build: Firebase is initialised from the Dart
+        # options injected above. `--live-tier-plist` writes that one file and
+        # nothing else, so it can never clobber the injected credentials.
+        run: dart ./.github/workflows/scripts/generate-dummy-firebase-configs.dart --live-tier-plist=ai
+      - name: Prepare iOS project for Swift Package Manager
+        # Done here rather than in the repository: the committed Podfile is what
+        # CocoaPods users of the example rely on, and `flutter build` prefers
+        # CocoaPods whenever a Podfile is present.
+        working-directory: packages/firebase_ai/firebase_ai/example/ios
+        run: |
+          if [ -f Podfile ]; then pod deintegrate; fi
+          rm -f Podfile Podfile.lock
+          rm -rf Pods
+      - name: 'Build Application'
+        working-directory: packages/firebase_ai/firebase_ai/example
+        timeout-minutes: 25
+        run: |
+          export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
+          export CCACHE_SLOPPINESS=clang_index_store,file_stat_matches,include_file_ctime,include_file_mtime,ivfsoverlay,pch_defines,modules,system_headers,time_macros
+          export CCACHE_FILECLONE=true
+          export CCACHE_DEPEND=true
+          export CCACHE_INODECACHE=true
+          ccache -s
+          flutter build ios --no-codesign --simulator --debug --target=./integration_test/e2e_test.dart --dart-define=CI=true
+          ccache -s
+      - uses: futureware-tech/simulator-action@e89aa8f93d3aec35083ff49d2854d07f7186f7f5
+        id: simulator
+        with:
+          # List of available simulators: https://github.com/actions/runner-images/blob/main/images/macos/macos-15-Readme.md#installed-simulators
+          model: "iPhone 16"
+      - name: Ensure Simulator Ready
+        timeout-minutes: 13
+        env:
+          SIMULATOR: ${{ steps.simulator.outputs.udid }}
+          ENSURE_BOOT_IF_NEEDED: "0"
+        run: .github/workflows/scripts/ensure-simulator-ready.sh
+      - name: 'E2E Tests'
+        working-directory: packages/firebase_ai/firebase_ai/example
+        timeout-minutes: 20
+        env:
+          SIMULATOR: ${{ steps.simulator.outputs.udid }}
+        run: |
+          flutter test integration_test/e2e_test.dart -d "$SIMULATOR" --timeout 10x --dart-define=CI=true
+
+  macos:
+    needs: changes
+    # Requires the live-project secrets, which fork and dependabot PRs do not
+    # receive.
+    if: >-
+      needs.changes.outputs.macos == 'true' &&
+      (github.event_name != 'pull_request' ||
+       (github.event.pull_request.head.repo.full_name == github.repository &&
+        github.actor != 'dependabot[bot]'))
+    permissions:
+      contents: read
+    runs-on: macos-15
+    timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 35 }}
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - name: Xcode
+        # Firebase iOS SDK: minimum Xcode 26.2.
+        run: sudo xcode-select -s /Applications/Xcode_26.2.app/Contents/Developer
+      - uses: ./.github/actions/setup-flutterfire
+        with:
+          node: 'false'
+          java: 'false'
+          flutter-version: '3.41.9'
+          bootstrap-scope: 'firebase_ai*'
+      - uses: hendrikmuhs/ccache-action@d62db5f07c26379fc4b4e0916f098a92573c3b03
+        name: Xcode Compile Cache
+        with:
+          # Distinct from every other macos-15 job's key, otherwise the workflows
+          # clobber each other's cache.
+          key: xcode-ccache-ai-macos
+          save: "${{ github.ref == 'refs/heads/main' }}"
+          max-size: 700M
+      - name: Pods Cache
+        continue-on-error: true
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        id: pods-cache
+        with:
+          # Must match the save path exactly
+          path: packages/firebase_ai/firebase_ai/example/macos/Pods
+          # Keyed on the Podfile and the pinned Firebase SDK version, not on a
+          # pubspec.lock: those are gitignored, so hashFiles() returns an empty
+          # string and the key could never be invalidated.
+          key: pods-v1-${{ runner.os }}-ai-macos-${{ hashFiles('packages/firebase_ai/firebase_ai/example/macos/Podfile', 'packages/firebase_core/firebase_core/ios/firebase_sdk_version.rb') }}
+          restore-keys: pods-v1-${{ runner.os }}-ai-macos-
+      - name: Inject Firebase config
+        # The `flutterfire-e2e-tests` project config lives in repository
+        # secrets rather than in the tree: this is a public repo and these are
+        # live backends. Same shape as `e2e_tests_pipeline.yaml`.
+        env:
+          FIREBASE_OPTIONS_DART: ${{ secrets.TESTS_E2E_FIREBASE_OPTIONS_DART }}
+          GOOGLE_SERVICES_JSON: ${{ secrets.TESTS_E2E_GOOGLE_SERVICES_JSON }}
+        run: |
+          if [ -z "$FIREBASE_OPTIONS_DART" ]; then
+            echo "::error::TESTS_E2E_FIREBASE_OPTIONS_DART is empty — secrets are unavailable (fork/dependabot PR?). Failing early instead of producing a broken build."
+            exit 1
+          fi
+          echo "$FIREBASE_OPTIONS_DART" > packages/firebase_ai/firebase_ai/example/lib/firebase_options.dart
+          echo "$GOOGLE_SERVICES_JSON" > packages/firebase_ai/firebase_ai/example/android/app/google-services.json
+      - name: Generate placeholder GoogleService-Info.plist
+        # The example's Xcode project lists the file in a Resources build
+        # phase, so the build fails outright when it is missing. It is only
+        # there to satisfy the build: Firebase is initialised from the Dart
+        # options injected above. `--live-tier-plist` writes that one file and
+        # nothing else, so it can never clobber the injected credentials.
+        run: dart ./.github/workflows/scripts/generate-dummy-firebase-configs.dart --live-tier-plist=ai
+      - name: 'Build Application'
+        working-directory: packages/firebase_ai/firebase_ai/example
+        timeout-minutes: 25
+        run: |
+          export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
+          export CCACHE_SLOPPINESS=clang_index_store,file_stat_matches,include_file_ctime,include_file_mtime,ivfsoverlay,pch_defines,modules,system_headers,time_macros
+          export CCACHE_FILECLONE=true
+          export CCACHE_DEPEND=true
+          export CCACHE_INODECACHE=true
+          ccache -s
+          flutter build macos --debug --target=./integration_test/e2e_test.dart --device-id=macos --dart-define=CI=true
+          ccache -s
+      - name: 'E2E Tests'
+        working-directory: packages/firebase_ai/firebase_ai/example
+        timeout-minutes: 20
+        run: |
+          # flutter test on macOS CI may exit 1 due to "Failed to foreground app"
+          # even when all tests pass. Check actual test results to determine success.
+          set +e
+          OUTPUT=$(flutter test \
+            integration_test/e2e_test.dart \
+            -d macos \
+            --dart-define=CI=true \
+            --timeout 10x 2>&1)
+          EXIT_CODE=$?
+          echo "$OUTPUT"
+          if [ $EXIT_CODE -ne 0 ]; then
+            if echo "$OUTPUT" | grep -q "Some tests failed" || echo "$OUTPUT" | grep -q "test failed"; then
+              exit 1
+            fi
+            if echo "$OUTPUT" | grep -q "tests passed"; then
+              echo "All tests passed but flutter test exited with $EXIT_CODE (likely 'Failed to foreground app'). Treating as success."
+              exit 0
+            fi
+            exit $EXIT_CODE
+          fi
+      - name: Save Pods Cache
+        continue-on-error: true
+        # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
+        if: github.ref == 'refs/heads/main'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          key: ${{ steps.pods-cache.outputs.cache-primary-key }}
+          # Must match the restore path exactly
+          path: packages/firebase_ai/firebase_ai/example/macos/Pods
+
+  web:
+    needs: changes
+    # Requires the live-project secrets, which fork and dependabot PRs do not
+    # receive.
+    if: >-
+      needs.changes.outputs.web == 'true' &&
+      (github.event_name != 'pull_request' ||
+       (github.event.pull_request.head.repo.full_name == github.repository &&
+        github.actor != 'dependabot[bot]'))
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 25 }}
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - uses: ./.github/actions/setup-flutterfire
+        timeout-minutes: 15
+        with:
+          node: 'false'
+          java: 'false'
+          bootstrap-scope: 'firebase_ai*'
+      # The ubuntu runner image ships Google Chrome and a chromedriver build
+      # that is matched to it — that pairing IS our pinning strategy, so we use
+      # the image binaries rather than downloading our own.
+      - name: 'Set up Chrome and chromedriver'
+        run: |
+          echo "$CHROMEWEBDRIVER" >> "$GITHUB_PATH"
+          google-chrome --version
+          "$CHROMEWEBDRIVER/chromedriver" --version
+      - name: Inject Firebase config
+        # The `flutterfire-e2e-tests` project config lives in repository
+        # secrets rather than in the tree: this is a public repo and these are
+        # live backends. Same shape as `e2e_tests_pipeline.yaml`.
+        env:
+          FIREBASE_OPTIONS_DART: ${{ secrets.TESTS_E2E_FIREBASE_OPTIONS_DART }}
+          GOOGLE_SERVICES_JSON: ${{ secrets.TESTS_E2E_GOOGLE_SERVICES_JSON }}
+        run: |
+          if [ -z "$FIREBASE_OPTIONS_DART" ]; then
+            echo "::error::TESTS_E2E_FIREBASE_OPTIONS_DART is empty — secrets are unavailable (fork/dependabot PR?). Failing early instead of producing a broken build."
+            exit 1
+          fi
+          echo "$FIREBASE_OPTIONS_DART" > packages/firebase_ai/firebase_ai/example/lib/firebase_options.dart
+          echo "$GOOGLE_SERVICES_JSON" > packages/firebase_ai/firebase_ai/example/android/app/google-services.json
+      - name: 'E2E Tests'
+        working-directory: packages/firebase_ai/firebase_ai/example
+        timeout-minutes: 20
+        # Web devices are not supported for the `flutter test` command yet. As a
+        # workaround we can use the `flutter drive` command. Tracking issue:
+        # https://github.com/flutter/flutter/issues/66264
+        # The retry script only retries infrastructure startup failures
+        # (timeouts, AppConnectionException, "Failed to exit Chromium"); real
+        # test/compile failures fail fast. It also owns the chromedriver
+        # lifecycle, so nothing here starts chromedriver.
+        env:
+          FLUTTER_DRIVE_TARGET: './integration_test/e2e_test.dart'
+          FLUTTER_DRIVE_DRIVER: './test_driver/integration_test.dart'
+          FLUTTER_DRIVE_EXTRA_ARGS: '--dart-define=CI=true'
+        run: ${{ github.workspace }}/.github/workflows/scripts/flutter-drive-web-retry.sh

@@ -46,18 +46,18 @@ jobs:
         # one small job instead of the whole run. `integration_test/e2e_test.dart`
         # still aggregates every suite for Windows and local runs.
         suite:
-          - name: core_misc
+          - name: core
             working_directory: tests
-            target: integration_test/shards/core_misc_shard_test.dart
+            target: integration_test/shards/core_shard_test.dart
             scope: tests
           - name: firestore
             working_directory: packages/cloud_firestore/cloud_firestore/example
             target: integration_test/e2e_test.dart
             scope: 'cloud_firestore*'
         exclude:
-          # Nightly drops the firestore example leg. The entry is repeated in
-          # full because matrix `exclude` compares the whole object; only `name`
-          # is switched, so outside nightly it matches nothing.
+          # Nightly test mode drops the firestore example leg. The entry is
+          # repeated in full because matrix `exclude` compares the whole object;
+          # only `name` is switched, so outside test mode it matches nothing.
           - suite:
               name: ${{ inputs.nightly_test_mode && 'firestore' || 'none' }}
               working_directory: packages/cloud_firestore/cloud_firestore/example

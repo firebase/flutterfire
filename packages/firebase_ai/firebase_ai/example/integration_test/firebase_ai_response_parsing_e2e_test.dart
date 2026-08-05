@@ -21,7 +21,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/test.dart';
 import 'package:firebase_ai/src/api.dart';
 import 'package:firebase_ai/src/developer/api.dart';
-import 'package:tests/firebase_options.dart';
+import 'package:firebase_ai_example/firebase_options.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();

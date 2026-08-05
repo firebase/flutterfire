@@ -9,7 +9,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:tests/firebase_options.dart';
+import 'package:firebase_app_check_example/firebase_options.dart';
 
 const androidDebugToken =
     String.fromEnvironment('APP_CHECK_ANDROID_DEBUG_TOKEN');

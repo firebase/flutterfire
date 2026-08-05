@@ -15,21 +15,52 @@
 import 'dart:convert';
 import 'dart:io';
 
+/// One column per nightly workflow, in table order: the environment variable
+/// `nightly.yaml` sets, and the header the issue shows.
+///
+/// The table used to be built by hand in three places (create, rewrite, and the
+/// row itself); with twenty workflows reporting that triplication was the whole
+/// maintenance cost of adding one. Everything below derives from this list, so
+/// a new workflow is a single entry here plus a `<NAME>_STATUS` in
+/// `nightly.yaml`.
+///
+/// Rows stay one-per-date: the issue is a 30-day history, so products have to
+/// be columns.
+const _columns = <({String env, String header})>[
+  (env: 'ANDROID_STATUS', header: 'Android'),
+  (env: 'IOS_STATUS', header: 'iOS'),
+  (env: 'WEB_STATUS', header: 'Web'),
+  (env: 'MACOS_STATUS', header: 'MacOS'),
+  (env: 'WINDOWS_STATUS', header: 'Windows'),
+  (env: 'FDC_STATUS', header: 'FDC'),
+  (env: 'STORAGE_STATUS', header: 'Storage'),
+  (env: 'AUTH_STATUS', header: 'Auth'),
+  (env: 'DATABASE_STATUS', header: 'Database'),
+  (env: 'FUNCTIONS_STATUS', header: 'Functions'),
+  (env: 'PIPELINE_STATUS', header: 'Pipeline'),
+  (env: 'AI_STATUS', header: 'AI'),
+  (env: 'ANALYTICS_STATUS', header: 'Analytics'),
+  (env: 'APP_CHECK_STATUS', header: 'App Check'),
+  (env: 'APP_INSTALLATIONS_STATUS', header: 'Installations'),
+  (env: 'CRASHLYTICS_STATUS', header: 'Crashlytics'),
+  (env: 'MESSAGING_STATUS', header: 'Messaging'),
+  (env: 'ML_MODEL_DOWNLOADER_STATUS', header: 'ML Model'),
+  (env: 'PERFORMANCE_STATUS', header: 'Performance'),
+  (env: 'REMOTE_CONFIG_STATUS', header: 'Remote Config'),
+];
+
+/// `| Date | Android | ... | Notes |`
+String get _headerRow =>
+    '| Date | ${_columns.map((c) => c.header).join(' | ')} | Notes |';
+
+/// The `| :--- | :--- | ... |` separator, one cell per header cell.
+String get _separatorRow =>
+    '| ${List.filled(_columns.length + 2, ':---').join(' | ')} |';
+
 void main() async {
   final env = Platform.environment;
   final token = env['GITHUB_TOKEN'];
   final repo = env['REPO'];
-  final androidStatus = env['ANDROID_STATUS'] ?? 'skipped';
-  final webStatus = env['WEB_STATUS'] ?? 'skipped';
-  final iosStatus = env['IOS_STATUS'] ?? 'skipped';
-  final macosStatus = env['MACOS_STATUS'] ?? 'skipped';
-  final windowsStatus = env['WINDOWS_STATUS'] ?? 'skipped';
-  final fdcStatus = env['FDC_STATUS'] ?? 'skipped';
-  final storageStatus = env['STORAGE_STATUS'] ?? 'skipped';
-  final authStatus = env['AUTH_STATUS'] ?? 'skipped';
-  final databaseStatus = env['DATABASE_STATUS'] ?? 'skipped';
-  final functionsStatus = env['FUNCTIONS_STATUS'] ?? 'skipped';
-  final pipelineStatus = env['PIPELINE_STATUS'] ?? 'skipped';
   final runId = env['GITHUB_RUN_ID'];
   final serverUrl = env['GITHUB_SERVER_URL'] ?? 'https://github.com';
 
@@ -44,20 +75,10 @@ void main() async {
   final runUrl = '$serverUrl/$repo/actions/runs/$runId';
   final notes = '[View Run]($runUrl)';
 
-  final androidIcon = _getIcon(androidStatus);
-  final webIcon = _getIcon(webStatus);
-  final iosIcon = _getIcon(iosStatus);
-  final macosIcon = _getIcon(macosStatus);
-  final windowsIcon = _getIcon(windowsStatus);
-  final fdcIcon = _getIcon(fdcStatus);
-  final storageIcon = _getIcon(storageStatus);
-  final authIcon = _getIcon(authStatus);
-  final databaseIcon = _getIcon(databaseStatus);
-  final functionsIcon = _getIcon(functionsStatus);
-  final pipelineIcon = _getIcon(pipelineStatus);
+  final icons =
+      _columns.map((c) => _getIcon(env[c.env] ?? 'skipped')).join(' | ');
 
-  final newRow =
-      '| $date | $androidIcon | $iosIcon | $webIcon | $macosIcon | $windowsIcon | $fdcIcon | $storageIcon | $authIcon | $databaseIcon | $functionsIcon | $pipelineIcon | $notes |';
+  final newRow = '| $date | $icons | $notes |';
 
   print('New Row: $newRow');
 
@@ -136,12 +157,11 @@ Future<void> _createIssue(
   final body = {
     'title': '[FlutterFire] Nightly Integration Testing Report',
     'labels': ['nightly-testing'],
-    'body':
-        '''
+    'body': '''
 ## Testing History (last 30 days)
 
-| Date | Android | iOS | Web | MacOS | Windows | FDC | Storage | Auth | Database | Functions | Pipeline | Notes |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+$_headerRow
+$_separatorRow
 $newRow
 ''',
   };
@@ -235,12 +255,8 @@ String _appendRow(String currentBody, String newRow) {
   for (final line in lines) {
     if (line.startsWith('| Date |')) {
       if (!processedTable) {
-        newBodyLines.add(
-          '| Date | Android | iOS | Web | MacOS | Windows | FDC | Storage | Auth | Database | Functions | Pipeline | Notes |',
-        );
-        newBodyLines.add(
-          '| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |',
-        );
+        newBodyLines.add(_headerRow);
+        newBodyLines.add(_separatorRow);
         newBodyLines.addAll(tableRows);
         processedTable = true;
       }
@@ -257,12 +273,8 @@ String _appendRow(String currentBody, String newRow) {
   if (!processedTable) {
     newBodyLines.add('## Testing History (last 30 days)');
     newBodyLines.add('');
-    newBodyLines.add(
-      '| Date | Android | iOS | Web | MacOS | Windows | FDC | Storage | Auth | Database | Functions | Pipeline | Notes |',
-    );
-    newBodyLines.add(
-      '| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |',
-    );
+    newBodyLines.add(_headerRow);
+    newBodyLines.add(_separatorRow);
     newBodyLines.add(newRow);
   }
 
@@ -283,4 +295,3 @@ String _getDateFromRow(String row) {
   }
   return '';
 }
-

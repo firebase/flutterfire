@@ -8,7 +8,7 @@ import 'package:flutter/foundation.dart'
     show TargetPlatform, defaultTargetPlatform, kIsWeb;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:tests/firebase_options.dart';
+import 'package:firebase_performance_example/firebase_options.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();

@@ -22,7 +22,7 @@ import 'package:firebase_ai/src/client.dart';
 import 'package:firebase_ai/src/base_model.dart';
 import 'package:firebase_ai/src/content.dart';
 import 'package:firebase_ai/src/chat.dart';
-import 'package:tests/firebase_options.dart';
+import 'package:firebase_ai_example/firebase_options.dart';
 
 class MockApiClient implements ApiClient {
   final List<Map<String, Object?>> requests = [];

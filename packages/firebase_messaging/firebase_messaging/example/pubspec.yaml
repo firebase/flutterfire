@@ -14,5 +14,11 @@ dependencies:
   flutter_local_notifications: ^21.0.0
   http: ^1.0.0
 
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  integration_test:
+    sdk: flutter
+
 flutter:
   uses-material-design: true

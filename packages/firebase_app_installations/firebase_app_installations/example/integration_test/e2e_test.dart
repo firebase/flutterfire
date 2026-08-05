@@ -7,9 +7,14 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:tests/firebase_options.dart';
+import 'package:firebase_app_installations_example/firebase_options.dart';
 
-import '../e2e_test.dart';
+// Was imported from the `tests` app's aggregated `e2e_test.dart` before this
+// suite moved into the example; it is the only thing this file needed from
+// there.
+// Github Actions environment variable
+// ignore: do_not_use_environment
+final isCI = const String.fromEnvironment('CI').isNotEmpty;
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();

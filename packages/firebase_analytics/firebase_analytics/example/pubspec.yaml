@@ -13,5 +13,11 @@ dependencies:
     sdk: flutter
   in_app_purchase: ^3.2.3
 
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  integration_test:
+    sdk: flutter
+
 flutter:
   uses-material-design: true

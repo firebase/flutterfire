@@ -7,10 +7,25 @@
 import 'dart:convert';
 import 'dart:io';
 
+/// Examples whose `lib/firebase_options.dart` this script fills in with dummy
+/// credentials.
+///
+/// The nine live-tier examples (ai, analytics, app_check, app_installations,
+/// crashlytics, messaging, ml_model_downloader, performance, remote_config)
+/// are still listed: their `lib/main.dart` imports `firebase_options.dart`, so
+/// without a file here `melos analyze-ci` and every example build in
+/// `all_plugins.yaml` fail on an unresolved import.
+///
+/// Their e2e workflows never take this path. `e2e_tests_<product>.yaml` gets
+/// the real values from repository secrets ("Inject Firebase config") and only
+/// ever invokes this script through `--live-tier-plist=<product>`, which writes
+/// the Apple placeholder plist and nothing else - so a dummy can never clobber
+/// an injected credential regardless of step order.
 const _firebaseOptionsPaths = <String>[
   'packages/cloud_firestore/cloud_firestore/example/integration_test/firebase_options.dart',
   'packages/cloud_firestore/cloud_firestore/example/lib/firebase_options.dart',
   'packages/cloud_functions/cloud_functions/example/lib/firebase_options.dart',
+  'packages/firebase_ai/firebase_ai/example/lib/firebase_options.dart',
   'packages/firebase_analytics/firebase_analytics/example/lib/firebase_options.dart',
   'packages/firebase_app_check/firebase_app_check/example/lib/firebase_options.dart',
   'packages/firebase_app_installations/firebase_app_installations/example/lib/firebase_options.dart',
@@ -92,7 +107,64 @@ class DefaultFirebaseOptions {
 }
 ''';
 
+/// Example roots of the nine live-tier products, keyed by the name used in
+/// `--live-tier-plist=<name>`.
+///
+/// Every one of these Xcode projects lists `GoogleService-Info.plist` in a
+/// Resources build phase, so `flutter build ios/macos` fails outright when the
+/// file is absent. The plist is only there to satisfy the build: these products
+/// initialise Firebase from the Dart `FirebaseOptions` injected from secrets,
+/// not from the plist, and the bundle id below matches the app identity every
+/// one of these examples now uses.
+///
+/// The one caveat found while migrating: the crashlytics example's macOS target
+/// runs `upload-symbols --flutter-project firebase_app_id_file.json`, so on that
+/// target it is the committed `firebase_app_id_file.json` - not the plist - that
+/// is load-bearing at build time.
+const _liveTierExampleRoots = <String, String>{
+  'ai': 'packages/firebase_ai/firebase_ai/example',
+  'analytics': 'packages/firebase_analytics/firebase_analytics/example',
+  'app_check': 'packages/firebase_app_check/firebase_app_check/example',
+  'app_installations':
+      'packages/firebase_app_installations/firebase_app_installations/example',
+  'crashlytics': 'packages/firebase_crashlytics/firebase_crashlytics/example',
+  'messaging': 'packages/firebase_messaging/firebase_messaging/example',
+  'ml_model_downloader':
+      'packages/firebase_ml_model_downloader/firebase_ml_model_downloader/example',
+  'performance': 'packages/firebase_performance/firebase_performance/example',
+  'remote_config':
+      'packages/firebase_remote_config/firebase_remote_config/example',
+};
+
+/// The app identity shared by the mega `tests` app and the nine live-tier
+/// examples: live Firebase backends only accept app ids registered in the
+/// `flutterfire-e2e-tests` project.
+const _liveTierBundleId = 'io.flutter.plugins.firebase.tests';
+
 void main(List<String> arguments) {
+  const plistFlag = '--live-tier-plist=';
+  final plistProducts = arguments
+      .where((argument) => argument.startsWith(plistFlag))
+      .map((argument) => argument.substring(plistFlag.length))
+      .toList();
+
+  if (plistProducts.isNotEmpty) {
+    // Deliberately exclusive: a live-tier e2e job must never write a Dart
+    // options file, because the real one arrives from a repository secret.
+    for (final product in plistProducts) {
+      final exampleRoot = _liveTierExampleRoots[product];
+      if (exampleRoot == null) {
+        stderr.writeln(
+          'Unknown --live-tier-plist target "$product". '
+          'Known: ${_liveTierExampleRoots.keys.join(', ')}.',
+        );
+        exit(1);
+      }
+      _writeApplePlists(exampleRoot: exampleRoot, bundleId: _liveTierBundleId);
+    }
+    return;
+  }
+
   for (final path in _firebaseOptionsPaths) {
     _write(path, _firebaseOptions);
   }
@@ -191,6 +263,20 @@ void _writeNativeConfigs({
     '${const JsonEncoder.withIndent('  ').convert(androidConfig)}\n',
   );
 
+  _writeApplePlists(
+    exampleRoot: exampleRoot,
+    bundleId: appleBundleId,
+    macosBundleId: macosBundleId,
+  );
+}
+
+void _writeApplePlists({
+  required String exampleRoot,
+  required String bundleId,
+  // Defaults to [bundleId]; only the examples whose macOS target carries a
+  // different bundle id need to pass this.
+  String? macosBundleId,
+}) {
   String applePlist(String bundleId) =>
       '''<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -213,14 +299,16 @@ void _writeNativeConfigs({
 </dict>
 </plist>
 ''';
-  _write(
-    '$exampleRoot/ios/Runner/GoogleService-Info.plist',
-    applePlist(appleBundleId),
-  );
-  _write(
-    '$exampleRoot/macos/Runner/GoogleService-Info.plist',
-    applePlist(macosBundleId ?? appleBundleId),
-  );
+
+  // Not every example has both Apple targets (the performance example has no
+  // `macos/`), and creating one would leave a stray directory behind.
+  for (final platform in const ['ios', 'macos']) {
+    if (!Directory('$exampleRoot/$platform').existsSync()) continue;
+    _write(
+      '$exampleRoot/$platform/Runner/GoogleService-Info.plist',
+      applePlist(platform == 'macos' ? (macosBundleId ?? bundleId) : bundleId),
+    );
+  }
 }
 
 void _write(String path, String contents) {
