@@ -119,8 +119,7 @@ class FirebaseInstallationsPlugin : FlutterFirebasePlugin, FlutterPlugin, Method
           "FirebaseInstallations#getId" -> getId(arguments)
           "FirebaseInstallations#getToken" -> getToken(arguments)
           "FirebaseInstallations#delete" -> deleteId(arguments)
-          "FirebaseInstallations#registerIdChangeListener" ->
-              registerIdChangeListener(arguments)
+          "FirebaseInstallations#registerIdChangeListener" -> registerIdChangeListener(arguments)
           else -> {
             result.notImplemented()
             return
@@ -141,8 +140,7 @@ class FirebaseInstallationsPlugin : FlutterFirebasePlugin, FlutterPlugin, Method
   private fun getExceptionDetails(exception: Exception?): Map<String, Any?> {
     return mapOf(
         "code" to "unknown",
-        "message" to
-            if (exception != null) exception.message else "An unknown error has occurred.",
+        "message" to if (exception != null) exception.message else "An unknown error has occurred.",
     )
   }
 
