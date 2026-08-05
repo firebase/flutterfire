@@ -74,6 +74,10 @@ class DefaultFirebaseOptions {
     appId: '1:123456789012:web:0000000000000000000000',
     messagingSenderId: '123456789012',
     projectId: 'flutterfire-e2e-tests',
+    // The database e2e suite asserts refFromURL() mismatch behavior, which
+    // only triggers when the instance has a configured databaseURL.
+    databaseURL:
+        'https://flutterfire-e2e-tests-default-rtdb.europe-west1.firebasedatabase.app',
     authDomain: 'flutterfire-e2e-tests.firebaseapp.com',
     storageBucket: 'flutterfire-e2e-tests.appspot.com',
   );
@@ -83,6 +87,10 @@ class DefaultFirebaseOptions {
     appId: '1:123456789012:android:0000000000000000000000',
     messagingSenderId: '123456789012',
     projectId: 'flutterfire-e2e-tests',
+    // The database e2e suite asserts refFromURL() mismatch behavior, which
+    // only triggers when the instance has a configured databaseURL.
+    databaseURL:
+        'https://flutterfire-e2e-tests-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'flutterfire-e2e-tests.appspot.com',
   );
 
@@ -91,6 +99,10 @@ class DefaultFirebaseOptions {
     appId: '1:123456789012:ios:0000000000000000000000',
     messagingSenderId: '123456789012',
     projectId: 'flutterfire-e2e-tests',
+    // The database e2e suite asserts refFromURL() mismatch behavior, which
+    // only triggers when the instance has a configured databaseURL.
+    databaseURL:
+        'https://flutterfire-e2e-tests-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'flutterfire-e2e-tests.appspot.com',
   );
 
@@ -101,6 +113,10 @@ class DefaultFirebaseOptions {
     appId: '1:123456789012:web:0000000000000000000000',
     messagingSenderId: '123456789012',
     projectId: 'flutterfire-e2e-tests',
+    // The database e2e suite asserts refFromURL() mismatch behavior, which
+    // only triggers when the instance has a configured databaseURL.
+    databaseURL:
+        'https://flutterfire-e2e-tests-default-rtdb.europe-west1.firebasedatabase.app',
     authDomain: 'flutterfire-e2e-tests.firebaseapp.com',
     storageBucket: 'flutterfire-e2e-tests.appspot.com',
   );
