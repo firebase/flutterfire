@@ -32,14 +32,7 @@ void main() {
 
   group('firebase_database', () {
     setUpAll(() async {
-      // The native SDK may already have configured [DEFAULT] from a bundled
-      // GoogleService-Info.plist (the plugin registrant does this before any
-      // Dart runs); initializing again would throw [core/duplicate-app].
-      if (Firebase.apps.isEmpty) {
-        await Firebase.initializeApp(
-          options: DefaultFirebaseOptions.currentPlatform,
-        );
-      }
+      // The native SDK may already have configured [DEFAULT] from a bundled      // GoogleService-Info.plist (the plugin registrant does this before any      // Dart runs). Dart's Firebase.apps cannot see that app until the first      // platform-channel call, so the only reliable guard is catching the      // duplicate-app error and keeping the natively configured instance.      try {        await Firebase.initializeApp(          options: DefaultFirebaseOptions.currentPlatform,        );      } on FirebaseException catch (e) {        if (e.code != 'duplicate-app') {          rethrow;        }      }
       database = FirebaseDatabase.instance;
       database.useDatabaseEmulator(emulatorHost, emulatorPort);
       await database.goOnline();
