@@ -164,8 +164,7 @@ void main() {
   }
 
   group('QueryRef double subscribe', () {
-    test(
-        'two subscribe() calls on the same ref open exactly one server stream',
+    test('two subscribe() calls on the same ref open exactly one server stream',
         () async {
       final ref = buildRef();
 
