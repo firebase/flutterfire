@@ -11,6 +11,11 @@ import 'package:integration_test/integration_test.dart';
 
 import 'test_utils.dart';
 
+/// Guards against a dropped `verifyPhoneNumber` callback hanging the whole
+/// suite: a missing callback fails the test instead of burning the job
+/// timeout. Generous because this is a multi-step phone auth flow.
+const _completerTimeout = Duration(seconds: 60);
+
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
@@ -215,7 +220,9 @@ void main() {
                   ),
                 );
 
-                return completer.future.then((value) => value as String);
+                return completer.future
+                    .timeout(_completerTimeout)
+                    .then((value) => value as String);
               }
 
               String storedVerificationId = await getVerificationId();

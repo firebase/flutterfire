@@ -15,6 +15,10 @@ import 'package:tests/firebase_options.dart';
 
 import './test_utils.dart';
 
+/// Storage tasks move large files; a dropped native event otherwise hangs the
+/// whole suite until the job-level timeout kills it.
+const _completerTimeout = Duration(seconds: 60);
+
 void setupTaskTests() {
   group('Task', () {
     late FirebaseStorage storage;
@@ -156,7 +160,8 @@ void setupTaskTests() {
             },
           );
           // Allow time for listener events to be called
-          FirebaseException streamError = await errorReceived.future;
+          FirebaseException streamError =
+              await errorReceived.future.timeout(_completerTimeout);
 
           expect(streamError.plugin, 'firebase_storage');
           expect(streamError.code, 'unauthorized');
@@ -164,7 +169,7 @@ void setupTaskTests() {
             streamError.message,
             'User is not authorized to perform the desired action.',
           );
-          final complete = await finished.future;
+          final complete = await finished.future.timeout(_completerTimeout);
 
           expect(complete, true);
           expect(task.snapshot.state, TaskState.error);
@@ -261,13 +266,14 @@ void setupTaskTests() {
             },
           );
 
-          await started.future;
+          await started.future.timeout(_completerTimeout);
 
           bool canceled = await task.cancel();
           expect(canceled, isTrue);
           expect(task.snapshot.state, TaskState.canceled);
 
-          final streamError = await errorReceived.future;
+          final streamError =
+              await errorReceived.future.timeout(_completerTimeout);
 
           expect(streamError, isNotNull);
           expect(streamError.code, 'canceled');
@@ -431,7 +437,7 @@ void setupTaskTests() {
           },
         );
 
-        final response = await onDoneReceived.future;
+        final response = await onDoneReceived.future.timeout(_completerTimeout);
         expect(response, isTrue);
         expect(snapshots.last.state, TaskState.success);
       });
@@ -454,7 +460,7 @@ void setupTaskTests() {
           },
         );
 
-        final response = await onDoneReceived.future;
+        final response = await onDoneReceived.future.timeout(_completerTimeout);
         expect(response, isTrue);
         expect(snapshots.last.state, TaskState.running);
         expect(streamError, isA<FirebaseException>());

@@ -20,6 +20,10 @@ String kTestFunctionTimeout = 'testFunctionTimeout';
 String kTestMapConvertType = 'testMapConvertType';
 String kTestStreamResponse = 'testStreamResponse';
 
+/// Guards against a dropped stream callback hanging the whole suite: a missing
+/// event fails the test instead of burning the job timeout.
+const _completerTimeout = Duration(seconds: 30);
+
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
@@ -474,7 +478,7 @@ void main() {
               }
             },
           );
-          await completer.future;
+          await completer.future.timeout(_completerTimeout);
         },
         skip: !kIsWeb,
       );
@@ -509,7 +513,7 @@ void main() {
               }
             },
           );
-          await completer.future;
+          await completer.future.timeout(_completerTimeout);
         },
         skip: !kIsWeb,
       );

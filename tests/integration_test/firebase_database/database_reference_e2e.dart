@@ -208,7 +208,9 @@ void setupDatabaseReferenceTests() {
           errorReceived.complete(e as FirebaseException);
         });
 
-        final streamError = await errorReceived.future;
+        // Fail the test rather than hang the suite if the error never arrives.
+        final streamError =
+            await errorReceived.future.timeout(const Duration(seconds: 30));
         expect(streamError, isA<FirebaseException>());
         expect(streamError.code, 'permission-denied');
       });
