@@ -396,30 +396,6 @@ void main() {
             fail('should have thrown an error');
           });
 
-          // TODO error codes no longer match when using emulator.
-          // test('should throw invalid-email ', () async {
-          //   // Setup
-          //   await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          //       email: email, password: testPassword);
-          //
-          //   try {
-          //     // Test
-          //     AuthCredential credential = EmailAuthProvider.credential(
-          //         email: 'invalid', password: testPassword);
-          //     await FirebaseAuth.instance.currentUser
-          //         .reauthenticateWithCredential(credential);
-          //   } on FirebaseAuthException catch (e) {
-          //     // Assertions
-          //     expect(e.code, equals('invalid-email'));
-          //     expect(e.message, equals('The email address is badly formatted.'));
-          //     return;
-          //   } catch (e) {
-          //     fail('should have thrown an FirebaseAuthException');
-          //   }
-          //
-          //   fail('should have thrown an error');
-          // });
-
           test('should throw wrong-password ', () async {
             // Setup
             await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -973,49 +949,6 @@ void main() {
       );
 
       group('updatePhoneNumber()', () {
-        // TODO this test is now flakey since switching to Auth emulator, consider
-        //      rewriting it.
-        // test('should update the phone number', () async {
-        //   // Setup
-        //   await FirebaseAuth.instance.signInAnonymously();
-        //
-        //   Future<String> getVerificationId() {
-        //     Completer completer = Completer<String>();
-        //
-        //     unawaited(FirebaseAuth.instance.verifyPhoneNumber(
-        //       phoneNumber: testPhoneNumber,
-        //       verificationCompleted: (PhoneAuthCredential credential) {
-        //         fail('Should not have auto resolved');
-        //       },
-        //       verificationFailed: (FirebaseException e) {
-        //         fail('Should not have errored');
-        //       },
-        //       codeSent: (String verificationId, int resetToken) {
-        //         completer.complete(verificationId);
-        //       },
-        //       codeAutoRetrievalTimeout: (String foo) {},
-        //     ));
-        //
-        //     return completer.future;
-        //   }
-        //
-        //   String storedVerificationId = await getVerificationId();
-        //
-        //   // Update user profile
-        //   await FirebaseAuth.instance.currentUser
-        //       .updatePhoneNumber(PhoneAuthProvider.credential(
-        //     verificationId: storedVerificationId,
-        //     smsCode: await emulatorPhoneVerificationCode(testPhoneNumber),
-        //   ));
-        //
-        //   await FirebaseAuth.instance.currentUser.reload();
-        //   User user = FirebaseAuth.instance.currentUser;
-        //
-        //   // Assertions
-        //   expect(user, isA<Object>());
-        //   expect(user.phoneNumber, equals(testPhoneNumber));
-        // }, skip: kIsWeb || defaultTargetPlatform == TargetPlatform.macOS);
-
         test(
           'should throw an FirebaseAuthException if verification id is invalid',
           () async {
@@ -1050,54 +983,7 @@ void main() {
               defaultTargetPlatform == TargetPlatform.macOS ||
               defaultTargetPlatform == TargetPlatform.windows,
         );
-
-        // TODO error codes no longer match up on emulator
-        // test('should throw an error when verification id is an empty string',
-        //     () async {
-        //   // Setup
-        //   await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        //       email: email, password: testPassword);
-        //
-        //   try {
-        //     // Test
-        //     await FirebaseAuth.instance.currentUser.updatePhoneNumber(
-        //         PhoneAuthProvider.credential(
-        //             verificationId: '', smsCode: '123456'));
-        //   } on FirebaseAuthException catch (e) {
-        //     expect(e.code, 'invalid-verification-id');
-        //     expect(e.message,
-        //         'The verification ID used to create the phone auth credential is invalid.');
-        //     return;
-        //   } catch (e) {
-        //     fail('should have thrown an FirebaseAuthException error');
-        //   }
-        //
-        //   fail('should have thrown an error');
-        // }, skip: kIsWeb || defaultTargetPlatform == TargetPlatform.macOS);
       });
-
-      // TODO fails on emulator but works on live Firebase project
-      // group('verifyBeforeUpdateEmail()', () {
-      //   test(
-      //     'should send verification email',
-      //     () async {
-      //       await ensureSignedIn(testEmail);
-      //       await FirebaseAuth.instance.currentUser.verifyBeforeUpdateEmail(
-      //           'updated-test-email@example.com',
-      //           ActionCodeSettings(
-      //             url: 'http://action-code-test.com',
-      //             handleCodeInApp: true,
-      //           ));
-      //
-      //       // Confirm with the Auth emulator that it triggered an email sending code.
-      //       final oobCode = await emulatorOutOfBandCode(
-      //           email, EmulatorOobCodeType.verifyEmail);
-      //       expect(oobCode, isNotNull);
-      //       expect(oobCode.email, testEmail);
-      //       expect(oobCode.type, EmulatorOobCodeType.verifyEmail);
-      //     },
-      //   );
-      // });
 
       group(
         'delete()',

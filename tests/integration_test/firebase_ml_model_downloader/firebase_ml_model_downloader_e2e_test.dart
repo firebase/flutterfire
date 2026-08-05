@@ -12,8 +12,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:tests/firebase_options.dart';
 
-const testModelName = 'mobilenet_v1_1_0_224';
-
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
@@ -26,28 +24,6 @@ void main() {
         );
       });
 
-      group(
-        'getModel',
-        () {
-          test(
-            'should return successfully',
-            () async {
-              await expectLater(
-                FirebaseModelDownloader.instance.getModel(
-                  testModelName,
-                  FirebaseModelDownloadType.latestModel,
-                ),
-                completes,
-              );
-            },
-            retry: 2,
-            timeout: const Timeout(Duration(seconds: 45)),
-          );
-        },
-        // TODO(salakar): always fails on CI but works fine locally.
-        skip: true,
-      );
-
       group('listDownloadedModels', () {
         test('should return successfully', () async {
           await expectLater(
@@ -55,21 +31,6 @@ void main() {
             completes,
           );
         });
-      });
-
-      group('deleteModel throws', () {
-        test(
-          'should return successfully',
-          () async {
-            await expectLater(
-              FirebaseModelDownloader.instance
-                  .deleteDownloadedModel(testModelName),
-              completes,
-            );
-          },
-          // TODO(salakar): skipping since getModel fails on CI but works fine locally (can't delete without first getting the model).
-          skip: true,
-        );
       });
     },
     // Only supported on Android & iOS/macOS.

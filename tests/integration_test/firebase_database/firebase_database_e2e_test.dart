@@ -44,7 +44,5 @@ void main() {
     setupQueryTests();
     setupDataSnapshotTests();
     setupWebOnlyTests();
-    // TODO(ehesp): Fix broken tests
-    // runOnDisconnectTests();
   });
 }
