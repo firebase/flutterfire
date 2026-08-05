@@ -225,7 +225,21 @@ jobs:
         # been observed to need more than 25 minutes on a cache miss.
         timeout-minutes: 35
         run: |
-          flutter build ios --no-codesign --simulator --debug --target=./integration_test/pipeline/pipeline_live_test.dart --dart-define=CI=true
+          # Flutter's SPM integration intermittently resolves a plugin package
+          # at its real path instead of through the ephemeral symlink farm
+          # ("Could not resolve package dependencies ... firebase_core doesn't
+          # exist"). Retry exactly once, like reusable_e2e_ios.yaml does; the
+          # second run resolves against the already-generated layout.
+          set +e
+          flutter build ios --no-codesign --simulator --debug --target=./integration_test/pipeline/pipeline_live_test.dart --dart-define=CI=true > build_output.log 2>&1
+          BUILD_EXIT=$?
+          cat build_output.log
+          if [ $BUILD_EXIT -ne 0 ] && grep -q "Could not resolve package dependencies" build_output.log; then
+            echo "SPM package resolution race detected; retrying the build once."
+            flutter build ios --no-codesign --simulator --debug --target=./integration_test/pipeline/pipeline_live_test.dart --dart-define=CI=true
+            BUILD_EXIT=$?
+          fi
+          exit $BUILD_EXIT
       - name: Ensure Simulator Ready
         env:
           SIMULATOR: ${{ steps.simulator.outputs.udid }}

@@ -311,11 +311,14 @@ void main() {
                 equals(ActionCodeInfoOperation.verifyEmail),
               );
             },
+            // Windows skipped like the enclosing group (checkActionCode is not
+            // implemented there); a per-test skip REPLACES the group skip in
+            // package:test metadata merging, so it must repeat that condition.
             // macOS skipped because createUserWithEmailAndPassword needs the
             // keychain sharing entitlement, which requires a provisioning
             // profile CI's ad-hoc signing cannot provide.
             // See: https://github.com/firebase/flutterfire/issues/9538
-            skip: !kIsWeb && Platform.isMacOS,
+            skip: !kIsWeb && (Platform.isWindows || Platform.isMacOS),
           );
 
           test(
@@ -348,7 +351,7 @@ void main() {
             },
             // macOS skipped for the same keychain reason as the verifyEmail
             // test above. See: https://github.com/firebase/flutterfire/issues/9538
-            skip: !kIsWeb && Platform.isMacOS,
+            skip: !kIsWeb && (Platform.isWindows || Platform.isMacOS),
           );
         },
         skip: !kIsWeb && Platform.isWindows,
@@ -507,7 +510,7 @@ void main() {
                 fail(e.toString());
               }
             },
-            skip: !kIsWeb && Platform.isMacOS,
+            skip: !kIsWeb && (Platform.isWindows || Platform.isMacOS),
           );
 
           test('fails if the user could not be found', () async {
