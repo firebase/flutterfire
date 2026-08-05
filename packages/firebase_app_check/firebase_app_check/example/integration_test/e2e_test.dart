@@ -26,9 +26,14 @@ void main() {
     'firebase_app_check',
     () {
       setUpAll(() async {
-        await Firebase.initializeApp(
-          options: DefaultFirebaseOptions.currentPlatform,
-        );
+        // The native SDK may already have configured [DEFAULT] from a bundled
+        // GoogleService-Info.plist (the plugin registrant does this before any
+        // Dart runs); initializing again would throw [core/duplicate-app].
+        if (Firebase.apps.isEmpty) {
+          await Firebase.initializeApp(
+            options: DefaultFirebaseOptions.currentPlatform,
+          );
+        }
       });
 
       test(

@@ -464,6 +464,15 @@ jobs:
         # both dependency managers are exercised.
         if: inputs.ios-spm
         run: flutter config --enable-swift-package-manager
+      - name: Pre-warm Swift Package Manager integration
+        if: inputs.ios-spm
+        # Generates the ephemeral package layout (and the SPM pbxproj
+        # integration) before the real build: resolving during the first full
+        # build intermittently looks up plugin siblings at their real paths,
+        # where ../firebase_core does not exist.
+        working-directory: ${{ inputs.package-path }}/example
+        timeout-minutes: 10
+        run: flutter build ios --config-only --no-codesign --simulator --debug --target="./$TEST_TARGET" --dart-define=CI=true
       - name: Disable Swift Package Manager for iOS
         # Recent stable Flutter enables SPM by default, which turns intended
         # CocoaPods builds into hybrid ones. This job's CocoaPods coverage is
