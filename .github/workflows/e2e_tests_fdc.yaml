@@ -6,20 +6,22 @@ concurrency:
 
 on:
   pull_request:
-    paths-ignore:
-      - 'docs/**'
-      - 'website/**'
-      - '**/example/**'
-      - '**/flutterfire_ui/**'
-      - '**.md'
+    # Data Connect e2e only exercises this package; running it on every PR
+    # costs 4 jobs (2 macOS) for changes that cannot affect it. The nightly
+    # workflow_call still runs it unconditionally.
+    paths:
+      - 'packages/firebase_data_connect/**'
+      - 'packages/firebase_core/**'
+      - '.github/workflows/e2e_tests_fdc.yaml'
+      - '.github/actions/setup-flutterfire/**'
   push:
     branches:
       - main
-    paths-ignore:
-      - 'docs/**'
-      - 'website/**'
-      - '**/example/**'
-      - '**.md'
+    paths:
+      - 'packages/firebase_data_connect/**'
+      - 'packages/firebase_core/**'
+      - '.github/workflows/e2e_tests_fdc.yaml'
+      - '.github/actions/setup-flutterfire/**'
   workflow_call:
     inputs:
       nightly_test_mode:
@@ -33,8 +35,6 @@ jobs:
   android:
     runs-on: ubuntu-latest
     timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 45 }}
-    strategy:
-      fail-fast: false
     env:
       AVD_ARCH: x86_64
       AVD_API_LEVEL: 34
@@ -136,8 +136,6 @@ jobs:
   ios:
     runs-on: macos-15
     timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 45 }}
-    strategy:
-      fail-fast: false
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
       - name: Xcode
@@ -243,8 +241,6 @@ jobs:
   web:
     runs-on: macos-latest
     timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 15 }}
-    strategy:
-      fail-fast: false
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
       - uses: ./.github/actions/setup-flutterfire
@@ -298,8 +294,6 @@ jobs:
   web-wasm:
     runs-on: macos-latest
     timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 15 }}
-    strategy:
-      fail-fast: false
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
       - uses: ./.github/actions/setup-flutterfire
