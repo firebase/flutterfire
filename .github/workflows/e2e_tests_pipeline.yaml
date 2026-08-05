@@ -52,7 +52,6 @@ jobs:
       - uses: ./.github/actions/setup-flutterfire
         with:
           npm-cache: 'false'
-          flutter-version: '3.41.9'
           bootstrap-scope: 'cloud_firestore*'
       - name: Inject Firebase config for pipeline E2E
         env:
@@ -184,7 +183,6 @@ jobs:
       - uses: ./.github/actions/setup-flutterfire
         with:
           npm-cache: 'false'
-          flutter-version: '3.41.9'
           bootstrap-scope: 'cloud_firestore*'
       - name: Enable Swift Package Manager for iOS
         run: flutter config --enable-swift-package-manager

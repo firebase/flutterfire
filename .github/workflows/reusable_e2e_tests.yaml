@@ -126,7 +126,7 @@ on:
       flutter-version:
         description: >-
           Pinned Flutter version. Empty (the default) leaves Android/web/Windows
-          unpinned; the macOS-hosted iOS and macOS jobs fall back to 3.41.9,
+          unpinned (stable channel) on every platform,
           which is what every product pins today.
         type: string
         default: ''
@@ -432,7 +432,7 @@ jobs:
         with:
           node: ${{ inputs.inject-config-secrets && 'false' || 'true' }}
           java: ${{ inputs.inject-config-secrets && 'false' || 'true' }}
-          flutter-version: ${{ inputs.flutter-version || '3.41.9' }}
+          flutter-version: ${{ inputs.flutter-version }}
           firebase-tools-version: ${{ inputs.inject-config-secrets && '' || inputs.firebase-tools-version }}
           bootstrap-scope: ${{ inputs.package-scope }}
       - name: Enable Swift Package Manager for iOS
@@ -622,7 +622,7 @@ jobs:
         with:
           node: ${{ inputs.inject-config-secrets && 'false' || 'true' }}
           java: ${{ inputs.inject-config-secrets && 'false' || 'true' }}
-          flutter-version: ${{ inputs.flutter-version || '3.41.9' }}
+          flutter-version: ${{ inputs.flutter-version }}
           firebase-tools-version: ${{ inputs.inject-config-secrets && '' || inputs.firebase-tools-version }}
           bootstrap-scope: ${{ inputs.package-scope }}
       - uses: hendrikmuhs/ccache-action@d62db5f07c26379fc4b4e0916f098a92573c3b03

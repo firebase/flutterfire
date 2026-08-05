@@ -139,7 +139,6 @@ jobs:
         with:
           node: 'false'
           java: 'false'
-          flutter-version: '3.41.9'
           # This job needs the whole workspace bootstrapped, which melos-action does itself.
           melos-run-bootstrap: 'true'
       - name: 'Build Examples'
@@ -167,7 +166,6 @@ jobs:
         with:
           node: 'false'
           java: 'false'
-          flutter-version: '3.41.9'
           # This job needs the whole workspace bootstrapped, which melos-action does itself.
           melos-run-bootstrap: 'true'
       - name: Setup firebase_core example app to test Swift integration
@@ -198,7 +196,6 @@ jobs:
         with:
           node: 'false'
           java: 'false'
-          flutter-version: '3.41.9'
           # This job needs the whole workspace bootstrapped, which melos-action does itself.
           melos-run-bootstrap: 'true'
       - name: Setup firebase_core example app to test Swift integration

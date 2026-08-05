@@ -201,7 +201,6 @@ jobs:
         run: sudo xcode-select -s /Applications/Xcode_26.2.app/Contents/Developer
       - uses: ./.github/actions/setup-flutterfire
         with:
-          flutter-version: '3.41.9'
           firebase-tools-version: '15.25.1'
           bootstrap-scope: tests
       - uses: hendrikmuhs/ccache-action@d62db5f07c26379fc4b4e0916f098a92573c3b03
@@ -333,7 +332,6 @@ jobs:
         run: sudo xcode-select -s /Applications/Xcode_26.2.app/Contents/Developer
       - uses: ./.github/actions/setup-flutterfire
         with:
-          flutter-version: '3.41.9'
           firebase-tools-version: '15.25.1'
           bootstrap-scope: tests
       - uses: hendrikmuhs/ccache-action@d62db5f07c26379fc4b4e0916f098a92573c3b03
