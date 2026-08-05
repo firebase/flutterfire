@@ -619,24 +619,36 @@ jobs:
           # flutter test on Apple simulators may exit 1 (e.g. "Failed to
           # foreground app") even when every test passed - same behaviour the
           # macOS job launders. Check the actual results to decide.
+          run_flutter_test() {
+            rm -f flutter_test_output.log
+            # File redirect, never capture (iOS spawns log streamers that hold
+            # a captured pipe open forever). perl-alarm bounds the known
+            # zero-output startup hang well below the step timeout.
+            perl -e 'alarm shift; exec @ARGV' 900 \
+              flutter test "$TEST_TARGET" -d "$SIMULATOR" --timeout 10x --dart-define=CI=true > flutter_test_output.log 2>&1
+            FT_EXIT=$?
+            cat flutter_test_output.log
+          }
           set +e
-          # Redirect to a file, never capture: command substitution waits for
-          # stdout EOF, and flutter test on iOS spawns simulator log streamers
-          # that inherit the pipe and keep it open - the step hangs to its
-          # timeout with zero output. File descriptors do not block.
-          flutter test "$TEST_TARGET" -d "$SIMULATOR" --timeout 10x --dart-define=CI=true > flutter_test_output.log 2>&1
-          EXIT_CODE=$?
-          cat flutter_test_output.log
-          if [ $EXIT_CODE -ne 0 ]; then
-            if grep -q "Some tests failed" flutter_test_output.log || grep -q "test failed" flutter_test_output.log; then
-              exit 1
-            fi
-            if grep -q "tests passed" flutter_test_output.log; then
-              echo "All tests passed but flutter test exited with $EXIT_CODE. Treating as success."
-              exit 0
-            fi
-            exit $EXIT_CODE
+          run_flutter_test
+          if ! grep -Eq '[0-9]+ tests? passed' flutter_test_output.log && ! grep -Eq '[0-9]+ failed' flutter_test_output.log; then
+            echo "flutter test produced no result tally (startup hang) - retrying once."
+            run_flutter_test
           fi
+          # Trust only the runner's own tally, parsed numerically. Substring
+          # checks are how '0 tests passed, 1 failed' once laundered into a
+          # green job.
+          PASSED=$(grep -Eo '[0-9]+ tests? passed' flutter_test_output.log | tail -1 | grep -Eo '^[0-9]+')
+          FAILED=$(grep -Eo '[0-9]+ failed' flutter_test_output.log | tail -1 | grep -Eo '^[0-9]+')
+          : "${PASSED:=0}"; : "${FAILED:=0}"
+          echo "Result tally: passed=$PASSED failed=$FAILED (flutter test exit $FT_EXIT)"
+          if [ "$FAILED" -gt 0 ] || [ "$PASSED" -eq 0 ]; then
+            exit 1
+          fi
+          if [ "$FT_EXIT" -ne 0 ]; then
+            echo "All $PASSED tests passed; tolerating flutter test exit $FT_EXIT (simulator foreground quirk)."
+          fi
+          exit 0
           EOF
           )
           # `emulators:exec` boots the suite, runs the command and tears the suite
@@ -652,24 +664,36 @@ jobs:
         run: |
           # Same "exit 1 despite all tests passing" laundering as the
           # emulator-tier step above and the macOS job.
+          run_flutter_test() {
+            rm -f flutter_test_output.log
+            # File redirect, never capture (iOS spawns log streamers that hold
+            # a captured pipe open forever). perl-alarm bounds the known
+            # zero-output startup hang well below the step timeout.
+            perl -e 'alarm shift; exec @ARGV' 900 \
+              flutter test "$TEST_TARGET" -d "$SIMULATOR" --timeout 10x --dart-define=CI=true > flutter_test_output.log 2>&1
+            FT_EXIT=$?
+            cat flutter_test_output.log
+          }
           set +e
-          # Redirect to a file, never capture: command substitution waits for
-          # stdout EOF, and flutter test on iOS spawns simulator log streamers
-          # that inherit the pipe and keep it open - the step hangs to its
-          # timeout with zero output. File descriptors do not block.
-          flutter test "$TEST_TARGET" -d "$SIMULATOR" --timeout 10x --dart-define=CI=true > flutter_test_output.log 2>&1
-          EXIT_CODE=$?
-          cat flutter_test_output.log
-          if [ $EXIT_CODE -ne 0 ]; then
-            if grep -q "Some tests failed" flutter_test_output.log || grep -q "test failed" flutter_test_output.log; then
-              exit 1
-            fi
-            if grep -q "tests passed" flutter_test_output.log; then
-              echo "All tests passed but flutter test exited with $EXIT_CODE. Treating as success."
-              exit 0
-            fi
-            exit $EXIT_CODE
+          run_flutter_test
+          if ! grep -Eq '[0-9]+ tests? passed' flutter_test_output.log && ! grep -Eq '[0-9]+ failed' flutter_test_output.log; then
+            echo "flutter test produced no result tally (startup hang) - retrying once."
+            run_flutter_test
           fi
+          # Trust only the runner's own tally, parsed numerically. Substring
+          # checks are how '0 tests passed, 1 failed' once laundered into a
+          # green job.
+          PASSED=$(grep -Eo '[0-9]+ tests? passed' flutter_test_output.log | tail -1 | grep -Eo '^[0-9]+')
+          FAILED=$(grep -Eo '[0-9]+ failed' flutter_test_output.log | tail -1 | grep -Eo '^[0-9]+')
+          : "${PASSED:=0}"; : "${FAILED:=0}"
+          echo "Result tally: passed=$PASSED failed=$FAILED (flutter test exit $FT_EXIT)"
+          if [ "$FAILED" -gt 0 ] || [ "$PASSED" -eq 0 ]; then
+            exit 1
+          fi
+          if [ "$FT_EXIT" -ne 0 ]; then
+            echo "All $PASSED tests passed; tolerating flutter test exit $FT_EXIT (simulator foreground quirk)."
+          fi
+          exit 0
       - name: Save Firebase Emulator Cache
         # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
         if: ${{ inputs.use-firebase-emulators && github.ref == 'refs/heads/main' }}
@@ -820,26 +844,36 @@ jobs:
           # layer of quote escaping onto it.
           TEST_COMMAND=$(cat <<'EOF'
           cd "${GITHUB_WORKSPACE}/${PACKAGE_PATH}/example"
-          # flutter test on macOS CI may exit 1 due to "Failed to foreground app"
-          # even when all tests pass. Check actual test results to determine success.
+          run_flutter_test() {
+            rm -f flutter_test_output.log
+            # File redirect, never capture (iOS spawns log streamers that hold
+            # a captured pipe open forever). perl-alarm bounds the known
+            # zero-output startup hang well below the step timeout.
+            perl -e 'alarm shift; exec @ARGV' 900 \
+              flutter test "$TEST_TARGET" -d macos --timeout 10x --dart-define=CI=true > flutter_test_output.log 2>&1
+            FT_EXIT=$?
+            cat flutter_test_output.log
+          }
           set +e
-          OUTPUT=$(flutter test \
-            "$TEST_TARGET" \
-            -d macos \
-            --dart-define=CI=true \
-            --timeout 10x 2>&1)
-          EXIT_CODE=$?
-          echo "$OUTPUT"
-          if [ $EXIT_CODE -ne 0 ]; then
-            if echo "$OUTPUT" | grep -q "Some tests failed" || echo "$OUTPUT" | grep -q "test failed"; then
-              exit 1
-            fi
-            if echo "$OUTPUT" | grep -q "tests passed"; then
-              echo "All tests passed but flutter test exited with $EXIT_CODE (likely 'Failed to foreground app'). Treating as success."
-              exit 0
-            fi
-            exit $EXIT_CODE
+          run_flutter_test
+          if ! grep -Eq '[0-9]+ tests? passed' flutter_test_output.log && ! grep -Eq '[0-9]+ failed' flutter_test_output.log; then
+            echo "flutter test produced no result tally (startup hang) - retrying once."
+            run_flutter_test
           fi
+          # Trust only the runner's own tally, parsed numerically. Substring
+          # checks are how '0 tests passed, 1 failed' once laundered into a
+          # green job.
+          PASSED=$(grep -Eo '[0-9]+ tests? passed' flutter_test_output.log | tail -1 | grep -Eo '^[0-9]+')
+          FAILED=$(grep -Eo '[0-9]+ failed' flutter_test_output.log | tail -1 | grep -Eo '^[0-9]+')
+          : "${PASSED:=0}"; : "${FAILED:=0}"
+          echo "Result tally: passed=$PASSED failed=$FAILED (flutter test exit $FT_EXIT)"
+          if [ "$FAILED" -gt 0 ] || [ "$PASSED" -eq 0 ]; then
+            exit 1
+          fi
+          if [ "$FT_EXIT" -ne 0 ]; then
+            echo "All $PASSED tests passed; tolerating flutter test exit $FT_EXIT (simulator foreground quirk)."
+          fi
+          exit 0
           EOF
           )
           # `emulators:exec` boots the suite, runs the command and tears the suite
@@ -851,26 +885,36 @@ jobs:
         working-directory: ${{ inputs.package-path }}/example
         timeout-minutes: 20
         run: |
-          # flutter test on macOS CI may exit 1 due to "Failed to foreground app"
-          # even when all tests pass. Check actual test results to determine success.
+          run_flutter_test() {
+            rm -f flutter_test_output.log
+            # File redirect, never capture (iOS spawns log streamers that hold
+            # a captured pipe open forever). perl-alarm bounds the known
+            # zero-output startup hang well below the step timeout.
+            perl -e 'alarm shift; exec @ARGV' 900 \
+              flutter test "$TEST_TARGET" -d macos --timeout 10x --dart-define=CI=true > flutter_test_output.log 2>&1
+            FT_EXIT=$?
+            cat flutter_test_output.log
+          }
           set +e
-          OUTPUT=$(flutter test \
-            "$TEST_TARGET" \
-            -d macos \
-            --dart-define=CI=true \
-            --timeout 10x 2>&1)
-          EXIT_CODE=$?
-          echo "$OUTPUT"
-          if [ $EXIT_CODE -ne 0 ]; then
-            if echo "$OUTPUT" | grep -q "Some tests failed" || echo "$OUTPUT" | grep -q "test failed"; then
-              exit 1
-            fi
-            if echo "$OUTPUT" | grep -q "tests passed"; then
-              echo "All tests passed but flutter test exited with $EXIT_CODE (likely 'Failed to foreground app'). Treating as success."
-              exit 0
-            fi
-            exit $EXIT_CODE
+          run_flutter_test
+          if ! grep -Eq '[0-9]+ tests? passed' flutter_test_output.log && ! grep -Eq '[0-9]+ failed' flutter_test_output.log; then
+            echo "flutter test produced no result tally (startup hang) - retrying once."
+            run_flutter_test
           fi
+          # Trust only the runner's own tally, parsed numerically. Substring
+          # checks are how '0 tests passed, 1 failed' once laundered into a
+          # green job.
+          PASSED=$(grep -Eo '[0-9]+ tests? passed' flutter_test_output.log | tail -1 | grep -Eo '^[0-9]+')
+          FAILED=$(grep -Eo '[0-9]+ failed' flutter_test_output.log | tail -1 | grep -Eo '^[0-9]+')
+          : "${PASSED:=0}"; : "${FAILED:=0}"
+          echo "Result tally: passed=$PASSED failed=$FAILED (flutter test exit $FT_EXIT)"
+          if [ "$FAILED" -gt 0 ] || [ "$PASSED" -eq 0 ]; then
+            exit 1
+          fi
+          if [ "$FT_EXIT" -ne 0 ]; then
+            echo "All $PASSED tests passed; tolerating flutter test exit $FT_EXIT (simulator foreground quirk)."
+          fi
+          exit 0
       - name: Save Firebase Emulator Cache
         continue-on-error: true
         # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
