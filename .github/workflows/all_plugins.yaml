@@ -59,7 +59,13 @@ jobs:
       # You need to switch to Flutter 3.3.0, and run this test manually to check it works and update PR to confirm its success
       - name: 'Pub Check (publish dry run)'
         if: always()
+        # `melos bootstrap` (run for the analysis above) syncs versions into the
+        # Package.swift / Constants.swift files, and `pub publish --dry-run`
+        # refuses a dirty tree ("checked-in files are modified in git") - the
+        # standalone job this was folded from started with a fresh checkout.
+        # Restore the committed state before validating.
         run: |
+          git checkout -- packages/
           melos exec -c 1 --no-private --ignore="*example*" -- \
             dart pub publish --dry-run
       - name: 'Flutter Pub Get (examples)'
