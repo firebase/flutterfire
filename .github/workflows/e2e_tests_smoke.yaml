@@ -203,6 +203,10 @@ jobs:
         with:
           firebase-tools-version: '15.25.1'
           bootstrap-scope: tests
+      - name: Disable Swift Package Manager
+        # Recent stable Flutter enables SPM by default; the smoke app's Apple
+        # builds are CocoaPods by design (tests/ios, tests/macos Podfiles).
+        run: flutter config --no-enable-swift-package-manager
       - uses: hendrikmuhs/ccache-action@d62db5f07c26379fc4b4e0916f098a92573c3b03
         name: Xcode Compile Cache
         with:
@@ -334,6 +338,10 @@ jobs:
         with:
           firebase-tools-version: '15.25.1'
           bootstrap-scope: tests
+      - name: Disable Swift Package Manager
+        # Recent stable Flutter enables SPM by default; the smoke app's Apple
+        # builds are CocoaPods by design (tests/ios, tests/macos Podfiles).
+        run: flutter config --no-enable-swift-package-manager
       - uses: hendrikmuhs/ccache-action@d62db5f07c26379fc4b4e0916f098a92573c3b03
         name: Xcode Compile Cache
         with:

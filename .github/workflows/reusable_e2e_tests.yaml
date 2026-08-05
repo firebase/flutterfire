@@ -455,6 +455,12 @@ jobs:
         # both dependency managers are exercised.
         if: inputs.ios-spm
         run: flutter config --enable-swift-package-manager
+      - name: Disable Swift Package Manager for iOS
+        # Recent stable Flutter enables SPM by default, which turns intended
+        # CocoaPods builds into hybrid ones. This job's CocoaPods coverage is
+        # deliberate (ios-spm: false), so opt out explicitly.
+        if: ${{ !inputs.ios-spm }}
+        run: flutter config --no-enable-swift-package-manager
       - uses: hendrikmuhs/ccache-action@d62db5f07c26379fc4b4e0916f098a92573c3b03
         name: Xcode Compile Cache
         with:
@@ -646,6 +652,11 @@ jobs:
           flutter-version: ${{ inputs.flutter-version }}
           firebase-tools-version: ${{ inputs.inject-config-secrets && '' || inputs.firebase-tools-version }}
           bootstrap-scope: ${{ inputs.package-scope }}
+      - name: Disable Swift Package Manager
+        # Recent stable Flutter enables SPM by default, which turns intended
+        # CocoaPods builds into hybrid ones. macOS is this workflow's CocoaPods
+        # coverage by design, so opt out explicitly.
+        run: flutter config --no-enable-swift-package-manager
       - uses: hendrikmuhs/ccache-action@d62db5f07c26379fc4b4e0916f098a92573c3b03
         name: Xcode Compile Cache
         with:

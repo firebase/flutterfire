@@ -409,13 +409,17 @@ Map<String, String?> _optionsFromDart(String exampleRoot, String platform) {
       .readAsStringSync()
       .replaceAll(RegExp(r'^\s*//.*$', multiLine: true), '');
 
+  // Both declaration shapes exist: this script's own template writes
+  // `static const ios = ...`, while the injected live config (and flutterfire
+  // configure output) writes the typed `static const FirebaseOptions ios = ...`.
   final block = RegExp(
-    'static\\s+const\\s+$platform\\s*=\\s*FirebaseOptions\\(([\\s\\S]*?)\\);',
+    'static\\s+const\\s+(?:FirebaseOptions\\s+)?$platform\\s*=\\s*FirebaseOptions\\(([\\s\\S]*?)\\);',
   ).firstMatch(source);
   if (block == null) {
     stderr.writeln(
       'Cannot write the $platform Firebase config: no '
-      '"static const $platform = FirebaseOptions(...)" found in $path.',
+      '"static const [FirebaseOptions] $platform = FirebaseOptions(...)" '
+      'found in $path.',
     );
     exit(1);
   }
