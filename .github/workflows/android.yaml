@@ -51,20 +51,11 @@ jobs:
       AVD_TARGET: google_apis
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
-      - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
-        name: Install Node.js 20
+      - uses: ./.github/actions/setup-flutterfire
         with:
-          node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: '.github/workflows/scripts/functions/package-lock.json'
-      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961
-        with:
-          distribution: 'temurin'
-          java-version: '21'
-      - name: 'Install Tools'
-        run: |
-          sudo npm i -g firebase-tools@15.25.1
-          echo "FIREBASE_TOOLS_VERSION=$(firebase --version)" >> $GITHUB_ENV
+          firebase-tools-version: '15.25.1'
+          # Each matrix leg bootstraps only the packages it exercises.
+          bootstrap-scope: ${{ matrix.working_directory == 'tests' && 'tests' || 'cloud_firestore*' }}
       - name: Firebase Emulator Cache
         id: firebase-emulator-cache
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
@@ -77,20 +68,8 @@ jobs:
           key: firebase-emulators-v5-${{ env.FIREBASE_TOOLS_VERSION }}
           # Trailing dash so this never prefix-matches a future version's key
           restore-keys: firebase-emulators-v5-
-      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
-        with:
-          channel: 'stable'
-          cache: true
-          cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
-          pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
-      - uses: bluefireteam/melos-action@2982f8e4fc92440a219490009d6d05195cb1a6a5
-        with:
-          run-bootstrap: false
-          melos-version: '5.3.0'
       - name: Generate dummy Firebase configs
         run: dart ./.github/workflows/scripts/generate-dummy-firebase-configs.dart --firestore-native
-      - name: 'Bootstrap package'
-        run: melos bootstrap --scope tests && melos bootstrap --scope "cloud_firestore*"
       - name: Start Firebase Emulator
         timeout-minutes: 8
         run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
@@ -194,22 +173,10 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
-      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961
+      - uses: ./.github/actions/setup-flutterfire
         with:
-          distribution: 'temurin'
-          java-version: '21'
-      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
-        with:
-          channel: 'stable'
-          cache: true
-          cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
-          pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
-      - uses: bluefireteam/melos-action@2982f8e4fc92440a219490009d6d05195cb1a6a5
-        with:
-          run-bootstrap: false
-          melos-version: '5.3.0'
-      - name: 'Bootstrap tests package'
-        run: melos bootstrap --scope tests
+          node: 'false'
+          bootstrap-scope: 'tests'
       - name: Gradle cache
         uses: gradle/actions/setup-gradle@90ddb51e90a5fd9ba75f40cf85156b7b41bf76a3
       - name: 'Build tests app with AGP 9'
