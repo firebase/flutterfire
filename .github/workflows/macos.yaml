@@ -51,6 +51,11 @@ jobs:
         name: Install Node.js 20
         with:
           node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: '.github/workflows/scripts/functions/package-lock.json'
+      - name: Xcode
+        # Firebase iOS SDK: minimum Xcode 26.2.
+        run: sudo xcode-select -s /Applications/Xcode_26.2.app/Contents/Developer
       - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961
         with:
           distribution: 'temurin'
@@ -58,7 +63,9 @@ jobs:
       - uses: hendrikmuhs/ccache-action@d62db5f07c26379fc4b4e0916f098a92573c3b03
         name: Xcode Compile Cache
         with:
-          key: xcode-cache-${{ runner.os }}
+          # Distinct from the iOS workflow's key: both run on macos-15, so a shared
+          # `xcode-cache-${{ runner.os }}` had the two workflows clobbering each other.
+          key: xcode-ccache-macos
           save: "${{ github.ref == 'refs/heads/main' }}"
           max-size: 700M
       - name: Pods Cache
@@ -68,12 +75,15 @@ jobs:
         with:
           # Must match the save path exactly
           path: tests/macos/Pods
-          key: pods-v3-${{ runner.os }}-macos-${{ hashFiles('tests/pubspec.lock') }}
-          restore-keys: pods-v3-${{ runner.os }}-macos
+          # Keyed on the Podfile and the pinned Firebase SDK version, not tests/pubspec.lock:
+          # that file is gitignored, so hashFiles() returned an empty string and the key
+          # never changed - the cache could never be invalidated.
+          key: pods-v4-${{ runner.os }}-macos-${{ hashFiles('tests/macos/Podfile', 'packages/firebase_core/firebase_core/ios/firebase_sdk_version.rb') }}
+          restore-keys: pods-v4-${{ runner.os }}-macos-
       - name: 'Install Tools'
         run: |
-          sudo npm i -g firebase-tools
-          echo "FIREBASE_TOOLS_VERSION=$(npm firebase --version)" >> $GITHUB_ENV
+          sudo npm i -g firebase-tools@15.25.1
+          echo "FIREBASE_TOOLS_VERSION=$(firebase --version)" >> $GITHUB_ENV
       - name: Firebase Emulator Cache
         id: firebase-emulator-cache
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
@@ -83,8 +93,9 @@ jobs:
           enableCrossOsArchive: true
           # Must match the save path exactly
           path: ~/.cache/firebase/emulators
-          key: firebase-emulators-v3-${{ env.FIREBASE_TOOLS_VERSION }}
-          restore-keys: firebase-emulators-v3
+          key: firebase-emulators-v5-${{ env.FIREBASE_TOOLS_VERSION }}
+          # Trailing dash so this never prefix-matches a future version's key
+          restore-keys: firebase-emulators-v5-
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
         with:
           channel: 'stable'
@@ -102,6 +113,7 @@ jobs:
         run: melos bootstrap --scope tests && melos bootstrap --scope "cloud_firestore*"
       - name: 'Build Application'
         working-directory: ${{ matrix.working_directory }}
+        timeout-minutes: 25
         run: |
           export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
           export CCACHE_SLOPPINESS=clang_index_store,file_stat_matches,include_file_ctime,include_file_mtime,ivfsoverlay,pch_defines,modules,system_headers,time_macros
@@ -113,9 +125,11 @@ jobs:
           ccache -s
       - name: Start Firebase Emulator
         # Chown the npm cache directory to the runner user to avoid permission issues
+        timeout-minutes: 8
         run: sudo chown -R 501:20 "/Users/runner/.npm" && cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
       - name: 'E2E Tests'
         working-directory: ${{ matrix.working_directory }}
+        timeout-minutes: 30
         run: |
           # flutter test on macOS CI may exit 1 due to "Failed to foreground app"
           # even when all tests pass. Check actual test results to determine success.
