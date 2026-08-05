@@ -9,6 +9,13 @@ FLUTTER_DRIVE_TIMEOUT_SECONDS="${FLUTTER_DRIVE_TIMEOUT_SECONDS:-180}"
 FLUTTER_DRIVE_MAX_ATTEMPTS="${FLUTTER_DRIVE_MAX_ATTEMPTS:-4}"
 FLUTTER_DRIVE_EXTRA_ARGS="${FLUTTER_DRIVE_EXTRA_ARGS:-}"
 
+# The embedded Python reads these from its environment; without the export a
+# variable defaulted above is invisible to it, the KeyError kills the run
+# before flutter drive starts, and on macOS (bash 3.2) that failure was
+# silently swallowed — the job went green having run zero tests.
+export FLUTTER_DRIVE_TARGET FLUTTER_DRIVE_DRIVER FLUTTER_DRIVE_DEVICE \
+  FLUTTER_DRIVE_TIMEOUT_SECONDS FLUTTER_DRIVE_MAX_ATTEMPTS FLUTTER_DRIVE_EXTRA_ARGS
+
 cleanup_web_processes() {
   # Chrome's process name differs per OS: "Google Chrome" on macOS,
   # "chrome"/"google-chrome" on Linux.
@@ -95,7 +102,8 @@ PY
   wait "$chromedriver_pid" 2>/dev/null || true
   cleanup_web_processes
 
-  output=$(<output.log)
+  # output.log may not exist if the drive process died before writing it.
+  output=$(cat output.log 2>/dev/null || true)
   if [[ "$output" =~ \[E\] ]]; then
     # You will see "All tests passed." in the logs even when tests failed.
     echo "All tests did not pass. Please check the logs for more information."
