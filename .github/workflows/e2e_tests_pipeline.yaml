@@ -197,13 +197,23 @@ jobs:
           echo "$FIREBASE_OPTIONS_DART" > packages/cloud_firestore/cloud_firestore/pipeline_example/lib/firebase_options.dart
           echo "$GOOGLE_SERVICES_JSON" > packages/cloud_firestore/cloud_firestore/pipeline_example/android/app/google-services.json
           echo "$GOOGLE_SERVICE_INFO_PLIST" > packages/cloud_firestore/cloud_firestore/pipeline_example/ios/Runner/GoogleService-Info.plist
-      - name: Disable Swift Package Manager
-        # Recent stable Flutter enables SPM by default; this job builds with
-        # CocoaPods. cloud_firestore's iOS SPM coverage lives in the
-        # e2e-firestore workflow, where the ephemeral package layout resolves
-        # correctly - here it did not under stable ("the folder firebase_core
-        # doesn't exist").
-        run: flutter config --no-enable-swift-package-manager
+      - name: Enable Swift Package Manager
+        # SPM, not CocoaPods: pods compile gRPC-C++/BoringSSL from source,
+        # which alone overran a 35-minute build budget on these runners, while
+        # SPM pulls Google's precompiled grpc/abseil binaries. The resolution
+        # failure that once forced CocoaPods here ("the folder firebase_core
+        # doesn't exist") was the pinned Xcode 26.2 canonicalizing the plugin
+        # symlink farm; the image-default Xcode resolves it fine, as the
+        # e2e-firestore SPM job proves every run.
+        run: flutter config --enable-swift-package-manager
+      - name: Prepare iOS project for Swift Package Manager
+        # The committed Podfile is what CocoaPods users of the example rely
+        # on, and `flutter build` prefers CocoaPods whenever one is present.
+        working-directory: packages/cloud_firestore/cloud_firestore/pipeline_example/ios
+        run: |
+          if [ -f Podfile ]; then pod deintegrate; fi
+          rm -f Podfile Podfile.lock
+          rm -rf Pods
       - uses: futureware-tech/simulator-action@e89aa8f93d3aec35083ff49d2854d07f7186f7f5
         id: simulator
         with:

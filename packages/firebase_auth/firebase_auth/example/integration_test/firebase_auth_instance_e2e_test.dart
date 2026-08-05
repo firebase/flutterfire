@@ -284,58 +284,72 @@ void main() {
             }
           });
 
-          test('returns correct operation for verifyEmail action code',
-              () async {
-            final email = generateRandomEmail();
-            await FirebaseAuth.instance.createUserWithEmailAndPassword(
-              email: email,
-              password: testPassword,
-            );
+          test(
+            'returns correct operation for verifyEmail action code',
+            () async {
+              final email = generateRandomEmail();
+              await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                email: email,
+                password: testPassword,
+              );
 
-            await FirebaseAuth.instance.currentUser!.sendEmailVerification();
+              await FirebaseAuth.instance.currentUser!.sendEmailVerification();
 
-            final oobCode = await emulatorOutOfBandCode(
-              email,
-              EmulatorOobCodeType.verifyEmail,
-            );
-            expect(oobCode, isNotNull);
+              final oobCode = await emulatorOutOfBandCode(
+                email,
+                EmulatorOobCodeType.verifyEmail,
+              );
+              expect(oobCode, isNotNull);
 
-            final actionCodeInfo = await FirebaseAuth.instance.checkActionCode(
-              oobCode!.oobCode!,
-            );
+              final actionCodeInfo =
+                  await FirebaseAuth.instance.checkActionCode(
+                oobCode!.oobCode!,
+              );
 
-            expect(
-              actionCodeInfo.operation,
-              equals(ActionCodeInfoOperation.verifyEmail),
-            );
-          });
+              expect(
+                actionCodeInfo.operation,
+                equals(ActionCodeInfoOperation.verifyEmail),
+              );
+            },
+            // macOS skipped because createUserWithEmailAndPassword needs the
+            // keychain sharing entitlement, which requires a provisioning
+            // profile CI's ad-hoc signing cannot provide.
+            // See: https://github.com/firebase/flutterfire/issues/9538
+            skip: !kIsWeb && Platform.isMacOS,
+          );
 
-          test('returns correct operation for passwordReset action code',
-              () async {
-            final email = generateRandomEmail();
-            await FirebaseAuth.instance.createUserWithEmailAndPassword(
-              email: email,
-              password: testPassword,
-            );
-            await ensureSignedOut();
+          test(
+            'returns correct operation for passwordReset action code',
+            () async {
+              final email = generateRandomEmail();
+              await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                email: email,
+                password: testPassword,
+              );
+              await ensureSignedOut();
 
-            await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+              await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
 
-            final oobCode = await emulatorOutOfBandCode(
-              email,
-              EmulatorOobCodeType.passwordReset,
-            );
-            expect(oobCode, isNotNull);
+              final oobCode = await emulatorOutOfBandCode(
+                email,
+                EmulatorOobCodeType.passwordReset,
+              );
+              expect(oobCode, isNotNull);
 
-            final actionCodeInfo = await FirebaseAuth.instance.checkActionCode(
-              oobCode!.oobCode!,
-            );
+              final actionCodeInfo =
+                  await FirebaseAuth.instance.checkActionCode(
+                oobCode!.oobCode!,
+              );
 
-            expect(
-              actionCodeInfo.operation,
-              equals(ActionCodeInfoOperation.passwordReset),
-            );
-          });
+              expect(
+                actionCodeInfo.operation,
+                equals(ActionCodeInfoOperation.passwordReset),
+              );
+            },
+            // macOS skipped for the same keychain reason as the verifyEmail
+            // test above. See: https://github.com/firebase/flutterfire/issues/9538
+            skip: !kIsWeb && Platform.isMacOS,
+          );
         },
         skip: !kIsWeb && Platform.isWindows,
       );
