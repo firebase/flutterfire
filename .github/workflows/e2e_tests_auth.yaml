@@ -49,4 +49,4 @@ jobs:
       web-package: 'firebase_auth_web'
       windows: true
       native-config-args: '--auth-native'
-      nightly_test_mode: ${{ inputs.nightly_test_mode }}
+      nightly_test_mode: ${{ inputs.nightly_test_mode == true }}

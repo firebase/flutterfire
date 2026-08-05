@@ -48,4 +48,4 @@ jobs:
       platform-interface-package: 'cloud_functions_platform_interface'
       web-package: 'cloud_functions_web'
       native-config-args: '--functions-native'
-      nightly_test_mode: ${{ inputs.nightly_test_mode }}
+      nightly_test_mode: ${{ inputs.nightly_test_mode == true }}

@@ -50,4 +50,4 @@ jobs:
       windows: true
       storage-emulator-debug: true
       native-config-args: '--storage-native'
-      nightly_test_mode: ${{ inputs.nightly_test_mode }}
+      nightly_test_mode: ${{ inputs.nightly_test_mode == true }}

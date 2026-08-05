@@ -48,4 +48,4 @@ jobs:
       platform-interface-package: 'firebase_database_platform_interface'
       web-package: 'firebase_database_web'
       native-config-args: '--database-native'
-      nightly_test_mode: ${{ inputs.nightly_test_mode }}
+      nightly_test_mode: ${{ inputs.nightly_test_mode == true }}

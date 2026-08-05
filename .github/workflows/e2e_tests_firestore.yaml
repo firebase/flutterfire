@@ -56,4 +56,4 @@ jobs:
       web-wasm-drive-timeout: '300'
       web-wasm-max-attempts: '2'
       native-config-args: '--firestore-native'
-      nightly_test_mode: ${{ inputs.nightly_test_mode }}
+      nightly_test_mode: ${{ inputs.nightly_test_mode == true }}

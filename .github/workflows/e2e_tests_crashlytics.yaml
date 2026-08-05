@@ -56,7 +56,7 @@ jobs:
       ios-spm: false
       native-config-args: '--live-tier-plist=crashlytics'
       inject-config-secrets: true
-      nightly_test_mode: ${{ inputs.nightly_test_mode }}
+      nightly_test_mode: ${{ inputs.nightly_test_mode == true }}
     secrets:
       TESTS_E2E_FIREBASE_OPTIONS_DART: ${{ secrets.TESTS_E2E_FIREBASE_OPTIONS_DART }}
       TESTS_E2E_GOOGLE_SERVICES_JSON: ${{ secrets.TESTS_E2E_GOOGLE_SERVICES_JSON }}
