@@ -70,9 +70,11 @@ jobs:
           restore-keys: firebase-emulators-v5-
       - name: Generate dummy Firebase configs
         run: dart ./.github/workflows/scripts/generate-dummy-firebase-configs.dart --firestore-native
-      - name: Start Firebase Emulator
-        timeout-minutes: 8
-        run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
+      - name: Install Cloud Functions dependencies
+        # `firebase emulators:exec` does not install these itself (the old
+        # start-firebase-emulator.sh wrapper did); without them the functions
+        # emulator fails to load the function definitions.
+        run: npm ci --prefix .github/workflows/scripts/functions
       - name: Enable KVM
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
@@ -123,9 +125,10 @@ jobs:
         run: flutter build apk --debug --target=integration_test/e2e_test.dart --android-skip-build-dependency-validation
       - name: Start AVD then run E2E tests
         uses: reactivecircus/android-emulator-runner@e89f39f1abbbd05b1113a29cf4db69e7540cae5a
-        timeout-minutes: 30
+        timeout-minutes: 35
         env:
           ANDROID_AVD_HOME: /mnt/avd
+          STORAGE_EMULATOR_DEBUG: 'true'
         with:
           api-level: ${{ env.AVD_API_LEVEL }}
           target: ${{ env.AVD_TARGET }}
@@ -133,9 +136,15 @@ jobs:
           emulator-build: 14214601
           # The default (true) wipes and recreates the AVD, making the cache above useless.
           force-avd-creation: false
-          working-directory: ${{ matrix.working_directory }}
+          # firebase.json and the emulator rule files live here, so `emulators:exec`
+          # has to run from this directory; the test command cds back to the
+          # package under test.
+          working-directory: .github/workflows/scripts
+          # `emulators:exec` owns the emulator lifecycle: it boots the suite, runs
+          # the command and tears the suite down, exiting with the command's exit
+          # code. Nothing is left running between steps.
           script: |
-            flutter test integration_test/e2e_test.dart --timeout 10x --dart-define=CI=true -d emulator-5554
+            firebase emulators:exec --project flutterfire-e2e-tests "cd ${GITHUB_WORKSPACE}/${{ matrix.working_directory }} && flutter test integration_test/e2e_test.dart --timeout 10x --dart-define=CI=true -d emulator-5554"
       - name: Ensure Appium is shut down
       # Required because of below issue where emulator failing to shut down properly causes tests to fail
       # https://github.com/ReactiveCircus/android-emulator-runner/issues/385
