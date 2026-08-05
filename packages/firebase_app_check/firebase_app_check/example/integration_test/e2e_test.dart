@@ -11,13 +11,16 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:firebase_app_check_example/firebase_options.dart';
 
+import 'report_test_results.dart';
+
 const androidDebugToken =
     String.fromEnvironment('APP_CHECK_ANDROID_DEBUG_TOKEN');
 
 const appleDebugToken = String.fromEnvironment('APP_CHECK_APPLE_DEBUG_TOKEN');
 
 void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  reportTestResultsToDriver(binding);
 
   group(
     'firebase_app_check',

@@ -10,12 +10,14 @@ import 'package:firebase_storage_example/firebase_options.dart';
 import 'instance_e2e.dart';
 import 'list_result_e2e.dart';
 import 'reference_e2e.dart';
+import 'report_test_results.dart';
 import 'task_e2e.dart';
 import 'second_bucket.dart';
 import 'test_utils.dart';
 
 void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  reportTestResultsToDriver(binding);
 
   group('firebase_storage', () {
     setUpAll(() async {

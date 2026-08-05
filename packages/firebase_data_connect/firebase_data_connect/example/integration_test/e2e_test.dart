@@ -15,6 +15,7 @@ import 'generation_e2e.dart';
 import 'instance_e2e.dart';
 import 'listen_e2e.dart';
 import 'query_e2e.dart';
+import 'report_test_results.dart';
 import 'websocket_e2e.dart';
 
 Future<void> _signInTestUser() async {
@@ -48,7 +49,8 @@ Future<void> _signInTestUser() async {
 }
 
 void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  reportTestResultsToDriver(binding);
 
   group('firebase_data_connect', () {
     setUpAll(() async {

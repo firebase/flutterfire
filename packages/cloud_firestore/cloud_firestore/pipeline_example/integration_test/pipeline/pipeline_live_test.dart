@@ -10,6 +10,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:pipeline_example/firebase_options.dart';
 
+import '../report_test_results.dart';
 import 'pipeline_add_fields_e2e.dart';
 import 'pipeline_aggregate_e2e.dart';
 import 'pipeline_expressions_e2e.dart';
@@ -24,7 +25,8 @@ import 'pipeline_select_e2e.dart';
 import 'pipeline_unnest_union_e2e.dart';
 
 void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  reportTestResultsToDriver(binding);
 
   group('pipeline (live)', () {
     setUpAll(() async {

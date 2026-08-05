@@ -10,11 +10,14 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:firebase_analytics_example/firebase_options.dart';
 
+import 'report_test_results.dart';
+
 // ignore: do_not_use_environment
 const bool skipTestsOnCI = bool.fromEnvironment('CI');
 
 void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  reportTestResultsToDriver(binding);
 
   group('firebase_analytics', () {
     setUpAll(() async {

@@ -17,6 +17,7 @@ import 'geo_point_e2e.dart';
 import 'instance_e2e.dart';
 import 'load_bundle_e2e.dart';
 import 'query_e2e.dart';
+import 'report_test_results.dart';
 import 'second_database.dart';
 import 'settings_e2e.dart';
 import 'snapshot_metadata_e2e.dart';
@@ -29,7 +30,8 @@ import 'write_batch_e2e.dart';
 bool kUseFirestoreEmulator = true;
 
 void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  reportTestResultsToDriver(binding);
 
   group('cloud_firestore', () {
     setUpAll(() async {

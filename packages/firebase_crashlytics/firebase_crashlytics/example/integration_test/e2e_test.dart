@@ -11,8 +11,11 @@ import 'package:integration_test/integration_test.dart';
 import 'package:firebase_crashlytics_example/firebase_options.dart';
 import 'dart:async';
 
+import 'report_test_results.dart';
+
 void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  reportTestResultsToDriver(binding);
 
   group(
     'firebase_crashlytics',

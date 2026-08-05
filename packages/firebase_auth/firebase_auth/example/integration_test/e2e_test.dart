@@ -12,10 +12,12 @@ import 'package:firebase_auth_example/firebase_options.dart';
 import 'firebase_auth_instance_e2e_test.dart' as instance_tests;
 import 'firebase_auth_multi_factor_e2e_test.dart' as multi_factor_tests;
 import 'firebase_auth_user_e2e_test.dart' as user_tests;
+import 'report_test_results.dart';
 import 'test_utils.dart';
 
 void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  reportTestResultsToDriver(binding);
 
   group('firebase_auth', () {
     setUpAll(() async {

@@ -11,6 +11,7 @@ import 'package:firebase_database_example/firebase_options.dart';
 import 'data_snapshot_e2e.dart';
 import 'database_e2e.dart';
 import 'database_reference_e2e.dart';
+import 'report_test_results.dart';
 import 'web_only_stub.dart' if (dart.library.js_interop) 'web_only.dart';
 import 'firebase_database_configuration_e2e.dart';
 import 'query_e2e.dart';
@@ -26,7 +27,8 @@ const emulatorPort = 9000;
 const emulatorHost = 'localhost';
 
 void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  reportTestResultsToDriver(binding);
 
   group('firebase_database', () {
     setUpAll(() async {

@@ -9,6 +9,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:firebase_app_installations_example/firebase_options.dart';
 
+import 'report_test_results.dart';
+
 // Was imported from the `tests` app's aggregated `e2e_test.dart` before this
 // suite moved into the example; it is the only thing this file needed from
 // there.
@@ -17,7 +19,8 @@ import 'package:firebase_app_installations_example/firebase_options.dart';
 final isCI = const String.fromEnvironment('CI').isNotEmpty;
 
 void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  reportTestResultsToDriver(binding);
   group(
     'firebase_app_installations',
     () {

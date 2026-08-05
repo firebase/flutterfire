@@ -12,6 +12,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:cloud_functions_example/firebase_options.dart';
 
+import 'report_test_results.dart';
 import 'sample_data.dart' as data;
 
 String kTestFunctionDefaultRegion = 'testFunctionDefaultRegion';
@@ -25,7 +26,8 @@ String kTestStreamResponse = 'testStreamResponse';
 const _completerTimeout = Duration(seconds: 30);
 
 void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  reportTestResultsToDriver(binding);
 
   group('cloud_functions', () {
     late HttpsCallable callable;

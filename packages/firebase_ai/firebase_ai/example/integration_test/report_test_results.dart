@@ -4,7 +4,7 @@
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//     http://www.apache.org/licenses/LICENSE-2.0
+//      http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,20 +13,17 @@
 // limitations under the License.
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:integration_test/common.dart' show Failure;
 import 'package:integration_test/integration_test.dart';
 
-import 'firebase_ai_headers_e2e_test.dart' as headers_tests;
-import 'firebase_ai_response_parsing_e2e_test.dart' as parsing_tests;
-import 'firebase_ai_mock_test.dart' as mock_tests;
-import 'report_test_results.dart';
-
-void main() {
-  final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-  reportTestResultsToDriver(binding);
-
-  group('firebase_ai', () {
-    headers_tests.main();
-    parsing_tests.main();
-    mock_tests.main();
+/// Copies per-test results into [IntegrationTestWidgetsFlutterBinding.reportData]
+/// so the web driver can print them; on web nothing else crosses the wire.
+void reportTestResultsToDriver(IntegrationTestWidgetsFlutterBinding binding) {
+  tearDownAll(() {
+    binding.reportData ??= <String, dynamic>{};
+    binding.reportData!['testResults'] = <String, String>{
+      for (final entry in binding.results.entries)
+        entry.key: entry.value is Failure ? 'failed' : 'success',
+    };
   });
 }
