@@ -131,14 +131,19 @@ PY
 }
 
 for attempt in $(seq 1 "$FLUTTER_DRIVE_MAX_ATTEMPTS"); do
-  if run_tests; then
+  # NOT `if run_tests; then ...; fi` + `$?`: a completed `if` with a false
+  # condition and no else sets $? to 0, so every failure collapsed to exit 0.
+  exit_code=0
+  run_tests || exit_code=$?
+
+  if [[ "$exit_code" == "0" ]]; then
     exit 0
   fi
-
-  exit_code=$?
   if [[ "$exit_code" != "3" || "$attempt" == "$FLUTTER_DRIVE_MAX_ATTEMPTS" ]]; then
     exit "$exit_code"
   fi
 
   echo "Attempt $attempt failed before tests completed. Retrying with clean browser processes..."
 done
+# Unreachable, but never fall off the end with an implicit 0.
+exit 1
