@@ -7,7 +7,15 @@ concurrency:
 # Emulator tier: every job runs under `firebase emulators:exec`, so no live
 # project credentials are needed.
 #
-# Thin caller: the jobs themselves live in `reusable_e2e_tests.yaml`.
+# Auth needs BOTH tiers: its tests run against the Auth emulator, but the
+# validatePassword() suite calls the live password-policy REST API, which
+# rejects placeholder credentials - so real config is injected while the
+# emulators stay on. The example commits its plists and
+# google-services.json, so no generator run is needed.
+#
+# Thin caller: one job per platform this product supports, each delegating
+# to the matching `reusable_e2e_<platform>.yaml`. Platforms the product does
+# not support have no job here, so they render no check at all.
 # Path-filtered so it only runs when this product or its dependencies change;
 # the nightly workflow_call still runs it unconditionally.
 on:
@@ -16,7 +24,7 @@ on:
       - 'packages/firebase_auth/**'
       - 'packages/firebase_core/**'
       - '.github/workflows/e2e_tests_auth.yaml'
-      - '.github/workflows/reusable_e2e_tests.yaml'
+      - '.github/workflows/reusable_e2e_*.yaml'
       - '.github/actions/setup-flutterfire/**'
       - '.github/workflows/scripts/**'
   push:
@@ -26,7 +34,7 @@ on:
       - 'packages/firebase_auth/**'
       - 'packages/firebase_core/**'
       - '.github/workflows/e2e_tests_auth.yaml'
-      - '.github/workflows/reusable_e2e_tests.yaml'
+      - '.github/workflows/reusable_e2e_*.yaml'
       - '.github/actions/setup-flutterfire/**'
       - '.github/workflows/scripts/**'
   workflow_call:
@@ -44,20 +52,75 @@ permissions:
   contents: read
 
 jobs:
-  e2e:
-    uses: ./.github/workflows/reusable_e2e_tests.yaml
+  changes:
+    uses: ./.github/workflows/reusable_e2e_changes.yaml
+    with:
+      package-path: 'packages/firebase_auth/firebase_auth'
+      platform-interface-package: 'firebase_auth_platform_interface'
+      web-package: 'firebase_auth_web'
+      inject-config-secrets: true
+
+  android:
+    needs: changes
+    if: needs.changes.outputs.android == 'true'
+    uses: ./.github/workflows/reusable_e2e_android.yaml
+    with:
+      package-path: 'packages/firebase_auth/firebase_auth'
+      package-scope: 'firebase_auth*'
+      inject-config-secrets: true
+      nightly_test_mode: ${{ inputs.nightly_test_mode == true }}
+    secrets:
+      TESTS_E2E_FIREBASE_OPTIONS_DART: ${{ secrets.TESTS_E2E_FIREBASE_OPTIONS_DART }}
+      TESTS_E2E_GOOGLE_SERVICES_JSON: ${{ secrets.TESTS_E2E_GOOGLE_SERVICES_JSON }}
+
+  ios:
+    needs: changes
+    if: needs.changes.outputs.ios == 'true'
+    uses: ./.github/workflows/reusable_e2e_ios.yaml
     with:
       package-path: 'packages/firebase_auth/firebase_auth'
       package-scope: 'firebase_auth*'
       cache-key-suffix: 'auth'
-      platform-interface-package: 'firebase_auth_platform_interface'
-      web-package: 'firebase_auth_web'
-      windows: true
-      # Auth needs BOTH: its tests run against the Auth emulator, but the
-      # validatePassword() suite calls the live password-policy REST API,
-      # which rejects placeholder credentials - so real config is injected
-      # while the emulators stay on. The example commits its plists and
-      # google-services.json, so no generator run is needed.
+      inject-config-secrets: true
+      nightly_test_mode: ${{ inputs.nightly_test_mode == true }}
+    secrets:
+      TESTS_E2E_FIREBASE_OPTIONS_DART: ${{ secrets.TESTS_E2E_FIREBASE_OPTIONS_DART }}
+      TESTS_E2E_GOOGLE_SERVICES_JSON: ${{ secrets.TESTS_E2E_GOOGLE_SERVICES_JSON }}
+
+  macos:
+    needs: changes
+    if: needs.changes.outputs.macos == 'true'
+    uses: ./.github/workflows/reusable_e2e_macos.yaml
+    with:
+      package-path: 'packages/firebase_auth/firebase_auth'
+      package-scope: 'firebase_auth*'
+      cache-key-suffix: 'auth'
+      inject-config-secrets: true
+      nightly_test_mode: ${{ inputs.nightly_test_mode == true }}
+    secrets:
+      TESTS_E2E_FIREBASE_OPTIONS_DART: ${{ secrets.TESTS_E2E_FIREBASE_OPTIONS_DART }}
+      TESTS_E2E_GOOGLE_SERVICES_JSON: ${{ secrets.TESTS_E2E_GOOGLE_SERVICES_JSON }}
+
+  web:
+    needs: changes
+    if: needs.changes.outputs.web == 'true'
+    uses: ./.github/workflows/reusable_e2e_web.yaml
+    with:
+      package-path: 'packages/firebase_auth/firebase_auth'
+      package-scope: 'firebase_auth*'
+      inject-config-secrets: true
+      nightly_test_mode: ${{ inputs.nightly_test_mode == true }}
+    secrets:
+      TESTS_E2E_FIREBASE_OPTIONS_DART: ${{ secrets.TESTS_E2E_FIREBASE_OPTIONS_DART }}
+      TESTS_E2E_GOOGLE_SERVICES_JSON: ${{ secrets.TESTS_E2E_GOOGLE_SERVICES_JSON }}
+
+  windows:
+    needs: changes
+    if: needs.changes.outputs.windows == 'true'
+    uses: ./.github/workflows/reusable_e2e_windows.yaml
+    with:
+      package-path: 'packages/firebase_auth/firebase_auth'
+      package-scope: 'firebase_auth*'
       inject-config-secrets: true
       nightly_test_mode: ${{ inputs.nightly_test_mode == true }}
     secrets:

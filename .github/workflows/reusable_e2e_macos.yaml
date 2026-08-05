@@ -1,0 +1,321 @@
+name: reusable-e2e-macos
+
+# The macOS half of the per-product e2e suite: build the example as a desktop
+# app and run the integration tests against it. Called by every
+# `e2e_tests_<product>.yaml` whose product ships a macOS implementation
+# (everything except firebase_performance).
+#
+# Always CocoaPods - the other half of the SPM/CocoaPods split with the iOS job.
+
+on:
+  workflow_call:
+    inputs:
+      package-path:
+        description: >-
+          Path of the package under test, e.g.
+          'packages/firebase_storage/firebase_storage'. The example app is
+          `<package-path>/example` by convention.
+        type: string
+        required: true
+      package-scope:
+        description: "Melos glob bootstrapped before the tests, e.g. 'firebase_storage*'."
+        type: string
+        required: true
+      test-target:
+        description: 'Integration test entrypoint, relative to the example directory.'
+        type: string
+        default: 'integration_test/e2e_test.dart'
+      native-config-args:
+        description: >-
+          Arguments for generate-dummy-firebase-configs.dart, e.g.
+          '--storage-native' (emulator tier, writes the native config files the
+          Android/Xcode builds require) or '--live-tier-plist=messaging' (live
+          tier, writes only the placeholder plist so it cannot clobber the
+          injected credentials). Empty = plain run.
+        type: string
+        default: ''
+      inject-config-secrets:
+        description: >-
+          true selects the live tier: the "Inject Firebase config" step writes
+          firebase_options.dart / google-services.json from secrets, no emulator
+          is started, and the job is fork/dependabot guarded.
+        type: boolean
+        default: false
+      use-firebase-emulators:
+        description: >-
+          true (default) runs the test command under `firebase emulators:exec`
+          with the emulator suite installed and cached. Independent of
+          inject-config-secrets since a product can need both: firebase_auth
+          tests run against the Auth emulator but its password-policy tests
+          call the live REST API, which rejects placeholder credentials.
+        type: boolean
+        default: true
+      storage-emulator-debug:
+        description: >-
+          Sets STORAGE_EMULATOR_DEBUG on the test steps. firebase_storage only.
+        type: boolean
+        default: false
+      flutter-version:
+        description: >-
+          Pinned Flutter version. Empty (the default) leaves the job unpinned
+          (stable channel), which is what every product uses today.
+        type: string
+        default: ''
+      firebase-tools-version:
+        description: 'firebase-tools version. Emulator tier only.'
+        type: string
+        default: '15.25.1'
+      cache-key-suffix:
+        description: >-
+          Short product token that makes the ccache/Pods cache keys unique, e.g.
+          'storage'. Two products sharing a suffix would clobber each other's
+          caches, so this is required rather than defaulted.
+        type: string
+        required: true
+      nightly_test_mode:
+        description: >-
+          Passed down from nightly.yaml. Shortens the job timeout to 5 minutes.
+        type: boolean
+        default: false
+    secrets:
+      # `required: false` so the emulator-tier callers can omit the `secrets:`
+      # block entirely. The live-tier callers declare them as required and pass
+      # them through explicitly.
+      TESTS_E2E_FIREBASE_OPTIONS_DART:
+        required: false
+      TESTS_E2E_GOOGLE_SERVICES_JSON:
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  macos:
+    # Live tier requires the live-project secrets, which fork and dependabot
+    # PRs do not receive.
+    if: >-
+      inputs.inject-config-secrets == false ||
+      github.event_name != 'pull_request' ||
+      (github.event.pull_request.head.repo.full_name == github.repository &&
+       github.actor != 'dependabot[bot]')
+    permissions:
+      contents: read
+    runs-on: macos-15
+    env:
+      # Inputs consumed inside run: scripts are routed through env so their
+      # values are data, never shell/template code (zizmor: template-injection).
+      PACKAGE_PATH: ${{ inputs.package-path }}
+      TEST_TARGET: ${{ inputs.test-target }}
+      NATIVE_CONFIG_ARGS: ${{ inputs.native-config-args }}
+    timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 35 }}
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      # No `xcode-select` pin: use the runner image's default Xcode. Firebase's
+      # minimum is 26.2 and every current macos-15 image is at or above it. See
+      # `reusable_e2e_ios.yaml` for why pinning 26.2 exactly was harmful.
+      - uses: ./.github/actions/setup-flutterfire
+        with:
+          node: ${{ inputs.use-firebase-emulators && 'true' || 'false' }}
+          java: ${{ inputs.use-firebase-emulators && 'true' || 'false' }}
+          flutter-version: ${{ inputs.flutter-version }}
+          firebase-tools-version: ${{ inputs.use-firebase-emulators && inputs.firebase-tools-version || '' }}
+          bootstrap-scope: ${{ inputs.package-scope }}
+      - name: Disable Swift Package Manager
+        # Recent stable Flutter enables SPM by default, which turns intended
+        # CocoaPods builds into hybrid ones. macOS is this workflow's CocoaPods
+        # coverage by design, so opt out explicitly.
+        run: flutter config --no-enable-swift-package-manager
+      - uses: hendrikmuhs/ccache-action@d62db5f07c26379fc4b4e0916f098a92573c3b03
+        name: Xcode Compile Cache
+        with:
+          # Distinct from every other macos-15 job's key, otherwise the workflows
+          # clobber each other's cache.
+          key: xcode-ccache-${{ inputs.cache-key-suffix }}-macos
+          save: "${{ github.ref == 'refs/heads/main' }}"
+          max-size: 700M
+      - name: Pods Cache
+        # macOS is always CocoaPods - that is the other half of the SPM/CocoaPods
+        # split with the iOS job.
+        continue-on-error: true
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        id: pods-cache
+        with:
+          # Must match the save path exactly
+          path: ${{ inputs.package-path }}/example/macos/Pods
+          # Keyed on the Podfile and the pinned Firebase SDK version, not on a
+          # pubspec.lock: those are gitignored, so hashFiles() returns an empty
+          # string and the key could never be invalidated.
+          key: pods-v1-${{ runner.os }}-${{ inputs.cache-key-suffix }}-macos-${{ hashFiles(format('{0}/example/macos/Podfile', inputs.package-path), 'packages/firebase_core/firebase_core/ios/firebase_sdk_version.rb') }}
+          restore-keys: pods-v1-${{ runner.os }}-${{ inputs.cache-key-suffix }}-macos-
+      - name: Firebase Emulator Cache
+        if: inputs.use-firebase-emulators
+        id: firebase-emulator-cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        continue-on-error: true
+        with:
+          # The firebase emulators are pure javascript and java, OS-independent
+          enableCrossOsArchive: true
+          # Must match the save path exactly
+          path: ~/.cache/firebase/emulators
+          key: firebase-emulators-v5-${{ env.FIREBASE_TOOLS_VERSION }}
+          # Trailing dash so this never prefix-matches a future version's key
+          restore-keys: firebase-emulators-v5-
+      - name: Inject Firebase config
+        if: inputs.inject-config-secrets
+        # The `flutterfire-e2e-tests` project config lives in repository
+        # secrets rather than in the tree: this is a public repo and these are
+        # live backends. Same shape as `e2e_tests_pipeline.yaml`.
+        env:
+          FIREBASE_OPTIONS_DART: ${{ secrets.TESTS_E2E_FIREBASE_OPTIONS_DART }}
+          GOOGLE_SERVICES_JSON: ${{ secrets.TESTS_E2E_GOOGLE_SERVICES_JSON }}
+        run: |
+          if [ -z "$FIREBASE_OPTIONS_DART" ]; then
+            echo "::error::TESTS_E2E_FIREBASE_OPTIONS_DART is empty — secrets are unavailable (fork/dependabot PR?). Failing early instead of producing a broken build."
+            exit 1
+          fi
+          echo "$FIREBASE_OPTIONS_DART" > "$PACKAGE_PATH/example/lib/firebase_options.dart"
+          echo "$GOOGLE_SERVICES_JSON" > "$PACKAGE_PATH/example/android/app/google-services.json"
+      - name: Generate Firebase config files
+        # See the iOS job: the macOS Xcode project has the same
+        # GoogleService-Info.plist resource requirement.
+        if: ${{ !inputs.inject-config-secrets || inputs.native-config-args != '' }}
+        run: |
+          # shellcheck disable=SC2086 # an argument list: word-splitting is the point
+          dart ./.github/workflows/scripts/generate-dummy-firebase-configs.dart $NATIVE_CONFIG_ARGS
+      - name: 'Build Application'
+        working-directory: ${{ inputs.package-path }}/example
+        timeout-minutes: 25
+        run: |
+          export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
+          export CCACHE_SLOPPINESS=clang_index_store,file_stat_matches,include_file_ctime,include_file_mtime,ivfsoverlay,pch_defines,modules,system_headers,time_macros
+          export CCACHE_FILECLONE=true
+          export CCACHE_DEPEND=true
+          export CCACHE_INODECACHE=true
+          ccache -s
+          flutter build macos --debug --target="./$TEST_TARGET" --device-id=macos --dart-define=CI=true
+          ccache -s
+      - name: Install Cloud Functions dependencies
+        if: inputs.use-firebase-emulators
+        # `firebase emulators:exec` does not install these itself (the old
+        # start-firebase-emulator.sh wrapper did); without them the functions
+        # emulator fails to load the function definitions.
+        # Chown the npm cache directory to the runner user to avoid permission issues.
+        run: sudo chown -R 501:20 "/Users/runner/.npm" && npm ci --prefix .github/workflows/scripts/functions
+      - name: 'E2E Tests'
+        if: inputs.use-firebase-emulators
+        # firebase.json and the emulator rule files live here, so `emulators:exec`
+        # has to run from this directory; the test command cds back to the
+        # package under test.
+        working-directory: ./.github/workflows/scripts
+        # Covers booting the emulator suite as well as the tests themselves, since
+        # `emulators:exec` now owns both.
+        timeout-minutes: 20
+        env:
+          STORAGE_EMULATOR_DEBUG: ${{ inputs.storage-emulator-debug && 'true' || '' }}
+        run: |
+          # The test command is handed to `emulators:exec` as a single string; a
+          # quoted heredoc keeps the script below verbatim instead of forcing a
+          # layer of quote escaping onto it.
+          TEST_COMMAND=$(cat <<'EOF'
+          cd "${GITHUB_WORKSPACE}/${PACKAGE_PATH}/example"
+          run_flutter_test() {
+            rm -f flutter_test_output.log
+            # File redirect, never capture (iOS spawns log streamers that hold
+            # a captured pipe open forever). perl-alarm bounds the known
+            # zero-output startup hang well below the step timeout.
+            perl -e 'alarm shift; exec @ARGV' 900 \
+              flutter test "$TEST_TARGET" -d macos --timeout 10x --dart-define=CI=true > flutter_test_output.log 2>&1
+            FT_EXIT=$?
+            cat flutter_test_output.log
+          }
+          set +e
+          run_flutter_test
+          # Retry once for the two known infra failure shapes: the zero-output
+          # startup hang (no tally at all), and the macOS/iOS launch race
+          # ("The log reader stopped unexpectedly" -> "Unable to start the app
+          # on the device"), which fails before a single test executes.
+          if { ! grep -Eq '[0-9]+ tests? passed' flutter_test_output.log && ! grep -Eq '[0-9]+ failed' flutter_test_output.log; } \
+             || grep -q "Unable to start the app on the device" flutter_test_output.log; then
+            echo "Infrastructure launch failure detected - retrying once."
+            run_flutter_test
+          fi
+          # Trust only the runner's own tally, parsed numerically. Substring
+          # checks are how '0 tests passed, 1 failed' once laundered into a
+          # green job.
+          PASSED=$(grep -Eo '[0-9]+ tests? passed' flutter_test_output.log | tail -1 | grep -Eo '^[0-9]+')
+          FAILED=$(grep -Eo '[0-9]+ failed' flutter_test_output.log | tail -1 | grep -Eo '^[0-9]+')
+          : "${PASSED:=0}"; : "${FAILED:=0}"
+          echo "Result tally: passed=$PASSED failed=$FAILED (flutter test exit $FT_EXIT)"
+          if [ "$FAILED" -gt 0 ] || [ "$PASSED" -eq 0 ]; then
+            exit 1
+          fi
+          if [ "$FT_EXIT" -ne 0 ]; then
+            echo "All $PASSED tests passed; tolerating flutter test exit $FT_EXIT (simulator foreground quirk)."
+          fi
+          exit 0
+          EOF
+          )
+          # `emulators:exec` boots the suite, runs the command and tears the suite
+          # down, exiting with the command's exit code - so the laundering above
+          # still decides whether this step passes.
+          firebase emulators:exec --project flutterfire-e2e-tests "$TEST_COMMAND"
+      - name: 'E2E Tests'
+        if: ${{ !inputs.use-firebase-emulators }}
+        working-directory: ${{ inputs.package-path }}/example
+        timeout-minutes: 20
+        run: |
+          run_flutter_test() {
+            rm -f flutter_test_output.log
+            # File redirect, never capture (iOS spawns log streamers that hold
+            # a captured pipe open forever). perl-alarm bounds the known
+            # zero-output startup hang well below the step timeout.
+            perl -e 'alarm shift; exec @ARGV' 900 \
+              flutter test "$TEST_TARGET" -d macos --timeout 10x --dart-define=CI=true > flutter_test_output.log 2>&1
+            FT_EXIT=$?
+            cat flutter_test_output.log
+          }
+          set +e
+          run_flutter_test
+          # Retry once for the two known infra failure shapes: the zero-output
+          # startup hang (no tally at all), and the macOS/iOS launch race
+          # ("The log reader stopped unexpectedly" -> "Unable to start the app
+          # on the device"), which fails before a single test executes.
+          if { ! grep -Eq '[0-9]+ tests? passed' flutter_test_output.log && ! grep -Eq '[0-9]+ failed' flutter_test_output.log; } \
+             || grep -q "Unable to start the app on the device" flutter_test_output.log; then
+            echo "Infrastructure launch failure detected - retrying once."
+            run_flutter_test
+          fi
+          # Trust only the runner's own tally, parsed numerically. Substring
+          # checks are how '0 tests passed, 1 failed' once laundered into a
+          # green job.
+          PASSED=$(grep -Eo '[0-9]+ tests? passed' flutter_test_output.log | tail -1 | grep -Eo '^[0-9]+')
+          FAILED=$(grep -Eo '[0-9]+ failed' flutter_test_output.log | tail -1 | grep -Eo '^[0-9]+')
+          : "${PASSED:=0}"; : "${FAILED:=0}"
+          echo "Result tally: passed=$PASSED failed=$FAILED (flutter test exit $FT_EXIT)"
+          if [ "$FAILED" -gt 0 ] || [ "$PASSED" -eq 0 ]; then
+            exit 1
+          fi
+          if [ "$FT_EXIT" -ne 0 ]; then
+            echo "All $PASSED tests passed; tolerating flutter test exit $FT_EXIT (simulator foreground quirk)."
+          fi
+          exit 0
+      - name: Save Firebase Emulator Cache
+        continue-on-error: true
+        # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
+        if: ${{ inputs.use-firebase-emulators && github.ref == 'refs/heads/main' }}
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          # The firebase emulators are pure javascript and java, OS-independent
+          enableCrossOsArchive: true
+          key: ${{ steps.firebase-emulator-cache.outputs.cache-primary-key }}
+          # Must match the restore path exactly
+          path: ~/.cache/firebase/emulators
+      - name: Save Pods Cache
+        continue-on-error: true
+        # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
+        if: github.ref == 'refs/heads/main'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          key: ${{ steps.pods-cache.outputs.cache-primary-key }}
+          # Must match the restore path exactly
+          path: ${{ inputs.package-path }}/example/macos/Pods

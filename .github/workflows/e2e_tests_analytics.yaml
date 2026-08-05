@@ -9,7 +9,9 @@ concurrency:
 # Fork and dependabot PRs do not get those secrets, so the reusable workflow
 # guards every job.
 #
-# Thin caller: the jobs themselves live in `reusable_e2e_tests.yaml`.
+# Thin caller: one job per platform this product supports, each delegating
+# to the matching `reusable_e2e_<platform>.yaml`. Platforms the product does
+# not support have no job here, so they render no check at all.
 # Path-filtered so it only runs when this product or its dependencies change;
 # the nightly workflow_call still runs it unconditionally.
 on:
@@ -18,7 +20,7 @@ on:
       - 'packages/firebase_analytics/**'
       - 'packages/firebase_core/**'
       - '.github/workflows/e2e_tests_analytics.yaml'
-      - '.github/workflows/reusable_e2e_tests.yaml'
+      - '.github/workflows/reusable_e2e_*.yaml'
       - '.github/actions/setup-flutterfire/**'
       - '.github/workflows/scripts/**'
   push:
@@ -28,7 +30,7 @@ on:
       - 'packages/firebase_analytics/**'
       - 'packages/firebase_core/**'
       - '.github/workflows/e2e_tests_analytics.yaml'
-      - '.github/workflows/reusable_e2e_tests.yaml'
+      - '.github/workflows/reusable_e2e_*.yaml'
       - '.github/actions/setup-flutterfire/**'
       - '.github/workflows/scripts/**'
   workflow_call:
@@ -46,14 +48,68 @@ permissions:
   contents: read
 
 jobs:
-  e2e:
-    uses: ./.github/workflows/reusable_e2e_tests.yaml
+  changes:
+    uses: ./.github/workflows/reusable_e2e_changes.yaml
+    with:
+      package-path: 'packages/firebase_analytics/firebase_analytics'
+      platform-interface-package: 'firebase_analytics_platform_interface'
+      web-package: 'firebase_analytics_web'
+      inject-config-secrets: true
+
+  android:
+    needs: changes
+    if: needs.changes.outputs.android == 'true'
+    uses: ./.github/workflows/reusable_e2e_android.yaml
+    with:
+      package-path: 'packages/firebase_analytics/firebase_analytics'
+      package-scope: 'firebase_analytics*'
+      native-config-args: '--live-tier-plist=analytics'
+      inject-config-secrets: true
+      use-firebase-emulators: false
+      nightly_test_mode: ${{ inputs.nightly_test_mode == true }}
+    secrets:
+      TESTS_E2E_FIREBASE_OPTIONS_DART: ${{ secrets.TESTS_E2E_FIREBASE_OPTIONS_DART }}
+      TESTS_E2E_GOOGLE_SERVICES_JSON: ${{ secrets.TESTS_E2E_GOOGLE_SERVICES_JSON }}
+
+  ios:
+    needs: changes
+    if: needs.changes.outputs.ios == 'true'
+    uses: ./.github/workflows/reusable_e2e_ios.yaml
     with:
       package-path: 'packages/firebase_analytics/firebase_analytics'
       package-scope: 'firebase_analytics*'
       cache-key-suffix: 'analytics'
-      platform-interface-package: 'firebase_analytics_platform_interface'
-      web-package: 'firebase_analytics_web'
+      native-config-args: '--live-tier-plist=analytics'
+      inject-config-secrets: true
+      use-firebase-emulators: false
+      nightly_test_mode: ${{ inputs.nightly_test_mode == true }}
+    secrets:
+      TESTS_E2E_FIREBASE_OPTIONS_DART: ${{ secrets.TESTS_E2E_FIREBASE_OPTIONS_DART }}
+      TESTS_E2E_GOOGLE_SERVICES_JSON: ${{ secrets.TESTS_E2E_GOOGLE_SERVICES_JSON }}
+
+  macos:
+    needs: changes
+    if: needs.changes.outputs.macos == 'true'
+    uses: ./.github/workflows/reusable_e2e_macos.yaml
+    with:
+      package-path: 'packages/firebase_analytics/firebase_analytics'
+      package-scope: 'firebase_analytics*'
+      cache-key-suffix: 'analytics'
+      native-config-args: '--live-tier-plist=analytics'
+      inject-config-secrets: true
+      use-firebase-emulators: false
+      nightly_test_mode: ${{ inputs.nightly_test_mode == true }}
+    secrets:
+      TESTS_E2E_FIREBASE_OPTIONS_DART: ${{ secrets.TESTS_E2E_FIREBASE_OPTIONS_DART }}
+      TESTS_E2E_GOOGLE_SERVICES_JSON: ${{ secrets.TESTS_E2E_GOOGLE_SERVICES_JSON }}
+
+  web:
+    needs: changes
+    if: needs.changes.outputs.web == 'true'
+    uses: ./.github/workflows/reusable_e2e_web.yaml
+    with:
+      package-path: 'packages/firebase_analytics/firebase_analytics'
+      package-scope: 'firebase_analytics*'
       native-config-args: '--live-tier-plist=analytics'
       inject-config-secrets: true
       use-firebase-emulators: false
