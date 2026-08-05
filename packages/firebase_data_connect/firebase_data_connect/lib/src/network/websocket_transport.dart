@@ -164,13 +164,39 @@ class WebSocketTransport implements DataConnectTransport {
     _disconnect();
   }
 
+  /// Number of operations that are currently between "requested by the caller"
+  /// and "registered in [_unaryListeners] / [_streamListeners]".
+  ///
+  /// Both `_invokeUnary` and `invokeStreamQuery` have to await the connection
+  /// handshake (and an AppCheck token) before they can send anything, so there
+  /// is a window during which a brand new operation is invisible to
+  /// [_checkIdleAndDisconnect]. Without this counter an unrelated unary
+  /// response arriving in that window makes the transport look idle, closes the
+  /// socket and — because the close is flagged as *expected* — permanently
+  /// vetoes any reconnect for the operation that was still being set up.
+  int _pendingOperationSetups = 0;
+
   void _checkIdleAndDisconnect() {
+    if (_pendingOperationSetups > 0) return;
     if (_streamListeners.isEmpty && _unaryListeners.isEmpty) {
       _isExpectedDisconnect = true;
       _disconnect();
       _releaseWebSocketTransport();
       _clearState();
     }
+  }
+
+  /// Re-establishes the connection on behalf of operations that are already
+  /// registered.
+  ///
+  /// An explicit `execute`/`subscribe` is an explicit intent to be connected,
+  /// so a previous *expected* disconnect (from [_checkIdleAndDisconnect] or
+  /// [disconnect]) must not veto the retry: [_scheduleReconnect] returns early
+  /// while `_isExpectedDisconnect` is set, which would strand the operation
+  /// forever with no event and no error.
+  void _reconnectForActiveOperations() {
+    _isExpectedDisconnect = false;
+    _scheduleReconnect();
   }
 
   final Random _random = Random();
@@ -235,24 +261,40 @@ class WebSocketTransport implements DataConnectTransport {
 
     _claimWebSocketTransport();
 
-    _channel = WebSocketChannel.connect(Uri.parse(_url));
-    _channelSubscription = _channel?.stream.listen(
+    // Detach any listener still attached to a previous socket, so a late
+    // `done`/`error` from it cannot clobber the channel we are about to open.
+    unawaited(_channelSubscription?.cancel());
+
+    final channel = WebSocketChannel.connect(Uri.parse(_url));
+    _channel = channel;
+    _channelSubscription = channel.stream.listen(
       _onMessage,
-      onError: _onError,
-      onDone: _onDone,
+      onError: (Object error) => _onError(channel, error),
+      onDone: () => _onDone(channel),
     );
 
     // reset this since an explicit connect was requested
     _isExpectedDisconnect = false;
 
     try {
-      await _channel?.ready;
+      // Await the local `channel`, never `_channel`: `_channel` can be nulled
+      // out while we are connecting, and `await null` would silently report
+      // success for a socket that is not usable.
+      await channel.ready;
     } catch (e) {
       developer.log('WebSocket connection failed to become ready: $e');
-      _channel = null;
+      if (identical(_channel, channel)) {
+        _channel = null;
+      }
       _releaseWebSocketTransport();
       throw DataConnectError(
           DataConnectErrorCode.other, 'WebSocket connection failed: $e');
+    }
+
+    if (!identical(_channel, channel)) {
+      // The socket was torn down or replaced while the handshake was in
+      // flight; whoever replaced it owns sending the init request.
+      return;
     }
 
     final initRequest = StreamRequest(
@@ -472,12 +514,13 @@ class WebSocketTransport implements DataConnectTransport {
     }
   }
 
-  void _onError(dynamic error) {
+  void _onError(WebSocketChannel channel, dynamic error) {
     if (!_isCurrentWebSocketTransport) {
       _closeStaleWebSocketTransport();
       return;
     }
-    if (_channel == null) return;
+    // Ignore events from a socket that is no longer the active one.
+    if (!identical(_channel, channel)) return;
     developer.log('WebSocket error: $error');
     _channel = null;
     _isReconnecting = false;
@@ -487,6 +530,10 @@ class WebSocketTransport implements DataConnectTransport {
   void _disconnect() {
     _reconnectTimer?.cancel();
     _reconnectTimer = null;
+    // The stream subscription is intentionally left attached so the close
+    // handshake can complete; `_onDone`/`_onError` ignore it once `_channel`
+    // no longer points at it, and `_doConnect` detaches it before opening the
+    // replacement socket.
     _channel?.sink.close();
     _channel = null;
   }
@@ -497,12 +544,14 @@ class WebSocketTransport implements DataConnectTransport {
     _releaseWebSocketTransport();
   }
 
-  void _onDone() {
+  void _onDone(WebSocketChannel channel) {
     if (!_isCurrentWebSocketTransport) {
       _closeStaleWebSocketTransport();
       return;
     }
-    if (_channel == null) return;
+    // A `done` from a socket we already replaced must not null out the current
+    // channel: every later `_send` would be dropped on the floor silently.
+    if (!identical(_channel, channel)) return;
     _channel = null;
     _isReconnecting = false;
     if (!_isExpectedDisconnect) {
@@ -560,7 +609,38 @@ class WebSocketTransport implements DataConnectTransport {
     RequestKind requestKind,
     bool isMutation,
   ) async {
+    // The setup is only "in flight" until the operation is registered and its
+    // request has been written; the returned future is intentionally awaited
+    // outside the guard so idle detection still works once we are waiting on
+    // the server.
+    _pendingOperationSetups++;
+    Completer<ServerResponse> completer;
+    try {
+      completer = await _sendUnary(operationId, operationName, serializer, vars,
+          authToken, requestKind, isMutation);
+    } finally {
+      _pendingOperationSetups--;
+    }
+    return completer.future;
+  }
+
+  Future<Completer<ServerResponse>> _sendUnary<Variables>(
+    String operationId,
+    String operationName,
+    Serializer<Variables>? serializer,
+    Variables? vars,
+    String? authToken,
+    RequestKind requestKind,
+    bool isMutation,
+  ) async {
     await _ensureConnected(authToken);
+    if (!isConnected) {
+      // A concurrent teardown closed the socket while we were connecting.
+      // Reconnect explicitly rather than writing into a null channel, which
+      // `_send` would drop silently and hang the returned future forever.
+      _isExpectedDisconnect = false;
+      await _ensureConnected(authToken);
+    }
 
     final completer = Completer<ServerResponse>();
 
@@ -588,9 +668,13 @@ class WebSocketTransport implements DataConnectTransport {
         resume: ResumeRequest(),
         headers: headers,
       );
-      _send(request.toJson());
+      if (isConnected) {
+        _send(request.toJson());
+      } else {
+        _reconnectForActiveOperations();
+      }
 
-      return completer.future;
+      return completer;
     }
 
     final requestId = _generateRequestId(operationId);
@@ -619,9 +703,14 @@ class WebSocketTransport implements DataConnectTransport {
       headers: headers,
     );
 
-    _send(request.toJson());
+    if (isConnected) {
+      _send(request.toJson());
+    } else {
+      // Registered in `_unaryListeners`, so the reconnect replays it.
+      _reconnectForActiveOperations();
+    }
 
-    return completer.future;
+    return completer;
   }
 
   @override
@@ -637,79 +726,106 @@ class WebSocketTransport implements DataConnectTransport {
 
     controller = StreamController<ServerResponse>(
       onListen: () async {
+        _pendingOperationSetups++;
         try {
-          await _ensureConnected(authToken);
-        } catch (e) {
-          developer.log("Error subscribing - setting up stream $e");
-          // Do NOT add error to sink here. The stream is designed to quietly
-          // add the query to `_pendingSubscriptions` below and silently
-          // retry when the network reconnects via `_scheduleReconnect`.
+          // Register this listener *synchronously*, before awaiting anything.
+          // `_checkIdleAndDisconnect()` and `_scheduleReconnect()` both key off
+          // `_streamListeners`, so a listener that is only registered after the
+          // `await` below is invisible to them: an unrelated unary response
+          // arriving in that window makes the transport look idle, closes the
+          // socket, flags the close as *expected*, and this subscription is
+          // then stranded forever — no first event, and (by design) no error.
+          final existingRequestId = _activeSubscriptions[operationId];
+          final isNewSubscription = existingRequestId == null;
+
+          Map<String, dynamic>? variables;
+          if (vars != null && serializer != null) {
+            variables = json.decode(serializer(vars));
+          }
+
+          final requestId =
+              existingRequestId ?? _generateRequestId(operationId);
+
+          if (isNewSubscription) {
+            _activeSubscriptions[operationId] = requestId;
+            _pendingSubscriptions[requestId] =
+                _PendingSubscription(operationId, queryName, variables);
+          }
+          _streamListeners.putIfAbsent(requestId, () => []).add(controller);
+
+          try {
+            await _ensureConnected(authToken);
+          } catch (e) {
+            developer.log("Error subscribing - setting up stream $e");
+            // Do NOT add error to sink here. The stream is designed to quietly
+            // keep the query in `_pendingSubscriptions` and silently retry
+            // when the network reconnects via `_scheduleReconnect`.
+          }
+
+          if (!isNewSubscription) {
+            // Multiplexed onto a `subscribe` that was already sent for
+            // `requestId`; nothing more to write.
+            if (!isConnected) _reconnectForActiveOperations();
+            return;
+          }
+
+          if (!isConnected) {
+            // we are not connected -
+            // keep pending sub to use for retry
+            _reconnectForActiveOperations();
+            return;
+          }
+
+          String? appCheckToken;
+          try {
+            appCheckToken = await appCheck?.getToken();
+          } catch (_) {
+            // Ignored
+          }
+
+          if (!isConnected) {
+            _reconnectForActiveOperations();
+            return;
+          }
+
+          final headers = _buildHeaders(authToken, appCheckToken);
+
+          final request = StreamRequest(
+            requestId: requestId,
+            requestKind: RequestKind.subscribe,
+            subscribe: ExecuteRequest(queryName, variables),
+            headers: headers,
+          );
+
+          _send(request.toJson());
+        } finally {
+          _pendingOperationSetups--;
         }
-
-        if (_activeSubscriptions.containsKey(operationId)) {
-          final existingRequestId = _activeSubscriptions[operationId]!;
-          _streamListeners
-              .putIfAbsent(existingRequestId, () => [])
-              .add(controller);
-          return;
-        }
-
-        final requestId = _generateRequestId(operationId);
-        _activeSubscriptions[operationId] = requestId;
-        _streamListeners.putIfAbsent(requestId, () => []).add(controller);
-
-        Map<String, dynamic>? variables;
-        if (vars != null && serializer != null) {
-          variables = json.decode(serializer(vars));
-        }
-        _pendingSubscriptions[requestId] =
-            _PendingSubscription(operationId, queryName, variables);
-
-        if (!isConnected) {
-          // we are not connected -
-          // keep pending sub to use for retry
-          _scheduleReconnect();
-          return;
-        }
-
-        String? appCheckToken;
-        try {
-          appCheckToken = await appCheck?.getToken();
-        } catch (_) {
-          // Ignored
-        }
-
-        final headers = _buildHeaders(authToken, appCheckToken);
-
-        final request = StreamRequest(
-          requestId: requestId,
-          requestKind: RequestKind.subscribe,
-          subscribe: ExecuteRequest(queryName, variables),
-          headers: headers,
-        );
-
-        _send(request.toJson());
       },
       onCancel: () {
-        if (!_activeSubscriptions.containsKey(operationId)) return;
-        final requestId = _activeSubscriptions[operationId]!;
+        final requestId = _activeSubscriptions[operationId];
+        if (requestId == null) return;
 
         final listeners = _streamListeners[requestId];
-        if (listeners != null) {
-          listeners.remove(controller);
-          if (listeners.isEmpty) {
-            _streamListeners.remove(requestId);
-            _activeSubscriptions.remove(operationId);
-            _pendingSubscriptions.remove(requestId);
+        listeners?.remove(controller);
+        if (listeners == null || listeners.isEmpty) {
+          // Always drop the `operationId -> requestId` mapping here. Leaving it
+          // behind (which the previous `listeners != null` guard did) makes
+          // every later `subscribe()` for this query attach to a request the
+          // server is no longer streaming, so it never gets a first event.
+          _streamListeners.remove(requestId);
+          _activeSubscriptions.remove(operationId);
+          _pendingSubscriptions.remove(requestId);
 
+          if (isConnected) {
             final cancelReq = StreamRequest(
               requestId: requestId,
               requestKind: RequestKind.cancel,
               cancel: true,
             );
             _send(cancelReq.toJson());
-            _checkIdleAndDisconnect();
           }
+          _checkIdleAndDisconnect();
         }
       },
     );
