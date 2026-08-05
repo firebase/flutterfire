@@ -14,6 +14,11 @@ import 'package:tests/firebase_options.dart';
 
 import './test_utils.dart';
 
+/// Guards against a dropped `verifyPhoneNumber` callback hanging the whole
+/// suite: a missing callback fails the test instead of burning the job
+/// timeout. Generous because these are multi-step phone auth flows.
+const _completerTimeout = Duration(seconds: 60);
+
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
@@ -965,7 +970,8 @@ void main() {
                 ),
               );
 
-              return completer.future as FutureOr<Exception>;
+              return completer.future.timeout(_completerTimeout)
+                  as FutureOr<Exception>;
             }
 
             Exception e = await getError();
@@ -1015,7 +1021,7 @@ void main() {
                   ),
                 );
 
-                return completer.future;
+                return completer.future.timeout(_completerTimeout);
               }
 
               PhoneAuthCredential credential = await getCredential();
