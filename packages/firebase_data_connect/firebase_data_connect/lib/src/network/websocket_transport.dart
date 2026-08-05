@@ -32,6 +32,12 @@ class _PendingSubscription {
   final String queryName;
   final Map<String, dynamic>? variables;
 
+  /// Connection generation on which the `subscribe` frame for this request was
+  /// last written. `-1` means "never written on any live socket", so the server
+  /// has no idea this subscription exists and it must be (re)sent before any
+  /// event — or any `resume` — can be expected for its request id.
+  int sentOnGeneration = -1;
+
   _PendingSubscription(this.operationId, this.queryName, this.variables);
 }
 
@@ -199,6 +205,64 @@ class WebSocketTransport implements DataConnectTransport {
     _scheduleReconnect();
   }
 
+  /// Incremented every time a socket completes its handshake and gets its init
+  /// frame. Subscriptions record the generation they were sent on so a
+  /// subscription can never be silently "live" on the client while the server
+  /// has never seen its `subscribe` frame.
+  int _connectionGeneration = 0;
+
+  /// Returns the request id of a subscription for [operationId] that new
+  /// listeners can safely attach to, or `null` if there is none.
+  ///
+  /// `_activeSubscriptions` is the routing table for both multiplexing
+  /// (`invokeStreamQuery`) and `resume` (`_sendUnary`). An entry that outlives
+  /// its subscription is silently fatal: every later `subscribe()` for that
+  /// query attaches to a request the server is not streaming, no `subscribe`
+  /// frame is ever written, and the caller waits forever for a first event
+  /// that cannot arrive. So treat the entry as a cache that has to be
+  /// *validated* against the listener/pending tables and purged when stale.
+  String? _liveSubscriptionRequestId(String operationId) {
+    final requestId = _activeSubscriptions[operationId];
+    if (requestId == null) return null;
+
+    final pending = _pendingSubscriptions[requestId];
+    final listeners = _streamListeners[requestId];
+    if (pending == null || listeners == null || listeners.isEmpty) {
+      _activeSubscriptions.remove(operationId);
+      _pendingSubscriptions.remove(requestId);
+      _streamListeners.remove(requestId);
+      return null;
+    }
+    return requestId;
+  }
+
+  /// Writes the `subscribe` frame for every registered subscription that has
+  /// not been sent on the current connection.
+  ///
+  /// Guarded by [_PendingSubscription.sentOnGeneration] so it is idempotent:
+  /// whoever gets there first (this method, `invokeStreamQuery.onListen`, or
+  /// `_resubscribeActive`) sends, the others skip. Without this, a subscription
+  /// registered while a socket was being established — or one whose frame was
+  /// dropped by a teardown — is never retried on any later connection.
+  void _sendPendingSubscriptions(String? authToken, String? appCheckToken) {
+    if (!isConnected) return;
+    for (final entry in _pendingSubscriptions.entries) {
+      final requestId = entry.key;
+      final sub = entry.value;
+      if (sub.sentOnGeneration == _connectionGeneration) continue;
+      if (_activeSubscriptions[sub.operationId] != requestId) continue;
+
+      final request = StreamRequest(
+        requestId: requestId,
+        requestKind: RequestKind.subscribe,
+        subscribe: ExecuteRequest(sub.queryName, sub.variables),
+        headers: _buildHeaders(authToken, appCheckToken),
+      );
+      _send(request.toJson());
+      sub.sentOnGeneration = _connectionGeneration;
+    }
+  }
+
   final Random _random = Random();
   static const String _chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
 
@@ -303,6 +367,11 @@ class WebSocketTransport implements DataConnectTransport {
       headers: headers,
     );
     _send(initRequest.toJson());
+
+    // This is a brand new server-side session: nothing that was sent on a
+    // previous socket counts any more.
+    _connectionGeneration++;
+    _sendPendingSubscriptions(authToken, appCheckToken);
   }
 
   // called when a message is received from the stream
@@ -443,18 +512,9 @@ class WebSocketTransport implements DataConnectTransport {
   }
 
   void _resubscribeActive(String? authToken, String? appCheckToken) {
-    for (final sub in _pendingSubscriptions.values) {
-      final reqId = _activeSubscriptions[sub.operationId];
-      if (reqId == null) continue;
-      final headers = _buildHeaders(authToken, appCheckToken);
-      final request = StreamRequest(
-        requestId: reqId,
-        requestKind: RequestKind.subscribe,
-        subscribe: ExecuteRequest(sub.queryName, sub.variables),
-        headers: headers,
-      );
-      _send(request.toJson());
-    }
+    // Generation-guarded, so this is a no-op for anything `_doConnect` already
+    // resent on the new socket rather than a duplicate `subscribe`.
+    _sendPendingSubscriptions(authToken, appCheckToken);
   }
 
   void _replayQueriesAndFailMutations(
@@ -644,8 +704,19 @@ class WebSocketTransport implements DataConnectTransport {
 
     final completer = Completer<ServerResponse>();
 
-    if (_activeSubscriptions.containsKey(operationId)) {
-      final existingRequestId = _activeSubscriptions[operationId]!;
+    // `resume` is only meaningful for a subscription the server currently
+    // streams. Resuming a request id it never received a `subscribe` for (or
+    // one it has already cancelled) yields no response at all, and this
+    // completer — the caller's `execute()` future — would hang forever.
+    // `_liveSubscriptionRequestId` also purges the mapping if it is stale.
+    final liveRequestId = _liveSubscriptionRequestId(operationId);
+    final liveSubscription =
+        liveRequestId == null ? null : _pendingSubscriptions[liveRequestId];
+    final canResume = liveRequestId != null &&
+        liveSubscription!.sentOnGeneration == _connectionGeneration;
+
+    if (canResume) {
+      final existingRequestId = liveRequestId;
       Map<String, dynamic>? variablesMap;
       if (vars != null && serializer != null) {
         variablesMap = jsonDecode(serializer(vars));
@@ -724,6 +795,13 @@ class WebSocketTransport implements DataConnectTransport {
   ) {
     late StreamController<ServerResponse> controller;
 
+    // The request id this particular controller joined. `onCancel` must use
+    // this rather than re-reading `_activeSubscriptions[operationId]`: by the
+    // time a cancel is delivered the map may already point at a *newer*
+    // subscription for the same query, and cleaning up against that entry
+    // corrupts the live subscription instead of this dead one.
+    String? joinedRequestId;
+
     controller = StreamController<ServerResponse>(
       onListen: () async {
         _pendingOperationSetups++;
@@ -735,7 +813,11 @@ class WebSocketTransport implements DataConnectTransport {
           // arriving in that window makes the transport look idle, closes the
           // socket, flags the close as *expected*, and this subscription is
           // then stranded forever — no first event, and (by design) no error.
-          final existingRequestId = _activeSubscriptions[operationId];
+          //
+          // Only multiplex onto an existing request id that is *verifiably*
+          // live. A stale entry here means no `subscribe` frame is ever
+          // written for this listener and it waits forever for a first event.
+          final existingRequestId = _liveSubscriptionRequestId(operationId);
           final isNewSubscription = existingRequestId == null;
 
           Map<String, dynamic>? variables;
@@ -745,6 +827,7 @@ class WebSocketTransport implements DataConnectTransport {
 
           final requestId =
               existingRequestId ?? _generateRequestId(operationId);
+          joinedRequestId = requestId;
 
           if (isNewSubscription) {
             _activeSubscriptions[operationId] = requestId;
@@ -760,13 +843,6 @@ class WebSocketTransport implements DataConnectTransport {
             // Do NOT add error to sink here. The stream is designed to quietly
             // keep the query in `_pendingSubscriptions` and silently retry
             // when the network reconnects via `_scheduleReconnect`.
-          }
-
-          if (!isNewSubscription) {
-            // Multiplexed onto a `subscribe` that was already sent for
-            // `requestId`; nothing more to write.
-            if (!isConnected) _reconnectForActiveOperations();
-            return;
           }
 
           if (!isConnected) {
@@ -788,23 +864,22 @@ class WebSocketTransport implements DataConnectTransport {
             return;
           }
 
-          final headers = _buildHeaders(authToken, appCheckToken);
-
-          final request = StreamRequest(
-            requestId: requestId,
-            requestKind: RequestKind.subscribe,
-            subscribe: ExecuteRequest(queryName, variables),
-            headers: headers,
-          );
-
-          _send(request.toJson());
+          // Generation-guarded, so this covers both cases with no duplicates:
+          // a brand new subscription is written here, and a multiplexed one is
+          // a no-op unless its `subscribe` is missing from this connection (in
+          // which case attaching to it silently would never yield an event).
+          _sendPendingSubscriptions(authToken, appCheckToken);
         } finally {
           _pendingOperationSetups--;
         }
       },
       onCancel: () {
-        final requestId = _activeSubscriptions[operationId];
+        // Clean up against the request id *this* controller joined, and only
+        // once — `onCancel` can be reached again for an already-cancelled
+        // subscription, and the map may meanwhile describe a newer one.
+        final requestId = joinedRequestId;
         if (requestId == null) return;
+        joinedRequestId = null;
 
         final listeners = _streamListeners[requestId];
         listeners?.remove(controller);
@@ -814,7 +889,9 @@ class WebSocketTransport implements DataConnectTransport {
           // every later `subscribe()` for this query attach to a request the
           // server is no longer streaming, so it never gets a first event.
           _streamListeners.remove(requestId);
-          _activeSubscriptions.remove(operationId);
+          if (_activeSubscriptions[operationId] == requestId) {
+            _activeSubscriptions.remove(operationId);
+          }
           _pendingSubscriptions.remove(requestId);
 
           if (isConnected) {
