@@ -54,6 +54,12 @@ public class FlutterFirebaseMessagingPlugin
   private Observer<RemoteMessage> remoteMessageObserver;
   private final LiveData<String> liveDataToken = FlutterFirebaseTokenLiveData.getInstance();
   private Observer<String> tokenObserver;
+  private final LiveData<String> liveDataRegistered =
+      FlutterFirebaseRegisteredLiveData.getInstance();
+  private Observer<String> registeredObserver;
+  private final LiveData<String> liveDataUnregistered =
+      FlutterFirebaseUnregisteredLiveData.getInstance();
+  private Observer<String> unregisteredObserver;
 
   private RemoteMessage initialMessage;
   // We store the initial notification in a separate variable
@@ -76,10 +82,14 @@ public class FlutterFirebaseMessagingPlugin
           channel.invokeMethod("Messaging#onMessage", content);
         };
     tokenObserver = token -> channel.invokeMethod("Messaging#onTokenRefresh", token);
+    registeredObserver = fid -> channel.invokeMethod("Messaging#onRegistered", fid);
+    unregisteredObserver = fid -> channel.invokeMethod("Messaging#onUnregistered", fid);
     // We remove these observers in the onDetachedFromEngine method. Using "observeForever()"
     // allows us to use without a LifecycleOwner.
     liveDataRemoteMessage.observeForever(remoteMessageObserver);
     liveDataToken.observeForever(tokenObserver);
+    liveDataRegistered.observeForever(registeredObserver);
+    liveDataUnregistered.observeForever(unregisteredObserver);
 
     registerPlugin(channelName, this);
   }
@@ -94,6 +104,8 @@ public class FlutterFirebaseMessagingPlugin
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
     liveDataToken.removeObserver(tokenObserver);
     liveDataRemoteMessage.removeObserver(remoteMessageObserver);
+    liveDataRegistered.removeObserver(registeredObserver);
+    liveDataUnregistered.removeObserver(unregisteredObserver);
   }
 
   @Override
@@ -154,6 +166,38 @@ public class FlutterFirebaseMessagingPlugin
                     put("token", token);
                   }
                 });
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
+        });
+
+    return taskCompletionSource.getTask();
+  }
+
+  private Task<Void> register() {
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            Tasks.await(FirebaseMessaging.getInstance().register());
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
+        });
+
+    return taskCompletionSource.getTask();
+  }
+
+  private Task<Void> unregister() {
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            Tasks.await(FirebaseMessaging.getInstance().unregister());
+            taskCompletionSource.setResult(null);
           } catch (Exception e) {
             taskCompletionSource.setException(e);
           }
@@ -471,6 +515,12 @@ public class FlutterFirebaseMessagingPlugin
         break;
       case "Messaging#getToken":
         methodCallTask = getToken();
+        break;
+      case "Messaging#register":
+        methodCallTask = register();
+        break;
+      case "Messaging#unregister":
+        methodCallTask = unregister();
         break;
       case "Messaging#subscribeToTopic":
         methodCallTask = subscribeToTopic(call.arguments());

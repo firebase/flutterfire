@@ -1,4 +1,4 @@
-// ignore_for_file: require_trailing_commas
+// ignore_for_file: deprecated_member_use, require_trailing_commas
 // Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
@@ -141,6 +141,46 @@ void main() {
         await firebaseMessagingPlatform.getToken();
       } on UnimplementedError catch (e) {
         expect(e.message, equals('getToken() is not implemented'));
+        return;
+      }
+      fail('Should have thrown an [UnimplementedError]');
+    });
+
+    test('throws if register()', () async {
+      try {
+        await firebaseMessagingPlatform.register();
+      } on UnimplementedError catch (e) {
+        expect(e.message, equals('register() is not implemented'));
+        return;
+      }
+      fail('Should have thrown an [UnimplementedError]');
+    });
+
+    test('throws if unregister()', () async {
+      try {
+        await firebaseMessagingPlatform.unregister();
+      } on UnimplementedError catch (e) {
+        expect(e.message, equals('unregister() is not implemented'));
+        return;
+      }
+      fail('Should have thrown an [UnimplementedError]');
+    });
+
+    test('throws if onRegistered', () {
+      try {
+        firebaseMessagingPlatform.onRegistered;
+      } on UnimplementedError catch (e) {
+        expect(e.message, equals('onRegistered is not implemented'));
+        return;
+      }
+      fail('Should have thrown an [UnimplementedError]');
+    });
+
+    test('throws if onUnregistered', () {
+      try {
+        firebaseMessagingPlatform.onUnregistered;
+      } on UnimplementedError catch (e) {
+        expect(e.message, equals('onUnregistered is not implemented'));
         return;
       }
       fail('Should have thrown an [UnimplementedError]');

@@ -1,4 +1,4 @@
-// ignore_for_file: require_trailing_commas
+// ignore_for_file: deprecated_member_use, require_trailing_commas
 // Copyright 2020 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -93,6 +93,45 @@ class MockFirebaseMessaging extends Mock
     return super.noSuchMethod(Invocation.method(#getAPNSToken, []),
         returnValue: Future<String>.value(''),
         returnValueForMissingStub: Future<String>.value(''));
+  }
+
+  @override
+  Future<void> register({
+    String? vapidKey,
+    String? serviceWorkerScriptPath,
+  }) {
+    return super.noSuchMethod(
+        Invocation.method(#register, [], {
+          #vapidKey: vapidKey,
+          #serviceWorkerScriptPath: serviceWorkerScriptPath
+        }),
+        returnValue: Future<void>.value(),
+        returnValueForMissingStub: Future<void>.value());
+  }
+
+  @override
+  Future<void> unregister() {
+    return super.noSuchMethod(Invocation.method(#unregister, []),
+        returnValue: Future<void>.value(),
+        returnValueForMissingStub: Future<void>.value());
+  }
+
+  @override
+  Stream<String> get onRegistered {
+    return super.noSuchMethod(
+      Invocation.getter(#onRegistered),
+      returnValue: const Stream<String>.empty(),
+      returnValueForMissingStub: const Stream<String>.empty(),
+    );
+  }
+
+  @override
+  Stream<String> get onUnregistered {
+    return super.noSuchMethod(
+      Invocation.getter(#onUnregistered),
+      returnValue: const Stream<String>.empty(),
+      returnValueForMissingStub: const Stream<String>.empty(),
+    );
   }
 
   @override

@@ -1,4 +1,4 @@
-// ignore_for_file: require_trailing_commas
+// ignore_for_file: deprecated_member_use, require_trailing_commas
 // Copyright 2020 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -29,6 +29,8 @@ void main() {
         log.add(call);
         switch (call.method) {
           case 'Messaging#deleteToken':
+          case 'Messaging#register':
+          case 'Messaging#unregister':
           case 'Messaging#subscribeToTopic':
           case 'Messaging#unsubscribeFromTopic':
             return null;
@@ -168,6 +170,51 @@ void main() {
       ]);
     });
 
+    test('register', () async {
+      await messaging.register();
+
+      // check native method was called
+      expect(log, <Matcher>[
+        isMethodCall(
+          'Messaging#register',
+          arguments: <String, dynamic>{
+            'appName': defaultFirebaseAppName,
+          },
+        ),
+      ]);
+    });
+
+    test('register with web options', () async {
+      await messaging.register(
+        vapidKey: 'test-vapid-key',
+        serviceWorkerScriptPath: 'custom-messaging-sw.js',
+      );
+
+      // check native method was called
+      expect(log, <Matcher>[
+        isMethodCall(
+          'Messaging#register',
+          arguments: <String, dynamic>{
+            'appName': defaultFirebaseAppName,
+          },
+        ),
+      ]);
+    });
+
+    test('unregister', () async {
+      await messaging.unregister();
+
+      // check native method was called
+      expect(log, <Matcher>[
+        isMethodCall(
+          'Messaging#unregister',
+          arguments: <String, dynamic>{
+            'appName': defaultFirebaseAppName,
+          },
+        ),
+      ]);
+    });
+
     test('requestPermission', () async {
       // test android response
       final androidPermissions = await messaging.requestPermission();
@@ -238,6 +285,14 @@ void main() {
 
     test('onTokenRefresh', () {
       expect(messaging.onTokenRefresh, isA<Stream<String>>());
+    });
+
+    test('onRegistered', () {
+      expect(messaging.onRegistered, isA<Stream<String>>());
+    });
+
+    test('onUnregistered', () {
+      expect(messaging.onUnregistered, isA<Stream<String>>());
     });
 
     test('subscribeToTopic', () async {
