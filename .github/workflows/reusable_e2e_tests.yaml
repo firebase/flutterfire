@@ -604,14 +604,18 @@ jobs:
           # foreground app") even when every test passed - same behaviour the
           # macOS job launders. Check the actual results to decide.
           set +e
-          OUTPUT=$(flutter test "$TEST_TARGET" -d "$SIMULATOR" --timeout 10x --dart-define=CI=true 2>&1)
+          # Redirect to a file, never capture: command substitution waits for
+          # stdout EOF, and flutter test on iOS spawns simulator log streamers
+          # that inherit the pipe and keep it open - the step hangs to its
+          # timeout with zero output. File descriptors do not block.
+          flutter test "$TEST_TARGET" -d "$SIMULATOR" --timeout 10x --dart-define=CI=true > flutter_test_output.log 2>&1
           EXIT_CODE=$?
-          echo "$OUTPUT"
+          cat flutter_test_output.log
           if [ $EXIT_CODE -ne 0 ]; then
-            if echo "$OUTPUT" | grep -q "Some tests failed" || echo "$OUTPUT" | grep -q "test failed"; then
+            if grep -q "Some tests failed" flutter_test_output.log || grep -q "test failed" flutter_test_output.log; then
               exit 1
             fi
-            if echo "$OUTPUT" | grep -q "tests passed"; then
+            if grep -q "tests passed" flutter_test_output.log; then
               echo "All tests passed but flutter test exited with $EXIT_CODE. Treating as success."
               exit 0
             fi
@@ -633,14 +637,18 @@ jobs:
           # Same "exit 1 despite all tests passing" laundering as the
           # emulator-tier step above and the macOS job.
           set +e
-          OUTPUT=$(flutter test "$TEST_TARGET" -d "$SIMULATOR" --timeout 10x --dart-define=CI=true 2>&1)
+          # Redirect to a file, never capture: command substitution waits for
+          # stdout EOF, and flutter test on iOS spawns simulator log streamers
+          # that inherit the pipe and keep it open - the step hangs to its
+          # timeout with zero output. File descriptors do not block.
+          flutter test "$TEST_TARGET" -d "$SIMULATOR" --timeout 10x --dart-define=CI=true > flutter_test_output.log 2>&1
           EXIT_CODE=$?
-          echo "$OUTPUT"
+          cat flutter_test_output.log
           if [ $EXIT_CODE -ne 0 ]; then
-            if echo "$OUTPUT" | grep -q "Some tests failed" || echo "$OUTPUT" | grep -q "test failed"; then
+            if grep -q "Some tests failed" flutter_test_output.log || grep -q "test failed" flutter_test_output.log; then
               exit 1
             fi
-            if echo "$OUTPUT" | grep -q "tests passed"; then
+            if grep -q "tests passed" flutter_test_output.log; then
               echo "All tests passed but flutter test exited with $EXIT_CODE. Treating as success."
               exit 0
             fi

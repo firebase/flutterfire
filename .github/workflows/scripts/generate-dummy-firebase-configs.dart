@@ -375,8 +375,17 @@ $body
   // `macos/`), and creating one would leave a stray directory behind.
   for (final platform in const ['ios', 'macos']) {
     if (!Directory('$exampleRoot/$platform').existsSync()) continue;
+    final target = '$exampleRoot/$platform/Runner/GoogleService-Info.plist';
+    // A committed plist wins: crashlytics, app_installations and messaging
+    // check in real plists for their registered Firebase apps, and the native
+    // SDKs configure from the bundled plist before any Dart code runs -
+    // overwriting one with a placeholder made crashlytics hang at launch.
+    if (File(target).existsSync()) {
+      stdout.writeln('Keeping existing $target');
+      continue;
+    }
     _write(
-      '$exampleRoot/$platform/Runner/GoogleService-Info.plist',
+      target,
       applePlist(platform == 'macos' ? (macosBundleId ?? bundleId) : bundleId),
     );
   }
