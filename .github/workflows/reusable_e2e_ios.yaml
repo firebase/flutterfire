@@ -333,6 +333,11 @@ jobs:
             # retry against it just burns the second alarm (observed: both
             # attempts of a job hanging identically). Recycle it first.
             echo "Infrastructure launch failure detected - recycling the simulator and retrying once."
+            echo "::group::Simulator log around the hang (Runner)"
+            perl -e 'alarm shift; exec @ARGV' 90 \
+              xcrun simctl spawn "$SIMULATOR" log show --last 16m --style compact \
+              --predicate 'process == "Runner" OR eventMessage CONTAINS "Runner"' 2>/dev/null | tail -80 || true
+            echo "::endgroup::"
             xcrun simctl shutdown "$SIMULATOR" 2>/dev/null || true
             xcrun simctl erase "$SIMULATOR" 2>/dev/null || true
             xcrun simctl boot "$SIMULATOR" 2>/dev/null || true
@@ -392,6 +397,11 @@ jobs:
             # retry against it just burns the second alarm (observed: both
             # attempts of a job hanging identically). Recycle it first.
             echo "Infrastructure launch failure detected - recycling the simulator and retrying once."
+            echo "::group::Simulator log around the hang (Runner)"
+            perl -e 'alarm shift; exec @ARGV' 90 \
+              xcrun simctl spawn "$SIMULATOR" log show --last 16m --style compact \
+              --predicate 'process == "Runner" OR eventMessage CONTAINS "Runner"' 2>/dev/null | tail -80 || true
+            echo "::endgroup::"
             xcrun simctl shutdown "$SIMULATOR" 2>/dev/null || true
             xcrun simctl erase "$SIMULATOR" 2>/dev/null || true
             xcrun simctl boot "$SIMULATOR" 2>/dev/null || true
