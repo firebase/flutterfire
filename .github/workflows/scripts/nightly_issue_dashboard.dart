@@ -19,7 +19,7 @@ import 'dart:io';
 /// `nightly.yaml` sets, and the header the issue shows.
 ///
 /// The table used to be built by hand in three places (create, rewrite, and the
-/// row itself); with twenty workflows reporting that triplication was the whole
+/// row itself); with seventeen workflows reporting that triplication was the whole
 /// maintenance cost of adding one. Everything below derives from this list, so
 /// a new workflow is a single entry here plus a `<NAME>_STATUS` in
 /// `nightly.yaml`.
@@ -27,11 +27,8 @@ import 'dart:io';
 /// Rows stay one-per-date: the issue is a 30-day history, so products have to
 /// be columns.
 const _columns = <({String env, String header})>[
-  (env: 'ANDROID_STATUS', header: 'Android'),
-  (env: 'IOS_STATUS', header: 'iOS'),
-  (env: 'WEB_STATUS', header: 'Web'),
-  (env: 'MACOS_STATUS', header: 'MacOS'),
-  (env: 'WINDOWS_STATUS', header: 'Windows'),
+  (env: 'SMOKE_STATUS', header: 'Smoke'),
+  (env: 'FIRESTORE_STATUS', header: 'Firestore'),
   (env: 'FDC_STATUS', header: 'FDC'),
   (env: 'STORAGE_STATUS', header: 'Storage'),
   (env: 'AUTH_STATUS', header: 'Auth'),
@@ -49,7 +46,7 @@ const _columns = <({String env, String header})>[
   (env: 'REMOTE_CONFIG_STATUS', header: 'Remote Config'),
 ];
 
-/// `| Date | Android | ... | Notes |`
+/// `| Date | Smoke | ... | Notes |`
 String get _headerRow =>
     '| Date | ${_columns.map((c) => c.header).join(' | ')} | Notes |';
 
