@@ -98,15 +98,33 @@ void main(List<String> arguments) {
   }
 
   if (arguments.contains('--firestore-native')) {
-    _writeFirestoreNativeConfigs();
+    _writeNativeConfigs(
+      exampleRoot: 'packages/cloud_firestore/cloud_firestore/example',
+      androidPackageName: 'io.flutter.plugins.firebase.firestore.example',
+      appleBundleId: 'io.flutter.plugins.firebase.firestore.example',
+    );
+  }
+
+  if (arguments.contains('--storage-native')) {
+    // The storage example's Android app applies the `google-services` plugin
+    // (which validates the package name against google-services.json) and both
+    // its Xcode projects list GoogleService-Info.plist in a Resources build
+    // phase, so the native builds fail outright when these files are absent.
+    // Its Android applicationId and Apple bundle id differ from each other.
+    _writeNativeConfigs(
+      exampleRoot: 'packages/firebase_storage/firebase_storage/example',
+      androidPackageName: 'io.flutter.plugins.firebasestorageexample',
+      appleBundleId: 'io.flutter.plugins.firebase.storage.example',
+    );
   }
 }
 
-void _writeFirestoreNativeConfigs() {
-  const packageName = 'io.flutter.plugins.firebase.firestore.example';
-  const androidPath =
-      'packages/cloud_firestore/cloud_firestore/example/android/app/google-services.json';
-  const appleRoot = 'packages/cloud_firestore/cloud_firestore/example';
+void _writeNativeConfigs({
+  required String exampleRoot,
+  required String androidPackageName,
+  required String appleBundleId,
+}) {
+  final androidPath = '$exampleRoot/android/app/google-services.json';
 
   final androidConfig = <String, Object>{
     'project_info': <String, String>{
@@ -119,7 +137,7 @@ void _writeFirestoreNativeConfigs() {
         'client_info': <String, Object>{
           'mobilesdk_app_id': '1:123456789012:android:0000000000000000000000',
           'android_client_info': <String, String>{
-            'package_name': packageName,
+            'package_name': androidPackageName,
           },
         },
         'api_key': <Object>[
@@ -134,7 +152,7 @@ void _writeFirestoreNativeConfigs() {
     '${const JsonEncoder.withIndent('  ').convert(androidConfig)}\n',
   );
 
-  const appleConfig = '''<?xml version="1.0" encoding="UTF-8"?>
+  final appleConfig = '''<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
@@ -145,7 +163,7 @@ void _writeFirestoreNativeConfigs() {
 \t<key>PLIST_VERSION</key>
 \t<string>1</string>
 \t<key>BUNDLE_ID</key>
-\t<string>$packageName</string>
+\t<string>$appleBundleId</string>
 \t<key>PROJECT_ID</key>
 \t<string>flutterfire-e2e-tests</string>
 \t<key>STORAGE_BUCKET</key>
@@ -155,8 +173,8 @@ void _writeFirestoreNativeConfigs() {
 </dict>
 </plist>
 ''';
-  _write('$appleRoot/ios/Runner/GoogleService-Info.plist', appleConfig);
-  _write('$appleRoot/macos/Runner/GoogleService-Info.plist', appleConfig);
+  _write('$exampleRoot/ios/Runner/GoogleService-Info.plist', appleConfig);
+  _write('$exampleRoot/macos/Runner/GoogleService-Info.plist', appleConfig);
 }
 
 void _write(String path, String contents) {

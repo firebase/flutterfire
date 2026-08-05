@@ -25,6 +25,7 @@ void main() async {
   final macosStatus = env['MACOS_STATUS'] ?? 'skipped';
   final windowsStatus = env['WINDOWS_STATUS'] ?? 'skipped';
   final fdcStatus = env['FDC_STATUS'] ?? 'skipped';
+  final storageStatus = env['STORAGE_STATUS'] ?? 'skipped';
   final pipelineStatus = env['PIPELINE_STATUS'] ?? 'skipped';
   final runId = env['GITHUB_RUN_ID'];
   final serverUrl = env['GITHUB_SERVER_URL'] ?? 'https://github.com';
@@ -46,10 +47,11 @@ void main() async {
   final macosIcon = _getIcon(macosStatus);
   final windowsIcon = _getIcon(windowsStatus);
   final fdcIcon = _getIcon(fdcStatus);
+  final storageIcon = _getIcon(storageStatus);
   final pipelineIcon = _getIcon(pipelineStatus);
 
   final newRow =
-      '| $date | $androidIcon | $iosIcon | $webIcon | $macosIcon | $windowsIcon | $fdcIcon | $pipelineIcon | $notes |';
+      '| $date | $androidIcon | $iosIcon | $webIcon | $macosIcon | $windowsIcon | $fdcIcon | $storageIcon | $pipelineIcon | $notes |';
 
   print('New Row: $newRow');
 
@@ -132,8 +134,8 @@ Future<void> _createIssue(
         '''
 ## Testing History (last 30 days)
 
-| Date | Android | iOS | Web | MacOS | Windows | FDC | Pipeline | Notes |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| Date | Android | iOS | Web | MacOS | Windows | FDC | Storage | Pipeline | Notes |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 $newRow
 ''',
   };
@@ -228,10 +230,10 @@ String _appendRow(String currentBody, String newRow) {
     if (line.startsWith('| Date |')) {
       if (!processedTable) {
         newBodyLines.add(
-          '| Date | Android | iOS | Web | MacOS | Windows | FDC | Pipeline | Notes |',
+          '| Date | Android | iOS | Web | MacOS | Windows | FDC | Storage | Pipeline | Notes |',
         );
         newBodyLines.add(
-          '| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |',
+          '| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |',
         );
         newBodyLines.addAll(tableRows);
         processedTable = true;
@@ -250,10 +252,10 @@ String _appendRow(String currentBody, String newRow) {
     newBodyLines.add('## Testing History (last 30 days)');
     newBodyLines.add('');
     newBodyLines.add(
-      '| Date | Android | iOS | Web | MacOS | Windows | FDC | Pipeline | Notes |',
+      '| Date | Android | iOS | Web | MacOS | Windows | FDC | Storage | Pipeline | Notes |',
     );
     newBodyLines.add(
-      '| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |',
+      '| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |',
     );
     newBodyLines.add(newRow);
   }
