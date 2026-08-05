@@ -530,6 +530,7 @@ melos:
           --ignore "**/Runner/AppDelegate.swift" \
           --ignore "**/Runner/main.m" \
           --ignore "**/Runner/MainFlutterWindow.swift" \
+          --ignore "**/Runner/SceneDelegate.swift" \
           --ignore "**/Runner/Runner-Bridging-Header.h" \
           --ignore "**/RunnerTests/RunnerTests.swift" \
           .
@@ -577,6 +578,7 @@ melos:
           --ignore "**/Runner/AppDelegate.swift" \
           --ignore "**/Runner/main.m" \
           --ignore "**/Runner/MainFlutterWindow.swift" \
+          --ignore "**/Runner/SceneDelegate.swift" \
           --ignore "**/Runner/Runner-Bridging-Header.h" \
           --ignore "**/RunnerTests/RunnerTests.swift" \
           .

@@ -631,8 +631,13 @@ jobs:
           }
           set +e
           run_flutter_test
-          if ! grep -Eq '[0-9]+ tests? passed' flutter_test_output.log && ! grep -Eq '[0-9]+ failed' flutter_test_output.log; then
-            echo "flutter test produced no result tally (startup hang) - retrying once."
+          # Retry once for the two known infra failure shapes: the zero-output
+          # startup hang (no tally at all), and the macOS/iOS launch race
+          # ("The log reader stopped unexpectedly" -> "Unable to start the app
+          # on the device"), which fails before a single test executes.
+          if { ! grep -Eq '[0-9]+ tests? passed' flutter_test_output.log && ! grep -Eq '[0-9]+ failed' flutter_test_output.log; } \
+             || grep -q "Unable to start the app on the device" flutter_test_output.log; then
+            echo "Infrastructure launch failure detected - retrying once."
             run_flutter_test
           fi
           # Trust only the runner's own tally, parsed numerically. Substring
@@ -676,8 +681,13 @@ jobs:
           }
           set +e
           run_flutter_test
-          if ! grep -Eq '[0-9]+ tests? passed' flutter_test_output.log && ! grep -Eq '[0-9]+ failed' flutter_test_output.log; then
-            echo "flutter test produced no result tally (startup hang) - retrying once."
+          # Retry once for the two known infra failure shapes: the zero-output
+          # startup hang (no tally at all), and the macOS/iOS launch race
+          # ("The log reader stopped unexpectedly" -> "Unable to start the app
+          # on the device"), which fails before a single test executes.
+          if { ! grep -Eq '[0-9]+ tests? passed' flutter_test_output.log && ! grep -Eq '[0-9]+ failed' flutter_test_output.log; } \
+             || grep -q "Unable to start the app on the device" flutter_test_output.log; then
+            echo "Infrastructure launch failure detected - retrying once."
             run_flutter_test
           fi
           # Trust only the runner's own tally, parsed numerically. Substring
@@ -856,8 +866,13 @@ jobs:
           }
           set +e
           run_flutter_test
-          if ! grep -Eq '[0-9]+ tests? passed' flutter_test_output.log && ! grep -Eq '[0-9]+ failed' flutter_test_output.log; then
-            echo "flutter test produced no result tally (startup hang) - retrying once."
+          # Retry once for the two known infra failure shapes: the zero-output
+          # startup hang (no tally at all), and the macOS/iOS launch race
+          # ("The log reader stopped unexpectedly" -> "Unable to start the app
+          # on the device"), which fails before a single test executes.
+          if { ! grep -Eq '[0-9]+ tests? passed' flutter_test_output.log && ! grep -Eq '[0-9]+ failed' flutter_test_output.log; } \
+             || grep -q "Unable to start the app on the device" flutter_test_output.log; then
+            echo "Infrastructure launch failure detected - retrying once."
             run_flutter_test
           fi
           # Trust only the runner's own tally, parsed numerically. Substring
@@ -897,8 +912,13 @@ jobs:
           }
           set +e
           run_flutter_test
-          if ! grep -Eq '[0-9]+ tests? passed' flutter_test_output.log && ! grep -Eq '[0-9]+ failed' flutter_test_output.log; then
-            echo "flutter test produced no result tally (startup hang) - retrying once."
+          # Retry once for the two known infra failure shapes: the zero-output
+          # startup hang (no tally at all), and the macOS/iOS launch race
+          # ("The log reader stopped unexpectedly" -> "Unable to start the app
+          # on the device"), which fails before a single test executes.
+          if { ! grep -Eq '[0-9]+ tests? passed' flutter_test_output.log && ! grep -Eq '[0-9]+ failed' flutter_test_output.log; } \
+             || grep -q "Unable to start the app on the device" flutter_test_output.log; then
+            echo "Infrastructure launch failure detected - retrying once."
             run_flutter_test
           fi
           # Trust only the runner's own tally, parsed numerically. Substring

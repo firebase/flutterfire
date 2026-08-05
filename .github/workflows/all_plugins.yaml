@@ -46,9 +46,19 @@ jobs:
           dart run scripts/generate_versions_spm.dart
           git diff --exit-code -- ':(glob)packages/**/Package.swift'
       - name: 'Run Analyze'
+        # flutter_plugin_tools is the flutter/packages-standard analyzer driver
+        # (already used by the format job). The custom-analysis config lists
+        # every package: FlutterFire manages analysis options centrally, which
+        # the tool otherwise treats as unexpected. publish-check was evaluated
+        # too but does not fit this repo's release model (it errors on
+        # already-published versions and requires AUTHORS files), so the pub
+        # dry-run below stays on melos.
         run: |
           dart ./.github/workflows/scripts/generate-dummy-firebase-configs.dart
-          melos analyze-ci
+          dart pub global activate flutter_plugin_tools 0.14.2
+          dart pub global run flutter_plugin_tools analyze \
+            --custom-analysis=.github/workflows/config/custom_analysis.yaml
+          (cd tests && dart analyze .)
       - name: 'Validate Workspace'
         if: always()
         run: melos run validate:workspace
