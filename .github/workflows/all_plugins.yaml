@@ -27,15 +27,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
-      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
+      - uses: ./.github/actions/setup-flutterfire
         with:
-          channel: 'stable'
-          cache: true
-          cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
-          pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
-      - uses: bluefireteam/melos-action@2982f8e4fc92440a219490009d6d05195cb1a6a5
-        with:
-          melos-version: '5.3.0'
+          node: 'false'
+          java: 'false'
+          # This job needs the whole workspace bootstrapped, which melos-action does itself.
+          melos-run-bootstrap: 'true'
       - name: 'Validate Generated SPM Versions'
         run: |
           dart run scripts/generate_versions_spm.dart
@@ -56,15 +53,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
-      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
+      - uses: ./.github/actions/setup-flutterfire
         with:
-          channel: 'stable'
-          cache: true
-          cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
-          pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
-      - uses: bluefireteam/melos-action@2982f8e4fc92440a219490009d6d05195cb1a6a5
-        with:
-          melos-version: '5.3.0'
+          node: 'false'
+          java: 'false'
+          # This job needs the whole workspace bootstrapped, which melos-action does itself.
+          melos-run-bootstrap: 'true'
       - name: 'Pub Check'
         run: |
           melos exec -c 1 --no-private --ignore="*example*" -- \
@@ -75,15 +69,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
-      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
+      - uses: ./.github/actions/setup-flutterfire
         with:
-          channel: 'stable'
-          cache: true
-          cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
-          pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
-      - uses: bluefireteam/melos-action@2982f8e4fc92440a219490009d6d05195cb1a6a5
-        with:
-          melos-version: '5.3.0'
+          node: 'false'
+          java: 'false'
+          # This job needs the whole workspace bootstrapped, which melos-action does itself.
+          melos-run-bootstrap: 'true'
       - name: 'Flutter Pub Get'
         run: |
           melos exec -c 1 --scope="*example*" -- \
@@ -145,16 +136,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
-      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
+      - uses: ./.github/actions/setup-flutterfire
         with:
-          channel: 'stable'
+          node: 'false'
+          java: 'false'
           flutter-version: '3.41.9'
-          cache: true
-          cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
-          pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
-      - uses: bluefireteam/melos-action@2982f8e4fc92440a219490009d6d05195cb1a6a5
-        with:
-          melos-version: '5.3.0'
+          # This job needs the whole workspace bootstrapped, which melos-action does itself.
+          melos-run-bootstrap: 'true'
       - name: 'Build Examples'
         run: |
           dart ./.github/workflows/scripts/generate-dummy-firebase-configs.dart
@@ -168,19 +156,16 @@ jobs:
       PR_HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
-      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
-        with:
-          channel: 'stable'
-          flutter-version: '3.41.9'
-          cache: true
-          cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
-          pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
       - name: Xcode
         # Firebase iOS SDK: minimum Xcode 26.2.
         run: sudo xcode-select -s /Applications/Xcode_26.2.app/Contents/Developer
-      - uses: bluefireteam/melos-action@705015c3d2bc4ab94201ac24accb2bbe070cf533
+      - uses: ./.github/actions/setup-flutterfire
         with:
-          melos-version: '5.3.0'
+          node: 'false'
+          java: 'false'
+          flutter-version: '3.41.9'
+          # This job needs the whole workspace bootstrapped, which melos-action does itself.
+          melos-run-bootstrap: 'true'
       - name: Setup firebase_core example app to test Swift integration
         # Run after melos bootstrap so workspace pubspec_overrides resolve unpublished package versions.
         run: |
@@ -199,15 +184,12 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
-      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
+      - uses: ./.github/actions/setup-flutterfire
         with:
-          channel: 'stable'
-          cache: true
-          cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
-          pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
-      - uses: bluefireteam/melos-action@2982f8e4fc92440a219490009d6d05195cb1a6a5
-        with:
-          melos-version: '5.3.0'
+          node: 'false'
+          java: 'false'
+          # This job needs the whole workspace bootstrapped, which melos-action does itself.
+          melos-run-bootstrap: 'true'
       - name: 'Flutter Test'
         run: melos run test --no-select
       - name: 'Flutter Test - Web'
@@ -224,18 +206,11 @@ jobs:
       # Go is used by addlicense command (addlicense is used in melos run
       # check-license-header)
       - run: go install github.com/google/addlicense@latest
-      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
+      # Running `melos bootstrap` is not needed because we use Melos just for the
+      # `check-license-header` script, so no `bootstrap-scope` is passed here.
+      - uses: ./.github/actions/setup-flutterfire
         with:
-          channel: 'stable'
-          cache: true
-          cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
-          pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
-      - name: Install Melos
-        uses: bluefireteam/melos-action@2982f8e4fc92440a219490009d6d05195cb1a6a5
-        with:
-          # Running `melos bootstrap` is not needed because we use Melos just
-          # for the `check-license-header` script.
-          run-bootstrap: false
-          melos-version: '5.3.0'
+          node: 'false'
+          java: 'false'
       - name: Check license header
         run: melos run check-license-header

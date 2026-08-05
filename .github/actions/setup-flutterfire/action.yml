@@ -1,0 +1,125 @@
+name: 'Setup FlutterFire'
+description: >-
+  Shared CI preamble: Node.js, Java, Flutter, Melos, optional firebase-tools and
+  optional scoped `melos bootstrap` runs. Requires actions/checkout to have run
+  first (a local action can only be resolved after the repository is checked out).
+
+inputs:
+  node:
+    description: "Set to 'false' to skip the Node.js setup step."
+    required: false
+    default: 'true'
+  node-version:
+    description: 'Node.js version to install.'
+    required: false
+    default: '20'
+  npm-cache:
+    description: >-
+      Set to 'false' to skip the npm cache. When enabled, the cache is keyed on
+      .github/workflows/scripts/functions/package-lock.json.
+    required: false
+    default: 'true'
+  java:
+    description: "Set to 'false' to skip the Java setup step."
+    required: false
+    default: 'true'
+  java-version:
+    description: 'Java (temurin) version to install.'
+    required: false
+    default: '21'
+  flutter-channel:
+    description: 'Flutter channel passed to subosito/flutter-action.'
+    required: false
+    default: 'stable'
+  flutter-version:
+    description: "Pinned Flutter version. Empty means unpinned (latest on the channel)."
+    required: false
+    default: ''
+  melos:
+    description: "Set to 'false' to skip installing Melos."
+    required: false
+    default: 'true'
+  melos-version:
+    description: 'Melos version to install.'
+    required: false
+    default: '5.3.0'
+  melos-run-bootstrap:
+    description: >-
+      Forwarded to melos-action's `run-bootstrap`. 'true' bootstraps the whole
+      workspace as part of the Melos install; leave 'false' and use
+      `bootstrap-scope` for scoped bootstraps.
+    required: false
+    default: 'false'
+  bootstrap-scope:
+    description: >-
+      Space-separated list of Melos scopes. Runs `melos bootstrap --scope "<s>"`
+      once per entry, in order. Empty means no scoped bootstrap.
+    required: false
+    default: ''
+  firebase-tools-version:
+    description: >-
+      When set, installs firebase-tools globally at this version and exports
+      FIREBASE_TOOLS_VERSION to $GITHUB_ENV (used as part of the Firebase
+      emulator cache key). Not usable on Windows runners (`sudo npm`).
+    required: false
+    default: ''
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Install Node.js
+      if: inputs.node == 'true'
+      uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: ${{ inputs.npm-cache == 'true' && 'npm' || '' }}
+        cache-dependency-path: '.github/workflows/scripts/functions/package-lock.json'
+
+    - name: Install Java
+      if: inputs.java == 'true'
+      uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961
+      with:
+        distribution: 'temurin'
+        java-version: ${{ inputs.java-version }}
+
+    - name: Install Tools
+      # Exports FIREBASE_TOOLS_VERSION so later steps can key the emulator cache on it.
+      if: inputs.firebase-tools-version != ''
+      shell: bash
+      env:
+        FIREBASE_TOOLS_REQUESTED_VERSION: ${{ inputs.firebase-tools-version }}
+      run: |
+        sudo npm i -g "firebase-tools@${FIREBASE_TOOLS_REQUESTED_VERSION}"
+        echo "FIREBASE_TOOLS_VERSION=$(firebase --version)" >> $GITHUB_ENV
+
+    - name: Install Flutter
+      uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
+      with:
+        channel: ${{ inputs.flutter-channel }}
+        flutter-version: ${{ inputs.flutter-version }}
+        cache: true
+        cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
+        pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
+
+    - name: Install Melos
+      if: inputs.melos == 'true'
+      uses: bluefireteam/melos-action@2982f8e4fc92440a219490009d6d05195cb1a6a5
+      with:
+        run-bootstrap: ${{ inputs.melos-run-bootstrap }}
+        melos-version: ${{ inputs.melos-version }}
+
+    - name: Bootstrap packages
+      if: inputs.melos == 'true' && inputs.bootstrap-scope != ''
+      shell: bash
+      env:
+        BOOTSTRAP_SCOPES: ${{ inputs.bootstrap-scope }}
+      run: |
+        set -euo pipefail
+        # Scopes are globs (e.g. `cloud_firestore*`); disable pathname expansion
+        # so the shell does not resolve them against the working directory.
+        set -f
+        for scope in $BOOTSTRAP_SCOPES; do
+          echo "::group::melos bootstrap --scope \"$scope\""
+          melos bootstrap --scope "$scope"
+          echo "::endgroup::"
+        done

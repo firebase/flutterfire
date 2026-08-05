@@ -47,16 +47,12 @@ jobs:
           - working_directory: ${{ inputs.nightly_test_mode && 'packages/cloud_firestore/cloud_firestore/example' || 'none' }}
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
-      - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
-        name: Install Node.js 20
+      - uses: ./.github/actions/setup-flutterfire
+        timeout-minutes: 15
         with:
-          node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: '.github/workflows/scripts/functions/package-lock.json'
-      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961
-        with:
-          distribution: 'temurin'
-          java-version: '21'
+          firebase-tools-version: '15.25.1'
+          # Each matrix leg bootstraps only the packages it exercises.
+          bootstrap-scope: ${{ matrix.working_directory == 'tests' && 'tests' || 'cloud_firestore*' }}
       # The ubuntu runner image ships Google Chrome and a chromedriver build
       # that is matched to it — that pairing IS our pinning strategy, so we use
       # the image binaries rather than downloading our own.
@@ -65,25 +61,8 @@ jobs:
           echo "$CHROMEWEBDRIVER" >> "$GITHUB_PATH"
           google-chrome --version
           "$CHROMEWEBDRIVER/chromedriver" --version
-      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
-        with:
-          channel: 'stable'
-          cache: true
-          cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
-          pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
-      - uses: bluefireteam/melos-action@2982f8e4fc92440a219490009d6d05195cb1a6a5
-        with:
-          run-bootstrap: false
-          melos-version: '5.3.0'
       - name: Generate dummy Firebase configs
         run: dart ./.github/workflows/scripts/generate-dummy-firebase-configs.dart
-      - name: 'Bootstrap package'
-        timeout-minutes: 15
-        run: melos bootstrap --scope tests && melos bootstrap --scope "cloud_firestore*"
-      - name: 'Install Tools'
-        run: |
-          sudo npm i -g firebase-tools@15.25.1
-          echo "FIREBASE_TOOLS_VERSION=$(firebase --version)" >> $GITHUB_ENV
       - name: Firebase Emulator Cache
         id: firebase-emulator-cache
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
@@ -132,16 +111,11 @@ jobs:
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
-      - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
-        name: Install Node.js 20
+      - uses: ./.github/actions/setup-flutterfire
+        timeout-minutes: 15
         with:
-          node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: '.github/workflows/scripts/functions/package-lock.json'
-      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961
-        with:
-          distribution: 'temurin'
-          java-version: '21'
+          firebase-tools-version: '15.25.1'
+          bootstrap-scope: 'tests'
       # The ubuntu runner image ships Google Chrome and a chromedriver build
       # that is matched to it — that pairing IS our pinning strategy, so we use
       # the image binaries rather than downloading our own.
@@ -150,23 +124,6 @@ jobs:
           echo "$CHROMEWEBDRIVER" >> "$GITHUB_PATH"
           google-chrome --version
           "$CHROMEWEBDRIVER/chromedriver" --version
-      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
-        with:
-          channel: 'stable'
-          cache: true
-          cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
-          pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
-      - uses: bluefireteam/melos-action@2982f8e4fc92440a219490009d6d05195cb1a6a5
-        with:
-          run-bootstrap: false
-          melos-version: '5.3.0'
-      - name: 'Bootstrap package'
-        timeout-minutes: 15
-        run: melos bootstrap --scope tests
-      - name: 'Install Tools'
-        run: |
-          sudo npm i -g firebase-tools@15.25.1
-          echo "FIREBASE_TOOLS_VERSION=$(firebase --version)" >> $GITHUB_ENV
       - name: Firebase Emulator Cache
         id: firebase-emulator-cache
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
@@ -222,16 +179,12 @@ jobs:
           - working_directory: ${{ inputs.nightly_test_mode && 'packages/cloud_firestore/cloud_firestore/example' || 'none' }}
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
-      - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
-        name: Install Node.js 20
+      - uses: ./.github/actions/setup-flutterfire
+        timeout-minutes: 15
         with:
-          node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: '.github/workflows/scripts/functions/package-lock.json'
-      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961
-        with:
-          distribution: 'temurin'
-          java-version: '21'
+          firebase-tools-version: '15.25.1'
+          # Each matrix leg bootstraps only the packages it exercises.
+          bootstrap-scope: ${{ matrix.working_directory == 'tests' && 'tests' || 'cloud_firestore*' }}
       # The ubuntu runner image ships Google Chrome and a chromedriver build
       # that is matched to it — that pairing IS our pinning strategy, so we use
       # the image binaries rather than downloading our own.
@@ -240,25 +193,8 @@ jobs:
           echo "$CHROMEWEBDRIVER" >> "$GITHUB_PATH"
           google-chrome --version
           "$CHROMEWEBDRIVER/chromedriver" --version
-      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
-        with:
-          channel: 'stable'
-          cache: true
-          cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
-          pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
-      - uses: bluefireteam/melos-action@2982f8e4fc92440a219490009d6d05195cb1a6a5
-        with:
-          run-bootstrap: false
-          melos-version: '5.3.0'
       - name: Generate dummy Firebase configs
         run: dart ./.github/workflows/scripts/generate-dummy-firebase-configs.dart
-      - name: 'Bootstrap package'
-        timeout-minutes: 15
-        run: melos bootstrap --scope tests && melos bootstrap --scope "cloud_firestore*"
-      - name: 'Install Tools'
-        run: |
-          sudo npm i -g firebase-tools@15.25.1
-          echo "FIREBASE_TOOLS_VERSION=$(firebase --version)" >> $GITHUB_ENV
       - name: Firebase Emulator Cache
         id: firebase-emulator-cache
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9

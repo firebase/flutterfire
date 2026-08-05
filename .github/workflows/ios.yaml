@@ -47,19 +47,15 @@ jobs:
           - working_directory: ${{ inputs.nightly_test_mode && 'packages/cloud_firestore/cloud_firestore/example' || 'none' }}
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
-      - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
-        name: Install Node.js 20
-        with:
-          node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: '.github/workflows/scripts/functions/package-lock.json'
       - name: Xcode
         # Firebase iOS SDK: minimum Xcode 26.2.
         run: sudo xcode-select -s /Applications/Xcode_26.2.app/Contents/Developer
-      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961
+      - uses: ./.github/actions/setup-flutterfire
         with:
-          distribution: 'temurin'
-          java-version: '21'
+          flutter-version: '3.41.9'
+          firebase-tools-version: '15.25.1'
+          # Each matrix leg bootstraps only the packages it exercises.
+          bootstrap-scope: ${{ matrix.working_directory == 'tests' && 'tests' || 'cloud_firestore*' }}
       - uses: hendrikmuhs/ccache-action@d62db5f07c26379fc4b4e0916f098a92573c3b03
         name: Xcode Compile Cache
         with:
@@ -80,10 +76,6 @@ jobs:
           # never changed - the cache could never be invalidated.
           key: pods-v4-${{ runner.os }}-ios-${{ hashFiles('tests/ios/Podfile', 'packages/firebase_core/firebase_core/ios/firebase_sdk_version.rb') }}
           restore-keys: pods-v4-${{ runner.os }}-ios-
-      - name: 'Install Tools'
-        run: |
-          sudo npm i -g firebase-tools@15.25.1
-          echo "FIREBASE_TOOLS_VERSION=$(firebase --version)" >> $GITHUB_ENV
       - name: Firebase Emulator Cache
         id: firebase-emulator-cache
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
@@ -96,21 +88,8 @@ jobs:
           key: firebase-emulators-v5-${{ env.FIREBASE_TOOLS_VERSION }}
           # Trailing dash so this never prefix-matches a future version's key
           restore-keys: firebase-emulators-v5-
-      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
-        with:
-          channel: 'stable'
-          cache: true
-          flutter-version: '3.41.9'
-          cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
-          pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
-      - uses: bluefireteam/melos-action@2982f8e4fc92440a219490009d6d05195cb1a6a5
-        with:
-          run-bootstrap: false
-          melos-version: '5.3.0'
       - name: Generate dummy Firebase configs
         run: dart ./.github/workflows/scripts/generate-dummy-firebase-configs.dart --firestore-native
-      - name: 'Bootstrap package'
-        run: melos bootstrap --scope tests && melos bootstrap --scope "cloud_firestore*"
       - name: 'Free up space'
         run: |
           sudo rm -rf \
