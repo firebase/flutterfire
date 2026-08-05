@@ -34,7 +34,68 @@ permissions:
   contents: read
 
 jobs:
+  # Maps changed paths to affected platforms so a Kotlin-only change runs only
+  # the android job, a Swift-only change only ios/macos, etc. Dart code, the
+  # tests themselves, firebase_core and CI plumbing affect every platform.
+  # Non-PR events (push to main, the nightly workflow_call) always run
+  # everything: the filter step is skipped and its empty outputs fall back to
+  # 'true' below.
+  changes:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      android: ${{ steps.filter.outputs.android || 'true' }}
+      ios: ${{ steps.filter.outputs.ios || 'true' }}
+      macos: ${{ steps.filter.outputs.macos || 'true' }}
+      web: ${{ steps.filter.outputs.web || 'true' }}
+      windows: ${{ steps.filter.outputs.windows || 'true' }}
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+        if: github.event_name == 'pull_request'
+      - uses: dorny/paths-filter@d1c1ffe0248fe513906c8e24db8ea791d46f8590
+        if: github.event_name == 'pull_request'
+        id: filter
+        with:
+          filters: |
+            shared: &shared
+              - 'packages/firebase_core/**'
+              - 'packages/firebase_storage/firebase_storage/lib/**'
+              - 'packages/firebase_storage/firebase_storage/pubspec.yaml'
+              - 'packages/firebase_storage/firebase_storage_platform_interface/**'
+              - 'packages/firebase_storage/firebase_storage/example/integration_test/**'
+              - 'packages/firebase_storage/firebase_storage/example/lib/**'
+              - 'packages/firebase_storage/firebase_storage/example/pubspec.yaml'
+              - '.github/workflows/e2e_tests_storage.yaml'
+              - '.github/actions/setup-flutterfire/**'
+              - '.github/workflows/scripts/**'
+            android:
+              - *shared
+              - 'packages/firebase_storage/firebase_storage/android/**'
+              - 'packages/firebase_storage/firebase_storage/example/android/**'
+            ios:
+              - *shared
+              - 'packages/firebase_storage/firebase_storage/ios/**'
+              - 'packages/firebase_storage/firebase_storage/darwin/**'
+              - 'packages/firebase_storage/firebase_storage/example/ios/**'
+            macos:
+              - *shared
+              - 'packages/firebase_storage/firebase_storage/macos/**'
+              - 'packages/firebase_storage/firebase_storage/darwin/**'
+              - 'packages/firebase_storage/firebase_storage/example/macos/**'
+            web:
+              - *shared
+              - 'packages/firebase_storage/firebase_storage_web/**'
+              - 'packages/firebase_storage/firebase_storage/example/web/**'
+            windows:
+              - *shared
+              - 'packages/firebase_storage/firebase_storage/windows/**'
+              - 'packages/firebase_storage/firebase_storage/example/windows/**'
+
   android:
+    needs: changes
+    if: needs.changes.outputs.android == 'true'
     permissions:
       contents: read
     runs-on: ubuntu-latest
@@ -173,6 +234,8 @@ jobs:
             ~/.android/adb*
 
   ios:
+    needs: changes
+    if: needs.changes.outputs.ios == 'true'
     permissions:
       contents: read
     runs-on: macos-15
@@ -285,6 +348,8 @@ jobs:
           path: ~/.cache/firebase/emulators
 
   macos:
+    needs: changes
+    if: needs.changes.outputs.macos == 'true'
     permissions:
       contents: read
     runs-on: macos-15
@@ -418,6 +483,8 @@ jobs:
           path: packages/firebase_storage/firebase_storage/example/macos/Pods
 
   web:
+    needs: changes
+    if: needs.changes.outputs.web == 'true'
     permissions:
       contents: read
     runs-on: ubuntu-latest
@@ -492,6 +559,8 @@ jobs:
           path: ~/.cache/firebase/emulators
 
   windows:
+    needs: changes
+    if: needs.changes.outputs.windows == 'true'
     permissions:
       contents: read
     runs-on: windows-latest
