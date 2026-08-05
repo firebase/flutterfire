@@ -565,8 +565,24 @@ jobs:
           export CCACHE_DEPEND=true
           export CCACHE_INODECACHE=true
           ccache -s
-          flutter build ios --no-codesign --simulator --debug --target="./$TEST_TARGET" --dart-define=CI=true
+          # Flutter's SPM integration (experimental) intermittently resolves a
+          # symlinked plugin package at its real path, where the sibling
+          # `../firebase_core` path dependency does not exist ("Could not
+          # resolve package dependencies"). Retry exactly once, for exactly
+          # that error class - anything else fails immediately.
+          set +e
+          flutter build ios --no-codesign --simulator --debug --target="./$TEST_TARGET" --dart-define=CI=true > build_output.log 2>&1
+          BUILD_EXIT=$?
+          cat build_output.log
+          if [ $BUILD_EXIT -ne 0 ] && grep -q "Could not resolve package dependencies" build_output.log; then
+            echo "SPM package resolution race detected; retrying the build once."
+            flutter clean > /dev/null
+            flutter build ios --no-codesign --simulator --debug --target="./$TEST_TARGET" --dart-define=CI=true
+            BUILD_EXIT=$?
+          fi
+          set -e
           ccache -s
+          exit $BUILD_EXIT
       - name: Install Cloud Functions dependencies
         if: inputs.use-firebase-emulators
         # `firebase emulators:exec` does not install these itself (the old

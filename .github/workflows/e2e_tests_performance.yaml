@@ -56,9 +56,6 @@ jobs:
       web-package: 'firebase_performance_web'
       macos: false
       native-config-args: '--live-tier-plist=performance'
-      # The example's Xcode project predates the format Flutter's SPM
-      # integration can parse ("Unable to get Xcode project information").
-      ios-spm: false
       inject-config-secrets: true
       use-firebase-emulators: false
       nightly_test_mode: ${{ inputs.nightly_test_mode == true }}
