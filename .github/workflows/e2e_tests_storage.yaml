@@ -560,7 +560,6 @@ jobs:
 
   windows:
     needs: changes
-    if: needs.changes.outputs.windows == 'true'
     permissions:
       contents: read
     runs-on: windows-latest
@@ -568,7 +567,7 @@ jobs:
     # `e2e_test.dart`; that entry is gone, so the coverage moves here with the
     # rest of the suite. Skipped in nightly test mode, where the 5 minute budget
     # cannot fit a Windows build (same as `windows-firestore`).
-    if: ${{ !inputs.nightly_test_mode }}
+    if: ${{ !inputs.nightly_test_mode && needs.changes.outputs.windows == 'true' }}
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
