@@ -118,8 +118,14 @@ runs:
         # Scopes are globs (e.g. `cloud_firestore*`); disable pathname expansion
         # so the shell does not resolve them against the working directory.
         set -f
+        # bash on Windows does not resolve `melos` to `melos.bat` the way
+        # PowerShell does.
+        MELOS_BIN="melos"
+        if [[ "${RUNNER_OS}" == "Windows" ]]; then
+          MELOS_BIN="melos.bat"
+        fi
         for scope in $BOOTSTRAP_SCOPES; do
           echo "::group::melos bootstrap --scope \"$scope\""
-          melos bootstrap --scope "$scope"
+          "$MELOS_BIN" bootstrap --scope "$scope"
           echo "::endgroup::"
         done
