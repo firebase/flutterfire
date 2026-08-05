@@ -394,6 +394,21 @@ jobs:
             echo "All $PASSED tests passed; tolerating flutter test exit $FT_EXIT (simulator foreground quirk)."
           fi
           exit 0
+      - name: Dump crash reports
+        # The recurring "Unable to start the app on the device" launch failures
+        # give the Flutter tool nothing to print; simulator app crashes land in
+        # the host's crash reporter with the real reason. Only runs on failure.
+        if: failure()
+        run: |
+          found=0
+          while IFS= read -r report; do
+            found=1
+            echo "::group::$(basename "$report")"
+            head -c 20000 "$report"
+            echo
+            echo "::endgroup::"
+          done < <(find "$HOME/Library/Logs/DiagnosticReports" -name '*.ips' -newermt '-2 hours' 2>/dev/null)
+          [ "$found" -eq 1 ] || echo "No crash reports in the last two hours."
       - name: Save Firebase Emulator Cache
         # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
         if: ${{ inputs.use-firebase-emulators && github.ref == 'refs/heads/main' }}

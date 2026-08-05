@@ -81,6 +81,10 @@ jobs:
       package-path: 'packages/firebase_auth/firebase_auth'
       package-scope: 'firebase_auth*'
       cache-key-suffix: 'auth'
+      # Derives GoogleService-Info.plist from the injected real options. The
+      # old committed plist carried an invalid-shape `dummy-api-key`, which
+      # FIRInstallations aborts on at launch.
+      native-config-args: '--live-tier-plist=auth'
       inject-config-secrets: true
       nightly_test_mode: ${{ inputs.nightly_test_mode == true }}
     secrets:
@@ -95,6 +99,8 @@ jobs:
       package-path: 'packages/firebase_auth/firebase_auth'
       package-scope: 'firebase_auth*'
       cache-key-suffix: 'auth'
+      # Same plist derivation as the iOS job above.
+      native-config-args: '--live-tier-plist=auth'
       inject-config-secrets: true
       nightly_test_mode: ${{ inputs.nightly_test_mode == true }}
     secrets:

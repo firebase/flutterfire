@@ -157,6 +157,15 @@ class DefaultFirebaseOptions {
 /// is load-bearing at build time.
 const _liveTierExampleRoots = <String, String>{
   'ai': 'packages/firebase_ai/firebase_ai/example',
+  // Not a live-tier product (its suite runs against the Auth emulator), but
+  // the same plist mechanics apply: real options are injected from secrets
+  // (the password-policy tests call the live REST API), the Xcode projects
+  // list GoogleService-Info.plist in a Resources build phase, and the native
+  // [DEFAULT] app configured from that plist must agree with the injected
+  // options. The old committed plist carried `dummy-api-key`, whose shape
+  // FIRInstallations rejects with an abort at launch - the "Unable to start
+  // the app on the device" failures.
+  'auth': 'packages/firebase_auth/firebase_auth/example',
   'analytics': 'packages/firebase_analytics/firebase_analytics/example',
   'app_check': 'packages/firebase_app_check/firebase_app_check/example',
   'app_installations':

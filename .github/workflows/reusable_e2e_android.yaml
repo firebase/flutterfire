@@ -209,7 +209,10 @@ jobs:
         run: flutter build apk --debug --target="$TEST_TARGET" --android-skip-build-dependency-validation
       - name: Start AVD then run E2E tests
         uses: reactivecircus/android-emulator-runner@e89f39f1abbbd05b1113a29cf4db69e7540cae5a
-        timeout-minutes: 20
+        # Two alarm-bounded test attempts (15 min each, see the retry script)
+        # plus AVD boot and the emulator suite have to fit; the old 20 minute
+        # budget was killed by a single launch hang.
+        timeout-minutes: 40
         env:
           ANDROID_AVD_HOME: /mnt/avd
           STORAGE_EMULATOR_DEBUG: ${{ inputs.storage-emulator-debug && 'true' || '' }}
@@ -226,11 +229,14 @@ jobs:
           # owns the emulator lifecycle - it boots the suite, runs the command
           # and tears the suite down, exiting with the command's exit code.
           # Live tier: no emulator, so the test runs straight from the example.
+          # Both tiers run the retry wrapper: `flutter test` against the AVD
+          # occasionally hangs at app launch without printing anything, and the
+          # wrapper bounds each attempt and retries that shape once.
           working-directory: ${{ inputs.use-firebase-emulators && '.github/workflows/scripts' || format('{0}/example', inputs.package-path) }}
           script: >-
             ${{ inputs.use-firebase-emulators
-            && format('firebase emulators:exec --project flutterfire-e2e-tests "cd {0}/{1}/example && flutter test {2} --timeout 10x --dart-define=CI=true -d emulator-5554"', github.workspace, inputs.package-path, inputs.test-target)
-            || format('flutter test {0} --timeout 10x --dart-define=CI=true -d emulator-5554', inputs.test-target) }}
+            && format('firebase emulators:exec --project flutterfire-e2e-tests "cd {0}/{1}/example && {0}/.github/workflows/scripts/flutter-test-android-retry.sh"', github.workspace, inputs.package-path)
+            || format('{0}/.github/workflows/scripts/flutter-test-android-retry.sh', github.workspace) }}
       - name: Ensure Appium is shut down
       # Required because of below issue where emulator failing to shut down properly causes tests to fail
       # https://github.com/ReactiveCircus/android-emulator-runner/issues/385

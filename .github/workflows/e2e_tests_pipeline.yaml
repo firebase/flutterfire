@@ -211,7 +211,9 @@ jobs:
           model: "iPhone 16"
       - name: Build iOS (simulator)
         working-directory: packages/cloud_firestore/cloud_firestore/pipeline_example
-        timeout-minutes: 25
+        # A cold SwiftPM fetch (grpc/abseil binaries) plus the Xcode build has
+        # been observed to need more than 25 minutes on a cache miss.
+        timeout-minutes: 35
         run: |
           flutter build ios --no-codesign --simulator --debug --target=./integration_test/pipeline/pipeline_live_test.dart --dart-define=CI=true
       - name: Ensure Simulator Ready
