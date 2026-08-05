@@ -4,7 +4,11 @@ set -euo pipefail
 : "${FLUTTER_DRIVE_TARGET:?FLUTTER_DRIVE_TARGET is required}"
 : "${FLUTTER_DRIVE_DRIVER:?FLUTTER_DRIVE_DRIVER is required}"
 
-FLUTTER_DRIVE_DEVICE="${FLUTTER_DRIVE_DEVICE:-chrome}"
+# web-server, not chrome: with `-d chrome` the flutter tool launches the
+# browser itself, which requires a display server and silently exits 0 when
+# none exists (headless CI). With web-server the browser is launched through
+# chromedriver, which is headless-capable.
+FLUTTER_DRIVE_DEVICE="${FLUTTER_DRIVE_DEVICE:-web-server}"
 FLUTTER_DRIVE_TIMEOUT_SECONDS="${FLUTTER_DRIVE_TIMEOUT_SECONDS:-180}"
 FLUTTER_DRIVE_MAX_ATTEMPTS="${FLUTTER_DRIVE_MAX_ATTEMPTS:-4}"
 FLUTTER_DRIVE_EXTRA_ARGS="${FLUTTER_DRIVE_EXTRA_ARGS:-}"
@@ -108,6 +112,13 @@ PY
     # You will see "All tests passed." in the logs even when tests failed.
     echo "All tests did not pass. Please check the logs for more information."
     return 2
+  fi
+
+  # Never trust a bare exit 0: `flutter drive` exits 0 even when the browser
+  # failed to launch and no test ever ran. Require positive evidence.
+  if [[ "$exit_code" == "0" && "$output" != *"All tests passed"* ]]; then
+    echo "flutter drive exited 0 without reporting test success; treating as an infrastructure failure."
+    return 3
   fi
 
   if [[ "$exit_code" == "124" ]] ||
