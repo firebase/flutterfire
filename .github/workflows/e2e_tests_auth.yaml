@@ -249,11 +249,13 @@ jobs:
           flutter-version: '3.41.9'
           firebase-tools-version: '15.25.1'
           bootstrap-scope: 'firebase_auth*'
-      # Unlike the storage workflow, this job stays on CocoaPods. The auth
-      # example depends on flutter_facebook_auth, whose currently resolved
-      # version (7.1.x) ships no Package.swift, so the app cannot resolve fully
-      # under SPM. Switch this job over once that constraint is bumped to a
-      # version that does.
+      # This job is the repository's iOS Swift Package Manager coverage for
+      # firebase_auth. Every plugin the example depends on ships a
+      # Package.swift (flutter_facebook_auth since 7.2.0, which the example now
+      # requires). The macOS job below stays on CocoaPods, so both dependency
+      # managers are exercised.
+      - name: Enable Swift Package Manager for iOS
+        run: flutter config --enable-swift-package-manager
       - uses: hendrikmuhs/ccache-action@d62db5f07c26379fc4b4e0916f098a92573c3b03
         name: Xcode Compile Cache
         with:
@@ -262,18 +264,6 @@ jobs:
           key: xcode-ccache-auth-ios
           save: "${{ github.ref == 'refs/heads/main' }}"
           max-size: 700M
-      - name: Pods Cache
-        continue-on-error: true
-        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
-        id: pods-cache
-        with:
-          # Must match the save path exactly
-          path: packages/firebase_auth/firebase_auth/example/ios/Pods
-          # Keyed on the Podfile and the pinned Firebase SDK version, not on a
-          # pubspec.lock: those are gitignored, so hashFiles() returns an empty
-          # string and the key could never be invalidated.
-          key: pods-v1-${{ runner.os }}-auth-ios-${{ hashFiles('packages/firebase_auth/firebase_auth/example/ios/Podfile', 'packages/firebase_core/firebase_core/ios/firebase_sdk_version.rb') }}
-          restore-keys: pods-v1-${{ runner.os }}-auth-ios-
       - name: Firebase Emulator Cache
         id: firebase-emulator-cache
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
@@ -291,6 +281,15 @@ jobs:
         # GoogleService-Info.plist in its Resources build phase, so the build
         # fails when the file is missing.
         run: dart ./.github/workflows/scripts/generate-dummy-firebase-configs.dart --auth-native
+      - name: Prepare iOS project for Swift Package Manager
+        # Done here rather than in the repository: the committed Podfile is what
+        # CocoaPods users of the example rely on, and `flutter build` prefers
+        # CocoaPods whenever a Podfile is present.
+        working-directory: packages/firebase_auth/firebase_auth/example/ios
+        run: |
+          if [ -f Podfile ]; then pod deintegrate; fi
+          rm -f Podfile Podfile.lock
+          rm -rf Pods
       - name: 'Build Application'
         working-directory: packages/firebase_auth/firebase_auth/example
         timeout-minutes: 25
@@ -345,16 +344,6 @@ jobs:
           key: ${{ steps.firebase-emulator-cache.outputs.cache-primary-key }}
           # Must match the restore path exactly
           path: ~/.cache/firebase/emulators
-      - name: Save Pods Cache
-        continue-on-error: true
-        # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
-        if: github.ref == 'refs/heads/main'
-        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
-        with:
-          key: ${{ steps.pods-cache.outputs.cache-primary-key }}
-          # Must match the restore path exactly
-          path: packages/firebase_auth/firebase_auth/example/ios/Pods
-
   macos:
     needs: changes
     if: needs.changes.outputs.macos == 'true'
