@@ -34,17 +34,47 @@ on:
 
 jobs:
   ios:
+    name: ios (${{ matrix.suite.name }})
     permissions:
       contents: read
     runs-on: macos-15
-    timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 60 }}
+    timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 35 }}
     strategy:
       fail-fast: false
       matrix:
-        working_directory:
-          ['tests', 'packages/cloud_firestore/cloud_firestore/example']
+        # The `tests` app is sharded by product suite so a hang or flake costs
+        # one small job instead of the whole run. `integration_test/e2e_test.dart`
+        # still aggregates every suite for Windows and local runs.
+        suite:
+          - name: auth
+            working_directory: tests
+            target: integration_test/shards/auth_shard_test.dart
+            scope: tests
+          - name: storage
+            working_directory: tests
+            target: integration_test/shards/storage_shard_test.dart
+            scope: tests
+          - name: database_functions
+            working_directory: tests
+            target: integration_test/shards/database_functions_shard_test.dart
+            scope: tests
+          - name: core_misc
+            working_directory: tests
+            target: integration_test/shards/core_misc_shard_test.dart
+            scope: tests
+          - name: firestore
+            working_directory: packages/cloud_firestore/cloud_firestore/example
+            target: integration_test/e2e_test.dart
+            scope: 'cloud_firestore*'
         exclude:
-          - working_directory: ${{ inputs.nightly_test_mode && 'packages/cloud_firestore/cloud_firestore/example' || 'none' }}
+          # Nightly drops the firestore example leg. The entry is repeated in
+          # full because matrix `exclude` compares the whole object; only `name`
+          # is switched, so outside nightly it matches nothing.
+          - suite:
+              name: ${{ inputs.nightly_test_mode && 'firestore' || 'none' }}
+              working_directory: packages/cloud_firestore/cloud_firestore/example
+              target: integration_test/e2e_test.dart
+              scope: 'cloud_firestore*'
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
       - name: Xcode
@@ -55,7 +85,7 @@ jobs:
           flutter-version: '3.41.9'
           firebase-tools-version: '15.25.1'
           # Each matrix leg bootstraps only the packages it exercises.
-          bootstrap-scope: ${{ matrix.working_directory == 'tests' && 'tests' || 'cloud_firestore*' }}
+          bootstrap-scope: ${{ matrix.suite.scope }}
       - uses: hendrikmuhs/ccache-action@d62db5f07c26379fc4b4e0916f098a92573c3b03
         name: Xcode Compile Cache
         with:
@@ -105,7 +135,7 @@ jobs:
             /usr/share/dotnet
           df -h /
       - name: 'Build Application'
-        working-directory: ${{ matrix.working_directory }}
+        working-directory: ${{ matrix.suite.working_directory }}
         timeout-minutes: 25
         run: |
           export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
@@ -114,7 +144,7 @@ jobs:
           export CCACHE_DEPEND=true
           export CCACHE_INODECACHE=true
           ccache -s
-          flutter build ios --no-codesign --simulator --debug --target=./integration_test/e2e_test.dart --dart-define=CI=true
+          flutter build ios --no-codesign --simulator --debug --target=./${{ matrix.suite.target }} --dart-define=CI=true
           ccache -s
       - name: Install Cloud Functions dependencies
         # `firebase emulators:exec` does not install these itself (the old
@@ -140,7 +170,7 @@ jobs:
         working-directory: ./.github/workflows/scripts
         # Covers booting the emulator suite as well as the tests themselves, since
         # `emulators:exec` now owns both.
-        timeout-minutes: 35
+        timeout-minutes: 20
         env:
           SIMULATOR: ${{ steps.simulator.outputs.udid }}
           STORAGE_EMULATOR_DEBUG: 'true'
@@ -151,7 +181,7 @@ jobs:
           # than starting a second app instance from a retry.
           # `emulators:exec` boots the suite, runs the command and tears the suite
           # down, exiting with the command's exit code.
-          firebase emulators:exec --project flutterfire-e2e-tests "cd ${GITHUB_WORKSPACE}/${{ matrix.working_directory }} && flutter test integration_test/e2e_test.dart -d \"$SIMULATOR\" --timeout 10x --dart-define=CI=true"
+          firebase emulators:exec --project flutterfire-e2e-tests "cd ${GITHUB_WORKSPACE}/${{ matrix.suite.working_directory }} && flutter test ${{ matrix.suite.target }} -d \"$SIMULATOR\" --timeout 10x --dart-define=CI=true"
       - name: Save Firestore Emulator Cache
         # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
         if: github.ref == 'refs/heads/main'
