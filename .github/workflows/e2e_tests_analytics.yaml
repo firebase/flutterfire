@@ -56,6 +56,7 @@ jobs:
       web-package: 'firebase_analytics_web'
       native-config-args: '--live-tier-plist=analytics'
       inject-config-secrets: true
+      use-firebase-emulators: false
       nightly_test_mode: ${{ inputs.nightly_test_mode == true }}
     secrets:
       TESTS_E2E_FIREBASE_OPTIONS_DART: ${{ secrets.TESTS_E2E_FIREBASE_OPTIONS_DART }}

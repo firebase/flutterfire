@@ -34,6 +34,11 @@ on:
       nightly_test_mode:
         type: boolean
         default: false
+    secrets:
+      TESTS_E2E_FIREBASE_OPTIONS_DART:
+        required: true
+      TESTS_E2E_GOOGLE_SERVICES_JSON:
+        required: true
 
 permissions:
   contents: read
@@ -48,5 +53,13 @@ jobs:
       platform-interface-package: 'firebase_auth_platform_interface'
       web-package: 'firebase_auth_web'
       windows: true
-      native-config-args: '--auth-native'
+      # Auth needs BOTH: its tests run against the Auth emulator, but the
+      # validatePassword() suite calls the live password-policy REST API,
+      # which rejects placeholder credentials - so real config is injected
+      # while the emulators stay on. The example commits its plists and
+      # google-services.json, so no generator run is needed.
+      inject-config-secrets: true
       nightly_test_mode: ${{ inputs.nightly_test_mode == true }}
+    secrets:
+      TESTS_E2E_FIREBASE_OPTIONS_DART: ${{ secrets.TESTS_E2E_FIREBASE_OPTIONS_DART }}
+      TESTS_E2E_GOOGLE_SERVICES_JSON: ${{ secrets.TESTS_E2E_GOOGLE_SERVICES_JSON }}

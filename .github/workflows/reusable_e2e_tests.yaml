@@ -13,9 +13,9 @@ name: reusable-e2e-tests
 #     `flutterfire-e2e-tests` project. Config comes from repository secrets via
 #     the "Inject Firebase config" step, Node/Java are skipped where unused, and
 #     every job is fork/dependabot guarded because forks do not get the secrets.
-# The two are mutually exclusive today (a live-tier product has no emulator to
-# talk to); if that ever stops being true, split the emulator behaviour out into
-# its own input.
+# `use-firebase-emulators` is independent of the config source: firebase_auth
+# uses secrets AND the emulator suite (its password-policy tests call the live
+# REST API, which rejects placeholder credentials).
 
 on:
   workflow_call:
@@ -116,6 +116,15 @@ on:
           guarded.
         type: boolean
         default: false
+      use-firebase-emulators:
+        description: >-
+          true (default) runs the test command under `firebase emulators:exec`
+          with the emulator suite installed and cached. Independent of
+          inject-config-secrets since a product can need both: firebase_auth
+          tests run against the Auth emulator but its password-policy tests
+          call the live REST API, which rejects placeholder credentials.
+        type: boolean
+        default: true
       storage-emulator-debug:
         description: >-
           Sets STORAGE_EMULATOR_DEBUG on the test steps. firebase_storage only.
@@ -268,9 +277,9 @@ jobs:
         with:
           # Live tier has no emulator suite, so no firebase-tools and no Node.
           # Java stays: the Gradle build needs it either way.
-          node: ${{ inputs.inject-config-secrets && 'false' || 'true' }}
+          node: ${{ inputs.use-firebase-emulators && 'true' || 'false' }}
           flutter-version: ${{ inputs.flutter-version }}
-          firebase-tools-version: ${{ inputs.inject-config-secrets && '' || inputs.firebase-tools-version }}
+          firebase-tools-version: ${{ inputs.use-firebase-emulators && inputs.firebase-tools-version || '' }}
           bootstrap-scope: ${{ inputs.package-scope }}
       - name: Inject Firebase config
         if: inputs.inject-config-secrets
@@ -288,7 +297,7 @@ jobs:
           echo "$FIREBASE_OPTIONS_DART" > "$PACKAGE_PATH/example/lib/firebase_options.dart"
           echo "$GOOGLE_SERVICES_JSON" > "$PACKAGE_PATH/example/android/app/google-services.json"
       - name: Firebase Emulator Cache
-        if: ${{ !inputs.inject-config-secrets }}
+        if: inputs.use-firebase-emulators
         id: firebase-emulator-cache
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         continue-on-error: true
@@ -310,7 +319,7 @@ jobs:
           # shellcheck disable=SC2086 # an argument list: word-splitting is the point
           dart ./.github/workflows/scripts/generate-dummy-firebase-configs.dart $NATIVE_CONFIG_ARGS
       - name: Install Cloud Functions dependencies
-        if: ${{ !inputs.inject-config-secrets }}
+        if: inputs.use-firebase-emulators
         # `firebase emulators:exec` does not install these itself (the old
         # start-firebase-emulator.sh wrapper did); without them the functions
         # emulator fails to load the function definitions.
@@ -382,11 +391,11 @@ jobs:
           # owns the emulator lifecycle - it boots the suite, runs the command
           # and tears the suite down, exiting with the command's exit code.
           # Live tier: no emulator, so the test runs straight from the example.
-          working-directory: ${{ inputs.inject-config-secrets && format('{0}/example', inputs.package-path) || '.github/workflows/scripts' }}
+          working-directory: ${{ inputs.use-firebase-emulators && '.github/workflows/scripts' || format('{0}/example', inputs.package-path) }}
           script: >-
-            ${{ inputs.inject-config-secrets
-            && format('flutter test {0} --timeout 10x --dart-define=CI=true -d emulator-5554', inputs.test-target)
-            || format('firebase emulators:exec --project flutterfire-e2e-tests "cd {0}/{1}/example && flutter test {2} --timeout 10x --dart-define=CI=true -d emulator-5554"', github.workspace, inputs.package-path, inputs.test-target) }}
+            ${{ inputs.use-firebase-emulators
+            && format('firebase emulators:exec --project flutterfire-e2e-tests "cd {0}/{1}/example && flutter test {2} --timeout 10x --dart-define=CI=true -d emulator-5554"', github.workspace, inputs.package-path, inputs.test-target)
+            || format('flutter test {0} --timeout 10x --dart-define=CI=true -d emulator-5554', inputs.test-target) }}
       - name: Ensure Appium is shut down
       # Required because of below issue where emulator failing to shut down properly causes tests to fail
       # https://github.com/ReactiveCircus/android-emulator-runner/issues/385
@@ -394,7 +403,7 @@ jobs:
           pgrep -f appium && pkill -f appium || echo "No Appium process found"
       - name: Save Firebase Emulator Cache
         # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
-        if: ${{ !inputs.inject-config-secrets && github.ref == 'refs/heads/main' }}
+        if: ${{ inputs.use-firebase-emulators && github.ref == 'refs/heads/main' }}
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         continue-on-error: true
         with:
@@ -443,10 +452,10 @@ jobs:
         run: sudo xcode-select -s /Applications/Xcode_26.2.app/Contents/Developer
       - uses: ./.github/actions/setup-flutterfire
         with:
-          node: ${{ inputs.inject-config-secrets && 'false' || 'true' }}
-          java: ${{ inputs.inject-config-secrets && 'false' || 'true' }}
+          node: ${{ inputs.use-firebase-emulators && 'true' || 'false' }}
+          java: ${{ inputs.use-firebase-emulators && 'true' || 'false' }}
           flutter-version: ${{ inputs.flutter-version }}
-          firebase-tools-version: ${{ inputs.inject-config-secrets && '' || inputs.firebase-tools-version }}
+          firebase-tools-version: ${{ inputs.use-firebase-emulators && inputs.firebase-tools-version || '' }}
           bootstrap-scope: ${{ inputs.package-scope }}
       - name: Enable Swift Package Manager for iOS
         # This job is the repository's iOS Swift Package Manager coverage for the
@@ -470,7 +479,7 @@ jobs:
           save: "${{ github.ref == 'refs/heads/main' }}"
           max-size: 700M
       - name: Firebase Emulator Cache
-        if: ${{ !inputs.inject-config-secrets }}
+        if: inputs.use-firebase-emulators
         id: firebase-emulator-cache
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         continue-on-error: true
@@ -559,7 +568,7 @@ jobs:
           flutter build ios --no-codesign --simulator --debug --target="./$TEST_TARGET" --dart-define=CI=true
           ccache -s
       - name: Install Cloud Functions dependencies
-        if: ${{ !inputs.inject-config-secrets }}
+        if: inputs.use-firebase-emulators
         # `firebase emulators:exec` does not install these itself (the old
         # start-firebase-emulator.sh wrapper did); without them the functions
         # emulator fails to load the function definitions.
@@ -577,7 +586,7 @@ jobs:
           ENSURE_BOOT_IF_NEEDED: "0"
         run: .github/workflows/scripts/ensure-simulator-ready.sh
       - name: 'E2E Tests'
-        if: ${{ !inputs.inject-config-secrets }}
+        if: inputs.use-firebase-emulators
         # firebase.json and the emulator rule files live here, so `emulators:exec`
         # has to run from this directory; the test command cds back to the package
         # under test.
@@ -589,20 +598,57 @@ jobs:
           SIMULATOR: ${{ steps.simulator.outputs.udid }}
           STORAGE_EMULATOR_DEBUG: ${{ inputs.storage-emulator-debug && 'true' || '' }}
         run: |
+          TEST_COMMAND=$(cat <<'EOF'
+          cd "${GITHUB_WORKSPACE}/${PACKAGE_PATH}/example"
+          # flutter test on Apple simulators may exit 1 (e.g. "Failed to
+          # foreground app") even when every test passed - same behaviour the
+          # macOS job launders. Check the actual results to decide.
+          set +e
+          OUTPUT=$(flutter test "$TEST_TARGET" -d "$SIMULATOR" --timeout 10x --dart-define=CI=true 2>&1)
+          EXIT_CODE=$?
+          echo "$OUTPUT"
+          if [ $EXIT_CODE -ne 0 ]; then
+            if echo "$OUTPUT" | grep -q "Some tests failed" || echo "$OUTPUT" | grep -q "test failed"; then
+              exit 1
+            fi
+            if echo "$OUTPUT" | grep -q "tests passed"; then
+              echo "All tests passed but flutter test exited with $EXIT_CODE. Treating as success."
+              exit 0
+            fi
+            exit $EXIT_CODE
+          fi
+          EOF
+          )
           # `emulators:exec` boots the suite, runs the command and tears the suite
-          # down, exiting with the command's exit code.
-          firebase emulators:exec --project flutterfire-e2e-tests "cd ${GITHUB_WORKSPACE}/${PACKAGE_PATH}/example && flutter test ${TEST_TARGET} -d \"$SIMULATOR\" --timeout 10x --dart-define=CI=true"
+          # down, exiting with the command's exit code - the laundering above
+          # decides whether this step passes.
+          firebase emulators:exec --project flutterfire-e2e-tests "$TEST_COMMAND"
       - name: 'E2E Tests'
-        if: inputs.inject-config-secrets
+        if: ${{ !inputs.use-firebase-emulators }}
         working-directory: ${{ inputs.package-path }}/example
         timeout-minutes: 20
         env:
           SIMULATOR: ${{ steps.simulator.outputs.udid }}
         run: |
-          flutter test "$TEST_TARGET" -d "$SIMULATOR" --timeout 10x --dart-define=CI=true
+          # Same "exit 1 despite all tests passing" laundering as the
+          # emulator-tier step above and the macOS job.
+          set +e
+          OUTPUT=$(flutter test "$TEST_TARGET" -d "$SIMULATOR" --timeout 10x --dart-define=CI=true 2>&1)
+          EXIT_CODE=$?
+          echo "$OUTPUT"
+          if [ $EXIT_CODE -ne 0 ]; then
+            if echo "$OUTPUT" | grep -q "Some tests failed" || echo "$OUTPUT" | grep -q "test failed"; then
+              exit 1
+            fi
+            if echo "$OUTPUT" | grep -q "tests passed"; then
+              echo "All tests passed but flutter test exited with $EXIT_CODE. Treating as success."
+              exit 0
+            fi
+            exit $EXIT_CODE
+          fi
       - name: Save Firebase Emulator Cache
         # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
-        if: ${{ !inputs.inject-config-secrets && github.ref == 'refs/heads/main' }}
+        if: ${{ inputs.use-firebase-emulators && github.ref == 'refs/heads/main' }}
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         continue-on-error: true
         with:
@@ -647,10 +693,10 @@ jobs:
         run: sudo xcode-select -s /Applications/Xcode_26.2.app/Contents/Developer
       - uses: ./.github/actions/setup-flutterfire
         with:
-          node: ${{ inputs.inject-config-secrets && 'false' || 'true' }}
-          java: ${{ inputs.inject-config-secrets && 'false' || 'true' }}
+          node: ${{ inputs.use-firebase-emulators && 'true' || 'false' }}
+          java: ${{ inputs.use-firebase-emulators && 'true' || 'false' }}
           flutter-version: ${{ inputs.flutter-version }}
-          firebase-tools-version: ${{ inputs.inject-config-secrets && '' || inputs.firebase-tools-version }}
+          firebase-tools-version: ${{ inputs.use-firebase-emulators && inputs.firebase-tools-version || '' }}
           bootstrap-scope: ${{ inputs.package-scope }}
       - name: Disable Swift Package Manager
         # Recent stable Flutter enables SPM by default, which turns intended
@@ -680,7 +726,7 @@ jobs:
           key: pods-v1-${{ runner.os }}-${{ inputs.cache-key-suffix }}-macos-${{ hashFiles(format('{0}/example/macos/Podfile', inputs.package-path), 'packages/firebase_core/firebase_core/ios/firebase_sdk_version.rb') }}
           restore-keys: pods-v1-${{ runner.os }}-${{ inputs.cache-key-suffix }}-macos-
       - name: Firebase Emulator Cache
-        if: ${{ !inputs.inject-config-secrets }}
+        if: inputs.use-firebase-emulators
         id: firebase-emulator-cache
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         continue-on-error: true
@@ -727,14 +773,14 @@ jobs:
           flutter build macos --debug --target="./$TEST_TARGET" --device-id=macos --dart-define=CI=true
           ccache -s
       - name: Install Cloud Functions dependencies
-        if: ${{ !inputs.inject-config-secrets }}
+        if: inputs.use-firebase-emulators
         # `firebase emulators:exec` does not install these itself (the old
         # start-firebase-emulator.sh wrapper did); without them the functions
         # emulator fails to load the function definitions.
         # Chown the npm cache directory to the runner user to avoid permission issues.
         run: sudo chown -R 501:20 "/Users/runner/.npm" && npm ci --prefix .github/workflows/scripts/functions
       - name: 'E2E Tests'
-        if: ${{ !inputs.inject-config-secrets }}
+        if: inputs.use-firebase-emulators
         # firebase.json and the emulator rule files live here, so `emulators:exec`
         # has to run from this directory; the test command cds back to the
         # package under test.
@@ -777,7 +823,7 @@ jobs:
           # still decides whether this step passes.
           firebase emulators:exec --project flutterfire-e2e-tests "$TEST_COMMAND"
       - name: 'E2E Tests'
-        if: inputs.inject-config-secrets
+        if: ${{ !inputs.use-firebase-emulators }}
         working-directory: ${{ inputs.package-path }}/example
         timeout-minutes: 20
         run: |
@@ -804,7 +850,7 @@ jobs:
       - name: Save Firebase Emulator Cache
         continue-on-error: true
         # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
-        if: ${{ !inputs.inject-config-secrets && github.ref == 'refs/heads/main' }}
+        if: ${{ inputs.use-firebase-emulators && github.ref == 'refs/heads/main' }}
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         with:
           # The firebase emulators are pure javascript and java, OS-independent
@@ -846,10 +892,10 @@ jobs:
       - uses: ./.github/actions/setup-flutterfire
         timeout-minutes: 15
         with:
-          node: ${{ inputs.inject-config-secrets && 'false' || 'true' }}
-          java: ${{ inputs.inject-config-secrets && 'false' || 'true' }}
+          node: ${{ inputs.use-firebase-emulators && 'true' || 'false' }}
+          java: ${{ inputs.use-firebase-emulators && 'true' || 'false' }}
           flutter-version: ${{ inputs.flutter-version }}
-          firebase-tools-version: ${{ inputs.inject-config-secrets && '' || inputs.firebase-tools-version }}
+          firebase-tools-version: ${{ inputs.use-firebase-emulators && inputs.firebase-tools-version || '' }}
           bootstrap-scope: ${{ inputs.package-scope }}
       # The ubuntu runner image ships Google Chrome and a chromedriver build
       # that is matched to it — that pairing IS our pinning strategy, so we use
@@ -880,7 +926,7 @@ jobs:
         if: ${{ !inputs.inject-config-secrets }}
         run: dart ./.github/workflows/scripts/generate-dummy-firebase-configs.dart
       - name: Firebase Emulator Cache
-        if: ${{ !inputs.inject-config-secrets }}
+        if: inputs.use-firebase-emulators
         id: firebase-emulator-cache
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         continue-on-error: true
@@ -892,7 +938,7 @@ jobs:
           key: firebase-emulators-v5-${{ env.FIREBASE_TOOLS_VERSION }}
           restore-keys: firebase-emulators-v5-
       - name: Install Cloud Functions dependencies
-        if: ${{ !inputs.inject-config-secrets }}
+        if: inputs.use-firebase-emulators
         # `firebase emulators:exec` does not install these itself (the old
         # start-firebase-emulator.sh wrapper did); without them the functions
         # emulator fails to load the function definitions.
@@ -907,7 +953,7 @@ jobs:
       # chromedriver. It reads its FLUTTER_DRIVE_* configuration from the
       # environment, which `emulators:exec` passes through to the command.
       - name: 'E2E Tests'
-        if: ${{ !inputs.inject-config-secrets }}
+        if: inputs.use-firebase-emulators
         # Covers booting the emulator suite as well as the tests themselves, since
         # `emulators:exec` now owns both.
         timeout-minutes: 20
@@ -923,7 +969,7 @@ jobs:
         run: |
           firebase emulators:exec --project flutterfire-e2e-tests "cd ${GITHUB_WORKSPACE}/${PACKAGE_PATH}/example && ${GITHUB_WORKSPACE}/.github/workflows/scripts/flutter-drive-web-retry.sh"
       - name: 'E2E Tests'
-        if: inputs.inject-config-secrets
+        if: ${{ !inputs.use-firebase-emulators }}
         working-directory: ${{ inputs.package-path }}/example
         timeout-minutes: 20
         env:
@@ -933,7 +979,7 @@ jobs:
         run: ${{ github.workspace }}/.github/workflows/scripts/flutter-drive-web-retry.sh
       - name: Save Firebase Emulator Cache
         # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
-        if: ${{ !inputs.inject-config-secrets && github.ref == 'refs/heads/main' }}
+        if: ${{ inputs.use-firebase-emulators && github.ref == 'refs/heads/main' }}
         continue-on-error: true
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         with:
@@ -969,10 +1015,10 @@ jobs:
       - uses: ./.github/actions/setup-flutterfire
         timeout-minutes: 15
         with:
-          node: ${{ inputs.inject-config-secrets && 'false' || 'true' }}
-          java: ${{ inputs.inject-config-secrets && 'false' || 'true' }}
+          node: ${{ inputs.use-firebase-emulators && 'true' || 'false' }}
+          java: ${{ inputs.use-firebase-emulators && 'true' || 'false' }}
           flutter-version: ${{ inputs.flutter-version }}
-          firebase-tools-version: ${{ inputs.inject-config-secrets && '' || inputs.firebase-tools-version }}
+          firebase-tools-version: ${{ inputs.use-firebase-emulators && inputs.firebase-tools-version || '' }}
           bootstrap-scope: ${{ inputs.package-scope }}
       # The ubuntu runner image ships Google Chrome and a chromedriver build
       # that is matched to it — that pairing IS our pinning strategy, so we use
@@ -998,7 +1044,7 @@ jobs:
         if: ${{ !inputs.inject-config-secrets }}
         run: dart ./.github/workflows/scripts/generate-dummy-firebase-configs.dart
       - name: Firebase Emulator Cache
-        if: ${{ !inputs.inject-config-secrets }}
+        if: inputs.use-firebase-emulators
         id: firebase-emulator-cache
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         continue-on-error: true
@@ -1010,7 +1056,7 @@ jobs:
           key: firebase-emulators-v5-${{ env.FIREBASE_TOOLS_VERSION }}
           restore-keys: firebase-emulators-v5-
       - name: Install Cloud Functions dependencies
-        if: ${{ !inputs.inject-config-secrets }}
+        if: inputs.use-firebase-emulators
         run: npm ci --prefix .github/workflows/scripts/functions
       - name: 'Use WASM index.html'
         working-directory: ${{ inputs.package-path }}/example
@@ -1019,7 +1065,7 @@ jobs:
       # connects; the retry script retries only those infrastructure startup
       # failures. See the `web` job for the rest of the rationale.
       - name: 'E2E Tests'
-        if: ${{ !inputs.inject-config-secrets }}
+        if: inputs.use-firebase-emulators
         timeout-minutes: 20
         working-directory: ./.github/workflows/scripts
         env:
@@ -1033,7 +1079,7 @@ jobs:
         run: |
           firebase emulators:exec --project flutterfire-e2e-tests "cd ${GITHUB_WORKSPACE}/${PACKAGE_PATH}/example && ${GITHUB_WORKSPACE}/.github/workflows/scripts/flutter-drive-web-retry.sh"
       - name: 'E2E Tests'
-        if: inputs.inject-config-secrets
+        if: ${{ !inputs.use-firebase-emulators }}
         working-directory: ${{ inputs.package-path }}/example
         timeout-minutes: 20
         env:
@@ -1045,7 +1091,7 @@ jobs:
         run: ${{ github.workspace }}/.github/workflows/scripts/flutter-drive-web-retry.sh
       - name: Save Firebase Emulator Cache
         # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
-        if: ${{ !inputs.inject-config-secrets && github.ref == 'refs/heads/main' }}
+        if: ${{ inputs.use-firebase-emulators && github.ref == 'refs/heads/main' }}
         continue-on-error: true
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         with:
@@ -1083,8 +1129,8 @@ jobs:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
       - uses: ./.github/actions/setup-flutterfire
         with:
-          node: ${{ inputs.inject-config-secrets && 'false' || 'true' }}
-          java: ${{ inputs.inject-config-secrets && 'false' || 'true' }}
+          node: ${{ inputs.use-firebase-emulators && 'true' || 'false' }}
+          java: ${{ inputs.use-firebase-emulators && 'true' || 'false' }}
           # The npm cache action is not worth its restore cost here; the only
           # npm work is the global firebase-tools install below.
           npm-cache: 'false'
@@ -1110,18 +1156,18 @@ jobs:
         if: ${{ !inputs.inject-config-secrets }}
         run: dart ./.github/workflows/scripts/generate-dummy-firebase-configs.dart
       - name: "Install Tools"
-        if: ${{ !inputs.inject-config-secrets }}
+        if: inputs.use-firebase-emulators
         # Not the composite action's firebase-tools install: that one uses `sudo npm`,
         # which does not exist on the Windows runners.
         run: |
           npm install -g firebase-tools@$env:FIREBASE_TOOLS_VERSION_INPUT
       - name: Install Cloud Functions dependencies
-        if: ${{ !inputs.inject-config-secrets }}
+        if: inputs.use-firebase-emulators
         # `firebase emulators:exec` does not install these itself; without them the
         # functions emulator logs "Failed to load function definition" on every run.
         run: npm ci --prefix .github/workflows/scripts/functions
       - name: Start Firebase Emulator and run tests
-        if: ${{ !inputs.inject-config-secrets }}
+        if: inputs.use-firebase-emulators
         timeout-minutes: 30
         env:
           STORAGE_EMULATOR_DEBUG: ${{ inputs.storage-emulator-debug && 'true' || '' }}
@@ -1136,7 +1182,7 @@ jobs:
           }
           exit $exitCode
       - name: Run E2E tests
-        if: inputs.inject-config-secrets
+        if: ${{ !inputs.use-firebase-emulators }}
         timeout-minutes: 20
         run: |
           cd $env:PACKAGE_PATH/example
