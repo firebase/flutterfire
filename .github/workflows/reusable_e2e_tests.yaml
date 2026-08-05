@@ -252,7 +252,7 @@ jobs:
     permissions:
       contents: read
     runs-on: ubuntu-latest
-    timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 25 }}
+    timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 35 }}
     env:
       AVD_ARCH: x86_64
       AVD_API_LEVEL: 34

@@ -12,7 +12,7 @@
 // something no single-product example can show. firebase_core is the suite it
 // runs, because it is the only one with no live backend behind it.
 //
-// `shards/core_shard_test.dart` is the same thing under the name CI uses; this
+// `core_shard_test.dart` is the same thing under the name CI uses; this
 // file stays as the local-run entrypoint (`flutter test integration_test`) and
 // as the Windows target.
 

@@ -119,7 +119,7 @@ jobs:
         # minimum Gradle version either.
         working-directory: tests
         timeout-minutes: 25
-        run: flutter build apk --debug --target=integration_test/shards/core_shard_test.dart --android-skip-build-dependency-validation
+        run: flutter build apk --debug --target=integration_test/core_shard_test.dart --android-skip-build-dependency-validation
       - name: Start AVD then run E2E tests
         uses: reactivecircus/android-emulator-runner@e89f39f1abbbd05b1113a29cf4db69e7540cae5a
         timeout-minutes: 20
@@ -141,7 +141,7 @@ jobs:
           # the command and tears the suite down, exiting with the command's exit
           # code. Nothing is left running between steps.
           script: |
-            firebase emulators:exec --project flutterfire-e2e-tests "cd ${GITHUB_WORKSPACE}/tests && flutter test integration_test/shards/core_shard_test.dart --timeout 10x --dart-define=CI=true -d emulator-5554"
+            firebase emulators:exec --project flutterfire-e2e-tests "cd ${GITHUB_WORKSPACE}/tests && flutter test integration_test/core_shard_test.dart --timeout 10x --dart-define=CI=true -d emulator-5554"
       - name: Ensure Appium is shut down
       # Required because of below issue where emulator failing to shut down properly causes tests to fail
       # https://github.com/ReactiveCircus/android-emulator-runner/issues/385
@@ -262,7 +262,7 @@ jobs:
           export CCACHE_DEPEND=true
           export CCACHE_INODECACHE=true
           ccache -s
-          flutter build ios --no-codesign --simulator --debug --target=./integration_test/shards/core_shard_test.dart --dart-define=CI=true
+          flutter build ios --no-codesign --simulator --debug --target=./integration_test/core_shard_test.dart --dart-define=CI=true
           ccache -s
       - name: Install Cloud Functions dependencies
         # `firebase emulators:exec` does not install these itself (the old
@@ -299,7 +299,7 @@ jobs:
           # than starting a second app instance from a retry.
           # `emulators:exec` boots the suite, runs the command and tears the suite
           # down, exiting with the command's exit code.
-          firebase emulators:exec --project flutterfire-e2e-tests "cd ${GITHUB_WORKSPACE}/tests && flutter test integration_test/shards/core_shard_test.dart -d \"$SIMULATOR\" --timeout 10x --dart-define=CI=true"
+          firebase emulators:exec --project flutterfire-e2e-tests "cd ${GITHUB_WORKSPACE}/tests && flutter test integration_test/core_shard_test.dart -d \"$SIMULATOR\" --timeout 10x --dart-define=CI=true"
       - name: Save Firestore Emulator Cache
         # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
         if: github.ref == 'refs/heads/main'
@@ -380,7 +380,7 @@ jobs:
           export CCACHE_DEPEND=true
           export CCACHE_INODECACHE=true
           ccache -s
-          flutter build macos --debug --target=./integration_test/shards/core_shard_test.dart --device-id=macos --dart-define=CI=true
+          flutter build macos --debug --target=./integration_test/core_shard_test.dart --device-id=macos --dart-define=CI=true
           ccache -s
       - name: Install Cloud Functions dependencies
         # `firebase emulators:exec` does not install these itself (the old
@@ -408,7 +408,7 @@ jobs:
           # even when all tests pass. Check actual test results to determine success.
           set +e
           OUTPUT=$(flutter test \
-            integration_test/shards/core_shard_test.dart \
+            integration_test/core_shard_test.dart \
             -d macos \
             --dart-define=CI=true \
             --timeout 10x 2>&1)
@@ -507,7 +507,7 @@ jobs:
         # The retry script reads its FLUTTER_DRIVE_* configuration from the
         # environment, which `emulators:exec` passes through to the command.
         env:
-          FLUTTER_DRIVE_TARGET: './integration_test/shards/core_shard_test.dart'
+          FLUTTER_DRIVE_TARGET: './integration_test/core_shard_test.dart'
           FLUTTER_DRIVE_DRIVER: './test_driver/integration_test.dart'
           FLUTTER_DRIVE_EXTRA_ARGS: '--dart-define=CI=true'
           STORAGE_EMULATOR_DEBUG: 'true'
@@ -584,7 +584,7 @@ jobs:
         # The retry script reads its FLUTTER_DRIVE_* configuration from the
         # environment, which `emulators:exec` passes through to the command.
         env:
-          FLUTTER_DRIVE_TARGET: './integration_test/shards/core_shard_test.dart'
+          FLUTTER_DRIVE_TARGET: './integration_test/core_shard_test.dart'
           FLUTTER_DRIVE_DRIVER: './test_driver/integration_test.dart'
           FLUTTER_DRIVE_EXTRA_ARGS: '--wasm --dart-define=CI=true'
           FLUTTER_DRIVE_TIMEOUT_SECONDS: '300'
