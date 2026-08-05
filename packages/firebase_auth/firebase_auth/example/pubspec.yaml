@@ -18,7 +18,16 @@ dependencies:
   google_sign_in_dartio: ^0.3.0
 
 dev_dependencies:
+  # `test_utils.dart` reaches for IterableExtension when scanning the emulator's
+  # oobCode list.
+  collection: ^1.15.0
+  flutter_test:
+    sdk: flutter
+  # The e2e suite drives the Auth emulator's REST API directly (clearing users,
+  # reading oobCodes and SMS verification codes).
   http: ^1.0.0
+  integration_test:
+    sdk: flutter
 
 flutter:
   uses-material-design: true

@@ -4,7 +4,7 @@
 
 import 'package:flutter_test/flutter_test.dart';
 
-import 'firebase_database_e2e_test.dart';
+import 'e2e_test.dart';
 
 void setupDatabaseTests() {
   group('FirebaseDatabase.ref()', () {

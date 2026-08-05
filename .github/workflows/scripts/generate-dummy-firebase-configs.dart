@@ -117,12 +117,51 @@ void main(List<String> arguments) {
       appleBundleId: 'io.flutter.plugins.firebase.storage.example',
     );
   }
+
+  if (arguments.contains('--auth-native')) {
+    // The auth example's Android app applies the `google-services` plugin and
+    // both its Xcode projects list GoogleService-Info.plist in a Resources
+    // build phase, so the native builds fail outright without these files.
+    _writeNativeConfigs(
+      exampleRoot: 'packages/firebase_auth/firebase_auth/example',
+      androidPackageName: 'io.flutter.plugins.firebase.auth.example',
+      appleBundleId: 'io.flutter.plugins.firebase.auth.example',
+    );
+  }
+
+  if (arguments.contains('--database-native')) {
+    // The database example's Android app applies the `google-services` plugin,
+    // and its macOS Xcode project lists GoogleService-Info.plist in a Resources
+    // build phase. Its iOS project does not reference the plist, but the file
+    // is written anyway so both Apple targets stay consistent - hence the
+    // separate macOS bundle id, which differs from the iOS one here.
+    _writeNativeConfigs(
+      exampleRoot: 'packages/firebase_database/firebase_database/example',
+      androidPackageName: 'io.flutter.plugins.firebase.database.example',
+      appleBundleId: 'io.flutter.plugins.firebase.database.example',
+      macosBundleId: 'io.flutter.plugins.firebaseDatabaseExample',
+    );
+  }
+
+  if (arguments.contains('--functions-native')) {
+    // The functions example's Android app applies the `google-services` plugin
+    // and both its Xcode projects list GoogleService-Info.plist in a Resources
+    // build phase.
+    _writeNativeConfigs(
+      exampleRoot: 'packages/cloud_functions/cloud_functions/example',
+      androidPackageName: 'io.flutter.plugins.firebase.functions.example',
+      appleBundleId: 'io.flutter.plugins.firebase.functions.example',
+    );
+  }
 }
 
 void _writeNativeConfigs({
   required String exampleRoot,
   required String androidPackageName,
   required String appleBundleId,
+  // Defaults to [appleBundleId]; only the examples whose macOS target carries a
+  // different bundle id need to pass this.
+  String? macosBundleId,
 }) {
   final androidPath = '$exampleRoot/android/app/google-services.json';
 
@@ -152,7 +191,8 @@ void _writeNativeConfigs({
     '${const JsonEncoder.withIndent('  ').convert(androidConfig)}\n',
   );
 
-  final appleConfig = '''<?xml version="1.0" encoding="UTF-8"?>
+  String applePlist(String bundleId) =>
+      '''<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
@@ -163,7 +203,7 @@ void _writeNativeConfigs({
 \t<key>PLIST_VERSION</key>
 \t<string>1</string>
 \t<key>BUNDLE_ID</key>
-\t<string>$appleBundleId</string>
+\t<string>$bundleId</string>
 \t<key>PROJECT_ID</key>
 \t<string>flutterfire-e2e-tests</string>
 \t<key>STORAGE_BUCKET</key>
@@ -173,8 +213,14 @@ void _writeNativeConfigs({
 </dict>
 </plist>
 ''';
-  _write('$exampleRoot/ios/Runner/GoogleService-Info.plist', appleConfig);
-  _write('$exampleRoot/macos/Runner/GoogleService-Info.plist', appleConfig);
+  _write(
+    '$exampleRoot/ios/Runner/GoogleService-Info.plist',
+    applePlist(appleBundleId),
+  );
+  _write(
+    '$exampleRoot/macos/Runner/GoogleService-Info.plist',
+    applePlist(macosBundleId ?? appleBundleId),
+  );
 }
 
 void _write(String path, String contents) {
