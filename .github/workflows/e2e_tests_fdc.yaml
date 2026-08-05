@@ -14,7 +14,7 @@ on:
       - '**.md'
   push:
     branches:
-      - master
+      - main
     paths-ignore:
       - 'docs/**'
       - 'website/**'
@@ -51,7 +51,7 @@ jobs:
           java-version: '21'
       - name: 'Install Tools'
         run: |
-          sudo npm i -g firebase-tools
+          sudo npm i -g firebase-tools@15.25.1
           echo "FIREBASE_TOOLS_VERSION=$(firebase --version)" >> $GITHUB_ENV
       - name: Firebase Emulator Cache
         id: firebase-emulator-cache
@@ -184,12 +184,15 @@ jobs:
         id: pods-cache
         with:
           # Must match the save path exactly
-          path: tests/ios/Pods
-          key: ${{ runner.os }}-fdc-pods-${{ hashFiles('tests/pubspec.lock') }}
-          restore-keys: ${{ runner.os }}-fdc-pods
+          path: packages/firebase_data_connect/firebase_data_connect/example/ios/Pods
+          # tests/pubspec.lock is gitignored, so the old key hashed nothing and
+          # the cache never invalidated. Key on the files that actually pin the
+          # native SDK version instead.
+          key: ${{ runner.os }}-fdc-pods-v2-${{ hashFiles('packages/firebase_data_connect/firebase_data_connect/example/ios/Podfile', 'packages/firebase_core/firebase_core/ios/firebase_sdk_version.rb') }}
+          restore-keys: ${{ runner.os }}-fdc-pods-v2-
       - name: 'Install Tools'
         run: |
-          sudo npm i -g firebase-tools
+          sudo npm i -g firebase-tools@15.25.1
           echo "FIREBASE_TOOLS_VERSION=$(firebase --version)" >> $GITHUB_ENV
       - name: Firebase Emulator Cache
         id: firebase-emulator-cache
@@ -272,8 +275,8 @@ jobs:
         continue-on-error: true
         with:
           key: ${{ steps.pods-cache.outputs.cache-primary-key }}
-          # Must match the restore paths exactly
-          path: tests/ios/Pods
+          # Must match the restore path exactly
+          path: packages/firebase_data_connect/firebase_data_connect/example/ios/Pods
 
   web:
     runs-on: macos-latest
@@ -308,7 +311,7 @@ jobs:
         run: melos bootstrap --scope "firebase_data_connect*"
       - name: 'Install Tools'
         run: |
-          sudo npm i -g firebase-tools
+          sudo npm i -g firebase-tools@15.25.1
           echo "FIREBASE_TOOLS_VERSION=$(firebase --version)" >> $GITHUB_ENV
       - name: Firebase Emulator Cache
         id: firebase-emulator-cache
@@ -382,7 +385,7 @@ jobs:
         run: melos bootstrap --scope "firebase_data_connect*"
       - name: 'Install Tools'
         run: |
-          sudo npm i -g firebase-tools
+          sudo npm i -g firebase-tools@15.25.1
           echo "FIREBASE_TOOLS_VERSION=$(firebase --version)" >> $GITHUB_ENV
       - name: Firebase Emulator Cache
         id: firebase-emulator-cache
