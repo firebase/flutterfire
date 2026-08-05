@@ -11,6 +11,11 @@ import 'package:integration_test/integration_test.dart';
 
 import 'test_utils.dart';
 
+/// Guards against a dropped `verifyPhoneNumber` callback hanging the whole
+/// suite: a missing callback fails the test instead of burning the job
+/// timeout. Generous because these are multi-step enrollment/sign-in flows.
+const _completerTimeout = Duration(seconds: 60);
+
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
@@ -129,7 +134,8 @@ void main() {
                 ),
               );
 
-              return completer.future as FutureOr<String>;
+              return completer.future.timeout(_completerTimeout)
+                  as FutureOr<String>;
             }
 
             final verificationId = await getCredential();
@@ -246,7 +252,8 @@ void main() {
                 ),
               );
 
-              return completer.future as FutureOr<String>;
+              return completer.future.timeout(_completerTimeout)
+                  as FutureOr<String>;
             }
 
             final verificationId = await getCredential();
@@ -355,7 +362,8 @@ void main() {
                 ),
               );
 
-              return completer.future as FutureOr<String>;
+              return completer.future.timeout(_completerTimeout)
+                  as FutureOr<String>;
             }
 
             final verificationId = await getCredential();
@@ -452,7 +460,8 @@ void main() {
                 ),
               );
 
-              return completer.future as FutureOr<Exception>;
+              return completer.future.timeout(_completerTimeout)
+                  as FutureOr<Exception>;
             }
 
             final exception = await getCredential();
@@ -524,7 +533,8 @@ void main() {
                 ),
               );
 
-              return completer.future as FutureOr<String>;
+              return completer.future.timeout(_completerTimeout)
+                  as FutureOr<String>;
             }
 
             final verificationId = await getCredential();
@@ -605,7 +615,8 @@ void main() {
                 ),
               );
 
-              return completer.future as FutureOr<String>;
+              return completer.future.timeout(_completerTimeout)
+                  as FutureOr<String>;
             }
 
             final verificationIdSignIn = await getCredentialSignIn();

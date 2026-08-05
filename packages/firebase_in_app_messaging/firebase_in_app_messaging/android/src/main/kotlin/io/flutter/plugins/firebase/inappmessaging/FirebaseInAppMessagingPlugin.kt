@@ -9,47 +9,74 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.inappmessaging.FirebaseInAppMessaging
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
-import io.flutter.plugin.common.MethodCall
-import io.flutter.plugin.common.MethodChannel
-import io.flutter.plugin.common.MethodChannel.MethodCallHandler
-import io.flutter.plugin.common.MethodChannel.Result
+import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin
+import io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry
 
 /** FirebaseInAppMessagingPlugin */
-class FirebaseInAppMessagingPlugin : FlutterFirebasePlugin, FlutterPlugin, MethodCallHandler {
-  private var channel: MethodChannel? = null
+class FirebaseInAppMessagingPlugin :
+    FlutterFirebasePlugin, FlutterPlugin, FirebaseInAppMessagingHostApi {
+  private var binaryMessenger: BinaryMessenger? = null
+
+  private fun initInstance(messenger: BinaryMessenger) {
+    FlutterFirebasePluginRegistry.registerPlugin(METHOD_CHANNEL_NAME, this)
+    binaryMessenger = messenger
+    FirebaseInAppMessagingHostApi.setUp(messenger, this)
+  }
 
   override fun onAttachedToEngine(binding: FlutterPluginBinding) {
-    channel =
-        MethodChannel(binding.binaryMessenger, METHOD_CHANNEL_NAME).also {
-          it.setMethodCallHandler(this)
-        }
+    initInstance(binding.binaryMessenger)
   }
 
   override fun onDetachedFromEngine(binding: FlutterPluginBinding) {
-    channel?.setMethodCallHandler(null)
-    channel = null
+    binaryMessenger = null
+    FirebaseInAppMessagingHostApi.setUp(binding.binaryMessenger, null)
   }
 
-  override fun onMethodCall(call: MethodCall, result: Result) {
-    when (call.method) {
-      "FirebaseInAppMessaging#triggerEvent" -> {
-        val eventName = requireNotNull(call.argument<String>("eventName"))
+  override fun triggerEvent(appName: String, eventName: String, callback: (Result<Unit>) -> Unit) {
+    FlutterFirebasePlugin.cachedThreadPool.execute {
+      try {
         FirebaseInAppMessaging.getInstance().triggerEvent(eventName)
-        result.success(null)
+        callback(Result.success(Unit))
+      } catch (exception: Exception) {
+        handleFailure(callback, exception)
       }
-      "FirebaseInAppMessaging#setMessagesSuppressed" -> {
-        val suppress = requireNotNull(call.argument<Boolean>("suppress"))
-        FirebaseInAppMessaging.getInstance().setMessagesSuppressed(suppress)
-        result.success(null)
-      }
-      "FirebaseInAppMessaging#setAutomaticDataCollectionEnabled" -> {
-        val enabled = call.argument<Boolean>("enabled")
-        FirebaseInAppMessaging.getInstance().setAutomaticDataCollectionEnabled(enabled)
-        result.success(null)
-      }
-      else -> result.notImplemented()
     }
+  }
+
+  override fun setMessagesSuppressed(
+      appName: String,
+      suppress: Boolean,
+      callback: (Result<Unit>) -> Unit
+  ) {
+    FlutterFirebasePlugin.cachedThreadPool.execute {
+      try {
+        FirebaseInAppMessaging.getInstance().setMessagesSuppressed(suppress)
+        callback(Result.success(Unit))
+      } catch (exception: Exception) {
+        handleFailure(callback, exception)
+      }
+    }
+  }
+
+  override fun setAutomaticDataCollectionEnabled(
+      appName: String,
+      enabled: Boolean,
+      callback: (Result<Unit>) -> Unit
+  ) {
+    FlutterFirebasePlugin.cachedThreadPool.execute {
+      try {
+        FirebaseInAppMessaging.getInstance().setAutomaticDataCollectionEnabled(enabled)
+        callback(Result.success(Unit))
+      } catch (exception: Exception) {
+        handleFailure(callback, exception)
+      }
+    }
+  }
+
+  private fun <T> handleFailure(callback: (Result<T>) -> Unit, exception: Exception?) {
+    val message = exception?.message ?: "An unknown error occurred"
+    callback(Result.failure(FlutterError("firebase_in_app_messaging", message, null)))
   }
 
   override fun getPluginConstantsForFirebaseApp(firebaseApp: FirebaseApp): Task<Map<String, Any>?> {

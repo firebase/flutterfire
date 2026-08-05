@@ -20,12 +20,24 @@ on:
       - '**/example/**'
       - '**.md'
   workflow_call:
+    secrets:
+      PIPELINE_E2E_FIREBASE_OPTIONS_DART:
+        required: true
+      PIPELINE_E2E_GOOGLE_SERVICES_JSON:
+        required: true
+      PIPELINE_E2E_GOOGLE_SERVICE_INFO_PLIST:
+        required: true
 
 permissions:
   contents: read
 
 jobs:
   pipeline-e2e-android:
+    # Requires live-project secrets, which fork and dependabot PRs don't receive.
+    if: >-
+      github.event_name != 'pull_request' ||
+      (github.event.pull_request.head.repo.full_name == github.repository &&
+       github.actor != 'dependabot[bot]')
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
@@ -59,6 +71,10 @@ jobs:
           GOOGLE_SERVICES_JSON: ${{ secrets.PIPELINE_E2E_GOOGLE_SERVICES_JSON }}
           GOOGLE_SERVICE_INFO_PLIST: ${{ secrets.PIPELINE_E2E_GOOGLE_SERVICE_INFO_PLIST }}
         run: |
+          if [ -z "$FIREBASE_OPTIONS_DART" ]; then
+            echo "::error::PIPELINE_E2E_FIREBASE_OPTIONS_DART is empty — secrets are unavailable (fork/dependabot PR?). Failing early instead of producing a broken build."
+            exit 1
+          fi
           echo "$FIREBASE_OPTIONS_DART" > packages/cloud_firestore/cloud_firestore/pipeline_example/lib/firebase_options.dart
           echo "$GOOGLE_SERVICES_JSON" > packages/cloud_firestore/cloud_firestore/pipeline_example/android/app/google-services.json
           echo "$GOOGLE_SERVICE_INFO_PLIST" > packages/cloud_firestore/cloud_firestore/pipeline_example/ios/Runner/GoogleService-Info.plist
@@ -124,6 +140,11 @@ jobs:
             ~/.android/adb*
 
   pipeline-e2e-web:
+    # Requires live-project secrets, which fork and dependabot PRs don't receive.
+    if: >-
+      github.event_name != 'pull_request' ||
+      (github.event.pull_request.head.repo.full_name == github.repository &&
+       github.actor != 'dependabot[bot]')
     runs-on: macos-latest
     timeout-minutes: 25
     steps:
@@ -148,6 +169,10 @@ jobs:
           GOOGLE_SERVICES_JSON: ${{ secrets.PIPELINE_E2E_GOOGLE_SERVICES_JSON }}
           GOOGLE_SERVICE_INFO_PLIST: ${{ secrets.PIPELINE_E2E_GOOGLE_SERVICE_INFO_PLIST }}
         run: |
+          if [ -z "$FIREBASE_OPTIONS_DART" ]; then
+            echo "::error::PIPELINE_E2E_FIREBASE_OPTIONS_DART is empty — secrets are unavailable (fork/dependabot PR?). Failing early instead of producing a broken build."
+            exit 1
+          fi
           echo "$FIREBASE_OPTIONS_DART" > packages/cloud_firestore/cloud_firestore/pipeline_example/lib/firebase_options.dart
           echo "$GOOGLE_SERVICES_JSON" > packages/cloud_firestore/cloud_firestore/pipeline_example/android/app/google-services.json
           echo "$GOOGLE_SERVICE_INFO_PLIST" > packages/cloud_firestore/cloud_firestore/pipeline_example/ios/Runner/GoogleService-Info.plist
@@ -168,6 +193,11 @@ jobs:
         shell: bash
 
   pipeline-e2e-ios:
+    # Requires live-project secrets, which fork and dependabot PRs don't receive.
+    if: >-
+      github.event_name != 'pull_request' ||
+      (github.event.pull_request.head.repo.full_name == github.repository &&
+       github.actor != 'dependabot[bot]')
     runs-on: macos-15
     timeout-minutes: 50
     steps:
@@ -202,6 +232,10 @@ jobs:
           GOOGLE_SERVICES_JSON: ${{ secrets.PIPELINE_E2E_GOOGLE_SERVICES_JSON }}
           GOOGLE_SERVICE_INFO_PLIST: ${{ secrets.PIPELINE_E2E_GOOGLE_SERVICE_INFO_PLIST }}
         run: |
+          if [ -z "$FIREBASE_OPTIONS_DART" ]; then
+            echo "::error::PIPELINE_E2E_FIREBASE_OPTIONS_DART is empty — secrets are unavailable (fork/dependabot PR?). Failing early instead of producing a broken build."
+            exit 1
+          fi
           echo "$FIREBASE_OPTIONS_DART" > packages/cloud_firestore/cloud_firestore/pipeline_example/lib/firebase_options.dart
           echo "$GOOGLE_SERVICES_JSON" > packages/cloud_firestore/cloud_firestore/pipeline_example/android/app/google-services.json
           echo "$GOOGLE_SERVICE_INFO_PLIST" > packages/cloud_firestore/cloud_firestore/pipeline_example/ios/Runner/GoogleService-Info.plist
@@ -220,16 +254,19 @@ jobs:
           model: "iPhone 16"
       - name: Build iOS (simulator)
         working-directory: packages/cloud_firestore/cloud_firestore/pipeline_example
+        timeout-minutes: 25
         run: |
           flutter build ios --no-codesign --simulator --debug --target=./integration_test/pipeline/pipeline_live_test.dart --dart-define=CI=true
       - name: Ensure Simulator Ready
         env:
           SIMULATOR: ${{ steps.simulator.outputs.udid }}
           ENSURE_BOOT_IF_NEEDED: "0"
+        timeout-minutes: 13
         run: .github/workflows/scripts/ensure-simulator-ready.sh
       - name: Run pipeline E2E tests (iOS)
         working-directory: packages/cloud_firestore/cloud_firestore/pipeline_example
         env:
           SIMULATOR: ${{ steps.simulator.outputs.udid }}
+        timeout-minutes: 20
         run: |
           flutter test integration_test/pipeline/pipeline_live_test.dart -d "$SIMULATOR" --timeout 10x --dart-define=CI=true
