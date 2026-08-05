@@ -107,7 +107,7 @@ jobs:
       PACKAGE_PATH: ${{ inputs.package-path }}
       TEST_TARGET: ${{ inputs.test-target }}
       NATIVE_CONFIG_ARGS: ${{ inputs.native-config-args }}
-    timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 35 }}
+    timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 60 }}
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
       # No `xcode-select` pin: use the runner image's default Xcode. Firebase's
@@ -209,7 +209,9 @@ jobs:
         working-directory: ./.github/workflows/scripts
         # Covers booting the emulator suite as well as the tests themselves, since
         # `emulators:exec` now owns both.
-        timeout-minutes: 20
+        # Fits two alarm-bounded (15 min) test attempts: the retry the
+        # wrapper performs is pointless if the step dies before it finishes.
+        timeout-minutes: 40
         env:
           STORAGE_EMULATOR_DEBUG: ${{ inputs.storage-emulator-debug && 'true' || '' }}
         run: |
@@ -262,7 +264,9 @@ jobs:
       - name: 'E2E Tests'
         if: ${{ !inputs.use-firebase-emulators }}
         working-directory: ${{ inputs.package-path }}/example
-        timeout-minutes: 20
+        # Fits two alarm-bounded (15 min) test attempts: the retry the
+        # wrapper performs is pointless if the step dies before it finishes.
+        timeout-minutes: 40
         run: |
           run_flutter_test() {
             rm -f flutter_test_output.log
