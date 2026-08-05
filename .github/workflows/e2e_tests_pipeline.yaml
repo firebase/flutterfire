@@ -20,6 +20,13 @@ on:
       - '**/example/**'
       - '**.md'
   workflow_call:
+    secrets:
+      PIPELINE_E2E_FIREBASE_OPTIONS_DART:
+        required: true
+      PIPELINE_E2E_GOOGLE_SERVICES_JSON:
+        required: true
+      PIPELINE_E2E_GOOGLE_SERVICE_INFO_PLIST:
+        required: true
 
 permissions:
   contents: read
