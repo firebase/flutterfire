@@ -42,6 +42,24 @@ const _firebaseOptionsPaths = <String>[
   'packages/firebase_storage/firebase_storage/example/lib/firebase_options.dart',
 ];
 
+/// Placeholder API key, shaped so the Firebase SDKs accept it.
+///
+/// It is not enough for this to be obviously fake. `firebase_core`'s iOS/macOS
+/// plugin calls `[FIRApp configureWithOptions:[FIROptions defaultOptions]]` the
+/// moment it is registered, whenever a GoogleService-Info.plist is present in
+/// the bundle - the plugin registrant runs it before any Dart code, so the Dart
+/// `FirebaseOptions` never get a say. `FIRApp` then eagerly instantiates
+/// `FIRInstallations`, which is a hard dependency of Analytics, App Check,
+/// App Installations, Crashlytics, In-App Messaging, ML Model Downloader,
+/// Messaging, Performance and Remote Config. `+[FIRInstallations
+/// validateAPIKey:]` raises an ObjC exception - i.e. SIGABRT at launch, before
+/// the VM service is up, which `flutter test` only ever sees as
+/// "WebSocketChannelException: Connection refused" - unless the key is exactly
+/// 39 characters, starts with `A` and contains only base64url characters.
+///
+/// So: keep the shape, keep the value obviously fake.
+const _dummyApiKey = 'AIzaSyDUMMYKEYFORFLUTTERFIRECITESTS0000';
+
 // The project ID must match the emulator fixtures and Firestore bundles.
 const _firebaseOptions = '''
 // Copyright 2026, the Chromium project authors. Please see the AUTHORS file
@@ -70,7 +88,7 @@ class DefaultFirebaseOptions {
   }
 
   static const web = FirebaseOptions(
-    apiKey: 'dummy-api-key',
+    apiKey: '$_dummyApiKey',
     appId: '1:123456789012:web:0000000000000000000000',
     messagingSenderId: '123456789012',
     projectId: 'flutterfire-e2e-tests',
@@ -83,7 +101,7 @@ class DefaultFirebaseOptions {
   );
 
   static const android = FirebaseOptions(
-    apiKey: 'dummy-api-key',
+    apiKey: '$_dummyApiKey',
     appId: '1:123456789012:android:0000000000000000000000',
     messagingSenderId: '123456789012',
     projectId: 'flutterfire-e2e-tests',
@@ -95,7 +113,7 @@ class DefaultFirebaseOptions {
   );
 
   static const ios = FirebaseOptions(
-    apiKey: 'dummy-api-key',
+    apiKey: '$_dummyApiKey',
     appId: '1:123456789012:ios:0000000000000000000000',
     messagingSenderId: '123456789012',
     projectId: 'flutterfire-e2e-tests',
@@ -109,7 +127,7 @@ class DefaultFirebaseOptions {
   static const macos = ios;
 
   static const windows = FirebaseOptions(
-    apiKey: 'dummy-api-key',
+    apiKey: '$_dummyApiKey',
     appId: '1:123456789012:web:0000000000000000000000',
     messagingSenderId: '123456789012',
     projectId: 'flutterfire-e2e-tests',
@@ -252,23 +270,32 @@ void _writeNativeConfigs({
   String? macosBundleId,
 }) {
   final androidPath = '$exampleRoot/android/app/google-services.json';
+  // Same reason as the plist: the google-services Gradle plugin turns this file
+  // into the string resources `FirebaseApp.initializeApp` reads, so anything
+  // missing here is missing from the natively-configured `[DEFAULT]` app that
+  // Dart then has to agree with. `firebase_url` is what the database suite's
+  // refFromURL assertions need.
+  final options = _optionsFromDart(exampleRoot, 'android');
 
   final androidConfig = <String, Object>{
     'project_info': <String, String>{
-      'project_number': '123456789012',
-      'project_id': 'flutterfire-e2e-tests',
-      'storage_bucket': 'flutterfire-e2e-tests.appspot.com',
+      'project_number': options['messagingSenderId']!,
+      'project_id': options['projectId']!,
+      if (options['storageBucket'] != null)
+        'storage_bucket': options['storageBucket']!,
+      if (options['databaseURL'] != null)
+        'firebase_url': options['databaseURL']!,
     },
     'client': <Object>[
       <String, Object>{
         'client_info': <String, Object>{
-          'mobilesdk_app_id': '1:123456789012:android:0000000000000000000000',
+          'mobilesdk_app_id': options['appId']!,
           'android_client_info': <String, String>{
             'package_name': androidPackageName,
           },
         },
         'api_key': <Object>[
-          <String, String>{'current_key': 'dummy-api-key'},
+          <String, String>{'current_key': options['apiKey']!},
         ],
       },
     ],
@@ -286,6 +313,23 @@ void _writeNativeConfigs({
   );
 }
 
+/// Writes `GoogleService-Info.plist` for whichever Apple targets the example
+/// has, with values taken from that example's `lib/firebase_options.dart`.
+///
+/// Deriving rather than hardcoding is the point. Once a plist is in the bundle,
+/// `firebase_core`'s plugin registrant configures the native `[DEFAULT]` app
+/// from it before any Dart runs; the Dart `Firebase.initializeApp(options: ...)`
+/// that follows then only succeeds if its apiKey, databaseURL and storageBucket
+/// agree with what the plist already installed - otherwise
+/// `MethodChannelFirebase.initializeApp` throws `[core/duplicate-app]`. Two
+/// hand-maintained copies of the same credentials drift the moment one side
+/// gains a field (which is exactly how `databaseURL` broke the Apple suites),
+/// so there is only one copy here and the plist is projected out of it.
+///
+/// This works for both tiers because both leave the truth in the same file:
+/// the emulator tier because [_firebaseOptions] was just written to it, the
+/// live tier because CI's "Inject Firebase config" step writes the real
+/// credentials there before invoking `--live-tier-plist`.
 void _writeApplePlists({
   required String exampleRoot,
   required String bundleId,
@@ -293,28 +337,39 @@ void _writeApplePlists({
   // different bundle id need to pass this.
   String? macosBundleId,
 }) {
-  String applePlist(String bundleId) =>
-      '''<?xml version="1.0" encoding="UTF-8"?>
+  final options = _optionsFromDart(exampleRoot, 'ios');
+
+  String applePlist(String bundleId) {
+    final entries = <String, String>{
+      'API_KEY': options['apiKey']!,
+      'GCM_SENDER_ID': options['messagingSenderId']!,
+      'PLIST_VERSION': '1',
+      'BUNDLE_ID': bundleId,
+      'PROJECT_ID': options['projectId']!,
+      'GOOGLE_APP_ID': options['appId']!,
+      // Optional in a real plist too: only projects with the product enabled
+      // carry them.
+      if (options['storageBucket'] != null)
+        'STORAGE_BUCKET': options['storageBucket']!,
+      if (options['databaseURL'] != null)
+        'DATABASE_URL': options['databaseURL']!,
+      if (options['iosClientId'] != null) 'CLIENT_ID': options['iosClientId']!,
+    };
+    final body = entries.entries
+        .map(
+          (entry) =>
+              '\t<key>${entry.key}</key>\n\t<string>${entry.value}</string>',
+        )
+        .join('\n');
+    return '''<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-\t<key>API_KEY</key>
-\t<string>dummy-api-key</string>
-\t<key>GCM_SENDER_ID</key>
-\t<string>123456789012</string>
-\t<key>PLIST_VERSION</key>
-\t<string>1</string>
-\t<key>BUNDLE_ID</key>
-\t<string>$bundleId</string>
-\t<key>PROJECT_ID</key>
-\t<string>flutterfire-e2e-tests</string>
-\t<key>STORAGE_BUCKET</key>
-\t<string>flutterfire-e2e-tests.appspot.com</string>
-\t<key>GOOGLE_APP_ID</key>
-\t<string>1:123456789012:ios:0000000000000000000000</string>
+$body
 </dict>
 </plist>
 ''';
+  }
 
   // Not every example has both Apple targets (the performance example has no
   // `macos/`), and creating one would leave a stray directory behind.
@@ -325,6 +380,68 @@ void _writeApplePlists({
       applePlist(platform == 'macos' ? (macosBundleId ?? bundleId) : bundleId),
     );
   }
+}
+
+/// Pulls one platform's `static const <platform> = FirebaseOptions(...)` values
+/// out of an example's `lib/firebase_options.dart`.
+///
+/// `macos` is never asked for: every generator (this script and the
+/// `flutterfire` CLI) emits the same credentials for both Apple platforms, and
+/// the two targets only differ by bundle id, which the caller supplies.
+///
+/// Exits non-zero rather than falling back to a placeholder: a native config
+/// that disagrees with the Dart options fails at runtime, inside the app, as
+/// `[core/duplicate-app]` - which is a far worse thing to debug than a build
+/// step that says what it could not read.
+Map<String, String?> _optionsFromDart(String exampleRoot, String platform) {
+  final path = '$exampleRoot/lib/firebase_options.dart';
+  final file = File(path);
+  if (!file.existsSync()) {
+    stderr.writeln(
+      'Cannot write the $platform Firebase config: $path is missing.',
+    );
+    exit(1);
+  }
+
+  // Comments can contain apostrophes ("doesn't"), which would otherwise be
+  // picked up as string delimiters by the field pattern below.
+  final source = file
+      .readAsStringSync()
+      .replaceAll(RegExp(r'^\s*//.*$', multiLine: true), '');
+
+  final block = RegExp(
+    'static\\s+const\\s+$platform\\s*=\\s*FirebaseOptions\\(([\\s\\S]*?)\\);',
+  ).firstMatch(source);
+  if (block == null) {
+    stderr.writeln(
+      'Cannot write the $platform Firebase config: no '
+      '"static const $platform = FirebaseOptions(...)" found in $path.',
+    );
+    exit(1);
+  }
+
+  final fields = <String, String>{
+    for (final field
+        in RegExp(r"(\w+)\s*:\s*'([^']*)'").allMatches(block.group(1)!))
+      field.group(1)!: field.group(2)!,
+  };
+
+  for (final required in const [
+    'apiKey',
+    'appId',
+    'messagingSenderId',
+    'projectId',
+  ]) {
+    if (fields[required] == null) {
+      stderr.writeln(
+        'Cannot write the $platform Firebase config: `$required` is missing '
+        'from the $platform FirebaseOptions in $path.',
+      );
+      exit(1);
+    }
+  }
+
+  return fields;
 }
 
 void _write(String path, String contents) {
