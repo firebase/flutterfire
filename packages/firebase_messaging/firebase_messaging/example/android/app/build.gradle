@@ -69,7 +69,10 @@ android {
 }
 
 dependencies {
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.4'
+    // flutter_local_notifications (a dependency of this example, but not of the
+    // `tests` mega-app this suite was migrated out of) publishes AAR metadata
+    // requiring desugar_jdk_libs 2.1.4+; 2.0.4 fails :app:checkDebugAarMetadata.
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.4'
 }
 
 flutter {
