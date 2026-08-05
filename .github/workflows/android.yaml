@@ -137,9 +137,11 @@ jobs:
       - name: Pre-build APK
         # Build outside the emulator so the AVD does not boot and idle through the
         # whole Gradle build. `flutter test` below reuses this warm build cache.
+        # The validation skip matches `flutter test`, which does not enforce the
+        # minimum Gradle version either (the firestore example pins Gradle 8.4).
         working-directory: ${{ matrix.working_directory }}
         timeout-minutes: 25
-        run: flutter build apk --debug --target=integration_test/e2e_test.dart
+        run: flutter build apk --debug --target=integration_test/e2e_test.dart --android-skip-build-dependency-validation
       - name: Start AVD then run E2E tests
         uses: reactivecircus/android-emulator-runner@e89f39f1abbbd05b1113a29cf4db69e7540cae5a
         timeout-minutes: 30
