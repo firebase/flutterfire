@@ -254,16 +254,19 @@ jobs:
           model: "iPhone 16"
       - name: Build iOS (simulator)
         working-directory: packages/cloud_firestore/cloud_firestore/pipeline_example
+        timeout-minutes: 25
         run: |
           flutter build ios --no-codesign --simulator --debug --target=./integration_test/pipeline/pipeline_live_test.dart --dart-define=CI=true
       - name: Ensure Simulator Ready
         env:
           SIMULATOR: ${{ steps.simulator.outputs.udid }}
           ENSURE_BOOT_IF_NEEDED: "0"
+        timeout-minutes: 13
         run: .github/workflows/scripts/ensure-simulator-ready.sh
       - name: Run pipeline E2E tests (iOS)
         working-directory: packages/cloud_firestore/cloud_firestore/pipeline_example
         env:
           SIMULATOR: ${{ steps.simulator.outputs.udid }}
+        timeout-minutes: 20
         run: |
           flutter test integration_test/pipeline/pipeline_live_test.dart -d "$SIMULATOR" --timeout 10x --dart-define=CI=true
