@@ -8,13 +8,13 @@ concurrency:
 on:
   schedule:
     - cron: '0 4 * * *'
-  # The dispatch is only for test purpose  
-  # workflow_dispatch:
-  #   inputs:
-  #     test_mode:
-  #       description: 'Run in test mode'
-  #       type: boolean
-  #       default: false
+  # The dispatch is only for test purpose
+  workflow_dispatch:
+    inputs:
+      test_mode:
+        description: 'Run in test mode'
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -58,6 +58,7 @@ jobs:
 
   update-dashboard:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     if: ${{ always() && !cancelled() }}
     needs: [e2e-android, e2e-ios, e2e-macos, e2e-web, e2e-windows, e2e-fdc, e2e-pipeline]
     steps:
