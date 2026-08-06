@@ -122,10 +122,14 @@ jobs:
         run: flutter build apk --debug --target=integration_test/core_shard_test.dart --android-skip-build-dependency-validation
       - name: Start AVD then run E2E tests
         uses: reactivecircus/android-emulator-runner@e89f39f1abbbd05b1113a29cf4db69e7540cae5a
-        timeout-minutes: 20
+        # Two alarm-bounded test attempts (see the retry script) plus AVD boot
+        # and the emulator suite; a single launch hang used to burn the whole
+        # 20-minute budget.
+        timeout-minutes: 40
         env:
           ANDROID_AVD_HOME: /mnt/avd
           STORAGE_EMULATOR_DEBUG: 'true'
+          TEST_TARGET: integration_test/core_shard_test.dart
         with:
           api-level: ${{ env.AVD_API_LEVEL }}
           target: ${{ env.AVD_TARGET }}
@@ -141,7 +145,7 @@ jobs:
           # the command and tears the suite down, exiting with the command's exit
           # code. Nothing is left running between steps.
           script: |
-            firebase emulators:exec --project flutterfire-e2e-tests "cd ${GITHUB_WORKSPACE}/tests && flutter test integration_test/core_shard_test.dart --timeout 10x --dart-define=CI=true -d emulator-5554"
+            firebase emulators:exec --project flutterfire-e2e-tests "cd ${GITHUB_WORKSPACE}/tests && ${GITHUB_WORKSPACE}/.github/workflows/scripts/flutter-test-android-retry.sh"
       - name: Ensure Appium is shut down
       # Required because of below issue where emulator failing to shut down properly causes tests to fail
       # https://github.com/ReactiveCircus/android-emulator-runner/issues/385
