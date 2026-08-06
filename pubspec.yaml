@@ -249,6 +249,27 @@ melos:
       description: |
         Run all e2e tests for cloud_firestore.
 
+    test:e2e:cloud_functions:
+      run: |
+        cd packages/cloud_functions/cloud_functions/example
+        flutter test integration_test/e2e_test.dart
+      description: |
+        Run all e2e tests for cloud_functions.
+
+    test:e2e:firebase_auth:
+      run: |
+        cd packages/firebase_auth/firebase_auth/example
+        flutter test integration_test/e2e_test.dart
+      description: |
+        Run all e2e tests for firebase_auth.
+
+    test:e2e:firebase_database:
+      run: |
+        cd packages/firebase_database/firebase_database/example
+        flutter test integration_test/e2e_test.dart
+      description: |
+        Run all e2e tests for firebase_database.
+
     test:e2e:firebase_performance:
       run: |
         cd packages/firebase_performance/firebase_performance/example
@@ -280,6 +301,27 @@ melos:
         flutter drive --target=./integration_test/e2e_test.dart --driver=./test_driver/integration_test.dart -d chrome
       description: |
         Run all e2e tests for cloud_firestore on web platform. Please ensure you have "chromedriver" installed and running.
+
+    test:e2e:web:cloud_functions:
+      run: |
+        cd packages/cloud_functions/cloud_functions/example
+        flutter drive --target=./integration_test/e2e_test.dart --driver=./test_driver/integration_test.dart -d chrome
+      description: |
+        Run all e2e tests for cloud_functions on web platform. Please ensure you have "chromedriver" installed and running.
+
+    test:e2e:web:firebase_auth:
+      run: |
+        cd packages/firebase_auth/firebase_auth/example
+        flutter drive --target=./integration_test/e2e_test.dart --driver=./test_driver/integration_test.dart -d chrome
+      description: |
+        Run all e2e tests for firebase_auth on web platform. Please ensure you have "chromedriver" installed and running.
+
+    test:e2e:web:firebase_database:
+      run: |
+        cd packages/firebase_database/firebase_database/example
+        flutter drive --target=./integration_test/e2e_test.dart --driver=./test_driver/integration_test.dart -d chrome
+      description: |
+        Run all e2e tests for firebase_database on web platform. Please ensure you have "chromedriver" installed and running.
 
     test:e2e:web:firebase_storage:
       run: |

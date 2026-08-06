@@ -48,14 +48,6 @@ jobs:
         # not in any shard on web: `web-app-check` below keeps running it alone,
         # because it is throttled when it shares a run with the other suites.
         suite:
-          - name: auth
-            working_directory: tests
-            target: integration_test/shards/auth_shard_test.dart
-            scope: tests
-          - name: database_functions
-            working_directory: tests
-            target: integration_test/shards/database_functions_shard_test.dart
-            scope: tests
           - name: core_misc
             working_directory: tests
             target: integration_test/shards/core_misc_shard_test.dart
@@ -226,14 +218,6 @@ jobs:
       matrix:
         # Same sharding as the `web` job above; see the comment there.
         suite:
-          - name: auth
-            working_directory: tests
-            target: integration_test/shards/auth_shard_test.dart
-            scope: tests
-          - name: database_functions
-            working_directory: tests
-            target: integration_test/shards/database_functions_shard_test.dart
-            scope: tests
           - name: core_misc
             working_directory: tests
             target: integration_test/shards/core_misc_shard_test.dart

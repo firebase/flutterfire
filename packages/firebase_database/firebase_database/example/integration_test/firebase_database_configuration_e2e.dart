@@ -5,7 +5,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'firebase_database_e2e_test.dart';
+import 'e2e_test.dart';
 
 const MAX_CACHE_SIZE = 100 * 1024 * 1024;
 const MIN_CACHE_SIZE = 1042 * 1024;

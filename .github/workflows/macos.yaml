@@ -46,14 +46,6 @@ jobs:
         # one small job instead of the whole run. `integration_test/e2e_test.dart`
         # still aggregates every suite for Windows and local runs.
         suite:
-          - name: auth
-            working_directory: tests
-            target: integration_test/shards/auth_shard_test.dart
-            scope: tests
-          - name: database_functions
-            working_directory: tests
-            target: integration_test/shards/database_functions_shard_test.dart
-            scope: tests
           - name: core_misc
             working_directory: tests
             target: integration_test/shards/core_misc_shard_test.dart

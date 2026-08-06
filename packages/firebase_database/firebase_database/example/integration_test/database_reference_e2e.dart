@@ -9,7 +9,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'firebase_database_e2e_test.dart';
+import 'e2e_test.dart';
 
 DatabaseReference _uniqueRef(String name) {
   return database.ref(
