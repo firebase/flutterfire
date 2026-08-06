@@ -152,9 +152,19 @@ jobs:
           STORAGE_EMULATOR_DEBUG: ${{ inputs.storage-emulator-debug && 'true' || '' }}
         run: |
           cd ./.github/workflows/scripts
-          firebase emulators:exec --project flutterfire-e2e-tests "cd ../../../$env:PACKAGE_PATH/example && flutter drive --target=.\$env:TEST_TARGET --driver=.\test_driver\integration_test.dart -d windows --verbose" 2>&1 | Tee-Object -FilePath output.log
-          $exitCode = $LASTEXITCODE
-          $output = Get-Content output.log -Raw
+          function Invoke-Drive {
+            firebase emulators:exec --project flutterfire-e2e-tests "cd ../../../$env:PACKAGE_PATH/example && flutter drive --target=.\$env:TEST_TARGET --driver=.\test_driver\integration_test.dart -d windows --verbose" 2>&1 | Tee-Object -FilePath output.log
+            $script:exitCode = $LASTEXITCODE
+            $script:output = Get-Content output.log -Raw
+          }
+          Invoke-Drive
+          # 'Service has disappeared' is the desktop app crashing mid-suite -
+          # an intermittent native crash, not a test failure. Retry that shape
+          # exactly once; everything else keeps its first verdict.
+          if ($exitCode -ne 0 -and $output -match 'Service has disappeared') {
+            Write-Host "App crashed mid-run (Service has disappeared) - retrying once."
+            Invoke-Drive
+          }
           if ($output -match '\[E\]' -or $output -match 'Some tests failed') {
             Write-Error "All tests did not pass. Please check the logs for more information."
             exit 1
@@ -165,9 +175,17 @@ jobs:
         timeout-minutes: 20
         run: |
           cd $env:PACKAGE_PATH/example
-          flutter drive --target=.\$env:TEST_TARGET --driver=.\test_driver\integration_test.dart -d windows --dart-define=CI=true --verbose 2>&1 | Tee-Object -FilePath output.log
-          $exitCode = $LASTEXITCODE
-          $output = Get-Content output.log -Raw
+          function Invoke-Drive {
+            flutter drive --target=.\$env:TEST_TARGET --driver=.\test_driver\integration_test.dart -d windows --dart-define=CI=true --verbose 2>&1 | Tee-Object -FilePath output.log
+            $script:exitCode = $LASTEXITCODE
+            $script:output = Get-Content output.log -Raw
+          }
+          Invoke-Drive
+          # Same crash-shape retry as the emulator-tier step above.
+          if ($exitCode -ne 0 -and $output -match 'Service has disappeared') {
+            Write-Host "App crashed mid-run (Service has disappeared) - retrying once."
+            Invoke-Drive
+          }
           if ($output -match '\[E\]' -or $output -match 'Some tests failed') {
             Write-Error "All tests did not pass. Please check the logs for more information."
             exit 1
