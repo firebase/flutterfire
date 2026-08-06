@@ -206,7 +206,18 @@ jobs:
         # whole Gradle build. `flutter test` below reuses this warm build cache.
         working-directory: ${{ inputs.package-path }}/example
         timeout-minutes: 25
-        run: flutter build apk --debug --target="$TEST_TARGET" --android-skip-build-dependency-validation
+        # Gradle artifact downloads flake; retry exactly that failure once.
+        run: |
+          set +e
+          flutter build apk --debug --target="$TEST_TARGET" --android-skip-build-dependency-validation > build_output.log 2>&1
+          BUILD_EXIT=$?
+          cat build_output.log
+          if [ $BUILD_EXIT -ne 0 ] && grep -q "error while downloading artifacts from the network" build_output.log; then
+            echo "Gradle artifact download failure - retrying the build once."
+            flutter build apk --debug --target="$TEST_TARGET" --android-skip-build-dependency-validation
+            BUILD_EXIT=$?
+          fi
+          exit $BUILD_EXIT
       - name: Start AVD then run E2E tests
         uses: reactivecircus/android-emulator-runner@e89f39f1abbbd05b1113a29cf4db69e7540cae5a
         # Two alarm-bounded test attempts (15 min each, see the retry script)
