@@ -125,7 +125,10 @@ void main() {
               reason: 'foo reason',
             );
 
-            final event = await completer.future;
+            // Fail the test rather than hang the suite if the native event
+            // channel never delivers.
+            final event =
+                await completer.future.timeout(const Duration(seconds: 30));
             expect(event, 'thrown foo reason');
             await subscription.cancel();
           },

@@ -20,12 +20,24 @@ on:
       - '**/example/**'
       - '**.md'
   workflow_call:
+    secrets:
+      PIPELINE_E2E_FIREBASE_OPTIONS_DART:
+        required: true
+      PIPELINE_E2E_GOOGLE_SERVICES_JSON:
+        required: true
+      PIPELINE_E2E_GOOGLE_SERVICE_INFO_PLIST:
+        required: true
 
 permissions:
   contents: read
 
 jobs:
   pipeline-e2e-android:
+    # Requires live-project secrets, which fork and dependabot PRs don't receive.
+    if: >-
+      github.event_name != 'pull_request' ||
+      (github.event.pull_request.head.repo.full_name == github.repository &&
+       github.actor != 'dependabot[bot]')
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
@@ -34,36 +46,24 @@ jobs:
       AVD_TARGET: google_apis
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
-      - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
-        name: Install Node.js 20
+      - uses: ./.github/actions/setup-flutterfire
         with:
-          node-version: '20'
-      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961
-        with:
-          distribution: 'temurin'
-          java-version: '21'
-      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
-        with:
-          channel: 'stable'
+          npm-cache: 'false'
           flutter-version: '3.41.9'
-          cache: true
-          cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
-          pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
-      - uses: bluefireteam/melos-action@705015c3d2bc4ab94201ac24accb2bbe070cf533
-        with:
-          run-bootstrap: false
-          melos-version: '5.3.0'
+          bootstrap-scope: 'cloud_firestore*'
       - name: Inject Firebase config for pipeline E2E
         env:
           FIREBASE_OPTIONS_DART: ${{ secrets.PIPELINE_E2E_FIREBASE_OPTIONS_DART }}
           GOOGLE_SERVICES_JSON: ${{ secrets.PIPELINE_E2E_GOOGLE_SERVICES_JSON }}
           GOOGLE_SERVICE_INFO_PLIST: ${{ secrets.PIPELINE_E2E_GOOGLE_SERVICE_INFO_PLIST }}
         run: |
+          if [ -z "$FIREBASE_OPTIONS_DART" ]; then
+            echo "::error::PIPELINE_E2E_FIREBASE_OPTIONS_DART is empty — secrets are unavailable (fork/dependabot PR?). Failing early instead of producing a broken build."
+            exit 1
+          fi
           echo "$FIREBASE_OPTIONS_DART" > packages/cloud_firestore/cloud_firestore/pipeline_example/lib/firebase_options.dart
           echo "$GOOGLE_SERVICES_JSON" > packages/cloud_firestore/cloud_firestore/pipeline_example/android/app/google-services.json
           echo "$GOOGLE_SERVICE_INFO_PLIST" > packages/cloud_firestore/cloud_firestore/pipeline_example/ios/Runner/GoogleService-Info.plist
-      - name: Bootstrap package
-        run: melos bootstrap --scope "cloud_firestore*"
       - name: Enable KVM
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
@@ -124,35 +124,33 @@ jobs:
             ~/.android/adb*
 
   pipeline-e2e-web:
+    # Requires live-project secrets, which fork and dependabot PRs don't receive.
+    if: >-
+      github.event_name != 'pull_request' ||
+      (github.event.pull_request.head.repo.full_name == github.repository &&
+       github.actor != 'dependabot[bot]')
     runs-on: macos-latest
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
-      - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
-        name: Install Node.js 20
+      - uses: ./.github/actions/setup-flutterfire
         with:
-          node-version: '20'
-      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
-        with:
-          channel: 'stable'
-          cache: true
-          cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
-          pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
-      - uses: bluefireteam/melos-action@705015c3d2bc4ab94201ac24accb2bbe070cf533
-        with:
-          run-bootstrap: false
-          melos-version: '5.3.0'
+          npm-cache: 'false'
+          java: 'false'
+          bootstrap-scope: 'cloud_firestore*'
       - name: Inject Firebase config for pipeline E2E
         env:
           FIREBASE_OPTIONS_DART: ${{ secrets.PIPELINE_E2E_FIREBASE_OPTIONS_DART }}
           GOOGLE_SERVICES_JSON: ${{ secrets.PIPELINE_E2E_GOOGLE_SERVICES_JSON }}
           GOOGLE_SERVICE_INFO_PLIST: ${{ secrets.PIPELINE_E2E_GOOGLE_SERVICE_INFO_PLIST }}
         run: |
+          if [ -z "$FIREBASE_OPTIONS_DART" ]; then
+            echo "::error::PIPELINE_E2E_FIREBASE_OPTIONS_DART is empty — secrets are unavailable (fork/dependabot PR?). Failing early instead of producing a broken build."
+            exit 1
+          fi
           echo "$FIREBASE_OPTIONS_DART" > packages/cloud_firestore/cloud_firestore/pipeline_example/lib/firebase_options.dart
           echo "$GOOGLE_SERVICES_JSON" > packages/cloud_firestore/cloud_firestore/pipeline_example/android/app/google-services.json
           echo "$GOOGLE_SERVICE_INFO_PLIST" > packages/cloud_firestore/cloud_firestore/pipeline_example/ios/Runner/GoogleService-Info.plist
-      - name: Bootstrap package
-        run: melos bootstrap --scope "cloud_firestore*"
       - name: Run pipeline E2E tests (Chrome)
         working-directory: packages/cloud_firestore/cloud_firestore/pipeline_example
         # Web devices are not supported for the `flutter test` command yet. As a
@@ -168,45 +166,38 @@ jobs:
         shell: bash
 
   pipeline-e2e-ios:
+    # Requires live-project secrets, which fork and dependabot PRs don't receive.
+    if: >-
+      github.event_name != 'pull_request' ||
+      (github.event.pull_request.head.repo.full_name == github.repository &&
+       github.actor != 'dependabot[bot]')
     runs-on: macos-15
     timeout-minutes: 50
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
-      - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
-        name: Install Node.js 20
-        with:
-          node-version: '20'
       - name: Xcode
         # Firebase iOS SDK: minimum Xcode 26.2.
         run: sudo xcode-select -s /Applications/Xcode_26.2.app/Contents/Developer
-      - uses: actions/setup-java@8df1039502a15bceb9433410b1a100fbe190c53b
+      - uses: ./.github/actions/setup-flutterfire
         with:
-          distribution: 'temurin'
-          java-version: '21'
-      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
-        with:
-          channel: 'stable'
+          npm-cache: 'false'
           flutter-version: '3.41.9'
-          cache: true
-          cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
-          pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
+          bootstrap-scope: 'cloud_firestore*'
       - name: Enable Swift Package Manager for iOS
         run: flutter config --enable-swift-package-manager
-      - uses: bluefireteam/melos-action@705015c3d2bc4ab94201ac24accb2bbe070cf533
-        with:
-          run-bootstrap: false
-          melos-version: '5.3.0'
       - name: Inject Firebase config for pipeline E2E
         env:
           FIREBASE_OPTIONS_DART: ${{ secrets.PIPELINE_E2E_FIREBASE_OPTIONS_DART }}
           GOOGLE_SERVICES_JSON: ${{ secrets.PIPELINE_E2E_GOOGLE_SERVICES_JSON }}
           GOOGLE_SERVICE_INFO_PLIST: ${{ secrets.PIPELINE_E2E_GOOGLE_SERVICE_INFO_PLIST }}
         run: |
+          if [ -z "$FIREBASE_OPTIONS_DART" ]; then
+            echo "::error::PIPELINE_E2E_FIREBASE_OPTIONS_DART is empty — secrets are unavailable (fork/dependabot PR?). Failing early instead of producing a broken build."
+            exit 1
+          fi
           echo "$FIREBASE_OPTIONS_DART" > packages/cloud_firestore/cloud_firestore/pipeline_example/lib/firebase_options.dart
           echo "$GOOGLE_SERVICES_JSON" > packages/cloud_firestore/cloud_firestore/pipeline_example/android/app/google-services.json
           echo "$GOOGLE_SERVICE_INFO_PLIST" > packages/cloud_firestore/cloud_firestore/pipeline_example/ios/Runner/GoogleService-Info.plist
-      - name: Bootstrap package
-        run: melos bootstrap --scope "cloud_firestore*"
       - name: Prepare iOS project for Swift Package Manager
         working-directory: packages/cloud_firestore/cloud_firestore/pipeline_example/ios
         run: |
@@ -220,16 +211,19 @@ jobs:
           model: "iPhone 16"
       - name: Build iOS (simulator)
         working-directory: packages/cloud_firestore/cloud_firestore/pipeline_example
+        timeout-minutes: 25
         run: |
           flutter build ios --no-codesign --simulator --debug --target=./integration_test/pipeline/pipeline_live_test.dart --dart-define=CI=true
       - name: Ensure Simulator Ready
         env:
           SIMULATOR: ${{ steps.simulator.outputs.udid }}
           ENSURE_BOOT_IF_NEEDED: "0"
+        timeout-minutes: 13
         run: .github/workflows/scripts/ensure-simulator-ready.sh
       - name: Run pipeline E2E tests (iOS)
         working-directory: packages/cloud_firestore/cloud_firestore/pipeline_example
         env:
           SIMULATOR: ${{ steps.simulator.outputs.udid }}
+        timeout-minutes: 20
         run: |
           flutter test integration_test/pipeline/pipeline_live_test.dart -d "$SIMULATOR" --timeout 10x --dart-define=CI=true
