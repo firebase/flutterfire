@@ -87,12 +87,6 @@ on:
           covered either way.
         type: boolean
         default: true
-      ios-free-up-space:
-        description: >-
-          Runs the aggressive `rm -rf` of preinstalled toolchains before the iOS
-          build. Only cloud_firestore needs it (its build fills the runner disk).
-        type: boolean
-        default: false
       nightly_test_mode:
         description: >-
           Passed down from nightly.yaml. Shortens the job timeout to 5 minutes.
@@ -207,21 +201,6 @@ jobs:
         run: |
           # shellcheck disable=SC2086 # an argument list: word-splitting is the point
           dart ./.github/workflows/scripts/generate-dummy-firebase-configs.dart $NATIVE_CONFIG_ARGS
-      - name: 'Free up space'
-        if: inputs.ios-free-up-space
-        run: |
-          sudo rm -rf \
-            /usr/local/share/.cache \
-            /opt/microsoft/msedge \
-            /opt/microsoft/powershell \
-            /opt/pipx \
-            /usr/lib/mono \
-            /usr/local/julia* \
-            /usr/local/lib/android \
-            /usr/local/share/chromium \
-            /usr/local/share/powershell \
-            /usr/share/dotnet
-          df -h /
       - name: Prepare iOS project for Swift Package Manager
         # Done here rather than in the repository: the committed Podfile is what
         # CocoaPods users of the example rely on, and `flutter build` prefers

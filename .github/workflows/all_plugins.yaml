@@ -22,6 +22,15 @@ permissions:
   contents: read
 
 jobs:
+  # analyze, format and test below are deliberately ungated: they are pure Dart
+  # and every change in the repo is in scope for them. Only the three jobs that
+  # build for a specific platform - the two Swift ones and the web example
+  # build - are platform-scoped.
+  changes:
+    uses: ./.github/workflows/reusable_repo_changes.yaml
+    with:
+      app-path: 'packages/*/*/example'
+
   # Home for every check that needs nothing but a bootstrapped workspace. The
   # pub dry run, the example `pub get` and the license-header check used to be
   # three separate jobs; each ran for a couple of minutes and paid a full
@@ -153,6 +162,8 @@ jobs:
           find packages -type d -name build -prune -exec rm -rf {} +
 
   build_examples_dart:
+    needs: changes
+    if: needs.changes.outputs.web == 'true'
     timeout-minutes: 30
     runs-on: ubuntu-latest
     steps:
@@ -174,6 +185,8 @@ jobs:
   # `swift-integration.dart` still builds both when no `--platform` is passed,
   # which is how it is run locally.
   swift-integration-ios:
+    needs: changes
+    if: needs.changes.outputs.ios == 'true'
     runs-on: macos-15
     timeout-minutes: 35
     env:
@@ -204,6 +217,8 @@ jobs:
           dart ./.github/workflows/scripts/swift-integration.dart --platform=ios $FLUTTER_DEPENDENCIES
 
   swift-integration-macos:
+    needs: changes
+    if: needs.changes.outputs.macos == 'true'
     runs-on: macos-15
     timeout-minutes: 35
     env:
