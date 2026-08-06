@@ -34,17 +34,47 @@ on:
 
 jobs:
   android:
+    name: android (${{ matrix.suite.name }})
     permissions:
       contents: read
     runs-on: ubuntu-latest
-    timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 45 }}
+    timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 25 }}
     strategy:
       fail-fast: false
       matrix:
-        working_directory:
-          ['tests', 'packages/cloud_firestore/cloud_firestore/example']
+        # The `tests` app is sharded by product suite so a hang or flake costs
+        # one small job instead of the whole run. `integration_test/e2e_test.dart`
+        # still aggregates every suite for Windows and local runs.
+        suite:
+          - name: auth
+            working_directory: tests
+            target: integration_test/shards/auth_shard_test.dart
+            scope: tests
+          - name: storage
+            working_directory: tests
+            target: integration_test/shards/storage_shard_test.dart
+            scope: tests
+          - name: database_functions
+            working_directory: tests
+            target: integration_test/shards/database_functions_shard_test.dart
+            scope: tests
+          - name: core_misc
+            working_directory: tests
+            target: integration_test/shards/core_misc_shard_test.dart
+            scope: tests
+          - name: firestore
+            working_directory: packages/cloud_firestore/cloud_firestore/example
+            target: integration_test/e2e_test.dart
+            scope: 'cloud_firestore*'
         exclude:
-          - working_directory: ${{ inputs.nightly_test_mode && 'packages/cloud_firestore/cloud_firestore/example' || 'none' }}
+          # Nightly drops the firestore example leg. The entry is repeated in
+          # full because matrix `exclude` compares the whole object; only `name`
+          # is switched, so outside nightly it matches nothing.
+          - suite:
+              name: ${{ inputs.nightly_test_mode && 'firestore' || 'none' }}
+              working_directory: packages/cloud_firestore/cloud_firestore/example
+              target: integration_test/e2e_test.dart
+              scope: 'cloud_firestore*'
     env:
       AVD_ARCH: x86_64
       AVD_API_LEVEL: 34
@@ -55,7 +85,7 @@ jobs:
         with:
           firebase-tools-version: '15.25.1'
           # Each matrix leg bootstraps only the packages it exercises.
-          bootstrap-scope: ${{ matrix.working_directory == 'tests' && 'tests' || 'cloud_firestore*' }}
+          bootstrap-scope: ${{ matrix.suite.scope }}
       - name: Firebase Emulator Cache
         id: firebase-emulator-cache
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
@@ -120,12 +150,12 @@ jobs:
         # whole Gradle build. `flutter test` below reuses this warm build cache.
         # The validation skip matches `flutter test`, which does not enforce the
         # minimum Gradle version either (the firestore example pins Gradle 8.4).
-        working-directory: ${{ matrix.working_directory }}
+        working-directory: ${{ matrix.suite.working_directory }}
         timeout-minutes: 25
-        run: flutter build apk --debug --target=integration_test/e2e_test.dart --android-skip-build-dependency-validation
+        run: flutter build apk --debug --target=${{ matrix.suite.target }} --android-skip-build-dependency-validation
       - name: Start AVD then run E2E tests
         uses: reactivecircus/android-emulator-runner@e89f39f1abbbd05b1113a29cf4db69e7540cae5a
-        timeout-minutes: 35
+        timeout-minutes: 20
         env:
           ANDROID_AVD_HOME: /mnt/avd
           STORAGE_EMULATOR_DEBUG: 'true'
@@ -144,7 +174,7 @@ jobs:
           # the command and tears the suite down, exiting with the command's exit
           # code. Nothing is left running between steps.
           script: |
-            firebase emulators:exec --project flutterfire-e2e-tests "cd ${GITHUB_WORKSPACE}/${{ matrix.working_directory }} && flutter test integration_test/e2e_test.dart --timeout 10x --dart-define=CI=true -d emulator-5554"
+            firebase emulators:exec --project flutterfire-e2e-tests "cd ${GITHUB_WORKSPACE}/${{ matrix.suite.working_directory }} && flutter test ${{ matrix.suite.target }} --timeout 10x --dart-define=CI=true -d emulator-5554"
       - name: Ensure Appium is shut down
       # Required because of below issue where emulator failing to shut down properly causes tests to fail
       # https://github.com/ReactiveCircus/android-emulator-runner/issues/385
