@@ -78,7 +78,7 @@ void setupConfigurationTests() {
         }
       },
       // TODO(SelaseKay): this needs to be investigated as now failing on android (should only run on android)
-      skip: true,
+      skip: defaultTargetPlatform != TargetPlatform.android,
     );
   });
 }
