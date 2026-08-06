@@ -11,9 +11,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Bundle;
+import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.annotation.VisibleForTesting;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
@@ -21,7 +24,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.messaging.Constants;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.MessagingAnalytics;
 import com.google.firebase.messaging.RemoteMessage;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
@@ -33,9 +38,11 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.NewIntentListener;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
+import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Queue;
 
 /** FlutterFirebaseMessagingPlugin */
 public class FlutterFirebaseMessagingPlugin
@@ -45,7 +52,14 @@ public class FlutterFirebaseMessagingPlugin
         FlutterPlugin,
         ActivityAware {
 
+  private static final String TAG = "FLTFireMsgPlugin";
+
+  /** Mirrors the de-duplication window the Messaging SDK keeps in FcmLifecycleCallbacks. */
+  private static final int RECENTLY_LOGGED_MESSAGE_IDS_MAX_SIZE = 10;
+
   private final HashMap<String, Boolean> consumedInitialMessages = new HashMap<>();
+  private final Queue<String> recentlyLoggedMessageIds =
+      new ArrayDeque<>(RECENTLY_LOGGED_MESSAGE_IDS_MAX_SIZE);
   private MethodChannel channel;
   private Activity mainActivity;
 
@@ -104,7 +118,10 @@ public class FlutterFirebaseMessagingPlugin
     if (mainActivity.getIntent() != null && mainActivity.getIntent().getExtras() != null) {
       if ((mainActivity.getIntent().getFlags() & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY)
           != Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) {
-        onNewIntent(mainActivity.getIntent());
+        // The notification tap created this Activity, so the Messaging SDK has already logged
+        // `notification_open` from FcmLifecycleCallbacks#onActivityCreated. Handle the intent
+        // without logging it a second time.
+        handleNotificationIntent(mainActivity.getIntent());
       }
     }
   }
@@ -533,13 +550,86 @@ public class FlutterFirebaseMessagingPlugin
 
   @Override
   public boolean onNewIntent(@NonNull Intent intent) {
+    // The Activity already existed, so the Messaging SDK never ran
+    // FcmLifecycleCallbacks#onActivityCreated for this intent and `notification_open` was not
+    // logged. Log it here before handling the intent.
+    logNotificationOpen(intent);
+    return handleNotificationIntent(intent);
+  }
+
+  /**
+   * Logs the Analytics {@code notification_open} event for a notification tap that did not create
+   * the Activity.
+   *
+   * <p>The Messaging SDK only logs this event from {@code FcmLifecycleCallbacks#onActivityCreated},
+   * so it is missed whenever the app was merely backgrounded (for example with the Home button) and
+   * the Activity is reused. See firebase/flutterfire#17072 and firebase/firebase-android-sdk#3799.
+   *
+   * <p>This mirrors the SDK's own implementation, including de-duplication by message id, so a
+   * message is never counted twice.
+   */
+  private void logNotificationOpen(@NonNull Intent intent) {
+    Bundle analyticsData;
+    try {
+      Bundle extras = intent.getExtras();
+      if (extras == null) {
+        return;
+      }
+
+      if (!markNotificationOpenAsLogged(getMessageId(extras))) {
+        return;
+      }
+
+      analyticsData = extras.getBundle(Constants.MessageNotificationKeys.ANALYTICS_DATA);
+    } catch (RuntimeException e) {
+      // The intent can come from anywhere and may be malformed, so never crash the host app while
+      // reading analytics data out of it.
+      Log.w(TAG, "Failed to get analytics data from notification intent extras.", e);
+      return;
+    }
+
+    if (MessagingAnalytics.shouldUploadScionMetrics(analyticsData)) {
+      MessagingAnalytics.logNotificationOpen(analyticsData);
+    }
+  }
+
+  /**
+   * Records {@code messageId} as having had its {@code notification_open} event logged, and returns
+   * whether the caller should log it.
+   *
+   * <p>Returns {@code false} when this message id was logged recently, so that a message tapped
+   * more than once (or delivered through both the create and the new-intent path) is only counted
+   * once. A {@code null} id cannot be de-duplicated and is always logged, matching the SDK.
+   */
+  @VisibleForTesting
+  boolean markNotificationOpenAsLogged(@Nullable String messageId) {
+    if (messageId == null) {
+      return true;
+    }
+    if (recentlyLoggedMessageIds.contains(messageId)) {
+      return false;
+    }
+    if (recentlyLoggedMessageIds.size() >= RECENTLY_LOGGED_MESSAGE_IDS_MAX_SIZE) {
+      recentlyLoggedMessageIds.poll();
+    }
+    recentlyLoggedMessageIds.add(messageId);
+    return true;
+  }
+
+  /** Remote Message ID can be either one of the following... */
+  @Nullable
+  private static String getMessageId(@NonNull Bundle extras) {
+    String messageId = extras.getString("google.message_id");
+    if (messageId == null) messageId = extras.getString("message_id");
+    return messageId;
+  }
+
+  private boolean handleNotificationIntent(@NonNull Intent intent) {
     if (intent.getExtras() == null) {
       return false;
     }
 
-    // Remote Message ID can be either one of the following...
-    String messageId = intent.getExtras().getString("google.message_id");
-    if (messageId == null) messageId = intent.getExtras().getString("message_id");
+    String messageId = getMessageId(intent.getExtras());
     if (messageId == null) {
       return false;
     }
