@@ -6,19 +6,22 @@ concurrency:
 
 on:
   pull_request:
-     paths-ignore:
-      - 'docs/**'
-      - 'website/**'
-      - '**/example/**'
-      - '**.md'
+    # Pipeline e2e only exercises cloud_firestore; running it on every PR
+    # costs 3 jobs (2 macOS) for changes that cannot affect it. The nightly
+    # workflow_call still runs it unconditionally.
+    paths:
+      - 'packages/cloud_firestore/**'
+      - 'packages/firebase_core/**'
+      - '.github/workflows/e2e_tests_pipeline.yaml'
+      - '.github/actions/setup-flutterfire/**'
   push:
     branches:
       - main
-    paths-ignore:
-      - 'docs/**'
-      - 'website/**'
-      - '**/example/**'
-      - '**.md'
+    paths:
+      - 'packages/cloud_firestore/**'
+      - 'packages/firebase_core/**'
+      - '.github/workflows/e2e_tests_pipeline.yaml'
+      - '.github/actions/setup-flutterfire/**'
   workflow_call:
     secrets:
       PIPELINE_E2E_FIREBASE_OPTIONS_DART:
