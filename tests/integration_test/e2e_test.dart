@@ -27,7 +27,6 @@ import 'firebase_performance/firebase_performance_e2e_test.dart'
     as firebase_performance;
 import 'firebase_remote_config/firebase_remote_config_e2e_test.dart'
     as firebase_remote_config;
-import 'firebase_storage/firebase_storage_e2e_test.dart' as firebase_storage;
 
 // Github Actions environment variable
 // ignore: do_not_use_environment
@@ -65,7 +64,6 @@ void main() {
       firebase_ml_model_downloader.main();
       firebase_performance.main();
       firebase_remote_config.main();
-      firebase_storage.main();
       return;
     }
 
@@ -79,7 +77,6 @@ void main() {
         firebase_core.main();
         firebase_auth.main();
         firebase_remote_config.main();
-        firebase_storage.main();
         firebase_app_check.main();
         break;
       default:
@@ -104,6 +101,5 @@ void runAllTests() {
   firebase_ml_model_downloader.main();
   firebase_performance.main();
   firebase_remote_config.main();
-  firebase_storage.main();
   firebase_app_check.main();
 }

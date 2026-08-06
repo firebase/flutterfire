@@ -46,6 +46,10 @@ jobs:
     uses: ./.github/workflows/e2e_tests_fdc.yaml
     with:
       nightly_test_mode: ${{ github.event.inputs.test_mode == 'true' }}
+  e2e-storage:
+    uses: ./.github/workflows/e2e_tests_storage.yaml
+    with:
+      nightly_test_mode: ${{ github.event.inputs.test_mode == 'true' }}
   e2e-pipeline:
     uses: ./.github/workflows/e2e_tests_pipeline.yaml
     if: ${{ github.event.inputs.test_mode != 'true' }}
@@ -62,7 +66,7 @@ jobs:
       contents: read
       issues: write
     if: ${{ always() && !cancelled() }}
-    needs: [e2e-android, e2e-ios, e2e-macos, e2e-web, e2e-windows, e2e-fdc, e2e-pipeline]
+    needs: [e2e-android, e2e-ios, e2e-macos, e2e-web, e2e-windows, e2e-fdc, e2e-storage, e2e-pipeline]
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
@@ -78,6 +82,7 @@ jobs:
           WEB_STATUS: ${{ needs.e2e-web.result }}
           WINDOWS_STATUS: ${{ needs.e2e-windows.result }}
           FDC_STATUS: ${{ needs.e2e-fdc.result }}
+          STORAGE_STATUS: ${{ needs.e2e-storage.result }}
           PIPELINE_STATUS: ${{ needs.e2e-pipeline.result }}
           REPO: ${{ github.repository }}
         run: |

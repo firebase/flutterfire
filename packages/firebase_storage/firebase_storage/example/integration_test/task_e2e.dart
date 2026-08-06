@@ -11,7 +11,7 @@ import 'package:firebase_core_platform_interface/firebase_core_platform_interfac
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:tests/firebase_options.dart';
+import 'package:firebase_storage_example/firebase_options.dart';
 
 import './test_utils.dart';
 

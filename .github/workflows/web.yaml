@@ -52,10 +52,6 @@ jobs:
             working_directory: tests
             target: integration_test/shards/auth_shard_test.dart
             scope: tests
-          - name: storage
-            working_directory: tests
-            target: integration_test/shards/storage_shard_test.dart
-            scope: tests
           - name: database_functions
             working_directory: tests
             target: integration_test/shards/database_functions_shard_test.dart
@@ -233,10 +229,6 @@ jobs:
           - name: auth
             working_directory: tests
             target: integration_test/shards/auth_shard_test.dart
-            scope: tests
-          - name: storage
-            working_directory: tests
-            target: integration_test/shards/storage_shard_test.dart
             scope: tests
           - name: database_functions
             working_directory: tests

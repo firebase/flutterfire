@@ -7,7 +7,7 @@ import 'dart:math';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
-import 'package:tests/firebase_options.dart';
+import 'package:firebase_storage_example/firebase_options.dart';
 
 final String kTestString =
     ([]..length = int.parse('${pow(2, 12)}')).join(_getRandomString(8)) * 100;

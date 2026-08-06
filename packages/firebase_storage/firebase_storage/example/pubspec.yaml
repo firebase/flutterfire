@@ -15,6 +15,15 @@ dependencies:
   image_picker_for_web: ^3.0.5
   web: ^1.0.0
 
+dev_dependencies:
+  # The e2e suite reaches for MethodChannelFirebase, which firebase_core
+  # deliberately hides from its own re-export.
+  firebase_core_platform_interface: ^8.1.0
+  flutter_test:
+    sdk: flutter
+  integration_test:
+    sdk: flutter
+
 flutter:
   uses-material-design: true
   assets:
