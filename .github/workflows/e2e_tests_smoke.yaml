@@ -2,8 +2,12 @@ name: e2e-smoke
 
 # The `tests` app depends on every plugin in the repository at once. Its job is
 # to prove they still build and boot together, so unlike the per-package e2e
-# workflows this one is deliberately NOT path-scoped to a package: any change
-# that is not documentation can break the combined app.
+# workflows this one is deliberately NOT path-scoped to a package: a change to
+# any plugin can break the combined app.
+#
+# It is still scoped by *platform*, via reusable_repo_changes.yaml: an
+# Android-only change anywhere in the repo runs the android jobs and skips the
+# four platforms it cannot affect.
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-smoke
@@ -38,7 +42,14 @@ on:
         default: false
 
 jobs:
+  changes:
+    uses: ./.github/workflows/reusable_repo_changes.yaml
+    with:
+      app-path: 'tests'
+
   android:
+    needs: changes
+    if: needs.changes.outputs.android == 'true'
     permissions:
       contents: read
     runs-on: ubuntu-latest
@@ -79,14 +90,6 @@ jobs:
           sudo udevadm trigger --name-match=kvm
       - name: Gradle cache
         uses: gradle/actions/setup-gradle@90ddb51e90a5fd9ba75f40cf85156b7b41bf76a3
-      - name: Free Disk Space (Ubuntu)
-        uses: AdityaGarg8/remove-unwanted-software@90e01b21170618765a73370fcc3abbd1684a7793
-        with:
-          remove-dotnet: true
-          remove-haskell: true
-          remove-codeql: true
-          remove-docker-images: true
-          remove-large-packages: true
       - name: Prepare AVD home on /mnt
         # GitHub-hosted runners mount a ~74GB volume at /mnt. Create it before AVD cache
         # restore and android-emulator-runner (avdmanager needs the space at create time).
@@ -177,6 +180,8 @@ jobs:
             ~/.android/adb*
 
   agp9-compatibility:
+    needs: changes
+    if: needs.changes.outputs.android == 'true'
     permissions:
       contents: read
     runs-on: ubuntu-latest
@@ -194,6 +199,8 @@ jobs:
         run: bash ./.github/workflows/scripts/agp9-compatibility.sh
 
   ios:
+    needs: changes
+    if: needs.changes.outputs.ios == 'true'
     permissions:
       contents: read
     runs-on: macos-15
@@ -245,20 +252,6 @@ jobs:
           restore-keys: firebase-emulators-v5-
       - name: Generate dummy Firebase configs
         run: dart ./.github/workflows/scripts/generate-dummy-firebase-configs.dart
-      - name: 'Free up space'
-        run: |
-          sudo rm -rf \
-            /usr/local/share/.cache \
-            /opt/microsoft/msedge \
-            /opt/microsoft/powershell \
-            /opt/pipx \
-            /usr/lib/mono \
-            /usr/local/julia* \
-            /usr/local/lib/android \
-            /usr/local/share/chromium \
-            /usr/local/share/powershell \
-            /usr/share/dotnet
-          df -h /
       - name: 'Build Application'
         working-directory: tests
         timeout-minutes: 25
@@ -329,6 +322,8 @@ jobs:
           path: tests/ios/Pods
 
   macos:
+    needs: changes
+    if: needs.changes.outputs.macos == 'true'
     permissions:
       contents: read
     runs-on: macos-15
@@ -462,6 +457,8 @@ jobs:
           path: tests/macos/Pods
 
   web:
+    needs: changes
+    if: needs.changes.outputs.web == 'true'
     permissions:
       contents: read
     runs-on: ubuntu-latest
@@ -536,6 +533,8 @@ jobs:
           path: ~/.cache/firebase/emulators
 
   web-wasm:
+    needs: changes
+    if: needs.changes.outputs.web == 'true'
     permissions:
       contents: read
     runs-on: ubuntu-latest
@@ -615,6 +614,8 @@ jobs:
           path: ~/.cache/firebase/emulators
 
   windows:
+    needs: changes
+    if: needs.changes.outputs.windows == 'true'
     permissions:
       contents: read
     runs-on: windows-latest
