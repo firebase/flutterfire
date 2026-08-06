@@ -570,7 +570,10 @@ public class FlutterFirebaseAuthPlugin
   public void setSettings(
       @NonNull GeneratedAndroidFirebaseAuth.AuthPigeonFirebaseApp app,
       @NonNull GeneratedAndroidFirebaseAuth.InternalFirebaseAuthSettings settings,
-      @NonNull GeneratedAndroidFirebaseAuth.VoidResult result) {
+      @NonNull
+          GeneratedAndroidFirebaseAuth.NullableResult<
+                  GeneratedAndroidFirebaseAuth.InternalUserDetails>
+              result) {
     try {
       FirebaseAuth firebaseAuth = getAuthFromPigeon(app);
 
@@ -591,7 +594,8 @@ public class FlutterFirebaseAuthPlugin
                 settings.getPhoneNumber(), settings.getSmsCode());
       }
 
-      result.success();
+      // Apple-only migration; Android has nothing to return here.
+      result.success(null);
     } catch (Exception e) {
       result.error(e);
     }

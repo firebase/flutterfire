@@ -230,11 +230,13 @@ typedef NS_ENUM(NSUInteger, ActionCodeInfoOperation) {
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)makeWithAppVerificationDisabledForTesting:(BOOL)appVerificationDisabledForTesting
                                           userAccessGroup:(nullable NSString *)userAccessGroup
+                                       migrateCurrentUser:(BOOL)migrateCurrentUser
                                               phoneNumber:(nullable NSString *)phoneNumber
                                                   smsCode:(nullable NSString *)smsCode
                                        forceRecaptchaFlow:(nullable NSNumber *)forceRecaptchaFlow;
 @property(nonatomic, assign) BOOL appVerificationDisabledForTesting;
 @property(nonatomic, copy, nullable) NSString *userAccessGroup;
+@property(nonatomic, assign) BOOL migrateCurrentUser;
 @property(nonatomic, copy, nullable) NSString *phoneNumber;
 @property(nonatomic, copy, nullable) NSString *smsCode;
 @property(nonatomic, strong, nullable) NSNumber *forceRecaptchaFlow;
@@ -388,7 +390,8 @@ NSObject<FlutterMessageCodec> *nullGetFirebaseAuthMessagesCodec(void);
                 completion:(void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
 - (void)setSettingsApp:(AuthPigeonFirebaseApp *)app
               settings:(InternalFirebaseAuthSettings *)settings
-            completion:(void (^)(FlutterError *_Nullable))completion;
+            completion:
+                (void (^)(InternalUserDetails *_Nullable, FlutterError *_Nullable))completion;
 - (void)verifyPasswordResetCodeApp:(AuthPigeonFirebaseApp *)app
                               code:(NSString *)code
                         completion:

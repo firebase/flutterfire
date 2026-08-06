@@ -1037,6 +1037,37 @@ void main() {
 
       group('setSettings()', () {
         test(
+          'migrates the current user when changing access groups',
+          () async {
+            final auth = FirebaseAuth.instance;
+
+            await auth.signOut();
+            final credential = await auth.signInAnonymously();
+            final uid = credential.user!.uid;
+
+            try {
+              await auth.setSettings(
+                userAccessGroup: 'YYX2P3XVJ7.io.flutter.plugins.firebase.tests',
+                migrateCurrentUser: true,
+              );
+
+              // Prefer the reconciled Dart cache from setSettings, then prove
+              // the native session survived with a token round-trip.
+              expect(auth.currentUser, isNotNull);
+              expect(auth.currentUser!.uid, uid);
+              expect(auth.currentUser!.isAnonymous, isTrue);
+              final token = await auth.currentUser!.getIdToken();
+              expect(token, isNotEmpty);
+            } finally {
+              // Leave later tests without this anonymous session. Access-group
+              // resets are not supported via null today (pre-existing).
+              await auth.signOut();
+            }
+          },
+          skip: kIsWeb || defaultTargetPlatform != TargetPlatform.iOS,
+        );
+
+        test(
           'throws argument error if phoneNumber & smsCode have not been set simultaneously',
           () async {
             String message =

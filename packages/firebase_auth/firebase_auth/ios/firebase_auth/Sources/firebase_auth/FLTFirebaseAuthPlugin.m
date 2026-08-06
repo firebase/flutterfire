@@ -1531,8 +1531,10 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
 
 - (void)setSettingsApp:(nonnull AuthPigeonFirebaseApp *)app
               settings:(nonnull InternalFirebaseAuthSettings *)settings
-            completion:(nonnull void (^)(FlutterError *_Nullable))completion {
+            completion:(nonnull void (^)(InternalUserDetails *_Nullable,
+                                         FlutterError *_Nullable))completion {
   FIRAuth *auth = [self getFIRAuthFromAppNameFromPigeon:app];
+  FIRUser *userToMigrate = settings.migrateCurrentUser ? auth.currentUser : nil;
 
   if (settings.userAccessGroup != nil) {
     BOOL useUserAccessGroupSuccessful;
@@ -1540,7 +1542,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
     useUserAccessGroupSuccessful = [auth useUserAccessGroup:settings.userAccessGroup
                                                       error:&useUserAccessGroupErrorPtr];
     if (!useUserAccessGroupSuccessful) {
-      completion([FLTFirebaseAuthPlugin convertToFlutterError:useUserAccessGroupErrorPtr]);
+      completion(nil, [FLTFirebaseAuthPlugin convertToFlutterError:useUserAccessGroupErrorPtr]);
       return;
     }
   }
@@ -1554,7 +1556,22 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
         @"on MacOS.");
 #endif
 
-  completion(nil);
+  if (userToMigrate != nil) {
+    [auth
+        updateCurrentUser:userToMigrate
+               completion:^(NSError *_Nullable error) {
+                 if (error != nil) {
+                   completion(nil, [FLTFirebaseAuthPlugin convertToFlutterError:error]);
+                   return;
+                 }
+                 FIRUser *migratedUser = auth.currentUser;
+                 completion(
+                     migratedUser != nil ? [PigeonParser getPigeonDetails:migratedUser] : nil, nil);
+               }];
+    return;
+  }
+
+  completion(nil, nil);
 }
 
 - (void)signInAnonymouslyApp:(nonnull AuthPigeonFirebaseApp *)app
