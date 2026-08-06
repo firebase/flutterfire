@@ -135,6 +135,8 @@ void main() {
         expect(convertToAuthorizationStatus(1), AuthorizationStatus.authorized);
         expect(
             convertToAuthorizationStatus(2), AuthorizationStatus.provisional);
+        expect(convertToAuthorizationStatus(3),
+            AuthorizationStatus.deniedPermanently);
       });
 
       test(
@@ -143,7 +145,7 @@ void main() {
         expect(convertToAuthorizationStatus(-2),
             AuthorizationStatus.notDetermined);
         expect(
-            convertToAuthorizationStatus(3), AuthorizationStatus.notDetermined);
+            convertToAuthorizationStatus(4), AuthorizationStatus.notDetermined);
       });
 
       test(

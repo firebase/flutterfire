@@ -7,9 +7,48 @@ import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:tests/firebase_options.dart';
+
+/// Test helpers that use UiAutomation to mutate runtime permissions during
+/// integration tests. Falls back gracefully on platforms that don't support it.
+const _permissionsChannel = MethodChannel('tests/permissions');
+const _postNotifications = 'android.permission.POST_NOTIFICATIONS';
+
+Future<int?> androidSdkInt() async {
+  try {
+    return await _permissionsChannel.invokeMethod<int>('getSdkInt');
+  } catch (_) {
+    return null;
+  }
+}
+
+Future<bool> grantAndroidPermission(String permission) async {
+  try {
+    return await _permissionsChannel
+            .invokeMethod<bool>('grant', {'permission': permission}) ??
+        false;
+  } catch (_) {
+    return false;
+  }
+}
+
+/// Revokes [permission], clears its user-set/user-fixed flags, and clears the
+/// prompt state firebase_messaging records, so the permission is reported as
+/// never asked again.
+Future<bool> resetAndroidPermission(String permission) async {
+  try {
+    final reset = await _permissionsChannel.invokeMethod<bool>(
+      'resetPermission',
+      {'permission': permission},
+    );
+    return reset ?? false;
+  } catch (_) {
+    return false;
+  }
+}
 
 // ignore: do_not_use_environment
 const bool skipTestsOnCI = bool.fromEnvironment('CI');
@@ -22,12 +61,16 @@ void main() {
     () {
       late FirebaseApp app;
       late FirebaseMessaging messaging;
+      int? sdkInt;
 
       setUpAll(() async {
         app = await Firebase.initializeApp(
           options: DefaultFirebaseOptions.currentPlatform,
         );
         messaging = FirebaseMessaging.instance;
+        if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
+          sdkInt = await androidSdkInt();
+        }
       });
 
       test('instance', () {
@@ -85,16 +128,91 @@ void main() {
         });
       });
 
+      group('getNotificationSettings', () {
+        bool android13Plus() =>
+            !kIsWeb &&
+            defaultTargetPlatform == TargetPlatform.android &&
+            (sdkInt ?? 0) >= 33;
+
+        setUp(() async {
+          if (!android13Plus()) {
+            return;
+          }
+          // Ensure a true "never asked" state between tests and runs.
+          // revoke alone leaves USER_SET flags and would look like a denial.
+          final reset = await resetAndroidPermission(_postNotifications);
+          if (!reset) {
+            fail('Could not reset POST_NOTIFICATIONS via UiAutomation');
+          }
+        });
+
+        test(
+          'returns notDetermined on Android 13+ before permission is granted',
+          () async {
+            if (!android13Plus()) {
+              markTestSkipped('Requires Android API 33+');
+              return;
+            }
+            // On Android 13+, getNotificationSettings() should return
+            // notDetermined when POST_NOTIFICATIONS has never been granted,
+            // allowing callers to decide whether to show the OS prompt or
+            // direct the user to app settings.
+            final settings = await messaging.getNotificationSettings();
+            expect(settings, isA<NotificationSettings>());
+            expect(
+              settings.authorizationStatus,
+              AuthorizationStatus.notDetermined,
+            );
+          },
+          skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android,
+        );
+
+        test(
+          'returns authorized on Android 13+ after permission is granted',
+          () async {
+            if (!android13Plus()) {
+              markTestSkipped('Requires Android API 33+');
+              return;
+            }
+            final granted = await grantAndroidPermission(_postNotifications);
+            if (!granted) {
+              fail('Could not grant POST_NOTIFICATIONS via UiAutomation');
+            }
+
+            final settings = await messaging.getNotificationSettings();
+            expect(settings, isA<NotificationSettings>());
+            expect(
+              settings.authorizationStatus,
+              AuthorizationStatus.authorized,
+            );
+          },
+          skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android,
+        );
+      });
+
       group('requestPermission', () {
         test(
-          'authorizationStatus returns AuthorizationStatus.authorized on Android',
+          'authorizationStatus returns AuthorizationStatus.authorized on Android 13+',
           () async {
+            final isAndroid13Plus = !kIsWeb &&
+                defaultTargetPlatform == TargetPlatform.android &&
+                (sdkInt ?? 0) >= 33;
+            if (!isAndroid13Plus) {
+              markTestSkipped('Requires Android API 33+');
+              return;
+            }
+            // Pre-grant the permission so requestPermission() returns
+            // authorized without showing a system dialog.
+            final granted = await grantAndroidPermission(_postNotifications);
+            if (!granted) {
+              fail('Could not grant POST_NOTIFICATIONS via UiAutomation');
+            }
+
             final result = await messaging.requestPermission();
             expect(result, isA<NotificationSettings>());
             expect(result.authorizationStatus, AuthorizationStatus.authorized);
           },
-          // TODO(Lyokone): since moving to SDK 33+ on Android, this test fails, we need to integrate with patrol to control native permissions
-          skip: true,
+          skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android,
         );
       });
 

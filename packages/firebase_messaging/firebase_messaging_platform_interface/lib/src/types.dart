@@ -47,6 +47,10 @@ enum AuthorizationStatus {
   authorized,
 
   /// The app is not authorized to create notifications.
+  ///
+  /// On Android 13+, this means the user denied the permission at least once
+  /// but the OS may still show another permission prompt. Prefer
+  /// [requestPermission] over sending the user to system settings.
   denied,
 
   /// The app user has not yet chosen whether to allow the application to create
@@ -56,6 +60,14 @@ enum AuthorizationStatus {
 
   /// The app is currently authorized to post non-interrupting user notifications.
   provisional,
+
+  /// The app is not authorized to create notifications and the OS will not show
+  /// another permission prompt.
+  ///
+  /// On Android 13+, the user must enable notifications from system settings.
+  /// On Apple platforms this status is not used; permanent denial is reported
+  /// as [denied].
+  deniedPermanently,
 }
 
 /// An enum representing a notification priority on Android.
