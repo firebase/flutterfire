@@ -12,16 +12,29 @@ import 'package:firebase_auth_example/firebase_options.dart';
 import 'firebase_auth_instance_e2e_test.dart' as instance_tests;
 import 'firebase_auth_multi_factor_e2e_test.dart' as multi_factor_tests;
 import 'firebase_auth_user_e2e_test.dart' as user_tests;
+import 'report_test_results.dart';
 import 'test_utils.dart';
 
 void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  reportTestResultsToDriver(binding);
 
   group('firebase_auth', () {
     setUpAll(() async {
-      await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform,
-      );
+      // The native SDK may already have configured [DEFAULT] from a bundled
+      // GoogleService-Info.plist (the plugin registrant does this before any
+      // Dart runs). Dart's Firebase.apps cannot see that app until the first
+      // platform-channel call, so the only reliable guard is catching the
+      // duplicate-app error and keeping the natively configured instance.
+      try {
+        await Firebase.initializeApp(
+          options: DefaultFirebaseOptions.currentPlatform,
+        );
+      } on FirebaseException catch (e) {
+        if (e.code != 'duplicate-app') {
+          rethrow;
+        }
+      }
 
       await FirebaseAuth.instance
           .useAuthEmulator(testEmulatorHost, testEmulatorPort);

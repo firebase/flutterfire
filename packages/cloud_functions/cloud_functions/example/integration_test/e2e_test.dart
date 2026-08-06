@@ -12,6 +12,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:cloud_functions_example/firebase_options.dart';
 
+import 'report_test_results.dart';
 import 'sample_data.dart' as data;
 
 String kTestFunctionDefaultRegion = 'testFunctionDefaultRegion';
@@ -25,15 +26,27 @@ String kTestStreamResponse = 'testStreamResponse';
 const _completerTimeout = Duration(seconds: 30);
 
 void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  reportTestResultsToDriver(binding);
 
   group('cloud_functions', () {
     late HttpsCallable callable;
 
     setUpAll(() async {
-      await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform,
-      );
+      // The native SDK may already have configured [DEFAULT] from a bundled
+      // GoogleService-Info.plist (the plugin registrant does this before any
+      // Dart runs). Dart's Firebase.apps cannot see that app until the first
+      // platform-channel call, so the only reliable guard is catching the
+      // duplicate-app error and keeping the natively configured instance.
+      try {
+        await Firebase.initializeApp(
+          options: DefaultFirebaseOptions.currentPlatform,
+        );
+      } on FirebaseException catch (e) {
+        if (e.code != 'duplicate-app') {
+          rethrow;
+        }
+      }
       FirebaseFunctions.instance.useFunctionsEmulator('localhost', 5001);
       callable =
           FirebaseFunctions.instance.httpsCallable(kTestFunctionDefaultRegion);

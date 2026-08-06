@@ -20,8 +20,13 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.firebase_ai_example"
+        // Deliberately the mega test app's Firebase app identity: the live-service
+        // e2e suite in `integration_test/` talks to real Firebase backends, which
+        // only accept app ids registered in the `flutterfire-e2e-tests` project.
+        // `namespace` and the Kotlin package below are unaffected. Two of these
+        // examples cannot be co-installed on one device - CI installs one per
+        // emulator.
+        applicationId = "io.flutter.plugins.firebase.tests"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion

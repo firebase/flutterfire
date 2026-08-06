@@ -11,6 +11,7 @@ import 'package:firebase_database_example/firebase_options.dart';
 import 'data_snapshot_e2e.dart';
 import 'database_e2e.dart';
 import 'database_reference_e2e.dart';
+import 'report_test_results.dart';
 import 'web_only_stub.dart' if (dart.library.js_interop) 'web_only.dart';
 import 'firebase_database_configuration_e2e.dart';
 import 'query_e2e.dart';
@@ -26,13 +27,25 @@ const emulatorPort = 9000;
 const emulatorHost = 'localhost';
 
 void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  reportTestResultsToDriver(binding);
 
   group('firebase_database', () {
     setUpAll(() async {
-      await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform,
-      );
+      // The native SDK may already have configured [DEFAULT] from a bundled
+      // GoogleService-Info.plist (the plugin registrant does this before any
+      // Dart runs). Dart's Firebase.apps cannot see that app until the first
+      // platform-channel call, so the only reliable guard is catching the
+      // duplicate-app error and keeping the natively configured instance.
+      try {
+        await Firebase.initializeApp(
+          options: DefaultFirebaseOptions.currentPlatform,
+        );
+      } on FirebaseException catch (e) {
+        if (e.code != 'duplicate-app') {
+          rethrow;
+        }
+      }
       database = FirebaseDatabase.instance;
       database.useDatabaseEmulator(emulatorHost, emulatorPort);
       await database.goOnline();
