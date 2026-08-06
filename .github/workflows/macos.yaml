@@ -102,14 +102,28 @@ jobs:
           ccache -s
           flutter build macos --debug --target=./integration_test/e2e_test.dart --device-id=macos --dart-define=CI=true
           ccache -s
-      - name: Start Firebase Emulator
-        # Chown the npm cache directory to the runner user to avoid permission issues
-        timeout-minutes: 8
-        run: sudo chown -R 501:20 "/Users/runner/.npm" && cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
+      - name: Install Cloud Functions dependencies
+        # `firebase emulators:exec` does not install these itself (the old
+        # start-firebase-emulator.sh wrapper did); without them the functions
+        # emulator fails to load the function definitions.
+        # Chown the npm cache directory to the runner user to avoid permission issues.
+        run: sudo chown -R 501:20 "/Users/runner/.npm" && npm ci --prefix .github/workflows/scripts/functions
       - name: 'E2E Tests'
-        working-directory: ${{ matrix.working_directory }}
-        timeout-minutes: 30
+        # firebase.json and the emulator rule files live here, so `emulators:exec`
+        # has to run from this directory; the test command cds back to the package
+        # under test.
+        working-directory: ./.github/workflows/scripts
+        # Covers booting the emulator suite as well as the tests themselves, since
+        # `emulators:exec` now owns both.
+        timeout-minutes: 35
+        env:
+          STORAGE_EMULATOR_DEBUG: 'true'
         run: |
+          # The test command is handed to `emulators:exec` as a single string; a
+          # quoted heredoc keeps the script below verbatim instead of forcing a
+          # layer of quote escaping onto it.
+          TEST_COMMAND=$(cat <<'EOF'
+          cd "${GITHUB_WORKSPACE}/${{ matrix.working_directory }}"
           # flutter test on macOS CI may exit 1 due to "Failed to foreground app"
           # even when all tests pass. Check actual test results to determine success.
           set +e
@@ -130,6 +144,12 @@ jobs:
             fi
             exit $EXIT_CODE
           fi
+          EOF
+          )
+          # `emulators:exec` boots the suite, runs the command and tears the suite
+          # down, exiting with the command's exit code - so the laundering above
+          # still decides whether this step passes.
+          firebase emulators:exec --project flutterfire-e2e-tests "$TEST_COMMAND"
       - name: Save Firestore Emulator Cache
         continue-on-error: true
         # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.

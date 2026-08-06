@@ -53,8 +53,14 @@ jobs:
       - name: "Build Windows (Profile)"
         timeout-minutes: 25
         run: cd tests && flutter build windows --profile
+      - name: Install Cloud Functions dependencies
+        # `firebase emulators:exec` does not install these itself; without them the
+        # functions emulator logs "Failed to load function definition" on every run.
+        run: npm ci --prefix .github/workflows/scripts/functions
       - name: Start Firebase Emulator and run tests
         timeout-minutes: 30
+        env:
+          STORAGE_EMULATOR_DEBUG: 'true'
         run: cd ./.github/workflows/scripts && firebase emulators:exec --project flutterfire-e2e-tests "cd ../../../tests && flutter test .\integration_test\e2e_test.dart -d windows --verbose"
 
   windows-firestore:
@@ -74,8 +80,14 @@ jobs:
         # which does not exist on the Windows runners.
         run: |
           npm install -g firebase-tools@15.25.1
+      - name: Install Cloud Functions dependencies
+        # `firebase emulators:exec` does not install these itself; without them the
+        # functions emulator logs "Failed to load function definition" on every run.
+        run: npm ci --prefix .github/workflows/scripts/functions
       - name: Start Firebase Emulator and run tests
         timeout-minutes: 30
+        env:
+          STORAGE_EMULATOR_DEBUG: 'true'
         run: |
           cd ./.github/workflows/scripts
           firebase emulators:exec --project flutterfire-e2e-tests "cd ../../../packages/cloud_firestore/cloud_firestore/example && flutter drive --target=.\integration_test\e2e_test.dart --driver=.\test_driver\integration_test.dart -d windows --verbose" 2>&1 | Tee-Object -FilePath output.log
