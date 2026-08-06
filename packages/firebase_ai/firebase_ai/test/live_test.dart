@@ -218,9 +218,7 @@ void main() {
 
       final message2 = LiveClientRealtimeInput();
       expect(message2.toJson(), {
-        'realtime_input': {
-          'media_chunks': null,
-        },
+        'realtime_input': {},
       });
     });
 
@@ -386,6 +384,71 @@ void main() {
       expect(contentMessage.outputTranscription, isA<Transcription>());
       expect(contentMessage.outputTranscription?.text, 'output');
       expect(contentMessage.outputTranscription?.finished, false);
+    });
+
+    test('ActivityDetectionConfig toJson() returns correct JSON', () {
+      final config = ActivityDetectionConfig(
+        startSensitivity: Sensitivity.low,
+        endSensitivity: Sensitivity.high,
+        prefixPaddingMS: 100,
+        silenceDurationMS: 500,
+      );
+      expect(config.toJson(), {
+        'start_of_speech_sensitivity': 'START_SENSITIVITY_LOW',
+        'end_of_speech_sensitivity': 'END_SENSITIVITY_HIGH',
+        'prefix_padding_ms': 100,
+        'silence_duration_ms': 500,
+      });
+
+      final disabledConfig = ActivityDetectionConfig.disabled();
+      expect(disabledConfig.toJson(), {
+        'disabled': true,
+      });
+
+      final emptyConfig = ActivityDetectionConfig();
+      expect(emptyConfig.toJson(), {});
+    });
+
+    test('RealtimeInputConfig toJson() returns correct JSON', () {
+      final config = RealtimeInputConfig(
+        automaticActivityDetection: ActivityDetectionConfig.disabled(),
+        activityHandling: ActivityHandling.interrupt,
+        turnCoverage: TurnCoverage.onlyActivity,
+      );
+      expect(config.toJson(), {
+        'automatic_activity_detection': {'disabled': true},
+        'activity_handling': 'START_OF_ACTIVITY_INTERRUPTS',
+        'turn_coverage': 'TURN_INCLUDES_ONLY_ACTIVITY',
+      });
+
+      final emptyConfig = RealtimeInputConfig();
+      expect(emptyConfig.toJson(), {});
+    });
+
+    test('LiveGenerationConfig with realtimeInputConfig toJson() returns correct JSON', () {
+      final liveGenerationConfig = LiveGenerationConfig(
+        realtimeInputConfig: RealtimeInputConfig(
+          automaticActivityDetection: ActivityDetectionConfig.disabled(),
+        ),
+      );
+      // Explicitly, realtimeInputConfig should not exist in generation_config toJson() directly
+      expect(liveGenerationConfig.toJson(), {});
+    });
+
+    test('LiveClientRealtimeInput activityStart and activityEnd toJson()', () {
+      final startMessage = LiveClientRealtimeInput.activityStart();
+      expect(startMessage.toJson(), {
+        'realtime_input': {
+          'activity_start': {},
+        },
+      });
+
+      final stopMessage = LiveClientRealtimeInput.activityEnd();
+      expect(stopMessage.toJson(), {
+        'realtime_input': {
+          'activity_end': {},
+        },
+      });
     });
   });
 }
