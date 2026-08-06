@@ -20,6 +20,9 @@ dev_dependencies:
     sdk: flutter
   integration_test:
     sdk: flutter
+  # `integration_test/report_test_results.dart` names each executed test via
+  # `package:test_api/hooks.dart`; `any` defers to the version flutter_test pins.
+  test_api: any
 
 flutter:
   uses-material-design: true

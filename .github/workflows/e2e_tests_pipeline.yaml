@@ -6,19 +6,22 @@ concurrency:
 
 on:
   pull_request:
-     paths-ignore:
-      - 'docs/**'
-      - 'website/**'
-      - '**/example/**'
-      - '**.md'
+    # Pipeline e2e only exercises cloud_firestore; running it on every PR
+    # costs 3 jobs (2 macOS) for changes that cannot affect it. The nightly
+    # workflow_call still runs it unconditionally.
+    paths:
+      - 'packages/cloud_firestore/**'
+      - 'packages/firebase_core/**'
+      - '.github/workflows/e2e_tests_pipeline.yaml'
+      - '.github/actions/setup-flutterfire/**'
   push:
     branches:
       - main
-    paths-ignore:
-      - 'docs/**'
-      - 'website/**'
-      - '**/example/**'
-      - '**.md'
+    paths:
+      - 'packages/cloud_firestore/**'
+      - 'packages/firebase_core/**'
+      - '.github/workflows/e2e_tests_pipeline.yaml'
+      - '.github/actions/setup-flutterfire/**'
   workflow_call:
     secrets:
       PIPELINE_E2E_FIREBASE_OPTIONS_DART:
@@ -49,7 +52,6 @@ jobs:
       - uses: ./.github/actions/setup-flutterfire
         with:
           npm-cache: 'false'
-          flutter-version: '3.41.9'
           bootstrap-scope: 'cloud_firestore*'
       - name: Inject Firebase config for pipeline E2E
         env:
@@ -181,10 +183,7 @@ jobs:
       - uses: ./.github/actions/setup-flutterfire
         with:
           npm-cache: 'false'
-          flutter-version: '3.41.9'
           bootstrap-scope: 'cloud_firestore*'
-      - name: Enable Swift Package Manager for iOS
-        run: flutter config --enable-swift-package-manager
       - name: Inject Firebase config for pipeline E2E
         env:
           FIREBASE_OPTIONS_DART: ${{ secrets.PIPELINE_E2E_FIREBASE_OPTIONS_DART }}
@@ -198,7 +197,18 @@ jobs:
           echo "$FIREBASE_OPTIONS_DART" > packages/cloud_firestore/cloud_firestore/pipeline_example/lib/firebase_options.dart
           echo "$GOOGLE_SERVICES_JSON" > packages/cloud_firestore/cloud_firestore/pipeline_example/android/app/google-services.json
           echo "$GOOGLE_SERVICE_INFO_PLIST" > packages/cloud_firestore/cloud_firestore/pipeline_example/ios/Runner/GoogleService-Info.plist
+      - name: Enable Swift Package Manager
+        # SPM, not CocoaPods: pods compile gRPC-C++/BoringSSL from source,
+        # which alone overran a 35-minute build budget on these runners, while
+        # SPM pulls Google's precompiled grpc/abseil binaries. The resolution
+        # failure that once forced CocoaPods here ("the folder firebase_core
+        # doesn't exist") was the pinned Xcode 26.2 canonicalizing the plugin
+        # symlink farm; the image-default Xcode resolves it fine, as the
+        # e2e-firestore SPM job proves every run.
+        run: flutter config --enable-swift-package-manager
       - name: Prepare iOS project for Swift Package Manager
+        # The committed Podfile is what CocoaPods users of the example rely
+        # on, and `flutter build` prefers CocoaPods whenever one is present.
         working-directory: packages/cloud_firestore/cloud_firestore/pipeline_example/ios
         run: |
           if [ -f Podfile ]; then pod deintegrate; fi
@@ -211,9 +221,25 @@ jobs:
           model: "iPhone 16"
       - name: Build iOS (simulator)
         working-directory: packages/cloud_firestore/cloud_firestore/pipeline_example
-        timeout-minutes: 25
+        # A cold SwiftPM fetch (grpc/abseil binaries) plus the Xcode build has
+        # been observed to need more than 25 minutes on a cache miss.
+        timeout-minutes: 35
         run: |
-          flutter build ios --no-codesign --simulator --debug --target=./integration_test/pipeline/pipeline_live_test.dart --dart-define=CI=true
+          # Flutter's SPM integration intermittently resolves a plugin package
+          # at its real path instead of through the ephemeral symlink farm
+          # ("Could not resolve package dependencies ... firebase_core doesn't
+          # exist"). Retry exactly once, like reusable_e2e_ios.yaml does; the
+          # second run resolves against the already-generated layout.
+          set +e
+          flutter build ios --no-codesign --simulator --debug --target=./integration_test/pipeline/pipeline_live_test.dart --dart-define=CI=true > build_output.log 2>&1
+          BUILD_EXIT=$?
+          cat build_output.log
+          if [ $BUILD_EXIT -ne 0 ] && grep -q "Could not resolve package dependencies" build_output.log; then
+            echo "SPM package resolution race detected; retrying the build once."
+            flutter build ios --no-codesign --simulator --debug --target=./integration_test/pipeline/pipeline_live_test.dart --dart-define=CI=true
+            BUILD_EXIT=$?
+          fi
+          exit $BUILD_EXIT
       - name: Ensure Simulator Ready
         env:
           SIMULATOR: ${{ steps.simulator.outputs.udid }}
@@ -224,6 +250,42 @@ jobs:
         working-directory: packages/cloud_firestore/cloud_firestore/pipeline_example
         env:
           SIMULATOR: ${{ steps.simulator.outputs.udid }}
-        timeout-minutes: 20
+        # Fits two alarm-bounded (15 min) attempts, like reusable_e2e_ios.yaml.
+        timeout-minutes: 40
+        # Same wrapper as reusable_e2e_ios.yaml: `flutter test` against a
+        # simulator intermittently hangs after "Xcode build done" with zero
+        # output (this step burned its whole 20-minute budget on exactly
+        # that). Bound each attempt, recycle the simulator, retry once, and
+        # trust only the numeric tally.
         run: |
-          flutter test integration_test/pipeline/pipeline_live_test.dart -d "$SIMULATOR" --timeout 10x --dart-define=CI=true
+          run_flutter_test() {
+            rm -f flutter_test_output.log
+            perl -e 'alarm shift; exec @ARGV' 900 \
+              flutter test integration_test/pipeline/pipeline_live_test.dart -d "$SIMULATOR" --timeout 10x --dart-define=CI=true > flutter_test_output.log 2>&1
+            FT_EXIT=$?
+            cat flutter_test_output.log
+          }
+          set +e
+          run_flutter_test
+          if { ! grep -Eq '[0-9]+ tests? passed' flutter_test_output.log && ! grep -Eq '[0-9]+ failed' flutter_test_output.log; } \
+             || grep -q "Unable to start the app on the device" flutter_test_output.log; then
+            echo "Infrastructure launch failure detected - recycling the simulator and retrying once."
+            echo "::group::Simulator log around the hang (Runner)"
+            perl -e 'alarm shift; exec @ARGV' 90 \
+              xcrun simctl spawn "$SIMULATOR" log show --last 16m --style compact \
+              --predicate 'process == "Runner" OR eventMessage CONTAINS "Runner"' 2>/dev/null | tail -80 || true
+            echo "::endgroup::"
+            xcrun simctl shutdown "$SIMULATOR" 2>/dev/null || true
+            xcrun simctl erase "$SIMULATOR" 2>/dev/null || true
+            xcrun simctl boot "$SIMULATOR" 2>/dev/null || true
+            "${GITHUB_WORKSPACE}/.github/workflows/scripts/ensure-simulator-ready.sh" || true
+            run_flutter_test
+          fi
+          PASSED=$(grep -Eo '[0-9]+ tests? passed' flutter_test_output.log | tail -1 | grep -Eo '^[0-9]+')
+          FAILED=$(grep -Eo '[0-9]+ failed' flutter_test_output.log | tail -1 | grep -Eo '^[0-9]+')
+          : "${PASSED:=0}"; : "${FAILED:=0}"
+          echo "Result tally: passed=$PASSED failed=$FAILED (flutter test exit $FT_EXIT)"
+          if [ "$FAILED" -gt 0 ] || [ "$PASSED" -eq 0 ]; then
+            exit 1
+          fi
+          exit 0

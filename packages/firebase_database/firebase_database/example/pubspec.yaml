@@ -12,5 +12,22 @@ dependencies:
   flutter:
     sdk: flutter
 
+dev_dependencies:
+  # `query_e2e.dart` uses ListEquality when comparing ordered query results.
+  collection: ^1.15.0
+  # The e2e suite reaches for MethodChannelFirebase, which firebase_core
+  # deliberately hides from its own re-export.
+  firebase_core_platform_interface: ^8.1.0
+  # `web_only.dart` (conditionally imported) asserts on the web plugin's
+  # JS-interop surface directly.
+  firebase_database_web: ^0.2.7+13
+  flutter_test:
+    sdk: flutter
+  integration_test:
+    sdk: flutter
+  # `integration_test/report_test_results.dart` names each executed test via
+  # `package:test_api/hooks.dart`; `any` defers to the version flutter_test pins.
+  test_api: any
+
 flutter:
   uses-material-design: true
