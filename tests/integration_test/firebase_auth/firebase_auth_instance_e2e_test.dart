@@ -572,19 +572,6 @@ void main() {
           },
           skip: kIsWeb || defaultTargetPlatform == TargetPlatform.macOS,
         );
-
-        test(
-          'should allow null value and set to null',
-          () async {
-            // Isn't possible anymore to set the language code to null
-            // See API: https://firebase.google.com/docs/reference/js/auth.md?_gl=1*120kqub*_up*MQ..*_ga*NTg2MzgzNDU0LjE3MDc5MTYxMjI.*_ga_CW55HF8NVT*MTcwNzkxNjEyMi4xLjAuMTcwNzkxNjEyMi4wLjAuMA..#usedevicelanguage_2a61ea7
-            // Effectively will set the language code to the device language.
-            await FirebaseAuth.instance.setLanguageCode(null);
-            // This will return the device language now. e.g. "en-GB"
-            expect(FirebaseAuth.instance.languageCode, null);
-          },
-          skip: true,
-        );
       });
 
       group(
@@ -1060,43 +1047,6 @@ void main() {
           skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android,
         );
       });
-
-      group(
-        'tenantId',
-        () {
-          test('User associated with the tenantId correctly', () async {
-            // tenantId created in the GCP console
-            const String tenantId = 'auth-tenant-test-xukxg';
-            // created User on GCP console associated with the above tenantId
-            final userCredential =
-                await FirebaseAuth.instance.signInWithEmailAndPassword(
-              email: 'test-tenant@email.com',
-              password: 'fake-password',
-            );
-
-            expect(userCredential.user!.tenantId, tenantId);
-          });
-          // todo(russellwheatley85): get/set tenantId and authenticating user via auth emulator is not possible at the moment.
-        },
-        skip: true,
-      );
-
-      group(
-        'initializeRecaptchaConfig',
-        () {
-          test('initializeRecaptchaConfig completes without throwing',
-              () async {
-            // Skipping this test as initializeRecaptchaConfig is not supported
-            // by the Firebase emulator suite.
-            try {
-              await FirebaseAuth.instance.initializeRecaptchaConfig();
-            } catch (e) {
-              fail('Should not have thrown: $e');
-            }
-          });
-        },
-        skip: true,
-      );
 
       group('validatePassword()', () {
         const String validPassword =

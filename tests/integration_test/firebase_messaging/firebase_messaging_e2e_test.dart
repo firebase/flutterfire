@@ -85,36 +85,6 @@ void main() {
         });
       });
 
-      group('requestPermission', () {
-        test(
-          'authorizationStatus returns AuthorizationStatus.authorized on Android',
-          () async {
-            final result = await messaging.requestPermission();
-            expect(result, isA<NotificationSettings>());
-            expect(result.authorizationStatus, AuthorizationStatus.authorized);
-          },
-          // TODO(Lyokone): since moving to SDK 33+ on Android, this test fails, we need to integrate with patrol to control native permissions
-          skip: true,
-        );
-      });
-
-      group('requestPermission', () {
-        test(
-          'authorizationStatus returns AuthorizationStatus.notDetermined on Web',
-          () async {
-            final result = await messaging.requestPermission();
-
-            expect(result, isA<NotificationSettings>());
-            expect(
-              result.authorizationStatus,
-              AuthorizationStatus.notDetermined,
-            );
-          },
-          // This requires interaction with the browser's permission dialog, it no longer returns `notDetermined` on web
-          skip: true,
-        );
-      });
-
       group('getAPNSToken', () {
         test(
           'resolves null on android',

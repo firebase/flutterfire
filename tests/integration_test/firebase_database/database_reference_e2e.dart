@@ -29,32 +29,6 @@ void setupDatabaseReferenceTests() {
         expect(actual.value, v);
       });
 
-      test(
-        'throws "permission-denied" on a ref with no read permission',
-        () async {
-          await expectLater(
-            database.ref('denied_read').get(),
-            throwsA(
-              isA<FirebaseException>()
-                  .having(
-                    (error) => error.code,
-                    'code',
-                    'permission-denied',
-                  )
-                  .having(
-                    (error) => error.message,
-                    'message',
-                    predicate(
-                      (String message) =>
-                          message.contains("doesn't have permission"),
-                    ),
-                  ),
-            ),
-          );
-        },
-        skip: true, // TODO Fails on CI even though works locally
-      );
-
       test('removes a value if set to null', () async {
         final ref = database.ref('tests/set-null');
         await ref.remove();

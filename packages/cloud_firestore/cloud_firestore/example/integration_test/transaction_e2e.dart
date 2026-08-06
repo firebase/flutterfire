@@ -331,24 +331,6 @@ void runTransactionTests() {
           },
           skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
         );
-
-        // ignore: todo
-        // TODO(Salakar): Test seems to fail sometimes. Will look at in a future PR.
-        // test('support returning any value, e.g. a [DocumentSnapshot]', () async {
-        //   DocumentReference<Map<String, dynamic>> documentReference =
-        //       await initializeTest('transaction-get');
-
-        //   DocumentSnapshot<Map<String, dynamic>> snapshot =
-        //       await firestore.runTransaction((Transaction transaction) async {
-        //     DocumentSnapshot<Map<String, dynamic>> returned = await transaction.get(documentReference);
-        //     // required:
-        //     transaction.set(documentReference, {'foo': 'bar'});
-        //     return returned;
-        //   });
-
-        //   expect(snapshot, isA<DocumentSnapshot>());
-        //   expect(snapshot.reference.path, equals(documentReference.path));
-        // }, skip: kUseFirestoreEmulator);
       });
 
       group('Transaction.delete()', () {
@@ -563,45 +545,6 @@ void runTransactionTests() {
           }
         },
       );
-
-      // TODO(Lyokone): adding auth make some tests fails in macOS
-      // test(
-      //     'should not fail to complete transaction if user is authenticated',
-      //     () async {
-      //   DocumentReference<Map<String, dynamic>> doc1 =
-      //       await initializeTest('transaction-authentified-1');
-
-      //   try {
-      //     await FirebaseAuth.instance.createUserWithEmailAndPassword(
-      //       email: 'firestore@mail.com',
-      //       password: 'this-is-a-password',
-      //     );
-      //   } catch (e) {
-      //     await FirebaseAuth.instance.signInWithEmailAndPassword(
-      //       email: 'firestore@mail.com',
-      //       password: 'this-is-a-password',
-      //     );
-      //   }
-
-      //   await doc1.set({'test': 0});
-
-      //   final value = await firestore.runTransaction(
-      //     (Transaction transaction) async {
-      //       final value = await transaction.get(doc1);
-      //       final newValue = value['test'] + 1;
-      //       transaction.set(doc1, {
-      //         'test': newValue,
-      //       });
-
-      //       return newValue;
-      //     },
-      //     maxAttempts: 1,
-      //   );
-
-      //   expect(value, equals(1));
-
-      //   await FirebaseAuth.instance.signOut();
-      // });
     },
     skip: kIsWeb,
   );
