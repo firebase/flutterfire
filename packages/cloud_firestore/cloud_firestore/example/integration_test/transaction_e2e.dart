@@ -6,6 +6,7 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void runTransactionTests() {
@@ -68,6 +69,47 @@ void runTransactionTests() {
         });
         expect(response, equals(randomValue));
       });
+
+      test(
+        'does not report an error when the transaction stream is cancelled',
+        () async {
+          final List<Object> reportedErrors = <Object>[];
+          final FlutterExceptionHandler? previousOnError = FlutterError.onError;
+          FlutterError.onError = (FlutterErrorDetails details) {
+            reportedErrors.add(details.exception);
+          };
+          addTearDown(() {
+            FlutterError.onError = previousOnError;
+          });
+
+          final DocumentReference<Map<String, dynamic>> doc =
+              await initializeTest('transaction-cancel-cleanup');
+
+          await firestore.runTransaction((Transaction transaction) async {
+            transaction.set(doc, {
+              'updatedAt': DateTime.now().toIso8601String(),
+            });
+          });
+
+          await Future<void>.delayed(const Duration(milliseconds: 100));
+
+          final Iterable<Object> transactionCancelErrors =
+              reportedErrors.where((Object error) {
+            final String text = error.toString();
+            return error is MissingPluginException &&
+                text.contains('firebase_firestore/transaction');
+          });
+
+          expect(
+            transactionCancelErrors,
+            isEmpty,
+            reason: 'Unexpected FlutterError(s): $reportedErrors',
+          );
+        },
+        skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android
+            ? 'Android-only EventChannel teardown race'
+            : false,
+      );
 
       test(
         'runs after reading a document',

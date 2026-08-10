@@ -277,26 +277,21 @@ public class FlutterFirebaseFirestorePlugin
     return identifier;
   }
 
-  private void removeEventListener(String identifier) {
+  private void removeTransaction(String transactionId) {
+    transactions.remove(transactionId);
+    transactionHandlers.remove(transactionId);
+
+    // onCancel invokes this method, so remove the handler without cancelling it again.
+    synchronized (streamHandlers) {
+      streamHandlers.remove(transactionId);
+    }
+
     synchronized (eventChannels) {
-      EventChannel eventChannel = eventChannels.remove(identifier);
+      EventChannel eventChannel = eventChannels.remove(transactionId);
       if (eventChannel != null) {
         eventChannel.setStreamHandler(null);
       }
     }
-
-    synchronized (streamHandlers) {
-      StreamHandler streamHandler = streamHandlers.remove(identifier);
-      if (streamHandler != null) {
-        streamHandler.onCancel(null);
-      }
-    }
-  }
-
-  private void removeTransaction(String transactionId) {
-    transactions.remove(transactionId);
-    removeEventListener(transactionId);
-    transactionHandlers.remove(transactionId);
   }
 
   private void removeEventListeners() {
