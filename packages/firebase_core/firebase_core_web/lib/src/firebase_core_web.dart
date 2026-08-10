@@ -414,9 +414,7 @@ class FirebaseCoreWeb extends FirebasePlatform {
     }
 
     await Future.wait(
-      _services.entries
-          .where((entry) => entry.key != 'app-check')
-          .map((entry) {
+      _services.entries.where((entry) => entry.key != 'app-check').map((entry) {
         final ensureInitializedFunction = entry.value.ensurePluginInitialized;
 
         if (ensureInitializedFunction == null || app == null) {
