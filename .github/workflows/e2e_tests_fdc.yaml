@@ -6,20 +6,22 @@ concurrency:
 
 on:
   pull_request:
-    paths-ignore:
-      - 'docs/**'
-      - 'website/**'
-      - '**/example/**'
-      - '**/flutterfire_ui/**'
-      - '**.md'
+    # Data Connect e2e only exercises this package; running it on every PR
+    # costs 4 jobs (2 macOS) for changes that cannot affect it. The nightly
+    # workflow_call still runs it unconditionally.
+    paths:
+      - 'packages/firebase_data_connect/**'
+      - 'packages/firebase_core/**'
+      - '.github/workflows/e2e_tests_fdc.yaml'
+      - '.github/actions/setup-flutterfire/**'
   push:
     branches:
       - main
-    paths-ignore:
-      - 'docs/**'
-      - 'website/**'
-      - '**/example/**'
-      - '**.md'
+    paths:
+      - 'packages/firebase_data_connect/**'
+      - 'packages/firebase_core/**'
+      - '.github/workflows/e2e_tests_fdc.yaml'
+      - '.github/actions/setup-flutterfire/**'
   workflow_call:
     inputs:
       nightly_test_mode:
@@ -33,26 +35,19 @@ jobs:
   android:
     runs-on: ubuntu-latest
     timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 45 }}
-    strategy:
-      fail-fast: false
     env:
       AVD_ARCH: x86_64
       AVD_API_LEVEL: 34
       AVD_TARGET: google_apis
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
-      - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
-        name: Install Node.js 20
+      - uses: ./.github/actions/setup-flutterfire
         with:
-          node-version: '20'
-      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961
-        with:
-          distribution: 'temurin'
-          java-version: '21'
-      - name: 'Install Tools'
-        run: |
-          sudo npm i -g firebase-tools@15.25.1
-          echo "FIREBASE_TOOLS_VERSION=$(firebase --version)" >> $GITHUB_ENV
+          npm-cache: 'false'
+          firebase-tools-version: '15.25.1'
+          bootstrap-scope: 'firebase_data_connect*'
+      - name: Setup PostgreSQL for Linux/macOS/Windows
+        uses: ikalnytskyi/action-setup-postgres@c4dda34aae1c821e3a771b68b73b13af3198a7ee
       - name: Firebase Emulator Cache
         id: firebase-emulator-cache
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
@@ -61,22 +56,8 @@ jobs:
           # Must match the save path exactly
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v4-${{ runner.os }}-${{ env.FIREBASE_TOOLS_VERSION }}
-      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
-        with:
-          channel: 'stable'
-          cache: true
-          cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
-          pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
-      - name: Setup PostgreSQL for Linux/macOS/Windows
-        uses: ikalnytskyi/action-setup-postgres@c4dda34aae1c821e3a771b68b73b13af3198a7ee
-      - uses: bluefireteam/melos-action@2982f8e4fc92440a219490009d6d05195cb1a6a5
-        with:
-          run-bootstrap: false
-          melos-version: '5.3.0'
       - name: Generate dummy Firebase configs
         run: dart ./.github/workflows/scripts/generate-dummy-firebase-configs.dart
-      - name: 'Bootstrap package'
-        run: melos bootstrap --scope "firebase_data_connect*"
       - name: Start Firebase Emulator
         run: |
           cd ./packages/firebase_data_connect/firebase_data_connect/example
@@ -155,21 +136,16 @@ jobs:
   ios:
     runs-on: macos-15
     timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 45 }}
-    strategy:
-      fail-fast: false
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
-      - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
-        name: Install Node.js 20
-        with:
-          node-version: '20'
       - name: Xcode
         # Firebase iOS SDK: minimum Xcode 26.2.
         run: sudo xcode-select -s /Applications/Xcode_26.2.app/Contents/Developer
-      - uses: actions/setup-java@8df1039502a15bceb9433410b1a100fbe190c53b
+      - uses: ./.github/actions/setup-flutterfire
         with:
-          distribution: 'temurin'
-          java-version: '21'
+          npm-cache: 'false'
+          firebase-tools-version: '15.25.1'
+          bootstrap-scope: 'firebase_data_connect*'
       - name: Setup PostgreSQL for Linux/macOS/Windows
         uses: ikalnytskyi/action-setup-postgres@c4dda34aae1c821e3a771b68b73b13af3198a7ee
       - uses: hendrikmuhs/ccache-action@d62db5f07c26379fc4b4e0916f098a92573c3b03
@@ -190,10 +166,6 @@ jobs:
           # native SDK version instead.
           key: ${{ runner.os }}-fdc-pods-v2-${{ hashFiles('packages/firebase_data_connect/firebase_data_connect/example/ios/Podfile', 'packages/firebase_core/firebase_core/ios/firebase_sdk_version.rb') }}
           restore-keys: ${{ runner.os }}-fdc-pods-v2-
-      - name: 'Install Tools'
-        run: |
-          sudo npm i -g firebase-tools@15.25.1
-          echo "FIREBASE_TOOLS_VERSION=$(firebase --version)" >> $GITHUB_ENV
       - name: Firebase Emulator Cache
         id: firebase-emulator-cache
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
@@ -202,20 +174,8 @@ jobs:
           # Must match the save path exactly
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-v4-${{ runner.os }}-${{ env.FIREBASE_TOOLS_VERSION }}
-      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
-        with:
-          channel: 'stable'
-          cache: true
-          cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
-          pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
-      - uses: bluefireteam/melos-action@2982f8e4fc92440a219490009d6d05195cb1a6a5
-        with:
-          run-bootstrap: false
-          melos-version: '5.3.0'
       - name: Generate dummy Firebase configs
         run: dart ./.github/workflows/scripts/generate-dummy-firebase-configs.dart
-      - name: 'Bootstrap package'
-        run: melos bootstrap --scope "firebase_data_connect*"
       - name: 'Build Application'
         working-directory: 'packages/firebase_data_connect/firebase_data_connect/example'
         run: |
@@ -281,38 +241,17 @@ jobs:
   web:
     runs-on: macos-latest
     timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 15 }}
-    strategy:
-      fail-fast: false
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
-      - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
-        name: Install Node.js 20
+      - uses: ./.github/actions/setup-flutterfire
         with:
-          node-version: '20'
-      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961
-        with:
-          distribution: 'temurin'
-          java-version: '21'
+          npm-cache: 'false'
+          firebase-tools-version: '15.25.1'
+          bootstrap-scope: 'firebase_data_connect*'
       - name: Setup PostgreSQL for Linux/macOS/Windows
         uses: ikalnytskyi/action-setup-postgres@c4dda34aae1c821e3a771b68b73b13af3198a7ee
-      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
-        with:
-          channel: 'stable'
-          cache: true
-          cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
-          pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
-      - uses: bluefireteam/melos-action@2982f8e4fc92440a219490009d6d05195cb1a6a5
-        with:
-          run-bootstrap: false
-          melos-version: '5.3.0'
       - name: Generate dummy Firebase configs
         run: dart ./.github/workflows/scripts/generate-dummy-firebase-configs.dart
-      - name: 'Bootstrap package'
-        run: melos bootstrap --scope "firebase_data_connect*"
-      - name: 'Install Tools'
-        run: |
-          sudo npm i -g firebase-tools@15.25.1
-          echo "FIREBASE_TOOLS_VERSION=$(firebase --version)" >> $GITHUB_ENV
       - name: Firebase Emulator Cache
         id: firebase-emulator-cache
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
@@ -355,38 +294,17 @@ jobs:
   web-wasm:
     runs-on: macos-latest
     timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 15 }}
-    strategy:
-      fail-fast: false
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
-      - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
-        name: Install Node.js 20
+      - uses: ./.github/actions/setup-flutterfire
         with:
-          node-version: '20'
-      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961
-        with:
-          distribution: 'temurin'
-          java-version: '21'
+          npm-cache: 'false'
+          firebase-tools-version: '15.25.1'
+          bootstrap-scope: 'firebase_data_connect*'
       - name: Setup PostgreSQL for Linux/macOS/Windows
         uses: ikalnytskyi/action-setup-postgres@c4dda34aae1c821e3a771b68b73b13af3198a7ee
-      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
-        with:
-          channel: 'stable'
-          cache: true
-          cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
-          pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
-      - uses: bluefireteam/melos-action@2982f8e4fc92440a219490009d6d05195cb1a6a5
-        with:
-          run-bootstrap: false
-          melos-version: '5.3.0'
       - name: Generate dummy Firebase configs
         run: dart ./.github/workflows/scripts/generate-dummy-firebase-configs.dart
-      - name: 'Bootstrap package'
-        run: melos bootstrap --scope "firebase_data_connect*"
-      - name: 'Install Tools'
-        run: |
-          sudo npm i -g firebase-tools@15.25.1
-          echo "FIREBASE_TOOLS_VERSION=$(firebase --version)" >> $GITHUB_ENV
       - name: Firebase Emulator Cache
         id: firebase-emulator-cache
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9

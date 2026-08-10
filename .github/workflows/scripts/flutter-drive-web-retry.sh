@@ -4,7 +4,11 @@ set -euo pipefail
 : "${FLUTTER_DRIVE_TARGET:?FLUTTER_DRIVE_TARGET is required}"
 : "${FLUTTER_DRIVE_DRIVER:?FLUTTER_DRIVE_DRIVER is required}"
 
-FLUTTER_DRIVE_DEVICE="${FLUTTER_DRIVE_DEVICE:-chrome}"
+# web-server, not chrome: with `-d chrome` the flutter tool launches the
+# browser itself, which requires a display server and silently exits 0 when
+# none exists (headless CI). With web-server the browser is launched through
+# chromedriver, which is headless-capable.
+FLUTTER_DRIVE_DEVICE="${FLUTTER_DRIVE_DEVICE:-web-server}"
 FLUTTER_DRIVE_TIMEOUT_SECONDS="${FLUTTER_DRIVE_TIMEOUT_SECONDS:-180}"
 FLUTTER_DRIVE_MAX_ATTEMPTS="${FLUTTER_DRIVE_MAX_ATTEMPTS:-4}"
 FLUTTER_DRIVE_EXTRA_ARGS="${FLUTTER_DRIVE_EXTRA_ARGS:-}"
@@ -110,6 +114,13 @@ PY
     return 2
   fi
 
+  # Never trust a bare exit 0: `flutter drive` exits 0 even when the browser
+  # failed to launch and no test ever ran. Require positive evidence.
+  if [[ "$exit_code" == "0" && "$output" != *"All tests passed"* ]]; then
+    echo "flutter drive exited 0 without reporting test success; treating as an infrastructure failure."
+    return 3
+  fi
+
   if [[ "$exit_code" == "124" ]] ||
      [[ "$output" == *"AppConnectionException"* ]] ||
      [[ "$output" == *"Failed to exit Chromium"* ]]; then
@@ -120,14 +131,19 @@ PY
 }
 
 for attempt in $(seq 1 "$FLUTTER_DRIVE_MAX_ATTEMPTS"); do
-  if run_tests; then
+  # NOT `if run_tests; then ...; fi` + `$?`: a completed `if` with a false
+  # condition and no else sets $? to 0, so every failure collapsed to exit 0.
+  exit_code=0
+  run_tests || exit_code=$?
+
+  if [[ "$exit_code" == "0" ]]; then
     exit 0
   fi
-
-  exit_code=$?
   if [[ "$exit_code" != "3" || "$attempt" == "$FLUTTER_DRIVE_MAX_ATTEMPTS" ]]; then
     exit "$exit_code"
   fi
 
   echo "Attempt $attempt failed before tests completed. Retrying with clean browser processes..."
 done
+# Unreachable, but never fall off the end with an implicit 0.
+exit 1

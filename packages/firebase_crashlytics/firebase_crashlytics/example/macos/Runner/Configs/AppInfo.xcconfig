@@ -8,7 +8,7 @@
 PRODUCT_NAME = example
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = io.flutter.plugins.firebase.crashlytics.example
+PRODUCT_BUNDLE_IDENTIFIER = io.flutter.plugins.firebase.tests
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2020 io.flutter.plugins.firebase.crashlytics. All rights reserved.
