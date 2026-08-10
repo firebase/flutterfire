@@ -36,7 +36,7 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
 @GenerateNiceMocks([MockSpec<FirebaseApp>(), MockSpec<ConnectorConfig>()])
-import '../firebase_data_connect_test.mocks.dart';
+import 'cache_manager_test.mocks.dart';
 import '../network/rest_transport_test.mocks.dart';
 
 class MockTransportOptions extends Mock implements TransportOptions {}
