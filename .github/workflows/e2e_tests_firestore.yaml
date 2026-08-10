@@ -69,7 +69,6 @@ jobs:
       package-path: 'packages/cloud_firestore/cloud_firestore'
       package-scope: 'cloud_firestore*'
       cache-key-suffix: 'firestore'
-      ios-free-up-space: true
       native-config-args: '--firestore-native'
       nightly_test_mode: ${{ inputs.nightly_test_mode == true }}
 
