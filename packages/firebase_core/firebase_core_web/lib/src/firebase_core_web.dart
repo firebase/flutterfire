@@ -386,7 +386,12 @@ class FirebaseCoreWeb extends FirebasePlatform {
           measurementId: options.measurementId,
         );
       } catch (e) {
-        if (_getJSErrorCode(e as JSError) == 'app/duplicate-app') {
+        // ignore: invalid_runtime_check_with_js_interop_types
+        if (e is! JSError) {
+          rethrow;
+        }
+
+        if (_getJSErrorCode(e) == 'app/duplicate-app') {
           throw duplicateApp(name);
         }
 
@@ -427,7 +432,12 @@ class FirebaseCoreWeb extends FirebasePlatform {
       app = guardNotInitialized(() => firebase.app(name));
       return _createFromJsApp(app);
     } catch (e) {
-      if (_getJSErrorCode(e as JSError) == 'app/no-app') {
+      // ignore: invalid_runtime_check_with_js_interop_types
+      if (e is! JSError) {
+        rethrow;
+      }
+
+      if (_getJSErrorCode(e) == 'app/no-app') {
         throw noAppExists(name);
       }
 
