@@ -31,9 +31,11 @@ Never convertPlatformExceptionToFirebaseException(
 
 /// Converts a [PlatformException] into a [FirebaseException].
 ///
-/// A [PlatformException] can only be converted to a [FirebaseException] if the
-/// `details` of the exception exist. Firebase returns specific codes and messages
-/// which can be converted into user friendly exceptions.
+/// Firebase returns specific codes and messages which can be converted into
+/// user friendly exceptions. Most native implementations carry them in the
+/// `details` of the exception, but a code sent as [PlatformException.code] is
+/// honoured as well: the Windows plugins report native Firebase codes that way,
+/// with no `details` payload at all.
 FirebaseException platformExceptionToFirebaseException(
   PlatformException platformException, {
   required String plugin,
@@ -54,6 +56,20 @@ FirebaseException platformExceptionToFirebaseException(
     message = details['message'] as String? ?? message;
   } else if (rawDetails != null) {
     message = rawDetails.toString();
+  } else if (platformException.code.isNotEmpty &&
+      platformException.code != plugin) {
+    // With no `details` payload at all, honour a code sent in the standard
+    // `PlatformException.code` field: the Windows plugins report native
+    // Firebase codes that way, because the Pigeon C++
+    // `FlutterError(code, message)` and `EventSink::Error(code, message)`
+    // overloads both send null details. Without this the code is lost and every
+    // such error surfaces as `unknown`.
+    //
+    // The plugin name itself is not a code - the Android and Windows Pigeon
+    // APIs send it in that field as a channel-level marker and carry the real
+    // code in `details` - so it is treated as absent rather than reported as
+    // `FirebaseException(code: 'firebase_database')`.
+    code = platformException.code;
   }
 
   return FirebaseException(
