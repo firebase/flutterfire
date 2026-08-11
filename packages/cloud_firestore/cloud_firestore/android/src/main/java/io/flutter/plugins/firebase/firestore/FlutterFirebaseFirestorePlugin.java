@@ -277,6 +277,23 @@ public class FlutterFirebaseFirestorePlugin
     return identifier;
   }
 
+  private void removeTransaction(String transactionId) {
+    transactions.remove(transactionId);
+    transactionHandlers.remove(transactionId);
+
+    // onCancel invokes this method, so remove the handler without cancelling it again.
+    synchronized (streamHandlers) {
+      streamHandlers.remove(transactionId);
+    }
+
+    synchronized (eventChannels) {
+      EventChannel eventChannel = eventChannels.remove(transactionId);
+      if (eventChannel != null) {
+        eventChannel.setStreamHandler(null);
+      }
+    }
+  }
+
   private void removeEventListeners() {
     synchronized (eventChannels) {
       for (String identifier : eventChannels.keySet()) {
@@ -292,6 +309,7 @@ public class FlutterFirebaseFirestorePlugin
       streamHandlers.clear();
     }
 
+    transactions.clear();
     transactionHandlers.clear();
   }
 
@@ -560,6 +578,7 @@ public class FlutterFirebaseFirestorePlugin
     final TransactionStreamHandler handler =
         new TransactionStreamHandler(
             transaction -> transactions.put(transactionId, transaction),
+            this::removeTransaction,
             firestore,
             transactionId,
             timeout,
@@ -576,8 +595,13 @@ public class FlutterFirebaseFirestorePlugin
       @NonNull GeneratedAndroidFirebaseFirestore.InternalTransactionResult resultType,
       @Nullable List<GeneratedAndroidFirebaseFirestore.InternalTransactionCommand> commands,
       @NonNull GeneratedAndroidFirebaseFirestore.VoidResult result) {
-    Objects.requireNonNull(transactionHandlers.get(transactionId))
-        .receiveTransactionResponse(resultType, commands);
+    OnTransactionResultListener handler = transactionHandlers.get(transactionId);
+    if (handler == null) {
+      result.success();
+      return;
+    }
+
+    handler.receiveTransactionResponse(resultType, commands);
     result.success();
   }
 

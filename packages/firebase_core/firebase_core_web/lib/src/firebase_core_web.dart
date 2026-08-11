@@ -362,7 +362,6 @@ class FirebaseCoreWeb extends FirebasePlatform {
           messagingSenderId: options.messagingSenderId,
           appId: options.appId,
           measurementId: options.measurementId,
-          recaptchaSiteKey: options.recaptchaSiteKey,
         );
       }
     }
@@ -385,14 +384,18 @@ class FirebaseCoreWeb extends FirebasePlatform {
           messagingSenderId: options.messagingSenderId,
           appId: options.appId,
           measurementId: options.measurementId,
-          recaptchaSiteKey: options.recaptchaSiteKey,
         );
       } catch (e) {
-        if (_getJSErrorCode(e as JSError) == 'app/duplicate-app') {
+        if (!e.isA<JSObject>()) {
+          rethrow;
+        }
+
+        final jsError = e as JSError;
+        if (_getJSErrorCode(jsError) == 'app/duplicate-app') {
           throw duplicateApp(name);
         }
 
-        throw _catchJSError(e);
+        throw _catchJSError(jsError);
       }
     }
 
@@ -429,11 +432,16 @@ class FirebaseCoreWeb extends FirebasePlatform {
       app = guardNotInitialized(() => firebase.app(name));
       return _createFromJsApp(app);
     } catch (e) {
-      if (_getJSErrorCode(e as JSError) == 'app/no-app') {
+      if (!e.isA<JSObject>()) {
+        rethrow;
+      }
+
+      final jsError = e as JSError;
+      if (_getJSErrorCode(jsError) == 'app/no-app') {
         throw noAppExists(name);
       }
 
-      throw _catchJSError(e);
+      throw _catchJSError(jsError);
     }
   }
 }

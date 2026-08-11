@@ -10,6 +10,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:pipeline_example/firebase_options.dart';
 
+import 'report_test_results.dart';
 import 'pipeline_add_fields_e2e.dart';
 import 'pipeline_aggregate_e2e.dart';
 import 'pipeline_expressions_e2e.dart';
@@ -24,13 +25,25 @@ import 'pipeline_select_e2e.dart';
 import 'pipeline_unnest_union_e2e.dart';
 
 void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  reportTestResultsToDriver(binding);
 
   group('pipeline (live)', () {
     setUpAll(() async {
-      await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform,
-      );
+      // The native SDK may already have configured [DEFAULT] from a bundled
+      // GoogleService-Info.plist (the plugin registrant does this before any
+      // Dart runs). Dart's Firebase.apps cannot see that app until the first
+      // platform-channel call, so the only reliable guard is catching the
+      // duplicate-app error and keeping the natively configured instance.
+      try {
+        await Firebase.initializeApp(
+          options: DefaultFirebaseOptions.currentPlatform,
+        );
+      } on FirebaseException catch (e) {
+        if (e.code != 'duplicate-app') {
+          rethrow;
+        }
+      }
       final firestore = FirebaseFirestore.instanceFor(
         app: Firebase.app(),
         databaseId: 'firestore-pipeline-test',

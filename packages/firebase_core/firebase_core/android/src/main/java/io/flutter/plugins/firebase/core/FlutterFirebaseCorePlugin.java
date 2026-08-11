@@ -63,9 +63,6 @@ public class FlutterFirebaseCorePlugin
     firebaseOptions.setDatabaseURL(options.getDatabaseUrl());
     firebaseOptions.setStorageBucket(options.getStorageBucket());
     firebaseOptions.setTrackingId(options.getGaTrackingId());
-    if (options.getRecaptchaSiteKey() != null) {
-      firebaseOptions.setRecaptchaSiteKey(options.getRecaptchaSiteKey());
-    }
 
     return firebaseOptions.build();
   }
@@ -152,7 +149,6 @@ public class FlutterFirebaseCorePlugin
                     .setProjectId(initializeAppRequest.getProjectId())
                     .setStorageBucket(initializeAppRequest.getStorageBucket())
                     .setGaTrackingId(initializeAppRequest.getTrackingId())
-                    .setRecaptchaSiteKey(initializeAppRequest.getRecaptchaSiteKey())
                     .build();
             // TODO(Salakar) hacky workaround a bug with FirebaseInAppMessaging causing the error:
             //    Can't create handler inside thread Thread[pool-3-thread-1,5,main] that has not

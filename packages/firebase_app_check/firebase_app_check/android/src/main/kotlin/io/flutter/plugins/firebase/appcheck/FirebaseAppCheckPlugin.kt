@@ -53,6 +53,7 @@ class FirebaseAppCheckPlugin : FlutterFirebasePlugin, FlutterPlugin, FirebaseApp
       androidProvider: String?,
       appleProvider: String?,
       debugToken: String?,
+      recaptchaSiteKey: String?,
       callback: (Result<Unit>) -> Unit
   ) {
     try {
@@ -64,8 +65,11 @@ class FirebaseAppCheckPlugin : FlutterFirebasePlugin, FlutterPlugin, FirebaseApp
               DebugAppCheckProviderFactory.getInstance())
         }
         "recaptcha" -> {
-          firebaseAppCheck.installAppCheckProviderFactory(
-              RecaptchaAppCheckProviderFactory.getInstance())
+          if (recaptchaSiteKey == null) {
+            throw Exception("reCAPTCHA site key must not be null")
+          }
+          val factory = RecaptchaAppCheckProviderFactory.getInstance(recaptchaSiteKey)
+          firebaseAppCheck.installAppCheckProviderFactory(factory)
         }
         else -> {
           firebaseAppCheck.installAppCheckProviderFactory(
@@ -87,6 +91,24 @@ class FirebaseAppCheckPlugin : FlutterFirebasePlugin, FlutterPlugin, FirebaseApp
     firebaseAppCheck.getAppCheckToken(forceRefresh).addOnCompleteListener { task ->
       if (task.isSuccessful) {
         callback(Result.success(task.result?.token))
+      } else {
+        callback(Result.failure(FlutterError("firebase_app_check", task.exception?.message, null)))
+      }
+    }
+  }
+
+  override fun getTokenResult(
+      appName: String,
+      forceRefresh: Boolean,
+      callback: (Result<InternalAppCheckTokenResult?>) -> Unit
+  ) {
+    val firebaseAppCheck = getAppCheck(appName)
+    firebaseAppCheck.getAppCheckToken(forceRefresh).addOnCompleteListener { task ->
+      if (task.isSuccessful) {
+        val token = task.result
+        callback(
+            Result.success(
+                token?.let { InternalAppCheckTokenResult(it.token, it.expireTimeMillis) }))
       } else {
         callback(Result.failure(FlutterError("firebase_app_check", task.exception?.message, null)))
       }

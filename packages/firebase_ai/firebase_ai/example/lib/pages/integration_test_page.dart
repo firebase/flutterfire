@@ -49,7 +49,7 @@ class TestItem {
   final String description;
   final Future<TestResult> Function(FirebaseAI provider, TestLogger logger) run;
   TestResult googleAIResult;
-  TestResult vertexAIResult;
+  TestResult agentPlatformResult;
 
   TestItem({
     required this.id,
@@ -57,7 +57,7 @@ class TestItem {
     required this.description,
     required this.run,
   })  : googleAIResult = TestResult.pending(),
-        vertexAIResult = TestResult.pending();
+        agentPlatformResult = TestResult.pending();
 }
 
 class TestLogger {
@@ -636,15 +636,14 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
     ];
   }
 
-  Future<void> _runTestItem(TestItem item, bool isVertex) async {
-    final provider = isVertex
-        ? FirebaseAI.vertexAI(location: 'global')
-        : FirebaseAI.googleAI();
+  Future<void> _runTestItem(TestItem item, bool isAgentPlatform) async {
+    final provider =
+        isAgentPlatform ? FirebaseAI.agentPlatform() : FirebaseAI.googleAI();
     final logger = TestLogger();
 
     setState(() {
-      if (isVertex) {
-        item.vertexAIResult =
+      if (isAgentPlatform) {
+        item.agentPlatformResult =
             TestResult(status: TestStatus.running, logs: 'Running...');
       } else {
         item.googleAIResult =
@@ -654,12 +653,12 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
 
     try {
       logger.log(
-        'Starting execution for ${item.name} (${isVertex ? 'Vertex AI' : 'Google AI'})...',
+        'Starting execution for ${item.name} (${isAgentPlatform ? 'Agent Platform' : 'Google AI'})...',
       );
       final result = await item.run(provider, logger);
       setState(() {
-        if (isVertex) {
-          item.vertexAIResult = result;
+        if (isAgentPlatform) {
+          item.agentPlatformResult = result;
         } else {
           item.googleAIResult = result;
         }
@@ -672,8 +671,8 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
           logs: logger.toString(),
           errorMessage: e.toString(),
         );
-        if (isVertex) {
-          item.vertexAIResult = failResult;
+        if (isAgentPlatform) {
+          item.agentPlatformResult = failResult;
         } else {
           item.googleAIResult = failResult;
         }
@@ -689,7 +688,7 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
       _progress = 0;
       for (final item in _testCases) {
         item.googleAIResult = TestResult.pending();
-        item.vertexAIResult = TestResult.pending();
+        item.agentPlatformResult = TestResult.pending();
       }
     });
 
@@ -895,7 +894,7 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
     final googleAIResults =
         _testCases.map((item) => item.googleAIResult).toList();
     final vertexAIResults =
-        _testCases.map((item) => item.vertexAIResult).toList();
+        _testCases.map((item) => item.agentPlatformResult).toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -942,7 +941,7 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
                 const SizedBox(width: 8),
                 Expanded(
                   child: _buildProviderSummary(
-                    'Vertex AI Suite',
+                    'Agent Platform Suite',
                     vertexAIResults,
                   ),
                 ),
@@ -992,13 +991,13 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
                         Row(
                           children: [
                             const Text(
-                              'V: ',
+                              'AP: ',
                               style: TextStyle(
                                 fontSize: 10,
                                 color: Colors.grey,
                               ),
                             ),
-                            _buildStatusBadge(item.vertexAIResult),
+                            _buildStatusBadge(item.agentPlatformResult),
                           ],
                         ),
                       ],
@@ -1020,8 +1019,8 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
                                 const SizedBox(width: 8),
                                 Expanded(
                                   child: _buildLogsConsole(
-                                    'Vertex AI Details',
-                                    item.vertexAIResult,
+                                    'Agent Platform Details',
+                                    item.agentPlatformResult,
                                   ),
                                 ),
                               ],

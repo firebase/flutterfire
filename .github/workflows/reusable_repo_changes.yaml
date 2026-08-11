@@ -1,0 +1,114 @@
+name: reusable-repo-changes
+
+# Repo-wide sibling of reusable_e2e_changes.yaml.
+#
+# That one scopes every filter to a single package, because each
+# `e2e_tests_<product>.yaml` tests one plugin. The callers here - the smoke
+# suite and all_plugins - build apps that depend on every plugin at once, so
+# their filters have to span all packages instead: a Kotlin-only change in any
+# plugin should still skip the iOS, macOS, web and Windows jobs.
+#
+# `app-path` is the app the caller builds and drives: `tests` for the smoke
+# suite, `packages/*/*/example` for all_plugins. It is a glob, not a literal
+# path, so one input covers both the single app and the per-package examples.
+#
+# Non-PR events (push to main, the nightly workflow_call) always run
+# everything: the filter step is skipped and its empty outputs fall back to
+# 'true' below. Same contract as reusable_e2e_changes.yaml.
+
+on:
+  workflow_call:
+    inputs:
+      app-path:
+        description: >-
+          Glob for the app(s) the caller builds, without a trailing slash, e.g.
+          'tests' or 'packages/*/*/example'. Its per-platform subdirectory
+          (`<app-path>/ios/**`) gates that platform; its Dart
+          (`<app-path>/lib/**`) is shared across all of them.
+        type: string
+        required: true
+    outputs:
+      android:
+        description: 'true when the diff can affect the Android build or tests.'
+        value: ${{ jobs.changes.outputs.android }}
+      ios:
+        description: 'true when the diff can affect the iOS build or tests.'
+        value: ${{ jobs.changes.outputs.ios }}
+      macos:
+        description: 'true when the diff can affect the macOS build or tests.'
+        value: ${{ jobs.changes.outputs.macos }}
+      web:
+        description: 'true when the diff can affect the web (JS or wasm) build or tests.'
+        value: ${{ jobs.changes.outputs.web }}
+      windows:
+        description: 'true when the diff can affect the Windows build or tests.'
+        value: ${{ jobs.changes.outputs.windows }}
+
+permissions:
+  contents: read
+
+jobs:
+  changes:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      android: ${{ steps.filter.outputs.android || 'true' }}
+      ios: ${{ steps.filter.outputs.ios || 'true' }}
+      macos: ${{ steps.filter.outputs.macos || 'true' }}
+      web: ${{ steps.filter.outputs.web || 'true' }}
+      windows: ${{ steps.filter.outputs.windows || 'true' }}
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+        if: github.event_name == 'pull_request'
+      - uses: dorny/paths-filter@d1c1ffe0248fe513906c8e24db8ea791d46f8590
+        if: github.event_name == 'pull_request'
+        id: filter
+        with:
+          # `packages/*/*` is every plugin package - main, platform interface
+          # and web implementation alike. `packages/_flutterfire_internals` is
+          # the one package that sits a level higher, so it needs its own entry.
+          #
+          # Any change under `.github/workflows` runs everything. The filters
+          # here decide what CI skips, so a change to how CI works must not be
+          # able to skip its own validation.
+          #
+          # Dart is shared: a change to `<plugin>_web/lib` runs the native jobs
+          # too, even though only web consumes it. Erring towards running an
+          # extra job beats needing a glob that can express "every package
+          # except the web ones".
+          filters: |
+            shared: &shared
+              - 'packages/*/*/lib/**'
+              - 'packages/*/*/pubspec.yaml'
+              - 'packages/_flutterfire_internals/**'
+              - '${{ inputs.app-path }}/lib/**'
+              - '${{ inputs.app-path }}/pubspec.yaml'
+              - '${{ inputs.app-path }}/integration_test/**'
+              - '${{ inputs.app-path }}/test_driver/**'
+              - '.github/workflows/**'
+              - '.github/actions/**'
+              - 'scripts/**'
+              - 'pubspec.yaml'
+            android:
+              - *shared
+              - 'packages/*/*/android/**'
+              - '${{ inputs.app-path }}/android/**'
+            ios:
+              - *shared
+              - 'packages/*/*/ios/**'
+              - 'packages/*/*/darwin/**'
+              - '${{ inputs.app-path }}/ios/**'
+            macos:
+              - *shared
+              - 'packages/*/*/macos/**'
+              - 'packages/*/*/darwin/**'
+              - '${{ inputs.app-path }}/macos/**'
+            web:
+              - *shared
+              - '${{ inputs.app-path }}/web/**'
+            windows:
+              - *shared
+              - 'packages/*/*/windows/**'
+              - '${{ inputs.app-path }}/windows/**'

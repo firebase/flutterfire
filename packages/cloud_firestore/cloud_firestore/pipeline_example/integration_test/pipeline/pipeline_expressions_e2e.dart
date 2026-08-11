@@ -686,41 +686,6 @@ void runPipelineExpressionsTests() {
       expect(snapshot.result[0].data()!['a_bool'], 1);
     });
 
-    test(
-      'addFields bitwise expressions (bitAnd/Or/Xor/Not/shifts)',
-      () async {
-        final snapshot = await firestore
-            .pipeline()
-            .collection('pipeline-e2e')
-            .where(Expression.field('test').equalValue('expressions'))
-            .where(Expression.field('score').equalValue(60))
-            .addFields(
-              Expression.field(
-                'bit_a',
-              ).bitAnd(Expression.constant(3)).as('b_and'),
-              Expression.field(
-                'bit_a',
-              ).bitOr(Expression.constant(1)).as('b_or'),
-              Expression.field(
-                'bit_a',
-              ).bitXor(Expression.constant(7)).as('b_xor'),
-              Expression.field('bit_a').bitNot().as('b_not'),
-              Expression.field('bit_a').bitLeftShiftLiteral(1).as('b_lsh'),
-              Expression.field('bit_a').bitRightShiftLiteral(1).as('b_rsh'),
-            )
-            .limit(1)
-            .execute();
-
-        expectResultCount(snapshot, 1);
-        expectResultsData(snapshot, [
-          {'b_and': 2, 'b_or': 7, 'b_xor': 1, 'b_lsh': 12, 'b_rsh': 3},
-        ]);
-        expect(snapshot.result[0].data()!['b_not'], isNotNull);
-      },
-      // Bitwise pipeline addFields not supported on Android native SDK yet.
-      skip: true,
-    );
-
     test('addFields documentId, collectionId and documentIdFromRef', () async {
       final col = firestore.collection('pipeline-e2e');
       final seedQuery = await col
@@ -930,8 +895,24 @@ void runPipelineExpressionsTests() {
           {'s1': 'Zy', 'iy': 1, 's2': 'xyxy'},
         ]);
       },
-      skip: !kIsWeb,
     );
+
+    test('addFields stringReplaceAll replaces every match on s', () async {
+      final snapshot = await firestore
+          .pipeline()
+          .collection('pipeline-e2e')
+          .where(Expression.field('test').equalValue('expressions'))
+          .where(Expression.field('score').equalValue(50))
+          .addFields(
+            Expression.field('s').stringReplaceAllLiteral('-', '_').as('s_all'),
+          )
+          .limit(1)
+          .execute();
+      expectResultCount(snapshot, 1);
+      expectResultsData(snapshot, [
+        {'s_all': 'a_b_c'},
+      ]);
+    });
 
     test('addFields ltrim rtrim on padded s', () async {
       final snapshot = await firestore
@@ -949,7 +930,7 @@ void runPipelineExpressionsTests() {
       expectResultsData(snapshot, [
         {'lt': 'AbC  ', 'rt': '  AbC'},
       ]);
-    }, skip: !kIsWeb);
+    });
 
     test('addFields mapSet and mapEntries on m', () async {
       final snapshot = await firestore

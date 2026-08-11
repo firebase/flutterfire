@@ -4,25 +4,10 @@ version '1.0-SNAPSHOT'
 apply plugin: 'com.android.library'
 apply from: file("local-config.gradle")
 
-// AGP 9+ has built-in Kotlin support unless Flutter opts out via android.builtInKotlin=false.
-def agpMajor = com.android.Version.ANDROID_GRADLE_PLUGIN_VERSION.tokenize('.')[0] as int
-def builtInKotlin = providers.gradleProperty("android.builtInKotlin")
-        .map { it.toBoolean() }
-        .orElse(agpMajor >= 9)
-        .get()
-if (agpMajor < 9 || !builtInKotlin) {
-  apply plugin: 'kotlin-android'
-}
-
 buildscript {
-  ext.kotlin_version = "2.0.0"
-
   repositories {
     google()
     mavenCentral()
-  }
-  dependencies {
-    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
   }
 }
 
@@ -31,6 +16,16 @@ rootProject.allprojects {
     google()
     mavenCentral()
   }
+}
+
+// AGP 9+ has built-in Kotlin support unless Flutter opts out via android.builtInKotlin=false.
+def agpMajor = com.android.Version.ANDROID_GRADLE_PLUGIN_VERSION.tokenize('.')[0] as int
+def builtInKotlin = providers.gradleProperty("android.builtInKotlin")
+        .map { it.toBoolean() }
+        .orElse(agpMajor >= 9)
+        .get()
+if (agpMajor < 9 || !builtInKotlin) {
+  apply plugin: 'kotlin-android'
 }
 
 def firebaseCoreProject = findProject(':firebase_core')
@@ -66,6 +61,7 @@ android {
 
   sourceSets {
     main.java.srcDirs += "src/main/kotlin"
+    test.java.srcDirs += "src/test/kotlin"
   }
 
   buildFeatures {
@@ -75,12 +71,17 @@ android {
   lintOptions {
     disable 'InvalidPackage'
   }
+
+  testOptions {
+    unitTests.returnDefaultValues = true
+  }
 }
 
 dependencies {
   implementation platform("com.google.firebase:firebase-bom:${getRootProjectExtOrCoreProperty("FirebaseSDKVersion", firebaseCoreProject)}")
   implementation 'com.google.firebase:firebase-crashlytics'
   implementation 'androidx.annotation:annotation:1.7.0'
+  testImplementation 'junit:junit:4.13.2'
 }
 
 plugins.withId("org.jetbrains.kotlin.android") {

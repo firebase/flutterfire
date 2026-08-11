@@ -1,3 +1,7 @@
+## 3.15.0
+
+ - **FEAT**(firebaseai): Rename vertexAI to agentPlatform ([#18467](https://github.com/firebase/flutterfire/issues/18467)). ([2f942f28](https://github.com/firebase/flutterfire/commit/2f942f28586a6fcc82b1de454b707633ba8e2e04))
+
 ## 3.14.1
 
  - Update a dependency to the latest release.
