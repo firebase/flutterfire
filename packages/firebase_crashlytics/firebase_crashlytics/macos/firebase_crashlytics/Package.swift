@@ -23,19 +23,30 @@ let package = Package(
     .package(name: "FlutterFramework", path: "../FlutterFramework"),
   ],
   targets: [
+    // SPM does not allow mixing Swift and ObjC in a single target.
+    .target(
+      name: "firebase_crashlytics_objc",
+      dependencies: [
+        .product(name: "FirebaseCrashlytics", package: "firebase-ios-sdk")
+      ],
+      path: "Sources/firebase_crashlytics_objc",
+      publicHeadersPath: "include",
+      cSettings: [
+        .headerSearchPath("include")
+      ]
+    ),
     .target(
       name: "firebase_crashlytics",
       dependencies: [
+        "firebase_crashlytics_objc",
         .product(name: "FirebaseCrashlytics", package: "firebase-ios-sdk"),
         .product(name: "firebase-core", package: "firebase_core"),
         .product(name: "FlutterFramework", package: "FlutterFramework"),
       ],
+      path: "Sources/firebase_crashlytics",
       resources: [
         .process("Resources")
-      ],
-      cSettings: [
-        .headerSearchPath("include")
       ]
-    )
+    ),
   ]
 )

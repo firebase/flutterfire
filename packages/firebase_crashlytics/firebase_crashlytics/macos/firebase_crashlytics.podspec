@@ -53,8 +53,8 @@ Pod::Spec.new do |s|
   s.authors          = 'The Chromium Authors'
   s.source           = { :path => '.' }
 
-  s.source_files     = 'firebase_crashlytics/Sources/firebase_crashlytics/**/*.{swift,h,m}'
-  s.public_header_files = 'firebase_crashlytics/Sources/firebase_crashlytics/include/*.h'
+  s.source_files     = 'firebase_crashlytics/Sources/**/*.{swift,h,m}'
+  s.public_header_files = 'firebase_crashlytics/Sources/**/include/*.h'
 
   s.platform = :osx, '10.13'
   s.swift_version = '5.5'

@@ -4,6 +4,10 @@
 
 import FirebaseCrashlytics
 
+#if canImport(firebase_crashlytics_objc)
+  import firebase_crashlytics_objc
+#endif
+
 #if canImport(FlutterMacOS)
   import FlutterMacOS
 #else

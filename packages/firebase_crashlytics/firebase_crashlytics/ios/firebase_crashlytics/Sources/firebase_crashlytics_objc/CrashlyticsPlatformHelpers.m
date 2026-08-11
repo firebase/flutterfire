@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-#import "include/CrashlyticsPlatformHelpers.h"
-#import "include/Crashlytics_Platform.h"
-#import "include/ExceptionModel_Platform.h"
+#import "CrashlyticsPlatformHelpers.h"
+#import "Crashlytics_Platform.h"
+#import "ExceptionModel_Platform.h"
 
 @implementation CrashlyticsPlatformHelpers
 
