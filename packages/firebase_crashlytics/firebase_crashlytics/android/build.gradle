@@ -18,6 +18,16 @@ rootProject.allprojects {
   }
 }
 
+// AGP 9+ has built-in Kotlin support unless Flutter opts out via android.builtInKotlin=false.
+def agpMajor = com.android.Version.ANDROID_GRADLE_PLUGIN_VERSION.tokenize('.')[0] as int
+def builtInKotlin = providers.gradleProperty("android.builtInKotlin")
+        .map { it.toBoolean() }
+        .orElse(agpMajor >= 9)
+        .get()
+if (agpMajor < 9 || !builtInKotlin) {
+  apply plugin: 'kotlin-android'
+}
+
 def firebaseCoreProject = findProject(':firebase_core')
 if (firebaseCoreProject == null) {
   throw new GradleException('Could not find the firebase_core FlutterFire plugin, have you added it as a dependency in your pubspec?')
@@ -49,6 +59,11 @@ android {
     targetCompatibility project.ext.javaVersion
   }
 
+  sourceSets {
+    main.java.srcDirs += "src/main/kotlin"
+    test.java.srcDirs += "src/test/kotlin"
+  }
+
   buildFeatures {
     buildConfig = true
   }
@@ -67,6 +82,14 @@ dependencies {
   implementation 'com.google.firebase:firebase-crashlytics'
   implementation 'androidx.annotation:annotation:1.7.0'
   testImplementation 'junit:junit:4.13.2'
+}
+
+plugins.withId("org.jetbrains.kotlin.android") {
+  kotlin {
+    compilerOptions {
+      jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.fromTarget(project.ext.javaVersion.toString())
+    }
+  }
 }
 
 apply from: file("./user-agent.gradle")
