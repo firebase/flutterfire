@@ -31,7 +31,10 @@ import kotlin.math.min
 internal class ElfBuildIdReader private constructor() {
   /** Parse outcome: either a build ID, or how many prefix bytes would have been needed. */
   @VisibleForTesting
-  class ParseResult(val buildId: String?, val bytesNeeded: Int) {
+  class ParseResult(
+      @JvmField val buildId: String?,
+      @JvmField val bytesNeeded: Int,
+  ) {
     companion object {
       @JvmField val NOT_FOUND = ParseResult(null, 0)
     }
