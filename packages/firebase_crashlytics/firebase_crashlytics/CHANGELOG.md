@@ -1,7 +1,3 @@
-## NEXT
-
- - **REFACTOR**(crashlytics,apple): migrate iOS/macOS plugin implementation to Swift.
-
 ## 5.2.7
 
  - **FIX**(crashlytics,android): avoid heap-loading libapp.so for build ID ([#18483](https://github.com/firebase/flutterfire/issues/18483)). ([8d0afcdd](https://github.com/firebase/flutterfire/commit/8d0afcdd9d8d7353a47a6339b09c7964d8eabf84))
