@@ -7,7 +7,6 @@
 
 import PackageDescription
 
-let libraryVersion = "5.2.7"
 let firebaseSdkVersion: Version = "12.17.0"
 
 let package = Package(
@@ -35,9 +34,7 @@ let package = Package(
         .process("Resources")
       ],
       cSettings: [
-        .headerSearchPath("include"),
-        .define("LIBRARY_VERSION", to: "\"\(libraryVersion)\""),
-        .define("LIBRARY_NAME", to: "\"flutter-fire-cls\""),
+        .headerSearchPath("include")
       ]
     )
   ]

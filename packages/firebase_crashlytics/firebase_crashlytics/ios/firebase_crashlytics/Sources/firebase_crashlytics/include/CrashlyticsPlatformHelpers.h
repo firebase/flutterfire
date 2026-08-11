@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Google LLC
+ * Copyright 2026 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-//
-//  Crashlytics_Platform.h
-//  Crashlytics
-//
 
 @import FirebaseCrashlytics;
+@import Foundation;
 
-@interface FIRCrashlytics (Platform)
+NS_ASSUME_NONNULL_BEGIN
 
-@property(nonatomic, strong, nullable) NSString* developmentPlatformName;
-@property(nonatomic, strong, nullable) NSString* developmentPlatformVersion;
+/// Thin ObjC helpers for Crashlytics private/platform APIs used by the Swift plugin.
+@interface CrashlyticsPlatformHelpers : NSObject
 
-- (void)recordOnDemandExceptionModel:(FIRExceptionModel* _Nonnull)exceptionModel;
++ (void)setDevelopmentPlatformName:(NSString *)name version:(NSString *)version;
+
+/// Configures on-demand/fatal flags and records via the appropriate Crashlytics API.
++ (void)recordExceptionModel:(FIRExceptionModel *)exception fatal:(BOOL)fatal;
 
 @end
+
+NS_ASSUME_NONNULL_END

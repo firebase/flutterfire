@@ -53,10 +53,11 @@ Pod::Spec.new do |s|
   s.authors          = 'The Chromium Authors'
   s.source           = { :path => '.' }
 
-  s.source_files     = 'firebase_crashlytics/Sources/firebase_crashlytics/**/*.{h,m}'
+  s.source_files     = 'firebase_crashlytics/Sources/firebase_crashlytics/**/*.{swift,h,m}'
   s.public_header_files = 'firebase_crashlytics/Sources/firebase_crashlytics/include/*.h'
 
   s.platform = :osx, '10.13'
+  s.swift_version = '5.5'
 
   # Flutter dependencies
   s.dependency 'FlutterMacOS'
@@ -68,7 +69,6 @@ Pod::Spec.new do |s|
 
   s.static_framework = true
   s.pod_target_xcconfig = {
-    'GCC_PREPROCESSOR_DEFINITIONS' => "LIBRARY_VERSION=\\\"#{library_version}\\\" LIBRARY_NAME=\\\"flutter-fire-cls\\\"",
     'DEFINES_MODULE' => 'YES'
   }
 end
