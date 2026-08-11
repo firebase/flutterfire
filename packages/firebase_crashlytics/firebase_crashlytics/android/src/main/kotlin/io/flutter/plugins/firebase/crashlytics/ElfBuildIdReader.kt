@@ -54,7 +54,8 @@ internal class ElfBuildIdReader private constructor() {
   companion object {
     private const val TAG = "FLTFirebaseCrashlytics"
 
-    private val ELF_MAGIC = byteArrayOf(0x7f, 'E'.code.toByte(), 'L'.code.toByte(), 'F'.code.toByte())
+    private val ELF_MAGIC =
+        byteArrayOf(0x7f, 'E'.code.toByte(), 'L'.code.toByte(), 'F'.code.toByte())
     private const val ELFCLASS32 = 1
     private const val ELFCLASS64 = 2
     private const val ELFDATA2LSB = 1
@@ -133,8 +134,9 @@ internal class ElfBuildIdReader private constructor() {
       return null
     }
 
-    private fun readBuildIdFromFile(elfFile: File): String? =
-        readBuildIdFromSource { FileInputStream(elfFile) }
+    private fun readBuildIdFromFile(elfFile: File): String? = readBuildIdFromSource {
+      FileInputStream(elfFile)
+    }
 
     /**
      * Parses successively larger prefixes until the build ID is found or the source runs out.
@@ -149,17 +151,15 @@ internal class ElfBuildIdReader private constructor() {
     fun readBuildIdFromSource(source: StreamSource): String? {
       var limit = INITIAL_PREFIX_BYTES
       while (true) {
-        val prefix =
-            source.open().use { inputStream ->
-              readPrefix(inputStream, limit)
-            }
+        val prefix = source.open().use { inputStream -> readPrefix(inputStream, limit) }
 
         val result = readBuildIdFromBytes(prefix)
         if (result.buildId != null) {
           return result.buildId
         }
 
-        // A short read means the source is exhausted, so a larger prefix cannot reveal anything new.
+        // A short read means the source is exhausted, so a larger prefix cannot reveal anything
+        // new.
         if (result.bytesNeeded <= prefix.size || prefix.size < limit) {
           return null
         }
@@ -344,8 +344,7 @@ internal class ElfBuildIdReader private constructor() {
             nameBytes[i] = buf.get(pos + NOTE_HEADER_BYTES + i)
           }
           // Name is null-terminated.
-          val name =
-              String(nameBytes, 0, maxOf(0, namesz - 1), StandardCharsets.US_ASCII)
+          val name = String(nameBytes, 0, maxOf(0, namesz - 1), StandardCharsets.US_ASCII)
 
           if (name == GNU_NOTE_NAME && descsz > 0) {
             val desc = ByteArray(descsz)
