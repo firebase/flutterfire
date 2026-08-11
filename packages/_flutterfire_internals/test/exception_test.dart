@@ -64,7 +64,26 @@ void main() {
       );
     });
 
-    test('ignores PlatformException.code when a details payload is present', () {
+    test('normalises the casing of a PlatformException.code fallback', () {
+      // Keeps a native `UNKNOWN` reporting as the documented `unknown`, the
+      // same normalisation the auth converter applies to this field.
+      final exception = platformExceptionToFirebaseException(
+        PlatformException(code: 'PERMISSION_DENIED', message: 'denied'),
+        plugin: 'firebase_database',
+      );
+
+      expect(exception.code, 'permission-denied');
+
+      expect(
+        platformExceptionToFirebaseException(
+          PlatformException(code: 'UNKNOWN'),
+          plugin: 'firebase_crashlytics',
+        ).code,
+        'unknown',
+      );
+    });
+
+    test('ignores PlatformException.code when details are present', () {
       // Pigeon's generic error path sends the exception class name as the code
       // and a stack trace as the details, so a details payload without a code
       // means there is no Firebase code to report.

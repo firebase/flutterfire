@@ -65,11 +65,16 @@ FirebaseException platformExceptionToFirebaseException(
     // overloads both send null details. Without this the code is lost and every
     // such error surfaces as `unknown`.
     //
+    // Normalised to the casing Firebase codes use, as
+    // `platformExceptionToFirebaseAuthException` already does for the same
+    // field, so that a native `UNKNOWN` or `PERMISSION_DENIED` does not leak
+    // through in a shape no caller can compare against.
+    //
     // The plugin name itself is not a code - the Android and Windows Pigeon
     // APIs send it in that field as a channel-level marker and carry the real
     // code in `details` - so it is treated as absent rather than reported as
     // `FirebaseException(code: 'firebase_database')`.
-    code = platformException.code;
+    code = platformException.code.toLowerCase().replaceAll('_', '-');
   }
 
   return FirebaseException(
