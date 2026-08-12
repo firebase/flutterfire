@@ -12,10 +12,10 @@ let firebaseSdkVersion: Version = "12.17.0"
 let package = Package(
   name: "firebase_app_installations",
   platforms: [
-    .iOS("15.0")
+    .iOS("15.0"),
   ],
   products: [
-    .library(name: "firebase-app-installations", targets: ["firebase_app_installations"])
+    .library(name: "firebase-app-installations", targets: ["firebase_app_installations"]),
   ],
   dependencies: [
     .package(url: "https://github.com/firebase/firebase-ios-sdk", exact: firebaseSdkVersion),
@@ -31,8 +31,8 @@ let package = Package(
         .product(name: "FlutterFramework", package: "FlutterFramework"),
       ],
       resources: [
-        .process("Resources")
+        .process("Resources"),
       ]
-    )
+    ),
   ]
 )

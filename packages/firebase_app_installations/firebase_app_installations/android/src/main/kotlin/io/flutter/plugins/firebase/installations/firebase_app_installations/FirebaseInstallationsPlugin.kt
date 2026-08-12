@@ -12,128 +12,95 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.EventChannel
-import io.flutter.plugin.common.MethodCall
-import io.flutter.plugin.common.MethodChannel
-import io.flutter.plugin.common.MethodChannel.MethodCallHandler
-import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin
 import io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry
 
 /** FirebaseInstallationsPlugin */
-class FirebaseInstallationsPlugin : FlutterFirebasePlugin, FlutterPlugin, MethodCallHandler {
-  private var channel: MethodChannel? = null
+class FirebaseInstallationsPlugin :
+    FlutterFirebasePlugin, FlutterPlugin, FirebaseAppInstallationsHostApi {
   private var messenger: BinaryMessenger? = null
   private val streamHandlers = mutableMapOf<EventChannel, EventChannel.StreamHandler>()
 
   override fun onAttachedToEngine(binding: FlutterPluginBinding) {
     messenger = binding.binaryMessenger
-    channel =
-        MethodChannel(binding.binaryMessenger, METHOD_CHANNEL_NAME).also {
-          it.setMethodCallHandler(this)
-        }
-
+    FirebaseAppInstallationsHostApi.setUp(binding.binaryMessenger, this)
     FlutterFirebasePluginRegistry.registerPlugin(METHOD_CHANNEL_NAME, this)
   }
 
   override fun onDetachedFromEngine(binding: FlutterPluginBinding) {
-    channel?.setMethodCallHandler(null)
-    channel = null
+    FirebaseAppInstallationsHostApi.setUp(binding.binaryMessenger, null)
     messenger = null
     removeEventListeners()
   }
 
-  private fun getInstallations(arguments: Map<String, Any>): FirebaseInstallations {
-    val appName = requireNotNull(arguments["appName"] as? String)
+  private fun getInstallations(appName: String): FirebaseInstallations {
     return FirebaseInstallations.getInstance(FirebaseApp.getInstance(appName))
   }
 
-  private fun getId(arguments: Map<String, Any>): Task<String> {
-    val taskCompletionSource = TaskCompletionSource<String>()
-
+  override fun delete(appName: String, callback: (Result<Unit>) -> Unit) {
     FlutterFirebasePlugin.cachedThreadPool.execute {
       try {
-        taskCompletionSource.setResult(Tasks.await(getInstallations(arguments).id))
+        Tasks.await(getInstallations(appName).delete())
+        callback(Result.success(Unit))
       } catch (exception: Exception) {
-        taskCompletionSource.setException(exception)
+        callback(
+            Result.failure(
+                FlutterError(
+                    "firebase_app_installations",
+                    exception.message,
+                    getExceptionDetails(exception))))
       }
     }
-
-    return taskCompletionSource.task
   }
 
-  private fun getToken(arguments: Map<String, Any>): Task<String> {
-    val taskCompletionSource = TaskCompletionSource<String>()
-
+  override fun getId(appName: String, callback: (Result<String>) -> Unit) {
     FlutterFirebasePlugin.cachedThreadPool.execute {
       try {
-        val forceRefresh = requireNotNull(arguments["forceRefresh"] as? Boolean)
-        val tokenResult = Tasks.await(getInstallations(arguments).getToken(forceRefresh))
-        taskCompletionSource.setResult(tokenResult.token)
+        callback(Result.success(Tasks.await(getInstallations(appName).id)))
       } catch (exception: Exception) {
-        taskCompletionSource.setException(exception)
+        callback(
+            Result.failure(
+                FlutterError(
+                    "firebase_app_installations",
+                    exception.message,
+                    getExceptionDetails(exception))))
       }
     }
-
-    return taskCompletionSource.task
   }
 
-  private fun registerIdChangeListener(arguments: Map<String, Any>): Task<String> {
-    val taskCompletionSource = TaskCompletionSource<String>()
-
+  override fun getToken(
+      appName: String,
+      forceRefresh: Boolean,
+      callback: (Result<String>) -> Unit
+  ) {
     FlutterFirebasePlugin.cachedThreadPool.execute {
       try {
-        val appName = requireNotNull(arguments["appName"] as? String)
-        val handler = TokenChannelStreamHandler(getInstallations(arguments))
-        val name = "$METHOD_CHANNEL_NAME/token/$appName"
-        val eventChannel = EventChannel(requireNotNull(messenger), name)
-        eventChannel.setStreamHandler(handler)
-        streamHandlers[eventChannel] = handler
-        taskCompletionSource.setResult(name)
+        val tokenResult = Tasks.await(getInstallations(appName).getToken(forceRefresh))
+        callback(Result.success(tokenResult.token))
       } catch (exception: Exception) {
-        taskCompletionSource.setException(exception)
+        callback(
+            Result.failure(
+                FlutterError(
+                    "firebase_app_installations",
+                    exception.message,
+                    getExceptionDetails(exception))))
       }
     }
-
-    return taskCompletionSource.task
   }
 
-  private fun deleteId(arguments: Map<String, Any>): Task<Void> {
-    val taskCompletionSource = TaskCompletionSource<Void>()
-
-    FlutterFirebasePlugin.cachedThreadPool.execute {
-      try {
-        Tasks.await(getInstallations(arguments).delete())
-        taskCompletionSource.setResult(null)
-      } catch (exception: Exception) {
-        taskCompletionSource.setException(exception)
-      }
-    }
-
-    return taskCompletionSource.task
-  }
-
-  override fun onMethodCall(call: MethodCall, result: Result) {
-    val arguments = requireNotNull(call.arguments<Map<String, Any>>())
-    val methodCallTask =
-        when (call.method) {
-          "FirebaseInstallations#getId" -> getId(arguments)
-          "FirebaseInstallations#getToken" -> getToken(arguments)
-          "FirebaseInstallations#delete" -> deleteId(arguments)
-          "FirebaseInstallations#registerIdChangeListener" -> registerIdChangeListener(arguments)
-          else -> {
-            result.notImplemented()
-            return
-          }
-        }
-
-    methodCallTask.addOnCompleteListener { task ->
-      if (task.isSuccessful) {
-        result.success(task.result)
-      } else {
-        val exception = task.exception
-        result.error(
-            "firebase_app_installations", exception?.message, getExceptionDetails(exception))
-      }
+  override fun registerIdChangeListener(appName: String, callback: (Result<String>) -> Unit) {
+    try {
+      val handler = TokenChannelStreamHandler(getInstallations(appName))
+      val name = "$METHOD_CHANNEL_NAME/token/$appName"
+      val eventChannel = EventChannel(requireNotNull(messenger), name)
+      eventChannel.setStreamHandler(handler)
+      streamHandlers[eventChannel] = handler
+      callback(Result.success(name))
+    } catch (exception: Exception) {
+      callback(
+          Result.failure(
+              FlutterError(
+                  "firebase_app_installations", exception.message, getExceptionDetails(exception))))
     }
   }
 
@@ -163,6 +130,7 @@ class FirebaseInstallationsPlugin : FlutterFirebasePlugin, FlutterPlugin, Method
 
     FlutterFirebasePlugin.cachedThreadPool.execute {
       try {
+        removeEventListeners()
         taskCompletionSource.setResult(null)
       } catch (exception: Exception) {
         taskCompletionSource.setException(exception)
