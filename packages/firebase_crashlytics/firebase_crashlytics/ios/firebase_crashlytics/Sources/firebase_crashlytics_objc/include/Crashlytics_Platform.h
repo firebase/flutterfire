@@ -28,5 +28,3 @@
 - (void)recordOnDemandExceptionModel:(FIRExceptionModel* _Nonnull)exceptionModel;
 
 @end
-
-void FIRCLSUserLoggingRecordInternalKeyValue(NSString* _Nullable key, id _Nullable value);
