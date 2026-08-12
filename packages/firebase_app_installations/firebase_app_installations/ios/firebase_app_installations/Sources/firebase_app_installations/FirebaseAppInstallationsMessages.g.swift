@@ -91,10 +91,12 @@ class FirebaseAppInstallationsMessagesPigeonCodec: FlutterStandardMessageCodec, 
 protocol FirebaseAppInstallationsHostApi {
   func delete(appName: String, completion: @escaping (Result<Void, Error>) -> Void)
   func getId(appName: String, completion: @escaping (Result<String, Error>) -> Void)
-  func getToken(appName: String, forceRefresh: Bool,
-                completion: @escaping (Result<String, Error>) -> Void)
-  func registerIdChangeListener(appName: String,
-                                completion: @escaping (Result<String, Error>) -> Void)
+  func getToken(
+    appName: String, forceRefresh: Bool,
+    completion: @escaping (Result<String, Error>) -> Void)
+  func registerIdChangeListener(
+    appName: String,
+    completion: @escaping (Result<String, Error>) -> Void)
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -105,12 +107,14 @@ class FirebaseAppInstallationsHostApiSetup {
 
   /// Sets up an instance of `FirebaseAppInstallationsHostApi` to handle messages through the
   /// `binaryMessenger`.
-  static func setUp(binaryMessenger: FlutterBinaryMessenger, api: FirebaseAppInstallationsHostApi?,
-                    messageChannelSuffix: String = "") {
+  static func setUp(
+    binaryMessenger: FlutterBinaryMessenger, api: FirebaseAppInstallationsHostApi?,
+    messageChannelSuffix: String = ""
+  ) {
     let channelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
     let deleteChannel = FlutterBasicMessageChannel(
       name:
-      "dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.delete\(channelSuffix)",
+        "dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.delete\(channelSuffix)",
       binaryMessenger: binaryMessenger, codec: codec
     )
     if let api {
@@ -131,7 +135,7 @@ class FirebaseAppInstallationsHostApiSetup {
     }
     let getIdChannel = FlutterBasicMessageChannel(
       name:
-      "dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.getId\(channelSuffix)",
+        "dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.getId\(channelSuffix)",
       binaryMessenger: binaryMessenger, codec: codec
     )
     if let api {
@@ -152,7 +156,7 @@ class FirebaseAppInstallationsHostApiSetup {
     }
     let getTokenChannel = FlutterBasicMessageChannel(
       name:
-      "dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.getToken\(channelSuffix)",
+        "dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.getToken\(channelSuffix)",
       binaryMessenger: binaryMessenger, codec: codec
     )
     if let api {
@@ -174,7 +178,7 @@ class FirebaseAppInstallationsHostApiSetup {
     }
     let registerIdChangeListenerChannel = FlutterBasicMessageChannel(
       name:
-      "dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.registerIdChangeListener\(channelSuffix)",
+        "dev.flutter.pigeon.firebase_app_installations_platform_interface.FirebaseAppInstallationsHostApi.registerIdChangeListener\(channelSuffix)",
       binaryMessenger: binaryMessenger, codec: codec
     )
     if let api {

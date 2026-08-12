@@ -22,7 +22,8 @@ let kFLTFirebaseInstallationsChannelName = "plugins.flutter.io/firebase_app_inst
 extension FlutterError: @retroactive Error {}
 
 public class FirebaseInstallationsPlugin: NSObject, FLTFirebasePluginProtocol, FlutterPlugin,
-  FirebaseAppInstallationsHostApi {
+  FirebaseAppInstallationsHostApi
+{
   private var messenger: FlutterBinaryMessenger
   private var streamHandler = [String: IdChangedStreamHandler?]()
 
@@ -103,8 +104,10 @@ public class FirebaseInstallationsPlugin: NSObject, FLTFirebasePluginProtocol, F
     )
   }
 
-  public func delete(appName: String,
-                     completion: @escaping (Result<Void, Error>) -> Void) {
+  public func delete(
+    appName: String,
+    completion: @escaping (Result<Void, Error>) -> Void
+  ) {
     let instance = getInstallations(appName: appName)
     instance.delete { (error: Error?) in
       if let error {
@@ -115,8 +118,10 @@ public class FirebaseInstallationsPlugin: NSObject, FLTFirebasePluginProtocol, F
     }
   }
 
-  public func getId(appName: String,
-                    completion: @escaping (Result<String, Error>) -> Void) {
+  public func getId(
+    appName: String,
+    completion: @escaping (Result<String, Error>) -> Void
+  ) {
     let instance = getInstallations(appName: appName)
     instance.installationID { (id: String?, error: Error?) in
       if let error {
@@ -137,13 +142,17 @@ public class FirebaseInstallationsPlugin: NSObject, FLTFirebasePluginProtocol, F
     }
   }
 
-  public func getToken(appName: String,
-                       forceRefresh: Bool,
-                       completion: @escaping (Result<String, Error>) -> Void) {
+  public func getToken(
+    appName: String,
+    forceRefresh: Bool,
+    completion: @escaping (Result<String, Error>) -> Void
+  ) {
     let instance = getInstallations(appName: appName)
     instance.authTokenForcingRefresh(forceRefresh) {
-      (tokenResult: InstallationsAuthTokenResult?,
-       error: Error?) in
+      (
+        tokenResult: InstallationsAuthTokenResult?,
+        error: Error?
+      ) in
       if let error {
         completion(.failure(self.createFlutterError(error)))
       } else if let token = tokenResult?.authToken {
@@ -162,8 +171,10 @@ public class FirebaseInstallationsPlugin: NSObject, FLTFirebasePluginProtocol, F
     }
   }
 
-  public func registerIdChangeListener(appName: String,
-                                       completion: @escaping (Result<String, Error>) -> Void) {
+  public func registerIdChangeListener(
+    appName: String,
+    completion: @escaping (Result<String, Error>) -> Void
+  ) {
     let instance = getInstallations(appName: appName)
     let eventChannelName = kFLTFirebaseInstallationsChannelName + "/token/" + appName
 
