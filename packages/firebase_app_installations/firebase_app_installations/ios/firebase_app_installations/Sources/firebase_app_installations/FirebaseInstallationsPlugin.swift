@@ -50,10 +50,6 @@ public class FirebaseInstallationsPlugin: NSObject, FLTFirebasePluginProtocol, F
   }
 
   public func didReinitializeFirebaseCore(_ completion: @escaping () -> Void) {
-    for (_, handler) in streamHandler {
-      _ = handler?.onCancel(withArguments: nil)
-    }
-    streamHandler.removeAll()
     completion()
   }
 

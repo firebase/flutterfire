@@ -130,7 +130,6 @@ class FirebaseInstallationsPlugin :
 
     FlutterFirebasePlugin.cachedThreadPool.execute {
       try {
-        removeEventListeners()
         taskCompletionSource.setResult(null)
       } catch (exception: Exception) {
         taskCompletionSource.setException(exception)
