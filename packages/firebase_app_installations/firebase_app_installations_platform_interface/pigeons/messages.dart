@@ -7,7 +7,6 @@ import 'package:pigeon/pigeon.dart';
 @ConfigurePigeon(
   PigeonOptions(
     dartOut: 'lib/src/pigeon/messages.pigeon.dart',
-    dartTestOut: 'test/pigeon/test_api.dart',
     dartPackageName: 'firebase_app_installations_platform_interface',
     kotlinOut:
         '../firebase_app_installations/android/src/main/kotlin/io/flutter/plugins/firebase/installations/firebase_app_installations/GeneratedAndroidFirebaseAppInstallations.g.kt',
@@ -20,7 +19,7 @@ import 'package:pigeon/pigeon.dart';
     copyrightHeader: 'pigeons/copyright.txt',
   ),
 )
-@HostApi(dartHostTestHandler: 'TestFirebaseAppInstallationsHostApi')
+@HostApi()
 abstract class FirebaseAppInstallationsHostApi {
   @async
   void delete(String appName);
