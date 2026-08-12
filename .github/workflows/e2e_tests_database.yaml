@@ -89,3 +89,13 @@ jobs:
       package-scope: 'firebase_database*'
       native-config-args: '--database-native'
       nightly_test_mode: ${{ inputs.nightly_test_mode == true }}
+
+  windows:
+    needs: changes
+    if: needs.changes.outputs.windows == 'true'
+    uses: ./.github/workflows/reusable_e2e_windows.yaml
+    with:
+      package-path: 'packages/firebase_database/firebase_database'
+      package-scope: 'firebase_database*'
+      native-config-args: '--database-native'
+      nightly_test_mode: ${{ inputs.nightly_test_mode == true }}
