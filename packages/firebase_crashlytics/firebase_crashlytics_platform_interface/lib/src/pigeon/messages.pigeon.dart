@@ -13,9 +13,9 @@ import 'package:flutter/services.dart';
 import 'package:meta/meta.dart' show immutable, protected, visibleForTesting;
 
 Object? _extractReplyValueOrThrow(
-    List<Object?>? replyList,
-    String channelName, {
-    required bool isNullValid,
+  List<Object?>? replyList,
+  String channelName, {
+  required bool isNullValid,
 }) {
   if (replyList == null) {
     throw PlatformException(
@@ -37,8 +37,8 @@ Object? _extractReplyValueOrThrow(
   return replyList.firstOrNull;
 }
 
-
-List<Object?> wrapResponse({Object? result, PlatformException? error, bool empty = false}) {
+List<Object?> wrapResponse(
+    {Object? result, PlatformException? error, bool empty = false}) {
   if (empty) {
     return <Object?>[];
   }
@@ -47,6 +47,7 @@ List<Object?> wrapResponse({Object? result, PlatformException? error, bool empty
   }
   return <Object?>[error.code, error.message, error.details];
 }
+
 bool _deepEquals(Object? a, Object? b) {
   if (identical(a, b)) {
     return true;
@@ -109,7 +110,6 @@ int _deepHash(Object? value) {
   return value.hashCode;
 }
 
-
 class CrashlyticsStackFrame {
   CrashlyticsStackFrame({
     this.className,
@@ -137,7 +137,8 @@ class CrashlyticsStackFrame {
   }
 
   Object encode() {
-    return _toList();  }
+    return _toList();
+  }
 
   static CrashlyticsStackFrame decode(Object result) {
     result as List<Object?>;
@@ -158,7 +159,10 @@ class CrashlyticsStackFrame {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(className, other.className) && _deepEquals(method, other.method) && _deepEquals(file, other.file) && _deepEquals(line, other.line);
+    return _deepEquals(className, other.className) &&
+        _deepEquals(method, other.method) &&
+        _deepEquals(file, other.file) &&
+        _deepEquals(line, other.line);
   }
 
   @override
@@ -204,7 +208,8 @@ class RecordErrorRequest {
   }
 
   Object encode() {
-    return _toList();  }
+    return _toList();
+  }
 
   static RecordErrorRequest decode(Object result) {
     result as List<Object?>;
@@ -215,7 +220,8 @@ class RecordErrorRequest {
       fatal: result[3]! as bool,
       buildId: result[4]! as String,
       loadingUnits: (result[5]! as List<Object?>).cast<String>(),
-      stackTraceElements: (result[6]! as List<Object?>).cast<CrashlyticsStackFrame>(),
+      stackTraceElements:
+          (result[6]! as List<Object?>).cast<CrashlyticsStackFrame>(),
     );
   }
 
@@ -228,14 +234,19 @@ class RecordErrorRequest {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(exception, other.exception) && _deepEquals(information, other.information) && _deepEquals(reason, other.reason) && _deepEquals(fatal, other.fatal) && _deepEquals(buildId, other.buildId) && _deepEquals(loadingUnits, other.loadingUnits) && _deepEquals(stackTraceElements, other.stackTraceElements);
+    return _deepEquals(exception, other.exception) &&
+        _deepEquals(information, other.information) &&
+        _deepEquals(reason, other.reason) &&
+        _deepEquals(fatal, other.fatal) &&
+        _deepEquals(buildId, other.buildId) &&
+        _deepEquals(loadingUnits, other.loadingUnits) &&
+        _deepEquals(stackTraceElements, other.stackTraceElements);
   }
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
 }
-
 
 class _PigeonCodec extends StandardMessageCodec {
   const _PigeonCodec();
@@ -244,10 +255,10 @@ class _PigeonCodec extends StandardMessageCodec {
     if (value is int) {
       buffer.putUint8(4);
       buffer.putInt64(value);
-    }    else if (value is CrashlyticsStackFrame) {
+    } else if (value is CrashlyticsStackFrame) {
       buffer.putUint8(129);
       writeValue(buffer, value.encode());
-    }    else if (value is RecordErrorRequest) {
+    } else if (value is RecordErrorRequest) {
       buffer.putUint8(130);
       writeValue(buffer, value.encode());
     } else {
@@ -272,9 +283,11 @@ class FirebaseCrashlyticsHostApi {
   /// Constructor for [FirebaseCrashlyticsHostApi].  The [binaryMessenger] named argument is
   /// available for dependency injection.  If it is left null, the default
   /// BinaryMessenger will be used which routes to the host platform.
-  FirebaseCrashlyticsHostApi({BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
+  FirebaseCrashlyticsHostApi(
+      {BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
       : pigeonVar_binaryMessenger = binaryMessenger,
-        pigeonVar_messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+        pigeonVar_messageChannelSuffix =
+            messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
   final BinaryMessenger? pigeonVar_binaryMessenger;
 
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
@@ -282,7 +295,8 @@ class FirebaseCrashlyticsHostApi {
   final String pigeonVar_messageChannelSuffix;
 
   Future<bool> checkForUnsentReports() async {
-    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.checkForUnsentReports$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.checkForUnsentReports$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -292,16 +306,16 @@ class FirebaseCrashlyticsHostApi {
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-        pigeonVar_replyList,
-        pigeonVar_channelName,
-        isNullValid: false,
-    )
-    ;
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: false,
+    );
     return pigeonVar_replyValue! as bool;
   }
 
   Future<void> crash() async {
-    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.crash$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.crash$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -311,15 +325,15 @@ class FirebaseCrashlyticsHostApi {
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
-        pigeonVar_replyList,
-        pigeonVar_channelName,
-        isNullValid: true,
-    )
-    ;
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: true,
+    );
   }
 
   Future<void> deleteUnsentReports() async {
-    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.deleteUnsentReports$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.deleteUnsentReports$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -329,15 +343,15 @@ class FirebaseCrashlyticsHostApi {
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
-        pigeonVar_replyList,
-        pigeonVar_channelName,
-        isNullValid: true,
-    )
-    ;
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: true,
+    );
   }
 
   Future<bool> didCrashOnPreviousExecution() async {
-    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.didCrashOnPreviousExecution$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.didCrashOnPreviousExecution$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -347,52 +361,54 @@ class FirebaseCrashlyticsHostApi {
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-        pigeonVar_replyList,
-        pigeonVar_channelName,
-        isNullValid: false,
-    )
-    ;
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: false,
+    );
     return pigeonVar_replyValue! as bool;
   }
 
   Future<void> recordError(RecordErrorRequest request) async {
-    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.recordError$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.recordError$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[request]);
+    final Future<Object?> pigeonVar_sendFuture =
+        pigeonVar_channel.send(<Object?>[request]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
-        pigeonVar_replyList,
-        pigeonVar_channelName,
-        isNullValid: true,
-    )
-    ;
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: true,
+    );
   }
 
   Future<void> log(String message) async {
-    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.log$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.log$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[message]);
+    final Future<Object?> pigeonVar_sendFuture =
+        pigeonVar_channel.send(<Object?>[message]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
-        pigeonVar_replyList,
-        pigeonVar_channelName,
-        isNullValid: true,
-    )
-    ;
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: true,
+    );
   }
 
   Future<void> sendUnsentReports() async {
-    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.sendUnsentReports$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.sendUnsentReports$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -402,65 +418,67 @@ class FirebaseCrashlyticsHostApi {
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
-        pigeonVar_replyList,
-        pigeonVar_channelName,
-        isNullValid: true,
-    )
-    ;
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: true,
+    );
   }
 
   Future<bool> setCrashlyticsCollectionEnabled(bool enabled) async {
-    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.setCrashlyticsCollectionEnabled$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.setCrashlyticsCollectionEnabled$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[enabled]);
+    final Future<Object?> pigeonVar_sendFuture =
+        pigeonVar_channel.send(<Object?>[enabled]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-        pigeonVar_replyList,
-        pigeonVar_channelName,
-        isNullValid: false,
-    )
-    ;
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: false,
+    );
     return pigeonVar_replyValue! as bool;
   }
 
   Future<void> setUserIdentifier(String identifier) async {
-    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.setUserIdentifier$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.setUserIdentifier$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[identifier]);
+    final Future<Object?> pigeonVar_sendFuture =
+        pigeonVar_channel.send(<Object?>[identifier]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
-        pigeonVar_replyList,
-        pigeonVar_channelName,
-        isNullValid: true,
-    )
-    ;
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: true,
+    );
   }
 
   Future<void> setCustomKey(String key, String value) async {
-    final pigeonVar_channelName = 'dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.setCustomKey$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.setCustomKey$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[key, value]);
+    final Future<Object?> pigeonVar_sendFuture =
+        pigeonVar_channel.send(<Object?>[key, value]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
-        pigeonVar_replyList,
-        pigeonVar_channelName,
-        isNullValid: true,
-    )
-    ;
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: true,
+    );
   }
 }

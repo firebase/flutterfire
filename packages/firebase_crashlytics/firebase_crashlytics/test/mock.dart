@@ -8,8 +8,7 @@ import 'package:firebase_core_platform_interface/test.dart';
 import 'package:firebase_crashlytics_platform_interface/test.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-final FakeFirebaseCrashlyticsHostApi hostApi =
-    FakeFirebaseCrashlyticsHostApi();
+final FakeFirebaseCrashlyticsHostApi hostApi = FakeFirebaseCrashlyticsHostApi();
 
 class MockFirebaseAppWithCollectionEnabled implements TestFirebaseCoreHostApi {
   @override
@@ -71,8 +70,7 @@ void setupFirebaseCrashlyticsMocks() {
   TestFirebaseCrashlyticsHostApi.setUp(hostApi);
 }
 
-class FakeFirebaseCrashlyticsHostApi
-    implements TestFirebaseCrashlyticsHostApi {
+class FakeFirebaseCrashlyticsHostApi implements TestFirebaseCrashlyticsHostApi {
   final List<String> calls = <String>[];
   RecordErrorRequest? lastRecordError;
   String? lastLogMessage;

@@ -27,13 +27,12 @@ final class PigeonError: Error {
   }
 
   var localizedDescription: String {
-    return
-      "PigeonError(code: \(code), message: \(message ?? "<nil>"), details: \(details ?? "<nil>")"
+    "PigeonError(code: \(code), message: \(message ?? "<nil>"), details: \(details ?? "<nil>")"
   }
 }
 
 private func wrapResult(_ result: Any?) -> [Any?] {
-  return [result]
+  [result]
 }
 
 private func wrapError(_ error: Any) -> [Any?] {
@@ -59,7 +58,7 @@ private func wrapError(_ error: Any) -> [Any?] {
 }
 
 private func isNullish(_ value: Any?) -> Bool {
-  return value is NSNull || value == nil
+  value is NSNull || value == nil
 }
 
 private func nilOrValue<T>(_ value: Any?) -> T? {
@@ -68,12 +67,12 @@ private func nilOrValue<T>(_ value: Any?) -> T? {
 }
 
 private func doubleEqualsFirebaseCrashlyticsMessages(_ lhs: Double, _ rhs: Double) -> Bool {
-  return (lhs.isNaN && rhs.isNaN) || lhs == rhs
+  (lhs.isNaN && rhs.isNaN) || lhs == rhs
 }
 
 private func doubleHashFirebaseCrashlyticsMessages(_ value: Double, _ hasher: inout Hasher) {
   if value.isNaN {
-    hasher.combine(0x7FF8000000000000)
+    hasher.combine(0x7FF8_0000_0000_0000)
   } else {
     // Normalize -0.0 to 0.0
     hasher.combine(value == 0 ? 0 : value)
@@ -145,7 +144,7 @@ func deepEqualsFirebaseCrashlyticsMessages(_ lhs: Any?, _ rhs: Any?) -> Bool {
 
 func deepHashFirebaseCrashlyticsMessages(value: Any?, hasher: inout Hasher) {
   let cleanValue = nilOrValue(value) as Any?
-  if let cleanValue = cleanValue {
+  if let cleanValue {
     if let doubleValue = cleanValue as? Double {
       doubleHashFirebaseCrashlyticsMessages(doubleValue, &hasher)
     } else if let valueList = cleanValue as? [Any?] {
@@ -176,15 +175,13 @@ func deepHashFirebaseCrashlyticsMessages(value: Any?, hasher: inout Hasher) {
   }
 }
 
-
 /// Generated class from Pigeon that represents data sent in messages.
 struct CrashlyticsStackFrame: Hashable {
   /// Dart reserved word `class`; native maps this to the historical "class" key.
-  var className: String? = nil
+  var className: String?
   var method: String
   var file: String
   var line: String
-
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
   static func fromList(_ pigeonVar_list: [Any?]) -> CrashlyticsStackFrame? {
@@ -200,19 +197,29 @@ struct CrashlyticsStackFrame: Hashable {
       line: line
     )
   }
+
   func toList() -> [Any?] {
-    return [
+    [
       className,
       method,
       file,
       line,
     ]
   }
+
   static func == (lhs: CrashlyticsStackFrame, rhs: CrashlyticsStackFrame) -> Bool {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return deepEqualsFirebaseCrashlyticsMessages(lhs.className, rhs.className) && deepEqualsFirebaseCrashlyticsMessages(lhs.method, rhs.method) && deepEqualsFirebaseCrashlyticsMessages(lhs.file, rhs.file) && deepEqualsFirebaseCrashlyticsMessages(lhs.line, rhs.line)
+    return deepEqualsFirebaseCrashlyticsMessages(lhs.className, rhs.className) &&
+      deepEqualsFirebaseCrashlyticsMessages(
+        lhs.method,
+        rhs.method
+      ) && deepEqualsFirebaseCrashlyticsMessages(lhs.file, rhs.file) &&
+      deepEqualsFirebaseCrashlyticsMessages(
+        lhs.line,
+        rhs.line
+      )
   }
 
   func hash(into hasher: inout Hasher) {
@@ -228,12 +235,11 @@ struct CrashlyticsStackFrame: Hashable {
 struct RecordErrorRequest: Hashable {
   var exception: String
   var information: String
-  var reason: String? = nil
+  var reason: String?
   var fatal: Bool
   var buildId: String
   var loadingUnits: [String]
   var stackTraceElements: [CrashlyticsStackFrame]
-
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
   static func fromList(_ pigeonVar_list: [Any?]) -> RecordErrorRequest? {
@@ -255,8 +261,9 @@ struct RecordErrorRequest: Hashable {
       stackTraceElements: stackTraceElements
     )
   }
+
   func toList() -> [Any?] {
-    return [
+    [
       exception,
       information,
       reason,
@@ -266,11 +273,24 @@ struct RecordErrorRequest: Hashable {
       stackTraceElements,
     ]
   }
+
   static func == (lhs: RecordErrorRequest, rhs: RecordErrorRequest) -> Bool {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return deepEqualsFirebaseCrashlyticsMessages(lhs.exception, rhs.exception) && deepEqualsFirebaseCrashlyticsMessages(lhs.information, rhs.information) && deepEqualsFirebaseCrashlyticsMessages(lhs.reason, rhs.reason) && deepEqualsFirebaseCrashlyticsMessages(lhs.fatal, rhs.fatal) && deepEqualsFirebaseCrashlyticsMessages(lhs.buildId, rhs.buildId) && deepEqualsFirebaseCrashlyticsMessages(lhs.loadingUnits, rhs.loadingUnits) && deepEqualsFirebaseCrashlyticsMessages(lhs.stackTraceElements, rhs.stackTraceElements)
+    return deepEqualsFirebaseCrashlyticsMessages(lhs.exception, rhs.exception) &&
+      deepEqualsFirebaseCrashlyticsMessages(
+        lhs.information,
+        rhs.information
+      ) && deepEqualsFirebaseCrashlyticsMessages(lhs.reason, rhs.reason) &&
+      deepEqualsFirebaseCrashlyticsMessages(
+        lhs.fatal,
+        rhs.fatal
+      ) && deepEqualsFirebaseCrashlyticsMessages(lhs.buildId, rhs.buildId) &&
+      deepEqualsFirebaseCrashlyticsMessages(
+        lhs.loadingUnits,
+        rhs.loadingUnits
+      ) && deepEqualsFirebaseCrashlyticsMessages(lhs.stackTraceElements, rhs.stackTraceElements)
   }
 
   func hash(into hasher: inout Hasher) {
@@ -289,9 +309,9 @@ private class FirebaseCrashlyticsMessagesPigeonCodecReader: FlutterStandardReade
   override func readValue(ofType type: UInt8) -> Any? {
     switch type {
     case 129:
-      return CrashlyticsStackFrame.fromList(self.readValue() as! [Any?])
+      return CrashlyticsStackFrame.fromList(readValue() as! [Any?])
     case 130:
-      return RecordErrorRequest.fromList(self.readValue() as! [Any?])
+      return RecordErrorRequest.fromList(readValue() as! [Any?])
     default:
       return super.readValue(ofType: type)
     }
@@ -314,18 +334,20 @@ private class FirebaseCrashlyticsMessagesPigeonCodecWriter: FlutterStandardWrite
 
 private class FirebaseCrashlyticsMessagesPigeonCodecReaderWriter: FlutterStandardReaderWriter {
   override func reader(with data: Data) -> FlutterStandardReader {
-    return FirebaseCrashlyticsMessagesPigeonCodecReader(data: data)
+    FirebaseCrashlyticsMessagesPigeonCodecReader(data: data)
   }
 
   override func writer(with data: NSMutableData) -> FlutterStandardWriter {
-    return FirebaseCrashlyticsMessagesPigeonCodecWriter(data: data)
+    FirebaseCrashlyticsMessagesPigeonCodecWriter(data: data)
   }
 }
 
 class FirebaseCrashlyticsMessagesPigeonCodec: FlutterStandardMessageCodec, @unchecked Sendable {
-  static let shared = FirebaseCrashlyticsMessagesPigeonCodec(readerWriter: FirebaseCrashlyticsMessagesPigeonCodecReaderWriter())
+  static let shared =
+    FirebaseCrashlyticsMessagesPigeonCodec(
+      readerWriter: FirebaseCrashlyticsMessagesPigeonCodecReaderWriter()
+    )
 }
-
 
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol FirebaseCrashlyticsHostApi {
@@ -336,19 +358,29 @@ protocol FirebaseCrashlyticsHostApi {
   func recordError(request: RecordErrorRequest, completion: @escaping (Result<Void, Error>) -> Void)
   func log(message: String, completion: @escaping (Result<Void, Error>) -> Void)
   func sendUnsentReports(completion: @escaping (Result<Void, Error>) -> Void)
-  func setCrashlyticsCollectionEnabled(enabled: Bool, completion: @escaping (Result<Bool, Error>) -> Void)
+  func setCrashlyticsCollectionEnabled(enabled: Bool,
+                                       completion: @escaping (Result<Bool, Error>) -> Void)
   func setUserIdentifier(identifier: String, completion: @escaping (Result<Void, Error>) -> Void)
   func setCustomKey(key: String, value: String, completion: @escaping (Result<Void, Error>) -> Void)
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
 class FirebaseCrashlyticsHostApiSetup {
-  static var codec: FlutterStandardMessageCodec { FirebaseCrashlyticsMessagesPigeonCodec.shared }
-  /// Sets up an instance of `FirebaseCrashlyticsHostApi` to handle messages through the `binaryMessenger`.
-  static func setUp(binaryMessenger: FlutterBinaryMessenger, api: FirebaseCrashlyticsHostApi?, messageChannelSuffix: String = "") {
+  static var codec: FlutterStandardMessageCodec {
+    FirebaseCrashlyticsMessagesPigeonCodec.shared
+  }
+
+  /// Sets up an instance of `FirebaseCrashlyticsHostApi` to handle messages through the
+  /// `binaryMessenger`.
+  static func setUp(binaryMessenger: FlutterBinaryMessenger, api: FirebaseCrashlyticsHostApi?,
+                    messageChannelSuffix: String = "") {
     let channelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
-    let checkForUnsentReportsChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.checkForUnsentReports\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
+    let checkForUnsentReportsChannel = FlutterBasicMessageChannel(
+      name: "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.checkForUnsentReports\(channelSuffix)",
+      binaryMessenger: binaryMessenger,
+      codec: codec
+    )
+    if let api {
       checkForUnsentReportsChannel.setMessageHandler { _, reply in
         api.checkForUnsentReports { result in
           switch result {
@@ -362,8 +394,12 @@ class FirebaseCrashlyticsHostApiSetup {
     } else {
       checkForUnsentReportsChannel.setMessageHandler(nil)
     }
-    let crashChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.crash\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
+    let crashChannel = FlutterBasicMessageChannel(
+      name: "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.crash\(channelSuffix)",
+      binaryMessenger: binaryMessenger,
+      codec: codec
+    )
+    if let api {
       crashChannel.setMessageHandler { _, reply in
         api.crash { result in
           switch result {
@@ -377,8 +413,12 @@ class FirebaseCrashlyticsHostApiSetup {
     } else {
       crashChannel.setMessageHandler(nil)
     }
-    let deleteUnsentReportsChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.deleteUnsentReports\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
+    let deleteUnsentReportsChannel = FlutterBasicMessageChannel(
+      name: "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.deleteUnsentReports\(channelSuffix)",
+      binaryMessenger: binaryMessenger,
+      codec: codec
+    )
+    if let api {
       deleteUnsentReportsChannel.setMessageHandler { _, reply in
         api.deleteUnsentReports { result in
           switch result {
@@ -392,8 +432,12 @@ class FirebaseCrashlyticsHostApiSetup {
     } else {
       deleteUnsentReportsChannel.setMessageHandler(nil)
     }
-    let didCrashOnPreviousExecutionChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.didCrashOnPreviousExecution\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
+    let didCrashOnPreviousExecutionChannel = FlutterBasicMessageChannel(
+      name: "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.didCrashOnPreviousExecution\(channelSuffix)",
+      binaryMessenger: binaryMessenger,
+      codec: codec
+    )
+    if let api {
       didCrashOnPreviousExecutionChannel.setMessageHandler { _, reply in
         api.didCrashOnPreviousExecution { result in
           switch result {
@@ -407,8 +451,12 @@ class FirebaseCrashlyticsHostApiSetup {
     } else {
       didCrashOnPreviousExecutionChannel.setMessageHandler(nil)
     }
-    let recordErrorChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.recordError\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
+    let recordErrorChannel = FlutterBasicMessageChannel(
+      name: "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.recordError\(channelSuffix)",
+      binaryMessenger: binaryMessenger,
+      codec: codec
+    )
+    if let api {
       recordErrorChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let requestArg = args[0] as! RecordErrorRequest
@@ -424,8 +472,12 @@ class FirebaseCrashlyticsHostApiSetup {
     } else {
       recordErrorChannel.setMessageHandler(nil)
     }
-    let logChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.log\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
+    let logChannel = FlutterBasicMessageChannel(
+      name: "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.log\(channelSuffix)",
+      binaryMessenger: binaryMessenger,
+      codec: codec
+    )
+    if let api {
       logChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let messageArg = args[0] as! String
@@ -441,8 +493,12 @@ class FirebaseCrashlyticsHostApiSetup {
     } else {
       logChannel.setMessageHandler(nil)
     }
-    let sendUnsentReportsChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.sendUnsentReports\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
+    let sendUnsentReportsChannel = FlutterBasicMessageChannel(
+      name: "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.sendUnsentReports\(channelSuffix)",
+      binaryMessenger: binaryMessenger,
+      codec: codec
+    )
+    if let api {
       sendUnsentReportsChannel.setMessageHandler { _, reply in
         api.sendUnsentReports { result in
           switch result {
@@ -456,8 +512,12 @@ class FirebaseCrashlyticsHostApiSetup {
     } else {
       sendUnsentReportsChannel.setMessageHandler(nil)
     }
-    let setCrashlyticsCollectionEnabledChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.setCrashlyticsCollectionEnabled\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
+    let setCrashlyticsCollectionEnabledChannel = FlutterBasicMessageChannel(
+      name: "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.setCrashlyticsCollectionEnabled\(channelSuffix)",
+      binaryMessenger: binaryMessenger,
+      codec: codec
+    )
+    if let api {
       setCrashlyticsCollectionEnabledChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let enabledArg = args[0] as! Bool
@@ -473,8 +533,12 @@ class FirebaseCrashlyticsHostApiSetup {
     } else {
       setCrashlyticsCollectionEnabledChannel.setMessageHandler(nil)
     }
-    let setUserIdentifierChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.setUserIdentifier\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
+    let setUserIdentifierChannel = FlutterBasicMessageChannel(
+      name: "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.setUserIdentifier\(channelSuffix)",
+      binaryMessenger: binaryMessenger,
+      codec: codec
+    )
+    if let api {
       setUserIdentifierChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let identifierArg = args[0] as! String
@@ -490,8 +554,12 @@ class FirebaseCrashlyticsHostApiSetup {
     } else {
       setUserIdentifierChannel.setMessageHandler(nil)
     }
-    let setCustomKeyChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.setCustomKey\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
+    let setCustomKeyChannel = FlutterBasicMessageChannel(
+      name: "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.setCustomKey\(channelSuffix)",
+      binaryMessenger: binaryMessenger,
+      codec: codec
+    )
+    if let api {
       setCustomKeyChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let keyArg = args[0] as! String

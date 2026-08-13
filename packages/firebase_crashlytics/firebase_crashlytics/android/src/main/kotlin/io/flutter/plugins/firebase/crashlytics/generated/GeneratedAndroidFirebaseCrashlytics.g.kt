@@ -10,12 +10,11 @@ package io.flutter.plugins.firebase.crashlytics.generated
 import android.util.Log
 import io.flutter.plugin.common.BasicMessageChannel
 import io.flutter.plugin.common.BinaryMessenger
-import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MessageCodec
-import io.flutter.plugin.common.StandardMethodCodec
 import io.flutter.plugin.common.StandardMessageCodec
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
+
 private object GeneratedAndroidFirebaseCrashlyticsPigeonUtils {
 
   fun wrapResult(result: Any?): List<Any?> {
@@ -24,19 +23,15 @@ private object GeneratedAndroidFirebaseCrashlyticsPigeonUtils {
 
   fun wrapError(exception: Throwable): List<Any?> {
     return if (exception is FlutterError) {
-      listOf(
-        exception.code,
-        exception.message,
-        exception.details
-      )
+      listOf(exception.code, exception.message, exception.details)
     } else {
       listOf(
-        exception.javaClass.simpleName,
-        exception.toString(),
-        "Cause: " + exception.cause + ", Stacktrace: " + Log.getStackTraceString(exception)
-      )
+          exception.javaClass.simpleName,
+          exception.toString(),
+          "Cause: " + exception.cause + ", Stacktrace: " + Log.getStackTraceString(exception))
     }
   }
+
   fun doubleEquals(a: Double, b: Double): Boolean {
     // Normalize -0.0 to 0.0 and handle NaN equality.
     return (if (a == 0.0) 0.0 else a) == (if (b == 0.0) 0.0 else b) || (a.isNaN() && b.isNaN())
@@ -180,30 +175,29 @@ private object GeneratedAndroidFirebaseCrashlyticsPigeonUtils {
       else -> value.hashCode()
     }
   }
-
 }
 
 /**
  * Error class for passing custom error details to Flutter via a thrown PlatformException.
+ *
  * @property code The error code.
  * @property message The error message.
  * @property details The error details. Must be a datatype supported by the api codec.
  */
-class FlutterError (
-  val code: String,
-  override val message: String? = null,
-  val details: Any? = null
+class FlutterError(
+    val code: String,
+    override val message: String? = null,
+    val details: Any? = null
 ) : RuntimeException()
 
 /** Generated class from Pigeon that represents data sent in messages. */
-data class CrashlyticsStackFrame (
-  /** Dart reserved word `class`; native maps this to the historical "class" key. */
-  val className: String? = null,
-  val method: String,
-  val file: String,
-  val line: String
-)
- {
+data class CrashlyticsStackFrame(
+    /** Dart reserved word `class`; native maps this to the historical "class" key. */
+    val className: String? = null,
+    val method: String,
+    val file: String,
+    val line: String
+) {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): CrashlyticsStackFrame {
       val className = pigeonVar_list[0] as String?
@@ -213,14 +207,16 @@ data class CrashlyticsStackFrame (
       return CrashlyticsStackFrame(className, method, file, line)
     }
   }
+
   fun toList(): List<Any?> {
     return listOf(
-      className,
-      method,
-      file,
-      line,
+        className,
+        method,
+        file,
+        line,
     )
   }
+
   override fun equals(other: Any?): Boolean {
     if (other == null || other.javaClass != javaClass) {
       return false
@@ -229,7 +225,11 @@ data class CrashlyticsStackFrame (
       return true
     }
     val other = other as CrashlyticsStackFrame
-    return GeneratedAndroidFirebaseCrashlyticsPigeonUtils.deepEquals(this.className, other.className) && GeneratedAndroidFirebaseCrashlyticsPigeonUtils.deepEquals(this.method, other.method) && GeneratedAndroidFirebaseCrashlyticsPigeonUtils.deepEquals(this.file, other.file) && GeneratedAndroidFirebaseCrashlyticsPigeonUtils.deepEquals(this.line, other.line)
+    return GeneratedAndroidFirebaseCrashlyticsPigeonUtils.deepEquals(
+        this.className, other.className) &&
+        GeneratedAndroidFirebaseCrashlyticsPigeonUtils.deepEquals(this.method, other.method) &&
+        GeneratedAndroidFirebaseCrashlyticsPigeonUtils.deepEquals(this.file, other.file) &&
+        GeneratedAndroidFirebaseCrashlyticsPigeonUtils.deepEquals(this.line, other.line)
   }
 
   override fun hashCode(): Int {
@@ -243,16 +243,15 @@ data class CrashlyticsStackFrame (
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
-data class RecordErrorRequest (
-  val exception: String,
-  val information: String,
-  val reason: String? = null,
-  val fatal: Boolean,
-  val buildId: String,
-  val loadingUnits: List<String>,
-  val stackTraceElements: List<CrashlyticsStackFrame>
-)
- {
+data class RecordErrorRequest(
+    val exception: String,
+    val information: String,
+    val reason: String? = null,
+    val fatal: Boolean,
+    val buildId: String,
+    val loadingUnits: List<String>,
+    val stackTraceElements: List<CrashlyticsStackFrame>
+) {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): RecordErrorRequest {
       val exception = pigeonVar_list[0] as String
@@ -262,20 +261,23 @@ data class RecordErrorRequest (
       val buildId = pigeonVar_list[4] as String
       val loadingUnits = pigeonVar_list[5] as List<String>
       val stackTraceElements = pigeonVar_list[6] as List<CrashlyticsStackFrame>
-      return RecordErrorRequest(exception, information, reason, fatal, buildId, loadingUnits, stackTraceElements)
+      return RecordErrorRequest(
+          exception, information, reason, fatal, buildId, loadingUnits, stackTraceElements)
     }
   }
+
   fun toList(): List<Any?> {
     return listOf(
-      exception,
-      information,
-      reason,
-      fatal,
-      buildId,
-      loadingUnits,
-      stackTraceElements,
+        exception,
+        information,
+        reason,
+        fatal,
+        buildId,
+        loadingUnits,
+        stackTraceElements,
     )
   }
+
   override fun equals(other: Any?): Boolean {
     if (other == null || other.javaClass != javaClass) {
       return false
@@ -284,7 +286,17 @@ data class RecordErrorRequest (
       return true
     }
     val other = other as RecordErrorRequest
-    return GeneratedAndroidFirebaseCrashlyticsPigeonUtils.deepEquals(this.exception, other.exception) && GeneratedAndroidFirebaseCrashlyticsPigeonUtils.deepEquals(this.information, other.information) && GeneratedAndroidFirebaseCrashlyticsPigeonUtils.deepEquals(this.reason, other.reason) && GeneratedAndroidFirebaseCrashlyticsPigeonUtils.deepEquals(this.fatal, other.fatal) && GeneratedAndroidFirebaseCrashlyticsPigeonUtils.deepEquals(this.buildId, other.buildId) && GeneratedAndroidFirebaseCrashlyticsPigeonUtils.deepEquals(this.loadingUnits, other.loadingUnits) && GeneratedAndroidFirebaseCrashlyticsPigeonUtils.deepEquals(this.stackTraceElements, other.stackTraceElements)
+    return GeneratedAndroidFirebaseCrashlyticsPigeonUtils.deepEquals(
+        this.exception, other.exception) &&
+        GeneratedAndroidFirebaseCrashlyticsPigeonUtils.deepEquals(
+            this.information, other.information) &&
+        GeneratedAndroidFirebaseCrashlyticsPigeonUtils.deepEquals(this.reason, other.reason) &&
+        GeneratedAndroidFirebaseCrashlyticsPigeonUtils.deepEquals(this.fatal, other.fatal) &&
+        GeneratedAndroidFirebaseCrashlyticsPigeonUtils.deepEquals(this.buildId, other.buildId) &&
+        GeneratedAndroidFirebaseCrashlyticsPigeonUtils.deepEquals(
+            this.loadingUnits, other.loadingUnits) &&
+        GeneratedAndroidFirebaseCrashlyticsPigeonUtils.deepEquals(
+            this.stackTraceElements, other.stackTraceElements)
   }
 
   override fun hashCode(): Int {
@@ -294,28 +306,29 @@ data class RecordErrorRequest (
     result = 31 * result + GeneratedAndroidFirebaseCrashlyticsPigeonUtils.deepHash(this.reason)
     result = 31 * result + GeneratedAndroidFirebaseCrashlyticsPigeonUtils.deepHash(this.fatal)
     result = 31 * result + GeneratedAndroidFirebaseCrashlyticsPigeonUtils.deepHash(this.buildId)
-    result = 31 * result + GeneratedAndroidFirebaseCrashlyticsPigeonUtils.deepHash(this.loadingUnits)
-    result = 31 * result + GeneratedAndroidFirebaseCrashlyticsPigeonUtils.deepHash(this.stackTraceElements)
+    result =
+        31 * result + GeneratedAndroidFirebaseCrashlyticsPigeonUtils.deepHash(this.loadingUnits)
+    result =
+        31 * result +
+            GeneratedAndroidFirebaseCrashlyticsPigeonUtils.deepHash(this.stackTraceElements)
     return result
   }
 }
+
 private open class GeneratedAndroidFirebaseCrashlyticsPigeonCodec : StandardMessageCodec() {
   override fun readValueOfType(type: Byte, buffer: ByteBuffer): Any? {
     return when (type) {
       129.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          CrashlyticsStackFrame.fromList(it)
-        }
+        return (readValue(buffer) as? List<Any?>)?.let { CrashlyticsStackFrame.fromList(it) }
       }
       130.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          RecordErrorRequest.fromList(it)
-        }
+        return (readValue(buffer) as? List<Any?>)?.let { RecordErrorRequest.fromList(it) }
       }
       else -> super.readValueOfType(type, buffer)
     }
   }
-  override fun writeValue(stream: ByteArrayOutputStream, value: Any?)   {
+
+  override fun writeValue(stream: ByteArrayOutputStream, value: Any?) {
     when (value) {
       is CrashlyticsStackFrame -> {
         stream.write(129)
@@ -330,34 +343,52 @@ private open class GeneratedAndroidFirebaseCrashlyticsPigeonCodec : StandardMess
   }
 }
 
-
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface FirebaseCrashlyticsHostApi {
   fun checkForUnsentReports(callback: (Result<Boolean>) -> Unit)
+
   fun crash(callback: (Result<Unit>) -> Unit)
+
   fun deleteUnsentReports(callback: (Result<Unit>) -> Unit)
+
   fun didCrashOnPreviousExecution(callback: (Result<Boolean>) -> Unit)
+
   fun recordError(request: RecordErrorRequest, callback: (Result<Unit>) -> Unit)
+
   fun log(message: String, callback: (Result<Unit>) -> Unit)
+
   fun sendUnsentReports(callback: (Result<Unit>) -> Unit)
+
   fun setCrashlyticsCollectionEnabled(enabled: Boolean, callback: (Result<Boolean>) -> Unit)
+
   fun setUserIdentifier(identifier: String, callback: (Result<Unit>) -> Unit)
+
   fun setCustomKey(key: String, value: String, callback: (Result<Unit>) -> Unit)
 
   companion object {
     /** The codec used by FirebaseCrashlyticsHostApi. */
-    val codec: MessageCodec<Any?> by lazy {
-      GeneratedAndroidFirebaseCrashlyticsPigeonCodec()
-    }
-    /** Sets up an instance of `FirebaseCrashlyticsHostApi` to handle messages through the `binaryMessenger`. */
+    val codec: MessageCodec<Any?> by lazy { GeneratedAndroidFirebaseCrashlyticsPigeonCodec() }
+    /**
+     * Sets up an instance of `FirebaseCrashlyticsHostApi` to handle messages through the
+     * `binaryMessenger`.
+     */
     @JvmOverloads
-    fun setUp(binaryMessenger: BinaryMessenger, api: FirebaseCrashlyticsHostApi?, messageChannelSuffix: String = "") {
-      val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    fun setUp(
+        binaryMessenger: BinaryMessenger,
+        api: FirebaseCrashlyticsHostApi?,
+        messageChannelSuffix: String = ""
+    ) {
+      val separatedMessageChannelSuffix =
+          if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.checkForUnsentReports$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.checkForUnsentReports$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { _, reply ->
-            api.checkForUnsentReports{ result: Result<Boolean> ->
+            api.checkForUnsentReports { result: Result<Boolean> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidFirebaseCrashlyticsPigeonUtils.wrapError(error))
@@ -372,10 +403,14 @@ interface FirebaseCrashlyticsHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.crash$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.crash$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { _, reply ->
-            api.crash{ result: Result<Unit> ->
+            api.crash { result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidFirebaseCrashlyticsPigeonUtils.wrapError(error))
@@ -389,10 +424,14 @@ interface FirebaseCrashlyticsHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.deleteUnsentReports$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.deleteUnsentReports$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { _, reply ->
-            api.deleteUnsentReports{ result: Result<Unit> ->
+            api.deleteUnsentReports { result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidFirebaseCrashlyticsPigeonUtils.wrapError(error))
@@ -406,10 +445,14 @@ interface FirebaseCrashlyticsHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.didCrashOnPreviousExecution$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.didCrashOnPreviousExecution$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { _, reply ->
-            api.didCrashOnPreviousExecution{ result: Result<Boolean> ->
+            api.didCrashOnPreviousExecution { result: Result<Boolean> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidFirebaseCrashlyticsPigeonUtils.wrapError(error))
@@ -424,7 +467,11 @@ interface FirebaseCrashlyticsHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.recordError$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.recordError$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -443,7 +490,11 @@ interface FirebaseCrashlyticsHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.log$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.log$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -462,10 +513,14 @@ interface FirebaseCrashlyticsHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.sendUnsentReports$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.sendUnsentReports$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { _, reply ->
-            api.sendUnsentReports{ result: Result<Unit> ->
+            api.sendUnsentReports { result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidFirebaseCrashlyticsPigeonUtils.wrapError(error))
@@ -479,7 +534,11 @@ interface FirebaseCrashlyticsHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.setCrashlyticsCollectionEnabled$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.setCrashlyticsCollectionEnabled$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -499,7 +558,11 @@ interface FirebaseCrashlyticsHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.setUserIdentifier$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.setUserIdentifier$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -518,7 +581,11 @@ interface FirebaseCrashlyticsHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.setCustomKey$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.setCustomKey$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>

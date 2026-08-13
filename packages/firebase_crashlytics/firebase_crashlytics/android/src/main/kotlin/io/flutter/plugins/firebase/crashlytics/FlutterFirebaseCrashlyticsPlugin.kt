@@ -25,8 +25,8 @@ import io.flutter.plugins.firebase.core.FlutterFirebasePlugin.cachedThreadPool
 import io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry
 import io.flutter.plugins.firebase.crashlytics.generated.CrashlyticsStackFrame
 import io.flutter.plugins.firebase.crashlytics.generated.FirebaseCrashlyticsHostApi
-import io.flutter.plugins.firebase.crashlytics.generated.RecordErrorRequest
 import io.flutter.plugins.firebase.crashlytics.generated.FlutterError as PigeonFlutterError
+import io.flutter.plugins.firebase.crashlytics.generated.RecordErrorRequest
 
 /** FlutterFirebaseCrashlyticsPlugin */
 class FlutterFirebaseCrashlyticsPlugin :
