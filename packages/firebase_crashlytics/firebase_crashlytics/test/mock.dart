@@ -1,17 +1,15 @@
 // ignore_for_file: require_trailing_commas
-// Copyright 2020 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
+// Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
 
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:firebase_core_platform_interface/test.dart';
-import 'package:firebase_crashlytics_platform_interface/firebase_crashlytics_platform_interface.dart';
-import 'package:flutter/services.dart';
+import 'package:firebase_crashlytics_platform_interface/test.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-typedef Callback = void Function(MethodCall call);
-
-final List<MethodCall> methodCallLog = <MethodCall>[];
+final FakeFirebaseCrashlyticsHostApi hostApi =
+    FakeFirebaseCrashlyticsHostApi();
 
 class MockFirebaseAppWithCollectionEnabled implements TestFirebaseCoreHostApi {
   @override
@@ -66,32 +64,89 @@ class MockFirebaseAppWithCollectionEnabled implements TestFirebaseCoreHostApi {
   }
 }
 
-void setupFirebaseCrashlyticsMocks([Callback? customHandlers]) {
+void setupFirebaseCrashlyticsMocks() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   TestFirebaseCoreHostApi.setUp(MockFirebaseAppWithCollectionEnabled());
+  TestFirebaseCrashlyticsHostApi.setUp(hostApi);
+}
 
-  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-      .setMockMethodCallHandler(MethodChannelFirebaseCrashlytics.channel,
-          (MethodCall methodCall) async {
-    methodCallLog.add(methodCall);
-    switch (methodCall.method) {
-      case 'Crashlytics#checkForUnsentReports':
-        return {
-          'unsentReports': true,
-        };
-      case 'Crashlytics#setCrashlyticsCollectionEnabled':
-        return {
-          'isCrashlyticsCollectionEnabled': methodCall.arguments['enabled']
-        };
-      case 'Crashlytics#didCrashOnPreviousExecution':
-        return {
-          'didCrashOnPreviousExecution': true,
-        };
-      case 'Crashlytics#recordError':
-        return null;
-      default:
-        return false;
-    }
-  });
+class FakeFirebaseCrashlyticsHostApi
+    implements TestFirebaseCrashlyticsHostApi {
+  final List<String> calls = <String>[];
+  RecordErrorRequest? lastRecordError;
+  String? lastLogMessage;
+  bool? lastCollectionEnabled;
+  String? lastUserIdentifier;
+  String? lastCustomKey;
+  String? lastCustomValue;
+
+  void reset() {
+    calls.clear();
+    lastRecordError = null;
+    lastLogMessage = null;
+    lastCollectionEnabled = null;
+    lastUserIdentifier = null;
+    lastCustomKey = null;
+    lastCustomValue = null;
+  }
+
+  @override
+  Future<bool> checkForUnsentReports() async {
+    calls.add('checkForUnsentReports');
+    return true;
+  }
+
+  @override
+  Future<void> crash() async {
+    calls.add('crash');
+  }
+
+  @override
+  Future<void> deleteUnsentReports() async {
+    calls.add('deleteUnsentReports');
+  }
+
+  @override
+  Future<bool> didCrashOnPreviousExecution() async {
+    calls.add('didCrashOnPreviousExecution');
+    return true;
+  }
+
+  @override
+  Future<void> recordError(RecordErrorRequest request) async {
+    calls.add('recordError');
+    lastRecordError = request;
+  }
+
+  @override
+  Future<void> log(String message) async {
+    calls.add('log');
+    lastLogMessage = message;
+  }
+
+  @override
+  Future<void> sendUnsentReports() async {
+    calls.add('sendUnsentReports');
+  }
+
+  @override
+  Future<bool> setCrashlyticsCollectionEnabled(bool enabled) async {
+    calls.add('setCrashlyticsCollectionEnabled');
+    lastCollectionEnabled = enabled;
+    return enabled;
+  }
+
+  @override
+  Future<void> setUserIdentifier(String identifier) async {
+    calls.add('setUserIdentifier');
+    lastUserIdentifier = identifier;
+  }
+
+  @override
+  Future<void> setCustomKey(String key, String value) async {
+    calls.add('setCustomKey');
+    lastCustomKey = key;
+    lastCustomValue = value;
+  }
 }

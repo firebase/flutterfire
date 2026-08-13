@@ -6,6 +6,8 @@
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics_platform_interface/src/pigeon/messages.pigeon.dart'
+    as pigeon;
 import 'package:flutter/services.dart';
 
 import './utils/exception.dart';
@@ -19,16 +21,19 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
   MethodChannelFirebaseCrashlytics({required FirebaseApp app})
       : super(appInstance: app);
 
-  /// The [MethodChannel] used to communicate with the native plugin
-  static MethodChannel channel = const MethodChannel(
+  /// Channel name used for [FlutterFirebasePluginRegistry] / pluginConstants.
+  static const MethodChannel channel = MethodChannel(
     'plugins.flutter.io/firebase_crashlytics',
   );
 
-  bool? _isCrashlyticsCollectionEnabled;
+  static final pigeon.FirebaseCrashlyticsHostApi pigeonChannel =
+      pigeon.FirebaseCrashlyticsHostApi();
+
+  late bool _isCrashlyticsCollectionEnabled;
 
   @override
   bool get isCrashlyticsCollectionEnabled {
-    return _isCrashlyticsCollectionEnabled!;
+    return _isCrashlyticsCollectionEnabled;
   }
 
   @override
@@ -47,12 +52,8 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
     }
 
     try {
-      Map<String, dynamic>? data =
-          await channel.invokeMapMethod<String, dynamic>(
-              'Crashlytics#checkForUnsentReports');
-
-      return data!['unsentReports'];
-    } on PlatformException catch (e, s) {
+      return await pigeonChannel.checkForUnsentReports();
+    } catch (e, s) {
       convertPlatformException(e, s);
     }
   }
@@ -60,8 +61,8 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
   @override
   Future<void> crash() async {
     try {
-      await channel.invokeMethod<void>('Crashlytics#crash');
-    } on PlatformException catch (e, s) {
+      await pigeonChannel.crash();
+    } catch (e, s) {
       convertPlatformException(e, s);
     }
   }
@@ -69,8 +70,8 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
   @override
   Future<void> deleteUnsentReports() async {
     try {
-      await channel.invokeMethod<void>('Crashlytics#deleteUnsentReports');
-    } on PlatformException catch (e, s) {
+      await pigeonChannel.deleteUnsentReports();
+    } catch (e, s) {
       convertPlatformException(e, s);
     }
   }
@@ -78,12 +79,8 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
   @override
   Future<bool> didCrashOnPreviousExecution() async {
     try {
-      Map<String, dynamic>? data =
-          await channel.invokeMapMethod<String, dynamic>(
-              'Crashlytics#didCrashOnPreviousExecution');
-
-      return data!['didCrashOnPreviousExecution'];
-    } on PlatformException catch (e, s) {
+      return await pigeonChannel.didCrashOnPreviousExecution();
+    } catch (e, s) {
       convertPlatformException(e, s);
     }
   }
@@ -99,17 +96,27 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
     List<Map<String, String>>? stackTraceElements,
   }) async {
     try {
-      await channel
-          .invokeMethod<void>('Crashlytics#recordError', <String, dynamic>{
-        'exception': exception,
-        'information': information,
-        'reason': reason,
-        'fatal': fatal,
-        'buildId': buildId ?? '',
-        'loadingUnits': loadingUnits,
-        'stackTraceElements': stackTraceElements ?? [],
-      });
-    } on PlatformException catch (e, s) {
+      await pigeonChannel.recordError(
+        pigeon.RecordErrorRequest(
+          exception: exception,
+          information: information,
+          reason: reason,
+          fatal: fatal,
+          buildId: buildId ?? '',
+          loadingUnits: loadingUnits,
+          stackTraceElements: (stackTraceElements ?? [])
+              .map(
+                (element) => pigeon.CrashlyticsStackFrame(
+                  className: element['class'],
+                  method: element['method'] ?? '',
+                  file: element['file'] ?? '',
+                  line: element['line'] ?? '0',
+                ),
+              )
+              .toList(),
+        ),
+      );
+    } catch (e, s) {
       convertPlatformException(e, s);
     }
   }
@@ -117,10 +124,8 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
   @override
   Future<void> log(String message) async {
     try {
-      await channel.invokeMethod<void>('Crashlytics#log', <String, dynamic>{
-        'message': message,
-      });
-    } on PlatformException catch (e, s) {
+      await pigeonChannel.log(message);
+    } catch (e, s) {
       convertPlatformException(e, s);
     }
   }
@@ -128,8 +133,8 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
   @override
   Future<void> sendUnsentReports() async {
     try {
-      await channel.invokeMethod<void>('Crashlytics#sendUnsentReports');
-    } on PlatformException catch (e, s) {
+      await pigeonChannel.sendUnsentReports();
+    } catch (e, s) {
       convertPlatformException(e, s);
     }
   }
@@ -137,14 +142,9 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
   @override
   Future<void> setCrashlyticsCollectionEnabled(bool enabled) async {
     try {
-      Map<String, dynamic>? data = await channel
-          .invokeMapMethod<String, dynamic>(
-              'Crashlytics#setCrashlyticsCollectionEnabled', <String, dynamic>{
-        'enabled': enabled,
-      });
-
-      _isCrashlyticsCollectionEnabled = data!['isCrashlyticsCollectionEnabled'];
-    } on PlatformException catch (e, s) {
+      _isCrashlyticsCollectionEnabled =
+          await pigeonChannel.setCrashlyticsCollectionEnabled(enabled);
+    } catch (e, s) {
       convertPlatformException(e, s);
     }
   }
@@ -152,11 +152,8 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
   @override
   Future<void> setUserIdentifier(String identifier) async {
     try {
-      await channel.invokeMethod<void>(
-          'Crashlytics#setUserIdentifier', <String, dynamic>{
-        'identifier': identifier,
-      });
-    } on PlatformException catch (e, s) {
+      await pigeonChannel.setUserIdentifier(identifier);
+    } catch (e, s) {
       convertPlatformException(e, s);
     }
   }
@@ -164,12 +161,8 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
   @override
   Future<void> setCustomKey(String key, String value) async {
     try {
-      await channel
-          .invokeMethod<void>('Crashlytics#setCustomKey', <String, dynamic>{
-        'key': key,
-        'value': value,
-      });
-    } on PlatformException catch (e, s) {
+      await pigeonChannel.setCustomKey(key, value);
+    } catch (e, s) {
       convertPlatformException(e, s);
     }
   }
