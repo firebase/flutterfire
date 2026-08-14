@@ -211,12 +211,12 @@ struct CrashlyticsStackFrame: Hashable {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return deepEqualsFirebaseCrashlyticsMessages(lhs.className, rhs.className) &&
-      deepEqualsFirebaseCrashlyticsMessages(
+    return deepEqualsFirebaseCrashlyticsMessages(lhs.className, rhs.className)
+      && deepEqualsFirebaseCrashlyticsMessages(
         lhs.method,
         rhs.method
-      ) && deepEqualsFirebaseCrashlyticsMessages(lhs.file, rhs.file) &&
-      deepEqualsFirebaseCrashlyticsMessages(
+      ) && deepEqualsFirebaseCrashlyticsMessages(lhs.file, rhs.file)
+      && deepEqualsFirebaseCrashlyticsMessages(
         lhs.line,
         rhs.line
       )
@@ -278,16 +278,16 @@ struct RecordErrorRequest: Hashable {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return deepEqualsFirebaseCrashlyticsMessages(lhs.exception, rhs.exception) &&
-      deepEqualsFirebaseCrashlyticsMessages(
+    return deepEqualsFirebaseCrashlyticsMessages(lhs.exception, rhs.exception)
+      && deepEqualsFirebaseCrashlyticsMessages(
         lhs.information,
         rhs.information
-      ) && deepEqualsFirebaseCrashlyticsMessages(lhs.reason, rhs.reason) &&
-      deepEqualsFirebaseCrashlyticsMessages(
+      ) && deepEqualsFirebaseCrashlyticsMessages(lhs.reason, rhs.reason)
+      && deepEqualsFirebaseCrashlyticsMessages(
         lhs.fatal,
         rhs.fatal
-      ) && deepEqualsFirebaseCrashlyticsMessages(lhs.buildId, rhs.buildId) &&
-      deepEqualsFirebaseCrashlyticsMessages(
+      ) && deepEqualsFirebaseCrashlyticsMessages(lhs.buildId, rhs.buildId)
+      && deepEqualsFirebaseCrashlyticsMessages(
         lhs.loadingUnits,
         rhs.loadingUnits
       ) && deepEqualsFirebaseCrashlyticsMessages(lhs.stackTraceElements, rhs.stackTraceElements)
@@ -358,8 +358,9 @@ protocol FirebaseCrashlyticsHostApi {
   func recordError(request: RecordErrorRequest, completion: @escaping (Result<Void, Error>) -> Void)
   func log(message: String, completion: @escaping (Result<Void, Error>) -> Void)
   func sendUnsentReports(completion: @escaping (Result<Void, Error>) -> Void)
-  func setCrashlyticsCollectionEnabled(enabled: Bool,
-                                       completion: @escaping (Result<Bool, Error>) -> Void)
+  func setCrashlyticsCollectionEnabled(
+    enabled: Bool,
+    completion: @escaping (Result<Bool, Error>) -> Void)
   func setUserIdentifier(identifier: String, completion: @escaping (Result<Void, Error>) -> Void)
   func setCustomKey(key: String, value: String, completion: @escaping (Result<Void, Error>) -> Void)
 }
@@ -372,11 +373,14 @@ class FirebaseCrashlyticsHostApiSetup {
 
   /// Sets up an instance of `FirebaseCrashlyticsHostApi` to handle messages through the
   /// `binaryMessenger`.
-  static func setUp(binaryMessenger: FlutterBinaryMessenger, api: FirebaseCrashlyticsHostApi?,
-                    messageChannelSuffix: String = "") {
+  static func setUp(
+    binaryMessenger: FlutterBinaryMessenger, api: FirebaseCrashlyticsHostApi?,
+    messageChannelSuffix: String = ""
+  ) {
     let channelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
     let checkForUnsentReportsChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.checkForUnsentReports\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.checkForUnsentReports\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -395,7 +399,8 @@ class FirebaseCrashlyticsHostApiSetup {
       checkForUnsentReportsChannel.setMessageHandler(nil)
     }
     let crashChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.crash\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.crash\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -414,7 +419,8 @@ class FirebaseCrashlyticsHostApiSetup {
       crashChannel.setMessageHandler(nil)
     }
     let deleteUnsentReportsChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.deleteUnsentReports\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.deleteUnsentReports\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -433,7 +439,8 @@ class FirebaseCrashlyticsHostApiSetup {
       deleteUnsentReportsChannel.setMessageHandler(nil)
     }
     let didCrashOnPreviousExecutionChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.didCrashOnPreviousExecution\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.didCrashOnPreviousExecution\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -452,7 +459,8 @@ class FirebaseCrashlyticsHostApiSetup {
       didCrashOnPreviousExecutionChannel.setMessageHandler(nil)
     }
     let recordErrorChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.recordError\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.recordError\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -473,7 +481,8 @@ class FirebaseCrashlyticsHostApiSetup {
       recordErrorChannel.setMessageHandler(nil)
     }
     let logChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.log\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.log\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -494,7 +503,8 @@ class FirebaseCrashlyticsHostApiSetup {
       logChannel.setMessageHandler(nil)
     }
     let sendUnsentReportsChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.sendUnsentReports\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.sendUnsentReports\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -513,7 +523,8 @@ class FirebaseCrashlyticsHostApiSetup {
       sendUnsentReportsChannel.setMessageHandler(nil)
     }
     let setCrashlyticsCollectionEnabledChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.setCrashlyticsCollectionEnabled\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.setCrashlyticsCollectionEnabled\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -534,7 +545,8 @@ class FirebaseCrashlyticsHostApiSetup {
       setCrashlyticsCollectionEnabledChannel.setMessageHandler(nil)
     }
     let setUserIdentifierChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.setUserIdentifier\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.setUserIdentifier\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -555,7 +567,8 @@ class FirebaseCrashlyticsHostApiSetup {
       setUserIdentifierChannel.setMessageHandler(nil)
     }
     let setCustomKeyChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.setCustomKey\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.firebase_crashlytics_platform_interface.FirebaseCrashlyticsHostApi.setCustomKey\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )

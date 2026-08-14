@@ -27,7 +27,8 @@ private let kFLTFirebaseCrashlyticsTestChannelName =
 extension FlutterError: Error {}
 
 public class FirebaseCrashlyticsPlugin: NSObject, FLTFirebasePluginProtocol, FlutterPlugin,
-  FlutterStreamHandler, FirebaseCrashlyticsHostApi {
+  FlutterStreamHandler, FirebaseCrashlyticsHostApi
+{
   private var testEventChannel: FlutterEventChannel?
   private var testEventSink: FlutterEventSink?
 
@@ -64,7 +65,7 @@ public class FirebaseCrashlyticsPlugin: NSObject, FLTFirebasePluginProtocol, Flu
 
   public func pluginConstants(for firebaseApp: FirebaseApp) -> [AnyHashable: Any] {
     [
-      "isCrashlyticsCollectionEnabled": Crashlytics.crashlytics().isCrashlyticsCollectionEnabled(),
+      "isCrashlyticsCollectionEnabled": Crashlytics.crashlytics().isCrashlyticsCollectionEnabled()
     ]
   }
 
@@ -101,8 +102,10 @@ public class FirebaseCrashlyticsPlugin: NSObject, FLTFirebasePluginProtocol, Flu
     completion(.success(Crashlytics.crashlytics().didCrashDuringPreviousExecution()))
   }
 
-  func recordError(request: RecordErrorRequest,
-                   completion: @escaping (Result<Void, Error>) -> Void) {
+  func recordError(
+    request: RecordErrorRequest,
+    completion: @escaping (Result<Void, Error>) -> Void
+  ) {
     var reason = request.reason
     let information = request.information
     let dartExceptionMessage = request.exception
@@ -158,21 +161,27 @@ public class FirebaseCrashlyticsPlugin: NSObject, FLTFirebasePluginProtocol, Flu
     completion(.success(()))
   }
 
-  func setCrashlyticsCollectionEnabled(enabled: Bool,
-                                       completion: @escaping (Result<Bool, Error>) -> Void) {
+  func setCrashlyticsCollectionEnabled(
+    enabled: Bool,
+    completion: @escaping (Result<Bool, Error>) -> Void
+  ) {
     Crashlytics.crashlytics().setCrashlyticsCollectionEnabled(enabled)
     completion(.success(Crashlytics.crashlytics().isCrashlyticsCollectionEnabled()))
   }
 
-  func setUserIdentifier(identifier: String,
-                         completion: @escaping (Result<Void, Error>) -> Void) {
+  func setUserIdentifier(
+    identifier: String,
+    completion: @escaping (Result<Void, Error>) -> Void
+  ) {
     Crashlytics.crashlytics().setUserID(identifier)
     completion(.success(()))
   }
 
-  func setCustomKey(key: String,
-                    value: String,
-                    completion: @escaping (Result<Void, Error>) -> Void) {
+  func setCustomKey(
+    key: String,
+    value: String,
+    completion: @escaping (Result<Void, Error>) -> Void
+  ) {
     Crashlytics.crashlytics().setCustomValue(value, forKey: key)
     completion(.success(()))
   }
@@ -190,8 +199,10 @@ public class FirebaseCrashlyticsPlugin: NSObject, FLTFirebasePluginProtocol, Flu
 
   // MARK: - FlutterStreamHandler
 
-  public func onListen(withArguments arguments: Any?,
-                       eventSink events: @escaping FlutterEventSink) -> FlutterError? {
+  public func onListen(
+    withArguments arguments: Any?,
+    eventSink events: @escaping FlutterEventSink
+  ) -> FlutterError? {
     testEventSink = events
     return nil
   }
