@@ -495,15 +495,12 @@ class Query<T extends firestore_interop.QueryJsImpl>
   /// Creates a new Query from a [jsObject].
   Query.fromJsObject(T jsObject) : super.fromJsObject(jsObject);
 
-  // dart2wasm TFA can drop these JS-interop cursor helpers (Flutter 3.47+).
-  @pragma('wasm:entry-point')
   Query endAt({DocumentSnapshot? snapshot, List<dynamic>? fieldValues}) =>
       Query.fromJsObject(firestore_interop.query(
           jsObject,
           _createQueryConstraint(
               firestore_interop.endAt, snapshot, fieldValues)));
 
-  @pragma('wasm:entry-point')
   Query endBefore({DocumentSnapshot? snapshot, List<dynamic>? fieldValues}) =>
       Query.fromJsObject(firestore_interop.query(
           jsObject,
@@ -604,7 +601,6 @@ class Query<T extends firestore_interop.QueryJsImpl>
         firestore_interop.query(jsObject, jsObjectOrderBy));
   }
 
-  @pragma('wasm:entry-point')
   Query startAfter({DocumentSnapshot? snapshot, List<dynamic>? fieldValues}) =>
       Query.fromJsObject(
         firestore_interop.query(
@@ -617,7 +613,6 @@ class Query<T extends firestore_interop.QueryJsImpl>
         ),
       );
 
-  @pragma('wasm:entry-point')
   Query startAt({DocumentSnapshot? snapshot, List<dynamic>? fieldValues}) =>
       Query.fromJsObject(
         firestore_interop.query(
@@ -646,7 +641,6 @@ class Query<T extends firestore_interop.QueryJsImpl>
   /// [fieldValues].
   /// We need to call this method in all paginating methods to fix that Dart
   /// doesn't support varargs - we need to use [List] to call js function.
-  @pragma('wasm:entry-point')
   firestore_interop.QueryConstraintJsImpl _createQueryConstraint<S>(
       Object method, DocumentSnapshot? snapshot, List<dynamic>? fieldValues) {
     if (snapshot == null && fieldValues == null) {
