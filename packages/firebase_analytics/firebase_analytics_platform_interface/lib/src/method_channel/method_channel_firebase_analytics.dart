@@ -85,7 +85,7 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
     bool? securityStorageConsentGranted,
   }) async {
     try {
-      return _api.setConsent(<String, bool?>{
+      return await _api.setConsent(<String, bool?>{
         if (adStorageConsentGranted != null)
           'adStorageConsentGranted': adStorageConsentGranted,
         if (analyticsStorageConsentGranted != null)
@@ -106,7 +106,7 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
     Map<String, Object?>? defaultParameters,
   ) async {
     try {
-      return _api.setDefaultEventParameters(defaultParameters);
+      return await _api.setDefaultEventParameters(defaultParameters);
     } catch (e, s) {
       convertPlatformException(e, s);
     }
@@ -168,7 +168,7 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
   Future<void> setSessionTimeoutDuration(Duration timeout) async {
     try {
       if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
-        return _api.setSessionTimeoutDuration(timeout.inMilliseconds);
+        return await _api.setSessionTimeoutDuration(timeout.inMilliseconds);
       }
     } catch (e, s) {
       convertPlatformException(e, s);
