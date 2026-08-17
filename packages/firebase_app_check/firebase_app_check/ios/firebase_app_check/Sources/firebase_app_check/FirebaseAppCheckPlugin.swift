@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import DeviceCheck
 import FirebaseAppCheck
 import FirebaseCore
 
@@ -371,11 +372,16 @@ class AppCheckProviderWrapper: NSObject, AppCheckProvider {
         delegateProvider = AppCheckDebugProvider(app: app)
       }
     case "appAttestWithDeviceCheckFallback":
-      if #available(iOS 14.0, macOS 14.0, *) {
-        delegateProvider = AppAttestProvider(app: app)
-      } else {
-        delegateProvider = DeviceCheckProvider(app: app)
+      // A new enough OS is not sufficient: the device must also support App
+      // Attest, which is often false on macOS. The SDK only reports that when a
+      // token is first requested, so check the same capability it checks —
+      // otherwise this provider never actually falls back. Typed as the
+      // protocol to keep the availability-annotated type inside `#available`.
+      var appAttestProvider: (any AppCheckProvider)?
+      if #available(iOS 14.0, macOS 14.0, *), DCAppAttestService.shared.isSupported {
+        appAttestProvider = AppAttestProvider(app: app)
       }
+      delegateProvider = appAttestProvider ?? DeviceCheckProvider(app: app)
     case "recaptcha":
       #if os(iOS)
         if let recaptchaSiteKey {
