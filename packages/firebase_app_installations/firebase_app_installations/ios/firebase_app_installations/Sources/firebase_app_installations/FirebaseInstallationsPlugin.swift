@@ -18,9 +18,6 @@ import FirebaseInstallations
 
 let kFLTFirebaseInstallationsChannelName = "plugins.flutter.io/firebase_app_installations"
 
-// swift-format-ignore: AvoidRetroactiveConformances
-extension FlutterError: @retroactive Error {}
-
 public class FirebaseInstallationsPlugin: NSObject, FLTFirebasePluginProtocol, FlutterPlugin,
   FirebaseAppInstallationsHostApi
 {
