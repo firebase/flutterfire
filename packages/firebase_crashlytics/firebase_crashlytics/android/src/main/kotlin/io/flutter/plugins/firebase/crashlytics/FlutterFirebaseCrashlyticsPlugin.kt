@@ -20,19 +20,18 @@ import com.google.firebase.crashlytics.internal.Logger
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.EventChannel
-import io.flutter.plugin.common.MethodCall
-import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin.cachedThreadPool
 import io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry
+import io.flutter.plugins.firebase.crashlytics.generated.CrashlyticsStackFrame
+import io.flutter.plugins.firebase.crashlytics.generated.FirebaseCrashlyticsHostApi
+import io.flutter.plugins.firebase.crashlytics.generated.FlutterError as PigeonFlutterError
+import io.flutter.plugins.firebase.crashlytics.generated.RecordErrorRequest
 
 /** FlutterFirebaseCrashlyticsPlugin */
 class FlutterFirebaseCrashlyticsPlugin :
-    FlutterFirebasePlugin,
-    FlutterPlugin,
-    MethodChannel.MethodCallHandler,
-    EventChannel.StreamHandler {
-  private var channel: MethodChannel? = null
+    FlutterFirebasePlugin, FlutterPlugin, FirebaseCrashlyticsHostApi, EventChannel.StreamHandler {
+  private var binaryMessenger: BinaryMessenger? = null
   private var testEventChannel: EventChannel? = null
   private var testEventSink: EventChannel.EventSink? = null
   private lateinit var applicationContext: Context
@@ -44,8 +43,9 @@ class FlutterFirebaseCrashlyticsPlugin :
   private var elfBuildId: String? = null
 
   private fun initInstance(messenger: BinaryMessenger) {
-    channel = MethodChannel(messenger, CHANNEL_NAME).also { it.setMethodCallHandler(this) }
     FlutterFirebasePluginRegistry.registerPlugin(CHANNEL_NAME, this)
+    binaryMessenger = messenger
+    FirebaseCrashlyticsHostApi.setUp(messenger, this)
     testEventChannel =
         EventChannel(messenger, TEST_EVENT_CHANNEL_NAME).also { it.setStreamHandler(this) }
   }
@@ -57,68 +57,60 @@ class FlutterFirebaseCrashlyticsPlugin :
   }
 
   override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
-    channel?.setMethodCallHandler(null)
-    channel = null
+    FirebaseCrashlyticsHostApi.setUp(binding.binaryMessenger, null)
+    binaryMessenger = null
     testEventChannel?.setStreamHandler(null)
     testEventChannel = null
   }
 
-  private fun checkForUnsentReports(): Task<Map<String, Any>> {
-    val taskCompletionSource = TaskCompletionSource<Map<String, Any>>()
+  override fun checkForUnsentReports(callback: (Result<Boolean>) -> Unit) {
     cachedThreadPool.execute {
       try {
         val unsentReports = Tasks.await(FirebaseCrashlytics.getInstance().checkForUnsentReports())
-        taskCompletionSource.setResult(mapOf(Constants.UNSENT_REPORTS to unsentReports))
+        callback(Result.success(unsentReports))
       } catch (exception: Exception) {
-        taskCompletionSource.setException(exception)
+        handleFailure(callback, exception)
       }
     }
-    return taskCompletionSource.task
   }
 
-  private fun crash() {
+  override fun crash(callback: (Result<Unit>) -> Unit) {
     Handler(Looper.myLooper()!!).postDelayed({ throw FirebaseCrashlyticsTestCrash() }, 50)
   }
 
-  private fun deleteUnsentReports(): Task<Void> {
-    val taskCompletionSource = TaskCompletionSource<Void>()
+  override fun deleteUnsentReports(callback: (Result<Unit>) -> Unit) {
     cachedThreadPool.execute {
       try {
         FirebaseCrashlytics.getInstance().deleteUnsentReports()
-        taskCompletionSource.setResult(null)
+        callback(Result.success(Unit))
       } catch (exception: Exception) {
-        taskCompletionSource.setException(exception)
+        handleFailure(callback, exception)
       }
     }
-    return taskCompletionSource.task
   }
 
-  private fun didCrashOnPreviousExecution(): Task<Map<String, Any>> {
-    val taskCompletionSource = TaskCompletionSource<Map<String, Any>>()
+  override fun didCrashOnPreviousExecution(callback: (Result<Boolean>) -> Unit) {
     cachedThreadPool.execute {
       try {
         val didCrash = FirebaseCrashlytics.getInstance().didCrashOnPreviousExecution()
-        taskCompletionSource.setResult(mapOf(Constants.DID_CRASH_ON_PREVIOUS_EXECUTION to didCrash))
+        callback(Result.success(didCrash))
       } catch (exception: Exception) {
-        taskCompletionSource.setException(exception)
+        handleFailure(callback, exception)
       }
     }
-    return taskCompletionSource.task
   }
 
-  private fun recordError(arguments: Map<String, Any>): Task<Void> {
-    val taskCompletionSource = TaskCompletionSource<Void>()
+  override fun recordError(request: RecordErrorRequest, callback: (Result<Unit>) -> Unit) {
     val mainHandler = Handler(Looper.getMainLooper())
     cachedThreadPool.execute {
       try {
         val crashlytics = FirebaseCrashlytics.getInstance()
-        val dartExceptionMessage = arguments[Constants.EXCEPTION]!! as String
-        val reason = arguments[Constants.REASON] as String?
-        val information = arguments[Constants.INFORMATION]!! as String
-        val fatal = arguments[Constants.FATAL]!! as Boolean
-        val dartBuildId = arguments[Constants.BUILD_ID]!! as String
-        @Suppress("UNCHECKED_CAST")
-        val loadingUnits = arguments[Constants.LOADING_UNITS]!! as List<String>
+        val dartExceptionMessage = request.exception
+        val reason = request.reason
+        val information = request.information
+        val fatal = request.fatal
+        val dartBuildId = request.buildId
+        val loadingUnits = request.loadingUnits
 
         // Prefer the ELF build ID from libapp.so over the Dart VM's snapshot build ID.
         // The firebase-crashlytics-buildtools JAR uses the ELF build ID when uploading symbols,
@@ -142,9 +134,8 @@ class FlutterFirebaseCrashlyticsPlugin :
             }
 
         crashlytics.setCustomKey(Constants.FLUTTER_ERROR_EXCEPTION, dartExceptionMessage)
-        @Suppress("UNCHECKED_CAST")
-        val errorElements = arguments[Constants.STACK_TRACE_ELEMENTS]!! as List<Map<String, String>>
-        exception.stackTrace = errorElements.mapNotNull(::generateStackTraceElement).toTypedArray()
+        exception.stackTrace =
+            request.stackTraceElements.mapNotNull(::generateStackTraceElement).toTypedArray()
 
         if (information.isNotEmpty()) {
           crashlytics.log(information)
@@ -154,128 +145,84 @@ class FlutterFirebaseCrashlyticsPlugin :
         } else {
           crashlytics.recordException(exception)
         }
-        taskCompletionSource.setResult(null)
+        callback(Result.success(Unit))
       } catch (exception: Exception) {
-        taskCompletionSource.setException(exception)
+        handleFailure(callback, exception)
       }
     }
-    return taskCompletionSource.task
   }
 
-  private fun log(arguments: Map<String, Any>): Task<Void> {
-    val taskCompletionSource = TaskCompletionSource<Void>()
+  override fun log(message: String, callback: (Result<Unit>) -> Unit) {
     cachedThreadPool.execute {
       try {
-        val message = arguments[Constants.MESSAGE]!! as String
         FirebaseCrashlytics.getInstance().log(message)
-        taskCompletionSource.setResult(null)
+        callback(Result.success(Unit))
       } catch (exception: Exception) {
-        taskCompletionSource.setException(exception)
+        handleFailure(callback, exception)
       }
     }
-    return taskCompletionSource.task
   }
 
-  private fun sendUnsentReports(): Task<Void> {
-    val taskCompletionSource = TaskCompletionSource<Void>()
+  override fun sendUnsentReports(callback: (Result<Unit>) -> Unit) {
     cachedThreadPool.execute {
       try {
         FirebaseCrashlytics.getInstance().sendUnsentReports()
-        taskCompletionSource.setResult(null)
+        callback(Result.success(Unit))
       } catch (exception: Exception) {
-        taskCompletionSource.setException(exception)
+        handleFailure(callback, exception)
       }
     }
-    return taskCompletionSource.task
   }
 
-  private fun setCrashlyticsCollectionEnabled(arguments: Map<String, Any>): Task<Map<String, Any>> {
-    val taskCompletionSource = TaskCompletionSource<Map<String, Any>>()
+  override fun setCrashlyticsCollectionEnabled(
+      enabled: Boolean,
+      callback: (Result<Boolean>) -> Unit
+  ) {
     cachedThreadPool.execute {
       try {
-        val enabled = arguments[Constants.ENABLED]!! as Boolean
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(enabled)
-        taskCompletionSource.setResult(
-            mapOf(
-                Constants.IS_CRASHLYTICS_COLLECTION_ENABLED to
-                    isCrashlyticsCollectionEnabled(FirebaseApp.getInstance())))
+        callback(Result.success(isCrashlyticsCollectionEnabled(FirebaseApp.getInstance())))
       } catch (exception: Exception) {
-        taskCompletionSource.setException(exception)
+        handleFailure(callback, exception)
       }
     }
-    return taskCompletionSource.task
   }
 
-  private fun setUserIdentifier(arguments: Map<String, Any>): Task<Void> {
-    val taskCompletionSource = TaskCompletionSource<Void>()
+  override fun setUserIdentifier(identifier: String, callback: (Result<Unit>) -> Unit) {
     cachedThreadPool.execute {
       try {
-        val identifier = arguments[Constants.IDENTIFIER]!! as String
         FirebaseCrashlytics.getInstance().setUserId(identifier)
-        taskCompletionSource.setResult(null)
+        callback(Result.success(Unit))
       } catch (exception: Exception) {
-        taskCompletionSource.setException(exception)
+        handleFailure(callback, exception)
       }
     }
-    return taskCompletionSource.task
   }
 
-  private fun setCustomKey(arguments: Map<String, Any>): Task<Void> {
-    val taskCompletionSource = TaskCompletionSource<Void>()
+  override fun setCustomKey(key: String, value: String, callback: (Result<Unit>) -> Unit) {
     cachedThreadPool.execute {
       try {
-        val key = arguments[Constants.KEY]!! as String
-        val value = arguments[Constants.VALUE]!! as String
         FirebaseCrashlytics.getInstance().setCustomKey(key, value)
-        taskCompletionSource.setResult(null)
+        callback(Result.success(Unit))
       } catch (exception: Exception) {
-        taskCompletionSource.setException(exception)
+        handleFailure(callback, exception)
       }
     }
-    return taskCompletionSource.task
   }
 
-  override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
-    val task: Task<*> =
-        when (call.method) {
-          "Crashlytics#checkForUnsentReports" -> checkForUnsentReports()
-          "Crashlytics#crash" -> {
-            crash()
-            return
-          }
-          "Crashlytics#deleteUnsentReports" -> deleteUnsentReports()
-          "Crashlytics#didCrashOnPreviousExecution" -> didCrashOnPreviousExecution()
-          "Crashlytics#recordError" -> recordError(call.arguments<Map<String, Any>>()!!)
-          "Crashlytics#log" -> log(call.arguments<Map<String, Any>>()!!)
-          "Crashlytics#sendUnsentReports" -> sendUnsentReports()
-          "Crashlytics#setCrashlyticsCollectionEnabled" ->
-              setCrashlyticsCollectionEnabled(call.arguments<Map<String, Any>>()!!)
-          "Crashlytics#setUserIdentifier" -> setUserIdentifier(call.arguments<Map<String, Any>>()!!)
-          "Crashlytics#setCustomKey" -> setCustomKey(call.arguments<Map<String, Any>>()!!)
-          else -> {
-            result.notImplemented()
-            return
-          }
-        }
-
-    task.addOnCompleteListener { completedTask ->
-      if (completedTask.isSuccessful) {
-        result.success(completedTask.result)
-      } else {
-        val message = completedTask.exception?.message ?: "An unknown error occurred"
-        result.error("firebase_crashlytics", message, null)
-      }
-    }
+  private fun <T> handleFailure(callback: (Result<T>) -> Unit, exception: Exception?) {
+    val message = exception?.message ?: "An unknown error occurred"
+    callback(Result.failure(PigeonFlutterError("firebase_crashlytics", message, null)))
   }
 
   /** Extracts a StackTraceElement from a Dart stack trace element. */
-  private fun generateStackTraceElement(errorElement: Map<String, String>): StackTraceElement? =
+  private fun generateStackTraceElement(errorElement: CrashlyticsStackFrame): StackTraceElement? =
       try {
         StackTraceElement(
-            errorElement[Constants.CLASS] ?: "",
-            errorElement[Constants.METHOD],
-            errorElement[Constants.FILE],
-            errorElement[Constants.LINE]!!.toInt())
+            errorElement.className ?: "",
+            errorElement.method,
+            errorElement.file,
+            errorElement.line.toInt())
       } catch (_: Exception) {
         Log.e(TAG, "Unable to generate stack trace element from Dart error.")
         null

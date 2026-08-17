@@ -24,23 +24,10 @@ private let kFLTFirebaseCrashlyticsChannelName = "plugins.flutter.io/firebase_cr
 private let kFLTFirebaseCrashlyticsTestChannelName =
   "plugins.flutter.io/firebase_crashlytics_test_stream"
 
-private let kCrashlyticsArgumentException = "exception"
-private let kCrashlyticsArgumentInformation = "information"
-private let kCrashlyticsArgumentStackTraceElements = "stackTraceElements"
-private let kCrashlyticsArgumentReason = "reason"
-private let kCrashlyticsArgumentIdentifier = "identifier"
-private let kCrashlyticsArgumentKey = "key"
-private let kCrashlyticsArgumentValue = "value"
-private let kCrashlyticsArgumentFatal = "fatal"
-private let kCrashlyticsArgumentFile = "file"
-private let kCrashlyticsArgumentLine = "line"
-private let kCrashlyticsArgumentMethod = "method"
-private let kCrashlyticsArgumentEnabled = "enabled"
-private let kCrashlyticsArgumentUnsentReports = "unsentReports"
-private let kCrashlyticsArgumentDidCrashOnPreviousExecution = "didCrashOnPreviousExecution"
+extension FlutterError: Error {}
 
 public class FirebaseCrashlyticsPlugin: NSObject, FLTFirebasePluginProtocol, FlutterPlugin,
-  FlutterStreamHandler
+  FlutterStreamHandler, FirebaseCrashlyticsHostApi
 {
   private var testEventChannel: FlutterEventChannel?
   private var testEventSink: FlutterEventSink?
@@ -56,15 +43,10 @@ public class FirebaseCrashlyticsPlugin: NSObject, FLTFirebasePluginProtocol, Flu
       binaryMessenger = registrar.messenger()
     #endif
 
-    let channel = FlutterMethodChannel(
-      name: kFLTFirebaseCrashlyticsChannelName,
-      binaryMessenger: binaryMessenger
-    )
-
     let instance = shared
     FLTFirebasePluginRegistry.sharedInstance().register(instance)
     CrashlyticsPlatformHelpers.setDevelopmentPlatformName("Flutter", version: "-1")
-    registrar.addMethodCallDelegate(instance, channel: channel)
+    FirebaseCrashlyticsHostApiSetup.setUp(binaryMessenger: binaryMessenger, api: instance)
 
     instance.testEventChannel = FlutterEventChannel(
       name: kFLTFirebaseCrashlyticsTestChannelName,
@@ -95,55 +77,46 @@ public class FirebaseCrashlyticsPlugin: NSObject, FLTFirebasePluginProtocol, Flu
     kFLTFirebaseCrashlyticsChannelName
   }
 
-  public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-    let arguments = call.arguments as? [String: Any] ?? [:]
+  // MARK: - FirebaseCrashlyticsHostApi
 
-    switch call.method {
-    case "Crashlytics#recordError":
-      recordError(arguments: arguments, result: result)
-    case "Crashlytics#setUserIdentifier":
-      setUserIdentifier(arguments: arguments, result: result)
-    case "Crashlytics#setCustomKey":
-      setCustomKey(arguments: arguments, result: result)
-    case "Crashlytics#log":
-      log(arguments: arguments, result: result)
-    case "Crashlytics#crash":
-      NSException(
-        name: NSExceptionName("FirebaseCrashlyticsTestCrash"),
-        reason: "This is a test crash caused by calling .crash() in Dart.",
-        userInfo: nil
-      ).raise()
-    case "Crashlytics#setCrashlyticsCollectionEnabled":
-      setCrashlyticsCollectionEnabled(arguments: arguments, result: result)
-    case "Crashlytics#checkForUnsentReports":
-      checkForUnsentReports(result: result)
-    case "Crashlytics#sendUnsentReports":
-      sendUnsentReports(result: result)
-    case "Crashlytics#deleteUnsentReports":
-      deleteUnsentReports(result: result)
-    case "Crashlytics#didCrashOnPreviousExecution":
-      didCrashOnPreviousExecution(result: result)
-    default:
-      result(FlutterMethodNotImplemented)
+  func checkForUnsentReports(completion: @escaping (Result<Bool, Error>) -> Void) {
+    Crashlytics.crashlytics().checkForUnsentReports { unsentReports in
+      completion(.success(unsentReports))
     }
   }
 
-  // MARK: - Firebase Crashlytics API
+  func crash(completion: @escaping (Result<Void, Error>) -> Void) {
+    NSException(
+      name: NSExceptionName("FirebaseCrashlyticsTestCrash"),
+      reason: "This is a test crash caused by calling .crash() in Dart.",
+      userInfo: nil
+    ).raise()
+  }
 
-  private func recordError(arguments: [String: Any], result: @escaping FlutterResult) {
-    var reason = arguments[kCrashlyticsArgumentReason] as? String
-    let information = arguments[kCrashlyticsArgumentInformation] as? String ?? ""
-    let dartExceptionMessage = arguments[kCrashlyticsArgumentException] as? String ?? ""
-    let errorElements =
-      arguments[kCrashlyticsArgumentStackTraceElements] as? [[String: Any]] ?? []
-    let fatal = (arguments[kCrashlyticsArgumentFatal] as? NSNumber)?.boolValue ?? false
+  func deleteUnsentReports(completion: @escaping (Result<Void, Error>) -> Void) {
+    Crashlytics.crashlytics().deleteUnsentReports()
+    completion(.success(()))
+  }
+
+  func didCrashOnPreviousExecution(completion: @escaping (Result<Bool, Error>) -> Void) {
+    completion(.success(Crashlytics.crashlytics().didCrashDuringPreviousExecution()))
+  }
+
+  func recordError(
+    request: RecordErrorRequest,
+    completion: @escaping (Result<Void, Error>) -> Void
+  ) {
+    var reason = request.reason
+    let information = request.information
+    let dartExceptionMessage = request.exception
+    let fatal = request.fatal
 
     if !information.isEmpty {
       Crashlytics.crashlytics().log(information)
     }
 
     var frames: [StackFrame] = []
-    for errorElement in errorElements {
+    for errorElement in request.stackTraceElements {
       frames.append(generateFrame(errorElement: errorElement))
     }
 
@@ -175,68 +148,52 @@ public class FirebaseCrashlyticsPlugin: NSObject, FLTFirebasePluginProtocol, Flu
     let exception = ExceptionModel(name: "FlutterError", reason: reason ?? "")
     exception.stackTrace = frames
     CrashlyticsPlatformHelpers.record(exception, fatal: fatal)
-    result(nil)
+    completion(.success(()))
   }
 
-  private func setUserIdentifier(arguments: [String: Any], result: @escaping FlutterResult) {
-    let identifier = arguments[kCrashlyticsArgumentIdentifier] as? String ?? ""
-    Crashlytics.crashlytics().setUserID(identifier)
-    result(nil)
-  }
-
-  private func setCustomKey(arguments: [String: Any], result: @escaping FlutterResult) {
-    let key = arguments[kCrashlyticsArgumentKey] as? String ?? ""
-    let value = arguments[kCrashlyticsArgumentValue] as? String ?? ""
-    Crashlytics.crashlytics().setCustomValue(value, forKey: key)
-    result(nil)
-  }
-
-  private func log(arguments: [String: Any], result: @escaping FlutterResult) {
-    let message = arguments["message"] as? String ?? ""
+  func log(message: String, completion: @escaping (Result<Void, Error>) -> Void) {
     Crashlytics.crashlytics().log(message)
-    result(nil)
+    completion(.success(()))
   }
 
-  private func setCrashlyticsCollectionEnabled(
-    arguments: [String: Any],
-    result: @escaping FlutterResult
-  ) {
-    let enabled = (arguments[kCrashlyticsArgumentEnabled] as? NSNumber)?.boolValue ?? false
-    Crashlytics.crashlytics().setCrashlyticsCollectionEnabled(enabled)
-    result([
-      "isCrashlyticsCollectionEnabled": Crashlytics.crashlytics().isCrashlyticsCollectionEnabled()
-    ])
-  }
-
-  private func checkForUnsentReports(result: @escaping FlutterResult) {
-    Crashlytics.crashlytics().checkForUnsentReports { unsentReports in
-      result([kCrashlyticsArgumentUnsentReports: unsentReports])
-    }
-  }
-
-  private func sendUnsentReports(result: @escaping FlutterResult) {
+  func sendUnsentReports(completion: @escaping (Result<Void, Error>) -> Void) {
     Crashlytics.crashlytics().sendUnsentReports()
-    result(nil)
+    completion(.success(()))
   }
 
-  private func deleteUnsentReports(result: @escaping FlutterResult) {
-    Crashlytics.crashlytics().deleteUnsentReports()
-    result(nil)
+  func setCrashlyticsCollectionEnabled(
+    enabled: Bool,
+    completion: @escaping (Result<Bool, Error>) -> Void
+  ) {
+    Crashlytics.crashlytics().setCrashlyticsCollectionEnabled(enabled)
+    completion(.success(Crashlytics.crashlytics().isCrashlyticsCollectionEnabled()))
   }
 
-  private func didCrashOnPreviousExecution(result: @escaping FlutterResult) {
-    let didCrash = Crashlytics.crashlytics().didCrashDuringPreviousExecution()
-    result([kCrashlyticsArgumentDidCrashOnPreviousExecution: didCrash])
+  func setUserIdentifier(
+    identifier: String,
+    completion: @escaping (Result<Void, Error>) -> Void
+  ) {
+    Crashlytics.crashlytics().setUserID(identifier)
+    completion(.success(()))
+  }
+
+  func setCustomKey(
+    key: String,
+    value: String,
+    completion: @escaping (Result<Void, Error>) -> Void
+  ) {
+    Crashlytics.crashlytics().setCustomValue(value, forKey: key)
+    completion(.success(()))
   }
 
   // MARK: - Utilities
 
-  private func generateFrame(errorElement: [String: Any]) -> StackFrame {
-    let methodName = errorElement[kCrashlyticsArgumentMethod] as? String ?? ""
-    let className = errorElement["class"] as? String ?? ""
+  private func generateFrame(errorElement: CrashlyticsStackFrame) -> StackFrame {
+    let methodName = errorElement.method
+    let className = errorElement.className ?? ""
     let symbol = "\(className).\(methodName)"
-    let file = errorElement[kCrashlyticsArgumentFile] as? String ?? ""
-    let line = (errorElement[kCrashlyticsArgumentLine] as? NSNumber)?.intValue ?? 0
+    let file = errorElement.file
+    let line = Int(errorElement.line) ?? 0
     return StackFrame(symbol: symbol, file: file, line: line)
   }
 
