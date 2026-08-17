@@ -10,11 +10,10 @@ import 'package:pigeon/pigeon.dart';
     // We export in the lib folder to expose the class to other packages.
     dartTestOut: 'lib/src/pigeon/test_api.dart',
     dartPackageName: 'firebase_core_platform_interface',
-    javaOut:
-        '../firebase_core/android/src/main/java/io/flutter/plugins/firebase/core/GeneratedAndroidFirebaseCore.java',
-    javaOptions: JavaOptions(
+    kotlinOut:
+        '../firebase_core/android/src/main/kotlin/io/flutter/plugins/firebase/core/GeneratedAndroidFirebaseCore.g.kt',
+    kotlinOptions: KotlinOptions(
       package: 'io.flutter.plugins.firebase.core',
-      className: 'GeneratedAndroidFirebaseCore',
     ),
     swiftOut:
         '../firebase_core/ios/firebase_core/Sources/firebase_core/FirebaseCoreMessages.g.swift',
