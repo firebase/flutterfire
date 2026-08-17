@@ -148,17 +148,20 @@ void main() {
                 const AppleAppAttestWithDeviceCheckFallbackProvider(),
           );
 
-          // On devices without App Attest support — most Macs — the provider
-          // has to fall back to DeviceCheck. It used to pick App Attest purely
-          // on OS version and fail with "The attestation provider
-          // AppAttestProvider is not supported on current platform and OS
-          // version", so that specific error must not come back.
+          // On devices without App Attest support — most Macs, and every
+          // simulator — the provider has to fall back to DeviceCheck. It used
+          // to pick App Attest purely on OS version and fail with "The
+          // attestation provider AppAttestProvider is not supported on current
+          // platform and OS version", so App Attest must not be the provider
+          // named in any error. Fetching a token can still fail beyond that
+          // (simulators do not support DeviceCheck either, and there is no
+          // debug token configured), which is fine here.
           try {
             await FirebaseAppCheck.instance.getToken(true);
           } on FirebaseException catch (e) {
             expect(
               '${e.message}',
-              isNot(contains('is not supported on current platform')),
+              isNot(contains('AppAttestProvider')),
               reason: 'the DeviceCheck fallback did not engage',
             );
           }
