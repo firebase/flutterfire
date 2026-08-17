@@ -20,7 +20,8 @@
  *
  * @param firebasePlugin id<FLTFirebasePlugin>
  */
-- (void)registerFirebasePlugin:(id<FLTFirebasePlugin> _Nonnull)firebasePlugin;
+- (void)registerFirebasePlugin:(id<FLTFirebasePlugin> _Nonnull)firebasePlugin
+    NS_SWIFT_NAME(register(_:));
 
 /**
  * Each FlutterFire plugin implementing FLTFirebasePlugin provides this method,
@@ -34,7 +35,8 @@
  * @param firebaseApp FIRApp Firebase App instance these constants relate to.
  * @return NSDictionary Dictionary of plugins and their constants.
  */
-- (NSDictionary *_Nonnull)pluginConstantsForFIRApp:(FIRApp *_Nonnull)firebaseApp;
+- (NSDictionary *_Nonnull)pluginConstantsForFIRApp:(FIRApp *_Nonnull)firebaseApp
+    NS_SWIFT_NAME(pluginConstants(for:));
 
 /**
  * Each FlutterFire plugin implementing this method are notified that
@@ -44,5 +46,6 @@
  * resources between Hot Restarts as `initializeCore` can only be called once in
  * Dart.
  */
-- (void)didReinitializeFirebaseCore:(void (^_Nonnull)(void))completion;
+- (void)didReinitializeFirebaseCore:(void (^_Nonnull)(void))completion
+    NS_SWIFT_NAME(didReinitializeFirebaseCore(_:));
 @end

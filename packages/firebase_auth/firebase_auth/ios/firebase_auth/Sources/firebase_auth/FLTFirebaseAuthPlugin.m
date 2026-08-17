@@ -21,12 +21,6 @@
 @import CommonCrypto;
 #import <AuthenticationServices/AuthenticationServices.h>
 
-#if __has_include(<firebase_core/FLTFirebaseCorePlugin.h>)
-#import <firebase_core/FLTFirebaseCorePlugin.h>
-#else
-#import <FLTFirebaseCorePlugin.h>
-#endif
-
 NSString *const kFLTFirebaseAuthChannelName = @"plugins.flutter.io/firebase_auth";
 
 // Argument Keys
@@ -764,7 +758,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
   FIRAuth *auth = [FIRAuth authWithApp:app];
 
   auth.tenantID = pigeonApp.tenantId;
-  auth.customAuthDomain = [FLTFirebaseCorePlugin getCustomDomain:app.name];
+  auth.customAuthDomain = [FLTFirebasePlugin getCustomDomain:app.name];
   // Auth's `customAuthDomain` supersedes value from `getCustomDomain` set by `initializeApp`
   if (pigeonApp.customAuthDomain != nil) {
     auth.customAuthDomain = pigeonApp.customAuthDomain;
