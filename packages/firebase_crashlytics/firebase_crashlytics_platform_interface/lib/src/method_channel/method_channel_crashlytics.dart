@@ -8,7 +8,6 @@ import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics_platform_interface/src/pigeon/messages.pigeon.dart'
     as pigeon;
-import 'package:flutter/services.dart';
 
 import './utils/exception.dart';
 import '../platform_interface/platform_interface_crashlytics.dart';
@@ -20,11 +19,6 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
   /// Create an instance of [MethodChannelFirebaseCrashlytics].
   MethodChannelFirebaseCrashlytics({required FirebaseApp app})
       : super(appInstance: app);
-
-  /// Channel name used for [FlutterFirebasePluginRegistry] / pluginConstants.
-  static const MethodChannel channel = MethodChannel(
-    'plugins.flutter.io/firebase_crashlytics',
-  );
 
   static final pigeon.FirebaseCrashlyticsHostApi pigeonChannel =
       pigeon.FirebaseCrashlyticsHostApi();
