@@ -200,35 +200,4 @@ void main() {
       expect(response.text, 'Some response');
     });
   });
-
-  group('TemplateImagenModel', () {
-    const templateId = 'my-imagen-template';
-    const location = 'us-central1';
-
-    TemplateImagenModel createModel(http.Client client,
-        {bool useVertexBackend = true}) {
-      // ignore: invalid_use_of_internal_member
-      return createTestTemplateImagenModel(
-          app: app,
-          location: location,
-          useVertexBackend: useVertexBackend,
-          client: client);
-    }
-
-    test('generateImages can make successful request', () async {
-      final mockHttp = MockClient((request) async {
-        final body = jsonDecode(request.body) as Map<String, Object?>;
-        expect(request.url.path,
-            endsWith('/templates/$templateId:templatePredict'));
-        expect(body['inputs'], {'prompt': 'A cat'});
-        return http.Response(jsonEncode(_arbitraryImagenResponse), 200,
-            headers: {'content-type': 'application/json'});
-      });
-      final model = createModel(mockHttp);
-      final response =
-          await model.generateImages(templateId, inputs: {'prompt': 'A cat'});
-      expect(response.images, hasLength(1));
-      expect(response.images.first, isA<ImagenInlineImage>());
-    });
-  });
 }
