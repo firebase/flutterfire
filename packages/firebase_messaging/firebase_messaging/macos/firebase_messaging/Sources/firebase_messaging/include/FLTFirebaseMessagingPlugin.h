@@ -1,0 +1,1 @@
+../../../../../ios/firebase_messaging/Sources/firebase_messaging/include/FLTFirebaseMessagingPlugin.h

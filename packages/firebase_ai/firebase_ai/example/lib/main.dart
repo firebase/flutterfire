@@ -1,0 +1,321 @@
+// Copyright 2024 Google LLC
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+import 'package:firebase_ai/firebase_ai.dart';
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+
+// Import after file is generated through flutterfire_cli.
+// import 'package:firebase_ai_example/firebase_options.dart';
+
+import 'pages/bidi_page.dart';
+import 'pages/chat_page.dart';
+import 'pages/function_calling_page.dart';
+import 'pages/image_generation_page.dart';
+import 'pages/capabilities_page.dart';
+import 'pages/server_template_page.dart';
+import 'pages/grounding_page.dart';
+import 'pages/integration_test_page.dart';
+import 'pages/tts_page.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // Enable this line instead once have the firebase_options.dart generated and
+  // imported through flutterfire_cli.
+  // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp();
+  await FirebaseAuth.instance.signInAnonymously();
+  runApp(const GenerativeAISample());
+}
+
+class GenerativeAISample extends StatefulWidget {
+  const GenerativeAISample({super.key});
+
+  @override
+  State<GenerativeAISample> createState() => _GenerativeAISampleState();
+}
+
+class _GenerativeAISampleState extends State<GenerativeAISample> {
+  bool _useAgentPlatform = false;
+  late GenerativeModel _currentModel;
+
+  static final ThemeData _darkTheme = ThemeData(
+    colorScheme: ColorScheme.fromSeed(
+      brightness: Brightness.dark,
+      seedColor: const Color.fromARGB(255, 171, 222, 244),
+    ),
+    useMaterial3: true,
+  );
+
+  @override
+  void initState() {
+    super.initState();
+
+    _initializeModel(_useAgentPlatform);
+  }
+
+  void _initializeModel(bool useVertexBackend) {
+    if (useVertexBackend) {
+      final agentPlatformInstance =
+          FirebaseAI.agentPlatform(location: 'global');
+      _currentModel =
+          agentPlatformInstance.generativeModel(model: 'gemini-3.1-flash-lite');
+    } else {
+      final googleAI = FirebaseAI.googleAI();
+      _currentModel = googleAI.generativeModel(model: 'gemini-3.1-flash-lite');
+    }
+  }
+
+  void _toggleBackend(bool value) {
+    setState(() {
+      _useAgentPlatform = value;
+    });
+    _initializeModel(_useAgentPlatform);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter + ${_useAgentPlatform ? 'Agent Platform' : 'Google AI'}',
+      debugShowCheckedModeBanner: false,
+      themeMode: ThemeMode.dark,
+      theme: _darkTheme,
+      home: HomeScreen(
+        key: ValueKey(
+          '${_useAgentPlatform}_${_currentModel.hashCode}',
+        ),
+        model: _currentModel,
+        useAgentPlatform: _useAgentPlatform,
+        onBackendChanged: _toggleBackend,
+      ),
+    );
+  }
+}
+
+class HomeScreen extends StatefulWidget {
+  final GenerativeModel model;
+  final bool useAgentPlatform;
+  final ValueChanged<bool> onBackendChanged;
+
+  const HomeScreen({
+    super.key,
+    required this.model,
+    required this.useAgentPlatform,
+    required this.onBackendChanged,
+  });
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  int _selectedIndex = 0;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+// Method to build the selected page on demand
+  Widget _buildSelectedPage(
+    int index,
+    GenerativeModel currentModel,
+    bool useAgentPlatform,
+  ) {
+    switch (index) {
+      case 0:
+        return ChatPage(
+          title: 'Chat',
+          useAgentPlatform: useAgentPlatform,
+        );
+      case 1:
+        return CapabilitiesPage(
+          title: 'Capabilities',
+          model: currentModel,
+        );
+      case 2:
+        // FunctionCallingPage initializes its own model as per original design
+        return FunctionCallingPage(
+          title: 'Function Calling',
+          useAgentPlatform: useAgentPlatform,
+        );
+      case 3:
+        return ImageGenerationPage(
+          title: 'Image Gen',
+          useAgentPlatform: useAgentPlatform,
+        );
+      case 4:
+        return BidiPage(
+          title: 'Live Stream',
+          model: currentModel,
+          useAgentPlatform: useAgentPlatform,
+        );
+      case 5:
+        return ServerTemplatePage(
+          title: 'Server Template',
+          useAgentPlatform: useAgentPlatform,
+        );
+      case 6:
+        return GroundingPage(
+          title: 'Grounding',
+          useAgentPlatform: useAgentPlatform,
+        );
+      case 7:
+        return TTSPage(
+          title: 'TTS Test',
+          useAgentPlatform: useAgentPlatform,
+        );
+
+      default:
+        // Fallback to the first page in case of an unexpected index
+        return ChatPage(
+          title: 'Chat',
+          useAgentPlatform: useAgentPlatform,
+        );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Flutter + ${widget.useAgentPlatform ? 'Agent Platform' : 'Google AI'}',
+        ),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.playlist_play),
+            tooltip: 'Run Integration Tests',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const IntegrationTestPage(),
+                ),
+              );
+            },
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text(
+                  'Google AI',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: widget.useAgentPlatform
+                        ? Theme.of(context).colorScheme.onSurface.withAlpha(180)
+                        : Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+                Switch(
+                  value: widget.useAgentPlatform,
+                  onChanged: widget.onBackendChanged,
+                  activeTrackColor: Colors.green.withAlpha(128),
+                  inactiveTrackColor: Colors.blueGrey.withAlpha(128),
+                  activeThumbColor: Colors.green,
+                  inactiveThumbColor: Colors.blueGrey,
+                ),
+                Text(
+                  'Agent Platform',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: widget.useAgentPlatform
+                        ? Theme.of(context).colorScheme.primary
+                        : Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withAlpha(180),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+      body: Center(
+        child: _buildSelectedPage(
+          _selectedIndex,
+          widget.model,
+          widget.useAgentPlatform,
+        ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        selectedFontSize: 10,
+        unselectedFontSize: 9,
+        selectedItemColor: Theme.of(context).colorScheme.primary,
+        unselectedItemColor: widget.useAgentPlatform
+            ? Theme.of(context).colorScheme.onSurface.withAlpha(180)
+            : Colors.grey,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.chat),
+            label: 'Chat',
+            tooltip: 'Chat',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.star),
+            label: 'Capabilities',
+            tooltip: 'Model Capabilities',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.functions),
+            label: 'Functions',
+            tooltip: 'Function Calling',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.brush),
+            label: 'NanoBanana',
+            tooltip: 'Image Generation',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.stream,
+            ),
+            label: 'Live',
+            tooltip: 'Live Stream',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.storage,
+            ),
+            label: 'Server',
+            tooltip: 'Server Template',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.location_on,
+            ),
+            label: 'Grounding',
+            tooltip: 'Search & Maps Grounding',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.record_voice_over,
+            ),
+            label: 'TTS',
+            tooltip: 'Text to Speech',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+      ),
+    );
+  }
+}

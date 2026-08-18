@@ -2,6 +2,9 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// This example intentionally demonstrates the deprecated package.
+// ignore_for_file: deprecated_member_use
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ml_model_downloader/firebase_ml_model_downloader.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +38,7 @@ class _MyAppState extends State<MyApp> {
   FirebaseCustomModel? model;
 
   /// Initially get the lcoal model if found, and asynchronously get the latest one in background.
-  initWithLocalModel() async {
+  Future<void> initWithLocalModel() async {
     final newModel = await FirebaseModelDownloader.instance.getModel(
         kModelName, FirebaseModelDownloadType.localModelUpdateInBackground);
 

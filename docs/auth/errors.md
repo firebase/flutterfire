@@ -97,3 +97,11 @@ try {
   }
 }
 ```
+
+## `recaptcha-sdk-not-linked` (iOS phone auth)
+
+If `e.code` is **`recaptcha-sdk-not-linked`** during **`verifyPhoneNumber`** on **iOS**, the native layer expects **reCAPTCHA Enterprise**
+to be linked or your **Identity Platform** project configuration must be adjusted. This is not fixed from Dart alone.
+
+See [Phone Authentication — iOS: reCAPTCHA SDK and Identity Platform](/docs/auth/phone-auth#ios-recaptcha-sdk-and-identity-platform) for
+recommended setup, the Safari flow, and a documented **GCP / Identity Toolkit** workaround with trade-offs.

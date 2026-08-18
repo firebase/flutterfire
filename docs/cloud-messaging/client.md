@@ -1,25 +1,12 @@
-Project: /docs/cloud-messaging/_project.yaml
-Book: /docs/_book.yaml
-page_type: guide
-
-{% include "_shared/apis/console/_local_variables.html" %}
-{% include "_local_variables.html" %}
-{% include "docs/cloud-messaging/_local_variables.html" %}
-{% include "docs/android/_local_variables.html" %}
-
 <link rel="stylesheet" type="text/css" href="/styles/docs.css" />
 
 # Set up a Firebase Cloud Messaging client app on Flutter
 
-Follow these steps to set up an FCM client on Flutter.
+Depending on the platform you're targeting, there are some additional required setup steps that you'll need to take.
 
-## Platform-specific setup and requirements
+## iOS+
 
-Some of the required steps depend on the platform you're targeting.
-
-### iOS+
-
-#### Enable app capabilities in Xcode
+### Enable app capabilities in Xcode
 
 Before your application can start to receive messages, you must enable push
 notifications and background modes in your Xcode project.
@@ -31,27 +18,25 @@ notifications and background modes in your Xcode project.
 
 #### Upload your APNs authentication key
 
-Before you use FCM, upload your APNs certificate to Firebase. If you don't
-already have an APNs certificate, create one in the
+Before you use FCM, upload your APNs authentication key to Firebase. If you don't
+already have an APNs authentication key, create one in the
 [Apple Developer Member Center](https://developer.apple.com/membercenter/index.action).
 
 1.  Inside your project in the Firebase console, select the gear icon, select
     **Project Settings**, and then select the **Cloud Messaging** tab.
-1.  Select the **Upload Certificate** button for your development certificate,
-    your production certificate, or both. At least one is required.
-1.  For each certificate, select the .p12 file, and provide the password, if
-    any. Make sure the bundle ID for this certificate matches the bundle ID of
-    your app. Select **Save**.
+1.  Select the **Upload** button for your development authentication key,
+    your production authentication key, or both. At least one is required.
+1.  For each authentication key, select the .p8 file, and provide the key ID and your Apple team ID. Select **Save**.
 
 #### Method swizzling
 
-To use the FCM Flutter plugin on Apple devices, you must not disable method
-swizzling. Swizzling is required, and without it, key Firebase features such as
-FCM token handling do not function properly.
+To use the FCM Flutter plugin on Apple devices, method
+swizzling is required. Without it, key Firebase features such as
+FCM token handling won't function properly.
 
-### Android
+## Android
 
-#### Google Play services
+### Google Play services
 
 FCM clients require devices running Android 4.4 or higher that also have Google
 Play services installed, or an emulator running Android 4.4 with Google APIs.
@@ -69,12 +54,12 @@ other means, such as through the back button, the check is still performed.
 If the device doesn't have a compatible version of Google Play services, your
 app can call [`GoogleApiAvailability.makeGooglePlayServicesAvailable()`](//developers.google.com/android/reference/com/google/android/gms/common/GoogleApiAvailability.html#public-methods) to allow users to download Google Play services from the Play Store.
 
-### Web
+## Web
 
-#### Configure Web Credentials with FCM
+### Configure Web Credentials with FCM
 
-The FCM Web interface uses Web credentials called "Voluntary Application Server
-Identification," or "VAPID" keys, to authorize send requests to supported web
+The FCM Web interface uses Web credentials called Voluntary Application Server
+Identification, or "VAPID" keys, to authorize send requests to supported web
 push services. To subscribe your app to push notifications, you need to
 associate a pair of keys with your Firebase project. You can either generate a
 new key pair or import your existing key pair through the Firebase console.
@@ -131,33 +116,42 @@ see [Application server keys](https://developers.google.com/web/fundamentals/pus
     flutter run
     ```
 
-
 ## Access the registration token
 
-To send a message to a specific device, you need to know that device's
-registration token. Because you'll need to enter the token in a field in the
-Notifications console to complete this tutorial, make sure to copy the token
-or securely store it after you retrieve it.
+To send a message to a specific device, you need to know the device
+registration token. To retrieve the current registration token for an app instance, call
+`getToken()`.
 
-To retrieve the current registration token for an app instance, call
-`getToken()`. If notification permission has not been granted, this method will
-ask the user for notification permissions. Otherwise, it returns a token or
-rejects the future due to an error.
-
-Warning: In iOS SDK 10.4.0 and higher, it is a requirement that the APNs token
-is available before making API requests. The APNs token is not guaranteed to
-have been received before making FCM plugin API requests.
+On Apple and Android platforms, `getToken()` does not request notification
+permission. If your app displays notifications, request permission explicitly:
 
 ```dart
-// You may set the permission requests to "provisional" which allows the user to choose what type
-// of notifications they would like to receive once the user receives a notification.
-final notificationSettings = await FirebaseMessaging.instance.requestPermission(provisional: true);
+final notificationSettings =
+    await FirebaseMessaging.instance.requestPermission(provisional: true);
+```
 
-// For apple platforms, ensure the APNS token is available before making any FCM plugin API calls
+On web, `getToken()` asks for notification permission if it has not already
+been granted. You can call `requestPermission()` first if you want to control
+when the browser displays the permission prompt.
+
+Warning: In iOS SDK 10.4.0 and higher, it is required that the APNs token
+is available before retrieving the FCM token. The APNs token is not guaranteed
+to be available immediately after permission is granted. If `getAPNSToken()`
+returns `null`, wait for APNs registration to complete and try again later.
+
+```dart
+// On Apple platforms, ensure the APNs token is available before retrieving
+// the FCM token.
 final apnsToken = await FirebaseMessaging.instance.getAPNSToken();
 if (apnsToken != null) {
- // APNS token is available, make FCM plugin API requests...
+  final fcmToken = await FirebaseMessaging.instance.getToken();
 }
+```
+
+On other native platforms, retrieve the token directly:
+
+```dart
+final fcmToken = await FirebaseMessaging.instance.getToken();
 ```
 
 On web platforms, pass your VAPID public key to `getToken()`:
@@ -166,22 +160,21 @@ On web platforms, pass your VAPID public key to `getToken()`:
 final fcmToken = await FirebaseMessaging.instance.getToken(vapidKey: "BKagOny0KF_2pCJQ3m....moL0ewzQ8rZu");
 ```
 
-To be notified whenever the token is updated, subscribe to the `onTokenRefresh`
-stream:
+On Apple and Android platforms, subscribe to the `onTokenRefresh` stream to be
+notified whenever a token is generated or refreshed. The stream does not emit
+at every app startup. On web, `onTokenRefresh` is a no-op stream.
 
 ```dart
 FirebaseMessaging.instance.onTokenRefresh
     .listen((fcmToken) {
       // TODO: If necessary send token to application server.
 
-      // Note: This callback is fired at each app startup and whenever a new
-      // token is generated.
+      // This callback is fired whenever a token is generated or refreshed.
     })
     .onError((err) {
       // Error getting token.
     });
 ```
-
 
 ## Prevent auto initialization {:#prevent-auto-init}
 
@@ -189,7 +182,7 @@ When an FCM registration token is generated, the library uploads
 the identifier and configuration data to Firebase. If you prefer to prevent
 token autogeneration, disable auto-initialization at build time.
 
-#### iOS
+### iOS
 
 On iOS, add a metadata value to your `Info.plist`:
 
@@ -197,8 +190,7 @@ On iOS, add a metadata value to your `Info.plist`:
 FirebaseMessagingAutoInitEnabled = NO
 ```
 
-
-#### Android
+### Android
 
 On Android, disable Analytics collection and FCM auto initialization (you must
 disable both) by adding these metadata values to your `AndroidManifest.xml`:
@@ -222,17 +214,49 @@ await FirebaseMessaging.instance.setAutoInitEnabled(true);
 
 This value persists across app restarts once set.
 
+## Send a test notification message
+
+1. Install and run the app on the target device. On Apple devices, you'll need to accept the request for permission to receive remote notifications.
+2. Make sure the app is in the background on the device.
+3. In the Firebase console, open the Messaging page.
+4. If this is your first message, select **Create your first campaign**. Select **Firebase Notification messages** and select **Create**.
+5. Otherwise, on the **Campaign** tab, select **New campaign** and then **Notifications**.
+6. Enter the message text.
+7. Select **Send test message** from the right pane.
+8. In the field labeled **Add an FCM registration token**, enter your registration token.
+9. Select **Test**.
+
+After you select **Test**, the targeted client device, with the app in the background, should receive the notification.
+
+For insight into message delivery to your app, see the FCM reporting dashboard, which records the number of messages sent and opened on Apple and Android devices, along with impression data for Android apps.
+
+## Handling interaction
+
+When users tap a notification, the default behavior on both Android and iOS is
+to open the application. If the application is terminated, it will be started,
+and if it is in the background, it will be brought to the foreground.
+
+Depending on the content of a notification, you may want to handle the user's
+interaction when the application opens. For example, if a new chat message is
+sent using a notification and the user selects it, you may want to open the
+specific conversation when the application opens.
+
+The `firebase-messaging` package provides two ways to handle this interaction:
+  1. `getInitialMessage():` If the application is opened from a terminated
+     state, this method returns a `Future` containing a `RemoteMessage`. Once
+     consumed, the `RemoteMessage` will be removed.
+  1. `onMessageOpenedApp`: A`Stream` which posts a `RemoteMessage` when the
+     application is opened from a background state.
+
+To make sure your users have a smooth experience, you should handle both
+scenarios. The following code example outlines how this can be achieved:
+
+How you handle interactions depends on your application setup. The previously
+shown example is a basic example of using a `StatefulWidget`.
+
 ## Next steps
 
-After the client app is set up, you are ready to start sending downstream
-messages with the
-[Notifications composer](//console.firebase.google.com/project/_/notification).
-See [Send a test message to a backgrounded app](first-message).
-
-To add other, more advanced behavior to your app, you'll need a
-[server implementation](/docs/cloud-messaging/server).
-
-Then, in your app client:
-
+After the client app is set up, you can start receiving messages or sending them to your users:
+- [Send a test message to a backgrounded app](first-message)
 - [Receive messages](/docs/cloud-messaging/flutter/receive)
-- [Subscribe to message topics](/docs/cloud-messaging/flutter/topic-messaging)
+- [Notification composer](///console.firebase.google.com/project/_/notification)

@@ -1,3 +1,152 @@
+## 0.2.7+13
+
+ - Update a dependency to the latest release.
+
+## 0.2.7+12
+
+ - Update a dependency to the latest release.
+
+## 0.2.7+11
+
+ - Update a dependency to the latest release.
+
+## 0.2.7+10
+
+ - Update a dependency to the latest release.
+
+## 0.2.7+9
+
+ - Update a dependency to the latest release.
+
+## 0.2.7+8
+
+ - Update a dependency to the latest release.
+
+## 0.2.7+7
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+
+## 0.2.7+6
+
+ - Update a dependency to the latest release.
+
+## 0.2.7+5
+
+ - Update a dependency to the latest release.
+
+## 0.2.7+4
+
+ - Update a dependency to the latest release.
+
+## 0.2.7+3
+
+ - Update a dependency to the latest release.
+
+## 0.2.7+2
+
+ - **FIX**(firebase_database,web): return correct DatabaseReference instance in ThenableReference ([#17915](https://github.com/firebase/flutterfire/issues/17915)). ([c0e682ee](https://github.com/firebase/flutterfire/commit/c0e682eeaf506a746219b3cc3dd7dd7e93f94dca))
+
+## 0.2.7+1
+
+ - Update a dependency to the latest release.
+
+## 0.2.7
+
+ - **FIX**(database,web): more explicit interop types ([#17823](https://github.com/firebase/flutterfire/issues/17823)). ([16037fbb](https://github.com/firebase/flutterfire/commit/16037fbbdf7db0c06a21ce8111493bcf848673b4))
+ - **FEAT**(web): add `registerVersion` support for packages ([#17780](https://github.com/firebase/flutterfire/issues/17780)). ([3c8c83d4](https://github.com/firebase/flutterfire/commit/3c8c83d4251f2965ae6fb1fe7b64c21dcb94e9ec))
+
+## 0.2.6+20
+
+ - Update a dependency to the latest release.
+
+## 0.2.6+19
+
+ - Update a dependency to the latest release.
+
+## 0.2.6+18
+
+ - Update a dependency to the latest release.
+
+## 0.2.6+17
+
+ - Update a dependency to the latest release.
+
+## 0.2.6+16
+
+ - Update a dependency to the latest release.
+
+## 0.2.6+15
+
+ - Update a dependency to the latest release.
+
+## 0.2.6+14
+
+ - Update a dependency to the latest release.
+
+## 0.2.6+13
+
+ - Update a dependency to the latest release.
+
+## 0.2.6+12
+
+ - Update a dependency to the latest release.
+
+## 0.2.6+11
+
+ - Update a dependency to the latest release.
+
+## 0.2.6+10
+
+ - Update a dependency to the latest release.
+
+## 0.2.6+9
+
+ - Update a dependency to the latest release.
+
+## 0.2.6+8
+
+ - Update a dependency to the latest release.
+
+## 0.2.6+7
+
+ - Update a dependency to the latest release.
+
+## 0.2.6+6
+
+ - Update a dependency to the latest release.
+
+## 0.2.6+5
+
+ - Update a dependency to the latest release.
+
+## 0.2.6+4
+
+ - Update a dependency to the latest release.
+
+## 0.2.6+3
+
+ - **FIX**(database): remove sync on stream broadcast ([#13503](https://github.com/firebase/flutterfire/issues/13503)). ([9e80c1d9](https://github.com/firebase/flutterfire/commit/9e80c1d98e3eae3b8ab490bf1a94a662b848db79))
+
+## 0.2.6+2
+
+ - Update a dependency to the latest release.
+
+## 0.2.6+1
+
+ - Update a dependency to the latest release.
+
+## 0.2.6
+
+ - **FEAT**(web): update to `web: ^1.0.0` ([#13200](https://github.com/firebase/flutterfire/issues/13200)). ([8fab04ae](https://github.com/firebase/flutterfire/commit/8fab04aec3b95789856d95639131bf09db29175b))
+
+## 0.2.5+14
+
+ - **FIX**(database,web): fix an issue that would remove duplicate streams in Debug mode ([#13253](https://github.com/firebase/flutterfire/issues/13253)). ([2546971b](https://github.com/firebase/flutterfire/commit/2546971bb0d253b4c7bb6584f40064ab997bbb5f))
+
+## 0.2.5+13
+
+ - Update a dependency to the latest release.
+
 ## 0.2.5+12
 
  - Update a dependency to the latest release.

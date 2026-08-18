@@ -1,3 +1,152 @@
+## 6.2.6
+
+ - Update a dependency to the latest release.
+
+## 6.2.5
+
+ - Update a dependency to the latest release.
+
+## 6.2.4
+
+ - Update a dependency to the latest release.
+
+## 6.2.3
+
+ - Update a dependency to the latest release.
+
+## 6.2.2
+
+ - Update a dependency to the latest release.
+
+## 6.2.1
+
+ - Update a dependency to the latest release.
+
+## 6.2.0
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+ - **FEAT**: upgrade pigeon to version 26.3.4 ([#18205](https://github.com/firebase/flutterfire/issues/18205)). ([cb6b4aef](https://github.com/firebase/flutterfire/commit/cb6b4aeffc568755ea3eebe32b998f00237bf5ad))
+
+## 6.1.5
+
+ - Update a dependency to the latest release.
+
+## 6.1.4
+
+ - **FIX**(auth): fix inconsistence in casing in the native iOS SDK and Web SDK ([#18086](https://github.com/firebase/flutterfire/issues/18086)). ([60b5cd5c](https://github.com/firebase/flutterfire/commit/60b5cd5c7888fa932124958125e87bd39e1c323c))
+
+## 6.1.3
+
+ - Update a dependency to the latest release.
+
+## 6.1.2
+
+ - Update a dependency to the latest release.
+
+## 6.1.1
+
+ - Update a dependency to the latest release.
+
+## 6.1.0
+
+ - **FIX**(auth): fix JS interop lints ([#17802](https://github.com/firebase/flutterfire/issues/17802)). ([0956646a](https://github.com/firebase/flutterfire/commit/0956646a0e1f88cbb416b748b4738a8bd83ad616))
+ - **FEAT**(web): add `registerVersion` support for packages ([#17780](https://github.com/firebase/flutterfire/issues/17780)). ([3c8c83d4](https://github.com/firebase/flutterfire/commit/3c8c83d4251f2965ae6fb1fe7b64c21dcb94e9ec))
+
+## 6.0.4
+
+ - Update a dependency to the latest release.
+
+## 6.0.3
+
+ - Update a dependency to the latest release.
+
+## 6.0.2
+
+ - Update a dependency to the latest release.
+
+## 6.0.1
+
+ - Update a dependency to the latest release.
+
+## 6.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**(auth): remove deprecated functions ([#17562](https://github.com/firebase/flutterfire/issues/17562)). ([d50aad95](https://github.com/firebase/flutterfire/commit/d50aad954443904d64d4ebd4442ebc63ed702986))
+
+## 5.15.3
+
+ - Update a dependency to the latest release.
+
+## 5.15.2
+
+ - Update a dependency to the latest release.
+
+## 5.15.1
+
+ - Update a dependency to the latest release.
+
+## 5.15.0
+
+ - **FEAT**(auth): add support for initializeRecaptchaConfig ([#17365](https://github.com/firebase/flutterfire/issues/17365)). ([73f9028e](https://github.com/firebase/flutterfire/commit/73f9028e114874fddc8a4f76f22b247504a95a02))
+
+## 5.14.3
+
+ - Update a dependency to the latest release.
+
+## 5.14.2
+
+ - **FIX**(auth,web): fix an issue that could occur when deleting FirebaseApp ([#17145](https://github.com/firebase/flutterfire/issues/17145)). ([a2246cd0](https://github.com/firebase/flutterfire/commit/a2246cd0ae8a7a53abc2537d7cd66ee079d3b096))
+
+## 5.14.1
+
+ - Update a dependency to the latest release.
+
+## 5.14.0
+
+ - **FEAT**(auth): support for `linkDomain` in `ActionCodeSettings` ([#17099](https://github.com/firebase/flutterfire/issues/17099)). ([090cdb20](https://github.com/firebase/flutterfire/commit/090cdb2078dc66e58aa4b1a3ef9a48101467b6ac))
+
+## 5.13.8
+
+ - Update a dependency to the latest release.
+
+## 5.13.7
+
+ - Update a dependency to the latest release.
+
+## 5.13.6
+
+ - Update a dependency to the latest release.
+
+## 5.13.5
+
+ - Update a dependency to the latest release.
+
+## 5.13.4
+
+ - Update a dependency to the latest release.
+
+## 5.13.3
+
+ - Update a dependency to the latest release.
+
+## 5.13.2
+
+ - Update a dependency to the latest release.
+
+## 5.13.1
+
+ - Update a dependency to the latest release.
+
+## 5.13.0
+
+ - **FIX**: (auth) TypeError when converting ActionCodeSettings to JS ([#13260](https://github.com/firebase/flutterfire/issues/13260)). ([6969e48a](https://github.com/firebase/flutterfire/commit/6969e48a632a69bb071b80102d3cc2cfc53736a6))
+ - **FEAT**(web): update to `web: ^1.0.0` ([#13200](https://github.com/firebase/flutterfire/issues/13200)). ([8fab04ae](https://github.com/firebase/flutterfire/commit/8fab04aec3b95789856d95639131bf09db29175b))
+
+## 5.12.6
+
+ - **DOCS**: remove reference to flutter.io and firebase.flutter.dev ([#13152](https://github.com/firebase/flutterfire/issues/13152)). ([5f0874b9](https://github.com/firebase/flutterfire/commit/5f0874b91e28a203dd62d37d391e5760c91f5729))
+
 ## 5.12.5
 
  - Update a dependency to the latest release.
@@ -33,7 +182,7 @@
 
 ## 5.11.4
 
- - **FIX**(web): fixing some uncorrect type casting for Web ([#12696](https://github.com/firebase/flutterfire/issues/12696)). ([471b5072](https://github.com/firebase/flutterfire/commit/471b507265a08bbc68277d3a2fdb7ef608c9efcc))
+ - **FIX**(web): fixing some incorrect type casting for Web ([#12696](https://github.com/firebase/flutterfire/issues/12696)). ([471b5072](https://github.com/firebase/flutterfire/commit/471b507265a08bbc68277d3a2fdb7ef608c9efcc))
 
 ## 5.11.3
 
@@ -194,7 +343,7 @@
 ## 5.5.0
 
  - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
- - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+ - **FEAT**: update libraries to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
 
 ## 5.4.0
 

@@ -172,12 +172,32 @@ ActionCodeInfo? convertWebActionCodeInfo(
   }
 
   return ActionCodeInfo(
-    operation: ActionCodeInfoOperation.passwordReset,
+    operation:
+        _convertWebActionCodeOperation(webActionCodeInfo.operation.toDart),
     data: ActionCodeInfoData(
       email: webActionCodeInfo.data.email?.toDart,
       previousEmail: webActionCodeInfo.data.previousEmail?.toDart,
     ),
   );
+}
+
+ActionCodeInfoOperation _convertWebActionCodeOperation(String operation) {
+  switch (operation) {
+    case 'EMAIL_SIGNIN':
+      return ActionCodeInfoOperation.emailSignIn;
+    case 'PASSWORD_RESET':
+      return ActionCodeInfoOperation.passwordReset;
+    case 'RECOVER_EMAIL':
+      return ActionCodeInfoOperation.recoverEmail;
+    case 'REVERT_SECOND_FACTOR_ADDITION':
+      return ActionCodeInfoOperation.revertSecondFactorAddition;
+    case 'VERIFY_AND_CHANGE_EMAIL':
+      return ActionCodeInfoOperation.verifyAndChangeEmail;
+    case 'VERIFY_EMAIL':
+      return ActionCodeInfoOperation.verifyEmail;
+    default:
+      return ActionCodeInfoOperation.unknown;
+  }
 }
 
 /// Converts a [auth_interop.AdditionalUserInfo] into a [AdditionalUserInfo].
@@ -201,7 +221,7 @@ IdTokenResult convertWebIdTokenResult(
   auth_interop.IdTokenResult webIdTokenResult,
 ) {
   return IdTokenResult(
-    PigeonIdTokenResult(
+    InternalIdTokenResult(
       claims: webIdTokenResult.claims,
       token: webIdTokenResult.token,
       authTimestamp: webIdTokenResult.authTime.millisecondsSinceEpoch,
@@ -223,30 +243,30 @@ auth_interop.ActionCodeSettings? convertPlatformActionCodeSettings(
   Map<String, dynamic> actionCodeSettingsMap = actionCodeSettings.asMap();
 
   auth_interop.ActionCodeSettings webActionCodeSettings;
+  webActionCodeSettings = auth_interop.ActionCodeSettings(
+    url: actionCodeSettings.url.toJS,
+    handleCodeInApp: actionCodeSettings.handleCodeInApp.toJS,
+  );
 
-  if (actionCodeSettings.dynamicLinkDomain != null) {
-    webActionCodeSettings = auth_interop.ActionCodeSettings(
-      url: actionCodeSettings.url.toJS,
-      handleCodeInApp: actionCodeSettings.handleCodeInApp.toJS,
-      dynamicLinkDomain: actionCodeSettings.dynamicLinkDomain?.toJS,
-    );
-  } else {
-    webActionCodeSettings = auth_interop.ActionCodeSettings(
-      url: actionCodeSettings.url.toJS,
-      handleCodeInApp: actionCodeSettings.handleCodeInApp.toJS,
-    );
+  if (actionCodeSettings.linkDomain != null) {
+    webActionCodeSettings.linkDomain = actionCodeSettings.linkDomain!.toJS;
   }
 
   if (actionCodeSettingsMap['android'] != null) {
     webActionCodeSettings.android = auth_interop.AndroidSettings(
-        packageName: actionCodeSettingsMap['android']['packageName'],
-        minimumVersion: actionCodeSettingsMap['android']['minimumVersion'],
-        installApp: actionCodeSettingsMap['android']['installApp']);
+      packageName:
+          (actionCodeSettingsMap['android']['packageName'] as String?)?.toJS,
+      minimumVersion:
+          (actionCodeSettingsMap['android']['minimumVersion'] as String?)?.toJS,
+      installApp:
+          (actionCodeSettingsMap['android']['installApp'] as bool?)?.toJS,
+    );
   }
 
   if (actionCodeSettingsMap['iOS'] != null) {
     webActionCodeSettings.iOS = auth_interop.IosSettings(
-        bundleId: actionCodeSettingsMap['iOS']['bundleId']);
+      bundleId: (actionCodeSettingsMap['iOS']['bundleId'] as String?)?.toJS,
+    );
   }
 
   return webActionCodeSettings;
@@ -446,7 +466,6 @@ String convertRecaptchaVerifierSize(RecaptchaVerifierSize size) {
     case RecaptchaVerifierSize.compact:
       return 'compact';
     case RecaptchaVerifierSize.normal:
-    default:
       return 'normal';
   }
 }
@@ -457,7 +476,6 @@ String convertRecaptchaVerifierTheme(RecaptchaVerifierTheme theme) {
     case RecaptchaVerifierTheme.dark:
       return 'dark';
     case RecaptchaVerifierTheme.light:
-    default:
       return 'light';
   }
 }

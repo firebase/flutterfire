@@ -2,10 +2,10 @@ require 'yaml'
 
 pubspec = YAML.load_file(File.join('..', 'pubspec.yaml'))
 library_version = pubspec['version'].gsub('+', '-')
-firebase_analytics = 'Firebase/Analytics'
+firebase_analytics = 'FirebaseAnalytics'
 
 if defined?($FirebaseAnalyticsWithoutAdIdSupport)
-firebase_analytics = 'Firebase/AnalyticsWithoutAdIdSupport'
+firebase_analytics = 'FirebaseAnalytics/Core'
 end
 
 if defined?($FirebaseSDKVersion)
@@ -48,9 +48,11 @@ Pod::Spec.new do |s|
   s.authors          = 'The Chromium Authors'
   s.source           = { :path => '.' }
 
-  s.source_files     = 'Classes/**/*.{h,m}'
+  s.source_files     = 'firebase_analytics/Sources/firebase_analytics/**/*.swift'
+  s.public_header_files = 'firebase_analytics/Sources/firebase_analytics/include/*.h'
 
   s.platform = :osx, '10.13'
+  s.swift_version = '5.0'
 
   # Flutter dependencies
   s.dependency 'FlutterMacOS'
@@ -61,7 +63,7 @@ Pod::Spec.new do |s|
 
   s.static_framework = true
   s.pod_target_xcconfig = {
-    'GCC_PREPROCESSOR_DEFINITIONS' => "LIBRARY_VERSION=\\@\\\"#{library_version}\\\" LIBRARY_NAME=\\@\\\"flutter-fire-analytics\\\"",
+    'GCC_PREPROCESSOR_DEFINITIONS' => "LIBRARY_VERSION=\\\"#{library_version}\\\" LIBRARY_NAME=\\\"flutter-fire-analytics\\\"",
     'DEFINES_MODULE' => 'YES'
   }
 end

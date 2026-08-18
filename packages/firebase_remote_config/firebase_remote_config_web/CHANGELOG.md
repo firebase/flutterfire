@@ -1,3 +1,152 @@
+## 1.10.13
+
+ - Update a dependency to the latest release.
+
+## 1.10.12
+
+ - Update a dependency to the latest release.
+
+## 1.10.11
+
+ - Update a dependency to the latest release.
+
+## 1.10.10
+
+ - Update a dependency to the latest release.
+
+## 1.10.9
+
+ - Update a dependency to the latest release.
+
+## 1.10.8
+
+ - Update a dependency to the latest release.
+
+## 1.10.7
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+
+## 1.10.6
+
+ - Update a dependency to the latest release.
+
+## 1.10.5
+
+ - Update a dependency to the latest release.
+
+## 1.10.4
+
+ - Update a dependency to the latest release.
+
+## 1.10.3
+
+ - Update a dependency to the latest release.
+
+## 1.10.2
+
+ - Update a dependency to the latest release.
+
+## 1.10.1
+
+ - **FIX**(firebase_remote_config,web): update getSource method call in RemoteConfig class and add test for getAll() method ([#17847](https://github.com/firebase/flutterfire/issues/17847)). ([71138573](https://github.com/firebase/flutterfire/commit/7113857365a8332a5feaac3fd5dbbda1b3a500ff))
+
+## 1.10.0
+
+ - **FIX**(remote-config): js interop types ([#17806](https://github.com/firebase/flutterfire/issues/17806)). ([725a33ac](https://github.com/firebase/flutterfire/commit/725a33acd6a2f945578025b19bb2aaac0fe6290b))
+ - **FEAT**(web): add `registerVersion` support for packages ([#17780](https://github.com/firebase/flutterfire/issues/17780)). ([3c8c83d4](https://github.com/firebase/flutterfire/commit/3c8c83d4251f2965ae6fb1fe7b64c21dcb94e9ec))
+
+## 1.9.0
+
+ - **FEAT**(remote_config,web): add web support for `onConfigUpdated` ([#17750](https://github.com/firebase/flutterfire/issues/17750)). ([799b12e4](https://github.com/firebase/flutterfire/commit/799b12e4b31a2c7c8f251dd4adbbf65227bfc1b6))
+
+## 1.8.12
+
+ - Update a dependency to the latest release.
+
+## 1.8.11
+
+ - Update a dependency to the latest release.
+
+## 1.8.10
+
+ - Update a dependency to the latest release.
+
+## 1.8.9
+
+ - Update a dependency to the latest release.
+
+## 1.8.8
+
+ - Update a dependency to the latest release.
+
+## 1.8.7
+
+ - Update a dependency to the latest release.
+
+## 1.8.6
+
+ - Update a dependency to the latest release.
+
+## 1.8.5
+
+ - Update a dependency to the latest release.
+
+## 1.8.4
+
+ - Update a dependency to the latest release.
+
+## 1.8.3
+
+ - Update a dependency to the latest release.
+
+## 1.8.2
+
+ - Update a dependency to the latest release.
+
+## 1.8.1
+
+ - Update a dependency to the latest release.
+
+## 1.8.0
+
+ - **FEAT**(remote-config): custom signals support ([#17053](https://github.com/firebase/flutterfire/issues/17053)). ([7cf248a8](https://github.com/firebase/flutterfire/commit/7cf248a8808e3d8f7fed29f18ddaf1fadf329ca3))
+
+## 1.7.7
+
+ - Update a dependency to the latest release.
+
+## 1.7.6
+
+ - Update a dependency to the latest release.
+
+## 1.7.5
+
+ - Update a dependency to the latest release.
+
+## 1.7.4
+
+ - Update a dependency to the latest release.
+
+## 1.7.3
+
+ - Update a dependency to the latest release.
+
+## 1.7.2
+
+ - Update a dependency to the latest release.
+
+## 1.7.1
+
+ - Update a dependency to the latest release.
+
+## 1.7.0
+
+ - **FEAT**(web): update to `web: ^1.0.0` ([#13200](https://github.com/firebase/flutterfire/issues/13200)). ([8fab04ae](https://github.com/firebase/flutterfire/commit/8fab04aec3b95789856d95639131bf09db29175b))
+
+## 1.6.13
+
+ - Update a dependency to the latest release.
+
 ## 1.6.12
 
  - Update a dependency to the latest release.

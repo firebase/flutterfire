@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-part of cloud_firestore;
+part of '../cloud_firestore.dart';
 
 /// The [TransactionHandler] may be executed multiple times; it should be able
 /// to handle multiple executions.
@@ -59,9 +59,11 @@ class Transaction {
 
   /// Updates fields in the document referred to by [documentReference].
   /// The update will fail if applied to a document that does not exist.
+  ///
+  /// Objects key can be a String or a FieldPath.
   Transaction update(
     DocumentReference documentReference,
-    Map<String, dynamic> data,
+    Map<Object, Object?> data,
   ) {
     assert(
       documentReference.firestore == _firestore,
@@ -72,7 +74,7 @@ class Transaction {
       _firestore,
       _delegate.update(
         documentReference.path,
-        _CodecUtility.replaceValueWithDelegatesInMap(data)!,
+        _CodecUtility.replaceValueWithDelegatesInMapFieldPath(data)!,
       ),
     );
   }

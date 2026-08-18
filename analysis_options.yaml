@@ -12,6 +12,13 @@ analyzer:
     included_file_warning: ignore
   exclude:
     - packages/**/example/lib/generated_plugin_registrant.dart
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
 
 linter:
   rules:
@@ -63,7 +70,7 @@ linter:
     always_specify_types: false
 
     # Incompatible with `prefer_final_locals`
-    # Having immutable local variables makes larger functions more predictible
+    # Having immutable local variables makes larger functions more predictable
     # so we will use `prefer_final_locals` instead.
     unnecessary_final: false
 

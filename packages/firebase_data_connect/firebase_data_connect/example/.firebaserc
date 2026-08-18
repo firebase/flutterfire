@@ -1,0 +1,7 @@
+{
+  "projects": {
+    "default": "flutterfire-e2e-tests"
+  },
+  "targets": {},
+  "etags": {}
+}

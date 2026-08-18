@@ -2,12 +2,13 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-part of cloud_firestore;
+part of '../../cloud_firestore.dart';
 
 // ignore: do_not_use_environment
 const kIsWasm = bool.fromEnvironment('dart.library.js_interop') &&
+    // html package is not available in wasm
     // ignore: do_not_use_environment
-    bool.fromEnvironment('dart.library.ffi');
+    !bool.fromEnvironment('dart.library.html');
 
 class _CodecUtility {
   static Map<String, dynamic>? replaceValueWithDelegatesInMap(
@@ -16,8 +17,11 @@ class _CodecUtility {
     if (data == null) {
       return null;
     }
-    Map<String, dynamic> output = Map.from(data);
-    output.updateAll((_, value) => valueEncode(value));
+    final output = <String, dynamic>{};
+    data.forEach((key, value) {
+      final stringKey = key is DocumentReference ? key.path : key as String;
+      output[stringKey] = valueEncode(value);
+    });
     return output;
   }
 

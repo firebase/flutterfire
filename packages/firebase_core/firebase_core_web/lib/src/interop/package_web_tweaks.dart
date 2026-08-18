@@ -5,7 +5,7 @@
 // Copied from https://github.com/flutter/packages/google_identity_services_web/lib/src/js_interop/package_web_tweaks.dart
 
 /// Provides some useful tweaks to `package:web`.
-library package_web_tweaks;
+library;
 
 import 'dart:js_interop';
 

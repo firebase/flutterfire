@@ -1,3 +1,150 @@
+## 0.4.2+7
+
+ - **FIX**(app_check): sync SPM pins to 12.17.0 and fix Windows Activate override after [#18505](https://github.com/firebase/flutterfire/issues/18505) ([#18515](https://github.com/firebase/flutterfire/issues/18515)). ([ce1f6e05](https://github.com/firebase/flutterfire/commit/ce1f6e05e2d2645c414f8e731d3d082436caa012))
+
+## 0.4.2+6
+
+ - Update a dependency to the latest release.
+
+## 0.4.2+5
+
+ - Update a dependency to the latest release.
+
+## 0.4.2+4
+
+ - Update a dependency to the latest release.
+
+## 0.4.2+3
+
+ - Update a dependency to the latest release.
+
+## 0.4.2+2
+
+ - Update a dependency to the latest release.
+
+## 0.4.2+1
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+
+## 0.4.2
+
+ - **FEAT**: use local firebase_core instead of remote SPM dependency ([#18141](https://github.com/firebase/flutterfire/issues/18141)). ([995caf40](https://github.com/firebase/flutterfire/commit/995caf400df80c0fde7151c651ccc6c0f756e381))
+
+## 0.4.1
+
+ - **FEAT**(ios): migrate iOS to UIScene lifecycle ([#18054](https://github.com/firebase/flutterfire/issues/18054)). ([3ffa4110](https://github.com/firebase/flutterfire/commit/3ffa411098132fd5182a84be4e7a226106bc7451))
+
+## 0.4.0+7
+
+ - Update a dependency to the latest release.
+
+## 0.4.0+6
+
+ - Update a dependency to the latest release.
+
+## 0.4.0+5
+
+ - Update a dependency to the latest release.
+
+## 0.4.0+4
+
+ - Update a dependency to the latest release.
+
+## 0.4.0+3
+
+ - Update a dependency to the latest release.
+
+## 0.4.0+2
+
+ - Update a dependency to the latest release.
+
+## 0.4.0+1
+
+ - Update a dependency to the latest release.
+
+## 0.4.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: bump iOS SDK to version 12.0.0 ([#17549](https://github.com/firebase/flutterfire/issues/17549)). ([b2619e68](https://github.com/firebase/flutterfire/commit/b2619e685fec897513483df1d7be347b64f95606))
+ - **BREAKING** **FEAT**: bump Android SDK to version 34.0.0 ([#17554](https://github.com/firebase/flutterfire/issues/17554)). ([a5bdc051](https://github.com/firebase/flutterfire/commit/a5bdc051d40ee44e39cf0b8d2a7801bc6f618b67))
+
+## 0.3.3
+
+ - **FEAT**(auth,macos): add support for `publish` and `addApplicationDelegate` on macOS FlutterPluginRegistrar ([#17518](https://github.com/firebase/flutterfire/issues/17518)). ([376bb6ea](https://github.com/firebase/flutterfire/commit/376bb6ea8878df3f25cc1416fe26ace2203fd793))
+
+## 0.3.2+9
+
+ - Update a dependency to the latest release.
+
+## 0.3.2+8
+
+ - Update a dependency to the latest release.
+
+## 0.3.2+7
+
+ - Update a dependency to the latest release.
+
+## 0.3.2+6
+
+ - Update a dependency to the latest release.
+
+## 0.3.2+5
+
+ - Update a dependency to the latest release.
+
+## 0.3.2+4
+
+ - Update a dependency to the latest release.
+
+## 0.3.2+3
+
+ - Update a dependency to the latest release.
+
+## 0.3.2+2
+
+ - Update a dependency to the latest release.
+
+## 0.3.2+1
+
+ - Update a dependency to the latest release.
+
+## 0.3.2
+
+ - **FEAT**(app-installations): Swift Package Manager support ([#16856](https://github.com/firebase/flutterfire/issues/16856)). ([547c6d71](https://github.com/firebase/flutterfire/commit/547c6d713ddb6ff339e6d873dae75a29aa3e75eb))
+
+## 0.3.1+7
+
+ - Update a dependency to the latest release.
+
+## 0.3.1+6
+
+ - Update a dependency to the latest release.
+
+## 0.3.1+5
+
+ - Update a dependency to the latest release.
+
+## 0.3.1+4
+
+ - Update a dependency to the latest release.
+
+## 0.3.1+3
+
+ - Update a dependency to the latest release.
+
+## 0.3.1+2
+
+ - Update a dependency to the latest release.
+
+## 0.3.1+1
+
+ - **FIX**(installations,apple): update the plugin to support parallels method calling ([#13256](https://github.com/firebase/flutterfire/issues/13256)). ([fe18362f](https://github.com/firebase/flutterfire/commit/fe18362f817d4bac33e98199e076a2c3d65656c5))
+
+## 0.3.1
+
+ - **FEAT**: bump iOS SDK to version 11.0.0 ([#13158](https://github.com/firebase/flutterfire/issues/13158)). ([c0e0c997](https://github.com/firebase/flutterfire/commit/c0e0c99703ea394d1bb873ac225c5fe3539b002d))
+
 ## 0.3.0+4
 
  - Update a dependency to the latest release.

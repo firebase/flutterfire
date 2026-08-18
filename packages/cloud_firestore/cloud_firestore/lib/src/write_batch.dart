@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-part of cloud_firestore;
+part of '../cloud_firestore.dart';
 
 /// A [WriteBatch] is a series of write operations to be performed as one unit.
 ///
@@ -66,14 +66,25 @@ class WriteBatch {
   /// Updates a given [document].
   ///
   /// If the document does not yet exist, an exception will be thrown.
-  void update(DocumentReference document, Map<String, dynamic> data) {
+  ///
+  /// Objects key can be a String or a FieldPath.
+  void update<T>(DocumentReference<T> document, T data) {
     assert(
       document.firestore == _firestore,
       'the document provided is from a different Firestore instance',
     );
+
+    Map<Object, Object?> firestoreData;
+    if (data is Map<Object, Object?>) {
+      firestoreData = data;
+    } else {
+      final withConverterDoc = document as _WithConverterDocumentReference<T>;
+      firestoreData = withConverterDoc._toFirestore(data, null);
+    }
+
     return _delegate.update(
       document.path,
-      _CodecUtility.replaceValueWithDelegatesInMap(data)!,
+      _CodecUtility.replaceValueWithDelegatesInMapFieldPath(firestoreData)!,
     );
   }
 }

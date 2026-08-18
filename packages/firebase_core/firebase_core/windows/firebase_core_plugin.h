@@ -21,38 +21,37 @@ class FirebaseCorePlugin : public flutter::Plugin,
                            public FirebaseCoreHostApi,
                            public FirebaseAppHostApi {
  public:
-  static void RegisterWithRegistrar(flutter::PluginRegistrarWindows *registrar);
+  static void RegisterWithRegistrar(flutter::PluginRegistrarWindows* registrar);
 
   FirebaseCorePlugin();
 
   virtual ~FirebaseCorePlugin();
 
   // Disallow copy and assign.
-  FirebaseCorePlugin(const FirebaseCorePlugin &) = delete;
-  FirebaseCorePlugin &operator=(const FirebaseCorePlugin &) = delete;
+  FirebaseCorePlugin(const FirebaseCorePlugin&) = delete;
+  FirebaseCorePlugin& operator=(const FirebaseCorePlugin&) = delete;
 
   // FirebaseCoreHostApi
   virtual void InitializeApp(
-      const std::string &app_name,
-      const PigeonFirebaseOptions &initialize_app_request,
-      std::function<void(ErrorOr<PigeonInitializeResponse> reply)> result)
+      const std::string& app_name,
+      const CoreFirebaseOptions& initialize_app_request,
+      std::function<void(ErrorOr<CoreInitializeResponse> reply)> result)
       override;
   virtual void InitializeCore(
       std::function<void(ErrorOr<flutter::EncodableList> reply)> result)
       override;
   virtual void OptionsFromResource(
-      std::function<void(ErrorOr<PigeonFirebaseOptions> reply)> result)
-      override;
+      std::function<void(ErrorOr<CoreFirebaseOptions> reply)> result) override;
 
   // FirebaseAppHostApi
   virtual void SetAutomaticDataCollectionEnabled(
-      const std::string &app_name, bool enabled,
+      const std::string& app_name, bool enabled,
       std::function<void(std::optional<FlutterError> reply)> result) override;
   virtual void SetAutomaticResourceManagementEnabled(
-      const std::string &app_name, bool enabled,
+      const std::string& app_name, bool enabled,
       std::function<void(std::optional<FlutterError> reply)> result) override;
   virtual void Delete(
-      const std::string &app_name,
+      const std::string& app_name,
       std::function<void(std::optional<FlutterError> reply)> result) override;
 
  private:

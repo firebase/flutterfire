@@ -1,3 +1,199 @@
+## 4.13.0
+
+ - **FIX**(firestore,core,windows): per-engine BinaryMessenger, Firestore/Auth link order, Profile builds ([#18516](https://github.com/firebase/flutterfire/issues/18516)). ([5dfd289e](https://github.com/firebase/flutterfire/commit/5dfd289ea45260c15d73894dcf2cb092fc8ddb9d))
+ - **FIX**(app_check): sync SPM pins to 12.17.0 and fix Windows Activate override after [#18505](https://github.com/firebase/flutterfire/issues/18505) ([#18515](https://github.com/firebase/flutterfire/issues/18515)). ([ce1f6e05](https://github.com/firebase/flutterfire/commit/ce1f6e05e2d2645c414f8e731d3d082436caa012))
+ - **FIX**(remote_config,windows): move CMake dependency from Core to Remote Config ([#18498](https://github.com/firebase/flutterfire/issues/18498)). ([d6ef43f6](https://github.com/firebase/flutterfire/commit/d6ef43f616d03a57b76469b77f4cfd3d8325075a))
+ - **FEAT**(appcheck): rCE provider api update ([#18505](https://github.com/firebase/flutterfire/issues/18505)). ([a56649a4](https://github.com/firebase/flutterfire/commit/a56649a41539c559a08e4f566128db8de390c284))
+ - **FEAT**(core): bump Firebase android SDK to 34.16.0 ([#18465](https://github.com/firebase/flutterfire/issues/18465)). ([fc599349](https://github.com/firebase/flutterfire/commit/fc5993493fbaaf405680eb1e0c8cc0b2604ef1a0))
+ - **FEAT**(core): bump Firebase iOS SDK to 12.16.0 ([#18464](https://github.com/firebase/flutterfire/issues/18464)). ([07c1bbe8](https://github.com/firebase/flutterfire/commit/07c1bbe82a8becd5ab673101a8a6561e0af725af))
+
+## 4.12.1
+
+ - **FIX**(core): clarify initialization requirement ([#18441](https://github.com/firebase/flutterfire/issues/18441)). ([9cfde82a](https://github.com/firebase/flutterfire/commit/9cfde82af1872c485e7b2f8fb091195e2287666d))
+
+## 4.12.0
+
+ - **FIX**(core,android): synchronize access to registeredPlugins in FlutterFirebasePluginRegistry ([#18406](https://github.com/firebase/flutterfire/issues/18406)). ([b40d972a](https://github.com/firebase/flutterfire/commit/b40d972a9a82e7da9611d6967379cbede085f4f3))
+ - **FEAT**(windows): bump Windows C++ SDK to version 13.9.0 ([#18400](https://github.com/firebase/flutterfire/issues/18400)). ([734fcd8a](https://github.com/firebase/flutterfire/commit/734fcd8a6a3a905c057724285e082974e690d9a2))
+
+## 4.11.0
+
+ - **FEAT**(appcheck): appcheck reCAPTCHA mobile support (gradually rolling out) ([#18261](https://github.com/firebase/flutterfire/issues/18261)). ([036a860a](https://github.com/firebase/flutterfire/commit/036a860a0e66d46b5c57eb3df3a0f9e5846ef00b))
+ - **FEAT**(core): bump Firebase ios SDK to 12.15.0 ([#18375](https://github.com/firebase/flutterfire/issues/18375)). ([4d083764](https://github.com/firebase/flutterfire/commit/4d083764c3abd94d6e4590a170fbdaaa4b161202))
+ - **FEAT**(core): bump Firebase android SDK to 34.15.0 ([#18374](https://github.com/firebase/flutterfire/issues/18374)). ([1cd3a0bd](https://github.com/firebase/flutterfire/commit/1cd3a0bd76fd594139356519fabee0e0d2b12f31))
+ - **FEAT**(core): Add Recaptcha Site Key to FirebaseOptions ([#18334](https://github.com/firebase/flutterfire/issues/18334)). ([57be7027](https://github.com/firebase/flutterfire/commit/57be702778d34b9b7e86b40817d93acaec4c3ca4))
+
+## 4.10.0
+
+ - **FEAT**(core): bump Firebase ios SDK to 12.14.0 ([#18330](https://github.com/firebase/flutterfire/issues/18330)). ([b1cfe745](https://github.com/firebase/flutterfire/commit/b1cfe745d221f09665943762c83cdd64684c6e6c))
+ - **FEAT**(core): bump Firebase android SDK to 34.14.0 ([#18329](https://github.com/firebase/flutterfire/issues/18329)). ([1562eace](https://github.com/firebase/flutterfire/commit/1562eace5196227ad0058df9b5426950b0094f83))
+
+## 4.9.0
+
+ - **FIX**(core,iOS): use namespaced iOS Pigeon header import ([#18281](https://github.com/firebase/flutterfire/issues/18281)). ([7c1257e7](https://github.com/firebase/flutterfire/commit/7c1257e7295f9ba67f3f5820493f105a14d34d52))
+ - **FEAT**: bump Firebase iOS SDK to 12.13.0 ([#18273](https://github.com/firebase/flutterfire/issues/18273)). ([78e10f02](https://github.com/firebase/flutterfire/commit/78e10f0222f4e23c96b636c63c29935ba5aa82e6))
+ - **FEAT**: bump Firebase android SDK to 34.13.0 ([#18272](https://github.com/firebase/flutterfire/issues/18272)). ([d10e0ffa](https://github.com/firebase/flutterfire/commit/d10e0ffa2980a21a5899dbe67952fc772a3c6c01))
+
+## 4.8.0
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+ - **FIX**: update core, auth and app-check logic so internal resources on method channels are properly disposed ([#18268](https://github.com/firebase/flutterfire/issues/18268)). ([a0de4ed8](https://github.com/firebase/flutterfire/commit/a0de4ed86b0dff89bb9e557f2a54f38cd2546016))
+ - **FEAT**(core): Add Auth and AppCheck as App's registered service. ([#18237](https://github.com/firebase/flutterfire/issues/18237)). ([7ce191cb](https://github.com/firebase/flutterfire/commit/7ce191cbd598b299cd0ec64b45d1366914367a5d))
+ - **FEAT**: upgrade pigeon to version 26.3.4 ([#18205](https://github.com/firebase/flutterfire/issues/18205)). ([cb6b4aef](https://github.com/firebase/flutterfire/commit/cb6b4aeffc568755ea3eebe32b998f00237bf5ad))
+
+## 4.7.0
+
+ - **FEAT**(core): bump Firebase Android SDK to 34.12.0 ([#18185](https://github.com/firebase/flutterfire/issues/18185)). ([346a048f](https://github.com/firebase/flutterfire/commit/346a048f098090e6848fdd0f61a8bf7d01394676))
+ - **FEAT**: bump Firebase iOS SDK to 12.12.0 ([#18187](https://github.com/firebase/flutterfire/issues/18187)). ([cc063bd9](https://github.com/firebase/flutterfire/commit/cc063bd9df1c59dd3bb8c25d067f8655bc268523))
+ - **FEAT**: bump iOS SDK to version 12.11.0 ([#18161](https://github.com/firebase/flutterfire/issues/18161)). ([2664b2c2](https://github.com/firebase/flutterfire/commit/2664b2c2dab4d0147461ce4d3f7862267e880542))
+ - **FEAT**(app_check,windows): add support for AppCheck for Windows ([#18140](https://github.com/firebase/flutterfire/issues/18140)). ([81f30325](https://github.com/firebase/flutterfire/commit/81f30325fc926fe94b630e49f56b795c781a4cbe))
+ - **FEAT**: bump Firebase android SDK to 34.11.0 ([#18146](https://github.com/firebase/flutterfire/issues/18146)). ([2b50061a](https://github.com/firebase/flutterfire/commit/2b50061a689634957efba8bd17c196dd548a08a2))
+ - **FEAT**: use local firebase_core instead of remote SPM dependency ([#18141](https://github.com/firebase/flutterfire/issues/18141)). ([995caf40](https://github.com/firebase/flutterfire/commit/995caf400df80c0fde7151c651ccc6c0f756e381))
+
+## 4.6.0
+
+ - **FIX**(remote_config,windows): release mode wasn't linking properly for windows ([#18073](https://github.com/firebase/flutterfire/issues/18073)). ([ea1f309a](https://github.com/firebase/flutterfire/commit/ea1f309a33075fc06c082819f0653976c6d5214b))
+ - **FIX**(core): bump Firebase C++ SDK to 13.5.0 (CMake deprecation fix) ([#18071](https://github.com/firebase/flutterfire/issues/18071)). ([3afd4101](https://github.com/firebase/flutterfire/commit/3afd41019bf931b95ae039394fc866528ff13f96))
+ - **FIX**(auth,windows): add pluginregistry to properly restore state on Windows ([#18049](https://github.com/firebase/flutterfire/issues/18049)). ([8d715a77](https://github.com/firebase/flutterfire/commit/8d715a777a4827bff59f820d9978007bd7568a7d))
+ - **FEAT**(database,windows): add support for Realtime Database to windows ([#18079](https://github.com/firebase/flutterfire/issues/18079)). ([007689f9](https://github.com/firebase/flutterfire/commit/007689f99866582828a063d174c52ebba13ac0ef))
+ - **FEAT**(ios): migrate iOS to UIScene lifecycle ([#18054](https://github.com/firebase/flutterfire/issues/18054)). ([3ffa4110](https://github.com/firebase/flutterfire/commit/3ffa411098132fd5182a84be4e7a226106bc7451))
+
+## 4.5.0
+
+ - **FEAT**(core,windows): update C++ Desktop SDK to 13.4.0. This may require updating your Visual Studio version and C++ build tools. ([#18006](https://github.com/firebase/flutterfire/issues/18006)). ([a6ec167f](https://github.com/firebase/flutterfire/commit/a6ec167f4ece9c9b455a916366781f482cc380b3))
+ - **FIX**: resolve lint issues ([#18017](https://github.com/firebase/flutterfire/issues/18017)). ([e8e85397](https://github.com/firebase/flutterfire/commit/e8e85397ccdcab6c8b84348884b4673f86b79d1c))
+ - **FEAT**: bump Firebase iOS SDK to 12.9.0 ([#18034](https://github.com/firebase/flutterfire/issues/18034)). ([c45894e2](https://github.com/firebase/flutterfire/commit/c45894e23895f9add8c152d13324920babe9b708))
+ - **FEAT**: bump Firebase android SDK to 34.9.0 ([#18016](https://github.com/firebase/flutterfire/issues/18016)). ([b218dbff](https://github.com/firebase/flutterfire/commit/b218dbffd72d0bf666ff94f79a3de1e24d038df0))
+ - **FEAT**(remote-config,windows): add support for windows ([#18006](https://github.com/firebase/flutterfire/issues/18006)). ([a6ec167f](https://github.com/firebase/flutterfire/commit/a6ec167f4ece9c9b455a916366781f482cc380b3))
+
+## 4.4.0
+
+ - **FEAT**: bump Firebase iOS SDK to 12.8.0 ([#17947](https://github.com/firebase/flutterfire/issues/17947)). ([4eb249ec](https://github.com/firebase/flutterfire/commit/4eb249ec5d870a960d3834e40fd0f3c3b871430c))
+ - **FEAT**: bump Firebase android SDK to 34.7.0 ([#17948](https://github.com/firebase/flutterfire/issues/17948)). ([6eef0511](https://github.com/firebase/flutterfire/commit/6eef051143ecff2351d6f893e797badc6d202a26))
+
+## 4.3.0
+
+ - **FEAT**: bump Firebase iOS SDK to 12.6.0 ([#17857](https://github.com/firebase/flutterfire/issues/17857)). ([668331b4](https://github.com/firebase/flutterfire/commit/668331b446726daef719a68b43b34af7b1ae411f))
+
+## 4.2.1
+
+ - Update a dependency to the latest release.
+
+## 4.2.0
+
+ - **FIX**: a bug with the `demoProjectId` arg to `Firebase.initializeApp()` ([#17703](https://github.com/firebase/flutterfire/issues/17703)). ([09d03aac](https://github.com/firebase/flutterfire/commit/09d03aac8ced6f7f9211c24f40b57eb992f2996d))
+ - **FEAT**: bump Android SDK to version 34.4.0 ([#17786](https://github.com/firebase/flutterfire/issues/17786)). ([3edfc18d](https://github.com/firebase/flutterfire/commit/3edfc18d94c82fa81740fe61d075a09195aa9610))
+ - **FEAT**: bump Firebase iOS SDK to 12.4.0 ([#17779](https://github.com/firebase/flutterfire/issues/17779)). ([51ed3fbb](https://github.com/firebase/flutterfire/commit/51ed3fbbc2eecf41850db604e7bd145fe0db130c))
+
+## 4.1.1
+
+ - Update a dependency to the latest release.
+
+## 4.1.0
+
+ - **FEAT**: bump Firebase iOS SDK to 12.2.0 ([#17677](https://github.com/firebase/flutterfire/issues/17677)). ([ecd8889d](https://github.com/firebase/flutterfire/commit/ecd8889df76954c8dfa2861e20d6d50d0b6239be))
+ - **FEAT**: bump Firebase android SDK to 34.1.0 ([#17668](https://github.com/firebase/flutterfire/issues/17668)). ([2af66ab3](https://github.com/firebase/flutterfire/commit/2af66ab320053f0deb3f010a39a4f88b4adde936))
+
+## 4.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: bump iOS SDK to version 12.0.0 ([#17549](https://github.com/firebase/flutterfire/issues/17549)). ([b2619e68](https://github.com/firebase/flutterfire/commit/b2619e685fec897513483df1d7be347b64f95606))
+ - **BREAKING** **FEAT**: bump Android SDK to version 34.0.0 ([#17554](https://github.com/firebase/flutterfire/issues/17554)). ([a5bdc051](https://github.com/firebase/flutterfire/commit/a5bdc051d40ee44e39cf0b8d2a7801bc6f618b67))
+
+## 3.15.2
+
+ - **FIX**(core): resolve iOS crash when enabling automatic data collection via `setAutomaticDataCollectionEnabled` ([#17497](https://github.com/firebase/flutterfire/issues/17497)). ([cd8b58d0](https://github.com/firebase/flutterfire/commit/cd8b58d053e34e9840bdbd20fd5aa3f698e5fcfa))
+
+## 3.15.1
+
+ - Update a dependency to the latest release.
+
+## 3.15.0
+
+ - **FIX**(core): bump Pigeon to v25.3.2 ([#17438](https://github.com/firebase/flutterfire/issues/17438)). ([4d24ef53](https://github.com/firebase/flutterfire/commit/4d24ef534464b39dcaef4151c83c78f87b36fb78))
+ - **FEAT**: bump iOS SDK to version 11.15.0 ([#17469](https://github.com/firebase/flutterfire/issues/17469)). ([84ca4f2a](https://github.com/firebase/flutterfire/commit/84ca4f2a0f3fbb7270b95f15436e0ebb2606dbfa))
+ - **FEAT**: bump Android SDK to version 33.16.0 ([#17470](https://github.com/firebase/flutterfire/issues/17470)). ([f79b786d](https://github.com/firebase/flutterfire/commit/f79b786d69ac037b03ce253236d588e2ff8a5934))
+
+## 3.14.0
+
+ - **FEAT**: bump Firebase iOS SDK to 11.13.0 ([#17378](https://github.com/firebase/flutterfire/issues/17378)). ([10fd1d8f](https://github.com/firebase/flutterfire/commit/10fd1d8f6f8af07dfae27c4bdda7726716f42d7f))
+
+## 3.13.1
+
+ - Update a dependency to the latest release.
+
+## 3.13.0
+
+ - **FEAT**(core,windows): update C++ SDK to 12.7.0 ([#17238](https://github.com/firebase/flutterfire/issues/17238)). ([b0e5843d](https://github.com/firebase/flutterfire/commit/b0e5843dde670063f755fbc4c52f6e2b070935e4))
+ - **FEAT**(functions): migrate cloud functions Apple implementation to Swift ([#17232](https://github.com/firebase/flutterfire/issues/17232)). ([9ebc7bc1](https://github.com/firebase/flutterfire/commit/9ebc7bc130757f918dfab9fbc583e5f6c5b3b565))
+ - **FEAT**: bump Firebase iOS SDK to 11.10.0 ([#17228](https://github.com/firebase/flutterfire/issues/17228)). ([4573a4d6](https://github.com/firebase/flutterfire/commit/4573a4d69c608e0d022f092a84f4c05d3ce145be))
+ - **FEAT**: bump Firebase android SDK to 33.11.0 ([#17217](https://github.com/firebase/flutterfire/issues/17217)). ([0cb8b91e](https://github.com/firebase/flutterfire/commit/0cb8b91ee30afe23bdca37aa748622b600ead2ee))
+
+## 3.12.1
+
+ - Update a dependency to the latest release.
+
+## 3.12.0
+
+ - **FEAT**: bump Firebase iOS SDK to `11.8.0` ([#17093](https://github.com/firebase/flutterfire/issues/17093)). ([52557617](https://github.com/firebase/flutterfire/commit/52557617ccdc7dc6d057fff6cea65baa338057c2))
+ - **FEAT**: bump Firebase android SDK to `33.9.0` ([#17092](https://github.com/firebase/flutterfire/issues/17092)). ([cbbb3748](https://github.com/firebase/flutterfire/commit/cbbb3748f192d35c25663bda6fb0f16a74dd71c7))
+
+## 3.11.0
+
+ - **FEAT**: bump Firebase android SDK to `33.8.0` ([#17048](https://github.com/firebase/flutterfire/issues/17048)). ([0befa109](https://github.com/firebase/flutterfire/commit/0befa109970893f79fb50d2b809b95d797fdc416))
+ - **FEAT**: bump firebase iOS SDK to `v11.7.0` ([#17011](https://github.com/firebase/flutterfire/issues/17011)). ([2e042ba7](https://github.com/firebase/flutterfire/commit/2e042ba79f0250fd0fb3b7dfcfe07f1fd4d81cad))
+
+## 3.10.1
+
+ - **FIX**(firebase_core): Update google_services_gradle_plugin_version in pubspec ([#16944](https://github.com/firebase/flutterfire/issues/16944)). ([9911deb6](https://github.com/firebase/flutterfire/commit/9911deb61b5a658981a11067154ccf3befce636c))
+
+## 3.10.0
+
+ - **FEAT**: bump firebase iOS SDK to `v11.6.0` ([#16858](https://github.com/firebase/flutterfire/issues/16858)). ([6a42a2d8](https://github.com/firebase/flutterfire/commit/6a42a2d801f7674992de1c1d9557cb800ead9963))
+
+## 3.9.0
+
+ - **FIX**(core,macos): update path to firebase sdk version for SPM ([#16890](https://github.com/firebase/flutterfire/issues/16890)). ([4a190da0](https://github.com/firebase/flutterfire/commit/4a190da0c353d295ff7fb9fea73119218a365687))
+ - **FIX**(core,macos): exclude files pulled in from remote dependency. SPM integration ([#16834](https://github.com/firebase/flutterfire/issues/16834)). ([a8a22b17](https://github.com/firebase/flutterfire/commit/a8a22b172657ba2568d2cce5a54db4da3189efa0))
+ - **FIX**(core): auth Swift support requires `FLTFirebaseCorePlugin` & `messages` to be shared ([#16774](https://github.com/firebase/flutterfire/issues/16774)). ([f89483cd](https://github.com/firebase/flutterfire/commit/f89483cd9a3b4900d9b79151bb383ae35aa3dd4f))
+ - **FIX**(core): auth Swift support requires `FLTFirebaseCorePlugin` & `messages` to be shared ([#16774](https://github.com/firebase/flutterfire/issues/16774)). ([ba5f2414](https://github.com/firebase/flutterfire/commit/ba5f2414c86f3fe200df07671f6ad84087646c86))
+ - **FEAT**: bump Firebase android BOM to `v33.7.0` ([#16857](https://github.com/firebase/flutterfire/issues/16857)). ([0048bd13](https://github.com/firebase/flutterfire/commit/0048bd138f67102ff7cfa0539c244819b4ce8c7d))
+
+## 3.8.1
+
+ - **FIX**(core): auth Swift support requires `FLTFirebaseCorePlugin` & `messages` to be shared ([#16774](https://github.com/firebase/flutterfire/issues/16774)). ([f89483cd](https://github.com/firebase/flutterfire/commit/f89483cd9a3b4900d9b79151bb383ae35aa3dd4f))
+
+## 3.8.0
+
+ - **FEAT**(firestore): Swift Package Manager support ([#13329](https://github.com/firebase/flutterfire/issues/13329)). ([0420eabb](https://github.com/firebase/flutterfire/commit/0420eabb3ab247e0e3998bedcb9779fe35c46920))
+
+## 3.7.0
+
+ - **FIX**(core,ios): ensure iOS SDK version can be found from Package.swift ([#13804](https://github.com/firebase/flutterfire/issues/13804)). ([83f4dad6](https://github.com/firebase/flutterfire/commit/83f4dad65aae08e2979d009b03e9adb4ca907df7))
+ - **FIX**(core,ios): update Package.swift and header imports for backwards compatibility ([#13545](https://github.com/firebase/flutterfire/issues/13545)). ([07eb25fa](https://github.com/firebase/flutterfire/commit/07eb25fa67a8c7c3e21275bacd234641721de8fc))
+ - **FEAT**: update Android SDK to version 33.5.1 ([#13803](https://github.com/firebase/flutterfire/issues/13803)). ([66394540](https://github.com/firebase/flutterfire/commit/6639454043c09a47d444046c08a398c9aef5315f))
+ - **FEAT**: bump firebase iOS SDK to `v11.4.0` ([#13552](https://github.com/firebase/flutterfire/issues/13552)). ([a4be6973](https://github.com/firebase/flutterfire/commit/a4be69731d41aade5dfcfb154af3292551633874))
+ - **FEAT**: bump Firebase android BOM to `v33.5.0` ([#13538](https://github.com/firebase/flutterfire/issues/13538)). ([d3cfc0e7](https://github.com/firebase/flutterfire/commit/d3cfc0e778b8173a370f645448569db380bb6cef))
+
+## 3.6.0
+
+ - **FEAT**: bump iOS SDK to version 11.2.0 ([#13338](https://github.com/firebase/flutterfire/issues/13338)). ([ff1e5f67](https://github.com/firebase/flutterfire/commit/ff1e5f672cee29731dc4d21251611030add9e605))
+ - **FEAT**: bump Firebase android BOM to `33.3.0` ([#13390](https://github.com/firebase/flutterfire/issues/13390)). ([15c0284e](https://github.com/firebase/flutterfire/commit/15c0284e3f3555ff888e7817e0811b64b3d3164e))
+
+## 3.5.0
+
+ - **FEAT**(fdc): Initial Release of Data Connect ([#13313](https://github.com/firebase/flutterfire/issues/13313)). ([603a6726](https://github.com/firebase/flutterfire/commit/603a67261a2f7cbdd6ef594bfaef480aeb820683))
+ - **FEAT**(core): support for using SPM (Swift Package Manager) ([#12786](https://github.com/firebase/flutterfire/issues/12786)). ([4e28103f](https://github.com/firebase/flutterfire/commit/4e28103fafd84c6613df647e7f0dbb6a068ca8ea))
+
+## 3.4.1
+
+ - Update a dependency to the latest release.
+
+## 3.4.0
+
+ - **FEAT**: bump iOS SDK to version 11.0.0 ([#13158](https://github.com/firebase/flutterfire/issues/13158)). ([c0e0c997](https://github.com/firebase/flutterfire/commit/c0e0c99703ea394d1bb873ac225c5fe3539b002d))
+
 ## 3.3.0
 
  - **FEAT**: bump iOS SDK to version 10.29.0 ([#13113](https://github.com/firebase/flutterfire/issues/13113)). ([45fa2f58](https://github.com/firebase/flutterfire/commit/45fa2f589abe60a4bf06ac5fd64895c7df94c19c))
@@ -441,7 +637,7 @@
 
 ## 1.0.4
 
- - **REFACTOR**: Share guard functions accross plugins (#5783).
+ - **REFACTOR**: Share guard functions across plugins (#5783).
  - **CHORE**: update Web plugins to use Firebase JS SDK version 8.4.1 (#4464).
 
 ## 1.0.3
@@ -706,7 +902,7 @@
 
 ## 0.3.2
 
-* Move Android dependency to Gradle BoM to help maintain compatability
+* Move Android dependency to Gradle BoM to help maintain compatibility
   with other FlutterFire plugins.
 
 ## 0.3.1+1

@@ -15,6 +15,7 @@ flutter_export_environment.sh
 
 examples/all_plugins/pubspec.yaml
 
+Package.resolved
 Podfile.lock
 Pods/
 .symlinks/
@@ -47,6 +48,7 @@ generated_plugins.cmake
 build/
 .flutter-plugins
 .flutter-plugins-dependencies
+.cxx/
 
 .project
 .classpath
@@ -79,3 +81,5 @@ firebase-debug.log
 firestore-debug.log
 database-debug.log
 ui-debug.log
+**/.build/**/*
+.github/workflows/spam-removal/package-lock.json

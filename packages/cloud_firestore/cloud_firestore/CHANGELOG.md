@@ -1,3 +1,192 @@
+## 6.8.0
+
+ - **FIX**(firestore,core,windows): per-engine BinaryMessenger, Firestore/Auth link order, Profile builds ([#18516](https://github.com/firebase/flutterfire/issues/18516)). ([5dfd289e](https://github.com/firebase/flutterfire/commit/5dfd289ea45260c15d73894dcf2cb092fc8ddb9d))
+ - **FIX**(app_check): sync SPM pins to 12.17.0 and fix Windows Activate override after [#18505](https://github.com/firebase/flutterfire/issues/18505) ([#18515](https://github.com/firebase/flutterfire/issues/18515)). ([ce1f6e05](https://github.com/firebase/flutterfire/commit/ce1f6e05e2d2645c414f8e731d3d082436caa012))
+ - **FIX**(firestore,android): clean up Android transaction listeners on completion ([#18475](https://github.com/firebase/flutterfire/issues/18475)). ([ae002c7c](https://github.com/firebase/flutterfire/commit/ae002c7ca8ae405ebc901bfe17e6724a48075bca))
+ - **FIX**(firestore,windows): reply on platform thread to prevent warnings ([#18459](https://github.com/firebase/flutterfire/issues/18459)). ([cfeddb1b](https://github.com/firebase/flutterfire/commit/cfeddb1b4e2a519d77440a8ec4799eb9b9c12a37))
+ - **FIX**(firestore,windows): Prevents lost Windows transaction responses ([#18448](https://github.com/firebase/flutterfire/issues/18448)). ([ed1a551d](https://github.com/firebase/flutterfire/commit/ed1a551d41bc3303e66985e30d4d2b570606bc7f))
+ - **FIX**(firestore): Preserves microseconds when serializing implicit DateTime values ([#18435](https://github.com/firebase/flutterfire/issues/18435)). ([068c3094](https://github.com/firebase/flutterfire/commit/068c30946912d8a3d5f24455fcb4bc00202e60ee))
+ - **FEAT**(firestore): add string manipulation functions for Android and iOS ([#18493](https://github.com/firebase/flutterfire/issues/18493)). ([b3bd7e9d](https://github.com/firebase/flutterfire/commit/b3bd7e9ddd61942530883501f285ed32b55f9953))
+
+## 6.7.1
+
+ - Update a dependency to the latest release.
+
+## 6.7.0
+
+ - **FIX**(firestore): preserve detailed native Firestore error messages ([#18428](https://github.com/firebase/flutterfire/issues/18428)). ([b23c3267](https://github.com/firebase/flutterfire/commit/b23c32678d131799793827b1eaed179e168707e0))
+ - **FIX**(cloud_firestore): guard shared transactions map against concurrent access ([#18421](https://github.com/firebase/flutterfire/issues/18421)). ([e81cb6db](https://github.com/firebase/flutterfire/commit/e81cb6db46a87e932cbff3c1fb3a93fedbcb9a3b))
+ - **FIX**(firestore): large snapshots do not block frame scheduling ([#18390](https://github.com/firebase/flutterfire/issues/18390)). ([0ce3c202](https://github.com/firebase/flutterfire/commit/0ce3c202c011ccc1f7ed1d1ecd4d8ed431b0de59))
+ - **FEAT**(firestore,windows): add support for Blob decoding on Windows ([#18432](https://github.com/firebase/flutterfire/issues/18432)). ([068db515](https://github.com/firebase/flutterfire/commit/068db5156840e18a1ded68110b8afec2f8dd9eb8))
+ - **FEAT**(firestore): add support for new expressions including nor, coalesce, switch_on, timestamp_diff, and timestamp_extract ([#18200](https://github.com/firebase/flutterfire/issues/18200)). ([2612eb2c](https://github.com/firebase/flutterfire/commit/2612eb2c72fd6606fa10837075ff7ff95a846aa4))
+ - **FEAT**(firestore): add support for withConverter on Writebatch ([#18394](https://github.com/firebase/flutterfire/issues/18394)). ([ac200e4f](https://github.com/firebase/flutterfire/commit/ac200e4fccfe851ff80689e3814d1793a7bb893e))
+ - **DOCS**(cloud_firestore): Remove Incorrect API Documentation ([#18423](https://github.com/firebase/flutterfire/issues/18423)). ([4b1056fd](https://github.com/firebase/flutterfire/commit/4b1056fdbf9da95f630d35ecd3ae605839cdb010))
+
+## 6.6.0
+
+ - **FEAT**(firestore): add support for search in firestore pipeline ([#18312](https://github.com/firebase/flutterfire/issues/18312)). ([b3c835f7](https://github.com/firebase/flutterfire/commit/b3c835f7bae8684d4c98167d78a071d9ed88f980))
+
+## 6.5.0
+
+ - **FIX**(firestore,ios): add forceIndex parameter to collection source stage initializations ([#18332](https://github.com/firebase/flutterfire/issues/18332)). ([1bf50d2f](https://github.com/firebase/flutterfire/commit/1bf50d2f5bbdcac29797268632e2ed8b7e344c7d))
+ - **FEAT**(firestore): add support for new array expressions ([#18283](https://github.com/firebase/flutterfire/issues/18283)). ([2293dee0](https://github.com/firebase/flutterfire/commit/2293dee00767cc6eebd57a340eb2b72bdab41d52))
+
+## 6.4.1
+
+ - Update a dependency to the latest release.
+
+## 6.4.0
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+ - **FIX**(firestore,web): update Timestamp handling in jsify and EncodeUtility ([#18264](https://github.com/firebase/flutterfire/issues/18264)). ([9783a448](https://github.com/firebase/flutterfire/commit/9783a448ff532568a5e46ecb927e7b1bc77a164c))
+ - **FIX**(firestore,windows): fix CI issue ([#18218](https://github.com/firebase/flutterfire/issues/18218)). ([b9c8a9e2](https://github.com/firebase/flutterfire/commit/b9c8a9e2993187c782c94398136aac9bf5418061))
+ - **FEAT**: upgrade pigeon to version 26.3.4 ([#18205](https://github.com/firebase/flutterfire/issues/18205)). ([cb6b4aef](https://github.com/firebase/flutterfire/commit/cb6b4aeffc568755ea3eebe32b998f00237bf5ad))
+
+## 6.3.0
+
+ - **FEAT**: support for Firestore Pipelines ([#18183](https://github.com/firebase/flutterfire/issues/18183)). ([d734cf08](https://github.com/firebase/flutterfire/commit/d734cf0885f6d9403c2fb3ac48d6c52e14199309))
+ - **FEAT**: use local firebase_core instead of remote SPM dependency ([#18141](https://github.com/firebase/flutterfire/issues/18141)). ([995caf40](https://github.com/firebase/flutterfire/commit/995caf400df80c0fde7151c651ccc6c0f756e381))
+
+## 6.2.0
+
+ - **FIX**(firestore,windows): fix a crash happening when terminating the firestore instance ([#18069](https://github.com/firebase/flutterfire/issues/18069)). ([adef1872](https://github.com/firebase/flutterfire/commit/adef1872b523b77e2309f3d7400e5a5fdd95738c))
+ - **FIX**(firestore,web): fix an issue where DocumentReference couldn't be read properly in web ([#18058](https://github.com/firebase/flutterfire/issues/18058)). ([e1a93a05](https://github.com/firebase/flutterfire/commit/e1a93a0501d580c93f055c8edbe625534730bab0))
+ - **FIX**(firestore,windows): fix an issue that could happen when querying by DocumentReference value ([#18053](https://github.com/firebase/flutterfire/issues/18053)). ([baf6543a](https://github.com/firebase/flutterfire/commit/baf6543aa0ea98888b5e4b36a19f9afbfd0f6489))
+ - **FEAT**(firestore): add support for FieldPath in update transactions ([#18121](https://github.com/firebase/flutterfire/issues/18121)). ([aa1f17a5](https://github.com/firebase/flutterfire/commit/aa1f17a554af0938c13f8500e3cfcd586377f3b0))
+ - **FEAT**(firestore,web): add webPersistentTabManager settings support ([#18067](https://github.com/firebase/flutterfire/issues/18067)). ([397ba523](https://github.com/firebase/flutterfire/commit/397ba523df968e8deb92e679f54ea837f28b23e3))
+ - **FEAT**(ios): migrate iOS to UIScene lifecycle ([#18054](https://github.com/firebase/flutterfire/issues/18054)). ([3ffa4110](https://github.com/firebase/flutterfire/commit/3ffa411098132fd5182a84be4e7a226106bc7451))
+
+## 6.1.3
+
+ - **FIX**: resolve lint issues ([#18017](https://github.com/firebase/flutterfire/issues/18017)). ([e8e85397](https://github.com/firebase/flutterfire/commit/e8e85397ccdcab6c8b84348884b4673f86b79d1c))
+
+## 6.1.2
+
+ - **FIX**(firestore,android): avoid ConcurrentModificationException by collecting Firestore instances before termination ([#17956](https://github.com/firebase/flutterfire/issues/17956)). ([f94bbd68](https://github.com/firebase/flutterfire/commit/f94bbd688c3c0aaa62ba9117b23902c10297ea84))
+
+## 6.1.1
+
+ - Update a dependency to the latest release.
+
+## 6.1.0
+
+ - **FEAT**(firestore): add client language support for Firestore plugin on Android and iOS ([#17830](https://github.com/firebase/flutterfire/issues/17830)). ([74a37ae6](https://github.com/firebase/flutterfire/commit/74a37ae68446e700ed6cc9f9307ff296a9ff20d8))
+
+## 6.0.3
+
+ - Update a dependency to the latest release.
+
+## 6.0.2
+
+ - Update a dependency to the latest release.
+
+## 6.0.1
+
+ - Update a dependency to the latest release.
+
+## 6.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: bump iOS SDK to version 12.0.0 ([#17549](https://github.com/firebase/flutterfire/issues/17549)). ([b2619e68](https://github.com/firebase/flutterfire/commit/b2619e685fec897513483df1d7be347b64f95606))
+ - **BREAKING** **FEAT**(firestore): remove deprecated functions ([#17559](https://github.com/firebase/flutterfire/issues/17559)). ([67017fd6](https://github.com/firebase/flutterfire/commit/67017fd6f139080cec7ecd1b4d75a05f13f238fa))
+ - **BREAKING** **FEAT**: bump Android SDK to version 34.0.0 ([#17554](https://github.com/firebase/flutterfire/issues/17554)). ([a5bdc051](https://github.com/firebase/flutterfire/commit/a5bdc051d40ee44e39cf0b8d2a7801bc6f618b67))
+
+## 5.6.12
+
+ - Update a dependency to the latest release.
+
+## 5.6.11
+
+ - Update a dependency to the latest release.
+
+## 5.6.10
+
+ - Update a dependency to the latest release.
+
+## 5.6.9
+
+ - **FIX**(firestore,ios): fix an issue where unlimited cache wasn't properly set on iOS ([#17412](https://github.com/firebase/flutterfire/issues/17412)). ([cad28406](https://github.com/firebase/flutterfire/commit/cad28406d3baf8fa1087be35630c82a79b5c9d92))
+
+## 5.6.8
+
+ - Update a dependency to the latest release.
+
+## 5.6.7
+
+ - **FIX**(firestore): Change asserts to throw argumentError ([#17302](https://github.com/firebase/flutterfire/issues/17302)). ([ec1e6a5e](https://github.com/firebase/flutterfire/commit/ec1e6a5eef149680b2750900d1f16d8074e09b38))
+ - **FIX**(cloud_firestore): correct nanoseconds calculation for pre-1970 dates ([#17195](https://github.com/firebase/flutterfire/issues/17195)). ([a13deae3](https://github.com/firebase/flutterfire/commit/a13deae3334045fb1a48817ff9300cbe0696d177))
+
+## 5.6.6
+
+ - Update a dependency to the latest release.
+
+## 5.6.5
+
+ - Update a dependency to the latest release.
+
+## 5.6.4
+
+ - **FIX**(firestore,macos): ensure Package.swift pulls firebase-ios-sdk version from local txt file ([#17097](https://github.com/firebase/flutterfire/issues/17097)). ([b7248e05](https://github.com/firebase/flutterfire/commit/b7248e05a0ab7689c1d634689fe660c9c7125713))
+
+## 5.6.3
+
+ - Update a dependency to the latest release.
+
+## 5.6.2
+
+ - **FIX**(cloud_firestore,android): suppress unchecked warning ([#16979](https://github.com/firebase/flutterfire/issues/16979)). ([684508da](https://github.com/firebase/flutterfire/commit/684508daf096acb50deb4c1d14c76f72fb52b8c5))
+
+## 5.6.1
+
+ - Update a dependency to the latest release.
+
+## 5.6.0
+
+ - **FEAT**(firestore): add support for VectorValue ([#16476](https://github.com/firebase/flutterfire/issues/16476)). ([cc23f179](https://github.com/firebase/flutterfire/commit/cc23f179082256fe9700f17e3856821b4a6d4240))
+
+## 5.5.1
+
+ - **FIX**(firestore,android): synchronize access to firestore instances ([#16675](https://github.com/firebase/flutterfire/issues/16675)). ([03e85ae6](https://github.com/firebase/flutterfire/commit/03e85ae63ece0924d376b98e35e8a73670b59fa8))
+
+## 5.5.0
+
+ - **FEAT**(firestore): Swift Package Manager support ([#13329](https://github.com/firebase/flutterfire/issues/13329)). ([0420eabb](https://github.com/firebase/flutterfire/commit/0420eabb3ab247e0e3998bedcb9779fe35c46920))
+
+## 5.4.5
+
+ - Update a dependency to the latest release.
+
+## 5.4.4
+
+ - **FIX**(cloud_firestore): remove single whereIn filter assertion ([#13436](https://github.com/firebase/flutterfire/issues/13436)). ([d770aa6a](https://github.com/firebase/flutterfire/commit/d770aa6a2616ed0535bbc2fbd2e9645da9ad18cd))
+
+## 5.4.3
+
+ - **FIX**(all,apple): use modular headers to import ([#13400](https://github.com/firebase/flutterfire/issues/13400)). ([d7d2d4b9](https://github.com/firebase/flutterfire/commit/d7d2d4b93e7c00226027fffde46699f3d5388a41))
+
+## 5.4.2
+
+ - Update a dependency to the latest release.
+
+## 5.4.1
+
+ - **FIX**(firestore,web): only set long polling options if it has a value ([#13295](https://github.com/firebase/flutterfire/issues/13295)). ([04b5002c](https://github.com/firebase/flutterfire/commit/04b5002c49904bae0b369f06147b5c2a90b978ee))
+
+## 5.4.0
+
+ - **FEAT**(firestore,web): expose `webExperimentalForceLongPolling`, `webExperimentalAutoDetectLongPolling` and `timeoutSeconds` on web ([#13201](https://github.com/firebase/flutterfire/issues/13201)). ([6ec2a103](https://github.com/firebase/flutterfire/commit/6ec2a103a3a325a73550bdfff4c0d524ae7e4068))
+
+## 5.3.0
+
+ - **FIX**(firestore): not passing correctly the ListenSource when listening to as single `DocumentReference` ([#13179](https://github.com/firebase/flutterfire/issues/13179)). ([ce6e1c97](https://github.com/firebase/flutterfire/commit/ce6e1c97efc1398bc3c209d7a522e3bb67db3d0f))
+ - **FEAT**: bump iOS SDK to version 11.0.0 ([#13158](https://github.com/firebase/flutterfire/issues/13158)). ([c0e0c997](https://github.com/firebase/flutterfire/commit/c0e0c99703ea394d1bb873ac225c5fe3539b002d))
+ - **DOCS**: remove reference to flutter.io and firebase.flutter.dev ([#13152](https://github.com/firebase/flutterfire/issues/13152)). ([5f0874b9](https://github.com/firebase/flutterfire/commit/5f0874b91e28a203dd62d37d391e5760c91f5729))
+
+## 5.2.1
+
+ - **FIX**: compilation issue on Windows ([#13135](https://github.com/firebase/flutterfire/issues/13135)). ([de8c9e0f](https://github.com/firebase/flutterfire/commit/de8c9e0f2d3117b3614ac8295b041fea7ed3ee7f))
+
 ## 5.2.0
 
  - **FIX**(firestore,web): stop cleaning up snapshot listeners in debug ([#13119](https://github.com/firebase/flutterfire/issues/13119)). ([82a63c8b](https://github.com/firebase/flutterfire/commit/82a63c8bf9bad0c262ed48d7829fb05110a9fe08))
@@ -225,7 +414,7 @@
 ## 4.7.0
 
  - **FEAT**: update dependency constraints to `sdk: '>=2.18.0 <4.0.0'` `flutter: '>=3.3.0'` ([#10946](https://github.com/firebase/flutterfire/issues/10946)). ([2772d10f](https://github.com/firebase/flutterfire/commit/2772d10fe510dcc28ec2d37a26b266c935699fa6))
- - **FEAT**: update librairies to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
+ - **FEAT**: update libraries to be compatible with Flutter 3.10.0 ([#10944](https://github.com/firebase/flutterfire/issues/10944)). ([e1f5a5ea](https://github.com/firebase/flutterfire/commit/e1f5a5ea798c54f19d1d2f7b8f2250f8819f44b7))
 
 ## 4.6.0
 

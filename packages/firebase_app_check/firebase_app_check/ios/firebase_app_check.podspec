@@ -24,9 +24,8 @@ Pod::Spec.new do |s|
   s.license          = { :file => '../LICENSE' }
   s.authors           = 'The Chromium Authors'
   s.source           = { :path => '.' }
-  s.source_files     = 'Classes/**/*.{h,m}'
-  s.public_header_files = 'Classes/*.h'
-  s.ios.deployment_target = '13.0'
+  s.source_files     = 'firebase_app_check/Sources/firebase_app_check/**/*.swift'
+  s.ios.deployment_target = '15.0'
 
   # Flutter dependencies
   s.dependency 'Flutter'
@@ -38,7 +37,7 @@ Pod::Spec.new do |s|
 
   s.static_framework = true
   s.pod_target_xcconfig = {
-    'GCC_PREPROCESSOR_DEFINITIONS' => "LIBRARY_VERSION=\\@\\\"#{library_version}\\\" LIBRARY_NAME=\\@\\\"flutter-fire-appcheck\\\"",
+    'GCC_PREPROCESSOR_DEFINITIONS' => "LIBRARY_VERSION=\\\"#{library_version}\\\" LIBRARY_NAME=\\\"flutter-fire-appcheck\\\"",
     'DEFINES_MODULE' => 'YES',
     # Flutter.framework does not contain a i386 slice.
     'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386'

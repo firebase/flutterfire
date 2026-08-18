@@ -15,16 +15,21 @@ import 'package:pigeon/pigeon.dart';
       package: 'io.flutter.plugins.firebase.core',
       className: 'GeneratedAndroidFirebaseCore',
     ),
-    objcHeaderOut: '../firebase_core/ios/Classes/messages.g.h',
-    objcSourceOut: '../firebase_core/ios/Classes/messages.g.m',
+    objcHeaderOut:
+        '../firebase_core/ios/firebase_core/Sources/firebase_core/include/firebase_core/messages.g.h',
+    objcSourceOut:
+        '../firebase_core/ios/firebase_core/Sources/firebase_core/messages.g.m',
+    objcOptions: ObjcOptions(
+      headerIncludePath: 'include/firebase_core/messages.g.h',
+    ),
     cppHeaderOut: '../firebase_core/windows/messages.g.h',
     cppSourceOut: '../firebase_core/windows/messages.g.cpp',
     cppOptions: CppOptions(namespace: 'firebase_core_windows'),
     copyrightHeader: 'pigeons/copyright.txt',
   ),
 )
-class PigeonFirebaseOptions {
-  PigeonFirebaseOptions({
+class CoreFirebaseOptions {
+  CoreFirebaseOptions({
     required this.authDomain,
     required this.measurementId,
     required this.deepLinkURLScheme,
@@ -70,8 +75,8 @@ class PigeonFirebaseOptions {
   final String? appGroupId;
 }
 
-class PigeonInitializeResponse {
-  PigeonInitializeResponse({
+class CoreInitializeResponse {
+  CoreInitializeResponse({
     required this.name,
     required this.options,
     required this.isAutomaticDataCollectionEnabled,
@@ -79,7 +84,7 @@ class PigeonInitializeResponse {
   });
 
   String name;
-  PigeonFirebaseOptions options;
+  CoreFirebaseOptions options;
   bool? isAutomaticDataCollectionEnabled;
   Map<String?, Object?> pluginConstants;
 }
@@ -87,16 +92,16 @@ class PigeonInitializeResponse {
 @HostApi(dartHostTestHandler: 'TestFirebaseCoreHostApi')
 abstract class FirebaseCoreHostApi {
   @async
-  PigeonInitializeResponse initializeApp(
+  CoreInitializeResponse initializeApp(
     String appName,
-    PigeonFirebaseOptions initializeAppRequest,
+    CoreFirebaseOptions initializeAppRequest,
   );
 
   @async
-  List<PigeonInitializeResponse> initializeCore();
+  List<CoreInitializeResponse> initializeCore();
 
   @async
-  PigeonFirebaseOptions optionsFromResource();
+  CoreFirebaseOptions optionsFromResource();
 }
 
 @HostApi(dartHostTestHandler: 'TestFirebaseAppHostApi')

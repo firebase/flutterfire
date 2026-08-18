@@ -14,8 +14,12 @@ import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'src/interop/performance.dart' as performance_interop;
 import 'src/trace.dart';
 
+import 'src/firebase_performance_version.dart';
+
 /// Web implementation for [FirebasePerformancePlatform]
 class FirebasePerformanceWeb extends FirebasePerformancePlatform {
+  static const String _libraryName = 'flutter-fire-perf';
+
   /// Stub initializer to allow the [registerWith] to create an instance without
   /// registering the web delegates or listeners.
   FirebasePerformanceWeb._()
@@ -51,6 +55,8 @@ class FirebasePerformanceWeb extends FirebasePerformancePlatform {
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
+    FirebaseCoreWeb.registerLibraryVersion(_libraryName, packageVersion);
+
     FirebaseCoreWeb.registerService('performance');
     FirebasePerformancePlatform.instance = FirebasePerformanceWeb.instance;
   }

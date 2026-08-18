@@ -1,14 +1,13 @@
 group 'io.flutter.plugins.firebase.crashlytics'
 version '1.0-SNAPSHOT'
 
+apply plugin: 'com.android.library'
+apply from: file("local-config.gradle")
+
 buildscript {
   repositories {
     google()
     mavenCentral()
-  }
-
-  dependencies {
-    classpath 'com.android.tools.build:gradle:8.1.2'
   }
 }
 
@@ -19,7 +18,16 @@ rootProject.allprojects {
   }
 }
 
-apply plugin: 'com.android.library'
+// AGP 9+ has built-in Kotlin support unless Flutter opts out via android.builtInKotlin=false.
+def agpMajor = com.android.Version.ANDROID_GRADLE_PLUGIN_VERSION.tokenize('.')[0] as int
+def builtInKotlin = providers.gradleProperty("android.builtInKotlin")
+        .map { it.toBoolean() }
+        .orElse(agpMajor >= 9)
+        .get()
+if (agpMajor < 9 || !builtInKotlin) {
+  apply plugin: 'kotlin-android'
+}
+
 def firebaseCoreProject = findProject(':firebase_core')
 if (firebaseCoreProject == null) {
   throw new GradleException('Could not find the firebase_core FlutterFire plugin, have you added it as a dependency in your pubspec?')
@@ -39,16 +47,21 @@ android {
     namespace 'io.flutter.plugins.firebase.crashlytics'
   }
 
-  compileSdk 34
+  compileSdkVersion project.ext.compileSdk
 
   defaultConfig {
-    minSdk 21
+    minSdkVersion project.ext.minSdk
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
   }
 
   compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
+    sourceCompatibility project.ext.javaVersion
+    targetCompatibility project.ext.javaVersion
+  }
+
+  sourceSets {
+    main.java.srcDirs += "src/main/kotlin"
+    test.java.srcDirs += "src/test/kotlin"
   }
 
   buildFeatures {
@@ -58,12 +71,25 @@ android {
   lintOptions {
     disable 'InvalidPackage'
   }
+
+  testOptions {
+    unitTests.returnDefaultValues = true
+  }
 }
 
 dependencies {
   implementation platform("com.google.firebase:firebase-bom:${getRootProjectExtOrCoreProperty("FirebaseSDKVersion", firebaseCoreProject)}")
   implementation 'com.google.firebase:firebase-crashlytics'
   implementation 'androidx.annotation:annotation:1.7.0'
+  testImplementation 'junit:junit:4.13.2'
+}
+
+plugins.withId("org.jetbrains.kotlin.android") {
+  kotlin {
+    compilerOptions {
+      jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.fromTarget(project.ext.javaVersion.toString())
+    }
+  }
 }
 
 apply from: file("./user-agent.gradle")

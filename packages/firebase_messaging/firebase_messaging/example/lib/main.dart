@@ -93,14 +93,15 @@ Future<void> setupFlutterNotifications() async {
 }
 
 void showFlutterNotification(RemoteMessage message) {
+  print('foreground message received: ${message.messageId}');
   RemoteNotification? notification = message.notification;
   AndroidNotification? android = message.notification?.android;
   if (notification != null && android != null && !kIsWeb) {
     flutterLocalNotificationsPlugin.show(
-      notification.hashCode,
-      notification.title,
-      notification.body,
-      NotificationDetails(
+      id: notification.hashCode,
+      title: notification.title,
+      body: notification.body,
+      notificationDetails: NotificationDetails(
         android: AndroidNotificationDetails(
           channel.id,
           channel.name,
@@ -179,14 +180,17 @@ class _Application extends State<Application> {
   void initState() {
     super.initState();
 
-    FirebaseMessaging.instance.getInitialMessage().then(
-          (value) => setState(
-            () {
-              _resolved = true;
-              initialMessage = value?.data.toString();
-            },
-          ),
-        );
+    // Delay getInitialMessage call by 3 seconds
+    Future.delayed(const Duration(seconds: 3), () {
+      FirebaseMessaging.instance.getInitialMessage().then(
+            (value) => setState(
+              () {
+                _resolved = true;
+                initialMessage = value?.data.toString();
+              },
+            ),
+          );
+    });
 
     FirebaseMessaging.onMessage.listen(showFlutterNotification);
 

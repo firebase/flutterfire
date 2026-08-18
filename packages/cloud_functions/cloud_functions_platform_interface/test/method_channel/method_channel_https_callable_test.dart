@@ -11,19 +11,18 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../mock.dart';
+import '../pigeon/test_api.dart';
 
 void main() {
   setupFirebaseFunctionsMocks();
 
   MethodChannelFirebaseFunctions? functions;
   MethodChannelHttpsCallable? httpsCallable;
-  final List<MethodCall> logger = <MethodCall>[];
 
   // mock props
   bool mockPlatformExceptionThrown = false;
   bool mockExceptionThrown = false;
   String kName = 'test_name';
-  Uri kUri = Uri.parse('https://test.com');
   String kOrigin = 'test_origin';
   dynamic kParameters = {'foo': 'bar'};
   HttpsCallableOptions kOptions = HttpsCallableOptions();
@@ -33,22 +32,15 @@ void main() {
     setUpAll(() async {
       FirebaseApp app = await Firebase.initializeApp();
 
-      handleMethodCall((call) async {
-        logger.add(call);
+      TestCloudFunctionsHostApi.setUp(_TestCloudFunctionsHostApi(() async {
         if (mockExceptionThrown) {
           throw Exception();
         } else if (mockPlatformExceptionThrown) {
           throw PlatformException(
               code: 'UNKNOWN', message: kPlatformExceptionMessage);
         }
-
-        switch (call.method) {
-          case 'FirebaseFunctions#call':
-            return kParameters;
-          default:
-            return null;
-        }
-      });
+        return kParameters;
+      }));
 
       functions =
           MethodChannelFirebaseFunctions(app: app, region: 'us-central1');
@@ -65,8 +57,6 @@ void main() {
       mockPlatformExceptionThrown = false;
       mockExceptionThrown = false;
       httpsCallable!.options = kOptions;
-
-      logger.clear();
     });
 
     group('constructor', () {
@@ -102,100 +92,19 @@ void main() {
     });
 
     group('call', () {
-      test('invokes native method with correct args', () async {
-        final result = await httpsCallable!.call(kParameters);
+      test('converts maps nested in lists', () async {
+        final originalParameters = kParameters;
+        addTearDown(() => kParameters = originalParameters);
+        kParameters = <Object?>[
+          <Object?, Object?>{'name': 'value'},
+        ];
 
-        expect(result, isA<dynamic>());
-        expect(result['foo'], 'bar');
+        final result = await httpsCallable!.call();
 
-        // check native method was called
-        expect(logger, <Matcher>[
-          isMethodCall(
-            'FirebaseFunctions#call',
-            arguments: <String, dynamic>{
-              'appName': functions!.app!.name,
-              'functionName': httpsCallable!.name,
-              'functionUri': null,
-              'origin': httpsCallable!.origin,
-              'region': functions!.region,
-              'timeout': httpsCallable!.options.timeout.inMilliseconds,
-              'parameters': kParameters,
-              'limitedUseAppCheckToken': false,
-            },
-          ),
-        ]);
-      });
-
-      test('invokes native method with correct args with Uri', () async {
-        final httpsCallableWithUri = MethodChannelHttpsCallable(
-          functions!,
-          kOrigin,
-          null,
-          kOptions,
-          kUri,
-        );
-        final result = await httpsCallableWithUri.call(kParameters);
-
-        expect(result, isA<dynamic>());
-        expect(result['foo'], 'bar');
-
-        // check native method was called
-        expect(logger, <Matcher>[
-          isMethodCall(
-            'FirebaseFunctions#call',
-            arguments: <String, dynamic>{
-              'appName': functions!.app!.name,
-              'functionName': null,
-              'functionUri': 'https://test.com',
-              'origin': httpsCallable!.origin,
-              'region': functions!.region,
-              'timeout': httpsCallable!.options.timeout.inMilliseconds,
-              'parameters': kParameters,
-              'limitedUseAppCheckToken': false,
-            },
-          ),
-        ]);
-      });
-
-      test('accepts no args', () async {
-        await httpsCallable!.call();
-
-        // check native method was called
-        expect(logger, <Matcher>[
-          isMethodCall(
-            'FirebaseFunctions#call',
-            arguments: <String, dynamic>{
-              'appName': functions!.app!.name,
-              'functionName': httpsCallable!.name,
-              'functionUri': null,
-              'origin': httpsCallable!.origin,
-              'region': functions!.region,
-              'timeout': httpsCallable!.options.timeout.inMilliseconds,
-              'parameters': null,
-              'limitedUseAppCheckToken': false,
-            },
-          ),
-        ]);
-      });
-
-      test('accepts null', () async {
-        await httpsCallable!.call();
-
-        // check native method was called
-        expect(logger, <Matcher>[
-          isMethodCall(
-            'FirebaseFunctions#call',
-            arguments: <String, dynamic>{
-              'appName': functions!.app!.name,
-              'functionName': httpsCallable!.name,
-              'functionUri': null,
-              'origin': httpsCallable!.origin,
-              'region': functions!.region,
-              'timeout': httpsCallable!.options.timeout.inMilliseconds,
-              'parameters': null,
-              'limitedUseAppCheckToken': false,
-            },
-          ),
+        expect(result, isA<List<dynamic>>());
+        expect((result as List<dynamic>).single, isA<Map<String, dynamic>>());
+        expect(result, <dynamic>[
+          <String, dynamic>{'name': 'value'},
         ]);
       });
 
@@ -212,4 +121,16 @@ void main() {
       });
     });
   });
+}
+
+class _TestCloudFunctionsHostApi implements TestCloudFunctionsHostApi {
+  _TestCloudFunctionsHostApi(this.callHandler);
+
+  final Future<Object?> Function() callHandler;
+
+  @override
+  Future<Object?> call(Map<String, Object?> arguments) => callHandler();
+
+  @override
+  Future<void> registerEventChannel(Map<String, Object> arguments) async {}
 }

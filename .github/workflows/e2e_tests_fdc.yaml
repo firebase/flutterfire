@@ -1,0 +1,340 @@
+name: e2e-fdc
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-fdc
+  cancel-in-progress: true
+
+on:
+  pull_request:
+    # Data Connect e2e only exercises this package; running it on every PR
+    # costs 4 jobs (2 macOS) for changes that cannot affect it. The nightly
+    # workflow_call still runs it unconditionally.
+    paths:
+      - 'packages/firebase_data_connect/**'
+      - 'packages/firebase_core/**'
+      - '.github/workflows/e2e_tests_fdc.yaml'
+      - '.github/actions/setup-flutterfire/**'
+  push:
+    branches:
+      - main
+    paths:
+      - 'packages/firebase_data_connect/**'
+      - 'packages/firebase_core/**'
+      - '.github/workflows/e2e_tests_fdc.yaml'
+      - '.github/actions/setup-flutterfire/**'
+  workflow_call:
+    inputs:
+      nightly_test_mode:
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 45 }}
+    env:
+      AVD_ARCH: x86_64
+      AVD_API_LEVEL: 34
+      AVD_TARGET: google_apis
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - uses: ./.github/actions/setup-flutterfire
+        with:
+          npm-cache: 'false'
+          firebase-tools-version: '15.25.1'
+          bootstrap-scope: 'firebase_data_connect*'
+      - name: Setup PostgreSQL for Linux/macOS/Windows
+        uses: ikalnytskyi/action-setup-postgres@c4dda34aae1c821e3a771b68b73b13af3198a7ee
+      - name: Firebase Emulator Cache
+        id: firebase-emulator-cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        continue-on-error: true
+        with:
+          # Must match the save path exactly
+          path: ~/.cache/firebase/emulators
+          key: firebase-emulators-v4-${{ runner.os }}-${{ env.FIREBASE_TOOLS_VERSION }}
+      - name: Generate dummy Firebase configs
+        run: dart ./.github/workflows/scripts/generate-dummy-firebase-configs.dart
+      - name: Start Firebase Emulator
+        run: |
+          cd ./packages/firebase_data_connect/firebase_data_connect/example
+          pkill -x postgres || true
+          unset PGSERVICEFILE
+          firebase experiments:enable dataconnect
+          ./start-firebase-emulator.sh
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Gradle cache
+        uses: gradle/actions/setup-gradle@90ddb51e90a5fd9ba75f40cf85156b7b41bf76a3
+      - name: Prepare AVD home on /mnt
+        run: |
+          sudo mkdir -p /mnt/avd
+          sudo chown "$USER:$USER" /mnt/avd
+          df -h / /mnt
+      - name: AVD cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        id: avd-cache
+        continue-on-error: true
+        with:
+          # Must match the save path exactly
+          path: |
+            /mnt/avd/*
+            ~/.android/adb*
+          key: avd-${{ runner.os }}-${{ env.AVD_API_LEVEL }}-${{ env.AVD_TARGET }}-${{ env.AVD_ARCH }}
+      - name: Link AVD home to /mnt
+        run: |
+          mkdir -p "$HOME/.android"
+          rm -rf "$HOME/.android/avd"
+          ln -s /mnt/avd "$HOME/.android/avd"
+      - name: Start AVD then run E2E tests
+        uses: reactivecircus/android-emulator-runner@e89f39f1abbbd05b1113a29cf4db69e7540cae5a
+        env:
+          ANDROID_AVD_HOME: /mnt/avd
+        with:
+          api-level: ${{ env.AVD_API_LEVEL }}
+          target: ${{ env.AVD_TARGET }}
+          arch: ${{ env.AVD_ARCH }}
+          emulator-build: 14214601
+          working-directory: 'packages/firebase_data_connect/firebase_data_connect/example'
+          script: |
+            flutter test integration_test/e2e_test.dart --dart-define=CI=true --timeout 10x -d emulator-5554
+      - name: Save Android Emulator Cache
+        # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
+        if: github.ref == 'refs/heads/main'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        continue-on-error: true
+        with:
+          key: ${{ steps.avd-cache.outputs.cache-primary-key }}
+          # Must match the restore path exactly
+          path: |
+            /mnt/avd/*
+            ~/.android/adb*
+      - name: Save Firestore Emulator Cache
+        # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
+        if: github.ref == 'refs/heads/main'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        continue-on-error: true
+        with:
+          key: ${{ steps.firebase-emulator-cache.outputs.cache-primary-key }}
+          # Must match the restore path exactly
+          path: ~/.cache/firebase/emulators
+
+  ios:
+    runs-on: macos-15
+    timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 45 }}
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - name: Xcode
+        # Firebase iOS SDK: minimum Xcode 26.2.
+        run: sudo xcode-select -s /Applications/Xcode_26.2.app/Contents/Developer
+      - uses: ./.github/actions/setup-flutterfire
+        with:
+          npm-cache: 'false'
+          firebase-tools-version: '15.25.1'
+          bootstrap-scope: 'firebase_data_connect*'
+      - name: Setup PostgreSQL for Linux/macOS/Windows
+        uses: ikalnytskyi/action-setup-postgres@c4dda34aae1c821e3a771b68b73b13af3198a7ee
+      - uses: hendrikmuhs/ccache-action@d62db5f07c26379fc4b4e0916f098a92573c3b03
+        name: Xcode Compile Cache
+        with:
+          key: xcode-cache-${{ runner.os }}
+          save: "${{ github.ref == 'refs/heads/main' }}"
+          max-size: 700M
+      - uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        continue-on-error: true
+        name: Pods Cache
+        id: pods-cache
+        with:
+          # Must match the save path exactly
+          path: packages/firebase_data_connect/firebase_data_connect/example/ios/Pods
+          # tests/pubspec.lock is gitignored, so the old key hashed nothing and
+          # the cache never invalidated. Key on the files that actually pin the
+          # native SDK version instead.
+          key: ${{ runner.os }}-fdc-pods-v2-${{ hashFiles('packages/firebase_data_connect/firebase_data_connect/example/ios/Podfile', 'packages/firebase_core/firebase_core/ios/firebase_sdk_version.rb') }}
+          restore-keys: ${{ runner.os }}-fdc-pods-v2-
+      - name: Firebase Emulator Cache
+        id: firebase-emulator-cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        continue-on-error: true
+        with:
+          # Must match the save path exactly
+          path: ~/.cache/firebase/emulators
+          key: firebase-emulators-v4-${{ runner.os }}-${{ env.FIREBASE_TOOLS_VERSION }}
+      - name: Generate dummy Firebase configs
+        run: dart ./.github/workflows/scripts/generate-dummy-firebase-configs.dart
+      - name: 'Build Application'
+        working-directory: 'packages/firebase_data_connect/firebase_data_connect/example'
+        run: |
+          export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
+          export CCACHE_SLOPPINESS=clang_index_store,file_stat_matches,include_file_ctime,include_file_mtime,ivfsoverlay,pch_defines,modules,system_headers,time_macros
+          export CCACHE_FILECLONE=true
+          export CCACHE_DEPEND=true
+          export CCACHE_INODECACHE=true
+          ccache -s
+          flutter build ios --no-codesign --simulator --debug --target=./integration_test/e2e_test.dart --dart-define=CI=true
+          ccache -s
+      - name: Start Firebase Emulator
+        run: |
+          sudo chown -R 501:20 "/Users/runner/.npm"
+          cd ./packages/firebase_data_connect/firebase_data_connect/example
+          pkill -x postgres || true
+          unset PGSERVICEFILE
+          firebase experiments:enable dataconnect
+          ./start-firebase-emulator.sh
+      - uses: futureware-tech/simulator-action@e89aa8f93d3aec35083ff49d2854d07f7186f7f5
+        id: simulator
+        with:
+          # https://github.com/actions/runner-images/blob/main/images/macos/macos-15-Readme.md#installed-simulators
+          model: "iPhone 16"
+      - name: Ensure Simulator Ready
+        env:
+          SIMULATOR: ${{ steps.simulator.outputs.udid }}
+          ENSURE_BOOT_IF_NEEDED: "0"
+        run: .github/workflows/scripts/ensure-simulator-ready.sh
+      - name: 'E2E Tests'
+        working-directory: 'packages/firebase_data_connect/firebase_data_connect/example'
+        env:
+          SIMULATOR: ${{ steps.simulator.outputs.udid }}
+        run: |
+          # Uncomment following line to have simulator logs printed out for debugging purposes.
+          # xcrun simctl spawn booted log stream --predicate 'eventMessage contains "flutter"' &
+          # Retry once after VM Service / simulator flake (reboot + migration-aware wait).
+          perl -e 'alarm 900; exec @ARGV' -- flutter test integration_test/e2e_test.dart -d "$SIMULATOR" --dart-define=CI=true --timeout 10x || {
+            echo "First attempt failed or timed out. Rebooting simulator and retrying..."
+            xcrun simctl shutdown "$SIMULATOR" || true
+            "${GITHUB_WORKSPACE}/.github/workflows/scripts/ensure-simulator-ready.sh"
+            flutter test integration_test/e2e_test.dart -d "$SIMULATOR" --dart-define=CI=true --timeout 10x
+          }
+      - name: Save Firestore Emulator Cache
+        # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
+        if: github.ref == 'refs/heads/main'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        continue-on-error: true
+        with:
+          key: ${{ steps.firebase-emulator-cache.outputs.cache-primary-key }}
+          # Must match the restore path exactly
+          path: ~/.cache/firebase/emulators
+      - name: Save Pods Cache
+        # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
+        if: github.ref == 'refs/heads/main'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        continue-on-error: true
+        with:
+          key: ${{ steps.pods-cache.outputs.cache-primary-key }}
+          # Must match the restore path exactly
+          path: packages/firebase_data_connect/firebase_data_connect/example/ios/Pods
+
+  web:
+    runs-on: macos-latest
+    timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 15 }}
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - uses: ./.github/actions/setup-flutterfire
+        with:
+          npm-cache: 'false'
+          firebase-tools-version: '15.25.1'
+          bootstrap-scope: 'firebase_data_connect*'
+      - name: Setup PostgreSQL for Linux/macOS/Windows
+        uses: ikalnytskyi/action-setup-postgres@c4dda34aae1c821e3a771b68b73b13af3198a7ee
+      - name: Generate dummy Firebase configs
+        run: dart ./.github/workflows/scripts/generate-dummy-firebase-configs.dart
+      - name: Firebase Emulator Cache
+        id: firebase-emulator-cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        continue-on-error: true
+        with:
+          # Must match the save path exactly
+          path: ~/.cache/firebase/emulators
+          key: firebase-emulators-v4-${{ runner.os }}-${{ env.FIREBASE_TOOLS_VERSION }}
+      - name: Start Firebase Emulator
+        run: |
+          sudo chown -R 501:20 "/Users/runner/.npm"
+          cd ./packages/firebase_data_connect/firebase_data_connect/example
+          pkill -x postgres || true
+          unset PGSERVICEFILE
+          firebase experiments:enable dataconnect
+          ./start-firebase-emulator.sh
+      - name: 'E2E Tests'
+        working-directory: 'packages/firebase_data_connect/firebase_data_connect/example'
+        # Web devices are not supported for the `flutter test` command yet. As a
+        # workaround we can use the `flutter drive` command. Tracking issue:
+        # https://github.com/flutter/flutter/issues/66264
+        # Chrome debug service can fail with AppConnectionException before tests
+        # connect. Retry only those infrastructure startup failures.
+        run: |
+          FLUTTER_DRIVE_TARGET="./integration_test/e2e_test.dart" \
+          FLUTTER_DRIVE_DRIVER="./test_driver/integration_test.dart" \
+          FLUTTER_DRIVE_EXTRA_ARGS="--dart-define=CI=true" \
+          "${GITHUB_WORKSPACE}/.github/workflows/scripts/flutter-drive-web-retry.sh"
+        shell: bash
+      - name: Save Firestore Emulator Cache
+        # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
+        if: github.ref == 'refs/heads/main'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        continue-on-error: true
+        with:
+          key: ${{ steps.firebase-emulator-cache.outputs.cache-primary-key }}
+          # Must match the restore path exactly
+          path: ~/.cache/firebase/emulators
+
+  web-wasm:
+    runs-on: macos-latest
+    timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 15 }}
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - uses: ./.github/actions/setup-flutterfire
+        with:
+          npm-cache: 'false'
+          firebase-tools-version: '15.25.1'
+          bootstrap-scope: 'firebase_data_connect*'
+      - name: Setup PostgreSQL for Linux/macOS/Windows
+        uses: ikalnytskyi/action-setup-postgres@c4dda34aae1c821e3a771b68b73b13af3198a7ee
+      - name: Generate dummy Firebase configs
+        run: dart ./.github/workflows/scripts/generate-dummy-firebase-configs.dart
+      - name: Firebase Emulator Cache
+        id: firebase-emulator-cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        continue-on-error: true
+        with:
+          # Must match the save path exactly
+          path: ~/.cache/firebase/emulators
+          key: firebase-emulators-v4-${{ runner.os }}-${{ env.FIREBASE_TOOLS_VERSION }}
+      - name: Start Firebase Emulator
+        run: |
+          cd ./packages/firebase_data_connect/firebase_data_connect/example
+          pkill -x postgres || true
+          unset PGSERVICEFILE
+          firebase experiments:enable dataconnect
+          ./start-firebase-emulator.sh
+      - name: 'E2E Tests'
+        working-directory: 'packages/firebase_data_connect/firebase_data_connect/example'
+        # Web devices are not supported for the `flutter test` command yet. As a
+        # workaround we can use the `flutter drive` command. Tracking issue:
+        # https://github.com/flutter/flutter/issues/66264
+        run: |
+          chromedriver --port=4444 --trace-buffer-size=100000 &
+          mv ./web/wasm_index.html ./web/index.html
+          flutter drive --target=./integration_test/e2e_test.dart --driver=./test_driver/integration_test.dart -d chrome --wasm --dart-define=CI=true | tee output.log
+          # We have to check the output for failed tests matching the string "[E]"
+          output=$(<output.log)
+          if [[ "$output" =~ \[E\] ]]; then
+          # You will see "All tests passed." in the logs even when tests failed.
+          echo "All tests did not pass. Please check the logs for more information."
+          exit 1
+          fi
+        shell: bash
+      - name: Save Firestore Emulator Cache
+        # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
+        if: github.ref == 'refs/heads/main'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        continue-on-error: true
+        with:
+          key: ${{ steps.firebase-emulator-cache.outputs.cache-primary-key }}
+          # Must match the restore path exactly
+          path: ~/.cache/firebase/emulators

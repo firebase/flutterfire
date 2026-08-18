@@ -76,7 +76,7 @@ you could update the username as follows:
 ```dart
 DatabaseReference ref = FirebaseDatabase.instance.ref("users/123");
 
-// Only update the name, leave the age and address!
+// Only update the age, leave the name and address!
 await ref.update({
   "age": 19,
 });

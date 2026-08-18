@@ -6,17 +6,13 @@
 // ignore_for_file: public_member_api_docs
 
 @JS('firebase_core')
-library firebase_interop.core.app;
+library;
 
 import 'dart:js_interop';
 
 import 'core_interop.dart';
 
-@JS('FirebaseApp')
-@staticInterop
-abstract class AppJsImpl {}
-
-extension AppJsImplExtension on AppJsImpl {
+extension type AppJsImpl._(JSObject _) implements JSObject {
   external JSString get name;
   external FirebaseOptions get options;
 }

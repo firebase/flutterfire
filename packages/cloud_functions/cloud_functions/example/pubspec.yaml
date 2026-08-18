@@ -1,15 +1,25 @@
 name: cloud_functions_example
 description: Demonstrates how to use the cloud_functions plugin.
+resolution: workspace
 
 environment:
-  sdk: '>=3.2.0 <4.0.0'
-  flutter: '>=3.3.0'
+  sdk: '^3.6.0'
+  flutter: '>=3.27.0'
 
 dependencies:
-  cloud_functions: ^5.0.4
-  firebase_core: ^3.3.0
+  cloud_functions: ^6.3.6
+  firebase_core: ^4.13.0
   flutter:
     sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  integration_test:
+    sdk: flutter
+  # `integration_test/report_test_results.dart` names each executed test via
+  # `package:test_api/hooks.dart`; `any` defers to the version flutter_test pins.
+  test_api: any
 
 flutter:
   uses-material-design: true

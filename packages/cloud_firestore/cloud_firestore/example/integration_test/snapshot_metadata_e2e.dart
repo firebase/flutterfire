@@ -27,8 +27,7 @@ void runSnapshotMetadataTests() {
         return collection;
       }
 
-      testWidgets('a snapshot returns the correct [isFromCache] value',
-          (_) async {
+      test('a snapshot returns the correct [isFromCache] value', () async {
         CollectionReference collection =
             await initializeTest('snapshot-metadata-is-from-cache');
         QuerySnapshot qs =

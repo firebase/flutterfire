@@ -41,8 +41,6 @@ toc:
 - title: firebase_database
   path: https://pub.dev/documentation/firebase_database/latest/
   status: external
-- title: firebase_dynamic_links
-  path: https://pub.dev/documentation/firebase_dynamic_links/latest/
   status: external
 - title: firebase_in_app_messaging
   path: https://pub.dev/documentation/firebase_in_app_messaging/latest/

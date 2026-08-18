@@ -2,12 +2,12 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-part of firebase_performance;
+part of '../firebase_performance.dart';
 
 /// The Firebase Performance API.
 ///
 /// You can get an instance by calling [FirebasePerformance.instance].
-class FirebasePerformance extends FirebasePluginPlatform {
+class FirebasePerformance extends FirebasePlugin {
   FirebasePerformance._({required this.app})
       : super(app.name, 'plugins.flutter.io/firebase_performance');
 

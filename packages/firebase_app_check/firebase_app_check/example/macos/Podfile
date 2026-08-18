@@ -28,9 +28,13 @@ flutter_macos_podfile_setup
 
 target 'Runner' do
   use_frameworks!
-  use_modular_headers!
 
   flutter_install_all_macos_pods File.dirname(File.realpath(__FILE__))
+  # There is no RunnerTests target in Runner.xcodeproj for this example, so no
+  # test target is declared here. Uncomment if one is ever added.
+  # target 'RunnerTests' do
+  #   inherit! :search_paths
+  # end
 end
 
 post_install do |installer|

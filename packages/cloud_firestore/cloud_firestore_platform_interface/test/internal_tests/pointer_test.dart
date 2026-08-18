@@ -50,11 +50,11 @@ void main() {
       expect(p.documentPath('bar'), 'foo/bar');
     });
 
-    test('parentPath() reutrns null if there is no parent', () {
+    test('parentPath() returns null if there is no parent', () {
       expect(Pointer('foo').parentPath(), null);
     });
 
-    test('parentPath() reutrns parent path correctly', () {
+    test('parentPath() returns parent path correctly', () {
       expect(Pointer('foo/bar').parentPath(), 'foo');
       expect(Pointer('foo/bar/baz').parentPath(), 'foo/bar');
     });

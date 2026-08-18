@@ -1,0 +1,42 @@
+// Copyright 2021 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+#import <TargetConditionals.h>
+
+#if TARGET_OS_OSX
+#import <FlutterMacOS/FlutterMacOS.h>
+#else
+#import <Flutter/Flutter.h>
+#endif
+
+#if TARGET_OS_OSX
+#import <FirebaseFirestore/FirebaseFirestore.h>
+#else
+@import FirebaseFirestore;
+#endif
+#if __has_include(<cloud_firestore/FirestoreMessages.g.h>)
+#import <cloud_firestore/FirestoreMessages.g.h>
+#else
+#import "../Public/FirestoreMessages.g.h"
+#endif
+#import <Foundation/Foundation.h>
+
+NS_ASSUME_NONNULL_BEGIN
+
+@interface FLTTransactionStreamHandler : NSObject <FlutterStreamHandler>
+@property(nonatomic, strong) FIRFirestore *firestore;
+@property(nonatomic, assign) NSInteger timeout;
+@property(nonatomic, assign) NSInteger maxAttempts;
+
+- (instancetype)initWithId:(NSString *)transactionId
+                 firestore:(FIRFirestore *)firestore
+                   timeout:(NSInteger)timeout
+               maxAttempts:(NSInteger)maxAttempts
+                   started:(void (^)(FIRTransaction *))startedListener
+                     ended:(void (^)(void))endedListener;
+- (void)receiveTransactionResponse:(InternalTransactionResult)resultType
+                          commands:(NSArray<InternalTransactionCommand *> *)commands;
+
+@end
+
+NS_ASSUME_NONNULL_END

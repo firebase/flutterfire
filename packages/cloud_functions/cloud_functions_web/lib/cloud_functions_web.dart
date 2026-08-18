@@ -13,8 +13,12 @@ import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'https_callable_web.dart';
 import 'interop/functions.dart' as functions_interop;
 
+import 'src/cloud_functions_version.dart';
+
 /// Web implementation of [FirebaseFunctionsPlatform].
 class FirebaseFunctionsWeb extends FirebaseFunctionsPlatform {
+  static const String _libraryName = 'flutter-fire-fn';
+
   /// The entry point for the [FirebaseFunctionsWeb] class.
   FirebaseFunctionsWeb({FirebaseApp? app, required String region})
       : super(app, region);
@@ -36,6 +40,8 @@ class FirebaseFunctionsWeb extends FirebaseFunctionsPlatform {
 
   /// Create the default instance of the [FirebaseFunctionsPlatform] as a [FirebaseFunctionsWeb]
   static void registerWith(Registrar registrar) {
+    FirebaseCoreWeb.registerLibraryVersion(_libraryName, packageVersion);
+
     FirebaseCoreWeb.registerService('functions');
     FirebaseFunctionsPlatform.instance = FirebaseFunctionsWeb.instance;
   }

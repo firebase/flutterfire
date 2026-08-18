@@ -1,3 +1,126 @@
+## 3.10.0
+
+ - **FIX**(core,web): load firebase-app.js before component bundles to avoid WebKit import race ([#18443](https://github.com/firebase/flutterfire/issues/18443)). ([4b731aed](https://github.com/firebase/flutterfire/commit/4b731aed0a1346070d8548c342e2e4b012844d58))
+ - **FEAT**(appcheck): rCE provider api update ([#18505](https://github.com/firebase/flutterfire/issues/18505)). ([a56649a4](https://github.com/firebase/flutterfire/commit/a56649a41539c559a08e4f566128db8de390c284))
+ - **FEAT**(core): bump Firebase web SDK to 12.16.0 ([#18466](https://github.com/firebase/flutterfire/issues/18466)). ([ff707788](https://github.com/firebase/flutterfire/commit/ff707788d48cf73e23e25b8c66205d6758a5022e))
+ - **DOCS**: fix code snippets that do not compile ([#18468](https://github.com/firebase/flutterfire/issues/18468)). ([85cbdcab](https://github.com/firebase/flutterfire/commit/85cbdcabe0f0f6230f63ebc4018c7358353b15a4))
+
+## 3.9.1
+
+ - **FIX**: update `firebase_core_platform_interface` constraint to support `8.0.0`.
+
+## 3.9.0
+
+ - **FEAT**(appcheck): appcheck reCAPTCHA mobile support (gradually rolling out) ([#18261](https://github.com/firebase/flutterfire/issues/18261)). ([036a860a](https://github.com/firebase/flutterfire/commit/036a860a0e66d46b5c57eb3df3a0f9e5846ef00b))
+ - **FEAT**(core): bump Firebase web SDK to 12.15.0 ([#18376](https://github.com/firebase/flutterfire/issues/18376)). ([22eb4d5d](https://github.com/firebase/flutterfire/commit/22eb4d5d0f3f14207e080e9c9fc8373052258ef4))
+ - **FEAT**(core): Add Recaptcha Site Key to FirebaseOptions ([#18334](https://github.com/firebase/flutterfire/issues/18334)). ([57be7027](https://github.com/firebase/flutterfire/commit/57be702778d34b9b7e86b40817d93acaec4c3ca4))
+
+## 3.8.0
+
+ - **FEAT**(core): bump Firebase web SDK to 12.14.0 ([#18331](https://github.com/firebase/flutterfire/issues/18331)). ([3f31a88a](https://github.com/firebase/flutterfire/commit/3f31a88ab6ad96914f427e292b919b6465cf4996))
+
+## 3.7.0
+
+ - **FEAT**: bump Firebase JS SDK to 12.13.0 ([#18274](https://github.com/firebase/flutterfire/issues/18274)). ([bb8ad546](https://github.com/firebase/flutterfire/commit/bb8ad546f114146b6e1cd26c3296825e2964745d))
+
+## 3.6.1
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+
+## 3.6.0
+
+ - **FEAT**: support for Firestore Pipelines ([#18183](https://github.com/firebase/flutterfire/issues/18183)). ([d734cf08](https://github.com/firebase/flutterfire/commit/d734cf0885f6d9403c2fb3ac48d6c52e14199309))
+ - **FEAT**: bump JS SDK to version 12.12.0 ([#18186](https://github.com/firebase/flutterfire/issues/18186)). ([3d943ed4](https://github.com/firebase/flutterfire/commit/3d943ed4154eb61617746825fc5c1c90f1e73d88))
+ - **FEAT**: bump JS SDK to version 12.11.0 ([#18160](https://github.com/firebase/flutterfire/issues/18160)). ([b3ab0003](https://github.com/firebase/flutterfire/commit/b3ab00036c70debca59414ea236c5012fb841a63))
+
+## 3.5.1
+
+ - Update a dependency to the latest release.
+
+## 3.5.0
+
+ - **FEAT**: bump Firebase JS SDK to 12.9.0 ([#18043](https://github.com/firebase/flutterfire/issues/18043)). ([1b29c4d4](https://github.com/firebase/flutterfire/commit/1b29c4d432597d12e08990825647f0ac9467a8f3))
+
+## 3.4.0
+
+ - **FIX**(firebase_core,web): return empty list from apps getter in WASM mode ([#17919](https://github.com/firebase/flutterfire/issues/17919)). ([0eea9f81](https://github.com/firebase/flutterfire/commit/0eea9f814e7f8bace50e8c1e5973c231cf9a4e3a))
+ - **FEAT**: bump Firebase JS SDK to 12.7.0 ([#17940](https://github.com/firebase/flutterfire/issues/17940)). ([198aef8d](https://github.com/firebase/flutterfire/commit/198aef8db6c96a08f57d750f1fa756da5e4a68a5))
+
+## 3.3.1
+
+ - **REFACTOR**(firebase_core,web): remove variant fallback in registerVersion ([#17874](https://github.com/firebase/flutterfire/issues/17874)). ([44d99a94](https://github.com/firebase/flutterfire/commit/44d99a94f00eb34a175a36ee35c074afcadf9890))
+
+## 3.3.0
+
+ - **FIX**(core,web): More explicit interop types ([#17809](https://github.com/firebase/flutterfire/issues/17809)). ([795567a6](https://github.com/firebase/flutterfire/commit/795567a64f20c7982e171d4dd66bd7ec61a7035b))
+ - **FEAT**(web): add `registerVersion` support for packages ([#17780](https://github.com/firebase/flutterfire/issues/17780)). ([3c8c83d4](https://github.com/firebase/flutterfire/commit/3c8c83d4251f2965ae6fb1fe7b64c21dcb94e9ec))
+
+## 3.2.0
+
+ - **FEAT**: bump Firebase JS SDK to 12.3.0 ([#17743](https://github.com/firebase/flutterfire/issues/17743)). ([007b2b36](https://github.com/firebase/flutterfire/commit/007b2b366f49263660e946a5a631e6919fc48eac))
+
+## 3.1.1
+
+ - Update a dependency to the latest release.
+
+## 3.1.0
+
+ - **FEAT**: bump Firebase JS SDK to 12.2.1 ([#17678](https://github.com/firebase/flutterfire/issues/17678)). ([a8e802a9](https://github.com/firebase/flutterfire/commit/a8e802a90f3e6bf53808a6996e28e814090a807b))
+
+## 3.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: bump JS SDK to version 12.0.0 ([#17548](https://github.com/firebase/flutterfire/issues/17548)). ([b44c965b](https://github.com/firebase/flutterfire/commit/b44c965b9594c4d37ba5bfcf30f6cec7f931a1d8))
+
+## 2.24.1
+
+ - Update a dependency to the latest release.
+
+## 2.24.0
+
+ - **FEAT**: bump JS SDK to version 11.9.1 ([#17471](https://github.com/firebase/flutterfire/issues/17471)). ([5033db83](https://github.com/firebase/flutterfire/commit/5033db8380bbf3a9a8a0cab13128e5f9c54b9e19))
+
+## 2.23.0
+
+ - **FEAT**: bump Firebase JS SDK to 11.7.0 ([#17355](https://github.com/firebase/flutterfire/issues/17355)). ([1c680eb9](https://github.com/firebase/flutterfire/commit/1c680eb97f51269285814309e7fca7a579698834))
+
+## 2.22.0
+
+ - **FEAT**: bump Firebase JS SDK to 11.5.0 ([#17243](https://github.com/firebase/flutterfire/issues/17243)). ([aa7fec73](https://github.com/firebase/flutterfire/commit/aa7fec7338f57ec69acd35052ec80769c77a7afd))
+
+## 2.21.1
+
+ - **FIX**(core,web): resolve type error in release mode ([#17123](https://github.com/firebase/flutterfire/issues/17123)). ([e9192931](https://github.com/firebase/flutterfire/commit/e91929313d78101dae22ed82ea20117f609d1878))
+
+## 2.21.0
+
+ - **FEAT**: bump Firebase JS SDK to `11.3.1` ([#17091](https://github.com/firebase/flutterfire/issues/17091)). ([a7176a89](https://github.com/firebase/flutterfire/commit/a7176a897b0eb0ea7f5207ed7e43ef9b12cec79f))
+
+## 2.20.0
+
+ - **FEAT**: bump Firebase JS SDK to `11.2.0` ([#17054](https://github.com/firebase/flutterfire/issues/17054)). ([68ed56bd](https://github.com/firebase/flutterfire/commit/68ed56bde89848133d2cbf49974f60b7e52f9be7))
+
+## 2.19.0
+
+ - **FEAT**: bump JS SDK to version 11.1.0 ([#16895](https://github.com/firebase/flutterfire/issues/16895)). ([71e1f21e](https://github.com/firebase/flutterfire/commit/71e1f21e9ad1559df67dcb78392f3adb0e6838c0))
+
+## 2.18.2
+
+ - Update a dependency to the latest release.
+
+## 2.18.1
+
+ - Update a dependency to the latest release.
+
+## 2.18.0
+
+ - **FEAT**(web): update to `web: ^1.0.0` ([#13200](https://github.com/firebase/flutterfire/issues/13200)). ([8fab04ae](https://github.com/firebase/flutterfire/commit/8fab04aec3b95789856d95639131bf09db29175b))
+
+## 2.17.5
+
+ - **DOCS**: remove reference to flutter.io and firebase.flutter.dev ([#13152](https://github.com/firebase/flutterfire/issues/13152)). ([5f0874b9](https://github.com/firebase/flutterfire/commit/5f0874b91e28a203dd62d37d391e5760c91f5729))
+
 ## 2.17.4
 
  - Update a dependency to the latest release.

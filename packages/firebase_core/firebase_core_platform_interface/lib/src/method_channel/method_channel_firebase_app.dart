@@ -3,7 +3,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-part of firebase_core_platform_interface;
+part of '../../firebase_core_platform_interface.dart';
 
 /// The entry point for accessing a Firebase app instance.
 ///
@@ -11,14 +11,14 @@ part of firebase_core_platform_interface;
 /// instance, for example:
 ///
 /// ```dart
-/// Firebase.app('SecondaryApp`);
+/// Firebase.app('SecondaryApp');
 /// ```
 class MethodChannelFirebaseApp extends FirebaseAppPlatform {
   // ignore: public_member_api_docs
   MethodChannelFirebaseApp(
     String name,
     FirebaseOptions options, {
-    isAutomaticDataCollectionEnabled,
+    bool? isAutomaticDataCollectionEnabled,
   })  : _isAutomaticDataCollectionEnabled =
             isAutomaticDataCollectionEnabled ?? false,
         super(name, options);
@@ -52,7 +52,7 @@ class MethodChannelFirebaseApp extends FirebaseAppPlatform {
     await _api.delete(name);
 
     MethodChannelFirebase.appInstances.remove(name);
-    FirebasePluginPlatform._constantsForPluginApps.remove(name);
+    FirebasePlugin._constantsForPluginApps.remove(name);
     _isDeleted = true;
   }
 

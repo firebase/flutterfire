@@ -3,7 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 @JS('firebase_performance')
-library firebase.performance_interop;
+library;
 
 import 'dart:js_interop';
 

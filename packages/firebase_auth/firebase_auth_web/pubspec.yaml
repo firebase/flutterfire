@@ -2,23 +2,24 @@ name: firebase_auth_web
 description: The web implementation of firebase_auth
 homepage: https://github.com/firebase/flutterfire/tree/main/packages/firebase_auth/firebase_auth_web
 repository: https://github.com/firebase/flutterfire/tree/main/packages/firebase_auth/firebase_auth_web
-version: 5.12.5
+version: 6.2.6
+resolution: workspace
 
 environment:
-  sdk: '>=3.2.0 <4.0.0'
-  flutter: '>=3.16.0'
+  sdk: '^3.6.0'
+  flutter: '>=3.22.0'
 
 dependencies:
-  firebase_auth_platform_interface: ^7.4.3
-  firebase_core: ^3.3.0
-  firebase_core_web: ^2.17.4
+  firebase_auth_platform_interface: ^9.0.6
+  firebase_core: ^4.13.0
+  firebase_core_web: ^3.10.0
   flutter:
     sdk: flutter
   flutter_web_plugins:
     sdk: flutter
   http_parser: ^4.0.0
   meta: ^1.8.0
-  web: ^0.5.1
+  web: ^1.0.0
 
 dev_dependencies:
   flutter_test:

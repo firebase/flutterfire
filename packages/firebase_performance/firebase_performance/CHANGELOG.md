@@ -1,3 +1,148 @@
+## 0.11.4+6
+
+ - **FIX**(app_check): sync SPM pins to 12.17.0 and fix Windows Activate override after [#18505](https://github.com/firebase/flutterfire/issues/18505) ([#18515](https://github.com/firebase/flutterfire/issues/18515)). ([ce1f6e05](https://github.com/firebase/flutterfire/commit/ce1f6e05e2d2645c414f8e731d3d082436caa012))
+
+## 0.11.4+5
+
+ - Update a dependency to the latest release.
+
+## 0.11.4+4
+
+ - Update a dependency to the latest release.
+
+## 0.11.4+3
+
+ - Update a dependency to the latest release.
+
+## 0.11.4+2
+
+ - Update a dependency to the latest release.
+
+## 0.11.4+1
+
+ - Update a dependency to the latest release.
+
+## 0.11.4
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+ - **FEAT**: upgrade pigeon to version 26.3.4 ([#18205](https://github.com/firebase/flutterfire/issues/18205)). ([cb6b4aef](https://github.com/firebase/flutterfire/commit/cb6b4aeffc568755ea3eebe32b998f00237bf5ad))
+
+## 0.11.3
+
+ - **FEAT**: use local firebase_core instead of remote SPM dependency ([#18141](https://github.com/firebase/flutterfire/issues/18141)). ([995caf40](https://github.com/firebase/flutterfire/commit/995caf400df80c0fde7151c651ccc6c0f756e381))
+
+## 0.11.2
+
+ - **FIX**(android): remove kotlin-android since AGP 9 supports it ([#18059](https://github.com/firebase/flutterfire/issues/18059)). ([1e39ad1f](https://github.com/firebase/flutterfire/commit/1e39ad1f146ce23742731ceeb30ff36c440b816f))
+ - **FEAT**(ios): migrate iOS to UIScene lifecycle ([#18054](https://github.com/firebase/flutterfire/issues/18054)). ([3ffa4110](https://github.com/firebase/flutterfire/commit/3ffa411098132fd5182a84be4e7a226106bc7451))
+
+## 0.11.1+5
+
+ - Update a dependency to the latest release.
+
+## 0.11.1+4
+
+ - Update a dependency to the latest release.
+
+## 0.11.1+3
+
+ - Update a dependency to the latest release.
+
+## 0.11.1+2
+
+ - Update a dependency to the latest release.
+
+## 0.11.1+1
+
+ - Update a dependency to the latest release.
+
+## 0.11.1
+
+ - **FEAT**(performance): add support for Pigeon. Update iOS to Swift and Android to Kotlin ([#17676](https://github.com/firebase/flutterfire/issues/17676)). ([9c2ab08a](https://github.com/firebase/flutterfire/commit/9c2ab08a41edd1ddb2e08aaf19d17fe85f64a7d7))
+
+## 0.11.0+1
+
+ - Update a dependency to the latest release.
+
+## 0.11.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: bump iOS SDK to version 12.0.0 ([#17549](https://github.com/firebase/flutterfire/issues/17549)). ([b2619e68](https://github.com/firebase/flutterfire/commit/b2619e685fec897513483df1d7be347b64f95606))
+ - **BREAKING** **FEAT**: bump Android SDK to version 34.0.0 ([#17554](https://github.com/firebase/flutterfire/issues/17554)). ([a5bdc051](https://github.com/firebase/flutterfire/commit/a5bdc051d40ee44e39cf0b8d2a7801bc6f618b67))
+
+## 0.10.1+10
+
+ - Update a dependency to the latest release.
+
+## 0.10.1+9
+
+ - Update a dependency to the latest release.
+
+## 0.10.1+8
+
+ - Update a dependency to the latest release.
+
+## 0.10.1+7
+
+ - Update a dependency to the latest release.
+
+## 0.10.1+6
+
+ - Update a dependency to the latest release.
+
+## 0.10.1+5
+
+ - Update a dependency to the latest release.
+
+## 0.10.1+4
+
+ - Update a dependency to the latest release.
+
+## 0.10.1+3
+
+ - Update a dependency to the latest release.
+
+## 0.10.1+2
+
+ - Update a dependency to the latest release.
+
+## 0.10.1+1
+
+ - Update a dependency to the latest release.
+
+## 0.10.1
+
+ - **FEAT**(perf): Swift Package Manager support ([#16849](https://github.com/firebase/flutterfire/issues/16849)). ([9231dd0c](https://github.com/firebase/flutterfire/commit/9231dd0c99d3745ce4174b8c91acbbe93bfcdeb1))
+
+## 0.10.0+11
+
+ - Update a dependency to the latest release.
+
+## 0.10.0+10
+
+ - Update a dependency to the latest release.
+
+## 0.10.0+9
+
+ - Update a dependency to the latest release.
+
+## 0.10.0+8
+
+ - **FIX**(all,apple): use modular headers to import ([#13400](https://github.com/firebase/flutterfire/issues/13400)). ([d7d2d4b9](https://github.com/firebase/flutterfire/commit/d7d2d4b93e7c00226027fffde46699f3d5388a41))
+
+## 0.10.0+7
+
+ - Update a dependency to the latest release.
+
+## 0.10.0+6
+
+ - Update a dependency to the latest release.
+
+## 0.10.0+5
+
+ - **DOCS**: remove reference to flutter.io and firebase.flutter.dev ([#13152](https://github.com/firebase/flutterfire/issues/13152)). ([5f0874b9](https://github.com/firebase/flutterfire/commit/5f0874b91e28a203dd62d37d391e5760c91f5729))
+
 ## 0.10.0+4
 
  - Update a dependency to the latest release.

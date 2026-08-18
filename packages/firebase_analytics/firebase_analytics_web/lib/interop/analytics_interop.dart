@@ -5,7 +5,7 @@
 // ignore_for_file: avoid_unused_constructor_parameters, non_constant_identifier_names, public_member_api_docs
 
 @JS('firebase_analytics')
-library firebase_interop.analytics;
+library;
 
 import 'dart:js_interop';
 
@@ -24,7 +24,7 @@ external AnalyticsJsImpl initializeAnalytics(
 
 @JS()
 @staticInterop
-external JSPromise /* bool */ isSupported();
+external JSPromise<JSBoolean> isSupported();
 
 @JS()
 @staticInterop
@@ -65,10 +65,6 @@ external void setUserProperties(
   JSObject? callOptions,
 );
 
-@JS('Analytics')
-@staticInterop
-abstract class AnalyticsJsImpl {}
-
-extension AnalyticsJsImplExtension on AnalyticsJsImpl {
+extension type AnalyticsJsImpl._(JSObject _) implements JSObject {
   external AppJsImpl get app;
 }

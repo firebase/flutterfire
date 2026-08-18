@@ -2,9 +2,9 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-part of firebase_app_installations;
+part of '../firebase_app_installations.dart';
 
-class FirebaseInstallations extends FirebasePluginPlatform {
+class FirebaseInstallations extends FirebasePlugin {
   FirebaseInstallations._({required this.app})
       : super(app.name, 'plugins.flutter.io/firebase_app_installations');
 

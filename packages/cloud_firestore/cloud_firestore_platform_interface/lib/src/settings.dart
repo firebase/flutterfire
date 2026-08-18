@@ -16,7 +16,11 @@ class Settings {
     this.host,
     this.sslEnabled,
     this.cacheSizeBytes,
+    this.webExperimentalForceLongPolling,
+    this.webExperimentalAutoDetectLongPolling,
+    this.webExperimentalLongPollingOptions,
     this.ignoreUndefinedProperties = false,
+    this.webPersistentTabManager,
   });
 
   /// Constant used to indicate the LRU garbage collection should be disabled.
@@ -51,6 +55,39 @@ class Settings {
   /// Web only.
   final bool ignoreUndefinedProperties;
 
+  /// Forces the SDK’s underlying network transport (WebChannel) to use long-polling.
+  ///
+  /// Each response from the backend will be closed immediately after the backend sends data
+  /// (by default responses are kept open in case the backend has more data to send).
+  /// This avoids incompatibility issues with certain proxies, antivirus software, etc.
+  /// that incorrectly buffer traffic indefinitely.
+  /// Use of this option will cause some performance degradation though.
+  final bool? webExperimentalForceLongPolling;
+
+  ///	Configures the SDK's underlying transport (WebChannel) to automatically detect if long-polling should be used.
+  ///
+  ///This is very similar to [webExperimentalForceLongPolling], but only uses long-polling if required.
+  final bool? webExperimentalAutoDetectLongPolling;
+
+  /// Options that configure the SDK’s underlying network transport (WebChannel) when long-polling is used.
+  ///
+  /// These options are only used if experimentalForceLongPolling is true
+  /// or if [webExperimentalAutoDetectLongPolling] is true and the auto-detection determined that long-polling was needed.
+  /// Otherwise, these options have no effect.
+  final WebExperimentalLongPollingOptions? webExperimentalLongPollingOptions;
+
+  /// Configures how multiple browser tabs are managed when using persistent
+  /// cache on web.
+  ///
+  /// When `null` (the default), the SDK uses single-tab mode. Set to
+  /// [WebPersistentMultipleTabManager] for multi-tab synchronization, or
+  /// [WebPersistentSingleTabManager] with [WebPersistentSingleTabManager.forceOwnership]
+  /// for Web Worker support.
+  ///
+  /// This setting only applies to Flutter Web with [persistenceEnabled] set
+  /// to `true`. It is ignored on other platforms.
+  final WebPersistentTabManager? webPersistentTabManager;
+
   /// Returns the settings as a [Map]
   Map<String, dynamic> get asMap {
     return {
@@ -58,7 +95,13 @@ class Settings {
       'host': host,
       'sslEnabled': sslEnabled,
       'cacheSizeBytes': cacheSizeBytes,
+      'webExperimentalForceLongPolling': webExperimentalForceLongPolling,
+      'webExperimentalAutoDetectLongPolling':
+          webExperimentalAutoDetectLongPolling,
+      'webExperimentalLongPollingOptions':
+          webExperimentalLongPollingOptions?.asMap,
       if (kIsWeb) 'ignoreUndefinedProperties': ignoreUndefinedProperties,
+      if (kIsWeb) 'webPersistentTabManager': webPersistentTabManager,
     };
   }
 
@@ -67,7 +110,11 @@ class Settings {
     String? host,
     bool? sslEnabled,
     int? cacheSizeBytes,
+    bool? webExperimentalForceLongPolling,
+    bool? webExperimentalAutoDetectLongPolling,
     bool? ignoreUndefinedProperties,
+    WebExperimentalLongPollingOptions? webExperimentalLongPollingOptions,
+    WebPersistentTabManager? webPersistentTabManager,
   }) {
     assert(
         cacheSizeBytes == null ||
@@ -81,8 +128,17 @@ class Settings {
       host: host ?? this.host,
       sslEnabled: sslEnabled ?? this.sslEnabled,
       cacheSizeBytes: cacheSizeBytes ?? this.cacheSizeBytes,
+      webExperimentalForceLongPolling: webExperimentalForceLongPolling ??
+          this.webExperimentalForceLongPolling,
+      webExperimentalAutoDetectLongPolling:
+          webExperimentalAutoDetectLongPolling ??
+              this.webExperimentalAutoDetectLongPolling,
+      webExperimentalLongPollingOptions: webExperimentalLongPollingOptions ??
+          this.webExperimentalLongPollingOptions,
       ignoreUndefinedProperties:
           ignoreUndefinedProperties ?? this.ignoreUndefinedProperties,
+      webPersistentTabManager:
+          webPersistentTabManager ?? this.webPersistentTabManager,
     );
   }
 
@@ -94,7 +150,14 @@ class Settings {
       other.host == host &&
       other.sslEnabled == sslEnabled &&
       other.cacheSizeBytes == cacheSizeBytes &&
-      other.ignoreUndefinedProperties == ignoreUndefinedProperties;
+      other.webExperimentalForceLongPolling ==
+          webExperimentalForceLongPolling &&
+      other.webExperimentalAutoDetectLongPolling ==
+          webExperimentalAutoDetectLongPolling &&
+      other.webExperimentalLongPollingOptions ==
+          webExperimentalLongPollingOptions &&
+      other.ignoreUndefinedProperties == ignoreUndefinedProperties &&
+      other.webPersistentTabManager == webPersistentTabManager;
 
   @override
   int get hashCode => Object.hash(
@@ -103,9 +166,120 @@ class Settings {
         host,
         sslEnabled,
         cacheSizeBytes,
+        webExperimentalForceLongPolling,
+        webExperimentalAutoDetectLongPolling,
+        webExperimentalLongPollingOptions,
         ignoreUndefinedProperties,
+        webPersistentTabManager,
       );
 
   @override
   String toString() => 'Settings($asMap)';
+}
+
+/// Configures how multiple browser tabs are managed by the Firestore SDK
+/// when using persistent cache on web.
+///
+/// This setting only applies to Flutter Web with [Settings.persistenceEnabled]
+/// set to `true`. It is ignored on other platforms.
+///
+/// See also:
+/// - [WebPersistentMultipleTabManager] for multi-tab synchronization
+/// - [WebPersistentSingleTabManager] for single-tab mode with optional
+///   force ownership (Web Workers)
+sealed class WebPersistentTabManager {
+  const WebPersistentTabManager();
+}
+
+/// Enables multi-tab synchronization for Firestore’s persistent cache.
+///
+/// The SDK will synchronize queries and mutations across all open browser
+/// tabs that use the same Firestore instance.
+///
+/// Example:
+/// ```dart
+/// FirebaseFirestore.instance.settings = const Settings(
+///   persistenceEnabled: true,
+///   webPersistentTabManager: WebPersistentMultipleTabManager(),
+/// );
+/// ```
+@immutable
+class WebPersistentMultipleTabManager extends WebPersistentTabManager {
+  const WebPersistentMultipleTabManager();
+
+  @override
+  bool operator ==(Object other) =>
+      other is WebPersistentMultipleTabManager &&
+      other.runtimeType == runtimeType;
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+}
+
+/// Configures the Firestore SDK to operate in single-tab mode.
+///
+/// When [forceOwnership] is `true`, this tab forcibly acquires the
+/// IndexedDB lock, which is useful for Web Workers but will cause other
+/// tabs using persistence to fail.
+///
+/// Example:
+/// ```dart
+/// FirebaseFirestore.instance.settings = const Settings(
+///   persistenceEnabled: true,
+///   webPersistentTabManager: WebPersistentSingleTabManager(forceOwnership: true),
+/// );
+/// ```
+@immutable
+class WebPersistentSingleTabManager extends WebPersistentTabManager {
+  const WebPersistentSingleTabManager({this.forceOwnership = false});
+
+  /// Whether to force-enable persistent (IndexedDB) cache for this tab.
+  ///
+  /// This cannot be used with multi-tab synchronization and is primarily
+  /// intended for use with Web Workers. Setting this to `true` will enable
+  /// IndexedDB, but cause other tabs using IndexedDB cache to fail.
+  final bool forceOwnership;
+
+  @override
+  bool operator ==(Object other) =>
+      other is WebPersistentSingleTabManager &&
+      other.runtimeType == runtimeType &&
+      other.forceOwnership == forceOwnership;
+
+  @override
+  int get hashCode => Object.hash(runtimeType, forceOwnership);
+}
+
+/// Options that configure the SDK’s underlying network transport (WebChannel) when long-polling is used.
+@immutable
+class WebExperimentalLongPollingOptions {
+  /// The desired maximum timeout interval, in seconds, to complete a long-polling GET response
+  ///
+  /// Valid values are between 5 and 30, inclusive.
+  /// By default, when long-polling is used the "hanging GET" request sent by the client times out after 30 seconds.
+  /// To request a different timeout from the server, set this setting with the desired timeout.
+  /// Changing the default timeout may be useful, for example,
+  /// if the buffering proxy that necessitated enabling long-polling in the first place has a shorter timeout for hanging GET requests,
+  /// in which case setting the long-polling timeout to a shorter value,
+  /// such as 25 seconds, may fix prematurely-closed hanging GET requests.
+  final Duration? timeoutDuration;
+
+  const WebExperimentalLongPollingOptions({
+    this.timeoutDuration,
+  });
+
+  Map<String, dynamic> get asMap {
+    return {
+      'timeoutDuration': timeoutDuration?.inSeconds,
+    };
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      other is WebExperimentalLongPollingOptions &&
+      other.runtimeType == runtimeType &&
+      other.timeoutDuration == timeoutDuration;
+
+  @override
+  int get hashCode => Object.hash(runtimeType, timeoutDuration);
 }

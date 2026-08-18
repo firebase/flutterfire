@@ -1,0 +1,85 @@
+/*
+ * Copyright 2024 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// Adapted from http://google3/google/firebase/dataconnect/v1main/graphql_error.proto;rcl=597595444
+
+syntax = "proto3";
+
+package google.firebase.dataconnect.v1;
+
+import "google/protobuf/struct.proto";
+
+option java_package = "google.firebase.dataconnect.proto";
+option java_multiple_files = true;
+
+// GraphqlError conforms to the GraphQL error spec.
+// https://spec.graphql.org/draft/#sec-Errors
+//
+// Firebase Data Connect API surfaces `GraphqlError` in various APIs:
+// - Upon compile error, `UpdateSchema` and `UpdateConnector` return
+// Code.Invalid_Argument with a list of `GraphqlError` in error details.
+// - Upon query compile error, `ExecuteGraphql` and `ExecuteGraphqlRead` return
+// Code.OK with a list of `GraphqlError` in response body.
+// - Upon query execution error, `ExecuteGraphql`, `ExecuteGraphqlRead`,
+// `ExecuteMutation` and `ExecuteQuery` all return Code.OK with a list of
+// `GraphqlError` in response body.
+message GraphqlError {
+  // The detailed error message.
+  // The message should help developer understand the underlying problem without
+  // leaking internal data.
+  string message = 1;
+
+  // The source locations where the error occurred.
+  // Locations should help developers and toolings identify the source of error
+  // quickly.
+  //
+  // Included in admin endpoints (`ExecuteGraphql`, `ExecuteGraphqlRead`,
+  // `UpdateSchema` and `UpdateConnector`) to reference the provided GraphQL
+  // GQL document.
+  //
+  // Omitted in `ExecuteMutation` and `ExecuteQuery` since the caller shouldn't
+  // have access access the underlying GQL source.
+  repeated SourceLocation locations = 2;
+
+  // The result field which could not be populated due to error.
+  //
+  // Clients can use path to identify whether a null result is intentional or
+  // caused by a runtime error.
+  // It should be a list of string or index from the root of GraphQL query
+  // document.
+  google.protobuf.ListValue path = 3;
+
+  // Additional error information.
+  GraphqlErrorExtensions extensions = 4;
+}
+
+// SourceLocation references a location in a GraphQL source.
+message SourceLocation {
+  // Line number starting at 1.
+  int32 line = 1;
+  // Column number starting at 1.
+  int32 column = 2;
+}
+
+// GraphqlErrorExtensions contains additional information of `GraphqlError`.
+// (-- TODO(b/305311379): include more detailed error fields:
+// go/firemat:api:gql-errors.  --)
+message GraphqlErrorExtensions {
+  // The source file name where the error occurred.
+  // Included only for `UpdateSchema` and `UpdateConnector`, it corresponds
+  // to `File.path` of the provided `Source`.
+  string file = 1;
+}

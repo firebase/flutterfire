@@ -3,7 +3,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-part of cloud_functions;
+part of '../cloud_functions.dart';
 
 /// A reference to a particular Callable HTTPS trigger in Cloud Functions.
 ///
@@ -48,12 +48,39 @@ class HttpsCallable {
     }
     return HttpsCallableResult<T>._(await delegate.call(updatedParameters));
   }
+
+  /// Streams data to the specified HTTPS endpoint.
+  ///
+  /// The data passed into the trigger can be any of the following types:
+  ///
+  /// `null`
+  /// `String`
+  /// `num`
+  /// [List], where the contained objects are also one of these types.
+  /// [Map], where the values are also one of these types.
+  ///
+  /// The request to the Cloud Functions backend made by this method
+  /// automatically includes a Firebase Instance ID token to identify the app
+  /// instance. If a user is logged in with Firebase Auth, an auth ID token for
+  /// the user is also automatically included.
+  Stream<StreamResponse<T, R>> stream<T, R>([Object? input]) async* {
+    await for (final value in delegate.stream(input).asBroadcastStream()) {
+      if (value is Map) {
+        if (value.containsKey('message')) {
+          yield Chunk<T, R>(value['message'] as T);
+        } else if (value.containsKey('result')) {
+          yield Result<T, R>(HttpsCallableResult._(value['result'] as R));
+        }
+      }
+    }
+  }
 }
 
 dynamic _updateRawDataToList(dynamic value) {
   if (value is Uint8List ||
       value is Int32List ||
-      value is Int64List ||
+      // Int64List is not supported by dart2js, skip the check on web.
+      (!kIsWeb && value is Int64List) ||
       value is Float32List ||
       value is Float64List) {
     return value.toList();

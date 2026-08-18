@@ -5,9 +5,11 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void runQueryTests() {
@@ -34,7 +36,7 @@ void runQueryTests() {
 
     group('equality', () {
       // testing == override using e2e tests as it is dependent on the platform
-      testWidgets('handles deeply compares query parameters', (_) async {
+      test('handles deeply compares query parameters', () async {
         final movies = firestore.collection('/movies');
         final starWarsComments =
             firestore.collection('/movies/star-wars/comments');
@@ -53,8 +55,7 @@ void runQueryTests() {
         );
       });
 
-      testWidgets('differentiate queries from a different app instance',
-          (_) async {
+      test('differentiate queries from a different app instance', () async {
         final fooApp = await Firebase.initializeApp(
           name: 'foo',
           options: Firebase.app().options,
@@ -79,7 +80,7 @@ void runQueryTests() {
         );
       });
 
-      testWidgets('differentiate collection group', (_) async {
+      test('differentiate collection group', () async {
         expect(
           firestore.collectionGroup('comments').limit(42),
           firestore.collectionGroup('comments').limit(42),
@@ -95,7 +96,7 @@ void runQueryTests() {
      * collectionGroup
      */
     group('collectionGroup()', () {
-      testWidgets('returns a data via a sub-collection', (_) async {
+      test('returns a data via a sub-collection', () async {
         CollectionReference<Map<String, dynamic>> collection =
             firestore.collection('flutter-tests/collection-group/group-test');
         QuerySnapshot<Map<String, dynamic>> snapshot = await collection.get();
@@ -117,9 +118,9 @@ void runQueryTests() {
         expect(groupSnapshot.docs[1].data()['foo'], equals(1));
       });
 
-      testWidgets(
+      test(
           'should respond with a FirebaseException, the query requires an index',
-          (_) async {
+          () async {
         try {
           await FirebaseFirestore.instance
               .collectionGroup('collection-group')
@@ -143,14 +144,14 @@ void runQueryTests() {
      * get
      */
     group('Query.get()', () {
-      testWidgets('returns a [QuerySnapshot]', (_) async {
+      test('returns a [QuerySnapshot]', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('get');
         QuerySnapshot<Map<String, dynamic>> qs = await collection.get();
         expect(qs, isA<QuerySnapshot<Map<String, dynamic>>>());
       });
 
-      testWidgets('uses [GetOptions] cache', (_) async {
+      test('uses [GetOptions] cache', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('get');
         QuerySnapshot<Map<String, dynamic>> qs =
@@ -159,7 +160,7 @@ void runQueryTests() {
         expect(qs.metadata.isFromCache, isTrue);
       });
 
-      testWidgets('uses [GetOptions] server', (_) async {
+      test('uses [GetOptions] server', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('get');
         QuerySnapshot<Map<String, dynamic>> qs =
@@ -168,8 +169,7 @@ void runQueryTests() {
         expect(qs.metadata.isFromCache, isFalse);
       });
 
-      testWidgets('uses [GetOptions] serverTimestampBehavior previous',
-          (_) async {
+      test('uses [GetOptions] serverTimestampBehavior previous', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('get');
         QuerySnapshot<Map<String, dynamic>> qs = await collection.get(
@@ -180,8 +180,7 @@ void runQueryTests() {
         expect(qs, isA<QuerySnapshot<Map<String, dynamic>>>());
       });
 
-      testWidgets('uses [GetOptions] serverTimestampBehavior estimate',
-          (_) async {
+      test('uses [GetOptions] serverTimestampBehavior estimate', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('get');
         QuerySnapshot<Map<String, dynamic>> qs = await collection.get(
@@ -192,9 +191,9 @@ void runQueryTests() {
         expect(qs, isA<QuerySnapshot<Map<String, dynamic>>>());
       });
 
-      testWidgets(
+      test(
         'throws a [FirebaseException]',
-        (_) async {
+        () async {
           CollectionReference<Map<String, dynamic>> collection =
               firestore.collection('not-allowed');
 
@@ -212,9 +211,9 @@ void runQueryTests() {
         },
       );
 
-      testWidgets(
+      test(
         'should respond with a FirebaseException, the query requires an index',
-        (_) async {
+        () async {
           try {
             await FirebaseFirestore.instance
                 .collection('flutter-tests')
@@ -239,7 +238,7 @@ void runQueryTests() {
      * snapshots
      */
     group('Query.snapshots()', () {
-      testWidgets('returns a [Stream]', (_) async {
+      test('returns a [Stream]', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('get');
         Stream<QuerySnapshot<Map<String, dynamic>>> stream =
@@ -247,7 +246,7 @@ void runQueryTests() {
         expect(stream, isA<Stream<QuerySnapshot<Map<String, dynamic>>>>());
       });
 
-      testWidgets('listens to a single response', (_) async {
+      test('listens to a single response', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('get-single');
         await collection.add({'foo': 'bar'});
@@ -272,9 +271,9 @@ void runQueryTests() {
         });
       });
 
-      testWidgets(
+      test(
         'listens to a single response from cache with QuerySnapshot',
-        (_) async {
+        () async {
           CollectionReference<Map<String, dynamic>> collection =
               await initializeTest('get-single-cache');
           await collection.add({'foo': 'bar'});
@@ -298,11 +297,12 @@ void runQueryTests() {
             await subscription?.cancel();
           });
         },
-        // Failing on CI but works locally
-        skip: kIsWeb,
+        // Failing on CI but works locally. Listening from cache is not
+        // supported on Windows.
+        skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
       );
 
-      testWidgets('listens to multiple queries', (_) async {
+      test('listens to multiple queries', () async {
         CollectionReference<Map<String, dynamic>> collection1 =
             await initializeTest('document-snapshot-1');
         CollectionReference<Map<String, dynamic>> collection2 =
@@ -324,66 +324,176 @@ void runQueryTests() {
         await expectLater(value2, completion('value2'));
       });
 
-      testWidgets('listens to a multiple changes response', (_) async {
+      test('listens to a multiple changes response', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('get-multiple');
         await collection.add({'foo': 'bar'});
 
         Stream<QuerySnapshot<Map<String, dynamic>>> stream =
             collection.snapshots();
-        int call = 0;
+        final initialSnapshot =
+            Completer<QuerySnapshot<Map<String, dynamic>>>();
+        final doc1Set = Completer<QuerySnapshot<Map<String, dynamic>>>();
+        final doc1Deleted = Completer<QuerySnapshot<Map<String, dynamic>>>();
+        final doc2Set = Completer<QuerySnapshot<Map<String, dynamic>>>();
+        final doc2Updated = Completer<QuerySnapshot<Map<String, dynamic>>>();
 
-        StreamSubscription subscription = stream.listen(
-          expectAsync1(
-            (QuerySnapshot<Map<String, dynamic>> snapshot) {
-              call++;
-              if (call == 1) {
-                expect(snapshot.docs.length, equals(1));
-                QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot =
-                    snapshot.docs[0];
-                expect(documentSnapshot.data()['foo'], equals('bar'));
-              } else if (call == 2) {
-                expect(snapshot.docs.length, equals(2));
-                QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot =
-                    snapshot.docs.firstWhere((doc) => doc.id == 'doc1');
-                expect(documentSnapshot.data()['bar'], equals('baz'));
-              } else if (call == 3) {
-                expect(snapshot.docs.length, equals(1));
-                expect(
-                  snapshot.docs.where((doc) => doc.id == 'doc1').isEmpty,
-                  isTrue,
-                );
-              } else if (call == 4) {
-                expect(snapshot.docs.length, equals(2));
-                QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot =
-                    snapshot.docs.firstWhere((doc) => doc.id == 'doc2');
-                expect(documentSnapshot.data()['foo'], equals('bar'));
-              } else if (call == 5) {
-                expect(snapshot.docs.length, equals(2));
-                QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot =
-                    snapshot.docs.firstWhere((doc) => doc.id == 'doc2');
-                expect(documentSnapshot.data()['foo'], equals('baz'));
-              } else {
-                fail('Should not have been called');
-              }
-            },
-            count: 5,
-            reason: 'Stream should only have been called five times.',
-          ),
+        StreamSubscription subscription = stream.listen((snapshot) {
+          final doc1 =
+              snapshot.docs.where((doc) => doc.id == 'doc1').firstOrNull;
+          final doc2 =
+              snapshot.docs.where((doc) => doc.id == 'doc2').firstOrNull;
+
+          if (!initialSnapshot.isCompleted &&
+              snapshot.docs.length == 1 &&
+              snapshot.docs.single.data()['foo'] == 'bar') {
+            initialSnapshot.complete(snapshot);
+          } else if (!doc1Set.isCompleted &&
+              snapshot.docs.length == 2 &&
+              doc1?.data()['bar'] == 'baz') {
+            doc1Set.complete(snapshot);
+          } else if (doc1Set.isCompleted &&
+              !doc1Deleted.isCompleted &&
+              doc1 == null) {
+            doc1Deleted.complete(snapshot);
+          } else if (doc1Deleted.isCompleted &&
+              !doc2Set.isCompleted &&
+              doc2?.data()['foo'] == 'bar') {
+            doc2Set.complete(snapshot);
+          } else if (doc2Set.isCompleted &&
+              !doc2Updated.isCompleted &&
+              doc2?.data()['foo'] == 'baz') {
+            doc2Updated.complete(snapshot);
+          }
+        });
+
+        final initial = await initialSnapshot.future.timeout(
+          const Duration(seconds: 30),
+        );
+        expect(initial.docs, hasLength(1));
+
+        await collection.doc('doc1').set({'bar': 'baz'});
+        final withDoc1 = await doc1Set.future.timeout(
+          const Duration(seconds: 30),
+        );
+        expect(withDoc1.docs, hasLength(2));
+        expect(
+          withDoc1.docs.firstWhere((doc) => doc.id == 'doc1').data()['bar'],
+          equals('baz'),
         );
 
-        await Future.delayed(const Duration(milliseconds: 500));
-        await collection.doc('doc1').set({'bar': 'baz'});
         await collection.doc('doc1').delete();
+        final withoutDoc1 = await doc1Deleted.future.timeout(
+          const Duration(seconds: 30),
+        );
+        expect(withoutDoc1.docs.where((doc) => doc.id == 'doc1'), isEmpty);
+
         await collection.doc('doc2').set({'foo': 'bar'});
+        final withDoc2 = await doc2Set.future.timeout(
+          const Duration(seconds: 30),
+        );
+        expect(
+          withDoc2.docs.firstWhere((doc) => doc.id == 'doc2').data()['foo'],
+          equals('bar'),
+        );
+
         await collection.doc('doc2').update({'foo': 'baz'});
+        final updatedDoc2 = await doc2Updated.future.timeout(
+          const Duration(seconds: 30),
+        );
+        expect(
+          updatedDoc2.docs.firstWhere((doc) => doc.id == 'doc2').data()['foo'],
+          equals('baz'),
+        );
 
         await subscription.cancel();
       });
 
       testWidgets(
+        'large snapshots do not block frame scheduling',
+        (WidgetTester tester) async {
+          CollectionReference<Map<String, dynamic>> collection =
+              await initializeTest('large-snapshot-listener');
+          const int documentCount = 1000;
+          final String payload = List.filled(1024, 'x').join();
+
+          for (int start = 0; start < documentCount; start += 400) {
+            final WriteBatch batch = firestore.batch();
+            final int end = min(start + 400, documentCount);
+            for (int index = start; index < end; index++) {
+              batch.set(collection.doc('doc-$index'), <String, Object?>{
+                'index': index,
+                'payload': payload,
+              });
+            }
+            await batch.commit();
+          }
+
+          final Completer<void> initialSnapshot = Completer<void>();
+          final Completer<void> receivedUpdates = Completer<void>();
+          var initialSnapshotReceived = false;
+          var updateSnapshots = 0;
+
+          final StreamSubscription<QuerySnapshot<Map<String, dynamic>>>
+              subscription = collection.snapshots().listen((snapshot) {
+            if (!initialSnapshotReceived && snapshot.size == documentCount) {
+              initialSnapshotReceived = true;
+              initialSnapshot.complete();
+              return;
+            }
+
+            if (initialSnapshotReceived && snapshot.docChanges.isNotEmpty) {
+              updateSnapshots++;
+              if (updateSnapshots >= 3 && !receivedUpdates.isCompleted) {
+                receivedUpdates.complete();
+              }
+            }
+          });
+          addTearDown(subscription.cancel);
+
+          await initialSnapshot.future.timeout(const Duration(seconds: 30));
+          await tester.pumpWidget(
+            const Directionality(
+              textDirection: TextDirection.ltr,
+              child: Center(child: CircularProgressIndicator()),
+            ),
+          );
+
+          var updatesDone = false;
+          final updateFuture = Future<void>(() async {
+            for (int index = 0; index < 3; index++) {
+              await collection.doc('doc-0').update(<String, Object?>{
+                'counter': index,
+                'payload': payload,
+              });
+            }
+            await receivedUpdates.future.timeout(const Duration(seconds: 30));
+          }).whenComplete(() {
+            updatesDone = true;
+          });
+
+          final pumpDurations = <Duration>[];
+          while (!updatesDone) {
+            final Stopwatch stopwatch = Stopwatch()..start();
+            await tester.pump(const Duration(milliseconds: 16));
+            stopwatch.stop();
+            pumpDurations.add(stopwatch.elapsed);
+          }
+          await updateFuture;
+
+          expect(pumpDurations, isNotEmpty);
+          final Duration longestPump = pumpDurations.reduce(
+            (current, next) => current > next ? current : next,
+          );
+          expect(longestPump, lessThan(const Duration(milliseconds: 750)));
+        },
+        timeout: const Timeout.factor(10),
+        skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
+      );
+
+      test(
         'listeners throws a [FirebaseException] with Query',
-        (_) async {
+        () async {
           CollectionReference<Map<String, dynamic>> collection =
               firestore.collection('not-allowed');
           Stream<QuerySnapshot<Map<String, dynamic>>> stream =
@@ -412,7 +522,7 @@ void runQueryTests() {
      */
 
     group('Query.endAt{Document}()', () {
-      testWidgets('ends at string field paths', (_) async {
+      test('ends at string field paths', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('endAt-string');
         await Future.wait([
@@ -446,7 +556,7 @@ void runQueryTests() {
         expect(snapshot2.docs[1].id, equals('doc2'));
       });
 
-      testWidgets('ends at string field paths with Iterable', (_) async {
+      test('ends at string field paths with Iterable', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('endAt-string');
         await Future.wait([
@@ -480,7 +590,7 @@ void runQueryTests() {
         expect(snapshot2.docs[1].id, equals('doc2'));
       });
 
-      testWidgets('ends at field paths', (_) async {
+      test('ends at field paths', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('endAt-field-path');
         await Future.wait([
@@ -514,7 +624,7 @@ void runQueryTests() {
         expect(snapshot2.docs[1].id, equals('doc2'));
       });
 
-      testWidgets('endAtDocument() ends at a document field value', (_) async {
+      test('endAtDocument() ends at a document field value', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('endAt-document');
         await Future.wait([
@@ -541,7 +651,7 @@ void runQueryTests() {
         expect(snapshot.docs[1].id, equals('doc2'));
       });
 
-      testWidgets('endAtDocument() ends at a document', (_) async {
+      test('endAtDocument() ends at a document', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('endAt-document');
         await Future.wait([
@@ -576,7 +686,7 @@ void runQueryTests() {
      */
 
     group('Query.startAt{Document}()', () {
-      testWidgets('starts at string field paths', (_) async {
+      test('starts at string field paths', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('startAt-string');
         await Future.wait([
@@ -610,7 +720,7 @@ void runQueryTests() {
         expect(snapshot2.docs[1].id, equals('doc3'));
       });
 
-      testWidgets('starts at string field paths with Iterable', (_) async {
+      test('starts at string field paths with Iterable', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('startAt-string');
         await Future.wait([
@@ -644,7 +754,7 @@ void runQueryTests() {
         expect(snapshot2.docs[1].id, equals('doc3'));
       });
 
-      testWidgets('starts at field paths', (_) async {
+      test('starts at field paths', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('startAt-field-path');
         await Future.wait([
@@ -679,8 +789,7 @@ void runQueryTests() {
         expect(snapshot2.docs[1].id, equals('doc3'));
       });
 
-      testWidgets('startAtDocument() starts at a document field value',
-          (_) async {
+      test('startAtDocument() starts at a document field value', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('startAt-document-field-value');
         await Future.wait([
@@ -707,7 +816,7 @@ void runQueryTests() {
         expect(snapshot.docs[1].id, equals('doc1'));
       });
 
-      testWidgets('startAtDocument() starts at a document', (_) async {
+      test('startAtDocument() starts at a document', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('startAt-document');
         await Future.wait([
@@ -741,7 +850,7 @@ void runQueryTests() {
      */
 
     group('Query.endBefore{Document}()', () {
-      testWidgets('ends before string field paths', (_) async {
+      test('ends before string field paths', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('endBefore-string');
         await Future.wait([
@@ -775,7 +884,7 @@ void runQueryTests() {
         expect(snapshot2.docs[1].id, equals('doc2'));
       });
 
-      testWidgets('ends before string field paths with Iterable', (_) async {
+      test('ends before string field paths with Iterable', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('endBefore-string');
         await Future.wait([
@@ -809,7 +918,7 @@ void runQueryTests() {
         expect(snapshot2.docs[1].id, equals('doc2'));
       });
 
-      testWidgets('ends before field paths', (_) async {
+      test('ends before field paths', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('endBefore-field-path');
         await Future.wait([
@@ -844,8 +953,7 @@ void runQueryTests() {
         expect(snapshot2.docs[1].id, equals('doc2'));
       });
 
-      testWidgets('endbeforeDocument() ends before a document field value',
-          (_) async {
+      test('endbeforeDocument() ends before a document field value', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('endBefore-document-field-value');
         await Future.wait([
@@ -872,7 +980,7 @@ void runQueryTests() {
         expect(snapshot.docs[1].id, equals('doc2'));
       });
 
-      testWidgets('endBeforeDocument() ends before a document', (_) async {
+      test('endBeforeDocument() ends before a document', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('endBefore-document');
         await Future.wait([
@@ -906,7 +1014,7 @@ void runQueryTests() {
      * Start after
      */
     group('Query.startAfter{Document}()', () {
-      testWidgets('starts after string field paths', (_) async {
+      test('starts after string field paths', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('startAfter-string');
         await Future.wait([
@@ -940,7 +1048,7 @@ void runQueryTests() {
         expect(snapshot2.docs[1].id, equals('doc3'));
       });
 
-      testWidgets('starts after field paths', (_) async {
+      test('starts after field paths', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('startAfter-field-path');
         await Future.wait([
@@ -975,8 +1083,8 @@ void runQueryTests() {
         expect(snapshot2.docs[1].id, equals('doc3'));
       });
 
-      testWidgets('startAfterDocument() starts after a document field value',
-          (_) async {
+      test('startAfterDocument() starts after a document field value',
+          () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('startAfter-document-field-value');
         await Future.wait([
@@ -1004,7 +1112,7 @@ void runQueryTests() {
         expect(snapshot.docs[1].id, equals('doc1'));
       });
 
-      testWidgets('startAfterDocument() starts after a document', (_) async {
+      test('startAfterDocument() starts after a document', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('startAfter-document');
         await Future.wait([
@@ -1031,6 +1139,166 @@ void runQueryTests() {
         expect(snapshot.docs[0].id, equals('doc3'));
         expect(snapshot.docs[1].id, equals('doc4'));
       });
+
+      test(
+        'startAfterDocument() preserves Timestamp cursor precision',
+        () async {
+          CollectionReference<Map<String, dynamic>> collection =
+              await initializeTest('startAfter-document-timestamp-precision');
+          await collection.doc('doc1').set({
+            'createdAt': Timestamp(1, 123456789),
+          });
+
+          Query<Map<String, dynamic>> baseQuery =
+              collection.orderBy('createdAt');
+          QuerySnapshot<Map<String, dynamic>> firstPage =
+              await baseQuery.limit(50).get();
+
+          expect(firstPage.docs.length, equals(1));
+          expect(firstPage.docs.first.id, equals('doc1'));
+
+          QuerySnapshot<Map<String, dynamic>> nextPage = await baseQuery
+              .startAfterDocument(firstPage.docs.last)
+              .limit(50)
+              .get();
+
+          expect(nextPage.docs, isEmpty);
+        },
+        skip: !kIsWeb,
+      );
+
+      testWidgets(
+        'throws exception without orderBy() on field used for inequality query',
+        (_) async {
+          CollectionReference<Map<String, dynamic>> collection =
+              await initializeTest('startAfterDocument-inequality-field-throw');
+          await Future.wait([
+            collection.doc('doc1').set({
+              'bar': {'value': 2},
+            }),
+            collection.doc('doc2').set({
+              'bar': {'value': 10},
+            }),
+            collection.doc('doc3').set({
+              'bar': {'value': 10},
+            }),
+            collection.doc('doc4').set({
+              'bar': {'value': 10},
+            }),
+          ]);
+
+          DocumentSnapshot startAtSnapshot = await collection.doc('doc2').get();
+          Query inequalityQuery =
+              collection.where('bar.value', isGreaterThan: 5);
+
+          await expectLater(
+            inequalityQuery.startAfterDocument(startAtSnapshot).get(),
+            throwsA(
+              isA<FirebaseException>().having(
+                (e) => e.message,
+                'message',
+                anyOf(
+                  contains('Client specified an invalid argument'),
+                  contains('order by clause cannot contain more fields '
+                      'after the key'),
+                ),
+              ),
+            ),
+          );
+        },
+        // firebase-js-sdk does not require an orderBy() field to be set for
+        // this to work
+        skip: kIsWeb,
+      );
+
+      testWidgets(
+        'throws exception without correct orderBy("wrong-field") field used for inequality query',
+        (_) async {
+          CollectionReference<Map<String, dynamic>> collection =
+              await initializeTest(
+            'startAfterDocument-wrong-inequality-field-throw',
+          );
+          await Future.wait([
+            collection.doc('doc1').set({
+              'bar': {'value': 2},
+            }),
+            collection.doc('doc2').set(
+              {
+                'bar': {'value': 10},
+                'wrong-field': 2,
+              },
+            ),
+            collection.doc('doc3').set(
+              {
+                'bar': {'value': 10},
+                'wrong-field': 2,
+              },
+            ),
+            collection.doc('doc4').set(
+              {
+                'bar': {'value': 10},
+                'wrong-field': 2,
+              },
+            ),
+          ]);
+
+          DocumentSnapshot startAtSnapshot = await collection.doc('doc2').get();
+          Query inequalityQuery =
+              collection.where('bar.value', isGreaterThan: 5);
+          await expectLater(
+            inequalityQuery
+                .orderBy('wrong-field')
+                .startAfterDocument(startAtSnapshot)
+                .get(),
+            throwsA(
+              isA<FirebaseException>().having(
+                (e) => e.message,
+                'message',
+                anyOf(
+                  contains('Client specified an invalid argument'),
+                  contains('order by clause cannot contain more fields '
+                      'after the key'),
+                ),
+              ),
+            ),
+          );
+        },
+        // firebase-js-sdk does not require an orderBy() field to be set for this to work
+        skip: kIsWeb,
+      );
+
+      testWidgets(
+          'Successful request when using orderBy() with same field used on inequality query',
+          (_) async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('startAfterDocument-correct-inequality-field');
+        await Future.wait([
+          collection.doc('doc1').set({
+            'bar': 2,
+          }),
+          collection.doc('doc2').set({
+            'bar': 10,
+          }),
+          collection.doc('doc3').set({
+            'bar': 11,
+          }),
+          collection.doc('doc4').set({
+            'bar': 12,
+          }),
+        ]);
+
+        DocumentSnapshot startAtSnapshot = await collection.doc('doc2').get();
+        Query inequalityQuery = collection.where('bar', isGreaterThan: 5);
+
+        final result = await inequalityQuery
+            .orderBy('bar')
+            .startAfterDocument(startAtSnapshot)
+            .get();
+
+        expect(result.size, equals(2));
+        expect(result.docs[0].id, equals('doc3'));
+        expect(result.docs[1].id, equals('doc4'));
+      });
     });
 
     /**
@@ -1038,7 +1306,7 @@ void runQueryTests() {
      */
 
     group('Query.startAt/endAt', () {
-      testWidgets('starts at & ends at a document', (_) async {
+      test('starts at & ends at a document', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('start-end-string');
         await Future.wait([
@@ -1064,7 +1332,7 @@ void runQueryTests() {
         expect(snapshot.docs[1].id, equals('doc3'));
       });
 
-      testWidgets('starts at & ends before a document', (_) async {
+      test('starts at & ends before a document', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('start-end-string');
         await Future.wait([
@@ -1090,7 +1358,7 @@ void runQueryTests() {
         expect(snapshot.docs[1].id, equals('doc3'));
       });
 
-      testWidgets('starts after & ends at a document', (_) async {
+      test('starts after & ends at a document', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('start-end-field-path');
         await Future.wait([
@@ -1116,7 +1384,7 @@ void runQueryTests() {
         expect(snapshot.docs[1].id, equals('doc3'));
       });
 
-      testWidgets('starts a document and ends before document', (_) async {
+      test('starts a document and ends before document', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('start-end-document');
         await Future.wait([
@@ -1153,7 +1421,7 @@ void runQueryTests() {
      */
 
     group('Query.limit{toLast}()', () {
-      testWidgets('limits documents', (_) async {
+      test('limits documents', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('limit');
         await Future.wait([
@@ -1183,7 +1451,7 @@ void runQueryTests() {
         expect(snapshot2.docs[1].id, equals('doc2'));
       });
 
-      testWidgets('limits to last documents', (_) async {
+      test('limits to last documents', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('limitToLast');
         await Future.wait([
@@ -1220,7 +1488,7 @@ void runQueryTests() {
      * Order
      */
     group('Query.orderBy()', () {
-      testWidgets('allows ordering by documentId', (_) async {
+      test('allows ordering by documentId', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('order-document-id');
 
@@ -1248,7 +1516,7 @@ void runQueryTests() {
         expect(snapshot.docs[2].id, equals('doc3'));
       });
 
-      testWidgets('orders async by default', (_) async {
+      test('orders async by default', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('order-asc');
 
@@ -1273,7 +1541,7 @@ void runQueryTests() {
         expect(snapshot.docs[2].id, equals('doc1'));
       });
 
-      testWidgets('orders descending', (_) async {
+      test('orders descending', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('order-desc');
         await Future.wait([
@@ -1303,9 +1571,8 @@ void runQueryTests() {
      */
 
     group('Query.where()', () {
-      testWidgets(
-          'returns documents when querying for properties that are not null',
-          (_) async {
+      test('returns documents when querying for properties that are not null',
+          () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('not-null');
         await Future.wait([
@@ -1328,9 +1595,8 @@ void runQueryTests() {
         expect(snapshot.docs[1].id, equals('doc2'));
       });
 
-      testWidgets(
-          'returns documents when querying properties that are equal to null',
-          (_) async {
+      test('returns documents when querying properties that are equal to null',
+          () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('not-null');
         await Future.wait([
@@ -1352,7 +1618,7 @@ void runQueryTests() {
         expect(snapshot.docs[0].id, equals('doc3'));
       });
 
-      testWidgets('returns with equal checks', (_) async {
+      test('returns with equal checks', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('where-equal');
         int rand = Random().nextInt(9999);
@@ -1378,7 +1644,7 @@ void runQueryTests() {
         });
       });
 
-      testWidgets('returns with not equal checks', (_) async {
+      test('returns with not equal checks', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('where-not-equal');
         int rand = Random().nextInt(9999);
@@ -1404,7 +1670,7 @@ void runQueryTests() {
         });
       });
 
-      testWidgets('returns with greater than checks', (_) async {
+      test('returns with greater than checks', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('where-greater-than');
         int rand = Random().nextInt(9999);
@@ -1433,7 +1699,7 @@ void runQueryTests() {
         });
       });
 
-      testWidgets('returns with greater than or equal to checks', (_) async {
+      test('returns with greater than or equal to checks', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('where-greater-than-equal');
         int rand = Random().nextInt(9999);
@@ -1462,7 +1728,7 @@ void runQueryTests() {
         });
       });
 
-      testWidgets('returns with less than checks', (_) async {
+      test('returns with less than checks', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('where-less-than');
         int rand = Random().nextInt(9999);
@@ -1488,7 +1754,7 @@ void runQueryTests() {
         });
       });
 
-      testWidgets('returns with less than equal checks', (_) async {
+      test('returns with less than equal checks', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('where-less-than');
         int rand = Random().nextInt(9999);
@@ -1517,7 +1783,7 @@ void runQueryTests() {
         });
       });
 
-      testWidgets('returns with array-contains filter', (_) async {
+      test('returns with array-contains filter', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('where-array-contains');
         int rand = Random().nextInt(9999);
@@ -1543,7 +1809,7 @@ void runQueryTests() {
         });
       });
 
-      testWidgets('returns with in filter', (_) async {
+      test('returns with in filter', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('where-in');
 
@@ -1572,7 +1838,7 @@ void runQueryTests() {
         });
       });
 
-      testWidgets('returns with in filter using Iterable', (_) async {
+      test('returns with in filter using Iterable', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('where-in-iterable');
 
@@ -1606,7 +1872,7 @@ void runQueryTests() {
         });
       });
 
-      testWidgets('returns with in filter using Set', (_) async {
+      test('returns with in filter using Set', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('where-in');
 
@@ -1635,7 +1901,7 @@ void runQueryTests() {
         });
       });
 
-      testWidgets('returns with not-in filter', (_) async {
+      test('returns with not-in filter', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('where-not-in');
 
@@ -1664,7 +1930,7 @@ void runQueryTests() {
         });
       });
 
-      testWidgets('returns with not-in filter with Iterable', (_) async {
+      test('returns with not-in filter with Iterable', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('where-not-in');
 
@@ -1693,7 +1959,7 @@ void runQueryTests() {
         });
       });
 
-      testWidgets('returns with array-contains-any filter', (_) async {
+      test('returns with array-contains-any filter', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('where-array-contains-any');
 
@@ -1721,8 +1987,7 @@ void runQueryTests() {
         expect(snapshot.docs.length, equals(3));
       });
 
-      testWidgets('returns with array-contains-any filter using Set',
-          (_) async {
+      test('returns with array-contains-any filter using Set', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('where-array-contains-any');
 
@@ -1752,7 +2017,7 @@ void runQueryTests() {
 
       // When documents have a key with a '.' in them, only a [FieldPath]
       // can access the value, rather than a raw string
-      testWidgets('returns where FieldPath', (_) async {
+      test('returns where FieldPath', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('where-field-path');
 
@@ -1786,7 +2051,7 @@ void runQueryTests() {
         expect(snapshot.docs[1].get('foo'), equals('bar'));
       });
 
-      testWidgets('returns results using FieldPath.documentId', (_) async {
+      test('returns results using FieldPath.documentId', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('where-field-path-document-id');
 
@@ -1807,7 +2072,7 @@ void runQueryTests() {
         expect(snapshot.docs[0].get('foo'), equals('bar'));
       });
 
-      testWidgets('returns an encoded DocumentReference', (_) async {
+      test('returns an encoded DocumentReference', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('where-document-reference');
 
@@ -1836,9 +2101,9 @@ void runQueryTests() {
     });
 
     group('Query.where() with Filter class', () {
-      testWidgets(
+      test(
           'returns documents with `DocumentReference` as an argument in `isEqualTo`',
-          (_) async {
+          () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('doc-ref-arg-isequal-to');
         final ref = FirebaseFirestore.instance.doc('foo/bar');
@@ -1886,9 +2151,9 @@ void runQueryTests() {
         expect(results.docs[2].data()['title'], equals('Book A'));
       });
 
-      testWidgets(
+      test(
           'returns documents with `DocumentReference` as an argument in `arrayContains`',
-          (_) async {
+          () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('doc-ref-arg-array-contains');
         final ref = FirebaseFirestore.instance.doc('foo/bar');
@@ -1936,8 +2201,7 @@ void runQueryTests() {
         expect(results.docs[2].data()['title'], equals('Book A'));
       });
 
-      testWidgets('returns documents with OR filter for arrayContainsAny',
-          (_) async {
+      test('returns documents with OR filter for arrayContainsAny', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('where-filter-array-contains-any');
         await Future.wait([
@@ -1970,7 +2234,7 @@ void runQueryTests() {
         expect(results.docs[1].data()['title'], equals('Book A'));
       });
 
-      testWidgets('returns documents with AND filter', (_) async {
+      test('returns documents with AND filter', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('where-filter-and');
         await Future.wait([
@@ -2004,8 +2268,8 @@ void runQueryTests() {
         expect(results.docs[0].data()['genre'], equals(['sci-fi', 'action']));
       });
 
-      testWidgets('returns documents with OR filter and a previous condition',
-          (_) async {
+      test('returns documents with OR filter and a previous condition',
+          () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('where-filter-and');
         await Future.wait([
@@ -2044,8 +2308,7 @@ void runQueryTests() {
         expect(results.docs[1].data()['rating'], equals(4.5));
       });
 
-      testWidgets('returns documents with nested OR and AND filters',
-          (_) async {
+      test('returns documents with nested OR and AND filters', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('where-filter-nested');
         await Future.wait([
@@ -2095,7 +2358,7 @@ void runQueryTests() {
         expect(results.docs[1].data()['genre'], equals(['sci-fi', 'action']));
       });
 
-      testWidgets('allow FieldPathType for Filter queries', (_) async {
+      test('allow FieldPathType for Filter queries', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('filter-path-type');
 
@@ -2142,7 +2405,7 @@ void runQueryTests() {
         expect(results.docs[1].data()['rating'], equals(3.8));
       });
 
-      testWidgets('allow multiple conjunctive queries', (_) async {
+      test('allow multiple conjunctive queries', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('multiple-conjunctive-queries');
 
@@ -2238,9 +2501,9 @@ void runQueryTests() {
         expect(results.docs[1].id, equals('doc2'));
       });
 
-      testWidgets(
+      test(
         'Can combine `arrayContainsAny` & `isNotEqualTo` in multiple conjunctive queries',
-        (_) async {
+        () async {
           CollectionReference<Map<String, dynamic>> collection =
               await initializeTest(
             'array-contain-not-equal-conjunctive-queries',
@@ -2277,7 +2540,7 @@ void runQueryTests() {
         },
       );
 
-      testWidgets('allow multiple disjunctive queries', (_) async {
+      test('allow multiple disjunctive queries', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('multiple-disjunctive-queries');
 
@@ -2392,9 +2655,9 @@ void runQueryTests() {
         expect(results.docs[2].data()['genre'], equals(['sci-fi', 'thriller']));
       });
 
-      testWidgets(
+      test(
         'Can combine  `arrayContainsAny` & `isNotEqualTo` in disjunctive queries',
-        (_) async {
+        () async {
           CollectionReference<Map<String, dynamic>> collection =
               await initializeTest(
             'array-contain-not-equal-disjunctive-queries',
@@ -2435,9 +2698,9 @@ void runQueryTests() {
         },
       );
 
-      testWidgets(
+      test(
           'allow multiple disjunctive queries for "arrayContainsAny" using ".where() API"',
-          (_) async {
+          () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('multiple-disjunctive-where');
 
@@ -2501,9 +2764,9 @@ void runQueryTests() {
         expect(results.docs[1].id, equals('doc3'));
       });
 
-      testWidgets(
+      test(
           'allow multiple disjunctive queries for "whereIn" using ".where() API"',
-          (_) async {
+          () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('multiple-disjunctive-where');
 
@@ -2558,8 +2821,7 @@ void runQueryTests() {
         expect(results.docs[1].id, equals('doc3'));
       });
 
-      testWidgets('"whereIn" query combined with "arrayContainsAny"',
-          (widgetTester) async {
+      test('"whereIn" query combined with "arrayContainsAny"', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('where-filter-arraycontainsany-in-combined');
         await Future.wait([
@@ -2594,7 +2856,7 @@ void runQueryTests() {
         expect(results.docs[1].id, equals('doc1'));
       });
 
-      testWidgets('isEqualTo filter', (_) async {
+      test('isEqualTo filter', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('where-filter-isequalto');
         await Future.wait([
@@ -2614,7 +2876,7 @@ void runQueryTests() {
         expect(results.docs[1].id, equals('doc2'));
       });
 
-      testWidgets('isNotEqualTo filter', (_) async {
+      test('isNotEqualTo filter', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('where-filter-isnotequalto');
         await Future.wait([
@@ -2633,7 +2895,7 @@ void runQueryTests() {
         expect(results.docs[0].id, equals('doc3'));
       });
 
-      testWidgets('isLessThan filter', (_) async {
+      test('isLessThan filter', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('where-filter-islessthan');
         await Future.wait([
@@ -2652,7 +2914,7 @@ void runQueryTests() {
         expect(results.docs[0].id, equals('doc1'));
       });
 
-      testWidgets('isLessThanOrEqualTo filter', (_) async {
+      test('isLessThanOrEqualTo filter', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('where-filter-islessthanequalto');
         await Future.wait([
@@ -2672,7 +2934,7 @@ void runQueryTests() {
         expect(results.docs[1].id, equals('doc2'));
       });
 
-      testWidgets('isGreaterThan filter', (_) async {
+      test('isGreaterThan filter', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('where-filter-isgreaterthan');
         await Future.wait([
@@ -2692,7 +2954,7 @@ void runQueryTests() {
         expect(results.docs[1].id, equals('doc3'));
       });
 
-      testWidgets('isGreaterThanOrEqualTo filter', (_) async {
+      test('isGreaterThanOrEqualTo filter', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('where-filter-isgreaterthanequalto');
         await Future.wait([
@@ -2712,7 +2974,7 @@ void runQueryTests() {
         expect(results.docs[1].id, equals('doc3'));
       });
 
-      testWidgets('arrayContains filter', (_) async {
+      test('arrayContains filter', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('where-filter-arraycontains');
         await Future.wait([
@@ -2738,7 +3000,7 @@ void runQueryTests() {
         expect(results.docs[1].id, equals('doc2'));
       });
 
-      testWidgets('arrayContainsAny filter', (_) async {
+      test('arrayContainsAny filter', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('where-filter-arraycontainsany');
         await Future.wait([
@@ -2762,7 +3024,7 @@ void runQueryTests() {
         expect(results.docs.length, equals(3));
       });
 
-      testWidgets('whereIn filter', (_) async {
+      test('whereIn filter', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('where-filter-wherein');
         await Future.wait([
@@ -2782,7 +3044,7 @@ void runQueryTests() {
         expect(results.docs[1].id, equals('doc3'));
       });
 
-      testWidgets('whereNotIn filter', (_) async {
+      test('whereNotIn filter', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('where-filter-wherenotin');
         await Future.wait([
@@ -2801,7 +3063,7 @@ void runQueryTests() {
         expect(results.docs[0].id, equals('doc2'));
       });
 
-      testWidgets('isNull filter', (_) async {
+      test('isNull filter', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('where-filter-isnull');
         await Future.wait([
@@ -2820,7 +3082,7 @@ void runQueryTests() {
         expect(results.docs[0].id, equals('doc2'));
       });
 
-      testWidgets('endAt filter', (_) async {
+      test('endAt filter', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('endat-filter');
         await Future.wait([
@@ -2842,7 +3104,7 @@ void runQueryTests() {
         expect(results.docs[1].data()['title'], equals('C'));
       });
 
-      testWidgets('endBefore filter', (_) async {
+      test('endBefore filter', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('endbefore-filter');
         await Future.wait([
@@ -2865,7 +3127,7 @@ void runQueryTests() {
         expect(results.docs[1].data()['title'], equals('C'));
       });
 
-      testWidgets('endBeforeDocument filter', (_) async {
+      test('endBeforeDocument filter', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('endbeforedocument-filter');
         await Future.wait([
@@ -2891,7 +3153,7 @@ void runQueryTests() {
         expect(results.docs[1].data()['title'], equals('C'));
       });
 
-      testWidgets('limit filter', (_) async {
+      test('limit filter', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('limit-filter');
         await Future.wait([
@@ -2915,7 +3177,7 @@ void runQueryTests() {
         expect(results.docs[1].data()['title'], equals('C'));
       });
 
-      testWidgets('limitToLast filter', (_) async {
+      test('limitToLast filter', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('limittolast-filter');
         await Future.wait([
@@ -2939,7 +3201,7 @@ void runQueryTests() {
         expect(results.docs[1].data()['title'], equals('E'));
       });
 
-      testWidgets('orderBy filter', (_) async {
+      test('orderBy filter', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('orderby-filter');
         await Future.wait([
@@ -2964,7 +3226,7 @@ void runQueryTests() {
         expect(results.docs[3].data()['title'], equals('B'));
       });
 
-      testWidgets('startAfter filter', (_) async {
+      test('startAfter filter', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('startafter-filter');
         await Future.wait([
@@ -2987,7 +3249,7 @@ void runQueryTests() {
         expect(results.docs[1].data()['title'], equals('E'));
       });
 
-      testWidgets('startAfterDocument filter', (_) async {
+      test('startAfterDocument filter', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('startafterdocument-filter');
         await Future.wait([
@@ -3014,7 +3276,7 @@ void runQueryTests() {
         expect(results.docs[2].data()['title'], equals('E'));
       });
 
-      testWidgets('startAt filter', (_) async {
+      test('startAt filter', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('startat-filter');
         await Future.wait([
@@ -3039,7 +3301,7 @@ void runQueryTests() {
         expect(results.docs[3].data()['title'], equals('E'));
       });
 
-      testWidgets('startAtDocument filter', (_) async {
+      test('startAtDocument filter', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('startatdocument-filter');
         await Future.wait([
@@ -3069,9 +3331,9 @@ void runQueryTests() {
     });
 
     group('withConverter', () {
-      testWidgets(
+      test(
         'from a query instead of collection',
-        (_) async {
+        () async {
           final collection = await initializeTest('foo');
 
           final query = collection //
@@ -3120,9 +3382,9 @@ void runQueryTests() {
         timeout: const Timeout.factor(3),
       );
 
-      testWidgets(
+      test(
         'from a Filter query instead of collection',
-        (_) async {
+        () async {
           final collection = await initializeTest('foo');
 
           final query = collection
@@ -3171,9 +3433,9 @@ void runQueryTests() {
         timeout: const Timeout.factor(3),
       );
 
-      testWidgets(
+      test(
         'snapshots',
-        (_) async {
+        () async {
           final collection = await initializeTest('foo');
 
           final converted = collection.withConverter<int>(
@@ -3218,9 +3480,9 @@ void runQueryTests() {
         timeout: const Timeout.factor(3),
       );
 
-      testWidgets(
+      test(
         'get',
-        (_) async {
+        () async {
           final collection = await initializeTest('foo');
 
           final converted = collection.withConverter<int>(
@@ -3242,9 +3504,9 @@ void runQueryTests() {
         timeout: const Timeout.factor(3),
       );
 
-      testWidgets(
+      test(
         'orderBy',
-        (_) async {
+        () async {
           final collection = await initializeTest('foo');
 
           final converted = collection.withConverter<int>(
@@ -3266,9 +3528,9 @@ void runQueryTests() {
         timeout: const Timeout.factor(3),
       );
 
-      testWidgets(
+      test(
         'limit',
-        (_) async {
+        () async {
           final collection = await initializeTest('foo');
 
           final converted = collection.withConverter<int>(
@@ -3289,9 +3551,9 @@ void runQueryTests() {
         timeout: const Timeout.factor(3),
       );
 
-      testWidgets(
+      test(
         'limitToLast',
-        (_) async {
+        () async {
           final collection = await initializeTest('foo');
 
           final converted = collection.withConverter<int>(
@@ -3316,7 +3578,7 @@ void runQueryTests() {
         timeout: const Timeout.factor(3),
       );
 
-      testWidgets('endAt', (_) async {
+      test('endAt', () async {
         final collection = await initializeTest('foo');
 
         final converted = collection.withConverter<int>(
@@ -3337,7 +3599,7 @@ void runQueryTests() {
         );
       });
 
-      testWidgets('endAt with Iterable', (_) async {
+      test('endAt with Iterable', () async {
         final collection = await initializeTest('foo');
 
         final converted = collection.withConverter<int>(
@@ -3358,9 +3620,9 @@ void runQueryTests() {
         );
       });
 
-      testWidgets(
+      test(
         'endAtDocument',
-        (_) async {
+        () async {
           final collection = await initializeTest('foo');
 
           final converted = collection.withConverter<int>(
@@ -3387,7 +3649,7 @@ void runQueryTests() {
         timeout: const Timeout.factor(3),
       );
 
-      testWidgets('endBefore', (_) async {
+      test('endBefore', () async {
         final collection = await initializeTest('foo');
 
         final converted = collection.withConverter<int>(
@@ -3409,7 +3671,7 @@ void runQueryTests() {
         );
       });
 
-      testWidgets('endBefore with Iterable', (_) async {
+      test('endBefore with Iterable', () async {
         final collection = await initializeTest('foo');
 
         final converted = collection.withConverter<int>(
@@ -3431,9 +3693,9 @@ void runQueryTests() {
         );
       });
 
-      testWidgets(
+      test(
         'endBeforeDocument',
-        (_) async {
+        () async {
           final collection = await initializeTest('foo');
 
           final converted = collection.withConverter<int>(
@@ -3457,9 +3719,9 @@ void runQueryTests() {
         timeout: const Timeout.factor(3),
       );
 
-      testWidgets(
+      test(
         'startAt',
-        (_) async {
+        () async {
           final collection = await initializeTest('foo');
 
           final converted = collection.withConverter<int>(
@@ -3486,9 +3748,9 @@ void runQueryTests() {
         timeout: const Timeout.factor(3),
       );
 
-      testWidgets(
+      test(
         'startAt with Iterable',
-        (_) async {
+        () async {
           final collection = await initializeTest('foo');
 
           final converted = collection.withConverter<int>(
@@ -3515,9 +3777,9 @@ void runQueryTests() {
         timeout: const Timeout.factor(3),
       );
 
-      testWidgets(
+      test(
         'startAtDocument',
-        (_) async {
+        () async {
           final collection = await initializeTest('foo');
 
           final converted = collection.withConverter<int>(
@@ -3544,9 +3806,9 @@ void runQueryTests() {
         timeout: const Timeout.factor(3),
       );
 
-      testWidgets(
+      test(
         'startAfter',
-        (_) async {
+        () async {
           final collection = await initializeTest('foo');
 
           final converted = collection.withConverter<int>(
@@ -3570,9 +3832,9 @@ void runQueryTests() {
         timeout: const Timeout.factor(3),
       );
 
-      testWidgets(
+      test(
         'startAfter with Iterable',
-        (_) async {
+        () async {
           final collection = await initializeTest('foo');
 
           final converted = collection.withConverter<int>(
@@ -3596,9 +3858,9 @@ void runQueryTests() {
         timeout: const Timeout.factor(3),
       );
 
-      testWidgets(
+      test(
         'startAfterDocument',
-        (_) async {
+        () async {
           final collection = await initializeTest('foo');
 
           final converted = collection.withConverter<int>(
@@ -3624,9 +3886,9 @@ void runQueryTests() {
     });
 
     group('Aggregate Queries', () {
-      testWidgets(
+      test(
         'count()',
-        (_) async {
+        () async {
           final collection = await initializeTest('count');
 
           await Future.wait([
@@ -3645,9 +3907,9 @@ void runQueryTests() {
         },
       );
 
-      testWidgets(
+      test(
         'count() with query',
-        (_) async {
+        () async {
           final collection = await initializeTest('count');
 
           await Future.wait([
@@ -3667,9 +3929,9 @@ void runQueryTests() {
         },
       );
 
-      testWidgets(
+      test(
         'sum()',
-        (_) async {
+        () async {
           final collection = await initializeTest('sum');
 
           await Future.wait([
@@ -3686,11 +3948,12 @@ void runQueryTests() {
             3,
           );
         },
+        skip: defaultTargetPlatform == TargetPlatform.windows,
       );
 
-      testWidgets(
+      test(
         'sum() with query',
-        (_) async {
+        () async {
           final collection = await initializeTest('sum');
 
           await Future.wait([
@@ -3708,11 +3971,12 @@ void runQueryTests() {
             1,
           );
         },
+        skip: defaultTargetPlatform == TargetPlatform.windows,
       );
 
-      testWidgets(
+      test(
         'average()',
-        (_) async {
+        () async {
           final collection = await initializeTest('avg');
 
           await Future.wait([
@@ -3729,11 +3993,12 @@ void runQueryTests() {
             1.5,
           );
         },
+        skip: defaultTargetPlatform == TargetPlatform.windows,
       );
 
-      testWidgets(
+      test(
         'average() with query',
-        (_) async {
+        () async {
           final collection = await initializeTest('avg');
 
           await Future.wait([
@@ -3751,11 +4016,12 @@ void runQueryTests() {
             1,
           );
         },
+        skip: defaultTargetPlatform == TargetPlatform.windows,
       );
 
-      testWidgets(
+      test(
         'chaining aggregate queries',
-        (_) async {
+        () async {
           final collection = await initializeTest('chaining');
 
           await Future.wait([
@@ -3782,41 +4048,46 @@ void runQueryTests() {
             1.5,
           );
         },
+        skip: defaultTargetPlatform == TargetPlatform.windows,
       );
 
-      testWidgets('chaining multiples aggregate queries', (_) async {
-        final collection = await initializeTest('chaining');
+      test(
+        'chaining multiples aggregate queries',
+        () async {
+          final collection = await initializeTest('chaining');
 
-        await Future.wait([
-          collection.add({'foo': 1}),
-          collection.add({'foo': 2}),
-        ]);
+          await Future.wait([
+            collection.add({'foo': 1}),
+            collection.add({'foo': 2}),
+          ]);
 
-        AggregateQuery query = collection
-            .where('foo', isEqualTo: 1)
-            .aggregate(count(), sum('foo'), average('foo'));
+          AggregateQuery query = collection
+              .where('foo', isEqualTo: 1)
+              .aggregate(count(), sum('foo'), average('foo'));
 
-        AggregateQuerySnapshot snapshot = await query.get();
+          AggregateQuerySnapshot snapshot = await query.get();
 
-        expect(
-          snapshot.count,
-          1,
-        );
+          expect(
+            snapshot.count,
+            1,
+          );
 
-        expect(
-          snapshot.getSum('foo'),
-          1,
-        );
+          expect(
+            snapshot.getSum('foo'),
+            1,
+          );
 
-        expect(
-          snapshot.getAverage('foo'),
-          1,
-        );
-      });
+          expect(
+            snapshot.getAverage('foo'),
+            1,
+          );
+        },
+        skip: defaultTargetPlatform == TargetPlatform.windows,
+      );
 
-      testWidgets(
+      test(
         'count() with collectionGroup',
-        (_) async {
+        () async {
           const subCollection = 'aggregate-group-count';
           final doc1 = FirebaseFirestore.instance
               .collection('flutter-tests')
@@ -3854,23 +4125,25 @@ void runQueryTests() {
         },
       );
 
-      testWidgets('count(), average() & sum() on empty collection',
-          (widgetTester) async {
-        final collection = await initializeTest('empty-collection');
+      test(
+        'count(), average() & sum() on empty collection',
+        () async {
+          final collection = await initializeTest('empty-collection');
 
-        final snapshot = await collection
-            .aggregate(count(), sum('foo'), average('foo'))
-            .get();
-        expect(snapshot.count, 0);
-        expect(snapshot.getSum('foo'), 0);
-        expect(snapshot.getAverage('foo'), null);
-      });
+          final snapshot = await collection
+              .aggregate(count(), sum('foo'), average('foo'))
+              .get();
+          expect(snapshot.count, 0);
+          expect(snapshot.getSum('foo'), 0);
+          expect(snapshot.getAverage('foo'), null);
+        },
+        skip: defaultTargetPlatform == TargetPlatform.windows,
+      );
     });
 
     group('startAfterDocument', () {
-      testWidgets(
-          'startAfterDocument() accept DocumentReference in query parameters',
-          (_) async {
+      test('startAfterDocument() accept DocumentReference in query parameters',
+          () async {
         final collection = await initializeTest('start-after-document');
 
         final doc1 = collection.doc('1');
@@ -3889,6 +4162,68 @@ void runQueryTests() {
 
         final res = await q.get();
         expect(res.docs.map((e) => e.reference), [doc2, doc3]);
+      });
+    });
+
+    group('WhereIn Filter', () {
+      test('Multiple whereIn filters should not trigger an assertion',
+          () async {
+        try {
+          final collection = await initializeTest('multipe-whereIn-clause');
+
+          Map<String, String> data = {};
+
+          for (int i = 1; i <= 10; i++) {
+            data['field$i'] = 'value$i';
+          }
+
+          await collection.doc().set(data);
+
+          Query<Map<String, dynamic>> query = collection;
+          data.forEach((field, values) {
+            query = query.where(field, whereIn: [values]);
+          });
+
+          await query.get();
+        } on AssertionError catch (e) {
+          fail('Test failed due to AssertionError: $e');
+        }
+      });
+
+      test(
+          'Multiple whereIn filters exceeding DNF 30 clause limit should trigger an assertion',
+          () async {
+        try {
+          final collection = await initializeTest('multipe-whereIn-clause');
+
+          await collection.doc().set({'genre': 'fiction'});
+          await collection.doc().set({'author': 'Author A'});
+
+          // DNF for this query = 36 (6 genres * 6 authors) exceeding the 30 clause limit
+          await collection.where(
+            'genre',
+            whereIn: [
+              'fiction',
+              'non-fiction',
+              'fantasy',
+              'science-fiction',
+              'mystery',
+              'thriller',
+            ],
+          ).where(
+            'author',
+            whereIn: [
+              'Author A',
+              'Author B',
+              'Author C',
+              'Author D',
+              'Author E',
+              'Author F',
+            ],
+          ).get();
+        } catch (error) {
+          expect(error, isA<FirebaseException>());
+        }
       });
     });
   });

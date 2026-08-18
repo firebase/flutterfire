@@ -64,3 +64,12 @@ String? getBuildId(StackTrace stackTrace) {
 
   return null;
 }
+
+List<String> getLoadingUnits(StackTrace stackTrace) =>
+    Trace.parseVM(stackTrace.toString())
+        .terse
+        .frames
+        .whereType<UnparsedFrame>()
+        .map((frame) => frame.member)
+        .where((member) => member.startsWith('loading_unit: '))
+        .toList();

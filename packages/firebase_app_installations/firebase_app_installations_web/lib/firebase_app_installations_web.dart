@@ -12,7 +12,11 @@ import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'src/guard.dart';
 import 'src/interop/installations.dart' as installations_interop;
 
+import 'src/firebase_app_installations_version.dart';
+
 class FirebaseAppInstallationsWeb extends FirebaseAppInstallationsPlatform {
+  static const String _libraryName = 'flutter-fire-installations';
+
   /// The entry point for the [FirebaseAppInstallationsWeb] class.
   FirebaseAppInstallationsWeb({FirebaseApp? app}) : super(app);
 
@@ -33,6 +37,8 @@ class FirebaseAppInstallationsWeb extends FirebaseAppInstallationsPlatform {
 
   /// Create the default instance of the [FirebaseAppInstallationsPlatform] as a [FirebaseAppInstallationsWeb]
   static void registerWith(Registrar registrar) {
+    FirebaseCoreWeb.registerLibraryVersion(_libraryName, packageVersion);
+
     FirebaseCoreWeb.registerService('installations');
     FirebaseAppInstallationsPlatform.instance =
         FirebaseAppInstallationsWeb.instance;

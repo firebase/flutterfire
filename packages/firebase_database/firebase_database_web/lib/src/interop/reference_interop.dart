@@ -4,21 +4,13 @@
 
 part of 'database_interop.dart';
 
-@JS('TransactionResult')
-@staticInterop
-abstract class TransactionResultJsImpl {}
-
-extension TransactionResultJsImplExtension on TransactionResultJsImpl {
+extension type TransactionResultJsImpl._(JSObject _) implements JSObject {
   external JSObject toJSON();
   external JSBoolean get committed;
   external DataSnapshotJsImpl get snapshot;
 }
 
-@JS('DatabaseReference')
-@staticInterop
-abstract class ReferenceJsImpl extends QueryJsImpl {}
-
-extension ReferenceJsImplExtension on ReferenceJsImpl {
+extension type ReferenceJsImpl._(JSObject _) implements JSObject, QueryJsImpl {
   external JSString? get key;
 
   external ReferenceJsImpl? get parent;

@@ -1,12 +1,16 @@
-Project: /docs/_project.yaml
+Project: /docs/app-check/_project.yaml
 Book: /docs/_book.yaml
+
+{% include "docs/app-check/_local_variables.html" %}
+{% include "_shared/firebase/_snippet_include_comment.html" %}
 
 <link rel="stylesheet" type="text/css" href="/styles/docs.css" />
 
-# Protect non-Firebase resources with App Check
+# Protect custom backend resources with {{app_check}} in Flutter projects
 
-You can protect your app's non-Firebase resources, such as self-hosted backends,
-with App Check. To do so, you will need to do both of the following:
+You can use {{app_check}} to protect non-Google custom backend resources for
+your app, like your own self-hosted backend. To do so, you'll need to do both of
+the following:
 
 - Modify your app client to send an App Check token along with each request
   to your backend, as described on this page.

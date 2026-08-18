@@ -1,3 +1,60 @@
+## 8.1.0
+
+ - **FEAT**(appcheck): rCE provider api update ([#18505](https://github.com/firebase/flutterfire/issues/18505)). ([a56649a4](https://github.com/firebase/flutterfire/commit/a56649a41539c559a08e4f566128db8de390c284))
+ - **DOCS**: fix code snippets that do not compile ([#18468](https://github.com/firebase/flutterfire/issues/18468)). ([85cbdcab](https://github.com/firebase/flutterfire/commit/85cbdcabe0f0f6230f63ebc4018c7358353b15a4))
+
+## 8.0.0
+
+## 7.1.0
+
+ - **FEAT**(appcheck): appcheck reCAPTCHA mobile support (gradually rolling out) ([#18261](https://github.com/firebase/flutterfire/issues/18261)). ([036a860a](https://github.com/firebase/flutterfire/commit/036a860a0e66d46b5c57eb3df3a0f9e5846ef00b))
+ - **FEAT**(core): Add Recaptcha Site Key to FirebaseOptions ([#18334](https://github.com/firebase/flutterfire/issues/18334)). ([57be7027](https://github.com/firebase/flutterfire/commit/57be702778d34b9b7e86b40817d93acaec4c3ca4))
+
+## 7.0.1
+
+ - **FIX**(core,iOS): use namespaced iOS Pigeon header import ([#18281](https://github.com/firebase/flutterfire/issues/18281)). ([7c1257e7](https://github.com/firebase/flutterfire/commit/7c1257e7295f9ba67f3f5820493f105a14d34d52))
+
+## 7.0.0
+
+ - Bump platform interface a major version due to pigeon dependency update
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+ - **FEAT**: upgrade pigeon to version 26.3.4 ([#18205](https://github.com/firebase/flutterfire/issues/18205)). ([cb6b4aef](https://github.com/firebase/flutterfire/commit/cb6b4aeffc568755ea3eebe32b998f00237bf5ad))
+
+## 6.0.3
+
+ - **REFACTOR**: fix formatting and analysis issues across the repo ([#18124](https://github.com/firebase/flutterfire/issues/18124)). ([ab79fd93](https://github.com/firebase/flutterfire/commit/ab79fd93ee4ccfeb478687623134b1cf8ab71c74))
+
+## 6.0.2
+
+ - **FIX**: a bug with the `demoProjectId` arg to `Firebase.initializeApp()` ([#17703](https://github.com/firebase/flutterfire/issues/17703)). ([09d03aac](https://github.com/firebase/flutterfire/commit/09d03aac8ced6f7f9211c24f40b57eb992f2996d))
+
+## 6.0.1
+
+ - **DOCS**(firebase_core): correct androidClientId docs (was incorrectly labeled iOS-only)\n\n- Clarify as Android OAuth client ID\n- Note it is used on Android only\n\nFixes firebase/flutterfire[#13519](https://github.com/firebase/flutterfire/issues/13519) ([#17720](https://github.com/firebase/flutterfire/issues/17720)). ([0b6b13d0](https://github.com/firebase/flutterfire/commit/0b6b13d0e0c0c45386eadb0ceef55e895a8d357b))
+
+## 6.0.0
+
+## 5.4.1
+
+ - **FIX**(core): bump Pigeon to v25.3.2 ([#17438](https://github.com/firebase/flutterfire/issues/17438)). ([4d24ef53](https://github.com/firebase/flutterfire/commit/4d24ef534464b39dcaef4151c83c78f87b36fb78))
+
+## 5.4.0
+
+ - Update a dependency to the latest release.
+
+## 5.3.1
+
+ - **FIX**(firebase_core_platform_interface): move test APIs to test.dart ([#16672](https://github.com/firebase/flutterfire/issues/16672)). ([f618a3d8](https://github.com/firebase/flutterfire/commit/f618a3d8f9284f802dbf86526b0ea9a226ccf130))
+
+## 5.3.0
+
+ - **FEAT**(core): support for using SPM (Swift Package Manager) ([#12786](https://github.com/firebase/flutterfire/issues/12786)). ([4e28103f](https://github.com/firebase/flutterfire/commit/4e28103fafd84c6613df647e7f0dbb6a068ca8ea))
+
+## 5.2.1
+
+ - **DOCS**: remove reference to flutter.io and firebase.flutter.dev ([#13152](https://github.com/firebase/flutterfire/issues/13152)). ([5f0874b9](https://github.com/firebase/flutterfire/commit/5f0874b91e28a203dd62d37d391e5760c91f5729))
+
 ## 5.2.0
 
  - **FEAT**(firebase_core_platform_interface): Add copyWith to FirebaseOptions ([#13084](https://github.com/firebase/flutterfire/issues/13084)). ([c7963d63](https://github.com/firebase/flutterfire/commit/c7963d63b1cd8cf6471959f0ee7fbf45b5f51edc))

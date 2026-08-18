@@ -7,15 +7,14 @@ Demonstrates how to use the `firebase_auth` plugin and enable multiple auth prov
 ## Phone Auth
 
 1. Enable phone authentication in the [Firebase console]((https://console.firebase.google.com/u/0/project/_/authentication/providers)).
-2. Ensure your [SHA-1 key](https://firebase.flutter.dev/docs/installation/android#generating-android-credentials) is added to the Firebase Console
-3. Add test phone number and verification code to the Firebase console.
+2. Add test phone number and verification code to the Firebase console.
   - For this sample the number `+1 408-555-6969` and verification code `888888` are used.
-4. For iOS set the `URL Schemes` to the `REVERSE_CLIENT_ID` from the `GoogleServices-Info.plist` file.
-5. Enter the phone number `+1 408-555-6969` and press the `Verify phone number` button.
-6. Once the phone number is verified the app displays the test
+3. For iOS set the `URL Schemes` to the `REVERSE_CLIENT_ID` from the `GoogleServices-Info.plist` file.
+4. Enter the phone number `+1 408-555-6969` and press the `Verify phone number` button.
+5. Once the phone number is verified the app displays the test
    verification code.
-7. Enter the verficication code `888888` and press "Sign in with phone number"
-8. Signed in user ID is now displayed in the UI.
+6. Enter the verficication code `888888` and press "Sign in with phone number"
+7. Signed in user ID is now displayed in the UI.
 
 ## Google Sign-In
 
@@ -56,4 +55,4 @@ To get your `apiKey` and `apiSecretKey` for Twitter:
 ## Getting Started
 
 For help getting started with Flutter, view the online
-[documentation](http://flutter.io/).
+[documentation](https://flutter.dev/).

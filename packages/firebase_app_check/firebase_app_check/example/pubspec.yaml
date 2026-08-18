@@ -4,16 +4,27 @@ description: Firebase App Check example application.
 publish_to: 'none'
 
 version: 1.0.0+1
+resolution: workspace
 
 environment:
-  sdk: '>=3.2.0 <4.0.0'
+  sdk: '^3.6.0'
+  flutter: '>=3.27.0'
 
 dependencies:
-  cloud_firestore: ^5.2.0
-  firebase_app_check: ^0.3.0+4
-  firebase_core: ^3.3.0
+  cloud_firestore: ^6.8.0
+  firebase_app_check: ^0.4.6
+  firebase_core: ^4.13.0
   flutter:
     sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  integration_test:
+    sdk: flutter
+  # `integration_test/report_test_results.dart` names each executed test via
+  # `package:test_api/hooks.dart`; `any` defers to the version flutter_test pins.
+  test_api: any
 
 flutter:
   uses-material-design: true

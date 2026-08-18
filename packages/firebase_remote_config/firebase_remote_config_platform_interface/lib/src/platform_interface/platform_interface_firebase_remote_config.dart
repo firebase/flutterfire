@@ -181,4 +181,13 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
   Stream<RemoteConfigUpdate> get onConfigUpdated {
     throw UnimplementedError('onConfigUpdated getter not implemented');
   }
+
+  /// Changes the custom signals for this FirebaseRemoteConfig instance
+  /// Custom signals are subject to limits on the size of key/value pairs and the total number of signals.
+  /// Any calls that exceed these limits will be discarded.
+  /// If a key already exists, the value is overwritten. Setting the value of a custom signal to null un-sets the signal.
+  /// The signals will be persisted locally on the client.
+  Future<void> setCustomSignals(Map<String, Object?> customSignals) {
+    throw UnimplementedError('setCustomSignals() is not implemented');
+  }
 }

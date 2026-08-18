@@ -16,7 +16,7 @@ else
 end
 
 begin
-  required_macos_version = "10.12"
+  required_macos_version = "10.15"
   current_target_definition = Pod::Config.instance.podfile.send(:current_target_definition)
   user_osx_target = current_target_definition.to_hash["platform"]["osx"]
   if (Gem::Version.new(user_osx_target) < Gem::Version.new(required_macos_version))
@@ -43,10 +43,10 @@ Pod::Spec.new do |s|
   s.authors          = 'The Chromium Authors'
   s.source           = { :path => '.' }
 
-  s.source_files     = 'Classes/**/*.{h,m}'
-  s.public_header_files = 'Classes/*.h'
+  s.source_files     = 'firebase_database/Sources/firebase_database/**/*.swift'
+  s.swift_version    = '5.0'
 
-  s.platform = :osx, '10.13'
+  s.platform = :osx, '10.15'
 
   # Flutter dependencies
   s.dependency 'FlutterMacOS'
@@ -58,7 +58,7 @@ Pod::Spec.new do |s|
 
   s.static_framework = true
   s.pod_target_xcconfig = {
-    'GCC_PREPROCESSOR_DEFINITIONS' => "LIBRARY_VERSION=\\@\\\"#{library_version}\\\" LIBRARY_NAME=\\@\\\"flutter-fire-rtdb\\\"",
+    'GCC_PREPROCESSOR_DEFINITIONS' => "LIBRARY_VERSION=\\\"#{library_version}\\\" LIBRARY_NAME=\\\"flutter-fire-rtdb\\\"",
     'DEFINES_MODULE' => 'YES'
   }
 end

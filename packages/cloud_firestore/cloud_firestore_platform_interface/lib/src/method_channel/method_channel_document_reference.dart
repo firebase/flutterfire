@@ -37,7 +37,7 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
         DocumentReferenceRequest(
           path: _pointer.path,
           data: data,
-          option: PigeonDocumentOption(
+          option: InternalDocumentOption(
             merge: options?.merge,
             mergeFields:
                 options?.mergeFields?.map((e) => e.components).toList(),
@@ -110,7 +110,7 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
     bool includeMetadataChanges = false,
     ServerTimestampBehavior serverTimestampBehavior =
         ServerTimestampBehavior.none,
-    ListenSource source = ListenSource.defaultSource,
+    required ListenSource listenSource,
   }) {
     // It's fine to let the StreamController be garbage collected once all the
     // subscribers have cancelled; this analyzer warning is safe to ignore.
@@ -128,7 +128,7 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
             serverTimestampBehavior: serverTimestampBehavior,
           ),
           includeMetadataChanges,
-          source,
+          listenSource,
         );
         snapshotStreamSubscription =
             MethodChannelFirebaseFirestore.documentSnapshotChannel(observerId)
@@ -137,8 +137,10 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
         )
                 .listen(
           (snapshot) {
-            final PigeonDocumentSnapshot result =
-                PigeonDocumentSnapshot.decode(snapshot);
+            // With Pigeon 26, the native side emits the generated Pigeon class
+            // directly through the Pigeon-aware codec, so we receive a fully
+            // decoded `InternalDocumentSnapshot` here (no manual decode required).
+            final result = snapshot as InternalDocumentSnapshot;
             controller.add(
               DocumentSnapshotPlatform(
                 firestore,

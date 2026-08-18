@@ -1,0 +1,101 @@
+// Copyright 2024 Google LLC
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+part of 'common_library.dart';
+
+/// Types of DataConnect errors that can occur.
+enum DataConnectErrorCode {
+  unavailable,
+  unauthorized,
+  cacheMiss,
+  codecFailed,
+  other
+}
+
+/// Error thrown when DataConnect encounters an error.
+class DataConnectError extends FirebaseException {
+  DataConnectError(this.dataConnectErrorCode, String? message)
+      : super(
+          plugin: 'Data Connect',
+          code: dataConnectErrorCode.toString(),
+          message: message,
+        );
+  final DataConnectErrorCode dataConnectErrorCode;
+}
+
+/// Error thrown when an operation is partially successful.
+class DataConnectOperationError<T> extends DataConnectError {
+  DataConnectOperationError(super.code, super.message, this.response);
+  final DataConnectOperationFailureResponse<T> response;
+}
+
+/// Nested class containing errors and decoded data.
+class DataConnectOperationFailureResponse<T> {
+  DataConnectOperationFailureResponse(this.errors, this.rawData, this.data);
+  final Map<String, dynamic>? rawData;
+  final List<DataConnectOperationFailureResponseErrorInfo> errors;
+  final T? data;
+}
+
+/// Error information per error.
+class DataConnectOperationFailureResponseErrorInfo {
+  DataConnectOperationFailureResponseErrorInfo(this.path, this.message);
+  String message;
+  List<DataConnectPathSegment> path;
+}
+
+/// Path where error occurred.
+@immutable
+sealed class DataConnectPathSegment {}
+
+class DataConnectFieldPathSegment extends DataConnectPathSegment {
+  final String field;
+  DataConnectFieldPathSegment(this.field);
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is DataConnectFieldPathSegment &&
+          runtimeType == other.runtimeType &&
+          field == other.field;
+
+  @override
+  int get hashCode => field.hashCode;
+
+  @override
+  String toString() => field;
+}
+
+class DataConnectListIndexPathSegment extends DataConnectPathSegment {
+  final int index;
+  DataConnectListIndexPathSegment(this.index);
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is DataConnectListIndexPathSegment &&
+          runtimeType == other.runtimeType &&
+          index == other.index;
+
+  @override
+  int get hashCode => index.hashCode;
+
+  @override
+  String toString() => index.toString();
+}
+
+typedef Serializer<Variables> = String Function(Variables vars);
+typedef DynamicSerializer<Variables> = dynamic Function(Variables vars);
+typedef Deserializer<Data> = Data Function(String data);
+typedef DynamicDeserializer<Data> = Data Function(dynamic data);

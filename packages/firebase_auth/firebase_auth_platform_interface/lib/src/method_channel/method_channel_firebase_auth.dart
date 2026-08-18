@@ -6,7 +6,6 @@
 import 'dart:async';
 
 import 'package:_flutterfire_internals/_flutterfire_internals.dart';
-import 'package:collection/collection.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_multi_factor.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/utils/convert_auth_provider.dart';
 import 'package:firebase_auth_platform_interface/src/pigeon/messages.pigeon.dart';
@@ -48,6 +47,11 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       _userChangesListeners =
       <String, StreamController<_ValueWrapper<UserPlatform>>>{};
 
+  final List<Future<void>> _listenerRegistrations = <Future<void>>[];
+  final List<StreamSubscription<dynamic>> _subscriptions =
+      <StreamSubscription<dynamic>>[];
+  bool _isDisposed = false;
+
   StreamController<T> _createBroadcastStream<T>() {
     return StreamController<T>.broadcast();
   }
@@ -75,28 +79,6 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   /// Creates a new instance with a given [FirebaseApp].
   MethodChannelFirebaseAuth({required FirebaseApp app})
       : super(appInstance: app) {
-    _api.registerIdTokenListener(pigeonDefault).then((channelName) {
-      final events = EventChannel(channelName, channel.codec);
-      events
-          .receiveGuardedBroadcastStream(onError: convertPlatformException)
-          .listen(
-        (arguments) {
-          _handleIdTokenChangesListener(app.name, arguments);
-        },
-      );
-    });
-
-    _api.registerAuthStateListener(pigeonDefault).then((channelName) {
-      final events = EventChannel(channelName, channel.codec);
-      events
-          .receiveGuardedBroadcastStream(onError: convertPlatformException)
-          .listen(
-        (arguments) {
-          _handleAuthStateChangesListener(app.name, arguments);
-        },
-      );
-    });
-
     // Create a app instance broadcast stream for native listener events
     _authStateChangesListeners[app.name] =
         _createBroadcastStream<_ValueWrapper<UserPlatform>>();
@@ -104,6 +86,57 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
         _createBroadcastStream<_ValueWrapper<UserPlatform>>();
     _userChangesListeners[app.name] =
         _createBroadcastStream<_ValueWrapper<UserPlatform>>();
+
+    _listenerRegistrations.add(_registerIdTokenListener(app));
+    _listenerRegistrations.add(_registerAuthStateListener(app));
+  }
+
+  Future<void> _registerIdTokenListener(FirebaseApp app) async {
+    try {
+      final channelName = await _api.registerIdTokenListener(pigeonDefault);
+      if (_isDisposed) {
+        return;
+      }
+
+      final events = EventChannel(channelName, channel.codec);
+      _subscriptions.add(
+        events
+            .receiveGuardedBroadcastStream(onError: convertPlatformException)
+            .listen((arguments) {
+          if (!_isDisposed) {
+            _handleIdTokenChangesListener(app.name, arguments);
+          }
+        }),
+      );
+      // ignore: avoid_catches_without_on_clauses
+    } catch (_) {
+      // Silently ignore errors during listener registration. This can happen
+      // in test environments where the host API is not set up.
+    }
+  }
+
+  Future<void> _registerAuthStateListener(FirebaseApp app) async {
+    try {
+      final channelName = await _api.registerAuthStateListener(pigeonDefault);
+      if (_isDisposed) {
+        return;
+      }
+
+      final events = EventChannel(channelName, channel.codec);
+      _subscriptions.add(
+        events
+            .receiveGuardedBroadcastStream(onError: convertPlatformException)
+            .listen((arguments) {
+          if (!_isDisposed) {
+            _handleAuthStateChangesListener(app.name, arguments);
+          }
+        }),
+      );
+      // ignore: avoid_catches_without_on_clauses
+    } catch (_) {
+      // Silently ignore errors during listener registration. This can happen
+      // in test environments where the host API is not set up.
+    }
   }
 
   @override
@@ -125,9 +158,13 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   Future<void> _handleAuthStateChangesListener(
       String appName, Map<dynamic, dynamic> arguments) async {
     // ignore: close_sinks
-    final streamController = _authStateChangesListeners[appName]!;
-    MethodChannelFirebaseAuth instance =
-        methodChannelFirebaseAuthInstances[appName]!;
+    final streamController = _authStateChangesListeners[appName];
+    MethodChannelFirebaseAuth? instance =
+        methodChannelFirebaseAuthInstances[appName];
+
+    if (streamController == null || instance == null) {
+      return;
+    }
 
     MethodChannelMultiFactor? multiFactorInstance =
         _multiFactorInstances[appName];
@@ -144,8 +181,8 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       final MethodChannelUser user = MethodChannelUser(
         instance,
         multiFactorInstance,
-        PigeonUserDetails.decode(
-          [PigeonUserInfo.decode(userList[0]!), userList[1]],
+        InternalUserDetails.decode(
+          [InternalUserInfo.decode(userList[0]!), userList[1]],
         ),
       );
 
@@ -160,14 +197,18 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   /// to any [userChanges] stream subscribers.
   Future<void> _handleIdTokenChangesListener(
       String appName, Map<dynamic, dynamic> arguments) async {
-    final StreamController<_ValueWrapper<UserPlatform>>
-        // ignore: close_sinks
-        idTokenStreamController = _idTokenChangesListeners[appName]!;
-    final StreamController<_ValueWrapper<UserPlatform>>
-        // ignore: close_sinks
-        userChangesStreamController = _userChangesListeners[appName]!;
-    MethodChannelFirebaseAuth instance =
-        methodChannelFirebaseAuthInstances[appName]!;
+    // ignore: close_sinks
+    final idTokenStreamController = _idTokenChangesListeners[appName];
+    // ignore: close_sinks
+    final userChangesStreamController = _userChangesListeners[appName];
+    MethodChannelFirebaseAuth? instance =
+        methodChannelFirebaseAuthInstances[appName];
+
+    if (idTokenStreamController == null ||
+        userChangesStreamController == null ||
+        instance == null) {
+      return;
+    }
     MethodChannelMultiFactor? multiFactorInstance =
         _multiFactorInstances[appName];
     if (multiFactorInstance == null) {
@@ -184,8 +225,8 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       final MethodChannelUser user = MethodChannelUser(
         instance,
         multiFactorInstance,
-        PigeonUserDetails.decode(
-          [PigeonUserInfo.decode(userList[0]!), userList[1]],
+        InternalUserDetails.decode(
+          [InternalUserInfo.decode(userList[0]!), userList[1]],
         ),
       );
 
@@ -207,8 +248,31 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   }
 
   @override
+  Future<void> dispose() async {
+    _isDisposed = true;
+
+    await Future.wait(
+      _listenerRegistrations.map((registration) {
+        return registration.catchError((_) {});
+      }),
+    );
+
+    await Future.wait(
+      _subscriptions.map((subscription) => subscription.cancel()),
+    );
+    _subscriptions.clear();
+
+    await _authStateChangesListeners.remove(app.name)?.close();
+    await _idTokenChangesListeners.remove(app.name)?.close();
+    await _userChangesListeners.remove(app.name)?.close();
+    _multiFactorInstances.remove(app.name);
+    methodChannelFirebaseAuthInstances.remove(app.name);
+    currentUser = null;
+  }
+
+  @override
   MethodChannelFirebaseAuth setInitialValues({
-    PigeonUserDetails? currentUser,
+    InternalUserDetails? currentUser,
     String? languageCode,
   }) {
     if (currentUser != null) {
@@ -386,7 +450,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
 
       final result = await _api.signInWithProvider(
         pigeonDefault,
-        PigeonSignInProvider(
+        InternalSignInProvider(
           providerId: convertedProvider.providerId,
           scopes: convertedProvider is OAuthProvider
               ? convertedProvider.scopes
@@ -437,7 +501,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     try {
       final data = await _api.fetchSignInMethodsForEmail(pigeonDefault, email);
 
-      return data.whereNotNull().toList();
+      return data.nonNulls.toList();
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -476,14 +540,14 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
         email,
         actionCodeSettings == null
             ? null
-            : PigeonActionCodeSettings(
+            : InternalActionCodeSettings(
                 url: actionCodeSettings.url,
                 handleCodeInApp: actionCodeSettings.handleCodeInApp,
                 iOSBundleId: actionCodeSettings.iOSBundleId,
                 androidPackageName: actionCodeSettings.androidPackageName,
                 androidInstallApp: actionCodeSettings.androidInstallApp,
                 androidMinimumVersion: actionCodeSettings.androidMinimumVersion,
-                dynamicLinkDomain: actionCodeSettings.dynamicLinkDomain,
+                linkDomain: actionCodeSettings.linkDomain,
               ),
       );
     } catch (e, stack) {
@@ -500,14 +564,14 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       await _api.sendSignInLinkToEmail(
         pigeonDefault,
         email,
-        PigeonActionCodeSettings(
+        InternalActionCodeSettings(
           url: actionCodeSettings.url,
           handleCodeInApp: actionCodeSettings.handleCodeInApp,
           iOSBundleId: actionCodeSettings.iOSBundleId,
+          linkDomain: actionCodeSettings.linkDomain,
           androidPackageName: actionCodeSettings.androidPackageName,
           androidInstallApp: actionCodeSettings.androidInstallApp,
           androidMinimumVersion: actionCodeSettings.androidMinimumVersion,
-          dynamicLinkDomain: actionCodeSettings.dynamicLinkDomain,
         ),
       );
     } catch (e, stack) {
@@ -545,7 +609,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     try {
       await _api.setSettings(
           pigeonDefault,
-          PigeonFirebaseAuthSettings(
+          InternalFirebaseAuthSettings(
             appVerificationDisabledForTesting:
                 appVerificationDisabledForTesting,
             userAccessGroup: userAccessGroup,
@@ -598,7 +662,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     try {
       final eventChannelName = await _api.verifyPhoneNumber(
         pigeonDefault,
-        PigeonVerifyPhoneNumberRequest(
+        InternalVerifyPhoneNumberRequest(
           phoneNumber: phoneNumber,
           multiFactorInfoId: multiFactorInfo?.uid,
           timeout: timeout.inMilliseconds,
@@ -662,6 +726,29 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       throw UnimplementedError(
         'revokeTokenWithAuthorizationCode() is only available on apple platforms.',
       );
+    }
+  }
+
+  @override
+  Future<void> revokeAccessToken(String accessToken) async {
+    if (defaultTargetPlatform != TargetPlatform.android) {
+      throw UnimplementedError(
+          'revokeAccessToken() is only available on the Android platform.');
+    }
+
+    try {
+      await _api.revokeAccessToken(pigeonDefault, accessToken);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
+    }
+  }
+
+  @override
+  Future<void> initializeRecaptchaConfig() async {
+    try {
+      await _api.initializeRecaptchaConfig(pigeonDefault);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 }

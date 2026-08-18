@@ -13,7 +13,7 @@ import 'package:http/http.dart' as http;
 import 'firebase_options.dart';
 
 /// Requires that a Firestore emulator is running locally.
-/// See https://firebase.flutter.dev/docs/firestore/usage#emulator-usage
+/// See https://firebase.google.com/docs/firestore/quickstart#optional_prototype_and_test_with
 bool shouldUseFirestoreEmulator = true;
 
 Future<Uint8List> loadBundleSetup(int number) async {
@@ -62,23 +62,15 @@ enum MovieQuery {
 extension on Query<Movie> {
   /// Create a firebase query from a [MovieQuery]
   Query<Movie> queryBy(MovieQuery query) {
-    switch (query) {
-      case MovieQuery.fantasy:
-        return where('genre', arrayContainsAny: ['fantasy']);
-
-      case MovieQuery.sciFi:
-        return where('genre', arrayContainsAny: ['sci-fi']);
-
-      case MovieQuery.likesAsc:
-      case MovieQuery.likesDesc:
-        return orderBy('likes', descending: query == MovieQuery.likesDesc);
-
-      case MovieQuery.year:
-        return orderBy('year', descending: true);
-
-      case MovieQuery.rated:
-        return orderBy('rated', descending: true);
-    }
+    return switch (query) {
+      MovieQuery.fantasy => where('genre', arrayContainsAny: ['fantasy']),
+      MovieQuery.sciFi => where('genre', arrayContainsAny: ['sci-fi']),
+      MovieQuery.likesAsc ||
+      MovieQuery.likesDesc =>
+        orderBy('likes', descending: query == MovieQuery.likesDesc),
+      MovieQuery.year => orderBy('year', descending: true),
+      MovieQuery.rated => orderBy('rated', descending: true)
+    };
   }
 }
 
@@ -240,6 +232,15 @@ class _FilmListState extends State<FilmList> {
                     list.map((e) => e.taskState),
                   );
                   return;
+                case 'vectorValue':
+                  const vectorValue = VectorValue([1.0, 2.0, 3.0]);
+                  final vectorValueDoc = await FirebaseFirestore.instance
+                      .collection('firestore-example-app')
+                      .add({'vectorValue': vectorValue});
+
+                  final snapshot = await vectorValueDoc.get();
+                  print(snapshot.data());
+                  return;
                 default:
                   return;
               }
@@ -257,6 +258,10 @@ class _FilmListState extends State<FilmList> {
                 const PopupMenuItem(
                   value: 'load_bundle',
                   child: Text('Load bundle'),
+                ),
+                const PopupMenuItem(
+                  value: 'vectorValue',
+                  child: Text('Test Vector Value'),
                 ),
               ];
             },

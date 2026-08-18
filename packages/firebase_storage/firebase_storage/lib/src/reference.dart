@@ -103,13 +103,35 @@ class Reference {
     return _delegate.getData(maxSize);
   }
 
+  /// Infers the content type from the reference [name] if not already set.
+  SettableMetadata? _withInferredContentType(SettableMetadata? metadata) {
+    if (metadata?.contentType != null) return metadata;
+
+    final inferred = lookupMimeType(name);
+    if (inferred == null) return metadata;
+
+    if (metadata == null) {
+      return SettableMetadata(contentType: inferred);
+    }
+
+    return SettableMetadata(
+      cacheControl: metadata.cacheControl,
+      contentDisposition: metadata.contentDisposition,
+      contentEncoding: metadata.contentEncoding,
+      contentLanguage: metadata.contentLanguage,
+      contentType: inferred,
+      customMetadata: metadata.customMetadata,
+    );
+  }
+
   /// Uploads data to this reference's location.
   ///
   /// Use this method to upload fixed sized data as a [Uint8List].
   ///
   /// Optionally, you can also set metadata onto the uploaded object.
   UploadTask putData(Uint8List data, [SettableMetadata? metadata]) {
-    return UploadTask._(storage, _delegate.putData(data, metadata));
+    return UploadTask._(
+        storage, _delegate.putData(data, _withInferredContentType(metadata)));
   }
 
   /// Upload a [Blob]. Note; this is only supported on web platforms.
@@ -117,7 +139,8 @@ class Reference {
   /// Optionally, you can also set metadata onto the uploaded object.
   UploadTask putBlob(dynamic blob, [SettableMetadata? metadata]) {
     assert(blob != null);
-    return UploadTask._(storage, _delegate.putBlob(blob, metadata));
+    return UploadTask._(
+        storage, _delegate.putBlob(blob, _withInferredContentType(metadata)));
   }
 
   /// Upload a [File] from the filesystem. The file must exist.

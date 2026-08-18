@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:firebase_performance_platform_interface/src/pigeon/messages.pigeon.dart'
+    as pigeon;
 import '../../firebase_performance_platform_interface.dart';
 import 'method_channel_firebase_performance.dart';
 import 'utils/exception.dart';
@@ -60,14 +62,12 @@ class MethodChannelHttpMetric extends HttpMetricPlatform {
   Future<void> start() async {
     if (_httpMetricHandle != null) return;
     try {
-      _httpMetricHandle =
-          await MethodChannelFirebasePerformance.channel.invokeMethod<int>(
-        'FirebasePerformance#httpMetricStart',
-        <String, Object?>{
-          'url': _url,
-          'httpMethod': _httpMethod.toString(),
-        },
+      final options = pigeon.HttpMetricOptions(
+        url: _url,
+        httpMethod: _convertHttpMethod(_httpMethod),
       );
+      _httpMetricHandle = await MethodChannelFirebasePerformance.pigeonChannel
+          .startHttpMetric(options);
     } catch (e, s) {
       convertPlatformException(e, s);
     }
@@ -77,20 +77,15 @@ class MethodChannelHttpMetric extends HttpMetricPlatform {
   Future<void> stop() async {
     if (_httpMetricHandle == null || _hasStopped) return;
     try {
-      await MethodChannelFirebasePerformance.channel.invokeMethod<void>(
-        'FirebasePerformance#httpMetricStop',
-        <String, Object?>{
-          'handle': _httpMetricHandle,
-          'attributes': _attributes,
-          if (_httpResponseCode != null) 'httpResponseCode': _httpResponseCode,
-          if (_requestPayloadSize != null)
-            'requestPayloadSize': _requestPayloadSize,
-          if (_responseContentType != null)
-            'responseContentType': _responseContentType,
-          if (_responsePayloadSize != null)
-            'responsePayloadSize': _responsePayloadSize,
-        },
+      final attributes = pigeon.HttpMetricAttributes(
+        httpResponseCode: _httpResponseCode,
+        requestPayloadSize: _requestPayloadSize,
+        responsePayloadSize: _responsePayloadSize,
+        responseContentType: _responseContentType,
+        attributes: _attributes,
       );
+      await MethodChannelFirebasePerformance.pigeonChannel
+          .stopHttpMetric(_httpMetricHandle!, attributes);
       _hasStopped = true;
     } catch (e, s) {
       convertPlatformException(e, s);
@@ -118,5 +113,28 @@ class MethodChannelHttpMetric extends HttpMetricPlatform {
   @override
   Map<String, String> getAttributes() {
     return {..._attributes};
+  }
+
+  pigeon.HttpMethod _convertHttpMethod(HttpMethod method) {
+    switch (method) {
+      case HttpMethod.Connect:
+        return pigeon.HttpMethod.connect;
+      case HttpMethod.Delete:
+        return pigeon.HttpMethod.delete;
+      case HttpMethod.Get:
+        return pigeon.HttpMethod.get;
+      case HttpMethod.Head:
+        return pigeon.HttpMethod.head;
+      case HttpMethod.Options:
+        return pigeon.HttpMethod.options;
+      case HttpMethod.Patch:
+        return pigeon.HttpMethod.patch;
+      case HttpMethod.Post:
+        return pigeon.HttpMethod.post;
+      case HttpMethod.Put:
+        return pigeon.HttpMethod.put;
+      case HttpMethod.Trace:
+        return pigeon.HttpMethod.trace;
+    }
   }
 }

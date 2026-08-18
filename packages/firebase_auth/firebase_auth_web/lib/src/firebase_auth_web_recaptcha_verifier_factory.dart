@@ -100,7 +100,7 @@ class RecaptchaVerifierFactoryWeb extends RecaptchaVerifierFactoryPlatform {
     }
 
     _delegate = auth_interop.RecaptchaVerifier(
-      element,
+      element.toJS,
       parameters,
       auth.delegate,
     );

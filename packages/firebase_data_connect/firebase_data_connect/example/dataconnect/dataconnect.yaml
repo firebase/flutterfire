@@ -1,0 +1,11 @@
+specVersion: "v1alpha"
+serviceId: "dataconnect"
+location: "us-west2"
+schema:
+  source: "./schema"
+  datasource:
+    postgresql:
+      database: "dataconnect"
+      cloudSql:
+        instanceId: "fdc-test-north1"
+connectorDirs: ["./connector"]

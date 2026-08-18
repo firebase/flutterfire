@@ -2,6 +2,11 @@ Project: /docs/storage/_project.yaml
 Book: /docs/_book.yaml
 page_type: guide
 
+{# The following is at site root, /third_party/devsite/firebase/en/ #}
+{% include "_local_variables.html" %}
+
+{% include "docs/storage/_local_variables.html" %}
+
 <link rel="stylesheet" type="text/css" href="/styles/docs.css" />
 
 # Handle errors for Cloud Storage on Flutter
@@ -22,14 +27,7 @@ try {
 }
 ```
 
-Note: By default, a Cloud Storage bucket requires Firebase Authentication to
-perform any action on the bucket's data or files. You can
-[change your Firebase Security Rules for Cloud Storage](/docs/storage/security/rules-conditions#public)
-to allow unauthenticated access. Since Firebase and your project's default
-App Engine app share this bucket, configuring public access may make newly
-uploaded App Engine files publicly accessible, as well. Be sure to restrict
-access to your Cloud Storage bucket again when you set up Authentication.
-
+<<../_includes/_restrict_access_to_bucket_note.md>>
 
 ## Handle Error Messages
 
@@ -46,7 +44,7 @@ Code                             | Description
 `storage/object-not-found`       | No object exists at the desired reference.
 `storage/bucket-not-found`       | No bucket is configured for Cloud Storage
 `storage/project-not-found`      | No project is configured for Cloud Storage
-`storage/quota-exceeded`         | Quota on your Cloud Storage bucket has been exceeded. If you're on the no-cost tier, upgrade to a paid plan. If you're on a paid plan, reach out to Firebase support.
+`storage/quota-exceeded`         | Quota on your {{firebase_storage}} bucket has been exceeded. If you're on the {{spark_plan_no_link_short}}, consider upgrading to the {{blaze_plan_with_link}}. If you're already on the {{blaze_plan_no_link_short}}, reach out to Firebase Support.<br><br>**Important**: Starting {{date_require_blaze_maintain_access_to_storage}}, the [{{blaze_plan_no_link_short}} will be _required_ to use {{firebase_storage}}](/docs/storage/faqs-storage-changes-announced-sept-2024), even default buckets.
 `storage/unauthenticated`        | User is unauthenticated, please authenticate and try again.
 `storage/unauthorized`           | User is not authorized to perform the desired action, check your security rules to ensure they are correct.
 `storage/retry-limit-exceeded`   | The maximum time limit on an operation (upload, download, delete, etc.) has been excceded. Try uploading again.

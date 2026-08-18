@@ -46,7 +46,7 @@ abstract class QueryPlatform extends PlatformInterface {
   /// Stores the instances query modifier filters.
   final Map<String, dynamic> parameters;
 
-  /// Returns whether the current query is targetted at a collection group.
+  /// Returns whether the current query is targeted at a collection group.
   bool get isCollectionGroupQuery {
     throw UnimplementedError('isCollectionGroupQuery is not implemented');
   }
@@ -135,7 +135,7 @@ abstract class QueryPlatform extends PlatformInterface {
   /// Notifies of query results at this location
   Stream<QuerySnapshotPlatform> snapshots({
     bool includeMetadataChanges = false,
-    ListenSource source = ListenSource.defaultSource,
+    required ListenSource listenSource,
   }) {
     throw UnimplementedError('snapshots() is not implemented');
   }

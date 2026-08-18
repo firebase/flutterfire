@@ -4,11 +4,7 @@
 
 part of 'database_interop.dart';
 
-@JS('Query')
-@staticInterop
-abstract class QueryJsImpl {}
-
-extension ExtensionQueryJsImpl on QueryJsImpl {
+extension type QueryJsImpl._(JSObject _) implements JSObject {
   external ReferenceJsImpl get ref;
 
   external JSBoolean isEqual(QueryJsImpl other);

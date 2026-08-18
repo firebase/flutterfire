@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-part of firebase_database;
+part of '../firebase_database.dart';
 
 /// The onDisconnect class allows you to write or clear data when your client
 /// disconnects from the Database server. These updates occur whether your

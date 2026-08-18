@@ -3,12 +3,12 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-part of firebase_crashlytics;
+part of '../firebase_crashlytics.dart';
 
 /// The entry point for accessing a [FirebaseCrashlytics].
 ///
 /// You can get an instance by calling [FirebaseCrashlytics.instance].
-class FirebaseCrashlytics extends FirebasePluginPlatform {
+class FirebaseCrashlytics extends FirebasePlugin {
   FirebaseCrashlytics._({required this.app})
       : super(app.name, 'plugins.flutter.io/firebase_crashlytics');
 
@@ -123,6 +123,7 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
     final List<Map<String, String>> stackTraceElements =
         getStackTraceElements(stackTrace);
     final String? buildId = getBuildId(stackTrace);
+    final List<String> loadingUnits = getLoadingUnits(stackTrace);
 
     return _delegate.recordError(
       exception: exception.toString(),
@@ -130,6 +131,7 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
       information: _information,
       stackTraceElements: stackTraceElements,
       buildId: buildId,
+      loadingUnits: loadingUnits,
       fatal: fatal,
     );
   }

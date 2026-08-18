@@ -3,7 +3,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:collection/collection.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_firebase_auth.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_multi_factor.dart';
@@ -43,9 +42,12 @@ FirebaseException platformExceptionToFirebaseAuthException(
         .replaceAll('ERROR_', '')
         .toLowerCase()
         .replaceAll('_', '-');
+    final details = platformException.details is Map
+        ? platformException.details as Map
+        : null;
 
     final customCode = _getCustomCode(
-      platformException.details,
+      details,
       platformException.message,
     );
     if (customCode != null) {
@@ -61,11 +63,10 @@ FirebaseException platformExceptionToFirebaseAuthException(
     AuthCredential? credential;
     String? email;
 
-    if (platformException.details != null) {
-      if (platformException.details['authCredential'] != null &&
-          platformException.details['authCredential'] is PigeonAuthCredential) {
-        PigeonAuthCredential pigeonAuthCredential =
-            platformException.details['authCredential'];
+    if (details != null) {
+      if (details['authCredential'] != null &&
+          details['authCredential'] is InternalAuthCredential) {
+        InternalAuthCredential pigeonAuthCredential = details['authCredential'];
 
         credential = AuthCredential(
           providerId: pigeonAuthCredential.providerId,
@@ -75,8 +76,8 @@ FirebaseException platformExceptionToFirebaseAuthException(
         );
       }
 
-      if (platformException.details['email'] != null) {
-        email = platformException.details['email'];
+      if (details['email'] != null) {
+        email = details['email'];
       }
     }
 
@@ -155,7 +156,7 @@ String? _getCustomCode(Map? additionalData, String? message) {
   for (final recognizedCode in listOfRecognizedCode) {
     if (additionalData?['message'] == recognizedCode ||
         (message?.contains(recognizedCode) ?? false)) {
-      return recognizedCode;
+      return recognizedCode.toLowerCase().replaceAll('_', '-');
     }
   }
 
@@ -179,9 +180,9 @@ FirebaseAuthMultiFactorExceptionPlatform parseMultiFactorError(
 
   final pigeonMultiFactorInfo =
       (additionalData['multiFactorHints'] as List<Object?>? ?? [])
-          .whereNotNull()
+          .nonNulls
           .map(
-            PigeonMultiFactorInfo.decode,
+            InternalMultiFactorInfo.decode,
           )
           .toList();
 

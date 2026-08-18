@@ -1,7 +1,7 @@
 // ignore_for_file: require_trailing_commas
-// Copyright 2020 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
+// Copyright 2020 The Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -23,44 +23,35 @@ void main() {
       crashlytics = FirebaseCrashlytics.instance;
     });
 
-    setUp(() async {
-      methodCallLog.clear();
-    });
-
-    tearDown(methodCallLog.clear);
+    setUp(hostApi.reset);
 
     test('checkForUnsentReports', () async {
       await crashlytics!.setCrashlyticsCollectionEnabled(false);
       await crashlytics!.checkForUnsentReports();
 
-      expect(methodCallLog, <Matcher>[
-        isMethodCall('Crashlytics#setCrashlyticsCollectionEnabled',
-            arguments: {'enabled': false}),
-        isMethodCall('Crashlytics#checkForUnsentReports', arguments: null)
+      expect(hostApi.calls, [
+        'setCrashlyticsCollectionEnabled',
+        'checkForUnsentReports',
       ]);
     });
 
     test('crash', () async {
       crashlytics!.crash();
+      await Future<void>.delayed(Duration.zero);
 
-      expect(methodCallLog,
-          <Matcher>[isMethodCall('Crashlytics#crash', arguments: null)]);
+      expect(hostApi.calls, ['crash']);
     });
 
     test('deleteUnsentReports', () async {
       await crashlytics!.deleteUnsentReports();
 
-      expect(methodCallLog, <Matcher>[
-        isMethodCall('Crashlytics#deleteUnsentReports', arguments: null)
-      ]);
+      expect(hostApi.calls, ['deleteUnsentReports']);
     });
 
     test('didCrashOnPreviousExecution', () async {
       await crashlytics!.didCrashOnPreviousExecution();
 
-      expect(methodCallLog, <Matcher>[
-        isMethodCall('Crashlytics#didCrashOnPreviousExecution', arguments: null)
-      ]);
+      expect(hostApi.calls, ['didCrashOnPreviousExecution']);
     });
 
     group('recordError', () {
@@ -71,21 +62,16 @@ void main() {
 
         await crashlytics!
             .recordError(exception, stack, reason: exceptionReason);
-        expect(methodCallLog, <Matcher>[
-          isMethodCall('Crashlytics#recordError', arguments: {
-            'exception': exception,
-            'reason': exceptionReason,
-            'information': '',
-            'fatal': false,
-            'stackTraceElements': getStackTraceElements(stack),
-            'buildId': '',
-          })
-        ]);
-        // Confirm that the stack trace contains current stack.
+        expect(hostApi.calls, ['recordError']);
+        expect(hostApi.lastRecordError!.exception, exception);
+        expect(hostApi.lastRecordError!.reason, exceptionReason);
+        expect(hostApi.lastRecordError!.information, '');
+        expect(hostApi.lastRecordError!.fatal, isFalse);
+        expect(hostApi.lastRecordError!.buildId, '');
+        expect(hostApi.lastRecordError!.loadingUnits, isEmpty);
         expect(
-          methodCallLog[0].arguments['stackTraceElements'],
-          contains(
-              containsPair('file', contains('firebase_crashlytics_test.dart'))),
+          hostApi.lastRecordError!.stackTraceElements.map((e) => e.file),
+          contains(contains('firebase_crashlytics_test.dart')),
         );
       });
 
@@ -95,15 +81,12 @@ void main() {
 
         await crashlytics!
             .recordError(exception, null, reason: exceptionReason);
-        expect(methodCallLog[0].method, 'Crashlytics#recordError');
-        expect(methodCallLog[0].arguments['exception'], exception);
-        expect(methodCallLog[0].arguments['reason'], exceptionReason);
-
-        // Confirm that the stack trace contains current stack.
+        expect(hostApi.calls, ['recordError']);
+        expect(hostApi.lastRecordError!.exception, exception);
+        expect(hostApi.lastRecordError!.reason, exceptionReason);
         expect(
-          methodCallLog[0].arguments['stackTraceElements'],
-          contains(
-              containsPair('file', contains('firebase_crashlytics_test.dart'))),
+          hostApi.lastRecordError!.stackTraceElements.map((e) => e.file),
+          contains(contains('firebase_crashlytics_test.dart')),
         );
       });
     });
@@ -133,16 +116,18 @@ void main() {
       try {
         await crashlytics!.recordFlutterError(details);
         expect(presentedError, true);
-        expect(methodCallLog, <Matcher>[
-          isMethodCall('Crashlytics#recordError', arguments: {
-            'exception': exception,
-            'reason': exceptionReason,
-            'fatal': false,
-            'information': '$exceptionFirstMessage\n$exceptionSecondMessage',
-            'stackTraceElements': getStackTraceElements(stack),
-            'buildId': '',
-          })
-        ]);
+        expect(hostApi.calls, ['recordError']);
+        expect(hostApi.lastRecordError!.exception, exception);
+        expect(hostApi.lastRecordError!.reason, exceptionReason);
+        expect(hostApi.lastRecordError!.fatal, isFalse);
+        expect(hostApi.lastRecordError!.information,
+            '$exceptionFirstMessage\n$exceptionSecondMessage');
+        expect(hostApi.lastRecordError!.buildId, '');
+        expect(hostApi.lastRecordError!.loadingUnits, isEmpty);
+        expect(
+          hostApi.lastRecordError!.stackTraceElements.map((e) => e.file),
+          contains(contains('firebase_crashlytics_test.dart')),
+        );
       } finally {
         FlutterError.presentError = oldPresentError;
       }
@@ -152,20 +137,15 @@ void main() {
       test('should call delegate method', () async {
         const msg = 'foo';
         await crashlytics!.log(msg);
-        expect(methodCallLog, <Matcher>[
-          isMethodCall('Crashlytics#log', arguments: {
-            'message': msg,
-          })
-        ]);
+        expect(hostApi.calls, ['log']);
+        expect(hostApi.lastLogMessage, msg);
       });
     });
 
     group('sendUnsentReports', () {
       test('should call delegate method', () async {
         await crashlytics!.sendUnsentReports();
-        expect(methodCallLog, <Matcher>[
-          isMethodCall('Crashlytics#sendUnsentReports', arguments: null)
-        ]);
+        expect(hostApi.calls, ['sendUnsentReports']);
       });
     });
 
@@ -175,16 +155,11 @@ void main() {
         expect(crashlytics!.isCrashlyticsCollectionEnabled, isFalse);
         await crashlytics!.setCrashlyticsCollectionEnabled(true);
         expect(crashlytics!.isCrashlyticsCollectionEnabled, isTrue);
-        expect(methodCallLog, <Matcher>[
-          isMethodCall('Crashlytics#setCrashlyticsCollectionEnabled',
-              arguments: {
-                'enabled': false,
-              }),
-          isMethodCall('Crashlytics#setCrashlyticsCollectionEnabled',
-              arguments: {
-                'enabled': true,
-              })
+        expect(hostApi.calls, [
+          'setCrashlyticsCollectionEnabled',
+          'setCrashlyticsCollectionEnabled',
         ]);
+        expect(hostApi.lastCollectionEnabled, isTrue);
       });
     });
 
@@ -192,11 +167,8 @@ void main() {
       test('should call delegate method', () async {
         const id = 'foo';
         await crashlytics!.setUserIdentifier(id);
-        expect(methodCallLog, <Matcher>[
-          isMethodCall('Crashlytics#setUserIdentifier', arguments: {
-            'identifier': id,
-          })
-        ]);
+        expect(hostApi.calls, ['setUserIdentifier']);
+        expect(hostApi.lastUserIdentifier, id);
       });
     });
 
@@ -212,12 +184,9 @@ void main() {
         const key = 'foo';
         const value = 'bar';
         await crashlytics!.setCustomKey(key, value);
-        expect(methodCallLog, <Matcher>[
-          isMethodCall('Crashlytics#setCustomKey', arguments: {
-            'key': key,
-            'value': value,
-          })
-        ]);
+        expect(hostApi.calls, ['setCustomKey']);
+        expect(hostApi.lastCustomKey, key);
+        expect(hostApi.lastCustomValue, value);
       });
     });
 

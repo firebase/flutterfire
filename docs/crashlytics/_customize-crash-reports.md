@@ -258,10 +258,12 @@ which includes the data that populates breadcrumb logs.
 
 ## Enable opt-in reporting {: #enable-reporting}
 
+<<../_includes/customize-crash-reports/_enable-opt-in_impact-awareness-note.md>>
+
 By default, {{crashlytics}} automatically collects crash reports for all your
 app's users. To give users more control over the data they send, you can enable
 opt-in reporting by disabling automatic reporting and only sending data to
-{{crashlytics}} when you choose to in your code:
+{{crashlytics}} when you choose to in your code.
 
 1.  Turn off automatic collection natively:
 
@@ -284,18 +286,19 @@ opt-in reporting by disabling automatic reporting and only sending data to
     ```
 
 1.  Enable collection for select users by calling the {{crashlytics}} data
-    collection override at runtime.
-
-    The override value persists across launches of your app so {{crashlytics}}
-    can automatically collect reports. To opt out of automatic crash reporting,
-    pass `false` as the override value. When set to `false`, the new value does
-    not apply until the next run of the app.
+    collection override at runtime. The override value persists across all
+    subsequent launches of your app so {{crashlytics}} can automatically collect
+    reports for that user.
 
     ```dart
     FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
     ```
 
-Note: When data collection is disabled, {{crashlytics}} will store crash
-information locally on the device. If data collection is subsequently enabled,
-any crash information stored on the device will be sent to {{crashlytics}} for
-processing.
+    If the user later opts-out of data collection, you can pass `false` as the
+    override value, which will apply the next time the user launches the app and
+    will persist across all subsequent launches for that user.
+
+Note: When data collection is disabled for a user, {{crashlytics}} will
+store crash information locally on the device. If data collection is
+subsequently enabled, any crash information stored on the device will be
+sent to {{crashlytics}} for processing.

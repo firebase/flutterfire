@@ -1,3 +1,143 @@
+## 0.1.4+75
+
+ - Update a dependency to the latest release.
+
+## 0.1.4+74
+
+ - Update a dependency to the latest release.
+
+## 0.1.4+73
+
+ - Update a dependency to the latest release.
+
+## 0.1.4+72
+
+ - Update a dependency to the latest release.
+
+## 0.1.4+71
+
+ - Update a dependency to the latest release.
+
+## 0.1.4+70
+
+ - Update a dependency to the latest release.
+
+## 0.1.4+69
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+
+## 0.1.4+68
+
+ - Update a dependency to the latest release.
+
+## 0.1.4+67
+
+ - Update a dependency to the latest release.
+
+## 0.1.4+66
+
+ - Update a dependency to the latest release.
+
+## 0.1.4+65
+
+ - Update a dependency to the latest release.
+
+## 0.1.4+64
+
+ - Update a dependency to the latest release.
+
+## 0.1.4+63
+
+ - Update a dependency to the latest release.
+
+## 0.1.4+62
+
+ - Update a dependency to the latest release.
+
+## 0.1.4+61
+
+ - Update a dependency to the latest release.
+
+## 0.1.4+60
+
+ - Update a dependency to the latest release.
+
+## 0.1.4+59
+
+ - Update a dependency to the latest release.
+
+## 0.1.4+58
+
+ - Update a dependency to the latest release.
+
+## 0.1.4+57
+
+ - Update a dependency to the latest release.
+
+## 0.1.4+56
+
+ - Update a dependency to the latest release.
+
+## 0.1.4+55
+
+ - Update a dependency to the latest release.
+
+## 0.1.4+54
+
+ - Update a dependency to the latest release.
+
+## 0.1.4+53
+
+ - Update a dependency to the latest release.
+
+## 0.1.4+52
+
+ - Update a dependency to the latest release.
+
+## 0.1.4+51
+
+ - Update a dependency to the latest release.
+
+## 0.1.4+50
+
+ - Update a dependency to the latest release.
+
+## 0.1.4+49
+
+ - Update a dependency to the latest release.
+
+## 0.1.4+48
+
+ - Update a dependency to the latest release.
+
+## 0.1.4+47
+
+ - Update a dependency to the latest release.
+
+## 0.1.4+46
+
+ - Update a dependency to the latest release.
+
+## 0.1.4+45
+
+ - Update a dependency to the latest release.
+
+## 0.1.4+44
+
+ - Update a dependency to the latest release.
+
+## 0.1.4+43
+
+ - Update a dependency to the latest release.
+
+## 0.1.4+42
+
+ - Update a dependency to the latest release.
+
+## 0.1.4+41
+
+ - Update a dependency to the latest release.
+
 ## 0.1.4+40
 
  - Update a dependency to the latest release.

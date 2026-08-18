@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-part of cloud_firestore;
+part of '../cloud_firestore.dart';
 
 @immutable
 // `extends Object?` so that type inference defaults to `Object?` instead of `dynamic`
@@ -23,18 +23,12 @@ abstract class CollectionReference<T extends Object?> implements Query<T> {
 
   /// Returns a `DocumentReference` with an auto-generated ID, after
   /// populating it with provided [data].
-  ///
-  /// The unique key generated is prefixed with a client-generated timestamp
-  /// so that the resulting list will be chronologically-sorted.
   Future<DocumentReference<T>> add(T data);
 
   /// {@template cloud_firestore.collection_reference.doc}
   /// Returns a `DocumentReference` with the provided path.
   ///
   /// If no [path] is provided, an auto-generated ID is used.
-  ///
-  /// The unique key generated is prefixed with a client-generated timestamp
-  /// so that the resulting list will be chronologically-sorted.
   /// {@endtemplate}
   DocumentReference<T> doc([String? path]);
 
@@ -113,9 +107,13 @@ class _JsonCollectionReference extends _JsonQuery
   @override
   DocumentReference<Map<String, dynamic>> doc([String? path]) {
     if (path != null) {
-      assert(path.isNotEmpty, 'a document path must be a non-empty string');
-      assert(!path.contains('//'), 'a document path must not contain "//"');
-      assert(path != '/', 'a document path must point to a valid document');
+      if (path.isEmpty) {
+        throw ArgumentError('A document path must be a non-empty string');
+      } else if (path.contains('//')) {
+        throw ArgumentError('A document path must not contain "//"');
+      } else if (path == '/') {
+        throw ArgumentError('A document path must point to a valid document');
+      }
     }
 
     return _JsonDocumentReference(firestore, _delegate.doc(path));

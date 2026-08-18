@@ -26,6 +26,9 @@ dynamic dartify(dynamic object) {
   if (jsObject.instanceof(GeoPointConstructor as JSFunction)) {
     return jsObject;
   }
+  if (jsObject.instanceof(VectorValueConstructor as JSFunction)) {
+    return jsObject;
+  }
   if (jsObject.instanceof(TimestampJsConstructor as JSFunction)) {
     final castedJSObject = jsObject as TimestampJsImpl;
     return Timestamp(
@@ -70,13 +73,18 @@ JSAny? jsify(Object? dartObject) {
   }
 
   if (dartObject is DateTime) {
-    return TimestampJsImpl.fromMillis(dartObject.millisecondsSinceEpoch.toJS)
-        as JSAny;
+    final timestamp = Timestamp.fromDate(dartObject);
+    return TimestampJsImpl(
+      timestamp.seconds.toJS,
+      timestamp.nanoseconds.toJS,
+    ) as JSAny;
   }
 
   if (dartObject is Timestamp) {
-    return TimestampJsImpl.fromMillis(dartObject.millisecondsSinceEpoch.toJS)
-        as JSAny;
+    return TimestampJsImpl(
+      dartObject.seconds.toJS,
+      dartObject.nanoseconds.toJS,
+    ) as JSAny;
   }
 
   if (dartObject is DocumentReference) {
@@ -96,6 +104,12 @@ JSAny? jsify(Object? dartObject) {
   // Cannot be done with Dart 3.2 constraints
   // ignore: invalid_runtime_check_with_js_interop_types
   if (dartObject is GeoPointJsImpl) {
+    return dartObject as JSAny;
+  }
+
+  // Cannot be done with Dart 3.2 constraints
+  // ignore: invalid_runtime_check_with_js_interop_types
+  if (dartObject is VectorValueJsImpl) {
     return dartObject as JSAny;
   }
 

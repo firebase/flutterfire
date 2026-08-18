@@ -101,6 +101,11 @@ body:
     attributes:
       value: |
         ---
+  
+  - type: markdown
+    attributes:
+      value: |
+        > **ℹ️ Please remove any API keys or other sensitive credentials from your bug report before submitting.**
 
   - type: textarea
     attributes:

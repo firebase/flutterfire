@@ -215,26 +215,6 @@ class MockFirebaseAnalyticsWeb extends _i1.Mock
       ) as _i5.Future<void>);
 
   @override
-  _i5.Future<void> setCurrentScreen({
-    String? screenName,
-    String? screenClassOverride,
-    _i3.AnalyticsCallOptions? callOptions,
-  }) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #setCurrentScreen,
-          [],
-          {
-            #screenName: screenName,
-            #screenClassOverride: screenClassOverride,
-            #callOptions: callOptions,
-          },
-        ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
-
-  @override
   _i5.Future<void> resetAnalyticsData() => (super.noSuchMethod(
         Invocation.method(
           #resetAnalyticsData,

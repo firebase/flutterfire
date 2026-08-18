@@ -2,14 +2,14 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-part of firebase_remote_config;
+part of '../firebase_remote_config.dart';
 
 /// The entry point for accessing Remote Config.
 ///
 /// You can get an instance by calling [FirebaseRemoteConfig.instance]. Note
 /// [FirebaseRemoteConfig.instance] is async.
 // ignore: prefer_mixin
-class FirebaseRemoteConfig extends FirebasePluginPlatform {
+class FirebaseRemoteConfig extends FirebasePlugin {
   FirebaseRemoteConfig._({required this.app})
       : super(app.name, 'plugins.flutter.io/firebase_remote_config');
 
@@ -160,12 +160,34 @@ class FirebaseRemoteConfig extends FirebasePluginPlatform {
   /// Starts listening for real-time config updates from the Remote Config backend and automatically
   /// fetches updates from the RC backend when they are available.
   ///
-  /// This feature is not supported on Web.
+  /// On web, you must call [fetchAndActivate] before listening to this stream. Events will only be
+  /// received after an initial call to [fetchAndActivate].
+  ///
+  /// Note: Real-time config updates are not yet supported on Windows and other
+  /// desktop platforms by the Firebase C++ SDK. The listener will be registered
+  /// but no events will be received. Use [fetchAndActivate] to manually check
+  /// for updates on desktop platforms.
   ///
   /// If a connection to the Remote Config backend is not already open, calling this method will
   /// open it. Multiple listeners can be added by calling this method again, but subsequent calls
-  /// re-use the same connection to the backend.
+  /// reuse the same connection to the backend.
   Stream<RemoteConfigUpdate> get onConfigUpdated {
     return _delegate.onConfigUpdated;
+  }
+
+  /// Changes the custom signals for this FirebaseRemoteConfig instance
+  /// Custom signals are subject to limits on the size of key/value pairs and the total number of signals.
+  /// Any calls that exceed these limits will be discarded.
+  /// If a key already exists, the value is overwritten. Setting the value of a custom signal to null un-sets the signal.
+  /// The signals will be persisted locally on the client.
+  Future<void> setCustomSignals(Map<String, Object?> customSignals) {
+    customSignals.forEach((key, value) {
+      // Apple will not trigger exception for boolean because it is represented as a number in objective-c so we assert early for all platforms
+      assert(
+        value is String || value is num || value == null,
+        'Invalid value type "${value.runtimeType}" for key "$key". Only strings, numbers, or null are supported.',
+      );
+    });
+    return _delegate.setCustomSignals(customSignals);
   }
 }

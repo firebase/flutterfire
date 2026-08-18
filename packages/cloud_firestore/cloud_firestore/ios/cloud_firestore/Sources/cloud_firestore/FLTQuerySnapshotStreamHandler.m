@@ -1,0 +1,102 @@
+// Copyright 2021 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+@import FirebaseFirestore;
+#if __has_include(<firebase_core/FLTFirebasePluginRegistry.h>)
+#import <firebase_core/FLTFirebasePluginRegistry.h>
+#else
+#import <FLTFirebasePluginRegistry.h>
+#endif
+
+#import "include/cloud_firestore/Private/FLTFirebaseFirestoreUtils.h"
+#import "include/cloud_firestore/Private/FLTQuerySnapshotStreamHandler.h"
+#import "include/cloud_firestore/Private/FirestorePigeonParser.h"
+#import "include/cloud_firestore/Public/CustomPigeonHeaderFirestore.h"
+
+@interface FLTQuerySnapshotStreamHandler ()
+@property(readwrite, strong) id<FIRListenerRegistration> listenerRegistration;
+@property(nonatomic) dispatch_queue_t snapshotQueue;
+@end
+
+@implementation FLTQuerySnapshotStreamHandler
+
+- (instancetype)initWithFirestore:(FIRFirestore *)firestore
+                            query:(FIRQuery *)query
+           includeMetadataChanges:(BOOL)includeMetadataChanges
+          serverTimestampBehavior:(FIRServerTimestampBehavior)serverTimestampBehavior
+                           source:(FIRListenSource)source {
+  self = [super init];
+  if (self) {
+    _firestore = firestore;
+    _query = query;
+    _includeMetadataChanges = includeMetadataChanges;
+    _serverTimestampBehavior = serverTimestampBehavior;
+    _source = source;
+    _snapshotQueue = dispatch_queue_create("io.flutter.plugins.firebase.firestore.query_snapshot",
+                                           DISPATCH_QUEUE_SERIAL);
+  }
+  return self;
+}
+
+- (FlutterError *_Nullable)onListenWithArguments:(id _Nullable)arguments
+                                       eventSink:(nonnull FlutterEventSink)events {
+  FIRQuery *query = self.query;
+
+  if (query == nil) {
+    return [FlutterError
+        errorWithCode:@"sdk-error"
+              message:@"An error occurred while parsing query arguments, see native logs for more "
+                      @"information. Please report this issue."
+              details:nil];
+  }
+
+  id listener = ^(FIRQuerySnapshot *_Nullable snapshot, NSError *_Nullable error) {
+    if (error) {
+      NSArray *codeAndMessage = [FLTFirebaseFirestoreUtils ErrorCodeAndMessageFromNSError:error];
+      NSString *code = codeAndMessage[0];
+      NSString *message = codeAndMessage[1];
+      NSDictionary *details = @{
+        @"code" : code,
+        @"message" : message,
+      };
+      dispatch_async(dispatch_get_main_queue(), ^{
+        events([FLTFirebasePlugin createFlutterErrorFromCode:code
+                                                     message:message
+                                             optionalDetails:details
+                                          andOptionalNSError:error]);
+      });
+    } else {
+      dispatch_async(self.snapshotQueue, ^{
+        // Emit the Pigeon object directly; the Pigeon-aware codec serializes nested
+        // `InternalDocumentSnapshot` / `InternalDocumentChange` / `InternalSnapshotMetadata`
+        // with their proper type codes. Pigeon 26 no longer flattens nested types
+        // via `toList`.
+        InternalQuerySnapshot *pigeonSnapshot =
+            [FirestorePigeonParser toPigeonQuerySnapshot:snapshot
+                                 serverTimestampBehavior:self.serverTimestampBehavior];
+        dispatch_async(dispatch_get_main_queue(), ^{
+          events(pigeonSnapshot);
+        });
+      });
+    }
+  };
+
+  FIRSnapshotListenOptions *options = [[FIRSnapshotListenOptions alloc] init];
+  FIRSnapshotListenOptions *optionsWithSourceAndMetadata = [[options
+      optionsWithIncludeMetadataChanges:_includeMetadataChanges] optionsWithSource:_source];
+
+  self.listenerRegistration = [query addSnapshotListenerWithOptions:optionsWithSourceAndMetadata
+                                                           listener:listener];
+
+  return nil;
+}
+
+- (FlutterError *_Nullable)onCancelWithArguments:(id _Nullable)arguments {
+  [self.listenerRegistration remove];
+  self.listenerRegistration = nil;
+
+  return nil;
+}
+
+@end

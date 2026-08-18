@@ -2,13 +2,14 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-library firebase_ml_model_downloader;
+// This package intentionally re-exports its deprecated public API.
+// ignore_for_file: deprecated_member_use
 
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
-    show FirebasePluginPlatform;
+    show FirebasePlugin;
 import 'package:firebase_ml_model_downloader_platform_interface/firebase_ml_model_downloader_platform_interface.dart';
 import 'package:flutter/foundation.dart';
 

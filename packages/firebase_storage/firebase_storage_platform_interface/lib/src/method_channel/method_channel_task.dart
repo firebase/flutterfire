@@ -38,7 +38,13 @@ abstract class MethodChannelTask extends TaskPlatform {
           if (taskState == TaskState.error) {
             _didComplete = true;
             final errorMap = Map<String, dynamic>.from(events['error']);
-            final code = errorMap['code'];
+            String code = errorMap['code'];
+
+            // If native surfaced an unknown error but we already transitioned the
+            // task snapshot to canceled (due to a local cancel), surface as canceled.
+            if (code != 'canceled' && snapshot.state == TaskState.canceled) {
+              code = 'canceled';
+            }
 
             final exception = FirebaseException(
               plugin: 'firebase_storage',
@@ -120,27 +126,27 @@ abstract class MethodChannelTask extends TaskPlatform {
   bool _userListening = false;
 
   ///  FirebaseApp pigeon instance
-  static PigeonStorageFirebaseApp pigeonFirebaseApp(
+  static InternalStorageFirebaseApp pigeonFirebaseApp(
       FirebaseStoragePlatform storage) {
-    return PigeonStorageFirebaseApp(
+    return InternalStorageFirebaseApp(
       appName: storage.app.name,
       bucket: storage.bucket,
     );
   }
 
-  /// Convert [TaskState] to [PigeonStorageTaskState]
-  PigeonStorageTaskState convertToPigeonTaskState(TaskState state) {
+  /// Convert [TaskState] to [InternalStorageTaskState]
+  InternalStorageTaskState convertToPigeonTaskState(TaskState state) {
     switch (state) {
       case TaskState.canceled:
-        return PigeonStorageTaskState.canceled;
+        return InternalStorageTaskState.canceled;
       case TaskState.error:
-        return PigeonStorageTaskState.error;
+        return InternalStorageTaskState.error;
       case TaskState.paused:
-        return PigeonStorageTaskState.paused;
+        return InternalStorageTaskState.paused;
       case TaskState.running:
-        return PigeonStorageTaskState.running;
+        return InternalStorageTaskState.running;
       case TaskState.success:
-        return PigeonStorageTaskState.success;
+        return InternalStorageTaskState.success;
     }
   }
 
@@ -257,7 +263,7 @@ class MethodChannelPutFileTask extends MethodChannelTask {
 
   static Future<String> _getTask(int handle, FirebaseStoragePlatform storage,
       String path, File file, SettableMetadata? metadata) {
-    PigeonSettableMetadata? pigeonSettableMetadata;
+    InternalSettableMetadata? pigeonSettableMetadata;
     if (defaultTargetPlatform == TargetPlatform.windows) {
       // TODO(russellwheatley): sending null to windows throws exception so we pass empty metadata
       pigeonSettableMetadata =

@@ -40,7 +40,7 @@ class Analytics extends JsObjectWrapper<analytics_interop.AnalyticsJsImpl> {
 
   static Future<bool> isSupported() async {
     final result = await analytics_interop.isSupported().toDart;
-    return (result! as JSBoolean).toDart;
+    return result.toDart;
   }
 
   /// Non-null App for this instance of analytics service.
@@ -99,18 +99,6 @@ class Analytics extends JsObjectWrapper<analytics_interop.AnalyticsJsImpl> {
     return analytics_interop.setAnalyticsCollectionEnabled(
       jsObject,
       enabled.toJS,
-    );
-  }
-
-  void setCurrentScreen({
-    String? screenName,
-    AnalyticsCallOptions? callOptions,
-  }) {
-    return analytics_interop.logEvent(
-      jsObject,
-      'screen_view'.toJS,
-      {'firebase_screen': screenName}.jsify(),
-      callOptions?.asMap().jsify() as JSObject?,
     );
   }
 

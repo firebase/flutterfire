@@ -6,7 +6,10 @@ Book: /docs/_book.yaml
 # Add multi-factor authentication to your Flutter app
 
 If you've upgraded to Firebase Authentication with Identity Platform,
- you can add SMS multi-factor authentication to your Flutter app.
+you can add SMS multi-factor authentication to your Flutter app.
+
+Note: Avoid the use of SMS-based MFA. SMS is an insecure technology that is easy to compromise or spoof with
+no authentication mechanism or eavesdropping protection.
 
 Multi-factor authentication (MFA) increases the security of your app. While attackers
 often compromise passwords and social accounts, intercepting a text message is
@@ -14,8 +17,8 @@ more difficult.
 
 ## Before you begin
 
-Note: Using multi-factor authentication with
-[multiple tenants](https://cloud.google.com/identity-platform/docs/multi-tenancy)
+Note: Windows platform does not support multi-factor authentication. Using multi-factor authentication with
+[multiple tenants](https://cloud.google.com/identity-platform/docs/multi-tenancy) on any platform
 is not supported on Flutter.
 
 1.  Enable at least one provider that supports multi-factor authentication.
@@ -106,7 +109,7 @@ To enroll a new secondary factor for a user:
       // ...
     },
     codeAutoRetrievalTimeout: (_) {},
-  ); 
+  );
   ```
 
 1. Once the SMS code is sent, ask the user to verify the code:
@@ -139,7 +142,7 @@ The code below shows a complete example of enrolling a second factor:
     verificationCompleted: (_) {},
     verificationFailed: (_) {},
     codeSent: (String verificationId, int? resendToken) async {
-      // See `firebase_auth` example app for a method of retrieving user's sms code: 
+      // See `firebase_auth` example app for a method of retrieving user's sms code:
       // https://github.com/firebase/flutterfire/blob/main/packages/firebase_auth/firebase_auth/example/lib/auth.dart#L591
       final smsCode = await getSmsCodeFromUser(context);
 
@@ -269,7 +272,7 @@ try {
     verificationCompleted: (_) {},
     verificationFailed: (_) {},
     codeSent: (String verificationId, int? resendToken) async {
-      // See `firebase_auth` example app for a method of retrieving user's sms code: 
+      // See `firebase_auth` example app for a method of retrieving user's sms code:
       // https://github.com/firebase/flutterfire/blob/main/packages/firebase_auth/firebase_auth/example/lib/auth.dart#L591
       final smsCode = await getSmsCodeFromUser(context);
 
@@ -295,7 +298,7 @@ try {
   );
 } catch (e) {
   ...
-} 
+}
 ```
 
 Congratulations! You successfully signed in a user using multi-factor

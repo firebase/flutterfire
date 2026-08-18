@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-library firebase_database_platform_interface;
-
 export 'src/transaction.dart';
 export 'src/platform_interface/platform_interface_data_snapshot.dart';
 export 'src/platform_interface/platform_interface_database.dart';

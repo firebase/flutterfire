@@ -3,7 +3,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-part of firebase_core_platform_interface;
+part of '../firebase_core_platform_interface.dart';
 
 /// Throws a consistent cross-platform error message when usage of an app occurs but
 /// no app has been created.
@@ -43,7 +43,7 @@ Firebase has not been correctly initialized.
 
 Usually this means you've attempted to use a Firebase service before calling `Firebase.initializeApp`.
 
-View the documentation for more information: https://firebase.flutter.dev/docs/overview#initialization
+View the documentation for more information: https://firebase.google.com/docs/flutter/setup
     ''';
 
   return FirebaseException(

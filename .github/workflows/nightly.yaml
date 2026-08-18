@@ -1,0 +1,174 @@
+name: nightly-ci
+run-name: ${{ github.event.inputs.test_mode == 'true' && format('[Test Mode] {0}', github.workflow) || github.workflow }}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+on:
+  schedule:
+    - cron: '0 4 * * *'
+  # The dispatch is only for test purpose
+  workflow_dispatch:
+    inputs:
+      test_mode:
+        description: 'Run in test mode'
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  # The emulator-backed workflows (smoke, firestore, fdc, storage, auth,
+  # database, functions) need no secrets. The nine live-tier product
+  # workflows and e2e-pipeline talk to real Firebase projects, so they get
+  # their config passed explicitly - never `secrets: inherit`, which would
+  # hand every called workflow the whole secret store.
+  e2e-smoke:
+    uses: ./.github/workflows/e2e_tests_smoke.yaml
+    with:
+      nightly_test_mode: ${{ github.event.inputs.test_mode == 'true' }}
+  e2e-firestore:
+    uses: ./.github/workflows/e2e_tests_firestore.yaml
+    with:
+      nightly_test_mode: ${{ github.event.inputs.test_mode == 'true' }}
+  e2e-fdc:
+    uses: ./.github/workflows/e2e_tests_fdc.yaml
+    with:
+      nightly_test_mode: ${{ github.event.inputs.test_mode == 'true' }}
+  e2e-storage:
+    uses: ./.github/workflows/e2e_tests_storage.yaml
+    with:
+      nightly_test_mode: ${{ github.event.inputs.test_mode == 'true' }}
+  e2e-auth:
+    uses: ./.github/workflows/e2e_tests_auth.yaml
+    with:
+      nightly_test_mode: ${{ github.event.inputs.test_mode == 'true' }}
+    secrets:
+      TESTS_E2E_FIREBASE_OPTIONS_DART: ${{ secrets.TESTS_E2E_FIREBASE_OPTIONS_DART }}
+      TESTS_E2E_GOOGLE_SERVICES_JSON: ${{ secrets.TESTS_E2E_GOOGLE_SERVICES_JSON }}
+  e2e-database:
+    uses: ./.github/workflows/e2e_tests_database.yaml
+    with:
+      nightly_test_mode: ${{ github.event.inputs.test_mode == 'true' }}
+  e2e-functions:
+    uses: ./.github/workflows/e2e_tests_functions.yaml
+    with:
+      nightly_test_mode: ${{ github.event.inputs.test_mode == 'true' }}
+  e2e-ai:
+    uses: ./.github/workflows/e2e_tests_ai.yaml
+    with:
+      nightly_test_mode: ${{ github.event.inputs.test_mode == 'true' }}
+    secrets:
+      TESTS_E2E_FIREBASE_OPTIONS_DART: ${{ secrets.TESTS_E2E_FIREBASE_OPTIONS_DART }}
+      TESTS_E2E_GOOGLE_SERVICES_JSON: ${{ secrets.TESTS_E2E_GOOGLE_SERVICES_JSON }}
+  e2e-analytics:
+    uses: ./.github/workflows/e2e_tests_analytics.yaml
+    with:
+      nightly_test_mode: ${{ github.event.inputs.test_mode == 'true' }}
+    secrets:
+      TESTS_E2E_FIREBASE_OPTIONS_DART: ${{ secrets.TESTS_E2E_FIREBASE_OPTIONS_DART }}
+      TESTS_E2E_GOOGLE_SERVICES_JSON: ${{ secrets.TESTS_E2E_GOOGLE_SERVICES_JSON }}
+  e2e-app-check:
+    uses: ./.github/workflows/e2e_tests_app_check.yaml
+    with:
+      nightly_test_mode: ${{ github.event.inputs.test_mode == 'true' }}
+    secrets:
+      TESTS_E2E_FIREBASE_OPTIONS_DART: ${{ secrets.TESTS_E2E_FIREBASE_OPTIONS_DART }}
+      TESTS_E2E_GOOGLE_SERVICES_JSON: ${{ secrets.TESTS_E2E_GOOGLE_SERVICES_JSON }}
+  e2e-app-installations:
+    uses: ./.github/workflows/e2e_tests_app_installations.yaml
+    with:
+      nightly_test_mode: ${{ github.event.inputs.test_mode == 'true' }}
+    secrets:
+      TESTS_E2E_FIREBASE_OPTIONS_DART: ${{ secrets.TESTS_E2E_FIREBASE_OPTIONS_DART }}
+      TESTS_E2E_GOOGLE_SERVICES_JSON: ${{ secrets.TESTS_E2E_GOOGLE_SERVICES_JSON }}
+  e2e-crashlytics:
+    uses: ./.github/workflows/e2e_tests_crashlytics.yaml
+    with:
+      nightly_test_mode: ${{ github.event.inputs.test_mode == 'true' }}
+    secrets:
+      TESTS_E2E_FIREBASE_OPTIONS_DART: ${{ secrets.TESTS_E2E_FIREBASE_OPTIONS_DART }}
+      TESTS_E2E_GOOGLE_SERVICES_JSON: ${{ secrets.TESTS_E2E_GOOGLE_SERVICES_JSON }}
+  e2e-messaging:
+    uses: ./.github/workflows/e2e_tests_messaging.yaml
+    with:
+      nightly_test_mode: ${{ github.event.inputs.test_mode == 'true' }}
+    secrets:
+      TESTS_E2E_FIREBASE_OPTIONS_DART: ${{ secrets.TESTS_E2E_FIREBASE_OPTIONS_DART }}
+      TESTS_E2E_GOOGLE_SERVICES_JSON: ${{ secrets.TESTS_E2E_GOOGLE_SERVICES_JSON }}
+  e2e-ml-model-downloader:
+    uses: ./.github/workflows/e2e_tests_ml_model_downloader.yaml
+    with:
+      nightly_test_mode: ${{ github.event.inputs.test_mode == 'true' }}
+    secrets:
+      TESTS_E2E_FIREBASE_OPTIONS_DART: ${{ secrets.TESTS_E2E_FIREBASE_OPTIONS_DART }}
+      TESTS_E2E_GOOGLE_SERVICES_JSON: ${{ secrets.TESTS_E2E_GOOGLE_SERVICES_JSON }}
+  e2e-performance:
+    uses: ./.github/workflows/e2e_tests_performance.yaml
+    with:
+      nightly_test_mode: ${{ github.event.inputs.test_mode == 'true' }}
+    secrets:
+      TESTS_E2E_FIREBASE_OPTIONS_DART: ${{ secrets.TESTS_E2E_FIREBASE_OPTIONS_DART }}
+      TESTS_E2E_GOOGLE_SERVICES_JSON: ${{ secrets.TESTS_E2E_GOOGLE_SERVICES_JSON }}
+  e2e-remote-config:
+    uses: ./.github/workflows/e2e_tests_remote_config.yaml
+    with:
+      nightly_test_mode: ${{ github.event.inputs.test_mode == 'true' }}
+    secrets:
+      TESTS_E2E_FIREBASE_OPTIONS_DART: ${{ secrets.TESTS_E2E_FIREBASE_OPTIONS_DART }}
+      TESTS_E2E_GOOGLE_SERVICES_JSON: ${{ secrets.TESTS_E2E_GOOGLE_SERVICES_JSON }}
+  e2e-pipeline:
+    uses: ./.github/workflows/e2e_tests_pipeline.yaml
+    if: ${{ github.event.inputs.test_mode != 'true' }}
+    secrets:
+      PIPELINE_E2E_FIREBASE_OPTIONS_DART: ${{ secrets.PIPELINE_E2E_FIREBASE_OPTIONS_DART }}
+      PIPELINE_E2E_GOOGLE_SERVICES_JSON: ${{ secrets.PIPELINE_E2E_GOOGLE_SERVICES_JSON }}
+      PIPELINE_E2E_GOOGLE_SERVICE_INFO_PLIST: ${{ secrets.PIPELINE_E2E_GOOGLE_SERVICE_INFO_PLIST }}
+
+  update-dashboard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # Only this job writes to issues; keep the workflow-level grant read-only.
+    permissions:
+      contents: read
+      issues: write
+    if: ${{ always() && !cancelled() }}
+    needs:
+      [
+        e2e-smoke, e2e-firestore, e2e-fdc,
+        e2e-storage, e2e-auth, e2e-database, e2e-functions, e2e-pipeline,
+        e2e-ai, e2e-analytics, e2e-app-check, e2e-app-installations,
+        e2e-crashlytics, e2e-messaging, e2e-ml-model-downloader,
+        e2e-performance, e2e-remote-config,
+      ]
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
+        with:
+          channel: 'stable'
+      - name: Update Dashboard Issue
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TEST_MODE: ${{ github.event.inputs.test_mode == 'true' }}
+          SMOKE_STATUS: ${{ needs.e2e-smoke.result }}
+          FIRESTORE_STATUS: ${{ needs.e2e-firestore.result }}
+          FDC_STATUS: ${{ needs.e2e-fdc.result }}
+          STORAGE_STATUS: ${{ needs.e2e-storage.result }}
+          AUTH_STATUS: ${{ needs.e2e-auth.result }}
+          DATABASE_STATUS: ${{ needs.e2e-database.result }}
+          FUNCTIONS_STATUS: ${{ needs.e2e-functions.result }}
+          PIPELINE_STATUS: ${{ needs.e2e-pipeline.result }}
+          AI_STATUS: ${{ needs.e2e-ai.result }}
+          ANALYTICS_STATUS: ${{ needs.e2e-analytics.result }}
+          APP_CHECK_STATUS: ${{ needs.e2e-app-check.result }}
+          APP_INSTALLATIONS_STATUS: ${{ needs.e2e-app-installations.result }}
+          CRASHLYTICS_STATUS: ${{ needs.e2e-crashlytics.result }}
+          MESSAGING_STATUS: ${{ needs.e2e-messaging.result }}
+          ML_MODEL_DOWNLOADER_STATUS: ${{ needs.e2e-ml-model-downloader.result }}
+          PERFORMANCE_STATUS: ${{ needs.e2e-performance.result }}
+          REMOTE_CONFIG_STATUS: ${{ needs.e2e-remote-config.result }}
+          REPO: ${{ github.repository }}
+        run: |
+          dart .github/workflows/scripts/nightly_issue_dashboard.dart

@@ -1,3 +1,146 @@
+## 3.0.6
+
+ - **FIX**(remote_config): restores the Apple error mapping and accepts both throttling status spellings ([#18458](https://github.com/firebase/flutterfire/issues/18458)). ([523d985a](https://github.com/firebase/flutterfire/commit/523d985a8219fd20a7071915ee539c19692975fa))
+
+## 3.0.5
+
+ - Update a dependency to the latest release.
+
+## 3.0.4
+
+ - Update a dependency to the latest release.
+
+## 3.0.3
+
+ - Update a dependency to the latest release.
+
+## 3.0.2
+
+ - Update a dependency to the latest release.
+
+## 3.0.1
+
+ - Update a dependency to the latest release.
+
+## 3.0.0
+
+ - Bump platform interface a major version due to pigeon dependency update
+
+ - **REFACTOR**: move all packages to workspace ([#18182](https://github.com/firebase/flutterfire/issues/18182)). ([6cdfcb10](https://github.com/firebase/flutterfire/commit/6cdfcb103da7be46ccb190d7e107d8c537aa1ff8))
+ - **FEAT**: upgrade pigeon to version 26.3.4 ([#18205](https://github.com/firebase/flutterfire/issues/18205)). ([cb6b4aef](https://github.com/firebase/flutterfire/commit/cb6b4aeffc568755ea3eebe32b998f00237bf5ad))
+
+## 2.1.2
+
+ - Update a dependency to the latest release.
+
+## 2.1.1
+
+ - Update a dependency to the latest release.
+
+## 2.1.0
+
+ - **FEAT**(remote-config,windows): add support for windows ([#18006](https://github.com/firebase/flutterfire/issues/18006)). ([a6ec167f](https://github.com/firebase/flutterfire/commit/a6ec167f4ece9c9b455a916366781f482cc380b3))
+
+## 2.0.7
+
+ - Update a dependency to the latest release.
+
+## 2.0.6
+
+ - Update a dependency to the latest release.
+
+## 2.0.5
+
+ - Update a dependency to the latest release.
+
+## 2.0.4
+
+ - Update a dependency to the latest release.
+
+## 2.0.3
+
+ - Update a dependency to the latest release.
+
+## 2.0.2
+
+ - Update a dependency to the latest release.
+
+## 2.0.1
+
+ - Update a dependency to the latest release.
+
+## 2.0.0
+
+ - **FEAT**(remote_config): add support for Pigeon. Update iOS to Swift and Android to Swift ([#17489](https://github.com/firebase/flutterfire/issues/17489)). ([08ecc502](https://github.com/firebase/flutterfire/commit/08ecc5029616058c86d0093b9aae3ee8cea811a4))
+
+## 1.5.7
+
+ - Update a dependency to the latest release.
+
+## 1.5.6
+
+ - Update a dependency to the latest release.
+
+## 1.5.5
+
+ - Update a dependency to the latest release.
+
+## 1.5.4
+
+ - Update a dependency to the latest release.
+
+## 1.5.3
+
+ - Update a dependency to the latest release.
+
+## 1.5.2
+
+ - Update a dependency to the latest release.
+
+## 1.5.1
+
+ - Update a dependency to the latest release.
+
+## 1.5.0
+
+ - **FEAT**(remote-config): custom signals support ([#17053](https://github.com/firebase/flutterfire/issues/17053)). ([7cf248a8](https://github.com/firebase/flutterfire/commit/7cf248a8808e3d8f7fed29f18ddaf1fadf329ca3))
+
+## 1.4.49
+
+ - Update a dependency to the latest release.
+
+## 1.4.48
+
+ - Update a dependency to the latest release.
+
+## 1.4.47
+
+ - Update a dependency to the latest release.
+
+## 1.4.46
+
+ - Update a dependency to the latest release.
+
+## 1.4.45
+
+ - **FIX**(remote_config): ensure all listeners fire on onConfigUpdated ([#13512](https://github.com/firebase/flutterfire/issues/13512)). ([170cc96d](https://github.com/firebase/flutterfire/commit/170cc96d33f68ea3352d45fdd0f071b65fb5596c))
+
+## 1.4.44
+
+ - Update a dependency to the latest release.
+
+## 1.4.43
+
+ - Update a dependency to the latest release.
+
+## 1.4.42
+
+ - Update a dependency to the latest release.
+
+## 1.4.41
+
+ - Update a dependency to the latest release.
+
 ## 1.4.40
 
  - Update a dependency to the latest release.

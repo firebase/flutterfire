@@ -1,4 +1,4 @@
-platform :osx, '10.12'
+platform :osx, '10.15'
 
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
@@ -11,7 +11,7 @@ project 'Runner', {
 
 def parse_KV_file(file, separator='=')
   file_abs_path = File.expand_path(file)
-  if !File.exists? file_abs_path
+  if !File.exist? file_abs_path
     return [];
   end
   pods_ary = []
@@ -33,7 +33,7 @@ end
 
 def pubspec_supports_macos(file)
   file_abs_path = File.expand_path(file)
-  if !File.exists? file_abs_path
+  if !File.exist? file_abs_path
     return false;
   end
   File.foreach(file_abs_path) { |line|
@@ -68,15 +68,51 @@ target 'Runner' do
   }
 
   # Plugin Pods
-  plugin_pods = parse_KV_file('../.flutter-plugins')
-  plugin_pods.map { |p|
-    symlink = File.join(symlink_plugins_dir, p[:name])
-    File.symlink(p[:path], symlink)
-    if pubspec_supports_macos(File.join(symlink, 'pubspec.yaml'))
-      pod p[:name], :path => File.join(symlink, 'macos')
+  require 'json'
+  plugin_dependencies_file = File.join('..', '.flutter-plugins-dependencies')
+  if File.exist?(plugin_dependencies_file)
+    plugin_dependencies = JSON.parse(File.read(plugin_dependencies_file))
+    if plugin_dependencies['plugins'] && plugin_dependencies['plugins']['macos']
+      plugin_dependencies['plugins']['macos'].each do |plugin|
+        plugin_name = plugin['name']
+        plugin_path = plugin['path']
+        symlink = File.join(symlink_plugins_dir, plugin_name)
+        File.symlink(plugin_path, symlink)
+        if pubspec_supports_macos(File.join(symlink, 'pubspec.yaml'))
+          pod plugin_name, :path => File.join(symlink, 'macos')
+        end
+      end
     end
-  }
+  end
 end
 
 # Prevent Cocoapods from embedding a second Flutter framework and causing an error with the new Xcode build system.
 install! 'cocoapods', :disable_input_output_paths => true
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    # Ensure Swift modules are properly configured
+    if target.name == 'firebase_database'
+      target.build_configurations.each do |config|
+        config.build_settings['SWIFT_VERSION'] = '5.0'
+        config.build_settings['DEFINES_MODULE'] = 'YES'
+        config.build_settings['SWIFT_INCLUDE_PATHS'] = '$(PODS_TARGET_SRCROOT)/Sources'
+      end
+    end
+    
+    # Ensure firebase_core is properly configured for Swift import
+    if target.name == 'firebase_core'
+      target.build_configurations.each do |config|
+        config.build_settings['DEFINES_MODULE'] = 'YES'
+        config.build_settings['CLANG_ENABLE_MODULES'] = 'YES'
+        config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
+      end
+    end
+    
+    # Ensure all targets have proper module configuration
+    target.build_configurations.each do |config|
+      config.build_settings['CLANG_ENABLE_MODULES'] = 'YES'
+      config.build_settings['DEFINES_MODULE'] = 'YES'
+    end
+  end
+end

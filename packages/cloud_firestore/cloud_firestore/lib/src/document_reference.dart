@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-part of cloud_firestore;
+part of '../cloud_firestore.dart';
 
 /// A [DocumentReference] refers to a document location in a [FirebaseFirestore] database
 /// and can be used to write, read, or listen to the location.
@@ -120,18 +120,15 @@ class _JsonDocumentReference
 
   @override
   CollectionReference<Map<String, dynamic>> collection(String collectionPath) {
-    assert(
-      collectionPath.isNotEmpty,
-      'a collectionPath path must be a non-empty string',
-    );
-    assert(
-      !collectionPath.contains('//'),
-      'a collection path must not contain "//"',
-    );
-    assert(
-      isValidCollectionPath(collectionPath),
-      'a collection path must point to a valid collection.',
-    );
+    if (collectionPath.isEmpty) {
+      throw ArgumentError('A collectionPath must be a non-empty string.');
+    } else if (collectionPath.contains('//')) {
+      throw ArgumentError('A collection path must not contain "//".');
+    } else if (!isValidCollectionPath(collectionPath)) {
+      throw ArgumentError(
+        'A collection path must point to a valid collection.',
+      );
+    }
 
     return _JsonCollectionReference(
       firestore,
@@ -167,7 +164,10 @@ class _JsonDocumentReference
     }
 
     return _delegate
-        .snapshots(includeMetadataChanges: includeMetadataChanges)
+        .snapshots(
+          includeMetadataChanges: includeMetadataChanges,
+          listenSource: source,
+        )
         .map(
           (delegateSnapshot) =>
               _JsonDocumentSnapshot(firestore, delegateSnapshot),

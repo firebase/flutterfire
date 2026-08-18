@@ -4,7 +4,7 @@
   <img src="https://github.com/firebase/flutterfire/workflows/all_plugins/badge.svg" alt="all_plugins GitHub Workflow Status"/>
 </a>
 
-_See also: [Flutter's code of conduct](https://flutter.io/design-principles/#code-of-conduct)_
+_See also: [Flutter's code of conduct](https://flutter.dev/design-principles/#code-of-conduct)_
 
 ## 1. Things you will need
 
@@ -183,7 +183,7 @@ We gladly accept contributions via GitHub pull requests.
 
 Please peruse the
 [Flutter style guide](https://github.com/flutter/flutter/wiki/Style-guide-for-Flutter-repo) and
-[design principles](https://flutter.io/design-principles/) before
+[design principles](https://flutter.dev/design-principles/) before
 working on anything non-trivial. These guidelines are intended to
 keep the code consistent and avoid common pitfalls.
 
@@ -267,6 +267,8 @@ Newly opened PRs first go through initial triage which results in one of:
 - **Starting a non trivial review** - if the review requires non trivial effort and the issue is a priority; in this case the maintainer will:
   - Add the "in review" label to the issue.
   - Self assign the PR.
+- **API Changes**
+  - If a change or improvement will affect public API, the team will take longer in the review process.
 
 ### The release process
 

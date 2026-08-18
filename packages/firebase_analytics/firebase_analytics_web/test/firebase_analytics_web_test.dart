@@ -42,16 +42,6 @@ void main() {
       verifyNoMoreInteractions(analytics);
     });
 
-    test('setCurrentScreen', () {
-      const screenName = 'screenName';
-      // screenClassOverride is discarded in web.
-      analytics.setCurrentScreen(
-        screenName: screenName,
-      );
-      verify(analytics.setCurrentScreen(screenName: screenName));
-      verifyNoMoreInteractions(analytics);
-    });
-
     test('setAnalyticsCollectionEnabled', () {
       analytics.setAnalyticsCollectionEnabled(true);
       verify(analytics.setAnalyticsCollectionEnabled(true));

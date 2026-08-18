@@ -7,7 +7,7 @@ import 'package:firebase_messaging_platform_interface/firebase_messaging_platfor
 
 import 'utils.dart';
 
-/// A class representing a notification which has been construted and sent to the
+/// A class representing a notification which has been constructed and sent to the
 /// device via FCM.
 ///
 /// This class can be accessed via a [RemoteMessage.notification].
@@ -149,7 +149,7 @@ class AndroidNotification {
   /// The channel the notification is delivered on.
   final String? channelId;
 
-  /// A spcific click action was defined for the notification.
+  /// A specific click action was defined for the notification.
   ///
   /// This property is not required to handle user interaction.
   final String? clickAction;
@@ -168,7 +168,7 @@ class AndroidNotification {
   // ignore: public_member_api_docs
   final String? link;
 
-  /// The priority for the notifcation.
+  /// The priority for the notification.
   ///
   /// This property only has impact on devices running Android 8.0 (API level 26) +.
   /// Later than this, they use the channel importance instead.

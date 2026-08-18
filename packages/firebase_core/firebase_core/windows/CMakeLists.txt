@@ -4,7 +4,7 @@
 # customers of the plugin.
 cmake_minimum_required(VERSION 3.14)
 
-set(FIREBASE_SDK_VERSION "12.0.0")
+set(FIREBASE_SDK_VERSION "13.9.0")
 
 if (EXISTS $ENV{FIREBASE_CPP_SDK_DIR}/include/firebase/version.h)
     file(READ "$ENV{FIREBASE_CPP_SDK_DIR}/include/firebase/version.h" existing_version)
@@ -65,6 +65,8 @@ list(APPEND PLUGIN_SOURCES
   "firebase_core_plugin.h"
   "messages.g.cpp"
   "messages.g.h"
+  "flutter_firebase_plugin_registry.h"
+  "flutter_firebase_plugin_registry.cpp"
 )
 
 # Read version from pubspec.yaml
@@ -120,18 +122,26 @@ add_subdirectory(${FIREBASE_CPP_SDK_DIR} bin/ EXCLUDE_FROM_ALL)
 target_include_directories(${PLUGIN_NAME} INTERFACE
   "${FIREBASE_CPP_SDK_DIR}/include")
 
-set(FIREBASE_RELEASE_PATH_LIBS firebase_app firebase_auth firebase_storage firebase_firestore)
+set(FIREBASE_RELEASE_PATH_LIBS firebase_app firebase_auth firebase_remote_config firebase_storage firebase_firestore firebase_database firebase_app_check)
 foreach(firebase_lib IN ITEMS ${FIREBASE_RELEASE_PATH_LIBS})
     get_target_property(firebase_lib_path ${firebase_lib} IMPORTED_LOCATION)
     string(REPLACE "Debug" "Release" firebase_lib_release_path ${firebase_lib_path})
+    # Flutter builds Windows apps in Debug, Profile or Release. Profile uses the
+    # release CRT (Flutter maps its compiler/linker flags onto Release), so it
+    # must pick the release libraries too - without an explicit mapping CMake
+    # falls back to plain IMPORTED_LOCATION, which the SDK points at Debug, and
+    # linking fails with unresolved __imp__CrtDbgReport / __imp__invalid_parameter.
     set_target_properties(${firebase_lib} PROPERTIES
       IMPORTED_LOCATION_DEBUG "${firebase_lib_path}"
       IMPORTED_LOCATION_RELEASE "${firebase_lib_release_path}"
+      IMPORTED_LOCATION_PROFILE "${firebase_lib_release_path}"
+      IMPORTED_LOCATION_RELWITHDEBINFO "${firebase_lib_release_path}"
+      IMPORTED_LOCATION_MINSIZEREL "${firebase_lib_release_path}"
     )
 endforeach()
 
 set(FIREBASE_LIBS firebase_app)
-set(ADDITIONAL_LIBS advapi32 ws2_32 crypt32 rpcrt4 ole32 icu)
+set(ADDITIONAL_LIBS advapi32 ws2_32 crypt32 rpcrt4 ole32)
 
 target_link_libraries(${PLUGIN_NAME} PUBLIC "${FIREBASE_LIBS}" "${ADDITIONAL_LIBS}")
 

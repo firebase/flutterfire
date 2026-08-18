@@ -3,8 +3,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-library firebase_auth_platform_interface;
-
 export 'src/action_code_info.dart';
 export 'src/action_code_settings.dart';
 export 'src/additional_user_info.dart';
@@ -15,10 +13,10 @@ export 'src/firebase_auth_multi_factor_exception.dart';
 export 'src/id_token_result.dart';
 export 'src/pigeon/messages.pigeon.dart'
     show
-        PigeonUserDetails,
-        PigeonUserInfo,
+        InternalUserDetails,
+        InternalUserInfo,
         ActionCodeInfoOperation,
-        PigeonIdTokenResult;
+        InternalIdTokenResult;
 export 'src/platform_interface/platform_interface_confirmation_result.dart';
 export 'src/platform_interface/platform_interface_firebase_auth.dart';
 export 'src/platform_interface/platform_interface_multi_factor.dart';
@@ -41,3 +39,7 @@ export 'src/providers/play_games_auth.dart';
 export 'src/types.dart';
 export 'src/user_info.dart';
 export 'src/user_metadata.dart';
+export 'src/password_policy/password_policy_api.dart';
+export 'src/password_policy/password_policy_impl.dart';
+export 'src/password_policy/password_policy.dart';
+export 'src/password_policy/password_validation_status.dart';

@@ -4,6 +4,7 @@
 // found in the LICENSE file.
 
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
+import 'package:firebase_core_platform_interface/test.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -49,7 +50,7 @@ void main() {
 
     test('should construct an instance from a Map', () {
       FirebaseOptions options1 = FirebaseOptions.fromPigeon(
-        PigeonFirebaseOptions(
+        CoreFirebaseOptions(
           apiKey: 'apiKey',
           appId: 'appId',
           messagingSenderId: 'messagingSenderId',

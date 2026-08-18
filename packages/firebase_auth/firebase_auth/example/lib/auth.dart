@@ -12,9 +12,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_signin_button/flutter_signin_button.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 typedef OAuthSignIn = void Function();
 
@@ -59,6 +58,20 @@ extension on AuthMode {
           : 'Register';
 }
 
+enum OAuthButton {
+  apple('Apple'),
+  google('Google'),
+  github('GitHub'),
+  microsoft('Microsoft'),
+  twitter('Twitter'),
+  yahoo('Yahoo'),
+  facebook('Facebook');
+
+  const OAuthButton(this.providerName);
+
+  final String providerName;
+}
+
 /// Entrypoint example for various sign-in flows with Firebase.
 class AuthGate extends StatefulWidget {
   // ignore: public_member_api_docs
@@ -87,7 +100,7 @@ class _AuthGateState extends State<AuthGate> {
     });
   }
 
-  late Map<Buttons, OAuthSignIn> authButtons;
+  late Map<OAuthButton, OAuthSignIn> authButtons;
 
   @override
   void initState() {
@@ -100,31 +113,31 @@ class _AuthGateState extends State<AuthGate> {
 
     if (!kIsWeb && Platform.isMacOS) {
       authButtons = {
-        Buttons.Apple: () => _handleMultiFactorException(
+        OAuthButton.apple: () => _handleMultiFactorException(
               _signInWithApple,
             ),
       };
     } else {
       authButtons = {
-        Buttons.Apple: () => _handleMultiFactorException(
+        OAuthButton.apple: () => _handleMultiFactorException(
               _signInWithApple,
             ),
-        Buttons.Google: () => _handleMultiFactorException(
+        OAuthButton.google: () => _handleMultiFactorException(
               _signInWithGoogle,
             ),
-        Buttons.GitHub: () => _handleMultiFactorException(
+        OAuthButton.github: () => _handleMultiFactorException(
               _signInWithGitHub,
             ),
-        Buttons.Microsoft: () => _handleMultiFactorException(
+        OAuthButton.microsoft: () => _handleMultiFactorException(
               _signInWithMicrosoft,
             ),
-        Buttons.Twitter: () => _handleMultiFactorException(
+        OAuthButton.twitter: () => _handleMultiFactorException(
               _signInWithTwitter,
             ),
-        Buttons.Yahoo: () => _handleMultiFactorException(
+        OAuthButton.yahoo: () => _handleMultiFactorException(
               _signInWithYahoo,
             ),
-        Buttons.Facebook: () => _handleMultiFactorException(
+        OAuthButton.facebook: () => _handleMultiFactorException(
               _signInWithFacebook,
             ),
       };
@@ -254,9 +267,11 @@ class _AuthGateState extends State<AuthGate> {
                                         : SizedBox(
                                             width: double.infinity,
                                             height: 50,
-                                            child: SignInButton(
-                                              button,
-                                              onPressed: authButtons[button]!,
+                                            child: OutlinedButton(
+                                              onPressed: authButtons[button],
+                                              child: Text(
+                                                'Sign in with ${button.providerName}',
+                                              ),
                                             ),
                                           ),
                                   ),

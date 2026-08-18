@@ -6,7 +6,7 @@
 part of firebase_storage;
 
 /// The entrypoint for [FirebaseStorage].
-class FirebaseStorage extends FirebasePluginPlatform {
+class FirebaseStorage extends FirebasePlugin {
   FirebaseStorage._({required this.app, required this.bucket})
       : super(app.name, 'plugins.flutter.io/firebase_storage');
 
@@ -172,6 +172,12 @@ class FirebaseStorage extends FirebasePluginPlatform {
         print('Mapping Storage Emulator host "$mappedHost" to "10.0.2.2".');
         mappedHost = '10.0.2.2';
       }
+    }
+
+    if (defaultTargetPlatform == TargetPlatform.windows && !kIsWeb) {
+      // ignore: avoid_print
+      print('The Storage Emulator is not available on Windows.');
+      return;
     }
 
     await _delegate.useStorageEmulator(mappedHost, port);

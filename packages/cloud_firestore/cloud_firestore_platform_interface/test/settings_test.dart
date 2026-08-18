@@ -14,14 +14,27 @@ void main() {
           persistenceEnabled: true,
           host: 'foo bar',
           sslEnabled: true,
+          webExperimentalForceLongPolling: false,
+          webExperimentalAutoDetectLongPolling: false,
           cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
+          webExperimentalLongPollingOptions: WebExperimentalLongPollingOptions(
+            timeoutDuration: Duration(seconds: 4),
+          ),
+          webPersistentTabManager: WebPersistentMultipleTabManager(),
         ),
         equals(
           const Settings(
             persistenceEnabled: true,
             host: 'foo bar',
             sslEnabled: true,
+            webExperimentalForceLongPolling: false,
+            webExperimentalAutoDetectLongPolling: false,
             cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
+            webExperimentalLongPollingOptions:
+                WebExperimentalLongPollingOptions(
+              timeoutDuration: Duration(seconds: 4),
+            ),
+            webPersistentTabManager: WebPersistentMultipleTabManager(),
           ),
         ),
       );
@@ -49,6 +62,11 @@ void main() {
         persistenceEnabled: true,
         host: 'foo bar',
         sslEnabled: true,
+        webExperimentalAutoDetectLongPolling: false,
+        webExperimentalForceLongPolling: false,
+        webExperimentalLongPollingOptions: WebExperimentalLongPollingOptions(
+          timeoutDuration: Duration(seconds: 4),
+        ),
         cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
       );
 
@@ -60,26 +78,96 @@ void main() {
         'persistenceEnabled': null,
         'host': null,
         'sslEnabled': null,
-        'cacheSizeBytes': null
+        'cacheSizeBytes': null,
+        'webExperimentalForceLongPolling': null,
+        'webExperimentalAutoDetectLongPolling': null,
+        'webExperimentalLongPollingOptions': null,
       });
 
       expect(
           const Settings(
-            persistenceEnabled: true,
-            host: 'foo bar',
-            sslEnabled: true,
-            cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
-          ).asMap,
+              persistenceEnabled: true,
+              host: 'foo bar',
+              sslEnabled: true,
+              cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
+              webExperimentalAutoDetectLongPolling: true,
+              webExperimentalForceLongPolling: true,
+              webExperimentalLongPollingOptions:
+                  WebExperimentalLongPollingOptions(
+                timeoutDuration: Duration(seconds: 4),
+              )).asMap,
           <String, dynamic>{
             'persistenceEnabled': true,
             'host': 'foo bar',
             'sslEnabled': true,
             'cacheSizeBytes': Settings.CACHE_SIZE_UNLIMITED,
+            'webExperimentalForceLongPolling': true,
+            'webExperimentalAutoDetectLongPolling': true,
+            'webExperimentalLongPollingOptions':
+                const WebExperimentalLongPollingOptions(
+              timeoutDuration: Duration(seconds: 4),
+            ).asMap
           });
     });
 
     test('CACHE_SIZE_UNLIMITED returns -1', () {
       expect(Settings.CACHE_SIZE_UNLIMITED, equals(-1));
+    });
+
+    test('WebPersistentTabManager equality', () {
+      expect(
+        const WebPersistentMultipleTabManager(),
+        equals(const WebPersistentMultipleTabManager()),
+      );
+
+      expect(
+        const WebPersistentSingleTabManager(),
+        equals(const WebPersistentSingleTabManager()),
+      );
+
+      expect(
+        const WebPersistentSingleTabManager(forceOwnership: true),
+        equals(const WebPersistentSingleTabManager(forceOwnership: true)),
+      );
+
+      expect(
+        const WebPersistentSingleTabManager(forceOwnership: true),
+        isNot(equals(const WebPersistentSingleTabManager())),
+      );
+
+      expect(
+        const WebPersistentMultipleTabManager(),
+        isNot(equals(const WebPersistentSingleTabManager())),
+      );
+    });
+
+    test('Settings with different webPersistentTabManager are not equal', () {
+      expect(
+        const Settings(
+          persistenceEnabled: true,
+          webPersistentTabManager: WebPersistentMultipleTabManager(),
+        ),
+        isNot(equals(
+          const Settings(
+            persistenceEnabled: true,
+            webPersistentTabManager: WebPersistentSingleTabManager(),
+          ),
+        )),
+      );
+    });
+
+    test('copyWith preserves webPersistentTabManager', () {
+      const settings = Settings(
+        persistenceEnabled: true,
+        webPersistentTabManager: WebPersistentMultipleTabManager(),
+      );
+
+      final copied = settings.copyWith(host: 'localhost');
+
+      expect(copied.webPersistentTabManager,
+          isA<WebPersistentMultipleTabManager>());
+      expect(copied.host, 'localhost');
+      expect(copied.persistenceEnabled, true);
     });
   });
 }
