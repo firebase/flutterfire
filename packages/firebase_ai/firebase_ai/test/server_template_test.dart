@@ -38,17 +38,6 @@ final _arbitraryGenerateContentResponse = {
   ],
 };
 
-// A response for Imagen's generateImages.
-final _arbitraryImagenResponse = {
-  'predictions': [
-    {
-      'mimeType': 'image/png',
-      'bytesBase64Encoded':
-          'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
-    }
-  ]
-};
-
 void main() {
   setupFirebaseVertexAIMocks();
   late FirebaseApp app;

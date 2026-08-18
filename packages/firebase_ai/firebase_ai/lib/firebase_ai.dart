@@ -38,12 +38,7 @@ export 'src/api.dart'
         UsageMetadata,
         WebGroundingChunk;
 export 'src/base_model.dart'
-    show
-        GenerativeModel,
-        ImagenModel,
-        LiveGenerativeModel,
-        TemplateGenerativeModel,
-        TemplateImagenModel;
+    show GenerativeModel, LiveGenerativeModel, TemplateGenerativeModel;
 export 'src/chat.dart' show ChatSession, StartChatExtension;
 export 'src/content.dart'
     show
