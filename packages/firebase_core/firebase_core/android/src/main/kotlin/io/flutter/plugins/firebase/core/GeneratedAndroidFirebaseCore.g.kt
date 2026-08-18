@@ -10,12 +10,11 @@ package io.flutter.plugins.firebase.core
 import android.util.Log
 import io.flutter.plugin.common.BasicMessageChannel
 import io.flutter.plugin.common.BinaryMessenger
-import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MessageCodec
-import io.flutter.plugin.common.StandardMethodCodec
 import io.flutter.plugin.common.StandardMessageCodec
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
+
 private object GeneratedAndroidFirebaseCorePigeonUtils {
 
   fun wrapResult(result: Any?): List<Any?> {
@@ -24,19 +23,15 @@ private object GeneratedAndroidFirebaseCorePigeonUtils {
 
   fun wrapError(exception: Throwable): List<Any?> {
     return if (exception is FlutterError) {
-      listOf(
-        exception.code,
-        exception.message,
-        exception.details
-      )
+      listOf(exception.code, exception.message, exception.details)
     } else {
       listOf(
-        exception.javaClass.simpleName,
-        exception.toString(),
-        "Cause: " + exception.cause + ", Stacktrace: " + Log.getStackTraceString(exception)
-      )
+          exception.javaClass.simpleName,
+          exception.toString(),
+          "Cause: " + exception.cause + ", Stacktrace: " + Log.getStackTraceString(exception))
     }
   }
+
   fun doubleEquals(a: Double, b: Double): Boolean {
     // Normalize -0.0 to 0.0 and handle NaN equality.
     return (if (a == 0.0) 0.0 else a) == (if (b == 0.0) 0.0 else b) || (a.isNaN() && b.isNaN())
@@ -180,39 +175,38 @@ private object GeneratedAndroidFirebaseCorePigeonUtils {
       else -> value.hashCode()
     }
   }
-
 }
 
 /**
  * Error class for passing custom error details to Flutter via a thrown PlatformException.
+ *
  * @property code The error code.
  * @property message The error message.
  * @property details The error details. Must be a datatype supported by the api codec.
  */
-class FlutterError (
-  val code: String,
-  override val message: String? = null,
-  val details: Any? = null
+class FlutterError(
+    val code: String,
+    override val message: String? = null,
+    val details: Any? = null
 ) : RuntimeException()
 
 /** Generated class from Pigeon that represents data sent in messages. */
-data class CoreFirebaseOptions (
-  val apiKey: String,
-  val appId: String,
-  val messagingSenderId: String,
-  val projectId: String,
-  val authDomain: String? = null,
-  val databaseURL: String? = null,
-  val storageBucket: String? = null,
-  val measurementId: String? = null,
-  val trackingId: String? = null,
-  val deepLinkURLScheme: String? = null,
-  val androidClientId: String? = null,
-  val iosClientId: String? = null,
-  val iosBundleId: String? = null,
-  val appGroupId: String? = null
-)
- {
+data class CoreFirebaseOptions(
+    val apiKey: String,
+    val appId: String,
+    val messagingSenderId: String,
+    val projectId: String,
+    val authDomain: String? = null,
+    val databaseURL: String? = null,
+    val storageBucket: String? = null,
+    val measurementId: String? = null,
+    val trackingId: String? = null,
+    val deepLinkURLScheme: String? = null,
+    val androidClientId: String? = null,
+    val iosClientId: String? = null,
+    val iosBundleId: String? = null,
+    val appGroupId: String? = null
+) {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): CoreFirebaseOptions {
       val apiKey = pigeonVar_list[0] as String
@@ -229,27 +223,43 @@ data class CoreFirebaseOptions (
       val iosClientId = pigeonVar_list[11] as String?
       val iosBundleId = pigeonVar_list[12] as String?
       val appGroupId = pigeonVar_list[13] as String?
-      return CoreFirebaseOptions(apiKey, appId, messagingSenderId, projectId, authDomain, databaseURL, storageBucket, measurementId, trackingId, deepLinkURLScheme, androidClientId, iosClientId, iosBundleId, appGroupId)
+      return CoreFirebaseOptions(
+          apiKey,
+          appId,
+          messagingSenderId,
+          projectId,
+          authDomain,
+          databaseURL,
+          storageBucket,
+          measurementId,
+          trackingId,
+          deepLinkURLScheme,
+          androidClientId,
+          iosClientId,
+          iosBundleId,
+          appGroupId)
     }
   }
+
   fun toList(): List<Any?> {
     return listOf(
-      apiKey,
-      appId,
-      messagingSenderId,
-      projectId,
-      authDomain,
-      databaseURL,
-      storageBucket,
-      measurementId,
-      trackingId,
-      deepLinkURLScheme,
-      androidClientId,
-      iosClientId,
-      iosBundleId,
-      appGroupId,
+        apiKey,
+        appId,
+        messagingSenderId,
+        projectId,
+        authDomain,
+        databaseURL,
+        storageBucket,
+        measurementId,
+        trackingId,
+        deepLinkURLScheme,
+        androidClientId,
+        iosClientId,
+        iosBundleId,
+        appGroupId,
     )
   }
+
   override fun equals(other: Any?): Boolean {
     if (other == null || other.javaClass != javaClass) {
       return false
@@ -258,7 +268,25 @@ data class CoreFirebaseOptions (
       return true
     }
     val other = other as CoreFirebaseOptions
-    return GeneratedAndroidFirebaseCorePigeonUtils.deepEquals(this.apiKey, other.apiKey) && GeneratedAndroidFirebaseCorePigeonUtils.deepEquals(this.appId, other.appId) && GeneratedAndroidFirebaseCorePigeonUtils.deepEquals(this.messagingSenderId, other.messagingSenderId) && GeneratedAndroidFirebaseCorePigeonUtils.deepEquals(this.projectId, other.projectId) && GeneratedAndroidFirebaseCorePigeonUtils.deepEquals(this.authDomain, other.authDomain) && GeneratedAndroidFirebaseCorePigeonUtils.deepEquals(this.databaseURL, other.databaseURL) && GeneratedAndroidFirebaseCorePigeonUtils.deepEquals(this.storageBucket, other.storageBucket) && GeneratedAndroidFirebaseCorePigeonUtils.deepEquals(this.measurementId, other.measurementId) && GeneratedAndroidFirebaseCorePigeonUtils.deepEquals(this.trackingId, other.trackingId) && GeneratedAndroidFirebaseCorePigeonUtils.deepEquals(this.deepLinkURLScheme, other.deepLinkURLScheme) && GeneratedAndroidFirebaseCorePigeonUtils.deepEquals(this.androidClientId, other.androidClientId) && GeneratedAndroidFirebaseCorePigeonUtils.deepEquals(this.iosClientId, other.iosClientId) && GeneratedAndroidFirebaseCorePigeonUtils.deepEquals(this.iosBundleId, other.iosBundleId) && GeneratedAndroidFirebaseCorePigeonUtils.deepEquals(this.appGroupId, other.appGroupId)
+    return GeneratedAndroidFirebaseCorePigeonUtils.deepEquals(this.apiKey, other.apiKey) &&
+        GeneratedAndroidFirebaseCorePigeonUtils.deepEquals(this.appId, other.appId) &&
+        GeneratedAndroidFirebaseCorePigeonUtils.deepEquals(
+            this.messagingSenderId, other.messagingSenderId) &&
+        GeneratedAndroidFirebaseCorePigeonUtils.deepEquals(this.projectId, other.projectId) &&
+        GeneratedAndroidFirebaseCorePigeonUtils.deepEquals(this.authDomain, other.authDomain) &&
+        GeneratedAndroidFirebaseCorePigeonUtils.deepEquals(this.databaseURL, other.databaseURL) &&
+        GeneratedAndroidFirebaseCorePigeonUtils.deepEquals(
+            this.storageBucket, other.storageBucket) &&
+        GeneratedAndroidFirebaseCorePigeonUtils.deepEquals(
+            this.measurementId, other.measurementId) &&
+        GeneratedAndroidFirebaseCorePigeonUtils.deepEquals(this.trackingId, other.trackingId) &&
+        GeneratedAndroidFirebaseCorePigeonUtils.deepEquals(
+            this.deepLinkURLScheme, other.deepLinkURLScheme) &&
+        GeneratedAndroidFirebaseCorePigeonUtils.deepEquals(
+            this.androidClientId, other.androidClientId) &&
+        GeneratedAndroidFirebaseCorePigeonUtils.deepEquals(this.iosClientId, other.iosClientId) &&
+        GeneratedAndroidFirebaseCorePigeonUtils.deepEquals(this.iosBundleId, other.iosBundleId) &&
+        GeneratedAndroidFirebaseCorePigeonUtils.deepEquals(this.appGroupId, other.appGroupId)
   }
 
   override fun hashCode(): Int {
@@ -282,30 +310,32 @@ data class CoreFirebaseOptions (
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
-data class CoreInitializeResponse (
-  val name: String,
-  val options: CoreFirebaseOptions,
-  val isAutomaticDataCollectionEnabled: Boolean? = null,
-  val pluginConstants: Map<String?, Any?>
-)
- {
+data class CoreInitializeResponse(
+    val name: String,
+    val options: CoreFirebaseOptions,
+    val isAutomaticDataCollectionEnabled: Boolean? = null,
+    val pluginConstants: Map<String?, Any?>
+) {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): CoreInitializeResponse {
       val name = pigeonVar_list[0] as String
       val options = pigeonVar_list[1] as CoreFirebaseOptions
       val isAutomaticDataCollectionEnabled = pigeonVar_list[2] as Boolean?
       val pluginConstants = pigeonVar_list[3] as Map<String?, Any?>
-      return CoreInitializeResponse(name, options, isAutomaticDataCollectionEnabled, pluginConstants)
+      return CoreInitializeResponse(
+          name, options, isAutomaticDataCollectionEnabled, pluginConstants)
     }
   }
+
   fun toList(): List<Any?> {
     return listOf(
-      name,
-      options,
-      isAutomaticDataCollectionEnabled,
-      pluginConstants,
+        name,
+        options,
+        isAutomaticDataCollectionEnabled,
+        pluginConstants,
     )
   }
+
   override fun equals(other: Any?): Boolean {
     if (other == null || other.javaClass != javaClass) {
       return false
@@ -314,35 +344,40 @@ data class CoreInitializeResponse (
       return true
     }
     val other = other as CoreInitializeResponse
-    return GeneratedAndroidFirebaseCorePigeonUtils.deepEquals(this.name, other.name) && GeneratedAndroidFirebaseCorePigeonUtils.deepEquals(this.options, other.options) && GeneratedAndroidFirebaseCorePigeonUtils.deepEquals(this.isAutomaticDataCollectionEnabled, other.isAutomaticDataCollectionEnabled) && GeneratedAndroidFirebaseCorePigeonUtils.deepEquals(this.pluginConstants, other.pluginConstants)
+    return GeneratedAndroidFirebaseCorePigeonUtils.deepEquals(this.name, other.name) &&
+        GeneratedAndroidFirebaseCorePigeonUtils.deepEquals(this.options, other.options) &&
+        GeneratedAndroidFirebaseCorePigeonUtils.deepEquals(
+            this.isAutomaticDataCollectionEnabled, other.isAutomaticDataCollectionEnabled) &&
+        GeneratedAndroidFirebaseCorePigeonUtils.deepEquals(
+            this.pluginConstants, other.pluginConstants)
   }
 
   override fun hashCode(): Int {
     var result = javaClass.hashCode()
     result = 31 * result + GeneratedAndroidFirebaseCorePigeonUtils.deepHash(this.name)
     result = 31 * result + GeneratedAndroidFirebaseCorePigeonUtils.deepHash(this.options)
-    result = 31 * result + GeneratedAndroidFirebaseCorePigeonUtils.deepHash(this.isAutomaticDataCollectionEnabled)
+    result =
+        31 * result +
+            GeneratedAndroidFirebaseCorePigeonUtils.deepHash(this.isAutomaticDataCollectionEnabled)
     result = 31 * result + GeneratedAndroidFirebaseCorePigeonUtils.deepHash(this.pluginConstants)
     return result
   }
 }
+
 private open class GeneratedAndroidFirebaseCorePigeonCodec : StandardMessageCodec() {
   override fun readValueOfType(type: Byte, buffer: ByteBuffer): Any? {
     return when (type) {
       129.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          CoreFirebaseOptions.fromList(it)
-        }
+        return (readValue(buffer) as? List<Any?>)?.let { CoreFirebaseOptions.fromList(it) }
       }
       130.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          CoreInitializeResponse.fromList(it)
-        }
+        return (readValue(buffer) as? List<Any?>)?.let { CoreInitializeResponse.fromList(it) }
       }
       else -> super.readValueOfType(type, buffer)
     }
   }
-  override fun writeValue(stream: ByteArrayOutputStream, value: Any?)   {
+
+  override fun writeValue(stream: ByteArrayOutputStream, value: Any?) {
     when (value) {
       is CoreFirebaseOptions -> {
         stream.write(129)
@@ -357,30 +392,46 @@ private open class GeneratedAndroidFirebaseCorePigeonCodec : StandardMessageCode
   }
 }
 
-
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface FirebaseCoreHostApi {
-  fun initializeApp(appName: String, initializeAppRequest: CoreFirebaseOptions, callback: (Result<CoreInitializeResponse>) -> Unit)
+  fun initializeApp(
+      appName: String,
+      initializeAppRequest: CoreFirebaseOptions,
+      callback: (Result<CoreInitializeResponse>) -> Unit
+  )
+
   fun initializeCore(callback: (Result<List<CoreInitializeResponse>>) -> Unit)
+
   fun optionsFromResource(callback: (Result<CoreFirebaseOptions>) -> Unit)
 
   companion object {
     /** The codec used by FirebaseCoreHostApi. */
-    val codec: MessageCodec<Any?> by lazy {
-      GeneratedAndroidFirebaseCorePigeonCodec()
-    }
-    /** Sets up an instance of `FirebaseCoreHostApi` to handle messages through the `binaryMessenger`. */
+    val codec: MessageCodec<Any?> by lazy { GeneratedAndroidFirebaseCorePigeonCodec() }
+    /**
+     * Sets up an instance of `FirebaseCoreHostApi` to handle messages through the
+     * `binaryMessenger`.
+     */
     @JvmOverloads
-    fun setUp(binaryMessenger: BinaryMessenger, api: FirebaseCoreHostApi?, messageChannelSuffix: String = "") {
-      val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    fun setUp(
+        binaryMessenger: BinaryMessenger,
+        api: FirebaseCoreHostApi?,
+        messageChannelSuffix: String = ""
+    ) {
+      val separatedMessageChannelSuffix =
+          if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseCoreHostApi.initializeApp$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseCoreHostApi.initializeApp$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val appNameArg = args[0] as String
             val initializeAppRequestArg = args[1] as CoreFirebaseOptions
-            api.initializeApp(appNameArg, initializeAppRequestArg) { result: Result<CoreInitializeResponse> ->
+            api.initializeApp(appNameArg, initializeAppRequestArg) {
+                result: Result<CoreInitializeResponse> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidFirebaseCorePigeonUtils.wrapError(error))
@@ -395,10 +446,14 @@ interface FirebaseCoreHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseCoreHostApi.initializeCore$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseCoreHostApi.initializeCore$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { _, reply ->
-            api.initializeCore{ result: Result<List<CoreInitializeResponse>> ->
+            api.initializeCore { result: Result<List<CoreInitializeResponse>> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidFirebaseCorePigeonUtils.wrapError(error))
@@ -413,10 +468,14 @@ interface FirebaseCoreHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseCoreHostApi.optionsFromResource$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseCoreHostApi.optionsFromResource$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { _, reply ->
-            api.optionsFromResource{ result: Result<CoreFirebaseOptions> ->
+            api.optionsFromResource { result: Result<CoreFirebaseOptions> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidFirebaseCorePigeonUtils.wrapError(error))
@@ -435,21 +494,40 @@ interface FirebaseCoreHostApi {
 }
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface FirebaseAppHostApi {
-  fun setAutomaticDataCollectionEnabled(appName: String, enabled: Boolean, callback: (Result<Unit>) -> Unit)
-  fun setAutomaticResourceManagementEnabled(appName: String, enabled: Boolean, callback: (Result<Unit>) -> Unit)
+  fun setAutomaticDataCollectionEnabled(
+      appName: String,
+      enabled: Boolean,
+      callback: (Result<Unit>) -> Unit
+  )
+
+  fun setAutomaticResourceManagementEnabled(
+      appName: String,
+      enabled: Boolean,
+      callback: (Result<Unit>) -> Unit
+  )
+
   fun delete(appName: String, callback: (Result<Unit>) -> Unit)
 
   companion object {
     /** The codec used by FirebaseAppHostApi. */
-    val codec: MessageCodec<Any?> by lazy {
-      GeneratedAndroidFirebaseCorePigeonCodec()
-    }
-    /** Sets up an instance of `FirebaseAppHostApi` to handle messages through the `binaryMessenger`. */
+    val codec: MessageCodec<Any?> by lazy { GeneratedAndroidFirebaseCorePigeonCodec() }
+    /**
+     * Sets up an instance of `FirebaseAppHostApi` to handle messages through the `binaryMessenger`.
+     */
     @JvmOverloads
-    fun setUp(binaryMessenger: BinaryMessenger, api: FirebaseAppHostApi?, messageChannelSuffix: String = "") {
-      val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    fun setUp(
+        binaryMessenger: BinaryMessenger,
+        api: FirebaseAppHostApi?,
+        messageChannelSuffix: String = ""
+    ) {
+      val separatedMessageChannelSuffix =
+          if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseAppHostApi.setAutomaticDataCollectionEnabled$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseAppHostApi.setAutomaticDataCollectionEnabled$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -469,13 +547,18 @@ interface FirebaseAppHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseAppHostApi.setAutomaticResourceManagementEnabled$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseAppHostApi.setAutomaticResourceManagementEnabled$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val appNameArg = args[0] as String
             val enabledArg = args[1] as Boolean
-            api.setAutomaticResourceManagementEnabled(appNameArg, enabledArg) { result: Result<Unit> ->
+            api.setAutomaticResourceManagementEnabled(appNameArg, enabledArg) { result: Result<Unit>
+              ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidFirebaseCorePigeonUtils.wrapError(error))
@@ -489,7 +572,11 @@ interface FirebaseAppHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseAppHostApi.delete$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseAppHostApi.delete$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>

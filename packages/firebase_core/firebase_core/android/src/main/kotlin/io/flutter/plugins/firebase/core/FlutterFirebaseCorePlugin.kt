@@ -53,8 +53,7 @@ class FlutterFirebaseCorePlugin : FlutterPlugin, FirebaseCoreHostApi, FirebaseAp
     cachedThreadPool.execute {
       try {
         val pluginConstantsRaw =
-            Tasks.await(
-                FlutterFirebasePluginRegistry.getPluginConstantsForFirebaseApp(firebaseApp))
+            Tasks.await(FlutterFirebasePluginRegistry.getPluginConstantsForFirebaseApp(firebaseApp))
                 ?: emptyMap()
         val pluginConstants = HashMap<String?, Any?>(pluginConstantsRaw.size)
         for ((key, value) in pluginConstantsRaw) {
@@ -81,8 +80,7 @@ class FlutterFirebaseCorePlugin : FlutterPlugin, FirebaseCoreHostApi, FirebaseAp
   ) {
     taskCompletionSource.task.addOnCompleteListener { task ->
       if (task.isSuccessful) {
-        @Suppress("UNCHECKED_CAST")
-        callback(Result.success(task.result as T))
+        @Suppress("UNCHECKED_CAST") callback(Result.success(task.result as T))
       } else {
         callback(Result.failure(task.exception ?: Exception("Unknown error")))
       }
