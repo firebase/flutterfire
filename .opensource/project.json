@@ -15,7 +15,7 @@
     "packages/firebase_app_check/firebase_app_check/README.md": "App Check",
     "packages/firebase_core/firebase_core/README.md": "Core",
     "packages/firebase_crashlytics/firebase_crashlytics/README.md": "Crashlytics",
-    "packages/firebase_data_connect/firebase_data_connect/README.md": "SQL Connect",
+    "packages/firebase_data_connect/firebase_data_connect/README.md": "Data Connect",
     "packages/firebase_database/firebase_database/README.md": "Realtime Database",
     "packages/firebase_messaging/firebase_messaging/README.md": "Cloud Messaging",
     "packages/firebase_performance/firebase_performance/README.md": "Performance Monitoring",
