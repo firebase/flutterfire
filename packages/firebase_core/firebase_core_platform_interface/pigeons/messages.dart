@@ -9,19 +9,15 @@ import 'package:pigeon/pigeon.dart';
     dartOut: 'lib/src/pigeon/messages.pigeon.dart',
     // We export in the lib folder to expose the class to other packages.
     dartTestOut: 'lib/src/pigeon/test_api.dart',
+    dartPackageName: 'firebase_core_platform_interface',
     javaOut:
         '../firebase_core/android/src/main/java/io/flutter/plugins/firebase/core/GeneratedAndroidFirebaseCore.java',
     javaOptions: JavaOptions(
       package: 'io.flutter.plugins.firebase.core',
       className: 'GeneratedAndroidFirebaseCore',
     ),
-    objcHeaderOut:
-        '../firebase_core/ios/firebase_core/Sources/firebase_core/include/firebase_core/messages.g.h',
-    objcSourceOut:
-        '../firebase_core/ios/firebase_core/Sources/firebase_core/messages.g.m',
-    objcOptions: ObjcOptions(
-      headerIncludePath: 'include/firebase_core/messages.g.h',
-    ),
+    swiftOut:
+        '../firebase_core/ios/firebase_core/Sources/firebase_core/FirebaseCoreMessages.g.swift',
     cppHeaderOut: '../firebase_core/windows/messages.g.h',
     cppSourceOut: '../firebase_core/windows/messages.g.cpp',
     cppOptions: CppOptions(namespace: 'firebase_core_windows'),

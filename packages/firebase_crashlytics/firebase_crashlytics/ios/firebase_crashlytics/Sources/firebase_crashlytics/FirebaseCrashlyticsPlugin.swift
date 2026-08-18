@@ -24,8 +24,6 @@ private let kFLTFirebaseCrashlyticsChannelName = "plugins.flutter.io/firebase_cr
 private let kFLTFirebaseCrashlyticsTestChannelName =
   "plugins.flutter.io/firebase_crashlytics_test_stream"
 
-extension FlutterError: Error {}
-
 public class FirebaseCrashlyticsPlugin: NSObject, FLTFirebasePluginProtocol, FlutterPlugin,
   FlutterStreamHandler, FirebaseCrashlyticsHostApi
 {

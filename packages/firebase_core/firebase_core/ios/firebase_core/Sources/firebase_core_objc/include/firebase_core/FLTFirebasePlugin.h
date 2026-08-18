@@ -142,7 +142,8 @@ typedef void (^FLTFirebaseMethodCallErrorBlock)(NSString *_Nullable code,
  *
  * @return NSString
  */
-+ (NSString *_Nonnull)firebaseAppNameFromDartName:(NSString *_Nonnull)appName;
++ (NSString *_Nonnull)firebaseAppNameFromDartName:(NSString *_Nonnull)appName
+    NS_SWIFT_NAME(firebaseAppName(fromDartName:));
 
 /**
  * Converts the '__FIRAPP_DEFAULT' app name used in iOS to '[DEFAULT]' - used in
@@ -155,7 +156,8 @@ typedef void (^FLTFirebaseMethodCallErrorBlock)(NSString *_Nullable code,
  *
  * @return NSString
  */
-+ (NSString *_Nonnull)firebaseAppNameFromIosName:(NSString *_Nonnull)appName;
++ (NSString *_Nonnull)firebaseAppNameFromIosName:(NSString *_Nonnull)appName
+    NS_SWIFT_NAME(firebaseAppName(fromIosName:));
 
 /**
  * Retrieves a FIRApp instance based on the app name provided from Dart code.
@@ -164,5 +166,22 @@ typedef void (^FLTFirebaseMethodCallErrorBlock)(NSString *_Nullable code,
  *
  * @return FIRApp - returns nil if Firebase app does not exist.
  */
-+ (FIRApp *_Nullable)firebaseAppNamed:(NSString *_Nonnull)appName;
++ (FIRApp *_Nullable)firebaseAppNamed:(NSString *_Nonnull)appName
+    NS_SWIFT_NAME(firebaseAppNamed(_:));
+
+/**
+ * Stores a custom auth domain for the given Firebase app name (iOS name,
+ * e.g. '__FIRAPP_DEFAULT'). Set from FirebaseOptions.authDomain during
+ * initializeApp. Read by firebase_auth.
+ */
++ (void)setCustomAuthDomain:(NSString *_Nonnull)domain
+                 forAppName:(NSString *_Nonnull)appName
+    NS_SWIFT_NAME(setCustomAuthDomain(_:forAppName:));
+
+/**
+ * Returns the custom auth domain for the given Firebase app name (iOS name),
+ * or nil if none was set.
+ */
++ (NSString *_Nullable)getCustomDomain:(NSString *_Nonnull)appName
+    NS_SWIFT_NAME(getCustomDomain(_:));
 @end

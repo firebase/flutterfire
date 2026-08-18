@@ -60,4 +60,22 @@ NSString *_Nonnull const kFIRDefaultAppNameDart = @"[DEFAULT]";
 + (FIRApp *_Nullable)firebaseAppNamed:(NSString *_Nonnull)appName {
   return [FIRApp allApps][[self firebaseAppNameFromDartName:appName]];
 }
+
+static NSMutableDictionary<NSString *, NSString *> *customAuthDomains;
+
++ (NSMutableDictionary<NSString *, NSString *> *)customAuthDomains {
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    customAuthDomains = [[NSMutableDictionary alloc] init];
+  });
+  return customAuthDomains;
+}
+
++ (void)setCustomAuthDomain:(NSString *_Nonnull)domain forAppName:(NSString *_Nonnull)appName {
+  [self customAuthDomains][appName] = domain;
+}
+
++ (NSString *_Nullable)getCustomDomain:(NSString *_Nonnull)appName {
+  return [self customAuthDomains][appName];
+}
 @end
