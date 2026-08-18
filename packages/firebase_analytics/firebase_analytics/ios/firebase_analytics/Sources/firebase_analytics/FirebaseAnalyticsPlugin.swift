@@ -343,9 +343,9 @@ public class FirebaseAnalyticsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
     @objc(scene:openURLContexts:)
     public func scene(
       _: UIScene,
-      openURLContexts URLContexts: Set<UIOpenURLContext>
+      openURLContexts urlContexts: Set<UIOpenURLContext>
     ) -> Bool {
-      handleCampaign(urlContexts: URLContexts)
+      handleCampaign(urlContexts: urlContexts)
       return false
     }
 
