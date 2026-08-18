@@ -39,10 +39,11 @@ Future<void> main() async {
         : ReCaptchaV3Provider(kWebRecaptchaSiteKey),
     providerAndroid: const AndroidDebugProvider(),
     providerApple: const AppleDebugProvider(),
-    // On Windows, only the debug provider is available.
-    // You must supply a debug token — the desktop C++ SDK does not
-    // auto-generate one. Create one in the Firebase Console under
-    // App Check > Apps > Manage debug tokens, then either:
+    // On Windows, use WindowsDebugProvider for development or
+    // WindowsCustomProvider to mint production tokens from your backend.
+    // The desktop C++ SDK does not auto-generate debug tokens. Create one in
+    // the Firebase Console under App Check > Apps > Manage debug tokens,
+    // then either:
     //   - pass it via --dart-define=APP_CHECK_DEBUG_TOKEN=<token>
     //   - or set the APP_CHECK_DEBUG_TOKEN environment variable
     providerWindows: WindowsDebugProvider(

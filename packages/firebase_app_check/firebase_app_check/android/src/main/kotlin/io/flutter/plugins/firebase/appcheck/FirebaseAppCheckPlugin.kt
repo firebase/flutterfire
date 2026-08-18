@@ -54,6 +54,7 @@ class FirebaseAppCheckPlugin : FlutterFirebasePlugin, FlutterPlugin, FirebaseApp
       appleProvider: String?,
       debugToken: String?,
       recaptchaSiteKey: String?,
+      windowsProvider: String?,
       callback: (Result<Unit>) -> Unit
   ) {
     try {
