@@ -174,7 +174,8 @@ typedef void (^FLTFirebaseMethodCallErrorBlock)(NSString *_Nullable code,
  * e.g. '__FIRAPP_DEFAULT'). Set from FirebaseOptions.authDomain during
  * initializeApp. Read by firebase_auth.
  */
-+ (void)setCustomAuthDomain:(NSString *_Nonnull)domain forAppName:(NSString *_Nonnull)appName
++ (void)setCustomAuthDomain:(NSString *_Nonnull)domain
+                 forAppName:(NSString *_Nonnull)appName
     NS_SWIFT_NAME(setCustomAuthDomain(_:forAppName:));
 
 /**

@@ -14,13 +14,16 @@ import FirebaseCore
   import Flutter
 #endif
 
-extension FlutterError: Error {}
+// Other FlutterFire Swift plugins import firebase_core and inherit this
+// conformance. Do not redeclare it in those plugins.
+// swift-format-ignore: AvoidRetroactiveConformances
+extension FlutterError: @retroactive Error {}
 
 private let kFLTFirebaseCoreChannelName =
   "dev.flutter.pigeon.FirebaseCoreHostApi.initializeApp"
 
 @objc(FLTFirebaseCorePlugin)
-public class FLTFirebaseCorePlugin: FLTFirebasePlugin, FlutterPlugin, FLTFirebasePluginProtocol,
+public class FLTFirebaseCorePlugin: NSObject, FlutterPlugin, FLTFirebasePluginProtocol,
   FirebaseCoreHostApi, FirebaseAppHostApi
 {
   private var coreInitialized = false
