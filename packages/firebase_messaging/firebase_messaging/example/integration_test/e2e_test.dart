@@ -22,7 +22,7 @@ const _postNotifications = 'android.permission.POST_NOTIFICATIONS';
 Future<int?> androidSdkInt() async {
   try {
     return await _permissionsChannel.invokeMethod<int>('getSdkInt');
-  } catch (_) {
+  } on MissingPluginException {
     return null;
   }
 }
@@ -32,7 +32,7 @@ Future<bool> grantAndroidPermission(String permission) async {
     return await _permissionsChannel
             .invokeMethod<bool>('grant', {'permission': permission}) ??
         false;
-  } catch (_) {
+  } on MissingPluginException {
     return false;
   }
 }
@@ -47,7 +47,7 @@ Future<bool> resetAndroidPermission(String permission) async {
       {'permission': permission},
     );
     return reset ?? false;
-  } catch (_) {
+  } on MissingPluginException {
     return false;
   }
 }
