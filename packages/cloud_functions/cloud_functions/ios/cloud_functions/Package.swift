@@ -7,7 +7,7 @@
 
 import PackageDescription
 
-let firebaseSdkVersion: Version = "12.16.0"
+let firebaseSdkVersion: Version = "12.17.0"
 
 let package = Package(
   name: "cloud_functions",
@@ -20,6 +20,7 @@ let package = Package(
   dependencies: [
     .package(url: "https://github.com/firebase/firebase-ios-sdk", exact: firebaseSdkVersion),
     .package(name: "firebase_core", path: "../firebase_core"),
+    .package(name: "FlutterFramework", path: "../FlutterFramework"),
   ],
   targets: [
     .target(
@@ -27,6 +28,7 @@ let package = Package(
       dependencies: [
         .product(name: "FirebaseFunctions", package: "firebase-ios-sdk"),
         .product(name: "firebase-core", package: "firebase_core"),
+        .product(name: "FlutterFramework", package: "FlutterFramework"),
       ],
       resources: [
         .process("Resources")

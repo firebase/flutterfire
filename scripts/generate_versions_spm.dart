@@ -115,6 +115,8 @@ void updateLibraryVersionPureSwiftPlugins() {
     'cloud_functions',
     'firebase_remote_config',
     'firebase_app_check',
+    'firebase_in_app_messaging',
+    'firebase_crashlytics',
   ];
 
   for (final package in packages) {

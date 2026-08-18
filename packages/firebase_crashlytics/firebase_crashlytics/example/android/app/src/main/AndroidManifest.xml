@@ -3,6 +3,13 @@
         android:label="firebasecrashlyticsexample"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <!-- The e2e suite asserts `isCrashlyticsCollectionEnabled` is false on
+             Android before any `setCrashlyticsCollectionEnabled` call. This
+             meta-data is what sets that initial value; it was carried by the
+             `tests` mega-app scaffold this suite was migrated out of. -->
+        <meta-data
+            android:name="firebase_crashlytics_collection_enabled"
+            android:value="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

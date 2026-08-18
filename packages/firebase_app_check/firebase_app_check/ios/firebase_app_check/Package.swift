@@ -7,7 +7,7 @@
 
 import PackageDescription
 
-let firebaseSdkVersion: Version = "12.16.0"
+let firebaseSdkVersion: Version = "12.17.0"
 
 let package = Package(
   name: "firebase_app_check",
@@ -24,6 +24,7 @@ let package = Package(
       from: "18.0.0"
     ),
     .package(name: "firebase_core", path: "../firebase_core"),
+    .package(name: "FlutterFramework", path: "../FlutterFramework"),
   ],
   targets: [
     .target(
@@ -32,6 +33,7 @@ let package = Package(
         .product(name: "FirebaseAppCheck", package: "firebase-ios-sdk"),
         .product(name: "RecaptchaEnterprise", package: "recaptcha-enterprise-mobile-sdk"),
         .product(name: "firebase-core", package: "firebase_core"),
+        .product(name: "FlutterFramework", package: "FlutterFramework"),
       ],
       resources: [
         .process("Resources")

@@ -143,8 +143,7 @@ static id GetNullableObjectAtIndex(NSArray<id> *array, NSInteger key) {
                androidClientId:(nullable NSString *)androidClientId
                    iosClientId:(nullable NSString *)iosClientId
                    iosBundleId:(nullable NSString *)iosBundleId
-                    appGroupId:(nullable NSString *)appGroupId
-              recaptchaSiteKey:(nullable NSString *)recaptchaSiteKey {
+                    appGroupId:(nullable NSString *)appGroupId {
   CoreFirebaseOptions *pigeonResult = [[CoreFirebaseOptions alloc] init];
   pigeonResult.apiKey = apiKey;
   pigeonResult.appId = appId;
@@ -160,7 +159,6 @@ static id GetNullableObjectAtIndex(NSArray<id> *array, NSInteger key) {
   pigeonResult.iosClientId = iosClientId;
   pigeonResult.iosBundleId = iosBundleId;
   pigeonResult.appGroupId = appGroupId;
-  pigeonResult.recaptchaSiteKey = recaptchaSiteKey;
   return pigeonResult;
 }
 + (CoreFirebaseOptions *)fromList:(NSArray<id> *)list {
@@ -179,7 +177,6 @@ static id GetNullableObjectAtIndex(NSArray<id> *array, NSInteger key) {
   pigeonResult.iosClientId = GetNullableObjectAtIndex(list, 11);
   pigeonResult.iosBundleId = GetNullableObjectAtIndex(list, 12);
   pigeonResult.appGroupId = GetNullableObjectAtIndex(list, 13);
-  pigeonResult.recaptchaSiteKey = GetNullableObjectAtIndex(list, 14);
   return pigeonResult;
 }
 + (nullable CoreFirebaseOptions *)nullableFromList:(NSArray<id> *)list {
@@ -201,7 +198,6 @@ static id GetNullableObjectAtIndex(NSArray<id> *array, NSInteger key) {
     self.iosClientId ?: [NSNull null],
     self.iosBundleId ?: [NSNull null],
     self.appGroupId ?: [NSNull null],
-    self.recaptchaSiteKey ?: [NSNull null],
   ];
 }
 - (BOOL)isEqual:(id)object {
@@ -225,8 +221,7 @@ static id GetNullableObjectAtIndex(NSArray<id> *array, NSInteger key) {
          FLTPigeonDeepEquals(self.androidClientId, other.androidClientId) &&
          FLTPigeonDeepEquals(self.iosClientId, other.iosClientId) &&
          FLTPigeonDeepEquals(self.iosBundleId, other.iosBundleId) &&
-         FLTPigeonDeepEquals(self.appGroupId, other.appGroupId) &&
-         FLTPigeonDeepEquals(self.recaptchaSiteKey, other.recaptchaSiteKey);
+         FLTPigeonDeepEquals(self.appGroupId, other.appGroupId);
 }
 
 - (NSUInteger)hash {
@@ -245,7 +240,6 @@ static id GetNullableObjectAtIndex(NSArray<id> *array, NSInteger key) {
   result = result * 31 + FLTPigeonDeepHash(self.iosClientId);
   result = result * 31 + FLTPigeonDeepHash(self.iosBundleId);
   result = result * 31 + FLTPigeonDeepHash(self.appGroupId);
-  result = result * 31 + FLTPigeonDeepHash(self.recaptchaSiteKey);
   return result;
 }
 @end

@@ -188,8 +188,12 @@ class FirebaseAppCheckHostApi {
 
   final String pigeonVar_messageChannelSuffix;
 
-  Future<void> activate(String appName, String? androidProvider,
-      String? appleProvider, String? debugToken) async {
+  Future<void> activate(
+      String appName,
+      String? androidProvider,
+      String? appleProvider,
+      String? debugToken,
+      String? recaptchaSiteKey) async {
     final pigeonVar_channelName =
         'dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.activate$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
@@ -198,7 +202,13 @@ class FirebaseAppCheckHostApi {
       binaryMessenger: pigeonVar_binaryMessenger,
     );
     final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel
-        .send(<Object?>[appName, androidProvider, appleProvider, debugToken]);
+        .send(<Object?>[
+      appName,
+      androidProvider,
+      appleProvider,
+      debugToken,
+      recaptchaSiteKey
+    ]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(

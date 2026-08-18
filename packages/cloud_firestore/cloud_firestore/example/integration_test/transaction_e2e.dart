@@ -6,6 +6,7 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void runTransactionTests() {
@@ -68,6 +69,47 @@ void runTransactionTests() {
         });
         expect(response, equals(randomValue));
       });
+
+      test(
+        'does not report an error when the transaction stream is cancelled',
+        () async {
+          final List<Object> reportedErrors = <Object>[];
+          final FlutterExceptionHandler? previousOnError = FlutterError.onError;
+          FlutterError.onError = (FlutterErrorDetails details) {
+            reportedErrors.add(details.exception);
+          };
+          addTearDown(() {
+            FlutterError.onError = previousOnError;
+          });
+
+          final DocumentReference<Map<String, dynamic>> doc =
+              await initializeTest('transaction-cancel-cleanup');
+
+          await firestore.runTransaction((Transaction transaction) async {
+            transaction.set(doc, {
+              'updatedAt': DateTime.now().toIso8601String(),
+            });
+          });
+
+          await Future<void>.delayed(const Duration(milliseconds: 100));
+
+          final Iterable<Object> transactionCancelErrors =
+              reportedErrors.where((Object error) {
+            final String text = error.toString();
+            return error is MissingPluginException &&
+                text.contains('firebase_firestore/transaction');
+          });
+
+          expect(
+            transactionCancelErrors,
+            isEmpty,
+            reason: 'Unexpected FlutterError(s): $reportedErrors',
+          );
+        },
+        skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android
+            ? 'Android-only EventChannel teardown race'
+            : false,
+      );
 
       test(
         'runs after reading a document',
@@ -331,24 +373,6 @@ void runTransactionTests() {
           },
           skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
         );
-
-        // ignore: todo
-        // TODO(Salakar): Test seems to fail sometimes. Will look at in a future PR.
-        // test('support returning any value, e.g. a [DocumentSnapshot]', () async {
-        //   DocumentReference<Map<String, dynamic>> documentReference =
-        //       await initializeTest('transaction-get');
-
-        //   DocumentSnapshot<Map<String, dynamic>> snapshot =
-        //       await firestore.runTransaction((Transaction transaction) async {
-        //     DocumentSnapshot<Map<String, dynamic>> returned = await transaction.get(documentReference);
-        //     // required:
-        //     transaction.set(documentReference, {'foo': 'bar'});
-        //     return returned;
-        //   });
-
-        //   expect(snapshot, isA<DocumentSnapshot>());
-        //   expect(snapshot.reference.path, equals(documentReference.path));
-        // }, skip: kUseFirestoreEmulator);
       });
 
       group('Transaction.delete()', () {
@@ -563,45 +587,6 @@ void runTransactionTests() {
           }
         },
       );
-
-      // TODO(Lyokone): adding auth make some tests fails in macOS
-      // test(
-      //     'should not fail to complete transaction if user is authenticated',
-      //     () async {
-      //   DocumentReference<Map<String, dynamic>> doc1 =
-      //       await initializeTest('transaction-authentified-1');
-
-      //   try {
-      //     await FirebaseAuth.instance.createUserWithEmailAndPassword(
-      //       email: 'firestore@mail.com',
-      //       password: 'this-is-a-password',
-      //     );
-      //   } catch (e) {
-      //     await FirebaseAuth.instance.signInWithEmailAndPassword(
-      //       email: 'firestore@mail.com',
-      //       password: 'this-is-a-password',
-      //     );
-      //   }
-
-      //   await doc1.set({'test': 0});
-
-      //   final value = await firestore.runTransaction(
-      //     (Transaction transaction) async {
-      //       final value = await transaction.get(doc1);
-      //       final newValue = value['test'] + 1;
-      //       transaction.set(doc1, {
-      //         'test': newValue,
-      //       });
-
-      //       return newValue;
-      //     },
-      //     maxAttempts: 1,
-      //   );
-
-      //   expect(value, equals(1));
-
-      //   await FirebaseAuth.instance.signOut();
-      // });
     },
     skip: kIsWeb,
   );

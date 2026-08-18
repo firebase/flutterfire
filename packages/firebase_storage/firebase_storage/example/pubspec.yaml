@@ -7,13 +7,25 @@ environment:
   flutter: '>=3.27.0'
 
 dependencies:
-  firebase_core: ^4.12.1
-  firebase_storage: ^13.4.5
+  firebase_core: ^4.13.0
+  firebase_storage: ^13.4.6
   flutter:
     sdk: flutter
   image_picker: ^1.1.2
   image_picker_for_web: ^3.0.5
   web: ^1.0.0
+
+dev_dependencies:
+  # The e2e suite reaches for MethodChannelFirebase, which firebase_core
+  # deliberately hides from its own re-export.
+  firebase_core_platform_interface: ^8.1.0
+  flutter_test:
+    sdk: flutter
+  integration_test:
+    sdk: flutter
+  # `integration_test/report_test_results.dart` names each executed test via
+  # `package:test_api/hooks.dart`; `any` defers to the version flutter_test pins.
+  test_api: any
 
 flutter:
   uses-material-design: true
