@@ -25,7 +25,6 @@ import 'api.dart';
 import 'client.dart';
 import 'content.dart';
 import 'developer/api.dart';
-import 'error.dart';
 import 'firebaseai_version.dart';
 import 'live_api.dart';
 import 'live_session.dart';
