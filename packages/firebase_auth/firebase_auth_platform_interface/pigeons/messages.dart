@@ -11,16 +11,13 @@ import 'package:pigeon/pigeon.dart';
     dartOut: 'lib/src/pigeon/messages.pigeon.dart',
     // We export in the lib folder to expose the class to other packages.
     dartTestOut: 'test/pigeon/test_api.dart',
-    javaOut:
-        '../firebase_auth/android/src/main/java/io/flutter/plugins/firebase/auth/GeneratedAndroidFirebaseAuth.java',
-    javaOptions: JavaOptions(
+    kotlinOut:
+        '../firebase_auth/android/src/main/kotlin/io/flutter/plugins/firebase/auth/GeneratedAndroidFirebaseAuth.g.kt',
+    kotlinOptions: KotlinOptions(
       package: 'io.flutter.plugins.firebase.auth',
-      className: 'GeneratedAndroidFirebaseAuth',
     ),
-    objcHeaderOut:
-        '../firebase_auth/ios/firebase_auth/Sources/firebase_auth/include/Public/firebase_auth_messages.g.h',
-    objcSourceOut:
-        '../firebase_auth/ios/firebase_auth/Sources/firebase_auth/firebase_auth_messages.g.m',
+    swiftOut:
+        '../firebase_auth/ios/firebase_auth/Sources/firebase_auth/FirebaseAuthMessages.g.swift',
     cppHeaderOut: '../firebase_auth/windows/messages.g.h',
     cppSourceOut: '../firebase_auth/windows/messages.g.cpp',
     cppOptions: CppOptions(namespace: 'firebase_auth_windows'),
