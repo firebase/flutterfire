@@ -23,8 +23,6 @@ import Security
   import FlutterMacOS
 #endif
 
-extension FlutterError: Error {}
-
 @objc(FLTFirebaseAuthPlugin)
 public class FLTFirebaseAuthPlugin: NSObject, FlutterPlugin, FLTFirebasePluginProtocol,
   FirebaseAuthHostApi, ASAuthorizationControllerDelegate,
@@ -191,7 +189,8 @@ public class FLTFirebaseAuthPlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
       Auth.auth().canHandle(url)
     }
 
-    public func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) -> Bool {
+    public func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) -> Bool
+    {
       for urlContext in URLContexts where Auth.auth().canHandle(urlContext.url) {
         return true
       }
@@ -246,7 +245,8 @@ public class FLTFirebaseAuthPlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
   ) {
     let nsError = error as NSError
     guard
-      let resolver = nsError.userInfo[AuthErrorUserInfoMultiFactorResolverKey] as? MultiFactorResolver
+      let resolver = nsError.userInfo[AuthErrorUserInfoMultiFactorResolverKey]
+        as? MultiFactorResolver
     else {
       completion(.failure(AuthErrors.convertToFlutterError(error)))
       return
@@ -405,7 +405,8 @@ public class FLTFirebaseAuthPlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
     authorizationController.performRequests()
   }
 
-  public func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
+  public func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor
+  {
     #if os(macOS)
       return NSApplication.shared.keyWindow ?? ASPresentationAnchor()
     #else
@@ -468,18 +469,21 @@ public class FLTFirebaseAuthPlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
     if isReauthenticatingWithApple {
       isReauthenticatingWithApple = false
       Auth.auth().currentUser?.reauthenticate(with: credential) { authResult, error in
-        self.handleSignInWithApple(authResult: authResult, authorizationCode: authorizationCode, error: error)
+        self.handleSignInWithApple(
+          authResult: authResult, authorizationCode: authorizationCode, error: error)
       }
     } else if let userToLink = linkWithAppleUser {
       userToLink.link(with: credential) { authResult, error in
         self.linkWithAppleUser = nil
-        self.handleSignInWithApple(authResult: authResult, authorizationCode: authorizationCode, error: error)
+        self.handleSignInWithApple(
+          authResult: authResult, authorizationCode: authorizationCode, error: error)
       }
     } else {
       let signInAuth = signInWithAppleAuth ?? Auth.auth()
       signInAuth.signIn(with: credential) { authResult, error in
         self.signInWithAppleAuth = nil
-        self.handleSignInWithApple(authResult: authResult, authorizationCode: authorizationCode, error: error)
+        self.handleSignInWithApple(
+          authResult: authResult, authorizationCode: authorizationCode, error: error)
       }
     }
   }
@@ -586,7 +590,8 @@ public class FLTFirebaseAuthPlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
 
     switch signInMethod {
     case kSignInMethodPassword:
-      completion(EmailAuthProvider.credential(withEmail: str("email") ?? "", password: secret ?? ""), nil)
+      completion(
+        EmailAuthProvider.credential(withEmail: str("email") ?? "", password: secret ?? ""), nil)
     case kSignInMethodEmailLink:
       completion(
         EmailAuthProvider.credential(withEmail: str("email") ?? "", link: str("emailLink") ?? ""),
@@ -613,7 +618,7 @@ public class FLTFirebaseAuthPlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
           "The Firebase Phone Authentication provider is not supported on the MacOS platform.")
         completion(nil, nil)
       #endif
-    if signInMethod == kSignInMethodApple {
+    case kSignInMethodApple:
       if let idToken, let rawNonce {
         var fullName = PersonNameComponents()
         fullName.givenName = str("givenName")
@@ -655,7 +660,8 @@ public class FLTFirebaseAuthPlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
           nil)
       }
     default:
-      print("Support for an auth provider with identifier '\(signInMethod ?? "")' is not implemented.")
+      print(
+        "Support for an auth provider with identifier '\(signInMethod ?? "")' is not implemented.")
       completion(nil, nil)
     }
   }
@@ -1017,7 +1023,8 @@ public class FLTFirebaseAuthPlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
     completion: @escaping (Result<Void, Error>) -> Void
   ) {
     let auth = getFIRAuthFromPigeon(app)
-    if let actionCodeSettings, let settings = PigeonParser.parseActionCodeSettings(actionCodeSettings)
+    if let actionCodeSettings,
+      let settings = PigeonParser.parseActionCodeSettings(actionCodeSettings)
     {
       auth.sendPasswordReset(withEmail: email, actionCodeSettings: settings) { error in
         self.completeVoid(error, completion: completion)
@@ -1083,7 +1090,8 @@ public class FLTFirebaseAuthPlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
     }
     #if os(iOS)
       if settings.appVerificationDisabledForTesting {
-        auth.settings?.isAppVerificationDisabledForTesting = settings.appVerificationDisabledForTesting
+        auth.settings?.isAppVerificationDisabledForTesting =
+          settings.appVerificationDisabledForTesting
       }
     #else
       print("FIRAuthSettings.appVerificationDisabledForTesting is not supported on MacOS.")
