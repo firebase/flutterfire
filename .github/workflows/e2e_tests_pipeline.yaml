@@ -6,26 +6,41 @@ concurrency:
 
 on:
   pull_request:
-     paths-ignore:
-      - 'docs/**'
-      - 'website/**'
-      - '**/example/**'
-      - '**.md'
+    # Pipeline e2e only exercises cloud_firestore; running it on every PR
+    # costs 3 jobs (2 macOS) for changes that cannot affect it. The nightly
+    # workflow_call still runs it unconditionally.
+    paths:
+      - 'packages/cloud_firestore/**'
+      - 'packages/firebase_core/**'
+      - '.github/workflows/e2e_tests_pipeline.yaml'
+      - '.github/actions/setup-flutterfire/**'
   push:
     branches:
       - main
-    paths-ignore:
-      - 'docs/**'
-      - 'website/**'
-      - '**/example/**'
-      - '**.md'
+    paths:
+      - 'packages/cloud_firestore/**'
+      - 'packages/firebase_core/**'
+      - '.github/workflows/e2e_tests_pipeline.yaml'
+      - '.github/actions/setup-flutterfire/**'
   workflow_call:
+    secrets:
+      PIPELINE_E2E_FIREBASE_OPTIONS_DART:
+        required: true
+      PIPELINE_E2E_GOOGLE_SERVICES_JSON:
+        required: true
+      PIPELINE_E2E_GOOGLE_SERVICE_INFO_PLIST:
+        required: true
 
 permissions:
   contents: read
 
 jobs:
   pipeline-e2e-android:
+    # Requires live-project secrets, which fork and dependabot PRs don't receive.
+    if: >-
+      github.event_name != 'pull_request' ||
+      (github.event.pull_request.head.repo.full_name == github.repository &&
+       github.actor != 'dependabot[bot]')
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
@@ -34,36 +49,23 @@ jobs:
       AVD_TARGET: google_apis
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
-      - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
-        name: Install Node.js 20
+      - uses: ./.github/actions/setup-flutterfire
         with:
-          node-version: '20'
-      - uses: actions/setup-java@1bcf9fb12cf4aa7d266a90ae39939e61372fe520
-        with:
-          distribution: 'temurin'
-          java-version: '21'
-      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
-        with:
-          channel: 'stable'
-          flutter-version: '3.41.9'
-          cache: true
-          cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
-          pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
-      - uses: bluefireteam/melos-action@c7dcb921b23cc520cace360b95d02b37bf09cdaa
-        with:
-          run-bootstrap: false
-          melos-version: '5.3.0'
+          npm-cache: 'false'
+          bootstrap-scope: 'cloud_firestore*'
       - name: Inject Firebase config for pipeline E2E
         env:
           FIREBASE_OPTIONS_DART: ${{ secrets.PIPELINE_E2E_FIREBASE_OPTIONS_DART }}
           GOOGLE_SERVICES_JSON: ${{ secrets.PIPELINE_E2E_GOOGLE_SERVICES_JSON }}
           GOOGLE_SERVICE_INFO_PLIST: ${{ secrets.PIPELINE_E2E_GOOGLE_SERVICE_INFO_PLIST }}
         run: |
+          if [ -z "$FIREBASE_OPTIONS_DART" ]; then
+            echo "::error::PIPELINE_E2E_FIREBASE_OPTIONS_DART is empty — secrets are unavailable (fork/dependabot PR?). Failing early instead of producing a broken build."
+            exit 1
+          fi
           echo "$FIREBASE_OPTIONS_DART" > packages/cloud_firestore/cloud_firestore/pipeline_example/lib/firebase_options.dart
           echo "$GOOGLE_SERVICES_JSON" > packages/cloud_firestore/cloud_firestore/pipeline_example/android/app/google-services.json
           echo "$GOOGLE_SERVICE_INFO_PLIST" > packages/cloud_firestore/cloud_firestore/pipeline_example/ios/Runner/GoogleService-Info.plist
-      - name: Bootstrap package
-        run: melos bootstrap --scope "cloud_firestore*"
       - name: Enable KVM
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
@@ -71,14 +73,6 @@ jobs:
           sudo udevadm trigger --name-match=kvm
       - name: Gradle cache
         uses: gradle/actions/setup-gradle@90ddb51e90a5fd9ba75f40cf85156b7b41bf76a3
-      - name: Free Disk Space (Ubuntu)
-        uses: AdityaGarg8/remove-unwanted-software@90e01b21170618765a73370fcc3abbd1684a7793
-        with:
-          remove-dotnet: true
-          remove-haskell: true
-          remove-codeql: true
-          remove-docker-images: true
-          remove-large-packages: true
       - name: Prepare AVD home on /mnt
         run: |
           sudo mkdir -p /mnt/avd
@@ -115,7 +109,7 @@ jobs:
           pgrep -f appium && pkill -f appium || echo "No Appium process found"
       - name: Save Android Emulator Cache
         if: github.ref == 'refs/heads/main'
-        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         continue-on-error: true
         with:
           key: ${{ steps.avd-cache.outputs.cache-primary-key }}
@@ -124,35 +118,33 @@ jobs:
             ~/.android/adb*
 
   pipeline-e2e-web:
+    # Requires live-project secrets, which fork and dependabot PRs don't receive.
+    if: >-
+      github.event_name != 'pull_request' ||
+      (github.event.pull_request.head.repo.full_name == github.repository &&
+       github.actor != 'dependabot[bot]')
     runs-on: macos-latest
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
-      - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
-        name: Install Node.js 20
+      - uses: ./.github/actions/setup-flutterfire
         with:
-          node-version: '20'
-      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
-        with:
-          channel: 'stable'
-          cache: true
-          cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
-          pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
-      - uses: bluefireteam/melos-action@c7dcb921b23cc520cace360b95d02b37bf09cdaa
-        with:
-          run-bootstrap: false
-          melos-version: '5.3.0'
+          npm-cache: 'false'
+          java: 'false'
+          bootstrap-scope: 'cloud_firestore*'
       - name: Inject Firebase config for pipeline E2E
         env:
           FIREBASE_OPTIONS_DART: ${{ secrets.PIPELINE_E2E_FIREBASE_OPTIONS_DART }}
           GOOGLE_SERVICES_JSON: ${{ secrets.PIPELINE_E2E_GOOGLE_SERVICES_JSON }}
           GOOGLE_SERVICE_INFO_PLIST: ${{ secrets.PIPELINE_E2E_GOOGLE_SERVICE_INFO_PLIST }}
         run: |
+          if [ -z "$FIREBASE_OPTIONS_DART" ]; then
+            echo "::error::PIPELINE_E2E_FIREBASE_OPTIONS_DART is empty — secrets are unavailable (fork/dependabot PR?). Failing early instead of producing a broken build."
+            exit 1
+          fi
           echo "$FIREBASE_OPTIONS_DART" > packages/cloud_firestore/cloud_firestore/pipeline_example/lib/firebase_options.dart
           echo "$GOOGLE_SERVICES_JSON" > packages/cloud_firestore/cloud_firestore/pipeline_example/android/app/google-services.json
           echo "$GOOGLE_SERVICE_INFO_PLIST" > packages/cloud_firestore/cloud_firestore/pipeline_example/ios/Runner/GoogleService-Info.plist
-      - name: Bootstrap package
-        run: melos bootstrap --scope "cloud_firestore*"
       - name: Run pipeline E2E tests (Chrome)
         working-directory: packages/cloud_firestore/cloud_firestore/pipeline_example
         # Web devices are not supported for the `flutter test` command yet. As a
@@ -168,45 +160,47 @@ jobs:
         shell: bash
 
   pipeline-e2e-ios:
+    # Requires live-project secrets, which fork and dependabot PRs don't receive.
+    if: >-
+      github.event_name != 'pull_request' ||
+      (github.event.pull_request.head.repo.full_name == github.repository &&
+       github.actor != 'dependabot[bot]')
     runs-on: macos-15
     timeout-minutes: 50
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
-      - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
-        name: Install Node.js 20
-        with:
-          node-version: '20'
       - name: Xcode
-        run: sudo xcode-select -s /Applications/Xcode_16.4.app/Contents/Developer
-      - uses: actions/setup-java@1bcf9fb12cf4aa7d266a90ae39939e61372fe520
+        # Firebase iOS SDK: minimum Xcode 26.2.
+        run: sudo xcode-select -s /Applications/Xcode_26.2.app/Contents/Developer
+      - uses: ./.github/actions/setup-flutterfire
         with:
-          distribution: 'temurin'
-          java-version: '21'
-      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
-        with:
-          channel: 'stable'
-          flutter-version: '3.41.9'
-          cache: true
-          cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
-          pub-cache-key: "flutter-pub-:os:-:channel:-:version:-:arch:-:hash:"
-      - name: Enable Swift Package Manager for iOS
-        run: flutter config --enable-swift-package-manager
-      - uses: bluefireteam/melos-action@c7dcb921b23cc520cace360b95d02b37bf09cdaa
-        with:
-          run-bootstrap: false
-          melos-version: '5.3.0'
+          npm-cache: 'false'
+          bootstrap-scope: 'cloud_firestore*'
       - name: Inject Firebase config for pipeline E2E
         env:
           FIREBASE_OPTIONS_DART: ${{ secrets.PIPELINE_E2E_FIREBASE_OPTIONS_DART }}
           GOOGLE_SERVICES_JSON: ${{ secrets.PIPELINE_E2E_GOOGLE_SERVICES_JSON }}
           GOOGLE_SERVICE_INFO_PLIST: ${{ secrets.PIPELINE_E2E_GOOGLE_SERVICE_INFO_PLIST }}
         run: |
+          if [ -z "$FIREBASE_OPTIONS_DART" ]; then
+            echo "::error::PIPELINE_E2E_FIREBASE_OPTIONS_DART is empty — secrets are unavailable (fork/dependabot PR?). Failing early instead of producing a broken build."
+            exit 1
+          fi
           echo "$FIREBASE_OPTIONS_DART" > packages/cloud_firestore/cloud_firestore/pipeline_example/lib/firebase_options.dart
           echo "$GOOGLE_SERVICES_JSON" > packages/cloud_firestore/cloud_firestore/pipeline_example/android/app/google-services.json
           echo "$GOOGLE_SERVICE_INFO_PLIST" > packages/cloud_firestore/cloud_firestore/pipeline_example/ios/Runner/GoogleService-Info.plist
-      - name: Bootstrap package
-        run: melos bootstrap --scope "cloud_firestore*"
+      - name: Enable Swift Package Manager
+        # SPM, not CocoaPods: pods compile gRPC-C++/BoringSSL from source,
+        # which alone overran a 35-minute build budget on these runners, while
+        # SPM pulls Google's precompiled grpc/abseil binaries. The resolution
+        # failure that once forced CocoaPods here ("the folder firebase_core
+        # doesn't exist") was the pinned Xcode 26.2 canonicalizing the plugin
+        # symlink farm; the image-default Xcode resolves it fine, as the
+        # e2e-firestore SPM job proves every run.
+        run: flutter config --enable-swift-package-manager
       - name: Prepare iOS project for Swift Package Manager
+        # The committed Podfile is what CocoaPods users of the example rely
+        # on, and `flutter build` prefers CocoaPods whenever one is present.
         working-directory: packages/cloud_firestore/cloud_firestore/pipeline_example/ios
         run: |
           if [ -f Podfile ]; then pod deintegrate; fi
@@ -219,16 +213,71 @@ jobs:
           model: "iPhone 16"
       - name: Build iOS (simulator)
         working-directory: packages/cloud_firestore/cloud_firestore/pipeline_example
+        # A cold SwiftPM fetch (grpc/abseil binaries) plus the Xcode build has
+        # been observed to need more than 25 minutes on a cache miss.
+        timeout-minutes: 35
         run: |
-          flutter build ios --no-codesign --simulator --debug --target=./integration_test/pipeline/pipeline_live_test.dart --dart-define=CI=true
+          # Flutter's SPM integration intermittently resolves a plugin package
+          # at its real path instead of through the ephemeral symlink farm
+          # ("Could not resolve package dependencies ... firebase_core doesn't
+          # exist"). Retry exactly once, like reusable_e2e_ios.yaml does; the
+          # second run resolves against the already-generated layout.
+          set +e
+          flutter build ios --no-codesign --simulator --debug --target=./integration_test/pipeline/pipeline_live_test.dart --dart-define=CI=true > build_output.log 2>&1
+          BUILD_EXIT=$?
+          cat build_output.log
+          if [ $BUILD_EXIT -ne 0 ] && grep -q "Could not resolve package dependencies" build_output.log; then
+            echo "SPM package resolution race detected; retrying the build once."
+            flutter build ios --no-codesign --simulator --debug --target=./integration_test/pipeline/pipeline_live_test.dart --dart-define=CI=true
+            BUILD_EXIT=$?
+          fi
+          exit $BUILD_EXIT
       - name: Ensure Simulator Ready
         env:
           SIMULATOR: ${{ steps.simulator.outputs.udid }}
           ENSURE_BOOT_IF_NEEDED: "0"
+        timeout-minutes: 13
         run: .github/workflows/scripts/ensure-simulator-ready.sh
       - name: Run pipeline E2E tests (iOS)
         working-directory: packages/cloud_firestore/cloud_firestore/pipeline_example
         env:
           SIMULATOR: ${{ steps.simulator.outputs.udid }}
+        # Fits two alarm-bounded (15 min) attempts, like reusable_e2e_ios.yaml.
+        timeout-minutes: 40
+        # Same wrapper as reusable_e2e_ios.yaml: `flutter test` against a
+        # simulator intermittently hangs after "Xcode build done" with zero
+        # output (this step burned its whole 20-minute budget on exactly
+        # that). Bound each attempt, recycle the simulator, retry once, and
+        # trust only the numeric tally.
         run: |
-          flutter test integration_test/pipeline/pipeline_live_test.dart -d "$SIMULATOR" --timeout 10x --dart-define=CI=true
+          run_flutter_test() {
+            rm -f flutter_test_output.log
+            perl -e 'alarm shift; exec @ARGV' 900 \
+              flutter test integration_test/pipeline/pipeline_live_test.dart -d "$SIMULATOR" --timeout 10x --dart-define=CI=true > flutter_test_output.log 2>&1
+            FT_EXIT=$?
+            cat flutter_test_output.log
+          }
+          set +e
+          run_flutter_test
+          if { ! grep -Eq '[0-9]+ tests? passed' flutter_test_output.log && ! grep -Eq '[0-9]+ failed' flutter_test_output.log; } \
+             || grep -q "Unable to start the app on the device" flutter_test_output.log; then
+            echo "Infrastructure launch failure detected - recycling the simulator and retrying once."
+            echo "::group::Simulator log around the hang (Runner)"
+            perl -e 'alarm shift; exec @ARGV' 90 \
+              xcrun simctl spawn "$SIMULATOR" log show --last 16m --style compact \
+              --predicate 'process == "Runner" OR eventMessage CONTAINS "Runner"' 2>/dev/null | tail -80 || true
+            echo "::endgroup::"
+            xcrun simctl shutdown "$SIMULATOR" 2>/dev/null || true
+            xcrun simctl erase "$SIMULATOR" 2>/dev/null || true
+            xcrun simctl boot "$SIMULATOR" 2>/dev/null || true
+            "${GITHUB_WORKSPACE}/.github/workflows/scripts/ensure-simulator-ready.sh" || true
+            run_flutter_test
+          fi
+          PASSED=$(grep -Eo '[0-9]+ tests? passed' flutter_test_output.log | tail -1 | grep -Eo '^[0-9]+')
+          FAILED=$(grep -Eo '[0-9]+ failed' flutter_test_output.log | tail -1 | grep -Eo '^[0-9]+')
+          : "${PASSED:=0}"; : "${FAILED:=0}"
+          echo "Result tally: passed=$PASSED failed=$FAILED (flutter test exit $FT_EXIT)"
+          if [ "$FAILED" -gt 0 ] || [ "$PASSED" -eq 0 ]; then
+            exit 1
+          fi
+          exit 0

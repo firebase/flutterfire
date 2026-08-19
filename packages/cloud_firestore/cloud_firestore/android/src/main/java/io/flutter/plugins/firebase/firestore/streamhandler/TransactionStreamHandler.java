@@ -38,7 +38,13 @@ public class TransactionStreamHandler implements OnTransactionResultListener, St
     void onStarted(Transaction transaction);
   }
 
+  /** Callback when Dart cancels the transaction event stream. */
+  public interface OnTransactionCancelledListener {
+    void onCancelled(String transactionId);
+  }
+
   final OnTransactionStartedListener onTransactionStartedListener;
+  final OnTransactionCancelledListener onTransactionCancelledListener;
   final FirebaseFirestore firestore;
   final String transactionId;
   final Long timeout;
@@ -47,11 +53,13 @@ public class TransactionStreamHandler implements OnTransactionResultListener, St
 
   public TransactionStreamHandler(
       OnTransactionStartedListener onTransactionStartedListener,
+      OnTransactionCancelledListener onTransactionCancelledListener,
       FirebaseFirestore firestore,
       String transactionId,
       Long timeout,
       Long maxAttempts) {
     this.onTransactionStartedListener = onTransactionStartedListener;
+    this.onTransactionCancelledListener = onTransactionCancelledListener;
     this.firestore = firestore;
     this.transactionId = transactionId;
     this.timeout = timeout;
@@ -185,6 +193,11 @@ public class TransactionStreamHandler implements OnTransactionResultListener, St
   @Override
   public void onCancel(Object arguments) {
     semaphore.release();
+    // FlutterFirebaseFirestorePlugin passes null when disposing all listeners and clears the
+    // listener maps itself. A non-null value identifies Dart's EventChannel cancellation.
+    if (arguments != null) {
+      onTransactionCancelledListener.onCancelled(transactionId);
+    }
   }
 
   @Override

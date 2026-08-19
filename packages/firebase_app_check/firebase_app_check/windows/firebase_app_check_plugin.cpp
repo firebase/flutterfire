@@ -166,7 +166,11 @@ FirebaseAppCheckPlugin::~FirebaseAppCheckPlugin() {
 void FirebaseAppCheckPlugin::Activate(
     const std::string& app_name, const std::string* android_provider,
     const std::string* apple_provider, const std::string* debug_token,
+    const std::string* recaptcha_site_key,
     std::function<void(std::optional<FlutterError> reply)> result) {
+  // reCAPTCHA is a mobile-only provider, so the site key is unused here.
+  (void)recaptcha_site_key;
+
   // On Windows/desktop, only the Debug provider is available.
   DebugAppCheckProviderFactory* factory =
       DebugAppCheckProviderFactory::GetInstance();
@@ -195,6 +199,30 @@ void FirebaseAppCheckPlugin::GetToken(
         result(std::optional<std::string>(token->token));
       } else {
         result(std::optional<std::string>(std::nullopt));
+      }
+    }
+  });
+}
+
+void FirebaseAppCheckPlugin::GetTokenResult(
+    const std::string& app_name, bool force_refresh,
+    std::function<
+        void(ErrorOr<std::optional<InternalAppCheckTokenResult>> reply)>
+        result) {
+  AppCheck* app_check = GetAppCheckFromPigeon(app_name);
+
+  Future<AppCheckToken> future = app_check->GetAppCheckToken(force_refresh);
+  future.OnCompletion([result](const Future<AppCheckToken>& completed_future) {
+    if (completed_future.error() != 0) {
+      result(ParseError(completed_future));
+    } else {
+      const AppCheckToken* token = completed_future.result();
+      if (token) {
+        int64_t expiration_timestamp = token->expire_time_millis;
+        result(std::optional<InternalAppCheckTokenResult>(
+            InternalAppCheckTokenResult(token->token, &expiration_timestamp)));
+      } else {
+        result(std::optional<InternalAppCheckTokenResult>(std::nullopt));
       }
     }
   });

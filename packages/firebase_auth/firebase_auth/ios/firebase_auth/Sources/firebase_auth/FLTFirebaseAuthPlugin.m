@@ -21,12 +21,6 @@
 @import CommonCrypto;
 #import <AuthenticationServices/AuthenticationServices.h>
 
-#if __has_include(<firebase_core/FLTFirebaseCorePlugin.h>)
-#import <firebase_core/FLTFirebaseCorePlugin.h>
-#else
-#import <FLTFirebaseCorePlugin.h>
-#endif
-
 NSString *const kFLTFirebaseAuthChannelName = @"plugins.flutter.io/firebase_auth";
 
 // Argument Keys
@@ -82,6 +76,25 @@ NSString *const kErrCodeInvalidCredential = @"invalid-credential";
 NSString *const kErrMsgInvalidCredential =
     @"The supplied auth credential is malformed, has expired or is not "
     @"currently supported.";
+NSString *const kErrCodeUnsupportedPlatform = @"unsupported-platform";
+
+#if TARGET_OS_OSX
+// The Firebase Apple SDK only builds the OAuth web sign-in flow
+// (`FIROAuthProvider getCredentialWithUIDelegate:completion:`) for iOS, so the
+// `*WithProvider()` APIs cannot be served on macOS. Sign in with Apple is
+// handled separately, before this error is built.
+static FlutterError *ProviderFlowUnsupportedOnMacOSError(NSString *methodName,
+                                                         NSString *providerId) {
+  return [FlutterError
+      errorWithCode:kErrCodeUnsupportedPlatform
+            message:[NSString stringWithFormat:@"%@ is not supported on macOS for the '%@' "
+                                               @"provider. The Firebase Apple SDK only implements "
+                                               @"the OAuth web sign-in flow on iOS. On macOS, only "
+                                               @"the '%@' provider is supported.",
+                                               methodName, providerId, kSignInMethodApple]
+            details:nil];
+}
+#endif
 
 // Used for caching credentials between Method Channel method calls.
 static NSMutableDictionary<NSNumber *, FIRAuthCredential *> *credentialsMap;
@@ -764,7 +777,7 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
   FIRAuth *auth = [FIRAuth authWithApp:app];
 
   auth.tenantID = pigeonApp.tenantId;
-  auth.customAuthDomain = [FLTFirebaseCorePlugin getCustomDomain:app.name];
+  auth.customAuthDomain = [FLTFirebasePlugin getCustomDomain:app.name];
   // Auth's `customAuthDomain` supersedes value from `getCustomDomain` set by `initializeApp`
   if (pigeonApp.customAuthDomain != nil) {
     auth.customAuthDomain = pigeonApp.customAuthDomain;
@@ -896,11 +909,18 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
   // OAuth
   if ([signInMethod isEqualToString:kSignInMethodOAuth]) {
     NSString *providerId = arguments[kArgumentProviderId];
-    completion([FIROAuthProvider credentialWithProviderID:providerId
-                                                  IDToken:idToken
-                                                 rawNonce:rawNonce
-                                              accessToken:accessToken],
-               nil);
+    FIRAuthCredential *credential;
+    if (accessToken == nil) {
+      credential = [FIROAuthProvider credentialWithProviderID:providerId
+                                                      IDToken:idToken
+                                                     rawNonce:rawNonce];
+    } else {
+      credential = [FIROAuthProvider credentialWithProviderID:providerId
+                                                      IDToken:idToken
+                                                     rawNonce:rawNonce
+                                                  accessToken:accessToken];
+    }
+    completion(credential, nil);
     return;
   }
 
@@ -966,8 +986,8 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
            displayName:(nullable NSString *)displayName
             completion:(nonnull void (^)(FlutterError *_Nullable))completion {
 #if TARGET_OS_OSX
-  completion([FlutterError errorWithCode:@"unsupported-platform"
-                                 message:@"Phone authentication is not supported on macOS"
+  completion([FlutterError errorWithCode:kErrCodeUnsupportedPlatform
+                                 message:@"Phone authentication is not supported on macOS."
                                  details:nil]);
 #else
 
@@ -1743,9 +1763,8 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
     return;
   }
 #if TARGET_OS_OSX
-  NSLog(@"signInWithProvider is not supported on the "
-        @"MacOS platform.");
-  completion(nil, nil);
+  completion(nil,
+             ProviderFlowUnsupportedOnMacOSError(@"signInWithProvider", signInProvider.providerId));
 #else
   self.authProvider = [FIROAuthProvider providerWithProviderID:signInProvider.providerId auth:auth];
   NSArray *scopes = signInProvider.scopes;
@@ -1816,9 +1835,9 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
                   completion:
                       (nonnull void (^)(NSString *_Nullable, FlutterError *_Nullable))completion {
 #if TARGET_OS_OSX
-  NSLog(@"The Firebase Phone Authentication provider is not supported on the "
-        @"MacOS platform.");
-  completion(nil, nil);
+  completion(nil, [FlutterError errorWithCode:kErrCodeUnsupportedPlatform
+                                      message:@"Phone authentication is not supported on macOS."
+                                      details:nil]);
 #else
   FIRAuth *auth = [self getFIRAuthFromAppNameFromPigeon:app];
 
@@ -1999,9 +2018,8 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
     return;
   }
 #if TARGET_OS_OSX
-  NSLog(@"linkWithProvider is not supported on the "
-        @"MacOS platform.");
-  completion(nil, nil);
+  completion(nil,
+             ProviderFlowUnsupportedOnMacOSError(@"linkWithProvider", signInProvider.providerId));
 #else
   self.authProvider = [FIROAuthProvider providerWithProviderID:signInProvider.providerId];
   NSArray *scopes = signInProvider.scopes;
@@ -2100,9 +2118,8 @@ static void handleAppleAuthResult(FLTFirebaseAuthPlugin *object, AuthPigeonFireb
     return;
   }
 #if TARGET_OS_OSX
-  NSLog(@"reauthenticateWithProvider is not supported on the "
-        @"MacOS platform.");
-  completion(nil, nil);
+  completion(nil, ProviderFlowUnsupportedOnMacOSError(@"reauthenticateWithProvider",
+                                                      signInProvider.providerId));
 #else
   self.authProvider = [FIROAuthProvider providerWithProviderID:signInProvider.providerId];
   NSArray *scopes = signInProvider.scopes;

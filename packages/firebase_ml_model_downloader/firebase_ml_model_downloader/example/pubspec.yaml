@@ -12,11 +12,18 @@ dependencies:
   flutter:
     sdk: flutter
 
-  firebase_core: ^4.12.1
-  firebase_ml_model_downloader: ^0.4.2+6
+  firebase_core: ^4.13.0
+  firebase_ml_model_downloader: ^0.4.3
 
 dev_dependencies:
   flutter_lints: ^6.0.0
+  flutter_test:
+    sdk: flutter
+  integration_test:
+    sdk: flutter
+  # `integration_test/report_test_results.dart` names each executed test via
+  # `package:test_api/hooks.dart`; `any` defers to the version flutter_test pins.
+  test_api: any
 
 flutter:
   uses-material-design: true

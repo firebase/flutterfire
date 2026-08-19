@@ -7,8 +7,8 @@
 
 import PackageDescription
 
-let libraryVersionString = "4.12.1"
-let firebaseSdkVersion: Version = "12.15.0"
+let libraryVersionString = "4.13.0"
+let firebaseSdkVersion: Version = "12.17.0"
 
 let package = Package(
   name: "firebase_core",
@@ -16,26 +16,41 @@ let package = Package(
     .macOS("10.15")
   ],
   products: [
-    .library(name: "firebase-core", targets: ["firebase_core"])
+    .library(name: "firebase-core", targets: ["firebase_core", "firebase_core_objc"])
   ],
   dependencies: [
-    .package(url: "https://github.com/firebase/firebase-ios-sdk", exact: firebaseSdkVersion)
+    .package(url: "https://github.com/firebase/firebase-ios-sdk", exact: firebaseSdkVersion),
+    .package(name: "FlutterFramework", path: "../FlutterFramework"),
   ],
   targets: [
+    // SPM does not allow mixing Swift and ObjC in a single target.
     .target(
-      name: "firebase_core",
+      name: "firebase_core_objc",
       dependencies: [
-        // No product for firebase-core so we pull in the smallest one
-        .product(name: "FirebaseInstallations", package: "firebase-ios-sdk")
+        .product(name: "FirebaseInstallations", package: "firebase-ios-sdk"),
+        .product(name: "FlutterFramework", package: "FlutterFramework"),
       ],
-      resources: [
-        .process("Resources")
-      ],
+      path: "Sources/firebase_core_objc",
+      publicHeadersPath: "include",
       cSettings: [
         .headerSearchPath("include/firebase_core"),
+        .headerSearchPath("include"),
         .define("LIBRARY_VERSION", to: "\"\(libraryVersionString)\""),
         .define("LIBRARY_NAME", to: "\"flutter-fire-core\""),
       ]
-    )
+    ),
+    .target(
+      name: "firebase_core",
+      dependencies: [
+        "firebase_core_objc",
+        .product(name: "FirebaseCore", package: "firebase-ios-sdk"),
+        .product(name: "FirebaseInstallations", package: "firebase-ios-sdk"),
+        .product(name: "FlutterFramework", package: "FlutterFramework"),
+      ],
+      path: "Sources/firebase_core",
+      resources: [
+        .process("Resources")
+      ]
+    ),
   ]
 )

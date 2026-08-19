@@ -4,13 +4,28 @@ set -euo pipefail
 : "${FLUTTER_DRIVE_TARGET:?FLUTTER_DRIVE_TARGET is required}"
 : "${FLUTTER_DRIVE_DRIVER:?FLUTTER_DRIVE_DRIVER is required}"
 
-FLUTTER_DRIVE_DEVICE="${FLUTTER_DRIVE_DEVICE:-chrome}"
+# web-server, not chrome: with `-d chrome` the flutter tool launches the
+# browser itself, which requires a display server and silently exits 0 when
+# none exists (headless CI). With web-server the browser is launched through
+# chromedriver, which is headless-capable.
+FLUTTER_DRIVE_DEVICE="${FLUTTER_DRIVE_DEVICE:-web-server}"
 FLUTTER_DRIVE_TIMEOUT_SECONDS="${FLUTTER_DRIVE_TIMEOUT_SECONDS:-180}"
 FLUTTER_DRIVE_MAX_ATTEMPTS="${FLUTTER_DRIVE_MAX_ATTEMPTS:-4}"
 FLUTTER_DRIVE_EXTRA_ARGS="${FLUTTER_DRIVE_EXTRA_ARGS:-}"
 
+# The embedded Python reads these from its environment; without the export a
+# variable defaulted above is invisible to it, the KeyError kills the run
+# before flutter drive starts, and on macOS (bash 3.2) that failure was
+# silently swallowed — the job went green having run zero tests.
+export FLUTTER_DRIVE_TARGET FLUTTER_DRIVE_DRIVER FLUTTER_DRIVE_DEVICE \
+  FLUTTER_DRIVE_TIMEOUT_SECONDS FLUTTER_DRIVE_MAX_ATTEMPTS FLUTTER_DRIVE_EXTRA_ARGS
+
 cleanup_web_processes() {
+  # Chrome's process name differs per OS: "Google Chrome" on macOS,
+  # "chrome"/"google-chrome" on Linux.
   pkill -f "Google Chrome" || true
+  pkill -f "google-chrome" || true
+  pkill -x chrome || true
   pkill -f chrome_crashpad || true
   pkill -x chromedriver || true
   pkill -x dartvm || true
@@ -23,7 +38,17 @@ run_tests() {
 
   chromedriver --port=4444 --trace-buffer-size=100000 &
   chromedriver_pid=$!
-  sleep 2
+  # Wait for chromedriver to accept connections instead of a fixed sleep.
+  for _ in $(seq 1 30); do
+    if curl --output /dev/null --silent --fail http://localhost:4444/status; then
+      break
+    fi
+    if ! kill -0 "$chromedriver_pid" 2>/dev/null; then
+      echo "chromedriver exited before becoming ready."
+      return 3
+    fi
+    sleep 1
+  done
 
   set +e
   python3 - <<'PY'
@@ -81,11 +106,19 @@ PY
   wait "$chromedriver_pid" 2>/dev/null || true
   cleanup_web_processes
 
-  output=$(<output.log)
+  # output.log may not exist if the drive process died before writing it.
+  output=$(cat output.log 2>/dev/null || true)
   if [[ "$output" =~ \[E\] ]]; then
     # You will see "All tests passed." in the logs even when tests failed.
     echo "All tests did not pass. Please check the logs for more information."
     return 2
+  fi
+
+  # Never trust a bare exit 0: `flutter drive` exits 0 even when the browser
+  # failed to launch and no test ever ran. Require positive evidence.
+  if [[ "$exit_code" == "0" && "$output" != *"All tests passed"* ]]; then
+    echo "flutter drive exited 0 without reporting test success; treating as an infrastructure failure."
+    return 3
   fi
 
   if [[ "$exit_code" == "124" ]] ||
@@ -98,14 +131,19 @@ PY
 }
 
 for attempt in $(seq 1 "$FLUTTER_DRIVE_MAX_ATTEMPTS"); do
-  if run_tests; then
+  # NOT `if run_tests; then ...; fi` + `$?`: a completed `if` with a false
+  # condition and no else sets $? to 0, so every failure collapsed to exit 0.
+  exit_code=0
+  run_tests || exit_code=$?
+
+  if [[ "$exit_code" == "0" ]]; then
     exit 0
   fi
-
-  exit_code=$?
   if [[ "$exit_code" != "3" || "$attempt" == "$FLUTTER_DRIVE_MAX_ATTEMPTS" ]]; then
     exit "$exit_code"
   fi
 
   echo "Attempt $attempt failed before tests completed. Retrying with clean browser processes..."
 done
+# Unreachable, but never fall off the end with an implicit 0.
+exit 1

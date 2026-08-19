@@ -133,6 +133,10 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
           providerApple: providerApple,
           providerWindows: providerWindows,
         ),
+        _getRecaptchaSiteKey(
+          providerAndroid: providerAndroid,
+          providerApple: providerApple,
+        ),
       );
     } on PlatformException catch (e, s) {
       convertPlatformException(e, s);
@@ -143,6 +147,25 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
   Future<String?> getToken(bool forceRefresh) async {
     try {
       return await _pigeonApi.getToken(app.name, forceRefresh);
+    } on PlatformException catch (e, s) {
+      convertPlatformException(e, s);
+    }
+  }
+
+  @override
+  Future<AppCheckTokenResult?> getTokenResult(bool forceRefresh) async {
+    try {
+      final result = await _pigeonApi.getTokenResult(app.name, forceRefresh);
+      if (result == null) {
+        return null;
+      }
+
+      return AppCheckTokenResult(
+        token: result.token,
+        expirationTime: result.expirationTimestamp == null
+            ? null
+            : DateTime.fromMillisecondsSinceEpoch(result.expirationTimestamp!),
+      );
     } on PlatformException catch (e, s) {
       convertPlatformException(e, s);
     }
@@ -196,6 +219,27 @@ String? _getDebugToken({
       return providerWindows is WindowsDebugProvider
           ? providerWindows.debugToken
           : null;
+    case TargetPlatform.fuchsia:
+    case TargetPlatform.linux:
+      return null;
+  }
+}
+
+String? _getRecaptchaSiteKey({
+  AndroidAppCheckProvider? providerAndroid,
+  AppleAppCheckProvider? providerApple,
+}) {
+  switch (defaultTargetPlatform) {
+    case TargetPlatform.android:
+      return providerAndroid is AndroidReCaptchaProvider
+          ? providerAndroid.siteKey
+          : null;
+    case TargetPlatform.iOS:
+    case TargetPlatform.macOS:
+      return providerApple is AppleReCaptchaProvider
+          ? providerApple.siteKey
+          : null;
+    case TargetPlatform.windows:
     case TargetPlatform.fuchsia:
     case TargetPlatform.linux:
       return null;

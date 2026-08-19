@@ -8,19 +8,31 @@ environment:
 
 dependencies:
   barcode_widget: ^2.0.4
-  firebase_auth: ^6.5.6
-  firebase_core: ^4.12.1
-  firebase_messaging: ^16.4.3
+  firebase_auth: ^6.5.7
+  firebase_core: ^4.13.0
+  firebase_messaging: ^16.5.0
   flutter:
     sdk: flutter
-  flutter_facebook_auth: ^7.1.5
-  flutter_signin_button: ^2.0.0
-  font_awesome_flutter: ^10.8.0
+  # 7.2.0 is the first release shipping Package.swift; the iOS e2e job builds
+  # this example with Swift Package Manager.
+  flutter_facebook_auth: ^7.2.0
   google_sign_in: ^6.1.0
   google_sign_in_dartio: ^0.3.0
 
 dev_dependencies:
+  # `test_utils.dart` reaches for IterableExtension when scanning the emulator's
+  # oobCode list.
+  collection: ^1.15.0
+  flutter_test:
+    sdk: flutter
+  # The e2e suite drives the Auth emulator's REST API directly (clearing users,
+  # reading oobCodes and SMS verification codes).
   http: ^1.0.0
+  integration_test:
+    sdk: flutter
+  # `integration_test/report_test_results.dart` names each executed test via
+  # `package:test_api/hooks.dart`; `any` defers to the version flutter_test pins.
+  test_api: any
 
 flutter:
   uses-material-design: true

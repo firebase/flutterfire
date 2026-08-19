@@ -430,7 +430,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = io.flutter.plugins.firebase.remoteconfig.example;
+				PRODUCT_BUNDLE_IDENTIFIER = io.flutter.plugins.firebase.tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -455,7 +455,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = io.flutter.plugins.firebase.remoteconfig.example;
+				PRODUCT_BUNDLE_IDENTIFIER = io.flutter.plugins.firebase.tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

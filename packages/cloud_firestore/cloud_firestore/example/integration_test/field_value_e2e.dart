@@ -177,29 +177,6 @@ void runFieldValueTests() {
         expect(snapshot.data()!['foo'], equals([3, 4]));
       });
 
-      // ignore: todo
-      // TODO(salakar): test is currently failing on CI but unable to reproduce locally
-      test(
-        'updates with nested types',
-        () async {
-          DocumentReference<Map<String, dynamic>> doc =
-              await initializeTest('field-value-nested-types');
-
-          DocumentReference<Map<String, dynamic>> ref =
-              FirebaseFirestore.instance.doc('foo/bar');
-
-          await doc.set({
-            'foo': [1],
-          });
-          await doc.update({
-            'foo': FieldValue.arrayUnion([2, ref]),
-          });
-          DocumentSnapshot<Map<String, dynamic>> snapshot = await doc.get();
-          expect(snapshot.data()!['foo'], equals([1, 2, ref]));
-        },
-        skip: true,
-      );
-
       test('query should restore nested Timestamp', () async {
         DocumentReference<Map<String, dynamic>> doc =
             await initializeTest('nested-timestamp');

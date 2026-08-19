@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import DeviceCheck
 import FirebaseAppCheck
 import FirebaseCore
 
@@ -19,9 +20,6 @@ import FirebaseCore
 
 let kFirebaseAppCheckChannelName = "plugins.flutter.io/firebase_app_check"
 let kFirebaseAppCheckTokenChannelPrefix = "plugins.flutter.io/firebase_app_check/token/"
-
-// swift-format-ignore: AvoidRetroactiveConformances
-extension FlutterError: @retroactive Error {}
 
 public class FirebaseAppCheckPlugin: NSObject, FlutterPlugin,
   FLTFirebasePluginProtocol, FirebaseAppCheckHostApi
@@ -64,7 +62,7 @@ public class FirebaseAppCheckPlugin: NSObject, FlutterPlugin,
 
   func activate(
     appName: String, androidProvider: String?, appleProvider: String?,
-    debugToken: String?,
+    debugToken: String?, recaptchaSiteKey: String?,
     completion: @escaping (Result<Void, Error>) -> Void
   ) {
     guard let app = FLTFirebasePlugin.firebaseAppNamed(appName) else {
@@ -82,7 +80,8 @@ public class FirebaseAppCheckPlugin: NSObject, FlutterPlugin,
     providerFactory?.configure(
       app: app,
       providerName: provider,
-      debugToken: debugToken
+      debugToken: debugToken,
+      recaptchaSiteKey: recaptchaSiteKey
     )
 
     completion(.success(()))
@@ -110,6 +109,41 @@ public class FirebaseAppCheckPlugin: NSObject, FlutterPlugin,
         completion(.failure(self.createFlutterError(error)))
       } else {
         completion(.success(token?.token))
+      }
+    }
+  }
+
+  func getTokenResult(
+    appName: String, forceRefresh: Bool,
+    completion: @escaping (Result<InternalAppCheckTokenResult?, Error>) -> Void
+  ) {
+    guard let app = FLTFirebasePlugin.firebaseAppNamed(appName),
+      let appCheck = AppCheck.appCheck(app: app)
+    else {
+      completion(
+        .failure(
+          FlutterError(
+            code: "unknown", message: "App Check not available for app: \(appName)", details: nil
+          )
+        )
+      )
+      return
+    }
+
+    appCheck.token(forcingRefresh: forceRefresh) { token, error in
+      if let error {
+        completion(.failure(self.createFlutterError(error)))
+      } else {
+        completion(
+          .success(
+            token.map {
+              InternalAppCheckTokenResult(
+                token: $0.token,
+                expirationTimestamp: Int64($0.expirationDate.timeIntervalSince1970 * 1000)
+              )
+            }
+          )
+        )
       }
     }
   }
@@ -284,7 +318,8 @@ class FlutterAppCheckProviderFactory: NSObject, AppCheckProviderFactory {
       wrapper.configure(
         app: app,
         providerName: "deviceCheck",
-        debugToken: nil
+        debugToken: nil,
+        recaptchaSiteKey: nil
       )
       providers[app.name] = wrapper
     }
@@ -294,7 +329,8 @@ class FlutterAppCheckProviderFactory: NSObject, AppCheckProviderFactory {
   func configure(
     app: FirebaseApp,
     providerName: String,
-    debugToken: String?
+    debugToken: String?,
+    recaptchaSiteKey: String?
   ) {
     if providers[app.name] == nil {
       providers[app.name] = AppCheckProviderWrapper()
@@ -302,7 +338,8 @@ class FlutterAppCheckProviderFactory: NSObject, AppCheckProviderFactory {
     providers[app.name]?.configure(
       app: app,
       providerName: providerName,
-      debugToken: debugToken
+      debugToken: debugToken,
+      recaptchaSiteKey: recaptchaSiteKey
     )
   }
 }
@@ -313,7 +350,8 @@ class AppCheckProviderWrapper: NSObject, AppCheckProvider {
   func configure(
     app: FirebaseApp,
     providerName: String,
-    debugToken: String?
+    debugToken: String?,
+    recaptchaSiteKey: String?
   ) {
     switch providerName {
     case "debug":
@@ -331,17 +369,26 @@ class AppCheckProviderWrapper: NSObject, AppCheckProvider {
         delegateProvider = AppCheckDebugProvider(app: app)
       }
     case "appAttestWithDeviceCheckFallback":
-      if #available(iOS 14.0, macOS 14.0, *) {
-        delegateProvider = AppAttestProvider(app: app)
-      } else {
-        delegateProvider = DeviceCheckProvider(app: app)
+      // A new enough OS is not sufficient: the device must also support App
+      // Attest, which is often false on macOS. The SDK only reports that when a
+      // token is first requested, so check the same capability it checks —
+      // otherwise this provider never actually falls back. Typed as the
+      // protocol to keep the availability-annotated type inside `#available`.
+      var appAttestProvider: (any AppCheckProvider)?
+      if #available(iOS 14.0, macOS 14.0, *), DCAppAttestService.shared.isSupported {
+        appAttestProvider = AppAttestProvider(app: app)
       }
+      delegateProvider = appAttestProvider ?? DeviceCheckProvider(app: app)
     case "recaptcha":
       #if os(iOS)
-        delegateProvider = RecaptchaProvider(app: app)
+        if let recaptchaSiteKey {
+          delegateProvider = RecaptchaProvider(app: app, siteKey: recaptchaSiteKey)
+        } else {
+          delegateProvider = nil
+        }
         if delegateProvider == nil {
           print(
-            "Firebase App Check: failed to initialize RecaptchaProvider. Ensure site key is in GoogleService-Info.plist."
+            "Firebase App Check: failed to initialize RecaptchaProvider. Ensure site key is provided."
           )
         }
       #else

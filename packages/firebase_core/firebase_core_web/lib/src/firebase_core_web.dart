@@ -57,6 +57,14 @@ class FirebaseCoreWeb extends FirebasePlatform {
     );
   }
 
+  /// Whether [service] is still registered for per-app initialization.
+  ///
+  /// Used by tests to ensure App Check is not removed after the first
+  /// [initializeApp] (secondary apps must re-run ensurePluginInitialized).
+  @visibleForTesting
+  static bool isServiceRegistered(String service) =>
+      _services.containsKey(service);
+
   static const String _libraryName = 'flutter-fire-core';
 
   /// Registers that [FirebaseCoreWeb] is the platform implementation.
@@ -208,28 +216,47 @@ class FirebaseCoreWeb extends FirebasePlatform {
     String version = firebaseSDKVersion;
     List<String> ignored = _ignoredServiceScripts;
 
-    await Future.wait(
-      _services.values.map((service) {
-        if (ignored.contains(service.override ?? service.name)) {
-          return Future.value();
-        }
+    Future<void> injectService(FirebaseWebService service) {
+      if (ignored.contains(service.override ?? service.name)) {
+        return Future.value();
+      }
 
-        const firestoreServiceName = 'firestore';
+      const firestoreServiceName = 'firestore';
 
-        if (service.name == firestoreServiceName) {
-          // Inject the Firestore Pipelines script. This bundle supports both
-          // Pipeline operations (Enterprise edition) and standard Firestore queries.
-          return injectSrcScript(
-            'https://www.gstatic.com/firebasejs/$version/firebase-firestore-pipelines.js',
-            'firebase_$firestoreServiceName',
-          );
-        }
-
+      if (service.name == firestoreServiceName) {
+        // Inject the Firestore Pipelines script. This bundle supports both
+        // Pipeline operations (Enterprise edition) and standard Firestore queries.
         return injectSrcScript(
-          'https://www.gstatic.com/firebasejs/$version/firebase-${service.name}.js',
-          'firebase_${service.override ?? service.name}',
+          'https://www.gstatic.com/firebasejs/$version/firebase-firestore-pipelines.js',
+          'firebase_$firestoreServiceName',
         );
-      }),
+      }
+
+      return injectSrcScript(
+        'https://www.gstatic.com/firebasejs/$version/firebase-${service.name}.js',
+        'firebase_${service.override ?? service.name}',
+      );
+    }
+
+    // Every component bundle (firebase-auth.js, firebase-messaging.js, ...)
+    // statically imports from firebase-app.js. Loading all services with
+    // concurrent dynamic import()s makes those imports race on the shared
+    // firebase-app.js module, which trips a WebKit module-evaluation defect:
+    // the returned namespace can still have its top-level bindings in the
+    // temporal dead zone, so reading firebase.SDK_VERSION right afterwards
+    // throws "ReferenceError: Cannot access 'SDK_VERSION' before
+    // initialization" (Safari/WKWebView only). Load firebase-app.js first,
+    // then fan out to the component bundles in parallel.
+    // https://github.com/firebase/flutterfire/issues/18436
+    final coreService = _services['core'];
+    if (coreService != null) {
+      await injectService(coreService);
+    }
+
+    await Future.wait(
+      _services.values
+          .where((service) => !identical(service, coreService))
+          .map(injectService),
     );
     registerLibraryVersion(_libraryName, packageVersion);
     _registerAllLibraryVersions();
@@ -343,7 +370,6 @@ class FirebaseCoreWeb extends FirebasePlatform {
           messagingSenderId: options.messagingSenderId,
           appId: options.appId,
           measurementId: options.measurementId,
-          recaptchaSiteKey: options.recaptchaSiteKey,
         );
       }
     }
@@ -366,26 +392,35 @@ class FirebaseCoreWeb extends FirebasePlatform {
           messagingSenderId: options.messagingSenderId,
           appId: options.appId,
           measurementId: options.measurementId,
-          recaptchaSiteKey: options.recaptchaSiteKey,
         );
       } catch (e) {
-        if (_getJSErrorCode(e as JSError) == 'app/duplicate-app') {
+        if (!e.isA<JSObject>()) {
+          rethrow;
+        }
+
+        final jsError = e as JSError;
+        if (_getJSErrorCode(jsError) == 'app/duplicate-app') {
           throw duplicateApp(name);
         }
 
-        throw _catchJSError(e);
+        throw _catchJSError(jsError);
       }
     }
 
-    final appCheck = _services.remove('app-check');
-    if (appCheck != null) {
-      // Activate app check first
-      await appCheck.ensurePluginInitialized!(app!);
+    // Activate App Check before other services so Auth/etc. attach tokens.
+    // Do NOT remove 'app-check' from [_services]: secondary (named) apps also
+    // need ensurePluginInitialized on each Firebase.initializeApp() call.
+    // Removing it caused App Check to skip reactivation for named apps on
+    // reload, so accounts:lookup ran without X-Firebase-AppCheck (#18556).
+    final appCheck = _services['app-check'];
+    final appCheckEnsureInitialized = appCheck?.ensurePluginInitialized;
+    if (appCheckEnsureInitialized != null) {
+      await appCheckEnsureInitialized(app!);
     }
 
     await Future.wait(
-      _services.values.map((service) {
-        final ensureInitializedFunction = service.ensurePluginInitialized;
+      _services.entries.where((entry) => entry.key != 'app-check').map((entry) {
+        final ensureInitializedFunction = entry.value.ensurePluginInitialized;
 
         if (ensureInitializedFunction == null || app == null) {
           return Future.value();
@@ -410,11 +445,16 @@ class FirebaseCoreWeb extends FirebasePlatform {
       app = guardNotInitialized(() => firebase.app(name));
       return _createFromJsApp(app);
     } catch (e) {
-      if (_getJSErrorCode(e as JSError) == 'app/no-app') {
+      if (!e.isA<JSObject>()) {
+        rethrow;
+      }
+
+      final jsError = e as JSError;
+      if (_getJSErrorCode(jsError) == 'app/no-app') {
         throw noAppExists(name);
       }
 
-      throw _catchJSError(e);
+      throw _catchJSError(jsError);
     }
   }
 }

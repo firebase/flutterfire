@@ -19,8 +19,6 @@ import FirebaseRemoteConfig
 let kFirebaseRemoteConfigChannelName = "plugins.flutter.io/firebase_remote_config"
 let kFirebaseRemoteConfigUpdatedChannelName = "plugins.flutter.io/firebase_remote_config_updated"
 
-extension FlutterError: Error {}
-
 public class FirebaseRemoteConfigPlugin: NSObject, FlutterPlugin, FlutterStreamHandler,
   FLTFirebasePluginProtocol, FirebaseRemoteConfigHostApi
 {
@@ -289,7 +287,7 @@ public class FirebaseRemoteConfigPlugin: NSObject, FlutterPlugin, FlutterStreamH
     return FlutterError(
       code: "firebase_remote_config",
       message: nsError.localizedDescription,
-      details: nsError.userInfo["details"]
+      details: FLTFirebaseRemoteConfigUtils.errorCodeAndMessage(from: nsError)
     )
   }
 

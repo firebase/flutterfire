@@ -402,8 +402,8 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = io.flutter.plugins.firebase.messaging;
-				PRODUCT_NAME = "Firebase Cloud Messaging Example";
+				PRODUCT_BUNDLE_IDENTIFIER = io.flutter.plugins.firebase.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -541,8 +541,8 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = io.flutter.plugins.firebase.messaging;
-				PRODUCT_NAME = "Firebase Cloud Messaging Example";
+				PRODUCT_BUNDLE_IDENTIFIER = io.flutter.plugins.firebase.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -573,8 +573,8 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = io.flutter.plugins.firebase.messaging;
-				PRODUCT_NAME = "Firebase Cloud Messaging Example";
+				PRODUCT_BUNDLE_IDENTIFIER = io.flutter.plugins.firebase.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				VERSIONING_SYSTEM = "apple-generic";
 			};

@@ -384,7 +384,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = io.flutter.plugins.firebase.appcheck.example;
+				PRODUCT_BUNDLE_IDENTIFIER = io.flutter.plugins.firebase.tests;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 			};
@@ -515,7 +515,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = io.flutter.plugins.firebase.appcheck.example;
+				PRODUCT_BUNDLE_IDENTIFIER = io.flutter.plugins.firebase.tests;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -538,7 +538,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = io.flutter.plugins.firebase.appcheck.example;
+				PRODUCT_BUNDLE_IDENTIFIER = io.flutter.plugins.firebase.tests;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 			};

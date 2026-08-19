@@ -55,7 +55,8 @@ void main() {
 ''';
       final decoded = jsonDecode(response) as Object;
       expect(
-        () => VertexSerialization().parseGenerateContentResponse(decoded),
+        () =>
+            AgentPlatformSerialization().parseGenerateContentResponse(decoded),
         throwsA(
           isA<FirebaseAISdkException>().having(
             (e) => e.message,
@@ -87,7 +88,7 @@ void main() {
 ''';
       final decoded = jsonDecode(response) as Object;
       expect(
-        VertexSerialization().parseGenerateContentResponse(decoded),
+        AgentPlatformSerialization().parseGenerateContentResponse(decoded),
         isA<GenerateContentResponse>(),
       );
     });
@@ -120,7 +121,7 @@ void main() {
 ''';
       final decoded = jsonDecode(response) as Object;
       final generateContentResponse =
-          VertexSerialization().parseGenerateContentResponse(decoded);
+          AgentPlatformSerialization().parseGenerateContentResponse(decoded);
       expect(
         generateContentResponse,
         matchesGenerateContentResponse(
@@ -184,13 +185,14 @@ void main() {
 ''';
       final decoded = jsonDecode(response) as Object;
       expect(
-        () => VertexSerialization().parseGenerateContentResponse(decoded),
+        () =>
+            AgentPlatformSerialization().parseGenerateContentResponse(decoded),
         throwsA(
           isA<ServiceApiNotEnabled>().having(
             (e) => e.message,
             'message',
             startsWith(
-                'The Vertex AI in Firebase SDK requires the Vertex AI in Firebase API'),
+                'Enable Firebase AI Logic in your Firebase project by visiting the Firebase Console'),
           ),
         ),
       );
@@ -232,7 +234,8 @@ void main() {
 ''';
       final decoded = jsonDecode(response) as Object;
       expect(
-        () => VertexSerialization().parseGenerateContentResponse(decoded),
+        () =>
+            AgentPlatformSerialization().parseGenerateContentResponse(decoded),
         throwsA(
           isA<QuotaExceeded>().having(
             (e) => e.message,
@@ -304,7 +307,7 @@ void main() {
 ''';
       final decoded = jsonDecode(response) as Object;
       final generateContentResponse =
-          VertexSerialization().parseGenerateContentResponse(decoded);
+          AgentPlatformSerialization().parseGenerateContentResponse(decoded);
       expect(
         generateContentResponse,
         matchesGenerateContentResponse(
@@ -438,7 +441,7 @@ void main() {
 ''';
       final decoded = jsonDecode(response) as Object;
       final generateContentResponse =
-          VertexSerialization().parseGenerateContentResponse(decoded);
+          AgentPlatformSerialization().parseGenerateContentResponse(decoded);
       expect(
         generateContentResponse,
         matchesGenerateContentResponse(
@@ -573,7 +576,7 @@ void main() {
 ''';
       final decoded = jsonDecode(response) as Object;
       final generateContentResponse =
-          VertexSerialization().parseGenerateContentResponse(decoded);
+          AgentPlatformSerialization().parseGenerateContentResponse(decoded);
       expect(
         generateContentResponse,
         matchesGenerateContentResponse(
@@ -655,7 +658,7 @@ void main() {
 ''';
       final decoded = jsonDecode(response) as Object;
       final generateContentResponse =
-          VertexSerialization().parseGenerateContentResponse(decoded);
+          AgentPlatformSerialization().parseGenerateContentResponse(decoded);
       expect(
         generateContentResponse,
         matchesGenerateContentResponse(
@@ -722,7 +725,7 @@ void main() {
         ''';
       final decoded = jsonDecode(response) as Object;
       final generateContentResponse =
-          VertexSerialization().parseGenerateContentResponse(decoded);
+          AgentPlatformSerialization().parseGenerateContentResponse(decoded);
       expect(
           generateContentResponse.text, 'Here is a description of the image:');
       expect(generateContentResponse.usageMetadata?.totalTokenCount, 1913);
@@ -771,7 +774,7 @@ void main() {
         ''';
       final decoded = jsonDecode(response) as Object;
       final countTokensResponse =
-          VertexSerialization().parseCountTokensResponse(decoded);
+          AgentPlatformSerialization().parseCountTokensResponse(decoded);
       expect(countTokensResponse.totalTokens, 1837);
       expect(countTokensResponse.promptTokensDetails?.first.modality,
           ContentModality.image);
@@ -805,7 +808,7 @@ void main() {
 ''';
       final decoded = jsonDecode(response) as Object;
       final generateContentResponse =
-          VertexSerialization().parseGenerateContentResponse(decoded);
+          AgentPlatformSerialization().parseGenerateContentResponse(decoded);
       expect(generateContentResponse.text, 'Initial text And more text');
       expect(generateContentResponse.candidates.single.text,
           'Initial text And more text');
@@ -890,7 +893,7 @@ void main() {
 ''';
       final decoded = jsonDecode(response) as Object;
       final generateContentResponse =
-          VertexSerialization().parseGenerateContentResponse(decoded);
+          AgentPlatformSerialization().parseGenerateContentResponse(decoded);
       final candidate = generateContentResponse.candidates.first;
       final urlContextMetadata = candidate.urlContextMetadata;
       expect(urlContextMetadata, isNotNull);
@@ -1031,7 +1034,7 @@ void main() {
 ''';
       final decoded = jsonDecode(response) as Object;
       final generateContentResponse =
-          VertexSerialization().parseGenerateContentResponse(decoded);
+          AgentPlatformSerialization().parseGenerateContentResponse(decoded);
       final urlContextMetadata =
           generateContentResponse.candidates.first.urlContextMetadata;
       expect(urlContextMetadata, isNotNull);
@@ -1106,7 +1109,7 @@ void main() {
 ''';
       final decoded = jsonDecode(response) as Object;
       final generateContentResponse =
-          VertexSerialization().parseGenerateContentResponse(decoded);
+          AgentPlatformSerialization().parseGenerateContentResponse(decoded);
       final urlContextMetadata =
           generateContentResponse.candidates.first.urlContextMetadata;
       expect(urlContextMetadata, isNotNull);
@@ -1141,8 +1144,8 @@ void main() {
         ]
       };
 
-      final response =
-          VertexSerialization().parseGenerateContentResponse(jsonResponse);
+      final response = AgentPlatformSerialization()
+          .parseGenerateContentResponse(jsonResponse);
       final groundingMetadata = response.candidates.first.groundingMetadata;
 
       expect(groundingMetadata, isNotNull);
@@ -1204,7 +1207,7 @@ void main() {
 ''';
       final decoded = jsonDecode(response) as Object;
       final generateContentResponse =
-          VertexSerialization().parseGenerateContentResponse(decoded);
+          AgentPlatformSerialization().parseGenerateContentResponse(decoded);
       expect(
         generateContentResponse,
         matchesGenerateContentResponse(
@@ -1275,7 +1278,7 @@ void main() {
 ''';
       final decoded = jsonDecode(response) as Object;
       final generateContentResponse =
-          VertexSerialization().parseGenerateContentResponse(decoded);
+          AgentPlatformSerialization().parseGenerateContentResponse(decoded);
       expect(
         generateContentResponse,
         matchesGenerateContentResponse(
@@ -1331,9 +1334,12 @@ void main() {
           'API key not valid. Please pass a valid API key.',
         ),
       );
-      expect(() => VertexSerialization().parseGenerateContentResponse(decoded),
+      expect(
+          () => AgentPlatformSerialization()
+              .parseGenerateContentResponse(decoded),
           expectedThrow);
-      expect(() => VertexSerialization().parseCountTokensResponse(decoded),
+      expect(
+          () => AgentPlatformSerialization().parseCountTokensResponse(decoded),
           expectedThrow);
     });
 
@@ -1361,9 +1367,12 @@ void main() {
           'User location is not supported for the API use.',
         ),
       );
-      expect(() => VertexSerialization().parseGenerateContentResponse(decoded),
+      expect(
+          () => AgentPlatformSerialization()
+              .parseGenerateContentResponse(decoded),
           expectedThrow);
-      expect(() => VertexSerialization().parseCountTokensResponse(decoded),
+      expect(
+          () => AgentPlatformSerialization().parseCountTokensResponse(decoded),
           expectedThrow);
     });
 
@@ -1394,9 +1403,12 @@ void main() {
           ),
         ),
       );
-      expect(() => VertexSerialization().parseGenerateContentResponse(decoded),
+      expect(
+          () => AgentPlatformSerialization()
+              .parseGenerateContentResponse(decoded),
           expectedThrow);
-      expect(() => VertexSerialization().parseCountTokensResponse(decoded),
+      expect(
+          () => AgentPlatformSerialization().parseCountTokensResponse(decoded),
           expectedThrow);
     });
   });
