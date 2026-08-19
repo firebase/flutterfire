@@ -189,6 +189,8 @@ public class FLTFirebaseAuthPlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
       Auth.auth().canHandle(url)
     }
 
+    // UIKit's scene(_:openURLContexts:) uses this parameter name.
+    // swift-format-ignore: AlwaysUseLowerCamelCase
     public func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) -> Bool
     {
       for urlContext in URLContexts where Auth.auth().canHandle(urlContext.url) {
