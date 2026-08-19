@@ -425,7 +425,9 @@ void main() {
       expect(emptyConfig.toJson(), {});
     });
 
-    test('LiveGenerationConfig with realtimeInputConfig toJson() returns correct JSON', () {
+    test(
+        'LiveGenerationConfig with realtimeInputConfig toJson() returns correct JSON',
+        () {
       final liveGenerationConfig = LiveGenerationConfig(
         realtimeInputConfig: RealtimeInputConfig(
           automaticActivityDetection: ActivityDetectionConfig.disabled(),

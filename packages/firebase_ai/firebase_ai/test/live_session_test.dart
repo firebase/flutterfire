@@ -122,7 +122,8 @@ void main() {
       fakeWs.close();
     });
 
-    test('sendStartActivityRealtime sends correct activity_start message', () async {
+    test('sendStartActivityRealtime sends correct activity_start message',
+        () async {
       final fakeWs = FakeWebSocketChannel();
       final session = LiveSession.forTesting(fakeWs);
 
@@ -137,7 +138,8 @@ void main() {
       });
     });
 
-    test('sendStopActivityRealtime sends correct activity_end message', () async {
+    test('sendStopActivityRealtime sends correct activity_end message',
+        () async {
       final fakeWs = FakeWebSocketChannel();
       final session = LiveSession.forTesting(fakeWs);
 

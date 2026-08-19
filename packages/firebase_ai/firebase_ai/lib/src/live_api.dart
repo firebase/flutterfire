@@ -175,11 +175,9 @@ final class ActivityDetectionConfig {
   // ignore: public_member_api_docs
   Map<String, Object?> toJson() => {
         if (startSensitivity case final startSensitivity?)
-          'start_of_speech_sensitivity':
-              'START_${startSensitivity.value}',
+          'start_of_speech_sensitivity': 'START_${startSensitivity.value}',
         if (endSensitivity case final endSensitivity?)
-          'end_of_speech_sensitivity':
-              'END_${endSensitivity.value}',
+          'end_of_speech_sensitivity': 'END_${endSensitivity.value}',
         if (prefixPaddingMS case final prefixPaddingMS?)
           'prefix_padding_ms': prefixPaddingMS,
         if (silenceDurationMS case final silenceDurationMS?)
