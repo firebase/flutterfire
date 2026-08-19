@@ -88,6 +88,8 @@ AuthorizationStatus convertToAuthorizationStatus(int? status) {
       return AuthorizationStatus.authorized;
     case 2:
       return AuthorizationStatus.provisional;
+    case 3:
+      return AuthorizationStatus.deniedPermanently;
     default:
       return AuthorizationStatus.notDetermined;
   }

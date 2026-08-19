@@ -108,6 +108,7 @@ const statusMap = {
   AuthorizationStatus.denied: 'Denied',
   AuthorizationStatus.notDetermined: 'Not Determined',
   AuthorizationStatus.provisional: 'Provisional',
+  AuthorizationStatus.deniedPermanently: 'Denied Permanently',
 };
 
 /// Maps a [AppleNotificationSetting] to a string value.
