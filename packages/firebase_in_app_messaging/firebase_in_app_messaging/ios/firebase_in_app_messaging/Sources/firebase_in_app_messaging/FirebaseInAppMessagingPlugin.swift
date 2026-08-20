@@ -27,6 +27,9 @@ public class FirebaseInAppMessagingPlugin: NSObject, FLTFirebasePluginProtocol, 
   private var pendingMessage: InAppMessagingDisplayMessage?
   private var pendingDelegate: InAppMessagingDisplayDelegate?
   private var pendingActions: [String: InAppMessagingAction] = [:]
+  /// The SDK's original display component. `messageDisplayComponent` is non-null
+  /// in Swift, so disable restores this instead of assigning `nil`.
+  private var defaultDisplayComponent: (any InAppMessagingDisplay)?
 
   /// Retained so `messageDisplayComponent` is not deallocated.
   private static var sharedInstance: FirebaseInAppMessagingPlugin?
@@ -115,10 +118,18 @@ public class FirebaseInAppMessagingPlugin: NSObject, FLTFirebasePluginProtocol, 
     completion: @escaping (Result<Void, Error>) -> Void
   ) {
     customDisplayEnabled = enabled
+    let inAppMessaging = InAppMessaging.inAppMessaging()
     if enabled {
-      InAppMessaging.inAppMessaging().messageDisplayComponent = self
+      if defaultDisplayComponent == nil,
+        !(inAppMessaging.messageDisplayComponent is FirebaseInAppMessagingPlugin)
+      {
+        defaultDisplayComponent = inAppMessaging.messageDisplayComponent
+      }
+      inAppMessaging.messageDisplayComponent = self
+    } else if let original = defaultDisplayComponent {
+      inAppMessaging.messageDisplayComponent = original
+      dismissPending(type: .typeAuto)
     } else {
-      InAppMessaging.inAppMessaging().messageDisplayComponent = nil
       dismissPending(type: .typeAuto)
     }
     completion(.success(()))
@@ -362,15 +373,13 @@ extension FirebaseInAppMessagingPlugin: InAppMessagingDisplay {
           backgroundColor: card.primaryActionButton.buttonBackgroundColor,
           url: card.primaryActionURL
         ),
-        secondaryAction: card.secondaryActionButton.map {
-          displayAction(
-            id: "\(campaignId)_secondary",
-            text: $0.buttonText,
-            textColor: $0.buttonTextColor,
-            backgroundColor: $0.buttonBackgroundColor,
-            url: card.secondaryActionURL
-          )
-        },
+        secondaryAction: displayAction(
+          id: "\(campaignId)_secondary",
+          text: card.secondaryActionButton?.buttonText,
+          textColor: card.secondaryActionButton?.buttonTextColor,
+          backgroundColor: card.secondaryActionButton?.buttonBackgroundColor,
+          url: card.secondaryActionURL
+        ),
         data: appData(message)
       )
     }
@@ -456,7 +465,7 @@ extension FirebaseInAppMessagingPlugin: InAppMessagingDisplay {
     backgroundColor: UIColor?,
     url: URL?
   ) -> FiamDisplayAction? {
-    if text == nil && url == nil {
+    if text == nil, url == nil {
       return nil
     }
     return FiamDisplayAction(

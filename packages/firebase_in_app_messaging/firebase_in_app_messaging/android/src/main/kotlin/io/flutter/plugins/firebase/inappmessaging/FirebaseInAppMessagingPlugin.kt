@@ -23,12 +23,12 @@ import com.google.firebase.inappmessaging.model.Action
 import com.google.firebase.inappmessaging.model.CardMessage
 import com.google.firebase.inappmessaging.model.InAppMessage
 import com.google.firebase.inappmessaging.model.MessageType
-import java.lang.ref.WeakReference
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin
 import io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry
+import java.lang.ref.WeakReference
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executor
 
@@ -90,9 +90,10 @@ class FirebaseInAppMessagingPlugin :
         override fun onActivityResumed(activity: Activity) {
           lastActivity = WeakReference(activity)
           if (customDisplayEnabled) {
-            FirebaseInAppMessaging.getInstance().setMessageDisplayComponent(
-                this@FirebaseInAppMessagingPlugin,
-            )
+            FirebaseInAppMessaging.getInstance()
+                .setMessageDisplayComponent(
+                    this@FirebaseInAppMessagingPlugin,
+                )
           }
         }
 
@@ -255,9 +256,11 @@ class FirebaseInAppMessagingPlugin :
         if (pending != null && action != null) {
           pending.callbacks.messageClicked(action)
         } else {
-          pending?.callbacks?.messageDismissed(
-              FirebaseInAppMessagingDisplayCallbacks.InAppMessagingDismissType.CLICK,
-          )
+          pending
+              ?.callbacks
+              ?.messageDismissed(
+                  FirebaseInAppMessagingDisplayCallbacks.InAppMessagingDismissType.CLICK,
+              )
         }
         callback(Result.success(Unit))
       } catch (exception: Exception) {
@@ -371,7 +374,8 @@ class FirebaseInAppMessagingPlugin :
             card?.portraitImageData?.imageUrl ?: message.imageUrl ?: message.imageData?.imageUrl,
         landscapeImageUrl = card?.landscapeImageData?.imageUrl,
         backgroundHexColor = message.backgroundHexColor,
-        action = if (card == null) toDisplayAction("${campaignId}_action", message.action) else null,
+        action =
+            if (card == null) toDisplayAction("${campaignId}_action", message.action) else null,
         primaryAction = toDisplayAction("${campaignId}_primary", card?.primaryAction),
         secondaryAction = toDisplayAction("${campaignId}_secondary", card?.secondaryAction),
         data = toData(message.data),
