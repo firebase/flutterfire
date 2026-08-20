@@ -18,7 +18,6 @@ import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.EventChannel.StreamHandler
 import io.flutter.plugin.common.MethodChannel
-import io.flutter.plugins.firebase.core.FlutterFirebaseCorePlugin
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin.cachedThreadPool
 import io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry
@@ -540,7 +539,7 @@ class FlutterFirebaseAuthPlugin : FlutterFirebasePlugin, FlutterPlugin, Activity
       val app = FirebaseApp.getInstance(pigeonApp.appName)
       val auth = FirebaseAuth.getInstance(app)
       pigeonApp.tenantId?.let { auth.setTenantId(it) }
-      val customDomain = FlutterFirebaseCorePlugin.customAuthDomain[pigeonApp.appName]
+      val customDomain = FlutterFirebasePlugin.customAuthDomain[pigeonApp.appName]
       if (customDomain != null) {
         auth.setCustomAuthDomain(customDomain)
       }
