@@ -35,8 +35,6 @@ let package = Package(
         .process("Resources")
       ],
       cSettings: [
-        .headerSearchPath("include/Private"),
-        .headerSearchPath("include/Public"),
         .define("LIBRARY_VERSION", to: "\"\(libraryVersion)\""),
         .define("LIBRARY_NAME", to: "\"flutter-fire-auth\""),
       ]
