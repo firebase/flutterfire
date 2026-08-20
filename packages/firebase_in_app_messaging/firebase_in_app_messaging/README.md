@@ -28,6 +28,24 @@ FirebaseInAppMessaging.instance.onMessageClicked.listen((event) {
 `onMessageImpression`, `onMessageDismissed` and `onMessageDisplayError` report
 the rest of the message lifecycle.
 
+### Custom Flutter display
+
+To render campaigns with your own widgets instead of the native templates:
+
+```dart
+FirebaseInAppMessaging.instance.onMessageDisplay.listen((message) async {
+  await message.impress();
+  // Draw your own UI, then:
+  // await message.click(message.action!);
+  // await message.dismiss();
+});
+
+await FirebaseInAppMessaging.instance.setCustomDisplayEnabled(true);
+```
+
+The plugin does not open action URLs. You must report impress / click / dismiss
+so campaign analytics keep working.
+
 ## Issues and feedback
 
 Please file FlutterFire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/firebase/flutterfire/issues/new).

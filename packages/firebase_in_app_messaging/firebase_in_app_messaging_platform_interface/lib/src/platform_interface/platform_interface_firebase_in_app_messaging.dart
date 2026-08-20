@@ -7,6 +7,7 @@ import 'package:meta/meta.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import '../events.dart';
+import '../in_app_message.dart';
 import '../method_channel/method_channel_firebase_in_app_messaging.dart';
 
 abstract class FirebaseInAppMessagingPlatform extends PlatformInterface {
@@ -88,5 +89,38 @@ abstract class FirebaseInAppMessagingPlatform extends PlatformInterface {
   /// Notifies about in-app messages that could not be rendered.
   Stream<InAppMessagingDisplayErrorEvent> get onMessageDisplayError {
     throw UnimplementedError('onMessageDisplayError is not implemented');
+  }
+
+  /// Opt in or out of custom Flutter rendering.
+  ///
+  /// When enabled, the native SDK does not draw its default templates. Eligible
+  /// campaigns are forwarded on [onMessageDisplay] instead.
+  Future<void> setCustomDisplayEnabled(bool enabled) {
+    throw UnimplementedError('setCustomDisplayEnabled() is not implemented');
+  }
+
+  /// Campaigns the native SDK wants shown, after [setCustomDisplayEnabled] is true.
+  Stream<InAppMessage> get onMessageDisplay {
+    throw UnimplementedError('onMessageDisplay is not implemented');
+  }
+
+  /// Reports that [campaignId] was displayed.
+  Future<void> reportImpression(String campaignId) {
+    throw UnimplementedError('reportImpression() is not implemented');
+  }
+
+  /// Reports that the user followed [actionId] on [campaignId].
+  Future<void> reportClick(String campaignId, String actionId) {
+    throw UnimplementedError('reportClick() is not implemented');
+  }
+
+  /// Reports that [campaignId] was dismissed.
+  Future<void> reportDismiss(String campaignId, String dismissType) {
+    throw UnimplementedError('reportDismiss() is not implemented');
+  }
+
+  /// Reports that Flutter failed to display [campaignId].
+  Future<void> reportDisplayError(String campaignId, String reason) {
+    throw UnimplementedError('reportDisplayError() is not implemented');
   }
 }
