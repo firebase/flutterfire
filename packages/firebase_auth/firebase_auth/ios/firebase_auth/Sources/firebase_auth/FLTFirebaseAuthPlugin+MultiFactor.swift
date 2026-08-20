@@ -76,7 +76,7 @@ extension FLTFirebaseAuthPlugin: MultiFactorUserHostApi, MultiFactoResolverHostA
       completion(.failure(AuthErrors.noCurrentUser()))
       return
     }
-    multiFactor.getSession { session, _ in
+    multiFactor.getSessionWithCompletion { session, _ in
       let id = UUID().uuidString
       self.multiFactorSessionMap[id] = session
       completion(.success(InternalMultiFactorSession(id: id)))
@@ -84,7 +84,8 @@ extension FLTFirebaseAuthPlugin: MultiFactorUserHostApi, MultiFactoResolverHostA
   }
 
   func unenroll(
-    app: AuthPigeonFirebaseApp, factorUid: String, completion: @escaping (Result<Void, Error>) -> Void
+    app: AuthPigeonFirebaseApp, factorUid: String,
+    completion: @escaping (Result<Void, Error>) -> Void
   ) {
     guard let multiFactor = getAppMultiFactorFromPigeon(app) else {
       completion(.failure(AuthErrors.noCurrentUser()))

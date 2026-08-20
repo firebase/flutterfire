@@ -73,7 +73,7 @@ private func doubleEqualsFirebaseAuthMessages(_ lhs: Double, _ rhs: Double) -> B
 
 private func doubleHashFirebaseAuthMessages(_ value: Double, _ hasher: inout Hasher) {
   if value.isNaN {
-    hasher.combine(0x7FF8000000000000)
+    hasher.combine(0x7FF8_0000_0000_0000)
   } else {
     // Normalize -0.0 to 0.0
     hasher.combine(value == 0 ? 0 : value)
@@ -176,7 +176,6 @@ func deepHashFirebaseAuthMessages(value: Any?, hasher: inout Hasher) {
   }
 }
 
-
 /// The type of operation that generated the action code from calling
 /// [checkActionCode].
 enum ActionCodeInfoOperation: Int {
@@ -199,7 +198,6 @@ enum ActionCodeInfoOperation: Int {
 /// Generated class from Pigeon that represents data sent in messages.
 struct InternalMultiFactorSession: Hashable {
   var id: String
-
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
   static func fromList(_ pigeonVar_list: [Any?]) -> InternalMultiFactorSession? {
@@ -232,7 +230,6 @@ struct InternalPhoneMultiFactorAssertion: Hashable {
   var verificationId: String
   var verificationCode: String
 
-
   // swift-format-ignore: AlwaysUseLowerCamelCase
   static func fromList(_ pigeonVar_list: [Any?]) -> InternalPhoneMultiFactorAssertion? {
     let verificationId = pigeonVar_list[0] as! String
@@ -249,11 +246,14 @@ struct InternalPhoneMultiFactorAssertion: Hashable {
       verificationCode,
     ]
   }
-  static func == (lhs: InternalPhoneMultiFactorAssertion, rhs: InternalPhoneMultiFactorAssertion) -> Bool {
+  static func == (lhs: InternalPhoneMultiFactorAssertion, rhs: InternalPhoneMultiFactorAssertion)
+    -> Bool
+  {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return deepEqualsFirebaseAuthMessages(lhs.verificationId, rhs.verificationId) && deepEqualsFirebaseAuthMessages(lhs.verificationCode, rhs.verificationCode)
+    return deepEqualsFirebaseAuthMessages(lhs.verificationId, rhs.verificationId)
+      && deepEqualsFirebaseAuthMessages(lhs.verificationCode, rhs.verificationCode)
   }
 
   func hash(into hasher: inout Hasher) {
@@ -270,7 +270,6 @@ struct InternalMultiFactorInfo: Hashable {
   var factorId: String? = nil
   var uid: String
   var phoneNumber: String? = nil
-
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
   static func fromList(_ pigeonVar_list: [Any?]) -> InternalMultiFactorInfo? {
@@ -301,7 +300,11 @@ struct InternalMultiFactorInfo: Hashable {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return deepEqualsFirebaseAuthMessages(lhs.displayName, rhs.displayName) && deepEqualsFirebaseAuthMessages(lhs.enrollmentTimestamp, rhs.enrollmentTimestamp) && deepEqualsFirebaseAuthMessages(lhs.factorId, rhs.factorId) && deepEqualsFirebaseAuthMessages(lhs.uid, rhs.uid) && deepEqualsFirebaseAuthMessages(lhs.phoneNumber, rhs.phoneNumber)
+    return deepEqualsFirebaseAuthMessages(lhs.displayName, rhs.displayName)
+      && deepEqualsFirebaseAuthMessages(lhs.enrollmentTimestamp, rhs.enrollmentTimestamp)
+      && deepEqualsFirebaseAuthMessages(lhs.factorId, rhs.factorId)
+      && deepEqualsFirebaseAuthMessages(lhs.uid, rhs.uid)
+      && deepEqualsFirebaseAuthMessages(lhs.phoneNumber, rhs.phoneNumber)
   }
 
   func hash(into hasher: inout Hasher) {
@@ -319,7 +322,6 @@ struct AuthPigeonFirebaseApp: Hashable {
   var appName: String
   var tenantId: String? = nil
   var customAuthDomain: String? = nil
-
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
   static func fromList(_ pigeonVar_list: [Any?]) -> AuthPigeonFirebaseApp? {
@@ -344,7 +346,9 @@ struct AuthPigeonFirebaseApp: Hashable {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return deepEqualsFirebaseAuthMessages(lhs.appName, rhs.appName) && deepEqualsFirebaseAuthMessages(lhs.tenantId, rhs.tenantId) && deepEqualsFirebaseAuthMessages(lhs.customAuthDomain, rhs.customAuthDomain)
+    return deepEqualsFirebaseAuthMessages(lhs.appName, rhs.appName)
+      && deepEqualsFirebaseAuthMessages(lhs.tenantId, rhs.tenantId)
+      && deepEqualsFirebaseAuthMessages(lhs.customAuthDomain, rhs.customAuthDomain)
   }
 
   func hash(into hasher: inout Hasher) {
@@ -359,7 +363,6 @@ struct AuthPigeonFirebaseApp: Hashable {
 struct InternalActionCodeInfoData: Hashable {
   var email: String? = nil
   var previousEmail: String? = nil
-
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
   static func fromList(_ pigeonVar_list: [Any?]) -> InternalActionCodeInfoData? {
@@ -381,7 +384,8 @@ struct InternalActionCodeInfoData: Hashable {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return deepEqualsFirebaseAuthMessages(lhs.email, rhs.email) && deepEqualsFirebaseAuthMessages(lhs.previousEmail, rhs.previousEmail)
+    return deepEqualsFirebaseAuthMessages(lhs.email, rhs.email)
+      && deepEqualsFirebaseAuthMessages(lhs.previousEmail, rhs.previousEmail)
   }
 
   func hash(into hasher: inout Hasher) {
@@ -395,7 +399,6 @@ struct InternalActionCodeInfoData: Hashable {
 struct InternalActionCodeInfo: Hashable {
   var operation: ActionCodeInfoOperation
   var data: InternalActionCodeInfoData
-
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
   static func fromList(_ pigeonVar_list: [Any?]) -> InternalActionCodeInfo? {
@@ -417,7 +420,8 @@ struct InternalActionCodeInfo: Hashable {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return deepEqualsFirebaseAuthMessages(lhs.operation, rhs.operation) && deepEqualsFirebaseAuthMessages(lhs.data, rhs.data)
+    return deepEqualsFirebaseAuthMessages(lhs.operation, rhs.operation)
+      && deepEqualsFirebaseAuthMessages(lhs.data, rhs.data)
   }
 
   func hash(into hasher: inout Hasher) {
@@ -434,7 +438,6 @@ struct InternalAdditionalUserInfo: Hashable {
   var username: String? = nil
   var authorizationCode: String? = nil
   var profile: [String?: Any?]? = nil
-
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
   static func fromList(_ pigeonVar_list: [Any?]) -> InternalAdditionalUserInfo? {
@@ -465,7 +468,11 @@ struct InternalAdditionalUserInfo: Hashable {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return deepEqualsFirebaseAuthMessages(lhs.isNewUser, rhs.isNewUser) && deepEqualsFirebaseAuthMessages(lhs.providerId, rhs.providerId) && deepEqualsFirebaseAuthMessages(lhs.username, rhs.username) && deepEqualsFirebaseAuthMessages(lhs.authorizationCode, rhs.authorizationCode) && deepEqualsFirebaseAuthMessages(lhs.profile, rhs.profile)
+    return deepEqualsFirebaseAuthMessages(lhs.isNewUser, rhs.isNewUser)
+      && deepEqualsFirebaseAuthMessages(lhs.providerId, rhs.providerId)
+      && deepEqualsFirebaseAuthMessages(lhs.username, rhs.username)
+      && deepEqualsFirebaseAuthMessages(lhs.authorizationCode, rhs.authorizationCode)
+      && deepEqualsFirebaseAuthMessages(lhs.profile, rhs.profile)
   }
 
   func hash(into hasher: inout Hasher) {
@@ -484,7 +491,6 @@ struct InternalAuthCredential: Hashable {
   var signInMethod: String
   var nativeId: Int64
   var accessToken: String? = nil
-
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
   static func fromList(_ pigeonVar_list: [Any?]) -> InternalAuthCredential? {
@@ -512,7 +518,10 @@ struct InternalAuthCredential: Hashable {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return deepEqualsFirebaseAuthMessages(lhs.providerId, rhs.providerId) && deepEqualsFirebaseAuthMessages(lhs.signInMethod, rhs.signInMethod) && deepEqualsFirebaseAuthMessages(lhs.nativeId, rhs.nativeId) && deepEqualsFirebaseAuthMessages(lhs.accessToken, rhs.accessToken)
+    return deepEqualsFirebaseAuthMessages(lhs.providerId, rhs.providerId)
+      && deepEqualsFirebaseAuthMessages(lhs.signInMethod, rhs.signInMethod)
+      && deepEqualsFirebaseAuthMessages(lhs.nativeId, rhs.nativeId)
+      && deepEqualsFirebaseAuthMessages(lhs.accessToken, rhs.accessToken)
   }
 
   func hash(into hasher: inout Hasher) {
@@ -538,7 +547,6 @@ struct InternalUserInfo: Hashable {
   var refreshToken: String? = nil
   var creationTimestamp: Int64? = nil
   var lastSignInTimestamp: Int64? = nil
-
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
   static func fromList(_ pigeonVar_list: [Any?]) -> InternalUserInfo? {
@@ -590,7 +598,18 @@ struct InternalUserInfo: Hashable {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return deepEqualsFirebaseAuthMessages(lhs.uid, rhs.uid) && deepEqualsFirebaseAuthMessages(lhs.email, rhs.email) && deepEqualsFirebaseAuthMessages(lhs.displayName, rhs.displayName) && deepEqualsFirebaseAuthMessages(lhs.photoUrl, rhs.photoUrl) && deepEqualsFirebaseAuthMessages(lhs.phoneNumber, rhs.phoneNumber) && deepEqualsFirebaseAuthMessages(lhs.isAnonymous, rhs.isAnonymous) && deepEqualsFirebaseAuthMessages(lhs.isEmailVerified, rhs.isEmailVerified) && deepEqualsFirebaseAuthMessages(lhs.providerId, rhs.providerId) && deepEqualsFirebaseAuthMessages(lhs.tenantId, rhs.tenantId) && deepEqualsFirebaseAuthMessages(lhs.refreshToken, rhs.refreshToken) && deepEqualsFirebaseAuthMessages(lhs.creationTimestamp, rhs.creationTimestamp) && deepEqualsFirebaseAuthMessages(lhs.lastSignInTimestamp, rhs.lastSignInTimestamp)
+    return deepEqualsFirebaseAuthMessages(lhs.uid, rhs.uid)
+      && deepEqualsFirebaseAuthMessages(lhs.email, rhs.email)
+      && deepEqualsFirebaseAuthMessages(lhs.displayName, rhs.displayName)
+      && deepEqualsFirebaseAuthMessages(lhs.photoUrl, rhs.photoUrl)
+      && deepEqualsFirebaseAuthMessages(lhs.phoneNumber, rhs.phoneNumber)
+      && deepEqualsFirebaseAuthMessages(lhs.isAnonymous, rhs.isAnonymous)
+      && deepEqualsFirebaseAuthMessages(lhs.isEmailVerified, rhs.isEmailVerified)
+      && deepEqualsFirebaseAuthMessages(lhs.providerId, rhs.providerId)
+      && deepEqualsFirebaseAuthMessages(lhs.tenantId, rhs.tenantId)
+      && deepEqualsFirebaseAuthMessages(lhs.refreshToken, rhs.refreshToken)
+      && deepEqualsFirebaseAuthMessages(lhs.creationTimestamp, rhs.creationTimestamp)
+      && deepEqualsFirebaseAuthMessages(lhs.lastSignInTimestamp, rhs.lastSignInTimestamp)
   }
 
   func hash(into hasher: inout Hasher) {
@@ -615,7 +634,6 @@ struct InternalUserDetails: Hashable {
   var userInfo: InternalUserInfo
   var providerData: [[AnyHashable?: Any?]?]
 
-
   // swift-format-ignore: AlwaysUseLowerCamelCase
   static func fromList(_ pigeonVar_list: [Any?]) -> InternalUserDetails? {
     let userInfo = pigeonVar_list[0] as! InternalUserInfo
@@ -636,7 +654,8 @@ struct InternalUserDetails: Hashable {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return deepEqualsFirebaseAuthMessages(lhs.userInfo, rhs.userInfo) && deepEqualsFirebaseAuthMessages(lhs.providerData, rhs.providerData)
+    return deepEqualsFirebaseAuthMessages(lhs.userInfo, rhs.userInfo)
+      && deepEqualsFirebaseAuthMessages(lhs.providerData, rhs.providerData)
   }
 
   func hash(into hasher: inout Hasher) {
@@ -651,7 +670,6 @@ struct InternalUserCredential: Hashable {
   var user: InternalUserDetails? = nil
   var additionalUserInfo: InternalAdditionalUserInfo? = nil
   var credential: InternalAuthCredential? = nil
-
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
   static func fromList(_ pigeonVar_list: [Any?]) -> InternalUserCredential? {
@@ -676,7 +694,9 @@ struct InternalUserCredential: Hashable {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return deepEqualsFirebaseAuthMessages(lhs.user, rhs.user) && deepEqualsFirebaseAuthMessages(lhs.additionalUserInfo, rhs.additionalUserInfo) && deepEqualsFirebaseAuthMessages(lhs.credential, rhs.credential)
+    return deepEqualsFirebaseAuthMessages(lhs.user, rhs.user)
+      && deepEqualsFirebaseAuthMessages(lhs.additionalUserInfo, rhs.additionalUserInfo)
+      && deepEqualsFirebaseAuthMessages(lhs.credential, rhs.credential)
   }
 
   func hash(into hasher: inout Hasher) {
@@ -693,7 +713,6 @@ struct InternalAuthCredentialInput: Hashable {
   var signInMethod: String
   var token: String? = nil
   var accessToken: String? = nil
-
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
   static func fromList(_ pigeonVar_list: [Any?]) -> InternalAuthCredentialInput? {
@@ -721,7 +740,10 @@ struct InternalAuthCredentialInput: Hashable {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return deepEqualsFirebaseAuthMessages(lhs.providerId, rhs.providerId) && deepEqualsFirebaseAuthMessages(lhs.signInMethod, rhs.signInMethod) && deepEqualsFirebaseAuthMessages(lhs.token, rhs.token) && deepEqualsFirebaseAuthMessages(lhs.accessToken, rhs.accessToken)
+    return deepEqualsFirebaseAuthMessages(lhs.providerId, rhs.providerId)
+      && deepEqualsFirebaseAuthMessages(lhs.signInMethod, rhs.signInMethod)
+      && deepEqualsFirebaseAuthMessages(lhs.token, rhs.token)
+      && deepEqualsFirebaseAuthMessages(lhs.accessToken, rhs.accessToken)
   }
 
   func hash(into hasher: inout Hasher) {
@@ -743,7 +765,6 @@ struct InternalActionCodeSettings: Hashable {
   var androidInstallApp: Bool
   var androidMinimumVersion: String? = nil
   var linkDomain: String? = nil
-
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
   static func fromList(_ pigeonVar_list: [Any?]) -> InternalActionCodeSettings? {
@@ -783,7 +804,14 @@ struct InternalActionCodeSettings: Hashable {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return deepEqualsFirebaseAuthMessages(lhs.url, rhs.url) && deepEqualsFirebaseAuthMessages(lhs.dynamicLinkDomain, rhs.dynamicLinkDomain) && deepEqualsFirebaseAuthMessages(lhs.handleCodeInApp, rhs.handleCodeInApp) && deepEqualsFirebaseAuthMessages(lhs.iOSBundleId, rhs.iOSBundleId) && deepEqualsFirebaseAuthMessages(lhs.androidPackageName, rhs.androidPackageName) && deepEqualsFirebaseAuthMessages(lhs.androidInstallApp, rhs.androidInstallApp) && deepEqualsFirebaseAuthMessages(lhs.androidMinimumVersion, rhs.androidMinimumVersion) && deepEqualsFirebaseAuthMessages(lhs.linkDomain, rhs.linkDomain)
+    return deepEqualsFirebaseAuthMessages(lhs.url, rhs.url)
+      && deepEqualsFirebaseAuthMessages(lhs.dynamicLinkDomain, rhs.dynamicLinkDomain)
+      && deepEqualsFirebaseAuthMessages(lhs.handleCodeInApp, rhs.handleCodeInApp)
+      && deepEqualsFirebaseAuthMessages(lhs.iOSBundleId, rhs.iOSBundleId)
+      && deepEqualsFirebaseAuthMessages(lhs.androidPackageName, rhs.androidPackageName)
+      && deepEqualsFirebaseAuthMessages(lhs.androidInstallApp, rhs.androidInstallApp)
+      && deepEqualsFirebaseAuthMessages(lhs.androidMinimumVersion, rhs.androidMinimumVersion)
+      && deepEqualsFirebaseAuthMessages(lhs.linkDomain, rhs.linkDomain)
   }
 
   func hash(into hasher: inout Hasher) {
@@ -806,7 +834,6 @@ struct InternalFirebaseAuthSettings: Hashable {
   var phoneNumber: String? = nil
   var smsCode: String? = nil
   var forceRecaptchaFlow: Bool? = nil
-
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
   static func fromList(_ pigeonVar_list: [Any?]) -> InternalFirebaseAuthSettings? {
@@ -837,7 +864,12 @@ struct InternalFirebaseAuthSettings: Hashable {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return deepEqualsFirebaseAuthMessages(lhs.appVerificationDisabledForTesting, rhs.appVerificationDisabledForTesting) && deepEqualsFirebaseAuthMessages(lhs.userAccessGroup, rhs.userAccessGroup) && deepEqualsFirebaseAuthMessages(lhs.phoneNumber, rhs.phoneNumber) && deepEqualsFirebaseAuthMessages(lhs.smsCode, rhs.smsCode) && deepEqualsFirebaseAuthMessages(lhs.forceRecaptchaFlow, rhs.forceRecaptchaFlow)
+    return deepEqualsFirebaseAuthMessages(
+      lhs.appVerificationDisabledForTesting, rhs.appVerificationDisabledForTesting)
+      && deepEqualsFirebaseAuthMessages(lhs.userAccessGroup, rhs.userAccessGroup)
+      && deepEqualsFirebaseAuthMessages(lhs.phoneNumber, rhs.phoneNumber)
+      && deepEqualsFirebaseAuthMessages(lhs.smsCode, rhs.smsCode)
+      && deepEqualsFirebaseAuthMessages(lhs.forceRecaptchaFlow, rhs.forceRecaptchaFlow)
   }
 
   func hash(into hasher: inout Hasher) {
@@ -855,7 +887,6 @@ struct InternalSignInProvider: Hashable {
   var providerId: String
   var scopes: [String?]? = nil
   var customParameters: [String?: String?]? = nil
-
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
   static func fromList(_ pigeonVar_list: [Any?]) -> InternalSignInProvider? {
@@ -880,7 +911,9 @@ struct InternalSignInProvider: Hashable {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return deepEqualsFirebaseAuthMessages(lhs.providerId, rhs.providerId) && deepEqualsFirebaseAuthMessages(lhs.scopes, rhs.scopes) && deepEqualsFirebaseAuthMessages(lhs.customParameters, rhs.customParameters)
+    return deepEqualsFirebaseAuthMessages(lhs.providerId, rhs.providerId)
+      && deepEqualsFirebaseAuthMessages(lhs.scopes, rhs.scopes)
+      && deepEqualsFirebaseAuthMessages(lhs.customParameters, rhs.customParameters)
   }
 
   func hash(into hasher: inout Hasher) {
@@ -899,7 +932,6 @@ struct InternalVerifyPhoneNumberRequest: Hashable {
   var autoRetrievedSmsCodeForTesting: String? = nil
   var multiFactorInfoId: String? = nil
   var multiFactorSessionId: String? = nil
-
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
   static func fromList(_ pigeonVar_list: [Any?]) -> InternalVerifyPhoneNumberRequest? {
@@ -929,11 +961,19 @@ struct InternalVerifyPhoneNumberRequest: Hashable {
       multiFactorSessionId,
     ]
   }
-  static func == (lhs: InternalVerifyPhoneNumberRequest, rhs: InternalVerifyPhoneNumberRequest) -> Bool {
+  static func == (lhs: InternalVerifyPhoneNumberRequest, rhs: InternalVerifyPhoneNumberRequest)
+    -> Bool
+  {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return deepEqualsFirebaseAuthMessages(lhs.phoneNumber, rhs.phoneNumber) && deepEqualsFirebaseAuthMessages(lhs.timeout, rhs.timeout) && deepEqualsFirebaseAuthMessages(lhs.forceResendingToken, rhs.forceResendingToken) && deepEqualsFirebaseAuthMessages(lhs.autoRetrievedSmsCodeForTesting, rhs.autoRetrievedSmsCodeForTesting) && deepEqualsFirebaseAuthMessages(lhs.multiFactorInfoId, rhs.multiFactorInfoId) && deepEqualsFirebaseAuthMessages(lhs.multiFactorSessionId, rhs.multiFactorSessionId)
+    return deepEqualsFirebaseAuthMessages(lhs.phoneNumber, rhs.phoneNumber)
+      && deepEqualsFirebaseAuthMessages(lhs.timeout, rhs.timeout)
+      && deepEqualsFirebaseAuthMessages(lhs.forceResendingToken, rhs.forceResendingToken)
+      && deepEqualsFirebaseAuthMessages(
+        lhs.autoRetrievedSmsCodeForTesting, rhs.autoRetrievedSmsCodeForTesting)
+      && deepEqualsFirebaseAuthMessages(lhs.multiFactorInfoId, rhs.multiFactorInfoId)
+      && deepEqualsFirebaseAuthMessages(lhs.multiFactorSessionId, rhs.multiFactorSessionId)
   }
 
   func hash(into hasher: inout Hasher) {
@@ -956,7 +996,6 @@ struct InternalIdTokenResult: Hashable {
   var signInProvider: String? = nil
   var claims: [String?: Any?]? = nil
   var signInSecondFactor: String? = nil
-
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
   static func fromList(_ pigeonVar_list: [Any?]) -> InternalIdTokenResult? {
@@ -993,7 +1032,13 @@ struct InternalIdTokenResult: Hashable {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return deepEqualsFirebaseAuthMessages(lhs.token, rhs.token) && deepEqualsFirebaseAuthMessages(lhs.expirationTimestamp, rhs.expirationTimestamp) && deepEqualsFirebaseAuthMessages(lhs.authTimestamp, rhs.authTimestamp) && deepEqualsFirebaseAuthMessages(lhs.issuedAtTimestamp, rhs.issuedAtTimestamp) && deepEqualsFirebaseAuthMessages(lhs.signInProvider, rhs.signInProvider) && deepEqualsFirebaseAuthMessages(lhs.claims, rhs.claims) && deepEqualsFirebaseAuthMessages(lhs.signInSecondFactor, rhs.signInSecondFactor)
+    return deepEqualsFirebaseAuthMessages(lhs.token, rhs.token)
+      && deepEqualsFirebaseAuthMessages(lhs.expirationTimestamp, rhs.expirationTimestamp)
+      && deepEqualsFirebaseAuthMessages(lhs.authTimestamp, rhs.authTimestamp)
+      && deepEqualsFirebaseAuthMessages(lhs.issuedAtTimestamp, rhs.issuedAtTimestamp)
+      && deepEqualsFirebaseAuthMessages(lhs.signInProvider, rhs.signInProvider)
+      && deepEqualsFirebaseAuthMessages(lhs.claims, rhs.claims)
+      && deepEqualsFirebaseAuthMessages(lhs.signInSecondFactor, rhs.signInSecondFactor)
   }
 
   func hash(into hasher: inout Hasher) {
@@ -1014,7 +1059,6 @@ struct InternalUserProfile: Hashable {
   var photoUrl: String? = nil
   var displayNameChanged: Bool
   var photoUrlChanged: Bool
-
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
   static func fromList(_ pigeonVar_list: [Any?]) -> InternalUserProfile? {
@@ -1042,7 +1086,10 @@ struct InternalUserProfile: Hashable {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return deepEqualsFirebaseAuthMessages(lhs.displayName, rhs.displayName) && deepEqualsFirebaseAuthMessages(lhs.photoUrl, rhs.photoUrl) && deepEqualsFirebaseAuthMessages(lhs.displayNameChanged, rhs.displayNameChanged) && deepEqualsFirebaseAuthMessages(lhs.photoUrlChanged, rhs.photoUrlChanged)
+    return deepEqualsFirebaseAuthMessages(lhs.displayName, rhs.displayName)
+      && deepEqualsFirebaseAuthMessages(lhs.photoUrl, rhs.photoUrl)
+      && deepEqualsFirebaseAuthMessages(lhs.displayNameChanged, rhs.displayNameChanged)
+      && deepEqualsFirebaseAuthMessages(lhs.photoUrlChanged, rhs.photoUrlChanged)
   }
 
   func hash(into hasher: inout Hasher) {
@@ -1061,7 +1108,6 @@ struct InternalTotpSecret: Hashable {
   var enrollmentCompletionDeadline: Int64? = nil
   var hashingAlgorithm: String? = nil
   var secretKey: String
-
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
   static func fromList(_ pigeonVar_list: [Any?]) -> InternalTotpSecret? {
@@ -1092,7 +1138,12 @@ struct InternalTotpSecret: Hashable {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return deepEqualsFirebaseAuthMessages(lhs.codeIntervalSeconds, rhs.codeIntervalSeconds) && deepEqualsFirebaseAuthMessages(lhs.codeLength, rhs.codeLength) && deepEqualsFirebaseAuthMessages(lhs.enrollmentCompletionDeadline, rhs.enrollmentCompletionDeadline) && deepEqualsFirebaseAuthMessages(lhs.hashingAlgorithm, rhs.hashingAlgorithm) && deepEqualsFirebaseAuthMessages(lhs.secretKey, rhs.secretKey)
+    return deepEqualsFirebaseAuthMessages(lhs.codeIntervalSeconds, rhs.codeIntervalSeconds)
+      && deepEqualsFirebaseAuthMessages(lhs.codeLength, rhs.codeLength)
+      && deepEqualsFirebaseAuthMessages(
+        lhs.enrollmentCompletionDeadline, rhs.enrollmentCompletionDeadline)
+      && deepEqualsFirebaseAuthMessages(lhs.hashingAlgorithm, rhs.hashingAlgorithm)
+      && deepEqualsFirebaseAuthMessages(lhs.secretKey, rhs.secretKey)
   }
 
   func hash(into hasher: inout Hasher) {
@@ -1237,45 +1288,92 @@ private class FirebaseAuthMessagesPigeonCodecReaderWriter: FlutterStandardReader
 }
 
 class FirebaseAuthMessagesPigeonCodec: FlutterStandardMessageCodec, @unchecked Sendable {
-  static let shared = FirebaseAuthMessagesPigeonCodec(readerWriter: FirebaseAuthMessagesPigeonCodecReaderWriter())
+  static let shared = FirebaseAuthMessagesPigeonCodec(
+    readerWriter: FirebaseAuthMessagesPigeonCodecReaderWriter())
 }
-
 
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol FirebaseAuthHostApi {
-  func registerIdTokenListener(app: AuthPigeonFirebaseApp, completion: @escaping (Result<String, Error>) -> Void)
-  func registerAuthStateListener(app: AuthPigeonFirebaseApp, completion: @escaping (Result<String, Error>) -> Void)
-  func useEmulator(app: AuthPigeonFirebaseApp, host: String, port: Int64, completion: @escaping (Result<Void, Error>) -> Void)
-  func applyActionCode(app: AuthPigeonFirebaseApp, code: String, completion: @escaping (Result<Void, Error>) -> Void)
-  func checkActionCode(app: AuthPigeonFirebaseApp, code: String, completion: @escaping (Result<InternalActionCodeInfo, Error>) -> Void)
-  func confirmPasswordReset(app: AuthPigeonFirebaseApp, code: String, newPassword: String, completion: @escaping (Result<Void, Error>) -> Void)
-  func createUserWithEmailAndPassword(app: AuthPigeonFirebaseApp, email: String, password: String, completion: @escaping (Result<InternalUserCredential, Error>) -> Void)
-  func signInAnonymously(app: AuthPigeonFirebaseApp, completion: @escaping (Result<InternalUserCredential, Error>) -> Void)
-  func signInWithCredential(app: AuthPigeonFirebaseApp, input: [String?: Any?], completion: @escaping (Result<InternalUserCredential, Error>) -> Void)
-  func signInWithCustomToken(app: AuthPigeonFirebaseApp, token: String, completion: @escaping (Result<InternalUserCredential, Error>) -> Void)
-  func signInWithEmailAndPassword(app: AuthPigeonFirebaseApp, email: String, password: String, completion: @escaping (Result<InternalUserCredential, Error>) -> Void)
-  func signInWithEmailLink(app: AuthPigeonFirebaseApp, email: String, emailLink: String, completion: @escaping (Result<InternalUserCredential, Error>) -> Void)
-  func signInWithProvider(app: AuthPigeonFirebaseApp, signInProvider: InternalSignInProvider, completion: @escaping (Result<InternalUserCredential, Error>) -> Void)
+  func registerIdTokenListener(
+    app: AuthPigeonFirebaseApp, completion: @escaping (Result<String, Error>) -> Void)
+  func registerAuthStateListener(
+    app: AuthPigeonFirebaseApp, completion: @escaping (Result<String, Error>) -> Void)
+  func useEmulator(
+    app: AuthPigeonFirebaseApp, host: String, port: Int64,
+    completion: @escaping (Result<Void, Error>) -> Void)
+  func applyActionCode(
+    app: AuthPigeonFirebaseApp, code: String, completion: @escaping (Result<Void, Error>) -> Void)
+  func checkActionCode(
+    app: AuthPigeonFirebaseApp, code: String,
+    completion: @escaping (Result<InternalActionCodeInfo, Error>) -> Void)
+  func confirmPasswordReset(
+    app: AuthPigeonFirebaseApp, code: String, newPassword: String,
+    completion: @escaping (Result<Void, Error>) -> Void)
+  func createUserWithEmailAndPassword(
+    app: AuthPigeonFirebaseApp, email: String, password: String,
+    completion: @escaping (Result<InternalUserCredential, Error>) -> Void)
+  func signInAnonymously(
+    app: AuthPigeonFirebaseApp,
+    completion: @escaping (Result<InternalUserCredential, Error>) -> Void)
+  func signInWithCredential(
+    app: AuthPigeonFirebaseApp, input: [String?: Any?],
+    completion: @escaping (Result<InternalUserCredential, Error>) -> Void)
+  func signInWithCustomToken(
+    app: AuthPigeonFirebaseApp, token: String,
+    completion: @escaping (Result<InternalUserCredential, Error>) -> Void)
+  func signInWithEmailAndPassword(
+    app: AuthPigeonFirebaseApp, email: String, password: String,
+    completion: @escaping (Result<InternalUserCredential, Error>) -> Void)
+  func signInWithEmailLink(
+    app: AuthPigeonFirebaseApp, email: String, emailLink: String,
+    completion: @escaping (Result<InternalUserCredential, Error>) -> Void)
+  func signInWithProvider(
+    app: AuthPigeonFirebaseApp, signInProvider: InternalSignInProvider,
+    completion: @escaping (Result<InternalUserCredential, Error>) -> Void)
   func signOut(app: AuthPigeonFirebaseApp, completion: @escaping (Result<Void, Error>) -> Void)
-  func fetchSignInMethodsForEmail(app: AuthPigeonFirebaseApp, email: String, completion: @escaping (Result<[String], Error>) -> Void)
-  func sendPasswordResetEmail(app: AuthPigeonFirebaseApp, email: String, actionCodeSettings: InternalActionCodeSettings?, completion: @escaping (Result<Void, Error>) -> Void)
-  func sendSignInLinkToEmail(app: AuthPigeonFirebaseApp, email: String, actionCodeSettings: InternalActionCodeSettings, completion: @escaping (Result<Void, Error>) -> Void)
-  func setLanguageCode(app: AuthPigeonFirebaseApp, languageCode: String?, completion: @escaping (Result<String, Error>) -> Void)
-  func setSettings(app: AuthPigeonFirebaseApp, settings: InternalFirebaseAuthSettings, completion: @escaping (Result<Void, Error>) -> Void)
-  func verifyPasswordResetCode(app: AuthPigeonFirebaseApp, code: String, completion: @escaping (Result<String, Error>) -> Void)
-  func verifyPhoneNumber(app: AuthPigeonFirebaseApp, request: InternalVerifyPhoneNumberRequest, completion: @escaping (Result<String, Error>) -> Void)
-  func revokeTokenWithAuthorizationCode(app: AuthPigeonFirebaseApp, authorizationCode: String, completion: @escaping (Result<Void, Error>) -> Void)
-  func revokeAccessToken(app: AuthPigeonFirebaseApp, accessToken: String, completion: @escaping (Result<Void, Error>) -> Void)
-  func initializeRecaptchaConfig(app: AuthPigeonFirebaseApp, completion: @escaping (Result<Void, Error>) -> Void)
+  func fetchSignInMethodsForEmail(
+    app: AuthPigeonFirebaseApp, email: String,
+    completion: @escaping (Result<[String], Error>) -> Void)
+  func sendPasswordResetEmail(
+    app: AuthPigeonFirebaseApp, email: String, actionCodeSettings: InternalActionCodeSettings?,
+    completion: @escaping (Result<Void, Error>) -> Void)
+  func sendSignInLinkToEmail(
+    app: AuthPigeonFirebaseApp, email: String, actionCodeSettings: InternalActionCodeSettings,
+    completion: @escaping (Result<Void, Error>) -> Void)
+  func setLanguageCode(
+    app: AuthPigeonFirebaseApp, languageCode: String?,
+    completion: @escaping (Result<String, Error>) -> Void)
+  func setSettings(
+    app: AuthPigeonFirebaseApp, settings: InternalFirebaseAuthSettings,
+    completion: @escaping (Result<Void, Error>) -> Void)
+  func verifyPasswordResetCode(
+    app: AuthPigeonFirebaseApp, code: String, completion: @escaping (Result<String, Error>) -> Void)
+  func verifyPhoneNumber(
+    app: AuthPigeonFirebaseApp, request: InternalVerifyPhoneNumberRequest,
+    completion: @escaping (Result<String, Error>) -> Void)
+  func revokeTokenWithAuthorizationCode(
+    app: AuthPigeonFirebaseApp, authorizationCode: String,
+    completion: @escaping (Result<Void, Error>) -> Void)
+  func revokeAccessToken(
+    app: AuthPigeonFirebaseApp, accessToken: String,
+    completion: @escaping (Result<Void, Error>) -> Void)
+  func initializeRecaptchaConfig(
+    app: AuthPigeonFirebaseApp, completion: @escaping (Result<Void, Error>) -> Void)
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
 class FirebaseAuthHostApiSetup {
   static var codec: FlutterStandardMessageCodec { FirebaseAuthMessagesPigeonCodec.shared }
   /// Sets up an instance of `FirebaseAuthHostApi` to handle messages through the `binaryMessenger`.
-  static func setUp(binaryMessenger: FlutterBinaryMessenger, api: FirebaseAuthHostApi?, messageChannelSuffix: String = "") {
+  static func setUp(
+    binaryMessenger: FlutterBinaryMessenger, api: FirebaseAuthHostApi?,
+    messageChannelSuffix: String = ""
+  ) {
     let channelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
-    let registerIdTokenListenerChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.registerIdTokenListener\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let registerIdTokenListenerChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.registerIdTokenListener\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       registerIdTokenListenerChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
@@ -1292,7 +1390,10 @@ class FirebaseAuthHostApiSetup {
     } else {
       registerIdTokenListenerChannel.setMessageHandler(nil)
     }
-    let registerAuthStateListenerChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.registerAuthStateListener\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let registerAuthStateListenerChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.registerAuthStateListener\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       registerAuthStateListenerChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
@@ -1309,7 +1410,10 @@ class FirebaseAuthHostApiSetup {
     } else {
       registerAuthStateListenerChannel.setMessageHandler(nil)
     }
-    let useEmulatorChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.useEmulator\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let useEmulatorChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.useEmulator\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       useEmulatorChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
@@ -1328,7 +1432,10 @@ class FirebaseAuthHostApiSetup {
     } else {
       useEmulatorChannel.setMessageHandler(nil)
     }
-    let applyActionCodeChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.applyActionCode\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let applyActionCodeChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.applyActionCode\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       applyActionCodeChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
@@ -1346,7 +1453,10 @@ class FirebaseAuthHostApiSetup {
     } else {
       applyActionCodeChannel.setMessageHandler(nil)
     }
-    let checkActionCodeChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.checkActionCode\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let checkActionCodeChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.checkActionCode\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       checkActionCodeChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
@@ -1364,14 +1474,18 @@ class FirebaseAuthHostApiSetup {
     } else {
       checkActionCodeChannel.setMessageHandler(nil)
     }
-    let confirmPasswordResetChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.confirmPasswordReset\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let confirmPasswordResetChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.confirmPasswordReset\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       confirmPasswordResetChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let appArg = args[0] as! AuthPigeonFirebaseApp
         let codeArg = args[1] as! String
         let newPasswordArg = args[2] as! String
-        api.confirmPasswordReset(app: appArg, code: codeArg, newPassword: newPasswordArg) { result in
+        api.confirmPasswordReset(app: appArg, code: codeArg, newPassword: newPasswordArg) {
+          result in
           switch result {
           case .success:
             reply(wrapResult(nil))
@@ -1383,14 +1497,18 @@ class FirebaseAuthHostApiSetup {
     } else {
       confirmPasswordResetChannel.setMessageHandler(nil)
     }
-    let createUserWithEmailAndPasswordChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.createUserWithEmailAndPassword\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let createUserWithEmailAndPasswordChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.createUserWithEmailAndPassword\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       createUserWithEmailAndPasswordChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let appArg = args[0] as! AuthPigeonFirebaseApp
         let emailArg = args[1] as! String
         let passwordArg = args[2] as! String
-        api.createUserWithEmailAndPassword(app: appArg, email: emailArg, password: passwordArg) { result in
+        api.createUserWithEmailAndPassword(app: appArg, email: emailArg, password: passwordArg) {
+          result in
           switch result {
           case .success(let res):
             reply(wrapResult(res))
@@ -1402,7 +1520,10 @@ class FirebaseAuthHostApiSetup {
     } else {
       createUserWithEmailAndPasswordChannel.setMessageHandler(nil)
     }
-    let signInAnonymouslyChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInAnonymously\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let signInAnonymouslyChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInAnonymously\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       signInAnonymouslyChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
@@ -1419,7 +1540,10 @@ class FirebaseAuthHostApiSetup {
     } else {
       signInAnonymouslyChannel.setMessageHandler(nil)
     }
-    let signInWithCredentialChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithCredential\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let signInWithCredentialChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithCredential\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       signInWithCredentialChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
@@ -1437,7 +1561,10 @@ class FirebaseAuthHostApiSetup {
     } else {
       signInWithCredentialChannel.setMessageHandler(nil)
     }
-    let signInWithCustomTokenChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithCustomToken\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let signInWithCustomTokenChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithCustomToken\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       signInWithCustomTokenChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
@@ -1455,14 +1582,18 @@ class FirebaseAuthHostApiSetup {
     } else {
       signInWithCustomTokenChannel.setMessageHandler(nil)
     }
-    let signInWithEmailAndPasswordChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithEmailAndPassword\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let signInWithEmailAndPasswordChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithEmailAndPassword\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       signInWithEmailAndPasswordChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let appArg = args[0] as! AuthPigeonFirebaseApp
         let emailArg = args[1] as! String
         let passwordArg = args[2] as! String
-        api.signInWithEmailAndPassword(app: appArg, email: emailArg, password: passwordArg) { result in
+        api.signInWithEmailAndPassword(app: appArg, email: emailArg, password: passwordArg) {
+          result in
           switch result {
           case .success(let res):
             reply(wrapResult(res))
@@ -1474,7 +1605,10 @@ class FirebaseAuthHostApiSetup {
     } else {
       signInWithEmailAndPasswordChannel.setMessageHandler(nil)
     }
-    let signInWithEmailLinkChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithEmailLink\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let signInWithEmailLinkChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithEmailLink\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       signInWithEmailLinkChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
@@ -1493,7 +1627,10 @@ class FirebaseAuthHostApiSetup {
     } else {
       signInWithEmailLinkChannel.setMessageHandler(nil)
     }
-    let signInWithProviderChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithProvider\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let signInWithProviderChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithProvider\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       signInWithProviderChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
@@ -1511,7 +1648,10 @@ class FirebaseAuthHostApiSetup {
     } else {
       signInWithProviderChannel.setMessageHandler(nil)
     }
-    let signOutChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signOut\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let signOutChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signOut\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       signOutChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
@@ -1528,7 +1668,10 @@ class FirebaseAuthHostApiSetup {
     } else {
       signOutChannel.setMessageHandler(nil)
     }
-    let fetchSignInMethodsForEmailChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.fetchSignInMethodsForEmail\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let fetchSignInMethodsForEmailChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.fetchSignInMethodsForEmail\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       fetchSignInMethodsForEmailChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
@@ -1546,14 +1689,19 @@ class FirebaseAuthHostApiSetup {
     } else {
       fetchSignInMethodsForEmailChannel.setMessageHandler(nil)
     }
-    let sendPasswordResetEmailChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.sendPasswordResetEmail\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let sendPasswordResetEmailChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.sendPasswordResetEmail\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       sendPasswordResetEmailChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let appArg = args[0] as! AuthPigeonFirebaseApp
         let emailArg = args[1] as! String
         let actionCodeSettingsArg: InternalActionCodeSettings? = nilOrValue(args[2])
-        api.sendPasswordResetEmail(app: appArg, email: emailArg, actionCodeSettings: actionCodeSettingsArg) { result in
+        api.sendPasswordResetEmail(
+          app: appArg, email: emailArg, actionCodeSettings: actionCodeSettingsArg
+        ) { result in
           switch result {
           case .success:
             reply(wrapResult(nil))
@@ -1565,14 +1713,19 @@ class FirebaseAuthHostApiSetup {
     } else {
       sendPasswordResetEmailChannel.setMessageHandler(nil)
     }
-    let sendSignInLinkToEmailChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.sendSignInLinkToEmail\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let sendSignInLinkToEmailChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.sendSignInLinkToEmail\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       sendSignInLinkToEmailChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let appArg = args[0] as! AuthPigeonFirebaseApp
         let emailArg = args[1] as! String
         let actionCodeSettingsArg = args[2] as! InternalActionCodeSettings
-        api.sendSignInLinkToEmail(app: appArg, email: emailArg, actionCodeSettings: actionCodeSettingsArg) { result in
+        api.sendSignInLinkToEmail(
+          app: appArg, email: emailArg, actionCodeSettings: actionCodeSettingsArg
+        ) { result in
           switch result {
           case .success:
             reply(wrapResult(nil))
@@ -1584,7 +1737,10 @@ class FirebaseAuthHostApiSetup {
     } else {
       sendSignInLinkToEmailChannel.setMessageHandler(nil)
     }
-    let setLanguageCodeChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.setLanguageCode\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let setLanguageCodeChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.setLanguageCode\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       setLanguageCodeChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
@@ -1602,7 +1758,10 @@ class FirebaseAuthHostApiSetup {
     } else {
       setLanguageCodeChannel.setMessageHandler(nil)
     }
-    let setSettingsChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.setSettings\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let setSettingsChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.setSettings\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       setSettingsChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
@@ -1620,7 +1779,10 @@ class FirebaseAuthHostApiSetup {
     } else {
       setSettingsChannel.setMessageHandler(nil)
     }
-    let verifyPasswordResetCodeChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.verifyPasswordResetCode\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let verifyPasswordResetCodeChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.verifyPasswordResetCode\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       verifyPasswordResetCodeChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
@@ -1638,7 +1800,10 @@ class FirebaseAuthHostApiSetup {
     } else {
       verifyPasswordResetCodeChannel.setMessageHandler(nil)
     }
-    let verifyPhoneNumberChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.verifyPhoneNumber\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let verifyPhoneNumberChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.verifyPhoneNumber\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       verifyPhoneNumberChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
@@ -1656,13 +1821,17 @@ class FirebaseAuthHostApiSetup {
     } else {
       verifyPhoneNumberChannel.setMessageHandler(nil)
     }
-    let revokeTokenWithAuthorizationCodeChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.revokeTokenWithAuthorizationCode\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let revokeTokenWithAuthorizationCodeChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.revokeTokenWithAuthorizationCode\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       revokeTokenWithAuthorizationCodeChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let appArg = args[0] as! AuthPigeonFirebaseApp
         let authorizationCodeArg = args[1] as! String
-        api.revokeTokenWithAuthorizationCode(app: appArg, authorizationCode: authorizationCodeArg) { result in
+        api.revokeTokenWithAuthorizationCode(app: appArg, authorizationCode: authorizationCodeArg) {
+          result in
           switch result {
           case .success:
             reply(wrapResult(nil))
@@ -1674,7 +1843,10 @@ class FirebaseAuthHostApiSetup {
     } else {
       revokeTokenWithAuthorizationCodeChannel.setMessageHandler(nil)
     }
-    let revokeAccessTokenChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.revokeAccessToken\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let revokeAccessTokenChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.revokeAccessToken\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       revokeAccessTokenChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
@@ -1692,7 +1864,10 @@ class FirebaseAuthHostApiSetup {
     } else {
       revokeAccessTokenChannel.setMessageHandler(nil)
     }
-    let initializeRecaptchaConfigChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.initializeRecaptchaConfig\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let initializeRecaptchaConfigChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.initializeRecaptchaConfig\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       initializeRecaptchaConfigChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
@@ -1714,28 +1889,59 @@ class FirebaseAuthHostApiSetup {
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol FirebaseAuthUserHostApi {
   func delete(app: AuthPigeonFirebaseApp, completion: @escaping (Result<Void, Error>) -> Void)
-  func getIdToken(app: AuthPigeonFirebaseApp, forceRefresh: Bool, completion: @escaping (Result<InternalIdTokenResult, Error>) -> Void)
-  func linkWithCredential(app: AuthPigeonFirebaseApp, input: [String?: Any?], completion: @escaping (Result<InternalUserCredential, Error>) -> Void)
-  func linkWithProvider(app: AuthPigeonFirebaseApp, signInProvider: InternalSignInProvider, completion: @escaping (Result<InternalUserCredential, Error>) -> Void)
-  func reauthenticateWithCredential(app: AuthPigeonFirebaseApp, input: [String?: Any?], completion: @escaping (Result<InternalUserCredential, Error>) -> Void)
-  func reauthenticateWithProvider(app: AuthPigeonFirebaseApp, signInProvider: InternalSignInProvider, completion: @escaping (Result<InternalUserCredential, Error>) -> Void)
-  func reload(app: AuthPigeonFirebaseApp, completion: @escaping (Result<InternalUserDetails, Error>) -> Void)
-  func sendEmailVerification(app: AuthPigeonFirebaseApp, actionCodeSettings: InternalActionCodeSettings?, completion: @escaping (Result<Void, Error>) -> Void)
-  func unlink(app: AuthPigeonFirebaseApp, providerId: String, completion: @escaping (Result<InternalUserCredential, Error>) -> Void)
-  func updateEmail(app: AuthPigeonFirebaseApp, newEmail: String, completion: @escaping (Result<InternalUserDetails, Error>) -> Void)
-  func updatePassword(app: AuthPigeonFirebaseApp, newPassword: String, completion: @escaping (Result<InternalUserDetails, Error>) -> Void)
-  func updatePhoneNumber(app: AuthPigeonFirebaseApp, input: [String?: Any?], completion: @escaping (Result<InternalUserDetails, Error>) -> Void)
-  func updateProfile(app: AuthPigeonFirebaseApp, profile: InternalUserProfile, completion: @escaping (Result<InternalUserDetails, Error>) -> Void)
-  func verifyBeforeUpdateEmail(app: AuthPigeonFirebaseApp, newEmail: String, actionCodeSettings: InternalActionCodeSettings?, completion: @escaping (Result<Void, Error>) -> Void)
+  func getIdToken(
+    app: AuthPigeonFirebaseApp, forceRefresh: Bool,
+    completion: @escaping (Result<InternalIdTokenResult, Error>) -> Void)
+  func linkWithCredential(
+    app: AuthPigeonFirebaseApp, input: [String?: Any?],
+    completion: @escaping (Result<InternalUserCredential, Error>) -> Void)
+  func linkWithProvider(
+    app: AuthPigeonFirebaseApp, signInProvider: InternalSignInProvider,
+    completion: @escaping (Result<InternalUserCredential, Error>) -> Void)
+  func reauthenticateWithCredential(
+    app: AuthPigeonFirebaseApp, input: [String?: Any?],
+    completion: @escaping (Result<InternalUserCredential, Error>) -> Void)
+  func reauthenticateWithProvider(
+    app: AuthPigeonFirebaseApp, signInProvider: InternalSignInProvider,
+    completion: @escaping (Result<InternalUserCredential, Error>) -> Void)
+  func reload(
+    app: AuthPigeonFirebaseApp, completion: @escaping (Result<InternalUserDetails, Error>) -> Void)
+  func sendEmailVerification(
+    app: AuthPigeonFirebaseApp, actionCodeSettings: InternalActionCodeSettings?,
+    completion: @escaping (Result<Void, Error>) -> Void)
+  func unlink(
+    app: AuthPigeonFirebaseApp, providerId: String,
+    completion: @escaping (Result<InternalUserCredential, Error>) -> Void)
+  func updateEmail(
+    app: AuthPigeonFirebaseApp, newEmail: String,
+    completion: @escaping (Result<InternalUserDetails, Error>) -> Void)
+  func updatePassword(
+    app: AuthPigeonFirebaseApp, newPassword: String,
+    completion: @escaping (Result<InternalUserDetails, Error>) -> Void)
+  func updatePhoneNumber(
+    app: AuthPigeonFirebaseApp, input: [String?: Any?],
+    completion: @escaping (Result<InternalUserDetails, Error>) -> Void)
+  func updateProfile(
+    app: AuthPigeonFirebaseApp, profile: InternalUserProfile,
+    completion: @escaping (Result<InternalUserDetails, Error>) -> Void)
+  func verifyBeforeUpdateEmail(
+    app: AuthPigeonFirebaseApp, newEmail: String, actionCodeSettings: InternalActionCodeSettings?,
+    completion: @escaping (Result<Void, Error>) -> Void)
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
 class FirebaseAuthUserHostApiSetup {
   static var codec: FlutterStandardMessageCodec { FirebaseAuthMessagesPigeonCodec.shared }
   /// Sets up an instance of `FirebaseAuthUserHostApi` to handle messages through the `binaryMessenger`.
-  static func setUp(binaryMessenger: FlutterBinaryMessenger, api: FirebaseAuthUserHostApi?, messageChannelSuffix: String = "") {
+  static func setUp(
+    binaryMessenger: FlutterBinaryMessenger, api: FirebaseAuthUserHostApi?,
+    messageChannelSuffix: String = ""
+  ) {
     let channelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
-    let deleteChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.delete\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let deleteChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.delete\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       deleteChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
@@ -1752,7 +1958,10 @@ class FirebaseAuthUserHostApiSetup {
     } else {
       deleteChannel.setMessageHandler(nil)
     }
-    let getIdTokenChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.getIdToken\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let getIdTokenChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.getIdToken\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       getIdTokenChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
@@ -1770,7 +1979,10 @@ class FirebaseAuthUserHostApiSetup {
     } else {
       getIdTokenChannel.setMessageHandler(nil)
     }
-    let linkWithCredentialChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.linkWithCredential\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let linkWithCredentialChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.linkWithCredential\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       linkWithCredentialChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
@@ -1788,7 +2000,10 @@ class FirebaseAuthUserHostApiSetup {
     } else {
       linkWithCredentialChannel.setMessageHandler(nil)
     }
-    let linkWithProviderChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.linkWithProvider\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let linkWithProviderChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.linkWithProvider\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       linkWithProviderChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
@@ -1806,7 +2021,10 @@ class FirebaseAuthUserHostApiSetup {
     } else {
       linkWithProviderChannel.setMessageHandler(nil)
     }
-    let reauthenticateWithCredentialChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reauthenticateWithCredential\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let reauthenticateWithCredentialChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reauthenticateWithCredential\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       reauthenticateWithCredentialChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
@@ -1824,7 +2042,10 @@ class FirebaseAuthUserHostApiSetup {
     } else {
       reauthenticateWithCredentialChannel.setMessageHandler(nil)
     }
-    let reauthenticateWithProviderChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reauthenticateWithProvider\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let reauthenticateWithProviderChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reauthenticateWithProvider\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       reauthenticateWithProviderChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
@@ -1842,7 +2063,10 @@ class FirebaseAuthUserHostApiSetup {
     } else {
       reauthenticateWithProviderChannel.setMessageHandler(nil)
     }
-    let reloadChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reload\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let reloadChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reload\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       reloadChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
@@ -1859,13 +2083,17 @@ class FirebaseAuthUserHostApiSetup {
     } else {
       reloadChannel.setMessageHandler(nil)
     }
-    let sendEmailVerificationChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.sendEmailVerification\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let sendEmailVerificationChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.sendEmailVerification\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       sendEmailVerificationChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let appArg = args[0] as! AuthPigeonFirebaseApp
         let actionCodeSettingsArg: InternalActionCodeSettings? = nilOrValue(args[1])
-        api.sendEmailVerification(app: appArg, actionCodeSettings: actionCodeSettingsArg) { result in
+        api.sendEmailVerification(app: appArg, actionCodeSettings: actionCodeSettingsArg) {
+          result in
           switch result {
           case .success:
             reply(wrapResult(nil))
@@ -1877,7 +2105,10 @@ class FirebaseAuthUserHostApiSetup {
     } else {
       sendEmailVerificationChannel.setMessageHandler(nil)
     }
-    let unlinkChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.unlink\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let unlinkChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.unlink\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       unlinkChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
@@ -1895,7 +2126,10 @@ class FirebaseAuthUserHostApiSetup {
     } else {
       unlinkChannel.setMessageHandler(nil)
     }
-    let updateEmailChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updateEmail\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let updateEmailChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updateEmail\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       updateEmailChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
@@ -1913,7 +2147,10 @@ class FirebaseAuthUserHostApiSetup {
     } else {
       updateEmailChannel.setMessageHandler(nil)
     }
-    let updatePasswordChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updatePassword\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let updatePasswordChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updatePassword\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       updatePasswordChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
@@ -1931,7 +2168,10 @@ class FirebaseAuthUserHostApiSetup {
     } else {
       updatePasswordChannel.setMessageHandler(nil)
     }
-    let updatePhoneNumberChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updatePhoneNumber\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let updatePhoneNumberChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updatePhoneNumber\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       updatePhoneNumberChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
@@ -1949,7 +2189,10 @@ class FirebaseAuthUserHostApiSetup {
     } else {
       updatePhoneNumberChannel.setMessageHandler(nil)
     }
-    let updateProfileChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updateProfile\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let updateProfileChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updateProfile\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       updateProfileChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
@@ -1967,14 +2210,19 @@ class FirebaseAuthUserHostApiSetup {
     } else {
       updateProfileChannel.setMessageHandler(nil)
     }
-    let verifyBeforeUpdateEmailChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.verifyBeforeUpdateEmail\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let verifyBeforeUpdateEmailChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.verifyBeforeUpdateEmail\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       verifyBeforeUpdateEmailChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let appArg = args[0] as! AuthPigeonFirebaseApp
         let newEmailArg = args[1] as! String
         let actionCodeSettingsArg: InternalActionCodeSettings? = nilOrValue(args[2])
-        api.verifyBeforeUpdateEmail(app: appArg, newEmail: newEmailArg, actionCodeSettings: actionCodeSettingsArg) { result in
+        api.verifyBeforeUpdateEmail(
+          app: appArg, newEmail: newEmailArg, actionCodeSettings: actionCodeSettingsArg
+        ) { result in
           switch result {
           case .success:
             reply(wrapResult(nil))
@@ -1990,27 +2238,44 @@ class FirebaseAuthUserHostApiSetup {
 }
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol MultiFactorUserHostApi {
-  func enrollPhone(app: AuthPigeonFirebaseApp, assertion: InternalPhoneMultiFactorAssertion, displayName: String?, completion: @escaping (Result<Void, Error>) -> Void)
-  func enrollTotp(app: AuthPigeonFirebaseApp, assertionId: String, displayName: String?, completion: @escaping (Result<Void, Error>) -> Void)
-  func getSession(app: AuthPigeonFirebaseApp, completion: @escaping (Result<InternalMultiFactorSession, Error>) -> Void)
-  func unenroll(app: AuthPigeonFirebaseApp, factorUid: String, completion: @escaping (Result<Void, Error>) -> Void)
-  func getEnrolledFactors(app: AuthPigeonFirebaseApp, completion: @escaping (Result<[InternalMultiFactorInfo], Error>) -> Void)
+  func enrollPhone(
+    app: AuthPigeonFirebaseApp, assertion: InternalPhoneMultiFactorAssertion, displayName: String?,
+    completion: @escaping (Result<Void, Error>) -> Void)
+  func enrollTotp(
+    app: AuthPigeonFirebaseApp, assertionId: String, displayName: String?,
+    completion: @escaping (Result<Void, Error>) -> Void)
+  func getSession(
+    app: AuthPigeonFirebaseApp,
+    completion: @escaping (Result<InternalMultiFactorSession, Error>) -> Void)
+  func unenroll(
+    app: AuthPigeonFirebaseApp, factorUid: String,
+    completion: @escaping (Result<Void, Error>) -> Void)
+  func getEnrolledFactors(
+    app: AuthPigeonFirebaseApp,
+    completion: @escaping (Result<[InternalMultiFactorInfo], Error>) -> Void)
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
 class MultiFactorUserHostApiSetup {
   static var codec: FlutterStandardMessageCodec { FirebaseAuthMessagesPigeonCodec.shared }
   /// Sets up an instance of `MultiFactorUserHostApi` to handle messages through the `binaryMessenger`.
-  static func setUp(binaryMessenger: FlutterBinaryMessenger, api: MultiFactorUserHostApi?, messageChannelSuffix: String = "") {
+  static func setUp(
+    binaryMessenger: FlutterBinaryMessenger, api: MultiFactorUserHostApi?,
+    messageChannelSuffix: String = ""
+  ) {
     let channelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
-    let enrollPhoneChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollPhone\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let enrollPhoneChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollPhone\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       enrollPhoneChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let appArg = args[0] as! AuthPigeonFirebaseApp
         let assertionArg = args[1] as! InternalPhoneMultiFactorAssertion
         let displayNameArg: String? = nilOrValue(args[2])
-        api.enrollPhone(app: appArg, assertion: assertionArg, displayName: displayNameArg) { result in
+        api.enrollPhone(app: appArg, assertion: assertionArg, displayName: displayNameArg) {
+          result in
           switch result {
           case .success:
             reply(wrapResult(nil))
@@ -2022,14 +2287,18 @@ class MultiFactorUserHostApiSetup {
     } else {
       enrollPhoneChannel.setMessageHandler(nil)
     }
-    let enrollTotpChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollTotp\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let enrollTotpChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollTotp\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       enrollTotpChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let appArg = args[0] as! AuthPigeonFirebaseApp
         let assertionIdArg = args[1] as! String
         let displayNameArg: String? = nilOrValue(args[2])
-        api.enrollTotp(app: appArg, assertionId: assertionIdArg, displayName: displayNameArg) { result in
+        api.enrollTotp(app: appArg, assertionId: assertionIdArg, displayName: displayNameArg) {
+          result in
           switch result {
           case .success:
             reply(wrapResult(nil))
@@ -2041,7 +2310,10 @@ class MultiFactorUserHostApiSetup {
     } else {
       enrollTotpChannel.setMessageHandler(nil)
     }
-    let getSessionChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.getSession\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let getSessionChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.getSession\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       getSessionChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
@@ -2058,7 +2330,10 @@ class MultiFactorUserHostApiSetup {
     } else {
       getSessionChannel.setMessageHandler(nil)
     }
-    let unenrollChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.unenroll\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let unenrollChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.unenroll\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       unenrollChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
@@ -2076,7 +2351,10 @@ class MultiFactorUserHostApiSetup {
     } else {
       unenrollChannel.setMessageHandler(nil)
     }
-    let getEnrolledFactorsChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.getEnrolledFactors\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let getEnrolledFactorsChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.getEnrolledFactors\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       getEnrolledFactorsChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
@@ -2097,23 +2375,33 @@ class MultiFactorUserHostApiSetup {
 }
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol MultiFactoResolverHostApi {
-  func resolveSignIn(resolverId: String, assertion: InternalPhoneMultiFactorAssertion?, totpAssertionId: String?, completion: @escaping (Result<InternalUserCredential, Error>) -> Void)
+  func resolveSignIn(
+    resolverId: String, assertion: InternalPhoneMultiFactorAssertion?, totpAssertionId: String?,
+    completion: @escaping (Result<InternalUserCredential, Error>) -> Void)
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
 class MultiFactoResolverHostApiSetup {
   static var codec: FlutterStandardMessageCodec { FirebaseAuthMessagesPigeonCodec.shared }
   /// Sets up an instance of `MultiFactoResolverHostApi` to handle messages through the `binaryMessenger`.
-  static func setUp(binaryMessenger: FlutterBinaryMessenger, api: MultiFactoResolverHostApi?, messageChannelSuffix: String = "") {
+  static func setUp(
+    binaryMessenger: FlutterBinaryMessenger, api: MultiFactoResolverHostApi?,
+    messageChannelSuffix: String = ""
+  ) {
     let channelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
-    let resolveSignInChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactoResolverHostApi.resolveSignIn\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let resolveSignInChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactoResolverHostApi.resolveSignIn\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       resolveSignInChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let resolverIdArg = args[0] as! String
         let assertionArg: InternalPhoneMultiFactorAssertion? = nilOrValue(args[1])
         let totpAssertionIdArg: String? = nilOrValue(args[2])
-        api.resolveSignIn(resolverId: resolverIdArg, assertion: assertionArg, totpAssertionId: totpAssertionIdArg) { result in
+        api.resolveSignIn(
+          resolverId: resolverIdArg, assertion: assertionArg, totpAssertionId: totpAssertionIdArg
+        ) { result in
           switch result {
           case .success(let res):
             reply(wrapResult(res))
@@ -2129,18 +2417,29 @@ class MultiFactoResolverHostApiSetup {
 }
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol MultiFactorTotpHostApi {
-  func generateSecret(sessionId: String, completion: @escaping (Result<InternalTotpSecret, Error>) -> Void)
-  func getAssertionForEnrollment(secretKey: String, oneTimePassword: String, completion: @escaping (Result<String, Error>) -> Void)
-  func getAssertionForSignIn(enrollmentId: String, oneTimePassword: String, completion: @escaping (Result<String, Error>) -> Void)
+  func generateSecret(
+    sessionId: String, completion: @escaping (Result<InternalTotpSecret, Error>) -> Void)
+  func getAssertionForEnrollment(
+    secretKey: String, oneTimePassword: String,
+    completion: @escaping (Result<String, Error>) -> Void)
+  func getAssertionForSignIn(
+    enrollmentId: String, oneTimePassword: String,
+    completion: @escaping (Result<String, Error>) -> Void)
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
 class MultiFactorTotpHostApiSetup {
   static var codec: FlutterStandardMessageCodec { FirebaseAuthMessagesPigeonCodec.shared }
   /// Sets up an instance of `MultiFactorTotpHostApi` to handle messages through the `binaryMessenger`.
-  static func setUp(binaryMessenger: FlutterBinaryMessenger, api: MultiFactorTotpHostApi?, messageChannelSuffix: String = "") {
+  static func setUp(
+    binaryMessenger: FlutterBinaryMessenger, api: MultiFactorTotpHostApi?,
+    messageChannelSuffix: String = ""
+  ) {
     let channelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
-    let generateSecretChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.generateSecret\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let generateSecretChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.generateSecret\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       generateSecretChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
@@ -2157,13 +2456,17 @@ class MultiFactorTotpHostApiSetup {
     } else {
       generateSecretChannel.setMessageHandler(nil)
     }
-    let getAssertionForEnrollmentChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForEnrollment\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let getAssertionForEnrollmentChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForEnrollment\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       getAssertionForEnrollmentChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let secretKeyArg = args[0] as! String
         let oneTimePasswordArg = args[1] as! String
-        api.getAssertionForEnrollment(secretKey: secretKeyArg, oneTimePassword: oneTimePasswordArg) { result in
+        api.getAssertionForEnrollment(secretKey: secretKeyArg, oneTimePassword: oneTimePasswordArg)
+        { result in
           switch result {
           case .success(let res):
             reply(wrapResult(res))
@@ -2175,13 +2478,18 @@ class MultiFactorTotpHostApiSetup {
     } else {
       getAssertionForEnrollmentChannel.setMessageHandler(nil)
     }
-    let getAssertionForSignInChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForSignIn\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let getAssertionForSignInChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForSignIn\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       getAssertionForSignInChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let enrollmentIdArg = args[0] as! String
         let oneTimePasswordArg = args[1] as! String
-        api.getAssertionForSignIn(enrollmentId: enrollmentIdArg, oneTimePassword: oneTimePasswordArg) { result in
+        api.getAssertionForSignIn(
+          enrollmentId: enrollmentIdArg, oneTimePassword: oneTimePasswordArg
+        ) { result in
           switch result {
           case .success(let res):
             reply(wrapResult(res))
@@ -2197,24 +2505,35 @@ class MultiFactorTotpHostApiSetup {
 }
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol MultiFactorTotpSecretHostApi {
-  func generateQrCodeUrl(secretKey: String, accountName: String?, issuer: String?, completion: @escaping (Result<String, Error>) -> Void)
-  func openInOtpApp(secretKey: String, qrCodeUrl: String, completion: @escaping (Result<Void, Error>) -> Void)
+  func generateQrCodeUrl(
+    secretKey: String, accountName: String?, issuer: String?,
+    completion: @escaping (Result<String, Error>) -> Void)
+  func openInOtpApp(
+    secretKey: String, qrCodeUrl: String, completion: @escaping (Result<Void, Error>) -> Void)
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
 class MultiFactorTotpSecretHostApiSetup {
   static var codec: FlutterStandardMessageCodec { FirebaseAuthMessagesPigeonCodec.shared }
   /// Sets up an instance of `MultiFactorTotpSecretHostApi` to handle messages through the `binaryMessenger`.
-  static func setUp(binaryMessenger: FlutterBinaryMessenger, api: MultiFactorTotpSecretHostApi?, messageChannelSuffix: String = "") {
+  static func setUp(
+    binaryMessenger: FlutterBinaryMessenger, api: MultiFactorTotpSecretHostApi?,
+    messageChannelSuffix: String = ""
+  ) {
     let channelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
-    let generateQrCodeUrlChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.generateQrCodeUrl\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let generateQrCodeUrlChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.generateQrCodeUrl\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       generateQrCodeUrlChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let secretKeyArg = args[0] as! String
         let accountNameArg: String? = nilOrValue(args[1])
         let issuerArg: String? = nilOrValue(args[2])
-        api.generateQrCodeUrl(secretKey: secretKeyArg, accountName: accountNameArg, issuer: issuerArg) { result in
+        api.generateQrCodeUrl(
+          secretKey: secretKeyArg, accountName: accountNameArg, issuer: issuerArg
+        ) { result in
           switch result {
           case .success(let res):
             reply(wrapResult(res))
@@ -2226,7 +2545,10 @@ class MultiFactorTotpSecretHostApiSetup {
     } else {
       generateQrCodeUrlChannel.setMessageHandler(nil)
     }
-    let openInOtpAppChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.openInOtpApp\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let openInOtpAppChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.openInOtpApp\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       openInOtpAppChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
@@ -2257,9 +2579,15 @@ protocol GenerateInterfaces {
 class GenerateInterfacesSetup {
   static var codec: FlutterStandardMessageCodec { FirebaseAuthMessagesPigeonCodec.shared }
   /// Sets up an instance of `GenerateInterfaces` to handle messages through the `binaryMessenger`.
-  static func setUp(binaryMessenger: FlutterBinaryMessenger, api: GenerateInterfaces?, messageChannelSuffix: String = "") {
+  static func setUp(
+    binaryMessenger: FlutterBinaryMessenger, api: GenerateInterfaces?,
+    messageChannelSuffix: String = ""
+  ) {
     let channelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
-    let pigeonInterfaceChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_auth_platform_interface.GenerateInterfaces.pigeonInterface\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let pigeonInterfaceChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_auth_platform_interface.GenerateInterfaces.pigeonInterface\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       pigeonInterfaceChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]

@@ -101,7 +101,9 @@ enum PigeonParser {
     )
   }
 
-  static func parseActionCodeSettings(_ settings: InternalActionCodeSettings?) -> ActionCodeSettings? {
+  static func parseActionCodeSettings(_ settings: InternalActionCodeSettings?)
+    -> ActionCodeSettings?
+  {
     guard let settings else { return nil }
     let codeSettings = ActionCodeSettings()
     codeSettings.url = URL(string: settings.url)
