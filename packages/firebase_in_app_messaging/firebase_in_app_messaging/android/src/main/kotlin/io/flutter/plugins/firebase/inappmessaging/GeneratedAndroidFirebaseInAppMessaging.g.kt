@@ -10,17 +10,16 @@ package io.flutter.plugins.firebase.inappmessaging
 import android.util.Log
 import io.flutter.plugin.common.BasicMessageChannel
 import io.flutter.plugin.common.BinaryMessenger
+import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MessageCodec
+import io.flutter.plugin.common.StandardMethodCodec
 import io.flutter.plugin.common.StandardMessageCodec
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
-
 private object GeneratedAndroidFirebaseInAppMessagingPigeonUtils {
 
   fun createConnectionError(channelName: String): FlutterError {
-    return FlutterError(
-        "channel-error", "Unable to establish connection on channel: '$channelName'.", "")
-  }
+    return FlutterError("channel-error",  "Unable to establish connection on channel: '$channelName'.", "")  }
 
   fun wrapResult(result: Any?): List<Any?> {
     return listOf(result)
@@ -28,15 +27,19 @@ private object GeneratedAndroidFirebaseInAppMessagingPigeonUtils {
 
   fun wrapError(exception: Throwable): List<Any?> {
     return if (exception is FlutterError) {
-      listOf(exception.code, exception.message, exception.details)
+      listOf(
+        exception.code,
+        exception.message,
+        exception.details
+      )
     } else {
       listOf(
-          exception.javaClass.simpleName,
-          exception.toString(),
-          "Cause: " + exception.cause + ", Stacktrace: " + Log.getStackTraceString(exception))
+        exception.javaClass.simpleName,
+        exception.toString(),
+        "Cause: " + exception.cause + ", Stacktrace: " + Log.getStackTraceString(exception)
+      )
     }
   }
-
   fun doubleEquals(a: Double, b: Double): Boolean {
     // Normalize -0.0 to 0.0 and handle NaN equality.
     return (if (a == 0.0) 0.0 else a) == (if (b == 0.0) 0.0 else b) || (a.isNaN() && b.isNaN())
@@ -180,19 +183,19 @@ private object GeneratedAndroidFirebaseInAppMessagingPigeonUtils {
       else -> value.hashCode()
     }
   }
+
 }
 
 /**
  * Error class for passing custom error details to Flutter via a thrown PlatformException.
- *
  * @property code The error code.
  * @property message The error message.
  * @property details The error details. Must be a datatype supported by the api codec.
  */
-class FlutterError(
-    val code: String,
-    override val message: String? = null,
-    val details: Any? = null
+class FlutterError (
+  val code: String,
+  override val message: String? = null,
+  val details: Any? = null
 ) : RuntimeException()
 
 /** How an in-app message was dismissed. */
@@ -201,11 +204,14 @@ enum class FiamDismissType(val raw: Int) {
   SWIPE(0),
   /** The user tapped a button to close the message. */
   CLICKED_CANCEL(1),
-  /** The message was dismissed automatically. Only reported on iOS, for banner messages. */
+  /**
+   * The message was dismissed automatically. Only reported on iOS, for banner
+   * messages.
+   */
   AUTO(2),
   /**
-   * The way the message was dismissed is unknown. Always reported on Android, which does not expose
-   * a dismiss type.
+   * The way the message was dismissed is unknown. Always reported on Android,
+   * which does not expose a dismiss type.
    */
   UNKNOWN(3);
 
@@ -221,11 +227,12 @@ enum class FiamDismissType(val raw: Int) {
  *
  * Generated class from Pigeon that represents data sent in messages.
  */
-data class FiamCampaignMetadata(
-    val campaignId: String,
-    val campaignName: String,
-    val isTestMessage: Boolean
-) {
+data class FiamCampaignMetadata (
+  val campaignId: String,
+  val campaignName: String,
+  val isTestMessage: Boolean
+)
+ {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): FiamCampaignMetadata {
       val campaignId = pigeonVar_list[0] as String
@@ -234,15 +241,13 @@ data class FiamCampaignMetadata(
       return FiamCampaignMetadata(campaignId, campaignName, isTestMessage)
     }
   }
-
   fun toList(): List<Any?> {
     return listOf(
-        campaignId,
-        campaignName,
-        isTestMessage,
+      campaignId,
+      campaignName,
+      isTestMessage,
     )
   }
-
   override fun equals(other: Any?): Boolean {
     if (other == null || other.javaClass != javaClass) {
       return false
@@ -251,22 +256,14 @@ data class FiamCampaignMetadata(
       return true
     }
     val other = other as FiamCampaignMetadata
-    return GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepEquals(
-        this.campaignId, other.campaignId) &&
-        GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepEquals(
-            this.campaignName, other.campaignName) &&
-        GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepEquals(
-            this.isTestMessage, other.isTestMessage)
+    return GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepEquals(this.campaignId, other.campaignId) && GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepEquals(this.campaignName, other.campaignName) && GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepEquals(this.isTestMessage, other.isTestMessage)
   }
 
   override fun hashCode(): Int {
     var result = javaClass.hashCode()
-    result =
-        31 * result + GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepHash(this.campaignId)
-    result =
-        31 * result + GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepHash(this.campaignName)
-    result =
-        31 * result + GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepHash(this.isTestMessage)
+    result = 31 * result + GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepHash(this.campaignId)
+    result = 31 * result + GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepHash(this.campaignName)
+    result = 31 * result + GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepHash(this.isTestMessage)
     return result
   }
 }
@@ -276,7 +273,11 @@ data class FiamCampaignMetadata(
  *
  * Generated class from Pigeon that represents data sent in messages.
  */
-data class FiamAction(val actionUrl: String? = null, val buttonText: String? = null) {
+data class FiamAction (
+  val actionUrl: String? = null,
+  val buttonText: String? = null
+)
+ {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): FiamAction {
       val actionUrl = pigeonVar_list[0] as String?
@@ -284,14 +285,12 @@ data class FiamAction(val actionUrl: String? = null, val buttonText: String? = n
       return FiamAction(actionUrl, buttonText)
     }
   }
-
   fun toList(): List<Any?> {
     return listOf(
-        actionUrl,
-        buttonText,
+      actionUrl,
+      buttonText,
     )
   }
-
   override fun equals(other: Any?): Boolean {
     if (other == null || other.javaClass != javaClass) {
       return false
@@ -300,39 +299,228 @@ data class FiamAction(val actionUrl: String? = null, val buttonText: String? = n
       return true
     }
     val other = other as FiamAction
-    return GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepEquals(
-        this.actionUrl, other.actionUrl) &&
-        GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepEquals(
-            this.buttonText, other.buttonText)
+    return GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepEquals(this.actionUrl, other.actionUrl) && GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepEquals(this.buttonText, other.buttonText)
   }
 
   override fun hashCode(): Int {
     var result = javaClass.hashCode()
-    result =
-        31 * result + GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepHash(this.actionUrl)
-    result =
-        31 * result + GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepHash(this.buttonText)
+    result = 31 * result + GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepHash(this.actionUrl)
+    result = 31 * result + GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepHash(this.buttonText)
     return result
   }
 }
 
+/**
+ * Styled text from a campaign, used by custom Flutter display.
+ *
+ * Generated class from Pigeon that represents data sent in messages.
+ */
+data class FiamText (
+  val text: String,
+  val hexColor: String? = null
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): FiamText {
+      val text = pigeonVar_list[0] as String
+      val hexColor = pigeonVar_list[1] as String?
+      return FiamText(text, hexColor)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      text,
+      hexColor,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other == null || other.javaClass != javaClass) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    val other = other as FiamText
+    return GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepEquals(this.text, other.text) && GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepEquals(this.hexColor, other.hexColor)
+  }
+
+  override fun hashCode(): Int {
+    var result = javaClass.hashCode()
+    result = 31 * result + GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepHash(this.text)
+    result = 31 * result + GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepHash(this.hexColor)
+    return result
+  }
+}
+
+/**
+ * A campaign action forwarded for custom Flutter display.
+ *
+ * Generated class from Pigeon that represents data sent in messages.
+ */
+data class FiamDisplayAction (
+  val id: String,
+  val actionUrl: String? = null,
+  val buttonText: String? = null,
+  val buttonTextHexColor: String? = null,
+  val buttonBackgroundHexColor: String? = null
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): FiamDisplayAction {
+      val id = pigeonVar_list[0] as String
+      val actionUrl = pigeonVar_list[1] as String?
+      val buttonText = pigeonVar_list[2] as String?
+      val buttonTextHexColor = pigeonVar_list[3] as String?
+      val buttonBackgroundHexColor = pigeonVar_list[4] as String?
+      return FiamDisplayAction(id, actionUrl, buttonText, buttonTextHexColor, buttonBackgroundHexColor)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      id,
+      actionUrl,
+      buttonText,
+      buttonTextHexColor,
+      buttonBackgroundHexColor,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other == null || other.javaClass != javaClass) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    val other = other as FiamDisplayAction
+    return GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepEquals(this.id, other.id) && GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepEquals(this.actionUrl, other.actionUrl) && GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepEquals(this.buttonText, other.buttonText) && GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepEquals(this.buttonTextHexColor, other.buttonTextHexColor) && GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepEquals(this.buttonBackgroundHexColor, other.buttonBackgroundHexColor)
+  }
+
+  override fun hashCode(): Int {
+    var result = javaClass.hashCode()
+    result = 31 * result + GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepHash(this.id)
+    result = 31 * result + GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepHash(this.actionUrl)
+    result = 31 * result + GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepHash(this.buttonText)
+    result = 31 * result + GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepHash(this.buttonTextHexColor)
+    result = 31 * result + GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepHash(this.buttonBackgroundHexColor)
+    return result
+  }
+}
+
+/**
+ * Full campaign payload forwarded instead of native templates.
+ *
+ * Generated class from Pigeon that represents data sent in messages.
+ */
+data class FiamDisplayMessage (
+  val campaignMetadata: FiamCampaignMetadata,
+  /** One of BANNER, MODAL, CARD, IMAGE_ONLY, UNKNOWN. */
+  val messageType: String,
+  val title: FiamText? = null,
+  val body: FiamText? = null,
+  val imageUrl: String? = null,
+  val landscapeImageUrl: String? = null,
+  val backgroundHexColor: String? = null,
+  val action: FiamDisplayAction? = null,
+  val primaryAction: FiamDisplayAction? = null,
+  val secondaryAction: FiamDisplayAction? = null,
+  val data: Map<String?, String?>? = null
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): FiamDisplayMessage {
+      val campaignMetadata = pigeonVar_list[0] as FiamCampaignMetadata
+      val messageType = pigeonVar_list[1] as String
+      val title = pigeonVar_list[2] as FiamText?
+      val body = pigeonVar_list[3] as FiamText?
+      val imageUrl = pigeonVar_list[4] as String?
+      val landscapeImageUrl = pigeonVar_list[5] as String?
+      val backgroundHexColor = pigeonVar_list[6] as String?
+      val action = pigeonVar_list[7] as FiamDisplayAction?
+      val primaryAction = pigeonVar_list[8] as FiamDisplayAction?
+      val secondaryAction = pigeonVar_list[9] as FiamDisplayAction?
+      val data = pigeonVar_list[10] as Map<String?, String?>?
+      return FiamDisplayMessage(campaignMetadata, messageType, title, body, imageUrl, landscapeImageUrl, backgroundHexColor, action, primaryAction, secondaryAction, data)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      campaignMetadata,
+      messageType,
+      title,
+      body,
+      imageUrl,
+      landscapeImageUrl,
+      backgroundHexColor,
+      action,
+      primaryAction,
+      secondaryAction,
+      data,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other == null || other.javaClass != javaClass) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    val other = other as FiamDisplayMessage
+    return GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepEquals(this.campaignMetadata, other.campaignMetadata) && GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepEquals(this.messageType, other.messageType) && GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepEquals(this.title, other.title) && GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepEquals(this.body, other.body) && GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepEquals(this.imageUrl, other.imageUrl) && GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepEquals(this.landscapeImageUrl, other.landscapeImageUrl) && GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepEquals(this.backgroundHexColor, other.backgroundHexColor) && GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepEquals(this.action, other.action) && GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepEquals(this.primaryAction, other.primaryAction) && GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepEquals(this.secondaryAction, other.secondaryAction) && GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepEquals(this.data, other.data)
+  }
+
+  override fun hashCode(): Int {
+    var result = javaClass.hashCode()
+    result = 31 * result + GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepHash(this.campaignMetadata)
+    result = 31 * result + GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepHash(this.messageType)
+    result = 31 * result + GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepHash(this.title)
+    result = 31 * result + GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepHash(this.body)
+    result = 31 * result + GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepHash(this.imageUrl)
+    result = 31 * result + GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepHash(this.landscapeImageUrl)
+    result = 31 * result + GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepHash(this.backgroundHexColor)
+    result = 31 * result + GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepHash(this.action)
+    result = 31 * result + GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepHash(this.primaryAction)
+    result = 31 * result + GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepHash(this.secondaryAction)
+    result = 31 * result + GeneratedAndroidFirebaseInAppMessagingPigeonUtils.deepHash(this.data)
+    return result
+  }
+}
 private open class GeneratedAndroidFirebaseInAppMessagingPigeonCodec : StandardMessageCodec() {
   override fun readValueOfType(type: Byte, buffer: ByteBuffer): Any? {
     return when (type) {
       129.toByte() -> {
-        return (readValue(buffer) as Long?)?.let { FiamDismissType.ofRaw(it.toInt()) }
+        return (readValue(buffer) as Long?)?.let {
+          FiamDismissType.ofRaw(it.toInt())
+        }
       }
       130.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let { FiamCampaignMetadata.fromList(it) }
+        return (readValue(buffer) as? List<Any?>)?.let {
+          FiamCampaignMetadata.fromList(it)
+        }
       }
       131.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let { FiamAction.fromList(it) }
+        return (readValue(buffer) as? List<Any?>)?.let {
+          FiamAction.fromList(it)
+        }
+      }
+      132.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          FiamText.fromList(it)
+        }
+      }
+      133.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          FiamDisplayAction.fromList(it)
+        }
+      }
+      134.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          FiamDisplayMessage.fromList(it)
+        }
       }
       else -> super.readValueOfType(type, buffer)
     }
   }
-
-  override fun writeValue(stream: ByteArrayOutputStream, value: Any?) {
+  override fun writeValue(stream: ByteArrayOutputStream, value: Any?)   {
     when (value) {
       is FiamDismissType -> {
         stream.write(129)
@@ -346,49 +534,51 @@ private open class GeneratedAndroidFirebaseInAppMessagingPigeonCodec : StandardM
         stream.write(131)
         writeValue(stream, value.toList())
       }
+      is FiamText -> {
+        stream.write(132)
+        writeValue(stream, value.toList())
+      }
+      is FiamDisplayAction -> {
+        stream.write(133)
+        writeValue(stream, value.toList())
+      }
+      is FiamDisplayMessage -> {
+        stream.write(134)
+        writeValue(stream, value.toList())
+      }
       else -> super.writeValue(stream, value)
     }
   }
 }
 
+
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface FirebaseInAppMessagingHostApi {
   fun triggerEvent(appName: String, eventName: String, callback: (Result<Unit>) -> Unit)
-
   fun setMessagesSuppressed(appName: String, suppress: Boolean, callback: (Result<Unit>) -> Unit)
-
-  fun setAutomaticDataCollectionEnabled(
-      appName: String,
-      enabled: Boolean,
-      callback: (Result<Unit>) -> Unit
-  )
+  fun setAutomaticDataCollectionEnabled(appName: String, enabled: Boolean, callback: (Result<Unit>) -> Unit)
   /**
    * Attaches the native message lifecycle listeners that forward events to
    * [FirebaseInAppMessagingFlutterApi]. Calling this more than once is a no-op.
    */
   fun addEventListeners(appName: String, callback: (Result<Unit>) -> Unit)
+  fun setCustomDisplayEnabled(appName: String, enabled: Boolean, callback: (Result<Unit>) -> Unit)
+  fun reportImpression(campaignId: String, callback: (Result<Unit>) -> Unit)
+  fun reportClick(campaignId: String, actionId: String, callback: (Result<Unit>) -> Unit)
+  fun reportDismiss(campaignId: String, dismissType: String, callback: (Result<Unit>) -> Unit)
+  fun reportDisplayError(campaignId: String, reason: String, callback: (Result<Unit>) -> Unit)
 
   companion object {
     /** The codec used by FirebaseInAppMessagingHostApi. */
-    val codec: MessageCodec<Any?> by lazy { GeneratedAndroidFirebaseInAppMessagingPigeonCodec() }
-    /**
-     * Sets up an instance of `FirebaseInAppMessagingHostApi` to handle messages through the
-     * `binaryMessenger`.
-     */
+    val codec: MessageCodec<Any?> by lazy {
+      GeneratedAndroidFirebaseInAppMessagingPigeonCodec()
+    }
+    /** Sets up an instance of `FirebaseInAppMessagingHostApi` to handle messages through the `binaryMessenger`. */
     @JvmOverloads
-    fun setUp(
-        binaryMessenger: BinaryMessenger,
-        api: FirebaseInAppMessagingHostApi?,
-        messageChannelSuffix: String = ""
-    ) {
-      val separatedMessageChannelSuffix =
-          if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    fun setUp(binaryMessenger: BinaryMessenger, api: FirebaseInAppMessagingHostApi?, messageChannelSuffix: String = "") {
+      val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
       run {
-        val channel =
-            BasicMessageChannel<Any?>(
-                binaryMessenger,
-                "dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingHostApi.triggerEvent$separatedMessageChannelSuffix",
-                codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingHostApi.triggerEvent$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -408,11 +598,7 @@ interface FirebaseInAppMessagingHostApi {
         }
       }
       run {
-        val channel =
-            BasicMessageChannel<Any?>(
-                binaryMessenger,
-                "dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingHostApi.setMessagesSuppressed$separatedMessageChannelSuffix",
-                codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingHostApi.setMessagesSuppressed$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -432,11 +618,7 @@ interface FirebaseInAppMessagingHostApi {
         }
       }
       run {
-        val channel =
-            BasicMessageChannel<Any?>(
-                binaryMessenger,
-                "dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingHostApi.setAutomaticDataCollectionEnabled$separatedMessageChannelSuffix",
-                codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingHostApi.setAutomaticDataCollectionEnabled$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -456,11 +638,7 @@ interface FirebaseInAppMessagingHostApi {
         }
       }
       run {
-        val channel =
-            BasicMessageChannel<Any?>(
-                binaryMessenger,
-                "dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingHostApi.addEventListeners$separatedMessageChannelSuffix",
-                codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingHostApi.addEventListeners$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -478,28 +656,120 @@ interface FirebaseInAppMessagingHostApi {
           channel.setMessageHandler(null)
         }
       }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingHostApi.setCustomDisplayEnabled$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val appNameArg = args[0] as String
+            val enabledArg = args[1] as Boolean
+            api.setCustomDisplayEnabled(appNameArg, enabledArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidFirebaseInAppMessagingPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(GeneratedAndroidFirebaseInAppMessagingPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingHostApi.reportImpression$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val campaignIdArg = args[0] as String
+            api.reportImpression(campaignIdArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidFirebaseInAppMessagingPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(GeneratedAndroidFirebaseInAppMessagingPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingHostApi.reportClick$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val campaignIdArg = args[0] as String
+            val actionIdArg = args[1] as String
+            api.reportClick(campaignIdArg, actionIdArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidFirebaseInAppMessagingPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(GeneratedAndroidFirebaseInAppMessagingPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingHostApi.reportDismiss$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val campaignIdArg = args[0] as String
+            val dismissTypeArg = args[1] as String
+            api.reportDismiss(campaignIdArg, dismissTypeArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidFirebaseInAppMessagingPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(GeneratedAndroidFirebaseInAppMessagingPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingHostApi.reportDisplayError$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val campaignIdArg = args[0] as String
+            val reasonArg = args[1] as String
+            api.reportDisplayError(campaignIdArg, reasonArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidFirebaseInAppMessagingPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(GeneratedAndroidFirebaseInAppMessagingPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
     }
   }
 }
 /** Generated class from Pigeon that represents Flutter messages that can be called from Kotlin. */
-class FirebaseInAppMessagingFlutterApi(
-    private val binaryMessenger: BinaryMessenger,
-    private val messageChannelSuffix: String = ""
-) {
+class FirebaseInAppMessagingFlutterApi(private val binaryMessenger: BinaryMessenger, private val messageChannelSuffix: String = "") {
   companion object {
     /** The codec used by FirebaseInAppMessagingFlutterApi. */
-    val codec: MessageCodec<Any?> by lazy { GeneratedAndroidFirebaseInAppMessagingPigeonCodec() }
+    val codec: MessageCodec<Any?> by lazy {
+      GeneratedAndroidFirebaseInAppMessagingPigeonCodec()
+    }
   }
-
-  fun onMessageClicked(
-      campaignMetadataArg: FiamCampaignMetadata,
-      actionArg: FiamAction,
-      callback: (Result<Unit>) -> Unit
-  ) {
-    val separatedMessageChannelSuffix =
-        if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
-    val channelName =
-        "dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingFlutterApi.onMessageClicked$separatedMessageChannelSuffix"
+  fun onMessageClicked(campaignMetadataArg: FiamCampaignMetadata, actionArg: FiamAction, callback: (Result<Unit>) -> Unit)
+{
+    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    val channelName = "dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingFlutterApi.onMessageClicked$separatedMessageChannelSuffix"
     val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
     channel.send(listOf(campaignMetadataArg, actionArg)) {
       if (it is List<*>) {
@@ -509,22 +779,14 @@ class FirebaseInAppMessagingFlutterApi(
           callback(Result.success(Unit))
         }
       } else {
-        callback(
-            Result.failure(
-                GeneratedAndroidFirebaseInAppMessagingPigeonUtils.createConnectionError(
-                    channelName)))
-      }
+        callback(Result.failure(GeneratedAndroidFirebaseInAppMessagingPigeonUtils.createConnectionError(channelName)))
+      } 
     }
   }
-
-  fun onMessageImpression(
-      campaignMetadataArg: FiamCampaignMetadata,
-      callback: (Result<Unit>) -> Unit
-  ) {
-    val separatedMessageChannelSuffix =
-        if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
-    val channelName =
-        "dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingFlutterApi.onMessageImpression$separatedMessageChannelSuffix"
+  fun onMessageImpression(campaignMetadataArg: FiamCampaignMetadata, callback: (Result<Unit>) -> Unit)
+{
+    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    val channelName = "dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingFlutterApi.onMessageImpression$separatedMessageChannelSuffix"
     val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
     channel.send(listOf(campaignMetadataArg)) {
       if (it is List<*>) {
@@ -534,23 +796,14 @@ class FirebaseInAppMessagingFlutterApi(
           callback(Result.success(Unit))
         }
       } else {
-        callback(
-            Result.failure(
-                GeneratedAndroidFirebaseInAppMessagingPigeonUtils.createConnectionError(
-                    channelName)))
-      }
+        callback(Result.failure(GeneratedAndroidFirebaseInAppMessagingPigeonUtils.createConnectionError(channelName)))
+      } 
     }
   }
-
-  fun onMessageDismissed(
-      campaignMetadataArg: FiamCampaignMetadata,
-      dismissTypeArg: FiamDismissType,
-      callback: (Result<Unit>) -> Unit
-  ) {
-    val separatedMessageChannelSuffix =
-        if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
-    val channelName =
-        "dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingFlutterApi.onMessageDismissed$separatedMessageChannelSuffix"
+  fun onMessageDismissed(campaignMetadataArg: FiamCampaignMetadata, dismissTypeArg: FiamDismissType, callback: (Result<Unit>) -> Unit)
+{
+    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    val channelName = "dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingFlutterApi.onMessageDismissed$separatedMessageChannelSuffix"
     val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
     channel.send(listOf(campaignMetadataArg, dismissTypeArg)) {
       if (it is List<*>) {
@@ -560,23 +813,14 @@ class FirebaseInAppMessagingFlutterApi(
           callback(Result.success(Unit))
         }
       } else {
-        callback(
-            Result.failure(
-                GeneratedAndroidFirebaseInAppMessagingPigeonUtils.createConnectionError(
-                    channelName)))
-      }
+        callback(Result.failure(GeneratedAndroidFirebaseInAppMessagingPigeonUtils.createConnectionError(channelName)))
+      } 
     }
   }
-
-  fun onMessageDisplayError(
-      campaignMetadataArg: FiamCampaignMetadata,
-      errorMessageArg: String?,
-      callback: (Result<Unit>) -> Unit
-  ) {
-    val separatedMessageChannelSuffix =
-        if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
-    val channelName =
-        "dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingFlutterApi.onMessageDisplayError$separatedMessageChannelSuffix"
+  fun onMessageDisplayError(campaignMetadataArg: FiamCampaignMetadata, errorMessageArg: String?, callback: (Result<Unit>) -> Unit)
+{
+    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    val channelName = "dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingFlutterApi.onMessageDisplayError$separatedMessageChannelSuffix"
     val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
     channel.send(listOf(campaignMetadataArg, errorMessageArg)) {
       if (it is List<*>) {
@@ -586,11 +830,25 @@ class FirebaseInAppMessagingFlutterApi(
           callback(Result.success(Unit))
         }
       } else {
-        callback(
-            Result.failure(
-                GeneratedAndroidFirebaseInAppMessagingPigeonUtils.createConnectionError(
-                    channelName)))
-      }
+        callback(Result.failure(GeneratedAndroidFirebaseInAppMessagingPigeonUtils.createConnectionError(channelName)))
+      } 
+    }
+  }
+  fun onMessageDisplay(messageArg: FiamDisplayMessage, callback: (Result<Unit>) -> Unit)
+{
+    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    val channelName = "dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingFlutterApi.onMessageDisplay$separatedMessageChannelSuffix"
+    val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
+    channel.send(listOf(messageArg)) {
+      if (it is List<*>) {
+        if (it.size > 1) {
+          callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
+        } else {
+          callback(Result.success(Unit))
+        }
+      } else {
+        callback(Result.failure(GeneratedAndroidFirebaseInAppMessagingPigeonUtils.createConnectionError(channelName)))
+      } 
     }
   }
 }
