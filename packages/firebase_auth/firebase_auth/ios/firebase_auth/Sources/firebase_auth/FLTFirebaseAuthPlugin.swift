@@ -148,7 +148,7 @@ public class FLTFirebaseAuthPlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
     let app = FLTFirebasePlugin.firebaseAppNamed(pigeonApp.appName)!
     let auth = Auth.auth(app: app)
     auth.tenantID = pigeonApp.tenantId
-    auth.customAuthDomain = FLTFirebaseCorePlugin.getCustomDomain(app.name)
+    auth.customAuthDomain = FLTFirebasePlugin.getCustomDomain(app.name)
     if let customAuthDomain = pigeonApp.customAuthDomain {
       auth.customAuthDomain = customAuthDomain
     }
@@ -200,7 +200,7 @@ public class FLTFirebaseAuthPlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
 
   func ensureAPNSTokenSetting() {
     #if os(iOS)
-      if FirebaseApp.defaultApp() != nil {
+      if FirebaseApp.app() != nil {
         if Auth.auth().apnsToken == nil, let apnsToken {
           Auth.auth().setAPNSToken(apnsToken, type: .unknown)
           self.apnsToken = nil
@@ -634,29 +634,16 @@ public class FLTFirebaseAuthPlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
         completion(nil, nil)
       }
     case kSignInMethodOAuth:
-      let providerId = str("providerId") ?? ""
+      let provider = AuthProviderID.custom(str("providerId") ?? "")
       let token = idToken ?? ""
-      // Keep the nil-accessToken path off the non-null 4-arg selector (#18450).
-      if let accessToken {
-        if let rawNonce {
-          completion(
-            OAuthProvider.credential(
-              withProviderID: providerId, idToken: token, rawNonce: rawNonce,
-              accessToken: accessToken),
-            nil)
-        } else {
-          completion(
-            OAuthProvider.credential(
-              withProviderID: providerId, idToken: token, accessToken: accessToken),
-            nil)
-        }
-      } else if let rawNonce {
+      if let rawNonce {
         completion(
-          OAuthProvider.credential(withProviderID: providerId, idToken: token, rawNonce: rawNonce),
+          OAuthProvider.credential(
+            providerID: provider, idToken: token, rawNonce: rawNonce, accessToken: accessToken),
           nil)
       } else {
         completion(
-          OAuthProvider.credential(withProviderID: providerId, idToken: token, accessToken: nil),
+          OAuthProvider.credential(providerID: provider, idToken: token, accessToken: accessToken),
           nil)
       }
     default:

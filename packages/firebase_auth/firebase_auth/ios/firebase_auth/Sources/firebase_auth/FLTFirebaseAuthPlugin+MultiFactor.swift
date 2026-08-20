@@ -76,7 +76,7 @@ extension FLTFirebaseAuthPlugin: MultiFactorUserHostApi, MultiFactoResolverHostA
       completion(.failure(AuthErrors.noCurrentUser()))
       return
     }
-    multiFactor.getSession { session, _ in
+    multiFactor.getSessionWithCompletion { session, _ in
       let id = UUID().uuidString
       self.multiFactorSessionMap[id] = session
       completion(.success(InternalMultiFactorSession(id: id)))
