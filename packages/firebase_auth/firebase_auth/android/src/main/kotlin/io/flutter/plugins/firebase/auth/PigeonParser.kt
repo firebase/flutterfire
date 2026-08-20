@@ -40,7 +40,9 @@ object PigeonParser {
         user = parseFirebaseUser(authResult.user))
   }
 
-  private fun parseAdditionalUserInfo(additionalUserInfo: AdditionalUserInfo?): InternalAdditionalUserInfo? {
+  private fun parseAdditionalUserInfo(
+      additionalUserInfo: AdditionalUserInfo?
+  ): InternalAdditionalUserInfo? {
     if (additionalUserInfo == null) {
       return null
     }
@@ -86,7 +88,8 @@ object PigeonParser {
             uid = firebaseUser.uid,
             tenantId = firebaseUser.tenantId)
 
-    return InternalUserDetails(userInfo = userInfo, providerData = parseUserInfoList(firebaseUser.providerData))
+    return InternalUserDetails(
+        userInfo = userInfo, providerData = parseUserInfoList(firebaseUser.providerData))
   }
 
   private fun parseUserInfoList(userInfoList: List<UserInfo>?): List<Map<Any?, Any?>?> {
@@ -146,7 +149,8 @@ object PigeonParser {
           EmailAuthProvider.getCredential(credentialMap[Constants.EMAIL] as String, secret!!)
       Constants.SIGN_IN_METHOD_EMAIL_LINK ->
           EmailAuthProvider.getCredentialWithLink(
-              credentialMap[Constants.EMAIL] as String, credentialMap[Constants.EMAIL_LINK] as String)
+              credentialMap[Constants.EMAIL] as String,
+              credentialMap[Constants.EMAIL_LINK] as String)
       Constants.SIGN_IN_METHOD_FACEBOOK -> FacebookAuthProvider.getCredential(accessToken!!)
       Constants.SIGN_IN_METHOD_GOOGLE -> GoogleAuthProvider.getCredential(idToken, accessToken)
       Constants.SIGN_IN_METHOD_TWITTER -> TwitterAuthProvider.getCredential(accessToken!!, secret!!)
@@ -177,7 +181,9 @@ object PigeonParser {
     }
   }
 
-  fun getActionCodeSettings(pigeonActionCodeSettings: InternalActionCodeSettings): ActionCodeSettings {
+  fun getActionCodeSettings(
+      pigeonActionCodeSettings: InternalActionCodeSettings
+  ): ActionCodeSettings {
     val builder = ActionCodeSettings.newBuilder()
     builder.setUrl(pigeonActionCodeSettings.url)
 

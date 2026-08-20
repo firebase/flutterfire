@@ -37,8 +37,7 @@ class PhoneNumberVerificationStreamHandler(
   private val phoneNumber: String? = request.phoneNumber
   private val timeout: Int = Math.toIntExact(request.timeout)
   private var autoRetrievedSmsCodeForTesting: String? = request.autoRetrievedSmsCodeForTesting
-  private var forceResendingToken: Int? =
-      request.forceResendingToken?.let { Math.toIntExact(it) }
+  private var forceResendingToken: Int? = request.forceResendingToken?.let { Math.toIntExact(it) }
 
   private var eventSink: EventSink? = null
 
@@ -103,9 +102,8 @@ class PhoneNumberVerificationStreamHandler(
         }
 
     if (autoRetrievedSmsCodeForTesting != null) {
-      firebaseAuth
-          .firebaseAuthSettings
-          .setAutoRetrievedSmsCodeForPhoneNumber(phoneNumber, autoRetrievedSmsCodeForTesting)
+      firebaseAuth.firebaseAuthSettings.setAutoRetrievedSmsCodeForPhoneNumber(
+          phoneNumber, autoRetrievedSmsCodeForTesting)
     }
 
     val phoneAuthOptionsBuilder = PhoneAuthOptions.Builder(firebaseAuth)

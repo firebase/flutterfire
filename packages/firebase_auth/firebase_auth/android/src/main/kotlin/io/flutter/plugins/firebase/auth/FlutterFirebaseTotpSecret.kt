@@ -23,7 +23,11 @@ class FlutterFirebaseTotpSecret : MultiFactorTotpSecretHostApi {
     callback(Result.success(secret.generateQrCodeUrl(accountName, issuer)))
   }
 
-  override fun openInOtpApp(secretKey: String, qrCodeUrl: String, callback: (Result<Unit>) -> Unit) {
+  override fun openInOtpApp(
+      secretKey: String,
+      qrCodeUrl: String,
+      callback: (Result<Unit>) -> Unit
+  ) {
     val secret: TotpSecret? = FlutterFirebaseTotpMultiFactor.multiFactorSecret[secretKey]
     checkNotNull(secret)
     secret.openInOtpApp(qrCodeUrl)

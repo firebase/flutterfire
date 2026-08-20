@@ -17,8 +17,9 @@ import java.util.UUID
 class FlutterFirebaseMultiFactor : MultiFactorUserHostApi, MultiFactoResolverHostApi {
   @Throws(FirebaseNoSignedInUserException::class)
   fun getAppMultiFactor(app: AuthPigeonFirebaseApp): MultiFactor {
-    val currentUser = FlutterFirebaseAuthUser.getCurrentUserFromPigeon(app)
-        ?: throw FirebaseNoSignedInUserException("No user is signed in")
+    val currentUser =
+        FlutterFirebaseAuthUser.getCurrentUserFromPigeon(app)
+            ?: throw FirebaseNoSignedInUserException("No user is signed in")
     val appMultiFactorUser = multiFactorUserMap.getOrPut(app.appName) { HashMap() }
     return appMultiFactorUser.getOrPut(currentUser.uid) { currentUser.multiFactor }
   }

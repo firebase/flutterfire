@@ -24,7 +24,8 @@ import io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry
 import java.util.UUID
 
 /** Flutter plugin for Firebase Auth. */
-class FlutterFirebaseAuthPlugin : FlutterFirebasePlugin, FlutterPlugin, ActivityAware, FirebaseAuthHostApi {
+class FlutterFirebaseAuthPlugin :
+    FlutterFirebasePlugin, FlutterPlugin, ActivityAware, FirebaseAuthHostApi {
   private var messenger: BinaryMessenger? = null
   private var channel: MethodChannel? = null
   private var activity: Activity? = null
@@ -76,7 +77,9 @@ class FlutterFirebaseAuthPlugin : FlutterFirebasePlugin, FlutterPlugin, Activity
     firebaseAuthUser.setActivity(null)
   }
 
-  override fun onReattachedToActivityForConfigChanges(activityPluginBinding: ActivityPluginBinding) {
+  override fun onReattachedToActivityForConfigChanges(
+      activityPluginBinding: ActivityPluginBinding
+  ) {
     activity = activityPluginBinding.activity
     firebaseAuthUser.setActivity(activity)
   }
@@ -90,7 +93,10 @@ class FlutterFirebaseAuthPlugin : FlutterFirebasePlugin, FlutterPlugin, Activity
     return activity
   }
 
-  override fun registerIdTokenListener(app: AuthPigeonFirebaseApp, callback: (Result<String>) -> Unit) {
+  override fun registerIdTokenListener(
+      app: AuthPigeonFirebaseApp,
+      callback: (Result<String>) -> Unit
+  ) {
     try {
       val auth = getAuthFromPigeon(app)
       val handler = IdTokenChannelStreamHandler(auth)
@@ -178,9 +184,10 @@ class FlutterFirebaseAuthPlugin : FlutterFirebasePlugin, FlutterPlugin, Activity
       password: String,
       callback: (Result<InternalUserCredential>) -> Unit
   ) {
-    getAuthFromPigeon(app)
-        .createUserWithEmailAndPassword(email, password)
-        .addOnCompleteListener { task -> completeAuthResult(task, callback) }
+    getAuthFromPigeon(app).createUserWithEmailAndPassword(email, password).addOnCompleteListener {
+        task ->
+      completeAuthResult(task, callback)
+    }
   }
 
   override fun signInAnonymously(
@@ -223,9 +230,10 @@ class FlutterFirebaseAuthPlugin : FlutterFirebasePlugin, FlutterPlugin, Activity
       password: String,
       callback: (Result<InternalUserCredential>) -> Unit
   ) {
-    getAuthFromPigeon(app)
-        .signInWithEmailAndPassword(email, password)
-        .addOnCompleteListener { task -> completeAuthResult(task, callback) }
+    getAuthFromPigeon(app).signInWithEmailAndPassword(email, password).addOnCompleteListener { task
+      ->
+      completeAuthResult(task, callback)
+    }
   }
 
   override fun signInWithEmailLink(
@@ -345,9 +353,8 @@ class FlutterFirebaseAuthPlugin : FlutterFirebasePlugin, FlutterPlugin, Activity
   ) {
     try {
       val firebaseAuth = getAuthFromPigeon(app)
-      firebaseAuth
-          .firebaseAuthSettings
-          .setAppVerificationDisabledForTesting(settings.appVerificationDisabledForTesting)
+      firebaseAuth.firebaseAuthSettings.setAppVerificationDisabledForTesting(
+          settings.appVerificationDisabledForTesting)
 
       if (settings.forceRecaptchaFlow != null) {
         firebaseAuth.firebaseAuthSettings.forceRecaptchaFlowForTesting(
@@ -355,9 +362,8 @@ class FlutterFirebaseAuthPlugin : FlutterFirebasePlugin, FlutterPlugin, Activity
       }
 
       if (settings.phoneNumber != null && settings.smsCode != null) {
-        firebaseAuth
-            .firebaseAuthSettings
-            .setAutoRetrievedSmsCodeForPhoneNumber(settings.phoneNumber, settings.smsCode)
+        firebaseAuth.firebaseAuthSettings.setAutoRetrievedSmsCodeForPhoneNumber(
+            settings.phoneNumber, settings.smsCode)
       }
 
       callback(Result.success(Unit))
@@ -412,11 +418,7 @@ class FlutterFirebaseAuthPlugin : FlutterFirebasePlugin, FlutterPlugin, Activity
 
       val handler =
           PhoneNumberVerificationStreamHandler(
-              getActivity(),
-              app,
-              request,
-              multiFactorSession,
-              multiFactorInfo) { credential ->
+              getActivity(), app, request, multiFactorSession, multiFactorInfo) { credential ->
                 authCredentials[credential.hashCode()] = credential
               }
 

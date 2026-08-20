@@ -66,16 +66,16 @@ object FlutterFirebaseAuthPluginException {
     }
 
     if (nativeException.message != null &&
-        nativeException
-            .message!!
-            .startsWith("Cannot create PhoneAuthCredential without either verificationProof")) {
+        nativeException.message!!.startsWith(
+            "Cannot create PhoneAuthCredential without either verificationProof")) {
       return FlutterError(
           "invalid-verification-code",
           "The verification ID used to create the phone auth credential is invalid.",
           null)
     }
 
-    if (message != null && message.contains("User has already been linked to the given provider.")) {
+    if (message != null &&
+        message.contains("User has already been linked to the given provider.")) {
       return alreadyLinkedProvider()
     }
 

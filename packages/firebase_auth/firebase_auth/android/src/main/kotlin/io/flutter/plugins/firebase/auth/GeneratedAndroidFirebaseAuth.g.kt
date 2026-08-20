@@ -10,12 +10,11 @@ package io.flutter.plugins.firebase.auth
 import android.util.Log
 import io.flutter.plugin.common.BasicMessageChannel
 import io.flutter.plugin.common.BinaryMessenger
-import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MessageCodec
-import io.flutter.plugin.common.StandardMethodCodec
 import io.flutter.plugin.common.StandardMessageCodec
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
+
 private object GeneratedAndroidFirebaseAuthPigeonUtils {
 
   fun wrapResult(result: Any?): List<Any?> {
@@ -24,19 +23,15 @@ private object GeneratedAndroidFirebaseAuthPigeonUtils {
 
   fun wrapError(exception: Throwable): List<Any?> {
     return if (exception is FlutterError) {
-      listOf(
-        exception.code,
-        exception.message,
-        exception.details
-      )
+      listOf(exception.code, exception.message, exception.details)
     } else {
       listOf(
-        exception.javaClass.simpleName,
-        exception.toString(),
-        "Cause: " + exception.cause + ", Stacktrace: " + Log.getStackTraceString(exception)
-      )
+          exception.javaClass.simpleName,
+          exception.toString(),
+          "Cause: " + exception.cause + ", Stacktrace: " + Log.getStackTraceString(exception))
     }
   }
+
   fun doubleEquals(a: Double, b: Double): Boolean {
     // Normalize -0.0 to 0.0 and handle NaN equality.
     return (if (a == 0.0) 0.0 else a) == (if (b == 0.0) 0.0 else b) || (a.isNaN() && b.isNaN())
@@ -180,25 +175,22 @@ private object GeneratedAndroidFirebaseAuthPigeonUtils {
       else -> value.hashCode()
     }
   }
-
 }
 
 /**
  * Error class for passing custom error details to Flutter via a thrown PlatformException.
+ *
  * @property code The error code.
  * @property message The error message.
  * @property details The error details. Must be a datatype supported by the api codec.
  */
-class FlutterError (
-  val code: String,
-  override val message: String? = null,
-  val details: Any? = null
+class FlutterError(
+    val code: String,
+    override val message: String? = null,
+    val details: Any? = null
 ) : RuntimeException()
 
-/**
- * The type of operation that generated the action code from calling
- * [checkActionCode].
- */
+/** The type of operation that generated the action code from calling [checkActionCode]. */
 enum class ActionCodeInfoOperation(val raw: Int) {
   /** Unknown operation. */
   UNKNOWN(0),
@@ -223,21 +215,20 @@ enum class ActionCodeInfoOperation(val raw: Int) {
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
-data class InternalMultiFactorSession (
-  val id: String
-)
- {
+data class InternalMultiFactorSession(val id: String) {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): InternalMultiFactorSession {
       val id = pigeonVar_list[0] as String
       return InternalMultiFactorSession(id)
     }
   }
+
   fun toList(): List<Any?> {
     return listOf(
-      id,
+        id,
     )
   }
+
   override fun equals(other: Any?): Boolean {
     if (other == null || other.javaClass != javaClass) {
       return false
@@ -257,11 +248,10 @@ data class InternalMultiFactorSession (
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
-data class InternalPhoneMultiFactorAssertion (
-  val verificationId: String,
-  val verificationCode: String
-)
- {
+data class InternalPhoneMultiFactorAssertion(
+    val verificationId: String,
+    val verificationCode: String
+) {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): InternalPhoneMultiFactorAssertion {
       val verificationId = pigeonVar_list[0] as String
@@ -269,12 +259,14 @@ data class InternalPhoneMultiFactorAssertion (
       return InternalPhoneMultiFactorAssertion(verificationId, verificationCode)
     }
   }
+
   fun toList(): List<Any?> {
     return listOf(
-      verificationId,
-      verificationCode,
+        verificationId,
+        verificationCode,
     )
   }
+
   override fun equals(other: Any?): Boolean {
     if (other == null || other.javaClass != javaClass) {
       return false
@@ -283,7 +275,10 @@ data class InternalPhoneMultiFactorAssertion (
       return true
     }
     val other = other as InternalPhoneMultiFactorAssertion
-    return GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.verificationId, other.verificationId) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.verificationCode, other.verificationCode)
+    return GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(
+        this.verificationId, other.verificationId) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(
+            this.verificationCode, other.verificationCode)
   }
 
   override fun hashCode(): Int {
@@ -295,14 +290,13 @@ data class InternalPhoneMultiFactorAssertion (
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
-data class InternalMultiFactorInfo (
-  val displayName: String? = null,
-  val enrollmentTimestamp: Double,
-  val factorId: String? = null,
-  val uid: String,
-  val phoneNumber: String? = null
-)
- {
+data class InternalMultiFactorInfo(
+    val displayName: String? = null,
+    val enrollmentTimestamp: Double,
+    val factorId: String? = null,
+    val uid: String,
+    val phoneNumber: String? = null
+) {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): InternalMultiFactorInfo {
       val displayName = pigeonVar_list[0] as String?
@@ -313,15 +307,17 @@ data class InternalMultiFactorInfo (
       return InternalMultiFactorInfo(displayName, enrollmentTimestamp, factorId, uid, phoneNumber)
     }
   }
+
   fun toList(): List<Any?> {
     return listOf(
-      displayName,
-      enrollmentTimestamp,
-      factorId,
-      uid,
-      phoneNumber,
+        displayName,
+        enrollmentTimestamp,
+        factorId,
+        uid,
+        phoneNumber,
     )
   }
+
   override fun equals(other: Any?): Boolean {
     if (other == null || other.javaClass != javaClass) {
       return false
@@ -330,13 +326,20 @@ data class InternalMultiFactorInfo (
       return true
     }
     val other = other as InternalMultiFactorInfo
-    return GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.displayName, other.displayName) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.enrollmentTimestamp, other.enrollmentTimestamp) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.factorId, other.factorId) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.uid, other.uid) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.phoneNumber, other.phoneNumber)
+    return GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(
+        this.displayName, other.displayName) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(
+            this.enrollmentTimestamp, other.enrollmentTimestamp) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.factorId, other.factorId) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.uid, other.uid) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.phoneNumber, other.phoneNumber)
   }
 
   override fun hashCode(): Int {
     var result = javaClass.hashCode()
     result = 31 * result + GeneratedAndroidFirebaseAuthPigeonUtils.deepHash(this.displayName)
-    result = 31 * result + GeneratedAndroidFirebaseAuthPigeonUtils.deepHash(this.enrollmentTimestamp)
+    result =
+        31 * result + GeneratedAndroidFirebaseAuthPigeonUtils.deepHash(this.enrollmentTimestamp)
     result = 31 * result + GeneratedAndroidFirebaseAuthPigeonUtils.deepHash(this.factorId)
     result = 31 * result + GeneratedAndroidFirebaseAuthPigeonUtils.deepHash(this.uid)
     result = 31 * result + GeneratedAndroidFirebaseAuthPigeonUtils.deepHash(this.phoneNumber)
@@ -345,12 +348,11 @@ data class InternalMultiFactorInfo (
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
-data class AuthPigeonFirebaseApp (
-  val appName: String,
-  val tenantId: String? = null,
-  val customAuthDomain: String? = null
-)
- {
+data class AuthPigeonFirebaseApp(
+    val appName: String,
+    val tenantId: String? = null,
+    val customAuthDomain: String? = null
+) {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): AuthPigeonFirebaseApp {
       val appName = pigeonVar_list[0] as String
@@ -359,13 +361,15 @@ data class AuthPigeonFirebaseApp (
       return AuthPigeonFirebaseApp(appName, tenantId, customAuthDomain)
     }
   }
+
   fun toList(): List<Any?> {
     return listOf(
-      appName,
-      tenantId,
-      customAuthDomain,
+        appName,
+        tenantId,
+        customAuthDomain,
     )
   }
+
   override fun equals(other: Any?): Boolean {
     if (other == null || other.javaClass != javaClass) {
       return false
@@ -374,7 +378,10 @@ data class AuthPigeonFirebaseApp (
       return true
     }
     val other = other as AuthPigeonFirebaseApp
-    return GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.appName, other.appName) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.tenantId, other.tenantId) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.customAuthDomain, other.customAuthDomain)
+    return GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.appName, other.appName) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.tenantId, other.tenantId) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(
+            this.customAuthDomain, other.customAuthDomain)
   }
 
   override fun hashCode(): Int {
@@ -387,11 +394,10 @@ data class AuthPigeonFirebaseApp (
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
-data class InternalActionCodeInfoData (
-  val email: String? = null,
-  val previousEmail: String? = null
-)
- {
+data class InternalActionCodeInfoData(
+    val email: String? = null,
+    val previousEmail: String? = null
+) {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): InternalActionCodeInfoData {
       val email = pigeonVar_list[0] as String?
@@ -399,12 +405,14 @@ data class InternalActionCodeInfoData (
       return InternalActionCodeInfoData(email, previousEmail)
     }
   }
+
   fun toList(): List<Any?> {
     return listOf(
-      email,
-      previousEmail,
+        email,
+        previousEmail,
     )
   }
+
   override fun equals(other: Any?): Boolean {
     if (other == null || other.javaClass != javaClass) {
       return false
@@ -413,7 +421,8 @@ data class InternalActionCodeInfoData (
       return true
     }
     val other = other as InternalActionCodeInfoData
-    return GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.email, other.email) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.previousEmail, other.previousEmail)
+    return GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.email, other.email) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.previousEmail, other.previousEmail)
   }
 
   override fun hashCode(): Int {
@@ -425,11 +434,10 @@ data class InternalActionCodeInfoData (
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
-data class InternalActionCodeInfo (
-  val operation: ActionCodeInfoOperation,
-  val data: InternalActionCodeInfoData
-)
- {
+data class InternalActionCodeInfo(
+    val operation: ActionCodeInfoOperation,
+    val data: InternalActionCodeInfoData
+) {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): InternalActionCodeInfo {
       val operation = pigeonVar_list[0] as ActionCodeInfoOperation
@@ -437,12 +445,14 @@ data class InternalActionCodeInfo (
       return InternalActionCodeInfo(operation, data)
     }
   }
+
   fun toList(): List<Any?> {
     return listOf(
-      operation,
-      data,
+        operation,
+        data,
     )
   }
+
   override fun equals(other: Any?): Boolean {
     if (other == null || other.javaClass != javaClass) {
       return false
@@ -451,7 +461,8 @@ data class InternalActionCodeInfo (
       return true
     }
     val other = other as InternalActionCodeInfo
-    return GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.operation, other.operation) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.data, other.data)
+    return GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.operation, other.operation) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.data, other.data)
   }
 
   override fun hashCode(): Int {
@@ -463,14 +474,13 @@ data class InternalActionCodeInfo (
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
-data class InternalAdditionalUserInfo (
-  val isNewUser: Boolean,
-  val providerId: String? = null,
-  val username: String? = null,
-  val authorizationCode: String? = null,
-  val profile: Map<String?, Any?>? = null
-)
- {
+data class InternalAdditionalUserInfo(
+    val isNewUser: Boolean,
+    val providerId: String? = null,
+    val username: String? = null,
+    val authorizationCode: String? = null,
+    val profile: Map<String?, Any?>? = null
+) {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): InternalAdditionalUserInfo {
       val isNewUser = pigeonVar_list[0] as Boolean
@@ -481,15 +491,17 @@ data class InternalAdditionalUserInfo (
       return InternalAdditionalUserInfo(isNewUser, providerId, username, authorizationCode, profile)
     }
   }
+
   fun toList(): List<Any?> {
     return listOf(
-      isNewUser,
-      providerId,
-      username,
-      authorizationCode,
-      profile,
+        isNewUser,
+        providerId,
+        username,
+        authorizationCode,
+        profile,
     )
   }
+
   override fun equals(other: Any?): Boolean {
     if (other == null || other.javaClass != javaClass) {
       return false
@@ -498,7 +510,12 @@ data class InternalAdditionalUserInfo (
       return true
     }
     val other = other as InternalAdditionalUserInfo
-    return GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.isNewUser, other.isNewUser) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.providerId, other.providerId) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.username, other.username) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.authorizationCode, other.authorizationCode) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.profile, other.profile)
+    return GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.isNewUser, other.isNewUser) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.providerId, other.providerId) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.username, other.username) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(
+            this.authorizationCode, other.authorizationCode) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.profile, other.profile)
   }
 
   override fun hashCode(): Int {
@@ -513,13 +530,12 @@ data class InternalAdditionalUserInfo (
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
-data class InternalAuthCredential (
-  val providerId: String,
-  val signInMethod: String,
-  val nativeId: Long,
-  val accessToken: String? = null
-)
- {
+data class InternalAuthCredential(
+    val providerId: String,
+    val signInMethod: String,
+    val nativeId: Long,
+    val accessToken: String? = null
+) {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): InternalAuthCredential {
       val providerId = pigeonVar_list[0] as String
@@ -529,14 +545,16 @@ data class InternalAuthCredential (
       return InternalAuthCredential(providerId, signInMethod, nativeId, accessToken)
     }
   }
+
   fun toList(): List<Any?> {
     return listOf(
-      providerId,
-      signInMethod,
-      nativeId,
-      accessToken,
+        providerId,
+        signInMethod,
+        nativeId,
+        accessToken,
     )
   }
+
   override fun equals(other: Any?): Boolean {
     if (other == null || other.javaClass != javaClass) {
       return false
@@ -545,7 +563,10 @@ data class InternalAuthCredential (
       return true
     }
     val other = other as InternalAuthCredential
-    return GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.providerId, other.providerId) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.signInMethod, other.signInMethod) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.nativeId, other.nativeId) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.accessToken, other.accessToken)
+    return GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.providerId, other.providerId) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.signInMethod, other.signInMethod) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.nativeId, other.nativeId) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.accessToken, other.accessToken)
   }
 
   override fun hashCode(): Int {
@@ -559,21 +580,20 @@ data class InternalAuthCredential (
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
-data class InternalUserInfo (
-  val uid: String,
-  val email: String? = null,
-  val displayName: String? = null,
-  val photoUrl: String? = null,
-  val phoneNumber: String? = null,
-  val isAnonymous: Boolean,
-  val isEmailVerified: Boolean,
-  val providerId: String? = null,
-  val tenantId: String? = null,
-  val refreshToken: String? = null,
-  val creationTimestamp: Long? = null,
-  val lastSignInTimestamp: Long? = null
-)
- {
+data class InternalUserInfo(
+    val uid: String,
+    val email: String? = null,
+    val displayName: String? = null,
+    val photoUrl: String? = null,
+    val phoneNumber: String? = null,
+    val isAnonymous: Boolean,
+    val isEmailVerified: Boolean,
+    val providerId: String? = null,
+    val tenantId: String? = null,
+    val refreshToken: String? = null,
+    val creationTimestamp: Long? = null,
+    val lastSignInTimestamp: Long? = null
+) {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): InternalUserInfo {
       val uid = pigeonVar_list[0] as String
@@ -588,25 +608,39 @@ data class InternalUserInfo (
       val refreshToken = pigeonVar_list[9] as String?
       val creationTimestamp = pigeonVar_list[10] as Long?
       val lastSignInTimestamp = pigeonVar_list[11] as Long?
-      return InternalUserInfo(uid, email, displayName, photoUrl, phoneNumber, isAnonymous, isEmailVerified, providerId, tenantId, refreshToken, creationTimestamp, lastSignInTimestamp)
+      return InternalUserInfo(
+          uid,
+          email,
+          displayName,
+          photoUrl,
+          phoneNumber,
+          isAnonymous,
+          isEmailVerified,
+          providerId,
+          tenantId,
+          refreshToken,
+          creationTimestamp,
+          lastSignInTimestamp)
     }
   }
+
   fun toList(): List<Any?> {
     return listOf(
-      uid,
-      email,
-      displayName,
-      photoUrl,
-      phoneNumber,
-      isAnonymous,
-      isEmailVerified,
-      providerId,
-      tenantId,
-      refreshToken,
-      creationTimestamp,
-      lastSignInTimestamp,
+        uid,
+        email,
+        displayName,
+        photoUrl,
+        phoneNumber,
+        isAnonymous,
+        isEmailVerified,
+        providerId,
+        tenantId,
+        refreshToken,
+        creationTimestamp,
+        lastSignInTimestamp,
     )
   }
+
   override fun equals(other: Any?): Boolean {
     if (other == null || other.javaClass != javaClass) {
       return false
@@ -615,7 +649,21 @@ data class InternalUserInfo (
       return true
     }
     val other = other as InternalUserInfo
-    return GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.uid, other.uid) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.email, other.email) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.displayName, other.displayName) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.photoUrl, other.photoUrl) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.phoneNumber, other.phoneNumber) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.isAnonymous, other.isAnonymous) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.isEmailVerified, other.isEmailVerified) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.providerId, other.providerId) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.tenantId, other.tenantId) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.refreshToken, other.refreshToken) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.creationTimestamp, other.creationTimestamp) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.lastSignInTimestamp, other.lastSignInTimestamp)
+    return GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.uid, other.uid) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.email, other.email) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.displayName, other.displayName) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.photoUrl, other.photoUrl) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.phoneNumber, other.phoneNumber) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.isAnonymous, other.isAnonymous) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(
+            this.isEmailVerified, other.isEmailVerified) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.providerId, other.providerId) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.tenantId, other.tenantId) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.refreshToken, other.refreshToken) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(
+            this.creationTimestamp, other.creationTimestamp) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(
+            this.lastSignInTimestamp, other.lastSignInTimestamp)
   }
 
   override fun hashCode(): Int {
@@ -631,17 +679,17 @@ data class InternalUserInfo (
     result = 31 * result + GeneratedAndroidFirebaseAuthPigeonUtils.deepHash(this.tenantId)
     result = 31 * result + GeneratedAndroidFirebaseAuthPigeonUtils.deepHash(this.refreshToken)
     result = 31 * result + GeneratedAndroidFirebaseAuthPigeonUtils.deepHash(this.creationTimestamp)
-    result = 31 * result + GeneratedAndroidFirebaseAuthPigeonUtils.deepHash(this.lastSignInTimestamp)
+    result =
+        31 * result + GeneratedAndroidFirebaseAuthPigeonUtils.deepHash(this.lastSignInTimestamp)
     return result
   }
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
-data class InternalUserDetails (
-  val userInfo: InternalUserInfo,
-  val providerData: List<Map<Any?, Any?>?>
-)
- {
+data class InternalUserDetails(
+    val userInfo: InternalUserInfo,
+    val providerData: List<Map<Any?, Any?>?>
+) {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): InternalUserDetails {
       val userInfo = pigeonVar_list[0] as InternalUserInfo
@@ -649,12 +697,14 @@ data class InternalUserDetails (
       return InternalUserDetails(userInfo, providerData)
     }
   }
+
   fun toList(): List<Any?> {
     return listOf(
-      userInfo,
-      providerData,
+        userInfo,
+        providerData,
     )
   }
+
   override fun equals(other: Any?): Boolean {
     if (other == null || other.javaClass != javaClass) {
       return false
@@ -663,7 +713,8 @@ data class InternalUserDetails (
       return true
     }
     val other = other as InternalUserDetails
-    return GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.userInfo, other.userInfo) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.providerData, other.providerData)
+    return GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.userInfo, other.userInfo) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.providerData, other.providerData)
   }
 
   override fun hashCode(): Int {
@@ -675,12 +726,11 @@ data class InternalUserDetails (
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
-data class InternalUserCredential (
-  val user: InternalUserDetails? = null,
-  val additionalUserInfo: InternalAdditionalUserInfo? = null,
-  val credential: InternalAuthCredential? = null
-)
- {
+data class InternalUserCredential(
+    val user: InternalUserDetails? = null,
+    val additionalUserInfo: InternalAdditionalUserInfo? = null,
+    val credential: InternalAuthCredential? = null
+) {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): InternalUserCredential {
       val user = pigeonVar_list[0] as InternalUserDetails?
@@ -689,13 +739,15 @@ data class InternalUserCredential (
       return InternalUserCredential(user, additionalUserInfo, credential)
     }
   }
+
   fun toList(): List<Any?> {
     return listOf(
-      user,
-      additionalUserInfo,
-      credential,
+        user,
+        additionalUserInfo,
+        credential,
     )
   }
+
   override fun equals(other: Any?): Boolean {
     if (other == null || other.javaClass != javaClass) {
       return false
@@ -704,7 +756,10 @@ data class InternalUserCredential (
       return true
     }
     val other = other as InternalUserCredential
-    return GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.user, other.user) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.additionalUserInfo, other.additionalUserInfo) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.credential, other.credential)
+    return GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.user, other.user) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(
+            this.additionalUserInfo, other.additionalUserInfo) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.credential, other.credential)
   }
 
   override fun hashCode(): Int {
@@ -717,13 +772,12 @@ data class InternalUserCredential (
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
-data class InternalAuthCredentialInput (
-  val providerId: String,
-  val signInMethod: String,
-  val token: String? = null,
-  val accessToken: String? = null
-)
- {
+data class InternalAuthCredentialInput(
+    val providerId: String,
+    val signInMethod: String,
+    val token: String? = null,
+    val accessToken: String? = null
+) {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): InternalAuthCredentialInput {
       val providerId = pigeonVar_list[0] as String
@@ -733,14 +787,16 @@ data class InternalAuthCredentialInput (
       return InternalAuthCredentialInput(providerId, signInMethod, token, accessToken)
     }
   }
+
   fun toList(): List<Any?> {
     return listOf(
-      providerId,
-      signInMethod,
-      token,
-      accessToken,
+        providerId,
+        signInMethod,
+        token,
+        accessToken,
     )
   }
+
   override fun equals(other: Any?): Boolean {
     if (other == null || other.javaClass != javaClass) {
       return false
@@ -749,7 +805,10 @@ data class InternalAuthCredentialInput (
       return true
     }
     val other = other as InternalAuthCredentialInput
-    return GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.providerId, other.providerId) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.signInMethod, other.signInMethod) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.token, other.token) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.accessToken, other.accessToken)
+    return GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.providerId, other.providerId) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.signInMethod, other.signInMethod) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.token, other.token) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.accessToken, other.accessToken)
   }
 
   override fun hashCode(): Int {
@@ -763,17 +822,16 @@ data class InternalAuthCredentialInput (
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
-data class InternalActionCodeSettings (
-  val url: String,
-  val dynamicLinkDomain: String? = null,
-  val handleCodeInApp: Boolean,
-  val iOSBundleId: String? = null,
-  val androidPackageName: String? = null,
-  val androidInstallApp: Boolean,
-  val androidMinimumVersion: String? = null,
-  val linkDomain: String? = null
-)
- {
+data class InternalActionCodeSettings(
+    val url: String,
+    val dynamicLinkDomain: String? = null,
+    val handleCodeInApp: Boolean,
+    val iOSBundleId: String? = null,
+    val androidPackageName: String? = null,
+    val androidInstallApp: Boolean,
+    val androidMinimumVersion: String? = null,
+    val linkDomain: String? = null
+) {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): InternalActionCodeSettings {
       val url = pigeonVar_list[0] as String
@@ -784,21 +842,31 @@ data class InternalActionCodeSettings (
       val androidInstallApp = pigeonVar_list[5] as Boolean
       val androidMinimumVersion = pigeonVar_list[6] as String?
       val linkDomain = pigeonVar_list[7] as String?
-      return InternalActionCodeSettings(url, dynamicLinkDomain, handleCodeInApp, iOSBundleId, androidPackageName, androidInstallApp, androidMinimumVersion, linkDomain)
+      return InternalActionCodeSettings(
+          url,
+          dynamicLinkDomain,
+          handleCodeInApp,
+          iOSBundleId,
+          androidPackageName,
+          androidInstallApp,
+          androidMinimumVersion,
+          linkDomain)
     }
   }
+
   fun toList(): List<Any?> {
     return listOf(
-      url,
-      dynamicLinkDomain,
-      handleCodeInApp,
-      iOSBundleId,
-      androidPackageName,
-      androidInstallApp,
-      androidMinimumVersion,
-      linkDomain,
+        url,
+        dynamicLinkDomain,
+        handleCodeInApp,
+        iOSBundleId,
+        androidPackageName,
+        androidInstallApp,
+        androidMinimumVersion,
+        linkDomain,
     )
   }
+
   override fun equals(other: Any?): Boolean {
     if (other == null || other.javaClass != javaClass) {
       return false
@@ -807,7 +875,19 @@ data class InternalActionCodeSettings (
       return true
     }
     val other = other as InternalActionCodeSettings
-    return GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.url, other.url) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.dynamicLinkDomain, other.dynamicLinkDomain) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.handleCodeInApp, other.handleCodeInApp) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.iOSBundleId, other.iOSBundleId) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.androidPackageName, other.androidPackageName) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.androidInstallApp, other.androidInstallApp) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.androidMinimumVersion, other.androidMinimumVersion) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.linkDomain, other.linkDomain)
+    return GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.url, other.url) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(
+            this.dynamicLinkDomain, other.dynamicLinkDomain) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(
+            this.handleCodeInApp, other.handleCodeInApp) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.iOSBundleId, other.iOSBundleId) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(
+            this.androidPackageName, other.androidPackageName) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(
+            this.androidInstallApp, other.androidInstallApp) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(
+            this.androidMinimumVersion, other.androidMinimumVersion) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.linkDomain, other.linkDomain)
   }
 
   override fun hashCode(): Int {
@@ -818,21 +898,21 @@ data class InternalActionCodeSettings (
     result = 31 * result + GeneratedAndroidFirebaseAuthPigeonUtils.deepHash(this.iOSBundleId)
     result = 31 * result + GeneratedAndroidFirebaseAuthPigeonUtils.deepHash(this.androidPackageName)
     result = 31 * result + GeneratedAndroidFirebaseAuthPigeonUtils.deepHash(this.androidInstallApp)
-    result = 31 * result + GeneratedAndroidFirebaseAuthPigeonUtils.deepHash(this.androidMinimumVersion)
+    result =
+        31 * result + GeneratedAndroidFirebaseAuthPigeonUtils.deepHash(this.androidMinimumVersion)
     result = 31 * result + GeneratedAndroidFirebaseAuthPigeonUtils.deepHash(this.linkDomain)
     return result
   }
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
-data class InternalFirebaseAuthSettings (
-  val appVerificationDisabledForTesting: Boolean,
-  val userAccessGroup: String? = null,
-  val phoneNumber: String? = null,
-  val smsCode: String? = null,
-  val forceRecaptchaFlow: Boolean? = null
-)
- {
+data class InternalFirebaseAuthSettings(
+    val appVerificationDisabledForTesting: Boolean,
+    val userAccessGroup: String? = null,
+    val phoneNumber: String? = null,
+    val smsCode: String? = null,
+    val forceRecaptchaFlow: Boolean? = null
+) {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): InternalFirebaseAuthSettings {
       val appVerificationDisabledForTesting = pigeonVar_list[0] as Boolean
@@ -840,18 +920,25 @@ data class InternalFirebaseAuthSettings (
       val phoneNumber = pigeonVar_list[2] as String?
       val smsCode = pigeonVar_list[3] as String?
       val forceRecaptchaFlow = pigeonVar_list[4] as Boolean?
-      return InternalFirebaseAuthSettings(appVerificationDisabledForTesting, userAccessGroup, phoneNumber, smsCode, forceRecaptchaFlow)
+      return InternalFirebaseAuthSettings(
+          appVerificationDisabledForTesting,
+          userAccessGroup,
+          phoneNumber,
+          smsCode,
+          forceRecaptchaFlow)
     }
   }
+
   fun toList(): List<Any?> {
     return listOf(
-      appVerificationDisabledForTesting,
-      userAccessGroup,
-      phoneNumber,
-      smsCode,
-      forceRecaptchaFlow,
+        appVerificationDisabledForTesting,
+        userAccessGroup,
+        phoneNumber,
+        smsCode,
+        forceRecaptchaFlow,
     )
   }
+
   override fun equals(other: Any?): Boolean {
     if (other == null || other.javaClass != javaClass) {
       return false
@@ -860,12 +947,21 @@ data class InternalFirebaseAuthSettings (
       return true
     }
     val other = other as InternalFirebaseAuthSettings
-    return GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.appVerificationDisabledForTesting, other.appVerificationDisabledForTesting) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.userAccessGroup, other.userAccessGroup) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.phoneNumber, other.phoneNumber) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.smsCode, other.smsCode) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.forceRecaptchaFlow, other.forceRecaptchaFlow)
+    return GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(
+        this.appVerificationDisabledForTesting, other.appVerificationDisabledForTesting) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(
+            this.userAccessGroup, other.userAccessGroup) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.phoneNumber, other.phoneNumber) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.smsCode, other.smsCode) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(
+            this.forceRecaptchaFlow, other.forceRecaptchaFlow)
   }
 
   override fun hashCode(): Int {
     var result = javaClass.hashCode()
-    result = 31 * result + GeneratedAndroidFirebaseAuthPigeonUtils.deepHash(this.appVerificationDisabledForTesting)
+    result =
+        31 * result +
+            GeneratedAndroidFirebaseAuthPigeonUtils.deepHash(this.appVerificationDisabledForTesting)
     result = 31 * result + GeneratedAndroidFirebaseAuthPigeonUtils.deepHash(this.userAccessGroup)
     result = 31 * result + GeneratedAndroidFirebaseAuthPigeonUtils.deepHash(this.phoneNumber)
     result = 31 * result + GeneratedAndroidFirebaseAuthPigeonUtils.deepHash(this.smsCode)
@@ -875,12 +971,11 @@ data class InternalFirebaseAuthSettings (
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
-data class InternalSignInProvider (
-  val providerId: String,
-  val scopes: List<String?>? = null,
-  val customParameters: Map<String?, String?>? = null
-)
- {
+data class InternalSignInProvider(
+    val providerId: String,
+    val scopes: List<String?>? = null,
+    val customParameters: Map<String?, String?>? = null
+) {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): InternalSignInProvider {
       val providerId = pigeonVar_list[0] as String
@@ -889,13 +984,15 @@ data class InternalSignInProvider (
       return InternalSignInProvider(providerId, scopes, customParameters)
     }
   }
+
   fun toList(): List<Any?> {
     return listOf(
-      providerId,
-      scopes,
-      customParameters,
+        providerId,
+        scopes,
+        customParameters,
     )
   }
+
   override fun equals(other: Any?): Boolean {
     if (other == null || other.javaClass != javaClass) {
       return false
@@ -904,7 +1001,10 @@ data class InternalSignInProvider (
       return true
     }
     val other = other as InternalSignInProvider
-    return GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.providerId, other.providerId) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.scopes, other.scopes) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.customParameters, other.customParameters)
+    return GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.providerId, other.providerId) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.scopes, other.scopes) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(
+            this.customParameters, other.customParameters)
   }
 
   override fun hashCode(): Int {
@@ -917,15 +1017,14 @@ data class InternalSignInProvider (
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
-data class InternalVerifyPhoneNumberRequest (
-  val phoneNumber: String? = null,
-  val timeout: Long,
-  val forceResendingToken: Long? = null,
-  val autoRetrievedSmsCodeForTesting: String? = null,
-  val multiFactorInfoId: String? = null,
-  val multiFactorSessionId: String? = null
-)
- {
+data class InternalVerifyPhoneNumberRequest(
+    val phoneNumber: String? = null,
+    val timeout: Long,
+    val forceResendingToken: Long? = null,
+    val autoRetrievedSmsCodeForTesting: String? = null,
+    val multiFactorInfoId: String? = null,
+    val multiFactorSessionId: String? = null
+) {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): InternalVerifyPhoneNumberRequest {
       val phoneNumber = pigeonVar_list[0] as String?
@@ -934,19 +1033,27 @@ data class InternalVerifyPhoneNumberRequest (
       val autoRetrievedSmsCodeForTesting = pigeonVar_list[3] as String?
       val multiFactorInfoId = pigeonVar_list[4] as String?
       val multiFactorSessionId = pigeonVar_list[5] as String?
-      return InternalVerifyPhoneNumberRequest(phoneNumber, timeout, forceResendingToken, autoRetrievedSmsCodeForTesting, multiFactorInfoId, multiFactorSessionId)
+      return InternalVerifyPhoneNumberRequest(
+          phoneNumber,
+          timeout,
+          forceResendingToken,
+          autoRetrievedSmsCodeForTesting,
+          multiFactorInfoId,
+          multiFactorSessionId)
     }
   }
+
   fun toList(): List<Any?> {
     return listOf(
-      phoneNumber,
-      timeout,
-      forceResendingToken,
-      autoRetrievedSmsCodeForTesting,
-      multiFactorInfoId,
-      multiFactorSessionId,
+        phoneNumber,
+        timeout,
+        forceResendingToken,
+        autoRetrievedSmsCodeForTesting,
+        multiFactorInfoId,
+        multiFactorSessionId,
     )
   }
+
   override fun equals(other: Any?): Boolean {
     if (other == null || other.javaClass != javaClass) {
       return false
@@ -955,32 +1062,45 @@ data class InternalVerifyPhoneNumberRequest (
       return true
     }
     val other = other as InternalVerifyPhoneNumberRequest
-    return GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.phoneNumber, other.phoneNumber) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.timeout, other.timeout) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.forceResendingToken, other.forceResendingToken) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.autoRetrievedSmsCodeForTesting, other.autoRetrievedSmsCodeForTesting) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.multiFactorInfoId, other.multiFactorInfoId) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.multiFactorSessionId, other.multiFactorSessionId)
+    return GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(
+        this.phoneNumber, other.phoneNumber) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.timeout, other.timeout) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(
+            this.forceResendingToken, other.forceResendingToken) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(
+            this.autoRetrievedSmsCodeForTesting, other.autoRetrievedSmsCodeForTesting) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(
+            this.multiFactorInfoId, other.multiFactorInfoId) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(
+            this.multiFactorSessionId, other.multiFactorSessionId)
   }
 
   override fun hashCode(): Int {
     var result = javaClass.hashCode()
     result = 31 * result + GeneratedAndroidFirebaseAuthPigeonUtils.deepHash(this.phoneNumber)
     result = 31 * result + GeneratedAndroidFirebaseAuthPigeonUtils.deepHash(this.timeout)
-    result = 31 * result + GeneratedAndroidFirebaseAuthPigeonUtils.deepHash(this.forceResendingToken)
-    result = 31 * result + GeneratedAndroidFirebaseAuthPigeonUtils.deepHash(this.autoRetrievedSmsCodeForTesting)
+    result =
+        31 * result + GeneratedAndroidFirebaseAuthPigeonUtils.deepHash(this.forceResendingToken)
+    result =
+        31 * result +
+            GeneratedAndroidFirebaseAuthPigeonUtils.deepHash(this.autoRetrievedSmsCodeForTesting)
     result = 31 * result + GeneratedAndroidFirebaseAuthPigeonUtils.deepHash(this.multiFactorInfoId)
-    result = 31 * result + GeneratedAndroidFirebaseAuthPigeonUtils.deepHash(this.multiFactorSessionId)
+    result =
+        31 * result + GeneratedAndroidFirebaseAuthPigeonUtils.deepHash(this.multiFactorSessionId)
     return result
   }
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
-data class InternalIdTokenResult (
-  val token: String? = null,
-  val expirationTimestamp: Long? = null,
-  val authTimestamp: Long? = null,
-  val issuedAtTimestamp: Long? = null,
-  val signInProvider: String? = null,
-  val claims: Map<String?, Any?>? = null,
-  val signInSecondFactor: String? = null
-)
- {
+data class InternalIdTokenResult(
+    val token: String? = null,
+    val expirationTimestamp: Long? = null,
+    val authTimestamp: Long? = null,
+    val issuedAtTimestamp: Long? = null,
+    val signInProvider: String? = null,
+    val claims: Map<String?, Any?>? = null,
+    val signInSecondFactor: String? = null
+) {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): InternalIdTokenResult {
       val token = pigeonVar_list[0] as String?
@@ -990,20 +1110,29 @@ data class InternalIdTokenResult (
       val signInProvider = pigeonVar_list[4] as String?
       val claims = pigeonVar_list[5] as Map<String?, Any?>?
       val signInSecondFactor = pigeonVar_list[6] as String?
-      return InternalIdTokenResult(token, expirationTimestamp, authTimestamp, issuedAtTimestamp, signInProvider, claims, signInSecondFactor)
+      return InternalIdTokenResult(
+          token,
+          expirationTimestamp,
+          authTimestamp,
+          issuedAtTimestamp,
+          signInProvider,
+          claims,
+          signInSecondFactor)
     }
   }
+
   fun toList(): List<Any?> {
     return listOf(
-      token,
-      expirationTimestamp,
-      authTimestamp,
-      issuedAtTimestamp,
-      signInProvider,
-      claims,
-      signInSecondFactor,
+        token,
+        expirationTimestamp,
+        authTimestamp,
+        issuedAtTimestamp,
+        signInProvider,
+        claims,
+        signInSecondFactor,
     )
   }
+
   override fun equals(other: Any?): Boolean {
     if (other == null || other.javaClass != javaClass) {
       return false
@@ -1012,13 +1141,25 @@ data class InternalIdTokenResult (
       return true
     }
     val other = other as InternalIdTokenResult
-    return GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.token, other.token) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.expirationTimestamp, other.expirationTimestamp) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.authTimestamp, other.authTimestamp) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.issuedAtTimestamp, other.issuedAtTimestamp) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.signInProvider, other.signInProvider) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.claims, other.claims) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.signInSecondFactor, other.signInSecondFactor)
+    return GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.token, other.token) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(
+            this.expirationTimestamp, other.expirationTimestamp) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(
+            this.authTimestamp, other.authTimestamp) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(
+            this.issuedAtTimestamp, other.issuedAtTimestamp) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(
+            this.signInProvider, other.signInProvider) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.claims, other.claims) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(
+            this.signInSecondFactor, other.signInSecondFactor)
   }
 
   override fun hashCode(): Int {
     var result = javaClass.hashCode()
     result = 31 * result + GeneratedAndroidFirebaseAuthPigeonUtils.deepHash(this.token)
-    result = 31 * result + GeneratedAndroidFirebaseAuthPigeonUtils.deepHash(this.expirationTimestamp)
+    result =
+        31 * result + GeneratedAndroidFirebaseAuthPigeonUtils.deepHash(this.expirationTimestamp)
     result = 31 * result + GeneratedAndroidFirebaseAuthPigeonUtils.deepHash(this.authTimestamp)
     result = 31 * result + GeneratedAndroidFirebaseAuthPigeonUtils.deepHash(this.issuedAtTimestamp)
     result = 31 * result + GeneratedAndroidFirebaseAuthPigeonUtils.deepHash(this.signInProvider)
@@ -1029,13 +1170,12 @@ data class InternalIdTokenResult (
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
-data class InternalUserProfile (
-  val displayName: String? = null,
-  val photoUrl: String? = null,
-  val displayNameChanged: Boolean,
-  val photoUrlChanged: Boolean
-)
- {
+data class InternalUserProfile(
+    val displayName: String? = null,
+    val photoUrl: String? = null,
+    val displayNameChanged: Boolean,
+    val photoUrlChanged: Boolean
+) {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): InternalUserProfile {
       val displayName = pigeonVar_list[0] as String?
@@ -1045,14 +1185,16 @@ data class InternalUserProfile (
       return InternalUserProfile(displayName, photoUrl, displayNameChanged, photoUrlChanged)
     }
   }
+
   fun toList(): List<Any?> {
     return listOf(
-      displayName,
-      photoUrl,
-      displayNameChanged,
-      photoUrlChanged,
+        displayName,
+        photoUrl,
+        displayNameChanged,
+        photoUrlChanged,
     )
   }
+
   override fun equals(other: Any?): Boolean {
     if (other == null || other.javaClass != javaClass) {
       return false
@@ -1061,7 +1203,13 @@ data class InternalUserProfile (
       return true
     }
     val other = other as InternalUserProfile
-    return GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.displayName, other.displayName) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.photoUrl, other.photoUrl) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.displayNameChanged, other.displayNameChanged) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.photoUrlChanged, other.photoUrlChanged)
+    return GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(
+        this.displayName, other.displayName) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.photoUrl, other.photoUrl) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(
+            this.displayNameChanged, other.displayNameChanged) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(
+            this.photoUrlChanged, other.photoUrlChanged)
   }
 
   override fun hashCode(): Int {
@@ -1075,14 +1223,13 @@ data class InternalUserProfile (
 }
 
 /** Generated class from Pigeon that represents data sent in messages. */
-data class InternalTotpSecret (
-  val codeIntervalSeconds: Long? = null,
-  val codeLength: Long? = null,
-  val enrollmentCompletionDeadline: Long? = null,
-  val hashingAlgorithm: String? = null,
-  val secretKey: String
-)
- {
+data class InternalTotpSecret(
+    val codeIntervalSeconds: Long? = null,
+    val codeLength: Long? = null,
+    val enrollmentCompletionDeadline: Long? = null,
+    val hashingAlgorithm: String? = null,
+    val secretKey: String
+) {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): InternalTotpSecret {
       val codeIntervalSeconds = pigeonVar_list[0] as Long?
@@ -1090,18 +1237,25 @@ data class InternalTotpSecret (
       val enrollmentCompletionDeadline = pigeonVar_list[2] as Long?
       val hashingAlgorithm = pigeonVar_list[3] as String?
       val secretKey = pigeonVar_list[4] as String
-      return InternalTotpSecret(codeIntervalSeconds, codeLength, enrollmentCompletionDeadline, hashingAlgorithm, secretKey)
+      return InternalTotpSecret(
+          codeIntervalSeconds,
+          codeLength,
+          enrollmentCompletionDeadline,
+          hashingAlgorithm,
+          secretKey)
     }
   }
+
   fun toList(): List<Any?> {
     return listOf(
-      codeIntervalSeconds,
-      codeLength,
-      enrollmentCompletionDeadline,
-      hashingAlgorithm,
-      secretKey,
+        codeIntervalSeconds,
+        codeLength,
+        enrollmentCompletionDeadline,
+        hashingAlgorithm,
+        secretKey,
     )
   }
+
   override fun equals(other: Any?): Boolean {
     if (other == null || other.javaClass != javaClass) {
       return false
@@ -1110,31 +1264,38 @@ data class InternalTotpSecret (
       return true
     }
     val other = other as InternalTotpSecret
-    return GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.codeIntervalSeconds, other.codeIntervalSeconds) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.codeLength, other.codeLength) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.enrollmentCompletionDeadline, other.enrollmentCompletionDeadline) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.hashingAlgorithm, other.hashingAlgorithm) && GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.secretKey, other.secretKey)
+    return GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(
+        this.codeIntervalSeconds, other.codeIntervalSeconds) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.codeLength, other.codeLength) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(
+            this.enrollmentCompletionDeadline, other.enrollmentCompletionDeadline) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(
+            this.hashingAlgorithm, other.hashingAlgorithm) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.secretKey, other.secretKey)
   }
 
   override fun hashCode(): Int {
     var result = javaClass.hashCode()
-    result = 31 * result + GeneratedAndroidFirebaseAuthPigeonUtils.deepHash(this.codeIntervalSeconds)
+    result =
+        31 * result + GeneratedAndroidFirebaseAuthPigeonUtils.deepHash(this.codeIntervalSeconds)
     result = 31 * result + GeneratedAndroidFirebaseAuthPigeonUtils.deepHash(this.codeLength)
-    result = 31 * result + GeneratedAndroidFirebaseAuthPigeonUtils.deepHash(this.enrollmentCompletionDeadline)
+    result =
+        31 * result +
+            GeneratedAndroidFirebaseAuthPigeonUtils.deepHash(this.enrollmentCompletionDeadline)
     result = 31 * result + GeneratedAndroidFirebaseAuthPigeonUtils.deepHash(this.hashingAlgorithm)
     result = 31 * result + GeneratedAndroidFirebaseAuthPigeonUtils.deepHash(this.secretKey)
     return result
   }
 }
+
 private open class GeneratedAndroidFirebaseAuthPigeonCodec : StandardMessageCodec() {
   override fun readValueOfType(type: Byte, buffer: ByteBuffer): Any? {
     return when (type) {
       129.toByte() -> {
-        return (readValue(buffer) as Long?)?.let {
-          ActionCodeInfoOperation.ofRaw(it.toInt())
-        }
+        return (readValue(buffer) as Long?)?.let { ActionCodeInfoOperation.ofRaw(it.toInt()) }
       }
       130.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          InternalMultiFactorSession.fromList(it)
-        }
+        return (readValue(buffer) as? List<Any?>)?.let { InternalMultiFactorSession.fromList(it) }
       }
       131.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
@@ -1142,69 +1303,43 @@ private open class GeneratedAndroidFirebaseAuthPigeonCodec : StandardMessageCode
         }
       }
       132.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          InternalMultiFactorInfo.fromList(it)
-        }
+        return (readValue(buffer) as? List<Any?>)?.let { InternalMultiFactorInfo.fromList(it) }
       }
       133.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          AuthPigeonFirebaseApp.fromList(it)
-        }
+        return (readValue(buffer) as? List<Any?>)?.let { AuthPigeonFirebaseApp.fromList(it) }
       }
       134.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          InternalActionCodeInfoData.fromList(it)
-        }
+        return (readValue(buffer) as? List<Any?>)?.let { InternalActionCodeInfoData.fromList(it) }
       }
       135.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          InternalActionCodeInfo.fromList(it)
-        }
+        return (readValue(buffer) as? List<Any?>)?.let { InternalActionCodeInfo.fromList(it) }
       }
       136.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          InternalAdditionalUserInfo.fromList(it)
-        }
+        return (readValue(buffer) as? List<Any?>)?.let { InternalAdditionalUserInfo.fromList(it) }
       }
       137.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          InternalAuthCredential.fromList(it)
-        }
+        return (readValue(buffer) as? List<Any?>)?.let { InternalAuthCredential.fromList(it) }
       }
       138.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          InternalUserInfo.fromList(it)
-        }
+        return (readValue(buffer) as? List<Any?>)?.let { InternalUserInfo.fromList(it) }
       }
       139.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          InternalUserDetails.fromList(it)
-        }
+        return (readValue(buffer) as? List<Any?>)?.let { InternalUserDetails.fromList(it) }
       }
       140.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          InternalUserCredential.fromList(it)
-        }
+        return (readValue(buffer) as? List<Any?>)?.let { InternalUserCredential.fromList(it) }
       }
       141.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          InternalAuthCredentialInput.fromList(it)
-        }
+        return (readValue(buffer) as? List<Any?>)?.let { InternalAuthCredentialInput.fromList(it) }
       }
       142.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          InternalActionCodeSettings.fromList(it)
-        }
+        return (readValue(buffer) as? List<Any?>)?.let { InternalActionCodeSettings.fromList(it) }
       }
       143.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          InternalFirebaseAuthSettings.fromList(it)
-        }
+        return (readValue(buffer) as? List<Any?>)?.let { InternalFirebaseAuthSettings.fromList(it) }
       }
       144.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          InternalSignInProvider.fromList(it)
-        }
+        return (readValue(buffer) as? List<Any?>)?.let { InternalSignInProvider.fromList(it) }
       }
       145.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
@@ -1212,24 +1347,19 @@ private open class GeneratedAndroidFirebaseAuthPigeonCodec : StandardMessageCode
         }
       }
       146.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          InternalIdTokenResult.fromList(it)
-        }
+        return (readValue(buffer) as? List<Any?>)?.let { InternalIdTokenResult.fromList(it) }
       }
       147.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          InternalUserProfile.fromList(it)
-        }
+        return (readValue(buffer) as? List<Any?>)?.let { InternalUserProfile.fromList(it) }
       }
       148.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          InternalTotpSecret.fromList(it)
-        }
+        return (readValue(buffer) as? List<Any?>)?.let { InternalTotpSecret.fromList(it) }
       }
       else -> super.readValueOfType(type, buffer)
     }
   }
-  override fun writeValue(stream: ByteArrayOutputStream, value: Any?)   {
+
+  override fun writeValue(stream: ByteArrayOutputStream, value: Any?) {
     when (value) {
       is ActionCodeInfoOperation -> {
         stream.write(129)
@@ -1316,45 +1446,159 @@ private open class GeneratedAndroidFirebaseAuthPigeonCodec : StandardMessageCode
   }
 }
 
-
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface FirebaseAuthHostApi {
   fun registerIdTokenListener(app: AuthPigeonFirebaseApp, callback: (Result<String>) -> Unit)
+
   fun registerAuthStateListener(app: AuthPigeonFirebaseApp, callback: (Result<String>) -> Unit)
-  fun useEmulator(app: AuthPigeonFirebaseApp, host: String, port: Long, callback: (Result<Unit>) -> Unit)
+
+  fun useEmulator(
+      app: AuthPigeonFirebaseApp,
+      host: String,
+      port: Long,
+      callback: (Result<Unit>) -> Unit
+  )
+
   fun applyActionCode(app: AuthPigeonFirebaseApp, code: String, callback: (Result<Unit>) -> Unit)
-  fun checkActionCode(app: AuthPigeonFirebaseApp, code: String, callback: (Result<InternalActionCodeInfo>) -> Unit)
-  fun confirmPasswordReset(app: AuthPigeonFirebaseApp, code: String, newPassword: String, callback: (Result<Unit>) -> Unit)
-  fun createUserWithEmailAndPassword(app: AuthPigeonFirebaseApp, email: String, password: String, callback: (Result<InternalUserCredential>) -> Unit)
-  fun signInAnonymously(app: AuthPigeonFirebaseApp, callback: (Result<InternalUserCredential>) -> Unit)
-  fun signInWithCredential(app: AuthPigeonFirebaseApp, input: Map<String?, Any?>, callback: (Result<InternalUserCredential>) -> Unit)
-  fun signInWithCustomToken(app: AuthPigeonFirebaseApp, token: String, callback: (Result<InternalUserCredential>) -> Unit)
-  fun signInWithEmailAndPassword(app: AuthPigeonFirebaseApp, email: String, password: String, callback: (Result<InternalUserCredential>) -> Unit)
-  fun signInWithEmailLink(app: AuthPigeonFirebaseApp, email: String, emailLink: String, callback: (Result<InternalUserCredential>) -> Unit)
-  fun signInWithProvider(app: AuthPigeonFirebaseApp, signInProvider: InternalSignInProvider, callback: (Result<InternalUserCredential>) -> Unit)
+
+  fun checkActionCode(
+      app: AuthPigeonFirebaseApp,
+      code: String,
+      callback: (Result<InternalActionCodeInfo>) -> Unit
+  )
+
+  fun confirmPasswordReset(
+      app: AuthPigeonFirebaseApp,
+      code: String,
+      newPassword: String,
+      callback: (Result<Unit>) -> Unit
+  )
+
+  fun createUserWithEmailAndPassword(
+      app: AuthPigeonFirebaseApp,
+      email: String,
+      password: String,
+      callback: (Result<InternalUserCredential>) -> Unit
+  )
+
+  fun signInAnonymously(
+      app: AuthPigeonFirebaseApp,
+      callback: (Result<InternalUserCredential>) -> Unit
+  )
+
+  fun signInWithCredential(
+      app: AuthPigeonFirebaseApp,
+      input: Map<String?, Any?>,
+      callback: (Result<InternalUserCredential>) -> Unit
+  )
+
+  fun signInWithCustomToken(
+      app: AuthPigeonFirebaseApp,
+      token: String,
+      callback: (Result<InternalUserCredential>) -> Unit
+  )
+
+  fun signInWithEmailAndPassword(
+      app: AuthPigeonFirebaseApp,
+      email: String,
+      password: String,
+      callback: (Result<InternalUserCredential>) -> Unit
+  )
+
+  fun signInWithEmailLink(
+      app: AuthPigeonFirebaseApp,
+      email: String,
+      emailLink: String,
+      callback: (Result<InternalUserCredential>) -> Unit
+  )
+
+  fun signInWithProvider(
+      app: AuthPigeonFirebaseApp,
+      signInProvider: InternalSignInProvider,
+      callback: (Result<InternalUserCredential>) -> Unit
+  )
+
   fun signOut(app: AuthPigeonFirebaseApp, callback: (Result<Unit>) -> Unit)
-  fun fetchSignInMethodsForEmail(app: AuthPigeonFirebaseApp, email: String, callback: (Result<List<String>>) -> Unit)
-  fun sendPasswordResetEmail(app: AuthPigeonFirebaseApp, email: String, actionCodeSettings: InternalActionCodeSettings?, callback: (Result<Unit>) -> Unit)
-  fun sendSignInLinkToEmail(app: AuthPigeonFirebaseApp, email: String, actionCodeSettings: InternalActionCodeSettings, callback: (Result<Unit>) -> Unit)
-  fun setLanguageCode(app: AuthPigeonFirebaseApp, languageCode: String?, callback: (Result<String>) -> Unit)
-  fun setSettings(app: AuthPigeonFirebaseApp, settings: InternalFirebaseAuthSettings, callback: (Result<Unit>) -> Unit)
-  fun verifyPasswordResetCode(app: AuthPigeonFirebaseApp, code: String, callback: (Result<String>) -> Unit)
-  fun verifyPhoneNumber(app: AuthPigeonFirebaseApp, request: InternalVerifyPhoneNumberRequest, callback: (Result<String>) -> Unit)
-  fun revokeTokenWithAuthorizationCode(app: AuthPigeonFirebaseApp, authorizationCode: String, callback: (Result<Unit>) -> Unit)
-  fun revokeAccessToken(app: AuthPigeonFirebaseApp, accessToken: String, callback: (Result<Unit>) -> Unit)
+
+  fun fetchSignInMethodsForEmail(
+      app: AuthPigeonFirebaseApp,
+      email: String,
+      callback: (Result<List<String>>) -> Unit
+  )
+
+  fun sendPasswordResetEmail(
+      app: AuthPigeonFirebaseApp,
+      email: String,
+      actionCodeSettings: InternalActionCodeSettings?,
+      callback: (Result<Unit>) -> Unit
+  )
+
+  fun sendSignInLinkToEmail(
+      app: AuthPigeonFirebaseApp,
+      email: String,
+      actionCodeSettings: InternalActionCodeSettings,
+      callback: (Result<Unit>) -> Unit
+  )
+
+  fun setLanguageCode(
+      app: AuthPigeonFirebaseApp,
+      languageCode: String?,
+      callback: (Result<String>) -> Unit
+  )
+
+  fun setSettings(
+      app: AuthPigeonFirebaseApp,
+      settings: InternalFirebaseAuthSettings,
+      callback: (Result<Unit>) -> Unit
+  )
+
+  fun verifyPasswordResetCode(
+      app: AuthPigeonFirebaseApp,
+      code: String,
+      callback: (Result<String>) -> Unit
+  )
+
+  fun verifyPhoneNumber(
+      app: AuthPigeonFirebaseApp,
+      request: InternalVerifyPhoneNumberRequest,
+      callback: (Result<String>) -> Unit
+  )
+
+  fun revokeTokenWithAuthorizationCode(
+      app: AuthPigeonFirebaseApp,
+      authorizationCode: String,
+      callback: (Result<Unit>) -> Unit
+  )
+
+  fun revokeAccessToken(
+      app: AuthPigeonFirebaseApp,
+      accessToken: String,
+      callback: (Result<Unit>) -> Unit
+  )
+
   fun initializeRecaptchaConfig(app: AuthPigeonFirebaseApp, callback: (Result<Unit>) -> Unit)
 
   companion object {
     /** The codec used by FirebaseAuthHostApi. */
-    val codec: MessageCodec<Any?> by lazy {
-      GeneratedAndroidFirebaseAuthPigeonCodec()
-    }
-    /** Sets up an instance of `FirebaseAuthHostApi` to handle messages through the `binaryMessenger`. */
+    val codec: MessageCodec<Any?> by lazy { GeneratedAndroidFirebaseAuthPigeonCodec() }
+    /**
+     * Sets up an instance of `FirebaseAuthHostApi` to handle messages through the
+     * `binaryMessenger`.
+     */
     @JvmOverloads
-    fun setUp(binaryMessenger: BinaryMessenger, api: FirebaseAuthHostApi?, messageChannelSuffix: String = "") {
-      val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    fun setUp(
+        binaryMessenger: BinaryMessenger,
+        api: FirebaseAuthHostApi?,
+        messageChannelSuffix: String = ""
+    ) {
+      val separatedMessageChannelSuffix =
+          if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.registerIdTokenListener$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.registerIdTokenListener$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -1374,7 +1618,11 @@ interface FirebaseAuthHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.registerAuthStateListener$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.registerAuthStateListener$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -1394,7 +1642,11 @@ interface FirebaseAuthHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.useEmulator$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.useEmulator$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -1415,7 +1667,11 @@ interface FirebaseAuthHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.applyActionCode$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.applyActionCode$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -1435,7 +1691,11 @@ interface FirebaseAuthHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.checkActionCode$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.checkActionCode$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -1456,7 +1716,11 @@ interface FirebaseAuthHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.confirmPasswordReset$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.confirmPasswordReset$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -1477,14 +1741,19 @@ interface FirebaseAuthHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.createUserWithEmailAndPassword$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.createUserWithEmailAndPassword$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val appArg = args[0] as AuthPigeonFirebaseApp
             val emailArg = args[1] as String
             val passwordArg = args[2] as String
-            api.createUserWithEmailAndPassword(appArg, emailArg, passwordArg) { result: Result<InternalUserCredential> ->
+            api.createUserWithEmailAndPassword(appArg, emailArg, passwordArg) {
+                result: Result<InternalUserCredential> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidFirebaseAuthPigeonUtils.wrapError(error))
@@ -1499,7 +1768,11 @@ interface FirebaseAuthHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInAnonymously$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInAnonymously$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -1519,7 +1792,11 @@ interface FirebaseAuthHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithCredential$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithCredential$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -1540,7 +1817,11 @@ interface FirebaseAuthHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithCustomToken$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithCustomToken$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -1561,14 +1842,19 @@ interface FirebaseAuthHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithEmailAndPassword$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithEmailAndPassword$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val appArg = args[0] as AuthPigeonFirebaseApp
             val emailArg = args[1] as String
             val passwordArg = args[2] as String
-            api.signInWithEmailAndPassword(appArg, emailArg, passwordArg) { result: Result<InternalUserCredential> ->
+            api.signInWithEmailAndPassword(appArg, emailArg, passwordArg) {
+                result: Result<InternalUserCredential> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidFirebaseAuthPigeonUtils.wrapError(error))
@@ -1583,14 +1869,19 @@ interface FirebaseAuthHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithEmailLink$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithEmailLink$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val appArg = args[0] as AuthPigeonFirebaseApp
             val emailArg = args[1] as String
             val emailLinkArg = args[2] as String
-            api.signInWithEmailLink(appArg, emailArg, emailLinkArg) { result: Result<InternalUserCredential> ->
+            api.signInWithEmailLink(appArg, emailArg, emailLinkArg) {
+                result: Result<InternalUserCredential> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidFirebaseAuthPigeonUtils.wrapError(error))
@@ -1605,13 +1896,18 @@ interface FirebaseAuthHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithProvider$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithProvider$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val appArg = args[0] as AuthPigeonFirebaseApp
             val signInProviderArg = args[1] as InternalSignInProvider
-            api.signInWithProvider(appArg, signInProviderArg) { result: Result<InternalUserCredential> ->
+            api.signInWithProvider(appArg, signInProviderArg) {
+                result: Result<InternalUserCredential> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidFirebaseAuthPigeonUtils.wrapError(error))
@@ -1626,7 +1922,11 @@ interface FirebaseAuthHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signOut$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signOut$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -1645,7 +1945,11 @@ interface FirebaseAuthHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.fetchSignInMethodsForEmail$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.fetchSignInMethodsForEmail$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -1666,14 +1970,19 @@ interface FirebaseAuthHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.sendPasswordResetEmail$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.sendPasswordResetEmail$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val appArg = args[0] as AuthPigeonFirebaseApp
             val emailArg = args[1] as String
             val actionCodeSettingsArg = args[2] as InternalActionCodeSettings?
-            api.sendPasswordResetEmail(appArg, emailArg, actionCodeSettingsArg) { result: Result<Unit> ->
+            api.sendPasswordResetEmail(appArg, emailArg, actionCodeSettingsArg) {
+                result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidFirebaseAuthPigeonUtils.wrapError(error))
@@ -1687,14 +1996,19 @@ interface FirebaseAuthHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.sendSignInLinkToEmail$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.sendSignInLinkToEmail$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val appArg = args[0] as AuthPigeonFirebaseApp
             val emailArg = args[1] as String
             val actionCodeSettingsArg = args[2] as InternalActionCodeSettings
-            api.sendSignInLinkToEmail(appArg, emailArg, actionCodeSettingsArg) { result: Result<Unit> ->
+            api.sendSignInLinkToEmail(appArg, emailArg, actionCodeSettingsArg) {
+                result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidFirebaseAuthPigeonUtils.wrapError(error))
@@ -1708,7 +2022,11 @@ interface FirebaseAuthHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.setLanguageCode$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.setLanguageCode$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -1729,7 +2047,11 @@ interface FirebaseAuthHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.setSettings$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.setSettings$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -1749,7 +2071,11 @@ interface FirebaseAuthHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.verifyPasswordResetCode$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.verifyPasswordResetCode$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -1770,7 +2096,11 @@ interface FirebaseAuthHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.verifyPhoneNumber$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.verifyPhoneNumber$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -1791,13 +2121,18 @@ interface FirebaseAuthHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.revokeTokenWithAuthorizationCode$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.revokeTokenWithAuthorizationCode$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val appArg = args[0] as AuthPigeonFirebaseApp
             val authorizationCodeArg = args[1] as String
-            api.revokeTokenWithAuthorizationCode(appArg, authorizationCodeArg) { result: Result<Unit> ->
+            api.revokeTokenWithAuthorizationCode(appArg, authorizationCodeArg) {
+                result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidFirebaseAuthPigeonUtils.wrapError(error))
@@ -1811,7 +2146,11 @@ interface FirebaseAuthHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.revokeAccessToken$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.revokeAccessToken$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -1831,7 +2170,11 @@ interface FirebaseAuthHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.initializeRecaptchaConfig$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.initializeRecaptchaConfig$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -1855,31 +2198,103 @@ interface FirebaseAuthHostApi {
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface FirebaseAuthUserHostApi {
   fun delete(app: AuthPigeonFirebaseApp, callback: (Result<Unit>) -> Unit)
-  fun getIdToken(app: AuthPigeonFirebaseApp, forceRefresh: Boolean, callback: (Result<InternalIdTokenResult>) -> Unit)
-  fun linkWithCredential(app: AuthPigeonFirebaseApp, input: Map<String?, Any?>, callback: (Result<InternalUserCredential>) -> Unit)
-  fun linkWithProvider(app: AuthPigeonFirebaseApp, signInProvider: InternalSignInProvider, callback: (Result<InternalUserCredential>) -> Unit)
-  fun reauthenticateWithCredential(app: AuthPigeonFirebaseApp, input: Map<String?, Any?>, callback: (Result<InternalUserCredential>) -> Unit)
-  fun reauthenticateWithProvider(app: AuthPigeonFirebaseApp, signInProvider: InternalSignInProvider, callback: (Result<InternalUserCredential>) -> Unit)
+
+  fun getIdToken(
+      app: AuthPigeonFirebaseApp,
+      forceRefresh: Boolean,
+      callback: (Result<InternalIdTokenResult>) -> Unit
+  )
+
+  fun linkWithCredential(
+      app: AuthPigeonFirebaseApp,
+      input: Map<String?, Any?>,
+      callback: (Result<InternalUserCredential>) -> Unit
+  )
+
+  fun linkWithProvider(
+      app: AuthPigeonFirebaseApp,
+      signInProvider: InternalSignInProvider,
+      callback: (Result<InternalUserCredential>) -> Unit
+  )
+
+  fun reauthenticateWithCredential(
+      app: AuthPigeonFirebaseApp,
+      input: Map<String?, Any?>,
+      callback: (Result<InternalUserCredential>) -> Unit
+  )
+
+  fun reauthenticateWithProvider(
+      app: AuthPigeonFirebaseApp,
+      signInProvider: InternalSignInProvider,
+      callback: (Result<InternalUserCredential>) -> Unit
+  )
+
   fun reload(app: AuthPigeonFirebaseApp, callback: (Result<InternalUserDetails>) -> Unit)
-  fun sendEmailVerification(app: AuthPigeonFirebaseApp, actionCodeSettings: InternalActionCodeSettings?, callback: (Result<Unit>) -> Unit)
-  fun unlink(app: AuthPigeonFirebaseApp, providerId: String, callback: (Result<InternalUserCredential>) -> Unit)
-  fun updateEmail(app: AuthPigeonFirebaseApp, newEmail: String, callback: (Result<InternalUserDetails>) -> Unit)
-  fun updatePassword(app: AuthPigeonFirebaseApp, newPassword: String, callback: (Result<InternalUserDetails>) -> Unit)
-  fun updatePhoneNumber(app: AuthPigeonFirebaseApp, input: Map<String?, Any?>, callback: (Result<InternalUserDetails>) -> Unit)
-  fun updateProfile(app: AuthPigeonFirebaseApp, profile: InternalUserProfile, callback: (Result<InternalUserDetails>) -> Unit)
-  fun verifyBeforeUpdateEmail(app: AuthPigeonFirebaseApp, newEmail: String, actionCodeSettings: InternalActionCodeSettings?, callback: (Result<Unit>) -> Unit)
+
+  fun sendEmailVerification(
+      app: AuthPigeonFirebaseApp,
+      actionCodeSettings: InternalActionCodeSettings?,
+      callback: (Result<Unit>) -> Unit
+  )
+
+  fun unlink(
+      app: AuthPigeonFirebaseApp,
+      providerId: String,
+      callback: (Result<InternalUserCredential>) -> Unit
+  )
+
+  fun updateEmail(
+      app: AuthPigeonFirebaseApp,
+      newEmail: String,
+      callback: (Result<InternalUserDetails>) -> Unit
+  )
+
+  fun updatePassword(
+      app: AuthPigeonFirebaseApp,
+      newPassword: String,
+      callback: (Result<InternalUserDetails>) -> Unit
+  )
+
+  fun updatePhoneNumber(
+      app: AuthPigeonFirebaseApp,
+      input: Map<String?, Any?>,
+      callback: (Result<InternalUserDetails>) -> Unit
+  )
+
+  fun updateProfile(
+      app: AuthPigeonFirebaseApp,
+      profile: InternalUserProfile,
+      callback: (Result<InternalUserDetails>) -> Unit
+  )
+
+  fun verifyBeforeUpdateEmail(
+      app: AuthPigeonFirebaseApp,
+      newEmail: String,
+      actionCodeSettings: InternalActionCodeSettings?,
+      callback: (Result<Unit>) -> Unit
+  )
 
   companion object {
     /** The codec used by FirebaseAuthUserHostApi. */
-    val codec: MessageCodec<Any?> by lazy {
-      GeneratedAndroidFirebaseAuthPigeonCodec()
-    }
-    /** Sets up an instance of `FirebaseAuthUserHostApi` to handle messages through the `binaryMessenger`. */
+    val codec: MessageCodec<Any?> by lazy { GeneratedAndroidFirebaseAuthPigeonCodec() }
+    /**
+     * Sets up an instance of `FirebaseAuthUserHostApi` to handle messages through the
+     * `binaryMessenger`.
+     */
     @JvmOverloads
-    fun setUp(binaryMessenger: BinaryMessenger, api: FirebaseAuthUserHostApi?, messageChannelSuffix: String = "") {
-      val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    fun setUp(
+        binaryMessenger: BinaryMessenger,
+        api: FirebaseAuthUserHostApi?,
+        messageChannelSuffix: String = ""
+    ) {
+      val separatedMessageChannelSuffix =
+          if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.delete$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.delete$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -1898,7 +2313,11 @@ interface FirebaseAuthUserHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.getIdToken$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.getIdToken$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -1919,7 +2338,11 @@ interface FirebaseAuthUserHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.linkWithCredential$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.linkWithCredential$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -1940,13 +2363,18 @@ interface FirebaseAuthUserHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.linkWithProvider$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.linkWithProvider$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val appArg = args[0] as AuthPigeonFirebaseApp
             val signInProviderArg = args[1] as InternalSignInProvider
-            api.linkWithProvider(appArg, signInProviderArg) { result: Result<InternalUserCredential> ->
+            api.linkWithProvider(appArg, signInProviderArg) { result: Result<InternalUserCredential>
+              ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidFirebaseAuthPigeonUtils.wrapError(error))
@@ -1961,13 +2389,18 @@ interface FirebaseAuthUserHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reauthenticateWithCredential$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reauthenticateWithCredential$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val appArg = args[0] as AuthPigeonFirebaseApp
             val inputArg = args[1] as Map<String?, Any?>
-            api.reauthenticateWithCredential(appArg, inputArg) { result: Result<InternalUserCredential> ->
+            api.reauthenticateWithCredential(appArg, inputArg) {
+                result: Result<InternalUserCredential> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidFirebaseAuthPigeonUtils.wrapError(error))
@@ -1982,13 +2415,18 @@ interface FirebaseAuthUserHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reauthenticateWithProvider$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reauthenticateWithProvider$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val appArg = args[0] as AuthPigeonFirebaseApp
             val signInProviderArg = args[1] as InternalSignInProvider
-            api.reauthenticateWithProvider(appArg, signInProviderArg) { result: Result<InternalUserCredential> ->
+            api.reauthenticateWithProvider(appArg, signInProviderArg) {
+                result: Result<InternalUserCredential> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidFirebaseAuthPigeonUtils.wrapError(error))
@@ -2003,7 +2441,11 @@ interface FirebaseAuthUserHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reload$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reload$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -2023,7 +2465,11 @@ interface FirebaseAuthUserHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.sendEmailVerification$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.sendEmailVerification$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -2043,7 +2489,11 @@ interface FirebaseAuthUserHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.unlink$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.unlink$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -2064,7 +2514,11 @@ interface FirebaseAuthUserHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updateEmail$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updateEmail$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -2085,7 +2539,11 @@ interface FirebaseAuthUserHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updatePassword$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updatePassword$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -2106,7 +2564,11 @@ interface FirebaseAuthUserHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updatePhoneNumber$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updatePhoneNumber$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -2127,7 +2589,11 @@ interface FirebaseAuthUserHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updateProfile$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updateProfile$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -2148,14 +2614,19 @@ interface FirebaseAuthUserHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.verifyBeforeUpdateEmail$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.verifyBeforeUpdateEmail$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val appArg = args[0] as AuthPigeonFirebaseApp
             val newEmailArg = args[1] as String
             val actionCodeSettingsArg = args[2] as InternalActionCodeSettings?
-            api.verifyBeforeUpdateEmail(appArg, newEmailArg, actionCodeSettingsArg) { result: Result<Unit> ->
+            api.verifyBeforeUpdateEmail(appArg, newEmailArg, actionCodeSettingsArg) {
+                result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidFirebaseAuthPigeonUtils.wrapError(error))
@@ -2173,23 +2644,50 @@ interface FirebaseAuthUserHostApi {
 }
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface MultiFactorUserHostApi {
-  fun enrollPhone(app: AuthPigeonFirebaseApp, assertion: InternalPhoneMultiFactorAssertion, displayName: String?, callback: (Result<Unit>) -> Unit)
-  fun enrollTotp(app: AuthPigeonFirebaseApp, assertionId: String, displayName: String?, callback: (Result<Unit>) -> Unit)
+  fun enrollPhone(
+      app: AuthPigeonFirebaseApp,
+      assertion: InternalPhoneMultiFactorAssertion,
+      displayName: String?,
+      callback: (Result<Unit>) -> Unit
+  )
+
+  fun enrollTotp(
+      app: AuthPigeonFirebaseApp,
+      assertionId: String,
+      displayName: String?,
+      callback: (Result<Unit>) -> Unit
+  )
+
   fun getSession(app: AuthPigeonFirebaseApp, callback: (Result<InternalMultiFactorSession>) -> Unit)
+
   fun unenroll(app: AuthPigeonFirebaseApp, factorUid: String, callback: (Result<Unit>) -> Unit)
-  fun getEnrolledFactors(app: AuthPigeonFirebaseApp, callback: (Result<List<InternalMultiFactorInfo>>) -> Unit)
+
+  fun getEnrolledFactors(
+      app: AuthPigeonFirebaseApp,
+      callback: (Result<List<InternalMultiFactorInfo>>) -> Unit
+  )
 
   companion object {
     /** The codec used by MultiFactorUserHostApi. */
-    val codec: MessageCodec<Any?> by lazy {
-      GeneratedAndroidFirebaseAuthPigeonCodec()
-    }
-    /** Sets up an instance of `MultiFactorUserHostApi` to handle messages through the `binaryMessenger`. */
+    val codec: MessageCodec<Any?> by lazy { GeneratedAndroidFirebaseAuthPigeonCodec() }
+    /**
+     * Sets up an instance of `MultiFactorUserHostApi` to handle messages through the
+     * `binaryMessenger`.
+     */
     @JvmOverloads
-    fun setUp(binaryMessenger: BinaryMessenger, api: MultiFactorUserHostApi?, messageChannelSuffix: String = "") {
-      val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    fun setUp(
+        binaryMessenger: BinaryMessenger,
+        api: MultiFactorUserHostApi?,
+        messageChannelSuffix: String = ""
+    ) {
+      val separatedMessageChannelSuffix =
+          if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollPhone$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollPhone$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -2210,7 +2708,11 @@ interface MultiFactorUserHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollTotp$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollTotp$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -2231,7 +2733,11 @@ interface MultiFactorUserHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.getSession$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.getSession$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -2251,7 +2757,11 @@ interface MultiFactorUserHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.unenroll$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.unenroll$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -2271,7 +2781,11 @@ interface MultiFactorUserHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.getEnrolledFactors$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.getEnrolledFactors$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -2295,26 +2809,42 @@ interface MultiFactorUserHostApi {
 }
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface MultiFactoResolverHostApi {
-  fun resolveSignIn(resolverId: String, assertion: InternalPhoneMultiFactorAssertion?, totpAssertionId: String?, callback: (Result<InternalUserCredential>) -> Unit)
+  fun resolveSignIn(
+      resolverId: String,
+      assertion: InternalPhoneMultiFactorAssertion?,
+      totpAssertionId: String?,
+      callback: (Result<InternalUserCredential>) -> Unit
+  )
 
   companion object {
     /** The codec used by MultiFactoResolverHostApi. */
-    val codec: MessageCodec<Any?> by lazy {
-      GeneratedAndroidFirebaseAuthPigeonCodec()
-    }
-    /** Sets up an instance of `MultiFactoResolverHostApi` to handle messages through the `binaryMessenger`. */
+    val codec: MessageCodec<Any?> by lazy { GeneratedAndroidFirebaseAuthPigeonCodec() }
+    /**
+     * Sets up an instance of `MultiFactoResolverHostApi` to handle messages through the
+     * `binaryMessenger`.
+     */
     @JvmOverloads
-    fun setUp(binaryMessenger: BinaryMessenger, api: MultiFactoResolverHostApi?, messageChannelSuffix: String = "") {
-      val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    fun setUp(
+        binaryMessenger: BinaryMessenger,
+        api: MultiFactoResolverHostApi?,
+        messageChannelSuffix: String = ""
+    ) {
+      val separatedMessageChannelSuffix =
+          if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactoResolverHostApi.resolveSignIn$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactoResolverHostApi.resolveSignIn$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val resolverIdArg = args[0] as String
             val assertionArg = args[1] as InternalPhoneMultiFactorAssertion?
             val totpAssertionIdArg = args[2] as String?
-            api.resolveSignIn(resolverIdArg, assertionArg, totpAssertionIdArg) { result: Result<InternalUserCredential> ->
+            api.resolveSignIn(resolverIdArg, assertionArg, totpAssertionIdArg) {
+                result: Result<InternalUserCredential> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidFirebaseAuthPigeonUtils.wrapError(error))
@@ -2334,20 +2864,40 @@ interface MultiFactoResolverHostApi {
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface MultiFactorTotpHostApi {
   fun generateSecret(sessionId: String, callback: (Result<InternalTotpSecret>) -> Unit)
-  fun getAssertionForEnrollment(secretKey: String, oneTimePassword: String, callback: (Result<String>) -> Unit)
-  fun getAssertionForSignIn(enrollmentId: String, oneTimePassword: String, callback: (Result<String>) -> Unit)
+
+  fun getAssertionForEnrollment(
+      secretKey: String,
+      oneTimePassword: String,
+      callback: (Result<String>) -> Unit
+  )
+
+  fun getAssertionForSignIn(
+      enrollmentId: String,
+      oneTimePassword: String,
+      callback: (Result<String>) -> Unit
+  )
 
   companion object {
     /** The codec used by MultiFactorTotpHostApi. */
-    val codec: MessageCodec<Any?> by lazy {
-      GeneratedAndroidFirebaseAuthPigeonCodec()
-    }
-    /** Sets up an instance of `MultiFactorTotpHostApi` to handle messages through the `binaryMessenger`. */
+    val codec: MessageCodec<Any?> by lazy { GeneratedAndroidFirebaseAuthPigeonCodec() }
+    /**
+     * Sets up an instance of `MultiFactorTotpHostApi` to handle messages through the
+     * `binaryMessenger`.
+     */
     @JvmOverloads
-    fun setUp(binaryMessenger: BinaryMessenger, api: MultiFactorTotpHostApi?, messageChannelSuffix: String = "") {
-      val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    fun setUp(
+        binaryMessenger: BinaryMessenger,
+        api: MultiFactorTotpHostApi?,
+        messageChannelSuffix: String = ""
+    ) {
+      val separatedMessageChannelSuffix =
+          if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.generateSecret$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.generateSecret$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -2367,13 +2917,18 @@ interface MultiFactorTotpHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForEnrollment$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForEnrollment$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val secretKeyArg = args[0] as String
             val oneTimePasswordArg = args[1] as String
-            api.getAssertionForEnrollment(secretKeyArg, oneTimePasswordArg) { result: Result<String> ->
+            api.getAssertionForEnrollment(secretKeyArg, oneTimePasswordArg) { result: Result<String>
+              ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidFirebaseAuthPigeonUtils.wrapError(error))
@@ -2388,13 +2943,18 @@ interface MultiFactorTotpHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForSignIn$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForSignIn$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val enrollmentIdArg = args[0] as String
             val oneTimePasswordArg = args[1] as String
-            api.getAssertionForSignIn(enrollmentIdArg, oneTimePasswordArg) { result: Result<String> ->
+            api.getAssertionForSignIn(enrollmentIdArg, oneTimePasswordArg) { result: Result<String>
+              ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidFirebaseAuthPigeonUtils.wrapError(error))
@@ -2413,27 +2973,44 @@ interface MultiFactorTotpHostApi {
 }
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface MultiFactorTotpSecretHostApi {
-  fun generateQrCodeUrl(secretKey: String, accountName: String?, issuer: String?, callback: (Result<String>) -> Unit)
+  fun generateQrCodeUrl(
+      secretKey: String,
+      accountName: String?,
+      issuer: String?,
+      callback: (Result<String>) -> Unit
+  )
+
   fun openInOtpApp(secretKey: String, qrCodeUrl: String, callback: (Result<Unit>) -> Unit)
 
   companion object {
     /** The codec used by MultiFactorTotpSecretHostApi. */
-    val codec: MessageCodec<Any?> by lazy {
-      GeneratedAndroidFirebaseAuthPigeonCodec()
-    }
-    /** Sets up an instance of `MultiFactorTotpSecretHostApi` to handle messages through the `binaryMessenger`. */
+    val codec: MessageCodec<Any?> by lazy { GeneratedAndroidFirebaseAuthPigeonCodec() }
+    /**
+     * Sets up an instance of `MultiFactorTotpSecretHostApi` to handle messages through the
+     * `binaryMessenger`.
+     */
     @JvmOverloads
-    fun setUp(binaryMessenger: BinaryMessenger, api: MultiFactorTotpSecretHostApi?, messageChannelSuffix: String = "") {
-      val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    fun setUp(
+        binaryMessenger: BinaryMessenger,
+        api: MultiFactorTotpSecretHostApi?,
+        messageChannelSuffix: String = ""
+    ) {
+      val separatedMessageChannelSuffix =
+          if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.generateQrCodeUrl$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.generateQrCodeUrl$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val secretKeyArg = args[0] as String
             val accountNameArg = args[1] as String?
             val issuerArg = args[2] as String?
-            api.generateQrCodeUrl(secretKeyArg, accountNameArg, issuerArg) { result: Result<String> ->
+            api.generateQrCodeUrl(secretKeyArg, accountNameArg, issuerArg) { result: Result<String>
+              ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidFirebaseAuthPigeonUtils.wrapError(error))
@@ -2448,7 +3025,11 @@ interface MultiFactorTotpSecretHostApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.openInOtpApp$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.openInOtpApp$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
@@ -2480,25 +3061,35 @@ interface GenerateInterfaces {
 
   companion object {
     /** The codec used by GenerateInterfaces. */
-    val codec: MessageCodec<Any?> by lazy {
-      GeneratedAndroidFirebaseAuthPigeonCodec()
-    }
-    /** Sets up an instance of `GenerateInterfaces` to handle messages through the `binaryMessenger`. */
+    val codec: MessageCodec<Any?> by lazy { GeneratedAndroidFirebaseAuthPigeonCodec() }
+    /**
+     * Sets up an instance of `GenerateInterfaces` to handle messages through the `binaryMessenger`.
+     */
     @JvmOverloads
-    fun setUp(binaryMessenger: BinaryMessenger, api: GenerateInterfaces?, messageChannelSuffix: String = "") {
-      val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    fun setUp(
+        binaryMessenger: BinaryMessenger,
+        api: GenerateInterfaces?,
+        messageChannelSuffix: String = ""
+    ) {
+      val separatedMessageChannelSuffix =
+          if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.firebase_auth_platform_interface.GenerateInterfaces.pigeonInterface$separatedMessageChannelSuffix", codec)
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_auth_platform_interface.GenerateInterfaces.pigeonInterface$separatedMessageChannelSuffix",
+                codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
             val infoArg = args[0] as InternalMultiFactorInfo
-            val wrapped: List<Any?> = try {
-              api.pigeonInterface(infoArg)
-              listOf(null)
-            } catch (exception: Throwable) {
-              GeneratedAndroidFirebaseAuthPigeonUtils.wrapError(exception)
-            }
+            val wrapped: List<Any?> =
+                try {
+                  api.pigeonInterface(infoArg)
+                  listOf(null)
+                } catch (exception: Throwable) {
+                  GeneratedAndroidFirebaseAuthPigeonUtils.wrapError(exception)
+                }
             reply.reply(wrapped)
           }
         } else {

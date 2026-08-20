@@ -30,7 +30,8 @@ class AuthStateChannelStreamHandler(private val firebaseAuth: FirebaseAuth) : St
           if (user == null) {
             event[Constants.USER] = null
           } else {
-            event[Constants.USER] = PigeonParser.manuallyToList(PigeonParser.parseFirebaseUser(user)!!)
+            event[Constants.USER] =
+                PigeonParser.manuallyToList(PigeonParser.parseFirebaseUser(user)!!)
           }
 
           events.success(event)

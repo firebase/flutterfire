@@ -56,7 +56,8 @@ class FlutterFirebaseAuthUser : FirebaseAuthUserHostApi {
         val response = Tasks.await(firebaseUser.getIdToken(forceRefresh))
         callback(Result.success(PigeonParser.parseTokenResult(response)))
       } catch (exception: Exception) {
-        callback(Result.failure(FlutterFirebaseAuthPluginException.parserExceptionToFlutter(exception)))
+        callback(
+            Result.failure(FlutterFirebaseAuthPluginException.parserExceptionToFlutter(exception)))
       }
     }
   }
@@ -224,12 +225,14 @@ class FlutterFirebaseAuthUser : FirebaseAuthUserHostApi {
         callback(Result.success(PigeonParser.parseAuthResult(task.result)))
       } else {
         val exception = task.exception
-        if (exception?.message?.contains(
-            "User was not linked to an account with the given provider.") == true) {
+        if (exception
+            ?.message
+            ?.contains("User was not linked to an account with the given provider.") == true) {
           callback(Result.failure(FlutterFirebaseAuthPluginException.noSuchProvider()))
         } else {
           callback(
-              Result.failure(FlutterFirebaseAuthPluginException.parserExceptionToFlutter(exception)))
+              Result.failure(
+                  FlutterFirebaseAuthPluginException.parserExceptionToFlutter(exception)))
         }
       }
     }
@@ -248,7 +251,9 @@ class FlutterFirebaseAuthUser : FirebaseAuthUserHostApi {
       newPassword: String,
       callback: (Result<InternalUserDetails>) -> Unit
   ) {
-    reloadAfterUserUpdate(getCurrentUserFromPigeon(app), callback) { it.updatePassword(newPassword) }
+    reloadAfterUserUpdate(getCurrentUserFromPigeon(app), callback) {
+      it.updatePassword(newPassword)
+    }
   }
 
   override fun updatePhoneNumber(
