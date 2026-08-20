@@ -115,6 +115,27 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
   }
 
   /// Fetches and caches configuration from the Remote Config service.
+  ///
+  /// A [FirebaseException] may be thrown with one of the following codes:
+  /// - **network-error**:
+  ///  - Thrown if the Remote Config backend could not be reached, for example
+  ///    when the device has no data connection, the request timed out or the
+  ///    host could not be resolved. Transient, the fetch can be retried.
+  /// - **cancelled**:
+  ///  - Thrown if the fetch was cancelled before it completed. Transient.
+  /// - **throttled**:
+  ///  - Thrown if the frequency of requests exceeds the throttled limits.
+  /// - **forbidden**:
+  ///  - Thrown if the Google Cloud Platform Firebase Remote Config API is
+  ///    disabled for the project.
+  /// - **remote-config-server-error**:
+  ///  - Thrown if the Remote Config backend answered with an error status.
+  /// - **internal** or **unknown**:
+  ///  - Thrown if the failure could not be classified. Read
+  ///    [FirebaseException.message] for the description the native SDK gave.
+  ///
+  /// On the web the codes come from the Firebase JavaScript SDK instead, for
+  /// example `fetch-client-network`, `fetch-timeout` and `fetch-throttle`.
   Future<void> fetch() {
     throw UnimplementedError('fetch() is not implemented');
   }
@@ -122,9 +143,8 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
   /// Performs a fetch and activate operation, as a convenience.
   ///
   /// Returns [bool] in the same way that is done for [activate].
-  /// A [FirebaseException] maybe thrown with the following error code:
-  /// - **forbidden**:
-  ///  - Thrown if the Google Cloud Platform Firebase Remote Config API is disabled
+  ///
+  /// Throws the same [FirebaseException] codes as [fetch].
   Future<bool> fetchAndActivate() {
     throw UnimplementedError('fetchAndActivate() is not implemented');
   }
