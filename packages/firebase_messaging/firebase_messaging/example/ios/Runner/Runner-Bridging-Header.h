@@ -1,4 +1,3 @@
-#import "AppDelegate.h"
 #import "GeneratedPluginRegistrant.h"
 
 // `<firebase_messaging/...>` is the CocoaPods header layout. Swift Package
@@ -11,17 +10,3 @@
 #else
 @import firebase_messaging;
 #endif
-
-@implementation AppDelegate
-
-- (BOOL)application:(UIApplication *)application
-    didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-  [FLTFirebaseMessagingPlugin configureNotificationCenterDelegate];
-  return [super application:application didFinishLaunchingWithOptions:launchOptions];
-}
-
-- (void)didInitializeImplicitFlutterEngine:(NSObject<FlutterImplicitEngineBridge> *)engineBridge {
-  [GeneratedPluginRegistrant registerWithRegistry:engineBridge.pluginRegistry];
-}
-
-@end

@@ -15,12 +15,15 @@ dependencies:
   collection: ^1.0.0
   flutter:
     sdk: flutter
-  # Needed to export the mocks
-  flutter_test:
-    sdk: flutter
   meta: ^1.8.0
   plugin_platform_interface: ^2.1.3
 
 dev_dependencies:
+  # `flutter_test` must stay a dev dependency: as a regular dependency it pins
+  # `test_api` for every consumer of this package, which breaks version solving
+  # for apps that use `package:test` (see #17001). `lib/src/test_binding.dart`
+  # exists so the generated Pigeon test API does not need it.
+  flutter_test:
+    sdk: flutter
   mockito: ^5.4.0
   pigeon: 26.3.4

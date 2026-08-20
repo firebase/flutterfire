@@ -38,12 +38,7 @@ export 'src/api.dart'
         UsageMetadata,
         WebGroundingChunk;
 export 'src/base_model.dart'
-    show
-        GenerativeModel,
-        ImagenModel,
-        LiveGenerativeModel,
-        TemplateGenerativeModel,
-        TemplateImagenModel;
+    show GenerativeModel, LiveGenerativeModel, TemplateGenerativeModel;
 export 'src/chat.dart' show ChatSession, StartChatExtension;
 export 'src/content.dart'
     show
@@ -68,40 +63,6 @@ export 'src/error.dart'
         UnsupportedUserLocation;
 export 'src/firebase_ai.dart' show FirebaseAI;
 export 'src/image_config.dart' show ImageConfig, ImageAspectRatio, ImageSize;
-export 'src/imagen/imagen_api.dart'
-    show
-        ImagenSafetySettings,
-        ImagenFormat,
-        ImagenSafetyFilterLevel,
-        ImagenPersonFilterLevel,
-        ImagenGenerationConfig,
-        ImagenAspectRatio;
-export 'src/imagen/imagen_content.dart' show ImagenInlineImage;
-export 'src/imagen/imagen_edit.dart'
-    show
-        ImagenEditMode,
-        ImagenSubjectReferenceType,
-        ImagenControlType,
-        ImagenMaskMode,
-        ImagenMaskConfig,
-        ImagenSubjectConfig,
-        ImagenStyleConfig,
-        ImagenControlConfig,
-        ImagenEditingConfig,
-        ImagenDimensions,
-        ImagenImagePlacement;
-export 'src/imagen/imagen_reference.dart'
-    show
-        ImagenReferenceImage,
-        ImagenMaskReference,
-        ImagenRawImage,
-        ImagenRawMask,
-        ImagenSemanticMask,
-        ImagenBackgroundMask,
-        ImagenForegroundMask,
-        ImagenSubjectReference,
-        ImagenStyleReference,
-        ImagenControlReference;
 export 'src/live_api.dart'
     show
         AudioTranscriptionConfig,
