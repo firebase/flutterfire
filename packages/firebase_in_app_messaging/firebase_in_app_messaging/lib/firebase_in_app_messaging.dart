@@ -7,6 +7,16 @@ import 'package:firebase_core_platform_interface/firebase_core_platform_interfac
     show FirebasePlugin;
 import 'package:firebase_in_app_messaging_platform_interface/firebase_in_app_messaging_platform_interface.dart';
 
+export 'package:firebase_in_app_messaging_platform_interface/firebase_in_app_messaging_platform_interface.dart'
+    show
+        InAppMessagingAction,
+        InAppMessagingCampaignMetadata,
+        InAppMessagingClickEvent,
+        InAppMessagingDismissEvent,
+        InAppMessagingDismissType,
+        InAppMessagingDisplayErrorEvent,
+        InAppMessagingImpressionEvent;
+
 class FirebaseInAppMessaging extends FirebasePlugin {
   FirebaseInAppMessaging._({required this.app})
       : super(app.name, 'plugins.flutter.io/firebase_in_app_messaging');
@@ -63,4 +73,34 @@ class FirebaseInAppMessaging extends FirebasePlugin {
   Future<void> setAutomaticDataCollectionEnabled(bool enabled) {
     return _delegate.setAutomaticDataCollectionEnabled(enabled);
   }
+
+  /// Notifies when the user taps the action button of an in-app message.
+  ///
+  /// Use [InAppMessagingClickEvent.action] to know which URL the campaign
+  /// asked to open, and [InAppMessagingClickEvent.campaignMetadata] to know
+  /// which campaign the message came from.
+  ///
+  /// Listening to any of the message lifecycle streams makes the plugin become
+  /// the `InAppMessaging` display delegate on iOS. If your app also sets that
+  /// delegate from native code, the one set last wins.
+  Stream<InAppMessagingClickEvent> get onMessageClicked =>
+      _delegate.onMessageClicked;
+
+  /// Notifies when an in-app message has been displayed long enough to count
+  /// as an impression.
+  Stream<InAppMessagingImpressionEvent> get onMessageImpression =>
+      _delegate.onMessageImpression;
+
+  /// Notifies when an in-app message is dismissed.
+  ///
+  /// [InAppMessagingDismissEvent.dismissType] is always
+  /// [InAppMessagingDismissType.unknown] on Android, which does not report how
+  /// a message was dismissed.
+  Stream<InAppMessagingDismissEvent> get onMessageDismissed =>
+      _delegate.onMessageDismissed;
+
+  /// Notifies when an in-app message could not be rendered, for example
+  /// because its image failed to download.
+  Stream<InAppMessagingDisplayErrorEvent> get onMessageDisplayError =>
+      _delegate.onMessageDisplayError;
 }
