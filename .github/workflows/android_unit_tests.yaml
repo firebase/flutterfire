@@ -43,7 +43,11 @@ jobs:
         # Tasks are listed per package rather than using the root testDebugUnitTest
         # task, which would also build the Dart sources of the aggregate test app.
         # Add a task here when a package gains an android/src/test directory.
-        run: cd tests/android && ./gradlew :firebase_crashlytics:testDebugUnitTest
+        run: |
+          cd tests/android
+          ./gradlew \
+            :cloud_firestore:testDebugUnitTest \
+            :firebase_crashlytics:testDebugUnitTest
       - name: 'Upload test reports'
         if: failure()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
