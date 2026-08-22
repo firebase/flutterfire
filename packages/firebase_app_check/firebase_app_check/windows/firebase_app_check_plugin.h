@@ -11,6 +11,7 @@
 #include <flutter/method_channel.h>
 #include <flutter/plugin_registrar_windows.h>
 
+#include <functional>
 #include <map>
 #include <memory>
 #include <string>
@@ -23,6 +24,45 @@
 namespace firebase_app_check_windows {
 
 class TokenStreamHandler;
+class FlutterAppCheckProviderFactory;
+
+// Custom App Check provider for Windows. When the Firebase C++ SDK calls
+// GetToken(), this provider either calls into Dart via
+// FirebaseAppCheckFlutterApi for a server-minted token, or forwards to the
+// debug provider for the same app.
+class FlutterAppCheckProvider : public firebase::app_check::AppCheckProvider {
+ public:
+  FlutterAppCheckProvider(flutter::BinaryMessenger* binary_messenger,
+                          FlutterAppCheckProviderFactory* factory,
+                          const std::string& app_name);
+  void GetToken(std::function<void(firebase::app_check::AppCheckToken, int,
+                                   const std::string&)>
+                    completion_callback) override;
+
+ private:
+  std::unique_ptr<FirebaseAppCheckFlutterApi> flutter_api_;
+  FlutterAppCheckProviderFactory* factory_;
+  std::string app_name_;
+};
+
+// Long-lived factory that creates one FlutterAppCheckProvider per firebase
+// App. CreateProvider is process-global in the C++ SDK, so this factory must
+// outlive every AppCheck instance it is registered with.
+class FlutterAppCheckProviderFactory
+    : public firebase::app_check::AppCheckProviderFactory {
+ public:
+  explicit FlutterAppCheckProviderFactory(
+      flutter::BinaryMessenger* binary_messenger);
+  firebase::app_check::AppCheckProvider* CreateProvider(
+      firebase::App* app) override;
+  void SetAppUsesCustomProvider(const std::string& app_name, bool uses_custom);
+  bool UsesCustomProvider(const std::string& app_name) const;
+
+ private:
+  flutter::BinaryMessenger* binary_messenger_;
+  std::map<std::string, bool> custom_apps_;
+  std::map<std::string, std::unique_ptr<FlutterAppCheckProvider>> providers_;
+};
 
 class FirebaseAppCheckPlugin : public flutter::Plugin,
                                public FirebaseAppCheckHostApi {
@@ -44,6 +84,7 @@ class FirebaseAppCheckPlugin : public flutter::Plugin,
       const std::string& app_name, const std::string* android_provider,
       const std::string* apple_provider, const std::string* debug_token,
       const std::string* recaptcha_site_key,
+      const std::string* windows_provider,
       std::function<void(std::optional<FlutterError> reply)> result) override;
   void GetToken(const std::string& app_name, bool force_refresh,
                 std::function<void(ErrorOr<std::optional<std::string>> reply)>
@@ -64,6 +105,10 @@ class FirebaseAppCheckPlugin : public flutter::Plugin,
       std::function<void(ErrorOr<std::string> reply)> result) override;
 
  private:
+  void EnsureProviderFactory();
+
+  std::unique_ptr<FlutterAppCheckProviderFactory> provider_factory_;
+
   static flutter::BinaryMessenger* binaryMessenger;
   static std::map<
       std::string,

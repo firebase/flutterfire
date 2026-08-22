@@ -221,6 +221,128 @@ void main() {
                 'APP_CHECK_APPLE_DEBUG_TOKEN dart-defines.'
             : null,
       );
+
+      group(
+        'WindowsCustomProvider',
+        () {
+          int farFutureExpireTimeMillis() {
+            return DateTime.now()
+                .add(const Duration(hours: 1))
+                .millisecondsSinceEpoch;
+          }
+
+          test(
+            'getToken invokes fetchToken and returns the synthetic token',
+            () async {
+              var fetchCount = 0;
+              const token = 'windows-custom-e2e-token';
+              final expireTimeMillis = farFutureExpireTimeMillis();
+
+              await FirebaseAppCheck.instance.activate(
+                providerWindows: WindowsCustomProvider(
+                  fetchToken: () async {
+                    fetchCount++;
+                    return CustomAppCheckToken(
+                      token: token,
+                      expireTimeMillis: expireTimeMillis,
+                    );
+                  },
+                ),
+              );
+
+              expect(
+                await FirebaseAppCheck.instance.getToken(true),
+                token,
+              );
+              expect(
+                fetchCount,
+                greaterThan(0),
+                reason: 'native must call GetCustomToken so fetchToken runs; '
+                    'a zero count means the debug provider path was used',
+              );
+            },
+          );
+
+          test(
+            'isolates fetchToken by Firebase app name',
+            () async {
+              var defaultFetchCount = 0;
+              var secondaryFetchCount = 0;
+              const defaultToken = 'windows-custom-default-app-token';
+              const secondaryToken = 'windows-custom-secondary-app-token';
+              final expireTimeMillis = farFutureExpireTimeMillis();
+
+              final secondaryApp = await Firebase.initializeApp(
+                name: 'app-check-secondary',
+                options: DefaultFirebaseOptions.currentPlatform,
+              );
+              addTearDown(secondaryApp.delete);
+
+              final defaultAppCheck = FirebaseAppCheck.instance;
+              final secondaryAppCheck = FirebaseAppCheck.instanceFor(
+                app: secondaryApp,
+              );
+
+              await defaultAppCheck.activate(
+                providerWindows: WindowsCustomProvider(
+                  fetchToken: () async {
+                    defaultFetchCount++;
+                    return CustomAppCheckToken(
+                      token: defaultToken,
+                      expireTimeMillis: expireTimeMillis,
+                    );
+                  },
+                ),
+              );
+              await secondaryAppCheck.activate(
+                providerWindows: WindowsCustomProvider(
+                  fetchToken: () async {
+                    secondaryFetchCount++;
+                    return CustomAppCheckToken(
+                      token: secondaryToken,
+                      expireTimeMillis: expireTimeMillis,
+                    );
+                  },
+                ),
+              );
+
+              expect(await defaultAppCheck.getToken(true), defaultToken);
+              expect(defaultFetchCount, greaterThan(0));
+              expect(
+                secondaryFetchCount,
+                0,
+                reason: 'fetching the default app must not invoke the '
+                    'secondary app fetchToken',
+              );
+
+              final defaultCountAfterDefaultFetch = defaultFetchCount;
+              expect(
+                await secondaryAppCheck.getToken(true),
+                secondaryToken,
+              );
+              expect(secondaryFetchCount, greaterThan(0));
+              expect(
+                defaultFetchCount,
+                defaultCountAfterDefaultFetch,
+                reason: 'fetching the secondary app must not invoke the '
+                    'default app fetchToken',
+              );
+
+              final secondaryCountAfterSecondaryFetch = secondaryFetchCount;
+              expect(await defaultAppCheck.getToken(true), defaultToken);
+              expect(
+                defaultFetchCount,
+                greaterThan(defaultCountAfterDefaultFetch),
+              );
+              expect(
+                secondaryFetchCount,
+                secondaryCountAfterSecondaryFetch,
+              );
+            },
+          );
+        },
+        skip: kIsWeb || defaultTargetPlatform != TargetPlatform.windows,
+      );
     },
   );
 }

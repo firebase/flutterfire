@@ -17,6 +17,11 @@ import java.nio.ByteBuffer
 
 private object GeneratedAndroidFirebaseAppCheckPigeonUtils {
 
+  fun createConnectionError(channelName: String): FlutterError {
+    return FlutterError(
+        "channel-error", "Unable to establish connection on channel: '$channelName'.", "")
+  }
+
   fun wrapResult(result: Any?): List<Any?> {
     return listOf(result)
   }
@@ -229,11 +234,68 @@ data class InternalAppCheckTokenResult(val token: String, val expirationTimestam
   }
 }
 
+/**
+ * Carries a minted App Check token plus the wall-clock expiry the Firebase SDK should associate
+ * with it. Returning the expiry alongside the token lets backends mint tokens with arbitrary
+ * lifetimes (short TTLs for a stricter security posture, longer TTLs for fewer round-trips) without
+ * the plugin hardcoding a refresh window.
+ *
+ * Generated class from Pigeon that represents data sent in messages.
+ */
+data class CustomAppCheckToken(
+    /** The App Check token string to send with Firebase requests. */
+    val token: String,
+    /**
+     * Absolute expiry as Unix epoch milliseconds (UTC). The Firebase SDK uses this to decide when
+     * to refresh; a token returned with an expiry in the past is treated as immediately expired.
+     */
+    val expireTimeMillis: Long
+) {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): CustomAppCheckToken {
+      val token = pigeonVar_list[0] as String
+      val expireTimeMillis = pigeonVar_list[1] as Long
+      return CustomAppCheckToken(token, expireTimeMillis)
+    }
+  }
+
+  fun toList(): List<Any?> {
+    return listOf(
+        token,
+        expireTimeMillis,
+    )
+  }
+
+  override fun equals(other: Any?): Boolean {
+    if (other == null || other.javaClass != javaClass) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    val other = other as CustomAppCheckToken
+    return GeneratedAndroidFirebaseAppCheckPigeonUtils.deepEquals(this.token, other.token) &&
+        GeneratedAndroidFirebaseAppCheckPigeonUtils.deepEquals(
+            this.expireTimeMillis, other.expireTimeMillis)
+  }
+
+  override fun hashCode(): Int {
+    var result = javaClass.hashCode()
+    result = 31 * result + GeneratedAndroidFirebaseAppCheckPigeonUtils.deepHash(this.token)
+    result =
+        31 * result + GeneratedAndroidFirebaseAppCheckPigeonUtils.deepHash(this.expireTimeMillis)
+    return result
+  }
+}
+
 private open class GeneratedAndroidFirebaseAppCheckPigeonCodec : StandardMessageCodec() {
   override fun readValueOfType(type: Byte, buffer: ByteBuffer): Any? {
     return when (type) {
       129.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let { InternalAppCheckTokenResult.fromList(it) }
+      }
+      130.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let { CustomAppCheckToken.fromList(it) }
       }
       else -> super.readValueOfType(type, buffer)
     }
@@ -243,6 +305,10 @@ private open class GeneratedAndroidFirebaseAppCheckPigeonCodec : StandardMessage
     when (value) {
       is InternalAppCheckTokenResult -> {
         stream.write(129)
+        writeValue(stream, value.toList())
+      }
+      is CustomAppCheckToken -> {
+        stream.write(130)
         writeValue(stream, value.toList())
       }
       else -> super.writeValue(stream, value)
@@ -258,6 +324,7 @@ interface FirebaseAppCheckHostApi {
       appleProvider: String?,
       debugToken: String?,
       recaptchaSiteKey: String?,
+      windowsProvider: String?,
       callback: (Result<Unit>) -> Unit
   )
 
@@ -308,12 +375,14 @@ interface FirebaseAppCheckHostApi {
             val appleProviderArg = args[2] as String?
             val debugTokenArg = args[3] as String?
             val recaptchaSiteKeyArg = args[4] as String?
+            val windowsProviderArg = args[5] as String?
             api.activate(
                 appNameArg,
                 androidProviderArg,
                 appleProviderArg,
                 debugTokenArg,
-                recaptchaSiteKeyArg) { result: Result<Unit> ->
+                recaptchaSiteKeyArg,
+                windowsProviderArg) { result: Result<Unit> ->
                   val error = result.exceptionOrNull()
                   if (error != null) {
                     reply.reply(GeneratedAndroidFirebaseAppCheckPigeonUtils.wrapError(error))
@@ -449,6 +518,53 @@ interface FirebaseAppCheckHostApi {
         } else {
           channel.setMessageHandler(null)
         }
+      }
+    }
+  }
+}
+/**
+ * Dart-side handler invoked by the native plugin when the Firebase SDK needs a fresh App Check
+ * token. Implementations typically call a backend service (for example a Cloud Function with
+ * `enforceAppCheck: false`) that mints a token using the Firebase Admin SDK. The native side awaits
+ * the future, then hands the token to the Firebase SDK, which attaches it to subsequent Firebase
+ * backend requests (Firestore, Functions, Storage, Auth, RTDB).
+ *
+ * Generated class from Pigeon that represents Flutter messages that can be called from Kotlin.
+ */
+class FirebaseAppCheckFlutterApi(
+    private val binaryMessenger: BinaryMessenger,
+    private val messageChannelSuffix: String = ""
+) {
+  companion object {
+    /** The codec used by FirebaseAppCheckFlutterApi. */
+    val codec: MessageCodec<Any?> by lazy { GeneratedAndroidFirebaseAppCheckPigeonCodec() }
+  }
+
+  fun getCustomToken(callback: (Result<CustomAppCheckToken>) -> Unit) {
+    val separatedMessageChannelSuffix =
+        if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    val channelName =
+        "dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckFlutterApi.getCustomToken$separatedMessageChannelSuffix"
+    val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
+    channel.send(null) {
+      if (it is List<*>) {
+        if (it.size > 1) {
+          callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
+        } else if (it[0] == null) {
+          callback(
+              Result.failure(
+                  FlutterError(
+                      "null-error",
+                      "Flutter api returned null value for non-null return value.",
+                      "")))
+        } else {
+          val output = it[0] as CustomAppCheckToken
+          callback(Result.success(output))
+        }
+      } else {
+        callback(
+            Result.failure(
+                GeneratedAndroidFirebaseAppCheckPigeonUtils.createConnectionError(channelName)))
       }
     }
   }

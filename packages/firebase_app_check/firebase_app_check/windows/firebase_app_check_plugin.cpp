@@ -10,6 +10,7 @@
 #include <flutter/standard_method_codec.h>
 #include <windows.h>
 
+#include <functional>
 #include <future>
 #include <memory>
 #include <string>
@@ -98,6 +99,71 @@ class TokenStreamHandler
   std::unique_ptr<FlutterAppCheckListener> listener_;
 };
 
+FlutterAppCheckProvider::FlutterAppCheckProvider(
+    flutter::BinaryMessenger* binary_messenger,
+    FlutterAppCheckProviderFactory* factory, const std::string& app_name)
+    : flutter_api_(std::make_unique<FirebaseAppCheckFlutterApi>(
+          binary_messenger, app_name)),
+      factory_(factory),
+      app_name_(app_name) {}
+
+void FlutterAppCheckProvider::GetToken(
+    std::function<void(firebase::app_check::AppCheckToken, int,
+                       const std::string&)>
+        completion_callback) {
+  if (factory_ == nullptr || !factory_->UsesCustomProvider(app_name_)) {
+    App* app = App::GetInstance(app_name_.c_str());
+    firebase::app_check::AppCheckProvider* debug_provider =
+        DebugAppCheckProviderFactory::GetInstance()->CreateProvider(app);
+    debug_provider->GetToken(std::move(completion_callback));
+    return;
+  }
+
+  auto completion = std::make_shared<std::function<void(
+      firebase::app_check::AppCheckToken, int, const std::string&)>>(
+      std::move(completion_callback));
+
+  flutter_api_->GetCustomToken(
+      [completion](const CustomAppCheckToken& dart_token) {
+        firebase::app_check::AppCheckToken result_token;
+        result_token.token = dart_token.token();
+        result_token.expire_time_millis = dart_token.expire_time_millis();
+        (*completion)(result_token, firebase::app_check::kAppCheckErrorNone,
+                      "");
+      },
+      [completion](const FlutterError& error) {
+        (*completion)(firebase::app_check::AppCheckToken(),
+                      firebase::app_check::kAppCheckErrorUnknown,
+                      error.message().empty() ? "unknown" : error.message());
+      });
+}
+
+FlutterAppCheckProviderFactory::FlutterAppCheckProviderFactory(
+    flutter::BinaryMessenger* binary_messenger)
+    : binary_messenger_(binary_messenger) {}
+
+firebase::app_check::AppCheckProvider*
+FlutterAppCheckProviderFactory::CreateProvider(firebase::App* app) {
+  const std::string app_name = app == nullptr ? "" : app->name();
+  auto& provider = providers_[app_name];
+  if (!provider) {
+    provider = std::make_unique<FlutterAppCheckProvider>(binary_messenger_,
+                                                         this, app_name);
+  }
+  return provider.get();
+}
+
+void FlutterAppCheckProviderFactory::SetAppUsesCustomProvider(
+    const std::string& app_name, bool uses_custom) {
+  custom_apps_[app_name] = uses_custom;
+}
+
+bool FlutterAppCheckProviderFactory::UsesCustomProvider(
+    const std::string& app_name) const {
+  auto it = custom_apps_.find(app_name);
+  return it != custom_apps_.end() && it->second;
+}
+
 static AppCheck* GetAppCheckFromPigeon(const std::string& app_name) {
   App* app = App::GetInstance(app_name.c_str());
   return AppCheck::GetInstance(app);
@@ -136,11 +202,12 @@ void FirebaseAppCheckPlugin::RegisterWithRegistrar(
     flutter::PluginRegistrarWindows* registrar) {
   auto plugin = std::make_unique<FirebaseAppCheckPlugin>();
 
+  binaryMessenger = registrar->messenger();
+  plugin->EnsureProviderFactory();
+
   FirebaseAppCheckHostApi::SetUp(registrar->messenger(), plugin.get());
 
   registrar->AddPlugin(std::move(plugin));
-
-  binaryMessenger = registrar->messenger();
 
   // Register for platform logging
   App::RegisterLibrary(kLibraryName.c_str(), getPluginVersion().c_str(),
@@ -148,6 +215,15 @@ void FirebaseAppCheckPlugin::RegisterWithRegistrar(
 }
 
 FirebaseAppCheckPlugin::FirebaseAppCheckPlugin() {}
+
+void FirebaseAppCheckPlugin::EnsureProviderFactory() {
+  if (provider_factory_) {
+    return;
+  }
+  provider_factory_ =
+      std::make_unique<FlutterAppCheckProviderFactory>(binaryMessenger);
+  AppCheck::SetAppCheckProviderFactory(provider_factory_.get());
+}
 
 FirebaseAppCheckPlugin::~FirebaseAppCheckPlugin() {
   for (auto& [app_name, listener] : listeners_map_) {
@@ -166,20 +242,22 @@ FirebaseAppCheckPlugin::~FirebaseAppCheckPlugin() {
 void FirebaseAppCheckPlugin::Activate(
     const std::string& app_name, const std::string* android_provider,
     const std::string* apple_provider, const std::string* debug_token,
-    const std::string* recaptcha_site_key,
+    const std::string* recaptcha_site_key, const std::string* windows_provider,
     std::function<void(std::optional<FlutterError> reply)> result) {
   // reCAPTCHA is a mobile-only provider, so the site key is unused here.
   (void)recaptcha_site_key;
+  (void)android_provider;
+  (void)apple_provider;
 
-  // On Windows/desktop, only the Debug provider is available.
-  DebugAppCheckProviderFactory* factory =
-      DebugAppCheckProviderFactory::GetInstance();
+  EnsureProviderFactory();
 
-  if (debug_token != nullptr && !debug_token->empty()) {
-    factory->SetDebugToken(*debug_token);
+  const bool uses_custom =
+      windows_provider != nullptr && *windows_provider == "custom";
+  provider_factory_->SetAppUsesCustomProvider(app_name, uses_custom);
+
+  if (!uses_custom && debug_token != nullptr && !debug_token->empty()) {
+    DebugAppCheckProviderFactory::GetInstance()->SetDebugToken(*debug_token);
   }
-
-  AppCheck::SetAppCheckProviderFactory(factory);
 
   result(std::nullopt);
 }
