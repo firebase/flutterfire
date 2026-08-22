@@ -5,6 +5,7 @@
 
 import 'package:meta/meta.dart';
 
+// ignore: do_not_use_environment
 const bool _kIsWeb = bool.fromEnvironment('dart.library.js_interop');
 
 /// Specifies custom configurations for your Cloud Firestore instance.
