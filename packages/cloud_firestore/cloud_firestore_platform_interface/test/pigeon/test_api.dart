@@ -173,10 +173,7 @@ abstract class TestFirebaseFirestoreHostApi {
   Future<String> loadBundle(FirestorePigeonFirebaseApp app, Uint8List bundle);
 
   Future<InternalQuerySnapshot> namedQueryGet(
-    FirestorePigeonFirebaseApp app,
-    String name,
-    InternalGetOptions options,
-  );
+      FirestorePigeonFirebaseApp app, String name, InternalGetOptions options);
 
   Future<void> clearPersistence(FirestorePigeonFirebaseApp app);
 
@@ -189,101 +186,76 @@ abstract class TestFirebaseFirestoreHostApi {
   Future<void> waitForPendingWrites(FirestorePigeonFirebaseApp app);
 
   Future<void> setIndexConfiguration(
-    FirestorePigeonFirebaseApp app,
-    String indexConfiguration,
-  );
+      FirestorePigeonFirebaseApp app, String indexConfiguration);
 
   Future<void> setLoggingEnabled(bool loggingEnabled);
 
   Future<String> snapshotsInSyncSetup(FirestorePigeonFirebaseApp app);
 
   Future<String> transactionCreate(
-    FirestorePigeonFirebaseApp app,
-    int timeout,
-    int maxAttempts,
-  );
+      FirestorePigeonFirebaseApp app, int timeout, int maxAttempts);
 
   Future<void> transactionStoreResult(
-    String transactionId,
-    InternalTransactionResult resultType,
-    List<InternalTransactionCommand?>? commands,
-  );
+      String transactionId,
+      InternalTransactionResult resultType,
+      List<InternalTransactionCommand?>? commands);
 
   Future<InternalDocumentSnapshot> transactionGet(
-    FirestorePigeonFirebaseApp app,
-    String transactionId,
-    String path,
-  );
+      FirestorePigeonFirebaseApp app, String transactionId, String path);
 
   Future<void> documentReferenceSet(
-    FirestorePigeonFirebaseApp app,
-    DocumentReferenceRequest request,
-  );
+      FirestorePigeonFirebaseApp app, DocumentReferenceRequest request);
 
   Future<void> documentReferenceUpdate(
-    FirestorePigeonFirebaseApp app,
-    DocumentReferenceRequest request,
-  );
+      FirestorePigeonFirebaseApp app, DocumentReferenceRequest request);
 
   Future<InternalDocumentSnapshot> documentReferenceGet(
-    FirestorePigeonFirebaseApp app,
-    DocumentReferenceRequest request,
-  );
+      FirestorePigeonFirebaseApp app, DocumentReferenceRequest request);
 
   Future<void> documentReferenceDelete(
-    FirestorePigeonFirebaseApp app,
-    DocumentReferenceRequest request,
-  );
+      FirestorePigeonFirebaseApp app, DocumentReferenceRequest request);
 
   Future<InternalQuerySnapshot> queryGet(
-    FirestorePigeonFirebaseApp app,
-    String path,
-    bool isCollectionGroup,
-    InternalQueryParameters parameters,
-    InternalGetOptions options,
-  );
+      FirestorePigeonFirebaseApp app,
+      String path,
+      bool isCollectionGroup,
+      InternalQueryParameters parameters,
+      InternalGetOptions options);
 
   Future<List<AggregateQueryResponse?>> aggregateQuery(
-    FirestorePigeonFirebaseApp app,
-    String path,
-    InternalQueryParameters parameters,
-    AggregateSource source,
-    List<AggregateQuery?> queries,
-    bool isCollectionGroup,
-  );
+      FirestorePigeonFirebaseApp app,
+      String path,
+      InternalQueryParameters parameters,
+      AggregateSource source,
+      List<AggregateQuery?> queries,
+      bool isCollectionGroup);
 
   Future<void> writeBatchCommit(
-    FirestorePigeonFirebaseApp app,
-    List<InternalTransactionCommand?> writes,
-  );
+      FirestorePigeonFirebaseApp app, List<InternalTransactionCommand?> writes);
 
   Future<String> querySnapshot(
-    FirestorePigeonFirebaseApp app,
-    String path,
-    bool isCollectionGroup,
-    InternalQueryParameters parameters,
-    InternalGetOptions options,
-    bool includeMetadataChanges,
-    ListenSource source,
-  );
+      FirestorePigeonFirebaseApp app,
+      String path,
+      bool isCollectionGroup,
+      InternalQueryParameters parameters,
+      InternalGetOptions options,
+      bool includeMetadataChanges,
+      ListenSource source);
 
   Future<String> documentReferenceSnapshot(
-    FirestorePigeonFirebaseApp app,
-    DocumentReferenceRequest parameters,
-    bool includeMetadataChanges,
-    ListenSource source,
-  );
+      FirestorePigeonFirebaseApp app,
+      DocumentReferenceRequest parameters,
+      bool includeMetadataChanges,
+      ListenSource source);
 
   Future<void> persistenceCacheIndexManagerRequest(
-    FirestorePigeonFirebaseApp app,
-    PersistenceCacheIndexManagerRequest request,
-  );
+      FirestorePigeonFirebaseApp app,
+      PersistenceCacheIndexManagerRequest request);
 
   Future<InternalPipelineSnapshot> executePipeline(
-    FirestorePigeonFirebaseApp app,
-    List<Map<String?, Object?>?> stages,
-    Map<String?, Object?>? options,
-  );
+      FirestorePigeonFirebaseApp app,
+      List<Map<String?, Object?>?> stages,
+      Map<String?, Object?>? options);
 
   static void setUp(
     TestFirebaseFirestoreHostApi? api, {
@@ -294,10 +266,9 @@ abstract class TestFirebaseFirestoreHostApi {
         messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.loadBundle$messageChannelSuffix',
-        pigeonChannelCodec,
-        binaryMessenger: binaryMessenger,
-      );
+          'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.loadBundle$messageChannelSuffix',
+          pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
@@ -316,18 +287,16 @@ abstract class TestFirebaseFirestoreHostApi {
             return wrapResponse(error: e);
           } catch (e) {
             return wrapResponse(
-              error: PlatformException(code: 'error', message: e.toString()),
-            );
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.namedQueryGet$messageChannelSuffix',
-        pigeonChannelCodec,
-        binaryMessenger: binaryMessenger,
-      );
+          'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.namedQueryGet$messageChannelSuffix',
+          pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
@@ -348,18 +317,16 @@ abstract class TestFirebaseFirestoreHostApi {
             return wrapResponse(error: e);
           } catch (e) {
             return wrapResponse(
-              error: PlatformException(code: 'error', message: e.toString()),
-            );
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.clearPersistence$messageChannelSuffix',
-        pigeonChannelCodec,
-        binaryMessenger: binaryMessenger,
-      );
+          'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.clearPersistence$messageChannelSuffix',
+          pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
@@ -377,18 +344,16 @@ abstract class TestFirebaseFirestoreHostApi {
             return wrapResponse(error: e);
           } catch (e) {
             return wrapResponse(
-              error: PlatformException(code: 'error', message: e.toString()),
-            );
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.disableNetwork$messageChannelSuffix',
-        pigeonChannelCodec,
-        binaryMessenger: binaryMessenger,
-      );
+          'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.disableNetwork$messageChannelSuffix',
+          pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
@@ -406,18 +371,16 @@ abstract class TestFirebaseFirestoreHostApi {
             return wrapResponse(error: e);
           } catch (e) {
             return wrapResponse(
-              error: PlatformException(code: 'error', message: e.toString()),
-            );
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.enableNetwork$messageChannelSuffix',
-        pigeonChannelCodec,
-        binaryMessenger: binaryMessenger,
-      );
+          'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.enableNetwork$messageChannelSuffix',
+          pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
@@ -435,18 +398,16 @@ abstract class TestFirebaseFirestoreHostApi {
             return wrapResponse(error: e);
           } catch (e) {
             return wrapResponse(
-              error: PlatformException(code: 'error', message: e.toString()),
-            );
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.terminate$messageChannelSuffix',
-        pigeonChannelCodec,
-        binaryMessenger: binaryMessenger,
-      );
+          'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.terminate$messageChannelSuffix',
+          pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
@@ -464,18 +425,16 @@ abstract class TestFirebaseFirestoreHostApi {
             return wrapResponse(error: e);
           } catch (e) {
             return wrapResponse(
-              error: PlatformException(code: 'error', message: e.toString()),
-            );
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.waitForPendingWrites$messageChannelSuffix',
-        pigeonChannelCodec,
-        binaryMessenger: binaryMessenger,
-      );
+          'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.waitForPendingWrites$messageChannelSuffix',
+          pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
@@ -493,18 +452,16 @@ abstract class TestFirebaseFirestoreHostApi {
             return wrapResponse(error: e);
           } catch (e) {
             return wrapResponse(
-              error: PlatformException(code: 'error', message: e.toString()),
-            );
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.setIndexConfiguration$messageChannelSuffix',
-        pigeonChannelCodec,
-        binaryMessenger: binaryMessenger,
-      );
+          'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.setIndexConfiguration$messageChannelSuffix',
+          pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
@@ -523,18 +480,16 @@ abstract class TestFirebaseFirestoreHostApi {
             return wrapResponse(error: e);
           } catch (e) {
             return wrapResponse(
-              error: PlatformException(code: 'error', message: e.toString()),
-            );
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.setLoggingEnabled$messageChannelSuffix',
-        pigeonChannelCodec,
-        binaryMessenger: binaryMessenger,
-      );
+          'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.setLoggingEnabled$messageChannelSuffix',
+          pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
@@ -551,18 +506,16 @@ abstract class TestFirebaseFirestoreHostApi {
             return wrapResponse(error: e);
           } catch (e) {
             return wrapResponse(
-              error: PlatformException(code: 'error', message: e.toString()),
-            );
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.snapshotsInSyncSetup$messageChannelSuffix',
-        pigeonChannelCodec,
-        binaryMessenger: binaryMessenger,
-      );
+          'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.snapshotsInSyncSetup$messageChannelSuffix',
+          pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
@@ -580,18 +533,16 @@ abstract class TestFirebaseFirestoreHostApi {
             return wrapResponse(error: e);
           } catch (e) {
             return wrapResponse(
-              error: PlatformException(code: 'error', message: e.toString()),
-            );
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionCreate$messageChannelSuffix',
-        pigeonChannelCodec,
-        binaryMessenger: binaryMessenger,
-      );
+          'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionCreate$messageChannelSuffix',
+          pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
@@ -606,27 +557,22 @@ abstract class TestFirebaseFirestoreHostApi {
           final int arg_maxAttempts = args[2]! as int;
           try {
             final String output = await api.transactionCreate(
-              arg_app,
-              arg_timeout,
-              arg_maxAttempts,
-            );
+                arg_app, arg_timeout, arg_maxAttempts);
             return <Object?>[output];
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
           } catch (e) {
             return wrapResponse(
-              error: PlatformException(code: 'error', message: e.toString()),
-            );
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionStoreResult$messageChannelSuffix',
-        pigeonChannelCodec,
-        binaryMessenger: binaryMessenger,
-      );
+          'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionStoreResult$messageChannelSuffix',
+          pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
@@ -642,27 +588,22 @@ abstract class TestFirebaseFirestoreHostApi {
               (args[2] as List<Object?>?)?.cast<InternalTransactionCommand?>();
           try {
             await api.transactionStoreResult(
-              arg_transactionId,
-              arg_resultType,
-              arg_commands,
-            );
+                arg_transactionId, arg_resultType, arg_commands);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
           } catch (e) {
             return wrapResponse(
-              error: PlatformException(code: 'error', message: e.toString()),
-            );
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionGet$messageChannelSuffix',
-        pigeonChannelCodec,
-        binaryMessenger: binaryMessenger,
-      );
+          'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionGet$messageChannelSuffix',
+          pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
@@ -683,18 +624,16 @@ abstract class TestFirebaseFirestoreHostApi {
             return wrapResponse(error: e);
           } catch (e) {
             return wrapResponse(
-              error: PlatformException(code: 'error', message: e.toString()),
-            );
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceSet$messageChannelSuffix',
-        pigeonChannelCodec,
-        binaryMessenger: binaryMessenger,
-      );
+          'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceSet$messageChannelSuffix',
+          pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
@@ -714,18 +653,16 @@ abstract class TestFirebaseFirestoreHostApi {
             return wrapResponse(error: e);
           } catch (e) {
             return wrapResponse(
-              error: PlatformException(code: 'error', message: e.toString()),
-            );
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceUpdate$messageChannelSuffix',
-        pigeonChannelCodec,
-        binaryMessenger: binaryMessenger,
-      );
+          'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceUpdate$messageChannelSuffix',
+          pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
@@ -745,18 +682,16 @@ abstract class TestFirebaseFirestoreHostApi {
             return wrapResponse(error: e);
           } catch (e) {
             return wrapResponse(
-              error: PlatformException(code: 'error', message: e.toString()),
-            );
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceGet$messageChannelSuffix',
-        pigeonChannelCodec,
-        binaryMessenger: binaryMessenger,
-      );
+          'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceGet$messageChannelSuffix',
+          pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
@@ -777,18 +712,16 @@ abstract class TestFirebaseFirestoreHostApi {
             return wrapResponse(error: e);
           } catch (e) {
             return wrapResponse(
-              error: PlatformException(code: 'error', message: e.toString()),
-            );
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceDelete$messageChannelSuffix',
-        pigeonChannelCodec,
-        binaryMessenger: binaryMessenger,
-      );
+          'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceDelete$messageChannelSuffix',
+          pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
@@ -808,18 +741,16 @@ abstract class TestFirebaseFirestoreHostApi {
             return wrapResponse(error: e);
           } catch (e) {
             return wrapResponse(
-              error: PlatformException(code: 'error', message: e.toString()),
-            );
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.queryGet$messageChannelSuffix',
-        pigeonChannelCodec,
-        binaryMessenger: binaryMessenger,
-      );
+          'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.queryGet$messageChannelSuffix',
+          pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
@@ -836,30 +767,23 @@ abstract class TestFirebaseFirestoreHostApi {
               args[3]! as InternalQueryParameters;
           final InternalGetOptions arg_options = args[4]! as InternalGetOptions;
           try {
-            final InternalQuerySnapshot output = await api.queryGet(
-              arg_app,
-              arg_path,
-              arg_isCollectionGroup,
-              arg_parameters,
-              arg_options,
-            );
+            final InternalQuerySnapshot output = await api.queryGet(arg_app,
+                arg_path, arg_isCollectionGroup, arg_parameters, arg_options);
             return <Object?>[output];
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
           } catch (e) {
             return wrapResponse(
-              error: PlatformException(code: 'error', message: e.toString()),
-            );
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.aggregateQuery$messageChannelSuffix',
-        pigeonChannelCodec,
-        binaryMessenger: binaryMessenger,
-      );
+          'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.aggregateQuery$messageChannelSuffix',
+          pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
@@ -879,31 +803,23 @@ abstract class TestFirebaseFirestoreHostApi {
           final bool arg_isCollectionGroup = args[5]! as bool;
           try {
             final List<AggregateQueryResponse?> output =
-                await api.aggregateQuery(
-              arg_app,
-              arg_path,
-              arg_parameters,
-              arg_source,
-              arg_queries,
-              arg_isCollectionGroup,
-            );
+                await api.aggregateQuery(arg_app, arg_path, arg_parameters,
+                    arg_source, arg_queries, arg_isCollectionGroup);
             return <Object?>[output];
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
           } catch (e) {
             return wrapResponse(
-              error: PlatformException(code: 'error', message: e.toString()),
-            );
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.writeBatchCommit$messageChannelSuffix',
-        pigeonChannelCodec,
-        binaryMessenger: binaryMessenger,
-      );
+          'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.writeBatchCommit$messageChannelSuffix',
+          pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
@@ -923,18 +839,16 @@ abstract class TestFirebaseFirestoreHostApi {
             return wrapResponse(error: e);
           } catch (e) {
             return wrapResponse(
-              error: PlatformException(code: 'error', message: e.toString()),
-            );
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.querySnapshot$messageChannelSuffix',
-        pigeonChannelCodec,
-        binaryMessenger: binaryMessenger,
-      );
+          'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.querySnapshot$messageChannelSuffix',
+          pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
@@ -954,31 +868,28 @@ abstract class TestFirebaseFirestoreHostApi {
           final ListenSource arg_source = args[6]! as ListenSource;
           try {
             final String output = await api.querySnapshot(
-              arg_app,
-              arg_path,
-              arg_isCollectionGroup,
-              arg_parameters,
-              arg_options,
-              arg_includeMetadataChanges,
-              arg_source,
-            );
+                arg_app,
+                arg_path,
+                arg_isCollectionGroup,
+                arg_parameters,
+                arg_options,
+                arg_includeMetadataChanges,
+                arg_source);
             return <Object?>[output];
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
           } catch (e) {
             return wrapResponse(
-              error: PlatformException(code: 'error', message: e.toString()),
-            );
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceSnapshot$messageChannelSuffix',
-        pigeonChannelCodec,
-        binaryMessenger: binaryMessenger,
-      );
+          'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceSnapshot$messageChannelSuffix',
+          pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
@@ -994,29 +905,23 @@ abstract class TestFirebaseFirestoreHostApi {
           final bool arg_includeMetadataChanges = args[2]! as bool;
           final ListenSource arg_source = args[3]! as ListenSource;
           try {
-            final String output = await api.documentReferenceSnapshot(
-              arg_app,
-              arg_parameters,
-              arg_includeMetadataChanges,
-              arg_source,
-            );
+            final String output = await api.documentReferenceSnapshot(arg_app,
+                arg_parameters, arg_includeMetadataChanges, arg_source);
             return <Object?>[output];
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
           } catch (e) {
             return wrapResponse(
-              error: PlatformException(code: 'error', message: e.toString()),
-            );
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.persistenceCacheIndexManagerRequest$messageChannelSuffix',
-        pigeonChannelCodec,
-        binaryMessenger: binaryMessenger,
-      );
+          'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.persistenceCacheIndexManagerRequest$messageChannelSuffix',
+          pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
@@ -1036,18 +941,16 @@ abstract class TestFirebaseFirestoreHostApi {
             return wrapResponse(error: e);
           } catch (e) {
             return wrapResponse(
-              error: PlatformException(code: 'error', message: e.toString()),
-            );
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.executePipeline$messageChannelSuffix',
-        pigeonChannelCodec,
-        binaryMessenger: binaryMessenger,
-      );
+          'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.executePipeline$messageChannelSuffix',
+          pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
@@ -1070,8 +973,7 @@ abstract class TestFirebaseFirestoreHostApi {
             return wrapResponse(error: e);
           } catch (e) {
             return wrapResponse(
-              error: PlatformException(code: 'error', message: e.toString()),
-            );
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
