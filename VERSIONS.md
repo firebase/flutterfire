@@ -4,12 +4,12 @@ This document is listing all the compatible versions of the FlutterFire plugins.
 
 # Versions
 
-## [Flutter BoM 5.0.0 (2026-08-24)](https://github.com/firebase/flutterfire/blob/main/CHANGELOG.md#2026-08-24)
+## [Flutter BoM 4.19.0 (2026-08-24)](https://github.com/firebase/flutterfire/blob/main/CHANGELOG.md#2026-08-24)
 
 Install this version using FlutterFire CLI
 
 ```bash
-flutterfire install 5.0.0
+flutterfire install 4.19.0
 ```
 
 ### Included Native Firebase SDK Versions
