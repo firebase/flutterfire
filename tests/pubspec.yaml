@@ -10,43 +10,43 @@ environment:
   flutter: '>=3.22.0'
 
 dependencies:
-  cloud_functions: ^6.3.6
-  cloud_functions_platform_interface: ^6.0.6
-  cloud_functions_web: ^5.1.12
+  cloud_functions: ^6.4.0
+  cloud_functions_platform_interface: ^6.0.7
+  cloud_functions_web: ^5.1.13
   collection: ^1.15.0
-  firebase_ai: ^3.15.0
-  firebase_analytics: ^12.4.6
-  firebase_analytics_platform_interface: ^6.0.6
-  firebase_analytics_web: ^0.6.1+12
-  firebase_app_check: ^0.4.6
-  firebase_app_check_platform_interface: ^0.4.2
-  firebase_app_check_web: ^0.2.6
-  firebase_app_installations: ^0.4.2+7
-  firebase_app_installations_platform_interface: ^0.1.4+75
-  firebase_app_installations_web: ^0.1.7+12
-  firebase_auth: ^6.5.7
-  firebase_auth_platform_interface: ^9.0.6
-  firebase_auth_web: ^6.2.6
-  firebase_core: ^4.13.0
-  firebase_core_platform_interface: ^8.1.0
-  firebase_core_web: ^3.10.0
-  firebase_crashlytics: ^5.2.7
-  firebase_crashlytics_platform_interface: ^3.8.27
-  firebase_database: ^12.4.7
-  firebase_database_platform_interface: ^0.4.0+6
-  firebase_database_web: ^0.2.7+13
-  firebase_messaging: ^16.5.0
-  firebase_messaging_platform_interface: ^4.9.3
-  firebase_messaging_web: ^4.2.4
-  firebase_ml_model_downloader: ^0.4.3
-  firebase_ml_model_downloader_platform_interface: ^0.1.6
-  firebase_performance: ^0.11.4+6
-  firebase_remote_config: ^6.5.6
-  firebase_remote_config_platform_interface: ^3.0.6
-  firebase_remote_config_web: ^1.10.13
-  firebase_storage: ^13.4.6
-  firebase_storage_platform_interface: ^6.0.6
-  firebase_storage_web: ^3.11.12
+  firebase_ai: ^4.0.0
+  firebase_analytics: ^12.5.0
+  firebase_analytics_platform_interface: ^6.0.7
+  firebase_analytics_web: ^0.6.1+13
+  firebase_app_check: ^0.4.7
+  firebase_app_check_platform_interface: ^0.4.2+1
+  firebase_app_check_web: ^0.2.6+1
+  firebase_app_installations: ^0.4.3
+  firebase_app_installations_platform_interface: ^0.1.5
+  firebase_app_installations_web: ^0.1.7+13
+  firebase_auth: ^6.6.0
+  firebase_auth_platform_interface: ^9.0.7
+  firebase_auth_web: ^6.2.7
+  firebase_core: ^4.14.0
+  firebase_core_platform_interface: ^8.1.1
+  firebase_core_web: ^3.11.0
+  firebase_crashlytics: ^5.3.0
+  firebase_crashlytics_platform_interface: ^3.9.0
+  firebase_database: ^12.5.0
+  firebase_database_platform_interface: ^0.4.0+7
+  firebase_database_web: ^0.2.7+14
+  firebase_messaging: ^16.6.0
+  firebase_messaging_platform_interface: ^4.10.0
+  firebase_messaging_web: ^4.2.5
+  firebase_ml_model_downloader: ^0.4.4
+  firebase_ml_model_downloader_platform_interface: ^0.1.6+1
+  firebase_performance: ^0.11.5
+  firebase_remote_config: ^6.6.0
+  firebase_remote_config_platform_interface: ^3.0.7
+  firebase_remote_config_web: ^1.10.14
+  firebase_storage: ^13.5.0
+  firebase_storage_platform_interface: ^6.0.7
+  firebase_storage_web: ^3.11.13
   flutter:
     sdk: flutter
   http: ^1.0.0

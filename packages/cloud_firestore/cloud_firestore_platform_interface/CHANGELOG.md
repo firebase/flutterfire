@@ -1,3 +1,8 @@
+## 8.0.7
+
+ - **REFACTOR**(platform_interface): replace Flutter UI and foundation imports with package:meta ([#18604](https://github.com/firebase/flutterfire/issues/18604)). ([fef6d420](https://github.com/firebase/flutterfire/commit/fef6d42090ea275f07117c085bd04710d9df51bc))
+ - **FIX**(firestore): avoid completing transaction future twice ([#18554](https://github.com/firebase/flutterfire/issues/18554)). ([94e36f1d](https://github.com/firebase/flutterfire/commit/94e36f1da0ad26b3ca74d6bde0799f17a0be5b5e))
+
 ## 8.0.6
 
  - **FIX**(firestore,android): clean up Android transaction listeners on completion ([#18475](https://github.com/firebase/flutterfire/issues/18475)). ([ae002c7c](https://github.com/firebase/flutterfire/commit/ae002c7ca8ae405ebc901bfe17e6724a48075bca))

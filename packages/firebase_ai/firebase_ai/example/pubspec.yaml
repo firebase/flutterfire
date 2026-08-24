@@ -23,9 +23,9 @@ dependencies:
 
   camera: ^0.12.0+1
   cupertino_icons: ^1.0.6
-  firebase_ai: ^3.15.0
-  firebase_core: ^4.13.0
-  firebase_storage: ^13.4.6
+  firebase_ai: ^4.0.0
+  firebase_core: ^4.14.0
+  firebase_storage: ^13.5.0
   flutter:
     sdk: flutter
   flutter_animate: ^4.5.2
@@ -41,7 +41,7 @@ dev_dependencies:
   # `firebase_ai_mock_test.dart` installs a mock platform via
   # `firebase_core_platform_interface/test.dart`, which firebase_core does not
   # re-export.
-  firebase_core_platform_interface: ^8.1.0
+  firebase_core_platform_interface: ^8.1.1
   flutter_lints: ^6.0.0
   flutter_test:
     sdk: flutter

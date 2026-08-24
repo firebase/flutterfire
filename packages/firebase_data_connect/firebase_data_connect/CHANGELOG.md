@@ -1,3 +1,10 @@
+## 0.3.2
+
+ - **REFACTOR**(tests): update listener completion logic and improve WebSocket channel handling ([#18524](https://github.com/firebase/flutterfire/issues/18524)). ([6b1fbc93](https://github.com/firebase/flutterfire/commit/6b1fbc93793db381a7d6d8cfb1a6cb4c8f078d9a))
+ - **FIX**(ci): bump Kotlin Gradle plugin to 2.3.0 ([#18600](https://github.com/firebase/flutterfire/issues/18600)). ([4c3865e2](https://github.com/firebase/flutterfire/commit/4c3865e2e56bf59904a9f48a6e70f0f963df2cda))
+ - **FIX**(ci): align Android toolchain and analyzer with Flutter 3.47 ([#18566](https://github.com/firebase/flutterfire/issues/18566)). ([87ace849](https://github.com/firebase/flutterfire/commit/87ace8496fec75c461f3b29a9b8a85d46e286957))
+ - **FEAT**(sql_connect): update websocket URL for GSLB soft stickiness ([#18531](https://github.com/firebase/flutterfire/issues/18531)). ([5283f143](https://github.com/firebase/flutterfire/commit/5283f1431f9e48e4062c0bbf972c1b558e505014))
+
 ## 0.3.1
 
  - **FIX**(sql_connect): e2e listen test ([#18496](https://github.com/firebase/flutterfire/issues/18496)). ([e512d39a](https://github.com/firebase/flutterfire/commit/e512d39a88f3d8df0eaeb2b7d7a439460b00b8e7))

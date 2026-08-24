@@ -1,3 +1,7 @@
+## 4.10.0
+
+ - **FEAT**(messaging,android): improve how messaging is determining permission on Android ([#18101](https://github.com/firebase/flutterfire/issues/18101)). ([1c89b686](https://github.com/firebase/flutterfire/commit/1c89b686209c79ef800e61885bcbfbd555b589ee))
+
 ## 4.9.3
 
  - Update a dependency to the latest release.

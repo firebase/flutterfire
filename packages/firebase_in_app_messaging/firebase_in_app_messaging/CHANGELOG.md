@@ -1,3 +1,12 @@
+## 0.9.3
+
+ - **REFACTOR**(in_app_messaging): migrate platform channels to Pigeon ([#18529](https://github.com/firebase/flutterfire/issues/18529)). ([17c4d6fd](https://github.com/firebase/flutterfire/commit/17c4d6fda76cfe2010b22811fb71d8211b8bcca2))
+ - **REFACTOR**(in_app_messaging): migrate iOS plugin to Swift ([#18528](https://github.com/firebase/flutterfire/issues/18528)). ([10cf4aa9](https://github.com/firebase/flutterfire/commit/10cf4aa9513d8d2b4c24281915483a27d24b04bb))
+ - **REFACTOR**(in_app_messaging): migrate Android plugin to Kotlin ([#18526](https://github.com/firebase/flutterfire/issues/18526)). ([f8ec3482](https://github.com/firebase/flutterfire/commit/f8ec3482aa711488b42a107757e1992078db35eb))
+ - **FIX**(ci): bump Kotlin Gradle plugin to 2.3.0 ([#18600](https://github.com/firebase/flutterfire/issues/18600)). ([4c3865e2](https://github.com/firebase/flutterfire/commit/4c3865e2e56bf59904a9f48a6e70f0f963df2cda))
+ - **FIX**(ci): align Android toolchain and analyzer with Flutter 3.47 ([#18566](https://github.com/firebase/flutterfire/issues/18566)). ([87ace849](https://github.com/firebase/flutterfire/commit/87ace8496fec75c461f3b29a9b8a85d46e286957))
+ - **FEAT**: bump Firebase iOS SDK to 12.18.0 ([#18596](https://github.com/firebase/flutterfire/issues/18596)). ([07febc37](https://github.com/firebase/flutterfire/commit/07febc37617ab8b4f6f06e7208baa6a15ce2ef70))
+
 ## 0.9.2+7
 
  - **FIX**(app_check): sync SPM pins to 12.17.0 and fix Windows Activate override after [#18505](https://github.com/firebase/flutterfire/issues/18505) ([#18515](https://github.com/firebase/flutterfire/issues/18515)). ([ce1f6e05](https://github.com/firebase/flutterfire/commit/ce1f6e05e2d2645c414f8e731d3d082436caa012))
