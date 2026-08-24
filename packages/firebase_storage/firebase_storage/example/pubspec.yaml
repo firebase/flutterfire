@@ -7,8 +7,8 @@ environment:
   flutter: '>=3.27.0'
 
 dependencies:
-  firebase_core: ^4.13.0
-  firebase_storage: ^13.4.6
+  firebase_core: ^4.14.0
+  firebase_storage: ^13.5.0
   flutter:
     sdk: flutter
   image_picker: ^1.1.2
@@ -18,7 +18,7 @@ dependencies:
 dev_dependencies:
   # The e2e suite reaches for MethodChannelFirebase, which firebase_core
   # deliberately hides from its own re-export.
-  firebase_core_platform_interface: ^8.1.0
+  firebase_core_platform_interface: ^8.1.1
   flutter_test:
     sdk: flutter
   integration_test:

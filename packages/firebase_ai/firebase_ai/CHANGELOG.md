@@ -1,3 +1,13 @@
+## 4.0.0
+
+> Note: This release has breaking changes.
+
+ - **FIX**(ai): reuse a persistent http.Client in HttpApiClient ([#18603](https://github.com/firebase/flutterfire/issues/18603)). ([87a4137c](https://github.com/firebase/flutterfire/commit/87a4137c08f2eb5c7ba4ba79ded82baa09cafe37))
+ - **FIX**(ci): bump Kotlin Gradle plugin to 2.3.0 ([#18600](https://github.com/firebase/flutterfire/issues/18600)). ([4c3865e2](https://github.com/firebase/flutterfire/commit/4c3865e2e56bf59904a9f48a6e70f0f963df2cda))
+ - **FIX**(ci): align Android toolchain and analyzer with Flutter 3.47 ([#18566](https://github.com/firebase/flutterfire/issues/18566)). ([87ace849](https://github.com/firebase/flutterfire/commit/87ace8496fec75c461f3b29a9b8a85d46e286957))
+ - **FEAT**(firebaseai): realtime input config ([#18447](https://github.com/firebase/flutterfire/issues/18447)). ([09d423b8](https://github.com/firebase/flutterfire/commit/09d423b800a966fead9eba1f4bdbc322d2720335))
+ - **BREAKING** **REFACTOR**(firebaseai): Removed deprecated Imagen methods and types due to Imagen models being shut down ([#18577](https://github.com/firebase/flutterfire/issues/18577)). ([989a177f](https://github.com/firebase/flutterfire/commit/989a177fb5f3ed93a6c4c0f76d58d2e6ab2b9d87))
+
 ## 3.15.0
 
  - **FEAT**(firebaseai): Rename vertexAI to agentPlatform ([#18467](https://github.com/firebase/flutterfire/issues/18467)). ([2f942f28](https://github.com/firebase/flutterfire/commit/2f942f28586a6fcc82b1de454b707633ba8e2e04))

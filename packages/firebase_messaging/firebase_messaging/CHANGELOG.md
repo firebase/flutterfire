@@ -1,3 +1,14 @@
+## 16.6.0
+
+ - **FIX**(ci): bump Kotlin Gradle plugin to 2.3.0 ([#18600](https://github.com/firebase/flutterfire/issues/18600)). ([4c3865e2](https://github.com/firebase/flutterfire/commit/4c3865e2e56bf59904a9f48a6e70f0f963df2cda))
+ - **FIX**(ci): align Android toolchain and analyzer with Flutter 3.47 ([#18566](https://github.com/firebase/flutterfire/issues/18566)). ([87ace849](https://github.com/firebase/flutterfire/commit/87ace8496fec75c461f3b29a9b8a85d46e286957))
+ - **FIX**(messaging,android): fixing an issue with analytics being triggered twice ([#18544](https://github.com/firebase/flutterfire/issues/18544)). ([ef1cac4c](https://github.com/firebase/flutterfire/commit/ef1cac4c0c5154921f70400d46a5d0eeade2dab0))
+ - **FIX**(messaging,macos): unwrap UNNotificationResponse launch payload ([#18527](https://github.com/firebase/flutterfire/issues/18527)). ([584acc9f](https://github.com/firebase/flutterfire/commit/584acc9fb2d805733c33060b875b674b9d434a7e))
+ - **FIX**(messaging,android): fix an issue that could cause duplicate call stack ([#18122](https://github.com/firebase/flutterfire/issues/18122)). ([1522bd8f](https://github.com/firebase/flutterfire/commit/1522bd8f7771da70508fa26422fc9447e3ffa8ad))
+ - **FEAT**: bump Firebase iOS SDK to 12.18.0 ([#18596](https://github.com/firebase/flutterfire/issues/18596)). ([07febc37](https://github.com/firebase/flutterfire/commit/07febc37617ab8b4f6f06e7208baa6a15ce2ef70))
+ - **FEAT**(messaging,ios): migrate example iOS runner from ObjC to Swift ([#18578](https://github.com/firebase/flutterfire/issues/18578)). ([69d16e44](https://github.com/firebase/flutterfire/commit/69d16e44cb7f70d8eaaed3e4fe9d2a186194e3d4))
+ - **FEAT**(messaging,android): improve how messaging is determining permission on Android ([#18101](https://github.com/firebase/flutterfire/issues/18101)). ([1c89b686](https://github.com/firebase/flutterfire/commit/1c89b686209c79ef800e61885bcbfbd555b589ee))
+
 ## 16.5.0
 
  - **FIX**(app_check): sync SPM pins to 12.17.0 and fix Windows Activate override after [#18505](https://github.com/firebase/flutterfire/issues/18505) ([#18515](https://github.com/firebase/flutterfire/issues/18515)). ([ce1f6e05](https://github.com/firebase/flutterfire/commit/ce1f6e05e2d2645c414f8e731d3d082436caa012))
