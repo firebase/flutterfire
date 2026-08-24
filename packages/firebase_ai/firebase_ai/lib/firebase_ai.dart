@@ -65,6 +65,8 @@ export 'src/firebase_ai.dart' show FirebaseAI;
 export 'src/image_config.dart' show ImageConfig, ImageAspectRatio, ImageSize;
 export 'src/live_api.dart'
     show
+        ActivityDetectionConfig,
+        ActivityHandling,
         AudioTranscriptionConfig,
         ContextWindowCompressionConfig,
         GoingAwayNotice,
@@ -74,10 +76,13 @@ export 'src/live_api.dart'
         LiveServerToolCall,
         LiveServerToolCallCancellation,
         LiveServerResponse,
+        RealtimeInputConfig,
+        Sensitivity,
         SessionResumptionConfig,
         SessionResumptionUpdate,
         SlidingWindow,
-        Transcription;
+        Transcription,
+        TurnCoverage;
 export 'src/live_session.dart' show LiveSession;
 export 'src/mime_types.dart' show FirebaseAIMimeTypes;
 export 'src/schema.dart' show JSONSchema, Schema, SchemaType;

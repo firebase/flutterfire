@@ -1,3 +1,11 @@
+## 6.9.0
+
+ - **FIX**(ci): bump Kotlin Gradle plugin to 2.3.0 ([#18600](https://github.com/firebase/flutterfire/issues/18600)). ([4c3865e2](https://github.com/firebase/flutterfire/commit/4c3865e2e56bf59904a9f48a6e70f0f963df2cda))
+ - **FIX**(ci): align Android toolchain and analyzer with Flutter 3.47 ([#18566](https://github.com/firebase/flutterfire/issues/18566)). ([87ace849](https://github.com/firebase/flutterfire/commit/87ace8496fec75c461f3b29a9b8a85d46e286957))
+ - **FIX**(firestore,android): defer transaction cleanup until stream cancellation ([#18553](https://github.com/firebase/flutterfire/issues/18553)). ([f949c23d](https://github.com/firebase/flutterfire/commit/f949c23d795a9d843ffd1c6deea285a4d9ce5ff3))
+ - **FIX**(android): remove plugin-local AGP and Kotlin Gradle Plugin pins from buildscript blocks ([#18139](https://github.com/firebase/flutterfire/issues/18139)). ([4f6960c4](https://github.com/firebase/flutterfire/commit/4f6960c437da6945e2db2505f4e0a92fef5b76da))
+ - **FEAT**: bump Firebase iOS SDK to 12.18.0 ([#18596](https://github.com/firebase/flutterfire/issues/18596)). ([07febc37](https://github.com/firebase/flutterfire/commit/07febc37617ab8b4f6f06e7208baa6a15ce2ef70))
+
 ## 6.8.0
 
  - **FIX**(firestore,core,windows): per-engine BinaryMessenger, Firestore/Auth link order, Profile builds ([#18516](https://github.com/firebase/flutterfire/issues/18516)). ([5dfd289e](https://github.com/firebase/flutterfire/commit/5dfd289ea45260c15d73894dcf2cb092fc8ddb9d))

@@ -1,3 +1,13 @@
+## 5.3.0
+
+ - **REFACTOR**(core,apple): migrate iOS/macOS plugin implementation to Swift ([#18569](https://github.com/firebase/flutterfire/issues/18569)). ([3b9a655b](https://github.com/firebase/flutterfire/commit/3b9a655b8ac8ac5f6efa23ea63e210b597f2ec02))
+ - **REFACTOR**(crashlytics,apple): migrate iOS/macOS plugin implementation to Swift ([#18560](https://github.com/firebase/flutterfire/issues/18560)). ([80f06a78](https://github.com/firebase/flutterfire/commit/80f06a789dcfeb69eea417ba1725e21007df0432))
+ - **REFACTOR**(crashlytics,android): migrate native implementation to Kotlin ([#18473](https://github.com/firebase/flutterfire/issues/18473)). ([1fb6302a](https://github.com/firebase/flutterfire/commit/1fb6302a4f740329ddaefb9d4ba852fe6b55beaa))
+ - **FIX**(ci): bump Kotlin Gradle plugin to 2.3.0 ([#18600](https://github.com/firebase/flutterfire/issues/18600)). ([4c3865e2](https://github.com/firebase/flutterfire/commit/4c3865e2e56bf59904a9f48a6e70f0f963df2cda))
+ - **FIX**(ci): align Android toolchain and analyzer with Flutter 3.47 ([#18566](https://github.com/firebase/flutterfire/issues/18566)). ([87ace849](https://github.com/firebase/flutterfire/commit/87ace8496fec75c461f3b29a9b8a85d46e286957))
+ - **FEAT**: bump Firebase iOS SDK to 12.18.0 ([#18596](https://github.com/firebase/flutterfire/issues/18596)). ([07febc37](https://github.com/firebase/flutterfire/commit/07febc37617ab8b4f6f06e7208baa6a15ce2ef70))
+ - **FEAT**(crashlytics): add Pigeon support ([#18565](https://github.com/firebase/flutterfire/issues/18565)). ([11daba2c](https://github.com/firebase/flutterfire/commit/11daba2cee5d3f919f4f4466e51155fcf4d95f62))
+
 ## 5.2.7
 
  - **FIX**(crashlytics,android): avoid heap-loading libapp.so for build ID ([#18483](https://github.com/firebase/flutterfire/issues/18483)). ([8d0afcdd](https://github.com/firebase/flutterfire/commit/8d0afcdd9d8d7353a47a6339b09c7964d8eabf84))
