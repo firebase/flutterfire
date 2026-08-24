@@ -93,6 +93,11 @@ Future<void> main() async {
     // 3. AppleAppAttestProvider
     // 4. AppleAppAttestProviderWithDeviceCheckFallback (App Attest provider is only available on iOS 14.0+, macOS 14.0+)
     providerApple: AppleAppAttestProvider(),
+    // Default provider for Windows is the debug provider. Use `providerWindows`
+    // to choose:
+    // 1. WindowsDebugProvider for development (pass a console-registered token)
+    // 2. WindowsCustomProvider for production token minting via your backend
+    providerWindows: WindowsDebugProvider(debugToken: 'your-debug-token'),
   );
   runApp(App());
 }

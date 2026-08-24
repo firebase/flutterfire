@@ -62,7 +62,7 @@ public class FirebaseAppCheckPlugin: NSObject, FlutterPlugin,
 
   func activate(
     appName: String, androidProvider: String?, appleProvider: String?,
-    debugToken: String?, recaptchaSiteKey: String?,
+    debugToken: String?, recaptchaSiteKey: String?, windowsProvider: String?,
     completion: @escaping (Result<Void, Error>) -> Void
   ) {
     guard let app = FLTFirebasePlugin.firebaseAppNamed(appName) else {
