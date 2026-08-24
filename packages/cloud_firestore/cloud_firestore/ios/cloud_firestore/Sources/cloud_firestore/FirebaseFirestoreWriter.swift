@@ -117,7 +117,8 @@ class FirebaseFirestoreWriter: FlutterStandardWriter {
     let maxVal = NSNotFound
     let newIndex: Int
     if documentChange.newIndex == NSNotFound || documentChange.newIndex == 4_294_967_295
-      || documentChange.newIndex == maxVal {
+      || documentChange.newIndex == maxVal
+    {
       newIndex = -1
     } else {
       newIndex = Int(documentChange.newIndex)
@@ -125,7 +126,8 @@ class FirebaseFirestoreWriter: FlutterStandardWriter {
 
     let oldIndex: Int
     if documentChange.oldIndex == NSNotFound || documentChange.oldIndex == 4_294_967_295
-      || documentChange.oldIndex == maxVal {
+      || documentChange.oldIndex == maxVal
+    {
       oldIndex = -1
     } else {
       oldIndex = Int(documentChange.oldIndex)
@@ -143,7 +145,8 @@ class FirebaseFirestoreWriter: FlutterStandardWriter {
 
   private func serverTimestampBehavior(from string: String?)
     -> FirebaseFirestore
-    .ServerTimestampBehavior {
+    .ServerTimestampBehavior
+  {
     switch string {
     case "estimate":
       return .estimate
@@ -163,7 +166,7 @@ class FirebaseFirestoreWriter: FlutterStandardWriter {
 
     let data: Any =
       documentSnapshot.exists
-        ? documentSnapshot.data(with: behavior) as Any : NSNull()
+      ? documentSnapshot.data(with: behavior) as Any : NSNull()
     return [
       "path": documentSnapshot.reference.path,
       "data": data,

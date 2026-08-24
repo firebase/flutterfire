@@ -188,7 +188,7 @@ enum FirebaseFirestoreUtils {
       code = "parse-error"
       message =
         error.localizedDescription.isEmpty
-          ? "An unknown error occurred." : error.localizedDescription
+        ? "An unknown error occurred." : error.localizedDescription
     default:
       code = "unknown"
       message = "An unknown error occurred."

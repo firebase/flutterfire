@@ -28,7 +28,8 @@ final class LoadBundleStreamHandler: NSObject, FlutterStreamHandler {
   }
 
   func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink)
-    -> FlutterError? {
+    -> FlutterError?
+  {
     task = firestore.loadBundle(bundle.data) { _, error in
       if let error {
         let (code, message) = FirebaseFirestoreUtils.errorCodeAndMessage(from: error)

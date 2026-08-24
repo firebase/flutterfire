@@ -28,12 +28,14 @@ final class TransactionStreamHandler: NSObject, FlutterStreamHandler {
   private var resultType: InternalTransactionResult = .success
   private var commands: [InternalTransactionCommand?] = []
 
-  init(id transactionId: String,
-       firestore: Firestore,
-       timeout: Int,
-       maxAttempts: Int,
-       started: @escaping (Transaction) -> Void,
-       ended: @escaping () -> Void) {
+  init(
+    id transactionId: String,
+    firestore: Firestore,
+    timeout: Int,
+    maxAttempts: Int,
+    started: @escaping (Transaction) -> Void,
+    ended: @escaping () -> Void
+  ) {
     self.transactionId = transactionId
     self.firestore = firestore
     self.timeout = timeout
@@ -43,7 +45,8 @@ final class TransactionStreamHandler: NSObject, FlutterStreamHandler {
   }
 
   func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink)
-    -> FlutterError? {
+    -> FlutterError?
+  {
     let options = TransactionOptions()
     options.maxAttempts = maxAttempts
 
@@ -56,7 +59,7 @@ final class TransactionStreamHandler: NSObject, FlutterStreamHandler {
         DispatchQueue.main.async {
           events([
             "appName": FLTFirebasePlugin.firebaseAppName(fromIosName: self.firestore.app.name)
-              as Any,
+              as Any
           ])
         }
 
@@ -135,8 +138,10 @@ final class TransactionStreamHandler: NSObject, FlutterStreamHandler {
     return nil
   }
 
-  func receiveTransactionResponse(_ resultType: InternalTransactionResult,
-                                  commands: [InternalTransactionCommand?]?) {
+  func receiveTransactionResponse(
+    _ resultType: InternalTransactionResult,
+    commands: [InternalTransactionCommand?]?
+  ) {
     self.resultType = resultType
     self.commands = commands ?? []
     semaphore.signal()

@@ -28,11 +28,13 @@ final class QuerySnapshotStreamHandler: NSObject, FlutterStreamHandler {
     label: "io.flutter.plugins.firebase.firestore.query_snapshot"
   )
 
-  init(firestore: Firestore,
-       query: Query?,
-       includeMetadataChanges: Bool,
-       serverTimestampBehavior: FirebaseFirestore.ServerTimestampBehavior,
-       source: FirebaseFirestore.ListenSource) {
+  init(
+    firestore: Firestore,
+    query: Query?,
+    includeMetadataChanges: Bool,
+    serverTimestampBehavior: FirebaseFirestore.ServerTimestampBehavior,
+    source: FirebaseFirestore.ListenSource
+  ) {
     self.firestore = firestore
     self.query = query
     self.includeMetadataChanges = includeMetadataChanges
@@ -41,12 +43,13 @@ final class QuerySnapshotStreamHandler: NSObject, FlutterStreamHandler {
   }
 
   func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink)
-    -> FlutterError? {
+    -> FlutterError?
+  {
     guard let query else {
       return FlutterError(
         code: "sdk-error",
         message:
-        "An error occurred while parsing query arguments, see native logs for more information. Please report this issue.",
+          "An error occurred while parsing query arguments, see native logs for more information. Please report this issue.",
         details: nil
       )
     }

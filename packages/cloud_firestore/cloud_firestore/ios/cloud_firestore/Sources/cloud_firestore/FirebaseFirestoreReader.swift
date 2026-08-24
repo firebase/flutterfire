@@ -50,7 +50,7 @@ class FirebaseFirestoreReader: FlutterStandardReader {
       let length = readSize()
       var array: [Any] = []
       array.reserveCapacity(Int(length))
-      for _ in 0 ..< length {
+      for _ in 0..<length {
         let value = readValue()
         array.append(value ?? NSNull())
       }

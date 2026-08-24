@@ -63,10 +63,12 @@ enum PigeonParser {
     fatalError("Invalid operator")
   }
 
-  static func parseQuery(parameters: InternalQueryParameters,
-                         firestore: Firestore,
-                         path: String,
-                         isCollectionGroup: Bool) -> Query? {
+  static func parseQuery(
+    parameters: InternalQueryParameters,
+    firestore: Firestore,
+    path: String,
+    isCollectionGroup: Bool
+  ) -> Query? {
     do {
       var query: Query
       if isCollectionGroup {
@@ -174,7 +176,8 @@ enum PigeonParser {
   }
 
   static func parseServerTimestampBehavior(_ behavior: ServerTimestampBehavior)
-    -> FirebaseFirestore.ServerTimestampBehavior {
+    -> FirebaseFirestore.ServerTimestampBehavior
+  {
     switch behavior {
     case .none:
       return .none
@@ -195,16 +198,19 @@ enum PigeonParser {
   }
 
   static func toPigeonSnapshotMetadata(_ snapshotMetadata: SnapshotMetadata)
-    -> InternalSnapshotMetadata {
+    -> InternalSnapshotMetadata
+  {
     InternalSnapshotMetadata(
       hasPendingWrites: snapshotMetadata.hasPendingWrites,
       isFromCache: snapshotMetadata.isFromCache
     )
   }
 
-  static func toPigeonDocumentSnapshot(_ documentSnapshot: DocumentSnapshot,
-                                       serverTimestampBehavior: FirebaseFirestore
-                                         .ServerTimestampBehavior) -> InternalDocumentSnapshot {
+  static func toPigeonDocumentSnapshot(
+    _ documentSnapshot: DocumentSnapshot,
+    serverTimestampBehavior: FirebaseFirestore
+      .ServerTimestampBehavior
+  ) -> InternalDocumentSnapshot {
     let data = documentSnapshot.data(with: serverTimestampBehavior)
     let mapped: [String?: Any?]? = data.map { original in
       Dictionary(uniqueKeysWithValues: original.map { ($0.key as String?, $0.value as Any?) })
@@ -217,17 +223,21 @@ enum PigeonParser {
   }
 
   static func toPigeonDocumentChangeType(_ documentChangeType: DocumentChangeType)
-    -> DocumentChangeType {
+    -> DocumentChangeType
+  {
     documentChangeType
   }
 
-  static func toPigeonDocumentChange(_ documentChange: DocumentChange,
-                                     serverTimestampBehavior: FirebaseFirestore
-                                       .ServerTimestampBehavior) -> InternalDocumentChange {
+  static func toPigeonDocumentChange(
+    _ documentChange: DocumentChange,
+    serverTimestampBehavior: FirebaseFirestore
+      .ServerTimestampBehavior
+  ) -> InternalDocumentChange {
     let maxVal = NSNotFound
     let newIndex: Int64
     if documentChange.newIndex == NSNotFound || documentChange.newIndex == 4_294_967_295
-      || documentChange.newIndex == maxVal {
+      || documentChange.newIndex == maxVal
+    {
       newIndex = -1
     } else {
       newIndex = Int64(documentChange.newIndex)
@@ -235,7 +245,8 @@ enum PigeonParser {
 
     let oldIndex: Int64
     if documentChange.oldIndex == NSNotFound || documentChange.oldIndex == 4_294_967_295
-      || documentChange.oldIndex == maxVal {
+      || documentChange.oldIndex == maxVal
+    {
       oldIndex = -1
     } else {
       oldIndex = Int64(documentChange.oldIndex)
@@ -263,19 +274,21 @@ enum PigeonParser {
     )
   }
 
-  static func toPigeonDocumentChanges(_ documentChanges: [DocumentChange],
-                                      serverTimestampBehavior: FirebaseFirestore
-                                        .ServerTimestampBehavior) -> [
-    InternalDocumentChange?
-  ] {
+  static func toPigeonDocumentChanges(
+    _ documentChanges: [DocumentChange],
+    serverTimestampBehavior: FirebaseFirestore
+      .ServerTimestampBehavior
+  ) -> [InternalDocumentChange?] {
     documentChanges.map {
       toPigeonDocumentChange($0, serverTimestampBehavior: serverTimestampBehavior)
     }
   }
 
-  static func toPigeonQuerySnapshot(_ querySnapshot: QuerySnapshot,
-                                    serverTimestampBehavior: FirebaseFirestore
-                                      .ServerTimestampBehavior) -> InternalQuerySnapshot {
+  static func toPigeonQuerySnapshot(
+    _ querySnapshot: QuerySnapshot,
+    serverTimestampBehavior: FirebaseFirestore
+      .ServerTimestampBehavior
+  ) -> InternalQuerySnapshot {
     let documents = querySnapshot.documents.map {
       toPigeonDocumentSnapshot($0, serverTimestampBehavior: serverTimestampBehavior)
         as InternalDocumentSnapshot?

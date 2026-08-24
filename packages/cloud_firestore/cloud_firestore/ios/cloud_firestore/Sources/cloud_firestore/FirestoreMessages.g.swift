@@ -306,15 +306,16 @@ struct InternalFirebaseSettings: Hashable {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return deepEqualsFirestoreMessages(lhs.persistenceEnabled, rhs.persistenceEnabled) &&
-      deepEqualsFirestoreMessages(
+    return deepEqualsFirestoreMessages(lhs.persistenceEnabled, rhs.persistenceEnabled)
+      && deepEqualsFirestoreMessages(
         lhs.host,
         rhs.host
-      ) && deepEqualsFirestoreMessages(lhs.sslEnabled, rhs.sslEnabled) &&
-      deepEqualsFirestoreMessages(
+      ) && deepEqualsFirestoreMessages(lhs.sslEnabled, rhs.sslEnabled)
+      && deepEqualsFirestoreMessages(
         lhs.cacheSizeBytes,
         rhs.cacheSizeBytes
-      ) && deepEqualsFirestoreMessages(
+      )
+      && deepEqualsFirestoreMessages(
         lhs.ignoreUndefinedProperties,
         rhs.ignoreUndefinedProperties
       )
@@ -361,10 +362,11 @@ struct FirestorePigeonFirebaseApp: Hashable {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return deepEqualsFirestoreMessages(lhs.appName, rhs.appName) && deepEqualsFirestoreMessages(
-      lhs.settings,
-      rhs.settings
-    ) && deepEqualsFirestoreMessages(lhs.databaseURL, rhs.databaseURL)
+    return deepEqualsFirestoreMessages(lhs.appName, rhs.appName)
+      && deepEqualsFirestoreMessages(
+        lhs.settings,
+        rhs.settings
+      ) && deepEqualsFirestoreMessages(lhs.databaseURL, rhs.databaseURL)
   }
 
   func hash(into hasher: inout Hasher) {
@@ -402,8 +404,8 @@ struct InternalSnapshotMetadata: Hashable {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return deepEqualsFirestoreMessages(lhs.hasPendingWrites, rhs.hasPendingWrites) &&
-      deepEqualsFirestoreMessages(
+    return deepEqualsFirestoreMessages(lhs.hasPendingWrites, rhs.hasPendingWrites)
+      && deepEqualsFirestoreMessages(
         lhs.isFromCache,
         rhs.isFromCache
       )
@@ -447,10 +449,11 @@ struct InternalDocumentSnapshot: Hashable {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return deepEqualsFirestoreMessages(lhs.path, rhs.path) && deepEqualsFirestoreMessages(
-      lhs.data,
-      rhs.data
-    ) && deepEqualsFirestoreMessages(lhs.metadata, rhs.metadata)
+    return deepEqualsFirestoreMessages(lhs.path, rhs.path)
+      && deepEqualsFirestoreMessages(
+        lhs.data,
+        rhs.data
+      ) && deepEqualsFirestoreMessages(lhs.metadata, rhs.metadata)
   }
 
   func hash(into hasher: inout Hasher) {
@@ -496,13 +499,15 @@ struct InternalDocumentChange: Hashable {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return deepEqualsFirestoreMessages(lhs.type, rhs.type) && deepEqualsFirestoreMessages(
-      lhs.document,
-      rhs.document
-    ) && deepEqualsFirestoreMessages(lhs.oldIndex, rhs.oldIndex) && deepEqualsFirestoreMessages(
-      lhs.newIndex,
-      rhs.newIndex
-    )
+    return deepEqualsFirestoreMessages(lhs.type, rhs.type)
+      && deepEqualsFirestoreMessages(
+        lhs.document,
+        rhs.document
+      ) && deepEqualsFirestoreMessages(lhs.oldIndex, rhs.oldIndex)
+      && deepEqualsFirestoreMessages(
+        lhs.newIndex,
+        rhs.newIndex
+      )
   }
 
   func hash(into hasher: inout Hasher) {
@@ -545,10 +550,11 @@ struct InternalQuerySnapshot: Hashable {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return deepEqualsFirestoreMessages(lhs.documents, rhs.documents) && deepEqualsFirestoreMessages(
-      lhs.documentChanges,
-      rhs.documentChanges
-    ) && deepEqualsFirestoreMessages(lhs.metadata, rhs.metadata)
+    return deepEqualsFirestoreMessages(lhs.documents, rhs.documents)
+      && deepEqualsFirestoreMessages(
+        lhs.documentChanges,
+        rhs.documentChanges
+      ) && deepEqualsFirestoreMessages(lhs.metadata, rhs.metadata)
   }
 
   func hash(into hasher: inout Hasher) {
@@ -595,12 +601,12 @@ struct InternalPipelineResult: Hashable {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return deepEqualsFirestoreMessages(lhs.documentPath, rhs.documentPath) &&
-      deepEqualsFirestoreMessages(
+    return deepEqualsFirestoreMessages(lhs.documentPath, rhs.documentPath)
+      && deepEqualsFirestoreMessages(
         lhs.createTime,
         rhs.createTime
-      ) && deepEqualsFirestoreMessages(lhs.updateTime, rhs.updateTime) &&
-      deepEqualsFirestoreMessages(
+      ) && deepEqualsFirestoreMessages(lhs.updateTime, rhs.updateTime)
+      && deepEqualsFirestoreMessages(
         lhs.data,
         rhs.data
       )
@@ -642,10 +648,11 @@ struct InternalPipelineSnapshot: Hashable {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return deepEqualsFirestoreMessages(lhs.results, rhs.results) && deepEqualsFirestoreMessages(
-      lhs.executionTime,
-      rhs.executionTime
-    )
+    return deepEqualsFirestoreMessages(lhs.results, rhs.results)
+      && deepEqualsFirestoreMessages(
+        lhs.executionTime,
+        rhs.executionTime
+      )
   }
 
   func hash(into hasher: inout Hasher) {
@@ -682,10 +689,11 @@ struct InternalGetOptions: Hashable {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return deepEqualsFirestoreMessages(lhs.source, rhs.source) && deepEqualsFirestoreMessages(
-      lhs.serverTimestampBehavior,
-      rhs.serverTimestampBehavior
-    )
+    return deepEqualsFirestoreMessages(lhs.source, rhs.source)
+      && deepEqualsFirestoreMessages(
+        lhs.serverTimestampBehavior,
+        rhs.serverTimestampBehavior
+      )
   }
 
   func hash(into hasher: inout Hasher) {
@@ -722,10 +730,11 @@ struct InternalDocumentOption: Hashable {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return deepEqualsFirestoreMessages(lhs.merge, rhs.merge) && deepEqualsFirestoreMessages(
-      lhs.mergeFields,
-      rhs.mergeFields
-    )
+    return deepEqualsFirestoreMessages(lhs.merge, rhs.merge)
+      && deepEqualsFirestoreMessages(
+        lhs.mergeFields,
+        rhs.mergeFields
+      )
   }
 
   func hash(into hasher: inout Hasher) {
@@ -770,13 +779,15 @@ struct InternalTransactionCommand: Hashable {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return deepEqualsFirestoreMessages(lhs.type, rhs.type) && deepEqualsFirestoreMessages(
-      lhs.path,
-      rhs.path
-    ) && deepEqualsFirestoreMessages(lhs.data, rhs.data) && deepEqualsFirestoreMessages(
-      lhs.option,
-      rhs.option
-    )
+    return deepEqualsFirestoreMessages(lhs.type, rhs.type)
+      && deepEqualsFirestoreMessages(
+        lhs.path,
+        rhs.path
+      ) && deepEqualsFirestoreMessages(lhs.data, rhs.data)
+      && deepEqualsFirestoreMessages(
+        lhs.option,
+        rhs.option
+      )
   }
 
   func hash(into hasher: inout Hasher) {
@@ -827,13 +838,15 @@ struct DocumentReferenceRequest: Hashable {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return deepEqualsFirestoreMessages(lhs.path, rhs.path) && deepEqualsFirestoreMessages(
-      lhs.data,
-      rhs.data
-    ) && deepEqualsFirestoreMessages(lhs.option, rhs.option) && deepEqualsFirestoreMessages(
-      lhs.source,
-      rhs.source
-    ) && deepEqualsFirestoreMessages(lhs.serverTimestampBehavior, rhs.serverTimestampBehavior)
+    return deepEqualsFirestoreMessages(lhs.path, rhs.path)
+      && deepEqualsFirestoreMessages(
+        lhs.data,
+        rhs.data
+      ) && deepEqualsFirestoreMessages(lhs.option, rhs.option)
+      && deepEqualsFirestoreMessages(
+        lhs.source,
+        rhs.source
+      ) && deepEqualsFirestoreMessages(lhs.serverTimestampBehavior, rhs.serverTimestampBehavior)
   }
 
   func hash(into hasher: inout Hasher) {
@@ -901,19 +914,23 @@ struct InternalQueryParameters: Hashable {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return deepEqualsFirestoreMessages(lhs.where, rhs.where) && deepEqualsFirestoreMessages(
-      lhs.orderBy,
-      rhs.orderBy
-    ) && deepEqualsFirestoreMessages(lhs.limit, rhs.limit) && deepEqualsFirestoreMessages(
-      lhs.limitToLast,
-      rhs.limitToLast
-    ) && deepEqualsFirestoreMessages(lhs.startAt, rhs.startAt) && deepEqualsFirestoreMessages(
-      lhs.startAfter,
-      rhs.startAfter
-    ) && deepEqualsFirestoreMessages(lhs.endAt, rhs.endAt) && deepEqualsFirestoreMessages(
-      lhs.endBefore,
-      rhs.endBefore
-    ) && deepEqualsFirestoreMessages(lhs.filters, rhs.filters)
+    return deepEqualsFirestoreMessages(lhs.where, rhs.where)
+      && deepEqualsFirestoreMessages(
+        lhs.orderBy,
+        rhs.orderBy
+      ) && deepEqualsFirestoreMessages(lhs.limit, rhs.limit)
+      && deepEqualsFirestoreMessages(
+        lhs.limitToLast,
+        rhs.limitToLast
+      ) && deepEqualsFirestoreMessages(lhs.startAt, rhs.startAt)
+      && deepEqualsFirestoreMessages(
+        lhs.startAfter,
+        rhs.startAfter
+      ) && deepEqualsFirestoreMessages(lhs.endAt, rhs.endAt)
+      && deepEqualsFirestoreMessages(
+        lhs.endBefore,
+        rhs.endBefore
+      ) && deepEqualsFirestoreMessages(lhs.filters, rhs.filters)
   }
 
   func hash(into hasher: inout Hasher) {
@@ -957,10 +974,11 @@ struct AggregateQuery: Hashable {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return deepEqualsFirestoreMessages(lhs.type, rhs.type) && deepEqualsFirestoreMessages(
-      lhs.field,
-      rhs.field
-    )
+    return deepEqualsFirestoreMessages(lhs.type, rhs.type)
+      && deepEqualsFirestoreMessages(
+        lhs.field,
+        rhs.field
+      )
   }
 
   func hash(into hasher: inout Hasher) {
@@ -1001,10 +1019,11 @@ struct AggregateQueryResponse: Hashable {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return deepEqualsFirestoreMessages(lhs.type, rhs.type) && deepEqualsFirestoreMessages(
-      lhs.field,
-      rhs.field
-    ) && deepEqualsFirestoreMessages(lhs.value, rhs.value)
+    return deepEqualsFirestoreMessages(lhs.type, rhs.type)
+      && deepEqualsFirestoreMessages(
+        lhs.field,
+        rhs.field
+      ) && deepEqualsFirestoreMessages(lhs.value, rhs.value)
   }
 
   func hash(into hasher: inout Hasher) {
@@ -1205,63 +1224,86 @@ class FirestoreMessagesPigeonCodec: FlutterStandardMessageCodec, @unchecked Send
 
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol FirebaseFirestoreHostApi {
-  func loadBundle(app: FirestorePigeonFirebaseApp, bundle: FlutterStandardTypedData,
-                  completion: @escaping (Result<String, Error>) -> Void)
-  func namedQueryGet(app: FirestorePigeonFirebaseApp, name: String, options: InternalGetOptions,
-                     completion: @escaping (Result<InternalQuerySnapshot, Error>) -> Void)
-  func clearPersistence(app: FirestorePigeonFirebaseApp,
-                        completion: @escaping (Result<Void, Error>) -> Void)
-  func disableNetwork(app: FirestorePigeonFirebaseApp,
-                      completion: @escaping (Result<Void, Error>) -> Void)
-  func enableNetwork(app: FirestorePigeonFirebaseApp,
-                     completion: @escaping (Result<Void, Error>) -> Void)
-  func terminate(app: FirestorePigeonFirebaseApp,
-                 completion: @escaping (Result<Void, Error>) -> Void)
-  func waitForPendingWrites(app: FirestorePigeonFirebaseApp,
-                            completion: @escaping (Result<Void, Error>) -> Void)
-  func setIndexConfiguration(app: FirestorePigeonFirebaseApp, indexConfiguration: String,
-                             completion: @escaping (Result<Void, Error>) -> Void)
+  func loadBundle(
+    app: FirestorePigeonFirebaseApp, bundle: FlutterStandardTypedData,
+    completion: @escaping (Result<String, Error>) -> Void)
+  func namedQueryGet(
+    app: FirestorePigeonFirebaseApp, name: String, options: InternalGetOptions,
+    completion: @escaping (Result<InternalQuerySnapshot, Error>) -> Void)
+  func clearPersistence(
+    app: FirestorePigeonFirebaseApp,
+    completion: @escaping (Result<Void, Error>) -> Void)
+  func disableNetwork(
+    app: FirestorePigeonFirebaseApp,
+    completion: @escaping (Result<Void, Error>) -> Void)
+  func enableNetwork(
+    app: FirestorePigeonFirebaseApp,
+    completion: @escaping (Result<Void, Error>) -> Void)
+  func terminate(
+    app: FirestorePigeonFirebaseApp,
+    completion: @escaping (Result<Void, Error>) -> Void)
+  func waitForPendingWrites(
+    app: FirestorePigeonFirebaseApp,
+    completion: @escaping (Result<Void, Error>) -> Void)
+  func setIndexConfiguration(
+    app: FirestorePigeonFirebaseApp, indexConfiguration: String,
+    completion: @escaping (Result<Void, Error>) -> Void)
   func setLoggingEnabled(loggingEnabled: Bool, completion: @escaping (Result<Void, Error>) -> Void)
-  func snapshotsInSyncSetup(app: FirestorePigeonFirebaseApp,
-                            completion: @escaping (Result<String, Error>) -> Void)
-  func transactionCreate(app: FirestorePigeonFirebaseApp, timeout: Int64, maxAttempts: Int64,
-                         completion: @escaping (Result<String, Error>) -> Void)
-  func transactionStoreResult(transactionId: String, resultType: InternalTransactionResult,
-                              commands: [InternalTransactionCommand?]?,
-                              completion: @escaping (Result<Void, Error>) -> Void)
-  func transactionGet(app: FirestorePigeonFirebaseApp, transactionId: String, path: String,
-                      completion: @escaping (Result<InternalDocumentSnapshot, Error>) -> Void)
-  func documentReferenceSet(app: FirestorePigeonFirebaseApp, request: DocumentReferenceRequest,
-                            completion: @escaping (Result<Void, Error>) -> Void)
-  func documentReferenceUpdate(app: FirestorePigeonFirebaseApp, request: DocumentReferenceRequest,
-                               completion: @escaping (Result<Void, Error>) -> Void)
-  func documentReferenceGet(app: FirestorePigeonFirebaseApp, request: DocumentReferenceRequest,
-                            completion: @escaping (Result<InternalDocumentSnapshot, Error>) -> Void)
-  func documentReferenceDelete(app: FirestorePigeonFirebaseApp, request: DocumentReferenceRequest,
-                               completion: @escaping (Result<Void, Error>) -> Void)
-  func queryGet(app: FirestorePigeonFirebaseApp, path: String, isCollectionGroup: Bool,
-                parameters: InternalQueryParameters, options: InternalGetOptions,
-                completion: @escaping (Result<InternalQuerySnapshot, Error>) -> Void)
-  func aggregateQuery(app: FirestorePigeonFirebaseApp, path: String,
-                      parameters: InternalQueryParameters, source: AggregateSource,
-                      queries: [AggregateQuery?], isCollectionGroup: Bool,
-                      completion: @escaping (Result<[AggregateQueryResponse?], Error>) -> Void)
-  func writeBatchCommit(app: FirestorePigeonFirebaseApp, writes: [InternalTransactionCommand?],
-                        completion: @escaping (Result<Void, Error>) -> Void)
-  func querySnapshot(app: FirestorePigeonFirebaseApp, path: String, isCollectionGroup: Bool,
-                     parameters: InternalQueryParameters, options: InternalGetOptions,
-                     includeMetadataChanges: Bool, source: ListenSource,
-                     completion: @escaping (Result<String, Error>) -> Void)
-  func documentReferenceSnapshot(app: FirestorePigeonFirebaseApp,
-                                 parameters: DocumentReferenceRequest, includeMetadataChanges: Bool,
-                                 source: ListenSource,
-                                 completion: @escaping (Result<String, Error>) -> Void)
-  func persistenceCacheIndexManagerRequest(app: FirestorePigeonFirebaseApp,
-                                           request: PersistenceCacheIndexManagerRequest,
-                                           completion: @escaping (Result<Void, Error>) -> Void)
-  func executePipeline(app: FirestorePigeonFirebaseApp, stages: [[String?: Any?]?],
-                       options: [String?: Any?]?,
-                       completion: @escaping (Result<InternalPipelineSnapshot, Error>) -> Void)
+  func snapshotsInSyncSetup(
+    app: FirestorePigeonFirebaseApp,
+    completion: @escaping (Result<String, Error>) -> Void)
+  func transactionCreate(
+    app: FirestorePigeonFirebaseApp, timeout: Int64, maxAttempts: Int64,
+    completion: @escaping (Result<String, Error>) -> Void)
+  func transactionStoreResult(
+    transactionId: String, resultType: InternalTransactionResult,
+    commands: [InternalTransactionCommand?]?,
+    completion: @escaping (Result<Void, Error>) -> Void)
+  func transactionGet(
+    app: FirestorePigeonFirebaseApp, transactionId: String, path: String,
+    completion: @escaping (Result<InternalDocumentSnapshot, Error>) -> Void)
+  func documentReferenceSet(
+    app: FirestorePigeonFirebaseApp, request: DocumentReferenceRequest,
+    completion: @escaping (Result<Void, Error>) -> Void)
+  func documentReferenceUpdate(
+    app: FirestorePigeonFirebaseApp, request: DocumentReferenceRequest,
+    completion: @escaping (Result<Void, Error>) -> Void)
+  func documentReferenceGet(
+    app: FirestorePigeonFirebaseApp, request: DocumentReferenceRequest,
+    completion: @escaping (Result<InternalDocumentSnapshot, Error>) -> Void)
+  func documentReferenceDelete(
+    app: FirestorePigeonFirebaseApp, request: DocumentReferenceRequest,
+    completion: @escaping (Result<Void, Error>) -> Void)
+  func queryGet(
+    app: FirestorePigeonFirebaseApp, path: String, isCollectionGroup: Bool,
+    parameters: InternalQueryParameters, options: InternalGetOptions,
+    completion: @escaping (Result<InternalQuerySnapshot, Error>) -> Void)
+  func aggregateQuery(
+    app: FirestorePigeonFirebaseApp, path: String,
+    parameters: InternalQueryParameters, source: AggregateSource,
+    queries: [AggregateQuery?], isCollectionGroup: Bool,
+    completion: @escaping (Result<[AggregateQueryResponse?], Error>) -> Void)
+  func writeBatchCommit(
+    app: FirestorePigeonFirebaseApp, writes: [InternalTransactionCommand?],
+    completion: @escaping (Result<Void, Error>) -> Void)
+  func querySnapshot(
+    app: FirestorePigeonFirebaseApp, path: String, isCollectionGroup: Bool,
+    parameters: InternalQueryParameters, options: InternalGetOptions,
+    includeMetadataChanges: Bool, source: ListenSource,
+    completion: @escaping (Result<String, Error>) -> Void)
+  func documentReferenceSnapshot(
+    app: FirestorePigeonFirebaseApp,
+    parameters: DocumentReferenceRequest, includeMetadataChanges: Bool,
+    source: ListenSource,
+    completion: @escaping (Result<String, Error>) -> Void)
+  func persistenceCacheIndexManagerRequest(
+    app: FirestorePigeonFirebaseApp,
+    request: PersistenceCacheIndexManagerRequest,
+    completion: @escaping (Result<Void, Error>) -> Void)
+  func executePipeline(
+    app: FirestorePigeonFirebaseApp, stages: [[String?: Any?]?],
+    options: [String?: Any?]?,
+    completion: @escaping (Result<InternalPipelineSnapshot, Error>) -> Void)
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -1272,11 +1314,14 @@ class FirebaseFirestoreHostApiSetup {
 
   /// Sets up an instance of `FirebaseFirestoreHostApi` to handle messages through the
   /// `binaryMessenger`.
-  static func setUp(binaryMessenger: FlutterBinaryMessenger, api: FirebaseFirestoreHostApi?,
-                    messageChannelSuffix: String = "") {
+  static func setUp(
+    binaryMessenger: FlutterBinaryMessenger, api: FirebaseFirestoreHostApi?,
+    messageChannelSuffix: String = ""
+  ) {
     let channelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
     let loadBundleChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.loadBundle\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.loadBundle\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -1298,7 +1343,8 @@ class FirebaseFirestoreHostApiSetup {
       loadBundleChannel.setMessageHandler(nil)
     }
     let namedQueryGetChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.namedQueryGet\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.namedQueryGet\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -1321,7 +1367,8 @@ class FirebaseFirestoreHostApiSetup {
       namedQueryGetChannel.setMessageHandler(nil)
     }
     let clearPersistenceChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.clearPersistence\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.clearPersistence\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -1342,7 +1389,8 @@ class FirebaseFirestoreHostApiSetup {
       clearPersistenceChannel.setMessageHandler(nil)
     }
     let disableNetworkChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.disableNetwork\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.disableNetwork\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -1363,7 +1411,8 @@ class FirebaseFirestoreHostApiSetup {
       disableNetworkChannel.setMessageHandler(nil)
     }
     let enableNetworkChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.enableNetwork\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.enableNetwork\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -1384,7 +1433,8 @@ class FirebaseFirestoreHostApiSetup {
       enableNetworkChannel.setMessageHandler(nil)
     }
     let terminateChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.terminate\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.terminate\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -1405,7 +1455,8 @@ class FirebaseFirestoreHostApiSetup {
       terminateChannel.setMessageHandler(nil)
     }
     let waitForPendingWritesChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.waitForPendingWrites\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.waitForPendingWrites\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -1426,7 +1477,8 @@ class FirebaseFirestoreHostApiSetup {
       waitForPendingWritesChannel.setMessageHandler(nil)
     }
     let setIndexConfigurationChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.setIndexConfiguration\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.setIndexConfiguration\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -1449,7 +1501,8 @@ class FirebaseFirestoreHostApiSetup {
       setIndexConfigurationChannel.setMessageHandler(nil)
     }
     let setLoggingEnabledChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.setLoggingEnabled\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.setLoggingEnabled\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -1470,7 +1523,8 @@ class FirebaseFirestoreHostApiSetup {
       setLoggingEnabledChannel.setMessageHandler(nil)
     }
     let snapshotsInSyncSetupChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.snapshotsInSyncSetup\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.snapshotsInSyncSetup\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -1491,7 +1545,8 @@ class FirebaseFirestoreHostApiSetup {
       snapshotsInSyncSetupChannel.setMessageHandler(nil)
     }
     let transactionCreateChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionCreate\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionCreate\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -1502,8 +1557,10 @@ class FirebaseFirestoreHostApiSetup {
         let timeoutArg = args[1] as! Int64
         let maxAttemptsArg = args[2] as! Int64
         api
-          .transactionCreate(app: appArg, timeout: timeoutArg,
-                             maxAttempts: maxAttemptsArg) { result in
+          .transactionCreate(
+            app: appArg, timeout: timeoutArg,
+            maxAttempts: maxAttemptsArg
+          ) { result in
             switch result {
             case .success(let res):
               reply(wrapResult(res))
@@ -1516,7 +1573,8 @@ class FirebaseFirestoreHostApiSetup {
       transactionCreateChannel.setMessageHandler(nil)
     }
     let transactionStoreResultChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionStoreResult\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionStoreResult\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -1543,7 +1601,8 @@ class FirebaseFirestoreHostApiSetup {
       transactionStoreResultChannel.setMessageHandler(nil)
     }
     let transactionGetChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionGet\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionGet\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -1566,7 +1625,8 @@ class FirebaseFirestoreHostApiSetup {
       transactionGetChannel.setMessageHandler(nil)
     }
     let documentReferenceSetChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceSet\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceSet\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -1588,7 +1648,8 @@ class FirebaseFirestoreHostApiSetup {
       documentReferenceSetChannel.setMessageHandler(nil)
     }
     let documentReferenceUpdateChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceUpdate\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceUpdate\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -1610,7 +1671,8 @@ class FirebaseFirestoreHostApiSetup {
       documentReferenceUpdateChannel.setMessageHandler(nil)
     }
     let documentReferenceGetChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceGet\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceGet\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -1632,7 +1694,8 @@ class FirebaseFirestoreHostApiSetup {
       documentReferenceGetChannel.setMessageHandler(nil)
     }
     let documentReferenceDeleteChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceDelete\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceDelete\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -1654,7 +1717,8 @@ class FirebaseFirestoreHostApiSetup {
       documentReferenceDeleteChannel.setMessageHandler(nil)
     }
     let queryGetChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.queryGet\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.queryGet\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -1685,7 +1749,8 @@ class FirebaseFirestoreHostApiSetup {
       queryGetChannel.setMessageHandler(nil)
     }
     let aggregateQueryChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.aggregateQuery\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.aggregateQuery\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -1718,7 +1783,8 @@ class FirebaseFirestoreHostApiSetup {
       aggregateQueryChannel.setMessageHandler(nil)
     }
     let writeBatchCommitChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.writeBatchCommit\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.writeBatchCommit\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -1740,7 +1806,8 @@ class FirebaseFirestoreHostApiSetup {
       writeBatchCommitChannel.setMessageHandler(nil)
     }
     let querySnapshotChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.querySnapshot\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.querySnapshot\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -1775,7 +1842,8 @@ class FirebaseFirestoreHostApiSetup {
       querySnapshotChannel.setMessageHandler(nil)
     }
     let documentReferenceSnapshotChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceSnapshot\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceSnapshot\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -1804,7 +1872,8 @@ class FirebaseFirestoreHostApiSetup {
       documentReferenceSnapshotChannel.setMessageHandler(nil)
     }
     let persistenceCacheIndexManagerRequestChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.persistenceCacheIndexManagerRequest\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.persistenceCacheIndexManagerRequest\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )
@@ -1826,7 +1895,8 @@ class FirebaseFirestoreHostApiSetup {
       persistenceCacheIndexManagerRequestChannel.setMessageHandler(nil)
     }
     let executePipelineChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.executePipeline\(channelSuffix)",
+      name:
+        "dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.executePipeline\(channelSuffix)",
       binaryMessenger: binaryMessenger,
       codec: codec
     )

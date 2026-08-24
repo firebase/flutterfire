@@ -25,11 +25,13 @@ final class DocumentSnapshotStreamHandler: NSObject, FlutterStreamHandler {
   private let source: FirebaseFirestore.ListenSource
   private var listenerRegistration: ListenerRegistration?
 
-  init(firestore: Firestore,
-       reference: DocumentReference,
-       includeMetadataChanges: Bool,
-       serverTimestampBehavior: FirebaseFirestore.ServerTimestampBehavior,
-       source: FirebaseFirestore.ListenSource) {
+  init(
+    firestore: Firestore,
+    reference: DocumentReference,
+    includeMetadataChanges: Bool,
+    serverTimestampBehavior: FirebaseFirestore.ServerTimestampBehavior,
+    source: FirebaseFirestore.ListenSource
+  ) {
     self.firestore = firestore
     self.reference = reference
     self.includeMetadataChanges = includeMetadataChanges
@@ -38,7 +40,8 @@ final class DocumentSnapshotStreamHandler: NSObject, FlutterStreamHandler {
   }
 
   func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink)
-    -> FlutterError? {
+    -> FlutterError?
+  {
     let options = SnapshotListenOptions()
       .withIncludeMetadataChanges(includeMetadataChanges)
       .withSource(source)

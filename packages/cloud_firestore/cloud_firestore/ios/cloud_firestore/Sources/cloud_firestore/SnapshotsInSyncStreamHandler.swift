@@ -20,7 +20,8 @@ final class SnapshotsInSyncStreamHandler: NSObject, FlutterStreamHandler {
   }
 
   func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink)
-    -> FlutterError? {
+    -> FlutterError?
+  {
     listenerRegistration = firestore.addSnapshotsInSyncListener {
       DispatchQueue.main.async {
         events(nil)
