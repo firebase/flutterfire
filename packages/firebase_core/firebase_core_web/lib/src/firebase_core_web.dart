@@ -394,7 +394,9 @@ class FirebaseCoreWeb extends FirebasePlatform {
           measurementId: options.measurementId,
         );
       } catch (e) {
-        if (!e.isA<JSObject>()) {
+        // isA on Object requires Dart 3.12; this package supports 3.6.
+        // ignore: invalid_runtime_check_with_js_interop_types
+        if (e is! JSError) {
           rethrow;
         }
 
@@ -445,7 +447,9 @@ class FirebaseCoreWeb extends FirebasePlatform {
       app = guardNotInitialized(() => firebase.app(name));
       return _createFromJsApp(app);
     } catch (e) {
-      if (!e.isA<JSObject>()) {
+      // isA on Object requires Dart 3.12; this package supports 3.6.
+      // ignore: invalid_runtime_check_with_js_interop_types
+      if (e is! JSError) {
         rethrow;
       }
 
