@@ -28,13 +28,11 @@ final class QuerySnapshotStreamHandler: NSObject, FlutterStreamHandler {
     label: "io.flutter.plugins.firebase.firestore.query_snapshot"
   )
 
-  init(
-    firestore: Firestore,
-    query: Query?,
-    includeMetadataChanges: Bool,
-    serverTimestampBehavior: FirebaseFirestore.ServerTimestampBehavior,
-    source: FirebaseFirestore.ListenSource
-  ) {
+  init(firestore: Firestore,
+       query: Query?,
+       includeMetadataChanges: Bool,
+       serverTimestampBehavior: FirebaseFirestore.ServerTimestampBehavior,
+       source: FirebaseFirestore.ListenSource) {
     self.firestore = firestore
     self.query = query
     self.includeMetadataChanges = includeMetadataChanges
@@ -43,13 +41,12 @@ final class QuerySnapshotStreamHandler: NSObject, FlutterStreamHandler {
   }
 
   func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink)
-    -> FlutterError?
-  {
+    -> FlutterError? {
     guard let query else {
       return FlutterError(
         code: "sdk-error",
         message:
-          "An error occurred while parsing query arguments, see native logs for more information. Please report this issue.",
+        "An error occurred while parsing query arguments, see native logs for more information. Please report this issue.",
         details: nil
       )
     }
@@ -58,7 +55,8 @@ final class QuerySnapshotStreamHandler: NSObject, FlutterStreamHandler {
       .withIncludeMetadataChanges(includeMetadataChanges)
       .withSource(source)
 
-    listenerRegistration = query.addSnapshotListener(options: options) { snapshot, error in
+    listenerRegistration = query.addSnapshotListener(options: options) {
+      [snapshotQueue, serverTimestampBehavior] snapshot, error in
       if let error {
         let (code, message) = FirebaseFirestoreUtils.errorCodeAndMessage(from: error)
         DispatchQueue.main.async {
@@ -72,9 +70,9 @@ final class QuerySnapshotStreamHandler: NSObject, FlutterStreamHandler {
           )
         }
       } else if let snapshot {
-        self.snapshotQueue.async {
+        snapshotQueue.async {
           let pigeonSnapshot = PigeonParser.toPigeonQuerySnapshot(
-            snapshot, serverTimestampBehavior: self.serverTimestampBehavior
+            snapshot, serverTimestampBehavior: serverTimestampBehavior
           )
           DispatchQueue.main.async {
             events(pigeonSnapshot)

@@ -6,18 +6,36 @@ import FirebaseFirestore
 import Foundation
 
 enum PigeonParser {
-  static func filterFromJson(_ map: [String: Any]?) -> Filter {
+  static func queryParseError(_ message: String) -> NSError {
+    NSError(
+      domain: "FLTFirebaseFirestore",
+      code: 0,
+      userInfo: [NSLocalizedDescriptionKey: message]
+    )
+  }
+
+  static func toPigeonMap(_ data: [String: Any]?) -> [String?: Any?]? {
+    guard let data else { return nil }
+    var mapped: [String?: Any?] = [:]
+    mapped.reserveCapacity(data.count)
+    for (key, value) in data {
+      mapped[key] = value
+    }
+    return mapped
+  }
+
+  static func filterFromJson(_ map: [String: Any]?) throws -> Filter {
     guard let map else {
-      NSException(
-        name: NSExceptionName("InvalidOperator"), reason: "Invalid operator", userInfo: nil
-      )
-      .raise()
-      fatalError("Invalid operator")
+      throw queryParseError("Invalid operator")
     }
 
     if map["fieldPath"] != nil {
-      let op = map["op"] as! String
-      let fieldPath = map["fieldPath"] as! FieldPath
+      guard let op = map["op"] as? String else {
+        throw queryParseError("Filter is missing an operator")
+      }
+      guard let fieldPath = map["fieldPath"] as? FieldPath else {
+        throw queryParseError("Filter is missing a field path")
+      }
       let value = map["value"] as Any
       switch op {
       case "==":
@@ -41,34 +59,30 @@ enum PigeonParser {
       case "not-in":
         return Filter.whereField(fieldPath, notIn: value as? [Any] ?? [])
       default:
-        NSException(
-          name: NSExceptionName("InvalidOperator"), reason: "Invalid operator", userInfo: nil
-        )
-        .raise()
-        fatalError("Invalid operator")
+        throw queryParseError("Invalid operator")
       }
     }
 
-    let op = map["op"] as! String
-    let queries = map["queries"] as! [[String: Any]]
-    let parsedFilters = queries.map { filterFromJson($0) }
+    guard let op = map["op"] as? String else {
+      throw queryParseError("Compound filter is missing an operator")
+    }
+    guard let queries = map["queries"] as? [[String: Any]] else {
+      throw queryParseError("Compound filter is missing queries")
+    }
+    let parsedFilters = try queries.map { try filterFromJson($0) }
     if op == "OR" {
       return Filter.orFilter(parsedFilters)
     }
     if op == "AND" {
       return Filter.andFilter(parsedFilters)
     }
-    NSException(name: NSExceptionName("InvalidOperator"), reason: "Invalid operator", userInfo: nil)
-      .raise()
-    fatalError("Invalid operator")
+    throw queryParseError("Invalid operator")
   }
 
-  static func parseQuery(
-    parameters: InternalQueryParameters,
-    firestore: Firestore,
-    path: String,
-    isCollectionGroup: Bool
-  ) -> Query? {
+  static func parseQuery(parameters: InternalQueryParameters,
+                         firestore: Firestore,
+                         path: String,
+                         isCollectionGroup: Bool) -> Query? {
     do {
       var query: Query
       if isCollectionGroup {
@@ -78,14 +92,15 @@ enum PigeonParser {
       }
 
       if let filters = parameters.filters as? [String: Any] {
-        query = query.whereFilter(filterFromJson(filters))
+        query = try query.whereFilter(filterFromJson(filters))
       }
 
       if let whereConditions = parameters.where {
         for item in whereConditions {
           guard let condition = item, condition.count >= 3 else { continue }
-          let fieldPath = condition[0] as! FieldPath
-          let op = condition[1] as! String
+          guard let fieldPath = condition[0] as? FieldPath, let op = condition[1] as? String else {
+            throw queryParseError("Invalid query condition")
+          }
           let value = condition[2]
           switch op {
           case "==":
@@ -130,9 +145,18 @@ enum PigeonParser {
 
       for orderByParameters in orderBy {
         guard let orderByParameters, orderByParameters.count >= 2 else { continue }
-        let fieldPath = orderByParameters[0] as! FieldPath
-        let descending = orderByParameters[1] as! NSNumber
-        query = query.order(by: fieldPath, descending: descending.boolValue)
+        guard let fieldPath = orderByParameters[0] as? FieldPath else {
+          throw queryParseError("Invalid orderBy field path")
+        }
+        let descending: Bool
+        if let number = orderByParameters[1] as? NSNumber {
+          descending = number.boolValue
+        } else if let boolValue = orderByParameters[1] as? Bool {
+          descending = boolValue
+        } else {
+          throw queryParseError("Invalid orderBy direction")
+        }
+        query = query.order(by: fieldPath, descending: descending)
       }
 
       if let startAt = parameters.startAt {
@@ -176,8 +200,7 @@ enum PigeonParser {
   }
 
   static func parseServerTimestampBehavior(_ behavior: ServerTimestampBehavior)
-    -> FirebaseFirestore.ServerTimestampBehavior
-  {
+    -> FirebaseFirestore.ServerTimestampBehavior {
     switch behavior {
     case .none:
       return .none
@@ -198,46 +221,36 @@ enum PigeonParser {
   }
 
   static func toPigeonSnapshotMetadata(_ snapshotMetadata: SnapshotMetadata)
-    -> InternalSnapshotMetadata
-  {
+    -> InternalSnapshotMetadata {
     InternalSnapshotMetadata(
       hasPendingWrites: snapshotMetadata.hasPendingWrites,
       isFromCache: snapshotMetadata.isFromCache
     )
   }
 
-  static func toPigeonDocumentSnapshot(
-    _ documentSnapshot: DocumentSnapshot,
-    serverTimestampBehavior: FirebaseFirestore
-      .ServerTimestampBehavior
-  ) -> InternalDocumentSnapshot {
+  static func toPigeonDocumentSnapshot(_ documentSnapshot: DocumentSnapshot,
+                                       serverTimestampBehavior: FirebaseFirestore
+                                         .ServerTimestampBehavior) -> InternalDocumentSnapshot {
     let data = documentSnapshot.data(with: serverTimestampBehavior)
-    let mapped: [String?: Any?]? = data.map { original in
-      Dictionary(uniqueKeysWithValues: original.map { ($0.key as String?, $0.value as Any?) })
-    }
     return InternalDocumentSnapshot(
       path: documentSnapshot.reference.path,
-      data: mapped,
+      data: toPigeonMap(data),
       metadata: toPigeonSnapshotMetadata(documentSnapshot.metadata)
     )
   }
 
   static func toPigeonDocumentChangeType(_ documentChangeType: DocumentChangeType)
-    -> DocumentChangeType
-  {
+    -> DocumentChangeType {
     documentChangeType
   }
 
-  static func toPigeonDocumentChange(
-    _ documentChange: DocumentChange,
-    serverTimestampBehavior: FirebaseFirestore
-      .ServerTimestampBehavior
-  ) -> InternalDocumentChange {
+  static func toPigeonDocumentChange(_ documentChange: DocumentChange,
+                                     serverTimestampBehavior: FirebaseFirestore
+                                       .ServerTimestampBehavior) -> InternalDocumentChange {
     let maxVal = NSNotFound
     let newIndex: Int64
     if documentChange.newIndex == NSNotFound || documentChange.newIndex == 4_294_967_295
-      || documentChange.newIndex == maxVal
-    {
+      || documentChange.newIndex == maxVal {
       newIndex = -1
     } else {
       newIndex = Int64(documentChange.newIndex)
@@ -245,8 +258,7 @@ enum PigeonParser {
 
     let oldIndex: Int64
     if documentChange.oldIndex == NSNotFound || documentChange.oldIndex == 4_294_967_295
-      || documentChange.oldIndex == maxVal
-    {
+      || documentChange.oldIndex == maxVal {
       oldIndex = -1
     } else {
       oldIndex = Int64(documentChange.oldIndex)
@@ -274,21 +286,17 @@ enum PigeonParser {
     )
   }
 
-  static func toPigeonDocumentChanges(
-    _ documentChanges: [DocumentChange],
-    serverTimestampBehavior: FirebaseFirestore
-      .ServerTimestampBehavior
-  ) -> [InternalDocumentChange?] {
+  static func toPigeonDocumentChanges(_ documentChanges: [DocumentChange],
+                                      serverTimestampBehavior: FirebaseFirestore
+                                        .ServerTimestampBehavior) -> [InternalDocumentChange?] {
     documentChanges.map {
       toPigeonDocumentChange($0, serverTimestampBehavior: serverTimestampBehavior)
     }
   }
 
-  static func toPigeonQuerySnapshot(
-    _ querySnapshot: QuerySnapshot,
-    serverTimestampBehavior: FirebaseFirestore
-      .ServerTimestampBehavior
-  ) -> InternalQuerySnapshot {
+  static func toPigeonQuerySnapshot(_ querySnapshot: QuerySnapshot,
+                                    serverTimestampBehavior: FirebaseFirestore
+                                      .ServerTimestampBehavior) -> InternalQuerySnapshot {
     let documents = querySnapshot.documents.map {
       toPigeonDocumentSnapshot($0, serverTimestampBehavior: serverTimestampBehavior)
         as InternalDocumentSnapshot?

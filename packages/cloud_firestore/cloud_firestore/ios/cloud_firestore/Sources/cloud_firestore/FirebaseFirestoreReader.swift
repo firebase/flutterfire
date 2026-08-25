@@ -50,7 +50,7 @@ class FirebaseFirestoreReader: FlutterStandardReader {
       let length = readSize()
       var array: [Any] = []
       array.reserveCapacity(Int(length))
-      for _ in 0..<length {
+      for _ in 0 ..< length {
         let value = readValue()
         array.append(value ?? NSNull())
       }
@@ -121,18 +121,18 @@ class FirebaseFirestoreReader: FlutterStandardReader {
     return settings
   }
 
-  private func filterFromJson(_ map: [String: Any]?) -> Filter {
+  private func filterFromJson(_ map: [String: Any]?) throws -> Filter {
     guard let map else {
-      NSException(
-        name: NSExceptionName("InvalidOperator"), reason: "Invalid operator", userInfo: nil
-      )
-      .raise()
-      fatalError("Invalid operator")
+      throw PigeonParser.queryParseError("Invalid operator")
     }
 
     if map["fieldPath"] != nil {
-      let op = map["op"] as! String
-      let fieldPath = map["fieldPath"] as! FieldPath
+      guard let op = map["op"] as? String else {
+        throw PigeonParser.queryParseError("Filter is missing an operator")
+      }
+      guard let fieldPath = map["fieldPath"] as? FieldPath else {
+        throw PigeonParser.queryParseError("Filter is missing a field path")
+      }
       let value = map["value"] as Any
       switch op {
       case "==":
@@ -156,17 +156,17 @@ class FirebaseFirestoreReader: FlutterStandardReader {
       case "not-in":
         return Filter.whereField(fieldPath, notIn: value as? [Any] ?? [])
       default:
-        NSException(
-          name: NSExceptionName("InvalidOperator"), reason: "Invalid operator", userInfo: nil
-        )
-        .raise()
-        fatalError("Invalid operator")
+        throw PigeonParser.queryParseError("Invalid operator")
       }
     }
 
-    let op = map["op"] as! String
-    let queries = map["queries"] as! [[String: Any]]
-    let parsedFilters = queries.map { filterFromJson($0) }
+    guard let op = map["op"] as? String else {
+      throw PigeonParser.queryParseError("Compound filter is missing an operator")
+    }
+    guard let queries = map["queries"] as? [[String: Any]] else {
+      throw PigeonParser.queryParseError("Compound filter is missing queries")
+    }
+    let parsedFilters = try queries.map { try filterFromJson($0) }
 
     if op == "OR" {
       return Filter.orFilter(parsedFilters)
@@ -175,9 +175,7 @@ class FirebaseFirestoreReader: FlutterStandardReader {
       return Filter.andFilter(parsedFilters)
     }
 
-    NSException(name: NSExceptionName("InvalidOperator"), reason: "Invalid operator", userInfo: nil)
-      .raise()
-    fatalError("Invalid operator")
+    throw PigeonParser.queryParseError("Invalid operator")
   }
 
   private func readQuery() -> Query? {
@@ -197,13 +195,16 @@ class FirebaseFirestoreReader: FlutterStandardReader {
       }
 
       if let filters = parameters["filters"] as? [String: Any] {
-        query = query.whereFilter(filterFromJson(filters))
+        query = try query.whereFilter(filterFromJson(filters))
       }
 
       for item in whereConditions {
-        let condition = item as! [Any]
-        let fieldPath = condition[0] as! FieldPath
-        let op = condition[1] as! String
+        guard let condition = item as? [Any], condition.count >= 3,
+              let fieldPath = condition[0] as? FieldPath,
+              let op = condition[1] as? String
+        else {
+          throw PigeonParser.queryParseError("Invalid query condition")
+        }
         let value = condition[2]
         switch op {
         case "==":
@@ -245,10 +246,22 @@ class FirebaseFirestoreReader: FlutterStandardReader {
         return query
       }
 
-      for orderByParameters in orderBy as! [[Any]] {
-        let fieldPath = orderByParameters[0] as! FieldPath
-        let descending = orderByParameters[1] as! NSNumber
-        query = query.order(by: fieldPath, descending: descending.boolValue)
+      guard let orderByEntries = orderBy as? [[Any]] else {
+        throw PigeonParser.queryParseError("Invalid orderBy parameters")
+      }
+      for orderByEntry in orderByEntries {
+        guard orderByEntry.count >= 2, let fieldPath = orderByEntry[0] as? FieldPath else {
+          throw PigeonParser.queryParseError("Invalid orderBy field path")
+        }
+        let descending: Bool
+        if let number = orderByEntry[1] as? NSNumber {
+          descending = number.boolValue
+        } else if let boolValue = orderByEntry[1] as? Bool {
+          descending = boolValue
+        } else {
+          throw PigeonParser.queryParseError("Invalid orderBy direction")
+        }
+        query = query.order(by: fieldPath, descending: descending)
       }
 
       if let startAt = parameters["startAt"], !(startAt is NSNull) {
@@ -267,7 +280,8 @@ class FirebaseFirestoreReader: FlutterStandardReader {
       return query
     } catch {
       NSLog(
-        "An error occurred while parsing query arguments, this is most likely an error with this SDK. %@"
+        "An error occurred while parsing query arguments, this is most likely an error with this SDK. %@",
+        error.localizedDescription
       )
       return nil
     }
