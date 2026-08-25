@@ -76,6 +76,12 @@ android {
         implementation platform("com.google.firebase:firebase-bom:${getRootProjectExtOrCoreProperty("FirebaseSDKVersion", firebaseCoreProject)}")
         implementation 'com.google.firebase:firebase-auth'
         implementation 'androidx.annotation:annotation:1.7.0'
+        // firebase-auth annotates its public API (for example
+        // FirebaseAuth.IdTokenListener) with Checker Framework type annotations,
+        // but does not expose checker-qual to consumers. Kotlin 2.4 rejects type
+        // annotations it cannot resolve, so this module's Kotlin sources fail to
+        // compile without it on the compile classpath.
+        compileOnly 'org.checkerframework:checker-qual:3.55.1'
     }
 }
 
