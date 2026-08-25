@@ -400,12 +400,11 @@ class FirebaseCoreWeb extends FirebasePlatform {
           rethrow;
         }
 
-        final jsError = e as JSError;
-        if (_getJSErrorCode(jsError) == 'app/duplicate-app') {
+        if (_getJSErrorCode(e) == 'app/duplicate-app') {
           throw duplicateApp(name);
         }
 
-        throw _catchJSError(jsError);
+        throw _catchJSError(e);
       }
     }
 
@@ -453,12 +452,11 @@ class FirebaseCoreWeb extends FirebasePlatform {
         rethrow;
       }
 
-      final jsError = e as JSError;
-      if (_getJSErrorCode(jsError) == 'app/no-app') {
+      if (_getJSErrorCode(e) == 'app/no-app') {
         throw noAppExists(name);
       }
 
-      throw _catchJSError(jsError);
+      throw _catchJSError(e);
     }
   }
 }
