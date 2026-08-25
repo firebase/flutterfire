@@ -133,6 +133,10 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
           providerApple: providerApple,
           providerWindows: providerWindows,
         ),
+        _getRecaptchaSiteKey(
+          providerAndroid: providerAndroid,
+          providerApple: providerApple,
+        ),
       );
     } on PlatformException catch (e, s) {
       convertPlatformException(e, s);
@@ -215,6 +219,27 @@ String? _getDebugToken({
       return providerWindows is WindowsDebugProvider
           ? providerWindows.debugToken
           : null;
+    case TargetPlatform.fuchsia:
+    case TargetPlatform.linux:
+      return null;
+  }
+}
+
+String? _getRecaptchaSiteKey({
+  AndroidAppCheckProvider? providerAndroid,
+  AppleAppCheckProvider? providerApple,
+}) {
+  switch (defaultTargetPlatform) {
+    case TargetPlatform.android:
+      return providerAndroid is AndroidReCaptchaProvider
+          ? providerAndroid.siteKey
+          : null;
+    case TargetPlatform.iOS:
+    case TargetPlatform.macOS:
+      return providerApple is AppleReCaptchaProvider
+          ? providerApple.siteKey
+          : null;
+    case TargetPlatform.windows:
     case TargetPlatform.fuchsia:
     case TargetPlatform.linux:
       return null;

@@ -23,9 +23,9 @@ dependencies:
 
   camera: ^0.12.0+1
   cupertino_icons: ^1.0.6
-  firebase_ai: ^3.14.1
-  firebase_core: ^4.12.1
-  firebase_storage: ^13.4.5
+  firebase_ai: ^4.0.0
+  firebase_core: ^4.14.0
+  firebase_storage: ^13.5.0
   flutter:
     sdk: flutter
   flutter_animate: ^4.5.2
@@ -38,9 +38,21 @@ dependencies:
   waveform_flutter: ^1.2.0
 
 dev_dependencies:
+  # `firebase_ai_mock_test.dart` installs a mock platform via
+  # `firebase_core_platform_interface/test.dart`, which firebase_core does not
+  # re-export.
+  firebase_core_platform_interface: ^8.1.1
   flutter_lints: ^6.0.0
   flutter_test:
     sdk: flutter
+  # `firebase_ai_response_parsing_e2e_test.dart` fetches the reference response
+  # fixtures straight over HTTP.
+  http: ^1.0.0
+  integration_test:
+    sdk: flutter
+  # `integration_test/report_test_results.dart` names each executed test via
+  # `package:test_api/hooks.dart`; `any` defers to the version flutter_test pins.
+  test_api: any
 
 flutter:
 

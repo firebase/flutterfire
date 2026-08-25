@@ -8,12 +8,18 @@ import static io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry.reg
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Bundle;
+import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.annotation.VisibleForTesting;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
@@ -21,9 +27,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.messaging.Constants;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.MessagingAnalytics;
 import com.google.firebase.messaging.RemoteMessage;
-import io.flutter.embedding.engine.FlutterShellArgs;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
@@ -34,9 +41,11 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.NewIntentListener;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
+import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Queue;
 
 /** FlutterFirebaseMessagingPlugin */
 public class FlutterFirebaseMessagingPlugin
@@ -46,7 +55,14 @@ public class FlutterFirebaseMessagingPlugin
         FlutterPlugin,
         ActivityAware {
 
+  private static final String TAG = "FLTFireMsgPlugin";
+
+  /** Mirrors the de-duplication window the Messaging SDK keeps in FcmLifecycleCallbacks. */
+  private static final int RECENTLY_LOGGED_MESSAGE_IDS_MAX_SIZE = 10;
+
   private final HashMap<String, Boolean> consumedInitialMessages = new HashMap<>();
+  private final Queue<String> recentlyLoggedMessageIds =
+      new ArrayDeque<>(RECENTLY_LOGGED_MESSAGE_IDS_MAX_SIZE);
   private MethodChannel channel;
   private Activity mainActivity;
 
@@ -105,7 +121,10 @@ public class FlutterFirebaseMessagingPlugin
     if (mainActivity.getIntent() != null && mainActivity.getIntent().getExtras() != null) {
       if ((mainActivity.getIntent().getFlags() & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY)
           != Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) {
-        onNewIntent(mainActivity.getIntent());
+        // The notification tap created this Activity, so the Messaging SDK has already logged
+        // `notification_open` from FcmLifecycleCallbacks#onActivityCreated. Handle the intent
+        // without logging it a second time.
+        handleNotificationIntent(mainActivity.getIntent());
       }
     }
   }
@@ -357,6 +376,16 @@ public class FlutterFirebaseMessagingPlugin
     return taskCompletionSource.getTask();
   }
 
+  // Wire values for Dart AuthorizationStatus (see convertToAuthorizationStatus).
+  private static final int AUTH_NOT_DETERMINED = -1;
+  private static final int AUTH_DENIED = 0;
+  private static final int AUTH_AUTHORIZED = 1;
+  private static final int AUTH_DENIED_PERMANENTLY = 3;
+
+  private static final String PERMISSIONS_PREFERENCES_FILE =
+      "io.flutter.plugins.firebase.messaging.permissions";
+  private static final String KEY_PERMISSION_REQUESTED = "notification_permission_requested";
+
   @RequiresApi(api = 33)
   private Task<Map<String, Integer>> requestPermissions() {
     TaskCompletionSource<Map<String, Integer>> taskCompletionSource = new TaskCompletionSource<>();
@@ -369,14 +398,24 @@ public class FlutterFirebaseMessagingPlugin
             if (!areNotificationsEnabled) {
               permissionManager.requestPermissions(
                   mainActivity,
-                  (notificationsEnabled) -> {
-                    permissions.put("authorizationStatus", notificationsEnabled);
+                  (grantResult) -> {
+                    // Record that the OS has now asked the user, so a later
+                    // getNotificationSettings() can tell a permanent denial apart from
+                    // "never asked".
+                    markNotificationPermissionRequested();
+                    // After the OS dialog, resolve the full status (soft vs permanent deny)
+                    // instead of returning only the raw grant result.
+                    int status =
+                        grantResult == 1
+                            ? AUTH_AUTHORIZED
+                            : resolveNotificationAuthorizationStatus();
+                    permissions.put("authorizationStatus", status);
                     taskCompletionSource.setResult(permissions);
                   },
                   (String errorDescription) ->
                       taskCompletionSource.setException(new Exception(errorDescription)));
             } else {
-              permissions.put("authorizationStatus", 1);
+              permissions.put("authorizationStatus", AUTH_AUTHORIZED);
               taskCompletionSource.setResult(permissions);
             }
 
@@ -395,6 +434,58 @@ public class FlutterFirebaseMessagingPlugin
         == PackageManager.PERMISSION_GRANTED;
   }
 
+  private SharedPreferences getPermissionsPreferences() {
+    return ContextHolder.getApplicationContext()
+        .getSharedPreferences(PERMISSIONS_PREFERENCES_FILE, Context.MODE_PRIVATE);
+  }
+
+  private void markNotificationPermissionRequested() {
+    getPermissionsPreferences().edit().putBoolean(KEY_PERMISSION_REQUESTED, true).apply();
+  }
+
+  /**
+   * Resolves Android 13+ notification permission into Dart authorization codes.
+   *
+   * <p>A denied {@code POST_NOTIFICATIONS} is ambiguous: Android reports the same state for "never
+   * asked" and "permanently denied", and it exposes no public API for reading the underlying
+   * permission flags. {@link ActivityCompat#shouldShowRequestPermissionRationale} combined with a
+   * SharedPreferences record of whether we ever showed the prompt breaks the tie. This mirrors how
+   * {@code permission_handler} solves the same problem.
+   *
+   * <ul>
+   *   <li>granted → authorized (1)
+   *   <li>never asked → notDetermined (-1)
+   *   <li>soft deny (rationale can be shown) → denied (0)
+   *   <li>asked before, no rationale → deniedPermanently (3)
+   * </ul>
+   *
+   * <p>Known limitation: if another plugin requested {@code POST_NOTIFICATIONS} and the user denied
+   * it permanently, we have no record of the prompt and report notDetermined. Calling {@link
+   * #requestPermissions()} in that state is a no-op that resolves to the correct status.
+   */
+  @RequiresApi(api = 33)
+  private int resolveNotificationAuthorizationStatus() {
+    if (checkPermissions()) {
+      return AUTH_AUTHORIZED;
+    }
+
+    if (mainActivity != null
+        && ActivityCompat.shouldShowRequestPermissionRationale(
+            mainActivity, Manifest.permission.POST_NOTIFICATIONS)) {
+      // Denied at least once, but the OS will still show another prompt.
+      return AUTH_DENIED;
+    }
+
+    if (!getPermissionsPreferences().getBoolean(KEY_PERMISSION_REQUESTED, false)) {
+      return AUTH_NOT_DETERMINED;
+    }
+
+    // Asked before and no rationale is available. Without an Activity we cannot call
+    // shouldShowRequestPermissionRationale at all, so report the softer status and let
+    // callers retry once an Activity is attached.
+    return mainActivity == null ? AUTH_DENIED : AUTH_DENIED_PERMANENTLY;
+  }
+
   private Task<Map<String, Integer>> getPermissions() {
     TaskCompletionSource<Map<String, Integer>> taskCompletionSource = new TaskCompletionSource<>();
 
@@ -402,14 +493,15 @@ public class FlutterFirebaseMessagingPlugin
         () -> {
           try {
             final Map<String, Integer> permissions = new HashMap<>();
-            final boolean areNotificationsEnabled;
             if (Build.VERSION.SDK_INT >= 33) {
-              areNotificationsEnabled = checkPermissions();
+              permissions.put("authorizationStatus", resolveNotificationAuthorizationStatus());
             } else {
-              areNotificationsEnabled =
-                  NotificationManagerCompat.from(mainActivity).areNotificationsEnabled();
+              final boolean areNotificationsEnabled =
+                  NotificationManagerCompat.from(ContextHolder.getApplicationContext())
+                      .areNotificationsEnabled();
+              permissions.put(
+                  "authorizationStatus", areNotificationsEnabled ? AUTH_AUTHORIZED : AUTH_DENIED);
             }
-            permissions.put("authorizationStatus", areNotificationsEnabled ? 1 : 0);
             taskCompletionSource.setResult(permissions);
           } catch (Exception e) {
             taskCompletionSource.setException(e);
@@ -424,12 +516,9 @@ public class FlutterFirebaseMessagingPlugin
     Task<?> methodCallTask;
 
     switch (call.method) {
-      // This message is sent when the Dart side of this plugin is told to initialize.
-      // In response, this (native) side of the plugin needs to spin up a background
-      // Dart isolate by using the given pluginCallbackHandle, and then setup a background
-      // method channel to communicate with the new background isolate. Once completed,
-      // this onMethodCall() method will receive messages from both the primary and background
-      // method channels.
+      // This message is sent when the Dart side of this plugin registers a background
+      // message handler. We persist the callback handles to SharedPreferences so
+      // the background service can start the isolate later when a message arrives.
       case "Messaging#startBackgroundIsolate":
         @SuppressWarnings("unchecked")
         Map<String, Object> arguments = ((Map<String, Object>) call.arguments);
@@ -458,19 +547,13 @@ public class FlutterFirebaseMessagingPlugin
               "Expected 'Long' or 'Integer' type for 'userCallbackHandle'.");
         }
 
-        FlutterShellArgs shellArgs = null;
-        if (mainActivity != null) {
-          // Supports both Flutter Activity types:
-          //    io.flutter.embedding.android.FlutterFragmentActivity
-          //    io.flutter.embedding.android.FlutterActivity
-          // We could use `getFlutterShellArgs()` but this is only available on `FlutterActivity`.
-          shellArgs = FlutterShellArgs.fromIntent(mainActivity.getIntent());
-        }
-
+        // Only save the callback handles to SharedPreferences. Don't start the
+        // background isolate here — it will be started lazily in
+        // FlutterFirebaseMessagingBackgroundService.onCreate() when a background
+        // message actually arrives and the service is started. Starting it eagerly
+        // caused a duplicate Dart main() to appear in the call stack (#17163).
         FlutterFirebaseMessagingBackgroundService.setCallbackDispatcher(pluginCallbackHandle);
         FlutterFirebaseMessagingBackgroundService.setUserCallbackHandle(userCallbackHandle);
-        FlutterFirebaseMessagingBackgroundService.startBackgroundIsolate(
-            pluginCallbackHandle, shellArgs);
         methodCallTask = Tasks.forResult(null);
         break;
       case "Messaging#getInitialMessage":
@@ -543,13 +626,86 @@ public class FlutterFirebaseMessagingPlugin
 
   @Override
   public boolean onNewIntent(@NonNull Intent intent) {
+    // The Activity already existed, so the Messaging SDK never ran
+    // FcmLifecycleCallbacks#onActivityCreated for this intent and `notification_open` was not
+    // logged. Log it here before handling the intent.
+    logNotificationOpen(intent);
+    return handleNotificationIntent(intent);
+  }
+
+  /**
+   * Logs the Analytics {@code notification_open} event for a notification tap that did not create
+   * the Activity.
+   *
+   * <p>The Messaging SDK only logs this event from {@code FcmLifecycleCallbacks#onActivityCreated},
+   * so it is missed whenever the app was merely backgrounded (for example with the Home button) and
+   * the Activity is reused. See firebase/flutterfire#17072 and firebase/firebase-android-sdk#3799.
+   *
+   * <p>This mirrors the SDK's own implementation, including de-duplication by message id, so a
+   * message is never counted twice.
+   */
+  private void logNotificationOpen(@NonNull Intent intent) {
+    Bundle analyticsData;
+    try {
+      Bundle extras = intent.getExtras();
+      if (extras == null) {
+        return;
+      }
+
+      if (!markNotificationOpenAsLogged(getMessageId(extras))) {
+        return;
+      }
+
+      analyticsData = extras.getBundle(Constants.MessageNotificationKeys.ANALYTICS_DATA);
+    } catch (RuntimeException e) {
+      // The intent can come from anywhere and may be malformed, so never crash the host app while
+      // reading analytics data out of it.
+      Log.w(TAG, "Failed to get analytics data from notification intent extras.", e);
+      return;
+    }
+
+    if (MessagingAnalytics.shouldUploadScionMetrics(analyticsData)) {
+      MessagingAnalytics.logNotificationOpen(analyticsData);
+    }
+  }
+
+  /**
+   * Records {@code messageId} as having had its {@code notification_open} event logged, and returns
+   * whether the caller should log it.
+   *
+   * <p>Returns {@code false} when this message id was logged recently, so that a message tapped
+   * more than once (or delivered through both the create and the new-intent path) is only counted
+   * once. A {@code null} id cannot be de-duplicated and is always logged, matching the SDK.
+   */
+  @VisibleForTesting
+  boolean markNotificationOpenAsLogged(@Nullable String messageId) {
+    if (messageId == null) {
+      return true;
+    }
+    if (recentlyLoggedMessageIds.contains(messageId)) {
+      return false;
+    }
+    if (recentlyLoggedMessageIds.size() >= RECENTLY_LOGGED_MESSAGE_IDS_MAX_SIZE) {
+      recentlyLoggedMessageIds.poll();
+    }
+    recentlyLoggedMessageIds.add(messageId);
+    return true;
+  }
+
+  /** Remote Message ID can be either one of the following... */
+  @Nullable
+  private static String getMessageId(@NonNull Bundle extras) {
+    String messageId = extras.getString("google.message_id");
+    if (messageId == null) messageId = extras.getString("message_id");
+    return messageId;
+  }
+
+  private boolean handleNotificationIntent(@NonNull Intent intent) {
     if (intent.getExtras() == null) {
       return false;
     }
 
-    // Remote Message ID can be either one of the following...
-    String messageId = intent.getExtras().getString("google.message_id");
-    if (messageId == null) messageId = intent.getExtras().getString("message_id");
+    String messageId = getMessageId(intent.getExtras());
     if (messageId == null) {
       return false;
     }

@@ -53,6 +53,7 @@ class FirebaseAppCheckPlugin : FlutterFirebasePlugin, FlutterPlugin, FirebaseApp
       androidProvider: String?,
       appleProvider: String?,
       debugToken: String?,
+      recaptchaSiteKey: String?,
       callback: (Result<Unit>) -> Unit
   ) {
     try {
@@ -64,8 +65,11 @@ class FirebaseAppCheckPlugin : FlutterFirebasePlugin, FlutterPlugin, FirebaseApp
               DebugAppCheckProviderFactory.getInstance())
         }
         "recaptcha" -> {
-          firebaseAppCheck.installAppCheckProviderFactory(
-              RecaptchaAppCheckProviderFactory.getInstance())
+          if (recaptchaSiteKey == null) {
+            throw Exception("reCAPTCHA site key must not be null")
+          }
+          val factory = RecaptchaAppCheckProviderFactory.getInstance(recaptchaSiteKey)
+          firebaseAppCheck.installAppCheckProviderFactory(factory)
         }
         else -> {
           firebaseAppCheck.installAppCheckProviderFactory(

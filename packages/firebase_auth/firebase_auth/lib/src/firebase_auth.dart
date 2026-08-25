@@ -473,12 +473,10 @@ class FirebaseAuth extends FirebasePlugin implements FirebaseService {
   /// A [FirebaseAuthException] maybe thrown with the following error code:
   /// - **account-exists-with-different-credential**:
   ///  - Thrown if there already exists an account with the email address
-  ///    asserted by the credential.
-  // ignore: deprecated_member_use_from_same_package
-  ///    Resolve this by asking
-  ///    the user to sign in using one of the returned providers.
-  ///    Once the user is signed in, the original credential can be linked to
-  ///    the user with [linkWithCredential].
+  ///    asserted by the credential. Resolve this by asking the user to sign in
+  ///    with a provider already linked to that email address. Once the user is
+  ///    signed in, the original credential can be linked to the user with
+  ///    [linkWithCredential].
   /// - **invalid-credential**:
   ///  - Thrown if the credential is malformed or has expired.
   /// - **operation-not-allowed**:
@@ -640,6 +638,10 @@ class FirebaseAuth extends FirebasePlugin implements FirebaseService {
   }
 
   /// Signs in with an AuthProvider using native authentication flow.
+  ///
+  /// On macOS, only [AppleAuthProvider] is supported: the Firebase Apple SDK
+  /// implements the OAuth web sign-in flow on iOS only. Any other provider
+  /// throws a [FirebaseAuthException] with the code `unsupported-platform`.
   ///
   /// A [FirebaseAuthException] maybe thrown with the following error code:
   /// - **user-disabled**:

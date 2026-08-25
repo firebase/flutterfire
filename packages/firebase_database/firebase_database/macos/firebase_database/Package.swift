@@ -7,8 +7,8 @@
 
 import PackageDescription
 
-let libraryVersion = "12.4.6"
-let firebaseSdkVersion: Version = "12.16.0"
+let libraryVersion = "12.5.0"
+let firebaseSdkVersion: Version = "12.18.0"
 
 let package = Package(
   name: "firebase_database",
@@ -21,6 +21,7 @@ let package = Package(
   dependencies: [
     .package(url: "https://github.com/firebase/firebase-ios-sdk", exact: firebaseSdkVersion),
     .package(name: "firebase_core", path: "../firebase_core"),
+    .package(name: "FlutterFramework", path: "../FlutterFramework"),
   ],
   targets: [
     .target(
@@ -28,6 +29,7 @@ let package = Package(
       dependencies: [
         .product(name: "FirebaseDatabase", package: "firebase-ios-sdk"),
         .product(name: "firebase-core", package: "firebase_core"),
+        .product(name: "FlutterFramework", package: "FlutterFramework"),
       ],
       resources: [
         .process("Resources")
