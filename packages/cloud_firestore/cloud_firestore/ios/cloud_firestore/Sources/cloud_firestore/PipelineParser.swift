@@ -134,7 +134,8 @@ private func exprBridge(from value: Any) -> ExprBridge? {
 
   for child in Mirror(reflecting: value).children {
     if child.label == "expr" || child.label == "constant" || child.label == "field",
-       let nested = exprBridge(from: child.value) {
+      let nested = exprBridge(from: child.value)
+    {
       return nested
     }
   }
@@ -142,7 +143,8 @@ private func exprBridge(from value: Any) -> ExprBridge? {
 }
 
 private func sendableExpressions(_ expressions: [any FirebaseFirestore.Expression])
-  -> [any Sendable] {
+  -> [any Sendable]
+{
   expressions.map { $0 as any Sendable }
 }
 
@@ -156,7 +158,8 @@ private func constantExpression(from value: Any) throws -> any FirebaseFirestore
     }
     let doubleValue = number.doubleValue
     if doubleValue.isFinite, doubleValue.rounded() == doubleValue,
-       doubleValue >= Double(Int.min), doubleValue <= Double(Int.max) {
+      doubleValue >= Double(Int.min), doubleValue <= Double(Int.max)
+    {
       return Constant(number.intValue)
     }
     return Constant(number.doubleValue)
@@ -197,8 +200,10 @@ private func constantExpression(from value: Any) throws -> any FirebaseFirestore
   throw parseError("Unsupported constant value: \(type(of: value))")
 }
 
-private func functionExpression(name: String,
-                                args: [any FirebaseFirestore.Expression]) -> FunctionExpression {
+private func functionExpression(
+  name: String,
+  args: [any FirebaseFirestore.Expression]
+) -> FunctionExpression {
   FunctionExpression(functionName: name, args: args)
 }
 
@@ -219,7 +224,8 @@ private final class PipelineExpressionParser {
   }
 
   private func parseBooleanTypedExpression(_ map: [String: Any]) throws
-    -> any FirebaseFirestore.BooleanExpression {
+    -> any FirebaseFirestore.BooleanExpression
+  {
     let expression = try parseTypedExpression(map)
     if let booleanExpression = expression as? any FirebaseFirestore.BooleanExpression {
       return booleanExpression
@@ -227,9 +233,12 @@ private final class PipelineExpressionParser {
     return expression.asBoolean()
   }
 
-  private func parseTypedExpressions(_ maps: [Any],
-                                     errorMessage: String) throws
-    -> [any FirebaseFirestore.Expression] {
+  private func parseTypedExpressions(
+    _ maps: [Any],
+    errorMessage: String
+  ) throws
+    -> [any FirebaseFirestore.Expression]
+  {
     var expressions: [any FirebaseFirestore.Expression] = []
     for value in maps {
       guard let map = asMap(value) else { continue }
@@ -242,7 +251,8 @@ private final class PipelineExpressionParser {
   }
 
   private func parseTypedExpression(_ map: [String: Any]) throws -> any FirebaseFirestore
-    .Expression {
+    .Expression
+  {
     expressionDepth += 1
     defer { expressionDepth -= 1 }
     if expressionDepth > kMaxPipelineExpressionDepth {
@@ -352,7 +362,8 @@ private final class PipelineExpressionParser {
     }
 
     if resolvedName == "exists" || resolvedName == "is_error" || resolvedName == "is_absent"
-      || resolvedName == "not" {
+      || resolvedName == "not"
+    {
       guard let exprMap = asMap(args["expression"]) else {
         throw parseError("\(resolvedName) requires expression")
       }
@@ -403,7 +414,8 @@ private final class PipelineExpressionParser {
     }
 
     if resolvedName == "and" || resolvedName == "or" || resolvedName == "xor"
-      || resolvedName == "nor" {
+      || resolvedName == "nor"
+    {
       guard let exprMaps = asArray(args["expressions"]), !exprMaps.isEmpty else {
         throw parseError("\(resolvedName) requires at least one expression")
       }
@@ -430,7 +442,7 @@ private final class PipelineExpressionParser {
     if resolvedName == "equal_any" || resolvedName == "not_equal_any" {
       let valuesMaps = asArray(args["values"])
       guard let valueMap = asMap(args["value"]),
-            let valuesMaps, !valuesMaps.isEmpty
+        let valuesMaps, !valuesMaps.isEmpty
       else {
         throw parseError("\(resolvedName) requires value and non-empty values")
       }
@@ -476,7 +488,8 @@ private final class PipelineExpressionParser {
       }
 
       if resolvedName == "array_contains_all",
-         let arrayExpressionMap = asMap(args["array_expression"]) {
+        let arrayExpressionMap = asMap(args["array_expression"])
+      {
         return try arrayExpr.arrayContainsAll(parseTypedExpression(arrayExpressionMap))
       }
 
@@ -501,8 +514,8 @@ private final class PipelineExpressionParser {
 
     if resolvedName == "substring" {
       guard let exprMap = asMap(args["expression"]),
-            let startMap = asMap(args["start"]),
-            let endMap = asMap(args["end"])
+        let startMap = asMap(args["start"]),
+        let endMap = asMap(args["end"])
       else {
         throw parseError("substring requires expression, start, and end")
       }
@@ -514,8 +527,8 @@ private final class PipelineExpressionParser {
 
     if resolvedName == "replace" || resolvedName == "string_replace_all" {
       guard let exprMap = asMap(args["expression"]),
-            let findMap = asMap(args["find"]),
-            let replacementMap = asMap(args["replacement"])
+        let findMap = asMap(args["find"]),
+        let replacementMap = asMap(args["replacement"])
       else {
         throw parseError("\(resolvedName) requires expression, find, and replacement")
       }
@@ -527,8 +540,8 @@ private final class PipelineExpressionParser {
 
     if resolvedName == "string_replace_one" {
       guard let exprMap = asMap(args["expression"]),
-            let findMap = asMap(args["find"]),
-            let replacementMap = asMap(args["replacement"])
+        let findMap = asMap(args["find"]),
+        let replacementMap = asMap(args["replacement"])
       else {
         throw parseError("string_replace_one requires expression, find, and replacement")
       }
@@ -541,7 +554,7 @@ private final class PipelineExpressionParser {
     if resolvedName == "string_index_of" || resolvedName == "string_repeat" {
       let argumentName = resolvedName == "string_index_of" ? "search" : "repetitions"
       guard let exprMap = asMap(args["expression"]),
-            let argumentMap = asMap(args[argumentName])
+        let argumentMap = asMap(args[argumentName])
       else {
         throw parseError("\(resolvedName) requires expression and \(argumentName)")
       }
@@ -567,7 +580,7 @@ private final class PipelineExpressionParser {
 
     if resolvedName == "split" || resolvedName == "join" {
       guard let exprMap = asMap(args["expression"]),
-            let delimiterMap = asMap(args["delimiter"])
+        let delimiterMap = asMap(args["delimiter"])
       else {
         throw parseError("\(resolvedName) requires expression and delimiter")
       }
@@ -577,8 +590,9 @@ private final class PipelineExpressionParser {
         return expr.split(delimiter: delimiter)
       }
       if let delimiterMap = asMap(args["delimiter"]),
-         (delimiterMap["name"] as? String) == "constant",
-         let delimiterValue = asMap(delimiterMap["args"])?["value"] as? String {
+        (delimiterMap["name"] as? String) == "constant",
+        let delimiterValue = asMap(delimiterMap["args"])?["value"] as? String
+      {
         return expr.join(delimiter: delimiterValue)
       }
       return functionExpression(name: "join", args: [expr, delimiter])
@@ -620,8 +634,8 @@ private final class PipelineExpressionParser {
 
     if resolvedName == "array_filter" {
       guard let exprMap = asMap(args["expression"]),
-            let alias = args["alias"] as? String,
-            let filterMap = asMap(args["filter"])
+        let alias = args["alias"] as? String,
+        let filterMap = asMap(args["filter"])
       else {
         throw parseError("array_filter requires expression, alias, and filter")
       }
@@ -633,8 +647,8 @@ private final class PipelineExpressionParser {
 
     if resolvedName == "array_transform" {
       guard let exprMap = asMap(args["expression"]),
-            let elementAlias = args["element_alias"] as? String,
-            let transformMap = asMap(args["transform"])
+        let elementAlias = args["element_alias"] as? String,
+        let transformMap = asMap(args["transform"])
       else {
         throw parseError("array_transform requires expression, element_alias, and transform")
       }
@@ -646,9 +660,9 @@ private final class PipelineExpressionParser {
 
     if resolvedName == "array_transform_with_index" {
       guard let exprMap = asMap(args["expression"]),
-            let elementAlias = args["element_alias"] as? String,
-            let indexAlias = args["index_alias"] as? String,
-            let transformMap = asMap(args["transform"])
+        let elementAlias = args["element_alias"] as? String,
+        let indexAlias = args["index_alias"] as? String,
+        let transformMap = asMap(args["transform"])
       else {
         throw parseError(
           "array_transform_with_index requires expression, element_alias, index_alias, and transform"
@@ -715,8 +729,8 @@ private final class PipelineExpressionParser {
 
     if resolvedName == "conditional" {
       guard let conditionMap = asMap(args["condition"]),
-            let thenMap = asMap(args["then"]),
-            let elseMap = asMap(args["else"])
+        let thenMap = asMap(args["then"]),
+        let elseMap = asMap(args["else"])
       else {
         throw parseError("conditional requires condition, then, and else")
       }
@@ -730,8 +744,8 @@ private final class PipelineExpressionParser {
     if resolvedName == "timestamp_add" || resolvedName == "timestamp_subtract" {
       let unitVal = args["unit"]
       guard let timestampMap = asMap(args["timestamp"]),
-            unitVal != nil,
-            let amountMap = asMap(args["amount"])
+        unitVal != nil,
+        let amountMap = asMap(args["amount"])
       else {
         throw parseError("\(resolvedName) requires timestamp, unit, and amount")
       }
@@ -800,8 +814,8 @@ private final class PipelineExpressionParser {
     if resolvedName == "timestamp_diff" {
       let unitObj = args["unit"]
       guard let endMap = asMap(args["end"]),
-            let startMap = asMap(args["start"]),
-            unitObj != nil
+        let startMap = asMap(args["start"]),
+        unitObj != nil
       else {
         throw parseError("timestamp_diff requires end, start, and unit")
       }
@@ -837,7 +851,7 @@ private final class PipelineExpressionParser {
 
     if resolvedName == "if_null" {
       guard let exprMap = asMap(args["expression"]),
-            let replMap = asMap(args["replacement"])
+        let replMap = asMap(args["replacement"])
       else {
         throw parseError("if_null requires expression and replacement")
       }
@@ -863,7 +877,7 @@ private final class PipelineExpressionParser {
         throw parseError("switch_on requires at least two expressions")
       }
       var switchArgs: [any FirebaseFirestore.Expression] = []
-      for i in 0 ..< exprMaps.count {
+      for i in 0..<exprMaps.count {
         guard let emMap = asMap(exprMaps[i]) else {
           throw parseError("switch_on requires at least two expressions")
         }
@@ -892,7 +906,8 @@ private final class PipelineExpressionParser {
   }
 
   private func parseFilterTypedExpression(args: [String: Any]) throws
-    -> any FirebaseFirestore.Expression {
+    -> any FirebaseFirestore.Expression
+  {
     let op = args["operator"] as? String
     let exprMaps = asArray(args["expressions"])
     if let op, let exprMaps {
@@ -977,10 +992,12 @@ private final class PipelineExpressionParser {
 }
 
 enum PipelineParser {
-  static func executePipeline(firestore: Firestore,
-                              stages: [[String: Any?]],
-                              options: [String: Any?]?,
-                              completion: @escaping (Any?, Error?) -> Void) {
+  static func executePipeline(
+    firestore: Firestore,
+    stages: [[String: Any?]],
+    options: [String: Any?]?,
+    completion: @escaping (Any?, Error?) -> Void
+  ) {
     _ = options
     if NSClassFromString("FIRPipelineBridge") == nil {
       completion(nil, pipelineUnavailableError())
@@ -1021,10 +1038,10 @@ enum PipelineParser {
     throw parseError("expression must have alias or be a field reference")
   }
 
-  private static func parseSearchFields(expressionMaps exprMaps: [Any],
-                                        exprParser: PipelineExpressionParser) throws -> [
-    String: ExprBridge
-  ] {
+  private static func parseSearchFields(
+    expressionMaps exprMaps: [Any],
+    exprParser: PipelineExpressionParser
+  ) throws -> [String: ExprBridge] {
     var fields: [String: ExprBridge] = [:]
     for em in exprMaps {
       guard let emMap = asMap(em) else { continue }
@@ -1038,8 +1055,10 @@ enum PipelineParser {
     return fields
   }
 
-  private static func parseSearchStage(args: [String: Any],
-                                       exprParser: PipelineExpressionParser) throws -> StageBridge {
+  private static func parseSearchStage(
+    args: [String: Any],
+    exprParser: PipelineExpressionParser
+  ) throws -> StageBridge {
     let queryType = args["query_type"] as? String
     let query = args["query"]
     var options: [String: ExprBridge] = [:]
@@ -1095,16 +1114,18 @@ enum PipelineParser {
     )
   }
 
-  private static func parseStages(firestore: Firestore,
-                                  stages: [[String: Any]],
-                                  depth: Int = 0) throws -> [StageBridge] {
+  private static func parseStages(
+    firestore: Firestore,
+    stages: [[String: Any]],
+    depth: Int = 0
+  ) throws -> [StageBridge] {
     if depth > kMaxPipelineStageDepth {
       throw parseError("Pipeline nested too deeply")
     }
     let exprParser = PipelineExpressionParser(firestore: firestore)
     var stageBridges: [StageBridge] = []
 
-    for i in 0 ..< stages.count {
+    for i in 0..<stages.count {
       let stageMap = stages[i]
       guard let stageName = stageMap["stage"] as? String else {
         throw parseError("Stage must have a 'stage' field")
@@ -1269,7 +1290,8 @@ enum PipelineParser {
           if (exprMap["name"] as? String) == "alias" {
             let aliasArgs = asMap(exprMap["args"])
             if let aliasArgs, aliasArgs["expression"] != nil,
-               let innerExpr = asMap(aliasArgs["expression"]) {
+              let innerExpr = asMap(aliasArgs["expression"])
+            {
               fieldExpr = try exprParser.parseExpression(innerExpr)
               aliasStr = aliasArgs["alias"] as? String
             }
@@ -1343,9 +1365,12 @@ enum PipelineParser {
     return stageBridges
   }
 
-  private static func aggregateFunction(from funcMap: [String: Any],
-                                        exprParser: PipelineExpressionParser) throws
-    -> AggregateFunctionBridge {
+  private static func aggregateFunction(
+    from funcMap: [String: Any],
+    exprParser: PipelineExpressionParser
+  ) throws
+    -> AggregateFunctionBridge
+  {
     guard let name = funcMap["name"] as? String else {
       throw parseError("Aggregate function must have a 'name'")
     }
@@ -1365,9 +1390,12 @@ enum PipelineParser {
     return AggregateFunctionBridge(name: iosName, args: argsArray)
   }
 
-  private static func parseAggregateStage(args: [String: Any],
-                                          exprParser: PipelineExpressionParser) throws
-    -> StageBridge {
+  private static func parseAggregateStage(
+    args: [String: Any],
+    exprParser: PipelineExpressionParser
+  ) throws
+    -> StageBridge
+  {
     guard let accumulatorMaps = asArray(args["aggregate_functions"]), !accumulatorMaps.isEmpty
     else {
       throw parseError("aggregate requires aggregate_functions")
@@ -1379,9 +1407,12 @@ enum PipelineParser {
     )
   }
 
-  private static func parseAggregateStageWithOptions(args: [String: Any],
-                                                     exprParser: PipelineExpressionParser) throws
-    -> StageBridge {
+  private static func parseAggregateStageWithOptions(
+    args: [String: Any],
+    exprParser: PipelineExpressionParser
+  ) throws
+    -> StageBridge
+  {
     guard let stageMap = asMap(args["aggregate_stage"]) else {
       throw parseError("aggregate_with_options requires aggregate_stage")
     }
@@ -1400,10 +1431,13 @@ enum PipelineParser {
     )
   }
 
-  private static func parseAggregateStage(accumulatorMaps: [Any],
-                                          groupMaps: [Any]?,
-                                          exprParser: PipelineExpressionParser) throws
-    -> StageBridge {
+  private static func parseAggregateStage(
+    accumulatorMaps: [Any],
+    groupMaps: [Any]?,
+    exprParser: PipelineExpressionParser
+  ) throws
+    -> StageBridge
+  {
     var accumulators: [String: AggregateFunctionBridge] = [:]
     for accMap in accumulatorMaps {
       guard let accMap = asMap(accMap) else { continue }
@@ -1442,9 +1476,11 @@ enum PipelineParser {
     return AggregateStageBridge(accumulators: accumulators, groups: groups)
   }
 
-  private static func buildPipeline(firestore: Firestore,
-                                    stages: [[String: Any]],
-                                    depth: Int = 0) throws -> PipelineBridge {
+  private static func buildPipeline(
+    firestore: Firestore,
+    stages: [[String: Any]],
+    depth: Int = 0
+  ) throws -> PipelineBridge {
     let stageBridges = try parseStages(firestore: firestore, stages: stages, depth: depth)
     return PipelineBridge(stages: stageBridges, db: firestore)
   }

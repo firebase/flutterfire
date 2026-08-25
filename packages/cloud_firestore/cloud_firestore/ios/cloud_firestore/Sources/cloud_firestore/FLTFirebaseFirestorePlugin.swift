@@ -26,7 +26,8 @@ import Foundation
 
 @objc(FLTFirebaseFirestorePlugin)
 public class FLTFirebaseFirestorePlugin: NSObject, FlutterPlugin, FLTFirebasePluginProtocol,
-  FirebaseFirestoreHostApi {
+  FirebaseFirestoreHostApi
+{
   private var messenger: FlutterBinaryMessenger
   private var transactions: [String: Transaction] = [:]
   private var eventChannels: [String: FlutterEventChannel] = [:]
@@ -126,9 +127,11 @@ public class FLTFirebaseFirestorePlugin: NSObject, FlutterPlugin, FLTFirebasePlu
   }
 
   @discardableResult
-  private func registerEventChannel(prefix: String,
-                                    identifier: String = UUID().uuidString.lowercased(),
-                                    streamHandler: NSObject & FlutterStreamHandler) -> String {
+  private func registerEventChannel(
+    prefix: String,
+    identifier: String = UUID().uuidString.lowercased(),
+    streamHandler: NSObject & FlutterStreamHandler
+  ) -> String {
     let channelName = "\(prefix)/\(identifier)"
     let channel = FlutterEventChannel(
       name: channelName,
@@ -189,13 +192,17 @@ public class FLTFirebaseFirestorePlugin: NSObject, FlutterPlugin, FLTFirebasePlu
     return firestore
   }
 
-  private func completeOnError<T>(_ error: Error,
-                                  _ completion: @escaping (Result<T, Error>) -> Void) {
+  private func completeOnError<T>(
+    _ error: Error,
+    _ completion: @escaping (Result<T, Error>) -> Void
+  ) {
     completion(.failure(FirebaseFirestoreUtils.flutterError(from: error)))
   }
 
-  func loadBundle(app: FirestorePigeonFirebaseApp, bundle: FlutterStandardTypedData,
-                  completion: @escaping (Result<String, Error>) -> Void) {
+  func loadBundle(
+    app: FirestorePigeonFirebaseApp, bundle: FlutterStandardTypedData,
+    completion: @escaping (Result<String, Error>) -> Void
+  ) {
     let firestore = firestore(from: app)
     let identifier = registerEventChannel(
       prefix: kFLTFirebaseFirestoreLoadBundleChannelName,
@@ -204,8 +211,10 @@ public class FLTFirebaseFirestorePlugin: NSObject, FlutterPlugin, FLTFirebasePlu
     completion(.success(identifier))
   }
 
-  func namedQueryGet(app: FirestorePigeonFirebaseApp, name: String, options: InternalGetOptions,
-                     completion: @escaping (Result<InternalQuerySnapshot, Error>) -> Void) {
+  func namedQueryGet(
+    app: FirestorePigeonFirebaseApp, name: String, options: InternalGetOptions,
+    completion: @escaping (Result<InternalQuerySnapshot, Error>) -> Void
+  ) {
     let firestore = firestore(from: app)
     let source = PigeonParser.parseSource(options.source)
     let serverTimestampBehavior = PigeonParser.parseServerTimestampBehavior(
@@ -219,7 +228,7 @@ public class FLTFirebaseFirestorePlugin: NSObject, FlutterPlugin, FLTFirebasePlu
             FlutterError(
               code: "non-existent-named-query",
               message:
-              "Named query has not been found. Please check it has been loaded properly via loadBundle().",
+                "Named query has not been found. Please check it has been loaded properly via loadBundle().",
               details: nil
             )
           )
@@ -242,8 +251,10 @@ public class FLTFirebaseFirestorePlugin: NSObject, FlutterPlugin, FLTFirebasePlu
     }
   }
 
-  func clearPersistence(app: FirestorePigeonFirebaseApp,
-                        completion: @escaping (Result<Void, Error>) -> Void) {
+  func clearPersistence(
+    app: FirestorePigeonFirebaseApp,
+    completion: @escaping (Result<Void, Error>) -> Void
+  ) {
     firestore(from: app).clearPersistence { error in
       if let error {
         self.completeOnError(error, completion)
@@ -253,8 +264,10 @@ public class FLTFirebaseFirestorePlugin: NSObject, FlutterPlugin, FLTFirebasePlu
     }
   }
 
-  func disableNetwork(app: FirestorePigeonFirebaseApp,
-                      completion: @escaping (Result<Void, Error>) -> Void) {
+  func disableNetwork(
+    app: FirestorePigeonFirebaseApp,
+    completion: @escaping (Result<Void, Error>) -> Void
+  ) {
     firestore(from: app).disableNetwork { error in
       if let error {
         self.completeOnError(error, completion)
@@ -264,8 +277,10 @@ public class FLTFirebaseFirestorePlugin: NSObject, FlutterPlugin, FLTFirebasePlu
     }
   }
 
-  func enableNetwork(app: FirestorePigeonFirebaseApp,
-                     completion: @escaping (Result<Void, Error>) -> Void) {
+  func enableNetwork(
+    app: FirestorePigeonFirebaseApp,
+    completion: @escaping (Result<Void, Error>) -> Void
+  ) {
     firestore(from: app).enableNetwork { error in
       if let error {
         self.completeOnError(error, completion)
@@ -275,8 +290,10 @@ public class FLTFirebaseFirestorePlugin: NSObject, FlutterPlugin, FLTFirebasePlu
     }
   }
 
-  func terminate(app: FirestorePigeonFirebaseApp,
-                 completion: @escaping (Result<Void, Error>) -> Void) {
+  func terminate(
+    app: FirestorePigeonFirebaseApp,
+    completion: @escaping (Result<Void, Error>) -> Void
+  ) {
     let firestore = firestore(from: app)
     firestore.terminate { error in
       if let error {
@@ -291,8 +308,10 @@ public class FLTFirebaseFirestorePlugin: NSObject, FlutterPlugin, FLTFirebasePlu
     }
   }
 
-  func waitForPendingWrites(app: FirestorePigeonFirebaseApp,
-                            completion: @escaping (Result<Void, Error>) -> Void) {
+  func waitForPendingWrites(
+    app: FirestorePigeonFirebaseApp,
+    completion: @escaping (Result<Void, Error>) -> Void
+  ) {
     firestore(from: app).waitForPendingWrites { error in
       if let error {
         self.completeOnError(error, completion)
@@ -302,8 +321,10 @@ public class FLTFirebaseFirestorePlugin: NSObject, FlutterPlugin, FLTFirebasePlu
     }
   }
 
-  func setIndexConfiguration(app: FirestorePigeonFirebaseApp, indexConfiguration: String,
-                             completion: @escaping (Result<Void, Error>) -> Void) {
+  func setIndexConfiguration(
+    app: FirestorePigeonFirebaseApp, indexConfiguration: String,
+    completion: @escaping (Result<Void, Error>) -> Void
+  ) {
     firestore(from: app).setIndexConfiguration(indexConfiguration) { error in
       if let error {
         self.completeOnError(error, completion)
@@ -313,14 +334,18 @@ public class FLTFirebaseFirestorePlugin: NSObject, FlutterPlugin, FLTFirebasePlu
     }
   }
 
-  func setLoggingEnabled(loggingEnabled: Bool,
-                         completion: @escaping (Result<Void, Error>) -> Void) {
+  func setLoggingEnabled(
+    loggingEnabled: Bool,
+    completion: @escaping (Result<Void, Error>) -> Void
+  ) {
     Firestore.enableLogging(loggingEnabled)
     completion(.success(()))
   }
 
-  func snapshotsInSyncSetup(app: FirestorePigeonFirebaseApp,
-                            completion: @escaping (Result<String, Error>) -> Void) {
+  func snapshotsInSyncSetup(
+    app: FirestorePigeonFirebaseApp,
+    completion: @escaping (Result<String, Error>) -> Void
+  ) {
     let firestore = firestore(from: app)
     let identifier = registerEventChannel(
       prefix: kFLTFirebaseFirestoreSnapshotsInSyncEventChannelName,
@@ -329,8 +354,10 @@ public class FLTFirebaseFirestorePlugin: NSObject, FlutterPlugin, FLTFirebasePlu
     completion(.success(identifier))
   }
 
-  func transactionCreate(app: FirestorePigeonFirebaseApp, timeout: Int64, maxAttempts: Int64,
-                         completion: @escaping (Result<String, Error>) -> Void) {
+  func transactionCreate(
+    app: FirestorePigeonFirebaseApp, timeout: Int64, maxAttempts: Int64,
+    completion: @escaping (Result<String, Error>) -> Void
+  ) {
     let firestore = firestore(from: app)
     let transactionId = UUID().uuidString.lowercased()
     let handler = TransactionStreamHandler(
@@ -363,9 +390,11 @@ public class FLTFirebaseFirestorePlugin: NSObject, FlutterPlugin, FLTFirebasePlu
     completion(.success(identifier))
   }
 
-  func transactionStoreResult(transactionId: String, resultType: InternalTransactionResult,
-                              commands: [InternalTransactionCommand?]?,
-                              completion: @escaping (Result<Void, Error>) -> Void) {
+  func transactionStoreResult(
+    transactionId: String, resultType: InternalTransactionResult,
+    commands: [InternalTransactionCommand?]?,
+    completion: @escaping (Result<Void, Error>) -> Void
+  ) {
     listenersLock.lock()
     let handler = transactionHandlers[transactionId]
     listenersLock.unlock()
@@ -373,8 +402,10 @@ public class FLTFirebaseFirestorePlugin: NSObject, FlutterPlugin, FLTFirebasePlu
     completion(.success(()))
   }
 
-  func transactionGet(app: FirestorePigeonFirebaseApp, transactionId: String, path: String,
-                      completion: @escaping (Result<InternalDocumentSnapshot, Error>) -> Void) {
+  func transactionGet(
+    app: FirestorePigeonFirebaseApp, transactionId: String, path: String,
+    completion: @escaping (Result<InternalDocumentSnapshot, Error>) -> Void
+  ) {
     DispatchQueue.global(qos: .default).async {
       let firestore = self.firestore(from: app)
       let document = firestore.document(path)
@@ -389,7 +420,7 @@ public class FLTFirebaseFirestorePlugin: NSObject, FlutterPlugin, FLTFirebasePlu
             FlutterError(
               code: "missing-transaction",
               message:
-              "An error occurred while getting the native transaction. It could be caused by a timeout in a preceding transaction operation.",
+                "An error occurred while getting the native transaction. It could be caused by a timeout in a preceding transaction operation.",
               details: nil
             )
           )
@@ -412,8 +443,10 @@ public class FLTFirebaseFirestorePlugin: NSObject, FlutterPlugin, FLTFirebasePlu
     }
   }
 
-  func documentReferenceSet(app: FirestorePigeonFirebaseApp, request: DocumentReferenceRequest,
-                            completion: @escaping (Result<Void, Error>) -> Void) {
+  func documentReferenceSet(
+    app: FirestorePigeonFirebaseApp, request: DocumentReferenceRequest,
+    completion: @escaping (Result<Void, Error>) -> Void
+  ) {
     let document = firestore(from: app).document(request.path)
     let data = request.data as? [String: Any] ?? [:]
     let finish: (Error?) -> Void = { error in
@@ -435,8 +468,10 @@ public class FLTFirebaseFirestorePlugin: NSObject, FlutterPlugin, FLTFirebasePlu
     }
   }
 
-  func documentReferenceUpdate(app: FirestorePigeonFirebaseApp, request: DocumentReferenceRequest,
-                               completion: @escaping (Result<Void, Error>) -> Void) {
+  func documentReferenceUpdate(
+    app: FirestorePigeonFirebaseApp, request: DocumentReferenceRequest,
+    completion: @escaping (Result<Void, Error>) -> Void
+  ) {
     let document = firestore(from: app).document(request.path)
     let data = request.data as? [AnyHashable: Any] ?? [:]
     document.updateData(data) { error in
@@ -448,10 +483,12 @@ public class FLTFirebaseFirestorePlugin: NSObject, FlutterPlugin, FLTFirebasePlu
     }
   }
 
-  func documentReferenceGet(app: FirestorePigeonFirebaseApp, request: DocumentReferenceRequest,
-                            completion:
-                            @escaping (Result<InternalDocumentSnapshot, Error>)
-                              -> Void) {
+  func documentReferenceGet(
+    app: FirestorePigeonFirebaseApp, request: DocumentReferenceRequest,
+    completion:
+      @escaping (Result<InternalDocumentSnapshot, Error>)
+      -> Void
+  ) {
     let document = firestore(from: app).document(request.path)
     let source = PigeonParser.parseSource(request.source ?? .serverAndCache)
     let serverTimestampBehavior = PigeonParser.parseServerTimestampBehavior(
@@ -472,8 +509,10 @@ public class FLTFirebaseFirestorePlugin: NSObject, FlutterPlugin, FLTFirebasePlu
     }
   }
 
-  func documentReferenceDelete(app: FirestorePigeonFirebaseApp, request: DocumentReferenceRequest,
-                               completion: @escaping (Result<Void, Error>) -> Void) {
+  func documentReferenceDelete(
+    app: FirestorePigeonFirebaseApp, request: DocumentReferenceRequest,
+    completion: @escaping (Result<Void, Error>) -> Void
+  ) {
     firestore(from: app).document(request.path).delete { error in
       if let error {
         self.completeOnError(error, completion)
@@ -483,9 +522,11 @@ public class FLTFirebaseFirestorePlugin: NSObject, FlutterPlugin, FLTFirebasePlu
     }
   }
 
-  func queryGet(app: FirestorePigeonFirebaseApp, path: String, isCollectionGroup: Bool,
-                parameters: InternalQueryParameters, options: InternalGetOptions,
-                completion: @escaping (Result<InternalQuerySnapshot, Error>) -> Void) {
+  func queryGet(
+    app: FirestorePigeonFirebaseApp, path: String, isCollectionGroup: Bool,
+    parameters: InternalQueryParameters, options: InternalGetOptions,
+    completion: @escaping (Result<InternalQuerySnapshot, Error>) -> Void
+  ) {
     let firestore = firestore(from: app)
     guard
       let query = PigeonParser.parseQuery(
@@ -498,7 +539,7 @@ public class FLTFirebaseFirestorePlugin: NSObject, FlutterPlugin, FLTFirebasePlu
           FlutterError(
             code: "error-parsing",
             message:
-            "An error occurred while parsing query arguments, this is most likely an error with this SDK.",
+              "An error occurred while parsing query arguments, this is most likely an error with this SDK.",
             details: nil
           )
         )
@@ -525,10 +566,12 @@ public class FLTFirebaseFirestorePlugin: NSObject, FlutterPlugin, FLTFirebasePlu
     }
   }
 
-  func aggregateQuery(app: FirestorePigeonFirebaseApp, path: String,
-                      parameters: InternalQueryParameters,
-                      source: AggregateSource, queries: [AggregateQuery?], isCollectionGroup: Bool,
-                      completion: @escaping (Result<[AggregateQueryResponse?], Error>) -> Void) {
+  func aggregateQuery(
+    app: FirestorePigeonFirebaseApp, path: String,
+    parameters: InternalQueryParameters,
+    source: AggregateSource, queries: [AggregateQuery?], isCollectionGroup: Bool,
+    completion: @escaping (Result<[AggregateQueryResponse?], Error>) -> Void
+  ) {
     let firestore = firestore(from: app)
     guard
       let query = PigeonParser.parseQuery(
@@ -541,7 +584,7 @@ public class FLTFirebaseFirestorePlugin: NSObject, FlutterPlugin, FLTFirebasePlu
           FlutterError(
             code: "error-parsing",
             message:
-            "An error occurred while parsing query arguments, this is most likely an error with this SDK.",
+              "An error occurred while parsing query arguments, this is most likely an error with this SDK.",
             details: nil
           )
         )
@@ -609,8 +652,10 @@ public class FLTFirebaseFirestorePlugin: NSObject, FlutterPlugin, FLTFirebasePlu
     }
   }
 
-  func writeBatchCommit(app: FirestorePigeonFirebaseApp, writes: [InternalTransactionCommand?],
-                        completion: @escaping (Result<Void, Error>) -> Void) {
+  func writeBatchCommit(
+    app: FirestorePigeonFirebaseApp, writes: [InternalTransactionCommand?],
+    completion: @escaping (Result<Void, Error>) -> Void
+  ) {
     let firestore = firestore(from: app)
     let batch = firestore.batch()
     for write in writes.compactMap({ $0 }) {
@@ -646,10 +691,12 @@ public class FLTFirebaseFirestorePlugin: NSObject, FlutterPlugin, FLTFirebasePlu
     }
   }
 
-  func querySnapshot(app: FirestorePigeonFirebaseApp, path: String, isCollectionGroup: Bool,
-                     parameters: InternalQueryParameters, options: InternalGetOptions,
-                     includeMetadataChanges: Bool, source: ListenSource,
-                     completion: @escaping (Result<String, Error>) -> Void) {
+  func querySnapshot(
+    app: FirestorePigeonFirebaseApp, path: String, isCollectionGroup: Bool,
+    parameters: InternalQueryParameters, options: InternalGetOptions,
+    includeMetadataChanges: Bool, source: ListenSource,
+    completion: @escaping (Result<String, Error>) -> Void
+  ) {
     let firestore = firestore(from: app)
     let query = PigeonParser.parseQuery(
       parameters: parameters, firestore: firestore, path: path, isCollectionGroup: isCollectionGroup
@@ -660,7 +707,7 @@ public class FLTFirebaseFirestorePlugin: NSObject, FlutterPlugin, FLTFirebasePlu
           FlutterError(
             code: "error-parsing",
             message:
-            "An error occurred while parsing query arguments, this is most likely an error with this SDK.",
+              "An error occurred while parsing query arguments, this is most likely an error with this SDK.",
             details: nil
           )
         )
@@ -683,10 +730,12 @@ public class FLTFirebaseFirestorePlugin: NSObject, FlutterPlugin, FLTFirebasePlu
     completion(.success(identifier))
   }
 
-  func documentReferenceSnapshot(app: FirestorePigeonFirebaseApp,
-                                 parameters: DocumentReferenceRequest,
-                                 includeMetadataChanges: Bool, source: ListenSource,
-                                 completion: @escaping (Result<String, Error>) -> Void) {
+  func documentReferenceSnapshot(
+    app: FirestorePigeonFirebaseApp,
+    parameters: DocumentReferenceRequest,
+    includeMetadataChanges: Bool, source: ListenSource,
+    completion: @escaping (Result<String, Error>) -> Void
+  ) {
     let firestore = firestore(from: app)
     let document = firestore.document(parameters.path)
     let identifier = registerEventChannel(
@@ -704,9 +753,11 @@ public class FLTFirebaseFirestorePlugin: NSObject, FlutterPlugin, FLTFirebasePlu
     completion(.success(identifier))
   }
 
-  func persistenceCacheIndexManagerRequest(app: FirestorePigeonFirebaseApp,
-                                           request: PersistenceCacheIndexManagerRequest,
-                                           completion: @escaping (Result<Void, Error>) -> Void) {
+  func persistenceCacheIndexManagerRequest(
+    app: FirestorePigeonFirebaseApp,
+    request: PersistenceCacheIndexManagerRequest,
+    completion: @escaping (Result<Void, Error>) -> Void
+  ) {
     if let manager = firestore(from: app).persistentCacheIndexManager {
       switch request {
       case .enableIndexAutoCreation:
@@ -722,9 +773,11 @@ public class FLTFirebaseFirestorePlugin: NSObject, FlutterPlugin, FLTFirebasePlu
     completion(.success(()))
   }
 
-  func executePipeline(app: FirestorePigeonFirebaseApp, stages: [[String?: Any?]?],
-                       options: [String?: Any?]?,
-                       completion: @escaping (Result<InternalPipelineSnapshot, Error>) -> Void) {
+  func executePipeline(
+    app: FirestorePigeonFirebaseApp, stages: [[String?: Any?]?],
+    options: [String?: Any?]?,
+    completion: @escaping (Result<InternalPipelineSnapshot, Error>) -> Void
+  ) {
     let firestore = firestore(from: app)
     let mappedStages: [[String: Any?]] = stages.compactMap { stage in
       guard let stage else { return nil }
@@ -783,7 +836,7 @@ public class FLTFirebaseFirestorePlugin: NSObject, FlutterPlugin, FLTFirebasePlu
           let ref = object.value(forKey: "reference") as AnyObject?
           let path =
             (ref?.value(forKey: "path") as? String)
-              ?? (object.value(forKey: "documentID") as? String)
+            ?? (object.value(forKey: "documentID") as? String)
           let data = object.value(forKey: "data") as? [String: Any]
           let mappedData = PigeonParser.toPigeonMap(data)
           pigeonResults.append(
@@ -820,7 +873,8 @@ private final class EventChannelCleanupHandler: NSObject, FlutterStreamHandler {
   }
 
   func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink)
-    -> FlutterError? {
+    -> FlutterError?
+  {
     inner.onListen(withArguments: arguments, eventSink: events)
   }
 

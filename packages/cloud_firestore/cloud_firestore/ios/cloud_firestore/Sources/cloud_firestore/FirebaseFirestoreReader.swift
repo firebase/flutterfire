@@ -50,7 +50,7 @@ class FirebaseFirestoreReader: FlutterStandardReader {
       let length = readSize()
       var array: [Any] = []
       array.reserveCapacity(Int(length))
-      for _ in 0 ..< length {
+      for _ in 0..<length {
         let value = readValue()
         array.append(value ?? NSNull())
       }
@@ -200,8 +200,8 @@ class FirebaseFirestoreReader: FlutterStandardReader {
 
       for item in whereConditions {
         guard let condition = item as? [Any], condition.count >= 3,
-              let fieldPath = condition[0] as? FieldPath,
-              let op = condition[1] as? String
+          let fieldPath = condition[0] as? FieldPath,
+          let op = condition[1] as? String
         else {
           throw PigeonParser.queryParseError("Invalid query condition")
         }
