@@ -1822,6 +1822,9 @@ class FirebaseAuthHostApi {
     return pigeonVar_replyValue! as String;
   }
 
+  /// Applies auth settings. When [InternalFirebaseAuthSettings.migrateCurrentUser]
+  /// is true and a user was migrated, returns that user so Dart can reconcile
+  /// [currentUser] before auth-state events arrive. Otherwise returns null.
   Future<InternalUserDetails?> setSettings(
       AuthPigeonFirebaseApp app, InternalFirebaseAuthSettings settings) async {
     final pigeonVar_channelName =

@@ -1064,6 +1064,8 @@ void main() {
         test(
           'migrates the current user when changing access groups',
           () async {
+            const accessGroup =
+                'YYX2P3XVJ7.io.flutter.plugins.firebase.auth.example';
             final auth = FirebaseAuth.instance;
 
             await auth.signOut();
@@ -1072,7 +1074,7 @@ void main() {
 
             try {
               await auth.setSettings(
-                userAccessGroup: 'YYX2P3XVJ7.io.flutter.plugins.firebase.tests',
+                userAccessGroup: accessGroup,
                 migrateCurrentUser: true,
               );
 

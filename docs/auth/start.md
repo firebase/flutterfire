@@ -248,7 +248,10 @@ await FirebaseAuth.instance.setSettings(
 );
 ```
 
-Migration can replace a user already stored in the destination access group.
+Migration reads the existing session straight from the Keychain when Auth has
+not restored it yet, so it is safe to run at app startup before any other Auth
+call. Migration can replace a user already stored in the destination access
+group.
 For more information about configuring access groups, see
 [Enabling cross-app authentication with shared Apple Keychain](https://firebase.google.com/docs/auth/ios/single-sign-on).
 
