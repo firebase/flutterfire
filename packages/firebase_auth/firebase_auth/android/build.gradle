@@ -76,10 +76,6 @@ android {
         implementation platform("com.google.firebase:firebase-bom:${getRootProjectExtOrCoreProperty("FirebaseSDKVersion", firebaseCoreProject)}")
         implementation 'com.google.firebase:firebase-auth'
         implementation 'androidx.annotation:annotation:1.7.0'
-        // firebase-auth class files reference @UnknownInitialization but do not
-        // declare checker-qual. Kotlin needs that annotation to resolve inferred
-        // SAM parameter types (IdTokenListener). See #18608.
-        compileOnly 'org.checkerframework:checker-qual:3.49.5'
     }
 }
 
