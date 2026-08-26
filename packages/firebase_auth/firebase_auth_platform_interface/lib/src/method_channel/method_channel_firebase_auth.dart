@@ -638,7 +638,8 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
           multiFactorInstance = MethodChannelMultiFactor(this);
           _multiFactorInstances[app.name] = multiFactorInstance;
         }
-        currentUser = MethodChannelUser(this, multiFactorInstance, migratedUser);
+        currentUser =
+            MethodChannelUser(this, multiFactorInstance, migratedUser);
       }
     } catch (e, stack) {
       convertPlatformException(e, stack);
