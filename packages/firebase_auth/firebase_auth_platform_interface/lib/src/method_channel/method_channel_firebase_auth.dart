@@ -629,7 +629,8 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       // Native migration completes before this Future resolves, but auth-state
       // events are delivered asynchronously. Assign [currentUser] from the
       // returned user (same pattern as sign-in APIs) so callers don't observe a
-      // stale or transiently-null cache.
+      // stale or transiently-null cache. The events themselves come from the
+      // native listener, which the migration triggers on its own.
       if (migratedUser != null) {
         MethodChannelMultiFactor? multiFactorInstance =
             _multiFactorInstances[app.name];
@@ -637,9 +638,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
           multiFactorInstance = MethodChannelMultiFactor(this);
           _multiFactorInstances[app.name] = multiFactorInstance;
         }
-        final user = MethodChannelUser(this, multiFactorInstance, migratedUser);
-        currentUser = user;
-        sendAuthChangesEvent(app.name, user);
+        currentUser = MethodChannelUser(this, multiFactorInstance, migratedUser);
       }
     } catch (e, stack) {
       convertPlatformException(e, stack);
