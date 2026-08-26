@@ -1080,7 +1080,15 @@ public class FLTFirebaseAuthPlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
       if let currentUser = auth.currentUser {
         userToMigrate = currentUser
       } else {
-        userToMigrate = try? auth.getStoredUser(forAccessGroup: auth.userAccessGroup)
+        do {
+          userToMigrate = try auth.getStoredUser(forAccessGroup: auth.userAccessGroup)
+        } catch {
+          // Report the read failure instead of carrying on: switching access
+          // groups below would delete the entry we just failed to read, and the
+          // session would be gone for good.
+          completion(.failure(AuthErrors.convertToFlutterError(error)))
+          return
+        }
       }
     }
 
