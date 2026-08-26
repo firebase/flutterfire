@@ -1,0 +1,1 @@
+../../../../../../ios/firebase_core/Sources/firebase_core_objc/include/firebase_core/FLTFirebasePlugin.h

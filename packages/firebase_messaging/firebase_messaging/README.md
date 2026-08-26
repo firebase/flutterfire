@@ -23,6 +23,16 @@ Apps that adopt the UIScene lifecycle register Flutter plugins after
 `UNUserNotificationCenter.delegate` to be configured before that method returns, so configure
 Firebase Messaging explicitly from your app delegate:
 
+```swift
+override func application(
+  _ application: UIApplication,
+  didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+) -> Bool {
+  FLTFirebaseMessagingPlugin.configureNotificationCenterDelegate()
+  return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+}
+```
+
 ```objectivec
 #import <firebase_messaging/FLTFirebaseMessagingPlugin.h>
 

@@ -1,3 +1,10 @@
+## 9.0.7
+
+ - **REFACTOR**(platform_interface): replace Flutter UI and foundation imports with package:meta ([#18604](https://github.com/firebase/flutterfire/issues/18604)). ([fef6d420](https://github.com/firebase/flutterfire/commit/fef6d42090ea275f07117c085bd04710d9df51bc))
+ - **REFACTOR**(auth,android): migrate native implementation to Kotlin ([#18582](https://github.com/firebase/flutterfire/issues/18582)). ([6131eddc](https://github.com/firebase/flutterfire/commit/6131eddc724aac2005f839e612617953572422fc))
+ - **REFACTOR**(auth,apple): migrate iOS/macOS plugin implementation to Swift ([#18581](https://github.com/firebase/flutterfire/issues/18581)). ([8d97b561](https://github.com/firebase/flutterfire/commit/8d97b56120900eee4e78bd52577b12831604cce9))
+ - **DOCS**(auth): update account-exists guidance after fetchSignInMethodsForEmail removal ([#18547](https://github.com/firebase/flutterfire/issues/18547)). ([b0585f0e](https://github.com/firebase/flutterfire/commit/b0585f0e32e40771b62fd711b87e91fc408d8520))
+
 ## 9.0.6
 
  - Update a dependency to the latest release.

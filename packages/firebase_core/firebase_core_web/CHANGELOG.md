@@ -1,3 +1,9 @@
+## 3.11.0
+
+ - **FIX**(core,web): keep App Check registered for secondary Firebase apps ([#18557](https://github.com/firebase/flutterfire/issues/18557)). ([1345dbb3](https://github.com/firebase/flutterfire/commit/1345dbb38af36c2d1c3f6582f474f5520a185021))
+ - **FIX**(core,web): preserve non-JavaScript app errors ([#18552](https://github.com/firebase/flutterfire/issues/18552)). ([e6943a68](https://github.com/firebase/flutterfire/commit/e6943a682f2a6e93076cd068d49ee7c47738c079))
+ - **FEAT**(core): bump Firebase JS SDK to 12.18.0 ([#18598](https://github.com/firebase/flutterfire/issues/18598)). ([f29565bb](https://github.com/firebase/flutterfire/commit/f29565bb191ddc32973f5b3be9fb4173ae3896b4))
+
 ## 3.10.0
 
  - **FIX**(core,web): load firebase-app.js before component bundles to avoid WebKit import race ([#18443](https://github.com/firebase/flutterfire/issues/18443)). ([4b731aed](https://github.com/firebase/flutterfire/commit/4b731aed0a1346070d8548c342e2e4b012844d58))

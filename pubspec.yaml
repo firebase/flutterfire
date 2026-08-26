@@ -96,7 +96,7 @@ melos:
           dart run scripts/generate_dataconnect_version.dart && \
           dart run scripts/generate_versions_web.dart && \
           dart run scripts/generate_versions_spm.dart && \
-          git add packages/firebase_data_connect/firebase_data_connect/lib/src/dataconnect_version.dart && git add packages/*/*_web/lib/src/*_version.dart && git add packages/*/*/ios/*/Package.swift packages/*/*/macos/*/Package.swift && git add packages/*/*/ios/*/Sources/*/Constants.swift
+          git add packages/firebase_ai/firebase_ai/lib/src/firebaseai_version.dart && git add packages/firebase_data_connect/firebase_data_connect/lib/src/dataconnect_version.dart && git add packages/*/*_web/lib/src/*_version.dart && git add packages/*/*/ios/*/Package.swift packages/*/*/macos/*/Package.swift && git add packages/*/*/ios/*/Sources/*/Constants.swift
 
     bootstrap:
       # It seems so that running "pub get" in parallel has some issues (like
@@ -465,10 +465,22 @@ melos:
         melos exec -- "flutter pub run pigeon --input ./pigeons/messages.dart" && \
         melos run generate:pigeon:macos --no-select && \
         melos run generate:pigeon:android --no-select && \
+        melos run generate:pigeon:dart-test --no-select && \
         melos run format-ci --no-select
       packageFilters:
         fileExists: 'pigeons/messages.dart'
       description: Generate the pigeon messages for all the supported packages.
+
+    generate:pigeon:dart-test:
+      run: |
+        melos exec -- "sed -i '' \"s;import 'package:flutter_test/flutter_test.dart';import 'package:firebase_core_platform_interface/test_binding.dart';g\" lib/src/pigeon/test_api.dart"
+      packageFilters:
+        fileExists: 'lib/src/pigeon/test_api.dart'
+      description: |
+        The generated test API lives in lib/ so other packages can use it, but
+        pigeon generates it against flutter_test, which cannot be a dependency
+        of a published package (it pins test_api for every consumer, see #17001).
+        Point it at the test binding shim instead.
 
     generate:pigeon:macos:
       run: |

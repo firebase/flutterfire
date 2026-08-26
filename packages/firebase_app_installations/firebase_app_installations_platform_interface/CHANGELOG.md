@@ -1,3 +1,8 @@
+## 0.1.5
+
+ - **FIX**(ci): align Android toolchain and analyzer with Flutter 3.47 ([#18566](https://github.com/firebase/flutterfire/issues/18566)). ([87ace849](https://github.com/firebase/flutterfire/commit/87ace8496fec75c461f3b29a9b8a85d46e286957))
+ - **FEAT**(app_installations): add Pigeon support ([#18562](https://github.com/firebase/flutterfire/issues/18562)). ([2d093eb9](https://github.com/firebase/flutterfire/commit/2d093eb9c384f29fdb148289b1245f49a5db6f0c))
+
 ## 0.1.4+75
 
  - Update a dependency to the latest release.

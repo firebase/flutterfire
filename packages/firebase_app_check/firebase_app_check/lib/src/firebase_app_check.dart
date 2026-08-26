@@ -73,6 +73,12 @@ class FirebaseAppCheck extends FirebasePlugin implements FirebaseService {
   /// "app attest with fallback to device check" via `AppleAppCheckProvider`.
   /// Note: App Attest is only available on iOS 14.0+ and macOS 14.0+.
   ///
+  /// Do not call `FirebaseApp.configure()` in `AppDelegate` unless you also
+  /// call `AppCheck.setAppCheckProviderFactory` first; otherwise
+  /// `providerApple` is ignored on physical Apple devices. Prefer
+  /// `Firebase.initializeApp()` only.
+  /// See https://github.com/firebase/flutterfire/issues/18613.
+  ///
   /// **Windows**: Only the debug provider is supported. You **must** supply a
   /// debug token — the desktop C++ SDK does not auto-generate one. Either pass
   /// it via `providerWindows: WindowsDebugProvider(debugToken: 'your-token')`

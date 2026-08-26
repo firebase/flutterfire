@@ -1,3 +1,7 @@
+## 0.1.7+13
+
+ - **FIX**(ci): align Android toolchain and analyzer with Flutter 3.47 ([#18566](https://github.com/firebase/flutterfire/issues/18566)). ([87ace849](https://github.com/firebase/flutterfire/commit/87ace8496fec75c461f3b29a9b8a85d46e286957))
+
 ## 0.1.7+12
 
  - Update a dependency to the latest release.

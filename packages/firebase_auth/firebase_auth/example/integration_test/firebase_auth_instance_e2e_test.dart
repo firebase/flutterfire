@@ -916,6 +916,27 @@ void main() {
         );
       });
 
+      group('signInWithProvider()', () {
+        test(
+          'throws a clear error on macOS, where the provider flow is unsupported',
+          () async {
+            await expectLater(
+              FirebaseAuth.instance.signInWithProvider(MicrosoftAuthProvider()),
+              throwsA(
+                isA<FirebaseAuthException>().having(
+                  (e) => e.code,
+                  'code',
+                  'unsupported-platform',
+                ),
+              ),
+            );
+          },
+          // The Firebase Apple SDK only implements the OAuth web sign-in flow
+          // on iOS, so this only applies to macOS.
+          skip: kIsWeb || defaultTargetPlatform != TargetPlatform.macOS,
+        );
+      });
+
       group('signOut()', () {
         test('should sign out', () async {
           await ensureSignedIn(testEmail);

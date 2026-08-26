@@ -317,17 +317,22 @@ jobs:
         # Web devices are not supported for the `flutter test` command yet. As a
         # workaround we can use the `flutter drive` command. Tracking issue:
         # https://github.com/flutter/flutter/issues/66264
+        # WASM runs can hang after building but before the test harness
+        # connects, which the 15 minute job timeout then reports as a
+        # cancellation. The retry script covers that failure class: it owns the
+        # chromedriver lifecycle, applies a per-attempt timeout, retries only
+        # infrastructure startup failures, and performs the `[E]` check. It also
+        # defaults the device to `web-server` rather than `chrome`, so
+        # chromedriver launches the browser headlessly instead of the flutter
+        # tool needing a display server.
         run: |
-          chromedriver --port=4444 --trace-buffer-size=100000 &
           mv ./web/wasm_index.html ./web/index.html
-          flutter drive --target=./integration_test/e2e_test.dart --driver=./test_driver/integration_test.dart -d chrome --wasm --dart-define=CI=true | tee output.log
-          # We have to check the output for failed tests matching the string "[E]"
-          output=$(<output.log)
-          if [[ "$output" =~ \[E\] ]]; then
-          # You will see "All tests passed." in the logs even when tests failed.
-          echo "All tests did not pass. Please check the logs for more information."
-          exit 1
-          fi
+          FLUTTER_DRIVE_TARGET="./integration_test/e2e_test.dart" \
+          FLUTTER_DRIVE_DRIVER="./test_driver/integration_test.dart" \
+          FLUTTER_DRIVE_EXTRA_ARGS="--wasm --dart-define=CI=true" \
+          FLUTTER_DRIVE_TIMEOUT_SECONDS="300" \
+          FLUTTER_DRIVE_MAX_ATTEMPTS="2" \
+          "${GITHUB_WORKSPACE}/.github/workflows/scripts/flutter-drive-web-retry.sh"
         shell: bash
       - name: Save Firestore Emulator Cache
         # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
