@@ -188,7 +188,10 @@ abstract class TestFirebaseAuthHostApi {
   Future<String> setLanguageCode(
       AuthPigeonFirebaseApp app, String? languageCode);
 
-  Future<void> setSettings(
+  /// Applies auth settings. When [InternalFirebaseAuthSettings.migrateCurrentUser]
+  /// is true and a user was migrated, returns that user so Dart can reconcile
+  /// [currentUser] before auth-state events arrive. Otherwise returns null.
+  Future<InternalUserDetails?> setSettings(
       AuthPigeonFirebaseApp app, InternalFirebaseAuthSettings settings);
 
   Future<String> verifyPasswordResetCode(
@@ -753,8 +756,9 @@ abstract class TestFirebaseAuthHostApi {
           final InternalFirebaseAuthSettings arg_settings =
               args[1]! as InternalFirebaseAuthSettings;
           try {
-            await api.setSettings(arg_app, arg_settings);
-            return wrapResponse(empty: true);
+            final InternalUserDetails? output =
+                await api.setSettings(arg_app, arg_settings);
+            return <Object?>[output];
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
           } catch (e) {

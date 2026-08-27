@@ -1064,9 +1064,34 @@ public class FLTFirebaseAuthPlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
 
   func setSettings(
     app: AuthPigeonFirebaseApp, settings: InternalFirebaseAuthSettings,
-    completion: @escaping (Result<Void, Error>) -> Void
+    completion: @escaping (Result<InternalUserDetails?, Error>) -> Void
   ) {
     let auth = getFIRAuthFromPigeon(app)
+
+    // Capture the session before switching access groups: moving away from the
+    // default keychain deletes the entry the user was stored in, so it can no
+    // longer be recovered afterwards.
+    var userToMigrate: User?
+    if settings.migrateCurrentUser {
+      // `currentUser` is restored from the keychain asynchronously while Auth
+      // starts up, so it can still be nil when an app migrates at launch. Read
+      // the keychain directly in that case rather than silently skipping the
+      // migration.
+      if let currentUser = auth.currentUser {
+        userToMigrate = currentUser
+      } else {
+        do {
+          userToMigrate = try auth.getStoredUser(forAccessGroup: auth.userAccessGroup)
+        } catch {
+          // Report the read failure instead of carrying on: switching access
+          // groups below would delete the entry we just failed to read, and the
+          // session would be gone for good.
+          completion(.failure(AuthErrors.convertToFlutterError(error)))
+          return
+        }
+      }
+    }
+
     if let userAccessGroup = settings.userAccessGroup {
       do {
         try auth.useUserAccessGroup(userAccessGroup)
@@ -1083,7 +1108,19 @@ public class FLTFirebaseAuthPlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
     #else
       print("FIRAuthSettings.appVerificationDisabledForTesting is not supported on MacOS.")
     #endif
-    completion(.success(()))
+
+    guard let userToMigrate else {
+      completion(.success(nil))
+      return
+    }
+
+    auth.updateCurrentUser(userToMigrate) { error in
+      if let error {
+        completion(.failure(AuthErrors.convertToFlutterError(error)))
+        return
+      }
+      completion(.success(auth.currentUser.map(PigeonParser.getPigeonDetails)))
+    }
   }
 
   func verifyPasswordResetCode(

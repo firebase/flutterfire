@@ -506,6 +506,7 @@ void main() {
           smsCode: any,
           forceRecaptchaFlow: any,
           userAccessGroup: any,
+          migrateCurrentUser: true,
         )).thenAnswer((i) async {});
 
         String phoneNumber = '123456';
@@ -513,6 +514,7 @@ void main() {
         bool forceRecaptchaFlow = true;
         bool appVerificationDisabledForTesting = true;
         String userAccessGroup = 'group-id';
+        bool migrateCurrentUser = true;
 
         await auth.setSettings(
           appVerificationDisabledForTesting: appVerificationDisabledForTesting,
@@ -520,6 +522,7 @@ void main() {
           smsCode: smsCode,
           forceRecaptchaFlow: forceRecaptchaFlow,
           userAccessGroup: userAccessGroup,
+          migrateCurrentUser: migrateCurrentUser,
         );
 
         verify(
@@ -530,6 +533,7 @@ void main() {
             smsCode: smsCode,
             forceRecaptchaFlow: forceRecaptchaFlow,
             userAccessGroup: userAccessGroup,
+            migrateCurrentUser: migrateCurrentUser,
           ),
         );
       });
@@ -1122,6 +1126,7 @@ class MockFirebaseAuth extends Mock
   Future<void> setSettings({
     bool? appVerificationDisabledForTesting,
     String? userAccessGroup,
+    bool migrateCurrentUser = false,
     String? phoneNumber,
     String? smsCode,
     bool? forceRecaptchaFlow,
@@ -1130,6 +1135,7 @@ class MockFirebaseAuth extends Mock
       Invocation.method(#setSettings, [
         appVerificationDisabledForTesting,
         userAccessGroup,
+        migrateCurrentUser,
         phoneNumber,
         smsCode,
         forceRecaptchaFlow,

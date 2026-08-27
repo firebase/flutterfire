@@ -349,7 +349,7 @@ class FlutterFirebaseAuthPlugin :
   override fun setSettings(
       app: AuthPigeonFirebaseApp,
       settings: InternalFirebaseAuthSettings,
-      callback: (Result<Unit>) -> Unit
+      callback: (Result<InternalUserDetails?>) -> Unit
   ) {
     try {
       val firebaseAuth = getAuthFromPigeon(app)
@@ -366,7 +366,9 @@ class FlutterFirebaseAuthPlugin :
             settings.phoneNumber, settings.smsCode)
       }
 
-      callback(Result.success(Unit))
+      // `userAccessGroup` and `migrateCurrentUser` are keychain settings, which
+      // only exist on Apple platforms.
+      callback(Result.success(null))
     } catch (e: Exception) {
       callback(Result.failure(e))
     }

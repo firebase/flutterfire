@@ -909,6 +909,7 @@ data class InternalActionCodeSettings(
 data class InternalFirebaseAuthSettings(
     val appVerificationDisabledForTesting: Boolean,
     val userAccessGroup: String? = null,
+    val migrateCurrentUser: Boolean,
     val phoneNumber: String? = null,
     val smsCode: String? = null,
     val forceRecaptchaFlow: Boolean? = null
@@ -917,12 +918,14 @@ data class InternalFirebaseAuthSettings(
     fun fromList(pigeonVar_list: List<Any?>): InternalFirebaseAuthSettings {
       val appVerificationDisabledForTesting = pigeonVar_list[0] as Boolean
       val userAccessGroup = pigeonVar_list[1] as String?
-      val phoneNumber = pigeonVar_list[2] as String?
-      val smsCode = pigeonVar_list[3] as String?
-      val forceRecaptchaFlow = pigeonVar_list[4] as Boolean?
+      val migrateCurrentUser = pigeonVar_list[2] as Boolean
+      val phoneNumber = pigeonVar_list[3] as String?
+      val smsCode = pigeonVar_list[4] as String?
+      val forceRecaptchaFlow = pigeonVar_list[5] as Boolean?
       return InternalFirebaseAuthSettings(
           appVerificationDisabledForTesting,
           userAccessGroup,
+          migrateCurrentUser,
           phoneNumber,
           smsCode,
           forceRecaptchaFlow)
@@ -933,6 +936,7 @@ data class InternalFirebaseAuthSettings(
     return listOf(
         appVerificationDisabledForTesting,
         userAccessGroup,
+        migrateCurrentUser,
         phoneNumber,
         smsCode,
         forceRecaptchaFlow,
@@ -951,6 +955,8 @@ data class InternalFirebaseAuthSettings(
         this.appVerificationDisabledForTesting, other.appVerificationDisabledForTesting) &&
         GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(
             this.userAccessGroup, other.userAccessGroup) &&
+        GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(
+            this.migrateCurrentUser, other.migrateCurrentUser) &&
         GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.phoneNumber, other.phoneNumber) &&
         GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(this.smsCode, other.smsCode) &&
         GeneratedAndroidFirebaseAuthPigeonUtils.deepEquals(
@@ -963,6 +969,7 @@ data class InternalFirebaseAuthSettings(
         31 * result +
             GeneratedAndroidFirebaseAuthPigeonUtils.deepHash(this.appVerificationDisabledForTesting)
     result = 31 * result + GeneratedAndroidFirebaseAuthPigeonUtils.deepHash(this.userAccessGroup)
+    result = 31 * result + GeneratedAndroidFirebaseAuthPigeonUtils.deepHash(this.migrateCurrentUser)
     result = 31 * result + GeneratedAndroidFirebaseAuthPigeonUtils.deepHash(this.phoneNumber)
     result = 31 * result + GeneratedAndroidFirebaseAuthPigeonUtils.deepHash(this.smsCode)
     result = 31 * result + GeneratedAndroidFirebaseAuthPigeonUtils.deepHash(this.forceRecaptchaFlow)
@@ -1545,11 +1552,15 @@ interface FirebaseAuthHostApi {
       languageCode: String?,
       callback: (Result<String>) -> Unit
   )
-
+  /**
+   * Applies auth settings. When [InternalFirebaseAuthSettings.migrateCurrentUser] is true and a
+   * user was migrated, returns that user so Dart can reconcile [currentUser] before auth-state
+   * events arrive. Otherwise returns null.
+   */
   fun setSettings(
       app: AuthPigeonFirebaseApp,
       settings: InternalFirebaseAuthSettings,
-      callback: (Result<Unit>) -> Unit
+      callback: (Result<InternalUserDetails?>) -> Unit
   )
 
   fun verifyPasswordResetCode(
@@ -2057,12 +2068,13 @@ interface FirebaseAuthHostApi {
             val args = message as List<Any?>
             val appArg = args[0] as AuthPigeonFirebaseApp
             val settingsArg = args[1] as InternalFirebaseAuthSettings
-            api.setSettings(appArg, settingsArg) { result: Result<Unit> ->
+            api.setSettings(appArg, settingsArg) { result: Result<InternalUserDetails?> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(GeneratedAndroidFirebaseAuthPigeonUtils.wrapError(error))
               } else {
-                reply.reply(GeneratedAndroidFirebaseAuthPigeonUtils.wrapResult(null))
+                val data = result.getOrNull()
+                reply.reply(GeneratedAndroidFirebaseAuthPigeonUtils.wrapResult(data))
               }
             }
           }

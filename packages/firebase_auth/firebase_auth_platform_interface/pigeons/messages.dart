@@ -239,6 +239,7 @@ class InternalFirebaseAuthSettings {
   const InternalFirebaseAuthSettings({
     required this.appVerificationDisabledForTesting,
     required this.userAccessGroup,
+    required this.migrateCurrentUser,
     required this.phoneNumber,
     required this.smsCode,
     required this.forceRecaptchaFlow,
@@ -246,6 +247,7 @@ class InternalFirebaseAuthSettings {
 
   final bool appVerificationDisabledForTesting;
   final String? userAccessGroup;
+  final bool migrateCurrentUser;
   final String? phoneNumber;
   final String? smsCode;
   final bool? forceRecaptchaFlow;
@@ -394,8 +396,11 @@ abstract class FirebaseAuthHostApi {
     String? languageCode,
   );
 
+  /// Applies auth settings. When [InternalFirebaseAuthSettings.migrateCurrentUser]
+  /// is true and a user was migrated, returns that user so Dart can reconcile
+  /// [currentUser] before auth-state events arrive. Otherwise returns null.
   @async
-  void setSettings(
+  InternalUserDetails? setSettings(
     AuthPigeonFirebaseApp app,
     InternalFirebaseAuthSettings settings,
   );

@@ -921,7 +921,8 @@ void FirebaseAuthPlugin::SetLanguageCode(
 void FirebaseAuthPlugin::SetSettings(
     const AuthPigeonFirebaseApp& app,
     const InternalFirebaseAuthSettings& settings,
-    std::function<void(std::optional<FlutterError> reply)> result) {
+    std::function<void(ErrorOr<std::optional<InternalUserDetails>> reply)>
+        result) {
   result(FlutterError("unimplemented",
                       "SetSettings is not available on this platform yet.",
                       nullptr));
