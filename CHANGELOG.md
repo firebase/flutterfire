@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2026-08-27 - [BoM 4.19.1](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-4191-2026-08-27)
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`firebase_auth` - `v6.6.1`](#firebase_auth---v661)
+
+---
+
+#### `firebase_auth` - `v6.6.1`
+
+ - **FIX**(firebase_auth): compile Android Kotlin without checker-qual on inferred types ([#18610](https://github.com/firebase/flutterfire/issues/18610)). ([811b07db](https://github.com/firebase/flutterfire/commit/811b07dbac4a980d50520ea262b281ec1464f6ad))
+
+
 ## 2026-08-24 - [BoM 4.19.0](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-4190-2026-08-24)
 
 ### Changes
