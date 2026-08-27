@@ -70,10 +70,10 @@ workspace:
   - tests
 
 dev_dependencies:
-  cli_util: ^0.4.1
+  cli_util: ^0.5.0
   glob: ^2.1.2
   intl: ^0.20.2
-  melos: ^7.5.1
+  melos: ^8.5.0
   path: ^1.9.0
   pub_semver: ^2.1.4
   yaml: ^3.1.2
@@ -90,6 +90,8 @@ melos:
       # branch: main
       # Additionally build a changelog at the root of the workspace.
       workspaceChangelog: true
+      # Don't bump dependents whose constraints already allow the new version.
+      smartDependents: true
       hooks:
         preCommit: |
           dart run scripts/generate_firebaseai_version.dart && \
