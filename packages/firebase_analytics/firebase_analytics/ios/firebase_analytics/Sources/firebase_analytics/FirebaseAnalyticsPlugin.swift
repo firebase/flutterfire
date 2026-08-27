@@ -32,20 +32,9 @@ let kFLTFirebaseAnalyticsUserId = "userId"
 // swift-format-ignore: AlwaysUseLowerCamelCase
 let FLTFirebaseAnalyticsChannelName = "plugins.flutter.io/firebase_analytics"
 
-/// Integration-test channel. Used by the example e2e suite to drive campaign
-/// URL / universal-link handling against the live Analytics SDK.
-// swift-format-ignore: AlwaysUseLowerCamelCase
-let FLTFirebaseAnalyticsTestChannelName = "plugins.flutter.io/firebase_analytics_test"
-
 public class FirebaseAnalyticsPlugin: NSObject, FLTFirebasePluginProtocol, FlutterPlugin,
   FirebaseAnalyticsHostApi
 {
-  #if os(iOS)
-    fileprivate var testChannel: FlutterMethodChannel?
-    fileprivate static var sceneDelegateRegistered = false
-    fileprivate static var lastHandledCampaignUrl: String?
-  #endif
-
   public static func register(with registrar: any FlutterPluginRegistrar) {
     let binaryMessenger: FlutterBinaryMessenger
 
@@ -59,7 +48,6 @@ public class FirebaseAnalyticsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
     FirebaseAnalyticsHostApiSetup.setUp(binaryMessenger: binaryMessenger, api: instance)
     #if os(iOS)
       registerSceneDelegateIfAvailable(registrar, instance: instance)
-      instance.registerCampaignTestChannel(registrar)
     #endif
   }
 
@@ -327,7 +315,6 @@ public class FirebaseAnalyticsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
       return
     }
     _ = (registrar as AnyObject).perform(selector, with: instance)
-    FirebaseAnalyticsPlugin.sceneDelegateRegistered = true
   }
 
   /// Forwards UIScene URL and universal-link opens to Analytics.
@@ -362,124 +349,21 @@ public class FirebaseAnalyticsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
 
     @objc(scene:continueUserActivity:)
     public func scene(_: UIScene, continue userActivity: NSUserActivity) -> Bool {
-      handleCampaign(userActivity: userActivity)
-      return false
-    }
-
-    fileprivate func handleCampaign(url: URL) {
-      Self.lastHandledCampaignUrl = url.absoluteString
-      Analytics.handleOpen(url)
-    }
-
-    fileprivate func handleCampaign(userActivity: NSUserActivity) {
-      if let url = userActivity.webpageURL {
-        Self.lastHandledCampaignUrl = url.absoluteString
-      }
       Analytics.handleUserActivity(userActivity)
+      return false
     }
 
     private func handleCampaign(urlContexts: Set<UIOpenURLContext>?) {
       guard let urlContexts else { return }
       for context in urlContexts {
-        handleCampaign(url: context.url)
+        Analytics.handleOpen(context.url)
       }
     }
 
     private func handleCampaign(userActivities: Set<NSUserActivity>?) {
       guard let userActivities else { return }
       for activity in userActivities {
-        handleCampaign(userActivity: activity)
-      }
-    }
-
-    fileprivate func registerCampaignTestChannel(_ registrar: FlutterPluginRegistrar) {
-      let channel = FlutterMethodChannel(
-        name: FLTFirebaseAnalyticsTestChannelName,
-        binaryMessenger: registrar.messenger()
-      )
-      testChannel = channel
-      channel.setMethodCallHandler { [weak self] call, result in
-        guard let self else {
-          result(
-            FlutterError(
-              code: "unavailable",
-              message: "Plugin deallocated",
-              details: nil
-            )
-          )
-          return
-        }
-        self.handleTestChannel(call, result: result)
-      }
-    }
-
-    private func handleTestChannel(
-      _ call: FlutterMethodCall,
-      result: @escaping FlutterResult
-    ) {
-      switch call.method {
-      case "isSceneDelegateRegistered":
-        result(Self.sceneDelegateRegistered)
-      case "getLastHandledCampaignUrl":
-        result(Self.lastHandledCampaignUrl)
-      case "handleCampaignUrl":
-        guard let urlString = call.arguments as? String, let url = URL(string: urlString)
-        else {
-          result(
-            FlutterError(
-              code: "invalid-argument",
-              message: "Expected a URL string",
-              details: nil
-            )
-          )
-          return
-        }
-        handleCampaign(url: url)
-        result(nil)
-      case "handleCampaignUserActivity":
-        guard let urlString = call.arguments as? String, let url = URL(string: urlString)
-        else {
-          result(
-            FlutterError(
-              code: "invalid-argument",
-              message: "Expected a URL string",
-              details: nil
-            )
-          )
-          return
-        }
-        guard let scene = UIApplication.shared.connectedScenes.first else {
-          result(
-            FlutterError(
-              code: "unavailable",
-              message: "No connected UIScene",
-              details: nil
-            )
-          )
-          return
-        }
-        let activity = NSUserActivity(activityType: NSUserActivityTypeBrowsingWeb)
-        activity.webpageURL = url
-        _ = self.scene(scene, continue: activity)
-        result(Self.lastHandledCampaignUrl)
-      case "openUrl":
-        guard let urlString = call.arguments as? String, let url = URL(string: urlString)
-        else {
-          result(
-            FlutterError(
-              code: "invalid-argument",
-              message: "Expected a URL string",
-              details: nil
-            )
-          )
-          return
-        }
-        Self.lastHandledCampaignUrl = nil
-        UIApplication.shared.open(url, options: [:]) { success in
-          result(success)
-        }
-      default:
-        result(FlutterMethodNotImplemented)
+        Analytics.handleUserActivity(activity)
       }
     }
   }
