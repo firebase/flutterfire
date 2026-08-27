@@ -1,3 +1,7 @@
+## 4.15.0
+
+ - **FEAT**(core): bump Firebase C++ SDK to 13.12.0 ([#18618](https://github.com/firebase/flutterfire/issues/18618)). ([d54b9308](https://github.com/firebase/flutterfire/commit/d54b93083c33d845873b11a901b9c469538b810f))
+
 ## 4.14.0
 
  - **REFACTOR**(core,android): migrate native implementation to Kotlin ([#18570](https://github.com/firebase/flutterfire/issues/18570)). ([7a0f5856](https://github.com/firebase/flutterfire/commit/7a0f5856cbb2ae64c530dcbdb43b03d43912465c))

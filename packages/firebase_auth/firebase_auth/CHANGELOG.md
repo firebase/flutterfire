@@ -1,3 +1,7 @@
+## 6.6.1
+
+ - **FIX**(firebase_auth): compile Android Kotlin without checker-qual on inferred types ([#18610](https://github.com/firebase/flutterfire/issues/18610)). ([28e30cb9](https://github.com/firebase/flutterfire/commit/28e30cb961c64f138d36be6f12b7fa67ea10e596))
+
 ## 6.6.0
 
  - **REFACTOR**(auth,android): migrate native implementation to Kotlin ([#18582](https://github.com/firebase/flutterfire/issues/18582)). ([6131eddc](https://github.com/firebase/flutterfire/commit/6131eddc724aac2005f839e612617953572422fc))

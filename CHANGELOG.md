@@ -3,6 +3,37 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2026-08-27
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`firebase_auth` - `v6.6.1`](#firebase_auth---v661)
+ - [`firebase_core` - `v4.15.0`](#firebase_core---v4150)
+ - [`firebase_core_web` - `v3.11.1`](#firebase_core_web---v3111)
+
+---
+
+#### `firebase_auth` - `v6.6.1`
+
+ - **FIX**(firebase_auth): compile Android Kotlin without checker-qual on inferred types ([#18610](https://github.com/firebase/flutterfire/issues/18610)). ([28e30cb9](https://github.com/firebase/flutterfire/commit/28e30cb961c64f138d36be6f12b7fa67ea10e596))
+
+#### `firebase_core` - `v4.15.0`
+
+ - **FEAT**(core): bump Firebase C++ SDK to 13.12.0 ([#18618](https://github.com/firebase/flutterfire/issues/18618)). ([d54b9308](https://github.com/firebase/flutterfire/commit/d54b93083c33d845873b11a901b9c469538b810f))
+
+#### `firebase_core_web` - `v3.11.1`
+
+ - **FIX**(core,web): compile isA checks on Dart < 3.12 ([#18612](https://github.com/firebase/flutterfire/issues/18612)). ([3bd7c069](https://github.com/firebase/flutterfire/commit/3bd7c069f791f5482f79e6f80cf6fd833b6245f8))
+
+
 ## 2026-08-24 - [BoM 4.19.0](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-4190-2026-08-24)
 
 ### Changes

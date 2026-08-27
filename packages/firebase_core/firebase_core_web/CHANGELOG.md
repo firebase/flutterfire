@@ -1,3 +1,7 @@
+## 3.11.1
+
+ - **FIX**(core,web): compile isA checks on Dart < 3.12 ([#18612](https://github.com/firebase/flutterfire/issues/18612)). ([3bd7c069](https://github.com/firebase/flutterfire/commit/3bd7c069f791f5482f79e6f80cf6fd833b6245f8))
+
 ## 3.11.0
 
  - **FIX**(core,web): keep App Check registered for secondary Firebase apps ([#18557](https://github.com/firebase/flutterfire/issues/18557)). ([1345dbb3](https://github.com/firebase/flutterfire/commit/1345dbb38af36c2d1c3f6582f474f5520a185021))
