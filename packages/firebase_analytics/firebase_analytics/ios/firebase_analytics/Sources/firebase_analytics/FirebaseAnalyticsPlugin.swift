@@ -37,8 +37,6 @@ let FLTFirebaseAnalyticsChannelName = "plugins.flutter.io/firebase_analytics"
 // swift-format-ignore: AlwaysUseLowerCamelCase
 let FLTFirebaseAnalyticsTestChannelName = "plugins.flutter.io/firebase_analytics_test"
 
-extension FlutterError: Error {}
-
 public class FirebaseAnalyticsPlugin: NSObject, FLTFirebasePluginProtocol, FlutterPlugin,
   FirebaseAnalyticsHostApi
 {
