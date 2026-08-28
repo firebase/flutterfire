@@ -51,9 +51,7 @@ class Firebase {
     FirebaseOptions? resolvedOptions = options;
     if (demoProjectId != null) {
       late final String platformString;
-      // ignore: do_not_use_environment
-      const bool kIsWeb = bool.fromEnvironment('dart.library.js_interop');
-      if (kIsWeb) {
+      if (_kIsWeb) {
         platformString = 'web';
       } else if (defaultTargetPlatform == TargetPlatform.android) {
         platformString = 'android';

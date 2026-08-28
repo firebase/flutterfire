@@ -13,3 +13,6 @@ export 'package:firebase_core_platform_interface/firebase_core_platform_interfac
 part 'src/firebase.dart';
 part 'src/firebase_app.dart';
 part 'src/port_mapping.dart';
+
+// ignore: do_not_use_environment
+const bool _kIsWeb = bool.fromEnvironment('dart.library.js_interop');
