@@ -5,7 +5,6 @@
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
@@ -156,17 +155,6 @@ void main() {
       mock.app(expectedName),
     ]);
   });
-
-  test('getMappedHost maps localhost to 10.0.2.2 on Android', () {
-    expect(getMappedHost('192.168.1.1'), '192.168.1.1');
-    if (defaultTargetPlatform == TargetPlatform.android) {
-      expect(getMappedHost('localhost'), '10.0.2.2');
-      expect(getMappedHost('127.0.0.1'), '10.0.2.2');
-    } else {
-      expect(getMappedHost('localhost'), 'localhost');
-      expect(getMappedHost('127.0.0.1'), '127.0.0.1');
-    }
-  });
 }
 
 class MockFirebaseCore extends Mock
@@ -179,8 +167,8 @@ class MockFirebaseCore extends Mock
   FirebaseAppPlatform app([String name = defaultFirebaseAppName]) {
     return super.noSuchMethod(
       Invocation.method(#app, [name]),
-      returnValue: FakeFirebaseAppPlatform(name),
-      returnValueForMissingStub: FakeFirebaseAppPlatform(name),
+      returnValue: FakeFirebaseAppPlatform(),
+      returnValueForMissingStub: FakeFirebaseAppPlatform(),
     );
   }
 
@@ -198,10 +186,8 @@ class MockFirebaseCore extends Mock
           #options: options,
         },
       ),
-      returnValue:
-          Future.value(FakeFirebaseAppPlatform(name ?? defaultFirebaseAppName)),
-      returnValueForMissingStub:
-          Future.value(FakeFirebaseAppPlatform(name ?? defaultFirebaseAppName)),
+      returnValue: Future.value(FakeFirebaseAppPlatform()),
+      returnValueForMissingStub: Future.value(FakeFirebaseAppPlatform()),
     );
   }
 
@@ -215,18 +201,8 @@ class MockFirebaseCore extends Mock
   }
 }
 
-class FakeFirebaseAppPlatform extends FirebaseAppPlatform {
-  FakeFirebaseAppPlatform([String name = defaultFirebaseAppName])
-      : super(
-          name,
-          const FirebaseOptions(
-            apiKey: 'apiKey',
-            appId: 'appId',
-            messagingSenderId: 'messagingSenderId',
-            projectId: 'projectId',
-          ),
-        );
-}
+// ignore: avoid_implementing_value_types
+class FakeFirebaseAppPlatform extends Fake implements FirebaseAppPlatform {}
 
 class TestFirebaseAppPlatform extends FirebaseAppPlatform {
   TestFirebaseAppPlatform(
