@@ -1639,7 +1639,6 @@ void CloudFirestorePlugin::AggregateQuery(
   Firestore* firestore = GetFirestoreFromPigeon(app);
   Query query = ParseQuery(firestore, path, is_collection_group, parameters);
 
-  // C++ SDK does not support average and sum
   firebase::firestore::AggregateQuery aggregate_query;
 
   for (auto& queryRequest : queries) {
@@ -1652,11 +1651,15 @@ void CloudFirestorePlugin::AggregateQuery(
         aggregate_query = query.Count();
         break;
       case AggregateType::kSum:
-        std::cout << "Sum is not supported on C++" << std::endl;
-        break;
       case AggregateType::kAverage:
-        std::cout << "Average is not supported on C++" << std::endl;
-        break;
+        // The Firebase C++ SDK only implements count() aggregations. Reject
+        // the request instead of dropping the unsupported aggregations from
+        // the response, which left `getSum()` / `getAverage()` returning null
+        // as if the query had succeeded.
+        result(FlutterError("unimplemented",
+                            "Sum and average aggregations are not supported by "
+                            "the Firebase C++ SDK on Windows."));
+        return;
     }
   }
 
@@ -1686,14 +1689,10 @@ void CloudFirestorePlugin::AggregateQuery(
                     CustomEncodableValue(aggregateResponse));
                 break;
               }
-              case AggregateType::kSum: {
-                std::cout << "Sum is not supported on C++" << std::endl;
+              case AggregateType::kSum:
+              case AggregateType::kAverage:
+                // Unreachable: requests containing these are rejected above.
                 break;
-              }
-              case AggregateType::kAverage: {
-                std::cout << "Average is not supported on C++" << std::endl;
-                break;
-              }
             }
           }
 
