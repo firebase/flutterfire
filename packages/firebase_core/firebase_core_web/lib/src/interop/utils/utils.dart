@@ -19,20 +19,17 @@ const bool kDebugMode = !bool.fromEnvironment('dart.vm.product');
 
 /// Handles the [Future] object with the provided [mapper] function.
 JSPromise handleFutureWithMapper<T, S>(
-  Future<dynamic> future,
+  Future<T> future,
   Func1<T, S> mapper,
 ) {
   return JSPromise((JSFunction resolve, JSFunction reject) {
-    future.then((dynamic value) {
-      final jsVal = value == null
+    future.then<void>((T value) {
+      final Object? target = mapper(value);
+      final JSAny? jsVal = target == null
           ? null
           // ignore: invalid_runtime_check_with_js_interop_types
-          : (value is JSAny
-              ? value
-              // ignore: avoid_dynamic_calls
-              : value.jsify());
+          : (target is JSAny ? target : target.jsify());
       resolve.callAsFunction(resolve, jsVal);
-      return value;
     }, onError: (Object error, StackTrace stackTrace) {
       final errorConstructor =
           globalContext.getProperty('Error'.toJS)! as JSFunction;
@@ -41,7 +38,6 @@ JSPromise handleFutureWithMapper<T, S>(
       wrapper['error'] = error.toJSBox;
       wrapper['stack'] = stackTrace.toString().toJS;
       reject.callAsFunction(reject, wrapper);
-      return wrapper;
     });
   }.toJS);
 }

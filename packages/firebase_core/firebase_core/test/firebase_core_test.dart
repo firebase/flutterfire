@@ -5,6 +5,7 @@
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
@@ -154,6 +155,17 @@ void main() {
       ),
       mock.app(expectedName),
     ]);
+  });
+
+  test('getMappedHost maps localhost to 10.0.2.2 on Android', () {
+    expect(getMappedHost('192.168.1.1'), '192.168.1.1');
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      expect(getMappedHost('localhost'), '10.0.2.2');
+      expect(getMappedHost('127.0.0.1'), '10.0.2.2');
+    } else {
+      expect(getMappedHost('localhost'), 'localhost');
+      expect(getMappedHost('127.0.0.1'), '127.0.0.1');
+    }
   });
 }
 

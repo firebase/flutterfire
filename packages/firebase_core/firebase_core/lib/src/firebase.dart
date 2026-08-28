@@ -50,9 +50,20 @@ class Firebase {
   }) async {
     FirebaseOptions? resolvedOptions = options;
     if (demoProjectId != null) {
+      late final String platformString;
       // ignore: do_not_use_environment
       const bool kIsWeb = bool.fromEnvironment('dart.library.js_interop');
-      const String platformString = kIsWeb ? 'web' : 'android';
+      if (kIsWeb) {
+        platformString = 'web';
+      } else if (defaultTargetPlatform == TargetPlatform.android) {
+        platformString = 'android';
+      } else if (defaultTargetPlatform == TargetPlatform.iOS ||
+          defaultTargetPlatform == TargetPlatform.macOS) {
+        platformString = 'ios';
+      } else {
+        // We use 'web' as the default platform for unknown platforms.
+        platformString = 'web';
+      }
       // A name must be set, otherwise [DEFAULT] will be used and the options
       // we've provided will be ignored if any platform specific configuration
       // files exist (i.e. GoogleService-Info.plist for iOS).
