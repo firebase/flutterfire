@@ -167,8 +167,8 @@ class MockFirebaseCore extends Mock
   FirebaseAppPlatform app([String name = defaultFirebaseAppName]) {
     return super.noSuchMethod(
       Invocation.method(#app, [name]),
-      returnValue: FakeFirebaseAppPlatform(),
-      returnValueForMissingStub: FakeFirebaseAppPlatform(),
+      returnValue: FakeFirebaseAppPlatform(name),
+      returnValueForMissingStub: FakeFirebaseAppPlatform(name),
     );
   }
 
@@ -186,8 +186,10 @@ class MockFirebaseCore extends Mock
           #options: options,
         },
       ),
-      returnValue: Future.value(FakeFirebaseAppPlatform()),
-      returnValueForMissingStub: Future.value(FakeFirebaseAppPlatform()),
+      returnValue:
+          Future.value(FakeFirebaseAppPlatform(name ?? defaultFirebaseAppName)),
+      returnValueForMissingStub:
+          Future.value(FakeFirebaseAppPlatform(name ?? defaultFirebaseAppName)),
     );
   }
 
@@ -201,8 +203,18 @@ class MockFirebaseCore extends Mock
   }
 }
 
-// ignore: avoid_implementing_value_types
-class FakeFirebaseAppPlatform extends Fake implements FirebaseAppPlatform {}
+class FakeFirebaseAppPlatform extends FirebaseAppPlatform {
+  FakeFirebaseAppPlatform([String name = defaultFirebaseAppName])
+      : super(
+          name,
+          const FirebaseOptions(
+            apiKey: 'apiKey',
+            appId: 'appId',
+            messagingSenderId: 'messagingSenderId',
+            projectId: 'projectId',
+          ),
+        );
+}
 
 class TestFirebaseAppPlatform extends FirebaseAppPlatform {
   TestFirebaseAppPlatform(

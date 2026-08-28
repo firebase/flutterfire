@@ -11,28 +11,33 @@ import 'dart:async';
 import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
 import 'package:web/web.dart' as web;
-import 'package:flutter/foundation.dart';
 
 import 'func.dart';
 
+// ignore: do_not_use_environment
+const bool kDebugMode = !bool.fromEnvironment('dart.vm.product');
+
 /// Handles the [Future] object with the provided [mapper] function.
 JSPromise handleFutureWithMapper<T, S>(
-  Future<JSAny?> future,
+  Future<dynamic> future,
   Func1<T, S> mapper,
 ) {
-  // Taken from js_interop:286
   return JSPromise((JSFunction resolve, JSFunction reject) {
-    future.then((JSAny? value) {
-      resolve.callAsFunction(resolve, value);
+    future.then((dynamic value) {
+      final jsVal = value == null
+          ? null
+          // ignore: invalid_runtime_check_with_js_interop_types
+          : (value is JSAny
+              ? value
+              // ignore: avoid_dynamic_calls
+              : value.jsify());
+      resolve.callAsFunction(resolve, jsVal);
       return value;
     }, onError: (Object error, StackTrace stackTrace) {
       final errorConstructor =
           globalContext.getProperty('Error'.toJS)! as JSFunction;
-      final wrapper = errorConstructor.callAsConstructor<JSObject>(
-          'Dart exception thrown from converted Future. Use the properties '
-                  "'error' to fetch the boxed error and 'stack' to recover "
-                  'the stack trace.'
-              .toJS);
+      final wrapper = errorConstructor
+          .callAsConstructor<JSObject>('Dart exception: $error'.toJS);
       wrapper['error'] = error.toJSBox;
       wrapper['stack'] = stackTrace.toString().toJS;
       reject.callAsFunction(reject, wrapper);

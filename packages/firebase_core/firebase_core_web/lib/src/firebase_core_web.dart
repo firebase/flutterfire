@@ -68,7 +68,7 @@ class FirebaseCoreWeb extends FirebasePlatform {
   static const String _libraryName = 'flutter-fire-core';
 
   /// Registers that [FirebaseCoreWeb] is the platform implementation.
-  static void registerWith(Registrar registrar) {
+  static void registerWith(dynamic registrar) {
     FirebasePlatform.instance = FirebaseCoreWeb();
   }
 
