@@ -51,9 +51,7 @@ class Firebase {
     FirebaseOptions? resolvedOptions = options;
     if (demoProjectId != null) {
       late final String platformString;
-      if (_kIsWeb) {
-        platformString = 'web';
-      } else if (defaultTargetPlatform == TargetPlatform.android) {
+      if (defaultTargetPlatform == TargetPlatform.android) {
         platformString = 'android';
       } else if (defaultTargetPlatform == TargetPlatform.iOS ||
           defaultTargetPlatform == TargetPlatform.macOS) {
