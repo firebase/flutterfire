@@ -135,6 +135,14 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     if ([registrar respondsToSelector:@selector(addSceneDelegate:)]) {
       [registrar performSelector:@selector(addSceneDelegate:) withObject:instance];
     }
+    // UIScene registers plugins after didFinishLaunching / scene:willConnect.
+    // If a scene is already connected those callbacks were missed, so run
+    // setup now. setupNotificationHandling is idempotent if a callback still
+    // arrives later. iOS re-delivers the APNs token when we register again.
+    if ([UIApplication sharedApplication].connectedScenes.count > 0) {
+      instance->_sceneDidConnect = YES;
+      [instance setupNotificationHandlingWithRemoteNotification:nil];
+    }
   }
 #endif
 }
