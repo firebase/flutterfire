@@ -58,19 +58,6 @@ void main() {
       verifyNoMoreInteractions(appCheck);
     });
 
-    test('activate with WebReCaptchaProvider', () async {
-      const provider = WebReCaptchaProvider();
-      await appCheck.activate(
-        webProvider: provider,
-      );
-      verify(
-        appCheck.activate(
-          webProvider: provider,
-        ),
-      );
-      verifyNoMoreInteractions(appCheck);
-    });
-
     test('getToken', () async {
       await appCheck.getToken(true);
       verify(appCheck.getToken(true));

@@ -1,0 +1,133 @@
+name: reusable-e2e-changes
+
+# Maps changed paths to affected platforms so a Kotlin-only change runs only
+# the android job, a Swift-only change only ios/macos, etc. Dart code, the
+# tests themselves, firebase_core and CI plumbing affect every platform.
+# Non-PR events (push to main, the nightly workflow_call) always run
+# everything: the filter step is skipped and its empty outputs fall back to
+# 'true' below.
+#
+# Every `e2e_tests_<product>.yaml` calls this once and gates its platform jobs
+# on the outputs. Platforms the product does not support are simply absent from
+# the caller, so they never render a check at all.
+
+on:
+  workflow_call:
+    inputs:
+      package-path:
+        description: >-
+          Path of the package under test, e.g.
+          'packages/firebase_storage/firebase_storage'. The example app is
+          `<package-path>/example` by convention.
+        type: string
+        required: true
+      web-package:
+        description: >-
+          Name of the web implementation package, e.g. 'firebase_storage_web'.
+          Only used to build the `web` paths-filter. Empty means the product has
+          no web package (firebase_ai).
+        type: string
+        default: ''
+      platform-interface-package:
+        description: >-
+          Name of the platform interface package, e.g.
+          'firebase_storage_platform_interface'. Only used to build the shared
+          paths-filter. Empty means the product has none (firebase_ai).
+        type: string
+        default: ''
+      inject-config-secrets:
+        description: >-
+          true selects the live tier, whose secrets fork and dependabot PRs do
+          not receive - this job is then fork/dependabot guarded, and skipping
+          it skips every platform job that needs its outputs.
+        type: boolean
+        default: false
+    outputs:
+      android:
+        description: 'true when the diff can affect the Android build or tests.'
+        value: ${{ jobs.changes.outputs.android }}
+      ios:
+        description: 'true when the diff can affect the iOS build or tests.'
+        value: ${{ jobs.changes.outputs.ios }}
+      macos:
+        description: 'true when the diff can affect the macOS build or tests.'
+        value: ${{ jobs.changes.outputs.macos }}
+      web:
+        description: 'true when the diff can affect the web (JS or wasm) build or tests.'
+        value: ${{ jobs.changes.outputs.web }}
+      windows:
+        description: 'true when the diff can affect the Windows build or tests.'
+        value: ${{ jobs.changes.outputs.windows }}
+
+permissions:
+  contents: read
+
+jobs:
+  changes:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    # Live tier requires the live-project secrets, which fork and dependabot
+    # PRs do not receive.
+    if: >-
+      inputs.inject-config-secrets == false ||
+      github.event_name != 'pull_request' ||
+      (github.event.pull_request.head.repo.full_name == github.repository &&
+       github.actor != 'dependabot[bot]')
+    outputs:
+      android: ${{ steps.filter.outputs.android || 'true' }}
+      ios: ${{ steps.filter.outputs.ios || 'true' }}
+      macos: ${{ steps.filter.outputs.macos || 'true' }}
+      web: ${{ steps.filter.outputs.web || 'true' }}
+      windows: ${{ steps.filter.outputs.windows || 'true' }}
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+        if: github.event_name == 'pull_request'
+      - uses: dorny/paths-filter@d1c1ffe0248fe513906c8e24db8ea791d46f8590
+        if: github.event_name == 'pull_request'
+        id: filter
+        with:
+          # The optional package entries fall back to a path that cannot exist
+          # rather than being omitted: an expression can pick a list *item*, not
+          # whether the item is there at all.
+          # `packages/*/<name>` avoids needing the product directory as a
+          # separate input - plugin package names are unique repo-wide.
+          # Both this file and the caller are in `shared`: a change to either
+          # must run everything.
+          filters: |
+            shared: &shared
+              - 'packages/firebase_core/**'
+              - '${{ inputs.package-path }}/lib/**'
+              - '${{ inputs.package-path }}/pubspec.yaml'
+              - '${{ inputs.platform-interface-package && format('packages/*/{0}/**', inputs.platform-interface-package) || 'packages/__none__/**' }}'
+              - '${{ inputs.package-path }}/example/integration_test/**'
+              - '${{ inputs.package-path }}/example/test_driver/**'
+              - '${{ inputs.package-path }}/example/lib/**'
+              - '${{ inputs.package-path }}/example/pubspec.yaml'
+              - '.github/workflows/reusable_e2e_*.yaml'
+              - '.github/workflows/e2e_tests_*.yaml'
+              - '.github/actions/setup-flutterfire/**'
+              - '.github/workflows/scripts/**'
+            android:
+              - *shared
+              - '${{ inputs.package-path }}/android/**'
+              - '${{ inputs.package-path }}/example/android/**'
+            ios:
+              - *shared
+              - '${{ inputs.package-path }}/ios/**'
+              - '${{ inputs.package-path }}/darwin/**'
+              - '${{ inputs.package-path }}/example/ios/**'
+            macos:
+              - *shared
+              - '${{ inputs.package-path }}/macos/**'
+              - '${{ inputs.package-path }}/darwin/**'
+              - '${{ inputs.package-path }}/example/macos/**'
+            web:
+              - *shared
+              - '${{ inputs.web-package && format('packages/*/{0}/**', inputs.web-package) || 'packages/__none__/**' }}'
+              - '${{ inputs.package-path }}/example/web/**'
+            windows:
+              - *shared
+              - '${{ inputs.package-path }}/windows/**'
+              - '${{ inputs.package-path }}/example/windows/**'

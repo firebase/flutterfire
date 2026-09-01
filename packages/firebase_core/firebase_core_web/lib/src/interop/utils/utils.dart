@@ -11,32 +11,30 @@ import 'dart:async';
 import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
 import 'package:web/web.dart' as web;
-import 'package:flutter/foundation.dart';
 
 import 'func.dart';
 
+// ignore: do_not_use_environment
+const bool _kDebugMode = !bool.fromEnvironment('dart.vm.product');
+
 /// Handles the [Future] object with the provided [mapper] function.
 JSPromise handleFutureWithMapper<T, S>(
-  Future<JSAny?> future,
+  Future<T> future,
   Func1<T, S> mapper,
 ) {
-  // Taken from js_interop:286
   return JSPromise((JSFunction resolve, JSFunction reject) {
-    future.then((JSAny? value) {
-      resolve.callAsFunction(resolve, value);
-      return value;
+    future.then<void>((T value) {
+      final Object? target = mapper(value);
+      final JSAny? jsVal = target?.jsify();
+      resolve.callAsFunction(resolve, jsVal);
     }, onError: (Object error, StackTrace stackTrace) {
       final errorConstructor =
           globalContext.getProperty('Error'.toJS)! as JSFunction;
-      final wrapper = errorConstructor.callAsConstructor<JSObject>(
-          'Dart exception thrown from converted Future. Use the properties '
-                  "'error' to fetch the boxed error and 'stack' to recover "
-                  'the stack trace.'
-              .toJS);
+      final wrapper = errorConstructor
+          .callAsConstructor<JSObject>('Dart exception: $error'.toJS);
       wrapper['error'] = error.toJSBox;
       wrapper['stack'] = stackTrace.toString().toJS;
       reject.callAsFunction(reject, wrapper);
-      return wrapper;
     });
   }.toJS);
 }
@@ -45,7 +43,7 @@ JSPromise handleFutureWithMapper<T, S>(
 // and clean up on hot restart if it exists.
 // See: https://github.com/firebase/flutterfire/issues/7064
 void unsubscribeWindowsListener(String key) {
-  if (kDebugMode) {
+  if (_kDebugMode) {
     final unsubscribe = web.window.getProperty(key.toJS);
     if (unsubscribe != null) {
       (unsubscribe as JSFunction).callAsFunction();
@@ -54,13 +52,13 @@ void unsubscribeWindowsListener(String key) {
 }
 
 void setWindowsListener(String key, JSFunction unsubscribe) {
-  if (kDebugMode) {
+  if (_kDebugMode) {
     web.window.setProperty(key.toJS, unsubscribe);
   }
 }
 
 void removeWindowsListener(String key) {
-  if (kDebugMode) {
+  if (_kDebugMode) {
     if (web.window.hasProperty(key.toJS) == true.toJS) {
       web.window.delete(key.toJS);
     }

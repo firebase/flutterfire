@@ -21,46 +21,46 @@ final class TemplateGenerativeModel extends BaseTemplateApiClientModel {
   TemplateGenerativeModel._test({
     required String location,
     required FirebaseApp app,
-    required bool useVertexBackend,
+    required bool useAgentPlatform,
     http.Client? httpClient,
   }) : super(
-          serializationStrategy: useVertexBackend
-              ? VertexSerialization()
+          serializationStrategy: useAgentPlatform
+              ? AgentPlatformSerialization()
               : DeveloperSerialization(),
-          modelUri: useVertexBackend
-              ? _VertexUri(app: app, model: '', location: location)
+          modelUri: useAgentPlatform
+              ? _AgentPlatformUri(app: app, model: '', location: location)
               : _GoogleAIUri(app: app, model: ''),
           client: HttpApiClient(
               apiKey: app.options.apiKey,
               httpClient: httpClient,
               requestHeaders: BaseModel.firebaseTokens(null, null, app, false)),
-          templateUri: useVertexBackend
-              ? _TemplateVertexUri(app: app, location: location)
+          templateUri: useAgentPlatform
+              ? _TemplateAgentPlatformUri(app: app, location: location)
               : _TemplateGoogleAIUri(app: app),
         );
 
   TemplateGenerativeModel._({
     required String location,
     required FirebaseApp app,
-    required bool useVertexBackend,
+    required bool useAgentPlatform,
     bool? useLimitedUseAppCheckTokens,
     FirebaseAppCheck? appCheck,
     FirebaseAuth? auth,
     http.Client? httpClient,
   }) : super(
-          serializationStrategy: useVertexBackend
-              ? VertexSerialization()
+          serializationStrategy: useAgentPlatform
+              ? AgentPlatformSerialization()
               : DeveloperSerialization(),
-          modelUri: useVertexBackend
-              ? _VertexUri(app: app, model: '', location: location)
+          modelUri: useAgentPlatform
+              ? _AgentPlatformUri(app: app, model: '', location: location)
               : _GoogleAIUri(app: app, model: ''),
           client: HttpApiClient(
               apiKey: app.options.apiKey,
               httpClient: httpClient,
               requestHeaders: BaseModel.firebaseTokens(
                   appCheck, auth, app, useLimitedUseAppCheckTokens)),
-          templateUri: useVertexBackend
-              ? _TemplateVertexUri(app: app, location: location)
+          templateUri: useAgentPlatform
+              ? _TemplateAgentPlatformUri(app: app, location: location)
               : _TemplateGoogleAIUri(app: app),
         );
 
@@ -139,7 +139,7 @@ final class TemplateGenerativeModel extends BaseTemplateApiClientModel {
 TemplateGenerativeModel createTemplateGenerativeModel({
   required FirebaseApp app,
   required String location,
-  required bool useVertexBackend,
+  required bool useAgentPlatform,
   bool? useLimitedUseAppCheckTokens,
   FirebaseAppCheck? appCheck,
   FirebaseAuth? auth,
@@ -147,7 +147,7 @@ TemplateGenerativeModel createTemplateGenerativeModel({
     TemplateGenerativeModel._(
       app: app,
       appCheck: appCheck,
-      useVertexBackend: useVertexBackend,
+      useAgentPlatform: useAgentPlatform,
       useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
       auth: auth,
       location: location,
@@ -159,12 +159,12 @@ TemplateGenerativeModel createTemplateGenerativeModel({
 TemplateGenerativeModel createTestTemplateGenerativeModel({
   required FirebaseApp app,
   required String location,
-  required bool useVertexBackend,
+  required bool useAgentPlatform,
   required http.Client client,
 }) =>
     TemplateGenerativeModel._test(
       app: app,
-      useVertexBackend: useVertexBackend,
+      useAgentPlatform: useAgentPlatform,
       location: location,
       httpClient: client,
     );

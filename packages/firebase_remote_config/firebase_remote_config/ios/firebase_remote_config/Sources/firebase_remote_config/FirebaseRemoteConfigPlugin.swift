@@ -19,8 +19,6 @@ import FirebaseRemoteConfig
 let kFirebaseRemoteConfigChannelName = "plugins.flutter.io/firebase_remote_config"
 let kFirebaseRemoteConfigUpdatedChannelName = "plugins.flutter.io/firebase_remote_config_updated"
 
-extension FlutterError: Error {}
-
 public class FirebaseRemoteConfigPlugin: NSObject, FlutterPlugin, FlutterStreamHandler,
   FLTFirebasePluginProtocol, FirebaseRemoteConfigHostApi
 {

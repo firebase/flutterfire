@@ -73,6 +73,12 @@ class FirebaseAppCheck extends FirebasePlugin implements FirebaseService {
   /// "app attest with fallback to device check" via `AppleAppCheckProvider`.
   /// Note: App Attest is only available on iOS 14.0+ and macOS 14.0+.
   ///
+  /// Do not call `FirebaseApp.configure()` in `AppDelegate` unless you also
+  /// call `AppCheck.setAppCheckProviderFactory` first; otherwise
+  /// `providerApple` is ignored on physical Apple devices. Prefer
+  /// `Firebase.initializeApp()` only.
+  /// See https://github.com/firebase/flutterfire/issues/18613.
+  ///
   /// **Windows**: Only the debug provider is supported. You **must** supply a
   /// debug token — the desktop C++ SDK does not auto-generate one. Either pass
   /// it via `providerWindows: WindowsDebugProvider(debugToken: 'your-token')`
@@ -131,6 +137,17 @@ class FirebaseAppCheck extends FirebasePlugin implements FirebaseService {
   /// false, will use a cached token if found in storage.
   Future<String?> getToken([bool? forceRefresh]) async {
     return _delegate.getToken(forceRefresh ?? false);
+  }
+
+  /// Get the current App Check token and its associated metadata.
+  ///
+  /// Attaches to the most recent in-flight request if one is present. Returns
+  /// null if no token is present and no token requests are in-flight.
+  ///
+  /// If `forceRefresh` is true, will always try to fetch a fresh token. If
+  /// false, will use a cached token if found in storage.
+  Future<AppCheckTokenResult?> getTokenResult([bool? forceRefresh]) {
+    return _delegate.getTokenResult(forceRefresh ?? false);
   }
 
   /// If true, the SDK automatically refreshes App Check tokens as needed.

@@ -1,0 +1,109 @@
+name: e2e-functions
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-functions
+  cancel-in-progress: true
+
+# Emulator tier: every job runs under `firebase emulators:exec`, so no live
+# project credentials are needed.
+#
+# Thin caller: one job per platform this product supports, each delegating
+# to the matching `reusable_e2e_<platform>.yaml`. Platforms the product does
+# not support have no job here, so they render no check at all.
+# Path-filtered so it only runs when this product or its dependencies change;
+# the nightly workflow_call still runs it unconditionally.
+on:
+  pull_request:
+    paths:
+      - 'packages/cloud_functions/**'
+      - 'packages/firebase_core/**'
+      - '.github/workflows/e2e_tests_functions.yaml'
+      - '.github/workflows/reusable_e2e_*.yaml'
+      - '.github/actions/setup-flutterfire/**'
+      - '.github/workflows/scripts/**'
+  push:
+    branches:
+      - main
+    paths:
+      - 'packages/cloud_functions/**'
+      - 'packages/firebase_core/**'
+      - '.github/workflows/e2e_tests_functions.yaml'
+      - '.github/workflows/reusable_e2e_*.yaml'
+      - '.github/actions/setup-flutterfire/**'
+      - '.github/workflows/scripts/**'
+  workflow_call:
+    inputs:
+      nightly_test_mode:
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  changes:
+    uses: ./.github/workflows/reusable_e2e_changes.yaml
+    with:
+      package-path: 'packages/cloud_functions/cloud_functions'
+      platform-interface-package: 'cloud_functions_platform_interface'
+      web-package: 'cloud_functions_web'
+
+  android:
+    needs: changes
+    if: needs.changes.outputs.android == 'true'
+    uses: ./.github/workflows/reusable_e2e_android.yaml
+    with:
+      package-path: 'packages/cloud_functions/cloud_functions'
+      package-scope: 'cloud_functions*'
+      native-config-args: '--functions-native'
+      nightly_test_mode: ${{ inputs.nightly_test_mode == true }}
+
+  ios:
+    needs: changes
+    if: needs.changes.outputs.ios == 'true'
+    uses: ./.github/workflows/reusable_e2e_ios.yaml
+    with:
+      package-path: 'packages/cloud_functions/cloud_functions'
+      package-scope: 'cloud_functions*'
+      cache-key-suffix: 'functions'
+      # CocoaPods for now: Flutter's experimental SPM integration kept failing
+      # to resolve this example's plugin siblings ("Could not resolve package
+      # dependencies ... ios/firebase_core does not exist"). Dropping the Xcode
+      # 26.2 pin (see `reusable_e2e_ios.yaml`) is the likely fix, but one
+      # variable at a time - these two rejoin SPM once the default-Xcode runs
+      # prove clean. iOS SPM coverage is unaffected meanwhile: storage,
+      # database, firestore and auth still build under it.
+      ios-spm: false
+      native-config-args: '--functions-native'
+      nightly_test_mode: ${{ inputs.nightly_test_mode == true }}
+
+  macos:
+    needs: changes
+    if: needs.changes.outputs.macos == 'true'
+    uses: ./.github/workflows/reusable_e2e_macos.yaml
+    with:
+      package-path: 'packages/cloud_functions/cloud_functions'
+      package-scope: 'cloud_functions*'
+      cache-key-suffix: 'functions'
+      native-config-args: '--functions-native'
+      nightly_test_mode: ${{ inputs.nightly_test_mode == true }}
+
+  web:
+    needs: changes
+    if: needs.changes.outputs.web == 'true'
+    uses: ./.github/workflows/reusable_e2e_web.yaml
+    with:
+      package-path: 'packages/cloud_functions/cloud_functions'
+      package-scope: 'cloud_functions*'
+      native-config-args: '--functions-native'
+      nightly_test_mode: ${{ inputs.nightly_test_mode == true }}
+
+  windows:
+    needs: changes
+    if: needs.changes.outputs.windows == 'true'
+    uses: ./.github/workflows/reusable_e2e_windows.yaml
+    with:
+      package-path: 'packages/cloud_functions/cloud_functions'
+      package-scope: 'cloud_functions*'
+      native-config-args: '--functions-native'
+      nightly_test_mode: ${{ inputs.nightly_test_mode == true }}

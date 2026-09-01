@@ -1,0 +1,134 @@
+name: e2e-remote-config
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-remote_config
+  cancel-in-progress: true
+
+# Live tier: this product has no emulator, so every job talks to the real
+# `flutterfire-e2e-tests` project using the config in repository secrets.
+# Fork and dependabot PRs do not get those secrets, so the reusable workflow
+# guards every job.
+#
+# Thin caller: one job per platform this product supports, each delegating
+# to the matching `reusable_e2e_<platform>.yaml`. Platforms the product does
+# not support have no job here, so they render no check at all.
+# Path-filtered so it only runs when this product or its dependencies change;
+# the nightly workflow_call still runs it unconditionally.
+on:
+  pull_request:
+    paths:
+      - 'packages/firebase_remote_config/**'
+      - 'packages/firebase_core/**'
+      - '.github/workflows/e2e_tests_remote_config.yaml'
+      - '.github/workflows/reusable_e2e_*.yaml'
+      - '.github/actions/setup-flutterfire/**'
+      - '.github/workflows/scripts/**'
+  push:
+    branches:
+      - main
+    paths:
+      - 'packages/firebase_remote_config/**'
+      - 'packages/firebase_core/**'
+      - '.github/workflows/e2e_tests_remote_config.yaml'
+      - '.github/workflows/reusable_e2e_*.yaml'
+      - '.github/actions/setup-flutterfire/**'
+      - '.github/workflows/scripts/**'
+  workflow_call:
+    inputs:
+      nightly_test_mode:
+        type: boolean
+        default: false
+    secrets:
+      TESTS_E2E_FIREBASE_OPTIONS_DART:
+        required: true
+      TESTS_E2E_GOOGLE_SERVICES_JSON:
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  changes:
+    uses: ./.github/workflows/reusable_e2e_changes.yaml
+    with:
+      package-path: 'packages/firebase_remote_config/firebase_remote_config'
+      platform-interface-package: 'firebase_remote_config_platform_interface'
+      web-package: 'firebase_remote_config_web'
+      inject-config-secrets: true
+
+  android:
+    needs: changes
+    if: needs.changes.outputs.android == 'true'
+    uses: ./.github/workflows/reusable_e2e_android.yaml
+    with:
+      package-path: 'packages/firebase_remote_config/firebase_remote_config'
+      package-scope: 'firebase_remote_config*'
+      native-config-args: '--live-tier-plist=remote_config'
+      inject-config-secrets: true
+      use-firebase-emulators: false
+      nightly_test_mode: ${{ inputs.nightly_test_mode == true }}
+    secrets:
+      TESTS_E2E_FIREBASE_OPTIONS_DART: ${{ secrets.TESTS_E2E_FIREBASE_OPTIONS_DART }}
+      TESTS_E2E_GOOGLE_SERVICES_JSON: ${{ secrets.TESTS_E2E_GOOGLE_SERVICES_JSON }}
+
+  ios:
+    needs: changes
+    if: needs.changes.outputs.ios == 'true'
+    uses: ./.github/workflows/reusable_e2e_ios.yaml
+    with:
+      package-path: 'packages/firebase_remote_config/firebase_remote_config'
+      package-scope: 'firebase_remote_config*'
+      cache-key-suffix: 'remote_config'
+      native-config-args: '--live-tier-plist=remote_config'
+      inject-config-secrets: true
+      use-firebase-emulators: false
+      nightly_test_mode: ${{ inputs.nightly_test_mode == true }}
+    secrets:
+      TESTS_E2E_FIREBASE_OPTIONS_DART: ${{ secrets.TESTS_E2E_FIREBASE_OPTIONS_DART }}
+      TESTS_E2E_GOOGLE_SERVICES_JSON: ${{ secrets.TESTS_E2E_GOOGLE_SERVICES_JSON }}
+
+  macos:
+    needs: changes
+    if: needs.changes.outputs.macos == 'true'
+    uses: ./.github/workflows/reusable_e2e_macos.yaml
+    with:
+      package-path: 'packages/firebase_remote_config/firebase_remote_config'
+      package-scope: 'firebase_remote_config*'
+      cache-key-suffix: 'remote_config'
+      native-config-args: '--live-tier-plist=remote_config'
+      inject-config-secrets: true
+      use-firebase-emulators: false
+      nightly_test_mode: ${{ inputs.nightly_test_mode == true }}
+    secrets:
+      TESTS_E2E_FIREBASE_OPTIONS_DART: ${{ secrets.TESTS_E2E_FIREBASE_OPTIONS_DART }}
+      TESTS_E2E_GOOGLE_SERVICES_JSON: ${{ secrets.TESTS_E2E_GOOGLE_SERVICES_JSON }}
+
+  web:
+    needs: changes
+    if: needs.changes.outputs.web == 'true'
+    uses: ./.github/workflows/reusable_e2e_web.yaml
+    with:
+      package-path: 'packages/firebase_remote_config/firebase_remote_config'
+      package-scope: 'firebase_remote_config*'
+      native-config-args: '--live-tier-plist=remote_config'
+      inject-config-secrets: true
+      use-firebase-emulators: false
+      nightly_test_mode: ${{ inputs.nightly_test_mode == true }}
+    secrets:
+      TESTS_E2E_FIREBASE_OPTIONS_DART: ${{ secrets.TESTS_E2E_FIREBASE_OPTIONS_DART }}
+      TESTS_E2E_GOOGLE_SERVICES_JSON: ${{ secrets.TESTS_E2E_GOOGLE_SERVICES_JSON }}
+
+  windows:
+    needs: changes
+    if: needs.changes.outputs.windows == 'true'
+    uses: ./.github/workflows/reusable_e2e_windows.yaml
+    with:
+      package-path: 'packages/firebase_remote_config/firebase_remote_config'
+      package-scope: 'firebase_remote_config*'
+      native-config-args: '--live-tier-plist=remote_config'
+      inject-config-secrets: true
+      use-firebase-emulators: false
+      nightly_test_mode: ${{ inputs.nightly_test_mode == true }}
+    secrets:
+      TESTS_E2E_FIREBASE_OPTIONS_DART: ${{ secrets.TESTS_E2E_FIREBASE_OPTIONS_DART }}
+      TESTS_E2E_GOOGLE_SERVICES_JSON: ${{ secrets.TESTS_E2E_GOOGLE_SERVICES_JSON }}

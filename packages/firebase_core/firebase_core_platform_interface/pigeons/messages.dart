@@ -8,20 +8,18 @@ import 'package:pigeon/pigeon.dart';
   PigeonOptions(
     dartOut: 'lib/src/pigeon/messages.pigeon.dart',
     // We export in the lib folder to expose the class to other packages.
+    // `melos run generate:pigeon` rewrites the generated `flutter_test` import
+    // to `package:firebase_core_platform_interface/test_binding.dart`, because
+    // `flutter_test` cannot be a dependency of a published package.
     dartTestOut: 'lib/src/pigeon/test_api.dart',
-    javaOut:
-        '../firebase_core/android/src/main/java/io/flutter/plugins/firebase/core/GeneratedAndroidFirebaseCore.java',
-    javaOptions: JavaOptions(
+    dartPackageName: 'firebase_core_platform_interface',
+    kotlinOut:
+        '../firebase_core/android/src/main/kotlin/io/flutter/plugins/firebase/core/GeneratedAndroidFirebaseCore.g.kt',
+    kotlinOptions: KotlinOptions(
       package: 'io.flutter.plugins.firebase.core',
-      className: 'GeneratedAndroidFirebaseCore',
     ),
-    objcHeaderOut:
-        '../firebase_core/ios/firebase_core/Sources/firebase_core/include/firebase_core/messages.g.h',
-    objcSourceOut:
-        '../firebase_core/ios/firebase_core/Sources/firebase_core/messages.g.m',
-    objcOptions: ObjcOptions(
-      headerIncludePath: 'include/firebase_core/messages.g.h',
-    ),
+    swiftOut:
+        '../firebase_core/ios/firebase_core/Sources/firebase_core/FirebaseCoreMessages.g.swift',
     cppHeaderOut: '../firebase_core/windows/messages.g.h',
     cppSourceOut: '../firebase_core/windows/messages.g.cpp',
     cppOptions: CppOptions(namespace: 'firebase_core_windows'),
@@ -44,7 +42,6 @@ class CoreFirebaseOptions {
     required this.databaseURL,
     required this.storageBucket,
     required this.trackingId,
-    required this.recaptchaSiteKey,
   });
 
   final String apiKey;
@@ -74,8 +71,6 @@ class CoreFirebaseOptions {
   final String? iosBundleId;
 
   final String? appGroupId;
-
-  final String? recaptchaSiteKey;
 }
 
 class CoreInitializeResponse {

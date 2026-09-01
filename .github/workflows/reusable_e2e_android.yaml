@@ -1,0 +1,271 @@
+name: reusable-e2e-android
+
+# The Android half of the per-product e2e suite: build the example APK, boot a
+# cached AVD and run the integration tests on it. Called by every
+# `e2e_tests_<product>.yaml` - every product supports Android.
+#
+# Two tiers, selected by `inject-config-secrets`: emulator (config generated,
+# tests wrapped in `firebase emulators:exec`) and live (config injected from
+# repository secrets, job fork/dependabot guarded). See
+# `reusable_e2e_changes.yaml` for how the job is gated on the diff.
+
+on:
+  workflow_call:
+    inputs:
+      package-path:
+        description: >-
+          Path of the package under test, e.g.
+          'packages/firebase_storage/firebase_storage'. The example app is
+          `<package-path>/example` by convention.
+        type: string
+        required: true
+      package-scope:
+        description: "Melos glob bootstrapped before the tests, e.g. 'firebase_storage*'."
+        type: string
+        required: true
+      test-target:
+        description: 'Integration test entrypoint, relative to the example directory.'
+        type: string
+        default: 'integration_test/e2e_test.dart'
+      native-config-args:
+        description: >-
+          Arguments for generate-dummy-firebase-configs.dart, e.g.
+          '--storage-native' (emulator tier, writes the native config files the
+          Android/Xcode builds require) or '--live-tier-plist=messaging' (live
+          tier, writes only the placeholder plist so it cannot clobber the
+          injected credentials). Empty = plain run.
+        type: string
+        default: ''
+      inject-config-secrets:
+        description: >-
+          true selects the live tier: the "Inject Firebase config" step writes
+          firebase_options.dart / google-services.json from secrets, no emulator
+          is started, and the job is fork/dependabot guarded.
+        type: boolean
+        default: false
+      use-firebase-emulators:
+        description: >-
+          true (default) runs the test command under `firebase emulators:exec`
+          with the emulator suite installed and cached. Independent of
+          inject-config-secrets since a product can need both: firebase_auth
+          tests run against the Auth emulator but its password-policy tests
+          call the live REST API, which rejects placeholder credentials.
+        type: boolean
+        default: true
+      storage-emulator-debug:
+        description: >-
+          Sets STORAGE_EMULATOR_DEBUG on the test steps. firebase_storage only.
+        type: boolean
+        default: false
+      flutter-version:
+        description: >-
+          Pinned Flutter version. Empty (the default) leaves the job unpinned
+          (stable channel), which is what every product uses today.
+        type: string
+        default: ''
+      firebase-tools-version:
+        description: 'firebase-tools version. Emulator tier only.'
+        type: string
+        default: '15.25.1'
+      nightly_test_mode:
+        description: >-
+          Passed down from nightly.yaml. Shortens the job timeout to 5 minutes.
+        type: boolean
+        default: false
+    secrets:
+      # `required: false` so the emulator-tier callers can omit the `secrets:`
+      # block entirely. The live-tier callers declare them as required and pass
+      # them through explicitly.
+      TESTS_E2E_FIREBASE_OPTIONS_DART:
+        required: false
+      TESTS_E2E_GOOGLE_SERVICES_JSON:
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  android:
+    # Live tier requires the live-project secrets, which fork and dependabot
+    # PRs do not receive.
+    if: >-
+      inputs.inject-config-secrets == false ||
+      github.event_name != 'pull_request' ||
+      (github.event.pull_request.head.repo.full_name == github.repository &&
+       github.actor != 'dependabot[bot]')
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    env:
+      # Inputs consumed inside run: scripts are routed through env so their
+      # values are data, never shell/template code (zizmor: template-injection).
+      PACKAGE_PATH: ${{ inputs.package-path }}
+      TEST_TARGET: ${{ inputs.test-target }}
+      NATIVE_CONFIG_ARGS: ${{ inputs.native-config-args }}
+      AVD_ARCH: x86_64
+      AVD_API_LEVEL: 34
+      AVD_TARGET: google_apis
+    timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 35 }}
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - uses: ./.github/actions/setup-flutterfire
+        with:
+          # Live tier has no emulator suite, so no firebase-tools and no Node.
+          # Java stays: the Gradle build needs it either way.
+          node: ${{ inputs.use-firebase-emulators && 'true' || 'false' }}
+          flutter-version: ${{ inputs.flutter-version }}
+          firebase-tools-version: ${{ inputs.use-firebase-emulators && inputs.firebase-tools-version || '' }}
+          bootstrap-scope: ${{ inputs.package-scope }}
+      - name: Inject Firebase config
+        if: inputs.inject-config-secrets
+        # The `flutterfire-e2e-tests` project config lives in repository
+        # secrets rather than in the tree: this is a public repo and these are
+        # live backends. Same shape as `e2e_tests_pipeline.yaml`.
+        env:
+          FIREBASE_OPTIONS_DART: ${{ secrets.TESTS_E2E_FIREBASE_OPTIONS_DART }}
+          GOOGLE_SERVICES_JSON: ${{ secrets.TESTS_E2E_GOOGLE_SERVICES_JSON }}
+        run: |
+          if [ -z "$FIREBASE_OPTIONS_DART" ]; then
+            echo "::error::TESTS_E2E_FIREBASE_OPTIONS_DART is empty — secrets are unavailable (fork/dependabot PR?). Failing early instead of producing a broken build."
+            exit 1
+          fi
+          echo "$FIREBASE_OPTIONS_DART" > "$PACKAGE_PATH/example/lib/firebase_options.dart"
+          echo "$GOOGLE_SERVICES_JSON" > "$PACKAGE_PATH/example/android/app/google-services.json"
+      - name: Firebase Emulator Cache
+        if: inputs.use-firebase-emulators
+        id: firebase-emulator-cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        continue-on-error: true
+        with:
+          # The firebase emulators are pure javascript and java, OS-independent
+          enableCrossOsArchive: true
+          # Must match the save path exactly
+          path: ~/.cache/firebase/emulators
+          # Shared with every other e2e workflow: same emulator payload, same key.
+          key: firebase-emulators-v5-${{ env.FIREBASE_TOOLS_VERSION }}
+          # Trailing dash so this never prefix-matches a future version's key
+          restore-keys: firebase-emulators-v5-
+      - name: Generate dummy Firebase configs
+        if: ${{ !inputs.inject-config-secrets }}
+        # The native flag (e.g. `--storage-native`) is required for products
+        # whose example applies the `google-services` plugin: the Android build
+        # fails when google-services.json is missing.
+        run: |
+          # shellcheck disable=SC2086 # an argument list: word-splitting is the point
+          dart ./.github/workflows/scripts/generate-dummy-firebase-configs.dart $NATIVE_CONFIG_ARGS
+      - name: Install Cloud Functions dependencies
+        if: inputs.use-firebase-emulators
+        # `firebase emulators:exec` does not install these itself (the old
+        # start-firebase-emulator.sh wrapper did); without them the functions
+        # emulator fails to load the function definitions.
+        run: npm ci --prefix .github/workflows/scripts/functions
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Gradle cache
+        uses: gradle/actions/setup-gradle@90ddb51e90a5fd9ba75f40cf85156b7b41bf76a3
+      - name: Prepare AVD home on /mnt
+        # GitHub-hosted runners mount a ~74GB volume at /mnt. Create it before AVD cache
+        # restore and android-emulator-runner (avdmanager needs the space at create time).
+        run: |
+          sudo mkdir -p /mnt/avd
+          sudo chown "$USER:$USER" /mnt/avd
+          df -h / /mnt
+      - name: AVD cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        continue-on-error: true
+        id: avd-cache
+        with:
+          # Must match the save path exactly
+          path: |
+            /mnt/avd/*
+            ~/.android/adb*
+          # Deliberately shared across products: every android job wants the same
+          # image, so they reuse one copy instead of building their own.
+          # The emulator build is part of the key so bumping `emulator-build:` below
+          # invalidates the cached AVD instead of reusing an image from the old build.
+          key: avd-${{ runner.os }}-${{ env.AVD_API_LEVEL }}-${{ env.AVD_TARGET }}-${{ env.AVD_ARCH }}-14214601
+      - name: Link AVD home to /mnt
+        # android-emulator-runner exportVariables ANDROID_AVD_HOME to $HOME/.android/avd
+        run: |
+          mkdir -p "$HOME/.android"
+          rm -rf "$HOME/.android/avd"
+          ln -s /mnt/avd "$HOME/.android/avd"
+      - name: Pre-build APK
+        # Build outside the emulator so the AVD does not boot and idle through the
+        # whole Gradle build. `flutter test` below reuses this warm build cache.
+        working-directory: ${{ inputs.package-path }}/example
+        timeout-minutes: 25
+        # Gradle artifact downloads flake; retry exactly that failure once.
+        run: |
+          set +e
+          flutter build apk --debug --target="$TEST_TARGET" --android-skip-build-dependency-validation > build_output.log 2>&1
+          BUILD_EXIT=$?
+          cat build_output.log
+          if [ $BUILD_EXIT -ne 0 ] && grep -q "error while downloading artifacts from the network" build_output.log; then
+            echo "Gradle artifact download failure - retrying the build once."
+            flutter build apk --debug --target="$TEST_TARGET" --android-skip-build-dependency-validation
+            BUILD_EXIT=$?
+          fi
+          exit $BUILD_EXIT
+      - name: Start AVD then run E2E tests
+        uses: reactivecircus/android-emulator-runner@e89f39f1abbbd05b1113a29cf4db69e7540cae5a
+        # Two alarm-bounded test attempts (15 min each, see the retry script)
+        # plus AVD boot and the emulator suite have to fit; the old 20 minute
+        # budget was killed by a single launch hang.
+        timeout-minutes: 40
+        env:
+          ANDROID_AVD_HOME: /mnt/avd
+          STORAGE_EMULATOR_DEBUG: ${{ inputs.storage-emulator-debug && 'true' || '' }}
+        with:
+          api-level: ${{ env.AVD_API_LEVEL }}
+          target: ${{ env.AVD_TARGET }}
+          arch: ${{ env.AVD_ARCH }}
+          emulator-build: 14214601
+          # The default (true) wipes and recreates the AVD, making the cache above useless.
+          force-avd-creation: false
+          # Emulator tier: firebase.json and the emulator rule files live in the
+          # scripts directory, so `emulators:exec` has to run from there and the
+          # test command cds back to the package under test. `emulators:exec`
+          # owns the emulator lifecycle - it boots the suite, runs the command
+          # and tears the suite down, exiting with the command's exit code.
+          # Live tier: no emulator, so the test runs straight from the example.
+          # Both tiers run the retry wrapper: `flutter test` against the AVD
+          # occasionally hangs at app launch without printing anything, and the
+          # wrapper bounds each attempt and retries that shape once.
+          working-directory: ${{ inputs.use-firebase-emulators && '.github/workflows/scripts' || format('{0}/example', inputs.package-path) }}
+          script: >-
+            ${{ inputs.use-firebase-emulators
+            && format('firebase emulators:exec --project flutterfire-e2e-tests "cd {0}/{1}/example && {0}/.github/workflows/scripts/flutter-test-android-retry.sh"', github.workspace, inputs.package-path)
+            || format('{0}/.github/workflows/scripts/flutter-test-android-retry.sh', github.workspace) }}
+      - name: Ensure Appium is shut down
+      # Required because of below issue where emulator failing to shut down properly causes tests to fail
+      # https://github.com/ReactiveCircus/android-emulator-runner/issues/385
+        run: |
+          pgrep -f appium && pkill -f appium || echo "No Appium process found"
+      - name: Save Firebase Emulator Cache
+        # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
+        if: ${{ inputs.use-firebase-emulators && github.ref == 'refs/heads/main' }}
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        continue-on-error: true
+        with:
+          # The firebase emulators are pure javascript and java, OS-independent
+          enableCrossOsArchive: true
+          key: ${{ steps.firebase-emulator-cache.outputs.cache-primary-key }}
+          # Must match the restore path exactly
+          path: ~/.cache/firebase/emulators
+      - name: Save Android Emulator Cache
+        # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
+        # Skip on a cache hit: the AVD image is multi-GB and re-uploading it unchanged on
+        # every main run is pure waste.
+        if: github.ref == 'refs/heads/main' && steps.avd-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        continue-on-error: true
+        with:
+          key: ${{ steps.avd-cache.outputs.cache-primary-key }}
+          # Must match the restore path exactly
+          path: |
+            /mnt/avd/*
+            ~/.android/adb*

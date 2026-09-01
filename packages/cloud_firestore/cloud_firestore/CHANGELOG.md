@@ -1,3 +1,21 @@
+## 6.9.0
+
+ - **FIX**(ci): bump Kotlin Gradle plugin to 2.3.0 ([#18600](https://github.com/firebase/flutterfire/issues/18600)). ([4c3865e2](https://github.com/firebase/flutterfire/commit/4c3865e2e56bf59904a9f48a6e70f0f963df2cda))
+ - **FIX**(ci): align Android toolchain and analyzer with Flutter 3.47 ([#18566](https://github.com/firebase/flutterfire/issues/18566)). ([87ace849](https://github.com/firebase/flutterfire/commit/87ace8496fec75c461f3b29a9b8a85d46e286957))
+ - **FIX**(firestore,android): defer transaction cleanup until stream cancellation ([#18553](https://github.com/firebase/flutterfire/issues/18553)). ([f949c23d](https://github.com/firebase/flutterfire/commit/f949c23d795a9d843ffd1c6deea285a4d9ce5ff3))
+ - **FIX**(android): remove plugin-local AGP and Kotlin Gradle Plugin pins from buildscript blocks ([#18139](https://github.com/firebase/flutterfire/issues/18139)). ([4f6960c4](https://github.com/firebase/flutterfire/commit/4f6960c437da6945e2db2505f4e0a92fef5b76da))
+ - **FEAT**: bump Firebase iOS SDK to 12.18.0 ([#18596](https://github.com/firebase/flutterfire/issues/18596)). ([07febc37](https://github.com/firebase/flutterfire/commit/07febc37617ab8b4f6f06e7208baa6a15ce2ef70))
+
+## 6.8.0
+
+ - **FIX**(firestore,core,windows): per-engine BinaryMessenger, Firestore/Auth link order, Profile builds ([#18516](https://github.com/firebase/flutterfire/issues/18516)). ([5dfd289e](https://github.com/firebase/flutterfire/commit/5dfd289ea45260c15d73894dcf2cb092fc8ddb9d))
+ - **FIX**(app_check): sync SPM pins to 12.17.0 and fix Windows Activate override after [#18505](https://github.com/firebase/flutterfire/issues/18505) ([#18515](https://github.com/firebase/flutterfire/issues/18515)). ([ce1f6e05](https://github.com/firebase/flutterfire/commit/ce1f6e05e2d2645c414f8e731d3d082436caa012))
+ - **FIX**(firestore,android): clean up Android transaction listeners on completion ([#18475](https://github.com/firebase/flutterfire/issues/18475)). ([ae002c7c](https://github.com/firebase/flutterfire/commit/ae002c7ca8ae405ebc901bfe17e6724a48075bca))
+ - **FIX**(firestore,windows): reply on platform thread to prevent warnings ([#18459](https://github.com/firebase/flutterfire/issues/18459)). ([cfeddb1b](https://github.com/firebase/flutterfire/commit/cfeddb1b4e2a519d77440a8ec4799eb9b9c12a37))
+ - **FIX**(firestore,windows): Prevents lost Windows transaction responses ([#18448](https://github.com/firebase/flutterfire/issues/18448)). ([ed1a551d](https://github.com/firebase/flutterfire/commit/ed1a551d41bc3303e66985e30d4d2b570606bc7f))
+ - **FIX**(firestore): Preserves microseconds when serializing implicit DateTime values ([#18435](https://github.com/firebase/flutterfire/issues/18435)). ([068c3094](https://github.com/firebase/flutterfire/commit/068c30946912d8a3d5f24455fcb4bc00202e60ee))
+ - **FEAT**(firestore): add string manipulation functions for Android and iOS ([#18493](https://github.com/firebase/flutterfire/issues/18493)). ([b3bd7e9d](https://github.com/firebase/flutterfire/commit/b3bd7e9ddd61942530883501f285ed32b55f9953))
+
 ## 6.7.1
 
  - Update a dependency to the latest release.
