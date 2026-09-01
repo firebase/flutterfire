@@ -3,8 +3,8 @@ description: Demonstrates how to use the cloud_functions plugin.
 resolution: workspace
 
 environment:
-  sdk: '^3.6.0'
-  flutter: '>=3.27.0'
+  sdk: '^3.10.0'
+  flutter: '>=3.38.0'
 
 dependencies:
   cloud_functions: ^6.4.0
