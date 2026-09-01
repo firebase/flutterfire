@@ -1629,17 +1629,16 @@ class FirebaseFirestoreHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
-      <Object?>[
-        app,
-        path,
-        isCollectionGroup,
-        parameters,
-        options,
-        includeMetadataChanges,
-        source,
-      ],
-    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel
+        .send(<Object?>[
+          app,
+          path,
+          isCollectionGroup,
+          parameters,
+          options,
+          includeMetadataChanges,
+          source,
+        ]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(

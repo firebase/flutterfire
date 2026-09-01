@@ -136,63 +136,58 @@ void runDocumentChangeTests() {
           defaultTargetPlatform == TargetPlatform.android,
     );
 
-    test(
-      'returns the correct metadata when modifying',
-      () async {
-        CollectionReference<Map<String, dynamic>> collection =
-            await initializeTest('add-modify-document');
-        DocumentReference<Map<String, dynamic>> doc1 = collection.doc('doc1');
-        DocumentReference<Map<String, dynamic>> doc2 = collection.doc('doc2');
-        DocumentReference<Map<String, dynamic>> doc3 = collection.doc('doc3');
+    test('returns the correct metadata when modifying', () async {
+      CollectionReference<Map<String, dynamic>> collection =
+          await initializeTest('add-modify-document');
+      DocumentReference<Map<String, dynamic>> doc1 = collection.doc('doc1');
+      DocumentReference<Map<String, dynamic>> doc2 = collection.doc('doc2');
+      DocumentReference<Map<String, dynamic>> doc3 = collection.doc('doc3');
 
-        await doc1.set({'value': 1});
-        await doc2.set({'value': 2});
-        await doc3.set({'value': 3});
+      await doc1.set({'value': 1});
+      await doc2.set({'value': 2});
+      await doc3.set({'value': 3});
 
-        final snapshots = <QuerySnapshot<Map<String, dynamic>>>[];
-        final receivedAll = Completer<void>();
+      final snapshots = <QuerySnapshot<Map<String, dynamic>>>[];
+      final receivedAll = Completer<void>();
 
-        StreamSubscription subscription = collection
-            .orderBy('value')
-            .snapshots()
-            .listen((snapshot) {
-              snapshots.add(snapshot);
-              if (snapshots.length >= 2 && !receivedAll.isCompleted) {
-                receivedAll.complete();
-              }
-            });
+      StreamSubscription subscription = collection
+          .orderBy('value')
+          .snapshots()
+          .listen((snapshot) {
+            snapshots.add(snapshot);
+            if (snapshots.length >= 2 && !receivedAll.isCompleted) {
+              receivedAll.complete();
+            }
+          });
 
-        // Wait for the initial snapshot before modifying
-        await Future.delayed(const Duration(milliseconds: 500));
-        await doc1.update({'value': 4});
+      // Wait for the initial snapshot before modifying
+      await Future.delayed(const Duration(milliseconds: 500));
+      await doc1.update({'value': 4});
 
-        await receivedAll.future.timeout(const Duration(seconds: 30));
-        await subscription.cancel();
+      await receivedAll.future.timeout(const Duration(seconds: 30));
+      await subscription.cancel();
 
-        // Verify first snapshot (all 3 docs added)
-        expect(snapshots[0].docs.length, equals(3));
-        expect(snapshots[0].docChanges.length, equals(3));
-        snapshots[0].docChanges.asMap().forEach((
-          int index,
-          DocumentChange<Map<String, dynamic>> change,
-        ) {
-          expect(change.oldIndex, equals(-1));
-          expect(change.newIndex, equals(index));
-          expect(change.type, equals(DocumentChangeType.added));
-          expect(change.doc.data()!['value'], equals(index + 1));
-        });
+      // Verify first snapshot (all 3 docs added)
+      expect(snapshots[0].docs.length, equals(3));
+      expect(snapshots[0].docChanges.length, equals(3));
+      snapshots[0].docChanges.asMap().forEach((
+        int index,
+        DocumentChange<Map<String, dynamic>> change,
+      ) {
+        expect(change.oldIndex, equals(-1));
+        expect(change.newIndex, equals(index));
+        expect(change.type, equals(DocumentChangeType.added));
+        expect(change.doc.data()!['value'], equals(index + 1));
+      });
 
-        // Verify second snapshot (doc1 modified, moved to end)
-        expect(snapshots[1].docs.length, equals(3));
-        expect(snapshots[1].docChanges.length, equals(1));
-        DocumentChange<Map<String, dynamic>> change =
-            snapshots[1].docChanges[0];
-        expect(change.oldIndex, equals(0));
-        expect(change.newIndex, equals(2));
-        expect(change.type, equals(DocumentChangeType.modified));
-        expect(change.doc.id, equals('doc1'));
-      },
-      skip: defaultTargetPlatform == TargetPlatform.windows,
-    );
+      // Verify second snapshot (doc1 modified, moved to end)
+      expect(snapshots[1].docs.length, equals(3));
+      expect(snapshots[1].docChanges.length, equals(1));
+      DocumentChange<Map<String, dynamic>> change = snapshots[1].docChanges[0];
+      expect(change.oldIndex, equals(0));
+      expect(change.newIndex, equals(2));
+      expect(change.type, equals(DocumentChangeType.modified));
+      expect(change.doc.id, equals('doc1'));
+    }, skip: defaultTargetPlatform == TargetPlatform.windows);
   });
 }

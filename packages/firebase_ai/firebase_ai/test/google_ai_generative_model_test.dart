@@ -79,23 +79,19 @@ void main() {
       );
     });
 
-    test(
-      'allows specifying an API version',
-      () async {
-        final (client, model) = createModel(
-          // requestOptions: RequestOptions(apiVersion: 'override_version'),
-        );
-        const prompt = 'Some prompt';
-        await client.checkRequest(
-          () => model.generateContent([Content.text(prompt)]),
-          response: arbitraryGenerateContentResponse,
-          verifyRequest: (uri, _) {
-            expect(uri.path, startsWith('/override_version/'));
-          },
-        );
-      },
-      skip: 'No support for overriding API version',
-    );
+    test('allows specifying an API version', () async {
+      final (client, model) = createModel(
+        // requestOptions: RequestOptions(apiVersion: 'override_version'),
+      );
+      const prompt = 'Some prompt';
+      await client.checkRequest(
+        () => model.generateContent([Content.text(prompt)]),
+        response: arbitraryGenerateContentResponse,
+        verifyRequest: (uri, _) {
+          expect(uri.path, startsWith('/override_version/'));
+        },
+      );
+    }, skip: 'No support for overriding API version');
 
     group('generate unary content', () {
       test('can make successful request', () async {
@@ -546,78 +542,74 @@ void main() {
         expect(response, matchesCountTokensResponse(CountTokensResponse(2)));
       });
 
-      test(
-        'can override GenerateContentRequest fields',
-        () async {
-          final (client, model) = createModel();
-          const prompt = 'Some prompt';
-          await client.checkRequest(
-            response: {'totalTokens': 100},
-            () => model.countTokens(
-              [Content.text(prompt)],
-              // safetySettings: [
-              //   SafetySetting(
-              //     HarmCategory.dangerousContent,
-              //     HarmBlockThreshold.high,
-              //     null,
-              //   ),
-              // ],
-              // generationConfig: GenerationConfig(stopSequences: ['a']),
-              // tools: [
-              //   Tool(functionDeclarations: [
-              //     FunctionDeclaration(
-              //       'someFunction',
-              //       'Some cool function.',
-              //       Schema(SchemaType.string, description: 'Some parameter.'),
-              //     ),
-              //   ]),
-              // ],
-              // toolConfig: ToolConfig(
-              //   functionCallingConfig: FunctionCallingConfig(
-              //     mode: FunctionCallingMode.any,
-              //     allowedFunctionNames: {'someFunction'},
-              //   ),
-              // ),
-            ),
-            verifyRequest: (_, countTokensRequest) {
-              expect(countTokensRequest, isNotNull);
-              final request =
-                  countTokensRequest['generateContentRequest']!
-                      as Map<String, Object?>;
-              expect(request['safetySettings'], [
-                {
-                  'category': 'HARM_CATEGORY_DANGEROUS_CONTENT',
-                  'threshold': 'BLOCK_ONLY_HIGH',
-                },
-              ]);
-              expect(request['generationConfig'], {
-                'stopSequences': ['a'],
-              });
-              expect(request['tools'], [
-                {
-                  'functionDeclarations': [
-                    {
-                      'name': 'someFunction',
-                      'description': 'Some cool function.',
-                      'parameters': {
-                        'type': 'STRING',
-                        'description': 'Some parameter.',
-                      },
+      test('can override GenerateContentRequest fields', () async {
+        final (client, model) = createModel();
+        const prompt = 'Some prompt';
+        await client.checkRequest(
+          response: {'totalTokens': 100},
+          () => model.countTokens(
+            [Content.text(prompt)],
+            // safetySettings: [
+            //   SafetySetting(
+            //     HarmCategory.dangerousContent,
+            //     HarmBlockThreshold.high,
+            //     null,
+            //   ),
+            // ],
+            // generationConfig: GenerationConfig(stopSequences: ['a']),
+            // tools: [
+            //   Tool(functionDeclarations: [
+            //     FunctionDeclaration(
+            //       'someFunction',
+            //       'Some cool function.',
+            //       Schema(SchemaType.string, description: 'Some parameter.'),
+            //     ),
+            //   ]),
+            // ],
+            // toolConfig: ToolConfig(
+            //   functionCallingConfig: FunctionCallingConfig(
+            //     mode: FunctionCallingMode.any,
+            //     allowedFunctionNames: {'someFunction'},
+            //   ),
+            // ),
+          ),
+          verifyRequest: (_, countTokensRequest) {
+            expect(countTokensRequest, isNotNull);
+            final request =
+                countTokensRequest['generateContentRequest']!
+                    as Map<String, Object?>;
+            expect(request['safetySettings'], [
+              {
+                'category': 'HARM_CATEGORY_DANGEROUS_CONTENT',
+                'threshold': 'BLOCK_ONLY_HIGH',
+              },
+            ]);
+            expect(request['generationConfig'], {
+              'stopSequences': ['a'],
+            });
+            expect(request['tools'], [
+              {
+                'functionDeclarations': [
+                  {
+                    'name': 'someFunction',
+                    'description': 'Some cool function.',
+                    'parameters': {
+                      'type': 'STRING',
+                      'description': 'Some parameter.',
                     },
-                  ],
-                },
-              ]);
-              expect(request['toolConfig'], {
-                'functionCallingConfig': {
-                  'mode': 'ANY',
-                  'allowedFunctionNames': ['someFunction'],
-                },
-              });
-            },
-          );
-        },
-        skip: 'Only content argument supported for countTokens',
-      );
+                  },
+                ],
+              },
+            ]);
+            expect(request['toolConfig'], {
+              'functionCallingConfig': {
+                'mode': 'ANY',
+                'allowedFunctionNames': ['someFunction'],
+              },
+            });
+          },
+        );
+      }, skip: 'Only content argument supported for countTokens');
 
       test('can pass a google search tool', () async {
         final (client, model) = createModel(tools: [Tool.googleSearch()]);

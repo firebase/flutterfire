@@ -225,13 +225,9 @@ void main() {
     });
 
     group('getAPNSToken', () {
-      test(
-        'resolves null on android',
-        () async {
-          expect(await messaging.getAPNSToken(), null);
-        },
-        skip: defaultTargetPlatform != TargetPlatform.android,
-      );
+      test('resolves null on android', () async {
+        expect(await messaging.getAPNSToken(), null);
+      }, skip: defaultTargetPlatform != TargetPlatform.android);
     });
 
     group('getInitialMessage', () {

@@ -50,20 +50,16 @@ void main() {
       // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
     }, skip: defaultTargetPlatform == TargetPlatform.macOS);
 
-    test(
-      'running get id in parallel',
-      () async {
-        final ids = await Future.wait([
-          FirebaseInstallations.instance.getId(),
-          FirebaseInstallations.instance.getId(),
-          FirebaseInstallations.instance.getId(),
-          FirebaseInstallations.instance.getId(),
-          FirebaseInstallations.instance.getId(),
-        ]);
-        expect(ids, isNotNull);
-      },
-      skip: defaultTargetPlatform == TargetPlatform.macOS && isCI,
-    );
+    test('running get id in parallel', () async {
+      final ids = await Future.wait([
+        FirebaseInstallations.instance.getId(),
+        FirebaseInstallations.instance.getId(),
+        FirebaseInstallations.instance.getId(),
+        FirebaseInstallations.instance.getId(),
+        FirebaseInstallations.instance.getId(),
+      ]);
+      expect(ids, isNotNull);
+    }, skip: defaultTargetPlatform == TargetPlatform.macOS && isCI);
 
     test(
       '.getToken',

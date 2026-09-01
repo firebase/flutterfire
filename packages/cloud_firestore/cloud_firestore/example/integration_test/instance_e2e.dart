@@ -161,34 +161,30 @@ void runInstanceTests() {
       await instance.terminate();
     }, skip: kIsWeb);
 
-    test(
-      'setIndexConfigurationFromJSON()',
-      () async {
-        final json = jsonEncode({
-          'indexes': [
-            {
-              'collectionGroup': 'posts',
-              'queryScope': 'COLLECTION',
-              'fields': [
-                {'fieldPath': 'author', 'arrayConfig': 'CONTAINS'},
-                {'fieldPath': 'timestamp', 'order': 'DESCENDING'},
-              ],
-            },
-          ],
-          'fieldOverrides': [
-            {
-              'collectionGroup': 'posts',
-              'fieldPath': 'myBigMapField',
-              'indexes': [],
-            },
-          ],
-        });
+    test('setIndexConfigurationFromJSON()', () async {
+      final json = jsonEncode({
+        'indexes': [
+          {
+            'collectionGroup': 'posts',
+            'queryScope': 'COLLECTION',
+            'fields': [
+              {'fieldPath': 'author', 'arrayConfig': 'CONTAINS'},
+              {'fieldPath': 'timestamp', 'order': 'DESCENDING'},
+            ],
+          },
+        ],
+        'fieldOverrides': [
+          {
+            'collectionGroup': 'posts',
+            'fieldPath': 'myBigMapField',
+            'indexes': [],
+          },
+        ],
+      });
 
-        // ignore: experimental_member_use
-        await firestore.setIndexConfigurationFromJSON(json);
-      },
-      skip: defaultTargetPlatform == TargetPlatform.windows,
-    );
+      // ignore: experimental_member_use
+      await firestore.setIndexConfigurationFromJSON(json);
+    }, skip: defaultTargetPlatform == TargetPlatform.windows);
 
     test('setLoggingEnabled should resolve without issue', () async {
       await FirebaseFirestore.setLoggingEnabled(true);

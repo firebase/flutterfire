@@ -747,30 +747,10 @@ void main() {
                 defaultTargetPlatform == TargetPlatform.macOS),
       );
 
-      group(
-        'refreshToken',
-        () {
-          test(
-            'should throw an unsupported error on non web platforms',
-            () async {
-              // Setup
-              await FirebaseAuth.instance.signInAnonymously();
-
-              // Test
-              FirebaseAuth.instance.currentUser!.refreshToken;
-
-              // Assertions
-              expect(FirebaseAuth.instance.currentUser!.refreshToken, isNull);
-            },
-            // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
-            // iOS supports it
-            skip:
-                kIsWeb ||
-                defaultTargetPlatform == TargetPlatform.macOS ||
-                defaultTargetPlatform == TargetPlatform.iOS,
-          );
-
-          test('should return a token on web', () async {
+      group('refreshToken', () {
+        test(
+          'should throw an unsupported error on non web platforms',
+          () async {
             // Setup
             await FirebaseAuth.instance.signInAnonymously();
 
@@ -778,18 +758,34 @@ void main() {
             FirebaseAuth.instance.currentUser!.refreshToken;
 
             // Assertions
-            expect(
-              FirebaseAuth.instance.currentUser!.refreshToken,
-              isA<String>(),
-            );
-            expect(
-              FirebaseAuth.instance.currentUser!.refreshToken!.isEmpty,
-              isFalse,
-            );
-          }, skip: !kIsWeb);
-        },
-        skip: !kIsWeb && defaultTargetPlatform == TargetPlatform.windows,
-      );
+            expect(FirebaseAuth.instance.currentUser!.refreshToken, isNull);
+          },
+          // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
+          // iOS supports it
+          skip:
+              kIsWeb ||
+              defaultTargetPlatform == TargetPlatform.macOS ||
+              defaultTargetPlatform == TargetPlatform.iOS,
+        );
+
+        test('should return a token on web', () async {
+          // Setup
+          await FirebaseAuth.instance.signInAnonymously();
+
+          // Test
+          FirebaseAuth.instance.currentUser!.refreshToken;
+
+          // Assertions
+          expect(
+            FirebaseAuth.instance.currentUser!.refreshToken,
+            isA<String>(),
+          );
+          expect(
+            FirebaseAuth.instance.currentUser!.refreshToken!.isEmpty,
+            isFalse,
+          );
+        }, skip: !kIsWeb);
+      }, skip: !kIsWeb && defaultTargetPlatform == TargetPlatform.windows);
 
       group(
         'user.metadata',

@@ -65,108 +65,100 @@ void main() {
     });
 
     group('enrollFactor', () {
-      test(
-        'should enroll and unenroll factor',
-        () async {
-          String testPhoneNumber = '+441444555666';
-          User? user;
-          UserCredential userCredential;
+      test('should enroll and unenroll factor', () async {
+        String testPhoneNumber = '+441444555666';
+        User? user;
+        UserCredential userCredential;
 
-          userCredential = await FirebaseAuth.instance
-              .createUserWithEmailAndPassword(
-                email: email,
-                password: testPassword,
-              );
-          user = userCredential.user;
-
-          await user!.sendEmailVerification();
-          final oobCode = (await emulatorOutOfBandCode(
-            email,
-            EmulatorOobCodeType.verifyEmail,
-          ))!;
-
-          await emulatorVerifyEmail(oobCode.oobCode!);
-
-          final multiFactor = user.multiFactor;
-          final session = await multiFactor.getSession();
-
-          Future<String> getCredential() async {
-            Completer completer = Completer<String>();
-
-            unawaited(
-              FirebaseAuth.instance.verifyPhoneNumber(
-                phoneNumber: testPhoneNumber,
-                multiFactorSession: session,
-                verificationCompleted: (PhoneAuthCredential credential) {
-                  if (!completer.isCompleted) {
-                    return completer.completeError(
-                      Exception(
-                        'verificationCompleted should not have been called',
-                      ),
-                    );
-                  }
-                },
-                verificationFailed: (FirebaseException e) {
-                  if (!completer.isCompleted) {
-                    return completer.completeError(
-                      Exception(
-                        'verificationFailed should not have been called',
-                      ),
-                    );
-                  }
-                },
-                codeSent: (String verificationId, int? resetToken) {
-                  completer.complete(verificationId);
-                },
-                codeAutoRetrievalTimeout: (String foo) {
-                  if (!completer.isCompleted) {
-                    return completer.completeError(
-                      Exception(
-                        'codeAutoRetrievalTimeout should not have been called',
-                      ),
-                    );
-                  }
-                },
-              ),
+        userCredential = await FirebaseAuth.instance
+            .createUserWithEmailAndPassword(
+              email: email,
+              password: testPassword,
             );
+        user = userCredential.user;
 
-            return completer.future.timeout(_completerTimeout)
-                as FutureOr<String>;
-          }
+        await user!.sendEmailVerification();
+        final oobCode = (await emulatorOutOfBandCode(
+          email,
+          EmulatorOobCodeType.verifyEmail,
+        ))!;
 
-          final verificationId = await getCredential();
+        await emulatorVerifyEmail(oobCode.oobCode!);
 
-          final smsCode = await emulatorPhoneVerificationCode(testPhoneNumber);
+        final multiFactor = user.multiFactor;
+        final session = await multiFactor.getSession();
 
-          final credential = PhoneAuthProvider.credential(
-            verificationId: verificationId,
-            smsCode: smsCode!,
+        Future<String> getCredential() async {
+          Completer completer = Completer<String>();
+
+          unawaited(
+            FirebaseAuth.instance.verifyPhoneNumber(
+              phoneNumber: testPhoneNumber,
+              multiFactorSession: session,
+              verificationCompleted: (PhoneAuthCredential credential) {
+                if (!completer.isCompleted) {
+                  return completer.completeError(
+                    Exception(
+                      'verificationCompleted should not have been called',
+                    ),
+                  );
+                }
+              },
+              verificationFailed: (FirebaseException e) {
+                if (!completer.isCompleted) {
+                  return completer.completeError(
+                    Exception('verificationFailed should not have been called'),
+                  );
+                }
+              },
+              codeSent: (String verificationId, int? resetToken) {
+                completer.complete(verificationId);
+              },
+              codeAutoRetrievalTimeout: (String foo) {
+                if (!completer.isCompleted) {
+                  return completer.completeError(
+                    Exception(
+                      'codeAutoRetrievalTimeout should not have been called',
+                    ),
+                  );
+                }
+              },
+            ),
           );
 
-          expect(credential, isA<PhoneAuthCredential>());
+          return completer.future.timeout(_completerTimeout)
+              as FutureOr<String>;
+        }
 
-          await user.multiFactor.enroll(
-            PhoneMultiFactorGenerator.getAssertion(credential),
-            displayName: 'My phone number',
-          );
+        final verificationId = await getCredential();
 
-          final enrolledFactors = await multiFactor.getEnrolledFactors();
+        final smsCode = await emulatorPhoneVerificationCode(testPhoneNumber);
 
-          // Assertions
-          expect(enrolledFactors.length, 1);
-          expect(enrolledFactors.first.displayName, 'My phone number');
+        final credential = PhoneAuthProvider.credential(
+          verificationId: verificationId,
+          smsCode: smsCode!,
+        );
 
-          await user.multiFactor.unenroll(
-            multiFactorInfo: enrolledFactors.first,
-          );
+        expect(credential, isA<PhoneAuthCredential>());
 
-          final enrolledFactorsAfter = await multiFactor.getEnrolledFactors();
+        await user.multiFactor.enroll(
+          PhoneMultiFactorGenerator.getAssertion(credential),
+          displayName: 'My phone number',
+        );
 
-          // Assertions
-          expect(enrolledFactorsAfter.length, 0);
-        },
-        skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android,
-      );
+        final enrolledFactors = await multiFactor.getEnrolledFactors();
+
+        // Assertions
+        expect(enrolledFactors.length, 1);
+        expect(enrolledFactors.first.displayName, 'My phone number');
+
+        await user.multiFactor.unenroll(multiFactorInfo: enrolledFactors.first);
+
+        final enrolledFactorsAfter = await multiFactor.getEnrolledFactors();
+
+        // Assertions
+        expect(enrolledFactorsAfter.length, 0);
+      }, skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android);
 
       test(
         'should enroll and unenroll factor with signing out in the middle',

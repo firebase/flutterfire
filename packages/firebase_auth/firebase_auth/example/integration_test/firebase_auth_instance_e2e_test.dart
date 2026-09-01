@@ -484,26 +484,22 @@ void main() {
       });
 
       group('sendPasswordResetEmail()', () {
-        test(
-          'should not error',
-          () async {
-            var email = generateRandomEmail();
+        test('should not error', () async {
+          var email = generateRandomEmail();
 
-            try {
-              await FirebaseAuth.instance.createUserWithEmailAndPassword(
-                email: email,
-                password: testPassword,
-              );
+          try {
+            await FirebaseAuth.instance.createUserWithEmailAndPassword(
+              email: email,
+              password: testPassword,
+            );
 
-              await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
-              await FirebaseAuth.instance.currentUser!.delete();
-            } catch (e) {
-              await FirebaseAuth.instance.currentUser!.delete();
-              fail(e.toString());
-            }
-          },
-          skip: !kIsWeb && (Platform.isWindows || Platform.isMacOS),
-        );
+            await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+            await FirebaseAuth.instance.currentUser!.delete();
+          } catch (e) {
+            await FirebaseAuth.instance.currentUser!.delete();
+            fail(e.toString());
+          }
+        }, skip: !kIsWeb && (Platform.isWindows || Platform.isMacOS));
 
         test('fails if the user could not be found', () async {
           try {
@@ -519,47 +515,43 @@ void main() {
         });
       }, skip: !kIsWeb && Platform.isWindows);
 
-      group(
-        'sendSignInLinkToEmail()',
-        () {
-          test('should send email successfully', () async {
-            const email = 'email-signin-test@example.com';
-            const continueUrl = 'http://action-code-test.com';
+      group('sendSignInLinkToEmail()', () {
+        test('should send email successfully', () async {
+          const email = 'email-signin-test@example.com';
+          const continueUrl = 'http://action-code-test.com';
 
-            await FirebaseAuth.instance.createUserWithEmailAndPassword(
-              email: email,
-              password: testPassword,
-            );
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: email,
+            password: testPassword,
+          );
 
-            final actionCodeSettings = ActionCodeSettings(
-              url: continueUrl,
-              handleCodeInApp: true,
-            );
+          final actionCodeSettings = ActionCodeSettings(
+            url: continueUrl,
+            handleCodeInApp: true,
+          );
 
-            await FirebaseAuth.instance.sendSignInLinkToEmail(
-              email: email,
-              actionCodeSettings: actionCodeSettings,
-            );
+          await FirebaseAuth.instance.sendSignInLinkToEmail(
+            email: email,
+            actionCodeSettings: actionCodeSettings,
+          );
 
-            // Confirm with the emulator that it triggered an email sending code.
-            final oobCode = await emulatorOutOfBandCode(
-              email,
-              EmulatorOobCodeType.emailSignIn,
-            );
-            expect(oobCode, isNotNull);
-            expect(oobCode?.email, email);
-            expect(oobCode?.type, EmulatorOobCodeType.emailSignIn);
+          // Confirm with the emulator that it triggered an email sending code.
+          final oobCode = await emulatorOutOfBandCode(
+            email,
+            EmulatorOobCodeType.emailSignIn,
+          );
+          expect(oobCode, isNotNull);
+          expect(oobCode?.email, email);
+          expect(oobCode?.type, EmulatorOobCodeType.emailSignIn);
 
-            // Confirm the continue url was passed through to backend correctly.
-            final url = Uri.parse(oobCode!.oobLink!);
-            expect(
-              url.queryParameters['continueUrl'],
-              Uri.encodeFull(continueUrl),
-            );
-          });
-        },
-        skip: !kIsWeb && (Platform.isWindows || Platform.isMacOS),
-      );
+          // Confirm the continue url was passed through to backend correctly.
+          final url = Uri.parse(oobCode!.oobLink!);
+          expect(
+            url.queryParameters['continueUrl'],
+            Uri.encodeFull(continueUrl),
+          );
+        });
+      }, skip: !kIsWeb && (Platform.isWindows || Platform.isMacOS));
 
       group('languageCode', () {
         test('should change the language code', () async {
@@ -583,18 +575,14 @@ void main() {
       });
 
       group('setPersistence()', () {
-        test(
-          'throw an unimplemented error',
-          () async {
-            try {
-              await FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
-              fail('Should have thrown');
-            } catch (e) {
-              expect(e, isInstanceOf<UnimplementedError>());
-            }
-          },
-          skip: kIsWeb || defaultTargetPlatform == TargetPlatform.macOS,
-        );
+        test('throw an unimplemented error', () async {
+          try {
+            await FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
+            fail('Should have thrown');
+          } catch (e) {
+            expect(e, isInstanceOf<UnimplementedError>());
+          }
+        }, skip: kIsWeb || defaultTargetPlatform == TargetPlatform.macOS);
 
         test('should set persistence', () async {
           try {
@@ -606,48 +594,40 @@ void main() {
       }, skip: !kIsWeb && Platform.isWindows);
 
       group('signInAnonymously()', () {
-        test(
-          'should sign in anonymously',
-          () async {
-            Future successCallback(UserCredential currentUserCredential) async {
-              final currentUser = currentUserCredential.user;
+        test('should sign in anonymously', () async {
+          Future successCallback(UserCredential currentUserCredential) async {
+            final currentUser = currentUserCredential.user;
 
-              expect(currentUser, isA<User>());
-              expect(currentUser?.uid, isA<String>());
-              expect(currentUser?.email, isNull);
-              expect(currentUser?.isAnonymous, isTrue);
-              expect(
-                currentUser?.uid,
-                equals(FirebaseAuth.instance.currentUser!.uid),
-              );
+            expect(currentUser, isA<User>());
+            expect(currentUser?.uid, isA<String>());
+            expect(currentUser?.email, isNull);
+            expect(currentUser?.isAnonymous, isTrue);
+            expect(
+              currentUser?.uid,
+              equals(FirebaseAuth.instance.currentUser!.uid),
+            );
 
-              var additionalUserInfo = currentUserCredential.additionalUserInfo;
-              expect(additionalUserInfo, isInstanceOf<Object>());
+            var additionalUserInfo = currentUserCredential.additionalUserInfo;
+            expect(additionalUserInfo, isInstanceOf<Object>());
 
-              await FirebaseAuth.instance.signOut();
-            }
+            await FirebaseAuth.instance.signOut();
+          }
 
-            final userCred = await FirebaseAuth.instance.signInAnonymously();
-            await successCallback(userCred);
-          },
-          skip: !kIsWeb && (Platform.isWindows || Platform.isMacOS),
-        );
+          final userCred = await FirebaseAuth.instance.signInAnonymously();
+          await successCallback(userCred);
+        }, skip: !kIsWeb && (Platform.isWindows || Platform.isMacOS));
       });
 
       group('signInWithCredential()', () {
-        test(
-          'should login with email and password',
-          () async {
-            final credential = EmailAuthProvider.credential(
-              email: testEmail,
-              password: testPassword,
-            );
-            await FirebaseAuth.instance
-                .signInWithCredential(credential)
-                .then(commonSuccessCallback);
-          },
-          skip: !kIsWeb && (Platform.isWindows || Platform.isMacOS),
-        );
+        test('should login with email and password', () async {
+          final credential = EmailAuthProvider.credential(
+            email: testEmail,
+            password: testPassword,
+          );
+          await FirebaseAuth.instance
+              .signInWithCredential(credential)
+              .then(commonSuccessCallback);
+        }, skip: !kIsWeb && (Platform.isWindows || Platform.isMacOS));
 
         test('throws if login user is disabled', () async {
           final credential = EmailAuthProvider.credential(
@@ -749,42 +729,38 @@ void main() {
         );
       });
 
-      group(
-        'signInWithCustomToken()',
-        () {
-          test('signs in with custom auth token', () async {
-            final userCredential = await FirebaseAuth.instance
-                .signInAnonymously();
-            final uid = userCredential.user!.uid;
-            final claims = {
-              'roles': [
-                {'role': 'member'},
-                {'role': 'admin'},
-              ],
-            };
+      group('signInWithCustomToken()', () {
+        test('signs in with custom auth token', () async {
+          final userCredential = await FirebaseAuth.instance
+              .signInAnonymously();
+          final uid = userCredential.user!.uid;
+          final claims = {
+            'roles': [
+              {'role': 'member'},
+              {'role': 'admin'},
+            ],
+          };
 
-            await ensureSignedOut();
+          await ensureSignedOut();
 
-            expect(FirebaseAuth.instance.currentUser, null);
+          expect(FirebaseAuth.instance.currentUser, null);
 
-            final customToken = emulatorCreateCustomToken(uid, claims: claims);
+          final customToken = emulatorCreateCustomToken(uid, claims: claims);
 
-            final customTokenUserCredential = await FirebaseAuth.instance
-                .signInWithCustomToken(customToken);
+          final customTokenUserCredential = await FirebaseAuth.instance
+              .signInWithCustomToken(customToken);
 
-            expect(customTokenUserCredential.user!.uid, equals(uid));
-            expect(FirebaseAuth.instance.currentUser!.uid, equals(uid));
+          expect(customTokenUserCredential.user!.uid, equals(uid));
+          expect(FirebaseAuth.instance.currentUser!.uid, equals(uid));
 
-            final idTokenResult = await FirebaseAuth.instance.currentUser!
-                .getIdTokenResult();
+          final idTokenResult = await FirebaseAuth.instance.currentUser!
+              .getIdTokenResult();
 
-            expect(idTokenResult.claims!['roles'], isA<List>());
-            expect(idTokenResult.claims!['roles'][0], isA<Map>());
-            expect(idTokenResult.claims!['roles'][0]['role'], 'member');
-          });
-        },
-        skip: !kIsWeb && (Platform.isWindows || Platform.isMacOS),
-      );
+          expect(idTokenResult.claims!['roles'], isA<List>());
+          expect(idTokenResult.claims!['roles'][0], isA<Map>());
+          expect(idTokenResult.claims!['roles'][0]['role'], 'member');
+        });
+      }, skip: !kIsWeb && (Platform.isWindows || Platform.isMacOS));
 
       group('signInWithEmailAndPassword()', () {
         test('should login with email and password', () async {
@@ -987,56 +963,52 @@ void main() {
             expect(exception.code, equals('invalid-phone-number'));
           });
 
-          test(
-            'should auto verify phone number',
-            () async {
-              String testPhoneNumber = '+447444555666';
-              String testSmsCode = '123456';
-              await FirebaseAuth.instance.signInAnonymously();
+          test('should auto verify phone number', () async {
+            String testPhoneNumber = '+447444555666';
+            String testSmsCode = '123456';
+            await FirebaseAuth.instance.signInAnonymously();
 
-              Future<PhoneAuthCredential> getCredential() async {
-                final completer = Completer<PhoneAuthCredential>();
+            Future<PhoneAuthCredential> getCredential() async {
+              final completer = Completer<PhoneAuthCredential>();
 
-                unawaited(
-                  FirebaseAuth.instance.verifyPhoneNumber(
-                    phoneNumber: testPhoneNumber,
-                    // ignore: invalid_use_of_visible_for_testing_member
-                    autoRetrievedSmsCodeForTesting: testSmsCode,
-                    verificationCompleted: (PhoneAuthCredential credential) {
-                      if (credential.smsCode != testSmsCode) {
-                        return completer.completeError(
-                          Exception('SMS code did not match'),
-                        );
-                      }
-
-                      completer.complete(credential);
-                    },
-                    verificationFailed: (FirebaseException e) {
+              unawaited(
+                FirebaseAuth.instance.verifyPhoneNumber(
+                  phoneNumber: testPhoneNumber,
+                  // ignore: invalid_use_of_visible_for_testing_member
+                  autoRetrievedSmsCodeForTesting: testSmsCode,
+                  verificationCompleted: (PhoneAuthCredential credential) {
+                    if (credential.smsCode != testSmsCode) {
                       return completer.completeError(
-                        Exception('Should not have been called'),
+                        Exception('SMS code did not match'),
                       );
-                    },
-                    codeSent: (String verificationId, int? resetToken) {
-                      return completer.completeError(
-                        Exception('Should not have been called'),
-                      );
-                    },
-                    codeAutoRetrievalTimeout: (String foo) {
-                      return completer.completeError(
-                        Exception('Should not have been called'),
-                      );
-                    },
-                  ),
-                );
+                    }
 
-                return completer.future.timeout(_completerTimeout);
-              }
+                    completer.complete(credential);
+                  },
+                  verificationFailed: (FirebaseException e) {
+                    return completer.completeError(
+                      Exception('Should not have been called'),
+                    );
+                  },
+                  codeSent: (String verificationId, int? resetToken) {
+                    return completer.completeError(
+                      Exception('Should not have been called'),
+                    );
+                  },
+                  codeAutoRetrievalTimeout: (String foo) {
+                    return completer.completeError(
+                      Exception('Should not have been called'),
+                    );
+                  },
+                ),
+              );
 
-              PhoneAuthCredential credential = await getCredential();
-              expect(credential, isA<PhoneAuthCredential>());
-            },
-            skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android,
-          );
+              return completer.future.timeout(_completerTimeout);
+            }
+
+            PhoneAuthCredential credential = await getCredential();
+            expect(credential, isA<PhoneAuthCredential>());
+          }, skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android);
         },
         skip:
             defaultTargetPlatform == TargetPlatform.macOS ||
@@ -1045,38 +1017,34 @@ void main() {
       );
 
       group('setSettings()', () {
-        test(
-          'migrates the current user when changing access groups',
-          () async {
-            const accessGroup =
-                'YYX2P3XVJ7.io.flutter.plugins.firebase.auth.example';
-            final auth = FirebaseAuth.instance;
+        test('migrates the current user when changing access groups', () async {
+          const accessGroup =
+              'YYX2P3XVJ7.io.flutter.plugins.firebase.auth.example';
+          final auth = FirebaseAuth.instance;
 
+          await auth.signOut();
+          final credential = await auth.signInAnonymously();
+          final uid = credential.user!.uid;
+
+          try {
+            await auth.setSettings(
+              userAccessGroup: accessGroup,
+              migrateCurrentUser: true,
+            );
+
+            // Prefer the reconciled Dart cache from setSettings, then prove
+            // the native session survived with a token round-trip.
+            expect(auth.currentUser, isNotNull);
+            expect(auth.currentUser!.uid, uid);
+            expect(auth.currentUser!.isAnonymous, isTrue);
+            final token = await auth.currentUser!.getIdToken();
+            expect(token, isNotEmpty);
+          } finally {
+            // Leave later tests without this anonymous session. Access-group
+            // resets are not supported via null today (pre-existing).
             await auth.signOut();
-            final credential = await auth.signInAnonymously();
-            final uid = credential.user!.uid;
-
-            try {
-              await auth.setSettings(
-                userAccessGroup: accessGroup,
-                migrateCurrentUser: true,
-              );
-
-              // Prefer the reconciled Dart cache from setSettings, then prove
-              // the native session survived with a token round-trip.
-              expect(auth.currentUser, isNotNull);
-              expect(auth.currentUser!.uid, uid);
-              expect(auth.currentUser!.isAnonymous, isTrue);
-              final token = await auth.currentUser!.getIdToken();
-              expect(token, isNotEmpty);
-            } finally {
-              // Leave later tests without this anonymous session. Access-group
-              // resets are not supported via null today (pre-existing).
-              await auth.signOut();
-            }
-          },
-          skip: kIsWeb || defaultTargetPlatform != TargetPlatform.iOS,
-        );
+          }
+        }, skip: kIsWeb || defaultTargetPlatform != TargetPlatform.iOS);
 
         test(
           'throws argument error if phoneNumber & smsCode have not been set simultaneously',

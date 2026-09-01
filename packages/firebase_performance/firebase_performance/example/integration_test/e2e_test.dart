@@ -33,36 +33,29 @@ void main() {
     }
   });
 
-  group(
-    '$FirebasePerformance.instance',
-    () {
-      test(
-        'isPerformanceCollectionEnabled',
-        () async {
-          FirebasePerformance performance = FirebasePerformance.instance;
-
-          expect(
-            performance.isPerformanceCollectionEnabled(),
-            completion(isTrue),
-          );
-        },
-        // Works locally but fails on CI
-        skip:
-            defaultTargetPlatform == TargetPlatform.android ||
-            defaultTargetPlatform == TargetPlatform.macOS,
-      );
-      test('setPerformanceCollectionEnabled', () async {
+  group('$FirebasePerformance.instance', () {
+    test(
+      'isPerformanceCollectionEnabled',
+      () async {
         FirebasePerformance performance = FirebasePerformance.instance;
 
-        await performance.setPerformanceCollectionEnabled(false);
         expect(
           performance.isPerformanceCollectionEnabled(),
-          completion(isFalse),
+          completion(isTrue),
         );
-      });
-    },
-    skip: kIsWeb || defaultTargetPlatform == TargetPlatform.macOS,
-  );
+      },
+      // Works locally but fails on CI
+      skip:
+          defaultTargetPlatform == TargetPlatform.android ||
+          defaultTargetPlatform == TargetPlatform.macOS,
+    );
+    test('setPerformanceCollectionEnabled', () async {
+      FirebasePerformance performance = FirebasePerformance.instance;
+
+      await performance.setPerformanceCollectionEnabled(false);
+      expect(performance.isPerformanceCollectionEnabled(), completion(isFalse));
+    });
+  }, skip: kIsWeb || defaultTargetPlatform == TargetPlatform.macOS);
 
   group('$Trace', () {
     late FirebasePerformance performance;

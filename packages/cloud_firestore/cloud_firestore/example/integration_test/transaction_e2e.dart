@@ -110,25 +110,21 @@ void runTransactionTests() {
           : false,
     );
 
-    test(
-      'runs after reading a document',
-      () async {
-        final documentReference = await initializeTest('transaction-after-get');
-        await documentReference.set({'value': 0});
-        await documentReference.get();
+    test('runs after reading a document', () async {
+      final documentReference = await initializeTest('transaction-after-get');
+      await documentReference.set({'value': 0});
+      await documentReference.get();
 
-        await firestore.runTransaction((transaction) async {
-          final snapshot = await transaction.get(documentReference);
-          transaction.update(documentReference, {
-            'value': snapshot.data()!['value'] + 1,
-          });
+      await firestore.runTransaction((transaction) async {
+        final snapshot = await transaction.get(documentReference);
+        transaction.update(documentReference, {
+          'value': snapshot.data()!['value'] + 1,
         });
+      });
 
-        final snapshot = await documentReference.get();
-        expect(snapshot.data()!['value'], 1);
-      },
-      skip: defaultTargetPlatform != TargetPlatform.windows,
-    );
+      final snapshot = await documentReference.get();
+      expect(snapshot.data()!['value'], 1);
+    }, skip: defaultTargetPlatform != TargetPlatform.windows);
 
     test('should abort if thrown and not continue', () async {
       DocumentReference<Map<String, dynamic>> documentReference =
@@ -172,37 +168,33 @@ void runTransactionTests() {
       expect(snapshot1.data()!['test'], equals(2));
     }, retry: 2);
 
-    test(
-      'should collide if number of maxAttempts is too low',
-      () async {
-        DocumentReference<Map<String, dynamic>> doc1 = await initializeTest(
-          'transaction-maxAttempts-2',
-        );
+    test('should collide if number of maxAttempts is too low', () async {
+      DocumentReference<Map<String, dynamic>> doc1 = await initializeTest(
+        'transaction-maxAttempts-2',
+      );
 
-        await doc1.set({'test': 0});
+      await doc1.set({'test': 0});
 
-        await expectLater(
-          Future.wait([
-            firestore.runTransaction((Transaction transaction) async {
-              final value = await transaction.get(doc1);
-              transaction.set(doc1, {'test': value['test'] + 1});
-            }, maxAttempts: 1),
-            firestore.runTransaction((Transaction transaction) async {
-              final value = await transaction.get(doc1);
-              transaction.set(doc1, {'test': value['test'] + 1});
-            }, maxAttempts: 1),
-          ]),
-          throwsA(
-            isA<FirebaseException>().having(
-              (e) => e.code,
-              'code',
-              'failed-precondition',
-            ),
+      await expectLater(
+        Future.wait([
+          firestore.runTransaction((Transaction transaction) async {
+            final value = await transaction.get(doc1);
+            transaction.set(doc1, {'test': value['test'] + 1});
+          }, maxAttempts: 1),
+          firestore.runTransaction((Transaction transaction) async {
+            final value = await transaction.get(doc1);
+            transaction.set(doc1, {'test': value['test'] + 1});
+          }, maxAttempts: 1),
+        ]),
+        throwsA(
+          isA<FirebaseException>().having(
+            (e) => e.code,
+            'code',
+            'failed-precondition',
           ),
-        );
-      },
-      skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
-    );
+        ),
+      );
+    }, skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows);
 
     test('runs multiple transactions in parallel', () async {
       DocumentReference<Map<String, dynamic>> doc1 = await initializeTest(
@@ -253,26 +245,22 @@ void runTransactionTests() {
       expect(snapshot.data()!['count'], 100);
     }, skip: kIsWeb);
 
-    test(
-      'should abort if timeout is exceeded',
-      () async {
-        await expectLater(
-          firestore.runTransaction(
-            (Transaction transaction) =>
-                Future.delayed(const Duration(seconds: 2)),
-            timeout: const Duration(seconds: 1),
+    test('should abort if timeout is exceeded', () async {
+      await expectLater(
+        firestore.runTransaction(
+          (Transaction transaction) =>
+              Future.delayed(const Duration(seconds: 2)),
+          timeout: const Duration(seconds: 1),
+        ),
+        throwsA(
+          isA<FirebaseException>().having(
+            (e) => e.code,
+            'code',
+            'deadline-exceeded',
           ),
-          throwsA(
-            isA<FirebaseException>().having(
-              (e) => e.code,
-              'code',
-              'deadline-exceeded',
-            ),
-          ),
-        );
-      },
-      skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
-    );
+        ),
+      );
+    }, skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows);
 
     test('should throw with exception', () async {
       try {

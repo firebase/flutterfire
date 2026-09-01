@@ -37,21 +37,17 @@ void main() {
         }
       });
 
-      group(
-        'isCrashlyticsCollectionEnabled',
-        () {
-          test(
-            'checks isCrashlyticsCollectionEnabled value set from AndroidManifest.xml',
-            () async {
-              bool isCrashlyticsCollectionEnabled =
-                  FirebaseCrashlytics.instance.isCrashlyticsCollectionEnabled;
+      group('isCrashlyticsCollectionEnabled', () {
+        test(
+          'checks isCrashlyticsCollectionEnabled value set from AndroidManifest.xml',
+          () async {
+            bool isCrashlyticsCollectionEnabled =
+                FirebaseCrashlytics.instance.isCrashlyticsCollectionEnabled;
 
-              expect(isCrashlyticsCollectionEnabled, false);
-            },
-          );
-        },
-        skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android,
-      );
+            expect(isCrashlyticsCollectionEnabled, false);
+          },
+        );
+      }, skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android);
 
       group('checkForUnsentReports', () {
         test('should throw if automatic crash report is enabled', () async {
@@ -119,36 +115,32 @@ void main() {
           );
         });
 
-        test(
-          'should have consistent error reason format',
-          () async {
-            const eventChannel = EventChannel(
-              'plugins.flutter.io/firebase_crashlytics_test_stream',
-            );
-            final eventStream = eventChannel.receiveBroadcastStream();
+        test('should have consistent error reason format', () async {
+          const eventChannel = EventChannel(
+            'plugins.flutter.io/firebase_crashlytics_test_stream',
+          );
+          final eventStream = eventChannel.receiveBroadcastStream();
 
-            final completer = Completer<String>();
+          final completer = Completer<String>();
 
-            final subscription = eventStream.listen((event) {
-              completer.complete(event.toString());
-            });
+          final subscription = eventStream.listen((event) {
+            completer.complete(event.toString());
+          });
 
-            await FirebaseCrashlytics.instance.recordError(
-              'foo exception',
-              StackTrace.fromString('during testing'),
-              reason: 'foo reason',
-            );
+          await FirebaseCrashlytics.instance.recordError(
+            'foo exception',
+            StackTrace.fromString('during testing'),
+            reason: 'foo reason',
+          );
 
-            // Fail the test rather than hang the suite if the native event
-            // channel never delivers.
-            final event = await completer.future.timeout(
-              const Duration(seconds: 30),
-            );
-            expect(event, 'thrown foo reason');
-            await subscription.cancel();
-          },
-          skip: kIsWeb || defaultTargetPlatform == TargetPlatform.macOS,
-        );
+          // Fail the test rather than hang the suite if the native event
+          // channel never delivers.
+          final event = await completer.future.timeout(
+            const Duration(seconds: 30),
+          );
+          expect(event, 'thrown foo reason');
+          await subscription.cancel();
+        }, skip: kIsWeb || defaultTargetPlatform == TargetPlatform.macOS);
       });
 
       group('log', () {

@@ -43,62 +43,58 @@ void runCollectionReferenceTests() {
       expect(randNum, equals(snapshot.data()!['value']));
     });
 
-    test(
-      'snapshots() can be reused',
-      () async {
-        final foo = await initializeTest('foo');
+    test('snapshots() can be reused', () async {
+      final foo = await initializeTest('foo');
 
-        final snapshot = foo.snapshots();
-        final snapshot2 = foo.snapshots();
+      final snapshot = foo.snapshots();
+      final snapshot2 = foo.snapshots();
 
-        expect(
-          await snapshot.first,
-          isA<QuerySnapshot<Map<String, dynamic>>>().having(
-            (e) => e.docs,
-            'docs',
-            [],
-          ),
-        );
-        expect(
-          await snapshot2.first,
-          isA<QuerySnapshot<Map<String, dynamic>>>().having(
-            (e) => e.docs,
-            'docs',
-            [],
-          ),
-        );
+      expect(
+        await snapshot.first,
+        isA<QuerySnapshot<Map<String, dynamic>>>().having(
+          (e) => e.docs,
+          'docs',
+          [],
+        ),
+      );
+      expect(
+        await snapshot2.first,
+        isA<QuerySnapshot<Map<String, dynamic>>>().having(
+          (e) => e.docs,
+          'docs',
+          [],
+        ),
+      );
 
-        await foo.add({'value': 42});
+      await foo.add({'value': 42});
 
-        expect(
-          await snapshot.first,
-          isA<QuerySnapshot<Map<String, dynamic>>>().having(
-            (e) => e.docs,
-            'docs',
-            [
-              isA<QueryDocumentSnapshot>().having((e) => e.data(), 'data', {
-                'value': 42,
-              }),
-            ],
-          ),
-        );
-        expect(
-          await snapshot2.first,
-          isA<QuerySnapshot<Map<String, dynamic>>>().having(
-            (e) => e.docs,
-            'docs',
-            [
-              isA<QueryDocumentSnapshot<Map<String, dynamic>>>().having(
-                (e) => e.data(),
-                'data',
-                {'value': 42},
-              ),
-            ],
-          ),
-        );
-      },
-      skip: defaultTargetPlatform == TargetPlatform.windows,
-    );
+      expect(
+        await snapshot.first,
+        isA<QuerySnapshot<Map<String, dynamic>>>().having(
+          (e) => e.docs,
+          'docs',
+          [
+            isA<QueryDocumentSnapshot>().having((e) => e.data(), 'data', {
+              'value': 42,
+            }),
+          ],
+        ),
+      );
+      expect(
+        await snapshot2.first,
+        isA<QuerySnapshot<Map<String, dynamic>>>().having(
+          (e) => e.docs,
+          'docs',
+          [
+            isA<QueryDocumentSnapshot<Map<String, dynamic>>>().having(
+              (e) => e.data(),
+              'data',
+              {'value': 42},
+            ),
+          ],
+        ),
+      );
+    }, skip: defaultTargetPlatform == TargetPlatform.windows);
 
     group('withConverter', () {
       test('add/snapshot', () async {

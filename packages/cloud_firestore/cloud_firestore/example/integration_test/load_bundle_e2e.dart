@@ -125,42 +125,38 @@ void runLoadBundleTests() {
         );
       });
 
-      test(
-        'loadBundle(): pause and resume stream',
-        () async {
-          Uint8List buffer = await loadBundleSetup(3);
-          LoadBundleTask task = firestore.loadBundle(buffer);
-          // Illustrates the pause() & resume() function.
-          // A single stream will stop sending events once the listener is unsubscribed
+      test('loadBundle(): pause and resume stream', () async {
+        Uint8List buffer = await loadBundleSetup(3);
+        LoadBundleTask task = firestore.loadBundle(buffer);
+        // Illustrates the pause() & resume() function.
+        // A single stream will stop sending events once the listener is unsubscribed
 
-          // Will listen & pause after first event received
-          await expectLater(
-            task.stream,
-            emits(
-              isA<LoadBundleTaskSnapshot>().having(
-                (ts) => ts.taskState,
-                'taskState',
-                LoadBundleTaskState.running,
-              ),
+        // Will listen & pause after first event received
+        await expectLater(
+          task.stream,
+          emits(
+            isA<LoadBundleTaskSnapshot>().having(
+              (ts) => ts.taskState,
+              'taskState',
+              LoadBundleTaskState.running,
             ),
-          );
+          ),
+        );
 
-          await Future.delayed(const Duration(milliseconds: 1));
+        await Future.delayed(const Duration(milliseconds: 1));
 
-          // Will resume & pause after second event received
-          await expectLater(
-            task.stream,
-            emits(
-              isA<LoadBundleTaskSnapshot>().having(
-                (ts) => ts.taskState,
-                'taskState',
-                anyOf(LoadBundleTaskState.running, LoadBundleTaskState.success),
-              ),
+        // Will resume & pause after second event received
+        await expectLater(
+          task.stream,
+          emits(
+            isA<LoadBundleTaskSnapshot>().having(
+              (ts) => ts.taskState,
+              'taskState',
+              anyOf(LoadBundleTaskState.running, LoadBundleTaskState.success),
             ),
-          );
-        },
-        skip: defaultTargetPlatform == TargetPlatform.windows,
-      );
+          ),
+        );
+      }, skip: defaultTargetPlatform == TargetPlatform.windows);
     });
 
     group('FirebaseFirestore.namedQueryGet()', () {
@@ -186,31 +182,27 @@ void runLoadBundleTests() {
         );
       }, skip: kIsWeb);
 
-      test(
-        'namedQueryGet() error',
-        () async {
-          Uint8List buffer = await loadBundleSetup(4);
-          LoadBundleTask task = firestore.loadBundle(buffer);
+      test('namedQueryGet() error', () async {
+        Uint8List buffer = await loadBundleSetup(4);
+        LoadBundleTask task = firestore.loadBundle(buffer);
 
-          // ensure the bundle has been completely cached
-          await task.stream.last;
+        // ensure the bundle has been completely cached
+        await task.stream.last;
 
-          await expectLater(
-            firestore.namedQueryGet(
-              'wrong-name',
-              options: const GetOptions(source: Source.cache),
+        await expectLater(
+          firestore.namedQueryGet(
+            'wrong-name',
+            options: const GetOptions(source: Source.cache),
+          ),
+          throwsA(
+            isA<FirebaseException>().having(
+              (e) => e.code,
+              'code',
+              'non-existent-named-query',
             ),
-            throwsA(
-              isA<FirebaseException>().having(
-                (e) => e.code,
-                'code',
-                'non-existent-named-query',
-              ),
-            ),
-          );
-        },
-        skip: defaultTargetPlatform == TargetPlatform.windows,
-      );
+          ),
+        );
+      }, skip: defaultTargetPlatform == TargetPlatform.windows);
     });
 
     group('FirebaeFirestore.namedQueryWithConverterGet()', () {
@@ -238,33 +230,29 @@ void runLoadBundleTests() {
         );
       });
 
-      test(
-        'namedQueryWithConverterGet() error',
-        () async {
-          Uint8List buffer = await loadBundleSetup(4);
-          LoadBundleTask task = firestore.loadBundle(buffer);
+      test('namedQueryWithConverterGet() error', () async {
+        Uint8List buffer = await loadBundleSetup(4);
+        LoadBundleTask task = firestore.loadBundle(buffer);
 
-          // ensure the bundle has been completely cached
-          await task.stream.last;
+        // ensure the bundle has been completely cached
+        await task.stream.last;
 
-          await expectLater(
-            firestore.namedQueryWithConverterGet<ConverterPlaceholder>(
-              'wrong-name',
-              options: const GetOptions(source: Source.cache),
-              fromFirestore: ConverterPlaceholder.new,
-              toFirestore: (value, options) => value.toFirestore(),
+        await expectLater(
+          firestore.namedQueryWithConverterGet<ConverterPlaceholder>(
+            'wrong-name',
+            options: const GetOptions(source: Source.cache),
+            fromFirestore: ConverterPlaceholder.new,
+            toFirestore: (value, options) => value.toFirestore(),
+          ),
+          throwsA(
+            isA<FirebaseException>().having(
+              (e) => e.code,
+              'code',
+              'non-existent-named-query',
             ),
-            throwsA(
-              isA<FirebaseException>().having(
-                (e) => e.code,
-                'code',
-                'non-existent-named-query',
-              ),
-            ),
-          );
-        },
-        skip: defaultTargetPlatform == TargetPlatform.windows,
-      );
+          ),
+        );
+      }, skip: defaultTargetPlatform == TargetPlatform.windows);
     });
   });
 }

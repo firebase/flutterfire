@@ -98,18 +98,14 @@ void main() {
       }
     });
 
-    test(
-      'debugToken on Android',
-      () async {
-        await expectLater(
-          FirebaseAppCheck.instance.activate(
-            providerAndroid: const AndroidDebugProvider(),
-          ),
-          completes,
-        );
-      },
-      skip: defaultTargetPlatform != TargetPlatform.android,
-    );
+    test('debugToken on Android', () async {
+      await expectLater(
+        FirebaseAppCheck.instance.activate(
+          providerAndroid: const AndroidDebugProvider(),
+        ),
+        completes,
+      );
+    }, skip: defaultTargetPlatform != TargetPlatform.android);
 
     test('debugToken on iOS', () async {
       await expectLater(

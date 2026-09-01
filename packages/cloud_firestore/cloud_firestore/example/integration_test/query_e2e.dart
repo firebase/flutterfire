@@ -3233,63 +3233,55 @@ void runQueryTests() {
         );
       }, timeout: const Timeout.factor(3));
 
-      test(
-        'from a Filter query instead of collection',
-        () async {
-          final collection = await initializeTest('foo');
+      test('from a Filter query instead of collection', () async {
+        final collection = await initializeTest('foo');
 
-          final query = collection
-              .where(Filter('value', isGreaterThan: 0))
-              .withConverter<int>(
-                fromFirestore: (snapshots, _) =>
-                    snapshots.data()!['value']! as int,
-                toFirestore: (value, _) => {'value': value},
-              );
+        final query = collection
+            .where(Filter('value', isGreaterThan: 0))
+            .withConverter<int>(
+              fromFirestore: (snapshots, _) =>
+                  snapshots.data()!['value']! as int,
+              toFirestore: (value, _) => {'value': value},
+            );
 
-          await collection.add({'value': 42});
-          await collection.add({'value': -1});
+        await collection.add({'value': 42});
+        await collection.add({'value': -1});
 
-          final snapshot = query.snapshots();
+        final snapshot = query.snapshots();
 
-          await expectLater(
-            snapshot,
-            emits(
-              isA<QuerySnapshot<int>>().having((e) => e.docs, 'docs', [
+        await expectLater(
+          snapshot,
+          emits(
+            isA<QuerySnapshot<int>>().having((e) => e.docs, 'docs', [
+              isA<DocumentSnapshot<int>>().having((e) => e.data(), 'data', 42),
+            ]),
+          ),
+        );
+
+        await collection.add({'value': 21});
+
+        await expectLater(
+          snapshot,
+          emits(
+            isA<QuerySnapshot<int>>().having(
+              (e) => e.docs,
+              'docs',
+              unorderedEquals([
                 isA<DocumentSnapshot<int>>().having(
                   (e) => e.data(),
                   'data',
                   42,
                 ),
+                isA<DocumentSnapshot<int>>().having(
+                  (e) => e.data(),
+                  'data',
+                  21,
+                ),
               ]),
             ),
-          );
-
-          await collection.add({'value': 21});
-
-          await expectLater(
-            snapshot,
-            emits(
-              isA<QuerySnapshot<int>>().having(
-                (e) => e.docs,
-                'docs',
-                unorderedEquals([
-                  isA<DocumentSnapshot<int>>().having(
-                    (e) => e.data(),
-                    'data',
-                    42,
-                  ),
-                  isA<DocumentSnapshot<int>>().having(
-                    (e) => e.data(),
-                    'data',
-                    21,
-                  ),
-                ]),
-              ),
-            ),
-          );
-        },
-        timeout: const Timeout.factor(3),
-      );
+          ),
+        );
+      }, timeout: const Timeout.factor(3));
 
       test('snapshots', () async {
         final collection = await initializeTest('foo');
@@ -3768,77 +3760,65 @@ void runQueryTests() {
         expect(snapshot.getAverage('foo'), 1.5);
       }, skip: defaultTargetPlatform == TargetPlatform.windows);
 
-      test(
-        'average() with query',
-        () async {
-          final collection = await initializeTest('avg');
+      test('average() with query', () async {
+        final collection = await initializeTest('avg');
 
-          await Future.wait([
-            collection.add({'foo': 1}),
-            collection.add({'foo': 2}),
-          ]);
+        await Future.wait([
+          collection.add({'foo': 1}),
+          collection.add({'foo': 2}),
+        ]);
 
-          AggregateQuery query = collection
-              .where('foo', isEqualTo: 1)
-              .aggregate(average('foo'));
+        AggregateQuery query = collection
+            .where('foo', isEqualTo: 1)
+            .aggregate(average('foo'));
 
-          AggregateQuerySnapshot snapshot = await query.get();
+        AggregateQuerySnapshot snapshot = await query.get();
 
-          expect(snapshot.getAverage('foo'), 1);
-        },
-        skip: defaultTargetPlatform == TargetPlatform.windows,
-      );
+        expect(snapshot.getAverage('foo'), 1);
+      }, skip: defaultTargetPlatform == TargetPlatform.windows);
 
-      test(
-        'chaining aggregate queries',
-        () async {
-          final collection = await initializeTest('chaining');
+      test('chaining aggregate queries', () async {
+        final collection = await initializeTest('chaining');
 
-          await Future.wait([
-            collection.add({'foo': 1}),
-            collection.add({'foo': 2}),
-          ]);
+        await Future.wait([
+          collection.add({'foo': 1}),
+          collection.add({'foo': 2}),
+        ]);
 
-          AggregateQuery query = collection.aggregate(
-            count(),
-            sum('foo'),
-            average('foo'),
-          );
-          AggregateQuerySnapshot snapshot = await query.get();
+        AggregateQuery query = collection.aggregate(
+          count(),
+          sum('foo'),
+          average('foo'),
+        );
+        AggregateQuerySnapshot snapshot = await query.get();
 
-          expect(snapshot.count, 2);
+        expect(snapshot.count, 2);
 
-          expect(snapshot.getSum('foo'), 3);
+        expect(snapshot.getSum('foo'), 3);
 
-          expect(snapshot.getAverage('foo'), 1.5);
-        },
-        skip: defaultTargetPlatform == TargetPlatform.windows,
-      );
+        expect(snapshot.getAverage('foo'), 1.5);
+      }, skip: defaultTargetPlatform == TargetPlatform.windows);
 
-      test(
-        'chaining multiples aggregate queries',
-        () async {
-          final collection = await initializeTest('chaining');
+      test('chaining multiples aggregate queries', () async {
+        final collection = await initializeTest('chaining');
 
-          await Future.wait([
-            collection.add({'foo': 1}),
-            collection.add({'foo': 2}),
-          ]);
+        await Future.wait([
+          collection.add({'foo': 1}),
+          collection.add({'foo': 2}),
+        ]);
 
-          AggregateQuery query = collection
-              .where('foo', isEqualTo: 1)
-              .aggregate(count(), sum('foo'), average('foo'));
+        AggregateQuery query = collection
+            .where('foo', isEqualTo: 1)
+            .aggregate(count(), sum('foo'), average('foo'));
 
-          AggregateQuerySnapshot snapshot = await query.get();
+        AggregateQuerySnapshot snapshot = await query.get();
 
-          expect(snapshot.count, 1);
+        expect(snapshot.count, 1);
 
-          expect(snapshot.getSum('foo'), 1);
+        expect(snapshot.getSum('foo'), 1);
 
-          expect(snapshot.getAverage('foo'), 1);
-        },
-        skip: defaultTargetPlatform == TargetPlatform.windows,
-      );
+        expect(snapshot.getAverage('foo'), 1);
+      }, skip: defaultTargetPlatform == TargetPlatform.windows);
 
       test('count() with collectionGroup', () async {
         const subCollection = 'aggregate-group-count';
@@ -3875,20 +3855,16 @@ void runQueryTests() {
         expect(snapshot.count, 6);
       });
 
-      test(
-        'count(), average() & sum() on empty collection',
-        () async {
-          final collection = await initializeTest('empty-collection');
+      test('count(), average() & sum() on empty collection', () async {
+        final collection = await initializeTest('empty-collection');
 
-          final snapshot = await collection
-              .aggregate(count(), sum('foo'), average('foo'))
-              .get();
-          expect(snapshot.count, 0);
-          expect(snapshot.getSum('foo'), 0);
-          expect(snapshot.getAverage('foo'), null);
-        },
-        skip: defaultTargetPlatform == TargetPlatform.windows,
-      );
+        final snapshot = await collection
+            .aggregate(count(), sum('foo'), average('foo'))
+            .get();
+        expect(snapshot.count, 0);
+        expect(snapshot.getSum('foo'), 0);
+        expect(snapshot.getAverage('foo'), null);
+      }, skip: defaultTargetPlatform == TargetPlatform.windows);
     });
 
     group('startAfterDocument', () {

@@ -38,28 +38,24 @@ void main() {
     });
 
     // getSessionId has to be first, else Android returns null
-    test(
-      'getSessionId',
-      () async {
-        if (kIsWeb) {
-          await expectLater(
-            FirebaseAnalytics.instance.getSessionId(),
-            throwsA(isA<UnimplementedError>()),
-          );
-        } else {
-          await expectLater(
-            FirebaseAnalytics.instance.setConsent(
-              analyticsStorageConsentGranted: true,
-            ),
-            completes,
-          );
+    test('getSessionId', () async {
+      if (kIsWeb) {
+        await expectLater(
+          FirebaseAnalytics.instance.getSessionId(),
+          throwsA(isA<UnimplementedError>()),
+        );
+      } else {
+        await expectLater(
+          FirebaseAnalytics.instance.setConsent(
+            analyticsStorageConsentGranted: true,
+          ),
+          completes,
+        );
 
-          final result = await FirebaseAnalytics.instance.getSessionId();
-          expect(result, isA<int?>());
-        }
-      },
-      skip: skipTestsOnCI && defaultTargetPlatform == TargetPlatform.iOS,
-    );
+        final result = await FirebaseAnalytics.instance.getSessionId();
+        expect(result, isA<int?>());
+      }
+    }, skip: skipTestsOnCI && defaultTargetPlatform == TargetPlatform.iOS);
 
     test('isSupported', () async {
       final result = await FirebaseAnalytics.instance.isSupported();
@@ -354,27 +350,23 @@ void main() {
       }
     });
 
-    test(
-      'initiateOnDeviceConversionMeasurement',
-      () async {
-        await expectLater(
-          FirebaseAnalytics.instance
-              .initiateOnDeviceConversionMeasurementWithEmailAddress(
-                'test@mail.com',
-              ),
-          completes,
-        );
+    test('initiateOnDeviceConversionMeasurement', () async {
+      await expectLater(
+        FirebaseAnalytics.instance
+            .initiateOnDeviceConversionMeasurementWithEmailAddress(
+              'test@mail.com',
+            ),
+        completes,
+      );
 
-        await expectLater(
-          FirebaseAnalytics.instance
-              .initiateOnDeviceConversionMeasurementWithPhoneNumber(
-                '+15555555555',
-              ),
-          completes,
-        );
-      },
-      skip: kIsWeb || defaultTargetPlatform != TargetPlatform.iOS,
-    );
+      await expectLater(
+        FirebaseAnalytics.instance
+            .initiateOnDeviceConversionMeasurementWithPhoneNumber(
+              '+15555555555',
+            ),
+        completes,
+      );
+    }, skip: kIsWeb || defaultTargetPlatform != TargetPlatform.iOS);
 
     group('logTransaction', () {
       test(
