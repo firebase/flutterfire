@@ -12,7 +12,7 @@ class _FilterObject {
 
 class _FilterQuery extends _FilterObject {
   _FilterQuery(this._field, this._operator, this._value)
-      : assert(_field is FieldPathType || _field is FieldPath);
+    : assert(_field is FieldPathType || _field is FieldPath);
 
   final Object _field;
   final String _operator;
@@ -50,11 +50,11 @@ class Filter extends FilterPlatformInterface {
   late final _FilterOperator? _filterOperator;
 
   Filter._(this._filterQuery, this._filterOperator)
-      : assert(
-          (_filterQuery != null && _filterOperator == null) ||
-              (_filterQuery == null && _filterOperator != null),
-          'Exactly one operator must be specified',
-        );
+    : assert(
+        (_filterQuery != null && _filterOperator == null) ||
+            (_filterQuery == null && _filterOperator != null),
+        'Exactly one operator must be specified',
+      );
 
   /// A [Filter] represents a restriction on one or more field values and can be used to refine
   /// the results of a [Query].
@@ -63,6 +63,7 @@ class Filter extends FilterPlatformInterface {
   Filter(
     /// The field or [FieldPath] to filter on.
     Object field, {
+
     /// Creates a new filter for checking that the given field is equal to the given value.
     Object? isEqualTo,
 
@@ -95,29 +96,24 @@ class Filter extends FilterPlatformInterface {
 
     /// Creates a new filter for checking that the given field is null.
     bool? isNull,
-  })  : assert(
-          () {
-            final operators = [
-              isEqualTo,
-              isNotEqualTo,
-              isLessThan,
-              isLessThanOrEqualTo,
-              isGreaterThan,
-              isGreaterThanOrEqualTo,
-              arrayContains,
-              arrayContainsAny,
-              whereIn,
-              whereNotIn,
-              isNull,
-            ];
-            final operatorsUsed = operators.where((e) => e != null).length;
-            return operatorsUsed == 1;
-          }(),
-          'Exactly one operator must be specified',
-        ),
-        assert(
-          field is String || field is FieldPath || field is FieldPathType,
-        ) {
+  }) : assert(() {
+         final operators = [
+           isEqualTo,
+           isNotEqualTo,
+           isLessThan,
+           isLessThanOrEqualTo,
+           isGreaterThan,
+           isGreaterThanOrEqualTo,
+           arrayContains,
+           arrayContainsAny,
+           whereIn,
+           whereNotIn,
+           isNull,
+         ];
+         final operatorsUsed = operators.where((e) => e != null).length;
+         return operatorsUsed == 1;
+       }(), 'Exactly one operator must be specified'),
+       assert(field is String || field is FieldPath || field is FieldPathType) {
     final _field = (field is String ? FieldPath.fromString(field) : field);
 
     _filterQuery = _FilterQuery(
@@ -225,10 +221,9 @@ class Filter extends FilterPlatformInterface {
   /// A disjunction filter includes a document if it satisfies any of the given filters.
   static Filter or(
     Filter filter1,
-    Filter filter2,
+    Filter filter2, [
     // Number of OR operation is limited on the server side
     // We let here 30 as a limit
-    [
     Filter? filter3,
     Filter? filter4,
     Filter? filter5,
@@ -258,41 +253,38 @@ class Filter extends FilterPlatformInterface {
     Filter? filter29,
     Filter? filter30,
   ]) {
-    return _generateFilter(
-      'OR',
-      [
-        filter1,
-        filter2,
-        filter3,
-        filter4,
-        filter5,
-        filter6,
-        filter7,
-        filter8,
-        filter9,
-        filter10,
-        filter11,
-        filter12,
-        filter13,
-        filter14,
-        filter15,
-        filter16,
-        filter17,
-        filter18,
-        filter19,
-        filter20,
-        filter21,
-        filter22,
-        filter23,
-        filter24,
-        filter25,
-        filter26,
-        filter27,
-        filter28,
-        filter29,
-        filter30,
-      ],
-    );
+    return _generateFilter('OR', [
+      filter1,
+      filter2,
+      filter3,
+      filter4,
+      filter5,
+      filter6,
+      filter7,
+      filter8,
+      filter9,
+      filter10,
+      filter11,
+      filter12,
+      filter13,
+      filter14,
+      filter15,
+      filter16,
+      filter17,
+      filter18,
+      filter19,
+      filter20,
+      filter21,
+      filter22,
+      filter23,
+      filter24,
+      filter25,
+      filter26,
+      filter27,
+      filter28,
+      filter29,
+      filter30,
+    ]);
   }
 
   /// Creates a new filter that is a conjunction of the given filters.
@@ -330,66 +322,54 @@ class Filter extends FilterPlatformInterface {
     Filter? filter29,
     Filter? filter30,
   ]) {
-    return _generateFilter(
-      'AND',
-      [
-        filter1,
-        filter2,
-        filter3,
-        filter4,
-        filter5,
-        filter6,
-        filter7,
-        filter8,
-        filter9,
-        filter10,
-        filter11,
-        filter12,
-        filter13,
-        filter14,
-        filter15,
-        filter16,
-        filter17,
-        filter18,
-        filter19,
-        filter20,
-        filter21,
-        filter22,
-        filter23,
-        filter24,
-        filter25,
-        filter26,
-        filter27,
-        filter28,
-        filter29,
-        filter30,
-      ],
-    );
+    return _generateFilter('AND', [
+      filter1,
+      filter2,
+      filter3,
+      filter4,
+      filter5,
+      filter6,
+      filter7,
+      filter8,
+      filter9,
+      filter10,
+      filter11,
+      filter12,
+      filter13,
+      filter14,
+      filter15,
+      filter16,
+      filter17,
+      filter18,
+      filter19,
+      filter20,
+      filter21,
+      filter22,
+      filter23,
+      filter24,
+      filter25,
+      filter26,
+      filter27,
+      filter28,
+      filter29,
+      filter30,
+    ]);
   }
 
-  static Filter _generateFilter(
-    String operator,
-    List<Filter?> filters,
-  ) {
-    assert(
-      () {
-        final filtersUsed = filters.where((e) => e != null).length;
-        return filtersUsed >= 2;
-      }(),
-      'At least two filters must be specified',
-    );
+  static Filter _generateFilter(String operator, List<Filter?> filters) {
+    assert(() {
+      final filtersUsed = filters.where((e) => e != null).length;
+      return filtersUsed >= 2;
+    }(), 'At least two filters must be specified');
     return Filter._(
       null,
-      _FilterOperator(
-        operator,
-        [
-          for (final filter in filters)
-            if (filter != null && filter._filterQuery != null)
-              filter._filterQuery
-            else if (filter != null && filter._filterOperator != null)
-              filter._filterOperator,
-        ],
-      ),
+      _FilterOperator(operator, [
+        for (final filter in filters)
+          if (filter != null && filter._filterQuery != null)
+            filter._filterQuery
+          else if (filter != null && filter._filterOperator != null)
+            filter._filterOperator,
+      ]),
     );
   }
 

@@ -53,10 +53,11 @@ void main() {
     group('setCustomParameters()', () {
       test('sets custom parameters', () {
         final Map<dynamic, dynamic> kCustomOAuthParameters = <dynamic, dynamic>{
-          'login_hint': 'user@example.com'
+          'login_hint': 'user@example.com',
         };
-        final result =
-            googleAuthProvider.setCustomParameters(kCustomOAuthParameters);
+        final result = googleAuthProvider.setCustomParameters(
+          kCustomOAuthParameters,
+        );
         expect(result, isA<GoogleAuthProvider>());
         expect(result.parameters['login_hint'], isA<String>());
         expect(result.parameters['login_hint'], equals('user@example.com'));
@@ -67,8 +68,9 @@ void main() {
       const String kMockAccessToken = 'test-access-token';
       const String kMockIdToken = 'test-id-token';
       test('creates a new [GoogleAuthCredential]', () {
-        final result =
-            GoogleAuthProvider.credential(accessToken: kMockAccessToken);
+        final result = GoogleAuthProvider.credential(
+          accessToken: kMockAccessToken,
+        );
         expect(result, isA<OAuthCredential>());
         expect(result.token, isNull);
         expect(result.idToken, isNull);
@@ -79,24 +81,24 @@ void main() {
 
       test('allows accessToken to be null', () {
         expect(
-            GoogleAuthProvider.credential(
-              idToken: kMockIdToken,
-            ),
-            isA<OAuthCredential>());
+          GoogleAuthProvider.credential(idToken: kMockIdToken),
+          isA<OAuthCredential>(),
+        );
       });
 
       test('allows idToken to be null', () {
         expect(
-            GoogleAuthProvider.credential(
-              accessToken: kMockAccessToken,
-            ),
-            isA<OAuthCredential>());
+          GoogleAuthProvider.credential(accessToken: kMockAccessToken),
+          isA<OAuthCredential>(),
+        );
       });
 
-      test('throws [AssertionError] when accessToken and idTokenResult is null',
-          () {
-        expect(GoogleAuthProvider.credential, throwsAssertionError);
-      });
+      test(
+        'throws [AssertionError] when accessToken and idTokenResult is null',
+        () {
+          expect(GoogleAuthProvider.credential, throwsAssertionError);
+        },
+      );
     });
   });
 }

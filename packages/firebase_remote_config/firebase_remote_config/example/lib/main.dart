@@ -10,9 +10,7 @@ import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const RemoteConfigApp());
 }
 
@@ -24,10 +22,7 @@ class RemoteConfigApp extends StatelessWidget {
     return MaterialApp(
       title: 'Remote Config Example',
       home: const HomePage(),
-      theme: ThemeData(
-        useMaterial3: true,
-        primarySwatch: Colors.blue,
-      ),
+      theme: ThemeData(useMaterial3: true, primarySwatch: Colors.blue),
     );
   }
 }

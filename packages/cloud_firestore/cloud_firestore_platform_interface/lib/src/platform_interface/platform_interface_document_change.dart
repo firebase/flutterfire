@@ -12,12 +12,8 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 /// (added, modified, or removed).
 class DocumentChangePlatform extends PlatformInterface {
   /// Create a [DocumentChangePlatform]
-  DocumentChangePlatform(
-    this.type,
-    this.oldIndex,
-    this.newIndex,
-    this.document,
-  ) : super(token: _token);
+  DocumentChangePlatform(this.type, this.oldIndex, this.newIndex, this.document)
+    : super(token: _token);
 
   static final Object _token = Object();
 

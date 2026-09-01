@@ -29,25 +29,31 @@ import 'utils/mutex.dart';
 /// response. The history reflects the most current state of the chat session.
 final class ChatSession {
   ChatSession._(
-      this._generateContent,
-      this._generateContentStream,
-      this._history,
-      this._safetySettings,
-      this._generationConfig,
-      List<Tool>? tools,
-      this._maxTurns)
-      : _autoFunctionDeclarations = tools
-            ?.expand((tool) => tool.autoFunctionDeclarations)
-            .fold(<String, AutoFunctionDeclaration>{}, (map, function) {
-          map?[function.name] = function;
-          return map;
-        });
-  final Future<GenerateContentResponse> Function(Iterable<Content> content,
-      {List<SafetySetting>? safetySettings,
-      GenerationConfig? generationConfig}) _generateContent;
-  final Stream<GenerateContentResponse> Function(Iterable<Content> content,
-      {List<SafetySetting>? safetySettings,
-      GenerationConfig? generationConfig}) _generateContentStream;
+    this._generateContent,
+    this._generateContentStream,
+    this._history,
+    this._safetySettings,
+    this._generationConfig,
+    List<Tool>? tools,
+    this._maxTurns,
+  ) : _autoFunctionDeclarations = tools
+          ?.expand((tool) => tool.autoFunctionDeclarations)
+          .fold(<String, AutoFunctionDeclaration>{}, (map, function) {
+            map?[function.name] = function;
+            return map;
+          });
+  final Future<GenerateContentResponse> Function(
+    Iterable<Content> content, {
+    List<SafetySetting>? safetySettings,
+    GenerationConfig? generationConfig,
+  })
+  _generateContent;
+  final Stream<GenerateContentResponse> Function(
+    Iterable<Content> content, {
+    List<SafetySetting>? safetySettings,
+    GenerationConfig? generationConfig,
+  })
+  _generateContentStream;
 
   final _mutex = Mutex();
 
@@ -85,9 +91,10 @@ final class ChatSession {
       var turn = 0;
       while (turn < _maxTurns) {
         final response = await _generateContent(
-            _history.followedBy(requestHistory),
-            safetySettings: _safetySettings,
-            generationConfig: _generationConfig);
+          _history.followedBy(requestHistory),
+          safetySettings: _safetySettings,
+          generationConfig: _generationConfig,
+        );
 
         final functionCalls = response.functionCalls;
 
@@ -95,11 +102,13 @@ final class ChatSession {
         // 1. We have auto-functions configured.
         // 2. The response actually contains function calls.
         // 3. ALL called functions exist in our declarations (prevents crashes).
-        final shouldAutoExecute = _autoFunctionDeclarations != null &&
+        final shouldAutoExecute =
+            _autoFunctionDeclarations != null &&
             _autoFunctionDeclarations.isNotEmpty &&
             functionCalls.isNotEmpty &&
-            functionCalls
-                .every((c) => _autoFunctionDeclarations.containsKey(c.name));
+            functionCalls.every(
+              (c) => _autoFunctionDeclarations.containsKey(c.name),
+            );
         if (!shouldAutoExecute) {
           // Standard handling: Update history and return the response to the user.
           if (response.candidates case [final candidate, ...]) {
@@ -124,8 +133,9 @@ final class ChatSession {
           } catch (e) {
             result = e.toString();
           }
-          functionResponses
-              .add(FunctionResponse(functionCall.name, {'result': result}));
+          functionResponses.add(
+            FunctionResponse(functionCall.name, {'result': result}),
+          );
         }
         requestHistory.add(Content('function', functionResponses));
         turn++;
@@ -161,9 +171,10 @@ final class ChatSession {
         var turn = 0;
         while (turn < _maxTurns) {
           final responses = _generateContentStream(
-              _history.followedBy(requestHistory),
-              safetySettings: _safetySettings,
-              generationConfig: _generationConfig);
+            _history.followedBy(requestHistory),
+            safetySettings: _safetySettings,
+            generationConfig: _generationConfig,
+          );
 
           final turnChunks = <GenerateContentResponse>[];
           await for (final response in responses) {
@@ -171,23 +182,28 @@ final class ChatSession {
             controller.add(response);
           }
           if (turnChunks.isEmpty) break;
-          final aggregatedContent = historyAggregate(turnChunks.map((r) {
-            final content = r.candidates.firstOrNull?.content;
-            if (content == null) {
-              throw Exception('No content in response candidate');
-            }
-            return content;
-          }).toList());
+          final aggregatedContent = historyAggregate(
+            turnChunks.map((r) {
+              final content = r.candidates.firstOrNull?.content;
+              if (content == null) {
+                throw Exception('No content in response candidate');
+              }
+              return content;
+            }).toList(),
+          );
 
-          final functionCalls =
-              aggregatedContent.parts.whereType<FunctionCall>().toList();
+          final functionCalls = aggregatedContent.parts
+              .whereType<FunctionCall>()
+              .toList();
 
           // Check if we should actually execute these functions.
-          final shouldAutoExecute = _autoFunctionDeclarations != null &&
+          final shouldAutoExecute =
+              _autoFunctionDeclarations != null &&
               _autoFunctionDeclarations.isNotEmpty &&
               functionCalls.isNotEmpty &&
-              functionCalls
-                  .every((c) => _autoFunctionDeclarations.containsKey(c.name));
+              functionCalls.every(
+                (c) => _autoFunctionDeclarations.containsKey(c.name),
+              );
 
           if (!shouldAutoExecute) {
             _history.addAll(requestHistory);
@@ -196,8 +212,9 @@ final class ChatSession {
           }
 
           requestHistory.add(aggregatedContent);
-          final functionResponseFutures =
-              functionCalls.map((functionCall) async {
+          final functionResponseFutures = functionCalls.map((
+            functionCall,
+          ) async {
             final function = _autoFunctionDeclarations[functionCall.name];
 
             Object? result;
@@ -208,8 +225,9 @@ final class ChatSession {
             }
             return FunctionResponse(functionCall.name, {'result': result});
           });
-          final functionResponseParts =
-              await Future.wait(functionResponseFutures);
+          final functionResponseParts = await Future.wait(
+            functionResponseFutures,
+          );
           requestHistory.add(Content.functionResponses(functionResponseParts));
           turn++;
         }
@@ -234,11 +252,18 @@ extension StartChatExtension on GenerativeModel {
   /// final response = await chat.sendMessage(Content.text('Hello there.'));
   /// print(response.text);
   /// ```
-  ChatSession startChat(
-          {List<Content>? history,
-          List<SafetySetting>? safetySettings,
-          GenerationConfig? generationConfig,
-          int? maxTurns}) =>
-      ChatSession._(generateContent, generateContentStream, history ?? [],
-          safetySettings, generationConfig, tools, maxTurns ?? 5);
+  ChatSession startChat({
+    List<Content>? history,
+    List<SafetySetting>? safetySettings,
+    GenerationConfig? generationConfig,
+    int? maxTurns,
+  }) => ChatSession._(
+    generateContent,
+    generateContentStream,
+    history ?? [],
+    safetySettings,
+    generationConfig,
+    tools,
+    maxTurns ?? 5,
+  );
 }

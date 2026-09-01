@@ -19,12 +19,13 @@ void runCollectionReferenceTests() {
     Future<CollectionReference<Map<String, dynamic>>> initializeTest(
       String id,
     ) async {
-      CollectionReference<Map<String, dynamic>> collection =
-          firestore.collection('flutter-tests/$id/query-tests');
+      CollectionReference<Map<String, dynamic>> collection = firestore
+          .collection('flutter-tests/$id/query-tests');
       QuerySnapshot<Map<String, dynamic>> snapshot = await collection.get();
 
-      await Future.forEach(snapshot.docs,
-          (DocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
+      await Future.forEach(snapshot.docs, (
+        DocumentSnapshot<Map<String, dynamic>> documentSnapshot,
+      ) {
         return documentSnapshot.reference.delete();
       });
       return collection;
@@ -52,160 +53,186 @@ void runCollectionReferenceTests() {
 
         expect(
           await snapshot.first,
-          isA<QuerySnapshot<Map<String, dynamic>>>()
-              .having((e) => e.docs, 'docs', []),
+          isA<QuerySnapshot<Map<String, dynamic>>>().having(
+            (e) => e.docs,
+            'docs',
+            [],
+          ),
         );
         expect(
           await snapshot2.first,
-          isA<QuerySnapshot<Map<String, dynamic>>>()
-              .having((e) => e.docs, 'docs', []),
+          isA<QuerySnapshot<Map<String, dynamic>>>().having(
+            (e) => e.docs,
+            'docs',
+            [],
+          ),
         );
 
         await foo.add({'value': 42});
 
         expect(
           await snapshot.first,
-          isA<QuerySnapshot<Map<String, dynamic>>>()
-              .having((e) => e.docs, 'docs', [
-            isA<QueryDocumentSnapshot>()
-                .having((e) => e.data(), 'data', {'value': 42}),
-          ]),
+          isA<QuerySnapshot<Map<String, dynamic>>>().having(
+            (e) => e.docs,
+            'docs',
+            [
+              isA<QueryDocumentSnapshot>().having((e) => e.data(), 'data', {
+                'value': 42,
+              }),
+            ],
+          ),
         );
         expect(
           await snapshot2.first,
-          isA<QuerySnapshot<Map<String, dynamic>>>()
-              .having((e) => e.docs, 'docs', [
-            isA<QueryDocumentSnapshot<Map<String, dynamic>>>()
-                .having((e) => e.data(), 'data', {'value': 42}),
-          ]),
+          isA<QuerySnapshot<Map<String, dynamic>>>().having(
+            (e) => e.docs,
+            'docs',
+            [
+              isA<QueryDocumentSnapshot<Map<String, dynamic>>>().having(
+                (e) => e.data(),
+                'data',
+                {'value': 42},
+              ),
+            ],
+          ),
         );
       },
       skip: defaultTargetPlatform == TargetPlatform.windows,
     );
 
-    group(
-      'withConverter',
-      () {
-        test(
-          'add/snapshot',
-          () async {
-            final foo = await initializeTest('foo');
-            final fooConverter = foo.withConverter<int>(
-              fromFirestore: (snapshots, _) =>
-                  snapshots.data()!['value']! as int,
-              toFirestore: (value, _) => {'value': value},
-            );
-
-            final fooSnapshot = foo.snapshots();
-            final fooConverterSnapshot = fooConverter.snapshots();
-
-            await expectLater(
-              fooSnapshot,
-              emits(
-                isA<QuerySnapshot<Map<String, dynamic>>>()
-                    .having((e) => e.docs, 'docs', []),
-              ),
-            );
-            await expectLater(
-              fooConverterSnapshot,
-              emits(
-                isA<QuerySnapshot<int>>().having((e) => e.docs, 'docs', []),
-              ),
-            );
-
-            final newDocument = await fooConverter.add(42);
-
-            await expectLater(
-              newDocument.get(),
-              completion(
-                isA<DocumentSnapshot<int>>()
-                    .having((e) => e.data(), 'data', 42),
-              ),
-            );
-
-            await expectLater(
-              fooSnapshot,
-              emits(
-                isA<QuerySnapshot>().having((e) => e.docs, 'docs', [
-                  isA<QueryDocumentSnapshot>()
-                      .having((e) => e.data(), 'data', {'value': 42}),
-                ]),
-              ),
-            );
-            await expectLater(
-              fooConverterSnapshot,
-              emits(
-                isA<QuerySnapshot<int>>().having((e) => e.docs, 'docs', [
-                  isA<QueryDocumentSnapshot<int>>()
-                      .having((e) => e.data(), 'data', 42),
-                ]),
-              ),
-            );
-
-            await foo.add({'value': 21});
-
-            await expectLater(
-              fooSnapshot,
-              emits(
-                isA<QuerySnapshot>().having(
-                  (e) => e.docs,
-                  'docs',
-                  unorderedEquals([
-                    isA<QueryDocumentSnapshot<Map<String, dynamic>>>()
-                        .having((e) => e.data(), 'data', {'value': 42}),
-                    isA<QueryDocumentSnapshot<Map<String, dynamic>>>()
-                        .having((e) => e.data(), 'data', {'value': 21}),
-                  ]),
-                ),
-              ),
-            );
-
-            await expectLater(
-              fooConverterSnapshot,
-              emits(
-                isA<QuerySnapshot<int>>().having(
-                  (e) => e.docs,
-                  'docs',
-                  unorderedEquals([
-                    isA<QueryDocumentSnapshot<int>>()
-                        .having((e) => e.data(), 'data', 42),
-                    isA<QueryDocumentSnapshot<int>>()
-                        .having((e) => e.data(), 'data', 21),
-                  ]),
-                ),
-              ),
-            );
-          },
-          timeout: const Timeout.factor(3),
+    group('withConverter', () {
+      test('add/snapshot', () async {
+        final foo = await initializeTest('foo');
+        final fooConverter = foo.withConverter<int>(
+          fromFirestore: (snapshots, _) => snapshots.data()!['value']! as int,
+          toFirestore: (value, _) => {'value': value},
         );
 
-        test(
-          'returning null from `fromFirestore` should not throw a null check error',
-          () async {
-            final foo = await initializeTest('foo');
-            await foo.add({'value': 42});
-            final fooConverter = foo.withConverter(
-              fromFirestore: (_, __) => null,
-              toFirestore: (_, __) => {}, // unused
-            );
+        final fooSnapshot = foo.snapshots();
+        final fooConverterSnapshot = fooConverter.snapshots();
 
-            final fooConverterSnapshot = fooConverter.snapshots();
+        await expectLater(
+          fooSnapshot,
+          emits(
+            isA<QuerySnapshot<Map<String, dynamic>>>().having(
+              (e) => e.docs,
+              'docs',
+              [],
+            ),
+          ),
+        );
+        await expectLater(
+          fooConverterSnapshot,
+          emits(isA<QuerySnapshot<int>>().having((e) => e.docs, 'docs', [])),
+        );
 
-            await expectLater(
-              fooConverterSnapshot,
-              emits(
+        final newDocument = await fooConverter.add(42);
+
+        await expectLater(
+          newDocument.get(),
+          completion(
+            isA<DocumentSnapshot<int>>().having((e) => e.data(), 'data', 42),
+          ),
+        );
+
+        await expectLater(
+          fooSnapshot,
+          emits(
+            isA<QuerySnapshot>().having((e) => e.docs, 'docs', [
+              isA<QueryDocumentSnapshot>().having((e) => e.data(), 'data', {
+                'value': 42,
+              }),
+            ]),
+          ),
+        );
+        await expectLater(
+          fooConverterSnapshot,
+          emits(
+            isA<QuerySnapshot<int>>().having((e) => e.docs, 'docs', [
+              isA<QueryDocumentSnapshot<int>>().having(
+                (e) => e.data(),
+                'data',
+                42,
+              ),
+            ]),
+          ),
+        );
+
+        await foo.add({'value': 21});
+
+        await expectLater(
+          fooSnapshot,
+          emits(
+            isA<QuerySnapshot>().having(
+              (e) => e.docs,
+              'docs',
+              unorderedEquals([
+                isA<QueryDocumentSnapshot<Map<String, dynamic>>>().having(
+                  (e) => e.data(),
+                  'data',
+                  {'value': 42},
+                ),
+                isA<QueryDocumentSnapshot<Map<String, dynamic>>>().having(
+                  (e) => e.data(),
+                  'data',
+                  {'value': 21},
+                ),
+              ]),
+            ),
+          ),
+        );
+
+        await expectLater(
+          fooConverterSnapshot,
+          emits(
+            isA<QuerySnapshot<int>>().having(
+              (e) => e.docs,
+              'docs',
+              unorderedEquals([
+                isA<QueryDocumentSnapshot<int>>().having(
+                  (e) => e.data(),
+                  'data',
+                  42,
+                ),
+                isA<QueryDocumentSnapshot<int>>().having(
+                  (e) => e.data(),
+                  'data',
+                  21,
+                ),
+              ]),
+            ),
+          ),
+        );
+      }, timeout: const Timeout.factor(3));
+
+      test(
+        'returning null from `fromFirestore` should not throw a null check error',
+        () async {
+          final foo = await initializeTest('foo');
+          await foo.add({'value': 42});
+          final fooConverter = foo.withConverter(
+            fromFirestore: (_, __) => null,
+            toFirestore: (_, __) => {}, // unused
+          );
+
+          final fooConverterSnapshot = fooConverter.snapshots();
+
+          await expectLater(
+            fooConverterSnapshot,
+            emits(
+              // ignore: prefer_void_to_null
+              isA<QuerySnapshot<Null>>().having((e) => e.docs, 'docs', [
                 // ignore: prefer_void_to_null
-                isA<QuerySnapshot<Null>>().having((e) => e.docs, 'docs', [
-                  // ignore: prefer_void_to_null
-                  isA<QueryDocumentSnapshot<Null>>()
-                      .having((e) => e.data(), 'data', null),
-                ]),
-              ),
-            );
-          },
-        );
-      },
-      skip: defaultTargetPlatform == TargetPlatform.windows,
-    );
+                isA<QueryDocumentSnapshot<Null>>().having(
+                  (e) => e.data(),
+                  'data',
+                  null,
+                ),
+              ]),
+            ),
+          );
+        },
+      );
+    }, skip: defaultTargetPlatform == TargetPlatform.windows);
   });
 }

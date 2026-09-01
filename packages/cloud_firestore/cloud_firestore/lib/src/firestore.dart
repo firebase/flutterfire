@@ -16,18 +16,14 @@ part of '../cloud_firestore.dart';
 /// FirebaseFirestore firestore = FirebaseFirestore.instanceFor(app: secondaryApp);
 /// ```
 class FirebaseFirestore extends FirebasePlugin {
-  FirebaseFirestore._({
-    required this.app,
-    required this.databaseId,
-  }) : super(app.name, 'plugins.flutter.io/firebase_firestore');
+  FirebaseFirestore._({required this.app, required this.databaseId})
+    : super(app.name, 'plugins.flutter.io/firebase_firestore');
 
   static final Map<String, FirebaseFirestore> _cachedInstances = {};
 
   /// Returns an instance using the default [FirebaseApp].
   static FirebaseFirestore get instance {
-    return FirebaseFirestore.instanceFor(
-      app: Firebase.app(),
-    );
+    return FirebaseFirestore.instanceFor(app: Firebase.app());
   }
 
   /// Returns an instance using a specified [FirebaseApp].
@@ -175,8 +171,10 @@ class FirebaseFirestore extends FirebasePlugin {
     String name, {
     GetOptions options = const GetOptions(),
   }) async {
-    QuerySnapshotPlatform snapshotDelegate =
-        await _delegate.namedQueryGet(name, options: options);
+    QuerySnapshotPlatform snapshotDelegate = await _delegate.namedQueryGet(
+      name,
+      options: options,
+    );
     return _JsonQuerySnapshot(FirebaseFirestore.instance, snapshotDelegate);
   }
 
@@ -330,12 +328,10 @@ class FirebaseFirestore extends FirebasePlugin {
       );
     }
 
-    PersistentCacheIndexManagerPlatform? indexManager =
-        _delegate.persistentCacheIndexManager();
+    PersistentCacheIndexManagerPlatform? indexManager = _delegate
+        .persistentCacheIndexManager();
     if (indexManager != null) {
-      return PersistentCacheIndexManager._(
-        indexManager,
-      );
+      return PersistentCacheIndexManager._(indexManager);
     }
     return null;
   }

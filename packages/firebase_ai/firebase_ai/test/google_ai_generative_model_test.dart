@@ -39,14 +39,15 @@ void main() {
     }) {
       final client = ClientController();
       final model = createModelWithClient(
-          useAgentPlatform: false,
-          app: app,
-          model: modelName,
-          client: client.client,
-          tools: tools,
-          toolConfig: toolConfig,
-          systemInstruction: systemInstruction,
-          location: 'us-central1');
+        useAgentPlatform: false,
+        app: app,
+        model: modelName,
+        client: client.client,
+        tools: tools,
+        toolConfig: toolConfig,
+        systemInstruction: systemInstruction,
+        location: 'us-central1',
+      );
       return (client, model);
     }
 
@@ -78,19 +79,23 @@ void main() {
       );
     });
 
-    test('allows specifying an API version', () async {
-      final (client, model) = createModel(
+    test(
+      'allows specifying an API version',
+      () async {
+        final (client, model) = createModel(
           // requestOptions: RequestOptions(apiVersion: 'override_version'),
-          );
-      const prompt = 'Some prompt';
-      await client.checkRequest(
-        () => model.generateContent([Content.text(prompt)]),
-        response: arbitraryGenerateContentResponse,
-        verifyRequest: (uri, _) {
-          expect(uri.path, startsWith('/override_version/'));
-        },
-      );
-    }, skip: 'No support for overriding API version');
+        );
+        const prompt = 'Some prompt';
+        await client.checkRequest(
+          () => model.generateContent([Content.text(prompt)]),
+          response: arbitraryGenerateContentResponse,
+          verifyRequest: (uri, _) {
+            expect(uri.path, startsWith('/override_version/'));
+          },
+        );
+      },
+      skip: 'No support for overriding API version',
+    );
 
     group('generate unary content', () {
       test('can make successful request', () async {
@@ -225,9 +230,7 @@ void main() {
             ]),
           ],
           toolConfig: ToolConfig(
-            functionCallingConfig: FunctionCallingConfig.any(
-              {'someFunction'},
-            ),
+            functionCallingConfig: FunctionCallingConfig.any({'someFunction'}),
           ),
         );
         const prompt = 'Some prompt';
@@ -245,11 +248,11 @@ void main() {
                       'properties': {
                         'schema1': {
                           'type': 'STRING',
-                          'description': 'Some parameter.'
-                        }
+                          'description': 'Some parameter.',
+                        },
                       },
-                      'required': ['schema1']
-                    }
+                      'required': ['schema1'],
+                    },
                   },
                 ],
               },
@@ -283,9 +286,9 @@ void main() {
               ]),
             ],
             toolConfig: ToolConfig(
-              functionCallingConfig: FunctionCallingConfig.any(
-                {'someFunction'},
-              ),
+              functionCallingConfig: FunctionCallingConfig.any({
+                'someFunction',
+              }),
             ),
           ),
           verifyRequest: (_, request) {
@@ -300,11 +303,11 @@ void main() {
                       'properties': {
                         'schema1': {
                           'type': 'STRING',
-                          'description': 'Some parameter.'
-                        }
+                          'description': 'Some parameter.',
+                        },
                       },
-                      'required': ['schema1']
-                    }
+                      'required': ['schema1'],
+                    },
                   },
                 ],
               },
@@ -321,9 +324,7 @@ void main() {
       });
 
       test('can pass a google search tool', () async {
-        final (client, model) = createModel(
-          tools: [Tool.googleSearch()],
-        );
+        final (client, model) = createModel(tools: [Tool.googleSearch()]);
         const prompt = 'Some prompt';
         await client.checkRequest(
           () => model.generateContent([Content.text(prompt)]),
@@ -337,9 +338,7 @@ void main() {
       });
 
       test('can pass a url context tool', () async {
-        final (client, model) = createModel(
-          tools: [Tool.urlContext()],
-        );
+        final (client, model) = createModel(tools: [Tool.urlContext()]);
         const prompt = 'Some prompt';
         await client.checkRequest(
           () => model.generateContent([Content.text(prompt)]),
@@ -353,15 +352,17 @@ void main() {
       });
 
       test('can enable code execution', () async {
-        final (client, model) = createModel(tools: [
-          // Tool(codeExecution: CodeExecution()),
-        ]);
+        final (client, model) = createModel(
+          tools: [
+            // Tool(codeExecution: CodeExecution()),
+          ],
+        );
         const prompt = 'Some prompt';
         await client.checkRequest(
           () => model.generateContent([Content.text(prompt)]),
           verifyRequest: (_, request) {
             expect(request['tools'], [
-              {'codeExecution': <String, Object?>{}}
+              {'codeExecution': <String, Object?>{}},
             ]);
           },
           response: arbitraryGenerateContentResponse,
@@ -372,14 +373,15 @@ void main() {
         final (client, model) = createModel();
         const prompt = 'Some prompt';
         await client.checkRequest(
-          () => model.generateContent([
-            Content.text(prompt)
-          ], tools: [
-            // Tool(codeExecution: CodeExecution()),
-          ]),
+          () => model.generateContent(
+            [Content.text(prompt)],
+            tools: [
+              // Tool(codeExecution: CodeExecution()),
+            ],
+          ),
           verifyRequest: (_, request) {
             expect(request['tools'], [
-              {'codeExecution': <String, Object?>{}}
+              {'codeExecution': <String, Object?>{}},
             ]);
           },
           response: arbitraryGenerateContentResponse,
@@ -495,9 +497,7 @@ void main() {
       });
 
       test('can pass a google search tool', () async {
-        final (client, model) = createModel(
-          tools: [Tool.googleSearch()],
-        );
+        final (client, model) = createModel(tools: [Tool.googleSearch()]);
         const prompt = 'Some prompt';
         final responses = await client.checkStreamRequest(
           () async => model.generateContentStream([Content.text(prompt)]),
@@ -538,7 +538,7 @@ void main() {
                     ],
                   },
                 ],
-              }
+              },
             });
           },
           response: {'totalTokens': 2},
@@ -546,78 +546,81 @@ void main() {
         expect(response, matchesCountTokensResponse(CountTokensResponse(2)));
       });
 
-      test('can override GenerateContentRequest fields', () async {
-        final (client, model) = createModel();
-        const prompt = 'Some prompt';
-        await client.checkRequest(
-          response: {'totalTokens': 100},
-          () => model.countTokens(
-            [Content.text(prompt)],
-            // safetySettings: [
-            //   SafetySetting(
-            //     HarmCategory.dangerousContent,
-            //     HarmBlockThreshold.high,
-            //     null,
-            //   ),
-            // ],
-            // generationConfig: GenerationConfig(stopSequences: ['a']),
-            // tools: [
-            //   Tool(functionDeclarations: [
-            //     FunctionDeclaration(
-            //       'someFunction',
-            //       'Some cool function.',
-            //       Schema(SchemaType.string, description: 'Some parameter.'),
-            //     ),
-            //   ]),
-            // ],
-            // toolConfig: ToolConfig(
-            //   functionCallingConfig: FunctionCallingConfig(
-            //     mode: FunctionCallingMode.any,
-            //     allowedFunctionNames: {'someFunction'},
-            //   ),
-            // ),
-          ),
-          verifyRequest: (_, countTokensRequest) {
-            expect(countTokensRequest, isNotNull);
-            final request = countTokensRequest['generateContentRequest']!
-                as Map<String, Object?>;
-            expect(request['safetySettings'], [
-              {
-                'category': 'HARM_CATEGORY_DANGEROUS_CONTENT',
-                'threshold': 'BLOCK_ONLY_HIGH',
-              },
-            ]);
-            expect(request['generationConfig'], {
-              'stopSequences': ['a'],
-            });
-            expect(request['tools'], [
-              {
-                'functionDeclarations': [
-                  {
-                    'name': 'someFunction',
-                    'description': 'Some cool function.',
-                    'parameters': {
-                      'type': 'STRING',
-                      'description': 'Some parameter.',
+      test(
+        'can override GenerateContentRequest fields',
+        () async {
+          final (client, model) = createModel();
+          const prompt = 'Some prompt';
+          await client.checkRequest(
+            response: {'totalTokens': 100},
+            () => model.countTokens(
+              [Content.text(prompt)],
+              // safetySettings: [
+              //   SafetySetting(
+              //     HarmCategory.dangerousContent,
+              //     HarmBlockThreshold.high,
+              //     null,
+              //   ),
+              // ],
+              // generationConfig: GenerationConfig(stopSequences: ['a']),
+              // tools: [
+              //   Tool(functionDeclarations: [
+              //     FunctionDeclaration(
+              //       'someFunction',
+              //       'Some cool function.',
+              //       Schema(SchemaType.string, description: 'Some parameter.'),
+              //     ),
+              //   ]),
+              // ],
+              // toolConfig: ToolConfig(
+              //   functionCallingConfig: FunctionCallingConfig(
+              //     mode: FunctionCallingMode.any,
+              //     allowedFunctionNames: {'someFunction'},
+              //   ),
+              // ),
+            ),
+            verifyRequest: (_, countTokensRequest) {
+              expect(countTokensRequest, isNotNull);
+              final request =
+                  countTokensRequest['generateContentRequest']!
+                      as Map<String, Object?>;
+              expect(request['safetySettings'], [
+                {
+                  'category': 'HARM_CATEGORY_DANGEROUS_CONTENT',
+                  'threshold': 'BLOCK_ONLY_HIGH',
+                },
+              ]);
+              expect(request['generationConfig'], {
+                'stopSequences': ['a'],
+              });
+              expect(request['tools'], [
+                {
+                  'functionDeclarations': [
+                    {
+                      'name': 'someFunction',
+                      'description': 'Some cool function.',
+                      'parameters': {
+                        'type': 'STRING',
+                        'description': 'Some parameter.',
+                      },
                     },
-                  },
-                ],
-              },
-            ]);
-            expect(request['toolConfig'], {
-              'functionCallingConfig': {
-                'mode': 'ANY',
-                'allowedFunctionNames': ['someFunction'],
-              },
-            });
-          },
-        );
-      }, skip: 'Only content argument supported for countTokens');
+                  ],
+                },
+              ]);
+              expect(request['toolConfig'], {
+                'functionCallingConfig': {
+                  'mode': 'ANY',
+                  'allowedFunctionNames': ['someFunction'],
+                },
+              });
+            },
+          );
+        },
+        skip: 'Only content argument supported for countTokens',
+      );
 
       test('can pass a google search tool', () async {
-        final (client, model) = createModel(
-          tools: [Tool.googleSearch()],
-        );
+        final (client, model) = createModel(tools: [Tool.googleSearch()]);
         const prompt = 'Some prompt';
         await client.checkRequest(
           () => model.countTokens([Content.text(prompt)]),
@@ -680,18 +683,24 @@ void main() {
         const outputDimensionality = 1;
         final embeddingValues = [0.1];
 
-        await client.checkRequest(() async {
-          Content.text(content);
-          // await model.embedContent(
-          //   Content.text(content),
-          //   outputDimensionality: outputDimensionality,
-          // );
-        }, verifyRequest: (_, request) {
-          expect(request,
-              containsPair('outputDimensionality', outputDimensionality));
-        }, response: {
-          'embedding': {'values': embeddingValues},
-        });
+        await client.checkRequest(
+          () async {
+            Content.text(content);
+            // await model.embedContent(
+            //   Content.text(content),
+            //   outputDimensionality: outputDimensionality,
+            // );
+          },
+          verifyRequest: (_, request) {
+            expect(
+              request,
+              containsPair('outputDimensionality', outputDimensionality),
+            );
+          },
+          response: {
+            'embedding': {'values': embeddingValues},
+          },
+        );
       });
     }, skip: 'No support for embedding content');
 
@@ -768,30 +777,34 @@ void main() {
         final embeddingValues1 = [0.1];
         final embeddingValues2 = [0.4];
 
-        await client.checkRequest(() async {
-          Content.text(content1);
-          Content.text(content2);
-          // await model.batchEmbedContents([
-          //   EmbedContentRequest(
-          //     Content.text(content1),
-          //     outputDimensionality: outputDimensionality,
-          //   ),
-          //   EmbedContentRequest(
-          //     Content.text(content2),
-          //     outputDimensionality: outputDimensionality,
-          //   ),
-          // ]);
-        }, verifyRequest: (_, request) {
-          expect(request['requests'], [
-            containsPair('outputDimensionality', outputDimensionality),
-            containsPair('outputDimensionality', outputDimensionality),
-          ]);
-        }, response: {
-          'embeddings': [
-            {'values': embeddingValues1},
-            {'values': embeddingValues2},
-          ],
-        });
+        await client.checkRequest(
+          () async {
+            Content.text(content1);
+            Content.text(content2);
+            // await model.batchEmbedContents([
+            //   EmbedContentRequest(
+            //     Content.text(content1),
+            //     outputDimensionality: outputDimensionality,
+            //   ),
+            //   EmbedContentRequest(
+            //     Content.text(content2),
+            //     outputDimensionality: outputDimensionality,
+            //   ),
+            // ]);
+          },
+          verifyRequest: (_, request) {
+            expect(request['requests'], [
+              containsPair('outputDimensionality', outputDimensionality),
+              containsPair('outputDimensionality', outputDimensionality),
+            ]);
+          },
+          response: {
+            'embeddings': [
+              {'values': embeddingValues1},
+              {'values': embeddingValues2},
+            ],
+          },
+        );
       });
     }, skip: 'No support for embed content');
   });

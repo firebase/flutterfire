@@ -68,7 +68,9 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
       final secondElement = currentUser[1]!;
       currentUser = InternalUserDetails.decode([firstElement, secondElement]);
     }
-    return FirebaseAuthPlatform.instance.delegateFor(app: app).setInitialValues(
+    return FirebaseAuthPlatform.instance
+        .delegateFor(app: app)
+        .setInitialValues(
           languageCode: pluginConstants['APP_LANGUAGE_CODE'],
           currentUser: currentUser,
         );
@@ -727,7 +729,8 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// Authorization code can be retrieved on the user credential i.e. userCredential.additionalUserInfo.authorizationCode
   Future<void> revokeTokenWithAuthorizationCode(String authorizationCode) {
     throw UnimplementedError(
-        'revokeTokenWithAuthorizationCode() is not implemented');
+      'revokeTokenWithAuthorizationCode() is not implemented',
+    );
   }
 
   /// Android only. Revokes the provided accessToken. Currently supports revoking Apple-issued accessToken only.

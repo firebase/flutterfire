@@ -30,17 +30,20 @@ void main() {
     test('UnsupportedUserLocation message', () {
       final exception = UnsupportedUserLocation();
       expect(
-          exception.message, 'User location is not supported for the API use.');
+        exception.message,
+        'User location is not supported for the API use.',
+      );
     });
 
     test('ServiceApiNotEnabled message', () {
       final exception = ServiceApiNotEnabled('projects/test-project');
       expect(
-          exception.message,
-          'Enable Firebase AI Logic in your Firebase project by visiting the Firebase Console at '
-          'https://console.firebase.google.com/project/test-project/ailogic '
-          'and clicking "Get started". If you enabled this API recently, wait a few minutes for the '
-          'action to propagate to our systems and then retry.');
+        exception.message,
+        'Enable Firebase AI Logic in your Firebase project by visiting the Firebase Console at '
+        'https://console.firebase.google.com/project/test-project/ailogic '
+        'and clicking "Get started". If you enabled this API recently, wait a few minutes for the '
+        'action to propagate to our systems and then retry.',
+      );
     });
 
     test('QuotaExceeded toString', () {
@@ -56,40 +59,48 @@ void main() {
     test('FirebaseAISdkException toString', () {
       final exception = FirebaseAISdkException('SDK failed to parse response.');
       expect(
-          exception.toString(),
-          'SDK failed to parse response.\n'
-          'This indicates a problem with the Firebase AI Logic SDK. '
-          'Try updating to the latest version '
-          '(https://pub.dev/packages/firebase_ai/versions), '
-          'or file an issue at '
-          'https://github.com/firebase/flutterfire/issues.');
+        exception.toString(),
+        'SDK failed to parse response.\n'
+        'This indicates a problem with the Firebase AI Logic SDK. '
+        'Try updating to the latest version '
+        '(https://pub.dev/packages/firebase_ai/versions), '
+        'or file an issue at '
+        'https://github.com/firebase/flutterfire/issues.',
+      );
     });
 
     test('ImagenImagesBlockedException toString', () {
-      final exception =
-          ImagenImagesBlockedException('All images were blocked.');
+      final exception = ImagenImagesBlockedException(
+        'All images were blocked.',
+      );
       expect(exception.toString(), 'All images were blocked.');
     });
 
     test('LiveWebSocketClosedException toString - DEADLINE_EXCEEDED', () {
       final exception = LiveWebSocketClosedException(
-          'DEADLINE_EXCEEDED: Connection timed out.');
-      expect(exception.toString(),
-          'The current live session has expired. Please start a new session.');
+        'DEADLINE_EXCEEDED: Connection timed out.',
+      );
+      expect(
+        exception.toString(),
+        'The current live session has expired. Please start a new session.',
+      );
     });
 
     test('LiveWebSocketClosedException toString - RESOURCE_EXHAUSTED', () {
       final exception = LiveWebSocketClosedException(
-          'RESOURCE_EXHAUSTED: Too many connections.');
+        'RESOURCE_EXHAUSTED: Too many connections.',
+      );
       expect(
-          exception.toString(),
-          'You have exceeded the maximum number of concurrent sessions. '
-          'Please close other sessions and try again later.');
+        exception.toString(),
+        'You have exceeded the maximum number of concurrent sessions. '
+        'Please close other sessions and try again later.',
+      );
     });
 
     test('LiveWebSocketClosedException toString - Other', () {
-      final exception =
-          LiveWebSocketClosedException('WebSocket connection closed.');
+      final exception = LiveWebSocketClosedException(
+        'WebSocket connection closed.',
+      );
       expect(exception.toString(), 'WebSocket connection closed.');
     });
 
@@ -98,8 +109,8 @@ void main() {
         final json = {
           'message': 'Invalid API key',
           'details': [
-            {'reason': 'API_KEY_INVALID'}
-          ]
+            {'reason': 'API_KEY_INVALID'},
+          ],
         };
         final exception = parseError(json);
         expect(exception, isInstanceOf<InvalidApiKey>());
@@ -108,7 +119,7 @@ void main() {
 
       test('parses UNSUPPORTED_USER_LOCATION', () {
         final json = {
-          'message': 'User location is not supported for the API use.'
+          'message': 'User location is not supported for the API use.',
         };
         final exception = parseError(json);
         expect(exception, isInstanceOf<UnsupportedUserLocation>());
@@ -130,18 +141,19 @@ void main() {
               'metadata': {
                 'service': 'firebasevertexai.googleapis.com',
                 'consumer': 'projects/my-project-id',
-              }
-            }
-          ]
+              },
+            },
+          ],
         };
         final exception = parseError(json);
         expect(exception, isInstanceOf<ServiceApiNotEnabled>());
         expect(
-            (exception as ServiceApiNotEnabled).message,
-            'Enable Firebase AI Logic in your Firebase project by visiting the Firebase Console at '
-            'https://console.firebase.google.com/project/my-project-id/ailogic '
-            'and clicking "Get started". If you enabled this API recently, wait a few minutes for the '
-            'action to propagate to our systems and then retry.');
+          (exception as ServiceApiNotEnabled).message,
+          'Enable Firebase AI Logic in your Firebase project by visiting the Firebase Console at '
+          'https://console.firebase.google.com/project/my-project-id/ailogic '
+          'and clicking "Get started". If you enabled this API recently, wait a few minutes for the '
+          'action to propagate to our systems and then retry.',
+        );
       });
 
       test('parses SERVER_ERROR', () {
@@ -153,8 +165,10 @@ void main() {
 
       test('parses UNHANDLED_FORMAT', () {
         final json = {'unexpected': 'format'};
-        expect(() => parseError(json),
-            throwsA(isInstanceOf<FirebaseAISdkException>()));
+        expect(
+          () => parseError(json),
+          throwsA(isInstanceOf<FirebaseAISdkException>()),
+        );
       });
     });
   });

@@ -122,36 +122,36 @@ void main() {
       fakeWs.close();
     });
 
-    test('sendStartActivityRealtime sends correct activity_start message',
-        () async {
-      final fakeWs = FakeWebSocketChannel();
-      final session = LiveSession.forTesting(fakeWs);
+    test(
+      'sendStartActivityRealtime sends correct activity_start message',
+      () async {
+        final fakeWs = FakeWebSocketChannel();
+        final session = LiveSession.forTesting(fakeWs);
 
-      await session.sendStartActivityRealtime();
+        await session.sendStartActivityRealtime();
 
-      expect(fakeWs.sentMessages.length, 1);
-      final jsonPayload = json.decode(fakeWs.sentMessages.first as String);
-      expect(jsonPayload, {
-        'realtime_input': {
-          'activity_start': {},
-        },
-      });
-    });
+        expect(fakeWs.sentMessages.length, 1);
+        final jsonPayload = json.decode(fakeWs.sentMessages.first as String);
+        expect(jsonPayload, {
+          'realtime_input': {'activity_start': {}},
+        });
+      },
+    );
 
-    test('sendStopActivityRealtime sends correct activity_end message',
-        () async {
-      final fakeWs = FakeWebSocketChannel();
-      final session = LiveSession.forTesting(fakeWs);
+    test(
+      'sendStopActivityRealtime sends correct activity_end message',
+      () async {
+        final fakeWs = FakeWebSocketChannel();
+        final session = LiveSession.forTesting(fakeWs);
 
-      await session.sendStopActivityRealtime();
+        await session.sendStopActivityRealtime();
 
-      expect(fakeWs.sentMessages.length, 1);
-      final jsonPayload = json.decode(fakeWs.sentMessages.first as String);
-      expect(jsonPayload, {
-        'realtime_input': {
-          'activity_end': {},
-        },
-      });
-    });
+        expect(fakeWs.sentMessages.length, 1);
+        final jsonPayload = json.decode(fakeWs.sentMessages.first as String);
+        expect(jsonPayload, {
+          'realtime_input': {'activity_end': {}},
+        });
+      },
+    );
   });
 }

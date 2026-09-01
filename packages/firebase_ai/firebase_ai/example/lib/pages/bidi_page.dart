@@ -105,13 +105,10 @@ class BidiMediaManager {
     // Wait for Mac Camera to Settle (Prevent audio hijack)
     await Future.delayed(const Duration(milliseconds: 1000));
 
-    _videoSubscription = _videoInput.startStreamingImages().listen(
-      (data) {
-        String mimeType = 'image/jpeg';
-        onData(data, mimeType);
-      },
-      onError: (e) => developer.log('Video Stream Error: $e'),
-    );
+    _videoSubscription = _videoInput.startStreamingImages().listen((data) {
+      String mimeType = 'image/jpeg';
+      onData(data, mimeType);
+    }, onError: (e) => developer.log('Video Stream Error: $e'));
   }
 
   Future<void> stopVideo() async {
@@ -938,7 +935,8 @@ class _BidiPageState extends State<BidiPage> {
                   height: 200,
                   color: Colors.black,
                   alignment: Alignment.center,
-                  child: (_controller.mediaManager.cameraController != null &&
+                  child:
+                      (_controller.mediaManager.cameraController != null &&
                           _controller.mediaManager.controllerInitialized)
                       ? FullCameraPreview(
                           controller: _controller.mediaManager.cameraController,
@@ -969,8 +967,10 @@ class _BidiPageState extends State<BidiPage> {
                 ),
               ),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 25, horizontal: 15),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 25,
+                  horizontal: 15,
+                ),
                 child: Row(
                   children: [
                     Expanded(

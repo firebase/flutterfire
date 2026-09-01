@@ -47,10 +47,7 @@ void setupSecondBucketTests() {
 
     group('bucket', () {
       test('returns the storage bucket as a string', () async {
-        expect(
-          storage.ref('/ok.jpeg').bucket,
-          secondStorageBucket,
-        );
+        expect(storage.ref('/ok.jpeg').bucket, secondStorageBucket);
       });
     });
 
@@ -125,8 +122,9 @@ void setupSecondBucketTests() {
 
       test('throws error if no write permission', () async {
         // second-bucket-not-allowed.jpeg is not allowed to be deleted via storage.rules for 2nd bucket
-        Reference ref =
-            storage.ref('flutter-tests/second-bucket-not-allowed.jpeg');
+        Reference ref = storage.ref(
+          'flutter-tests/second-bucket-not-allowed.jpeg',
+        );
 
         await expectLater(
           () => ref.delete(),
@@ -161,7 +159,8 @@ void setupSecondBucketTests() {
         },
         // Fails on emulator since iOS SDK 10. See PR notes:
         // https://github.com/firebase/flutterfire/pull/9708
-        skip: defaultTargetPlatform == TargetPlatform.iOS ||
+        skip:
+            defaultTargetPlatform == TargetPlatform.iOS ||
             defaultTargetPlatform == TargetPlatform.macOS,
       );
 
@@ -200,81 +199,73 @@ void setupSecondBucketTests() {
       });
     });
 
-    group(
-      'list',
-      () {
-        test('returns list results', () async {
-          Reference ref = storage.ref(allowableListsSecondBucket);
-          ListResult result = await ref.list(const ListOptions(maxResults: 25));
-          expect(result.items.length, greaterThan(0));
-          expect(result.prefixes, isA<List<Reference>>());
-        });
-
-        test(
-          'errors if permission denied',
-          () async {
-            Reference ref = storage.ref('flutter-tests');
-
-            await expectLater(
-              () => ref.list(const ListOptions(maxResults: 25)),
-              throwsA(
-                isA<FirebaseException>()
-                    .having((e) => e.code, 'code', 'unauthorized')
-                    .having(
-                      (e) => e.message,
-                      'message',
-                      'User is not authorized to perform the desired action.',
-                    ),
-              ),
-            );
-          },
-          // Web: Firebase JS SDK / emulator never returns the permission error,
-          // causing a consistent 30s timeout.
-          // Windows: C++ SDK / emulator does not enforce permissions for list
-          // operations on the second bucket (returns results instead of error).
-          skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
-        );
-
-        test('errors if maxResults is less than 0 ', () async {
-          Reference ref = storage.ref('/list');
-          expect(
-            () => ref.list(const ListOptions(maxResults: -1)),
-            throwsAssertionError,
-          );
-        });
-
-        test('errors if maxResults is 0 ', () async {
-          Reference ref = storage.ref('/list');
-          expect(
-            () => ref.list(const ListOptions(maxResults: 0)),
-            throwsAssertionError,
-          );
-        });
-
-        test('errors if maxResults is more than 1000 ', () async {
-          Reference ref = storage.ref('/list');
-          expect(
-            () => ref.list(const ListOptions(maxResults: 1001)),
-            throwsAssertionError,
-          );
-        });
-      },
-      skip: defaultTargetPlatform == TargetPlatform.windows,
-    );
-
-    test(
-      'listAll',
-      () async {
+    group('list', () {
+      test('returns list results', () async {
         Reference ref = storage.ref(allowableListsSecondBucket);
-        ListResult result = await ref.listAll();
-        expect(result.items, isNotNull);
+        ListResult result = await ref.list(const ListOptions(maxResults: 25));
         expect(result.items.length, greaterThan(0));
-        expect(result.nextPageToken, isNull);
-
         expect(result.prefixes, isA<List<Reference>>());
-      },
-      skip: defaultTargetPlatform == TargetPlatform.windows,
-    );
+      });
+
+      test(
+        'errors if permission denied',
+        () async {
+          Reference ref = storage.ref('flutter-tests');
+
+          await expectLater(
+            () => ref.list(const ListOptions(maxResults: 25)),
+            throwsA(
+              isA<FirebaseException>()
+                  .having((e) => e.code, 'code', 'unauthorized')
+                  .having(
+                    (e) => e.message,
+                    'message',
+                    'User is not authorized to perform the desired action.',
+                  ),
+            ),
+          );
+        },
+        // Web: Firebase JS SDK / emulator never returns the permission error,
+        // causing a consistent 30s timeout.
+        // Windows: C++ SDK / emulator does not enforce permissions for list
+        // operations on the second bucket (returns results instead of error).
+        skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
+      );
+
+      test('errors if maxResults is less than 0 ', () async {
+        Reference ref = storage.ref('/list');
+        expect(
+          () => ref.list(const ListOptions(maxResults: -1)),
+          throwsAssertionError,
+        );
+      });
+
+      test('errors if maxResults is 0 ', () async {
+        Reference ref = storage.ref('/list');
+        expect(
+          () => ref.list(const ListOptions(maxResults: 0)),
+          throwsAssertionError,
+        );
+      });
+
+      test('errors if maxResults is more than 1000 ', () async {
+        Reference ref = storage.ref('/list');
+        expect(
+          () => ref.list(const ListOptions(maxResults: 1001)),
+          throwsAssertionError,
+        );
+      });
+    }, skip: defaultTargetPlatform == TargetPlatform.windows);
+
+    test('listAll', () async {
+      Reference ref = storage.ref(allowableListsSecondBucket);
+      ListResult result = await ref.listAll();
+      expect(result.items, isNotNull);
+      expect(result.items.length, greaterThan(0));
+      expect(result.nextPageToken, isNull);
+
+      expect(result.prefixes, isA<List<Reference>>());
+    }, skip: defaultTargetPlatform == TargetPlatform.windows);
 
     group(
       'putData',
@@ -284,14 +275,13 @@ void setupSecondBucketTests() {
 
           Uint8List data = Uint8List.fromList(list);
 
-          final Reference ref =
-              storage.ref('flutter-tests').child('flt-ok.txt');
+          final Reference ref = storage
+              .ref('flutter-tests')
+              .child('flt-ok.txt');
 
           final TaskSnapshot complete = await ref.putData(
             data,
-            SettableMetadata(
-              contentLanguage: 'en',
-            ),
+            SettableMetadata(contentLanguage: 'en'),
           );
 
           expect(complete.metadata?.size, kTestString.length);
@@ -324,61 +314,54 @@ void setupSecondBucketTests() {
     );
 
     group('putBlob', () {
-      test(
-        'throws [UnimplementedError] for native platforms',
-        () async {
-          final File file = await createFile('flt-ok.txt');
-          final Reference ref =
-              storage.ref('flutter-tests').child('flt-ok.txt');
+      test('throws [UnimplementedError] for native platforms', () async {
+        final File file = await createFile('flt-ok.txt');
+        final Reference ref = storage.ref('flutter-tests').child('flt-ok.txt');
 
-          await expectLater(
-            () => ref.putBlob(
-              file,
-              SettableMetadata(
-                contentLanguage: 'en',
-                customMetadata: <String, String>{'activity': 'test'},
-              ),
+        await expectLater(
+          () => ref.putBlob(
+            file,
+            SettableMetadata(
+              contentLanguage: 'en',
+              customMetadata: <String, String>{'activity': 'test'},
             ),
-            throwsA(
-              isA<UnimplementedError>().having(
-                (e) => e.message,
-                'message',
-                'putBlob() is not supported on native platforms. Use [put], [putFile] or [putString] instead.',
-              ),
+          ),
+          throwsA(
+            isA<UnimplementedError>().having(
+              (e) => e.message,
+              'message',
+              'putBlob() is not supported on native platforms. Use [put], [putFile] or [putString] instead.',
             ),
-          );
+          ),
+        );
 
-          // This *must* be skipped in web, the test is intended for native platforms.
-        },
-        skip: kIsWeb,
-      );
+        // This *must* be skipped in web, the test is intended for native platforms.
+      }, skip: kIsWeb);
     });
 
     group(
       'putFile',
       () {
-        test(
-          'uploads a file',
-          () async {
-            final File file = await createFile('flt-ok.txt');
+        test('uploads a file', () async {
+          final File file = await createFile('flt-ok.txt');
 
-            final Reference ref =
-                storage.ref('flutter-tests').child('flt-ok.txt');
+          final Reference ref = storage
+              .ref('flutter-tests')
+              .child('flt-ok.txt');
 
-            final TaskSnapshot complete = await ref.putFile(
-              file,
-              SettableMetadata(
-                contentLanguage: 'en',
-                customMetadata: <String, String>{'activity': 'test'},
-              ),
-            );
+          final TaskSnapshot complete = await ref.putFile(
+            file,
+            SettableMetadata(
+              contentLanguage: 'en',
+              customMetadata: <String, String>{'activity': 'test'},
+            ),
+          );
 
-            expect(complete.metadata?.size, kTestString.length);
-            // TODO - remove this note if still appplicable - Metadata isn't saved on objects when using the emulator which fails test
-            expect(complete.metadata?.contentLanguage, 'en');
-            expect(complete.metadata?.customMetadata!['activity'], 'test');
-          },
-        );
+          expect(complete.metadata?.size, kTestString.length);
+          // TODO - remove this note if still appplicable - Metadata isn't saved on objects when using the emulator which fails test
+          expect(complete.metadata?.contentLanguage, 'en');
+          expect(complete.metadata?.customMetadata!['activity'], 'test');
+        });
 
         test('errors if permission denied', () async {
           File file = await createFile('flt-ok.txt');
@@ -441,13 +424,15 @@ void setupSecondBucketTests() {
         'writes a file',
         () async {
           File file = await createFile('ok.txt');
-          TaskSnapshot complete =
-              await storage.ref('flutter-tests/ok.txt').writeToFile(file);
+          TaskSnapshot complete = await storage
+              .ref('flutter-tests/ok.txt')
+              .writeToFile(file);
           expect(complete.bytesTransferred, complete.totalBytes);
           expect(complete.state, TaskState.success);
           expect(complete.ref.bucket, secondStorageBucket);
         },
-        skip: defaultTargetPlatform == TargetPlatform.iOS ||
+        skip:
+            defaultTargetPlatform == TargetPlatform.iOS ||
             defaultTargetPlatform == TargetPlatform.macOS,
       );
     });
@@ -455,8 +440,9 @@ void setupSecondBucketTests() {
     group('updateMetadata', () {
       test('updates metadata', () async {
         Reference ref = storage.ref('flutter-tests').child('flt-ok.txt');
-        FullMetadata fullMetadata = await ref
-            .updateMetadata(SettableMetadata(customMetadata: {'foo': 'bar'}));
+        FullMetadata fullMetadata = await ref.updateMetadata(
+          SettableMetadata(customMetadata: {'foo': 'bar'}),
+        );
         expect(fullMetadata.customMetadata!['foo'], 'bar');
         expect(fullMetadata.bucket, secondStorageBucket);
       });
@@ -483,25 +469,23 @@ void setupSecondBucketTests() {
         skip: defaultTargetPlatform == TargetPlatform.windows,
       );
 
-      test(
-        'errors if permission denied',
-        () async {
-          Reference ref =
-              storage.ref('flutter-tests/second-bucket-not-allowed.jpeg');
-          await expectLater(
-            () => ref.updateMetadata(SettableMetadata(contentType: 'jpeg')),
-            throwsA(
-              isA<FirebaseException>()
-                  .having((e) => e.code, 'code', 'unauthorized')
-                  .having(
-                    (e) => e.message,
-                    'message',
-                    'User is not authorized to perform the desired action.',
-                  ),
-            ),
-          );
-        },
-      );
+      test('errors if permission denied', () async {
+        Reference ref = storage.ref(
+          'flutter-tests/second-bucket-not-allowed.jpeg',
+        );
+        await expectLater(
+          () => ref.updateMetadata(SettableMetadata(contentType: 'jpeg')),
+          throwsA(
+            isA<FirebaseException>()
+                .having((e) => e.code, 'code', 'unauthorized')
+                .having(
+                  (e) => e.message,
+                  'message',
+                  'User is not authorized to perform the desired action.',
+                ),
+          ),
+        );
+      });
     });
   });
 }

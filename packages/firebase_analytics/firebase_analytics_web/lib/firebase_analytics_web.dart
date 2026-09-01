@@ -33,10 +33,8 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
 
   /// Builds an instance of [FirebaseAnalyticsWeb] with an optional [FirebaseApp] instance
   /// If [app] is null then the created instance will use the default [FirebaseApp]
-  FirebaseAnalyticsWeb({
-    FirebaseApp? app,
-    this.webOptions,
-  }) : super(appInstance: app);
+  FirebaseAnalyticsWeb({FirebaseApp? app, this.webOptions})
+    : super(appInstance: app);
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
@@ -117,10 +115,7 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
     AnalyticsCallOptions? callOptions,
   }) async {
     return convertWebExceptions(() {
-      return _delegate.setUserId(
-        id: id,
-        callOptions: callOptions,
-      );
+      return _delegate.setUserId(id: id, callOptions: callOptions);
     });
   }
 
@@ -162,8 +157,6 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
 
   @override
   Future<String?> getAppInstanceId() async {
-    throw UnimplementedError(
-      'getAppInstanceId() is not supported on web',
-    );
+    throw UnimplementedError('getAppInstanceId() is not supported on web');
   }
 }

@@ -43,7 +43,10 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   /// Lazily initialize [_webFirestore] on first method call
   firestore_interop.Firestore get _delegate {
     return _webFirestore ??= firestore_interop.getFirestoreInstance(
-        core_interop.app(app.name), _interopSettings, databaseId);
+      core_interop.app(app.name),
+      _interopSettings,
+      databaseId,
+    );
   }
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
@@ -57,13 +60,15 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   /// Builds an instance of [FirebaseFirestoreWeb] with an optional [FirebaseApp] instance
   /// If [app] is null then the created instance will use the default [FirebaseApp]
   FirebaseFirestoreWeb({FirebaseApp? app, String? databaseId})
-      : super(appInstance: app, databaseChoice: databaseId) {
+    : super(appInstance: app, databaseChoice: databaseId) {
     FieldValueFactoryPlatform.instance = FieldValueFactoryWeb();
   }
 
   @override
-  FirebaseFirestorePlatform delegateFor(
-      {required FirebaseApp app, required String databaseId}) {
+  FirebaseFirestorePlatform delegateFor({
+    required FirebaseApp app,
+    required String databaseId,
+  }) {
     return FirebaseFirestoreWeb(app: app, databaseId: databaseId);
   }
 
@@ -88,8 +93,11 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   @override
   QueryPlatform collectionGroup(String collectionPath) {
     return QueryWeb(
-        this, collectionPath, _delegate.collectionGroup(collectionPath),
-        isCollectionGroupQuery: true);
+      this,
+      collectionPath,
+      _delegate.collectionGroup(collectionPath),
+      isCollectionGroupQuery: true,
+    );
   }
 
   @override
@@ -207,11 +215,13 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
       // If this is null, it will throw an exception when initializing the Firestore instance via interop
       JSAny experimentalLongPollingOptions =
           firestore_interop.ExperimentalLongPollingOptions(
-              timeoutSeconds: firestoreSettings
-                  .webExperimentalLongPollingOptions
-                  ?.timeoutDuration
-                  ?.inSeconds
-                  .toJS) as JSAny;
+                timeoutSeconds: firestoreSettings
+                    .webExperimentalLongPollingOptions
+                    ?.timeoutDuration
+                    ?.inSeconds
+                    .toJS,
+              )
+              as JSAny;
       _interopSettings?.experimentalLongPollingOptions =
           experimentalLongPollingOptions;
     }
@@ -238,8 +248,9 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
     GetOptions options = const GetOptions(),
   }) async {
     firestore_interop.Query? query = await _delegate.namedQuery(name);
-    firestore_interop.QuerySnapshot snapshot =
-        await query.get(convertGetOptions(options));
+    firestore_interop.QuerySnapshot snapshot = await query.get(
+      convertGetOptions(options),
+    );
 
     return convertWebQuerySnapshot(
       this,
@@ -250,9 +261,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
 
   @override
   Future<void> setIndexConfiguration(String indexConfiguration) async {
-    return _delegate.setIndexConfiguration(
-      indexConfiguration,
-    );
+    return _delegate.setIndexConfiguration(indexConfiguration);
   }
 
   @override

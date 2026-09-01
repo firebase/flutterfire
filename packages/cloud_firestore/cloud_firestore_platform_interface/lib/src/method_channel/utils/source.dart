@@ -9,7 +9,7 @@ String getSourceString(Source source) {
   return switch (source) {
     Source.server => 'server',
     Source.cache => 'cache',
-    _ => 'default'
+    _ => 'default',
   };
 }
 

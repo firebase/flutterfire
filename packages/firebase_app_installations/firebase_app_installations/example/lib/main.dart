@@ -13,9 +13,7 @@ import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   runApp(const MyApp());
 }
@@ -28,9 +26,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(primarySwatch: Colors.amber),
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Firebase Installations'),
-        ),
+        appBar: AppBar(title: const Text('Firebase Installations')),
         body: const InstallationsCard(),
       ),
     );
@@ -51,22 +47,26 @@ class _InstallationsCardState extends State<InstallationsCard> {
     init();
 
     // Listen to changes
-    FirebaseInstallations.instance.onIdChange.listen((event) {
-      setState(() {
-        id = event;
-      });
+    FirebaseInstallations.instance.onIdChange
+        .listen((event) {
+          setState(() {
+            id = event;
+          });
 
-      // Make sure that the Auth Token is updated once the Installation Id is updated
-      getAuthToken();
+          // Make sure that the Auth Token is updated once the Installation Id is updated
+          getAuthToken();
 
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('New Firebase Installations Id generated 🎉'),
-        backgroundColor: Colors.green,
-      ));
-    }).onError((error) {
-      log("$error");
-    });
+          // ignore: use_build_context_synchronously
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('New Firebase Installations Id generated 🎉'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        })
+        .onError((error) {
+          log("$error");
+        });
   }
 
   String id = 'None';
@@ -133,25 +133,15 @@ class _InstallationsCardState extends State<InstallationsCard> {
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Expanded(
-                              child: Text("Installation Id: "),
-                            ),
-                            Expanded(
-                              flex: 2,
-                              child: Text(id),
-                            ),
+                            const Expanded(child: Text("Installation Id: ")),
+                            Expanded(flex: 2, child: Text(id)),
                           ],
                         ),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Expanded(
-                              child: Text("Auth Token: "),
-                            ),
-                            Expanded(
-                              flex: 2,
-                              child: Text(authToken),
-                            ),
+                            const Expanded(child: Text("Auth Token: ")),
+                            Expanded(flex: 2, child: Text(authToken)),
                           ],
                         ),
                       ],
@@ -183,9 +173,9 @@ class _InstallationsCardState extends State<InstallationsCard> {
                       onPressed: getId,
                       child: const Text("Get ID"),
                     ),
-                  )
+                  ),
                 ],
-              )
+              ),
             ],
           ),
         ),

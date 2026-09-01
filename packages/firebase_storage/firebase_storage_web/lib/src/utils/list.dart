@@ -22,7 +22,9 @@ storage_interop.ListOptions? listOptionsToFbListOptions(ListOptions? options) {
 
 /// Converts a ListResult from the JS interop layer to a ListResultWeb for the plugin.
 ListResultWeb fbListResultToListResultWeb(
-    FirebaseStoragePlatform storage, storage_interop.ListResult result) {
+  FirebaseStoragePlatform storage,
+  storage_interop.ListResult result,
+) {
   return ListResultWeb(
     storage,
     nextPageToken: result.nextPageToken,

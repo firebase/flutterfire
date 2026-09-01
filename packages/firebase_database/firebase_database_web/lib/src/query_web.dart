@@ -11,10 +11,7 @@ class QueryWeb extends QueryPlatform {
   final DatabasePlatform _database;
   final database_interop.Query _queryDelegate;
 
-  QueryWeb(
-    this._database,
-    this._queryDelegate,
-  ) : super(database: _database);
+  QueryWeb(this._database, this._queryDelegate) : super(database: _database);
 
   database_interop.Query _getQueryDelegateInstance(QueryModifiers modifiers) {
     database_interop.Query instance = _queryDelegate;
@@ -101,9 +98,9 @@ class QueryWeb extends QueryPlatform {
       hashCode = Object.hashAll([
         appName,
         path,
-        ...modifiers
-            .toList()
-            .map((e) => const DeepCollectionEquality().hash(e)),
+        ...modifiers.toList().map(
+          (e) => const DeepCollectionEquality().hash(e),
+        ),
         eventType.index,
       ]).toString();
       // Need to track as the same properties to create hash could be used multiple times
@@ -123,10 +120,13 @@ class QueryWeb extends QueryPlatform {
 
   @override
   Stream<DatabaseEventPlatform> observe(
-      QueryModifiers modifiers, DatabaseEventType eventType) {
+    QueryModifiers modifiers,
+    DatabaseEventType eventType,
+  ) {
     database_interop.Query instance = _getQueryDelegateInstance(modifiers);
-    final appName =
-        _database.app != null ? _database.app!.name : Firebase.app().name;
+    final appName = _database.app != null
+        ? _database.app!.name
+        : Firebase.app().name;
 
     // Purely for unsubscribing purposes in debug mode on "hot restart"
     // if not running in debug mode, hashCode won't be used
@@ -136,42 +136,27 @@ class QueryWeb extends QueryPlatform {
       case DatabaseEventType.childAdded:
         return _webStreamToPlatformStream(
           eventType,
-          instance.onChildAdded(
-            appName,
-            hashCode,
-          ),
+          instance.onChildAdded(appName, hashCode),
         );
       case DatabaseEventType.childChanged:
         return _webStreamToPlatformStream(
           eventType,
-          instance.onChildChanged(
-            appName,
-            hashCode,
-          ),
+          instance.onChildChanged(appName, hashCode),
         );
       case DatabaseEventType.childMoved:
         return _webStreamToPlatformStream(
           eventType,
-          instance.onChildMoved(
-            appName,
-            hashCode,
-          ),
+          instance.onChildMoved(appName, hashCode),
         );
       case DatabaseEventType.childRemoved:
         return _webStreamToPlatformStream(
           eventType,
-          instance.onChildRemoved(
-            appName,
-            hashCode,
-          ),
+          instance.onChildRemoved(appName, hashCode),
         );
       case DatabaseEventType.value:
         return _webStreamToPlatformStream(
           eventType,
-          instance.onValue(
-            appName,
-            hashCode,
-          ),
+          instance.onValue(appName, hashCode),
         );
     }
   }
@@ -181,11 +166,8 @@ class QueryWeb extends QueryPlatform {
     Stream<database_interop.QueryEvent> stream,
   ) {
     return stream.map(
-      (database_interop.QueryEvent event) => webEventToPlatformEvent(
-        ref,
-        eventType,
-        event,
-      ),
+      (database_interop.QueryEvent event) =>
+          webEventToPlatformEvent(ref, eventType, event),
     );
   }
 }

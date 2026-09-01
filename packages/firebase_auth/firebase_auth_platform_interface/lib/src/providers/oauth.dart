@@ -41,9 +41,7 @@ class OAuthProvider extends AuthProvider {
 
   /// Sets the OAuth custom parameters to pass in a OAuth request for popup and
   /// redirect sign-in operations.
-  OAuthProvider setCustomParameters(
-    Map<String, String> customOAuthParameters,
-  ) {
+  OAuthProvider setCustomParameters(Map<String, String> customOAuthParameters) {
     _parameters = customOAuthParameters;
     return this;
   }
@@ -84,10 +82,10 @@ class OAuthCredential extends AuthCredential {
     this.serverAuthCode,
     this.appleFullPersonName,
   }) : super(
-          providerId: providerId,
-          signInMethod: signInMethod,
-          accessToken: accessToken,
-        );
+         providerId: providerId,
+         signInMethod: signInMethod,
+         accessToken: accessToken,
+       );
 
   /// The OAuth ID token associated with the credential if it belongs to an
   /// OIDC provider, such as `google.com`.

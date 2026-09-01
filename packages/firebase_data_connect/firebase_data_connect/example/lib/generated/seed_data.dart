@@ -2,11 +2,9 @@ part of 'movies.dart';
 
 class SeedDataVariablesBuilder {
   final FirebaseDataConnect _dataConnect;
-  SeedDataVariablesBuilder(
-    this._dataConnect,
-  );
-  Deserializer<SeedDataData> dataDeserializer =
-      (dynamic json) => SeedDataData.fromJson(jsonDecode(json));
+  SeedDataVariablesBuilder(this._dataConnect);
+  Deserializer<SeedDataData> dataDeserializer = (dynamic json) =>
+      SeedDataData.fromJson(jsonDecode(json));
 
   Future<OperationResult<SeedDataData, void>> execute() {
     return ref().execute();
@@ -14,7 +12,11 @@ class SeedDataVariablesBuilder {
 
   MutationRef<SeedDataData, void> ref() {
     return _dataConnect.mutation(
-        "seedData", dataDeserializer, emptySerializer, null);
+      "seedData",
+      dataDeserializer,
+      emptySerializer,
+      null,
+    );
   }
 }
 
@@ -22,7 +24,7 @@ class SeedDataVariablesBuilder {
 class SeedDataTheMatrix {
   final String id;
   SeedDataTheMatrix.fromJson(dynamic json)
-      : id = nativeFromJson<String>(json['id']);
+    : id = nativeFromJson<String>(json['id']);
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) {
@@ -45,16 +47,14 @@ class SeedDataTheMatrix {
     return json;
   }
 
-  SeedDataTheMatrix({
-    required this.id,
-  });
+  SeedDataTheMatrix({required this.id});
 }
 
 @immutable
 class SeedDataData {
   final SeedDataTheMatrix the_matrix;
   SeedDataData.fromJson(dynamic json)
-      : the_matrix = SeedDataTheMatrix.fromJson(json['the_matrix']);
+    : the_matrix = SeedDataTheMatrix.fromJson(json['the_matrix']);
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) {
@@ -77,7 +77,5 @@ class SeedDataData {
     return json;
   }
 
-  SeedDataData({
-    required this.the_matrix,
-  });
+  SeedDataData({required this.the_matrix});
 }

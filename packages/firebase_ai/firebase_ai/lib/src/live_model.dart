@@ -30,39 +30,32 @@ const _apiUrlSuffixGoogleAI = 'GenerativeService/BidiGenerateContent';
 /// is in Public Preview, which means that the feature is not subject to any SLA
 /// or deprecation policy and could change in backwards-incompatible ways.
 final class LiveGenerativeModel extends BaseModel {
-  LiveGenerativeModel._(
-      {required String model,
-      required String location,
-      required FirebaseApp app,
-      required bool useAgentPlatform,
-      bool? useLimitedUseAppCheckTokens,
-      FirebaseAppCheck? appCheck,
-      FirebaseAuth? auth,
-      LiveGenerationConfig? liveGenerationConfig,
-      List<Tool>? tools,
-      Content? systemInstruction})
-      : _app = app,
-        _location = location,
-        _useAgentPlatform = useAgentPlatform,
-        _appCheck = appCheck,
-        _auth = auth,
-        _liveGenerationConfig = liveGenerationConfig,
-        _tools = tools,
-        _systemInstruction = systemInstruction,
-        _useLimitedUseAppCheckTokens = useLimitedUseAppCheckTokens,
-        super._(
-          serializationStrategy: AgentPlatformSerialization(),
-          modelUri: useAgentPlatform
-              ? _AgentPlatformUri(
-                  model: model,
-                  app: app,
-                  location: location,
-                )
-              : _GoogleAIUri(
-                  model: model,
-                  app: app,
-                ),
-        );
+  LiveGenerativeModel._({
+    required String model,
+    required String location,
+    required FirebaseApp app,
+    required bool useAgentPlatform,
+    bool? useLimitedUseAppCheckTokens,
+    FirebaseAppCheck? appCheck,
+    FirebaseAuth? auth,
+    LiveGenerationConfig? liveGenerationConfig,
+    List<Tool>? tools,
+    Content? systemInstruction,
+  }) : _app = app,
+       _location = location,
+       _useAgentPlatform = useAgentPlatform,
+       _appCheck = appCheck,
+       _auth = auth,
+       _liveGenerationConfig = liveGenerationConfig,
+       _tools = tools,
+       _systemInstruction = systemInstruction,
+       _useLimitedUseAppCheckTokens = useLimitedUseAppCheckTokens,
+       super._(
+         serializationStrategy: AgentPlatformSerialization(),
+         modelUri: useAgentPlatform
+             ? _AgentPlatformUri(model: model, app: app, location: location)
+             : _GoogleAIUri(model: model, app: app),
+       );
 
   final FirebaseApp _app;
   final String _location;
@@ -74,14 +67,17 @@ final class LiveGenerativeModel extends BaseModel {
   final Content? _systemInstruction;
   final bool? _useLimitedUseAppCheckTokens;
 
-  String _agentPlatformUri() => 'wss://${_modelUri.baseAuthority}/'
+  String _agentPlatformUri() =>
+      'wss://${_modelUri.baseAuthority}/'
       '$_apiUrl.${_modelUri.apiVersion}.$_apiUrlSuffixAgentPlatform/'
       '$_location?key=${_app.options.apiKey}';
 
-  String _agentPlatformModelString() => 'projects/${_app.options.projectId}/'
+  String _agentPlatformModelString() =>
+      'projects/${_app.options.projectId}/'
       'locations/$_location/publishers/google/models/${model.name}';
 
-  String _googleAIUri() => 'wss://${_modelUri.baseAuthority}/'
+  String _googleAIUri() =>
+      'wss://${_modelUri.baseAuthority}/'
       '$_apiUrl.${_modelUri.apiVersion}.$_apiUrlSuffixGoogleAI?key=${_app.options.apiKey}';
 
   String _googleAIModelString() =>
@@ -96,8 +92,9 @@ final class LiveGenerativeModel extends BaseModel {
   ///
   /// Returns a [Future] that resolves to an [LiveSession] object upon successful
   /// connection.
-  Future<LiveSession> connect(
-      {SessionResumptionConfig? sessionResumption}) async {
+  Future<LiveSession> connect({
+    SessionResumptionConfig? sessionResumption,
+  }) async {
     final uri = _useAgentPlatform ? _agentPlatformUri() : _googleAIUri();
     final modelString = _useAgentPlatform
         ? _agentPlatformModelString()
@@ -134,16 +131,15 @@ LiveGenerativeModel createLiveGenerativeModel({
   LiveGenerationConfig? liveGenerationConfig,
   List<Tool>? tools,
   Content? systemInstruction,
-}) =>
-    LiveGenerativeModel._(
-      model: model,
-      app: app,
-      appCheck: appCheck,
-      auth: auth,
-      location: location,
-      useAgentPlatform: useAgentPlatform,
-      useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
-      liveGenerationConfig: liveGenerationConfig,
-      tools: tools,
-      systemInstruction: systemInstruction,
-    );
+}) => LiveGenerativeModel._(
+  model: model,
+  app: app,
+  appCheck: appCheck,
+  auth: auth,
+  location: location,
+  useAgentPlatform: useAgentPlatform,
+  useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
+  liveGenerationConfig: liveGenerationConfig,
+  tools: tools,
+  systemInstruction: systemInstruction,
+);

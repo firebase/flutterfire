@@ -28,11 +28,10 @@ class RemoteConfig
 
   static RemoteConfig getInstance(
     remote_config_interop.RemoteConfigJsImpl jsObject,
-  ) =>
-      _expando[jsObject] ??= RemoteConfig._fromJsObject(jsObject);
+  ) => _expando[jsObject] ??= RemoteConfig._fromJsObject(jsObject);
 
   RemoteConfig._fromJsObject(remote_config_interop.RemoteConfigJsImpl jsObject)
-      : super.fromJsObject(jsObject);
+    : super.fromJsObject(jsObject);
 
   /// Defines configuration for the Remote Config SDK.
   RemoteConfigSettings get settings =>
@@ -51,8 +50,8 @@ class RemoteConfig
   /// remoteConfig.defaultConfig['x'] = 1;        // Runtime error: attempt to modify an unmodifiable map.
   /// ```
   Map<String, dynamic> get defaultConfig => Map.unmodifiable(
-        jsObject.defaultConfig.dartify()! as Map<String, dynamic>,
-      );
+    jsObject.defaultConfig.dartify()! as Map<String, dynamic>,
+  );
 
   set defaultConfig(Map<String, dynamic> value) {
     jsObject.defaultConfig = value.jsify()! as JSObject;
@@ -100,16 +99,17 @@ class RemoteConfig
   /// Performs fetch and activate operations, as a convenience.
   /// Returns a promise which resolves to true if the current call activated the fetched configs.
   /// If the fetched configs were already activated, the promise will resolve to false.
-  Future<bool> fetchAndActivate() async =>
-      remote_config_interop.fetchAndActivate(jsObject).toDart.then(
-            (value) => value.toDart,
-          );
+  Future<bool> fetchAndActivate() async => remote_config_interop
+      .fetchAndActivate(jsObject)
+      .toDart
+      .then((value) => value.toDart);
 
   /// Returns all config values.
   Map<String, RemoteConfigValue> getAll() {
     // Return type is Map<Object?, Object?>
-    final map = remote_config_interop.getAll(jsObject).dartify()!
-        as Map<Object?, Object?>;
+    final map =
+        remote_config_interop.getAll(jsObject).dartify()!
+            as Map<Object?, Object?>;
     // Cast the map to <String, Object?> to mirror expected return type: Record<string, Value>;
     final castMap = map.cast<String, Object?>();
     final entries = castMap.keys.map<MapEntry<String, RemoteConfigValue>>(
@@ -119,13 +119,13 @@ class RemoteConfig
   }
 
   RemoteConfigValue getValue(String key) => RemoteConfigValue(
-        utf8.encode(
-          remote_config_interop.getValue(jsObject, key.toJS).asString().toDart,
-        ),
-        getSource(
-          remote_config_interop.getValue(jsObject, key.toJS).getSource().toDart,
-        ),
-      );
+    utf8.encode(
+      remote_config_interop.getValue(jsObject, key.toJS).asString().toDart,
+    ),
+    getSource(
+      remote_config_interop.getValue(jsObject, key.toJS).getSource().toDart,
+    ),
+  );
 
   ///  Gets the value for the given key as a boolean.
   ///  Convenience method for calling `remoteConfig.getValue(key).asString()`.
@@ -149,8 +149,7 @@ class RemoteConfig
         RemoteConfigLogLevel.debug: 'debug',
         RemoteConfigLogLevel.error: 'error',
         RemoteConfigLogLevel.silent: 'silent',
-      }[value]!
-          .toJS,
+      }[value]!.toJS,
     );
   }
 
@@ -171,14 +170,15 @@ class RemoteConfig
       };
       final nextWrapper =
           (remote_config_interop.ConfigUpdateJsImpl configUpdate) {
-        _onConfigUpdatedController
-            ?.add(RemoteConfigUpdatePayload._fromJsObject(configUpdate));
-      };
+            _onConfigUpdatedController?.add(
+              RemoteConfigUpdatePayload._fromJsObject(configUpdate),
+            );
+          };
       remote_config_interop.ConfigUpdateObserver observer =
           remote_config_interop.ConfigUpdateObserver(
-        error: errorWrapper.toJS,
-        next: nextWrapper.toJS,
-      );
+            error: errorWrapper.toJS,
+            next: nextWrapper.toJS,
+          );
 
       remote_config_interop.onConfigUpdate(jsObject, observer);
     }
@@ -242,11 +242,7 @@ enum RemoteConfigFetchStatus {
 }
 
 /// Defines levels of Remote Config logging.
-enum RemoteConfigLogLevel {
-  debug,
-  error,
-  silent,
-}
+enum RemoteConfigLogLevel { debug, error, silent }
 
 class RemoteConfigUpdatePayload
     extends JsObjectWrapper<remote_config_interop.ConfigUpdateJsImpl> {

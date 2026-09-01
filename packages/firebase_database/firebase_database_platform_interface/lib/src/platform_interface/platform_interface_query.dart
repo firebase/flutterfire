@@ -23,9 +23,7 @@ abstract class QueryPlatform extends PlatformInterface {
   }
 
   /// Create a [QueryPlatform] instance
-  QueryPlatform({
-    required this.database,
-  }) : super(token: _token);
+  QueryPlatform({required this.database}) : super(token: _token);
 
   /// Returns the path to this reference.
   String get path {

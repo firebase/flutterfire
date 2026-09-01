@@ -15,9 +15,7 @@ import 'package:pigeon/pigeon.dart';
     dartPackageName: 'firebase_core_platform_interface',
     kotlinOut:
         '../firebase_core/android/src/main/kotlin/io/flutter/plugins/firebase/core/GeneratedAndroidFirebaseCore.g.kt',
-    kotlinOptions: KotlinOptions(
-      package: 'io.flutter.plugins.firebase.core',
-    ),
+    kotlinOptions: KotlinOptions(package: 'io.flutter.plugins.firebase.core'),
     swiftOut:
         '../firebase_core/ios/firebase_core/Sources/firebase_core/FirebaseCoreMessages.g.swift',
     cppHeaderOut: '../firebase_core/windows/messages.g.h',
@@ -105,19 +103,11 @@ abstract class FirebaseCoreHostApi {
 @HostApi(dartHostTestHandler: 'TestFirebaseAppHostApi')
 abstract class FirebaseAppHostApi {
   @async
-  void setAutomaticDataCollectionEnabled(
-    String appName,
-    bool enabled,
-  );
+  void setAutomaticDataCollectionEnabled(String appName, bool enabled);
 
   @async
-  void setAutomaticResourceManagementEnabled(
-    String appName,
-    bool enabled,
-  );
+  void setAutomaticResourceManagementEnabled(String appName, bool enabled);
 
   @async
-  void delete(
-    String appName,
-  );
+  void delete(String appName);
 }

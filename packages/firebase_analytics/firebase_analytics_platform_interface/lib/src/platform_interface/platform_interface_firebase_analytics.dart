@@ -44,8 +44,10 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
     required FirebaseApp app,
     Map<String, dynamic>? webOptions,
   }) {
-    return FirebaseAnalyticsPlatform.instance
-        .delegateFor(app: app, webOptions: webOptions);
+    return FirebaseAnalyticsPlatform.instance.delegateFor(
+      app: app,
+      webOptions: webOptions,
+    );
   }
 
   /// The current default [FirebaseAnalyticsPlatform] instance.
@@ -131,10 +133,7 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
   /// Sets the user id.
   /// Setting a null [id] removes the user id.
   /// [callOptions] are for web platform only.
-  Future<void> setUserId({
-    String? id,
-    AnalyticsCallOptions? callOptions,
-  }) {
+  Future<void> setUserId({String? id, AnalyticsCallOptions? callOptions}) {
     throw UnimplementedError('setUserId() is not implemented');
   }
 
@@ -210,9 +209,7 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
     );
   }
 
-  Future<void> logTransaction({
-    required String transactionId,
-  }) {
+  Future<void> logTransaction({required String transactionId}) {
     throw UnimplementedError('logTransaction() is not implemented');
   }
 }

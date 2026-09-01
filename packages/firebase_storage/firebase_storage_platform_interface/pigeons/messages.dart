@@ -68,17 +68,12 @@ class InternalStorageReference {
 }
 
 class InternalFullMetaData {
-  const InternalFullMetaData({
-    required this.metadata,
-  });
+  const InternalFullMetaData({required this.metadata});
   final Map<String?, Object?>? metadata;
 }
 
 class InternalListOptions {
-  const InternalListOptions({
-    required this.maxResults,
-    this.pageToken,
-  });
+  const InternalListOptions({required this.maxResults, this.pageToken});
 
   /// If set, limits the total number of `prefixes` and `items` to return.
   ///
@@ -166,20 +161,11 @@ abstract class FirebaseStorageHostApi {
     String? bucket,
   );
   @async
-  void setMaxOperationRetryTime(
-    InternalStorageFirebaseApp app,
-    int time,
-  );
+  void setMaxOperationRetryTime(InternalStorageFirebaseApp app, int time);
   @async
-  void setMaxUploadRetryTime(
-    InternalStorageFirebaseApp app,
-    int time,
-  );
+  void setMaxUploadRetryTime(InternalStorageFirebaseApp app, int time);
   @async
-  void setMaxDownloadRetryTime(
-    InternalStorageFirebaseApp app,
-    int time,
-  );
+  void setMaxDownloadRetryTime(InternalStorageFirebaseApp app, int time);
 
   @async
   void useStorageEmulator(
@@ -273,20 +259,11 @@ abstract class FirebaseStorageHostApi {
 
   // APIs for Task class
   @async
-  Map<String, Object> taskPause(
-    InternalStorageFirebaseApp app,
-    int handle,
-  );
+  Map<String, Object> taskPause(InternalStorageFirebaseApp app, int handle);
 
   @async
-  Map<String, Object> taskResume(
-    InternalStorageFirebaseApp app,
-    int handle,
-  );
+  Map<String, Object> taskResume(InternalStorageFirebaseApp app, int handle);
 
   @async
-  Map<String, Object> taskCancel(
-    InternalStorageFirebaseApp app,
-    int handle,
-  );
+  Map<String, Object> taskCancel(InternalStorageFirebaseApp app, int handle);
 }

@@ -58,15 +58,18 @@ void main() {
     'schemaVersion': 1,
     'enforcement': 'OFF',
   };
-  final PasswordPolicy kMockPasswordPolicyObject =
-      PasswordPolicy(kMockPasswordPolicy);
+  final PasswordPolicy kMockPasswordPolicyObject = PasswordPolicy(
+    kMockPasswordPolicy,
+  );
   const int kMockPort = 31337;
 
   final TestAuthProvider testAuthProvider = TestAuthProvider();
-  final int kMockCreationTimestamp =
-      DateTime.now().subtract(const Duration(days: 2)).millisecondsSinceEpoch;
-  final int kMockLastSignInTimestamp =
-      DateTime.now().subtract(const Duration(days: 1)).millisecondsSinceEpoch;
+  final int kMockCreationTimestamp = DateTime.now()
+      .subtract(const Duration(days: 2))
+      .millisecondsSinceEpoch;
+  final int kMockLastSignInTimestamp = DateTime.now()
+      .subtract(const Duration(days: 1))
+      .millisecondsSinceEpoch;
 
   final kMockUser = InternalUserDetails(
     userInfo: InternalUserInfo(
@@ -84,7 +87,7 @@ void main() {
         'displayName': 'Flutter Test User',
         'photoUrl': 'http://www.example.com/',
         'email': 'test@example.com',
-      }
+      },
     ],
   );
 
@@ -120,7 +123,10 @@ void main() {
       user = kMockUser;
 
       mockUserPlatform = MockUserPlatform(
-          mockAuthPlatform, TestMultiFactorPlatform(mockAuthPlatform), user);
+        mockAuthPlatform,
+        TestMultiFactorPlatform(mockAuthPlatform),
+        user,
+      );
       mockConfirmationResultPlatform = MockConfirmationResultPlatform();
       mockAdditionalUserInfo = AdditionalUserInfo(
         isNewUser: false,
@@ -128,10 +134,9 @@ void main() {
         providerId: 'testProvider',
         profile: <String, dynamic>{'foo': 'bar'},
       );
-      mockCredential = EmailAuthProvider.credential(
-        email: 'test',
-        password: 'test',
-      ) as EmailAuthCredential;
+      mockCredential =
+          EmailAuthProvider.credential(email: 'test', password: 'test')
+              as EmailAuthCredential;
       mockUserCredPlatform = MockUserCredentialPlatform(
         FirebaseAuthPlatform.instance,
         mockAdditionalUserInfo,
@@ -140,68 +145,89 @@ void main() {
       );
       mockVerifier = MockRecaptchaVerifier();
 
-      when(mockAuthPlatform.signInAnonymously())
-          .thenAnswer((_) async => mockUserCredPlatform);
+      when(
+        mockAuthPlatform.signInAnonymously(),
+      ).thenAnswer((_) async => mockUserCredPlatform);
 
       when(mockAuthPlatform.signInWithCredential(any)).thenAnswer(
-          (_) => Future<UserCredentialPlatform>.value(mockUserCredPlatform));
+        (_) => Future<UserCredentialPlatform>.value(mockUserCredPlatform),
+      );
 
       when(mockAuthPlatform.currentUser).thenReturn(mockUserPlatform);
 
-      when(mockAuthPlatform.instanceFor(
-        app: anyNamed('app'),
-        pluginConstants: anyNamed('pluginConstants'),
-      )).thenAnswer((_) => mockUserPlatform);
+      when(
+        mockAuthPlatform.instanceFor(
+          app: anyNamed('app'),
+          pluginConstants: anyNamed('pluginConstants'),
+        ),
+      ).thenAnswer((_) => mockUserPlatform);
 
-      when(mockAuthPlatform.delegateFor(
-        app: anyNamed('app'),
-      )).thenAnswer((_) => mockAuthPlatform);
+      when(
+        mockAuthPlatform.delegateFor(app: anyNamed('app')),
+      ).thenAnswer((_) => mockAuthPlatform);
 
-      when(mockAuthPlatform.setInitialValues(
-        currentUser: anyNamed('currentUser'),
-        languageCode: anyNamed('languageCode'),
-      )).thenAnswer((_) => mockAuthPlatform);
+      when(
+        mockAuthPlatform.setInitialValues(
+          currentUser: anyNamed('currentUser'),
+          languageCode: anyNamed('languageCode'),
+        ),
+      ).thenAnswer((_) => mockAuthPlatform);
 
-      when(mockAuthPlatform.createUserWithEmailAndPassword(any, any))
-          .thenAnswer((_) async => mockUserCredPlatform);
+      when(
+        mockAuthPlatform.createUserWithEmailAndPassword(any, any),
+      ).thenAnswer((_) async => mockUserCredPlatform);
 
-      when(mockAuthPlatform.getRedirectResult())
-          .thenAnswer((_) async => mockUserCredPlatform);
+      when(
+        mockAuthPlatform.getRedirectResult(),
+      ).thenAnswer((_) async => mockUserCredPlatform);
 
-      when(mockAuthPlatform.signInWithCustomToken(any))
-          .thenAnswer((_) async => mockUserCredPlatform);
+      when(
+        mockAuthPlatform.signInWithCustomToken(any),
+      ).thenAnswer((_) async => mockUserCredPlatform);
 
-      when(mockAuthPlatform.signInWithEmailAndPassword(any, any))
-          .thenAnswer((_) async => mockUserCredPlatform);
+      when(
+        mockAuthPlatform.signInWithEmailAndPassword(any, any),
+      ).thenAnswer((_) async => mockUserCredPlatform);
 
-      when(mockAuthPlatform.signInWithEmailLink(any, any))
-          .thenAnswer((_) async => mockUserCredPlatform);
+      when(
+        mockAuthPlatform.signInWithEmailLink(any, any),
+      ).thenAnswer((_) async => mockUserCredPlatform);
 
-      when(mockAuthPlatform.signInWithPhoneNumber(any, any))
-          .thenAnswer((_) async => mockConfirmationResultPlatform);
+      when(
+        mockAuthPlatform.signInWithPhoneNumber(any, any),
+      ).thenAnswer((_) async => mockConfirmationResultPlatform);
 
       when(mockVerifier.delegate).thenReturn(mockVerifier.mockDelegate);
 
-      when(mockAuthPlatform.signInWithPopup(any))
-          .thenAnswer((_) async => mockUserCredPlatform);
+      when(
+        mockAuthPlatform.signInWithPopup(any),
+      ).thenAnswer((_) async => mockUserCredPlatform);
 
-      when(mockAuthPlatform.signInWithRedirect(any))
-          .thenAnswer((_) async => mockUserCredPlatform);
+      when(
+        mockAuthPlatform.signInWithRedirect(any),
+      ).thenAnswer((_) async => mockUserCredPlatform);
 
-      when(mockAuthPlatform.authStateChanges()).thenAnswer((_) =>
-          Stream<UserPlatform>.fromIterable(<UserPlatform>[mockUserPlatform]));
+      when(mockAuthPlatform.authStateChanges()).thenAnswer(
+        (_) =>
+            Stream<UserPlatform>.fromIterable(<UserPlatform>[mockUserPlatform]),
+      );
 
-      when(mockAuthPlatform.idTokenChanges()).thenAnswer((_) =>
-          Stream<UserPlatform>.fromIterable(<UserPlatform>[mockUserPlatform]));
+      when(mockAuthPlatform.idTokenChanges()).thenAnswer(
+        (_) =>
+            Stream<UserPlatform>.fromIterable(<UserPlatform>[mockUserPlatform]),
+      );
 
-      when(mockAuthPlatform.userChanges()).thenAnswer((_) =>
-          Stream<UserPlatform>.fromIterable(<UserPlatform>[mockUserPlatform]));
+      when(mockAuthPlatform.userChanges()).thenAnswer(
+        (_) =>
+            Stream<UserPlatform>.fromIterable(<UserPlatform>[mockUserPlatform]),
+      );
 
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(MethodChannelFirebaseAuth.channel,
-              (call) async {
-        return <String, dynamic>{'user': user};
-      });
+          .setMockMethodCallHandler(MethodChannelFirebaseAuth.channel, (
+            call,
+          ) async {
+            return <String, dynamic>{'user': user};
+          });
     });
 
     // incremented after tests completed, in case a test may want to use this
@@ -216,8 +242,9 @@ void main() {
     group('emulator', () {
       test('useAuthEmulator() should call delegate method', () async {
         // Necessary as we otherwise get a "null is not a Future<void>" error
-        when(mockAuthPlatform.useAuthEmulator(kMockHost, kMockPort))
-            .thenAnswer((i) async {});
+        when(
+          mockAuthPlatform.useAuthEmulator(kMockHost, kMockPort),
+        ).thenAnswer((i) async {});
         await auth.useAuthEmulator(kMockHost, kMockPort);
         verify(mockAuthPlatform.useAuthEmulator(kMockHost, kMockPort));
       });
@@ -231,51 +258,56 @@ void main() {
       });
     });
 
-    test('creates a fresh instance after app delete and reinitialize',
-        () async {
-      final appName = 'delete-reinit-$testCount';
-      const options = FirebaseOptions(
-        apiKey: 'apiKey',
-        appId: 'appId',
-        messagingSenderId: 'messagingSenderId',
-        projectId: 'projectId',
-      );
-      final app = await Firebase.initializeApp(
-        name: appName,
-        options: options,
-      );
-      final auth1 = FirebaseAuth.instanceFor(app: app);
+    test(
+      'creates a fresh instance after app delete and reinitialize',
+      () async {
+        final appName = 'delete-reinit-$testCount';
+        const options = FirebaseOptions(
+          apiKey: 'apiKey',
+          appId: 'appId',
+          messagingSenderId: 'messagingSenderId',
+          projectId: 'projectId',
+        );
+        final app = await Firebase.initializeApp(
+          name: appName,
+          options: options,
+        );
+        final auth1 = FirebaseAuth.instanceFor(app: app);
 
-      expect(app.getService<FirebaseAuth>(), same(auth1));
+        expect(app.getService<FirebaseAuth>(), same(auth1));
 
-      await app.delete();
+        await app.delete();
 
-      final app2 = await Firebase.initializeApp(
-        name: appName,
-        options: options,
-      );
-      addTearDown(app2.delete);
+        final app2 = await Firebase.initializeApp(
+          name: appName,
+          options: options,
+        );
+        addTearDown(app2.delete);
 
-      final auth2 = FirebaseAuth.instanceFor(app: app2);
+        final auth2 = FirebaseAuth.instanceFor(app: app2);
 
-      expect(auth2, isNot(same(auth1)));
-      expect(auth2.app, app2);
-      expect(app2.getService<FirebaseAuth>(), same(auth2));
-    });
+        expect(auth2, isNot(same(auth1)));
+        expect(auth2.app, app2);
+        expect(app2.getService<FirebaseAuth>(), same(auth2));
+      },
+    );
 
     group('tenantId', () {
       test('set tenantId should call delegate method', () async {
         // Each test uses a unique FirebaseApp instance to avoid sharing state
         final app = await Firebase.initializeApp(
-            name: 'tenantIdTest',
-            options: const FirebaseOptions(
-                apiKey: 'apiKey',
-                appId: 'appId',
-                messagingSenderId: 'messagingSenderId',
-                projectId: 'projectId'));
+          name: 'tenantIdTest',
+          options: const FirebaseOptions(
+            apiKey: 'apiKey',
+            appId: 'appId',
+            messagingSenderId: 'messagingSenderId',
+            projectId: 'projectId',
+          ),
+        );
 
-        FirebaseAuthPlatform.instance =
-            FakeFirebaseAuthPlatform(tenantId: 'foo');
+        FirebaseAuthPlatform.instance = FakeFirebaseAuthPlatform(
+          tenantId: 'foo',
+        );
         auth = FirebaseAuth.instanceFor(app: app);
 
         expect(auth.tenantId, 'foo');
@@ -291,15 +323,18 @@ void main() {
       test('set customAuthDomain should call delegate method', () async {
         // Each test uses a unique FirebaseApp instance to avoid sharing state
         final app = await Firebase.initializeApp(
-            name: 'customAuthDomainTest',
-            options: const FirebaseOptions(
-                apiKey: 'apiKey',
-                appId: 'appId',
-                messagingSenderId: 'messagingSenderId',
-                projectId: 'projectId'));
+          name: 'customAuthDomainTest',
+          options: const FirebaseOptions(
+            apiKey: 'apiKey',
+            appId: 'appId',
+            messagingSenderId: 'messagingSenderId',
+            projectId: 'projectId',
+          ),
+        );
 
-        FirebaseAuthPlatform.instance =
-            FakeFirebaseAuthPlatform(customAuthDomain: 'foo');
+        FirebaseAuthPlatform.instance = FakeFirebaseAuthPlatform(
+          customAuthDomain: 'foo',
+        );
         auth = FirebaseAuth.instanceFor(app: app);
 
         expect(auth.customAuthDomain, 'foo');
@@ -351,41 +386,47 @@ void main() {
     group('confirmPasswordReset()', () {
       test('should call delegate method', () async {
         // Necessary as we otherwise get a "null is not a Future<void>" error
-        when(mockAuthPlatform.confirmPasswordReset(any, any))
-            .thenAnswer((i) async {});
+        when(
+          mockAuthPlatform.confirmPasswordReset(any, any),
+        ).thenAnswer((i) async {});
 
         await auth.confirmPasswordReset(
           code: kMockActionCode,
           newPassword: kMockPassword,
         );
-        verify(mockAuthPlatform.confirmPasswordReset(
-            kMockActionCode, kMockPassword));
+        verify(
+          mockAuthPlatform.confirmPasswordReset(kMockActionCode, kMockPassword),
+        );
       });
     });
 
     group('createUserWithEmailAndPassword()', () {
       test('should call delegate method', () async {
         // Necessary as we otherwise get a "null is not a Future<void>" error
-        when(mockAuthPlatform.createUserWithEmailAndPassword(any, any))
-            .thenAnswer((i) async => EmptyUserCredentialPlatform());
+        when(
+          mockAuthPlatform.createUserWithEmailAndPassword(any, any),
+        ).thenAnswer((i) async => EmptyUserCredentialPlatform());
 
         await auth.createUserWithEmailAndPassword(
           email: kMockEmail,
           password: kMockPassword,
         );
 
-        verify(mockAuthPlatform.createUserWithEmailAndPassword(
-          kMockEmail,
-          kMockPassword,
-        ));
+        verify(
+          mockAuthPlatform.createUserWithEmailAndPassword(
+            kMockEmail,
+            kMockPassword,
+          ),
+        );
       });
     });
 
     group('getRedirectResult()', () {
       test('should call delegate method', () async {
         // Necessary as we otherwise get a "null is not a Future<void>" error
-        when(mockAuthPlatform.getRedirectResult())
-            .thenAnswer((i) async => EmptyUserCredentialPlatform());
+        when(
+          mockAuthPlatform.getRedirectResult(),
+        ).thenAnswer((i) async => EmptyUserCredentialPlatform());
 
         await auth.getRedirectResult();
         verify(mockAuthPlatform.getRedirectResult());
@@ -395,8 +436,9 @@ void main() {
     group('isSignInWithEmailLink()', () {
       test('should call delegate method', () async {
         // Necessary as we otherwise get a "null is not a Future<void>" error
-        when(mockAuthPlatform.isSignInWithEmailLink(any))
-            .thenAnswer((i) => false);
+        when(
+          mockAuthPlatform.isSignInWithEmailLink(any),
+        ).thenAnswer((i) => false);
 
         auth.isSignInWithEmailLink(kMockURL);
         verify(mockAuthPlatform.isSignInWithEmailLink(kMockURL));
@@ -405,24 +447,27 @@ void main() {
 
     group('authStateChanges()', () {
       test('should stream changes', () async {
-        final StreamQueue<User?> changes =
-            StreamQueue<User?>(auth.authStateChanges());
+        final StreamQueue<User?> changes = StreamQueue<User?>(
+          auth.authStateChanges(),
+        );
         expect(await changes.next, isA<User>());
       });
     });
 
     group('idTokenChanges()', () {
       test('should stream changes', () async {
-        final StreamQueue<User?> changes =
-            StreamQueue<User?>(auth.idTokenChanges());
+        final StreamQueue<User?> changes = StreamQueue<User?>(
+          auth.idTokenChanges(),
+        );
         expect(await changes.next, isA<User>());
       });
     });
 
     group('userChanges()', () {
       test('should stream changes', () async {
-        final StreamQueue<User?> changes =
-            StreamQueue<User?>(auth.userChanges());
+        final StreamQueue<User?> changes = StreamQueue<User?>(
+          auth.userChanges(),
+        );
         expect(await changes.next, isA<User>());
       });
     });
@@ -430,8 +475,9 @@ void main() {
     group('sendPasswordResetEmail()', () {
       test('should call delegate method', () async {
         // Necessary as we otherwise get a "null is not a Future<void>" error
-        when(mockAuthPlatform.sendPasswordResetEmail(any))
-            .thenAnswer((i) async {});
+        when(
+          mockAuthPlatform.sendPasswordResetEmail(any),
+        ).thenAnswer((i) async {});
 
         await auth.sendPasswordResetEmail(email: kMockEmail);
         verify(mockAuthPlatform.sendPasswordResetEmail(kMockEmail));
@@ -441,8 +487,9 @@ void main() {
     group('sendPasswordResetEmail()', () {
       test('should call delegate method', () async {
         // Necessary as we otherwise get a "null is not a Future<void>" error
-        when(mockAuthPlatform.sendPasswordResetEmail(any))
-            .thenAnswer((i) async {});
+        when(
+          mockAuthPlatform.sendPasswordResetEmail(any),
+        ).thenAnswer((i) async {});
 
         await auth.sendPasswordResetEmail(email: kMockEmail);
         verify(mockAuthPlatform.sendPasswordResetEmail(kMockEmail));
@@ -450,37 +497,43 @@ void main() {
     });
 
     group('sendSignInLinkToEmail()', () {
-      test('should throw if actionCodeSettings.handleCodeInApp is not true',
-          () async {
-        // Necessary as we otherwise get a "null is not a Future<void>" error
-        when(mockAuthPlatform.sendSignInLinkToEmail(any, any))
-            .thenAnswer((i) async {});
+      test(
+        'should throw if actionCodeSettings.handleCodeInApp is not true',
+        () async {
+          // Necessary as we otherwise get a "null is not a Future<void>" error
+          when(
+            mockAuthPlatform.sendSignInLinkToEmail(any, any),
+          ).thenAnswer((i) async {});
 
-        final ActionCodeSettings kMockActionCodeSettingsNull =
-            ActionCodeSettings(url: kMockURL);
-        final ActionCodeSettings kMockActionCodeSettingsFalse =
-            ActionCodeSettings(url: kMockURL);
+          final ActionCodeSettings kMockActionCodeSettingsNull =
+              ActionCodeSettings(url: kMockURL);
+          final ActionCodeSettings kMockActionCodeSettingsFalse =
+              ActionCodeSettings(url: kMockURL);
 
-        // when handleCodeInApp is null
-        expect(
-          () => auth.sendSignInLinkToEmail(
+          // when handleCodeInApp is null
+          expect(
+            () => auth.sendSignInLinkToEmail(
               email: kMockEmail,
-              actionCodeSettings: kMockActionCodeSettingsNull),
-          throwsArgumentError,
-        );
-        // when handleCodeInApp is false
-        expect(
-          () => auth.sendSignInLinkToEmail(
+              actionCodeSettings: kMockActionCodeSettingsNull,
+            ),
+            throwsArgumentError,
+          );
+          // when handleCodeInApp is false
+          expect(
+            () => auth.sendSignInLinkToEmail(
               email: kMockEmail,
-              actionCodeSettings: kMockActionCodeSettingsFalse),
-          throwsArgumentError,
-        );
-      });
+              actionCodeSettings: kMockActionCodeSettingsFalse,
+            ),
+            throwsArgumentError,
+          );
+        },
+      );
 
       test('should call delegate method', () async {
         // Necessary as we otherwise get a "null is not a Future<void>" error
-        when(mockAuthPlatform.sendSignInLinkToEmail(any, any))
-            .thenAnswer((i) async {});
+        when(
+          mockAuthPlatform.sendSignInLinkToEmail(any, any),
+        ).thenAnswer((i) async {});
 
         final ActionCodeSettings kMockActionCodeSettingsValid =
             ActionCodeSettings(url: kMockURL, handleCodeInApp: true);
@@ -490,24 +543,28 @@ void main() {
           actionCodeSettings: kMockActionCodeSettingsValid,
         );
 
-        verify(mockAuthPlatform.sendSignInLinkToEmail(
-          kMockEmail,
-          kMockActionCodeSettingsValid,
-        ));
+        verify(
+          mockAuthPlatform.sendSignInLinkToEmail(
+            kMockEmail,
+            kMockActionCodeSettingsValid,
+          ),
+        );
       });
     });
 
     group('setSettings()', () {
       test('should call delegate method', () async {
         // Necessary as we otherwise get a "null is not a Future<void>" error
-        when(mockAuthPlatform.setSettings(
-          appVerificationDisabledForTesting: any,
-          phoneNumber: any,
-          smsCode: any,
-          forceRecaptchaFlow: any,
-          userAccessGroup: any,
-          migrateCurrentUser: true,
-        )).thenAnswer((i) async {});
+        when(
+          mockAuthPlatform.setSettings(
+            appVerificationDisabledForTesting: any,
+            phoneNumber: any,
+            smsCode: any,
+            forceRecaptchaFlow: any,
+            userAccessGroup: any,
+            migrateCurrentUser: true,
+          ),
+        ).thenAnswer((i) async {});
 
         String phoneNumber = '123456';
         String smsCode = '1234';
@@ -552,8 +609,9 @@ void main() {
     group('signInAnonymously()', () {
       test('should call delegate method', () async {
         // Necessary as we otherwise get a "null is not a Future<void>" error
-        when(mockAuthPlatform.signInAnonymously())
-            .thenAnswer((i) async => EmptyUserCredentialPlatform());
+        when(
+          mockAuthPlatform.signInAnonymously(),
+        ).thenAnswer((i) async => EmptyUserCredentialPlatform());
 
         await auth.signInAnonymously();
         verify(mockAuthPlatform.signInAnonymously());
@@ -562,13 +620,13 @@ void main() {
 
     group('signInWithCredential()', () {
       test('GithubAuthProvider signInWithCredential', () async {
-        final AuthCredential credential =
-            GithubAuthProvider.credential(kMockGithubToken);
+        final AuthCredential credential = GithubAuthProvider.credential(
+          kMockGithubToken,
+        );
         await auth.signInWithCredential(credential);
-        final captured =
-            verify(mockAuthPlatform.signInWithCredential(captureAny))
-                .captured
-                .single;
+        final captured = verify(
+          mockAuthPlatform.signInWithCredential(captureAny),
+        ).captured.single;
         expect(captured, isA<GithubAuthCredential>());
         expect(captured.providerId, equals('github.com'));
         expect(captured.accessToken, equals(kMockGithubToken));
@@ -580,14 +638,15 @@ void main() {
           emailLink: '<Url with domain from your Firebase project>',
         );
         await auth.signInWithCredential(credential);
-        final EmailAuthCredential captured =
-            verify(mockAuthPlatform.signInWithCredential(captureAny))
-                .captured
-                .single;
+        final EmailAuthCredential captured = verify(
+          mockAuthPlatform.signInWithCredential(captureAny),
+        ).captured.single;
         expect(captured.providerId, equals('password'));
         expect(captured.email, equals('test@example.com'));
-        expect(captured.emailLink,
-            equals('<Url with domain from your Firebase project>'));
+        expect(
+          captured.emailLink,
+          equals('<Url with domain from your Firebase project>'),
+        );
       });
 
       test('TwitterAuthProvider signInWithCredential', () async {
@@ -596,10 +655,9 @@ void main() {
           secret: kMockAccessToken,
         );
         await auth.signInWithCredential(credential);
-        final captured =
-            verify(mockAuthPlatform.signInWithCredential(captureAny))
-                .captured
-                .single;
+        final captured = verify(
+          mockAuthPlatform.signInWithCredential(captureAny),
+        ).captured.single;
         expect(captured, isA<TwitterAuthCredential>());
         expect(captured.providerId, equals('twitter.com'));
         expect(captured.accessToken, equals(kMockIdToken));
@@ -612,10 +670,9 @@ void main() {
           accessToken: kMockAccessToken,
         );
         await auth.signInWithCredential(credential);
-        final captured =
-            verify(mockAuthPlatform.signInWithCredential(captureAny))
-                .captured
-                .single;
+        final captured = verify(
+          mockAuthPlatform.signInWithCredential(captureAny),
+        ).captured.single;
         expect(captured, isA<GoogleAuthCredential>());
         expect(captured.providerId, equals('google.com'));
         expect(captured.idToken, equals(kMockIdToken));
@@ -629,53 +686,53 @@ void main() {
           accessToken: kMockAccessToken,
         );
         await auth.signInWithCredential(credential);
-        final captured =
-            verify(mockAuthPlatform.signInWithCredential(captureAny))
-                .captured
-                .single;
+        final captured = verify(
+          mockAuthPlatform.signInWithCredential(captureAny),
+        ).captured.single;
         expect(captured.providerId, equals('apple.com'));
         expect(captured.idToken, equals(kMockIdToken));
         expect(captured.accessToken, equals(kMockAccessToken));
         expect(captured.rawNonce, equals(null));
       });
 
-      test('OAuthProvider signInWithCredential for Apple with rawNonce',
-          () async {
-        OAuthProvider oAuthProvider = OAuthProvider('apple.com');
-        final AuthCredential credential = oAuthProvider.credential(
-          idToken: kMockIdToken,
-          rawNonce: kMockRawNonce,
-          accessToken: kMockAccessToken,
-        );
-        await auth.signInWithCredential(credential);
-        final captured =
-            verify(mockAuthPlatform.signInWithCredential(captureAny))
-                .captured
-                .single;
-        expect(captured.providerId, equals('apple.com'));
-        expect(captured.idToken, equals(kMockIdToken));
-        expect(captured.rawNonce, equals(kMockRawNonce));
-        expect(captured.accessToken, equals(kMockAccessToken));
-      });
+      test(
+        'OAuthProvider signInWithCredential for Apple with rawNonce',
+        () async {
+          OAuthProvider oAuthProvider = OAuthProvider('apple.com');
+          final AuthCredential credential = oAuthProvider.credential(
+            idToken: kMockIdToken,
+            rawNonce: kMockRawNonce,
+            accessToken: kMockAccessToken,
+          );
+          await auth.signInWithCredential(credential);
+          final captured = verify(
+            mockAuthPlatform.signInWithCredential(captureAny),
+          ).captured.single;
+          expect(captured.providerId, equals('apple.com'));
+          expect(captured.idToken, equals(kMockIdToken));
+          expect(captured.rawNonce, equals(kMockRawNonce));
+          expect(captured.accessToken, equals(kMockAccessToken));
+        },
+      );
 
       test(
-          'OAuthProvider signInWithCredential for Apple with rawNonce (empty accessToken)',
-          () async {
-        OAuthProvider oAuthProvider = OAuthProvider('apple.com');
-        final AuthCredential credential = oAuthProvider.credential(
-          idToken: kMockIdToken,
-          rawNonce: kMockRawNonce,
-        );
-        await auth.signInWithCredential(credential);
-        final captured =
-            verify(mockAuthPlatform.signInWithCredential(captureAny))
-                .captured
-                .single;
-        expect(captured.providerId, equals('apple.com'));
-        expect(captured.idToken, equals(kMockIdToken));
-        expect(captured.rawNonce, equals(kMockRawNonce));
-        expect(captured.accessToken, equals(null));
-      });
+        'OAuthProvider signInWithCredential for Apple with rawNonce (empty accessToken)',
+        () async {
+          OAuthProvider oAuthProvider = OAuthProvider('apple.com');
+          final AuthCredential credential = oAuthProvider.credential(
+            idToken: kMockIdToken,
+            rawNonce: kMockRawNonce,
+          );
+          await auth.signInWithCredential(credential);
+          final captured = verify(
+            mockAuthPlatform.signInWithCredential(captureAny),
+          ).captured.single;
+          expect(captured.providerId, equals('apple.com'));
+          expect(captured.idToken, equals(kMockIdToken));
+          expect(captured.rawNonce, equals(kMockRawNonce));
+          expect(captured.accessToken, equals(null));
+        },
+      );
 
       test('PhoneAuthProvider signInWithCredential', () async {
         final PhoneAuthCredential credential = PhoneAuthProvider.credential(
@@ -683,23 +740,22 @@ void main() {
           smsCode: kMockSmsCode,
         );
         await auth.signInWithCredential(credential);
-        final PhoneAuthCredential captured =
-            verify(mockAuthPlatform.signInWithCredential(captureAny))
-                .captured
-                .single;
+        final PhoneAuthCredential captured = verify(
+          mockAuthPlatform.signInWithCredential(captureAny),
+        ).captured.single;
         expect(captured.providerId, equals('phone'));
         expect(captured.verificationId, equals(kMockVerificationId));
         expect(captured.smsCode, equals(kMockSmsCode));
       });
 
       test('FacebookAuthProvider signInWithCredential', () async {
-        final AuthCredential credential =
-            FacebookAuthProvider.credential(kMockAccessToken);
+        final AuthCredential credential = FacebookAuthProvider.credential(
+          kMockAccessToken,
+        );
         await auth.signInWithCredential(credential);
-        final captured =
-            verify(mockAuthPlatform.signInWithCredential(captureAny))
-                .captured
-                .single;
+        final captured = verify(
+          mockAuthPlatform.signInWithCredential(captureAny),
+        ).captured.single;
         expect(captured, isA<FacebookAuthCredential>());
         expect(captured.providerId, equals('facebook.com'));
         expect(captured.accessToken, equals(kMockAccessToken));
@@ -716,9 +772,15 @@ void main() {
     group('signInWithEmailAndPassword()', () {
       test('should call delegate method', () async {
         await auth.signInWithEmailAndPassword(
-            email: kMockEmail, password: kMockPassword);
-        verify(mockAuthPlatform.signInWithEmailAndPassword(
-            kMockEmail, kMockPassword));
+          email: kMockEmail,
+          password: kMockPassword,
+        );
+        verify(
+          mockAuthPlatform.signInWithEmailAndPassword(
+            kMockEmail,
+            kMockPassword,
+          ),
+        );
       });
     });
 
@@ -763,8 +825,9 @@ void main() {
     group('verifyPasswordResetCode()', () {
       test('should call delegate method', () async {
         // Necessary as we otherwise get a "null is not a Future<void>" error
-        when(mockAuthPlatform.verifyPasswordResetCode(any))
-            .thenAnswer((i) async => '');
+        when(
+          mockAuthPlatform.verifyPasswordResetCode(any),
+        ).thenAnswer((i) async => '');
 
         await auth.verifyPasswordResetCode(kMockOobCode);
         verify(mockAuthPlatform.verifyPasswordResetCode(kMockOobCode));
@@ -774,17 +837,20 @@ void main() {
     group('verifyPhoneNumber()', () {
       test('should call delegate method', () async {
         // Necessary as we otherwise get a "null is not a Future<void>" error
-        when(mockAuthPlatform.verifyPhoneNumber(
-          autoRetrievedSmsCodeForTesting:
-              anyNamed('autoRetrievedSmsCodeForTesting'),
-          codeAutoRetrievalTimeout: anyNamed('codeAutoRetrievalTimeout'),
-          codeSent: anyNamed('codeSent'),
-          forceResendingToken: anyNamed('forceResendingToken'),
-          phoneNumber: anyNamed('phoneNumber'),
-          timeout: anyNamed('timeout'),
-          verificationCompleted: anyNamed('verificationCompleted'),
-          verificationFailed: anyNamed('verificationFailed'),
-        )).thenAnswer((i) async {});
+        when(
+          mockAuthPlatform.verifyPhoneNumber(
+            autoRetrievedSmsCodeForTesting: anyNamed(
+              'autoRetrievedSmsCodeForTesting',
+            ),
+            codeAutoRetrievalTimeout: anyNamed('codeAutoRetrievalTimeout'),
+            codeSent: anyNamed('codeSent'),
+            forceResendingToken: anyNamed('forceResendingToken'),
+            phoneNumber: anyNamed('phoneNumber'),
+            timeout: anyNamed('timeout'),
+            verificationCompleted: anyNamed('verificationCompleted'),
+            verificationFailed: anyNamed('verificationFailed'),
+          ),
+        ).thenAnswer((i) async {});
 
         final PhoneVerificationCompleted verificationCompleted =
             (PhoneAuthCredential phoneAuthCredential) {};
@@ -818,8 +884,9 @@ void main() {
     group('revokeAccessToken()', () {
       test('should call delegate method', () async {
         // Necessary as we otherwise get a "null is not a Future<void>" error
-        when(mockAuthPlatform.revokeAccessToken(kMockAuthToken))
-            .thenAnswer((i) async {});
+        when(
+          mockAuthPlatform.revokeAccessToken(kMockAuthToken),
+        ).thenAnswer((i) async {});
 
         await auth.revokeAccessToken(kMockAuthToken);
         verify(mockAuthPlatform.revokeAccessToken(kMockAuthToken));
@@ -827,65 +894,75 @@ void main() {
     });
 
     group('passwordPolicy', () {
-      test('passwordPolicy should be initialized with correct parameters',
-          () async {
-        PasswordPolicyImpl passwordPolicy =
-            PasswordPolicyImpl(kMockPasswordPolicyObject);
-        expect(passwordPolicy.policy, equals(kMockPasswordPolicyObject));
-      });
+      test(
+        'passwordPolicy should be initialized with correct parameters',
+        () async {
+          PasswordPolicyImpl passwordPolicy = PasswordPolicyImpl(
+            kMockPasswordPolicyObject,
+          );
+          expect(passwordPolicy.policy, equals(kMockPasswordPolicyObject));
+        },
+      );
 
-      PasswordPolicyImpl passwordPolicy =
-          PasswordPolicyImpl(kMockPasswordPolicyObject);
+      PasswordPolicyImpl passwordPolicy = PasswordPolicyImpl(
+        kMockPasswordPolicyObject,
+      );
 
       test('should return true for valid password', () async {
-        final PasswordValidationStatus status =
-            passwordPolicy.isPasswordValid(kMockValidPassword);
+        final PasswordValidationStatus status = passwordPolicy.isPasswordValid(
+          kMockValidPassword,
+        );
         expect(status.isValid, isTrue);
       });
 
-      test('should return false for invalid password that is too short',
-          () async {
-        final PasswordValidationStatus status =
-            passwordPolicy.isPasswordValid(kMockInvalidPassword);
-        expect(status.isValid, isFalse);
-      });
+      test(
+        'should return false for invalid password that is too short',
+        () async {
+          final PasswordValidationStatus status = passwordPolicy
+              .isPasswordValid(kMockInvalidPassword);
+          expect(status.isValid, isFalse);
+        },
+      );
 
       test(
-          'should return false for invalid password with no capital characters',
-          () async {
-        final PasswordValidationStatus status =
-            passwordPolicy.isPasswordValid(kMockInvalidPassword2);
-        expect(status.isValid, isFalse);
-      });
+        'should return false for invalid password with no capital characters',
+        () async {
+          final PasswordValidationStatus status = passwordPolicy
+              .isPasswordValid(kMockInvalidPassword2);
+          expect(status.isValid, isFalse);
+        },
+      );
 
       test(
-          'should return false for invalid password with no lowercase characters',
-          () async {
-        final PasswordValidationStatus status =
-            passwordPolicy.isPasswordValid(kMockInvalidPassword3);
-        expect(status.isValid, isFalse);
-      });
+        'should return false for invalid password with no lowercase characters',
+        () async {
+          final PasswordValidationStatus status = passwordPolicy
+              .isPasswordValid(kMockInvalidPassword3);
+          expect(status.isValid, isFalse);
+        },
+      );
 
-      test('should return false for invalid password with no numbers',
-          () async {
-        final PasswordValidationStatus status =
-            passwordPolicy.isPasswordValid(kMockInvalidPassword4);
-        expect(status.isValid, isFalse);
-      });
+      test(
+        'should return false for invalid password with no numbers',
+        () async {
+          final PasswordValidationStatus status = passwordPolicy
+              .isPasswordValid(kMockInvalidPassword4);
+          expect(status.isValid, isFalse);
+        },
+      );
 
-      test('should return false for invalid password with no symbols',
-          () async {
-        final PasswordValidationStatus status =
-            passwordPolicy.isPasswordValid(kMockInvalidPassword5);
-        expect(status.isValid, isFalse);
-      });
+      test(
+        'should return false for invalid password with no symbols',
+        () async {
+          final PasswordValidationStatus status = passwordPolicy
+              .isPasswordValid(kMockInvalidPassword5);
+          expect(status.isValid, isFalse);
+        },
+      );
     });
 
     test('toString()', () async {
-      expect(
-        auth.toString(),
-        equals('FirebaseAuth(app: $testCount)'),
-      );
+      expect(auth.toString(), equals('FirebaseAuth(app: $testCount)'));
     });
   });
 }
@@ -921,8 +998,10 @@ class MockFirebaseAuth extends Mock
   }
 
   @override
-  FirebaseAuthPlatform delegateFor(
-      {FirebaseApp? app, Persistence? persistence}) {
+  FirebaseAuthPlatform delegateFor({
+    FirebaseApp? app,
+    Persistence? persistence,
+  }) {
     return super.noSuchMethod(
       Invocation.method(#delegateFor, [], {#app: app}),
       returnValue: TestFirebaseAuthPlatform(),
@@ -948,10 +1027,10 @@ class MockFirebaseAuth extends Mock
     RecaptchaVerifierFactoryPlatform? applicationVerifier,
   ) {
     return super.noSuchMethod(
-      Invocation.method(
-        #signInWithPhoneNumber,
-        [phoneNumber, applicationVerifier],
-      ),
+      Invocation.method(#signInWithPhoneNumber, [
+        phoneNumber,
+        applicationVerifier,
+      ]),
       returnValue: neverEndingFuture<ConfirmationResultPlatform>(),
       returnValueForMissingStub:
           neverEndingFuture<ConfirmationResultPlatform>(),
@@ -1223,8 +1302,10 @@ class FakeFirebaseAuthPlatform extends Fake
   String? customAuthDomain;
 
   @override
-  FirebaseAuthPlatform delegateFor(
-      {required FirebaseApp app, Persistence? persistence}) {
+  FirebaseAuthPlatform delegateFor({
+    required FirebaseApp app,
+    Persistence? persistence,
+  }) {
     return this;
   }
 
@@ -1240,8 +1321,11 @@ class FakeFirebaseAuthPlatform extends Fake
 class MockUserPlatform extends Mock
     with MockPlatformInterfaceMixin
     implements TestUserPlatform {
-  MockUserPlatform(FirebaseAuthPlatform auth, MultiFactorPlatform multiFactor,
-      InternalUserDetails _user) {
+  MockUserPlatform(
+    FirebaseAuthPlatform auth,
+    MultiFactorPlatform multiFactor,
+    InternalUserDetails _user,
+  ) {
     TestUserPlatform(auth, multiFactor, _user);
   }
 }
@@ -1285,8 +1369,10 @@ class TestFirebaseAuthPlatform extends FirebaseAuthPlatform {
   }) {}
 
   @override
-  FirebaseAuthPlatform delegateFor(
-      {FirebaseApp? app, Persistence? persistence}) {
+  FirebaseAuthPlatform delegateFor({
+    FirebaseApp? app,
+    Persistence? persistence,
+  }) {
     return this;
   }
 
@@ -1360,9 +1446,11 @@ class TestAuthProvider extends AuthProvider {
 }
 
 class TestUserPlatform extends UserPlatform {
-  TestUserPlatform(FirebaseAuthPlatform auth, MultiFactorPlatform multiFactor,
-      InternalUserDetails data)
-      : super(auth, multiFactor, data);
+  TestUserPlatform(
+    FirebaseAuthPlatform auth,
+    MultiFactorPlatform multiFactor,
+    InternalUserDetails data,
+  ) : super(auth, multiFactor, data);
 }
 
 class TestMultiFactorPlatform extends MultiFactorPlatform {
@@ -1376,11 +1464,11 @@ class TestUserCredentialPlatform extends UserCredentialPlatform {
     AuthCredential credential,
     UserPlatform userPlatform,
   ) : super(
-          auth: auth,
-          additionalUserInfo: additionalUserInfo,
-          credential: credential,
-          user: userPlatform,
-        );
+        auth: auth,
+        additionalUserInfo: additionalUserInfo,
+        credential: credential,
+        user: userPlatform,
+      );
 }
 
 class EmptyUserCredentialPlatform extends UserCredentialPlatform {

@@ -10,12 +10,12 @@ class AddDateAndTimestampVariablesBuilder {
     required this.date,
     required this.timestamp,
   });
-  Deserializer<AddDateAndTimestampData> dataDeserializer =
-      (dynamic json) => AddDateAndTimestampData.fromJson(jsonDecode(json));
+  Deserializer<AddDateAndTimestampData> dataDeserializer = (dynamic json) =>
+      AddDateAndTimestampData.fromJson(jsonDecode(json));
   Serializer<AddDateAndTimestampVariables> varsSerializer =
       (AddDateAndTimestampVariables vars) => jsonEncode(vars.toJson());
   Future<OperationResult<AddDateAndTimestampData, AddDateAndTimestampVariables>>
-      execute() {
+  execute() {
     return ref().execute();
   }
 
@@ -25,7 +25,11 @@ class AddDateAndTimestampVariablesBuilder {
       timestamp: timestamp,
     );
     return _dataConnect.mutation(
-        "addDateAndTimestamp", dataDeserializer, varsSerializer, vars);
+      "addDateAndTimestamp",
+      dataDeserializer,
+      varsSerializer,
+      vars,
+    );
   }
 }
 
@@ -33,7 +37,7 @@ class AddDateAndTimestampVariablesBuilder {
 class AddDateAndTimestampTimestampHolderInsert {
   final String id;
   AddDateAndTimestampTimestampHolderInsert.fromJson(dynamic json)
-      : id = nativeFromJson<String>(json['id']);
+    : id = nativeFromJson<String>(json['id']);
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) {
@@ -57,18 +61,17 @@ class AddDateAndTimestampTimestampHolderInsert {
     return json;
   }
 
-  AddDateAndTimestampTimestampHolderInsert({
-    required this.id,
-  });
+  AddDateAndTimestampTimestampHolderInsert({required this.id});
 }
 
 @immutable
 class AddDateAndTimestampData {
   final AddDateAndTimestampTimestampHolderInsert timestampHolder_insert;
   AddDateAndTimestampData.fromJson(dynamic json)
-      : timestampHolder_insert =
-            AddDateAndTimestampTimestampHolderInsert.fromJson(
-                json['timestampHolder_insert']);
+    : timestampHolder_insert =
+          AddDateAndTimestampTimestampHolderInsert.fromJson(
+            json['timestampHolder_insert'],
+          );
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) {
@@ -91,9 +94,7 @@ class AddDateAndTimestampData {
     return json;
   }
 
-  AddDateAndTimestampData({
-    required this.timestampHolder_insert,
-  });
+  AddDateAndTimestampData({required this.timestampHolder_insert});
 }
 
 @immutable
@@ -101,10 +102,11 @@ class AddDateAndTimestampVariables {
   final DateTime date;
   final Timestamp timestamp;
   @Deprecated(
-      'fromJson is deprecated for Variable classes as they are no longer required for deserialization.')
+    'fromJson is deprecated for Variable classes as they are no longer required for deserialization.',
+  )
   AddDateAndTimestampVariables.fromJson(Map<String, dynamic> json)
-      : date = nativeFromJson<DateTime>(json['date']),
-        timestamp = Timestamp.fromJson(json['timestamp']);
+    : date = nativeFromJson<DateTime>(json['date']),
+      timestamp = Timestamp.fromJson(json['timestamp']);
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) {
@@ -129,8 +131,5 @@ class AddDateAndTimestampVariables {
     return json;
   }
 
-  AddDateAndTimestampVariables({
-    required this.date,
-    required this.timestamp,
-  });
+  AddDateAndTimestampVariables({required this.date, required this.timestamp});
 }

@@ -56,8 +56,8 @@ class TestItem {
     required this.name,
     required this.description,
     required this.run,
-  })  : googleAIResult = TestResult.pending(),
-        agentPlatformResult = TestResult.pending();
+  }) : googleAIResult = TestResult.pending(),
+       agentPlatformResult = TestResult.pending();
 }
 
 class TestLogger {
@@ -91,8 +91,9 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
             'Verifies simple stateless text generation with a precise answer target using gemini-3.1-flash-lite.',
         run: (provider, logger) async {
           logger.log('Initializing model gemini-3.1-flash-lite...');
-          final model =
-              provider.generativeModel(model: 'gemini-3.1-flash-lite');
+          final model = provider.generativeModel(
+            model: 'gemini-3.1-flash-lite',
+          );
           const prompt = "Reply with exactly the word 'SUCCESS' in uppercase.";
           logger.log('Sending prompt: "$prompt"');
           final response = await model.generateContent([Content.text(prompt)]);
@@ -161,7 +162,8 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
           final response = await model.generateContent([Content.text(prompt)]);
           logger.log('Response received: "${response.text}"');
           final responseText = response.text?.toLowerCase() ?? '';
-          final containsKnightTerms = responseText.contains('thou') ||
+          final containsKnightTerms =
+              responseText.contains('thou') ||
               responseText.contains('thee') ||
               responseText.contains('sir') ||
               responseText.contains('knight') ||
@@ -192,8 +194,9 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
             'Verifies stateful conversation preservation across turns via ChatSession.',
         run: (provider, logger) async {
           logger.log('Initializing model and starting ChatSession...');
-          final model =
-              provider.generativeModel(model: 'gemini-3.1-flash-lite');
+          final model = provider.generativeModel(
+            model: 'gemini-3.1-flash-lite',
+          );
           final chat = model.startChat();
 
           const prompt1 = 'My secret agent name is Agent Orange.';
@@ -236,8 +239,9 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
             name: 'getSuperHeroPower',
             description: 'Returns the superpower of a given superhero by name.',
             parameters: {
-              'heroName':
-                  Schema.string(description: 'The name of the superhero.'),
+              'heroName': Schema.string(
+                description: 'The name of the superhero.',
+              ),
             },
             callable: (args) async {
               final hero = args['heroName'] as String?;
@@ -292,8 +296,9 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
             'getSuperHeroPower',
             'Returns the superpower of a given superhero by name.',
             parameters: {
-              'heroName':
-                  Schema.string(description: 'The name of the superhero.'),
+              'heroName': Schema.string(
+                description: 'The name of the superhero.',
+              ),
             },
           );
 
@@ -337,8 +342,9 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
           );
           final manualResponse = FunctionResponse(call.name, {'power': power});
 
-          logger
-              .log('Sending second request with history + FunctionResponse...');
+          logger.log(
+            'Sending second request with history + FunctionResponse...',
+          );
           final nextResponse = await model.generateContent([
             Content.text(prompt),
             response.candidates.first.content,
@@ -461,8 +467,9 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
             'Verifies generateContentStream works and aggregates chunks correctly.',
         run: (provider, logger) async {
           logger.log('Initializing model for streaming...');
-          final model =
-              provider.generativeModel(model: 'gemini-3.1-flash-lite');
+          final model = provider.generativeModel(
+            model: 'gemini-3.1-flash-lite',
+          );
 
           const prompt = 'Write a 2-paragraph poem about a computer.';
           logger.log('Starting prompt stream: "$prompt"');
@@ -506,8 +513,9 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
           final catBytes = await rootBundle.load('assets/images/cat.jpg');
 
           logger.log('Initializing model for token counting...');
-          final model =
-              provider.generativeModel(model: 'gemini-3.1-flash-lite');
+          final model = provider.generativeModel(
+            model: 'gemini-3.1-flash-lite',
+          );
 
           final content = [
             Content.multi([
@@ -606,8 +614,9 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
           logger.log('Sending multimodal output prompt: "$prompt"');
           final response = await model.generateContent([Content.text(prompt)]);
 
-          final imageParts = response.inlineDataParts
-              .where((p) => p.mimeType.startsWith('image/'));
+          final imageParts = response.inlineDataParts.where(
+            (p) => p.mimeType.startsWith('image/'),
+          );
           logger.log('Response text: "${response.text}"');
           logger.log('Image parts returned: ${imageParts.length}');
 
@@ -637,17 +646,22 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
   }
 
   Future<void> _runTestItem(TestItem item, bool isAgentPlatform) async {
-    final provider =
-        isAgentPlatform ? FirebaseAI.agentPlatform() : FirebaseAI.googleAI();
+    final provider = isAgentPlatform
+        ? FirebaseAI.agentPlatform()
+        : FirebaseAI.googleAI();
     final logger = TestLogger();
 
     setState(() {
       if (isAgentPlatform) {
-        item.agentPlatformResult =
-            TestResult(status: TestStatus.running, logs: 'Running...');
+        item.agentPlatformResult = TestResult(
+          status: TestStatus.running,
+          logs: 'Running...',
+        );
       } else {
-        item.googleAIResult =
-            TestResult(status: TestStatus.running, logs: 'Running...');
+        item.googleAIResult = TestResult(
+          status: TestStatus.running,
+          logs: 'Running...',
+        );
       }
     });
 
@@ -891,10 +905,12 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
 
   @override
   Widget build(BuildContext context) {
-    final googleAIResults =
-        _testCases.map((item) => item.googleAIResult).toList();
-    final vertexAIResults =
-        _testCases.map((item) => item.agentPlatformResult).toList();
+    final googleAIResults = _testCases
+        .map((item) => item.googleAIResult)
+        .toList();
+    final vertexAIResults = _testCases
+        .map((item) => item.agentPlatformResult)
+        .toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -954,8 +970,10 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
               itemBuilder: (context, index) {
                 final item = _testCases[index];
                 return Card(
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
                   child: ExpansionTile(
                     leading: CircleAvatar(
                       backgroundColor: Colors.grey.shade800,

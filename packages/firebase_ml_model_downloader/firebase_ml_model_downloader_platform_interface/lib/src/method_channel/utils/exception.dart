@@ -10,10 +10,7 @@ import 'package:flutter/services.dart';
 /// Catches a [PlatformException] and returns an [Exception].
 ///
 /// If the [Exception] is a [PlatformException], a [FirebaseException] is returned.
-Never convertPlatformException(
-  dynamic exception,
-  StackTrace stackTrace,
-) {
+Never convertPlatformException(dynamic exception, StackTrace stackTrace) {
   if (exception is! Exception || exception is! PlatformException) {
     Error.throwWithStackTrace(exception, stackTrace);
   }

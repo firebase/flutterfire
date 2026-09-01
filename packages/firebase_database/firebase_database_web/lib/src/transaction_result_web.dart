@@ -6,7 +6,7 @@ part of '../firebase_database_web.dart';
 
 class TransactionResultWeb extends TransactionResultPlatform {
   TransactionResultWeb._(this._ref, this._delegate)
-      : super(_delegate.committed);
+    : super(_delegate.committed);
 
   final database_interop.Transaction _delegate;
 

@@ -15,9 +15,12 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 class DocumentSnapshotPlatform extends PlatformInterface {
   /// Constructs a [DocumentSnapshotPlatform] using the provided [FirebaseFirestorePlatform].
   DocumentSnapshotPlatform(
-      this._firestore, String path, this._data, this._metadata)
-      : _pointer = Pointer(path),
-        super(token: _token);
+    this._firestore,
+    String path,
+    this._data,
+    this._metadata,
+  ) : _pointer = Pointer(path),
+      super(token: _token);
 
   static final Object _token = Object();
 
@@ -115,7 +118,9 @@ class DocumentSnapshotPlatform extends PlatformInterface {
 
       if (value is Map) {
         return _findComponent(
-            componentIndex + 1, Map<String, dynamic>.from(value));
+          componentIndex + 1,
+          Map<String, dynamic>.from(value),
+        );
       } else {
         throw StateError(
           'field "$value" does not exist within the $DocumentSnapshotPlatform',

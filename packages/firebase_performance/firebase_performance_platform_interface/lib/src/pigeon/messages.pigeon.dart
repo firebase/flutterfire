@@ -37,8 +37,11 @@ Object? _extractReplyValueOrThrow(
   return replyList.firstOrNull;
 }
 
-List<Object?> wrapResponse(
-    {Object? result, PlatformException? error, bool empty = false}) {
+List<Object?> wrapResponse({
+  Object? result,
+  PlatformException? error,
+  bool empty = false,
+}) {
   if (empty) {
     return <Object?>[];
   }
@@ -60,8 +63,9 @@ bool _deepEquals(Object? a, Object? b) {
   }
   if (a is List && b is List) {
     return a.length == b.length &&
-        a.indexed
-            .every(((int, dynamic) item) => _deepEquals(item.$2, b[item.$1]));
+        a.indexed.every(
+          ((int, dynamic) item) => _deepEquals(item.$2, b[item.$1]),
+        );
   }
   if (a is Map && b is Map) {
     if (a.length != b.length) {
@@ -110,33 +114,17 @@ int _deepHash(Object? value) {
   return value.hashCode;
 }
 
-enum HttpMethod {
-  connect,
-  delete,
-  get,
-  head,
-  options,
-  patch,
-  post,
-  put,
-  trace,
-}
+enum HttpMethod { connect, delete, get, head, options, patch, post, put, trace }
 
 class HttpMetricOptions {
-  HttpMetricOptions({
-    required this.url,
-    required this.httpMethod,
-  });
+  HttpMetricOptions({required this.url, required this.httpMethod});
 
   String url;
 
   HttpMethod httpMethod;
 
   List<Object?> _toList() {
-    return <Object?>[
-      url,
-      httpMethod,
-    ];
+    return <Object?>[url, httpMethod];
   }
 
   Object encode() {
@@ -235,20 +223,14 @@ class HttpMetricAttributes {
 }
 
 class TraceAttributes {
-  TraceAttributes({
-    this.metrics,
-    this.attributes,
-  });
+  TraceAttributes({this.metrics, this.attributes});
 
   Map<String, int>? metrics;
 
   Map<String, String>? attributes;
 
   List<Object?> _toList() {
-    return <Object?>[
-      metrics,
-      attributes,
-    ];
+    return <Object?>[metrics, attributes];
   }
 
   Object encode() {
@@ -327,11 +309,13 @@ class FirebasePerformanceHostApi {
   /// Constructor for [FirebasePerformanceHostApi].  The [binaryMessenger] named argument is
   /// available for dependency injection.  If it is left null, the default
   /// BinaryMessenger will be used which routes to the host platform.
-  FirebasePerformanceHostApi(
-      {BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
-      : pigeonVar_binaryMessenger = binaryMessenger,
-        pigeonVar_messageChannelSuffix =
-            messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+  FirebasePerformanceHostApi({
+    BinaryMessenger? binaryMessenger,
+    String messageChannelSuffix = '',
+  }) : pigeonVar_binaryMessenger = binaryMessenger,
+       pigeonVar_messageChannelSuffix = messageChannelSuffix.isNotEmpty
+           ? '.$messageChannelSuffix'
+           : '';
   final BinaryMessenger? pigeonVar_binaryMessenger;
 
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
@@ -346,8 +330,9 @@ class FirebasePerformanceHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[enabled]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[enabled],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
@@ -384,8 +369,9 @@ class FirebasePerformanceHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[name]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[name],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
@@ -404,8 +390,9 @@ class FirebasePerformanceHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[handle, attributes]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[handle, attributes],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
@@ -423,8 +410,9 @@ class FirebasePerformanceHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[options]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[options],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
@@ -436,7 +424,9 @@ class FirebasePerformanceHostApi {
   }
 
   Future<void> stopHttpMetric(
-      int handle, HttpMetricAttributes attributes) async {
+    int handle,
+    HttpMetricAttributes attributes,
+  ) async {
     final pigeonVar_channelName =
         'dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.stopHttpMetric$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
@@ -444,8 +434,9 @@ class FirebasePerformanceHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[handle, attributes]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[handle, attributes],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(

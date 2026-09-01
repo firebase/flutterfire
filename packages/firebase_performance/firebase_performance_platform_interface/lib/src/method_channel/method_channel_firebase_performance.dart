@@ -15,9 +15,10 @@ import 'utils/exception.dart';
 /// The method channel implementation of [FirebasePerformancePlatform].
 class MethodChannelFirebasePerformance extends FirebasePerformancePlatform {
   MethodChannelFirebasePerformance({required FirebaseApp app})
-      : super(appInstance: app);
-  static const MethodChannel channel =
-      MethodChannel('plugins.flutter.io/firebase_performance');
+    : super(appInstance: app);
+  static const MethodChannel channel = MethodChannel(
+    'plugins.flutter.io/firebase_performance',
+  );
 
   /// Internal stub class initializer.
   ///

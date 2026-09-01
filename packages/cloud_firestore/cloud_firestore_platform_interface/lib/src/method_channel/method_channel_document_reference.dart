@@ -39,8 +39,9 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
           data: data,
           option: InternalDocumentOption(
             merge: options?.merge,
-            mergeFields:
-                options?.mergeFields?.map((e) => e.components).toList(),
+            mergeFields: options?.mergeFields
+                ?.map((e) => e.components)
+                .toList(),
           ),
         ),
       );
@@ -54,30 +55,28 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
     try {
       await MethodChannelFirebaseFirestore.pigeonChannel
           .documentReferenceUpdate(
-        pigeonApp,
-        DocumentReferenceRequest(
-          path: _pointer.path,
-          data: data,
-        ),
-      );
+            pigeonApp,
+            DocumentReferenceRequest(path: _pointer.path, data: data),
+          );
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
   }
 
   @override
-  Future<DocumentSnapshotPlatform> get(
-      [GetOptions options = const GetOptions()]) async {
+  Future<DocumentSnapshotPlatform> get([
+    GetOptions options = const GetOptions(),
+  ]) async {
     try {
       final result = await MethodChannelFirebaseFirestore.pigeonChannel
           .documentReferenceGet(
-        pigeonApp,
-        DocumentReferenceRequest(
-          path: _pointer.path,
-          source: options.source,
-          serverTimestampBehavior: options.serverTimestampBehavior,
-        ),
-      );
+            pigeonApp,
+            DocumentReferenceRequest(
+              path: _pointer.path,
+              source: options.source,
+              serverTimestampBehavior: options.serverTimestampBehavior,
+            ),
+          );
 
       return DocumentSnapshotPlatform(
         firestore,
@@ -95,11 +94,9 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
     try {
       await MethodChannelFirebaseFirestore.pigeonChannel
           .documentReferenceDelete(
-        pigeonApp,
-        DocumentReferenceRequest(
-          path: _pointer.path,
-        ),
-      );
+            pigeonApp,
+            DocumentReferenceRequest(path: _pointer.path),
+          );
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -115,43 +112,40 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
     // It's fine to let the StreamController be garbage collected once all the
     // subscribers have cancelled; this analyzer warning is safe to ignore.
     late StreamController<DocumentSnapshotPlatform>
-        controller; // ignore: close_sinks
+    controller; // ignore: close_sinks
 
     StreamSubscription<dynamic>? snapshotStreamSubscription;
     controller = StreamController<DocumentSnapshotPlatform>.broadcast(
       onListen: () async {
         final observerId = await MethodChannelFirebaseFirestore.pigeonChannel
             .documentReferenceSnapshot(
-          pigeonApp,
-          DocumentReferenceRequest(
-            path: _pointer.path,
-            serverTimestampBehavior: serverTimestampBehavior,
-          ),
-          includeMetadataChanges,
-          listenSource,
-        );
-        snapshotStreamSubscription =
-            MethodChannelFirebaseFirestore.documentSnapshotChannel(observerId)
-                .receiveGuardedBroadcastStream(
-          onError: convertPlatformException,
-        )
-                .listen(
-          (snapshot) {
-            // With Pigeon 26, the native side emits the generated Pigeon class
-            // directly through the Pigeon-aware codec, so we receive a fully
-            // decoded `InternalDocumentSnapshot` here (no manual decode required).
-            final result = snapshot as InternalDocumentSnapshot;
-            controller.add(
-              DocumentSnapshotPlatform(
-                firestore,
-                result.path,
-                result.data,
-                result.metadata,
+              pigeonApp,
+              DocumentReferenceRequest(
+                path: _pointer.path,
+                serverTimestampBehavior: serverTimestampBehavior,
               ),
+              includeMetadataChanges,
+              listenSource,
             );
-          },
-          onError: controller.addError,
-        );
+        snapshotStreamSubscription =
+            MethodChannelFirebaseFirestore.documentSnapshotChannel(
+              observerId,
+            ).receiveGuardedBroadcastStream(onError: convertPlatformException).listen((
+              snapshot,
+            ) {
+              // With Pigeon 26, the native side emits the generated Pigeon class
+              // directly through the Pigeon-aware codec, so we receive a fully
+              // decoded `InternalDocumentSnapshot` here (no manual decode required).
+              final result = snapshot as InternalDocumentSnapshot;
+              controller.add(
+                DocumentSnapshotPlatform(
+                  firestore,
+                  result.path,
+                  result.data,
+                  result.metadata,
+                ),
+              );
+            }, onError: controller.addError);
       },
       onCancel: () {
         snapshotStreamSubscription?.cancel();

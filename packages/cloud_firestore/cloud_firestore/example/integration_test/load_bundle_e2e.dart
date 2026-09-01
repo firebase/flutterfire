@@ -103,27 +103,27 @@ void runLoadBundleTests() {
         skip: kIsWeb,
       );
 
-      test(
-        'loadBundle(): error handling for malformed bundle',
-        () async {
-          final Uint8List buffer = await _fetchFixture(
-            Uri.https(
-              'api.rnfirebase.io',
-              '/firestore/e2e-tests/malformed-bundle',
-            ),
-          );
+      test('loadBundle(): error handling for malformed bundle', () async {
+        final Uint8List buffer = await _fetchFixture(
+          Uri.https(
+            'api.rnfirebase.io',
+            '/firestore/e2e-tests/malformed-bundle',
+          ),
+        );
 
-          LoadBundleTask task = firestore.loadBundle(buffer);
+        LoadBundleTask task = firestore.loadBundle(buffer);
 
-          await expectLater(
-            task.stream.last,
-            throwsA(
-              isA<FirebaseException>()
-                  .having((e) => e.code, 'code', 'load-bundle-error'),
+        await expectLater(
+          task.stream.last,
+          throwsA(
+            isA<FirebaseException>().having(
+              (e) => e.code,
+              'code',
+              'load-bundle-error',
             ),
-          );
-        },
-      );
+          ),
+        );
+      });
 
       test(
         'loadBundle(): pause and resume stream',
@@ -164,31 +164,27 @@ void runLoadBundleTests() {
     });
 
     group('FirebaseFirestore.namedQueryGet()', () {
-      test(
-        'namedQueryGet() successful',
-        () async {
-          const int number = 4;
-          Uint8List buffer = await loadBundleSetup(number);
-          LoadBundleTask task = firestore.loadBundle(buffer);
+      test('namedQueryGet() successful', () async {
+        const int number = 4;
+        Uint8List buffer = await loadBundleSetup(number);
+        LoadBundleTask task = firestore.loadBundle(buffer);
 
-          // ensure the bundle has been completely cached
-          await task.stream.last;
+        // ensure the bundle has been completely cached
+        await task.stream.last;
 
-          // namedQuery 'named-bundle-test' which returns a QuerySnaphot of the same 3 documents
-          // with 'number' property
-          QuerySnapshot<Map<String, Object?>> snapshot =
-              await firestore.namedQueryGet(
-            'named-bundle-test-$number',
-            options: const GetOptions(source: Source.cache),
-          );
+        // namedQuery 'named-bundle-test' which returns a QuerySnaphot of the same 3 documents
+        // with 'number' property
+        QuerySnapshot<Map<String, Object?>> snapshot = await firestore
+            .namedQueryGet(
+              'named-bundle-test-$number',
+              options: const GetOptions(source: Source.cache),
+            );
 
-          expect(
-            snapshot.docs.map((document) => document['number']),
-            everyElement(anyOf(1, 2, 3)),
-          );
-        },
-        skip: kIsWeb,
-      );
+        expect(
+          snapshot.docs.map((document) => document['number']),
+          everyElement(anyOf(1, 2, 3)),
+        );
+      }, skip: kIsWeb);
 
       test(
         'namedQueryGet() error',
@@ -205,8 +201,11 @@ void runLoadBundleTests() {
               options: const GetOptions(source: Source.cache),
             ),
             throwsA(
-              isA<FirebaseException>()
-                  .having((e) => e.code, 'code', 'non-existent-named-query'),
+              isA<FirebaseException>().having(
+                (e) => e.code,
+                'code',
+                'non-existent-named-query',
+              ),
             ),
           );
         },
@@ -225,13 +224,13 @@ void runLoadBundleTests() {
 
         // namedQuery 'named-bundle-test' which returns a QuerySnaphot of the same 3 documents
         // with 'number' property
-        QuerySnapshot<ConverterPlaceholder> snapshot =
-            await firestore.namedQueryWithConverterGet<ConverterPlaceholder>(
-          'named-bundle-test-$number',
-          options: const GetOptions(source: Source.cache),
-          fromFirestore: ConverterPlaceholder.new,
-          toFirestore: (value, options) => value.toFirestore(),
-        );
+        QuerySnapshot<ConverterPlaceholder> snapshot = await firestore
+            .namedQueryWithConverterGet<ConverterPlaceholder>(
+              'named-bundle-test-$number',
+              options: const GetOptions(source: Source.cache),
+              fromFirestore: ConverterPlaceholder.new,
+              toFirestore: (value, options) => value.toFirestore(),
+            );
 
         expect(
           snapshot.docs.map((document) => document['number']),
@@ -256,8 +255,11 @@ void runLoadBundleTests() {
               toFirestore: (value, options) => value.toFirestore(),
             ),
             throwsA(
-              isA<FirebaseException>()
-                  .having((e) => e.code, 'code', 'non-existent-named-query'),
+              isA<FirebaseException>().having(
+                (e) => e.code,
+                'code',
+                'non-existent-named-query',
+              ),
             ),
           );
         },

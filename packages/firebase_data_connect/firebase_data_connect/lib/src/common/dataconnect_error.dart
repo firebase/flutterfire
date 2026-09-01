@@ -20,17 +20,17 @@ enum DataConnectErrorCode {
   unauthorized,
   cacheMiss,
   codecFailed,
-  other
+  other,
 }
 
 /// Error thrown when DataConnect encounters an error.
 class DataConnectError extends FirebaseException {
   DataConnectError(this.dataConnectErrorCode, String? message)
-      : super(
-          plugin: 'Data Connect',
-          code: dataConnectErrorCode.toString(),
-          message: message,
-        );
+    : super(
+        plugin: 'Data Connect',
+        code: dataConnectErrorCode.toString(),
+        message: message,
+      );
   final DataConnectErrorCode dataConnectErrorCode;
 }
 

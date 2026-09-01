@@ -121,9 +121,7 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   /// before the instance has initialized to prevent any unnecessary async
   /// calls.
   @protected
-  FirebaseMessagingPlatform setInitialValues({
-    bool? isAutoInitEnabled,
-  }) {
+  FirebaseMessagingPlatform setInitialValues({bool? isAutoInitEnabled}) {
     throw UnimplementedError('setInitialValues() is not implemented');
   }
 
@@ -154,7 +152,8 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   /// on web a service worker can be registered.
   void registerBackgroundMessageHandler(BackgroundMessageHandler handler) {
     throw UnimplementedError(
-        'registerBackgroundMessageHandler() is not implemented');
+      'registerBackgroundMessageHandler() is not implemented',
+    );
   }
 
   /// Removes access to an FCM token previously authorized with optional [senderId].
@@ -293,7 +292,8 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
     required bool sound,
   }) {
     throw UnimplementedError(
-        'setForegroundNotificationPresentationOptions() is not implemented');
+      'setForegroundNotificationPresentationOptions() is not implemented',
+    );
   }
 
   /// Subscribe to topic in background.

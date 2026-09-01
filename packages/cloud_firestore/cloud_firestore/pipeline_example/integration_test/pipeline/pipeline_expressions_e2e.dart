@@ -803,17 +803,21 @@ void runPipelineExpressionsTests() {
       ]);
     });
 
-    test('arraySum addFields succeeds on Android', () async {
-      final snapshot = await firestore
-          .pipeline()
-          .collection('pipeline-e2e')
-          .where(Expression.field('test').equalValue('expressions'))
-          .addFields(Expression.array([1, 2, 3]).arraySum().as('x'))
-          .limit(1)
-          .execute();
-      expectResultCount(snapshot, 1);
-      expect(snapshot.result[0].data()!['x'], 6);
-    }, skip: defaultTargetPlatform != TargetPlatform.android);
+    test(
+      'arraySum addFields succeeds on Android',
+      () async {
+        final snapshot = await firestore
+            .pipeline()
+            .collection('pipeline-e2e')
+            .where(Expression.field('test').equalValue('expressions'))
+            .addFields(Expression.array([1, 2, 3]).arraySum().as('x'))
+            .limit(1)
+            .execute();
+        expectResultCount(snapshot, 1);
+        expect(snapshot.result[0].data()!['x'], 6);
+      },
+      skip: defaultTargetPlatform != TargetPlatform.android,
+    );
 
     test(
       'unsupported expression returns parse-error with informative message',

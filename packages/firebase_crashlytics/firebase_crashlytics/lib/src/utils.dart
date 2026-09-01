@@ -5,8 +5,9 @@
 
 import 'package:stack_trace/stack_trace.dart';
 
-final _obfuscatedStackTraceLineRegExp =
-    RegExp(r'^(\s*#\d{2} abs )([\da-f]+)((?: virt [\da-f]+)?(?: .*)?)$');
+final _obfuscatedStackTraceLineRegExp = RegExp(
+  r'^(\s*#\d{2} abs )([\da-f]+)((?: virt [\da-f]+)?(?: .*)?)$',
+);
 
 /// Returns a [List] containing detailed output of each line in a stack trace.
 List<Map<String, String>> getStackTraceElements(StackTrace stackTrace) {
@@ -66,9 +67,7 @@ String? getBuildId(StackTrace stackTrace) {
 }
 
 List<String> getLoadingUnits(StackTrace stackTrace) =>
-    Trace.parseVM(stackTrace.toString())
-        .terse
-        .frames
+    Trace.parseVM(stackTrace.toString()).terse.frames
         .whereType<UnparsedFrame>()
         .map((frame) => frame.member)
         .where((member) => member.startsWith('loading_unit: '))

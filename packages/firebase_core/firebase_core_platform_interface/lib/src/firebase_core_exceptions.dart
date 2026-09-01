@@ -9,19 +9,21 @@ part of '../firebase_core_platform_interface.dart';
 /// no app has been created.
 FirebaseException noAppExists(String appName) {
   return FirebaseException(
-      plugin: 'core',
-      code: 'no-app',
-      message:
-          "No Firebase App '$appName' has been created - call Firebase.initializeApp()");
+    plugin: 'core',
+    code: 'no-app',
+    message:
+        "No Firebase App '$appName' has been created - call Firebase.initializeApp()",
+  );
 }
 
 /// Throws a consistent cross-platform error message when an app is being created
 /// which already exists.
 FirebaseException duplicateApp(String appName) {
   return FirebaseException(
-      plugin: 'core',
-      code: 'duplicate-app',
-      message: 'A Firebase App named "$appName" already exists');
+    plugin: 'core',
+    code: 'duplicate-app',
+    message: 'A Firebase App named "$appName" already exists',
+  );
 }
 
 /// Throws a consistent cross-platform error message if the user attempts to
@@ -29,7 +31,8 @@ FirebaseException duplicateApp(String appName) {
 FirebaseException noDefaultAppInitialization() {
   return FirebaseException(
     plugin: 'core',
-    message: 'The $defaultFirebaseAppName app cannot be initialized here. '
+    message:
+        'The $defaultFirebaseAppName app cannot be initialized here. '
         'To initialize the default app, follow the installation instructions '
         'for the specific platform you are developing with.',
   );
@@ -47,7 +50,10 @@ View the documentation for more information: https://firebase.google.com/docs/fl
     ''';
 
   return FirebaseException(
-      plugin: 'core', code: 'not-initialized', message: message);
+    plugin: 'core',
+    code: 'not-initialized',
+    message: message,
+  );
 }
 
 /// Throws a consistent cross-platform error message if the user attempts

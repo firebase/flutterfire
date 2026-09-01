@@ -47,13 +47,13 @@ class FirestoreMessageCodec extends StandardMessageCodec {
 
   static const Map<FieldValueType, int> _kFieldValueCodes =
       <FieldValueType, int>{
-    FieldValueType.arrayUnion: _kArrayUnion,
-    FieldValueType.arrayRemove: _kArrayRemove,
-    FieldValueType.delete: _kDelete,
-    FieldValueType.serverTimestamp: _kServerTimestamp,
-    FieldValueType.incrementDouble: _kIncrementDouble,
-    FieldValueType.incrementInteger: _kIncrementInteger,
-  };
+        FieldValueType.arrayUnion: _kArrayUnion,
+        FieldValueType.arrayRemove: _kArrayRemove,
+        FieldValueType.delete: _kDelete,
+        FieldValueType.serverTimestamp: _kServerTimestamp,
+        FieldValueType.incrementDouble: _kIncrementDouble,
+        FieldValueType.incrementInteger: _kIncrementInteger,
+      };
 
   static const Map<FieldPathType, int> _kFieldPathCodes = <FieldPathType, int>{
     FieldPathType.documentId: _kDocumentId,
@@ -152,7 +152,9 @@ class FirestoreMessageCodec extends StandardMessageCodec {
         final FirebaseApp app = Firebase.app(appName);
         final FirebaseFirestorePlatform firestore =
             FirebaseFirestorePlatform.instanceFor(
-                app: app, databaseId: databaseId);
+              app: app,
+              databaseId: databaseId,
+            );
         return firestore.doc(path);
       case _kVectorValue:
         final List<Object?> vector = (readValue(buffer)!) as List<Object?>;

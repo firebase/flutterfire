@@ -79,7 +79,8 @@ Future<void> setupFlutterNotifications() async {
   /// default FCM channel to enable heads up notifications.
   await flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>()
+        AndroidFlutterLocalNotificationsPlugin
+      >()
       ?.createNotificationChannel(channel);
 
   /// Update the iOS foreground notification presentation options to allow
@@ -183,13 +184,11 @@ class _Application extends State<Application> {
     // Delay getInitialMessage call by 3 seconds
     Future.delayed(const Duration(seconds: 3), () {
       FirebaseMessaging.instance.getInitialMessage().then(
-            (value) => setState(
-              () {
-                _resolved = true;
-                initialMessage = value?.data.toString();
-              },
-            ),
-          );
+        (value) => setState(() {
+          _resolved = true;
+          initialMessage = value?.data.toString();
+        }),
+      );
     });
 
     FirebaseMessaging.onMessage.listen(showFlutterNotification);
@@ -328,9 +327,9 @@ class _Application extends State<Application> {
             ),
             ElevatedButton(
               onPressed: () {
-                FirebaseMessaging.instance
-                    .getInitialMessage()
-                    .then((RemoteMessage? message) {
+                FirebaseMessaging.instance.getInitialMessage().then((
+                  RemoteMessage? message,
+                ) {
                   if (message != null) {
                     Navigator.pushNamed(
                       context,

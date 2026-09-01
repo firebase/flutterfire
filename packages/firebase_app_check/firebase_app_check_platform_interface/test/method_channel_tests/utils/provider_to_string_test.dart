@@ -12,34 +12,37 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('getAndroidProviderString', () {
     test(
-        'returns new provider type when both providers are provided and legacy is default',
-        () {
-      final result = getAndroidProviderString(
-        legacyProvider: AndroidProvider.playIntegrity,
-        newProvider: const AndroidPlayIntegrityProvider(),
-      );
-      expect(result, 'playIntegrity');
-    });
+      'returns new provider type when both providers are provided and legacy is default',
+      () {
+        final result = getAndroidProviderString(
+          legacyProvider: AndroidProvider.playIntegrity,
+          newProvider: const AndroidPlayIntegrityProvider(),
+        );
+        expect(result, 'playIntegrity');
+      },
+    );
 
     test(
-        'returns legacy provider when explicitly set to debug and new provider is default',
-        () {
-      final result = getAndroidProviderString(
-        legacyProvider: AndroidProvider.debug,
-        newProvider: const AndroidPlayIntegrityProvider(),
-      );
-      expect(result, 'debug');
-    });
+      'returns legacy provider when explicitly set to debug and new provider is default',
+      () {
+        final result = getAndroidProviderString(
+          legacyProvider: AndroidProvider.debug,
+          newProvider: const AndroidPlayIntegrityProvider(),
+        );
+        expect(result, 'debug');
+      },
+    );
 
     test(
-        'returns new provider type when only new provider is provided and legacy is default',
-        () {
-      final result = getAndroidProviderString(
-        legacyProvider: AndroidProvider.playIntegrity,
-        newProvider: const AndroidDebugProvider(),
-      );
-      expect(result, 'debug');
-    });
+      'returns new provider type when only new provider is provided and legacy is default',
+      () {
+        final result = getAndroidProviderString(
+          legacyProvider: AndroidProvider.playIntegrity,
+          newProvider: const AndroidDebugProvider(),
+        );
+        expect(result, 'debug');
+      },
+    );
 
     test('returns default when neither provider is provided', () {
       final result = getAndroidProviderString();
@@ -57,54 +60,59 @@ void main() {
     });
 
     test(
-        'returns legacy provider when explicitly set to debug and new provider is default',
-        () {
-      final result = getAppleProviderString(
-        legacyProvider: AppleProvider.debug,
-        newProvider: const AppleDeviceCheckProvider(),
-      );
-      expect(result, 'debug');
-    });
+      'returns legacy provider when explicitly set to debug and new provider is default',
+      () {
+        final result = getAppleProviderString(
+          legacyProvider: AppleProvider.debug,
+          newProvider: const AppleDeviceCheckProvider(),
+        );
+        expect(result, 'debug');
+      },
+    );
 
     test(
-        'returns legacy provider when explicitly set to appAttest and new provider is default',
-        () {
-      final result = getAppleProviderString(
-        legacyProvider: AppleProvider.appAttest,
-        newProvider: const AppleDeviceCheckProvider(),
-      );
-      expect(result, 'appAttest');
-    });
+      'returns legacy provider when explicitly set to appAttest and new provider is default',
+      () {
+        final result = getAppleProviderString(
+          legacyProvider: AppleProvider.appAttest,
+          newProvider: const AppleDeviceCheckProvider(),
+        );
+        expect(result, 'appAttest');
+      },
+    );
 
     test(
-        'returns legacy provider when explicitly set to appAttestWithDeviceCheckFallback and new provider is default',
-        () {
-      final result = getAppleProviderString(
-        legacyProvider: AppleProvider.appAttestWithDeviceCheckFallback,
-        newProvider: const AppleDeviceCheckProvider(),
-      );
-      expect(result, 'appAttestWithDeviceCheckFallback');
-    });
+      'returns legacy provider when explicitly set to appAttestWithDeviceCheckFallback and new provider is default',
+      () {
+        final result = getAppleProviderString(
+          legacyProvider: AppleProvider.appAttestWithDeviceCheckFallback,
+          newProvider: const AppleDeviceCheckProvider(),
+        );
+        expect(result, 'appAttestWithDeviceCheckFallback');
+      },
+    );
 
     test(
-        'returns new provider type when new provider is provided and legacy is default',
-        () {
-      final result = getAppleProviderString(
-        legacyProvider: AppleProvider.deviceCheck,
-        newProvider: const AppleDebugProvider(),
-      );
-      expect(result, 'debug');
-    });
+      'returns new provider type when new provider is provided and legacy is default',
+      () {
+        final result = getAppleProviderString(
+          legacyProvider: AppleProvider.deviceCheck,
+          newProvider: const AppleDebugProvider(),
+        );
+        expect(result, 'debug');
+      },
+    );
 
     test(
-        'returns legacy provider when new provider is provided and legacy is default',
-        () {
-      final result = getAppleProviderString(
-        legacyProvider: AppleProvider.deviceCheck,
-        newProvider: const AppleAppAttestProvider(),
-      );
-      expect(result, 'appAttest');
-    });
+      'returns legacy provider when new provider is provided and legacy is default',
+      () {
+        final result = getAppleProviderString(
+          legacyProvider: AppleProvider.deviceCheck,
+          newProvider: const AppleAppAttestProvider(),
+        );
+        expect(result, 'appAttest');
+      },
+    );
 
     test('returns default when neither provider is provided', () {
       final result = getAppleProviderString();
@@ -112,13 +120,14 @@ void main() {
     });
 
     test(
-        'returns new provider when explicitly set to appAttestWithDeviceCheckFallback',
-        () {
-      final result = getAppleProviderString(
-        legacyProvider: AppleProvider.deviceCheck,
-        newProvider: const AppleAppAttestWithDeviceCheckFallbackProvider(),
-      );
-      expect(result, 'appAttestWithDeviceCheckFallback');
-    });
+      'returns new provider when explicitly set to appAttestWithDeviceCheckFallback',
+      () {
+        final result = getAppleProviderString(
+          legacyProvider: AppleProvider.deviceCheck,
+          newProvider: const AppleAppAttestWithDeviceCheckFallbackProvider(),
+        );
+        expect(result, 'appAttestWithDeviceCheckFallback');
+      },
+    );
   });
 }

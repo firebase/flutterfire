@@ -45,27 +45,26 @@ String _harmBlockThresholdToJson(HarmBlockThreshold? threshold) =>
       HarmBlockThreshold.off => 'OFF',
     };
 String _harmCategoryToJson(HarmCategory harmCategory) => switch (harmCategory) {
-      HarmCategory.unknown => 'HARM_CATEGORY_UNSPECIFIED',
-      HarmCategory.harassment => 'HARM_CATEGORY_HARASSMENT',
-      HarmCategory.hateSpeech => 'HARM_CATEGORY_HATE_SPEECH',
-      HarmCategory.sexuallyExplicit => 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
-      HarmCategory.dangerousContent => 'HARM_CATEGORY_DANGEROUS_CONTENT',
-      HarmCategory.imageHate => 'HARM_CATEGORY_IMAGE_HATE',
-      HarmCategory.imageDangerousContent =>
-        'HARM_CATEGORY_IMAGE_DANGEROUS_CONTENT',
-      HarmCategory.imageHarassment => 'HARM_CATEGORY_IMAGE_HARASSMENT',
-      HarmCategory.imageSexuallyExplicit =>
-        'HARM_CATEGORY_IMAGE_SEXUALLY_EXPLICIT',
-    };
+  HarmCategory.unknown => 'HARM_CATEGORY_UNSPECIFIED',
+  HarmCategory.harassment => 'HARM_CATEGORY_HARASSMENT',
+  HarmCategory.hateSpeech => 'HARM_CATEGORY_HATE_SPEECH',
+  HarmCategory.sexuallyExplicit => 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
+  HarmCategory.dangerousContent => 'HARM_CATEGORY_DANGEROUS_CONTENT',
+  HarmCategory.imageHate => 'HARM_CATEGORY_IMAGE_HATE',
+  HarmCategory.imageDangerousContent => 'HARM_CATEGORY_IMAGE_DANGEROUS_CONTENT',
+  HarmCategory.imageHarassment => 'HARM_CATEGORY_IMAGE_HARASSMENT',
+  HarmCategory.imageSexuallyExplicit => 'HARM_CATEGORY_IMAGE_SEXUALLY_EXPLICIT',
+};
 
 Object _safetySettingToJson(SafetySetting safetySetting) {
   if (safetySetting.method != null) {
     throw ArgumentError(
-        'HarmBlockMethod is not supported by google AI and must be left null.');
+      'HarmBlockMethod is not supported by google AI and must be left null.',
+    );
   }
   return {
     'category': _harmCategoryToJson(safetySetting.category),
-    'threshold': _harmBlockThresholdToJson(safetySetting.threshold)
+    'threshold': _harmBlockThresholdToJson(safetySetting.threshold),
   };
 }
 
@@ -77,20 +76,25 @@ final class DeveloperSerialization implements SerializationStrategy {
     final candidates = switch (jsonObject) {
       {'candidates': final List<Object?> candidates} =>
         candidates.map(_parseCandidate).toList(),
-      _ => <Candidate>[]
+      _ => <Candidate>[],
     };
     final promptFeedback = switch (jsonObject) {
-      {'promptFeedback': final promptFeedback?} =>
-        _parsePromptFeedback(promptFeedback),
+      {'promptFeedback': final promptFeedback?} => _parsePromptFeedback(
+        promptFeedback,
+      ),
       _ => null,
     };
     final usageMetadata = switch (jsonObject) {
-      {'usageMetadata': final usageMetadata?} =>
-        parseUsageMetadata(usageMetadata),
+      {'usageMetadata': final usageMetadata?} => parseUsageMetadata(
+        usageMetadata,
+      ),
       _ => null,
     };
-    return GenerateContentResponse(candidates, promptFeedback,
-        usageMetadata: usageMetadata);
+    return GenerateContentResponse(
+      candidates,
+      promptFeedback,
+      usageMetadata: usageMetadata,
+    );
   }
 
   @override
@@ -134,18 +138,17 @@ final class DeveloperSerialization implements SerializationStrategy {
     GenerationConfig? generationConfig,
     List<Tool>? tools,
     ToolConfig? toolConfig,
-  ) =>
-      {
-        'generateContentRequest': generateContentRequest(
-          contents,
-          model,
-          safetySettings,
-          generationConfig,
-          tools,
-          toolConfig,
-          null,
-        )
-      };
+  ) => {
+    'generateContentRequest': generateContentRequest(
+      contents,
+      model,
+      safetySettings,
+      generationConfig,
+      tools,
+      toolConfig,
+      null,
+    ),
+  };
 }
 
 // Developer API and Agent Platform has different _parseSafetyRating logic.
@@ -161,31 +164,32 @@ Candidate _parseCandidate(Object? jsonObject) {
     switch (jsonObject) {
       {'safetyRatings': final List<Object?> safetyRatings} =>
         safetyRatings.map(_parseSafetyRating).toList(),
-      _ => null
+      _ => null,
     },
     switch (jsonObject) {
       {'citationMetadata': final Object citationMetadata} =>
         parseCitationMetadata(citationMetadata),
-      _ => null
+      _ => null,
     },
     switch (jsonObject) {
-      {'finishReason': final Object finishReason} =>
-        FinishReason.parseValue(finishReason),
-      _ => null
+      {'finishReason': final Object finishReason} => FinishReason.parseValue(
+        finishReason,
+      ),
+      _ => null,
     },
     switch (jsonObject) {
       {'finishMessage': final String finishMessage} => finishMessage,
-      _ => null
+      _ => null,
     },
     groundingMetadata: switch (jsonObject) {
       {'groundingMetadata': final Object groundingMetadata} =>
         parseGroundingMetadata(groundingMetadata),
-      _ => null
+      _ => null,
     },
     urlContextMetadata: switch (jsonObject) {
       {'urlContextMetadata': final Object urlContextMetadata} =>
         parseUrlContextMetadata(urlContextMetadata),
-      _ => null
+      _ => null,
     },
   );
 }
@@ -193,21 +197,20 @@ Candidate _parseCandidate(Object? jsonObject) {
 // Developer API and Agent Platform has different _parseSafetyRating logic.
 PromptFeedback _parsePromptFeedback(Object jsonObject) {
   return switch (jsonObject) {
-    {
-      'safetyRatings': final List<Object?> safetyRatings,
-    } =>
-      PromptFeedback(
-          switch (jsonObject) {
-            {'blockReason': final String blockReason} =>
-              BlockReason.parseValue(blockReason),
-            _ => null,
-          },
-          switch (jsonObject) {
-            {'blockReasonMessage': final String blockReasonMessage} =>
-              blockReasonMessage,
-            _ => null,
-          },
-          safetyRatings.map(_parseSafetyRating).toList()),
+    {'safetyRatings': final List<Object?> safetyRatings} => PromptFeedback(
+      switch (jsonObject) {
+        {'blockReason': final String blockReason} => BlockReason.parseValue(
+          blockReason,
+        ),
+        _ => null,
+      },
+      switch (jsonObject) {
+        {'blockReasonMessage': final String blockReasonMessage} =>
+          blockReasonMessage,
+        _ => null,
+      },
+      safetyRatings.map(_parseSafetyRating).toList(),
+    ),
     _ => throw unhandledFormat('PromptFeedback', jsonObject),
   };
 }
@@ -220,14 +223,18 @@ SafetyRating _parseSafetyRating(Object? jsonObject) {
       'blocked': final bool? isBlocked,
     } =>
       SafetyRating(
-          _parseHarmCategory(category), _parseHarmProbability(probability),
-          isBlocked: isBlocked),
+        _parseHarmCategory(category),
+        _parseHarmProbability(probability),
+        isBlocked: isBlocked,
+      ),
     {
       'category': final Object category,
       'probability': final Object probability,
     } =>
       SafetyRating(
-          _parseHarmCategory(category), _parseHarmProbability(probability)),
+        _parseHarmCategory(category),
+        _parseHarmProbability(probability),
+      ),
     _ => throw unhandledFormat('SafetyRating', jsonObject),
   };
 }
@@ -242,16 +249,14 @@ HarmProbability _parseHarmProbability(Object jsonObject) =>
       _ => throw unhandledFormat('HarmProbability', jsonObject),
     };
 HarmCategory _parseHarmCategory(Object jsonObject) => switch (jsonObject) {
-      'HARM_CATEGORY_UNSPECIFIED' => HarmCategory.unknown,
-      'HARM_CATEGORY_HARASSMENT' => HarmCategory.harassment,
-      'HARM_CATEGORY_HATE_SPEECH' => HarmCategory.hateSpeech,
-      'HARM_CATEGORY_SEXUALLY_EXPLICIT' => HarmCategory.sexuallyExplicit,
-      'HARM_CATEGORY_DANGEROUS_CONTENT' => HarmCategory.dangerousContent,
-      'HARM_CATEGORY_IMAGE_HATE' => HarmCategory.imageHate,
-      'HARM_CATEGORY_IMAGE_DANGEROUS_CONTENT' =>
-        HarmCategory.imageDangerousContent,
-      'HARM_CATEGORY_IMAGE_HARASSMENT' => HarmCategory.imageHarassment,
-      'HARM_CATEGORY_IMAGE_SEXUALLY_EXPLICIT' =>
-        HarmCategory.imageSexuallyExplicit,
-      _ => HarmCategory.unknown,
-    };
+  'HARM_CATEGORY_UNSPECIFIED' => HarmCategory.unknown,
+  'HARM_CATEGORY_HARASSMENT' => HarmCategory.harassment,
+  'HARM_CATEGORY_HATE_SPEECH' => HarmCategory.hateSpeech,
+  'HARM_CATEGORY_SEXUALLY_EXPLICIT' => HarmCategory.sexuallyExplicit,
+  'HARM_CATEGORY_DANGEROUS_CONTENT' => HarmCategory.dangerousContent,
+  'HARM_CATEGORY_IMAGE_HATE' => HarmCategory.imageHate,
+  'HARM_CATEGORY_IMAGE_DANGEROUS_CONTENT' => HarmCategory.imageDangerousContent,
+  'HARM_CATEGORY_IMAGE_HARASSMENT' => HarmCategory.imageHarassment,
+  'HARM_CATEGORY_IMAGE_SEXUALLY_EXPLICIT' => HarmCategory.imageSexuallyExplicit,
+  _ => HarmCategory.unknown,
+};

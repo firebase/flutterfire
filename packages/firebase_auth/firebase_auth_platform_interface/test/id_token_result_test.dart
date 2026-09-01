@@ -14,34 +14,41 @@ void main() {
   const int kMockExpirationTimestamp = 1234566;
   const int kMockAuthTimestamp = 1234567;
   const int kMockIssuedAtTimestamp = 12345678;
-  final Map<String, String> kMockClaims = {
-    'claim1': 'value1',
-  };
+  final Map<String, String> kMockClaims = {'claim1': 'value1'};
 
   final kMockData = InternalIdTokenResult(
-      claims: kMockClaims,
-      issuedAtTimestamp: kMockIssuedAtTimestamp,
-      authTimestamp: kMockAuthTimestamp,
-      expirationTimestamp: kMockExpirationTimestamp,
-      signInProvider: kMockSignInProvider,
-      signInSecondFactor: kMockSignInSecondFactor,
-      token: kMockToken);
+    claims: kMockClaims,
+    issuedAtTimestamp: kMockIssuedAtTimestamp,
+    authTimestamp: kMockAuthTimestamp,
+    expirationTimestamp: kMockExpirationTimestamp,
+    signInProvider: kMockSignInProvider,
+    signInSecondFactor: kMockSignInSecondFactor,
+    token: kMockToken,
+  );
 
   group('$IdTokenResult', () {
     final idTokenResult = IdTokenResult(kMockData);
     group('Constructor', () {
       test('returns an instance of [IdTokenResult]', () {
         expect(idTokenResult, isA<IdTokenResult>());
-        expect(idTokenResult.authTime!.millisecondsSinceEpoch,
-            equals(kMockAuthTimestamp));
+        expect(
+          idTokenResult.authTime!.millisecondsSinceEpoch,
+          equals(kMockAuthTimestamp),
+        );
         expect(idTokenResult.claims, equals(kMockClaims));
-        expect(idTokenResult.expirationTime!.millisecondsSinceEpoch,
-            equals(kMockExpirationTimestamp));
-        expect(idTokenResult.issuedAtTime!.millisecondsSinceEpoch,
-            equals(kMockIssuedAtTimestamp));
+        expect(
+          idTokenResult.expirationTime!.millisecondsSinceEpoch,
+          equals(kMockExpirationTimestamp),
+        );
+        expect(
+          idTokenResult.issuedAtTime!.millisecondsSinceEpoch,
+          equals(kMockIssuedAtTimestamp),
+        );
         expect(idTokenResult.signInProvider, equals(kMockSignInProvider));
         expect(
-            idTokenResult.signInSecondFactor, equals(kMockSignInSecondFactor));
+          idTokenResult.signInSecondFactor,
+          equals(kMockSignInSecondFactor),
+        );
         expect(idTokenResult.token, equals(kMockToken));
       });
     });
@@ -53,12 +60,13 @@ void main() {
 
       test('returns null when data[claims] is null', () {
         final kMockData = InternalIdTokenResult(
-            issuedAtTimestamp: kMockIssuedAtTimestamp,
-            authTimestamp: kMockAuthTimestamp,
-            expirationTimestamp: kMockExpirationTimestamp,
-            signInProvider: kMockSignInProvider,
-            signInSecondFactor: kMockSignInSecondFactor,
-            token: kMockToken);
+          issuedAtTimestamp: kMockIssuedAtTimestamp,
+          authTimestamp: kMockAuthTimestamp,
+          expirationTimestamp: kMockExpirationTimestamp,
+          signInProvider: kMockSignInProvider,
+          signInSecondFactor: kMockSignInSecondFactor,
+          token: kMockToken,
+        );
 
         final testIdTokenResult = IdTokenResult(kMockData);
         expect(testIdTokenResult.claims, isNull);
@@ -66,8 +74,10 @@ void main() {
     });
 
     test('toString()', () {
-      expect(idTokenResult.toString(),
-          '$IdTokenResult(authTime: ${idTokenResult.authTime}, claims: $kMockClaims, expirationTime: ${idTokenResult.expirationTime}, issuedAtTime: ${idTokenResult.issuedAtTime}, signInProvider: $kMockSignInProvider, signInSecondFactor: $kMockSignInSecondFactor, token: $kMockToken)');
+      expect(
+        idTokenResult.toString(),
+        '$IdTokenResult(authTime: ${idTokenResult.authTime}, claims: $kMockClaims, expirationTime: ${idTokenResult.expirationTime}, issuedAtTime: ${idTokenResult.issuedAtTime}, signInProvider: $kMockSignInProvider, signInSecondFactor: $kMockSignInSecondFactor, token: $kMockToken)',
+      );
     });
   });
 }

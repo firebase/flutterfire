@@ -14,7 +14,5 @@ enum IndexMode {
 class ExecuteOptions {
   final IndexMode indexMode;
 
-  const ExecuteOptions({
-    this.indexMode = IndexMode.recommended,
-  });
+  const ExecuteOptions({this.indexMode = IndexMode.recommended});
 }

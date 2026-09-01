@@ -34,27 +34,15 @@ void main() {
 
     test('activate with ReCaptchaV3Provider', () async {
       final provider = ReCaptchaV3Provider('key');
-      await appCheck.activate(
-        webProvider: provider,
-      );
-      verify(
-        appCheck.activate(
-          webProvider: provider,
-        ),
-      );
+      await appCheck.activate(webProvider: provider);
+      verify(appCheck.activate(webProvider: provider));
       verifyNoMoreInteractions(appCheck);
     });
 
     test('activate with ReCaptchaEnterpriseProvider', () async {
       final provider = ReCaptchaEnterpriseProvider('key');
-      await appCheck.activate(
-        webProvider: provider,
-      );
-      verify(
-        appCheck.activate(
-          webProvider: provider,
-        ),
-      );
+      await appCheck.activate(webProvider: provider);
+      verify(appCheck.activate(webProvider: provider));
       verifyNoMoreInteractions(appCheck);
     });
 

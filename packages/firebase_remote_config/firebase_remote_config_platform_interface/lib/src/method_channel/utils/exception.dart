@@ -21,9 +21,9 @@ Never convertPlatformException(Object exception, StackTrace stackTrace) {
   if (exception is PlatformException) {
     final FirebaseException firebaseException =
         platformExceptionToFirebaseException(
-      exception,
-      plugin: 'firebase_remote_config',
-    );
+          exception,
+          plugin: 'firebase_remote_config',
+        );
 
     final String code = refineRemoteConfigErrorCode(
       firebaseException.code,

@@ -6,8 +6,10 @@ part of '../../firebase_database_web.dart';
 
 // Cannot use `guardWebExceptions` since we are inferring the
 // exception type from the message.
-FirebaseException convertFirebaseDatabaseException(Object exception,
-    [StackTrace? stackTrace]) {
+FirebaseException convertFirebaseDatabaseException(
+  Object exception, [
+  StackTrace? stackTrace,
+]) {
   final castedJSObject = exception as core_interop.JSError;
   String code = 'unknown';
   String message = castedJSObject.message?.toDart ?? '';
@@ -20,8 +22,9 @@ FirebaseException convertFirebaseDatabaseException(Object exception,
   } else if (lowerCaseMessage.contains('permission denied') ||
       lowerCaseMessage.contains('permission_denied')) {
     code = 'permission-denied';
-  } else if (lowerCaseMessage
-      .contains('transaction needs to be run again with current data')) {
+  } else if (lowerCaseMessage.contains(
+    'transaction needs to be run again with current data',
+  )) {
     code = 'data-stale';
   } else if (lowerCaseMessage.contains('transaction had too many retries')) {
     code = 'max-retries';
