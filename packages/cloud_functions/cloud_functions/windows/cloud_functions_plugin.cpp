@@ -98,7 +98,10 @@ static Variant EncodableValueToVariant(const flutter::EncodableValue& value) {
     return Variant(std::get<std::string>(value));
   } else if (std::holds_alternative<std::vector<uint8_t>>(value)) {
     const auto& bytes = std::get<std::vector<uint8_t>>(value);
-    return Variant::FromMutableBlob(bytes.data(), bytes.size());
+    // bytes.data() may be null for an empty vector; give the SDK a valid
+    // pointer regardless.
+    return bytes.empty() ? Variant::FromMutableBlob("", 0)
+                         : Variant::FromMutableBlob(bytes.data(), bytes.size());
   } else if (std::holds_alternative<std::vector<int32_t>>(value)) {
     std::vector<Variant> vec;
     for (int32_t item : std::get<std::vector<int32_t>>(value)) {
@@ -205,6 +208,61 @@ static Functions* GetFunctionsInstance(const std::string& app_name,
                         : Functions::GetInstance(app, region.c_str());
 }
 
+// Per-call bookkeeping shared by the deadline thread and the SDK completion.
+//
+// The C++ SDK has no per-call deadline API, so the plugin enforces the
+// Dart-provided timeout itself. Whichever of the deadline thread and the SDK
+// completion runs first delivers the response; the loser only cleans up.
+//
+// `ref` is heap-allocated because its internals own the transport that runs
+// the request on an SDK background thread: a stack local would be destroyed
+// when the handler returns, mid-request. It is only released once the SDK
+// completion has fired -- but not *on* the completion thread either, since
+// OnCompletion runs inside the reference's own Future/transport machinery and
+// destroying the reference from there crashes on Windows. The delete is
+// therefore handed to a short-lived thread.
+struct CallState {
+  std::mutex mutex;
+  std::condition_variable cv;
+  bool responded = false;
+  HttpsCallableReference* ref = nullptr;
+};
+
+// Marks the call as responded. Returns true for exactly one caller.
+static bool ClaimResponse(CallState& state) {
+  std::lock_guard<std::mutex> lock(state.mutex);
+  if (state.responded) {
+    return false;
+  }
+  state.responded = true;
+  return true;
+}
+
+static void ReleaseReference(CallState& state) {
+  HttpsCallableReference* ref = nullptr;
+  {
+    std::lock_guard<std::mutex> lock(state.mutex);
+    ref = state.ref;
+    state.ref = nullptr;
+  }
+  std::thread([ref]() { delete ref; }).detach();
+}
+
+// Reads the "timeout" argument (milliseconds); 0 when absent or non-integer.
+static int64_t GetTimeoutMsArg(const flutter::EncodableMap& arguments) {
+  auto it = arguments.find(flutter::EncodableValue("timeout"));
+  if (it == arguments.end()) {
+    return 0;
+  }
+  if (std::holds_alternative<int64_t>(it->second)) {
+    return std::get<int64_t>(it->second);
+  }
+  if (std::holds_alternative<int32_t>(it->second)) {
+    return std::get<int32_t>(it->second);
+  }
+  return 0;
+}
+
 static FlutterError MakeFunctionsError(const std::string& code,
                                        const std::string& message) {
   // Dart's platformExceptionToFirebaseFunctionsException reads the canonical
@@ -258,18 +316,14 @@ void CloudFunctionsPlugin::Call(
     functions->UseFunctionsEmulator(origin.c_str());
   }
 
-  // The HttpsCallableReference is heap-allocated and only deleted once the
-  // SDK completion has fired. The reference's internal owns the transport
-  // that runs the request on an SDK background thread; if the reference were
-  // a local and went out of scope when this handler returns, that transport
-  // would be destroyed mid-request and crash (use-after-free).
-  auto* ref = new HttpsCallableReference();
+  auto state = std::make_shared<CallState>();
   if (!function_name.empty()) {
-    *ref = functions->GetHttpsCallable(function_name.c_str());
+    state->ref = new HttpsCallableReference(
+        functions->GetHttpsCallable(function_name.c_str()));
   } else if (!function_uri.empty()) {
-    *ref = functions->GetHttpsCallableFromURL(function_uri.c_str());
+    state->ref = new HttpsCallableReference(
+        functions->GetHttpsCallableFromURL(function_uri.c_str()));
   } else {
-    delete ref;
     result(MakeFunctionsError(
         "invalid-argument",
         "Either functionName or functionUri must be provided"));
@@ -282,87 +336,50 @@ void CloudFunctionsPlugin::Call(
     parameters = EncodableValueToVariant(parameters_it->second);
   }
 
-  // The C++ SDK has no per-call deadline API, so the plugin enforces the
-  // Dart-provided timeout itself. Whichever of the deadline thread and the
-  // SDK completion runs first delivers the response; the loser only cleans
-  // up. Cleanup (reference delete) always happens in the completion path
-  // because deleting the reference while the request is in flight would
-  // destroy the transport mid-request.
-  struct CallState {
-    std::mutex mutex;
-    std::condition_variable cv;
-    bool responded = false;
-    HttpsCallableReference* ref;
-  };
-  auto state = std::make_shared<CallState>();
-  state->ref = ref;
-
-  int64_t timeout_ms = 0;
-  auto timeout_it = arguments.find(flutter::EncodableValue("timeout"));
-  if (timeout_it != arguments.end()) {
-    if (std::holds_alternative<int64_t>(timeout_it->second)) {
-      timeout_ms = std::get<int64_t>(timeout_it->second);
-    } else if (std::holds_alternative<int32_t>(timeout_it->second)) {
-      timeout_ms = std::get<int32_t>(timeout_it->second);
-    }
-  }
+  int64_t timeout_ms = GetTimeoutMsArg(arguments);
   if (timeout_ms > 0) {
     std::thread([state, result, timeout_ms]() {
       std::unique_lock<std::mutex> lock(state->mutex);
       // wait_for returns false only on timeout; a completed request notifies
       // the condition variable so this thread exits (and releases its
       // captures) immediately instead of sleeping out the full deadline.
-      if (!state->cv.wait_for(lock, std::chrono::milliseconds(timeout_ms),
-                              [&state] { return state->responded; })) {
-        state->responded = true;
-        lock.unlock();
-        result(MakeFunctionsError("deadline-exceeded",
-                                  "The operation timed out."));
+      bool completed =
+          state->cv.wait_for(lock, std::chrono::milliseconds(timeout_ms),
+                             [state] { return state->responded; });
+      if (completed) {
+        return;
       }
+      state->responded = true;
+      lock.unlock();
+      result(
+          MakeFunctionsError("deadline-exceeded", "The operation timed out."));
     }).detach();
   }
 
-  ref->Call(parameters)
+  state->ref->Call(parameters)
       .OnCompletion([state, result](const Future<HttpsCallableResult>& future) {
+        ErrorOr<std::optional<flutter::EncodableValue>> reply =
+            std::optional<flutter::EncodableValue>();
         if (future.error() == Error::kErrorNone) {
           const HttpsCallableResult* callable_result = future.result();
-          flutter::EncodableValue data =
-              callable_result != nullptr
-                  ? VariantToEncodableValue(callable_result->data())
-                  : flutter::EncodableValue();
-          bool deliver = false;
-          {
-            std::lock_guard<std::mutex> lock(state->mutex);
-            if (!state->responded) {
-              state->responded = true;
-              deliver = true;
-            }
-          }
-          state->cv.notify_all();
-          if (deliver) {
-            result(ErrorOr<std::optional<flutter::EncodableValue>>(
-                std::optional<flutter::EncodableValue>(data)));
+          if (callable_result != nullptr) {
+            reply = std::optional<flutter::EncodableValue>(
+                VariantToEncodableValue(callable_result->data()));
           }
         } else {
           std::string code =
               GetFunctionsErrorCode(static_cast<Error>(future.error()));
           std::string message =
               future.error_message() ? future.error_message() : "Unknown error";
-          bool deliver = false;
-          {
-            std::lock_guard<std::mutex> lock(state->mutex);
-            if (!state->responded) {
-              state->responded = true;
-              deliver = true;
-            }
-          }
-          state->cv.notify_all();
-          if (deliver) {
-            result(MakeFunctionsError(code, message));
-          }
+          reply = MakeFunctionsError(code, message);
         }
-        delete state->ref;
-        state->ref = nullptr;
+
+        bool deliver = ClaimResponse(*state);
+        state->cv.notify_all();
+        if (deliver) {
+          result(std::move(reply));
+        }
+        ReleaseReference(*state);
       });
 }
 
