@@ -10,11 +10,10 @@ import 'package:pigeon/pigeon.dart';
     dartOut: 'lib/src/pigeon/messages.pigeon.dart',
     // We export in the lib folder to expose the class to other packages.
     dartTestOut: 'test/pigeon/test_api.dart',
-    javaOut:
-        '../cloud_firestore/android/src/main/java/io/flutter/plugins/firebase/firestore/GeneratedAndroidFirebaseFirestore.java',
-    javaOptions: JavaOptions(
+    kotlinOut:
+        '../cloud_firestore/android/src/main/kotlin/io/flutter/plugins/firebase/firestore/GeneratedAndroidFirebaseFirestore.g.kt',
+    kotlinOptions: KotlinOptions(
       package: 'io.flutter.plugins.firebase.firestore',
-      className: 'GeneratedAndroidFirebaseFirestore',
     ),
     objcHeaderOut:
         '../cloud_firestore/ios/cloud_firestore/Sources/cloud_firestore/include/cloud_firestore/Public/FirestoreMessages.g.h',
