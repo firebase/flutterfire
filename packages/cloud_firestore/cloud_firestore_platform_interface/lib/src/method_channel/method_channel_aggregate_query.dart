@@ -4,6 +4,7 @@
 
 import '../../cloud_firestore_platform_interface.dart';
 import 'method_channel_firestore.dart';
+import 'utils/exception.dart';
 
 /// An implementation of [AggregateQueryPlatform] for the [MethodChannel]
 class MethodChannelAggregateQuery extends AggregateQueryPlatform {
@@ -27,39 +28,43 @@ class MethodChannelAggregateQuery extends AggregateQueryPlatform {
   Future<AggregateQuerySnapshotPlatform> get({
     required AggregateSource source,
   }) async {
-    final data =
-        await MethodChannelFirebaseFirestore.pigeonChannel.aggregateQuery(
-      _pigeonApp,
-      _path,
-      _pigeonParameters,
-      source,
-      _aggregateQueries,
-      _isCollectionGroupQuery,
-    );
+    try {
+      final data =
+          await MethodChannelFirebaseFirestore.pigeonChannel.aggregateQuery(
+        _pigeonApp,
+        _path,
+        _pigeonParameters,
+        source,
+        _aggregateQueries,
+        _isCollectionGroupQuery,
+      );
 
-    int? count;
-    List<AggregateQueryResponse> sum = [];
-    List<AggregateQueryResponse> average = [];
-    for (final query in data) {
-      if (query == null) continue;
-      switch (query.type) {
-        case AggregateType.count:
-          count = query.value?.toInt();
-          break;
-        case AggregateType.sum:
-          sum.add(query);
-          break;
-        case AggregateType.average:
-          average.add(query);
-          break;
+      int? count;
+      List<AggregateQueryResponse> sum = [];
+      List<AggregateQueryResponse> average = [];
+      for (final query in data) {
+        if (query == null) continue;
+        switch (query.type) {
+          case AggregateType.count:
+            count = query.value?.toInt();
+            break;
+          case AggregateType.sum:
+            sum.add(query);
+            break;
+          case AggregateType.average:
+            average.add(query);
+            break;
+        }
       }
-    }
 
-    return AggregateQuerySnapshotPlatform(
-      count: count,
-      sum: sum,
-      average: average,
-    );
+      return AggregateQuerySnapshotPlatform(
+        count: count,
+        sum: sum,
+        average: average,
+      );
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
+    }
   }
 
   @override
