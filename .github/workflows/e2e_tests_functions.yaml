@@ -97,3 +97,13 @@ jobs:
       package-scope: 'cloud_functions*'
       native-config-args: '--functions-native'
       nightly_test_mode: ${{ inputs.nightly_test_mode == true }}
+
+  windows:
+    needs: changes
+    if: needs.changes.outputs.windows == 'true'
+    uses: ./.github/workflows/reusable_e2e_windows.yaml
+    with:
+      package-path: 'packages/cloud_functions/cloud_functions'
+      package-scope: 'cloud_functions*'
+      native-config-args: '--functions-native'
+      nightly_test_mode: ${{ inputs.nightly_test_mode == true }}
