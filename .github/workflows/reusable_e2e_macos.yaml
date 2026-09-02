@@ -109,7 +109,7 @@ jobs:
       NATIVE_CONFIG_ARGS: ${{ inputs.native-config-args }}
     timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 60 }}
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       # No `xcode-select` pin: use the runner image's default Xcode. Firebase's
       # minimum is 26.2 and every current macos-15 image is at or above it. See
       # `reusable_e2e_ios.yaml` for why pinning 26.2 exactly was harmful.
