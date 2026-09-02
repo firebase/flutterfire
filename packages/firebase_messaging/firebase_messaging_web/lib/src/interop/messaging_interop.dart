@@ -24,7 +24,9 @@ external JSPromise<JSBoolean> deleteToken(MessagingJsImpl messaging);
 @JS()
 @staticInterop
 external JSPromise<JSString> getToken(
-    MessagingJsImpl messaging, GetTokenOptions? getTokenOptions);
+  MessagingJsImpl messaging,
+  GetTokenOptions? getTokenOptions,
+);
 
 @JS('isSupported')
 @staticInterop
@@ -32,10 +34,7 @@ external JSPromise<JSBoolean> isSupported();
 
 @JS()
 @staticInterop
-external JSFunction onMessage(
-  MessagingJsImpl messaging,
-  Observer observer,
-);
+external JSFunction onMessage(MessagingJsImpl messaging, Observer observer);
 
 extension type MessagingJsImpl._(JSObject _) implements JSObject {}
 

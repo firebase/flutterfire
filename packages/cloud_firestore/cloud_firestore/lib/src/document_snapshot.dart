@@ -4,14 +4,13 @@
 
 part of '../cloud_firestore.dart';
 
-typedef FromFirestore<T> = T Function(
-  DocumentSnapshot<Map<String, dynamic>> snapshot,
-  SnapshotOptions? options,
-);
-typedef ToFirestore<T> = Map<String, Object?> Function(
-  T value,
-  SetOptions? options,
-);
+typedef FromFirestore<T> =
+    T Function(
+      DocumentSnapshot<Map<String, dynamic>> snapshot,
+      SnapshotOptions? options,
+    );
+typedef ToFirestore<T> =
+    Map<String, Object?> Function(T value, SetOptions? options);
 
 /// Options that configure how data is retrieved from a DocumentSnapshot
 /// (e.g. the desired behavior for server timestamps that have not yet been set to their final value).
@@ -69,8 +68,9 @@ class _JsonDocumentSnapshot implements DocumentSnapshot<Map<String, dynamic>> {
   String get id => _delegate.id;
 
   @override
-  late final DocumentReference<Map<String, dynamic>> reference =
-      _firestore.doc(_delegate.reference.path);
+  late final DocumentReference<Map<String, dynamic>> reference = _firestore.doc(
+    _delegate.reference.path,
+  );
 
   @override
   late final SnapshotMetadata metadata = SnapshotMetadata._(_delegate.metadata);
@@ -130,10 +130,10 @@ class _WithConverterDocumentSnapshot<T> implements DocumentSnapshot<T> {
 
   @override
   DocumentReference<T> get reference => _WithConverterDocumentReference<T>(
-        _originalDocumentSnapshot.reference,
-        _fromFirestore,
-        _toFirestore,
-      );
+    _originalDocumentSnapshot.reference,
+    _fromFirestore,
+    _toFirestore,
+  );
 
   @override
   dynamic get(Object field) => _originalDocumentSnapshot.get(field);

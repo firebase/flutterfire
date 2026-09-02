@@ -46,22 +46,28 @@ final class GenerativeModel extends BaseApiClientModel {
     ToolConfig? toolConfig,
     Content? systemInstruction,
     http.Client? httpClient,
-  })  : _safetySettings = safetySettings ?? [],
-        _generationConfig = generationConfig,
-        _toolConfig = toolConfig,
-        _systemInstruction = systemInstruction,
-        super(
-            serializationStrategy: useAgentPlatform
-                ? AgentPlatformSerialization()
-                : DeveloperSerialization(),
-            modelUri: useAgentPlatform
-                ? _AgentPlatformUri(app: app, model: model, location: location)
-                : _GoogleAIUri(app: app, model: model),
-            client: HttpApiClient(
-                apiKey: app.options.apiKey,
-                httpClient: httpClient,
-                requestHeaders: BaseModel.firebaseTokens(
-                    appCheck, auth, app, useLimitedUseAppCheckTokens)));
+  }) : _safetySettings = safetySettings ?? [],
+       _generationConfig = generationConfig,
+       _toolConfig = toolConfig,
+       _systemInstruction = systemInstruction,
+       super(
+         serializationStrategy: useAgentPlatform
+             ? AgentPlatformSerialization()
+             : DeveloperSerialization(),
+         modelUri: useAgentPlatform
+             ? _AgentPlatformUri(app: app, model: model, location: location)
+             : _GoogleAIUri(app: app, model: model),
+         client: HttpApiClient(
+           apiKey: app.options.apiKey,
+           httpClient: httpClient,
+           requestHeaders: BaseModel.firebaseTokens(
+             appCheck,
+             auth,
+             app,
+             useLimitedUseAppCheckTokens,
+           ),
+         ),
+       );
 
   GenerativeModel._constructTestModel({
     required String model,
@@ -77,22 +83,29 @@ final class GenerativeModel extends BaseApiClientModel {
     ToolConfig? toolConfig,
     Content? systemInstruction,
     ApiClient? apiClient,
-  })  : _safetySettings = safetySettings ?? [],
-        _generationConfig = generationConfig,
-        _toolConfig = toolConfig,
-        _systemInstruction = systemInstruction,
-        super(
-            serializationStrategy: useAgentPlatform
-                ? AgentPlatformSerialization()
-                : DeveloperSerialization(),
-            modelUri: useAgentPlatform
-                ? _AgentPlatformUri(app: app, model: model, location: location)
-                : _GoogleAIUri(app: app, model: model),
-            client: apiClient ??
-                HttpApiClient(
-                    apiKey: app.options.apiKey,
-                    requestHeaders: BaseModel.firebaseTokens(
-                        appCheck, auth, app, useLimitedUseAppCheckTokens)));
+  }) : _safetySettings = safetySettings ?? [],
+       _generationConfig = generationConfig,
+       _toolConfig = toolConfig,
+       _systemInstruction = systemInstruction,
+       super(
+         serializationStrategy: useAgentPlatform
+             ? AgentPlatformSerialization()
+             : DeveloperSerialization(),
+         modelUri: useAgentPlatform
+             ? _AgentPlatformUri(app: app, model: model, location: location)
+             : _GoogleAIUri(app: app, model: model),
+         client:
+             apiClient ??
+             HttpApiClient(
+               apiKey: app.options.apiKey,
+               requestHeaders: BaseModel.firebaseTokens(
+                 appCheck,
+                 auth,
+                 app,
+                 useLimitedUseAppCheckTokens,
+               ),
+             ),
+       );
 
   final List<SafetySetting> _safetySettings;
   final GenerationConfig? _generationConfig;
@@ -113,23 +126,25 @@ final class GenerativeModel extends BaseApiClientModel {
   /// final response = await model.generateContent([Content.text(prompt)]);
   /// print(response.text);
   /// ```
-  Future<GenerateContentResponse> generateContent(Iterable<Content> prompt,
-          {List<SafetySetting>? safetySettings,
-          GenerationConfig? generationConfig,
-          List<Tool>? tools,
-          ToolConfig? toolConfig}) =>
-      makeRequest(
-          Task.generateContent,
-          _serializationStrategy.generateContentRequest(
-            prompt,
-            model,
-            safetySettings ?? _safetySettings,
-            generationConfig ?? _generationConfig,
-            tools ?? this.tools,
-            toolConfig ?? _toolConfig,
-            _systemInstruction,
-          ),
-          _serializationStrategy.parseGenerateContentResponse);
+  Future<GenerateContentResponse> generateContent(
+    Iterable<Content> prompt, {
+    List<SafetySetting>? safetySettings,
+    GenerationConfig? generationConfig,
+    List<Tool>? tools,
+    ToolConfig? toolConfig,
+  }) => makeRequest(
+    Task.generateContent,
+    _serializationStrategy.generateContentRequest(
+      prompt,
+      model,
+      safetySettings ?? _safetySettings,
+      generationConfig ?? _generationConfig,
+      tools ?? this.tools,
+      toolConfig ?? _toolConfig,
+      _systemInstruction,
+    ),
+    _serializationStrategy.parseGenerateContentResponse,
+  );
 
   /// Generates a stream of content responding to [prompt].
   ///
@@ -144,22 +159,24 @@ final class GenerativeModel extends BaseApiClientModel {
   /// }
   /// ```
   Stream<GenerateContentResponse> generateContentStream(
-      Iterable<Content> prompt,
-      {List<SafetySetting>? safetySettings,
-      GenerationConfig? generationConfig,
-      List<Tool>? tools,
-      ToolConfig? toolConfig}) {
+    Iterable<Content> prompt, {
+    List<SafetySetting>? safetySettings,
+    GenerationConfig? generationConfig,
+    List<Tool>? tools,
+    ToolConfig? toolConfig,
+  }) {
     final response = client.streamRequest(
-        taskUri(Task.streamGenerateContent),
-        _serializationStrategy.generateContentRequest(
-          prompt,
-          model,
-          safetySettings ?? _safetySettings,
-          generationConfig ?? _generationConfig,
-          tools ?? this.tools,
-          toolConfig ?? _toolConfig,
-          _systemInstruction,
-        ));
+      taskUri(Task.streamGenerateContent),
+      _serializationStrategy.generateContentRequest(
+        prompt,
+        model,
+        safetySettings ?? _safetySettings,
+        generationConfig ?? _generationConfig,
+        tools ?? this.tools,
+        toolConfig ?? _toolConfig,
+        _systemInstruction,
+      ),
+    );
     return response.map(_serializationStrategy.parseGenerateContentResponse);
   }
 
@@ -180,9 +197,7 @@ final class GenerativeModel extends BaseApiClientModel {
   ///   print(response.text);
   /// }
   /// ```
-  Future<CountTokensResponse> countTokens(
-    Iterable<Content> contents,
-  ) async {
+  Future<CountTokensResponse> countTokens(Iterable<Content> contents) async {
     final parameters = _serializationStrategy.countTokensRequest(
       contents,
       model,
@@ -191,8 +206,11 @@ final class GenerativeModel extends BaseApiClientModel {
       tools,
       _toolConfig,
     );
-    return makeRequest(Task.countTokens, parameters,
-        _serializationStrategy.parseCountTokensResponse);
+    return makeRequest(
+      Task.countTokens,
+      parameters,
+      _serializationStrategy.parseCountTokensResponse,
+    );
   }
 }
 
@@ -211,22 +229,21 @@ GenerativeModel createGenerativeModel({
   ToolConfig? toolConfig,
   Content? systemInstruction,
   http.Client? httpClient,
-}) =>
-    GenerativeModel._(
-      model: model,
-      app: app,
-      appCheck: appCheck,
-      useAgentPlatform: useAgentPlatform,
-      useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
-      auth: auth,
-      location: location,
-      safetySettings: safetySettings,
-      generationConfig: generationConfig,
-      tools: tools,
-      toolConfig: toolConfig,
-      systemInstruction: systemInstruction,
-      httpClient: httpClient,
-    );
+}) => GenerativeModel._(
+  model: model,
+  app: app,
+  appCheck: appCheck,
+  useAgentPlatform: useAgentPlatform,
+  useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
+  auth: auth,
+  location: location,
+  safetySettings: safetySettings,
+  generationConfig: generationConfig,
+  tools: tools,
+  toolConfig: toolConfig,
+  systemInstruction: systemInstruction,
+  httpClient: httpClient,
+);
 
 /// Creates a model with an overridden [ApiClient] for testing.
 ///
@@ -245,18 +262,18 @@ GenerativeModel createModelWithClient({
   List<SafetySetting>? safetySettings,
   List<Tool>? tools,
   ToolConfig? toolConfig,
-}) =>
-    GenerativeModel._constructTestModel(
-        model: model,
-        app: app,
-        appCheck: appCheck,
-        useAgentPlatform: useAgentPlatform,
-        useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
-        auth: auth,
-        location: location,
-        safetySettings: safetySettings,
-        generationConfig: generationConfig,
-        systemInstruction: systemInstruction,
-        tools: tools,
-        toolConfig: toolConfig,
-        apiClient: client);
+}) => GenerativeModel._constructTestModel(
+  model: model,
+  app: app,
+  appCheck: appCheck,
+  useAgentPlatform: useAgentPlatform,
+  useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
+  auth: auth,
+  location: location,
+  safetySettings: safetySettings,
+  generationConfig: generationConfig,
+  systemInstruction: systemInstruction,
+  tools: tools,
+  toolConfig: toolConfig,
+  apiClient: client,
+);

@@ -199,7 +199,8 @@ class RestTransport implements DataConnectTransport {
     String? token,
   ) {
     throw UnsupportedError(
-        'Streaming should be routed through WebSocketTransport');
+      'Streaming should be routed through WebSocketTransport',
+    );
   }
 }
 
@@ -210,5 +211,4 @@ DataConnectTransport getTransport(
   String appId,
   CallerSDKType sdkType,
   FirebaseAppCheck? appCheck,
-) =>
-    RestTransport(transportOptions, options, appId, sdkType, appCheck);
+) => RestTransport(transportOptions, options, appId, sdkType, appCheck);

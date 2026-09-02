@@ -15,9 +15,7 @@ import 'tabs_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
 
@@ -25,16 +23,15 @@ class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-  static FirebaseAnalyticsObserver observer =
-      FirebaseAnalyticsObserver(analytics: analytics);
+  static FirebaseAnalyticsObserver observer = FirebaseAnalyticsObserver(
+    analytics: analytics,
+  );
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Firebase Analytics Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: ThemeData(primarySwatch: Colors.blue),
       navigatorObservers: <NavigatorObserver>[observer],
       home: MyHomePage(
         title: 'Firebase Analytics Demo',
@@ -70,8 +67,9 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    _purchaseSubscription =
-        InAppPurchase.instance.purchaseStream.listen(_onPurchaseUpdate);
+    _purchaseSubscription = InAppPurchase.instance.purchaseStream.listen(
+      _onPurchaseUpdate,
+    );
   }
 
   @override
@@ -90,11 +88,14 @@ class _MyHomePageState extends State<MyHomePage> {
         final transactionId = purchase.purchaseID;
         print('transactionId: $transactionId');
         if (transactionId != null) {
-          widget.analytics.logTransaction(transactionId).then((_) {
-            setMessage('logTransaction succeeded with ID: $transactionId');
-          }).catchError((e) {
-            setMessage('logTransaction failed: $e');
-          });
+          widget.analytics
+              .logTransaction(transactionId)
+              .then((_) {
+                setMessage('logTransaction succeeded with ID: $transactionId');
+              })
+              .catchError((e) {
+                setMessage('logTransaction failed: $e');
+              });
         }
       } else if (purchase.status == PurchaseStatus.error) {
         setMessage('Purchase error: ${purchase.error?.message}');
@@ -158,8 +159,9 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _testSetSessionTimeoutDuration() async {
-    await widget.analytics
-        .setSessionTimeoutDuration(const Duration(milliseconds: 20000));
+    await widget.analytics.setSessionTimeoutDuration(
+      const Duration(milliseconds: 20000),
+    );
     setMessage('setSessionTimeoutDuration succeeded');
   }
 
@@ -207,8 +209,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
     setMessage('Loading product $_testProductId...');
 
-    final response =
-        await InAppPurchase.instance.queryProductDetails({_testProductId});
+    final response = await InAppPurchase.instance.queryProductDetails({
+      _testProductId,
+    });
 
     if (response.error != null) {
       setMessage('Failed to load product: ${response.error!.message}');
@@ -287,25 +290,19 @@ class _MyHomePageState extends State<MyHomePage> {
       value: 345.66,
     );
 
-    await widget.analytics.logGenerateLead(
-      currency: 'USD',
-      value: 123.45,
-    );
-    await widget.analytics.logJoinGroup(
-      groupId: 'test group id',
-    );
-    await widget.analytics.logLevelUp(
-      level: 5,
-      character: 'witch doctor',
-    );
+    await widget.analytics.logGenerateLead(currency: 'USD', value: 123.45);
+    await widget.analytics.logJoinGroup(groupId: 'test group id');
+    await widget.analytics.logLevelUp(level: 5, character: 'witch doctor');
     await widget.analytics.logLogin(loginMethod: 'login');
     await widget.analytics.logPostScore(
       score: 1000000,
       level: 70,
       character: 'tiefling cleric',
     );
-    await widget.analytics
-        .logPurchase(currency: 'USD', transactionId: 'transaction-id');
+    await widget.analytics.logPurchase(
+      currency: 'USD',
+      transactionId: 'transaction-id',
+    );
     await widget.analytics.logSearch(
       searchTerm: 'hotel',
       numberOfNights: 2,
@@ -332,9 +329,7 @@ class _MyHomePageState extends State<MyHomePage> {
       itemListName: 't-shirt',
       itemListId: '1234',
     );
-    await widget.analytics.logScreenView(
-      screenName: 'tabs-page',
-    );
+    await widget.analytics.logScreenView(screenName: 'tabs-page');
     await widget.analytics.logViewCart(
       currency: 'USD',
       value: 123,
@@ -345,9 +340,7 @@ class _MyHomePageState extends State<MyHomePage> {
       itemId: 'test item id',
       method: 'facebook',
     );
-    await widget.analytics.logSignUp(
-      signUpMethod: 'test sign up method',
-    );
+    await widget.analytics.logSignUp(signUpMethod: 'test sign up method');
     await widget.analytics.logSpendVirtualCurrency(
       itemName: 'test item name',
       virtualCurrencyName: 'bitcoin',
@@ -379,18 +372,14 @@ class _MyHomePageState extends State<MyHomePage> {
       itemListName: 'green t-shirt',
       items: [itemCreator()],
     );
-    await widget.analytics.logViewSearchResults(
-      searchTerm: 'test search term',
-    );
+    await widget.analytics.logViewSearchResults(searchTerm: 'test search term');
     setMessage('All standard events logged successfully');
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
+      appBar: AppBar(title: Text(widget.title)),
       body: Center(
         child: Column(
           children: <Widget>[

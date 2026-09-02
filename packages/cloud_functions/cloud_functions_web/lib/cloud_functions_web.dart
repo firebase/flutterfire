@@ -21,13 +21,11 @@ class FirebaseFunctionsWeb extends FirebaseFunctionsPlatform {
 
   /// The entry point for the [FirebaseFunctionsWeb] class.
   FirebaseFunctionsWeb({FirebaseApp? app, required String region})
-      : super(app, region);
+    : super(app, region);
 
   /// Stub initializer to allow the [registerWith] to create an instance without
   /// registering the web delegates or listeners.
-  FirebaseFunctionsWeb._()
-      : _webFunctions = null,
-        super(null, 'us-central1');
+  FirebaseFunctionsWeb._() : _webFunctions = null, super(null, 'us-central1');
 
   /// Instance of functions from the web plugin
   functions_interop.Functions? _webFunctions;
@@ -35,7 +33,9 @@ class FirebaseFunctionsWeb extends FirebaseFunctionsPlatform {
   /// Lazily initialize [_webFunctions] on first method call
   functions_interop.Functions get _delegate {
     return _webFunctions ??= functions_interop.getFunctionsInstance(
-        core_interop.app(app?.name), region);
+      core_interop.app(app?.name),
+      region,
+    );
   }
 
   /// Create the default instance of the [FirebaseFunctionsPlatform] as a [FirebaseFunctionsWeb]
@@ -52,20 +52,28 @@ class FirebaseFunctionsWeb extends FirebaseFunctionsPlatform {
   }
 
   @override
-  FirebaseFunctionsPlatform delegateFor(
-      {FirebaseApp? app, required String region}) {
+  FirebaseFunctionsPlatform delegateFor({
+    FirebaseApp? app,
+    required String region,
+  }) {
     return FirebaseFunctionsWeb(app: app, region: region);
   }
 
   @override
   HttpsCallablePlatform httpsCallable(
-      String? origin, String name, HttpsCallableOptions options) {
+    String? origin,
+    String name,
+    HttpsCallableOptions options,
+  ) {
     return HttpsCallableWeb(this, _delegate, origin, name, options, null);
   }
 
   @override
   HttpsCallablePlatform httpsCallableWithUri(
-      String? origin, Uri uri, HttpsCallableOptions options) {
+    String? origin,
+    Uri uri,
+    HttpsCallableOptions options,
+  ) {
     return HttpsCallableWeb(this, _delegate, origin, null, options, uri);
   }
 }

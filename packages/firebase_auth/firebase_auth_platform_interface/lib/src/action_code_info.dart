@@ -10,10 +10,8 @@ import 'package:meta/meta.dart';
 class ActionCodeInfo {
   // ignore: public_member_api_docs
   @protected
-  ActionCodeInfo({
-    required this.operation,
-    required ActionCodeInfoData data,
-  }) : _data = data;
+  ActionCodeInfo({required this.operation, required ActionCodeInfoData data})
+    : _data = data;
 
   ActionCodeInfoOperation operation;
 
@@ -29,10 +27,7 @@ class ActionCodeInfo {
 class ActionCodeInfoData {
   // ignore: public_member_api_docs
   @protected
-  ActionCodeInfoData({
-    required this.email,
-    required this.previousEmail,
-  });
+  ActionCodeInfoData({required this.email, required this.previousEmail});
 
   /// The email associated with the action code.
   final String? email;
@@ -42,9 +37,6 @@ class ActionCodeInfoData {
 
   /// Converts the [ActionCodeInfoData] instance to a [Map].
   Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'email': email,
-      'previousEmail': previousEmail,
-    };
+    return <String, dynamic>{'email': email, 'previousEmail': previousEmail};
   }
 }

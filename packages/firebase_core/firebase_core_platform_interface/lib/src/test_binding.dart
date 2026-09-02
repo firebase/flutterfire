@@ -51,8 +51,9 @@ class TestBinaryMessenger {
       return;
     }
     _setMockMessageHandler(channel.name, (ByteData? message) async {
-      return channel.codec
-          .encodeMessage(await handler(channel.codec.decodeMessage(message)));
+      return channel.codec.encodeMessage(
+        await handler(channel.codec.decodeMessage(message)),
+      );
     });
   }
 

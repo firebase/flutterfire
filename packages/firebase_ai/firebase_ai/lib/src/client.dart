@@ -30,7 +30,9 @@ abstract interface class ApiClient {
 
   /// Function to make a stream request.
   Stream<Map<String, Object?>> streamRequest(
-      Uri uri, Map<String, Object?> body);
+    Uri uri,
+    Map<String, Object?> body,
+  );
 }
 
 // Encodes first by `json.encode`, then `utf8.encode`.
@@ -40,31 +42,32 @@ final _utf8Json = json.fuse(utf8);
 /// The http implementation of ApiClient
 final class HttpApiClient implements ApiClient {
   ///Constructor
-  HttpApiClient(
-      {required String apiKey,
-      http.Client? httpClient,
-      FutureOr<Map<String, String>> Function()? requestHeaders})
-      : _apiKey = apiKey,
-        // package:http top-level helpers (http.post, Request.send) create and
-        // close a Client per call, which prevents TCP/TLS connection reuse.
-        _httpClient = httpClient ?? http.Client(),
-        _requestHeaders = requestHeaders;
+  HttpApiClient({
+    required String apiKey,
+    http.Client? httpClient,
+    FutureOr<Map<String, String>> Function()? requestHeaders,
+  }) : _apiKey = apiKey,
+       // package:http top-level helpers (http.post, Request.send) create and
+       // close a Client per call, which prevents TCP/TLS connection reuse.
+       _httpClient = httpClient ?? http.Client(),
+       _requestHeaders = requestHeaders;
   final String _apiKey;
   final http.Client _httpClient;
 
   final FutureOr<Map<String, String>> Function()? _requestHeaders;
 
   Future<Map<String, String>> _headers() async => {
-        'x-goog-api-key': _apiKey,
-        'x-goog-api-client': clientName,
-        'Content-Type': 'application/json',
-        if (_requestHeaders case final requestHeaders?)
-          ...await requestHeaders(),
-      };
+    'x-goog-api-key': _apiKey,
+    'x-goog-api-client': clientName,
+    'Content-Type': 'application/json',
+    if (_requestHeaders case final requestHeaders?) ...await requestHeaders(),
+  };
 
   @override
   Future<Map<String, Object?>> makeRequest(
-      Uri uri, Map<String, Object?> body) async {
+    Uri uri,
+    Map<String, Object?> body,
+  ) async {
     final headers = await _headers();
     final response = await _httpClient.post(
       uri,
@@ -73,7 +76,8 @@ final class HttpApiClient implements ApiClient {
     );
     if (response.statusCode >= 500) {
       throw FirebaseAIException(
-          'Server Error [${response.statusCode}]: ${response.body}');
+        'Server Error [${response.statusCode}]: ${response.body}',
+      );
     }
 
     return _utf8Json.decode(response.bodyBytes)! as Map<String, Object?>;
@@ -81,7 +85,9 @@ final class HttpApiClient implements ApiClient {
 
   @override
   Stream<Map<String, Object?>> streamRequest(
-      Uri uri, Map<String, Object?> body) async* {
+    Uri uri,
+    Map<String, Object?> body,
+  ) async* {
     Uri streamUri = uri.replace(queryParameters: {'alt': 'sse'});
     final request = http.Request('POST', streamUri)
       ..bodyBytes = _utf8Json.encode(body)
@@ -94,8 +100,9 @@ final class HttpApiClient implements ApiClient {
       yield jsonDecode(body) as Map<String, Object?>;
       return;
     }
-    final lines =
-        response.stream.toStringStream().transform(const LineSplitter());
+    final lines = response.stream.toStringStream().transform(
+      const LineSplitter(),
+    );
     await for (final line in lines) {
       const dataPrefix = 'data: ';
       if (line.startsWith(dataPrefix)) {

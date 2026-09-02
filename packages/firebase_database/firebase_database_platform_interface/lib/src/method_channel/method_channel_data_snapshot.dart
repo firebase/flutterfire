@@ -6,10 +6,7 @@ import 'package:firebase_database_platform_interface/firebase_database_platform_
 
 /// Represents a query over the data at a particular location.
 class MethodChannelDataSnapshot extends DataSnapshotPlatform {
-  MethodChannelDataSnapshot(
-    this._ref,
-    this._data,
-  ) : super(_ref, _data);
+  MethodChannelDataSnapshot(this._ref, this._data) : super(_ref, _data);
 
   DatabaseReferencePlatform _ref;
 
@@ -45,34 +42,29 @@ class MethodChannelDataSnapshot extends DataSnapshotPlatform {
     }
 
     if (childValue == null) {
-      return MethodChannelDataSnapshot(
-        _ref.child(childPath),
-        <String, dynamic>{
-          'key': _ref.child(childPath).key,
-          'value': null,
-          'priority': null,
-          'childKeys': [],
-        },
-      );
+      return MethodChannelDataSnapshot(_ref.child(childPath), <String, dynamic>{
+        'key': _ref.child(childPath).key,
+        'value': null,
+        'priority': null,
+        'childKeys': [],
+      });
     }
 
-    return MethodChannelDataSnapshot(
-      _ref.child(childPath),
-      <String, dynamic>{
-        'key': _ref.child(childPath).key,
-        'value': childValue,
-        'priority': null,
-        'childKeys': _childKeysFromValue(childValue),
-      },
-    );
+    return MethodChannelDataSnapshot(_ref.child(childPath), <String, dynamic>{
+      'key': _ref.child(childPath).key,
+      'value': childValue,
+      'priority': null,
+      'childKeys': _childKeysFromValue(childValue),
+    });
   }
 
   @override
   Iterable<DataSnapshotPlatform> get children {
     List<String> _childKeys = List<String>.from(_data['childKeys']);
 
-    return Iterable<DataSnapshotPlatform>.generate(_childKeys.length,
-        (int index) {
+    return Iterable<DataSnapshotPlatform>.generate(_childKeys.length, (
+      int index,
+    ) {
       String childKey = _childKeys[index];
 
       dynamic childValue;
@@ -84,15 +76,12 @@ class MethodChannelDataSnapshot extends DataSnapshotPlatform {
         }
       }
 
-      return MethodChannelDataSnapshot(
-        _ref.child(childKey),
-        <String, dynamic>{
-          'key': childKey,
-          'value': childValue,
-          'priority': null,
-          'childKeys': _childKeysFromValue(childValue),
-        },
-      );
+      return MethodChannelDataSnapshot(_ref.child(childKey), <String, dynamic>{
+        'key': childKey,
+        'value': childValue,
+        'priority': null,
+        'childKeys': _childKeysFromValue(childValue),
+      });
     });
   }
 }

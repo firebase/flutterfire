@@ -16,9 +16,14 @@ import 'package:web/web.dart' as web;
 /// A web specific implementation of [HttpsCallable].
 class HttpsCallableWeb extends HttpsCallablePlatform {
   /// Constructor.
-  HttpsCallableWeb(FirebaseFunctionsPlatform functions, this._webFunctions,
-      String? origin, String? name, HttpsCallableOptions options, Uri? uri)
-      : super(functions, origin, name, options, uri);
+  HttpsCallableWeb(
+    FirebaseFunctionsPlatform functions,
+    this._webFunctions,
+    String? origin,
+    String? name,
+    HttpsCallableOptions options,
+    Uri? uri,
+  ) : super(functions, origin, name, options, uri);
 
   final functions_interop.Functions _webFunctions;
 
@@ -32,9 +37,9 @@ class HttpsCallableWeb extends HttpsCallablePlatform {
 
     functions_interop.HttpsCallableOptions callableOptions =
         functions_interop.HttpsCallableOptions(
-      timeout: options.timeout.inMilliseconds.toJS,
-      limitedUseAppCheckTokens: options.limitedUseAppCheckToken.toJS,
-    );
+          timeout: options.timeout.inMilliseconds.toJS,
+          limitedUseAppCheckTokens: options.limitedUseAppCheckToken.toJS,
+        );
 
     late functions_interop.HttpsCallable callable;
 
@@ -84,11 +89,14 @@ class HttpsCallableWeb extends HttpsCallablePlatform {
     }
     interop.HttpsCallableStreamOptions callableStreamOptions =
         interop.HttpsCallableStreamOptions(
-            limitedUseAppCheckTokens: options.limitedUseAppCheckToken.toJS,
-            signal: signal);
+          limitedUseAppCheckTokens: options.limitedUseAppCheckToken.toJS,
+          signal: signal,
+        );
     try {
-      await for (final value
-          in callable.stream(parametersJS, callableStreamOptions)) {
+      await for (final value in callable.stream(
+        parametersJS,
+        callableStreamOptions,
+      )) {
         yield value;
       }
     } catch (e, s) {

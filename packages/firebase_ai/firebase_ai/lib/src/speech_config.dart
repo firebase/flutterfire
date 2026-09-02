@@ -18,14 +18,15 @@ import 'package:meta/meta.dart';
 class SpeechConfig {
   /// Constructs a [SpeechConfig] for a single-speaker setup.
   SpeechConfig({this.voiceName, this.languageCode})
-      : multiSpeakerVoiceConfig = null;
+    : multiSpeakerVoiceConfig = null;
 
   /// Constructs a [SpeechConfig] for a multi-speaker setup.
   ///
   /// This feature is in Public Preview.
-  SpeechConfig.multiSpeaker(
-      {required this.multiSpeakerVoiceConfig, this.languageCode})
-      : voiceName = null;
+  SpeechConfig.multiSpeaker({
+    required this.multiSpeakerVoiceConfig,
+    this.languageCode,
+  }) : voiceName = null;
 
   /// The voice name to use for a single-speaker setup.
   final String? voiceName;
@@ -39,15 +40,14 @@ class SpeechConfig {
   /// Convert to json format.
   @internal
   Map<String, Object?> toJson() => {
-        if (voiceName != null)
-          'voice_config': VoiceConfig(
-            prebuiltVoiceConfig: PrebuiltVoiceConfig(voiceName: voiceName),
-          ).toJson(),
-        if (multiSpeakerVoiceConfig case final multiSpeakerVoiceConfig?)
-          'multi_speaker_voice_config': multiSpeakerVoiceConfig.toJson(),
-        if (languageCode case final languageCode?)
-          'language_code': languageCode,
-      };
+    if (voiceName != null)
+      'voice_config': VoiceConfig(
+        prebuiltVoiceConfig: PrebuiltVoiceConfig(voiceName: voiceName),
+      ).toJson(),
+    if (multiSpeakerVoiceConfig case final multiSpeakerVoiceConfig?)
+      'multi_speaker_voice_config': multiSpeakerVoiceConfig.toJson(),
+    if (languageCode case final languageCode?) 'language_code': languageCode,
+  };
 }
 
 /// Configuration for a multi-speaker audio generation setup.
@@ -62,9 +62,10 @@ class MultiSpeakerVoiceConfig {
 
   /// Convert to json format.
   Map<String, Object?> toJson() => {
-        'speaker_voice_configs':
-            speakerVoiceConfigs.map((e) => e.toJson()).toList(),
-      };
+    'speaker_voice_configs': speakerVoiceConfigs
+        .map((e) => e.toJson())
+        .toList(),
+  };
 }
 
 /// Configures a participating speaker within a multi-speaker setup.
@@ -82,11 +83,11 @@ class SpeakerVoiceConfig {
 
   /// Convert to json format.
   Map<String, Object?> toJson() => {
-        'speaker': speaker,
-        'voice_config': VoiceConfig(
-          prebuiltVoiceConfig: PrebuiltVoiceConfig(voiceName: voiceName),
-        ).toJson(),
-      };
+    'speaker': speaker,
+    'voice_config': VoiceConfig(
+      prebuiltVoiceConfig: PrebuiltVoiceConfig(voiceName: voiceName),
+    ).toJson(),
+  };
 }
 
 /// Configuration for a prebuilt voice.
@@ -98,8 +99,9 @@ class PrebuiltVoiceConfig {
   final String? voiceName;
 
   /// Convert to json format.
-  Map<String, Object?> toJson() =>
-      {if (voiceName case final voiceName?) 'voice_name': voiceName};
+  Map<String, Object?> toJson() => {
+    if (voiceName case final voiceName?) 'voice_name': voiceName,
+  };
 }
 
 /// Configuration for the voice to be used in speech synthesis.
@@ -112,7 +114,7 @@ class VoiceConfig {
 
   /// Convert to json format.
   Map<String, Object?> toJson() => {
-        if (prebuiltVoiceConfig case final prebuiltVoiceConfig?)
-          'prebuilt_voice_config': prebuiltVoiceConfig.toJson()
-      };
+    if (prebuiltVoiceConfig case final prebuiltVoiceConfig?)
+      'prebuilt_voice_config': prebuiltVoiceConfig.toJson(),
+  };
 }

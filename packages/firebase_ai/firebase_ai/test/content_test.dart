@@ -25,8 +25,10 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('Content tests', () {
     test('constructor', () {
-      final content = Content('user',
-          [const TextPart('Test'), InlineDataPart('image/png', Uint8List(0))]);
+      final content = Content('user', [
+        const TextPart('Test'),
+        InlineDataPart('image/png', Uint8List(0)),
+      ]);
       expect(content.role, 'user');
       expect(content.parts[0], isA<TextPart>());
       expect((content.parts[0] as TextPart).text, 'Test');
@@ -42,8 +44,9 @@ void main() {
     });
 
     test('data()', () {
-      final content =
-          Content('user', [InlineDataPart('image/png', Uint8List(0))]);
+      final content = Content('user', [
+        InlineDataPart('image/png', Uint8List(0)),
+      ]);
       expect(content.parts[0], isA<InlineDataPart>());
     });
 
@@ -58,35 +61,36 @@ void main() {
         'role': 'user',
         'parts': [
           {
-            'inlineData': {
-              'mimeType': 'image/png',
-              'data': '',
-            },
-            'mediaResolution': {
-              'level': 'MEDIA_RESOLUTION_HIGH',
-            },
-          }
+            'inlineData': {'mimeType': 'image/png', 'data': ''},
+            'mediaResolution': {'level': 'MEDIA_RESOLUTION_HIGH'},
+          },
         ],
       });
     });
 
     test('multi()', () {
-      final content = Content('user',
-          [const TextPart('Test'), InlineDataPart('image/png', Uint8List(0))]);
+      final content = Content('user', [
+        const TextPart('Test'),
+        InlineDataPart('image/png', Uint8List(0)),
+      ]);
       expect(content.parts.length, 2);
       expect(content.parts[0], isA<TextPart>());
       expect(content.parts[1], isA<InlineDataPart>());
     });
 
     test('toJson', () {
-      final content = Content('user',
-          [const TextPart('Test'), InlineDataPart('image/png', Uint8List(0))]);
+      final content = Content('user', [
+        const TextPart('Test'),
+        InlineDataPart('image/png', Uint8List(0)),
+      ]);
       final json = content.toJson();
       expect(json['role'], 'user');
       expect((json['parts']! as List).length, 2);
       expect((json['parts']! as List)[0]['text'], 'Test');
       expect(
-          (json['parts']! as List)[1]['inlineData']['mimeType'], 'image/png');
+        (json['parts']! as List)[1]['inlineData']['mimeType'],
+        'image/png',
+      );
       expect((json['parts']! as List)[1]['inlineData']['data'].length, 0);
     });
 
@@ -95,7 +99,7 @@ void main() {
         'role': 'user',
         'parts': [
           {'text': 'Hello'},
-        ]
+        ],
       };
       final content = parseContent(json);
       expect(content.role, 'user');
@@ -107,8 +111,11 @@ void main() {
 
   group('Part tests', () {
     test('TextPart with isThought and thoughtSignature toJson', () {
-      const part =
-          TextPart.forTest('Test', isThought: true, thoughtSignature: 'sig');
+      const part = TextPart.forTest(
+        'Test',
+        isThought: true,
+        thoughtSignature: 'sig',
+      );
       final json = part.toJson() as Map;
       expect(json['text'], 'Test');
       expect(json['thought'], true);
@@ -116,8 +123,12 @@ void main() {
     });
 
     test('DataPart with isThought and thoughtSignature toJson', () {
-      final part = InlineDataPart.forTest('image/png', Uint8List(0),
-          isThought: true, thoughtSignature: 'sig');
+      final part = InlineDataPart.forTest(
+        'image/png',
+        Uint8List(0),
+        isThought: true,
+        thoughtSignature: 'sig',
+      );
       final json = part.toJson() as Map;
       final inlineData = json['inlineData'] as Map;
       expect(inlineData['mimeType'], 'image/png');
@@ -128,8 +139,11 @@ void main() {
     });
 
     test('DataPart with false willContinue toJson', () {
-      final part =
-          InlineDataPart('image/png', Uint8List(0), willContinue: false);
+      final part = InlineDataPart(
+        'image/png',
+        Uint8List(0),
+        willContinue: false,
+      );
       final json = part.toJson() as Map;
       final inlineData = json['inlineData'] as Map;
       expect(inlineData['mimeType'], 'image/png');
@@ -139,8 +153,11 @@ void main() {
     });
 
     test('DataPart with true willContinue toJson', () {
-      final part =
-          InlineDataPart('image/png', Uint8List(0), willContinue: true);
+      final part = InlineDataPart(
+        'image/png',
+        Uint8List(0),
+        willContinue: true,
+      );
       final json = part.toJson() as Map;
       final inlineData = json['inlineData'] as Map;
       expect(inlineData['mimeType'], 'image/png');
@@ -157,27 +174,23 @@ void main() {
       );
 
       expect(part.toJson(), {
-        'inlineData': {
-          'mimeType': 'image/png',
-          'data': '',
-        },
-        'mediaResolution': {
-          'level': 'MEDIA_RESOLUTION_ULTRA_HIGH',
-        },
+        'inlineData': {'mimeType': 'image/png', 'data': ''},
+        'mediaResolution': {'level': 'MEDIA_RESOLUTION_ULTRA_HIGH'},
       });
     });
 
     test('FunctionCall with isThought and thoughtSignature toJson', () {
       const part = FunctionCall.forTest(
-          'myFunction',
-          {
-            'arguments': [
-              {'text': 'Test'}
-            ],
-          },
-          id: 'myFunctionId',
-          isThought: true,
-          thoughtSignature: 'sig');
+        'myFunction',
+        {
+          'arguments': [
+            {'text': 'Test'},
+          ],
+        },
+        id: 'myFunctionId',
+        isThought: true,
+        thoughtSignature: 'sig',
+      );
       final json = part.toJson() as Map;
       final functionCall = json['functionCall'] as Map;
       expect(functionCall['name'], 'myFunction');
@@ -198,8 +211,8 @@ void main() {
         {
           'inlineData': {
             'mimeType': 'application/octet-stream',
-            'data': Uint8List(0)
-          }
+            'data': Uint8List(0),
+          },
         },
         id: 'myFunctionId',
         isThought: true,
@@ -216,8 +229,11 @@ void main() {
     });
 
     test('FileData with isThought and thoughtSignature toJson', () {
-      const part = FileData.forTest('image/png', 'gs://bucket-name/path',
-          isThought: true);
+      const part = FileData.forTest(
+        'image/png',
+        'gs://bucket-name/path',
+        isThought: true,
+      );
       final json = part.toJson() as Map;
       final fileData = json['file_data'] as Map;
       expect(fileData['mime_type'], 'image/png');
@@ -237,9 +253,7 @@ void main() {
           'mime_type': 'image/png',
           'file_uri': 'gs://bucket-name/path',
         },
-        'mediaResolution': {
-          'level': 'MEDIA_RESOLUTION_HIGH',
-        },
+        'mediaResolution': {'level': 'MEDIA_RESOLUTION_HIGH'},
       });
     });
   });
@@ -258,7 +272,7 @@ void main() {
           'name': 'myFunction',
           'args': {'arg1': 1, 'arg2': 'value'},
           'id': '123',
-        }
+        },
       };
       final result = parsePart(json);
       expect(result, isA<FunctionCall>());
@@ -273,7 +287,7 @@ void main() {
         'file_data': {
           'file_uri': 'file:///path/to/file.txt',
           'mime_type': 'text/plain',
-        }
+        },
       };
       final result = parsePart(json);
       expect(result, isA<FileData>());
@@ -287,8 +301,8 @@ void main() {
         'inlineData': {
           'mimeType': 'image/png',
           'data': base64Encode([1, 2, 3]),
-          'willContinue': true
-        }
+          'willContinue': true,
+        },
       };
       final result = parsePart(json);
       expect(result, isA<InlineDataPart>());
@@ -303,8 +317,8 @@ void main() {
         'inlineData': {
           'mimeType': 'image/png',
           'data': base64Encode([1, 2, 3]),
-          'willContinue': false
-        }
+          'willContinue': false,
+        },
       };
       final result = parsePart(json);
       expect(result, isA<InlineDataPart>());
@@ -318,8 +332,8 @@ void main() {
       final json = {
         'inlineData': {
           'mimeType': 'image/png',
-          'data': base64Encode([1, 2, 3])
-        }
+          'data': base64Encode([1, 2, 3]),
+        },
       };
       final result = parsePart(json);
       expect(result, isA<InlineDataPart>());
@@ -331,7 +345,7 @@ void main() {
 
     test('returns UnknownPart for functionResponse', () {
       final json = {
-        'functionResponse': {'name': 'test', 'response': {}}
+        'functionResponse': {'name': 'test', 'response': {}},
       };
       final result = parsePart(json);
       expect(result, isA<UnknownPart>());

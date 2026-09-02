@@ -4,8 +4,9 @@
 
 part of '../../cloud_firestore.dart';
 
-// ignore: do_not_use_environment
-const kIsWasm = bool.fromEnvironment('dart.library.js_interop') &&
+const kIsWasm =
+    // ignore: do_not_use_environment
+    bool.fromEnvironment('dart.library.js_interop') &&
     // html package is not available in wasm
     // ignore: do_not_use_environment
     !bool.fromEnvironment('dart.library.html');
@@ -74,9 +75,9 @@ class _CodecUtility {
     if (data == null) {
       return null;
     }
-    return List.from(data)
-        .map((value) => valueDecode(value, firestore))
-        .toList();
+    return List.from(
+      data,
+    ).map((value) => valueDecode(value, firestore)).toList();
   }
 
   static dynamic valueEncode(dynamic value) {

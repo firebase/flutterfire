@@ -25,8 +25,8 @@ Map<String, dynamic> _initialParameters = Map<String, dynamic>.unmodifiable({
 abstract class QueryPlatform extends PlatformInterface {
   /// Create a [QueryPlatform] instance
   QueryPlatform(this.firestore, Map<String, dynamic>? params)
-      : parameters = params ?? _initialParameters,
-        super(token: _token);
+    : parameters = params ?? _initialParameters,
+      super(token: _token);
 
   static final Object _token = Object();
 
@@ -96,7 +96,9 @@ abstract class QueryPlatform extends PlatformInterface {
   ///  * [startAtDocument] for a query that starts at a document.
   ///  * [endAtDocument] for a query that ends at a document.
   QueryPlatform endBeforeDocument(
-      Iterable<dynamic> orders, Iterable<dynamic> values) {
+    Iterable<dynamic> orders,
+    Iterable<dynamic> values,
+  ) {
     throw UnimplementedError('endBeforeDocument() is not implemented');
   }
 
@@ -199,7 +201,9 @@ abstract class QueryPlatform extends PlatformInterface {
   ///  * [endAtDocument] for a query that ends at a document.
   ///  * [endBeforeDocument] for a query that ends before a document.
   QueryPlatform startAtDocument(
-      Iterable<dynamic> orders, Iterable<dynamic> values) {
+    Iterable<dynamic> orders,
+    Iterable<dynamic> values,
+  ) {
     throw UnimplementedError('startAtDocument() is not implemented');
   }
 

@@ -37,42 +37,56 @@ void main() {
 
     group('constructor', () {
       test('should create an instance with no args', () {
-        MethodChannelFirebaseStorage test =
-            MethodChannelFirebaseStorage(app: app, bucket: kBucket);
+        MethodChannelFirebaseStorage test = MethodChannelFirebaseStorage(
+          app: app,
+          bucket: kBucket,
+        );
         expect(test.app, equals(Firebase.app()));
       });
 
       test('create an instance with default app', () {
-        MethodChannelFirebaseStorage test =
-            MethodChannelFirebaseStorage(app: Firebase.app(), bucket: '');
+        MethodChannelFirebaseStorage test = MethodChannelFirebaseStorage(
+          app: Firebase.app(),
+          bucket: '',
+        );
         expect(test.app, equals(Firebase.app()));
       });
       test('create an instance with a secondary app', () {
-        MethodChannelFirebaseStorage test =
-            MethodChannelFirebaseStorage(app: secondaryApp, bucket: '');
+        MethodChannelFirebaseStorage test = MethodChannelFirebaseStorage(
+          app: secondaryApp,
+          bucket: '',
+        );
         expect(test.app, equals(secondaryApp));
       });
 
       test('allow multiple instances', () {
-        MethodChannelFirebaseStorage test1 =
-            MethodChannelFirebaseStorage(app: Firebase.app(), bucket: '');
-        MethodChannelFirebaseStorage test2 =
-            MethodChannelFirebaseStorage(app: secondaryApp, bucket: '');
+        MethodChannelFirebaseStorage test1 = MethodChannelFirebaseStorage(
+          app: Firebase.app(),
+          bucket: '',
+        );
+        MethodChannelFirebaseStorage test2 = MethodChannelFirebaseStorage(
+          app: secondaryApp,
+          bucket: '',
+        );
         expect(test1.app, equals(Firebase.app()));
         expect(test2.app, equals(secondaryApp));
       });
     });
 
     test('instance', () {
-      expect(MethodChannelFirebaseStorage.instance,
-          isInstanceOf<MethodChannelFirebaseStorage>());
+      expect(
+        MethodChannelFirebaseStorage.instance,
+        isInstanceOf<MethodChannelFirebaseStorage>(),
+      );
     });
 
     test('nextMethodChannelHandleId', () {
       final handleId = MethodChannelFirebaseStorage.nextMethodChannelHandleId;
 
       expect(
-          MethodChannelFirebaseStorage.nextMethodChannelHandleId, handleId + 1);
+        MethodChannelFirebaseStorage.nextMethodChannelHandleId,
+        handleId + 1,
+      );
 
       nextMockHandleId;
       nextMockHandleId;
@@ -103,5 +117,5 @@ void main() {
 
 class TestMethodChannelFirebaseStorage extends MethodChannelFirebaseStorage {
   TestMethodChannelFirebaseStorage(FirebaseApp app)
-      : super(app: app, bucket: '');
+    : super(app: app, bucket: '');
 }

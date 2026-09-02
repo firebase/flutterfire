@@ -18,27 +18,27 @@ import 'utils/errors.dart';
 
 /// The type for functions that implement the `ref` method of the [FirebaseStorageWeb] class.
 @visibleForTesting
-typedef ReferenceBuilder = ReferencePlatform Function(
-    FirebaseStorageWeb storage, String path);
+typedef ReferenceBuilder =
+    ReferencePlatform Function(FirebaseStorageWeb storage, String path);
 
 /// The Web implementation of the FirebaseStoragePlatform.
 class FirebaseStorageWeb extends FirebaseStoragePlatform {
   /// Construct the plugin.
   FirebaseStorageWeb({FirebaseApp? app, required String bucket})
-      : _bucket = bucket,
-        super(appInstance: app, bucket: bucket);
+    : _bucket = bucket,
+      super(appInstance: app, bucket: bucket);
 
   /// Create a FirebaseStorageWeb injecting a [fb.Storage] object.
   @visibleForTesting
-  FirebaseStorageWeb.forMock(this._webStorage,
-      {required String bucket, FirebaseApp? app})
-      : super(appInstance: app, bucket: bucket);
+  FirebaseStorageWeb.forMock(
+    this._webStorage, {
+    required String bucket,
+    FirebaseApp? app,
+  }) : super(appInstance: app, bucket: bucket);
 
   // Empty constructor. This is only used by the registerWith method.
   // superclass also needs to be initialized and 'bucket' param is required.
-  FirebaseStorageWeb._nullInstance()
-      : _webStorage = null,
-        super(bucket: '');
+  FirebaseStorageWeb._nullInstance() : _webStorage = null, super(bucket: '');
   static const String _libraryName = 'flutter-fire-gcs';
 
   /// The js-interop layer for Firebase Storage
@@ -49,8 +49,10 @@ class FirebaseStorageWeb extends FirebaseStoragePlatform {
 
   /// Lazily initialize [webStorage] on first method call
   storage_interop.Storage get delegate {
-    return _webStorage ??=
-        storage_interop.getStorageInstance(core_interop.app(app.name), _bucket);
+    return _webStorage ??= storage_interop.getStorageInstance(
+      core_interop.app(app.name),
+      _bucket,
+    );
   }
 
   // Same default as the method channel implementation
@@ -69,8 +71,10 @@ class FirebaseStorageWeb extends FirebaseStoragePlatform {
 
   /// Returns a [FirebaseStorageWeb] with the provided arguments.
   @override
-  FirebaseStoragePlatform delegateFor(
-      {FirebaseApp? app, required String bucket}) {
+  FirebaseStoragePlatform delegateFor({
+    FirebaseApp? app,
+    required String bucket,
+  }) {
     return FirebaseStorageWeb(app: app, bucket: bucket);
   }
 

@@ -37,19 +37,14 @@ void main() {
     });
 
     test('document is null for aggregate-only result', () {
-      final result = PipelineResult(
-        data: <String, dynamic>{'count': 42},
-      );
+      final result = PipelineResult(data: <String, dynamic>{'count': 42});
       expect(result.document, isNull);
     });
 
     test('stores createTime and updateTime', () {
       final create = DateTime(2026);
       final update = DateTime(2026, 1, 2);
-      final result = PipelineResult(
-        createTime: create,
-        updateTime: update,
-      );
+      final result = PipelineResult(createTime: create, updateTime: update);
       expect(result.createTime, create);
       expect(result.updateTime, update);
     });

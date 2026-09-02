@@ -24,8 +24,9 @@ void main() {
     test('setInitialValues', () {
       final remoteConfigValues = <dynamic, dynamic>{'a': 'b'};
       remoteConfig.setInitialValues(remoteConfigValues: remoteConfigValues);
-      verify(remoteConfig.setInitialValues(
-          remoteConfigValues: remoteConfigValues));
+      verify(
+        remoteConfig.setInitialValues(remoteConfigValues: remoteConfigValues),
+      );
       verifyNoMoreInteractions(remoteConfig);
     });
 
@@ -96,8 +97,10 @@ void main() {
 
     test('setConfigSettings', () {
       const time = Duration(milliseconds: 1000);
-      RemoteConfigSettings settings =
-          RemoteConfigSettings(fetchTimeout: time, minimumFetchInterval: time);
+      RemoteConfigSettings settings = RemoteConfigSettings(
+        fetchTimeout: time,
+        minimumFetchInterval: time,
+      );
       remoteConfig.setConfigSettings(settings);
       verify(remoteConfig.setConfigSettings(settings));
       verifyNoMoreInteractions(remoteConfig);

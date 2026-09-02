@@ -77,163 +77,202 @@ abstract class TestFirebasePerformanceHostApi {
     BinaryMessenger? binaryMessenger,
     String messageChannelSuffix = '',
   }) {
-    messageChannelSuffix =
-        messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+    messageChannelSuffix = messageChannelSuffix.isNotEmpty
+        ? '.$messageChannelSuffix'
+        : '';
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.setPerformanceCollectionEnabled$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.setPerformanceCollectionEnabled$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final bool arg_enabled = args[0]! as bool;
-          try {
-            await api.setPerformanceCollectionEnabled(arg_enabled);
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final bool arg_enabled = args[0]! as bool;
+              try {
+                await api.setPerformanceCollectionEnabled(arg_enabled);
+                return wrapResponse(empty: true);
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.isPerformanceCollectionEnabled$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.isPerformanceCollectionEnabled$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          try {
-            final bool output = await api.isPerformanceCollectionEnabled();
-            return <Object?>[output];
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              try {
+                final bool output = await api.isPerformanceCollectionEnabled();
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.startTrace$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.startTrace$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final String arg_name = args[0]! as String;
-          try {
-            final int output = await api.startTrace(arg_name);
-            return <Object?>[output];
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final String arg_name = args[0]! as String;
+              try {
+                final int output = await api.startTrace(arg_name);
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.stopTrace$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.stopTrace$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final int arg_handle = args[0]! as int;
-          final TraceAttributes arg_attributes = args[1]! as TraceAttributes;
-          try {
-            await api.stopTrace(arg_handle, arg_attributes);
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final int arg_handle = args[0]! as int;
+              final TraceAttributes arg_attributes =
+                  args[1]! as TraceAttributes;
+              try {
+                await api.stopTrace(arg_handle, arg_attributes);
+                return wrapResponse(empty: true);
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.startHttpMetric$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.startHttpMetric$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final HttpMetricOptions arg_options = args[0]! as HttpMetricOptions;
-          try {
-            final int output = await api.startHttpMetric(arg_options);
-            return <Object?>[output];
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final HttpMetricOptions arg_options =
+                  args[0]! as HttpMetricOptions;
+              try {
+                final int output = await api.startHttpMetric(arg_options);
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.stopHttpMetric$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.stopHttpMetric$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final int arg_handle = args[0]! as int;
-          final HttpMetricAttributes arg_attributes =
-              args[1]! as HttpMetricAttributes;
-          try {
-            await api.stopHttpMetric(arg_handle, arg_attributes);
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final int arg_handle = args[0]! as int;
+              final HttpMetricAttributes arg_attributes =
+                  args[1]! as HttpMetricAttributes;
+              try {
+                await api.stopHttpMetric(arg_handle, arg_attributes);
+                return wrapResponse(empty: true);
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
   }

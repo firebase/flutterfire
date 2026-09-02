@@ -8,27 +8,24 @@ import 'package:firebase_data_connect_example/generated/movies.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void runInstanceTests() {
-  group(
-    '$FirebaseDataConnect.instance',
-    () {
-      late FirebaseDataConnect fdc;
-      late FirebaseApp app;
+  group('$FirebaseDataConnect.instance', () {
+    late FirebaseDataConnect fdc;
+    late FirebaseApp app;
 
-      setUpAll(() async {
-        app = Firebase.app();
-        fdc = FirebaseDataConnect.instanceFor(
-          app: app,
-          connectorConfig: MoviesConnector.connectorConfig,
-        );
-      });
+    setUpAll(() async {
+      app = Firebase.app();
+      fdc = FirebaseDataConnect.instanceFor(
+        app: app,
+        connectorConfig: MoviesConnector.connectorConfig,
+      );
+    });
 
-      testWidgets('can instantiate', (WidgetTester tester) async {
-        expect(fdc, isNotNull);
-      });
+    testWidgets('can instantiate', (WidgetTester tester) async {
+      expect(fdc, isNotNull);
+    });
 
-      testWidgets('can access app', (WidgetTester tester) async {
-        expect(fdc.app == app, isTrue);
-      });
-    },
-  );
+    testWidgets('can access app', (WidgetTester tester) async {
+      expect(fdc.app == app, isTrue);
+    });
+  });
 }

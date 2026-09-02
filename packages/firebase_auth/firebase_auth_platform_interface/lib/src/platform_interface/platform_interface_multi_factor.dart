@@ -12,9 +12,7 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 /// {@endtemplate}
 abstract class MultiFactorPlatform extends PlatformInterface {
   /// {@macro .platformInterfaceMultiFactor}
-  MultiFactorPlatform(
-    this.auth,
-  ) : super(token: _token);
+  MultiFactorPlatform(this.auth) : super(token: _token);
 
   /// The [FirebaseAuthPlatform] instance.
   final FirebaseAuthPlatform auth;
@@ -82,10 +80,7 @@ class MultiFactorAssertionPlatform extends PlatformInterface {
 /// {@endtemplate}
 class MultiFactorResolverPlatform extends PlatformInterface {
   /// {@macro .platformInterfaceMultiFactorResolverPlatform}
-  MultiFactorResolverPlatform(
-    this.hints,
-    this.session,
-  ) : super(token: _token);
+  MultiFactorResolverPlatform(this.hints, this.session) : super(token: _token);
 
   static final Object _token = Object();
 
@@ -148,11 +143,11 @@ class PhoneMultiFactorInfo extends MultiFactorInfo {
     required String uid,
     required this.phoneNumber,
   }) : super(
-          displayName: displayName,
-          enrollmentTimestamp: enrollmentTimestamp,
-          factorId: factorId,
-          uid: uid,
-        );
+         displayName: displayName,
+         enrollmentTimestamp: enrollmentTimestamp,
+         factorId: factorId,
+         uid: uid,
+       );
 
   /// The phone number associated with this second factor verification method.
   final String phoneNumber;
@@ -193,9 +188,7 @@ class PhoneMultiFactorGeneratorPlatform extends PlatformInterface {
 
   /// Transforms a PhoneAuthCredential into a [MultiFactorAssertion]
   /// which can be used to confirm ownership of a phone second factor.
-  MultiFactorAssertionPlatform getAssertion(
-    PhoneAuthCredential credential,
-  ) {
+  MultiFactorAssertionPlatform getAssertion(PhoneAuthCredential credential) {
     throw UnimplementedError('getAssertion() is not implemented');
   }
 }
@@ -224,9 +217,7 @@ class TotpMultiFactorGeneratorPlatform extends PlatformInterface {
   }
 
   /// Generate a TOTP secret for the authenticated user.
-  Future<TotpSecretPlatform> generateSecret(
-    MultiFactorSession session,
-  ) {
+  Future<TotpSecretPlatform> generateSecret(MultiFactorSession session) {
     throw UnimplementedError('generateSecret() is not implemented');
   }
 
@@ -268,17 +259,12 @@ class TotpSecretPlatform extends PlatformInterface {
   ) : super(token: _token);
 
   /// Generate a TOTP secret for the authenticated user.
-  Future<String> generateQrCodeUrl({
-    String? accountName,
-    String? issuer,
-  }) {
+  Future<String> generateQrCodeUrl({String? accountName, String? issuer}) {
     throw UnimplementedError('generateQrCodeUrl() is not implemented');
   }
 
   /// Opens the specified QR Code URL in a password manager like iCloud Keychain.
-  Future<void> openInOtpApp(
-    String qrCodeUrl,
-  ) async {
+  Future<void> openInOtpApp(String qrCodeUrl) async {
     throw UnimplementedError('openInOtpApp() is not implemented');
   }
 }

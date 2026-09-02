@@ -18,25 +18,28 @@ import 'func.dart';
 const bool _kDebugMode = !bool.fromEnvironment('dart.vm.product');
 
 /// Handles the [Future] object with the provided [mapper] function.
-JSPromise handleFutureWithMapper<T, S>(
-  Future<T> future,
-  Func1<T, S> mapper,
-) {
-  return JSPromise((JSFunction resolve, JSFunction reject) {
-    future.then<void>((T value) {
-      final Object? target = mapper(value);
-      final JSAny? jsVal = target?.jsify();
-      resolve.callAsFunction(resolve, jsVal);
-    }, onError: (Object error, StackTrace stackTrace) {
-      final errorConstructor =
-          globalContext.getProperty('Error'.toJS)! as JSFunction;
-      final wrapper = errorConstructor
-          .callAsConstructor<JSObject>('Dart exception: $error'.toJS);
-      wrapper['error'] = error.toJSBox;
-      wrapper['stack'] = stackTrace.toString().toJS;
-      reject.callAsFunction(reject, wrapper);
-    });
-  }.toJS);
+JSPromise handleFutureWithMapper<T, S>(Future<T> future, Func1<T, S> mapper) {
+  return JSPromise(
+    (JSFunction resolve, JSFunction reject) {
+      future.then<void>(
+        (T value) {
+          final Object? target = mapper(value);
+          final JSAny? jsVal = target?.jsify();
+          resolve.callAsFunction(resolve, jsVal);
+        },
+        onError: (Object error, StackTrace stackTrace) {
+          final errorConstructor =
+              globalContext.getProperty('Error'.toJS)! as JSFunction;
+          final wrapper = errorConstructor.callAsConstructor<JSObject>(
+            'Dart exception: $error'.toJS,
+          );
+          wrapper['error'] = error.toJSBox;
+          wrapper['stack'] = stackTrace.toString().toJS;
+          reject.callAsFunction(reject, wrapper);
+        },
+      );
+    }.toJS,
+  );
 }
 
 // No way to unsubscribe from event listeners on hot reload so we set on the windows object

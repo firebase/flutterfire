@@ -20,9 +20,9 @@ class TaskWeb extends TaskPlatform {
   /// Creates a Task for web from a [ReferencePlatform] object and a native [storage_interop.UploadTask].
   /// The `reference` is used when creating [TaskSnapshotWeb] of this task.
   TaskWeb(ReferencePlatform reference, storage_interop.UploadTask task)
-      : _reference = reference,
-        _task = task,
-        super();
+    : _reference = reference,
+      _task = task,
+      super();
 
   final ReferencePlatform _reference;
 
@@ -50,26 +50,30 @@ class TaskWeb extends TaskPlatform {
       // It can also throw a FirebaseError internally, so we handle it.
       final onStateChangedStream = _task
           .onStateChanged(
-        _reference.storage.app.name,
-        _reference.bucket,
-        _reference.fullPath,
-      )
+            _reference.storage.app.name,
+            _reference.bucket,
+            _reference.fullPath,
+          )
           .map<TaskSnapshotPlatform>((snapshot) {
-        return fbUploadTaskSnapshotToTaskSnapshot(_reference, snapshot);
-      });
+            return fbUploadTaskSnapshotToTaskSnapshot(_reference, snapshot);
+          });
 
       group.add(onStateChangedStream);
 
-      onComplete.asStream().last.then((value) async {
-        // If successful, we add a final snapshot with the state "success"
-        await group.add(onComplete.asStream());
-        await group.close();
-      }).catchError((e) async {
-        // We don't care about the error here as it has already propagated via `guard()`
-        // We need to remove the onStateChangedStream from the group and close group for onDone callback to be called
-        await group.remove(onStateChangedStream);
-        await group.close();
-      });
+      onComplete
+          .asStream()
+          .last
+          .then((value) async {
+            // If successful, we add a final snapshot with the state "success"
+            await group.add(onComplete.asStream());
+            await group.close();
+          })
+          .catchError((e) async {
+            // We don't care about the error here as it has already propagated via `guard()`
+            // We need to remove the onStateChangedStream from the group and close group for onDone callback to be called
+            await group.remove(onStateChangedStream);
+            await group.close();
+          });
 
       return group.stream;
     });
@@ -84,10 +88,7 @@ class TaskWeb extends TaskPlatform {
   @override
   Future<TaskSnapshotPlatform> get onComplete {
     return guard(() async {
-      return fbUploadTaskSnapshotToTaskSnapshot(
-        _reference,
-        await _task.future,
-      );
+      return fbUploadTaskSnapshotToTaskSnapshot(_reference, await _task.future);
     });
   }
 
@@ -136,8 +137,9 @@ class TaskWeb extends TaskPlatform {
     final canceled = _task.cancel();
     // The snapshotEvents will eventually throw an exception when the user cancels.
     // Wait for that signal, and then return the value of "canceled" (or true).
-    return snapshotEvents
-        .drain()
-        .then<bool>((_) => canceled, onError: (_) => canceled);
+    return snapshotEvents.drain().then<bool>(
+      (_) => canceled,
+      onError: (_) => canceled,
+    );
   }
 }

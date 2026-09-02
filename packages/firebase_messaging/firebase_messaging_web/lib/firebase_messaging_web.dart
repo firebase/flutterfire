@@ -29,14 +29,17 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
   messaging_interop.Messaging? _webMessaging;
 
   messaging_interop.Messaging get _delegate {
-    _webMessaging ??=
-        messaging_interop.getMessagingInstance(core_interop.app(app.name));
+    _webMessaging ??= messaging_interop.getMessagingInstance(
+      core_interop.app(app.name),
+    );
 
     if (!_initialized) {
-      _webMessaging!.onMessage
-          .listen((messaging_interop.MessagePayload webMessagePayload) {
-        RemoteMessage remoteMessage =
-            RemoteMessage.fromMap(utils.messagePayloadToMap(webMessagePayload));
+      _webMessaging!.onMessage.listen((
+        messaging_interop.MessagePayload webMessagePayload,
+      ) {
+        RemoteMessage remoteMessage = RemoteMessage.fromMap(
+          utils.messagePayloadToMap(webMessagePayload),
+        );
         FirebaseMessagingPlatform.onMessage.add(remoteMessage);
       });
 
@@ -112,8 +115,10 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
   }
 
   @override
-  Future<String?> getToken(
-      {String? vapidKey, String? serviceWorkerScriptPath}) async {
+  Future<String?> getToken({
+    String? vapidKey,
+    String? serviceWorkerScriptPath,
+  }) async {
     _delegate;
 
     if (!_initialized) {
@@ -123,7 +128,9 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
 
     return convertWebExceptions(
       () => _delegate.getToken(
-          vapidKey: vapidKey, serviceWorkerScriptPath: serviceWorkerScriptPath),
+        vapidKey: vapidKey,
+        serviceWorkerScriptPath: serviceWorkerScriptPath,
+      ),
     );
   }
 

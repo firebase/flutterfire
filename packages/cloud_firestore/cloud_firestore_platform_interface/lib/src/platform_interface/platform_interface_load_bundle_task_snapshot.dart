@@ -11,11 +11,11 @@ import '../../cloud_firestore_platform_interface.dart';
 class LoadBundleTaskSnapshotPlatform extends PlatformInterface {
   // ignore: public_member_api_docs
   LoadBundleTaskSnapshotPlatform(this.taskState, Map<String, dynamic> data)
-      : bytesLoaded = data['bytesLoaded'],
-        documentsLoaded = data['documentsLoaded'],
-        totalBytes = data['totalBytes'],
-        totalDocuments = data['totalDocuments'],
-        super(token: _token);
+    : bytesLoaded = data['bytesLoaded'],
+      documentsLoaded = data['documentsLoaded'],
+      totalBytes = data['totalBytes'],
+      totalDocuments = data['totalDocuments'],
+      super(token: _token);
 
   static final Object _token = Object();
 

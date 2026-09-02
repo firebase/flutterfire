@@ -80,7 +80,9 @@ Map<String, dynamic> messagePayloadToMap(MessagePayload messagePayload) {
     'notification': messagePayload.notification == null
         ? null
         : notificationPayloadToMap(
-            messagePayload.notification!, messagePayload.fcmOptions),
+            messagePayload.notification!,
+            messagePayload.fcmOptions,
+          ),
     'sentTime': sentTime,
     'threadId': null,
     'ttl': null,
@@ -92,7 +94,9 @@ Map<String, dynamic> messagePayloadToMap(MessagePayload messagePayload) {
 /// Since [FcmOptions] are web specific, we pass these down to the upper layer
 /// as web properties.
 Map<String, dynamic> notificationPayloadToMap(
-    NotificationPayload notificationPayload, FcmOptions? fcmOptions) {
+  NotificationPayload notificationPayload,
+  FcmOptions? fcmOptions,
+) {
   return <String, dynamic>{
     'title': notificationPayload.title,
     'body': notificationPayload.body,

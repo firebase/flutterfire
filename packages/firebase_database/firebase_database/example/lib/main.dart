@@ -21,24 +21,19 @@ const emulatorPort = 9000;
 // so let's use that if running on Android.
 final emulatorHost =
     (!kIsWeb && defaultTargetPlatform == TargetPlatform.android)
-        ? '10.0.2.2'
-        : 'localhost';
+    ? '10.0.2.2'
+    : 'localhost';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   if (USE_DATABASE_EMULATOR) {
     FirebaseDatabase.instance.useDatabaseEmulator(emulatorHost, emulatorPort);
   }
 
   runApp(
-    const MaterialApp(
-      title: 'Flutter Database Example',
-      home: MyHomePage(),
-    ),
+    const MaterialApp(title: 'Flutter Database Example', home: MyHomePage()),
   );
 }
 
@@ -139,9 +134,9 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> _increment() async {
     await _counterRef.set(ServerValue.increment(1));
 
-    await _messagesRef
-        .push()
-        .set(<String, String>{_kTestKey: '$_kTestValue $_counter'});
+    await _messagesRef.push().set(<String, String>{
+      _kTestKey: '$_kTestValue $_counter',
+    });
   }
 
   Future<void> _incrementAsTransaction() async {
@@ -181,9 +176,7 @@ class _MyHomePageState extends State<MyHomePage> {
     if (!initialized) return Container();
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Flutter Database Example'),
-      ),
+      appBar: AppBar(title: const Text('Flutter Database Example')),
       body: Column(
         children: [
           Flexible(

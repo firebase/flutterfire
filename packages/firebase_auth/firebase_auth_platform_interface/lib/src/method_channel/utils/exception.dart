@@ -46,10 +46,7 @@ FirebaseException platformExceptionToFirebaseAuthException(
         ? platformException.details as Map
         : null;
 
-    final customCode = _getCustomCode(
-      details,
-      platformException.message,
-    );
+    final customCode = _getCustomCode(details, platformException.message);
     if (customCode != null) {
       code = customCode;
     }
@@ -166,7 +163,8 @@ String? _getCustomCode(Map? additionalData, String? message) {
 const kMultiFactorError = 'second-factor-required';
 
 FirebaseAuthMultiFactorExceptionPlatform parseMultiFactorError(
-    PlatformException exception) {
+  PlatformException exception,
+) {
   const code = kMultiFactorError;
   final message = exception.message;
   final additionalData = exception.details as Map<Object?, Object?>?;
@@ -179,25 +177,17 @@ FirebaseAuthMultiFactorExceptionPlatform parseMultiFactorError(
   }
 
   final pigeonMultiFactorInfo =
-      (additionalData['multiFactorHints'] as List<Object?>? ?? [])
-          .nonNulls
-          .map(
-            InternalMultiFactorInfo.decode,
-          )
+      (additionalData['multiFactorHints'] as List<Object?>? ?? []).nonNulls
+          .map(InternalMultiFactorInfo.decode)
           .toList();
 
-  final multiFactorInfo = multiFactorInfoPigeonToObject(
-    pigeonMultiFactorInfo,
-  );
+  final multiFactorInfo = multiFactorInfoPigeonToObject(pigeonMultiFactorInfo);
 
   final auth = MethodChannelFirebaseAuth
       .methodChannelFirebaseAuthInstances[additionalData['appName']];
 
   if (auth == null) {
-    throw FirebaseAuthException(
-      code: code,
-      message: message,
-    );
+    throw FirebaseAuthException(code: code, message: message);
   }
 
   final sessionId = additionalData['multiFactorSessionId'] as String?;

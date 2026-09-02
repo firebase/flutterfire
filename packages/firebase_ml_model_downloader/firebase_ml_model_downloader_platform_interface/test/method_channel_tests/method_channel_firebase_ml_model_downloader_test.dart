@@ -85,8 +85,9 @@ void main() {
 
     group('delegateFor', () {
       test('returns correct class instance', () {
-        final testMlDownloader =
-            TestMethodChannelFirebaseModelDownloader(Firebase.app());
+        final testMlDownloader = TestMethodChannelFirebaseModelDownloader(
+          Firebase.app(),
+        );
         final result = testMlDownloader.delegateFor(app: Firebase.app());
 
         expect(result, isA<FirebaseModelDownloaderPlatform>());
@@ -118,19 +119,20 @@ void main() {
       });
 
       test(
-          'catch a [PlatformException] error and throws a [FirebaseException] error',
-          () async {
-        mockPlatformExceptionThrown = true;
+        'catch a [PlatformException] error and throws a [FirebaseException] error',
+        () async {
+          mockPlatformExceptionThrown = true;
 
-        await testExceptionHandling(
-          'PLATFORM',
-          () => mlDownloader.getModel(
-            kModelName,
-            FirebaseModelDownloadType.latestModel,
-            FirebaseModelDownloadConditions(),
-          ),
-        );
-      });
+          await testExceptionHandling(
+            'PLATFORM',
+            () => mlDownloader.getModel(
+              kModelName,
+              FirebaseModelDownloadType.latestModel,
+              FirebaseModelDownloadConditions(),
+            ),
+          );
+        },
+      );
     });
 
     group('listDownloadedModels', () {
@@ -142,23 +144,22 @@ void main() {
         expect(log, <Matcher>[
           isMethodCall(
             'FirebaseModelDownloader#listDownloadedModels',
-            arguments: <String, dynamic>{
-              'appName': app.name,
-            },
+            arguments: <String, dynamic>{'appName': app.name},
           ),
         ]);
       });
 
       test(
-          'catch a [PlatformException] error and throws a [FirebaseException] error',
-          () async {
-        mockPlatformExceptionThrown = true;
+        'catch a [PlatformException] error and throws a [FirebaseException] error',
+        () async {
+          mockPlatformExceptionThrown = true;
 
-        await testExceptionHandling(
-          'PLATFORM',
-          () => mlDownloader.listDownloadedModels(),
-        );
-      });
+          await testExceptionHandling(
+            'PLATFORM',
+            () => mlDownloader.listDownloadedModels(),
+          );
+        },
+      );
     });
 
     group('deleteDownloadedModel', () {
@@ -178,15 +179,16 @@ void main() {
       });
 
       test(
-          'catch a [PlatformException] error and throws a [FirebaseException] error',
-          () async {
-        mockPlatformExceptionThrown = true;
+        'catch a [PlatformException] error and throws a [FirebaseException] error',
+        () async {
+          mockPlatformExceptionThrown = true;
 
-        await testExceptionHandling(
-          'PLATFORM',
-          () => mlDownloader.deleteDownloadedModel(kModelName),
-        );
-      });
+          await testExceptionHandling(
+            'PLATFORM',
+            () => mlDownloader.deleteDownloadedModel(kModelName),
+          );
+        },
+      );
     });
   });
 }

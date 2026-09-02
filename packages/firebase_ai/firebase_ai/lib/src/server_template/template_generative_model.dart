@@ -24,20 +24,21 @@ final class TemplateGenerativeModel extends BaseTemplateApiClientModel {
     required bool useAgentPlatform,
     http.Client? httpClient,
   }) : super(
-          serializationStrategy: useAgentPlatform
-              ? AgentPlatformSerialization()
-              : DeveloperSerialization(),
-          modelUri: useAgentPlatform
-              ? _AgentPlatformUri(app: app, model: '', location: location)
-              : _GoogleAIUri(app: app, model: ''),
-          client: HttpApiClient(
-              apiKey: app.options.apiKey,
-              httpClient: httpClient,
-              requestHeaders: BaseModel.firebaseTokens(null, null, app, false)),
-          templateUri: useAgentPlatform
-              ? _TemplateAgentPlatformUri(app: app, location: location)
-              : _TemplateGoogleAIUri(app: app),
-        );
+         serializationStrategy: useAgentPlatform
+             ? AgentPlatformSerialization()
+             : DeveloperSerialization(),
+         modelUri: useAgentPlatform
+             ? _AgentPlatformUri(app: app, model: '', location: location)
+             : _GoogleAIUri(app: app, model: ''),
+         client: HttpApiClient(
+           apiKey: app.options.apiKey,
+           httpClient: httpClient,
+           requestHeaders: BaseModel.firebaseTokens(null, null, app, false),
+         ),
+         templateUri: useAgentPlatform
+             ? _TemplateAgentPlatformUri(app: app, location: location)
+             : _TemplateGoogleAIUri(app: app),
+       );
 
   TemplateGenerativeModel._({
     required String location,
@@ -48,88 +49,104 @@ final class TemplateGenerativeModel extends BaseTemplateApiClientModel {
     FirebaseAuth? auth,
     http.Client? httpClient,
   }) : super(
-          serializationStrategy: useAgentPlatform
-              ? AgentPlatformSerialization()
-              : DeveloperSerialization(),
-          modelUri: useAgentPlatform
-              ? _AgentPlatformUri(app: app, model: '', location: location)
-              : _GoogleAIUri(app: app, model: ''),
-          client: HttpApiClient(
-              apiKey: app.options.apiKey,
-              httpClient: httpClient,
-              requestHeaders: BaseModel.firebaseTokens(
-                  appCheck, auth, app, useLimitedUseAppCheckTokens)),
-          templateUri: useAgentPlatform
-              ? _TemplateAgentPlatformUri(app: app, location: location)
-              : _TemplateGoogleAIUri(app: app),
-        );
+         serializationStrategy: useAgentPlatform
+             ? AgentPlatformSerialization()
+             : DeveloperSerialization(),
+         modelUri: useAgentPlatform
+             ? _AgentPlatformUri(app: app, model: '', location: location)
+             : _GoogleAIUri(app: app, model: ''),
+         client: HttpApiClient(
+           apiKey: app.options.apiKey,
+           httpClient: httpClient,
+           requestHeaders: BaseModel.firebaseTokens(
+             appCheck,
+             auth,
+             app,
+             useLimitedUseAppCheckTokens,
+           ),
+         ),
+         templateUri: useAgentPlatform
+             ? _TemplateAgentPlatformUri(app: app, location: location)
+             : _TemplateGoogleAIUri(app: app),
+       );
 
   /// Generates content from a template with the given [templateId] and [inputs].
   ///
   /// Sends a "templateGenerateContent" API request for the configured model.
   @experimental
-  Future<GenerateContentResponse> generateContent(String templateId,
-          {required Map<String, Object?> inputs,
-          TemplateToolConfig? toolConfig}) =>
-      makeTemplateRequest(
-          TemplateTask.templateGenerateContent,
-          templateId,
-          inputs,
-          null, // history
-          null, // tools
-          toolConfig,
-          _serializationStrategy.parseGenerateContentResponse);
+  Future<GenerateContentResponse> generateContent(
+    String templateId, {
+    required Map<String, Object?> inputs,
+    TemplateToolConfig? toolConfig,
+  }) => makeTemplateRequest(
+    TemplateTask.templateGenerateContent,
+    templateId,
+    inputs,
+    null, // history
+    null, // tools
+    toolConfig,
+    _serializationStrategy.parseGenerateContentResponse,
+  );
 
   /// Generates a stream of content responding to [templateId] and [inputs].
   ///
   /// Sends a "templateStreamGenerateContent" API request for the server template,
   /// and waits for the response.
   @experimental
-  Stream<GenerateContentResponse> generateContentStream(String templateId,
-      {required Map<String, Object?> inputs, TemplateToolConfig? toolConfig}) {
+  Stream<GenerateContentResponse> generateContentStream(
+    String templateId, {
+    required Map<String, Object?> inputs,
+    TemplateToolConfig? toolConfig,
+  }) {
     return streamTemplateRequest(
-        TemplateTask.templateStreamGenerateContent,
-        templateId,
-        inputs,
-        null, // history
-        null, // tools
-        toolConfig,
-        _serializationStrategy.parseGenerateContentResponse);
+      TemplateTask.templateStreamGenerateContent,
+      templateId,
+      inputs,
+      null, // history
+      null, // tools
+      toolConfig,
+      _serializationStrategy.parseGenerateContentResponse,
+    );
   }
 
   /// Generates content from a template with the given [templateId], [inputs] and
   /// [history].
   @experimental
   Future<GenerateContentResponse> templateGenerateContentWithHistory(
-          Iterable<Content> history, String templateId,
-          {required Map<String, Object?> inputs,
-          List<TemplateTool>? tools,
-          TemplateToolConfig? toolConfig}) =>
-      makeTemplateRequest(
-          TemplateTask.templateGenerateContent,
-          templateId,
-          inputs,
-          history,
-          tools,
-          toolConfig,
-          _serializationStrategy.parseGenerateContentResponse);
+    Iterable<Content> history,
+    String templateId, {
+    required Map<String, Object?> inputs,
+    List<TemplateTool>? tools,
+    TemplateToolConfig? toolConfig,
+  }) => makeTemplateRequest(
+    TemplateTask.templateGenerateContent,
+    templateId,
+    inputs,
+    history,
+    tools,
+    toolConfig,
+    _serializationStrategy.parseGenerateContentResponse,
+  );
 
   /// Generates a stream of content from a template with the given [templateId],
   /// [inputs] and [history].
   @experimental
   Stream<GenerateContentResponse> templateGenerateContentWithHistoryStream(
-      Iterable<Content> history, String templateId,
-      {required Map<String, Object?> inputs,
-      List<TemplateTool>? tools,
-      TemplateToolConfig? toolConfig}) {
+    Iterable<Content> history,
+    String templateId, {
+    required Map<String, Object?> inputs,
+    List<TemplateTool>? tools,
+    TemplateToolConfig? toolConfig,
+  }) {
     return streamTemplateRequest(
-        TemplateTask.templateStreamGenerateContent,
-        templateId,
-        inputs,
-        history,
-        tools,
-        toolConfig,
-        _serializationStrategy.parseGenerateContentResponse);
+      TemplateTask.templateStreamGenerateContent,
+      templateId,
+      inputs,
+      history,
+      tools,
+      toolConfig,
+      _serializationStrategy.parseGenerateContentResponse,
+    );
   }
 }
 
@@ -143,15 +160,14 @@ TemplateGenerativeModel createTemplateGenerativeModel({
   bool? useLimitedUseAppCheckTokens,
   FirebaseAppCheck? appCheck,
   FirebaseAuth? auth,
-}) =>
-    TemplateGenerativeModel._(
-      app: app,
-      appCheck: appCheck,
-      useAgentPlatform: useAgentPlatform,
-      useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
-      auth: auth,
-      location: location,
-    );
+}) => TemplateGenerativeModel._(
+  app: app,
+  appCheck: appCheck,
+  useAgentPlatform: useAgentPlatform,
+  useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
+  auth: auth,
+  location: location,
+);
 
 /// Returns a [TemplateGenerativeModel] for test case.
 @experimental
@@ -161,10 +177,9 @@ TemplateGenerativeModel createTestTemplateGenerativeModel({
   required String location,
   required bool useAgentPlatform,
   required http.Client client,
-}) =>
-    TemplateGenerativeModel._test(
-      app: app,
-      useAgentPlatform: useAgentPlatform,
-      location: location,
-      httpClient: client,
-    );
+}) => TemplateGenerativeModel._test(
+  app: app,
+  useAgentPlatform: useAgentPlatform,
+  location: location,
+  httpClient: client,
+);

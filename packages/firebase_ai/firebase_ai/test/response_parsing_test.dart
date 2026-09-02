@@ -120,8 +120,8 @@ void main() {
 }
 ''';
       final decoded = jsonDecode(response) as Object;
-      final generateContentResponse =
-          AgentPlatformSerialization().parseGenerateContentResponse(decoded);
+      final generateContentResponse = AgentPlatformSerialization()
+          .parseGenerateContentResponse(decoded);
       expect(
         generateContentResponse,
         matchesGenerateContentResponse(
@@ -192,7 +192,8 @@ void main() {
             (e) => e.message,
             'message',
             startsWith(
-                'Enable Firebase AI Logic in your Firebase project by visiting the Firebase Console'),
+              'Enable Firebase AI Logic in your Firebase project by visiting the Firebase Console',
+            ),
           ),
         ),
       );
@@ -306,8 +307,8 @@ void main() {
 }
 ''';
       final decoded = jsonDecode(response) as Object;
-      final generateContentResponse =
-          AgentPlatformSerialization().parseGenerateContentResponse(decoded);
+      final generateContentResponse = AgentPlatformSerialization()
+          .parseGenerateContentResponse(decoded);
       expect(
         generateContentResponse,
         matchesGenerateContentResponse(
@@ -440,8 +441,8 @@ void main() {
 }
 ''';
       final decoded = jsonDecode(response) as Object;
-      final generateContentResponse =
-          AgentPlatformSerialization().parseGenerateContentResponse(decoded);
+      final generateContentResponse = AgentPlatformSerialization()
+          .parseGenerateContentResponse(decoded);
       expect(
         generateContentResponse,
         matchesGenerateContentResponse(
@@ -575,8 +576,8 @@ void main() {
 }
 ''';
       final decoded = jsonDecode(response) as Object;
-      final generateContentResponse =
-          AgentPlatformSerialization().parseGenerateContentResponse(decoded);
+      final generateContentResponse = AgentPlatformSerialization()
+          .parseGenerateContentResponse(decoded);
       expect(
         generateContentResponse,
         matchesGenerateContentResponse(
@@ -657,31 +658,36 @@ void main() {
 }
 ''';
       final decoded = jsonDecode(response) as Object;
-      final generateContentResponse =
-          AgentPlatformSerialization().parseGenerateContentResponse(decoded);
+      final generateContentResponse = AgentPlatformSerialization()
+          .parseGenerateContentResponse(decoded);
       expect(
         generateContentResponse,
         matchesGenerateContentResponse(
           GenerateContentResponse([
             Candidate(
-                Content(null, []),
-                [
-                  SafetyRating(
-                    HarmCategory.sexuallyExplicit,
-                    HarmProbability.negligible,
-                  ),
-                  SafetyRating(
-                      HarmCategory.hateSpeech, HarmProbability.negligible),
-                  SafetyRating(
-                      HarmCategory.harassment, HarmProbability.negligible),
-                  SafetyRating(
-                    HarmCategory.dangerousContent,
-                    HarmProbability.negligible,
-                  ),
-                ],
-                CitationMetadata([]),
-                FinishReason.safety,
-                null),
+              Content(null, []),
+              [
+                SafetyRating(
+                  HarmCategory.sexuallyExplicit,
+                  HarmProbability.negligible,
+                ),
+                SafetyRating(
+                  HarmCategory.hateSpeech,
+                  HarmProbability.negligible,
+                ),
+                SafetyRating(
+                  HarmCategory.harassment,
+                  HarmProbability.negligible,
+                ),
+                SafetyRating(
+                  HarmCategory.dangerousContent,
+                  HarmProbability.negligible,
+                ),
+              ],
+              CitationMetadata([]),
+              FinishReason.safety,
+              null,
+            ),
           ], null),
         ),
       );
@@ -724,38 +730,61 @@ void main() {
 }
         ''';
       final decoded = jsonDecode(response) as Object;
-      final generateContentResponse =
-          AgentPlatformSerialization().parseGenerateContentResponse(decoded);
+      final generateContentResponse = AgentPlatformSerialization()
+          .parseGenerateContentResponse(decoded);
       expect(
-          generateContentResponse.text, 'Here is a description of the image:');
+        generateContentResponse.text,
+        'Here is a description of the image:',
+      );
       expect(generateContentResponse.usageMetadata?.totalTokenCount, 1913);
       expect(generateContentResponse.usageMetadata?.toolUsePromptTokenCount, 5);
       expect(
-          generateContentResponse.usageMetadata?.cachedContentTokenCount, 10);
+        generateContentResponse.usageMetadata?.cachedContentTokenCount,
+        10,
+      );
       expect(
-          generateContentResponse
-              .usageMetadata?.cacheTokensDetails?.first.modality,
-          ContentModality.text);
+        generateContentResponse
+            .usageMetadata
+            ?.cacheTokensDetails
+            ?.first
+            .modality,
+        ContentModality.text,
+      );
       expect(
-          generateContentResponse
-              .usageMetadata?.cacheTokensDetails?.first.tokenCount,
-          10);
+        generateContentResponse
+            .usageMetadata
+            ?.cacheTokensDetails
+            ?.first
+            .tokenCount,
+        10,
+      );
       expect(
-          generateContentResponse
-              .usageMetadata?.promptTokensDetails?[1].modality,
-          ContentModality.image);
+        generateContentResponse.usageMetadata?.promptTokensDetails?[1].modality,
+        ContentModality.image,
+      );
       expect(
-          generateContentResponse
-              .usageMetadata?.promptTokensDetails?[1].tokenCount,
-          1806);
+        generateContentResponse
+            .usageMetadata
+            ?.promptTokensDetails?[1]
+            .tokenCount,
+        1806,
+      );
       expect(
-          generateContentResponse
-              .usageMetadata?.candidatesTokensDetails?.first.modality,
-          ContentModality.text);
+        generateContentResponse
+            .usageMetadata
+            ?.candidatesTokensDetails
+            ?.first
+            .modality,
+        ContentModality.text,
+      );
       expect(
-          generateContentResponse
-              .usageMetadata?.candidatesTokensDetails?.first.tokenCount,
-          76);
+        generateContentResponse
+            .usageMetadata
+            ?.candidatesTokensDetails
+            ?.first
+            .tokenCount,
+        76,
+      );
     });
 
     test('countTokens with modality fields returned', () async {
@@ -773,11 +802,13 @@ void main() {
 }
         ''';
       final decoded = jsonDecode(response) as Object;
-      final countTokensResponse =
-          AgentPlatformSerialization().parseCountTokensResponse(decoded);
+      final countTokensResponse = AgentPlatformSerialization()
+          .parseCountTokensResponse(decoded);
       expect(countTokensResponse.totalTokens, 1837);
-      expect(countTokensResponse.promptTokensDetails?.first.modality,
-          ContentModality.image);
+      expect(
+        countTokensResponse.promptTokensDetails?.first.modality,
+        ContentModality.image,
+      );
       expect(countTokensResponse.promptTokensDetails?.first.tokenCount, 1806);
     });
 
@@ -807,11 +838,13 @@ void main() {
 }
 ''';
       final decoded = jsonDecode(response) as Object;
-      final generateContentResponse =
-          AgentPlatformSerialization().parseGenerateContentResponse(decoded);
+      final generateContentResponse = AgentPlatformSerialization()
+          .parseGenerateContentResponse(decoded);
       expect(generateContentResponse.text, 'Initial text And more text');
-      expect(generateContentResponse.candidates.single.text,
-          'Initial text And more text');
+      expect(
+        generateContentResponse.candidates.single.text,
+        'Initial text And more text',
+      );
     });
 
     test('url context', () {
@@ -892,16 +925,20 @@ void main() {
 }
 ''';
       final decoded = jsonDecode(response) as Object;
-      final generateContentResponse =
-          AgentPlatformSerialization().parseGenerateContentResponse(decoded);
+      final generateContentResponse = AgentPlatformSerialization()
+          .parseGenerateContentResponse(decoded);
       final candidate = generateContentResponse.candidates.first;
       final urlContextMetadata = candidate.urlContextMetadata;
       expect(urlContextMetadata, isNotNull);
       expect(urlContextMetadata!.urlMetadata, hasLength(1));
-      expect(urlContextMetadata.urlMetadata.first.retrievedUrl,
-          Uri.parse('https://berkshirehathaway.com'));
-      expect(urlContextMetadata.urlMetadata.first.urlRetrievalStatus,
-          UrlRetrievalStatus.success);
+      expect(
+        urlContextMetadata.urlMetadata.first.retrievedUrl,
+        Uri.parse('https://berkshirehathaway.com'),
+      );
+      expect(
+        urlContextMetadata.urlMetadata.first.urlRetrievalStatus,
+        UrlRetrievalStatus.success,
+      );
       final usageMetadata = generateContentResponse.usageMetadata;
       expect(usageMetadata, isNotNull);
       expect(usageMetadata!.toolUsePromptTokenCount, 34);
@@ -1033,20 +1070,28 @@ void main() {
 }
 ''';
       final decoded = jsonDecode(response) as Object;
-      final generateContentResponse =
-          AgentPlatformSerialization().parseGenerateContentResponse(decoded);
+      final generateContentResponse = AgentPlatformSerialization()
+          .parseGenerateContentResponse(decoded);
       final urlContextMetadata =
           generateContentResponse.candidates.first.urlContextMetadata;
       expect(urlContextMetadata, isNotNull);
       expect(urlContextMetadata!.urlMetadata, hasLength(3));
-      expect(urlContextMetadata.urlMetadata[2].retrievedUrl,
-          Uri.parse('https://a-completely-non-existent-url-for-testing.org'));
-      expect(urlContextMetadata.urlMetadata[2].urlRetrievalStatus,
-          UrlRetrievalStatus.error);
-      expect(urlContextMetadata.urlMetadata[1].retrievedUrl,
-          Uri.parse('https://ai.google.dev'));
-      expect(urlContextMetadata.urlMetadata[1].urlRetrievalStatus,
-          UrlRetrievalStatus.success);
+      expect(
+        urlContextMetadata.urlMetadata[2].retrievedUrl,
+        Uri.parse('https://a-completely-non-existent-url-for-testing.org'),
+      );
+      expect(
+        urlContextMetadata.urlMetadata[2].urlRetrievalStatus,
+        UrlRetrievalStatus.error,
+      );
+      expect(
+        urlContextMetadata.urlMetadata[1].retrievedUrl,
+        Uri.parse('https://ai.google.dev'),
+      );
+      expect(
+        urlContextMetadata.urlMetadata[1].urlRetrievalStatus,
+        UrlRetrievalStatus.success,
+      );
     });
 
     test('url context missing retrievedUrl', () {
@@ -1108,15 +1153,17 @@ void main() {
 }
 ''';
       final decoded = jsonDecode(response) as Object;
-      final generateContentResponse =
-          AgentPlatformSerialization().parseGenerateContentResponse(decoded);
+      final generateContentResponse = AgentPlatformSerialization()
+          .parseGenerateContentResponse(decoded);
       final urlContextMetadata =
           generateContentResponse.candidates.first.urlContextMetadata;
       expect(urlContextMetadata, isNotNull);
       expect(urlContextMetadata!.urlMetadata, hasLength(1));
       expect(urlContextMetadata.urlMetadata[0].retrievedUrl, isNull);
-      expect(urlContextMetadata.urlMetadata[0].urlRetrievalStatus,
-          UrlRetrievalStatus.error);
+      expect(
+        urlContextMetadata.urlMetadata[0].urlRetrievalStatus,
+        UrlRetrievalStatus.error,
+      );
     });
 
     test('parses json with google maps grounding chunk', () {
@@ -1125,8 +1172,8 @@ void main() {
           {
             'content': {
               'parts': [
-                {'text': 'This is a maps response.'}
-              ]
+                {'text': 'This is a maps response.'},
+              ],
             },
             'finishReason': 'STOP',
             'groundingMetadata': {
@@ -1136,12 +1183,12 @@ void main() {
                     'uri': 'https://maps.google.com/?cid=123',
                     'title': 'Google HQ',
                     'placeId': 'ChIJS5dFe_cZzosR26ZvwqWaMAM',
-                  }
-                }
+                  },
+                },
               ],
-            }
-          }
-        ]
+            },
+          },
+        ],
       };
 
       final response = AgentPlatformSerialization()
@@ -1206,30 +1253,22 @@ void main() {
 }
 ''';
       final decoded = jsonDecode(response) as Object;
-      final generateContentResponse =
-          AgentPlatformSerialization().parseGenerateContentResponse(decoded);
+      final generateContentResponse = AgentPlatformSerialization()
+          .parseGenerateContentResponse(decoded);
       expect(
         generateContentResponse,
         matchesGenerateContentResponse(
           GenerateContentResponse(
             [
               Candidate(
-                Content.model([
-                  const TextPart('Some text'),
-                ]),
+                Content.model([const TextPart('Some text')]),
                 [
-                  SafetyRating(
-                    HarmCategory.harassment,
-                    HarmProbability.medium,
-                  ),
+                  SafetyRating(HarmCategory.harassment, HarmProbability.medium),
                   SafetyRating(
                     HarmCategory.dangerousContent,
                     HarmProbability.unknown,
                   ),
-                  SafetyRating(
-                    HarmCategory.unknown,
-                    HarmProbability.high,
-                  ),
+                  SafetyRating(HarmCategory.unknown, HarmProbability.high),
                 ],
                 null,
                 FinishReason.stop,
@@ -1237,18 +1276,12 @@ void main() {
               ),
             ],
             PromptFeedback(null, null, [
-              SafetyRating(
-                HarmCategory.harassment,
-                HarmProbability.medium,
-              ),
+              SafetyRating(HarmCategory.harassment, HarmProbability.medium),
               SafetyRating(
                 HarmCategory.dangerousContent,
                 HarmProbability.unknown,
               ),
-              SafetyRating(
-                HarmCategory.unknown,
-                HarmProbability.high,
-              ),
+              SafetyRating(HarmCategory.unknown, HarmProbability.high),
             ]),
           ),
         ),
@@ -1277,25 +1310,20 @@ void main() {
 }
 ''';
       final decoded = jsonDecode(response) as Object;
-      final generateContentResponse =
-          AgentPlatformSerialization().parseGenerateContentResponse(decoded);
+      final generateContentResponse = AgentPlatformSerialization()
+          .parseGenerateContentResponse(decoded);
       expect(
         generateContentResponse,
         matchesGenerateContentResponse(
-          GenerateContentResponse(
-            [
-              Candidate(
-                Content.model([
-                  const FunctionCall('current_time', {}),
-                ]),
-                null,
-                null,
-                FinishReason.stop,
-                null,
-              ),
-            ],
-            null,
-          ),
+          GenerateContentResponse([
+            Candidate(
+              Content.model([const FunctionCall('current_time', {})]),
+              null,
+              null,
+              FinishReason.stop,
+              null,
+            ),
+          ], null),
         ),
       );
     });
@@ -1335,12 +1363,14 @@ void main() {
         ),
       );
       expect(
-          () => AgentPlatformSerialization()
-              .parseGenerateContentResponse(decoded),
-          expectedThrow);
+        () =>
+            AgentPlatformSerialization().parseGenerateContentResponse(decoded),
+        expectedThrow,
+      );
       expect(
-          () => AgentPlatformSerialization().parseCountTokensResponse(decoded),
-          expectedThrow);
+        () => AgentPlatformSerialization().parseCountTokensResponse(decoded),
+        expectedThrow,
+      );
     });
 
     test('for unsupported user location', () async {
@@ -1368,12 +1398,14 @@ void main() {
         ),
       );
       expect(
-          () => AgentPlatformSerialization()
-              .parseGenerateContentResponse(decoded),
-          expectedThrow);
+        () =>
+            AgentPlatformSerialization().parseGenerateContentResponse(decoded),
+        expectedThrow,
+      );
       expect(
-          () => AgentPlatformSerialization().parseCountTokensResponse(decoded),
-          expectedThrow);
+        () => AgentPlatformSerialization().parseCountTokensResponse(decoded),
+        expectedThrow,
+      );
     });
 
     test('for general server errors', () async {
@@ -1404,12 +1436,14 @@ void main() {
         ),
       );
       expect(
-          () => AgentPlatformSerialization()
-              .parseGenerateContentResponse(decoded),
-          expectedThrow);
+        () =>
+            AgentPlatformSerialization().parseGenerateContentResponse(decoded),
+        expectedThrow,
+      );
       expect(
-          () => AgentPlatformSerialization().parseCountTokensResponse(decoded),
-          expectedThrow);
+        () => AgentPlatformSerialization().parseCountTokensResponse(decoded),
+        expectedThrow,
+      );
     });
   });
 }

@@ -24,7 +24,11 @@ class _PendingUnary {
   final bool isMutation;
 
   _PendingUnary(
-      this.completer, this.operationName, this.variables, this.isMutation);
+    this.completer,
+    this.operationName,
+    this.variables,
+    this.isMutation,
+  );
 }
 
 class _PendingSubscription {
@@ -66,7 +70,8 @@ class WebSocketTransport implements DataConnectTransport {
       scheme: protocol,
       host: host,
       port: port,
-      path: '/ws/google.firebase.dataconnect.v1.ConnectorStreamService.Connect/'
+      path:
+          '/ws/google.firebase.dataconnect.v1.ConnectorStreamService.Connect/'
           '$projectId/locations/$location/services/$serviceId',
     ).toString();
 
@@ -269,8 +274,12 @@ class WebSocketTransport implements DataConnectTransport {
   static const String _chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
 
   String _generateRequestId(String operationName) {
-    final randStr = String.fromCharCodes(Iterable.generate(
-        15, (_) => _chars.codeUnitAt(_random.nextInt(_chars.length))));
+    final randStr = String.fromCharCodes(
+      Iterable.generate(
+        15,
+        (_) => _chars.codeUnitAt(_random.nextInt(_chars.length)),
+      ),
+    );
     return '${operationName}_$randStr';
   }
 
@@ -354,7 +363,9 @@ class WebSocketTransport implements DataConnectTransport {
       }
       _releaseWebSocketTransport();
       throw DataConnectError(
-          DataConnectErrorCode.other, 'WebSocket connection failed: $e');
+        DataConnectErrorCode.other,
+        'WebSocket connection failed: $e',
+      );
     }
 
     if (!identical(_channel, channel)) {
@@ -442,9 +453,12 @@ class WebSocketTransport implements DataConnectTransport {
   }
 
   void _clearState([DataConnectError? error]) {
-    final e = error ??
+    final e =
+        error ??
         DataConnectError(
-            DataConnectErrorCode.other, 'WebSocket connection closed.');
+          DataConnectErrorCode.other,
+          'WebSocket connection closed.',
+        );
     for (final pendings in _unaryListeners.values) {
       for (final p in pendings) {
         if (!p.completer.isCompleted) {
@@ -478,14 +492,19 @@ class WebSocketTransport implements DataConnectTransport {
     _isReconnecting = true;
 
     if (_reconnectAttempts >= _maxReconnectAttempts) {
-      _clearState(DataConnectError(DataConnectErrorCode.other,
-          'Network disconnected after max attempts.'));
+      _clearState(
+        DataConnectError(
+          DataConnectErrorCode.other,
+          'Network disconnected after max attempts.',
+        ),
+      );
       return;
     }
 
     final delay = min(
-        _initialReconnectDelayMs * pow(2, _reconnectAttempts).toInt(),
-        _maxReconnectDelayMs);
+      _initialReconnectDelayMs * pow(2, _reconnectAttempts).toInt(),
+      _maxReconnectDelayMs,
+    );
 
     _reconnectTimer?.cancel();
     _reconnectTimer = Timer(Duration(milliseconds: delay), () async {
@@ -520,15 +539,21 @@ class WebSocketTransport implements DataConnectTransport {
   }
 
   void _replayQueriesAndFailMutations(
-      String? authToken, String? appCheckToken) {
+    String? authToken,
+    String? appCheckToken,
+  ) {
     final unariesToReplay = <String, List<_PendingUnary>>{};
     for (final entry in _unaryListeners.entries) {
       final reqId = entry.key;
       final kept = <_PendingUnary>[];
       for (final p in entry.value) {
         if (p.isMutation) {
-          p.completer.completeError(DataConnectError(DataConnectErrorCode.other,
-              'Network reconnected; mutations cannot be safely retried.'));
+          p.completer.completeError(
+            DataConnectError(
+              DataConnectErrorCode.other,
+              'Network reconnected; mutations cannot be safely retried.',
+            ),
+          );
         } else {
           kept.add(p);
           final headers = _buildHeaders(authToken, appCheckToken);
@@ -644,8 +669,16 @@ class WebSocketTransport implements DataConnectTransport {
     Variables? vars,
     String? authToken,
   ) async {
-    return _invokeUnary(operationId, queryName, deserializer, serializer, vars,
-        authToken, RequestKind.execute, false);
+    return _invokeUnary(
+      operationId,
+      queryName,
+      deserializer,
+      serializer,
+      vars,
+      authToken,
+      RequestKind.execute,
+      false,
+    );
   }
 
   @override
@@ -657,8 +690,16 @@ class WebSocketTransport implements DataConnectTransport {
     Variables? vars,
     String? authToken,
   ) async {
-    return _invokeUnary(operationId, queryName, deserializer, serializer, vars,
-        authToken, RequestKind.execute, true);
+    return _invokeUnary(
+      operationId,
+      queryName,
+      deserializer,
+      serializer,
+      vars,
+      authToken,
+      RequestKind.execute,
+      true,
+    );
   }
 
   Future<ServerResponse> _invokeUnary<Data, Variables>(
@@ -678,8 +719,15 @@ class WebSocketTransport implements DataConnectTransport {
     _pendingOperationSetups++;
     Completer<ServerResponse> completer;
     try {
-      completer = await _sendUnary(operationId, operationName, serializer, vars,
-          authToken, requestKind, isMutation);
+      completer = await _sendUnary(
+        operationId,
+        operationName,
+        serializer,
+        vars,
+        authToken,
+        requestKind,
+        isMutation,
+      );
     } finally {
       _pendingOperationSetups--;
     }
@@ -712,9 +760,11 @@ class WebSocketTransport implements DataConnectTransport {
     // completer — the caller's `execute()` future — would hang forever.
     // `_liveSubscriptionRequestId` also purges the mapping if it is stale.
     final liveRequestId = _liveSubscriptionRequestId(operationId);
-    final liveSubscription =
-        liveRequestId == null ? null : _pendingSubscriptions[liveRequestId];
-    final canResume = liveRequestId != null &&
+    final liveSubscription = liveRequestId == null
+        ? null
+        : _pendingSubscriptions[liveRequestId];
+    final canResume =
+        liveRequestId != null &&
         liveSubscription!.sentOnGeneration == _connectionGeneration;
 
     if (canResume) {
@@ -723,8 +773,11 @@ class WebSocketTransport implements DataConnectTransport {
       if (vars != null && serializer != null) {
         variablesMap = jsonDecode(serializer(vars));
       }
-      _unaryListeners.putIfAbsent(existingRequestId, () => []).add(
-          _PendingUnary(completer, operationName, variablesMap, isMutation));
+      _unaryListeners
+          .putIfAbsent(existingRequestId, () => [])
+          .add(
+            _PendingUnary(completer, operationName, variablesMap, isMutation),
+          );
 
       String? appCheckToken;
       try {
@@ -833,8 +886,11 @@ class WebSocketTransport implements DataConnectTransport {
 
           if (isNewSubscription) {
             _activeSubscriptions[operationId] = requestId;
-            _pendingSubscriptions[requestId] =
-                _PendingSubscription(operationId, queryName, variables);
+            _pendingSubscriptions[requestId] = _PendingSubscription(
+              operationId,
+              queryName,
+              variables,
+            );
           }
           _streamListeners.putIfAbsent(requestId, () => []).add(controller);
 

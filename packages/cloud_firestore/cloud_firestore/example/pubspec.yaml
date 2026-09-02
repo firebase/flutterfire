@@ -3,8 +3,8 @@ description: Demonstrates how to use the firestore plugin.
 resolution: workspace
 
 environment:
-  sdk: '^3.6.0'
-  flutter: '>=3.27.0'
+  sdk: '^3.10.0'
+  flutter: '>=3.38.0'
 
 dependencies:
   cloud_firestore: ^6.9.0

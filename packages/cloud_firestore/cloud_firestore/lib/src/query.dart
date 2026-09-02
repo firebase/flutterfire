@@ -232,10 +232,7 @@ abstract class Query<T extends Object?> {
 ///
 /// Can construct refined [Query] objects by adding filters and ordering.
 class _JsonQuery implements Query<Map<String, dynamic>> {
-  _JsonQuery(
-    this.firestore,
-    this._delegate,
-  ) {
+  _JsonQuery(this.firestore, this._delegate) {
     QueryPlatform.verify(_delegate);
   }
 
@@ -291,8 +288,9 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
       // All order by fields must exist within the snapshot
       if (field != FieldPath.documentId) {
         try {
-          final codecValue =
-              _CodecUtility.valueEncode(documentSnapshot.get(field));
+          final codecValue = _CodecUtility.valueEncode(
+            documentSnapshot.get(field),
+          );
           values.add(codecValue);
         } on StateError {
           throw "You are trying to start or end a query using a document for which the field '$field' (used as the orderBy) does not exist.";
@@ -319,10 +317,7 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
       values.add(documentSnapshot.id);
     }
 
-    return <String, dynamic>{
-      'orders': orders,
-      'values': values,
-    };
+    return <String, dynamic>{'orders': orders, 'values': values};
   }
 
   /// Common handler for all non-document based cursor queries.
@@ -410,10 +405,7 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
   @override
   Query<Map<String, dynamic>> endBefore(Iterable<Object?> values) {
     _assertQueryCursorValues(values);
-    return _JsonQuery(
-      firestore,
-      _delegate.endBefore(values.toList()),
-    );
+    return _JsonQuery(firestore, _delegate.endBefore(values.toList()));
   }
 
   /// Fetch the documents for this query.
@@ -422,8 +414,9 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
   /// with a [GetOptions] instance.
   @override
   Future<QuerySnapshot<Map<String, dynamic>>> get([GetOptions? options]) async {
-    QuerySnapshotPlatform snapshotDelegate =
-        await _delegate.get(options ?? const GetOptions());
+    QuerySnapshotPlatform snapshotDelegate = await _delegate.get(
+      options ?? const GetOptions(),
+    );
     return _JsonQuerySnapshot(firestore, snapshotDelegate);
   }
 
@@ -483,10 +476,7 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
   /// or [endAtDocument] because the order by clause on the document id
   /// is added by these methods implicitly.
   @override
-  Query<Map<String, dynamic>> orderBy(
-    Object field, {
-    bool descending = false,
-  }) {
+  Query<Map<String, dynamic>> orderBy(Object field, {bool descending = false}) {
     _assertValidFieldType(field);
     assert(
       !_hasStartCursor(),
@@ -501,8 +491,9 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
       'endBefore() or endBeforeDocument() before calling orderBy()',
     );
 
-    final List<List<dynamic>> orders =
-        List<List<dynamic>>.from(parameters['orderBy']);
+    final List<List<dynamic>> orders = List<List<dynamic>>.from(
+      parameters['orderBy'],
+    );
 
     assert(
       orders.where((List<dynamic> item) => field == item[0]).isEmpty,
@@ -512,8 +503,9 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
     if (field == FieldPath.documentId) {
       orders.add([field, descending]);
     } else {
-      FieldPath fieldPath =
-          field is String ? FieldPath.fromString(field) : field as FieldPath;
+      FieldPath fieldPath = field is String
+          ? FieldPath.fromString(field)
+          : field as FieldPath;
       orders.add([fieldPath, descending]);
     }
 
@@ -630,8 +622,9 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
     final field = fieldOrFilter;
 
     const ListEquality<dynamic> equality = ListEquality<dynamic>();
-    final List<List<dynamic>> conditions =
-        List<List<dynamic>>.from(parameters['where']);
+    final List<List<dynamic>> conditions = List<List<dynamic>>.from(
+      parameters['where'],
+    );
 
     // Conditions can be chained from other [Query] instances
     void addCondition(dynamic field, String operator, dynamic value) {
@@ -641,8 +634,9 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
       if (field == FieldPath.documentId) {
         condition = <dynamic>[field, operator, codecValue];
       } else {
-        FieldPath fieldPath =
-            field is String ? FieldPath.fromString(field) : field as FieldPath;
+        FieldPath fieldPath = field is String
+            ? FieldPath.fromString(field)
+            : field as FieldPath;
         condition = <dynamic>[fieldPath, operator, codecValue];
       }
 
@@ -757,18 +751,12 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
           !hasNotEqualTo,
           "You cannot use 'not-in' filters with '!=' filters.",
         );
-        assert(
-          !hasIn,
-          "You cannot use 'not-in' filters with 'in' filters.",
-        );
+        assert(!hasIn, "You cannot use 'not-in' filters with 'in' filters.");
         hasNotIn = true;
       }
 
       if (operator == 'in') {
-        assert(
-          !hasNotIn,
-          "You cannot use 'in' filters with 'not-in' filters.",
-        );
+        assert(!hasNotIn, "You cannot use 'in' filters with 'not-in' filters.");
         hasIn = true;
       }
 
@@ -804,11 +792,7 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
     required FromFirestore<R> fromFirestore,
     required ToFirestore<R> toFirestore,
   }) {
-    return _WithConverterQuery(
-      this,
-      fromFirestore,
-      toFirestore,
-    );
+    return _WithConverterQuery(this, fromFirestore, toFirestore);
   }
 
   @override
@@ -1049,11 +1033,7 @@ class _WithConverterQuery<T extends Object?> implements Query<T> {
     required FromFirestore<R> fromFirestore,
     required ToFirestore<R> toFirestore,
   }) {
-    return _WithConverterQuery(
-      _originalQuery,
-      fromFirestore,
-      toFirestore,
-    );
+    return _WithConverterQuery(_originalQuery, fromFirestore, toFirestore);
   }
 
   @override

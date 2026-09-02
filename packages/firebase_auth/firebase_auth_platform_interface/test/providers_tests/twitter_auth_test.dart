@@ -21,7 +21,9 @@ void main() {
     test('TwitterAuthProvider.TWITTER_SIGN_IN_METHOD', () {
       expect(TwitterAuthProvider.TWITTER_SIGN_IN_METHOD, isA<String>());
       expect(
-          TwitterAuthProvider.TWITTER_SIGN_IN_METHOD, equals(kMockProviderId));
+        TwitterAuthProvider.TWITTER_SIGN_IN_METHOD,
+        equals(kMockProviderId),
+      );
     });
 
     test('TwitterAuthProvider.PROVIDER_ID', () {
@@ -36,8 +38,9 @@ void main() {
     group('setCustomParameters()', () {
       test('sets custom parameters', () {
         final Map<String, String> kCustomOAuthParameters = {'lang': 'es'};
-        final result =
-            twitterAuthProvider.setCustomParameters(kCustomOAuthParameters);
+        final result = twitterAuthProvider.setCustomParameters(
+          kCustomOAuthParameters,
+        );
         expect(result, isA<TwitterAuthProvider>());
         expect(result.parameters['lang'], isA<String>());
         expect(result.parameters['lang'], equals('es'));
@@ -49,7 +52,9 @@ void main() {
       const String kMockSecret = 'test-secret';
       test('creates a new [TwitterAuthCredential]', () {
         final result = TwitterAuthProvider.credential(
-            accessToken: kMockAccessToken, secret: kMockSecret);
+          accessToken: kMockAccessToken,
+          secret: kMockSecret,
+        );
         expect(result, isA<OAuthCredential>());
         expect(result.token, isNull);
         expect(result.idToken, isNull);

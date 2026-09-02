@@ -2,11 +2,9 @@ part of 'movies.dart';
 
 class DeleteAllMovieDataVariablesBuilder {
   final FirebaseDataConnect _dataConnect;
-  DeleteAllMovieDataVariablesBuilder(
-    this._dataConnect,
-  );
-  Deserializer<DeleteAllMovieDataData> dataDeserializer =
-      (dynamic json) => DeleteAllMovieDataData.fromJson(jsonDecode(json));
+  DeleteAllMovieDataVariablesBuilder(this._dataConnect);
+  Deserializer<DeleteAllMovieDataData> dataDeserializer = (dynamic json) =>
+      DeleteAllMovieDataData.fromJson(jsonDecode(json));
 
   Future<OperationResult<DeleteAllMovieDataData, void>> execute() {
     return ref().execute();
@@ -14,7 +12,11 @@ class DeleteAllMovieDataVariablesBuilder {
 
   MutationRef<DeleteAllMovieDataData, void> ref() {
     return _dataConnect.mutation(
-        "deleteAllMovieData", dataDeserializer, emptySerializer, null);
+      "deleteAllMovieData",
+      dataDeserializer,
+      emptySerializer,
+      null,
+    );
   }
 }
 
@@ -24,10 +26,11 @@ class DeleteAllMovieDataData {
   final int movie_deleteMany;
   final int person_deleteMany;
   DeleteAllMovieDataData.fromJson(dynamic json)
-      : directedBy_deleteMany =
-            nativeFromJson<int>(json['directedBy_deleteMany']),
-        movie_deleteMany = nativeFromJson<int>(json['movie_deleteMany']),
-        person_deleteMany = nativeFromJson<int>(json['person_deleteMany']);
+    : directedBy_deleteMany = nativeFromJson<int>(
+        json['directedBy_deleteMany'],
+      ),
+      movie_deleteMany = nativeFromJson<int>(json['movie_deleteMany']),
+      person_deleteMany = nativeFromJson<int>(json['person_deleteMany']);
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) {
@@ -45,10 +48,10 @@ class DeleteAllMovieDataData {
 
   @override
   int get hashCode => Object.hashAll([
-        directedBy_deleteMany.hashCode,
-        movie_deleteMany.hashCode,
-        person_deleteMany.hashCode
-      ]);
+    directedBy_deleteMany.hashCode,
+    movie_deleteMany.hashCode,
+    person_deleteMany.hashCode,
+  ]);
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};

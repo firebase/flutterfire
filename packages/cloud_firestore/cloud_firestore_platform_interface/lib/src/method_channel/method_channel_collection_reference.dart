@@ -21,15 +21,15 @@ import 'utils/auto_id_generator.dart';
 /// errors, now you know why.
 class MethodChannelCollectionReference extends MethodChannelQuery
     implements
-// ignore: avoid_implementing_value_types
+        // ignore: avoid_implementing_value_types
         CollectionReferencePlatform {
   /// Create a [MethodChannelCollectionReference] instance.
   MethodChannelCollectionReference(
     FirebaseFirestorePlatform firestore,
     String path,
     FirestorePigeonFirebaseApp pigeonApp,
-  )   : _pointer = Pointer(path),
-        super(firestore, path, pigeonApp);
+  ) : _pointer = Pointer(path),
+      super(firestore, path, pigeonApp);
 
   final Pointer _pointer;
 

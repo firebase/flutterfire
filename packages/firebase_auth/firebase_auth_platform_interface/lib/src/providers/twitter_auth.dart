@@ -81,14 +81,13 @@ class TwitterAuthProvider extends AuthProvider {
 /// The auth credential returned from calling
 /// [TwitterAuthProvider.credential].
 class TwitterAuthCredential extends OAuthCredential {
-  TwitterAuthCredential._({
-    required String accessToken,
-    required String secret,
-  }) : super(
-            providerId: _kProviderId,
-            signInMethod: _kProviderId,
-            accessToken: accessToken,
-            secret: secret);
+  TwitterAuthCredential._({required String accessToken, required String secret})
+    : super(
+        providerId: _kProviderId,
+        signInMethod: _kProviderId,
+        accessToken: accessToken,
+        secret: secret,
+      );
 
   factory TwitterAuthCredential._credential({
     required String accessToken,

@@ -56,8 +56,11 @@ class SQLite3CacheProvider implements CacheProvider {
   final String entityDataTable = 'entity_data';
   final String resultTreeTable = 'query_results';
 
-  SQLite3CacheProvider(this._identifier,
-      {this.memory = false, this.customDbPath});
+  SQLite3CacheProvider(
+    this._identifier, {
+    this.memory = false,
+    this.customDbPath,
+  });
 
   @override
   Future<bool> initialize() async {
@@ -83,28 +86,33 @@ class SQLite3CacheProvider implements CacheProvider {
         int major = curVersion ~/ 1000000;
         if (major != 1) {
           developer.log(
-              'Unsupported schema major version $major detected. Expected 1');
+            'Unsupported schema major version $major detected. Expected 1',
+          );
           return false;
         }
       }
 
-      final selectEntityStmt = _db
-          .prepare('SELECT data FROM $entityDataTable WHERE entity_guid = ?');
+      final selectEntityStmt = _db.prepare(
+        'SELECT data FROM $entityDataTable WHERE entity_guid = ?',
+      );
       _openedStatements.add(selectEntityStmt);
       _selectEntityStmt = selectEntityStmt;
 
       final insertEntityStmt = _db.prepare(
-          'INSERT OR REPLACE INTO $entityDataTable (entity_guid, data) VALUES (?, ?)');
+        'INSERT OR REPLACE INTO $entityDataTable (entity_guid, data) VALUES (?, ?)',
+      );
       _openedStatements.add(insertEntityStmt);
       _insertEntityStmt = insertEntityStmt;
 
-      final selectResultStmt =
-          _db.prepare('SELECT data FROM $resultTreeTable WHERE query_id = ?');
+      final selectResultStmt = _db.prepare(
+        'SELECT data FROM $resultTreeTable WHERE query_id = ?',
+      );
       _openedStatements.add(selectResultStmt);
       _selectResultStmt = selectResultStmt;
 
       final insertResultStmt = _db.prepare(
-          'INSERT OR REPLACE INTO $resultTreeTable (query_id, last_accessed, data) VALUES (?, ?, ?)');
+        'INSERT OR REPLACE INTO $resultTreeTable (query_id, last_accessed, data) VALUES (?, ?, ?)',
+      );
       _openedStatements.add(insertResultStmt);
       _insertResultStmt = insertResultStmt;
 
@@ -224,7 +232,7 @@ class SQLite3CacheProvider implements CacheProvider {
       _insertResultStmt.execute([
         queryId,
         DateTime.now().millisecondsSinceEpoch / 1000.0,
-        resultTree.toRawJson()
+        resultTree.toRawJson(),
       ]);
       if (needsTransaction) {
         _db.execute('COMMIT');
@@ -258,7 +266,12 @@ class SQLite3CacheProvider implements CacheProvider {
   }
 }
 
-CacheProvider cacheImplementation(String identifier, bool memory,
-        {String? customDbPath}) =>
-    SQLite3CacheProvider(identifier,
-        memory: memory, customDbPath: customDbPath);
+CacheProvider cacheImplementation(
+  String identifier,
+  bool memory, {
+  String? customDbPath,
+}) => SQLite3CacheProvider(
+  identifier,
+  memory: memory,
+  customDbPath: customDbPath,
+);

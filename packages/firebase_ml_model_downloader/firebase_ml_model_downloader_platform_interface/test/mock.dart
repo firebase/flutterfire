@@ -18,10 +18,12 @@ void setupFirebaseModelDownloaderMocks([Callback? customHandlers]) {
 
 void handleMethodCall(MethodCallCallback methodCallCallback) =>
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(MethodChannelFirebaseModelDownloader.channel,
-            (call) async {
-      return await methodCallCallback(call);
-    });
+        .setMockMethodCallHandler(
+          MethodChannelFirebaseModelDownloader.channel,
+          (call) async {
+            return await methodCallCallback(call);
+          },
+        );
 
 Future<void> testExceptionHandling(String type, Function testMethod) async {
   try {

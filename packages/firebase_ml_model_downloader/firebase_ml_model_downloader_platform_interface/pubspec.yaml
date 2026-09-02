@@ -6,8 +6,8 @@ homepage: https://github.com/firebase/flutterfire/tree/main/packages/firebase_ml
 repository: https://github.com/firebase/flutterfire/tree/main/packages/firebase_ml_model_downloader/firebase_ml_model_downloader_platform_interface
 
 environment:
-  sdk: '^3.6.0'
-  flutter: '>=3.27.0'
+  sdk: '^3.10.0'
+  flutter: '>=3.38.0'
 
 dependencies:
   firebase_core: ^4.14.0

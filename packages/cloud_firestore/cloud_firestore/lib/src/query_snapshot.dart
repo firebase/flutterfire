@@ -83,11 +83,7 @@ class _WithConverterQuerySnapshot<T extends Object?>
   List<DocumentChange<T>> get docChanges {
     return [
       for (final change in _originalQuerySnapshot.docChanges)
-        _WithConverterDocumentChange<T>(
-          change,
-          _fromFirestore,
-          _toFirestore,
-        ),
+        _WithConverterDocumentChange<T>(change, _fromFirestore, _toFirestore),
     ];
   }
 

@@ -78,7 +78,7 @@ class MethodChannelDatabase extends DatabasePlatform {
   }
 
   MethodChannelDatabase({FirebaseApp? app, String? databaseURL})
-      : super(app: app, databaseURL: databaseURL) {
+    : super(app: app, databaseURL: databaseURL) {
     if (_initialized) return;
 
     // Set up the Pigeon FlutterApi for transaction handler callbacks
@@ -123,8 +123,9 @@ class MethodChannelDatabase extends DatabasePlatform {
 
   /// The [MethodChannel] used to communicate with the native plugin
   /// This is kept for backward compatibility with query operations
-  static const MethodChannel channel =
-      MethodChannel('plugins.flutter.io/firebase_database');
+  static const MethodChannel channel = MethodChannel(
+    'plugins.flutter.io/firebase_database',
+  );
 
   @override
   void useDatabaseEmulator(String host, int port) {

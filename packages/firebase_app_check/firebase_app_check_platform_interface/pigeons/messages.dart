@@ -5,10 +5,7 @@
 import 'package:pigeon/pigeon.dart';
 
 class InternalAppCheckTokenResult {
-  InternalAppCheckTokenResult({
-    required this.token,
-    this.expirationTimestamp,
-  });
+  InternalAppCheckTokenResult({required this.token, this.expirationTimestamp});
 
   String token;
 

@@ -26,8 +26,10 @@ Future<void> main() async {
   late FirebaseStorage storage;
   late Reference testRef;
   FullMetadata testFullMetadata = FullMetadata(testMetadataMap);
-  ListOptions testListOptions =
-      const ListOptions(maxResults: testMaxResults, pageToken: testPageToken);
+  ListOptions testListOptions = const ListOptions(
+    maxResults: testMaxResults,
+    pageToken: testPageToken,
+  );
 
   SettableMetadata testSettableMetadata = SettableMetadata();
   File testFile = await createFile('foo.txt');
@@ -130,8 +132,9 @@ Future<void> main() async {
 
     group('getDownloadURL()', () {
       test('verify delegate method is called', () async {
-        when(mockReference.getDownloadURL())
-            .thenAnswer((_) => Future.value(testDownloadUrl));
+        when(
+          mockReference.getDownloadURL(),
+        ).thenAnswer((_) => Future.value(testDownloadUrl));
 
         final result = await testRef.getDownloadURL();
 
@@ -144,8 +147,9 @@ Future<void> main() async {
 
     group('getMetadata()', () {
       test('verify delegate method is called', () async {
-        when(mockReference.getMetadata())
-            .thenAnswer((_) => Future.value(testFullMetadata));
+        when(
+          mockReference.getMetadata(),
+        ).thenAnswer((_) => Future.value(testFullMetadata));
 
         final result = await testRef.getMetadata();
 
@@ -158,8 +162,9 @@ Future<void> main() async {
 
     group('list()', () {
       test('verify delegate method is called', () async {
-        when(mockReference.list(testListOptions))
-            .thenAnswer((_) => Future.value(mockListResultPlatform));
+        when(
+          mockReference.list(testListOptions),
+        ).thenAnswer((_) => Future.value(mockListResultPlatform));
         final result = await testRef.list(testListOptions);
 
         expect(result, isA<ListResult>());
@@ -168,14 +173,18 @@ Future<void> main() async {
       });
 
       test('throws AssertionError if max results is not greater than 0', () {
-        ListOptions listOptions =
-            const ListOptions(maxResults: 0, pageToken: testPageToken);
+        ListOptions listOptions = const ListOptions(
+          maxResults: 0,
+          pageToken: testPageToken,
+        );
         expect(() => testRef.list(listOptions), throwsAssertionError);
       });
 
       test('throws AssertionError if max results is greater than 1000', () {
-        ListOptions listOptions =
-            const ListOptions(maxResults: 1001, pageToken: testPageToken);
+        ListOptions listOptions = const ListOptions(
+          maxResults: 1001,
+          pageToken: testPageToken,
+        );
 
         expect(() => testRef.list(listOptions), throwsAssertionError);
       });
@@ -183,8 +192,9 @@ Future<void> main() async {
 
     group('listAll()', () {
       test('verify delegate method is called', () async {
-        when(mockReference.listAll())
-            .thenAnswer((_) => Future.value(mockListResultPlatform));
+        when(
+          mockReference.listAll(),
+        ).thenAnswer((_) => Future.value(mockListResultPlatform));
 
         final result = await testRef.listAll();
 
@@ -212,8 +222,9 @@ Future<void> main() async {
 
     group('putBlob()', () {
       test('verify delegate method is called', () {
-        when(mockReference.putBlob(testFile))
-            .thenReturn(mockUploadTaskPlatform);
+        when(
+          mockReference.putBlob(testFile),
+        ).thenReturn(mockUploadTaskPlatform);
 
         final result = testRef.putBlob(testFile);
 
@@ -229,8 +240,9 @@ Future<void> main() async {
 
     group('putFile()', () {
       test('verify delegate method is called', () {
-        when(mockReference.putFile(testFile))
-            .thenReturn(mockUploadTaskPlatform);
+        when(
+          mockReference.putFile(testFile),
+        ).thenReturn(mockUploadTaskPlatform);
 
         final result = testRef.putFile(testFile);
 
@@ -261,31 +273,42 @@ Future<void> main() async {
       test('data_url format', () {
         UriData uriData = UriData.fromString(testString, base64: true);
         Uri uri = uriData.uri;
-        final result =
-            testRef.putString(uri.toString(), format: PutStringFormat.dataUrl);
+        final result = testRef.putString(
+          uri.toString(),
+          format: PutStringFormat.dataUrl,
+        );
 
         expect(result, isA<Task>());
 
         // confirm data_url was converted to a Base64 format
         UriData uriDataExpected = UriData.fromUri(Uri.parse(uri.toString()));
-        verify(mockReference.putString(
-            uriDataExpected.contentText, PutStringFormat.base64, any));
+        verify(
+          mockReference.putString(
+            uriDataExpected.contentText,
+            PutStringFormat.base64,
+            any,
+          ),
+        );
       });
 
       test('throws AssertionError if data_url is not a Base64 format', () {
         UriData uriData = UriData.fromString(testString);
         Uri uri = uriData.uri;
         expect(
-            () => testRef.putString(uri.toString(),
-                format: PutStringFormat.dataUrl),
-            throwsAssertionError);
+          () => testRef.putString(
+            uri.toString(),
+            format: PutStringFormat.dataUrl,
+          ),
+          throwsAssertionError,
+        );
       });
     });
 
     group('updateMetadata()', () {
       test('verify delegate method is called', () async {
-        when(mockReference.updateMetadata(testSettableMetadata))
-            .thenAnswer((_) => Future.value(testFullMetadata));
+        when(
+          mockReference.updateMetadata(testSettableMetadata),
+        ).thenAnswer((_) => Future.value(testFullMetadata));
 
         final result = await testRef.updateMetadata(testSettableMetadata);
 
@@ -298,8 +321,9 @@ Future<void> main() async {
 
     group('writeToFile()', () {
       test('verify delegate method is called', () {
-        when(mockReference.writeToFile(testFile))
-            .thenReturn(mockDownloadTaskPlatform);
+        when(
+          mockReference.writeToFile(testFile),
+        ).thenReturn(mockDownloadTaskPlatform);
 
         final result = testRef.writeToFile(testFile);
 
@@ -323,28 +347,30 @@ Future<void> main() async {
       test('infers contentType from ref name when no metadata', () {
         List<int> list = utf8.encode('hello');
         Uint8List data = Uint8List.fromList(list);
-        when(mockJpgReference.putData(data, any))
-            .thenReturn(mockUploadTaskPlatform);
+        when(
+          mockJpgReference.putData(data, any),
+        ).thenReturn(mockUploadTaskPlatform);
 
         jpgRef.putData(data);
 
-        final captured = verify(mockJpgReference.putData(data, captureAny))
-            .captured
-            .single as SettableMetadata;
+        final captured =
+            verify(mockJpgReference.putData(data, captureAny)).captured.single
+                as SettableMetadata;
         expect(captured.contentType, 'image/jpeg');
       });
 
       test('infers contentType when metadata has no contentType', () {
         List<int> list = utf8.encode('hello');
         Uint8List data = Uint8List.fromList(list);
-        when(mockJpgReference.putData(data, any))
-            .thenReturn(mockUploadTaskPlatform);
+        when(
+          mockJpgReference.putData(data, any),
+        ).thenReturn(mockUploadTaskPlatform);
 
         jpgRef.putData(data, SettableMetadata(contentLanguage: 'en'));
 
-        final captured = verify(mockJpgReference.putData(data, captureAny))
-            .captured
-            .single as SettableMetadata;
+        final captured =
+            verify(mockJpgReference.putData(data, captureAny)).captured.single
+                as SettableMetadata;
         expect(captured.contentType, 'image/jpeg');
         expect(captured.contentLanguage, 'en');
       });
@@ -352,30 +378,36 @@ Future<void> main() async {
       test('preserves explicit contentType', () {
         List<int> list = utf8.encode('hello');
         Uint8List data = Uint8List.fromList(list);
-        when(mockJpgReference.putData(data, any))
-            .thenReturn(mockUploadTaskPlatform);
+        when(
+          mockJpgReference.putData(data, any),
+        ).thenReturn(mockUploadTaskPlatform);
 
         jpgRef.putData(
-            data, SettableMetadata(contentType: 'application/octet-stream'));
+          data,
+          SettableMetadata(contentType: 'application/octet-stream'),
+        );
 
-        final captured = verify(mockJpgReference.putData(data, captureAny))
-            .captured
-            .single as SettableMetadata;
+        final captured =
+            verify(mockJpgReference.putData(data, captureAny)).captured.single
+                as SettableMetadata;
         expect(captured.contentType, 'application/octet-stream');
       });
 
       test('preserves customMetadata when inferring contentType', () {
         List<int> list = utf8.encode('hello');
         Uint8List data = Uint8List.fromList(list);
-        when(mockJpgReference.putData(data, any))
-            .thenReturn(mockUploadTaskPlatform);
+        when(
+          mockJpgReference.putData(data, any),
+        ).thenReturn(mockUploadTaskPlatform);
 
         jpgRef.putData(
-            data, SettableMetadata(customMetadata: {'activity': 'test'}));
+          data,
+          SettableMetadata(customMetadata: {'activity': 'test'}),
+        );
 
-        final captured = verify(mockJpgReference.putData(data, captureAny))
-            .captured
-            .single as SettableMetadata;
+        final captured =
+            verify(mockJpgReference.putData(data, captureAny)).captured.single
+                as SettableMetadata;
         expect(captured.contentType, 'image/jpeg');
         expect(captured.customMetadata, {'activity': 'test'});
       });
@@ -408,27 +440,31 @@ Future<void> main() async {
       });
 
       test('infers contentType from ref name when no metadata', () {
-        when(mockJpgReference.putBlob(any, any))
-            .thenReturn(mockUploadTaskPlatform);
+        when(
+          mockJpgReference.putBlob(any, any),
+        ).thenReturn(mockUploadTaskPlatform);
 
         jpgRef.putBlob('blob-data');
 
-        final captured = verify(mockJpgReference.putBlob(any, captureAny))
-            .captured
-            .single as SettableMetadata;
+        final captured =
+            verify(mockJpgReference.putBlob(any, captureAny)).captured.single
+                as SettableMetadata;
         expect(captured.contentType, 'image/jpeg');
       });
 
       test('preserves explicit contentType', () {
-        when(mockJpgReference.putBlob(any, any))
-            .thenReturn(mockUploadTaskPlatform);
+        when(
+          mockJpgReference.putBlob(any, any),
+        ).thenReturn(mockUploadTaskPlatform);
 
         jpgRef.putBlob(
-            'blob-data', SettableMetadata(contentType: 'text/plain'));
+          'blob-data',
+          SettableMetadata(contentType: 'text/plain'),
+        );
 
-        final captured = verify(mockJpgReference.putBlob(any, captureAny))
-            .captured
-            .single as SettableMetadata;
+        final captured =
+            verify(mockJpgReference.putBlob(any, captureAny)).captured.single
+                as SettableMetadata;
         expect(captured.contentType, 'text/plain');
       });
     });

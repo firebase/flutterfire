@@ -12,36 +12,35 @@ import 'method_channel_document_change.dart';
 class MethodChannelQuerySnapshot extends QuerySnapshotPlatform {
   /// Creates a [MethodChannelQuerySnapshot] from the given [data]
   MethodChannelQuerySnapshot(
-      FirebaseFirestorePlatform firestore, InternalQuerySnapshot data)
-      : super(
-            data.documents
-                .map<DocumentSnapshotPlatform?>((document) {
-                  if (document == null) {
-                    return null;
-                  }
-                  return DocumentSnapshotPlatform(
-                    firestore,
-                    document.path,
-                    document.data,
-                    document.metadata,
-                  );
-                })
-                .nonNulls
-                .toList(),
-            data.documentChanges
-                .map((documentChange) {
-                  if (documentChange == null) {
-                    return null;
-                  }
-                  return MethodChannelDocumentChange(
-                    firestore,
-                    documentChange,
-                  );
-                })
-                .nonNulls
-                .toList(),
-            SnapshotMetadataPlatform(
-              data.metadata.hasPendingWrites,
-              data.metadata.isFromCache,
-            ));
+    FirebaseFirestorePlatform firestore,
+    InternalQuerySnapshot data,
+  ) : super(
+        data.documents
+            .map<DocumentSnapshotPlatform?>((document) {
+              if (document == null) {
+                return null;
+              }
+              return DocumentSnapshotPlatform(
+                firestore,
+                document.path,
+                document.data,
+                document.metadata,
+              );
+            })
+            .nonNulls
+            .toList(),
+        data.documentChanges
+            .map((documentChange) {
+              if (documentChange == null) {
+                return null;
+              }
+              return MethodChannelDocumentChange(firestore, documentChange);
+            })
+            .nonNulls
+            .toList(),
+        SnapshotMetadataPlatform(
+          data.metadata.hasPendingWrites,
+          data.metadata.isFromCache,
+        ),
+      );
 }

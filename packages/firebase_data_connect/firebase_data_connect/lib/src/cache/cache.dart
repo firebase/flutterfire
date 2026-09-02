@@ -95,24 +95,28 @@ class Cache {
     bool memory = _settings.storage == CacheStorage.memory;
     _localCacheProvider = cacheImplementation(identifier, memory);
 
-    _localProviderInitialization =
-        _localCacheProvider!.initialize().then((success) {
-      if (!success) {
-        _localInitFailed = true;
-      }
-      return success;
-    }).catchError((e) {
-      _localInitFailed = true;
-      return false;
-    });
+    _localProviderInitialization = _localCacheProvider!
+        .initialize()
+        .then((success) {
+          if (!success) {
+            _localInitFailed = true;
+          }
+          return success;
+        })
+        .catchError((e) {
+          _localInitFailed = true;
+          return false;
+        });
   }
 
   void _startIsolate() async {
     _toIsolatePortCompleter = Completer<SendPort>();
     _fromIsolatePort = ReceivePort();
     try {
-      _isolate =
-          await Isolate.spawn(_cacheIsolateEntry, _fromIsolatePort!.sendPort);
+      _isolate = await Isolate.spawn(
+        _cacheIsolateEntry,
+        _fromIsolatePort!.sendPort,
+      );
 
       _fromIsolatePort!.listen((message) {
         if (_toIsolatePort == null) {
@@ -128,9 +132,10 @@ class Cache {
       });
     } catch (e, stackTrace) {
       developer.log(
-          'Failed to spawn background cache Isolate: $e. Falling back to local mode.',
-          error: e,
-          stackTrace: stackTrace);
+        'Failed to spawn background cache Isolate: $e. Falling back to local mode.',
+        error: e,
+        stackTrace: stackTrace,
+      );
       // Fallback to local mode on failure
       _isolateFallbackMode = true;
       _toIsolatePortCompleter!.completeError(e);
@@ -170,7 +175,8 @@ class Cache {
         dbPath = appDir.path;
       } catch (e) {
         developer.log(
-            'Failed to get application documents directory for background cache: $e');
+          'Failed to get application documents directory for background cache: $e',
+        );
       }
     }
 
@@ -193,7 +199,8 @@ class Cache {
   void _listenForAuthChanges() {
     if (dataConnect.auth == null) {
       developer.log(
-          'Not listening for auth changes since no auth instance in data connect');
+        'Not listening for auth changes since no auth instance in data connect',
+      );
       return;
     }
 
@@ -223,8 +230,11 @@ class Cache {
           completer.complete();
         } else {
           _lastInitFailed = true;
-          completer.completeError(StateError(
-              'CacheProvider failed to initialize in background isolate.'));
+          completer.completeError(
+            StateError(
+              'CacheProvider failed to initialize in background isolate.',
+            ),
+          );
         }
       }
     } else if (op == 'updateResponse') {
@@ -303,7 +313,9 @@ class Cache {
 
   /// Fetches a cached result.
   Future<Map<String, dynamic>?> resultTree(
-      String queryId, bool allowStale) async {
+    String queryId,
+    bool allowStale,
+  ) async {
     if (kIsWeb || _isolateFallbackMode) {
       _initializeLocalProvider();
       if (_localCacheProvider == null) {
@@ -393,8 +405,11 @@ void _cacheIsolateEntry(SendPort mainSendPort) async {
           await provider.dispose();
         }
 
-        cacheProvider =
-            cacheImplementation(identifier, isMemory, customDbPath: dbPath);
+        cacheProvider = cacheImplementation(
+          identifier,
+          isMemory,
+          customDbPath: dbPath,
+        );
         providerInitialization = cacheProvider.initialize();
 
         final success = await providerInitialization;
@@ -530,22 +545,28 @@ Future<Set<String>> dehydrateAndUpdateCache({
         ? ExtensionResponse.fromJson(extensions).flattenPathMetadata()
         : {};
 
-    final dehydrationResult =
-        await processor.dehydrateResults(queryId, data, provider, paths);
+    final dehydrationResult = await processor.dehydrateResults(
+      queryId,
+      data,
+      provider,
+      paths,
+    );
 
     EntityNode rootNode = dehydrationResult.dehydratedTree;
-    Map<String, dynamic> dehydratedMap =
-        rootNode.toJson(mode: EncodingMode.dehydrated);
+    Map<String, dynamic> dehydratedMap = rootNode.toJson(
+      mode: EncodingMode.dehydrated,
+    );
 
     Duration ttl = extensions != null && extensions['ttl'] != null
         ? Duration(seconds: extensions['ttl'] as int)
         : maxAge;
 
     final resultTree = ResultTree(
-        data: dehydratedMap,
-        ttl: ttl,
-        cachedAt: DateTime.now(),
-        lastAccessed: DateTime.now());
+      data: dehydratedMap,
+      ttl: ttl,
+      cachedAt: DateTime.now(),
+      lastAccessed: DateTime.now(),
+    );
 
     provider.setResultTree(queryId, resultTree);
 
@@ -575,8 +596,10 @@ Future<Map<String, dynamic>?> fetchAndHydrateCache({
 
     EntityNode rootNode = EntityNode.fromJson(resultTree.data, provider);
 
-    Map<String, dynamic> hydratedJson =
-        await processor.hydrateResults(rootNode, provider);
+    Map<String, dynamic> hydratedJson = await processor.hydrateResults(
+      rootNode,
+      provider,
+    );
 
     return hydratedJson;
   }

@@ -17,9 +17,9 @@ class AggregateQueryWeb extends AggregateQueryPlatform {
     QueryPlatform query,
     firestore_interop.Query _webQuery,
     this._aggregateQueries,
-  )   : _delegate = firestore_interop.AggregateQuery(_webQuery),
-        _webQuery = _webQuery,
-        super(query);
+  ) : _delegate = firestore_interop.AggregateQuery(_webQuery),
+      _webQuery = _webQuery,
+      super(query);
 
   final List<AggregateQuery> _aggregateQueries;
   final firestore_interop.Query _webQuery;
@@ -30,8 +30,9 @@ class AggregateQueryWeb extends AggregateQueryPlatform {
     required AggregateSource source,
   }) async {
     // Note: There isn't a source option on the web platform
-    firestore_interop.AggregateQuerySnapshot snapshot =
-        await _delegate.get(_aggregateQueries);
+    firestore_interop.AggregateQuerySnapshot snapshot = await _delegate.get(
+      _aggregateQueries,
+    );
 
     List<AggregateQueryResponse> sum = [];
     List<AggregateQueryResponse> average = [];
@@ -70,39 +71,25 @@ class AggregateQueryWeb extends AggregateQueryPlatform {
 
   @override
   AggregateQueryPlatform count() {
-    return AggregateQueryWeb(
-      query,
-      _webQuery,
-      [
-        ..._aggregateQueries,
-        AggregateQuery(
-          type: AggregateType.count,
-        ),
-      ],
-    );
+    return AggregateQueryWeb(query, _webQuery, [
+      ..._aggregateQueries,
+      AggregateQuery(type: AggregateType.count),
+    ]);
   }
 
   @override
   AggregateQueryPlatform sum(String field) {
-    return AggregateQueryWeb(
-      query,
-      _webQuery,
-      [
-        ..._aggregateQueries,
-        AggregateQuery(type: AggregateType.sum, field: field),
-      ],
-    );
+    return AggregateQueryWeb(query, _webQuery, [
+      ..._aggregateQueries,
+      AggregateQuery(type: AggregateType.sum, field: field),
+    ]);
   }
 
   @override
   AggregateQueryPlatform average(String field) {
-    return AggregateQueryWeb(
-      query,
-      _webQuery,
-      [
-        ..._aggregateQueries,
-        AggregateQuery(type: AggregateType.average, field: field),
-      ],
-    );
+    return AggregateQueryWeb(query, _webQuery, [
+      ..._aggregateQueries,
+      AggregateQuery(type: AggregateType.average, field: field),
+    ]);
   }
 }

@@ -41,9 +41,7 @@ class YahooAuthProvider extends AuthProvider {
 
   /// Create a new [YahooAuthCredential] from a provided [accessToken];
   static OAuthCredential credential(String accessToken) {
-    return YahooAuthCredential._credential(
-      accessToken,
-    );
+    return YahooAuthCredential._credential(accessToken);
   }
 
   /// This corresponds to the sign-in method identifier.
@@ -88,12 +86,12 @@ class YahooAuthProvider extends AuthProvider {
 /// The auth credential returned from calling
 /// [YahooAuthProvider.credential].
 class YahooAuthCredential extends OAuthCredential {
-  YahooAuthCredential._({
-    required String accessToken,
-  }) : super(
-            providerId: _kProviderId,
-            signInMethod: _kProviderId,
-            accessToken: accessToken);
+  YahooAuthCredential._({required String accessToken})
+    : super(
+        providerId: _kProviderId,
+        signInMethod: _kProviderId,
+        accessToken: accessToken,
+      );
 
   factory YahooAuthCredential._credential(String accessToken) {
     return YahooAuthCredential._(accessToken: accessToken);
