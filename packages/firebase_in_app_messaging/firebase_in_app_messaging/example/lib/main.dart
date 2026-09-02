@@ -38,6 +38,7 @@ class MyApp extends StatelessWidget {
                 children: <Widget>[
                   AnalyticsEventExample(),
                   ProgrammaticTriggersExample(),
+                  MessageEventsExample(),
                 ],
               ),
             );
@@ -81,6 +82,81 @@ class ProgrammaticTriggersExample extends StatelessWidget {
                 style: const TextStyle(color: Colors.white),
               ),
             )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class MessageEventsExample extends StatefulWidget {
+  @override
+  State<MessageEventsExample> createState() => _MessageEventsExampleState();
+}
+
+class _MessageEventsExampleState extends State<MessageEventsExample> {
+  final List<StreamSubscription<Object>> _subscriptions =
+      <StreamSubscription<Object>>[];
+  String _lastEvent = 'No message event yet';
+
+  @override
+  void initState() {
+    super.initState();
+
+    _subscriptions.addAll(<StreamSubscription<Object>>[
+      MyApp.fiam.onMessageClicked.listen((InAppMessagingClickEvent event) {
+        _log('clicked ${event.campaignMetadata.campaignName}, '
+            'action url: ${event.action.actionUrl}');
+      }),
+      MyApp.fiam.onMessageImpression
+          .listen((InAppMessagingImpressionEvent event) {
+        _log('impression for ${event.campaignMetadata.campaignName}');
+      }),
+      MyApp.fiam.onMessageDismissed.listen((InAppMessagingDismissEvent event) {
+        _log('dismissed ${event.campaignMetadata.campaignName} '
+            '(${event.dismissType.name})');
+      }),
+      MyApp.fiam.onMessageDisplayError
+          .listen((InAppMessagingDisplayErrorEvent event) {
+        _log('display error for ${event.campaignMetadata.campaignName}: '
+            '${event.errorMessage}');
+      }),
+    ]);
+  }
+
+  @override
+  void dispose() {
+    for (final StreamSubscription<Object> subscription in _subscriptions) {
+      subscription.cancel();
+    }
+    super.dispose();
+  }
+
+  void _log(String message) {
+    if (!mounted) return;
+    setState(() {
+      _lastEvent = message;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          children: <Widget>[
+            const Text(
+              'Message events',
+              style: TextStyle(
+                fontStyle: FontStyle.italic,
+                fontSize: 18,
+              ),
+            ),
+            const SizedBox(height: 8),
+            const Text('Last event received from the campaign'),
+            const SizedBox(height: 8),
+            Text(_lastEvent, textAlign: TextAlign.center),
           ],
         ),
       ),
