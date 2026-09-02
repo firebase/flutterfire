@@ -58,6 +58,62 @@ class FiamAction {
   final String? buttonText;
 }
 
+/// Styled text from a campaign, used by custom Flutter display.
+class FiamText {
+  const FiamText({required this.text, this.hexColor});
+
+  final String text;
+  final String? hexColor;
+}
+
+/// A campaign action forwarded for custom Flutter display.
+class FiamDisplayAction {
+  const FiamDisplayAction({
+    required this.id,
+    this.actionUrl,
+    this.buttonText,
+    this.buttonTextHexColor,
+    this.buttonBackgroundHexColor,
+  });
+
+  final String id;
+  final String? actionUrl;
+  final String? buttonText;
+  final String? buttonTextHexColor;
+  final String? buttonBackgroundHexColor;
+}
+
+/// Full campaign payload forwarded instead of native templates.
+class FiamDisplayMessage {
+  const FiamDisplayMessage({
+    required this.campaignMetadata,
+    required this.messageType,
+    this.title,
+    this.body,
+    this.imageUrl,
+    this.landscapeImageUrl,
+    this.backgroundHexColor,
+    this.action,
+    this.primaryAction,
+    this.secondaryAction,
+    this.data,
+  });
+
+  final FiamCampaignMetadata campaignMetadata;
+
+  /// One of BANNER, MODAL, CARD, IMAGE_ONLY, UNKNOWN.
+  final String messageType;
+  final FiamText? title;
+  final FiamText? body;
+  final String? imageUrl;
+  final String? landscapeImageUrl;
+  final String? backgroundHexColor;
+  final FiamDisplayAction? action;
+  final FiamDisplayAction? primaryAction;
+  final FiamDisplayAction? secondaryAction;
+  final Map<String?, String?>? data;
+}
+
 @HostApi(dartHostTestHandler: 'TestFirebaseInAppMessagingHostApi')
 abstract class FirebaseInAppMessagingHostApi {
   @async
@@ -73,6 +129,21 @@ abstract class FirebaseInAppMessagingHostApi {
   /// [FirebaseInAppMessagingFlutterApi]. Calling this more than once is a no-op.
   @async
   void addEventListeners(String appName);
+
+  @async
+  void setCustomDisplayEnabled(String appName, bool enabled);
+
+  @async
+  void reportImpression(String campaignId);
+
+  @async
+  void reportClick(String campaignId, String actionId);
+
+  @async
+  void reportDismiss(String campaignId, String dismissType);
+
+  @async
+  void reportDisplayError(String campaignId, String reason);
 }
 
 @FlutterApi()
@@ -91,4 +162,6 @@ abstract class FirebaseInAppMessagingFlutterApi {
     FiamCampaignMetadata campaignMetadata,
     String? errorMessage,
   );
+
+  void onMessageDisplay(FiamDisplayMessage message);
 }
