@@ -4,8 +4,8 @@
 
 part of '../../cloud_firestore.dart';
 
-// ignore: do_not_use_environment
 const kIsWasm =
+    // ignore: do_not_use_environment
     bool.fromEnvironment('dart.library.js_interop') &&
     // html package is not available in wasm
     // ignore: do_not_use_environment
