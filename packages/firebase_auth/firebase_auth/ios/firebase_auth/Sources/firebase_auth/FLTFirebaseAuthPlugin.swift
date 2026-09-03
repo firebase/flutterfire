@@ -186,11 +186,15 @@ public class FLTFirebaseAuthPlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
       open url: URL,
       options: [UIApplication.OpenURLOptionsKey: Any] = [:]
     ) -> Bool {
-      Auth.auth().canHandle(url)
+      // Auth.auth() traps when no FirebaseApp has been configured yet (e.g. an
+      // app that initialises Firebase from Dart-side options after start-up).
+      guard FirebaseApp.app() != nil else { return false }
+      return Auth.auth().canHandle(url)
     }
 
     public func scene(_ scene: UIScene, openURLContexts urlContexts: Set<UIOpenURLContext>) -> Bool
     {
+      guard FirebaseApp.app() != nil else { return false }
       for urlContext in urlContexts where Auth.auth().canHandle(urlContext.url) {
         return true
       }
