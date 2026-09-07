@@ -20,9 +20,7 @@ final class TaskStateChannelStreamHandler: NSObject, FlutterStreamHandler {
   private var failureHandle: String?
   private var pausedHandle: String?
   private var progressHandle: String?
-  private var eventSink: FlutterEventSink?
-  private var generation: UInt64 = 0
-  private var isListening = false
+  private let dispatcher = TaskEventDispatcher<[String: Any]>()
 
   init(task: StorageObservableTask, storage: Storage, identifier: String) {
     self.task = task
@@ -71,9 +69,7 @@ final class TaskStateChannelStreamHandler: NSObject, FlutterStreamHandler {
 
   private func startListening(_ events: @escaping FlutterEventSink) -> FlutterError? {
     invalidateOnMain()
-    eventSink = events
-    isListening = true
-    let listenGeneration = generation
+    let listenGeneration = dispatcher.listen { events($0) }
 
     successHandle = task.observe(.success) { [weak self] snapshot in
       self?.enqueue(generation: listenGeneration, terminal: true) { handler in
@@ -120,28 +116,20 @@ final class TaskStateChannelStreamHandler: NSObject, FlutterStreamHandler {
     terminal: Bool,
     makeEvent: @escaping (TaskStateChannelStreamHandler) -> [String: Any]
   ) {
-    DispatchQueue.main.async { [weak self] in
-      guard let self,
-        self.isListening,
-        self.generation == generation,
-        let events = self.eventSink
-      else { return }
-
-      let event = makeEvent(self)
-      if terminal {
-        // Invalidate and remove observers before sending the terminal event so
-        // callbacks queued by observer removal cannot send another event.
-        self.invalidateOnMain()
-      }
-      events(event)
-    }
+    dispatcher.enqueue(
+      generation: generation, terminal: terminal,
+      makeEvent: { [weak self] in
+        guard let self else { return nil }
+        return makeEvent(self)
+      },
+      beforeTerminal: { [weak self] in
+        self?.invalidateOnMain()
+      })
   }
 
   private func invalidateOnMain() {
     dispatchPrecondition(condition: .onQueue(.main))
-    generation &+= 1
-    isListening = false
-    eventSink = nil
+    dispatcher.invalidate()
 
     let handles = [successHandle, failureHandle, pausedHandle, progressHandle]
     successHandle = nil
@@ -224,12 +212,24 @@ final class TaskStateChannelStreamHandler: NSObject, FlutterStreamHandler {
     out["size"] = md.size
     out["creationTimeMillis"] = Int((md.timeCreated?.timeIntervalSince1970 ?? 0) * 1000)
     out["updatedTimeMillis"] = Int((md.updated?.timeIntervalSince1970 ?? 0) * 1000)
-    if let v = md.md5Hash { out["md5Hash"] = v }
-    if let v = md.cacheControl { out["cacheControl"] = v }
-    if let v = md.contentDisposition { out["contentDisposition"] = v }
-    if let v = md.contentEncoding { out["contentEncoding"] = v }
-    if let v = md.contentLanguage { out["contentLanguage"] = v }
-    if let v = md.contentType { out["contentType"] = v }
+    if let v = md.md5Hash {
+      out["md5Hash"] = v
+    }
+    if let v = md.cacheControl {
+      out["cacheControl"] = v
+    }
+    if let v = md.contentDisposition {
+      out["contentDisposition"] = v
+    }
+    if let v = md.contentEncoding {
+      out["contentEncoding"] = v
+    }
+    if let v = md.contentLanguage {
+      out["contentLanguage"] = v
+    }
+    if let v = md.contentType {
+      out["contentType"] = v
+    }
     out["customMetadata"] = md.customMetadata ?? [:]
     return out
   }
