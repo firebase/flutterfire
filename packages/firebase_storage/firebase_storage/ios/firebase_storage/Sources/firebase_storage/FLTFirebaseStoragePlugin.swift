@@ -21,7 +21,7 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
   private var channel: FlutterMethodChannel?
   private var messenger: FlutterBinaryMessenger?
   private var eventChannels: [String: FlutterEventChannel] = [:]
-  private var streamHandlers: [String: FlutterStreamHandler] = [:]
+  private var streamHandlers: [String: TaskStateChannelStreamHandler] = [:]
   private var handleToTask: [Int64: AnyObject] = [:]
   private var handleToPath: [Int64: String] = [:]
   private var handleToIdentifier: [Int64: String] = [:]
@@ -53,6 +53,30 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
     result(FlutterMethodNotImplemented)
+  }
+
+  public func detachFromEngine(for registrar: FlutterPluginRegistrar) {
+    if Thread.isMainThread {
+      cleanupStreamsOnMain()
+    } else {
+      DispatchQueue.main.sync {
+        self.cleanupStreamsOnMain()
+      }
+    }
+  }
+
+  private func cleanupStreamsOnMain() {
+    // Flutter may tear down an engine without delivering onCancel for every
+    // active event channel. Invalidate handlers first so already queued
+    // Firebase callbacks cannot reach a detached FlutterEventSink.
+    for handler in streamHandlers.values {
+      handler.invalidate()
+    }
+    for eventChannel in eventChannels.values {
+      eventChannel.setStreamHandler(nil)
+    }
+    streamHandlers.removeAll()
+    eventChannels.removeAll()
   }
 
   private func storage(app: InternalStorageFirebaseApp) -> Storage {
@@ -433,14 +457,14 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
     let channelName = "plugins.flutter.io/firebase_storage/taskEvent/\(uuid)"
     let channel = FlutterEventChannel(name: channelName, binaryMessenger: messenger!)
     let storageInstance = Storage.storage(app: FLTFirebasePlugin.firebaseAppNamed(appName)!)
-    channel.setStreamHandler(
-      TaskStateChannelStreamHandler(
-        task: task,
-        storage: storageInstance,
-        identifier: channelName
-      )
+    let streamHandler = TaskStateChannelStreamHandler(
+      task: task,
+      storage: storageInstance,
+      identifier: channelName
     )
+    channel.setStreamHandler(streamHandler)
     eventChannels[channelName] = channel
+    streamHandlers[channelName] = streamHandler
     handleToTask[handle] = task as AnyObject
     handleToPath[handle] = path
     handleToIdentifier[handle] = channelName
