@@ -48,6 +48,7 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
     instance.channel = channel
     instance.messenger = resolvedMessenger
     registrar.addMethodCallDelegate(instance, channel: channel)
+    registrar.publish(instance)
     FirebaseStorageHostApiSetup.setUp(binaryMessenger: resolvedMessenger, api: instance)
   }
 
