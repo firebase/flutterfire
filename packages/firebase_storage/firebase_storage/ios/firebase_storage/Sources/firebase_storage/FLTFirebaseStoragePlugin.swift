@@ -48,7 +48,9 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
     instance.channel = channel
     instance.messenger = resolvedMessenger
     registrar.addMethodCallDelegate(instance, channel: channel)
-    registrar.publish(instance)
+    #if os(iOS)
+      registrar.publish(instance)
+    #endif
     FirebaseStorageHostApiSetup.setUp(binaryMessenger: resolvedMessenger, api: instance)
   }
 
@@ -56,29 +58,32 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
     result(FlutterMethodNotImplemented)
   }
 
-  public func detachFromEngine(for registrar: FlutterPluginRegistrar) {
-    if Thread.isMainThread {
-      cleanupStreamsOnMain()
-    } else {
-      DispatchQueue.main.sync {
-        self.cleanupStreamsOnMain()
+  #if os(iOS)
+    public func detachFromEngine(for registrar: FlutterPluginRegistrar) {
+      if Thread.isMainThread {
+        cleanupStreamsOnMain()
+      } else {
+        DispatchQueue.main.sync {
+          self.cleanupStreamsOnMain()
+        }
       }
     }
-  }
 
-  private func cleanupStreamsOnMain() {
-    // Flutter may tear down an engine without delivering onCancel for every
-    // active event channel. Invalidate handlers first so already queued
-    // Firebase callbacks cannot reach a detached FlutterEventSink.
-    for handler in streamHandlers.values {
-      handler.invalidate()
+    private func cleanupStreamsOnMain() {
+      // Flutter may tear down an engine without delivering onCancel for every
+      // active event channel. Invalidate handlers first so already queued
+      // Firebase callbacks cannot reach a detached FlutterEventSink.
+      for handler in streamHandlers.values {
+        handler.invalidate()
+      }
+      for eventChannel in eventChannels.values {
+        eventChannel.setStreamHandler(nil)
+      }
+      streamHandlers.removeAll()
+      eventChannels.removeAll()
     }
-    for eventChannel in eventChannels.values {
-      eventChannel.setStreamHandler(nil)
-    }
-    streamHandlers.removeAll()
-    eventChannels.removeAll()
-  }
+
+  #endif
 
   private func storage(app: InternalStorageFirebaseApp) -> Storage {
     let base = "gs://" + app.bucket
