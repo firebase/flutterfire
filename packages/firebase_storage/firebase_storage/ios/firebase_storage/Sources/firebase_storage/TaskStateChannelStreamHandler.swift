@@ -20,6 +20,9 @@ final class TaskStateChannelStreamHandler: NSObject, FlutterStreamHandler {
   private var failureHandle: String?
   private var pausedHandle: String?
   private var progressHandle: String?
+  private var eventSink: FlutterEventSink?
+  private var generation: UInt64 = 0
+  private var isListening = false
 
   init(task: StorageObservableTask, storage: Storage, identifier: String) {
     self.task = task
@@ -31,55 +34,125 @@ final class TaskStateChannelStreamHandler: NSObject, FlutterStreamHandler {
     withArguments arguments: Any?,
     eventSink events: @escaping FlutterEventSink
   ) -> FlutterError? {
-    successHandle = task.observe(.success) { snapshot in
-      events([
-        "taskState": 2,  // success
-        "appName": self.storage.app.name,
-        "snapshot": self.parseTaskSnapshot(snapshot),
-      ])
-      self.cleanupObservers()
+    if Thread.isMainThread {
+      return startListening(events)
     }
-    failureHandle = task.observe(.failure) { snapshot in
-      let err = snapshot.error as NSError?
-      let errorDict: [String: Any] = self.errorDict(err)
-      events([
-        "taskState": 4,  // error (including cancellations as errors per platform contract)
-        "appName": self.storage.app.name,
-        "error": errorDict,
-      ])
-      self.cleanupObservers()
+
+    var error: FlutterError?
+    DispatchQueue.main.sync {
+      error = startListening(events)
     }
-    pausedHandle = task.observe(.pause) { snapshot in
-      events([
-        "taskState": 0,  // paused
-        "appName": self.storage.app.name,
-        "snapshot": self.parseTaskSnapshot(snapshot),
-      ])
-    }
-    progressHandle = task.observe(.progress) { snapshot in
-      events([
-        "taskState": 1,  // running
-        "appName": self.storage.app.name,
-        "snapshot": self.parseTaskSnapshot(snapshot),
-      ])
-    }
-    return nil
+    return error
   }
 
   func onCancel(withArguments arguments: Any?) -> FlutterError? {
-    cleanupObservers()
+    if Thread.isMainThread {
+      invalidateOnMain()
+    } else {
+      DispatchQueue.main.sync {
+        self.invalidateOnMain()
+      }
+    }
     return nil
   }
 
-  private func cleanupObservers() {
-    if let h = successHandle { task.removeObserver(withHandle: h) }
-    if let h = failureHandle { task.removeObserver(withHandle: h) }
-    if let h = pausedHandle { task.removeObserver(withHandle: h) }
-    if let h = progressHandle { task.removeObserver(withHandle: h) }
+  /// Invalidates queued deliveries before removing Firebase observers. This is
+  /// also called by the plugin when Flutter detaches, since Flutter does not
+  /// necessarily invoke onCancel for every active event channel.
+  func invalidate() {
+    if Thread.isMainThread {
+      invalidateOnMain()
+    } else {
+      DispatchQueue.main.sync {
+        self.invalidateOnMain()
+      }
+    }
+  }
+
+  private func startListening(_ events: @escaping FlutterEventSink) -> FlutterError? {
+    invalidateOnMain()
+    eventSink = events
+    isListening = true
+    let listenGeneration = generation
+
+    successHandle = task.observe(.success) { [weak self] snapshot in
+      self?.enqueue(generation: listenGeneration, terminal: true) { handler in
+        [
+          "taskState": 2,  // success
+          "appName": handler.storage.app.name,
+          "snapshot": handler.parseTaskSnapshot(snapshot),
+        ]
+      }
+    }
+    failureHandle = task.observe(.failure) { [weak self] snapshot in
+      self?.enqueue(generation: listenGeneration, terminal: true) { handler in
+        let err = snapshot.error as NSError?
+        return [
+          "taskState": 4,  // error (including cancellations as errors per platform contract)
+          "appName": handler.storage.app.name,
+          "error": handler.errorDict(err),
+        ]
+      }
+    }
+    pausedHandle = task.observe(.pause) { [weak self] snapshot in
+      self?.enqueue(generation: listenGeneration, terminal: false) { handler in
+        [
+          "taskState": 0,  // paused
+          "appName": handler.storage.app.name,
+          "snapshot": handler.parseTaskSnapshot(snapshot),
+        ]
+      }
+    }
+    progressHandle = task.observe(.progress) { [weak self] snapshot in
+      self?.enqueue(generation: listenGeneration, terminal: false) { handler in
+        [
+          "taskState": 1,  // running
+          "appName": handler.storage.app.name,
+          "snapshot": handler.parseTaskSnapshot(snapshot),
+        ]
+      }
+    }
+    return nil
+  }
+
+  private func enqueue(
+    generation: UInt64,
+    terminal: Bool,
+    makeEvent: @escaping (TaskStateChannelStreamHandler) -> [String: Any]
+  ) {
+    DispatchQueue.main.async { [weak self] in
+      guard let self,
+        self.isListening,
+        self.generation == generation,
+        let events = self.eventSink
+      else { return }
+
+      let event = makeEvent(self)
+      if terminal {
+        // Invalidate and remove observers before sending the terminal event so
+        // callbacks queued by observer removal cannot send another event.
+        self.invalidateOnMain()
+      }
+      events(event)
+    }
+  }
+
+  private func invalidateOnMain() {
+    dispatchPrecondition(condition: .onQueue(.main))
+    generation &+= 1
+    isListening = false
+    eventSink = nil
+
+    let handles = [successHandle, failureHandle, pausedHandle, progressHandle]
     successHandle = nil
     failureHandle = nil
     pausedHandle = nil
     progressHandle = nil
+    for handle in handles {
+      if let handle {
+        task.removeObserver(withHandle: handle)
+      }
+    }
   }
 
   private func parseTaskSnapshot(_ snapshot: StorageTaskSnapshot) -> [String: Any] {
