@@ -662,6 +662,24 @@ void setupQueryTests() {
       );
 
       test(
+        'cancels in-flight value listeners on distinct paths without error',
+        () async {
+          final errors = <Object>[];
+
+          for (var i = 0; i < 64; i++) {
+            final subscription = ref
+                .child('cancel-inflight-${i % 16}')
+                .onValue
+                .listen((_) {}, onError: errors.add);
+            await Future<void>.delayed(Duration(milliseconds: i * 7 % 50));
+            await subscription.cancel();
+          }
+
+          expect(errors, isEmpty);
+        },
+      );
+
+      test(
           'throw a `permission-denied` exception when accessing restricted data',
           () async {
         final Completer<FirebaseException> errorReceived =
