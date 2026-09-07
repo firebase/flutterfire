@@ -352,8 +352,14 @@ void main() {
               expect(e.code, equals('user-mismatch'));
               expect(
                 e.message,
-                equals(
-                  'The supplied credentials do not correspond to the previously signed in user.',
+                anyOf(
+                  equals(
+                    'The supplied credentials do not correspond to the previously signed in user.',
+                  ),
+                  // Windows C++ SDK omits the trailing period.
+                  equals(
+                    'The supplied credentials do not correspond to the previously signed in user',
+                  ),
                 ),
               );
               await FirebaseAuth.instance.currentUser!.delete(); //clean up
@@ -459,7 +465,10 @@ void main() {
               );
             },
             // Exercises signInWithEmailAndPassword, not reauthenticateWithCredential.
-            skip: !kIsWeb && defaultTargetPlatform == TargetPlatform.windows,
+            // A test-level skip overrides the group skip, so include macOS here too.
+            skip: !kIsWeb &&
+                (defaultTargetPlatform == TargetPlatform.windows ||
+                    defaultTargetPlatform == TargetPlatform.macOS),
           );
         },
         skip: !kIsWeb && defaultTargetPlatform == TargetPlatform.macOS,
