@@ -298,40 +298,33 @@ void main() {
                 defaultTargetPlatform == TargetPlatform.macOS),
       );
 
-      // Kept outside the skipped group so Windows covers the success path
-      // that previously hung. Remaining cases stay skipped on desktop
-      // because they assert platform-specific error messages.
-      test(
-        'reauthenticateWithCredential() should reauthenticate correctly',
-        () async {
-          // Setup
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
-            email: email,
-            password: testPassword,
-          );
-          final initialUser = FirebaseAuth.instance.currentUser;
-
-          // Test
-          AuthCredential credential = EmailAuthProvider.credential(
-            email: email,
-            password: testPassword,
-          );
-          await FirebaseAuth.instance.currentUser!
-              .reauthenticateWithCredential(credential);
-
-          // Assertions
-          final currentUser = FirebaseAuth.instance.currentUser;
-          expect(currentUser, isNot(equals(null)));
-          expect(initialUser, isNot(equals(null)));
-          expect(currentUser?.email, equals(email));
-          expect(currentUser?.uid, equals(initialUser?.uid));
-        },
-        skip: !kIsWeb && defaultTargetPlatform == TargetPlatform.macOS,
-      );
-
       group(
         'reauthenticateWithCredential()',
         () {
+          test('should reauthenticate correctly', () async {
+            // Setup
+            await FirebaseAuth.instance.createUserWithEmailAndPassword(
+              email: email,
+              password: testPassword,
+            );
+            final initialUser = FirebaseAuth.instance.currentUser;
+
+            // Test
+            AuthCredential credential = EmailAuthProvider.credential(
+              email: email,
+              password: testPassword,
+            );
+            await FirebaseAuth.instance.currentUser!
+                .reauthenticateWithCredential(credential);
+
+            // Assertions
+            final currentUser = FirebaseAuth.instance.currentUser;
+            expect(currentUser, isNot(equals(null)));
+            expect(initialUser, isNot(equals(null)));
+            expect(currentUser?.email, equals(email));
+            expect(currentUser?.uid, equals(initialUser?.uid));
+          });
+
           test('should throw user-mismatch ', () async {
             // Setup
             String emailAlready = generateRandomEmail();
@@ -435,38 +428,41 @@ void main() {
             fail('should have thrown an error');
           });
 
-          test('should throw wrong-password ', () async {
-            // Setup
-            final email = generateRandomEmail();
-            await FirebaseAuth.instance.createUserWithEmailAndPassword(
-              email: email,
-              password: testPassword,
-            );
-
-            await FirebaseAuth.instance.signOut();
-
-            await expectLater(
-              FirebaseAuth.instance.signInWithEmailAndPassword(
+          test(
+            'should throw wrong-password ',
+            () async {
+              // Setup
+              final email = generateRandomEmail();
+              await FirebaseAuth.instance.createUserWithEmailAndPassword(
                 email: email,
-                password: 'wrong password',
-              ),
-              throwsA(
-                isA<FirebaseAuthException>()
-                    .having((e) => e.code, 'code', equals('wrong-password'))
-                    .having(
-                      (e) => e.message,
-                      'message',
-                      equals(
-                        'The password is invalid or the user does not have a password.',
+                password: testPassword,
+              );
+
+              await FirebaseAuth.instance.signOut();
+
+              await expectLater(
+                FirebaseAuth.instance.signInWithEmailAndPassword(
+                  email: email,
+                  password: 'wrong password',
+                ),
+                throwsA(
+                  isA<FirebaseAuthException>()
+                      .having((e) => e.code, 'code', equals('wrong-password'))
+                      .having(
+                        (e) => e.message,
+                        'message',
+                        equals(
+                          'The password is invalid or the user does not have a password.',
+                        ),
                       ),
-                    ),
-              ),
-            );
-          });
+                ),
+              );
+            },
+            // Exercises signInWithEmailAndPassword, not reauthenticateWithCredential.
+            skip: !kIsWeb && defaultTargetPlatform == TargetPlatform.windows,
+          );
         },
-        skip: !kIsWeb &&
-            (defaultTargetPlatform == TargetPlatform.windows ||
-                defaultTargetPlatform == TargetPlatform.macOS),
+        skip: !kIsWeb && defaultTargetPlatform == TargetPlatform.macOS,
       );
 
       group('reload()', () {
