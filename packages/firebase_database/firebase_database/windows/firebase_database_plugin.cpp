@@ -1457,9 +1457,10 @@ void FirebaseDatabasePlugin::QueryGet(
       } else {
         result_map[EncodableValue("snapshot")] = EncodableValue();
       }
-      ReplyOnPlatformThread(result, result_map);
+      ReplyOnPlatformThread<flutter::EncodableMap>(result, result_map);
     } else {
-      ReplyOnPlatformThread(result, FirebaseDatabasePlugin::ParseError(future));
+      ReplyOnPlatformThread<flutter::EncodableMap>(
+          result, FirebaseDatabasePlugin::ParseError(future));
     }
   });
 }
