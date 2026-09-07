@@ -39,6 +39,7 @@ let package = Package(
         .define("LIBRARY_VERSION", to: "\"\(libraryVersion)\""),
         .define("LIBRARY_NAME", to: "\"flutter-fire-gcs\""),
       ]
-    )
+    ),
+    .testTarget(name: "firebase_storageTests", dependencies: ["firebase_storage"]),
   ]
 )

@@ -411,12 +411,24 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
 
   private func toMeta(_ m: InternalSettableMetadata) -> StorageMetadata {
     let md = StorageMetadata()
-    if let v = m.cacheControl { md.cacheControl = v }
-    if let v = m.contentType { md.contentType = v }
-    if let v = m.contentDisposition { md.contentDisposition = v }
-    if let v = m.contentEncoding { md.contentEncoding = v }
-    if let v = m.contentLanguage { md.contentLanguage = v }
-    if let v = m.customMetadata { md.customMetadata = v as? [String: String] }
+    if let v = m.cacheControl {
+      md.cacheControl = v
+    }
+    if let v = m.contentType {
+      md.contentType = v
+    }
+    if let v = m.contentDisposition {
+      md.contentDisposition = v
+    }
+    if let v = m.contentEncoding {
+      md.contentEncoding = v
+    }
+    if let v = m.contentLanguage {
+      md.contentLanguage = v
+    }
+    if let v = m.customMetadata {
+      md.customMetadata = v as? [String: String]
+    }
     return md
   }
 
@@ -431,12 +443,24 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
     out["size"] = md.size
     out["creationTimeMillis"] = Int((md.timeCreated?.timeIntervalSince1970 ?? 0) * 1000)
     out["updatedTimeMillis"] = Int((md.updated?.timeIntervalSince1970 ?? 0) * 1000)
-    if let v = md.md5Hash { out["md5Hash"] = v }
-    if let v = md.cacheControl { out["cacheControl"] = v }
-    if let v = md.contentDisposition { out["contentDisposition"] = v }
-    if let v = md.contentEncoding { out["contentEncoding"] = v }
-    if let v = md.contentLanguage { out["contentLanguage"] = v }
-    if let v = md.contentType { out["contentType"] = v }
+    if let v = md.md5Hash {
+      out["md5Hash"] = v
+    }
+    if let v = md.cacheControl {
+      out["cacheControl"] = v
+    }
+    if let v = md.contentDisposition {
+      out["contentDisposition"] = v
+    }
+    if let v = md.contentEncoding {
+      out["contentEncoding"] = v
+    }
+    if let v = md.contentLanguage {
+      out["contentLanguage"] = v
+    }
+    if let v = md.contentType {
+      out["contentType"] = v
+    }
     out["customMetadata"] = md.customMetadata ?? [:]
     return out
   }
