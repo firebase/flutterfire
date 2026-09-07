@@ -298,33 +298,40 @@ void main() {
                 defaultTargetPlatform == TargetPlatform.macOS),
       );
 
+      // Kept outside the skipped group so Windows covers the success path
+      // that previously hung. Remaining cases stay skipped on desktop
+      // because they assert platform-specific error messages.
+      test(
+        'reauthenticateWithCredential() should reauthenticate correctly',
+        () async {
+          // Setup
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: email,
+            password: testPassword,
+          );
+          final initialUser = FirebaseAuth.instance.currentUser;
+
+          // Test
+          AuthCredential credential = EmailAuthProvider.credential(
+            email: email,
+            password: testPassword,
+          );
+          await FirebaseAuth.instance.currentUser!
+              .reauthenticateWithCredential(credential);
+
+          // Assertions
+          final currentUser = FirebaseAuth.instance.currentUser;
+          expect(currentUser, isNot(equals(null)));
+          expect(initialUser, isNot(equals(null)));
+          expect(currentUser?.email, equals(email));
+          expect(currentUser?.uid, equals(initialUser?.uid));
+        },
+        skip: !kIsWeb && defaultTargetPlatform == TargetPlatform.macOS,
+      );
+
       group(
         'reauthenticateWithCredential()',
         () {
-          test('should reauthenticate correctly', () async {
-            // Setup
-            await FirebaseAuth.instance.createUserWithEmailAndPassword(
-              email: email,
-              password: testPassword,
-            );
-            final initialUser = FirebaseAuth.instance.currentUser;
-
-            // Test
-            AuthCredential credential = EmailAuthProvider.credential(
-              email: email,
-              password: testPassword,
-            );
-            await FirebaseAuth.instance.currentUser!
-                .reauthenticateWithCredential(credential);
-
-            // Assertions
-            final currentUser = FirebaseAuth.instance.currentUser;
-            expect(currentUser, isNot(equals(null)));
-            expect(initialUser, isNot(equals(null)));
-            expect(currentUser?.email, equals(email));
-            expect(currentUser?.uid, equals(initialUser?.uid));
-          });
-
           test('should throw user-mismatch ', () async {
             // Setup
             String emailAlready = generateRandomEmail();
