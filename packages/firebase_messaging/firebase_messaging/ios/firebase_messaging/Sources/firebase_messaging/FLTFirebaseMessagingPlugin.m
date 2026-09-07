@@ -291,22 +291,18 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 // Safe to call repeatedly: APNs registration is only requested once per process.
 - (void)registerForRemoteNotificationsIfAutoInitEnabled {
   if (_apnsRegistrationRequested) {
-    NSLog(@"APNS-REG skip: already requested");
     return;
   }
   // Checked via FIRApp.allApps rather than `[FIRApp defaultApp]` / `[FIRMessaging messaging]` so
   // a not-yet-configured app does not log the misleading "default Firebase app has not yet been
   // configured" (I-COR000003) warning during launch.
   if ([FLTFirebasePlugin firebaseAppNamed:@"[DEFAULT]"] == nil) {
-    NSLog(@"APNS-REG skip: no default FIRApp");
     return;
   }
   if (![FIRMessaging messaging].isAutoInitEnabled) {
-    NSLog(@"APNS-REG skip: auto-init disabled");
     return;
   }
   _apnsRegistrationRequested = YES;
-  NSLog(@"APNS-REG requesting registerForRemoteNotifications");
   [self registerForRemoteNotifications];
   // Forward an APNs token that may have arrived before Firebase was configured.
   [self ensureAPNSTokenSetting];
@@ -634,7 +630,6 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 - (void)application:(UIApplication *)application
     didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
 #endif
-  NSLog(@"APNS-REG didRegister tokenBytes=%lu", (unsigned long)deviceToken.length);
   FIRMessaging *messaging = [FIRMessaging messaging];
   if (!messaging.isAutoInitEnabled) {
     _apnsToken = deviceToken;
@@ -655,7 +650,6 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 - (void)application:(UIApplication *)application
     didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
 #endif
-  NSLog(@"APNS-REG didFail %@", error);
   NSLog(@"%@", error.localizedDescription);
 }
 
@@ -958,7 +952,6 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   // Called by firebase_core right after `Firebase.initializeApp()` has configured the app. For
   // apps initialized from Dart this is the first point where `[FIRMessaging messaging]` exists,
   // so re-run the auto-init check that was skipped during launch.
-  NSLog(@"APNS-REG pluginConstantsForFIRApp name=%@", firebase_app.name);
   [self registerForRemoteNotificationsIfAutoInitEnabled];
   return @{
     @"AUTO_INIT_ENABLED" : @([FIRMessaging messaging].isAutoInitEnabled),
