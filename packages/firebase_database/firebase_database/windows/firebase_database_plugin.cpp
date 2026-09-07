@@ -993,81 +993,77 @@ void FirebaseDatabasePlugin::DatabaseReferenceRunTransaction(
       ctx, apply_locally);
 
   // Wait for the transaction to complete
-  ref.RunTransactionLastResult().OnCompletion(
-      [ctx](const Future<DataSnapshot>& future) {
-        Error error = static_cast<Error>(future.error());
+  ref.RunTransactionLastResult().OnCompletion([ctx](const Future<DataSnapshot>&
+                                                        future) {
+    Error error = static_cast<Error>(future.error());
 
-        // A deliberate abort is not an error condition: `runTransaction` has to
-        // resolve with `committed: false`, as it does on Android, iOS and web.
-        //
-        // The handler's own decision - not the native error code - is what
-        // decides this. The desktop SDK reports a deliberate abort as
-        // `kErrorWriteCanceled` when the handler aborts on its initial
-        // invocation and as `kErrorNone` when it aborts on a rerun, and it
-        // never reports the `kErrorTransactionAbortedByUser` that the mobile
-        // SDKs use (that code is only ever emitted by the Android and iOS
-        // implementations). Neither native code can be trusted on its own here:
-        // `kErrorWriteCanceled` also means "cancelled by
-        // PurgeOutstandingWrites()", which must stay an error, and `kErrorNone`
-        // otherwise means the transaction committed.
-        // See https://github.com/firebase/flutterfire/issues/18549,
-        // https://github.com/firebase/firebase-cpp-sdk/issues/1905.
-        bool aborted_by_handler =
-            ctx->handler_aborted ||
-            error == Error::kErrorTransactionAbortedByUser;
-        // Either way the handler, not the server, ended this transaction, so it
-        // did not commit - whatever the native error code says.
-        bool ended_by_handler = aborted_by_handler || ctx->handler_failed;
+    // A deliberate abort is not an error condition: `runTransaction` has to
+    // resolve with `committed: false`, as it does on Android, iOS and web.
+    //
+    // The handler's own decision - not the native error code - is what
+    // decides this. The desktop SDK reports a deliberate abort as
+    // `kErrorWriteCanceled` when the handler aborts on its initial
+    // invocation and as `kErrorNone` when it aborts on a rerun, and it
+    // never reports the `kErrorTransactionAbortedByUser` that the mobile
+    // SDKs use (that code is only ever emitted by the Android and iOS
+    // implementations). Neither native code can be trusted on its own here:
+    // `kErrorWriteCanceled` also means "cancelled by
+    // PurgeOutstandingWrites()", which must stay an error, and `kErrorNone`
+    // otherwise means the transaction committed.
+    // See https://github.com/firebase/flutterfire/issues/18549,
+    // https://github.com/firebase/firebase-cpp-sdk/issues/1905.
+    bool aborted_by_handler =
+        ctx->handler_aborted || error == Error::kErrorTransactionAbortedByUser;
+    // Either way the handler, not the server, ended this transaction, so it
+    // did not commit - whatever the native error code says.
+    bool ended_by_handler = aborted_by_handler || ctx->handler_failed;
 
-        if (error == Error::kErrorNone && !ended_by_handler) {
-          const DataSnapshot* snapshot = future.result();
-          EncodableMap result_map;
-          result_map[EncodableValue("committed")] = EncodableValue(true);
-          if (snapshot) {
-            result_map[EncodableValue("snapshot")] = EncodableValue(
-                FirebaseDatabasePlugin::DataSnapshotToEncodableMap(*snapshot));
-          } else {
-            result_map[EncodableValue("snapshot")] = EncodableValue();
-          }
-          (*ctx->transaction_results)[ctx->transaction_key] = result_map;
-          ReplyOnPlatformThread(ctx->result, std::nullopt);
-        } else {
-          EncodableMap result_map;
-          result_map[EncodableValue("committed")] = EncodableValue(false);
-          if (aborted_by_handler && !ctx->aborted_snapshot.empty()) {
-            // Report the data the handler saw, like the other platforms do.
-            result_map[EncodableValue("snapshot")] =
-                EncodableValue(ctx->aborted_snapshot);
-          } else {
-            result_map[EncodableValue("snapshot")] =
-                EncodableValue(EncodableMap{
-                    {EncodableValue("key"), EncodableValue()},
-                    {EncodableValue("value"), EncodableValue()},
-                    {EncodableValue("priority"), EncodableValue()},
-                    {EncodableValue("childKeys"),
-                     EncodableValue(EncodableList{})},
-                });
-          }
-          (*ctx->transaction_results)[ctx->transaction_key] = result_map;
+    if (error == Error::kErrorNone && !ended_by_handler) {
+      const DataSnapshot* snapshot = future.result();
+      EncodableMap result_map;
+      result_map[EncodableValue("committed")] = EncodableValue(true);
+      if (snapshot) {
+        result_map[EncodableValue("snapshot")] = EncodableValue(
+            FirebaseDatabasePlugin::DataSnapshotToEncodableMap(*snapshot));
+      } else {
+        result_map[EncodableValue("snapshot")] = EncodableValue();
+      }
+      (*ctx->transaction_results)[ctx->transaction_key] = result_map;
+      ReplyOnPlatformThread(ctx->result, std::nullopt);
+    } else {
+      EncodableMap result_map;
+      result_map[EncodableValue("committed")] = EncodableValue(false);
+      if (aborted_by_handler && !ctx->aborted_snapshot.empty()) {
+        // Report the data the handler saw, like the other platforms do.
+        result_map[EncodableValue("snapshot")] =
+            EncodableValue(ctx->aborted_snapshot);
+      } else {
+        result_map[EncodableValue("snapshot")] = EncodableValue(EncodableMap{
+            {EncodableValue("key"), EncodableValue()},
+            {EncodableValue("value"), EncodableValue()},
+            {EncodableValue("priority"), EncodableValue()},
+            {EncodableValue("childKeys"), EncodableValue(EncodableList{})},
+        });
+      }
+      (*ctx->transaction_results)[ctx->transaction_key] = result_map;
 
-          if (ctx->handler_failed) {
-            std::string message =
-                "The transaction handler could not be called. The transaction "
-                "was aborted.";
-            ReplyOnPlatformThread(
-                ctx->result,
-                FlutterError("unknown", message,
-                             FirebaseDatabasePlugin::BuildErrorDetails(
-                                 "unknown", message)));
-          } else if (aborted_by_handler) {
-            ReplyOnPlatformThread(ctx->result, std::nullopt);
-          } else {
-            ReplyOnPlatformThread(ctx->result,
-                                  FirebaseDatabasePlugin::ParseError(future));
-          }
-        }
-        delete ctx;
-      });
+      if (ctx->handler_failed) {
+        std::string message =
+            "The transaction handler could not be called. The transaction "
+            "was aborted.";
+        ReplyOnPlatformThread(
+            ctx->result, FlutterError("unknown", message,
+                                      FirebaseDatabasePlugin::BuildErrorDetails(
+                                          "unknown", message)));
+      } else if (aborted_by_handler) {
+        ReplyOnPlatformThread(ctx->result, std::nullopt);
+      } else {
+        ReplyOnPlatformThread(ctx->result,
+                              FirebaseDatabasePlugin::ParseError(future));
+      }
+    }
+    delete ctx;
+  });
 }
 
 void FirebaseDatabasePlugin::DatabaseReferenceGetTransactionResult(
@@ -1181,15 +1177,14 @@ void FirebaseDatabasePlugin::OnDisconnectCancel(
 
   DatabaseReference ref = database->GetReference(path.c_str());
 
-  ref.OnDisconnect()->Cancel().OnCompletion(
-      [result](const Future<void>& future) {
-        if (future.error() == Error::kErrorNone) {
-          ReplyOnPlatformThread(result, std::nullopt);
-        } else {
-          ReplyOnPlatformThread(result,
-                                FirebaseDatabasePlugin::ParseError(future));
-        }
-      });
+  ref.OnDisconnect()->Cancel().OnCompletion([result](
+                                                const Future<void>& future) {
+    if (future.error() == Error::kErrorNone) {
+      ReplyOnPlatformThread(result, std::nullopt);
+    } else {
+      ReplyOnPlatformThread(result, FirebaseDatabasePlugin::ParseError(future));
+    }
+  });
 }
 
 // ===== Query methods =====
