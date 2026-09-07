@@ -66,8 +66,7 @@ class FlutterFirebaseFunctionsPluginTest {
         )
 
     for ((enumName, canonical) in expected) {
-      assertEquals(
-          canonical, FlutterFirebaseFunctionsPlugin.mapFunctionsErrorCode(enumName))
+      assertEquals(canonical, FlutterFirebaseFunctionsPlugin.mapFunctionsErrorCode(enumName))
     }
   }
 }
