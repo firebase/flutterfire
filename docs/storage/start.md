@@ -144,7 +144,7 @@ final storage = FirebaseStorage.instanceFor(bucket: "gs://my-custom-bucket");
 
 When importing an existing Cloud Storage bucket into Firebase, you'll
 have to grant Firebase the ability to access these files using the
-`gsutil` tool, included in the
+`gcloud storage` tool, included in the
 [Google Cloud SDK](//cloud.google.com/sdk/docs/):
 
 ```bash
