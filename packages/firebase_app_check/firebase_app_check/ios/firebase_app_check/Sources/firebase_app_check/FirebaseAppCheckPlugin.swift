@@ -380,7 +380,10 @@ class AppCheckProviderWrapper: NSObject, AppCheckProvider {
       }
       delegateProvider = appAttestProvider ?? DeviceCheckProvider(app: app)
     case "recaptcha":
-      #if os(iOS)
+      // RecaptchaProvider is only usable when RecaptchaEnterprise is linked
+      // (SPM Package.swift). CocoaPods does not ship that dependency, and some
+      // Podfile setups fail to compile if this type is referenced at all.
+      #if os(iOS) && canImport(RecaptchaEnterprise)
         if let recaptchaSiteKey {
           delegateProvider = RecaptchaProvider(app: app, siteKey: recaptchaSiteKey)
         } else {
@@ -391,6 +394,11 @@ class AppCheckProviderWrapper: NSObject, AppCheckProvider {
             "Firebase App Check: failed to initialize RecaptchaProvider. Ensure site key is provided."
           )
         }
+      #elseif os(iOS)
+        print(
+          "Firebase App Check: RecaptchaProvider requires Swift Package Manager with RecaptchaEnterprise."
+        )
+        delegateProvider = nil
       #else
         print("Firebase App Check: reCAPTCHA is only supported on iOS.")
       #endif
