@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import FirebaseCore
 import FirebaseStorage
 import Foundation
 
@@ -17,7 +18,9 @@ import Foundation
   import FlutterMacOS
 #endif
 
-public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseStorageHostApi {
+public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FLTFirebasePluginProtocol,
+  FirebaseStorageHostApi
+{
   private var channel: FlutterMethodChannel?
   private var messenger: FlutterBinaryMessenger?
   private var eventChannels: [String: FlutterEventChannel] = [:]
@@ -45,6 +48,7 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
     #endif
     let channel = FlutterMethodChannel(name: channelName, binaryMessenger: resolvedMessenger)
     let instance = FLTFirebaseStoragePlugin()
+    FLTFirebasePluginRegistry.sharedInstance().register(instance)
     instance.channel = channel
     instance.messenger = resolvedMessenger
     registrar.addMethodCallDelegate(instance, channel: channel)
@@ -60,30 +64,50 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
 
   #if os(iOS)
     public func detachFromEngine(for registrar: FlutterPluginRegistrar) {
-      if Thread.isMainThread {
-        cleanupStreamsOnMain()
-      } else {
-        DispatchQueue.main.sync {
-          self.cleanupStreamsOnMain()
-        }
-      }
+      cleanupStreams()
     }
-
-    private func cleanupStreamsOnMain() {
-      // Flutter may tear down an engine without delivering onCancel for every
-      // active event channel. Invalidate handlers first so already queued
-      // Firebase callbacks cannot reach a detached FlutterEventSink.
-      for handler in streamHandlers.values {
-        handler.invalidate()
-      }
-      for eventChannel in eventChannels.values {
-        eventChannel.setStreamHandler(nil)
-      }
-      streamHandlers.removeAll()
-      eventChannels.removeAll()
-    }
-
   #endif
+
+  public func didReinitializeFirebaseCore(_ completion: @escaping () -> Void) {
+    cleanupStreams()
+    completion()
+  }
+
+  public func pluginConstants(for firebaseApp: FirebaseApp) -> [AnyHashable: Any] {
+    [:]
+  }
+
+  public func firebaseLibraryName() -> String { "flutter-fire-gcs" }
+
+  public func firebaseLibraryVersion() -> String { versionNumber }
+
+  public func flutterChannelName() -> String { "plugins.flutter.io/firebase_storage" }
+
+  private func cleanupStreams() {
+    if Thread.isMainThread {
+      cleanupStreamsOnMain()
+    } else {
+      DispatchQueue.main.sync { self.cleanupStreamsOnMain() }
+    }
+  }
+
+  private func cleanupStreamsOnMain() {
+    // Removing Firebase observers does not retract callbacks already queued for delivery.
+    for handler in streamHandlers.values {
+      _ = handler.onCancel(withArguments: nil)
+    }
+    for eventChannel in eventChannels.values {
+      eventChannel.setStreamHandler(nil)
+    }
+    for identifier in handleToIdentifier.values {
+      Self.canceledIdentifiers.remove(identifier)
+    }
+    streamHandlers.removeAll()
+    eventChannels.removeAll()
+    handleToTask.removeAll()
+    handleToPath.removeAll()
+    handleToIdentifier.removeAll()
+  }
 
   private func storage(app: InternalStorageFirebaseApp) -> Storage {
     let base = "gs://" + app.bucket
