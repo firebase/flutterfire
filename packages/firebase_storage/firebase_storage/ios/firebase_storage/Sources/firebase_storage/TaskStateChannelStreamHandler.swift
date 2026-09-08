@@ -20,7 +20,15 @@ final class TaskStateChannelStreamHandler: NSObject, FlutterStreamHandler {
   private var failureHandle: String?
   private var pausedHandle: String?
   private var progressHandle: String?
-  private let dispatcher = TaskEventDispatcher<[String: Any]>()
+  private final class Listener {
+    var sink: FlutterEventSink?
+
+    init(_ sink: @escaping FlutterEventSink) {
+      self.sink = sink
+    }
+  }
+
+  private var listener: Listener?
 
   init(task: StorageObservableTask, storage: Storage, identifier: String) {
     self.task = task
@@ -43,6 +51,7 @@ final class TaskStateChannelStreamHandler: NSObject, FlutterStreamHandler {
     return error
   }
 
+  /// Clears the sink before removing observers, including during plugin cleanup.
   func onCancel(withArguments arguments: Any?) -> FlutterError? {
     if Thread.isMainThread {
       invalidateOnMain()
@@ -54,25 +63,13 @@ final class TaskStateChannelStreamHandler: NSObject, FlutterStreamHandler {
     return nil
   }
 
-  /// Invalidates queued deliveries before removing Firebase observers. This is
-  /// also called by the plugin when Flutter detaches, since Flutter does not
-  /// necessarily invoke onCancel for every active event channel.
-  func invalidate() {
-    if Thread.isMainThread {
-      invalidateOnMain()
-    } else {
-      DispatchQueue.main.sync {
-        self.invalidateOnMain()
-      }
-    }
-  }
-
   private func startListening(_ events: @escaping FlutterEventSink) -> FlutterError? {
     invalidateOnMain()
-    let listenGeneration = dispatcher.listen { events($0) }
+    let listener = Listener(events)
+    self.listener = listener
 
     successHandle = task.observe(.success) { [weak self] snapshot in
-      self?.enqueue(generation: listenGeneration, terminal: true) { handler in
+      self?.deliver(listener: listener, terminal: true) { handler in
         [
           "taskState": 2,  // success
           "appName": handler.storage.app.name,
@@ -81,7 +78,7 @@ final class TaskStateChannelStreamHandler: NSObject, FlutterStreamHandler {
       }
     }
     failureHandle = task.observe(.failure) { [weak self] snapshot in
-      self?.enqueue(generation: listenGeneration, terminal: true) { handler in
+      self?.deliver(listener: listener, terminal: true) { handler in
         let err = snapshot.error as NSError?
         return [
           "taskState": 4,  // error (including cancellations as errors per platform contract)
@@ -91,7 +88,7 @@ final class TaskStateChannelStreamHandler: NSObject, FlutterStreamHandler {
       }
     }
     pausedHandle = task.observe(.pause) { [weak self] snapshot in
-      self?.enqueue(generation: listenGeneration, terminal: false) { handler in
+      self?.deliver(listener: listener, terminal: false) { handler in
         [
           "taskState": 0,  // paused
           "appName": handler.storage.app.name,
@@ -100,7 +97,7 @@ final class TaskStateChannelStreamHandler: NSObject, FlutterStreamHandler {
       }
     }
     progressHandle = task.observe(.progress) { [weak self] snapshot in
-      self?.enqueue(generation: listenGeneration, terminal: false) { handler in
+      self?.deliver(listener: listener, terminal: false) { handler in
         [
           "taskState": 1,  // running
           "appName": handler.storage.app.name,
@@ -111,25 +108,30 @@ final class TaskStateChannelStreamHandler: NSObject, FlutterStreamHandler {
     return nil
   }
 
-  private func enqueue(
-    generation: UInt64,
+  private func deliver(
+    listener: Listener,
     terminal: Bool,
     makeEvent: @escaping (TaskStateChannelStreamHandler) -> [String: Any]
   ) {
-    dispatcher.enqueue(
-      generation: generation, terminal: terminal,
-      makeEvent: { [weak self] in
-        guard let self else { return nil }
-        return makeEvent(self)
-      },
-      beforeTerminal: { [weak self] in
-        self?.invalidateOnMain()
-      })
+    let send = { [weak self] in
+      guard let self, let sink = listener.sink else { return }
+      let event = makeEvent(self)
+      if terminal {
+        self.invalidateOnMain()
+      }
+      sink(event)
+    }
+    if Thread.isMainThread {
+      send()
+    } else {
+      DispatchQueue.main.async(execute: send)
+    }
   }
 
   private func invalidateOnMain() {
     dispatchPrecondition(condition: .onQueue(.main))
-    dispatcher.invalidate()
+    listener?.sink = nil
+    listener = nil
 
     let handles = [successHandle, failureHandle, pausedHandle, progressHandle]
     successHandle = nil

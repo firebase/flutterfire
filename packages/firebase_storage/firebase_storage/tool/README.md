@@ -1,13 +1,11 @@
-# Native lifecycle tests
+# Native Storage listener tests
 
-Run the deterministic Foundation-only dispatcher tests with:
+The example's checked-in `RunnerTests` target exercises the actual Storage
+plugin and Firebase SDK on an iOS simulator. It uses the example's normal
+`Runner` scheme and links against the host app's plugin code.
 
-```sh
-./tool/test_native_lifecycle.sh
-```
-
-To test real iOS engine disposal, first run `melos bootstrap` at the repository
-root, start the Storage emulator, and boot an iOS simulator:
+First run `melos bootstrap` at the repository root, enable Flutter Swift Package
+Manager support, and start the local Storage emulator:
 
 ```sh
 cd .github/workflows/scripts
@@ -20,18 +18,23 @@ From the Firebase Storage package directory, run:
 ./tool/test_engine_lifecycle.sh <simulator-udid>
 ```
 
-This requires Xcode, Flutter with Swift Package Manager enabled, CocoaPods'
-`xcodeproj` Ruby gem, and the Storage emulator on `127.0.0.1:9199`. The runner builds a minimal Dart entrypoint, creates
-a temporary XCTest target in the example project, and restores the project
-files afterward. Do not edit or build that example concurrently with the runner.
+The runner requires Xcode, Flutter, a booted iOS simulator, and the Storage
+emulator on `127.0.0.1:9199`. It builds a minimal Dart entrypoint and runs the
+checked-in Xcode test target. It does not create or edit test targets or schemes.
+Flutter may perform its normal generated-project migrations during the build.
 
-The XCTest starts a real headless Flutter engine, registers the actual Storage
-plugin, and pauses a real Firebase upload. It queues a real Firebase observer
-callback before disposing the engine and verifies that Flutter invokes plugin
-cleanup and the queued callback does not reach its old event sink.
+The tests cover callbacks queued before cancellation, relistening, background
+callback delivery, immediate sink release, terminal success and cancellation,
+iOS engine disposal, and cleanup through Firebase Core's reinitialization
+registry followed by a new successful upload. Fixtures use a real paused upload
+and an event-counting sink. No Firebase credentials or production bucket are
+required.
 
-This covers iOS engine disposal, which invokes `detachFromEngine(for:)`.
-`destroyContext()` alone while retaining the engine is a different lifecycle
-and is not covered by this hook. macOS does not expose the corresponding plugin
-detach callback; shared dispatcher tests and the macOS emulator suite cover
-cancellation and terminal delivery there.
+Listener cleanup removes observers and stale plugin task handles. It does not
+explicitly cancel native transfers, and it preserves emulator configuration
+across Firebase Core reinitialization.
+
+Engine disposal invokes `detachFromEngine(for:)` on iOS. Calling `destroyContext()`
+while retaining the engine does not invoke that hook and remains outside this
+fix. macOS has no corresponding plugin-detach callback; cancellation and Firebase
+Core reinitialization cleanup use the shared Swift implementation there.
