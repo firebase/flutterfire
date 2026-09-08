@@ -166,6 +166,7 @@ public class FLTFirebaseAuthPlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
         didReceiveRemoteNotification notification: [AnyHashable: Any],
         fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void
       ) -> Bool {
+        guard FirebaseApp.app() != nil else { return false }
         if Auth.auth().canHandleNotification(notification) {
           completionHandler(.noData)
           return true
@@ -186,11 +187,13 @@ public class FLTFirebaseAuthPlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
       open url: URL,
       options: [UIApplication.OpenURLOptionsKey: Any] = [:]
     ) -> Bool {
-      Auth.auth().canHandle(url)
+      guard FirebaseApp.app() != nil else { return false }
+      return Auth.auth().canHandle(url)
     }
 
     public func scene(_ scene: UIScene, openURLContexts urlContexts: Set<UIOpenURLContext>) -> Bool
     {
+      guard FirebaseApp.app() != nil else { return false }
       for urlContext in urlContexts where Auth.auth().canHandle(urlContext.url) {
         return true
       }
