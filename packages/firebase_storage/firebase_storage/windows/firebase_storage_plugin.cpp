@@ -707,8 +707,8 @@ void SendMetadataTaskResult(std::shared_ptr<EventSinkState> events_state,
   } else {
     SendSuccessOnPlatformThread(
         std::move(events_state),
-        flutter::EncodableValue(FirebaseStoragePlugin::ErrorStreamEvent(
-            data_result, app_name)));
+        flutter::EncodableValue(
+            FirebaseStoragePlugin::ErrorStreamEvent(data_result, app_name)));
   }
 }
 
@@ -752,15 +752,14 @@ class PutDataStreamHandler
 
     ::Sleep(1);  // timing for c++ sdk grabbing a mutex
 
-    future_result.OnCompletion(
-        [events_state = events_state_,
-         app_name = std::string(storage_->app()->name()),
-         reference = reference_,
-         listener = listener_](const Future<Metadata>& data_result) {
-          (void)reference;
-          (void)listener;
-          SendMetadataTaskResult(events_state, app_name, data_result);
-        });
+    future_result.OnCompletion([events_state = events_state_,
+                                app_name = std::string(storage_->app()->name()),
+                                reference = reference_, listener = listener_](
+                                   const Future<Metadata>& data_result) {
+      (void)reference;
+      (void)listener;
+      SendMetadataTaskResult(events_state, app_name, data_result);
+    });
     return nullptr;
   }
 
@@ -815,20 +814,19 @@ class PutFileStreamHandler
       future_result = reference_->PutFile(file_path_.c_str(), *storage_metadata,
                                           listener_.get(), controller_);
     } else {
-      future_result = reference_->PutFile(file_path_.c_str(), listener_.get(),
-                                          controller_);
+      future_result =
+          reference_->PutFile(file_path_.c_str(), listener_.get(), controller_);
     }
 
     ::Sleep(1);  // timing for c++ sdk grabbing a mutex
-    future_result.OnCompletion(
-        [events_state = events_state_,
-         app_name = std::string(storage_->app()->name()),
-         reference = reference_,
-         listener = listener_](const Future<Metadata>& data_result) {
-          (void)reference;
-          (void)listener;
-          SendMetadataTaskResult(events_state, app_name, data_result);
-        });
+    future_result.OnCompletion([events_state = events_state_,
+                                app_name = std::string(storage_->app()->name()),
+                                reference = reference_, listener = listener_](
+                                   const Future<Metadata>& data_result) {
+      (void)reference;
+      (void)listener;
+      SendMetadataTaskResult(events_state, app_name, data_result);
+    });
     return nullptr;
   }
 
@@ -872,8 +870,8 @@ class GetFileStreamHandler
     listener_ = std::make_shared<TaskStateListener>(events_state_);
     reference_ = std::make_shared<StorageReference>(
         storage_->GetReference(reference_path_));
-    Future<size_t> future_result = reference_->GetFile(
-        file_path_.c_str(), listener_.get(), controller_);
+    Future<size_t> future_result =
+        reference_->GetFile(file_path_.c_str(), listener_.get(), controller_);
 
     ::Sleep(1);  // timing for c++ sdk grabbing a mutex
     future_result.OnCompletion(
