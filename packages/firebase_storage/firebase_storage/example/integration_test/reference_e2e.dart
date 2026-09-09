@@ -370,9 +370,10 @@ void setupReferenceTests() {
           },
         );
 
-        // Overlapping putData calls can native-crash Windows (0xC0000005 in
-        // TaskStateListener::OnProgress). Sequential putData tests do not hit
-        // that path. See https://github.com/firebase/flutterfire/issues/18664.
+        // Overlapping putData calls previously native-crashed Windows by
+        // sending task events off the platform thread. Sequential putData
+        // tests do not hit that path.
+        // See https://github.com/firebase/flutterfire/issues/18664.
         test(
           'uploads many small files concurrently and reads them back',
           () async {
