@@ -111,7 +111,7 @@ but certain restrictions are imposed including:
 1. No Carriage Return or Line Feed characters.
 1. Avoid using `#`, `[`, `]`, `*`, or `?`, as these do not work well with
    other tools such as the [Firebase Realtime Database](/docs/database/overview)
-   or [gsutil](https://cloud.google.com/storage/docs/gsutil).
+   or [gcloud storage](https://docs.cloud.google.com/sdk/gcloud/reference/storage).
 
 ## Full Example
 
