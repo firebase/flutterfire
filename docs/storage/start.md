@@ -148,7 +148,7 @@ have to grant Firebase the ability to access these files using the
 [Google Cloud SDK](//cloud.google.com/sdk/docs/):
 
 ```bash
-gcloud storage objects add-iam-policy-binding gs://YOUR-CLOUD-STORAGE-BUCKET \
+gcloud storage buckets add-iam-policy-binding gs://YOUR-CLOUD-STORAGE-BUCKET \
     --member="serviceAccount:service-PROJECT_NUMBER@gcp-sa-firebasestorage.iam.gserviceaccount.com" \
     --role="roles/storage.objectViewer"
 ```
