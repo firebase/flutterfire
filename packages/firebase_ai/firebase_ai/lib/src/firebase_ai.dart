@@ -35,8 +35,8 @@ class FirebaseAI extends FirebasePlugin {
     this.appCheck,
     this.auth,
     this.useLimitedUseAppCheckTokens = false,
-  })  : _useAgentPlatform = useAgentPlatform,
-        super(app.name, 'plugins.flutter.io/firebase_vertexai');
+  }) : _useAgentPlatform = useAgentPlatform,
+       super(app.name, 'plugins.flutter.io/firebase_vertexai');
 
   /// The [FirebaseApp] for this current [FirebaseAI] instance.
   FirebaseApp app;
@@ -63,14 +63,17 @@ class FirebaseAI extends FirebasePlugin {
   /// If [app] is not provided, the default Firebase app will be used.
   /// If pass in [appCheck], request session will get protected from abusing.
   @Deprecated(
-      'Use agentPlatform() instead. Note that the default location for agentPlatform is now "global" instead of "us-central1"')
+    'Use agentPlatform() instead. Note that the default location for agentPlatform is now "global" instead of "us-central1"',
+  )
   static FirebaseAI vertexAI({
     FirebaseApp? app,
     @Deprecated(
-        'Passing an explicit instance is deprecated, internal handling is now automatic.')
+      'Passing an explicit instance is deprecated, internal handling is now automatic.',
+    )
     FirebaseAppCheck? appCheck,
     @Deprecated(
-        'Passing an explicit instance is deprecated, internal handling is now automatic.')
+      'Passing an explicit instance is deprecated, internal handling is now automatic.',
+    )
     FirebaseAuth? auth,
     String? location,
     bool? useLimitedUseAppCheckTokens,
@@ -136,10 +139,12 @@ class FirebaseAI extends FirebasePlugin {
   static FirebaseAI googleAI({
     FirebaseApp? app,
     @Deprecated(
-        'Passing an explicit instance is deprecated, internal handling is now automatic.')
+      'Passing an explicit instance is deprecated, internal handling is now automatic.',
+    )
     FirebaseAppCheck? appCheck,
     @Deprecated(
-        'Passing an explicit instance is deprecated, internal handling is now automatic.')
+      'Passing an explicit instance is deprecated, internal handling is now automatic.',
+    )
     FirebaseAuth? auth,
     bool? useLimitedUseAppCheckTokens,
   }) {
@@ -235,11 +240,12 @@ class FirebaseAI extends FirebasePlugin {
   @experimental
   TemplateGenerativeModel templateGenerativeModel() {
     return createTemplateGenerativeModel(
-        app: app,
-        location: location,
-        useAgentPlatform: _useAgentPlatform,
-        useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
-        auth: auth,
-        appCheck: appCheck);
+      app: app,
+      location: location,
+      useAgentPlatform: _useAgentPlatform,
+      useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
+      auth: auth,
+      appCheck: appCheck,
+    );
   }
 }

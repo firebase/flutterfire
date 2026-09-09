@@ -20,8 +20,8 @@ abstract class HttpsCallablePlatform extends PlatformInterface {
     this.name,
     this.options,
     this.uri,
-  )   : assert(name != null || uri != null),
-        super(token: _token);
+  ) : assert(name != null || uri != null),
+      super(token: _token);
 
   static final Object _token = Object();
 

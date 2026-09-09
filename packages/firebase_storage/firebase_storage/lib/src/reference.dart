@@ -72,9 +72,11 @@ class Reference {
   /// Storage List API will filter these unsupported objects. [list] may fail
   /// if there are too many unsupported objects in the bucket.
   Future<ListResult> list([ListOptions? options]) async {
-    assert(options == null ||
-        options.maxResults == null ||
-        options.maxResults! > 0 && options.maxResults! <= 1000);
+    assert(
+      options == null ||
+          options.maxResults == null ||
+          options.maxResults! > 0 && options.maxResults! <= 1000,
+    );
     return ListResult._(storage, await _delegate.list(options));
   }
 
@@ -131,7 +133,9 @@ class Reference {
   /// Optionally, you can also set metadata onto the uploaded object.
   UploadTask putData(Uint8List data, [SettableMetadata? metadata]) {
     return UploadTask._(
-        storage, _delegate.putData(data, _withInferredContentType(metadata)));
+      storage,
+      _delegate.putData(data, _withInferredContentType(metadata)),
+    );
   }
 
   /// Upload a [Blob]. Note; this is only supported on web platforms.
@@ -140,7 +144,9 @@ class Reference {
   UploadTask putBlob(dynamic blob, [SettableMetadata? metadata]) {
     assert(blob != null);
     return UploadTask._(
-        storage, _delegate.putBlob(blob, _withInferredContentType(metadata)));
+      storage,
+      _delegate.putBlob(blob, _withInferredContentType(metadata)),
+    );
   }
 
   /// Upload a [File] from the filesystem. The file must exist.
@@ -184,9 +190,7 @@ class Reference {
       _data = uri.contentText;
 
       if (_metadata == null && uri.mimeType.isNotEmpty) {
-        _metadata = SettableMetadata(
-          contentType: uri.mimeType,
-        );
+        _metadata = SettableMetadata(contentType: uri.mimeType);
       }
 
       // If the data_url contains a mime-type & the user has not provided it,
@@ -203,7 +207,9 @@ class Reference {
       }
     }
     return UploadTask._(
-        storage, _delegate.putString(_data, _format, _metadata));
+      storage,
+      _delegate.putString(_data, _format, _metadata),
+    );
   }
 
   /// Updates the metadata on a storage object.

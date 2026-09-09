@@ -16,8 +16,8 @@ import '../internal/pointer.dart';
 abstract class ReferencePlatform extends PlatformInterface {
   // ignore: public_member_api_docs
   ReferencePlatform(this.storage, String path)
-      : _pointer = Pointer(path),
-        super(token: _token);
+    : _pointer = Pointer(path),
+      super(token: _token);
 
   Pointer _pointer;
 
@@ -159,8 +159,11 @@ abstract class ReferencePlatform extends PlatformInterface {
   ///     argument, the [mimeType] will be automatically set.
   ///   - [PutStringFormat.base64] will be encoded as a Base64 string.
   ///   - [PutStringFormat.base64Url] will be encoded as a Base64 string safe URL.
-  TaskPlatform putString(String data, PutStringFormat format,
-      [SettableMetadata? metadata]) {
+  TaskPlatform putString(
+    String data,
+    PutStringFormat format, [
+    SettableMetadata? metadata,
+  ]) {
     throw UnimplementedError('putString() is not implemented');
   }
 

@@ -65,9 +65,7 @@ class Pipeline {
   /// ```
   Future<PipelineSnapshot> execute({ExecuteOptions? options}) async {
     final optionsMap = options != null
-        ? {
-            'indexMode': options.indexMode.name,
-          }
+        ? {'indexMode': options.indexMode.name}
         : null;
     final platformSnapshot = await _delegate.execute(options: optionsMap);
     return _convertPlatformSnapshot(platformSnapshot);
@@ -172,10 +170,7 @@ class Pipeline {
     if (selectable29 != null) selectables.add(selectable29);
     if (selectable30 != null) selectables.add(selectable30);
     final stage = _AddFieldsStage(selectables);
-    return Pipeline._(
-      _firestore,
-      _delegate.addStage(stage.toMap()),
-    );
+    return Pipeline._(_firestore, _delegate.addStage(stage.toMap()));
   }
 
   /// Performs aggregation operations on the documents from previous stages.
@@ -258,10 +253,7 @@ class Pipeline {
     if (aggregateFunction30 != null) functions.add(aggregateFunction30);
 
     final stage = _AggregateStage(functions);
-    return Pipeline._(
-      _firestore,
-      _delegate.addStage(stage.toMap()),
-    );
+    return Pipeline._(_firestore, _delegate.addStage(stage.toMap()));
   }
 
   /// Performs optionally grouped aggregation operations on the documents from previous stages.
@@ -310,10 +302,7 @@ class Pipeline {
       aggregateStage,
       options ?? AggregateOptions(),
     );
-    return Pipeline._(
-      _firestore,
-      _delegate.addStage(stage.toMap()),
-    );
+    return Pipeline._(_firestore, _delegate.addStage(stage.toMap()));
   }
 
   /// Returns a set of distinct values from the inputs to this stage.
@@ -392,10 +381,7 @@ class Pipeline {
     if (expression30 != null) expressions.add(expression30);
 
     final stage = _DistinctStage(expressions);
-    return Pipeline._(
-      _firestore,
-      _delegate.addStage(stage.toMap()),
-    );
+    return Pipeline._(_firestore, _delegate.addStage(stage.toMap()));
   }
 
   /// Performs a vector similarity search.
@@ -427,10 +413,7 @@ class Pipeline {
       distanceMeasure,
       limit: limit,
     );
-    return Pipeline._(
-      _firestore,
-      _delegate.addStage(stage.toMap()),
-    );
+    return Pipeline._(_firestore, _delegate.addStage(stage.toMap()));
   }
 
   /// Adds a search stage to this pipeline.
@@ -452,10 +435,7 @@ class Pipeline {
     }
 
     final stage = _SearchStage(searchStage);
-    return Pipeline._(
-      _firestore,
-      _delegate.addStage(stage.toMap()),
-    );
+    return Pipeline._(_firestore, _delegate.addStage(stage.toMap()));
   }
 
   /// Limits the maximum number of documents returned by previous stages to
@@ -472,10 +452,7 @@ class Pipeline {
   /// ```
   Pipeline limit(int limit) {
     final stage = _LimitStage(limit);
-    return Pipeline._(
-      _firestore,
-      _delegate.addStage(stage.toMap()),
-    );
+    return Pipeline._(_firestore, _delegate.addStage(stage.toMap()));
   }
 
   /// Skips the first [offset] documents from the results of previous stages.
@@ -492,10 +469,7 @@ class Pipeline {
   /// ```
   Pipeline offset(int offset) {
     final stage = _OffsetStage(offset);
-    return Pipeline._(
-      _firestore,
-      _delegate.addStage(stage.toMap()),
-    );
+    return Pipeline._(_firestore, _delegate.addStage(stage.toMap()));
   }
 
   /// Removes fields from outputs of previous stages.
@@ -569,10 +543,7 @@ class Pipeline {
     if (fieldPath30 != null) fieldPaths.add(fieldPath30);
 
     final stage = _RemoveFieldsStage(fieldPaths);
-    return Pipeline._(
-      _firestore,
-      _delegate.addStage(stage.toMap()),
-    );
+    return Pipeline._(_firestore, _delegate.addStage(stage.toMap()));
   }
 
   /// Fully overwrites each document with the value of the given expression.
@@ -589,10 +560,7 @@ class Pipeline {
   /// ```
   Pipeline replaceWith(Expression expression) {
     final stage = _ReplaceWithStage(expression);
-    return Pipeline._(
-      _firestore,
-      _delegate.addStage(stage.toMap()),
-    );
+    return Pipeline._(_firestore, _delegate.addStage(stage.toMap()));
   }
 
   /// Performs a pseudo-random sampling of the input documents.
@@ -609,10 +577,7 @@ class Pipeline {
   /// ```
   Pipeline sample(PipelineSample sample) {
     final stage = _SampleStage(sample);
-    return Pipeline._(
-      _firestore,
-      _delegate.addStage(stage.toMap()),
-    );
+    return Pipeline._(_firestore, _delegate.addStage(stage.toMap()));
   }
 
   /// Selects or creates a set of fields from the outputs of previous stages.
@@ -692,10 +657,7 @@ class Pipeline {
     if (expression30 != null) expressions.add(expression30);
 
     final stage = _SelectStage(expressions);
-    return Pipeline._(
-      _firestore,
-      _delegate.addStage(stage.toMap()),
-    );
+    return Pipeline._(_firestore, _delegate.addStage(stage.toMap()));
   }
 
   /// Sorts the documents from previous stages based on one or more orderings.
@@ -776,10 +738,7 @@ class Pipeline {
     if (order30 != null) orderings.add(order30);
 
     final stage = _SortStage(orderings);
-    return Pipeline._(
-      _firestore,
-      _delegate.addStage(stage.toMap()),
-    );
+    return Pipeline._(_firestore, _delegate.addStage(stage.toMap()));
   }
 
   /// Takes a specified array from the input documents and outputs a document
@@ -799,10 +758,7 @@ class Pipeline {
   /// ```
   Pipeline unnest(Selectable expression, [String? indexField]) {
     final stage = _UnnestStage(expression, indexField);
-    return Pipeline._(
-      _firestore,
-      _delegate.addStage(stage.toMap()),
-    );
+    return Pipeline._(_firestore, _delegate.addStage(stage.toMap()));
   }
 
   /// Performs a union of all documents from this pipeline and [pipeline],
@@ -819,10 +775,7 @@ class Pipeline {
   /// ```
   Pipeline union(Pipeline pipeline) {
     final stage = _UnionStage(pipeline);
-    return Pipeline._(
-      _firestore,
-      _delegate.addStage(stage.toMap()),
-    );
+    return Pipeline._(_firestore, _delegate.addStage(stage.toMap()));
   }
 
   /// Filters the documents from previous stages to only include those matching
@@ -844,9 +797,6 @@ class Pipeline {
   /// ```
   Pipeline where(BooleanExpression expression) {
     final stage = _WhereStage(expression);
-    return Pipeline._(
-      _firestore,
-      _delegate.addStage(stage.toMap()),
-    );
+    return Pipeline._(_firestore, _delegate.addStage(stage.toMap()));
   }
 }

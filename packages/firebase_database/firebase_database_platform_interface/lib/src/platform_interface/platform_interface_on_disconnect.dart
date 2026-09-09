@@ -10,7 +10,7 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 abstract class OnDisconnectPlatform extends PlatformInterface {
   /// Create a [OnDisconnectPlatform] instance
   OnDisconnectPlatform({required this.database, required this.ref})
-      : super(token: _token);
+    : super(token: _token);
 
   /// Throws an [AssertionError] if [instance] does not extend
   /// [OnDisconnectPlatform].

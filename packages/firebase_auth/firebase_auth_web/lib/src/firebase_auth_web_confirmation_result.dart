@@ -14,11 +14,8 @@ import 'utils/web_utils.dart';
 /// The web delegate implementation for [ConfirmationResultPlatform].
 class ConfirmationResultWeb extends ConfirmationResultPlatform {
   /// Creates a new [ConfirmationResultWeb] instance.
-  ConfirmationResultWeb(
-    this._auth,
-    this._webConfirmationResult,
-    this._webAuth,
-  ) : super(_webConfirmationResult.verificationId);
+  ConfirmationResultWeb(this._auth, this._webConfirmationResult, this._webAuth)
+    : super(_webConfirmationResult.verificationId);
 
   final FirebaseAuthPlatform _auth;
 
@@ -30,10 +27,6 @@ class ConfirmationResultWeb extends ConfirmationResultPlatform {
     final userCredential = await guardAuthExceptions(
       () => _webConfirmationResult.confirm(verificationCode),
     );
-    return UserCredentialWeb(
-      _auth,
-      userCredential,
-      _webAuth,
-    );
+    return UserCredentialWeb(_auth, userCredential, _webAuth);
   }
 }

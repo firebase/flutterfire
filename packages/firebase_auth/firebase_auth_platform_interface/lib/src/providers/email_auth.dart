@@ -61,14 +61,22 @@ class EmailAuthCredential extends AuthCredential {
   }) : super(providerId: _kProviderId, signInMethod: _signInMethod);
 
   factory EmailAuthCredential._credential(String email, String password) {
-    return EmailAuthCredential._(_kProviderId,
-        email: email, password: password);
+    return EmailAuthCredential._(
+      _kProviderId,
+      email: email,
+      password: password,
+    );
   }
 
   factory EmailAuthCredential._credentialWithLink(
-      String email, String emailLink) {
-    return EmailAuthCredential._(_kLinkProviderId,
-        email: email, emailLink: emailLink);
+    String email,
+    String emailLink,
+  ) {
+    return EmailAuthCredential._(
+      _kLinkProviderId,
+      email: email,
+      emailLink: emailLink,
+    );
   }
 
   /// The user's email address.

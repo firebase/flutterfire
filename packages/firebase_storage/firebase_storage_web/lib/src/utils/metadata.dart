@@ -11,7 +11,8 @@ import '../interop/storage.dart' as storage_interop;
 
 /// Converts FullMetadata coming from the JS Interop layer to FullMetadata for the plugin.
 FullMetadata fbFullMetadataToFullMetadata(
-    storage_interop.FullMetadata metadata) {
+  storage_interop.FullMetadata metadata,
+) {
   return FullMetadata({
     'bucket': metadata.bucket,
     'cacheControl': metadata.cacheControl,
@@ -33,7 +34,8 @@ FullMetadata fbFullMetadataToFullMetadata(
 
 /// Converts SettableMetadata from the plugin to SettableMetadata for the JS Interop layer.
 storage_interop.SettableMetadata settableMetadataToFbSettableMetadata(
-    SettableMetadata metadata) {
+  SettableMetadata metadata,
+) {
   return storage_interop.SettableMetadata(
     cacheControl: metadata.cacheControl,
     contentDisposition: metadata.contentDisposition,
@@ -46,8 +48,9 @@ storage_interop.SettableMetadata settableMetadataToFbSettableMetadata(
 
 /// Converts SettableMetadata from the plugin and an additional MD5 hash (as String) to an UploadMetadata for the JS Interop layer.
 storage_interop.UploadMetadata settableMetadataToFbUploadMetadata(
-    SettableMetadata metadata,
-    {String? md5Hash}) {
+  SettableMetadata metadata, {
+  String? md5Hash,
+}) {
   return storage_interop.UploadMetadata(
     cacheControl: metadata.cacheControl,
     contentDisposition: metadata.contentDisposition,

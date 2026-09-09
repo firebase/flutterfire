@@ -29,16 +29,17 @@ void main() {
   group('getPlatformSecurityHeaders', () {
     test('returns headers from native plugin', () async {
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(platformHeaderChannel,
-              (MethodCall methodCall) async {
-        if (methodCall.method == 'getPlatformHeaders') {
-          return <String, String>{
-            'X-Android-Package': 'com.example.test',
-            'X-Android-Cert': 'AABBCCDD',
-          };
-        }
-        return null;
-      });
+          .setMockMethodCallHandler(platformHeaderChannel, (
+            MethodCall methodCall,
+          ) async {
+            if (methodCall.method == 'getPlatformHeaders') {
+              return <String, String>{
+                'X-Android-Package': 'com.example.test',
+                'X-Android-Cert': 'AABBCCDD',
+              };
+            }
+            return null;
+          });
 
       final headers = await getPlatformSecurityHeaders();
 
@@ -49,15 +50,16 @@ void main() {
 
     test('returns iOS bundle identifier from native plugin', () async {
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(platformHeaderChannel,
-              (MethodCall methodCall) async {
-        if (methodCall.method == 'getPlatformHeaders') {
-          return <String, String>{
-            'x-ios-bundle-identifier': 'com.example.iosapp',
-          };
-        }
-        return null;
-      });
+          .setMockMethodCallHandler(platformHeaderChannel, (
+            MethodCall methodCall,
+          ) async {
+            if (methodCall.method == 'getPlatformHeaders') {
+              return <String, String>{
+                'x-ios-bundle-identifier': 'com.example.iosapp',
+              };
+            }
+            return null;
+          });
 
       final headers = await getPlatformSecurityHeaders();
 
@@ -68,14 +70,15 @@ void main() {
     test('caches result across calls', () async {
       var callCount = 0;
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(platformHeaderChannel,
-              (MethodCall methodCall) async {
-        callCount++;
-        return <String, String>{
-          'X-Android-Package': 'com.example.test',
-          'X-Android-Cert': 'AABBCCDD',
-        };
-      });
+          .setMockMethodCallHandler(platformHeaderChannel, (
+            MethodCall methodCall,
+          ) async {
+            callCount++;
+            return <String, String>{
+              'X-Android-Package': 'com.example.test',
+              'X-Android-Cert': 'AABBCCDD',
+            };
+          });
 
       await getPlatformSecurityHeaders();
       await getPlatformSecurityHeaders();
@@ -86,10 +89,11 @@ void main() {
 
     test('returns empty map when native plugin is not available', () async {
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(platformHeaderChannel,
-              (MethodCall methodCall) async {
-        throw MissingPluginException();
-      });
+          .setMockMethodCallHandler(platformHeaderChannel, (
+            MethodCall methodCall,
+          ) async {
+            throw MissingPluginException();
+          });
 
       final headers = await getPlatformSecurityHeaders();
 
@@ -98,10 +102,11 @@ void main() {
 
     test('returns empty map when native plugin returns null', () async {
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(platformHeaderChannel,
-              (MethodCall methodCall) async {
-        return null;
-      });
+          .setMockMethodCallHandler(platformHeaderChannel, (
+            MethodCall methodCall,
+          ) async {
+            return null;
+          });
 
       final headers = await getPlatformSecurityHeaders();
 

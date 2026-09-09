@@ -23,49 +23,56 @@ class UserWeb extends UserPlatform {
     this._webUser,
     this._webAuth,
   ) : super(
-          auth,
-          multiFactor,
-          InternalUserDetails(
-              userInfo: InternalUserInfo(
-                displayName: _webUser.displayName,
-                email: _webUser.email,
-                isEmailVerified: _webUser.emailVerified,
-                isAnonymous: _webUser.isAnonymous,
-                creationTimestamp: _webUser.metadata.creationTime != null
-                    ? (js_interop.globalContext.getProperty('Date'.toJS)!
-                            as js_interop.JSObject)
-                        .callMethod<js_interop.JSNumber>(
-                            'parse'.toJS, _webUser.metadata.creationTime)
-                        .toDartInt
-                    : null,
-                lastSignInTimestamp: _webUser.metadata.lastSignInTime != null
-                    ? (js_interop.globalContext.getProperty('Date'.toJS)!
-                            as js_interop.JSObject)
-                        .callMethod<js_interop.JSNumber>(
-                            'parse'.toJS, _webUser.metadata.lastSignInTime)
-                        .toDartInt
-                    : null,
-                phoneNumber: _webUser.phoneNumber,
-                photoUrl: _webUser.photoURL,
-                refreshToken: _webUser.refreshToken,
-                tenantId: _webUser.tenantId,
-                uid: _webUser.uid,
-              ),
-              providerData: _webUser.providerData
-                  .map((auth_interop.UserInfo webUserInfo) => <String, dynamic>{
-                        'displayName': webUserInfo.displayName,
-                        'email': webUserInfo.email,
-                        // isAnonymous is always false for providerData
-                        'isAnonymous': false,
-                        // isEmailVerified is always true for providerData
-                        'isEmailVerified': true,
-                        'phoneNumber': webUserInfo.phoneNumber,
-                        'providerId': webUserInfo.providerId,
-                        'photoUrl': webUserInfo.photoURL,
-                        'uid': webUserInfo.uid,
-                      })
-                  .toList()),
-        );
+        auth,
+        multiFactor,
+        InternalUserDetails(
+          userInfo: InternalUserInfo(
+            displayName: _webUser.displayName,
+            email: _webUser.email,
+            isEmailVerified: _webUser.emailVerified,
+            isAnonymous: _webUser.isAnonymous,
+            creationTimestamp: _webUser.metadata.creationTime != null
+                ? (js_interop.globalContext.getProperty('Date'.toJS)!
+                          as js_interop.JSObject)
+                      .callMethod<js_interop.JSNumber>(
+                        'parse'.toJS,
+                        _webUser.metadata.creationTime,
+                      )
+                      .toDartInt
+                : null,
+            lastSignInTimestamp: _webUser.metadata.lastSignInTime != null
+                ? (js_interop.globalContext.getProperty('Date'.toJS)!
+                          as js_interop.JSObject)
+                      .callMethod<js_interop.JSNumber>(
+                        'parse'.toJS,
+                        _webUser.metadata.lastSignInTime,
+                      )
+                      .toDartInt
+                : null,
+            phoneNumber: _webUser.phoneNumber,
+            photoUrl: _webUser.photoURL,
+            refreshToken: _webUser.refreshToken,
+            tenantId: _webUser.tenantId,
+            uid: _webUser.uid,
+          ),
+          providerData: _webUser.providerData
+              .map(
+                (auth_interop.UserInfo webUserInfo) => <String, dynamic>{
+                  'displayName': webUserInfo.displayName,
+                  'email': webUserInfo.email,
+                  // isAnonymous is always false for providerData
+                  'isAnonymous': false,
+                  // isEmailVerified is always true for providerData
+                  'isEmailVerified': true,
+                  'phoneNumber': webUserInfo.phoneNumber,
+                  'providerId': webUserInfo.providerId,
+                  'photoUrl': webUserInfo.photoURL,
+                  'uid': webUserInfo.uid,
+                },
+              )
+              .toList(),
+        ),
+      );
 
   final auth_interop.User _webUser;
   final auth_interop.Auth? _webAuth;
@@ -89,54 +96,39 @@ class UserWeb extends UserPlatform {
   Future<IdTokenResult> getIdTokenResult(bool forceRefresh) async {
     _assertIsSignedOut(auth);
     final result = convertWebIdTokenResult(
-      await guardAuthExceptions(
-        () => _webUser.getIdTokenResult(forceRefresh),
-      ),
+      await guardAuthExceptions(() => _webUser.getIdTokenResult(forceRefresh)),
     );
     return result;
   }
 
   @override
   Future<UserCredentialPlatform> linkWithCredential(
-      AuthCredential credential) async {
+    AuthCredential credential,
+  ) async {
     _assertIsSignedOut(auth);
     final userCredential = await guardAuthExceptions(
-      () => _webUser.linkWithCredential(
-        convertPlatformCredential(credential),
-      ),
+      () => _webUser.linkWithCredential(convertPlatformCredential(credential)),
       auth: _webAuth,
     );
 
-    return UserCredentialWeb(
-      auth,
-      userCredential,
-      _webAuth,
-    );
+    return UserCredentialWeb(auth, userCredential, _webAuth);
   }
 
   @override
   Future<UserCredentialPlatform> linkWithPopup(AuthProvider provider) async {
     _assertIsSignedOut(auth);
     final userCredential = await guardAuthExceptions(
-      () => _webUser.linkWithPopup(
-        convertPlatformAuthProvider(provider),
-      ),
+      () => _webUser.linkWithPopup(convertPlatformAuthProvider(provider)),
       auth: _webAuth,
     );
 
-    return UserCredentialWeb(
-      auth,
-      userCredential,
-      _webAuth,
-    );
+    return UserCredentialWeb(auth, userCredential, _webAuth);
   }
 
   @override
   Future<void> linkWithRedirect(AuthProvider provider) async {
     await guardAuthExceptions(
-      () => _webUser.linkWithRedirect(
-        convertPlatformAuthProvider(provider),
-      ),
+      () => _webUser.linkWithRedirect(convertPlatformAuthProvider(provider)),
       auth: _webAuth,
     );
   }
@@ -154,16 +146,13 @@ class UserWeb extends UserPlatform {
       () => _webUser.linkWithPhoneNumber(phoneNumber, verifier),
       auth: _webAuth,
     );
-    return ConfirmationResultWeb(
-      auth,
-      confirmationResult,
-      _webAuth,
-    );
+    return ConfirmationResultWeb(auth, confirmationResult, _webAuth);
   }
 
   @override
   Future<UserCredentialPlatform> reauthenticateWithCredential(
-      AuthCredential credential) async {
+    AuthCredential credential,
+  ) async {
     _assertIsSignedOut(auth);
 
     auth_interop.UserCredential userCredential = await guardAuthExceptions(
@@ -177,7 +166,8 @@ class UserWeb extends UserPlatform {
 
   @override
   Future<UserCredentialPlatform> reauthenticateWithPopup(
-      AuthProvider provider) async {
+    AuthProvider provider,
+  ) async {
     _assertIsSignedOut(auth);
 
     auth_interop.UserCredential userCredential = await guardAuthExceptions(
@@ -228,12 +218,7 @@ class UserWeb extends UserPlatform {
       auth: _webAuth,
     );
 
-    return UserWeb(
-      auth,
-      multiFactor,
-      userPlatform,
-      _webAuth,
-    );
+    return UserWeb(auth, multiFactor, userPlatform, _webAuth);
   }
 
   @override
@@ -270,10 +255,7 @@ class UserWeb extends UserPlatform {
       ),
       auth: _webAuth,
     );
-    await guardAuthExceptions(
-      _webUser.reload,
-      auth: _webAuth,
-    );
+    await guardAuthExceptions(_webUser.reload, auth: _webAuth);
     auth.sendAuthChangesEvent(auth.app.name, auth.currentUser);
   }
 
@@ -302,10 +284,7 @@ class UserWeb extends UserPlatform {
       () => _webUser.updateProfile(newProfile),
       auth: _webAuth,
     );
-    await guardAuthExceptions(
-      _webUser.reload,
-      auth: _webAuth,
-    );
+    await guardAuthExceptions(_webUser.reload, auth: _webAuth);
     auth.sendAuthChangesEvent(auth.app.name, auth.currentUser);
   }
 

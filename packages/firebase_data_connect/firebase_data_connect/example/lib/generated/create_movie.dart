@@ -5,8 +5,10 @@ class CreateMovieVariablesBuilder {
   int releaseYear;
   String genre;
   Optional<double> _rating = Optional.optional(nativeFromJson, nativeToJson);
-  Optional<String> _description =
-      Optional.optional(nativeFromJson, nativeToJson);
+  Optional<String> _description = Optional.optional(
+    nativeFromJson,
+    nativeToJson,
+  );
 
   final FirebaseDataConnect _dataConnect;
   CreateMovieVariablesBuilder rating(double? t) {
@@ -25,8 +27,8 @@ class CreateMovieVariablesBuilder {
     required this.releaseYear,
     required this.genre,
   });
-  Deserializer<CreateMovieData> dataDeserializer =
-      (dynamic json) => CreateMovieData.fromJson(jsonDecode(json));
+  Deserializer<CreateMovieData> dataDeserializer = (dynamic json) =>
+      CreateMovieData.fromJson(jsonDecode(json));
   Serializer<CreateMovieVariables> varsSerializer =
       (CreateMovieVariables vars) => jsonEncode(vars.toJson());
   Future<OperationResult<CreateMovieData, CreateMovieVariables>> execute() {
@@ -42,7 +44,11 @@ class CreateMovieVariablesBuilder {
       description: _description,
     );
     return _dataConnect.mutation(
-        "createMovie", dataDeserializer, varsSerializer, vars);
+      "createMovie",
+      dataDeserializer,
+      varsSerializer,
+      vars,
+    );
   }
 }
 
@@ -50,7 +56,7 @@ class CreateMovieVariablesBuilder {
 class CreateMovieMovieInsert {
   final String id;
   CreateMovieMovieInsert.fromJson(dynamic json)
-      : id = nativeFromJson<String>(json['id']);
+    : id = nativeFromJson<String>(json['id']);
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) {
@@ -73,16 +79,14 @@ class CreateMovieMovieInsert {
     return json;
   }
 
-  CreateMovieMovieInsert({
-    required this.id,
-  });
+  CreateMovieMovieInsert({required this.id});
 }
 
 @immutable
 class CreateMovieData {
   final CreateMovieMovieInsert movie_insert;
   CreateMovieData.fromJson(dynamic json)
-      : movie_insert = CreateMovieMovieInsert.fromJson(json['movie_insert']);
+    : movie_insert = CreateMovieMovieInsert.fromJson(json['movie_insert']);
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) {
@@ -105,9 +109,7 @@ class CreateMovieData {
     return json;
   }
 
-  CreateMovieData({
-    required this.movie_insert,
-  });
+  CreateMovieData({required this.movie_insert});
 }
 
 @immutable
@@ -118,14 +120,16 @@ class CreateMovieVariables {
   late final Optional<double> rating;
   late final Optional<String> description;
   @Deprecated(
-      'fromJson is deprecated for Variable classes as they are no longer required for deserialization.')
+    'fromJson is deprecated for Variable classes as they are no longer required for deserialization.',
+  )
   CreateMovieVariables.fromJson(Map<String, dynamic> json)
-      : title = nativeFromJson<String>(json['title']),
-        releaseYear = nativeFromJson<int>(json['releaseYear']),
-        genre = nativeFromJson<String>(json['genre']) {
+    : title = nativeFromJson<String>(json['title']),
+      releaseYear = nativeFromJson<int>(json['releaseYear']),
+      genre = nativeFromJson<String>(json['genre']) {
     rating = Optional.optional(nativeFromJson, nativeToJson);
-    rating.value =
-        json['rating'] == null ? null : nativeFromJson<double>(json['rating']);
+    rating.value = json['rating'] == null
+        ? null
+        : nativeFromJson<double>(json['rating']);
 
     description = Optional.optional(nativeFromJson, nativeToJson);
     description.value = json['description'] == null
@@ -151,12 +155,12 @@ class CreateMovieVariables {
 
   @override
   int get hashCode => Object.hashAll([
-        title.hashCode,
-        releaseYear.hashCode,
-        genre.hashCode,
-        rating.hashCode,
-        description.hashCode
-      ]);
+    title.hashCode,
+    releaseYear.hashCode,
+    genre.hashCode,
+    rating.hashCode,
+    description.hashCode,
+  ]);
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};

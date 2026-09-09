@@ -29,10 +29,11 @@ class MockFirebaseAuth extends Mock implements FirebaseAuth {
   @override
   Stream<User?> idTokenChanges() {
     return super.noSuchMethod(
-      Invocation.method(#idTokenChanges, []),
-      returnValue: const Stream<User?>.empty(),
-      returnValueForMissingStub: const Stream<User?>.empty(),
-    ) as Stream<User?>;
+          Invocation.method(#idTokenChanges, []),
+          returnValue: const Stream<User?>.empty(),
+          returnValueForMissingStub: const Stream<User?>.empty(),
+        )
+        as Stream<User?>;
   }
 }
 
@@ -226,33 +227,34 @@ void main() {
     });
 
     test(
-        'checkTransport resolves dynamic service instances from registry just-in-time',
-        () {
-      FirebaseDataConnect.cachedInstances.clear();
+      'checkTransport resolves dynamic service instances from registry just-in-time',
+      () {
+        FirebaseDataConnect.cachedInstances.clear();
 
-      final dynamicApp = DynamicMockFirebaseApp(
-        name: 'transportAppName',
-        options: const FirebaseOptions(
-          apiKey: 'fake_api_key',
-          appId: 'fake_app_id',
-          messagingSenderId: 'fake_messaging_sender_id',
-          projectId: 'fake_project_id',
-        ),
-        mockAuth: mockAuth,
-        mockAppCheck: mockAppCheck,
-      );
+        final dynamicApp = DynamicMockFirebaseApp(
+          name: 'transportAppName',
+          options: const FirebaseOptions(
+            apiKey: 'fake_api_key',
+            appId: 'fake_app_id',
+            messagingSenderId: 'fake_messaging_sender_id',
+            projectId: 'fake_project_id',
+          ),
+          mockAuth: mockAuth,
+          mockAppCheck: mockAppCheck,
+        );
 
-      final instance = FirebaseDataConnect(
-        app: dynamicApp,
-        connectorConfig: mockConnectorConfig,
-      );
+        final instance = FirebaseDataConnect(
+          app: dynamicApp,
+          connectorConfig: mockConnectorConfig,
+        );
 
-      instance.checkTransport();
+        instance.checkTransport();
 
-      final dynamic routingTransport = instance.transport;
-      expect(routingTransport.rest.appCheck, equals(mockAppCheck));
-      expect(routingTransport.websocket.auth, equals(mockAuth));
-      expect(routingTransport.websocket.appCheck, equals(mockAppCheck));
-    });
+        final dynamic routingTransport = instance.transport;
+        expect(routingTransport.rest.appCheck, equals(mockAppCheck));
+        expect(routingTransport.websocket.auth, equals(mockAuth));
+        expect(routingTransport.websocket.appCheck, equals(mockAppCheck));
+      },
+    );
   });
 }

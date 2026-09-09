@@ -19,16 +19,20 @@ void main() {
       );
     });
 
-    test('should catch a [PlatformException] and throw a [FirebaseException]',
-        () async {
-      PlatformException platformException = PlatformException(code: 'UNKNOWN');
+    test(
+      'should catch a [PlatformException] and throw a [FirebaseException]',
+      () async {
+        PlatformException platformException = PlatformException(
+          code: 'UNKNOWN',
+        );
 
-      expect(
-        () => convertPlatformException(platformException, StackTrace.empty),
-        throwsA(
-          isA<FirebaseException>().having((e) => e.code, 'code', 'unknown'),
-        ),
-      );
-    });
+        expect(
+          () => convertPlatformException(platformException, StackTrace.empty),
+          throwsA(
+            isA<FirebaseException>().having((e) => e.code, 'code', 'unknown'),
+          ),
+        );
+      },
+    );
   });
 }

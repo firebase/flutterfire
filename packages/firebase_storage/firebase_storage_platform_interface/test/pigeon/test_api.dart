@@ -81,665 +81,853 @@ abstract class TestFirebaseStorageHostApi {
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
 
   Future<InternalStorageReference> getReferencebyPath(
-      InternalStorageFirebaseApp app, String path, String? bucket);
+    InternalStorageFirebaseApp app,
+    String path,
+    String? bucket,
+  );
 
   Future<void> setMaxOperationRetryTime(
-      InternalStorageFirebaseApp app, int time);
+    InternalStorageFirebaseApp app,
+    int time,
+  );
 
   Future<void> setMaxUploadRetryTime(InternalStorageFirebaseApp app, int time);
 
   Future<void> setMaxDownloadRetryTime(
-      InternalStorageFirebaseApp app, int time);
+    InternalStorageFirebaseApp app,
+    int time,
+  );
 
   Future<void> useStorageEmulator(
-      InternalStorageFirebaseApp app, String host, int port);
+    InternalStorageFirebaseApp app,
+    String host,
+    int port,
+  );
 
   Future<void> referenceDelete(
-      InternalStorageFirebaseApp app, InternalStorageReference reference);
+    InternalStorageFirebaseApp app,
+    InternalStorageReference reference,
+  );
 
   Future<String> referenceGetDownloadURL(
-      InternalStorageFirebaseApp app, InternalStorageReference reference);
+    InternalStorageFirebaseApp app,
+    InternalStorageReference reference,
+  );
 
   Future<InternalFullMetaData> referenceGetMetaData(
-      InternalStorageFirebaseApp app, InternalStorageReference reference);
+    InternalStorageFirebaseApp app,
+    InternalStorageReference reference,
+  );
 
-  Future<InternalListResult> referenceList(InternalStorageFirebaseApp app,
-      InternalStorageReference reference, InternalListOptions options);
+  Future<InternalListResult> referenceList(
+    InternalStorageFirebaseApp app,
+    InternalStorageReference reference,
+    InternalListOptions options,
+  );
 
   Future<InternalListResult> referenceListAll(
-      InternalStorageFirebaseApp app, InternalStorageReference reference);
+    InternalStorageFirebaseApp app,
+    InternalStorageReference reference,
+  );
 
-  Future<Uint8List?> referenceGetData(InternalStorageFirebaseApp app,
-      InternalStorageReference reference, int maxSize);
+  Future<Uint8List?> referenceGetData(
+    InternalStorageFirebaseApp app,
+    InternalStorageReference reference,
+    int maxSize,
+  );
 
   Future<String> referencePutData(
-      InternalStorageFirebaseApp app,
-      InternalStorageReference reference,
-      Uint8List data,
-      InternalSettableMetadata settableMetaData,
-      int handle);
+    InternalStorageFirebaseApp app,
+    InternalStorageReference reference,
+    Uint8List data,
+    InternalSettableMetadata settableMetaData,
+    int handle,
+  );
 
   Future<String> referencePutString(
-      InternalStorageFirebaseApp app,
-      InternalStorageReference reference,
-      String data,
-      int format,
-      InternalSettableMetadata settableMetaData,
-      int handle);
+    InternalStorageFirebaseApp app,
+    InternalStorageReference reference,
+    String data,
+    int format,
+    InternalSettableMetadata settableMetaData,
+    int handle,
+  );
 
   Future<String> referencePutFile(
-      InternalStorageFirebaseApp app,
-      InternalStorageReference reference,
-      String filePath,
-      InternalSettableMetadata? settableMetaData,
-      int handle);
+    InternalStorageFirebaseApp app,
+    InternalStorageReference reference,
+    String filePath,
+    InternalSettableMetadata? settableMetaData,
+    int handle,
+  );
 
-  Future<String> referenceDownloadFile(InternalStorageFirebaseApp app,
-      InternalStorageReference reference, String filePath, int handle);
+  Future<String> referenceDownloadFile(
+    InternalStorageFirebaseApp app,
+    InternalStorageReference reference,
+    String filePath,
+    int handle,
+  );
 
   Future<InternalFullMetaData> referenceUpdateMetadata(
-      InternalStorageFirebaseApp app,
-      InternalStorageReference reference,
-      InternalSettableMetadata metadata);
+    InternalStorageFirebaseApp app,
+    InternalStorageReference reference,
+    InternalSettableMetadata metadata,
+  );
 
   Future<Map<String, Object>> taskPause(
-      InternalStorageFirebaseApp app, int handle);
+    InternalStorageFirebaseApp app,
+    int handle,
+  );
 
   Future<Map<String, Object>> taskResume(
-      InternalStorageFirebaseApp app, int handle);
+    InternalStorageFirebaseApp app,
+    int handle,
+  );
 
   Future<Map<String, Object>> taskCancel(
-      InternalStorageFirebaseApp app, int handle);
+    InternalStorageFirebaseApp app,
+    int handle,
+  );
 
   static void setUp(
     TestFirebaseStorageHostApi? api, {
     BinaryMessenger? binaryMessenger,
     String messageChannelSuffix = '',
   }) {
-    messageChannelSuffix =
-        messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+    messageChannelSuffix = messageChannelSuffix.isNotEmpty
+        ? '.$messageChannelSuffix'
+        : '';
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.getReferencebyPath$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.getReferencebyPath$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final InternalStorageFirebaseApp arg_app =
-              args[0]! as InternalStorageFirebaseApp;
-          final String arg_path = args[1]! as String;
-          final String? arg_bucket = args[2] as String?;
-          try {
-            final InternalStorageReference output =
-                await api.getReferencebyPath(arg_app, arg_path, arg_bucket);
-            return <Object?>[output];
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final InternalStorageFirebaseApp arg_app =
+                  args[0]! as InternalStorageFirebaseApp;
+              final String arg_path = args[1]! as String;
+              final String? arg_bucket = args[2] as String?;
+              try {
+                final InternalStorageReference output = await api
+                    .getReferencebyPath(arg_app, arg_path, arg_bucket);
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxOperationRetryTime$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxOperationRetryTime$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final InternalStorageFirebaseApp arg_app =
-              args[0]! as InternalStorageFirebaseApp;
-          final int arg_time = args[1]! as int;
-          try {
-            await api.setMaxOperationRetryTime(arg_app, arg_time);
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final InternalStorageFirebaseApp arg_app =
+                  args[0]! as InternalStorageFirebaseApp;
+              final int arg_time = args[1]! as int;
+              try {
+                await api.setMaxOperationRetryTime(arg_app, arg_time);
+                return wrapResponse(empty: true);
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxUploadRetryTime$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxUploadRetryTime$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final InternalStorageFirebaseApp arg_app =
-              args[0]! as InternalStorageFirebaseApp;
-          final int arg_time = args[1]! as int;
-          try {
-            await api.setMaxUploadRetryTime(arg_app, arg_time);
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final InternalStorageFirebaseApp arg_app =
+                  args[0]! as InternalStorageFirebaseApp;
+              final int arg_time = args[1]! as int;
+              try {
+                await api.setMaxUploadRetryTime(arg_app, arg_time);
+                return wrapResponse(empty: true);
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxDownloadRetryTime$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxDownloadRetryTime$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final InternalStorageFirebaseApp arg_app =
-              args[0]! as InternalStorageFirebaseApp;
-          final int arg_time = args[1]! as int;
-          try {
-            await api.setMaxDownloadRetryTime(arg_app, arg_time);
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final InternalStorageFirebaseApp arg_app =
+                  args[0]! as InternalStorageFirebaseApp;
+              final int arg_time = args[1]! as int;
+              try {
+                await api.setMaxDownloadRetryTime(arg_app, arg_time);
+                return wrapResponse(empty: true);
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.useStorageEmulator$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.useStorageEmulator$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final InternalStorageFirebaseApp arg_app =
-              args[0]! as InternalStorageFirebaseApp;
-          final String arg_host = args[1]! as String;
-          final int arg_port = args[2]! as int;
-          try {
-            await api.useStorageEmulator(arg_app, arg_host, arg_port);
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final InternalStorageFirebaseApp arg_app =
+                  args[0]! as InternalStorageFirebaseApp;
+              final String arg_host = args[1]! as String;
+              final int arg_port = args[2]! as int;
+              try {
+                await api.useStorageEmulator(arg_app, arg_host, arg_port);
+                return wrapResponse(empty: true);
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceDelete$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceDelete$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final InternalStorageFirebaseApp arg_app =
-              args[0]! as InternalStorageFirebaseApp;
-          final InternalStorageReference arg_reference =
-              args[1]! as InternalStorageReference;
-          try {
-            await api.referenceDelete(arg_app, arg_reference);
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final InternalStorageFirebaseApp arg_app =
+                  args[0]! as InternalStorageFirebaseApp;
+              final InternalStorageReference arg_reference =
+                  args[1]! as InternalStorageReference;
+              try {
+                await api.referenceDelete(arg_app, arg_reference);
+                return wrapResponse(empty: true);
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetDownloadURL$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetDownloadURL$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final InternalStorageFirebaseApp arg_app =
-              args[0]! as InternalStorageFirebaseApp;
-          final InternalStorageReference arg_reference =
-              args[1]! as InternalStorageReference;
-          try {
-            final String output =
-                await api.referenceGetDownloadURL(arg_app, arg_reference);
-            return <Object?>[output];
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final InternalStorageFirebaseApp arg_app =
+                  args[0]! as InternalStorageFirebaseApp;
+              final InternalStorageReference arg_reference =
+                  args[1]! as InternalStorageReference;
+              try {
+                final String output = await api.referenceGetDownloadURL(
+                  arg_app,
+                  arg_reference,
+                );
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetMetaData$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetMetaData$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final InternalStorageFirebaseApp arg_app =
-              args[0]! as InternalStorageFirebaseApp;
-          final InternalStorageReference arg_reference =
-              args[1]! as InternalStorageReference;
-          try {
-            final InternalFullMetaData output =
-                await api.referenceGetMetaData(arg_app, arg_reference);
-            return <Object?>[output];
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final InternalStorageFirebaseApp arg_app =
+                  args[0]! as InternalStorageFirebaseApp;
+              final InternalStorageReference arg_reference =
+                  args[1]! as InternalStorageReference;
+              try {
+                final InternalFullMetaData output = await api
+                    .referenceGetMetaData(arg_app, arg_reference);
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceList$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceList$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final InternalStorageFirebaseApp arg_app =
-              args[0]! as InternalStorageFirebaseApp;
-          final InternalStorageReference arg_reference =
-              args[1]! as InternalStorageReference;
-          final InternalListOptions arg_options =
-              args[2]! as InternalListOptions;
-          try {
-            final InternalListResult output =
-                await api.referenceList(arg_app, arg_reference, arg_options);
-            return <Object?>[output];
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final InternalStorageFirebaseApp arg_app =
+                  args[0]! as InternalStorageFirebaseApp;
+              final InternalStorageReference arg_reference =
+                  args[1]! as InternalStorageReference;
+              final InternalListOptions arg_options =
+                  args[2]! as InternalListOptions;
+              try {
+                final InternalListResult output = await api.referenceList(
+                  arg_app,
+                  arg_reference,
+                  arg_options,
+                );
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceListAll$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceListAll$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final InternalStorageFirebaseApp arg_app =
-              args[0]! as InternalStorageFirebaseApp;
-          final InternalStorageReference arg_reference =
-              args[1]! as InternalStorageReference;
-          try {
-            final InternalListResult output =
-                await api.referenceListAll(arg_app, arg_reference);
-            return <Object?>[output];
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final InternalStorageFirebaseApp arg_app =
+                  args[0]! as InternalStorageFirebaseApp;
+              final InternalStorageReference arg_reference =
+                  args[1]! as InternalStorageReference;
+              try {
+                final InternalListResult output = await api.referenceListAll(
+                  arg_app,
+                  arg_reference,
+                );
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetData$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetData$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final InternalStorageFirebaseApp arg_app =
-              args[0]! as InternalStorageFirebaseApp;
-          final InternalStorageReference arg_reference =
-              args[1]! as InternalStorageReference;
-          final int arg_maxSize = args[2]! as int;
-          try {
-            final Uint8List? output =
-                await api.referenceGetData(arg_app, arg_reference, arg_maxSize);
-            return <Object?>[output];
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final InternalStorageFirebaseApp arg_app =
+                  args[0]! as InternalStorageFirebaseApp;
+              final InternalStorageReference arg_reference =
+                  args[1]! as InternalStorageReference;
+              final int arg_maxSize = args[2]! as int;
+              try {
+                final Uint8List? output = await api.referenceGetData(
+                  arg_app,
+                  arg_reference,
+                  arg_maxSize,
+                );
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutData$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutData$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final InternalStorageFirebaseApp arg_app =
-              args[0]! as InternalStorageFirebaseApp;
-          final InternalStorageReference arg_reference =
-              args[1]! as InternalStorageReference;
-          final Uint8List arg_data = args[2]! as Uint8List;
-          final InternalSettableMetadata arg_settableMetaData =
-              args[3]! as InternalSettableMetadata;
-          final int arg_handle = args[4]! as int;
-          try {
-            final String output = await api.referencePutData(arg_app,
-                arg_reference, arg_data, arg_settableMetaData, arg_handle);
-            return <Object?>[output];
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final InternalStorageFirebaseApp arg_app =
+                  args[0]! as InternalStorageFirebaseApp;
+              final InternalStorageReference arg_reference =
+                  args[1]! as InternalStorageReference;
+              final Uint8List arg_data = args[2]! as Uint8List;
+              final InternalSettableMetadata arg_settableMetaData =
+                  args[3]! as InternalSettableMetadata;
+              final int arg_handle = args[4]! as int;
+              try {
+                final String output = await api.referencePutData(
+                  arg_app,
+                  arg_reference,
+                  arg_data,
+                  arg_settableMetaData,
+                  arg_handle,
+                );
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutString$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutString$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final InternalStorageFirebaseApp arg_app =
-              args[0]! as InternalStorageFirebaseApp;
-          final InternalStorageReference arg_reference =
-              args[1]! as InternalStorageReference;
-          final String arg_data = args[2]! as String;
-          final int arg_format = args[3]! as int;
-          final InternalSettableMetadata arg_settableMetaData =
-              args[4]! as InternalSettableMetadata;
-          final int arg_handle = args[5]! as int;
-          try {
-            final String output = await api.referencePutString(
-                arg_app,
-                arg_reference,
-                arg_data,
-                arg_format,
-                arg_settableMetaData,
-                arg_handle);
-            return <Object?>[output];
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final InternalStorageFirebaseApp arg_app =
+                  args[0]! as InternalStorageFirebaseApp;
+              final InternalStorageReference arg_reference =
+                  args[1]! as InternalStorageReference;
+              final String arg_data = args[2]! as String;
+              final int arg_format = args[3]! as int;
+              final InternalSettableMetadata arg_settableMetaData =
+                  args[4]! as InternalSettableMetadata;
+              final int arg_handle = args[5]! as int;
+              try {
+                final String output = await api.referencePutString(
+                  arg_app,
+                  arg_reference,
+                  arg_data,
+                  arg_format,
+                  arg_settableMetaData,
+                  arg_handle,
+                );
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutFile$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutFile$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final InternalStorageFirebaseApp arg_app =
-              args[0]! as InternalStorageFirebaseApp;
-          final InternalStorageReference arg_reference =
-              args[1]! as InternalStorageReference;
-          final String arg_filePath = args[2]! as String;
-          final InternalSettableMetadata? arg_settableMetaData =
-              args[3] as InternalSettableMetadata?;
-          final int arg_handle = args[4]! as int;
-          try {
-            final String output = await api.referencePutFile(arg_app,
-                arg_reference, arg_filePath, arg_settableMetaData, arg_handle);
-            return <Object?>[output];
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final InternalStorageFirebaseApp arg_app =
+                  args[0]! as InternalStorageFirebaseApp;
+              final InternalStorageReference arg_reference =
+                  args[1]! as InternalStorageReference;
+              final String arg_filePath = args[2]! as String;
+              final InternalSettableMetadata? arg_settableMetaData =
+                  args[3] as InternalSettableMetadata?;
+              final int arg_handle = args[4]! as int;
+              try {
+                final String output = await api.referencePutFile(
+                  arg_app,
+                  arg_reference,
+                  arg_filePath,
+                  arg_settableMetaData,
+                  arg_handle,
+                );
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceDownloadFile$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceDownloadFile$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final InternalStorageFirebaseApp arg_app =
-              args[0]! as InternalStorageFirebaseApp;
-          final InternalStorageReference arg_reference =
-              args[1]! as InternalStorageReference;
-          final String arg_filePath = args[2]! as String;
-          final int arg_handle = args[3]! as int;
-          try {
-            final String output = await api.referenceDownloadFile(
-                arg_app, arg_reference, arg_filePath, arg_handle);
-            return <Object?>[output];
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final InternalStorageFirebaseApp arg_app =
+                  args[0]! as InternalStorageFirebaseApp;
+              final InternalStorageReference arg_reference =
+                  args[1]! as InternalStorageReference;
+              final String arg_filePath = args[2]! as String;
+              final int arg_handle = args[3]! as int;
+              try {
+                final String output = await api.referenceDownloadFile(
+                  arg_app,
+                  arg_reference,
+                  arg_filePath,
+                  arg_handle,
+                );
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceUpdateMetadata$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceUpdateMetadata$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final InternalStorageFirebaseApp arg_app =
-              args[0]! as InternalStorageFirebaseApp;
-          final InternalStorageReference arg_reference =
-              args[1]! as InternalStorageReference;
-          final InternalSettableMetadata arg_metadata =
-              args[2]! as InternalSettableMetadata;
-          try {
-            final InternalFullMetaData output = await api
-                .referenceUpdateMetadata(arg_app, arg_reference, arg_metadata);
-            return <Object?>[output];
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final InternalStorageFirebaseApp arg_app =
+                  args[0]! as InternalStorageFirebaseApp;
+              final InternalStorageReference arg_reference =
+                  args[1]! as InternalStorageReference;
+              final InternalSettableMetadata arg_metadata =
+                  args[2]! as InternalSettableMetadata;
+              try {
+                final InternalFullMetaData output = await api
+                    .referenceUpdateMetadata(
+                      arg_app,
+                      arg_reference,
+                      arg_metadata,
+                    );
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskPause$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskPause$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final InternalStorageFirebaseApp arg_app =
-              args[0]! as InternalStorageFirebaseApp;
-          final int arg_handle = args[1]! as int;
-          try {
-            final Map<String, Object> output =
-                await api.taskPause(arg_app, arg_handle);
-            return <Object?>[output];
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final InternalStorageFirebaseApp arg_app =
+                  args[0]! as InternalStorageFirebaseApp;
+              final int arg_handle = args[1]! as int;
+              try {
+                final Map<String, Object> output = await api.taskPause(
+                  arg_app,
+                  arg_handle,
+                );
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskResume$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskResume$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final InternalStorageFirebaseApp arg_app =
-              args[0]! as InternalStorageFirebaseApp;
-          final int arg_handle = args[1]! as int;
-          try {
-            final Map<String, Object> output =
-                await api.taskResume(arg_app, arg_handle);
-            return <Object?>[output];
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final InternalStorageFirebaseApp arg_app =
+                  args[0]! as InternalStorageFirebaseApp;
+              final int arg_handle = args[1]! as int;
+              try {
+                final Map<String, Object> output = await api.taskResume(
+                  arg_app,
+                  arg_handle,
+                );
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskCancel$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskCancel$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final InternalStorageFirebaseApp arg_app =
-              args[0]! as InternalStorageFirebaseApp;
-          final int arg_handle = args[1]! as int;
-          try {
-            final Map<String, Object> output =
-                await api.taskCancel(arg_app, arg_handle);
-            return <Object?>[output];
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final InternalStorageFirebaseApp arg_app =
+                  args[0]! as InternalStorageFirebaseApp;
+              final int arg_handle = args[1]! as int;
+              try {
+                final Map<String, Object> output = await api.taskCancel(
+                  arg_app,
+                  arg_handle,
+                );
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
   }

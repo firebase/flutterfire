@@ -16,5 +16,5 @@ enum RemoteConfigFetchStatus {
   failure,
 
   /// Indicates the last fetch attempt was rate-limited.
-  throttle
+  throttle,
 }

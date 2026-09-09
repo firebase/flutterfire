@@ -8,12 +8,10 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test('parses native throttled fetch status', () {
-    final remoteConfig =
-        MethodChannelFirebaseRemoteConfig.instance.setInitialValues(
-      remoteConfigValues: <String, Object?>{
-        'lastFetchStatus': 'throttled',
-      },
-    );
+    final remoteConfig = MethodChannelFirebaseRemoteConfig.instance
+        .setInitialValues(
+          remoteConfigValues: <String, Object?>{'lastFetchStatus': 'throttled'},
+        );
 
     expect(remoteConfig.lastFetchStatus, RemoteConfigFetchStatus.throttle);
   });

@@ -27,15 +27,15 @@ class MethodChannelAggregateQuery extends AggregateQueryPlatform {
   Future<AggregateQuerySnapshotPlatform> get({
     required AggregateSource source,
   }) async {
-    final data =
-        await MethodChannelFirebaseFirestore.pigeonChannel.aggregateQuery(
-      _pigeonApp,
-      _path,
-      _pigeonParameters,
-      source,
-      _aggregateQueries,
-      _isCollectionGroupQuery,
-    );
+    final data = await MethodChannelFirebaseFirestore.pigeonChannel
+        .aggregateQuery(
+          _pigeonApp,
+          _path,
+          _pigeonParameters,
+          source,
+          _aggregateQueries,
+          _isCollectionGroupQuery,
+        );
 
     int? count;
     List<AggregateQueryResponse> sum = [];
@@ -69,10 +69,7 @@ class MethodChannelAggregateQuery extends AggregateQueryPlatform {
       _pigeonParameters,
       _path,
       _pigeonApp,
-      [
-        ..._aggregateQueries,
-        AggregateQuery(type: AggregateType.count),
-      ],
+      [..._aggregateQueries, AggregateQuery(type: AggregateType.count)],
       _isCollectionGroupQuery,
     );
   }

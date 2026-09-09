@@ -38,8 +38,11 @@ Object? _extractReplyValueOrThrow(
   return replyList.firstOrNull;
 }
 
-List<Object?> wrapResponse(
-    {Object? result, PlatformException? error, bool empty = false}) {
+List<Object?> wrapResponse({
+  Object? result,
+  PlatformException? error,
+  bool empty = false,
+}) {
   if (empty) {
     return <Object?>[];
   }
@@ -61,8 +64,9 @@ bool _deepEquals(Object? a, Object? b) {
   }
   if (a is List && b is List) {
     return a.length == b.length &&
-        a.indexed
-            .every(((int, dynamic) item) => _deepEquals(item.$2, b[item.$1]));
+        a.indexed.every(
+          ((int, dynamic) item) => _deepEquals(item.$2, b[item.$1]),
+        );
   }
   if (a is Map && b is Map) {
     if (a.length != b.length) {
@@ -185,23 +189,11 @@ enum PersistenceCacheIndexManagerRequest {
   deleteAllIndexes,
 }
 
-enum InternalTransactionResult {
-  success,
-  failure,
-}
+enum InternalTransactionResult { success, failure }
 
-enum InternalTransactionType {
-  get,
-  update,
-  set,
-  deleteType,
-}
+enum InternalTransactionType { get, update, set, deleteType }
 
-enum AggregateType {
-  count,
-  sum,
-  average,
-}
+enum AggregateType { count, sum, average }
 
 class InternalFirebaseSettings {
   InternalFirebaseSettings({
@@ -283,11 +275,7 @@ class FirestorePigeonFirebaseApp {
   String databaseURL;
 
   List<Object?> _toList() {
-    return <Object?>[
-      appName,
-      settings,
-      databaseURL,
-    ];
+    return <Object?>[appName, settings, databaseURL];
   }
 
   Object encode() {
@@ -334,10 +322,7 @@ class InternalSnapshotMetadata {
   bool isFromCache;
 
   List<Object?> _toList() {
-    return <Object?>[
-      hasPendingWrites,
-      isFromCache,
-    ];
+    return <Object?>[hasPendingWrites, isFromCache];
   }
 
   Object encode() {
@@ -385,11 +370,7 @@ class InternalDocumentSnapshot {
   InternalSnapshotMetadata metadata;
 
   List<Object?> _toList() {
-    return <Object?>[
-      path,
-      data,
-      metadata,
-    ];
+    return <Object?>[path, data, metadata];
   }
 
   Object encode() {
@@ -442,12 +423,7 @@ class InternalDocumentChange {
   int newIndex;
 
   List<Object?> _toList() {
-    return <Object?>[
-      type,
-      document,
-      oldIndex,
-      newIndex,
-    ];
+    return <Object?>[type, document, oldIndex, newIndex];
   }
 
   Object encode() {
@@ -498,11 +474,7 @@ class InternalQuerySnapshot {
   InternalSnapshotMetadata metadata;
 
   List<Object?> _toList() {
-    return <Object?>[
-      documents,
-      documentChanges,
-      metadata,
-    ];
+    return <Object?>[documents, documentChanges, metadata];
   }
 
   Object encode() {
@@ -512,10 +484,10 @@ class InternalQuerySnapshot {
   static InternalQuerySnapshot decode(Object result) {
     result as List<Object?>;
     return InternalQuerySnapshot(
-      documents:
-          (result[0]! as List<Object?>).cast<InternalDocumentSnapshot?>(),
-      documentChanges:
-          (result[1]! as List<Object?>).cast<InternalDocumentChange?>(),
+      documents: (result[0]! as List<Object?>)
+          .cast<InternalDocumentSnapshot?>(),
+      documentChanges: (result[1]! as List<Object?>)
+          .cast<InternalDocumentChange?>(),
       metadata: result[2]! as InternalSnapshotMetadata,
     );
   }
@@ -557,12 +529,7 @@ class InternalPipelineResult {
   Map<String?, Object?>? data;
 
   List<Object?> _toList() {
-    return <Object?>[
-      documentPath,
-      createTime,
-      updateTime,
-      data,
-    ];
+    return <Object?>[documentPath, createTime, updateTime, data];
   }
 
   Object encode() {
@@ -610,10 +577,7 @@ class InternalPipelineSnapshot {
   int executionTime;
 
   List<Object?> _toList() {
-    return <Object?>[
-      results,
-      executionTime,
-    ];
+    return <Object?>[results, executionTime];
   }
 
   Object encode() {
@@ -658,10 +622,7 @@ class InternalGetOptions {
   ServerTimestampBehavior serverTimestampBehavior;
 
   List<Object?> _toList() {
-    return <Object?>[
-      source,
-      serverTimestampBehavior,
-    ];
+    return <Object?>[source, serverTimestampBehavior];
   }
 
   Object encode() {
@@ -695,20 +656,14 @@ class InternalGetOptions {
 }
 
 class InternalDocumentOption {
-  InternalDocumentOption({
-    this.merge,
-    this.mergeFields,
-  });
+  InternalDocumentOption({this.merge, this.mergeFields});
 
   bool? merge;
 
   List<List<String?>?>? mergeFields;
 
   List<Object?> _toList() {
-    return <Object?>[
-      merge,
-      mergeFields,
-    ];
+    return <Object?>[merge, mergeFields];
   }
 
   Object encode() {
@@ -758,12 +713,7 @@ class InternalTransactionCommand {
   InternalDocumentOption? option;
 
   List<Object?> _toList() {
-    return <Object?>[
-      type,
-      path,
-      data,
-      option,
-    ];
+    return <Object?>[type, path, data, option];
   }
 
   Object encode() {
@@ -821,13 +771,7 @@ class DocumentReferenceRequest {
   ServerTimestampBehavior? serverTimestampBehavior;
 
   List<Object?> _toList() {
-    return <Object?>[
-      path,
-      data,
-      option,
-      source,
-      serverTimestampBehavior,
-    ];
+    return <Object?>[path, data, option, source, serverTimestampBehavior];
   }
 
   Object encode() {
@@ -957,20 +901,14 @@ class InternalQueryParameters {
 }
 
 class AggregateQuery {
-  AggregateQuery({
-    required this.type,
-    this.field,
-  });
+  AggregateQuery({required this.type, this.field});
 
   AggregateType type;
 
   String? field;
 
   List<Object?> _toList() {
-    return <Object?>[
-      type,
-      field,
-    ];
+    return <Object?>[type, field];
   }
 
   Object encode() {
@@ -1003,11 +941,7 @@ class AggregateQuery {
 }
 
 class AggregateQueryResponse {
-  AggregateQueryResponse({
-    required this.type,
-    this.field,
-    this.value,
-  });
+  AggregateQueryResponse({required this.type, this.field, this.value});
 
   AggregateType type;
 
@@ -1016,11 +950,7 @@ class AggregateQueryResponse {
   double? value;
 
   List<Object?> _toList() {
-    return <Object?>[
-      type,
-      field,
-      value,
-    ];
+    return <Object?>[type, field, value];
   }
 
   Object encode() {
@@ -1211,11 +1141,13 @@ class FirebaseFirestoreHostApi {
   /// Constructor for [FirebaseFirestoreHostApi].  The [binaryMessenger] named argument is
   /// available for dependency injection.  If it is left null, the default
   /// BinaryMessenger will be used which routes to the host platform.
-  FirebaseFirestoreHostApi(
-      {BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
-      : pigeonVar_binaryMessenger = binaryMessenger,
-        pigeonVar_messageChannelSuffix =
-            messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+  FirebaseFirestoreHostApi({
+    BinaryMessenger? binaryMessenger,
+    String messageChannelSuffix = '',
+  }) : pigeonVar_binaryMessenger = binaryMessenger,
+       pigeonVar_messageChannelSuffix = messageChannelSuffix.isNotEmpty
+           ? '.$messageChannelSuffix'
+           : '';
   final BinaryMessenger? pigeonVar_binaryMessenger;
 
   static const MessageCodec<Object?> pigeonChannelCodec = PigeonCodec();
@@ -1223,7 +1155,9 @@ class FirebaseFirestoreHostApi {
   final String pigeonVar_messageChannelSuffix;
 
   Future<String> loadBundle(
-      FirestorePigeonFirebaseApp app, Uint8List bundle) async {
+    FirestorePigeonFirebaseApp app,
+    Uint8List bundle,
+  ) async {
     final pigeonVar_channelName =
         'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.loadBundle$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
@@ -1231,8 +1165,9 @@ class FirebaseFirestoreHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, bundle]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app, bundle],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
@@ -1243,8 +1178,11 @@ class FirebaseFirestoreHostApi {
     return pigeonVar_replyValue! as String;
   }
 
-  Future<InternalQuerySnapshot> namedQueryGet(FirestorePigeonFirebaseApp app,
-      String name, InternalGetOptions options) async {
+  Future<InternalQuerySnapshot> namedQueryGet(
+    FirestorePigeonFirebaseApp app,
+    String name,
+    InternalGetOptions options,
+  ) async {
     final pigeonVar_channelName =
         'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.namedQueryGet$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
@@ -1252,8 +1190,9 @@ class FirebaseFirestoreHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, name, options]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app, name, options],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
@@ -1272,8 +1211,9 @@ class FirebaseFirestoreHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
@@ -1291,8 +1231,9 @@ class FirebaseFirestoreHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
@@ -1310,8 +1251,9 @@ class FirebaseFirestoreHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
@@ -1329,8 +1271,9 @@ class FirebaseFirestoreHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
@@ -1348,8 +1291,9 @@ class FirebaseFirestoreHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
@@ -1360,7 +1304,9 @@ class FirebaseFirestoreHostApi {
   }
 
   Future<void> setIndexConfiguration(
-      FirestorePigeonFirebaseApp app, String indexConfiguration) async {
+    FirestorePigeonFirebaseApp app,
+    String indexConfiguration,
+  ) async {
     final pigeonVar_channelName =
         'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.setIndexConfiguration$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
@@ -1368,8 +1314,9 @@ class FirebaseFirestoreHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, indexConfiguration]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app, indexConfiguration],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
@@ -1387,8 +1334,9 @@ class FirebaseFirestoreHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[loggingEnabled]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[loggingEnabled],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
@@ -1406,8 +1354,9 @@ class FirebaseFirestoreHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
@@ -1419,7 +1368,10 @@ class FirebaseFirestoreHostApi {
   }
 
   Future<String> transactionCreate(
-      FirestorePigeonFirebaseApp app, int timeout, int maxAttempts) async {
+    FirestorePigeonFirebaseApp app,
+    int timeout,
+    int maxAttempts,
+  ) async {
     final pigeonVar_channelName =
         'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionCreate$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
@@ -1427,8 +1379,9 @@ class FirebaseFirestoreHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, timeout, maxAttempts]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app, timeout, maxAttempts],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
@@ -1440,9 +1393,10 @@ class FirebaseFirestoreHostApi {
   }
 
   Future<void> transactionStoreResult(
-      String transactionId,
-      InternalTransactionResult resultType,
-      List<InternalTransactionCommand?>? commands) async {
+    String transactionId,
+    InternalTransactionResult resultType,
+    List<InternalTransactionCommand?>? commands,
+  ) async {
     final pigeonVar_channelName =
         'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionStoreResult$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
@@ -1450,8 +1404,9 @@ class FirebaseFirestoreHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[transactionId, resultType, commands]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[transactionId, resultType, commands],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
@@ -1462,7 +1417,10 @@ class FirebaseFirestoreHostApi {
   }
 
   Future<InternalDocumentSnapshot> transactionGet(
-      FirestorePigeonFirebaseApp app, String transactionId, String path) async {
+    FirestorePigeonFirebaseApp app,
+    String transactionId,
+    String path,
+  ) async {
     final pigeonVar_channelName =
         'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.transactionGet$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
@@ -1470,8 +1428,9 @@ class FirebaseFirestoreHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, transactionId, path]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app, transactionId, path],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
@@ -1483,7 +1442,9 @@ class FirebaseFirestoreHostApi {
   }
 
   Future<void> documentReferenceSet(
-      FirestorePigeonFirebaseApp app, DocumentReferenceRequest request) async {
+    FirestorePigeonFirebaseApp app,
+    DocumentReferenceRequest request,
+  ) async {
     final pigeonVar_channelName =
         'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceSet$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
@@ -1491,8 +1452,9 @@ class FirebaseFirestoreHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, request]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app, request],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
@@ -1503,7 +1465,9 @@ class FirebaseFirestoreHostApi {
   }
 
   Future<void> documentReferenceUpdate(
-      FirestorePigeonFirebaseApp app, DocumentReferenceRequest request) async {
+    FirestorePigeonFirebaseApp app,
+    DocumentReferenceRequest request,
+  ) async {
     final pigeonVar_channelName =
         'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceUpdate$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
@@ -1511,8 +1475,9 @@ class FirebaseFirestoreHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, request]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app, request],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
@@ -1523,7 +1488,9 @@ class FirebaseFirestoreHostApi {
   }
 
   Future<InternalDocumentSnapshot> documentReferenceGet(
-      FirestorePigeonFirebaseApp app, DocumentReferenceRequest request) async {
+    FirestorePigeonFirebaseApp app,
+    DocumentReferenceRequest request,
+  ) async {
     final pigeonVar_channelName =
         'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceGet$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
@@ -1531,8 +1498,9 @@ class FirebaseFirestoreHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, request]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app, request],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
@@ -1544,7 +1512,9 @@ class FirebaseFirestoreHostApi {
   }
 
   Future<void> documentReferenceDelete(
-      FirestorePigeonFirebaseApp app, DocumentReferenceRequest request) async {
+    FirestorePigeonFirebaseApp app,
+    DocumentReferenceRequest request,
+  ) async {
     final pigeonVar_channelName =
         'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceDelete$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
@@ -1552,8 +1522,9 @@ class FirebaseFirestoreHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, request]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app, request],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
@@ -1564,11 +1535,12 @@ class FirebaseFirestoreHostApi {
   }
 
   Future<InternalQuerySnapshot> queryGet(
-      FirestorePigeonFirebaseApp app,
-      String path,
-      bool isCollectionGroup,
-      InternalQueryParameters parameters,
-      InternalGetOptions options) async {
+    FirestorePigeonFirebaseApp app,
+    String path,
+    bool isCollectionGroup,
+    InternalQueryParameters parameters,
+    InternalGetOptions options,
+  ) async {
     final pigeonVar_channelName =
         'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.queryGet$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
@@ -1576,8 +1548,9 @@ class FirebaseFirestoreHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel
-        .send(<Object?>[app, path, isCollectionGroup, parameters, options]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app, path, isCollectionGroup, parameters, options],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
@@ -1589,12 +1562,13 @@ class FirebaseFirestoreHostApi {
   }
 
   Future<List<AggregateQueryResponse?>> aggregateQuery(
-      FirestorePigeonFirebaseApp app,
-      String path,
-      InternalQueryParameters parameters,
-      AggregateSource source,
-      List<AggregateQuery?> queries,
-      bool isCollectionGroup) async {
+    FirestorePigeonFirebaseApp app,
+    String path,
+    InternalQueryParameters parameters,
+    AggregateSource source,
+    List<AggregateQuery?> queries,
+    bool isCollectionGroup,
+  ) async {
     final pigeonVar_channelName =
         'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.aggregateQuery$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
@@ -1603,7 +1577,8 @@ class FirebaseFirestoreHostApi {
       binaryMessenger: pigeonVar_binaryMessenger,
     );
     final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
-        <Object?>[app, path, parameters, source, queries, isCollectionGroup]);
+      <Object?>[app, path, parameters, source, queries, isCollectionGroup],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
@@ -1615,8 +1590,10 @@ class FirebaseFirestoreHostApi {
         .cast<AggregateQueryResponse?>();
   }
 
-  Future<void> writeBatchCommit(FirestorePigeonFirebaseApp app,
-      List<InternalTransactionCommand?> writes) async {
+  Future<void> writeBatchCommit(
+    FirestorePigeonFirebaseApp app,
+    List<InternalTransactionCommand?> writes,
+  ) async {
     final pigeonVar_channelName =
         'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.writeBatchCommit$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
@@ -1624,8 +1601,9 @@ class FirebaseFirestoreHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, writes]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app, writes],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
@@ -1636,13 +1614,14 @@ class FirebaseFirestoreHostApi {
   }
 
   Future<String> querySnapshot(
-      FirestorePigeonFirebaseApp app,
-      String path,
-      bool isCollectionGroup,
-      InternalQueryParameters parameters,
-      InternalGetOptions options,
-      bool includeMetadataChanges,
-      ListenSource source) async {
+    FirestorePigeonFirebaseApp app,
+    String path,
+    bool isCollectionGroup,
+    InternalQueryParameters parameters,
+    InternalGetOptions options,
+    bool includeMetadataChanges,
+    ListenSource source,
+  ) async {
     final pigeonVar_channelName =
         'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.querySnapshot$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
@@ -1650,16 +1629,16 @@ class FirebaseFirestoreHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[
-      app,
-      path,
-      isCollectionGroup,
-      parameters,
-      options,
-      includeMetadataChanges,
-      source
-    ]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel
+        .send(<Object?>[
+          app,
+          path,
+          isCollectionGroup,
+          parameters,
+          options,
+          includeMetadataChanges,
+          source,
+        ]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
@@ -1671,10 +1650,11 @@ class FirebaseFirestoreHostApi {
   }
 
   Future<String> documentReferenceSnapshot(
-      FirestorePigeonFirebaseApp app,
-      DocumentReferenceRequest parameters,
-      bool includeMetadataChanges,
-      ListenSource source) async {
+    FirestorePigeonFirebaseApp app,
+    DocumentReferenceRequest parameters,
+    bool includeMetadataChanges,
+    ListenSource source,
+  ) async {
     final pigeonVar_channelName =
         'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.documentReferenceSnapshot$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
@@ -1682,8 +1662,9 @@ class FirebaseFirestoreHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel
-        .send(<Object?>[app, parameters, includeMetadataChanges, source]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app, parameters, includeMetadataChanges, source],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
@@ -1695,8 +1676,9 @@ class FirebaseFirestoreHostApi {
   }
 
   Future<void> persistenceCacheIndexManagerRequest(
-      FirestorePigeonFirebaseApp app,
-      PersistenceCacheIndexManagerRequest request) async {
+    FirestorePigeonFirebaseApp app,
+    PersistenceCacheIndexManagerRequest request,
+  ) async {
     final pigeonVar_channelName =
         'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.persistenceCacheIndexManagerRequest$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
@@ -1704,8 +1686,9 @@ class FirebaseFirestoreHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, request]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app, request],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
@@ -1716,9 +1699,10 @@ class FirebaseFirestoreHostApi {
   }
 
   Future<InternalPipelineSnapshot> executePipeline(
-      FirestorePigeonFirebaseApp app,
-      List<Map<String?, Object?>?> stages,
-      Map<String?, Object?>? options) async {
+    FirestorePigeonFirebaseApp app,
+    List<Map<String?, Object?>?> stages,
+    Map<String?, Object?>? options,
+  ) async {
     final pigeonVar_channelName =
         'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.executePipeline$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
@@ -1726,8 +1710,9 @@ class FirebaseFirestoreHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, stages, options]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app, stages, options],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(

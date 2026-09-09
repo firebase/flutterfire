@@ -8,7 +8,7 @@ import 'method_channel_data_snapshot.dart';
 
 class MethodChannelTransactionResult extends TransactionResultPlatform {
   MethodChannelTransactionResult(bool committed, this._ref, this._snapshot)
-      : super(committed);
+    : super(committed);
 
   DatabaseReferencePlatform _ref;
 

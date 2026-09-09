@@ -9,13 +9,14 @@ import 'dart:js_interop_unsafe';
 import 'package:cloud_functions_platform_interface/cloud_functions_platform_interface.dart';
 
 /// Given a web error, a [FirebaseFunctionsException] is returned.
-FirebaseFunctionsException convertFirebaseFunctionsException(JSObject exception,
-    [StackTrace? stackTrace]) {
+FirebaseFunctionsException convertFirebaseFunctionsException(
+  JSObject exception, [
+  StackTrace? stackTrace,
+]) {
   String originalCode =
       (exception.getProperty('code'.toJS)! as JSString).toDart;
   String code = originalCode.replaceFirst('functions/', '');
-  String message = (exception.getProperty('message'.toJS)! as JSString)
-      .toDart
+  String message = (exception.getProperty('message'.toJS)! as JSString).toDart
       .replaceFirst('($originalCode)', '');
 
   return FirebaseFunctionsException(

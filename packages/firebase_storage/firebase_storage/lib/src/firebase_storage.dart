@@ -8,7 +8,7 @@ part of firebase_storage;
 /// The entrypoint for [FirebaseStorage].
 class FirebaseStorage extends FirebasePlugin {
   FirebaseStorage._({required this.app, required this.bucket})
-      : super(app.name, 'plugins.flutter.io/firebase_storage');
+    : super(app.name, 'plugins.flutter.io/firebase_storage');
 
   // Cached and lazily loaded instance of [FirebaseStoragePlatform] to avoid
   // creating a [MethodChannelStorage] when not needed or creating an
@@ -47,28 +47,25 @@ class FirebaseStorage extends FirebasePlugin {
 
   /// Returns an instance using the default [FirebaseApp].
   static FirebaseStorage get instance {
-    return FirebaseStorage.instanceFor(
-      app: Firebase.app(),
-    );
+    return FirebaseStorage.instanceFor(app: Firebase.app());
   }
 
   /// Returns an instance using a specified [FirebaseApp] and/or custom storage bucket.
   ///
   /// If [app] is not provided, the default Firebase app will be used.
   /// If [bucket] is not provided, the default storage bucket will be used.
-  static FirebaseStorage instanceFor({
-    FirebaseApp? app,
-    String? bucket,
-  }) {
+  static FirebaseStorage instanceFor({FirebaseApp? app, String? bucket}) {
     app ??= Firebase.app();
 
     if (bucket == null && app.options.storageBucket == null) {
       if (app.name == defaultFirebaseAppName) {
         _throwNoBucketError(
-            'No default storage bucket could be found. Ensure you have correctly followed the Getting Started guide.');
+          'No default storage bucket could be found. Ensure you have correctly followed the Getting Started guide.',
+        );
       } else {
         _throwNoBucketError(
-            "No storage bucket could be found for the app '${app.name}'. Ensure you have set the [storageBucket] on [FirebaseOptions] whilst initializing the secondary Firebase app.");
+          "No storage bucket could be found for the app '${app.name}'. Ensure you have set the [storageBucket] on [FirebaseOptions] whilst initializing the secondary Firebase app.",
+        );
       }
     }
 
@@ -109,8 +106,10 @@ class FirebaseStorage extends FirebasePlugin {
   /// [FirebaseStorage.bucket], a new [FirebaseStorage] instance for the
   /// [Reference] will be used instead.
   Reference refFromURL(String url) {
-    assert(url.startsWith('gs://') || url.startsWith('http'),
-        "'a url must start with 'gs://' or 'https://'");
+    assert(
+      url.startsWith('gs://') || url.startsWith('http'),
+      "'a url must start with 'gs://' or 'https://'",
+    );
 
     String? bucket;
     String? path;
@@ -118,8 +117,10 @@ class FirebaseStorage extends FirebasePlugin {
     if (url.startsWith('http')) {
       final parts = partsFromHttpUrl(url);
 
-      assert(parts != null,
-          "url could not be parsed, ensure it's a valid storage url");
+      assert(
+        parts != null,
+        "url could not be parsed, ensure it's a valid storage url",
+      );
 
       bucket = parts!['bucket'];
       path = parts['path'];
@@ -128,8 +129,10 @@ class FirebaseStorage extends FirebasePlugin {
       path = pathFromGoogleStorageUrl(url);
     }
 
-    return FirebaseStorage.instanceFor(app: app, bucket: 'gs://$bucket')
-        .ref(path);
+    return FirebaseStorage.instanceFor(
+      app: app,
+      bucket: 'gs://$bucket',
+    ).ref(path);
   }
 
   /// Sets the new maximum operation retry time.
@@ -157,8 +160,11 @@ class FirebaseStorage extends FirebasePlugin {
   ///
   /// Note: Must be called immediately, prior to accessing storage methods.
   /// Do not use with production credentials as emulator traffic is not encrypted.
-  Future<void> useStorageEmulator(String host, int port,
-      {bool automaticHostMapping = true}) async {
+  Future<void> useStorageEmulator(
+    String host,
+    int port, {
+    bool automaticHostMapping = true,
+  }) async {
     assert(host.isNotEmpty);
     assert(!port.isNegative);
 
@@ -198,5 +204,8 @@ class FirebaseStorage extends FirebasePlugin {
 
 void _throwNoBucketError(String message) {
   throw FirebaseException(
-      plugin: 'firebase_storage', code: 'no-bucket', message: message);
+    plugin: 'firebase_storage',
+    code: 'no-bucket',
+    message: message,
+  );
 }

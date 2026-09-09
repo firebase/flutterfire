@@ -46,10 +46,7 @@ void main() {
     });
 
     setUp(() async {
-      httpMetric = TestMethodChannelHttpMetric(
-        kUrl,
-        kMethod,
-      );
+      httpMetric = TestMethodChannelHttpMetric(kUrl, kMethod);
       mockPlatformExceptionThrown = false;
       mockExceptionThrown = false;
       log.clear();
@@ -103,49 +100,52 @@ void main() {
       });
 
       test(
-          "will immediately return if name length is longer than 'HttpMetricPlatform.maxAttributeKeyLength' ",
-          () async {
-        String longName =
-            'thisisaverylongnamethatislongerthanthe40charactersallowedbyHttpMetricPlatformmaxAttributeKeyLengthwaywaylongertogetover100charlimit';
-        const String attributeValue = 'foo';
-        httpMetric.putAttribute(longName, attributeValue);
-        expect(log, <Matcher>[]);
-        expect(httpMetric.getAttribute(longName), isNull);
-      });
+        "will immediately return if name length is longer than 'HttpMetricPlatform.maxAttributeKeyLength' ",
+        () async {
+          String longName =
+              'thisisaverylongnamethatislongerthanthe40charactersallowedbyHttpMetricPlatformmaxAttributeKeyLengthwaywaylongertogetover100charlimit';
+          const String attributeValue = 'foo';
+          httpMetric.putAttribute(longName, attributeValue);
+          expect(log, <Matcher>[]);
+          expect(httpMetric.getAttribute(longName), isNull);
+        },
+      );
 
       test(
-          "will immediately return if value length is longer than 'HttpMetricPlatform.maxAttributeValueLength' ",
-          () async {
-        String attributeName = 'foo';
-        String longValue =
-            'thisisaverylongnamethatislongerthanthe40charactersallowedbyHttpMetricPlatformmaxAttributeKeyLengthwaywaylongertogetover100charlimit';
-        httpMetric.putAttribute(attributeName, longValue);
-        expect(log, <Matcher>[]);
-        expect(httpMetric.getAttribute(attributeName), isNull);
-      });
+        "will immediately return if value length is longer than 'HttpMetricPlatform.maxAttributeValueLength' ",
+        () async {
+          String attributeName = 'foo';
+          String longValue =
+              'thisisaverylongnamethatislongerthanthe40charactersallowedbyHttpMetricPlatformmaxAttributeKeyLengthwaywaylongertogetover100charlimit';
+          httpMetric.putAttribute(attributeName, longValue);
+          expect(log, <Matcher>[]);
+          expect(httpMetric.getAttribute(attributeName), isNull);
+        },
+      );
 
       test(
-          "will immediately return if attribute map has more properties than 'HttpMetricPlatform.maxCustomAttributes' allows",
-          () async {
-        String attributeName1 = 'foo';
-        String attributeName2 = 'bar';
-        String attributeName3 = 'baz';
-        String attributeName4 = 'too';
-        String attributeName5 = 'yoo';
-        String attributeName6 = 'who';
-        String attributeValue = 'bar';
-        httpMetric.putAttribute(attributeName1, attributeValue);
-        httpMetric.putAttribute(attributeName2, attributeValue);
-        httpMetric.putAttribute(attributeName3, attributeValue);
-        httpMetric.putAttribute(attributeName4, attributeValue);
-        httpMetric.putAttribute(attributeName5, attributeValue);
-        httpMetric.putAttribute(attributeName6, attributeValue);
+        "will immediately return if attribute map has more properties than 'HttpMetricPlatform.maxCustomAttributes' allows",
+        () async {
+          String attributeName1 = 'foo';
+          String attributeName2 = 'bar';
+          String attributeName3 = 'baz';
+          String attributeName4 = 'too';
+          String attributeName5 = 'yoo';
+          String attributeName6 = 'who';
+          String attributeValue = 'bar';
+          httpMetric.putAttribute(attributeName1, attributeValue);
+          httpMetric.putAttribute(attributeName2, attributeValue);
+          httpMetric.putAttribute(attributeName3, attributeValue);
+          httpMetric.putAttribute(attributeName4, attributeValue);
+          httpMetric.putAttribute(attributeName5, attributeValue);
+          httpMetric.putAttribute(attributeName6, attributeValue);
 
-        expect(log, <Matcher>[]);
+          expect(log, <Matcher>[]);
 
-        expect(httpMetric.getAttribute(attributeName5), attributeValue);
-        expect(httpMetric.getAttribute(attributeName6), isNull);
-      });
+          expect(httpMetric.getAttribute(attributeName5), attributeValue);
+          expect(httpMetric.getAttribute(attributeName6), isNull);
+        },
+      );
     });
 
     group('removeAttribute', () {
@@ -203,8 +203,6 @@ class TestFirebasePerformancePlatform extends FirebasePerformancePlatform {
 }
 
 class TestMethodChannelHttpMetric extends MethodChannelHttpMetric {
-  TestMethodChannelHttpMetric(
-    String url,
-    HttpMethod method,
-  ) : super(url, method);
+  TestMethodChannelHttpMetric(String url, HttpMethod method)
+    : super(url, method);
 }

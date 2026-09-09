@@ -14,11 +14,9 @@ abstract class CollectionReferencePlatform extends QueryPlatform {
   final Pointer _pointer;
 
   /// Create a [CollectionReferencePlatform] from a [path]
-  CollectionReferencePlatform(
-    FirebaseFirestorePlatform firestore,
-    String path,
-  )   : _pointer = Pointer(path),
-        super(firestore, <String, dynamic>{});
+  CollectionReferencePlatform(FirebaseFirestorePlatform firestore, String path)
+    : _pointer = Pointer(path),
+      super(firestore, <String, dynamic>{});
 
   /// Identifier of the referenced collection.
   String get id => _pointer.id;

@@ -51,14 +51,16 @@ class _TTSPageState extends State<TTSPage> {
   String _selectedVoice = 'Kore';
 
   // Multi Speaker Controllers
-  final TextEditingController _speaker1NameController =
-      TextEditingController(text: 'Joe');
+  final TextEditingController _speaker1NameController = TextEditingController(
+    text: 'Joe',
+  );
   final TextEditingController _speaker1LineController = TextEditingController(
     text: "How's it going today Jane?",
   );
   String _speaker1Voice = 'Kore';
-  final TextEditingController _speaker2NameController =
-      TextEditingController(text: 'Jane');
+  final TextEditingController _speaker2NameController = TextEditingController(
+    text: 'Jane',
+  );
   final TextEditingController _speaker2LineController = TextEditingController(
     text: 'Not too bad, how about you?',
   );
@@ -101,9 +103,7 @@ class _TTSPageState extends State<TTSPage> {
       builder: (context) {
         return AlertDialog(
           title: const Text('Something went wrong'),
-          content: SingleChildScrollView(
-            child: SelectableText(message),
-          ),
+          content: SingleChildScrollView(child: SelectableText(message)),
           actions: [
             TextButton(
               onPressed: () {
@@ -239,8 +239,9 @@ class _TTSPageState extends State<TTSPage> {
       }
 
       // Play audio and start visualizer
-      final duration =
-          Duration(milliseconds: (audioBytes.length / 48.0).round());
+      final duration = Duration(
+        milliseconds: (audioBytes.length / 48.0).round(),
+      );
       await _startPlayback(duration: duration);
       _audioOutput.addDataToAudioStream(audioBytes);
       _schedulePlaybackCompletion(audioBytes.length);
@@ -270,8 +271,9 @@ class _TTSPageState extends State<TTSPage> {
 
     try {
       final (:model, :prompt) = _setupModelAndPrompt();
-      final responseStream =
-          model.generateContentStream([Content.text(prompt)]);
+      final responseStream = model.generateContentStream([
+        Content.text(prompt),
+      ]);
 
       final textBuffer = StringBuffer();
       int totalAudioBytes = 0;
@@ -346,10 +348,7 @@ class _TTSPageState extends State<TTSPage> {
             border: OutlineInputBorder(),
           ),
           items: _availableVoices.map((voice) {
-            return DropdownMenuItem(
-              value: voice,
-              child: Text(voice),
-            );
+            return DropdownMenuItem(value: voice, child: Text(voice));
           }).toList(),
           onChanged: (value) {
             if (value != null) {
@@ -376,10 +375,7 @@ class _TTSPageState extends State<TTSPage> {
       margin: const EdgeInsets.symmetric(vertical: 8),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-        side: BorderSide(
-          color: accentColor.withAlpha(80),
-          width: 1.5,
-        ),
+        side: BorderSide(color: accentColor.withAlpha(80), width: 1.5),
       ),
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -425,10 +421,7 @@ class _TTSPageState extends State<TTSPage> {
                       border: OutlineInputBorder(),
                     ),
                     items: _availableVoices.map((voice) {
-                      return DropdownMenuItem(
-                        value: voice,
-                        child: Text(voice),
-                      );
+                      return DropdownMenuItem(value: voice, child: Text(voice));
                     }).toList(),
                     onChanged: onVoiceChanged,
                   ),

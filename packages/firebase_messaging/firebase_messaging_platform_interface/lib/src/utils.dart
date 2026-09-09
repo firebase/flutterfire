@@ -7,7 +7,8 @@ import 'package:firebase_messaging_platform_interface/firebase_messaging_platfor
 
 /// Converts an [int] into it's [AndroidNotificationPriority] representation.
 AndroidNotificationPriority convertToAndroidNotificationPriority(
-    int? priority) {
+  int? priority,
+) {
   switch (priority) {
     case -2:
       return AndroidNotificationPriority.minimumPriority;
@@ -26,7 +27,8 @@ AndroidNotificationPriority convertToAndroidNotificationPriority(
 
 /// Converts an [AndroidNotificationPriority] into it's [int] representation.
 int convertAndroidNotificationPriorityToInt(
-    AndroidNotificationPriority? priority) {
+  AndroidNotificationPriority? priority,
+) {
   switch (priority) {
     case AndroidNotificationPriority.minimumPriority:
       return -2;
@@ -45,7 +47,8 @@ int convertAndroidNotificationPriorityToInt(
 
 /// Converts an [int] into it's [AndroidNotificationVisibility] representation.
 AndroidNotificationVisibility convertToAndroidNotificationVisibility(
-    int? visibility) {
+  int? visibility,
+) {
   switch (visibility) {
     case -1:
       return AndroidNotificationVisibility.secret;
@@ -60,7 +63,8 @@ AndroidNotificationVisibility convertToAndroidNotificationVisibility(
 
 /// Converts an [AndroidNotificationVisibility] into it's [int] representation.
 int convertAndroidNotificationVisibilityToInt(
-    AndroidNotificationVisibility? visibility) {
+  AndroidNotificationVisibility? visibility,
+) {
   switch (visibility) {
     case AndroidNotificationVisibility.secret:
       return -1;
@@ -132,8 +136,9 @@ AppleShowPreviewSetting convertToAppleShowPreviewSetting(int? status) {
 /// Converts a [Map] into it's [NotificationSettings] representation.
 NotificationSettings convertToNotificationSettings(Map<String, int> map) {
   return NotificationSettings(
-    authorizationStatus:
-        convertToAuthorizationStatus(map['authorizationStatus']),
+    authorizationStatus: convertToAuthorizationStatus(
+      map['authorizationStatus'],
+    ),
     timeSensitive: convertToAppleNotificationSetting(map['timeSensitive']),
     criticalAlert: convertToAppleNotificationSetting(map['criticalAlert']),
     alert: convertToAppleNotificationSetting(map['alert']),
@@ -141,12 +146,14 @@ NotificationSettings convertToNotificationSettings(Map<String, int> map) {
     badge: convertToAppleNotificationSetting(map['badge']),
     carPlay: convertToAppleNotificationSetting(map['carPlay']),
     lockScreen: convertToAppleNotificationSetting(map['lockScreen']),
-    notificationCenter:
-        convertToAppleNotificationSetting(map['notificationCenter']),
+    notificationCenter: convertToAppleNotificationSetting(
+      map['notificationCenter'],
+    ),
     showPreviews: convertToAppleShowPreviewSetting(map['showPreviews']),
     sound: convertToAppleNotificationSetting(map['sound']),
     providesAppNotificationSettings: convertToAppleNotificationSetting(
-        map['providesAppNotificationSettings']),
+      map['providesAppNotificationSettings'],
+    ),
   );
 }
 

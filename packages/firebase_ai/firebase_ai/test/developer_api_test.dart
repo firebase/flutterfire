@@ -30,11 +30,11 @@ void main() {
               'content': {
                 'role': 'model',
                 'parts': [
-                  {'text': 'Some generated text.'}
-                ]
+                  {'text': 'Some generated text.'},
+                ],
               },
               'finishReason': 'STOP',
-            }
+            },
           ],
           'usageMetadata': {
             'promptTokenCount': 10,
@@ -42,18 +42,19 @@ void main() {
             'totalTokenCount': 15,
             'thoughtsTokenCount': 3,
             'promptTokensDetails': [
-              {'modality': 'TEXT', 'tokenCount': 10}
+              {'modality': 'TEXT', 'tokenCount': 10},
             ],
             'candidatesTokensDetails': [
-              {'modality': 'TEXT', 'tokenCount': 25}
+              {'modality': 'TEXT', 'tokenCount': 25},
             ],
             'toolUsePromptTokensDetails': [
-              {'modality': 'TEXT', 'tokenCount': 12}
+              {'modality': 'TEXT', 'tokenCount': 12},
             ],
-          }
+          },
         };
-        final response =
-            DeveloperSerialization().parseGenerateContentResponse(jsonResponse);
+        final response = DeveloperSerialization().parseGenerateContentResponse(
+          jsonResponse,
+        );
         expect(response.usageMetadata, isNotNull);
         expect(response.usageMetadata!.promptTokenCount, 10);
         expect(response.usageMetadata!.candidatesTokenCount, 5);
@@ -62,19 +63,24 @@ void main() {
         expect(response.usageMetadata!.promptTokensDetails, isNotNull);
         expect(response.usageMetadata!.promptTokensDetails, hasLength(1));
         expect(
-            response.usageMetadata!.promptTokensDetails!.first.tokenCount, 10);
+          response.usageMetadata!.promptTokensDetails!.first.tokenCount,
+          10,
+        );
         expect(response.usageMetadata!.candidatesTokensDetails, isNotNull);
         expect(response.usageMetadata!.candidatesTokensDetails, hasLength(1));
         expect(
-            response.usageMetadata!.candidatesTokensDetails!.first.tokenCount,
-            25);
+          response.usageMetadata!.candidatesTokensDetails!.first.tokenCount,
+          25,
+        );
         expect(response.usageMetadata!.toolUsePromptTokensDetails, isNotNull);
         expect(
-            response.usageMetadata!.toolUsePromptTokensDetails, hasLength(1));
+          response.usageMetadata!.toolUsePromptTokensDetails,
+          hasLength(1),
+        );
         expect(
-            response
-                .usageMetadata!.toolUsePromptTokensDetails!.first.tokenCount,
-            12);
+          response.usageMetadata!.toolUsePromptTokensDetails!.first.tokenCount,
+          12,
+        );
       });
 
       test('parses usageMetadata when thoughtsTokenCount is missing', () {
@@ -84,11 +90,11 @@ void main() {
               'content': {
                 'role': 'model',
                 'parts': [
-                  {'text': 'Some generated text.'}
-                ]
+                  {'text': 'Some generated text.'},
+                ],
               },
               'finishReason': 'STOP',
-            }
+            },
           ],
           'usageMetadata': {
             'promptTokenCount': 10,
@@ -96,15 +102,16 @@ void main() {
             'totalTokenCount': 15,
             // thoughtsTokenCount is missing
             'promptTokensDetails': [
-              {'modality': 'TEXT', 'tokenCount': 10}
+              {'modality': 'TEXT', 'tokenCount': 10},
             ],
             'candidatesTokensDetails': [
-              {'modality': 'TEXT', 'tokenCount': 25}
+              {'modality': 'TEXT', 'tokenCount': 25},
             ],
-          }
+          },
         };
-        final response =
-            DeveloperSerialization().parseGenerateContentResponse(jsonResponse);
+        final response = DeveloperSerialization().parseGenerateContentResponse(
+          jsonResponse,
+        );
         expect(response.usageMetadata, isNotNull);
         expect(response.usageMetadata!.promptTokenCount, 10);
         expect(response.usageMetadata!.candidatesTokenCount, 5);
@@ -112,32 +119,34 @@ void main() {
         expect(response.usageMetadata!.thoughtsTokenCount, isNull);
       });
 
-      test('parses usageMetadata when thoughtsTokenCount is present but null',
-          () {
-        final jsonResponse = {
-          'candidates': [
-            {
-              'content': {
-                'role': 'model',
-                'parts': [
-                  {'text': 'Some generated text.'}
-                ]
+      test(
+        'parses usageMetadata when thoughtsTokenCount is present but null',
+        () {
+          final jsonResponse = {
+            'candidates': [
+              {
+                'content': {
+                  'role': 'model',
+                  'parts': [
+                    {'text': 'Some generated text.'},
+                  ],
+                },
+                'finishReason': 'STOP',
               },
-              'finishReason': 'STOP',
-            }
-          ],
-          'usageMetadata': {
-            'promptTokenCount': 10,
-            'candidatesTokenCount': 5,
-            'totalTokenCount': 15,
-            'thoughtsTokenCount': null,
-          }
-        };
-        final response =
-            DeveloperSerialization().parseGenerateContentResponse(jsonResponse);
-        expect(response.usageMetadata, isNotNull);
-        expect(response.usageMetadata!.thoughtsTokenCount, isNull);
-      });
+            ],
+            'usageMetadata': {
+              'promptTokenCount': 10,
+              'candidatesTokenCount': 5,
+              'totalTokenCount': 15,
+              'thoughtsTokenCount': null,
+            },
+          };
+          final response = DeveloperSerialization()
+              .parseGenerateContentResponse(jsonResponse);
+          expect(response.usageMetadata, isNotNull);
+          expect(response.usageMetadata!.thoughtsTokenCount, isNull);
+        },
+      );
 
       test('parses response when usageMetadata is missing', () {
         final jsonResponse = {
@@ -146,16 +155,17 @@ void main() {
               'content': {
                 'role': 'model',
                 'parts': [
-                  {'text': 'Some generated text.'}
-                ]
+                  {'text': 'Some generated text.'},
+                ],
               },
               'finishReason': 'STOP',
-            }
+            },
           ],
           // usageMetadata is missing
         };
-        final response =
-            DeveloperSerialization().parseGenerateContentResponse(jsonResponse);
+        final response = DeveloperSerialization().parseGenerateContentResponse(
+          jsonResponse,
+        );
         expect(response.usageMetadata, isNull);
       });
 
@@ -166,8 +176,8 @@ void main() {
               {
                 'content': {
                   'parts': [
-                    {'text': 'This is a grounded response.'}
-                  ]
+                    {'text': 'This is a grounded response.'},
+                  ],
                 },
                 'finishReason': 'STOP',
                 'groundingMetadata': {
@@ -178,22 +188,22 @@ void main() {
                       'web': {
                         'uri': 'http://example.com/1',
                         'title': 'Example Page 1',
-                      }
-                    }
+                      },
+                    },
                   ],
                   'groundingSupports': [
                     {
                       'segment': {
                         'startIndex': 5,
                         'endIndex': 13,
-                        'text': 'grounded'
+                        'text': 'grounded',
                       },
                       'groundingChunkIndices': [0],
-                    }
-                  ]
-                }
-              }
-            ]
+                    },
+                  ],
+                },
+              },
+            ],
           };
 
           final response = DeveloperSerialization()
@@ -201,10 +211,14 @@ void main() {
           final groundingMetadata = response.candidates.first.groundingMetadata;
 
           expect(groundingMetadata, isNotNull);
-          expect(groundingMetadata!.webSearchQueries,
-              equals(['query1', 'query2']));
-          expect(groundingMetadata.searchEntryPoint?.renderedContent,
-              '<div></div>');
+          expect(
+            groundingMetadata!.webSearchQueries,
+            equals(['query1', 'query2']),
+          );
+          expect(
+            groundingMetadata.searchEntryPoint?.renderedContent,
+            '<div></div>',
+          );
 
           final groundingChunk = groundingMetadata.groundingChunks.first;
           expect(groundingChunk.web?.uri, 'http://example.com/1');
@@ -225,8 +239,8 @@ void main() {
               {
                 'content': {
                   'parts': [
-                    {'text': 'This is a maps response.'}
-                  ]
+                    {'text': 'This is a maps response.'},
+                  ],
                 },
                 'finishReason': 'STOP',
                 'groundingMetadata': {
@@ -236,12 +250,12 @@ void main() {
                         'uri': 'https://maps.google.com/?cid=123',
                         'title': 'Google HQ',
                         'placeId': 'ChIJS5dFe_cZzosR26ZvwqWaMAM',
-                      }
-                    }
+                      },
+                    },
                   ],
-                }
-              }
-            ]
+                },
+              },
+            ],
           };
 
           final response = DeveloperSerialization()
@@ -257,33 +271,35 @@ void main() {
         });
 
         test(
-            'parses groundingMetadata with all optional fields null/missing and empty lists',
-            () {
-          final jsonResponse = {
-            'candidates': [
-              {
-                'content': {
-                  'parts': [
-                    {'text': 'Test'}
-                  ]
+          'parses groundingMetadata with all optional fields null/missing and empty lists',
+          () {
+            final jsonResponse = {
+              'candidates': [
+                {
+                  'content': {
+                    'parts': [
+                      {'text': 'Test'},
+                    ],
+                  },
+                  'finishReason': 'STOP',
+                  'groundingMetadata': {
+                    // All fields are missing
+                  },
                 },
-                'finishReason': 'STOP',
-                'groundingMetadata': {
-                  // All fields are missing
-                }
-              }
-            ]
-          };
-          final response = DeveloperSerialization()
-              .parseGenerateContentResponse(jsonResponse);
-          final groundingMetadata = response.candidates.first.groundingMetadata;
+              ],
+            };
+            final response = DeveloperSerialization()
+                .parseGenerateContentResponse(jsonResponse);
+            final groundingMetadata =
+                response.candidates.first.groundingMetadata;
 
-          expect(groundingMetadata, isNotNull);
-          expect(groundingMetadata!.searchEntryPoint, isNull);
-          expect(groundingMetadata.groundingChunks, isEmpty);
-          expect(groundingMetadata.groundingSupports, isEmpty);
-          expect(groundingMetadata.webSearchQueries, isEmpty);
-        });
+            expect(groundingMetadata, isNotNull);
+            expect(groundingMetadata!.searchEntryPoint, isNull);
+            expect(groundingMetadata.groundingChunks, isEmpty);
+            expect(groundingMetadata.groundingSupports, isEmpty);
+            expect(groundingMetadata.webSearchQueries, isEmpty);
+          },
+        );
 
         test('handles absence of groundingMetadata field', () {
           final jsonResponse = {
@@ -291,13 +307,13 @@ void main() {
               {
                 'content': {
                   'parts': [
-                    {'text': 'Test'}
-                  ]
+                    {'text': 'Test'},
+                  ],
                 },
-                'finishReason': 'STOP'
+                'finishReason': 'STOP',
                 // No groundingMetadata key
-              }
-            ]
+              },
+            ],
           };
           final response = DeveloperSerialization()
               .parseGenerateContentResponse(jsonResponse);
@@ -306,70 +322,80 @@ void main() {
         });
 
         test(
-            'throws FormatException if renderedContent is missing in searchEntryPoint',
-            () {
-          final jsonResponse = {
-            'candidates': [
-              {
-                'groundingMetadata': {'searchEntryPoint': {}}
-              }
-            ]
-          };
+          'throws FormatException if renderedContent is missing in searchEntryPoint',
+          () {
+            final jsonResponse = {
+              'candidates': [
+                {
+                  'groundingMetadata': {'searchEntryPoint': {}},
+                },
+              ],
+            };
 
-          expect(
-              () => DeveloperSerialization()
-                  .parseGenerateContentResponse(jsonResponse),
-              throwsA(isA<FirebaseAISdkException>().having(
-                  (e) => e.message, 'message', contains('SearchEntryPoint'))));
-        });
+            expect(
+              () => DeveloperSerialization().parseGenerateContentResponse(
+                jsonResponse,
+              ),
+              throwsA(
+                isA<FirebaseAISdkException>().having(
+                  (e) => e.message,
+                  'message',
+                  contains('SearchEntryPoint'),
+                ),
+              ),
+            );
+          },
+        );
 
         test(
-            'parses groundingSupports and filters out entries without a segment',
-            () {
-          final jsonResponse = {
-            'candidates': [
-              {
-                'content': {
-                  'parts': [
-                    {'text': 'Test'}
-                  ]
-                },
-                'finishReason': 'STOP',
-                'groundingMetadata': {
-                  'groundingSupports': [
-                    // Valid entry
-                    {
-                      'segment': {
-                        'startIndex': 0,
-                        'endIndex': 4,
-                        'text': 'Test'
+          'parses groundingSupports and filters out entries without a segment',
+          () {
+            final jsonResponse = {
+              'candidates': [
+                {
+                  'content': {
+                    'parts': [
+                      {'text': 'Test'},
+                    ],
+                  },
+                  'finishReason': 'STOP',
+                  'groundingMetadata': {
+                    'groundingSupports': [
+                      // Valid entry
+                      {
+                        'segment': {
+                          'startIndex': 0,
+                          'endIndex': 4,
+                          'text': 'Test',
+                        },
+                        'groundingChunkIndices': [0],
                       },
-                      'groundingChunkIndices': [0]
-                    },
-                    // Invalid entry - missing segment
-                    {
-                      'groundingChunkIndices': [1]
-                    },
-                    // Invalid entry - empty object
-                    {}
-                  ]
-                }
-              }
-            ]
-          };
+                      // Invalid entry - missing segment
+                      {
+                        'groundingChunkIndices': [1],
+                      },
+                      // Invalid entry - empty object
+                      {},
+                    ],
+                  },
+                },
+              ],
+            };
 
-          final response = DeveloperSerialization()
-              .parseGenerateContentResponse(jsonResponse);
-          final groundingMetadata = response.candidates.first.groundingMetadata;
+            final response = DeveloperSerialization()
+                .parseGenerateContentResponse(jsonResponse);
+            final groundingMetadata =
+                response.candidates.first.groundingMetadata;
 
-          expect(groundingMetadata, isNotNull);
-          // The invalid entries should be filtered out.
-          expect(groundingMetadata!.groundingSupports, hasLength(1));
+            expect(groundingMetadata, isNotNull);
+            // The invalid entries should be filtered out.
+            expect(groundingMetadata!.groundingSupports, hasLength(1));
 
-          final validSupport = groundingMetadata.groundingSupports.first;
-          expect(validSupport.segment.text, 'Test');
-          expect(validSupport.groundingChunkIndices, [0]);
-        });
+            final validSupport = groundingMetadata.groundingSupports.first;
+            expect(validSupport.segment.text, 'Test');
+            expect(validSupport.groundingChunkIndices, [0]);
+          },
+        );
       });
 
       group('UrlContextMetadata parsing', () {
@@ -379,20 +405,20 @@ void main() {
               {
                 'content': {
                   'parts': [
-                    {'text': 'Some text'}
-                  ]
+                    {'text': 'Some text'},
+                  ],
                 },
                 'finishReason': 'STOP',
                 'urlContextMetadata': {
                   'urlMetadata': [
                     {
                       'retrievedUrl': 'https://example.com',
-                      'urlRetrievalStatus': 'URL_RETRIEVAL_STATUS_SUCCESS'
-                    }
-                  ]
-                }
-              }
-            ]
+                      'urlRetrievalStatus': 'URL_RETRIEVAL_STATUS_SUCCESS',
+                    },
+                  ],
+                },
+              },
+            ],
           };
           final response = DeveloperSerialization()
               .parseGenerateContentResponse(jsonResponse);
@@ -411,11 +437,11 @@ void main() {
               {
                 'urlContextMetadata': {
                   'urlMetadata': [
-                    {'urlRetrievalStatus': 'URL_RETRIEVAL_STATUS_ERROR'}
-                  ]
-                }
-              }
-            ]
+                    {'urlRetrievalStatus': 'URL_RETRIEVAL_STATUS_ERROR'},
+                  ],
+                },
+              },
+            ],
           };
           final response = DeveloperSerialization()
               .parseGenerateContentResponse(jsonResponse);
@@ -429,9 +455,9 @@ void main() {
           final jsonResponse = {
             'candidates': [
               {
-                'urlContextMetadata': {'urlMetadata': []}
-              }
-            ]
+                'urlContextMetadata': {'urlMetadata': []},
+              },
+            ],
           };
           final response = DeveloperSerialization()
               .parseGenerateContentResponse(jsonResponse);
@@ -444,8 +470,8 @@ void main() {
         test('handles missing urlContextMetadata field', () {
           final jsonResponse = {
             'candidates': [
-              {'finishReason': 'STOP'}
-            ]
+              {'finishReason': 'STOP'},
+            ],
           };
           final response = DeveloperSerialization()
               .parseGenerateContentResponse(jsonResponse);
@@ -456,14 +482,21 @@ void main() {
         test('throws for invalid urlContextMetadata structure', () {
           final jsonResponse = {
             'candidates': [
-              {'urlContextMetadata': 'not_a_map'}
-            ]
+              {'urlContextMetadata': 'not_a_map'},
+            ],
           };
           expect(
-              () => DeveloperSerialization()
-                  .parseGenerateContentResponse(jsonResponse),
-              throwsA(isA<FirebaseAISdkException>().having((e) => e.message,
-                  'message', contains('UrlContextMetadata'))));
+            () => DeveloperSerialization().parseGenerateContentResponse(
+              jsonResponse,
+            ),
+            throwsA(
+              isA<FirebaseAISdkException>().having(
+                (e) => e.message,
+                'message',
+                contains('UrlContextMetadata'),
+              ),
+            ),
+          );
         });
 
         test('throws for invalid urlMetadata item in list', () {
@@ -471,16 +504,23 @@ void main() {
             'candidates': [
               {
                 'urlContextMetadata': {
-                  'urlMetadata': ['not_a_map']
-                }
-              }
-            ]
+                  'urlMetadata': ['not_a_map'],
+                },
+              },
+            ],
           };
           expect(
-              () => DeveloperSerialization()
-                  .parseGenerateContentResponse(jsonResponse),
-              throwsA(isA<FirebaseAISdkException>().having(
-                  (e) => e.message, 'message', contains('UrlMetadata'))));
+            () => DeveloperSerialization().parseGenerateContentResponse(
+              jsonResponse,
+            ),
+            throwsA(
+              isA<FirebaseAISdkException>().having(
+                (e) => e.message,
+                'message',
+                contains('UrlMetadata'),
+              ),
+            ),
+          );
         });
       });
 
@@ -490,11 +530,12 @@ void main() {
             'promptTokenCount': 10,
             'candidatesTokenCount': 25,
             'totalTokenCount': 35,
-          }
+          },
         };
 
-        final response =
-            DeveloperSerialization().parseGenerateContentResponse(jsonResponse);
+        final response = DeveloperSerialization().parseGenerateContentResponse(
+          jsonResponse,
+        );
 
         expect(response.usageMetadata, isNotNull);
         expect(response.usageMetadata!.promptTokenCount, 10);
@@ -516,16 +557,17 @@ void main() {
                     'inlineData': {
                       'mimeType': 'application/octet-stream',
                       'data': base64Encode(inlineData),
-                    }
-                  }
-                ]
+                    },
+                  },
+                ],
               },
               'finishReason': 'STOP',
-            }
+            },
           ],
         };
-        final response =
-            DeveloperSerialization().parseGenerateContentResponse(jsonResponse);
+        final response = DeveloperSerialization().parseGenerateContentResponse(
+          jsonResponse,
+        );
         final part = response.candidates.first.content.parts.first;
         expect(part, isA<InlineDataPart>());
         expect((part as InlineDataPart).mimeType, 'application/octet-stream');
@@ -538,8 +580,8 @@ void main() {
             {
               'content': {
                 'parts': [
-                  {'text': 'Test'}
-                ]
+                  {'text': 'Test'},
+                ],
               },
               'safetyRatings': [
                 {
@@ -548,14 +590,15 @@ void main() {
                   'blocked': true,
                   // These fields should be ignored by the developer parser
                   'severity': 'HARM_SEVERITY_HIGH',
-                  'severityScore': 0.9
-                }
-              ]
-            }
-          ]
+                  'severityScore': 0.9,
+                },
+              ],
+            },
+          ],
         };
-        final response =
-            DeveloperSerialization().parseGenerateContentResponse(jsonResponse);
+        final response = DeveloperSerialization().parseGenerateContentResponse(
+          jsonResponse,
+        );
         final rating = response.candidates.first.safetyRatings!.first;
         expect(rating.category, HarmCategory.dangerousContent);
         expect(rating.probability, HarmProbability.high);
@@ -568,8 +611,9 @@ void main() {
     group('parseCountTokensResponse', () {
       test('parses valid JSON correctly', () {
         final json = {'totalTokens': 123};
-        final response =
-            DeveloperSerialization().parseCountTokensResponse(json);
+        final response = DeveloperSerialization().parseCountTokensResponse(
+          json,
+        );
         expect(response.totalTokens, 123);
         // Developer API does not return other fields
         // ignore: deprecated_member_use_from_same_package
@@ -579,16 +623,20 @@ void main() {
 
       test('throws FirebaseAIException on error response', () {
         final json = {
-          'error': {'code': 400, 'message': 'Invalid request'}
+          'error': {'code': 400, 'message': 'Invalid request'},
         };
-        expect(() => DeveloperSerialization().parseCountTokensResponse(json),
-            throwsA(isA<FirebaseAIException>()));
+        expect(
+          () => DeveloperSerialization().parseCountTokensResponse(json),
+          throwsA(isA<FirebaseAIException>()),
+        );
       });
 
       test('throws unhandledFormat on invalid JSON', () {
         final json = {'wrongKey': 123};
-        expect(() => DeveloperSerialization().parseCountTokensResponse(json),
-            throwsA(isA<FirebaseAISdkException>()));
+        expect(
+          () => DeveloperSerialization().parseCountTokensResponse(json),
+          throwsA(isA<FirebaseAISdkException>()),
+        );
       });
     });
 
@@ -599,7 +647,10 @@ void main() {
           (prefix: 'models', name: 'gemini-pro'),
           [
             SafetySetting(
-                HarmCategory.dangerousContent, HarmBlockThreshold.high, null)
+              HarmCategory.dangerousContent,
+              HarmBlockThreshold.high,
+              null,
+            ),
           ],
           null,
           null,
@@ -610,25 +661,29 @@ void main() {
         expect(safetySettings, hasLength(1));
         expect(safetySettings.first, {
           'category': 'HARM_CATEGORY_DANGEROUS_CONTENT',
-          'threshold': 'BLOCK_ONLY_HIGH'
+          'threshold': 'BLOCK_ONLY_HIGH',
         });
       });
 
       test('throws ArgumentError for safetySetting with method', () {
         expect(
-            () => DeveloperSerialization().generateContentRequest(
-                  [],
-                  (prefix: 'models', name: 'gemini-pro'),
-                  [
-                    SafetySetting(HarmCategory.dangerousContent,
-                        HarmBlockThreshold.high, HarmBlockMethod.severity)
-                  ],
-                  null,
-                  null,
-                  null,
-                  null,
-                ),
-            throwsA(isA<ArgumentError>()));
+          () => DeveloperSerialization().generateContentRequest(
+            [],
+            (prefix: 'models', name: 'gemini-pro'),
+            [
+              SafetySetting(
+                HarmCategory.dangerousContent,
+                HarmBlockThreshold.high,
+                HarmBlockMethod.severity,
+              ),
+            ],
+            null,
+            null,
+            null,
+            null,
+          ),
+          throwsA(isA<ArgumentError>()),
+        );
       });
     });
 

@@ -57,10 +57,7 @@ void main() {
         );
 
         expect(FirebaseCoreWeb.isServiceRegistered('app-check'), isTrue);
-        expect(
-          initializedAppNames,
-          containsAll(['[DEFAULT]', 'prod']),
-        );
+        expect(initializedAppNames, containsAll(['[DEFAULT]', 'prod']));
       },
     );
   });

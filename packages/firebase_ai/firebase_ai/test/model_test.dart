@@ -40,14 +40,15 @@ void main() {
     }) {
       final client = ClientController();
       final model = createModelWithClient(
-          useAgentPlatform: true,
-          app: app,
-          model: modelName,
-          client: client.client,
-          tools: tools,
-          toolConfig: toolConfig,
-          systemInstruction: systemInstruction,
-          location: 'us-central1');
+        useAgentPlatform: true,
+        app: app,
+        model: modelName,
+        client: client.client,
+        tools: tools,
+        toolConfig: toolConfig,
+        systemInstruction: systemInstruction,
+        location: 'us-central1',
+      );
       return (client, model);
     }
 
@@ -181,9 +182,13 @@ void main() {
         final (client, model) = createModel();
         const prompt = 'Some prompt';
         await client.checkRequest(
-          () => model.generateContent([Content.text(prompt)],
-              generationConfig: GenerationConfig(
-                  presencePenalty: 0.5, frequencyPenalty: 0.2)),
+          () => model.generateContent(
+            [Content.text(prompt)],
+            generationConfig: GenerationConfig(
+              presencePenalty: 0.5,
+              frequencyPenalty: 0.2,
+            ),
+          ),
           verifyRequest: (_, request) {
             expect(request['generationConfig'], {
               'presencePenalty': 0.5,
@@ -222,15 +227,13 @@ void main() {
                 'someFunction',
                 'Some cool function.',
                 parameters: {
-                  'schema1': Schema.string(description: 'Some parameter.')
+                  'schema1': Schema.string(description: 'Some parameter.'),
                 },
               ),
             ]),
           ],
           toolConfig: ToolConfig(
-            functionCallingConfig: FunctionCallingConfig.any(
-              {'someFunction'},
-            ),
+            functionCallingConfig: FunctionCallingConfig.any({'someFunction'}),
           ),
         );
         const prompt = 'Some prompt';
@@ -248,11 +251,11 @@ void main() {
                       'properties': {
                         'schema1': {
                           'type': 'STRING',
-                          'description': 'Some parameter.'
-                        }
+                          'description': 'Some parameter.',
+                        },
                       },
-                      'required': ['schema1']
-                    }
+                      'required': ['schema1'],
+                    },
                   },
                 ],
               },
@@ -269,9 +272,7 @@ void main() {
       });
 
       test('can pass a google search tool', () async {
-        final (client, model) = createModel(
-          tools: [Tool.googleSearch()],
-        );
+        final (client, model) = createModel(tools: [Tool.googleSearch()]);
         const prompt = 'Some prompt';
         await client.checkRequest(
           () => model.generateContent([Content.text(prompt)]),
@@ -285,9 +286,7 @@ void main() {
       });
 
       test('can pass a url context tool', () async {
-        final (client, model) = createModel(
-          tools: [Tool.urlContext()],
-        );
+        final (client, model) = createModel(tools: [Tool.urlContext()]);
         const prompt = 'Some prompt';
         await client.checkRequest(
           () => model.generateContent([Content.text(prompt)]),
@@ -312,15 +311,15 @@ void main() {
                   'someFunction',
                   'Some cool function.',
                   parameters: {
-                    'schema1': Schema.string(description: 'Some parameter.')
+                    'schema1': Schema.string(description: 'Some parameter.'),
                   },
                 ),
               ]),
             ],
             toolConfig: ToolConfig(
-              functionCallingConfig: FunctionCallingConfig.any(
-                {'someFunction'},
-              ),
+              functionCallingConfig: FunctionCallingConfig.any({
+                'someFunction',
+              }),
             ),
           ),
           verifyRequest: (_, request) {
@@ -335,11 +334,11 @@ void main() {
                       'properties': {
                         'schema1': {
                           'type': 'STRING',
-                          'description': 'Some parameter.'
-                        }
+                          'description': 'Some parameter.',
+                        },
                       },
-                      'required': ['schema1']
-                    }
+                      'required': ['schema1'],
+                    },
                   },
                 ],
               },

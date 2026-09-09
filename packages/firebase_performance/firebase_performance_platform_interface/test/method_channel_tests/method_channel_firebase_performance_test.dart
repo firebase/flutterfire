@@ -85,8 +85,10 @@ void main() {
 
   group('newHttpMetric', () {
     test('should call delegate method successfully', () {
-      final httpMetric =
-          performance.newHttpMetric('http-metric-url', HttpMethod.Get);
+      final httpMetric = performance.newHttpMetric(
+        'http-metric-url',
+        HttpMethod.Get,
+      );
 
       expect(httpMetric, isA<MethodChannelHttpMetric>());
     });

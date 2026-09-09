@@ -10,7 +10,7 @@ part of '../firebase_crashlytics.dart';
 /// You can get an instance by calling [FirebaseCrashlytics.instance].
 class FirebaseCrashlytics extends FirebasePlugin {
   FirebaseCrashlytics._({required this.app})
-      : super(app.name, 'plugins.flutter.io/firebase_crashlytics');
+    : super(app.name, 'plugins.flutter.io/firebase_crashlytics');
 
   /// Cached instance of [FirebaseCrashlytics];
   static FirebaseCrashlytics? _instance;
@@ -22,7 +22,9 @@ class FirebaseCrashlytics extends FirebasePlugin {
 
   FirebaseCrashlyticsPlatform get _delegate {
     return _delegatePackingProperty ??= FirebaseCrashlyticsPlatform.instanceFor(
-        app: app, pluginConstants: pluginConstants);
+      app: app,
+      pluginConstants: pluginConstants,
+    );
   }
 
   /// The [FirebaseApp] for this current [FirebaseCrashlytics] instance.
@@ -76,11 +78,14 @@ class FirebaseCrashlytics extends FirebasePlugin {
   }
 
   /// Submits a Crashlytics report of a caught error.
-  Future<void> recordError(dynamic exception, StackTrace? stack,
-      {dynamic reason,
-      Iterable<Object> information = const [],
-      bool? printDetails,
-      bool fatal = false}) async {
+  Future<void> recordError(
+    dynamic exception,
+    StackTrace? stack, {
+    dynamic reason,
+    Iterable<Object> information = const [],
+    bool? printDetails,
+    bool fatal = false,
+  }) async {
     // Use the debug flag if printDetails is not provided
     printDetails ??= kDebugMode;
 
@@ -120,8 +125,9 @@ class FirebaseCrashlytics extends FirebasePlugin {
         : stack;
 
     // Report error.
-    final List<Map<String, String>> stackTraceElements =
-        getStackTraceElements(stackTrace);
+    final List<Map<String, String>> stackTraceElements = getStackTraceElements(
+      stackTrace,
+    );
     final String? buildId = getBuildId(stackTrace);
     final List<String> loadingUnits = getLoadingUnits(stackTrace);
 
@@ -138,8 +144,10 @@ class FirebaseCrashlytics extends FirebasePlugin {
 
   /// Submits a Crashlytics report of an error caught by the Flutter framework.
   /// Use [fatal] to indicate whether the error is a fatal or not.
-  Future<void> recordFlutterError(FlutterErrorDetails flutterErrorDetails,
-      {bool fatal = false}) {
+  Future<void> recordFlutterError(
+    FlutterErrorDetails flutterErrorDetails, {
+    bool fatal = false,
+  }) {
     FlutterError.presentError(flutterErrorDetails);
 
     final information = flutterErrorDetails.informationCollector?.call() ?? [];
@@ -158,7 +166,8 @@ class FirebaseCrashlytics extends FirebasePlugin {
 
   /// Submits a Crashlytics report of a fatal error caught by the Flutter framework.
   Future<void> recordFlutterFatalError(
-      FlutterErrorDetails flutterErrorDetails) {
+    FlutterErrorDetails flutterErrorDetails,
+  ) {
     return recordFlutterError(flutterErrorDetails, fatal: true);
   }
 

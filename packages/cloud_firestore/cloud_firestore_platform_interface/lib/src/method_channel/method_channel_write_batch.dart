@@ -42,8 +42,10 @@ class MethodChannelWriteBatch extends WriteBatchPlatform {
     }
 
     try {
-      await MethodChannelFirebaseFirestore.pigeonChannel
-          .writeBatchCommit(pigeonApp, _writes);
+      await MethodChannelFirebaseFirestore.pigeonChannel.writeBatchCommit(
+        pigeonApp,
+        _writes,
+      );
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -52,45 +54,52 @@ class MethodChannelWriteBatch extends WriteBatchPlatform {
   @override
   void delete(String documentPath) {
     _assertNotCommitted();
-    _writes.add(InternalTransactionCommand(
-      path: documentPath,
-      type: InternalTransactionType.deleteType,
-    ));
-  }
-
-  @override
-  void set(String documentPath, Map<String, dynamic> data,
-      [SetOptions? options]) {
-    _assertNotCommitted();
-    _writes.add(InternalTransactionCommand(
-      path: documentPath,
-      type: InternalTransactionType.set,
-      data: data,
-      option: InternalDocumentOption(
-        merge: options?.merge,
-        mergeFields: options?.mergeFields?.map((e) => e.components).toList(),
+    _writes.add(
+      InternalTransactionCommand(
+        path: documentPath,
+        type: InternalTransactionType.deleteType,
       ),
-    ));
+    );
   }
 
   @override
-  void update(
+  void set(
     String documentPath,
-    Map<FieldPath, dynamic> data,
-  ) {
+    Map<String, dynamic> data, [
+    SetOptions? options,
+  ]) {
     _assertNotCommitted();
-    _writes.add(InternalTransactionCommand(
-      path: documentPath,
-      type: InternalTransactionType.update,
-      data: data,
-    ));
+    _writes.add(
+      InternalTransactionCommand(
+        path: documentPath,
+        type: InternalTransactionType.set,
+        data: data,
+        option: InternalDocumentOption(
+          merge: options?.merge,
+          mergeFields: options?.mergeFields?.map((e) => e.components).toList(),
+        ),
+      ),
+    );
+  }
+
+  @override
+  void update(String documentPath, Map<FieldPath, dynamic> data) {
+    _assertNotCommitted();
+    _writes.add(
+      InternalTransactionCommand(
+        path: documentPath,
+        type: InternalTransactionType.update,
+        data: data,
+      ),
+    );
   }
 
   /// Ensures that once a batch has been committed, it can not be modified again.
   void _assertNotCommitted() {
     if (_committed) {
       throw StateError(
-          'This batch has already been committed and can no longer be changed.');
+        'This batch has already been committed and can no longer be changed.',
+      );
     }
   }
 }

@@ -38,11 +38,7 @@ class WriteBatch {
   ///
   /// If [SetOptions] are provided, the data will be merged into an existing
   /// document instead of overwriting.
-  void set<T>(
-    DocumentReference<T> document,
-    T data, [
-    SetOptions? options,
-  ]) {
+  void set<T>(DocumentReference<T> document, T data, [SetOptions? options]) {
     assert(
       document.firestore == _firestore,
       'the document provided is from a different Firestore instance',

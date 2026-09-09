@@ -13,12 +13,7 @@
 // limitations under the License.
 
 /// The kind of streaming request.
-enum RequestKind {
-  subscribe,
-  execute,
-  resume,
-  cancel,
-}
+enum RequestKind { subscribe, execute, resume, cancel }
 
 /// Request to execute or subscribe to a Data Connect query or mutation.
 class ExecuteRequest {
@@ -134,8 +129,8 @@ class StreamResponse {
       final errObj = json['error'] as Map<String, dynamic>;
       json = {
         'errors': [
-          {'message': errObj['message']}
-        ]
+          {'message': errObj['message']},
+        ],
       };
     }
 

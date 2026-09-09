@@ -24,185 +24,204 @@ const _wasmSkipReason =
 const _listenTimeout = Duration(seconds: 30);
 
 void runListenTests() {
-  group(
-    '$FirebaseDataConnect.instance listen',
-    () {
-      setUp(() async {
-        await deleteAllMovies();
-      });
+  group('$FirebaseDataConnect.instance listen', () {
+    setUp(() async {
+      await deleteAllMovies();
+    });
 
-      testWidgets('should be able to listen to the list of movies',
-          (WidgetTester tester) async {
-        final initialValue =
-            await MoviesConnector.instance.listMovies().ref().execute();
-        expect(initialValue.data.movies.length, 0,
-            reason: 'Initial movie list should be empty');
+    testWidgets('should be able to listen to the list of movies', (
+      WidgetTester tester,
+    ) async {
+      final initialValue = await MoviesConnector.instance
+          .listMovies()
+          .ref()
+          .execute();
+      expect(
+        initialValue.data.movies.length,
+        0,
+        reason: 'Initial movie list should be empty',
+      );
 
-        final initialMovies = Completer<List<ListMoviesMovies>>();
-        final updatedMovies = Completer<List<ListMoviesMovies>>();
+      final initialMovies = Completer<List<ListMoviesMovies>>();
+      final updatedMovies = Completer<List<ListMoviesMovies>>();
 
-        final listener = MoviesConnector.instance
-            .listMovies()
+      final listener = MoviesConnector.instance
+          .listMovies()
+          .ref()
+          .subscribe()
+          .listen((value) {
+            final movies = value.data.movies;
+
+            if (!initialMovies.isCompleted && movies.isEmpty) {
+              initialMovies.complete(movies);
+            } else if (!updatedMovies.isCompleted &&
+                movies.length == 1 &&
+                movies.single.title == 'The Matrix') {
+              updatedMovies.complete(movies);
+            }
+          });
+
+      try {
+        // Wait for the listener to be ready
+        final initial = await initialMovies.future.timeout(_listenTimeout);
+        expect(
+          initial,
+          isEmpty,
+          reason: 'First emission should contain an empty list',
+        );
+
+        // Create the movie
+        await MoviesConnector.instance
+            .createMovie(
+              genre: 'Action',
+              title: 'The Matrix',
+              releaseYear: 1999,
+            )
+            .rating(4.5)
             .ref()
-            .subscribe()
-            .listen((value) {
-          final movies = value.data.movies;
+            .execute();
 
-          if (!initialMovies.isCompleted && movies.isEmpty) {
-            initialMovies.complete(movies);
-          } else if (!updatedMovies.isCompleted &&
-              movies.length == 1 &&
-              movies.single.title == 'The Matrix') {
-            updatedMovies.complete(movies);
-          }
-        });
+        await MoviesConnector.instance.listMovies().ref().execute(
+          fetchPolicy: QueryFetchPolicy.serverOnly,
+        );
 
-        try {
-          // Wait for the listener to be ready
-          final initial = await initialMovies.future.timeout(_listenTimeout);
-          expect(initial, isEmpty,
-              reason: 'First emission should contain an empty list');
+        // Wait for the listener to receive the movie update
+        final movies = await updatedMovies.future.timeout(_listenTimeout);
 
-          // Create the movie
-          await MoviesConnector.instance
-              .createMovie(
-                genre: 'Action',
-                title: 'The Matrix',
-                releaseYear: 1999,
-              )
-              .rating(4.5)
-              .ref()
-              .execute();
+        expect(
+          movies,
+          hasLength(1),
+          reason: 'Second emission should contain one movie',
+        );
+        expect(
+          movies.single.title,
+          'The Matrix',
+          reason: 'The movie should be The Matrix',
+        );
+      } finally {
+        // Cancel the listener and wait for it to finish
+        await listener.cancel();
+      }
+    });
+    testWidgets('should be able to gracefully cancel', (
+      WidgetTester tester,
+    ) async {
+      final initialValue = await MoviesConnector.instance
+          .listMovies()
+          .ref()
+          .execute();
+      expect(
+        initialValue.data.movies.length,
+        0,
+        reason: 'Initial movie list should be empty',
+      );
 
-          await MoviesConnector.instance
-              .listMovies()
-              .ref()
-              .execute(fetchPolicy: QueryFetchPolicy.serverOnly);
+      final listener1Ready = Completer<void>();
+      final listener2Ready = Completer<void>();
+      final listener1ReceivedFirstMovie = Completer<void>();
+      final listener2ReceivedFirstMovie = Completer<void>();
+      final listener2ReceivedSecondMovie = Completer<void>();
 
-          // Wait for the listener to receive the movie update
-          final movies = await updatedMovies.future.timeout(_listenTimeout);
+      int count1 = 0;
 
-          expect(movies, hasLength(1),
-              reason: 'Second emission should contain one movie');
-          expect(movies.single.title, 'The Matrix',
-              reason: 'The movie should be The Matrix');
-        } finally {
-          // Cancel the listener and wait for it to finish
-          await listener.cancel();
-        }
-      });
-      testWidgets('should be able to gracefully cancel',
-          (WidgetTester tester) async {
-        final initialValue =
-            await MoviesConnector.instance.listMovies().ref().execute();
-        expect(initialValue.data.movies.length, 0,
-            reason: 'Initial movie list should be empty');
+      final listener1 = MoviesConnector.instance
+          .listMovies()
+          .ref()
+          .subscribe()
+          .listen((value) {
+            count1++;
+            final movies = value.data.movies;
+            if (movies.isEmpty && !listener1Ready.isCompleted) {
+              listener1Ready.complete();
+            } else if (movies.length == 1 &&
+                movies.single.title == 'The Matrix' &&
+                !listener1ReceivedFirstMovie.isCompleted) {
+              listener1ReceivedFirstMovie.complete();
+            }
+          });
 
-        final listener1Ready = Completer<void>();
-        final listener2Ready = Completer<void>();
-        final listener1ReceivedFirstMovie = Completer<void>();
-        final listener2ReceivedFirstMovie = Completer<void>();
-        final listener2ReceivedSecondMovie = Completer<void>();
+      final listener2 = MoviesConnector.instance
+          .listMovies()
+          .ref()
+          .subscribe()
+          .listen((value) {
+            final movies = value.data.movies;
+            if (movies.isEmpty && !listener2Ready.isCompleted) {
+              listener2Ready.complete();
+            } else if (movies.length == 1 &&
+                movies.single.title == 'The Matrix' &&
+                !listener2ReceivedFirstMovie.isCompleted) {
+              listener2ReceivedFirstMovie.complete();
+            } else if (movies.length == 2 &&
+                movies.any((movie) => movie.title == 'The Matrix') &&
+                movies.any(
+                  (movie) => movie.title == 'Raiders of the Lost Arc',
+                ) &&
+                !listener2ReceivedSecondMovie.isCompleted) {
+              listener2ReceivedSecondMovie.complete();
+            }
+          });
 
-        int count1 = 0;
+      try {
+        // Wait for both listeners to be ready with initial emission
+        await Future.wait([
+          listener1Ready.future,
+          listener2Ready.future,
+        ]).timeout(_listenTimeout);
 
-        final listener1 = MoviesConnector.instance
-            .listMovies()
+        // Create first movie
+        await MoviesConnector.instance
+            .createMovie(
+              genre: 'Action',
+              title: 'The Matrix',
+              releaseYear: 1999,
+            )
+            .rating(4.5)
             .ref()
-            .subscribe()
-            .listen((value) {
-          count1++;
-          final movies = value.data.movies;
-          if (movies.isEmpty && !listener1Ready.isCompleted) {
-            listener1Ready.complete();
-          } else if (movies.length == 1 &&
-              movies.single.title == 'The Matrix' &&
-              !listener1ReceivedFirstMovie.isCompleted) {
-            listener1ReceivedFirstMovie.complete();
-          }
-        });
+            .execute();
 
-        final listener2 = MoviesConnector.instance
-            .listMovies()
+        // Force a server result so the test does not depend on emulator push
+        // timing. This may duplicate an automatic WebSocket emission, so
+        // synchronize on result contents rather than event counts.
+        await MoviesConnector.instance.listMovies().ref().execute(
+          fetchPolicy: QueryFetchPolicy.serverOnly,
+        );
+
+        await Future.wait([
+          listener1ReceivedFirstMovie.future,
+          listener2ReceivedFirstMovie.future,
+        ]).timeout(_listenTimeout);
+
+        // Cancel listener1
+        await listener1.cancel();
+        final listener1CountAfterCancel = count1;
+
+        // Create second movie
+        await MoviesConnector.instance
+            .createMovie(
+              genre: 'Adventure',
+              title: 'Raiders of the Lost Arc',
+              releaseYear: 1999,
+            )
+            .rating(4.5)
             .ref()
-            .subscribe()
-            .listen((value) {
-          final movies = value.data.movies;
-          if (movies.isEmpty && !listener2Ready.isCompleted) {
-            listener2Ready.complete();
-          } else if (movies.length == 1 &&
-              movies.single.title == 'The Matrix' &&
-              !listener2ReceivedFirstMovie.isCompleted) {
-            listener2ReceivedFirstMovie.complete();
-          } else if (movies.length == 2 &&
-              movies.any((movie) => movie.title == 'The Matrix') &&
-              movies.any((movie) => movie.title == 'Raiders of the Lost Arc') &&
-              !listener2ReceivedSecondMovie.isCompleted) {
-            listener2ReceivedSecondMovie.complete();
-          }
-        });
+            .execute();
 
-        try {
-          // Wait for both listeners to be ready with initial emission
-          await Future.wait([
-            listener1Ready.future,
-            listener2Ready.future,
-          ]).timeout(_listenTimeout);
+        await MoviesConnector.instance.listMovies().ref().execute(
+          fetchPolicy: QueryFetchPolicy.serverOnly,
+        );
 
-          // Create first movie
-          await MoviesConnector.instance
-              .createMovie(
-                genre: 'Action',
-                title: 'The Matrix',
-                releaseYear: 1999,
-              )
-              .rating(4.5)
-              .ref()
-              .execute();
+        await listener2ReceivedSecondMovie.future.timeout(_listenTimeout);
 
-          // Force a server result so the test does not depend on emulator push
-          // timing. This may duplicate an automatic WebSocket emission, so
-          // synchronize on result contents rather than event counts.
-          await MoviesConnector.instance
-              .listMovies()
-              .ref()
-              .execute(fetchPolicy: QueryFetchPolicy.serverOnly);
-
-          await Future.wait([
-            listener1ReceivedFirstMovie.future,
-            listener2ReceivedFirstMovie.future,
-          ]).timeout(_listenTimeout);
-
-          // Cancel listener1
-          await listener1.cancel();
-          final listener1CountAfterCancel = count1;
-
-          // Create second movie
-          await MoviesConnector.instance
-              .createMovie(
-                genre: 'Adventure',
-                title: 'Raiders of the Lost Arc',
-                releaseYear: 1999,
-              )
-              .rating(4.5)
-              .ref()
-              .execute();
-
-          await MoviesConnector.instance
-              .listMovies()
-              .ref()
-              .execute(fetchPolicy: QueryFetchPolicy.serverOnly);
-
-          await listener2ReceivedSecondMovie.future.timeout(_listenTimeout);
-
-          expect(count1, equals(listener1CountAfterCancel),
-              reason: 'Canceled listener should not receive further updates');
-        } finally {
-          await listener1.cancel();
-          await listener2.cancel();
-        }
-      });
-    },
-    skip: kIsWasm ? _wasmSkipReason : null,
-  );
+        expect(
+          count1,
+          equals(listener1CountAfterCancel),
+          reason: 'Canceled listener should not receive further updates',
+        );
+      } finally {
+        await listener1.cancel();
+        await listener2.cancel();
+      }
+    });
+  }, skip: kIsWasm ? _wasmSkipReason : null);
 }

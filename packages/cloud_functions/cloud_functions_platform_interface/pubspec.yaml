@@ -9,8 +9,8 @@ version: 6.0.7
 resolution: workspace
 
 environment:
-  sdk: '^3.6.0'
-  flutter: '>=3.27.0'
+  sdk: '^3.10.0'
+  flutter: '>=3.38.0'
 
 dependencies:
   firebase_core: ^4.14.0

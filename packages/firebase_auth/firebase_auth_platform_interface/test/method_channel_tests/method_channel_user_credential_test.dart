@@ -113,35 +113,45 @@ void main() {
 
       test('set additionalUserInfo to null', () {
         userData.additionalUserInfo = null;
-        MethodChannelUserCredential testUser =
-            MethodChannelUserCredential(auth, userData);
+        MethodChannelUserCredential testUser = MethodChannelUserCredential(
+          auth,
+          userData,
+        );
 
         expect(testUser.additionalUserInfo, isNull);
       });
 
       test('set additionalUserInfo.profile to empty map', () {
         userData.additionalUserInfo?.profile = null;
-        MethodChannelUserCredential testUser =
-            MethodChannelUserCredential(auth, userData);
+        MethodChannelUserCredential testUser = MethodChannelUserCredential(
+          auth,
+          userData,
+        );
 
         expect(testUser.additionalUserInfo, isA<AdditionalUserInfo>());
         expect(
-            testUser.additionalUserInfo!.profile, isA<Map<String, dynamic>>());
+          testUser.additionalUserInfo!.profile,
+          isA<Map<String, dynamic>>(),
+        );
         expect(testUser.additionalUserInfo!.profile, isEmpty);
       });
 
       test('set authCredential to null', () {
         userData.credential = null;
-        MethodChannelUserCredential testUser =
-            MethodChannelUserCredential(auth, userData);
+        MethodChannelUserCredential testUser = MethodChannelUserCredential(
+          auth,
+          userData,
+        );
 
         expect(testUser.credential, isNull);
       });
 
       test('set user to null', () {
         userData.user = null;
-        MethodChannelUserCredential testUser =
-            MethodChannelUserCredential(auth, userData);
+        MethodChannelUserCredential testUser = MethodChannelUserCredential(
+          auth,
+          userData,
+        );
 
         expect(testUser.user, isNull);
       });

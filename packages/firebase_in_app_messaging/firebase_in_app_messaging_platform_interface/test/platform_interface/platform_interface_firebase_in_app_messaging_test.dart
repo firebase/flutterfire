@@ -36,13 +36,15 @@ void main() {
       );
     });
 
-    test('setAutomaticDataCollectionEnabled throws if not implemented',
-        () async {
-      await expectLater(
-        () => platform!.setAutomaticDataCollectionEnabled(true),
-        throwsA(isA<UnimplementedError>()),
-      );
-    });
+    test(
+      'setAutomaticDataCollectionEnabled throws if not implemented',
+      () async {
+        await expectLater(
+          () => platform!.setAutomaticDataCollectionEnabled(true),
+          throwsA(isA<UnimplementedError>()),
+        );
+      },
+    );
   });
 }
 

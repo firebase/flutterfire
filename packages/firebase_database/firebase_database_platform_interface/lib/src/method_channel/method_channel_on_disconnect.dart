@@ -63,10 +63,7 @@ class MethodChannelOnDisconnect extends OnDisconnectPlatform {
   @override
   Future<void> cancel() async {
     try {
-      await _api.onDisconnectCancel(
-        _pigeonApp,
-        ref.path,
-      );
+      await _api.onDisconnectCancel(_pigeonApp, ref.path);
     } catch (e, s) {
       convertPlatformException(e, s);
     }

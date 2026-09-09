@@ -56,43 +56,45 @@ void main() {
 
   group('DataConnectOptions', () {
     test(
-        'should initialize with correct parameters and inherit from ConnectorConfig',
-        () {
-      final options = DataConnectOptions(
-        'project-abc',
-        'us-central1',
-        'cloud-sql',
-        'service-123',
-      );
+      'should initialize with correct parameters and inherit from ConnectorConfig',
+      () {
+        final options = DataConnectOptions(
+          'project-abc',
+          'us-central1',
+          'cloud-sql',
+          'service-123',
+        );
 
-      // Test inherited fields from ConnectorConfig
-      expect(options.location, 'us-central1');
-      expect(options.connector, 'cloud-sql');
-      expect(options.serviceId, 'service-123');
+        // Test inherited fields from ConnectorConfig
+        expect(options.location, 'us-central1');
+        expect(options.connector, 'cloud-sql');
+        expect(options.serviceId, 'service-123');
 
-      // Test new field specific to DataConnectOptions
-      expect(options.projectId, 'project-abc');
-    });
+        // Test new field specific to DataConnectOptions
+        expect(options.projectId, 'project-abc');
+      },
+    );
 
     test(
-        'should return correct JSON representation for DataConnectOptions via ConnectorConfig toJson',
-        () {
-      final options = DataConnectOptions(
-        'project-abc',
-        'us-central1',
-        'cloud-sql',
-        'service-123',
-      );
+      'should return correct JSON representation for DataConnectOptions via ConnectorConfig toJson',
+      () {
+        final options = DataConnectOptions(
+          'project-abc',
+          'us-central1',
+          'cloud-sql',
+          'service-123',
+        );
 
-      final jsonResult = options.toJson();
-      final expectedJson = jsonEncode({
-        'location': 'us-central1',
-        'connector': 'cloud-sql',
-        'serviceId': 'service-123',
-      });
+        final jsonResult = options.toJson();
+        final expectedJson = jsonEncode({
+          'location': 'us-central1',
+          'connector': 'cloud-sql',
+          'serviceId': 'service-123',
+        });
 
-      // Even though DataConnectOptions has a new field, toJson only reflects fields in ConnectorConfig
-      expect(jsonResult, expectedJson);
-    });
+        // Even though DataConnectOptions has a new field, toJson only reflects fields in ConnectorConfig
+        expect(jsonResult, expectedJson);
+      },
+    );
   });
 }

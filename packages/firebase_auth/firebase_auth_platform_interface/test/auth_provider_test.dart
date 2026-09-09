@@ -19,8 +19,10 @@ void main() {
     group('toString', () {
       test('returns correct string when providerId is set', () {
         TestAuthProvider authProvider = TestAuthProvider(kMockProviderId);
-        expect(authProvider.toString(),
-            equals('AuthProvider(providerId: $kMockProviderId)'));
+        expect(
+          authProvider.toString(),
+          equals('AuthProvider(providerId: $kMockProviderId)'),
+        );
       });
     });
   });

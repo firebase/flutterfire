@@ -22,7 +22,7 @@ import '../common/common_library.dart';
 /// Result data source
 enum DataSource {
   cache, // results come from cache
-  server // results come from server
+  server, // results come from server
 }
 
 /// Result of an Operation Request (query/mutation).
@@ -60,8 +60,11 @@ abstract class OperationRef<Data, Variables> {
 
   final FirebaseDataConnect dataConnect;
 
-  late final String operationId =
-      createOperationId(operationName, variables, serializer);
+  late final String operationId = createOperationId(
+    operationName,
+    variables,
+    serializer,
+  );
 
   static dynamic _sortKeys(dynamic value) {
     if (value is Map) {
@@ -77,8 +80,11 @@ abstract class OperationRef<Data, Variables> {
     return value;
   }
 
-  static String createOperationId<Variables>(String operationName,
-      Variables? vars, Serializer<Variables>? serializer) {
+  static String createOperationId<Variables>(
+    String operationName,
+    Variables? vars,
+    Serializer<Variables>? serializer,
+  ) {
     if (vars != null && serializer != null) {
       try {
         final decoded = jsonDecode(serializer(vars));
@@ -115,24 +121,34 @@ abstract class OperationRef<Data, Variables> {
     List errors = bodyJson['errors'] ?? [];
     final data = bodyJson['data'] ?? bodyJson;
     List<DataConnectOperationFailureResponseErrorInfo> suberrors = errors
-        .map((e) => switch (e) {
-              {'path': List? path, 'message': String? message} =>
-                DataConnectOperationFailureResponseErrorInfo(
-                    (path ?? [])
-                        .map((val) => switch (val) {
-                              String() => DataConnectFieldPathSegment(val),
-                              int() => DataConnectListIndexPathSegment(val),
-                              _ => throw DataConnectError(
-                                  DataConnectErrorCode.other,
-                                  'Incorrect type for $val')
-                            })
-                        .toList(),
-                    message ??
-                        (throw DataConnectError(
-                            DataConnectErrorCode.other, 'Missing message'))),
-              _ => throw DataConnectError(
-                  DataConnectErrorCode.other, 'Unable to parse JSON: $e')
-            })
+        .map(
+          (e) => switch (e) {
+            {'path': List? path, 'message': String? message} =>
+              DataConnectOperationFailureResponseErrorInfo(
+                (path ?? [])
+                    .map(
+                      (val) => switch (val) {
+                        String() => DataConnectFieldPathSegment(val),
+                        int() => DataConnectListIndexPathSegment(val),
+                        _ => throw DataConnectError(
+                          DataConnectErrorCode.other,
+                          'Incorrect type for $val',
+                        ),
+                      },
+                    )
+                    .toList(),
+                message ??
+                    (throw DataConnectError(
+                      DataConnectErrorCode.other,
+                      'Missing message',
+                    )),
+              ),
+            _ => throw DataConnectError(
+              DataConnectErrorCode.other,
+              'Unable to parse JSON: $e',
+            ),
+          },
+        )
         .toList();
     Data? decodedData;
     Object? decodeError;
@@ -145,15 +161,23 @@ abstract class OperationRef<Data, Variables> {
       decodeError = e;
     }
     if (suberrors.isNotEmpty) {
-      final response =
-          DataConnectOperationFailureResponse(suberrors, data, decodedData);
+      final response = DataConnectOperationFailureResponse(
+        suberrors,
+        data,
+        decodedData,
+      );
 
       throw DataConnectOperationError(
-          DataConnectErrorCode.other, 'Failed to invoke operation: ', response);
+        DataConnectErrorCode.other,
+        'Failed to invoke operation: ',
+        response,
+      );
     } else {
       if (decodeError != null) {
         throw DataConnectError(
-            DataConnectErrorCode.other, 'Unable to decode data: $decodeError');
+          DataConnectErrorCode.other,
+          'Unable to decode data: $decodeError',
+        );
       }
       if (decodedData is! Data) {
         throw DataConnectError(
@@ -180,17 +204,19 @@ class QueryManager {
     if (dataConnect.cacheManager != null) {
       _impactedQueriesSubscription = dataConnect.cacheManager!.impactedQueries
           .listen((impactedQueryIds) async {
-        for (final queryId in impactedQueryIds) {
-          final queryRef = trackedQueries[queryId];
-          if (queryRef != null) {
-            try {
-              await queryRef.execute(fetchPolicy: QueryFetchPolicy.cacheOnly);
-            } catch (e) {
-              log('Error executing impacted query $queryId $e');
+            for (final queryId in impactedQueryIds) {
+              final queryRef = trackedQueries[queryId];
+              if (queryRef != null) {
+                try {
+                  await queryRef.execute(
+                    fetchPolicy: QueryFetchPolicy.cacheOnly,
+                  );
+                } catch (e) {
+                  log('Error executing impacted query $queryId $e');
+                }
+              }
             }
-          }
-        }
-      });
+          });
     }
   }
 
@@ -214,11 +240,11 @@ class QueryManager {
 
     final streamController =
         StreamController<QueryResult<Data, Variables>>.broadcast(
-      onCancel: () {
-        trackedQueries.remove(queryId);
-        ref._onAllSubscribersCancelled();
-      },
-    );
+          onCancel: () {
+            trackedQueries.remove(queryId);
+            ref._onAllSubscribersCancelled();
+          },
+        );
 
     return streamController;
   }
@@ -238,19 +264,20 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
     Serializer<Variables> serializer,
     Variables? variables,
   ) : super(
-          dataConnect,
-          operationName,
-          transport,
-          deserializer,
-          serializer,
-          variables,
-        );
+        dataConnect,
+        operationName,
+        transport,
+        deserializer,
+        serializer,
+        variables,
+      );
 
   final QueryManager _queryManager;
 
   @override
-  Future<QueryResult<Data, Variables>> execute(
-      {QueryFetchPolicy fetchPolicy = QueryFetchPolicy.preferCache}) async {
+  Future<QueryResult<Data, Variables>> execute({
+    QueryFetchPolicy fetchPolicy = QueryFetchPolicy.preferCache,
+  }) async {
     if (dataConnect.cacheManager != null) {
       switch (fetchPolicy) {
         case QueryFetchPolicy.cacheOnly:
@@ -270,23 +297,28 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
   }
 
   Future<QueryResult<Data, Variables>> _executeFromCache(
-      QueryFetchPolicy fetchPolicy) async {
+    QueryFetchPolicy fetchPolicy,
+  ) async {
     if (dataConnect.cacheManager == null) {
       throw DataConnectError(
-          DataConnectErrorCode.cacheMiss, 'Cache miss. No configured cache');
+        DataConnectErrorCode.cacheMiss,
+        'Cache miss. No configured cache',
+      );
     }
     final cacheManager = dataConnect.cacheManager!;
-    bool allowStale = fetchPolicy ==
+    bool allowStale =
+        fetchPolicy ==
         QueryFetchPolicy.cacheOnly; //if its cache only, we always allow stale
     final cachedData = await cacheManager.resultTree(operationId, allowStale);
 
     if (cachedData != null) {
       try {
         final result = QueryResult(
-            dataConnect,
-            deserializer(jsonEncode(cachedData['data'] ?? cachedData)),
-            DataSource.cache,
-            this);
+          dataConnect,
+          deserializer(jsonEncode(cachedData['data'] ?? cachedData)),
+          DataSource.cache,
+          this,
+        );
         publishResultToStream(result);
         return result;
       } catch (e) {
@@ -297,7 +329,9 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
         throw DataConnectError(DataConnectErrorCode.cacheMiss, 'Cache miss');
       } else {
         throw DataConnectError(
-            DataConnectErrorCode.cacheMiss, 'Possible stale cache miss');
+          DataConnectErrorCode.cacheMiss,
+          'Possible stale cache miss',
+        );
       }
     }
   }
@@ -305,23 +339,27 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
   Future<QueryResult<Data, Variables>> _executeFromServer() async {
     bool shouldRetry = await _shouldRetry();
     try {
-      ServerResponse serverResponse =
-          await _transport.invokeQuery<Data, Variables>(
-        operationId,
-        operationName,
-        deserializer,
-        serializer,
-        variables,
-        _lastToken,
-      );
+      ServerResponse serverResponse = await _transport
+          .invokeQuery<Data, Variables>(
+            operationId,
+            operationName,
+            deserializer,
+            serializer,
+            variables,
+            _lastToken,
+          );
 
       if (dataConnect.cacheManager != null) {
         await dataConnect.cacheManager!.update(operationId, serverResponse);
       }
       Data typedData = _convertBodyJsonToData(serverResponse.data);
 
-      QueryResult<Data, Variables> res =
-          QueryResult(dataConnect, typedData, DataSource.server, this);
+      QueryResult<Data, Variables> res = QueryResult(
+        dataConnect,
+        typedData,
+        DataSource.server,
+        this,
+      );
       publishResultToStream(res);
       return res;
     } on DataConnectError catch (e) {
@@ -372,8 +410,8 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
     // server stream for one logical subscription.
     _queryManager.trackedQueries[operationId] = this;
 
-    final stream =
-        _streamController!.stream.cast<QueryResult<Data, Variables>>();
+    final stream = _streamController!.stream
+        .cast<QueryResult<Data, Variables>>();
 
     // Return the stream to the caller, then execute fetches
     Future.microtask(() async {
@@ -428,16 +466,24 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
         (serverResponse) async {
           if (dataConnect.cacheManager != null) {
             try {
-              await dataConnect.cacheManager!
-                  .update(operationId, serverResponse);
+              await dataConnect.cacheManager!.update(
+                operationId,
+                serverResponse,
+              );
             } catch (e) {
-              log("QueryRef $operationId _streamFromServer loop cache update failed: $e");
+              log(
+                "QueryRef $operationId _streamFromServer loop cache update failed: $e",
+              );
             }
           }
           Data typedData = _convertBodyJsonToData(serverResponse.data);
 
-          QueryResult<Data, Variables> res =
-              QueryResult(dataConnect, typedData, DataSource.server, this);
+          QueryResult<Data, Variables> res = QueryResult(
+            dataConnect,
+            typedData,
+            DataSource.server,
+            this,
+          );
           publishResultToStream(res);
         },
         onError: (e) {
@@ -463,7 +509,9 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
       _serverStreamSubscription?.cancel();
       _serverStreamSubscription = null;
       _serverStream = null;
-      log("QueryRef $operationId _streamFromServer loop Unknown loop failure: $e");
+      log(
+        "QueryRef $operationId _streamFromServer loop Unknown loop failure: $e",
+      );
       publishErrorToStream(e);
     } finally {
       _serverStreamStarting = false;
@@ -514,15 +562,15 @@ class MutationRef<Data, Variables> extends OperationRef<Data, Variables> {
   Future<OperationResult<Data, Variables>> _executeOperation(
     String? token,
   ) async {
-    ServerResponse serverResponse =
-        await _transport.invokeMutation<Data, Variables>(
-      operationId,
-      operationName,
-      deserializer,
-      serializer,
-      variables,
-      token,
-    );
+    ServerResponse serverResponse = await _transport
+        .invokeMutation<Data, Variables>(
+          operationId,
+          operationName,
+          deserializer,
+          serializer,
+          variables,
+          token,
+        );
 
     Data typedData = _convertBodyJsonToData(serverResponse.data);
 

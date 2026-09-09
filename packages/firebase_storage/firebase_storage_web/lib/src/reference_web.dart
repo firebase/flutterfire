@@ -26,8 +26,8 @@ final _storageUrlPrefix = RegExp(r'^(?:gs|https?):\//');
 class ReferenceWeb extends ReferencePlatform {
   /// Constructor for this ref
   ReferenceWeb(FirebaseStorageWeb storage, String path)
-      : _path = path,
-        super(storage, path) {
+    : _path = path,
+      super(storage, path) {
     if (_path.startsWith(_storageUrlPrefix)) {
       _ref = storage.delegate.refFromURL(_path);
     } else {
@@ -144,9 +144,7 @@ class ReferenceWeb extends ReferencePlatform {
       this,
       _ref.put(
         data.toJS,
-        settableMetadataToFbUploadMetadata(
-          _cache.store(metadata),
-        ),
+        settableMetadataToFbUploadMetadata(_cache.store(metadata)),
       ),
     );
   }
@@ -223,8 +221,8 @@ class ReferenceWeb extends ReferencePlatform {
     });
   }
 
-// Purposefully left unimplemented because of lack of dart:io support in web:
+  // Purposefully left unimplemented because of lack of dart:io support in web:
 
-// TaskPlatform writeToFile(File file) {}
-// TaskPlatform putFile(File file, [SettableMetadata metadata]) {}
+  // TaskPlatform writeToFile(File file) {}
+  // TaskPlatform putFile(File file, [SettableMetadata metadata]) {}
 }

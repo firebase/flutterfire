@@ -24,11 +24,7 @@ class PipelineWeb extends PipelinePlatform {
 
   @override
   PipelinePlatform addStage(Map<String, dynamic> serializedStage) {
-    return PipelineWeb(
-      firestore,
-      _firestoreWeb,
-      [...stages, serializedStage],
-    );
+    return PipelineWeb(firestore, _firestoreWeb, [...stages, serializedStage]);
   }
 
   @override
@@ -59,17 +55,17 @@ class PipelineResultWeb extends PipelineResultPlatform {
     FirebaseFirestorePlatform firestore,
     firestore_interop.Firestore firestoreWeb,
     interop.PipelineResultJsImpl jsResult,
-  )   : _document = jsResult.ref != null
-            ? DocumentReferenceWeb(
-                firestore,
-                firestoreWeb,
-                jsResult.ref!.path.toDart,
-              )
-            : null,
-        _createTime = _timestampToDateTime(jsResult.createTime),
-        _updateTime = _timestampToDateTime(jsResult.updateTime),
-        _data = _dataFromResult(jsResult),
-        super();
+  ) : _document = jsResult.ref != null
+          ? DocumentReferenceWeb(
+              firestore,
+              firestoreWeb,
+              jsResult.ref!.path.toDart,
+            )
+          : null,
+      _createTime = _timestampToDateTime(jsResult.createTime),
+      _updateTime = _timestampToDateTime(jsResult.updateTime),
+      _data = _dataFromResult(jsResult),
+      super();
 
   final DocumentReferencePlatform? _document;
   final DateTime? _createTime;
@@ -77,7 +73,8 @@ class PipelineResultWeb extends PipelineResultPlatform {
   final Map<String, dynamic>? _data;
 
   static Map<String, dynamic>? _dataFromResult(
-      interop.PipelineResultJsImpl jsResult) {
+    interop.PipelineResultJsImpl jsResult,
+  ) {
     final d = jsResult.data();
     if (d == null) return null;
     final parsed = dartify(d);

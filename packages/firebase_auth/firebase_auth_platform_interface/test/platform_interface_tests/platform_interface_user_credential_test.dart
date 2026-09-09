@@ -44,13 +44,22 @@ void main() {
         profile: {},
         isNewUser: false,
       );
-      kMockUser =
-          TestUserPlatform(auth, TestMultiFactorPlatform(auth), kMockUserData);
+      kMockUser = TestUserPlatform(
+        auth,
+        TestMultiFactorPlatform(auth),
+        kMockUserData,
+      );
       kMockCredential = EmailAuthProvider.credential(
-          email: kMockEmail, password: kMockPassword);
+        email: kMockEmail,
+        password: kMockPassword,
+      );
 
       userCredentialPlatform = TestUserCredentialPlatform(
-          auth, kMockAdditionalUserInfo, kMockCredential, kMockUser);
+        auth,
+        kMockAdditionalUserInfo,
+        kMockCredential,
+        kMockUser,
+      );
     });
 
     group('Constructor', () {
@@ -102,27 +111,27 @@ void main() {
 }
 
 class TestUserPlatform extends UserPlatform {
-  TestUserPlatform(FirebaseAuthPlatform auth,
-      MultiFactorPlatform multiFactorPlatform, InternalUserDetails data)
-      : super(auth, multiFactorPlatform, data);
+  TestUserPlatform(
+    FirebaseAuthPlatform auth,
+    MultiFactorPlatform multiFactorPlatform,
+    InternalUserDetails data,
+  ) : super(auth, multiFactorPlatform, data);
 }
 
 class TestMultiFactorPlatform extends MultiFactorPlatform {
-  TestMultiFactorPlatform(FirebaseAuthPlatform auth)
-      : super(
-          auth,
-        );
+  TestMultiFactorPlatform(FirebaseAuthPlatform auth) : super(auth);
 }
 
 class TestUserCredentialPlatform extends UserCredentialPlatform {
   TestUserCredentialPlatform(
-      FirebaseAuthPlatform auth,
-      AdditionalUserInfo additionalUserInfo,
-      AuthCredential credential,
-      UserPlatform user)
-      : super(
-            auth: auth,
-            additionalUserInfo: additionalUserInfo,
-            credential: credential,
-            user: user);
+    FirebaseAuthPlatform auth,
+    AdditionalUserInfo additionalUserInfo,
+    AuthCredential credential,
+    UserPlatform user,
+  ) : super(
+        auth: auth,
+        additionalUserInfo: additionalUserInfo,
+        credential: credential,
+        user: user,
+      );
 }

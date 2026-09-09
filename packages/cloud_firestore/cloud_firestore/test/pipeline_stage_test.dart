@@ -37,10 +37,7 @@ void main() {
       });
 
       test('throws on empty collection path', () {
-        expect(
-          () => firestore.pipeline().collection(''),
-          throwsArgumentError,
-        );
+        expect(() => firestore.pipeline().collection(''), throwsArgumentError);
       });
 
       test('throws on collection path with double slashes', () {
@@ -101,10 +98,7 @@ void main() {
       });
 
       test('throws on empty documents list', () {
-        expect(
-          () => firestore.pipeline().documents([]),
-          throwsArgumentError,
-        );
+        expect(() => firestore.pipeline().documents([]), throwsArgumentError);
       });
     });
 
@@ -155,7 +149,10 @@ void main() {
       });
 
       test('serializes addFields with multiple fields', () {
-        final pipeline = firestore.pipeline().collection('users').addFields(
+        final pipeline = firestore
+            .pipeline()
+            .collection('users')
+            .addFields(
               Field('a').as('x'),
               Field('b').as('y'),
               Field('c').as('z'),
@@ -212,15 +209,15 @@ void main() {
       });
 
       test('serializes multiple orderings', () {
-        final pipeline = firestore.pipeline().collection('users').sort(
+        final pipeline = firestore
+            .pipeline()
+            .collection('users')
+            .sort(
               Ordering(Field('lastName'), OrderDirection.asc),
               Ordering(Field('firstName'), OrderDirection.asc),
             );
         final stage = pipeline.stages.last;
-        expect(
-          stage['args']['orderings'] as List,
-          hasLength(2),
-        );
+        expect(stage['args']['orderings'] as List, hasLength(2));
       });
     });
 
@@ -232,33 +229,30 @@ void main() {
             .aggregate(CountAll().as('totalCount'));
         final stage = pipeline.stages.last;
         expect(stage['stage'], 'aggregate');
-        expect(
-          stage['args']['aggregate_functions'],
-          hasLength(1),
-        );
+        expect(stage['args']['aggregate_functions'], hasLength(1));
       });
 
       test('serializes multiple aggregate functions', () {
-        final pipeline = firestore.pipeline().collection('orders').aggregate(
+        final pipeline = firestore
+            .pipeline()
+            .collection('orders')
+            .aggregate(
               CountAll().as('count'),
               Sum(Field('amount')).as('total'),
             );
         final stage = pipeline.stages.last;
-        expect(
-          stage['args']['aggregate_functions'] as List,
-          hasLength(2),
-        );
+        expect(stage['args']['aggregate_functions'] as List, hasLength(2));
       });
     });
 
     group('_AggregateStageWithOptions', () {
       test('serializes aggregate stage with accumulators only', () {
-        final pipeline =
-            firestore.pipeline().collection('orders').aggregateWithOptions(
-                  AggregateStageOptions(
-                    accumulators: [CountAll().as('count')],
-                  ),
-                );
+        final pipeline = firestore
+            .pipeline()
+            .collection('orders')
+            .aggregateWithOptions(
+              AggregateStageOptions(accumulators: [CountAll().as('count')]),
+            );
         final stage = pipeline.stages.last;
         expect(stage['stage'], 'aggregate_with_options');
         final aggregateStage =
@@ -268,16 +262,18 @@ void main() {
       });
 
       test('serializes aggregate stage with accumulators and groups', () {
-        final pipeline =
-            firestore.pipeline().collection('orders').aggregateWithOptions(
-                  AggregateStageOptions(
-                    accumulators: [
-                      Sum(Field('amount')).as('total'),
-                      CountAll().as('count'),
-                    ],
-                    groups: [Field('category')],
-                  ),
-                );
+        final pipeline = firestore
+            .pipeline()
+            .collection('orders')
+            .aggregateWithOptions(
+              AggregateStageOptions(
+                accumulators: [
+                  Sum(Field('amount')).as('total'),
+                  CountAll().as('count'),
+                ],
+                groups: [Field('category')],
+              ),
+            );
         final stage = pipeline.stages.last;
         expect(stage['stage'], 'aggregate_with_options');
         final aggregateStage =
@@ -287,12 +283,12 @@ void main() {
       });
 
       test('includes options map in args', () {
-        final pipeline =
-            firestore.pipeline().collection('orders').aggregateWithOptions(
-                  AggregateStageOptions(
-                    accumulators: [CountAll().as('count')],
-                  ),
-                );
+        final pipeline = firestore
+            .pipeline()
+            .collection('orders')
+            .aggregateWithOptions(
+              AggregateStageOptions(accumulators: [CountAll().as('count')]),
+            );
         final stage = pipeline.stages.last;
         expect(stage['args'].containsKey('options'), isTrue);
       });
@@ -300,8 +296,10 @@ void main() {
 
     group('_DistinctStage', () {
       test('serializes distinct stage', () {
-        final pipeline =
-            firestore.pipeline().collection('users').distinct(Field('country'));
+        final pipeline = firestore
+            .pipeline()
+            .collection('users')
+            .distinct(Field('country'));
         final stage = pipeline.stages.last;
         expect(stage['stage'], 'distinct');
         expect(stage['args']['expressions'], hasLength(1));
@@ -363,10 +361,10 @@ void main() {
     group('_FindNearestStage', () {
       test('serializes findNearest without limit', () {
         final pipeline = firestore.pipeline().collection('items').findNearest(
-              Field('embedding'),
-              [0.1, 0.2, 0.3],
-              DistanceMeasure.cosine,
-            );
+          Field('embedding'),
+          [0.1, 0.2, 0.3],
+          DistanceMeasure.cosine,
+        );
         final stage = pipeline.stages.last;
         expect(stage['stage'], 'find_nearest');
         expect(stage['args']['vector_field'], 'embedding');
@@ -376,7 +374,10 @@ void main() {
       });
 
       test('serializes findNearest with limit', () {
-        final pipeline = firestore.pipeline().collection('items').findNearest(
+        final pipeline = firestore
+            .pipeline()
+            .collection('items')
+            .findNearest(
               Field('embedding'),
               [0.1, 0.2, 0.3],
               DistanceMeasure.euclidean,
@@ -389,10 +390,10 @@ void main() {
 
       test('serializes findNearest with dotProduct distance', () {
         final pipeline = firestore.pipeline().collection('items').findNearest(
-              Field('embedding'),
-              [1.0, 0.0],
-              DistanceMeasure.dotProduct,
-            );
+          Field('embedding'),
+          [1.0, 0.0],
+          DistanceMeasure.dotProduct,
+        );
         final stage = pipeline.stages.last;
         expect(stage['args']['distance_measure'], 'dotProduct');
       });
@@ -400,7 +401,10 @@ void main() {
 
     group('_SearchStage', () {
       test('serializes search with string query', () {
-        final pipeline = firestore.pipeline().collection('restaurants').search(
+        final pipeline = firestore
+            .pipeline()
+            .collection('restaurants')
+            .search(
               SearchStage.withQuery(
                 'breakfast -diner',
                 limit: 10,
@@ -420,7 +424,10 @@ void main() {
       });
 
       test('serializes search with query expression', () {
-        final pipeline = firestore.pipeline().collection('restaurants').search(
+        final pipeline = firestore
+            .pipeline()
+            .collection('restaurants')
+            .search(
               SearchStage.withQueryExpression(
                 Expression.documentMatches('waffles OR pancakes'),
               ),
@@ -435,7 +442,10 @@ void main() {
       });
 
       test('serializes search sort and add fields', () {
-        final pipeline = firestore.pipeline().collection('restaurants').search(
+        final pipeline = firestore
+            .pipeline()
+            .collection('restaurants')
+            .search(
               SearchStage.withQuery(
                 'breakfast',
                 sort: [Field('rating').descending()],
@@ -475,15 +485,14 @@ void main() {
     group('_UnionStage', () {
       test('serializes union stage with nested pipeline stages', () {
         final innerPipeline = firestore.pipeline().collection('archived_users');
-        final pipeline =
-            firestore.pipeline().collection('users').union(innerPipeline);
+        final pipeline = firestore
+            .pipeline()
+            .collection('users')
+            .union(innerPipeline);
         final stage = pipeline.stages.last;
         expect(stage['stage'], 'union');
         expect(stage['args']['pipeline'], isA<List>());
-        expect(
-          stage['args']['pipeline'] as List,
-          hasLength(1),
-        );
+        expect(stage['args']['pipeline'] as List, hasLength(1));
       });
     });
 

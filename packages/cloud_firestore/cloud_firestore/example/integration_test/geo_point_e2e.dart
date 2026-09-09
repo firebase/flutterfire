@@ -22,8 +22,9 @@ void runGeoPointTests() {
     }
 
     test('sets a $GeoPoint & returns one', () async {
-      DocumentReference<Map<String, dynamic>> doc =
-          await initializeTest('geo-point');
+      DocumentReference<Map<String, dynamic>> doc = await initializeTest(
+        'geo-point',
+      );
 
       await doc.set({'foo': const GeoPoint(10, -10)});
 
@@ -36,8 +37,9 @@ void runGeoPointTests() {
     });
 
     test('updates a $GeoPoint & returns', () async {
-      DocumentReference<Map<String, dynamic>> doc =
-          await initializeTest('geo-point-update');
+      DocumentReference<Map<String, dynamic>> doc = await initializeTest(
+        'geo-point-update',
+      );
 
       await doc.set({'foo': const GeoPoint(10, -10)});
 

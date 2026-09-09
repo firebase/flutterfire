@@ -48,8 +48,10 @@ void main() {
 
       expect(firestore.databaseId, equals('foo'));
 
-      final firestore2 =
-          FirebaseFirestore.instanceFor(app: Firebase.app(), databaseId: 'bar');
+      final firestore2 = FirebaseFirestore.instanceFor(
+        app: Firebase.app(),
+        databaseId: 'bar',
+      );
 
       expect(firestore2.databaseId, equals('bar'));
 

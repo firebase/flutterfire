@@ -20,8 +20,9 @@ void main() {
     group('start()', () {
       test('fails assertion if a starting point is already set', () {
         final instance = QueryModifiers([]);
-        final modifier =
-            instance.start(StartCursorModifier.startAt('foo', 'bar'));
+        final modifier = instance.start(
+          StartCursorModifier.startAt('foo', 'bar'),
+        );
 
         expect(
           () => modifier.start(StartCursorModifier.startAfter('foo', 'bar')),
@@ -42,8 +43,9 @@ void main() {
         final instance = QueryModifiers([]);
         expect(instance.toList().length, 0);
 
-        final modifiers =
-            instance.start(StartCursorModifier.startAfter('foo', 'bar'));
+        final modifiers = instance.start(
+          StartCursorModifier.startAfter('foo', 'bar'),
+        );
 
         expect(
           modifiers.toList(),
@@ -53,7 +55,7 @@ void main() {
               'name': 'startAfter',
               'value': 'foo',
               'key': 'bar',
-            }
+            },
           ]),
         );
       });
@@ -149,10 +151,7 @@ void main() {
         expect(
           modifiers.toList(),
           equals([
-            {
-              'type': 'orderBy',
-              'name': 'orderByPriority',
-            }
+            {'type': 'orderBy', 'name': 'orderByPriority'},
           ]),
         );
       });
@@ -160,59 +159,68 @@ void main() {
 
     group('validation', () {
       test(
-          'it fails assertion when ordering by key, but the key provided to a cursor modifier is also set',
-          () {
-        final instance = QueryModifiers([]);
+        'it fails assertion when ordering by key, but the key provided to a cursor modifier is also set',
+        () {
+          final instance = QueryModifiers([]);
 
-        final modifiers =
-            instance.start(StartCursorModifier.startAt('foo', 'bar'));
+          final modifiers = instance.start(
+            StartCursorModifier.startAt('foo', 'bar'),
+          );
 
-        expect(
-          () => modifiers.order(OrderModifier.orderByKey()),
-          throwsAssertionError,
-        );
-      });
-
-      test(
-          'it fails assertion when ordering by key, but the value provided to a cursor modifier is not a string',
-          () {
-        final instance = QueryModifiers([]);
-
-        final modifiers =
-            instance.start(StartCursorModifier.startAt(123, null));
-
-        expect(
-          () => modifiers.order(OrderModifier.orderByKey()),
-          throwsAssertionError,
-        );
-      });
+          expect(
+            () => modifiers.order(OrderModifier.orderByKey()),
+            throwsAssertionError,
+          );
+        },
+      );
 
       test(
-          'it fails assertion when ordering by priority, but start cursor value is not a valid priority value',
-          () {
-        final instance = QueryModifiers([]);
+        'it fails assertion when ordering by key, but the value provided to a cursor modifier is not a string',
+        () {
+          final instance = QueryModifiers([]);
 
-        final modifiers =
-            instance.start(StartCursorModifier.startAfter(true, null));
+          final modifiers = instance.start(
+            StartCursorModifier.startAt(123, null),
+          );
 
-        expect(
-          () => modifiers.order(OrderModifier.orderByPriority()),
-          throwsAssertionError,
-        );
-      });
+          expect(
+            () => modifiers.order(OrderModifier.orderByKey()),
+            throwsAssertionError,
+          );
+        },
+      );
 
       test(
-          'it fails assertion when ordering by priority, but end cursor value is not a valid priority value',
-          () {
-        final instance = QueryModifiers([]);
+        'it fails assertion when ordering by priority, but start cursor value is not a valid priority value',
+        () {
+          final instance = QueryModifiers([]);
 
-        final modifiers = instance.end(EndCursorModifier.endBefore(true, null));
+          final modifiers = instance.start(
+            StartCursorModifier.startAfter(true, null),
+          );
 
-        expect(
-          () => modifiers.order(OrderModifier.orderByPriority()),
-          throwsAssertionError,
-        );
-      });
+          expect(
+            () => modifiers.order(OrderModifier.orderByPriority()),
+            throwsAssertionError,
+          );
+        },
+      );
+
+      test(
+        'it fails assertion when ordering by priority, but end cursor value is not a valid priority value',
+        () {
+          final instance = QueryModifiers([]);
+
+          final modifiers = instance.end(
+            EndCursorModifier.endBefore(true, null),
+          );
+
+          expect(
+            () => modifiers.order(OrderModifier.orderByPriority()),
+            throwsAssertionError,
+          );
+        },
+      );
     });
   });
 }

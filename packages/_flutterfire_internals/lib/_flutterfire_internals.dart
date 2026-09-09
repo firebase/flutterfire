@@ -17,7 +17,8 @@ import 'src/interop_shimmer.dart'
     if (dart.library.js_interop) 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
 import 'src/interop_shimmer.dart'
-    if (dart.library.js_interop) 'src/js_interop.dart' as js_interop;
+    if (dart.library.js_interop) 'src/js_interop.dart'
+    as js_interop;
 
 export 'src/exception.dart';
 
@@ -70,17 +71,14 @@ FirebaseException _firebaseExceptionFromCoreFirebaseError(
   final convertCode = _safeConvertFromPossibleJSObject(firebaseError.code);
   final code = codeParser(convertCode);
 
-  final String convertMessage =
-      _safeConvertFromPossibleJSObject(firebaseError.message);
+  final String convertMessage = _safeConvertFromPossibleJSObject(
+    firebaseError.message,
+  );
   final message = messageParser != null
       ? messageParser(code, convertMessage)
       : convertMessage.replaceFirst('(${firebaseError.code})', '');
 
-  return FirebaseException(
-    plugin: plugin,
-    message: message,
-    code: code,
-  );
+  return FirebaseException(plugin: plugin, message: message, code: code);
 }
 
 /// Checks whether a thrown object needs to be mapped using [_mapException] or
@@ -135,30 +133,32 @@ R guardWebExceptions<R>(
 
     if (value is Future) {
       return value.catchError(
-        (err, stack) => Error.throwWithStackTrace(
-          _mapException(
-            err,
-            plugin: plugin,
-            codeParser: codeParser,
-            messageParser: messageParser,
-          ),
-          stack,
-        ),
-        test: _testException,
-      ) as R;
+            (err, stack) => Error.throwWithStackTrace(
+              _mapException(
+                err,
+                plugin: plugin,
+                codeParser: codeParser,
+                messageParser: messageParser,
+              ),
+              stack,
+            ),
+            test: _testException,
+          )
+          as R;
     } else if (value is Stream) {
       return value.handleError(
-        (err, stack) => Error.throwWithStackTrace(
-          _mapException(
-            err,
-            plugin: plugin,
-            codeParser: codeParser,
-            messageParser: messageParser,
-          ),
-          stack,
-        ),
-        test: _testException,
-      ) as R;
+            (err, stack) => Error.throwWithStackTrace(
+              _mapException(
+                err,
+                plugin: plugin,
+                codeParser: codeParser,
+                messageParser: messageParser,
+              ),
+              stack,
+            ),
+            test: _testException,
+          )
+          as R;
     }
 
     return value;

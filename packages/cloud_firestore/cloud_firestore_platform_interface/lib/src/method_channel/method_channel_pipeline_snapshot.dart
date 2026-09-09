@@ -17,25 +17,27 @@ class MethodChannelPipelineSnapshot extends PipelineSnapshotPlatform {
     FirebaseFirestorePlatform firestore,
     FirestorePigeonFirebaseApp pigeonApp,
     InternalPipelineSnapshot pigeonSnapshot,
-  )   : _results = pigeonSnapshot.results
-            .whereType<InternalPipelineResult>()
-            .map((result) => MethodChannelPipelineResult(
-                  firestore,
-                  pigeonApp,
-                  result.documentPath,
-                  result.createTime != null
-                      ? DateTime.fromMillisecondsSinceEpoch(result.createTime!)
-                      : null,
-                  result.updateTime != null
-                      ? DateTime.fromMillisecondsSinceEpoch(result.updateTime!)
-                      : null,
-                  result.data?.cast<String, dynamic>(),
-                ))
-            .toList(),
-        _executionTime = DateTime.fromMillisecondsSinceEpoch(
-          pigeonSnapshot.executionTime,
-        ),
-        super();
+  ) : _results = pigeonSnapshot.results
+          .whereType<InternalPipelineResult>()
+          .map(
+            (result) => MethodChannelPipelineResult(
+              firestore,
+              pigeonApp,
+              result.documentPath,
+              result.createTime != null
+                  ? DateTime.fromMillisecondsSinceEpoch(result.createTime!)
+                  : null,
+              result.updateTime != null
+                  ? DateTime.fromMillisecondsSinceEpoch(result.updateTime!)
+                  : null,
+              result.data?.cast<String, dynamic>(),
+            ),
+          )
+          .toList(),
+      _executionTime = DateTime.fromMillisecondsSinceEpoch(
+        pigeonSnapshot.executionTime,
+      ),
+      super();
 
   @override
   List<PipelineResultPlatform> get results => _results;
@@ -59,15 +61,11 @@ class MethodChannelPipelineResult extends PipelineResultPlatform {
     this._createTime,
     this._updateTime,
     Map<String, dynamic>? data,
-  )   : _document = (documentPath != null && documentPath.isNotEmpty)
-            ? MethodChannelDocumentReference(
-                firestore,
-                documentPath,
-                pigeonApp,
-              )
-            : null,
-        _data = data,
-        super();
+  ) : _document = (documentPath != null && documentPath.isNotEmpty)
+          ? MethodChannelDocumentReference(firestore, documentPath, pigeonApp)
+          : null,
+      _data = data,
+      super();
 
   @override
   DocumentReferencePlatform? get document => _document;

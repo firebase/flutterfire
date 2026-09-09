@@ -38,8 +38,10 @@ void main() {
     });
 
     test('fromMillisecondsSinceEpoch throws max out of range exception', () {
-      expect(() => Timestamp.fromMillisecondsSinceEpoch(int64MaxValue),
-          throwsArgumentError);
+      expect(
+        () => Timestamp.fromMillisecondsSinceEpoch(int64MaxValue),
+        throwsArgumentError,
+      );
     });
 
     test('fromMillisecondsSinceEpoch can handle current timestamp', () {
@@ -54,9 +56,10 @@ void main() {
       Timestamp t = Timestamp.fromMillisecondsSinceEpoch(currentEpoch);
 
       expect(
-          t.toDate().millisecondsSinceEpoch >
-              DateTime.now().millisecondsSinceEpoch,
-          equals(true));
+        t.toDate().millisecondsSinceEpoch >
+            DateTime.now().millisecondsSinceEpoch,
+        equals(true),
+      );
     });
 
     test('fromMillisecondsSinceEpoch can handle 0', () {
@@ -66,13 +69,15 @@ void main() {
       expect(t.toDate().toUtc().day, 1);
     });
 
-    test('fromMillisecondsSinceEpoch can handle negative millisecond values',
-        () {
-      Timestamp t = Timestamp.fromMillisecondsSinceEpoch(-9999999999);
+    test(
+      'fromMillisecondsSinceEpoch can handle negative millisecond values',
+      () {
+        Timestamp t = Timestamp.fromMillisecondsSinceEpoch(-9999999999);
 
-      expect(t.toDate().toUtc().year, 1969);
-      expect(t.toDate().toUtc().month, 9);
-    });
+        expect(t.toDate().toUtc().year, 1969);
+        expect(t.toDate().toUtc().month, 9);
+      },
+    );
 
     test('millisecondsSinceEpoch returns correct negative epoch value', () {
       Timestamp t = Timestamp.fromMillisecondsSinceEpoch(-9999999999);
@@ -101,13 +106,14 @@ void main() {
     });
 
     test(
-        'pre-1970 Timestamps should match the original DateTime after conversion',
-        () {
-      final date = DateTime(1969, 06, 22, 0, 0, 0, 123);
-      final timestamp = Timestamp.fromDate(date);
-      final timestampAsDateTime = timestamp.toDate();
+      'pre-1970 Timestamps should match the original DateTime after conversion',
+      () {
+        final date = DateTime(1969, 06, 22, 0, 0, 0, 123);
+        final timestamp = Timestamp.fromDate(date);
+        final timestampAsDateTime = timestamp.toDate();
 
-      expect(date, equals(timestampAsDateTime));
-    });
+        expect(date, equals(timestampAsDateTime));
+      },
+    );
   });
 }

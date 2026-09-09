@@ -106,29 +106,21 @@ void main() {
     test('toMap for List<int> (bytes)', () {
       final bytes = <int>[1, 2, 3];
       final expr = Constant(bytes);
-      expect(
-        expr.toMap(),
-        {
-          'name': 'constant',
-          'args': {
-            'value': [1, 2, 3],
-          },
+      expect(expr.toMap(), {
+        'name': 'constant',
+        'args': {
+          'value': [1, 2, 3],
         },
-      );
+      });
     });
 
     test('toMap for Blob', () {
       final blob = Blob(Uint8List.fromList([1, 2, 3]));
       final expr = Constant(blob);
-      expect(
-        expr.toMap(),
-        {
-          'name': 'constant',
-          'args': {
-            'value': blob,
-          },
-        },
-      );
+      expect(expr.toMap(), {
+        'name': 'constant',
+        'args': {'value': blob},
+      });
     });
 
     test('toMap for DocumentReference serializes path', () {
@@ -137,9 +129,7 @@ void main() {
       expect(expr.toMap(), {
         'name': 'constant',
         'args': {
-          'value': {
-            'path': 'users/alice',
-          },
+          'value': {'path': 'users/alice'},
         },
       });
     });
@@ -319,10 +309,7 @@ void main() {
 
   group('Expression static boolean helpers', () {
     test('Expression.equalStatic produces equal expression', () {
-      final expr = Expression.equalStatic(
-        Field('a'),
-        Constant(1),
-      );
+      final expr = Expression.equalStatic(Field('a'), Constant(1));
       expect(expr.toMap()['name'], 'equal');
     });
 
@@ -400,10 +387,7 @@ void main() {
       final expr = base.ifAbsent(fallback);
       expect(expr.toMap(), {
         'name': 'if_absent',
-        'args': {
-          'expression': base.toMap(),
-          'else': fallback.toMap(),
-        },
+        'args': {'expression': base.toMap(), 'else': fallback.toMap()},
       });
     });
 
@@ -418,10 +402,7 @@ void main() {
       final expr = base.ifError(catchExpr);
       expect(expr.toMap(), {
         'name': 'if_error',
-        'args': {
-          'expression': base.toMap(),
-          'catch': catchExpr.toMap(),
-        },
+        'args': {'expression': base.toMap(), 'catch': catchExpr.toMap()},
       });
     });
   });
@@ -504,8 +485,9 @@ void main() {
     });
 
     test('stringReplaceAll serializes correctly', () {
-      final expr =
-          Field('s').stringReplaceAll(Constant('old'), Constant('new'));
+      final expr = Field(
+        's',
+      ).stringReplaceAll(Constant('old'), Constant('new'));
       expect(expr.toMap(), {
         'name': 'string_replace_all',
         'args': {
@@ -528,10 +510,7 @@ void main() {
       final expr = arr.join(Constant('-'));
       expect(expr.toMap(), {
         'name': 'join',
-        'args': {
-          'expression': arr.toMap(),
-          'delimiter': Constant('-').toMap(),
-        },
+        'args': {'expression': arr.toMap(), 'delimiter': Constant('-').toMap()},
       });
     });
   });
@@ -563,8 +542,9 @@ void main() {
     });
 
     test('arrayContainsAny serializes correctly', () {
-      final expr =
-          Field('tags').arrayContainsAny([Constant('a'), Constant('b')]);
+      final expr = Field(
+        'tags',
+      ).arrayContainsAny([Constant('a'), Constant('b')]);
       expect(expr.toMap()['name'], 'array_contains_any');
       expect(expr.toMap()['args']['array']['args']['field'], 'tags');
       expect(expr.toMap()['args']['values'], hasLength(2));
@@ -576,10 +556,7 @@ void main() {
         'name': 'array_contains_all',
         'args': {
           'array': Field('tags').toMap(),
-          'values': [
-            Constant('a').toMap(),
-            Constant('b').toMap(),
-          ],
+          'values': [Constant('a').toMap(), Constant('b').toMap()],
         },
       });
     });
@@ -597,32 +574,37 @@ void main() {
     });
 
     test(
-        'Expression.arrayContainsAllWithExpression(array, arrayExpression) serializes correctly',
-        () {
-      final arrayExpr =
-          Expression.array([Field('required'), Constant('admin')]);
-      final expr = Expression.arrayContainsAllWithExpression(
-        Field('permissions'),
-        arrayExpr,
-      );
-      expect(expr.toMap(), {
-        'name': 'array_contains_all',
-        'args': {
-          'array': Field('permissions').toMap(),
-          'array_expression': arrayExpr.toMap(),
-        },
-      });
-    });
+      'Expression.arrayContainsAllWithExpression(array, arrayExpression) serializes correctly',
+      () {
+        final arrayExpr = Expression.array([
+          Field('required'),
+          Constant('admin'),
+        ]);
+        final expr = Expression.arrayContainsAllWithExpression(
+          Field('permissions'),
+          arrayExpr,
+        );
+        expect(expr.toMap(), {
+          'name': 'array_contains_all',
+          'args': {
+            'array': Field('permissions').toMap(),
+            'array_expression': arrayExpr.toMap(),
+          },
+        });
+      },
+    );
 
-    test('Expression.arrayContainsAllValues(array, list) serializes correctly',
-        () {
-      final expr = Expression.arrayContainsAllValues(
-        Field('tags'),
-        [Constant('flutter'), Constant('dart')],
-      );
-      expect(expr.toMap()['name'], 'array_contains_all');
-      expect(expr.toMap()['args']['values'], hasLength(2));
-    });
+    test(
+      'Expression.arrayContainsAllValues(array, list) serializes correctly',
+      () {
+        final expr = Expression.arrayContainsAllValues(Field('tags'), [
+          Constant('flutter'),
+          Constant('dart'),
+        ]);
+        expect(expr.toMap()['name'], 'array_contains_all');
+        expect(expr.toMap()['args']['values'], hasLength(2));
+      },
+    );
 
     test('Expression.arrayContainsAllField serializes correctly', () {
       final required = Expression.array([Field('requiredPermissions')]);
@@ -650,10 +632,7 @@ void main() {
       final expr = a.arrayConcat(b);
       expect(expr.toMap(), {
         'name': 'array_concat',
-        'args': {
-          'first': a.toMap(),
-          'second': b.toMap(),
-        },
+        'args': {'first': a.toMap(), 'second': b.toMap()},
       });
     });
 
@@ -693,10 +672,9 @@ void main() {
     });
 
     test('arrayFilter serializes correctly', () {
-      final expr = Field('scores').arrayFilter(
-        'item',
-        Field('item').greaterThanValue(10),
-      );
+      final expr = Field(
+        'scores',
+      ).arrayFilter('item', Field('item').greaterThanValue(10));
       expect(expr.toMap(), {
         'name': 'array_filter',
         'args': {
@@ -708,10 +686,9 @@ void main() {
     });
 
     test('arrayTransform serializes correctly', () {
-      final expr = Field('scores').arrayTransform(
-        'score',
-        Field('score').multiplyNumber(10),
-      );
+      final expr = Field(
+        'scores',
+      ).arrayTransform('score', Field('score').multiplyNumber(10));
       expect(expr.toMap(), {
         'name': 'array_transform',
         'args': {
@@ -723,11 +700,9 @@ void main() {
     });
 
     test('arrayTransformWithIndex serializes correctly', () {
-      final expr = Field('scores').arrayTransformWithIndex(
-        'score',
-        'i',
-        Field('score').add(Field('i')),
-      );
+      final expr = Field(
+        'scores',
+      ).arrayTransformWithIndex('score', 'i', Field('score').add(Field('i')));
       expect(expr.toMap(), {
         'name': 'array_transform_with_index',
         'args': {
@@ -745,10 +720,7 @@ void main() {
       final expr = Field('a').add(Field('b'));
       expect(expr.toMap(), {
         'name': 'add',
-        'args': {
-          'left': Field('a').toMap(),
-          'right': Field('b').toMap(),
-        },
+        'args': {'left': Field('a').toMap(), 'right': Field('b').toMap()},
       });
     });
 
@@ -790,17 +762,11 @@ void main() {
     });
 
     test('Expression.map serializes correctly', () {
-      final expr = Expression.map({
-        'k1': Constant(1),
-        'k2': Field('v'),
-      });
+      final expr = Expression.map({'k1': Constant(1), 'k2': Field('v')});
       expect(expr.toMap(), {
         'name': 'map',
         'args': {
-          'data': {
-            'k1': Constant(1).toMap(),
-            'k2': Field('v').toMap(),
-          },
+          'data': {'k1': Constant(1).toMap(), 'k2': Field('v').toMap()},
         },
       });
     });
@@ -830,10 +796,7 @@ void main() {
       final expr = Expression.timestampTruncate(Field('ts'), 'day');
       expect(expr.toMap(), {
         'name': 'timestamp_truncate',
-        'args': {
-          'timestamp': Field('ts').toMap(),
-          'unit': 'day',
-        },
+        'args': {'timestamp': Field('ts').toMap(), 'unit': 'day'},
       });
     });
   });
@@ -991,10 +954,7 @@ void main() {
       final expr = Field('n').isType(Type.int64);
       expect(expr.toMap(), {
         'name': 'is_type',
-        'args': {
-          'expression': Field('n').toMap(),
-          'type': 'int64',
-        },
+        'args': {'expression': Field('n').toMap(), 'type': 'int64'},
       });
     });
 
@@ -1035,10 +995,7 @@ void main() {
       final expr = Field('tags').arrayFirstN(2);
       expect(expr.toMap(), {
         'name': 'array_first_n',
-        'args': {
-          'expression': Field('tags').toMap(),
-          'n': Constant(2).toMap(),
-        },
+        'args': {'expression': Field('tags').toMap(), 'n': Constant(2).toMap()},
       });
     });
 
@@ -1166,11 +1123,7 @@ void main() {
 
     test('switchOn rejects invalid default', () {
       expect(
-        () => Expression.switchOn(
-          Field('x').equalValue(0),
-          Constant('a'),
-          42,
-        ),
+        () => Expression.switchOn(Field('x').equalValue(0), Constant('a'), 42),
         throwsA(isA<ArgumentError>()),
       );
     });

@@ -114,17 +114,19 @@ class _GroundingPageState extends State<GroundingPage> {
       final groundingMetadata =
           response?.candidates.firstOrNull?.groundingMetadata;
       if (groundingMetadata != null) {
-        final chunks = groundingMetadata.groundingChunks.map((chunk) {
-          if (chunk.web != null) {
-            final title = chunk.web!.title ?? chunk.web!.uri;
-            return '- [$title](${chunk.web!.uri})';
-          }
-          if (chunk.maps != null) {
-            final title = chunk.maps!.title ?? chunk.maps!.uri;
-            return '- [${title ?? 'Maps Result'}](${chunk.maps!.uri ?? ''})';
-          }
-          return '- Unknown chunk';
-        }).join('\n');
+        final chunks = groundingMetadata.groundingChunks
+            .map((chunk) {
+              if (chunk.web != null) {
+                final title = chunk.web!.title ?? chunk.web!.uri;
+                return '- [$title](${chunk.web!.uri})';
+              }
+              if (chunk.maps != null) {
+                final title = chunk.maps!.title ?? chunk.maps!.uri;
+                return '- [${title ?? 'Maps Result'}](${chunk.maps!.uri ?? ''})';
+              }
+              return '- Unknown chunk';
+            })
+            .join('\n');
 
         if (chunks.isNotEmpty) {
           text = '$text\n\n**Grounding Sources:**\n$chunks';
@@ -157,9 +159,7 @@ class _GroundingPageState extends State<GroundingPage> {
       builder: (context) {
         return AlertDialog(
           title: const Text('Something went wrong'),
-          content: SingleChildScrollView(
-            child: SelectableText(message),
-          ),
+          content: SingleChildScrollView(child: SelectableText(message)),
           actions: [
             TextButton(
               onPressed: () {
@@ -176,9 +176,7 @@ class _GroundingPageState extends State<GroundingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
+      appBar: AppBar(title: Text(widget.title)),
       body: Padding(
         padding: const EdgeInsets.all(8),
         child: Column(
@@ -223,8 +221,9 @@ class _GroundingPageState extends State<GroundingPage> {
                     Expanded(
                       child: TextField(
                         controller: _latController,
-                        decoration:
-                            const InputDecoration(labelText: 'Latitude'),
+                        decoration: const InputDecoration(
+                          labelText: 'Latitude',
+                        ),
                         keyboardType: const TextInputType.numberWithOptions(
                           decimal: true,
                           signed: true,
@@ -235,8 +234,9 @@ class _GroundingPageState extends State<GroundingPage> {
                     Expanded(
                       child: TextField(
                         controller: _lngController,
-                        decoration:
-                            const InputDecoration(labelText: 'Longitude'),
+                        decoration: const InputDecoration(
+                          labelText: 'Longitude',
+                        ),
                         keyboardType: const TextInputType.numberWithOptions(
                           decimal: true,
                           signed: true,
@@ -261,10 +261,7 @@ class _GroundingPageState extends State<GroundingPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: 25,
-                horizontal: 15,
-              ),
+              padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 15),
               child: Row(
                 children: [
                   Expanded(

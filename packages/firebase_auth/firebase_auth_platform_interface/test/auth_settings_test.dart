@@ -17,13 +17,15 @@ void main() {
 
     test('sets appVerificationDisabledForTesting with given value', () {
       // set appVerificationDisabledForTesting to true
-      AuthSettings authSettings =
-          const AuthSettings(appVerificationDisabledForTesting: true);
+      AuthSettings authSettings = const AuthSettings(
+        appVerificationDisabledForTesting: true,
+      );
       expect(authSettings.appVerificationDisabledForTesting, isTrue);
 
       // set appVerificationDisabledForTesting to false
-      authSettings =
-          const AuthSettings(appVerificationDisabledForTesting: false);
+      authSettings = const AuthSettings(
+        appVerificationDisabledForTesting: false,
+      );
       expect(authSettings.appVerificationDisabledForTesting, isFalse);
     });
   });

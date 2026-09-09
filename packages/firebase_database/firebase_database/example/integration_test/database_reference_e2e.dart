@@ -13,9 +13,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'e2e_test.dart';
 
 DatabaseReference _uniqueRef(String name) {
-  return database.ref(
-    'tests/$name-${DateTime.now().microsecondsSinceEpoch}',
-  );
+  return database.ref('tests/$name-${DateTime.now().microsecondsSinceEpoch}');
 }
 
 void setupDatabaseReferenceTests() {
@@ -49,20 +47,22 @@ void setupDatabaseReferenceTests() {
       // plugin computed a mapped code but sent it without a Pigeon `details`
       // payload, so every native error reached Dart as `unknown` with the code
       // dropped.
-      test('a rejected write keeps its native error code and message',
-          () async {
-        // `denied_read` denies reads and writes in database.rules.json.
-        final ref = database.ref('denied_read/rejected-write');
+      test(
+        'a rejected write keeps its native error code and message',
+        () async {
+          // `denied_read` denies reads and writes in database.rules.json.
+          final ref = database.ref('denied_read/rejected-write');
 
-        await expectLater(
-          ref.set('probe'),
-          throwsA(
-            isA<FirebaseException>()
-                .having((e) => e.code, 'code', 'permission-denied')
-                .having((e) => e.message, 'message', isNotEmpty),
-          ),
-        );
-      });
+          await expectLater(
+            ref.set('probe'),
+            throwsA(
+              isA<FirebaseException>()
+                  .having((e) => e.code, 'code', 'permission-denied')
+                  .having((e) => e.message, 'message', isNotEmpty),
+            ),
+          );
+        },
+      );
     });
 
     group('setPriority()', () {
@@ -101,10 +101,7 @@ void setupDatabaseReferenceTests() {
         await ref.update({'bar': newValue});
         final actual = await ref.get();
 
-        expect(actual.value, {
-          'foo': 'bar',
-          'bar': newValue,
-        });
+        expect(actual.value, {'foo': 'bar', 'bar': newValue});
       });
     });
 
@@ -249,14 +246,16 @@ void setupDatabaseReferenceTests() {
         await ref
             .runTransaction((value) => Transaction.success(1))
             .then((result) {
-          // No-op
-        }).catchError((e) {
-          errorReceived.complete(e as FirebaseException);
-        });
+              // No-op
+            })
+            .catchError((e) {
+              errorReceived.complete(e as FirebaseException);
+            });
 
         // Fail the test rather than hang the suite if the error never arrives.
-        final streamError =
-            await errorReceived.future.timeout(const Duration(seconds: 30));
+        final streamError = await errorReceived.future.timeout(
+          const Duration(seconds: 30),
+        );
         expect(streamError, isA<FirebaseException>());
         if (defaultTargetPlatform == TargetPlatform.windows) {
           // The desktop C++ SDK replaces any non-`datastale` server error on a

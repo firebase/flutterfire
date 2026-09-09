@@ -56,14 +56,14 @@ void main() {
       customAuth = FirebaseAuth.instanceFor(app: customApp);
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMessageHandler(
-        'dev.flutter.pigeon.firebase_app_check_platform_interface.'
-        'FirebaseAppCheckHostApi.getToken',
-        (_) async {
-          return const StandardMessageCodec().encodeMessage(
-            <Object?>['app-check-token'],
+            'dev.flutter.pigeon.firebase_app_check_platform_interface.'
+            'FirebaseAppCheckHostApi.getToken',
+            (_) async {
+              return const StandardMessageCodec().encodeMessage(<Object?>[
+                'app-check-token',
+              ]);
+            },
           );
-        },
-      );
     });
 
     group('agentPlatform tests', () {
@@ -150,9 +150,10 @@ void main() {
       test('Instance creation with custom', () {
         // ignore: deprecated_member_use_from_same_package
         final vertexAI = FirebaseAI.vertexAI(
-            app: customApp,
-            appCheck: customAppCheck,
-            location: 'custom-location');
+          app: customApp,
+          appCheck: customAppCheck,
+          location: 'custom-location',
+        );
         expect(vertexAI.app, equals(customApp));
         expect(vertexAI.appCheck, equals(customAppCheck));
         expect(vertexAI.location, equals('custom-location'));
@@ -242,10 +243,7 @@ void main() {
       });
       final ai = FirebaseAI.googleAI(app: app);
 
-      final model = ai.generativeModel(
-        model: 'gemini-pro',
-        httpClient: client,
-      );
+      final model = ai.generativeModel(model: 'gemini-pro', httpClient: client);
 
       await model.generateContent([Content.text('prompt')]);
       await model.generateContentStream([Content.text('prompt')]).drain<void>();

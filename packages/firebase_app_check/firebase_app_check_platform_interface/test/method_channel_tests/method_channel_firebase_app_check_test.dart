@@ -33,19 +33,19 @@ void main() {
       debugDefaultTargetPlatformOverride = null;
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMessageHandler(
-        'dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.activate',
-        null,
-      );
+            'dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.activate',
+            null,
+          );
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMessageHandler(
-        'dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.getToken',
-        null,
-      );
+            'dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.getToken',
+            null,
+          );
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMessageHandler(
-        'dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.getTokenResult',
-        null,
-      );
+            'dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.getTokenResult',
+            null,
+          );
     });
 
     group('delegateFor()', () {
@@ -73,35 +73,36 @@ void main() {
       setUp(() {
         TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
             .setMockMessageHandler(
-          'dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.getToken',
-          (ByteData? message) async {
-            return FirebaseAppCheckHostApi.pigeonChannelCodec.encodeMessage(
-              <Object?>['test-token'],
+              'dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.getToken',
+              (ByteData? message) async {
+                return FirebaseAppCheckHostApi.pigeonChannelCodec.encodeMessage(
+                  <Object?>['test-token'],
+                );
+              },
             );
-          },
-        );
         TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
             .setMockMessageHandler(
-          'dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.getTokenResult',
-          (ByteData? message) async {
-            return FirebaseAppCheckHostApi.pigeonChannelCodec.encodeMessage(
-              <Object?>[
-                InternalAppCheckTokenResult(
-                  token: 'test-token',
-                  expirationTimestamp: expirationTimestamp,
-                ),
-              ],
+              'dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.getTokenResult',
+              (ByteData? message) async {
+                return FirebaseAppCheckHostApi.pigeonChannelCodec
+                    .encodeMessage(<Object?>[
+                      InternalAppCheckTokenResult(
+                        token: 'test-token',
+                        expirationTimestamp: expirationTimestamp,
+                      ),
+                    ]);
+              },
             );
-          },
-        );
       });
 
-      test('returns the token string without changing the existing API',
-          () async {
-        final appCheck = MethodChannelFirebaseAppCheck(app: secondaryApp);
+      test(
+        'returns the token string without changing the existing API',
+        () async {
+          final appCheck = MethodChannelFirebaseAppCheck(app: secondaryApp);
 
-        expect(await appCheck.getToken(true), 'test-token');
-      });
+          expect(await appCheck.getToken(true), 'test-token');
+        },
+      );
 
       test('returns token metadata', () async {
         final appCheck = MethodChannelFirebaseAppCheck(app: secondaryApp);
@@ -122,17 +123,19 @@ void main() {
         final calls = <List<Object?>>[];
         TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
             .setMockMessageHandler(
-          'dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.activate',
-          (ByteData? message) async {
-            calls.add(
-              FirebaseAppCheckHostApi.pigeonChannelCodec.decodeMessage(message)!
-                  as List<Object?>,
+              'dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.activate',
+              (ByteData? message) async {
+                calls.add(
+                  FirebaseAppCheckHostApi.pigeonChannelCodec.decodeMessage(
+                        message,
+                      )!
+                      as List<Object?>,
+                );
+                return FirebaseAppCheckHostApi.pigeonChannelCodec.encodeMessage(
+                  <Object?>[],
+                );
+              },
             );
-            return FirebaseAppCheckHostApi.pigeonChannelCodec.encodeMessage(
-              <Object?>[],
-            );
-          },
-        );
 
         final appCheck = MethodChannelFirebaseAppCheck(app: secondaryApp);
 
@@ -154,17 +157,19 @@ void main() {
         final calls = <List<Object?>>[];
         TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
             .setMockMessageHandler(
-          'dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.activate',
-          (ByteData? message) async {
-            calls.add(
-              FirebaseAppCheckHostApi.pigeonChannelCodec.decodeMessage(message)!
-                  as List<Object?>,
+              'dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.activate',
+              (ByteData? message) async {
+                calls.add(
+                  FirebaseAppCheckHostApi.pigeonChannelCodec.decodeMessage(
+                        message,
+                      )!
+                      as List<Object?>,
+                );
+                return FirebaseAppCheckHostApi.pigeonChannelCodec.encodeMessage(
+                  <Object?>[],
+                );
+              },
             );
-            return FirebaseAppCheckHostApi.pigeonChannelCodec.encodeMessage(
-              <Object?>[],
-            );
-          },
-        );
 
         final appCheck = MethodChannelFirebaseAppCheck(app: secondaryApp);
 
@@ -190,15 +195,17 @@ void main() {
 
         TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
             .setMockMessageHandler(
-          'dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.activate',
-          (message) async {
-            final list = const StandardMessageCodec().decodeMessage(message)
-                as List<dynamic>;
-            log.add(list);
-            return const StandardMessageCodec()
-                .encodeMessage([null]); // Return success
-          },
-        );
+              'dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.activate',
+              (message) async {
+                final list =
+                    const StandardMessageCodec().decodeMessage(message)
+                        as List<dynamic>;
+                log.add(list);
+                return const StandardMessageCodec().encodeMessage([
+                  null,
+                ]); // Return success
+              },
+            );
 
         await appCheck.activate(
           providerAndroid: const AndroidReCaptchaProvider('test-site-key'),
@@ -218,15 +225,17 @@ void main() {
 
         TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
             .setMockMessageHandler(
-          'dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.activate',
-          (message) async {
-            final list = const StandardMessageCodec().decodeMessage(message)
-                as List<dynamic>;
-            log.add(list);
-            return const StandardMessageCodec()
-                .encodeMessage([null]); // Return success
-          },
-        );
+              'dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.activate',
+              (message) async {
+                final list =
+                    const StandardMessageCodec().decodeMessage(message)
+                        as List<dynamic>;
+                log.add(list);
+                return const StandardMessageCodec().encodeMessage([
+                  null,
+                ]); // Return success
+              },
+            );
 
         await appCheck.activate(
           providerApple: const AppleReCaptchaProvider('test-site-key'),

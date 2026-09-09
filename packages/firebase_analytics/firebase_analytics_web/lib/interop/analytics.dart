@@ -30,7 +30,7 @@ Analytics getAnalyticsInstance([
 
 class Analytics extends JsObjectWrapper<analytics_interop.AnalyticsJsImpl> {
   Analytics._fromJsObject(analytics_interop.AnalyticsJsImpl jsObject)
-      : super.fromJsObject(jsObject);
+    : super.fromJsObject(jsObject);
   static final _expando = Expando<Analytics>();
 
   /// Creates a new Analytics instance from a [jsObject].
@@ -70,29 +70,32 @@ class Analytics extends JsObjectWrapper<analytics_interop.AnalyticsJsImpl> {
   }) {
     final consentSettings = {
       if (adPersonalizationSignalsConsentGranted != null)
-        'ad_personalization':
-            adPersonalizationSignalsConsentGranted ? 'granted' : 'denied',
+        'ad_personalization': adPersonalizationSignalsConsentGranted
+            ? 'granted'
+            : 'denied',
       if (adStorageConsentGranted != null)
         'ad_storage': adStorageConsentGranted ? 'granted' : 'denied',
       if (adUserDataConsentGranted != null)
         'ad_user_data': adUserDataConsentGranted ? 'granted' : 'denied',
       if (analyticsStorageConsentGranted != null)
-        'analytics_storage':
-            analyticsStorageConsentGranted ? 'granted' : 'denied',
+        'analytics_storage': analyticsStorageConsentGranted
+            ? 'granted'
+            : 'denied',
       if (functionalityStorageConsentGranted != null)
-        'functionality_storage':
-            functionalityStorageConsentGranted ? 'granted' : 'denied',
+        'functionality_storage': functionalityStorageConsentGranted
+            ? 'granted'
+            : 'denied',
       if (personalizationStorageConsentGranted != null)
-        'personalization_storage':
-            personalizationStorageConsentGranted ? 'granted' : 'denied',
+        'personalization_storage': personalizationStorageConsentGranted
+            ? 'granted'
+            : 'denied',
       if (securityStorageConsentGranted != null)
-        'security_storage':
-            securityStorageConsentGranted ? 'granted' : 'denied',
+        'security_storage': securityStorageConsentGranted
+            ? 'granted'
+            : 'denied',
     }.jsify();
 
-    return analytics_interop.setConsent(
-      consentSettings,
-    );
+    return analytics_interop.setConsent(consentSettings);
   }
 
   void setAnalyticsCollectionEnabled({required bool enabled}) {
@@ -102,10 +105,7 @@ class Analytics extends JsObjectWrapper<analytics_interop.AnalyticsJsImpl> {
     );
   }
 
-  void setUserId({
-    String? id,
-    AnalyticsCallOptions? callOptions,
-  }) {
+  void setUserId({String? id, AnalyticsCallOptions? callOptions}) {
     return analytics_interop.setUserId(
       jsObject,
       id?.toJS,

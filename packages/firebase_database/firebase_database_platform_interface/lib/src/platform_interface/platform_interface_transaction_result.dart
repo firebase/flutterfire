@@ -11,9 +11,7 @@ typedef TransactionHandler = Transaction Function(Object? value);
 /// Interface for [TransactionResultPlatform]
 class TransactionResultPlatform extends PlatformInterface {
   /// Constructor for [TransactionResultPlatform]
-  TransactionResultPlatform(
-    this.committed,
-  ) : super(token: _token);
+  TransactionResultPlatform(this.committed) : super(token: _token);
 
   /// Throws an [AssertionError] if [instance] does not extend
   /// [TransactionResultPlatform].

@@ -9,22 +9,22 @@ import 'field_path.dart';
 /// [WriteBatch] and [Transaction].
 class SetOptions {
   /// Creates a [SetOptions] instance.
-  SetOptions({
-    this.merge,
-    List<Object>? mergeFields,
-  })  : assert(
-          (merge != null) ^ (mergeFields != null),
-          "options must provide either 'merge' or 'mergeFields'",
-        ),
-        mergeFields = mergeFields?.map((field) {
-          assert(
-            field is String || field is FieldPath,
-            '[mergeFields] can only contain Strings or FieldPaths but got $field',
-          );
+  SetOptions({this.merge, List<Object>? mergeFields})
+    : assert(
+        (merge != null) ^ (mergeFields != null),
+        "options must provide either 'merge' or 'mergeFields'",
+      ),
+      mergeFields = mergeFields
+          ?.map((field) {
+            assert(
+              field is String || field is FieldPath,
+              '[mergeFields] can only contain Strings or FieldPaths but got $field',
+            );
 
-          if (field is String) return FieldPath.fromString(field);
-          return field as FieldPath;
-        }).toList(growable: false);
+            if (field is String) return FieldPath.fromString(field);
+            return field as FieldPath;
+          })
+          .toList(growable: false);
 
   /// Changes the behavior of a set() call to only replace the values specified
   /// in its data argument.

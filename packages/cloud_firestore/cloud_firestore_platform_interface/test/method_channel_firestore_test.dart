@@ -85,54 +85,52 @@ void main() {
     messenger.setMockMessageHandler(channelName, null);
   });
 
-  test(
-    'does not complete the transaction future twice when native reports an '
-    'error while storing a failure',
-    () async {
-      final firestore = MethodChannelFirebaseFirestore(
-        app: app,
-        databaseId: '(default)',
-      );
+  test('does not complete the transaction future twice when native reports an '
+      'error while storing a failure', () async {
+    final firestore = MethodChannelFirebaseFirestore(
+      app: app,
+      databaseId: '(default)',
+    );
 
-      final transactionFuture = firestore.runTransaction<void>(
-        (_) => throw StateError('handler failed'),
-      );
+    final transactionFuture = firestore.runTransaction<void>(
+      (_) => throw StateError('handler failed'),
+    );
 
-      await eventChannelListened.future;
-      unawaited(
-        messenger.handlePlatformMessage(
-          channelName,
-          codec.encodeSuccessEnvelope(<String, Object?>{
-            'appName': 'test-app',
-          }),
-          (_) {},
+    await eventChannelListened.future;
+    unawaited(
+      messenger.handlePlatformMessage(
+        channelName,
+        codec.encodeSuccessEnvelope(<String, Object?>{'appName': 'test-app'}),
+        (_) {},
+      ),
+    );
+    await hostApi.storeResultCalled.future;
+
+    unawaited(
+      messenger.handlePlatformMessage(
+        channelName,
+        codec.encodeSuccessEnvelope(<String, Object?>{
+          'error': <String, Object?>{
+            'code': 'deadline-exceeded',
+            'message': 'Transaction timed out',
+          },
+        }),
+        (_) {},
+      ),
+    );
+
+    await expectLater(
+      transactionFuture,
+      throwsA(
+        isA<FirebaseException>().having(
+          (error) => error.code,
+          'code',
+          'deadline-exceeded',
         ),
-      );
-      await hostApi.storeResultCalled.future;
+      ),
+    );
 
-      unawaited(
-        messenger.handlePlatformMessage(
-          channelName,
-          codec.encodeSuccessEnvelope(<String, Object?>{
-            'error': <String, Object?>{
-              'code': 'deadline-exceeded',
-              'message': 'Transaction timed out',
-            },
-          }),
-          (_) {},
-        ),
-      );
-
-      await expectLater(
-        transactionFuture,
-        throwsA(
-          isA<FirebaseException>()
-              .having((error) => error.code, 'code', 'deadline-exceeded'),
-        ),
-      );
-
-      hostApi.releaseStoreResult.complete();
-      await Future<void>.delayed(Duration.zero);
-    },
-  );
+    hostApi.releaseStoreResult.complete();
+    await Future<void>.delayed(Duration.zero);
+  });
 }

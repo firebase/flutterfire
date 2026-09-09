@@ -16,24 +16,34 @@ import 'package:firebase_core_web/firebase_core_web_interop.dart';
 
 @JS()
 @staticInterop
-external FunctionsJsImpl getFunctions(
-    [AppJsImpl? app, JSString? regionOrDomain]);
+external FunctionsJsImpl getFunctions([
+  AppJsImpl? app,
+  JSString? regionOrDomain,
+]);
 
 @JS()
 @staticInterop
 external void connectFunctionsEmulator(
-    FunctionsJsImpl functions, JSString host, JSNumber port);
+  FunctionsJsImpl functions,
+  JSString host,
+  JSNumber port,
+);
 
 @JS()
 @staticInterop
-external JSFunction httpsCallable(FunctionsJsImpl functions, JSString name,
-    [HttpsCallableOptions? options]);
+external JSFunction httpsCallable(
+  FunctionsJsImpl functions,
+  JSString name, [
+  HttpsCallableOptions? options,
+]);
 
 @JS()
 @staticInterop
 external JSFunction httpsCallableFromURL(
-    FunctionsJsImpl functions, JSString url,
-    [HttpsCallableOptions? options]);
+  FunctionsJsImpl functions,
+  JSString url, [
+  HttpsCallableOptions? options,
+]);
 
 /// The Cloud Functions for Firebase service interface.
 ///
@@ -49,8 +59,10 @@ extension type FunctionsJsImpl._(JSObject _) implements JSObject {
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.functions.HttpsCallableOptions>.
 extension type HttpsCallableOptions._(JSObject _) implements JSObject {
-  external factory HttpsCallableOptions(
-      {JSNumber? timeout, JSBoolean? limitedUseAppCheckTokens});
+  external factory HttpsCallableOptions({
+    JSNumber? timeout,
+    JSBoolean? limitedUseAppCheckTokens,
+  });
   external JSNumber? get timeout;
   external set timeout(JSNumber? t);
   external JSBoolean? get limitedUseAppCheckTokens;
@@ -75,8 +87,10 @@ extension type HttpsCallableStreamResultJsImpl._(JSObject _)
 }
 
 extension type HttpsCallableStreamOptions._(JSObject _) implements JSObject {
-  external factory HttpsCallableStreamOptions(
-      {JSBoolean? limitedUseAppCheckTokens, web.AbortSignal? signal});
+  external factory HttpsCallableStreamOptions({
+    JSBoolean? limitedUseAppCheckTokens,
+    web.AbortSignal? signal,
+  });
   external JSBoolean? get limitedUseAppCheckTokens;
   external set limitedUseAppCheckTokens(JSBoolean? t);
   external web.AbortSignal? signal;
@@ -94,9 +108,11 @@ extension type JsAsyncIterator<T extends JSAny>._(JSObject _)
     final object = (iterator as JSFunction).callAsFunction()! as JSObject;
     while (true) {
       // Wait for the next iteration result.
-      final result = await ((object.getProperty('next'.toJS)! as JSFunction)
-              .callAsFunction()! as JSPromise<JSAny>)
-          .toDart;
+      final result =
+          await ((object.getProperty('next'.toJS)! as JSFunction)
+                      .callAsFunction()!
+                  as JSPromise<JSAny>)
+              .toDart;
       final dartObject = (result.dartify()! as Map).cast<String, dynamic>();
       if (dartObject['done'] as bool) {
         break;

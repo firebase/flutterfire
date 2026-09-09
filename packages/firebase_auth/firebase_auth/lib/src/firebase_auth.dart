@@ -31,7 +31,7 @@ class FirebaseAuth extends FirebasePlugin implements FirebaseService {
   FirebaseApp app;
 
   FirebaseAuth._({required this.app})
-      : super(app.name, 'plugins.flutter.io/firebase_auth');
+    : super(app.name, 'plugins.flutter.io/firebase_auth');
 
   /// Returns an instance using the default [FirebaseApp].
   static FirebaseAuth get instance {
@@ -41,9 +41,7 @@ class FirebaseAuth extends FirebasePlugin implements FirebaseService {
   }
 
   /// Returns an instance using a specified [FirebaseApp].
-  factory FirebaseAuth.instanceFor({
-    required FirebaseApp app,
-  }) {
+  factory FirebaseAuth.instanceFor({required FirebaseApp app}) {
     return _firebaseAuthInstances.putIfAbsent(app.name, () {
       final instance = FirebaseAuth._(app: app);
       app.registerService<FirebaseAuth>(
@@ -89,8 +87,11 @@ class FirebaseAuth extends FirebasePlugin implements FirebaseService {
   ///
   /// Note: Must be called immediately, prior to accessing auth methods.
   /// Do not use with production credentials as emulator traffic is not encrypted.
-  Future<void> useAuthEmulator(String host, int port,
-      {bool automaticHostMapping = true}) async {
+  Future<void> useAuthEmulator(
+    String host,
+    int port, {
+    bool automaticHostMapping = true,
+  }) async {
     String mappedHost = automaticHostMapping ? getMappedHost(host) : host;
 
     await _delegate.useAuthEmulator(mappedHost, port);
@@ -133,9 +134,7 @@ class FirebaseAuth extends FirebasePlugin implements FirebaseService {
       final message = defaultTargetPlatform == TargetPlatform.windows
           ? 'Cannot set custom auth domain on a FirebaseAuth instance for windows platform'
           : 'Cannot set custom auth domain on a FirebaseAuth instance. Set the custom auth domain on `FirebaseOptions.authDomain` instance and pass into `Firebase.initializeApp()` instead.';
-      throw UnimplementedError(
-        message,
-      );
+      throw UnimplementedError(message);
     }
     _delegate.customAuthDomain = customAuthDomain;
   }
@@ -262,13 +261,15 @@ class FirebaseAuth extends FirebasePlugin implements FirebaseService {
   /// Internal helper which pipes internal [Stream] events onto
   /// a users own Stream.
   Stream<User?> _pipeStreamChanges(Stream<UserPlatform?> stream) {
-    return stream.map((delegateUser) {
-      if (delegateUser == null) {
-        return null;
-      }
+    return stream
+        .map((delegateUser) {
+          if (delegateUser == null) {
+            return null;
+          }
 
-      return User._(this, delegateUser);
-    }).asBroadcastStream(onCancel: (sub) => sub.cancel());
+          return User._(this, delegateUser);
+        })
+        .asBroadcastStream(onCancel: (sub) => sub.cancel());
   }
 
   /// Notifies about changes to the user's sign-in state (such as sign-in or
@@ -535,7 +536,9 @@ class FirebaseAuth extends FirebasePlugin implements FirebaseService {
   Future<UserCredential> signInWithCustomToken(String token) async {
     try {
       return UserCredential._(
-          this, await _delegate.signInWithCustomToken(token));
+        this,
+        await _delegate.signInWithCustomToken(token),
+      );
     } on FirebaseAuthMultiFactorExceptionPlatform catch (e) {
       throw FirebaseAuthMultiFactorException._(this, e);
     } catch (e) {
@@ -646,9 +649,7 @@ class FirebaseAuth extends FirebasePlugin implements FirebaseService {
   /// A [FirebaseAuthException] maybe thrown with the following error code:
   /// - **user-disabled**:
   ///  - Thrown if the user corresponding to the given email has been disabled.
-  Future<UserCredential> signInWithProvider(
-    AuthProvider provider,
-  ) async {
+  Future<UserCredential> signInWithProvider(AuthProvider provider) async {
     try {
       return UserCredential._(
         this,
@@ -679,8 +680,10 @@ class FirebaseAuth extends FirebasePlugin implements FirebaseService {
     // also clear that instance before proceeding.
     bool mustClear = verifier == null;
     verifier ??= RecaptchaVerifier(auth: _delegate);
-    final result =
-        await _delegate.signInWithPhoneNumber(phoneNumber, verifier.delegate);
+    final result = await _delegate.signInWithPhoneNumber(
+      phoneNumber,
+      verifier.delegate,
+    );
     if (mustClear) {
       verifier.clear();
     }
@@ -887,10 +890,11 @@ class FirebaseAuth extends FirebasePlugin implements FirebaseService {
         message: 'Password cannot be null or empty',
       );
     }
-    PasswordPolicyApi passwordPolicyApi =
-        PasswordPolicyApi(auth.app.options.apiKey);
-    PasswordPolicy passwordPolicy =
-        await passwordPolicyApi.fetchPasswordPolicy();
+    PasswordPolicyApi passwordPolicyApi = PasswordPolicyApi(
+      auth.app.options.apiKey,
+    );
+    PasswordPolicy passwordPolicy = await passwordPolicyApi
+        .fetchPasswordPolicy();
     PasswordPolicyImpl passwordPolicyImpl = PasswordPolicyImpl(passwordPolicy);
     return passwordPolicyImpl.isPasswordValid(password);
   }

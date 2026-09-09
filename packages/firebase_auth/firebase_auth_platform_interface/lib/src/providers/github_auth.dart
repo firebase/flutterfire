@@ -41,9 +41,7 @@ class GithubAuthProvider extends AuthProvider {
 
   /// Create a new [GithubAuthCredential] from a provided [accessToken];
   static OAuthCredential credential(String accessToken) {
-    return GithubAuthCredential._credential(
-      accessToken,
-    );
+    return GithubAuthCredential._credential(accessToken);
   }
 
   /// This corresponds to the sign-in method identifier.
@@ -88,12 +86,12 @@ class GithubAuthProvider extends AuthProvider {
 /// The auth credential returned from calling
 /// [GithubAuthProvider.credential].
 class GithubAuthCredential extends OAuthCredential {
-  GithubAuthCredential._({
-    required String accessToken,
-  }) : super(
-            providerId: _kProviderId,
-            signInMethod: _kProviderId,
-            accessToken: accessToken);
+  GithubAuthCredential._({required String accessToken})
+    : super(
+        providerId: _kProviderId,
+        signInMethod: _kProviderId,
+        accessToken: accessToken,
+      );
 
   factory GithubAuthCredential._credential(String accessToken) {
     return GithubAuthCredential._(accessToken: accessToken);

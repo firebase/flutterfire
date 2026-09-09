@@ -40,8 +40,9 @@ Future<Map<String, String>> getPlatformSecurityHeaders() async {
   if (_cachedHeaders != null) return _cachedHeaders!;
 
   try {
-    final result = await platformHeaderChannel
-        .invokeMapMethod<String, String>('getPlatformHeaders');
+    final result = await platformHeaderChannel.invokeMapMethod<String, String>(
+      'getPlatformHeaders',
+    );
     _cachedHeaders = result ?? const {};
   } catch (_) {
     _cachedHeaders = const {};

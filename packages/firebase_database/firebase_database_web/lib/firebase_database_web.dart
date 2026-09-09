@@ -36,11 +36,8 @@ class FirebaseDatabaseWeb extends DatabasePlatform {
 
   /// Lazily initialize [_firebaseDatabase] on first method call
   database_interop.Database get _delegate {
-    return _firebaseDatabase ??=
-        _firebaseDatabase = database_interop.getDatabaseInstance(
-      core_interop.app(app?.name),
-      databaseURL,
-    );
+    return _firebaseDatabase ??= _firebaseDatabase = database_interop
+        .getDatabaseInstance(core_interop.app(app?.name), databaseURL);
   }
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
@@ -56,8 +53,10 @@ class FirebaseDatabaseWeb extends DatabasePlatform {
   FirebaseDatabaseWeb({super.app, super.databaseURL});
 
   @override
-  DatabasePlatform delegateFor(
-      {required FirebaseApp app, String? databaseURL}) {
+  DatabasePlatform delegateFor({
+    required FirebaseApp app,
+    String? databaseURL,
+  }) {
     return FirebaseDatabaseWeb(app: app, databaseURL: databaseURL);
   }
 
@@ -83,7 +82,8 @@ class FirebaseDatabaseWeb extends DatabasePlatform {
   @override
   void setPersistenceCacheSizeBytes(int cacheSize) {
     throw UnsupportedError(
-        "setPersistenceCacheSizeBytes() is not supported for web");
+      "setPersistenceCacheSizeBytes() is not supported for web",
+    );
   }
 
   @override
@@ -124,7 +124,8 @@ class FirebaseDatabaseWeb extends DatabasePlatform {
       // Hot reload keeps state, so ignore if this is thrown.
       if (exception.message != null &&
           exception.message!.contains(
-              'Cannot call useEmulator() after instance has already been initialized')) {
+            'Cannot call useEmulator() after instance has already been initialized',
+          )) {
         return;
       }
 

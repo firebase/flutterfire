@@ -28,13 +28,16 @@ void main() {
       clearInteractions(mock);
       Firebase.delegatePackingProperty = mock;
 
-      final FirebaseAppPlatform platformApp =
-          FirebaseAppPlatform(testAppName, testOptions);
+      final FirebaseAppPlatform platformApp = FirebaseAppPlatform(
+        testAppName,
+        testOptions,
+      );
 
       when(mock.apps).thenReturn([platformApp]);
       when(mock.app(testAppName)).thenReturn(platformApp);
-      when(mock.initializeApp(name: testAppName, options: testOptions))
-          .thenAnswer((_) {
+      when(
+        mock.initializeApp(name: testAppName, options: testOptions),
+      ).thenAnswer((_) {
         return Future.value(platformApp);
       });
     });
@@ -54,8 +57,10 @@ void main() {
     });
 
     test('.initializeApp()', () async {
-      FirebaseApp initializedApp =
-          await Firebase.initializeApp(name: testAppName, options: testOptions);
+      FirebaseApp initializedApp = await Firebase.initializeApp(
+        name: testAppName,
+        options: testOptions,
+      );
       FirebaseApp app = Firebase.app(testAppName);
 
       expect(initializedApp, app);
@@ -76,8 +81,10 @@ void main() {
 
     test('.getService() returns null when registry is null', () {
       String nullAppName = 'nullApp';
-      final FirebaseAppPlatform nullPlatformApp =
-          FirebaseAppPlatform(nullAppName, testOptions);
+      final FirebaseAppPlatform nullPlatformApp = FirebaseAppPlatform(
+        nullAppName,
+        testOptions,
+      );
       when(mock.app(nullAppName)).thenReturn(nullPlatformApp);
 
       FirebaseApp app = Firebase.app(nullAppName);
@@ -89,32 +96,34 @@ void main() {
       expect(app.getService<AnotherTestService>(), isNull);
     });
 
-    test('.delete() disposes registered services before deleting app',
-        () async {
-      final calls = <String>[];
-      final platformApp = TestFirebaseAppPlatform(
-        testAppName,
-        testOptions,
-        onDelete: () async {
-          calls.add('app');
-        },
-      );
-      when(mock.app(testAppName)).thenReturn(platformApp);
+    test(
+      '.delete() disposes registered services before deleting app',
+      () async {
+        final calls = <String>[];
+        final platformApp = TestFirebaseAppPlatform(
+          testAppName,
+          testOptions,
+          onDelete: () async {
+            calls.add('app');
+          },
+        );
+        when(mock.app(testAppName)).thenReturn(platformApp);
 
-      FirebaseApp app = Firebase.app(testAppName);
-      final testService = TestService();
-      app.registerService<TestService>(
-        testService,
-        dispose: (_) async {
-          calls.add('service');
-        },
-      );
+        FirebaseApp app = Firebase.app(testAppName);
+        final testService = TestService();
+        app.registerService<TestService>(
+          testService,
+          dispose: (_) async {
+            calls.add('service');
+          },
+        );
 
-      await app.delete();
+        await app.delete();
 
-      expect(calls, <String>['service', 'app']);
-      expect(app.getService<TestService>(), isNull);
-    });
+        expect(calls, <String>['service', 'app']);
+        expect(app.getService<TestService>(), isNull);
+      },
+    );
   });
 
   test('.initializeApp() with demoProjectId', () async {
@@ -131,13 +140,16 @@ void main() {
     final mock = MockFirebaseCore();
     Firebase.delegatePackingProperty = mock;
 
-    final FirebaseAppPlatform platformApp =
-        FirebaseAppPlatform(expectedName, expectedOptions);
+    final FirebaseAppPlatform platformApp = FirebaseAppPlatform(
+      expectedName,
+      expectedOptions,
+    );
 
     when(mock.apps).thenReturn([platformApp]);
     when(mock.app(expectedName)).thenReturn(platformApp);
-    when(mock.initializeApp(name: expectedName, options: expectedOptions))
-        .thenAnswer((_) => Future.value(platformApp));
+    when(
+      mock.initializeApp(name: expectedName, options: expectedOptions),
+    ).thenAnswer((_) => Future.value(platformApp));
 
     // Initialize the app with only a demo project id. The implementation will
     // set the name and options accordingly.
@@ -148,10 +160,7 @@ void main() {
 
     expect(initializedApp, app);
     verifyInOrder([
-      mock.initializeApp(
-        name: expectedName,
-        options: expectedOptions,
-      ),
+      mock.initializeApp(name: expectedName, options: expectedOptions),
       mock.app(expectedName),
     ]);
   });
@@ -161,8 +170,7 @@ class MockFirebaseCore extends Mock
     with
         // ignore: prefer_mixin, plugin_platform_interface needs to migrate to use `mixin`
         MockPlatformInterfaceMixin
-    implements
-        FirebasePlatform {
+    implements FirebasePlatform {
   @override
   FirebaseAppPlatform app([String name = defaultFirebaseAppName]) {
     return super.noSuchMethod(
@@ -178,14 +186,10 @@ class MockFirebaseCore extends Mock
     FirebaseOptions? options,
   }) {
     return super.noSuchMethod(
-      Invocation.method(
-        #initializeApp,
-        const [],
-        {
-          #name: name,
-          #options: options,
-        },
-      ),
+      Invocation.method(#initializeApp, const [], {
+        #name: name,
+        #options: options,
+      }),
       returnValue: Future.value(FakeFirebaseAppPlatform()),
       returnValueForMissingStub: Future.value(FakeFirebaseAppPlatform()),
     );
@@ -205,11 +209,7 @@ class MockFirebaseCore extends Mock
 class FakeFirebaseAppPlatform extends Fake implements FirebaseAppPlatform {}
 
 class TestFirebaseAppPlatform extends FirebaseAppPlatform {
-  TestFirebaseAppPlatform(
-    super.name,
-    super.options, {
-    this.onDelete,
-  });
+  TestFirebaseAppPlatform(super.name, super.options, {this.onDelete});
 
   final Future<void> Function()? onDelete;
 

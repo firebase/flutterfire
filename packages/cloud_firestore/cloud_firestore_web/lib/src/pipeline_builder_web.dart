@@ -22,7 +22,11 @@ interop.PipelineJsImpl buildPipelineFromStages(
 
   // Build source stage
   interop.PipelineJsImpl pipeline = _applySourceStage(
-      source as interop.PipelineSourceJsImpl, jsFirestore, stageName, first);
+    source as interop.PipelineSourceJsImpl,
+    jsFirestore,
+    stageName,
+    first,
+  );
 
   final converter = PipelineExpressionParserWeb(interop.pipelines, jsFirestore);
 
@@ -41,20 +45,23 @@ interop.PipelineJsImpl _applySourceStage(
 ) {
   final args = first['args'];
   return switch (stageName) {
-    'collection' => source
-        .collection(((args as Map<String, dynamic>)['path']! as String).toJS),
+    'collection' => source.collection(
+      ((args as Map<String, dynamic>)['path']! as String).toJS,
+    ),
     'collection_group' => source.collectionGroup(
-        ((args as Map<String, dynamic>)['path']! as String).toJS),
+      ((args as Map<String, dynamic>)['path']! as String).toJS,
+    ),
     'database' => source.database(),
     'documents' => source.documents(
-        (args as List<dynamic>)
-            .map((e) => (e as Map<String, dynamic>)['path']! as String)
-            .map((p) => interop.doc(jsFirestore as JSAny, p.toJS))
-            .toList()
-            .toJS,
-      ),
+      (args as List<dynamic>)
+          .map((e) => (e as Map<String, dynamic>)['path']! as String)
+          .map((p) => interop.doc(jsFirestore as JSAny, p.toJS))
+          .toList()
+          .toJS,
+    ),
     _ => throw UnsupportedError(
-        'Pipeline source stage "$stageName" is not supported on web.'),
+      'Pipeline source stage "$stageName" is not supported on web.',
+    ),
   };
 }
 
@@ -78,8 +85,9 @@ interop.PipelineJsImpl _applyStage(
     case 'where':
       final expression = map['expression'];
       if (expression == null) return pipeline;
-      final condition =
-          converter.toBooleanExpression(expression as Map<String, dynamic>);
+      final condition = converter.toBooleanExpression(
+        expression as Map<String, dynamic>,
+      );
       if (condition == null) {
         throw UnsupportedError(
           'Pipeline where() on web: could not parse the condition expression.',
@@ -105,8 +113,9 @@ interop.PipelineJsImpl _applyStage(
     case 'aggregate':
       return pipeline.aggregate(converter.toAggregateOptionsFromFunctions(map));
     case 'aggregate_with_options':
-      return pipeline
-          .aggregate(converter.toAggregateOptionsFromStageAndOptions(map));
+      return pipeline.aggregate(
+        converter.toAggregateOptionsFromStageAndOptions(map),
+      );
     case 'sample':
       return pipeline.sample(converter.toSampleOptions(args));
     case 'unnest':
@@ -119,15 +128,18 @@ interop.PipelineJsImpl _applyStage(
       final expression = map['expression'];
       if (expression == null) return pipeline;
       return pipeline.replaceWith(
-          converter.toReplaceWithOptions(expression as Map<String, dynamic>));
+        converter.toReplaceWithOptions(expression as Map<String, dynamic>),
+      );
     case 'find_nearest':
       return pipeline.findNearest(converter.toFindNearestOptions(map));
     case 'search':
       return pipeline.search(converter.toSearchOptions(map));
     case 'union':
       final pipelineStages = map['pipeline'] as List<Map<String, dynamic>>;
-      final otherPipeline =
-          buildPipelineFromStages(jsFirestore, pipelineStages);
+      final otherPipeline = buildPipelineFromStages(
+        jsFirestore,
+        pipelineStages,
+      );
       return pipeline.union(otherPipeline);
     default:
       throw FirebaseException(

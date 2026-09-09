@@ -21,13 +21,17 @@ void main() {
 
     setUpAll(() async {
       app = await Firebase.initializeApp();
-      functions =
-          MethodChannelFirebaseFunctions(app: app, region: 'us-central1');
+      functions = MethodChannelFirebaseFunctions(
+        app: app,
+        region: 'us-central1',
+      );
     });
 
     test('channel', () {
-      expect(MethodChannelFirebaseFunctions.channel.name,
-          'plugins.flutter.io/firebase_functions');
+      expect(
+        MethodChannelFirebaseFunctions.channel.name,
+        'plugins.flutter.io/firebase_functions',
+      );
     });
 
     test('instance', () {
@@ -38,10 +42,14 @@ void main() {
     });
 
     test('delegateFor', () {
-      final testFunctions =
-          TestMethodChannelFirebaseFunctions(app: app, region: 'us-central1');
-      final result =
-          testFunctions.delegateFor(app: app, region: 'europe-west1');
+      final testFunctions = TestMethodChannelFirebaseFunctions(
+        app: app,
+        region: 'us-central1',
+      );
+      final result = testFunctions.delegateFor(
+        app: app,
+        region: 'europe-west1',
+      );
       expect(result, isA<MethodChannelFirebaseFunctions>());
       expect(result.app, isA<FirebaseApp>());
       expect(result.app, equals(app));
@@ -51,8 +59,11 @@ void main() {
     test('httpsCallable', () {
       const testOrigin = 'http://localhost:5000';
       const testFunctionName = 'test_function_name';
-      final callable = functions!
-          .httpsCallable(testOrigin, testFunctionName, HttpsCallableOptions());
+      final callable = functions!.httpsCallable(
+        testOrigin,
+        testFunctionName,
+        HttpsCallableOptions(),
+      );
       expect(callable, isA<MethodChannelHttpsCallable>());
       expect(callable.origin, equals(testOrigin));
       expect(callable.name, equals(testFunctionName));
@@ -63,5 +74,5 @@ void main() {
 class TestMethodChannelFirebaseFunctions
     extends MethodChannelFirebaseFunctions {
   TestMethodChannelFirebaseFunctions({FirebaseApp? app, required String region})
-      : super(app: app, region: region);
+    : super(app: app, region: region);
 }

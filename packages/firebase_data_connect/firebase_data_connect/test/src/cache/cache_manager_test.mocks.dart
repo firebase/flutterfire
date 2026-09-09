@@ -43,13 +43,8 @@ import 'package:mockito/src/dummies.dart' as _i4;
 
 class _FakeFirebaseOptions_0 extends _i1.SmartFake
     implements _i2.FirebaseOptions {
-  _FakeFirebaseOptions_0(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeFirebaseOptions_0(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 /// A class which mocks [FirebaseApp].
@@ -57,83 +52,78 @@ class _FakeFirebaseOptions_0 extends _i1.SmartFake
 /// See the documentation for Mockito's code generation for more information.
 class MockFirebaseApp extends _i1.Mock implements _i3.FirebaseApp {
   @override
-  String get name => (super.noSuchMethod(
-        Invocation.getter(#name),
-        returnValue: _i4.dummyValue<String>(
-          this,
-          Invocation.getter(#name),
-        ),
-        returnValueForMissingStub: _i4.dummyValue<String>(
-          this,
-          Invocation.getter(#name),
-        ),
-      ) as String);
+  String get name =>
+      (super.noSuchMethod(
+            Invocation.getter(#name),
+            returnValue: _i4.dummyValue<String>(this, Invocation.getter(#name)),
+            returnValueForMissingStub: _i4.dummyValue<String>(
+              this,
+              Invocation.getter(#name),
+            ),
+          )
+          as String);
 
   @override
-  _i2.FirebaseOptions get options => (super.noSuchMethod(
-        Invocation.getter(#options),
-        returnValue: _FakeFirebaseOptions_0(
-          this,
-          Invocation.getter(#options),
-        ),
-        returnValueForMissingStub: _FakeFirebaseOptions_0(
-          this,
-          Invocation.getter(#options),
-        ),
-      ) as _i2.FirebaseOptions);
+  _i2.FirebaseOptions get options =>
+      (super.noSuchMethod(
+            Invocation.getter(#options),
+            returnValue: _FakeFirebaseOptions_0(
+              this,
+              Invocation.getter(#options),
+            ),
+            returnValueForMissingStub: _FakeFirebaseOptions_0(
+              this,
+              Invocation.getter(#options),
+            ),
+          )
+          as _i2.FirebaseOptions);
 
   @override
-  bool get isAutomaticDataCollectionEnabled => (super.noSuchMethod(
-        Invocation.getter(#isAutomaticDataCollectionEnabled),
-        returnValue: false,
-        returnValueForMissingStub: false,
-      ) as bool);
+  bool get isAutomaticDataCollectionEnabled =>
+      (super.noSuchMethod(
+            Invocation.getter(#isAutomaticDataCollectionEnabled),
+            returnValue: false,
+            returnValueForMissingStub: false,
+          )
+          as bool);
 
   @override
-  _i5.Future<void> delete() => (super.noSuchMethod(
-        Invocation.method(
-          #delete,
-          [],
-        ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+  _i5.Future<void> delete() =>
+      (super.noSuchMethod(
+            Invocation.method(#delete, []),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
 
   @override
   _i5.Future<void> setAutomaticDataCollectionEnabled(bool? enabled) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #setAutomaticDataCollectionEnabled,
-          [enabled],
-        ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+            Invocation.method(#setAutomaticDataCollectionEnabled, [enabled]),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
 
   @override
   _i5.Future<void> setAutomaticResourceManagementEnabled(bool? enabled) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #setAutomaticResourceManagementEnabled,
-          [enabled],
-        ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+            Invocation.method(#setAutomaticResourceManagementEnabled, [
+              enabled,
+            ]),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
 
   @override
   void registerService<T extends _i3.FirebaseService>(
     T service, {
     _i5.Future<void> Function(T)? dispose,
-  }) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #registerService,
-          [service],
-          {#dispose: dispose},
-        ),
-        returnValueForMissingStub: null,
-      );
+  }) => super.noSuchMethod(
+    Invocation.method(#registerService, [service], {#dispose: dispose}),
+    returnValueForMissingStub: null,
+  );
 }
 
 /// A class which mocks [ConnectorConfig].
@@ -141,90 +131,80 @@ class MockFirebaseApp extends _i1.Mock implements _i3.FirebaseApp {
 /// See the documentation for Mockito's code generation for more information.
 class MockConnectorConfig extends _i1.Mock implements _i6.ConnectorConfig {
   @override
-  String get location => (super.noSuchMethod(
-        Invocation.getter(#location),
-        returnValue: _i4.dummyValue<String>(
-          this,
-          Invocation.getter(#location),
-        ),
-        returnValueForMissingStub: _i4.dummyValue<String>(
-          this,
-          Invocation.getter(#location),
-        ),
-      ) as String);
+  String get location =>
+      (super.noSuchMethod(
+            Invocation.getter(#location),
+            returnValue: _i4.dummyValue<String>(
+              this,
+              Invocation.getter(#location),
+            ),
+            returnValueForMissingStub: _i4.dummyValue<String>(
+              this,
+              Invocation.getter(#location),
+            ),
+          )
+          as String);
 
   @override
-  String get connector => (super.noSuchMethod(
-        Invocation.getter(#connector),
-        returnValue: _i4.dummyValue<String>(
-          this,
-          Invocation.getter(#connector),
-        ),
-        returnValueForMissingStub: _i4.dummyValue<String>(
-          this,
-          Invocation.getter(#connector),
-        ),
-      ) as String);
+  String get connector =>
+      (super.noSuchMethod(
+            Invocation.getter(#connector),
+            returnValue: _i4.dummyValue<String>(
+              this,
+              Invocation.getter(#connector),
+            ),
+            returnValueForMissingStub: _i4.dummyValue<String>(
+              this,
+              Invocation.getter(#connector),
+            ),
+          )
+          as String);
 
   @override
-  String get serviceId => (super.noSuchMethod(
-        Invocation.getter(#serviceId),
-        returnValue: _i4.dummyValue<String>(
-          this,
-          Invocation.getter(#serviceId),
-        ),
-        returnValueForMissingStub: _i4.dummyValue<String>(
-          this,
-          Invocation.getter(#serviceId),
-        ),
-      ) as String);
+  String get serviceId =>
+      (super.noSuchMethod(
+            Invocation.getter(#serviceId),
+            returnValue: _i4.dummyValue<String>(
+              this,
+              Invocation.getter(#serviceId),
+            ),
+            returnValueForMissingStub: _i4.dummyValue<String>(
+              this,
+              Invocation.getter(#serviceId),
+            ),
+          )
+          as String);
 
   @override
   set location(String? value) => super.noSuchMethod(
-        Invocation.setter(
-          #location,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#location, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
   set connector(String? value) => super.noSuchMethod(
-        Invocation.setter(
-          #connector,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#connector, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
   set serviceId(String? value) => super.noSuchMethod(
-        Invocation.setter(
-          #serviceId,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#serviceId, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  String toJson() => (super.noSuchMethod(
-        Invocation.method(
-          #toJson,
-          [],
-        ),
-        returnValue: _i4.dummyValue<String>(
-          this,
-          Invocation.method(
-            #toJson,
-            [],
-          ),
-        ),
-        returnValueForMissingStub: _i4.dummyValue<String>(
-          this,
-          Invocation.method(
-            #toJson,
-            [],
-          ),
-        ),
-      ) as String);
+  String toJson() =>
+      (super.noSuchMethod(
+            Invocation.method(#toJson, []),
+            returnValue: _i4.dummyValue<String>(
+              this,
+              Invocation.method(#toJson, []),
+            ),
+            returnValueForMissingStub: _i4.dummyValue<String>(
+              this,
+              Invocation.method(#toJson, []),
+            ),
+          )
+          as String);
 }

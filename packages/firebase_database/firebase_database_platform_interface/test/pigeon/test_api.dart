@@ -84,691 +84,874 @@ abstract class TestFirebaseDatabaseHostApi {
   Future<void> goOffline(DatabasePigeonFirebaseApp app);
 
   Future<void> setPersistenceEnabled(
-      DatabasePigeonFirebaseApp app, bool enabled);
+    DatabasePigeonFirebaseApp app,
+    bool enabled,
+  );
 
   Future<void> setPersistenceCacheSizeBytes(
-      DatabasePigeonFirebaseApp app, int cacheSize);
+    DatabasePigeonFirebaseApp app,
+    int cacheSize,
+  );
 
   Future<void> setLoggingEnabled(DatabasePigeonFirebaseApp app, bool enabled);
 
   Future<void> useDatabaseEmulator(
-      DatabasePigeonFirebaseApp app, String host, int port);
+    DatabasePigeonFirebaseApp app,
+    String host,
+    int port,
+  );
 
-  Future<DatabaseReferencePlatform> ref(DatabasePigeonFirebaseApp app,
-      [String? path]);
+  Future<DatabaseReferencePlatform> ref(
+    DatabasePigeonFirebaseApp app, [
+    String? path,
+  ]);
 
   Future<DatabaseReferencePlatform> refFromURL(
-      DatabasePigeonFirebaseApp app, String url);
+    DatabasePigeonFirebaseApp app,
+    String url,
+  );
 
   Future<void> purgeOutstandingWrites(DatabasePigeonFirebaseApp app);
 
   Future<void> databaseReferenceSet(
-      DatabasePigeonFirebaseApp app, DatabaseReferenceRequest request);
+    DatabasePigeonFirebaseApp app,
+    DatabaseReferenceRequest request,
+  );
 
   Future<void> databaseReferenceSetWithPriority(
-      DatabasePigeonFirebaseApp app, DatabaseReferenceRequest request);
+    DatabasePigeonFirebaseApp app,
+    DatabaseReferenceRequest request,
+  );
 
   Future<void> databaseReferenceUpdate(
-      DatabasePigeonFirebaseApp app, UpdateRequest request);
+    DatabasePigeonFirebaseApp app,
+    UpdateRequest request,
+  );
 
   Future<void> databaseReferenceSetPriority(
-      DatabasePigeonFirebaseApp app, DatabaseReferenceRequest request);
+    DatabasePigeonFirebaseApp app,
+    DatabaseReferenceRequest request,
+  );
 
   Future<void> databaseReferenceRunTransaction(
-      DatabasePigeonFirebaseApp app, TransactionRequest request);
+    DatabasePigeonFirebaseApp app,
+    TransactionRequest request,
+  );
 
   Future<Map<String, Object?>> databaseReferenceGetTransactionResult(
-      DatabasePigeonFirebaseApp app, int transactionKey);
+    DatabasePigeonFirebaseApp app,
+    int transactionKey,
+  );
 
   Future<void> onDisconnectSet(
-      DatabasePigeonFirebaseApp app, DatabaseReferenceRequest request);
+    DatabasePigeonFirebaseApp app,
+    DatabaseReferenceRequest request,
+  );
 
   Future<void> onDisconnectSetWithPriority(
-      DatabasePigeonFirebaseApp app, DatabaseReferenceRequest request);
+    DatabasePigeonFirebaseApp app,
+    DatabaseReferenceRequest request,
+  );
 
   Future<void> onDisconnectUpdate(
-      DatabasePigeonFirebaseApp app, UpdateRequest request);
+    DatabasePigeonFirebaseApp app,
+    UpdateRequest request,
+  );
 
   Future<void> onDisconnectCancel(DatabasePigeonFirebaseApp app, String path);
 
   Future<String> queryObserve(
-      DatabasePigeonFirebaseApp app, QueryRequest request);
+    DatabasePigeonFirebaseApp app,
+    QueryRequest request,
+  );
 
   Future<void> queryKeepSynced(
-      DatabasePigeonFirebaseApp app, QueryRequest request);
+    DatabasePigeonFirebaseApp app,
+    QueryRequest request,
+  );
 
   Future<Map<String, Object?>> queryGet(
-      DatabasePigeonFirebaseApp app, QueryRequest request);
+    DatabasePigeonFirebaseApp app,
+    QueryRequest request,
+  );
 
   static void setUp(
     TestFirebaseDatabaseHostApi? api, {
     BinaryMessenger? binaryMessenger,
     String messageChannelSuffix = '',
   }) {
-    messageChannelSuffix =
-        messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+    messageChannelSuffix = messageChannelSuffix.isNotEmpty
+        ? '.$messageChannelSuffix'
+        : '';
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.goOnline$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.goOnline$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final DatabasePigeonFirebaseApp arg_app =
-              args[0]! as DatabasePigeonFirebaseApp;
-          try {
-            await api.goOnline(arg_app);
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final DatabasePigeonFirebaseApp arg_app =
+                  args[0]! as DatabasePigeonFirebaseApp;
+              try {
+                await api.goOnline(arg_app);
+                return wrapResponse(empty: true);
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.goOffline$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.goOffline$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final DatabasePigeonFirebaseApp arg_app =
-              args[0]! as DatabasePigeonFirebaseApp;
-          try {
-            await api.goOffline(arg_app);
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final DatabasePigeonFirebaseApp arg_app =
+                  args[0]! as DatabasePigeonFirebaseApp;
+              try {
+                await api.goOffline(arg_app);
+                return wrapResponse(empty: true);
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.setPersistenceEnabled$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.setPersistenceEnabled$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final DatabasePigeonFirebaseApp arg_app =
-              args[0]! as DatabasePigeonFirebaseApp;
-          final bool arg_enabled = args[1]! as bool;
-          try {
-            await api.setPersistenceEnabled(arg_app, arg_enabled);
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final DatabasePigeonFirebaseApp arg_app =
+                  args[0]! as DatabasePigeonFirebaseApp;
+              final bool arg_enabled = args[1]! as bool;
+              try {
+                await api.setPersistenceEnabled(arg_app, arg_enabled);
+                return wrapResponse(empty: true);
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.setPersistenceCacheSizeBytes$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.setPersistenceCacheSizeBytes$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final DatabasePigeonFirebaseApp arg_app =
-              args[0]! as DatabasePigeonFirebaseApp;
-          final int arg_cacheSize = args[1]! as int;
-          try {
-            await api.setPersistenceCacheSizeBytes(arg_app, arg_cacheSize);
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final DatabasePigeonFirebaseApp arg_app =
+                  args[0]! as DatabasePigeonFirebaseApp;
+              final int arg_cacheSize = args[1]! as int;
+              try {
+                await api.setPersistenceCacheSizeBytes(arg_app, arg_cacheSize);
+                return wrapResponse(empty: true);
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.setLoggingEnabled$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.setLoggingEnabled$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final DatabasePigeonFirebaseApp arg_app =
-              args[0]! as DatabasePigeonFirebaseApp;
-          final bool arg_enabled = args[1]! as bool;
-          try {
-            await api.setLoggingEnabled(arg_app, arg_enabled);
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final DatabasePigeonFirebaseApp arg_app =
+                  args[0]! as DatabasePigeonFirebaseApp;
+              final bool arg_enabled = args[1]! as bool;
+              try {
+                await api.setLoggingEnabled(arg_app, arg_enabled);
+                return wrapResponse(empty: true);
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.useDatabaseEmulator$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.useDatabaseEmulator$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final DatabasePigeonFirebaseApp arg_app =
-              args[0]! as DatabasePigeonFirebaseApp;
-          final String arg_host = args[1]! as String;
-          final int arg_port = args[2]! as int;
-          try {
-            await api.useDatabaseEmulator(arg_app, arg_host, arg_port);
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final DatabasePigeonFirebaseApp arg_app =
+                  args[0]! as DatabasePigeonFirebaseApp;
+              final String arg_host = args[1]! as String;
+              final int arg_port = args[2]! as int;
+              try {
+                await api.useDatabaseEmulator(arg_app, arg_host, arg_port);
+                return wrapResponse(empty: true);
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.ref$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.ref$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final DatabasePigeonFirebaseApp arg_app =
-              args[0]! as DatabasePigeonFirebaseApp;
-          final String? arg_path = args[1] as String?;
-          try {
-            final DatabaseReferencePlatform output =
-                await api.ref(arg_app, arg_path);
-            return <Object?>[output];
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final DatabasePigeonFirebaseApp arg_app =
+                  args[0]! as DatabasePigeonFirebaseApp;
+              final String? arg_path = args[1] as String?;
+              try {
+                final DatabaseReferencePlatform output = await api.ref(
+                  arg_app,
+                  arg_path,
+                );
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.refFromURL$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.refFromURL$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final DatabasePigeonFirebaseApp arg_app =
-              args[0]! as DatabasePigeonFirebaseApp;
-          final String arg_url = args[1]! as String;
-          try {
-            final DatabaseReferencePlatform output =
-                await api.refFromURL(arg_app, arg_url);
-            return <Object?>[output];
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final DatabasePigeonFirebaseApp arg_app =
+                  args[0]! as DatabasePigeonFirebaseApp;
+              final String arg_url = args[1]! as String;
+              try {
+                final DatabaseReferencePlatform output = await api.refFromURL(
+                  arg_app,
+                  arg_url,
+                );
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.purgeOutstandingWrites$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.purgeOutstandingWrites$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final DatabasePigeonFirebaseApp arg_app =
-              args[0]! as DatabasePigeonFirebaseApp;
-          try {
-            await api.purgeOutstandingWrites(arg_app);
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final DatabasePigeonFirebaseApp arg_app =
+                  args[0]! as DatabasePigeonFirebaseApp;
+              try {
+                await api.purgeOutstandingWrites(arg_app);
+                return wrapResponse(empty: true);
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceSet$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceSet$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final DatabasePigeonFirebaseApp arg_app =
-              args[0]! as DatabasePigeonFirebaseApp;
-          final DatabaseReferenceRequest arg_request =
-              args[1]! as DatabaseReferenceRequest;
-          try {
-            await api.databaseReferenceSet(arg_app, arg_request);
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final DatabasePigeonFirebaseApp arg_app =
+                  args[0]! as DatabasePigeonFirebaseApp;
+              final DatabaseReferenceRequest arg_request =
+                  args[1]! as DatabaseReferenceRequest;
+              try {
+                await api.databaseReferenceSet(arg_app, arg_request);
+                return wrapResponse(empty: true);
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceSetWithPriority$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceSetWithPriority$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final DatabasePigeonFirebaseApp arg_app =
-              args[0]! as DatabasePigeonFirebaseApp;
-          final DatabaseReferenceRequest arg_request =
-              args[1]! as DatabaseReferenceRequest;
-          try {
-            await api.databaseReferenceSetWithPriority(arg_app, arg_request);
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final DatabasePigeonFirebaseApp arg_app =
+                  args[0]! as DatabasePigeonFirebaseApp;
+              final DatabaseReferenceRequest arg_request =
+                  args[1]! as DatabaseReferenceRequest;
+              try {
+                await api.databaseReferenceSetWithPriority(
+                  arg_app,
+                  arg_request,
+                );
+                return wrapResponse(empty: true);
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceUpdate$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceUpdate$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final DatabasePigeonFirebaseApp arg_app =
-              args[0]! as DatabasePigeonFirebaseApp;
-          final UpdateRequest arg_request = args[1]! as UpdateRequest;
-          try {
-            await api.databaseReferenceUpdate(arg_app, arg_request);
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final DatabasePigeonFirebaseApp arg_app =
+                  args[0]! as DatabasePigeonFirebaseApp;
+              final UpdateRequest arg_request = args[1]! as UpdateRequest;
+              try {
+                await api.databaseReferenceUpdate(arg_app, arg_request);
+                return wrapResponse(empty: true);
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceSetPriority$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceSetPriority$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final DatabasePigeonFirebaseApp arg_app =
-              args[0]! as DatabasePigeonFirebaseApp;
-          final DatabaseReferenceRequest arg_request =
-              args[1]! as DatabaseReferenceRequest;
-          try {
-            await api.databaseReferenceSetPriority(arg_app, arg_request);
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final DatabasePigeonFirebaseApp arg_app =
+                  args[0]! as DatabasePigeonFirebaseApp;
+              final DatabaseReferenceRequest arg_request =
+                  args[1]! as DatabaseReferenceRequest;
+              try {
+                await api.databaseReferenceSetPriority(arg_app, arg_request);
+                return wrapResponse(empty: true);
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceRunTransaction$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceRunTransaction$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final DatabasePigeonFirebaseApp arg_app =
-              args[0]! as DatabasePigeonFirebaseApp;
-          final TransactionRequest arg_request = args[1]! as TransactionRequest;
-          try {
-            await api.databaseReferenceRunTransaction(arg_app, arg_request);
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final DatabasePigeonFirebaseApp arg_app =
+                  args[0]! as DatabasePigeonFirebaseApp;
+              final TransactionRequest arg_request =
+                  args[1]! as TransactionRequest;
+              try {
+                await api.databaseReferenceRunTransaction(arg_app, arg_request);
+                return wrapResponse(empty: true);
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceGetTransactionResult$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceGetTransactionResult$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final DatabasePigeonFirebaseApp arg_app =
-              args[0]! as DatabasePigeonFirebaseApp;
-          final int arg_transactionKey = args[1]! as int;
-          try {
-            final Map<String, Object?> output =
-                await api.databaseReferenceGetTransactionResult(
-                    arg_app, arg_transactionKey);
-            return <Object?>[output];
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final DatabasePigeonFirebaseApp arg_app =
+                  args[0]! as DatabasePigeonFirebaseApp;
+              final int arg_transactionKey = args[1]! as int;
+              try {
+                final Map<String, Object?> output = await api
+                    .databaseReferenceGetTransactionResult(
+                      arg_app,
+                      arg_transactionKey,
+                    );
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectSet$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectSet$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final DatabasePigeonFirebaseApp arg_app =
-              args[0]! as DatabasePigeonFirebaseApp;
-          final DatabaseReferenceRequest arg_request =
-              args[1]! as DatabaseReferenceRequest;
-          try {
-            await api.onDisconnectSet(arg_app, arg_request);
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final DatabasePigeonFirebaseApp arg_app =
+                  args[0]! as DatabasePigeonFirebaseApp;
+              final DatabaseReferenceRequest arg_request =
+                  args[1]! as DatabaseReferenceRequest;
+              try {
+                await api.onDisconnectSet(arg_app, arg_request);
+                return wrapResponse(empty: true);
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectSetWithPriority$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectSetWithPriority$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final DatabasePigeonFirebaseApp arg_app =
-              args[0]! as DatabasePigeonFirebaseApp;
-          final DatabaseReferenceRequest arg_request =
-              args[1]! as DatabaseReferenceRequest;
-          try {
-            await api.onDisconnectSetWithPriority(arg_app, arg_request);
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final DatabasePigeonFirebaseApp arg_app =
+                  args[0]! as DatabasePigeonFirebaseApp;
+              final DatabaseReferenceRequest arg_request =
+                  args[1]! as DatabaseReferenceRequest;
+              try {
+                await api.onDisconnectSetWithPriority(arg_app, arg_request);
+                return wrapResponse(empty: true);
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectUpdate$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectUpdate$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final DatabasePigeonFirebaseApp arg_app =
-              args[0]! as DatabasePigeonFirebaseApp;
-          final UpdateRequest arg_request = args[1]! as UpdateRequest;
-          try {
-            await api.onDisconnectUpdate(arg_app, arg_request);
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final DatabasePigeonFirebaseApp arg_app =
+                  args[0]! as DatabasePigeonFirebaseApp;
+              final UpdateRequest arg_request = args[1]! as UpdateRequest;
+              try {
+                await api.onDisconnectUpdate(arg_app, arg_request);
+                return wrapResponse(empty: true);
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectCancel$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectCancel$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final DatabasePigeonFirebaseApp arg_app =
-              args[0]! as DatabasePigeonFirebaseApp;
-          final String arg_path = args[1]! as String;
-          try {
-            await api.onDisconnectCancel(arg_app, arg_path);
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final DatabasePigeonFirebaseApp arg_app =
+                  args[0]! as DatabasePigeonFirebaseApp;
+              final String arg_path = args[1]! as String;
+              try {
+                await api.onDisconnectCancel(arg_app, arg_path);
+                return wrapResponse(empty: true);
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.queryObserve$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.queryObserve$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final DatabasePigeonFirebaseApp arg_app =
-              args[0]! as DatabasePigeonFirebaseApp;
-          final QueryRequest arg_request = args[1]! as QueryRequest;
-          try {
-            final String output = await api.queryObserve(arg_app, arg_request);
-            return <Object?>[output];
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final DatabasePigeonFirebaseApp arg_app =
+                  args[0]! as DatabasePigeonFirebaseApp;
+              final QueryRequest arg_request = args[1]! as QueryRequest;
+              try {
+                final String output = await api.queryObserve(
+                  arg_app,
+                  arg_request,
+                );
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.queryKeepSynced$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.queryKeepSynced$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final DatabasePigeonFirebaseApp arg_app =
-              args[0]! as DatabasePigeonFirebaseApp;
-          final QueryRequest arg_request = args[1]! as QueryRequest;
-          try {
-            await api.queryKeepSynced(arg_app, arg_request);
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final DatabasePigeonFirebaseApp arg_app =
+                  args[0]! as DatabasePigeonFirebaseApp;
+              final QueryRequest arg_request = args[1]! as QueryRequest;
+              try {
+                await api.queryKeepSynced(arg_app, arg_request);
+                return wrapResponse(empty: true);
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.queryGet$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.queryGet$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final DatabasePigeonFirebaseApp arg_app =
-              args[0]! as DatabasePigeonFirebaseApp;
-          final QueryRequest arg_request = args[1]! as QueryRequest;
-          try {
-            final Map<String, Object?> output =
-                await api.queryGet(arg_app, arg_request);
-            return <Object?>[output];
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final DatabasePigeonFirebaseApp arg_app =
+                  args[0]! as DatabasePigeonFirebaseApp;
+              final QueryRequest arg_request = args[1]! as QueryRequest;
+              try {
+                final Map<String, Object?> output = await api.queryGet(
+                  arg_app,
+                  arg_request,
+                );
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
   }

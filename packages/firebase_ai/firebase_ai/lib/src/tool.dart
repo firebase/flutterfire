@@ -23,12 +23,18 @@ import 'schema.dart';
 /// knowledge and scope of the model.
 final class Tool {
   // ignore: public_member_api_docs
-  Tool._(this._functionDeclarations, this._googleSearch, this._codeExecution,
-      this._urlContext, this._googleMaps);
+  Tool._(
+    this._functionDeclarations,
+    this._googleSearch,
+    this._codeExecution,
+    this._urlContext,
+    this._googleMaps,
+  );
 
   /// Returns a [Tool] instance with list of [FunctionDeclaration].
   static Tool functionDeclarations(
-      List<FunctionDeclaration> functionDeclarations) {
+    List<FunctionDeclaration> functionDeclarations,
+  ) {
     return Tool._(functionDeclarations, null, null, null, null);
   }
 
@@ -54,8 +60,9 @@ final class Tool {
   }
 
   /// Returns a [Tool] instance that enables the model to use Code Execution.
-  static Tool codeExecution(
-      {CodeExecution codeExecution = const CodeExecution()}) {
+  static Tool codeExecution({
+    CodeExecution codeExecution = const CodeExecution(),
+  }) {
     return Tool._(null, null, codeExecution, null, null);
   }
 
@@ -132,18 +139,17 @@ final class Tool {
 
   /// Convert to json object.
   Map<String, Object> toJson() => {
-        if (_functionDeclarations case final _functionDeclarations?)
-          'functionDeclarations':
-              _functionDeclarations.map((f) => f.toJson()).toList(),
-        if (_googleSearch case final _googleSearch?)
-          'googleSearch': _googleSearch.toJson(),
-        if (_codeExecution case final _codeExecution?)
-          'codeExecution': _codeExecution.toJson(),
-        if (_urlContext case final _urlContext?)
-          'urlContext': _urlContext.toJson(),
-        if (_googleMaps case final _googleMaps?)
-          'googleMaps': _googleMaps.toJson(),
-      };
+    if (_functionDeclarations case final _functionDeclarations?)
+      'functionDeclarations': _functionDeclarations
+          .map((f) => f.toJson())
+          .toList(),
+    if (_googleSearch case final _googleSearch?)
+      'googleSearch': _googleSearch.toJson(),
+    if (_codeExecution case final _codeExecution?)
+      'codeExecution': _codeExecution.toJson(),
+    if (_urlContext case final _urlContext?) 'urlContext': _urlContext.toJson(),
+    if (_googleMaps case final _googleMaps?) 'googleMaps': _googleMaps.toJson(),
+  };
 }
 
 /// A tool that allows the generative model to connect to Google Search to
@@ -214,15 +220,20 @@ final class CodeExecution {
 /// as a `Tool` by the model and executed by the client.
 class FunctionDeclaration {
   // ignore: public_member_api_docs
-  FunctionDeclaration(this.name, this.description,
-      {required Map<String, Schema> parameters,
-      List<String> optionalParameters = const []})
-      : _schemaObject = parameters.values.any((s) => s is JSONSchema)
-            ? JSONSchema.object(
-                properties: parameters.cast<String, JSONSchema>(),
-                optionalProperties: optionalParameters)
-            : Schema.object(
-                properties: parameters, optionalProperties: optionalParameters);
+  FunctionDeclaration(
+    this.name,
+    this.description, {
+    required Map<String, Schema> parameters,
+    List<String> optionalParameters = const [],
+  }) : _schemaObject = parameters.values.any((s) => s is JSONSchema)
+           ? JSONSchema.object(
+               properties: parameters.cast<String, JSONSchema>(),
+               optionalProperties: optionalParameters,
+             )
+           : Schema.object(
+               properties: parameters,
+               optionalProperties: optionalParameters,
+             );
 
   /// The name of the function.
   ///
@@ -237,13 +248,13 @@ class FunctionDeclaration {
 
   /// Convert to json object.
   Map<String, Object?> toJson() => {
-        'name': name,
-        'description': description,
-        if (_schemaObject is JSONSchema)
-          'parametersJsonSchema': _schemaObject.toJson()
-        else
-          'parameters': _schemaObject.toJson(),
-      };
+    'name': name,
+    'description': description,
+    if (_schemaObject is JSONSchema)
+      'parametersJsonSchema': _schemaObject.toJson()
+    else
+      'parameters': _schemaObject.toJson(),
+  };
 }
 
 /// A [FunctionDeclaration] for auto function calling.
@@ -261,12 +272,16 @@ final class AutoFunctionDeclaration extends FunctionDeclaration {
     required Map<String, Schema> parameters,
     List<String> optionalParameters = const [],
     required this.callable,
-  }) : super(name, description,
-            parameters: parameters, optionalParameters: optionalParameters);
+  }) : super(
+         name,
+         description,
+         parameters: parameters,
+         optionalParameters: optionalParameters,
+       );
 
   /// The callable function that this declaration represents.
   final FutureOr<Map<String, Object?>> Function(Map<String, Object?> args)
-      callable;
+  callable;
 }
 
 /// Config for tools to use with model.
@@ -282,11 +297,10 @@ final class ToolConfig {
 
   /// Convert to json object.
   Map<String, Object?> toJson() => {
-        if (functionCallingConfig case final config?)
-          'functionCallingConfig': config.toJson(),
-        if (retrievalConfig case final config?)
-          'retrievalConfig': config.toJson(),
-      };
+    if (functionCallingConfig case final config?)
+      'functionCallingConfig': config.toJson(),
+    if (retrievalConfig case final config?) 'retrievalConfig': config.toJson(),
+  };
 }
 
 /// An object that represents a latitude/longitude pair.
@@ -302,9 +316,9 @@ final class LatLng {
 
   /// Convert to json object.
   Map<String, Object?> toJson() => {
-        'latitude': latitude,
-        'longitude': longitude,
-      };
+    'latitude': latitude,
+    'longitude': longitude,
+  };
 }
 
 /// The configuration that specifies information which can be used by tools
@@ -321,9 +335,9 @@ final class RetrievalConfig {
 
   /// Convert to json object.
   Map<String, Object?> toJson() => {
-        if (latLng case final latLng?) 'latLng': latLng.toJson(),
-        if (languageCode case final languageCode?) 'languageCode': languageCode,
-      };
+    if (latLng case final latLng?) 'latLng': latLng.toJson(),
+    if (languageCode case final languageCode?) 'languageCode': languageCode,
+  };
 }
 
 /// Configuration specifying how the model should use the functions provided as
@@ -354,8 +368,9 @@ final class FunctionCallingConfig {
   /// Returns a [FunctionCallingConfig] instance with mode of [FunctionCallingMode.any].
   static FunctionCallingConfig any(Set<String> allowedFunctionNames) {
     return FunctionCallingConfig._(
-        mode: FunctionCallingMode.any,
-        allowedFunctionNames: allowedFunctionNames);
+      mode: FunctionCallingMode.any,
+      allowedFunctionNames: allowedFunctionNames,
+    );
   }
 
   /// Returns a [FunctionCallingConfig] instance with mode of [FunctionCallingMode.none].
@@ -365,10 +380,10 @@ final class FunctionCallingConfig {
 
   /// Convert to json object.
   Object toJson() => {
-        if (mode case final mode?) 'mode': mode.toJson(),
-        if (allowedFunctionNames case final allowedFunctionNames?)
-          'allowedFunctionNames': allowedFunctionNames.toList(),
-      };
+    if (mode case final mode?) 'mode': mode.toJson(),
+    if (allowedFunctionNames case final allowedFunctionNames?)
+      'allowedFunctionNames': allowedFunctionNames.toList(),
+  };
 }
 
 /// The mode in which the model should use the functions provided as tools.
@@ -390,8 +405,8 @@ enum FunctionCallingMode {
 
   /// Convert to json object.
   String toJson() => switch (this) {
-        auto => 'AUTO',
-        any => 'ANY',
-        none => 'NONE',
-      };
+    auto => 'AUTO',
+    any => 'ANY',
+    none => 'NONE',
+  };
 }

@@ -24,8 +24,8 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
     FirebaseFirestorePlatform firestore,
     this.firestoreWeb,
     String path,
-  )   : _delegate = firestoreWeb.doc(path),
-        super(firestore, path);
+  ) : _delegate = firestoreWeb.doc(path),
+      super(firestore, path);
 
   @override
   Future<void> set(Map<String, dynamic> data, [SetOptions? options]) {
@@ -45,12 +45,13 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
   }
 
   @override
-  Future<DocumentSnapshotPlatform> get(
-      [GetOptions options = const GetOptions()]) async {
+  Future<DocumentSnapshotPlatform> get([
+    GetOptions options = const GetOptions(),
+  ]) async {
     firestore_interop.DocumentSnapshot documentSnapshot =
         await convertWebExceptions(
-      () => _delegate.get(convertGetOptions(options)),
-    );
+          () => _delegate.get(convertGetOptions(options)),
+        );
 
     return convertWebDocumentSnapshot(
       firestore,
@@ -69,11 +70,11 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
     bool includeMetadataChanges = false,
     required ListenSource listenSource,
   }) {
-    Stream<firestore_interop.DocumentSnapshot> querySnapshots =
-        _delegate.onSnapshot(
-      includeMetadataChanges: includeMetadataChanges,
-      source: listenSource,
-    );
+    Stream<firestore_interop.DocumentSnapshot> querySnapshots = _delegate
+        .onSnapshot(
+          includeMetadataChanges: includeMetadataChanges,
+          source: listenSource,
+        );
 
     return convertWebExceptions(
       () => querySnapshots.map((webSnapshot) {

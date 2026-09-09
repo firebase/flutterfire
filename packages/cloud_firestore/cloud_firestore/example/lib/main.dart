@@ -19,8 +19,10 @@ bool shouldUseFirestoreEmulator = true;
 Future<Uint8List> loadBundleSetup(int number) async {
   // endpoint serves a bundle with 3 documents each containing
   // a 'number' property that increments in value 1-3.
-  final url =
-      Uri.https('api.rnfirebase.io', '/firestore/e2e-tests/bundle-$number');
+  final url = Uri.https(
+    'api.rnfirebase.io',
+    '/firestore/e2e-tests/bundle-$number',
+  );
   final response = await http.get(url);
   String string = response.body;
   return Uint8List.fromList(string.codeUnits);
@@ -50,14 +52,7 @@ final moviesRef = FirebaseFirestore.instance
     );
 
 /// The different ways that we can filter/sort movies.
-enum MovieQuery {
-  year,
-  likesAsc,
-  likesDesc,
-  rated,
-  sciFi,
-  fantasy,
-}
+enum MovieQuery { year, likesAsc, likesDesc, rated, sciFi, fantasy }
 
 extension on Query<Movie> {
   /// Create a firebase query from a [MovieQuery]
@@ -65,11 +60,12 @@ extension on Query<Movie> {
     return switch (query) {
       MovieQuery.fantasy => where('genre', arrayContainsAny: ['fantasy']),
       MovieQuery.sciFi => where('genre', arrayContainsAny: ['sci-fi']),
-      MovieQuery.likesAsc ||
-      MovieQuery.likesDesc =>
-        orderBy('likes', descending: query == MovieQuery.likesDesc),
+      MovieQuery.likesAsc || MovieQuery.likesDesc => orderBy(
+        'likes',
+        descending: query == MovieQuery.likesDesc,
+      ),
       MovieQuery.year => orderBy('year', descending: true),
-      MovieQuery.rated => orderBy('rated', descending: true)
+      MovieQuery.rated => orderBy('rated', descending: true),
     };
   }
 }
@@ -83,9 +79,7 @@ class FirestoreExampleApp extends StatelessWidget {
     return MaterialApp(
       title: 'Firestore Example App',
       theme: ThemeData.dark(),
-      home: const Scaffold(
-        body: Center(child: FilmList()),
-      ),
+      home: const Scaffold(body: Center(child: FilmList())),
     );
   }
 }
@@ -190,47 +184,34 @@ class _FilmListState extends State<FilmList> {
                   // In one query
                   final _all = await FirebaseFirestore.instance
                       .collection('firestore-example-app')
-                      .aggregate(
-                        average('likes'),
-                        sum('likes'),
-                        count(),
-                      )
+                      .aggregate(average('likes'), sum('likes'), count())
                       .get();
 
-                  print('Average: ${_all.getAverage('likes')} '
-                      'Sum: ${_all.getSum('likes')} '
-                      'Count: ${_all.count}');
+                  print(
+                    'Average: ${_all.getAverage('likes')} '
+                    'Sum: ${_all.getSum('likes')} '
+                    'Count: ${_all.count}',
+                  );
 
                   return;
                 case 'load_bundle':
                   Uint8List buffer = await loadBundleSetup(2);
-                  LoadBundleTask task =
-                      FirebaseFirestore.instance.loadBundle(buffer);
+                  LoadBundleTask task = FirebaseFirestore.instance.loadBundle(
+                    buffer,
+                  );
 
                   final list = await task.stream.toList();
 
-                  print(
-                    list.map((e) => e.totalDocuments),
-                  );
-                  print(
-                    list.map((e) => e.bytesLoaded),
-                  );
-                  print(
-                    list.map((e) => e.documentsLoaded),
-                  );
-                  print(
-                    list.map((e) => e.totalBytes),
-                  );
-                  print(
-                    list,
-                  );
+                  print(list.map((e) => e.totalDocuments));
+                  print(list.map((e) => e.bytesLoaded));
+                  print(list.map((e) => e.documentsLoaded));
+                  print(list.map((e) => e.totalBytes));
+                  print(list);
 
                   LoadBundleTaskSnapshot lastSnapshot = list.removeLast();
                   print(lastSnapshot.taskState);
 
-                  print(
-                    list.map((e) => e.taskState),
-                  );
+                  print(list.map((e) => e.taskState));
                   return;
                 case 'vectorValue':
                   const vectorValue = VectorValue([1.0, 2.0, 3.0]);
@@ -272,9 +253,7 @@ class _FilmListState extends State<FilmList> {
         stream: moviesRef.queryBy(query).snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return Center(
-              child: Text(snapshot.error.toString()),
-            );
+            return Center(child: Text(snapshot.error.toString()));
           }
 
           if (!snapshot.hasData) {
@@ -322,10 +301,7 @@ class _MovieItem extends StatelessWidget {
 
   /// Returns the movie poster.
   Widget get poster {
-    return SizedBox(
-      width: 100,
-      child: Image.network(movie.poster),
-    );
+    return SizedBox(width: 100, child: Image.network(movie.poster));
   }
 
   /// Returns movie details.
@@ -338,10 +314,7 @@ class _MovieItem extends StatelessWidget {
           title,
           metadata,
           genres,
-          Likes(
-            reference: reference,
-            currentLikes: movie.likes,
-          ),
+          Likes(reference: reference, currentLikes: movie.likes),
         ],
       ),
     );
@@ -380,10 +353,7 @@ class _MovieItem extends StatelessWidget {
           padding: const EdgeInsets.only(right: 2),
           child: Chip(
             backgroundColor: Colors.lightBlue,
-            label: Text(
-              genre,
-              style: const TextStyle(color: Colors.white),
-            ),
+            label: Text(genre, style: const TextStyle(color: Colors.white)),
           ),
         ),
     ];
@@ -393,9 +363,7 @@ class _MovieItem extends StatelessWidget {
   Widget get genres {
     return Padding(
       padding: const EdgeInsets.only(top: 8),
-      child: Wrap(
-        children: genreItems,
-      ),
+      child: Wrap(children: genreItems),
     );
   }
 
@@ -418,11 +386,8 @@ class _MovieItem extends StatelessWidget {
 class Likes extends StatefulWidget {
   /// Constructs a new [Likes] instance with a given [DocumentReference] and
   /// current like count.
-  Likes({
-    Key? key,
-    required this.reference,
-    required this.currentLikes,
-  }) : super(key: key);
+  Likes({Key? key, required this.reference, required this.currentLikes})
+    : super(key: key);
 
   /// The reference relating to the counter.
   final DocumentReference<Movie> reference;
@@ -452,10 +417,12 @@ class _LikesState extends State<Likes> {
       // We use a transaction because multiple users could update the likes count
       // simultaneously. As such, our likes count may be different from the likes
       // count on the server.
-      int newLikes = await FirebaseFirestore.instance
-          .runTransaction<int>((transaction) async {
-        DocumentSnapshot<Movie> movie =
-            await transaction.get<Movie>(widget.reference);
+      int newLikes = await FirebaseFirestore.instance.runTransaction<int>((
+        transaction,
+      ) async {
+        DocumentSnapshot<Movie> movie = await transaction.get<Movie>(
+          widget.reference,
+        );
 
         if (!movie.exists) {
           throw Exception('Document does not exist!');
@@ -516,15 +483,15 @@ class Movie {
   });
 
   Movie.fromJson(Map<String, Object?> json)
-      : this(
-          genre: (json['genre']! as List).cast<String>(),
-          likes: json['likes']! as int,
-          poster: json['poster']! as String,
-          rated: json['rated']! as String,
-          runtime: json['runtime']! as String,
-          title: json['title']! as String,
-          year: json['year']! as int,
-        );
+    : this(
+        genre: (json['genre']! as List).cast<String>(),
+        likes: json['likes']! as int,
+        poster: json['poster']! as String,
+        rated: json['rated']! as String,
+        runtime: json['runtime']! as String,
+        title: json['title']! as String,
+        year: json['year']! as int,
+      );
 
   final String poster;
   final int likes;

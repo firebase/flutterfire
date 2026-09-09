@@ -14,9 +14,7 @@ import 'package:flutter/material.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   // You should have the Functions Emulator running locally to use it
   // https://firebase.google.com/docs/functions/local-emulator
@@ -47,36 +45,35 @@ class _MyAppState extends State<MyApp> {
         .httpsCallable('testStreamResponse')
         .stream<String, List<dynamic>>()
         .listen(
-      (data) {
-        switch (data) {
-          case Chunk<String, List<dynamic>>(:final partialData):
-            setState(() {
-              // adds individual stream values to list
-              fruit.add(partialData);
-            });
-          case Result<String, List<dynamic>>(:final result):
-            setState(() {
-              // stores complete stream result
-              streamResult = List.from(result.data);
-            });
-        }
-      },
-      onError: (e) {
-        debugPrint('Error: $e');
-      },
-    );
+          (data) {
+            switch (data) {
+              case Chunk<String, List<dynamic>>(:final partialData):
+                setState(() {
+                  // adds individual stream values to list
+                  fruit.add(partialData);
+                });
+              case Result<String, List<dynamic>>(:final result):
+                setState(() {
+                  // stores complete stream result
+                  streamResult = List.from(result.data);
+                });
+            }
+          },
+          onError: (e) {
+            debugPrint('Error: $e');
+          },
+        );
   }
 
   @override
   Widget build(BuildContext context) {
-    final localhostMapped =
-        kIsWeb || !Platform.isAndroid ? 'localhost' : '10.0.2.2';
+    final localhostMapped = kIsWeb || !Platform.isAndroid
+        ? 'localhost'
+        : '10.0.2.2';
 
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Firebase Functions Example'),
-        ),
+        appBar: AppBar(title: const Text('Firebase Functions Example')),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -84,9 +81,7 @@ class _MyAppState extends State<MyApp> {
               child: ListView.builder(
                 itemCount: fruit.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text('${fruit[index]}'),
-                  );
+                  return ListTile(title: Text('${fruit[index]}'));
                 },
               ),
             ),
@@ -94,18 +89,14 @@ class _MyAppState extends State<MyApp> {
               visible: streamResult.isNotEmpty,
               child: const Text(
                 "Stream's Complete Result: ",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
             Expanded(
               child: ListView.builder(
                 itemCount: streamResult.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text('${streamResult[index]}'),
-                  );
+                  return ListTile(title: Text('${streamResult[index]}'));
                 },
               ),
             ),
@@ -128,13 +119,13 @@ class _MyAppState extends State<MyApp> {
                   onPressed: () async {
                     // See .github/workflows/scripts/functions/src/index.ts for the example function we
                     // are using for this example
-                    HttpsCallable callable =
-                        FirebaseFunctions.instance.httpsCallable(
-                      'listFruit',
-                      options: HttpsCallableOptions(
-                        timeout: const Duration(seconds: 5),
-                      ),
-                    );
+                    HttpsCallable callable = FirebaseFunctions.instance
+                        .httpsCallable(
+                          'listFruit',
+                          options: HttpsCallableOptions(
+                            timeout: const Duration(seconds: 5),
+                          ),
+                        );
 
                     await callingFunction(callable, context);
                   },
@@ -147,8 +138,8 @@ class _MyAppState extends State<MyApp> {
                   onPressed: () async {
                     // See .github/workflows/scripts/functions/src/index.ts for the example function we
                     // are using for this example
-                    HttpsCallable callable =
-                        FirebaseFunctions.instance.httpsCallableFromUrl(
+                    HttpsCallable
+                    callable = FirebaseFunctions.instance.httpsCallableFromUrl(
                       'http://$localhostMapped:5001/flutterfire-e2e-tests/us-central1/listfruits2ndgen',
                       options: HttpsCallableOptions(
                         timeout: const Duration(seconds: 5),
@@ -183,11 +174,9 @@ class _MyAppState extends State<MyApp> {
         });
       });
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('ERROR: $e'),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('ERROR: $e')));
     }
   }
 }

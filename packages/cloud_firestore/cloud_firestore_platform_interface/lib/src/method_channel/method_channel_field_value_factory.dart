@@ -37,7 +37,8 @@ class MethodChannelFieldValueFactory extends FieldValueFactoryPlatform {
     }
 
     throw StateError(
-        'MethodChannelFieldValue().increment() expects a "num" value');
+      'MethodChannelFieldValue().increment() expects a "num" value',
+    );
   }
 
   @override

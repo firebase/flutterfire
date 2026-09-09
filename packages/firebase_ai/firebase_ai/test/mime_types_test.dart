@@ -17,14 +17,15 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test('exposes supported MIME types by media category', () {
-    expect(
-      FirebaseAIMimeTypes.image,
-      const <String>['image/png', 'image/jpeg', 'image/webp'],
-    );
-    expect(
-      FirebaseAIMimeTypes.document,
-      const <String>['application/pdf', 'text/plain'],
-    );
+    expect(FirebaseAIMimeTypes.image, const <String>[
+      'image/png',
+      'image/jpeg',
+      'image/webp',
+    ]);
+    expect(FirebaseAIMimeTypes.document, const <String>[
+      'application/pdf',
+      'text/plain',
+    ]);
     expect(
       FirebaseAIMimeTypes.all,
       containsAll(<String>[

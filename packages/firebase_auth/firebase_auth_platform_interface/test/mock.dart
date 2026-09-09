@@ -24,23 +24,21 @@ void setupFirebaseAuthMocks([Callback? customHandlers]) {
   setupFirebaseCoreMocks();
 }
 
-void handleEventChannel(
-  final String name, [
-  List<MethodCall>? log,
-]) {
+void handleEventChannel(final String name, [List<MethodCall>? log]) {
   TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-      .setMockMethodCallHandler(MethodChannel(name),
-          (MethodCall methodCall) async {
-    log?.add(methodCall);
-    switch (methodCall.method) {
-      case 'listen':
-        break;
-      case 'cancel':
-      default:
+      .setMockMethodCallHandler(MethodChannel(name), (
+        MethodCall methodCall,
+      ) async {
+        log?.add(methodCall);
+        switch (methodCall.method) {
+          case 'listen':
+            break;
+          case 'cancel':
+          default:
+            return null;
+        }
         return null;
-    }
-    return null;
-  });
+      });
 }
 
 Future<void> injectEventChannelResponse(
@@ -49,31 +47,32 @@ Future<void> injectEventChannelResponse(
 ) async {
   await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
       .handlePlatformMessage(
-    channelName,
-    MethodChannelFirebaseAuth.channel.codec.encodeSuccessEnvelope(event),
-    (_) {},
-  );
+        channelName,
+        MethodChannelFirebaseAuth.channel.codec.encodeSuccessEnvelope(event),
+        (_) {},
+      );
 }
 
 void handleMethodCall(MethodCallCallback methodCallCallback) =>
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(MethodChannelFirebaseAuth.channel,
-            (call) async {
-      return await methodCallCallback(call);
-    });
+        .setMockMethodCallHandler(MethodChannelFirebaseAuth.channel, (
+          call,
+        ) async {
+          return await methodCallCallback(call);
+        });
 
 Future<void> simulateEvent(String name, Map<String, dynamic>? user) async {
   await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
       .handlePlatformMessage(
-    MethodChannelFirebaseAuth.channel.name,
-    MethodChannelFirebaseAuth.channel.codec.encodeMethodCall(
-      MethodCall(
-        name,
-        <String, dynamic>{'user': user, 'appName': defaultFirebaseAppName},
-      ),
-    ),
-    (_) {},
-  );
+        MethodChannelFirebaseAuth.channel.name,
+        MethodChannelFirebaseAuth.channel.codec.encodeMethodCall(
+          MethodCall(name, <String, dynamic>{
+            'user': user,
+            'appName': defaultFirebaseAppName,
+          }),
+        ),
+        (_) {},
+      );
 }
 
 Future<void> testExceptionHandling(

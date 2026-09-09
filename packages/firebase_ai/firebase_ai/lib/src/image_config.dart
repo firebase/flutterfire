@@ -25,10 +25,10 @@ final class ImageConfig {
 
   /// Convert to json format.
   Map<String, Object?> toJson() => {
-        if (aspectRatio case final aspectRatio?)
-          'aspectRatio': aspectRatio.toJson(),
-        if (imageSize case final imageSize?) 'imageSize': imageSize.toJson(),
-      };
+    if (aspectRatio case final aspectRatio?)
+      'aspectRatio': aspectRatio.toJson(),
+    if (imageSize case final imageSize?) 'imageSize': imageSize.toJson(),
+  };
 }
 
 /// An aspect ratio for generated images.

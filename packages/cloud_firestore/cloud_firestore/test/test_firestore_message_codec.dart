@@ -63,10 +63,7 @@ class TestFirestoreMessageCodec extends FirestoreMessageCodec {
         String databaseId = readValue(buffer)! as String;
         readValue(buffer);
         final FirebaseApp app = Firebase.app(appName);
-        return MethodChannelFirebaseFirestore(
-          app: app,
-          databaseId: databaseId,
-        );
+        return MethodChannelFirebaseFirestore(app: app, databaseId: databaseId);
       case _kFirestoreQuery:
         String appName = readValue(buffer)! as String;
         Map<dynamic, dynamic> values =

@@ -22,9 +22,7 @@ final class _CollectionPipelineStage extends PipelineStage {
   Map<String, dynamic> toMap() {
     return {
       'stage': name,
-      'args': {
-        'path': collectionPath,
-      },
+      'args': {'path': collectionPath},
     };
   }
 }
@@ -42,13 +40,7 @@ final class _DocumentsPipelineStage extends PipelineStage {
   Map<String, dynamic> toMap() {
     return {
       'stage': name,
-      'args': documents
-          .map(
-            (doc) => {
-              'path': doc.path,
-            },
-          )
-          .toList(),
+      'args': documents.map((doc) => {'path': doc.path}).toList(),
     };
   }
 }
@@ -62,9 +54,7 @@ final class _DatabasePipelineStage extends PipelineStage {
 
   @override
   Map<String, dynamic> toMap() {
-    return {
-      'stage': name,
-    };
+    return {'stage': name};
   }
 }
 
@@ -81,9 +71,7 @@ final class _CollectionGroupPipelineStage extends PipelineStage {
   Map<String, dynamic> toMap() {
     return {
       'stage': name,
-      'args': {
-        'path': collectionPath,
-      },
+      'args': {'path': collectionPath},
     };
   }
 }
@@ -101,9 +89,7 @@ final class _AddFieldsStage extends PipelineStage {
   Map<String, dynamic> toMap() {
     return {
       'stage': name,
-      'args': {
-        'expressions': expressions.map((expr) => expr.toMap()).toList(),
-      },
+      'args': {'expressions': expressions.map((expr) => expr.toMap()).toList()},
     };
   }
 }
@@ -122,8 +108,9 @@ final class _AggregateStage extends PipelineStage {
     return {
       'stage': name,
       'args': {
-        'aggregate_functions':
-            aggregateFunctions.map((func) => func.toMap()).toList(),
+        'aggregate_functions': aggregateFunctions
+            .map((func) => func.toMap())
+            .toList(),
       },
     };
   }
@@ -145,10 +132,7 @@ final class _AggregateStageWithOptions extends PipelineStage {
     final optionsMap = options?.toMap();
     return {
       'stage': name,
-      'args': {
-        'aggregate_stage': map,
-        'options': optionsMap,
-      },
+      'args': {'aggregate_stage': map, 'options': optionsMap},
     };
   }
 }
@@ -166,9 +150,7 @@ final class _DistinctStage extends PipelineStage {
   Map<String, dynamic> toMap() {
     return {
       'stage': name,
-      'args': {
-        'expressions': expressions.map((expr) => expr.toMap()).toList(),
-      },
+      'args': {'expressions': expressions.map((expr) => expr.toMap()).toList()},
     };
   }
 }
@@ -218,10 +200,7 @@ final class _SearchStage extends PipelineStage {
 
   @override
   Map<String, dynamic> toMap() {
-    return {
-      'stage': name,
-      'args': searchStage.toMap(),
-    };
+    return {'stage': name, 'args': searchStage.toMap()};
   }
 }
 
@@ -238,9 +217,7 @@ final class _LimitStage extends PipelineStage {
   Map<String, dynamic> toMap() {
     return {
       'stage': name,
-      'args': {
-        'limit': limit,
-      },
+      'args': {'limit': limit},
     };
   }
 }
@@ -258,9 +235,7 @@ final class _OffsetStage extends PipelineStage {
   Map<String, dynamic> toMap() {
     return {
       'stage': name,
-      'args': {
-        'offset': offset,
-      },
+      'args': {'offset': offset},
     };
   }
 }
@@ -278,9 +253,7 @@ final class _RemoveFieldsStage extends PipelineStage {
   Map<String, dynamic> toMap() {
     return {
       'stage': name,
-      'args': {
-        'field_paths': fieldPaths,
-      },
+      'args': {'field_paths': fieldPaths},
     };
   }
 }
@@ -298,9 +271,7 @@ final class _ReplaceWithStage extends PipelineStage {
   Map<String, dynamic> toMap() {
     return {
       'stage': name,
-      'args': {
-        'expression': expression.toMap(),
-      },
+      'args': {'expression': expression.toMap()},
     };
   }
 }
@@ -316,10 +287,7 @@ final class _SampleStage extends PipelineStage {
 
   @override
   Map<String, dynamic> toMap() {
-    return {
-      'stage': name,
-      'args': sample.toMap(),
-    };
+    return {'stage': name, 'args': sample.toMap()};
   }
 }
 
@@ -336,9 +304,7 @@ final class _SelectStage extends PipelineStage {
   Map<String, dynamic> toMap() {
     return {
       'stage': name,
-      'args': {
-        'expressions': expressions.map((expr) => expr.toMap()).toList(),
-      },
+      'args': {'expressions': expressions.map((expr) => expr.toMap()).toList()},
     };
   }
 }
@@ -361,8 +327,9 @@ final class _SortStage extends PipelineStage {
             .map(
               (o) => {
                 'expression': o.expression.toMap(),
-                'order_direction':
-                    o.direction == OrderDirection.asc ? 'asc' : 'desc',
+                'order_direction': o.direction == OrderDirection.asc
+                    ? 'asc'
+                    : 'desc',
               },
             )
             .toList(),
@@ -385,9 +352,7 @@ final class _UnnestStage extends PipelineStage {
   Map<String, dynamic> toMap() {
     final map = <String, dynamic>{
       'stage': name,
-      'args': <String, dynamic>{
-        'expression': expression.toMap(),
-      },
+      'args': <String, dynamic>{'expression': expression.toMap()},
     };
     if (indexField != null) {
       map['args']['index_field'] = indexField;
@@ -409,9 +374,7 @@ final class _UnionStage extends PipelineStage {
   Map<String, dynamic> toMap() {
     return {
       'stage': name,
-      'args': {
-        'pipeline': pipeline.stages,
-      },
+      'args': {'pipeline': pipeline.stages},
     };
   }
 }
@@ -429,9 +392,7 @@ final class _WhereStage extends PipelineStage {
   Map<String, dynamic> toMap() {
     return {
       'stage': name,
-      'args': {
-        'expression': expression.toMap(),
-      },
+      'args': {'expression': expression.toMap()},
     };
   }
 }

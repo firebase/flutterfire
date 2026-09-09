@@ -32,18 +32,24 @@ void main() {
     setUpAll(() async {
       FirebaseApp app = await Firebase.initializeApp();
 
-      TestCloudFunctionsHostApi.setUp(_TestCloudFunctionsHostApi(() async {
-        if (mockExceptionThrown) {
-          throw Exception();
-        } else if (mockPlatformExceptionThrown) {
-          throw PlatformException(
-              code: 'UNKNOWN', message: kPlatformExceptionMessage);
-        }
-        return kParameters;
-      }));
+      TestCloudFunctionsHostApi.setUp(
+        _TestCloudFunctionsHostApi(() async {
+          if (mockExceptionThrown) {
+            throw Exception();
+          } else if (mockPlatformExceptionThrown) {
+            throw PlatformException(
+              code: 'UNKNOWN',
+              message: kPlatformExceptionMessage,
+            );
+          }
+          return kParameters;
+        }),
+      );
 
-      functions =
-          MethodChannelFirebaseFunctions(app: app, region: 'us-central1');
+      functions = MethodChannelFirebaseFunctions(
+        app: app,
+        region: 'us-central1',
+      );
       httpsCallable = MethodChannelHttpsCallable(
         functions!,
         kOrigin,
@@ -114,11 +120,12 @@ void main() {
       });
 
       test(
-          'catch a [PlatformException] error and throws a [FirebaseStorageException] error',
-          () async {
-        mockPlatformExceptionThrown = true;
-        await testExceptionHandling('PLATFORM', httpsCallable!.call);
-      });
+        'catch a [PlatformException] error and throws a [FirebaseStorageException] error',
+        () async {
+          mockPlatformExceptionThrown = true;
+          await testExceptionHandling('PLATFORM', httpsCallable!.call);
+        },
+      );
     });
   });
 }

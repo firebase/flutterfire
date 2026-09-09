@@ -55,14 +55,16 @@ void main() {
 
   group('instanceFor', () {
     test('returns an instance', () async {
-      final mlModelDownloader =
-          FirebaseModelDownloader.instanceFor(app: secondaryApp);
+      final mlModelDownloader = FirebaseModelDownloader.instanceFor(
+        app: secondaryApp,
+      );
       expect(mlModelDownloader, isA<FirebaseModelDownloader>());
     });
 
     test('returns the correct $FirebaseApp', () {
-      final mlModelDownloader =
-          FirebaseModelDownloader.instanceFor(app: secondaryApp);
+      final mlModelDownloader = FirebaseModelDownloader.instanceFor(
+        app: secondaryApp,
+      );
       expect(mlModelDownloader.app, isA<FirebaseApp>());
       expect(mlModelDownloader.app.name, 'secondaryApp');
     });
@@ -113,8 +115,9 @@ void main() {
           size: 123,
         ),
       ];
-      when(kMockDownloaderPlatform.listDownloadedModels())
-          .thenAnswer((_) => Future.value(customModels));
+      when(
+        kMockDownloaderPlatform.listDownloadedModels(),
+      ).thenAnswer((_) => Future.value(customModels));
 
       final modelList = await mlModelDownloader.listDownloadedModels();
 
@@ -126,8 +129,9 @@ void main() {
   group('deleteDownloadedModel', () {
     test('verify delegate method is called', () async {
       const String modelName = 'modelName';
-      when(kMockDownloaderPlatform.deleteDownloadedModel(modelName))
-          .thenAnswer((_) => Future.value());
+      when(
+        kMockDownloaderPlatform.deleteDownloadedModel(modelName),
+      ).thenAnswer((_) => Future.value());
 
       await mlModelDownloader.deleteDownloadedModel(modelName);
 

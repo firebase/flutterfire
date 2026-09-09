@@ -31,9 +31,7 @@ void main() {
         ),
       );
 
-      firebaseMessagingPlatform = TestFirebaseMessagingPlatform(
-        app,
-      );
+      firebaseMessagingPlatform = TestFirebaseMessagingPlatform(app);
 
       handleMethodCall((call) async {
         switch (call.method) {
@@ -50,28 +48,34 @@ void main() {
 
     test('instanceFor', () {
       final result = FirebaseMessagingPlatform.instanceFor(
-          app: app,
-          pluginConstants: <dynamic, dynamic>{
-            'AUTO_INIT_ENABLED': true,
-          });
+        app: app,
+        pluginConstants: <dynamic, dynamic>{'AUTO_INIT_ENABLED': true},
+      );
       expect(result, isA<FirebaseMessagingPlatform>());
       expect(result.isAutoInitEnabled, isA<bool>());
     });
 
     test('get.instance', () {
       expect(
-          FirebaseMessagingPlatform.instance, isA<FirebaseMessagingPlatform>());
-      expect(FirebaseMessagingPlatform.instance.app.name,
-          equals(defaultFirebaseAppName));
+        FirebaseMessagingPlatform.instance,
+        isA<FirebaseMessagingPlatform>(),
+      );
+      expect(
+        FirebaseMessagingPlatform.instance.app.name,
+        equals(defaultFirebaseAppName),
+      );
     });
 
     group('set.instance', () {
       test('sets the current instance', () {
-        FirebaseMessagingPlatform.instance =
-            TestFirebaseMessagingPlatform(secondaryApp);
+        FirebaseMessagingPlatform.instance = TestFirebaseMessagingPlatform(
+          secondaryApp,
+        );
 
-        expect(FirebaseMessagingPlatform.instance,
-            isA<FirebaseMessagingPlatform>());
+        expect(
+          FirebaseMessagingPlatform.instance,
+          isA<FirebaseMessagingPlatform>(),
+        );
         expect(FirebaseMessagingPlatform.instance.app.name, equals('testApp2'));
       });
     });

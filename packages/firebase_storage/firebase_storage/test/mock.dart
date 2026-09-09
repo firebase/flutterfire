@@ -30,7 +30,7 @@ const String testToken = 'mock-token';
 const String testParent = 'test-parent';
 const String testDownloadUrl = 'test-download-url';
 const Map<String, dynamic> testMetadataMap = <String, dynamic>{
-  'contentType': 'gif'
+  'contentType': 'gif',
 };
 const int testMaxResults = 1;
 const String testPageToken = 'test-page-token';
@@ -63,7 +63,7 @@ class MockFirebaseAppStorage implements TestFirebaseCoreHostApi {
           storageBucket: kBucket,
         ),
         pluginConstants: {},
-      )
+      ),
     ];
   }
 
@@ -85,9 +85,12 @@ void setupFirebaseStorageMocks() {
   TestFirebaseCoreHostApi.setUp(MockFirebaseAppStorage());
 
   // Mock Platform Interface Methods
-  when(kMockStoragePlatform.delegateFor(
-          app: anyNamed('app'), bucket: anyNamed('bucket')))
-      .thenReturn(kMockStoragePlatform);
+  when(
+    kMockStoragePlatform.delegateFor(
+      app: anyNamed('app'),
+      bucket: anyNamed('bucket'),
+    ),
+  ).thenReturn(kMockStoragePlatform);
 }
 
 // Platform Interface Mock Classes
@@ -97,8 +100,7 @@ class MockFirebaseStorage extends Mock
     with
         // ignore: prefer_mixin, plugin_platform_interface needs to migrate to use `mixin`
         MockPlatformInterfaceMixin
-    implements
-        TestFirebaseStoragePlatform {
+    implements TestFirebaseStoragePlatform {
   MockFirebaseStorage() {
     TestFirebaseStoragePlatform();
   }
@@ -113,21 +115,25 @@ class MockFirebaseStorage extends Mock
   @override
   FirebaseStoragePlatform delegateFor({FirebaseApp? app, String? bucket}) {
     return super.noSuchMethod(
-        Invocation.method(#delegateFor, [], {#app: app, #bucket: bucket}),
-        returnValue: TestFirebaseStoragePlatform());
+      Invocation.method(#delegateFor, [], {#app: app, #bucket: bucket}),
+      returnValue: TestFirebaseStoragePlatform(),
+    );
   }
 
   @override
   ReferencePlatform ref(String? path) {
-    return super.noSuchMethod(Invocation.method(#ref, [path]),
-        returnValue: TestReferencePlatform(),
-        returnValueForMissingStub: TestReferencePlatform());
+    return super.noSuchMethod(
+      Invocation.method(#ref, [path]),
+      returnValue: TestReferencePlatform(),
+      returnValueForMissingStub: TestReferencePlatform(),
+    );
   }
 
   @override
   Future<void> useStorageEmulator(String host, int port) async {
-    return super
-        .noSuchMethod(Invocation.method(#useStorageEmulator, [host, port]));
+    return super.noSuchMethod(
+      Invocation.method(#useStorageEmulator, [host, port]),
+    );
   }
 }
 
@@ -143,7 +149,7 @@ class TestFirebaseStoragePlatform extends FirebaseStoragePlatform {
 // ReferencePlatform Mock
 class TestReferencePlatform extends ReferencePlatform {
   TestReferencePlatform() : super(TestFirebaseStoragePlatform(), testFullPath);
-// @override
+  // @override
 }
 
 // ReferencePlatform Mock
@@ -151,124 +157,162 @@ class MockReferencePlatform extends Mock
     with
         // ignore: prefer_mixin, plugin_platform_interface needs to migrate to use `mixin`
         MockPlatformInterfaceMixin
-    implements
-        ReferencePlatform {
+    implements ReferencePlatform {
   @override
   Future<ListResultPlatform> list([ListOptions? options]) {
-    return super.noSuchMethod(Invocation.method(#list, [options]),
-        returnValue: neverEndingFuture<ListResultPlatform>(),
-        returnValueForMissingStub: neverEndingFuture<ListResultPlatform>());
+    return super.noSuchMethod(
+      Invocation.method(#list, [options]),
+      returnValue: neverEndingFuture<ListResultPlatform>(),
+      returnValueForMissingStub: neverEndingFuture<ListResultPlatform>(),
+    );
   }
 
   @override
   TaskPlatform putData(Uint8List data, [SettableMetadata? metadata]) {
-    return super.noSuchMethod(Invocation.method(#putData, [data, metadata]),
-        returnValue: TestUploadTaskPlatform(),
-        returnValueForMissingStub: TestUploadTaskPlatform());
+    return super.noSuchMethod(
+      Invocation.method(#putData, [data, metadata]),
+      returnValue: TestUploadTaskPlatform(),
+      returnValueForMissingStub: TestUploadTaskPlatform(),
+    );
   }
 
   @override
   TaskPlatform putFile(File file, [SettableMetadata? metadata]) {
-    return super.noSuchMethod(Invocation.method(#putFile, [file, metadata]),
-        returnValue: TestUploadTaskPlatform(),
-        returnValueForMissingStub: TestUploadTaskPlatform());
+    return super.noSuchMethod(
+      Invocation.method(#putFile, [file, metadata]),
+      returnValue: TestUploadTaskPlatform(),
+      returnValueForMissingStub: TestUploadTaskPlatform(),
+    );
   }
 
   @override
   Future<FullMetadata> updateMetadata(SettableMetadata metadata) {
-    return super.noSuchMethod(Invocation.method(#updateMetadata, [metadata]),
-        returnValue: neverEndingFuture<FullMetadata>(),
-        returnValueForMissingStub: neverEndingFuture<FullMetadata>());
+    return super.noSuchMethod(
+      Invocation.method(#updateMetadata, [metadata]),
+      returnValue: neverEndingFuture<FullMetadata>(),
+      returnValueForMissingStub: neverEndingFuture<FullMetadata>(),
+    );
   }
 
   @override
   String get bucket {
-    return super.noSuchMethod(Invocation.getter(#bucket),
-        returnValue: testBucket, returnValueForMissingStub: testBucket);
+    return super.noSuchMethod(
+      Invocation.getter(#bucket),
+      returnValue: testBucket,
+      returnValueForMissingStub: testBucket,
+    );
   }
 
   @override
   String get fullPath {
-    return super.noSuchMethod(Invocation.getter(#fullPath),
-        returnValue: testFullPath, returnValueForMissingStub: testBucket);
+    return super.noSuchMethod(
+      Invocation.getter(#fullPath),
+      returnValue: testFullPath,
+      returnValueForMissingStub: testBucket,
+    );
   }
 
   @override
   String get name {
-    return super.noSuchMethod(Invocation.getter(#name),
-        returnValue: testName, returnValueForMissingStub: testName);
+    return super.noSuchMethod(
+      Invocation.getter(#name),
+      returnValue: testName,
+      returnValueForMissingStub: testName,
+    );
   }
 
   @override
   ReferencePlatform? get parent {
-    return super.noSuchMethod(Invocation.getter(#parent),
-        returnValue: TestListResultPlatform(),
-        returnValueForMissingStub: TestListResultPlatform());
+    return super.noSuchMethod(
+      Invocation.getter(#parent),
+      returnValue: TestListResultPlatform(),
+      returnValueForMissingStub: TestListResultPlatform(),
+    );
   }
 
   @override
   TaskPlatform putBlob(dynamic data, [SettableMetadata? metadata]) {
-    return super.noSuchMethod(Invocation.method(#putBlob, [data, metadata]),
-        returnValue: TestUploadTaskPlatform(),
-        returnValueForMissingStub: TestUploadTaskPlatform());
+    return super.noSuchMethod(
+      Invocation.method(#putBlob, [data, metadata]),
+      returnValue: TestUploadTaskPlatform(),
+      returnValueForMissingStub: TestUploadTaskPlatform(),
+    );
   }
 
   @override
   TaskPlatform writeToFile(File file) {
-    return super.noSuchMethod(Invocation.method(#writeToFile, [file]),
-        returnValue: TestUploadTaskPlatform(),
-        returnValueForMissingStub: TestUploadTaskPlatform());
+    return super.noSuchMethod(
+      Invocation.method(#writeToFile, [file]),
+      returnValue: TestUploadTaskPlatform(),
+      returnValueForMissingStub: TestUploadTaskPlatform(),
+    );
   }
 
   @override
   ReferencePlatform get root {
-    return super.noSuchMethod(Invocation.getter(#root),
-        returnValue: TestReferencePlatform(),
-        returnValueForMissingStub: TestListResultPlatform());
+    return super.noSuchMethod(
+      Invocation.getter(#root),
+      returnValue: TestReferencePlatform(),
+      returnValueForMissingStub: TestListResultPlatform(),
+    );
   }
 
   @override
   ReferencePlatform child(String path) {
-    return super.noSuchMethod(Invocation.method(#child, [], {#path: path}),
-        returnValue: TestReferencePlatform(),
-        returnValueForMissingStub: TestListResultPlatform());
+    return super.noSuchMethod(
+      Invocation.method(#child, [], {#path: path}),
+      returnValue: TestReferencePlatform(),
+      returnValueForMissingStub: TestListResultPlatform(),
+    );
   }
 
   @override
   Future<void> delete() {
-    return super.noSuchMethod(Invocation.method(#delete, []),
-        returnValue: neverEndingFuture<void>(),
-        returnValueForMissingStub: neverEndingFuture<void>());
+    return super.noSuchMethod(
+      Invocation.method(#delete, []),
+      returnValue: neverEndingFuture<void>(),
+      returnValueForMissingStub: neverEndingFuture<void>(),
+    );
   }
 
   @override
-  TaskPlatform putString(String? data, PutStringFormat? format,
-      [SettableMetadata? metadata]) {
+  TaskPlatform putString(
+    String? data,
+    PutStringFormat? format, [
+    SettableMetadata? metadata,
+  ]) {
     return super.noSuchMethod(
-        Invocation.method(#child, [data, format, metadata]),
-        returnValue: TestUploadTaskPlatform(),
-        returnValueForMissingStub: TestUploadTaskPlatform());
+      Invocation.method(#child, [data, format, metadata]),
+      returnValue: TestUploadTaskPlatform(),
+      returnValueForMissingStub: TestUploadTaskPlatform(),
+    );
   }
 
   @override
   Future<String> getDownloadURL() {
-    return super.noSuchMethod(Invocation.method(#getDownloadURL, []),
-        returnValue: neverEndingFuture<String>(),
-        returnValueForMissingStub: neverEndingFuture<String>());
+    return super.noSuchMethod(
+      Invocation.method(#getDownloadURL, []),
+      returnValue: neverEndingFuture<String>(),
+      returnValueForMissingStub: neverEndingFuture<String>(),
+    );
   }
 
   @override
   Future<FullMetadata> getMetadata() {
-    return super.noSuchMethod(Invocation.method(#getMetadata, []),
-        returnValue: neverEndingFuture<FullMetadata>(),
-        returnValueForMissingStub: neverEndingFuture<FullMetadata>());
+    return super.noSuchMethod(
+      Invocation.method(#getMetadata, []),
+      returnValue: neverEndingFuture<FullMetadata>(),
+      returnValueForMissingStub: neverEndingFuture<FullMetadata>(),
+    );
   }
 
   @override
   Future<ListResultPlatform> listAll() {
-    return super.noSuchMethod(Invocation.method(#listAll, []),
-        returnValue: neverEndingFuture<ListResultPlatform>(),
-        returnValueForMissingStub: neverEndingFuture<ListResultPlatform>());
+    return super.noSuchMethod(
+      Invocation.method(#listAll, []),
+      returnValue: neverEndingFuture<ListResultPlatform>(),
+      returnValueForMissingStub: neverEndingFuture<ListResultPlatform>(),
+    );
   }
 }
 
@@ -277,48 +321,59 @@ class MockUploadTaskPlatform extends Mock
     with
         // ignore: prefer_mixin, plugin_platform_interface needs to migrate to use `mixin`
         MockPlatformInterfaceMixin
-    implements
-        TaskPlatform {
+    implements TaskPlatform {
   @override
   TaskSnapshotPlatform get snapshot {
-    return super.noSuchMethod(Invocation.getter(#snapshot),
-        returnValue: TestTaskSnapshotPlatform(),
-        returnValueForMissingStub: TestTaskSnapshotPlatform());
+    return super.noSuchMethod(
+      Invocation.getter(#snapshot),
+      returnValue: TestTaskSnapshotPlatform(),
+      returnValueForMissingStub: TestTaskSnapshotPlatform(),
+    );
   }
 
   @override
   Stream<TaskSnapshotPlatform> get snapshotEvents {
-    return super.noSuchMethod(Invocation.getter(#snapshotEvents),
-        returnValue: const Stream<TaskSnapshotPlatform>.empty(),
-        returnValueForMissingStub: const Stream<TaskSnapshotPlatform>.empty());
+    return super.noSuchMethod(
+      Invocation.getter(#snapshotEvents),
+      returnValue: const Stream<TaskSnapshotPlatform>.empty(),
+      returnValueForMissingStub: const Stream<TaskSnapshotPlatform>.empty(),
+    );
   }
 
   @override
   Future<TaskSnapshotPlatform> get onComplete {
-    return super.noSuchMethod(Invocation.getter(#onComplete),
-        returnValue: neverEndingFuture<TaskSnapshotPlatform>(),
-        returnValueForMissingStub: neverEndingFuture<TaskSnapshotPlatform>());
+    return super.noSuchMethod(
+      Invocation.getter(#onComplete),
+      returnValue: neverEndingFuture<TaskSnapshotPlatform>(),
+      returnValueForMissingStub: neverEndingFuture<TaskSnapshotPlatform>(),
+    );
   }
 
   @override
   Future<bool> pause() {
-    return super.noSuchMethod(Invocation.method(#pause, []),
-        returnValue: Future.value(false),
-        returnValueForMissingStub: Future.value(false));
+    return super.noSuchMethod(
+      Invocation.method(#pause, []),
+      returnValue: Future.value(false),
+      returnValueForMissingStub: Future.value(false),
+    );
   }
 
   @override
   Future<bool> resume() {
-    return super.noSuchMethod(Invocation.method(#resume, []),
-        returnValue: Future.value(false),
-        returnValueForMissingStub: Future.value(false));
+    return super.noSuchMethod(
+      Invocation.method(#resume, []),
+      returnValue: Future.value(false),
+      returnValueForMissingStub: Future.value(false),
+    );
   }
 
   @override
   Future<bool> cancel() {
-    return super.noSuchMethod(Invocation.method(#cancel, []),
-        returnValue: Future.value(false),
-        returnValueForMissingStub: Future.value(false));
+    return super.noSuchMethod(
+      Invocation.method(#cancel, []),
+      returnValue: Future.value(false),
+      returnValueForMissingStub: Future.value(false),
+    );
   }
 }
 
@@ -335,26 +390,32 @@ class MockListResultPlatform extends Mock
     with
         // ignore: prefer_mixin, plugin_platform_interface needs to migrate to use `mixin`
         MockPlatformInterfaceMixin
-    implements
-        ListResultPlatform {
+    implements ListResultPlatform {
   @override
   List<ReferencePlatform> get items {
-    return super.noSuchMethod(Invocation.getter(#items),
-        returnValue: <ReferencePlatform>[],
-        returnValueForMissingStub: <ReferencePlatform>[]);
+    return super.noSuchMethod(
+      Invocation.getter(#items),
+      returnValue: <ReferencePlatform>[],
+      returnValueForMissingStub: <ReferencePlatform>[],
+    );
   }
 
   @override
   String? get nextPageToken {
-    return super.noSuchMethod(Invocation.getter(#nextPageToken),
-        returnValue: testToken, returnValueForMissingStub: testToken);
+    return super.noSuchMethod(
+      Invocation.getter(#nextPageToken),
+      returnValue: testToken,
+      returnValueForMissingStub: testToken,
+    );
   }
 
   @override
   List<ReferencePlatform> get prefixes {
-    return super.noSuchMethod(Invocation.getter(#prefixes),
-        returnValue: <ReferencePlatform>[],
-        returnValueForMissingStub: <ReferencePlatform>[]);
+    return super.noSuchMethod(
+      Invocation.getter(#prefixes),
+      returnValue: <ReferencePlatform>[],
+      returnValueForMissingStub: <ReferencePlatform>[],
+    );
   }
 }
 
@@ -367,40 +428,48 @@ class MockDownloadTaskPlatform extends Mock
     with
         // ignore: prefer_mixin, plugin_platform_interface needs to migrate to use `mixin`
         MockPlatformInterfaceMixin
-    implements
-        TaskPlatform {}
+    implements TaskPlatform {}
 
 // TaskSnapshotPlatform Mock
 class MockTaskSnapshotPlatform extends Mock
     with
         // ignore: prefer_mixin, plugin_platform_interface needs to migrate to use `mixin`
         MockPlatformInterfaceMixin
-    implements
-        TaskSnapshotPlatform {
+    implements TaskSnapshotPlatform {
   @override
   int get bytesTransferred {
-    return super.noSuchMethod(Invocation.getter(#bytesTransferred),
-        returnValue: 0, returnValueForMissingStub: 0);
+    return super.noSuchMethod(
+      Invocation.getter(#bytesTransferred),
+      returnValue: 0,
+      returnValueForMissingStub: 0,
+    );
   }
 
   @override
   int get totalBytes {
-    return super.noSuchMethod(Invocation.getter(#totalBytes),
-        returnValue: 0, returnValueForMissingStub: 0);
+    return super.noSuchMethod(
+      Invocation.getter(#totalBytes),
+      returnValue: 0,
+      returnValueForMissingStub: 0,
+    );
   }
 
   @override
   ReferencePlatform get ref {
-    return super.noSuchMethod(Invocation.getter(#ref),
-        returnValue: TestReferencePlatform(),
-        returnValueForMissingStub: TestReferencePlatform());
+    return super.noSuchMethod(
+      Invocation.getter(#ref),
+      returnValue: TestReferencePlatform(),
+      returnValueForMissingStub: TestReferencePlatform(),
+    );
   }
 
   @override
   TaskState get state {
-    return super.noSuchMethod(Invocation.getter(#state),
-        returnValue: TaskState.running,
-        returnValueForMissingStub: TaskState.running);
+    return super.noSuchMethod(
+      Invocation.getter(#state),
+      returnValue: TaskState.running,
+      returnValueForMissingStub: TaskState.running,
+    );
   }
 }
 

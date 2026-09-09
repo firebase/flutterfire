@@ -36,11 +36,14 @@ void main() {
         }
       }
 
-      await FirebaseAuth.instance
-          .useAuthEmulator(testEmulatorHost, testEmulatorPort);
+      await FirebaseAuth.instance.useAuthEmulator(
+        testEmulatorHost,
+        testEmulatorPort,
+      );
       if (defaultTargetPlatform != TargetPlatform.windows) {
-        await FirebaseAuth.instance
-            .setSettings(appVerificationDisabledForTesting: true);
+        await FirebaseAuth.instance.setSettings(
+          appVerificationDisabledForTesting: true,
+        );
       }
     });
 
@@ -64,11 +67,11 @@ void main() {
       }
 
       try {
-        final disabledUserCredential =
-            await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: testDisabledEmail,
-          password: testPassword,
-        );
+        final disabledUserCredential = await FirebaseAuth.instance
+            .createUserWithEmailAndPassword(
+              email: testDisabledEmail,
+              password: testPassword,
+            );
         await emulatorDisableUser(disabledUserCredential.user!.uid);
       } on FirebaseAuthException catch (e) {
         if (e.code != 'email-already-in-use' && e.code != 'keychain-error') {

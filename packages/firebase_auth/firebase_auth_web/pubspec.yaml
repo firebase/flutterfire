@@ -6,8 +6,8 @@ version: 6.2.7
 resolution: workspace
 
 environment:
-  sdk: '^3.6.0'
-  flutter: '>=3.22.0'
+  sdk: '^3.10.0'
+  flutter: '>=3.38.0'
 
 dependencies:
   firebase_auth_platform_interface: ^9.0.7

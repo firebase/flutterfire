@@ -151,9 +151,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           floatingLabelBehavior: FloatingLabelBehavior.never,
                           alignLabelWithHint: true,
                           label: Center(
-                            child: Text(
-                              'Click to add a display name',
-                            ),
+                            child: Text('Click to add a display name'),
                           ),
                         ),
                       ),
@@ -196,8 +194,8 @@ class _ProfilePageState extends State<ProfilePage> {
                             // e.g. final authorizationCode = userCredential.additionalUserInfo?.authorizationCode;
                             await FirebaseAuth.instance
                                 .revokeTokenWithAuthorizationCode(
-                              AuthGate.appleAuthorizationCode!,
-                            );
+                                  AuthGate.appleAuthorizationCode!,
+                                );
                             // You may wish to delete the user at this point
                             AuthGate.appleAuthorizationCode = null;
                           } else {
@@ -225,30 +223,34 @@ class _ProfilePageState extends State<ProfilePage> {
                             phoneNumber: phoneController.text,
                             verificationCompleted: (_) {},
                             verificationFailed: print,
-                            codeSent: (
-                              String verificationId,
-                              int? resendToken,
-                            ) async {
-                              final smsCode = await getSmsCodeFromUser(context);
-
-                              if (smsCode != null) {
-                                // Create a PhoneAuthCredential with the code
-                                final credential = PhoneAuthProvider.credential(
-                                  verificationId: verificationId,
-                                  smsCode: smsCode,
-                                );
-
-                                try {
-                                  await user.multiFactor.enroll(
-                                    PhoneMultiFactorGenerator.getAssertion(
-                                      credential,
-                                    ),
+                            codeSent:
+                                (
+                                  String verificationId,
+                                  int? resendToken,
+                                ) async {
+                                  final smsCode = await getSmsCodeFromUser(
+                                    context,
                                   );
-                                } on FirebaseAuthException catch (e) {
-                                  print(e.message);
-                                }
-                              }
-                            },
+
+                                  if (smsCode != null) {
+                                    // Create a PhoneAuthCredential with the code
+                                    final credential =
+                                        PhoneAuthProvider.credential(
+                                          verificationId: verificationId,
+                                          smsCode: smsCode,
+                                        );
+
+                                    try {
+                                      await user.multiFactor.enroll(
+                                        PhoneMultiFactorGenerator.getAssertion(
+                                          credential,
+                                        ),
+                                      );
+                                    } on FirebaseAuthException catch (e) {
+                                      print(e.message);
+                                    }
+                                  }
+                                },
                             codeAutoRetrievalTimeout: print,
                           );
                         },
@@ -259,8 +261,8 @@ class _ProfilePageState extends State<ProfilePage> {
                           final totp =
                               (await user.multiFactor.getEnrolledFactors())
                                   .firstWhereOrNull(
-                            (element) => element.factorId == 'totp',
-                          );
+                                    (element) => element.factorId == 'totp',
+                                  );
                           if (totp != null) {
                             await user.multiFactor.unenroll(
                               factorUid:
@@ -274,18 +276,19 @@ class _ProfilePageState extends State<ProfilePage> {
                           final session = await user.multiFactor.getSession();
                           final totpSecret =
                               await TotpMultiFactorGenerator.generateSecret(
-                            session,
-                          );
+                                session,
+                              );
                           print(totpSecret);
-                          final code =
-                              await getTotpFromUser(context, totpSecret);
+                          final code = await getTotpFromUser(
+                            context,
+                            totpSecret,
+                          );
                           print('code: $code');
                           if (code == null) {
                             return;
                           }
                           await user.multiFactor.enroll(
-                            await TotpMultiFactorGenerator
-                                .getAssertionForEnrollment(
+                            await TotpMultiFactorGenerator.getAssertionForEnrollment(
                               totpSecret,
                               code,
                             ),
@@ -297,8 +300,8 @@ class _ProfilePageState extends State<ProfilePage> {
                       TextButton(
                         onPressed: () async {
                           try {
-                            final enrolledFactors =
-                                await user.multiFactor.getEnrolledFactors();
+                            final enrolledFactors = await user.multiFactor
+                                .getEnrolledFactors();
 
                             await user.multiFactor.unenroll(
                               factorUid: enrolledFactors.first.uid,

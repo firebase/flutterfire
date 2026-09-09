@@ -55,16 +55,13 @@ class ActionCodeSettings {
       'url': url,
       'linkDomain': linkDomain,
       'handleCodeInApp': handleCodeInApp,
-      if (iOSBundleId != null)
-        'iOS': {
-          'bundleId': iOSBundleId,
-        },
+      if (iOSBundleId != null) 'iOS': {'bundleId': iOSBundleId},
       if (androidPackageName != null)
         'android': {
           'packageName': androidPackageName,
           'minimumVersion': androidMinimumVersion,
           'installApp': androidInstallApp,
-        }
+        },
     };
   }
 

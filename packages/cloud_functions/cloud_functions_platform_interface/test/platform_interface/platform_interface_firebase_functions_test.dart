@@ -47,7 +47,9 @@ void main() {
 
     test('FirebaseFunctionsPlatform.instanceFor', () {
       final result = FirebaseFunctionsPlatform.instanceFor(
-          app: app, region: 'us-central1');
+        app: app,
+        region: 'us-central1',
+      );
       expect(result, isA<FirebaseFunctionsPlatform>());
       expect(result.app, isA<FirebaseApp>());
       expect(result.app!.name, defaultFirebaseAppName);
@@ -55,19 +57,26 @@ void main() {
 
     test('get.instance', () {
       expect(
-          FirebaseFunctionsPlatform.instance, isA<FirebaseFunctionsPlatform>());
+        FirebaseFunctionsPlatform.instance,
+        isA<FirebaseFunctionsPlatform>(),
+      );
       expect(FirebaseFunctionsPlatform.instance.app, isNull);
     });
 
     group('set.instance', () {
       test('sets the current instance', () {
-        FirebaseFunctionsPlatform.instance =
-            TestFirebaseFunctionsPlatform(secondaryApp);
+        FirebaseFunctionsPlatform.instance = TestFirebaseFunctionsPlatform(
+          secondaryApp,
+        );
 
-        expect(FirebaseFunctionsPlatform.instance,
-            isA<FirebaseFunctionsPlatform>());
         expect(
-            FirebaseFunctionsPlatform.instance.app!.name, equals('testApp2'));
+          FirebaseFunctionsPlatform.instance,
+          isA<FirebaseFunctionsPlatform>(),
+        );
+        expect(
+          FirebaseFunctionsPlatform.instance.app!.name,
+          equals('testApp2'),
+        );
       });
     });
 
@@ -84,8 +93,11 @@ void main() {
 
     test('throws if httpsCallable()', () {
       try {
-        firebaseFunctionsPlatform!
-            .httpsCallable('', '', HttpsCallableOptions());
+        firebaseFunctionsPlatform!.httpsCallable(
+          '',
+          '',
+          HttpsCallableOptions(),
+        );
         // ignore: avoid_catching_errors, acceptable as UnimplementedError usage is correct
       } on UnimplementedError catch (e) {
         expect(e.message, equals('httpsCallable() is not implemented'));

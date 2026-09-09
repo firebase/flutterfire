@@ -8,13 +8,12 @@ import 'package:firebase_storage_platform_interface/firebase_storage_platform_in
 import 'package:firebase_storage_web/src/utils/metadata_cache.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-final someMetadata = SettableMetadata(contentLanguage: 'es', customMetadata: {
-  'testing': '123',
-});
-
-final otherMetadata = SettableMetadata(
-  contentType: 'image/png',
+final someMetadata = SettableMetadata(
+  contentLanguage: 'es',
+  customMetadata: {'testing': '123'},
 );
+
+final otherMetadata = SettableMetadata(contentType: 'image/png');
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -37,30 +36,34 @@ void main() {
         final setMetadata = cache!.store(otherMetadata);
 
         expect(
-            setMetadata.contentLanguage, equals(someMetadata.contentLanguage));
+          setMetadata.contentLanguage,
+          equals(someMetadata.contentLanguage),
+        );
         expect(setMetadata.contentType, equals(otherMetadata.contentType));
       });
 
       test(
-          "Shallowly merges extendedMetadata without overwriting what's already set",
-          () {
-        final withCustomMetadata = SettableMetadata(customMetadata: {
-          'testing': '456',
-          'more-testing': 'yes',
-        });
+        "Shallowly merges extendedMetadata without overwriting what's already set",
+        () {
+          final withCustomMetadata = SettableMetadata(
+            customMetadata: {'testing': '456', 'more-testing': 'yes'},
+          );
 
-        final setMetadata = cache!.store(withCustomMetadata);
-        final customMetadata = setMetadata.customMetadata;
-        expect(customMetadata, containsPair('testing', '123'));
-        expect(customMetadata, containsPair('more-testing', 'yes'));
-        expect(customMetadata, isNot(containsPair('testing', '456')));
-      });
+          final setMetadata = cache!.store(withCustomMetadata);
+          final customMetadata = setMetadata.customMetadata;
+          expect(customMetadata, containsPair('testing', '123'));
+          expect(customMetadata, containsPair('more-testing', 'yes'));
+          expect(customMetadata, isNot(containsPair('testing', '456')));
+        },
+      );
 
       test('Storing null returns the current cache', () {
         final setMetadata = cache!.store(null);
 
         expect(
-            setMetadata.contentLanguage, equals(someMetadata.contentLanguage));
+          setMetadata.contentLanguage,
+          equals(someMetadata.contentLanguage),
+        );
       });
     });
 

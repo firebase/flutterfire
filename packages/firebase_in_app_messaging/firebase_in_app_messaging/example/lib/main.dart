@@ -14,9 +14,7 @@ import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(MyApp());
 }
 
@@ -27,9 +25,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('In-App Messaging example'),
-        ),
+        appBar: AppBar(title: const Text('In-App Messaging example')),
         body: Builder(
           builder: (BuildContext context) {
             return Center(
@@ -58,10 +54,7 @@ class ProgrammaticTriggersExample extends StatelessWidget {
           children: <Widget>[
             const Text(
               'Programmatic Trigger',
-              style: TextStyle(
-                fontStyle: FontStyle.italic,
-                fontSize: 18,
-              ),
+              style: TextStyle(fontStyle: FontStyle.italic, fontSize: 18),
             ),
             const SizedBox(height: 8),
             const Text('Manually trigger events programmatically '),
@@ -80,7 +73,7 @@ class ProgrammaticTriggersExample extends StatelessWidget {
                 'Programmatic Triggers'.toUpperCase(),
                 style: const TextStyle(color: Colors.white),
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -107,10 +100,7 @@ class AnalyticsEventExample extends StatelessWidget {
           children: <Widget>[
             const Text(
               'Log an analytics event',
-              style: TextStyle(
-                fontStyle: FontStyle.italic,
-                fontSize: 18,
-              ),
+              style: TextStyle(fontStyle: FontStyle.italic, fontSize: 18),
             ),
             const SizedBox(height: 8),
             const Text('Trigger an analytics event'),

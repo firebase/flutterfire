@@ -72,6 +72,8 @@ class InMemoryCacheProvider implements CacheProvider {
   Future<void> dispose() async {}
 }
 
-CacheProvider cacheImplementation(String identifier, bool memory,
-        {String? customDbPath}) =>
-    InMemoryCacheProvider(identifier);
+CacheProvider cacheImplementation(
+  String identifier,
+  bool memory, {
+  String? customDbPath,
+}) => InMemoryCacheProvider(identifier);

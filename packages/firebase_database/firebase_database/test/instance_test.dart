@@ -27,16 +27,17 @@ void main() {
     });
 
     test(
-        'ensure databaseUrl has "/" removed on FirebaseDatabase initialisation',
-        () {
-      String secondDb = 'https://second-db.firebaseio.com';
-      final shared = FirebaseDatabase.instanceFor(
-        app: Firebase.app(),
-        // add forward slash to end
-        databaseURL: '$secondDb/',
-      );
+      'ensure databaseUrl has "/" removed on FirebaseDatabase initialisation',
+      () {
+        String secondDb = 'https://second-db.firebaseio.com';
+        final shared = FirebaseDatabase.instanceFor(
+          app: Firebase.app(),
+          // add forward slash to end
+          databaseURL: '$secondDb/',
+        );
 
-      expect(shared.databaseURL, secondDb);
-    });
+        expect(shared.databaseURL, secondDb);
+      },
+    );
   });
 }

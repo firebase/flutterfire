@@ -24,12 +24,12 @@ void main() {
     setUpAll(() async {
       await Firebase.initializeApp();
       installations = FirebaseInstallations.instance;
-      when(mockInstallations.delegateFor(
-        app: anyNamed('app'),
-      )).thenAnswer((_) => mockInstallations);
-      when(mockInstallations.getId()).thenAnswer(
-        (_) => Future.value('some-id'),
-      );
+      when(
+        mockInstallations.delegateFor(app: anyNamed('app')),
+      ).thenAnswer((_) => mockInstallations);
+      when(
+        mockInstallations.getId(),
+      ).thenAnswer((_) => Future.value('some-id'));
     });
 
     test('getId', () async {
@@ -57,8 +57,7 @@ class MockFirebaseInstallations extends Mock
     with
         // ignore: prefer_mixin
         MockPlatformInterfaceMixin
-    implements
-        TestFirebaseAppInstallationsPlatform {
+    implements TestFirebaseAppInstallationsPlatform {
   @override
   TestFirebaseAppInstallationsPlatform delegateFor({FirebaseApp? app}) {
     return super.noSuchMethod(

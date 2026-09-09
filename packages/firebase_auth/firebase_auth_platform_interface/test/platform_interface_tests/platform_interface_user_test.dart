@@ -23,10 +23,12 @@ void main() {
   const String kMockPhoneNumber = TEST_PHONE_NUMBER;
   const String kMockRefreshToken = 'test';
   const String kMockTenantId = 'test-tenant-id';
-  final int kMockCreationTimestamp =
-      DateTime.now().subtract(const Duration(days: 2)).millisecondsSinceEpoch;
-  final int kMockLastSignInTimestamp =
-      DateTime.now().subtract(const Duration(days: 1)).millisecondsSinceEpoch;
+  final int kMockCreationTimestamp = DateTime.now()
+      .subtract(const Duration(days: 2))
+      .millisecondsSinceEpoch;
+  final int kMockLastSignInTimestamp = DateTime.now()
+      .subtract(const Duration(days: 1))
+      .millisecondsSinceEpoch;
   final List<Map<String, Object>> kMockInitialProviderData = [
     <String, Object>{
       'providerId': kMockProviderId,
@@ -36,7 +38,7 @@ void main() {
       'email': kMockEmail,
       'phoneNumber': kMockPhoneNumber,
       'isEmailVerified': false,
-      'isAnonymous': true
+      'isAnonymous': true,
     },
   ];
   group('$UserPlatform()', () {
@@ -62,8 +64,11 @@ void main() {
         providerData: kMockInitialProviderData,
       );
 
-      userPlatform =
-          TestUserPlatform(auth, TestMultiFactorPlatform(auth), kMockUser);
+      userPlatform = TestUserPlatform(
+        auth,
+        TestMultiFactorPlatform(auth),
+        kMockUser,
+      );
     });
 
     group('Constructor', () {
@@ -104,10 +109,14 @@ void main() {
 
     test('UserPlatform.metadata', () {
       expect(userPlatform.metadata, isA<UserMetadata>());
-      expect(userPlatform.metadata.creationTime!.millisecondsSinceEpoch,
-          equals(kMockCreationTimestamp));
-      expect(userPlatform.metadata.lastSignInTime!.millisecondsSinceEpoch,
-          equals(kMockLastSignInTimestamp));
+      expect(
+        userPlatform.metadata.creationTime!.millisecondsSinceEpoch,
+        equals(kMockCreationTimestamp),
+      );
+      expect(
+        userPlatform.metadata.lastSignInTime!.millisecondsSinceEpoch,
+        equals(kMockLastSignInTimestamp),
+      );
     });
     test('UserPlatform.phoneNumber', () {
       expect(userPlatform.phoneNumber, equals(kMockPhoneNumber));
@@ -172,7 +181,9 @@ void main() {
 
     test('throws if .linkWithCredential', () async {
       AuthCredential credential = EmailAuthProvider.credential(
-          email: 'test@email.com', password: 'testPassword');
+        email: 'test@email.com',
+        password: 'testPassword',
+      );
       try {
         await userPlatform.linkWithCredential(credential);
       } on UnimplementedError catch (e) {
@@ -184,12 +195,16 @@ void main() {
 
     test('throws if .reauthenticateWithCredential', () async {
       AuthCredential credential = EmailAuthProvider.credential(
-          email: 'test@email.com', password: 'testPassword');
+        email: 'test@email.com',
+        password: 'testPassword',
+      );
       try {
         await userPlatform.reauthenticateWithCredential(credential);
       } on UnimplementedError catch (e) {
-        expect(e.message,
-            equals('reauthenticateWithCredential() is not implemented'));
+        expect(
+          e.message,
+          equals('reauthenticateWithCredential() is not implemented'),
+        );
         return;
       }
       fail('Should have thrown an [UnimplementedError]');
@@ -206,8 +221,9 @@ void main() {
     });
 
     test('throws if .sendEmailVerification', () async {
-      ActionCodeSettings actionCodeSettings =
-          ActionCodeSettings(url: 'www.test.com');
+      ActionCodeSettings actionCodeSettings = ActionCodeSettings(
+        url: 'www.test.com',
+      );
       try {
         await userPlatform.sendEmailVerification(actionCodeSettings);
       } on UnimplementedError catch (e) {
@@ -272,14 +288,19 @@ void main() {
     });
 
     test('throws if .verifyBeforeUpdateEmail', () async {
-      ActionCodeSettings actionCodeSettings =
-          ActionCodeSettings(url: 'www.test.com');
+      ActionCodeSettings actionCodeSettings = ActionCodeSettings(
+        url: 'www.test.com',
+      );
       try {
         await userPlatform.verifyBeforeUpdateEmail(
-            'test@email.com', actionCodeSettings);
+          'test@email.com',
+          actionCodeSettings,
+        );
       } on UnimplementedError catch (e) {
         expect(
-            e.message, equals('verifyBeforeUpdateEmail() is not implemented'));
+          e.message,
+          equals('verifyBeforeUpdateEmail() is not implemented'),
+        );
         return;
       }
       fail('Should have thrown an [UnimplementedError]');
@@ -288,7 +309,9 @@ void main() {
 }
 
 class TestUserPlatform extends UserPlatform {
-  TestUserPlatform(FirebaseAuthPlatform auth, MultiFactorPlatform multiFactor,
-      InternalUserDetails data)
-      : super(auth, multiFactor, data);
+  TestUserPlatform(
+    FirebaseAuthPlatform auth,
+    MultiFactorPlatform multiFactor,
+    InternalUserDetails data,
+  ) : super(auth, multiFactor, data);
 }
