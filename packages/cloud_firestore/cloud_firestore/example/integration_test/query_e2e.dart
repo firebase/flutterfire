@@ -4139,6 +4139,40 @@ void runQueryTests() {
         },
         skip: defaultTargetPlatform == TargetPlatform.windows,
       );
+
+      test(
+        'sum() & average() report that they are unsupported on Windows',
+        () async {
+          final collection = await initializeTest('unsupported-aggregations');
+
+          await collection.add({'foo': 1});
+
+          final unsupportedError = isA<FirebaseException>()
+              .having((error) => error.code, 'code', 'unimplemented')
+              .having(
+                (error) => error.message,
+                'message',
+                'Sum and average aggregations are not supported by the '
+                    'Firebase C++ SDK on Windows.',
+              );
+
+          await expectLater(
+            collection.aggregate(sum('foo')).get(),
+            throwsA(unsupportedError),
+          );
+          await expectLater(
+            collection.aggregate(average('foo')).get(),
+            throwsA(unsupportedError),
+          );
+          // A mixed request used to resolve with the count and a null sum,
+          // which reads as a successful query returning no sum.
+          await expectLater(
+            collection.aggregate(count(), sum('foo')).get(),
+            throwsA(unsupportedError),
+          );
+        },
+        skip: defaultTargetPlatform != TargetPlatform.windows,
+      );
     });
 
     group('startAfterDocument', () {
