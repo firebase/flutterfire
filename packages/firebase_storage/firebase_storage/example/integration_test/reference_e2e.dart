@@ -369,6 +369,53 @@ void setupReferenceTests() {
             expect(complete.metadata?.contentType, 'image/jpeg');
           },
         );
+
+        // Overlapping putData calls can native-crash Windows (0xC0000005 in
+        // TaskStateListener::OnProgress). Sequential putData tests do not hit
+        // that path. See https://github.com/firebase/flutterfire/issues/18664.
+        test(
+          'uploads many small files concurrently and reads them back',
+          () async {
+            final bytes = Uint8List.fromList(
+              utf8.encode(
+                jsonEncode({
+                  'id': List.generate(300, (i) => i),
+                  'label': List.generate(300, (i) => 'Synthetic customer $i'),
+                }),
+              ),
+            );
+            const rounds = 3;
+            const uploadsPerRound = 13;
+            final prefix =
+                'flutter-tests/concurrent-put-data/${DateTime.now().microsecondsSinceEpoch}';
+
+            for (var round = 0; round < rounds; round++) {
+              final refs = List<Reference>.generate(
+                uploadsPerRound,
+                (i) => storage.ref('$prefix/round-$round-$i.json'),
+              );
+
+              final snapshots = await Future.wait(
+                refs.map(
+                  (ref) => ref.putData(
+                    bytes,
+                    SettableMetadata(contentType: 'application/json'),
+                  ),
+                ),
+              );
+
+              expect(snapshots, hasLength(uploadsPerRound));
+              for (final snapshot in snapshots) {
+                expect(snapshot.state, TaskState.success);
+              }
+
+              for (final ref in refs) {
+                expect(await ref.getData(), bytes);
+              }
+            }
+          },
+          timeout: const Timeout(Duration(minutes: 2)),
+        );
       },
     );
 
