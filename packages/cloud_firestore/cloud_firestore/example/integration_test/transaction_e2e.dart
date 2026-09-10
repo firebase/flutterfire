@@ -302,6 +302,34 @@ void runTransactionTests() {
         skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
       );
 
+      test(
+        'should not crash when a get is issued after the transaction timeout',
+        () async {
+          final DocumentReference<Map<String, dynamic>> first =
+              await initializeTest('timeout-second-get-1');
+          final DocumentReference<Map<String, dynamic>> second =
+              await initializeTest('timeout-second-get-2');
+          await first.set(<String, Object>{'v': 1});
+          await second.set(<String, Object>{'v': 2});
+
+          await expectLater(
+            firestore.runTransaction(
+              (Transaction transaction) async {
+                await transaction.get(first);
+                await Future<void>.delayed(const Duration(seconds: 2));
+                await transaction.get(second);
+              },
+              timeout: const Duration(seconds: 1),
+            ),
+            throwsA(
+              isA<FirebaseException>()
+                  .having((e) => e.code, 'code', 'deadline-exceeded'),
+            ),
+          );
+        },
+        skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android,
+      );
+
       test('should throw with exception', () async {
         try {
           await firestore.runTransaction((Transaction transaction) async {
