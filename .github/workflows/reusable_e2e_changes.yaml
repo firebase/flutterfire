@@ -118,6 +118,7 @@ jobs:
               - '${{ inputs.package-path }}/ios/**'
               - '${{ inputs.package-path }}/darwin/**'
               - '${{ inputs.package-path }}/example/ios/**'
+              - '${{ inputs.package-path }}/tool/test_engine_lifecycle.sh'
             macos:
               - *shared
               - '${{ inputs.package-path }}/macos/**'
