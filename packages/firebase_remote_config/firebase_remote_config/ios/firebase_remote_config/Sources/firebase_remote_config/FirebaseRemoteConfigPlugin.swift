@@ -211,7 +211,10 @@ public class FirebaseRemoteConfigPlugin: NSObject, FlutterPlugin, FlutterStreamH
         return
       }
       if let update {
-        events(Array(update.updatedKeys))
+        let updatedKeys = Array(update.updatedKeys)
+        DispatchQueue.main.async {
+          events(updatedKeys)
+        }
       }
     }
     return nil
