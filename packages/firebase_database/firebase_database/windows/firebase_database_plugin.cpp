@@ -6,7 +6,9 @@
 
 #include <flutter/event_channel.h>
 #include <flutter/event_stream_handler_functions.h>
+#include <flutter/plugin_registrar_windows.h>
 #include <flutter/standard_method_codec.h>
+#include <windows.h>
 
 #include <chrono>
 #include <condition_variable>
@@ -16,6 +18,8 @@
 #include <map>
 #include <memory>
 #include <mutex>
+#include <optional>
+#include <queue>
 #include <sstream>
 #include <string>
 #include <thread>
@@ -62,6 +66,176 @@ std::map<std::string, std::unique_ptr<flutter::StreamHandler<>>>
     FirebaseDatabasePlugin::stream_handlers_;
 std::map<std::string, firebase::database::Database*>
     FirebaseDatabasePlugin::database_instances_;
+
+namespace {
+
+// Hop C++ SDK callbacks onto Flutter's platform thread before touching an
+// EventSink or Pigeon reply. Listener callbacks and Future::OnCompletion run
+// on the SDK worker thread; sending platform-channel messages from there
+// crashes the Windows embedder. See
+// https://github.com/firebase/flutterfire/issues/18630 and the same pattern
+// in cloud_firestore's Windows plugin.
+constexpr wchar_t kTaskRunnerWindowClassName[] =
+    L"FirebaseDatabaseWindowsTaskRunnerWindow";
+constexpr UINT kTaskRunnerWindowMessage = WM_APP + 0x4674;
+
+class PlatformThreadDispatcher {
+ public:
+  static PlatformThreadDispatcher& GetInstance() {
+    static PlatformThreadDispatcher instance;
+    return instance;
+  }
+
+  void Initialize() {
+    std::lock_guard<std::mutex> lock(mutex_);
+    if (window_ != nullptr) {
+      return;
+    }
+
+    platform_thread_id_ = GetCurrentThreadId();
+
+    WNDCLASSW window_class = {};
+    window_class.lpfnWndProc = PlatformThreadDispatcher::WindowProc;
+    window_class.hInstance = GetModuleHandle(nullptr);
+    window_class.lpszClassName = kTaskRunnerWindowClassName;
+
+    RegisterClassW(&window_class);
+    window_ =
+        CreateWindowExW(0, kTaskRunnerWindowClassName, L"", 0, 0, 0, 0, 0,
+                        HWND_MESSAGE, nullptr, window_class.hInstance, this);
+  }
+
+  void Post(std::function<void()> task) {
+    if (window_ == nullptr) {
+      task();
+      return;
+    }
+    if (GetCurrentThreadId() == platform_thread_id_) {
+      task();
+      return;
+    }
+
+    {
+      std::lock_guard<std::mutex> lock(mutex_);
+      tasks_.push(std::move(task));
+    }
+    PostMessageW(window_, kTaskRunnerWindowMessage, 0, 0);
+  }
+
+ private:
+  static LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wparam,
+                                     LPARAM lparam) {
+    if (message == WM_NCCREATE) {
+      auto create_struct = reinterpret_cast<CREATESTRUCT*>(lparam);
+      SetWindowLongPtr(
+          window, GWLP_USERDATA,
+          reinterpret_cast<LONG_PTR>(create_struct->lpCreateParams));
+      return TRUE;
+    }
+
+    auto dispatcher = reinterpret_cast<PlatformThreadDispatcher*>(
+        GetWindowLongPtr(window, GWLP_USERDATA));
+    if (dispatcher != nullptr && message == kTaskRunnerWindowMessage) {
+      dispatcher->ProcessTasks();
+      return 0;
+    }
+
+    return DefWindowProc(window, message, wparam, lparam);
+  }
+
+  void ProcessTasks() {
+    std::queue<std::function<void()>> tasks;
+    {
+      std::lock_guard<std::mutex> lock(mutex_);
+      tasks.swap(tasks_);
+    }
+
+    while (!tasks.empty()) {
+      tasks.front()();
+      tasks.pop();
+    }
+  }
+
+  PlatformThreadDispatcher() = default;
+
+  HWND window_ = nullptr;
+  DWORD platform_thread_id_ = 0;
+  std::mutex mutex_;
+  std::queue<std::function<void()>> tasks_;
+};
+
+void ReplyOnPlatformThread(
+    std::function<void(std::optional<FlutterError>)> result,
+    std::optional<FlutterError> reply) {
+  PlatformThreadDispatcher::GetInstance().Post(
+      [result = std::move(result), reply = std::move(reply)]() mutable {
+        result(std::move(reply));
+      });
+}
+
+template <typename T>
+void ReplyOnPlatformThread(std::function<void(ErrorOr<T>)> result,
+                           ErrorOr<T> reply) {
+  PlatformThreadDispatcher::GetInstance().Post(
+      [result = std::move(result), reply = std::move(reply)]() mutable {
+        result(std::move(reply));
+      });
+}
+
+struct EventSinkState {
+  std::mutex mutex;
+  std::unique_ptr<flutter::EventSink<flutter::EncodableValue>> events;
+  bool active = true;
+};
+
+void SendSuccessOnPlatformThread(std::shared_ptr<EventSinkState> state,
+                                 flutter::EncodableValue value) {
+  if (!state) {
+    return;
+  }
+
+  PlatformThreadDispatcher::GetInstance().Post(
+      [state, value = std::move(value)]() mutable {
+        std::lock_guard<std::mutex> lock(state->mutex);
+        if (state->active && state->events) {
+          state->events->Success(value);
+        }
+      });
+}
+
+void SendErrorOnPlatformThread(std::shared_ptr<EventSinkState> state,
+                               const std::string& code,
+                               const std::string& message,
+                               flutter::EncodableValue details) {
+  if (!state) {
+    return;
+  }
+
+  PlatformThreadDispatcher::GetInstance().Post(
+      [state, code, message, details = std::move(details)]() {
+        std::lock_guard<std::mutex> lock(state->mutex);
+        if (!state->active || !state->events) {
+          return;
+        }
+        state->events->Error(code, message, details);
+      });
+}
+
+void EndStreamOnPlatformThread(std::shared_ptr<EventSinkState> state) {
+  if (!state) {
+    return;
+  }
+
+  PlatformThreadDispatcher::GetInstance().Post([state]() {
+    std::lock_guard<std::mutex> lock(state->mutex);
+    if (state->active && state->events) {
+      state->events->EndOfStream();
+      state->active = false;
+    }
+  });
+}
+
+}  // namespace
 
 // atexit handler: clean up Database resources before static destruction.
 // 1. Clear event channels to trigger StreamHandler destruction, which
@@ -375,6 +549,8 @@ FirebaseDatabasePlugin::~FirebaseDatabasePlugin() {}
 
 void FirebaseDatabasePlugin::RegisterWithRegistrar(
     flutter::PluginRegistrarWindows* registrar) {
+  PlatformThreadDispatcher::GetInstance().Initialize();
+
   auto plugin = std::make_unique<FirebaseDatabasePlugin>();
   messenger_ = registrar->messenger();
   FirebaseDatabaseHostApi::SetUp(registrar->messenger(), plugin.get());
@@ -598,9 +774,9 @@ void FirebaseDatabasePlugin::DatabaseReferenceSet(
 
   ref.SetValue(value).OnCompletion([result](const Future<void>& future) {
     if (future.error() == Error::kErrorNone) {
-      result(std::nullopt);
+      ReplyOnPlatformThread(result, std::nullopt);
     } else {
-      result(FirebaseDatabasePlugin::ParseError(future));
+      ReplyOnPlatformThread(result, FirebaseDatabasePlugin::ParseError(future));
     }
   });
 }
@@ -625,9 +801,10 @@ void FirebaseDatabasePlugin::DatabaseReferenceSetWithPriority(
   ref.SetValueAndPriority(value, priority)
       .OnCompletion([result](const Future<void>& future) {
         if (future.error() == Error::kErrorNone) {
-          result(std::nullopt);
+          ReplyOnPlatformThread(result, std::nullopt);
         } else {
-          result(FirebaseDatabasePlugin::ParseError(future));
+          ReplyOnPlatformThread(result,
+                                FirebaseDatabasePlugin::ParseError(future));
         }
       });
 }
@@ -646,9 +823,9 @@ void FirebaseDatabasePlugin::DatabaseReferenceUpdate(
 
   ref.UpdateChildren(values).OnCompletion([result](const Future<void>& future) {
     if (future.error() == Error::kErrorNone) {
-      result(std::nullopt);
+      ReplyOnPlatformThread(result, std::nullopt);
     } else {
-      result(FirebaseDatabasePlugin::ParseError(future));
+      ReplyOnPlatformThread(result, FirebaseDatabasePlugin::ParseError(future));
     }
   });
 }
@@ -670,9 +847,9 @@ void FirebaseDatabasePlugin::DatabaseReferenceSetPriority(
 
   ref.SetPriority(priority).OnCompletion([result](const Future<void>& future) {
     if (future.error() == Error::kErrorNone) {
-      result(std::nullopt);
+      ReplyOnPlatformThread(result, std::nullopt);
     } else {
-      result(FirebaseDatabasePlugin::ParseError(future));
+      ReplyOnPlatformThread(result, FirebaseDatabasePlugin::ParseError(future));
     }
   });
 }
@@ -816,78 +993,77 @@ void FirebaseDatabasePlugin::DatabaseReferenceRunTransaction(
       ctx, apply_locally);
 
   // Wait for the transaction to complete
-  ref.RunTransactionLastResult().OnCompletion(
-      [ctx](const Future<DataSnapshot>& future) {
-        Error error = static_cast<Error>(future.error());
+  ref.RunTransactionLastResult().OnCompletion([ctx](const Future<DataSnapshot>&
+                                                        future) {
+    Error error = static_cast<Error>(future.error());
 
-        // A deliberate abort is not an error condition: `runTransaction` has to
-        // resolve with `committed: false`, as it does on Android, iOS and web.
-        //
-        // The handler's own decision - not the native error code - is what
-        // decides this. The desktop SDK reports a deliberate abort as
-        // `kErrorWriteCanceled` when the handler aborts on its initial
-        // invocation and as `kErrorNone` when it aborts on a rerun, and it
-        // never reports the `kErrorTransactionAbortedByUser` that the mobile
-        // SDKs use (that code is only ever emitted by the Android and iOS
-        // implementations). Neither native code can be trusted on its own here:
-        // `kErrorWriteCanceled` also means "cancelled by
-        // PurgeOutstandingWrites()", which must stay an error, and `kErrorNone`
-        // otherwise means the transaction committed.
-        // See https://github.com/firebase/flutterfire/issues/18549,
-        // https://github.com/firebase/firebase-cpp-sdk/issues/1905.
-        bool aborted_by_handler =
-            ctx->handler_aborted ||
-            error == Error::kErrorTransactionAbortedByUser;
-        // Either way the handler, not the server, ended this transaction, so it
-        // did not commit - whatever the native error code says.
-        bool ended_by_handler = aborted_by_handler || ctx->handler_failed;
+    // A deliberate abort is not an error condition: `runTransaction` has to
+    // resolve with `committed: false`, as it does on Android, iOS and web.
+    //
+    // The handler's own decision - not the native error code - is what
+    // decides this. The desktop SDK reports a deliberate abort as
+    // `kErrorWriteCanceled` when the handler aborts on its initial
+    // invocation and as `kErrorNone` when it aborts on a rerun, and it
+    // never reports the `kErrorTransactionAbortedByUser` that the mobile
+    // SDKs use (that code is only ever emitted by the Android and iOS
+    // implementations). Neither native code can be trusted on its own here:
+    // `kErrorWriteCanceled` also means "cancelled by
+    // PurgeOutstandingWrites()", which must stay an error, and `kErrorNone`
+    // otherwise means the transaction committed.
+    // See https://github.com/firebase/flutterfire/issues/18549,
+    // https://github.com/firebase/firebase-cpp-sdk/issues/1905.
+    bool aborted_by_handler =
+        ctx->handler_aborted || error == Error::kErrorTransactionAbortedByUser;
+    // Either way the handler, not the server, ended this transaction, so it
+    // did not commit - whatever the native error code says.
+    bool ended_by_handler = aborted_by_handler || ctx->handler_failed;
 
-        if (error == Error::kErrorNone && !ended_by_handler) {
-          const DataSnapshot* snapshot = future.result();
-          EncodableMap result_map;
-          result_map[EncodableValue("committed")] = EncodableValue(true);
-          if (snapshot) {
-            result_map[EncodableValue("snapshot")] = EncodableValue(
-                FirebaseDatabasePlugin::DataSnapshotToEncodableMap(*snapshot));
-          } else {
-            result_map[EncodableValue("snapshot")] = EncodableValue();
-          }
-          (*ctx->transaction_results)[ctx->transaction_key] = result_map;
-          ctx->result(std::nullopt);
-        } else {
-          EncodableMap result_map;
-          result_map[EncodableValue("committed")] = EncodableValue(false);
-          if (aborted_by_handler && !ctx->aborted_snapshot.empty()) {
-            // Report the data the handler saw, like the other platforms do.
-            result_map[EncodableValue("snapshot")] =
-                EncodableValue(ctx->aborted_snapshot);
-          } else {
-            result_map[EncodableValue("snapshot")] =
-                EncodableValue(EncodableMap{
-                    {EncodableValue("key"), EncodableValue()},
-                    {EncodableValue("value"), EncodableValue()},
-                    {EncodableValue("priority"), EncodableValue()},
-                    {EncodableValue("childKeys"),
-                     EncodableValue(EncodableList{})},
-                });
-          }
-          (*ctx->transaction_results)[ctx->transaction_key] = result_map;
+    if (error == Error::kErrorNone && !ended_by_handler) {
+      const DataSnapshot* snapshot = future.result();
+      EncodableMap result_map;
+      result_map[EncodableValue("committed")] = EncodableValue(true);
+      if (snapshot) {
+        result_map[EncodableValue("snapshot")] = EncodableValue(
+            FirebaseDatabasePlugin::DataSnapshotToEncodableMap(*snapshot));
+      } else {
+        result_map[EncodableValue("snapshot")] = EncodableValue();
+      }
+      (*ctx->transaction_results)[ctx->transaction_key] = result_map;
+      ReplyOnPlatformThread(ctx->result, std::nullopt);
+    } else {
+      EncodableMap result_map;
+      result_map[EncodableValue("committed")] = EncodableValue(false);
+      if (aborted_by_handler && !ctx->aborted_snapshot.empty()) {
+        // Report the data the handler saw, like the other platforms do.
+        result_map[EncodableValue("snapshot")] =
+            EncodableValue(ctx->aborted_snapshot);
+      } else {
+        result_map[EncodableValue("snapshot")] = EncodableValue(EncodableMap{
+            {EncodableValue("key"), EncodableValue()},
+            {EncodableValue("value"), EncodableValue()},
+            {EncodableValue("priority"), EncodableValue()},
+            {EncodableValue("childKeys"), EncodableValue(EncodableList{})},
+        });
+      }
+      (*ctx->transaction_results)[ctx->transaction_key] = result_map;
 
-          if (ctx->handler_failed) {
-            std::string message =
-                "The transaction handler could not be called. The transaction "
-                "was aborted.";
-            ctx->result(FlutterError(
-                "unknown", message,
-                FirebaseDatabasePlugin::BuildErrorDetails("unknown", message)));
-          } else if (aborted_by_handler) {
-            ctx->result(std::nullopt);
-          } else {
-            ctx->result(FirebaseDatabasePlugin::ParseError(future));
-          }
-        }
-        delete ctx;
-      });
+      if (ctx->handler_failed) {
+        std::string message =
+            "The transaction handler could not be called. The transaction "
+            "was aborted.";
+        ReplyOnPlatformThread(
+            ctx->result, FlutterError("unknown", message,
+                                      FirebaseDatabasePlugin::BuildErrorDetails(
+                                          "unknown", message)));
+      } else if (aborted_by_handler) {
+        ReplyOnPlatformThread(ctx->result, std::nullopt);
+      } else {
+        ReplyOnPlatformThread(ctx->result,
+                              FirebaseDatabasePlugin::ParseError(future));
+      }
+    }
+    delete ctx;
+  });
 }
 
 void FirebaseDatabasePlugin::DatabaseReferenceGetTransactionResult(
@@ -930,9 +1106,10 @@ void FirebaseDatabasePlugin::OnDisconnectSet(
   ref.OnDisconnect()->SetValue(value).OnCompletion(
       [result](const Future<void>& future) {
         if (future.error() == Error::kErrorNone) {
-          result(std::nullopt);
+          ReplyOnPlatformThread(result, std::nullopt);
         } else {
-          result(FirebaseDatabasePlugin::ParseError(future));
+          ReplyOnPlatformThread(result,
+                                FirebaseDatabasePlugin::ParseError(future));
         }
       });
 }
@@ -958,9 +1135,10 @@ void FirebaseDatabasePlugin::OnDisconnectSetWithPriority(
       ->SetValueAndPriority(value, priority)
       .OnCompletion([result](const Future<void>& future) {
         if (future.error() == Error::kErrorNone) {
-          result(std::nullopt);
+          ReplyOnPlatformThread(result, std::nullopt);
         } else {
-          result(FirebaseDatabasePlugin::ParseError(future));
+          ReplyOnPlatformThread(result,
+                                FirebaseDatabasePlugin::ParseError(future));
         }
       });
 }
@@ -980,9 +1158,10 @@ void FirebaseDatabasePlugin::OnDisconnectUpdate(
   ref.OnDisconnect()->UpdateChildren(values).OnCompletion(
       [result](const Future<void>& future) {
         if (future.error() == Error::kErrorNone) {
-          result(std::nullopt);
+          ReplyOnPlatformThread(result, std::nullopt);
         } else {
-          result(FirebaseDatabasePlugin::ParseError(future));
+          ReplyOnPlatformThread(result,
+                                FirebaseDatabasePlugin::ParseError(future));
         }
       });
 }
@@ -998,14 +1177,14 @@ void FirebaseDatabasePlugin::OnDisconnectCancel(
 
   DatabaseReference ref = database->GetReference(path.c_str());
 
-  ref.OnDisconnect()->Cancel().OnCompletion(
-      [result](const Future<void>& future) {
-        if (future.error() == Error::kErrorNone) {
-          result(std::nullopt);
-        } else {
-          result(FirebaseDatabasePlugin::ParseError(future));
-        }
-      });
+  ref.OnDisconnect()->Cancel().OnCompletion([result](
+                                                const Future<void>& future) {
+    if (future.error() == Error::kErrorNone) {
+      ReplyOnPlatformThread(result, std::nullopt);
+    } else {
+      ReplyOnPlatformThread(result, FirebaseDatabasePlugin::ParseError(future));
+    }
+  });
 }
 
 // ===== Query methods =====
@@ -1017,17 +1196,122 @@ namespace {
 // does for the Pigeon host-API errors built by `ParseError()`. The two-argument
 // `EventSink::Error()` overload sends null details, which loses the code.
 // See https://github.com/firebase/flutterfire/issues/18550.
-void SendListenerError(flutter::EventSink<flutter::EncodableValue>* events,
+void SendListenerError(std::shared_ptr<EventSinkState> events_state,
                        const Error& error, const char* error_message) {
-  if (!events) return;
+  if (!events_state) {
+    return;
+  }
   std::string code = FirebaseDatabasePlugin::GetDatabaseErrorCode(error);
   std::string message =
       (error_message && *error_message)
           ? std::string(error_message)
           : FirebaseDatabasePlugin::GetDatabaseErrorMessage(error);
-  events->Error(code, message,
-                FirebaseDatabasePlugin::BuildErrorDetails(code, message));
+  SendErrorOnPlatformThread(
+      std::move(events_state), code, message,
+      FirebaseDatabasePlugin::BuildErrorDetails(code, message));
 }
+
+// SDK callbacks can still be in flight after RemoveValueListener /
+// RemoveChildListener. Cancel() waits on mutex_ so OnCancelInternal can
+// delete the listener only after any in-flight callback has returned.
+class DatabaseValueListener : public firebase::database::ValueListener {
+ public:
+  explicit DatabaseValueListener(std::shared_ptr<EventSinkState> events_state)
+      : events_state_(std::move(events_state)) {}
+
+  void Cancel() {
+    std::lock_guard<std::mutex> lock(mutex_);
+    cancelled_ = true;
+  }
+
+  void OnValueChanged(const DataSnapshot& snapshot) override {
+    std::lock_guard<std::mutex> lock(mutex_);
+    if (cancelled_) {
+      return;
+    }
+    EncodableMap event;
+    event[EncodableValue("eventType")] = EncodableValue("value");
+    event[EncodableValue("previousChildKey")] = EncodableValue();
+    event[EncodableValue("snapshot")] = EncodableValue(
+        FirebaseDatabasePlugin::DataSnapshotToEncodableMap(snapshot));
+    SendSuccessOnPlatformThread(events_state_, EncodableValue(event));
+  }
+
+  void OnCancelled(const Error& error, const char* error_message) override {
+    std::lock_guard<std::mutex> lock(mutex_);
+    if (cancelled_) {
+      return;
+    }
+    SendListenerError(events_state_, error, error_message);
+  }
+
+ private:
+  std::mutex mutex_;
+  bool cancelled_ = false;
+  std::shared_ptr<EventSinkState> events_state_;
+};
+
+class DatabaseChildListener : public firebase::database::ChildListener {
+ public:
+  DatabaseChildListener(std::shared_ptr<EventSinkState> events_state,
+                        std::string event_type)
+      : events_state_(std::move(events_state)),
+        event_type_(std::move(event_type)) {}
+
+  void Cancel() {
+    std::lock_guard<std::mutex> lock(mutex_);
+    cancelled_ = true;
+  }
+
+  void OnChildAdded(const DataSnapshot& snapshot, const char* prev) override {
+    if (event_type_ == "childAdded") {
+      Send("childAdded", snapshot, prev);
+    }
+  }
+  void OnChildChanged(const DataSnapshot& snapshot, const char* prev) override {
+    if (event_type_ == "childChanged") {
+      Send("childChanged", snapshot, prev);
+    }
+  }
+  void OnChildMoved(const DataSnapshot& snapshot, const char* prev) override {
+    if (event_type_ == "childMoved") {
+      Send("childMoved", snapshot, prev);
+    }
+  }
+  void OnChildRemoved(const DataSnapshot& snapshot) override {
+    if (event_type_ == "childRemoved") {
+      Send("childRemoved", snapshot, nullptr);
+    }
+  }
+  void OnCancelled(const Error& error, const char* error_message) override {
+    std::lock_guard<std::mutex> lock(mutex_);
+    if (cancelled_) {
+      return;
+    }
+    SendListenerError(events_state_, error, error_message);
+  }
+
+ private:
+  void Send(const std::string& type, const DataSnapshot& snapshot,
+            const char* prev) {
+    std::lock_guard<std::mutex> lock(mutex_);
+    if (cancelled_) {
+      return;
+    }
+    EncodableMap event;
+    event[EncodableValue("eventType")] = EncodableValue(type);
+    event[EncodableValue("previousChildKey")] =
+        prev ? EncodableValue(std::string(prev)) : EncodableValue();
+    event[EncodableValue("snapshot")] = EncodableValue(
+        FirebaseDatabasePlugin::DataSnapshotToEncodableMap(snapshot));
+    SendSuccessOnPlatformThread(events_state_, EncodableValue(event));
+  }
+
+  std::mutex mutex_;
+  bool cancelled_ = false;
+  std::shared_ptr<EventSinkState> events_state_;
+  std::string event_type_;
+};
 
 }  // namespace
 
@@ -1058,22 +1342,7 @@ void FirebaseDatabasePlugin::QueryObserve(
     DatabaseGenericStreamHandler(firebase::database::Query query)
         : query_(query), value_listener_(nullptr), child_listener_(nullptr) {}
 
-    ~DatabaseGenericStreamHandler() override {
-      // Remove listeners before deleting to avoid dangling pointers in the
-      // Database's internal listener list. Query::RemoveXxxListener() checks
-      // if (internal_) first, so this is a safe no-op if the Database was
-      // already destroyed (the cleanup mechanism nullifies internal_).
-      if (value_listener_) {
-        query_.RemoveValueListener(value_listener_);
-        delete value_listener_;
-        value_listener_ = nullptr;
-      }
-      if (child_listener_) {
-        query_.RemoveChildListener(child_listener_);
-        delete child_listener_;
-        child_listener_ = nullptr;
-      }
-    }
+    ~DatabaseGenericStreamHandler() override { DetachListeners(); }
 
    protected:
     std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
@@ -1081,7 +1350,8 @@ void FirebaseDatabasePlugin::QueryObserve(
         const flutter::EncodableValue* arguments,
         std::unique_ptr<flutter::EventSink<flutter::EncodableValue>>&& events)
         override {
-      events_ = std::move(events);
+      events_state_ = std::make_shared<EventSinkState>();
+      events_state_->events = std::move(events);
 
       // Extract eventType from arguments
       std::string event_type = "value";
@@ -1095,73 +1365,10 @@ void FirebaseDatabasePlugin::QueryObserve(
       }
 
       if (event_type == "value") {
-        // Value listener
-        class VL : public firebase::database::ValueListener {
-         public:
-          VL(flutter::EventSink<flutter::EncodableValue>* events)
-              : events_(events) {}
-          void OnValueChanged(const DataSnapshot& snapshot) override {
-            EncodableMap event;
-            event[EncodableValue("eventType")] = EncodableValue("value");
-            event[EncodableValue("previousChildKey")] = EncodableValue();
-            event[EncodableValue("snapshot")] = EncodableValue(
-                FirebaseDatabasePlugin::DataSnapshotToEncodableMap(snapshot));
-            events_->Success(EncodableValue(event));
-          }
-          void OnCancelled(const Error& error,
-                           const char* error_message) override {
-            SendListenerError(events_, error, error_message);
-          }
-
-         private:
-          flutter::EventSink<flutter::EncodableValue>* events_;
-        };
-        value_listener_ = new VL(events_.get());
+        value_listener_ = new DatabaseValueListener(events_state_);
         query_.AddValueListener(value_listener_);
       } else {
-        // Child listener
-        class CL : public firebase::database::ChildListener {
-         public:
-          CL(flutter::EventSink<flutter::EncodableValue>* events,
-             const std::string& event_type)
-              : events_(events), event_type_(event_type) {}
-          void OnChildAdded(const DataSnapshot& snapshot,
-                            const char* prev) override {
-            if (event_type_ == "childAdded") Send("childAdded", snapshot, prev);
-          }
-          void OnChildChanged(const DataSnapshot& snapshot,
-                              const char* prev) override {
-            if (event_type_ == "childChanged")
-              Send("childChanged", snapshot, prev);
-          }
-          void OnChildMoved(const DataSnapshot& snapshot,
-                            const char* prev) override {
-            if (event_type_ == "childMoved") Send("childMoved", snapshot, prev);
-          }
-          void OnChildRemoved(const DataSnapshot& snapshot) override {
-            if (event_type_ == "childRemoved")
-              Send("childRemoved", snapshot, nullptr);
-          }
-          void OnCancelled(const Error& error,
-                           const char* error_message) override {
-            SendListenerError(events_, error, error_message);
-          }
-
-         private:
-          void Send(const std::string& type, const DataSnapshot& snapshot,
-                    const char* prev) {
-            EncodableMap event;
-            event[EncodableValue("eventType")] = EncodableValue(type);
-            event[EncodableValue("previousChildKey")] =
-                prev ? EncodableValue(std::string(prev)) : EncodableValue();
-            event[EncodableValue("snapshot")] = EncodableValue(
-                FirebaseDatabasePlugin::DataSnapshotToEncodableMap(snapshot));
-            events_->Success(EncodableValue(event));
-          }
-          flutter::EventSink<flutter::EncodableValue>* events_;
-          std::string event_type_;
-        };
-        child_listener_ = new CL(events_.get(), event_type);
+        child_listener_ = new DatabaseChildListener(events_state_, event_type);
         query_.AddChildListener(child_listener_);
       }
 
@@ -1170,27 +1377,36 @@ void FirebaseDatabasePlugin::QueryObserve(
 
     std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
     OnCancelInternal(const flutter::EncodableValue* arguments) override {
+      DetachListeners();
+      EndStreamOnPlatformThread(events_state_);
+      return nullptr;
+    }
+
+   private:
+    void DetachListeners() {
+      // Remove listeners before deleting to avoid dangling pointers in the
+      // Database's internal listener list. Query::RemoveXxxListener() checks
+      // if (internal_) first, so this is a safe no-op if the Database was
+      // already destroyed (the cleanup mechanism nullifies internal_).
+      // Cancel() serializes with in-flight SDK callbacks before delete.
       if (value_listener_) {
         query_.RemoveValueListener(value_listener_);
+        value_listener_->Cancel();
         delete value_listener_;
         value_listener_ = nullptr;
       }
       if (child_listener_) {
         query_.RemoveChildListener(child_listener_);
+        child_listener_->Cancel();
         delete child_listener_;
         child_listener_ = nullptr;
       }
-      if (events_) {
-        events_->EndOfStream();
-      }
-      return nullptr;
     }
 
-   private:
     firebase::database::Query query_;
-    firebase::database::ValueListener* value_listener_;
-    firebase::database::ChildListener* child_listener_;
-    std::unique_ptr<flutter::EventSink<flutter::EncodableValue>> events_;
+    DatabaseValueListener* value_listener_;
+    DatabaseChildListener* child_listener_;
+    std::shared_ptr<EventSinkState> events_state_;
   };
 
   auto handler = std::make_unique<DatabaseGenericStreamHandler>(query);
@@ -1241,9 +1457,10 @@ void FirebaseDatabasePlugin::QueryGet(
       } else {
         result_map[EncodableValue("snapshot")] = EncodableValue();
       }
-      result(result_map);
+      ReplyOnPlatformThread<flutter::EncodableMap>(result, result_map);
     } else {
-      result(FirebaseDatabasePlugin::ParseError(future));
+      ReplyOnPlatformThread<flutter::EncodableMap>(
+          result, FirebaseDatabasePlugin::ParseError(future));
     }
   });
 }
