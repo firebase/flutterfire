@@ -101,6 +101,33 @@ void main() {
             }
             fail('should have thrown an error');
           });
+
+          test('should surface the error code when a forced refresh is refused',
+              () async {
+            // Demonstrate fix for this issue works: https://github.com/firebase/flutterfire/issues/18561
+            // A refresh the backend refuses (user disabled, deleted, token
+            // revoked) reached Dart as `unknown` on Android, because the
+            // failed Task surfaced as an ExecutionException that hid the
+            // FirebaseAuthException carrying the code.
+            final userCredential =
+                await FirebaseAuth.instance.createUserWithEmailAndPassword(
+              email: generateRandomEmail(),
+              password: testPassword,
+            );
+            final user = userCredential.user!;
+
+            // Disable the account behind the signed-in user's back, then force
+            // a refresh so the SDK has to ask the backend again.
+            await emulatorDisableUser(user.uid);
+
+            try {
+              await user.getIdToken(true);
+            } on FirebaseAuthException catch (e) {
+              expect(e.code, 'user-disabled');
+              return;
+            }
+            fail('should have thrown a FirebaseAuthException');
+          });
         },
         skip: !kIsWeb &&
             (defaultTargetPlatform == TargetPlatform.windows ||
