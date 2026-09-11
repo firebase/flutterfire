@@ -47,6 +47,11 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   BOOL _notificationHandlingSetup;
   BOOL _applicationObserverRegistered;
 
+  // Set once APNs registration has been requested because FCM auto-init is enabled, so the
+  // auto-init check is not re-run (and registerForRemoteNotifications not re-issued) on every
+  // Firebase app initialization.
+  BOOL _apnsRegistrationRequested;
+
 #if TARGET_OS_OSX
   // Tracks when plugin registration occurred after the macOS launch notification.
   BOOL _missedApplicationDidFinishLaunchingNotification;
@@ -281,6 +286,36 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 #endif
 }
 
+// Registers for APNs if FCM auto-init is enabled. Registration is deferred while auto-init is
+// disabled so the APNs token cannot trigger FCM registration before the user opts in (see
+// `messagingSetAutoInitEnabled:`, which registers once they do).
+//
+// `[FIRMessaging messaging]` requires a configured default FIRApp. When Firebase is initialized
+// from Dart (`Firebase.initializeApp(options:)` with no GoogleService-Info.plist / native
+// `FirebaseApp.configure()`), the default app does not exist yet at launch, so `[FIRMessaging
+// messaging]` is nil and `isAutoInitEnabled` reads as NO. In that case the check is skipped here
+// and re-run from `pluginConstantsForFIRApp:` once Dart has configured the app.
+//
+// Safe to call repeatedly: APNs registration is only requested once per process.
+- (void)registerForRemoteNotificationsIfAutoInitEnabled {
+  if (_apnsRegistrationRequested) {
+    return;
+  }
+  // Checked via FIRApp.allApps rather than `[FIRApp defaultApp]` / `[FIRMessaging messaging]` so
+  // a not-yet-configured app does not log the misleading "default Firebase app has not yet been
+  // configured" (I-COR000003) warning during launch.
+  if ([FLTFirebasePlugin firebaseAppNamed:@"[DEFAULT]"] == nil) {
+    return;
+  }
+  if (![FIRMessaging messaging].isAutoInitEnabled) {
+    return;
+  }
+  _apnsRegistrationRequested = YES;
+  [self registerForRemoteNotifications];
+  // Forward an APNs token that may have arrived before Firebase was configured.
+  [self ensureAPNSTokenSetting];
+}
+
 #ifdef __FF_NOTIFICATIONS_SUPPORTED_PLATFORM
 - (void)configureNotificationCenterDelegate {
   // Set UNUserNotificationCenter but preserve original delegate if necessary.
@@ -424,11 +459,9 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   // We automatically register for remote notifications as
   // application:didReceiveRemoteNotification:fetchCompletionHandler: will not get called unless
   // registerForRemoteNotifications is called early on during app initialization, calling this from
-  // Dart would be too late. Defer registration when auto-init is disabled so the APNs token cannot
-  // trigger FCM registration before the user opts in.
-  if ([FIRMessaging messaging].isAutoInitEnabled) {
-    [self registerForRemoteNotifications];
-  }
+  // Dart would be too late. Registration is skipped when auto-init is disabled, or deferred to
+  // `pluginConstantsForFIRApp:` when Firebase has not been configured natively yet.
+  [self registerForRemoteNotificationsIfAutoInitEnabled];
 }
 
 - (void)markInitialNotificationGatheredAfterDelay {
@@ -793,6 +826,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   BOOL enabled = [arguments[@"enabled"] boolValue];
   messaging.autoInitEnabled = enabled;
   if (enabled) {
+    _apnsRegistrationRequested = YES;
     [self registerForRemoteNotifications];
     [self ensureAPNSTokenSetting];
   }
@@ -923,6 +957,10 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 }
 
 - (NSDictionary *_Nonnull)pluginConstantsForFIRApp:(FIRApp *)firebase_app {
+  // Called by firebase_core right after `Firebase.initializeApp()` has configured the app. For
+  // apps initialized from Dart this is the first point where `[FIRMessaging messaging]` exists,
+  // so re-run the auto-init check that was skipped during launch.
+  [self registerForRemoteNotificationsIfAutoInitEnabled];
   return @{
     @"AUTO_INIT_ENABLED" : @([FIRMessaging messaging].isAutoInitEnabled),
   };
