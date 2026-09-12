@@ -54,12 +54,12 @@ class _ChatPageState extends State<ChatPage> {
     );
     if (widget.useAgentPlatform) {
       _model = FirebaseAI.agentPlatform().generativeModel(
-        model: 'gemini-3.1-flash-lite',
+        model: 'gemini-3.5-flash-lite',
         generationConfig: generationConfig,
       );
     } else {
       _model = FirebaseAI.googleAI().generativeModel(
-        model: 'gemini-3.1-flash-lite',
+        model: 'gemini-3.5-flash-lite',
         generationConfig: generationConfig,
       );
     }
