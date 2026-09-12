@@ -3,4 +3,5 @@
 // found in the LICENSE file.
 
 export 'src/events.dart';
+export 'src/in_app_message.dart';
 export 'src/platform_interface/platform_interface_firebase_in_app_messaging.dart';

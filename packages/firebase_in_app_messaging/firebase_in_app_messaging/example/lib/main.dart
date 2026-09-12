@@ -39,6 +39,7 @@ class MyApp extends StatelessWidget {
                   AnalyticsEventExample(),
                   ProgrammaticTriggersExample(),
                   MessageEventsExample(),
+                  CustomDisplayExample(),
                 ],
               ),
             );
@@ -157,6 +158,112 @@ class _MessageEventsExampleState extends State<MessageEventsExample> {
             const Text('Last event received from the campaign'),
             const SizedBox(height: 8),
             Text(_lastEvent, textAlign: TextAlign.center),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class CustomDisplayExample extends StatefulWidget {
+  @override
+  State<CustomDisplayExample> createState() => _CustomDisplayExampleState();
+}
+
+class _CustomDisplayExampleState extends State<CustomDisplayExample> {
+  StreamSubscription<InAppMessage>? _subscription;
+  bool _customDisplayEnabled = false;
+
+  @override
+  void dispose() {
+    _subscription?.cancel();
+    super.dispose();
+  }
+
+  Future<void> _toggle(bool enabled) async {
+    await _subscription?.cancel();
+    _subscription = null;
+    if (enabled) {
+      _subscription = MyApp.fiam.onMessageDisplay.listen(_show);
+    }
+    await MyApp.fiam.setCustomDisplayEnabled(enabled);
+    if (mounted) {
+      setState(() {
+        _customDisplayEnabled = enabled;
+      });
+    }
+  }
+
+  Future<void> _show(InAppMessage message) async {
+    if (!mounted) return;
+    await message.impress();
+    if (!mounted) return;
+    await showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        final InAppMessageAction? primary =
+            message.primaryAction ?? message.action;
+        return AlertDialog(
+          title: Text(
+              message.title?.text ?? message.campaignMetadata.campaignName),
+          content: Text(message.body?.text ?? 'Custom Flutter in-app message'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () async {
+                await message.dismiss();
+                if (context.mounted) {
+                  Navigator.of(context).pop();
+                }
+              },
+              child: const Text('Dismiss'),
+            ),
+            if (primary != null)
+              FilledButton(
+                onPressed: () async {
+                  await message.click(primary);
+                  if (context.mounted) {
+                    Navigator.of(context).pop();
+                    ScaffoldMessenger.of(this.context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          'Action URL: ${primary.actionUrl ?? '(none)'}',
+                        ),
+                      ),
+                    );
+                  }
+                },
+                child: Text(primary.buttonText ?? 'Continue'),
+              ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          children: <Widget>[
+            const Text(
+              'Custom Flutter display',
+              style: TextStyle(
+                fontStyle: FontStyle.italic,
+                fontSize: 18,
+              ),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'When enabled, campaigns are rendered with Flutter widgets instead of native templates.',
+              textAlign: TextAlign.center,
+            ),
+            SwitchListTile(
+              title: const Text('Use custom display'),
+              value: _customDisplayEnabled,
+              onChanged: _toggle,
+            ),
           ],
         ),
       ),
