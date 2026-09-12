@@ -54,7 +54,8 @@ class WebSocketTransport implements DataConnectTransport {
     this.sdkType,
     this.appCheck, [
     this.auth,
-  ]) {
+    @visibleForTesting WebSocketChannel Function(Uri)? connectWebSocket,
+  ]) : _connectWebSocket = connectWebSocket ?? WebSocketChannel.connect {
     final protocol = (transportOptions.isSecure ?? true) ? 'wss' : 'ws';
     final host = transportOptions.host;
     final port = transportOptions.port ?? 443;
@@ -94,6 +95,7 @@ class WebSocketTransport implements DataConnectTransport {
     });
   }
 
+  final WebSocketChannel Function(Uri) _connectWebSocket;
   FirebaseAuth? auth;
   String? _currentUid;
   // ignore: unused_field
@@ -184,14 +186,37 @@ class WebSocketTransport implements DataConnectTransport {
   /// vetoes any reconnect for the operation that was still being set up.
   int _pendingOperationSetups = 0;
 
+  static const Duration _idleDisconnectTimeout = Duration(seconds: 15);
+  Timer? _idleDisconnectTimer;
+
   void _checkIdleAndDisconnect() {
-    if (_pendingOperationSetups > 0) return;
-    if (_streamListeners.isEmpty && _unaryListeners.isEmpty) {
-      _isExpectedDisconnect = true;
-      _disconnect();
-      _releaseWebSocketTransport();
-      _clearState();
+    if (_pendingOperationSetups > 0) {
+      _cancelIdleDisconnectTimer();
+      return;
     }
+    if (_streamListeners.isEmpty && _unaryListeners.isEmpty) {
+      _scheduleIdleDisconnect();
+    } else {
+      _cancelIdleDisconnectTimer();
+    }
+  }
+
+  void _scheduleIdleDisconnect() {
+    if (_idleDisconnectTimer != null) return; // Already scheduled
+    _idleDisconnectTimer = Timer(_idleDisconnectTimeout, () {
+      _idleDisconnectTimer = null;
+      if (_streamListeners.isEmpty && _unaryListeners.isEmpty && _pendingOperationSetups == 0) {
+        _isExpectedDisconnect = true;
+        _disconnect();
+        _releaseWebSocketTransport();
+        _clearState();
+      }
+    });
+  }
+
+  void _cancelIdleDisconnectTimer() {
+    _idleDisconnectTimer?.cancel();
+    _idleDisconnectTimer = null;
   }
 
   /// Re-establishes the connection on behalf of operations that are already
@@ -284,6 +309,9 @@ class WebSocketTransport implements DataConnectTransport {
 
   bool get isConnected => _channel != null;
 
+  /// Returns true if there are active stream listeners.
+  bool get hasActiveSubscriptions => _streamListeners.isNotEmpty;
+
   @visibleForTesting
   Map<String, String> buildHeaders(String? authToken, String? appCheckToken) =>
       _buildHeaders(authToken, appCheckToken);
@@ -307,6 +335,7 @@ class WebSocketTransport implements DataConnectTransport {
   Future<void>? _connectionFuture;
 
   Future<void> _ensureConnected(String? authToken) {
+    _cancelIdleDisconnectTimer();
     if (_channel != null) return Future.value();
     if (_connectionFuture != null) return _connectionFuture!;
     _connectionFuture = _doConnect(authToken).whenComplete(() {
@@ -331,7 +360,7 @@ class WebSocketTransport implements DataConnectTransport {
     // `done`/`error` from it cannot clobber the channel we are about to open.
     unawaited(_channelSubscription?.cancel());
 
-    final channel = WebSocketChannel.connect(Uri.parse(_url));
+    final channel = _connectWebSocket(Uri.parse(_url));
     _channel = channel;
     _channelSubscription = channel.stream.listen(
       _onMessage,
@@ -584,6 +613,7 @@ class WebSocketTransport implements DataConnectTransport {
     // Ignore events from a socket that is no longer the active one.
     if (!identical(_channel, channel)) return;
     developer.log('WebSocket error: $error');
+    _cancelIdleDisconnectTimer();
     _channel = null;
     _isReconnecting = false;
     _scheduleReconnect();
@@ -602,6 +632,7 @@ class WebSocketTransport implements DataConnectTransport {
 
   void disconnect() {
     _isExpectedDisconnect = true;
+    _cancelIdleDisconnectTimer();
     _disconnect();
     _releaseWebSocketTransport();
   }
@@ -614,6 +645,7 @@ class WebSocketTransport implements DataConnectTransport {
     // A `done` from a socket we already replaced must not null out the current
     // channel: every later `_send` would be dropped on the floor silently.
     if (!identical(_channel, channel)) return;
+    _cancelIdleDisconnectTimer();
     _channel = null;
     _isReconnecting = false;
     if (!_isExpectedDisconnect) {
@@ -682,6 +714,7 @@ class WebSocketTransport implements DataConnectTransport {
           authToken, requestKind, isMutation);
     } finally {
       _pendingOperationSetups--;
+      _checkIdleAndDisconnect();
     }
     return completer.future;
   }
@@ -873,6 +906,7 @@ class WebSocketTransport implements DataConnectTransport {
           _sendPendingSubscriptions(authToken, appCheckToken);
         } finally {
           _pendingOperationSetups--;
+          _checkIdleAndDisconnect();
         }
       },
       onCancel: () {

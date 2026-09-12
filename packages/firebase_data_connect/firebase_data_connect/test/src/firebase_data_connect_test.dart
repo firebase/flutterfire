@@ -22,7 +22,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-@GenerateNiceMocks([MockSpec<FirebaseApp>(), MockSpec<ConnectorConfig>()])
+@GenerateNiceMocks([MockSpec<ConnectorConfig>()])
 import 'firebase_data_connect_test.mocks.dart';
 
 class MockFirebaseAuth extends Mock implements FirebaseAuth {
@@ -75,24 +75,25 @@ class MockQueryManager extends Mock implements QueryManager {}
 
 void main() {
   group('FirebaseDataConnect', () {
-    late MockFirebaseApp mockApp;
+    late DynamicMockFirebaseApp mockApp;
     late MockFirebaseAuth mockAuth;
     late MockFirebaseAppCheck mockAppCheck;
     late MockConnectorConfig mockConnectorConfig;
 
     setUp(() {
-      mockApp = MockFirebaseApp();
       mockAuth = MockFirebaseAuth();
       mockAppCheck = MockFirebaseAppCheck();
       mockConnectorConfig = MockConnectorConfig();
-
-      when(mockApp.options).thenReturn(
-        const FirebaseOptions(
+      mockApp = DynamicMockFirebaseApp(
+        name: 'default',
+        options: const FirebaseOptions(
           apiKey: 'fake_api_key',
           appId: 'fake_app_id',
           messagingSenderId: 'fake_messaging_sender_id',
           projectId: 'fake_project_id',
         ),
+        mockAuth: mockAuth,
+        mockAppCheck: mockAppCheck,
       );
       when(mockConnectorConfig.location).thenReturn('us-central1');
       when(mockConnectorConfig.connector).thenReturn('connector');
@@ -181,7 +182,12 @@ void main() {
     test('instanceFor returns cached instance if available', () {
       FirebaseDataConnect.cachedInstances.clear(); // Clear cache first
 
-      when(mockApp.name).thenReturn('appName');
+      mockApp = DynamicMockFirebaseApp(
+        name: 'appName',
+        options: mockApp.options,
+        mockAuth: mockAuth,
+        mockAppCheck: mockAppCheck,
+      );
       when(mockConnectorConfig.toJson()).thenReturn('connectorConfigStr');
 
       final dataConnect = FirebaseDataConnect(
@@ -208,7 +214,12 @@ void main() {
     test('instanceFor creates new instance if not cached', () {
       FirebaseDataConnect.cachedInstances.clear(); // Clear cache first
 
-      when(mockApp.name).thenReturn('appName');
+      mockApp = DynamicMockFirebaseApp(
+        name: 'appName',
+        options: mockApp.options,
+        mockAuth: mockAuth,
+        mockAppCheck: mockAppCheck,
+      );
       when(mockConnectorConfig.toJson()).thenReturn('connectorConfigStr');
 
       final instance = FirebaseDataConnect.instanceFor(
