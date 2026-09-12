@@ -78,6 +78,34 @@ void main() {
       expect(content.parts[1], isA<InlineDataPart>());
     });
 
+    test('functionResponse() has role user', () {
+      final content = Content.functionResponse('testFunc', {'result': 'ok'});
+      expect(content.role, 'user');
+      expect(content.parts.length, 1);
+      expect(content.parts[0], isA<FunctionResponse>());
+      final json = content.toJson();
+      expect(json['role'], 'user');
+      expect((json['parts']! as List)[0]['functionResponse']['name'], 'testFunc');
+    });
+
+    test('functionResponses() has role user', () {
+      final content = Content.functionResponses([
+        const FunctionResponse('testFunc1', {'result': 1}),
+        const FunctionResponse('testFunc2', {'result': 2}),
+      ]);
+      expect(content.role, 'user');
+      expect(content.parts.length, 2);
+      final json = content.toJson();
+      expect(json['role'], 'user');
+    });
+
+    test('toJson sanitizes legacy function role to user', () {
+      final content = Content('function', [const FunctionResponse('legacyFunc', {})]);
+      expect(content.role, 'function');
+      final json = content.toJson();
+      expect(json['role'], 'user');
+    });
+
     test('toJson', () {
       final content = Content('user',
           [const TextPart('Test'), InlineDataPart('image/png', Uint8List(0))]);
