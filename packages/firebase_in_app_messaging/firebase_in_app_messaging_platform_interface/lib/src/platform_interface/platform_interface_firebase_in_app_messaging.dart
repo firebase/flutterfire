@@ -6,6 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:meta/meta.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
+import '../events.dart';
 import '../method_channel/method_channel_firebase_in_app_messaging.dart';
 
 abstract class FirebaseInAppMessagingPlatform extends PlatformInterface {
@@ -66,5 +67,26 @@ abstract class FirebaseInAppMessagingPlatform extends PlatformInterface {
     throw UnimplementedError(
       'setAutomaticDataCollectionEnabled() is not implemented',
     );
+  }
+
+  /// Notifies about in-app messages whose action button was tapped.
+  Stream<InAppMessagingClickEvent> get onMessageClicked {
+    throw UnimplementedError('onMessageClicked is not implemented');
+  }
+
+  /// Notifies about in-app messages that were displayed long enough to count
+  /// as an impression.
+  Stream<InAppMessagingImpressionEvent> get onMessageImpression {
+    throw UnimplementedError('onMessageImpression is not implemented');
+  }
+
+  /// Notifies about in-app messages that were dismissed.
+  Stream<InAppMessagingDismissEvent> get onMessageDismissed {
+    throw UnimplementedError('onMessageDismissed is not implemented');
+  }
+
+  /// Notifies about in-app messages that could not be rendered.
+  Stream<InAppMessagingDisplayErrorEvent> get onMessageDisplayError {
+    throw UnimplementedError('onMessageDisplayError is not implemented');
   }
 }

@@ -57,6 +57,13 @@ private func wrapError(_ error: Any) -> [Any?] {
   ]
 }
 
+private func createConnectionError(withChannelName channelName: String) -> PigeonError {
+  PigeonError(
+    code: "channel-error", message: "Unable to establish connection on channel: '\(channelName)'.",
+    details: ""
+  )
+}
+
 private func isNullish(_ value: Any?) -> Bool {
   value is NSNull || value == nil
 }
@@ -66,9 +73,250 @@ private func nilOrValue<T>(_ value: Any?) -> T? {
   return value as! T?
 }
 
-private class FirebaseInAppMessagingMessagesPigeonCodecReader: FlutterStandardReader {}
+private func doubleEqualsFirebaseInAppMessagingMessages(_ lhs: Double, _ rhs: Double) -> Bool {
+  (lhs.isNaN && rhs.isNaN) || lhs == rhs
+}
 
-private class FirebaseInAppMessagingMessagesPigeonCodecWriter: FlutterStandardWriter {}
+private func doubleHashFirebaseInAppMessagingMessages(_ value: Double, _ hasher: inout Hasher) {
+  if value.isNaN {
+    hasher.combine(0x7FF8_0000_0000_0000)
+  } else {
+    // Normalize -0.0 to 0.0
+    hasher.combine(value == 0 ? 0 : value)
+  }
+}
+
+func deepEqualsFirebaseInAppMessagingMessages(_ lhs: Any?, _ rhs: Any?) -> Bool {
+  let cleanLhs = nilOrValue(lhs) as Any?
+  let cleanRhs = nilOrValue(rhs) as Any?
+  switch (cleanLhs, cleanRhs) {
+  case (nil, nil):
+    return true
+
+  case (nil, _), (_, nil):
+    return false
+
+  case (let lhs as AnyObject, let rhs as AnyObject) where lhs === rhs:
+    return true
+
+  case is (Void, Void):
+    return true
+
+  case (let lhsArray, let rhsArray) as ([Any?], [Any?]):
+    guard lhsArray.count == rhsArray.count else { return false }
+    for (index, element) in lhsArray.enumerated() {
+      if !deepEqualsFirebaseInAppMessagingMessages(element, rhsArray[index]) {
+        return false
+      }
+    }
+    return true
+
+  case (let lhsArray, let rhsArray) as ([Double], [Double]):
+    guard lhsArray.count == rhsArray.count else { return false }
+    for (index, element) in lhsArray.enumerated() {
+      if !doubleEqualsFirebaseInAppMessagingMessages(element, rhsArray[index]) {
+        return false
+      }
+    }
+    return true
+
+  case (let lhsDictionary, let rhsDictionary) as ([AnyHashable: Any?], [AnyHashable: Any?]):
+    guard lhsDictionary.count == rhsDictionary.count else { return false }
+    for (lhsKey, lhsValue) in lhsDictionary {
+      var found = false
+      for (rhsKey, rhsValue) in rhsDictionary {
+        if deepEqualsFirebaseInAppMessagingMessages(lhsKey, rhsKey) {
+          if deepEqualsFirebaseInAppMessagingMessages(lhsValue, rhsValue) {
+            found = true
+            break
+          } else {
+            return false
+          }
+        }
+      }
+      if !found { return false }
+    }
+    return true
+
+  case (let lhs as Double, let rhs as Double):
+    return doubleEqualsFirebaseInAppMessagingMessages(lhs, rhs)
+
+  case (let lhsHashable, let rhsHashable) as (AnyHashable, AnyHashable):
+    return lhsHashable == rhsHashable
+
+  default:
+    return false
+  }
+}
+
+func deepHashFirebaseInAppMessagingMessages(value: Any?, hasher: inout Hasher) {
+  let cleanValue = nilOrValue(value) as Any?
+  if let cleanValue {
+    if let doubleValue = cleanValue as? Double {
+      doubleHashFirebaseInAppMessagingMessages(doubleValue, &hasher)
+    } else if let valueList = cleanValue as? [Any?] {
+      for item in valueList {
+        deepHashFirebaseInAppMessagingMessages(value: item, hasher: &hasher)
+      }
+    } else if let valueList = cleanValue as? [Double] {
+      for item in valueList {
+        doubleHashFirebaseInAppMessagingMessages(item, &hasher)
+      }
+    } else if let valueDict = cleanValue as? [AnyHashable: Any?] {
+      var result = 0
+      for (key, value) in valueDict {
+        var entryKeyHasher = Hasher()
+        deepHashFirebaseInAppMessagingMessages(value: key, hasher: &entryKeyHasher)
+        var entryValueHasher = Hasher()
+        deepHashFirebaseInAppMessagingMessages(value: value, hasher: &entryValueHasher)
+        result = result &+ ((entryKeyHasher.finalize() &* 31) ^ entryValueHasher.finalize())
+      }
+      hasher.combine(result)
+    } else if let hashableValue = cleanValue as? AnyHashable {
+      hasher.combine(hashableValue)
+    } else {
+      hasher.combine(String(describing: cleanValue))
+    }
+  } else {
+    hasher.combine(0)
+  }
+}
+
+/// How an in-app message was dismissed.
+enum FiamDismissType: Int {
+  /// The message was swiped away. Only reported on iOS, for banner messages.
+  case swipe = 0
+  /// The user tapped a button to close the message.
+  case clickedCancel = 1
+  /// The message was dismissed automatically. Only reported on iOS, for banner
+  /// messages.
+  case auto = 2
+  /// The way the message was dismissed is unknown. Always reported on Android,
+  /// which does not expose a dismiss type.
+  case unknown = 3
+}
+
+/// Metadata of the campaign an in-app message belongs to.
+///
+/// Generated class from Pigeon that represents data sent in messages.
+struct FiamCampaignMetadata: Hashable {
+  var campaignId: String
+  var campaignName: String
+  var isTestMessage: Bool
+
+  // swift-format-ignore: AlwaysUseLowerCamelCase
+  static func fromList(_ pigeonVar_list: [Any?]) -> FiamCampaignMetadata? {
+    let campaignId = pigeonVar_list[0] as! String
+    let campaignName = pigeonVar_list[1] as! String
+    let isTestMessage = pigeonVar_list[2] as! Bool
+
+    return FiamCampaignMetadata(
+      campaignId: campaignId,
+      campaignName: campaignName,
+      isTestMessage: isTestMessage
+    )
+  }
+
+  func toList() -> [Any?] {
+    [
+      campaignId,
+      campaignName,
+      isTestMessage,
+    ]
+  }
+
+  static func == (lhs: FiamCampaignMetadata, rhs: FiamCampaignMetadata) -> Bool {
+    if Swift.type(of: lhs) != Swift.type(of: rhs) {
+      return false
+    }
+    return deepEqualsFirebaseInAppMessagingMessages(lhs.campaignId, rhs.campaignId)
+      && deepEqualsFirebaseInAppMessagingMessages(lhs.campaignName, rhs.campaignName)
+      && deepEqualsFirebaseInAppMessagingMessages(lhs.isTestMessage, rhs.isTestMessage)
+  }
+
+  func hash(into hasher: inout Hasher) {
+    hasher.combine("FiamCampaignMetadata")
+    deepHashFirebaseInAppMessagingMessages(value: campaignId, hasher: &hasher)
+    deepHashFirebaseInAppMessagingMessages(value: campaignName, hasher: &hasher)
+    deepHashFirebaseInAppMessagingMessages(value: isTestMessage, hasher: &hasher)
+  }
+}
+
+/// The action attached to the button a user tapped on an in-app message.
+///
+/// Generated class from Pigeon that represents data sent in messages.
+struct FiamAction: Hashable {
+  var actionUrl: String?
+  var buttonText: String?
+
+  // swift-format-ignore: AlwaysUseLowerCamelCase
+  static func fromList(_ pigeonVar_list: [Any?]) -> FiamAction? {
+    let actionUrl: String? = nilOrValue(pigeonVar_list[0])
+    let buttonText: String? = nilOrValue(pigeonVar_list[1])
+
+    return FiamAction(
+      actionUrl: actionUrl,
+      buttonText: buttonText
+    )
+  }
+
+  func toList() -> [Any?] {
+    [
+      actionUrl,
+      buttonText,
+    ]
+  }
+
+  static func == (lhs: FiamAction, rhs: FiamAction) -> Bool {
+    if Swift.type(of: lhs) != Swift.type(of: rhs) {
+      return false
+    }
+    return deepEqualsFirebaseInAppMessagingMessages(lhs.actionUrl, rhs.actionUrl)
+      && deepEqualsFirebaseInAppMessagingMessages(lhs.buttonText, rhs.buttonText)
+  }
+
+  func hash(into hasher: inout Hasher) {
+    hasher.combine("FiamAction")
+    deepHashFirebaseInAppMessagingMessages(value: actionUrl, hasher: &hasher)
+    deepHashFirebaseInAppMessagingMessages(value: buttonText, hasher: &hasher)
+  }
+}
+
+private class FirebaseInAppMessagingMessagesPigeonCodecReader: FlutterStandardReader {
+  override func readValue(ofType type: UInt8) -> Any? {
+    switch type {
+    case 129:
+      let enumResultAsInt: Int? = nilOrValue(readValue() as! Int?)
+      if let enumResultAsInt {
+        return FiamDismissType(rawValue: enumResultAsInt)
+      }
+      return nil
+    case 130:
+      return FiamCampaignMetadata.fromList(readValue() as! [Any?])
+    case 131:
+      return FiamAction.fromList(readValue() as! [Any?])
+    default:
+      return super.readValue(ofType: type)
+    }
+  }
+}
+
+private class FirebaseInAppMessagingMessagesPigeonCodecWriter: FlutterStandardWriter {
+  override func writeValue(_ value: Any) {
+    if let value = value as? FiamDismissType {
+      super.writeByte(129)
+      super.writeValue(value.rawValue)
+    } else if let value = value as? FiamCampaignMetadata {
+      super.writeByte(130)
+      super.writeValue(value.toList())
+    } else if let value = value as? FiamAction {
+      super.writeByte(131)
+      super.writeValue(value.toList())
+    } else {
+      super.writeValue(value)
+    }
+  }
+}
 
 private class FirebaseInAppMessagingMessagesPigeonCodecReaderWriter: FlutterStandardReaderWriter {
   override func reader(with data: Data) -> FlutterStandardReader {
@@ -97,6 +345,9 @@ protocol FirebaseInAppMessagingHostApi {
   func setAutomaticDataCollectionEnabled(
     appName: String, enabled: Bool,
     completion: @escaping (Result<Void, Error>) -> Void)
+  /// Attaches the native message lifecycle listeners that forward events to
+  /// [FirebaseInAppMessagingFlutterApi]. Calling this more than once is a no-op.
+  func addEventListeners(appName: String, completion: @escaping (Result<Void, Error>) -> Void)
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -177,6 +428,164 @@ class FirebaseInAppMessagingHostApiSetup {
       }
     } else {
       setAutomaticDataCollectionEnabledChannel.setMessageHandler(nil)
+    }
+    // Attaches the native message lifecycle listeners that forward events to
+    // [FirebaseInAppMessagingFlutterApi]. Calling this more than once is a no-op.
+    let addEventListenersChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingHostApi.addEventListeners\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec
+    )
+    if let api {
+      addEventListenersChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let appNameArg = args[0] as! String
+        api.addEventListeners(appName: appNameArg) { result in
+          switch result {
+          case .success:
+            reply(wrapResult(nil))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      addEventListenersChannel.setMessageHandler(nil)
+    }
+  }
+}
+
+/// Generated protocol from Pigeon that represents Flutter messages that can be called from Swift.
+protocol FirebaseInAppMessagingFlutterApiProtocol {
+  func onMessageClicked(
+    campaignMetadata campaignMetadataArg: FiamCampaignMetadata,
+    action actionArg: FiamAction,
+    completion: @escaping (Result<Void, PigeonError>) -> Void)
+  func onMessageImpression(
+    campaignMetadata campaignMetadataArg: FiamCampaignMetadata,
+    completion: @escaping (Result<Void, PigeonError>) -> Void)
+  func onMessageDismissed(
+    campaignMetadata campaignMetadataArg: FiamCampaignMetadata,
+    dismissType dismissTypeArg: FiamDismissType,
+    completion: @escaping (Result<Void, PigeonError>) -> Void)
+  func onMessageDisplayError(
+    campaignMetadata campaignMetadataArg: FiamCampaignMetadata,
+    errorMessage errorMessageArg: String?,
+    completion: @escaping (Result<Void, PigeonError>) -> Void)
+}
+
+class FirebaseInAppMessagingFlutterApi: FirebaseInAppMessagingFlutterApiProtocol {
+  private let binaryMessenger: FlutterBinaryMessenger
+  private let messageChannelSuffix: String
+  init(binaryMessenger: FlutterBinaryMessenger, messageChannelSuffix: String = "") {
+    self.binaryMessenger = binaryMessenger
+    self.messageChannelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
+  }
+
+  var codec: FirebaseInAppMessagingMessagesPigeonCodec {
+    FirebaseInAppMessagingMessagesPigeonCodec.shared
+  }
+
+  func onMessageClicked(
+    campaignMetadata campaignMetadataArg: FiamCampaignMetadata,
+    action actionArg: FiamAction,
+    completion: @escaping (Result<Void, PigeonError>) -> Void
+  ) {
+    let channelName =
+      "dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingFlutterApi.onMessageClicked\(messageChannelSuffix)"
+    let channel = FlutterBasicMessageChannel(
+      name: channelName, binaryMessenger: binaryMessenger, codec: codec
+    )
+    channel.sendMessage([campaignMetadataArg, actionArg] as [Any?]) { response in
+      guard let listResponse = response as? [Any?] else {
+        completion(.failure(createConnectionError(withChannelName: channelName)))
+        return
+      }
+      if listResponse.count > 1 {
+        let code: String = listResponse[0] as! String
+        let message: String? = nilOrValue(listResponse[1])
+        let details: String? = nilOrValue(listResponse[2])
+        completion(.failure(PigeonError(code: code, message: message, details: details)))
+      } else {
+        completion(.success(()))
+      }
+    }
+  }
+
+  func onMessageImpression(
+    campaignMetadata campaignMetadataArg: FiamCampaignMetadata,
+    completion: @escaping (Result<Void, PigeonError>) -> Void
+  ) {
+    let channelName =
+      "dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingFlutterApi.onMessageImpression\(messageChannelSuffix)"
+    let channel = FlutterBasicMessageChannel(
+      name: channelName, binaryMessenger: binaryMessenger, codec: codec
+    )
+    channel.sendMessage([campaignMetadataArg] as [Any?]) { response in
+      guard let listResponse = response as? [Any?] else {
+        completion(.failure(createConnectionError(withChannelName: channelName)))
+        return
+      }
+      if listResponse.count > 1 {
+        let code: String = listResponse[0] as! String
+        let message: String? = nilOrValue(listResponse[1])
+        let details: String? = nilOrValue(listResponse[2])
+        completion(.failure(PigeonError(code: code, message: message, details: details)))
+      } else {
+        completion(.success(()))
+      }
+    }
+  }
+
+  func onMessageDismissed(
+    campaignMetadata campaignMetadataArg: FiamCampaignMetadata,
+    dismissType dismissTypeArg: FiamDismissType,
+    completion: @escaping (Result<Void, PigeonError>) -> Void
+  ) {
+    let channelName =
+      "dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingFlutterApi.onMessageDismissed\(messageChannelSuffix)"
+    let channel = FlutterBasicMessageChannel(
+      name: channelName, binaryMessenger: binaryMessenger, codec: codec
+    )
+    channel.sendMessage([campaignMetadataArg, dismissTypeArg] as [Any?]) { response in
+      guard let listResponse = response as? [Any?] else {
+        completion(.failure(createConnectionError(withChannelName: channelName)))
+        return
+      }
+      if listResponse.count > 1 {
+        let code: String = listResponse[0] as! String
+        let message: String? = nilOrValue(listResponse[1])
+        let details: String? = nilOrValue(listResponse[2])
+        completion(.failure(PigeonError(code: code, message: message, details: details)))
+      } else {
+        completion(.success(()))
+      }
+    }
+  }
+
+  func onMessageDisplayError(
+    campaignMetadata campaignMetadataArg: FiamCampaignMetadata,
+    errorMessage errorMessageArg: String?,
+    completion: @escaping (Result<Void, PigeonError>) -> Void
+  ) {
+    let channelName =
+      "dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingFlutterApi.onMessageDisplayError\(messageChannelSuffix)"
+    let channel = FlutterBasicMessageChannel(
+      name: channelName, binaryMessenger: binaryMessenger, codec: codec
+    )
+    channel.sendMessage([campaignMetadataArg, errorMessageArg] as [Any?]) { response in
+      guard let listResponse = response as? [Any?] else {
+        completion(.failure(createConnectionError(withChannelName: channelName)))
+        return
+      }
+      if listResponse.count > 1 {
+        let code: String = listResponse[0] as! String
+        let message: String? = nilOrValue(listResponse[1])
+        let details: String? = nilOrValue(listResponse[2])
+        completion(.failure(PigeonError(code: code, message: message, details: details)))
+      } else {
+        completion(.success(()))
+      }
     }
   }
 }
