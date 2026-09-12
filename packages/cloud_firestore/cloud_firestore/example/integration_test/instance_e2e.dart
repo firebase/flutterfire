@@ -188,6 +188,73 @@ void runInstanceTests() {
       );
 
       test(
+        'Settings() - persistenceEnabled: false does not persist across terminate()',
+        () async {
+          // Regression test for https://github.com/firebase/flutterfire/issues/18659
+          // Windows ignored persistenceEnabled: false (pointer-to-bool + never
+          // forwarded to the C++ SDK). Disk cache is the only state that
+          // survives terminate(); in-memory cache does not.
+          FirebaseFirestore firestoreFor(
+            String databaseId, {
+            required bool persistenceEnabled,
+          }) {
+            final firestore = FirebaseFirestore.instanceFor(
+              app: Firebase.app(),
+              databaseId: databaseId,
+            );
+            firestore.settings =
+                Settings(persistenceEnabled: persistenceEnabled);
+            firestore.useFirestoreEmulator('localhost', 8080);
+            return firestore;
+          }
+
+          Future<void> writeThenTerminate(FirebaseFirestore firestore) async {
+            await firestore
+                .doc('flutter-tests/persistence-across-terminate')
+                .set({'foo': 'bar'});
+            await firestore.waitForPendingWrites();
+            await firestore.terminate();
+          }
+
+          const docPath = 'flutter-tests/persistence-across-terminate';
+          const cacheGet = GetOptions(source: Source.cache);
+
+          // Control: persistence on → cache must survive terminate. If this
+          // fails, Windows is not keeping a disk cache and the disabled case
+          // would not prove the setting was forwarded.
+          final enabled = firestoreFor(
+            'persistence-enabled-18659',
+            persistenceEnabled: true,
+          );
+          await writeThenTerminate(enabled);
+
+          final cachedWhenEnabled = await enabled.doc(docPath).get(cacheGet);
+          expect(cachedWhenEnabled.data(), {'foo': 'bar'});
+          expect(cachedWhenEnabled.metadata.isFromCache, isTrue);
+          await enabled.terminate();
+
+          final disabled = firestoreFor(
+            'persistence-disabled-18659',
+            persistenceEnabled: false,
+          );
+          await writeThenTerminate(disabled);
+
+          await expectLater(
+            disabled.doc(docPath).get(cacheGet),
+            throwsA(
+              isA<FirebaseException>().having(
+                (e) => e.code,
+                'code',
+                'unavailable',
+              ),
+            ),
+          );
+          await disabled.terminate();
+        },
+        skip: defaultTargetPlatform != TargetPlatform.windows,
+      );
+
+      test(
         'setIndexConfigurationFromJSON()',
         () async {
           final json = jsonEncode({
