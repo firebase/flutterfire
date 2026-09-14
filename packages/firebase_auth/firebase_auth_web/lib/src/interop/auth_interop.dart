@@ -270,9 +270,20 @@ external MultiFactorResolverJsImpl getMultiFactorResolver(
 @staticInterop
 abstract class AuthJsImpl {}
 
+@JS()
+@staticInterop
+abstract class EmulatorConfigJsImpl {}
+
+extension EmulatorConfigJsImplExtension on EmulatorConfigJsImpl {
+  external JSString get protocol;
+  external JSString get host;
+  external JSNumber? get port;
+}
+
 extension AuthJsImplExtension on AuthJsImpl {
   external AppJsImpl get app;
   external UserJsImpl? get currentUser;
+  external EmulatorConfigJsImpl? get emulatorConfig;
   external JSString? get languageCode;
   external set languageCode(JSString? s);
   external AuthSettings get settings;

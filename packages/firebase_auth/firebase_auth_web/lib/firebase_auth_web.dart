@@ -19,6 +19,7 @@ import 'package:web/web.dart' as web;
 
 import 'src/firebase_auth_version.dart';
 
+import 'src/auth_emulator.dart';
 import 'src/firebase_auth_web_confirmation_result.dart';
 import 'src/firebase_auth_web_recaptcha_verifier_factory.dart';
 import 'src/firebase_auth_web_user.dart';
@@ -56,28 +57,30 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       'auth',
       ensurePluginInitialized: (firebaseApp) async {
         final authDelegate = auth_interop.getAuthInstance(firebaseApp);
-        // if localhost, and emulator was previously set in localStorage, use it
-        if (web.window.location.hostname == 'localhost' && kDebugMode) {
-          final String? emulatorOrigin = web.window.sessionStorage
-              .getItem(getOriginName(firebaseApp.name));
-
-          if (emulatorOrigin != null) {
-            try {
-              authDelegate.useAuthEmulator(emulatorOrigin);
+        // Re-apply a persisted emulator origin before Auth restores the user.
+        // Must include 127.0.0.1 — Chrome often uses that instead of localhost.
+        final String? emulatorOrigin = web.window.sessionStorage
+            .getItem(authEmulatorOriginStorageKey(firebaseApp.name));
+        if (shouldReusePersistedAuthEmulator(
+          hostname: web.window.location.hostname,
+          isDebugMode: kDebugMode,
+          storedOrigin: emulatorOrigin,
+        )) {
+          try {
+            authDelegate.useAuthEmulator(emulatorOrigin!);
+            // ignore: avoid_print
+            print(
+              'Using previously configured Auth emulator at $emulatorOrigin for ${firebaseApp.name} \nTo switch back to production, restart your app with the emulator turned off.',
+            );
+          } catch (e) {
+            if (e.toString().contains('sooner')) {
+              // Happens during hot reload when the emulator is already configured
               // ignore: avoid_print
               print(
-                'Using previously configured Auth emulator at $emulatorOrigin for ${firebaseApp.name} \nTo switch back to production, restart your app with the emulator turned off.',
+                'Auth emulator is already configured at $emulatorOrigin for ${firebaseApp.name} and kept across hot reload.\nTo switch back to production, restart your app with the emulator turned off.',
               );
-            } catch (e) {
-              if (e.toString().contains('sooner')) {
-                // Happens during hot reload when the emulator is already configured
-                // ignore: avoid_print
-                print(
-                  'Auth emulator is already configured at $emulatorOrigin for ${firebaseApp.name} and kept across hot reload.\nTo switch back to production, restart your app with the emulator turned off.',
-                );
-              } else {
-                rethrow;
-              }
+            } else {
+              rethrow;
             }
           }
         }
@@ -541,18 +544,18 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   @override
   Future<void> useAuthEmulator(String host, int port) async {
     try {
-      // Get current session storage value
-      final String? emulatorOrigin =
-          web.window.sessionStorage.getItem(getOriginName(delegate.app.name));
-
       // The generic platform interface is with host and port split to
       // centralize logic between android/ios native, but web takes the
       // origin as a single string
-      final String origin = 'http://$host:$port';
+      final String origin = authEmulatorOrigin(host, port);
 
-      if (origin == emulatorOrigin) {
-        // If the origin is the same as the current one, do nothing
-        // The emulator was already started at the app start
+      // Skip only if THIS JS Auth instance is already on that origin.
+      // SessionStorage matching is not enough: after a full page reload the
+      // Auth instance is new and still points at production (#18689).
+      if (shouldSkipConnectAuthEmulator(
+        requestedOrigin: origin,
+        connectedEmulatorOrigin: delegate.emulatorOrigin,
+      )) {
         return;
       }
 
@@ -561,7 +564,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       // only in debug mode
       if (kDebugMode) {
         web.window.sessionStorage
-            .setItem(getOriginName(delegate.app.name), origin);
+            .setItem(authEmulatorOriginStorageKey(delegate.app.name), origin);
       }
     } catch (e) {
       // Cannot be done with 3.2 constraints
@@ -647,8 +650,4 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       () => delegate.initializeRecaptchaConfig(),
     );
   }
-}
-
-String getOriginName(String appName) {
-  return '$appName-firebaseEmulatorOrigin';
 }

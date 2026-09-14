@@ -1,3 +1,7 @@
+## 6.3.1
+
+ - **FIX**(auth, web): connect the Auth emulator after a reload even when sessionStorage already has the origin ([#18689](https://github.com/firebase/flutterfire/issues/18689)).
+
 ## 6.3.0
 
  - **FIX**(auth,web): convert Auth errors that omit customData without throwing ([#18686](https://github.com/firebase/flutterfire/issues/18686)). ([5e518361](https://github.com/firebase/flutterfire/commit/5e518361ce7f94923437d8b0e41add7ca75083ef))
