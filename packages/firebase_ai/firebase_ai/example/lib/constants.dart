@@ -18,7 +18,7 @@ abstract final class ExampleModels {
   static const String flashLite = 'gemini-3.5-flash-lite';
 
   /// Multimodal text and image generation model.
-  static const String flashImage = 'gemini-2.5-flash-image';
+  static const String flashImage = 'gemini-3.1-flash-image';
 
   /// Text-to-speech audio model preview.
   static const String flashTTS = 'gemini-3.1-flash-tts-preview';
