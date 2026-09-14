@@ -630,7 +630,7 @@ extension AuthErrorExtension on AuthError {
   external set tenantId(JSString s);
   external JSString get phoneNumber;
   external set phoneNumber(JSString s);
-  external JSObject get customData;
+  external JSObject? get customData;
 }
 
 extension type AuthErrorCustomData._(JSObject _) implements JSObject {
