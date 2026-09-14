@@ -4,7 +4,7 @@ homepage: https://github.com/firebase/flutterfire/tree/main/packages/firebase_au
 repository: https://github.com/firebase/flutterfire/tree/main/packages/firebase_auth/firebase_auth_platform_interface
 # NOTE: We strongly prefer non-breaking changes, even at the expense of a
 # less-clean API. See https://flutter.dev/go/platform-interface-breaking-changes
-version: 9.0.7
+version: 9.1.0
 resolution: workspace
 
 environment:

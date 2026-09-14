@@ -1,3 +1,9 @@
+## 6.10.0
+
+ - **FIX**(firestore,windows): honor persistenceEnabled: false ([#18662](https://github.com/firebase/flutterfire/issues/18662)). ([d94be3c4](https://github.com/firebase/flutterfire/commit/d94be3c4d9665ce12bc3fa1d4f77fccdc6777350))
+ - **FIX**(firestore,android): abort timed-out transactions without crashing on a later get ([#18668](https://github.com/firebase/flutterfire/issues/18668)). ([168172a8](https://github.com/firebase/flutterfire/commit/168172a889c0d08c0b618d7ef68d9c5ce503dc40))
+ - **FEAT**(core): bump Firebase iOS SDK to 12.19.0 ([#18683](https://github.com/firebase/flutterfire/issues/18683)). ([35e39637](https://github.com/firebase/flutterfire/commit/35e39637f4cbef0d70043047f80d6f6e80daf8fe))
+
 ## 6.9.0
 
  - **FIX**(ci): bump Kotlin Gradle plugin to 2.3.0 ([#18600](https://github.com/firebase/flutterfire/issues/18600)). ([4c3865e2](https://github.com/firebase/flutterfire/commit/4c3865e2e56bf59904a9f48a6e70f0f963df2cda))
