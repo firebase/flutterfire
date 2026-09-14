@@ -1039,17 +1039,22 @@ void FirebaseAuthPlugin::ReauthenticateWithCredential(
   firebase::auth::Auth* firebaseAuth = GetAuthFromPigeon(app);
   firebase::auth::User user = firebaseAuth->current_user();
 
-  firebase::Future<void> future =
-      user.Reauthenticate(getCredentialFromArguments(input, app));
+  firebase::Future<firebase::auth::AuthResult> future =
+      user.ReauthenticateAndRetrieveData(
+          getCredentialFromArguments(input, app));
 
-  future.OnCompletion([result](const firebase::Future<void>& completed_future) {
-    // We are probably in a different thread right now.
-    if (completed_future.error() == 0) {
-      // TODO: wrong return type
-    } else {
-      result(FirebaseAuthPlugin::ParseError(completed_future));
-    }
-  });
+  future.OnCompletion(
+      [result](const firebase::Future<firebase::auth::AuthResult>&
+                   completed_future) {
+        // We are probably in a different thread right now.
+        if (completed_future.error() == 0) {
+          InternalUserCredential credential =
+              ParseAuthResult(completed_future.result());
+          result(credential);
+        } else {
+          result(FirebaseAuthPlugin::ParseError(completed_future));
+        }
+      });
 }
 
 void FirebaseAuthPlugin::ReauthenticateWithProvider(
