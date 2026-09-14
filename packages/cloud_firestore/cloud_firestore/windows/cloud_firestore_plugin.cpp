@@ -400,7 +400,10 @@ Firestore* GetFirestoreFromPigeon(const FirestorePigeonFirebaseApp& pigeonApp) {
   firebase::firestore::Settings settings;
 
   if (pigeonApp.settings().persistence_enabled()) {
-    bool persistEnabled = pigeonApp.settings().persistence_enabled();
+    // The getter returns `const bool*` (null when unset); dereference to read
+    // the actual value rather than testing pointer presence.
+    bool persistEnabled = *pigeonApp.settings().persistence_enabled();
+    settings.set_persistence_enabled(persistEnabled);
 
     // This is the maximum amount of cache allowed. We use the same number on
     // android.
