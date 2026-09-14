@@ -21,6 +21,8 @@ let kFLTFirebaseInAppMessagingChannelName = "plugins.flutter.io/firebase_in_app_
 public class FirebaseInAppMessagingPlugin: NSObject, FLTFirebasePluginProtocol, FlutterPlugin,
   FirebaseInAppMessagingHostApi
 {
+  private var flutterApi: FirebaseInAppMessagingFlutterApi?
+
   public static func register(with registrar: FlutterPluginRegistrar) {
     let binaryMessenger: FlutterBinaryMessenger
 
@@ -31,6 +33,7 @@ public class FirebaseInAppMessagingPlugin: NSObject, FLTFirebasePluginProtocol, 
     #endif
 
     let instance = FirebaseInAppMessagingPlugin()
+    instance.flutterApi = FirebaseInAppMessagingFlutterApi(binaryMessenger: binaryMessenger)
     FLTFirebasePluginRegistry.sharedInstance().register(instance)
     FirebaseInAppMessagingHostApiSetup.setUp(binaryMessenger: binaryMessenger, api: instance)
   }
@@ -85,5 +88,81 @@ public class FirebaseInAppMessagingPlugin: NSObject, FLTFirebasePluginProtocol, 
     let inAppMessaging = InAppMessaging.inAppMessaging()
     inAppMessaging.automaticDataCollectionEnabled = enabled
     completion(.success(()))
+  }
+
+  public func addEventListeners(
+    appName: String,
+    completion: @escaping (Result<Void, Error>) -> Void
+  ) {
+    // `delegate` is a weak reference, this instance is retained by
+    // `FLTFirebasePluginRegistry`.
+    InAppMessaging.inAppMessaging().delegate = self
+    completion(.success(()))
+  }
+}
+
+/// The delegate callbacks are documented as being called on the main thread,
+/// which is also where the Pigeon channels have to be used.
+extension FirebaseInAppMessagingPlugin: InAppMessagingDisplayDelegate {
+  public func messageClicked(
+    _ inAppMessage: InAppMessagingDisplayMessage,
+    with action: InAppMessagingAction
+  ) {
+    flutterApi?.onMessageClicked(
+      campaignMetadata: Self.campaignMetadata(inAppMessage),
+      action: FiamAction(
+        actionUrl: action.actionURL?.absoluteString,
+        buttonText: action.actionText
+      )
+    ) { _ in }
+  }
+
+  public func impressionDetected(for inAppMessage: InAppMessagingDisplayMessage) {
+    flutterApi?.onMessageImpression(
+      campaignMetadata: Self.campaignMetadata(inAppMessage)
+    ) { _ in }
+  }
+
+  public func messageDismissed(
+    _ inAppMessage: InAppMessagingDisplayMessage,
+    dismissType: InAppMessagingDismissType
+  ) {
+    flutterApi?.onMessageDismissed(
+      campaignMetadata: Self.campaignMetadata(inAppMessage),
+      dismissType: Self.dismissType(dismissType)
+    ) { _ in }
+  }
+
+  public func displayError(
+    for inAppMessage: InAppMessagingDisplayMessage,
+    error: Error
+  ) {
+    flutterApi?.onMessageDisplayError(
+      campaignMetadata: Self.campaignMetadata(inAppMessage),
+      errorMessage: error.localizedDescription
+    ) { _ in }
+  }
+
+  private static func campaignMetadata(_ inAppMessage: InAppMessagingDisplayMessage)
+    -> FiamCampaignMetadata
+  {
+    FiamCampaignMetadata(
+      campaignId: inAppMessage.campaignInfo.messageID,
+      campaignName: inAppMessage.campaignInfo.campaignName,
+      isTestMessage: inAppMessage.campaignInfo.renderAsTestMessage
+    )
+  }
+
+  private static func dismissType(_ dismissType: InAppMessagingDismissType) -> FiamDismissType {
+    switch dismissType {
+    case .typeUserSwipe:
+      return .swipe
+    case .typeUserTapClose:
+      return .clickedCancel
+    case .typeAuto:
+      return .auto
+    default:
+      return .unknown
+    }
   }
 }
