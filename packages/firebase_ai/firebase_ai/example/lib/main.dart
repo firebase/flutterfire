@@ -72,10 +72,10 @@ class _GenerativeAISampleState extends State<GenerativeAISample> {
       final agentPlatformInstance =
           FirebaseAI.agentPlatform(location: 'global');
       _currentModel =
-          agentPlatformInstance.generativeModel(model: 'gemini-3.1-flash-lite');
+          agentPlatformInstance.generativeModel(model: 'gemini-3.5-flash-lite');
     } else {
       final googleAI = FirebaseAI.googleAI();
-      _currentModel = googleAI.generativeModel(model: 'gemini-3.1-flash-lite');
+      _currentModel = googleAI.generativeModel(model: 'gemini-3.5-flash-lite');
     }
   }
 
