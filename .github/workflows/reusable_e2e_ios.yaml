@@ -26,6 +26,10 @@ on:
         description: 'Integration test entrypoint, relative to the example directory.'
         type: string
         default: 'integration_test/e2e_test.dart'
+      native-test-script:
+        description: 'Optional native test script relative to the package; receives the simulator UDID and runs with the Storage emulator.'
+        type: string
+        default: ''
       native-config-args:
         description: >-
           Arguments for generate-dummy-firebase-configs.dart, e.g.
@@ -270,6 +274,23 @@ jobs:
           SIMULATOR: ${{ steps.simulator.outputs.udid }}
           ENSURE_BOOT_IF_NEEDED: "0"
         run: .github/workflows/scripts/ensure-simulator-ready.sh
+      - name: Native iOS tests
+        if: inputs.native-test-script != ''
+        working-directory: ./.github/workflows/scripts
+        timeout-minutes: 20
+        env:
+          SIMULATOR: ${{ steps.simulator.outputs.udid }}
+          NATIVE_TEST_SCRIPT: ${{ inputs.native-test-script }}
+        run: |
+          firebase emulators:exec --only storage --project flutterfire-e2e-tests \
+            'bash "${GITHUB_WORKSPACE}/${PACKAGE_PATH}/${NATIVE_TEST_SCRIPT}" "$SIMULATOR"'
+      - name: Upload native iOS test results
+        if: ${{ !cancelled() && inputs.native-test-script != '' }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: native-ios-tests-${{ inputs.cache-key-suffix }}
+          path: ${{ inputs.package-path }}/example/build/native-tests/Logs/Test/*.xcresult
+          if-no-files-found: warn
       - name: 'E2E Tests'
         if: inputs.use-firebase-emulators
         # firebase.json and the emulator rule files live here, so `emulators:exec`

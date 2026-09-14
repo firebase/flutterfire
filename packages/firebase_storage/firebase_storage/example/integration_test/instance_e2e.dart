@@ -5,7 +5,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:firebase_storage_example/firebase_options.dart';
 
 import 'test_utils.dart';
 
@@ -16,9 +15,6 @@ void setupInstanceTests() {
     late FirebaseApp secondaryAppWithoutBucket;
 
     setUpAll(() async {
-      await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform,
-      );
       storage = FirebaseStorage.instance;
       secondaryApp = await testInitializeSecondaryApp();
     });
