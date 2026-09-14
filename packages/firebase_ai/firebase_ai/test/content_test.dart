@@ -85,7 +85,8 @@ void main() {
       expect(content.parts[0], isA<FunctionResponse>());
       final json = content.toJson();
       expect(json['role'], 'user');
-      expect((json['parts']! as List)[0]['functionResponse']['name'], 'testFunc');
+      expect(
+          (json['parts']! as List)[0]['functionResponse']['name'], 'testFunc');
     });
 
     test('functionResponses() has role user', () {
@@ -100,7 +101,8 @@ void main() {
     });
 
     test('toJson sanitizes legacy function role to user', () {
-      final content = Content('function', [const FunctionResponse('legacyFunc', {})]);
+      final content =
+          Content('function', [const FunctionResponse('legacyFunc', {})]);
       expect(content.role, 'function');
       final json = content.toJson();
       expect(json['role'], 'user');
