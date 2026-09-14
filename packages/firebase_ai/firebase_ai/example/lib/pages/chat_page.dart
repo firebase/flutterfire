@@ -14,6 +14,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_ai/firebase_ai.dart';
+import '../constants.dart';
 import '../widgets/message_widget.dart';
 
 class ChatPage extends StatefulWidget {
@@ -54,12 +55,12 @@ class _ChatPageState extends State<ChatPage> {
     );
     if (widget.useAgentPlatform) {
       _model = FirebaseAI.agentPlatform().generativeModel(
-        model: 'gemini-3.5-flash-lite',
+        model: ExampleModels.flashLite,
         generationConfig: generationConfig,
       );
     } else {
       _model = FirebaseAI.googleAI().generativeModel(
-        model: 'gemini-3.5-flash-lite',
+        model: ExampleModels.flashLite,
         generationConfig: generationConfig,
       );
     }
