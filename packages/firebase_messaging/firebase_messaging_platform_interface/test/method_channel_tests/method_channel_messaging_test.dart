@@ -182,28 +182,30 @@ void main() {
       ]);
     });
 
-    test('getNotificationSettings returns notDetermined when authorizationStatus is -1', () async {
+    test(
+        'getNotificationSettings returns notDetermined when authorizationStatus is -1',
+        () async {
       // Override the method handler to return notDetermined (-1)
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(MethodChannelFirebaseMessaging.channel, (
-            call,
-          ) async {
-            log.add(call);
-            if (call.method == 'Messaging#getNotificationSettings') {
-              return {
-                'authorizationStatus': -1,
-                'alert': -1,
-                'announcement': -1,
-                'badge': -1,
-                'carPlay': -1,
-                'criticalAlert': -1,
-                'provisional': -1,
-                'sound': -1,
-                'providesAppNotificationSettings': -1,
-              };
-            }
-            return <String, dynamic>{};
-          });
+        call,
+      ) async {
+        log.add(call);
+        if (call.method == 'Messaging#getNotificationSettings') {
+          return {
+            'authorizationStatus': -1,
+            'alert': -1,
+            'announcement': -1,
+            'badge': -1,
+            'carPlay': -1,
+            'criticalAlert': -1,
+            'provisional': -1,
+            'sound': -1,
+            'providesAppNotificationSettings': -1,
+          };
+        }
+        return <String, dynamic>{};
+      });
 
       final settings = await messaging.getNotificationSettings();
       expect(
@@ -248,27 +250,29 @@ void main() {
       });
     });
 
-    test('getNotificationSettings returns deniedPermanently when authorizationStatus is 3', () async {
+    test(
+        'getNotificationSettings returns deniedPermanently when authorizationStatus is 3',
+        () async {
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(MethodChannelFirebaseMessaging.channel, (
-            call,
-          ) async {
-            log.add(call);
-            if (call.method == 'Messaging#getNotificationSettings') {
-              return {
-                'authorizationStatus': 3,
-                'alert': 0,
-                'announcement': 0,
-                'badge': 0,
-                'carPlay': 0,
-                'criticalAlert': 0,
-                'provisional': 0,
-                'sound': 0,
-                'providesAppNotificationSettings': 0,
-              };
-            }
-            return <String, dynamic>{};
-          });
+        call,
+      ) async {
+        log.add(call);
+        if (call.method == 'Messaging#getNotificationSettings') {
+          return {
+            'authorizationStatus': 3,
+            'alert': 0,
+            'announcement': 0,
+            'badge': 0,
+            'carPlay': 0,
+            'criticalAlert': 0,
+            'provisional': 0,
+            'sound': 0,
+            'providesAppNotificationSettings': 0,
+          };
+        }
+        return <String, dynamic>{};
+      });
 
       final settings = await messaging.getNotificationSettings();
       expect(
