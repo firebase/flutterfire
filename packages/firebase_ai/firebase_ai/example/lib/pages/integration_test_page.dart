@@ -86,13 +86,13 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
     _testCases = [
       TestItem(
         id: '1',
-        name: 'Stateless Text Gen (gemini-3.1-flash-lite)',
+        name: 'Stateless Text Gen (gemini-3.5-flash-lite)',
         description:
-            'Verifies simple stateless text generation with a precise answer target using gemini-3.1-flash-lite.',
+            'Verifies simple stateless text generation with a precise answer target using gemini-3.5-flash-lite.',
         run: (provider, logger) async {
-          logger.log('Initializing model gemini-3.1-flash-lite...');
+          logger.log('Initializing model gemini-3.5-flash-lite...');
           final model =
-              provider.generativeModel(model: 'gemini-3.1-flash-lite');
+              provider.generativeModel(model: 'gemini-3.5-flash-lite');
           const prompt = "Reply with exactly the word 'SUCCESS' in uppercase.";
           logger.log('Sending prompt: "$prompt"');
           final response = await model.generateContent([Content.text(prompt)]);
@@ -151,7 +151,7 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
         run: (provider, logger) async {
           logger.log('Initializing model with medieval system instruction...');
           final model = provider.generativeModel(
-            model: 'gemini-3.1-flash-lite',
+            model: 'gemini-3.5-flash-lite',
             systemInstruction: Content.text(
               'You are a medieval knight. Respond only with Shakespearean knightly terms.',
             ),
@@ -193,7 +193,7 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
         run: (provider, logger) async {
           logger.log('Initializing model and starting ChatSession...');
           final model =
-              provider.generativeModel(model: 'gemini-3.1-flash-lite');
+              provider.generativeModel(model: 'gemini-3.5-flash-lite');
           final chat = model.startChat();
 
           const prompt1 = 'My secret agent name is Agent Orange.';
@@ -252,7 +252,7 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
           );
 
           final model = provider.generativeModel(
-            model: 'gemini-3.1-flash-lite',
+            model: 'gemini-3.5-flash-lite',
             tools: [
               Tool.functionDeclarations([autoPowerTool]),
             ],
@@ -298,7 +298,7 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
           );
 
           final model = provider.generativeModel(
-            model: 'gemini-3.1-flash-lite',
+            model: 'gemini-3.5-flash-lite',
             tools: [
               Tool.functionDeclarations([powerTool]),
             ],
@@ -462,7 +462,7 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
         run: (provider, logger) async {
           logger.log('Initializing model for streaming...');
           final model =
-              provider.generativeModel(model: 'gemini-3.1-flash-lite');
+              provider.generativeModel(model: 'gemini-3.5-flash-lite');
 
           const prompt = 'Write a 2-paragraph poem about a computer.';
           logger.log('Starting prompt stream: "$prompt"');
@@ -507,7 +507,7 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
 
           logger.log('Initializing model for token counting...');
           final model =
-              provider.generativeModel(model: 'gemini-3.1-flash-lite');
+              provider.generativeModel(model: 'gemini-3.5-flash-lite');
 
           final content = [
             Content.multi([
