@@ -128,7 +128,7 @@ final class TemplateChatSession {
           functionResponses
               .add(FunctionResponse(functionCall.name, {'result': result}));
         }
-        requestHistory.add(Content('function', functionResponses));
+        requestHistory.add(Content('user', functionResponses));
         turn++;
       }
       throw Exception('Max turns of $_maxTurns reached.');

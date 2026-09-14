@@ -44,6 +44,13 @@ To use the debug provider while running your app in a simulator interactively
     }
     ```
 
+    If your iOS `AppDelegate` calls `FirebaseApp.configure()`, Dart
+    `AppleDebugProvider` is ignored on **physical devices**. Remove the native
+    `configure()` call, or install an `AppCheckProviderFactory` that returns
+    `AppCheckDebugProvider` *before* `configure()`. See
+    [Get started using App Check in Flutter apps](/docs/app-check/flutter/default-providers#native-configure)
+    and [flutterfire#18613](https://github.com/firebase/flutterfire/issues/18613).
+
 1.  Enable debug logging in your Xcode project (v11.0 or newer):
 
     1.  Open **Product > Scheme > Edit scheme**.

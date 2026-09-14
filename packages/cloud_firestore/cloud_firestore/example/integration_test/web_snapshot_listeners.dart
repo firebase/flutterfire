@@ -8,6 +8,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+/// Guards against a dropped snapshot callback hanging the whole suite: a
+/// missing event fails this test instead of burning the job timeout.
+const _completerTimeout = Duration(seconds: 30);
+
 // Run only on web for demonstrating snapshot listener clean up in debug mode does not clean up the listeners incorrectly.
 // See: https://github.com/firebase/flutterfire/issues/13019
 void runWebSnapshotListenersTests() {
@@ -57,9 +61,9 @@ void runWebSnapshotListenersTests() {
           completer3.complete(true);
         });
 
-        final one = await completer.future;
-        final two = await completer2.future;
-        final three = await completer3.future;
+        final one = await completer.future.timeout(_completerTimeout);
+        final two = await completer2.future.timeout(_completerTimeout);
+        final three = await completer3.future.timeout(_completerTimeout);
 
         expect(one, true);
         expect(two, true);
@@ -103,10 +107,10 @@ void runWebSnapshotListenersTests() {
           completer4.complete(true);
         });
 
-        final one = await completer.future;
-        final two = await completer2.future;
-        final three = await completer3.future;
-        final four = await completer4.future;
+        final one = await completer.future.timeout(_completerTimeout);
+        final two = await completer2.future.timeout(_completerTimeout);
+        final three = await completer3.future.timeout(_completerTimeout);
+        final four = await completer4.future.timeout(_completerTimeout);
 
         expect(one, true);
         expect(two, true);
@@ -142,9 +146,9 @@ void runWebSnapshotListenersTests() {
           }
           completer3.complete(true);
         });
-        final one = await completer.future;
-        final two = await completer2.future;
-        final three = await completer3.future;
+        final one = await completer.future.timeout(_completerTimeout);
+        final two = await completer2.future.timeout(_completerTimeout);
+        final three = await completer3.future.timeout(_completerTimeout);
 
         expect(one, true);
         expect(two, true);
@@ -180,9 +184,9 @@ void runWebSnapshotListenersTests() {
           completer3.complete(true);
         });
 
-        final one = await completer.future;
-        final two = await completer2.future;
-        final three = await completer3.future;
+        final one = await completer.future.timeout(_completerTimeout);
+        final two = await completer2.future.timeout(_completerTimeout);
+        final three = await completer3.future.timeout(_completerTimeout);
 
         expect(one, true);
         expect(two, true);

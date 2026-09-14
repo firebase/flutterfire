@@ -206,8 +206,12 @@ std::string FirebaseDatabasePlugin::GetDatabaseErrorCode(Error error) {
       return "max-retries";
     case Error::kErrorNetworkError:
       return "network-error";
+    // `failure` and `write-cancelled` rather than the C++ enum's own wording:
+    // these are the codes the Android, Apple and web implementations report for
+    // the same conditions, and until #18550 no Windows code reached Dart at all
+    // for anything to depend on.
     case Error::kErrorOperationFailed:
-      return "operation-failed";
+      return "failure";
     case Error::kErrorOverriddenBySet:
       return "overridden-by-set";
     case Error::kErrorPermissionDenied:
@@ -215,7 +219,7 @@ std::string FirebaseDatabasePlugin::GetDatabaseErrorCode(Error error) {
     case Error::kErrorUnavailable:
       return "unavailable";
     case Error::kErrorWriteCanceled:
-      return "write-canceled";
+      return "write-cancelled";
     case Error::kErrorInvalidVariantType:
       return "invalid-variant-type";
     case Error::kErrorConflictingOperationInProgress:
@@ -232,13 +236,33 @@ std::string FirebaseDatabasePlugin::GetDatabaseErrorMessage(Error error) {
   return msg ? std::string(msg) : "Unknown error";
 }
 
+// --- Helper: `details` payload carrying the code and message to Dart ---
+//
+// `_flutterfire_internals` reads the Firebase code out of this map, keyed the
+// same way the Android plugin keys its `additionalData`. Sending only the
+// two-argument `FlutterError(code, message)` leaves Pigeon's `details` null,
+// which used to cost every native error its code on Windows.
+// See https://github.com/firebase/flutterfire/issues/18550.
+flutter::EncodableValue FirebaseDatabasePlugin::BuildErrorDetails(
+    const std::string& code, const std::string& message) {
+  return EncodableValue(EncodableMap{
+      {EncodableValue("code"), EncodableValue(code)},
+      {EncodableValue("message"), EncodableValue(message)},
+  });
+}
+
 FlutterError FirebaseDatabasePlugin::ParseError(
     const firebase::FutureBase& future) {
   Error error = static_cast<Error>(future.error());
   std::string code = GetDatabaseErrorCode(error);
-  std::string message =
-      future.error_message() ? future.error_message() : "Unknown error";
-  return FlutterError(code, message);
+  // An empty C string is non-null, and the desktop SDK completes some futures
+  // with one (a deliberate transaction abort, for instance), so test for
+  // emptiness rather than just for null before falling back.
+  const char* error_message = future.error_message();
+  std::string message = (error_message && *error_message)
+                            ? std::string(error_message)
+                            : GetDatabaseErrorMessage(error);
+  return FlutterError(code, message, BuildErrorDetails(code, message));
 }
 
 // --- Helper: Convert DataSnapshot to EncodableMap ---
@@ -671,6 +695,19 @@ void FirebaseDatabasePlugin::DatabaseReferenceRunTransaction(
     int64_t transaction_key;
     std::map<int64_t, EncodableMap>* transaction_results;
     std::function<void(std::optional<FlutterError> reply)> result;
+    // Whether the Dart handler asked to abort. The desktop SDK does not report
+    // a deliberate abort the way the mobile SDKs do (see the completion handler
+    // below), so the handler's own decision is what we key the
+    // `committed: false` contract off. Written from the transaction handler,
+    // which the SDK always runs to completion before completing the future.
+    bool handler_aborted = false;
+    // The data as of the aborting invocation, shaped like
+    // `DataSnapshotToEncodableMap` so that an aborted transaction reports the
+    // same snapshot on Windows as it does on the other platforms.
+    EncodableMap aborted_snapshot;
+    // Whether the handler could not be called at all (a channel failure rather
+    // than a decision made by Dart code).
+    bool handler_failed = false;
   };
 
   auto* ctx = new TransactionContext{messenger_, transaction_key,
@@ -690,6 +727,7 @@ void FirebaseDatabasePlugin::DatabaseReferenceRunTransaction(
         std::mutex mtx;
         std::condition_variable cv;
         bool handler_complete = false;
+        bool handler_failed = false;
         TransactionHandlerResult* handler_result = nullptr;
 
         auto flutter_api =
@@ -711,6 +749,7 @@ void FirebaseDatabasePlugin::DatabaseReferenceRunTransaction(
             },
             [&](const FlutterError& error) {
               handler_result = new TransactionHandlerResult(true, true);
+              handler_failed = true;
               std::lock_guard<std::mutex> lock(mtx);
               handler_complete = true;
               cv.notify_one();
@@ -722,8 +761,42 @@ void FirebaseDatabasePlugin::DatabaseReferenceRunTransaction(
           cv.wait(lock, [&] { return handler_complete; });
         }
 
+        if (handler_failed) {
+          // The handler never ran, so there is no Dart-side decision (nor a
+          // stored Dart error) to report: surface this as a genuine failure.
+          ctx->handler_failed = true;
+          delete handler_result;
+          return firebase::database::kTransactionResultAbort;
+        }
+
         if (!handler_result || handler_result->aborted() ||
             handler_result->exception()) {
+          // Dart returned `Transaction.abort()`, or the handler threw - the
+          // Dart side stores its own error and rethrows it, so both are an
+          // abort as far as the native result goes. Record the decision and the
+          // data it saw: the completion handler cannot recover it from the
+          // future, because the desktop SDK reports a deliberate abort as
+          // `kErrorWriteCanceled` on the initial invocation and as
+          // `kErrorNone` on a rerun.
+          ctx->handler_aborted = true;
+          ctx->aborted_snapshot.clear();
+          ctx->aborted_snapshot[EncodableValue("key")] =
+              data->key() ? EncodableValue(std::string(data->key()))
+                          : EncodableValue();
+          ctx->aborted_snapshot[EncodableValue("value")] = snapshot_value;
+          ctx->aborted_snapshot[EncodableValue("priority")] =
+              FirebaseDatabasePlugin::VariantToEncodableValue(data->priority());
+          EncodableList aborted_child_keys;
+          std::vector<MutableData> children = data->children();
+          for (auto& child : children) {
+            if (child.key()) {
+              aborted_child_keys.push_back(
+                  EncodableValue(std::string(child.key())));
+            }
+          }
+          ctx->aborted_snapshot[EncodableValue("childKeys")] =
+              EncodableValue(aborted_child_keys);
+
           delete handler_result;
           return firebase::database::kTransactionResultAbort;
         }
@@ -745,7 +818,31 @@ void FirebaseDatabasePlugin::DatabaseReferenceRunTransaction(
   // Wait for the transaction to complete
   ref.RunTransactionLastResult().OnCompletion(
       [ctx](const Future<DataSnapshot>& future) {
-        if (future.error() == Error::kErrorNone) {
+        Error error = static_cast<Error>(future.error());
+
+        // A deliberate abort is not an error condition: `runTransaction` has to
+        // resolve with `committed: false`, as it does on Android, iOS and web.
+        //
+        // The handler's own decision - not the native error code - is what
+        // decides this. The desktop SDK reports a deliberate abort as
+        // `kErrorWriteCanceled` when the handler aborts on its initial
+        // invocation and as `kErrorNone` when it aborts on a rerun, and it
+        // never reports the `kErrorTransactionAbortedByUser` that the mobile
+        // SDKs use (that code is only ever emitted by the Android and iOS
+        // implementations). Neither native code can be trusted on its own here:
+        // `kErrorWriteCanceled` also means "cancelled by
+        // PurgeOutstandingWrites()", which must stay an error, and `kErrorNone`
+        // otherwise means the transaction committed.
+        // See https://github.com/firebase/flutterfire/issues/18549,
+        // https://github.com/firebase/firebase-cpp-sdk/issues/1905.
+        bool aborted_by_handler =
+            ctx->handler_aborted ||
+            error == Error::kErrorTransactionAbortedByUser;
+        // Either way the handler, not the server, ended this transaction, so it
+        // did not commit - whatever the native error code says.
+        bool ended_by_handler = aborted_by_handler || ctx->handler_failed;
+
+        if (error == Error::kErrorNone && !ended_by_handler) {
           const DataSnapshot* snapshot = future.result();
           EncodableMap result_map;
           result_map[EncodableValue("committed")] = EncodableValue(true);
@@ -758,20 +855,32 @@ void FirebaseDatabasePlugin::DatabaseReferenceRunTransaction(
           (*ctx->transaction_results)[ctx->transaction_key] = result_map;
           ctx->result(std::nullopt);
         } else {
-          // Transaction failed but may have been aborted
           EncodableMap result_map;
           result_map[EncodableValue("committed")] = EncodableValue(false);
-          result_map[EncodableValue("snapshot")] = EncodableValue(EncodableMap{
-              {EncodableValue("key"), EncodableValue()},
-              {EncodableValue("value"), EncodableValue()},
-              {EncodableValue("priority"), EncodableValue()},
-              {EncodableValue("childKeys"), EncodableValue(EncodableList{})},
-          });
+          if (aborted_by_handler && !ctx->aborted_snapshot.empty()) {
+            // Report the data the handler saw, like the other platforms do.
+            result_map[EncodableValue("snapshot")] =
+                EncodableValue(ctx->aborted_snapshot);
+          } else {
+            result_map[EncodableValue("snapshot")] =
+                EncodableValue(EncodableMap{
+                    {EncodableValue("key"), EncodableValue()},
+                    {EncodableValue("value"), EncodableValue()},
+                    {EncodableValue("priority"), EncodableValue()},
+                    {EncodableValue("childKeys"),
+                     EncodableValue(EncodableList{})},
+                });
+          }
           (*ctx->transaction_results)[ctx->transaction_key] = result_map;
 
-          if (static_cast<Error>(future.error()) ==
-              Error::kErrorTransactionAbortedByUser) {
-            // Aborted by user is not an error condition
+          if (ctx->handler_failed) {
+            std::string message =
+                "The transaction handler could not be called. The transaction "
+                "was aborted.";
+            ctx->result(FlutterError(
+                "unknown", message,
+                FirebaseDatabasePlugin::BuildErrorDetails("unknown", message)));
+          } else if (aborted_by_handler) {
             ctx->result(std::nullopt);
           } else {
             ctx->result(FirebaseDatabasePlugin::ParseError(future));
@@ -901,6 +1010,27 @@ void FirebaseDatabasePlugin::OnDisconnectCancel(
 
 // ===== Query methods =====
 
+namespace {
+
+// Forwards a listener cancellation to Dart with a `details` payload, so the
+// mapped code survives the conversion to `FirebaseException` the same way it
+// does for the Pigeon host-API errors built by `ParseError()`. The two-argument
+// `EventSink::Error()` overload sends null details, which loses the code.
+// See https://github.com/firebase/flutterfire/issues/18550.
+void SendListenerError(flutter::EventSink<flutter::EncodableValue>* events,
+                       const Error& error, const char* error_message) {
+  if (!events) return;
+  std::string code = FirebaseDatabasePlugin::GetDatabaseErrorCode(error);
+  std::string message =
+      (error_message && *error_message)
+          ? std::string(error_message)
+          : FirebaseDatabasePlugin::GetDatabaseErrorMessage(error);
+  events->Error(code, message,
+                FirebaseDatabasePlugin::BuildErrorDetails(code, message));
+}
+
+}  // namespace
+
 void FirebaseDatabasePlugin::QueryObserve(
     const DatabasePigeonFirebaseApp& app, const QueryRequest& request,
     std::function<void(ErrorOr<std::string> reply)> result) {
@@ -980,8 +1110,7 @@ void FirebaseDatabasePlugin::QueryObserve(
           }
           void OnCancelled(const Error& error,
                            const char* error_message) override {
-            events_->Error(FirebaseDatabasePlugin::GetDatabaseErrorCode(error),
-                           error_message ? error_message : "Unknown error");
+            SendListenerError(events_, error, error_message);
           }
 
          private:
@@ -1015,8 +1144,7 @@ void FirebaseDatabasePlugin::QueryObserve(
           }
           void OnCancelled(const Error& error,
                            const char* error_message) override {
-            events_->Error(FirebaseDatabasePlugin::GetDatabaseErrorCode(error),
-                           error_message ? error_message : "Unknown error");
+            SendListenerError(events_, error, error_message);
           }
 
          private:

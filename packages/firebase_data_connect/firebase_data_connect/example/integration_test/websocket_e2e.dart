@@ -16,9 +16,16 @@ import 'dart:async';
 
 import 'package:firebase_data_connect/firebase_data_connect.dart';
 import 'package:firebase_data_connect_example/generated/movies.dart';
+import 'package:flutter/foundation.dart' show kIsWasm;
 import 'package:flutter_test/flutter_test.dart';
 
 import 'query_e2e.dart'; // For deleteAllMovies
+
+/// See the note on the same constant in `listen_e2e.dart`.
+///
+/// https://github.com/firebase/flutterfire/issues/18518
+const _wasmSkipReason =
+    'Subscriptions over the multiplexed WebSocket are unstable under dart2wasm';
 
 const _streamTimeout = Duration(seconds: 30);
 
@@ -253,5 +260,6 @@ void runWebSocketTests() {
         }
       });
     },
+    skip: kIsWasm ? _wasmSkipReason : null,
   );
 }

@@ -11,11 +11,20 @@ environment:
   flutter: '>=3.27.0'
 
 dependencies:
-  cloud_firestore: ^6.7.1
-  firebase_app_check: ^0.4.5+2
-  firebase_core: ^4.12.1
+  cloud_firestore: ^6.9.0
+  firebase_app_check: ^0.4.7
+  firebase_core: ^4.14.0
   flutter:
     sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  integration_test:
+    sdk: flutter
+  # `integration_test/report_test_results.dart` names each executed test via
+  # `package:test_api/hooks.dart`; `any` defers to the version flutter_test pins.
+  test_api: any
 
 flutter:
   uses-material-design: true

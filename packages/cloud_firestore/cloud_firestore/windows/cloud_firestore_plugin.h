@@ -176,7 +176,12 @@ class CloudFirestorePlugin : public flutter::Plugin,
       std::function<void(ErrorOr<InternalPipelineSnapshot> reply)> result)
       override;
 
-  static flutter::BinaryMessenger* messenger_;
+  // Per-registration messenger. A Windows app can host several Flutter engines
+  // in the same process (e.g. via `desktop_multi_window`), and each one
+  // registers the plugin with its own registrar. Keeping this per instance
+  // means every channel is built on the messenger of the engine that asked for
+  // it, instead of whichever engine registered last.
+  flutter::BinaryMessenger* messenger_ = nullptr;
   static std::map<
       std::string,
       std::unique_ptr<flutter::EventChannel<flutter::EncodableValue>>>

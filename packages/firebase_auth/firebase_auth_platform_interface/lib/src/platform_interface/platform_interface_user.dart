@@ -181,9 +181,9 @@ abstract class UserPlatform extends PlatformInterface {
   ///    user, an `email` and `credential` ([AuthCredential]) fields are also
   ///    provided. You have to link the credential to the existing user with
   ///    that email if you wish to continue signing in with that credential.
-  ///    To do so, call [fetchSignInMethodsForEmail], sign in to `email` via one
-  ///    of the providers returned and then [User.linkWithCredential] the
-  ///    original credential to that newly signed in user.
+  ///    To do so, sign in to `email` with a provider already linked to it, then
+  ///    [User.linkWithCredential] the original credential to that newly signed
+  ///    in user.
   /// - **operation-not-allowed**:
   ///  - Thrown if you have not enabled the provider in the Firebase Console. Go
   ///    to the Firebase Console for your project, in the Auth section and the
@@ -227,9 +227,9 @@ abstract class UserPlatform extends PlatformInterface {
   ///    user, an `email` and `credential` ([AuthCredential]) fields are also
   ///    provided. You have to link the credential to the existing user with
   ///    that email if you wish to continue signing in with that credential.
-  ///    To do so, call [fetchSignInMethodsForEmail], sign in to `email` via one
-  ///    of the providers returned and then [User.linkWithCredential] the
-  ///    original credential to that newly signed in user.
+  ///    To do so, sign in to `email` with a provider already linked to it, then
+  ///    [User.linkWithCredential] the original credential to that newly signed
+  ///    in user.
   /// - **operation-not-allowed**:
   ///  - Thrown if you have not enabled the provider in the Firebase Console. Go
   ///    to the Firebase Console for your project, in the Auth section and the
@@ -329,9 +329,9 @@ abstract class UserPlatform extends PlatformInterface {
   ///    user, an `email` and `credential` ([AuthCredential]) fields are also
   ///    provided. You have to link the credential to the existing user with
   ///    that email if you wish to continue signing in with that credential.
-  ///    To do so, call [fetchSignInMethodsForEmail], sign in to `email` via one
-  ///    of the providers returned and then [User.linkWithCredential] the
-  ///    original credential to that newly signed in user.
+  ///    To do so, sign in to `email` with a provider already linked to it, then
+  ///    [User.linkWithCredential] the original credential to that newly signed
+  ///    in user.
   /// - **operation-not-allowed**:
   ///  - Thrown if you have not enabled the provider in the Firebase Console. Go
   ///    to the Firebase Console for your project, in the Auth section and the
@@ -368,9 +368,9 @@ abstract class UserPlatform extends PlatformInterface {
   ///    user, an `email` and `credential` ([AuthCredential]) fields are also
   ///    provided. You have to link the credential to the existing user with
   ///    that email if you wish to continue signing in with that credential.
-  ///    To do so, call [fetchSignInMethodsForEmail], sign in to `email` via one
-  ///    of the providers returned and then [User.linkWithCredential] the
-  ///    original credential to that newly signed in user.
+  ///    To do so, sign in to `email` with a provider already linked to it, then
+  ///    [User.linkWithCredential] the original credential to that newly signed
+  ///    in user.
   /// - **operation-not-allowed**:
   ///  - Thrown if you have not enabled the provider in the Firebase Console. Go
   ///    to the Firebase Console for your project, in the Auth section and the

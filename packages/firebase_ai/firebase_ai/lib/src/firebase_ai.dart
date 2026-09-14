@@ -205,26 +205,6 @@ class FirebaseAI extends FirebasePlugin {
     );
   }
 
-  /// Create a [ImagenModel].
-  ///
-  /// The optional [safetySettings] can be used to control and guide the
-  /// generation. See [ImagenSafetySettings] for details.
-  ImagenModel imagenModel(
-      {required String model,
-      ImagenGenerationConfig? generationConfig,
-      ImagenSafetySettings? safetySettings}) {
-    return createImagenModel(
-        app: app,
-        location: location,
-        model: model,
-        useAgentPlatform: _useAgentPlatform,
-        generationConfig: generationConfig,
-        safetySettings: safetySettings,
-        appCheck: appCheck,
-        auth: auth,
-        useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens);
-  }
-
   /// Create a [LiveGenerativeModel] for real-time interaction.
   ///
   /// The optional [liveGenerationConfig] can be used to control and guide the
@@ -261,20 +241,5 @@ class FirebaseAI extends FirebasePlugin {
         useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
         auth: auth,
         appCheck: appCheck);
-  }
-
-  /// Returns a [TemplateImagenModel] instance.
-  ///
-  /// This is an experimental API and may change in the future.
-  @experimental
-  TemplateImagenModel templateImagenModel() {
-    return createTemplateImagenModel(
-      app: app,
-      location: location,
-      useAgentPlatform: _useAgentPlatform,
-      useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
-      auth: auth,
-      appCheck: appCheck,
-    );
   }
 }

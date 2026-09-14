@@ -4,6 +4,8 @@
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_in_app_messaging_platform_interface/firebase_in_app_messaging_platform_interface.dart';
+import 'package:firebase_in_app_messaging_platform_interface/src/pigeon/messages.pigeon.dart'
+    as pigeon;
 import 'package:flutter/services.dart';
 
 import 'utils/exception.dart';
@@ -23,6 +25,8 @@ class MethodChannelFirebaseInAppMessaging
     'plugins.flutter.io/firebase_in_app_messaging',
   );
 
+  static final pigeonChannel = pigeon.FirebaseInAppMessagingHostApi();
+
   /// Returns a stub instance to allow the platform interface to access
   /// the class instance statically.
   static MethodChannelFirebaseInAppMessaging get instance {
@@ -37,11 +41,7 @@ class MethodChannelFirebaseInAppMessaging
   @override
   Future<void> triggerEvent(String eventName) async {
     try {
-      await channel
-          .invokeMethod('FirebaseInAppMessaging#triggerEvent', <String, String>{
-        'appName': app!.name,
-        'eventName': eventName,
-      });
+      await pigeonChannel.triggerEvent(app!.name, eventName);
     } catch (e, s) {
       convertPlatformException(e, s);
     }
@@ -50,11 +50,7 @@ class MethodChannelFirebaseInAppMessaging
   @override
   Future<void> setMessagesSuppressed(bool suppress) async {
     try {
-      await channel.invokeMethod(
-          'FirebaseInAppMessaging#setMessagesSuppressed', <String, dynamic>{
-        'appName': app!.name,
-        'suppress': suppress,
-      });
+      await pigeonChannel.setMessagesSuppressed(app!.name, suppress);
     } catch (e, s) {
       convertPlatformException(e, s);
     }
@@ -63,12 +59,7 @@ class MethodChannelFirebaseInAppMessaging
   @override
   Future<void> setAutomaticDataCollectionEnabled(bool enabled) async {
     try {
-      await channel.invokeMethod(
-          'FirebaseInAppMessaging#setAutomaticDataCollectionEnabled',
-          <String, dynamic>{
-            'appName': app!.name,
-            'enabled': enabled,
-          });
+      await pigeonChannel.setAutomaticDataCollectionEnabled(app!.name, enabled);
     } catch (e, s) {
       convertPlatformException(e, s);
     }

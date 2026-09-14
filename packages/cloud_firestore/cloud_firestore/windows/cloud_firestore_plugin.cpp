@@ -255,7 +255,7 @@ void CloudFirestorePlugin::RegisterWithRegistrar(
 
   auto plugin = std::make_unique<CloudFirestorePlugin>();
 
-  messenger_ = registrar->messenger();
+  plugin->messenger_ = registrar->messenger();
 
   FirebaseFirestoreHostApi::SetUp(registrar->messenger(), plugin.get());
 
@@ -327,9 +327,6 @@ firebase::firestore::FieldValue CloudFirestorePlugin::ConvertToFieldValue(
   }
 }
 
-flutter::BinaryMessenger*
-    cloud_firestore_windows::CloudFirestorePlugin::messenger_ = nullptr;
-
 std::map<std::string,
          std::unique_ptr<flutter::EventChannel<flutter::EncodableValue>>>
     event_channels_;
@@ -343,12 +340,12 @@ std::map<std::string, std::unique_ptr<firebase::firestore::Firestore>>
     cloud_firestore_windows::CloudFirestorePlugin::firestoreInstances_;
 
 std::string RegisterEventChannelWithUUID(
-    std::string prefix, std::string uuid,
+    flutter::BinaryMessenger* messenger, std::string prefix, std::string uuid,
     std::unique_ptr<flutter::StreamHandler<flutter::EncodableValue>> handler) {
   std::string channelName = prefix + uuid;
   event_channels_[channelName] =
       std::make_unique<flutter::EventChannel<flutter::EncodableValue>>(
-          CloudFirestorePlugin::messenger_, channelName,
+          messenger, channelName,
           &flutter::StandardMethodCodec::GetInstance(
               &FirebaseFirestoreHostApiCodecSerializer::GetInstance()));
 
@@ -361,7 +358,7 @@ std::string RegisterEventChannelWithUUID(
 }
 
 std::string RegisterEventChannel(
-    std::string prefix,
+    flutter::BinaryMessenger* messenger, std::string prefix,
     std::unique_ptr<flutter::StreamHandler<flutter::EncodableValue>> handler) {
   UUID uuid;
   UuidCreate(&uuid);
@@ -371,7 +368,7 @@ std::string RegisterEventChannel(
   std::string channelName = prefix + str;
   event_channels_[channelName] =
       std::make_unique<flutter::EventChannel<flutter::EncodableValue>>(
-          CloudFirestorePlugin::messenger_, channelName,
+          messenger, channelName,
           &flutter::StandardMethodCodec::GetInstance(
               &FirebaseFirestoreHostApiCodecSerializer::GetInstance()));
   stream_handlers_[channelName] = std::move(handler);
@@ -403,7 +400,10 @@ Firestore* GetFirestoreFromPigeon(const FirestorePigeonFirebaseApp& pigeonApp) {
   firebase::firestore::Settings settings;
 
   if (pigeonApp.settings().persistence_enabled()) {
-    bool persistEnabled = pigeonApp.settings().persistence_enabled();
+    // The getter returns `const bool*` (null when unset); dereference to read
+    // the actual value rather than testing pointer presence.
+    bool persistEnabled = *pigeonApp.settings().persistence_enabled();
+    settings.set_persistence_enabled(persistEnabled);
 
     // This is the maximum amount of cache allowed. We use the same number on
     // android.
@@ -831,7 +831,8 @@ void CloudFirestorePlugin::LoadBundle(
       std::make_unique<LoadBundleStreamHandler>(firestore, bundleConverted);
 
   std::string channelName = RegisterEventChannel(
-      "plugins.flutter.io/firebase_firestore/loadBundle/", std::move(handler));
+      messenger_, "plugins.flutter.io/firebase_firestore/loadBundle/",
+      std::move(handler));
 
   result(channelName);
 }
@@ -1029,7 +1030,7 @@ void CloudFirestorePlugin::SnapshotsInSyncSetup(
   std::string snapshotInSyncId(str);
 
   std::string channelName = RegisterEventChannelWithUUID(
-      "plugins.flutter.io/firebase_firestore/snapshotsInSync/",
+      messenger_, "plugins.flutter.io/firebase_firestore/snapshotsInSync/",
       snapshotInSyncId, std::move(handler));
   result(snapshotInSyncId);
 }
@@ -1202,8 +1203,8 @@ void CloudFirestorePlugin::TransactionCreate(
 
   // Register the event channel.
   std::string channelName = RegisterEventChannelWithUUID(
-      "plugins.flutter.io/firebase_firestore/transaction/", transactionId,
-      std::move(handler));
+      messenger_, "plugins.flutter.io/firebase_firestore/transaction/",
+      transactionId, std::move(handler));
 
   // Return the result (assumed to be transaction ID in this example).
   result(transactionId);
@@ -1864,9 +1865,9 @@ void CloudFirestorePlugin::QuerySnapshot(
       GetServerTimestampBehaviorFromPigeon(
           options.server_timestamp_behavior()));
 
-  std::string channelName =
-      RegisterEventChannel("plugins.flutter.io/firebase_firestore/query/",
-                           std::move(query_snapshot_handler));
+  std::string channelName = RegisterEventChannel(
+      messenger_, "plugins.flutter.io/firebase_firestore/query/",
+      std::move(query_snapshot_handler));
 
   result(channelName);
 }
@@ -1962,9 +1963,9 @@ void CloudFirestorePlugin::DocumentReferenceSnapshot(
           GetServerTimestampBehaviorFromPigeon(
               *parameters.server_timestamp_behavior()));
 
-  std::string channelName =
-      RegisterEventChannel("plugins.flutter.io/firebase_firestore/document/",
-                           std::move(document_snapshot_handler));
+  std::string channelName = RegisterEventChannel(
+      messenger_, "plugins.flutter.io/firebase_firestore/document/",
+      std::move(document_snapshot_handler));
   result(channelName);
 }
 

@@ -45,6 +45,12 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 
   // Guard against calling setupNotificationHandling twice
   BOOL _notificationHandlingSetup;
+  BOOL _applicationObserverRegistered;
+
+  // Set once APNs registration has been requested because FCM auto-init is enabled, so the
+  // auto-init check is not re-run (and registerForRemoteNotifications not re-issued) on every
+  // Firebase app initialization.
+  BOOL _apnsRegistrationRequested;
 
 #if TARGET_OS_OSX
   // Tracks when plugin registration occurred after the macOS launch notification.
@@ -65,15 +71,39 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 
 #pragma mark - FlutterPlugin
 
-- (instancetype)initWithFlutterMethodChannel:(FlutterMethodChannel *)channel
-                   andFlutterPluginRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
+- (instancetype)init {
   self = [super init];
   if (self) {
     _initialNotificationGathered = NO;
     _sceneDidConnect = NO;
     _notificationHandlingSetup = NO;
-    _channel = channel;
-    _registrar = registrar;
+    _applicationObserverRegistered = NO;
+  }
+  return self;
+}
+
++ (instancetype)sharedInstance {
+  static FLTFirebaseMessagingPlugin *sharedInstance = nil;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    sharedInstance = [[FLTFirebaseMessagingPlugin alloc] init];
+  });
+  return sharedInstance;
+}
+
++ (void)configureNotificationCenterDelegate {
+#ifdef __FF_NOTIFICATIONS_SUPPORTED_PLATFORM
+  [[FLTFirebaseMessagingPlugin sharedInstance] configureNotificationCenterDelegate];
+#endif
+}
+
+- (void)configureWithFlutterMethodChannel:(FlutterMethodChannel *)channel
+                andFlutterPluginRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
+  _channel = channel;
+  _registrar = registrar;
+
+  if (!_applicationObserverRegistered) {
+    _applicationObserverRegistered = YES;
     // Application
     // Dart -> `getInitialNotification`
     // ObjC -> Initialize other delegates & observers
@@ -87,16 +117,14 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 #endif
              object:nil];
   }
-  return self;
 }
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
   FlutterMethodChannel *channel =
       [FlutterMethodChannel methodChannelWithName:kFLTFirebaseMessagingChannelName
                                   binaryMessenger:[registrar messenger]];
-  FLTFirebaseMessagingPlugin *instance =
-      [[FLTFirebaseMessagingPlugin alloc] initWithFlutterMethodChannel:channel
-                                             andFlutterPluginRegistrar:registrar];
+  FLTFirebaseMessagingPlugin *instance = [FLTFirebaseMessagingPlugin sharedInstance];
+  [instance configureWithFlutterMethodChannel:channel andFlutterPluginRegistrar:registrar];
   // Register with internal FlutterFire plugin registry.
   [[FLTFirebasePluginRegistry sharedInstance] registerFirebasePlugin:instance];
 
@@ -111,6 +139,14 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   if (@available(iOS 13.0, *)) {
     if ([registrar respondsToSelector:@selector(addSceneDelegate:)]) {
       [registrar performSelector:@selector(addSceneDelegate:) withObject:instance];
+    }
+    // UIScene registers plugins after didFinishLaunching / scene:willConnect.
+    // If a scene is already connected those callbacks were missed, so run
+    // setup now. setupNotificationHandling is idempotent if a callback still
+    // arrives later. iOS re-delivers the APNs token when we register again.
+    if ([UIApplication sharedApplication].connectedScenes.count > 0) {
+      instance->_sceneDidConnect = YES;
+      [instance setupNotificationHandlingWithRemoteNotification:nil];
     }
   }
 #endif
@@ -299,6 +335,87 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 #endif
 }
 
+// Registers for APNs if FCM auto-init is enabled. Registration is deferred while auto-init is
+// disabled so the APNs token cannot trigger FCM registration before the user opts in (see
+// `messagingSetAutoInitEnabled:`, which registers once they do).
+//
+// `[FIRMessaging messaging]` requires a configured default FIRApp. When Firebase is initialized
+// from Dart (`Firebase.initializeApp(options:)` with no GoogleService-Info.plist / native
+// `FirebaseApp.configure()`), the default app does not exist yet at launch, so `[FIRMessaging
+// messaging]` is nil and `isAutoInitEnabled` reads as NO. In that case the check is skipped here
+// and re-run from `pluginConstantsForFIRApp:` once Dart has configured the app.
+//
+// Safe to call repeatedly: APNs registration is only requested once per process.
+- (void)registerForRemoteNotificationsIfAutoInitEnabled {
+  if (_apnsRegistrationRequested) {
+    return;
+  }
+  // Checked via FIRApp.allApps rather than `[FIRApp defaultApp]` / `[FIRMessaging messaging]` so
+  // a not-yet-configured app does not log the misleading "default Firebase app has not yet been
+  // configured" (I-COR000003) warning during launch.
+  if ([FLTFirebasePlugin firebaseAppNamed:@"[DEFAULT]"] == nil) {
+    return;
+  }
+  if (![FIRMessaging messaging].isAutoInitEnabled) {
+    return;
+  }
+  _apnsRegistrationRequested = YES;
+  [self registerForRemoteNotifications];
+  // Forward an APNs token that may have arrived before Firebase was configured.
+  [self ensureAPNSTokenSetting];
+}
+
+#ifdef __FF_NOTIFICATIONS_SUPPORTED_PLATFORM
+- (void)configureNotificationCenterDelegate {
+  // Set UNUserNotificationCenter but preserve original delegate if necessary.
+  if (@available(iOS 10.0, macOS 10.14, *)) {
+    BOOL shouldReplaceDelegate = YES;
+    UNUserNotificationCenter *notificationCenter =
+        [UNUserNotificationCenter currentNotificationCenter];
+    id<UNUserNotificationCenterDelegate> currentDelegate = notificationCenter.delegate;
+
+    if (currentDelegate == self) {
+      return;
+    }
+
+    if (currentDelegate != nil) {
+#if !TARGET_OS_OSX
+      // If a UNUserNotificationCenterDelegate is set and it conforms to
+      // FlutterAppLifeCycleProvider then we don't want to replace it on iOS as the earlier
+      // call to `[_registrar addApplicationDelegate:self];` will automatically delegate calls
+      // to this plugin. If we replace it, it will cause a stack overflow as our original
+      // delegate forwarding handler below causes an infinite loop of forwarding. See
+      // https://github.com/firebasefire/issues/4026.
+      if ([currentDelegate conformsToProtocol:@protocol(FlutterAppLifeCycleProvider)]) {
+        // Note this one only executes if Firebase swizzling is **enabled**.
+        shouldReplaceDelegate = NO;
+      }
+#endif
+
+      if (shouldReplaceDelegate) {
+        _originalNotificationCenterDelegate = currentDelegate;
+        _originalNotificationCenterDelegateRespondsTo.openSettingsForNotification =
+            (unsigned int)[_originalNotificationCenterDelegate
+                respondsToSelector:@selector(userNotificationCenter:openSettingsForNotification:)];
+        _originalNotificationCenterDelegateRespondsTo.willPresentNotification =
+            (unsigned int)[_originalNotificationCenterDelegate
+                respondsToSelector:@selector(userNotificationCenter:willPresentNotification:
+                                             withCompletionHandler:)];
+        _originalNotificationCenterDelegateRespondsTo.didReceiveNotificationResponse =
+            (unsigned int)[_originalNotificationCenterDelegate
+                respondsToSelector:@selector(userNotificationCenter:didReceiveNotificationResponse:
+                                             withCompletionHandler:)];
+      }
+    }
+
+    if (shouldReplaceDelegate) {
+      __strong FLTFirebasePlugin<UNUserNotificationCenterDelegate> *strongSelf = self;
+      notificationCenter.delegate = strongSelf;
+    }
+  }
+}
+#endif
+
 - (void)setupNotificationHandlingWithRemoteNotification:(nullable NSDictionary *)remoteNotification
                                        actionIdentifier:(nullable NSString *)actionIdentifier {
   // If notification handling was already set up (e.g. from
@@ -384,56 +501,16 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   [_registrar addApplicationDelegate:self];
 #endif
 
-  // Set UNUserNotificationCenter but preserve original delegate if necessary.
-  if (@available(iOS 10.0, macOS 10.14, *)) {
-    BOOL shouldReplaceDelegate = YES;
-    UNUserNotificationCenter *notificationCenter =
-        [UNUserNotificationCenter currentNotificationCenter];
-
-    if (notificationCenter.delegate != nil) {
-#if !TARGET_OS_OSX
-      // If a UNUserNotificationCenterDelegate is set and it conforms to
-      // FlutterAppLifeCycleProvider then we don't want to replace it on iOS as the earlier
-      // call to `[_registrar addApplicationDelegate:self];` will automatically delegate calls
-      // to this plugin. If we replace it, it will cause a stack overflow as our original
-      // delegate forwarding handler below causes an infinite loop of forwarding. See
-      // https://github.com/firebasefire/issues/4026.
-      if ([notificationCenter.delegate conformsToProtocol:@protocol(FlutterAppLifeCycleProvider)]) {
-        // Note this one only executes if Firebase swizzling is **enabled**.
-        shouldReplaceDelegate = NO;
-      }
+#ifdef __FF_NOTIFICATIONS_SUPPORTED_PLATFORM
+  [self configureNotificationCenterDelegate];
 #endif
-
-      if (shouldReplaceDelegate) {
-        _originalNotificationCenterDelegate = notificationCenter.delegate;
-        _originalNotificationCenterDelegateRespondsTo.openSettingsForNotification =
-            (unsigned int)[_originalNotificationCenterDelegate
-                respondsToSelector:@selector(userNotificationCenter:openSettingsForNotification:)];
-        _originalNotificationCenterDelegateRespondsTo.willPresentNotification =
-            (unsigned int)[_originalNotificationCenterDelegate
-                respondsToSelector:@selector(userNotificationCenter:willPresentNotification:
-                                             withCompletionHandler:)];
-        _originalNotificationCenterDelegateRespondsTo.didReceiveNotificationResponse =
-            (unsigned int)[_originalNotificationCenterDelegate
-                respondsToSelector:@selector(userNotificationCenter:didReceiveNotificationResponse:
-                                             withCompletionHandler:)];
-      }
-    }
-
-    if (shouldReplaceDelegate) {
-      __strong FLTFirebasePlugin<UNUserNotificationCenterDelegate> *strongSelf = self;
-      notificationCenter.delegate = strongSelf;
-    }
-  }
 
   // We automatically register for remote notifications as
   // application:didReceiveRemoteNotification:fetchCompletionHandler: will not get called unless
   // registerForRemoteNotifications is called early on during app initialization, calling this from
-  // Dart would be too late. Defer registration when auto-init is disabled so the APNs token cannot
-  // trigger FCM registration before the user opts in.
-  if ([FIRMessaging messaging].isAutoInitEnabled) {
-    [self registerForRemoteNotifications];
-  }
+  // Dart would be too late. Registration is skipped when auto-init is disabled, or deferred to
+  // `pluginConstantsForFIRApp:` when Firebase has not been configured natively yet.
+  [self registerForRemoteNotificationsIfAutoInitEnabled];
 }
 
 - (void)markInitialNotificationGatheredAfterDelay {
@@ -453,7 +530,15 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   NSDictionary *remoteNotification = nil;
   if ([launchNotification isKindOfClass:[NSDictionary class]]) {
     remoteNotification = launchNotification;
+  } else if ([launchNotification isKindOfClass:[UNNotificationResponse class]]) {
+    // UNNotificationResponse exposes the payload via its content, not a top-level `userInfo`,
+    // so it has to be unwrapped explicitly. Without this the payload is dropped and
+    // getInitialMessage() resolves with null when the app is launched by tapping a
+    // notification.
+    remoteNotification =
+        ((UNNotificationResponse *)launchNotification).notification.request.content.userInfo;
   } else if ([launchNotification respondsToSelector:@selector(userInfo)]) {
+    // Covers the deprecated NSUserNotification, which does expose `userInfo` directly.
     remoteNotification = [launchNotification userInfo];
   }
 #else
@@ -790,6 +875,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   BOOL enabled = [arguments[@"enabled"] boolValue];
   messaging.autoInitEnabled = enabled;
   if (enabled) {
+    _apnsRegistrationRequested = YES;
     [self registerForRemoteNotifications];
     [self ensureAPNSTokenSetting];
   }
@@ -944,6 +1030,10 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 
 - (NSDictionary *_Nonnull)pluginConstantsForFIRApp:(FIRApp *)firebase_app {
   FIRMessaging *messaging = [self messagingWithDelegate];
+  // Called by firebase_core right after `Firebase.initializeApp()` has configured the app. For
+  // apps initialized from Dart this is the first point where `[FIRMessaging messaging]` exists,
+  // so re-run the auto-init check that was skipped during launch.
+  [self registerForRemoteNotificationsIfAutoInitEnabled];
   return @{
     @"AUTO_INIT_ENABLED" : @(messaging.isAutoInitEnabled),
   };

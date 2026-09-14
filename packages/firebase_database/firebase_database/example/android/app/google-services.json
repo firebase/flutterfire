@@ -1,0 +1,24 @@
+{
+  "project_info": {
+    "project_number": "123456789012",
+    "project_id": "flutterfire-e2e-tests",
+    "storage_bucket": "flutterfire-e2e-tests.appspot.com",
+    "firebase_url": "https://flutterfire-e2e-tests-default-rtdb.europe-west1.firebasedatabase.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:123456789012:android:0000000000000000000000",
+        "android_client_info": {
+          "package_name": "io.flutter.plugins.firebase.database.example"
+        }
+      },
+      "api_key": [
+        {
+          "current_key": "AIzaSyDUMMYKEYFORFLUTTERFIRECITESTS0000"
+        }
+      ]
+    }
+  ],
+  "configuration_version": "1"
+}

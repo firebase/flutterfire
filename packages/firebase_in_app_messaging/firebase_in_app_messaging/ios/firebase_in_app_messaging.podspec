@@ -22,10 +22,12 @@ Pod::Spec.new do |s|
   s.description      = pubspec['description']
   s.homepage         = pubspec['homepage']
   s.license          = { :file => '../LICENSE' }
-  s.author           = 'The Chromium Authors'
+  s.authors          = 'The Chromium Authors'
   s.source           = { :path => '.' }
-  s.source_files     = 'firebase_in_app_messaging/Sources/firebase_in_app_messaging/**/*.{h,m}'
-  s.public_header_files = 'firebase_in_app_messaging/Sources/firebase_in_app_messaging/include/*.h'
+  s.source_files     = 'firebase_in_app_messaging/Sources/**/*.swift'
+
+  s.swift_version = '5.5'
+
   s.dependency 'Flutter'
   s.dependency 'firebase_core'
   s.dependency 'Firebase/InAppMessaging', firebase_sdk_version
@@ -34,7 +36,6 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '15.0'
 
   s.pod_target_xcconfig = {
-    'GCC_PREPROCESSOR_DEFINITIONS' => "LIBRARY_VERSION=\\\"#{library_version}\\\" LIBRARY_NAME=\\\"flutter-fire-fiam\\\"",
     'DEFINES_MODULE' => 'YES'
   }
 end

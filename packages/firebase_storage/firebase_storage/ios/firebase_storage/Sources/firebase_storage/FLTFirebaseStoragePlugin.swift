@@ -17,8 +17,6 @@ import Foundation
   import FlutterMacOS
 #endif
 
-extension FlutterError: Error {}
-
 public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseStorageHostApi {
   private var channel: FlutterMethodChannel?
   private var messenger: FlutterBinaryMessenger?

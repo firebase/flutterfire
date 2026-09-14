@@ -287,8 +287,12 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
             null,
           );
 
-          // Allow the [runTransaction] method to listen to an error.
+          // Native may report an error while the result is being stored.
+          if (completer.isCompleted) {
+            return;
+          }
 
+          // Allow the [runTransaction] method to listen to an error.
           completer.completeError(error, stack);
 
           return;

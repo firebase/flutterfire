@@ -32,6 +32,11 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
   private var listenerCount: Int = 0
   private var transactionResults: [Int64: [String: Any?]] = [:]
 
+  /// Wraps a native error so that its Realtime Database code reaches Dart.
+  ///
+  /// Forwarding the raw `NSError` instead lets Pigeon fall back to its generic
+  /// shape - the error's description as the code and its type name as the
+  /// message - and the Dart converter then reports `unknown`.
   private func createFlutterError(_ error: Error) -> PigeonError {
     let parts = FLTFirebaseDatabaseUtils.codeAndMessage(from: error)
     let code = parts[0]
@@ -220,7 +225,7 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
 
     reference.setValue(request.value) { error, _ in
       if let error {
-        completion(.failure(error))
+        completion(.failure(self.createFlutterError(error)))
       } else {
         completion(.success(()))
       }
@@ -237,7 +242,7 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
 
     reference.setValue(request.value, andPriority: request.priority) { error, _ in
       if let error {
-        completion(.failure(error))
+        completion(.failure(self.createFlutterError(error)))
       } else {
         completion(.success(()))
       }
@@ -255,7 +260,7 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
 
     reference.updateChildValues(values) { error, _ in
       if let error {
-        completion(.failure(error))
+        completion(.failure(self.createFlutterError(error)))
       } else {
         completion(.success(()))
       }
@@ -272,7 +277,7 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
 
     reference.setPriority(request.priority) { error, _ in
       if let error {
-        completion(.failure(error))
+        completion(.failure(self.createFlutterError(error)))
       } else {
         completion(.success(()))
       }
@@ -376,7 +381,7 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
 
     reference.onDisconnectSetValue(request.value) { error, _ in
       if let error {
-        completion(.failure(error))
+        completion(.failure(self.createFlutterError(error)))
       } else {
         completion(.success(()))
       }
@@ -393,7 +398,7 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
 
     reference.onDisconnectSetValue(request.value, andPriority: request.priority) { error, _ in
       if let error {
-        completion(.failure(error))
+        completion(.failure(self.createFlutterError(error)))
       } else {
         completion(.success(()))
       }
@@ -411,7 +416,7 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
 
     reference.onDisconnectUpdateChildValues(values) { error, _ in
       if let error {
-        completion(.failure(error))
+        completion(.failure(self.createFlutterError(error)))
       } else {
         completion(.success(()))
       }
@@ -427,7 +432,7 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
 
     reference.cancelDisconnectOperations { error, _ in
       if let error {
-        completion(.failure(error))
+        completion(.failure(self.createFlutterError(error)))
       } else {
         completion(.success(()))
       }

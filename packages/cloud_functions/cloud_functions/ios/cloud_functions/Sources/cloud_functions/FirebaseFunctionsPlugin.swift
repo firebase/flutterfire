@@ -16,8 +16,6 @@ import FirebaseFunctions
   import firebase_core_shared
 #endif
 
-extension FlutterError: Error {}
-
 let kFLTFirebaseFunctionsChannelName = "plugins.flutter.io/firebase_functions"
 
 public class FirebaseFunctionsPlugin: NSObject, FLTFirebasePluginProtocol, FlutterPlugin,

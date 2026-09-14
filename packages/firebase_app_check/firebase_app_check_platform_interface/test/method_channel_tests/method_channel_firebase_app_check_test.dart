@@ -201,12 +201,13 @@ void main() {
         );
 
         await appCheck.activate(
-          providerAndroid: const AndroidReCaptchaProvider(),
+          providerAndroid: const AndroidReCaptchaProvider('test-site-key'),
         );
 
         expect(log.length, 1);
         expect(log[0][0], '[DEFAULT]'); // appName
         expect(log[0][1], 'recaptcha'); // androidProvider
+        expect(log[0][4], 'test-site-key'); // recaptchaSiteKey
       });
 
       test('passes recaptcha on iOS', () async {
@@ -228,12 +229,13 @@ void main() {
         );
 
         await appCheck.activate(
-          providerApple: const AppleReCaptchaProvider(),
+          providerApple: const AppleReCaptchaProvider('test-site-key'),
         );
 
         expect(log.length, 1);
         expect(log[0][0], '[DEFAULT]'); // appName
         expect(log[0][2], 'recaptcha'); // appleProvider
+        expect(log[0][4], 'test-site-key'); // recaptchaSiteKey
       });
     });
   });

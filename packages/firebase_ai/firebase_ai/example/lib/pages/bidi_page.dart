@@ -170,12 +170,84 @@ class BidiSessionController extends ChangeNotifier {
   int? _inputTranscriptionMessageIndex;
   int? _outputTranscriptionMessageIndex;
 
+  bool disableAutomaticActivityDetection = false;
+  ActivityHandling? selectedActivityHandling;
+  TurnCoverage? selectedTurnCoverage;
+  Sensitivity? selectedStartSensitivity;
+  Sensitivity? selectedEndSensitivity;
+
+  void updateRealtimeConfig({
+    bool? disableVAD,
+    ActivityHandling? activityHandling,
+    TurnCoverage? turnCoverage,
+    Sensitivity? startSensitivity,
+    Sensitivity? endSensitivity,
+    bool clearActivityHandling = false,
+    bool clearTurnCoverage = false,
+    bool clearStartSensitivity = false,
+    bool clearEndSensitivity = false,
+  }) {
+    if (disableVAD != null) disableAutomaticActivityDetection = disableVAD;
+    if (clearActivityHandling) {
+      selectedActivityHandling = null;
+    } else if (activityHandling != null) {
+      selectedActivityHandling = activityHandling;
+    }
+    if (clearTurnCoverage) {
+      selectedTurnCoverage = null;
+    } else if (turnCoverage != null) {
+      selectedTurnCoverage = turnCoverage;
+    }
+    if (clearStartSensitivity) {
+      selectedStartSensitivity = null;
+    } else if (startSensitivity != null) {
+      selectedStartSensitivity = startSensitivity;
+    }
+    if (clearEndSensitivity) {
+      selectedEndSensitivity = null;
+    } else if (endSensitivity != null) {
+      selectedEndSensitivity = endSensitivity;
+    }
+    _initLiveModel();
+    notifyListeners();
+  }
+
   void _initLiveModel() {
+    final RealtimeInputConfig? realtimeInputConfig;
+    final bool hasSensitivities =
+        selectedStartSensitivity != null || selectedEndSensitivity != null;
+    final ActivityDetectionConfig? automaticActivityDetection;
+
+    if (disableAutomaticActivityDetection) {
+      automaticActivityDetection = ActivityDetectionConfig.disabled();
+    } else if (hasSensitivities) {
+      automaticActivityDetection = ActivityDetectionConfig(
+        startSensitivity: selectedStartSensitivity,
+        endSensitivity: selectedEndSensitivity,
+      );
+    } else {
+      automaticActivityDetection = null;
+    }
+
+    if (disableAutomaticActivityDetection ||
+        hasSensitivities ||
+        selectedActivityHandling != null ||
+        selectedTurnCoverage != null) {
+      realtimeInputConfig = RealtimeInputConfig(
+        automaticActivityDetection: automaticActivityDetection,
+        activityHandling: selectedActivityHandling,
+        turnCoverage: selectedTurnCoverage,
+      );
+    } else {
+      realtimeInputConfig = null;
+    }
+
     final config = LiveGenerationConfig(
       speechConfig: SpeechConfig(voiceName: 'Fenrir'),
       responseModalities: [ResponseModalities.audio],
       inputAudioTranscription: AudioTranscriptionConfig(),
       outputAudioTranscription: AudioTranscriptionConfig(),
+      realtimeInputConfig: realtimeInputConfig,
     );
 
     final tools = [
@@ -194,6 +266,40 @@ class BidiSessionController extends ChangeNotifier {
             liveGenerationConfig: config,
             tools: tools,
           );
+  }
+
+  Future<void> sendStartActivity() async {
+    if (!isSessionActive || _session == null) return;
+    try {
+      await _session!.sendStartActivityRealtime();
+      messages.add(
+        MessageData(
+          text: '[System] Sent manual start activity signal',
+          fromUser: true,
+        ),
+      );
+      onScrollDown?.call();
+      notifyListeners();
+    } catch (e) {
+      onShowError?.call(e.toString());
+    }
+  }
+
+  Future<void> sendStopActivity() async {
+    if (!isSessionActive || _session == null) return;
+    try {
+      await _session!.sendStopActivityRealtime();
+      messages.add(
+        MessageData(
+          text: '[System] Sent manual stop activity signal',
+          fromUser: true,
+        ),
+      );
+      onScrollDown?.call();
+      notifyListeners();
+    } catch (e) {
+      onShowError?.call(e.toString());
+    }
   }
 
   Future<void> initialize() async {
@@ -655,6 +761,176 @@ class _BidiPageState extends State<BidiPage> {
                         : null,
                   ),
                 ],
+              ),
+              const SizedBox(height: 8),
+              Card(
+                margin: const EdgeInsets.symmetric(vertical: 4),
+                child: ExpansionTile(
+                  title: const Text(
+                    'Realtime Input Config Settings',
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                  ),
+                  subtitle: Text(
+                    _controller.disableAutomaticActivityDetection
+                        ? 'Auto VAD: Disabled (Manual signals required)'
+                        : 'Auto VAD: Enabled',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: _controller.disableAutomaticActivityDetection
+                          ? Colors.orangeAccent
+                          : Colors.greenAccent,
+                    ),
+                  ),
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text('Disable Automatic VAD:'),
+                              Switch(
+                                value: _controller
+                                    .disableAutomaticActivityDetection,
+                                onChanged: (val) {
+                                  _controller.updateRealtimeConfig(
+                                    disableVAD: val,
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: ElevatedButton.icon(
+                                  icon: const Icon(Icons.play_arrow, size: 16),
+                                  label: const Text('Start Activity'),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.green.shade800,
+                                  ),
+                                  onPressed: _controller.isSessionActive
+                                      ? () => _controller.sendStartActivity()
+                                      : null,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: ElevatedButton.icon(
+                                  icon: const Icon(Icons.stop, size: 16),
+                                  label: const Text('Stop Activity'),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.red.shade800,
+                                  ),
+                                  onPressed: _controller.isSessionActive
+                                      ? () => _controller.sendStopActivity()
+                                      : null,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const Divider(height: 24),
+                          Wrap(
+                            spacing: 12,
+                            runSpacing: 12,
+                            children: [
+                              DropdownButton<ActivityHandling?>(
+                                value: _controller.selectedActivityHandling,
+                                hint: const Text('Activity Handling'),
+                                items: [
+                                  const DropdownMenuItem(
+                                    child: Text('Handling: Default'),
+                                  ),
+                                  ...ActivityHandling.values.map(
+                                    (e) => DropdownMenuItem(
+                                      value: e,
+                                      child: Text('Handling: ${e.name}'),
+                                    ),
+                                  ),
+                                ],
+                                onChanged: (val) {
+                                  _controller.updateRealtimeConfig(
+                                    activityHandling: val,
+                                    clearActivityHandling: val == null,
+                                  );
+                                },
+                              ),
+                              DropdownButton<TurnCoverage?>(
+                                value: _controller.selectedTurnCoverage,
+                                hint: const Text('Turn Coverage'),
+                                items: [
+                                  const DropdownMenuItem(
+                                    child: Text('Coverage: Default'),
+                                  ),
+                                  ...TurnCoverage.values.map(
+                                    (e) => DropdownMenuItem(
+                                      value: e,
+                                      child: Text('Coverage: ${e.name}'),
+                                    ),
+                                  ),
+                                ],
+                                onChanged: (val) {
+                                  _controller.updateRealtimeConfig(
+                                    turnCoverage: val,
+                                    clearTurnCoverage: val == null,
+                                  );
+                                },
+                              ),
+                              DropdownButton<Sensitivity?>(
+                                value: _controller.selectedStartSensitivity,
+                                hint: const Text('Start Sensitivity'),
+                                items: [
+                                  const DropdownMenuItem(
+                                    child: Text('Start Sens: Default'),
+                                  ),
+                                  ...Sensitivity.values.map(
+                                    (e) => DropdownMenuItem(
+                                      value: e,
+                                      child: Text('Start Sens: ${e.name}'),
+                                    ),
+                                  ),
+                                ],
+                                onChanged: (val) {
+                                  _controller.updateRealtimeConfig(
+                                    startSensitivity: val,
+                                    clearStartSensitivity: val == null,
+                                  );
+                                },
+                              ),
+                              DropdownButton<Sensitivity?>(
+                                value: _controller.selectedEndSensitivity,
+                                hint: const Text('End Sensitivity'),
+                                items: [
+                                  const DropdownMenuItem(
+                                    child: Text('End Sens: Default'),
+                                  ),
+                                  ...Sensitivity.values.map(
+                                    (e) => DropdownMenuItem(
+                                      value: e,
+                                      child: Text('End Sens: ${e.name}'),
+                                    ),
+                                  ),
+                                ],
+                                onChanged: (val) {
+                                  _controller.updateRealtimeConfig(
+                                    endSensitivity: val,
+                                    clearEndSensitivity: val == null,
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: 8),
               if (_controller.isCameraOn)

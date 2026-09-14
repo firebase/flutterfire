@@ -6,7 +6,7 @@
 import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
-import 'package:flutter/foundation.dart' show immutable;
+import 'package:meta/meta.dart';
 
 /// Represents binary data stored in [Uint8List].
 @immutable

@@ -40,6 +40,8 @@ class FirebaseDatabasePlugin : public flutter::Plugin,
       const flutter::EncodableValue& value);
   static std::string GetDatabaseErrorCode(firebase::database::Error error);
   static std::string GetDatabaseErrorMessage(firebase::database::Error error);
+  static flutter::EncodableValue BuildErrorDetails(const std::string& code,
+                                                   const std::string& message);
   static FlutterError ParseError(const firebase::FutureBase& future);
   static flutter::EncodableMap DataSnapshotToEncodableMap(
       const firebase::database::DataSnapshot& snapshot);

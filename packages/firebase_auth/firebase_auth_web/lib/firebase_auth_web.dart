@@ -393,6 +393,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   Future<void> setSettings({
     bool? appVerificationDisabledForTesting,
     String? userAccessGroup,
+    bool migrateCurrentUser = false,
     String? phoneNumber,
     String? smsCode,
     bool? forceRecaptchaFlow,

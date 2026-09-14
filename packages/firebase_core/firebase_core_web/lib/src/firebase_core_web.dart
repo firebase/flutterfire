@@ -57,10 +57,18 @@ class FirebaseCoreWeb extends FirebasePlatform {
     );
   }
 
+  /// Whether [service] is still registered for per-app initialization.
+  ///
+  /// Used by tests to ensure App Check is not removed after the first
+  /// [initializeApp] (secondary apps must re-run ensurePluginInitialized).
+  @visibleForTesting
+  static bool isServiceRegistered(String service) =>
+      _services.containsKey(service);
+
   static const String _libraryName = 'flutter-fire-core';
 
   /// Registers that [FirebaseCoreWeb] is the platform implementation.
-  static void registerWith(Registrar registrar) {
+  static void registerWith(dynamic registrar) {
     FirebasePlatform.instance = FirebaseCoreWeb();
   }
 
@@ -362,7 +370,6 @@ class FirebaseCoreWeb extends FirebasePlatform {
           messagingSenderId: options.messagingSenderId,
           appId: options.appId,
           measurementId: options.measurementId,
-          recaptchaSiteKey: options.recaptchaSiteKey,
         );
       }
     }
@@ -385,10 +392,15 @@ class FirebaseCoreWeb extends FirebasePlatform {
           messagingSenderId: options.messagingSenderId,
           appId: options.appId,
           measurementId: options.measurementId,
-          recaptchaSiteKey: options.recaptchaSiteKey,
         );
       } catch (e) {
-        if (_getJSErrorCode(e as JSError) == 'app/duplicate-app') {
+        // isA on Object requires Dart 3.12; this package supports 3.6.
+        // ignore: invalid_runtime_check_with_js_interop_types
+        if (e is! JSError) {
+          rethrow;
+        }
+
+        if (_getJSErrorCode(e) == 'app/duplicate-app') {
           throw duplicateApp(name);
         }
 
@@ -396,15 +408,20 @@ class FirebaseCoreWeb extends FirebasePlatform {
       }
     }
 
-    final appCheck = _services.remove('app-check');
-    if (appCheck != null) {
-      // Activate app check first
-      await appCheck.ensurePluginInitialized!(app!);
+    // Activate App Check before other services so Auth/etc. attach tokens.
+    // Do NOT remove 'app-check' from [_services]: secondary (named) apps also
+    // need ensurePluginInitialized on each Firebase.initializeApp() call.
+    // Removing it caused App Check to skip reactivation for named apps on
+    // reload, so accounts:lookup ran without X-Firebase-AppCheck (#18556).
+    final appCheck = _services['app-check'];
+    final appCheckEnsureInitialized = appCheck?.ensurePluginInitialized;
+    if (appCheckEnsureInitialized != null) {
+      await appCheckEnsureInitialized(app!);
     }
 
     await Future.wait(
-      _services.values.map((service) {
-        final ensureInitializedFunction = service.ensurePluginInitialized;
+      _services.entries.where((entry) => entry.key != 'app-check').map((entry) {
+        final ensureInitializedFunction = entry.value.ensurePluginInitialized;
 
         if (ensureInitializedFunction == null || app == null) {
           return Future.value();
@@ -429,7 +446,13 @@ class FirebaseCoreWeb extends FirebasePlatform {
       app = guardNotInitialized(() => firebase.app(name));
       return _createFromJsApp(app);
     } catch (e) {
-      if (_getJSErrorCode(e as JSError) == 'app/no-app') {
+      // isA on Object requires Dart 3.12; this package supports 3.6.
+      // ignore: invalid_runtime_check_with_js_interop_types
+      if (e is! JSError) {
+        rethrow;
+      }
+
+      if (_getJSErrorCode(e) == 'app/no-app') {
         throw noAppExists(name);
       }
 

@@ -11,6 +11,23 @@ buildscript {
     }
 }
 
+rootProject.allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+// AGP 9+ has built-in Kotlin support unless Flutter opts out via android.builtInKotlin=false.
+def agpMajor = com.android.Version.ANDROID_GRADLE_PLUGIN_VERSION.tokenize('.')[0] as int
+def builtInKotlin = providers.gradleProperty("android.builtInKotlin")
+        .map { it.toBoolean() }
+        .orElse(agpMajor >= 9)
+        .get()
+if (agpMajor < 9 || !builtInKotlin) {
+    apply plugin: 'kotlin-android'
+}
+
 def getRootProjectExtOrDefaultProperty(name) {
     if (!rootProject.ext.has("FlutterFire")) return project.properties[name]
     if (!rootProject.ext.get("FlutterFire")[name]) return project.properties[name]
@@ -36,6 +53,10 @@ android {
         targetCompatibility project.ext.javaVersion
     }
 
+    sourceSets {
+      main.java.srcDirs += "src/main/kotlin"
+    }
+
     buildFeatures {
         buildConfig true
     }
@@ -50,6 +71,14 @@ android {
 
         implementation 'androidx.annotation:annotation:1.7.0'
     }
+}
+
+plugins.withId("org.jetbrains.kotlin.android") {
+  kotlin {
+    compilerOptions {
+      jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.fromTarget(project.ext.javaVersion.toString())
+    }
+  }
 }
 
 apply from: file("./user-agent.gradle")

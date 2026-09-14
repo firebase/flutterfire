@@ -1,0 +1,47 @@
+# Packages allowed to have their own analysis_options.yaml.
+# FlutterFire manages analysis centrally via melos + the root config;
+# every package (and its example) carries local options by design.
+- cloud_firestore
+- cloud_firestore/cloud_firestore_platform_interface
+- cloud_firestore/cloud_firestore_web
+- cloud_functions
+- cloud_functions/cloud_functions_platform_interface
+- cloud_functions/cloud_functions_web
+- firebase_ai
+- firebase_analytics
+- firebase_analytics/firebase_analytics_platform_interface
+- firebase_analytics/firebase_analytics_web
+- firebase_app_check
+- firebase_app_check/firebase_app_check_platform_interface
+- firebase_app_check/firebase_app_check_web
+- firebase_app_installations
+- firebase_app_installations/firebase_app_installations_platform_interface
+- firebase_app_installations/firebase_app_installations_web
+- firebase_auth
+- firebase_auth/firebase_auth_platform_interface
+- firebase_auth/firebase_auth_web
+- firebase_core
+- firebase_core/firebase_core_platform_interface
+- firebase_core/firebase_core_web
+- firebase_crashlytics
+- firebase_crashlytics/firebase_crashlytics_platform_interface
+- firebase_data_connect
+- firebase_database
+- firebase_database/firebase_database_platform_interface
+- firebase_database/firebase_database_web
+- firebase_in_app_messaging
+- firebase_in_app_messaging/firebase_in_app_messaging_platform_interface
+- firebase_messaging
+- firebase_messaging/firebase_messaging_platform_interface
+- firebase_messaging/firebase_messaging_web
+- firebase_ml_model_downloader
+- firebase_ml_model_downloader/firebase_ml_model_downloader_platform_interface
+- firebase_performance
+- firebase_performance/firebase_performance_platform_interface
+- firebase_performance/firebase_performance_web
+- firebase_remote_config
+- firebase_remote_config/firebase_remote_config_platform_interface
+- firebase_remote_config/firebase_remote_config_web
+- firebase_storage
+- firebase_storage/firebase_storage_platform_interface
+- firebase_storage/firebase_storage_web

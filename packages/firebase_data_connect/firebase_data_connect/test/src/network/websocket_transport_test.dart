@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import 'dart:async';
+import 'dart:io';
 
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -32,13 +33,15 @@ void main() {
   late MockUser mockUser1;
   late MockUser mockUser2;
   late StreamController<User?> authChangesController;
+  late HttpServer localHttpServer;
 
-  setUp(() {
+  setUp(() async {
     mockAuth = MockFirebaseAuth();
     mockAppCheck = MockFirebaseAppCheck();
     mockUser1 = MockUser();
     mockUser2 = MockUser();
     authChangesController = StreamController<User?>.broadcast();
+    addTearDown(() => authChangesController.close());
 
     when(mockUser1.uid).thenReturn('uid-1');
     when(mockUser2.uid).thenReturn('uid-2');
@@ -46,8 +49,12 @@ void main() {
     when(mockAuth.idTokenChanges())
         .thenAnswer((_) => authChangesController.stream);
 
+    localHttpServer = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
+    addTearDown(() => localHttpServer.close(force: true));
+
     transport = WebSocketTransport(
-      TransportOptions('testhost', 443, true),
+      TransportOptions(
+          localHttpServer.address.host, localHttpServer.port, false),
       DataConnectOptions(
         'testProject',
         'testLocation',
@@ -59,10 +66,7 @@ void main() {
       mockAppCheck,
       mockAuth,
     );
-  });
-
-  tearDown(() async {
-    await authChangesController.close();
+    addTearDown(() => transport.disconnect());
   });
 
   group('WebSocketTransport Idle Reconnection Guard', () {
@@ -84,6 +88,38 @@ void main() {
       // (which is the first step of a reconnect) since the client is idle.
       verifyNever(mockUser2.getIdToken());
       expect(transport.isConnected, isFalse);
+    });
+  });
+
+  group('WebSocketTransport URL Validation', () {
+    test('should connect with the correct sticky URL path', () async {
+      final pathCompleter = Completer<String>();
+      localHttpServer.listen((HttpRequest request) async {
+        pathCompleter.complete(request.uri.path);
+        await request.response.close();
+      });
+
+      final stream = transport.invokeStreamQuery(
+        'testOpId',
+        'testQuery',
+        (json) => json,
+        null,
+        null,
+        null,
+      );
+
+      final subscription = stream.listen((_) {});
+      final actualPath = await pathCompleter.future.timeout(
+        const Duration(seconds: 3),
+        onTimeout: () =>
+            fail('Server did not receive connection request in time'),
+      );
+      await subscription.cancel();
+
+      final expectedPath =
+          '/ws/google.firebase.dataconnect.v1.ConnectorStreamService.Connect'
+          '/testProject/locations/testLocation/services/testService';
+      expect(actualPath, equals(expectedPath));
     });
   });
 }

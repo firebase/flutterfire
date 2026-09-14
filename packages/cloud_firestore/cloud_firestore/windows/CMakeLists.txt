@@ -66,7 +66,12 @@ target_compile_definitions(${PLUGIN_NAME} PRIVATE -DINTERNAL_EXPERIMENTAL=1)
 # Source include directories and library dependencies. Add any plugin-specific
 # dependencies here.
 set(MSVC_RUNTIME_MODE MD)
-set(firebase_libs firebase_core_plugin firebase_auth firebase_firestore)
+# firebase_auth must come after firebase_firestore: the Firestore desktop
+# credentials provider pulls symbols out of firebase_auth (e.g.
+# `firebase::g_auth_initializer`), the Firebase C++ SDK does not declare that
+# dependency between its imported targets, and MSVC resolves static libraries
+# in the order they appear on the link line.
+set(firebase_libs firebase_core_plugin firebase_firestore firebase_auth)
 set(ADDITIONAL_LIBS advapi32 ws2_32 crypt32 rpcrt4 ole32 shell32 Bcrypt.lib DbgHelp.lib)
 target_link_libraries(${PLUGIN_NAME} PRIVATE "${firebase_libs}" "${ADDITIONAL_LIBS}")
 

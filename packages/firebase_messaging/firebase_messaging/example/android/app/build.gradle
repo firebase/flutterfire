@@ -39,12 +39,14 @@ android {
         coreLibraryDesugaringEnabled true
     }
 
-    kotlinOptions {
-        jvmTarget = "17"
-    }
-
     defaultConfig {
-        applicationId = "io.flutter.plugins.firebase.messaging.example"
+        // Deliberately the mega test app's Firebase app identity: the live-service
+        // e2e suite in `integration_test/` talks to real Firebase backends, which
+        // only accept app ids registered in the `flutterfire-e2e-tests` project.
+        // `namespace` and the Kotlin package below are unaffected. Two of these
+        // examples cannot be co-installed on one device - CI installs one per
+        // emulator.
+        applicationId = "io.flutter.plugins.firebase.tests"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdk = 23
@@ -63,9 +65,18 @@ android {
 }
 
 dependencies {
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.4'
+    // flutter_local_notifications (a dependency of this example, but not of the
+    // `tests` mega-app this suite was migrated out of) publishes AAR metadata
+    // requiring desugar_jdk_libs 2.1.4+; 2.0.4 fails :app:checkDebugAarMetadata.
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.4'
 }
 
 flutter {
     source = "../.."
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
+    }
 }

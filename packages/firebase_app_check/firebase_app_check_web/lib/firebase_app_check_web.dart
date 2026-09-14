@@ -23,7 +23,6 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
   static const recaptchaTypeV3 = 'recaptcha-v3';
   static const recaptchaTypeEnterprise = 'enterprise';
   static const recaptchaTypeDebug = 'debug';
-  static const recaptchaTypeWebRecaptcha = 'web-recaptcha';
   static Map<String, StreamController<String?>> _tokenChangesListeners = {};
 
   /// Stub initializer to allow the [registerWith] to create an instance without
@@ -64,8 +63,6 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
             final debugToken =
                 recaptchaSiteKey?.isNotEmpty ?? false ? recaptchaSiteKey : null;
             provider = WebDebugProvider(debugToken: debugToken);
-          } else if (recaptchaType == recaptchaTypeWebRecaptcha) {
-            provider = const WebReCaptchaProvider();
           } else if (recaptchaSiteKey != null) {
             if (recaptchaType == recaptchaTypeV3) {
               provider = ReCaptchaV3Provider(recaptchaSiteKey);
@@ -146,8 +143,6 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
         recaptchaType = recaptchaTypeV3;
       } else if (webProvider is ReCaptchaEnterpriseProvider) {
         recaptchaType = recaptchaTypeEnterprise;
-      } else if (webProvider is WebReCaptchaProvider) {
-        recaptchaType = recaptchaTypeWebRecaptcha;
       } else {
         throw Exception('Invalid web provider: $webProvider');
       }

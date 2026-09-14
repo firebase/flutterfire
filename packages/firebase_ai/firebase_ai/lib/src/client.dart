@@ -45,10 +45,12 @@ final class HttpApiClient implements ApiClient {
       http.Client? httpClient,
       FutureOr<Map<String, String>> Function()? requestHeaders})
       : _apiKey = apiKey,
-        _httpClient = httpClient,
+        // package:http top-level helpers (http.post, Request.send) create and
+        // close a Client per call, which prevents TCP/TLS connection reuse.
+        _httpClient = httpClient ?? http.Client(),
         _requestHeaders = requestHeaders;
   final String _apiKey;
-  final http.Client? _httpClient;
+  final http.Client _httpClient;
 
   final FutureOr<Map<String, String>> Function()? _requestHeaders;
 
@@ -64,7 +66,7 @@ final class HttpApiClient implements ApiClient {
   Future<Map<String, Object?>> makeRequest(
       Uri uri, Map<String, Object?> body) async {
     final headers = await _headers();
-    final response = await (_httpClient?.post ?? http.post)(
+    final response = await _httpClient.post(
       uri,
       headers: headers,
       body: _utf8Json.encode(body),
@@ -84,7 +86,7 @@ final class HttpApiClient implements ApiClient {
     final request = http.Request('POST', streamUri)
       ..bodyBytes = _utf8Json.encode(body)
       ..headers.addAll(await _headers());
-    final response = await (_httpClient?.send(request) ?? request.send());
+    final response = await _httpClient.send(request);
     if (response.statusCode != 200) {
       final body = await response.stream.bytesToString();
       // Yield a potential error object like a normal result for consistency

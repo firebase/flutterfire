@@ -229,7 +229,10 @@ class FirebaseRemoteConfigPlugin :
       details["message"] = "frequency of requests exceeds throttled limits"
     } else if (exception is FirebaseRemoteConfigClientException) {
       details["code"] = "internal"
-      details["message"] = "internal remote config fetch error"
+      // The native message is the only thing that says what went wrong here,
+      // for example a missing data connection, so it is passed on as is and
+      // the Dart side refines the code from it.
+      details["message"] = exception.message ?: "internal remote config fetch error"
     } else if (exception is FirebaseRemoteConfigServerException) {
       details["code"] = "remote-config-server-error"
       details["message"] = exception.message
@@ -244,7 +247,7 @@ class FirebaseRemoteConfigPlugin :
       }
     } else {
       details["code"] = "unknown"
-      details["message"] = "unknown remote config error"
+      details["message"] = exception?.message ?: "unknown remote config error"
     }
     callback(Result.failure(FlutterError("firebase_remote_config", exception?.message, details)))
   }
