@@ -19,6 +19,7 @@ import 'package:firebase_core_platform_interface/firebase_core_platform_interfac
 import 'package:firebase_data_connect/src/common/common_library.dart';
 import 'package:firebase_data_connect/src/core/ref.dart';
 import 'package:flutter/foundation.dart';
+import 'package:meta/meta.dart';
 
 import './network/rest_library.dart';
 import './network/transport_library.dart';
@@ -116,7 +117,7 @@ class FirebaseDataConnect extends FirebasePlugin {
       appCheck,
       auth,
     );
-    transport = _RoutingTransport(rest, ws);
+    transport = RoutingTransport(rest, ws);
   }
 
   @visibleForTesting
@@ -240,8 +241,12 @@ class FirebaseDataConnect extends FirebasePlugin {
   }
 }
 
-class _RoutingTransport implements DataConnectTransport {
-  _RoutingTransport(this.rest, this.websocket);
+/// @nodoc
+@internal
+// TODO: Move RoutingTransport to its own file under src/network/ to avoid exposing it publicly
+// and hiding it in exports.
+class RoutingTransport implements DataConnectTransport {
+  RoutingTransport(this.rest, this.websocket);
   final RestTransport rest;
   final WebSocketTransport websocket;
 
@@ -294,7 +299,7 @@ class _RoutingTransport implements DataConnectTransport {
     Variables? vars,
     String? token,
   ) {
-    if (websocket.isConnected) {
+    if (websocket.isConnected && websocket.hasActiveSubscriptions) {
       return websocket.invokeMutation(
           operationId, queryName, deserializer, serializer, vars, token);
     }
@@ -311,7 +316,7 @@ class _RoutingTransport implements DataConnectTransport {
     Variables? vars,
     String? token,
   ) {
-    if (websocket.isConnected) {
+    if (websocket.isConnected && websocket.hasActiveSubscriptions) {
       return websocket.invokeQuery(
           operationId, queryName, deserializer, serialize, vars, token);
     }
