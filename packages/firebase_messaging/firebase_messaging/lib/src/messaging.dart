@@ -97,6 +97,7 @@ class FirebaseMessaging extends FirebasePlugin {
   /// Removes access to an FCM token previously authorized.
   ///
   /// Messages sent by the server to this token will fail.
+  @Deprecated('Use unregister() instead.')
   Future<void> deleteToken() {
     return _delegate.deleteToken();
   }
@@ -111,6 +112,45 @@ class FirebaseMessaging extends FirebasePlugin {
     return _delegate.getAPNSToken();
   }
 
+  /// Registers the current app instance with Firebase Cloud Messaging.
+  ///
+  /// Once registration completes, [onRegistered] provides the Firebase
+  /// Installation ID (FID) that can be used as the direct-send target for this
+  /// app instance.
+  Future<void> register({
+    String? vapidKey,
+    String? serviceWorkerScriptPath,
+  }) {
+    return _delegate.register(
+      vapidKey: vapidKey,
+      serviceWorkerScriptPath: serviceWorkerScriptPath,
+    );
+  }
+
+  /// Unregisters the current app instance with Firebase Cloud Messaging.
+  ///
+  /// Once unregistration completes, [onUnregistered] provides the Firebase
+  /// Installation ID (FID) that is no longer active for direct-send messaging.
+  Future<void> unregister() {
+    return _delegate.unregister();
+  }
+
+  /// Fires when this app instance is registered with Firebase Cloud Messaging.
+  ///
+  /// The event value is the Firebase Installation ID (FID) that should be sent
+  /// to your backend for direct-send messaging.
+  Stream<String> get onRegistered {
+    return _delegate.onRegistered;
+  }
+
+  /// Fires when this app instance is unregistered from Firebase Cloud Messaging.
+  ///
+  /// The event value is the Firebase Installation ID (FID) that should be
+  /// removed from your backend.
+  Stream<String> get onUnregistered {
+    return _delegate.onUnregistered;
+  }
+
   /// Returns the default FCM token for this device.
   ///
   /// On web, a [vapidKey] is required.
@@ -118,6 +158,7 @@ class FirebaseMessaging extends FirebasePlugin {
   /// On web, a custom messaging service worker can be registered with
   /// [serviceWorkerScriptPath]. This must point to a JavaScript file in the
   /// root of the app's `web` directory.
+  @Deprecated('Use register() and onRegistered instead.')
   Future<String?> getToken({
     String? vapidKey,
     String? serviceWorkerScriptPath,
@@ -129,6 +170,7 @@ class FirebaseMessaging extends FirebasePlugin {
   }
 
   /// Fires when a new FCM token is generated.
+  @Deprecated('Use onRegistered instead.')
   Stream<String> get onTokenRefresh {
     return _delegate.onTokenRefresh;
   }
