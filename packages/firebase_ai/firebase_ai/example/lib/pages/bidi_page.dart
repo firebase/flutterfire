@@ -18,12 +18,13 @@ import 'package:flutter/material.dart';
 import 'package:firebase_ai/firebase_ai.dart';
 import 'package:waveform_flutter/waveform_flutter.dart';
 
+import '../constants.dart';
 import '../utils/audio_input.dart';
 import '../utils/audio_output.dart';
 import '../utils/video_input.dart';
-import '../widgets/message_widget.dart';
 import '../widgets/audio_visualizer.dart';
 import '../widgets/camera_previews.dart';
+import '../widgets/message_widget.dart';
 
 // ============================================================================
 // MEDIA MANAGER
@@ -257,12 +258,12 @@ class BidiSessionController extends ChangeNotifier {
 
     _liveModel = useVertexBackend
         ? FirebaseAI.agentPlatform().liveGenerativeModel(
-            model: 'gemini-live-2.5-flash-preview-native-audio-09-2025',
+            model: ExampleModels.liveAgentPlatform,
             liveGenerationConfig: config,
             tools: tools,
           )
         : FirebaseAI.googleAI().liveGenerativeModel(
-            model: 'gemini-2.5-flash-native-audio-preview-09-2025',
+            model: ExampleModels.liveGoogleAI,
             liveGenerationConfig: config,
             tools: tools,
           );

@@ -21,15 +21,18 @@ import 'package:flutter/material.dart';
 // Import after file is generated through flutterfire_cli.
 // import 'package:firebase_ai_example/firebase_options.dart';
 
+import 'constants.dart';
 import 'pages/bidi_page.dart';
+import 'pages/capabilities_page.dart';
 import 'pages/chat_page.dart';
 import 'pages/function_calling_page.dart';
-import 'pages/image_generation_page.dart';
-import 'pages/capabilities_page.dart';
-import 'pages/server_template_page.dart';
 import 'pages/grounding_page.dart';
+import 'pages/image_generation_page.dart';
 import 'pages/integration_test_page.dart';
+import 'pages/server_template_page.dart';
 import 'pages/tts_page.dart';
+
+export 'constants.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -72,10 +75,10 @@ class _GenerativeAISampleState extends State<GenerativeAISample> {
       final agentPlatformInstance =
           FirebaseAI.agentPlatform(location: 'global');
       _currentModel =
-          agentPlatformInstance.generativeModel(model: 'gemini-3.5-flash-lite');
+          agentPlatformInstance.generativeModel(model: ExampleModels.flashLite);
     } else {
       final googleAI = FirebaseAI.googleAI();
-      _currentModel = googleAI.generativeModel(model: 'gemini-3.5-flash-lite');
+      _currentModel = googleAI.generativeModel(model: ExampleModels.flashLite);
     }
   }
 
