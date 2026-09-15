@@ -1215,6 +1215,8 @@ abstract class BaseGenerationConfig {
   ///
   /// This value must be between [1, 8], inclusive. If unset, this will default
   /// to 1.
+  @Deprecated(
+      'These parameters are unsupported in Gemini 3.x and later models.')
   final int? candidateCount;
 
   /// The maximum number of tokens to include in a candidate.
@@ -1229,6 +1231,8 @@ abstract class BaseGenerationConfig {
   ///
   /// Values can range from `[0.0, infinity]`, inclusive. A value temperature
   /// must be greater than 0.0.
+  @Deprecated(
+      'These parameters are unsupported in Gemini 3.x and later models.')
   final double? temperature;
 
   /// The maximum cumulative probability of tokens to consider when sampling.
@@ -1240,6 +1244,8 @@ abstract class BaseGenerationConfig {
   /// on the cumulative probability.
   ///
   /// Note: The default value varies by model.
+  @Deprecated(
+      'These parameters are unsupported in Gemini 3.x and later models.')
   final double? topP;
 
   /// The maximum number of tokens to consider when sampling.
@@ -1248,6 +1254,8 @@ abstract class BaseGenerationConfig {
   /// considers the set of `top_k` most probable tokens. Defaults to 40.
   ///
   /// Note: The default value varies by model.
+  @Deprecated(
+      'These parameters are unsupported in Gemini 3.x and later models.')
   final int? topK;
 
   /// The penalty for repeating the same words or phrases already generated in
@@ -1266,6 +1274,8 @@ abstract class BaseGenerationConfig {
   /// the model; see the
   /// [documentation](https://firebase.google.com/docs/vertex-ai/model-parameters?platform=flutter#configure-model-parameters-gemini)
   /// for more details.
+  @Deprecated(
+      'These parameters are unsupported in Gemini 3.x and later models.')
   final double? presencePenalty;
 
   /// The penalty for repeating words or phrases, with the penalty increasing
@@ -1283,6 +1293,8 @@ abstract class BaseGenerationConfig {
   /// the model; see the
   /// [documentation](https://firebase.google.com/docs/vertex-ai/model-parameters?platform=flutter#configure-model-parameters-gemini)
   /// for more details.
+  @Deprecated(
+      'These parameters are unsupported in Gemini 3.x and later models.')
   final double? frequencyPenalty;
 
   /// The list of desired response modalities.
