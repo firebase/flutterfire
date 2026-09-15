@@ -187,16 +187,13 @@ jobs:
   swift-integration-ios:
     needs: changes
     if: needs.changes.outputs.ios == 'true'
-    runs-on: macos-15
+    runs-on: xcode-27
     timeout-minutes: 35
     env:
       FLUTTER_DEPENDENCIES: "cloud_firestore firebase_remote_config cloud_functions firebase_database firebase_auth firebase_storage firebase_analytics firebase_messaging firebase_app_check firebase_in_app_messaging firebase_performance firebase_crashlytics firebase_ml_model_downloader firebase_app_installations firebase_ai"
       PR_HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-      - name: Xcode
-        # Firebase iOS SDK: minimum Xcode 26.2.
-        run: sudo xcode-select -s /Applications/Xcode_26.2.app/Contents/Developer
       - uses: ./.github/actions/setup-flutterfire
         with:
           node: 'false'
@@ -219,16 +216,13 @@ jobs:
   swift-integration-macos:
     needs: changes
     if: needs.changes.outputs.macos == 'true'
-    runs-on: macos-15
+    runs-on: xcode-27
     timeout-minutes: 35
     env:
       FLUTTER_DEPENDENCIES: "cloud_firestore firebase_remote_config cloud_functions firebase_database firebase_auth firebase_storage firebase_analytics firebase_messaging firebase_app_check firebase_in_app_messaging firebase_performance firebase_crashlytics firebase_ml_model_downloader firebase_app_installations firebase_ai"
       PR_HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-      - name: Xcode
-        # Firebase iOS SDK: minimum Xcode 26.2.
-        run: sudo xcode-select -s /Applications/Xcode_26.2.app/Contents/Developer
       - uses: ./.github/actions/setup-flutterfire
         with:
           node: 'false'

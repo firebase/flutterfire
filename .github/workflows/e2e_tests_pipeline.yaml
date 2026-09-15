@@ -165,13 +165,10 @@ jobs:
       github.event_name != 'pull_request' ||
       (github.event.pull_request.head.repo.full_name == github.repository &&
        github.actor != 'dependabot[bot]')
-    runs-on: macos-15
+    runs-on: xcode-27
     timeout-minutes: 50
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-      - name: Xcode
-        # Firebase iOS SDK: minimum Xcode 26.2.
-        run: sudo xcode-select -s /Applications/Xcode_26.2.app/Contents/Developer
       - uses: ./.github/actions/setup-flutterfire
         with:
           npm-cache: 'false'
@@ -209,8 +206,8 @@ jobs:
       - uses: futureware-tech/simulator-action@e89aa8f93d3aec35083ff49d2854d07f7186f7f5
         id: simulator
         with:
-          # https://github.com/actions/runner-images/blob/main/images/macos/macos-15-Readme.md#installed-simulators
-          model: "iPhone 16"
+          # https://github.com/actions/runner-images/blob/main/images/macos/xcode-27-arm64-Readme.md#installed-simulators
+          model: "iPhone 17"
       - name: Build iOS (simulator)
         working-directory: packages/cloud_firestore/cloud_firestore/pipeline_example
         # A cold SwiftPM fetch (grpc/abseil binaries) plus the Xcode build has
