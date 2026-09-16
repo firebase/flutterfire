@@ -20,25 +20,20 @@ sed -i '' 's/private static class PigeonCodec extends StandardMessageCodec {/pub
 
 echo "Android modification complete."
 
-# Fix iOS files
-FILE_NAME="../../cloud_firestore/ios/cloud_firestore/Sources/cloud_firestore/FirestoreMessages.g.m"
-sed -i '' '/#import "FirestoreMessages.g.h"/a\
-#import "FLTFirebaseFirestoreReader.h"\
-#import "FLTFirebaseFirestoreWriter.h"
-' $FILE_NAME
-# Pigeon 26 generates ObjC codec classes with a `null<FileName>PigeonCodec*` prefix when no
-# ObjcOptions prefix is configured. Rename them to stable, readable names first.
-sed -i '' 's/nullFirestoreMessagesPigeonCodecReaderWriter/FirebaseFirestoreHostApiCodecReaderWriter/g' $FILE_NAME
-sed -i '' 's/nullFirestoreMessagesPigeonCodecReader/FirebaseFirestoreHostApiCodecReader/g' $FILE_NAME
-sed -i '' 's/nullFirestoreMessagesPigeonCodecWriter/FirebaseFirestoreHostApiCodecWriter/g' $FILE_NAME
-# Rename the public codec getter from `nullGetFirestoreMessagesCodec` so the plugin can reuse
-# it on EventChannels without an awkward `null` prefix.
-sed -i '' 's/nullGetFirestoreMessagesCodec/GetFirebaseFirestoreHostApiCodec/g' $FILE_NAME
-sed -i '' 's/nullGetFirestoreMessagesCodec/GetFirebaseFirestoreHostApiCodec/g' ../../cloud_firestore/ios/cloud_firestore/Sources/cloud_firestore/include/cloud_firestore/Public/FirestoreMessages.g.h
-# Reparent the reader/writer onto our custom Firestore reader/writer so Firestore-specific
-# types (Timestamp, GeoPoint, FieldValue, DocumentReference, FieldPath, ...) round-trip.
-sed -i '' 's/@interface FirebaseFirestoreHostApiCodecReader : FlutterStandardReader/@interface FirebaseFirestoreHostApiCodecReader : FLTFirebaseFirestoreReader/' $FILE_NAME
-sed -i '' 's/@interface FirebaseFirestoreHostApiCodecWriter : FlutterStandardWriter/@interface FirebaseFirestoreHostApiCodecWriter : FLTFirebaseFirestoreWriter/' $FILE_NAME
+# Fix iOS Swift files.
+# Pigeon has no custom-codec hook, so reparent the generated reader/writer onto our
+# Firestore codec (Timestamp, GeoPoint, FieldValue, DocumentReference, ...) and expose
+# the ReaderWriter so EventChannels can reuse it.
+FILE_NAME="../../cloud_firestore/ios/cloud_firestore/Sources/cloud_firestore/FirestoreMessages.g.swift"
+sed -i '' 's/private class FirestoreMessagesPigeonCodecReader: FlutterStandardReader/class FirestoreMessagesPigeonCodecReader: FirebaseFirestoreReader/' "$FILE_NAME"
+sed -i '' 's/private class FirestoreMessagesPigeonCodecWriter: FlutterStandardWriter/class FirestoreMessagesPigeonCodecWriter: FirebaseFirestoreWriter/' "$FILE_NAME"
+sed -i '' 's/private class FirestoreMessagesPigeonCodecReaderWriter/class FirestoreMessagesPigeonCodecReaderWriter/' "$FILE_NAME"
+# `where` is a Swift keyword; Pigeon emits it as a property name on InternalQueryParameters.
+perl -i -pe 's/\bvar where:/var `where`:/g; s/\blet where:/let `where`:/g; s/\bwhere: where,/`where`: `where`,/g; s/\blhs\.where\b/lhs.`where`/g; s/\brhs\.where\b/rhs.`where`/g; s/value: where,/value: `where`,/g' "$FILE_NAME"
+# The toList() array entry is a bare `where,` on its own line.
+sed -i '' '/func toList()/,/^  }/{
+  s/^      where,$/      `where`,/
+}' "$FILE_NAME"
 
 echo "iOS modification complete."
 
