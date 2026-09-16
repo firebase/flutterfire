@@ -43,6 +43,10 @@ typedef NS_ENUM(UInt8, FirestoreDataType) {
   FirestoreDataTypeFirestoreQuery = 197,
   FirestoreDataTypeFirestoreSettings = 198,
   FirestoreDataTypeVectorValue = 199,
+  FirestoreDataTypeMinimumDouble = 200,
+  FirestoreDataTypeMinimumInteger = 201,
+  FirestoreDataTypeMaximumDouble = 202,
+  FirestoreDataTypeMaximumInteger = 203,
 };
 
 @interface FLTFirebaseFirestoreReaderWriter : FlutterStandardReaderWriter
