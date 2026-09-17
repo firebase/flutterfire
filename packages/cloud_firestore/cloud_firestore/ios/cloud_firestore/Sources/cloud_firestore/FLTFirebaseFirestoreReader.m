@@ -69,6 +69,14 @@
           [FIRFieldValue fieldValueForDoubleIncrement:((NSNumber *)[self readValue]).doubleValue];
     case FirestoreDataTypeIncrementInteger:
       return [FIRFieldValue fieldValueForIntegerIncrement:((NSNumber *)[self readValue]).intValue];
+    case FirestoreDataTypeMinimumDouble:
+      return [FIRFieldValue fieldValueForDoubleMinimum:((NSNumber *)[self readValue]).doubleValue];
+    case FirestoreDataTypeMinimumInteger:
+      return [FIRFieldValue fieldValueForIntegerMinimum:((NSNumber *)[self readValue]).intValue];
+    case FirestoreDataTypeMaximumDouble:
+      return [FIRFieldValue fieldValueForDoubleMaximum:((NSNumber *)[self readValue]).doubleValue];
+    case FirestoreDataTypeMaximumInteger:
+      return [FIRFieldValue fieldValueForIntegerMaximum:((NSNumber *)[self readValue]).intValue];
     case FirestoreDataTypeDocumentId:
       return [FIRFieldPath documentID];
     case FirestoreDataTypeFirestoreInstance:

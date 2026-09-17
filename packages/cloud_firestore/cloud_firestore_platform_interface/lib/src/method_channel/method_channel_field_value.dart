@@ -28,6 +28,18 @@ enum FieldValueType {
 
   ///  increment or decrement a numeric field value using an integer value
   incrementInteger,
+
+  ///  set a numeric field to the minimum of its current value and a double
+  minimumDouble,
+
+  ///  set a numeric field to the minimum of its current value and an integer
+  minimumInteger,
+
+  ///  set a numeric field to the maximum of its current value and a double
+  maximumDouble,
+
+  ///  set a numeric field to the maximum of its current value and an integer
+  maximumInteger,
 }
 
 /// Default, `MethodChannel`-based delegate for a [FieldValuePlatform].

@@ -76,4 +76,22 @@ abstract class FieldValueFactoryPlatform extends PlatformInterface {
   dynamic increment(num value) {
     throw UnimplementedError('increment() is not implemented');
   }
+
+  /// Returns a special value for use with set() or update() that tells the
+  /// server to set the field to the minimum of its current value and [value].
+  ///
+  /// If the current field value is not an integer or double, or if the field
+  /// does not yet exist, the transformation sets the field to [value].
+  dynamic minimum(num value) {
+    throw UnimplementedError('minimum() is not implemented');
+  }
+
+  /// Returns a special value for use with set() or update() that tells the
+  /// server to set the field to the maximum of its current value and [value].
+  ///
+  /// If the current field value is not an integer or double, or if the field
+  /// does not yet exist, the transformation sets the field to [value].
+  dynamic maximum(num value) {
+    throw UnimplementedError('maximum() is not implemented');
+  }
 }
