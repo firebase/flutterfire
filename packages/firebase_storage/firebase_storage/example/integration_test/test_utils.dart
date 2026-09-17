@@ -100,13 +100,13 @@ Future<FirebaseApp> testInitializeSecondaryApp({
       (defaultTargetPlatform == TargetPlatform.macOS ||
           defaultTargetPlatform == TargetPlatform.iOS ||
           defaultTargetPlatform == TargetPlatform.windows)) {
+    final nativeOptions = Firebase.app().options;
     testAppOptions = FirebaseOptions(
-      appId: DefaultFirebaseOptions.currentPlatform.appId,
-      apiKey: DefaultFirebaseOptions.currentPlatform.apiKey,
-      projectId: DefaultFirebaseOptions.currentPlatform.projectId,
-      messagingSenderId:
-          DefaultFirebaseOptions.currentPlatform.messagingSenderId,
-      iosBundleId: DefaultFirebaseOptions.currentPlatform.iosBundleId,
+      appId: nativeOptions.appId,
+      apiKey: nativeOptions.apiKey,
+      projectId: nativeOptions.projectId,
+      messagingSenderId: nativeOptions.messagingSenderId,
+      iosBundleId: nativeOptions.iosBundleId,
       storageBucket: withDefaultBucket ? kTestStorageBucket : null,
     );
   } else {

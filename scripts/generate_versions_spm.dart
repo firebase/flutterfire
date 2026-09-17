@@ -79,7 +79,7 @@ void updatePluginPackageSwiftVersions(
 
       // Update firebaseSdkVersion (matches Package.swift naming).
       content = content.replaceAll(
-        RegExp(r'let firebaseSdkVersion: Version = "[^"]+"'),
+        RegExp('let firebaseSdkVersion: Version = "[^"]+"'),
         'let firebaseSdkVersion: Version = "$firebaseiOSVersion"',
       );
 
@@ -91,11 +91,11 @@ void updatePluginPackageSwiftVersions(
         if (version != null) {
           final spmVersion = version.replaceAll('+', '-');
           content = content.replaceAll(
-            RegExp(r'let libraryVersionString = "[^"]+"'),
+            RegExp('let libraryVersionString = "[^"]+"'),
             'let libraryVersionString = "$spmVersion"',
           );
           content = content.replaceAll(
-            RegExp(r'let libraryVersion = "[^"]+"'),
+            RegExp('let libraryVersion = "[^"]+"'),
             'let libraryVersion = "$spmVersion"',
           );
         }
@@ -118,6 +118,7 @@ void updateLibraryVersionPureSwiftPlugins() {
     'firebase_in_app_messaging',
     'firebase_crashlytics',
     'firebase_core',
+    'firebase_storage',
   ];
 
   for (final package in packages) {
