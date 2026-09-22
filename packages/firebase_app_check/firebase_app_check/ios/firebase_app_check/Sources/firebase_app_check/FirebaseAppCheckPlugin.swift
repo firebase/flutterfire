@@ -242,7 +242,7 @@ public class FirebaseAppCheckPlugin: NSObject, FlutterPlugin,
   }
 
   public func firebaseLibraryName() -> String {
-    "flutter-fire-appcheck"
+    "flutter-fire-app-check"
   }
 
   public func firebaseLibraryVersion() -> String {
