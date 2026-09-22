@@ -118,6 +118,7 @@ void updateLibraryVersionPureSwiftPlugins() {
     'firebase_in_app_messaging',
     'firebase_crashlytics',
     'firebase_core',
+    'firebase_ai',
   ];
 
   for (final package in packages) {
