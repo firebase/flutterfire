@@ -45,11 +45,10 @@ firebase_storage/example$ cat cors.json
 ]
 ```
 
-And then, with `gsutil`:
+And then, with `gcloud storage`:
 
 ```
 firebase_storage/example$ gcloud storage buckets update gs://my-example-bucket.appspot.com --cors-file=cors.json
-Setting CORS on gs://my-example-bucket.appspot.com/...
 ```
 
 For much, much more information about CORS in Google Cloud Platform, see:

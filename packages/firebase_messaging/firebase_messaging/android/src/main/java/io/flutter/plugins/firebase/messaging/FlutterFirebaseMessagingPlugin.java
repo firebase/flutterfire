@@ -124,7 +124,9 @@ public class FlutterFirebaseMessagingPlugin
         // The notification tap created this Activity, so the Messaging SDK has already logged
         // `notification_open` from FcmLifecycleCallbacks#onActivityCreated. Handle the intent
         // without logging it a second time.
-        handleNotificationIntent(mainActivity.getIntent());
+        // Terminated launch: getInitialMessage() owns this tap. Do not also fire
+        // onMessageOpenedApp (firebase/flutterfire#18661).
+        handleNotificationIntent(mainActivity.getIntent(), /* shouldNotifyStream= */ false);
       }
     }
   }
@@ -630,7 +632,8 @@ public class FlutterFirebaseMessagingPlugin
     // FcmLifecycleCallbacks#onActivityCreated for this intent and `notification_open` was not
     // logged. Log it here before handling the intent.
     logNotificationOpen(intent);
-    return handleNotificationIntent(intent);
+    // Background resume: onMessageOpenedApp owns this tap.
+    return handleNotificationIntent(intent, /* shouldNotifyStream= */ true);
   }
 
   /**
@@ -700,7 +703,17 @@ public class FlutterFirebaseMessagingPlugin
     return messageId;
   }
 
-  private boolean handleNotificationIntent(@NonNull Intent intent) {
+  /**
+   * Handles a notification-tap intent.
+   *
+   * <p>{@code shouldNotifyStream} is {@code false} when the tap created this Activity (terminated
+   * launch). In that case the message is stored for {@code getInitialMessage()} only, matching iOS
+   * and the Dart API docs. It is {@code true} when the Activity already existed ({@link
+   * #onNewIntent}), which is a resume from background and should fire {@code onMessageOpenedApp}.
+   *
+   * @see <a href="https://github.com/firebase/flutterfire/issues/18661">#18661</a>
+   */
+  private boolean handleNotificationIntent(@NonNull Intent intent, boolean shouldNotifyStream) {
     if (intent.getExtras() == null) {
       return false;
     }
@@ -740,7 +753,10 @@ public class FlutterFirebaseMessagingPlugin
       message.put("notification", initialMessageNotification);
     }
 
-    channel.invokeMethod("Messaging#onMessageOpenedApp", message);
+    // On a terminated launch, getInitialMessage() owns this message.
+    if (shouldNotifyStream) {
+      channel.invokeMethod("Messaging#onMessageOpenedApp", message);
+    }
     mainActivity.setIntent(intent);
     return true;
   }

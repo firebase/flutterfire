@@ -1,3 +1,10 @@
+## 16.7.0
+
+ - **FIX**(messaging,ios): register for APNs after Dart Firebase.initializeApp() ([#18650](https://github.com/firebase/flutterfire/issues/18650)). ([2ea8381a](https://github.com/firebase/flutterfire/commit/2ea8381a1ada9fa6946c87fc0d203f94f04c6212))
+ - **FIX**(messaging,android): skip onMessageOpenedApp for terminated notification taps ([#18663](https://github.com/firebase/flutterfire/issues/18663)). ([a57837ef](https://github.com/firebase/flutterfire/commit/a57837ef40f73f0187b45125ecc0d81811b71bd9))
+ - **FIX**(messaging,ios): register for APNs when UIScene plugins miss launch callbacks ([#18620](https://github.com/firebase/flutterfire/issues/18620)). ([2fd8aa88](https://github.com/firebase/flutterfire/commit/2fd8aa886fcd7faf281ca5a7645ddaebabc3cb7a))
+ - **FEAT**(core): bump Firebase iOS SDK to 12.19.0 ([#18683](https://github.com/firebase/flutterfire/issues/18683)). ([35e39637](https://github.com/firebase/flutterfire/commit/35e39637f4cbef0d70043047f80d6f6e80daf8fe))
+
 ## 16.6.0
 
  - **FIX**(ci): bump Kotlin Gradle plugin to 2.3.0 ([#18600](https://github.com/firebase/flutterfire/issues/18600)). ([4c3865e2](https://github.com/firebase/flutterfire/commit/4c3865e2e56bf59904a9f48a6e70f0f963df2cda))

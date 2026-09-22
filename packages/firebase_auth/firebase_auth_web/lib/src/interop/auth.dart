@@ -330,6 +330,23 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// Currently signed-in [User].
   User? get currentUser => User.getInstance(jsObject.currentUser);
 
+  /// Origin this Auth instance is connected to, or `null` when using production.
+  ///
+  /// Matches the string passed to [useAuthEmulator], e.g. `http://localhost:9099`.
+  String? get emulatorOrigin {
+    final config = jsObject.emulatorConfig;
+    if (config == null) {
+      return null;
+    }
+    final protocol = config.protocol.toDart;
+    final host = config.host.toDart;
+    final port = config.port;
+    if (port == null) {
+      return '$protocol://$host';
+    }
+    return '$protocol://$host:${port.toDartInt}';
+  }
+
   // Returns the current tenantId for the instance.
   String? get tenantId {
     return jsObject.tenantId?.toDart;
