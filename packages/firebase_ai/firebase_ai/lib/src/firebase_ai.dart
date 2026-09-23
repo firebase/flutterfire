@@ -23,7 +23,6 @@ import 'package:meta/meta.dart';
 import '../firebase_ai.dart';
 import 'base_model.dart';
 
-const _defaultVertexAILocation = 'us-central1';
 const _defaultAgentPlatformLocation = 'global';
 
 /// The entrypoint for generative models.
