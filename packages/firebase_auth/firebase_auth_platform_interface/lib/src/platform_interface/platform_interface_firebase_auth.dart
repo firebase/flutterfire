@@ -241,9 +241,6 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// - **network-request-failed**:
   ///  - Thrown if there was a network request error, for example the user
   ///    doesn't have internet connection
-  /// - **operation-not-allowed**:
-  ///  - Thrown if email/password accounts are not enabled. Enable
-  ///    email/password accounts in the Firebase Console, under the Auth tab.
   Future<UserCredentialPlatform> createUserWithEmailAndPassword(
     String email,
     String password,
@@ -555,8 +552,8 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   ///    [email enumeration protection](https://cloud.google.com/identity-platform/docs/admin/email-enumeration-protection)
   ///    enabled (the default since September 2023), this replaces
   ///    **user-not-found** and **wrong-password** to prevent revealing
-  ///    whether an account exists. On the Firebase emulator, the code may
-  ///    appear as **INVALID_LOGIN_CREDENTIALS**.
+  ///    whether an account exists. Older versions of the native SDKs
+  ///    reported **invalid-login-credentials** instead.
   /// - **operation-not-allowed**:
   ///  - Thrown if email/password accounts are not enabled. Enable
   ///    email/password accounts in the Firebase Console, under the Auth tab.
