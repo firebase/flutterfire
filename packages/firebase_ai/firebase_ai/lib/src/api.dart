@@ -22,21 +22,12 @@ import 'tool.dart' show Tool, ToolConfig;
 /// Response for Count Tokens
 final class CountTokensResponse {
   // ignore: public_member_api_docs
-  CountTokensResponse(this.totalTokens,
-      {this.totalBillableCharacters, this.promptTokensDetails});
+  CountTokensResponse(this.totalTokens, {this.promptTokensDetails});
 
   /// The number of tokens that the `model` tokenizes the `prompt` into.
   ///
   /// Always non-negative.
   final int totalTokens;
-
-  /// The number of characters that the `model` could bill at.
-  ///
-  /// Always non-negative.
-  @Deprecated(
-    'Use `totalTokens` instead; Gemini 2.0 series models and newer are always billed by token count.',
-  )
-  final int? totalBillableCharacters;
 
   /// List of modalities that were processed in the request input.
   final List<ModalityTokenCount>? promptTokensDetails;
@@ -447,12 +438,6 @@ final class GroundingMetadata {
   /// Each chunk represents a piece of retrieved content (e.g., from a web
   /// page) that the model used to ground its response.
   final List<GroundingChunk> groundingChunks;
-
-  /// A list of [GroundingSupport]s.
-  ///
-  /// Keeping for backwards compatibility. See b/477107542.
-  @Deprecated('Use groundingSupports instead')
-  List<GroundingSupport> get groundingSupport => groundingSupports;
 
   /// A list of [GroundingSupport]s.
   ///
@@ -1129,19 +1114,6 @@ enum ThinkingLevel {
 
 /// Config for thinking features.
 class ThinkingConfig {
-  /// Deprecated public constructor of [ThinkingConfig].
-  ///
-  /// Keep for backwards compatibility.
-  /// [thinkingBudget] and [thinkingLevel] cannot be set at the same time.
-  @Deprecated(
-      'Use ThinkingConfig.withThinkingBudget() or ThinkingConfig.withThinkingLevel() instead.')
-  ThinkingConfig(
-      {this.thinkingBudget, this.thinkingLevel, this.includeThoughts})
-      : assert(
-          !(thinkingBudget != null && thinkingLevel != null),
-          'thinkingBudget and thinkingLevel cannot be set at the same time.',
-        );
-
   // Private constructor
   ThinkingConfig._(
       {this.thinkingBudget, this.thinkingLevel, this.includeThoughts});
@@ -1540,11 +1512,6 @@ final class AgentPlatformSerialization implements SerializationStrategy {
     }
 
     final totalTokens = jsonObject['totalTokens'] as int;
-    final totalBillableCharacters = switch (jsonObject) {
-      {'totalBillableCharacters': final int totalBillableCharacters} =>
-        totalBillableCharacters,
-      _ => null,
-    };
     final promptTokensDetails = switch (jsonObject) {
       {'promptTokensDetails': final List<Object?> promptTokensDetails} =>
         promptTokensDetails.map(_parseModalityTokenCount).toList(),
@@ -1553,7 +1520,6 @@ final class AgentPlatformSerialization implements SerializationStrategy {
 
     return CountTokensResponse(
       totalTokens,
-      totalBillableCharacters: totalBillableCharacters,
       promptTokensDetails: promptTokensDetails,
     );
   }

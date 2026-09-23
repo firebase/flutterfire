@@ -535,7 +535,7 @@ void main() {
 
     test('GenerationConfig toJson with all fields', () {
       final schema = Schema.object(properties: {});
-      final thinkingConfig = ThinkingConfig(thinkingBudget: 100);
+      final thinkingConfig = ThinkingConfig.withThinkingBudget(100);
       const imageConfig = ImageConfig(
           aspectRatio: ImageAspectRatio.square1x1, imageSize: ImageSize.size1K);
       final config = GenerationConfig(
@@ -629,7 +629,7 @@ void main() {
 
   group('ThinkingConfig', () {
     test('toJson with thinkingBudget set', () {
-      final config = ThinkingConfig(thinkingBudget: 123);
+      final config = ThinkingConfig.withThinkingBudget(123);
 
       expect(config.toJson(), {'thinkingBudget': 123});
     });
@@ -643,13 +643,14 @@ void main() {
     });
 
     test('toJson with includeThoughts set', () {
-      final config = ThinkingConfig(includeThoughts: true);
+      final config =
+          ThinkingConfig.withThinkingBudget(null, includeThoughts: true);
 
       expect(config.toJson(), {'includeThoughts': true});
     });
 
     test('toJson with thinkingBudget and thinkingLevel null', () {
-      final config = ThinkingConfig();
+      final config = ThinkingConfig.withThinkingBudget(null);
 
       // Expecting the key to be absent or the value to be explicitly null,
       // depending on implementation. Current implementation omits the key.
@@ -657,7 +658,7 @@ void main() {
     });
 
     test('constructor initializes thinkingBudget', () {
-      final config = ThinkingConfig(thinkingBudget: 456);
+      final config = ThinkingConfig.withThinkingBudget(456);
 
       expect(config.thinkingBudget, 456);
       expect(config.thinkingLevel, isNull);
@@ -665,7 +666,7 @@ void main() {
     });
 
     test('constructor initializes thinkingLevel', () {
-      final config = ThinkingConfig(thinkingLevel: ThinkingLevel.low);
+      final config = ThinkingConfig.withThinkingLevel(ThinkingLevel.low);
 
       expect(config.thinkingBudget, isNull);
       expect(config.thinkingLevel, ThinkingLevel.low);
@@ -673,7 +674,8 @@ void main() {
     });
 
     test('constructor initializes includeThoughts', () {
-      final config = ThinkingConfig(includeThoughts: true);
+      final config =
+          ThinkingConfig.withThinkingLevel(null, includeThoughts: true);
 
       expect(config.thinkingBudget, isNull);
       expect(config.thinkingLevel, isNull);
@@ -696,15 +698,6 @@ void main() {
       expect(config.thinkingBudget, isNull);
       expect(config.thinkingLevel, ThinkingLevel.medium);
       expect(config.includeThoughts, isTrue);
-    });
-
-    test(
-        'deprecated constructor throws AssertionError if both thinkingBudget and thinkingLevel are provided',
-        () {
-      expect(
-          () => ThinkingConfig(
-              thinkingBudget: 100, thinkingLevel: ThinkingLevel.high),
-          throwsA(isA<AssertionError>()));
     });
   });
 

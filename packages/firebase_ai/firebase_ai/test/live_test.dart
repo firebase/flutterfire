@@ -201,27 +201,6 @@ void main() {
       expect(message2.functionIds, null);
     });
 
-    test('LiveClientRealtimeInput toJson() returns correct JSON', () {
-      final part = InlineDataPart('audio/pcm', Uint8List.fromList([1, 2, 3]));
-      // ignore: deprecated_member_use_from_same_package
-      final message = LiveClientRealtimeInput(mediaChunks: [part]);
-      expect(message.toJson(), {
-        'realtime_input': {
-          'media_chunks': [
-            {
-              'mimeType': 'audio/pcm',
-              'data': 'AQID',
-            }
-          ],
-        },
-      });
-
-      final message2 = LiveClientRealtimeInput();
-      expect(message2.toJson(), {
-        'realtime_input': {},
-      });
-    });
-
     test('LiveClientContent toJson() returns correct JSON', () {
       final content = Content.text('some test input');
       final message = LiveClientContent(turns: [content], turnComplete: true);

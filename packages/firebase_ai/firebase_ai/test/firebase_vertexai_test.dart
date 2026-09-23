@@ -132,16 +132,16 @@ void main() {
       // ignore: deprecated_member_use_from_same_package
       test('Singleton behavior', () {
         // ignore: deprecated_member_use_from_same_package
-        final instance1 = FirebaseAI.vertexAI();
+        final instance1 = FirebaseAI.agentPlatform();
         // ignore: deprecated_member_use_from_same_package
-        final instance2 = FirebaseAI.vertexAI(app: app);
+        final instance2 = FirebaseAI.agentPlatform(app: app);
         expect(identical(instance1, instance2), isTrue);
       });
 
       // ignore: deprecated_member_use_from_same_package
       test('Instance creation with defaults', () {
         // ignore: deprecated_member_use_from_same_package
-        final vertexAI = FirebaseAI.vertexAI(app: app);
+        final vertexAI = FirebaseAI.agentPlatform(app: app);
         expect(vertexAI.app, equals(app));
         expect(vertexAI.location, equals('us-central1'));
       });
@@ -149,10 +149,8 @@ void main() {
       // ignore: deprecated_member_use_from_same_package
       test('Instance creation with custom', () {
         // ignore: deprecated_member_use_from_same_package
-        final vertexAI = FirebaseAI.vertexAI(
-            app: customApp,
-            appCheck: customAppCheck,
-            location: 'custom-location');
+        final vertexAI = FirebaseAI.agentPlatform(
+            app: customApp, location: 'custom-location');
         expect(vertexAI.app, equals(customApp));
         expect(vertexAI.appCheck, equals(customAppCheck));
         expect(vertexAI.location, equals('custom-location'));
@@ -161,7 +159,7 @@ void main() {
       // ignore: deprecated_member_use_from_same_package
       test('generativeModel creation', () {
         // ignore: deprecated_member_use_from_same_package
-        final vertexAI = FirebaseAI.vertexAI();
+        final vertexAI = FirebaseAI.agentPlatform();
 
         final model = vertexAI.generativeModel(
           model: 'gemini-pro',
@@ -175,9 +173,8 @@ void main() {
       // ignore: deprecated_member_use_from_same_package
       test('Instance creation with useLimitedUseAppCheckTokens', () {
         // ignore: deprecated_member_use_from_same_package
-        final vertexAIAppCheck = FirebaseAI.vertexAI(
+        final vertexAIAppCheck = FirebaseAI.agentPlatform(
           app: limitTokenApp,
-          appCheck: limitTokenAppCheck,
           location: 'limit-token-location',
           useLimitedUseAppCheckTokens: true,
         );
@@ -190,7 +187,7 @@ void main() {
       // ignore: deprecated_member_use_from_same_package
       test('Instance creation with auto-injected AppCheck', () {
         // ignore: deprecated_member_use_from_same_package
-        final vertexAI = FirebaseAI.vertexAI(app: customApp);
+        final vertexAI = FirebaseAI.agentPlatform(app: customApp);
 
         expect(vertexAI.app, equals(customApp));
         expect(vertexAI.appCheck, equals(customAppCheck));
@@ -199,7 +196,7 @@ void main() {
       // ignore: deprecated_member_use_from_same_package
       test('Instance creation with auto-injected Auth', () {
         // ignore: deprecated_member_use_from_same_package
-        final vertexAI = FirebaseAI.vertexAI(app: customApp);
+        final vertexAI = FirebaseAI.agentPlatform(app: customApp);
 
         expect(vertexAI.app, equals(customApp));
         expect(vertexAI.auth, equals(customAuth));
