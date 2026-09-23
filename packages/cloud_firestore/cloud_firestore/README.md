@@ -67,11 +67,6 @@ Realtime listeners (`snapshots()`) must also be attached on the main isolate.
 If you need background work per event, map each event to plain data first, then
 offload processing.
 
-### Related issues
-
-- [#3124](https://github.com/firebase/flutterfire/issues/3124)
-- [#4129](https://github.com/firebase/flutterfire/issues/4129)
-- [#4846](https://github.com/firebase/flutterfire/issues/4846)
 
 ## Issues and feedback
 
