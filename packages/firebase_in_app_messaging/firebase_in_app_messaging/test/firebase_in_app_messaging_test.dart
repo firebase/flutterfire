@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:async';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/test.dart';
 import 'package:firebase_in_app_messaging/firebase_in_app_messaging.dart';
@@ -63,6 +65,85 @@ void main() {
       await fiam.setAutomaticDataCollectionEnabled(false);
       verify(mockFiam.setAutomaticDataCollectionEnabled(false));
     });
+
+    test('onMessageClicked', () async {
+      final controller = StreamController<InAppMessagingClickEvent>();
+      addTearDown(controller.close);
+      when(mockFiam.onMessageClicked).thenAnswer((_) => controller.stream);
+
+      const event = InAppMessagingClickEvent(
+        campaignMetadata: InAppMessagingCampaignMetadata(
+          campaignId: 'campaign-id',
+          campaignName: 'campaign-name',
+          isTestMessage: false,
+        ),
+        action: InAppMessagingAction(actionUrl: 'https://example.com'),
+      );
+
+      final emitted = fiam.onMessageClicked.first;
+      controller.add(event);
+
+      expect(await emitted, event);
+    });
+
+    test('onMessageImpression', () async {
+      final controller = StreamController<InAppMessagingImpressionEvent>();
+      addTearDown(controller.close);
+      when(mockFiam.onMessageImpression).thenAnswer((_) => controller.stream);
+
+      const event = InAppMessagingImpressionEvent(
+        campaignMetadata: InAppMessagingCampaignMetadata(
+          campaignId: 'campaign-id',
+          campaignName: 'campaign-name',
+          isTestMessage: false,
+        ),
+      );
+
+      final emitted = fiam.onMessageImpression.first;
+      controller.add(event);
+
+      expect(await emitted, event);
+    });
+
+    test('onMessageDismissed', () async {
+      final controller = StreamController<InAppMessagingDismissEvent>();
+      addTearDown(controller.close);
+      when(mockFiam.onMessageDismissed).thenAnswer((_) => controller.stream);
+
+      const event = InAppMessagingDismissEvent(
+        campaignMetadata: InAppMessagingCampaignMetadata(
+          campaignId: 'campaign-id',
+          campaignName: 'campaign-name',
+          isTestMessage: false,
+        ),
+        dismissType: InAppMessagingDismissType.swipe,
+      );
+
+      final emitted = fiam.onMessageDismissed.first;
+      controller.add(event);
+
+      expect(await emitted, event);
+    });
+
+    test('onMessageDisplayError', () async {
+      final controller = StreamController<InAppMessagingDisplayErrorEvent>();
+      addTearDown(controller.close);
+      when(mockFiam.onMessageDisplayError).thenAnswer((_) => controller.stream);
+
+      const event = InAppMessagingDisplayErrorEvent(
+        campaignMetadata: InAppMessagingCampaignMetadata(
+          campaignId: 'campaign-id',
+          campaignName: 'campaign-name',
+          isTestMessage: false,
+        ),
+        errorMessage: 'IMAGE_FETCH_ERROR',
+      );
+
+      final emitted = fiam.onMessageDisplayError.first;
+      controller.add(event);
+
+      expect(await emitted, event);
+    });
   });
 }
 
@@ -111,6 +192,45 @@ class MockFirebaseInAppMessaging extends Mock
       Invocation.method(#triggerEvent, [eventName]),
       returnValue: Future<void>.value(),
       returnValueForMissingStub: Future<void>.value(),
+    );
+  }
+
+  @override
+  Stream<InAppMessagingClickEvent> get onMessageClicked {
+    return super.noSuchMethod(
+      Invocation.getter(#onMessageClicked),
+      returnValue: const Stream<InAppMessagingClickEvent>.empty(),
+      returnValueForMissingStub: const Stream<InAppMessagingClickEvent>.empty(),
+    );
+  }
+
+  @override
+  Stream<InAppMessagingImpressionEvent> get onMessageImpression {
+    return super.noSuchMethod(
+      Invocation.getter(#onMessageImpression),
+      returnValue: const Stream<InAppMessagingImpressionEvent>.empty(),
+      returnValueForMissingStub:
+          const Stream<InAppMessagingImpressionEvent>.empty(),
+    );
+  }
+
+  @override
+  Stream<InAppMessagingDismissEvent> get onMessageDismissed {
+    return super.noSuchMethod(
+      Invocation.getter(#onMessageDismissed),
+      returnValue: const Stream<InAppMessagingDismissEvent>.empty(),
+      returnValueForMissingStub:
+          const Stream<InAppMessagingDismissEvent>.empty(),
+    );
+  }
+
+  @override
+  Stream<InAppMessagingDisplayErrorEvent> get onMessageDisplayError {
+    return super.noSuchMethod(
+      Invocation.getter(#onMessageDisplayError),
+      returnValue: const Stream<InAppMessagingDisplayErrorEvent>.empty(),
+      returnValueForMissingStub:
+          const Stream<InAppMessagingDisplayErrorEvent>.empty(),
     );
   }
 }
