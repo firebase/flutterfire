@@ -812,10 +812,12 @@ void FirebaseAuthPlugin::SignInWithProvider(
     const InternalSignInProvider& sign_in_provider,
     std::function<void(ErrorOr<InternalUserCredential> reply)> result) {
   firebase::auth::Auth* firebaseAuth = GetAuthFromPigeon(app);
+  // Named local so we do not take the address of a temporary (MSVC C4238).
+  firebase::auth::FederatedOAuthProvider provider =
+      getProviderFromArguments(sign_in_provider);
 
   firebase::Future<firebase::auth::AuthResult> signInFuture =
-      firebaseAuth->SignInWithProvider(
-          &getProviderFromArguments(sign_in_provider));
+      firebaseAuth->SignInWithProvider(&provider);
 
   signInFuture.OnCompletion(
       [result](const firebase::Future<firebase::auth::AuthResult>&
@@ -1015,9 +1017,12 @@ void FirebaseAuthPlugin::LinkWithProvider(
     std::function<void(ErrorOr<InternalUserCredential> reply)> result) {
   firebase::auth::Auth* firebaseAuth = GetAuthFromPigeon(app);
   firebase::auth::User user = firebaseAuth->current_user();
+  // Named local so we do not take the address of a temporary (MSVC C4238).
+  firebase::auth::FederatedOAuthProvider provider =
+      getProviderFromArguments(sign_in_provider);
 
   firebase::Future<firebase::auth::AuthResult> future =
-      user.LinkWithProvider(&getProviderFromArguments(sign_in_provider));
+      user.LinkWithProvider(&provider);
 
   future.OnCompletion(
       [result](const firebase::Future<firebase::auth::AuthResult>&
@@ -1063,10 +1068,12 @@ void FirebaseAuthPlugin::ReauthenticateWithProvider(
     std::function<void(ErrorOr<InternalUserCredential> reply)> result) {
   firebase::auth::Auth* firebaseAuth = GetAuthFromPigeon(app);
   firebase::auth::User user = firebaseAuth->current_user();
+  // Named local so we do not take the address of a temporary (MSVC C4238).
+  firebase::auth::FederatedOAuthProvider provider =
+      getProviderFromArguments(sign_in_provider);
 
   firebase::Future<firebase::auth::AuthResult> future =
-      user.ReauthenticateWithProvider(
-          &getProviderFromArguments(sign_in_provider));
+      user.ReauthenticateWithProvider(&provider);
 
   future.OnCompletion(
       [result](const firebase::Future<firebase::auth::AuthResult>&
