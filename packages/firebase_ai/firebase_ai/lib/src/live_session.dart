@@ -323,50 +323,6 @@ class LiveSession {
     _ws.sink.add(clientJson);
   }
 
-  /// Sends realtime input (media chunks) to the server.
-  ///
-  /// [mediaChunks]: The list of media chunks to send.
-  @Deprecated(
-      'Use sendAudioRealtime, sendVideoRealtime, or sendTextRealtime instead')
-  Future<void> sendMediaChunks({
-    required List<InlineDataPart> mediaChunks,
-  }) async {
-    _checkWsStatus();
-    var clientMessage = LiveClientRealtimeInput(mediaChunks: mediaChunks);
-    var clientJson = jsonEncode(clientMessage.toJson());
-    _ws.sink.add(clientJson);
-  }
-
-  /// Starts streaming media chunks to the server from the provided [mediaChunkStream].
-  ///
-  /// This function asynchronously processes each [InlineDataPart] from the given
-  /// [mediaChunkStream] and sends it to the server via the WebSocket connection.
-  ///
-  /// Parameters:
-  /// - [mediaChunkStream]: The stream of [InlineDataPart] objects to send to the server.
-  @Deprecated('Use sendAudio, sendVideo, or sendText with a stream instead')
-  Future<void> sendMediaStream(Stream<InlineDataPart> mediaChunkStream) async {
-    _checkWsStatus();
-
-    try {
-      await for (final chunk in mediaChunkStream) {
-        await _sendMediaChunk(chunk);
-      }
-    } catch (e) {
-      throw FirebaseAISdkException(e.toString());
-    } finally {
-      log('Stream processing completed.');
-    }
-  }
-
-  Future<void> _sendMediaChunk(InlineDataPart chunk) async {
-    var clientMessage = LiveClientRealtimeInput(
-        // ignore: deprecated_member_use_from_same_package
-        mediaChunks: [chunk]); // Create a list with the single chunk
-    var clientJson = jsonEncode(clientMessage.toJson());
-    _ws.sink.add(clientJson);
-  }
-
   /// Receives messages from the server.
   ///
   /// Returns a [Stream] of [LiveServerResponse] objects representing the

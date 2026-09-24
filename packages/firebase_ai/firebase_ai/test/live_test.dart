@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:firebase_ai/src/api.dart';
 import 'package:firebase_ai/src/content.dart';
@@ -199,27 +198,6 @@ void main() {
 
       final message2 = LiveServerToolCallCancellation();
       expect(message2.functionIds, null);
-    });
-
-    test('LiveClientRealtimeInput toJson() returns correct JSON', () {
-      final part = InlineDataPart('audio/pcm', Uint8List.fromList([1, 2, 3]));
-      // ignore: deprecated_member_use_from_same_package
-      final message = LiveClientRealtimeInput(mediaChunks: [part]);
-      expect(message.toJson(), {
-        'realtime_input': {
-          'media_chunks': [
-            {
-              'mimeType': 'audio/pcm',
-              'data': 'AQID',
-            }
-          ],
-        },
-      });
-
-      final message2 = LiveClientRealtimeInput();
-      expect(message2.toJson(), {
-        'realtime_input': {},
-      });
     });
 
     test('LiveClientContent toJson() returns correct JSON', () {
