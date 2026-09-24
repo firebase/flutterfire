@@ -54,22 +54,14 @@ bool _registered = false;
 void registerWebLibraryVersion(String libraryName, String version) {
   if (_registered) return;
   try {
-    final firebaseCore =
-        globalContext.getProperty('firebase_core'.toJS) as JSObject?;
-    if (firebaseCore != null &&
-        firebaseCore.hasProperty('registerVersion'.toJS).toDart) {
-      final sessionStorage =
+    final core = globalContext.getProperty('firebase_core'.toJS) as JSObject?;
+    if (core != null && core.hasProperty('registerVersion'.toJS).toDart) {
+      final storage =
           globalContext.getProperty('sessionStorage'.toJS) as JSObject?;
-      final sessionKey = 'flutterfire-$libraryName-$version'.toJS;
-      final existing =
-          sessionStorage?.callMethod<JSAny?>('getItem'.toJS, sessionKey);
-      if (existing == null) {
-        sessionStorage?.callMethod<JSAny?>(
-          'setItem'.toJS,
-          sessionKey,
-          version.toJS,
-        );
-        firebaseCore.callMethod<JSAny?>(
+      final key = 'flutterfire-$libraryName-$version'.toJS;
+      if (storage?.callMethod<JSAny?>('getItem'.toJS, key) == null) {
+        storage?.callMethod<JSAny?>('setItem'.toJS, key, version.toJS);
+        core.callMethod<JSAny?>(
           'registerVersion'.toJS,
           libraryName.toJS,
           version.toJS,
@@ -77,7 +69,5 @@ void registerWebLibraryVersion(String libraryName, String version) {
       }
       _registered = true;
     }
-  } catch (_) {
-    // Ignore when running in unit test environments without firebase_core JS.
-  }
+  } catch (_) {}
 }
