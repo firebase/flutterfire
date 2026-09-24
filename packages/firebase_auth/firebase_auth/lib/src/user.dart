@@ -163,9 +163,9 @@ class User {
   ///    user, an `email` and `credential` ([AuthCredential]) fields are also
   ///    provided. You have to link the credential to the existing user with
   ///    that email if you wish to continue signing in with that credential. To
-  ///    do so, sign in to `email` via one of
-  ///    the providers returned and then [User.linkWithCredential] the original
-  ///    credential to that newly signed in user.
+  ///    do so, sign in to `email` with the provider the account already uses
+  ///    and then [User.linkWithCredential] the original credential to that
+  ///    newly signed in user.
   /// - **operation-not-allowed**:
   ///  - Thrown if you have not enabled the provider in the Firebase Console. Go
   ///    to the Firebase Console for your project, in the Auth section and the
@@ -173,10 +173,6 @@ class User {
   /// - **invalid-email**:
   ///  - Thrown if the email used in a [EmailAuthProvider.credential] is
   ///    invalid.
-  /// - **invalid-email**:
-  ///  - Thrown if the password used in a [EmailAuthProvider.credential] is not
-  ///    correct or when the user associated with the email does not have a
-  ///    password.
   /// - **invalid-verification-code**:
   ///  - Thrown if the credential is a [PhoneAuthProvider.credential] and the
   ///    verification code of the credential is not valid.
