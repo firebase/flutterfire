@@ -43,6 +43,9 @@ void main() {
       when(mockFiam.setAutomaticDataCollectionEnabled(any)).thenAnswer(
         (_) => Future<void>.value(),
       );
+      when(mockFiam.setCustomDisplayEnabled(any)).thenAnswer(
+        (_) => Future<void>.value(),
+      );
     });
 
     test('triggerEvent', () async {
@@ -144,6 +147,35 @@ void main() {
 
       expect(await emitted, event);
     });
+
+    test('setCustomDisplayEnabled', () async {
+      await fiam.setCustomDisplayEnabled(true);
+      verify(mockFiam.setCustomDisplayEnabled(true));
+    });
+
+    test('onMessageDisplay', () async {
+      final controller = StreamController<InAppMessage>();
+      addTearDown(controller.close);
+      when(mockFiam.onMessageDisplay).thenAnswer((_) => controller.stream);
+
+      final event = InAppMessage(
+        campaignMetadata: const InAppMessagingCampaignMetadata(
+          campaignId: 'campaign-id',
+          campaignName: 'campaign-name',
+          isTestMessage: false,
+        ),
+        messageType: InAppMessageType.modal,
+        onImpress: () async {},
+        onClick: (_) async {},
+        onDismiss: (_) async {},
+        onError: (_) async {},
+      );
+
+      final emitted = fiam.onMessageDisplay.first;
+      controller.add(event);
+
+      expect(await emitted, event);
+    });
   });
 }
 
@@ -231,6 +263,24 @@ class MockFirebaseInAppMessaging extends Mock
       returnValue: const Stream<InAppMessagingDisplayErrorEvent>.empty(),
       returnValueForMissingStub:
           const Stream<InAppMessagingDisplayErrorEvent>.empty(),
+    );
+  }
+
+  @override
+  Future<void> setCustomDisplayEnabled(bool? enabled) {
+    return super.noSuchMethod(
+      Invocation.method(#setCustomDisplayEnabled, [enabled]),
+      returnValue: Future<void>.value(),
+      returnValueForMissingStub: Future<void>.value(),
+    );
+  }
+
+  @override
+  Stream<InAppMessage> get onMessageDisplay {
+    return super.noSuchMethod(
+      Invocation.getter(#onMessageDisplay),
+      returnValue: const Stream<InAppMessage>.empty(),
+      returnValueForMissingStub: const Stream<InAppMessage>.empty(),
     );
   }
 }
