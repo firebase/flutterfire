@@ -196,7 +196,7 @@ You're all set! Your Flutter apps are registered and configured to use Firebase.
 
 Product                                          | Plugin name                    | iOS     | Android | Web     | Other Apple<br>(macOS, etc.) | Windows
 -------------------------------------------------|--------------------------------|---------|---------|---------|:--------------------------:|:-------:
-[{{firebase_vertexai}}][vertex ai docs]  <sup>1</sup> | `firebase_ai`             | {{YES}} | {{YES}} | {{YES}} | beta |
+[{{firebase_vertexai}}][vertex ai docs]  <sup>1</sup> | `firebase_ai`             | {{YES}} | {{YES}} | {{YES}} | beta | beta <sup>2</sup> |
 [{{analytics}}][analytics docs]                  | `firebase_analytics`           | {{YES}} | {{YES}} | {{YES}} | beta |
 [{{app_check}}][app check docs]                  | `firebase_app_check`           | {{YES}} | {{YES}} | {{YES}} | beta |
 [{{auth}}][auth docs]                            | `firebase_auth`                | {{YES}} | {{YES}} | {{YES}} | beta | beta
@@ -217,6 +217,13 @@ Product                                          | Plugin name                  
   <b>1</b> <em>{{firebase_vertexai}} was formerly called
   "{{vertex_ai_in_firebase}}" with the plugin
   <code>firebase_vertexai</code>.</em>
+</sup>
+
+<sup>
+  <b>2</b> <em>On Windows, <code>firebase_ai</code> sends no app-identity
+  headers, so an API key cannot be restricted to a Windows app. Windows has no
+  production App Check provider, so enforcing App Check for AI Logic rejects
+  production Windows clients. A debug token is for local development only.</em>
 </sup>
 
 Caution: Firebase on Windows is not intended for production use cases, only local development workflows.

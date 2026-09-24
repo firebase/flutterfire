@@ -32,11 +32,16 @@ void clearPlatformSecurityHeadersCache() {
 /// Each platform's native plugin returns the appropriate headers:
 /// - **Android**: `X-Android-Package` and `X-Android-Cert`
 /// - **iOS/macOS**: `x-ios-bundle-identifier`
-/// - **Web/other**: empty map (no plugin registered)
+/// - **Web and Windows**: an empty map. Windows has no app identity to send,
+///   so an API key cannot be restricted to a Windows app.
+///
+/// Platforms with no plugin (currently Linux) also get an empty map.
 ///
 /// Results are cached since platform identity does not change at runtime.
 Future<Map<String, String>> getPlatformSecurityHeaders() async {
-  if (kIsWeb) return const {};
+  if (kIsWeb || defaultTargetPlatform == TargetPlatform.windows) {
+    return const {};
+  }
   if (_cachedHeaders != null) return _cachedHeaders!;
 
   try {

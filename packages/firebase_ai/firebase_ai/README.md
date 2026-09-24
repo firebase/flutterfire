@@ -7,6 +7,23 @@ like Gemini and Imagen.
 
 To learn more about Firebase AI, please visit the [Firebase website](https://firebase.google.com/docs/ai-logic)
 
+## Supported platforms
+
+Android, iOS, macOS, web, and Windows.
+
+### Windows
+
+`firebase_ai` runs on Windows desktop. Generation requests are plain Dart HTTP.
+Windows does not send app-identity headers (`X-Android-Package`,
+`X-Android-Cert`, or `x-ios-bundle-identifier`), so an API key restricted to an
+Android app or an Apple bundle ID will not authorize a Windows client. Use a
+key that allows this client, the same way you would for web.
+
+Windows App Check only supports the debug provider, and that provider is for
+local development. There is no production attestation provider. If App Check is
+enforced for Firebase AI Logic, production Windows clients cannot obtain a
+valid token.
+
 ## Getting Started
 
 To get started with Firebase AI Logic Flutter, please [see the documentation](https://firebase.google.com/docs/ai-logic/get-started?platform=flutter).
