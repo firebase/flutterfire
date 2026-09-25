@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void runFieldValueTests() {
@@ -60,6 +61,75 @@ void runFieldValueTests() {
         DocumentSnapshot<Map<String, dynamic>> snapshot2 = await doc.get();
         expect(snapshot2.data()!['foo'], equals(1));
       });
+    });
+
+    group('FieldValue.minimum() / FieldValue.maximum()', () {
+      test(
+        'minimum sets the smaller of the current value and the operand',
+        () async {
+          DocumentReference<Map<String, dynamic>> doc =
+              await initializeTest('field-value-minimum-existing');
+          await doc.set({'foo': 80});
+          await doc.update({'foo': FieldValue.minimum(50)});
+          DocumentSnapshot<Map<String, dynamic>> snapshot = await doc.get();
+          expect(snapshot.data()!['foo'], equals(50));
+
+          await doc.update({'foo': FieldValue.minimum(100)});
+          snapshot = await doc.get();
+          expect(snapshot.data()!['foo'], equals(50));
+        },
+        skip: defaultTargetPlatform == TargetPlatform.windows
+            ? 'The Firebase C++ SDK does not expose FieldValue.minimum/maximum.'
+            : null,
+      );
+
+      test(
+        'maximum sets the larger of the current value and the operand',
+        () async {
+          DocumentReference<Map<String, dynamic>> doc =
+              await initializeTest('field-value-maximum-existing');
+          await doc.set({'foo': 80});
+          await doc.update({'foo': FieldValue.maximum(100)});
+          DocumentSnapshot<Map<String, dynamic>> snapshot = await doc.get();
+          expect(snapshot.data()!['foo'], equals(100));
+
+          await doc.update({'foo': FieldValue.maximum(50)});
+          snapshot = await doc.get();
+          expect(snapshot.data()!['foo'], equals(100));
+        },
+        skip: defaultTargetPlatform == TargetPlatform.windows
+            ? 'The Firebase C++ SDK does not expose FieldValue.minimum/maximum.'
+            : null,
+      );
+
+      test(
+        'minimum sets the operand when the field does not exist',
+        () async {
+          DocumentReference<Map<String, dynamic>> doc =
+              await initializeTest('field-value-minimum-not-exists');
+          await doc.set({'foo': FieldValue.minimum(50)});
+          DocumentSnapshot<Map<String, dynamic>> snapshot = await doc.get();
+          expect(snapshot.data()!['foo'], equals(50));
+        },
+        skip: defaultTargetPlatform == TargetPlatform.windows
+            ? 'The Firebase C++ SDK does not expose FieldValue.minimum/maximum.'
+            : null,
+      );
+
+      test(
+        'maximum replaces a non-numeric field with the operand',
+        () async {
+          DocumentReference<Map<String, dynamic>> doc =
+              await initializeTest('field-value-maximum-non-numeric');
+          await doc.set({'foo': 'bar'});
+          await doc.update({'foo': FieldValue.maximum(7)});
+          DocumentSnapshot<Map<String, dynamic>> snapshot = await doc.get();
+          expect(snapshot.data()!['foo'], equals(7));
+        },
+        skip: defaultTargetPlatform == TargetPlatform.windows
+            ? 'The Firebase C++ SDK does not expose FieldValue.minimum/maximum.'
+            : null,
+      );
     });
 
     group('FieldValue.serverTimestamp()', () {
