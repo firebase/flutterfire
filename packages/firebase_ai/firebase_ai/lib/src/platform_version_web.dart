@@ -15,42 +15,9 @@
 import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
 
-String? claimDataConnectWebSocketTransport(String key) {
-  final token =
-      '${DateTime.now().microsecondsSinceEpoch}-${identityHashCode(Object())}';
-  globalContext.setProperty(key.toJS, token.toJS);
-  return token;
-}
-
-bool isCurrentDataConnectWebSocketTransport(String key, String? token) {
-  if (token == null) {
-    return true;
-  }
-
-  final currentToken = globalContext.getProperty(key.toJS);
-  if (currentToken == null) {
-    return false;
-  }
-
-  try {
-    return (currentToken as JSString).toDart == token;
-  } catch (_) {
-    return false;
-  }
-}
-
-void releaseDataConnectWebSocketTransport(String key, String? token) {
-  if (token == null) {
-    return;
-  }
-
-  if (isCurrentDataConnectWebSocketTransport(key, token)) {
-    globalContext.delete(key.toJS);
-  }
-}
-
 bool _registered = false;
 
+/// Registers [libraryName] and [version] with the Firebase Web JS SDK.
 void registerWebLibraryVersion(String libraryName, String version) {
   if (_registered) return;
   try {

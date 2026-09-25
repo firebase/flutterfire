@@ -12,10 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-String? claimDataConnectWebSocketTransport(String key) => null;
+package io.flutter.plugins.firebase.ai
 
-bool isCurrentDataConnectWebSocketTransport(String key, String? token) => true;
+import androidx.annotation.Keep
+import com.google.firebase.components.Component
+import com.google.firebase.components.ComponentRegistrar
+import com.google.firebase.platforminfo.LibraryVersionComponent
 
-void releaseDataConnectWebSocketTransport(String key, String? token) {}
-
-void registerWebLibraryVersion(String libraryName, String version) {}
+@Keep
+class FlutterFirebaseAppRegistrar : ComponentRegistrar {
+  override fun getComponents(): List<Component<*>> {
+    return listOf(
+        LibraryVersionComponent.create(BuildConfig.LIBRARY_NAME, BuildConfig.LIBRARY_VERSION))
+  }
+}

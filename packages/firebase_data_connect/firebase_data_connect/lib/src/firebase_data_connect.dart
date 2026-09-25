@@ -20,11 +20,14 @@ import 'package:firebase_data_connect/src/common/common_library.dart';
 import 'package:firebase_data_connect/src/core/ref.dart';
 import 'package:flutter/foundation.dart';
 
+import './network/hot_restart_guard_stub.dart'
+    if (dart.library.js_interop) './network/hot_restart_guard_web.dart';
 import './network/rest_library.dart';
 import './network/transport_library.dart';
 
 import 'cache/cache_data_types.dart';
 import 'cache/cache.dart';
+import 'dataconnect_version.dart';
 
 /// DataConnect class
 class FirebaseDataConnect extends FirebasePlugin {
@@ -48,6 +51,7 @@ class FirebaseDataConnect extends FirebasePlugin {
           connectorConfig.serviceId,
         ),
         super(app.name, 'plugins.flutter.io/firebase_data_connect') {
+    registerWebLibraryVersion('flutter-fire-dc', packageVersion);
     _queryManager = QueryManager(this);
     if (sdkType != null) {
       _sdkType = sdkType;

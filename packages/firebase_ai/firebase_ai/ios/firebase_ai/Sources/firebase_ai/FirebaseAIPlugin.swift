@@ -32,6 +32,17 @@ public class FirebaseAIPlugin: NSObject, FlutterPlugin {
     )
     let instance = FirebaseAIPlugin()
     registrar.addMethodCallDelegate(instance, channel: channel)
+
+    let selector = NSSelectorFromString("registerLibrary:withVersion:")
+    if let firAppClass = NSClassFromString("FIRApp") as? NSObject.Type,
+      firAppClass.responds(to: selector)
+    {
+      _ = firAppClass.perform(
+        selector,
+        with: "flutter-fire-ai",
+        with: versionNumber
+      )
+    }
   }
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
