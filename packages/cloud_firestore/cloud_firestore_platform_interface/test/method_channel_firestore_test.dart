@@ -18,6 +18,28 @@ class _MockFirebaseFirestoreHostApi extends Mock
     implements TestFirebaseFirestoreHostApi {
   final Completer<void> storeResultCalled = Completer<void>();
   final Completer<void> releaseStoreResult = Completer<void>();
+  final Completer<String> snapshotObserverId = Completer<String>();
+
+  @override
+  Future<String> documentReferenceSnapshot(
+    FirestorePigeonFirebaseApp app,
+    DocumentReferenceRequest parameters,
+    bool includeMetadataChanges,
+    ListenSource source,
+  ) =>
+      snapshotObserverId.future;
+
+  @override
+  Future<String> querySnapshot(
+    FirestorePigeonFirebaseApp app,
+    String path,
+    bool isCollectionGroup,
+    InternalQueryParameters parameters,
+    InternalGetOptions options,
+    bool includeMetadataChanges,
+    ListenSource source,
+  ) =>
+      snapshotObserverId.future;
 
   @override
   Future<String> transactionCreate(
@@ -135,4 +157,75 @@ void main() {
       await Future<void>.delayed(Duration.zero);
     },
   );
+
+  group('snapshot listener cancelled while it registers', () {
+    const observerId = 'observer-id';
+    const channels = <String>[
+      'plugins.flutter.io/firebase_firestore/document/$observerId',
+      'plugins.flutter.io/firebase_firestore/query/$observerId',
+    ];
+    late List<String> eventChannelCalls;
+
+    setUp(() {
+      eventChannelCalls = <String>[];
+      for (final channel in channels) {
+        messenger.setMockMessageHandler(channel, (ByteData? message) async {
+          eventChannelCalls.add(codec.decodeMethodCall(message).method);
+          return codec.encodeSuccessEnvelope(null);
+        });
+      }
+    });
+
+    tearDown(() {
+      for (final channel in channels) {
+        messenger.setMockMessageHandler(channel, null);
+      }
+    });
+
+    Future<void> expectNoNativeListen(Stream<Object?> stream) async {
+      await stream.listen((_) {}).cancel();
+      hostApi.snapshotObserverId.complete(observerId);
+      await pumpEventQueue();
+      expect(eventChannelCalls, isEmpty);
+    }
+
+    late MethodChannelFirebaseFirestore firestore;
+
+    setUp(() {
+      firestore = MethodChannelFirebaseFirestore(
+        app: app,
+        databaseId: '(default)',
+      );
+    });
+
+    test('DocumentReference.snapshots() does not attach a native listener',
+        () async {
+      await expectNoNativeListen(
+        firestore
+            .doc('foo/bar')
+            .snapshots(listenSource: ListenSource.defaultSource),
+      );
+    });
+
+    test('Query.snapshots() does not attach a native listener', () async {
+      await expectNoNativeListen(
+        firestore
+            .collection('foo')
+            .snapshots(listenSource: ListenSource.defaultSource),
+      );
+    });
+
+    test('a listener that is not cancelled still attaches', () async {
+      final subscription = firestore
+          .doc('foo/bar')
+          .snapshots(listenSource: ListenSource.defaultSource)
+          .listen((_) {});
+      hostApi.snapshotObserverId.complete(observerId);
+      await pumpEventQueue();
+      expect(eventChannelCalls, <String>['listen']);
+      await subscription.cancel();
+      await pumpEventQueue();
+      expect(eventChannelCalls, <String>['listen', 'cancel']);
+    });
+  });
 }
