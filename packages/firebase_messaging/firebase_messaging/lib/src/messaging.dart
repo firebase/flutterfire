@@ -97,7 +97,7 @@ class FirebaseMessaging extends FirebasePlugin {
   /// Removes access to an FCM token previously authorized.
   ///
   /// Messages sent by the server to this token will fail.
-  @Deprecated('Use unregister() instead.')
+  @Deprecated('Use unregister() and onUnregistered instead.')
   Future<void> deleteToken() {
     return _delegate.deleteToken();
   }

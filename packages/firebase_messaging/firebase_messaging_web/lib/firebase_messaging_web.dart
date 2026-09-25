@@ -95,7 +95,7 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
   }
 
   @override
-  @Deprecated('Use unregister() instead.')
+  @Deprecated('Use unregister() and onUnregistered instead.')
   Future<void> deleteToken() async {
     _delegate;
 

@@ -160,7 +160,7 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   /// Removes access to an FCM token previously authorized with optional [senderId].
   ///
   /// Messages sent by the server to this token will fail.
-  @Deprecated('Use unregister() instead.')
+  @Deprecated('Use unregister() and onUnregistered instead.')
   Future<void> deleteToken() {
     throw UnimplementedError('deleteToken() is not implemented');
   }
