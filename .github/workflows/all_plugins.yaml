@@ -260,3 +260,19 @@ jobs:
         run: melos run test --no-select
       - name: 'Flutter Test - Web'
         run: melos run test:web --no-select
+
+  # Ruby, not Dart: crashlytics_add_upload_symbols_test.rb checks the generated
+  # Xcode Run Script. It only needs the xcodeproj gem, so it stays off the
+  # Flutter bootstrap used by the test job above.
+  crashlytics_upload_symbols:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - name: Run Crashlytics upload-symbols script test
+        env:
+          GEM_HOME: ${{ github.workspace }}/.gem
+        run: |
+          mkdir -p "$GEM_HOME"
+          gem install xcodeproj --no-document
+          ruby packages/firebase_crashlytics/firebase_crashlytics/ios/crashlytics_add_upload_symbols_test.rb
