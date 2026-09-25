@@ -42,3 +42,5 @@ flutter:
         pluginClass: FirebaseFunctionsPlugin
       web:
         default_package: cloud_functions_web
+      windows:
+        pluginClass: CloudFunctionsPluginCApi
