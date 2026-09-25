@@ -582,27 +582,40 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     [_channel invokeMethod:@"Messaging#onMessage" arguments:notificationDict];
   }
 
-  // Forward on to any other delegates amd allow them to control presentation behavior.
+  // When AppDelegate owns UNUserNotificationCenter, Flutter forwards this callback to every
+  // plugin with the same completion handler. The first call decides the banner. None suppresses
+  // every later plugin, including a local notification whose payload copied gcm.message_id.
+  // See #18699.
+  //
+  // Call the handler only when:
+  //   - another delegate was replaced and must receive the callback, or
+  //   - this plugin is the notification center delegate, so nobody else will answer, or
+  //   - Flutter forwarded a remote FCM notification (aps + gcm.message_id) and the app opted
+  //     into foreground presentation. Do not call the handler with None on a forwarded callback.
+  BOOL ownsNotificationCenter = (center.delegate == self);
+  BOOL isRemoteFCMNotification = (messageID != nil && userInfo[@"aps"] != nil);
+  UNNotificationPresentationOptions presentationOptions = UNNotificationPresentationOptionNone;
+  NSDictionary *persistedOptions = [[NSUserDefaults standardUserDefaults]
+      dictionaryForKey:kMessagingPresentationOptionsUserDefaults];
+  if (persistedOptions != nil) {
+    if ([persistedOptions[@"alert"] isEqual:@(YES)]) {
+      presentationOptions |= UNNotificationPresentationOptionAlert;
+    }
+    if ([persistedOptions[@"badge"] isEqual:@(YES)]) {
+      presentationOptions |= UNNotificationPresentationOptionBadge;
+    }
+    if ([persistedOptions[@"sound"] isEqual:@(YES)]) {
+      presentationOptions |= UNNotificationPresentationOptionSound;
+    }
+  }
   if (_originalNotificationCenterDelegate != nil &&
       _originalNotificationCenterDelegateRespondsTo.willPresentNotification) {
     [_originalNotificationCenterDelegate userNotificationCenter:center
                                         willPresentNotification:notification
                                           withCompletionHandler:completionHandler];
-  } else {
-    UNNotificationPresentationOptions presentationOptions = UNNotificationPresentationOptionNone;
-    NSDictionary *persistedOptions = [[NSUserDefaults standardUserDefaults]
-        dictionaryForKey:kMessagingPresentationOptionsUserDefaults];
-    if (persistedOptions != nil) {
-      if ([persistedOptions[@"alert"] isEqual:@(YES)]) {
-        presentationOptions |= UNNotificationPresentationOptionAlert;
-      }
-      if ([persistedOptions[@"badge"] isEqual:@(YES)]) {
-        presentationOptions |= UNNotificationPresentationOptionBadge;
-      }
-      if ([persistedOptions[@"sound"] isEqual:@(YES)]) {
-        presentationOptions |= UNNotificationPresentationOptionSound;
-      }
-    }
+  } else if (ownsNotificationCenter ||
+             (isRemoteFCMNotification &&
+              presentationOptions != UNNotificationPresentationOptionNone)) {
     completionHandler(presentationOptions);
   }
 
@@ -648,13 +661,18 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     [_channel invokeMethod:@"Messaging#onMessageOpenedApp" arguments:notificationDict];
   }
 
-  // Forward on to any other delegates.
+  // Same ownership rule as willPresentNotification. Calling the shared handler consumes the
+  // tap. A local notification may copy gcm.message_id; aps is what APNs puts on a remote one.
+  // See #18699.
+  BOOL ownsNotificationCenter = (center.delegate == self);
+  BOOL isRemoteFCMNotification =
+      (_notificationOpenedAppID != nil && remoteNotification[@"aps"] != nil);
   if (_originalNotificationCenterDelegate != nil &&
       _originalNotificationCenterDelegateRespondsTo.didReceiveNotificationResponse) {
     [_originalNotificationCenterDelegate userNotificationCenter:center
                                  didReceiveNotificationResponse:response
                                           withCompletionHandler:completionHandler];
-  } else {
+  } else if (ownsNotificationCenter || isRemoteFCMNotification) {
     completionHandler();
   }
 }
