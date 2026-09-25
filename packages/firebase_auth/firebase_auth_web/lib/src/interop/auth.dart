@@ -392,10 +392,10 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
     };
 
     final errorWrapper = (JSAny e) {
-      _changeController?.addError(e);
       if (!completer.isCompleted) {
         completer.completeError(e);
       }
+      _changeController?.addError(e);
     };
 
     final unsubscribe =
