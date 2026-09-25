@@ -254,5 +254,38 @@ void main() {
       expect(routingTransport.websocket.auth, equals(mockAuth));
       expect(routingTransport.websocket.appCheck, equals(mockAppCheck));
     });
+
+    test('query returns identical QueryRef instance for identical queries', () {
+      final dynamicApp = DynamicMockFirebaseApp(
+        name: 'queryRefAppName',
+        options: const FirebaseOptions(
+          apiKey: 'fake_api_key',
+          appId: 'fake_app_id',
+          messagingSenderId: 'fake_messaging_sender_id',
+          projectId: 'fake_project_id',
+        ),
+      );
+
+      final instance = FirebaseDataConnect(
+        app: dynamicApp,
+        connectorConfig: mockConnectorConfig,
+      );
+
+      final ref1 = instance.query(
+        'listMovies',
+        (json) => json,
+        emptySerializer,
+        null,
+      );
+
+      final ref2 = instance.query(
+        'listMovies',
+        (json) => json,
+        emptySerializer,
+        null,
+      );
+
+      expect(identical(ref1, ref2), isTrue);
+    });
   });
 }
