@@ -35,7 +35,7 @@ export 'src/core/ref.dart'
         QueryRef,
         QueryResult,
         DataSource;
-export 'src/firebase_data_connect.dart';
+export 'src/firebase_data_connect.dart' hide RoutingTransport;
 export 'src/optional.dart'
     show
         Optional,
