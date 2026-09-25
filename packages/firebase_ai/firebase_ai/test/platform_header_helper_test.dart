@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'package:firebase_ai/src/firebase_ai_windows.dart';
 import 'package:firebase_ai/src/platform_header_helper.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -22,6 +24,7 @@ void main() {
   setUp(clearPlatformSecurityHeadersCache);
 
   tearDown(() {
+    debugDefaultTargetPlatformOverride = null;
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(platformHeaderChannel, null);
   });
@@ -82,6 +85,26 @@ void main() {
       await getPlatformSecurityHeaders();
 
       expect(callCount, 1);
+    });
+
+    test('returns empty map on Windows without calling the channel', () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.windows;
+      var called = false;
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(platformHeaderChannel,
+              (MethodCall methodCall) async {
+        called = true;
+        return <String, String>{'X-Android-Package': 'com.example.test'};
+      });
+
+      final headers = await getPlatformSecurityHeaders();
+
+      expect(headers, isEmpty);
+      expect(called, isFalse);
+    });
+
+    test('Windows plugin registration does nothing', () {
+      expect(FirebaseAIWindows.registerWith, returnsNormally);
     });
 
     test('returns empty map when native plugin is not available', () async {
