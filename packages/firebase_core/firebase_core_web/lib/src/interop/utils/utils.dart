@@ -14,8 +14,19 @@ import 'package:web/web.dart' as web;
 
 import 'func.dart';
 
+// Hot restart exists only in debug mode. This must match Flutter's
+// kDebugMode (`!dart.vm.product && !dart.vm.profile`). Profile builds leave
+// dart.vm.product false, so gating on product mode alone still stores JS
+// unsubscribe functions on window. Plugins then share the key 'no-op'
+// outside debug and cancel the previous listener on the next subscription.
+// See https://github.com/firebase/flutterfire/issues/18728.
 // ignore: do_not_use_environment
-const bool _kDebugMode = !bool.fromEnvironment('dart.vm.product');
+const bool _kReleaseMode = bool.fromEnvironment('dart.vm.product');
+
+// ignore: do_not_use_environment
+const bool _kProfileMode = bool.fromEnvironment('dart.vm.profile');
+
+const bool _kDebugMode = !_kReleaseMode && !_kProfileMode;
 
 /// Handles the [Future] object with the provided [mapper] function.
 JSPromise handleFutureWithMapper<T, S>(
