@@ -413,4 +413,26 @@ class AppCheckProviderWrapper: NSObject, AppCheckProvider {
     }
     delegateProvider.getToken(completion: handler)
   }
+
+  // `getLimitedUseToken(completion:)` is optional on `AppCheckProvider`. Without
+  // forwarding it, FirebaseAppCheck falls back to `getToken` and
+  // `getLimitedUseToken()` returns standard (reusable) tokens, which services
+  // with replay protection enforced (e.g. Firebase AI Logic) reject.
+  func getLimitedUseToken(completion handler: @escaping (AppCheckToken?, Error?) -> Void) {
+    guard let delegateProvider else {
+      handler(
+        nil,
+        NSError(
+          domain: "firebase_app_check", code: -1,
+          userInfo: [NSLocalizedDescriptionKey: "Provider not configured"]
+        )
+      )
+      return
+    }
+    if let getLimitedUseToken = delegateProvider.getLimitedUseToken {
+      getLimitedUseToken(handler)
+    } else {
+      delegateProvider.getToken(completion: handler)
+    }
+  }
 }
