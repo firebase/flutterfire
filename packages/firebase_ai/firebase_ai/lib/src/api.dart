@@ -22,21 +22,12 @@ import 'tool.dart' show Tool, ToolConfig;
 /// Response for Count Tokens
 final class CountTokensResponse {
   // ignore: public_member_api_docs
-  CountTokensResponse(this.totalTokens,
-      {this.totalBillableCharacters, this.promptTokensDetails});
+  CountTokensResponse(this.totalTokens, {this.promptTokensDetails});
 
   /// The number of tokens that the `model` tokenizes the `prompt` into.
   ///
   /// Always non-negative.
   final int totalTokens;
-
-  /// The number of characters that the `model` could bill at.
-  ///
-  /// Always non-negative.
-  @Deprecated(
-    'Use `totalTokens` instead; Gemini 2.0 series models and newer are always billed by token count.',
-  )
-  final int? totalBillableCharacters;
 
   /// List of modalities that were processed in the request input.
   final List<ModalityTokenCount>? promptTokensDetails;
@@ -447,12 +438,6 @@ final class GroundingMetadata {
   /// Each chunk represents a piece of retrieved content (e.g., from a web
   /// page) that the model used to ground its response.
   final List<GroundingChunk> groundingChunks;
-
-  /// A list of [GroundingSupport]s.
-  ///
-  /// Keeping for backwards compatibility. See b/477107542.
-  @Deprecated('Use groundingSupports instead')
-  List<GroundingSupport> get groundingSupport => groundingSupports;
 
   /// A list of [GroundingSupport]s.
   ///
@@ -1129,19 +1114,6 @@ enum ThinkingLevel {
 
 /// Config for thinking features.
 class ThinkingConfig {
-  /// Deprecated public constructor of [ThinkingConfig].
-  ///
-  /// Keep for backwards compatibility.
-  /// [thinkingBudget] and [thinkingLevel] cannot be set at the same time.
-  @Deprecated(
-      'Use ThinkingConfig.withThinkingBudget() or ThinkingConfig.withThinkingLevel() instead.')
-  ThinkingConfig(
-      {this.thinkingBudget, this.thinkingLevel, this.includeThoughts})
-      : assert(
-          !(thinkingBudget != null && thinkingLevel != null),
-          'thinkingBudget and thinkingLevel cannot be set at the same time.',
-        );
-
   // Private constructor
   ThinkingConfig._(
       {this.thinkingBudget, this.thinkingLevel, this.includeThoughts});
@@ -1215,6 +1187,10 @@ abstract class BaseGenerationConfig {
   ///
   /// This value must be between [1, 8], inclusive. If unset, this will default
   /// to 1.
+  @Deprecated(
+      'Not supported in Gemini 3.x and later models. The model will ignore '
+      'this parameter if it is included in a request. Make parallel requests '
+      'instead.')
   final int? candidateCount;
 
   /// The maximum number of tokens to include in a candidate.
@@ -1229,6 +1205,10 @@ abstract class BaseGenerationConfig {
   ///
   /// Values can range from `[0.0, infinity]`, inclusive. A value temperature
   /// must be greater than 0.0.
+  @Deprecated(
+      'Not supported in Gemini 3.x and later models. The model will ignore '
+      'this parameter if it is included in a request. Omit this parameter and '
+      'let the model manage sampling automatically.')
   final double? temperature;
 
   /// The maximum cumulative probability of tokens to consider when sampling.
@@ -1240,6 +1220,10 @@ abstract class BaseGenerationConfig {
   /// on the cumulative probability.
   ///
   /// Note: The default value varies by model.
+  @Deprecated(
+      'Not supported in Gemini 3.x and later models. The model will ignore '
+      'this parameter if it is included in a request. Omit this parameter and '
+      'let the model manage sampling automatically.')
   final double? topP;
 
   /// The maximum number of tokens to consider when sampling.
@@ -1248,6 +1232,10 @@ abstract class BaseGenerationConfig {
   /// considers the set of `top_k` most probable tokens. Defaults to 40.
   ///
   /// Note: The default value varies by model.
+  @Deprecated(
+      'Not supported in Gemini 3.x and later models. The model will ignore '
+      'this parameter if it is included in a request. Omit this parameter and '
+      'let the model manage sampling automatically.')
   final int? topK;
 
   /// The penalty for repeating the same words or phrases already generated in
@@ -1266,6 +1254,9 @@ abstract class BaseGenerationConfig {
   /// the model; see the
   /// [documentation](https://firebase.google.com/docs/vertex-ai/model-parameters?platform=flutter#configure-model-parameters-gemini)
   /// for more details.
+  @Deprecated(
+      'Not supported in Gemini 3.x and later models. Requests that include '
+      'this parameter will fail with a 400 error. Omit this parameter.')
   final double? presencePenalty;
 
   /// The penalty for repeating words or phrases, with the penalty increasing
@@ -1283,6 +1274,9 @@ abstract class BaseGenerationConfig {
   /// the model; see the
   /// [documentation](https://firebase.google.com/docs/vertex-ai/model-parameters?platform=flutter#configure-model-parameters-gemini)
   /// for more details.
+  @Deprecated(
+      'Not supported in Gemini 3.x and later models. Requests that include '
+      'this parameter will fail with a 400 error. Omit this parameter.')
   final double? frequencyPenalty;
 
   /// The list of desired response modalities.
@@ -1518,11 +1512,6 @@ final class AgentPlatformSerialization implements SerializationStrategy {
     }
 
     final totalTokens = jsonObject['totalTokens'] as int;
-    final totalBillableCharacters = switch (jsonObject) {
-      {'totalBillableCharacters': final int totalBillableCharacters} =>
-        totalBillableCharacters,
-      _ => null,
-    };
     final promptTokensDetails = switch (jsonObject) {
       {'promptTokensDetails': final List<Object?> promptTokensDetails} =>
         promptTokensDetails.map(_parseModalityTokenCount).toList(),
@@ -1531,7 +1520,6 @@ final class AgentPlatformSerialization implements SerializationStrategy {
 
     return CountTokensResponse(
       totalTokens,
-      totalBillableCharacters: totalBillableCharacters,
       promptTokensDetails: promptTokensDetails,
     );
   }

@@ -1,3 +1,7 @@
+## 0.2.6+1
+
+ - Update a dependency to the latest release.
+
 ## 0.2.6
 
  - **FEAT**(appcheck): rCE provider api update ([#18505](https://github.com/firebase/flutterfire/issues/18505)). ([a56649a4](https://github.com/firebase/flutterfire/commit/a56649a41539c559a08e4f566128db8de390c284))

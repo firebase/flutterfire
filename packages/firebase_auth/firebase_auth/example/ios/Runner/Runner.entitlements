@@ -10,5 +10,9 @@
 	</array>
 	<key>com.apple.developer.game-center</key>
 	<true/>
+	<key>keychain-access-groups</key>
+	<array>
+		<string>$(AppIdentifierPrefix)io.flutter.plugins.firebase.auth.example</string>
+	</array>
 </dict>
 </plist>

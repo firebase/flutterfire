@@ -20,7 +20,7 @@ class IdTokenChannelStreamHandler(private val firebaseAuth: FirebaseAuth) : Stre
     val initialAuthState = AtomicBoolean(true)
 
     idTokenListener =
-        FirebaseAuth.IdTokenListener { auth ->
+        FirebaseAuth.IdTokenListener { auth: FirebaseAuth ->
           if (initialAuthState.get()) {
             initialAuthState.set(false)
             return@IdTokenListener

@@ -3,7 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:collection/collection.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:meta/meta.dart';
 
 import 'field_path_type.dart';
 

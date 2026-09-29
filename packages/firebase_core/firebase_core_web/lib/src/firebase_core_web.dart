@@ -68,7 +68,7 @@ class FirebaseCoreWeb extends FirebasePlatform {
   static const String _libraryName = 'flutter-fire-core';
 
   /// Registers that [FirebaseCoreWeb] is the platform implementation.
-  static void registerWith(Registrar registrar) {
+  static void registerWith(dynamic registrar) {
     FirebasePlatform.instance = FirebaseCoreWeb();
   }
 
@@ -394,16 +394,17 @@ class FirebaseCoreWeb extends FirebasePlatform {
           measurementId: options.measurementId,
         );
       } catch (e) {
-        if (!e.isA<JSObject>()) {
+        // isA on Object requires Dart 3.12; this package supports 3.6.
+        // ignore: invalid_runtime_check_with_js_interop_types
+        if (e is! JSError) {
           rethrow;
         }
 
-        final jsError = e as JSError;
-        if (_getJSErrorCode(jsError) == 'app/duplicate-app') {
+        if (_getJSErrorCode(e) == 'app/duplicate-app') {
           throw duplicateApp(name);
         }
 
-        throw _catchJSError(jsError);
+        throw _catchJSError(e);
       }
     }
 
@@ -445,16 +446,17 @@ class FirebaseCoreWeb extends FirebasePlatform {
       app = guardNotInitialized(() => firebase.app(name));
       return _createFromJsApp(app);
     } catch (e) {
-      if (!e.isA<JSObject>()) {
+      // isA on Object requires Dart 3.12; this package supports 3.6.
+      // ignore: invalid_runtime_check_with_js_interop_types
+      if (e is! JSError) {
         rethrow;
       }
 
-      final jsError = e as JSError;
-      if (_getJSErrorCode(jsError) == 'app/no-app') {
+      if (_getJSErrorCode(e) == 'app/no-app') {
         throw noAppExists(name);
       }
 
-      throw _catchJSError(jsError);
+      throw _catchJSError(e);
     }
   }
 }

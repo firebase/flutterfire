@@ -7,8 +7,8 @@ environment:
   flutter: '>=3.27.0'
 
 dependencies:
-  firebase_core: ^4.13.0
-  firebase_database: ^12.4.7
+  firebase_core: ^4.14.0
+  firebase_database: ^12.5.0
   flutter:
     sdk: flutter
 
@@ -17,10 +17,10 @@ dev_dependencies:
   collection: ^1.15.0
   # The e2e suite reaches for MethodChannelFirebase, which firebase_core
   # deliberately hides from its own re-export.
-  firebase_core_platform_interface: ^8.1.0
+  firebase_core_platform_interface: ^8.1.1
   # `web_only.dart` (conditionally imported) asserts on the web plugin's
   # JS-interop surface directly.
-  firebase_database_web: ^0.2.7+13
+  firebase_database_web: ^0.2.7+14
   flutter_test:
     sdk: flutter
   integration_test:

@@ -1,3 +1,9 @@
+## 3.9.0
+
+ - **REFACTOR**(platform_interface): replace Flutter UI and foundation imports with package:meta ([#18604](https://github.com/firebase/flutterfire/issues/18604)). ([fef6d420](https://github.com/firebase/flutterfire/commit/fef6d42090ea275f07117c085bd04710d9df51bc))
+ - **FIX**(core,crashlytics): drop `flutter_test` from published dependencies ([#18575](https://github.com/firebase/flutterfire/issues/18575)). ([a54439f9](https://github.com/firebase/flutterfire/commit/a54439f91e0d84c169b5f09def5174b590619f0d))
+ - **FEAT**(crashlytics): add Pigeon support ([#18565](https://github.com/firebase/flutterfire/issues/18565)). ([11daba2c](https://github.com/firebase/flutterfire/commit/11daba2cee5d3f919f4f4466e51155fcf4d95f62))
+
 ## 3.8.27
 
  - Update a dependency to the latest release.

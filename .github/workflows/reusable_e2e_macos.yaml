@@ -100,7 +100,7 @@ jobs:
        github.actor != 'dependabot[bot]')
     permissions:
       contents: read
-    runs-on: macos-15
+    runs-on: xcode-27
     env:
       # Inputs consumed inside run: scripts are routed through env so their
       # values are data, never shell/template code (zizmor: template-injection).
@@ -109,10 +109,9 @@ jobs:
       NATIVE_CONFIG_ARGS: ${{ inputs.native-config-args }}
     timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 60 }}
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
-      # No `xcode-select` pin: use the runner image's default Xcode. Firebase's
-      # minimum is 26.2 and every current macos-15 image is at or above it. See
-      # `reusable_e2e_ios.yaml` for why pinning 26.2 exactly was harmful.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      # Use the xcode-27 image default (Xcode 27 / macOS 27). See
+      # `reusable_e2e_ios.yaml` for why pinning an older Xcode was harmful.
       - uses: ./.github/actions/setup-flutterfire
         with:
           node: ${{ inputs.use-firebase-emulators && 'true' || 'false' }}
@@ -128,9 +127,9 @@ jobs:
       - uses: hendrikmuhs/ccache-action@d62db5f07c26379fc4b4e0916f098a92573c3b03
         name: Xcode Compile Cache
         with:
-          # Distinct from every other macos-15 job's key, otherwise the workflows
+          # Distinct from every other xcode-27 job's key, otherwise the workflows
           # clobber each other's cache.
-          key: xcode-ccache-${{ inputs.cache-key-suffix }}-macos
+          key: xcode-ccache-${{ inputs.cache-key-suffix }}-macos-xcode27
           save: "${{ github.ref == 'refs/heads/main' }}"
           max-size: 700M
       - name: Pods Cache
@@ -145,8 +144,8 @@ jobs:
           # Keyed on the Podfile and the pinned Firebase SDK version, not on a
           # pubspec.lock: those are gitignored, so hashFiles() returns an empty
           # string and the key could never be invalidated.
-          key: pods-v1-${{ runner.os }}-${{ inputs.cache-key-suffix }}-macos-${{ hashFiles(format('{0}/example/macos/Podfile', inputs.package-path), 'packages/firebase_core/firebase_core/ios/firebase_sdk_version.rb') }}
-          restore-keys: pods-v1-${{ runner.os }}-${{ inputs.cache-key-suffix }}-macos-
+          key: pods-v2-${{ runner.os }}-${{ inputs.cache-key-suffix }}-macos-${{ hashFiles(format('{0}/example/macos/Podfile', inputs.package-path), 'packages/firebase_core/firebase_core/ios/firebase_sdk_version.rb') }}
+          restore-keys: pods-v2-${{ runner.os }}-${{ inputs.cache-key-suffix }}-macos-
       - name: Firebase Emulator Cache
         if: inputs.use-firebase-emulators
         id: firebase-emulator-cache

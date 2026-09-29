@@ -40,7 +40,7 @@ jobs:
       AVD_API_LEVEL: 34
       AVD_TARGET: google_apis
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - uses: ./.github/actions/setup-flutterfire
         with:
           npm-cache: 'false'
@@ -126,13 +126,10 @@ jobs:
           path: ~/.cache/firebase/emulators
 
   ios:
-    runs-on: macos-15
+    runs-on: xcode-27
     timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 45 }}
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
-      - name: Xcode
-        # Firebase iOS SDK: minimum Xcode 26.2.
-        run: sudo xcode-select -s /Applications/Xcode_26.2.app/Contents/Developer
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - uses: ./.github/actions/setup-flutterfire
         with:
           npm-cache: 'false'
@@ -143,7 +140,7 @@ jobs:
       - uses: hendrikmuhs/ccache-action@d62db5f07c26379fc4b4e0916f098a92573c3b03
         name: Xcode Compile Cache
         with:
-          key: xcode-cache-${{ runner.os }}
+          key: xcode-cache-${{ runner.os }}-xcode27
           save: "${{ github.ref == 'refs/heads/main' }}"
           max-size: 700M
       - uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
@@ -156,8 +153,8 @@ jobs:
           # tests/pubspec.lock is gitignored, so the old key hashed nothing and
           # the cache never invalidated. Key on the files that actually pin the
           # native SDK version instead.
-          key: ${{ runner.os }}-fdc-pods-v2-${{ hashFiles('packages/firebase_data_connect/firebase_data_connect/example/ios/Podfile', 'packages/firebase_core/firebase_core/ios/firebase_sdk_version.rb') }}
-          restore-keys: ${{ runner.os }}-fdc-pods-v2-
+          key: ${{ runner.os }}-fdc-pods-v3-${{ hashFiles('packages/firebase_data_connect/firebase_data_connect/example/ios/Podfile', 'packages/firebase_core/firebase_core/ios/firebase_sdk_version.rb') }}
+          restore-keys: ${{ runner.os }}-fdc-pods-v3-
       - name: Firebase Emulator Cache
         id: firebase-emulator-cache
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
@@ -190,8 +187,8 @@ jobs:
       - uses: futureware-tech/simulator-action@e89aa8f93d3aec35083ff49d2854d07f7186f7f5
         id: simulator
         with:
-          # https://github.com/actions/runner-images/blob/main/images/macos/macos-15-Readme.md#installed-simulators
-          model: "iPhone 16"
+          # https://github.com/actions/runner-images/blob/main/images/macos/xcode-27-arm64-Readme.md#installed-simulators
+          model: "iPhone 17"
       - name: Ensure Simulator Ready
         env:
           SIMULATOR: ${{ steps.simulator.outputs.udid }}
@@ -234,7 +231,7 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 15 }}
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - uses: ./.github/actions/setup-flutterfire
         with:
           npm-cache: 'false'
@@ -287,7 +284,7 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 15 }}
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - uses: ./.github/actions/setup-flutterfire
         with:
           npm-cache: 'false'

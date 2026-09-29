@@ -134,7 +134,10 @@ class LiveSession {
                 liveGenerationConfig.outputAudioTranscription!.toJson(),
           if (liveGenerationConfig.contextWindowCompression
               case final contextWindowCompression?)
-            'contextWindowCompression': contextWindowCompression.toJson()
+            'contextWindowCompression': contextWindowCompression.toJson(),
+          if (liveGenerationConfig.realtimeInputConfig
+              case final realtimeInputConfig?)
+            'realtime_input_config': realtimeInputConfig.toJson(),
         },
       }
     };
@@ -287,46 +290,35 @@ class LiveSession {
     _ws.sink.add(clientJson);
   }
 
-  /// Sends realtime input (media chunks) to the server.
+  /// Manually marks the start of user activity, using the realtime API.
   ///
-  /// [mediaChunks]: The list of media chunks to send.
-  @Deprecated(
-      'Use sendAudioRealtime, sendVideoRealtime, or sendTextRealtime instead')
-  Future<void> sendMediaChunks({
-    required List<InlineDataPart> mediaChunks,
-  }) async {
+  /// The start of user activity is effectively the start of a user's turn, but
+  /// depending on the configuration defined in [RealtimeInputConfig], it may not
+  /// be interpreted as an interruption. An example of the start of user activity
+  /// could be the user speaking (not silence).
+  ///
+  /// Should be followed with a call to [sendStopActivityRealtime]; after all the
+  /// data has been sent for the user's turn.
+  ///
+  /// Only required when automatic activity detection is disabled via [RealtimeInputConfig].
+  Future<void> sendStartActivityRealtime() async {
     _checkWsStatus();
-    var clientMessage = LiveClientRealtimeInput(mediaChunks: mediaChunks);
+    var clientMessage = LiveClientRealtimeInput.activityStart();
     var clientJson = jsonEncode(clientMessage.toJson());
     _ws.sink.add(clientJson);
   }
 
-  /// Starts streaming media chunks to the server from the provided [mediaChunkStream].
+  /// Manually marks the end of user activity, using the realtime API.
   ///
-  /// This function asynchronously processes each [InlineDataPart] from the given
-  /// [mediaChunkStream] and sends it to the server via the WebSocket connection.
+  /// The end of user activity is effectively the end of a user's turn, and
+  /// signals that the model can start sending responses.
   ///
-  /// Parameters:
-  /// - [mediaChunkStream]: The stream of [InlineDataPart] objects to send to the server.
-  @Deprecated('Use sendAudio, sendVideo, or sendText with a stream instead')
-  Future<void> sendMediaStream(Stream<InlineDataPart> mediaChunkStream) async {
+  /// Should follow after a previous call to [sendStartActivityRealtime].
+  ///
+  /// Only required when automatic activity detection is disabled via [RealtimeInputConfig].
+  Future<void> sendStopActivityRealtime() async {
     _checkWsStatus();
-
-    try {
-      await for (final chunk in mediaChunkStream) {
-        await _sendMediaChunk(chunk);
-      }
-    } catch (e) {
-      throw FirebaseAISdkException(e.toString());
-    } finally {
-      log('Stream processing completed.');
-    }
-  }
-
-  Future<void> _sendMediaChunk(InlineDataPart chunk) async {
-    var clientMessage = LiveClientRealtimeInput(
-        // ignore: deprecated_member_use_from_same_package
-        mediaChunks: [chunk]); // Create a list with the single chunk
+    var clientMessage = LiveClientRealtimeInput.activityEnd();
     var clientJson = jsonEncode(clientMessage.toJson());
     _ws.sink.add(clientJson);
   }

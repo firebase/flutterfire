@@ -70,10 +70,10 @@ workspace:
   - tests
 
 dev_dependencies:
-  cli_util: ^0.4.1
+  cli_util: ^0.5.0
   glob: ^2.1.2
   intl: ^0.20.2
-  melos: ^7.5.1
+  melos: ^8.5.0
   path: ^1.9.0
   pub_semver: ^2.1.4
   yaml: ^3.1.2
@@ -90,13 +90,15 @@ melos:
       # branch: main
       # Additionally build a changelog at the root of the workspace.
       workspaceChangelog: true
+      # Don't bump dependents whose constraints already allow the new version.
+      smartDependents: true
       hooks:
         preCommit: |
           dart run scripts/generate_firebaseai_version.dart && \
           dart run scripts/generate_dataconnect_version.dart && \
           dart run scripts/generate_versions_web.dart && \
           dart run scripts/generate_versions_spm.dart && \
-          git add packages/firebase_data_connect/firebase_data_connect/lib/src/dataconnect_version.dart && git add packages/*/*_web/lib/src/*_version.dart && git add packages/*/*/ios/*/Package.swift packages/*/*/macos/*/Package.swift && git add packages/*/*/ios/*/Sources/*/Constants.swift
+          git add packages/firebase_ai/firebase_ai/lib/src/firebaseai_version.dart && git add packages/firebase_data_connect/firebase_data_connect/lib/src/dataconnect_version.dart && git add packages/*/*_web/lib/src/*_version.dart && git add packages/*/*/ios/*/Package.swift packages/*/*/macos/*/Package.swift && git add packages/*/*/ios/*/Sources/*/Constants.swift
 
     bootstrap:
       # It seems so that running "pub get" in parallel has some issues (like

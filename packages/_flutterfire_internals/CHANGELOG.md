@@ -1,3 +1,7 @@
+## 1.3.77
+
+ - **FIX**(database,windows): fix transaction threwing and native error codes dropped ([#18559](https://github.com/firebase/flutterfire/issues/18559)). ([12f5f32b](https://github.com/firebase/flutterfire/commit/12f5f32b20ad379e7923fd1c22a66ce22f869bf5))
+
 ## 1.3.76
 
  - Update a dependency to the latest release.

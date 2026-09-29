@@ -8,9 +8,9 @@ environment:
 
 dependencies:
   barcode_widget: ^2.0.4
-  firebase_auth: ^6.5.7
-  firebase_core: ^4.13.0
-  firebase_messaging: ^16.5.0
+  firebase_auth: ^6.6.0
+  firebase_core: ^4.14.0
+  firebase_messaging: ^16.6.0
   flutter:
     sdk: flutter
   # 7.2.0 is the first release shipping Package.swift; the iOS e2e job builds

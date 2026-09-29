@@ -1,3 +1,9 @@
+## 8.1.1
+
+ - **REFACTOR**(core,android): migrate native implementation to Kotlin ([#18570](https://github.com/firebase/flutterfire/issues/18570)). ([7a0f5856](https://github.com/firebase/flutterfire/commit/7a0f5856cbb2ae64c530dcbdb43b03d43912465c))
+ - **REFACTOR**(core,apple): migrate iOS/macOS plugin implementation to Swift ([#18569](https://github.com/firebase/flutterfire/issues/18569)). ([3b9a655b](https://github.com/firebase/flutterfire/commit/3b9a655b8ac8ac5f6efa23ea63e210b597f2ec02))
+ - **FIX**(core,crashlytics): drop `flutter_test` from published dependencies ([#18575](https://github.com/firebase/flutterfire/issues/18575)). ([a54439f9](https://github.com/firebase/flutterfire/commit/a54439f91e0d84c169b5f09def5174b590619f0d))
+
 ## 8.1.0
 
  - **FEAT**(appcheck): rCE provider api update ([#18505](https://github.com/firebase/flutterfire/issues/18505)). ([a56649a4](https://github.com/firebase/flutterfire/commit/a56649a41539c559a08e4f566128db8de390c284))

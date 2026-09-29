@@ -1,3 +1,7 @@
+## 0.1.6+1
+
+ - Update a dependency to the latest release.
+
 ## 0.1.6
 
  - **FEAT**(ml): adding depreciation notice to ML plugin ([#18472](https://github.com/firebase/flutterfire/issues/18472)). ([fb20da9c](https://github.com/firebase/flutterfire/commit/fb20da9c88d0e7ac20b89fc27000ae4eeb50654d))

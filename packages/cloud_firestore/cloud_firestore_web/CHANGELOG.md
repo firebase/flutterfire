@@ -1,3 +1,7 @@
+## 5.7.3
+
+ - Update a dependency to the latest release.
+
 ## 5.7.2
 
  - **FIX**(firestore): Preserves microseconds when serializing implicit DateTime values ([#18435](https://github.com/firebase/flutterfire/issues/18435)). ([068c3094](https://github.com/firebase/flutterfire/commit/068c30946912d8a3d5f24455fcb4bc00202e60ee))

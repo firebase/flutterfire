@@ -14,6 +14,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_ai/firebase_ai.dart';
+import '../constants.dart';
 import '../widgets/message_widget.dart';
 
 class GroundingPage extends StatefulWidget {
@@ -78,7 +79,7 @@ class _GroundingPageState extends State<GroundingPage> {
         : FirebaseAI.googleAI();
 
     _model = aiProvider.generativeModel(
-      model: 'gemini-3.5-flash',
+      model: ExampleModels.flashLite,
       tools: tools.isNotEmpty ? tools : null,
       toolConfig: toolConfig,
     );

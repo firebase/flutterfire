@@ -1,3 +1,8 @@
+## 3.0.7
+
+ - **REFACTOR**(platform_interface): replace Flutter UI and foundation imports with package:meta ([#18604](https://github.com/firebase/flutterfire/issues/18604)). ([fef6d420](https://github.com/firebase/flutterfire/commit/fef6d42090ea275f07117c085bd04710d9df51bc))
+ - **FIX**(remote_config): classify fetch failures instead of reporting them all as `internal` ([#18585](https://github.com/firebase/flutterfire/issues/18585)). ([128912e8](https://github.com/firebase/flutterfire/commit/128912e884c815b498ff943cd7b38838104d89f0))
+
 ## 3.0.6
 
  - **FIX**(remote_config): restores the Apple error mapping and accepts both throttling status spellings ([#18458](https://github.com/firebase/flutterfire/issues/18458)). ([523d985a](https://github.com/firebase/flutterfire/commit/523d985a8219fd20a7071915ee539c19692975fa))

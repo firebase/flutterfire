@@ -1,3 +1,7 @@
+## 0.2.5+28
+
+ - **REFACTOR**(in_app_messaging): migrate platform channels to Pigeon ([#18529](https://github.com/firebase/flutterfire/issues/18529)). ([17c4d6fd](https://github.com/firebase/flutterfire/commit/17c4d6fda76cfe2010b22811fb71d8211b8bcca2))
+
 ## 0.2.5+27
 
  - Update a dependency to the latest release.

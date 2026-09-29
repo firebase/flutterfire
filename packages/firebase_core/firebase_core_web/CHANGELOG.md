@@ -1,3 +1,16 @@
+## 3.12.0
+
+ - **FIX**(auth,web): convert Auth errors that omit customData without throwing ([#18686](https://github.com/firebase/flutterfire/issues/18686)). ([5e518361](https://github.com/firebase/flutterfire/commit/5e518361ce7f94923437d8b0e41add7ca75083ef))
+ - **FIX**(core,web): compile isA checks on Dart < 3.12 ([#18612](https://github.com/firebase/flutterfire/issues/18612)). ([3bd7c069](https://github.com/firebase/flutterfire/commit/3bd7c069f791f5482f79e6f80cf6fd833b6245f8))
+ - **FEAT**(core): bump Firebase JS SDK to 12.19.0 ([#18684](https://github.com/firebase/flutterfire/issues/18684)). ([4988ec5b](https://github.com/firebase/flutterfire/commit/4988ec5b2a6349f59ca37d32ed08a4efa6ba4a27))
+ - **FEAT**(firebase_core_web): decouple foundation imports and fix JS SDK interop ([#18624](https://github.com/firebase/flutterfire/issues/18624)). ([4fd99824](https://github.com/firebase/flutterfire/commit/4fd9982426d33c255ef516c6919ede835263cf37))
+
+## 3.11.0
+
+ - **FIX**(core,web): keep App Check registered for secondary Firebase apps ([#18557](https://github.com/firebase/flutterfire/issues/18557)). ([1345dbb3](https://github.com/firebase/flutterfire/commit/1345dbb38af36c2d1c3f6582f474f5520a185021))
+ - **FIX**(core,web): preserve non-JavaScript app errors ([#18552](https://github.com/firebase/flutterfire/issues/18552)). ([e6943a68](https://github.com/firebase/flutterfire/commit/e6943a682f2a6e93076cd068d49ee7c47738c079))
+ - **FEAT**(core): bump Firebase JS SDK to 12.18.0 ([#18598](https://github.com/firebase/flutterfire/issues/18598)). ([f29565bb](https://github.com/firebase/flutterfire/commit/f29565bb191ddc32973f5b3be9fb4173ae3896b4))
+
 ## 3.10.0
 
  - **FIX**(core,web): load firebase-app.js before component bundles to avoid WebKit import race ([#18443](https://github.com/firebase/flutterfire/issues/18443)). ([4b731aed](https://github.com/firebase/flutterfire/commit/4b731aed0a1346070d8548c342e2e4b012844d58))

@@ -47,6 +47,11 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   BOOL _notificationHandlingSetup;
   BOOL _applicationObserverRegistered;
 
+  // Set once APNs registration has been requested because FCM auto-init is enabled, so the
+  // auto-init check is not re-run (and registerForRemoteNotifications not re-issued) on every
+  // Firebase app initialization.
+  BOOL _apnsRegistrationRequested;
+
 #if TARGET_OS_OSX
   // Tracks when plugin registration occurred after the macOS launch notification.
   BOOL _missedApplicationDidFinishLaunchingNotification;
@@ -135,6 +140,14 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     if ([registrar respondsToSelector:@selector(addSceneDelegate:)]) {
       [registrar performSelector:@selector(addSceneDelegate:) withObject:instance];
     }
+    // UIScene registers plugins after didFinishLaunching / scene:willConnect.
+    // If a scene is already connected those callbacks were missed, so run
+    // setup now. setupNotificationHandling is idempotent if a callback still
+    // arrives later. iOS re-delivers the APNs token when we register again.
+    if ([UIApplication sharedApplication].connectedScenes.count > 0) {
+      instance->_sceneDidConnect = YES;
+      [instance setupNotificationHandlingWithRemoteNotification:nil];
+    }
   }
 #endif
 }
@@ -185,6 +198,10 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
                                            withMethodCallResult:methodCallResult];
   } else if ([@"Messaging#getToken" isEqualToString:call.method]) {
     [self messagingGetToken:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"Messaging#register" isEqualToString:call.method]) {
+    [self messagingRegister:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"Messaging#unregister" isEqualToString:call.method]) {
+    [self messagingUnregister:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Messaging#getNotificationSettings" isEqualToString:call.method]) {
     if (@available(iOS 10, macOS 10.14, *)) {
       [self messagingGetNotificationSettings:call.arguments withMethodCallResult:methodCallResult];
@@ -211,6 +228,13 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     methodCallResult.success(FlutterMethodNotImplemented);
   }
 }
+
+- (FIRMessaging *)messagingWithDelegate {
+  FIRMessaging *messaging = [FIRMessaging messaging];
+  messaging.delegate = self;
+  return messaging;
+}
+
 - (void)messagingSetForegroundNotificationPresentationOptions:(id)arguments
                                          withMethodCallResult:
                                              (FLTFirebaseMethodCallResult *)result {
@@ -256,6 +280,44 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   }
 }
 
+- (void)messaging:(nonnull FIRMessaging *)messaging
+    didReceiveRegistration:(nullable NSString *)installationId {
+  if (installationId == nil) {
+    return;
+  }
+
+  [_channel invokeMethod:@"Messaging#onRegistered" arguments:installationId];
+
+  // If the users AppDelegate implements messaging:didReceiveRegistration: then call it as well
+  // so we don't break other libraries.
+  SEL messaging_didReceiveRegistrationSelector =
+      NSSelectorFromString(@"messaging:didReceiveRegistration:");
+  if ([[GULAppDelegateSwizzler sharedApplication].delegate
+          respondsToSelector:messaging_didReceiveRegistrationSelector]) {
+    void (*usersDidReceiveRegistrationIMP)(id, SEL, FIRMessaging *, NSString *) =
+        (typeof(usersDidReceiveRegistrationIMP))&objc_msgSend;
+    usersDidReceiveRegistrationIMP([GULAppDelegateSwizzler sharedApplication].delegate,
+                                   messaging_didReceiveRegistrationSelector, messaging,
+                                   installationId);
+  }
+}
+
+- (void)messaging:(nonnull FIRMessaging *)messaging
+    didUnregister:(nonnull NSString *)installationId {
+  [_channel invokeMethod:@"Messaging#onUnregistered" arguments:installationId];
+
+  // If the users AppDelegate implements messaging:didUnregister: then call it as well
+  // so we don't break other libraries.
+  SEL messaging_didUnregisterSelector = NSSelectorFromString(@"messaging:didUnregister:");
+  if ([[GULAppDelegateSwizzler sharedApplication].delegate
+          respondsToSelector:messaging_didUnregisterSelector]) {
+    void (*usersDidUnregisterIMP)(id, SEL, FIRMessaging *, NSString *) =
+        (typeof(usersDidUnregisterIMP))&objc_msgSend;
+    usersDidUnregisterIMP([GULAppDelegateSwizzler sharedApplication].delegate,
+                          messaging_didUnregisterSelector, messaging, installationId);
+  }
+}
+
 #pragma mark - NSNotificationCenter Observers
 
 - (void)setupNotificationHandlingWithRemoteNotification:
@@ -271,6 +333,36 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 #else
   [[UIApplication sharedApplication] registerForRemoteNotifications];
 #endif
+}
+
+// Registers for APNs if FCM auto-init is enabled. Registration is deferred while auto-init is
+// disabled so the APNs token cannot trigger FCM registration before the user opts in (see
+// `messagingSetAutoInitEnabled:`, which registers once they do).
+//
+// `[FIRMessaging messaging]` requires a configured default FIRApp. When Firebase is initialized
+// from Dart (`Firebase.initializeApp(options:)` with no GoogleService-Info.plist / native
+// `FirebaseApp.configure()`), the default app does not exist yet at launch, so `[FIRMessaging
+// messaging]` is nil and `isAutoInitEnabled` reads as NO. In that case the check is skipped here
+// and re-run from `pluginConstantsForFIRApp:` once Dart has configured the app.
+//
+// Safe to call repeatedly: APNs registration is only requested once per process.
+- (void)registerForRemoteNotificationsIfAutoInitEnabled {
+  if (_apnsRegistrationRequested) {
+    return;
+  }
+  // Checked via FIRApp.allApps rather than `[FIRApp defaultApp]` / `[FIRMessaging messaging]` so
+  // a not-yet-configured app does not log the misleading "default Firebase app has not yet been
+  // configured" (I-COR000003) warning during launch.
+  if ([FLTFirebasePlugin firebaseAppNamed:@"[DEFAULT]"] == nil) {
+    return;
+  }
+  if (![FIRMessaging messaging].isAutoInitEnabled) {
+    return;
+  }
+  _apnsRegistrationRequested = YES;
+  [self registerForRemoteNotifications];
+  // Forward an APNs token that may have arrived before Firebase was configured.
+  [self ensureAPNSTokenSetting];
 }
 
 #ifdef __FF_NOTIFICATIONS_SUPPORTED_PLATFORM
@@ -416,11 +508,9 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   // We automatically register for remote notifications as
   // application:didReceiveRemoteNotification:fetchCompletionHandler: will not get called unless
   // registerForRemoteNotifications is called early on during app initialization, calling this from
-  // Dart would be too late. Defer registration when auto-init is disabled so the APNs token cannot
-  // trigger FCM registration before the user opts in.
-  if ([FIRMessaging messaging].isAutoInitEnabled) {
-    [self registerForRemoteNotifications];
-  }
+  // Dart would be too late. Registration is skipped when auto-init is disabled, or deferred to
+  // `pluginConstantsForFIRApp:` when Firebase has not been configured natively yet.
+  [self registerForRemoteNotificationsIfAutoInitEnabled];
 }
 
 - (void)markInitialNotificationGatheredAfterDelay {
@@ -785,6 +875,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   BOOL enabled = [arguments[@"enabled"] boolValue];
   messaging.autoInitEnabled = enabled;
   if (enabled) {
+    _apnsRegistrationRequested = YES;
     [self registerForRemoteNotifications];
     [self ensureAPNSTokenSetting];
   }
@@ -908,6 +999,29 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   }];
 }
 
+- (void)messagingRegister:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRMessaging *messaging = [self messagingWithDelegate];
+  [messaging registerWithCompletion:^(NSError *_Nullable error) {
+    if (error != nil) {
+      result.error(nil, nil, nil, error);
+    } else {
+      result.success(nil);
+    }
+  }];
+}
+
+- (void)messagingUnregister:(id)arguments
+       withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRMessaging *messaging = [self messagingWithDelegate];
+  [messaging unregisterWithCompletion:^(NSError *_Nullable error) {
+    if (error != nil) {
+      result.error(nil, nil, nil, error);
+    } else {
+      result.success(nil);
+    }
+  }];
+}
+
 #pragma mark - FLTFirebasePlugin
 
 - (void)didReinitializeFirebaseCore:(void (^)(void))completion {
@@ -915,8 +1029,13 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 }
 
 - (NSDictionary *_Nonnull)pluginConstantsForFIRApp:(FIRApp *)firebase_app {
+  FIRMessaging *messaging = [self messagingWithDelegate];
+  // Called by firebase_core right after `Firebase.initializeApp()` has configured the app. For
+  // apps initialized from Dart this is the first point where `[FIRMessaging messaging]` exists,
+  // so re-run the auto-init check that was skipped during launch.
+  [self registerForRemoteNotificationsIfAutoInitEnabled];
   return @{
-    @"AUTO_INIT_ENABLED" : @([FIRMessaging messaging].isAutoInitEnabled),
+    @"AUTO_INIT_ENABLED" : @(messaging.isAutoInitEnabled),
   };
 }
 

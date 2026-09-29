@@ -3,7 +3,10 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:flutter/foundation.dart';
+import 'package:meta/meta.dart';
+
+// ignore: do_not_use_environment
+const bool _kIsWeb = bool.fromEnvironment('dart.library.js_interop');
 
 /// Specifies custom configurations for your Cloud Firestore instance.
 ///
@@ -100,8 +103,8 @@ class Settings {
           webExperimentalAutoDetectLongPolling,
       'webExperimentalLongPollingOptions':
           webExperimentalLongPollingOptions?.asMap,
-      if (kIsWeb) 'ignoreUndefinedProperties': ignoreUndefinedProperties,
-      if (kIsWeb) 'webPersistentTabManager': webPersistentTabManager,
+      if (_kIsWeb) 'ignoreUndefinedProperties': ignoreUndefinedProperties,
+      if (_kIsWeb) 'webPersistentTabManager': webPersistentTabManager,
     };
   }
 
