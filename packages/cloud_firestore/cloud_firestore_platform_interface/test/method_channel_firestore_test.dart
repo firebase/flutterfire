@@ -318,8 +318,7 @@ void main() {
         const syncChannel =
             'plugins.flutter.io/firebase_firestore/snapshotsInSync/$syncObserverId';
         final syncChannelCalls = <String>[];
-        messenger.setMockMessageHandler(syncChannel,
-            (ByteData? message) async {
+        messenger.setMockMessageHandler(syncChannel, (ByteData? message) async {
           syncChannelCalls.add(codec.decodeMethodCall(message).method);
           return codec.encodeSuccessEnvelope(null);
         });
