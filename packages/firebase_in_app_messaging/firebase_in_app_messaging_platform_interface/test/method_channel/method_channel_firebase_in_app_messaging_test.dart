@@ -143,6 +143,49 @@ void main() {
     expect(errorEvent.campaignMetadata.campaignId, 'campaign-id');
     expect(errorEvent.errorMessage, 'IMAGE_FETCH_ERROR');
   });
+
+  test('setCustomDisplayEnabled forwards the app name and value', () async {
+    await inAppMessaging.setCustomDisplayEnabled(true);
+
+    expect(hostApi.appName, app.name);
+    expect(hostApi.customDisplayEnabled, isTrue);
+  });
+
+  test('onMessageDisplay emits the campaign payload', () async {
+    await inAppMessaging.setCustomDisplayEnabled(true);
+    final event = inAppMessaging.onMessageDisplay.first;
+
+    await _sendFlutterApiMessage('onMessageDisplay', [
+      pigeon.FiamDisplayMessage(
+        campaignMetadata: pigeon.FiamCampaignMetadata(
+          campaignId: 'campaign-id',
+          campaignName: 'campaign-name',
+          isTestMessage: false,
+        ),
+        messageType: 'MODAL',
+        title: pigeon.FiamText(text: 'Hello', hexColor: '#FFFFFF'),
+        body: pigeon.FiamText(text: 'World'),
+        imageUrl: 'https://example.com/image.png',
+        action: pigeon.FiamDisplayAction(
+          id: 'campaign-id_action',
+          actionUrl: 'https://example.com',
+          buttonText: 'Open',
+        ),
+        data: <String?, String?>{'promo': 'SAVE10'},
+      ),
+    ]);
+
+    final message = await event;
+    expect(message.campaignMetadata.campaignId, 'campaign-id');
+    expect(message.messageType, InAppMessageType.modal);
+    expect(message.title?.text, 'Hello');
+    expect(message.body?.text, 'World');
+    expect(message.action?.actionUrl, 'https://example.com');
+    expect(message.data['promo'], 'SAVE10');
+
+    await message.impress();
+    expect(hostApi.campaignId, 'campaign-id');
+  });
 }
 
 /// Simulates the native side calling [pigeon.FirebaseInAppMessagingFlutterApi].
@@ -168,6 +211,11 @@ class _TestFirebaseInAppMessagingHostApi
   bool? messagesSuppressed;
   bool? automaticDataCollectionEnabled;
   int addEventListenersCount = 0;
+  bool? customDisplayEnabled;
+  String? campaignId;
+  String? actionId;
+  String? dismissType;
+  String? errorReason;
 
   void reset() {
     appName = null;
@@ -175,6 +223,11 @@ class _TestFirebaseInAppMessagingHostApi
     messagesSuppressed = null;
     automaticDataCollectionEnabled = null;
     addEventListenersCount = 0;
+    customDisplayEnabled = null;
+    campaignId = null;
+    actionId = null;
+    dismissType = null;
+    errorReason = null;
   }
 
   @override
@@ -202,5 +255,34 @@ class _TestFirebaseInAppMessagingHostApi
   Future<void> addEventListeners(String appName) async {
     this.appName = appName;
     addEventListenersCount++;
+  }
+
+  @override
+  Future<void> setCustomDisplayEnabled(String appName, bool enabled) async {
+    this.appName = appName;
+    customDisplayEnabled = enabled;
+  }
+
+  @override
+  Future<void> reportImpression(String campaignId) async {
+    this.campaignId = campaignId;
+  }
+
+  @override
+  Future<void> reportClick(String campaignId, String actionId) async {
+    this.campaignId = campaignId;
+    this.actionId = actionId;
+  }
+
+  @override
+  Future<void> reportDismiss(String campaignId, String dismissType) async {
+    this.campaignId = campaignId;
+    this.dismissType = dismissType;
+  }
+
+  @override
+  Future<void> reportDisplayError(String campaignId, String reason) async {
+    this.campaignId = campaignId;
+    errorReason = reason;
   }
 }
