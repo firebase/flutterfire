@@ -817,7 +817,11 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 #pragma mark - SceneDelegate Methods
 
 #if !TARGET_OS_OSX
-- (void)scene:(UIScene *)scene
+// FlutterSceneLifeCycleDelegate declares this as BOOL. YES means this plugin
+// consumed the connection, which skips Flutter's cold-start deep link delivery
+// and passes nil options to later plugins. Messaging only reads
+// notificationResponse, so always return NO.
+- (BOOL)scene:(UIScene *)scene
     willConnectToSession:(UISceneSession *)session
                  options:(UISceneConnectionOptions *)connectionOptions {
   // Handle launch notification if present
@@ -836,6 +840,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 
   [self setupNotificationHandlingWithRemoteNotification:remoteNotification
                                        actionIdentifier:actionIdentifier];
+  return NO;
 }
 #endif
 
