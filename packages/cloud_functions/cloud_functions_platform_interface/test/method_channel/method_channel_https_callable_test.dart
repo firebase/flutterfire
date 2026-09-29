@@ -27,12 +27,15 @@ void main() {
   dynamic kParameters = {'foo': 'bar'};
   HttpsCallableOptions kOptions = HttpsCallableOptions();
   String kPlatformExceptionMessage = 'Mock platform exception thrown';
+  Map<String, Object?>? lastCallArguments;
 
   group('$MethodChannelHttpsCallable', () {
     setUpAll(() async {
       FirebaseApp app = await Firebase.initializeApp();
 
-      TestCloudFunctionsHostApi.setUp(_TestCloudFunctionsHostApi(() async {
+      TestCloudFunctionsHostApi.setUp(
+          _TestCloudFunctionsHostApi((arguments) async {
+        lastCallArguments = arguments;
         if (mockExceptionThrown) {
           throw Exception();
         } else if (mockPlatformExceptionThrown) {
@@ -56,6 +59,8 @@ void main() {
     setUp(() async {
       mockPlatformExceptionThrown = false;
       mockExceptionThrown = false;
+      lastCallArguments = null;
+      functions!.allowInsecureTokenAttachment = false;
       httpsCallable!.options = kOptions;
     });
 
@@ -92,6 +97,17 @@ void main() {
     });
 
     group('call', () {
+      test('sends allowInsecureTokenAttachment, defaulting to false', () async {
+        await httpsCallable!.call();
+
+        expect(lastCallArguments?['allowInsecureTokenAttachment'], isFalse);
+
+        functions!.allowInsecureTokenAttachment = true;
+        await httpsCallable!.call();
+
+        expect(lastCallArguments?['allowInsecureTokenAttachment'], isTrue);
+      });
+
       test('converts maps nested in lists', () async {
         final originalParameters = kParameters;
         addTearDown(() => kParameters = originalParameters);
@@ -120,16 +136,48 @@ void main() {
         await testExceptionHandling('PLATFORM', httpsCallable!.call);
       });
     });
+
+    group('stream', () {
+      test('sends allowInsecureTokenAttachment on the event channel', () async {
+        functions!.allowInsecureTokenAttachment = true;
+        const channelName = 'plugins.flutter.io/firebase_functions/test_name_0';
+        Object? listenedArguments;
+        final messenger = TestDefaultBinaryMessengerBinding
+            .instance.defaultBinaryMessenger;
+        messenger.setMockMethodCallHandler(const MethodChannel(channelName),
+            (call) async {
+          if (call.method == 'listen') {
+            listenedArguments = call.arguments;
+          }
+          return null;
+        });
+        addTearDown(() {
+          messenger.setMockMethodCallHandler(
+              const MethodChannel(channelName), null);
+        });
+
+        final subscription = httpsCallable!.stream(null).listen((_) {});
+        await Future<void>.delayed(Duration.zero);
+        await subscription.cancel();
+
+        expect(listenedArguments, isA<Map>());
+        expect(
+          (listenedArguments! as Map)['allowInsecureTokenAttachment'],
+          isTrue,
+        );
+      });
+    });
   });
 }
 
 class _TestCloudFunctionsHostApi implements TestCloudFunctionsHostApi {
   _TestCloudFunctionsHostApi(this.callHandler);
 
-  final Future<Object?> Function() callHandler;
+  final Future<Object?> Function(Map<String, Object?> arguments) callHandler;
 
   @override
-  Future<Object?> call(Map<String, Object?> arguments) => callHandler();
+  Future<Object?> call(Map<String, Object?> arguments) =>
+      callHandler(arguments);
 
   @override
   Future<void> registerEventChannel(Map<String, Object> arguments) async {}
