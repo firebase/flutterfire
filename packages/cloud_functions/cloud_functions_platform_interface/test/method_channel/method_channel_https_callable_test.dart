@@ -142,8 +142,8 @@ void main() {
         functions!.allowInsecureTokenAttachment = true;
         const channelName = 'plugins.flutter.io/firebase_functions/test_name_0';
         Object? listenedArguments;
-        final messenger = TestDefaultBinaryMessengerBinding
-            .instance.defaultBinaryMessenger;
+        final messenger =
+            TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
         messenger.setMockMethodCallHandler(const MethodChannel(channelName),
             (call) async {
           if (call.method == 'listen') {
