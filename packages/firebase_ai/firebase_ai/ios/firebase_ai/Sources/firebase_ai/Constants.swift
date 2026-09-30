@@ -12,10 +12,5 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-String? claimDataConnectWebSocketTransport(String key) => null;
-
-bool isCurrentDataConnectWebSocketTransport(String key, String? token) => true;
-
-void releaseDataConnectWebSocketTransport(String key, String? token) {}
-
-void registerWebLibraryVersion(String libraryName, String version) {}
+/// Auto-generated file. Do not edit.
+public let versionNumber = "4.0.0"

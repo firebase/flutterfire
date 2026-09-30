@@ -22,6 +22,9 @@ import 'package:meta/meta.dart';
 
 import '../firebase_ai.dart';
 import 'base_model.dart';
+import 'firebaseai_version.dart';
+import 'platform_version_stub.dart'
+    if (dart.library.js_interop) 'platform_version_web.dart';
 
 const _defaultAgentPlatformLocation = 'global';
 
@@ -35,7 +38,9 @@ class FirebaseAI extends FirebasePlugin {
     this.auth,
     this.useLimitedUseAppCheckTokens = false,
   })  : _useAgentPlatform = useAgentPlatform,
-        super(app.name, 'plugins.flutter.io/firebase_vertexai');
+        super(app.name, 'plugins.flutter.io/firebase_vertexai') {
+    registerWebLibraryVersion('flutter-fire-ai', packageVersion);
+  }
 
   /// The [FirebaseApp] for this current [FirebaseAI] instance.
   FirebaseApp app;
