@@ -1163,8 +1163,8 @@ class TransactionStreamHandler
                 static_cast<firebase::firestore::Error>(
                     completed_future.error());
             EncodableMap error;
-            error[EncodableValue("code")] = EncodableValue(
-                CloudFirestorePlugin::GetErrorCode(errorCode));
+            error[EncodableValue("code")] =
+                EncodableValue(CloudFirestorePlugin::GetErrorCode(errorCode));
             error[EncodableValue("message")] =
                 EncodableValue(completed_future.error_message());
             result[EncodableValue("error")] = EncodableValue(error);
