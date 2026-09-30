@@ -1157,12 +1157,19 @@ class TransactionStreamHandler
             SendSuccessOnPlatformThread(events_state_,
                                         flutter::EncodableValue(result));
           } else {
-            // Dart reads the Firestore code from details. An empty details
-            // value makes every commit failure surface as `unknown`.
-            const FlutterError error =
-                CloudFirestorePlugin::ParseError(completed_future);
-            SendErrorOnPlatformThread(events_state_, error.code(),
-                                      error.message(), error.details());
+            // runTransaction reads this success payload. An EventChannel
+            // error never reaches the transaction future.
+            const firebase::firestore::Error errorCode =
+                static_cast<firebase::firestore::Error>(
+                    completed_future.error());
+            EncodableMap error;
+            error[EncodableValue("code")] = EncodableValue(
+                CloudFirestorePlugin::GetErrorCode(errorCode));
+            error[EncodableValue("message")] =
+                EncodableValue(completed_future.error_message());
+            result[EncodableValue("error")] = EncodableValue(error);
+            SendSuccessOnPlatformThread(events_state_,
+                                        flutter::EncodableValue(result));
           }
           EndStreamOnPlatformThread(events_state_);
         });
