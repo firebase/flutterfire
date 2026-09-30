@@ -75,7 +75,8 @@ class _GenerativeAISampleState extends State<GenerativeAISample> {
       final geminiEnterpriseInstance =
           FirebaseAI.enterprise(location: 'global');
       _currentModel = geminiEnterpriseInstance.generativeModel(
-          model: ExampleModels.flashLite);
+        model: ExampleModels.flashLite,
+      );
     } else {
       final googleAI = FirebaseAI.googleAI();
       _currentModel = googleAI.generativeModel(model: ExampleModels.flashLite);
