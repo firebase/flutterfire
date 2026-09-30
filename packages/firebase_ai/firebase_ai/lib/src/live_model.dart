@@ -15,8 +15,7 @@
 part of 'base_model.dart';
 
 const _apiUrl = 'ws/google.firebase.vertexai';
-const _apiUrlSuffixAgentPlatform =
-    'LlmBidiService/BidiGenerateContent/locations';
+const _apiUrlSuffixEnterprise = 'LlmBidiService/BidiGenerateContent/locations';
 const _apiUrlSuffixGoogleAI = 'GenerativeService/BidiGenerateContent';
 
 /// A live, generative AI model for real-time interaction.
@@ -34,7 +33,7 @@ final class LiveGenerativeModel extends BaseModel {
       {required String model,
       required String location,
       required FirebaseApp app,
-      required bool useAgentPlatform,
+      required bool useEnterprise,
       bool? useLimitedUseAppCheckTokens,
       FirebaseAppCheck? appCheck,
       FirebaseAuth? auth,
@@ -43,7 +42,7 @@ final class LiveGenerativeModel extends BaseModel {
       Content? systemInstruction})
       : _app = app,
         _location = location,
-        _useAgentPlatform = useAgentPlatform,
+        _useEnterprise = useEnterprise,
         _appCheck = appCheck,
         _auth = auth,
         _liveGenerationConfig = liveGenerationConfig,
@@ -51,9 +50,9 @@ final class LiveGenerativeModel extends BaseModel {
         _systemInstruction = systemInstruction,
         _useLimitedUseAppCheckTokens = useLimitedUseAppCheckTokens,
         super._(
-          serializationStrategy: AgentPlatformSerialization(),
-          modelUri: useAgentPlatform
-              ? _AgentPlatformUri(
+          serializationStrategy: EnterpriseSerialization(),
+          modelUri: useEnterprise
+              ? _EnterpriseUri(
                   model: model,
                   app: app,
                   location: location,
@@ -66,7 +65,7 @@ final class LiveGenerativeModel extends BaseModel {
 
   final FirebaseApp _app;
   final String _location;
-  final bool _useAgentPlatform;
+  final bool _useEnterprise;
   final FirebaseAppCheck? _appCheck;
   final FirebaseAuth? _auth;
   final LiveGenerationConfig? _liveGenerationConfig;
@@ -74,11 +73,11 @@ final class LiveGenerativeModel extends BaseModel {
   final Content? _systemInstruction;
   final bool? _useLimitedUseAppCheckTokens;
 
-  String _agentPlatformUri() => 'wss://${_modelUri.baseAuthority}/'
-      '$_apiUrl.${_modelUri.apiVersion}.$_apiUrlSuffixAgentPlatform/'
+  String _geminiEnterpriseUri() => 'wss://${_modelUri.baseAuthority}/'
+      '$_apiUrl.${_modelUri.apiVersion}.$_apiUrlSuffixEnterprise/'
       '$_location?key=${_app.options.apiKey}';
 
-  String _agentPlatformModelString() => 'projects/${_app.options.projectId}/'
+  String _geminiEnterpriseModelString() => 'projects/${_app.options.projectId}/'
       'locations/$_location/publishers/google/models/${model.name}';
 
   String _googleAIUri() => 'wss://${_modelUri.baseAuthority}/'
@@ -98,9 +97,9 @@ final class LiveGenerativeModel extends BaseModel {
   /// connection.
   Future<LiveSession> connect(
       {SessionResumptionConfig? sessionResumption}) async {
-    final uri = _useAgentPlatform ? _agentPlatformUri() : _googleAIUri();
-    final modelString = _useAgentPlatform
-        ? _agentPlatformModelString()
+    final uri = _useEnterprise ? _geminiEnterpriseUri() : _googleAIUri();
+    final modelString = _useEnterprise
+        ? _geminiEnterpriseModelString()
         : _googleAIModelString();
 
     final headers = await BaseModel.firebaseTokens(
@@ -127,7 +126,7 @@ LiveGenerativeModel createLiveGenerativeModel({
   required FirebaseApp app,
   required String location,
   required String model,
-  required bool useAgentPlatform,
+  required bool useEnterprise,
   bool? useLimitedUseAppCheckTokens,
   FirebaseAppCheck? appCheck,
   FirebaseAuth? auth,
@@ -141,7 +140,7 @@ LiveGenerativeModel createLiveGenerativeModel({
       appCheck: appCheck,
       auth: auth,
       location: location,
-      useAgentPlatform: useAgentPlatform,
+      useEnterprise: useEnterprise,
       useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
       liveGenerationConfig: liveGenerationConfig,
       tools: tools,

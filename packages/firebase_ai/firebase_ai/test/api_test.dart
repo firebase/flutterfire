@@ -714,7 +714,7 @@ void main() {
           ]
         };
         final response =
-            AgentPlatformSerialization().parseCountTokensResponse(json);
+            EnterpriseSerialization().parseCountTokensResponse(json);
         expect(response.totalTokens, 120);
         expect(response.promptTokensDetails, isNotNull);
         expect(response.promptTokensDetails, hasLength(2));
@@ -728,7 +728,7 @@ void main() {
       test('parses valid JSON with minimal fields (only totalTokens)', () {
         final json = {'totalTokens': 50};
         final response =
-            AgentPlatformSerialization().parseCountTokensResponse(json);
+            EnterpriseSerialization().parseCountTokensResponse(json);
         expect(response.totalTokens, 50);
         expect(response.promptTokensDetails, isNull);
       });
@@ -737,23 +737,21 @@ void main() {
         final json = {
           'error': {'code': 400, 'message': 'Invalid request'}
         };
-        expect(
-            () => AgentPlatformSerialization().parseCountTokensResponse(json),
+        expect(() => EnterpriseSerialization().parseCountTokensResponse(json),
             throwsA(isA<FirebaseAIException>()));
       });
 
       test('throws FormatException for invalid JSON structure (not a Map)', () {
         const json = 'not_a_map';
         expect(
-            () => AgentPlatformSerialization().parseCountTokensResponse(json),
+            () => EnterpriseSerialization().parseCountTokensResponse(json),
             throwsA(isA<FirebaseAISdkException>().having(
                 (e) => e.message, 'message', contains('CountTokensResponse'))));
       });
 
       test('throws if totalTokens is missing', () {
         final json = {'totalBillableCharacters': 100};
-        expect(
-            () => AgentPlatformSerialization().parseCountTokensResponse(json),
+        expect(() => EnterpriseSerialization().parseCountTokensResponse(json),
             throwsA(anything)); // More specific error expected
       });
     });
@@ -804,7 +802,7 @@ void main() {
           }
         };
         final response =
-            AgentPlatformSerialization().parseGenerateContentResponse(json);
+            EnterpriseSerialization().parseGenerateContentResponse(json);
         expect(response.candidates, hasLength(1));
         expect(response.candidates.first.text, 'Hello world');
         expect(response.candidates.first.finishReason, FinishReason.stop);
@@ -867,7 +865,7 @@ void main() {
           ]
         };
         final response =
-            AgentPlatformSerialization().parseGenerateContentResponse(json);
+            EnterpriseSerialization().parseGenerateContentResponse(json);
         final ratings = response.candidates.first.safetyRatings!;
         expect(ratings.map((r) => r.category), [
           HarmCategory.imageDangerousContent,
@@ -898,7 +896,7 @@ void main() {
           ]
         };
         final response =
-            AgentPlatformSerialization().parseGenerateContentResponse(json);
+            EnterpriseSerialization().parseGenerateContentResponse(json);
         expect(response.candidates.first.safetyRatings!.first.category,
             HarmCategory.unknown);
       });
@@ -915,7 +913,7 @@ void main() {
             }
           };
           final response =
-              AgentPlatformSerialization().parseGenerateContentResponse(json);
+              EnterpriseSerialization().parseGenerateContentResponse(json);
           expect(response.usageMetadata, isNotNull);
           expect(response.usageMetadata!.promptTokenCount, 10);
           expect(response.usageMetadata!.candidatesTokenCount, 20);
@@ -933,7 +931,7 @@ void main() {
             }
           };
           final response =
-              AgentPlatformSerialization().parseGenerateContentResponse(json);
+              EnterpriseSerialization().parseGenerateContentResponse(json);
           expect(response.usageMetadata, isNotNull);
           expect(response.usageMetadata!.thoughtsTokenCount, isNull);
         });
@@ -976,7 +974,7 @@ void main() {
             ]
           };
 
-          final response = AgentPlatformSerialization()
+          final response = EnterpriseSerialization()
               .parseGenerateContentResponse(jsonResponse);
           final groundingMetadata = response.candidates.first.groundingMetadata;
 
@@ -1035,7 +1033,7 @@ void main() {
             ]
           };
 
-          final response = AgentPlatformSerialization()
+          final response = EnterpriseSerialization()
               .parseGenerateContentResponse(jsonResponse);
           final groundingMetadata = response.candidates.first.groundingMetadata;
 
@@ -1078,7 +1076,7 @@ void main() {
           };
 
           expect(
-              () => AgentPlatformSerialization()
+              () => EnterpriseSerialization()
                   .parseGenerateContentResponse(jsonResponse),
               throwsA(isA<FirebaseAISdkException>().having(
                   (e) => e.message, 'message', contains('SearchEntryPoint'))));
@@ -1105,7 +1103,7 @@ void main() {
               }
             ]
           };
-          final response = AgentPlatformSerialization()
+          final response = EnterpriseSerialization()
               .parseGenerateContentResponse(jsonResponse);
           final groundingMetadata = response.candidates.first.groundingMetadata;
 
@@ -1127,8 +1125,8 @@ void main() {
             ]
           };
           expect(
-              () => AgentPlatformSerialization()
-                  .parseGenerateContentResponse(json),
+              () =>
+                  EnterpriseSerialization().parseGenerateContentResponse(json),
               throwsA(isA<FirebaseAISdkException>().having(
                   (e) => e.message, 'message', contains('GroundingChunk'))));
         });
@@ -1145,8 +1143,8 @@ void main() {
             ]
           };
           expect(
-              () => AgentPlatformSerialization()
-                  .parseGenerateContentResponse(json),
+              () =>
+                  EnterpriseSerialization().parseGenerateContentResponse(json),
               throwsA(isA<FirebaseAISdkException>().having(
                   (e) => e.message, 'message', contains('GroundingSupport'))));
         });
@@ -1161,8 +1159,8 @@ void main() {
             ]
           };
           expect(
-              () => AgentPlatformSerialization()
-                  .parseGenerateContentResponse(json),
+              () =>
+                  EnterpriseSerialization().parseGenerateContentResponse(json),
               throwsA(isA<FirebaseAISdkException>().having(
                   (e) => e.message, 'message', contains('SearchEntryPoint'))));
         });
@@ -1182,8 +1180,8 @@ void main() {
             ]
           };
           expect(
-              () => AgentPlatformSerialization()
-                  .parseGenerateContentResponse(json),
+              () =>
+                  EnterpriseSerialization().parseGenerateContentResponse(json),
               throwsA(isA<FirebaseAISdkException>()
                   .having((e) => e.message, 'message', contains('Segment'))));
         });
@@ -1203,8 +1201,8 @@ void main() {
             ]
           };
           expect(
-              () => AgentPlatformSerialization()
-                  .parseGenerateContentResponse(json),
+              () =>
+                  EnterpriseSerialization().parseGenerateContentResponse(json),
               throwsA(isA<FirebaseAISdkException>().having(
                   (e) => e.message, 'message', contains('WebGroundingChunk'))));
         });
@@ -1215,7 +1213,7 @@ void main() {
               {'finishReason': 'MALFORMED_FUNCTION_CALL'}
             ]
           };
-          final response = AgentPlatformSerialization()
+          final response = EnterpriseSerialization()
               .parseGenerateContentResponse(jsonResponse);
           expect(response.candidates.first.finishReason,
               FinishReason.malformedFunctionCall);
@@ -1227,7 +1225,7 @@ void main() {
               {'finishReason': 'UNEXPECTED_TOOL_CALL'}
             ]
           };
-          final response = AgentPlatformSerialization()
+          final response = EnterpriseSerialization()
               .parseGenerateContentResponse(jsonResponse);
           expect(response.candidates.first.finishReason,
               FinishReason.unexpectedToolCall);
@@ -1268,7 +1266,7 @@ void main() {
             ]
           };
 
-          final response = AgentPlatformSerialization()
+          final response = EnterpriseSerialization()
               .parseGenerateContentResponse(jsonResponse);
           final groundingMetadata = response.candidates.first.groundingMetadata;
 
@@ -1304,7 +1302,7 @@ void main() {
               }
             ]
           };
-          final response = AgentPlatformSerialization()
+          final response = EnterpriseSerialization()
               .parseGenerateContentResponse(jsonResponse);
           final urlContextMetadata =
               response.candidates.first.urlContextMetadata;
@@ -1342,7 +1340,7 @@ void main() {
               }
             ]
           };
-          final response = AgentPlatformSerialization()
+          final response = EnterpriseSerialization()
               .parseGenerateContentResponse(jsonResponse);
           final urlContextMetadata =
               response.candidates.first.urlContextMetadata;
@@ -1371,7 +1369,7 @@ void main() {
               }
             ]
           };
-          final response = AgentPlatformSerialization()
+          final response = EnterpriseSerialization()
               .parseGenerateContentResponse(jsonResponse);
           final urlMetadata =
               response.candidates.first.urlContextMetadata!.urlMetadata.first;
@@ -1387,7 +1385,7 @@ void main() {
               }
             ]
           };
-          final response = AgentPlatformSerialization()
+          final response = EnterpriseSerialization()
               .parseGenerateContentResponse(jsonResponse);
           final urlContextMetadata =
               response.candidates.first.urlContextMetadata;
@@ -1401,7 +1399,7 @@ void main() {
               {'finishReason': 'STOP'}
             ]
           };
-          final response = AgentPlatformSerialization()
+          final response = EnterpriseSerialization()
               .parseGenerateContentResponse(jsonResponse);
           final candidate = response.candidates.first;
           expect(candidate.urlContextMetadata, isNull);
@@ -1414,7 +1412,7 @@ void main() {
             ]
           };
           expect(
-              () => AgentPlatformSerialization()
+              () => EnterpriseSerialization()
                   .parseGenerateContentResponse(jsonResponse),
               throwsA(isA<FirebaseAISdkException>().having((e) => e.message,
                   'message', contains('UrlContextMetadata'))));
@@ -1431,7 +1429,7 @@ void main() {
             ]
           };
           expect(
-              () => AgentPlatformSerialization()
+              () => EnterpriseSerialization()
                   .parseGenerateContentResponse(jsonResponse),
               throwsA(isA<FirebaseAISdkException>().having(
                   (e) => e.message, 'message', contains('UrlMetadata'))));
@@ -1441,7 +1439,7 @@ void main() {
       test('parses JSON with no candidates (empty list)', () {
         final json = {'candidates': []};
         final response =
-            AgentPlatformSerialization().parseGenerateContentResponse(json);
+            EnterpriseSerialization().parseGenerateContentResponse(json);
         expect(response.candidates, isEmpty);
         expect(response.promptFeedback, isNull);
         expect(response.usageMetadata, isNull);
@@ -1451,7 +1449,7 @@ void main() {
         // The code defaults to <Candidate>[] if 'candidates' key is missing
         final json = {'promptFeedback': null};
         final response =
-            AgentPlatformSerialization().parseGenerateContentResponse(json);
+            EnterpriseSerialization().parseGenerateContentResponse(json);
         expect(response.candidates, isEmpty);
         expect(response.promptFeedback, isNull);
       });
@@ -1470,7 +1468,7 @@ void main() {
           ]
         };
         final response =
-            AgentPlatformSerialization().parseGenerateContentResponse(json);
+            EnterpriseSerialization().parseGenerateContentResponse(json);
         expect(response.candidates, hasLength(1));
         expect(response.candidates.first.text, 'Minimal');
         expect(response.candidates.first.finishReason, isNull);
@@ -1500,7 +1498,7 @@ void main() {
           }
         };
         final response =
-            AgentPlatformSerialization().parseGenerateContentResponse(json);
+            EnterpriseSerialization().parseGenerateContentResponse(json);
         expect(response.candidates, hasLength(1));
         expect(response.candidates.first.text, 'Hello world');
         expect(response.candidates.first.finishReason, FinishReason.stop);
@@ -1556,7 +1554,7 @@ void main() {
           ]
         };
         final response =
-            AgentPlatformSerialization().parseGenerateContentResponse(json);
+            EnterpriseSerialization().parseGenerateContentResponse(json);
         final candidate = response.candidates.first;
         expect(candidate.citationMetadata, isNotNull);
         expect(candidate.citationMetadata!.citations, hasLength(1));
@@ -1587,7 +1585,7 @@ void main() {
           ]
         };
         final response =
-            AgentPlatformSerialization().parseGenerateContentResponse(json);
+            EnterpriseSerialization().parseGenerateContentResponse(json);
         final candidate = response.candidates.first;
         expect(candidate.citationMetadata, isNotNull);
         expect(candidate.citationMetadata!.citations, hasLength(1));
@@ -1601,8 +1599,7 @@ void main() {
           'error': {'code': 500, 'message': 'Internal server error'}
         };
         expect(
-            () =>
-                AgentPlatformSerialization().parseGenerateContentResponse(json),
+            () => EnterpriseSerialization().parseGenerateContentResponse(json),
             throwsA(isA<FirebaseAIException>()));
       });
 
@@ -1617,7 +1614,7 @@ void main() {
           ]
         };
         final response =
-            AgentPlatformSerialization().parseGenerateContentResponse(json);
+            EnterpriseSerialization().parseGenerateContentResponse(json);
         expect(response.candidates, hasLength(1));
         expect(response.candidates.first.content.parts, isEmpty);
         expect(response.candidates.first.text, isNull);
@@ -1628,7 +1625,7 @@ void main() {
           'candidates': ['not_a_map_candidate']
         };
         expect(
-            () => AgentPlatformSerialization()
+            () => EnterpriseSerialization()
                 .parseGenerateContentResponse(jsonResponse),
             throwsA(isA<FirebaseAISdkException>()
                 .having((e) => e.message, 'message', contains('Candidate'))));
@@ -1644,7 +1641,7 @@ void main() {
           ]
         };
         expect(
-            () => AgentPlatformSerialization()
+            () => EnterpriseSerialization()
                 .parseGenerateContentResponse(jsonResponse),
             throwsA(isA<FirebaseAISdkException>().having(
                 (e) => e.message, 'message', contains('SafetyRating'))));
@@ -1660,7 +1657,7 @@ void main() {
           ]
         };
         expect(
-            () => AgentPlatformSerialization()
+            () => EnterpriseSerialization()
                 .parseGenerateContentResponse(jsonResponse),
             throwsA(isA<FirebaseAISdkException>().having(
                 (e) => e.message, 'message', contains('CitationMetadata'))));
@@ -1668,7 +1665,7 @@ void main() {
       test('throws FormatException for invalid prompt feedback structure', () {
         final jsonResponse = {'promptFeedback': 'not_a_map_feedback'};
         expect(
-            () => AgentPlatformSerialization()
+            () => EnterpriseSerialization()
                 .parseGenerateContentResponse(jsonResponse),
             throwsA(isA<FirebaseAISdkException>().having(
                 (e) => e.message, 'message', contains('PromptFeedback'))));
@@ -1676,7 +1673,7 @@ void main() {
       test('throws FormatException for invalid usage metadata structure', () {
         final jsonResponse = {'usageMetadata': 'not_a_map_usage'};
         expect(
-            () => AgentPlatformSerialization()
+            () => EnterpriseSerialization()
                 .parseGenerateContentResponse(jsonResponse),
             throwsA(isA<FirebaseAISdkException>().having(
                 (e) => e.message, 'message', contains('UsageMetadata'))));
@@ -1689,7 +1686,7 @@ void main() {
           }
         };
         expect(
-            () => AgentPlatformSerialization()
+            () => EnterpriseSerialization()
                 .parseGenerateContentResponse(jsonResponse),
             throwsA(isA<FirebaseAISdkException>().having(
                 (e) => e.message, 'message', contains('ModalityTokenCount'))));

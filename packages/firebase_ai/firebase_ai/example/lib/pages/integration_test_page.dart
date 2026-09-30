@@ -51,7 +51,7 @@ class TestItem {
   final String model;
   final Future<TestResult> Function(FirebaseAI provider, TestLogger logger) run;
   TestResult googleAIResult;
-  TestResult agentPlatformResult;
+  TestResult geminiEnterpriseResult;
 
   TestItem({
     required this.id,
@@ -66,7 +66,7 @@ class TestItem {
   })  : name = name.contains(model) ? name : '$name ($model)',
         run = ((provider, logger) => run(provider, logger, model)),
         googleAIResult = TestResult.pending(),
-        agentPlatformResult = TestResult.pending();
+        geminiEnterpriseResult = TestResult.pending();
 }
 
 class TestLogger {
@@ -662,14 +662,14 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
     ];
   }
 
-  Future<void> _runTestItem(TestItem item, bool isAgentPlatform) async {
+  Future<void> _runTestItem(TestItem item, bool isGeminiEnterprise) async {
     final provider =
-        isAgentPlatform ? FirebaseAI.agentPlatform() : FirebaseAI.googleAI();
+        isGeminiEnterprise ? FirebaseAI.enterprise() : FirebaseAI.googleAI();
     final logger = TestLogger();
 
     setState(() {
-      if (isAgentPlatform) {
-        item.agentPlatformResult =
+      if (isGeminiEnterprise) {
+        item.geminiEnterpriseResult =
             TestResult(status: TestStatus.running, logs: 'Running...');
       } else {
         item.googleAIResult =
@@ -679,12 +679,12 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
 
     try {
       logger.log(
-        'Starting execution for ${item.name} (${isAgentPlatform ? 'Agent Platform' : 'Google AI'})...',
+        'Starting execution for ${item.name} (${isGeminiEnterprise ? 'Gemini Enterprise' : 'Google AI'})...',
       );
       final result = await item.run(provider, logger);
       setState(() {
-        if (isAgentPlatform) {
-          item.agentPlatformResult = result;
+        if (isGeminiEnterprise) {
+          item.geminiEnterpriseResult = result;
         } else {
           item.googleAIResult = result;
         }
@@ -697,8 +697,8 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
           logs: logger.toString(),
           errorMessage: e.toString(),
         );
-        if (isAgentPlatform) {
-          item.agentPlatformResult = failResult;
+        if (isGeminiEnterprise) {
+          item.geminiEnterpriseResult = failResult;
         } else {
           item.googleAIResult = failResult;
         }
@@ -714,7 +714,7 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
       _progress = 0;
       for (final item in _testCases) {
         item.googleAIResult = TestResult.pending();
-        item.agentPlatformResult = TestResult.pending();
+        item.geminiEnterpriseResult = TestResult.pending();
       }
     });
 
@@ -920,7 +920,7 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
     final googleAIResults =
         _testCases.map((item) => item.googleAIResult).toList();
     final vertexAIResults =
-        _testCases.map((item) => item.agentPlatformResult).toList();
+        _testCases.map((item) => item.geminiEnterpriseResult).toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -967,7 +967,7 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
                 const SizedBox(width: 8),
                 Expanded(
                   child: _buildProviderSummary(
-                    'Agent Platform Suite',
+                    'Gemini Enterprise Suite',
                     vertexAIResults,
                   ),
                 ),
@@ -1017,13 +1017,13 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
                         Row(
                           children: [
                             const Text(
-                              'AP: ',
+                              'GE: ',
                               style: TextStyle(
                                 fontSize: 10,
                                 color: Colors.grey,
                               ),
                             ),
-                            _buildStatusBadge(item.agentPlatformResult),
+                            _buildStatusBadge(item.geminiEnterpriseResult),
                           ],
                         ),
                       ],
@@ -1045,8 +1045,8 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
                                 const SizedBox(width: 8),
                                 Expanded(
                                   child: _buildLogsConsole(
-                                    'Agent Platform Details',
-                                    item.agentPlatformResult,
+                                    'Gemini Enterprise Details',
+                                    item.geminiEnterpriseResult,
                                   ),
                                 ),
                               ],

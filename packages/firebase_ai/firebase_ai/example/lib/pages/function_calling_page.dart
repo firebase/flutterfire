@@ -23,11 +23,11 @@ class FunctionCallingPage extends StatefulWidget {
   const FunctionCallingPage({
     super.key,
     required this.title,
-    required this.useAgentPlatform,
+    required this.useGeminiEnterprise,
   });
 
   final String title;
-  final bool useAgentPlatform;
+  final bool useGeminiEnterprise;
 
   @override
   State<FunctionCallingPage> createState() => _FunctionCallingPageState();
@@ -236,8 +236,8 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
           : null,
     );
 
-    final aiClient = widget.useAgentPlatform
-        ? FirebaseAI.agentPlatform()
+    final aiClient = widget.useGeminiEnterprise
+        ? FirebaseAI.enterprise()
         : FirebaseAI.googleAI();
 
     _functionCallModel = aiClient.generativeModel(

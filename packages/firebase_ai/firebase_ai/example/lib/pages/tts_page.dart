@@ -26,11 +26,11 @@ class TTSPage extends StatefulWidget {
   const TTSPage({
     super.key,
     required this.title,
-    required this.useAgentPlatform,
+    required this.useGeminiEnterprise,
   });
 
   final String title;
-  final bool useAgentPlatform;
+  final bool useGeminiEnterprise;
 
   @override
   State<TTSPage> createState() => _TTSPageState();
@@ -156,8 +156,8 @@ class _TTSPageState extends State<TTSPage> {
 
     // Use the preview model for TTS
     final GenerativeModel model;
-    if (widget.useAgentPlatform) {
-      model = FirebaseAI.agentPlatform().generativeModel(
+    if (widget.useGeminiEnterprise) {
+      model = FirebaseAI.enterprise().generativeModel(
         model: ExampleModels.flashTTS,
         generationConfig: config,
       );
