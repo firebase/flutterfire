@@ -5,7 +5,8 @@ name: reusable-e2e-macos
 # `e2e_tests_<product>.yaml` whose product ships a macOS implementation
 # (everything except firebase_performance).
 #
-# Always CocoaPods - the other half of the SPM/CocoaPods split with the iOS job.
+# `macos-spm` (default false) selects Swift Package Manager. Crashlytics stays
+# on CocoaPods: its example build phase calls a script under PODS_ROOT.
 
 on:
   workflow_call:
@@ -72,6 +73,15 @@ on:
           caches, so this is required rather than defaulted.
         type: string
         required: true
+      macos-spm:
+        description: >-
+          true  = macOS builds under Swift Package Manager (the Podfile is
+                  removed first, so `flutter build` does not prefer CocoaPods).
+          false = macOS stays on CocoaPods and gets a Pods cache. Crashlytics
+                  must stay false: its Xcode project runs
+                  "${PODS_ROOT}/FirebaseCrashlytics/upload-symbols".
+        type: boolean
+        default: false
       nightly_test_mode:
         description: >-
           Passed down from nightly.yaml. Shortens the job timeout to 5 minutes.
@@ -119,10 +129,14 @@ jobs:
           flutter-version: ${{ inputs.flutter-version }}
           firebase-tools-version: ${{ inputs.use-firebase-emulators && inputs.firebase-tools-version || '' }}
           bootstrap-scope: ${{ inputs.package-scope }}
-      - name: Disable Swift Package Manager
+      - name: Enable Swift Package Manager for macOS
+        if: inputs.macos-spm
+        run: flutter config --enable-swift-package-manager
+      - name: Disable Swift Package Manager for macOS
         # Recent stable Flutter enables SPM by default, which turns intended
-        # CocoaPods builds into hybrid ones. macOS is this workflow's CocoaPods
-        # coverage by design, so opt out explicitly.
+        # CocoaPods builds into hybrid ones. Callers that stay on CocoaPods
+        # (macos-spm: false) opt out explicitly.
+        if: ${{ !inputs.macos-spm }}
         run: flutter config --no-enable-swift-package-manager
       - uses: hendrikmuhs/ccache-action@d62db5f07c26379fc4b4e0916f098a92573c3b03
         name: Xcode Compile Cache
@@ -133,8 +147,7 @@ jobs:
           save: "${{ github.ref == 'refs/heads/main' }}"
           max-size: 700M
       - name: Pods Cache
-        # macOS is always CocoaPods - that is the other half of the SPM/CocoaPods
-        # split with the iOS job.
+        if: ${{ !inputs.macos-spm }}
         continue-on-error: true
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         id: pods-cache
@@ -181,6 +194,16 @@ jobs:
         run: |
           # shellcheck disable=SC2086 # an argument list: word-splitting is the point
           dart ./.github/workflows/scripts/generate-dummy-firebase-configs.dart $NATIVE_CONFIG_ARGS
+      - name: Prepare macOS project for Swift Package Manager
+        # Done here rather than in the repository: the committed Podfile is what
+        # CocoaPods users of the example rely on, and `flutter build` prefers
+        # CocoaPods whenever a Podfile is present.
+        if: inputs.macos-spm
+        working-directory: ${{ inputs.package-path }}/example/macos
+        run: |
+          if [ -f Podfile ]; then pod deintegrate; fi
+          rm -f Podfile Podfile.lock
+          rm -rf Pods
       - name: 'Build Application'
         working-directory: ${{ inputs.package-path }}/example
         timeout-minutes: 25
@@ -331,7 +354,7 @@ jobs:
       - name: Save Pods Cache
         continue-on-error: true
         # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
-        if: github.ref == 'refs/heads/main'
+        if: ${{ !inputs.macos-spm && github.ref == 'refs/heads/main' }}
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         with:
           key: ${{ steps.pods-cache.outputs.cache-primary-key }}

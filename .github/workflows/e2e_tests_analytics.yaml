@@ -95,6 +95,7 @@ jobs:
       package-path: 'packages/firebase_analytics/firebase_analytics'
       package-scope: 'firebase_analytics*'
       cache-key-suffix: 'analytics'
+      macos-spm: true
       native-config-args: '--live-tier-plist=analytics'
       inject-config-secrets: true
       use-firebase-emulators: false
