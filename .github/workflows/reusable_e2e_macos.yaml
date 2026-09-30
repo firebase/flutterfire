@@ -82,6 +82,15 @@ on:
                   "${PODS_ROOT}/FirebaseCrashlytics/upload-symbols".
         type: boolean
         default: false
+      preserve-podfile:
+        description: >-
+          true keeps the committed Podfile when macos-spm is also true. Use
+          this when a dependency has no macOS Package.swift, so Flutter still
+          runs pod install. The auth example needs it: facebook_auth_desktop
+          has no macOS SPM support, and Flutter's regenerated Podfile targets
+          RunnerTests, which that example does not have.
+        type: boolean
+        default: false
       nightly_test_mode:
         description: >-
           Passed down from nightly.yaml. Shortens the job timeout to 5 minutes.
@@ -198,11 +207,19 @@ jobs:
         # Done here rather than in the repository: the committed Podfile is what
         # CocoaPods users of the example rely on, and `flutter build` prefers
         # CocoaPods whenever a Podfile is present.
+        # preserve-podfile keeps that file for examples that still need a pods
+        # fallback. Deintegrate first so the old full-pod integration is not
+        # left next to the Swift package.
         if: inputs.macos-spm
         working-directory: ${{ inputs.package-path }}/example/macos
+        env:
+          PRESERVE_PODFILE: ${{ inputs.preserve-podfile && 'true' || 'false' }}
         run: |
           if [ -f Podfile ]; then pod deintegrate; fi
-          rm -f Podfile Podfile.lock
+          if [ "$PRESERVE_PODFILE" != "true" ]; then
+            rm -f Podfile
+          fi
+          rm -f Podfile.lock
           rm -rf Pods
       - name: 'Build Application'
         working-directory: ${{ inputs.package-path }}/example
