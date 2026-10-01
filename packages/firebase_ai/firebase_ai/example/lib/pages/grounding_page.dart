@@ -14,17 +14,18 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_ai/firebase_ai.dart';
+import '../constants.dart';
 import '../widgets/message_widget.dart';
 
 class GroundingPage extends StatefulWidget {
   const GroundingPage({
     super.key,
     required this.title,
-    required this.useAgentPlatform,
+    required this.useGeminiEnterprise,
   });
 
   final String title;
-  final bool useAgentPlatform;
+  final bool useGeminiEnterprise;
 
   @override
   State<GroundingPage> createState() => _GroundingPageState();
@@ -73,12 +74,12 @@ class _GroundingPageState extends State<GroundingPage> {
       }
     }
 
-    final aiProvider = widget.useAgentPlatform
-        ? FirebaseAI.agentPlatform()
+    final aiProvider = widget.useGeminiEnterprise
+        ? FirebaseAI.enterprise()
         : FirebaseAI.googleAI();
 
     _model = aiProvider.generativeModel(
-      model: 'gemini-3.5-flash',
+      model: ExampleModels.flashLite,
       tools: tools.isNotEmpty ? tools : null,
       toolConfig: toolConfig,
     );

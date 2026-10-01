@@ -18,6 +18,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:firebase_ai/firebase_ai.dart';
 import 'package:waveform_flutter/waveform_flutter.dart';
+import '../constants.dart';
 import '../utils/audio_output.dart';
 import '../widgets/audio_visualizer.dart';
 
@@ -25,11 +26,11 @@ class TTSPage extends StatefulWidget {
   const TTSPage({
     super.key,
     required this.title,
-    required this.useAgentPlatform,
+    required this.useGeminiEnterprise,
   });
 
   final String title;
-  final bool useAgentPlatform;
+  final bool useGeminiEnterprise;
 
   @override
   State<TTSPage> createState() => _TTSPageState();
@@ -154,16 +155,15 @@ class _TTSPageState extends State<TTSPage> {
     }
 
     // Use the preview model for TTS
-    const modelName = 'gemini-3.1-flash-tts-preview';
     final GenerativeModel model;
-    if (widget.useAgentPlatform) {
-      model = FirebaseAI.agentPlatform().generativeModel(
-        model: modelName,
+    if (widget.useGeminiEnterprise) {
+      model = FirebaseAI.enterprise().generativeModel(
+        model: ExampleModels.flashTTS,
         generationConfig: config,
       );
     } else {
       model = FirebaseAI.googleAI().generativeModel(
-        model: modelName,
+        model: ExampleModels.flashTTS,
         generationConfig: config,
       );
     }

@@ -8,10 +8,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 import org.junit.Test;
 
 public class ElfBuildIdReaderTest {
@@ -337,10 +341,95 @@ public class ElfBuildIdReaderTest {
     assertNull(ElfBuildIdReader.readBuildIdFromSource(sourceOf(new byte[0])));
   }
 
+  // --- Universal APK: pick libapp.so for the running ABI ---
+
+  @Test
+  public void readBuildIdFromZip_readsTheRuntimeAbiInsteadOfTheFirstLibapp() throws IOException {
+    // arm64 is first, which is what a universal APK scan used to return on every device.
+    // A decoy entry also ends in /libapp.so so a name-suffix match cannot pass this test.
+    File apk =
+        zipOfLibapp(
+            new String[] {
+              "assets/decoy/libapp.so",
+              "lib/arm64-v8a/libapp.so",
+              "lib/armeabi-v7a/libapp.so",
+              "lib/x86_64/libapp.so"
+            },
+            new byte[][] {
+              elfWithBuildId((byte) 0x99),
+              elfWithBuildId((byte) 0x11),
+              elfWithBuildId((byte) 0x22),
+              elfWithBuildId((byte) 0x33)
+            });
+
+    assertEquals(
+        hexWithFirstByte((byte) 0x33),
+        ElfBuildIdReader.readBuildIdFromZip(apk.getPath(), new String[] {"x86_64"}));
+    assertEquals(
+        hexWithFirstByte((byte) 0x22),
+        ElfBuildIdReader.readBuildIdFromZip(apk.getPath(), new String[] {"armeabi-v7a"}));
+    assertEquals(
+        hexWithFirstByte((byte) 0x11),
+        ElfBuildIdReader.readBuildIdFromZip(apk.getPath(), new String[] {"arm64-v8a"}));
+  }
+
+  @Test
+  public void readBuildIdFromZip_usesAbiPreferenceOrder() throws IOException {
+    File apk =
+        zipOfLibapp(
+            new String[] {"lib/arm64-v8a/libapp.so", "lib/x86_64/libapp.so"},
+            new byte[][] {elfWithBuildId((byte) 0x11), elfWithBuildId((byte) 0x33)});
+
+    assertEquals(
+        hexWithFirstByte((byte) 0x33),
+        ElfBuildIdReader.readBuildIdFromZip(
+            apk.getPath(), new String[] {"x86", "x86_64", "arm64-v8a"}));
+  }
+
+  @Test
+  public void readBuildIdFromZip_returnsNullWhenNoSupportedAbiIsPackaged() throws IOException {
+    File apk =
+        zipOfLibapp(
+            new String[] {"lib/arm64-v8a/libapp.so"}, new byte[][] {elfWithBuildId((byte) 0x11)});
+
+    assertNull(ElfBuildIdReader.readBuildIdFromZip(apk.getPath(), new String[] {"x86_64"}));
+  }
+
   // --- Helpers ---
 
   private static ElfBuildIdReader.StreamSource sourceOf(byte[] image) {
     return () -> new ByteArrayInputStream(image);
+  }
+
+  private static byte[] elfWithBuildId(byte first) {
+    byte[] buildId = BUILD_ID.clone();
+    buildId[0] = first;
+    byte[] image = new byte[512];
+    ByteBuffer buffer = newElf64(image, ByteOrder.LITTLE_ENDIAN, 1);
+    writePhdr64(buffer, 0, PT_NOTE, 256, 36);
+    writeNote(buffer, 256, "GNU", NT_GNU_BUILD_ID, buildId);
+    return image;
+  }
+
+  private static String hexWithFirstByte(byte first) {
+    return String.format("%02x", first & 0xff) + BUILD_ID_HEX.substring(2);
+  }
+
+  /** Writes entries in order. The first entry is what a suffix scan would return. */
+  private static File zipOfLibapp(String[] names, byte[][] images) throws IOException {
+    if (names.length != images.length) {
+      throw new IllegalArgumentException("name and image counts must match");
+    }
+    File apk = File.createTempFile("libapp-", ".apk");
+    apk.deleteOnExit();
+    try (ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(apk))) {
+      for (int i = 0; i < names.length; i++) {
+        zip.putNextEntry(new ZipEntry(names[i]));
+        zip.write(images[i]);
+        zip.closeEntry();
+      }
+    }
+    return apk;
   }
 
   private static void writeIdent(byte[] image, int elfClass, ByteOrder order) {

@@ -43,6 +43,48 @@ void main() {
         throwsA(isA<UnimplementedError>()),
       );
     });
+
+    test('onMessageClicked throws if not implemented', () {
+      expect(
+        () => platform!.onMessageClicked,
+        throwsA(isA<UnimplementedError>()),
+      );
+    });
+
+    test('onMessageImpression throws if not implemented', () {
+      expect(
+        () => platform!.onMessageImpression,
+        throwsA(isA<UnimplementedError>()),
+      );
+    });
+
+    test('onMessageDismissed throws if not implemented', () {
+      expect(
+        () => platform!.onMessageDismissed,
+        throwsA(isA<UnimplementedError>()),
+      );
+    });
+
+    test('onMessageDisplayError throws if not implemented', () {
+      expect(
+        () => platform!.onMessageDisplayError,
+        throwsA(isA<UnimplementedError>()),
+      );
+    });
+
+    test('setCustomDisplayEnabled throws if not implemented', () async {
+      await expectLater(
+        () => platform!.setCustomDisplayEnabled(true),
+        throwsA(isA<UnimplementedError>()),
+      );
+    });
+
+    test('onMessageDisplay throws if not implemented', () {
+      expect(
+        () => platform!.onMessageDisplay,
+        throwsA(isA<UnimplementedError>()),
+      );
+    });
   });
 }
 

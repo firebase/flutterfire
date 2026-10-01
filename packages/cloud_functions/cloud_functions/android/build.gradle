@@ -78,6 +78,11 @@ android {
     implementation 'com.google.firebase:firebase-functions'
     implementation 'androidx.annotation:annotation:1.7.0'
     implementation 'org.reactivestreams:reactive-streams:1.0.4'
+    testImplementation 'junit:junit:4.13.2'
+  }
+
+  testOptions {
+    unitTests.returnDefaultValues = true
   }
 
 }

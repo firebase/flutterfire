@@ -22,11 +22,11 @@ class ServerTemplatePage extends StatefulWidget {
   const ServerTemplatePage({
     super.key,
     required this.title,
-    required this.useAgentPlatform,
+    required this.useGeminiEnterprise,
   });
 
   final String title;
-  final bool useAgentPlatform;
+  final bool useGeminiEnterprise;
 
   @override
   State<ServerTemplatePage> createState() => _ServerTemplatePageState();
@@ -54,10 +54,10 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
   }
 
   void _initializeServerTemplate() {
-    if (widget.useAgentPlatform) {
+    if (widget.useGeminiEnterprise) {
       _templateGenerativeModel =
           // ignore: experimental_member_use
-          FirebaseAI.agentPlatform().templateGenerativeModel();
+          FirebaseAI.enterprise().templateGenerativeModel();
     } else {
       _templateGenerativeModel =
           // ignore: experimental_member_use

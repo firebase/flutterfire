@@ -1,3 +1,8 @@
+## 0.3.3
+
+ - **FIX**(data_connect): exclude generated protobuf sources from analysis ([#18687](https://github.com/firebase/flutterfire/issues/18687)). ([82ac5ff8](https://github.com/firebase/flutterfire/commit/82ac5ff83a186a9f9805ec45f196ded045ca20cf))
+ - **FEAT**(auth,ios): add support for `migrateCurrentUser` ([#18460](https://github.com/firebase/flutterfire/issues/18460)). ([b4eeafba](https://github.com/firebase/flutterfire/commit/b4eeafba347abed13e5410263556e9a4bff1b96e))
+
 ## 0.3.2
 
  - **REFACTOR**(tests): update listener completion logic and improve WebSocket channel handling ([#18524](https://github.com/firebase/flutterfire/issues/18524)). ([6b1fbc93](https://github.com/firebase/flutterfire/commit/6b1fbc93793db381a7d6d8cfb1a6cb4c8f078d9a))

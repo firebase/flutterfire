@@ -1,3 +1,8 @@
+## 12.6.0
+
+ - **FEAT**(core): bump Firebase iOS SDK to 12.19.0 ([#18683](https://github.com/firebase/flutterfire/issues/18683)). ([35e39637](https://github.com/firebase/flutterfire/commit/35e39637f4cbef0d70043047f80d6f6e80daf8fe))
+ - **FEAT**(analytics,ios): add UIScene support for campaign attribution ([#18573](https://github.com/firebase/flutterfire/issues/18573)). ([5cb35640](https://github.com/firebase/flutterfire/commit/5cb35640d346678d307f3634f6836d34a1d6da1e))
+
 ## 12.5.0
 
  - **REFACTOR**(core,apple): migrate iOS/macOS plugin implementation to Swift ([#18569](https://github.com/firebase/flutterfire/issues/18569)). ([3b9a655b](https://github.com/firebase/flutterfire/commit/3b9a655b8ac8ac5f6efa23ea63e210b597f2ec02))

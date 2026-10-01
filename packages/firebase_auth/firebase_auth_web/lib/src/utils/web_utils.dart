@@ -92,7 +92,8 @@ FirebaseAuthException getFirebaseAuthException(
       .replaceFirst('Firebase: ', '');
 
   // "customData" - see Firebase AuthError docs: https://firebase.google.com/docs/reference/js/auth.autherror
-  final customData = exception.customData as auth_interop.AuthErrorCustomData;
+  // Some Auth error shapes omit customData; casting a missing value throws TypeError.
+  final customData = exception.customData as auth_interop.AuthErrorCustomData?;
 
   if (code == 'multi-factor-auth-required') {
     final _auth = auth;
@@ -111,9 +112,9 @@ FirebaseAuthException getFirebaseAuthException(
     return FirebaseAuthMultiFactorExceptionPlatform(
       code: code,
       message: message,
-      email: customData.email?.toDart,
-      phoneNumber: customData.phoneNumber?.toDart,
-      tenantId: customData.tenantId?.toDart,
+      email: customData?.email?.toDart,
+      phoneNumber: customData?.phoneNumber?.toDart,
+      tenantId: customData?.tenantId?.toDart,
       resolver: MultiFactorResolverWeb(
         resolverWeb.hints.map(fromInteropMultiFactorInfo).toList(),
         MultiFactorSessionWeb('web', resolverWeb.session),
@@ -127,9 +128,9 @@ FirebaseAuthException getFirebaseAuthException(
   return FirebaseAuthException(
     code: code,
     message: message,
-    email: customData.email?.toDart,
-    phoneNumber: customData.phoneNumber?.toDart,
-    tenantId: customData.tenantId?.toDart,
+    email: customData?.email?.toDart,
+    phoneNumber: customData?.phoneNumber?.toDart,
+    tenantId: customData?.tenantId?.toDart,
     credential: credential,
   );
 }

@@ -3,6 +3,137 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2026-09-14 - [BoM 4.20.0](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-4200-2026-09-14)
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`cloud_firestore` - `v6.10.0`](#cloud_firestore---v6100)
+ - [`cloud_functions` - `v6.5.0`](#cloud_functions---v650)
+ - [`firebase_analytics` - `v12.6.0`](#firebase_analytics---v1260)
+ - [`firebase_app_check` - `v0.4.8`](#firebase_app_check---v048)
+ - [`firebase_app_installations` - `v0.4.4`](#firebase_app_installations---v044)
+ - [`firebase_auth` - `v6.7.0`](#firebase_auth---v670)
+ - [`firebase_auth_platform_interface` - `v9.1.0`](#firebase_auth_platform_interface---v910)
+ - [`firebase_auth_web` - `v6.3.0`](#firebase_auth_web---v630)
+ - [`firebase_core` - `v4.15.0`](#firebase_core---v4150)
+ - [`firebase_core_web` - `v3.12.0`](#firebase_core_web---v3120)
+ - [`firebase_crashlytics` - `v5.4.0`](#firebase_crashlytics---v540)
+ - [`firebase_data_connect` - `v0.3.3`](#firebase_data_connect---v033)
+ - [`firebase_database` - `v12.6.0`](#firebase_database---v1260)
+ - [`firebase_in_app_messaging` - `v0.9.4`](#firebase_in_app_messaging---v094)
+ - [`firebase_messaging` - `v16.7.0`](#firebase_messaging---v1670)
+ - [`firebase_ml_model_downloader` - `v0.4.5`](#firebase_ml_model_downloader---v045)
+ - [`firebase_performance` - `v0.11.6`](#firebase_performance---v0116)
+ - [`firebase_remote_config` - `v6.7.0`](#firebase_remote_config---v670)
+ - [`firebase_storage` - `v13.6.0`](#firebase_storage---v1360)
+
+---
+
+#### `cloud_firestore` - `v6.10.0`
+
+ - **FIX**(firestore,windows): honor persistenceEnabled: false ([#18662](https://github.com/firebase/flutterfire/issues/18662)). ([d94be3c4](https://github.com/firebase/flutterfire/commit/d94be3c4d9665ce12bc3fa1d4f77fccdc6777350))
+ - **FIX**(firestore,android): abort timed-out transactions without crashing on a later get ([#18668](https://github.com/firebase/flutterfire/issues/18668)). ([168172a8](https://github.com/firebase/flutterfire/commit/168172a889c0d08c0b618d7ef68d9c5ce503dc40))
+ - **FEAT**(core): bump Firebase iOS SDK to 12.19.0 ([#18683](https://github.com/firebase/flutterfire/issues/18683)). ([35e39637](https://github.com/firebase/flutterfire/commit/35e39637f4cbef0d70043047f80d6f6e80daf8fe))
+
+#### `cloud_functions` - `v6.5.0`
+
+ - **FIX**(cloud_functions): lowercase Android error codes with Locale.ROOT ([#18651](https://github.com/firebase/flutterfire/issues/18651)). ([8f0a5d01](https://github.com/firebase/flutterfire/commit/8f0a5d0198663231a27fab2802cfad179838e601))
+ - **FEAT**(core): bump Firebase iOS SDK to 12.19.0 ([#18683](https://github.com/firebase/flutterfire/issues/18683)). ([35e39637](https://github.com/firebase/flutterfire/commit/35e39637f4cbef0d70043047f80d6f6e80daf8fe))
+
+#### `firebase_analytics` - `v12.6.0`
+
+ - **FEAT**(core): bump Firebase iOS SDK to 12.19.0 ([#18683](https://github.com/firebase/flutterfire/issues/18683)). ([35e39637](https://github.com/firebase/flutterfire/commit/35e39637f4cbef0d70043047f80d6f6e80daf8fe))
+ - **FEAT**(analytics,ios): add UIScene support for campaign attribution ([#18573](https://github.com/firebase/flutterfire/issues/18573)). ([5cb35640](https://github.com/firebase/flutterfire/commit/5cb35640d346678d307f3634f6836d34a1d6da1e))
+
+#### `firebase_app_check` - `v0.4.8`
+
+ - **FEAT**(core): bump Firebase iOS SDK to 12.19.0 ([#18683](https://github.com/firebase/flutterfire/issues/18683)). ([35e39637](https://github.com/firebase/flutterfire/commit/35e39637f4cbef0d70043047f80d6f6e80daf8fe))
+ - **DOCS**(app_check): document native configure() workaround on Apple ([#18614](https://github.com/firebase/flutterfire/issues/18614)). ([4566e70f](https://github.com/firebase/flutterfire/commit/4566e70f961264bdecaed5909b1380814d23be09))
+
+#### `firebase_app_installations` - `v0.4.4`
+
+ - **FIX**(app_installations,android): dispatch ID-change events on the main thread ([#18652](https://github.com/firebase/flutterfire/issues/18652)). ([efed3e2b](https://github.com/firebase/flutterfire/commit/efed3e2b7bf88bbb60445bc3adbaab52006b21b7))
+ - **FEAT**(core): bump Firebase iOS SDK to 12.19.0 ([#18683](https://github.com/firebase/flutterfire/issues/18683)). ([35e39637](https://github.com/firebase/flutterfire/commit/35e39637f4cbef0d70043047f80d6f6e80daf8fe))
+
+#### `firebase_auth` - `v6.7.0`
+
+ - **FIX**(auth,windows): complete reauthenticateWithCredential on success ([#18653](https://github.com/firebase/flutterfire/issues/18653)). ([cdd85fdd](https://github.com/firebase/flutterfire/commit/cdd85fdd6032326b706b33a76b7e612585269d6d))
+ - **FIX**(auth,ios): guard URL and notification hooks when no default FirebaseApp exists ([#18669](https://github.com/firebase/flutterfire/issues/18669)). ([7e221a72](https://github.com/firebase/flutterfire/commit/7e221a729114f9e5764362ad59994fb418a2ebcd))
+ - **FEAT**(core): bump Firebase iOS SDK to 12.19.0 ([#18683](https://github.com/firebase/flutterfire/issues/18683)). ([35e39637](https://github.com/firebase/flutterfire/commit/35e39637f4cbef0d70043047f80d6f6e80daf8fe))
+ - **FEAT**(auth,ios): add support for `migrateCurrentUser` ([#18460](https://github.com/firebase/flutterfire/issues/18460)). ([b4eeafba](https://github.com/firebase/flutterfire/commit/b4eeafba347abed13e5410263556e9a4bff1b96e))
+
+#### `firebase_auth_platform_interface` - `v9.1.0`
+
+ - **FEAT**(auth,ios): add support for `migrateCurrentUser` ([#18460](https://github.com/firebase/flutterfire/issues/18460)). ([b4eeafba](https://github.com/firebase/flutterfire/commit/b4eeafba347abed13e5410263556e9a4bff1b96e))
+
+#### `firebase_auth_web` - `v6.3.0`
+
+ - **FIX**(auth,web): convert Auth errors that omit customData without throwing ([#18686](https://github.com/firebase/flutterfire/issues/18686)). ([5e518361](https://github.com/firebase/flutterfire/commit/5e518361ce7f94923437d8b0e41add7ca75083ef))
+ - **FEAT**(auth,ios): add support for `migrateCurrentUser` ([#18460](https://github.com/firebase/flutterfire/issues/18460)). ([b4eeafba](https://github.com/firebase/flutterfire/commit/b4eeafba347abed13e5410263556e9a4bff1b96e))
+
+#### `firebase_core` - `v4.15.0`
+
+ - **FEAT**(core): bump Firebase iOS SDK to 12.19.0 ([#18683](https://github.com/firebase/flutterfire/issues/18683)). ([35e39637](https://github.com/firebase/flutterfire/commit/35e39637f4cbef0d70043047f80d6f6e80daf8fe))
+ - **FEAT**(core): bump Firebase Android SDK to 34.19.0 ([#18678](https://github.com/firebase/flutterfire/issues/18678)). ([fbf39e96](https://github.com/firebase/flutterfire/commit/fbf39e96a4cacff809f32ca3be87358f9ea038da))
+ - **FEAT**(core): bump Firebase C++ SDK to 13.12.0 ([#18618](https://github.com/firebase/flutterfire/issues/18618)). ([d54b9308](https://github.com/firebase/flutterfire/commit/d54b93083c33d845873b11a901b9c469538b810f))
+
+#### `firebase_core_web` - `v3.12.0`
+
+ - **FIX**(auth,web): convert Auth errors that omit customData without throwing ([#18686](https://github.com/firebase/flutterfire/issues/18686)). ([5e518361](https://github.com/firebase/flutterfire/commit/5e518361ce7f94923437d8b0e41add7ca75083ef))
+ - **FIX**(core,web): compile isA checks on Dart < 3.12 ([#18612](https://github.com/firebase/flutterfire/issues/18612)). ([3bd7c069](https://github.com/firebase/flutterfire/commit/3bd7c069f791f5482f79e6f80cf6fd833b6245f8))
+ - **FEAT**(core): bump Firebase JS SDK to 12.19.0 ([#18684](https://github.com/firebase/flutterfire/issues/18684)). ([4988ec5b](https://github.com/firebase/flutterfire/commit/4988ec5b2a6349f59ca37d32ed08a4efa6ba4a27))
+ - **FEAT**(firebase_core_web): decouple foundation imports and fix JS SDK interop ([#18624](https://github.com/firebase/flutterfire/issues/18624)). ([4fd99824](https://github.com/firebase/flutterfire/commit/4fd9982426d33c255ef516c6919ede835263cf37))
+
+#### `firebase_crashlytics` - `v5.4.0`
+
+ - **FEAT**(core): bump Firebase iOS SDK to 12.19.0 ([#18683](https://github.com/firebase/flutterfire/issues/18683)). ([35e39637](https://github.com/firebase/flutterfire/commit/35e39637f4cbef0d70043047f80d6f6e80daf8fe))
+
+#### `firebase_data_connect` - `v0.3.3`
+
+ - **FIX**(data_connect): exclude generated protobuf sources from analysis ([#18687](https://github.com/firebase/flutterfire/issues/18687)). ([82ac5ff8](https://github.com/firebase/flutterfire/commit/82ac5ff83a186a9f9805ec45f196ded045ca20cf))
+ - **FEAT**(auth,ios): add support for `migrateCurrentUser` ([#18460](https://github.com/firebase/flutterfire/issues/18460)). ([b4eeafba](https://github.com/firebase/flutterfire/commit/b4eeafba347abed13e5410263556e9a4bff1b96e))
+
+#### `firebase_database` - `v12.6.0`
+
+ - **FEAT**(core): bump Firebase iOS SDK to 12.19.0 ([#18683](https://github.com/firebase/flutterfire/issues/18683)). ([35e39637](https://github.com/firebase/flutterfire/commit/35e39637f4cbef0d70043047f80d6f6e80daf8fe))
+
+#### `firebase_in_app_messaging` - `v0.9.4`
+
+ - **FEAT**(core): bump Firebase iOS SDK to 12.19.0 ([#18683](https://github.com/firebase/flutterfire/issues/18683)). ([35e39637](https://github.com/firebase/flutterfire/commit/35e39637f4cbef0d70043047f80d6f6e80daf8fe))
+
+#### `firebase_messaging` - `v16.7.0`
+
+ - **FIX**(messaging,ios): register for APNs after Dart Firebase.initializeApp() ([#18650](https://github.com/firebase/flutterfire/issues/18650)). ([2ea8381a](https://github.com/firebase/flutterfire/commit/2ea8381a1ada9fa6946c87fc0d203f94f04c6212))
+ - **FIX**(messaging,android): skip onMessageOpenedApp for terminated notification taps ([#18663](https://github.com/firebase/flutterfire/issues/18663)). ([a57837ef](https://github.com/firebase/flutterfire/commit/a57837ef40f73f0187b45125ecc0d81811b71bd9))
+ - **FIX**(messaging,ios): register for APNs when UIScene plugins miss launch callbacks ([#18620](https://github.com/firebase/flutterfire/issues/18620)). ([2fd8aa88](https://github.com/firebase/flutterfire/commit/2fd8aa886fcd7faf281ca5a7645ddaebabc3cb7a))
+ - **FEAT**(core): bump Firebase iOS SDK to 12.19.0 ([#18683](https://github.com/firebase/flutterfire/issues/18683)). ([35e39637](https://github.com/firebase/flutterfire/commit/35e39637f4cbef0d70043047f80d6f6e80daf8fe))
+
+#### `firebase_ml_model_downloader` - `v0.4.5`
+
+ - **FEAT**(core): bump Firebase iOS SDK to 12.19.0 ([#18683](https://github.com/firebase/flutterfire/issues/18683)). ([35e39637](https://github.com/firebase/flutterfire/commit/35e39637f4cbef0d70043047f80d6f6e80daf8fe))
+
+#### `firebase_performance` - `v0.11.6`
+
+ - **FEAT**(core): bump Firebase iOS SDK to 12.19.0 ([#18683](https://github.com/firebase/flutterfire/issues/18683)). ([35e39637](https://github.com/firebase/flutterfire/commit/35e39637f4cbef0d70043047f80d6f6e80daf8fe))
+
+#### `firebase_remote_config` - `v6.7.0`
+
+ - **FIX**(remote_config,ios): emit onConfigUpdated events on the platform thread ([#18673](https://github.com/firebase/flutterfire/issues/18673)). ([17c70494](https://github.com/firebase/flutterfire/commit/17c70494c73c6c8cddb758fbfffc8468ad8fdbc6))
+ - **FEAT**(core): bump Firebase iOS SDK to 12.19.0 ([#18683](https://github.com/firebase/flutterfire/issues/18683)). ([35e39637](https://github.com/firebase/flutterfire/commit/35e39637f4cbef0d70043047f80d6f6e80daf8fe))
+
+#### `firebase_storage` - `v13.6.0`
+
+ - **FEAT**(core): bump Firebase iOS SDK to 12.19.0 ([#18683](https://github.com/firebase/flutterfire/issues/18683)). ([35e39637](https://github.com/firebase/flutterfire/commit/35e39637f4cbef0d70043047f80d6f6e80daf8fe))
+
+
 ## 2026-08-27 - [BoM 4.19.1](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-4191-2026-08-27)
 
 ### Changes

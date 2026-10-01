@@ -79,7 +79,10 @@ android {
     dependencies {
       api firebaseCoreProject
       implementation platform("com.google.firebase:firebase-bom:${getRootProjectExtOrCoreProperty("FirebaseSDKVersion", firebaseCoreProject)}")
-      implementation 'com.google.firebase:firebase-inappmessaging-display'
+      // `api` so app Java compilation can resolve FirebaseInAppMessagingDisplay,
+      // which the plugin class implements.
+      api 'com.google.firebase:firebase-inappmessaging'
+      api 'com.google.firebase:firebase-inappmessaging-display'
       implementation 'androidx.annotation:annotation:1.7.0'
     }
 }

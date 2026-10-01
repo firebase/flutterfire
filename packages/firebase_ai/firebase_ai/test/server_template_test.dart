@@ -50,12 +50,12 @@ void main() {
     const location = 'us-central1';
 
     TemplateGenerativeModel createModel(http.Client client,
-        {bool useAgentPlatform = true}) {
+        {bool useGeminiEnterprise = true}) {
       // ignore: invalid_use_of_internal_member
       return createTestTemplateGenerativeModel(
         app: app,
         location: location,
-        useAgentPlatform: useAgentPlatform,
+        useEnterprise: useGeminiEnterprise,
         client: client,
       );
     }

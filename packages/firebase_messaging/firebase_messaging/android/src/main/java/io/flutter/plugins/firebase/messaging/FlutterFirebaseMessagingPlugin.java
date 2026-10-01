@@ -71,6 +71,12 @@ public class FlutterFirebaseMessagingPlugin
   private Observer<RemoteMessage> remoteMessageObserver;
   private final LiveData<String> liveDataToken = FlutterFirebaseTokenLiveData.getInstance();
   private Observer<String> tokenObserver;
+  private final LiveData<String> liveDataRegistered =
+      FlutterFirebaseRegisteredLiveData.getInstance();
+  private Observer<String> registeredObserver;
+  private final LiveData<String> liveDataUnregistered =
+      FlutterFirebaseUnregisteredLiveData.getInstance();
+  private Observer<String> unregisteredObserver;
 
   private RemoteMessage initialMessage;
   // We store the initial notification in a separate variable
@@ -93,10 +99,14 @@ public class FlutterFirebaseMessagingPlugin
           channel.invokeMethod("Messaging#onMessage", content);
         };
     tokenObserver = token -> channel.invokeMethod("Messaging#onTokenRefresh", token);
+    registeredObserver = fid -> channel.invokeMethod("Messaging#onRegistered", fid);
+    unregisteredObserver = fid -> channel.invokeMethod("Messaging#onUnregistered", fid);
     // We remove these observers in the onDetachedFromEngine method. Using "observeForever()"
     // allows us to use without a LifecycleOwner.
     liveDataRemoteMessage.observeForever(remoteMessageObserver);
     liveDataToken.observeForever(tokenObserver);
+    liveDataRegistered.observeForever(registeredObserver);
+    liveDataUnregistered.observeForever(unregisteredObserver);
 
     registerPlugin(channelName, this);
   }
@@ -111,6 +121,8 @@ public class FlutterFirebaseMessagingPlugin
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
     liveDataToken.removeObserver(tokenObserver);
     liveDataRemoteMessage.removeObserver(remoteMessageObserver);
+    liveDataRegistered.removeObserver(registeredObserver);
+    liveDataUnregistered.removeObserver(unregisteredObserver);
   }
 
   @Override
@@ -124,7 +136,9 @@ public class FlutterFirebaseMessagingPlugin
         // The notification tap created this Activity, so the Messaging SDK has already logged
         // `notification_open` from FcmLifecycleCallbacks#onActivityCreated. Handle the intent
         // without logging it a second time.
-        handleNotificationIntent(mainActivity.getIntent());
+        // Terminated launch: getInitialMessage() owns this tap. Do not also fire
+        // onMessageOpenedApp (firebase/flutterfire#18661).
+        handleNotificationIntent(mainActivity.getIntent(), /* shouldNotifyStream= */ false);
       }
     }
   }
@@ -174,6 +188,38 @@ public class FlutterFirebaseMessagingPlugin
                     put("token", token);
                   }
                 });
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
+        });
+
+    return taskCompletionSource.getTask();
+  }
+
+  private Task<Void> register() {
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            Tasks.await(FirebaseMessaging.getInstance().register());
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
+        });
+
+    return taskCompletionSource.getTask();
+  }
+
+  private Task<Void> unregister() {
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            Tasks.await(FirebaseMessaging.getInstance().unregister());
+            taskCompletionSource.setResult(null);
           } catch (Exception e) {
             taskCompletionSource.setException(e);
           }
@@ -565,6 +611,12 @@ public class FlutterFirebaseMessagingPlugin
       case "Messaging#getToken":
         methodCallTask = getToken();
         break;
+      case "Messaging#register":
+        methodCallTask = register();
+        break;
+      case "Messaging#unregister":
+        methodCallTask = unregister();
+        break;
       case "Messaging#subscribeToTopic":
         methodCallTask = subscribeToTopic(call.arguments());
         break;
@@ -630,7 +682,8 @@ public class FlutterFirebaseMessagingPlugin
     // FcmLifecycleCallbacks#onActivityCreated for this intent and `notification_open` was not
     // logged. Log it here before handling the intent.
     logNotificationOpen(intent);
-    return handleNotificationIntent(intent);
+    // Background resume: onMessageOpenedApp owns this tap.
+    return handleNotificationIntent(intent, /* shouldNotifyStream= */ true);
   }
 
   /**
@@ -700,7 +753,17 @@ public class FlutterFirebaseMessagingPlugin
     return messageId;
   }
 
-  private boolean handleNotificationIntent(@NonNull Intent intent) {
+  /**
+   * Handles a notification-tap intent.
+   *
+   * <p>{@code shouldNotifyStream} is {@code false} when the tap created this Activity (terminated
+   * launch). In that case the message is stored for {@code getInitialMessage()} only, matching iOS
+   * and the Dart API docs. It is {@code true} when the Activity already existed ({@link
+   * #onNewIntent}), which is a resume from background and should fire {@code onMessageOpenedApp}.
+   *
+   * @see <a href="https://github.com/firebase/flutterfire/issues/18661">#18661</a>
+   */
+  private boolean handleNotificationIntent(@NonNull Intent intent, boolean shouldNotifyStream) {
     if (intent.getExtras() == null) {
       return false;
     }
@@ -740,7 +803,10 @@ public class FlutterFirebaseMessagingPlugin
       message.put("notification", initialMessageNotification);
     }
 
-    channel.invokeMethod("Messaging#onMessageOpenedApp", message);
+    // On a terminated launch, getInitialMessage() owns this message.
+    if (shouldNotifyStream) {
+      channel.invokeMethod("Messaging#onMessageOpenedApp", message);
+    }
     mainActivity.setIntent(intent);
     return true;
   }

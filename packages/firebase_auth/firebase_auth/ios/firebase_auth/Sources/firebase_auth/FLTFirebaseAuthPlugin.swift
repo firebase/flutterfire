@@ -166,6 +166,7 @@ public class FLTFirebaseAuthPlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
         didReceiveRemoteNotification notification: [AnyHashable: Any],
         fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void
       ) -> Bool {
+        guard FirebaseApp.app() != nil else { return false }
         if Auth.auth().canHandleNotification(notification) {
           completionHandler(.noData)
           return true
@@ -186,11 +187,13 @@ public class FLTFirebaseAuthPlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
       open url: URL,
       options: [UIApplication.OpenURLOptionsKey: Any] = [:]
     ) -> Bool {
-      Auth.auth().canHandle(url)
+      guard FirebaseApp.app() != nil else { return false }
+      return Auth.auth().canHandle(url)
     }
 
     public func scene(_ scene: UIScene, openURLContexts urlContexts: Set<UIOpenURLContext>) -> Bool
     {
+      guard FirebaseApp.app() != nil else { return false }
       for urlContext in urlContexts where Auth.auth().canHandle(urlContext.url) {
         return true
       }
@@ -281,23 +284,6 @@ public class FLTFirebaseAuthPlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
       .failure(
         FlutterError(
           code: "second-factor-required", message: nsError.description, details: output)))
-  }
-
-  func handleInternalError(
-    error: Error,
-    completion: @escaping (Result<InternalUserCredential, Error>) -> Void
-  ) {
-    let nsError = error as NSError
-    if let underlyingError = nsError.userInfo[NSUnderlyingErrorKey] as? NSError,
-      let details = underlyingError.userInfo["FIRAuthErrorUserInfoDeserializedResponseKey"]
-    {
-      completion(
-        .failure(
-          FlutterError(code: "internal-error", message: nsError.description, details: details)))
-      return
-    }
-    completion(
-      .failure(FlutterError(code: "internal-error", message: nsError.description, details: nil)))
   }
 
   func handleAppleAuthResult(
@@ -663,8 +649,6 @@ public class FLTFirebaseAuthPlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
       let nsError = error as NSError
       if nsError.code == AuthErrorCode.secondFactorRequired.rawValue {
         handleMultiFactorError(app: app, error: error, completion: completion)
-      } else if nsError.code == AuthErrorCode.internalError.rawValue {
-        handleInternalError(error: error, completion: completion)
       } else {
         completion(.failure(AuthErrors.convertToFlutterError(error)))
       }
@@ -876,7 +860,7 @@ public class FLTFirebaseAuthPlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
             as? [String: Any]
           if let firebaseDictionary, firebaseDictionary["message"] != nil {
             if firebaseDictionary["code"] is NSNumber {
-              self.handleInternalError(error: error, completion: completion)
+              completion(.failure(AuthErrors.convertToFlutterError(error)))
             } else {
               completion(
                 .failure(
@@ -887,8 +871,6 @@ public class FLTFirebaseAuthPlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
             }
           } else if nsError.code == AuthErrorCode.secondFactorRequired.rawValue {
             self.handleMultiFactorError(app: app, error: error, completion: completion)
-          } else if nsError.code == AuthErrorCode.internalError.rawValue {
-            self.handleInternalError(error: error, completion: completion)
           } else {
             completion(.failure(AuthErrors.convertToFlutterError(error)))
           }
@@ -1034,15 +1016,7 @@ public class FLTFirebaseAuthPlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
     getFIRAuthFromPigeon(app).sendSignInLink(toEmail: email, actionCodeSettings: settings) {
       error in
       if let error {
-        if (error as NSError).code == AuthErrorCode.internalError.rawValue {
-          self.handleInternalError(error: error) { result in
-            if case .failure(let internalError) = result {
-              completion(.failure(internalError))
-            }
-          }
-        } else {
-          completion(.failure(AuthErrors.convertToFlutterError(error)))
-        }
+        completion(.failure(AuthErrors.convertToFlutterError(error)))
       } else {
         completion(.success(()))
       }

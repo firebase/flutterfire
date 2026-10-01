@@ -87,11 +87,15 @@ public class TransactionStreamHandler implements OnTransactionResultListener, St
 
               try {
                 if (!semaphore.tryAcquire(timeout, TimeUnit.MILLISECONDS)) {
-                  return FlutterFirebaseFirestoreTransactionResult.failed(
+                  // Throw a non-FirebaseFirestoreException so the Android SDK
+                  // does not retry or commit. Returning a failed result object
+                  // makes apply() succeed, which commits and then crashes a later
+                  // transaction.get (see #18666).
+                  throw new RuntimeException(
                       new FirebaseFirestoreException("timed out", Code.DEADLINE_EXCEEDED));
                 }
               } catch (InterruptedException e) {
-                return FlutterFirebaseFirestoreTransactionResult.failed(
+                throw new RuntimeException(
                     new FirebaseFirestoreException("interrupted", Code.DEADLINE_EXCEEDED));
               }
 

@@ -66,33 +66,33 @@ void main() {
       );
     });
 
-    group('agentPlatform tests', () {
+    group('Gemini Enterprise tests', () {
       test('Singleton behavior', () {
-        final instance1 = FirebaseAI.agentPlatform();
-        final instance2 = FirebaseAI.agentPlatform(app: app);
+        final instance1 = FirebaseAI.enterprise();
+        final instance2 = FirebaseAI.enterprise(app: app);
         expect(identical(instance1, instance2), isTrue);
       });
 
       test('Instance creation with defaults', () {
-        final agentPlatform = FirebaseAI.agentPlatform(app: app);
-        expect(agentPlatform.app, equals(app));
-        expect(agentPlatform.location, equals('global'));
+        final geminiEnterprise = FirebaseAI.enterprise(app: app);
+        expect(geminiEnterprise.app, equals(app));
+        expect(geminiEnterprise.location, equals('global'));
       });
 
       test('Instance creation with custom location', () {
-        final agentPlatform = FirebaseAI.agentPlatform(
+        final geminiEnterprise = FirebaseAI.enterprise(
           app: customApp,
           location: 'custom-location',
         );
-        expect(agentPlatform.app, equals(customApp));
-        expect(agentPlatform.appCheck, equals(customAppCheck));
-        expect(agentPlatform.location, equals('custom-location'));
+        expect(geminiEnterprise.app, equals(customApp));
+        expect(geminiEnterprise.appCheck, equals(customAppCheck));
+        expect(geminiEnterprise.location, equals('custom-location'));
       });
 
       test('generativeModel creation', () {
-        final agentPlatform = FirebaseAI.agentPlatform();
+        final geminiEnterprise = FirebaseAI.enterprise();
 
-        final model = agentPlatform.generativeModel(
+        final model = geminiEnterprise.generativeModel(
           model: 'gemini-pro',
           generationConfig: GenerationConfig(maxOutputTokens: 1024),
           systemInstruction: Content.system('You are a helpful assistant.'),
@@ -102,107 +102,29 @@ void main() {
       });
 
       test('Instance creation with useLimitedUseAppCheckTokens', () {
-        final agentPlatform = FirebaseAI.agentPlatform(
+        final geminiEnterprise = FirebaseAI.enterprise(
           app: limitTokenApp,
           location: 'limit-token-location',
           useLimitedUseAppCheckTokens: true,
         );
-        expect(agentPlatform.app, equals(limitTokenApp));
-        expect(agentPlatform.appCheck, equals(limitTokenAppCheck));
-        expect(agentPlatform.location, equals('limit-token-location'));
-        expect(agentPlatform.useLimitedUseAppCheckTokens, true);
+        expect(geminiEnterprise.app, equals(limitTokenApp));
+        expect(geminiEnterprise.appCheck, equals(limitTokenAppCheck));
+        expect(geminiEnterprise.location, equals('limit-token-location'));
+        expect(geminiEnterprise.useLimitedUseAppCheckTokens, true);
       });
 
       test('Instance creation with auto-injected AppCheck', () {
-        final agentPlatform = FirebaseAI.agentPlatform(app: customApp);
+        final geminiEnterprise = FirebaseAI.enterprise(app: customApp);
 
-        expect(agentPlatform.app, equals(customApp));
-        expect(agentPlatform.appCheck, equals(customAppCheck));
+        expect(geminiEnterprise.app, equals(customApp));
+        expect(geminiEnterprise.appCheck, equals(customAppCheck));
       });
 
       test('Instance creation with auto-injected Auth', () {
-        final agentPlatform = FirebaseAI.agentPlatform(app: customApp);
+        final geminiEnterprise = FirebaseAI.enterprise(app: customApp);
 
-        expect(agentPlatform.app, equals(customApp));
-        expect(agentPlatform.auth, equals(customAuth));
-      });
-    });
-
-    group('Deprecated vertexAI tests', () {
-      // ignore: deprecated_member_use_from_same_package
-      test('Singleton behavior', () {
-        // ignore: deprecated_member_use_from_same_package
-        final instance1 = FirebaseAI.vertexAI();
-        // ignore: deprecated_member_use_from_same_package
-        final instance2 = FirebaseAI.vertexAI(app: app);
-        expect(identical(instance1, instance2), isTrue);
-      });
-
-      // ignore: deprecated_member_use_from_same_package
-      test('Instance creation with defaults', () {
-        // ignore: deprecated_member_use_from_same_package
-        final vertexAI = FirebaseAI.vertexAI(app: app);
-        expect(vertexAI.app, equals(app));
-        expect(vertexAI.location, equals('us-central1'));
-      });
-
-      // ignore: deprecated_member_use_from_same_package
-      test('Instance creation with custom', () {
-        // ignore: deprecated_member_use_from_same_package
-        final vertexAI = FirebaseAI.vertexAI(
-            app: customApp,
-            appCheck: customAppCheck,
-            location: 'custom-location');
-        expect(vertexAI.app, equals(customApp));
-        expect(vertexAI.appCheck, equals(customAppCheck));
-        expect(vertexAI.location, equals('custom-location'));
-      });
-
-      // ignore: deprecated_member_use_from_same_package
-      test('generativeModel creation', () {
-        // ignore: deprecated_member_use_from_same_package
-        final vertexAI = FirebaseAI.vertexAI();
-
-        final model = vertexAI.generativeModel(
-          model: 'gemini-pro',
-          generationConfig: GenerationConfig(maxOutputTokens: 1024),
-          systemInstruction: Content.system('You are a helpful assistant.'),
-        );
-
-        expect(model, isA<GenerativeModel>());
-      });
-
-      // ignore: deprecated_member_use_from_same_package
-      test('Instance creation with useLimitedUseAppCheckTokens', () {
-        // ignore: deprecated_member_use_from_same_package
-        final vertexAIAppCheck = FirebaseAI.vertexAI(
-          app: limitTokenApp,
-          appCheck: limitTokenAppCheck,
-          location: 'limit-token-location',
-          useLimitedUseAppCheckTokens: true,
-        );
-        expect(vertexAIAppCheck.app, equals(limitTokenApp));
-        expect(vertexAIAppCheck.appCheck, equals(limitTokenAppCheck));
-        expect(vertexAIAppCheck.location, equals('limit-token-location'));
-        expect(vertexAIAppCheck.useLimitedUseAppCheckTokens, true);
-      });
-
-      // ignore: deprecated_member_use_from_same_package
-      test('Instance creation with auto-injected AppCheck', () {
-        // ignore: deprecated_member_use_from_same_package
-        final vertexAI = FirebaseAI.vertexAI(app: customApp);
-
-        expect(vertexAI.app, equals(customApp));
-        expect(vertexAI.appCheck, equals(customAppCheck));
-      });
-
-      // ignore: deprecated_member_use_from_same_package
-      test('Instance creation with auto-injected Auth', () {
-        // ignore: deprecated_member_use_from_same_package
-        final vertexAI = FirebaseAI.vertexAI(app: customApp);
-
-        expect(vertexAI.app, equals(customApp));
-        expect(vertexAI.auth, equals(customAuth));
+        expect(geminiEnterprise.app, equals(customApp));
+        expect(geminiEnterprise.auth, equals(customAuth));
       });
     });
 

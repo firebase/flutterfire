@@ -1,3 +1,9 @@
+## 4.15.0
+
+ - **FEAT**(core): bump Firebase iOS SDK to 12.19.0 ([#18683](https://github.com/firebase/flutterfire/issues/18683)). ([35e39637](https://github.com/firebase/flutterfire/commit/35e39637f4cbef0d70043047f80d6f6e80daf8fe))
+ - **FEAT**(core): bump Firebase Android SDK to 34.19.0 ([#18678](https://github.com/firebase/flutterfire/issues/18678)). ([fbf39e96](https://github.com/firebase/flutterfire/commit/fbf39e96a4cacff809f32ca3be87358f9ea038da))
+ - **FEAT**(core): bump Firebase C++ SDK to 13.12.0 ([#18618](https://github.com/firebase/flutterfire/issues/18618)). ([d54b9308](https://github.com/firebase/flutterfire/commit/d54b93083c33d845873b11a901b9c469538b810f))
+
 ## 4.14.0
 
  - **REFACTOR**(core,android): migrate native implementation to Kotlin ([#18570](https://github.com/firebase/flutterfire/issues/18570)). ([7a0f5856](https://github.com/firebase/flutterfire/commit/7a0f5856cbb2ae64c530dcbdb43b03d43912465c))

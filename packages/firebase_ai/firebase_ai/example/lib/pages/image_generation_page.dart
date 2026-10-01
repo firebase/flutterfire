@@ -16,17 +16,18 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:firebase_ai/firebase_ai.dart';
 
+import '../constants.dart';
 import '../widgets/message_widget.dart';
 
 class ImageGenerationPage extends StatefulWidget {
   const ImageGenerationPage({
     super.key,
     required this.title,
-    required this.useAgentPlatform,
+    required this.useGeminiEnterprise,
   });
 
   final String title;
-  final bool useAgentPlatform;
+  final bool useGeminiEnterprise;
 
   @override
   State<ImageGenerationPage> createState() => _ImageGenerationPageState();
@@ -49,12 +50,12 @@ class _ImageGenerationPageState extends State<ImageGenerationPage> {
   }
 
   void _initializeModel() {
-    final aiClient = widget.useAgentPlatform
-        ? FirebaseAI.agentPlatform()
+    final aiClient = widget.useGeminiEnterprise
+        ? FirebaseAI.enterprise()
         : FirebaseAI.googleAI();
 
     _model = aiClient.generativeModel(
-      model: 'gemini-2.5-flash-image',
+      model: ExampleModels.flashImage,
       generationConfig: GenerationConfig(
         responseModalities: [ResponseModalities.text, ResponseModalities.image],
       ),

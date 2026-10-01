@@ -15,6 +15,16 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
   }
 
   @Override
+  public void onRegistered(@NonNull String installationId) {
+    FlutterFirebaseRegisteredLiveData.getInstance().postFid(installationId);
+  }
+
+  @Override
+  public void onUnregistered(@NonNull String installationId) {
+    FlutterFirebaseUnregisteredLiveData.getInstance().postFid(installationId);
+  }
+
+  @Override
   public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
     // Added for commenting purposes;
     // We don't handle the message here as we already handle it in the receiver and don't want to

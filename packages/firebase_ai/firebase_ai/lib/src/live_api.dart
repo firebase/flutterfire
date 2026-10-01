@@ -424,7 +424,6 @@ class LiveServerResponse {
 class LiveClientRealtimeInput {
   /// Creates a [LiveClientRealtimeInput] instance.
   LiveClientRealtimeInput({
-    @Deprecated('Use audio, video, or text instead') this.mediaChunks,
     this.audio,
     this.video,
     this.text,
@@ -435,8 +434,7 @@ class LiveClientRealtimeInput {
   /// Creates a [LiveClientRealtimeInput] with audio data.
   LiveClientRealtimeInput.audio(this.audio)
       // ignore: deprecated_member_use_from_same_package
-      : mediaChunks = null,
-        video = null,
+      : video = null,
         text = null,
         activityStart = null,
         activityEnd = null;
@@ -444,8 +442,7 @@ class LiveClientRealtimeInput {
   /// Creates a [LiveClientRealtimeInput] with video data.
   LiveClientRealtimeInput.video(this.video)
       // ignore: deprecated_member_use_from_same_package
-      : mediaChunks = null,
-        audio = null,
+      : audio = null,
         text = null,
         activityStart = null,
         activityEnd = null;
@@ -453,8 +450,7 @@ class LiveClientRealtimeInput {
   /// Creates a [LiveClientRealtimeInput] with text data.
   LiveClientRealtimeInput.text(this.text)
       // ignore: deprecated_member_use_from_same_package
-      : mediaChunks = null,
-        audio = null,
+      : audio = null,
         video = null,
         activityStart = null,
         activityEnd = null;
@@ -462,8 +458,7 @@ class LiveClientRealtimeInput {
   /// Creates a [LiveClientRealtimeInput] with activity start signal.
   LiveClientRealtimeInput.activityStart()
       // ignore: deprecated_member_use_from_same_package
-      : mediaChunks = null,
-        audio = null,
+      : audio = null,
         video = null,
         text = null,
         activityStart = const {},
@@ -472,16 +467,11 @@ class LiveClientRealtimeInput {
   /// Creates a [LiveClientRealtimeInput] with activity end signal.
   LiveClientRealtimeInput.activityEnd()
       // ignore: deprecated_member_use_from_same_package
-      : mediaChunks = null,
-        audio = null,
+      : audio = null,
         video = null,
         text = null,
         activityStart = null,
         activityEnd = const {};
-
-  /// The list of media chunks.
-  @Deprecated('Use audio, video, or text instead')
-  final List<InlineDataPart>? mediaChunks;
 
   /// Audio data.
   final InlineDataPart? audio;
@@ -501,10 +491,6 @@ class LiveClientRealtimeInput {
   // ignore: public_member_api_docs
   Map<String, dynamic> toJson() => {
         'realtime_input': {
-          if (mediaChunks != null)
-            'media_chunks':
-                // ignore: deprecated_member_use_from_same_package
-                mediaChunks?.map((e) => e.toMediaChunkJson()).toList(),
           if (audio != null) 'audio': audio!.toMediaChunkJson(),
           if (video != null) 'video': video!.toMediaChunkJson(),
           if (text != null) 'text': text,

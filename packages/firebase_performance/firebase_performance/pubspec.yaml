@@ -5,7 +5,7 @@ description:
   iOS.
 homepage: https://firebase.google.com/docs/perf-mon
 repository: https://github.com/firebase/flutterfire/tree/main/packages/firebase_performance/firebase_performance
-version: 0.11.5
+version: 0.11.6
 resolution: workspace
 topics:
   - firebase

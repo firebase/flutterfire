@@ -1,3 +1,10 @@
+## 6.7.0
+
+ - **FIX**(auth,windows): complete reauthenticateWithCredential on success ([#18653](https://github.com/firebase/flutterfire/issues/18653)). ([cdd85fdd](https://github.com/firebase/flutterfire/commit/cdd85fdd6032326b706b33a76b7e612585269d6d))
+ - **FIX**(auth,ios): guard URL and notification hooks when no default FirebaseApp exists ([#18669](https://github.com/firebase/flutterfire/issues/18669)). ([7e221a72](https://github.com/firebase/flutterfire/commit/7e221a729114f9e5764362ad59994fb418a2ebcd))
+ - **FEAT**(core): bump Firebase iOS SDK to 12.19.0 ([#18683](https://github.com/firebase/flutterfire/issues/18683)). ([35e39637](https://github.com/firebase/flutterfire/commit/35e39637f4cbef0d70043047f80d6f6e80daf8fe))
+ - **FEAT**(auth,ios): add support for `migrateCurrentUser` ([#18460](https://github.com/firebase/flutterfire/issues/18460)). ([b4eeafba](https://github.com/firebase/flutterfire/commit/b4eeafba347abed13e5410263556e9a4bff1b96e))
+
 ## 6.6.1
 
  - **FIX**(firebase_auth): compile Android Kotlin without checker-qual on inferred types ([#18610](https://github.com/firebase/flutterfire/issues/18610)). ([811b07db](https://github.com/firebase/flutterfire/commit/811b07dbac4a980d50520ea262b281ec1464f6ad))

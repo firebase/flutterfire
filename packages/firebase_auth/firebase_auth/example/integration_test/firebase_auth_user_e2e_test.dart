@@ -352,8 +352,14 @@ void main() {
               expect(e.code, equals('user-mismatch'));
               expect(
                 e.message,
-                equals(
-                  'The supplied credentials do not correspond to the previously signed in user.',
+                anyOf(
+                  equals(
+                    'The supplied credentials do not correspond to the previously signed in user.',
+                  ),
+                  // Windows C++ SDK omits the trailing period.
+                  equals(
+                    'The supplied credentials do not correspond to the previously signed in user',
+                  ),
                 ),
               );
               await FirebaseAuth.instance.currentUser!.delete(); //clean up
@@ -428,38 +434,44 @@ void main() {
             fail('should have thrown an error');
           });
 
-          test('should throw wrong-password ', () async {
-            // Setup
-            final email = generateRandomEmail();
-            await FirebaseAuth.instance.createUserWithEmailAndPassword(
-              email: email,
-              password: testPassword,
-            );
-
-            await FirebaseAuth.instance.signOut();
-
-            await expectLater(
-              FirebaseAuth.instance.signInWithEmailAndPassword(
+          test(
+            'should throw wrong-password ',
+            () async {
+              // Setup
+              final email = generateRandomEmail();
+              await FirebaseAuth.instance.createUserWithEmailAndPassword(
                 email: email,
-                password: 'wrong password',
-              ),
-              throwsA(
-                isA<FirebaseAuthException>()
-                    .having((e) => e.code, 'code', equals('wrong-password'))
-                    .having(
-                      (e) => e.message,
-                      'message',
-                      equals(
-                        'The password is invalid or the user does not have a password.',
+                password: testPassword,
+              );
+
+              await FirebaseAuth.instance.signOut();
+
+              await expectLater(
+                FirebaseAuth.instance.signInWithEmailAndPassword(
+                  email: email,
+                  password: 'wrong password',
+                ),
+                throwsA(
+                  isA<FirebaseAuthException>()
+                      .having((e) => e.code, 'code', equals('wrong-password'))
+                      .having(
+                        (e) => e.message,
+                        'message',
+                        equals(
+                          'The password is invalid or the user does not have a password.',
+                        ),
                       ),
-                    ),
-              ),
-            );
-          });
+                ),
+              );
+            },
+            // Exercises signInWithEmailAndPassword, not reauthenticateWithCredential.
+            // A test-level skip overrides the group skip, so include macOS here too.
+            skip: !kIsWeb &&
+                (defaultTargetPlatform == TargetPlatform.windows ||
+                    defaultTargetPlatform == TargetPlatform.macOS),
+          );
         },
-        skip: !kIsWeb &&
-            (defaultTargetPlatform == TargetPlatform.windows ||
-                defaultTargetPlatform == TargetPlatform.macOS),
+        skip: !kIsWeb && defaultTargetPlatform == TargetPlatform.macOS,
       );
 
       group('reload()', () {

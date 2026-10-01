@@ -1,3 +1,8 @@
+## 6.7.0
+
+ - **FIX**(remote_config,ios): emit onConfigUpdated events on the platform thread ([#18673](https://github.com/firebase/flutterfire/issues/18673)). ([17c70494](https://github.com/firebase/flutterfire/commit/17c70494c73c6c8cddb758fbfffc8468ad8fdbc6))
+ - **FEAT**(core): bump Firebase iOS SDK to 12.19.0 ([#18683](https://github.com/firebase/flutterfire/issues/18683)). ([35e39637](https://github.com/firebase/flutterfire/commit/35e39637f4cbef0d70043047f80d6f6e80daf8fe))
+
 ## 6.6.0
 
  - **REFACTOR**(core,apple): migrate iOS/macOS plugin implementation to Swift ([#18569](https://github.com/firebase/flutterfire/issues/18569)). ([3b9a655b](https://github.com/firebase/flutterfire/commit/3b9a655b8ac8ac5f6efa23ea63e210b597f2ec02))

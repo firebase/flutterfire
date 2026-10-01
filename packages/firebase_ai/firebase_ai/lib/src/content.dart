@@ -55,11 +55,11 @@ final class Content {
   /// Return a [Content] with [FunctionResponse].
   static Content functionResponse(String name, Map<String, Object?> response,
           {String? id}) =>
-      Content('function', [FunctionResponse(name, response, id: id)]);
+      Content('user', [FunctionResponse(name, response, id: id)]);
 
   /// Return a [Content] with multiple [FunctionResponse].
   static Content functionResponses(Iterable<FunctionResponse> responses) =>
-      Content('function', responses.toList());
+      Content('user', responses.toList());
 
   /// Return a [Content] with [TextPart] of system instruction.
   static Content system(String instructions) =>
@@ -67,7 +67,7 @@ final class Content {
 
   /// Convert the [Content] to json format.
   Map<String, Object?> toJson() => {
-        if (role case final role?) 'role': role,
+        if (role case final role?) 'role': role == 'function' ? 'user' : role,
         'parts': parts.map((p) {
           return p.toJson();
         }).toList(),

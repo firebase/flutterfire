@@ -14,17 +14,18 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_ai/firebase_ai.dart';
+import '../constants.dart';
 import '../widgets/message_widget.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({
     super.key,
     required this.title,
-    required this.useAgentPlatform,
+    required this.useGeminiEnterprise,
   });
 
   final String title;
-  final bool useAgentPlatform;
+  final bool useGeminiEnterprise;
 
   @override
   State<ChatPage> createState() => _ChatPageState();
@@ -52,14 +53,14 @@ class _ChatPageState extends State<ChatPage> {
           ? ThinkingConfig.withThinkingLevel(ThinkingLevel.medium)
           : null,
     );
-    if (widget.useAgentPlatform) {
-      _model = FirebaseAI.agentPlatform().generativeModel(
-        model: 'gemini-3.1-flash-lite',
+    if (widget.useGeminiEnterprise) {
+      _model = FirebaseAI.enterprise().generativeModel(
+        model: ExampleModels.flashLite,
         generationConfig: generationConfig,
       );
     } else {
       _model = FirebaseAI.googleAI().generativeModel(
-        model: 'gemini-3.1-flash-lite',
+        model: ExampleModels.flashLite,
         generationConfig: generationConfig,
       );
     }

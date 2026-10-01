@@ -5,6 +5,8 @@
 package io.flutter.plugins.firebase.crashlytics
 
 import android.content.Context
+import android.os.Build
+import android.os.Process
 import android.util.Log
 import androidx.annotation.VisibleForTesting
 import java.io.File
@@ -121,17 +123,38 @@ internal class ElfBuildIdReader private constructor() {
       return null
     }
 
-    private fun readBuildIdFromZip(apkPath: String): String? {
+    /**
+     * Reads the build ID of `lib/<abi>/libapp.so` for the first [abis] entry that exists.
+     *
+     * A universal APK stores one `libapp.so` per ABI, and `lib/arm64-v8a/libapp.so` is usually
+     * first. Taking that entry reports the arm64 build ID on every device, so Crashlytics
+     * symbolicates x86_64 and armeabi-v7a crashes with the arm64 symbols.
+     */
+    @JvmStatic
+    @VisibleForTesting
+    fun readBuildIdFromZip(apkPath: String, abis: Array<String>): String? {
       ZipFile(apkPath).use { zipFile ->
-        val entries = zipFile.entries()
-        while (entries.hasMoreElements()) {
-          val entry = entries.nextElement()
-          if (entry.name.endsWith("/libapp.so")) {
-            return readBuildIdFromSource { zipFile.getInputStream(entry) }
-          }
+        for (abi in abis) {
+          val entry = zipFile.getEntry("lib/$abi/libapp.so") ?: continue
+          return readBuildIdFromSource { zipFile.getInputStream(entry) }
         }
       }
       return null
+    }
+
+    private fun readBuildIdFromZip(apkPath: String): String? =
+        readBuildIdFromZip(apkPath, runtimeAbis())
+
+    /**
+     * ABIs this process can load, most preferred first.
+     *
+     * [Build.SUPPORTED_64_BIT_ABIS] and [Build.SUPPORTED_32_BIT_ABIS] follow the package manager's
+     * preference order, so the first one present in the APK is the library that is running.
+     * [Process.is64Bit] requires API 23, which is this plugin's minSdk.
+     */
+    private fun runtimeAbis(): Array<String> {
+      val abis = if (Process.is64Bit()) Build.SUPPORTED_64_BIT_ABIS else Build.SUPPORTED_32_BIT_ABIS
+      return abis ?: emptyArray()
     }
 
     private fun readBuildIdFromFile(elfFile: File): String? = readBuildIdFromSource {

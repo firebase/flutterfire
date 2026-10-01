@@ -3,7 +3,10 @@
 // found in the LICENSE file.
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_in_app_messaging_platform_interface/firebase_in_app_messaging_platform_interface.dart';
 import 'package:firebase_in_app_messaging_platform_interface/src/method_channel/method_channel_firebase_in_app_messaging.dart';
+import 'package:firebase_in_app_messaging_platform_interface/src/pigeon/messages.pigeon.dart'
+    as pigeon;
 import 'package:flutter_test/flutter_test.dart';
 
 import '../mock.dart';
@@ -54,6 +57,151 @@ void main() {
       expect(hostApi.automaticDataCollectionEnabled, isFalse);
     },
   );
+
+  test('listening to an event stream adds the native listeners once', () async {
+    final clicked = inAppMessaging.onMessageClicked.listen((_) {});
+    final dismissed = inAppMessaging.onMessageDismissed.listen((_) {});
+    addTearDown(clicked.cancel);
+    addTearDown(dismissed.cancel);
+
+    // The host API is called without being awaited by the getters.
+    await pumpEventQueue();
+
+    expect(hostApi.addEventListenersCount, 1);
+    expect(hostApi.appName, app.name);
+  });
+
+  test('onMessageClicked emits the campaign metadata and the action', () async {
+    final event = inAppMessaging.onMessageClicked.first;
+
+    await _sendFlutterApiMessage('onMessageClicked', [
+      pigeon.FiamCampaignMetadata(
+        campaignId: 'campaign-id',
+        campaignName: 'campaign-name',
+        isTestMessage: true,
+      ),
+      pigeon.FiamAction(
+        actionUrl: 'https://example.com',
+        buttonText: 'Open',
+      ),
+    ]);
+
+    final clickEvent = await event;
+    expect(clickEvent.campaignMetadata.campaignId, 'campaign-id');
+    expect(clickEvent.campaignMetadata.campaignName, 'campaign-name');
+    expect(clickEvent.campaignMetadata.isTestMessage, isTrue);
+    expect(clickEvent.action.actionUrl, 'https://example.com');
+    expect(clickEvent.action.buttonText, 'Open');
+  });
+
+  test('onMessageImpression emits the campaign metadata', () async {
+    final event = inAppMessaging.onMessageImpression.first;
+
+    await _sendFlutterApiMessage('onMessageImpression', [
+      pigeon.FiamCampaignMetadata(
+        campaignId: 'campaign-id',
+        campaignName: 'campaign-name',
+        isTestMessage: false,
+      ),
+    ]);
+
+    final impressionEvent = await event;
+    expect(impressionEvent.campaignMetadata.campaignId, 'campaign-id');
+    expect(impressionEvent.campaignMetadata.isTestMessage, isFalse);
+  });
+
+  test('onMessageDismissed emits the dismiss type', () async {
+    final event = inAppMessaging.onMessageDismissed.first;
+
+    await _sendFlutterApiMessage('onMessageDismissed', [
+      pigeon.FiamCampaignMetadata(
+        campaignId: 'campaign-id',
+        campaignName: 'campaign-name',
+        isTestMessage: false,
+      ),
+      pigeon.FiamDismissType.clickedCancel,
+    ]);
+
+    final dismissEvent = await event;
+    expect(dismissEvent.campaignMetadata.campaignId, 'campaign-id');
+    expect(dismissEvent.dismissType, InAppMessagingDismissType.clickedCancel);
+  });
+
+  test('onMessageDisplayError emits the error message', () async {
+    final event = inAppMessaging.onMessageDisplayError.first;
+
+    await _sendFlutterApiMessage('onMessageDisplayError', [
+      pigeon.FiamCampaignMetadata(
+        campaignId: 'campaign-id',
+        campaignName: 'campaign-name',
+        isTestMessage: false,
+      ),
+      'IMAGE_FETCH_ERROR',
+    ]);
+
+    final errorEvent = await event;
+    expect(errorEvent.campaignMetadata.campaignId, 'campaign-id');
+    expect(errorEvent.errorMessage, 'IMAGE_FETCH_ERROR');
+  });
+
+  test('setCustomDisplayEnabled forwards the app name and value', () async {
+    await inAppMessaging.setCustomDisplayEnabled(true);
+
+    expect(hostApi.appName, app.name);
+    expect(hostApi.customDisplayEnabled, isTrue);
+  });
+
+  test('onMessageDisplay emits the campaign payload', () async {
+    await inAppMessaging.setCustomDisplayEnabled(true);
+    final event = inAppMessaging.onMessageDisplay.first;
+
+    await _sendFlutterApiMessage('onMessageDisplay', [
+      pigeon.FiamDisplayMessage(
+        campaignMetadata: pigeon.FiamCampaignMetadata(
+          campaignId: 'campaign-id',
+          campaignName: 'campaign-name',
+          isTestMessage: false,
+        ),
+        messageType: 'MODAL',
+        title: pigeon.FiamText(text: 'Hello', hexColor: '#FFFFFF'),
+        body: pigeon.FiamText(text: 'World'),
+        imageUrl: 'https://example.com/image.png',
+        action: pigeon.FiamDisplayAction(
+          id: 'campaign-id_action',
+          actionUrl: 'https://example.com',
+          buttonText: 'Open',
+        ),
+        data: <String?, String?>{'promo': 'SAVE10'},
+      ),
+    ]);
+
+    final message = await event;
+    expect(message.campaignMetadata.campaignId, 'campaign-id');
+    expect(message.messageType, InAppMessageType.modal);
+    expect(message.title?.text, 'Hello');
+    expect(message.body?.text, 'World');
+    expect(message.action?.actionUrl, 'https://example.com');
+    expect(message.data['promo'], 'SAVE10');
+
+    await message.impress();
+    expect(hostApi.campaignId, 'campaign-id');
+  });
+}
+
+/// Simulates the native side calling [pigeon.FirebaseInAppMessagingFlutterApi].
+Future<void> _sendFlutterApiMessage(
+  String methodName,
+  List<Object?> arguments,
+) {
+  const codec = pigeon.FirebaseInAppMessagingFlutterApi.pigeonChannelCodec;
+
+  return TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+      .handlePlatformMessage(
+    'dev.flutter.pigeon.firebase_in_app_messaging_platform_interface'
+    '.FirebaseInAppMessagingFlutterApi.$methodName',
+    codec.encodeMessage(arguments),
+    (_) {},
+  );
 }
 
 class _TestFirebaseInAppMessagingHostApi
@@ -62,12 +210,24 @@ class _TestFirebaseInAppMessagingHostApi
   String? eventName;
   bool? messagesSuppressed;
   bool? automaticDataCollectionEnabled;
+  int addEventListenersCount = 0;
+  bool? customDisplayEnabled;
+  String? campaignId;
+  String? actionId;
+  String? dismissType;
+  String? errorReason;
 
   void reset() {
     appName = null;
     eventName = null;
     messagesSuppressed = null;
     automaticDataCollectionEnabled = null;
+    addEventListenersCount = 0;
+    customDisplayEnabled = null;
+    campaignId = null;
+    actionId = null;
+    dismissType = null;
+    errorReason = null;
   }
 
   @override
@@ -89,5 +249,40 @@ class _TestFirebaseInAppMessagingHostApi
   ) async {
     this.appName = appName;
     automaticDataCollectionEnabled = enabled;
+  }
+
+  @override
+  Future<void> addEventListeners(String appName) async {
+    this.appName = appName;
+    addEventListenersCount++;
+  }
+
+  @override
+  Future<void> setCustomDisplayEnabled(String appName, bool enabled) async {
+    this.appName = appName;
+    customDisplayEnabled = enabled;
+  }
+
+  @override
+  Future<void> reportImpression(String campaignId) async {
+    this.campaignId = campaignId;
+  }
+
+  @override
+  Future<void> reportClick(String campaignId, String actionId) async {
+    this.campaignId = campaignId;
+    this.actionId = actionId;
+  }
+
+  @override
+  Future<void> reportDismiss(String campaignId, String dismissType) async {
+    this.campaignId = campaignId;
+    this.dismissType = dismissType;
+  }
+
+  @override
+  Future<void> reportDisplayError(String campaignId, String reason) async {
+    this.campaignId = campaignId;
+    errorReason = reason;
   }
 }
