@@ -93,7 +93,7 @@ jobs:
           rm -rf "$HOME/.android/avd"
           ln -s /mnt/avd "$HOME/.android/avd"
       - name: Start AVD then run pipeline E2E tests
-        uses: reactivecircus/android-emulator-runner@e89f39f1abbbd05b1113a29cf4db69e7540cae5a
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
         env:
           ANDROID_AVD_HOME: /mnt/avd
         with:
