@@ -336,7 +336,7 @@ final class WebGroundingChunk {
 
   /// The domain of the original URI from which the content was retrieved.
   ///
-  /// This field is only populated when using the Agent Platform Gemini API.
+  /// This field is only populated when using the Gemini Enterprise API.
   final String? domain;
 }
 
@@ -416,7 +416,7 @@ final class SearchEntryPoint {
 /// comply with the "Grounding with Google Search" usage requirements for your
 /// chosen API provider:
 /// [Gemini Developer API](https://ai.google.dev/gemini-api/terms#grounding-with-google-search)
-/// or Agent Platform Gemini API (see [Service Terms](https://cloud.google.com/terms/service-terms)
+/// or Gemini Enterprise API (see [Service Terms](https://cloud.google.com/terms/service-terms)
 /// section within the Service Specific Terms).
 final class GroundingMetadata {
   // ignore: public_member_api_docs
@@ -1476,7 +1476,7 @@ abstract interface class SerializationStrategy {
 }
 
 // ignore: public_member_api_docs
-final class AgentPlatformSerialization implements SerializationStrategy {
+final class EnterpriseSerialization implements SerializationStrategy {
   /// Parse the json to [GenerateContentResponse]
   @override
   GenerateContentResponse parseGenerateContentResponse(Object jsonObject) {

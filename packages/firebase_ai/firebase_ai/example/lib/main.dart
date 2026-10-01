@@ -52,7 +52,7 @@ class GenerativeAISample extends StatefulWidget {
 }
 
 class _GenerativeAISampleState extends State<GenerativeAISample> {
-  bool _useAgentPlatform = false;
+  bool _useGeminiEnterprise = false;
   late GenerativeModel _currentModel;
 
   static final ThemeData _darkTheme = ThemeData(
@@ -67,15 +67,16 @@ class _GenerativeAISampleState extends State<GenerativeAISample> {
   void initState() {
     super.initState();
 
-    _initializeModel(_useAgentPlatform);
+    _initializeModel(_useGeminiEnterprise);
   }
 
   void _initializeModel(bool useVertexBackend) {
     if (useVertexBackend) {
-      final agentPlatformInstance =
-          FirebaseAI.agentPlatform(location: 'global');
-      _currentModel =
-          agentPlatformInstance.generativeModel(model: ExampleModels.flashLite);
+      final geminiEnterpriseInstance =
+          FirebaseAI.enterprise(location: 'global');
+      _currentModel = geminiEnterpriseInstance.generativeModel(
+        model: ExampleModels.flashLite,
+      );
     } else {
       final googleAI = FirebaseAI.googleAI();
       _currentModel = googleAI.generativeModel(model: ExampleModels.flashLite);
@@ -84,24 +85,25 @@ class _GenerativeAISampleState extends State<GenerativeAISample> {
 
   void _toggleBackend(bool value) {
     setState(() {
-      _useAgentPlatform = value;
+      _useGeminiEnterprise = value;
     });
-    _initializeModel(_useAgentPlatform);
+    _initializeModel(_useGeminiEnterprise);
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter + ${_useAgentPlatform ? 'Agent Platform' : 'Google AI'}',
+      title:
+          'Flutter + ${_useGeminiEnterprise ? 'Gemini Enterprise' : 'Google AI'}',
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.dark,
       theme: _darkTheme,
       home: HomeScreen(
         key: ValueKey(
-          '${_useAgentPlatform}_${_currentModel.hashCode}',
+          '${_useGeminiEnterprise}_${_currentModel.hashCode}',
         ),
         model: _currentModel,
-        useAgentPlatform: _useAgentPlatform,
+        useGeminiEnterprise: _useGeminiEnterprise,
         onBackendChanged: _toggleBackend,
       ),
     );
@@ -110,13 +112,13 @@ class _GenerativeAISampleState extends State<GenerativeAISample> {
 
 class HomeScreen extends StatefulWidget {
   final GenerativeModel model;
-  final bool useAgentPlatform;
+  final bool useGeminiEnterprise;
   final ValueChanged<bool> onBackendChanged;
 
   const HomeScreen({
     super.key,
     required this.model,
-    required this.useAgentPlatform,
+    required this.useGeminiEnterprise,
     required this.onBackendChanged,
   });
 
@@ -137,13 +139,13 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildSelectedPage(
     int index,
     GenerativeModel currentModel,
-    bool useAgentPlatform,
+    bool useGeminiEnterprise,
   ) {
     switch (index) {
       case 0:
         return ChatPage(
           title: 'Chat',
-          useAgentPlatform: useAgentPlatform,
+          useGeminiEnterprise: useGeminiEnterprise,
         );
       case 1:
         return CapabilitiesPage(
@@ -154,40 +156,40 @@ class _HomeScreenState extends State<HomeScreen> {
         // FunctionCallingPage initializes its own model as per original design
         return FunctionCallingPage(
           title: 'Function Calling',
-          useAgentPlatform: useAgentPlatform,
+          useGeminiEnterprise: useGeminiEnterprise,
         );
       case 3:
         return ImageGenerationPage(
           title: 'Image Gen',
-          useAgentPlatform: useAgentPlatform,
+          useGeminiEnterprise: useGeminiEnterprise,
         );
       case 4:
         return BidiPage(
           title: 'Live Stream',
           model: currentModel,
-          useAgentPlatform: useAgentPlatform,
+          useGeminiEnterprise: useGeminiEnterprise,
         );
       case 5:
         return ServerTemplatePage(
           title: 'Server Template',
-          useAgentPlatform: useAgentPlatform,
+          useGeminiEnterprise: useGeminiEnterprise,
         );
       case 6:
         return GroundingPage(
           title: 'Grounding',
-          useAgentPlatform: useAgentPlatform,
+          useGeminiEnterprise: useGeminiEnterprise,
         );
       case 7:
         return TTSPage(
           title: 'TTS Test',
-          useAgentPlatform: useAgentPlatform,
+          useGeminiEnterprise: useGeminiEnterprise,
         );
 
       default:
         // Fallback to the first page in case of an unexpected index
         return ChatPage(
           title: 'Chat',
-          useAgentPlatform: useAgentPlatform,
+          useGeminiEnterprise: useGeminiEnterprise,
         );
     }
   }
@@ -197,7 +199,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Flutter + ${widget.useAgentPlatform ? 'Agent Platform' : 'Google AI'}',
+          'Flutter + ${widget.useGeminiEnterprise ? 'Gemini Enterprise' : 'Google AI'}',
         ),
         actions: <Widget>[
           IconButton(
@@ -221,13 +223,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   'Google AI',
                   style: TextStyle(
                     fontSize: 12,
-                    color: widget.useAgentPlatform
+                    color: widget.useGeminiEnterprise
                         ? Theme.of(context).colorScheme.onSurface.withAlpha(180)
                         : Theme.of(context).colorScheme.primary,
                   ),
                 ),
                 Switch(
-                  value: widget.useAgentPlatform,
+                  value: widget.useGeminiEnterprise,
                   onChanged: widget.onBackendChanged,
                   activeTrackColor: Colors.green.withAlpha(128),
                   inactiveTrackColor: Colors.blueGrey.withAlpha(128),
@@ -235,10 +237,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   inactiveThumbColor: Colors.blueGrey,
                 ),
                 Text(
-                  'Agent Platform',
+                  'Gemini Enterprise',
                   style: TextStyle(
                     fontSize: 12,
-                    color: widget.useAgentPlatform
+                    color: widget.useGeminiEnterprise
                         ? Theme.of(context).colorScheme.primary
                         : Theme.of(context)
                             .colorScheme
@@ -255,7 +257,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: _buildSelectedPage(
           _selectedIndex,
           widget.model,
-          widget.useAgentPlatform,
+          widget.useGeminiEnterprise,
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -263,7 +265,7 @@ class _HomeScreenState extends State<HomeScreen> {
         selectedFontSize: 10,
         unselectedFontSize: 9,
         selectedItemColor: Theme.of(context).colorScheme.primary,
-        unselectedItemColor: widget.useAgentPlatform
+        unselectedItemColor: widget.useGeminiEnterprise
             ? Theme.of(context).colorScheme.onSurface.withAlpha(180)
             : Colors.grey,
         items: const <BottomNavigationBarItem>[

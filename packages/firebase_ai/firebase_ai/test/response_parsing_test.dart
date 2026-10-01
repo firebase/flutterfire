@@ -55,8 +55,7 @@ void main() {
 ''';
       final decoded = jsonDecode(response) as Object;
       expect(
-        () =>
-            AgentPlatformSerialization().parseGenerateContentResponse(decoded),
+        () => EnterpriseSerialization().parseGenerateContentResponse(decoded),
         throwsA(
           isA<FirebaseAISdkException>().having(
             (e) => e.message,
@@ -88,7 +87,7 @@ void main() {
 ''';
       final decoded = jsonDecode(response) as Object;
       expect(
-        AgentPlatformSerialization().parseGenerateContentResponse(decoded),
+        EnterpriseSerialization().parseGenerateContentResponse(decoded),
         isA<GenerateContentResponse>(),
       );
     });
@@ -121,7 +120,7 @@ void main() {
 ''';
       final decoded = jsonDecode(response) as Object;
       final generateContentResponse =
-          AgentPlatformSerialization().parseGenerateContentResponse(decoded);
+          EnterpriseSerialization().parseGenerateContentResponse(decoded);
       expect(
         generateContentResponse,
         matchesGenerateContentResponse(
@@ -185,8 +184,7 @@ void main() {
 ''';
       final decoded = jsonDecode(response) as Object;
       expect(
-        () =>
-            AgentPlatformSerialization().parseGenerateContentResponse(decoded),
+        () => EnterpriseSerialization().parseGenerateContentResponse(decoded),
         throwsA(
           isA<ServiceApiNotEnabled>().having(
             (e) => e.message,
@@ -234,8 +232,7 @@ void main() {
 ''';
       final decoded = jsonDecode(response) as Object;
       expect(
-        () =>
-            AgentPlatformSerialization().parseGenerateContentResponse(decoded),
+        () => EnterpriseSerialization().parseGenerateContentResponse(decoded),
         throwsA(
           isA<QuotaExceeded>().having(
             (e) => e.message,
@@ -307,7 +304,7 @@ void main() {
 ''';
       final decoded = jsonDecode(response) as Object;
       final generateContentResponse =
-          AgentPlatformSerialization().parseGenerateContentResponse(decoded);
+          EnterpriseSerialization().parseGenerateContentResponse(decoded);
       expect(
         generateContentResponse,
         matchesGenerateContentResponse(
@@ -441,7 +438,7 @@ void main() {
 ''';
       final decoded = jsonDecode(response) as Object;
       final generateContentResponse =
-          AgentPlatformSerialization().parseGenerateContentResponse(decoded);
+          EnterpriseSerialization().parseGenerateContentResponse(decoded);
       expect(
         generateContentResponse,
         matchesGenerateContentResponse(
@@ -576,7 +573,7 @@ void main() {
 ''';
       final decoded = jsonDecode(response) as Object;
       final generateContentResponse =
-          AgentPlatformSerialization().parseGenerateContentResponse(decoded);
+          EnterpriseSerialization().parseGenerateContentResponse(decoded);
       expect(
         generateContentResponse,
         matchesGenerateContentResponse(
@@ -658,7 +655,7 @@ void main() {
 ''';
       final decoded = jsonDecode(response) as Object;
       final generateContentResponse =
-          AgentPlatformSerialization().parseGenerateContentResponse(decoded);
+          EnterpriseSerialization().parseGenerateContentResponse(decoded);
       expect(
         generateContentResponse,
         matchesGenerateContentResponse(
@@ -725,7 +722,7 @@ void main() {
         ''';
       final decoded = jsonDecode(response) as Object;
       final generateContentResponse =
-          AgentPlatformSerialization().parseGenerateContentResponse(decoded);
+          EnterpriseSerialization().parseGenerateContentResponse(decoded);
       expect(
           generateContentResponse.text, 'Here is a description of the image:');
       expect(generateContentResponse.usageMetadata?.totalTokenCount, 1913);
@@ -774,7 +771,7 @@ void main() {
         ''';
       final decoded = jsonDecode(response) as Object;
       final countTokensResponse =
-          AgentPlatformSerialization().parseCountTokensResponse(decoded);
+          EnterpriseSerialization().parseCountTokensResponse(decoded);
       expect(countTokensResponse.totalTokens, 1837);
       expect(countTokensResponse.promptTokensDetails?.first.modality,
           ContentModality.image);
@@ -808,7 +805,7 @@ void main() {
 ''';
       final decoded = jsonDecode(response) as Object;
       final generateContentResponse =
-          AgentPlatformSerialization().parseGenerateContentResponse(decoded);
+          EnterpriseSerialization().parseGenerateContentResponse(decoded);
       expect(generateContentResponse.text, 'Initial text And more text');
       expect(generateContentResponse.candidates.single.text,
           'Initial text And more text');
@@ -893,7 +890,7 @@ void main() {
 ''';
       final decoded = jsonDecode(response) as Object;
       final generateContentResponse =
-          AgentPlatformSerialization().parseGenerateContentResponse(decoded);
+          EnterpriseSerialization().parseGenerateContentResponse(decoded);
       final candidate = generateContentResponse.candidates.first;
       final urlContextMetadata = candidate.urlContextMetadata;
       expect(urlContextMetadata, isNotNull);
@@ -1034,7 +1031,7 @@ void main() {
 ''';
       final decoded = jsonDecode(response) as Object;
       final generateContentResponse =
-          AgentPlatformSerialization().parseGenerateContentResponse(decoded);
+          EnterpriseSerialization().parseGenerateContentResponse(decoded);
       final urlContextMetadata =
           generateContentResponse.candidates.first.urlContextMetadata;
       expect(urlContextMetadata, isNotNull);
@@ -1109,7 +1106,7 @@ void main() {
 ''';
       final decoded = jsonDecode(response) as Object;
       final generateContentResponse =
-          AgentPlatformSerialization().parseGenerateContentResponse(decoded);
+          EnterpriseSerialization().parseGenerateContentResponse(decoded);
       final urlContextMetadata =
           generateContentResponse.candidates.first.urlContextMetadata;
       expect(urlContextMetadata, isNotNull);
@@ -1144,8 +1141,8 @@ void main() {
         ]
       };
 
-      final response = AgentPlatformSerialization()
-          .parseGenerateContentResponse(jsonResponse);
+      final response =
+          EnterpriseSerialization().parseGenerateContentResponse(jsonResponse);
       final groundingMetadata = response.candidates.first.groundingMetadata;
 
       expect(groundingMetadata, isNotNull);
@@ -1207,7 +1204,7 @@ void main() {
 ''';
       final decoded = jsonDecode(response) as Object;
       final generateContentResponse =
-          AgentPlatformSerialization().parseGenerateContentResponse(decoded);
+          EnterpriseSerialization().parseGenerateContentResponse(decoded);
       expect(
         generateContentResponse,
         matchesGenerateContentResponse(
@@ -1278,7 +1275,7 @@ void main() {
 ''';
       final decoded = jsonDecode(response) as Object;
       final generateContentResponse =
-          AgentPlatformSerialization().parseGenerateContentResponse(decoded);
+          EnterpriseSerialization().parseGenerateContentResponse(decoded);
       expect(
         generateContentResponse,
         matchesGenerateContentResponse(
@@ -1335,11 +1332,9 @@ void main() {
         ),
       );
       expect(
-          () => AgentPlatformSerialization()
-              .parseGenerateContentResponse(decoded),
+          () => EnterpriseSerialization().parseGenerateContentResponse(decoded),
           expectedThrow);
-      expect(
-          () => AgentPlatformSerialization().parseCountTokensResponse(decoded),
+      expect(() => EnterpriseSerialization().parseCountTokensResponse(decoded),
           expectedThrow);
     });
 
@@ -1368,11 +1363,9 @@ void main() {
         ),
       );
       expect(
-          () => AgentPlatformSerialization()
-              .parseGenerateContentResponse(decoded),
+          () => EnterpriseSerialization().parseGenerateContentResponse(decoded),
           expectedThrow);
-      expect(
-          () => AgentPlatformSerialization().parseCountTokensResponse(decoded),
+      expect(() => EnterpriseSerialization().parseCountTokensResponse(decoded),
           expectedThrow);
     });
 
@@ -1404,11 +1397,9 @@ void main() {
         ),
       );
       expect(
-          () => AgentPlatformSerialization()
-              .parseGenerateContentResponse(decoded),
+          () => EnterpriseSerialization().parseGenerateContentResponse(decoded),
           expectedThrow);
-      expect(
-          () => AgentPlatformSerialization().parseCountTokensResponse(decoded),
+      expect(() => EnterpriseSerialization().parseCountTokensResponse(decoded),
           expectedThrow);
     });
   });
