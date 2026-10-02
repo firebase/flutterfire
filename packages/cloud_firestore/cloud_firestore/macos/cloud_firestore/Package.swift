@@ -24,22 +24,30 @@ let package = Package(
     .package(name: "FlutterFramework", path: "../FlutterFramework"),
   ],
   targets: [
+    // SPM does not allow mixing Swift and ObjC in a single target.
+    .target(
+      name: "cloud_firestore_objc",
+      dependencies: [
+        .product(name: "FirebaseFirestore", package: "firebase-ios-sdk")
+      ],
+      path: "Sources/cloud_firestore_objc",
+      publicHeadersPath: "include",
+      cSettings: [
+        .headerSearchPath("include")
+      ]
+    ),
     .target(
       name: "cloud_firestore",
       dependencies: [
+        "cloud_firestore_objc",
         .product(name: "FirebaseFirestore", package: "firebase-ios-sdk"),
         .product(name: "firebase-core", package: "firebase_core"),
         .product(name: "FlutterFramework", package: "FlutterFramework"),
       ],
+      path: "Sources/cloud_firestore",
       resources: [
         .process("Resources")
-      ],
-      cSettings: [
-        .headerSearchPath("include/cloud_firestore/Private"),
-        .headerSearchPath("include/cloud_firestore/Public"),
-        .define("LIBRARY_VERSION", to: "\"\(libraryVersion)\""),
-        .define("LIBRARY_NAME", to: "\"flutter-fire-fst\""),
       ]
-    )
+    ),
   ]
 )
