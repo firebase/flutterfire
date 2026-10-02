@@ -187,10 +187,13 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   Stream<void> snapshotsInSync() {
     StreamSubscription<dynamic>? snapshotStreamSubscription;
     late StreamController<void> controller; // ignore: close_sinks
+    var listenGeneration = 0;
 
     controller = StreamController<void>.broadcast(
       onListen: () async {
+        final generation = ++listenGeneration;
         final observerId = await pigeonChannel.snapshotsInSyncSetup(pigeonApp);
+        if (generation != listenGeneration) return;
 
         snapshotStreamSubscription =
             MethodChannelFirebaseFirestore.snapshotsInSyncChannel(observerId)
@@ -203,7 +206,9 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
         );
       },
       onCancel: () {
+        listenGeneration++;
         snapshotStreamSubscription?.cancel();
+        snapshotStreamSubscription = null;
       },
     );
 
