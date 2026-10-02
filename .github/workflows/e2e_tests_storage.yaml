@@ -67,6 +67,7 @@ jobs:
       package-path: 'packages/firebase_storage/firebase_storage'
       package-scope: 'firebase_storage*'
       cache-key-suffix: 'storage'
+      native-test-script: 'tool/test_engine_lifecycle.sh'
       native-config-args: '--storage-native'
       storage-emulator-debug: true
       nightly_test_mode: ${{ inputs.nightly_test_mode == true }}

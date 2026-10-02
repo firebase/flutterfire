@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import FirebaseCore
 import FirebaseStorage
 import Foundation
 
@@ -17,11 +18,13 @@ import Foundation
   import FlutterMacOS
 #endif
 
-public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseStorageHostApi {
+public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FLTFirebasePluginProtocol,
+  FirebaseStorageHostApi
+{
   private var channel: FlutterMethodChannel?
   private var messenger: FlutterBinaryMessenger?
   private var eventChannels: [String: FlutterEventChannel] = [:]
-  private var streamHandlers: [String: FlutterStreamHandler] = [:]
+  private var streamHandlers: [String: TaskStateChannelStreamHandler] = [:]
   private var handleToTask: [Int64: AnyObject] = [:]
   private var handleToPath: [Int64: String] = [:]
   private var handleToIdentifier: [Int64: String] = [:]
@@ -45,14 +48,65 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
     #endif
     let channel = FlutterMethodChannel(name: channelName, binaryMessenger: resolvedMessenger)
     let instance = FLTFirebaseStoragePlugin()
+    FLTFirebasePluginRegistry.sharedInstance().register(instance)
     instance.channel = channel
     instance.messenger = resolvedMessenger
     registrar.addMethodCallDelegate(instance, channel: channel)
+    #if os(iOS)
+      registrar.publish(instance)
+    #endif
     FirebaseStorageHostApiSetup.setUp(binaryMessenger: resolvedMessenger, api: instance)
   }
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
     result(FlutterMethodNotImplemented)
+  }
+
+  #if os(iOS)
+    public func detachFromEngine(for registrar: FlutterPluginRegistrar) {
+      cleanupStreams()
+    }
+  #endif
+
+  public func didReinitializeFirebaseCore(_ completion: @escaping () -> Void) {
+    cleanupStreams()
+    completion()
+  }
+
+  public func pluginConstants(for firebaseApp: FirebaseApp) -> [AnyHashable: Any] {
+    [:]
+  }
+
+  public func firebaseLibraryName() -> String { "flutter-fire-gcs" }
+
+  public func firebaseLibraryVersion() -> String { versionNumber }
+
+  public func flutterChannelName() -> String { "plugins.flutter.io/firebase_storage" }
+
+  private func cleanupStreams() {
+    if Thread.isMainThread {
+      cleanupStreamsOnMain()
+    } else {
+      DispatchQueue.main.sync { self.cleanupStreamsOnMain() }
+    }
+  }
+
+  private func cleanupStreamsOnMain() {
+    // Removing Firebase observers does not retract callbacks already queued for delivery.
+    for handler in streamHandlers.values {
+      _ = handler.onCancel(withArguments: nil)
+    }
+    for eventChannel in eventChannels.values {
+      eventChannel.setStreamHandler(nil)
+    }
+    for identifier in handleToIdentifier.values {
+      Self.canceledIdentifiers.remove(identifier)
+    }
+    streamHandlers.removeAll()
+    eventChannels.removeAll()
+    handleToTask.removeAll()
+    handleToPath.removeAll()
+    handleToIdentifier.removeAll()
   }
 
   private func storage(app: InternalStorageFirebaseApp) -> Storage {
@@ -387,12 +441,24 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
 
   private func toMeta(_ m: InternalSettableMetadata) -> StorageMetadata {
     let md = StorageMetadata()
-    if let v = m.cacheControl { md.cacheControl = v }
-    if let v = m.contentType { md.contentType = v }
-    if let v = m.contentDisposition { md.contentDisposition = v }
-    if let v = m.contentEncoding { md.contentEncoding = v }
-    if let v = m.contentLanguage { md.contentLanguage = v }
-    if let v = m.customMetadata { md.customMetadata = v as? [String: String] }
+    if let v = m.cacheControl {
+      md.cacheControl = v
+    }
+    if let v = m.contentType {
+      md.contentType = v
+    }
+    if let v = m.contentDisposition {
+      md.contentDisposition = v
+    }
+    if let v = m.contentEncoding {
+      md.contentEncoding = v
+    }
+    if let v = m.contentLanguage {
+      md.contentLanguage = v
+    }
+    if let v = m.customMetadata {
+      md.customMetadata = v as? [String: String]
+    }
     return md
   }
 
@@ -407,12 +473,24 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
     out["size"] = md.size
     out["creationTimeMillis"] = Int((md.timeCreated?.timeIntervalSince1970 ?? 0) * 1000)
     out["updatedTimeMillis"] = Int((md.updated?.timeIntervalSince1970 ?? 0) * 1000)
-    if let v = md.md5Hash { out["md5Hash"] = v }
-    if let v = md.cacheControl { out["cacheControl"] = v }
-    if let v = md.contentDisposition { out["contentDisposition"] = v }
-    if let v = md.contentEncoding { out["contentEncoding"] = v }
-    if let v = md.contentLanguage { out["contentLanguage"] = v }
-    if let v = md.contentType { out["contentType"] = v }
+    if let v = md.md5Hash {
+      out["md5Hash"] = v
+    }
+    if let v = md.cacheControl {
+      out["cacheControl"] = v
+    }
+    if let v = md.contentDisposition {
+      out["contentDisposition"] = v
+    }
+    if let v = md.contentEncoding {
+      out["contentEncoding"] = v
+    }
+    if let v = md.contentLanguage {
+      out["contentLanguage"] = v
+    }
+    if let v = md.contentType {
+      out["contentType"] = v
+    }
     out["customMetadata"] = md.customMetadata ?? [:]
     return out
   }
@@ -433,14 +511,14 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
     let channelName = "plugins.flutter.io/firebase_storage/taskEvent/\(uuid)"
     let channel = FlutterEventChannel(name: channelName, binaryMessenger: messenger!)
     let storageInstance = Storage.storage(app: FLTFirebasePlugin.firebaseAppNamed(appName)!)
-    channel.setStreamHandler(
-      TaskStateChannelStreamHandler(
-        task: task,
-        storage: storageInstance,
-        identifier: channelName
-      )
+    let streamHandler = TaskStateChannelStreamHandler(
+      task: task,
+      storage: storageInstance,
+      identifier: channelName
     )
+    channel.setStreamHandler(streamHandler)
     eventChannels[channelName] = channel
+    streamHandlers[channelName] = streamHandler
     handleToTask[handle] = task as AnyObject
     handleToPath[handle] = path
     handleToIdentifier[handle] = channelName
