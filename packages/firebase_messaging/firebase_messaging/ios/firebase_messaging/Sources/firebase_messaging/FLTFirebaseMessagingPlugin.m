@@ -538,11 +538,13 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   // every later plugin, including a local notification whose payload copied gcm.message_id.
   // See #18699.
   //
-  // Call the handler only when:
+  // Call the handler when:
   //   - another delegate was replaced and must receive the callback, or
   //   - this plugin is the notification center delegate, so nobody else will answer, or
-  //   - Flutter forwarded a remote FCM notification (aps + gcm.message_id) and the app opted
-  //     into foreground presentation. Do not call the handler with None on a forwarded callback.
+  //   - Flutter forwarded a remote FCM notification (aps + gcm.message_id). Always answer,
+  //     including with None, so a foreground FCM notification stays hidden unless the app
+  //     opted in via setForegroundNotificationPresentationOptions. Leave a forwarded local
+  //     notification unanswered so the plugin that posted it can present it.
   BOOL ownsNotificationCenter = (center.delegate == self);
   BOOL isRemoteFCMNotification = (messageID != nil && userInfo[@"aps"] != nil);
   UNNotificationPresentationOptions presentationOptions = UNNotificationPresentationOptionNone;
@@ -564,9 +566,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     [_originalNotificationCenterDelegate userNotificationCenter:center
                                         willPresentNotification:notification
                                           withCompletionHandler:completionHandler];
-  } else if (ownsNotificationCenter ||
-             (isRemoteFCMNotification &&
-              presentationOptions != UNNotificationPresentationOptionNone)) {
+  } else if (ownsNotificationCenter || isRemoteFCMNotification) {
     completionHandler(presentationOptions);
   }
 
