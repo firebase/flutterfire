@@ -10,22 +10,16 @@ import 'dart:io';
 import 'package:cli_util/cli_logging.dart' as logging;
 import 'package:yaml/yaml.dart';
 
-// Used to generate a simple txt file for Package.swift file to parse in order to use correct firebase-ios-sdk version
+import 'firebase_sdk_version_spm.dart';
+
+// Writes scripts/firebase_sdk_version_spm.dart into each plugin Package.swift.
 
 void main(List<String> args) async {
   final workspace = await getMelosWorkspace();
-  // get version from core
-  final firebaseCorePackage = workspace.filteredPackages.values
-      .firstWhere((package) => package.name == 'firebase_core');
 
-  final firebaseCoreIosVersionFile = File(
-    '${firebaseCorePackage.path}/ios/firebase_sdk_version.rb',
-  );
-
-  final firebaseiOSVersion = getFirebaseiOSVersion(firebaseCoreIosVersionFile);
-
-  // Update hard-coded versions in all plugin Package.swift files
-  updatePluginPackageSwiftVersions(workspace, firebaseiOSVersion);
+  // Update hard-coded versions in all plugin Package.swift files.
+  // CocoaPods keeps its own pin in firebase_sdk_version.rb.
+  updatePluginPackageSwiftVersions(workspace, firebaseSpmSdkVersion);
   // Update plugin version in Constants.swift for pure Swift plugins. Unable to pass macros in pure Swift implementations
   updateLibraryVersionPureSwiftPlugins();
 }
@@ -45,23 +39,6 @@ Future<melos.MelosWorkspace> getMelosWorkspace() async {
     packageFilters: packageFilters,
   );
   return workspace;
-}
-
-String getFirebaseiOSVersion(File firebaseCoreIosSdkVersion) {
-  if (firebaseCoreIosSdkVersion.existsSync()) {
-    final content = firebaseCoreIosSdkVersion.readAsStringSync();
-    final versionMatch = RegExp(r"'(\d+\.\d+\.\d+)'").firstMatch(content);
-
-    if (versionMatch != null && versionMatch.group(1) != null) {
-      return versionMatch.group(1)!;
-    } else {
-      throw Exception(
-        'Firebase iOS SDK version not found in firebase_sdk_version.rb.',
-      );
-    }
-  } else {
-    throw Exception('firebase_sdk_version.rb file does not exist.');
-  }
 }
 
 void updatePluginPackageSwiftVersions(
