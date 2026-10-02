@@ -99,6 +99,10 @@ jobs:
       package-path: 'packages/firebase_auth/firebase_auth'
       package-scope: 'firebase_auth*'
       cache-key-suffix: 'auth'
+      macos-spm: true
+      # facebook_auth_desktop has no macOS Package.swift, so this job still
+      # pod-installs that plugin. Keep the committed Podfile (Runner only).
+      preserve-podfile: true
       # Same plist derivation as the iOS job above.
       native-config-args: '--live-tier-plist=auth'
       inject-config-secrets: true
