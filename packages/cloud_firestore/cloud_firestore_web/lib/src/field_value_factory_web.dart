@@ -31,6 +31,14 @@ class FieldValueFactoryWeb extends FieldValueFactoryPlatform {
       FieldValueWeb(firestore_interop.FieldValue.increment(value));
 
   @override
+  FieldValueWeb minimum(num value) =>
+      FieldValueWeb(firestore_interop.FieldValue.minimum(value));
+
+  @override
+  FieldValueWeb maximum(num value) =>
+      FieldValueWeb(firestore_interop.FieldValue.maximum(value));
+
+  @override
   FieldValueWeb serverTimestamp() =>
       FieldValueWeb(firestore_interop.FieldValue.serverTimestamp());
 }

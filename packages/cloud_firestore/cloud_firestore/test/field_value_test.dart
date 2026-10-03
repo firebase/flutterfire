@@ -14,6 +14,11 @@ void main() {
         isTrue,
       );
       expect(FieldValue.delete() == FieldValue.serverTimestamp(), isFalse);
+      expect(FieldValue.minimum(1) == FieldValue.minimum(1), isTrue);
+      expect(FieldValue.maximum(1) == FieldValue.maximum(1), isTrue);
+      expect(FieldValue.minimum(1) == FieldValue.maximum(1), isFalse);
+      expect(FieldValue.minimum(1) == FieldValue.increment(1), isFalse);
+      expect(FieldValue.minimum(1) == FieldValue.minimum(2), isFalse);
     });
   });
 }

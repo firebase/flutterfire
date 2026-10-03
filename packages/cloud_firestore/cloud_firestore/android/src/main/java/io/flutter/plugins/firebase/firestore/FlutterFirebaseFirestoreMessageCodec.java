@@ -57,6 +57,10 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
   private static final byte DATA_TYPE_FIRESTORE_QUERY = (byte) 197;
   private static final byte DATA_TYPE_FIRESTORE_SETTINGS = (byte) 198;
   private static final byte DATA_TYPE_VECTOR_VALUE = (byte) 199;
+  private static final byte DATA_TYPE_MINIMUM_DOUBLE = (byte) 200;
+  private static final byte DATA_TYPE_MINIMUM_INTEGER = (byte) 201;
+  private static final byte DATA_TYPE_MAXIMUM_DOUBLE = (byte) 202;
+  private static final byte DATA_TYPE_MAXIMUM_INTEGER = (byte) 203;
 
   @Override
   protected void writeValue(ByteArrayOutputStream stream, Object value) {
@@ -273,6 +277,18 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
       case DATA_TYPE_INCREMENT_DOUBLE:
         final Number doubleIncrementValue = (Number) readValue(buffer);
         return FieldValue.increment(doubleIncrementValue.doubleValue());
+      case DATA_TYPE_MINIMUM_INTEGER:
+        final Number integerMinimumValue = (Number) readValue(buffer);
+        return FieldValue.minimum(integerMinimumValue.intValue());
+      case DATA_TYPE_MINIMUM_DOUBLE:
+        final Number doubleMinimumValue = (Number) readValue(buffer);
+        return FieldValue.minimum(doubleMinimumValue.doubleValue());
+      case DATA_TYPE_MAXIMUM_INTEGER:
+        final Number integerMaximumValue = (Number) readValue(buffer);
+        return FieldValue.maximum(integerMaximumValue.intValue());
+      case DATA_TYPE_MAXIMUM_DOUBLE:
+        final Number doubleMaximumValue = (Number) readValue(buffer);
+        return FieldValue.maximum(doubleMaximumValue.doubleValue());
       case DATA_TYPE_DOCUMENT_ID:
         return FieldPath.documentId();
       case DATA_TYPE_FIRESTORE_INSTANCE:

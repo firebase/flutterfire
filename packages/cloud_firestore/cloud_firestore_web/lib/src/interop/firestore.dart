@@ -988,6 +988,30 @@ class _FieldValueIncrement implements FieldValue {
   String toString() => 'FieldValue.increment($n)';
 }
 
+class _FieldValueMinimum implements FieldValue {
+  final num n;
+
+  _FieldValueMinimum(this.n);
+
+  @override
+  firestore_interop.FieldValue _jsify() => firestore_interop.minimum(n.toJS);
+
+  @override
+  String toString() => 'FieldValue.minimum($n)';
+}
+
+class _FieldValueMaximum implements FieldValue {
+  final num n;
+
+  _FieldValueMaximum(this.n);
+
+  @override
+  firestore_interop.FieldValue _jsify() => firestore_interop.maximum(n.toJS);
+
+  @override
+  String toString() => 'FieldValue.maximum($n)';
+}
+
 JSAny? jsifyFieldValue(FieldValue fieldValue) => fieldValue._jsify() as JSAny?;
 
 /// Sentinel values that can be used when writing document fields with set()
@@ -1014,6 +1038,10 @@ abstract class FieldValue {
   // to precision loss. Furthermore, once processed by the Firestore backend,
   // all integer operations are capped between -2^63 and 2^63-1.
   static FieldValue increment(num n) => _FieldValueIncrement(n);
+
+  static FieldValue minimum(num n) => _FieldValueMinimum(n);
+
+  static FieldValue maximum(num n) => _FieldValueMaximum(n);
 
   FieldValue._();
 

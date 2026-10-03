@@ -50,6 +50,20 @@ class FieldValue extends FieldValuePlatform {
   static FieldValue increment(num value) =>
       FieldValue._(_factory.increment(value));
 
+  /// Returns a special value for use with set() or update() that tells the
+  /// server to set the field to the minimum of its current value and [value].
+  ///
+  /// If the current field value is not an integer or double, or if the field
+  /// does not yet exist, the transformation sets the field to [value].
+  static FieldValue minimum(num value) => FieldValue._(_factory.minimum(value));
+
+  /// Returns a special value for use with set() or update() that tells the
+  /// server to set the field to the maximum of its current value and [value].
+  ///
+  /// If the current field value is not an integer or double, or if the field
+  /// does not yet exist, the transformation sets the field to [value].
+  static FieldValue maximum(num value) => FieldValue._(_factory.maximum(value));
+
   dynamic _delegate;
 
   @override
