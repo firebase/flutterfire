@@ -27,6 +27,12 @@ final class Tool {
       this._urlContext, this._googleMaps);
 
   /// Returns a [Tool] instance with list of [FunctionDeclaration].
+  ///
+  /// **Note:** Some models do not accept function declarations in the same
+  /// request as other tools, such as [googleSearch]. Which combinations a
+  /// model accepts depends on the model and can change with new model
+  /// versions. If a request is rejected, send the function declarations and
+  /// the other tools in separate requests.
   static Tool functionDeclarations(
       List<FunctionDeclaration> functionDeclarations) {
     return Tool._(functionDeclarations, null, null, null, null);
@@ -44,6 +50,9 @@ final class Tool {
   /// [Gemini Developer API](https://ai.google.dev/gemini-api/terms#grounding-with-google-search)
   /// or Vertex AI Gemini API (see [Service Terms](https://cloud.google.com/terms/service-terms)
   /// section within the Service Specific Terms).
+  ///
+  /// Some models do not accept this tool in the same request as function
+  /// declarations. See [functionDeclarations] for details.
   ///
   /// - [googleSearch]: An empty [GoogleSearch] object. The presence of this
   ///   object in the list of tools enables the model to use Google Search.
