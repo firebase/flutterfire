@@ -17,6 +17,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:firebase_ai/src/error.dart';
 import 'package:firebase_ai/src/live_api.dart';
 import 'package:firebase_ai/src/live_session.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -117,6 +118,39 @@ void main() {
 
       final result = await completer.future.timeout(const Duration(seconds: 5));
       expect(result, isTrue);
+
+      await subscription.cancel();
+      fakeWs.close();
+    });
+
+    test('keeps receiving after a server message it cannot parse', () async {
+      final fakeWs = FakeWebSocketChannel();
+      final session = LiveSession.forTesting(fakeWs);
+
+      final events = <Object?>[];
+      final secondMessage = Completer<void>();
+      var isDone = false;
+      final subscription = session.receive().listen(
+        (response) {
+          events.add(response.message);
+          if (events.length == 3) secondMessage.complete();
+        },
+        onError: events.add,
+        onDone: () => isDone = true,
+      );
+
+      fakeWs.emit('{"setupComplete": {}}');
+      fakeWs.emit(
+          '{"voiceActivity": {"type": "ACTIVITY_START", "audioOffset": "2.520s"}}');
+      fakeWs.emit('{"setupComplete": {}}');
+
+      await secondMessage.future.timeout(const Duration(seconds: 5));
+      expect(events, [
+        isA<LiveServerSetupComplete>(),
+        isA<FirebaseAISdkException>(),
+        isA<LiveServerSetupComplete>(),
+      ]);
+      expect(isDone, isFalse);
 
       await subscription.cancel();
       fakeWs.close();
