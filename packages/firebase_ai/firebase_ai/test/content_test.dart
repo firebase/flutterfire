@@ -312,6 +312,53 @@ void main() {
       expect(fileData.mimeType, 'text/plain');
     });
 
+    test('parses camelCase fileData correctly', () {
+      final json = {
+        'fileData': {
+          'fileUri': 'gs://bucket/image.png',
+          'mimeType': 'image/png',
+        }
+      };
+      final result = parsePart(json);
+      expect(result, isA<FileData>());
+      final fileData = result as FileData;
+      expect(fileData.fileUri, 'gs://bucket/image.png');
+      expect(fileData.mimeType, 'image/png');
+      expect(fileData.isThought, false);
+      expect((fileData.toJson() as Map).containsKey('thoughtSignature'), false);
+    });
+
+    test('parses camelCase fileData with thought and thoughtSignature', () {
+      final json = {
+        'thought': true,
+        'thoughtSignature': 'sig',
+        'fileData': {
+          'fileUri': 'gs://bucket/image.png',
+          'mimeType': 'image/png',
+        }
+      };
+      final result = parsePart(json);
+      expect(result, isA<FileData>());
+      final fileData = result as FileData;
+      expect(fileData.fileUri, 'gs://bucket/image.png');
+      expect(fileData.mimeType, 'image/png');
+      expect(fileData.isThought, true);
+      expect((fileData.toJson() as Map)['thoughtSignature'], 'sig');
+    });
+
+    test('parses camelCase fileData with mediaResolution', () {
+      final json = {
+        'fileData': {
+          'fileUri': 'gs://bucket/image.png',
+          'mimeType': 'image/png',
+        },
+        'mediaResolution': {'level': 'MEDIA_RESOLUTION_HIGH'},
+      };
+      final result = parsePart(json);
+      expect(result, isA<FileData>());
+      expect((result as FileData).mediaResolution, MediaResolution.high);
+    });
+
     test('parses InlineDataPart correctly', () {
       final json = {
         'inlineData': {
