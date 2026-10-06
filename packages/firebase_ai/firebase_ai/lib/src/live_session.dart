@@ -328,12 +328,13 @@ class LiveSession {
   /// Returns a [Stream] of [LiveServerResponse] objects representing the
   /// messages received from the server. The stream will stops once the server
   /// sends turn complete message.
+  ///
+  /// A server message that can't be parsed is delivered as an error event, and
+  /// the stream keeps going.
   Stream<LiveServerResponse> receive() async* {
     _checkWsStatus();
 
-    await for (final result in _messageController.stream) {
-      yield result;
-    }
+    yield* _messageController.stream;
   }
 
   /// Closes the WebSocket connection.
