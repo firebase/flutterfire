@@ -188,5 +188,58 @@ void main() {
       final response = await responseStream.first;
       expect(response.text, 'Some response');
     });
+
+    test('sendMessage retains auto-executed function turns in history',
+        () async {
+      var requestCount = 0;
+      final mockHttp = MockClient((request) async {
+        requestCount++;
+        final body = requestCount == 1
+            ? {
+                'candidates': [
+                  {
+                    'content': {
+                      'role': 'model',
+                      'parts': [
+                        {
+                          'functionCall': {'name': 'getValue', 'args': {}},
+                        },
+                      ],
+                    },
+                  },
+                ],
+              }
+            : _arbitraryGenerateContentResponse;
+        return http.Response(jsonEncode(body), 200,
+            headers: {'content-type': 'application/json'});
+      });
+
+      final model = createModel(mockHttp);
+      final chat = model.startChat(
+        templateId,
+        inputs: {'prompt': 'Some prompt'},
+        tools: [
+          TemplateTool.functionDeclarations([
+            TemplateAutoFunctionDeclaration(
+              name: 'getValue',
+              callable: (args) async => {'value': 42},
+            ),
+          ]),
+        ],
+      );
+
+      await chat.sendMessage(Content.text('Call getValue.'));
+
+      final history = chat.history.toList();
+      expect(history, hasLength(4));
+      expect(history[0].parts.whereType<TextPart>().single.text,
+          'Call getValue.');
+      expect(history[1].parts.whereType<FunctionCall>().single.name,
+          'getValue');
+      expect(history[2].parts.whereType<FunctionResponse>().single.name,
+          'getValue');
+      expect(history[3].parts.whereType<TextPart>().single.text,
+          'Some response');
+    });
   });
 }
