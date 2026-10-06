@@ -71,6 +71,20 @@ void main() {
         throwsA(isA<UnimplementedError>()),
       );
     });
+
+    test('setCustomDisplayEnabled throws if not implemented', () async {
+      await expectLater(
+        () => platform!.setCustomDisplayEnabled(true),
+        throwsA(isA<UnimplementedError>()),
+      );
+    });
+
+    test('onMessageDisplay throws if not implemented', () {
+      expect(
+        () => platform!.onMessageDisplay,
+        throwsA(isA<UnimplementedError>()),
+      );
+    });
   });
 }
 

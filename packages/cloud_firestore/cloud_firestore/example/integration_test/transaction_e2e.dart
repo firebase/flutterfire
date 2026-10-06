@@ -363,7 +363,7 @@ void runTransactionTests() {
             fail('Transaction threw invalid exception');
           }
         },
-        skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
+        skip: kIsWeb,
       );
 
       group('Transaction.get()', () {
@@ -399,7 +399,7 @@ void runTransactionTests() {
               fail('Transaction threw invalid exception');
             }
           },
-          skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
+          skip: kIsWeb,
         );
       });
 

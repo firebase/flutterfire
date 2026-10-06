@@ -93,7 +93,7 @@ jobs:
           rm -rf "$HOME/.android/avd"
           ln -s /mnt/avd "$HOME/.android/avd"
       - name: Start AVD then run E2E tests
-        uses: reactivecircus/android-emulator-runner@e89f39f1abbbd05b1113a29cf4db69e7540cae5a
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
         env:
           ANDROID_AVD_HOME: /mnt/avd
         with:
@@ -137,7 +137,7 @@ jobs:
           bootstrap-scope: 'firebase_data_connect*'
       - name: Setup PostgreSQL for Linux/macOS/Windows
         uses: ikalnytskyi/action-setup-postgres@c4dda34aae1c821e3a771b68b73b13af3198a7ee
-      - uses: hendrikmuhs/ccache-action@d62db5f07c26379fc4b4e0916f098a92573c3b03
+      - uses: hendrikmuhs/ccache-action@f09c25b45002a07be2955cbe52e8cee55643f89d
         name: Xcode Compile Cache
         with:
           key: xcode-cache-${{ runner.os }}-xcode27
