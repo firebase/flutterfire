@@ -23,11 +23,11 @@ class ImageGenerationPage extends StatefulWidget {
   const ImageGenerationPage({
     super.key,
     required this.title,
-    required this.useGeminiEnterprise,
+    required this.useAgentPlatform,
   });
 
   final String title;
-  final bool useGeminiEnterprise;
+  final bool useAgentPlatform;
 
   @override
   State<ImageGenerationPage> createState() => _ImageGenerationPageState();
@@ -50,8 +50,8 @@ class _ImageGenerationPageState extends State<ImageGenerationPage> {
   }
 
   void _initializeModel() {
-    final aiClient = widget.useGeminiEnterprise
-        ? FirebaseAI.enterprise()
+    final aiClient = widget.useAgentPlatform
+        ? FirebaseAI.agentPlatform()
         : FirebaseAI.googleAI();
 
     _model = aiClient.generativeModel(

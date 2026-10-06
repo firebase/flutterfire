@@ -74,7 +74,7 @@ void main() {
 
         final isVertex = path.contains('vertexai');
         final serializer =
-            isVertex ? EnterpriseSerialization() : DeveloperSerialization();
+            isVertex ? AgentPlatformSerialization() : DeveloperSerialization();
 
         try {
           if (path.contains('total-tokens') || path.contains('token')) {
