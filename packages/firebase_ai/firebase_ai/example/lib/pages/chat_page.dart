@@ -21,11 +21,11 @@ class ChatPage extends StatefulWidget {
   const ChatPage({
     super.key,
     required this.title,
-    required this.useGeminiEnterprise,
+    required this.useAgentPlatform,
   });
 
   final String title;
-  final bool useGeminiEnterprise;
+  final bool useAgentPlatform;
 
   @override
   State<ChatPage> createState() => _ChatPageState();
@@ -53,8 +53,8 @@ class _ChatPageState extends State<ChatPage> {
           ? ThinkingConfig.withThinkingLevel(ThinkingLevel.medium)
           : null,
     );
-    if (widget.useGeminiEnterprise) {
-      _model = FirebaseAI.enterprise().generativeModel(
+    if (widget.useAgentPlatform) {
+      _model = FirebaseAI.agentPlatform().generativeModel(
         model: ExampleModels.flashLite,
         generationConfig: generationConfig,
       );

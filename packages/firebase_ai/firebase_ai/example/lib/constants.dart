@@ -23,8 +23,8 @@ abstract final class ExampleModels {
   /// Text-to-speech audio model preview.
   static const String flashTTS = 'gemini-3.1-flash-tts-preview';
 
-  /// Live bidirectional audio streaming model for Gemini Enterprise.
-  static const String liveGeminiEnterprise =
+  /// Live bidirectional audio streaming model for Agent Platform.
+  static const String liveAgentPlatform =
       'gemini-live-2.5-flash-preview-native-audio-09-2025';
 
   /// Live bidirectional audio streaming model for Google AI.

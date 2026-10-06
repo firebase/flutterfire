@@ -21,11 +21,11 @@ class GroundingPage extends StatefulWidget {
   const GroundingPage({
     super.key,
     required this.title,
-    required this.useGeminiEnterprise,
+    required this.useAgentPlatform,
   });
 
   final String title;
-  final bool useGeminiEnterprise;
+  final bool useAgentPlatform;
 
   @override
   State<GroundingPage> createState() => _GroundingPageState();
@@ -74,8 +74,8 @@ class _GroundingPageState extends State<GroundingPage> {
       }
     }
 
-    final aiProvider = widget.useGeminiEnterprise
-        ? FirebaseAI.enterprise()
+    final aiProvider = widget.useAgentPlatform
+        ? FirebaseAI.agentPlatform()
         : FirebaseAI.googleAI();
 
     _model = aiProvider.generativeModel(

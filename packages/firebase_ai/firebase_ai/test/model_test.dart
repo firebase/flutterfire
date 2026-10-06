@@ -40,7 +40,7 @@ void main() {
     }) {
       final client = ClientController();
       final model = createModelWithClient(
-          useEnterprise: true,
+          useAgentPlatform: true,
           app: app,
           model: modelName,
           client: client.client,

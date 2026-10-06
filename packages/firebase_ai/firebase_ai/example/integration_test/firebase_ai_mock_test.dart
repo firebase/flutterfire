@@ -80,7 +80,7 @@ void main() {
         location: 'us-central1',
         model: 'gemini-pro',
         client: mockClient,
-        useEnterprise: true,
+        useAgentPlatform: true,
       );
 
       // We need to construct a request that uses Grounding.
@@ -115,7 +115,7 @@ void main() {
         location: 'us-central1',
         model: 'gemini-pro',
         client: mockClient,
-        useEnterprise: true,
+        useAgentPlatform: true,
       );
 
       final schema = {
@@ -167,7 +167,7 @@ void main() {
         location: 'us-central1',
         model: 'gemini-pro',
         client: mockClient,
-        useEnterprise: true,
+        useAgentPlatform: true,
       );
 
       final chat = model.startChat();

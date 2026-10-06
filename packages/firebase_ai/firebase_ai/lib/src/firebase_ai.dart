@@ -23,18 +23,18 @@ import 'package:meta/meta.dart';
 import '../firebase_ai.dart';
 import 'base_model.dart';
 
-const _defaultGeminiEnterpriseLocation = 'global';
+const _defaultAgentPlatformLocation = 'global';
 
 /// The entrypoint for generative models.
 class FirebaseAI extends FirebasePlugin {
   FirebaseAI._({
     required this.app,
     required this.location,
-    required bool useEnterprise,
+    required bool useAgentPlatform,
     this.appCheck,
     this.auth,
     this.useLimitedUseAppCheckTokens = false,
-  })  : _useEnterprise = useEnterprise,
+  })  : _useAgentPlatform = useAgentPlatform,
         super(app.name, 'plugins.flutter.io/firebase_vertexai');
 
   /// The [FirebaseApp] for this current [FirebaseAI] instance.
@@ -53,14 +53,13 @@ class FirebaseAI extends FirebasePlugin {
   /// Whether to use App Check limited use tokens. Defaults to false.
   final bool useLimitedUseAppCheckTokens;
 
-  final bool _useEnterprise;
+  final bool _useAgentPlatform;
 
   static final Map<String, FirebaseAI> _cachedInstances = {};
 
   /// Returns an instance using a specified [FirebaseApp].
   ///
   /// If [app] is not provided, the default Firebase app will be used.
-  @Deprecated('Deprecated, use FirebaseAI.enterprise() instead.')
   static FirebaseAI agentPlatform({
     FirebaseApp? app,
     String? location,
@@ -73,44 +72,14 @@ class FirebaseAI extends FirebasePlugin {
       return _cachedInstances[instanceKey]!;
     }
 
-    location ??= _defaultGeminiEnterpriseLocation;
+    location ??= _defaultAgentPlatformLocation;
 
     FirebaseAI newInstance = FirebaseAI._(
       app: app,
       location: location,
       appCheck: app.getService<FirebaseAppCheck>(),
       auth: app.getService<FirebaseAuth>(),
-      useEnterprise: true,
-      useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens ?? false,
-    );
-    _cachedInstances[instanceKey] = newInstance;
-
-    return newInstance;
-  }
-
-  /// Returns an instance using a specified [FirebaseApp].
-  ///
-  /// If [app] is not provided, the default Firebase app will be used.
-  static FirebaseAI enterprise({
-    FirebaseApp? app,
-    String? location,
-    bool? useLimitedUseAppCheckTokens,
-  }) {
-    app ??= Firebase.app();
-    var instanceKey = '${app.name}::enterprise::$location';
-
-    if (_cachedInstances.containsKey(instanceKey)) {
-      return _cachedInstances[instanceKey]!;
-    }
-
-    location ??= _defaultGeminiEnterpriseLocation;
-
-    FirebaseAI newInstance = FirebaseAI._(
-      app: app,
-      location: location,
-      appCheck: app.getService<FirebaseAppCheck>(),
-      auth: app.getService<FirebaseAuth>(),
-      useEnterprise: true,
+      useAgentPlatform: true,
       useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens ?? false,
     );
     _cachedInstances[instanceKey] = newInstance;
@@ -135,10 +104,10 @@ class FirebaseAI extends FirebasePlugin {
 
     FirebaseAI newInstance = FirebaseAI._(
       app: app,
-      location: _defaultGeminiEnterpriseLocation,
+      location: _defaultAgentPlatformLocation,
       appCheck: app.getService<FirebaseAppCheck>(),
       auth: app.getService<FirebaseAuth>(),
-      useEnterprise: false,
+      useAgentPlatform: false,
       useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens ?? false,
     );
     _cachedInstances[instanceKey] = newInstance;
@@ -173,7 +142,7 @@ class FirebaseAI extends FirebasePlugin {
       model: model,
       app: app,
       appCheck: appCheck,
-      useEnterprise: _useEnterprise,
+      useAgentPlatform: _useAgentPlatform,
       auth: auth,
       location: location,
       safetySettings: safetySettings,
@@ -200,7 +169,7 @@ class FirebaseAI extends FirebasePlugin {
       app: app,
       location: location,
       model: model,
-      useEnterprise: _useEnterprise,
+      useAgentPlatform: _useAgentPlatform,
       liveGenerationConfig: liveGenerationConfig,
       tools: tools,
       systemInstruction: systemInstruction,
@@ -218,7 +187,7 @@ class FirebaseAI extends FirebasePlugin {
     return createTemplateGenerativeModel(
         app: app,
         location: location,
-        useEnterprise: _useEnterprise,
+        useAgentPlatform: _useAgentPlatform,
         useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
         auth: auth,
         appCheck: appCheck);

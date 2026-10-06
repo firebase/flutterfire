@@ -70,13 +70,13 @@ abstract interface class _ModelUri {
   ({String prefix, String name}) get model;
 }
 
-final class _EnterpriseUri implements _ModelUri {
-  _EnterpriseUri(
+final class _AgentPlatformUri implements _ModelUri {
+  _AgentPlatformUri(
       {required String model,
       required String location,
       required FirebaseApp app})
       : model = _normalizeModelName(model),
-        _projectUri = _enterpriseUri(app, location);
+        _projectUri = _agentPlatformUri(app, location);
 
   static const _baseAuthority = 'firebasevertexai.googleapis.com';
   static const _apiVersion = 'v1beta';
@@ -91,7 +91,7 @@ final class _EnterpriseUri implements _ModelUri {
     return (prefix: parts.first, name: parts.skip(1).join('/'));
   }
 
-  static Uri _enterpriseUri(FirebaseApp app, String location) {
+  static Uri _agentPlatformUri(FirebaseApp app, String location) {
     var projectId = app.options.projectId;
     return Uri.https(
       _baseAuthority,
@@ -167,10 +167,11 @@ abstract interface class _TemplateUri {
   String templateName(String templateId);
 }
 
-final class _TemplateEnterpriseUri implements _TemplateUri {
-  _TemplateEnterpriseUri({required String location, required FirebaseApp app})
-      : _templateUri = _enterpriseTemplateUri(app, location),
-        _templateName = _enterpriseTemplateName(app, location);
+final class _TemplateAgentPlatformUri implements _TemplateUri {
+  _TemplateAgentPlatformUri(
+      {required String location, required FirebaseApp app})
+      : _templateUri = _agentPlatformTemplateUri(app, location),
+        _templateName = _agentPlatformTemplateName(app, location);
 
   static const _baseAuthority = 'firebasevertexai.googleapis.com';
   static const _apiVersion = 'v1beta';
@@ -178,7 +179,7 @@ final class _TemplateEnterpriseUri implements _TemplateUri {
   final Uri _templateUri;
   final String _templateName;
 
-  static Uri _enterpriseTemplateUri(FirebaseApp app, String location) {
+  static Uri _agentPlatformTemplateUri(FirebaseApp app, String location) {
     var projectId = app.options.projectId;
     return Uri.https(
       _baseAuthority,
@@ -186,7 +187,7 @@ final class _TemplateEnterpriseUri implements _TemplateUri {
     );
   }
 
-  static String _enterpriseTemplateName(FirebaseApp app, String location) {
+  static String _agentPlatformTemplateName(FirebaseApp app, String location) {
     var projectId = app.options.projectId;
     return 'projects/$projectId/locations/$location';
   }
