@@ -161,9 +161,11 @@ class MethodChannelQuery extends QueryPlatform {
         controller; // ignore: close_sinks
 
     StreamSubscription<dynamic>? snapshotStreamSubscription;
+    var listenGeneration = 0;
 
     controller = StreamController<QuerySnapshotPlatform>.broadcast(
       onListen: () async {
+        final generation = ++listenGeneration;
         final observerId =
             await MethodChannelFirebaseFirestore.pigeonChannel.querySnapshot(
           pigeonApp,
@@ -177,6 +179,7 @@ class MethodChannelQuery extends QueryPlatform {
           includeMetadataChanges,
           listenSource,
         );
+        if (generation != listenGeneration) return;
 
         snapshotStreamSubscription =
             MethodChannelFirebaseFirestore.querySnapshotChannel(observerId)
@@ -195,7 +198,9 @@ class MethodChannelQuery extends QueryPlatform {
         );
       },
       onCancel: () {
+        listenGeneration++;
         snapshotStreamSubscription?.cancel();
+        snapshotStreamSubscription = null;
       },
     );
 

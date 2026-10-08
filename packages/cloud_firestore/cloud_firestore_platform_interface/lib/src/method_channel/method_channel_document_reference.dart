@@ -118,8 +118,10 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
         controller; // ignore: close_sinks
 
     StreamSubscription<dynamic>? snapshotStreamSubscription;
+    var listenGeneration = 0;
     controller = StreamController<DocumentSnapshotPlatform>.broadcast(
       onListen: () async {
+        final generation = ++listenGeneration;
         final observerId = await MethodChannelFirebaseFirestore.pigeonChannel
             .documentReferenceSnapshot(
           pigeonApp,
@@ -130,6 +132,7 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
           includeMetadataChanges,
           listenSource,
         );
+        if (generation != listenGeneration) return;
         snapshotStreamSubscription =
             MethodChannelFirebaseFirestore.documentSnapshotChannel(observerId)
                 .receiveGuardedBroadcastStream(
@@ -154,7 +157,9 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
         );
       },
       onCancel: () {
+        listenGeneration++;
         snapshotStreamSubscription?.cancel();
+        snapshotStreamSubscription = null;
       },
     );
 
