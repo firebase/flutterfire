@@ -314,6 +314,42 @@ void main() {
       expect(goAwayMessage.timeLeft, '50s');
     });
 
+    test('parseServerMessage parses voiceActivity message correctly', () {
+      final start = parseServerResponse({
+        'voiceActivity': {
+          'type': 'ACTIVITY_START',
+          'audioOffset': '2.520s',
+        },
+      });
+      expect(start.message, isA<LiveServerVoiceActivity>());
+      final startMessage = start.message as LiveServerVoiceActivity;
+      expect(startMessage.type, VoiceActivityType.activityStart);
+      expect(startMessage.audioOffset, '2.520s');
+
+      final end = parseServerResponse({
+        'voiceActivity': {
+          'type': 'ACTIVITY_END',
+          'audioOffset': '3.640s',
+        },
+      });
+      final endMessage = end.message as LiveServerVoiceActivity;
+      expect(endMessage.type, VoiceActivityType.activityEnd);
+      expect(endMessage.audioOffset, '3.640s');
+    });
+
+    test('parseServerMessage keeps voiceActivity with an unrecognized type',
+        () {
+      final response = parseServerResponse({
+        'voiceActivity': {
+          'type': 'ACTIVITY_UNKNOWN',
+          'audioOffset': '1s',
+        },
+      });
+      final message = response.message as LiveServerVoiceActivity;
+      expect(message.type, isNull);
+      expect(message.audioOffset, '1s');
+    });
+
     test('parseServerMessage throws VertexAIException for error message', () {
       final jsonObject = {'error': {}};
       expect(() => parseServerResponse(jsonObject),

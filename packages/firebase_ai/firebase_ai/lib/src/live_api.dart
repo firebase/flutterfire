@@ -379,6 +379,41 @@ class GoingAwayNotice implements LiveServerMessage {
   final String? timeLeft;
 }
 
+/// Whether the server detected the start or end of user speech.
+enum VoiceActivityType {
+  /// The user started speaking.
+  activityStart('ACTIVITY_START'),
+
+  /// The user stopped speaking.
+  activityEnd('ACTIVITY_END');
+
+  const VoiceActivityType(this.value);
+
+  /// The JSON wire string value.
+  final String value;
+}
+
+/// A server message indicating that voice activity was detected.
+///
+/// Gemini 3.x Live models send this when the user starts or stops speaking.
+class LiveServerVoiceActivity implements LiveServerMessage {
+  /// Creates a [LiveServerVoiceActivity] instance.
+  ///
+  /// [type] (optional): Whether speech started or stopped.
+  /// [audioOffset] (optional): When the activity was detected, as a duration
+  /// string such as `2.520s`.
+  const LiveServerVoiceActivity({this.type, this.audioOffset});
+
+  /// Whether speech started or stopped.
+  ///
+  /// Null when the server sends a type this SDK does not recognize.
+  final VoiceActivityType? type;
+
+  /// The time the activity was detected, relative to the start of the audio
+  /// stream. A duration string such as `2.520s`.
+  final String? audioOffset;
+}
+
 /// An update of the session resumption state.
 ///
 /// This message is only sent if [SessionResumptionConfig] was set in the
@@ -558,6 +593,7 @@ class LiveClientToolResponse {
 /// - `toolCall` messages indicating function calls requested by the model.
 /// - `toolCallCancellation` messages to cancel pending function calls.
 /// - `setupComplete` messages signaling the completion of the server setup.
+/// - `voiceActivity` messages signaling the start or end of user speech.
 ///
 /// If the JSON object does not match any of the expected formats, an
 /// [FirebaseAISdkException] is thrown.
@@ -590,11 +626,23 @@ class LiveClientToolResponse {
 /// Returns:
 /// - A [LiveServerResponse] object representing the parsed message.
 LiveServerResponse parseServerResponse(Object jsonObject) {
-  LiveServerMessage message = _parseServerMessage(jsonObject);
+  return tryParseServerResponse(jsonObject) ??
+      (throw unhandledFormat('LiveServerMessage', jsonObject));
+}
+
+/// Parses a live server message.
+///
+/// Returns null when [jsonObject] has a top-level key this SDK does not
+/// recognize. Error payloads still throw [FirebaseAIException].
+LiveServerResponse? tryParseServerResponse(Object jsonObject) {
+  final LiveServerMessage? message = _parseServerMessage(jsonObject);
+  if (message == null) {
+    return null;
+  }
   return LiveServerResponse(message: message);
 }
 
-LiveServerMessage _parseServerMessage(Object jsonObject) {
+LiveServerMessage? _parseServerMessage(Object jsonObject) {
   if (jsonObject case {'error': final Object error}) {
     throw parseError(error);
   }
@@ -668,7 +716,28 @@ LiveServerMessage _parseServerMessage(Object jsonObject) {
       lastConsumedClientMessageIndex:
           sessionResumptionUpdateJson['lastConsumedClientMessageIndex'] as int?,
     );
+  } else if (json.containsKey('voiceActivity')) {
+    return _parseVoiceActivity(json['voiceActivity']);
   } else {
-    throw unhandledFormat('LiveServerMessage', json);
+    return null;
   }
 }
+
+LiveServerVoiceActivity _parseVoiceActivity(Object? value) {
+  if (value is! Map) {
+    return const LiveServerVoiceActivity();
+  }
+  final json = Map<String, dynamic>.from(value);
+  final type = json['type'];
+  final audioOffset = json['audioOffset'];
+  return LiveServerVoiceActivity(
+    type: _parseVoiceActivityType(type),
+    audioOffset: audioOffset is String ? audioOffset : null,
+  );
+}
+
+VoiceActivityType? _parseVoiceActivityType(Object? value) => switch (value) {
+      'ACTIVITY_START' => VoiceActivityType.activityStart,
+      'ACTIVITY_END' => VoiceActivityType.activityEnd,
+      _ => null,
+    };
