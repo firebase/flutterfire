@@ -159,9 +159,14 @@ class LiveSession {
           final String jsonString =
               message is String ? message : utf8.decode(message as List<int>);
           var response = json.decode(jsonString);
-
-          if (!_messageController.isClosed) {
-            _messageController.add(parseServerResponse(response));
+          final parsed = tryParseServerResponse(response);
+          if (parsed == null) {
+            log(
+              'live_session: Ignoring unrecognized LiveServerMessage',
+              error: response,
+            );
+          } else if (!_messageController.isClosed) {
+            _messageController.add(parsed);
           }
         } catch (e) {
           if (!_messageController.isClosed && _messageController.hasListener) {

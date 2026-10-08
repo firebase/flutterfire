@@ -122,6 +122,92 @@ void main() {
       fakeWs.close();
     });
 
+    test('receive stays open across a voiceActivity frame', () async {
+      final fakeWs = FakeWebSocketChannel();
+      final session = LiveSession.forTesting(fakeWs);
+
+      final messages = <LiveServerMessage>[];
+      final errors = <Object>[];
+      var done = false;
+      final completer = Completer<void>();
+      final subscription = session.receive().listen(
+        (response) {
+          messages.add(response.message);
+          if (messages.length == 2 && !completer.isCompleted) {
+            completer.complete();
+          }
+        },
+        onError: errors.add,
+        onDone: () => done = true,
+      );
+
+      fakeWs.emit(jsonEncode({
+        'voiceActivity': {
+          'type': 'ACTIVITY_START',
+          'audioOffset': '2.520s',
+        },
+      }));
+      fakeWs.emit('{"setupComplete": {}}');
+
+      await completer.future.timeout(const Duration(seconds: 5));
+      expect(messages[0], isA<LiveServerVoiceActivity>());
+      expect(
+        (messages[0] as LiveServerVoiceActivity).type,
+        VoiceActivityType.activityStart,
+      );
+      expect(
+        (messages[0] as LiveServerVoiceActivity).audioOffset,
+        '2.520s',
+      );
+      expect(messages[1], isA<LiveServerSetupComplete>());
+      expect(errors, isEmpty);
+      expect(done, isFalse);
+
+      await subscription.cancel();
+      fakeWs.close();
+    });
+
+    test('receive stays open after an unrecognized frame', () async {
+      final fakeWs = FakeWebSocketChannel();
+      final session = LiveSession.forTesting(fakeWs);
+
+      final errors = <Object>[];
+      var done = false;
+      final completer = Completer<LiveServerMessage>();
+      final subscription = session.receive().listen(
+        (response) {
+          if (response.message is LiveServerSetupComplete &&
+              !completer.isCompleted) {
+            completer.complete(response.message);
+          }
+        },
+        onError: (Object error) {
+          errors.add(error);
+          if (!completer.isCompleted) {
+            completer.completeError(error);
+          }
+        },
+        onDone: () {
+          done = true;
+          if (!completer.isCompleted) {
+            completer.completeError(StateError('receive closed'));
+          }
+        },
+      );
+
+      fakeWs.emit('{"unknown": {}}');
+      fakeWs.emit('{"setupComplete": {}}');
+
+      final message =
+          await completer.future.timeout(const Duration(seconds: 5));
+      expect(message, isA<LiveServerSetupComplete>());
+      expect(errors, isEmpty);
+      expect(done, isFalse);
+
+      await subscription.cancel();
+      fakeWs.close();
+    });
+
     test('sendStartActivityRealtime sends correct activity_start message',
         () async {
       final fakeWs = FakeWebSocketChannel();
