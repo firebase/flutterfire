@@ -44,6 +44,10 @@ class FirestoreMessageCodec extends StandardMessageCodec {
   static const int _kFirestoreQuery = 197;
   static const int _kFirestoreSettings = 198;
   static const int _kVectorValue = 199;
+  static const int _kMinimumDouble = 200;
+  static const int _kMinimumInteger = 201;
+  static const int _kMaximumDouble = 202;
+  static const int _kMaximumInteger = 203;
 
   static const Map<FieldValueType, int> _kFieldValueCodes =
       <FieldValueType, int>{
@@ -53,6 +57,17 @@ class FirestoreMessageCodec extends StandardMessageCodec {
     FieldValueType.serverTimestamp: _kServerTimestamp,
     FieldValueType.incrementDouble: _kIncrementDouble,
     FieldValueType.incrementInteger: _kIncrementInteger,
+    FieldValueType.minimumDouble: _kMinimumDouble,
+    FieldValueType.minimumInteger: _kMinimumInteger,
+    FieldValueType.maximumDouble: _kMaximumDouble,
+    FieldValueType.maximumInteger: _kMaximumInteger,
+  };
+
+  static const Map<FieldValueType, int> _kIntegerToDoubleCodes =
+      <FieldValueType, int>{
+    FieldValueType.incrementInteger: _kIncrementDouble,
+    FieldValueType.minimumInteger: _kMinimumDouble,
+    FieldValueType.maximumInteger: _kMaximumDouble,
   };
 
   static const Map<FieldPathType, int> _kFieldPathCodes = <FieldPathType, int>{
@@ -84,14 +99,13 @@ class FirestoreMessageCodec extends StandardMessageCodec {
       buffer.putUint8List(value.bytes);
     } else if (value is FieldValuePlatform) {
       MethodChannelFieldValue delegate = FieldValuePlatform.getDelegate(value);
-      final int code = _kFieldValueCodes[delegate.type]!;
       // We turn int superior to 2^32 into double here to avoid precision loss.
-      if (delegate.type == FieldValueType.incrementInteger &&
+      if (_kIntegerToDoubleCodes.containsKey(delegate.type) &&
           (delegate.value > 2147483647 || delegate.value < -2147483648)) {
-        buffer.putUint8(_kIncrementDouble);
+        buffer.putUint8(_kIntegerToDoubleCodes[delegate.type]!);
         writeValue(buffer, (delegate.value as int).toDouble());
       } else {
-        buffer.putUint8(code);
+        buffer.putUint8(_kFieldValueCodes[delegate.type]!);
         if (delegate.value != null) writeValue(buffer, delegate.value);
       }
     } else if (value is FieldPathType) {
@@ -181,6 +195,10 @@ class FirestoreMessageCodec extends StandardMessageCodec {
       case _kServerTimestamp:
       case _kIncrementDouble:
       case _kIncrementInteger:
+      case _kMinimumDouble:
+      case _kMinimumInteger:
+      case _kMaximumDouble:
+      case _kMaximumInteger:
       default:
         return super.readValueOfType(type, buffer);
     }

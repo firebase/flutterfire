@@ -41,6 +41,10 @@ class FirestoreCodec : public flutter::StandardCodecSerializer {
   static const uint8_t DATA_TYPE_FIRESTORE_INSTANCE = 196;
   static const uint8_t DATA_TYPE_FIRESTORE_QUERY = 197;
   static const uint8_t DATA_TYPE_FIRESTORE_SETTINGS = 198;
+  static const uint8_t DATA_TYPE_MINIMUM_DOUBLE = 200;
+  static const uint8_t DATA_TYPE_MINIMUM_INTEGER = 201;
+  static const uint8_t DATA_TYPE_MAXIMUM_DOUBLE = 202;
+  static const uint8_t DATA_TYPE_MAXIMUM_INTEGER = 203;
 
   FirestoreCodec();
   inline static FirestoreCodec& GetInstance() {
