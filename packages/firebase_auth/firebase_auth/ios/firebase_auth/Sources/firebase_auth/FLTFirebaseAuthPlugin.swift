@@ -214,7 +214,7 @@ public class FLTFirebaseAuthPlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
 
   func randomNonce(_ length: Int) -> String {
     precondition(length > 0)
-    let characterSet = Array("0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._")
+    let characterSet = Array("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-._")
     var result = ""
     var remainingLength = length
     while remainingLength > 0 {
