@@ -39,7 +39,7 @@ Content historyAggregate(List<Content> contents) {
 
   for (final content in contents) {
     for (final part in content.parts) {
-      if (part case TextPart(:final text)) {
+      if (part case TextPart(:final text, speechMetadata: null)) {
         if (text.isNotEmpty) {
           previousText = textBuffer.isEmpty ? part : null;
           textBuffer.write(text);
