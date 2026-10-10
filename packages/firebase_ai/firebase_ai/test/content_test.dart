@@ -17,6 +17,7 @@ import 'dart:typed_data';
 
 import 'package:firebase_ai/src/api.dart';
 import 'package:firebase_ai/src/content.dart';
+import 'package:firebase_ai/src/speech_config.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 // Mock google_ai classes (if needed)
@@ -143,6 +144,55 @@ void main() {
       expect(json['text'], 'Test');
       expect(json['thought'], true);
       expect(json['thoughtSignature'], 'sig');
+      expect(json.containsKey('speechMetadata'), false);
+    });
+
+    test('TextPart with SpeechMetadata toJson', () {
+      const part = TextPart(
+        'Hello there!',
+        speechMetadata: SpeechMetadata(
+          speaker: 'Alice',
+          style: 'excitedly',
+        ),
+      );
+      expect(part.toJson(), {
+        'text': 'Hello there!',
+        'speechMetadata': {
+          'speaker': 'Alice',
+          'style': 'excitedly',
+        },
+      });
+
+      const speakerOnlyPart = TextPart(
+        'Hi!',
+        speechMetadata: SpeechMetadata(speaker: 'Bob'),
+      );
+      expect(speakerOnlyPart.toJson(), {
+        'text': 'Hi!',
+        'speechMetadata': {
+          'speaker': 'Bob',
+        },
+      });
+
+      const styleOnlyPart = TextPart(
+        'Shh...',
+        speechMetadata: SpeechMetadata(style: 'whispering'),
+      );
+      expect(styleOnlyPart.toJson(), {
+        'text': 'Shh...',
+        'speechMetadata': {
+          'style': 'whispering',
+        },
+      });
+
+      const emptyMetadataPart = TextPart(
+        'Plain',
+        speechMetadata: SpeechMetadata(),
+      );
+      expect(emptyMetadataPart.toJson(), {
+        'text': 'Plain',
+        'speechMetadata': <String, Object?>{},
+      });
     });
 
     test('DataPart with isThought and thoughtSignature toJson', () {
@@ -279,7 +329,55 @@ void main() {
       final json = {'text': 'Hello, world!'};
       final result = parsePart(json);
       expect(result, isA<TextPart>());
-      expect((result as TextPart).text, 'Hello, world!');
+      final textPart = result as TextPart;
+      expect(textPart.text, 'Hello, world!');
+      expect(textPart.speechMetadata, isNull);
+    });
+
+    test('parses TextPart with SpeechMetadata correctly', () {
+      final json = {
+        'text': 'Hello there!',
+        'speechMetadata': {
+          'speaker': 'Alice',
+          'style': 'excitedly',
+        },
+      };
+      final result = parsePart(json);
+      expect(result, isA<TextPart>());
+      final textPart = result as TextPart;
+      expect(textPart.text, 'Hello there!');
+      expect(
+        textPart.speechMetadata,
+        const SpeechMetadata(speaker: 'Alice', style: 'excitedly'),
+      );
+    });
+
+    test('parses TextPart with partial SpeechMetadata correctly', () {
+      final speakerOnlyJson = {
+        'text': 'Hi!',
+        'speechMetadata': {
+          'speaker': 'Bob',
+        },
+      };
+      final speakerOnlyResult = parsePart(speakerOnlyJson) as TextPart;
+      expect(speakerOnlyResult.text, 'Hi!');
+      expect(
+        speakerOnlyResult.speechMetadata,
+        const SpeechMetadata(speaker: 'Bob'),
+      );
+
+      final styleOnlyJson = {
+        'text': 'Shh...',
+        'speechMetadata': {
+          'style': 'whispering',
+        },
+      };
+      final styleOnlyResult = parsePart(styleOnlyJson) as TextPart;
+      expect(styleOnlyResult.text, 'Shh...');
+      expect(
+        styleOnlyResult.speechMetadata,
+        const SpeechMetadata(style: 'whispering'),
+      );
     });
 
     test('parses FunctionCall correctly', () {

@@ -116,3 +116,52 @@ class VoiceConfig {
           'prebuilt_voice_config': prebuiltVoiceConfig.toJson()
       };
 }
+
+/// Structured speech metadata associated with a `TextPart`.
+///
+/// Used to guide speech generation for a specific piece of text, such as
+/// identifying which speaker says it and the vocal style they should use.
+///
+/// This feature is in Public Preview.
+@immutable
+class SpeechMetadata {
+  /// Constructs a [SpeechMetadata] instance.
+  ///
+  /// - [speaker]: Optional speaker name for multi-speaker synthesis. Identifies
+  ///   which speaker is speaking this turn. When using a
+  ///   [MultiSpeakerVoiceConfig], this should match the
+  ///   [SpeakerVoiceConfig.speaker] of one of the configured speakers.
+  /// - [style]: Optional style instruction for the speech synthesis (a natural
+  ///   language description of the vocal style, such as `'cheerful'`).
+  const SpeechMetadata({this.speaker, this.style});
+
+  /// The speaker reference name for multi-speaker synthesis.
+  ///
+  /// Identifies which speaker is speaking this turn. When using a
+  /// [MultiSpeakerVoiceConfig], this should match the
+  /// [SpeakerVoiceConfig.speaker] of one of the configured speakers.
+  final String? speaker;
+
+  /// The style instruction for the speech synthesis.
+  ///
+  /// A natural language description of the vocal style (for example,
+  /// `'cheerful'`).
+  final String? style;
+
+  /// Convert to json format.
+  Map<String, Object?> toJson() => {
+        if (speaker case final speaker?) 'speaker': speaker,
+        if (style case final style?) 'style': style,
+      };
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is SpeechMetadata &&
+          runtimeType == other.runtimeType &&
+          speaker == other.speaker &&
+          style == other.style;
+
+  @override
+  int get hashCode => Object.hash(speaker, style);
+}
