@@ -16,8 +16,10 @@ import 'package:http/http.dart' as http;
 import 'package:matcher/matcher.dart';
 
 Matcher matchesPart(Part part) => switch (part) {
-      TextPart(text: final text) =>
-        isA<TextPart>().having((p) => p.text, 'text', text),
+      TextPart(text: final text, speechMetadata: final speechMetadata) =>
+        isA<TextPart>()
+            .having((p) => p.text, 'text', text)
+            .having((p) => p.speechMetadata, 'speechMetadata', speechMetadata),
       InlineDataPart(mimeType: final mimeType, bytes: final bytes) =>
         isA<InlineDataPart>()
             .having((p) => p.mimeType, 'mimeType', mimeType)

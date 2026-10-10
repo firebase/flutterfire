@@ -95,7 +95,11 @@ export 'src/server_template/template_tool.dart'
         TemplateTool,
         TemplateToolConfig;
 export 'src/speech_config.dart'
-    show SpeechConfig, MultiSpeakerVoiceConfig, SpeakerVoiceConfig;
+    show
+        SpeechConfig,
+        SpeechMetadata,
+        MultiSpeakerVoiceConfig,
+        SpeakerVoiceConfig;
 export 'src/tool.dart'
     show
         AutoFunctionDeclaration,

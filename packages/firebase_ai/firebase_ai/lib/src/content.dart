@@ -20,6 +20,7 @@ import 'package:meta/meta.dart';
 
 import 'api.dart';
 import 'error.dart';
+import 'speech_config.dart';
 
 /// The base structured datatype containing multi-part content of a message.
 final class Content {
@@ -172,8 +173,18 @@ Part parsePart(Object? jsonObject) {
     }
   }
   return switch (jsonObject) {
-    {'text': final String text} => TextPart._(text,
-        isThought: isThought, thoughtSignature: thoughtSignature),
+    {'text': final String text} => TextPart._(
+        text,
+        isThought: isThought,
+        thoughtSignature: thoughtSignature,
+        speechMetadata: switch (jsonObject['speechMetadata']) {
+          final Map<Object?, Object?> metadata => SpeechMetadata(
+              speaker: metadata['speaker'] as String?,
+              style: metadata['style'] as String?,
+            ),
+          _ => null,
+        },
+      ),
     {
       'file_data': {
         'file_uri': final String fileUri,
@@ -228,7 +239,7 @@ final class UnknownPart extends Part {
 /// A [Part] with the text content.
 final class TextPart extends Part {
   // ignore: public_member_api_docs
-  const TextPart(this.text, {bool? isThought})
+  const TextPart(this.text, {bool? isThought, this.speechMetadata})
       : super(
           isThought: isThought,
           thoughtSignature: null,
@@ -240,6 +251,7 @@ final class TextPart extends Part {
     this.text, {
     bool? isThought,
     String? thoughtSignature,
+    this.speechMetadata,
   }) : super(
           isThought: isThought,
           thoughtSignature: thoughtSignature,
@@ -249,6 +261,7 @@ final class TextPart extends Part {
     this.text, {
     bool? isThought,
     String? thoughtSignature,
+    this.speechMetadata,
   }) : super(
           isThought: isThought,
           thoughtSignature: thoughtSignature,
@@ -256,10 +269,22 @@ final class TextPart extends Part {
 
   /// The text content of the [Part]
   final String text;
+
+  /// Optional [SpeechMetadata] used to guide speech generation for this text,
+  /// such as the speaker and vocal style.
+  ///
+  /// This feature is in Public Preview.
+  final SpeechMetadata? speechMetadata;
+
   @override
   Object toJson() {
     final superJson = super.toJson() as Map<String, Object?>;
-    return <String, Object?>{...superJson, 'text': text};
+    return <String, Object?>{
+      ...superJson,
+      'text': text,
+      if (speechMetadata case final speechMetadata?)
+        'speechMetadata': speechMetadata.toJson(),
+    };
   }
 }
 
