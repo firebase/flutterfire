@@ -4,9 +4,8 @@ name: reusable-e2e-ios
 # simulator and run the integration tests on it. Called by every
 # `e2e_tests_<product>.yaml` - every product supports iOS.
 #
-# This job is the repository's Swift Package Manager coverage (`ios-spm`,
-# default true); the macOS job is always CocoaPods, so both dependency managers
-# stay exercised.
+# This job builds with Swift Package Manager (`ios-spm`, default true).
+# Crashlytics opts out: its example build phase calls a script under PODS_ROOT.
 
 on:
   workflow_call:
@@ -77,14 +76,9 @@ on:
         description: >-
           true  = iOS builds under Swift Package Manager (the Podfile is removed
                   first, so `flutter build` does not prefer CocoaPods).
-          false = iOS stays on CocoaPods and gets a Pods cache, as
-                  firebase_crashlytics must (its Xcode project runs
-                  "${PODS_ROOT}/FirebaseCrashlytics/run") and as cloud_functions
-                  and firebase_performance currently must (Flutter's
-                  experimental SPM integration cannot resolve their examples on
-                  the CI Xcode).
-          The macOS job is always CocoaPods, so both dependency managers stay
-          covered either way.
+          false = iOS stays on CocoaPods and gets a Pods cache.
+                  firebase_crashlytics must: its Xcode project runs
+                  "${PODS_ROOT}/FirebaseCrashlytics/run".
         type: boolean
         default: true
       nightly_test_mode:
@@ -128,9 +122,7 @@ jobs:
       # Use the xcode-27 image default (Xcode 27 / iOS 27). Do not pin an older
       # Xcode: pinning 26.2 on macos-15 made SPM fail by canonicalizing Flutter's
       # ephemeral plugin symlink farm ("Could not resolve package dependencies
-      # ... ios/firebase_core does not exist"). cloud_functions and
-      # firebase_performance stay on CocoaPods until default-Xcode SPM runs prove
-      # clean.
+      # ... ios/firebase_core does not exist").
       - uses: ./.github/actions/setup-flutterfire
         with:
           node: ${{ inputs.use-firebase-emulators && 'true' || 'false' }}
@@ -139,10 +131,8 @@ jobs:
           firebase-tools-version: ${{ inputs.use-firebase-emulators && inputs.firebase-tools-version || '' }}
           bootstrap-scope: ${{ inputs.package-scope }}
       - name: Enable Swift Package Manager for iOS
-        # This job is the repository's iOS Swift Package Manager coverage for the
-        # product: every plugin the example depends on ships a Package.swift, so
-        # the whole app resolves under SPM. The macOS job stays on CocoaPods, so
-        # both dependency managers are exercised.
+        # Every plugin the example depends on ships a Package.swift, so the
+        # whole app resolves under SPM.
         if: inputs.ios-spm
         run: flutter config --enable-swift-package-manager
       - name: Disable Swift Package Manager for iOS

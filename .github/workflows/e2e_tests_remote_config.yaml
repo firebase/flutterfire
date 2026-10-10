@@ -95,6 +95,7 @@ jobs:
       package-path: 'packages/firebase_remote_config/firebase_remote_config'
       package-scope: 'firebase_remote_config*'
       cache-key-suffix: 'remote_config'
+      macos-spm: true
       native-config-args: '--live-tier-plist=remote_config'
       inject-config-secrets: true
       use-firebase-emulators: false

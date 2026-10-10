@@ -94,6 +94,9 @@ jobs:
       package-path: 'packages/firebase_crashlytics/firebase_crashlytics'
       package-scope: 'firebase_crashlytics*'
       cache-key-suffix: 'crashlytics'
+      # Stays on CocoaPods: the example build phase calls
+      # "${PODS_ROOT}/FirebaseCrashlytics/upload-symbols".
+      macos-spm: false
       native-config-args: '--live-tier-plist=crashlytics'
       inject-config-secrets: true
       use-firebase-emulators: false
