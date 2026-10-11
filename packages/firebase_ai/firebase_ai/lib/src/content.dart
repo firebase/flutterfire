@@ -175,6 +175,12 @@ Part parsePart(Object? jsonObject) {
     {'text': final String text} => TextPart._(text,
         isThought: isThought, thoughtSignature: thoughtSignature),
     {
+      'fileData': {
+        'fileUri': final String fileUri,
+        'mimeType': final String mimeType,
+      }
+    } ||
+    {
       'file_data': {
         'file_uri': final String fileUri,
         'mime_type': final String mimeType,
