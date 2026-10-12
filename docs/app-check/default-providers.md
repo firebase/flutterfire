@@ -79,8 +79,8 @@ Future<void> main() async {
   await Firebase.initializeApp();
   await FirebaseAppCheck.instance.activate(
     // You can also use a `ReCaptchaEnterpriseProvider` provider instance as an
-    // argument for `webProvider`
-    webProvider: ReCaptchaV3Provider('recaptcha-v3-site-key'),
+    // argument for `providerWeb`
+    providerWeb: ReCaptchaV3Provider('recaptcha-v3-site-key'),
     // Default provider for Android is the Play Integrity provider. You can use the "providerAndroid" parameter to choose
     // your preferred provider. Choose from:
     // 1. AndroidDebugProvider for debug environments

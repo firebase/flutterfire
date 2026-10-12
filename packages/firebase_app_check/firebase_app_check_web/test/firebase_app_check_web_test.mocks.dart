@@ -30,35 +30,20 @@ import 'package:mockito/src/dummies.dart' as _i6;
 // ignore_for_file: subtype_of_sealed_class
 
 class _FakeFirebaseApp_0 extends _i1.SmartFake implements _i2.FirebaseApp {
-  _FakeFirebaseApp_0(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeFirebaseApp_0(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeFirebaseAppCheckPlatform_1 extends _i1.SmartFake
     implements _i3.FirebaseAppCheckPlatform {
-  _FakeFirebaseAppCheckPlatform_1(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeFirebaseAppCheckPlatform_1(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeFirebaseAppCheckWeb_2 extends _i1.SmartFake
     implements _i4.FirebaseAppCheckWeb {
-  _FakeFirebaseAppCheckWeb_2(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeFirebaseAppCheckWeb_2(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 /// A class which mocks [FirebaseAppCheckWeb].
@@ -68,140 +53,89 @@ class MockFirebaseAppCheckWeb extends _i1.Mock
     implements _i4.FirebaseAppCheckWeb {
   @override
   _i5.Stream<String?> get onTokenChange => (super.noSuchMethod(
-        Invocation.getter(#onTokenChange),
-        returnValue: _i5.Stream<String?>.empty(),
-        returnValueForMissingStub: _i5.Stream<String?>.empty(),
-      ) as _i5.Stream<String?>);
+    Invocation.getter(#onTokenChange),
+    returnValue: _i5.Stream<String?>.empty(),
+    returnValueForMissingStub: _i5.Stream<String?>.empty(),
+  ) as _i5.Stream<String?>);
 
   @override
   _i2.FirebaseApp get app => (super.noSuchMethod(
-        Invocation.getter(#app),
-        returnValue: _FakeFirebaseApp_0(
-          this,
-          Invocation.getter(#app),
-        ),
-        returnValueForMissingStub: _FakeFirebaseApp_0(
-          this,
-          Invocation.getter(#app),
-        ),
-      ) as _i2.FirebaseApp);
+    Invocation.getter(#app),
+    returnValue: _FakeFirebaseApp_0(this, Invocation.getter(#app)),
+    returnValueForMissingStub: _FakeFirebaseApp_0(
+      this,
+      Invocation.getter(#app),
+    ),
+  ) as _i2.FirebaseApp);
 
   @override
   _i3.FirebaseAppCheckPlatform delegateFor({required _i2.FirebaseApp? app}) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #delegateFor,
-          [],
-          {#app: app},
-        ),
+        Invocation.method(#delegateFor, [], {#app: app}),
         returnValue: _FakeFirebaseAppCheckPlatform_1(
           this,
-          Invocation.method(
-            #delegateFor,
-            [],
-            {#app: app},
-          ),
+          Invocation.method(#delegateFor, [], {#app: app}),
         ),
         returnValueForMissingStub: _FakeFirebaseAppCheckPlatform_1(
           this,
-          Invocation.method(
-            #delegateFor,
-            [],
-            {#app: app},
-          ),
+          Invocation.method(#delegateFor, [], {#app: app}),
         ),
       ) as _i3.FirebaseAppCheckPlatform);
 
   @override
   _i4.FirebaseAppCheckWeb setInitialValues() => (super.noSuchMethod(
-        Invocation.method(
-          #setInitialValues,
-          [],
-        ),
-        returnValue: _FakeFirebaseAppCheckWeb_2(
-          this,
-          Invocation.method(
-            #setInitialValues,
-            [],
-          ),
-        ),
-        returnValueForMissingStub: _FakeFirebaseAppCheckWeb_2(
-          this,
-          Invocation.method(
-            #setInitialValues,
-            [],
-          ),
-        ),
-      ) as _i4.FirebaseAppCheckWeb);
+    Invocation.method(#setInitialValues, []),
+    returnValue: _FakeFirebaseAppCheckWeb_2(
+      this,
+      Invocation.method(#setInitialValues, []),
+    ),
+    returnValueForMissingStub: _FakeFirebaseAppCheckWeb_2(
+      this,
+      Invocation.method(#setInitialValues, []),
+    ),
+  ) as _i4.FirebaseAppCheckWeb);
 
   @override
   _i5.Future<void> activate({
-    _i3.WebProvider? webProvider,
-    _i3.AndroidProvider? androidProvider,
-    _i3.AppleProvider? appleProvider,
+    _i3.WebProvider? providerWeb,
     _i3.AndroidAppCheckProvider? providerAndroid,
     _i3.AppleAppCheckProvider? providerApple,
     _i3.WindowsAppCheckProvider? providerWindows,
-  }) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #activate,
-          [],
-          {
-            #webProvider: webProvider,
-            #androidProvider: androidProvider,
-            #appleProvider: appleProvider,
-            #providerAndroid: providerAndroid,
-            #providerApple: providerApple,
-            #providerWindows: providerWindows,
-          },
-        ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+  }) => (super.noSuchMethod(
+    Invocation.method(#activate, [], {
+      #providerWeb: providerWeb,
+      #providerAndroid: providerAndroid,
+      #providerApple: providerApple,
+      #providerWindows: providerWindows,
+    }),
+    returnValue: _i5.Future<void>.value(),
+    returnValueForMissingStub: _i5.Future<void>.value(),
+  ) as _i5.Future<void>);
 
   @override
   _i5.Future<String?> getToken(bool? forceRefresh) => (super.noSuchMethod(
-        Invocation.method(
-          #getToken,
-          [forceRefresh],
-        ),
-        returnValue: _i5.Future<String?>.value(),
-        returnValueForMissingStub: _i5.Future<String?>.value(),
-      ) as _i5.Future<String?>);
+    Invocation.method(#getToken, [forceRefresh]),
+    returnValue: _i5.Future<String?>.value(),
+    returnValueForMissingStub: _i5.Future<String?>.value(),
+  ) as _i5.Future<String?>);
 
   @override
   _i5.Future<String> getLimitedUseToken() => (super.noSuchMethod(
-        Invocation.method(
-          #getLimitedUseToken,
-          [],
-        ),
-        returnValue: _i5.Future<String>.value(_i6.dummyValue<String>(
-          this,
-          Invocation.method(
-            #getLimitedUseToken,
-            [],
-          ),
-        )),
-        returnValueForMissingStub:
-            _i5.Future<String>.value(_i6.dummyValue<String>(
-          this,
-          Invocation.method(
-            #getLimitedUseToken,
-            [],
-          ),
-        )),
-      ) as _i5.Future<String>);
+    Invocation.method(#getLimitedUseToken, []),
+    returnValue: _i5.Future<String>.value(
+      _i6.dummyValue<String>(this, Invocation.method(#getLimitedUseToken, [])),
+    ),
+    returnValueForMissingStub: _i5.Future<String>.value(
+      _i6.dummyValue<String>(this, Invocation.method(#getLimitedUseToken, [])),
+    ),
+  ) as _i5.Future<String>);
 
   @override
   _i5.Future<void> setTokenAutoRefreshEnabled(
-          bool? isTokenAutoRefreshEnabled) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #setTokenAutoRefreshEnabled,
-          [isTokenAutoRefreshEnabled],
-        ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+    bool? isTokenAutoRefreshEnabled,
+  ) => (super.noSuchMethod(
+    Invocation.method(#setTokenAutoRefreshEnabled, [isTokenAutoRefreshEnabled]),
+    returnValue: _i5.Future<void>.value(),
+    returnValueForMissingStub: _i5.Future<void>.value(),
+  ) as _i5.Future<void>);
 }

@@ -90,7 +90,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await FirebaseAppCheck.instance.activate(
-    webProvider: ReCaptchaV3Provider('recaptcha-v3-site-key'),
+    providerWeb: ReCaptchaV3Provider('recaptcha-v3-site-key'),
     // Set providerAndroid to use AndroidDebugProvider
     providerAndroid: AndroidDebugProvider('123a4567-b89c-12d3-e456-789012345678'),
   );
@@ -174,7 +174,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await FirebaseAppCheck.instance.activate(
-    webProvider: ReCaptchaV3Provider('recaptcha-v3-site-key'),
+    providerWeb: ReCaptchaV3Provider('recaptcha-v3-site-key'),
     // Set providerAndroid with debug token
     providerAndroid: AndroidDebugProvider('123a4567-b89c-12d3-e456-789012345678'),
     // Set providerApple with debug token
