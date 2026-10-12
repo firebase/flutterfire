@@ -62,6 +62,10 @@
     long timedOut = dispatch_semaphore_wait(
         strongSelf.semaphore, dispatch_time(DISPATCH_TIME_NOW, self.timeout * NSEC_PER_MSEC));
 
+    // Firestore may commit once this block returns, and a getDocument: on a
+    // committed transaction aborts the app.
+    strongSelf.ended();
+
     if (timedOut) {
       NSArray *codeAndMessage = [FLTFirebaseFirestoreUtils
           ErrorCodeAndMessageFromNSError:[NSError
@@ -77,6 +81,12 @@
           }
         });
       });
+
+      // Outside FIRFirestoreErrorDomain, so Firestore neither retries nor commits.
+      *pError = [NSError errorWithDomain:@"io.flutter.plugins.firebase.firestore"
+                                    code:FIRFirestoreErrorCodeDeadlineExceeded
+                                userInfo:nil];
+      return nil;
     }
 
     if (self.resultType == InternalTransactionResultFailure) {
