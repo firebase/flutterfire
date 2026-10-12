@@ -105,6 +105,10 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
             call.arguments as String,
           );
           break;
+        case 'Messaging#onTokenRefresh':
+          // Native handlers still emit this after deleteToken/getToken were
+          // removed. Ignore it.
+          break;
         case 'Messaging#onMessage':
           Map<String, dynamic> messageMap = Map<String, dynamic>.from(
             call.arguments,

@@ -206,7 +206,7 @@ This value persists across app restarts once set.
 5. Otherwise, on the **Campaign** tab, select **New campaign** and then **Notifications**.
 6. Enter the message text.
 7. Select **Send test message** from the right pane.
-8. In the field labeled **Add an FCM registration token**, enter your registration token.
+8. In the field labeled **Add an FCM registration token**, enter the Firebase Installation ID from `onRegistered`.
 9. Select **Test**.
 
 After you select **Test**, the targeted client device, with the app in the background, should receive the notification.

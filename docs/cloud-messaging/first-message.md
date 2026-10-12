@@ -45,12 +45,11 @@ messages when your app is in the foreground as well, see also
     ```
 
 
-## Access the registration token
+## Access the Firebase Installation ID
 
-To send a message to a specific device, you need to know that device's
-registration token. Because you'll need to enter the token in a field in the
-Notifications console to complete this tutorial, make sure to copy the token
-or securely store it after you retrieve it.
+To send a message to a specific device, you need that device's Firebase
+Installation ID. Copy the ID from `onRegistered` so you can paste it into the
+Notifications console.
 
 To retrieve the current registration for an app instance, call `register()`
 and listen to `onRegistered`. The event value is the Firebase Installation ID.
