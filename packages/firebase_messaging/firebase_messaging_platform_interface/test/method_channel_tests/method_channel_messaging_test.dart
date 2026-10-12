@@ -426,17 +426,21 @@ void main() {
       MethodChannelFirebaseMessaging.setMethodCallHandlers();
       final registered = <String>[];
       final subscription = messaging.onRegistered.listen(registered.add);
+      ByteData? reply;
 
       await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .handlePlatformMessage(
-            MethodChannelFirebaseMessaging.channel.name,
-            const StandardMethodCodec().encodeMethodCall(
-              const MethodCall('Messaging#onTokenRefresh', 'fcm-token'),
-            ),
-            (ByteData? _) {},
-          );
+        MethodChannelFirebaseMessaging.channel.name,
+        const StandardMethodCodec().encodeMethodCall(
+          const MethodCall('Messaging#onTokenRefresh', 'fcm-token'),
+        ),
+        (ByteData? data) {
+          reply = data;
+        },
+      );
 
       expect(registered, isEmpty);
+      expect(const StandardMethodCodec().decodeEnvelope(reply!), isNull);
       await subscription.cancel();
     });
 
