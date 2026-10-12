@@ -96,17 +96,7 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
 
   @override
   Future<void> activate({
-    WebProvider? webProvider,
-    @Deprecated(
-      'Use providerAndroid instead. '
-      'This parameter will be removed in a future major release.',
-    )
-    AndroidProvider? androidProvider,
-    @Deprecated(
-      'Use providerApple instead. '
-      'This parameter will be removed in a future major release.',
-    )
-    AppleProvider? appleProvider,
+    WebProvider? providerWeb,
     AndroidAppCheckProvider? providerAndroid,
     AppleAppCheckProvider? providerApple,
     WindowsAppCheckProvider? providerWindows,
@@ -115,18 +105,12 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
       await _pigeonApi.activate(
         app.name,
         defaultTargetPlatform == TargetPlatform.android || kDebugMode
-            ? getAndroidProviderString(
-                legacyProvider: androidProvider,
-                newProvider: providerAndroid,
-              )
+            ? getAndroidProviderString(providerAndroid)
             : null,
         defaultTargetPlatform == TargetPlatform.iOS ||
                 defaultTargetPlatform == TargetPlatform.macOS ||
                 kDebugMode
-            ? getAppleProviderString(
-                legacyProvider: appleProvider,
-                newProvider: providerApple,
-              )
+            ? getAppleProviderString(providerApple)
             : null,
         _getDebugToken(
           providerAndroid: providerAndroid,
