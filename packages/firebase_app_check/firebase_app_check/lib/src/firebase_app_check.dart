@@ -9,7 +9,7 @@ class FirebaseAppCheck extends FirebasePlugin implements FirebaseService {
   static Map<String, FirebaseAppCheck> _firebaseAppCheckInstances = {};
 
   FirebaseAppCheck._({required this.app})
-    : super(app.name, 'plugins.flutter.io/firebase_app_check');
+      : super(app.name, 'plugins.flutter.io/firebase_app_check');
 
   /// The [FirebaseApp] for this current [FirebaseAppCheck] instance.
   FirebaseApp app;

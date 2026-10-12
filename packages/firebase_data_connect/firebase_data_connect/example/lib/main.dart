@@ -112,20 +112,16 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
   void initState() {
     super.initState();
 
-    QueryRef<ListMoviesData, void> ref = MoviesConnector.instance
-        .listMovies()
-        .ref();
+    QueryRef<ListMoviesData, void> ref =
+        MoviesConnector.instance.listMovies().ref();
 
-    ref
-        .subscribe()
-        .listen((event) {
-          setState(() {
-            _movies = event.data.movies;
-          });
-        })
-        .onError((e) {
-          _showError("Got an error: $e");
-        });
+    ref.subscribe().listen((event) {
+      setState(() {
+        _movies = event.data.movies;
+      });
+    }).onError((e) {
+      _showError("Got an error: $e");
+    });
   }
 
   @override
