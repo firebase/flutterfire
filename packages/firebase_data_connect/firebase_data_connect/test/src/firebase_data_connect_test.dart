@@ -103,13 +103,11 @@ void main() {
       final dataConnect = FirebaseDataConnect(
         app: mockApp,
         connectorConfig: mockConnectorConfig,
-        auth: mockAuth,
-        appCheck: mockAppCheck,
       );
 
       expect(dataConnect.app, equals(mockApp));
-      expect(dataConnect.auth, equals(mockAuth));
-      expect(dataConnect.appCheck, equals(mockAppCheck));
+      expect(dataConnect.auth, isNull);
+      expect(dataConnect.appCheck, isNull);
       expect(dataConnect.connectorConfig, equals(mockConnectorConfig));
       expect(dataConnect.options.projectId, 'fake_project_id');
     });
@@ -118,8 +116,6 @@ void main() {
       final dataConnect = FirebaseDataConnect(
         app: mockApp,
         connectorConfig: mockConnectorConfig,
-        auth: mockAuth,
-        appCheck: mockAppCheck,
       );
 
       dataConnect.checkTransport();
@@ -131,8 +127,6 @@ void main() {
       final dataConnect = FirebaseDataConnect(
         app: mockApp,
         connectorConfig: mockConnectorConfig,
-        auth: mockAuth,
-        appCheck: mockAppCheck,
       );
 
       final queryRef = dataConnect.query(
@@ -149,8 +143,6 @@ void main() {
       final dataConnect = FirebaseDataConnect(
         app: mockApp,
         connectorConfig: mockConnectorConfig,
-        auth: mockAuth,
-        appCheck: mockAppCheck,
       );
 
       final mutationRef = dataConnect.mutation(
@@ -167,8 +159,6 @@ void main() {
       final dataConnect = FirebaseDataConnect(
         app: mockApp,
         connectorConfig: mockConnectorConfig,
-        auth: mockAuth,
-        appCheck: mockAppCheck,
       );
 
       dataConnect.useDataConnectEmulator('localhost', 8080);
@@ -187,8 +177,6 @@ void main() {
       final dataConnect = FirebaseDataConnect(
         app: mockApp,
         connectorConfig: mockConnectorConfig,
-        auth: mockAuth,
-        appCheck: mockAppCheck,
       );
 
       FirebaseDataConnect.cachedInstances['appName'] = {
@@ -198,8 +186,6 @@ void main() {
       final instance = FirebaseDataConnect.instanceFor(
         app: mockApp,
         connectorConfig: mockConnectorConfig,
-        auth: mockAuth,
-        appCheck: mockAppCheck,
       );
 
       expect(instance, equals(dataConnect));
@@ -214,8 +200,6 @@ void main() {
       final instance = FirebaseDataConnect.instanceFor(
         app: mockApp,
         connectorConfig: mockConnectorConfig,
-        auth: mockAuth,
-        appCheck: mockAppCheck,
       );
 
       expect(instance, isA<FirebaseDataConnect>());
@@ -225,9 +209,7 @@ void main() {
       );
     });
 
-    test(
-        'checkTransport resolves dynamic service instances from registry just-in-time',
-        () {
+    test('checkTransport resolves dynamic service instances from registry just-in-time', () {
       FirebaseDataConnect.cachedInstances.clear();
 
       final dynamicApp = DynamicMockFirebaseApp(
