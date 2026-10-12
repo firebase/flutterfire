@@ -144,8 +144,9 @@ returns `null`, wait for APNs registration to complete and try again later.
 
 ```dart
 final registered = FirebaseMessaging.instance.onRegistered.first;
-if (defaultTargetPlatform == TargetPlatform.iOS ||
-    defaultTargetPlatform == TargetPlatform.macOS) {
+if (!kIsWeb &&
+    (defaultTargetPlatform == TargetPlatform.iOS ||
+        defaultTargetPlatform == TargetPlatform.macOS)) {
   final apnsToken = await FirebaseMessaging.instance.getAPNSToken();
   if (apnsToken == null) {
     // Wait for APNs registration to complete and try again later.
