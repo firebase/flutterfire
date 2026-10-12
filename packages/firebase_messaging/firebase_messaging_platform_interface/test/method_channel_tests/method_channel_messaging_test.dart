@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use, require_trailing_commas
+// ignore_for_file: require_trailing_commas
 // Copyright 2020 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -420,6 +420,24 @@ void main() {
           },
         ),
       ]);
+    });
+
+    test('ignores a native Messaging#onTokenRefresh call', () async {
+      MethodChannelFirebaseMessaging.setMethodCallHandlers();
+      final registered = <String>[];
+      final subscription = messaging.onRegistered.listen(registered.add);
+
+      await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .handlePlatformMessage(
+            MethodChannelFirebaseMessaging.channel.name,
+            const StandardMethodCodec().encodeMethodCall(
+              const MethodCall('Messaging#onTokenRefresh', 'fcm-token'),
+            ),
+            (ByteData? _) {},
+          );
+
+      expect(registered, isEmpty);
+      await subscription.cancel();
     });
 
     test('unsubscribeFromTopic', () async {
