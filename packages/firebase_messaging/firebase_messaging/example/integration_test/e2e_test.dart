@@ -96,15 +96,15 @@ void main() {
         StreamSubscription<RemoteMessage> _onMessageOpenedAppSubscription;
 
         _onMessageSubscription = FirebaseMessaging.onMessage.listen((_) {});
-        _onMessageOpenedAppSubscription = FirebaseMessaging.onMessageOpenedApp
-            .listen((_) {});
+        _onMessageOpenedAppSubscription =
+            FirebaseMessaging.onMessageOpenedApp.listen((_) {});
 
         await _onMessageSubscription.cancel();
         await _onMessageOpenedAppSubscription.cancel();
 
         _onMessageSubscription = FirebaseMessaging.onMessage.listen((_) {});
-        _onMessageOpenedAppSubscription = FirebaseMessaging.onMessageOpenedApp
-            .listen((_) {});
+        _onMessageOpenedAppSubscription =
+            FirebaseMessaging.onMessageOpenedApp.listen((_) {});
 
         await _onMessageSubscription.cancel();
         await _onMessageOpenedAppSubscription.cancel();
@@ -112,12 +112,16 @@ void main() {
     });
 
     group('setAutoInitEnabled()', () {
-      test('sets the value', () async {
-        await messaging.setAutoInitEnabled(true);
-        expect(messaging.isAutoInitEnabled, isTrue);
-        await messaging.setAutoInitEnabled(false);
-        expect(messaging.isAutoInitEnabled, isFalse);
-      }, skip: kIsWeb);
+      test(
+        'sets the value',
+        () async {
+          await messaging.setAutoInitEnabled(true);
+          expect(messaging.isAutoInitEnabled, isTrue);
+          await messaging.setAutoInitEnabled(false);
+          expect(messaging.isAutoInitEnabled, isFalse);
+        },
+        skip: kIsWeb,
+      );
     });
 
     group('isSupported()', () {
@@ -188,26 +192,29 @@ void main() {
     });
 
     group('requestPermission', () {
-      test('authorizationStatus returns AuthorizationStatus.authorized on Android 13+', () async {
-        final isAndroid13Plus =
-            !kIsWeb &&
-            defaultTargetPlatform == TargetPlatform.android &&
-            (sdkInt ?? 0) >= 33;
-        if (!isAndroid13Plus) {
-          markTestSkipped('Requires Android API 33+');
-          return;
-        }
-        // Pre-grant the permission so requestPermission() returns
-        // authorized without showing a system dialog.
-        final granted = await grantAndroidPermission(_postNotifications);
-        if (!granted) {
-          fail('Could not grant POST_NOTIFICATIONS via UiAutomation');
-        }
+      test(
+        'authorizationStatus returns AuthorizationStatus.authorized on Android 13+',
+        () async {
+          final isAndroid13Plus = !kIsWeb &&
+              defaultTargetPlatform == TargetPlatform.android &&
+              (sdkInt ?? 0) >= 33;
+          if (!isAndroid13Plus) {
+            markTestSkipped('Requires Android API 33+');
+            return;
+          }
+          // Pre-grant the permission so requestPermission() returns
+          // authorized without showing a system dialog.
+          final granted = await grantAndroidPermission(_postNotifications);
+          if (!granted) {
+            fail('Could not grant POST_NOTIFICATIONS via UiAutomation');
+          }
 
-        final result = await messaging.requestPermission();
-        expect(result, isA<NotificationSettings>());
-        expect(result.authorizationStatus, AuthorizationStatus.authorized);
-      }, skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android);
+          final result = await messaging.requestPermission();
+          expect(result, isA<NotificationSettings>());
+          expect(result.authorizationStatus, AuthorizationStatus.authorized);
+        },
+        skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android,
+      );
 
       test(
         'authorizationStatus returns AuthorizationStatus.notDetermined on Web',
@@ -223,17 +230,21 @@ void main() {
     });
 
     group('getAPNSToken', () {
-      test('resolves null on android', () async {
-        expect(await messaging.getAPNSToken(), null);
-      }, skip: defaultTargetPlatform != TargetPlatform.android);
+      test(
+        'resolves null on android',
+        () async {
+          expect(await messaging.getAPNSToken(), null);
+        },
+        skip: defaultTargetPlatform != TargetPlatform.android,
+      );
     });
 
     group('getInitialMessage', () {
       test('returns null when no initial message', () async {
         expect(
           await messaging.getInitialMessage().timeout(
-            const Duration(seconds: 5),
-          ),
+                const Duration(seconds: 5),
+              ),
           null,
         );
       });
@@ -262,8 +273,7 @@ void main() {
           await subscription.cancel();
         },
         // iOS CI does not have the push/APNs setup needed for FID registration.
-        skip:
-            kIsWeb ||
+        skip: kIsWeb ||
             (defaultTargetPlatform == TargetPlatform.iOS && skipTestsOnCI) ||
             (defaultTargetPlatform != TargetPlatform.android &&
                 defaultTargetPlatform != TargetPlatform.iOS),
@@ -307,8 +317,7 @@ void main() {
           await unregisteredSubscription.cancel();
         },
         // iOS CI does not have the push/APNs setup needed for FID registration.
-        skip:
-            kIsWeb ||
+        skip: kIsWeb ||
             (defaultTargetPlatform == TargetPlatform.iOS && skipTestsOnCI) ||
             (defaultTargetPlatform != TargetPlatform.android &&
                 defaultTargetPlatform != TargetPlatform.iOS),

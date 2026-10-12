@@ -38,9 +38,8 @@ void _firebaseMessagingCallbackDispatcher() {
 
       // PluginUtilities.getCallbackFromHandle performs a lookup based on the
       // callback handle and returns a tear-off of the original callback.
-      final closure =
-          PluginUtilities.getCallbackFromHandle(handle)!
-              as Future<void> Function(RemoteMessage);
+      final closure = PluginUtilities.getCallbackFromHandle(handle)!
+          as Future<void> Function(RemoteMessage);
 
       try {
         Map<String, dynamic> messageMap = Map<String, dynamic>.from(
@@ -72,7 +71,7 @@ void _firebaseMessagingCallbackDispatcher() {
 class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
   /// Create an instance of [MethodChannelFirebaseMessaging] with optional [FirebaseApp]
   MethodChannelFirebaseMessaging({required FirebaseApp app})
-    : super(appInstance: app);
+      : super(appInstance: app);
 
   late bool _autoInitEnabled;
 
@@ -163,7 +162,8 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
         throw FirebaseException(
           plugin: 'firebase_messaging',
           code: 'apns-token-not-set',
-          message: 'APNS token has not been received on the device yet. Please ensure the APNS token is available before calling `getAPNSToken()`.',
+          message:
+              'APNS token has not been received on the device yet. Please ensure the APNS token is available before calling `getAPNSToken()`.',
         );
       }
     }
@@ -196,8 +196,8 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
     try {
       Map<String, dynamic>? remoteMessageMap = await channel
           .invokeMapMethod<String, dynamic>('Messaging#getInitialMessage', {
-            'appName': app.name,
-          });
+        'appName': app.name,
+      });
 
       if (remoteMessageMap == null) {
         return null;
@@ -242,8 +242,8 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
     try {
       Map<String, String?>? data = await channel
           .invokeMapMethod<String, String?>('Messaging#getAPNSToken', {
-            'appName': app.name,
-          });
+        'appName': app.name,
+      });
 
       return data!['token'];
     } catch (e, stack) {
@@ -342,9 +342,9 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
     try {
       Map<String, dynamic>? data = await channel
           .invokeMapMethod<String, dynamic>('Messaging#setAutoInitEnabled', {
-            'appName': app.name,
-            'enabled': enabled,
-          });
+        'appName': app.name,
+        'enabled': enabled,
+      });
 
       _autoInitEnabled = data!['isAutoInitEnabled'] as bool;
     } catch (e, stack) {

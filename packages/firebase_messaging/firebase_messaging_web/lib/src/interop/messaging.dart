@@ -35,7 +35,7 @@ class Messaging extends JsObjectWrapper<messaging_interop.MessagingJsImpl> {
       messaging_interop.isSupported().toDart.then((value) => value.toDart);
 
   Messaging._fromJsObject(messaging_interop.MessagingJsImpl jsObject)
-    : super.fromJsObject(jsObject);
+      : super.fromJsObject(jsObject);
 
   Future<messaging_interop.RegisterOptions?> _buildRegisterOptions({
     String? vapidKey,
@@ -160,7 +160,7 @@ class NotificationPayload
 class MessagePayload
     extends JsObjectWrapper<messaging_interop.MessagePayloadJsImpl> {
   MessagePayload._fromJsObject(messaging_interop.MessagePayloadJsImpl jsObject)
-    : super.fromJsObject(jsObject);
+      : super.fromJsObject(jsObject);
 
   String get messageId => jsObject.messageId.toDart;
   String? get collapseKey => jsObject.collapseKey?.toDart;
@@ -178,7 +178,7 @@ class MessagePayload
 
 class FcmOptions extends JsObjectWrapper<messaging_interop.FcmOptionsJsImpl> {
   FcmOptions._fromJsObject(messaging_interop.FcmOptionsJsImpl jsObject)
-    : super.fromJsObject(jsObject);
+      : super.fromJsObject(jsObject);
 
   String? get analyticsLabel => jsObject.analyticsLabel?.toDart;
   String? get link => jsObject.link?.toDart;
