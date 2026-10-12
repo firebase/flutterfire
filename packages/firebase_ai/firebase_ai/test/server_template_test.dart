@@ -232,14 +232,14 @@ void main() {
 
       final history = chat.history.toList();
       expect(history, hasLength(4));
-      expect(history[0].parts.whereType<TextPart>().single.text,
-          'Call getValue.');
-      expect(history[1].parts.whereType<FunctionCall>().single.name,
-          'getValue');
+      expect(
+          history[0].parts.whereType<TextPart>().single.text, 'Call getValue.');
+      expect(
+          history[1].parts.whereType<FunctionCall>().single.name, 'getValue');
       expect(history[2].parts.whereType<FunctionResponse>().single.name,
           'getValue');
-      expect(history[3].parts.whereType<TextPart>().single.text,
-          'Some response');
+      expect(
+          history[3].parts.whereType<TextPart>().single.text, 'Some response');
     });
   });
 }
