@@ -56,6 +56,13 @@ for individual Flutter screens. A single view controller encapsulates your
 entire Flutter application natively so the underlying native Firebase SDK is
 not aware of screen transitions.
 
+On Android and Apple platforms, automatic network request monitoring only covers
+requests made by native code, such as native SDKs that your app depends on.
+Requests made from Dart, including requests made with `dart:io` `HttpClient`,
+`package:http` with its default client, or `Image.network`, are not collected
+automatically. To monitor these requests, add
+[custom network request traces](/docs/perf-mon/custom-network-traces?platform=flutter).
+
 Note: When you add Performance Monitoring to your app, the Remote Config SDK is
 included as a dependency. If you already use Remote Config, you won't see
 any difference. However, if you're new to Remote Config, explore the
@@ -104,6 +111,9 @@ information from your app.
       * <code>Logging trace metric: <var>TRACE_NAME</var>, <var>FIREBASE_PERFORMANCE_CONSOLE_URL</var></code>
       * <code>Logging network request trace: <var>URL</var></code>
 
+    Network request trace logs appear for requests made from Dart only if you
+    have added custom network request traces for them.
+
 1. Click on the URL to view your data in the Firebase console. It may take a few
    moments for the data to update in the dashboard.
 
@@ -141,6 +151,9 @@ of the Firebase console.
     [app start time](/docs/perf-mon/app-start-foreground-background-traces)
   * Data for [HTTP/S network requests](/docs/perf-mon/network-traces) issued
     by your app
+
+* On Android and Apple platforms, monitor network requests made from Dart by
+  [instrumenting custom network request traces](/docs/perf-mon/custom-network-traces?platform=flutter).
 
 * [View, track, and filter](/docs/perf-mon/console) your
   performance data in the Firebase console.

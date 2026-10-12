@@ -7,9 +7,11 @@ your app.
 
 The
 [network request traces automatically collected by Performance Monitoring](/docs/perf-mon/network-traces)
-include most network requests for your app. However, some requests might not be
-reported or you might use a different library to make network requests. In these
-cases, you can use the Performance Monitoring API to manually instrument
+on Android and Apple platforms only include requests made by native code, such
+as native SDKs that your app depends on. Requests made from Dart, including
+requests made with `dart:io` `HttpClient`, `package:http` with its default
+client, or `Image.network`, are not collected automatically. To monitor these
+requests, use the Performance Monitoring API to manually instrument
 **_custom network request traces_**. Custom network request traces are only
 supported for Apple and Android apps.
 
