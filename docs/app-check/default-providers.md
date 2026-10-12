@@ -91,7 +91,7 @@ Future<void> main() async {
     // 1. AppleDebugProvider for debug environments
     // 2. AppleDeviceCheckProvider
     // 3. AppleAppAttestProvider
-    // 4. AppleAppAttestProviderWithDeviceCheckFallback (App Attest provider is only available on iOS 14.0+, macOS 14.0+)
+    // 4. AppleAppAttestWithDeviceCheckFallbackProvider (App Attest provider is only available on iOS 14.0+, macOS 14.0+)
     providerApple: AppleAppAttestProvider(),
   );
   runApp(App());

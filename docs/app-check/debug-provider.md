@@ -38,7 +38,9 @@ To use the debug provider while running your app in a simulator interactively
       await Firebase.initializeApp();
       await FirebaseAppCheck.instance.activate(
       // Set providerApple to use AppleDebugProvider
-      providerApple: AppleDebugProvider('123a4567-b89c-12d3-e456-789012345678'),
+      providerApple: AppleDebugProvider(
+        debugToken: '123a4567-b89c-12d3-e456-789012345678',
+      ),
       );
       runApp(App());
     }
@@ -92,7 +94,9 @@ Future<void> main() async {
   await FirebaseAppCheck.instance.activate(
     providerWeb: ReCaptchaV3Provider('recaptcha-v3-site-key'),
     // Set providerAndroid to use AndroidDebugProvider
-    providerAndroid: AndroidDebugProvider('123a4567-b89c-12d3-e456-789012345678'),
+    providerAndroid: AndroidDebugProvider(
+      debugToken: '123a4567-b89c-12d3-e456-789012345678',
+    ),
   );
   runApp(App());
 }
@@ -176,9 +180,13 @@ Future<void> main() async {
   await FirebaseAppCheck.instance.activate(
     providerWeb: ReCaptchaV3Provider('recaptcha-v3-site-key'),
     // Set providerAndroid with debug token
-    providerAndroid: AndroidDebugProvider('123a4567-b89c-12d3-e456-789012345678'),
+    providerAndroid: AndroidDebugProvider(
+      debugToken: '123a4567-b89c-12d3-e456-789012345678',
+    ),
     // Set providerApple with debug token
-    providerApple: AppleDebugProvider('123a4567-b89c-12d3-e456-789012345678'),
+    providerApple: AppleDebugProvider(
+      debugToken: '123a4567-b89c-12d3-e456-789012345678',
+    ),
   );
   runApp(App());
 }
