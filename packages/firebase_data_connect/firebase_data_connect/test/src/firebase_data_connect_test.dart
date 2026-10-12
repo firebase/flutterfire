@@ -209,7 +209,9 @@ void main() {
       );
     });
 
-    test('checkTransport resolves dynamic service instances from registry just-in-time', () {
+    test(
+        'checkTransport resolves dynamic service instances from registry just-in-time',
+        () {
       FirebaseDataConnect.cachedInstances.clear();
 
       final dynamicApp = DynamicMockFirebaseApp(
