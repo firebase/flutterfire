@@ -86,6 +86,12 @@ jobs:
       # FIRInstallations aborts on at launch.
       native-config-args: '--live-tier-plist=auth'
       inject-config-secrets: true
+      # Firebase Apple SDK 13 needs app-check 12, and every GoogleSignIn-iOS
+      # release (8.0.0 to 10.0.0) needs app-check 11, so the example's
+      # google_sign_in cannot resolve under SPM. CocoaPods is still on 12.19.0.
+      # Rejoin SPM once https://github.com/google/GoogleSignIn-iOS/pull/626
+      # ships and google_sign_in_ios accepts that release.
+      ios-spm: false
       nightly_test_mode: ${{ inputs.nightly_test_mode == true }}
     secrets:
       TESTS_E2E_FIREBASE_OPTIONS_DART: ${{ secrets.TESTS_E2E_FIREBASE_OPTIONS_DART }}
