@@ -61,7 +61,14 @@ android {
     dependencies {
         api firebaseCoreProject
         implementation platform("com.google.firebase:firebase-bom:${getRootProjectExtOrCoreProperty("FirebaseSDKVersion", firebaseCoreProject)}")
-        implementation 'com.google.firebase:firebase-firestore'
+        // Firestore 27 publishes test libraries as runtime dependencies. Mockito
+        // pulls byte-buddy 1.17.7, which Jetifier cannot transform.
+        implementation('com.google.firebase:firebase-firestore') {
+            exclude group: 'org.mockito', module: 'mockito-core'
+            exclude group: 'junit', module: 'junit'
+            exclude group: 'com.google.truth', module: 'truth'
+            exclude group: 'com.fasterxml.jackson.core', module: 'jackson-databind'
+        }
     }
 }
 

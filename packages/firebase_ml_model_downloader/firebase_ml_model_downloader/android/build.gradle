@@ -60,7 +60,8 @@ android {
   dependencies {
     api firebaseCoreProject
     implementation platform("com.google.firebase:firebase-bom:${getRootProjectExtOrCoreProperty("FirebaseSDKVersion", firebaseCoreProject)}")
-    implementation 'com.google.firebase:firebase-ml-modeldownloader'
+    // BoM 35 dropped this artifact. 26.1.1 is the last version BoM 34.19.0 mapped.
+    implementation 'com.google.firebase:firebase-ml-modeldownloader:26.1.1'
     implementation 'androidx.annotation:annotation:1.7.0'
   }
 }
