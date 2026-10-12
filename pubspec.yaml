@@ -34,6 +34,7 @@ workspace:
   - packages/firebase_auth/firebase_auth_web
   - packages/firebase_core/firebase_core
   - packages/firebase_core/firebase_core/example
+  - packages/firebase_core/firebase_core_common
   - packages/firebase_core/firebase_core_platform_interface
   - packages/firebase_core/firebase_core_web
   - packages/firebase_crashlytics/firebase_crashlytics
@@ -502,6 +503,16 @@ melos:
     # Additional cleanup lifecycle script, executed when `melos clean` is run.
     postclean: >
       melos exec -c 6 -- "flutter clean"
+
+    check:pure-dart:
+      run: |
+        melos exec --scope=firebase_core_web -- \
+          "dart compile js tool/pure_dart_check.dart --output=/tmp/flutterfire_pure_dart_core_check.js"
+      description: |-
+        Compile a pure Dart entry point which uses the web implementation of
+        firebase_core. It fails as soon as a library which depends on Flutter
+        becomes reachable, which is what allows the web implementation to be
+        used without Flutter, for example in pure Dart web applications.
 
     add-license-header:
       # If you add here another --ignore flag, add it also to

@@ -3,7 +3,12 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-part of '../../firebase_core_platform_interface.dart';
+import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+
+import '../default_firebase_app_name.dart';
+import '../firebase_exception.dart';
+import '../firebase_options.dart';
+import 'platform_interface_firebase_app.dart';
 
 /// The interface that implementations of `firebase_core` must extend.
 ///
@@ -19,15 +24,43 @@ abstract class FirebasePlatform extends PlatformInterface {
 
   static final Object _token = Object();
 
+  /// Whether a [FirebasePlatform] implementation has been registered.
+  ///
+  /// Implementations register themselves by setting [FirebasePlatform.instance],
+  /// usually from their `registerWith` method which is called by the Flutter
+  /// plugin registrant (or manually when running outside of Flutter).
+  static bool get isRegistered => _instance != null;
+
   /// The default instance of [FirebasePlatform] to use.
   ///
-  /// Platform-specific plugins should override this with their own class
+  /// Platform-specific plugins should set this with their own class
   /// that extends [FirebasePlatform] when they register themselves.
   ///
-  /// Defaults to [MethodChannelFirebase].
-  static FirebasePlatform get instance => _instance;
+  /// Throws a [FirebaseException] if no implementation has been registered yet.
+  /// On Flutter, `firebase_core` registers its `MethodChannel` implementation
+  /// before the first usage of the `Firebase` API. Other platforms must call
+  /// the `registerWith` method of their implementation, for example
+  /// `FirebaseCoreWeb.registerWith(null)` on web.
+  static FirebasePlatform get instance {
+    final FirebasePlatform? instance = _instance;
 
-  static FirebasePlatform _instance = MethodChannelFirebase();
+    if (instance == null) {
+      throw FirebaseException(
+        plugin: 'core',
+        code: 'no-platform-implementation',
+        message: 'No Firebase Core platform implementation has been '
+            'registered.\n\nIf you are using Flutter, this usually means that '
+            'the platform you are running on is not supported, or that '
+            '`Firebase.initializeApp()` has not been called yet.\n\nIf you are '
+            'not using Flutter, register your implementation manually, for '
+            'example by calling `FirebaseCoreWeb.registerWith(null)` on web.',
+      );
+    }
+
+    return instance;
+  }
+
+  static FirebasePlatform? _instance;
 
   static set instance(FirebasePlatform instance) {
     PlatformInterface.verify(instance, _token);

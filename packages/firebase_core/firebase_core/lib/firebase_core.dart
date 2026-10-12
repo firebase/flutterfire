@@ -4,12 +4,16 @@
 // found in the LICENSE file.
 
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
-    hide MethodChannelFirebaseApp, MethodChannelFirebase;
+    hide MethodChannelFirebaseApp;
 import 'package:flutter/foundation.dart';
 
 export 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
-    show FirebaseOptions, defaultFirebaseAppName, FirebaseException;
+    show
+        FirebaseApp,
+        FirebaseException,
+        FirebaseOptions,
+        FirebaseService,
+        defaultFirebaseAppName;
 
 part 'src/firebase.dart';
-part 'src/firebase_app.dart';
 part 'src/port_mapping.dart';

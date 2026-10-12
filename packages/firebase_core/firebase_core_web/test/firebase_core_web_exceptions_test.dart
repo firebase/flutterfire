@@ -7,7 +7,7 @@
 import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
 
-import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
+import 'package:firebase_core_common/firebase_core_common.dart';
 import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:flutter_test/flutter_test.dart';
 

@@ -3,7 +3,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-part of '../firebase_core_platform_interface.dart';
+import 'package:meta/meta.dart';
 
 /// A generic class which provides exceptions in a Firebase-friendly format
 /// to users.

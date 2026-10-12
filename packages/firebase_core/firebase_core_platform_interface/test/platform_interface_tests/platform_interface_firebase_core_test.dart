@@ -13,8 +13,12 @@ void main() {
 
   group('$FirebasePlatform', () {
     // should allow read of default app from native
-    test('$MethodChannelFirebase is the default instance', () {
+    test('$MethodChannelFirebase can be registered as the default instance',
+        () {
+      FirebasePlatform.instance = MethodChannelFirebase();
+
       expect(FirebasePlatform.instance, isA<MethodChannelFirebase>());
+      expect(FirebasePlatform.isRegistered, isTrue);
     });
 
     test('Can be extended', () {

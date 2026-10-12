@@ -38,15 +38,17 @@ class MethodChannelFirebase extends FirebasePlatform {
     MethodChannelFirebaseApp methodChannelFirebaseApp =
         MethodChannelFirebaseApp(
       response.name,
-      FirebaseOptions.fromPigeon(response.options),
+      firebaseOptionsFromPigeon(response.options),
       isAutomaticDataCollectionEnabled:
           response.isAutomaticDataCollectionEnabled,
     );
 
     appInstances[methodChannelFirebaseApp.name] = methodChannelFirebaseApp;
 
-    FirebasePlugin._constantsForPluginApps[methodChannelFirebaseApp.name] =
-        response.pluginConstants;
+    FirebasePlugin.registerConstantsForApp(
+      methodChannelFirebaseApp.name,
+      response.pluginConstants,
+    );
   }
 
   /// Returns the created [FirebaseAppPlatform] instances.
@@ -83,7 +85,7 @@ class MethodChannelFirebase extends FirebasePlatform {
           defaultApp == null &&
           _options == null) {
         final options = await api.optionsFromResource();
-        _options = FirebaseOptions.fromPigeon(options);
+        _options = firebaseOptionsFromPigeon(options);
       }
 
       // If no options are present & no default app has been setup, the user is
@@ -190,4 +192,31 @@ class MethodChannelFirebase extends FirebasePlatform {
 
     throw noAppExists(name);
   }
+}
+
+/// Creates a [FirebaseOptions] from the Pigeon representation used to send the
+/// options of a [FirebaseAppPlatform] across a [MethodChannel].
+///
+/// This replaces the `FirebaseOptions.fromPigeon` named constructor, which was
+/// removed so that [FirebaseOptions] (exposed by `firebase_core_common`) does
+/// not depend on the Flutter dependent Pigeon generated models.
+FirebaseOptions firebaseOptionsFromPigeon(CoreFirebaseOptions options) {
+  return FirebaseOptions(
+    apiKey: options.apiKey,
+    appId: options.appId,
+    messagingSenderId: options.messagingSenderId,
+    projectId: options.projectId,
+    authDomain: options.authDomain,
+    databaseURL: options.databaseURL,
+    storageBucket: options.storageBucket,
+    measurementId: options.measurementId,
+    trackingId: options.trackingId,
+    deepLinkURLScheme: options.deepLinkURLScheme,
+    androidClientId: options.androidClientId,
+    iosClientId: options.iosClientId,
+    iosBundleId: options.iosBundleId,
+    appGroupId: options.appGroupId,
+    // Placeholder to coordinate with the flutterfire CLI current operation.
+    recaptchaSiteKey: '',
+  );
 }

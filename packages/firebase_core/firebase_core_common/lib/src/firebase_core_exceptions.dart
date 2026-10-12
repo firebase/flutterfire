@@ -3,7 +3,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-part of '../firebase_core_platform_interface.dart';
+import 'default_firebase_app_name.dart';
+import 'firebase_exception.dart';
 
 /// Throws a consistent cross-platform error message when usage of an app occurs but
 /// no app has been created.

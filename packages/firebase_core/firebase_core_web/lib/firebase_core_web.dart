@@ -7,7 +7,7 @@ import 'dart:async';
 import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
 
-import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
+import 'package:firebase_core_common/firebase_core_common.dart';
 import 'package:firebase_core_web/src/firebase_core_version.dart';
 import 'package:firebase_core_web/src/interop/package_web_tweaks.dart';
 import 'package:firebase_core_web/src/interop/utils/es6_interop.dart';

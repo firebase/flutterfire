@@ -3,8 +3,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-part of '../../firebase_core_platform_interface.dart';
-
 /// The base class that other FlutterFire plugins must extend.
 ///
 /// This class provides access to common plugin properties and constants which
@@ -20,6 +18,22 @@ abstract class FirebasePlugin {
   /// here. For example, calling [FirebaseAppPlatform.isAutomaticDataCollectionEnabled]
   /// requires that the value is synchronously available for use after initialization.
   static Map<dynamic, dynamic> _constantsForPluginApps = {};
+
+  /// Registers the plugin [constants] of [appName].
+  ///
+  /// Platform implementations call this once core has been initialized, so
+  /// that the constants are synchronously available to plugins afterwards.
+  static void registerConstantsForApp(
+    String appName,
+    Map<dynamic, dynamic> constants,
+  ) {
+    _constantsForPluginApps[appName] = constants;
+  }
+
+  /// Removes the constants registered for the plugins of [appName].
+  static void removeConstantsForApp(String appName) {
+    _constantsForPluginApps.remove(appName);
+  }
 
   final String _appName;
 

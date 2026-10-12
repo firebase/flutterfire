@@ -3,8 +3,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// ignore_for_file: deprecated_member_use_from_same_package
-part of '../firebase_core_platform_interface.dart';
+import 'package:collection/collection.dart';
+import 'package:meta/meta.dart';
 
 /// The options used to configure a Firebase app.
 ///
@@ -52,29 +52,6 @@ class FirebaseOptions {
     this.iosBundleId,
     this.appGroupId,
   });
-
-  /// Named constructor to create [FirebaseOptions] from a the response of Pigeon channel.
-  ///
-  /// This constructor is used when platforms cannot directly return a
-  /// [FirebaseOptions] instance, for example when data is sent back from a
-  /// [MethodChannel].
-  FirebaseOptions.fromPigeon(CoreFirebaseOptions options)
-      : apiKey = options.apiKey,
-        appId = options.appId,
-        messagingSenderId = options.messagingSenderId,
-        projectId = options.projectId,
-        authDomain = options.authDomain,
-        databaseURL = options.databaseURL,
-        storageBucket = options.storageBucket,
-        measurementId = options.measurementId,
-        trackingId = options.trackingId,
-        deepLinkURLScheme = options.deepLinkURLScheme,
-        androidClientId = options.androidClientId,
-        iosClientId = options.iosClientId,
-        iosBundleId = options.iosBundleId,
-        appGroupId = options.appGroupId,
-        recaptchaSiteKey =
-            ''; // Placeholder to coordinate with fluttefire cli current operation.
 
   /// Returns a copy of this FirebaseOptions with the given fields replaced with
   /// the new values.
