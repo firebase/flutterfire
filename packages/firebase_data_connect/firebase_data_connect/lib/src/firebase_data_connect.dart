@@ -202,7 +202,7 @@ class FirebaseDataConnect extends FirebasePlugin {
   /// Returns an instance using a specified [FirebaseApp].
   ///
   /// If [app] is not provided, the default Firebase app will be used.
-  /// Auth and App Check instances are resolved from [app] when a request runs.
+  /// Auth and App Check are attached from [app] when the instance is created.
   static FirebaseDataConnect instanceFor({
     FirebaseApp? app,
     CallerSDKType? sdkType,
@@ -210,6 +210,8 @@ class FirebaseDataConnect extends FirebasePlugin {
     CacheSettings? cacheSettings,
   }) {
     app ??= Firebase.app();
+    final auth = FirebaseAuth.instanceFor(app: app);
+    final appCheck = FirebaseAppCheck.instanceFor(app: app);
 
     if (cachedInstances[app.name] != null &&
         cachedInstances[app.name]![connectorConfig.toJson()] != null) {
@@ -222,6 +224,8 @@ class FirebaseDataConnect extends FirebasePlugin {
       sdkType: sdkType,
       cacheSettings: cacheSettings,
     );
+    newInstance.auth = auth;
+    newInstance.appCheck = appCheck;
     if (cachedInstances[app.name] == null) {
       cachedInstances[app.name] = <String, FirebaseDataConnect>{};
     }
