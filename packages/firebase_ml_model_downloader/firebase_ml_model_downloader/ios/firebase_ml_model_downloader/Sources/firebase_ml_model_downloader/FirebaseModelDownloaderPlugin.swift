@@ -3,7 +3,9 @@
 // found in the LICENSE file.
 
 import FirebaseCore
-import FirebaseMLModelDownloader
+#if canImport(FirebaseMLModelDownloader)
+  import FirebaseMLModelDownloader
+#endif
 
 #if canImport(FlutterMacOS)
   import FlutterMacOS
@@ -61,6 +63,7 @@ public class FirebaseModelDownloaderPlugin: NSObject, FLTFirebasePluginProtocol,
     "plugins.flutter.io/firebase_ml_model_downloader"
   }
 
+#if canImport(FirebaseMLModelDownloader)
   func mapErrorCodes(error: Error) -> NSString {
     switch error {
     case DownloadError.notFound:
@@ -201,4 +204,17 @@ public class FirebaseModelDownloaderPlugin: NSObject, FLTFirebasePluginProtocol,
     let app: FirebaseApp = FLTFirebasePlugin.firebaseAppNamed(arguments["appName"] as! String)!
     return ModelDownloader.modelDownloader(app: app)
   }
+#else
+  public func handle(_: FlutterMethodCall, result: @escaping FlutterResult) {
+    result(
+      FLTFirebasePlugin.createFlutterError(
+        fromCode: "unimplemented",
+        message:
+          "Firebase ML Model Downloader is not in the Firebase Apple SDK 13 Swift package. CocoaPods remains on Firebase Apple SDK 12.19.0, which still includes it.",
+        optionalDetails: nil,
+        andOptionalNSError: nil
+      )
+    )
+  }
+#endif
 }

@@ -52,16 +52,16 @@ static NSError *pipelineUnavailableError(void) {
 
 // Firebase iOS SDK versions differ: some expose initWithName:Args:Options:, others
 // initWithName:Args:.
-@interface FIRFunctionExprBridge (FLTSDKCompat)
+@interface __FIRFunctionExprBridge (FLTSDKCompat)
 - (instancetype)initWithName:(NSString *)name
-                        Args:(NSArray<FIRExprBridge *> *)args
-                     Options:(NSDictionary<NSString *, FIRExprBridge *> *)options;
-- (instancetype)initWithName:(NSString *)name Args:(NSArray<FIRExprBridge *> *)args;
+                        Args:(NSArray<__FIRExprBridge *> *)args
+                     Options:(NSDictionary<NSString *, __FIRExprBridge *> *)options;
+- (instancetype)initWithName:(NSString *)name Args:(NSArray<__FIRExprBridge *> *)args;
 @end
 
-static FIRFunctionExprBridge *FLTNewFunctionExprBridge(NSString *name,
-                                                       NSArray<FIRExprBridge *> *args) {
-  FIRFunctionExprBridge *obj = [FIRFunctionExprBridge alloc];
+static __FIRFunctionExprBridge *FLTNewFunctionExprBridge(NSString *name,
+                                                       NSArray<__FIRExprBridge *> *args) {
+  __FIRFunctionExprBridge *obj = [__FIRFunctionExprBridge alloc];
   if ([obj respondsToSelector:@selector(initWithName:Args:Options:)]) {
     return [obj initWithName:name Args:args Options:nil];
   }
@@ -77,10 +77,10 @@ static NSError *parseError(NSString *message) {
 @interface FLTPipelineExpressionParser : NSObject
 @property(nonatomic, strong) FIRFirestore *firestore;
 - (instancetype)initWithFirestore:(FIRFirestore *)firestore;
-- (FIRExprBridge *)parseExpression:(NSDictionary<NSString *, id> *)map error:(NSError **)error;
-- (FIRExprBridge *)parseBooleanExpression:(NSDictionary<NSString *, id> *)map
+- (__FIRExprBridge *)parseExpression:(NSDictionary<NSString *, id> *)map error:(NSError **)error;
+- (__FIRExprBridge *)parseBooleanExpression:(NSDictionary<NSString *, id> *)map
                                     error:(NSError **)error;
-- (FIRExprBridge *)rightExprFromValue:(id)value error:(NSError **)error;
+- (__FIRExprBridge *)rightExprFromValue:(id)value error:(NSError **)error;
 @end
 
 @implementation FLTPipelineExpressionParser
@@ -93,12 +93,12 @@ static NSError *parseError(NSString *message) {
   return self;
 }
 
-- (FIRExprBridge *)parseExpression:(NSDictionary<NSString *, id> *)map error:(NSError **)error {
+- (__FIRExprBridge *)parseExpression:(NSDictionary<NSString *, id> *)map error:(NSError **)error {
   NSString *name = map[@"name"];
   if (!name) {
     NSDictionary *args = map[@"args"];
     if ([args isKindOfClass:[NSDictionary class]] && args[@"field"]) {
-      return [[FIRFieldBridge alloc] initWithName:args[@"field"]];
+      return [[__FIRFieldBridge alloc] initWithName:args[@"field"]];
     }
     if (error) *error = parseError(@"Expression must have a 'name' field");
     return nil;
@@ -113,7 +113,7 @@ static NSError *parseError(NSString *message) {
       if (error) *error = parseError(@"Field expression requires 'field' argument");
       return nil;
     }
-    return [[FIRFieldBridge alloc] initWithName:field];
+    return [[__FIRFieldBridge alloc] initWithName:field];
   }
 
   if ([name isEqualToString:@"constant"]) {
@@ -126,10 +126,10 @@ static NSError *parseError(NSString *message) {
       NSString *path = ((NSDictionary *)value)[@"path"];
       if ([path isKindOfClass:[NSString class]] && self.firestore) {
         FIRDocumentReference *docRef = [self.firestore documentWithPath:path];
-        return [[FIRConstantBridge alloc] init:docRef];
+        return [[__FIRConstantBridge alloc] init:docRef];
       }
     }
-    return [[FIRConstantBridge alloc] init:value];
+    return [[__FIRConstantBridge alloc] init:value];
   }
 
   if ([name isEqualToString:@"alias"]) {
@@ -144,7 +144,7 @@ static NSError *parseError(NSString *message) {
   }
 
   if ([name isEqualToString:@"null"]) {
-    return [[FIRConstantBridge alloc] init:[NSNull null]];
+    return [[__FIRConstantBridge alloc] init:[NSNull null]];
   }
 
   if ([name isEqualToString:@"document_id_from_ref"]) {
@@ -158,12 +158,12 @@ static NSError *parseError(NSString *message) {
       return nil;
     }
     FIRDocumentReference *docRef = [self.firestore documentWithPath:path];
-    FIRExprBridge *refExpr = [[FIRConstantBridge alloc] init:docRef];
+    __FIRExprBridge *refExpr = [[__FIRConstantBridge alloc] init:docRef];
     return FLTNewFunctionExprBridge(@"document_id", @[ refExpr ]);
   }
 
   // Swift asBoolean() is a type coercion, not a pipeline function named "as_boolean".
-  // Dart still sends as_boolean + expression; unwrap to the inner FIRExprBridge.
+  // Dart still sends as_boolean + expression; unwrap to the inner __FIRExprBridge.
   if ([name isEqualToString:@"as_boolean"]) {
     id exprMap = args[@"expression"];
     if (![exprMap isKindOfClass:[NSDictionary class]]) {
@@ -179,7 +179,7 @@ static NSError *parseError(NSString *message) {
       if (error) *error = parseError(@"document_matches requires query");
       return nil;
     }
-    FIRExprBridge *queryExpr = [[FIRConstantBridge alloc] init:query];
+    __FIRExprBridge *queryExpr = [[__FIRConstantBridge alloc] init:query];
     return FLTNewFunctionExprBridge(@"document_matches", @[ queryExpr ]);
   }
 
@@ -210,8 +210,8 @@ static NSError *parseError(NSString *message) {
             parseError([NSString stringWithFormat:@"%@ requires left and right expressions", name]);
       return nil;
     }
-    FIRExprBridge *left = [self parseExpression:leftMap error:error];
-    FIRExprBridge *right = [self parseExpression:rightMap error:error];
+    __FIRExprBridge *left = [self parseExpression:leftMap error:error];
+    __FIRExprBridge *right = [self parseExpression:rightMap error:error];
     if (!left || !right) return nil;
     return FLTNewFunctionExprBridge(sdkName, @[ left, right ]);
   }
@@ -227,7 +227,7 @@ static NSError *parseError(NSString *message) {
       if (error) *error = parseError([NSString stringWithFormat:@"%@ requires expression", name]);
       return nil;
     }
-    FIRExprBridge *expr = [name isEqualToString:@"not"]
+    __FIRExprBridge *expr = [name isEqualToString:@"not"]
                               ? [self parseBooleanExpression:exprMap error:error]
                               : [self parseExpression:exprMap error:error];
     if (!expr) return nil;
@@ -248,7 +248,7 @@ static NSError *parseError(NSString *message) {
       if (error) *error = parseError([NSString stringWithFormat:@"%@ requires expression", name]);
       return nil;
     }
-    FIRExprBridge *expr = [self parseExpression:exprMap error:error];
+    __FIRExprBridge *expr = [self parseExpression:exprMap error:error];
     if (!expr) return nil;
     NSString *unarySdkName = name;
     if ([name isEqualToString:@"to_lower_case"]) unarySdkName = @"to_lower";
@@ -268,10 +268,10 @@ static NSError *parseError(NSString *message) {
             parseError([NSString stringWithFormat:@"%@ requires at least one expression", name]);
       return nil;
     }
-    NSMutableArray<FIRExprBridge *> *all = [NSMutableArray array];
+    NSMutableArray<__FIRExprBridge *> *all = [NSMutableArray array];
     for (id em in exprMaps) {
       if (![em isKindOfClass:[NSDictionary class]]) continue;
-      FIRExprBridge *e = [self parseBooleanExpression:em error:error];
+      __FIRExprBridge *e = [self parseBooleanExpression:em error:error];
       if (!e) return nil;
       [all addObject:e];
     }
@@ -296,12 +296,12 @@ static NSError *parseError(NSString *message) {
             parseError([NSString stringWithFormat:@"%@ requires value and non-empty values", name]);
       return nil;
     }
-    FIRExprBridge *valueExpr = [self parseExpression:valueMap error:error];
+    __FIRExprBridge *valueExpr = [self parseExpression:valueMap error:error];
     if (!valueExpr) return nil;
-    NSMutableArray<FIRExprBridge *> *valueExprs = [NSMutableArray array];
+    NSMutableArray<__FIRExprBridge *> *valueExprs = [NSMutableArray array];
     for (id vm in valuesMaps) {
       if (![vm isKindOfClass:[NSDictionary class]]) continue;
-      FIRExprBridge *ve = [self parseExpression:vm error:error];
+      __FIRExprBridge *ve = [self parseExpression:vm error:error];
       if (!ve) return nil;
       [valueExprs addObject:ve];
     }
@@ -310,7 +310,7 @@ static NSError *parseError(NSString *message) {
         *error = parseError([NSString stringWithFormat:@"%@ requires at least one value", name]);
       return nil;
     }
-    FIRExprBridge *valuesArrayExpr = FLTNewFunctionExprBridge(@"array", valueExprs);
+    __FIRExprBridge *valuesArrayExpr = FLTNewFunctionExprBridge(@"array", valueExprs);
     return FLTNewFunctionExprBridge(name, @[ valueExpr, valuesArrayExpr ]);
   }
 
@@ -325,8 +325,8 @@ static NSError *parseError(NSString *message) {
       if (error) *error = parseError(@"array_contains requires array and element");
       return nil;
     }
-    FIRExprBridge *arrayExpr = [self parseExpression:arrayMap error:error];
-    FIRExprBridge *elementExpr = [self parseExpression:elementMap error:error];
+    __FIRExprBridge *arrayExpr = [self parseExpression:arrayMap error:error];
+    __FIRExprBridge *elementExpr = [self parseExpression:elementMap error:error];
     if (!arrayExpr || !elementExpr) return nil;
     return FLTNewFunctionExprBridge(name, @[ arrayExpr, elementExpr ]);
   }
@@ -343,7 +343,7 @@ static NSError *parseError(NSString *message) {
       if (error) *error = parseError([NSString stringWithFormat:@"%@ requires array", name]);
       return nil;
     }
-    FIRExprBridge *arrayExpr = [self parseExpression:arrayMap error:error];
+    __FIRExprBridge *arrayExpr = [self parseExpression:arrayMap error:error];
     if (!arrayExpr) return nil;
 
     NSArray *valuesMaps = args[@"values"];
@@ -352,7 +352,7 @@ static NSError *parseError(NSString *message) {
 
     if (hasValues) {
       NSDictionary *arrayExprMap = @{@"name" : @"array", @"args" : @{@"elements" : valuesMaps}};
-      FIRExprBridge *valuesArrayExpr = [self parseExpression:arrayExprMap error:error];
+      __FIRExprBridge *valuesArrayExpr = [self parseExpression:arrayExprMap error:error];
       if (!valuesArrayExpr) return nil;
       return FLTNewFunctionExprBridge(name, @[ arrayExpr, valuesArrayExpr ]);
     }
@@ -360,7 +360,7 @@ static NSError *parseError(NSString *message) {
     if ([name isEqualToString:@"array_contains_all"]) {
       id arrayExpressionMap = args[@"array_expression"];
       if ([arrayExpressionMap isKindOfClass:[NSDictionary class]]) {
-        FIRExprBridge *requiredArrayExpr = [self parseExpression:arrayExpressionMap error:error];
+        __FIRExprBridge *requiredArrayExpr = [self parseExpression:arrayExpressionMap error:error];
         if (!requiredArrayExpr) return nil;
         return FLTNewFunctionExprBridge(name, @[ arrayExpr, requiredArrayExpr ]);
       }
@@ -383,10 +383,10 @@ static NSError *parseError(NSString *message) {
       if (error) *error = parseError(@"concat requires non-empty expressions");
       return nil;
     }
-    NSMutableArray<FIRExprBridge *> *all = [NSMutableArray array];
+    NSMutableArray<__FIRExprBridge *> *all = [NSMutableArray array];
     for (id em in exprMaps) {
       if (![em isKindOfClass:[NSDictionary class]]) continue;
-      FIRExprBridge *e = [self parseExpression:em error:error];
+      __FIRExprBridge *e = [self parseExpression:em error:error];
       if (!e) return nil;
       [all addObject:e];
     }
@@ -410,9 +410,9 @@ static NSError *parseError(NSString *message) {
       if (error) *error = parseError(@"substring requires expression, start, and end");
       return nil;
     }
-    FIRExprBridge *expr = [self parseExpression:exprMap error:error];
-    FIRExprBridge *start = [self parseExpression:startMap error:error];
-    FIRExprBridge *end = [self parseExpression:endMap error:error];
+    __FIRExprBridge *expr = [self parseExpression:exprMap error:error];
+    __FIRExprBridge *start = [self parseExpression:startMap error:error];
+    __FIRExprBridge *end = [self parseExpression:endMap error:error];
     if (!expr || !start || !end) return nil;
     return FLTNewFunctionExprBridge(@"substring", @[ expr, start, end ]);
   }
@@ -430,9 +430,9 @@ static NSError *parseError(NSString *message) {
       if (error) *error = parseError(@"replace requires expression, find, and replacement");
       return nil;
     }
-    FIRExprBridge *expr = [self parseExpression:exprMap error:error];
-    FIRExprBridge *find = [self parseExpression:findMap error:error];
-    FIRExprBridge *replacement = [self parseExpression:replacementMap error:error];
+    __FIRExprBridge *expr = [self parseExpression:exprMap error:error];
+    __FIRExprBridge *find = [self parseExpression:findMap error:error];
+    __FIRExprBridge *replacement = [self parseExpression:replacementMap error:error];
     if (!expr || !find || !replacement) return nil;
     return FLTNewFunctionExprBridge(@"string_replace", @[ expr, find, replacement ]);
   }
@@ -453,9 +453,9 @@ static NSError *parseError(NSString *message) {
             [NSString stringWithFormat:@"%@ requires expression, find, and replacement", name]);
       return nil;
     }
-    FIRExprBridge *expr = [self parseExpression:exprMap error:error];
-    FIRExprBridge *find = [self parseExpression:findMap error:error];
-    FIRExprBridge *replacement = [self parseExpression:replacementMap error:error];
+    __FIRExprBridge *expr = [self parseExpression:exprMap error:error];
+    __FIRExprBridge *find = [self parseExpression:findMap error:error];
+    __FIRExprBridge *replacement = [self parseExpression:replacementMap error:error];
     if (!expr || !find || !replacement) return nil;
     return FLTNewFunctionExprBridge(name, @[ expr, find, replacement ]);
   }
@@ -474,8 +474,8 @@ static NSError *parseError(NSString *message) {
             [NSString stringWithFormat:@"%@ requires expression and %@", name, argumentName]);
       return nil;
     }
-    FIRExprBridge *expr = [self parseExpression:exprMap error:error];
-    FIRExprBridge *argument = [self parseExpression:argumentMap error:error];
+    __FIRExprBridge *expr = [self parseExpression:exprMap error:error];
+    __FIRExprBridge *argument = [self parseExpression:argumentMap error:error];
     if (!expr || !argument) return nil;
     return FLTNewFunctionExprBridge(name, @[ expr, argument ]);
   }
@@ -489,14 +489,14 @@ static NSError *parseError(NSString *message) {
       if (error) *error = parseError([NSString stringWithFormat:@"%@ requires expression", name]);
       return nil;
     }
-    FIRExprBridge *expr = [self parseExpression:exprMap error:error];
+    __FIRExprBridge *expr = [self parseExpression:exprMap error:error];
     if (!expr) return nil;
 
     id valueMap = args[@"value"];
     if (![valueMap isKindOfClass:[NSDictionary class]]) {
       return FLTNewFunctionExprBridge(name, @[ expr ]);
     }
-    FIRExprBridge *value = [self parseExpression:valueMap error:error];
+    __FIRExprBridge *value = [self parseExpression:valueMap error:error];
     if (!value) return nil;
     return FLTNewFunctionExprBridge(name, @[ expr, value ]);
   }
@@ -514,8 +514,8 @@ static NSError *parseError(NSString *message) {
             parseError([NSString stringWithFormat:@"%@ requires expression and delimiter", name]);
       return nil;
     }
-    FIRExprBridge *expr = [self parseExpression:exprMap error:error];
-    FIRExprBridge *delimiter = [self parseExpression:delimiterMap error:error];
+    __FIRExprBridge *expr = [self parseExpression:exprMap error:error];
+    __FIRExprBridge *delimiter = [self parseExpression:delimiterMap error:error];
     if (!expr || !delimiter) return nil;
     return FLTNewFunctionExprBridge(name, @[ expr, delimiter ]);
   }
@@ -531,8 +531,8 @@ static NSError *parseError(NSString *message) {
       if (error) *error = parseError(@"array_concat requires first and second");
       return nil;
     }
-    FIRExprBridge *first = [self parseExpression:firstMap error:error];
-    FIRExprBridge *second = [self parseExpression:secondMap error:error];
+    __FIRExprBridge *first = [self parseExpression:firstMap error:error];
+    __FIRExprBridge *second = [self parseExpression:secondMap error:error];
     if (!first || !second) return nil;
     return FLTNewFunctionExprBridge(@"array_concat", @[ first, second ]);
   }
@@ -546,10 +546,10 @@ static NSError *parseError(NSString *message) {
       if (error) *error = parseError(@"array_concat_multiple requires non-empty arrays");
       return nil;
     }
-    NSMutableArray<FIRExprBridge *> *all = [NSMutableArray array];
+    NSMutableArray<__FIRExprBridge *> *all = [NSMutableArray array];
     for (id am in arraysMaps) {
       if (![am isKindOfClass:[NSDictionary class]]) continue;
-      FIRExprBridge *e = [self parseExpression:am error:error];
+      __FIRExprBridge *e = [self parseExpression:am error:error];
       if (!e) return nil;
       [all addObject:e];
     }
@@ -572,13 +572,13 @@ static NSError *parseError(NSString *message) {
       if (error) *error = parseError(@"array_slice requires expression and offset");
       return nil;
     }
-    FIRExprBridge *expr = [self parseExpression:exprMap error:error];
-    FIRExprBridge *offset = [self parseExpression:offsetMap error:error];
+    __FIRExprBridge *expr = [self parseExpression:exprMap error:error];
+    __FIRExprBridge *offset = [self parseExpression:offsetMap error:error];
     if (!expr || !offset) return nil;
-    NSMutableArray<FIRExprBridge *> *sliceArgs =
+    NSMutableArray<__FIRExprBridge *> *sliceArgs =
         [NSMutableArray arrayWithObjects:expr, offset, nil];
     if ([lengthMap isKindOfClass:[NSDictionary class]]) {
-      FIRExprBridge *length = [self parseExpression:lengthMap error:error];
+      __FIRExprBridge *length = [self parseExpression:lengthMap error:error];
       if (!length) return nil;
       [sliceArgs addObject:length];
     }
@@ -597,11 +597,11 @@ static NSError *parseError(NSString *message) {
       if (error) *error = parseError(@"array_filter requires expression, alias, and filter");
       return nil;
     }
-    FIRExprBridge *expr = [self parseExpression:exprMap error:error];
-    FIRExprBridge *filter = [self parseBooleanExpression:filterMap error:error];
+    __FIRExprBridge *expr = [self parseExpression:exprMap error:error];
+    __FIRExprBridge *filter = [self parseBooleanExpression:filterMap error:error];
     if (!expr || !filter) return nil;
     return FLTNewFunctionExprBridge(@"array_filter",
-                                    @[ expr, [[FIRConstantBridge alloc] init:alias], filter ]);
+                                    @[ expr, [[__FIRConstantBridge alloc] init:alias], filter ]);
   }
 
   // -------------------------------------------------------------------------
@@ -628,13 +628,13 @@ static NSError *parseError(NSString *message) {
       }
       return nil;
     }
-    FIRExprBridge *expr = [self parseExpression:exprMap error:error];
-    FIRExprBridge *transform = [self parseExpression:transformMap error:error];
+    __FIRExprBridge *expr = [self parseExpression:exprMap error:error];
+    __FIRExprBridge *transform = [self parseExpression:transformMap error:error];
     if (!expr || !transform) return nil;
-    NSMutableArray<FIRExprBridge *> *transformArgs =
-        [NSMutableArray arrayWithObjects:expr, [[FIRConstantBridge alloc] init:elementAlias], nil];
+    NSMutableArray<__FIRExprBridge *> *transformArgs =
+        [NSMutableArray arrayWithObjects:expr, [[__FIRConstantBridge alloc] init:elementAlias], nil];
     if (withIndex) {
-      [transformArgs addObject:[[FIRConstantBridge alloc] init:indexAlias]];
+      [transformArgs addObject:[[__FIRConstantBridge alloc] init:indexAlias]];
     }
     [transformArgs addObject:transform];
     return FLTNewFunctionExprBridge(name, transformArgs);
@@ -649,10 +649,10 @@ static NSError *parseError(NSString *message) {
       if (error) *error = parseError(@"array requires non-empty elements");
       return nil;
     }
-    NSMutableArray<FIRExprBridge *> *elementExprs = [NSMutableArray array];
+    NSMutableArray<__FIRExprBridge *> *elementExprs = [NSMutableArray array];
     for (id em in elementsMaps) {
       if (![em isKindOfClass:[NSDictionary class]]) continue;
-      FIRExprBridge *e = [self parseExpression:em error:error];
+      __FIRExprBridge *e = [self parseExpression:em error:error];
       if (!e) return nil;
       [elementExprs addObject:e];
     }
@@ -673,12 +673,12 @@ static NSError *parseError(NSString *message) {
       if (error) *error = parseError(@"map requires non-empty data");
       return nil;
     }
-    NSMutableArray<FIRExprBridge *> *mapArgs = [NSMutableArray array];
+    NSMutableArray<__FIRExprBridge *> *mapArgs = [NSMutableArray array];
     for (NSString *key in dataMap) {
       id valueMap = dataMap[key];
       if (![valueMap isKindOfClass:[NSDictionary class]]) continue;
-      FIRExprBridge *keyExpr = [[FIRConstantBridge alloc] init:key];
-      FIRExprBridge *valueExpr = [self parseExpression:valueMap error:error];
+      __FIRExprBridge *keyExpr = [[__FIRConstantBridge alloc] init:key];
+      __FIRExprBridge *valueExpr = [self parseExpression:valueMap error:error];
       if (!valueExpr) return nil;
       [mapArgs addObject:keyExpr];
       [mapArgs addObject:valueExpr];
@@ -701,8 +701,8 @@ static NSError *parseError(NSString *message) {
       if (error) *error = parseError(@"map_get requires map and key");
       return nil;
     }
-    FIRExprBridge *mapExpr = [self parseExpression:mapMap error:error];
-    FIRExprBridge *keyExpr = [self parseExpression:keyMap error:error];
+    __FIRExprBridge *mapExpr = [self parseExpression:mapMap error:error];
+    __FIRExprBridge *keyExpr = [self parseExpression:keyMap error:error];
     if (!mapExpr || !keyExpr) return nil;
     return FLTNewFunctionExprBridge(@"map_get", @[ mapExpr, keyExpr ]);
   }
@@ -718,8 +718,8 @@ static NSError *parseError(NSString *message) {
       if (error) *error = parseError(@"if_absent requires expression and else");
       return nil;
     }
-    FIRExprBridge *expr = [self parseExpression:exprMap error:error];
-    FIRExprBridge *elseExpr = [self parseExpression:elseMap error:error];
+    __FIRExprBridge *expr = [self parseExpression:exprMap error:error];
+    __FIRExprBridge *elseExpr = [self parseExpression:elseMap error:error];
     if (!expr || !elseExpr) return nil;
     return FLTNewFunctionExprBridge(@"if_absent", @[ expr, elseExpr ]);
   }
@@ -735,8 +735,8 @@ static NSError *parseError(NSString *message) {
       if (error) *error = parseError(@"if_error requires expression and catch");
       return nil;
     }
-    FIRExprBridge *expr = [self parseExpression:exprMap error:error];
-    FIRExprBridge *catchExpr = [self parseExpression:catchMap error:error];
+    __FIRExprBridge *expr = [self parseExpression:exprMap error:error];
+    __FIRExprBridge *catchExpr = [self parseExpression:catchMap error:error];
     if (!expr || !catchExpr) return nil;
     return FLTNewFunctionExprBridge(@"if_error", @[ expr, catchExpr ]);
   }
@@ -754,9 +754,9 @@ static NSError *parseError(NSString *message) {
       if (error) *error = parseError(@"conditional requires condition, then, and else");
       return nil;
     }
-    FIRExprBridge *condition = [self parseBooleanExpression:conditionMap error:error];
-    FIRExprBridge *thenExpr = [self parseExpression:thenMap error:error];
-    FIRExprBridge *elseExpr = [self parseExpression:elseMap error:error];
+    __FIRExprBridge *condition = [self parseBooleanExpression:conditionMap error:error];
+    __FIRExprBridge *thenExpr = [self parseExpression:thenMap error:error];
+    __FIRExprBridge *elseExpr = [self parseExpression:elseMap error:error];
     if (!condition || !thenExpr || !elseExpr) return nil;
     return FLTNewFunctionExprBridge(@"conditional", @[ condition, thenExpr, elseExpr ]);
   }
@@ -775,10 +775,10 @@ static NSError *parseError(NSString *message) {
             [NSString stringWithFormat:@"%@ requires timestamp, unit, and amount", name]);
       return nil;
     }
-    FIRExprBridge *timestampExpr = [self parseExpression:timestampMap error:error];
-    FIRExprBridge *amountExpr = [self parseExpression:amountMap error:error];
+    __FIRExprBridge *timestampExpr = [self parseExpression:timestampMap error:error];
+    __FIRExprBridge *amountExpr = [self parseExpression:amountMap error:error];
     if (!timestampExpr || !amountExpr) return nil;
-    FIRExprBridge *unitExpr = [[FIRConstantBridge alloc] init:unitVal];
+    __FIRExprBridge *unitExpr = [[__FIRConstantBridge alloc] init:unitVal];
     return FLTNewFunctionExprBridge(name, @[ timestampExpr, unitExpr, amountExpr ]);
   }
 
@@ -799,9 +799,9 @@ static NSError *parseError(NSString *message) {
       if (error) *error = parseError(@"timestamp_truncate requires timestamp and unit");
       return nil;
     }
-    FIRExprBridge *timestampExpr = [self parseExpression:timestampMap error:error];
+    __FIRExprBridge *timestampExpr = [self parseExpression:timestampMap error:error];
     if (!timestampExpr) return nil;
-    FIRExprBridge *unitExpr = [[FIRConstantBridge alloc] init:unitVal];
+    __FIRExprBridge *unitExpr = [[__FIRConstantBridge alloc] init:unitVal];
     return FLTNewFunctionExprBridge(@"timestamp_trunc", @[ timestampExpr, unitExpr ]);
   }
 
@@ -814,7 +814,7 @@ static NSError *parseError(NSString *message) {
       if (error) *error = parseError([NSString stringWithFormat:@"%@ requires expression", name]);
       return nil;
     }
-    FIRExprBridge *expr = [self parseExpression:(NSDictionary *)exprMap error:error];
+    __FIRExprBridge *expr = [self parseExpression:(NSDictionary *)exprMap error:error];
     if (!expr) return nil;
     return FLTNewFunctionExprBridge(name, @[ expr ]);
   }
@@ -826,7 +826,7 @@ static NSError *parseError(NSString *message) {
     NSString *docPath = args[@"doc_ref"];
     if ([docPath isKindOfClass:[NSString class]] && docPath.length > 0) {
       FIRDocumentReference *ref = [self.firestore documentWithPath:docPath];
-      FIRExprBridge *refExpr = [[FIRConstantBridge alloc] init:ref];
+      __FIRExprBridge *refExpr = [[__FIRConstantBridge alloc] init:ref];
       return FLTNewFunctionExprBridge(@"parent", @[ refExpr ]);
     }
     id exprMap = args[@"expression"];
@@ -834,7 +834,7 @@ static NSError *parseError(NSString *message) {
       if (error) *error = parseError(@"parent requires expression or doc_ref");
       return nil;
     }
-    FIRExprBridge *expr = [self parseExpression:(NSDictionary *)exprMap error:error];
+    __FIRExprBridge *expr = [self parseExpression:(NSDictionary *)exprMap error:error];
     if (!expr) return nil;
     return FLTNewFunctionExprBridge(@"parent", @[ expr ]);
   }
@@ -851,12 +851,12 @@ static NSError *parseError(NSString *message) {
       if (error) *error = parseError(@"timestamp_diff requires end, start, and unit");
       return nil;
     }
-    FIRExprBridge *endExpr = [self parseExpression:(NSDictionary *)endMap error:error];
-    FIRExprBridge *startExpr = [self parseExpression:(NSDictionary *)startMap error:error];
+    __FIRExprBridge *endExpr = [self parseExpression:(NSDictionary *)endMap error:error];
+    __FIRExprBridge *startExpr = [self parseExpression:(NSDictionary *)startMap error:error];
     if (!endExpr || !startExpr) return nil;
-    FIRExprBridge *unitExpr = nil;
+    __FIRExprBridge *unitExpr = nil;
     if ([unitObj isKindOfClass:[NSString class]]) {
-      unitExpr = [[FIRConstantBridge alloc] init:unitObj];
+      unitExpr = [[__FIRConstantBridge alloc] init:unitObj];
     } else if ([unitObj isKindOfClass:[NSDictionary class]]) {
       unitExpr = [self parseExpression:(NSDictionary *)unitObj error:error];
     } else {
@@ -878,16 +878,16 @@ static NSError *parseError(NSString *message) {
       if (error) *error = parseError(@"timestamp_extract requires timestamp and part");
       return nil;
     }
-    FIRExprBridge *tsExpr = [self parseExpression:(NSDictionary *)timestampMap error:error];
-    FIRExprBridge *partExpr = [self parseExpression:(NSDictionary *)partMap error:error];
+    __FIRExprBridge *tsExpr = [self parseExpression:(NSDictionary *)timestampMap error:error];
+    __FIRExprBridge *partExpr = [self parseExpression:(NSDictionary *)partMap error:error];
     if (!tsExpr || !partExpr) return nil;
     id tzRaw = args[@"timezone"];
     if (tzRaw == nil) {
       return FLTNewFunctionExprBridge(@"timestamp_extract", @[ tsExpr, partExpr ]);
     }
-    FIRExprBridge *tzExpr = nil;
+    __FIRExprBridge *tzExpr = nil;
     if ([tzRaw isKindOfClass:[NSString class]]) {
-      tzExpr = [[FIRConstantBridge alloc] init:tzRaw];
+      tzExpr = [[__FIRConstantBridge alloc] init:tzRaw];
     } else if ([tzRaw isKindOfClass:[NSDictionary class]]) {
       tzExpr = [self parseExpression:(NSDictionary *)tzRaw error:error];
     } else {
@@ -909,8 +909,8 @@ static NSError *parseError(NSString *message) {
       if (error) *error = parseError(@"if_null requires expression and replacement");
       return nil;
     }
-    FIRExprBridge *ifExpr = [self parseExpression:(NSDictionary *)exprMap error:error];
-    FIRExprBridge *replExpr = [self parseExpression:(NSDictionary *)replMap error:error];
+    __FIRExprBridge *ifExpr = [self parseExpression:(NSDictionary *)exprMap error:error];
+    __FIRExprBridge *replExpr = [self parseExpression:(NSDictionary *)replMap error:error];
     if (!ifExpr || !replExpr) return nil;
     return FLTNewFunctionExprBridge(@"if_null", @[ ifExpr, replExpr ]);
   }
@@ -924,10 +924,10 @@ static NSError *parseError(NSString *message) {
       if (error) *error = parseError(@"coalesce requires at least two expressions");
       return nil;
     }
-    NSMutableArray<FIRExprBridge *> *exprs = [NSMutableArray array];
+    NSMutableArray<__FIRExprBridge *> *exprs = [NSMutableArray array];
     for (id em in exprMaps) {
       if (![em isKindOfClass:[NSDictionary class]]) continue;
-      FIRExprBridge *e = [self parseExpression:(NSDictionary *)em error:error];
+      __FIRExprBridge *e = [self parseExpression:(NSDictionary *)em error:error];
       if (!e) return nil;
       [exprs addObject:e];
     }
@@ -948,15 +948,15 @@ static NSError *parseError(NSString *message) {
       return nil;
     }
     NSUInteger n = exprMaps.count;
-    FIRExprBridge *first = [self parseBooleanExpression:exprMaps[0] error:error];
-    FIRExprBridge *second = [self parseExpression:exprMaps[1] error:error];
+    __FIRExprBridge *first = [self parseBooleanExpression:exprMaps[0] error:error];
+    __FIRExprBridge *second = [self parseExpression:exprMaps[1] error:error];
     if (!first || !second) return nil;
     if (n == 2) {
       return FLTNewFunctionExprBridge(@"switch_on", @[ first, second ]);
     }
-    NSMutableArray<FIRExprBridge *> *rest = [NSMutableArray array];
+    NSMutableArray<__FIRExprBridge *> *rest = [NSMutableArray array];
     for (NSUInteger i = 2; i < n; i++) {
-      FIRExprBridge *e = nil;
+      __FIRExprBridge *e = nil;
       if ((n % 2 == 1) && (i == n - 1)) {
         e = [self parseExpression:exprMaps[i] error:error];
       } else if (i % 2 == 0) {
@@ -967,7 +967,7 @@ static NSError *parseError(NSString *message) {
       if (!e) return nil;
       [rest addObject:e];
     }
-    NSMutableArray<FIRExprBridge *> *all = [NSMutableArray arrayWithObjects:first, second, nil];
+    NSMutableArray<__FIRExprBridge *> *all = [NSMutableArray arrayWithObjects:first, second, nil];
     [all addObjectsFromArray:rest];
     return FLTNewFunctionExprBridge(@"switch_on", all);
   }
@@ -983,14 +983,14 @@ static NSError *parseError(NSString *message) {
   return nil;
 }
 
-- (FIRExprBridge *)rightExprFromValue:(id)value error:(NSError **)error {
+- (__FIRExprBridge *)rightExprFromValue:(id)value error:(NSError **)error {
   if ([value isKindOfClass:[NSDictionary class]]) {
     return [self parseExpression:(NSDictionary *)value error:error];
   }
-  return [[FIRConstantBridge alloc] init:value];
+  return [[__FIRConstantBridge alloc] init:value];
 }
 
-- (FIRExprBridge *)parseFilterExpressionWithArgs:(NSDictionary *)args error:(NSError **)error {
+- (__FIRExprBridge *)parseFilterExpressionWithArgs:(NSDictionary *)args error:(NSError **)error {
   // Operator-based: and/or with expressions array (from PipelineFilter.and / .or)
   NSString *operator= args[@"operator"];
   NSArray *exprMaps = args[@"expressions"];
@@ -1007,10 +1007,10 @@ static NSError *parseError(NSString *message) {
       }
       return [self parseBooleanExpression:(NSDictionary *)em error:error];
     }
-    NSMutableArray<FIRExprBridge *> *all = [NSMutableArray array];
+    NSMutableArray<__FIRExprBridge *> *all = [NSMutableArray array];
     for (id em in exprMaps) {
       if (![em isKindOfClass:[NSDictionary class]]) continue;
-      FIRExprBridge *e = [self parseBooleanExpression:(NSDictionary *)em error:error];
+      __FIRExprBridge *e = [self parseBooleanExpression:(NSDictionary *)em error:error];
       if (!e) return nil;
       [all addObject:e];
     }
@@ -1024,7 +1024,7 @@ static NSError *parseError(NSString *message) {
     if (error) *error = parseError(@"filter requires operator+expressions or field");
     return nil;
   }
-  FIRExprBridge *fieldExpr = [[FIRFieldBridge alloc] initWithName:fieldName];
+  __FIRExprBridge *fieldExpr = [[__FIRFieldBridge alloc] initWithName:fieldName];
 
   static NSArray *filterComparisonKeys = nil;
   static dispatch_once_t filterOnce;
@@ -1040,45 +1040,45 @@ static NSError *parseError(NSString *message) {
     if (value == nil) continue;
 
     if ([key isEqualToString:@"isEqualTo"]) {
-      FIRExprBridge *right = [self rightExprFromValue:value error:error];
+      __FIRExprBridge *right = [self rightExprFromValue:value error:error];
       if (!right) return nil;
       return FLTNewFunctionExprBridge(@"equal", @[ fieldExpr, right ]);
     }
     if ([key isEqualToString:@"isNotEqualTo"]) {
-      FIRExprBridge *right = [self rightExprFromValue:value error:error];
+      __FIRExprBridge *right = [self rightExprFromValue:value error:error];
       if (!right) return nil;
       return FLTNewFunctionExprBridge(@"not_equal", @[ fieldExpr, right ]);
     }
     if ([key isEqualToString:@"isGreaterThan"]) {
-      FIRExprBridge *right = [self rightExprFromValue:value error:error];
+      __FIRExprBridge *right = [self rightExprFromValue:value error:error];
       if (!right) return nil;
       return FLTNewFunctionExprBridge(@"greater_than", @[ fieldExpr, right ]);
     }
     if ([key isEqualToString:@"isGreaterThanOrEqualTo"]) {
-      FIRExprBridge *right = [self rightExprFromValue:value error:error];
+      __FIRExprBridge *right = [self rightExprFromValue:value error:error];
       if (!right) return nil;
       return FLTNewFunctionExprBridge(@"greater_than_or_equal", @[ fieldExpr, right ]);
     }
     if ([key isEqualToString:@"isLessThan"]) {
-      FIRExprBridge *right = [self rightExprFromValue:value error:error];
+      __FIRExprBridge *right = [self rightExprFromValue:value error:error];
       if (!right) return nil;
       return FLTNewFunctionExprBridge(@"less_than", @[ fieldExpr, right ]);
     }
     if ([key isEqualToString:@"isLessThanOrEqualTo"]) {
-      FIRExprBridge *right = [self rightExprFromValue:value error:error];
+      __FIRExprBridge *right = [self rightExprFromValue:value error:error];
       if (!right) return nil;
       return FLTNewFunctionExprBridge(@"less_than_or_equal", @[ fieldExpr, right ]);
     }
     if ([key isEqualToString:@"arrayContains"]) {
-      FIRExprBridge *right = [self rightExprFromValue:value error:error];
+      __FIRExprBridge *right = [self rightExprFromValue:value error:error];
       if (!right) return nil;
       return FLTNewFunctionExprBridge(@"array_contains", @[ fieldExpr, right ]);
     }
     if ([key isEqualToString:@"arrayContainsAny"] || [key isEqualToString:@"whereIn"]) {
       NSArray *valuesList = [value isKindOfClass:[NSArray class]] ? value : @[];
-      NSMutableArray<FIRExprBridge *> *valueExprs = [NSMutableArray array];
+      NSMutableArray<__FIRExprBridge *> *valueExprs = [NSMutableArray array];
       for (id v in valuesList) {
-        FIRExprBridge *ve = [self rightExprFromValue:v error:error];
+        __FIRExprBridge *ve = [self rightExprFromValue:v error:error];
         if (!ve) return nil;
         [valueExprs addObject:ve];
       }
@@ -1087,14 +1087,14 @@ static NSError *parseError(NSString *message) {
         return nil;
       }
       // SDK expects (value, array) not (value, v1, v2, ...); wrap in "array" expr.
-      FIRExprBridge *valuesArrayExpr = FLTNewFunctionExprBridge(@"array", valueExprs);
+      __FIRExprBridge *valuesArrayExpr = FLTNewFunctionExprBridge(@"array", valueExprs);
       return FLTNewFunctionExprBridge(@"equal_any", @[ fieldExpr, valuesArrayExpr ]);
     }
     if ([key isEqualToString:@"whereNotIn"]) {
       NSArray *valuesList = [value isKindOfClass:[NSArray class]] ? value : @[];
-      NSMutableArray<FIRExprBridge *> *valueExprs = [NSMutableArray array];
+      NSMutableArray<__FIRExprBridge *> *valueExprs = [NSMutableArray array];
       for (id v in valuesList) {
-        FIRExprBridge *ve = [self rightExprFromValue:v error:error];
+        __FIRExprBridge *ve = [self rightExprFromValue:v error:error];
         if (!ve) return nil;
         [valueExprs addObject:ve];
       }
@@ -1103,15 +1103,15 @@ static NSError *parseError(NSString *message) {
         return nil;
       }
       // SDK expects (value, array) not (value, v1, v2, ...); wrap in "array" expr.
-      FIRExprBridge *valuesArrayExpr = FLTNewFunctionExprBridge(@"array", valueExprs);
+      __FIRExprBridge *valuesArrayExpr = FLTNewFunctionExprBridge(@"array", valueExprs);
       return FLTNewFunctionExprBridge(@"not_equal_any", @[ fieldExpr, valuesArrayExpr ]);
     }
     if ([key isEqualToString:@"isNull"]) {
-      FIRExprBridge *right = [[FIRConstantBridge alloc] init:[NSNull null]];
+      __FIRExprBridge *right = [[__FIRConstantBridge alloc] init:[NSNull null]];
       return FLTNewFunctionExprBridge(@"equal", @[ fieldExpr, right ]);
     }
     if ([key isEqualToString:@"isNotNull"]) {
-      FIRExprBridge *right = [[FIRConstantBridge alloc] init:[NSNull null]];
+      __FIRExprBridge *right = [[__FIRConstantBridge alloc] init:[NSNull null]];
       return FLTNewFunctionExprBridge(@"not_equal", @[ fieldExpr, right ]);
     }
   }
@@ -1122,7 +1122,7 @@ static NSError *parseError(NSString *message) {
   return nil;
 }
 
-- (FIRExprBridge *)parseBooleanExpression:(NSDictionary<NSString *, id> *)map
+- (__FIRExprBridge *)parseBooleanExpression:(NSDictionary<NSString *, id> *)map
                                     error:(NSError **)error {
   return [self parseExpression:map error:error];
 }
@@ -1149,17 +1149,17 @@ static NSError *parseError(NSString *message) {
   return nil;
 }
 
-+ (NSDictionary<NSString *, FIRExprBridge *> *)
++ (NSDictionary<NSString *, __FIRExprBridge *> *)
     parseSearchFieldsWithExpressionMaps:(NSArray<NSDictionary<NSString *, id> *> *)exprMaps
                              exprParser:(FLTPipelineExpressionParser *)exprParser
                                   error:(NSError **)error {
-  NSMutableDictionary<NSString *, FIRExprBridge *> *fields = [NSMutableDictionary dictionary];
+  NSMutableDictionary<NSString *, __FIRExprBridge *> *fields = [NSMutableDictionary dictionary];
   NSError *parseErr = nil;
 
   for (id em in exprMaps) {
     if (![em isKindOfClass:[NSDictionary class]]) continue;
 
-    FIRExprBridge *expr = [exprParser parseExpression:em error:&parseErr];
+    __FIRExprBridge *expr = [exprParser parseExpression:em error:&parseErr];
     if (!expr) {
       if (error) *error = parseErr;
       return nil;
@@ -1173,12 +1173,12 @@ static NSError *parseError(NSString *message) {
   return fields;
 }
 
-+ (FIRStageBridge *)parseSearchStageWithArgs:(NSDictionary *)args
++ (__FIRStageBridge *)parseSearchStageWithArgs:(NSDictionary *)args
                                   exprParser:(FLTPipelineExpressionParser *)exprParser
                                        error:(NSError **)error {
   NSString *queryType = args[@"query_type"];
   id query = args[@"query"];
-  NSMutableDictionary<NSString *, FIRExprBridge *> *options = [NSMutableDictionary dictionary];
+  NSMutableDictionary<NSString *, __FIRExprBridge *> *options = [NSMutableDictionary dictionary];
   NSError *parseErr = nil;
 
   if ([queryType isEqualToString:@"string"]) {
@@ -1186,14 +1186,14 @@ static NSError *parseError(NSString *message) {
       if (error) *error = parseError(@"search query_type 'string' requires string query");
       return nil;
     }
-    FIRExprBridge *queryExpr = [[FIRConstantBridge alloc] init:query];
+    __FIRExprBridge *queryExpr = [[__FIRConstantBridge alloc] init:query];
     options[@"query"] = FLTNewFunctionExprBridge(@"document_matches", @[ queryExpr ]);
   } else if ([queryType isEqualToString:@"expression"]) {
     if (![query isKindOfClass:[NSDictionary class]]) {
       if (error) *error = parseError(@"search query_type 'expression' requires expression query");
       return nil;
     }
-    FIRExprBridge *queryExpr = [exprParser parseBooleanExpression:query error:&parseErr];
+    __FIRExprBridge *queryExpr = [exprParser parseBooleanExpression:query error:&parseErr];
     if (!queryExpr) {
       if (error) *error = parseErr;
       return nil;
@@ -1205,24 +1205,24 @@ static NSError *parseError(NSString *message) {
   }
 
   NSNumber *limit = [args[@"limit"] isKindOfClass:[NSNumber class]] ? args[@"limit"] : nil;
-  if (limit) options[@"limit"] = [[FIRConstantBridge alloc] init:limit];
+  if (limit) options[@"limit"] = [[__FIRConstantBridge alloc] init:limit];
 
   NSNumber *offset = [args[@"offset"] isKindOfClass:[NSNumber class]] ? args[@"offset"] : nil;
-  if (offset) options[@"offset"] = [[FIRConstantBridge alloc] init:offset];
+  if (offset) options[@"offset"] = [[__FIRConstantBridge alloc] init:offset];
 
   NSNumber *retrievalDepth =
       [args[@"retrieval_depth"] isKindOfClass:[NSNumber class]] ? args[@"retrieval_depth"] : nil;
   if (retrievalDepth) {
-    options[@"retrieval_depth"] = [[FIRConstantBridge alloc] init:retrievalDepth];
+    options[@"retrieval_depth"] = [[__FIRConstantBridge alloc] init:retrievalDepth];
   }
 
   NSString *languageCode =
       [args[@"language_code"] isKindOfClass:[NSString class]] ? args[@"language_code"] : nil;
   if (languageCode) {
-    options[@"language_code"] = [[FIRConstantBridge alloc] init:languageCode];
+    options[@"language_code"] = [[__FIRConstantBridge alloc] init:languageCode];
   }
 
-  NSMutableArray<FIROrderingBridge *> *sort = [NSMutableArray array];
+  NSMutableArray<__FIROrderingBridge *> *sort = [NSMutableArray array];
   NSArray *orderingMaps = args[@"sort"];
   if ([orderingMaps isKindOfClass:[NSArray class]]) {
     for (id om in orderingMaps) {
@@ -1230,17 +1230,17 @@ static NSError *parseError(NSString *message) {
       id exprMap = ((NSDictionary *)om)[@"expression"];
       NSString *dir = ((NSDictionary *)om)[@"order_direction"];
       if (![exprMap isKindOfClass:[NSDictionary class]]) continue;
-      FIRExprBridge *expr = [exprParser parseExpression:exprMap error:&parseErr];
+      __FIRExprBridge *expr = [exprParser parseExpression:exprMap error:&parseErr];
       if (!expr) {
         if (error) *error = parseErr;
         return nil;
       }
       NSString *direction = [dir isEqualToString:@"asc"] ? @"ascending" : @"descending";
-      [sort addObject:[[FIROrderingBridge alloc] initWithExpr:expr Direction:direction]];
+      [sort addObject:[[__FIROrderingBridge alloc] initWithExpr:expr Direction:direction]];
     }
   }
 
-  NSDictionary<NSString *, FIRExprBridge *> *addFields = @{};
+  NSDictionary<NSString *, __FIRExprBridge *> *addFields = @{};
   NSArray *addFieldMaps = args[@"add_fields"];
   if ([addFieldMaps isKindOfClass:[NSArray class]] && addFieldMaps.count > 0) {
     addFields = [self parseSearchFieldsWithExpressionMaps:addFieldMaps
@@ -1249,19 +1249,19 @@ static NSError *parseError(NSString *message) {
     if (!addFields) return nil;
   }
 
-  return [[FIRSearchStageBridge alloc] initWithOptions:options
+  return [[__FIRSearchStageBridge alloc] initWithOptions:options
                                              addFields:addFields
                                                 select:@{}
                                                   sort:sort];
 }
 
-+ (NSArray<FIRStageBridge *> *)
++ (NSArray<__FIRStageBridge *> *)
     parseStagesWithFirestore:(FIRFirestore *)firestore
                       stages:(NSArray<NSDictionary<NSString *, id> *> *)stages
                        error:(NSError **)error {
   FLTPipelineExpressionParser *exprParser =
       [[FLTPipelineExpressionParser alloc] initWithFirestore:firestore];
-  NSMutableArray<FIRStageBridge *> *stageBridges = [NSMutableArray array];
+  NSMutableArray<__FIRStageBridge *> *stageBridges = [NSMutableArray array];
   NSError *parseErr = nil;
 
   for (NSUInteger i = 0; i < stages.count; i++) {
@@ -1279,7 +1279,7 @@ static NSError *parseError(NSString *message) {
     NSDictionary *args = [argsObj isKindOfClass:[NSDictionary class]] ? argsObj : @{};
     NSArray *argsArray = [argsObj isKindOfClass:[NSArray class]] ? argsObj : nil;
 
-    FIRStageBridge *stage = nil;
+    __FIRStageBridge *stage = nil;
 
     if (i == 0) {
       if ([stageName isEqualToString:@"collection"]) {
@@ -1289,7 +1289,7 @@ static NSError *parseError(NSString *message) {
           return nil;
         }
         FIRCollectionReference *ref = [firestore collectionWithPath:path];
-        stage = [[FIRCollectionSourceStageBridge alloc] initWithRef:ref
+        stage = [[__FIRCollectionSourceStageBridge alloc] initWithRef:ref
                                                           firestore:firestore
                                                          forceIndex:nil];
       } else if ([stageName isEqualToString:@"collection_group"]) {
@@ -1298,10 +1298,10 @@ static NSError *parseError(NSString *message) {
           if (error) *error = parseError(@"collection_group requires 'path'");
           return nil;
         }
-        stage = [[FIRCollectionGroupSourceStageBridge alloc] initWithCollectionId:path
+        stage = [[__FIRCollectionGroupSourceStageBridge alloc] initWithCollectionId:path
                                                                        forceIndex:nil];
       } else if ([stageName isEqualToString:@"database"]) {
-        stage = [[FIRDatabaseSourceStageBridge alloc] init];
+        stage = [[__FIRDatabaseSourceStageBridge alloc] init];
       } else if ([stageName isEqualToString:@"documents"]) {
         NSArray *docMaps = argsArray;
         if (!docMaps || docMaps.count == 0) {
@@ -1314,7 +1314,7 @@ static NSError *parseError(NSString *message) {
           NSString *path = ((NSDictionary *)docMap)[@"path"];
           if (path) [refs addObject:[firestore documentWithPath:path]];
         }
-        stage = [[FIRDocumentsSourceStageBridge alloc] initWithDocuments:refs firestore:firestore];
+        stage = [[__FIRDocumentsSourceStageBridge alloc] initWithDocuments:refs firestore:firestore];
       } else {
         if (error)
           *error = parseError(
@@ -1330,12 +1330,12 @@ static NSError *parseError(NSString *message) {
           if (error) *error = parseError(@"where requires expression");
           return nil;
         }
-        FIRExprBridge *expr = [exprParser parseBooleanExpression:exprMap error:&parseErr];
+        __FIRExprBridge *expr = [exprParser parseBooleanExpression:exprMap error:&parseErr];
         if (!expr) {
           if (error) *error = parseErr;
           return nil;
         }
-        stage = [[FIRWhereStageBridge alloc] initWithExpr:expr];
+        stage = [[__FIRWhereStageBridge alloc] initWithExpr:expr];
       } else if ([stageName isEqualToString:@"search"]) {
         stage = [self parseSearchStageWithArgs:args exprParser:exprParser error:error];
         if (!stage) return nil;
@@ -1345,33 +1345,33 @@ static NSError *parseError(NSString *message) {
           if (error) *error = parseError(@"limit requires numeric limit");
           return nil;
         }
-        stage = [[FIRLimitStageBridge alloc] initWithLimit:limit.intValue];
+        stage = [[__FIRLimitStageBridge alloc] initWithLimit:limit.intValue];
       } else if ([stageName isEqualToString:@"offset"]) {
         NSNumber *offset = args[@"offset"];
         if (![offset isKindOfClass:[NSNumber class]]) {
           if (error) *error = parseError(@"offset requires numeric offset");
           return nil;
         }
-        stage = [[FIROffsetStageBridge alloc] initWithOffset:offset.intValue];
+        stage = [[__FIROffsetStageBridge alloc] initWithOffset:offset.intValue];
       } else if ([stageName isEqualToString:@"sort"]) {
         NSArray *orderingMaps = args[@"orderings"];
         if (![orderingMaps isKindOfClass:[NSArray class]] || orderingMaps.count == 0) {
           if (error) *error = parseError(@"sort requires at least one ordering");
           return nil;
         }
-        NSMutableArray<FIROrderingBridge *> *orderings = [NSMutableArray array];
+        NSMutableArray<__FIROrderingBridge *> *orderings = [NSMutableArray array];
         for (id om in orderingMaps) {
           if (![om isKindOfClass:[NSDictionary class]]) continue;
           id exprMap = ((NSDictionary *)om)[@"expression"];
           NSString *dir = ((NSDictionary *)om)[@"order_direction"];
           if (![exprMap isKindOfClass:[NSDictionary class]]) continue;
-          FIRExprBridge *expr = [exprParser parseExpression:exprMap error:&parseErr];
+          __FIRExprBridge *expr = [exprParser parseExpression:exprMap error:&parseErr];
           if (!expr) {
             if (error) *error = parseErr;
             return nil;
           }
           NSString *direction = [dir isEqualToString:@"asc"] ? @"ascending" : @"descending";
-          FIROrderingBridge *ordering = [[FIROrderingBridge alloc] initWithExpr:expr
+          __FIROrderingBridge *ordering = [[__FIROrderingBridge alloc] initWithExpr:expr
                                                                       Direction:direction];
           [orderings addObject:ordering];
         }
@@ -1379,17 +1379,17 @@ static NSError *parseError(NSString *message) {
           if (error) *error = parseError(@"sort requires at least one ordering");
           return nil;
         }
-        stage = [[FIRSorStageBridge alloc] initWithOrderings:orderings];
+        stage = [[__FIRSortStageBridge alloc] initWithOrderings:orderings];
       } else if ([stageName isEqualToString:@"select"]) {
         NSArray *exprMaps = args[@"expressions"];
         if (![exprMaps isKindOfClass:[NSArray class]] || exprMaps.count == 0) {
           if (error) *error = parseError(@"select requires at least one expression");
           return nil;
         }
-        NSMutableDictionary<NSString *, FIRExprBridge *> *fields = [NSMutableDictionary dictionary];
+        NSMutableDictionary<NSString *, __FIRExprBridge *> *fields = [NSMutableDictionary dictionary];
         for (id em in exprMaps) {
           if (![em isKindOfClass:[NSDictionary class]]) continue;
-          FIRExprBridge *expr = [exprParser parseExpression:em error:&parseErr];
+          __FIRExprBridge *expr = [exprParser parseExpression:em error:&parseErr];
           if (!expr) {
             if (error) *error = parseErr;
             return nil;
@@ -1398,17 +1398,17 @@ static NSError *parseError(NSString *message) {
           if (!key) return nil;
           fields[key] = expr;
         }
-        stage = [[FIRSelectStageBridge alloc] initWithSelections:fields];
+        stage = [[__FIRSelectStageBridge alloc] initWithSelections:fields];
       } else if ([stageName isEqualToString:@"add_fields"]) {
         NSArray *exprMaps = args[@"expressions"];
         if (![exprMaps isKindOfClass:[NSArray class]] || exprMaps.count == 0) {
           if (error) *error = parseError(@"add_fields requires at least one expression");
           return nil;
         }
-        NSMutableDictionary<NSString *, FIRExprBridge *> *fields = [NSMutableDictionary dictionary];
+        NSMutableDictionary<NSString *, __FIRExprBridge *> *fields = [NSMutableDictionary dictionary];
         for (id em in exprMaps) {
           if (![em isKindOfClass:[NSDictionary class]]) continue;
-          FIRExprBridge *expr = [exprParser parseExpression:em error:&parseErr];
+          __FIRExprBridge *expr = [exprParser parseExpression:em error:&parseErr];
           if (!expr) {
             if (error) *error = parseErr;
             return nil;
@@ -1420,24 +1420,24 @@ static NSError *parseError(NSString *message) {
           }
           fields[alias] = expr;
         }
-        stage = [[FIRAddFieldsStageBridge alloc] initWithFields:fields];
+        stage = [[__FIRAddFieldsStageBridge alloc] initWithFields:fields];
       } else if ([stageName isEqualToString:@"remove_fields"]) {
         NSArray *paths = args[@"field_paths"];
         if (![paths isKindOfClass:[NSArray class]] || paths.count == 0) {
           if (error) *error = parseError(@"remove_fields requires field_paths");
           return nil;
         }
-        stage = [[FIRRemoveFieldsStageBridge alloc] initWithFields:paths];
+        stage = [[__FIRRemoveFieldsStageBridge alloc] initWithFields:paths];
       } else if ([stageName isEqualToString:@"distinct"]) {
         NSArray *exprMaps = args[@"expressions"];
         if (![exprMaps isKindOfClass:[NSArray class]] || exprMaps.count == 0) {
           if (error) *error = parseError(@"distinct requires at least one expression");
           return nil;
         }
-        NSMutableDictionary<NSString *, FIRExprBridge *> *fields = [NSMutableDictionary dictionary];
+        NSMutableDictionary<NSString *, __FIRExprBridge *> *fields = [NSMutableDictionary dictionary];
         for (id em in exprMaps) {
           if (![em isKindOfClass:[NSDictionary class]]) continue;
-          FIRExprBridge *expr = [exprParser parseExpression:em error:&parseErr];
+          __FIRExprBridge *expr = [exprParser parseExpression:em error:&parseErr];
           if (!expr) {
             if (error) *error = parseErr;
             return nil;
@@ -1446,19 +1446,19 @@ static NSError *parseError(NSString *message) {
           if (!key) return nil;
           fields[key] = expr;
         }
-        stage = [[FIRDistinctStageBridge alloc] initWithGroups:fields];
+        stage = [[__FIRDistinctStageBridge alloc] initWithGroups:fields];
       } else if ([stageName isEqualToString:@"replace_with"]) {
         id exprMap = args[@"expression"];
         if (![exprMap isKindOfClass:[NSDictionary class]]) {
           if (error) *error = parseError(@"replace_with requires expression");
           return nil;
         }
-        FIRExprBridge *expr = [exprParser parseExpression:exprMap error:&parseErr];
+        __FIRExprBridge *expr = [exprParser parseExpression:exprMap error:&parseErr];
         if (!expr) {
           if (error) *error = parseErr;
           return nil;
         }
-        stage = [[FIRReplaceWithStageBridge alloc] initWithExpr:expr];
+        stage = [[__FIRReplaceWithStageBridge alloc] initWithExpr:expr];
       } else if ([stageName isEqualToString:@"union"]) {
         NSArray *nestedStages = args[@"pipeline"];
         if (![nestedStages isKindOfClass:[NSArray class]] || nestedStages.count == 0) {
@@ -1472,16 +1472,16 @@ static NSError *parseError(NSString *message) {
           if (error) *error = parseErr;
           return nil;
         }
-        stage = [[FIRUnionStageBridge alloc] initWithOther:otherPipeline];
+        stage = [[__FIRUnionStageBridge alloc] initWithOther:otherPipeline];
       } else if ([stageName isEqualToString:@"sample"]) {
         NSString *type = args[@"type"];
         id val = args[@"value"];
         if ([type isEqualToString:@"percentage"]) {
           double v = [val isKindOfClass:[NSNumber class]] ? [(NSNumber *)val doubleValue] : 0;
-          stage = [[FIRSampleStageBridge alloc] initWithPercentage:v];
+          stage = [[__FIRSampleStageBridge alloc] initWithPercentage:v];
         } else {
           int v = [val isKindOfClass:[NSNumber class]] ? [(NSNumber *)val intValue] : 0;
-          stage = [[FIRSampleStageBridge alloc] initWithCount:v];
+          stage = [[__FIRSampleStageBridge alloc] initWithCount:v];
         }
       } else if ([stageName isEqualToString:@"aggregate"]) {
         stage = [self parseAggregateStageWithArgs:args exprParser:exprParser error:error];
@@ -1493,8 +1493,8 @@ static NSError *parseError(NSString *message) {
           if (error) *error = parseError(@"unnest requires expression");
           return nil;
         }
-        FIRExprBridge *fieldExpr = nil;
-        FIRExprBridge *aliasExpr = nil;
+        __FIRExprBridge *fieldExpr = nil;
+        __FIRExprBridge *aliasExpr = nil;
         NSDictionary *exprDict = (NSDictionary *)exprMap;
         NSString *aliasStr = nil;
         if ([exprDict[@"name"] isEqualToString:@"alias"]) {
@@ -1522,12 +1522,12 @@ static NSError *parseError(NSString *message) {
           }
         }
         if (!aliasStr) aliasStr = @"_";
-        aliasExpr = [[FIRFieldBridge alloc] initWithName:aliasStr];
+        aliasExpr = [[__FIRFieldBridge alloc] initWithName:aliasStr];
         NSString *indexFieldStr =
             [args[@"index_field"] isKindOfClass:[NSString class]] ? args[@"index_field"] : nil;
-        FIRExprBridge *indexFieldExpr =
-            (indexFieldStr.length > 0) ? [[FIRFieldBridge alloc] initWithName:indexFieldStr] : nil;
-        stage = [[FIRUnnestStageBridge alloc] initWithField:fieldExpr
+        __FIRExprBridge *indexFieldExpr =
+            (indexFieldStr.length > 0) ? [[__FIRFieldBridge alloc] initWithName:indexFieldStr] : nil;
+        stage = [[__FIRUnnestStageBridge alloc] initWithField:fieldExpr
                                                       alias:aliasExpr
                                                  indexField:indexFieldExpr];
       } else if ([stageName isEqualToString:@"find_nearest"]) {
@@ -1550,7 +1550,7 @@ static NSError *parseError(NSString *message) {
           if (error) *error = parseError(@"find_nearest requires 'distance_measure'");
           return nil;
         }
-        FIRFieldBridge *embeddingField = [[FIRFieldBridge alloc] initWithName:vectorFieldName];
+        __FIRFieldBridge *embeddingField = [[__FIRFieldBridge alloc] initWithName:vectorFieldName];
         NSMutableArray<NSNumber *> *numbers =
             [NSMutableArray arrayWithCapacity:vectorValueArray.count];
         for (id v in vectorValueArray) {
@@ -1563,7 +1563,7 @@ static NSError *parseError(NSString *message) {
           return nil;
         }
         FIRVectorValue *queryVector = [[FIRVectorValue alloc] initWithArray:numbers];
-        stage = [[FIRFindNearestStageBridge alloc] initWithField:embeddingField
+        stage = [[__FIRFindNearestStageBridge alloc] initWithField:embeddingField
                                                      vectorValue:queryVector
                                                  distanceMeasure:distanceMeasure
                                                            limit:limit
@@ -1586,7 +1586,7 @@ static NSError *parseError(NSString *message) {
   return stageBridges;
 }
 
-+ (FIRAggregateFunctionBridge *)aggregateFunctionFromMap:(NSDictionary *)funcMap
++ (__FIRAggregateFunctionBridge *)aggregateFunctionFromMap:(NSDictionary *)funcMap
                                               exprParser:(FLTPipelineExpressionParser *)exprParser
                                                    error:(NSError **)error {
   NSString *name = funcMap[@"name"];
@@ -1605,19 +1605,19 @@ static NSError *parseError(NSString *message) {
     iosName = @"max";
   }
   NSDictionary *argsDict = funcMap[@"args"];
-  NSMutableArray<FIRExprBridge *> *argsArray = [NSMutableArray array];
+  NSMutableArray<__FIRExprBridge *> *argsArray = [NSMutableArray array];
   if ([argsDict isKindOfClass:[NSDictionary class]]) {
     id exprMap = argsDict[@"expression"];
     if ([exprMap isKindOfClass:[NSDictionary class]]) {
-      FIRExprBridge *expr = [exprParser parseExpression:exprMap error:error];
+      __FIRExprBridge *expr = [exprParser parseExpression:exprMap error:error];
       if (!expr) return nil;
       [argsArray addObject:expr];
     }
   }
-  return [[FIRAggregateFunctionBridge alloc] initWithName:iosName Args:argsArray];
+  return [[__FIRAggregateFunctionBridge alloc] initWithName:iosName Args:argsArray];
 }
 
-+ (FIRStageBridge *)parseAggregateStageWithArgs:(NSDictionary *)args
++ (__FIRStageBridge *)parseAggregateStageWithArgs:(NSDictionary *)args
                                      exprParser:(FLTPipelineExpressionParser *)exprParser
                                           error:(NSError **)error {
   NSArray *accumulatorMaps = args[@"aggregate_functions"];
@@ -1631,7 +1631,7 @@ static NSError *parseError(NSString *message) {
                                                 error:error];
 }
 
-+ (FIRStageBridge *)parseAggregateStageWithOptionsArgs:(NSDictionary *)args
++ (__FIRStageBridge *)parseAggregateStageWithOptionsArgs:(NSDictionary *)args
                                             exprParser:(FLTPipelineExpressionParser *)exprParser
                                                  error:(NSError **)error {
   NSDictionary *stageMap = args[@"aggregate_stage"];
@@ -1654,12 +1654,12 @@ static NSError *parseError(NSString *message) {
                                                 error:error];
 }
 
-+ (FIRStageBridge *)parseAggregateStageWithAccumulatorMaps:(NSArray *)accumulatorMaps
++ (__FIRStageBridge *)parseAggregateStageWithAccumulatorMaps:(NSArray *)accumulatorMaps
                                                  groupMaps:(nullable NSArray *)groupMaps
                                                 exprParser:(FLTPipelineExpressionParser *)exprParser
                                                      error:(NSError **)error {
   NSError *parseErr = nil;
-  NSMutableDictionary<NSString *, FIRAggregateFunctionBridge *> *accumulators =
+  NSMutableDictionary<NSString *, __FIRAggregateFunctionBridge *> *accumulators =
       [NSMutableDictionary dictionary];
   for (id accMap in accumulatorMaps) {
     if (![accMap isKindOfClass:[NSDictionary class]]) continue;
@@ -1675,7 +1675,7 @@ static NSError *parseError(NSString *message) {
       if (error) *error = parseError(@"Each accumulator must have alias and aggregate_function");
       return nil;
     }
-    FIRAggregateFunctionBridge *func = [self aggregateFunctionFromMap:funcMap
+    __FIRAggregateFunctionBridge *func = [self aggregateFunctionFromMap:funcMap
                                                            exprParser:exprParser
                                                                 error:&parseErr];
     if (!func) {
@@ -1689,12 +1689,12 @@ static NSError *parseError(NSString *message) {
     return nil;
   }
 
-  NSMutableDictionary<NSString *, FIRExprBridge *> *groups = [NSMutableDictionary dictionary];
+  NSMutableDictionary<NSString *, __FIRExprBridge *> *groups = [NSMutableDictionary dictionary];
   if ([groupMaps isKindOfClass:[NSArray class]] && groupMaps.count > 0) {
     for (NSUInteger g = 0; g < groupMaps.count; g++) {
       id gm = groupMaps[g];
       if (![gm isKindOfClass:[NSDictionary class]]) continue;
-      FIRExprBridge *expr = [exprParser parseExpression:gm error:&parseErr];
+      __FIRExprBridge *expr = [exprParser parseExpression:gm error:&parseErr];
       if (!expr) continue;
       NSError *groupKeyError = nil;
       NSString *groupKey = [self keyForExpressionMap:gm error:&groupKeyError];
@@ -1710,7 +1710,7 @@ static NSError *parseError(NSString *message) {
     }
   }
 
-  return [[FIRAggregateStageBridge alloc] initWithAccumulators:accumulators groups:groups];
+  return [[__FIRAggregateStageBridge alloc] initWithAccumulators:accumulators groups:groups];
 }
 
 + (void)executePipelineWithFirestore:(FIRFirestore *)firestore
@@ -1724,7 +1724,7 @@ static NSError *parseError(NSString *message) {
   }
 
   NSError *parseErr = nil;
-  NSArray<FIRStageBridge *> *stageBridges = [self parseStagesWithFirestore:firestore
+  NSArray<__FIRStageBridge *> *stageBridges = [self parseStagesWithFirestore:firestore
                                                                     stages:stages
                                                                      error:&parseErr];
   if (!stageBridges) {
@@ -1732,7 +1732,7 @@ static NSError *parseError(NSString *message) {
     return;
   }
 
-  FIRPipelineBridge *pipeline = [[FIRPipelineBridge alloc] initWithStages:stageBridges
+  __FIRPipelineBridge *pipeline = [[__FIRPipelineBridge alloc] initWithStages:stageBridges
                                                                        db:firestore];
   [pipeline executeWithCompletion:^(id snapshot, NSError *execError) {
     if (execError) {
@@ -1746,11 +1746,11 @@ static NSError *parseError(NSString *message) {
 + (id)buildPipelineWithFirestore:(FIRFirestore *)firestore
                           stages:(NSArray<NSDictionary<NSString *, id> *> *)stages
                            error:(NSError **)error {
-  NSArray<FIRStageBridge *> *stageBridges = [self parseStagesWithFirestore:firestore
+  NSArray<__FIRStageBridge *> *stageBridges = [self parseStagesWithFirestore:firestore
                                                                     stages:stages
                                                                      error:error];
   if (!stageBridges) return nil;
-  return [[FIRPipelineBridge alloc] initWithStages:stageBridges db:firestore];
+  return [[__FIRPipelineBridge alloc] initWithStages:stageBridges db:firestore];
 }
 
 @end
