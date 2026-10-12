@@ -28,14 +28,12 @@ void main() {
       handleMethodCall((call) async {
         log.add(call);
         switch (call.method) {
-          case 'Messaging#deleteToken':
           case 'Messaging#register':
           case 'Messaging#unregister':
           case 'Messaging#subscribeToTopic':
           case 'Messaging#unsubscribeFromTopic':
             return null;
           case 'Messaging#getAPNSToken':
-          case 'Messaging#getToken':
             return {'token': 'test_token'};
           case 'Messaging#hasPermission':
           case 'Messaging#requestPermission':
@@ -127,18 +125,6 @@ void main() {
       expect(messaging.isAutoInitEnabled, isTrue);
     });
 
-    test('deleteToken', () async {
-      await messaging.deleteToken();
-
-      // check native method was called
-      expect(log, <Matcher>[
-        isMethodCall(
-          'Messaging#deleteToken',
-          arguments: <String, dynamic>{'appName': defaultFirebaseAppName},
-        ),
-      ]);
-    });
-
     test('getAPNSToken', () async {
       // not applicable to android
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
@@ -148,18 +134,6 @@ void main() {
       expect(log, <Matcher>[
         isMethodCall(
           'Messaging#getAPNSToken',
-          arguments: <String, dynamic>{'appName': defaultFirebaseAppName},
-        ),
-      ]);
-    });
-
-    test('getToken', () async {
-      await messaging.getToken();
-
-      // check native method was called
-      expect(log, <Matcher>[
-        isMethodCall(
-          'Messaging#getToken',
           arguments: <String, dynamic>{'appName': defaultFirebaseAppName},
         ),
       ]);
@@ -182,30 +156,28 @@ void main() {
       ]);
     });
 
-    test(
-        'getNotificationSettings returns notDetermined when authorizationStatus is -1',
-        () async {
+    test('getNotificationSettings returns notDetermined when authorizationStatus is -1', () async {
       // Override the method handler to return notDetermined (-1)
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(MethodChannelFirebaseMessaging.channel, (
-        call,
-      ) async {
-        log.add(call);
-        if (call.method == 'Messaging#getNotificationSettings') {
-          return {
-            'authorizationStatus': -1,
-            'alert': -1,
-            'announcement': -1,
-            'badge': -1,
-            'carPlay': -1,
-            'criticalAlert': -1,
-            'provisional': -1,
-            'sound': -1,
-            'providesAppNotificationSettings': -1,
-          };
-        }
-        return <String, dynamic>{};
-      });
+            call,
+          ) async {
+            log.add(call);
+            if (call.method == 'Messaging#getNotificationSettings') {
+              return {
+                'authorizationStatus': -1,
+                'alert': -1,
+                'announcement': -1,
+                'badge': -1,
+                'carPlay': -1,
+                'criticalAlert': -1,
+                'provisional': -1,
+                'sound': -1,
+                'providesAppNotificationSettings': -1,
+              };
+            }
+            return <String, dynamic>{};
+          });
 
       final settings = await messaging.getNotificationSettings();
       expect(
@@ -217,14 +189,12 @@ void main() {
       handleMethodCall((call) async {
         log.add(call);
         switch (call.method) {
-          case 'Messaging#deleteToken':
           case 'Messaging#register':
           case 'Messaging#unregister':
           case 'Messaging#subscribeToTopic':
           case 'Messaging#unsubscribeFromTopic':
             return null;
           case 'Messaging#getAPNSToken':
-          case 'Messaging#getToken':
             return {'token': 'test_token'};
           case 'Messaging#hasPermission':
           case 'Messaging#requestPermission':
@@ -250,29 +220,27 @@ void main() {
       });
     });
 
-    test(
-        'getNotificationSettings returns deniedPermanently when authorizationStatus is 3',
-        () async {
+    test('getNotificationSettings returns deniedPermanently when authorizationStatus is 3', () async {
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(MethodChannelFirebaseMessaging.channel, (
-        call,
-      ) async {
-        log.add(call);
-        if (call.method == 'Messaging#getNotificationSettings') {
-          return {
-            'authorizationStatus': 3,
-            'alert': 0,
-            'announcement': 0,
-            'badge': 0,
-            'carPlay': 0,
-            'criticalAlert': 0,
-            'provisional': 0,
-            'sound': 0,
-            'providesAppNotificationSettings': 0,
-          };
-        }
-        return <String, dynamic>{};
-      });
+            call,
+          ) async {
+            log.add(call);
+            if (call.method == 'Messaging#getNotificationSettings') {
+              return {
+                'authorizationStatus': 3,
+                'alert': 0,
+                'announcement': 0,
+                'badge': 0,
+                'carPlay': 0,
+                'criticalAlert': 0,
+                'provisional': 0,
+                'sound': 0,
+                'providesAppNotificationSettings': 0,
+              };
+            }
+            return <String, dynamic>{};
+          });
 
       final settings = await messaging.getNotificationSettings();
       expect(
@@ -284,14 +252,12 @@ void main() {
       handleMethodCall((call) async {
         log.add(call);
         switch (call.method) {
-          case 'Messaging#deleteToken':
           case 'Messaging#register':
           case 'Messaging#unregister':
           case 'Messaging#subscribeToTopic':
           case 'Messaging#unsubscribeFromTopic':
             return null;
           case 'Messaging#getAPNSToken':
-          case 'Messaging#getToken':
             return {'token': 'test_token'};
           case 'Messaging#hasPermission':
           case 'Messaging#requestPermission':
@@ -426,10 +392,6 @@ void main() {
           },
         ),
       ]);
-    });
-
-    test('onTokenRefresh', () {
-      expect(messaging.onTokenRefresh, isA<Stream<String>>());
     });
 
     test('onRegistered', () {

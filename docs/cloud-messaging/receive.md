@@ -30,7 +30,7 @@ receive message payloads using FCM:
 - The application must have opened at least once (to allow for registration with FCM).
 - On iOS, if the user swipes away the application from the app switcher, it must be manually reopened for background messages to start working again.
 - On Android, if the user force-quits the app from device settings, it must be manually reopened for messages to start working.
-- On web, you must have requested a token (using `getToken()`) with your web push certificate.
+- On web, you must have registered the app instance (using `register()`) with your web push certificate.
 
 ## Request permission to receive messages {:#permissions}
 
