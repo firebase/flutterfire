@@ -50,6 +50,45 @@ static NSError *pipelineUnavailableError(void) {
 
 #if FLT_PIPELINE_AVAILABLE
 
+// Swift Package Manager builds against Firebase Apple SDK 13, which prefixes
+// these classes with __. CocoaPods stays on 12.19.0, where the same classes
+// are unprefixed and the sort stage is FIRSorStageBridge. Package.swift sets
+// FLT_FIREBASE_SDK_13 so these aliases are skipped. Classes that were already
+// __FIR* in 12.19.0 are left alone.
+#ifndef FLT_FIREBASE_SDK_13
+@compatibility_alias __FIRExprBridge FIRExprBridge;
+@compatibility_alias __FIRFieldBridge FIRFieldBridge;
+@compatibility_alias __FIRConstantBridge FIRConstantBridge;
+@compatibility_alias __FIRFunctionExprBridge FIRFunctionExprBridge;
+@compatibility_alias __FIRAggregateFunctionBridge FIRAggregateFunctionBridge;
+@compatibility_alias __FIROrderingBridge FIROrderingBridge;
+@compatibility_alias __FIRStageBridge FIRStageBridge;
+@compatibility_alias __FIRCollectionSourceStageBridge \
+    FIRCollectionSourceStageBridge;
+@compatibility_alias __FIRDatabaseSourceStageBridge \
+    FIRDatabaseSourceStageBridge;
+@compatibility_alias __FIRCollectionGroupSourceStageBridge \
+    FIRCollectionGroupSourceStageBridge;
+@compatibility_alias __FIRDocumentsSourceStageBridge \
+    FIRDocumentsSourceStageBridge;
+@compatibility_alias __FIRWhereStageBridge FIRWhereStageBridge;
+@compatibility_alias __FIRLimitStageBridge FIRLimitStageBridge;
+@compatibility_alias __FIROffsetStageBridge FIROffsetStageBridge;
+@compatibility_alias __FIRAddFieldsStageBridge FIRAddFieldsStageBridge;
+@compatibility_alias __FIRRemoveFieldsStageBridge FIRRemoveFieldsStageBridge;
+@compatibility_alias __FIRSelectStageBridge FIRSelectStageBridge;
+@compatibility_alias __FIRDistinctStageBridge FIRDistinctStageBridge;
+@compatibility_alias __FIRAggregateStageBridge FIRAggregateStageBridge;
+@compatibility_alias __FIRFindNearestStageBridge FIRFindNearestStageBridge;
+@compatibility_alias __FIRSearchStageBridge FIRSearchStageBridge;
+@compatibility_alias __FIRSortStageBridge FIRSorStageBridge;
+@compatibility_alias __FIRReplaceWithStageBridge FIRReplaceWithStageBridge;
+@compatibility_alias __FIRSampleStageBridge FIRSampleStageBridge;
+@compatibility_alias __FIRUnionStageBridge FIRUnionStageBridge;
+@compatibility_alias __FIRUnnestStageBridge FIRUnnestStageBridge;
+@compatibility_alias __FIRPipelineBridge FIRPipelineBridge;
+#endif
+
 // Firebase iOS SDK versions differ: some expose initWithName:Args:Options:, others
 // initWithName:Args:.
 @interface __FIRFunctionExprBridge (FLTSDKCompat)
