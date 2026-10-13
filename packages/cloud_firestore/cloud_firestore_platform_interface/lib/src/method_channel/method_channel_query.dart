@@ -16,6 +16,7 @@ import 'package:flutter/services.dart';
 import 'method_channel_aggregate_query.dart';
 import 'method_channel_firestore.dart';
 import 'method_channel_query_snapshot.dart';
+import 'query_snapshot_chunk_assembler.dart';
 import 'utils/exception.dart';
 
 /// An implementation of [QueryPlatform] that uses [MethodChannel] to
@@ -161,6 +162,7 @@ class MethodChannelQuery extends QueryPlatform {
         controller; // ignore: close_sinks
 
     StreamSubscription<dynamic>? snapshotStreamSubscription;
+    final snapshotAssembler = QuerySnapshotChunkAssembler();
 
     controller = StreamController<QuerySnapshotPlatform>.broadcast(
       onListen: () async {
@@ -185,16 +187,24 @@ class MethodChannelQuery extends QueryPlatform {
         )
                 .listen(
           (snapshot) {
-            // With Pigeon 26, the native side emits the generated Pigeon class
-            // directly through the Pigeon-aware codec, so we receive a fully
-            // decoded `InternalQuerySnapshot` here (no manual decode required).
-            final result = snapshot as InternalQuerySnapshot;
-            controller.add(MethodChannelQuerySnapshot(firestore, result));
+            try {
+              final result = snapshotAssembler.add(snapshot);
+              if (result != null) {
+                controller.add(MethodChannelQuerySnapshot(firestore, result));
+              }
+            } catch (error, stackTrace) {
+              snapshotAssembler.reset();
+              controller.addError(error, stackTrace);
+            }
           },
-          onError: controller.addError,
+          onError: (Object error, StackTrace stackTrace) {
+            snapshotAssembler.reset();
+            controller.addError(error, stackTrace);
+          },
         );
       },
       onCancel: () {
+        snapshotAssembler.reset();
         snapshotStreamSubscription?.cancel();
       },
     );
