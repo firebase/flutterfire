@@ -13,7 +13,7 @@ let firebaseSdkVersion: Version = "13.0.0"
 let package = Package(
   name: "firebase_core",
   platforms: [
-    .macOS("10.15")
+    .macOS("11.0")
   ],
   products: [
     .library(name: "firebase-core", targets: ["firebase_core", "firebase_core_objc"])

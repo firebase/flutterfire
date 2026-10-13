@@ -26,7 +26,7 @@ let package = Package(
     .target(
       name: "firebase_ml_model_downloader",
       dependencies: [
-        .product(name: "FirebaseMLModelDownloader", package: "firebase-ios-sdk"),
+        .product(name: "FirebaseCore", package: "firebase-ios-sdk"),
         .product(name: "firebase-core", package: "firebase_core"),
         .product(name: "FlutterFramework", package: "FlutterFramework"),
       ],

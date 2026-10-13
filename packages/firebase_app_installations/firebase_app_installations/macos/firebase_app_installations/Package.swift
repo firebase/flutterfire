@@ -12,7 +12,7 @@ let firebaseSdkVersion: Version = "13.0.0"
 let package = Package(
   name: "firebase_app_installations",
   platforms: [
-    .macOS("10.15")
+    .macOS("11.0")
   ],
   products: [
     .library(name: "firebase-app-installations", targets: ["firebase_app_installations"])

@@ -12,7 +12,7 @@ let firebaseSdkVersion: Version = "13.0.0"
 let package = Package(
   name: "firebase_ml_model_downloader",
   platforms: [
-    .macOS("10.15")
+    .macOS("11.0")
   ],
   products: [
     .library(name: "firebase-ml-model-downloader", targets: ["firebase_ml_model_downloader"])
@@ -26,7 +26,7 @@ let package = Package(
     .target(
       name: "firebase_ml_model_downloader",
       dependencies: [
-        .product(name: "FirebaseMLModelDownloader", package: "firebase-ios-sdk"),
+        .product(name: "FirebaseCore", package: "firebase-ios-sdk"),
         .product(name: "firebase-core", package: "firebase_core"),
         .product(name: "FlutterFramework", package: "FlutterFramework"),
       ],

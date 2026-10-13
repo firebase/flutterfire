@@ -81,6 +81,9 @@ jobs:
       native-config-args: '--live-tier-plist=ml_model_downloader'
       inject-config-secrets: true
       use-firebase-emulators: false
+      # Firebase Apple SDK 13 removed FirebaseMLModelDownloader. Live tests stay
+      # on CocoaPods, which is still pinned to 12.19.0.
+      ios-spm: false
       nightly_test_mode: ${{ inputs.nightly_test_mode == true }}
     secrets:
       TESTS_E2E_FIREBASE_OPTIONS_DART: ${{ secrets.TESTS_E2E_FIREBASE_OPTIONS_DART }}
