@@ -25,9 +25,11 @@ abstract class FirebasePlugin {
   /// that the constants are synchronously available to plugins afterwards.
   static void registerConstantsForApp(
     String appName,
-    Map<dynamic, dynamic> constants,
+    Map<dynamic, dynamic>? constants,
   ) {
-    _constantsForPluginApps[appName] = constants;
+    if (constants != null) {
+      _constantsForPluginApps[appName] = constants;
+    }
   }
 
   /// Removes the constants registered for the plugins of [appName].
