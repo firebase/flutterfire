@@ -20,8 +20,9 @@ class Firebase {
   static FirebasePlatform? delegatePackingProperty;
 
   static FirebasePlatform get _delegate {
-    if (delegatePackingProperty != null) {
-      return delegatePackingProperty!;
+    final delegate = delegatePackingProperty;
+    if (delegate != null) {
+      return delegate;
     }
 
     // The platform interface cannot depend on the `MethodChannel`
