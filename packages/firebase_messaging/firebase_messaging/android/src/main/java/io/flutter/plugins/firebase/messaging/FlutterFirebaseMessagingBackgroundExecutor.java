@@ -137,7 +137,7 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
               () -> {
                 String appBundlePath = loader.findAppBundlePath();
                 AssetManager assets = ContextHolder.getApplicationContext().getAssets();
-                if (isNotRunning()) {
+                if (isNotRunning() && backgroundFlutterEngine == null) {
                   Log.i(TAG, "Creating background FlutterEngine instance.");
                   backgroundFlutterEngine =
                       new FlutterEngine(ContextHolder.getApplicationContext());
