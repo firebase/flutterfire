@@ -72,7 +72,7 @@ jobs:
       # 26.2 pin (see `reusable_e2e_ios.yaml`) is the likely fix, but one
       # variable at a time - these two rejoin SPM once the default-Xcode runs
       # prove clean. iOS SPM coverage is unaffected meanwhile: storage,
-      # database, firestore and auth still build under it.
+      # database and firestore still build under it.
       ios-spm: false
       native-config-args: '--functions-native'
       nightly_test_mode: ${{ inputs.nightly_test_mode == true }}

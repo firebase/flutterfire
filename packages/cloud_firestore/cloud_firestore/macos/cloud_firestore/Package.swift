@@ -13,7 +13,7 @@ let firebaseSdkVersion: Version = "13.0.0"
 let package = Package(
   name: "cloud_firestore",
   platforms: [
-    .macOS("10.15")
+    .macOS("11.0")
   ],
   products: [
     .library(name: "cloud-firestore", targets: ["cloud_firestore"])
@@ -39,6 +39,7 @@ let package = Package(
         .headerSearchPath("include/cloud_firestore/Public"),
         .define("LIBRARY_VERSION", to: "\"\(libraryVersion)\""),
         .define("LIBRARY_NAME", to: "\"flutter-fire-fst\""),
+        .define("FLT_FIREBASE_SDK_13"),
       ]
     )
   ]
