@@ -320,11 +320,30 @@ void main() {
           throwsA(isA<FirebaseAISdkException>()));
     });
 
-    test('parseServerMessage throws VertexAISdkException for unhandled format',
+    test('parseServerMessage returns an unknown message for unhandled format',
         () {
-      final jsonObject = {'unknown': {}};
-      expect(() => parseServerResponse(jsonObject),
-          throwsA(isA<FirebaseAISdkException>()));
+      for (final jsonObject in [
+        {'unknown': {}},
+        {
+          'voiceActivity': {
+            'type': 'ACTIVITY_START',
+            'audioOffset': '2.520s',
+          },
+        },
+      ]) {
+        final response = parseServerResponse(jsonObject);
+        expect(
+          response.message,
+          isNot(anyOf(
+            isA<LiveServerContent>(),
+            isA<LiveServerToolCall>(),
+            isA<LiveServerToolCallCancellation>(),
+            isA<LiveServerSetupComplete>(),
+            isA<GoingAwayNotice>(),
+            isA<SessionResumptionUpdate>(),
+          )),
+        );
+      }
     });
 
     test(

@@ -11,6 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+import 'dart:developer';
+
 import 'api.dart';
 import 'content.dart';
 import 'error.dart';
@@ -273,6 +275,9 @@ final class LiveGenerationConfig extends BaseGenerationConfig {
 /// This class serves as a base for different types of server messages,
 /// such as content updates, tool calls, and tool call cancellations.
 /// Subclasses should implement specific message types.
+///
+/// The server can send message types this SDK does not recognize yet, so a
+/// `switch` over [LiveServerMessage] needs a default case.
 sealed class LiveServerMessage {}
 
 /// A message indicating that the live server setup is complete.
@@ -405,6 +410,13 @@ class SessionResumptionUpdate implements LiveServerMessage {
   /// The index of the last client message that is included in the state
   /// represented by this update.
   final int? lastConsumedClientMessageIndex;
+}
+
+/// A server message this SDK does not recognize.
+///
+/// Handle it with a default case when switching over [LiveServerMessage].
+final class _UnknownLiveServerMessage implements LiveServerMessage {
+  const _UnknownLiveServerMessage();
 }
 
 /// A single response chunk received during a live content generation.
@@ -559,8 +571,8 @@ class LiveClientToolResponse {
 /// - `toolCallCancellation` messages to cancel pending function calls.
 /// - `setupComplete` messages signaling the completion of the server setup.
 ///
-/// If the JSON object does not match any of the expected formats, an
-/// [FirebaseAISdkException] is thrown.
+/// If the JSON object does not match any of the expected formats, it is
+/// returned as a [LiveServerMessage] that matches none of the public subtypes.
 ///
 /// Example:
 /// ```dart
@@ -582,7 +594,6 @@ class LiveClientToolResponse {
 ///
 /// Throws:
 /// - [FirebaseAIException]: If the JSON object contains an error message.
-/// - [FirebaseAISdkException]: If the JSON object does not match any expected format.
 ///
 /// Parameters:
 /// - [jsonObject]: The JSON object received from the live server.
@@ -669,6 +680,7 @@ LiveServerMessage _parseServerMessage(Object jsonObject) {
           sessionResumptionUpdateJson['lastConsumedClientMessageIndex'] as int?,
     );
   } else {
-    throw unhandledFormat('LiveServerMessage', json);
+    log('Ignoring unrecognized LiveServerMessage: ${json.keys}');
+    return const _UnknownLiveServerMessage();
   }
 }
