@@ -6,8 +6,10 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth_platform_interface/src/pigeon/messages.pigeon.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:firebase_auth_example/firebase_options.dart';
@@ -83,6 +85,39 @@ void main() {
           await FirebaseAuth.instance.signInAnonymously();
         });
       });
+
+      test(
+        'native auth streams forward a signed-out initial callback',
+        () async {
+          final app = await Firebase.initializeApp(
+            name: 'initial-signed-out',
+            options: DefaultFirebaseOptions.currentPlatform,
+          );
+          // Keep the app for the suite's lifetime, as in the initialization
+          // test below: other plugins may still initialize it in the background.
+          final api = FirebaseAuthHostApi();
+          final pigeonApp = AuthPigeonFirebaseApp(appName: app.name);
+          await api.useEmulator(
+            pigeonApp,
+            testEmulatorHost,
+            testEmulatorPort,
+          );
+          await api.signOut(pigeonApp);
+          for (final register in [
+            api.registerAuthStateListener,
+            api.registerIdTokenListener,
+          ]) {
+            final channelName = await register(pigeonApp);
+            final event = await EventChannel(channelName)
+                .receiveBroadcastStream()
+                .first
+                .timeout(const Duration(seconds: 5));
+            expect(event['user'], isNull);
+          }
+        },
+        skip: kIsWeb ||
+            (!Platform.isAndroid && !Platform.isIOS && !Platform.isMacOS),
+      );
 
       group('idTokenChanges()', () {
         StreamSubscription? subscription;

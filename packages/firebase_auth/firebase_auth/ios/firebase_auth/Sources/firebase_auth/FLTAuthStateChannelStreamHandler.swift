@@ -20,13 +20,15 @@ final class FLTAuthStateChannelStreamHandler: NSObject, FlutterStreamHandler {
   }
 
   func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink)
-    -> FlutterError?
-  {
+    -> FlutterError? {
     var initialAuthState = true
     handle = auth.addStateDidChangeListener { auth, user in
       if initialAuthState {
         initialAuthState = false
-        return
+        // Forward a nil first callback after sign-out before subscription.
+        if user != nil {
+          return
+        }
       }
 
       if user != nil, let currentUser = auth.currentUser {
