@@ -82,5 +82,14 @@ void main() {
         await app.setAutomaticResourceManagementEnabled(false);
       }
     });
+
+    test('Firebase.initializeApp() with demoProjectId', () async {
+      const demoProjectId = 'demo-flutterfire-e2e';
+      final app = await Firebase.initializeApp(demoProjectId: demoProjectId);
+      addTearDown(app.delete);
+
+      expect(app.name, demoProjectId);
+      expect(app.options.projectId, demoProjectId);
+    });
   });
 }
