@@ -35,6 +35,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   // to the initialNotification request
   BOOL _initialNotificationGathered;
   FLTFirebaseMethodCallResult *_initialNotificationResult;
+  BOOL _initialNotificationResolved;
 
   NSString *_initialNotificationID;
   NSString *_notificationOpenedAppID;
@@ -648,16 +649,30 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   }
 #endif
 
-  if (_initialNotification != nil &&
-      [_initialNotificationID isEqualToString:_notificationOpenedAppID]) {
-    _initialNotification = notificationDict;
-    [self initialNotificationCallback];
+  BOOL tappedInitialNotification =
+      _notificationOpenedAppID != nil &&
+      [_initialNotificationID isEqualToString:_notificationOpenedAppID];
+
+  BOOL initialNotificationResolved;
+  @synchronized(self) {
+    initialNotificationResolved = _initialNotificationResolved;
+  }
+
+  if (tappedInitialNotification && _initialNotification != nil) {
+    if (!initialNotificationResolved) {
+      _initialNotification = notificationDict;
+      [self initialNotificationCallback];
+    } else {
+      // Dart calls getInitialMessage() once, so a tap after it resolved null (the stored push
+      // launched the app in the background) must go through onMessageOpenedApp. See #18793.
+      _initialNotification = nil;
+      tappedInitialNotification = NO;
+    }
   }
 
   // We only want to handle FCM notifications and stop firing `onMessageOpenedApp()` when app is
   // coming from a terminated state.
-  if (_notificationOpenedAppID != nil &&
-      ![_initialNotificationID isEqualToString:_notificationOpenedAppID]) {
+  if (_notificationOpenedAppID != nil && !tappedInitialNotification) {
     [_channel invokeMethod:@"Messaging#onMessageOpenedApp" arguments:notificationDict];
   }
 
@@ -1419,6 +1434,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 
 - (nullable NSDictionary *)copyInitialNotification {
   @synchronized(self) {
+    _initialNotificationResolved = YES;
 #if TARGET_OS_OSX
     _missedApplicationDidFinishLaunchingNotification = NO;
 #endif
