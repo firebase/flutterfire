@@ -228,6 +228,10 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
   /// start using the index once the index entries have been written.
   ///
   /// This API is in preview mode and is subject to change.
+  @Deprecated(
+    'Use persistentCacheIndexManager()?.enableIndexAutoCreation() instead. '
+    'Manual index configuration is deprecated in the native Firebase SDKs.',
+  )
   Future<void> setIndexConfiguration(String indexConfiguration) {
     throw UnimplementedError('setIndexConfiguration() is not implemented');
   }

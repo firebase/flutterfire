@@ -277,7 +277,7 @@ void runInstanceTests() {
             ],
           });
 
-          // ignore: experimental_member_use
+          // ignore: deprecated_member_use, experimental_member_use
           await firestore.setIndexConfigurationFromJSON(json);
         },
         skip: defaultTargetPlatform == TargetPlatform.windows,
