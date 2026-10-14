@@ -87,7 +87,6 @@ void updatePluginPackageSwiftVersions(
 void updateLibraryVersionPureSwiftPlugins() {
   // Packages that require updating library versions
   const packages = [
-    'firebase_ml_model_downloader',
     'firebase_app_installations',
     'cloud_functions',
     'firebase_remote_config',

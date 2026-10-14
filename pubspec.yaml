@@ -52,9 +52,6 @@ workspace:
   - packages/firebase_messaging/firebase_messaging/example
   - packages/firebase_messaging/firebase_messaging_platform_interface
   - packages/firebase_messaging/firebase_messaging_web
-  - packages/firebase_ml_model_downloader/firebase_ml_model_downloader
-  - packages/firebase_ml_model_downloader/firebase_ml_model_downloader/example
-  - packages/firebase_ml_model_downloader/firebase_ml_model_downloader_platform_interface
   - packages/firebase_performance/firebase_performance
   - packages/firebase_performance/firebase_performance/example
   - packages/firebase_performance/firebase_performance_platform_interface
@@ -299,13 +296,6 @@ melos:
         flutter test integration_test/e2e_test.dart
       description: |
         Run all e2e tests for firebase_messaging.
-
-    test:e2e:firebase_ml_model_downloader:
-      run: |
-        cd packages/firebase_ml_model_downloader/firebase_ml_model_downloader/example
-        flutter test integration_test/e2e_test.dart
-      description: |
-        Run all e2e tests for firebase_ml_model_downloader.
 
     test:e2e:firebase_auth:
       run: |

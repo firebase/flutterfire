@@ -190,7 +190,7 @@ jobs:
     runs-on: xcode-27
     timeout-minutes: 35
     env:
-      FLUTTER_DEPENDENCIES: "cloud_firestore firebase_remote_config cloud_functions firebase_database firebase_auth firebase_storage firebase_analytics firebase_messaging firebase_app_check firebase_in_app_messaging firebase_performance firebase_crashlytics firebase_ml_model_downloader firebase_app_installations firebase_ai"
+      FLUTTER_DEPENDENCIES: "cloud_firestore firebase_remote_config cloud_functions firebase_database firebase_auth firebase_storage firebase_analytics firebase_messaging firebase_app_check firebase_in_app_messaging firebase_performance firebase_crashlytics firebase_app_installations firebase_ai"
       PR_HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -219,7 +219,7 @@ jobs:
     runs-on: xcode-27
     timeout-minutes: 35
     env:
-      FLUTTER_DEPENDENCIES: "cloud_firestore firebase_remote_config cloud_functions firebase_database firebase_auth firebase_storage firebase_analytics firebase_messaging firebase_app_check firebase_in_app_messaging firebase_performance firebase_crashlytics firebase_ml_model_downloader firebase_app_installations firebase_ai"
+      FLUTTER_DEPENDENCIES: "cloud_firestore firebase_remote_config cloud_functions firebase_database firebase_auth firebase_storage firebase_analytics firebase_messaging firebase_app_check firebase_in_app_messaging firebase_performance firebase_crashlytics firebase_app_installations firebase_ai"
       PR_HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
