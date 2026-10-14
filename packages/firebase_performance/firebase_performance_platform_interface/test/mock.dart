@@ -2,7 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:firebase_core_platform_interface/test.dart';
 import 'package:firebase_performance_platform_interface/src/method_channel/method_channel_firebase_performance.dart';
 import 'package:flutter/services.dart';
@@ -26,17 +25,3 @@ void handleMethodCall(MethodCallCallback methodCallCallback) =>
             (call) async {
       return await methodCallCallback(call);
     });
-
-Future<void> testExceptionHandling(
-  String type,
-  void Function() testMethod,
-) async {
-  await expectLater(
-    () async => testMethod(),
-    anyOf([
-      completes,
-      if (type == 'PLATFORM' || type == 'EXCEPTION')
-        throwsA(isA<FirebaseException>()),
-    ]),
-  );
-}
