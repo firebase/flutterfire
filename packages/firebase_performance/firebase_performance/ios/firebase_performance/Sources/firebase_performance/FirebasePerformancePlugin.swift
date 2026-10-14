@@ -19,8 +19,6 @@ import FirebasePerformance
 // swift-format-ignore: AlwaysUseLowerCamelCase
 let FirebasePerformanceChannelName = "plugins.flutter.io/firebase_performance"
 
-extension FlutterError: Error {}
-
 public class FirebasePerformancePlugin: NSObject, FlutterPlugin, FLTFirebasePluginProtocol,
   FirebasePerformanceHostApi
 {

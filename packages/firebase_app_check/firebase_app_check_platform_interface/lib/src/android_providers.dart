@@ -34,8 +34,10 @@ class AndroidPlayIntegrityProvider extends AndroidAppCheckProvider {
 }
 
 /// reCAPTCHA provider for Android.
-///
-/// The site key is retrieved automatically from google-services.json.
 class AndroidReCaptchaProvider extends AndroidAppCheckProvider {
-  const AndroidReCaptchaProvider() : super('recaptcha');
+  /// Creates an Android reCAPTCHA provider with a required [siteKey].
+  const AndroidReCaptchaProvider(this.siteKey) : super('recaptcha');
+
+  /// The reCAPTCHA site key for this provider.
+  final String siteKey;
 }

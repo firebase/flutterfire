@@ -23,8 +23,7 @@ class AuthCredential {
   final String providerId;
 
   /// The authentication sign in method for the credential. For example,
-  /// 'password', or 'emailLink'. This corresponds to the sign-in method
-  /// identifier returned in [fetchSignInMethodsForEmail].
+  /// 'password', or 'emailLink'.
   final String signInMethod;
 
   /// A token used to identify the AuthCredential on native platforms.

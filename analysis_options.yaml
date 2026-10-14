@@ -12,6 +12,13 @@ analyzer:
     included_file_warning: ignore
   exclude:
     - packages/**/example/lib/generated_plugin_registrant.dart
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
 
 linter:
   rules:

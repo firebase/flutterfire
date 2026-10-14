@@ -55,11 +55,11 @@ final class Content {
   /// Return a [Content] with [FunctionResponse].
   static Content functionResponse(String name, Map<String, Object?> response,
           {String? id}) =>
-      Content('function', [FunctionResponse(name, response, id: id)]);
+      Content('user', [FunctionResponse(name, response, id: id)]);
 
   /// Return a [Content] with multiple [FunctionResponse].
   static Content functionResponses(Iterable<FunctionResponse> responses) =>
-      Content('function', responses.toList());
+      Content('user', responses.toList());
 
   /// Return a [Content] with [TextPart] of system instruction.
   static Content system(String instructions) =>
@@ -67,7 +67,7 @@ final class Content {
 
   /// Convert the [Content] to json format.
   Map<String, Object?> toJson() => {
-        if (role case final role?) 'role': role,
+        if (role case final role?) 'role': role == 'function' ? 'user' : role,
         'parts': parts.map((p) {
           return p.toJson();
         }).toList(),
@@ -174,6 +174,12 @@ Part parsePart(Object? jsonObject) {
   return switch (jsonObject) {
     {'text': final String text} => TextPart._(text,
         isThought: isThought, thoughtSignature: thoughtSignature),
+    {
+      'fileData': {
+        'fileUri': final String fileUri,
+        'mimeType': final String mimeType,
+      }
+    } ||
     {
       'file_data': {
         'file_uri': final String fileUri,
@@ -304,7 +310,8 @@ final class InlineDataPart extends Part {
         );
 
   /// File type of the [InlineDataPart].
-  /// https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/send-multimodal-prompts#media_requirements
+  ///
+  /// Can find details in [FirebaseAIMimeTypes]
   final String mimeType;
 
   /// Data contents in bytes.
@@ -485,7 +492,8 @@ final class FileData extends Part {
         );
 
   /// File type of the [FileData].
-  /// https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/send-multimodal-prompts#media_requirements
+  ///
+  /// Can find details in [FirebaseAIMimeTypes]
   final String mimeType;
 
   /// The gs link for Firebase Storage reference

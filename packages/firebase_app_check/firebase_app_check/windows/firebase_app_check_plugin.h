@@ -43,10 +43,16 @@ class FirebaseAppCheckPlugin : public flutter::Plugin,
   void Activate(
       const std::string& app_name, const std::string* android_provider,
       const std::string* apple_provider, const std::string* debug_token,
+      const std::string* recaptcha_site_key,
       std::function<void(std::optional<FlutterError> reply)> result) override;
   void GetToken(const std::string& app_name, bool force_refresh,
                 std::function<void(ErrorOr<std::optional<std::string>> reply)>
                     result) override;
+  void GetTokenResult(
+      const std::string& app_name, bool force_refresh,
+      std::function<
+          void(ErrorOr<std::optional<InternalAppCheckTokenResult>> reply)>
+          result) override;
   void SetTokenAutoRefreshEnabled(
       const std::string& app_name, bool is_token_auto_refresh_enabled,
       std::function<void(std::optional<FlutterError> reply)> result) override;

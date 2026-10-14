@@ -10,6 +10,7 @@ import 'package:intl/intl.dart';
 import 'package:melos/melos.dart';
 
 import 'bom_analysis.dart';
+import 'firebase_sdk_version_spm.dart';
 
 const packagesDir = 'packages';
 const versionsFile = 'VERSIONS.md';
@@ -73,6 +74,7 @@ void main(List<String> arguments) async {
       'firebase_sdk': {
         'android': androidSdkVersion,
         'ios': iosSdkVersion,
+        'ios_spm': firebaseSpmSdkVersion,
         'web': webSdkVersion,
         'windows': windowsSdkVersion,
       },
@@ -100,6 +102,7 @@ void main(List<String> arguments) async {
     date,
     androidSdkVersion,
     iosSdkVersion,
+    firebaseSpmSdkVersion,
     webSdkVersion,
     windowsSdkVersion,
   );
@@ -145,6 +148,7 @@ Future<void> appendStaticText(
   String date,
   String androidSdkVersion,
   String iosSdkVersion,
+  String iosSpmSdkVersion,
   String webSdkVersion,
   String windowsSdkVersion,
 ) async {
@@ -185,7 +189,10 @@ Future<void> appendStaticText(
     '| Android SDK | $androidSdkVersion | [Release Notes](https://firebase.google.com/support/release-notes/android) |',
   );
   sink.writeln(
-    '| iOS SDK | $iosSdkVersion | [Release Notes](https://firebase.google.com/support/release-notes/ios) |',
+    '| iOS SDK (CocoaPods) | $iosSdkVersion | [Release Notes](https://firebase.google.com/support/release-notes/ios) |',
+  );
+  sink.writeln(
+    '| iOS SDK (Swift Package Manager) | $iosSpmSdkVersion | [Release Notes](https://firebase.google.com/support/release-notes/ios) |',
   );
   sink.writeln(
     '| Web SDK | $webSdkVersion | [Release Notes](https://firebase.google.com/support/release-notes/js) |',

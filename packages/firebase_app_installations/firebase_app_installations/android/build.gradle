@@ -49,6 +49,11 @@ android {
       targetCompatibility project.ext.javaVersion
     }
 
+    sourceSets {
+      main.java.srcDirs += "src/main/kotlin"
+      test.java.srcDirs += "src/test/kotlin"
+    }
+
     buildFeatures {
         buildConfig true
     }
@@ -62,6 +67,12 @@ android {
 
 dependencies {
   implementation 'androidx.annotation:annotation:1.7.0'
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.fromTarget(project.ext.javaVersion.toString())
+    }
 }
 
 apply from: file("./user-agent.gradle")

@@ -25,12 +25,7 @@ import 'api.dart';
 import 'client.dart';
 import 'content.dart';
 import 'developer/api.dart';
-import 'error.dart';
 import 'firebaseai_version.dart';
-import 'imagen/imagen_api.dart';
-import 'imagen/imagen_content.dart';
-import 'imagen/imagen_edit.dart';
-import 'imagen/imagen_reference.dart';
 import 'live_api.dart';
 import 'live_session.dart';
 import 'platform_header_helper.dart';
@@ -38,10 +33,8 @@ import 'server_template/template_tool.dart';
 import 'tool.dart';
 
 part 'generative_model.dart';
-part 'imagen/imagen_model.dart';
 part 'live_model.dart';
 part 'server_template/template_generative_model.dart';
-part 'server_template/template_imagen_model.dart';
 
 /// [Task] enum class for [GenerativeModel] to make request.
 enum Task {
@@ -77,13 +70,13 @@ abstract interface class _ModelUri {
   ({String prefix, String name}) get model;
 }
 
-final class _VertexUri implements _ModelUri {
-  _VertexUri(
+final class _AgentPlatformUri implements _ModelUri {
+  _AgentPlatformUri(
       {required String model,
       required String location,
       required FirebaseApp app})
       : model = _normalizeModelName(model),
-        _projectUri = _vertexUri(app, location);
+        _projectUri = _agentPlatformUri(app, location);
 
   static const _baseAuthority = 'firebasevertexai.googleapis.com';
   static const _apiVersion = 'v1beta';
@@ -98,7 +91,7 @@ final class _VertexUri implements _ModelUri {
     return (prefix: parts.first, name: parts.skip(1).join('/'));
   }
 
-  static Uri _vertexUri(FirebaseApp app, String location) {
+  static Uri _agentPlatformUri(FirebaseApp app, String location) {
     var projectId = app.options.projectId;
     return Uri.https(
       _baseAuthority,
@@ -174,10 +167,11 @@ abstract interface class _TemplateUri {
   String templateName(String templateId);
 }
 
-final class _TemplateVertexUri implements _TemplateUri {
-  _TemplateVertexUri({required String location, required FirebaseApp app})
-      : _templateUri = _vertexTemplateUri(app, location),
-        _templateName = _vertexTemplateName(app, location);
+final class _TemplateAgentPlatformUri implements _TemplateUri {
+  _TemplateAgentPlatformUri(
+      {required String location, required FirebaseApp app})
+      : _templateUri = _agentPlatformTemplateUri(app, location),
+        _templateName = _agentPlatformTemplateName(app, location);
 
   static const _baseAuthority = 'firebasevertexai.googleapis.com';
   static const _apiVersion = 'v1beta';
@@ -185,7 +179,7 @@ final class _TemplateVertexUri implements _TemplateUri {
   final Uri _templateUri;
   final String _templateName;
 
-  static Uri _vertexTemplateUri(FirebaseApp app, String location) {
+  static Uri _agentPlatformTemplateUri(FirebaseApp app, String location) {
     var projectId = app.options.projectId;
     return Uri.https(
       _baseAuthority,
@@ -193,7 +187,7 @@ final class _TemplateVertexUri implements _TemplateUri {
     );
   }
 
-  static String _vertexTemplateName(FirebaseApp app, String location) {
+  static String _agentPlatformTemplateName(FirebaseApp app, String location) {
     var projectId = app.options.projectId;
     return 'projects/$projectId/locations/$location';
   }

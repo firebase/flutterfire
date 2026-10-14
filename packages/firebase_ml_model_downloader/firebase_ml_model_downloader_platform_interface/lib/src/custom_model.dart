@@ -12,8 +12,18 @@ import 'dart:io';
 /// In the case where an update is available, after the updated model file is
 /// fully downloaded, the original model file will be removed once it is safe
 /// to do so.
+@Deprecated(
+  'Firebase ML is deprecated and will shut down on June 15, 2027. '
+  'Migrate hosted custom models to another solution, such as Cloud Storage '
+  'for Firebase. See https://firebase.google.com/docs/ml/migrate-to-cloud-storage.',
+)
 class FirebaseCustomModel {
   /// Creates a new [FirebaseCustomModel] instance.
+  @Deprecated(
+    'Firebase ML is deprecated and will shut down on June 15, 2027. '
+    'Migrate hosted custom models to another solution, such as Cloud Storage '
+    'for Firebase. See https://firebase.google.com/docs/ml/migrate-to-cloud-storage.',
+  )
   FirebaseCustomModel({
     required this.file,
     required this.size,

@@ -38,11 +38,20 @@ To use the debug provider while running your app in a simulator interactively
       await Firebase.initializeApp();
       await FirebaseAppCheck.instance.activate(
       // Set providerApple to use AppleDebugProvider
-      providerApple: AppleDebugProvider('123a4567-b89c-12d3-e456-789012345678'),
+      providerApple: AppleDebugProvider(
+        debugToken: '123a4567-b89c-12d3-e456-789012345678',
+      ),
       );
       runApp(App());
     }
     ```
+
+    If your iOS `AppDelegate` calls `FirebaseApp.configure()`, Dart
+    `AppleDebugProvider` is ignored on **physical devices**. Remove the native
+    `configure()` call, or install an `AppCheckProviderFactory` that returns
+    `AppCheckDebugProvider` *before* `configure()`. See
+    [Get started using App Check in Flutter apps](/docs/app-check/flutter/default-providers#native-configure)
+    and [flutterfire#18613](https://github.com/firebase/flutterfire/issues/18613).
 
 1.  Enable debug logging in your Xcode project (v11.0 or newer):
 
@@ -83,9 +92,11 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await FirebaseAppCheck.instance.activate(
-    webProvider: ReCaptchaV3Provider('recaptcha-v3-site-key'),
+    providerWeb: ReCaptchaV3Provider('recaptcha-v3-site-key'),
     // Set providerAndroid to use AndroidDebugProvider
-    providerAndroid: AndroidDebugProvider('123a4567-b89c-12d3-e456-789012345678'),
+    providerAndroid: AndroidDebugProvider(
+      debugToken: '123a4567-b89c-12d3-e456-789012345678',
+    ),
   );
   runApp(App());
 }
@@ -167,11 +178,15 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await FirebaseAppCheck.instance.activate(
-    webProvider: ReCaptchaV3Provider('recaptcha-v3-site-key'),
+    providerWeb: ReCaptchaV3Provider('recaptcha-v3-site-key'),
     // Set providerAndroid with debug token
-    providerAndroid: AndroidDebugProvider('123a4567-b89c-12d3-e456-789012345678'),
+    providerAndroid: AndroidDebugProvider(
+      debugToken: '123a4567-b89c-12d3-e456-789012345678',
+    ),
     // Set providerApple with debug token
-    providerApple: AppleDebugProvider('123a4567-b89c-12d3-e456-789012345678'),
+    providerApple: AppleDebugProvider(
+      debugToken: '123a4567-b89c-12d3-e456-789012345678',
+    ),
   );
   runApp(App());
 }

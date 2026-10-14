@@ -1,0 +1,106 @@
+name: e2e-storage
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-storage
+  cancel-in-progress: true
+
+# Emulator tier: every job runs under `firebase emulators:exec`, so no live
+# project credentials are needed.
+#
+# Thin caller: one job per platform this product supports, each delegating
+# to the matching `reusable_e2e_<platform>.yaml`. Platforms the product does
+# not support have no job here, so they render no check at all.
+# Path-filtered so it only runs when this product or its dependencies change;
+# the nightly workflow_call still runs it unconditionally.
+on:
+  pull_request:
+    paths:
+      - 'packages/firebase_storage/**'
+      - 'packages/firebase_core/**'
+      - '.github/workflows/e2e_tests_storage.yaml'
+      - '.github/workflows/reusable_e2e_*.yaml'
+      - '.github/actions/setup-flutterfire/**'
+      - '.github/workflows/scripts/**'
+  push:
+    branches:
+      - main
+    paths:
+      - 'packages/firebase_storage/**'
+      - 'packages/firebase_core/**'
+      - '.github/workflows/e2e_tests_storage.yaml'
+      - '.github/workflows/reusable_e2e_*.yaml'
+      - '.github/actions/setup-flutterfire/**'
+      - '.github/workflows/scripts/**'
+  workflow_call:
+    inputs:
+      nightly_test_mode:
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  changes:
+    uses: ./.github/workflows/reusable_e2e_changes.yaml
+    with:
+      package-path: 'packages/firebase_storage/firebase_storage'
+      platform-interface-package: 'firebase_storage_platform_interface'
+      web-package: 'firebase_storage_web'
+
+  android:
+    needs: changes
+    if: needs.changes.outputs.android == 'true'
+    uses: ./.github/workflows/reusable_e2e_android.yaml
+    with:
+      package-path: 'packages/firebase_storage/firebase_storage'
+      package-scope: 'firebase_storage*'
+      native-config-args: '--storage-native'
+      storage-emulator-debug: true
+      nightly_test_mode: ${{ inputs.nightly_test_mode == true }}
+
+  ios:
+    needs: changes
+    if: needs.changes.outputs.ios == 'true'
+    uses: ./.github/workflows/reusable_e2e_ios.yaml
+    with:
+      package-path: 'packages/firebase_storage/firebase_storage'
+      package-scope: 'firebase_storage*'
+      cache-key-suffix: 'storage'
+      native-config-args: '--storage-native'
+      storage-emulator-debug: true
+      nightly_test_mode: ${{ inputs.nightly_test_mode == true }}
+
+  macos:
+    needs: changes
+    if: needs.changes.outputs.macos == 'true'
+    uses: ./.github/workflows/reusable_e2e_macos.yaml
+    with:
+      package-path: 'packages/firebase_storage/firebase_storage'
+      package-scope: 'firebase_storage*'
+      cache-key-suffix: 'storage'
+      native-config-args: '--storage-native'
+      storage-emulator-debug: true
+      nightly_test_mode: ${{ inputs.nightly_test_mode == true }}
+
+  web:
+    needs: changes
+    if: needs.changes.outputs.web == 'true'
+    uses: ./.github/workflows/reusable_e2e_web.yaml
+    with:
+      package-path: 'packages/firebase_storage/firebase_storage'
+      package-scope: 'firebase_storage*'
+      native-config-args: '--storage-native'
+      storage-emulator-debug: true
+      nightly_test_mode: ${{ inputs.nightly_test_mode == true }}
+
+  windows:
+    needs: changes
+    if: needs.changes.outputs.windows == 'true'
+    uses: ./.github/workflows/reusable_e2e_windows.yaml
+    with:
+      package-path: 'packages/firebase_storage/firebase_storage'
+      package-scope: 'firebase_storage*'
+      native-config-args: '--storage-native'
+      storage-emulator-debug: true
+      nightly_test_mode: ${{ inputs.nightly_test_mode == true }}

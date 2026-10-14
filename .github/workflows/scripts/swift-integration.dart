@@ -7,6 +7,8 @@ import 'dart:convert';
 
 final debugMode = false;
 
+const _allPlatforms = ['ios', 'macos'];
+
 void main(List<String> arguments) async {
   if (debugMode) {
     print('[DEBUG] main: Starting swift-integration script');
@@ -14,8 +16,34 @@ void main(List<String> arguments) async {
     print('[DEBUG] Number of arguments: ${arguments.length}');
   }
 
-  if (arguments.isEmpty) {
+  // `--platform=<ios|macos>` narrows the run to one platform so CI can build
+  // the two in parallel jobs. Omitting it builds both, in order, as before.
+  final platforms = <String>[];
+  final packages = <String>[];
+  for (final argument in arguments) {
+    if (argument.startsWith('--platform=')) {
+      final platform = argument.substring('--platform='.length);
+      if (!_allPlatforms.contains(platform)) {
+        throw Exception(
+          'Unknown --platform value "$platform". '
+          'Expected one of: ${_allPlatforms.join(', ')}.',
+        );
+      }
+      platforms.add(platform);
+    } else {
+      packages.add(argument);
+    }
+  }
+  if (platforms.isEmpty) {
+    platforms.addAll(_allPlatforms);
+  }
+
+  if (packages.isEmpty) {
     throw Exception('No FlutterFire dependency arguments provided.');
+  }
+
+  if (debugMode) {
+    print('[DEBUG] Platforms to build: ${platforms.join(', ')}');
   }
 
   // Get the current git branch from GitHub Actions environment or fallback to git command
@@ -29,23 +57,20 @@ void main(List<String> arguments) async {
   }
 
   // Update all Package.swift files to use branch dependencies
-  await updatePackageSwiftFiles(currentBranch, arguments);
+  await updatePackageSwiftFiles(currentBranch, packages);
 
   if (debugMode) {
     print('[DEBUG] Package.swift files updated, starting builds');
   }
 
-  final plugins = arguments.join(',');
+  final plugins = packages.join(',');
 
-  if (debugMode) {
-    print('[DEBUG] Building iOS first...');
+  for (final platform in platforms) {
+    if (debugMode) {
+      print('[DEBUG] Building $platform...');
+    }
+    await buildSwiftExampleApp(platform, plugins);
   }
-  await buildSwiftExampleApp('ios', plugins);
-
-  if (debugMode) {
-    print('[DEBUG] iOS build completed, now building macOS...');
-  }
-  await buildSwiftExampleApp('macos', plugins);
 
   if (debugMode) {
     print('[DEBUG] main: All builds completed successfully');

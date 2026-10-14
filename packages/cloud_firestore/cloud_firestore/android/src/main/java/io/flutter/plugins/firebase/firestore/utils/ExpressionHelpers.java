@@ -98,6 +98,84 @@ class ExpressionHelpers {
   }
 
   /**
+   * Parses a "nor" expression from a list of expression maps. Uses Expression.nor() with varargs
+   * signature.
+   */
+  @SuppressWarnings("unchecked")
+  static BooleanExpression parseNorExpression(
+      @NonNull List<Map<String, Object>> exprMaps, @NonNull ExpressionParsers parser) {
+    if (exprMaps == null || exprMaps.isEmpty()) {
+      throw new IllegalArgumentException("'nor' requires at least one expression");
+    }
+
+    BooleanExpression first = parser.parseBooleanExpression(exprMaps.get(0));
+    if (exprMaps.size() == 1) {
+      return first;
+    }
+
+    BooleanExpression[] rest = new BooleanExpression[exprMaps.size() - 1];
+    for (int i = 1; i < exprMaps.size(); i++) {
+      rest[i - 1] = parser.parseBooleanExpression(exprMaps.get(i));
+    }
+    return Expression.nor(first, rest);
+  }
+
+  /**
+   * Parses a "coalesce" expression from a list of expression maps. Uses Expression.coalesce() with
+   * varargs.
+   */
+  @SuppressWarnings("unchecked")
+  static Expression parseCoalesceExpression(
+      @NonNull List<Map<String, Object>> exprMaps, @NonNull ExpressionParsers parser) {
+    if (exprMaps == null || exprMaps.size() < 2) {
+      throw new IllegalArgumentException("'coalesce' requires at least two expressions");
+    }
+
+    Expression first = parser.parseExpression(exprMaps.get(0));
+    Expression second = parser.parseExpression(exprMaps.get(1));
+    if (exprMaps.size() == 2) {
+      return Expression.coalesce(first, second);
+    }
+
+    Object[] rest = new Object[exprMaps.size() - 2];
+    for (int i = 2; i < exprMaps.size(); i++) {
+      rest[i - 2] = parser.parseExpression(exprMaps.get(i));
+    }
+    return Expression.coalesce(first, second, rest);
+  }
+
+  /**
+   * Parses a "switch_on" expression: alternating BooleanExpression condition and Expression result,
+   * with an optional trailing default Expression when the list length is odd.
+   */
+  @SuppressWarnings("unchecked")
+  static Expression parseSwitchOnExpression(
+      @NonNull List<Map<String, Object>> exprMaps, @NonNull ExpressionParsers parser) {
+    int n = exprMaps.size();
+    if (n < 2) {
+      throw new IllegalArgumentException("'switch_on' requires at least two expressions");
+    }
+
+    BooleanExpression first = parser.parseBooleanExpression(exprMaps.get(0));
+    Expression second = parser.parseExpression(exprMaps.get(1));
+    if (n == 2) {
+      return Expression.switchOn(first, second);
+    }
+
+    Object[] tail = new Object[n - 2];
+    for (int i = 2; i < n; i++) {
+      if (n % 2 == 1 && i == n - 1) {
+        tail[i - 2] = parser.parseExpression(exprMaps.get(i));
+      } else if (i % 2 == 0) {
+        tail[i - 2] = parser.parseBooleanExpression(exprMaps.get(i));
+      } else {
+        tail[i - 2] = parser.parseExpression(exprMaps.get(i));
+      }
+    }
+    return Expression.switchOn(first, second, tail);
+  }
+
+  /**
    * Parses a constant value based on its type to match Android SDK constant() overloads. Valid
    * types: String, Number, Boolean, Date, Timestamp, GeoPoint, byte[], Blob, DocumentReference,
    * VectorValue

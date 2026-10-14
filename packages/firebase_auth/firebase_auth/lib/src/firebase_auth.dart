@@ -397,9 +397,15 @@ class FirebaseAuth extends FirebasePlugin implements FirebaseService {
   ///   Key Sharing capabilities must be enabled for your app via XCode (Project
   ///   settings > Capabilities). To learn more, visit the
   ///   [Apple documentation](https://developer.apple.com/documentation/security/keychain_services/keychain_items/sharing_access_to_keychain_items_among_a_collection_of_apps).
+  ///
+  /// [migrateCurrentUser] This setting only applies to iOS and macOS platforms.
+  ///   When `true`, the currently signed-in user is migrated to
+  ///   [userAccessGroup]. [userAccessGroup] must be non-null when this is
+  ///   `true`. This may replace a user already stored in that access group.
   Future<void> setSettings({
     bool appVerificationDisabledForTesting = false,
     String? userAccessGroup,
+    bool migrateCurrentUser = false,
     String? phoneNumber,
     String? smsCode,
     bool? forceRecaptchaFlow,
@@ -407,6 +413,7 @@ class FirebaseAuth extends FirebasePlugin implements FirebaseService {
     return _delegate.setSettings(
       appVerificationDisabledForTesting: appVerificationDisabledForTesting,
       userAccessGroup: userAccessGroup,
+      migrateCurrentUser: migrateCurrentUser,
       phoneNumber: phoneNumber,
       smsCode: smsCode,
       forceRecaptchaFlow: forceRecaptchaFlow,
@@ -466,12 +473,10 @@ class FirebaseAuth extends FirebasePlugin implements FirebaseService {
   /// A [FirebaseAuthException] maybe thrown with the following error code:
   /// - **account-exists-with-different-credential**:
   ///  - Thrown if there already exists an account with the email address
-  ///    asserted by the credential.
-  // ignore: deprecated_member_use_from_same_package
-  ///    Resolve this by asking
-  ///    the user to sign in using one of the returned providers.
-  ///    Once the user is signed in, the original credential can be linked to
-  ///    the user with [linkWithCredential].
+  ///    asserted by the credential. Resolve this by asking the user to sign in
+  ///    with a provider already linked to that email address. Once the user is
+  ///    signed in, the original credential can be linked to the user with
+  ///    [linkWithCredential].
   /// - **invalid-credential**:
   ///  - Thrown if the credential is malformed or has expired.
   /// - **operation-not-allowed**:
@@ -633,6 +638,10 @@ class FirebaseAuth extends FirebasePlugin implements FirebaseService {
   }
 
   /// Signs in with an AuthProvider using native authentication flow.
+  ///
+  /// On macOS, only [AppleAuthProvider] is supported: the Firebase Apple SDK
+  /// implements the OAuth web sign-in flow on iOS only. Any other provider
+  /// throws a [FirebaseAuthException] with the code `unsupported-platform`.
   ///
   /// A [FirebaseAuthException] maybe thrown with the following error code:
   /// - **user-disabled**:

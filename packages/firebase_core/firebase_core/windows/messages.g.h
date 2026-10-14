@@ -76,8 +76,7 @@ class CoreFirebaseOptions {
       const std::string* storage_bucket, const std::string* measurement_id,
       const std::string* tracking_id, const std::string* deep_link_u_r_l_scheme,
       const std::string* android_client_id, const std::string* ios_client_id,
-      const std::string* ios_bundle_id, const std::string* app_group_id,
-      const std::string* recaptcha_site_key);
+      const std::string* ios_bundle_id, const std::string* app_group_id);
 
   const std::string& api_key() const;
   void set_api_key(std::string_view value_arg);
@@ -131,10 +130,6 @@ class CoreFirebaseOptions {
   void set_app_group_id(const std::string_view* value_arg);
   void set_app_group_id(std::string_view value_arg);
 
-  const std::string* recaptcha_site_key() const;
-  void set_recaptcha_site_key(const std::string_view* value_arg);
-  void set_recaptcha_site_key(std::string_view value_arg);
-
   bool operator==(const CoreFirebaseOptions& other) const;
   bool operator!=(const CoreFirebaseOptions& other) const;
   /// Returns a hash code value for the object. This method is supported for the
@@ -144,11 +139,7 @@ class CoreFirebaseOptions {
  private:
   static CoreFirebaseOptions FromEncodableList(
       const ::flutter::EncodableList& list);
-
- public:
   ::flutter::EncodableList ToEncodableList() const;
-
- private:
   friend class CoreInitializeResponse;
   friend class FirebaseCoreHostApi;
   friend class FirebaseAppHostApi;
@@ -167,7 +158,6 @@ class CoreFirebaseOptions {
   std::optional<std::string> ios_client_id_;
   std::optional<std::string> ios_bundle_id_;
   std::optional<std::string> app_group_id_;
-  std::optional<std::string> recaptcha_site_key_;
 };
 
 // Generated class from Pigeon that represents data sent in messages.
@@ -212,11 +202,7 @@ class CoreInitializeResponse {
  private:
   static CoreInitializeResponse FromEncodableList(
       const ::flutter::EncodableList& list);
-
- public:
   ::flutter::EncodableList ToEncodableList() const;
-
- private:
   friend class FirebaseCoreHostApi;
   friend class FirebaseAppHostApi;
   friend class PigeonInternalCodecSerializer;

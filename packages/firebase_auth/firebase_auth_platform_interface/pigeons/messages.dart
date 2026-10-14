@@ -11,16 +11,13 @@ import 'package:pigeon/pigeon.dart';
     dartOut: 'lib/src/pigeon/messages.pigeon.dart',
     // We export in the lib folder to expose the class to other packages.
     dartTestOut: 'test/pigeon/test_api.dart',
-    javaOut:
-        '../firebase_auth/android/src/main/java/io/flutter/plugins/firebase/auth/GeneratedAndroidFirebaseAuth.java',
-    javaOptions: JavaOptions(
+    kotlinOut:
+        '../firebase_auth/android/src/main/kotlin/io/flutter/plugins/firebase/auth/GeneratedAndroidFirebaseAuth.g.kt',
+    kotlinOptions: KotlinOptions(
       package: 'io.flutter.plugins.firebase.auth',
-      className: 'GeneratedAndroidFirebaseAuth',
     ),
-    objcHeaderOut:
-        '../firebase_auth/ios/firebase_auth/Sources/firebase_auth/include/Public/firebase_auth_messages.g.h',
-    objcSourceOut:
-        '../firebase_auth/ios/firebase_auth/Sources/firebase_auth/firebase_auth_messages.g.m',
+    swiftOut:
+        '../firebase_auth/ios/firebase_auth/Sources/firebase_auth/FirebaseAuthMessages.g.swift',
     cppHeaderOut: '../firebase_auth/windows/messages.g.h',
     cppSourceOut: '../firebase_auth/windows/messages.g.cpp',
     cppOptions: CppOptions(namespace: 'firebase_auth_windows'),
@@ -242,6 +239,7 @@ class InternalFirebaseAuthSettings {
   const InternalFirebaseAuthSettings({
     required this.appVerificationDisabledForTesting,
     required this.userAccessGroup,
+    required this.migrateCurrentUser,
     required this.phoneNumber,
     required this.smsCode,
     required this.forceRecaptchaFlow,
@@ -249,6 +247,7 @@ class InternalFirebaseAuthSettings {
 
   final bool appVerificationDisabledForTesting;
   final String? userAccessGroup;
+  final bool migrateCurrentUser;
   final String? phoneNumber;
   final String? smsCode;
   final bool? forceRecaptchaFlow;
@@ -397,8 +396,11 @@ abstract class FirebaseAuthHostApi {
     String? languageCode,
   );
 
+  /// Applies auth settings. When [InternalFirebaseAuthSettings.migrateCurrentUser]
+  /// is true and a user was migrated, returns that user so Dart can reconcile
+  /// [currentUser] before auth-state events arrive. Otherwise returns null.
   @async
-  void setSettings(
+  InternalUserDetails? setSettings(
     AuthPigeonFirebaseApp app,
     InternalFirebaseAuthSettings settings,
   );

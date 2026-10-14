@@ -239,16 +239,110 @@ size_t PigeonInternalDeepHash(const ::flutter::EncodableValue& v) {
 }
 
 }  // namespace
+// InternalAppCheckTokenResult
+
+InternalAppCheckTokenResult::InternalAppCheckTokenResult(
+    const std::string& token)
+    : token_(token) {}
+
+InternalAppCheckTokenResult::InternalAppCheckTokenResult(
+    const std::string& token, const int64_t* expiration_timestamp)
+    : token_(token),
+      expiration_timestamp_(expiration_timestamp
+                                ? std::optional<int64_t>(*expiration_timestamp)
+                                : std::nullopt) {}
+
+const std::string& InternalAppCheckTokenResult::token() const { return token_; }
+
+void InternalAppCheckTokenResult::set_token(std::string_view value_arg) {
+  token_ = value_arg;
+}
+
+const int64_t* InternalAppCheckTokenResult::expiration_timestamp() const {
+  return expiration_timestamp_ ? &(*expiration_timestamp_) : nullptr;
+}
+
+void InternalAppCheckTokenResult::set_expiration_timestamp(
+    const int64_t* value_arg) {
+  expiration_timestamp_ =
+      value_arg ? std::optional<int64_t>(*value_arg) : std::nullopt;
+}
+
+void InternalAppCheckTokenResult::set_expiration_timestamp(int64_t value_arg) {
+  expiration_timestamp_ = value_arg;
+}
+
+EncodableList InternalAppCheckTokenResult::ToEncodableList() const {
+  EncodableList list;
+  list.reserve(2);
+  list.push_back(EncodableValue(token_));
+  list.push_back(expiration_timestamp_ ? EncodableValue(*expiration_timestamp_)
+                                       : EncodableValue());
+  return list;
+}
+
+InternalAppCheckTokenResult InternalAppCheckTokenResult::FromEncodableList(
+    const EncodableList& list) {
+  InternalAppCheckTokenResult decoded(std::get<std::string>(list[0]));
+  auto& encodable_expiration_timestamp = list[1];
+  if (!encodable_expiration_timestamp.IsNull()) {
+    decoded.set_expiration_timestamp(
+        std::get<int64_t>(encodable_expiration_timestamp));
+  }
+  return decoded;
+}
+
+bool InternalAppCheckTokenResult::operator==(
+    const InternalAppCheckTokenResult& other) const {
+  return PigeonInternalDeepEquals(token_, other.token_) &&
+         PigeonInternalDeepEquals(expiration_timestamp_,
+                                  other.expiration_timestamp_);
+}
+
+bool InternalAppCheckTokenResult::operator!=(
+    const InternalAppCheckTokenResult& other) const {
+  return !(*this == other);
+}
+
+size_t InternalAppCheckTokenResult::Hash() const {
+  size_t result = 1;
+  result = result * 31 + PigeonInternalDeepHash(token_);
+  result = result * 31 + PigeonInternalDeepHash(expiration_timestamp_);
+  return result;
+}
+
+size_t PigeonInternalDeepHash(const InternalAppCheckTokenResult& v) {
+  return v.Hash();
+}
 
 PigeonInternalCodecSerializer::PigeonInternalCodecSerializer() {}
 
 EncodableValue PigeonInternalCodecSerializer::ReadValueOfType(
     uint8_t type, ::flutter::ByteStreamReader* stream) const {
-  return ::flutter::StandardCodecSerializer::ReadValueOfType(type, stream);
+  switch (type) {
+    case 129: {
+      return CustomEncodableValue(
+          InternalAppCheckTokenResult::FromEncodableList(
+              std::get<EncodableList>(ReadValue(stream))));
+    }
+    default:
+      return ::flutter::StandardCodecSerializer::ReadValueOfType(type, stream);
+  }
 }
 
 void PigeonInternalCodecSerializer::WriteValue(
     const EncodableValue& value, ::flutter::ByteStreamWriter* stream) const {
+  if (const CustomEncodableValue* custom_value =
+          std::get_if<CustomEncodableValue>(&value)) {
+    if (custom_value->type() == typeid(InternalAppCheckTokenResult)) {
+      stream->WriteByte(129);
+      WriteValue(EncodableValue(
+                     std::any_cast<InternalAppCheckTokenResult>(*custom_value)
+                         .ToEncodableList()),
+                 stream);
+      return;
+    }
+  }
   ::flutter::StandardCodecSerializer::WriteValue(value, stream);
 }
 
@@ -302,8 +396,12 @@ void FirebaseAppCheckHostApi::SetUp(
               const auto& encodable_debug_token_arg = args.at(3);
               const auto* debug_token_arg =
                   std::get_if<std::string>(&encodable_debug_token_arg);
+              const auto& encodable_recaptcha_site_key_arg = args.at(4);
+              const auto* recaptcha_site_key_arg =
+                  std::get_if<std::string>(&encodable_recaptcha_site_key_arg);
               api->Activate(app_name_arg, android_provider_arg,
                             apple_provider_arg, debug_token_arg,
+                            recaptcha_site_key_arg,
                             [reply](std::optional<FlutterError>&& output) {
                               if (output.has_value()) {
                                 reply(WrapError(output.value()));
@@ -360,6 +458,59 @@ void FirebaseAppCheckHostApi::SetUp(
                     if (output_optional) {
                       wrapped.push_back(
                           EncodableValue(std::move(output_optional).value()));
+                    } else {
+                      wrapped.push_back(EncodableValue());
+                    }
+                    reply(EncodableValue(std::move(wrapped)));
+                  });
+            } catch (const std::exception& exception) {
+              reply(WrapError(exception.what()));
+            }
+          });
+    } else {
+      channel.SetMessageHandler(nullptr);
+    }
+  }
+  {
+    BasicMessageChannel<> channel(
+        binary_messenger,
+        "dev.flutter.pigeon.firebase_app_check_platform_interface."
+        "FirebaseAppCheckHostApi.getTokenResult" +
+            prepended_suffix,
+        &GetCodec());
+    if (api != nullptr) {
+      channel.SetMessageHandler(
+          [api](const EncodableValue& message,
+                const ::flutter::MessageReply<EncodableValue>& reply) {
+            try {
+              const auto& args = std::get<EncodableList>(message);
+              const auto& encodable_app_name_arg = args.at(0);
+              if (encodable_app_name_arg.IsNull()) {
+                reply(WrapError("app_name_arg unexpectedly null."));
+                return;
+              }
+              const auto& app_name_arg =
+                  std::get<std::string>(encodable_app_name_arg);
+              const auto& encodable_force_refresh_arg = args.at(1);
+              if (encodable_force_refresh_arg.IsNull()) {
+                reply(WrapError("force_refresh_arg unexpectedly null."));
+                return;
+              }
+              const auto& force_refresh_arg =
+                  std::get<bool>(encodable_force_refresh_arg);
+              api->GetTokenResult(
+                  app_name_arg, force_refresh_arg,
+                  [reply](ErrorOr<std::optional<InternalAppCheckTokenResult>>&&
+                              output) {
+                    if (output.has_error()) {
+                      reply(WrapError(output.error()));
+                      return;
+                    }
+                    EncodableList wrapped;
+                    auto output_optional = std::move(output).TakeValue();
+                    if (output_optional) {
+                      wrapped.push_back(CustomEncodableValue(
+                          std::move(output_optional).value()));
                     } else {
                       wrapped.push_back(EncodableValue());
                     }

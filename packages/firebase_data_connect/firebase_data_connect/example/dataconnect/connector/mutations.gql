@@ -62,6 +62,12 @@ mutation deleteMovie($id: UUID!) @auth(level: PUBLIC) {
   movie_delete(id: $id)
 }
 
+mutation deleteAllMovieData @auth(level: PUBLIC) {
+  directedBy_deleteMany(all: true)
+  movie_deleteMany(all: true)
+  person_deleteMany(all: true)
+}
+
 mutation thing($title: Any! = "ABC") @auth(level: PUBLIC) {
   abc: thing_insert(data: {
     id: "a231d1ff-1825-447d-8b12-de092fb3a0f1"

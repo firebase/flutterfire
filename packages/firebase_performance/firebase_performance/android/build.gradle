@@ -5,12 +5,9 @@ apply plugin: 'com.android.library'
 apply from: file("local-config.gradle")
 
 buildscript {
-
     repositories {
         google()
         mavenCentral()
-    }
-    dependencies {
     }
 }
 

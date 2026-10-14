@@ -16,8 +16,6 @@ import FirebaseFunctions
   import firebase_core_shared
 #endif
 
-extension FlutterError: Error {}
-
 let kFLTFirebaseFunctionsChannelName = "plugins.flutter.io/firebase_functions"
 
 public class FirebaseFunctionsPlugin: NSObject, FLTFirebasePluginProtocol, FlutterPlugin,
@@ -100,6 +98,11 @@ public class FirebaseFunctionsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
     let app = FLTFirebasePlugin.firebaseAppNamed(appName)!
 
     let functions = Functions.functions(app: app, region: region ?? "")
+
+    #if DEBUG
+      functions.allowInsecureTokenAttachment =
+        arguments["allowInsecureTokenAttachment"] as? Bool ?? false
+    #endif
 
     if let origin, !origin.isEmpty,
       let url = URL(string: origin),

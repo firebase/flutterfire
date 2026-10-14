@@ -37,6 +37,116 @@ Object? _extractReplyValueOrThrow(
   return replyList.firstOrNull;
 }
 
+bool _deepEquals(Object? a, Object? b) {
+  if (identical(a, b)) {
+    return true;
+  }
+  if (a is double && b is double) {
+    if (a.isNaN && b.isNaN) {
+      return true;
+    }
+    return a == b;
+  }
+  if (a is List && b is List) {
+    return a.length == b.length &&
+        a.indexed
+            .every(((int, dynamic) item) => _deepEquals(item.$2, b[item.$1]));
+  }
+  if (a is Map && b is Map) {
+    if (a.length != b.length) {
+      return false;
+    }
+    for (final MapEntry<Object?, Object?> entryA in a.entries) {
+      bool found = false;
+      for (final MapEntry<Object?, Object?> entryB in b.entries) {
+        if (_deepEquals(entryA.key, entryB.key)) {
+          if (_deepEquals(entryA.value, entryB.value)) {
+            found = true;
+            break;
+          } else {
+            return false;
+          }
+        }
+      }
+      if (!found) {
+        return false;
+      }
+    }
+    return true;
+  }
+  return a == b;
+}
+
+int _deepHash(Object? value) {
+  if (value is List) {
+    return Object.hashAll(value.map(_deepHash));
+  }
+  if (value is Map) {
+    int result = 0;
+    for (final MapEntry<Object?, Object?> entry in value.entries) {
+      result += (_deepHash(entry.key) * 31) ^ _deepHash(entry.value);
+    }
+    return result;
+  }
+  if (value is double && value.isNaN) {
+    // Normalize NaN to a consistent hash.
+    return 0x7FF8000000000000.hashCode;
+  }
+  if (value is double && value == 0.0) {
+    // Normalize -0.0 to 0.0 so they have the same hash code.
+    return 0.0.hashCode;
+  }
+  return value.hashCode;
+}
+
+class InternalAppCheckTokenResult {
+  InternalAppCheckTokenResult({
+    required this.token,
+    this.expirationTimestamp,
+  });
+
+  String token;
+
+  int? expirationTimestamp;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      token,
+      expirationTimestamp,
+    ];
+  }
+
+  Object encode() {
+    return _toList();
+  }
+
+  static InternalAppCheckTokenResult decode(Object result) {
+    result as List<Object?>;
+    return InternalAppCheckTokenResult(
+      token: result[0]! as String,
+      expirationTimestamp: result[1] as int?,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! InternalAppCheckTokenResult ||
+        other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(token, other.token) &&
+        _deepEquals(expirationTimestamp, other.expirationTimestamp);
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
+}
+
 class _PigeonCodec extends StandardMessageCodec {
   const _PigeonCodec();
   @override
@@ -44,6 +154,9 @@ class _PigeonCodec extends StandardMessageCodec {
     if (value is int) {
       buffer.putUint8(4);
       buffer.putInt64(value);
+    } else if (value is InternalAppCheckTokenResult) {
+      buffer.putUint8(129);
+      writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
     }
@@ -52,6 +165,8 @@ class _PigeonCodec extends StandardMessageCodec {
   @override
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
+      case 129:
+        return InternalAppCheckTokenResult.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
     }
@@ -73,8 +188,12 @@ class FirebaseAppCheckHostApi {
 
   final String pigeonVar_messageChannelSuffix;
 
-  Future<void> activate(String appName, String? androidProvider,
-      String? appleProvider, String? debugToken) async {
+  Future<void> activate(
+      String appName,
+      String? androidProvider,
+      String? appleProvider,
+      String? debugToken,
+      String? recaptchaSiteKey) async {
     final pigeonVar_channelName =
         'dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.activate$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
@@ -83,7 +202,13 @@ class FirebaseAppCheckHostApi {
       binaryMessenger: pigeonVar_binaryMessenger,
     );
     final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel
-        .send(<Object?>[appName, androidProvider, appleProvider, debugToken]);
+        .send(<Object?>[
+      appName,
+      androidProvider,
+      appleProvider,
+      debugToken,
+      recaptchaSiteKey
+    ]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
@@ -111,6 +236,27 @@ class FirebaseAppCheckHostApi {
       isNullValid: true,
     );
     return pigeonVar_replyValue as String?;
+  }
+
+  Future<InternalAppCheckTokenResult?> getTokenResult(
+      String appName, bool forceRefresh) async {
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.firebase_app_check_platform_interface.FirebaseAppCheckHostApi.getTokenResult$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture =
+        pigeonVar_channel.send(<Object?>[appName, forceRefresh]);
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: true,
+    );
+    return pigeonVar_replyValue as InternalAppCheckTokenResult?;
   }
 
   Future<void> setTokenAutoRefreshEnabled(

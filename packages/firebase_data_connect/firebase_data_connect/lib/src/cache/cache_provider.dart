@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:async';
 import 'cache_data_types.dart';
 
 /// An interface that defines the contract for the underlying storage mechanism.
@@ -23,6 +24,11 @@ abstract class CacheProvider {
 
   /// Initialize the provider async
   Future<bool> initialize();
+
+  /// Runs a body of code in a transaction if supported by the provider.
+  FutureOr<T> runInTransaction<T>(FutureOr<T> Function() action) {
+    return action();
+  }
 
   /// Stores a `ResultTree` object.
   void setResultTree(String queryId, ResultTree resultTree);
@@ -38,4 +44,7 @@ abstract class CacheProvider {
 
   /// Clears all data from the cache.
   void clear();
+
+  /// Disposes of any resources held by the provider.
+  Future<void> dispose() async {}
 }

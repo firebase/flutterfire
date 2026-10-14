@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:async';
 import 'cache_data_types.dart';
 import 'cache_provider.dart';
 
@@ -24,6 +25,11 @@ class InMemoryCacheProvider implements CacheProvider {
   final String cacheIdentifier;
 
   InMemoryCacheProvider(this.cacheIdentifier);
+
+  @override
+  FutureOr<T> runInTransaction<T>(FutureOr<T> Function() action) {
+    return action();
+  }
 
   @override
   String identifier() {
@@ -61,7 +67,11 @@ class InMemoryCacheProvider implements CacheProvider {
     _resultTrees.clear();
     _edos.clear();
   }
+
+  @override
+  Future<void> dispose() async {}
 }
 
-CacheProvider cacheImplementation(String identifier, bool memory) =>
+CacheProvider cacheImplementation(String identifier, bool memory,
+        {String? customDbPath}) =>
     InMemoryCacheProvider(identifier);

@@ -187,28 +187,6 @@ void runSecondDatabaseTests() {
           );
           expect(qs, isA<QuerySnapshot<Map<String, dynamic>>>());
         });
-
-        test(
-          'throws a [FirebaseException]',
-          () async {
-            CollectionReference<Map<String, dynamic>> collection =
-                firestore.collection('not-allowed');
-
-            try {
-              await collection.get();
-            } catch (error) {
-              expect(error, isA<FirebaseException>());
-              expect(
-                (error as FirebaseException).code,
-                equals('permission-denied'),
-              );
-              return;
-            }
-            fail('Should have thrown a [FirebaseException]');
-          },
-          // Emulator for 2nd database allows this request, the live project correctly throws a "permission-denied" error
-          skip: true,
-        );
       });
 
       /**
@@ -329,33 +307,6 @@ void runSecondDatabaseTests() {
 
           await subscription.cancel();
         });
-
-        test(
-          'listeners throws a [FirebaseException]',
-          () async {
-            CollectionReference<Map<String, dynamic>> collection =
-                firestore.collection('not-allowed');
-            Stream<QuerySnapshot<Map<String, dynamic>>> stream =
-                collection.snapshots();
-
-            try {
-              await stream.first;
-            } catch (error) {
-              expect(error, isA<FirebaseException>());
-              expect(
-                (error as FirebaseException).code,
-                equals(
-                  'permission-denied',
-                ),
-              );
-              return;
-            }
-
-            fail('Should have thrown a [FirebaseException]');
-          },
-          // Emulator for 2nd database allows this request, the live project correctly throws a "permission-denied" error
-          skip: true,
-        );
       });
 
       /**
@@ -1790,87 +1741,6 @@ void runSecondDatabaseTests() {
       });
 
       group('Query.where() with Filter class', () {
-        test(
-          'Can combine `arrayContainsAny` & `isNotEqualTo` in multiple disjunctive queries',
-          () async {
-            CollectionReference<Map<String, dynamic>> collection =
-                await initializeTest('multiple-disjunctive-queries');
-
-            await Future.wait([
-              collection.add({
-                'genre': 'sci-fi',
-                'mainCharacter': 'Tim',
-                'rating': 1,
-              }),
-              collection.add({
-                'mainCharacter': 'MainCharacter2',
-                'genre': 'action',
-                'rating': 1,
-              }),
-              collection.add({
-                'mainCharacter': 'MainCharacter2',
-                'genre': 'action',
-                'rating': 1,
-              }),
-            ]);
-            final result = await collection
-                .where(
-                  Filter.or(
-                    Filter('genre', arrayContainsAny: ['sci-fi']),
-                    Filter('mainCharacter', isNotEqualTo: 'MainCharacter2'),
-                  ),
-                )
-                .orderBy('rating', descending: true)
-                .get();
-
-            expect(result.docs.length, equals(1));
-            expect(result.docs[0].data()['genre'], equals('sci-fi'));
-          },
-          // Emulator for 2nd database allows this request, the live project correctly throws a "permission-denied" error
-          skip: true,
-        );
-
-        test(
-          'Can combine `arrayContainsAny` & `isNotEqualTo` in multiple conjunctive queries',
-          () async {
-            CollectionReference<Map<String, dynamic>> collection =
-                await initializeTest(
-              'array-contain-not-equal-conjunctive-queries',
-            );
-
-            await Future.wait([
-              collection.doc('doc1').set({
-                'genre': ['fantasy', 'sci-fi'],
-                'screenplay2': 'bar',
-              }),
-              collection.doc('doc2').set({
-                'genre': ['fantasy', 'sci-fi'],
-                'screenplay2': 'bar',
-              }),
-              collection.doc('doc3').set({
-                'genre': ['fantasy', 'sci-fi'],
-                'screenplay2': 'foo',
-              }),
-            ]);
-
-            final results = await collection
-                .where(
-                  Filter.and(
-                    Filter('genre', arrayContainsAny: ['sci-fi']),
-                    Filter('screenplay2', isNotEqualTo: 'foo'),
-                  ),
-                )
-                .orderBy('screenplay2', descending: true)
-                .get();
-
-            expect(results.docs.length, equals(2));
-            expect(results.docs[0].id, equals('doc2'));
-            expect(results.docs[1].id, equals('doc1'));
-          },
-          // Emulator for 2nd database allows this request, the live project correctly throws a "permission-denied" error
-          skip: true,
-        );
-
         test('isEqualTo filter', () async {
           CollectionReference<Map<String, dynamic>> collection =
               await initializeTest('where-filter-isequalto');

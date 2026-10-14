@@ -30,18 +30,12 @@ import 'cache/cache.dart';
 class FirebaseDataConnect extends FirebasePlugin {
   /// Constructor for initializing Data Connect
   @visibleForTesting
-  FirebaseDataConnect(
-      {required this.app,
-      required this.connectorConfig,
-      @Deprecated(
-          'Passing an explicit instance is deprecated, internal handling is now automatic.')
-      this.auth,
-      @Deprecated(
-          'Passing an explicit instance is deprecated, internal handling is now automatic.')
-      this.appCheck,
-      CallerSDKType? sdkType,
-      this.cacheSettings})
-      : options = DataConnectOptions(
+  FirebaseDataConnect({
+    required this.app,
+    required this.connectorConfig,
+    CallerSDKType? sdkType,
+    this.cacheSettings,
+  })  : options = DataConnectOptions(
           app.options.projectId,
           connectorConfig.location,
           connectorConfig.connector,
@@ -96,8 +90,11 @@ class FirebaseDataConnect extends FirebasePlugin {
     if (transport != null) {
       return;
     }
-    transportOptions ??=
-        TransportOptions('firebasedataconnect.googleapis.com', null, true);
+    transportOptions ??= TransportOptions(
+      'firebasedataconnect.googleapis.com',
+      null,
+      true,
+    );
     auth ??= app.getService<FirebaseAuth>();
     appCheck ??= app.getService<FirebaseAppCheck>();
 
@@ -136,8 +133,11 @@ class FirebaseDataConnect extends FirebasePlugin {
   ) {
     checkTransport();
     checkAndInitializeCache();
-    String queryId =
-        OperationRef.createOperationId(operationName, vars, varsSerializer);
+    String queryId = OperationRef.createOperationId(
+      operationName,
+      vars,
+      varsSerializer,
+    );
 
     QueryRef<Data, Variables>? ref =
         _queryManager.trackedQueries[queryId] as QueryRef<Data, Variables>?;
@@ -202,21 +202,16 @@ class FirebaseDataConnect extends FirebasePlugin {
   /// Returns an instance using a specified [FirebaseApp].
   ///
   /// If [app] is not provided, the default Firebase app will be used.
-  /// If pass in [appCheck], request session will get protected from abusing.
-  static FirebaseDataConnect instanceFor(
-      {FirebaseApp? app,
-      @Deprecated(
-          'Passing an explicit instance is deprecated, internal handling is now automatic.')
-      FirebaseAuth? auth,
-      @Deprecated(
-          'Passing an explicit instance is deprecated, internal handling is now automatic.')
-      FirebaseAppCheck? appCheck,
-      CallerSDKType? sdkType,
-      required ConnectorConfig connectorConfig,
-      CacheSettings? cacheSettings}) {
+  /// Auth and App Check are attached from [app] when the instance is created.
+  static FirebaseDataConnect instanceFor({
+    FirebaseApp? app,
+    CallerSDKType? sdkType,
+    required ConnectorConfig connectorConfig,
+    CacheSettings? cacheSettings,
+  }) {
     app ??= Firebase.app();
-    auth ??= FirebaseAuth.instanceFor(app: app);
-    appCheck ??= FirebaseAppCheck.instanceFor(app: app);
+    final auth = FirebaseAuth.instanceFor(app: app);
+    final appCheck = FirebaseAppCheck.instanceFor(app: app);
 
     if (cachedInstances[app.name] != null &&
         cachedInstances[app.name]![connectorConfig.toJson()] != null) {
@@ -225,12 +220,12 @@ class FirebaseDataConnect extends FirebasePlugin {
 
     FirebaseDataConnect newInstance = FirebaseDataConnect(
       app: app,
-      auth: auth,
-      appCheck: appCheck,
       connectorConfig: connectorConfig,
       sdkType: sdkType,
       cacheSettings: cacheSettings,
     );
+    newInstance.auth = auth;
+    newInstance.appCheck = appCheck;
     if (cachedInstances[app.name] == null) {
       cachedInstances[app.name] = <String, FirebaseDataConnect>{};
     }
@@ -296,10 +291,22 @@ class _RoutingTransport implements DataConnectTransport {
   ) {
     if (websocket.isConnected) {
       return websocket.invokeMutation(
-          operationId, queryName, deserializer, serializer, vars, token);
+        operationId,
+        queryName,
+        deserializer,
+        serializer,
+        vars,
+        token,
+      );
     }
     return rest.invokeMutation(
-        operationId, queryName, deserializer, serializer, vars, token);
+      operationId,
+      queryName,
+      deserializer,
+      serializer,
+      vars,
+      token,
+    );
   }
 
   @override
@@ -313,10 +320,22 @@ class _RoutingTransport implements DataConnectTransport {
   ) {
     if (websocket.isConnected) {
       return websocket.invokeQuery(
-          operationId, queryName, deserializer, serialize, vars, token);
+        operationId,
+        queryName,
+        deserializer,
+        serialize,
+        vars,
+        token,
+      );
     }
     return rest.invokeQuery(
-        operationId, queryName, deserializer, serialize, vars, token);
+      operationId,
+      queryName,
+      deserializer,
+      serialize,
+      vars,
+      token,
+    );
   }
 
   @override
@@ -329,6 +348,12 @@ class _RoutingTransport implements DataConnectTransport {
     String? token,
   ) {
     return websocket.invokeStreamQuery(
-        operationId, queryName, deserializer, serializer, vars, token);
+      operationId,
+      queryName,
+      deserializer,
+      serializer,
+      vars,
+      token,
+    );
   }
 }

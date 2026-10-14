@@ -15,6 +15,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_ai/firebase_ai.dart';
 
+import '../constants.dart';
 import '../utils/function_call_utils.dart';
 import '../widgets/message_widget.dart';
 
@@ -22,11 +23,11 @@ class FunctionCallingPage extends StatefulWidget {
   const FunctionCallingPage({
     super.key,
     required this.title,
-    required this.useVertexBackend,
+    required this.useAgentPlatform,
   });
 
   final String title;
-  final bool useVertexBackend;
+  final bool useAgentPlatform;
 
   @override
   State<FunctionCallingPage> createState() => _FunctionCallingPageState();
@@ -235,26 +236,26 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
           : null,
     );
 
-    final aiClient = widget.useVertexBackend
-        ? FirebaseAI.vertexAI(location: 'global')
+    final aiClient = widget.useAgentPlatform
+        ? FirebaseAI.agentPlatform()
         : FirebaseAI.googleAI();
 
     _functionCallModel = aiClient.generativeModel(
-      model: 'gemini-3.1-flash-lite',
+      model: ExampleModels.flashLite,
       generationConfig: generationConfig,
       tools: [
         Tool.functionDeclarations([fetchWeatherTool]),
       ],
     );
     _autoFunctionCallModel = aiClient.generativeModel(
-      model: 'gemini-3.1-flash-lite',
+      model: ExampleModels.flashLite,
       generationConfig: generationConfig,
       tools: [
         Tool.functionDeclarations([_autoFetchWeatherTool]),
       ],
     );
     _parallelAutoFunctionCallModel = aiClient.generativeModel(
-      model: 'gemini-3.1-flash-lite',
+      model: ExampleModels.flashLite,
       generationConfig: generationConfig,
       tools: [
         Tool.functionDeclarations(
@@ -263,21 +264,21 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
       ],
     );
     _codeExecutionModel = aiClient.generativeModel(
-      model: 'gemini-3.1-flash-lite',
+      model: ExampleModels.flashLite,
       generationConfig: generationConfig,
       tools: [
         Tool.codeExecution(),
       ],
     );
     _complexSchemaModel = aiClient.generativeModel(
-      model: 'gemini-3.1-flash-lite',
+      model: ExampleModels.flashLite,
       generationConfig: generationConfig,
       tools: [
         Tool.functionDeclarations([_autoPlanVacationTool]),
       ],
     );
     _refDefJsonSchemaModel = aiClient.generativeModel(
-      model: 'gemini-3.1-flash-lite',
+      model: ExampleModels.flashLite,
       generationConfig: generationConfig,
       tools: [
         Tool.functionDeclarations([_autoProcessTransactionTool]),

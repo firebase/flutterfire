@@ -11,6 +11,13 @@ buildscript {
     }
 }
 
+rootProject.allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
 def getRootProjectExtOrDefaultProperty(name) {
     if (!rootProject.ext.has("FlutterFire")) return project.properties[name]
     if (!rootProject.ext.get("FlutterFire")[name]) return project.properties[name]
@@ -36,6 +43,10 @@ android {
         targetCompatibility project.ext.javaVersion
     }
 
+    sourceSets {
+      main.java.srcDirs += "src/main/kotlin"
+    }
+
     buildFeatures {
         buildConfig true
     }
@@ -49,6 +60,12 @@ android {
         implementation "com.google.firebase:firebase-common"
 
         implementation 'androidx.annotation:annotation:1.7.0'
+    }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.fromTarget(project.ext.javaVersion.toString())
     }
 }
 

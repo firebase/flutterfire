@@ -9,9 +9,6 @@ buildscript {
         google()
         mavenCentral()
     }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:9.0.0'
-    }
 }
 
 rootProject.allprojects {

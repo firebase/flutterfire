@@ -1,0 +1,121 @@
+name: e2e-firestore
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-firestore
+  cancel-in-progress: true
+
+# Emulator tier: every job runs under `firebase emulators:exec`, so no live
+# project credentials are needed.
+#
+# The only product with a wasm job (its example ships web/wasm_index.html) and
+# the only one whose iOS build needs the extra disk cleanup.
+#
+# Thin caller: one job per platform this product supports, each delegating
+# to the matching `reusable_e2e_<platform>.yaml`. Platforms the product does
+# not support have no job here, so they render no check at all.
+# Path-filtered so it only runs when this product or its dependencies change;
+# the nightly workflow_call still runs it unconditionally.
+on:
+  pull_request:
+    paths:
+      - 'packages/cloud_firestore/**'
+      - 'packages/firebase_core/**'
+      - '.github/workflows/e2e_tests_firestore.yaml'
+      - '.github/workflows/reusable_e2e_*.yaml'
+      - '.github/actions/setup-flutterfire/**'
+      - '.github/workflows/scripts/**'
+  push:
+    branches:
+      - main
+    paths:
+      - 'packages/cloud_firestore/**'
+      - 'packages/firebase_core/**'
+      - '.github/workflows/e2e_tests_firestore.yaml'
+      - '.github/workflows/reusable_e2e_*.yaml'
+      - '.github/actions/setup-flutterfire/**'
+      - '.github/workflows/scripts/**'
+  workflow_call:
+    inputs:
+      nightly_test_mode:
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  changes:
+    uses: ./.github/workflows/reusable_e2e_changes.yaml
+    with:
+      package-path: 'packages/cloud_firestore/cloud_firestore'
+      platform-interface-package: 'cloud_firestore_platform_interface'
+      web-package: 'cloud_firestore_web'
+
+  android:
+    needs: changes
+    if: needs.changes.outputs.android == 'true'
+    uses: ./.github/workflows/reusable_e2e_android.yaml
+    with:
+      package-path: 'packages/cloud_firestore/cloud_firestore'
+      package-scope: 'cloud_firestore*'
+      native-config-args: '--firestore-native'
+      nightly_test_mode: ${{ inputs.nightly_test_mode == true }}
+
+  ios:
+    needs: changes
+    if: needs.changes.outputs.ios == 'true'
+    uses: ./.github/workflows/reusable_e2e_ios.yaml
+    with:
+      package-path: 'packages/cloud_firestore/cloud_firestore'
+      package-scope: 'cloud_firestore*'
+      cache-key-suffix: 'firestore'
+      native-config-args: '--firestore-native'
+      nightly_test_mode: ${{ inputs.nightly_test_mode == true }}
+
+  macos:
+    needs: changes
+    if: needs.changes.outputs.macos == 'true'
+    uses: ./.github/workflows/reusable_e2e_macos.yaml
+    with:
+      package-path: 'packages/cloud_firestore/cloud_firestore'
+      package-scope: 'cloud_firestore*'
+      cache-key-suffix: 'firestore'
+      native-config-args: '--firestore-native'
+      nightly_test_mode: ${{ inputs.nightly_test_mode == true }}
+
+  web:
+    needs: changes
+    if: needs.changes.outputs.web == 'true'
+    uses: ./.github/workflows/reusable_e2e_web.yaml
+    with:
+      package-path: 'packages/cloud_firestore/cloud_firestore'
+      package-scope: 'cloud_firestore*'
+      native-config-args: '--firestore-native'
+      nightly_test_mode: ${{ inputs.nightly_test_mode == true }}
+
+  web-wasm:
+    needs: changes
+    # Gated on the same `web` filter output: a change that affects the JS
+    # web build affects the wasm one too.
+    if: needs.changes.outputs.web == 'true'
+    uses: ./.github/workflows/reusable_e2e_web.yaml
+    with:
+      package-path: 'packages/cloud_firestore/cloud_firestore'
+      package-scope: 'cloud_firestore*'
+      wasm: true
+      # Diagnostic pin: check whether the dart2wasm TFA startAfter failure is 3.47-only.
+      flutter-version: '3.44.0'
+      drive-timeout: '300'
+      max-attempts: '2'
+      native-config-args: '--firestore-native'
+      nightly_test_mode: ${{ inputs.nightly_test_mode == true }}
+
+  windows:
+    needs: changes
+    if: needs.changes.outputs.windows == 'true'
+    uses: ./.github/workflows/reusable_e2e_windows.yaml
+    with:
+      package-path: 'packages/cloud_firestore/cloud_firestore'
+      package-scope: 'cloud_firestore*'
+      native-config-args: '--firestore-native'
+      nightly_test_mode: ${{ inputs.nightly_test_mode == true }}

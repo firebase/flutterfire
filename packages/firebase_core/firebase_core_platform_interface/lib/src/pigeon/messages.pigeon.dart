@@ -126,7 +126,6 @@ class CoreFirebaseOptions {
     this.iosClientId,
     this.iosBundleId,
     this.appGroupId,
-    this.recaptchaSiteKey,
   });
 
   String apiKey;
@@ -157,8 +156,6 @@ class CoreFirebaseOptions {
 
   String? appGroupId;
 
-  String? recaptchaSiteKey;
-
   List<Object?> _toList() {
     return <Object?>[
       apiKey,
@@ -175,7 +172,6 @@ class CoreFirebaseOptions {
       iosClientId,
       iosBundleId,
       appGroupId,
-      recaptchaSiteKey,
     ];
   }
 
@@ -200,7 +196,6 @@ class CoreFirebaseOptions {
       iosClientId: result[11] as String?,
       iosBundleId: result[12] as String?,
       appGroupId: result[13] as String?,
-      recaptchaSiteKey: result[14] as String?,
     );
   }
 
@@ -226,8 +221,7 @@ class CoreFirebaseOptions {
         _deepEquals(androidClientId, other.androidClientId) &&
         _deepEquals(iosClientId, other.iosClientId) &&
         _deepEquals(iosBundleId, other.iosBundleId) &&
-        _deepEquals(appGroupId, other.appGroupId) &&
-        _deepEquals(recaptchaSiteKey, other.recaptchaSiteKey);
+        _deepEquals(appGroupId, other.appGroupId);
   }
 
   @override

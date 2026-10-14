@@ -686,41 +686,6 @@ void runPipelineExpressionsTests() {
       expect(snapshot.result[0].data()!['a_bool'], 1);
     });
 
-    test(
-      'addFields bitwise expressions (bitAnd/Or/Xor/Not/shifts)',
-      () async {
-        final snapshot = await firestore
-            .pipeline()
-            .collection('pipeline-e2e')
-            .where(Expression.field('test').equalValue('expressions'))
-            .where(Expression.field('score').equalValue(60))
-            .addFields(
-              Expression.field(
-                'bit_a',
-              ).bitAnd(Expression.constant(3)).as('b_and'),
-              Expression.field(
-                'bit_a',
-              ).bitOr(Expression.constant(1)).as('b_or'),
-              Expression.field(
-                'bit_a',
-              ).bitXor(Expression.constant(7)).as('b_xor'),
-              Expression.field('bit_a').bitNot().as('b_not'),
-              Expression.field('bit_a').bitLeftShiftLiteral(1).as('b_lsh'),
-              Expression.field('bit_a').bitRightShiftLiteral(1).as('b_rsh'),
-            )
-            .limit(1)
-            .execute();
-
-        expectResultCount(snapshot, 1);
-        expectResultsData(snapshot, [
-          {'b_and': 2, 'b_or': 7, 'b_xor': 1, 'b_lsh': 12, 'b_rsh': 3},
-        ]);
-        expect(snapshot.result[0].data()!['b_not'], isNotNull);
-      },
-      // Bitwise pipeline addFields not supported on Android native SDK yet.
-      skip: true,
-    );
-
     test('addFields documentId, collectionId and documentIdFromRef', () async {
       final col = firestore.collection('pipeline-e2e');
       final seedQuery = await col
@@ -838,21 +803,17 @@ void runPipelineExpressionsTests() {
       ]);
     });
 
-    test(
-      'arraySum addFields succeeds on Android',
-      () async {
-        final snapshot = await firestore
-            .pipeline()
-            .collection('pipeline-e2e')
-            .where(Expression.field('test').equalValue('expressions'))
-            .addFields(Expression.array([1, 2, 3]).arraySum().as('x'))
-            .limit(1)
-            .execute();
-        expectResultCount(snapshot, 1);
-        expect(snapshot.result[0].data()!['x'], 6);
-      },
-      skip: defaultTargetPlatform != TargetPlatform.android,
-    );
+    test('arraySum addFields succeeds on Android', () async {
+      final snapshot = await firestore
+          .pipeline()
+          .collection('pipeline-e2e')
+          .where(Expression.field('test').equalValue('expressions'))
+          .addFields(Expression.array([1, 2, 3]).arraySum().as('x'))
+          .limit(1)
+          .execute();
+      expectResultCount(snapshot, 1);
+      expect(snapshot.result[0].data()!['x'], 6);
+    }, skip: defaultTargetPlatform != TargetPlatform.android);
 
     test(
       'unsupported expression returns parse-error with informative message',
@@ -930,8 +891,24 @@ void runPipelineExpressionsTests() {
           {'s1': 'Zy', 'iy': 1, 's2': 'xyxy'},
         ]);
       },
-      skip: !kIsWeb,
     );
+
+    test('addFields stringReplaceAll replaces every match on s', () async {
+      final snapshot = await firestore
+          .pipeline()
+          .collection('pipeline-e2e')
+          .where(Expression.field('test').equalValue('expressions'))
+          .where(Expression.field('score').equalValue(50))
+          .addFields(
+            Expression.field('s').stringReplaceAllLiteral('-', '_').as('s_all'),
+          )
+          .limit(1)
+          .execute();
+      expectResultCount(snapshot, 1);
+      expectResultsData(snapshot, [
+        {'s_all': 'a_b_c'},
+      ]);
+    });
 
     test('addFields ltrim rtrim on padded s', () async {
       final snapshot = await firestore
@@ -949,7 +926,7 @@ void runPipelineExpressionsTests() {
       expectResultsData(snapshot, [
         {'lt': 'AbC  ', 'rt': '  AbC'},
       ]);
-    }, skip: !kIsWeb);
+    });
 
     test('addFields mapSet and mapEntries on m', () async {
       final snapshot = await firestore
@@ -1102,5 +1079,172 @@ void runPipelineExpressionsTests() {
           .execute();
       expectResultCount(snapshot, 2);
     }, skip: !kIsWeb);
+
+    // map_keys, timestamp_diff, nor, switchOn, if_null, coalesce, parent — expressions seed row score 60 (see pipeline_seed).
+    test(
+      'addFields map_keys and map_values on map field (expressions score 60)',
+      () async {
+        final snapshot = await firestore
+            .pipeline()
+            .collection('pipeline-e2e')
+            .where(Expression.field('test').equalValue('expressions'))
+            .where(Expression.field('score').equalValue(60))
+            .addFields(
+              Expression.field('m').mapKeys().as('mk'),
+              Expression.field('m').mapValues().as('mv'),
+            )
+            .limit(1)
+            .execute();
+        expectResultCount(snapshot, 1);
+        final data = snapshot.result.first.data()!;
+        expect((data['mk'] as List).map((e) => e as String).toSet(), {
+          'x',
+          'y',
+        });
+        expect((data['mv'] as List).map((e) => e as int).toSet(), {10, 20});
+      },
+    );
+
+    test(
+      'addFields timestamp_diff between t_end and t_start (expressions score 60)',
+      () async {
+        final snapshot = await firestore
+            .pipeline()
+            .collection('pipeline-e2e')
+            .where(Expression.field('test').equalValue('expressions'))
+            .where(Expression.field('score').equalValue(60))
+            .addFields(
+              Expression.field('t_end')
+                  .timestampDiff(Expression.field('t_start'), 'day')
+                  .as('diff_days'),
+              Expression.timestampDiffStatic(
+                Expression.field('t_end'),
+                Expression.field('t_start'),
+                'hour',
+              ).as('diff_hours'),
+            )
+            .limit(1)
+            .execute();
+        expectResultCount(snapshot, 1);
+        expectResultsData(snapshot, [
+          {'diff_days': 2, 'diff_hours': 48},
+        ]);
+      },
+    );
+
+    test(
+      'addFields timestamp_extract on t_end (expressions score 60)',
+      () async {
+        final snapshot = await firestore
+            .pipeline()
+            .collection('pipeline-e2e')
+            .where(Expression.field('test').equalValue('expressions'))
+            .where(Expression.field('score').equalValue(60))
+            .addFields(
+              Expression.field(
+                't_end',
+              ).timestampExtract('month').as('end_month'),
+              Expression.field('t_end').timestampExtract('day').as('end_day'),
+            )
+            .limit(1)
+            .execute();
+        expectResultCount(snapshot, 1);
+        expectResultsData(snapshot, [
+          {'end_month': 1, 'end_day': 3},
+        ]);
+      },
+    );
+
+    test(
+      'addFields nor — both arms false on seed doc (expressions score 60)',
+      () async {
+        final snapshot = await firestore
+            .pipeline()
+            .collection('pipeline-e2e')
+            .where(Expression.field('test').equalValue('expressions'))
+            .where(Expression.field('score').equalValue(60))
+            .addFields(
+              Expression.nor(
+                Expression.field('score').lessThanValue(0),
+                Expression.field('a').equalValue(9999),
+              ).as('nor_ok'),
+            )
+            .limit(1)
+            .execute();
+        expectResultCount(snapshot, 1);
+        expect(snapshot.result.first.data()!['nor_ok'], true);
+      },
+    );
+
+    test(
+      'addFields switchOn — a=1 yields low (expressions score 60)',
+      () async {
+        final snapshot = await firestore
+            .pipeline()
+            .collection('pipeline-e2e')
+            .where(Expression.field('test').equalValue('expressions'))
+            .where(Expression.field('score').equalValue(60))
+            .addFields(
+              Expression.switchOn(
+                Expression.field('a').greaterThanValue(50),
+                Expression.constant('high'),
+                Expression.field('a').greaterThanValue(5),
+                Expression.constant('mid'),
+                Expression.constant('low'),
+              ).as('bucket'),
+            )
+            .limit(1)
+            .execute();
+        expectResultCount(snapshot, 1);
+        expect(snapshot.result.first.data()!['bucket'], 'low');
+      },
+    );
+
+    test('addFields if_null and coalesce (expressions score 60)', () async {
+      final snapshot = await firestore
+          .pipeline()
+          .collection('pipeline-e2e')
+          .where(Expression.field('test').equalValue('expressions'))
+          .where(Expression.field('score').equalValue(60))
+          .addFields(
+            Expression.field('nope').ifNullValue(-1).as('if_null_n'),
+            Expression.coalesce(
+              Expression.field('title'),
+              Expression.field('missing'),
+              Expression.constant('fb'),
+            ).as('coalesce_title'),
+          )
+          .limit(1)
+          .execute();
+      expectResultCount(snapshot, 1);
+      expectResultsData(snapshot, [
+        {'if_null_n': -1, 'coalesce_title': 'Expressions seed doc'},
+      ]);
+    });
+
+    test(
+      'addFields parentFromRef and Constant(ref).parent() (expressions score 60)',
+      () async {
+        final snapshot = await firestore
+            .pipeline()
+            .collection('pipeline-e2e')
+            .where(Expression.field('test').equalValue('expressions'))
+            .where(Expression.field('score').equalValue(60))
+            .addFields(
+              Expression.parentFromRef(
+                firestore.collection('pipeline-e2e').doc('e2e_parent_demo'),
+              ).as('parent_from_ref'),
+              Constant(
+                firestore.collection('pipeline-e2e').doc('e2e_parent_demo'),
+              ).parent().as('parent_of_const'),
+            )
+            .limit(1)
+            .execute();
+        expectResultCount(snapshot, 1);
+        final data = snapshot.result.first.data()!;
+        expect(data['parent_from_ref'], isNotNull);
+        expect(data['parent_of_const'], isNotNull);
+      },
+    );
   });
 }

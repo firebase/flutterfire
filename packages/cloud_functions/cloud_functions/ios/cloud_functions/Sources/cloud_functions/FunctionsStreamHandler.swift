@@ -54,6 +54,11 @@ class FunctionsStreamHandler: NSObject, FlutterStreamHandler {
     let timeout = arguments["timeout"] as? Double
     let limitedUseAppCheckToken = arguments["limitedUseAppCheckToken"] as? Bool ?? false
 
+    #if DEBUG
+      functions.allowInsecureTokenAttachment =
+        arguments["allowInsecureTokenAttachment"] as? Bool ?? false
+    #endif
+
     if let origin,
       let url = URL(string: origin),
       let host = url.host,

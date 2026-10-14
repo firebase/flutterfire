@@ -62,7 +62,6 @@ extension type FirebaseOptions._(JSObject _) implements JSObject {
     JSString? messagingSenderId,
     JSString? measurementId,
     JSString? appId,
-    JSString? recaptchaSiteKey,
   });
 }
 
@@ -83,6 +82,4 @@ extension FirebaseOptionsExtension on FirebaseOptions {
   external set measurementId(JSString? s);
   external JSString? get appId;
   external set appId(JSString? s);
-  external JSString? get recaptchaSiteKey;
-  external set recaptchaSiteKey(JSString? s);
 }

@@ -152,6 +152,40 @@ application state or execute any UI impacting logic. You can, however, perform l
 It is also recommended to complete your logic as soon as possible. Running long, intensive tasks impacts device performance
 and may cause the OS to terminate the process. If tasks run for longer than 30 seconds, the device may automatically kill the process.
 
+##### Setting engine flags for the background isolate on Android {: #android-background-engine-flags}
+
+On Android the background isolate runs in its own `FlutterEngine`, started by a
+background service once a message arrives. Because no activity is involved, engine
+flags you pass on the command line to `flutter run` (such as `--trace-startup`) do
+not reach it.
+
+To apply a flag to the background isolate, declare it as `<application>` metadata in
+`android/app/src/main/AndroidManifest.xml`. Flutter reads this metadata while
+initializing any engine, including the background one, so no extra Dart or Android
+code is needed:
+
+```xml
+<manifest ...>
+  <application ...>
+    <!-- Prefix is required, and is always io.flutter.embedding.android. -->
+    <meta-data
+      android:name="io.flutter.embedding.android.TraceStartup"
+      android:value="true" />
+  </application>
+</manifest>
+```
+
+A few things to be aware of:
+
+1. Manifest metadata flags require **Flutter 3.44.0 or higher**. On earlier versions
+   there is no supported way to set engine flags for the background isolate.
+2. The `io.flutter.embedding.android.` prefix is mandatory; it exists to avoid
+   collisions with other metadata keys.
+3. Most flags are intended for debugging and are ignored in release builds. When that
+   happens Flutter logs `Flag with metadata key ... is not allowed in release builds`.
+4. If the same flag is set both in the manifest and on the command line, the command
+   line value wins.
+
 #### Web {:#web}
  {:#web}
 

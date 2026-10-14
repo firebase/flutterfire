@@ -16,6 +16,33 @@ To get started with Firebase Cloud Messaging for Flutter, please [see the docume
 
 To use this plugin, please visit the [Cloud Messaging Usage documentation](https://firebase.google.com/docs/cloud-messaging)
 
+### iOS apps using UIScene
+
+Apps that adopt the UIScene lifecycle register Flutter plugins after
+`application:didFinishLaunchingWithOptions:`. Apple requires
+`UNUserNotificationCenter.delegate` to be configured before that method returns, so configure
+Firebase Messaging explicitly from your app delegate:
+
+```swift
+override func application(
+  _ application: UIApplication,
+  didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+) -> Bool {
+  FLTFirebaseMessagingPlugin.configureNotificationCenterDelegate()
+  return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+}
+```
+
+```objectivec
+#import <firebase_messaging/FLTFirebaseMessagingPlugin.h>
+
+- (BOOL)application:(UIApplication *)application
+    didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+  [FLTFirebaseMessagingPlugin configureNotificationCenterDelegate];
+  return [super application:application didFinishLaunchingWithOptions:launchOptions];
+}
+```
+
 ## Issues and feedback
 
 Please file FlutterFire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/firebase/flutterfire/issues/new).

@@ -79,8 +79,8 @@ Future<void> main() async {
   await Firebase.initializeApp();
   await FirebaseAppCheck.instance.activate(
     // You can also use a `ReCaptchaEnterpriseProvider` provider instance as an
-    // argument for `webProvider`
-    webProvider: ReCaptchaV3Provider('recaptcha-v3-site-key'),
+    // argument for `providerWeb`
+    providerWeb: ReCaptchaV3Provider('recaptcha-v3-site-key'),
     // Default provider for Android is the Play Integrity provider. You can use the "providerAndroid" parameter to choose
     // your preferred provider. Choose from:
     // 1. AndroidDebugProvider for debug environments
@@ -91,12 +91,46 @@ Future<void> main() async {
     // 1. AppleDebugProvider for debug environments
     // 2. AppleDeviceCheckProvider
     // 3. AppleAppAttestProvider
-    // 4. AppleAppAttestProviderWithDeviceCheckFallback (App Attest provider is only available on iOS 14.0+, macOS 14.0+)
+    // 4. AppleAppAttestWithDeviceCheckFallbackProvider (App Attest provider is only available on iOS 14.0+, macOS 14.0+)
     providerApple: AppleAppAttestProvider(),
   );
   runApp(App());
 }
 ```
+
+### Native `FirebaseApp.configure()` on Apple platforms {:#native-configure}
+
+Do **not** call `FirebaseApp.configure()` in your `AppDelegate` unless you
+have a specific reason. `Firebase.initializeApp()`
+already configures the native default app.
+
+If you *must* call `FirebaseApp.configure()` natively, you must also install
+an App Check provider factory **before** `configure()`. Otherwise the Apple
+SDK locks in DeviceCheck on physical devices, and `providerApple` passed to
+Dart `activate()` is ignored. `activate()` on Android is unaffected.
+
+```swift
+import FirebaseAppCheck
+import FirebaseCore
+
+final class MyAppCheckProviderFactory: NSObject, AppCheckProviderFactory {
+  func createProvider(with app: FirebaseApp) -> (any AppCheckProvider)? {
+    #if DEBUG || targetEnvironment(simulator)
+      return AppCheckDebugProvider(app: app)
+    #else
+      return AppAttestProvider(app: app)
+    #endif
+  }
+}
+
+// In application(_:didFinishLaunchingWithOptions:), in this order:
+AppCheck.setAppCheckProviderFactory(MyAppCheckProviderFactory())
+FirebaseApp.configure()
+```
+
+This limitation is easiest to miss on a simulator, where the Apple SDK
+already defaults to the debug provider. See
+[flutterfire#18613](https://github.com/firebase/flutterfire/issues/18613).
 
 ## Next steps
 

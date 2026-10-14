@@ -16,9 +16,16 @@ import 'dart:async';
 
 import 'package:firebase_data_connect/firebase_data_connect.dart';
 import 'package:firebase_data_connect_example/generated/movies.dart';
+import 'package:flutter/foundation.dart' show kIsWasm;
 import 'package:flutter_test/flutter_test.dart';
 
 import 'query_e2e.dart'; // For deleteAllMovies
+
+/// See the note on the same constant in `listen_e2e.dart`.
+///
+/// https://github.com/firebase/flutterfire/issues/18518
+const _wasmSkipReason =
+    'Subscriptions over the multiplexed WebSocket are unstable under dart2wasm';
 
 const _streamTimeout = Duration(seconds: 30);
 
@@ -144,9 +151,8 @@ void runWebSocketTests() {
           await _waitForStreamEvent(isReady.future, 'listMovies subscription');
 
           // Now perform a query, which should go over WebSocket if connected
-          final result =
-              await MoviesConnector.instance.listMovies().ref().execute();
-          expect(result.data.movies.length, 0);
+          final movies = await listMoviesFromServer();
+          expect(movies, isEmpty);
 
           // Perform a mutation
           await MoviesConnector.instance
@@ -188,31 +194,35 @@ void runWebSocketTests() {
           count++;
         });
 
-        await _waitForStreamEvent(isReady.future, 'listMovies subscription');
-
-        // Cancel the subscription
-        await sub.cancel();
-
-        // Create a movie
-        await MoviesConnector.instance
-            .createMovie(
-              genre: 'Action',
-              title: 'Avatar',
-              releaseYear: 2009,
-            )
-            .rating(4.7)
-            .ref()
-            .execute();
-
-        // Wait a bit to ensure no event is received
-        bool received = true;
         try {
-          await receivedUpdate.future.timeout(const Duration(seconds: 2));
-        } on TimeoutException {
-          received = false;
+          await _waitForStreamEvent(isReady.future, 'listMovies subscription');
+
+          // Cancel the subscription
+          await sub.cancel();
+
+          // Create a movie
+          await MoviesConnector.instance
+              .createMovie(
+                genre: 'Action',
+                title: 'Avatar',
+                releaseYear: 2009,
+              )
+              .rating(4.7)
+              .ref()
+              .execute();
+
+          // Wait a bit to ensure no event is received
+          bool received = true;
+          try {
+            await receivedUpdate.future.timeout(const Duration(seconds: 2));
+          } on TimeoutException {
+            received = false;
+          }
+          expect(received, isFalse,
+              reason: 'Should not receive events after cancel');
+        } finally {
+          await sub.cancel();
         }
-        expect(received, isFalse,
-            reason: 'Should not receive events after cancel');
       });
 
       testWidgets(
@@ -232,19 +242,24 @@ void runWebSocketTests() {
           count++;
         });
 
-        await _waitForStreamEvent(isReady.future, 'listMovies subscription');
+        try {
+          await _waitForStreamEvent(isReady.future, 'listMovies subscription');
 
-        final dataConnect = MoviesConnector.instance.dataConnect;
-        final transport = (dataConnect as dynamic).transport;
-        final ws = (transport as dynamic).websocket;
+          final dataConnect = MoviesConnector.instance.dataConnect;
+          final transport = (dataConnect as dynamic).transport;
+          final ws = (transport as dynamic).websocket;
 
-        expect(ws.isConnected, isTrue);
+          expect(ws.isConnected, isTrue);
 
-        // Cancel the subscription
-        await sub.cancel();
+          // Cancel the subscription
+          await sub.cancel();
 
-        expect(ws.isConnected, isFalse);
+          expect(ws.isConnected, isFalse);
+        } finally {
+          await sub.cancel();
+        }
       });
     },
+    skip: kIsWasm ? _wasmSkipReason : null,
   );
 }

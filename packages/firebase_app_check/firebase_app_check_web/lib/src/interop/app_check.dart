@@ -18,7 +18,7 @@ export 'app_check_interop.dart';
 AppCheck? getAppCheckInstance([App? app, WebProvider? provider]) {
   app_check_interop.ReCaptchaProvider? jsProvider;
 
-  if (provider == null || provider is WebReCaptchaProvider) {
+  if (provider == null) {
     jsProvider = null;
   } else if (provider is WebDebugProvider) {
     // Set the debug token global before initializing App Check.

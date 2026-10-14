@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.os.Handler;
 import android.util.Log;
 import androidx.annotation.NonNull;
-import io.flutter.embedding.engine.FlutterShellArgs;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -35,28 +34,6 @@ public class FlutterFirebaseMessagingBackgroundService extends JobIntentService 
         FlutterFirebaseMessagingUtils.JOB_ID,
         messageIntent,
         isHighPriority);
-  }
-
-  /**
-   * Starts the background isolate for the {@link FlutterFirebaseMessagingBackgroundService}.
-   *
-   * <p>Preconditions:
-   *
-   * <ul>
-   *   <li>The given {@code callbackHandle} must correspond to a registered Dart callback. If the
-   *       handle does not resolve to a Dart callback then this method does nothing.
-   *   <li>A static {@link #pluginRegistrantCallback} must exist, otherwise a {@link
-   *       PluginRegistrantException} will be thrown.
-   * </ul>
-   */
-  @SuppressWarnings("JavadocReference")
-  public static void startBackgroundIsolate(long callbackHandle, FlutterShellArgs shellArgs) {
-    if (flutterBackgroundExecutor != null) {
-      Log.w(TAG, "Attempted to start a duplicate background isolate. Returning...");
-      return;
-    }
-    flutterBackgroundExecutor = new FlutterFirebaseMessagingBackgroundExecutor();
-    flutterBackgroundExecutor.startBackgroundIsolate(callbackHandle, shellArgs);
   }
 
   /**

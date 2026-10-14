@@ -607,6 +607,25 @@ class FirebaseDatabasePlugin : FlutterFirebasePlugin, FlutterPlugin, FirebaseDat
     }
   }
 
+  /**
+   * Wraps a failed write in a [FlutterError] that carries the Realtime Database code in its
+   * details, the way the transaction path already does.
+   *
+   * `FlutterError("firebase_database", message, null)` drops the code: the Dart converter reads it
+   * out of the details map, so every failure used to reach Dart as `unknown`.
+   */
+  private fun writeFlutterError(exception: Exception?): FlutterError {
+    val databaseException =
+        when (exception) {
+          null -> FlutterFirebaseDatabaseException.unknown()
+          is FlutterFirebaseDatabaseException -> exception
+          is DatabaseException -> FlutterFirebaseDatabaseException.fromDatabaseException(exception)
+          else -> FlutterFirebaseDatabaseException.fromException(exception)
+        }
+    return FlutterError(
+        "firebase_database", databaseException.message, databaseException.additionalData)
+  }
+
   override fun databaseReferenceSet(
       app: DatabasePigeonFirebaseApp,
       request: DatabaseReferenceRequest,
@@ -623,9 +642,7 @@ class FirebaseDatabasePlugin : FlutterFirebasePlugin, FlutterPlugin, FirebaseDat
           if (completedTask.isSuccessful) {
             callback(KotlinResult.success(Unit))
           } else {
-            val exception = completedTask.exception ?: Exception("Unknown error setting value")
-            callback(
-                KotlinResult.failure(FlutterError("firebase_database", exception.message, null)))
+            callback(KotlinResult.failure(writeFlutterError(completedTask.exception)))
           }
         }
       }
@@ -665,10 +682,7 @@ class FirebaseDatabasePlugin : FlutterFirebasePlugin, FlutterPlugin, FirebaseDat
           if (completedTask.isSuccessful) {
             callback(KotlinResult.success(Unit))
           } else {
-            val exception =
-                completedTask.exception ?: Exception("Unknown error setting value with priority")
-            callback(
-                KotlinResult.failure(FlutterError("firebase_database", exception.message, null)))
+            callback(KotlinResult.failure(writeFlutterError(completedTask.exception)))
           }
         }
       }
@@ -691,8 +705,7 @@ class FirebaseDatabasePlugin : FlutterFirebasePlugin, FlutterPlugin, FirebaseDat
       if (task.isSuccessful) {
         callback(KotlinResult.success(Unit))
       } else {
-        val exception = task.exception
-        callback(KotlinResult.failure(FlutterError("firebase_database", exception?.message, null)))
+        callback(KotlinResult.failure(writeFlutterError(task.exception)))
       }
     }
   }

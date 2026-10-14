@@ -9,10 +9,6 @@ buildscript {
         google()
         mavenCentral()
     }
-
-    dependencies {
-        classpath 'com.android.tools.build:gradle:9.0.0'
-    }
 }
 
 rootProject.allprojects {
@@ -21,8 +17,6 @@ rootProject.allprojects {
         mavenCentral()
     }
 }
-
-apply plugin: 'com.android.library'
 
 def firebaseCoreProject = findProject(':firebase_core')
 if (firebaseCoreProject == null) {

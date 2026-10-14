@@ -4,6 +4,8 @@
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics_platform_interface/firebase_crashlytics_platform_interface.dart';
+import 'package:firebase_crashlytics_platform_interface/src/pigeon/messages.pigeon.dart';
+import 'package:firebase_crashlytics_platform_interface/src/pigeon/test_api.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -11,217 +13,143 @@ import '../mock.dart';
 
 void main() {
   setupFirebaseCrashlyticsMocks();
-  TestMethodChannelFirebaseCrashlytics? mockCrashlytics;
-  FirebaseCrashlyticsPlatform? crashlytics;
-  final List<MethodCall> logger = <MethodCall>[];
 
-  // mock props
-  bool mockPlatformExceptionThrown = false;
-  bool mockExceptionThrown = false;
+  late FirebaseCrashlyticsPlatform crashlytics;
+  late TestMethodChannelFirebaseCrashlytics mockCrashlytics;
+  late _TestFirebaseCrashlyticsHostApi hostApi;
 
-  bool kUnsentReports = false;
+  const kMockMessage = 'foo.bar.baz';
+  const kMockUserIdentifier = 'user12345';
 
-  String kMockMessage = 'foo.bar.baz';
-  String kMockUserIdentifier = 'user12345';
-
-  Map<String, dynamic> kMockError = <String, dynamic>{
-    'exception': 'Test exception',
-    'reason': 'MethodChannelTest',
-    'fatal': false,
-    'information': 'This is a test exception',
-    'buildId': '',
-    'loadingUnits': [],
-    'stackTraceElements': <Map<String, String>>[
-      <String, String>{
-        'declaringClass': 'MethodChannelCrashlyticsTest',
-        'methodName': 'recordError',
-        'fileName': 'method_channel_crashlytics_test.dart',
-        'lineNumber': '99999',
-      }
-    ],
-  };
+  final kMockStackTraceElements = <Map<String, String>>[
+    <String, String>{
+      'class': 'MethodChannelCrashlyticsTest',
+      'method': 'recordError',
+      'file': 'method_channel_crashlytics_test.dart',
+      'line': '99999',
+    }
+  ];
 
   group('$MethodChannelFirebaseCrashlytics', () {
     setUpAll(() async {
-      FirebaseApp app = await Firebase.initializeApp();
-
-      handleMethodCall((call) async {
-        logger.add(call);
-
-        if (mockExceptionThrown) {
-          throw Exception();
-        } else if (mockPlatformExceptionThrown) {
-          throw PlatformException(code: 'UNKNOWN');
-        }
-
-        switch (call.method) {
-          case 'Crashlytics#recordError':
-            return null;
-          case 'Crashlytics#checkForUnsentReports':
-            return <String, dynamic>{'unsentReports': kUnsentReports};
-          case 'Crashlytics#crash':
-            return null;
-          case 'Crashlytics#deleteUnsentReports':
-            kUnsentReports = false;
-            return null;
-          case 'Crashlytics#didCrashOnPreviousExecution':
-            return <String, dynamic>{'didCrashOnPreviousExecution': true};
-          case 'Crashlytics#log':
-            return null;
-          case 'Crashlytics#sendUnsentReports':
-            return null;
-          case 'Crashlytics#setCrashlyticsCollectionEnabled':
-            return <String, dynamic>{'isCrashlyticsCollectionEnabled': true};
-          default:
-            return true;
-        }
-      });
-
+      final FirebaseApp app = await Firebase.initializeApp();
+      hostApi = _TestFirebaseCrashlyticsHostApi();
+      TestFirebaseCrashlyticsHostApi.setUp(hostApi);
       crashlytics = MethodChannelFirebaseCrashlytics(app: app);
       mockCrashlytics = TestMethodChannelFirebaseCrashlytics(app);
     });
 
-    setUp(() async {
-      mockPlatformExceptionThrown = false;
-      mockExceptionThrown = false;
-      logger.clear();
+    tearDownAll(() {
+      TestFirebaseCrashlyticsHostApi.setUp(null);
     });
 
-    tearDown(() async {
-      mockPlatformExceptionThrown = false;
-      mockExceptionThrown = false;
+    setUp(() {
+      hostApi.reset();
     });
 
     group('checkForUnsentReports', () {
       test('should call delegate method successfully', () async {
-        kUnsentReports = true;
-        var isUnsentReports = await mockCrashlytics!.checkForUnsentReports();
+        hostApi.unsentReports = true;
+        final isUnsentReports = await mockCrashlytics.checkForUnsentReports();
 
         expect(isUnsentReports, isTrue);
-
-        // check native method was called
-        expect(logger, <Matcher>[
-          isMethodCall(
-            'Crashlytics#checkForUnsentReports',
-            arguments: null,
-          ),
-        ]);
-
-        kUnsentReports = false;
+        expect(hostApi.checkForUnsentReportsCalled, isTrue);
       });
 
       test(
           'catch a [PlatformException] error and throws a [FirebaseCrashlyticsException] error',
           () async {
-        mockPlatformExceptionThrown = true;
+        hostApi.throwPlatformException = true;
 
         await testExceptionHandling(
           'PLATFORM',
-          mockCrashlytics!.checkForUnsentReports,
+          mockCrashlytics.checkForUnsentReports,
         );
       });
     });
 
     group('crash', () {
-      test('should call delegate method successfully', () {
-        crashlytics!.crash();
+      test('should call delegate method successfully', () async {
+        await mockCrashlytics.crash();
 
-        // check native method was called
-        expect(logger, <Matcher>[
-          isMethodCall(
-            'Crashlytics#crash',
-            arguments: null,
-          ),
-        ]);
+        expect(hostApi.crashCalled, isTrue);
       });
 
       test(
           'catch a [PlatformException] error and throws a [FirebaseCrashlyticsException] error',
           () async {
-        mockPlatformExceptionThrown = true;
+        hostApi.throwPlatformException = true;
 
-        await testExceptionHandling('PLATFORM', crashlytics!.crash);
+        await testExceptionHandling('PLATFORM', crashlytics.crash);
       });
     });
 
     group('deleteUnsentReports', () {
       test('should call delegate method successfully', () async {
-        kUnsentReports = true;
-        await crashlytics!.deleteUnsentReports();
+        hostApi.unsentReports = true;
+        await crashlytics.deleteUnsentReports();
 
-        expect(kUnsentReports, isFalse);
-
-        // check native method was called
-        expect(logger, <Matcher>[
-          isMethodCall(
-            'Crashlytics#deleteUnsentReports',
-            arguments: null,
-          ),
-        ]);
+        expect(hostApi.unsentReports, isFalse);
+        expect(hostApi.deleteUnsentReportsCalled, isTrue);
       });
 
       test(
           'catch a [PlatformException] error and throws a [FirebaseCrashlyticsException] error',
           () async {
-        mockPlatformExceptionThrown = true;
+        hostApi.throwPlatformException = true;
 
         await testExceptionHandling(
           'PLATFORM',
-          crashlytics!.deleteUnsentReports,
+          crashlytics.deleteUnsentReports,
         );
       });
     });
 
     group('didCrashOnPreviousExecution', () {
       test('should call delegate method successfully', () async {
-        var didCrash = await crashlytics!.didCrashOnPreviousExecution();
+        final didCrash = await crashlytics.didCrashOnPreviousExecution();
 
         expect(didCrash, isTrue);
-
-        // check native method was called
-        expect(logger, <Matcher>[
-          isMethodCall(
-            'Crashlytics#didCrashOnPreviousExecution',
-            arguments: null,
-          ),
-        ]);
+        expect(hostApi.didCrashOnPreviousExecutionCalled, isTrue);
       });
 
       test(
           'catch a [PlatformException] error and throws a [FirebaseCrashlyticsException] error',
           () async {
-        mockPlatformExceptionThrown = true;
+        hostApi.throwPlatformException = true;
 
         await testExceptionHandling(
           'PLATFORM',
-          crashlytics!.didCrashOnPreviousExecution,
+          crashlytics.didCrashOnPreviousExecution,
         );
       });
     });
 
     group('recordError', () {
       test('should call delegate method successfully', () async {
-        await crashlytics!.recordError(
-          exception: kMockError['exception'],
-          fatal: kMockError['fatal'],
-          reason: kMockError['reason'],
-          information: kMockError['information'],
-          stackTraceElements: kMockError['stackTraceElements'],
+        await crashlytics.recordError(
+          exception: 'Test exception',
+          reason: 'MethodChannelTest',
+          information: 'This is a test exception',
+          stackTraceElements: kMockStackTraceElements,
         );
 
-        // check native method was called
-        expect(logger, <Matcher>[
-          isMethodCall(
-            'Crashlytics#recordError',
-            arguments: <String, dynamic>{
-              'exception': kMockError['exception'],
-              'reason': kMockError['reason'],
-              'fatal': kMockError['fatal'],
-              'information': kMockError['information'],
-              'stackTraceElements': kMockError['stackTraceElements'],
-              'buildId': '',
-              'loadingUnits': [],
-            },
+        expect(hostApi.lastRecordError, isNotNull);
+        expect(hostApi.lastRecordError!.exception, 'Test exception');
+        expect(hostApi.lastRecordError!.reason, 'MethodChannelTest');
+        expect(hostApi.lastRecordError!.fatal, isFalse);
+        expect(
+          hostApi.lastRecordError!.information,
+          'This is a test exception',
+        );
+        expect(hostApi.lastRecordError!.buildId, '');
+        expect(hostApi.lastRecordError!.loadingUnits, isEmpty);
+        expect(hostApi.lastRecordError!.stackTraceElements, [
+          CrashlyticsStackFrame(
+            className: 'MethodChannelCrashlyticsTest',
+            method: 'recordError',
+            file: 'method_channel_crashlytics_test.dart',
+            line: '99999',
           ),
         ]);
       });
@@ -229,11 +157,11 @@ void main() {
       test(
           'catch a [PlatformException] error and throws a [FirebaseCrashlyticsException] error',
           () async {
-        mockPlatformExceptionThrown = true;
+        hostApi.throwPlatformException = true;
 
         await testExceptionHandling(
           'PLATFORM',
-          () => crashlytics!.recordError(
+          () => crashlytics.recordError(
             exception: 'test exception',
             reason: 'test',
             information: 'test',
@@ -244,119 +172,81 @@ void main() {
     });
 
     test('log', () async {
-      await crashlytics!.log(kMockMessage);
+      await crashlytics.log(kMockMessage);
 
-      // check native method was called
-      expect(logger, <Matcher>[
-        isMethodCall(
-          'Crashlytics#log',
-          arguments: <String, dynamic>{
-            'message': kMockMessage,
-          },
-        ),
-      ]);
+      expect(hostApi.lastLogMessage, kMockMessage);
     });
 
     group('sendUnsentReports', () {
       test('should call delegate method successfully', () async {
-        await crashlytics!.sendUnsentReports();
+        await crashlytics.sendUnsentReports();
 
-        // check native method was called
-        expect(logger, <Matcher>[
-          isMethodCall(
-            'Crashlytics#sendUnsentReports',
-            arguments: null,
-          ),
-        ]);
+        expect(hostApi.sendUnsentReportsCalled, isTrue);
       });
 
       test(
           'catch a [PlatformException] error and throws a [FirebaseCrashlyticsException] error',
           () async {
-        mockPlatformExceptionThrown = true;
+        hostApi.throwPlatformException = true;
 
-        await testExceptionHandling('PLATFORM', crashlytics!.sendUnsentReports);
+        await testExceptionHandling('PLATFORM', crashlytics.sendUnsentReports);
       });
     });
 
     group('setCrashlyticsCollectionEnabled', () {
       test('should call delegate method successfully', () async {
-        await crashlytics!.setCrashlyticsCollectionEnabled(true);
+        await crashlytics.setCrashlyticsCollectionEnabled(true);
 
-        // check native method was called
-        expect(logger, <Matcher>[
-          isMethodCall(
-            'Crashlytics#setCrashlyticsCollectionEnabled',
-            arguments: <String, dynamic>{
-              'enabled': true,
-            },
-          ),
-        ]);
+        expect(hostApi.lastCollectionEnabled, isTrue);
       });
 
       test(
           'catch a [PlatformException] error and throws a [FirebaseCrashlyticsException] error',
           () async {
-        mockPlatformExceptionThrown = true;
+        hostApi.throwPlatformException = true;
 
         await testExceptionHandling(
           'PLATFORM',
-          () => crashlytics!.setCrashlyticsCollectionEnabled(true),
+          () => crashlytics.setCrashlyticsCollectionEnabled(true),
         );
       });
     });
 
     group('setUserIdentifier', () {
       test('should call delegate method successfully', () async {
-        await crashlytics!.setUserIdentifier(kMockUserIdentifier);
+        await crashlytics.setUserIdentifier(kMockUserIdentifier);
 
-        // check native method was called
-        expect(logger, <Matcher>[
-          isMethodCall(
-            'Crashlytics#setUserIdentifier',
-            arguments: <String, dynamic>{
-              'identifier': kMockUserIdentifier,
-            },
-          ),
-        ]);
+        expect(hostApi.lastUserIdentifier, kMockUserIdentifier);
       });
 
       test(
           'catch a [PlatformException] error and throws a [FirebaseCrashlyticsException] error',
           () async {
-        mockPlatformExceptionThrown = true;
+        hostApi.throwPlatformException = true;
 
         await testExceptionHandling(
           'PLATFORM',
-          () => crashlytics!.setUserIdentifier(kMockUserIdentifier),
+          () => crashlytics.setUserIdentifier(kMockUserIdentifier),
         );
       });
     });
 
     group('setCustomKey', () {
       test('setCustomKey', () async {
-        await crashlytics!.setCustomKey('foo', 'bar');
+        await crashlytics.setCustomKey('foo', 'bar');
 
-        // check native method was called
-        expect(logger, <Matcher>[
-          isMethodCall(
-            'Crashlytics#setCustomKey',
-            arguments: <String, dynamic>{
-              'key': 'foo',
-              'value': 'bar',
-            },
-          ),
-        ]);
+        expect(hostApi.lastCustomKey, 'foo');
+        expect(hostApi.lastCustomValue, 'bar');
       });
 
       test(
           'catch a [PlatformException] error and throws a [FirebaseCrashlyticsException] error',
           () async {
-        mockPlatformExceptionThrown = true;
+        hostApi.throwPlatformException = true;
 
         await testExceptionHandling(
           'PLATFORM',
-          () => crashlytics!.setCustomKey('foo', 'bar'),
+          () => crashlytics.setCustomKey('foo', 'bar'),
         );
       });
     });
@@ -368,4 +258,107 @@ class TestMethodChannelFirebaseCrashlytics
   TestMethodChannelFirebaseCrashlytics(FirebaseApp app) : super(app: app);
   @override
   bool get isCrashlyticsCollectionEnabled => false;
+}
+
+class _TestFirebaseCrashlyticsHostApi
+    implements TestFirebaseCrashlyticsHostApi {
+  bool throwPlatformException = false;
+  bool unsentReports = false;
+  bool checkForUnsentReportsCalled = false;
+  bool crashCalled = false;
+  bool deleteUnsentReportsCalled = false;
+  bool didCrashOnPreviousExecutionCalled = false;
+  bool sendUnsentReportsCalled = false;
+  RecordErrorRequest? lastRecordError;
+  String? lastLogMessage;
+  bool? lastCollectionEnabled;
+  String? lastUserIdentifier;
+  String? lastCustomKey;
+  String? lastCustomValue;
+
+  void reset() {
+    throwPlatformException = false;
+    checkForUnsentReportsCalled = false;
+    crashCalled = false;
+    deleteUnsentReportsCalled = false;
+    didCrashOnPreviousExecutionCalled = false;
+    sendUnsentReportsCalled = false;
+    lastRecordError = null;
+    lastLogMessage = null;
+    lastCollectionEnabled = null;
+    lastUserIdentifier = null;
+    lastCustomKey = null;
+    lastCustomValue = null;
+  }
+
+  void _maybeThrow() {
+    if (throwPlatformException) {
+      throw PlatformException(code: 'UNKNOWN');
+    }
+  }
+
+  @override
+  Future<bool> checkForUnsentReports() async {
+    _maybeThrow();
+    checkForUnsentReportsCalled = true;
+    return unsentReports;
+  }
+
+  @override
+  Future<void> crash() async {
+    _maybeThrow();
+    crashCalled = true;
+  }
+
+  @override
+  Future<void> deleteUnsentReports() async {
+    _maybeThrow();
+    deleteUnsentReportsCalled = true;
+    unsentReports = false;
+  }
+
+  @override
+  Future<bool> didCrashOnPreviousExecution() async {
+    _maybeThrow();
+    didCrashOnPreviousExecutionCalled = true;
+    return true;
+  }
+
+  @override
+  Future<void> recordError(RecordErrorRequest request) async {
+    _maybeThrow();
+    lastRecordError = request;
+  }
+
+  @override
+  Future<void> log(String message) async {
+    _maybeThrow();
+    lastLogMessage = message;
+  }
+
+  @override
+  Future<void> sendUnsentReports() async {
+    _maybeThrow();
+    sendUnsentReportsCalled = true;
+  }
+
+  @override
+  Future<bool> setCrashlyticsCollectionEnabled(bool enabled) async {
+    _maybeThrow();
+    lastCollectionEnabled = enabled;
+    return enabled;
+  }
+
+  @override
+  Future<void> setUserIdentifier(String identifier) async {
+    _maybeThrow();
+    lastUserIdentifier = identifier;
+  }
+
+  @override
+  Future<void> setCustomKey(String key, String value) async {
+    _maybeThrow();
+    lastCustomKey = key;
+    lastCustomValue = value;
+  }
 }

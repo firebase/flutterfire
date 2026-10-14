@@ -148,7 +148,7 @@ final class DeveloperSerialization implements SerializationStrategy {
       };
 }
 
-// Developer API and Vertex AI has different _parseSafetyRating logic.
+// Developer API and Agent Platform has different _parseSafetyRating logic.
 Candidate _parseCandidate(Object? jsonObject) {
   if (jsonObject is! Map) {
     throw unhandledFormat('Candidate', jsonObject);
@@ -190,7 +190,7 @@ Candidate _parseCandidate(Object? jsonObject) {
   );
 }
 
-// Developer API and Vertex AI has different _parseSafetyRating logic.
+// Developer API and Agent Platform has different _parseSafetyRating logic.
 PromptFeedback _parsePromptFeedback(Object jsonObject) {
   return switch (jsonObject) {
     {

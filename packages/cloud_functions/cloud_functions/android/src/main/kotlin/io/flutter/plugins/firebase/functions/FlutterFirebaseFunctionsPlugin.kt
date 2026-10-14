@@ -136,7 +136,7 @@ class FlutterFirebaseFunctionsPlugin : FlutterPlugin, FlutterFirebasePlugin, Clo
       }
     }
 
-    details["code"] = code.replace("_", "-").lowercase(Locale.getDefault())
+    details["code"] = mapFunctionsErrorCode(code)
     details["message"] = message
 
     if (additionalData != null) {
@@ -164,6 +164,11 @@ class FlutterFirebaseFunctionsPlugin : FlutterPlugin, FlutterFirebasePlugin, Clo
 
   companion object {
     private const val METHOD_CHANNEL_NAME = "plugins.flutter.io/firebase_functions"
+
+    // Locale.ROOT: Turkish/Azerbaijani map 'I' → 'ı' under Locale.getDefault().
+    internal fun mapFunctionsErrorCode(code: String): String {
+      return code.replace("_", "-").lowercase(Locale.ROOT)
+    }
   }
 
   override fun call(arguments: Map<String, Any?>, callback: (Result<Any?>) -> Unit) {

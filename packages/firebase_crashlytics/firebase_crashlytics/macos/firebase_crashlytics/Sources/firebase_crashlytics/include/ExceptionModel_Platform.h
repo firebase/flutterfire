@@ -1,1 +1,0 @@
-../../../../../ios/firebase_crashlytics/Sources/firebase_crashlytics/include/ExceptionModel_Platform.h

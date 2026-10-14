@@ -18,6 +18,8 @@ part 'create_movie.dart';
 
 part 'delete_movie.dart';
 
+part 'delete_all_movie_data.dart';
+
 part 'thing.dart';
 
 part 'seed_data.dart';
@@ -92,6 +94,12 @@ class MoviesConnector {
     return DeleteMovieVariablesBuilder(
       dataConnect,
       id: id,
+    );
+  }
+
+  DeleteAllMovieDataVariablesBuilder deleteAllMovieData() {
+    return DeleteAllMovieDataVariablesBuilder(
+      dataConnect,
     );
   }
 

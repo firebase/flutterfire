@@ -199,6 +199,10 @@ class User {
   /// Links with an AuthProvider using native authentication flow.
   /// On web, you should use [linkWithPopup] or [linkWithRedirect] instead.
   ///
+  /// On macOS, only [AppleAuthProvider] is supported: the Firebase Apple SDK
+  /// implements the OAuth web sign-in flow on iOS only. Any other provider
+  /// throws a [FirebaseAuthException] with the code `unsupported-platform`.
+  ///
   /// A [FirebaseAuthException] maybe thrown with the following error code:
   /// - **provider-already-linked**:
   ///  - Thrown if the provider has already been linked to the user. This error
@@ -251,6 +255,10 @@ class User {
   ///
   /// Use before operations such as [User.updatePassword] that require tokens
   /// from recent sign-in attempts.
+  ///
+  /// On macOS, only [AppleAuthProvider] is supported: the Firebase Apple SDK
+  /// implements the OAuth web sign-in flow on iOS only. Any other provider
+  /// throws a [FirebaseAuthException] with the code `unsupported-platform`.
   ///
   /// A [FirebaseAuthException] maybe thrown with the following error code:
   /// - **user-mismatch**:
