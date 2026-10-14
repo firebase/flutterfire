@@ -10,11 +10,11 @@ import 'dart:io';
 /// Examples whose `lib/firebase_options.dart` this script fills in with dummy
 /// credentials.
 ///
-/// The nine live-tier examples (ai, analytics, app_check, app_installations,
-/// crashlytics, messaging, ml_model_downloader, performance, remote_config)
-/// are still listed: their `lib/main.dart` imports `firebase_options.dart`, so
-/// without a file here `melos analyze-ci` and every example build in
-/// `all_plugins.yaml` fail on an unresolved import.
+/// The eight live-tier examples (ai, analytics, app_check, app_installations,
+/// crashlytics, messaging, performance, remote_config) are still listed: their
+/// `lib/main.dart` imports `firebase_options.dart`, so without a file here
+/// `melos analyze-ci` and every example build in `all_plugins.yaml` fail on an
+/// unresolved import.
 ///
 /// Their e2e workflows never take this path. `e2e_tests_<product>.yaml` gets
 /// the real values from repository secrets ("Inject Firebase config") and only
@@ -36,7 +36,6 @@ const _firebaseOptionsPaths = <String>[
   'packages/firebase_database/firebase_database/example/lib/firebase_options.dart',
   'packages/firebase_in_app_messaging/firebase_in_app_messaging/example/lib/firebase_options.dart',
   'packages/firebase_messaging/firebase_messaging/example/lib/firebase_options.dart',
-  'packages/firebase_ml_model_downloader/firebase_ml_model_downloader/example/lib/firebase_options.dart',
   'packages/firebase_performance/firebase_performance/example/lib/firebase_options.dart',
   'packages/firebase_remote_config/firebase_remote_config/example/lib/firebase_options.dart',
   'packages/firebase_storage/firebase_storage/example/lib/firebase_options.dart',
@@ -50,12 +49,12 @@ const _firebaseOptionsPaths = <String>[
 /// the bundle - the plugin registrant runs it before any Dart code, so the Dart
 /// `FirebaseOptions` never get a say. `FIRApp` then eagerly instantiates
 /// `FIRInstallations`, which is a hard dependency of Analytics, App Check,
-/// App Installations, Crashlytics, In-App Messaging, ML Model Downloader,
-/// Messaging, Performance and Remote Config. `+[FIRInstallations
-/// validateAPIKey:]` raises an ObjC exception - i.e. SIGABRT at launch, before
-/// the VM service is up, which `flutter test` only ever sees as
-/// "WebSocketChannelException: Connection refused" - unless the key is exactly
-/// 39 characters, starts with `A` and contains only base64url characters.
+/// App Installations, Crashlytics, In-App Messaging, Messaging, Performance
+/// and Remote Config. `+[FIRInstallations validateAPIKey:]` raises an ObjC
+/// exception - i.e. SIGABRT at launch, before the VM service is up, which
+/// `flutter test` only ever sees as "WebSocketChannelException: Connection
+/// refused" - unless the key is exactly 39 characters, starts with `A` and
+/// contains only base64url characters.
 ///
 /// So: keep the shape, keep the value obviously fake.
 const _dummyApiKey = 'AIzaSyDUMMYKEYFORFLUTTERFIRECITESTS0000';
@@ -141,7 +140,7 @@ class DefaultFirebaseOptions {
 }
 ''';
 
-/// Example roots of the nine live-tier products, keyed by the name used in
+/// Example roots of the eight live-tier products, keyed by the name used in
 /// `--live-tier-plist=<name>`.
 ///
 /// Every one of these Xcode projects lists `GoogleService-Info.plist` in a
@@ -172,14 +171,12 @@ const _liveTierExampleRoots = <String, String>{
       'packages/firebase_app_installations/firebase_app_installations/example',
   'crashlytics': 'packages/firebase_crashlytics/firebase_crashlytics/example',
   'messaging': 'packages/firebase_messaging/firebase_messaging/example',
-  'ml_model_downloader':
-      'packages/firebase_ml_model_downloader/firebase_ml_model_downloader/example',
   'performance': 'packages/firebase_performance/firebase_performance/example',
   'remote_config':
       'packages/firebase_remote_config/firebase_remote_config/example',
 };
 
-/// The app identity shared by the mega `tests` app and the nine live-tier
+/// The app identity shared by the mega `tests` app and the eight live-tier
 /// examples: live Firebase backends only accept app ids registered in the
 /// `flutterfire-e2e-tests` project.
 const _liveTierBundleId = 'io.flutter.plugins.firebase.tests';

@@ -2,8 +2,7 @@ name: reusable-e2e-web
 
 # The web half of the per-product e2e suite: `flutter drive` the example under
 # chromedriver. Called by every `e2e_tests_<product>.yaml` whose product ships
-# a web implementation (everything except firebase_crashlytics and
-# firebase_ml_model_downloader).
+# a web implementation (everything except firebase_crashlytics).
 #
 # `wasm: true` selects the WebAssembly variant instead of the JS one; a product
 # whose example ships `web/wasm_index.html` calls this workflow twice, once per
