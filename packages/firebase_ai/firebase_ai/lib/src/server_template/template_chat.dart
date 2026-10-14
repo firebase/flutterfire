@@ -104,7 +104,7 @@ final class TemplateChatSession {
         if (!shouldAutoExecute) {
           // Standard handling: Update history and return the response to the user.
           if (response.candidates case [final candidate, ...]) {
-            _history.add(message);
+            _history.addAll(requestHistory);
             final normalizedContent = candidate.content.role == null
                 ? Content('model', candidate.content.parts)
                 : candidate.content;
