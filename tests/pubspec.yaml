@@ -38,8 +38,6 @@ dependencies:
   firebase_messaging: ^16.6.0
   firebase_messaging_platform_interface: ^4.10.0
   firebase_messaging_web: ^4.2.5
-  firebase_ml_model_downloader: ^0.4.4
-  firebase_ml_model_downloader_platform_interface: ^0.1.6+1
   firebase_performance: ^0.11.5
   firebase_remote_config: ^6.6.0
   firebase_remote_config_platform_interface: ^3.0.7

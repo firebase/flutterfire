@@ -65,13 +65,6 @@ and open source.
 
  (*) for development only. Production on Windows is not supported.
 
-## Preview Plugins
-
-| Name                | pub.dev                                                                                                                                                      | Firebase Product                                                                                                                                      | Documentation                                                        | View Source                                                                                                                         | Android | iOS | Web | MacOS |
-|---------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------------:|:---------:|:-----:|:-----:|:-------:|
-| ML Model Downloader (deprecated) | [![ML Model Downloader pub.dev badge](https://img.shields.io/pub/v/firebase_ml_model_downloader.svg)](https://pub.dev/packages/firebase_ml_model_downloader) | [🔗](https://firebase.google.com/products/ml) | [📖](https://firebase.google.com/docs/ml/migrate-to-cloud-storage) | [`firebase_ml_model_downloader`](https://github.com/FirebaseExtended/flutterfire/tree/main/packages/firebase_ml_model_downloader) | ✔       | ✔   | N/A | β     |
-
-
 ## Issues
 
 Please file FlutterFire specific issues, bugs, or feature requests in
