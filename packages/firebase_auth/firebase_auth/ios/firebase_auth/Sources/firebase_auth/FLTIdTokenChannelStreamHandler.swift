@@ -20,7 +20,8 @@ final class FLTIdTokenChannelStreamHandler: NSObject, FlutterStreamHandler {
   }
 
   func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink)
-    -> FlutterError? {
+    -> FlutterError?
+  {
     var initialAuthState = true
     handle = auth.addIDTokenDidChangeListener { auth, user in
       if initialAuthState {

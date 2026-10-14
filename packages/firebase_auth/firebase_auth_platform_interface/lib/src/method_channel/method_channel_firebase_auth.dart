@@ -144,8 +144,19 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     }
   }
 
+  UserPlatform? _currentUser;
+
   @override
-  UserPlatform? currentUser;
+  UserPlatform? get currentUser => _currentUser;
+
+  @override
+  set currentUser(UserPlatform? user) {
+    _currentUser = user;
+    if (user != null) {
+      _authStateChangesIsSignedOut = false;
+      _idTokenChangesIsSignedOut = false;
+    }
+  }
 
   @override
   String? languageCode;
@@ -196,7 +207,6 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       );
 
       instance.currentUser = user;
-      instance._authStateChangesIsSignedOut = false;
       streamController.add(_ValueWrapper(instance.currentUser));
     }
   }
@@ -245,7 +255,6 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       );
 
       instance.currentUser = user;
-      instance._idTokenChangesIsSignedOut = false;
       idTokenStreamController.add(_ValueWrapper(user));
       userChangesStreamController.add(_ValueWrapper(user));
     }

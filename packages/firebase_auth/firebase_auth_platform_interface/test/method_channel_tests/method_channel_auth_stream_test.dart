@@ -36,6 +36,7 @@ void main() {
   final hostResponses = <String, Object?>{
     'registerAuthStateListener': _authChannel,
     'registerIdTokenListener': _tokenChannel,
+    'signInAnonymously': InternalUserCredential(user: user),
     'signOut': null,
   };
   BasicMessageChannel<Object?> hostChannel(String method) =>
@@ -119,6 +120,15 @@ void main() {
 
       test('emits null when a signed-in user signs out', () async {
         auth.setInitialValues(currentUser: user);
+        final events = await listen(stream());
+        await injectEventChannelResponse(channel, {'user': null});
+        await pumpEventQueue();
+        expect(events.map((event) => event?.uid), ['test-user', null]);
+        expect(auth.currentUser, isNull);
+      });
+
+      test('emits null after signing in before any native events', () async {
+        await auth.signInAnonymously();
         final events = await listen(stream());
         await injectEventChannelResponse(channel, {'user': null});
         await pumpEventQueue();
