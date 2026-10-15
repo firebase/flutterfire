@@ -1,3 +1,12 @@
+## 7.0.0
+
+> Note: This release has breaking changes.
+
+ - **FIX**(apple): build on Firebase Apple SDK 13 and require macOS 11 for Swift packages ([#18783](https://github.com/firebase/flutterfire/issues/18783)). ([aca14eab](https://github.com/firebase/flutterfire/commit/aca14eab5305d80011af473bc7dd289ef71b75e8))
+ - **FIX**(android): build on Firebase BoM 35 and require minSdk 24 ([#18782](https://github.com/firebase/flutterfire/issues/18782)). ([7555707d](https://github.com/firebase/flutterfire/commit/7555707dec23382dfce1e7841c00446a21c9a406))
+ - **FEAT**(cloud_functions): expose allowInsecureTokenAttachment for Apple debug builds ([#18734](https://github.com/firebase/flutterfire/issues/18734)). ([8f954613](https://github.com/firebase/flutterfire/commit/8f95461306aed516911664e1e529ca89406b31aa))
+ - **BREAKING** **FEAT**: bump Firebase iOS SDK to 13.0.0 ([#18771](https://github.com/firebase/flutterfire/issues/18771)). ([dbf7f754](https://github.com/firebase/flutterfire/commit/dbf7f7543a37386f7e8e314d8344be82b0483b77))
+
 ## 6.5.0
 
  - **FIX**(cloud_functions): lowercase Android error codes with Locale.ROOT ([#18651](https://github.com/firebase/flutterfire/issues/18651)). ([8f0a5d01](https://github.com/firebase/flutterfire/commit/8f0a5d0198663231a27fab2802cfad179838e601))

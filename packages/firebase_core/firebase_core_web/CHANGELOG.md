@@ -1,3 +1,10 @@
+## 4.0.0
+
+> Note: This release has breaking changes.
+
+ - **FIX**(core,web): skip hot-restart listener cleanup in profile mode ([#18729](https://github.com/firebase/flutterfire/issues/18729)). ([20f2cbfd](https://github.com/firebase/flutterfire/commit/20f2cbfd6fc65ae6fc139d25c83ebc112789b060))
+ - **BREAKING** **FEAT**: bump Firebase JS SDK to 13.0.0 ([#18768](https://github.com/firebase/flutterfire/issues/18768)). ([88d7bc65](https://github.com/firebase/flutterfire/commit/88d7bc65513b0c61496ea1e74804695587050480))
+
 ## 3.12.0
 
  - **FIX**(auth,web): convert Auth errors that omit customData without throwing ([#18686](https://github.com/firebase/flutterfire/issues/18686)). ([5e518361](https://github.com/firebase/flutterfire/commit/5e518361ce7f94923437d8b0e41add7ca75083ef))

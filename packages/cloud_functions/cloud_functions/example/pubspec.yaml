@@ -7,8 +7,8 @@ environment:
   flutter: '>=3.27.0'
 
 dependencies:
-  cloud_functions: ^6.4.0
-  firebase_core: ^4.14.0
+  cloud_functions: ^7.0.0
+  firebase_core: ^5.0.0
   flutter:
     sdk: flutter
 

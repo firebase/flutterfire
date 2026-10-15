@@ -1,3 +1,14 @@
+## 0.5.0
+
+> Note: This release has breaking changes.
+
+ - **FIX**(apple): build on Firebase Apple SDK 13 and require macOS 11 for Swift packages ([#18783](https://github.com/firebase/flutterfire/issues/18783)). ([aca14eab](https://github.com/firebase/flutterfire/commit/aca14eab5305d80011af473bc7dd289ef71b75e8))
+ - **FIX**(android): build on Firebase BoM 35 and require minSdk 24 ([#18782](https://github.com/firebase/flutterfire/issues/18782)). ([7555707d](https://github.com/firebase/flutterfire/commit/7555707dec23382dfce1e7841c00446a21c9a406))
+ - **FIX**(appcheck,apple): forward getLimitedUseToken to the configured provider ([#18719](https://github.com/firebase/flutterfire/issues/18719)). ([5d3c70d2](https://github.com/firebase/flutterfire/commit/5d3c70d21e79a43277a54ac71a9979ae4d78dd74))
+ - **FIX**(appcheck): normalize telemetry token on iOS/macOS to flutter-fire-app-check ([#18706](https://github.com/firebase/flutterfire/issues/18706)). ([9f47dda9](https://github.com/firebase/flutterfire/commit/9f47dda9ed9a72ee1de555a240c4154a5796a02d))
+ - **BREAKING** **REFACTOR**(app_check): remove deprecated activate provider parameters ([#18779](https://github.com/firebase/flutterfire/issues/18779)). ([90bea4ed](https://github.com/firebase/flutterfire/commit/90bea4edd78eea274fe5b43778c5e036bf51be31))
+ - **BREAKING** **FEAT**: bump Firebase iOS SDK to 13.0.0 ([#18771](https://github.com/firebase/flutterfire/issues/18771)). ([dbf7f754](https://github.com/firebase/flutterfire/commit/dbf7f7543a37386f7e8e314d8344be82b0483b77))
+
 ## 0.4.8
 
  - **FEAT**(core): bump Firebase iOS SDK to 12.19.0 ([#18683](https://github.com/firebase/flutterfire/issues/18683)). ([35e39637](https://github.com/firebase/flutterfire/commit/35e39637f4cbef0d70043047f80d6f6e80daf8fe))

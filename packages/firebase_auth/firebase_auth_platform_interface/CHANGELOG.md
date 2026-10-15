@@ -1,3 +1,7 @@
+## 9.1.1
+
+ - Update a dependency to the latest release.
+
 ## 9.1.0
 
  - **FEAT**(auth,ios): add support for `migrateCurrentUser` ([#18460](https://github.com/firebase/flutterfire/issues/18460)). ([b4eeafba](https://github.com/firebase/flutterfire/commit/b4eeafba347abed13e5410263556e9a4bff1b96e))
