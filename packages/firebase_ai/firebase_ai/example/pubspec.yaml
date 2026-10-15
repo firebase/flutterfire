@@ -23,9 +23,9 @@ dependencies:
 
   camera: ^0.12.0+1
   cupertino_icons: ^1.0.6
-  firebase_ai: ^4.0.0
-  firebase_core: ^4.14.0
-  firebase_storage: ^13.5.0
+  firebase_ai: ^5.0.0
+  firebase_core: ^5.0.0
+  firebase_storage: ^14.0.0
   flutter:
     sdk: flutter
   flutter_animate: ^4.5.2

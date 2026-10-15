@@ -1,3 +1,15 @@
+## 7.0.0
+
+> Note: This release has breaking changes.
+
+ - **REFACTOR**(firestore): deprecate setIndexConfigurationFromJSON ([#18801](https://github.com/firebase/flutterfire/issues/18801)). ([caf683df](https://github.com/firebase/flutterfire/commit/caf683dfaefcdd2eea5a9d667b35e149bd916928))
+ - **FIX**(firestore,apple): fail a timed-out transaction instead of aborting on a later get ([#18777](https://github.com/firebase/flutterfire/issues/18777)). ([8e94b3d7](https://github.com/firebase/flutterfire/commit/8e94b3d71eedbd3e1edd708d492f95cb9d65ca2c))
+ - **FIX**(apple): build on Firebase Apple SDK 13 and require macOS 11 for Swift packages ([#18783](https://github.com/firebase/flutterfire/issues/18783)). ([aca14eab](https://github.com/firebase/flutterfire/commit/aca14eab5305d80011af473bc7dd289ef71b75e8))
+ - **FIX**(android): build on Firebase BoM 35 and require minSdk 24 ([#18782](https://github.com/firebase/flutterfire/issues/18782)). ([7555707d](https://github.com/firebase/flutterfire/commit/7555707dec23382dfce1e7841c00446a21c9a406))
+ - **FIX**(firestore,windows): preserve Firestore error codes on transaction failures ([#18737](https://github.com/firebase/flutterfire/issues/18737)). ([96d48c7c](https://github.com/firebase/flutterfire/commit/96d48c7c146af6159290b49927ca58df874af1d2))
+ - **FIX**(firestore,windows): report unimplemented for sum/average aggregations ([#18628](https://github.com/firebase/flutterfire/issues/18628)). ([a646d554](https://github.com/firebase/flutterfire/commit/a646d5546a4686b21b2b0015a9d4e5f41ca92757))
+ - **BREAKING** **FEAT**: bump Firebase iOS SDK to 13.0.0 ([#18771](https://github.com/firebase/flutterfire/issues/18771)). ([dbf7f754](https://github.com/firebase/flutterfire/commit/dbf7f7543a37386f7e8e314d8344be82b0483b77))
+
 ## 6.10.0
 
  - **FIX**(firestore,windows): honor persistenceEnabled: false ([#18662](https://github.com/firebase/flutterfire/issues/18662)). ([d94be3c4](https://github.com/firebase/flutterfire/commit/d94be3c4d9665ce12bc3fa1d4f77fccdc6777350))

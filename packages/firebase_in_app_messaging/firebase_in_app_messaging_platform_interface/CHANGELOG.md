@@ -1,3 +1,8 @@
+## 0.2.6+29
+
+ - **FEAT**(in_app_messaging): add custom Flutter display for campaigns ([#18586](https://github.com/firebase/flutterfire/issues/18586)). ([efa14e08](https://github.com/firebase/flutterfire/commit/efa14e08e78a2cba06a72a47d4dccee01be0ac61))
+ - **FEAT**(in_app_messaging): expose the message lifecycle events ([#18584](https://github.com/firebase/flutterfire/issues/18584)). ([a35e3dad](https://github.com/firebase/flutterfire/commit/a35e3dad23c32bf2b26a7029a2a71dfba38eb0cf))
+
 ## 0.2.5+28
 
  - **REFACTOR**(in_app_messaging): migrate platform channels to Pigeon ([#18529](https://github.com/firebase/flutterfire/issues/18529)). ([17c4d6fd](https://github.com/firebase/flutterfire/commit/17c4d6fda76cfe2010b22811fb71d8211b8bcca2))

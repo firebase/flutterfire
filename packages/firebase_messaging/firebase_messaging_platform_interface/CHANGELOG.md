@@ -1,3 +1,7 @@
+## 4.11.0
+
+ - **FEAT**(messaging): add FID registration APIs ([#18482](https://github.com/firebase/flutterfire/issues/18482)). ([ff6da47e](https://github.com/firebase/flutterfire/commit/ff6da47ea85fd62e4a2c267603d39f2077c6fdb3))
+
 ## 4.10.0
 
  - **FEAT**(messaging,android): improve how messaging is determining permission on Android ([#18101](https://github.com/firebase/flutterfire/issues/18101)). ([1c89b686](https://github.com/firebase/flutterfire/commit/1c89b686209c79ef800e61885bcbfbd555b589ee))
