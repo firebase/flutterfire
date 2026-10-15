@@ -9,6 +9,10 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ---
 
+**Apple SDK dependency managers:** This release dual-pins the Firebase Apple SDK. Swift Package Manager resolves **13.0.0** (`Package.swift`). CocoaPods remains on **12.19.0** (podspecs). Upgrading FlutterFire does not by itself force every app onto SPM or onto Apple SDK 13 — which manager Flutter uses for the app chooses the pin. Recent Flutter may enable SPM by default; apps that stay on CocoaPods remain on 12.19.0.
+
+`firebase_ml_model_downloader` is no longer published with FlutterFire. Existing versions on pub.dev remain available; migrate off the package before the service shutdown (see the Firebase ML / Cloud Storage migration guidance).
+
 Packages with breaking changes:
 
  - [`cloud_firestore` - `v7.0.0`](#cloud_firestore---v700)
