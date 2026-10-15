@@ -108,12 +108,10 @@ Packages with dependency updates only:
 
 #### `firebase_ai` - `v5.0.0`
 
- - **REVERT**(firebaseai): Rename Agent Platform to Gemini Enterprise ([#18740](https://github.com/firebase/flutterfire/issues/18740)) ([#18759](https://github.com/firebase/flutterfire/issues/18759)). ([3f647996](https://github.com/firebase/flutterfire/commit/3f6479969c5a1a27bf7087ac45c643557d0ac396))
  - **FIX**(ai): keep auto-executed function turns in TemplateChatSession history ([#18758](https://github.com/firebase/flutterfire/issues/18758)). ([c650d79b](https://github.com/firebase/flutterfire/commit/c650d79b65d73a048710184a3f5ae4118f979ca9))
  - **FIX**(apple): build on Firebase Apple SDK 13 and require macOS 11 for Swift packages ([#18783](https://github.com/firebase/flutterfire/issues/18783)). ([aca14eab](https://github.com/firebase/flutterfire/commit/aca14eab5305d80011af473bc7dd289ef71b75e8))
  - **FIX**(android): build on Firebase BoM 35 and require minSdk 24 ([#18782](https://github.com/firebase/flutterfire/issues/18782)). ([7555707d](https://github.com/firebase/flutterfire/commit/7555707dec23382dfce1e7841c00446a21c9a406))
  - **FIX**(firebase_ai): parse camelCase fileData response parts ([#18754](https://github.com/firebase/flutterfire/issues/18754)). ([9f70ff93](https://github.com/firebase/flutterfire/commit/9f70ff938591e8a457276cdfa664951abcb9e214))
- - **FEAT**(firebaseai): Rename Agent Platform to Gemini Enterprise ([#18740](https://github.com/firebase/flutterfire/issues/18740)). ([1035bd97](https://github.com/firebase/flutterfire/commit/1035bd97258c11fd31b25f4a8be356bfde38dd64))
  - **FEAT**(firebaseai): Deprecated `candidateCount`, `temperature`, `topP`, `topK`, `presence… ([#18694](https://github.com/firebase/flutterfire/issues/18694)). ([2c1e26fb](https://github.com/firebase/flutterfire/commit/2c1e26fb2f2309a9e545cb3734be2fbb21c1a52d))
  - **BREAKING** **REFACTOR**(firebaseai): remove deprecated apis ([#18708](https://github.com/firebase/flutterfire/issues/18708)). ([d857508b](https://github.com/firebase/flutterfire/commit/d857508be36f8997c5911b464b2e8c71ce6d8f3d))
  - **BREAKING** **FIX**(firebaseai): keep LiveSession.receive() open on unrecognized server messages ([#18770](https://github.com/firebase/flutterfire/issues/18770)). ([304c435c](https://github.com/firebase/flutterfire/commit/304c435cfe398b0f58fd28a6eaac2ae9af0593ea))
