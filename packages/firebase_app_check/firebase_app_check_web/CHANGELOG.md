@@ -2,6 +2,8 @@
 
 > Note: This release has breaking changes.
 
+Migration: replace removed `activate` parameters `webProvider` / `androidProvider` / `appleProvider` with `providerWeb` / `providerAndroid` / `providerApple`.
+
  - **BREAKING** **REFACTOR**(app_check): remove deprecated activate provider parameters ([#18779](https://github.com/firebase/flutterfire/issues/18779)). ([90bea4ed](https://github.com/firebase/flutterfire/commit/90bea4edd78eea274fe5b43778c5e036bf51be31))
 
 ## 0.2.6+1

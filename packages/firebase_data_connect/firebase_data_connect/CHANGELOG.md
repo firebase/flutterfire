@@ -2,6 +2,8 @@
 
 > Note: This release has breaking changes.
 
+Migration: `FirebaseDataConnect` / `FirebaseDataConnect.instanceFor` no longer take `auth` or `appCheck` arguments. Those instances are obtained from the associated `FirebaseApp` internally.
+
  - **FIX**(android): build on Firebase BoM 35 and require minSdk 24 ([#18782](https://github.com/firebase/flutterfire/issues/18782)). ([7555707d](https://github.com/firebase/flutterfire/commit/7555707dec23382dfce1e7841c00446a21c9a406))
  - **BREAKING** **REFACTOR**(data_connect): remove deprecated auth and appCheck arguments ([#18778](https://github.com/firebase/flutterfire/issues/18778)). ([d14c4dc6](https://github.com/firebase/flutterfire/commit/d14c4dc67b1edec7617f29bf776b933e896a8853))
  - **BREAKING** **REFACTOR**(app_check): remove deprecated activate provider parameters ([#18779](https://github.com/firebase/flutterfire/issues/18779)). ([90bea4ed](https://github.com/firebase/flutterfire/commit/90bea4edd78eea274fe5b43778c5e036bf51be31))

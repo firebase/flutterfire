@@ -2,6 +2,8 @@
 
 > Note: This release has breaking changes.
 
+Migration: `activate` no longer accepts `webProvider`, `androidProvider`, or `appleProvider`. Use `providerWeb`, `providerAndroid`, and `providerApple` instead.
+
  - **FIX**(apple): build on Firebase Apple SDK 13 and require macOS 11 for Swift packages ([#18783](https://github.com/firebase/flutterfire/issues/18783)). ([aca14eab](https://github.com/firebase/flutterfire/commit/aca14eab5305d80011af473bc7dd289ef71b75e8))
  - **FIX**(android): build on Firebase BoM 35 and require minSdk 24 ([#18782](https://github.com/firebase/flutterfire/issues/18782)). ([7555707d](https://github.com/firebase/flutterfire/commit/7555707dec23382dfce1e7841c00446a21c9a406))
  - **FIX**(appcheck,apple): forward getLimitedUseToken to the configured provider ([#18719](https://github.com/firebase/flutterfire/issues/18719)). ([5d3c70d2](https://github.com/firebase/flutterfire/commit/5d3c70d21e79a43277a54ac71a9979ae4d78dd74))

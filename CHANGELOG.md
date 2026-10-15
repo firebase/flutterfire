@@ -11,7 +11,11 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 **Apple SDK dependency managers:** This release dual-pins the Firebase Apple SDK. Swift Package Manager resolves **13.0.0** (`Package.swift`). CocoaPods remains on **12.19.0** (podspecs). Upgrading FlutterFire does not by itself force every app onto SPM or onto Apple SDK 13 — which manager Flutter uses for the app chooses the pin. Recent Flutter may enable SPM by default; apps that stay on CocoaPods remain on 12.19.0.
 
-`firebase_ml_model_downloader` is no longer published with FlutterFire. Existing versions on pub.dev remain available; migrate off the package before the service shutdown (see the Firebase ML / Cloud Storage migration guidance).
+`firebase_ml_model_downloader` is no longer published with FlutterFire. Existing versions on pub.dev remain available, but model download stops working when the service shuts down on **15 June 2027**. Move hosted models to Cloud Storage for Firebase and download them with `firebase_storage`. See [Migrate TensorFlow Lite models to Cloud Storage](https://firebase.google.com/docs/ml/migrate-to-cloud-storage).
+
+App Check: replace removed `activate` parameters `webProvider` / `androidProvider` / `appleProvider` with `providerWeb` / `providerAndroid` / `providerApple`.
+
+Data Connect: remove `auth` and `appCheck` arguments from `FirebaseDataConnect` / `instanceFor`; the plugin resolves them from the `FirebaseApp`.
 
 Packages with breaking changes:
 
