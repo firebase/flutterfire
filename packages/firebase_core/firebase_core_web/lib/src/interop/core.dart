@@ -7,7 +7,7 @@
 
 import 'dart:js_interop';
 
-import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
+import 'package:firebase_core_common/firebase_core_common.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
 
 import 'core_interop.dart' as firebase_interop;

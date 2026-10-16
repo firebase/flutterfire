@@ -48,8 +48,8 @@ void main() {
       expect(options1 == options2, isFalse);
     });
 
-    test('should construct an instance from a Map', () {
-      FirebaseOptions options1 = FirebaseOptions.fromPigeon(
+    test('should construct an instance from a Pigeon response', () {
+      FirebaseOptions options1 = firebaseOptionsFromPigeon(
         CoreFirebaseOptions(
           apiKey: 'apiKey',
           appId: 'appId',

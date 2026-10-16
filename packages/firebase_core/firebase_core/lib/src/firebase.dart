@@ -20,12 +20,26 @@ class Firebase {
   static FirebasePlatform? delegatePackingProperty;
 
   static FirebasePlatform get _delegate {
-    return delegatePackingProperty ??= FirebasePlatform.instance;
+    final delegate = delegatePackingProperty;
+    if (delegate != null) {
+      return delegate;
+    }
+
+    // The platform interface cannot depend on the `MethodChannel`
+    // implementation (it has to stay usable without Flutter), which is why the
+    // default implementation is installed lazily here instead. Platform
+    // implementations register themselves, for example `FirebaseCoreWeb` does
+    // so from `registerWith`, in which case they are kept as is.
+    if (!FirebasePlatform.isRegistered) {
+      FirebasePlatform.instance = MethodChannelFirebase();
+    }
+
+    return delegatePackingProperty = FirebasePlatform.instance;
   }
 
   /// Returns a list of all [FirebaseApp] instances that have been created.
   static List<FirebaseApp> get apps {
-    return _delegate.apps.map(FirebaseApp._).toList(growable: false);
+    return _delegate.apps.map(FirebaseApp.fromPlatform).toList(growable: false);
   }
 
   /// Initializes a new [FirebaseApp] instance by [name] and [options] and
@@ -81,7 +95,7 @@ class Firebase {
       options: resolvedOptions,
     );
 
-    return FirebaseApp._(app);
+    return FirebaseApp.fromPlatform(app);
   }
 
   /// Returns a [FirebaseApp] instance.
@@ -91,7 +105,7 @@ class Firebase {
   static FirebaseApp app([String name = defaultFirebaseAppName]) {
     FirebaseAppPlatform app = _delegate.app(name);
 
-    return FirebaseApp._(app);
+    return FirebaseApp.fromPlatform(app);
   }
 
   // TODO(rrousselGit): remove ==/hashCode

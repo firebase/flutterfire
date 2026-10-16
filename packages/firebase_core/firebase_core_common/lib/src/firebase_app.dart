@@ -3,12 +3,22 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-part of '../firebase_core.dart';
+import 'firebase_options.dart';
+import 'platform_interface/platform_interface_firebase_app.dart';
 
 /// Represents a single Firebase app instance.
 ///
 /// You can get an instance by calling [Firebase.app()].
 class FirebaseApp {
+  /// Creates a [FirebaseApp] from a [FirebaseAppPlatform] delegate.
+  ///
+  /// This is not intended to be used directly. On Flutter, use
+  /// `Firebase.initializeApp()` or `Firebase.app()` instead. When using the
+  /// platform interfaces directly, for example outside of Flutter, wrap the
+  /// result of [FirebasePlatform.initializeApp] with this constructor.
+  factory FirebaseApp.fromPlatform(FirebaseAppPlatform delegate) =>
+      FirebaseApp._(delegate);
+
   /// A [FirebaseApp] instance can only be accessed from a call to `app()` on
   /// [FirebaseCore].
   ///

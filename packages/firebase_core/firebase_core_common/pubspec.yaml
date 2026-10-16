@@ -1,0 +1,21 @@
+name: firebase_core_common
+description: Pure Dart shared types and platform interfaces used by firebase_core
+  and its platform implementations.
+homepage: https://firebase.google.com/docs/flutter/setup
+repository: https://github.com/firebase/flutterfire/tree/main/packages/firebase_core/firebase_core_common
+version: 0.1.0
+resolution: workspace
+topics:
+  - firebase
+  - core
+
+environment:
+  sdk: '^3.6.0'
+
+dependencies:
+  collection: ^1.0.0
+  meta: ^1.8.0
+  plugin_platform_interface: ^2.1.3
+
+dev_dependencies:
+  test: ^1.25.0

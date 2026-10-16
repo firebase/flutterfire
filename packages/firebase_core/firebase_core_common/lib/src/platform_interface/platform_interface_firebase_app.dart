@@ -3,7 +3,10 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-part of '../../firebase_core_platform_interface.dart';
+import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+
+import '../default_firebase_app_name.dart';
+import '../firebase_options.dart';
 
 /// A class storing the name and options of a Firebase app.
 ///
@@ -26,7 +29,7 @@ class FirebaseAppPlatform extends PlatformInterface {
   final FirebaseOptions options;
 
   /// Returns whether this instance is the default Firebase app.
-  bool get _isDefault => name == defaultFirebaseAppName;
+  bool get isDefault => name == defaultFirebaseAppName;
 
   /// Returns true if automatic data collection is enabled for this app.
   bool get isAutomaticDataCollectionEnabled {

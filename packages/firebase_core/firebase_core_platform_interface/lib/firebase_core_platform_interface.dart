@@ -8,20 +8,17 @@ library;
 
 import 'dart:async';
 
-import 'package:collection/collection.dart';
+import 'package:firebase_core_common/firebase_core_common.dart';
 import 'package:firebase_core_platform_interface/src/pigeon/messages.pigeon.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-part 'src/firebase_core_exceptions.dart';
-part 'src/firebase_exception.dart';
-part 'src/firebase_options.dart';
+/// The parts of the platform interface which do not depend on Flutter live in
+/// `firebase_core_common`, so that they can be consumed outside of Flutter.
+/// They are imported by this library (so that the parts below can use them)
+/// and re-exported, to keep this package the single entry point for Flutter
+/// users.
+export 'package:firebase_core_common/firebase_core_common.dart';
+
 part 'src/method_channel/method_channel_firebase.dart';
 part 'src/method_channel/method_channel_firebase_app.dart';
-part 'src/platform_interface/platform_interface_firebase.dart';
-part 'src/platform_interface/platform_interface_firebase_app.dart';
-part 'src/platform_interface/platform_interface_firebase_plugin.dart';
-
-/// The default Firebase application name.
-const String defaultFirebaseAppName = '[DEFAULT]';
