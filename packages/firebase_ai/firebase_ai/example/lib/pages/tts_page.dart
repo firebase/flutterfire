@@ -43,8 +43,15 @@ enum _TtsModel {
   /// The name shown in the model picker.
   final String label;
 
-  /// Whether multi-speaker lines are sent as [TextPart]s with [SpeechMetadata].
+  /// Whether speakers and styles are sent as [SpeechMetadata] rather than in
+  /// the prompt text.
   final bool usesSpeechMetadata;
+
+  /// The default single-speaker prompt. Models that use [SpeechMetadata] take
+  /// the style from the Style field, so their prompt has no style prefix.
+  String get defaultSinglePrompt => usesSpeechMetadata
+      ? 'Have a wonderful day!'
+      : 'Say cheerfully: Have a wonderful day!';
 }
 
 class TTSPage extends StatefulWidget {
@@ -71,10 +78,11 @@ class _TTSPageState extends State<TTSPage> {
   bool _isPlaying = false;
   String? _responseText;
 
-  // Single Speaker Controller
-  final TextEditingController _singlePromptController = TextEditingController(
-    text: 'Say cheerfully: Have a wonderful day!',
-  );
+  // Single Speaker Controllers
+  late final TextEditingController _singlePromptController =
+      TextEditingController(text: _selectedModel.defaultSinglePrompt);
+  final TextEditingController _singleStyleController =
+      TextEditingController(text: 'cheerful');
   String _selectedVoice = 'Kore';
 
   // Multi Speaker Controllers
@@ -119,6 +127,7 @@ class _TTSPageState extends State<TTSPage> {
     _mockAmpGen.stop();
     _playbackTimer?.cancel();
     _singlePromptController.dispose();
+    _singleStyleController.dispose();
     _speaker1NameController.dispose();
     _speaker1LineController.dispose();
     _speaker1StyleController.dispose();
@@ -179,7 +188,9 @@ class _TTSPageState extends State<TTSPage> {
         ),
       );
     } else {
-      prompt = Content.text(_singlePromptController.text);
+      prompt = _selectedModel.usesSpeechMetadata
+          ? _taggedSingleSpeakerPrompt()
+          : Content.text(_singlePromptController.text);
       config = GenerationConfig(
         responseModalities: [ResponseModalities.audio],
         speechConfig: SpeechConfig(
@@ -233,6 +244,18 @@ class _TTSPageState extends State<TTSPage> {
         style: trimmedStyle.isEmpty ? null : trimmedStyle,
       ),
     );
+  }
+
+  /// Builds the single-speaker prompt, sending the optional style as
+  /// [SpeechMetadata] instead of as an instruction in the prompt text.
+  Content _taggedSingleSpeakerPrompt() {
+    final style = _singleStyleController.text.trim();
+    return Content.multi([
+      TextPart(
+        _singlePromptController.text,
+        speechMetadata: style.isEmpty ? null : SpeechMetadata(style: style),
+      ),
+    ]);
   }
 
   Future<void> _startPlayback({
@@ -312,6 +335,9 @@ class _TTSPageState extends State<TTSPage> {
       // the MIME type: raw PCM, or a complete file such as `audio/wav`.
       final duration =
           await _audioOutput.playClip(audioPart.bytes, audioPart.mimeType);
+      if (duration == null) {
+        throw Exception('Audio output is not initialized.');
+      }
       _showPlaying(duration);
       _endPlaybackAfter(duration);
     } catch (e) {
@@ -408,6 +434,17 @@ class _TTSPageState extends State<TTSPage> {
           maxLines: 3,
         ),
         const SizedBox(height: 16),
+        if (_selectedModel.usesSpeechMetadata) ...[
+          TextField(
+            controller: _singleStyleController,
+            decoration: const InputDecoration(
+              labelText: 'Style (optional)',
+              hintText: 'How the prompt is delivered, e.g. cheerful',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(height: 16),
+        ],
         DropdownButtonFormField<String>(
           initialValue: _selectedVoice,
           decoration: const InputDecoration(
@@ -573,6 +610,19 @@ class _TTSPageState extends State<TTSPage> {
     );
   }
 
+  /// Selects [model], switching the single-speaker prompt to its default
+  /// unless the user has edited the prompt.
+  void _selectModel(_TtsModel model) {
+    final promptIsDefault =
+        _singlePromptController.text == _selectedModel.defaultSinglePrompt;
+    setState(() {
+      _selectedModel = model;
+      if (promptIsDefault) {
+        _singlePromptController.text = model.defaultSinglePrompt;
+      }
+    });
+  }
+
   Widget _buildModelPicker() {
     return DropdownButtonFormField<_TtsModel>(
       initialValue: _selectedModel,
@@ -581,19 +631,15 @@ class _TTSPageState extends State<TTSPage> {
         prefixIcon: const Icon(Icons.memory),
         border: const OutlineInputBorder(),
         helperText: _selectedModel.usesSpeechMetadata
-            ? 'Multi-speaker lines are tagged with SpeechMetadata'
-            : 'Multi-speaker lines are sent as "Name: line" text',
+            ? 'Speakers and styles are sent as SpeechMetadata'
+            : 'Speakers and styles are written into the prompt text',
       ),
       items: [
         for (final model in _TtsModel.values)
           DropdownMenuItem(value: model, child: Text(model.label)),
       ],
       onChanged: (value) {
-        if (value != null) {
-          setState(() {
-            _selectedModel = value;
-          });
-        }
+        if (value != null) _selectModel(value);
       },
     );
   }
