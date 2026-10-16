@@ -117,47 +117,57 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
     late StreamController<DocumentSnapshotPlatform>
         controller; // ignore: close_sinks
 
-    StreamSubscription<dynamic>? snapshotStreamSubscription;
+    StreamSubscription<DocumentSnapshotPlatform>? subscription;
     controller = StreamController<DocumentSnapshotPlatform>.broadcast(
-      onListen: () async {
-        final observerId = await MethodChannelFirebaseFirestore.pigeonChannel
-            .documentReferenceSnapshot(
-          pigeonApp,
-          DocumentReferenceRequest(
-            path: _pointer.path,
-            serverTimestampBehavior: serverTimestampBehavior,
-          ),
-          includeMetadataChanges,
-          listenSource,
-        );
-        snapshotStreamSubscription =
-            MethodChannelFirebaseFirestore.documentSnapshotChannel(observerId)
-                .receiveGuardedBroadcastStream(
-          onError: convertPlatformException,
-        )
-                .listen(
-          (snapshot) {
-            // With Pigeon 26, the native side emits the generated Pigeon class
-            // directly through the Pigeon-aware codec, so we receive a fully
-            // decoded `InternalDocumentSnapshot` here (no manual decode required).
-            final result = snapshot as InternalDocumentSnapshot;
-            controller.add(
-              DocumentSnapshotPlatform(
-                firestore,
-                result.path,
-                result.data,
-                result.metadata,
-              ),
-            );
-          },
+      onListen: () {
+        subscription = _snapshots(
+          includeMetadataChanges: includeMetadataChanges,
+          serverTimestampBehavior: serverTimestampBehavior,
+          listenSource: listenSource,
+        ).listen(
+          controller.add,
           onError: controller.addError,
         );
       },
       onCancel: () {
-        snapshotStreamSubscription?.cancel();
+        subscription?.cancel();
+        subscription = null;
       },
     );
 
     return controller.stream;
+  }
+
+  Stream<DocumentSnapshotPlatform> _snapshots({
+    required bool includeMetadataChanges,
+    required ServerTimestampBehavior serverTimestampBehavior,
+    required ListenSource listenSource,
+  }) async* {
+    final observerId = await MethodChannelFirebaseFirestore.pigeonChannel
+        .documentReferenceSnapshot(
+      pigeonApp,
+      DocumentReferenceRequest(
+        path: _pointer.path,
+        serverTimestampBehavior: serverTimestampBehavior,
+      ),
+      includeMetadataChanges,
+      listenSource,
+    );
+    yield* MethodChannelFirebaseFirestore.documentSnapshotChannel(observerId)
+        .receiveGuardedBroadcastStream(
+      onError: convertPlatformException,
+    )
+        .map((snapshot) {
+      // With Pigeon 26, the native side emits the generated Pigeon class
+      // directly through the Pigeon-aware codec, so we receive a fully
+      // decoded `InternalDocumentSnapshot` here (no manual decode required).
+      final result = snapshot as InternalDocumentSnapshot;
+      return DocumentSnapshotPlatform(
+        firestore,
+        result.path,
+        result.data,
+        result.metadata,
+      );
+    });
   }
 }

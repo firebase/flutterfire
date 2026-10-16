@@ -185,29 +185,32 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
 
   @override
   Stream<void> snapshotsInSync() {
-    StreamSubscription<dynamic>? snapshotStreamSubscription;
     late StreamController<void> controller; // ignore: close_sinks
+    StreamSubscription<dynamic>? subscription;
 
     controller = StreamController<void>.broadcast(
-      onListen: () async {
-        final observerId = await pigeonChannel.snapshotsInSyncSetup(pigeonApp);
-
-        snapshotStreamSubscription =
-            MethodChannelFirebaseFirestore.snapshotsInSyncChannel(observerId)
-                .receiveGuardedBroadcastStream(
-          arguments: <String, dynamic>{'firestore': this},
-          onError: convertPlatformException,
-        ).listen(
-          (event) => controller.add(null),
+      onListen: () {
+        subscription = _snapshotsInSync().listen(
+          (_) => controller.add(null),
           onError: controller.addError,
         );
       },
       onCancel: () {
-        snapshotStreamSubscription?.cancel();
+        subscription?.cancel();
+        subscription = null;
       },
     );
 
     return controller.stream;
+  }
+
+  Stream<dynamic> _snapshotsInSync() async* {
+    final observerId = await pigeonChannel.snapshotsInSyncSetup(pigeonApp);
+    yield* MethodChannelFirebaseFirestore.snapshotsInSyncChannel(observerId)
+        .receiveGuardedBroadcastStream(
+      arguments: <String, dynamic>{'firestore': this},
+      onError: convertPlatformException,
+    );
   }
 
   @override
