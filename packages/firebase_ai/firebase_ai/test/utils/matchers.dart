@@ -17,9 +17,13 @@ import 'package:matcher/matcher.dart';
 
 Matcher matchesPart(Part part) => switch (part) {
       TextPart(text: final text, speechMetadata: final speechMetadata) =>
-        isA<TextPart>()
-            .having((p) => p.text, 'text', text)
-            .having((p) => p.speechMetadata, 'speechMetadata', speechMetadata),
+        isA<TextPart>().having((p) => p.text, 'text', text).having(
+              (p) => p.speechMetadata,
+              'speechMetadata',
+              speechMetadata == null
+                  ? isNull
+                  : matchesSpeechMetadata(speechMetadata),
+            ),
       InlineDataPart(mimeType: final mimeType, bytes: final bytes) =>
         isA<InlineDataPart>()
             .having((p) => p.mimeType, 'mimeType', mimeType)
@@ -46,6 +50,11 @@ Matcher matchesPart(Part part) => switch (part) {
       UnknownPart(data: final data) =>
         isA<UnknownPart>().having((p) => p.data, 'data', data),
     };
+
+Matcher matchesSpeechMetadata(SpeechMetadata speechMetadata) =>
+    isA<SpeechMetadata>()
+        .having((m) => m.speaker, 'speaker', speechMetadata.speaker)
+        .having((m) => m.style, 'style', speechMetadata.style);
 
 Matcher matchesContent(Content content) => isA<Content>()
     .having((c) => c.role, 'role', content.role)

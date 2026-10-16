@@ -20,6 +20,8 @@ import 'package:firebase_ai/src/content.dart';
 import 'package:firebase_ai/src/speech_config.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'utils/matchers.dart';
+
 // Mock google_ai classes (if needed)
 // ...
 
@@ -348,7 +350,9 @@ void main() {
       expect(textPart.text, 'Hello there!');
       expect(
         textPart.speechMetadata,
-        const SpeechMetadata(speaker: 'Alice', style: 'excitedly'),
+        matchesSpeechMetadata(
+          const SpeechMetadata(speaker: 'Alice', style: 'excitedly'),
+        ),
       );
     });
 
@@ -363,7 +367,7 @@ void main() {
       expect(speakerOnlyResult.text, 'Hi!');
       expect(
         speakerOnlyResult.speechMetadata,
-        const SpeechMetadata(speaker: 'Bob'),
+        matchesSpeechMetadata(const SpeechMetadata(speaker: 'Bob')),
       );
 
       final styleOnlyJson = {
@@ -376,7 +380,7 @@ void main() {
       expect(styleOnlyResult.text, 'Shh...');
       expect(
         styleOnlyResult.speechMetadata,
-        const SpeechMetadata(style: 'whispering'),
+        matchesSpeechMetadata(const SpeechMetadata(style: 'whispering')),
       );
     });
 

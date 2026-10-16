@@ -123,16 +123,8 @@ class VoiceConfig {
 /// identifying which speaker says it and the vocal style they should use.
 ///
 /// This feature is in Public Preview.
-@immutable
 class SpeechMetadata {
-  /// Constructs a [SpeechMetadata] instance.
-  ///
-  /// - [speaker]: Optional speaker name for multi-speaker synthesis. Identifies
-  ///   which speaker is speaking this turn. When using a
-  ///   [MultiSpeakerVoiceConfig], this should match the
-  ///   [SpeakerVoiceConfig.speaker] of one of the configured speakers.
-  /// - [style]: Optional style instruction for the speech synthesis (a natural
-  ///   language description of the vocal style, such as `'cheerful'`).
+  /// Constructor
   const SpeechMetadata({this.speaker, this.style});
 
   /// The speaker reference name for multi-speaker synthesis.
@@ -153,15 +145,4 @@ class SpeechMetadata {
         if (speaker case final speaker?) 'speaker': speaker,
         if (style case final style?) 'style': style,
       };
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is SpeechMetadata &&
-          runtimeType == other.runtimeType &&
-          speaker == other.speaker &&
-          style == other.style;
-
-  @override
-  int get hashCode => Object.hash(speaker, style);
 }
