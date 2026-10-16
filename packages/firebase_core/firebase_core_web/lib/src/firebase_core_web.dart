@@ -87,6 +87,9 @@ class FirebaseCoreWeb extends FirebasePlatform {
 
   static void registerLibraryVersion(String libraryName, String version) {
     _libraryVersions[libraryName] = version;
+    if (globalContext.getProperty('firebase_core'.toJS) != null) {
+      _registerVersionIfNeeded(libraryName, version);
+    }
   }
 
   static void _registerAllLibraryVersions() {

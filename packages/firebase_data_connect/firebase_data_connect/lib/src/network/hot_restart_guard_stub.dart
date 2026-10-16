@@ -17,3 +17,5 @@ String? claimDataConnectWebSocketTransport(String key) => null;
 bool isCurrentDataConnectWebSocketTransport(String key, String? token) => true;
 
 void releaseDataConnectWebSocketTransport(String key, String? token) {}
+
+void registerWebLibraryVersion(String libraryName, String version) {}
