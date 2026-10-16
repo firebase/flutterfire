@@ -116,9 +116,9 @@ class AudioOutput {
   /// (such as the `audio/wav` some TTS models return from `generateContent`)
   /// is a complete file with headers, so SoLoud decodes it rather than the
   /// buffer stream playing those headers as noise.
-  Future<Duration> playClip(Uint8List bytes, String mimeType) async {
+  Future<Duration?> playClip(Uint8List bytes, String mimeType) async {
     if (!isRawPcm(mimeType)) return _playFile(bytes);
-    await playStream();
+    if (await playStream() == null) return null;
     addDataToAudioStream(bytes);
     finishStream();
     // 16-bit mono PCM is 2 bytes per sample.
@@ -126,7 +126,8 @@ class AudioOutput {
     return Duration(microseconds: bytes.length * 1000000 ~/ bytesPerSecond);
   }
 
-  Future<Duration> _playFile(Uint8List bytes) async {
+  Future<Duration?> _playFile(Uint8List bytes) async {
+    if (!SoLoud.instance.isInitialized) return null;
     // The path only labels the clip; a unique one avoids clashing with a clip
     // that's still loaded. autoDispose frees it once it finishes or is stopped.
     final source = await SoLoud.instance.loadMem(
