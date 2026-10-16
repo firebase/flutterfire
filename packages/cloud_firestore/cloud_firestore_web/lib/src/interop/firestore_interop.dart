@@ -163,6 +163,14 @@ external FieldValue increment(JSNumber n);
 
 @JS()
 @staticInterop
+external FieldValue minimum(JSNumber n);
+
+@JS()
+@staticInterop
+external FieldValue maximum(JSNumber n);
+
+@JS()
+@staticInterop
 external QueryConstraintJsImpl limit(JSNumber limit);
 
 @JS()
