@@ -66,6 +66,35 @@ void runDocumentReferenceTests() {
           );
         });
 
+        test(
+          'cancelling before the first snapshot does not leave a listener attached',
+          () async {
+            final document =
+                await initializeTest('document-snapshot-cancel-race');
+            final stream = document.snapshots();
+
+            await stream.listen((_) {}).cancel();
+
+            final matches = <int>[];
+            final firstMatch = Completer<void>();
+            final subscription = stream.listen((snapshot) {
+              if (snapshot.data()?['n'] == 1) {
+                matches.add(1);
+                if (!firstMatch.isCompleted) {
+                  firstMatch.complete();
+                }
+              }
+            });
+            addTearDown(subscription.cancel);
+
+            await document.set({'n': 1});
+            await firstMatch.future.timeout(const Duration(seconds: 10));
+            await Future<void>.delayed(const Duration(seconds: 1));
+
+            expect(matches, [1]);
+          },
+        );
+
         test('listens to a single response', () async {
           DocumentReference<Map<String, dynamic>> document =
               await initializeTest('document-snapshot');
