@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use, require_trailing_commas
+// ignore_for_file: require_trailing_commas
 // Copyright 2020 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -34,9 +34,11 @@ void setupFirebaseMessagingMocks() {
   when(kMockMessagingPlatform.delegateFor(app: anyNamed('app')))
       .thenReturn(kMockMessagingPlatform);
   // ignore: invalid_use_of_protected_member
-  when(kMockMessagingPlatform.setInitialValues(
-    isAutoInitEnabled: anyNamed('isAutoInitEnabled'),
-  )).thenReturn(kMockMessagingPlatform);
+  when(
+    kMockMessagingPlatform.setInitialValues(
+      isAutoInitEnabled: anyNamed('isAutoInitEnabled'),
+    ),
+  ).thenReturn(kMockMessagingPlatform);
 }
 
 // Platform Interface Mock Classes
@@ -51,8 +53,11 @@ class MockFirebaseMessaging extends Mock
 
   @override
   bool get isAutoInitEnabled {
-    return super.noSuchMethod(Invocation.getter(#isAutoInitEnabled),
-        returnValue: true, returnValueForMissingStub: true);
+    return super.noSuchMethod(
+      Invocation.getter(#isAutoInitEnabled),
+      returnValue: true,
+      returnValueForMissingStub: true,
+    );
   }
 
   @override
@@ -67,8 +72,9 @@ class MockFirebaseMessaging extends Mock
   @override
   FirebaseMessagingPlatform setInitialValues({bool? isAutoInitEnabled}) {
     return super.noSuchMethod(
-      Invocation.method(
-          #setInitialValues, [], {#isAutoInitEnabled: isAutoInitEnabled}),
+      Invocation.method(#setInitialValues, [], {
+        #isAutoInitEnabled: isAutoInitEnabled,
+      }),
       returnValue: TestFirebaseMessagingPlatform(),
       returnValueForMissingStub: TestFirebaseMessagingPlatform(),
     );
@@ -76,44 +82,41 @@ class MockFirebaseMessaging extends Mock
 
   @override
   Future<RemoteMessage?> getInitialMessage() {
-    return super.noSuchMethod(Invocation.method(#getInitialMessage, []),
-        returnValue: neverEndingFuture<RemoteMessage>(),
-        returnValueForMissingStub: neverEndingFuture<RemoteMessage>());
-  }
-
-  @override
-  Future<void> deleteToken() {
-    return super.noSuchMethod(Invocation.method(#deleteToken, []),
-        returnValue: Future<void>.value(),
-        returnValueForMissingStub: Future<void>.value());
+    return super.noSuchMethod(
+      Invocation.method(#getInitialMessage, []),
+      returnValue: neverEndingFuture<RemoteMessage>(),
+      returnValueForMissingStub: neverEndingFuture<RemoteMessage>(),
+    );
   }
 
   @override
   Future<String?> getAPNSToken() {
-    return super.noSuchMethod(Invocation.method(#getAPNSToken, []),
-        returnValue: Future<String>.value(''),
-        returnValueForMissingStub: Future<String>.value(''));
+    return super.noSuchMethod(
+      Invocation.method(#getAPNSToken, []),
+      returnValue: Future<String>.value(''),
+      returnValueForMissingStub: Future<String>.value(''),
+    );
   }
 
   @override
-  Future<void> register({
-    String? vapidKey,
-    String? serviceWorkerScriptPath,
-  }) {
+  Future<void> register({String? vapidKey, String? serviceWorkerScriptPath}) {
     return super.noSuchMethod(
-        Invocation.method(#register, [], {
-          #vapidKey: vapidKey,
-          #serviceWorkerScriptPath: serviceWorkerScriptPath
-        }),
-        returnValue: Future<void>.value(),
-        returnValueForMissingStub: Future<void>.value());
+      Invocation.method(#register, [], {
+        #vapidKey: vapidKey,
+        #serviceWorkerScriptPath: serviceWorkerScriptPath,
+      }),
+      returnValue: Future<void>.value(),
+      returnValueForMissingStub: Future<void>.value(),
+    );
   }
 
   @override
   Future<void> unregister() {
-    return super.noSuchMethod(Invocation.method(#unregister, []),
-        returnValue: Future<void>.value(),
-        returnValueForMissingStub: Future<void>.value());
+    return super.noSuchMethod(
+      Invocation.method(#unregister, []),
+      returnValue: Future<void>.value(),
+      returnValueForMissingStub: Future<void>.value(),
+    );
   }
 
   @override
@@ -135,29 +138,11 @@ class MockFirebaseMessaging extends Mock
   }
 
   @override
-  Future<String> getToken({String? vapidKey, String? serviceWorkerScriptPath}) {
-    return super.noSuchMethod(
-        Invocation.method(#getToken, [], {
-          #vapidKey: vapidKey,
-          #serviceWorkerScriptPath: serviceWorkerScriptPath
-        }),
-        returnValue: Future<String>.value(''),
-        returnValueForMissingStub: Future<String>.value(''));
-  }
-
-  @override
   Future<void> setAutoInitEnabled(bool? enabled) {
-    return super.noSuchMethod(Invocation.method(#setAutoInitEnabled, [enabled]),
-        returnValue: Future<void>.value(),
-        returnValueForMissingStub: Future<void>.value());
-  }
-
-  @override
-  Stream<String> get onTokenRefresh {
     return super.noSuchMethod(
-      Invocation.getter(#onTokenRefresh),
-      returnValue: const Stream<String>.empty(),
-      returnValueForMissingStub: const Stream<String>.empty(),
+      Invocation.method(#setAutoInitEnabled, [enabled]),
+      returnValue: Future<void>.value(),
+      returnValueForMissingStub: Future<void>.value(),
     );
   }
 
@@ -173,32 +158,37 @@ class MockFirebaseMessaging extends Mock
     bool? providesAppNotificationSettings = false,
   }) {
     return super.noSuchMethod(
-        Invocation.method(#requestPermission, [], {
-          #alert: alert,
-          #announcement: announcement,
-          #badge: badge,
-          #carPlay: carPlay,
-          #criticalAlert: criticalAlert,
-          #provisional: provisional,
-          #sound: sound,
-          #providesAppNotificationSettings: providesAppNotificationSettings,
-        }),
-        returnValue: neverEndingFuture<NotificationSettings>(),
-        returnValueForMissingStub: neverEndingFuture<NotificationSettings>());
+      Invocation.method(#requestPermission, [], {
+        #alert: alert,
+        #announcement: announcement,
+        #badge: badge,
+        #carPlay: carPlay,
+        #criticalAlert: criticalAlert,
+        #provisional: provisional,
+        #sound: sound,
+        #providesAppNotificationSettings: providesAppNotificationSettings,
+      }),
+      returnValue: neverEndingFuture<NotificationSettings>(),
+      returnValueForMissingStub: neverEndingFuture<NotificationSettings>(),
+    );
   }
 
   @override
   Future<void> subscribeToTopic(String? topic) {
-    return super.noSuchMethod(Invocation.method(#subscribeToTopic, [topic]),
-        returnValue: Future<void>.value(),
-        returnValueForMissingStub: Future<void>.value());
+    return super.noSuchMethod(
+      Invocation.method(#subscribeToTopic, [topic]),
+      returnValue: Future<void>.value(),
+      returnValueForMissingStub: Future<void>.value(),
+    );
   }
 
   @override
   Future<void> unsubscribeFromTopic(String? topic) {
-    return super.noSuchMethod(Invocation.method(#unsubscribeFromTopic, [topic]),
-        returnValue: Future<void>.value(),
-        returnValueForMissingStub: Future<void>.value());
+    return super.noSuchMethod(
+      Invocation.method(#unsubscribeFromTopic, [topic]),
+      returnValue: Future<void>.value(),
+      returnValueForMissingStub: Future<void>.value(),
+    );
   }
 }
 

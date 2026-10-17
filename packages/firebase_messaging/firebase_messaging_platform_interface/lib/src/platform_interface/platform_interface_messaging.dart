@@ -121,9 +121,7 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   /// before the instance has initialized to prevent any unnecessary async
   /// calls.
   @protected
-  FirebaseMessagingPlatform setInitialValues({
-    bool? isAutoInitEnabled,
-  }) {
+  FirebaseMessagingPlatform setInitialValues({bool? isAutoInitEnabled}) {
     throw UnimplementedError('setInitialValues() is not implemented');
   }
 
@@ -154,15 +152,8 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   /// on web a service worker can be registered.
   void registerBackgroundMessageHandler(BackgroundMessageHandler handler) {
     throw UnimplementedError(
-        'registerBackgroundMessageHandler() is not implemented');
-  }
-
-  /// Removes access to an FCM token previously authorized with optional [senderId].
-  ///
-  /// Messages sent by the server to this token will fail.
-  @Deprecated('Use unregister() and onUnregistered instead.')
-  Future<void> deleteToken() {
-    throw UnimplementedError('deleteToken() is not implemented');
+      'registerBackgroundMessageHandler() is not implemented',
+    );
   }
 
   /// On iOS & MacOS, it is possible to get the users APNs token. This may be required
@@ -176,10 +167,7 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   /// Once registration completes, [onRegistered] provides the Firebase
   /// Installation ID (FID) that can be used as the direct-send target for this
   /// app instance.
-  Future<void> register({
-    String? vapidKey,
-    String? serviceWorkerScriptPath,
-  }) {
+  Future<void> register({String? vapidKey, String? serviceWorkerScriptPath}) {
     throw UnimplementedError('register() is not implemented');
   }
 
@@ -205,21 +193,6 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   /// removed from your backend.
   Stream<String> get onUnregistered {
     throw UnimplementedError('onUnregistered is not implemented');
-  }
-
-  /// Returns the default FCM token for this device and optionally [senderId].
-  @Deprecated('Use register() and onRegistered instead.')
-  Future<String?> getToken({
-    String? vapidKey,
-    String? serviceWorkerScriptPath,
-  }) {
-    throw UnimplementedError('getToken() is not implemented');
-  }
-
-  /// Fires when a new FCM token is generated.
-  @Deprecated('Use onRegistered instead.')
-  Stream<String> get onTokenRefresh {
-    throw UnimplementedError('onTokenRefresh is not implemented');
   }
 
   /// Returns the current [NotificationSettings].
@@ -332,7 +305,8 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
     required bool sound,
   }) {
     throw UnimplementedError(
-        'setForegroundNotificationPresentationOptions() is not implemented');
+      'setForegroundNotificationPresentationOptions() is not implemented',
+    );
   }
 
   /// Subscribe to topic in background.

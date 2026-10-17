@@ -29,14 +29,17 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
   messaging_interop.Messaging? _webMessaging;
 
   messaging_interop.Messaging get _delegate {
-    _webMessaging ??=
-        messaging_interop.getMessagingInstance(core_interop.app(app.name));
+    _webMessaging ??= messaging_interop.getMessagingInstance(
+      core_interop.app(app.name),
+    );
 
     if (!_initialized) {
-      _webMessaging!.onMessage
-          .listen((messaging_interop.MessagePayload webMessagePayload) {
-        RemoteMessage remoteMessage =
-            RemoteMessage.fromMap(utils.messagePayloadToMap(webMessagePayload));
+      _webMessaging!.onMessage.listen((
+        messaging_interop.MessagePayload webMessagePayload,
+      ) {
+        RemoteMessage remoteMessage = RemoteMessage.fromMap(
+          utils.messagePayloadToMap(webMessagePayload),
+        );
         FirebaseMessagingPlatform.onMessage.add(remoteMessage);
       });
 
@@ -53,8 +56,6 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
     FirebaseCoreWeb.registerService('messaging');
     FirebaseMessagingPlatform.instance = FirebaseMessagingWeb();
   }
-
-  Stream<String>? _noopOnTokenRefreshStream;
 
   static bool _initialized = false;
 
@@ -92,19 +93,6 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
   @override
   Future<RemoteMessage?> getInitialMessage() async {
     return null;
-  }
-
-  @override
-  @Deprecated('Use unregister() and onUnregistered instead.')
-  Future<void> deleteToken() async {
-    _delegate;
-
-    if (!_initialized) {
-      // no-op for unsupported browsers
-      return;
-    }
-
-    return convertWebExceptions(_delegate.deleteToken);
   }
 
   @override
@@ -152,33 +140,6 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
   @override
   Stream<String> get onUnregistered {
     return _delegate.onUnregistered;
-  }
-
-  @override
-  @Deprecated('Use register() and onRegistered instead.')
-  Future<String?> getToken(
-      {String? vapidKey, String? serviceWorkerScriptPath}) async {
-    _delegate;
-
-    if (!_initialized) {
-      // no-op for unsupported browsers
-      return null;
-    }
-
-    return convertWebExceptions(
-      () => _delegate.getToken(
-          vapidKey: vapidKey, serviceWorkerScriptPath: serviceWorkerScriptPath),
-    );
-  }
-
-  @override
-  @Deprecated('Use onRegistered instead.')
-  Stream<String> get onTokenRefresh {
-    // onTokenRefresh is deprecated on web, however since this is a non-critical
-    // api we just return a noop stream to keep functionality the same across
-    // platforms.
-    return _noopOnTokenRefreshStream ??=
-        StreamController<String>.broadcast().stream;
   }
 
   @override

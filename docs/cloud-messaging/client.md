@@ -116,13 +116,12 @@ see [Application server keys](https://developers.google.com/web/fundamentals/pus
     flutter run
     ```
 
-## Access the registration token
+## Access the registration
 
-To send a message to a specific device, you need to know the device
-registration token. To retrieve the current registration token for an app instance, call
-`getToken()`.
+To send a message to a specific app instance, register it and read the
+Firebase Installation ID from `onRegistered`.
 
-On Apple and Android platforms, `getToken()` does not request notification
+On Apple and Android platforms, `register()` does not request notification
 permission. If your app displays notifications, request permission explicitly:
 
 ```dart
@@ -130,50 +129,40 @@ final notificationSettings =
     await FirebaseMessaging.instance.requestPermission(provisional: true);
 ```
 
-On web, `getToken()` asks for notification permission if it has not already
-been granted. You can call `requestPermission()` first if you want to control
-when the browser displays the permission prompt.
+On web, pass your VAPID public key to `register()`:
+
+```dart
+await FirebaseMessaging.instance.register(
+  vapidKey: "BKagOny0KF_2pCJQ3m....moL0ewzQ8rZu",
+);
+```
 
 Warning: In iOS SDK 10.4.0 and higher, it is required that the APNs token
-is available before retrieving the FCM token. The APNs token is not guaranteed
+is available before registering. The APNs token is not guaranteed
 to be available immediately after permission is granted. If `getAPNSToken()`
 returns `null`, wait for APNs registration to complete and try again later.
 
 ```dart
-// On Apple platforms, ensure the APNs token is available before retrieving
-// the FCM token.
-final apnsToken = await FirebaseMessaging.instance.getAPNSToken();
-if (apnsToken != null) {
-  final fcmToken = await FirebaseMessaging.instance.getToken();
+final registered = FirebaseMessaging.instance.onRegistered.first;
+if (!kIsWeb &&
+    (defaultTargetPlatform == TargetPlatform.iOS ||
+        defaultTargetPlatform == TargetPlatform.macOS)) {
+  final apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+  if (apnsToken == null) {
+    // Wait for APNs registration to complete and try again later.
+    return;
+  }
 }
+await FirebaseMessaging.instance.register();
+final fid = await registered;
 ```
 
-On other native platforms, retrieve the token directly:
+Subscribe to `onRegistered` to be notified when registration completes:
 
 ```dart
-final fcmToken = await FirebaseMessaging.instance.getToken();
-```
-
-On web platforms, pass your VAPID public key to `getToken()`:
-
-```dart
-final fcmToken = await FirebaseMessaging.instance.getToken(vapidKey: "BKagOny0KF_2pCJQ3m....moL0ewzQ8rZu");
-```
-
-On Apple and Android platforms, subscribe to the `onTokenRefresh` stream to be
-notified whenever a token is generated or refreshed. The stream does not emit
-at every app startup. On web, `onTokenRefresh` is a no-op stream.
-
-```dart
-FirebaseMessaging.instance.onTokenRefresh
-    .listen((fcmToken) {
-      // TODO: If necessary send token to application server.
-
-      // This callback is fired whenever a token is generated or refreshed.
-    })
-    .onError((err) {
-      // Error getting token.
-    });
+FirebaseMessaging.instance.onRegistered.listen((fid) {
+  // TODO: If necessary send the Firebase Installation ID to your server.
+});
 ```
 
 ## Prevent auto initialization {:#prevent-auto-init}
@@ -223,7 +212,7 @@ This value persists across app restarts once set.
 5. Otherwise, on the **Campaign** tab, select **New campaign** and then **Notifications**.
 6. Enter the message text.
 7. Select **Send test message** from the right pane.
-8. In the field labeled **Add an FCM registration token**, enter your registration token.
+8. In the field labeled **Add an FCM registration token**, enter the Firebase Installation ID from `onRegistered`.
 9. Select **Test**.
 
 After you select **Test**, the targeted client device, with the app in the background, should receive the notification.
