@@ -272,6 +272,28 @@ Future<void> main() async {
             uriDataExpected.contentText, PutStringFormat.base64, any));
       });
 
+      test('data_url format keeps customMetadata', () {
+        const payload = 'data url with custom metadata';
+        UriData uriData = UriData.fromString(payload, base64: true);
+        SettableMetadata metadata = SettableMetadata(
+          customMetadata: {'activity': 'test'},
+        );
+
+        testRef.putString(
+          uriData.uri.toString(),
+          format: PutStringFormat.dataUrl,
+          metadata: metadata,
+        );
+
+        String expectedData = base64.encode(utf8.encode(payload));
+        final captured = verify(mockReference.putString(
+                expectedData, PutStringFormat.base64, captureAny))
+            .captured
+            .single as SettableMetadata;
+        expect(captured.contentType, 'text/plain');
+        expect(captured.customMetadata, {'activity': 'test'});
+      });
+
       test('throws AssertionError if data_url is not a Base64 format', () {
         UriData uriData = UriData.fromString(testString);
         Uri uri = uriData.uri;
