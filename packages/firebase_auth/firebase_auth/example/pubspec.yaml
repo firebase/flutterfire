@@ -23,6 +23,7 @@ dev_dependencies:
   # `test_utils.dart` reaches for IterableExtension when scanning the emulator's
   # oobCode list.
   collection: ^1.15.0
+  firebase_auth_platform_interface: ^9.1.0
   flutter_test:
     sdk: flutter
   # The e2e suite drives the Auth emulator's REST API directly (clearing users,
