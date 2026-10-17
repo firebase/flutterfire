@@ -230,9 +230,6 @@ class FirebaseAuth extends FirebasePlugin implements FirebaseService {
   /// - **network-request-failed**:
   ///  - Thrown if there was a network request error, for example the user
   ///    doesn't have internet connection
-  /// - **operation-not-allowed**:
-  ///  - Thrown if email/password accounts are not enabled. Enable
-  ///    email/password accounts in the Firebase Console, under the Auth tab.
   Future<UserCredential> createUserWithEmailAndPassword({
     required String email,
     required String password,
@@ -303,19 +300,19 @@ class FirebaseAuth extends FirebasePlugin implements FirebaseService {
   ///
   /// May throw a [FirebaseAuthException] with the following error codes:
   ///
-  /// - **auth/invalid-email**\
+  /// - **invalid-email**\
   ///   Thrown if the email address is not valid.
-  /// - **auth/missing-android-pkg-name**\
+  /// - **missing-android-pkg-name**\
   ///   An Android package name must be provided if the Android app is required to be installed.
-  /// - **auth/missing-continue-uri**\
+  /// - **missing-continue-uri**\
   ///   A continue URL must be provided in the request.
-  /// - **auth/missing-ios-bundle-id**\
+  /// - **missing-ios-bundle-id**\
   ///   An iOS Bundle ID must be provided if an App Store ID is provided.
-  /// - **auth/invalid-continue-uri**\
+  /// - **invalid-continue-uri**\
   ///   The continue URL provided in the request is invalid.
-  /// - **auth/unauthorized-continue-uri**\
+  /// - **unauthorized-continue-uri**\
   ///   The domain of the continue URL is not whitelisted. Whitelist the domain in the Firebase console.
-  /// - **auth/user-not-found**\
+  /// - **user-not-found**\
   ///   Thrown if there is no user corresponding to the email address. Note: This
   ///   exception is not thrown when email enumeration protection is enabled.
   Future<void> sendPasswordResetEmail({
@@ -327,9 +324,8 @@ class FirebaseAuth extends FirebasePlugin implements FirebaseService {
 
   /// Sends a sign in with email link to provided email address.
   ///
-  /// To complete the password reset, call [confirmPasswordReset] with the code
-  /// supplied in the email sent to the user, along with the new password
-  /// specified by the user.
+  /// To complete the sign-in, call [signInWithEmailLink] with the email
+  /// address and the link supplied in the email sent to the user.
   ///
   /// The [handleCodeInApp] of [actionCodeSettings] must be set to `true`
   /// otherwise an [ArgumentError] will be thrown.
@@ -585,8 +581,8 @@ class FirebaseAuth extends FirebasePlugin implements FirebaseService {
   ///    [email enumeration protection](https://cloud.google.com/identity-platform/docs/admin/email-enumeration-protection)
   ///    enabled (the default since September 2023), this replaces
   ///    **user-not-found** and **wrong-password** to prevent revealing
-  ///    whether an account exists. On the Firebase emulator, the code may
-  ///    appear as **INVALID_LOGIN_CREDENTIALS**.
+  ///    whether an account exists. Older versions of the native SDKs
+  ///    reported **invalid-login-credentials** instead.
   /// - **operation-not-allowed**:
   ///  - Thrown if email/password accounts are not enabled. Enable
   ///    email/password accounts in the Firebase Console, under the Auth tab.
@@ -853,8 +849,8 @@ class FirebaseAuth extends FirebasePlugin implements FirebaseService {
   /// If an auth flow fails because a submitted password does not meet the password policy requirements and this method has previously been called,
   /// then this method will use the most recent policy available when called again.
   ///
-  /// Returns a map with the following keys:
-  /// - **status**: A boolean indicating if the password is valid.
+  /// Returns a [PasswordValidationStatus] with the following fields:
+  /// - **isValid**: A boolean indicating if the password is valid.
   /// - **passwordPolicy**: The password policy used to validate the password.
   /// - **meetsMinPasswordLength**: A boolean indicating if the password meets the minimum length requirement.
   /// - **meetsMaxPasswordLength**: A boolean indicating if the password meets the maximum length requirement.
@@ -865,18 +861,10 @@ class FirebaseAuth extends FirebasePlugin implements FirebaseService {
   ///
   /// A [FirebaseAuthException] maybe thrown with the following error code:
   /// - **invalid-password**:
-  ///  - Thrown if the password is invalid.
-  /// - **network-request-failed**:
-  ///  - Thrown if there was a network request error, for example the user
-  ///    doesn't have internet connection
-  /// - **INVALID_LOGIN_CREDENTIALS** or **invalid-credential**:
-  ///  - Thrown if the password is invalid for the given email, or the account
-  ///    corresponding to the email does not have a password set.
-  ///    Depending on if you are using firebase emulator or not the code is
-  ///    different
-  /// - **operation-not-allowed**:
-  ///  - Thrown if email/password accounts are not enabled. Enable
-  ///    email/password accounts in the Firebase Console, under the Auth tab.
+  ///  - Thrown if the password is `null` or empty.
+  ///
+  /// An [Exception] is thrown if the password policy cannot be fetched, for
+  /// example because of a network error.
   Future<PasswordValidationStatus> validatePassword(
     FirebaseAuth auth,
     String? password,
