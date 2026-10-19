@@ -27,31 +27,56 @@ class RemoteMessage {
   /// Constructs a [RemoteMessage] from a raw Map.
   factory RemoteMessage.fromMap(Map<String, dynamic> map) {
     return RemoteMessage(
-      senderId: map['senderId'],
-      category: map['category'],
-      actionIdentifier: map['actionIdentifier'],
-      collapseKey: map['collapseKey'],
-      contentAvailable: map['contentAvailable'] ?? false,
-      data: map['data'] == null
-          ? <String, dynamic>{}
-          : Map<String, dynamic>.from(map['data']),
-      from: map['from'],
+      senderId: map['senderId']?.toString(),
+      category: map['category']?.toString(),
+      actionIdentifier: map['actionIdentifier']?.toString(),
+      collapseKey: map['collapseKey']?.toString(),
+      contentAvailable: _asBool(map['contentAvailable']),
+      data: map['data'] is Map
+          ? Map<String, dynamic>.from(map['data'] as Map)
+          : <String, dynamic>{},
+      from: map['from']?.toString(),
       // Note: using toString on messageId as it can be an int or string when being sent from native.
       messageId: map['messageId']?.toString(),
-      messageType: map['messageType'],
-      mutableContent: map['mutableContent'] ?? false,
-      notification: map['notification'] == null
-          ? null
-          : RemoteNotification.fromMap(
-              Map<String, dynamic>.from(map['notification'])),
-      // Note: using toString on sentTime as it can be an int or string when being sent from native.
-      sentTime: map['sentTime'] == null
-          ? null
-          : DateTime.fromMillisecondsSinceEpoch(
-              int.parse(map['sentTime'].toString())),
-      threadId: map['threadId'],
-      ttl: map['ttl'],
+      messageType: map['messageType']?.toString(),
+      mutableContent: _asBool(map['mutableContent']),
+      notification: map['notification'] is Map
+          ? RemoteNotification.fromMap(
+              Map<String, dynamic>.from(map['notification'] as Map))
+          : null,
+      sentTime: _parseSentTime(map['sentTime']),
+      threadId: map['threadId']?.toString(),
+      ttl: _asInt(map['ttl']),
     );
+  }
+
+  static bool _asBool(Object? value) {
+    if (value is bool) return value;
+    if (value is num) return value != 0;
+    if (value is String) return value == 'true' || value == '1';
+    return false;
+  }
+
+  static int? _asInt(Object? value) {
+    if (value is int) return value;
+    if (value is num) return value.toInt();
+    if (value is String) return int.tryParse(value);
+    return null;
+  }
+
+  static DateTime? _parseSentTime(Object? value) {
+    int? raw = _asInt(value);
+    if (raw == null) return null;
+    // Convert positive 10-digit epoch-seconds values (e.g. Apple google.c.a.ts)
+    // to milliseconds since epoch.
+    if (raw > 0 && raw < 10000000000) {
+      raw = raw * 1000;
+    }
+    const int maxEpochMs = 8640000000000000;
+    if (raw < -maxEpochMs || raw > maxEpochMs) {
+      return null;
+    }
+    return DateTime.fromMillisecondsSinceEpoch(raw);
   }
 
   /// Returns the [RemoteMessage] as a raw Map.

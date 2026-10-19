@@ -654,5 +654,47 @@ void main() {
       expect(webNotificationMap['image'], notification.image);
       expect(webNotificationMap['link'], notification.link);
     });
+
+    test(
+        'Notification fromMap factories coerce non-string scalars, non-list locArgs, and string sound volume',
+        () {
+      final notification = RemoteNotification.fromMap(<String, dynamic>{
+        'title': 123,
+        'titleLocArgs': 'single-arg',
+        'titleLocKey': 456,
+        'body': 789,
+        'bodyLocArgs': <Object?>[1, 'two', null, true],
+        'bodyLocKey': 101,
+        'apple': <String, dynamic>{
+          'badge': 5,
+          'subtitle': 202,
+          'subtitleLocArgs': <Object?>[3, 'four'],
+          'subtitleLocKey': 303,
+          'imageUrl': 404,
+          'sound': <String, dynamic>{
+            'critical': 1,
+            'name': 505,
+            'volume': '0.75',
+          },
+        },
+      });
+
+      expect(notification.title, '123');
+      expect(notification.titleLocArgs, <String>['single-arg']);
+      expect(notification.titleLocKey, '456');
+      expect(notification.body, '789');
+      expect(notification.bodyLocArgs, <String>['1', 'two', 'true']);
+      expect(notification.bodyLocKey, '101');
+      expect(notification.apple, isNotNull);
+      expect(notification.apple!.badge, '5');
+      expect(notification.apple!.subtitle, '202');
+      expect(notification.apple!.subtitleLocArgs, <String>['3', 'four']);
+      expect(notification.apple!.subtitleLocKey, '303');
+      expect(notification.apple!.imageUrl, '404');
+      expect(notification.apple!.sound, isNotNull);
+      expect(notification.apple!.sound!.critical, isTrue);
+      expect(notification.apple!.sound!.name, '505');
+      expect(notification.apple!.sound!.volume, 0.75);
+    });
   });
 }
