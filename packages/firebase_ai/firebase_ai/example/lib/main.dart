@@ -14,6 +14,7 @@
 
 import 'package:firebase_ai/firebase_ai.dart';
 
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -41,6 +42,28 @@ void main() async {
   // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await Firebase.initializeApp();
   await FirebaseAuth.instance.signInAnonymously();
+  // App Check is required to exercise the Live API `resumeSession` header
+  // refresh (https://github.com/firebase/flutterfire/pull/18814). The debug
+  // providers print a debug token to the device logs on first launch; register
+  // it in the Firebase console under App Check > Manage debug tokens.
+  await FirebaseAppCheck.instance.activate(
+    providerWeb: WebDebugProvider(),
+    providerAndroid: const AndroidDebugProvider(),
+    providerApple: const AppleDebugProvider(),
+  );
+
+  // FirebaseAI caches instances per app/backend, so the first call decides
+  // whether limited-use App Check tokens are used. Create them up front.
+  FirebaseAI.googleAI(
+    useLimitedUseAppCheckTokens: kUseLimitedUseAppCheckTokens,
+  );
+  FirebaseAI.agentPlatform(
+    useLimitedUseAppCheckTokens: kUseLimitedUseAppCheckTokens,
+  );
+  FirebaseAI.agentPlatform(
+    location: 'global',
+    useLimitedUseAppCheckTokens: kUseLimitedUseAppCheckTokens,
+  );
   runApp(const GenerativeAISample());
 }
 
