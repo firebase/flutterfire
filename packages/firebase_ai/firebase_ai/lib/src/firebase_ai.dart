@@ -134,6 +134,9 @@ class FirebaseAI extends FirebasePlugin {
   ///
   /// The optional [httpClient] can be used to customize HTTP request handling,
   /// such as adding support for cancelling in-flight requests.
+  ///
+  /// The optional [requestOptions] can be used to configure request parameters
+  /// such as the request timeout.
   GenerativeModel generativeModel({
     required String model,
     List<SafetySetting>? safetySettings,
@@ -142,6 +145,7 @@ class FirebaseAI extends FirebasePlugin {
     ToolConfig? toolConfig,
     Content? systemInstruction,
     http.Client? httpClient,
+    RequestOptions? requestOptions,
   }) {
     return createGenerativeModel(
       model: model,
@@ -157,6 +161,7 @@ class FirebaseAI extends FirebasePlugin {
       systemInstruction: systemInstruction,
       useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
       httpClient: httpClient,
+      requestOptions: requestOptions,
     );
   }
 
@@ -164,11 +169,15 @@ class FirebaseAI extends FirebasePlugin {
   ///
   /// The optional [liveGenerationConfig] can be used to control and guide the
   /// generation. See [LiveGenerationConfig] for details.
+  ///
+  /// The optional [requestOptions] can be used to configure request parameters
+  /// such as the connection timeout.
   LiveGenerativeModel liveGenerativeModel({
     required String model,
     LiveGenerationConfig? liveGenerationConfig,
     List<Tool>? tools,
     Content? systemInstruction,
+    RequestOptions? requestOptions,
   }) {
     return createLiveGenerativeModel(
       app: app,
@@ -181,20 +190,27 @@ class FirebaseAI extends FirebasePlugin {
       appCheck: appCheck,
       auth: auth,
       useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
+      requestOptions: requestOptions,
     );
   }
 
   /// Returns a [TemplateGenerativeModel] instance.
   ///
+  /// The optional [requestOptions] can be used to configure request parameters
+  /// such as the request timeout.
+  ///
   /// This is an experimental API and may change in the future.
   @experimental
-  TemplateGenerativeModel templateGenerativeModel() {
+  TemplateGenerativeModel templateGenerativeModel({
+    RequestOptions? requestOptions,
+  }) {
     return createTemplateGenerativeModel(
         app: app,
         location: location,
         useAgentPlatform: _useAgentPlatform,
         useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
         auth: auth,
-        appCheck: appCheck);
+        appCheck: appCheck,
+        requestOptions: requestOptions);
   }
 }

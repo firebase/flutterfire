@@ -48,6 +48,7 @@ class LiveSession {
     List<Tool>? tools,
     LiveGenerationConfig? liveGenerationConfig,
     LiveWebSocketConnector? connector,
+    Duration? timeout,
   })  : _uri = uri,
         _headersProvider = headersProvider,
         _modelString = modelString,
@@ -55,6 +56,7 @@ class LiveSession {
         _tools = tools,
         _liveGenerationConfig = liveGenerationConfig,
         _connector = connector ?? _defaultConnector,
+        _timeout = timeout ?? _defaultConnectTimeout,
         _messageController = StreamController<LiveServerResponse>.broadcast() {
     _listenToWebSocket();
   }
@@ -91,9 +93,11 @@ class LiveSession {
     List<Tool>? tools,
     SessionResumptionConfig? sessionResumption,
     LiveGenerationConfig? liveGenerationConfig,
+    Duration? timeout,
     @visibleForTesting LiveWebSocketConnector? connector,
   }) async {
     final effectiveConnector = connector ?? _defaultConnector;
+    final effectiveTimeout = timeout ?? _defaultConnectTimeout;
     final ws = await _performWebSocketSetup(
       uri: uri,
       headers: await headersProvider(),
@@ -103,6 +107,7 @@ class LiveSession {
       sessionResumption: sessionResumption,
       liveGenerationConfig: liveGenerationConfig,
       connector: effectiveConnector,
+      timeout: effectiveTimeout,
     );
     return LiveSession._(
       ws,
@@ -113,6 +118,7 @@ class LiveSession {
       tools: tools,
       liveGenerationConfig: liveGenerationConfig,
       connector: effectiveConnector,
+      timeout: effectiveTimeout,
     );
   }
 
@@ -130,10 +136,13 @@ class LiveSession {
   final Content? _systemInstruction;
   final List<Tool>? _tools;
   final LiveGenerationConfig? _liveGenerationConfig;
+  final Duration _timeout;
 
   WebSocketChannel _ws;
   StreamController<LiveServerResponse> _messageController;
   late StreamSubscription _wsSubscription;
+
+  static const Duration _defaultConnectTimeout = Duration(seconds: 180);
 
   static Future<WebSocketChannel> _performWebSocketSetup({
     required String uri,
@@ -144,6 +153,7 @@ class LiveSession {
     List<Tool>? tools,
     SessionResumptionConfig? sessionResumption,
     LiveGenerationConfig? liveGenerationConfig,
+    Duration timeout = _defaultConnectTimeout,
   }) async {
     final setupJson = {
       'setup': {
@@ -173,7 +183,7 @@ class LiveSession {
 
     final request = jsonEncode(setupJson);
     final ws = connector(Uri.parse(uri), headers);
-    await ws.ready;
+    await ws.ready.timeout(timeout);
 
     ws.sink.add(request);
     return ws;
@@ -248,6 +258,7 @@ class LiveSession {
         tools: _tools,
         sessionResumption: sessionResumption,
         liveGenerationConfig: _liveGenerationConfig,
+        timeout: _timeout,
       );
     } catch (e) {
       log('live_session.resumeSession: WebSocket setup failed', error: e);

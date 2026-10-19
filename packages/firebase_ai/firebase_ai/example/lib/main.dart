@@ -30,6 +30,7 @@ import 'pages/function_calling_page.dart';
 import 'pages/grounding_page.dart';
 import 'pages/image_generation_page.dart';
 import 'pages/integration_test_page.dart';
+import 'pages/request_timeout_test_page.dart';
 import 'pages/server_template_page.dart';
 import 'pages/tts_page.dart';
 
@@ -231,6 +232,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => const IntegrationTestPage(),
+                ),
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.timer),
+            tooltip: 'Request Timeout Tests',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const RequestTimeoutTestPage(),
                 ),
               );
             },
