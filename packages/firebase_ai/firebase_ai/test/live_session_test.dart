@@ -242,4 +242,103 @@ void main() {
       });
     });
   });
+
+  group('LiveSession connection headers', () {
+    test('create fetches headers from the provider for the first connection',
+        () async {
+      final connections = <Map<String, String>>[];
+      final channels = <FakeWebSocketChannel>[];
+      var providerCalls = 0;
+
+      final session = await LiveSession.create(
+        uri: 'wss://example.com/ws',
+        headersProvider: () async {
+          providerCalls++;
+          return {'X-Firebase-AppCheck': 'token-$providerCalls'};
+        },
+        modelString: 'projects/p/models/m',
+        connector: (uri, headers) {
+          connections.add(Map.of(headers));
+          final channel = FakeWebSocketChannel();
+          channels.add(channel);
+          return channel;
+        },
+      );
+
+      expect(providerCalls, 1);
+      expect(connections, [
+        {'X-Firebase-AppCheck': 'token-1'},
+      ]);
+      expect(channels.single.sentMessages, hasLength(1));
+
+      await session.close();
+    });
+
+    test('resumeSession re-fetches headers instead of reusing stale tokens',
+        () async {
+      final connections = <Map<String, String>>[];
+      final channels = <FakeWebSocketChannel>[];
+      var providerCalls = 0;
+
+      final session = await LiveSession.create(
+        uri: 'wss://example.com/ws',
+        // Simulates limited-use App Check tokens / refreshed Auth ID tokens:
+        // every call returns a distinct value.
+        headersProvider: () async {
+          providerCalls++;
+          return {
+            'X-Firebase-AppCheck': 'app-check-$providerCalls',
+            'Authorization': 'Firebase id-token-$providerCalls',
+          };
+        },
+        modelString: 'projects/p/models/m',
+        connector: (uri, headers) {
+          connections.add(Map.of(headers));
+          final channel = FakeWebSocketChannel();
+          channels.add(channel);
+          return channel;
+        },
+      );
+
+      await session.resumeSession(
+        sessionResumption: SessionResumptionConfig.resume('resume-handle'),
+      );
+
+      expect(providerCalls, 2);
+      expect(connections, hasLength(2));
+      expect(connections[0]['X-Firebase-AppCheck'], 'app-check-1');
+      expect(connections[1]['X-Firebase-AppCheck'], 'app-check-2');
+      expect(connections[1]['Authorization'], 'Firebase id-token-2');
+
+      // The resumed connection still sends the setup message with the handle.
+      final resumedSetup =
+          json.decode(channels[1].sentMessages.single as String) as Map;
+      expect(
+        (resumedSetup['setup'] as Map)['session_resumption'],
+        {'handle': 'resume-handle'},
+      );
+
+      await session.close();
+    });
+
+    test('resumeSession surfaces header provider failures', () async {
+      var providerCalls = 0;
+
+      final session = await LiveSession.create(
+        uri: 'wss://example.com/ws',
+        headersProvider: () async {
+          providerCalls++;
+          if (providerCalls > 1) {
+            throw StateError('App Check unavailable');
+          }
+          return const {'X-Firebase-AppCheck': 'app-check-1'};
+        },
+        modelString: 'projects/p/models/m',
+        connector: (uri, headers) => FakeWebSocketChannel(),
+      );
+
+      await expectLater(session.resumeSession(), throwsStateError);
+      expect(providerCalls, 2);
+    });
+  });
 }
