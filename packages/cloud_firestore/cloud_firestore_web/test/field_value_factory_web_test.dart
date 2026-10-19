@@ -36,6 +36,22 @@ void main() {
       expect(actualDouble.data, isInstanceOf<web.FieldValue>());
     });
 
+    test('minimum', () {
+      final FieldValueWeb actualInt = factory.minimum(1);
+      expect(actualInt.data, isInstanceOf<web.FieldValue>());
+
+      final FieldValueWeb actualDouble = factory.minimum(1.25);
+      expect(actualDouble.data, isInstanceOf<web.FieldValue>());
+    });
+
+    test('maximum', () {
+      final FieldValueWeb actualInt = factory.maximum(1);
+      expect(actualInt.data, isInstanceOf<web.FieldValue>());
+
+      final FieldValueWeb actualDouble = factory.maximum(1.25);
+      expect(actualDouble.data, isInstanceOf<web.FieldValue>());
+    });
+
     test('serverTimestamp', () {
       final FieldValueWeb actual = factory.serverTimestamp();
       expect(actual.data, isInstanceOf<web.FieldValue>());
