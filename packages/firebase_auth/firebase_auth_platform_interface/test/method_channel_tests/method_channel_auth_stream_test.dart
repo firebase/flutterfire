@@ -118,6 +118,26 @@ void main() {
         expect(events, [null]);
       });
 
+      test('does not repeat null after signing out before listening', () async {
+        auth.setInitialValues(currentUser: user);
+        await auth.signOut();
+        final events = await listen(stream());
+        await injectEventChannelResponse(channel, {'user': null});
+        await pumpEventQueue();
+        expect(events, [null]);
+      });
+
+      test('dedupes sign-out independently for late subscribers', () async {
+        auth.setInitialValues(currentUser: user);
+        final events = await listen(stream());
+        await auth.signOut();
+        final lateEvents = await listen(stream());
+        await injectEventChannelResponse(channel, {'user': null});
+        await pumpEventQueue();
+        expect(events.map((event) => event?.uid), ['test-user', null]);
+        expect(lateEvents, [null]);
+      });
+
       test('emits null when a signed-in user signs out', () async {
         auth.setInitialValues(currentUser: user);
         final events = await listen(stream());

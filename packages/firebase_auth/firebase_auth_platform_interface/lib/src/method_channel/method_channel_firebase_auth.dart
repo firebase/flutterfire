@@ -52,11 +52,6 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       <StreamSubscription<dynamic>>[];
   bool _isDisposed = false;
 
-  // Each native listener must track sign-out independently: both update
-  // currentUser, and their callbacks can arrive in either order.
-  bool _authStateChangesIsSignedOut = true;
-  bool _idTokenChangesIsSignedOut = true;
-
   StreamController<T> _createBroadcastStream<T>() {
     return StreamController<T>.broadcast();
   }
@@ -144,19 +139,8 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     }
   }
 
-  UserPlatform? _currentUser;
-
   @override
-  UserPlatform? get currentUser => _currentUser;
-
-  @override
-  set currentUser(UserPlatform? user) {
-    _currentUser = user;
-    if (user != null) {
-      _authStateChangesIsSignedOut = false;
-      _idTokenChangesIsSignedOut = false;
-    }
-  }
+  UserPlatform? currentUser;
 
   @override
   String? languageCode;
@@ -192,10 +176,6 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     final userList = arguments['user'];
     if (userList == null) {
       instance.currentUser = null;
-      if (instance._authStateChangesIsSignedOut) {
-        return;
-      }
-      instance._authStateChangesIsSignedOut = true;
       streamController.add(const _ValueWrapper.absent());
     } else {
       final MethodChannelUser user = MethodChannelUser(
@@ -239,10 +219,6 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     final userList = arguments['user'];
     if (userList == null) {
       instance.currentUser = null;
-      if (instance._idTokenChangesIsSignedOut) {
-        return;
-      }
-      instance._idTokenChangesIsSignedOut = true;
       idTokenStreamController.add(const _ValueWrapper.absent());
       userChangesStreamController.add(const _ValueWrapper.absent());
     } else {
@@ -303,9 +279,6 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       final multiFactor = MethodChannelMultiFactor(this);
       this.currentUser = MethodChannelUser(this, multiFactor, currentUser);
     }
-
-    _authStateChangesIsSignedOut = this.currentUser == null;
-    _idTokenChangesIsSignedOut = this.currentUser == null;
 
     this.languageCode = languageCode;
     return this;
@@ -534,26 +507,32 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     }
   }
 
+  Stream<UserPlatform?> _streamChanges(
+      Stream<_ValueWrapper<UserPlatform>> stream) async* {
+    var isSignedOut = currentUser == null;
+    yield currentUser;
+    yield* stream.map((event) => event.value).where((user) {
+      if (user == null && isSignedOut) {
+        return false;
+      }
+      isSignedOut = user == null;
+      return true;
+    });
+  }
+
   @override
   Stream<UserPlatform?> authStateChanges() async* {
-    yield currentUser;
-    yield* _authStateChangesListeners[app.name]!
-        .stream
-        .map((event) => event.value);
+    yield* _streamChanges(_authStateChangesListeners[app.name]!.stream);
   }
 
   @override
   Stream<UserPlatform?> idTokenChanges() async* {
-    yield currentUser;
-    yield* _idTokenChangesListeners[app.name]!
-        .stream
-        .map((event) => event.value);
+    yield* _streamChanges(_idTokenChangesListeners[app.name]!.stream);
   }
 
   @override
   Stream<UserPlatform?> userChanges() async* {
-    yield currentUser;
-    yield* _userChangesListeners[app.name]!.stream.map((event) => event.value);
+    yield* _streamChanges(_userChangesListeners[app.name]!.stream);
   }
 
   @override
