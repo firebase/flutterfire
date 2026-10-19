@@ -6,6 +6,7 @@
 import 'package:cloud_functions_platform_interface/cloud_functions_platform_interface.dart';
 import 'package:cloud_functions_platform_interface/src/method_channel/method_channel_firebase_functions.dart';
 import 'package:cloud_functions_platform_interface/src/method_channel/method_channel_https_callable.dart';
+import 'package:cloud_functions_platform_interface/src/method_channel/utils/exception.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -165,6 +166,42 @@ void main() {
           (listenedArguments! as Map)['allowInsecureTokenAttachment'],
           isTrue,
         );
+      });
+    });
+
+    group('platformExceptionToFirebaseFunctionsException', () {
+      test('falls back to code when message is null', () {
+        final exception = platformExceptionToFirebaseFunctionsException(
+          PlatformException(
+            code: 'functions_error',
+            details: <String, Object?>{
+              'code': 'internal',
+              'message': null,
+            },
+          ),
+          StackTrace.empty,
+        );
+
+        expect(exception, isA<FirebaseFunctionsException>());
+        expect(exception.code, 'internal');
+        expect(exception.message, 'internal');
+      });
+
+      test('tolerates non-string code and message in details', () {
+        final exception = platformExceptionToFirebaseFunctionsException(
+          PlatformException(
+            code: 'functions_error',
+            message: 'fallback message',
+            details: <String, Object?>{
+              'code': 500,
+              'message': <String>['not a string'],
+            },
+          ),
+          StackTrace.empty,
+        );
+
+        expect(exception.code, 'unknown');
+        expect(exception.message, 'fallback message');
       });
     });
   });
