@@ -40,20 +40,22 @@ FirebaseException platformExceptionToFirebaseException(
   PlatformException platformException, {
   required String plugin,
 }) {
-  Map<String, Object>? details;
+  Map<String, Object?>? details;
 
   final rawDetails = platformException.details;
 
   if (rawDetails is Map) {
-    details = Map<String, Object>.from(rawDetails);
+    details = Map<String, Object?>.from(rawDetails);
   }
 
   String? code;
   String message = platformException.message ?? '';
 
   if (details != null) {
-    code = details['code'] as String?;
-    message = details['message'] as String? ?? message;
+    final rawCode = details['code'];
+    final rawMessage = details['message'];
+    code = rawCode is String ? rawCode : null;
+    message = rawMessage is String ? rawMessage : message;
   } else if (rawDetails != null) {
     message = rawDetails.toString();
   } else if (platformException.code.isNotEmpty &&
