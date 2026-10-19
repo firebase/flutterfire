@@ -569,6 +569,16 @@ enum BlockReason {
   /// prompt.
   safety('SAFETY'),
 
+  /// Prompt was blocked due to the terms which are included from the
+  /// terminology blocklist.
+  blocklist('BLOCKLIST'),
+
+  /// Prompt was blocked due to prohibited content.
+  prohibitedContent('PROHIBITED_CONTENT'),
+
+  /// Prompt was blocked due to unsafe image generation content.
+  imageSafety('IMAGE_SAFETY'),
+
   /// Prompt was blocked due to other unspecified reasons.
   other('OTHER');
 
@@ -579,6 +589,9 @@ enum BlockReason {
     return switch (jsonObject) {
       'BLOCK_REASON_UNSPECIFIED' => BlockReason.unknown,
       'SAFETY' => BlockReason.safety,
+      'BLOCKLIST' => BlockReason.blocklist,
+      'PROHIBITED_CONTENT' => BlockReason.prohibitedContent,
+      'IMAGE_SAFETY' => BlockReason.imageSafety,
       'OTHER' => BlockReason.other,
       _ => BlockReason.unknown,
     };
@@ -1608,24 +1621,26 @@ PromptFeedback _parsePromptFeedback(Object jsonObject) {
   if (jsonObject.isEmpty) {
     return PromptFeedback(null, null, []);
   }
-  return switch (jsonObject) {
-    {
-      'safetyRatings': final List<Object?> safetyRatings,
-    } =>
-      PromptFeedback(
-          switch (jsonObject) {
-            {'blockReason': final String blockReason} =>
-              BlockReason.parseValue(blockReason),
-            _ => null,
-          },
-          switch (jsonObject) {
-            {'blockReasonMessage': final String blockReasonMessage} =>
-              blockReasonMessage,
-            _ => null,
-          },
-          safetyRatings.map(_parseSafetyRating).toList()),
-    _ => throw unhandledFormat('PromptFeedback', jsonObject),
-  };
+  final safetyRatingsJson = jsonObject['safetyRatings'];
+  if (safetyRatingsJson != null && safetyRatingsJson is! List<Object?>) {
+    throw unhandledFormat('PromptFeedback', jsonObject);
+  }
+  final safetyRatings = safetyRatingsJson is List<Object?>
+      ? safetyRatingsJson.map(_parseSafetyRating).toList()
+      : <SafetyRating>[];
+  return PromptFeedback(
+    switch (jsonObject) {
+      {'blockReason': final String blockReason} =>
+        BlockReason.parseValue(blockReason),
+      _ => null,
+    },
+    switch (jsonObject) {
+      {'blockReasonMessage': final String blockReasonMessage} =>
+        blockReasonMessage,
+      _ => null,
+    },
+    safetyRatings,
+  );
 }
 
 /// Parses a UsageMetadata from a JSON object.
@@ -1791,8 +1806,8 @@ GroundingMetadata parseGroundingMetadata(Object? jsonObject) {
       } ??
       [];
   final webSearchQueries = switch (jsonObject) {
-        {'webSearchQueries': final List<String>? webSearchQueries} =>
-          webSearchQueries,
+        {'webSearchQueries': final List<Object?> webSearchQueries} =>
+          webSearchQueries.whereType<String>().toList(),
         _ => null,
       } ??
       [];
