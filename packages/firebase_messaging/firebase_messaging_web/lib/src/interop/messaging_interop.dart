@@ -9,6 +9,7 @@
 library;
 
 import 'dart:js_interop';
+
 import 'package:web/web.dart' as web;
 
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
@@ -19,17 +20,10 @@ external MessagingJsImpl getMessaging([AppJsImpl? app]);
 
 @JS()
 @staticInterop
-external JSPromise<JSBoolean> deleteToken(MessagingJsImpl messaging);
-
-@JS()
-@staticInterop
-external JSPromise<JSString> getToken(
-    MessagingJsImpl messaging, GetTokenOptions? getTokenOptions);
-
-@JS()
-@staticInterop
 external JSPromise<JSAny?> register(
-    MessagingJsImpl messaging, RegisterOptions? registerOptions);
+  MessagingJsImpl messaging,
+  RegisterOptions? registerOptions,
+);
 
 @JS()
 @staticInterop
@@ -41,17 +35,11 @@ external JSPromise<JSBoolean> isSupported();
 
 @JS()
 @staticInterop
-external JSFunction onMessage(
-  MessagingJsImpl messaging,
-  Observer observer,
-);
+external JSFunction onMessage(MessagingJsImpl messaging, Observer observer);
 
 @JS()
 @staticInterop
-external JSFunction onRegistered(
-  MessagingJsImpl messaging,
-  Observer observer,
-);
+external JSFunction onRegistered(MessagingJsImpl messaging, Observer observer);
 
 @JS()
 @staticInterop
@@ -66,15 +54,6 @@ extension type Observer._(JSObject _) implements JSObject {
   external factory Observer({JSAny next, JSAny error});
   external JSAny get next;
   external JSAny get error;
-}
-
-extension type GetTokenOptions._(JSObject _) implements JSObject {
-  external factory GetTokenOptions({
-    JSString? vapidKey,
-    web.ServiceWorkerRegistration? serviceWorkerRegistration,
-  });
-  external JSString get vapidKey;
-  external web.ServiceWorkerRegistration get serviceWorkerRegistration;
 }
 
 extension type RegisterOptions._(JSObject _) implements JSObject {

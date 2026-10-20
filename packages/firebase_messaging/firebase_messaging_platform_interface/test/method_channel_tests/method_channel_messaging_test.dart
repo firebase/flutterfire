@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use, require_trailing_commas
+// ignore_for_file: require_trailing_commas
 // Copyright 2020 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -28,14 +28,12 @@ void main() {
       handleMethodCall((call) async {
         log.add(call);
         switch (call.method) {
-          case 'Messaging#deleteToken':
           case 'Messaging#register':
           case 'Messaging#unregister':
           case 'Messaging#subscribeToTopic':
           case 'Messaging#unsubscribeFromTopic':
             return null;
           case 'Messaging#getAPNSToken':
-          case 'Messaging#getToken':
             return {'token': 'test_token'};
           case 'Messaging#hasPermission':
           case 'Messaging#requestPermission':
@@ -127,18 +125,6 @@ void main() {
       expect(messaging.isAutoInitEnabled, isTrue);
     });
 
-    test('deleteToken', () async {
-      await messaging.deleteToken();
-
-      // check native method was called
-      expect(log, <Matcher>[
-        isMethodCall(
-          'Messaging#deleteToken',
-          arguments: <String, dynamic>{'appName': defaultFirebaseAppName},
-        ),
-      ]);
-    });
-
     test('getAPNSToken', () async {
       // not applicable to android
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
@@ -148,18 +134,6 @@ void main() {
       expect(log, <Matcher>[
         isMethodCall(
           'Messaging#getAPNSToken',
-          arguments: <String, dynamic>{'appName': defaultFirebaseAppName},
-        ),
-      ]);
-    });
-
-    test('getToken', () async {
-      await messaging.getToken();
-
-      // check native method was called
-      expect(log, <Matcher>[
-        isMethodCall(
-          'Messaging#getToken',
           arguments: <String, dynamic>{'appName': defaultFirebaseAppName},
         ),
       ]);
@@ -217,14 +191,12 @@ void main() {
       handleMethodCall((call) async {
         log.add(call);
         switch (call.method) {
-          case 'Messaging#deleteToken':
           case 'Messaging#register':
           case 'Messaging#unregister':
           case 'Messaging#subscribeToTopic':
           case 'Messaging#unsubscribeFromTopic':
             return null;
           case 'Messaging#getAPNSToken':
-          case 'Messaging#getToken':
             return {'token': 'test_token'};
           case 'Messaging#hasPermission':
           case 'Messaging#requestPermission':
@@ -284,14 +256,12 @@ void main() {
       handleMethodCall((call) async {
         log.add(call);
         switch (call.method) {
-          case 'Messaging#deleteToken':
           case 'Messaging#register':
           case 'Messaging#unregister':
           case 'Messaging#subscribeToTopic':
           case 'Messaging#unsubscribeFromTopic':
             return null;
           case 'Messaging#getAPNSToken':
-          case 'Messaging#getToken':
             return {'token': 'test_token'};
           case 'Messaging#hasPermission':
           case 'Messaging#requestPermission':
@@ -428,10 +398,6 @@ void main() {
       ]);
     });
 
-    test('onTokenRefresh', () {
-      expect(messaging.onTokenRefresh, isA<Stream<String>>());
-    });
-
     test('onRegistered', () {
       expect(messaging.onRegistered, isA<Stream<String>>());
     });
@@ -454,6 +420,28 @@ void main() {
           },
         ),
       ]);
+    });
+
+    test('ignores a native Messaging#onTokenRefresh call', () async {
+      MethodChannelFirebaseMessaging.setMethodCallHandlers();
+      final registered = <String>[];
+      final subscription = messaging.onRegistered.listen(registered.add);
+      ByteData? reply;
+
+      await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .handlePlatformMessage(
+        MethodChannelFirebaseMessaging.channel.name,
+        const StandardMethodCodec().encodeMethodCall(
+          const MethodCall('Messaging#onTokenRefresh', 'fcm-token'),
+        ),
+        (ByteData? data) {
+          reply = data;
+        },
+      );
+
+      expect(registered, isEmpty);
+      expect(const StandardMethodCodec().decodeEnvelope(reply!), isNull);
+      await subscription.cancel();
     });
 
     test('unsubscribeFromTopic', () async {

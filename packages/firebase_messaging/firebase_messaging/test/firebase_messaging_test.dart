@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use, require_trailing_commas
+// ignore_for_file: require_trailing_commas
 // Copyright 2020 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -74,17 +74,6 @@ void main() {
       });
     });
 
-    group('deleteToken', () {
-      test('verify delegate method is called with correct args', () async {
-        when(kMockMessagingPlatform.deleteToken())
-            .thenAnswer((_) => Future.value());
-
-        await messaging!.deleteToken();
-
-        verify(kMockMessagingPlatform.deleteToken());
-      });
-    });
-
     group('getAPNSToken', () {
       test('verify delegate method is called', () async {
         const apnsToken = 'test-apns';
@@ -101,37 +90,47 @@ void main() {
       test('verify delegate method is called with correct args', () async {
         const vapidKey = 'test-vapid-key';
 
-        when(kMockMessagingPlatform.register(
-          vapidKey: anyNamed('vapidKey'),
-          serviceWorkerScriptPath: anyNamed('serviceWorkerScriptPath'),
-        )).thenAnswer((_) => Future.value());
+        when(
+          kMockMessagingPlatform.register(
+            vapidKey: anyNamed('vapidKey'),
+            serviceWorkerScriptPath: anyNamed('serviceWorkerScriptPath'),
+          ),
+        ).thenAnswer((_) => Future.value());
 
         await messaging!.register(vapidKey: vapidKey);
 
-        verify(kMockMessagingPlatform.register(
-          vapidKey: vapidKey,
-          serviceWorkerScriptPath: null,
-        ));
-      });
-
-      test('verify delegate method is called with service worker path',
-          () async {
-        const serviceWorkerScriptPath = 'custom-messaging-sw.js';
-
-        when(kMockMessagingPlatform.register(
-          vapidKey: anyNamed('vapidKey'),
-          serviceWorkerScriptPath: anyNamed('serviceWorkerScriptPath'),
-        )).thenAnswer((_) => Future.value());
-
-        await messaging!.register(
-          serviceWorkerScriptPath: serviceWorkerScriptPath,
+        verify(
+          kMockMessagingPlatform.register(
+            vapidKey: vapidKey,
+            serviceWorkerScriptPath: null,
+          ),
         );
-
-        verify(kMockMessagingPlatform.register(
-          vapidKey: null,
-          serviceWorkerScriptPath: serviceWorkerScriptPath,
-        ));
       });
+
+      test(
+        'verify delegate method is called with service worker path',
+        () async {
+          const serviceWorkerScriptPath = 'custom-messaging-sw.js';
+
+          when(
+            kMockMessagingPlatform.register(
+              vapidKey: anyNamed('vapidKey'),
+              serviceWorkerScriptPath: anyNamed('serviceWorkerScriptPath'),
+            ),
+          ).thenAnswer((_) => Future.value());
+
+          await messaging!.register(
+            serviceWorkerScriptPath: serviceWorkerScriptPath,
+          );
+
+          verify(
+            kMockMessagingPlatform.register(
+              vapidKey: null,
+              serviceWorkerScriptPath: serviceWorkerScriptPath,
+            ),
+          );
+        },
+      );
     });
 
     group('unregister', () {
@@ -152,8 +151,9 @@ void main() {
         when(kMockMessagingPlatform.onRegistered)
             .thenAnswer((_) => Stream<String>.fromIterable(<String>[fid]));
 
-        final StreamQueue<String> changes =
-            StreamQueue<String>(messaging!.onRegistered);
+        final StreamQueue<String> changes = StreamQueue<String>(
+          messaging!.onRegistered,
+        );
         expect(await changes.next, equals(fid));
 
         verify(kMockMessagingPlatform.onRegistered);
@@ -167,76 +167,30 @@ void main() {
         when(kMockMessagingPlatform.onUnregistered)
             .thenAnswer((_) => Stream<String>.fromIterable(<String>[fid]));
 
-        final StreamQueue<String> changes =
-            StreamQueue<String>(messaging!.onUnregistered);
+        final StreamQueue<String> changes = StreamQueue<String>(
+          messaging!.onUnregistered,
+        );
         expect(await changes.next, equals(fid));
 
         verify(kMockMessagingPlatform.onUnregistered);
       });
     });
-
-    group('getToken', () {
-      test('verify delegate method is called with correct args', () async {
-        const vapidKey = 'test-vapid-key';
-        when(kMockMessagingPlatform.getToken(
-          vapidKey: anyNamed('vapidKey'),
-          serviceWorkerScriptPath: anyNamed('serviceWorkerScriptPath'),
-        )).thenAnswer((_) => Future.value(''));
-
-        await messaging!.getToken(vapidKey: vapidKey);
-
-        verify(kMockMessagingPlatform.getToken(
-          vapidKey: vapidKey,
-          serviceWorkerScriptPath: null,
-        ));
-      });
-
-      test('verify delegate method is called with service worker path',
-          () async {
-        const serviceWorkerScriptPath = 'custom-messaging-sw.js';
-        when(kMockMessagingPlatform.getToken(
-          vapidKey: anyNamed('vapidKey'),
-          serviceWorkerScriptPath: anyNamed('serviceWorkerScriptPath'),
-        )).thenAnswer((_) => Future.value(''));
-
-        await messaging!.getToken(
-          serviceWorkerScriptPath: serviceWorkerScriptPath,
-        );
-
-        verify(kMockMessagingPlatform.getToken(
-          vapidKey: null,
-          serviceWorkerScriptPath: serviceWorkerScriptPath,
-        ));
-      });
-    });
-
-    group('onTokenRefresh', () {
-      test('verify delegate method is called', () async {
-        const token = 'test-token';
-
-        when(kMockMessagingPlatform.onTokenRefresh)
-            .thenAnswer((_) => Stream<String>.fromIterable(<String>[token]));
-
-        final StreamQueue<String> changes =
-            StreamQueue<String>(messaging!.onTokenRefresh);
-        expect(await changes.next, isA<String>());
-
-        verify(kMockMessagingPlatform.onTokenRefresh);
-      });
-    });
     group('requestPermission', () {
       test('verify delegate method is called with correct args', () async {
-        when(kMockMessagingPlatform.requestPermission(
-          alert: anyNamed('alert'),
-          announcement: anyNamed('announcement'),
-          badge: anyNamed('badge'),
-          carPlay: anyNamed('carPlay'),
-          criticalAlert: anyNamed('criticalAlert'),
-          provisional: anyNamed('provisional'),
-          sound: anyNamed('sound'),
-          providesAppNotificationSettings:
-              anyNamed('providesAppNotificationSettings'),
-        )).thenAnswer((_) => Future.value(defaultNotificationSettings));
+        when(
+          kMockMessagingPlatform.requestPermission(
+            alert: anyNamed('alert'),
+            announcement: anyNamed('announcement'),
+            badge: anyNamed('badge'),
+            carPlay: anyNamed('carPlay'),
+            criticalAlert: anyNamed('criticalAlert'),
+            provisional: anyNamed('provisional'),
+            sound: anyNamed('sound'),
+            providesAppNotificationSettings: anyNamed(
+              'providesAppNotificationSettings',
+            ),
+          ),
+        ).thenAnswer((_) => Future.value(defaultNotificationSettings));
 
         // true values
         await messaging!.requestPermission(
@@ -250,16 +204,18 @@ void main() {
           providesAppNotificationSettings: true,
         );
 
-        verify(kMockMessagingPlatform.requestPermission(
-          alert: true,
-          announcement: true,
-          badge: true,
-          carPlay: true,
-          criticalAlert: true,
-          provisional: true,
-          sound: true,
-          providesAppNotificationSettings: true,
-        ));
+        verify(
+          kMockMessagingPlatform.requestPermission(
+            alert: true,
+            announcement: true,
+            badge: true,
+            carPlay: true,
+            criticalAlert: true,
+            provisional: true,
+            sound: true,
+            providesAppNotificationSettings: true,
+          ),
+        );
 
         // false values
         await messaging!.requestPermission(
@@ -273,30 +229,34 @@ void main() {
           providesAppNotificationSettings: false,
         );
 
-        verify(kMockMessagingPlatform.requestPermission(
-          alert: false,
-          announcement: false,
-          badge: false,
-          carPlay: false,
-          criticalAlert: false,
-          provisional: false,
-          sound: false,
-          providesAppNotificationSettings: false,
-        ));
+        verify(
+          kMockMessagingPlatform.requestPermission(
+            alert: false,
+            announcement: false,
+            badge: false,
+            carPlay: false,
+            criticalAlert: false,
+            provisional: false,
+            sound: false,
+            providesAppNotificationSettings: false,
+          ),
+        );
 
         // default values
         await messaging!.requestPermission();
 
-        verify(kMockMessagingPlatform.requestPermission(
-          alert: true,
-          announcement: false,
-          badge: true,
-          carPlay: false,
-          criticalAlert: false,
-          provisional: false,
-          sound: true,
-          providesAppNotificationSettings: false,
-        ));
+        verify(
+          kMockMessagingPlatform.requestPermission(
+            alert: true,
+            announcement: false,
+            badge: true,
+            carPlay: false,
+            criticalAlert: false,
+            provisional: false,
+            sound: true,
+            providesAppNotificationSettings: false,
+          ),
+        );
       });
     });
 
@@ -321,8 +281,10 @@ void main() {
       test('throws AssertionError if topic is invalid', () async {
         const invalidTopic = 'test invalid = topic';
 
-        expect(() => messaging!.subscribeToTopic(invalidTopic),
-            throwsAssertionError);
+        expect(
+          () => messaging!.subscribeToTopic(invalidTopic),
+          throwsAssertionError,
+        );
       });
 
       test('verify delegate method is called with correct args', () async {

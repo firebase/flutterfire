@@ -45,25 +45,26 @@ messages when your app is in the foreground as well, see also
     ```
 
 
-## Access the registration token
+## Access the Firebase Installation ID
 
-To send a message to a specific device, you need to know that device's
-registration token. Because you'll need to enter the token in a field in the
-Notifications console to complete this tutorial, make sure to copy the token
-or securely store it after you retrieve it.
+To send a message to a specific device, you need that device's Firebase
+Installation ID. Copy the ID from `onRegistered` so you can paste it into the
+Notifications console.
 
-To retrieve the current registration token for an app instance, call
-`getToken()`. On Apple and Android platforms, this method does not request
-notification permission. On web, it requests permission if permission has not
-already been granted. To keep the flow explicit and consistent across
-platforms, call `requestPermission()` before retrieving the token. On Apple
-platforms, also ensure that `getAPNSToken()` returns a non-null APNs token
-before calling `getToken()`.
+To retrieve the current registration for an app instance, call `register()`
+and listen to `onRegistered`. The event value is the Firebase Installation ID.
+On Apple and Android platforms, `register()` does not request notification
+permission. On web, pass a VAPID key when you register. To keep the flow
+explicit, call `requestPermission()` before registering. On Apple platforms,
+also ensure that `getAPNSToken()` returns a non-null APNs token before
+calling `register()`.
 
 ```dart
 await FirebaseMessaging.instance.requestPermission();
 // On Apple platforms, run this only after getAPNSToken() returns non-null.
-final fcmToken = await FirebaseMessaging.instance.getToken();
+final registered = FirebaseMessaging.instance.onRegistered.first;
+await FirebaseMessaging.instance.register();
+final fid = await registered;
 ```
 
 

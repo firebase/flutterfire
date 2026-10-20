@@ -18,7 +18,9 @@ class FirebaseMessaging extends FirebasePlugin {
 
   FirebaseMessagingPlatform get _delegate {
     return _delegatePackingProperty ??= FirebaseMessagingPlatform.instanceFor(
-        app: app, pluginConstants: pluginConstants);
+      app: app,
+      pluginConstants: pluginConstants,
+    );
   }
 
   /// The [FirebaseApp] for this current [FirebaseMessaging] instance.
@@ -94,14 +96,6 @@ class FirebaseMessaging extends FirebasePlugin {
     return _delegate.getInitialMessage();
   }
 
-  /// Removes access to an FCM token previously authorized.
-  ///
-  /// Messages sent by the server to this token will fail.
-  @Deprecated('Use unregister() and onUnregistered instead.')
-  Future<void> deleteToken() {
-    return _delegate.deleteToken();
-  }
-
   /// On iOS/MacOS, it is possible to get the users APNs token.
   ///
   /// This may be required if you want to send messages to your iOS/MacOS devices
@@ -117,10 +111,7 @@ class FirebaseMessaging extends FirebasePlugin {
   /// Once registration completes, [onRegistered] provides the Firebase
   /// Installation ID (FID) that can be used as the direct-send target for this
   /// app instance.
-  Future<void> register({
-    String? vapidKey,
-    String? serviceWorkerScriptPath,
-  }) {
+  Future<void> register({String? vapidKey, String? serviceWorkerScriptPath}) {
     return _delegate.register(
       vapidKey: vapidKey,
       serviceWorkerScriptPath: serviceWorkerScriptPath,
@@ -149,30 +140,6 @@ class FirebaseMessaging extends FirebasePlugin {
   /// removed from your backend.
   Stream<String> get onUnregistered {
     return _delegate.onUnregistered;
-  }
-
-  /// Returns the default FCM token for this device.
-  ///
-  /// On web, a [vapidKey] is required.
-  ///
-  /// On web, a custom messaging service worker can be registered with
-  /// [serviceWorkerScriptPath]. This must point to a JavaScript file in the
-  /// root of the app's `web` directory.
-  @Deprecated('Use register() and onRegistered instead.')
-  Future<String?> getToken({
-    String? vapidKey,
-    String? serviceWorkerScriptPath,
-  }) {
-    return _delegate.getToken(
-      vapidKey: vapidKey,
-      serviceWorkerScriptPath: serviceWorkerScriptPath,
-    );
-  }
-
-  /// Fires when a new FCM token is generated.
-  @Deprecated('Use onRegistered instead.')
-  Stream<String> get onTokenRefresh {
-    return _delegate.onTokenRefresh;
   }
 
   Future<bool> isSupported() {

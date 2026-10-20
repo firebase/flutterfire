@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use, require_trailing_commas
+// ignore_for_file: require_trailing_commas
 // Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
@@ -31,9 +31,7 @@ void main() {
         ),
       );
 
-      firebaseMessagingPlatform = TestFirebaseMessagingPlatform(
-        app,
-      );
+      firebaseMessagingPlatform = TestFirebaseMessagingPlatform(app);
 
       handleMethodCall((call) async {
         switch (call.method) {
@@ -50,28 +48,34 @@ void main() {
 
     test('instanceFor', () {
       final result = FirebaseMessagingPlatform.instanceFor(
-          app: app,
-          pluginConstants: <dynamic, dynamic>{
-            'AUTO_INIT_ENABLED': true,
-          });
+        app: app,
+        pluginConstants: <dynamic, dynamic>{'AUTO_INIT_ENABLED': true},
+      );
       expect(result, isA<FirebaseMessagingPlatform>());
       expect(result.isAutoInitEnabled, isA<bool>());
     });
 
     test('get.instance', () {
       expect(
-          FirebaseMessagingPlatform.instance, isA<FirebaseMessagingPlatform>());
-      expect(FirebaseMessagingPlatform.instance.app.name,
-          equals(defaultFirebaseAppName));
+        FirebaseMessagingPlatform.instance,
+        isA<FirebaseMessagingPlatform>(),
+      );
+      expect(
+        FirebaseMessagingPlatform.instance.app.name,
+        equals(defaultFirebaseAppName),
+      );
     });
 
     group('set.instance', () {
       test('sets the current instance', () {
-        FirebaseMessagingPlatform.instance =
-            TestFirebaseMessagingPlatform(secondaryApp);
+        FirebaseMessagingPlatform.instance = TestFirebaseMessagingPlatform(
+          secondaryApp,
+        );
 
-        expect(FirebaseMessagingPlatform.instance,
-            isA<FirebaseMessagingPlatform>());
+        expect(
+          FirebaseMessagingPlatform.instance,
+          isA<FirebaseMessagingPlatform>(),
+        );
         expect(FirebaseMessagingPlatform.instance.app.name, equals('testApp2'));
       });
     });
@@ -116,31 +120,11 @@ void main() {
       fail('Should have thrown an [UnimplementedError]');
     });
 
-    test('throws if deleteToken()', () async {
-      try {
-        await firebaseMessagingPlatform.deleteToken();
-      } on UnimplementedError catch (e) {
-        expect(e.message, equals('deleteToken() is not implemented'));
-        return;
-      }
-      fail('Should have thrown an [UnimplementedError]');
-    });
-
     test('throws if getAPNSToken()', () async {
       try {
         await firebaseMessagingPlatform.getAPNSToken();
       } on UnimplementedError catch (e) {
         expect(e.message, equals('getAPNSToken() is not implemented'));
-        return;
-      }
-      fail('Should have thrown an [UnimplementedError]');
-    });
-
-    test('throws if getToken()', () async {
-      try {
-        await firebaseMessagingPlatform.getToken();
-      } on UnimplementedError catch (e) {
-        expect(e.message, equals('getToken() is not implemented'));
         return;
       }
       fail('Should have thrown an [UnimplementedError]');
@@ -181,16 +165,6 @@ void main() {
         firebaseMessagingPlatform.onUnregistered;
       } on UnimplementedError catch (e) {
         expect(e.message, equals('onUnregistered is not implemented'));
-        return;
-      }
-      fail('Should have thrown an [UnimplementedError]');
-    });
-
-    test('throws if onTokenRefresh', () {
-      try {
-        firebaseMessagingPlatform.onTokenRefresh;
-      } on UnimplementedError catch (e) {
-        expect(e.message, equals('onTokenRefresh is not implemented'));
         return;
       }
       fail('Should have thrown an [UnimplementedError]');
