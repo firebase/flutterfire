@@ -33,7 +33,7 @@ void main() {
         cache!.store(someMetadata);
       });
 
-      test("Merges metadata without overwriting what's already set", () {
+      test('Merges metadata and keeps what is not set again', () {
         final setMetadata = cache!.store(otherMetadata);
 
         expect(
@@ -41,9 +41,16 @@ void main() {
         expect(setMetadata.contentType, equals(otherMetadata.contentType));
       });
 
-      test(
-          "Shallowly merges extendedMetadata without overwriting what's already set",
-          () {
+      test('New values replace the cached ones', () {
+        final setMetadata = cache!.store(SettableMetadata(
+          contentLanguage: 'fr',
+        ));
+
+        expect(setMetadata.contentLanguage, equals('fr'));
+        expect(setMetadata.customMetadata, equals({'testing': '123'}));
+      });
+
+      test('Shallowly merges customMetadata, new values win', () {
         final withCustomMetadata = SettableMetadata(customMetadata: {
           'testing': '456',
           'more-testing': 'yes',
@@ -51,9 +58,8 @@ void main() {
 
         final setMetadata = cache!.store(withCustomMetadata);
         final customMetadata = setMetadata.customMetadata;
-        expect(customMetadata, containsPair('testing', '123'));
+        expect(customMetadata, containsPair('testing', '456'));
         expect(customMetadata, containsPair('more-testing', 'yes'));
-        expect(customMetadata, isNot(containsPair('testing', '456')));
       });
 
       test('Storing null returns the current cache', () {
