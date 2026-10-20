@@ -51,19 +51,6 @@ void main() async {
     providerAndroid: const AndroidDebugProvider(),
     providerApple: const AppleDebugProvider(),
   );
-
-  // FirebaseAI caches instances per app/backend, so the first call decides
-  // whether limited-use App Check tokens are used. Create them up front.
-  FirebaseAI.googleAI(
-    useLimitedUseAppCheckTokens: kUseLimitedUseAppCheckTokens,
-  );
-  FirebaseAI.agentPlatform(
-    useLimitedUseAppCheckTokens: kUseLimitedUseAppCheckTokens,
-  );
-  FirebaseAI.agentPlatform(
-    location: 'global',
-    useLimitedUseAppCheckTokens: kUseLimitedUseAppCheckTokens,
-  );
   runApp(const GenerativeAISample());
 }
 
