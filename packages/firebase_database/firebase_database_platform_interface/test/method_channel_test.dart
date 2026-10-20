@@ -567,7 +567,7 @@ void main() {
 
     group('MethodChannelDataSnapshot', () {
       test(
-          'child() on a List-valued child generates 0-based childKeys and iterates children without RangeError (RTDB-4)',
+          'child() on a List-valued child generates 0-based childKeys and iterates children without RangeError',
           () {
         final snapshot = MethodChannelDataSnapshot(
           database.ref('root'),
