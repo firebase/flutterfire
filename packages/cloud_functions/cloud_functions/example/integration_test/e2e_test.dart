@@ -385,6 +385,25 @@ void main() {
         await expectLater(stream, emits(isA<StreamResponse>()));
       });
 
+      test('sends data when called using a url', () async {
+        final localhostMapped =
+            kIsWeb || !Platform.isAndroid ? 'localhost' : '10.0.2.2';
+
+        HttpsCallable callable =
+            FirebaseFunctions.instance.httpsCallableFromUrl(
+          'http://$localhostMapped:5001/flutterfire-e2e-tests/us-central1/$kTestFunctionDefaultRegion',
+        );
+
+        final stream = callable.stream('foo').where((event) => event is Chunk);
+        await expectLater(
+          stream,
+          emits(
+            isA<Chunk>()
+                .having((e) => e.partialData, 'partialData', equals('string')),
+          ),
+        );
+      });
+
       test(
         'concurrent streams on the same callable do not collide',
         () async {
