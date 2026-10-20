@@ -115,24 +115,21 @@ try {
   await auth.signInWithCredential(googleAuthCredential);
 } on FirebaseAuthException catch (e) {
   if (e.code == 'account-exists-with-different-credential') {
-    // The email address of the existing account.
-    String? email = e.email;
-    // The Google credential the user just tried to sign in with.
-    AuthCredential? pendingCredential = e.credential;
+    final String? email = e.email;
+    if (email == null) {
+      return;
+    }
+    final AuthCredential? pendingCredential = e.credential;
 
-    // Ask the user to sign in to `email` with the provider they used before,
-    // for example Facebook. With email enumeration protection enabled,
-    // Firebase does not tell you which provider that is, so let the user
-    // choose.
+    // Email enumeration protection hides which provider the account uses,
+    // so the user has to choose the provider they signed in with before.
     print('Sign in to $email with the provider you used before.');
-    UserCredential userCredential = await auth.signInWithCredential(
+    final UserCredential userCredential = await auth.signInWithCredential(
       FacebookAuthProvider.credential(facebookAccessToken),
     );
-
-    // Link the Google credential to the existing account, so the user can
-    // sign in with either provider from now on.
-    if (pendingCredential != null) {
-      await userCredential.user!.linkWithCredential(pendingCredential);
+    final User? user = userCredential.user;
+    if (pendingCredential != null && user != null) {
+      await user.linkWithCredential(pendingCredential);
     }
   }
 }
