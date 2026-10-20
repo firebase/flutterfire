@@ -294,6 +294,30 @@ void main() {
       verify(mockUserPlatform.updateProfile(data));
     });
 
+    test('updateProfile() only sends the fields that are passed', () async {
+      when(mockUserPlatform.updateProfile(any)).thenAnswer((i) async {});
+
+      await auth.currentUser!.updateProfile(displayName: 'updatedName');
+      verify(mockUserPlatform
+          .updateProfile(<String, String?>{'displayName': 'updatedName'}));
+
+      await auth.currentUser!.updateProfile(photoURL: 'testUrl');
+      verify(mockUserPlatform
+          .updateProfile(<String, String?>{'photoURL': 'testUrl'}));
+    });
+
+    test('updateProfile() sends null to remove a field', () async {
+      when(mockUserPlatform.updateProfile(any)).thenAnswer((i) async {});
+
+      await auth.currentUser!.updateProfile(displayName: null);
+      verify(mockUserPlatform
+          .updateProfile(<String, String?>{'displayName': null}));
+
+      await auth.currentUser!.updateProfile(displayName: null, photoURL: null);
+      verify(mockUserPlatform.updateProfile(
+          <String, String?>{'displayName': null, 'photoURL': null}));
+    });
+
     group('verifyBeforeUpdateEmail()', () {
       test('should call verifyBeforeUpdateEmail()', () async {
         // Necessary as we otherwise get a "null is not a Future<void>" error
