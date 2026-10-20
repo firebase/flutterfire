@@ -199,6 +199,7 @@ class Reference {
           contentEncoding: metadata.contentEncoding,
           contentLanguage: metadata.contentLanguage,
           contentType: uri.mimeType,
+          customMetadata: metadata.customMetadata,
         );
       }
     }
