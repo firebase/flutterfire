@@ -153,6 +153,35 @@ void main() {
         ),
       );
     });
+
+    test('with a blocked prompt omitting safetyRatings (AI-3)', () {
+      const response = '''
+{
+  "promptFeedback": {
+    "blockReason": "PROHIBITED_CONTENT"
+  }
+}
+''';
+      final decoded = jsonDecode(response) as Object;
+      final generateContentResponse =
+          AgentPlatformSerialization().parseGenerateContentResponse(decoded);
+      expect(generateContentResponse.promptFeedback, isNotNull);
+      expect(
+        generateContentResponse.promptFeedback!.blockReason?.toString(),
+        'prohibitedContent',
+      );
+      expect(generateContentResponse.promptFeedback!.safetyRatings, isEmpty);
+      expect(
+        () => generateContentResponse.text,
+        throwsA(
+          isA<FirebaseAIException>().having(
+            (e) => e.message,
+            'message',
+            startsWith('Response was blocked due to prohibitedContent'),
+          ),
+        ),
+      );
+    });
     test('with service api not enabled', () {
       const response = '''
 {
@@ -1154,6 +1183,34 @@ void main() {
       expect(groundingChunk.maps?.title, 'Google HQ');
       expect(groundingChunk.maps?.placeId, 'ChIJS5dFe_cZzosR26ZvwqWaMAM');
       expect(groundingChunk.web, isNull);
+    });
+
+    test('preserves webSearchQueries when decoded from JSON string (AI-6)', () {
+      const responseJson = '''
+{
+  "candidates": [
+    {
+      "content": {
+        "role": "model",
+        "parts": [{"text": "Search result"}]
+      },
+      "finishReason": "STOP",
+      "groundingMetadata": {
+        "webSearchQueries": ["flutter", "firebase"]
+      }
+    }
+  ]
+}
+''';
+      final decoded = jsonDecode(responseJson) as Object;
+      final response =
+          AgentPlatformSerialization().parseGenerateContentResponse(decoded);
+      final groundingMetadata = response.candidates.first.groundingMetadata;
+      expect(groundingMetadata, isNotNull);
+      expect(
+        groundingMetadata!.webSearchQueries,
+        <String>['flutter', 'firebase'],
+      );
     });
 
     test('with unknown safety ratings', () async {
