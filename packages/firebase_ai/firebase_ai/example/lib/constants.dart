@@ -14,7 +14,6 @@
 
 /// Whether `FirebaseAI` instances should request limited-use App Check tokens.
 ///
-/// Enable with `flutter run --dart-define=LIMITED_USE_APP_CHECK=true`.
 /// Limited-use tokens are rejected on replay, which makes it easy to verify
 /// that `LiveSession.resumeSession` fetches fresh headers on every reconnect
 /// (https://github.com/firebase/flutterfire/pull/18814).
