@@ -14,6 +14,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:firebase_messaging_example/firebase_options.dart';
 
+import 'remote_notification_delivery.dart';
 import 'report_test_results.dart';
 
 /// Test helpers that use UiAutomation to mutate runtime permissions during
@@ -52,40 +53,6 @@ Future<bool> resetAndroidPermission(String permission) async {
   } on MissingPluginException {
     return false;
   }
-}
-
-/// iOS test helper implemented in `ios/Runner/RemoteNotificationTestChannel.swift`.
-const _remoteNotificationsChannel = MethodChannel('tests/remote_notifications');
-
-/// Delivers a data message through the app delegate the same way iOS does when
-/// a push arrives. Returns how many times the fetch completion handler was
-/// called (`completionCount`) and with which `UIBackgroundFetchResult`
-/// (`fetchResult`).
-Future<Map<String, Object?>> deliverRemoteNotification(
-  String messageId, {
-  required bool inBackground,
-}) async {
-  final delivery = await _remoteNotificationsChannel
-      .invokeMapMethod<String, Object?>('deliver', {
-    'inBackground': inBackground,
-    'userInfo': {
-      'aps': {'content-available': 1},
-      'gcm.message_id': messageId,
-      'google.c.a.e': '1',
-      'from': 'e2e',
-      'test': 'remote-notification-delivery',
-    },
-  });
-  return delivery!;
-}
-
-const _uiBackgroundFetchResultNewData = 0;
-
-final List<RemoteMessage> _backgroundMessages = <RemoteMessage>[];
-
-@pragma('vm:entry-point')
-Future<void> _backgroundMessageHandler(RemoteMessage message) async {
-  _backgroundMessages.add(message);
 }
 
 // ignore: do_not_use_environment
@@ -280,84 +247,7 @@ void main() {
         );
       });
 
-      group(
-        'remote notification delivery',
-        () {
-          String uniqueMessageId(String prefix) =>
-              '$prefix-${DateTime.now().microsecondsSinceEpoch}';
-
-          test('a data message in the foreground reaches onMessage once',
-              () async {
-            final messageId = uniqueMessageId('foreground');
-            final received = <RemoteMessage>[];
-            final subscription = FirebaseMessaging.onMessage
-                .where((message) => message.messageId == messageId)
-                .listen(received.add);
-            addTearDown(subscription.cancel);
-
-            final delivery = await deliverRemoteNotification(
-              messageId,
-              inBackground: false,
-            );
-            await Future<void>.delayed(const Duration(milliseconds: 500));
-
-            expect(received, hasLength(1));
-            expect(
-              received.single.data,
-              containsPair('test', 'remote-notification-delivery'),
-            );
-            expect(delivery['completionCount'], 1);
-          });
-
-          test(
-              'a data message in the background runs onBackgroundMessage once '
-              'before the push completes', () async {
-            FirebaseMessaging.onBackgroundMessage(_backgroundMessageHandler);
-            final messageId = uniqueMessageId('background');
-
-            final delivery = await deliverRemoteNotification(
-              messageId,
-              inBackground: true,
-            );
-
-            expect(
-              _backgroundMessages.where((m) => m.messageId == messageId),
-              hasLength(1),
-            );
-            expect(delivery['completionCount'], 1);
-            expect(delivery['fetchResult'], _uiBackgroundFetchResultNewData);
-          });
-
-          test('a later push that reuses a message ID is handled again',
-              () async {
-            // Some servers send pushes straight to APNs with a fixed
-            // `gcm.message_id`: only the duplicate within one delivery from
-            // iOS may be dropped.
-            final messageId = uniqueMessageId('reused-id');
-            final received = <RemoteMessage>[];
-            final subscription = FirebaseMessaging.onMessage
-                .where((message) => message.messageId == messageId)
-                .listen(received.add);
-            addTearDown(subscription.cancel);
-
-            final first = await deliverRemoteNotification(
-              messageId,
-              inBackground: false,
-            );
-            final second = await deliverRemoteNotification(
-              messageId,
-              inBackground: false,
-            );
-            await Future<void>.delayed(const Duration(milliseconds: 500));
-
-            expect(received, hasLength(2));
-            expect(first['completionCount'], 1);
-            expect(second['completionCount'], 1);
-          });
-        },
-        // Pushes are delivered through the iOS app delegate.
-        skip: kIsWeb || defaultTargetPlatform != TargetPlatform.iOS,
-      );
+      remoteNotificationDeliveryTests();
 
       group('getInitialMessage', () {
         test('returns null when no initial message', () async {
