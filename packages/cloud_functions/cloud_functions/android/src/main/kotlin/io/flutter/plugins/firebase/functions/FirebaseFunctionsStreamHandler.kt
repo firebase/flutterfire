@@ -56,7 +56,7 @@ class FirebaseFunctionsStreamHandler(private val firebaseFunctions: FirebaseFunc
       } else if (functionUri != null) {
         httpsCallableReference =
             firebaseFunctions.getHttpsCallableFromUrl(URL(functionUri), options)
-        publisher = httpsCallableReference.stream()
+        publisher = httpsCallableReference.stream(parameters)
       } else {
         throw IllegalArgumentException("Either functionName or functionUri must be set")
       }
