@@ -353,11 +353,24 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
 
   bool get _hasServerStream => _serverStream != null || _serverStreamStarting;
 
-  /// The last result sent to the subscribers of the current server stream.
+  /// The last result published to this ref's subscribers while its server
+  /// stream was live, whether it came from that stream or from [execute].
   ///
   /// The server only pushes when the data changes, so this is replayed to a
-  /// subscriber that joins a server stream which is already live.
+  /// subscriber that joins a server stream which is already live. It is only
+  /// kept when no cache is configured: with a cache, [subscribe] reads the
+  /// cache instead. A replayed result is the original object, so it keeps the
+  /// [DataSource] it was published with.
   QueryResult<Data, Variables>? _lastResult;
+
+  /// The auth uid that was current when [_lastResult] was published.
+  ///
+  /// After a user switch the transport keeps the server stream open until it
+  /// has reconnected as the new user, so [_lastResult] can still be the
+  /// previous user's data.
+  String? _lastResultUid;
+
+  String? get _currentUid => dataConnect.auth?.currentUser?.uid;
 
   void _onAllSubscribersCancelled() {
     _serverStreamGeneration++;
@@ -387,7 +400,8 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
       final lastResult = _lastResult;
       if (dataConnect.cacheManager == null &&
           _hasServerStream &&
-          lastResult != null) {
+          lastResult != null &&
+          _lastResultUid == _currentUid) {
         controller.add(lastResult);
       }
       final subscription = source.listen(
@@ -498,7 +512,10 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
   }
 
   void publishResultToStream(QueryResult<Data, Variables> result) {
-    _lastResult = result;
+    // Only keep what `subscribe` can replay.
+    final replayable = dataConnect.cacheManager == null && _hasServerStream;
+    _lastResult = replayable ? result : null;
+    _lastResultUid = replayable ? _currentUid : null;
     if (_streamController != null) {
       _streamController?.add(result);
     }
