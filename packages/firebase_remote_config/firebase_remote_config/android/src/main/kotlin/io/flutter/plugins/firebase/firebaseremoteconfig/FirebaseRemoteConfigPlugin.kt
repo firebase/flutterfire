@@ -28,6 +28,7 @@ import io.flutter.plugin.common.EventChannel.EventSink
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin
 import io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry
 import java.util.Objects
+import java.util.concurrent.Executor
 
 /** FirebaseRemoteConfigPlugin */
 class FirebaseRemoteConfigPlugin :
@@ -189,16 +190,7 @@ class FirebaseRemoteConfigPlugin :
 
     listenersMap[appName] =
         remoteConfig.addOnConfigUpdateListener(
-            object : ConfigUpdateListener {
-              override fun onUpdate(configUpdate: ConfigUpdate) {
-                val updatedKeys = ArrayList(configUpdate.updatedKeys)
-                mainThreadHandler.post { events.success(updatedKeys) }
-              }
-
-              override fun onError(error: FirebaseRemoteConfigException) {
-                events.error("firebase_remote_config", error.message, null)
-              }
-            })
+            createConfigUpdateListener(events) { mainThreadHandler.post(it) })
   }
 
   override fun onCancel(arguments: Any?) {
@@ -256,6 +248,27 @@ class FirebaseRemoteConfigPlugin :
     const val TAG: String = "FRCPlugin"
     const val METHOD_CHANNEL: String = "plugins.flutter.io/firebase_remote_config"
     const val EVENT_CHANNEL: String = "plugins.flutter.io/firebase_remote_config_updated"
+
+    /**
+     * The SDK calls both callbacks on its own background executor, but an [EventSink] may only be
+     * used on the main thread, so both go through [mainThreadExecutor].
+     */
+    internal fun createConfigUpdateListener(
+        events: EventSink,
+        mainThreadExecutor: Executor,
+    ): ConfigUpdateListener =
+        object : ConfigUpdateListener {
+          override fun onUpdate(configUpdate: ConfigUpdate) {
+            val updatedKeys = ArrayList(configUpdate.updatedKeys)
+            mainThreadExecutor.execute { events.success(updatedKeys) }
+          }
+
+          override fun onError(error: FirebaseRemoteConfigException) {
+            mainThreadExecutor.execute {
+              events.error("firebase_remote_config", error.message, null)
+            }
+          }
+        }
   }
 
   override fun fetch(appName: String, callback: (Result<Unit>) -> Unit) {
