@@ -328,8 +328,12 @@ void main() {
             expect(delivery['fetchResult'], _uiBackgroundFetchResultNewData);
           });
 
-          test('a message delivered again is only handled once', () async {
-            final messageId = uniqueMessageId('redelivered');
+          test('a later push that reuses a message ID is handled again',
+              () async {
+            // Some servers send pushes straight to APNs with a fixed
+            // `gcm.message_id`: only the duplicate within one delivery from
+            // iOS may be dropped.
+            final messageId = uniqueMessageId('reused-id');
             final received = <RemoteMessage>[];
             final subscription = FirebaseMessaging.onMessage
                 .where((message) => message.messageId == messageId)
@@ -346,7 +350,7 @@ void main() {
             );
             await Future<void>.delayed(const Duration(milliseconds: 500));
 
-            expect(received, hasLength(1));
+            expect(received, hasLength(2));
             expect(first['completionCount'], 1);
             expect(second['completionCount'], 1);
           });

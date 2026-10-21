@@ -131,4 +131,34 @@ void main() {
 
     expect(handled.map((m) => m.messageId), <String>['after-registration']);
   });
+
+  test('does not wait once the app has been using messaging for a while',
+      () async {
+    MethodChannelFirebaseMessaging.backgroundMessageHandlerRegistrationTimeout =
+        const Duration(milliseconds: 100);
+    await Future<void>.delayed(const Duration(milliseconds: 200));
+
+    // Would wait the whole timeout if it still held the message.
+    await deliverFromNative('late-without-handler')
+        .timeout(const Duration(milliseconds: 80));
+
+    expect(handled, isEmpty);
+  });
+
+  test('is woken by the handler even when the platform instance was replaced',
+      () async {
+    final reply = deliverFromNative('replaced-instance');
+    await pumpEventQueue();
+    FirebaseMessagingPlatform.instance = _OtherFirebaseMessagingPlatform();
+
+    FirebaseMessagingPlatform.onBackgroundMessage = handler;
+    await reply.timeout(const Duration(seconds: 2));
+
+    expect(handled.map((m) => m.messageId), <String>['replaced-instance']);
+  });
+}
+
+class _OtherFirebaseMessagingPlatform extends FirebaseMessagingPlatform {
+  @override
+  void registerBackgroundMessageHandler(BackgroundMessageHandler handler) {}
 }

@@ -29,9 +29,6 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 // launch the app in the background. Flutter only keeps one by default.
 static const NSInteger kFLTFirebaseMessagingChannelBufferSize = 64;
 
-// How many recently handled FCM message IDs are remembered to drop repeated deliveries.
-static const NSUInteger kFLTFirebaseMessagingMaxHandledMessageIDs = 100;
-
 @implementation FLTFirebaseMessagingPlugin {
   FlutterMethodChannel *_channel;
   NSObject<FlutterPluginRegistrar> *_registrar;
@@ -51,8 +48,8 @@ static const NSUInteger kFLTFirebaseMessagingMaxHandledMessageIDs = 100;
   // Track if scene delegate connected (for iOS 13+ scene delegate support)
   BOOL _sceneDidConnect;
 
-  // FCM message IDs already forwarded to Dart, oldest first.
-  NSMutableOrderedSet *_handledMessageIDs;
+  // FCM message IDs of the pushes being delivered right now, see beginDeliveringMessage:.
+  NSMutableSet *_messageIDsBeingDelivered;
 
   // Guard against calling setupNotificationHandling twice
   BOOL _notificationHandlingSetup;
@@ -82,6 +79,17 @@ static const NSUInteger kFLTFirebaseMessagingMaxHandledMessageIDs = 100;
 
 #pragma mark - FlutterPlugin
 
+// Sends a message to Dart. Messages sent before Dart has set up its handler on the channel wait in
+// a buffer that only keeps one by default, so it is enlarged with every message: Flutter drops
+// messages sent before the engine runs Dart, which is when UIScene apps register plugins, so it
+// cannot be done once at registration.
+- (void)invokeDartMethod:(NSString *)method
+               arguments:(id _Nullable)arguments
+                  result:(FlutterResult _Nullable)result {
+  [_channel resizeChannelBuffer:kFLTFirebaseMessagingChannelBufferSize];
+  [_channel invokeMethod:method arguments:arguments result:result];
+}
+
 - (instancetype)init {
   self = [super init];
   if (self) {
@@ -89,7 +97,7 @@ static const NSUInteger kFLTFirebaseMessagingMaxHandledMessageIDs = 100;
     _sceneDidConnect = NO;
     _notificationHandlingSetup = NO;
     _applicationObserverRegistered = NO;
-    _handledMessageIDs = [NSMutableOrderedSet orderedSet];
+    _messageIDsBeingDelivered = [NSMutableSet set];
   }
   return self;
 }
@@ -135,7 +143,6 @@ static const NSUInteger kFLTFirebaseMessagingMaxHandledMessageIDs = 100;
   FlutterMethodChannel *channel =
       [FlutterMethodChannel methodChannelWithName:kFLTFirebaseMessagingChannelName
                                   binaryMessenger:[registrar messenger]];
-  [channel resizeChannelBuffer:kFLTFirebaseMessagingChannelBufferSize];
   FLTFirebaseMessagingPlugin *instance = [FLTFirebaseMessagingPlugin sharedInstance];
   [instance configureWithFlutterMethodChannel:channel andFlutterPluginRegistrar:registrar];
   // Register with internal FlutterFire plugin registry.
@@ -277,7 +284,7 @@ static const NSUInteger kFLTFirebaseMessagingMaxHandledMessageIDs = 100;
   }
 
   // Send to Dart.
-  [_channel invokeMethod:@"Messaging#onTokenRefresh" arguments:fcmToken];
+  [self invokeDartMethod:@"Messaging#onTokenRefresh" arguments:fcmToken result:nil];
 
   // If the users AppDelegate implements messaging:didReceiveRegistrationToken: then call it as well
   // so we don't break other libraries.
@@ -299,7 +306,7 @@ static const NSUInteger kFLTFirebaseMessagingMaxHandledMessageIDs = 100;
     return;
   }
 
-  [_channel invokeMethod:@"Messaging#onRegistered" arguments:installationId];
+  [self invokeDartMethod:@"Messaging#onRegistered" arguments:installationId result:nil];
 
   // If the users AppDelegate implements messaging:didReceiveRegistration: then call it as well
   // so we don't break other libraries.
@@ -317,7 +324,7 @@ static const NSUInteger kFLTFirebaseMessagingMaxHandledMessageIDs = 100;
 
 - (void)messaging:(nonnull FIRMessaging *)messaging
     didUnregister:(nonnull NSString *)installationId {
-  [_channel invokeMethod:@"Messaging#onUnregistered" arguments:installationId];
+  [self invokeDartMethod:@"Messaging#onUnregistered" arguments:installationId result:nil];
 
   // If the users AppDelegate implements messaging:didUnregister: then call it as well
   // so we don't break other libraries.
@@ -592,7 +599,7 @@ static const NSUInteger kFLTFirebaseMessagingMaxHandledMessageIDs = 100;
   if (messageID && !shouldCheckForDuplicate) {
     NSDictionary *notificationDict =
         [FLTFirebaseMessagingPlugin NSDictionaryFromUNNotification:notification];
-    [_channel invokeMethod:@"Messaging#onMessage" arguments:notificationDict];
+    [self invokeDartMethod:@"Messaging#onMessage" arguments:notificationDict result:nil];
   }
 
   // When AppDelegate owns UNUserNotificationCenter, Flutter forwards this callback to every
@@ -685,7 +692,7 @@ static const NSUInteger kFLTFirebaseMessagingMaxHandledMessageIDs = 100;
   // We only want to handle FCM notifications and stop firing `onMessageOpenedApp()` when app is
   // coming from a terminated state.
   if (_notificationOpenedAppID != nil && !tappedInitialNotification) {
-    [_channel invokeMethod:@"Messaging#onMessageOpenedApp" arguments:notificationDict];
+    [self invokeDartMethod:@"Messaging#onMessageOpenedApp" arguments:notificationDict result:nil];
   }
 
   // Same ownership rule as willPresentNotification. Calling the shared handler consumes the
@@ -755,50 +762,59 @@ static const NSUInteger kFLTFirebaseMessagingMaxHandledMessageIDs = 100;
   NSLog(@"%@", error.localizedDescription);
 }
 
-// A push can reach the remote notification handlers below more than once: through the
-// GoogleUtilities app delegate proxy (registerAppDelegateInterceptor) and through Flutter's plugin
-// app delegate forwarding (addApplicationDelegate). Returns NO when this message was already
-// handled, so it is only forwarded to Dart once.
-- (BOOL)markMessageAsHandled:(NSDictionary *)userInfo {
-  id messageID = userInfo[@"gcm.message_id"];
-  @synchronized(self) {
-    if ([_handledMessageIDs containsObject:messageID]) {
-      return NO;
-    }
-    [_handledMessageIDs addObject:messageID];
-    if (_handledMessageIDs.count > kFLTFirebaseMessagingMaxHandledMessageIDs) {
-      [_handledMessageIDs removeObjectAtIndex:0];
-    }
-    return YES;
-  }
-}
-
 // Called when a remote notification is received via APNs.
 #if TARGET_OS_OSX
 - (void)application:(NSApplication *)application
     didReceiveRemoteNotification:(NSDictionary *)userInfo {
   // Only handle notifications from FCM.
   if (userInfo[@"gcm.message_id"]) {
-    if (![self markMessageAsHandled:userInfo]) {
-      return;
-    }
     NSDictionary *notificationDict =
         [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:userInfo];
 
     if ([NSApplication sharedApplication].isActive) {
-      [_channel invokeMethod:@"Messaging#onMessage" arguments:notificationDict];
+      [self invokeDartMethod:@"Messaging#onMessage" arguments:notificationDict result:nil];
     } else {
-      [_channel invokeMethod:@"Messaging#onBackgroundMessage" arguments:notificationDict];
+      [self invokeDartMethod:@"Messaging#onBackgroundMessage"
+                   arguments:notificationDict
+                      result:nil];
     }
   }
 }
 #endif
 
 #if !TARGET_OS_OSX
+// A push reaches the method below twice in the same call from iOS: through the GoogleUtilities app
+// delegate proxy (registerAppDelegateInterceptor) and through Flutter's plugin app delegate
+// forwarding (addApplicationDelegate). Returns NO for the second one so the message is only
+// forwarded to Dart once. The ID is forgotten right after, so a later push that reuses it is
+// handled again.
+- (BOOL)beginDeliveringMessage:(NSDictionary *)userInfo {
+  id messageID = userInfo[@"gcm.message_id"];
+  @synchronized(self) {
+    if ([_messageIDsBeingDelivered containsObject:messageID]) {
+      return NO;
+    }
+    [_messageIDsBeingDelivered addObject:messageID];
+  }
+  dispatch_async(dispatch_get_main_queue(), ^{
+    @synchronized(self) {
+      [self->_messageIDsBeingDelivered removeObject:messageID];
+    }
+  });
+  return YES;
+}
+
 // Called for silent messages (i.e. data only) in the foreground & background
 - (BOOL)application:(UIApplication *)application
     didReceiveRemoteNotification:(NSDictionary *)userInfo
           fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler {
+  if (![self isKindOfClass:[FLTFirebaseMessagingPlugin class]]) {
+    // This implementation was copied onto the app delegate (see
+    // setupNotificationHandlingWithRemoteNotification:), so `self` is the app delegate.
+    return [[FLTFirebaseMessagingPlugin sharedInstance] application:application
+                                       didReceiveRemoteNotification:userInfo
+                                             fetchCompletionHandler:completionHandler];
+  }
 #if __has_include(<FirebaseAuth/FirebaseAuth.h>)
   if ([FIRApp defaultApp] != nil && [[FIRAuth auth] canHandleNotification:userInfo]) {
     completionHandler(UIBackgroundFetchResultNoData);
@@ -809,7 +825,7 @@ static const NSUInteger kFLTFirebaseMessagingMaxHandledMessageIDs = 100;
       [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:userInfo];
   // Only handle notifications from FCM.
   if (userInfo[@"gcm.message_id"]) {
-    if (![self markMessageAsHandled:userInfo]) {
+    if (![self beginDeliveringMessage:userInfo]) {
       // Still complete this delivery: the GoogleUtilities proxy only calls the system completion
       // handler once every delivery it made has completed.
       completionHandler(UIBackgroundFetchResultNoData);
@@ -857,7 +873,7 @@ static const NSUInteger kFLTFirebaseMessagingMaxHandledMessageIDs = 100;
                        }
                      });
 
-      [_channel invokeMethod:@"Messaging#onBackgroundMessage"
+      [self invokeDartMethod:@"Messaging#onBackgroundMessage"
                    arguments:notificationDict
                       result:^(id _Nullable result) {
                         @synchronized(self) {
@@ -875,7 +891,7 @@ static const NSUInteger kFLTFirebaseMessagingMaxHandledMessageIDs = 100;
       // If "alert" (i.e. notification) is present in userInfo, this will be called by the other
       // "Messaging#onMessage" channel handler
       if (userInfo[@"aps"] != nil && userInfo[@"aps"][@"alert"] == nil) {
-        [_channel invokeMethod:@"Messaging#onMessage" arguments:notificationDict];
+        [self invokeDartMethod:@"Messaging#onMessage" arguments:notificationDict result:nil];
       }
       completionHandler(UIBackgroundFetchResultNoData);
     }
@@ -1046,7 +1062,7 @@ static const NSUInteger kFLTFirebaseMessagingMaxHandledMessageIDs = 100;
       result.error(nil, nil, nil, error);
     } else {
       if (refreshToken) {
-        [self->_channel invokeMethod:@"Messaging#onTokenRefresh" arguments:token];
+        [self invokeDartMethod:@"Messaging#onTokenRefresh" arguments:token result:nil];
       }
 
       result.success(@{@"token" : token});

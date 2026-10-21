@@ -87,6 +87,9 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
   MethodChannelFirebaseMessaging._() : super(appInstance: null);
 
   static void setMethodCallHandlers() {
+    _sinceMethodCallHandlersSet
+      ..reset()
+      ..start();
     MethodChannelFirebaseMessaging.channel
         .setMethodCallHandler((MethodCall call) async {
       switch (call.method) {
@@ -126,8 +129,9 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
     });
   }
 
-  /// How long a background message waits for the app to register a handler
-  /// with `FirebaseMessaging.onBackgroundMessage` on Apple platforms.
+  /// How long after the app starts using messaging a background message waits
+  /// for a handler registered with `FirebaseMessaging.onBackgroundMessage`, on
+  /// Apple platforms.
   ///
   /// The native side completes the push 25 seconds after it arrived, so this
   /// leaves the handler time to run once it is registered.
@@ -135,25 +139,38 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
   static Duration backgroundMessageHandlerRegistrationTimeout =
       const Duration(seconds: 10);
 
+  static final Stopwatch _sinceMethodCallHandlersSet = Stopwatch();
+
   static Completer<void>? _backgroundMessageHandlerRegistered;
 
   // When iOS launches the app in the background for a push, the message can
   // reach Dart before `main()` has called `FirebaseMessaging.onBackgroundMessage`,
   // for example when `FirebaseMessaging.instance` is used first. Hold the
-  // message until a handler is registered instead of dropping it.
+  // message until a handler is registered instead of dropping it, but only
+  // while the app is starting: an app that never registers one must not keep
+  // every push waiting.
   static Future<BackgroundMessageHandler?>
       _waitForBackgroundMessageHandler() async {
-    if (FirebaseMessagingPlatform.onBackgroundMessage == null) {
+    final remaining = backgroundMessageHandlerRegistrationTimeout -
+        _sinceMethodCallHandlersSet.elapsed;
+    if (FirebaseMessagingPlatform.onBackgroundMessage == null &&
+        remaining > Duration.zero) {
       final registered =
           _backgroundMessageHandlerRegistered ??= Completer<void>();
       try {
-        await registered.future
-            .timeout(backgroundMessageHandlerRegistrationTimeout);
+        await registered.future.timeout(remaining);
       } on TimeoutException {
-        // The app never registered a handler, the message is not handled.
+        // No handler was registered in time, the message is not handled.
       }
     }
     return FirebaseMessagingPlatform.onBackgroundMessage;
+  }
+
+  /// Wakes up the background messages waiting for a handler. Called when one
+  /// is set on [FirebaseMessagingPlatform.onBackgroundMessage].
+  static void backgroundMessageHandlerSet() {
+    _backgroundMessageHandlerRegistered?.complete();
+    _backgroundMessageHandlerRegistered = null;
   }
 
   static const MethodChannel channel = MethodChannel(
@@ -235,10 +252,6 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
   Future<void> registerBackgroundMessageHandler(
       BackgroundMessageHandler handler) async {
     if (defaultTargetPlatform != TargetPlatform.android) {
-      // Apple platforms deliver background messages on the main channel, wake
-      // up any that arrived before this handler was registered.
-      _backgroundMessageHandlerRegistered?.complete();
-      _backgroundMessageHandlerRegistered = null;
       return;
     }
 

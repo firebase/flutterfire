@@ -62,7 +62,14 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   // Native events only reach these streams once the default instance has set
   // up its method channel handler, so listening sets it up instead of relying
   // on the app having called another messaging API first.
-  static void _ensureInstance() => instance;
+  static void _ensureInstance() {
+    try {
+      instance;
+    } catch (_) {
+      // No binding yet (e.g. a unit test without one), so no native events
+      // can arrive either. The handler is set up when `instance` is used.
+    }
+  }
 
   /// Sets the [FirebaseMessagingPlatform.instance]
   static set instance(FirebaseMessagingPlatform instance) {
@@ -109,6 +116,7 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
     _onBackgroundMessageHandler = handler;
 
     if (handler != null) {
+      MethodChannelFirebaseMessaging.backgroundMessageHandlerSet();
       instance.registerBackgroundMessageHandler(handler);
     }
   }
