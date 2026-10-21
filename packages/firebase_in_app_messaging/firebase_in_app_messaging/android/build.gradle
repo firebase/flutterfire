@@ -86,10 +86,6 @@ android {
       implementation 'androidx.annotation:annotation:1.7.0'
       testImplementation 'junit:junit:4.13.2'
     }
-
-    testOptions {
-      unitTests.returnDefaultValues = true
-    }
 }
 
 plugins.withId("org.jetbrains.kotlin.android") {
