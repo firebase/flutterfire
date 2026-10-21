@@ -148,7 +148,7 @@ class FirebaseDataConnect extends FirebasePlugin {
     if (ref != null) {
       return ref;
     } else {
-      return QueryRef<Data, Variables>(
+      final newRef = QueryRef<Data, Variables>(
         this,
         operationName,
         transport!,
@@ -157,6 +157,8 @@ class FirebaseDataConnect extends FirebasePlugin {
         varsSerializer,
         vars,
       );
+      _queryManager.trackedQueries[queryId] = newRef;
+      return newRef;
     }
   }
 
