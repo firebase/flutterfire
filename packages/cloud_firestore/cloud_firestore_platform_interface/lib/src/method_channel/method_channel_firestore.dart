@@ -113,7 +113,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
       );
 
       return MethodChannelQuerySnapshot(
-        FirebaseFirestorePlatform.instance,
+        this,
         data,
       );
     } catch (e, stack) {

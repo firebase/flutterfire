@@ -44,6 +44,27 @@ class _MockFirebaseFirestoreHostApi extends Mock
       snapshotsInSyncObserverId.future;
 
   @override
+  Future<InternalQuerySnapshot> namedQueryGet(
+    FirestorePigeonFirebaseApp app,
+    String name,
+    InternalGetOptions options,
+  ) async {
+    final metadata =
+        InternalSnapshotMetadata(hasPendingWrites: false, isFromCache: true);
+    return InternalQuerySnapshot(
+      documents: [
+        InternalDocumentSnapshot(
+          path: 'foo/bar',
+          data: {'value': 1},
+          metadata: metadata,
+        ),
+      ],
+      documentChanges: [],
+      metadata: metadata,
+    );
+  }
+
+  @override
   Future<String> querySnapshot(
     FirestorePigeonFirebaseApp app,
     String path,
@@ -339,5 +360,18 @@ void main() {
         expect(syncChannelCalls, isEmpty);
       },
     );
+  });
+
+  test('namedQueryGet binds the snapshot to the calling instance', () async {
+    final firestore = MethodChannelFirebaseFirestore(
+      app: app,
+      databaseId: 'named-query-db',
+    );
+
+    final snapshot = await firestore.namedQueryGet('named-query');
+
+    final reference = snapshot.docs.single.reference;
+    expect(reference.firestore.app.name, 'test-app');
+    expect(reference.firestore.databaseId, 'named-query-db');
   });
 }

@@ -630,11 +630,22 @@ class User {
     return _delegate.updateProfile(<String, String?>{'photoURL': photoURL});
   }
 
+  // Default value of the [updateProfile] arguments, so an omitted argument can
+  // be told apart from an explicit `null`.
+  static const String _unchangedProfileField = '<unchanged>';
+
   /// Updates a user's profile data.
-  Future<void> updateProfile({String? displayName, String? photoURL}) {
+  ///
+  /// Only the fields that are passed are changed. Pass `null` to remove the
+  /// display name or the photo URL.
+  Future<void> updateProfile({
+    String? displayName = _unchangedProfileField,
+    String? photoURL = _unchangedProfileField,
+  }) {
     return _delegate.updateProfile(<String, String?>{
-      'displayName': displayName,
-      'photoURL': photoURL,
+      if (!identical(displayName, _unchangedProfileField))
+        'displayName': displayName,
+      if (!identical(photoURL, _unchangedProfileField)) 'photoURL': photoURL,
     });
   }
 
