@@ -4,7 +4,10 @@
 package io.flutter.plugins.firebase.firebaseremoteconfig
 
 import com.google.firebase.remoteconfig.ConfigUpdate
+import com.google.firebase.remoteconfig.ConfigUpdateListener
+import com.google.firebase.remoteconfig.ConfigUpdateListenerRegistration
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigException
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigServerException
 import io.flutter.plugin.common.EventChannel.EventSink
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -12,6 +15,8 @@ import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.TimeUnit
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
@@ -41,7 +46,7 @@ class FirebaseRemoteConfigPluginTest {
 
     override fun error(errorCode: String, errorMessage: String?, errorDetails: Any?) {
       ensureRunningOnMainThread()
-      received.add("error $errorCode: $errorMessage")
+      received.add("error $errorCode: $errorMessage $errorDetails")
     }
 
     override fun endOfStream() {
@@ -57,6 +62,8 @@ class FirebaseRemoteConfigPluginTest {
     mainThreadExecutor.shutdownNow()
   }
 
+  private fun nextEvent(): String? = events.received.poll(5, TimeUnit.SECONDS)
+
   @Test
   fun onError_isForwardedToDartOnTheMainThread() {
     val listener = FirebaseRemoteConfigPlugin.createConfigUpdateListener(events, mainThreadExecutor)
@@ -68,8 +75,51 @@ class FirebaseRemoteConfigPluginTest {
             FirebaseRemoteConfigException.Code.CONFIG_UPDATE_STREAM_ERROR))
 
     assertEquals(
-        "error firebase_remote_config: The connection to the realtime stream failed.",
-        events.received.poll(5, TimeUnit.SECONDS))
+        "error firebase_remote_config: The connection to the realtime stream failed. " +
+            "{code=config-update-stream-error, " +
+            "message=The connection to the realtime stream failed.}",
+        nextEvent())
+  }
+
+  @Test
+  fun onError_reportsAStableCodeForEachNativeCode() {
+    val listener = FirebaseRemoteConfigPlugin.createConfigUpdateListener(events, mainThreadExecutor)
+    val expectedCodes =
+        mapOf(
+            FirebaseRemoteConfigException.Code.CONFIG_UPDATE_STREAM_ERROR to
+                "config-update-stream-error",
+            FirebaseRemoteConfigException.Code.CONFIG_UPDATE_MESSAGE_INVALID to
+                "config-update-message-invalid",
+            FirebaseRemoteConfigException.Code.CONFIG_UPDATE_NOT_FETCHED to
+                "config-update-not-fetched",
+            FirebaseRemoteConfigException.Code.CONFIG_UPDATE_UNAVAILABLE to
+                "config-update-unavailable",
+            FirebaseRemoteConfigException.Code.UNKNOWN to "unknown",
+        )
+    assertEquals(FirebaseRemoteConfigException.Code.values().toSet(), expectedCodes.keys)
+
+    for ((nativeCode, code) in expectedCodes) {
+      listener.onError(FirebaseRemoteConfigException("message", nativeCode))
+
+      assertEquals(
+          "error firebase_remote_config: message {code=$code, message=message}", nextEvent())
+    }
+  }
+
+  @Test
+  fun onError_keepsTheHttpStatusInTheMessage() {
+    val listener = FirebaseRemoteConfigPlugin.createConfigUpdateListener(events, mainThreadExecutor)
+
+    listener.onError(
+        FirebaseRemoteConfigServerException(
+            503,
+            "Unable to connect to the server. Try again in a few minutes. HTTP status code: 503",
+            FirebaseRemoteConfigException.Code.CONFIG_UPDATE_STREAM_ERROR))
+
+    val event = nextEvent()
+    assertNotNull(event)
+    assertTrue(event!!, event.contains("code=config-update-stream-error"))
+    assertTrue(event, event.contains("message=Unable to connect") && event.endsWith("503}"))
   }
 
   @Test
@@ -78,6 +128,39 @@ class FirebaseRemoteConfigPluginTest {
 
     listener.onUpdate(ConfigUpdate.create(setOf("welcome_message")))
 
-    assertEquals("success [welcome_message]", events.received.poll(5, TimeUnit.SECONDS))
+    assertEquals("success [welcome_message]", nextEvent())
+  }
+
+  @Test
+  fun onListen_registersAListenerThatReportsOnTheMainThread() {
+    val registered = LinkedBlockingQueue<Pair<String, ConfigUpdateListener>>()
+    var removed = false
+    val plugin =
+        FirebaseRemoteConfigPlugin(mainThreadExecutor) { appName, listener ->
+          registered.add(appName to listener)
+          ConfigUpdateListenerRegistration { removed = true }
+        }
+
+    plugin.onListen(mapOf("appName" to "[DEFAULT]"), events)
+
+    val (appName, listener) = registered.single()
+    assertEquals("[DEFAULT]", appName)
+
+    // Both callbacks come from the SDK's background executor, which is this test thread.
+    listener.onError(
+        FirebaseRemoteConfigException(
+            "Unable to fetch the latest version of the template.",
+            FirebaseRemoteConfigException.Code.CONFIG_UPDATE_NOT_FETCHED))
+    listener.onUpdate(ConfigUpdate.create(setOf("welcome_message")))
+
+    assertEquals(
+        "error firebase_remote_config: Unable to fetch the latest version of the template. " +
+            "{code=config-update-not-fetched, " +
+            "message=Unable to fetch the latest version of the template.}",
+        nextEvent())
+    assertEquals("success [welcome_message]", nextEvent())
+
+    plugin.onCancel(mapOf("appName" to "[DEFAULT]"))
+    assertTrue(removed)
   }
 }

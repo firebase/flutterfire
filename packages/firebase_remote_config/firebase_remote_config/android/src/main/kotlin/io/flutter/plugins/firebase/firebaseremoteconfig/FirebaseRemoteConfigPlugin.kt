@@ -31,12 +31,23 @@ import java.util.Objects
 import java.util.concurrent.Executor
 
 /** FirebaseRemoteConfigPlugin */
-class FirebaseRemoteConfigPlugin :
-    FlutterFirebasePlugin, FlutterPlugin, EventChannel.StreamHandler, FirebaseRemoteConfigHostApi {
+class FirebaseRemoteConfigPlugin
+internal constructor(
+    private val mainThreadExecutor: Executor,
+    private val addConfigUpdateListener:
+        (appName: String, listener: ConfigUpdateListener) -> ConfigUpdateListenerRegistration,
+) : FlutterFirebasePlugin, FlutterPlugin, EventChannel.StreamHandler, FirebaseRemoteConfigHostApi {
+
+  constructor() :
+      this(
+          Handler(Looper.getMainLooper()).let { handler -> Executor { handler.post(it) } },
+          { appName, listener ->
+            FirebaseRemoteConfig.getInstance(FirebaseApp.getInstance(appName))
+                .addOnConfigUpdateListener(listener)
+          })
 
   private val listenersMap: MutableMap<String, ConfigUpdateListenerRegistration> = HashMap()
   private var eventChannel: EventChannel? = null
-  private val mainThreadHandler = Handler(Looper.getMainLooper())
   private var messenger: BinaryMessenger? = null
 
   override fun onAttachedToEngine(binding: FlutterPluginBinding) {
@@ -186,11 +197,9 @@ class FirebaseRemoteConfigPlugin :
   override fun onListen(arguments: Any, events: EventSink) {
     val argumentsMap = arguments as Map<String, Any>
     val appName = Objects.requireNonNull(argumentsMap["appName"]) as String
-    val remoteConfig = getRemoteConfig(appName)
 
     listenersMap[appName] =
-        remoteConfig.addOnConfigUpdateListener(
-            createConfigUpdateListener(events) { mainThreadHandler.post(it) })
+        addConfigUpdateListener(appName, createConfigUpdateListener(events, mainThreadExecutor))
   }
 
   override fun onCancel(arguments: Any?) {
@@ -264,10 +273,26 @@ class FirebaseRemoteConfigPlugin :
           }
 
           override fun onError(error: FirebaseRemoteConfigException) {
+            val details =
+                mapOf("code" to configUpdateErrorCode(error.code), "message" to error.message)
             mainThreadExecutor.execute {
-              events.error("firebase_remote_config", error.message, null)
+              events.error("firebase_remote_config", error.message, details)
             }
           }
+        }
+
+    /** The code Dart reports a realtime update error with, the same on every platform. */
+    private fun configUpdateErrorCode(code: FirebaseRemoteConfigException.Code): String =
+        when (code) {
+          FirebaseRemoteConfigException.Code.CONFIG_UPDATE_STREAM_ERROR ->
+              "config-update-stream-error"
+          FirebaseRemoteConfigException.Code.CONFIG_UPDATE_MESSAGE_INVALID ->
+              "config-update-message-invalid"
+          FirebaseRemoteConfigException.Code.CONFIG_UPDATE_NOT_FETCHED ->
+              "config-update-not-fetched"
+          FirebaseRemoteConfigException.Code.CONFIG_UPDATE_UNAVAILABLE ->
+              "config-update-unavailable"
+          else -> "unknown"
         }
   }
 
