@@ -117,6 +117,10 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
           FirebaseMessagingPlatform.onMessageOpenedApp
               .add(RemoteMessage.fromMap(messageMap));
           break;
+        case 'Messaging#backgroundMessageHandlerExpected':
+          // Apple only, sent before each `Messaging#onBackgroundMessage`.
+          _backgroundMessageHandlerExpected = call.arguments as bool;
+          break;
         case 'Messaging#onBackgroundMessage':
           // Apple only. Android calls via separate background channel.
           Map<String, dynamic> messageMap =
@@ -141,19 +145,27 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
 
   static final Stopwatch _sinceMethodCallHandlersSet = Stopwatch();
 
+  // Whether the app registered a background message handler during this run or
+  // the previous one, as told by the native side before each message.
+  static bool _backgroundMessageHandlerExpected = true;
+
   static Completer<void>? _backgroundMessageHandlerRegistered;
 
   // When iOS launches the app in the background for a push, the message can
   // reach Dart before `main()` has called `FirebaseMessaging.onBackgroundMessage`,
   // for example when `FirebaseMessaging.instance` is used first. Hold the
   // message until a handler is registered instead of dropping it, but only
-  // while the app is starting: an app that never registers one must not keep
-  // every push waiting.
+  // while the app is starting, and only for apps that register one: the others
+  // must not keep every push waiting.
   static Future<BackgroundMessageHandler?>
       _waitForBackgroundMessageHandler() async {
     final remaining = backgroundMessageHandlerRegistrationTimeout -
         _sinceMethodCallHandlersSet.elapsed;
+    final isApple = defaultTargetPlatform == TargetPlatform.iOS ||
+        defaultTargetPlatform == TargetPlatform.macOS;
     if (FirebaseMessagingPlatform.onBackgroundMessage == null &&
+        isApple &&
+        _backgroundMessageHandlerExpected &&
         remaining > Duration.zero) {
       final registered =
           _backgroundMessageHandlerRegistered ??= Completer<void>();
@@ -251,6 +263,16 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
   @override
   Future<void> registerBackgroundMessageHandler(
       BackgroundMessageHandler handler) async {
+    if (defaultTargetPlatform == TargetPlatform.iOS ||
+        defaultTargetPlatform == TargetPlatform.macOS) {
+      // Remembered natively, see `Messaging#backgroundMessageHandlerExpected`.
+      unawaited(
+        channel
+            .invokeMethod<void>('Messaging#backgroundMessageHandlerRegistered')
+            .catchError((Object _) {}),
+      );
+      return;
+    }
     if (defaultTargetPlatform != TargetPlatform.android) {
       return;
     }

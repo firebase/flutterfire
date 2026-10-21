@@ -99,6 +99,9 @@ void remoteNotificationDeliveryTests() {
           'set runs it once it is', () async {
         // As when iOS launches the app in the background for a push: the
         // message reaches Dart before `main()` has registered the handler.
+        // Registering it once first tells the native side the app has one.
+        FirebaseMessaging.onBackgroundMessage(_backgroundMessageHandler);
+        await Future<void>.delayed(const Duration(milliseconds: 100));
         FirebaseMessagingPlatform.onBackgroundMessage = null;
         // Messages wait for a handler while the app starts using messaging;
         // restart that window, the app has been running for a while.
@@ -124,6 +127,33 @@ void remoteNotificationDeliveryTests() {
         );
         expect(result['completionCount'], 1);
         expect(result['fetchResult'], _uiBackgroundFetchResultNewData);
+      });
+
+      test(
+          'messages sent before Dart handles the channel are all kept '
+          'until it does', () async {
+        // As when pushes arrive before the app starts using messaging: Flutter
+        // keeps a single message by default.
+        final messageIds = [
+          for (var i = 0; i < 3; i++) _uniqueMessageId('buffered-$i'),
+        ];
+        final received = <String?>[];
+        final subscription = FirebaseMessaging.onMessage
+            .where((message) => messageIds.contains(message.messageId))
+            .listen((message) => received.add(message.messageId));
+        addTearDown(subscription.cancel);
+
+        MethodChannelFirebaseMessaging.channel.setMethodCallHandler(null);
+        addTearDown(MethodChannelFirebaseMessaging.setMethodCallHandlers);
+        for (final messageId in messageIds) {
+          await deliverRemoteNotification(messageId, inBackground: false);
+        }
+        expect(received, isEmpty);
+
+        MethodChannelFirebaseMessaging.setMethodCallHandlers();
+        await Future<void>.delayed(const Duration(milliseconds: 500));
+
+        expect(received, messageIds);
       });
 
       test('a later push that reuses a message ID is handled again', () async {

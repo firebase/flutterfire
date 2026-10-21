@@ -48,11 +48,26 @@ void main() {
     return reply.future;
   }
 
+  // Simulates the native side telling Dart whether the app registered a
+  // background handler, which it does before each background message.
+  Future<void> sendHandlerExpected(bool expected) {
+    final reply = Completer<void>();
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .handlePlatformMessage(
+      MethodChannelFirebaseMessaging.channel.name,
+      const StandardMethodCodec().encodeMethodCall(
+        MethodCall('Messaging#backgroundMessageHandlerExpected', expected),
+      ),
+      (_) => reply.complete(),
+    );
+    return reply.future;
+  }
+
   setUpAll(() async {
     app = await Firebase.initializeApp();
   });
 
-  setUp(() {
+  setUp(() async {
     debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
     handled.clear();
     FirebaseMessagingPlatform.instance = MethodChannelFirebaseMessaging(
@@ -60,6 +75,7 @@ void main() {
     );
     FirebaseMessagingPlatform.onBackgroundMessage = null;
     MethodChannelFirebaseMessaging.setMethodCallHandlers();
+    await sendHandlerExpected(true);
   });
 
   tearDown(() {
@@ -143,6 +159,45 @@ void main() {
         .timeout(const Duration(milliseconds: 80));
 
     expect(handled, isEmpty);
+  });
+
+  test('does not wait when the app never registered a handler', () async {
+    await sendHandlerExpected(false);
+
+    // Would wait the whole timeout if it held the message.
+    await deliverFromNative('no-handler-expected')
+        .timeout(const Duration(milliseconds: 80));
+
+    expect(handled, isEmpty);
+  });
+
+  test('does not wait on Android, which never sends these messages', () async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.android;
+
+    await deliverFromNative('android')
+        .timeout(const Duration(milliseconds: 80));
+
+    expect(handled, isEmpty);
+  });
+
+  test('registering a handler tells the native side', () async {
+    final calls = <String>[];
+    handleMethodCall((call) {
+      calls.add(call.method);
+      return null;
+    });
+    addTearDown(
+      () => TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+        MethodChannelFirebaseMessaging.channel,
+        null,
+      ),
+    );
+
+    FirebaseMessagingPlatform.onBackgroundMessage = handler;
+    await pumpEventQueue();
+
+    expect(calls, contains('Messaging#backgroundMessageHandlerRegistered'));
   });
 
   test('is woken by the handler even when the platform instance was replaced',
