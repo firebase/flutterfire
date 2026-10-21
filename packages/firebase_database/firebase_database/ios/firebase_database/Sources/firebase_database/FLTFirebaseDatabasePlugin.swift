@@ -31,6 +31,9 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
   private var streamHandlers: [String: FLTFirebaseDatabaseObserveStreamHandler] = [:]
   private var listenerCount: Int = 0
   private var transactionResults: [Int64: [String: Any?]] = [:]
+  private let pendingTransactionLock = NSLock()
+  private var pendingTransactionSemaphores: [DispatchSemaphore] = []
+  private var isDetached = false
 
   /// Wraps a native error so that its Realtime Database code reaches Dart.
   ///
@@ -77,7 +80,7 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
   }
 
   func cleanup(completion: (() -> Void)? = nil) {
-    // No-op cleanup for now
+    releasePendingTransactionWaits()
     completion?()
   }
 
@@ -89,6 +92,9 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
 
   public func didReinitializeFirebaseCore(_ completion: @escaping () -> Void) {
     cleanup()
+    pendingTransactionLock.lock()
+    isDetached = false
+    pendingTransactionLock.unlock()
     completion()
   }
 
@@ -256,7 +262,9 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
     let database = getDatabaseFromPigeonApp(app)
     let reference = database.reference(withPath: request.path)
 
-    let values = request.value.compactMapValues { $0 }
+    let values = Dictionary(
+      uniqueKeysWithValues: request.value.map { ($0.key, $0.value ?? NSNull()) }
+    )
 
     reference.updateChildValues(values) { error, _ in
       if let error {
@@ -296,7 +304,24 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
         let semaphore = DispatchSemaphore(value: 0)
         var transactionResult: TransactionHandlerResult?
 
+        self.pendingTransactionLock.lock()
+        self.pendingTransactionSemaphores.append(semaphore)
+        let detached = self.isDetached
+        self.pendingTransactionLock.unlock()
+
+        if detached {
+          self.removePendingTransactionSemaphore(semaphore)
+          return TransactionResult.abort()
+        }
+
         DispatchQueue.main.async {
+          self.pendingTransactionLock.lock()
+          let detached = self.isDetached
+          self.pendingTransactionLock.unlock()
+          if detached {
+            return
+          }
+
           let flutterApi = FirebaseDatabaseFlutterApi(binaryMessenger: self.binaryMessenger)
           flutterApi.callTransactionHandler(
             transactionKey: request.transactionKey,
@@ -315,7 +340,13 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
           }
         }
 
-        semaphore.wait()
+        // 30s matches cloud_firestore / Android.
+        let waitResult = semaphore.wait(timeout: .now() + .seconds(30))
+        let detachedAfterWait = self.removePendingTransactionSemaphore(semaphore)
+
+        if waitResult == .timedOut || detachedAfterWait {
+          return TransactionResult.abort()
+        }
 
         guard let result = transactionResult else {
           return TransactionResult.abort()
@@ -412,7 +443,9 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
     let database = getDatabaseFromPigeonApp(app)
     let reference = database.reference(withPath: request.path)
 
-    let values = request.value.compactMapValues { $0 }
+    let values = Dictionary(
+      uniqueKeysWithValues: request.value.map { ($0.key, $0.value ?? NSNull()) }
+    )
 
     reference.onDisconnectUpdateChildValues(values) { error, _ in
       if let error {
@@ -743,6 +776,25 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
   }
 
   // MARK: - Helper Methods
+
+  private func releasePendingTransactionWaits() {
+    pendingTransactionLock.lock()
+    isDetached = true
+    let semaphores = pendingTransactionSemaphores
+    pendingTransactionSemaphores.removeAll()
+    pendingTransactionLock.unlock()
+    for semaphore in semaphores {
+      semaphore.signal()
+    }
+  }
+
+  private func removePendingTransactionSemaphore(_ semaphore: DispatchSemaphore) -> Bool {
+    pendingTransactionLock.lock()
+    pendingTransactionSemaphores.removeAll { $0 === semaphore }
+    let detached = isDetached
+    pendingTransactionLock.unlock()
+    return detached
+  }
 
   private func databaseInstanceKey(_ app: DatabasePigeonFirebaseApp) -> String {
     app.appName + (app.databaseURL ?? "")
