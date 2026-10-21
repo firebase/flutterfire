@@ -71,8 +71,9 @@ class FirebaseMessaging extends FirebasePlugin {
   ///
   /// On iOS and macOS, a message received before the handler is registered
   /// (for example when the app is launched in the background by a push) waits
-  /// for it during the first 10 seconds after the app starts using messaging.
-  /// Register it early in `main()` all the same.
+  /// for it during the first 10 seconds after the app starts using messaging,
+  /// if the app registered one in its previous run. Register it early in
+  /// `main()` all the same.
   // ignore: use_setters_to_change_properties
   static void onBackgroundMessage(BackgroundMessageHandler handler) {
     FirebaseMessagingPlatform.onBackgroundMessage = handler;

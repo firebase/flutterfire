@@ -271,6 +271,18 @@ jobs:
           fi
           set -e
           ccache -s
+          # Fail rather than silently test the default configuration.
+          if [ $BUILD_EXIT -eq 0 ]; then
+            for override in $INFO_PLIST_OVERRIDES; do
+              key="${override%%=*}"
+              value="${override#*=}"
+              built="$(/usr/libexec/PlistBuddy -c "Print :$key" build/ios/iphonesimulator/Runner.app/Info.plist)"
+              if [ "$built" != "$value" ]; then
+                echo "::error::Built Info.plist has $key = '$built', expected '$value'."
+                exit 1
+              fi
+            done
+          fi
           exit $BUILD_EXIT
       - name: Install Cloud Functions dependencies
         if: inputs.use-firebase-emulators

@@ -113,12 +113,13 @@ static const NSInteger kFLTFirebaseMessagingChannelBufferSize = 64;
     _notificationHandlingSetup = NO;
     _applicationObserverRegistered = NO;
     _messageIDsBeingDelivered = [NSMutableSet set];
-    // Read and cleared once per run: registering the handler again sets it for the next run, so
-    // an app that stops registering one stops being treated as having one.
+    // Read and reset once per run: registering the handler again sets it for the next run, so an
+    // app that stops registering one stops being treated as having one. Missing (first run of
+    // this version) counts as registered, to not drop a push before Dart has had a chance.
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    _backgroundMessageHandlerRegistered =
-        [defaults boolForKey:kMessagingBackgroundMessageHandlerUserDefaults];
-    [defaults removeObjectForKey:kMessagingBackgroundMessageHandlerUserDefaults];
+    id registered = [defaults objectForKey:kMessagingBackgroundMessageHandlerUserDefaults];
+    _backgroundMessageHandlerRegistered = registered == nil || [registered boolValue];
+    [defaults setBool:NO forKey:kMessagingBackgroundMessageHandlerUserDefaults];
   }
   return self;
 }
@@ -223,14 +224,18 @@ static const NSInteger kFLTFirebaseMessagingChannelBufferSize = 64;
   FLTFirebaseMethodCallResult *methodCallResult =
       [FLTFirebaseMethodCallResult createWithSuccess:flutterResult andErrorBlock:errorBlock];
 
-  [self ensureAPNSTokenSetting];
-
+  // Before ensureAPNSTokenSetting: apps register the handler before Firebase is configured.
   if ([@"Messaging#backgroundMessageHandlerRegistered" isEqualToString:call.method]) {
     _backgroundMessageHandlerRegistered = YES;
     [[NSUserDefaults standardUserDefaults] setBool:YES
                                             forKey:kMessagingBackgroundMessageHandlerUserDefaults];
     methodCallResult.success(nil);
-  } else if ([@"Messaging#getInitialMessage" isEqualToString:call.method]) {
+    return;
+  }
+
+  [self ensureAPNSTokenSetting];
+
+  if ([@"Messaging#getInitialMessage" isEqualToString:call.method]) {
     _initialNotificationResult = methodCallResult;
     [self initialNotificationCallback];
 
@@ -837,8 +842,9 @@ static const NSInteger kFLTFirebaseMessagingChannelBufferSize = 64;
     // setupNotificationHandlingWithRemoteNotification:), so `self` is the app delegate. Hand the
     // call to where FlutterAppDelegate forwards it, so the other plugins get it too, or else to
     // this plugin.
-    id<FlutterApplicationLifeCycleDelegate> target = [self forwardingTargetForSelector:_cmd];
-    if (target == nil || target == (id)self || ![target respondsToSelector:_cmd]) {
+    SEL selector = @selector(application:didReceiveRemoteNotification:fetchCompletionHandler:);
+    id<FlutterApplicationLifeCycleDelegate> target = [self forwardingTargetForSelector:selector];
+    if (target == nil || target == (id)self || ![target respondsToSelector:selector]) {
       target = [FLTFirebaseMessagingPlugin sharedInstance];
     }
     return [target application:application

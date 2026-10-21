@@ -146,8 +146,9 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
   static final Stopwatch _sinceMethodCallHandlersSet = Stopwatch();
 
   // Whether the app registered a background message handler during this run or
-  // the previous one, as told by the native side before each message.
-  static bool _backgroundMessageHandlerExpected = true;
+  // the previous one, as told by the native side before each message. Older
+  // native code never says, and gets the old behavior.
+  static bool _backgroundMessageHandlerExpected = false;
 
   static Completer<void>? _backgroundMessageHandlerRegistered;
 
