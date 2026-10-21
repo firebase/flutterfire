@@ -52,8 +52,10 @@ internal constructor(
     private const val METHOD_CHANNEL_NAME = "plugins.flutter.io/firebase_database"
     private val databaseInstanceCache = HashMap<String, FirebaseDatabase>()
 
-    // The Dart handler is synchronous, so this only fires when no reply is coming. It matches the
-    // default transaction timeout of cloud_firestore.
+    // How long a transaction waits for its Dart handler, which is synchronous. It is reached when
+    // the isolate is paused in a debugger, the main thread is blocked, or the reply is lost, as
+    // during a hot restart or once the engine is detached. It matches the default transaction
+    // timeout of cloud_firestore.
     private val TRANSACTION_HANDLER_TIMEOUT_MILLIS = TimeUnit.SECONDS.toMillis(30)
   }
 
@@ -82,7 +84,9 @@ internal constructor(
     }
   }
 
-  private fun initPluginInstance(messenger: BinaryMessenger) {
+  internal fun initPluginInstance(messenger: BinaryMessenger) {
+    // The plugin can be attached again after a detach.
+    isDetached = false
     FlutterFirebasePluginRegistry.registerPlugin(METHOD_CHANNEL_NAME, this)
     this.messenger = messenger
 
@@ -457,6 +461,10 @@ internal constructor(
   override fun onDetachedFromEngine(
       @NonNull binding: FlutterPluginBinding,
   ) {
+    detachFromEngine()
+  }
+
+  internal fun detachFromEngine() {
     isDetached = true
     pendingTransactionHandlers.forEach { it.countDown() }
     methodChannel.setMethodCallHandler(null)
@@ -807,51 +815,7 @@ internal constructor(
       transactionRequests[request.transactionKey] = request
 
       // Start the transaction - simplified approach like iOS
-      reference.runTransaction(
-          object : com.google.firebase.database.Transaction.Handler {
-            override fun doTransaction(
-                mutableData: com.google.firebase.database.MutableData
-            ): com.google.firebase.database.Transaction.Result {
-              val result =
-                  callTransactionHandler(request.transactionKey, mutableData.value)
-                      ?: return com.google.firebase.database.Transaction.abort()
-
-              if (result.aborted || result.exception) {
-                return com.google.firebase.database.Transaction.abort()
-              }
-
-              mutableData.value = result.value
-              return com.google.firebase.database.Transaction.success(mutableData)
-            }
-
-            override fun onComplete(
-                error: com.google.firebase.database.DatabaseError?,
-                committed: Boolean,
-                currentData: com.google.firebase.database.DataSnapshot?
-            ) {
-              // Store the transaction result for later retrieval
-              val result =
-                  mapOf(
-                      "committed" to committed,
-                      "snapshot" to
-                          mapOf(
-                              "value" to currentData?.value,
-                              "key" to currentData?.key,
-                              "exists" to currentData?.exists()))
-              transactionResults[request.transactionKey] = result
-
-              // Complete the transaction - simplified like iOS
-              if (error != null) {
-                val ex = FlutterFirebaseDatabaseException.fromDatabaseError(error)
-                callback(
-                    KotlinResult.failure(
-                        FlutterError("firebase_database", ex.message, ex.additionalData)))
-              } else {
-                callback(KotlinResult.success(Unit))
-              }
-            }
-          },
-          request.applyLocally)
+      reference.runTransaction(transactionHandler(request, callback), request.applyLocally)
     } catch (e: Exception) {
       // Convert generic exceptions to FlutterFirebaseDatabaseException for proper error handling
       val flutterException =
@@ -1059,6 +1023,65 @@ internal constructor(
     return database
   }
 
+  /** Bridges the RTDB transaction of [request] to its Dart handler, and reports to [callback]. */
+  internal fun transactionHandler(
+      request: TransactionRequest,
+      callback: (KotlinResult<Unit>) -> Unit
+  ): com.google.firebase.database.Transaction.Handler =
+      object : com.google.firebase.database.Transaction.Handler {
+        // Why the Dart handler gave no result. Reported from onComplete rather than thrown, because
+        // the SDK turns an exception thrown here into an uncoded "user code" error.
+        @Volatile private var handlerFailure: FlutterFirebaseDatabaseException? = null
+
+        override fun doTransaction(
+            mutableData: com.google.firebase.database.MutableData
+        ): com.google.firebase.database.Transaction.Result {
+          val result =
+              try {
+                callTransactionHandler(request.transactionKey, mutableData.value)
+              } catch (e: FlutterFirebaseDatabaseException) {
+                handlerFailure = e
+                return com.google.firebase.database.Transaction.abort()
+              }
+
+          if (result.aborted || result.exception) {
+            return com.google.firebase.database.Transaction.abort()
+          }
+
+          mutableData.value = result.value
+          return com.google.firebase.database.Transaction.success(mutableData)
+        }
+
+        override fun onComplete(
+            error: com.google.firebase.database.DatabaseError?,
+            committed: Boolean,
+            currentData: com.google.firebase.database.DataSnapshot?
+        ) {
+          // Store the transaction result for later retrieval
+          val result =
+              mapOf(
+                  "committed" to committed,
+                  "snapshot" to
+                      mapOf(
+                          "value" to currentData?.value,
+                          "key" to currentData?.key,
+                          "exists" to currentData?.exists()))
+          transactionResults[request.transactionKey] = result
+
+          // Complete the transaction - simplified like iOS
+          val ex =
+              handlerFailure
+                  ?: error?.let { FlutterFirebaseDatabaseException.fromDatabaseError(it) }
+          if (ex != null) {
+            callback(
+                KotlinResult.failure(
+                    FlutterError("firebase_database", ex.message, ex.additionalData)))
+          } else {
+            callback(KotlinResult.success(Unit))
+          }
+        }
+      }
+
   // Dart transaction handlers that RTDB run-loop threads are waiting on.
   private val pendingTransactionHandlers: MutableSet<CountDownLatch> = ConcurrentHashMap.newKeySet()
   @Volatile private var isDetached = false
@@ -1070,34 +1093,42 @@ internal constructor(
    * until it returns. Nothing replies when the engine is destroyed or its messenger detached while
    * the handler is pending, so the wait times out, and [onDetachedFromEngine] releases it at once.
    *
-   * @return the handler's result, or `null` to abort the transaction.
+   * @throws FlutterFirebaseDatabaseException `deadline-exceeded` when Dart does not reply in time,
+   *   or `cancelled` when the plugin is detached from its engine first.
    */
-  internal fun callTransactionHandler(
-      transactionKey: Long,
-      value: Any?
-  ): TransactionHandlerResult? {
+  internal fun callTransactionHandler(transactionKey: Long, value: Any?): TransactionHandlerResult {
     val latch = CountDownLatch(1)
     pendingTransactionHandlers.add(latch)
     try {
       // Checked after registering the latch, so a concurrent detach either sees it or is seen here.
-      if (isDetached) {
-        return null
-      }
-      val transactionResult = AtomicReference<TransactionHandlerResult?>()
-      // FlutterJNI must be called on the main thread.
-      mainThreadExecutor.execute {
-        FirebaseDatabaseFlutterApi(messenger).callTransactionHandler(transactionKey, value) {
-          transactionResult.set(
-              it.getOrElse {
-                TransactionHandlerResult(value = null, aborted = true, exception = true)
-              })
-          latch.countDown()
+      if (!isDetached) {
+        val transactionResult = AtomicReference<TransactionHandlerResult?>()
+        // FlutterJNI must be called on the main thread.
+        mainThreadExecutor.execute {
+          FirebaseDatabaseFlutterApi(messenger).callTransactionHandler(transactionKey, value) {
+            transactionResult.set(
+                it.getOrElse {
+                  TransactionHandlerResult(value = null, aborted = true, exception = true)
+                })
+            latch.countDown()
+          }
+        }
+        latch.await(transactionHandlerTimeoutMillis, TimeUnit.MILLISECONDS)
+        // Read after the wait, so a reply that arrives just after the timeout is still used.
+        transactionResult.get()?.let {
+          return it
         }
       }
-      if (!latch.await(transactionHandlerTimeoutMillis, TimeUnit.MILLISECONDS)) {
-        Log.w(TAG, "The Dart transaction handler did not reply, aborting the transaction.")
+      if (isDetached) {
+        throw FlutterFirebaseDatabaseException(
+            "cancelled",
+            "The transaction was cancelled because the Flutter engine was detached before its " +
+                "handler replied.")
       }
-      return transactionResult.get()
+      Log.w(TAG, "The Dart transaction handler did not reply in time, failing the transaction.")
+      throw FlutterFirebaseDatabaseException(
+          "deadline-exceeded",
+          "The transaction handler did not reply within $transactionHandlerTimeoutMillis ms.")
     } finally {
       pendingTransactionHandlers.remove(latch)
     }
