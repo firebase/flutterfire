@@ -1,0 +1,25 @@
+// Copyright 2026, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
+import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
+import 'package:firebase_auth_platform_interface/src/method_channel/utils/convert_auth_provider.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+void main() {
+  group('convertToOAuthProvider()', () {
+    test('keeps FacebookAuthProvider scopes and custom parameters', () {
+      final provider = FacebookAuthProvider()
+        ..addScope('user_birthday')
+        ..setCustomParameters({'display': 'popup'});
+
+      final converted = convertToOAuthProvider(provider);
+
+      expect(converted, isA<OAuthProvider>());
+      converted as OAuthProvider;
+      expect(converted.providerId, 'facebook.com');
+      expect(converted.scopes, ['user_birthday']);
+      expect(converted.parameters, {'display': 'popup'});
+    });
+  });
+}
