@@ -417,6 +417,17 @@ void main() {
         final stage = pipeline.stages.last;
         expect(stage['args'].containsKey('distance_field'), isFalse);
       });
+
+      test('omits distance_field when distanceField is empty', () {
+        final pipeline = firestore.pipeline().collection('items').findNearest(
+              Field('embedding'),
+              [0.1, 0.2, 0.3],
+              DistanceMeasure.cosine,
+              distanceField: '',
+            );
+        final stage = pipeline.stages.last;
+        expect(stage['args'].containsKey('distance_field'), isFalse);
+      });
     });
 
     group('_SearchStage', () {

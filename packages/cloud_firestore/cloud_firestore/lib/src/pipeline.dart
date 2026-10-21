@@ -406,9 +406,11 @@ class Pipeline {
   /// compare vectors (e.g. [DistanceMeasure.cosine]). Use [limit] to return
   /// only the first N documents.
   ///
-  /// [distanceField] is the name of a field added to each result. That field
-  /// holds the calculated distance from [vectorValue]. Omit it to return the
-  /// nearest documents without the numeric distance.
+  /// [distanceField] is the Firestore field name added to each result. That
+  /// field holds the calculated distance from [vectorValue]. A dot in the
+  /// name separates path segments, as it does for any other Firestore field
+  /// name. Omit it to return the nearest documents without the numeric
+  /// distance.
   ///
   /// Example:
   /// ```dart
