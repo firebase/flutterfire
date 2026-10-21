@@ -23,8 +23,8 @@ enum RemoteNotificationTestChannel {
     )
     channel.setMethodCallHandler { call, result in
       guard call.method == "deliver",
-            let arguments = call.arguments as? [String: Any],
-            let userInfo = arguments["userInfo"] as? [AnyHashable: Any]
+        let arguments = call.arguments as? [String: Any],
+        let userInfo = arguments["userInfo"] as? [AnyHashable: Any]
       else {
         result(FlutterMethodNotImplemented)
         return
@@ -37,8 +37,10 @@ enum RemoteNotificationTestChannel {
 
   /// Calls the app delegate like iOS does, then reports how many times the
   /// fetch completion handler was called and with which result.
-  private static func deliver(_ userInfo: [AnyHashable: Any], inBackground: Bool,
-                              result: @escaping FlutterResult) {
+  private static func deliver(
+    _ userInfo: [AnyHashable: Any], inBackground: Bool,
+    result: @escaping FlutterResult
+  ) {
     let application = UIApplication.shared
     let selector = #selector(
       UIApplicationDelegate.application(_:didReceiveRemoteNotification:fetchCompletionHandler:)
@@ -89,8 +91,8 @@ enum RemoteNotificationTestChannel {
   }()
 }
 
-private extension UIApplication {
-  @objc dynamic var remoteNotificationTestApplicationState: UIApplication.State {
+extension UIApplication {
+  @objc fileprivate dynamic var remoteNotificationTestApplicationState: UIApplication.State {
     if let state = RemoteNotificationTestChannel.simulatedApplicationState {
       return state
     }
