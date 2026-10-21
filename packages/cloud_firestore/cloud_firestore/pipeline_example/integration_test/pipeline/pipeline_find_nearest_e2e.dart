@@ -76,9 +76,10 @@ void runPipelineFindNearestTests() {
         );
         final snapshot = await platform.pipeline(stages).execute();
         expect(snapshot.results, isA<List<PipelineResultPlatform>>());
-        if (!_distanceFieldIsReturned || snapshot.results.isEmpty) {
+        if (!_distanceFieldIsReturned) {
           return;
         }
+        expect(snapshot.results, isNotEmpty);
         for (final result in snapshot.results) {
           final data = result.data;
           expect(data, isNotNull);
