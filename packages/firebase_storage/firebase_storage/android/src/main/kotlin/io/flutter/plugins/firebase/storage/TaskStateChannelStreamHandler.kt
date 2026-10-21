@@ -16,10 +16,13 @@ internal class TaskStateChannelStreamHandler(
     private val flutterTask: FlutterFirebaseStorageTask,
     private val androidStorage: FirebaseStorage,
     task: Any,
-    private val identifier: String
+    private val identifier: String,
+    private val onCancelled: (String) -> Unit
 ) : StreamHandler {
 
   private val androidTask: StorageTask<*> = task as StorageTask<*>
+
+  @Volatile private var events: EventSink? = null
 
   private val TASK_STATE_NAME = "taskState"
   private val TASK_APP_NAME = "appName"
@@ -27,11 +30,12 @@ internal class TaskStateChannelStreamHandler(
   private val TASK_ERROR = "error"
 
   override fun onListen(arguments: Any?, events: EventSink) {
+    this.events = events
     androidTask.addOnProgressListener { taskSnapshot ->
       if (flutterTask.isDestroyed()) return@addOnProgressListener
       val event = getTaskEventMap(taskSnapshot, null)
       event[TASK_STATE_NAME] = InternalStorageTaskState.RUNNING.raw
-      events.success(event)
+      this.events?.success(event)
       flutterTask.notifyResumeObjects()
     }
 
@@ -39,7 +43,7 @@ internal class TaskStateChannelStreamHandler(
       if (flutterTask.isDestroyed()) return@addOnPausedListener
       val event = getTaskEventMap(taskSnapshot, null)
       event[TASK_STATE_NAME] = InternalStorageTaskState.PAUSED.raw
-      events.success(event)
+      this.events?.success(event)
       flutterTask.notifyPauseObjects()
     }
 
@@ -47,7 +51,7 @@ internal class TaskStateChannelStreamHandler(
       if (flutterTask.isDestroyed()) return@addOnSuccessListener
       val event = getTaskEventMap(taskSnapshot, null)
       event[TASK_STATE_NAME] = InternalStorageTaskState.SUCCESS.raw
-      events.success(event)
+      this.events?.success(event)
       flutterTask.destroy()
     }
 
@@ -61,7 +65,7 @@ internal class TaskStateChannelStreamHandler(
       syntheticException["message"] =
           FlutterFirebaseStorageException.getMessage(StorageException.ERROR_CANCELED)
       event[TASK_ERROR] = syntheticException
-      events.success(event)
+      this.events?.success(event)
       flutterTask.notifyCancelObjects()
       flutterTask.destroy()
     }
@@ -70,22 +74,16 @@ internal class TaskStateChannelStreamHandler(
       if (flutterTask.isDestroyed()) return@addOnFailureListener
       val event = getTaskEventMap(null, exception)
       event[TASK_STATE_NAME] = InternalStorageTaskState.ERROR.raw
-      events.success(event)
+      this.events?.success(event)
       flutterTask.destroy()
     }
   }
 
   override fun onCancel(arguments: Any?) {
-    if (!androidTask.isCanceled) androidTask.cancel()
-    if (!flutterTask.isDestroyed()) flutterTask.destroy()
-    val eventChannel = FlutterFirebaseStoragePlugin.eventChannels[identifier]
-    if (eventChannel != null) {
-      eventChannel.setStreamHandler(null)
-      FlutterFirebaseStoragePlugin.eventChannels.remove(identifier)
-    }
-    if (FlutterFirebaseStoragePlugin.streamHandlers[identifier] != null) {
-      FlutterFirebaseStoragePlugin.streamHandlers.remove(identifier)
-    }
+    // Only stop sending events, as on iOS. The task keeps running, can still be paused, resumed or
+    // cancelled by its handle, and the listeners above still release it once it ends.
+    events = null
+    onCancelled(identifier)
   }
 
   private fun getTaskEventMap(

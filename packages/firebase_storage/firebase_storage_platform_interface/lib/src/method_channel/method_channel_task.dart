@@ -27,7 +27,8 @@ abstract class MethodChannelTask extends TaskPlatform {
     this._initialTask,
   ) : super() {
     Stream<TaskSnapshotPlatform> mapNativeStream() async* {
-      final observerId = await _initialTask;
+      final observerId =
+          await _initialTask.catchError(convertPlatformException);
 
       final nativePlatformStream =
           MethodChannelFirebaseStorage.storageTaskChannel(observerId)
@@ -67,10 +68,7 @@ abstract class MethodChannelTask extends TaskPlatform {
             }
             _exception = exception;
             _completer?.completeError(exception);
-            if (_userListening) {
-              // If the user is listening to the stream, yield the error. Otherwise, it results in an unhandled exception.
-              yield* Stream.error(exception);
-            }
+            yield* Stream.error(exception);
 
             break;
           }
@@ -112,8 +110,9 @@ abstract class MethodChannelTask extends TaskPlatform {
       }
     }
 
-    _stream = mapNativeStream().asBroadcastStream(
-        onListen: (sub) => sub.resume(), onCancel: (sub) => sub.cancel());
+    _nativeStream = mapNativeStream();
+    _controller = StreamController<TaskSnapshotPlatform>.broadcast(
+        sync: true, onListen: _listenToNativeStream);
 
     // Keep reference to whether the initial "start" task has completed.
     _snapshot = MethodChannelTaskSnapshot(storage, TaskState.running, {
@@ -122,8 +121,6 @@ abstract class MethodChannelTask extends TaskPlatform {
       'totalBytes': 1,
     });
   }
-
-  bool _userListening = false;
 
   ///  FirebaseApp pigeon instance
   static InternalStorageFirebaseApp pigeonFirebaseApp(
@@ -156,7 +153,11 @@ abstract class MethodChannelTask extends TaskPlatform {
 
   Completer<TaskSnapshotPlatform>? _completer;
 
-  late Stream<TaskSnapshotPlatform> _stream;
+  late final Stream<TaskSnapshotPlatform> _nativeStream;
+
+  bool _listeningToNativeStream = false;
+
+  late final StreamController<TaskSnapshotPlatform> _controller;
 
   Future<String> _initialTask;
 
@@ -167,11 +168,43 @@ abstract class MethodChannelTask extends TaskPlatform {
 
   late TaskSnapshotPlatform _snapshot;
 
-  @override
-  Stream<TaskSnapshotPlatform> get snapshotEvents {
-    _userListening = true;
-    return _stream;
+  // A single internal subscription drives [snapshot] and [onComplete], so
+  // cancelling a user's [snapshotEvents] subscription does not cancel the
+  // native event stream (which also cancels the task on Android).
+  void _listenToNativeStream() {
+    if (_listeningToNativeStream) return;
+    _listeningToNativeStream = true;
+    _nativeStream.listen(
+      _controller.add,
+      onError: (Object error, StackTrace stackTrace) {
+        if (!_didComplete) {
+          _didComplete = true;
+          _exception = error;
+          _completer?.completeError(error, stackTrace);
+        }
+        _controller.addError(error, stackTrace);
+      },
+      onDone: () {
+        if (!_didComplete) {
+          // The native stream closed without a final state. Fail instead of
+          // leaving `await task` pending forever.
+          final exception = FirebaseException(
+            plugin: 'firebase_storage',
+            code: 'unknown',
+            message: 'The task event stream closed before the task finished.',
+          );
+          _didComplete = true;
+          _exception = exception;
+          _completer?.completeError(exception);
+          _controller.addError(exception);
+        }
+        _controller.close();
+      },
+    );
   }
+
+  @override
+  Stream<TaskSnapshotPlatform> get snapshotEvents => _controller.stream;
 
   @override
   TaskSnapshotPlatform get snapshot => _snapshot;
@@ -183,14 +216,8 @@ abstract class MethodChannelTask extends TaskPlatform {
     } else if (_didComplete && _exception != null) {
       return catchFuturePlatformException(_exception!, StackTrace.current);
     } else {
-      // Call _stream.last to trigger the stream initialization, in case it hasn't been.
-      // ignore: unawaited_futures
-      _stream.last.catchError((_) {
-        // We ignore the exception here, stream exceptions are propagated in the stream handler above
-        // This causes unhandled exceptions when task.listen & onComplete are used together.
-        return Future.value(snapshot);
-      });
       _completer ??= Completer<TaskSnapshotPlatform>();
+      _listenToNativeStream();
       return _completer!.future;
     }
   }
