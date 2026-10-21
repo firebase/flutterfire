@@ -169,7 +169,10 @@ class MainActivity : FlutterActivity() {
   /// listens to onMessage and reports what it receives. The messaging plugin
   /// is attached once its Dart runs, like an engine created after messages
   /// were received.
-  private fun startSecondEngine(callback: FlutterCallbackInformation, result: MethodChannel.Result) {
+  private fun startSecondEngine(
+      callback: FlutterCallbackInformation,
+      result: MethodChannel.Result
+  ) {
     secondEngine?.destroy()
     secondEngineMessages.clear()
     val engine = FlutterEngine(applicationContext, null, /* automaticallyRegisterPlugins= */ false)
