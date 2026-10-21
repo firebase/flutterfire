@@ -103,6 +103,9 @@ class FirebaseInAppMessaging extends FirebasePlugin {
 
   /// Notifies when an in-app message could not be rendered, for example
   /// because its image failed to download.
+  ///
+  /// On iOS, it also fires for a message that nothing listened to on
+  /// [onMessageDisplay], which the plugin reports as a display error.
   Stream<InAppMessagingDisplayErrorEvent> get onMessageDisplayError =>
       _delegate.onMessageDisplayError;
 
@@ -133,7 +136,8 @@ class FirebaseInAppMessaging extends FirebasePlugin {
   ///
   /// Listen before enabling custom display. A message that arrives while
   /// nothing listens is held for the first listener for a few seconds, then
-  /// reported as a display error, because the SDK shows no other campaign
-  /// until the current one is reported.
+  /// dropped. On iOS, where the SDK shows no other campaign until the current
+  /// one is reported, the message is also reported as a display error, which
+  /// [onMessageDisplayError] notifies.
   Stream<InAppMessage> get onMessageDisplay => _delegate.onMessageDisplay;
 }

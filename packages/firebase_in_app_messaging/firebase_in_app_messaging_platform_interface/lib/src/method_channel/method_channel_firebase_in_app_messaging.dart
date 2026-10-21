@@ -280,22 +280,20 @@ class MethodChannelFirebaseInAppMessaging
       displayController.add(message);
       return;
     }
-    // A broadcast stream drops events nobody listens to, but the native SDKs
-    // wait for every message to be reported: iOS shows no other campaign
-    // until then. Hold the message for a listener, and report it if none
-    // arrives.
+    // A broadcast stream drops events nobody listens to. Hold the message for
+    // a listener, and release it if none arrives.
     final replaced = _takePendingDisplay();
     // Native keeps one message per campaign, which is now [message].
     if (replaced != null &&
         replaced.campaignMetadata.campaignId !=
             message.campaignMetadata.campaignId) {
-      _reportUndelivered(replaced);
+      _releaseUndelivered(replaced);
     }
     _pendingDisplay = message;
     _pendingDisplayTimer = Timer(pendingDisplayTimeout, () {
       final undelivered = _takePendingDisplay();
       if (undelivered != null) {
-        _reportUndelivered(undelivered);
+        _releaseUndelivered(undelivered);
       }
     });
   }
@@ -315,9 +313,17 @@ class MethodChannelFirebaseInAppMessaging
     }
   }
 
-  /// Reported as a display error rather than a dismissal, which both SDKs
-  /// would count as an impression of a message nobody saw.
-  static void _reportUndelivered(InAppMessage message) {
+  /// Lets the SDK move on from a message no listener received.
+  ///
+  /// iOS shows no other campaign until the message is reported, so it is
+  /// reported as a display error, which iOS does not count as an impression.
+  /// Android has no such lock, and records a display error as an impression,
+  /// which for an app open campaign also uses up the one a day app open
+  /// limit, so there the message is only dropped.
+  static void _releaseUndelivered(InAppMessage message) {
+    if (defaultTargetPlatform != TargetPlatform.iOS) {
+      return;
+    }
     message
         .reportError('No listener on onMessageDisplay')
         .catchError((Object _) {});

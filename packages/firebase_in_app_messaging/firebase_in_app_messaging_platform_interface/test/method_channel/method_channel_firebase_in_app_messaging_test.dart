@@ -7,6 +7,7 @@ import 'package:firebase_in_app_messaging_platform_interface/firebase_in_app_mes
 import 'package:firebase_in_app_messaging_platform_interface/src/method_channel/method_channel_firebase_in_app_messaging.dart';
 import 'package:firebase_in_app_messaging_platform_interface/src/pigeon/messages.pigeon.dart'
     as pigeon;
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../mock.dart';
@@ -198,85 +199,145 @@ void main() {
     tearDown(() {
       MethodChannelFirebaseInAppMessaging.pendingDisplayTimeout =
           defaultTimeout;
+      debugDefaultTargetPlatformOverride = null;
     });
 
-    test('holds the message for the first listener', () async {
-      await _sendFlutterApiMessage('onMessageDisplay', [
-        _displayMessage('held-campaign'),
-      ]);
+    for (final platform in [TargetPlatform.android, TargetPlatform.iOS]) {
+      group(platform.name, () {
+        setUp(() => debugDefaultTargetPlatformOverride = platform);
 
-      final messages = <InAppMessage>[];
-      final subscription = inAppMessaging.onMessageDisplay.listen(
-        messages.add,
+        test('holds the message for the first listener', () async {
+          await _sendFlutterApiMessage('onMessageDisplay', [
+            _displayMessage('held-campaign'),
+          ]);
+
+          final messages = <InAppMessage>[];
+          final subscription = inAppMessaging.onMessageDisplay.listen(
+            messages.add,
+          );
+          addTearDown(subscription.cancel);
+          await pumpEventQueue();
+
+          expect(messages, hasLength(1));
+          expect(messages.single.campaignMetadata.campaignId, 'held-campaign');
+
+          // The held message was delivered, so it is not reported.
+          await Future<void>.delayed(_pastPendingDisplayTimeout);
+          expect(hostApi.campaignId, isNull);
+        });
+
+        test(
+          'does not report a held message that its campaign replaces',
+          () async {
+            await _sendFlutterApiMessage('onMessageDisplay', [
+              _displayMessage('same-campaign'),
+            ]);
+            await _sendFlutterApiMessage('onMessageDisplay', [
+              _displayMessage('same-campaign'),
+            ]);
+
+            final message = await inAppMessaging.onMessageDisplay.first;
+            expect(message.campaignMetadata.campaignId, 'same-campaign');
+            await Future<void>.delayed(_pastPendingDisplayTimeout);
+            expect(hostApi.campaignId, isNull);
+          },
+        );
+
+        test(
+          'drops the held message when custom display is disabled',
+          () async {
+            await _sendFlutterApiMessage('onMessageDisplay', [
+              _displayMessage('disabled-campaign'),
+            ]);
+            await inAppMessaging.setCustomDisplayEnabled(false);
+
+            final messages = <InAppMessage>[];
+            final subscription = inAppMessaging.onMessageDisplay.listen(
+              messages.add,
+            );
+            addTearDown(subscription.cancel);
+            await Future<void>.delayed(_pastPendingDisplayTimeout);
+
+            expect(messages, isEmpty);
+            expect(hostApi.campaignId, isNull);
+          },
+        );
+      });
+    }
+
+    // iOS shows no other campaign until the message is reported, and a display
+    // error records no impression there.
+    group('iOS', () {
+      setUp(() => debugDefaultTargetPlatformOverride = TargetPlatform.iOS);
+
+      test('reports a display error when nobody listens', () async {
+        await _sendFlutterApiMessage('onMessageDisplay', [
+          _displayMessage('unheard-campaign'),
+        ]);
+
+        await Future<void>.delayed(_pastPendingDisplayTimeout);
+
+        expect(hostApi.campaignId, 'unheard-campaign');
+        expect(hostApi.errorReason, isNotNull);
+        expect(hostApi.dismissType, isNull);
+      });
+
+      test('reports a held message that a newer one replaces', () async {
+        await _sendFlutterApiMessage('onMessageDisplay', [
+          _displayMessage('older-campaign'),
+        ]);
+        await _sendFlutterApiMessage('onMessageDisplay', [
+          _displayMessage('newer-campaign'),
+        ]);
+        await pumpEventQueue();
+
+        expect(hostApi.campaignId, 'older-campaign');
+        expect(hostApi.errorReason, isNotNull);
+
+        final message = await inAppMessaging.onMessageDisplay.first;
+        expect(message.campaignMetadata.campaignId, 'newer-campaign');
+      });
+    });
+
+    // Android counts a display error as an impression, and caps app open
+    // campaigns at one a day, so a message nobody saw is not reported.
+    group('Android', () {
+      setUp(
+        () => debugDefaultTargetPlatformOverride = TargetPlatform.android,
       );
-      addTearDown(subscription.cancel);
-      await pumpEventQueue();
 
-      expect(messages, hasLength(1));
-      expect(messages.single.campaignMetadata.campaignId, 'held-campaign');
+      test('drops the message without reporting it', () async {
+        await _sendFlutterApiMessage('onMessageDisplay', [
+          _displayMessage('unheard-campaign'),
+        ]);
 
-      // The held message was delivered, so it is not reported.
-      await Future<void>.delayed(_pastPendingDisplayTimeout);
-      expect(hostApi.campaignId, isNull);
-    });
+        await Future<void>.delayed(_pastPendingDisplayTimeout);
+        expect(hostApi.campaignId, isNull);
 
-    test('reports a display error when nobody listens', () async {
-      await _sendFlutterApiMessage('onMessageDisplay', [
-        _displayMessage('unheard-campaign'),
-      ]);
+        // The message is no longer held either.
+        final messages = <InAppMessage>[];
+        final subscription = inAppMessaging.onMessageDisplay.listen(
+          messages.add,
+        );
+        addTearDown(subscription.cancel);
+        await pumpEventQueue();
+        expect(messages, isEmpty);
+      });
 
-      await Future<void>.delayed(_pastPendingDisplayTimeout);
+      test('drops a held message that a newer one replaces', () async {
+        await _sendFlutterApiMessage('onMessageDisplay', [
+          _displayMessage('older-campaign'),
+        ]);
+        await _sendFlutterApiMessage('onMessageDisplay', [
+          _displayMessage('newer-campaign'),
+        ]);
+        await pumpEventQueue();
 
-      expect(hostApi.campaignId, 'unheard-campaign');
-      expect(hostApi.errorReason, isNotNull);
-      expect(hostApi.dismissType, isNull);
-    });
+        expect(hostApi.campaignId, isNull);
 
-    test('reports a held message that a newer one replaces', () async {
-      await _sendFlutterApiMessage('onMessageDisplay', [
-        _displayMessage('older-campaign'),
-      ]);
-      await _sendFlutterApiMessage('onMessageDisplay', [
-        _displayMessage('newer-campaign'),
-      ]);
-      await pumpEventQueue();
-
-      expect(hostApi.campaignId, 'older-campaign');
-      expect(hostApi.errorReason, isNotNull);
-
-      final message = await inAppMessaging.onMessageDisplay.first;
-      expect(message.campaignMetadata.campaignId, 'newer-campaign');
-    });
-
-    test('does not report a held message that its campaign replaces', () async {
-      await _sendFlutterApiMessage('onMessageDisplay', [
-        _displayMessage('same-campaign'),
-      ]);
-      await _sendFlutterApiMessage('onMessageDisplay', [
-        _displayMessage('same-campaign'),
-      ]);
-
-      final message = await inAppMessaging.onMessageDisplay.first;
-      expect(message.campaignMetadata.campaignId, 'same-campaign');
-      await Future<void>.delayed(_pastPendingDisplayTimeout);
-      expect(hostApi.campaignId, isNull);
-    });
-
-    test('drops the held message when custom display is disabled', () async {
-      await _sendFlutterApiMessage('onMessageDisplay', [
-        _displayMessage('disabled-campaign'),
-      ]);
-      await inAppMessaging.setCustomDisplayEnabled(false);
-
-      final messages = <InAppMessage>[];
-      final subscription = inAppMessaging.onMessageDisplay.listen(
-        messages.add,
-      );
-      addTearDown(subscription.cancel);
-      await Future<void>.delayed(_pastPendingDisplayTimeout);
-
-      expect(messages, isEmpty);
-      expect(hostApi.campaignId, isNull);
+        final message = await inAppMessaging.onMessageDisplay.first;
+        expect(message.campaignMetadata.campaignId, 'newer-campaign');
+      });
     });
   });
 }
