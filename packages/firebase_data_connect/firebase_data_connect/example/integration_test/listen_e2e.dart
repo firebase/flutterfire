@@ -202,6 +202,41 @@ void runListenTests() {
           await listener2.cancel();
         }
       });
+
+      testWidgets('a listener added to a live query gets the current result',
+          (WidgetTester tester) async {
+        final listener1Ready = Completer<void>();
+        final listener2Movies = Completer<List<ListMoviesMovies>>();
+
+        final listener1 =
+            MoviesConnector.instance.listMovies().ref().subscribe().listen((_) {
+          if (!listener1Ready.isCompleted) listener1Ready.complete();
+        });
+        StreamSubscription<Object?>? listener2;
+
+        try {
+          await listener1Ready.future.timeout(_listenTimeout);
+
+          // Like a second screen pushed while the first one is still
+          // listening: the server has nothing new to push, so the result has
+          // to come from the query that is already live.
+          listener2 = MoviesConnector.instance
+              .listMovies()
+              .ref()
+              .subscribe()
+              .listen((value) {
+            if (!listener2Movies.isCompleted) {
+              listener2Movies.complete(value.data.movies);
+            }
+          });
+
+          final movies = await listener2Movies.future.timeout(_listenTimeout);
+          expect(movies, isEmpty);
+        } finally {
+          await listener1.cancel();
+          await listener2?.cancel();
+        }
+      });
     },
     skip: kIsWasm ? _wasmSkipReason : null,
   );

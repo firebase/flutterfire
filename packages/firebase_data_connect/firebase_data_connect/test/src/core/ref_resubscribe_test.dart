@@ -16,12 +16,28 @@ import 'dart:async';
 
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_data_connect/firebase_data_connect.dart';
+import 'package:firebase_data_connect/src/cache/cache.dart';
 import 'package:firebase_data_connect/src/common/common_library.dart';
 import 'package:firebase_data_connect/src/core/ref.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
 class MockFirebaseDataConnect extends Mock implements FirebaseDataConnect {}
+
+/// Cache that keeps the last server response per query in memory.
+class FakeCache extends Fake implements Cache {
+  final Map<String, Map<String, dynamic>> _results = {};
+
+  @override
+  Future<void> update(String queryId, ServerResponse serverResponse) async {
+    _results[queryId] = serverResponse.data;
+  }
+
+  @override
+  Future<Map<String, dynamic>?> resultTree(
+          String queryId, bool allowStale) async =>
+      _results[queryId];
+}
 
 /// Minimal in-memory transport that records subscribe/cancel and lets a test
 /// push events into whichever stream is currently listened to.
@@ -298,6 +314,83 @@ void main() {
         reason: 're-subscribing after a deferred cancel must restart the '
             'server stream',
       );
+    });
+  });
+
+  group('QueryRef late subscriber', () {
+    test('a subscriber joining a live query gets the last result', () async {
+      final ref = buildRef();
+      final a = <String>[];
+      final b = <String>[];
+
+      final subA = ref.subscribe().listen((r) => a.add(r.data));
+      await Future<void>.delayed(const Duration(milliseconds: 20));
+      transport.emit({'v': 1});
+      transport.emit({'v': 2});
+      await Future<void>.delayed(const Duration(milliseconds: 20));
+
+      // A second screen subscribes while the first one is still mounted. The
+      // server won't push again until the data changes.
+      final subB = ref.subscribe().listen((r) => b.add(r.data));
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+
+      expect(b, ['{"v":2}'],
+          reason: 'the new subscriber must get the latest result right away');
+      expect(a, ['{"v":1}', '{"v":2}'],
+          reason: 'the existing subscriber must not get it a second time');
+      expect(transport.subscribeCount, 1);
+
+      transport.emit({'v': 3});
+      await Future<void>.delayed(const Duration(milliseconds: 20));
+      expect(a, ['{"v":1}', '{"v":2}', '{"v":3}']);
+      expect(b, ['{"v":2}', '{"v":3}']);
+
+      await subA.cancel();
+      await subB.cancel();
+    });
+
+    test('a subscriber that restarts the server stream gets no stale result',
+        () async {
+      final ref = buildRef();
+
+      final first = ref.subscribe().listen((_) {});
+      await Future<void>.delayed(const Duration(milliseconds: 20));
+      transport.emit({'v': 1});
+      await Future<void>.delayed(const Duration(milliseconds: 20));
+      await first.cancel();
+
+      final received = <String>[];
+      final second = ref.subscribe().listen((r) => received.add(r.data));
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+      expect(received, isEmpty,
+          reason: 'the result of a server stream that was torn down is stale');
+
+      transport.emit({'v': 2});
+      await Future<void>.delayed(const Duration(milliseconds: 20));
+      expect(received, ['{"v":2}']);
+
+      await second.cancel();
+    });
+
+    test('with a cache, a late subscriber gets the cached result only',
+        () async {
+      when(dataConnect.cacheManager).thenReturn(FakeCache());
+      final ref = buildRef();
+      final b = <QueryResult<String, String?>>[];
+
+      final subA = ref.subscribe().listen((_) {});
+      await Future<void>.delayed(const Duration(milliseconds: 20));
+      transport.emit({'v': 1});
+      await Future<void>.delayed(const Duration(milliseconds: 20));
+
+      final subB = ref.subscribe().listen(b.add);
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+
+      expect(b.map((r) => r.source), [DataSource.cache]);
+      expect(b.single.data, '{"v":1}');
+
+      await subA.cancel();
+      await subB.cancel();
     });
   });
 }

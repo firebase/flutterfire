@@ -353,12 +353,19 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
 
   bool get _hasServerStream => _serverStream != null || _serverStreamStarting;
 
+  /// The last result sent to the subscribers of the current server stream.
+  ///
+  /// The server only pushes when the data changes, so this is replayed to a
+  /// subscriber that joins a server stream which is already live.
+  QueryResult<Data, Variables>? _lastResult;
+
   void _onAllSubscribersCancelled() {
     _serverStreamGeneration++;
     _serverStreamStarting = false;
     _serverStreamSubscription?.cancel();
     _serverStreamSubscription = null;
     _serverStream = null;
+    _lastResult = null;
   }
 
   Stream<QueryResult<Data, Variables>> subscribe() {
@@ -372,8 +379,27 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
     // server stream for one logical subscription.
     _queryManager.trackedQueries[operationId] = this;
 
-    final stream =
-        _streamController!.stream.cast<QueryResult<Data, Variables>>();
+    final source = _streamController!.stream;
+    final stream = Stream<QueryResult<Data, Variables>>.multi((controller) {
+      // Without a cache, nothing else gives a listener that joins a live
+      // server stream its first result, so replay the last one to it alone.
+      // With a cache, the cache read below already does that.
+      final lastResult = _lastResult;
+      if (dataConnect.cacheManager == null &&
+          _hasServerStream &&
+          lastResult != null) {
+        controller.add(lastResult);
+      }
+      final subscription = source.listen(
+        controller.addSync,
+        onError: controller.addErrorSync,
+        onDone: controller.closeSync,
+      );
+      controller
+        ..onPause = subscription.pause
+        ..onResume = subscription.resume
+        ..onCancel = subscription.cancel;
+    }, isBroadcast: true);
 
     // Return the stream to the caller, then execute fetches
     Future.microtask(() async {
@@ -405,6 +431,7 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
     // multiplexes onto it and never receives a first event.
     if (_hasServerStream) return;
     _serverStreamStarting = true;
+    _lastResult = null;
     final generation = _serverStreamGeneration;
 
     bool shouldRetry = await _shouldRetry();
@@ -471,6 +498,7 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
   }
 
   void publishResultToStream(QueryResult<Data, Variables> result) {
+    _lastResult = result;
     if (_streamController != null) {
       _streamController?.add(result);
     }
