@@ -54,5 +54,11 @@ await FirebaseInAppMessaging.instance.setCustomDisplayEnabled(true);
 Until `setCustomDisplayEnabled(true)` is called, native templates keep working.
 Listening to `onMessageDisplay` alone does not replace native UI.
 
+Start listening to `onMessageDisplay` before you call
+`setCustomDisplayEnabled(true)`. The SDK shows no other campaign until the
+current one is reported, so a message that arrives while nothing listens is
+held for the first listener for a few seconds, then reported as a display
+error.
+
 If you also listen to `onMessageClicked` / `onMessageImpression`, those
 lifecycle streams still fire when your Flutter UI reports click and impress.

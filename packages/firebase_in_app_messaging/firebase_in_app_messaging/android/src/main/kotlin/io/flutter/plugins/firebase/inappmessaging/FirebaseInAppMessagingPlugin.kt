@@ -77,7 +77,25 @@ class FirebaseInAppMessagingPlugin :
         flutterApi?.onMessageDisplayError(campaignMetadata(inAppMessage), errorReason.name) {}
       }
 
-  private var eventListenersAdded = false
+  private val eventListeners =
+      EventListenerRegistration(
+          addListeners = {
+            FirebaseInAppMessaging.getInstance().apply {
+              addClickListener(clickListener, mainThreadExecutor)
+              addImpressionListener(impressionListener, mainThreadExecutor)
+              addDismissListener(dismissListener, mainThreadExecutor)
+              addDisplayErrorListener(displayErrorListener, mainThreadExecutor)
+            }
+          },
+          removeListeners = {
+            FirebaseInAppMessaging.getInstance().apply {
+              removeClickListener(clickListener)
+              removeImpressionListener(impressionListener)
+              removeDismissListener(dismissListener)
+              removeDisplayErrorListener(displayErrorListener)
+            }
+          },
+      )
 
   private val messageDisplay =
       object : FirebaseInAppMessagingDisplay {
@@ -120,12 +138,15 @@ class FirebaseInAppMessagingPlugin :
           if (customDisplayEnabled) {
             FirebaseInAppMessaging.getInstance().setMessageDisplayComponent(messageDisplay)
           }
+          eventListeners.restore()
         }
 
         override fun onActivityPaused(activity: Activity) {
           if (lastActivity?.get() === activity) {
             lastActivity = null
           }
+          // `firebase-inappmessaging-display` removes all listeners here.
+          eventListeners.onRemovedBySdk()
         }
 
         override fun onActivityStopped(activity: Activity) {}
@@ -149,7 +170,8 @@ class FirebaseInAppMessagingPlugin :
 
   override fun onDetachedFromEngine(binding: FlutterPluginBinding) {
     setCustomDisplayEnabledInternal(false)
-    removeEventListeners()
+    eventListeners.remove()
+    updateLifecycleCallbacks()
     binaryMessenger = null
     flutterApi = null
     FirebaseInAppMessagingHostApi.setUp(binding.binaryMessenger, null)
@@ -164,22 +186,12 @@ class FirebaseInAppMessagingPlugin :
     )
   }
 
-  private fun removeEventListeners() {
-    if (!eventListenersAdded) return
-    eventListenersAdded = false
-
-    FirebaseInAppMessaging.getInstance().apply {
-      removeClickListener(clickListener)
-      removeImpressionListener(impressionListener)
-      removeDismissListener(dismissListener)
-      removeDisplayErrorListener(displayErrorListener)
-    }
-  }
-
   override fun addEventListeners(appName: String, callback: (Result<Unit>) -> Unit) {
-    FlutterFirebasePlugin.cachedThreadPool.execute {
+    // On the main thread, where the SDK removes the listeners on pause.
+    mainHandler.post {
       try {
-        addEventListenersInternal()
+        eventListeners.add()
+        updateLifecycleCallbacks()
         callback(Result.success(Unit))
       } catch (exception: Exception) {
         handleFailure(callback, exception)
@@ -313,50 +325,39 @@ class FirebaseInAppMessagingPlugin :
 
   private fun setCustomDisplayEnabledInternal(enabled: Boolean) {
     customDisplayEnabled = enabled
-    val fiam = FirebaseInAppMessaging.getInstance()
+    updateLifecycleCallbacks()
     if (enabled) {
-      fiam.setMessageDisplayComponent(messageDisplay)
-      if (!lifecycleRegistered) {
-        application?.registerActivityLifecycleCallbacks(lifecycleCallbacks)
-        lifecycleRegistered = true
-      }
+      FirebaseInAppMessaging.getInstance().setMessageDisplayComponent(messageDisplay)
     } else {
-      if (lifecycleRegistered) {
-        application?.unregisterActivityLifecycleCallbacks(lifecycleCallbacks)
-        lifecycleRegistered = false
-      }
       dismissAllPending()
       restoreDefaultDisplay()
     }
   }
 
-  /// Hands rendering back to `firebase-inappmessaging-display`. That SDK
-  /// overwrites the display component on activity resume, so we force a
-  /// rebind; `onActivityPaused` also calls `removeAllListeners()`, so any
-  /// lifecycle listeners attached by this plugin are registered again.
-  private fun restoreDefaultDisplay() {
-    val activity = lastActivity?.get() ?: return
-    val defaultDisplay = FirebaseInAppMessagingDefaultDisplay.getInstance()
-    val shouldRestoreListeners = eventListenersAdded
-    defaultDisplay.onActivityPaused(activity)
-    defaultDisplay.onActivityResumed(activity)
-    if (shouldRestoreListeners) {
-      eventListenersAdded = false
-      addEventListenersInternal()
+  /// Registered only once Dart uses the plugin, so they run after the ones
+  /// `firebase-inappmessaging-display` registers when Firebase initializes.
+  private fun updateLifecycleCallbacks() {
+    val needed = customDisplayEnabled || eventListeners.isWanted
+    if (needed && !lifecycleRegistered) {
+      application?.registerActivityLifecycleCallbacks(lifecycleCallbacks)
+      lifecycleRegistered = true
+    } else if (!needed && lifecycleRegistered) {
+      application?.unregisterActivityLifecycleCallbacks(lifecycleCallbacks)
+      lifecycleRegistered = false
     }
   }
 
-  private fun addEventListenersInternal() {
-    if (eventListenersAdded) {
-      return
-    }
-    FirebaseInAppMessaging.getInstance().apply {
-      addClickListener(clickListener, mainThreadExecutor)
-      addImpressionListener(impressionListener, mainThreadExecutor)
-      addDismissListener(dismissListener, mainThreadExecutor)
-      addDisplayErrorListener(displayErrorListener, mainThreadExecutor)
-    }
-    eventListenersAdded = true
+  /// Hands rendering back to `firebase-inappmessaging-display`. That SDK
+  /// overwrites the display component on activity resume, so we force a
+  /// rebind; `onActivityPaused` also calls `removeAllListeners()`, so the
+  /// lifecycle listeners are registered again.
+  private fun restoreDefaultDisplay() {
+    val activity = lastActivity?.get() ?: return
+    val defaultDisplay = FirebaseInAppMessagingDefaultDisplay.getInstance()
+    defaultDisplay.onActivityPaused(activity)
+    eventListeners.onRemovedBySdk()
+    defaultDisplay.onActivityResumed(activity)
+    eventListeners.restore()
   }
 
   private fun dismissAllPending() {

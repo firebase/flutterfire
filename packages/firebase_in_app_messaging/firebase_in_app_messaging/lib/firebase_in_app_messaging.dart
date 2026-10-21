@@ -111,7 +111,8 @@ class FirebaseInAppMessaging extends FirebasePlugin {
   /// When [enabled] is `true`, native modal / card / banner / image-only
   /// templates are not shown. Eligible campaigns are delivered on
   /// [onMessageDisplay] instead. Call this after [Firebase.initializeApp]
-  /// and before campaigns may trigger.
+  /// and before campaigns may trigger, and listen to [onMessageDisplay]
+  /// first.
   ///
   /// Apps must report [InAppMessage.impress], [InAppMessage.click], or
   /// [InAppMessage.dismiss] so analytics and frequency capping keep working.
@@ -129,5 +130,10 @@ class FirebaseInAppMessaging extends FirebasePlugin {
   /// This is not Firebase Cloud Messaging's `onMessage`, and it is not
   /// [onMessageClicked]. It fires only after [setCustomDisplayEnabled] is
   /// `true`, at the moment the SDK would have drawn a native template.
+  ///
+  /// Listen before enabling custom display. A message that arrives while
+  /// nothing listens is held for the first listener for a few seconds, then
+  /// reported as a display error, because the SDK shows no other campaign
+  /// until the current one is reported.
   Stream<InAppMessage> get onMessageDisplay => _delegate.onMessageDisplay;
 }
