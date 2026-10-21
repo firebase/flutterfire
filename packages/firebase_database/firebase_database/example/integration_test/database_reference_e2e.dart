@@ -188,6 +188,36 @@ void setupDatabaseReferenceTests() {
         skip: kIsWeb,
       );
 
+      test(
+        'fails with deadline-exceeded when the handler does not reply in time',
+        () async {
+          final ref = _uniqueRef('transaction-handler-timeout');
+          await ref.set('unchanged');
+
+          await expectLater(
+            ref.runTransaction((value) {
+              final until = DateTime.now().add(const Duration(seconds: 31));
+              while (DateTime.now().isBefore(until)) {}
+              return Transaction.success(value);
+            }),
+            throwsA(
+              isA<FirebaseException>().having(
+                (e) => e.code,
+                'code',
+                'deadline-exceeded',
+              ),
+            ),
+          );
+
+          final snapshot = await ref.get();
+          expect(snapshot.value, 'unchanged');
+        },
+        timeout: const Timeout(Duration(seconds: 45)),
+        skip: kIsWeb ||
+            (defaultTargetPlatform != TargetPlatform.iOS &&
+                defaultTargetPlatform != TargetPlatform.macOS),
+      );
+
       test('does not emit local transaction events when disabled', () async {
         final ref = _uniqueRef('transaction-apply-locally-false');
         await ref.set({'count': 0});
