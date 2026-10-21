@@ -87,6 +87,13 @@ on:
           covered either way.
         type: boolean
         default: true
+      info-plist-overrides:
+        description: >-
+          Space-separated `Key=true|false` booleans written to the example's
+          ios/Runner/Info.plist before building, to run the tests under another
+          app configuration (e.g. `FirebaseAppDelegateProxyEnabled=false`).
+        type: string
+        default: ''
       nightly_test_mode:
         description: >-
           Passed down from nightly.yaml. Shortens the job timeout to 5 minutes.
@@ -122,6 +129,7 @@ jobs:
       PACKAGE_PATH: ${{ inputs.package-path }}
       TEST_TARGET: ${{ inputs.test-target }}
       NATIVE_CONFIG_ARGS: ${{ inputs.native-config-args }}
+      INFO_PLIST_OVERRIDES: ${{ inputs.info-plist-overrides }}
     timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 60 }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -208,6 +216,21 @@ jobs:
           if [ -f Podfile ]; then pod deintegrate; fi
           rm -f Podfile Podfile.lock
           rm -rf Pods
+      - name: Apply Info.plist overrides
+        if: inputs.info-plist-overrides != ''
+        working-directory: ${{ inputs.package-path }}/example/ios/Runner
+        run: |
+          for override in $INFO_PLIST_OVERRIDES; do
+            key="${override%%=*}"
+            value="${override#*=}"
+            if [[ ! "$key" =~ ^[A-Za-z0-9_]+$ || ! "$value" =~ ^(true|false)$ ]]; then
+              echo "::error::Invalid Info.plist override '$override', expected Key=true|false."
+              exit 1
+            fi
+            /usr/libexec/PlistBuddy -c "Delete :$key" Info.plist 2>/dev/null || true
+            /usr/libexec/PlistBuddy -c "Add :$key bool $value" Info.plist
+            echo "Info.plist: $key = $value"
+          done
       - name: Pods Cache
         if: ${{ !inputs.ios-spm }}
         continue-on-error: true
@@ -248,6 +271,18 @@ jobs:
           fi
           set -e
           ccache -s
+          # Fail rather than silently test the default configuration.
+          if [ $BUILD_EXIT -eq 0 ]; then
+            for override in $INFO_PLIST_OVERRIDES; do
+              key="${override%%=*}"
+              value="${override#*=}"
+              built="$(/usr/libexec/PlistBuddy -c "Print :$key" build/ios/iphonesimulator/Runner.app/Info.plist)"
+              if [ "$built" != "$value" ]; then
+                echo "::error::Built Info.plist has $key = '$built', expected '$value'."
+                exit 1
+              fi
+            done
+          fi
           exit $BUILD_EXIT
       - name: Install Cloud Functions dependencies
         if: inputs.use-firebase-emulators
