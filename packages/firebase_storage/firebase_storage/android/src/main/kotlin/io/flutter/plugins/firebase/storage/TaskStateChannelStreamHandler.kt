@@ -80,8 +80,8 @@ internal class TaskStateChannelStreamHandler(
   }
 
   override fun onCancel(arguments: Any?) {
-    // Only stop sending events, as on iOS. The task keeps running, can still be paused, resumed or
-    // cancelled by its handle, and the listeners above still release it once it ends.
+    // Only stop sending events: the task keeps running, can still be paused, resumed or cancelled
+    // by its handle, and the listeners above still release it once it ends.
     events = null
     onCancelled(identifier)
   }

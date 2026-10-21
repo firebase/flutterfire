@@ -475,7 +475,7 @@ void setupTaskTests() {
 
         // For example, a progress dialog that is closed mid-upload, before
         // the app awaits the task.
-        await task.snapshotEvents.first;
+        await task.snapshotEvents.first.timeout(_completerTimeout);
         await Future<void>.delayed(const Duration(milliseconds: 100));
 
         final snapshot = await task.timeout(_completerTimeout);
@@ -487,9 +487,11 @@ void setupTaskTests() {
 
     test('detaching firebase_storage from another engine does not affect tasks '
         'of this engine', () async {
+      // Big enough to still be uploading when the other engine is
+      // destroyed, small enough to finish well within the timeout.
       final task = storage
           .ref('flutter-tests/engine-detach.txt')
-          .putString('A' * 20000000);
+          .putString('A' * 10000000);
       final started = Completer<void>();
       final subscription = task.snapshotEvents.listen((_) {
         if (!started.isCompleted) started.complete();
