@@ -43,6 +43,10 @@ FirebaseInAppMessaging.instance.onMessageDisplay.listen((message) async {
 await FirebaseInAppMessaging.instance.setCustomDisplayEnabled(true);
 ```
 
+Listen to `onMessageDisplay` before calling `setCustomDisplayEnabled(true)`. A
+message that arrives while nothing listens is held for a few seconds, then
+reported as a display error so the SDK can show the next one.
+
 The plugin does not open action URLs. You must report impress / click / dismiss
 so campaign analytics keep working.
 

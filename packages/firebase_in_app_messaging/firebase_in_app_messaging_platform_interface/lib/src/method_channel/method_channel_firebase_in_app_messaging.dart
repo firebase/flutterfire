@@ -70,7 +70,7 @@ class _FirebaseInAppMessagingFlutterApi
 
   @override
   void onMessageDisplay(pigeon.FiamDisplayMessage message) {
-    MethodChannelFirebaseInAppMessaging.displayController.add(
+    MethodChannelFirebaseInAppMessaging._addDisplay(
       inAppMessageFromPigeon(message),
     );
   }
@@ -142,7 +142,17 @@ class MethodChannelFirebaseInAppMessaging
 
   @visibleForTesting
   // ignore: close_sinks
-  static final displayController = StreamController<InAppMessage>.broadcast();
+  static final displayController = StreamController<InAppMessage>.broadcast(
+    onListen: _deliverPendingDisplay,
+  );
+
+  /// How long a message that arrives while nothing listens to
+  /// [onMessageDisplay] is held for the first listener.
+  @visibleForTesting
+  static Duration pendingDisplayTimeout = const Duration(seconds: 5);
+
+  static InAppMessage? _pendingDisplay;
+  static Timer? _pendingDisplayTimer;
 
   static bool _eventListenersAdded = false;
   static bool _flutterApiSetUp = false;
@@ -218,6 +228,10 @@ class MethodChannelFirebaseInAppMessaging
   @override
   Future<void> setCustomDisplayEnabled(bool enabled) async {
     _ensureFlutterApi();
+    if (!enabled) {
+      // Native dismisses the message itself.
+      _takePendingDisplay();
+    }
     try {
       await pigeonChannel.setCustomDisplayEnabled(app!.name, enabled);
     } catch (e, s) {
@@ -259,6 +273,54 @@ class MethodChannelFirebaseInAppMessaging
     } catch (e, s) {
       convertPlatformException(e, s);
     }
+  }
+
+  static void _addDisplay(InAppMessage message) {
+    if (displayController.hasListener) {
+      displayController.add(message);
+      return;
+    }
+    // A broadcast stream drops events nobody listens to, but the native SDKs
+    // wait for every message to be reported: iOS shows no other campaign
+    // until then. Hold the message for a listener, and report it if none
+    // arrives.
+    final replaced = _takePendingDisplay();
+    // Native keeps one message per campaign, which is now [message].
+    if (replaced != null &&
+        replaced.campaignMetadata.campaignId !=
+            message.campaignMetadata.campaignId) {
+      _reportUndelivered(replaced);
+    }
+    _pendingDisplay = message;
+    _pendingDisplayTimer = Timer(pendingDisplayTimeout, () {
+      final undelivered = _takePendingDisplay();
+      if (undelivered != null) {
+        _reportUndelivered(undelivered);
+      }
+    });
+  }
+
+  static InAppMessage? _takePendingDisplay() {
+    final message = _pendingDisplay;
+    _pendingDisplay = null;
+    _pendingDisplayTimer?.cancel();
+    _pendingDisplayTimer = null;
+    return message;
+  }
+
+  static void _deliverPendingDisplay() {
+    final message = _takePendingDisplay();
+    if (message != null) {
+      displayController.add(message);
+    }
+  }
+
+  /// Reported as a display error rather than a dismissal, which both SDKs
+  /// would count as an impression of a message nobody saw.
+  static void _reportUndelivered(InAppMessage message) {
+    message
+        .reportError('No listener on onMessageDisplay')
+        .catchError((Object _) {});
   }
 
   void _ensureFlutterApi() {
