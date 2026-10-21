@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.Executor;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -57,9 +58,24 @@ public class FlutterFirebaseCrashlyticsPluginTest {
         public void setMessageHandler(String channel, BinaryMessageHandler handler) {}
       };
 
+  private Executor defaultBuildIdExecutor;
+
   @Before
   public void setUp() throws IOException {
     ElfBuildIdReader.clearCachedBuildId();
+    // Runs the startup read on another thread, like the thread pool does, and waits for it so no
+    // read outlives the test.
+    defaultBuildIdExecutor = FlutterFirebaseCrashlyticsPlugin.getBuildIdExecutor();
+    FlutterFirebaseCrashlyticsPlugin.setBuildIdExecutor(
+        runnable -> {
+          Thread thread = new Thread(runnable);
+          thread.start();
+          try {
+            thread.join();
+          } catch (InterruptedException e) {
+            throw new AssertionError(e);
+          }
+        });
     try (FileOutputStream libapp =
         new FileOutputStream(new File(nativeLibraryDir.getRoot(), "libapp.so"))) {
       libapp.write(ElfBuildIdReaderTest.elfWithBuildId((byte) 0x42));
@@ -68,12 +84,14 @@ public class FlutterFirebaseCrashlyticsPluginTest {
 
   @After
   public void tearDown() {
+    FlutterFirebaseCrashlyticsPlugin.setBuildIdExecutor(defaultBuildIdExecutor);
     ElfBuildIdReader.clearCachedBuildId();
   }
 
   @Test
-  public void onAttachedToEngine_doesNotReadLibappOnTheMainThread() {
+  public void onAttachedToEngine_readsLibappOnceInTheBackground() {
     // Every engine attaches its plugins on the main thread, which this test thread stands in for.
+    int reads = 0;
     for (int engine = 0; engine < 2; engine++) {
       RecordingContext context = new RecordingContext(nativeLibraryDir.getRoot());
 
@@ -82,7 +100,13 @@ public class FlutterFirebaseCrashlyticsPluginTest {
               new FlutterPluginBinding(context, null, MESSENGER, null, null, null, null));
 
       assertFalse(context.applicationInfoThreads.contains(Thread.currentThread()));
+      reads += context.applicationInfoThreads.size();
     }
+    // Read at the first attach, so a first error report doesn't have to.
+    assertEquals(1, reads);
+    assertEquals(
+        ElfBuildIdReaderTest.hexWithFirstByte((byte) 0x42),
+        ElfBuildIdReader.cachedBuildId(new RecordingContext(nativeLibraryDir.getRoot())));
   }
 
   @Test

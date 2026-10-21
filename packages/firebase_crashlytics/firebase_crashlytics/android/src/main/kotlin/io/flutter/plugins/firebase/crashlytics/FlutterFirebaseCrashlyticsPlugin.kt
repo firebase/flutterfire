@@ -10,6 +10,7 @@ import android.content.pm.PackageManager
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import androidx.annotation.VisibleForTesting
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.TaskCompletionSource
 import com.google.android.gms.tasks.Tasks
@@ -27,6 +28,7 @@ import io.flutter.plugins.firebase.crashlytics.generated.CrashlyticsStackFrame
 import io.flutter.plugins.firebase.crashlytics.generated.FirebaseCrashlyticsHostApi
 import io.flutter.plugins.firebase.crashlytics.generated.FlutterError as PigeonFlutterError
 import io.flutter.plugins.firebase.crashlytics.generated.RecordErrorRequest
+import java.util.concurrent.Executor
 
 /** FlutterFirebaseCrashlyticsPlugin */
 class FlutterFirebaseCrashlyticsPlugin :
@@ -45,8 +47,13 @@ class FlutterFirebaseCrashlyticsPlugin :
   }
 
   override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
-    applicationContext = binding.applicationContext
+    val context = binding.applicationContext
+    applicationContext = context
     initInstance(binding.binaryMessenger)
+    // Read once at startup, off the main thread: the first report then doesn't have to, and the
+    // read doesn't happen while the app is short of memory or file descriptors, which is often
+    // why it reports an error, and would leave every report without the ID.
+    buildIdExecutor.execute { ElfBuildIdReader.cachedBuildId(context) }
   }
 
   override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
@@ -281,6 +288,9 @@ class FlutterFirebaseCrashlyticsPlugin :
         "plugins.flutter.io/firebase_crashlytics_test_stream"
     private const val FIREBASE_CRASHLYTICS_COLLECTION_ENABLED =
         "firebase_crashlytics_collection_enabled"
+
+    /** Where the ELF build ID is read at startup. */
+    @VisibleForTesting @JvmStatic var buildIdExecutor: Executor = cachedThreadPool
 
     private fun readCrashlyticsDataCollectionEnabledFromManifest(
         applicationContext: Context

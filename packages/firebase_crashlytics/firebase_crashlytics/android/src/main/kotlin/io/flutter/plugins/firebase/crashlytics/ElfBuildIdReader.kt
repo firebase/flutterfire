@@ -128,6 +128,7 @@ internal class ElfBuildIdReader private constructor() {
      * @return the build ID as a lowercase hex string, or `null` if it cannot be read.
      */
     @JvmStatic
+    @WorkerThread
     fun readBuildId(context: Context): String? {
       return try {
         val libApp = File(context.applicationInfo.nativeLibraryDir, "libapp.so")
