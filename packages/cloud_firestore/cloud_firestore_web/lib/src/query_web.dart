@@ -251,8 +251,15 @@ class QueryWeb extends QueryPlatform {
 
   @override
   QueryPlatform whereFilter(FilterPlatformInterface filter) {
+    final existingFilters = parameters['filters'];
     return _copyWithParameters(<String, dynamic>{
-      'filters': filter.toJson(),
+      // Chained filters are combined with AND, like the JS SDK does.
+      'filters': existingFilters == null
+          ? filter.toJson()
+          : <String, Object?>{
+              'op': 'AND',
+              'queries': [existingFilters, filter.toJson()],
+            },
     });
   }
 
