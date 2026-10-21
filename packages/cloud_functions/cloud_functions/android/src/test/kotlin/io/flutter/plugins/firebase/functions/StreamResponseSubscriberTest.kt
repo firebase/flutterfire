@@ -4,7 +4,6 @@
 package io.flutter.plugins.firebase.functions
 
 import com.google.firebase.functions.FirebaseFunctionsException
-import io.flutter.plugin.common.EventChannel.EventSink
 import java.io.IOException
 import java.util.concurrent.Executor
 import org.junit.Assert.assertEquals
@@ -14,22 +13,6 @@ import org.junit.runners.JUnit4
 
 @RunWith(JUnit4::class)
 class StreamResponseSubscriberTest {
-  private class RecordingEventSink : EventSink {
-    val events = mutableListOf<List<Any?>>()
-
-    override fun success(event: Any?) {
-      events.add(listOf("success", event))
-    }
-
-    override fun error(errorCode: String?, errorMessage: String?, errorDetails: Any?) {
-      events.add(listOf("error", errorCode, errorMessage, errorDetails))
-    }
-
-    override fun endOfStream() {
-      events.add(listOf("endOfStream"))
-    }
-  }
-
   private val eventSink = RecordingEventSink()
   private val subscriber = StreamResponseSubscriber(eventSink, Executor { it.run() })
 

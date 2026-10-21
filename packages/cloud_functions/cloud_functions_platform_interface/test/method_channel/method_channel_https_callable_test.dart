@@ -243,6 +243,29 @@ void main() {
             ]),
           );
         });
+
+        test('without a message are emitted as [FirebaseFunctionsException]',
+            () async {
+          mockNativeStream((events) {
+            events.error(
+              code: 'firebase_functions',
+              details: <Object?, Object?>{'code': 'unknown'},
+            );
+            events.endOfStream();
+          });
+
+          await expectLater(
+            httpsCallable!.stream(null),
+            emitsInOrder(<Object>[
+              emitsError(
+                isA<FirebaseFunctionsException>()
+                    .having((e) => e.code, 'code', 'unknown')
+                    .having((e) => e.message, 'message', isEmpty),
+              ),
+              emitsDone,
+            ]),
+          );
+        });
       });
     });
   });

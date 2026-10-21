@@ -25,7 +25,8 @@ class FirebaseFunctionsStreamHandler(private val firebaseFunctions: FirebaseFunc
   }
 
   override fun onCancel(arguments: Any) {
-    subscriber!!.cancel()
+    // Null when the stream failed before subscribing.
+    subscriber?.cancel()
   }
 
   private fun httpsStreamCall(arguments: Map<String, Any>, events: EventSink) {
@@ -67,7 +68,9 @@ class FirebaseFunctionsStreamHandler(private val firebaseFunctions: FirebaseFunc
       subscriber = StreamResponseSubscriber(events)
       publisher.subscribe(subscriber)
     } catch (e: Exception) {
-      events.error("firebase_functions", e.message, null)
+      events.error(
+          "firebase_functions", e.message, FlutterFirebaseFunctionsPlugin.getExceptionDetails(e))
+      events.endOfStream()
     }
   }
 }

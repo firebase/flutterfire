@@ -44,6 +44,7 @@ class FunctionsStreamHandler: NSObject, FlutterStreamHandler {
             details: nil
           )
         )
+        events(FlutterEndOfEventStream)
       }
       return
     }
@@ -86,6 +87,7 @@ class FunctionsStreamHandler: NSObject, FlutterStreamHandler {
               details: nil
             )
           )
+          events(FlutterEndOfEventStream)
         }
         return
       }
@@ -112,13 +114,8 @@ class FunctionsStreamHandler: NSObject, FlutterStreamHandler {
         }
       } catch {
         await MainActor.run {
-          events(
-            FlutterError(
-              code: "unknown",
-              message: error.localizedDescription,
-              details: ["code": "unknown", "message": error.localizedDescription]
-            )
-          )
+          events(FirebaseFunctionsPlugin.createFlutterError(from: error))
+          events(FlutterEndOfEventStream)
         }
       }
     } else {
@@ -130,6 +127,7 @@ class FunctionsStreamHandler: NSObject, FlutterStreamHandler {
             details: nil
           )
         )
+        events(FlutterEndOfEventStream)
       }
     }
   }
