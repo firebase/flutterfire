@@ -188,7 +188,9 @@ public class FirebaseAppCheckPlugin: NSObject, FlutterPlugin,
     }
 
     let channel = FlutterEventChannel(name: name, binaryMessenger: messenger)
-    let handler = AppCheckTokenStreamHandler(appName: appName)
+    let handler = AppCheckTokenStreamHandler(
+      appName: FLTFirebasePlugin.firebaseAppName(fromDartName: appName)
+    )
     channel.setStreamHandler(handler)
 
     eventChannels[name] = channel
