@@ -41,7 +41,6 @@ dependencies:
   cupertino_icons: ^1.0.8
 
 dev_dependencies:
-  cloud_firestore_platform_interface: ^8.0.8
   flutter_test:
     sdk: flutter
   integration_test:
