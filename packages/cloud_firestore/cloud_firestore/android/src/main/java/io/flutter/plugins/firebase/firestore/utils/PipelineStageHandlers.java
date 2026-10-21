@@ -312,9 +312,7 @@ class PipelineStageHandlers {
     String distanceMeasureStr = (String) args.get("distance_measure");
     Number limitObj = (Number) args.get("limit");
     String distanceField =
-        args.get("distance_field") instanceof String
-            ? (String) args.get("distance_field")
-            : null;
+        args.get("distance_field") instanceof String ? (String) args.get("distance_field") : null;
 
     if (distanceMeasureStr == null) {
       throw new IllegalArgumentException("'find_nearest' requires a 'distance_measure' argument");
