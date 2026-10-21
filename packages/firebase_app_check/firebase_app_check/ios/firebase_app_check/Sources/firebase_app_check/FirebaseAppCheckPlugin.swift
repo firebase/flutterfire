@@ -257,7 +257,7 @@ public class FirebaseAppCheckPlugin: NSObject, FlutterPlugin,
     let nsError = error as NSError
     let code: String
     if nsError.domain == AppCheckErrorDomain,
-      let errorCode = AppCheckErrorCode(rawValue: nsError.code)
+      let errorCode = AppCheckErrorCode.Code(rawValue: nsError.code)
     {
       switch errorCode {
       case .unknown:
