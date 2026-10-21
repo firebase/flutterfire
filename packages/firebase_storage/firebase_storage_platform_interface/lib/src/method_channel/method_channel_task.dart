@@ -29,6 +29,8 @@ abstract class MethodChannelTask extends TaskPlatform {
     Stream<TaskSnapshotPlatform> mapNativeStream() async* {
       final observerId =
           await _initialTask.catchError(convertPlatformException);
+      // Raw metadata of the last native snapshot, reused by the error snapshot.
+      Object? lastMetadata;
 
       final nativePlatformStream =
           MethodChannelFirebaseStorage.storageTaskChannel(observerId)
@@ -62,7 +64,7 @@ abstract class MethodChannelTask extends TaskPlatform {
                   'path': path,
                   'bytesTransferred': _snapshot.bytesTransferred,
                   'totalBytes': _snapshot.totalBytes,
-                  'metadata': _snapshot.metadata
+                  'metadata': lastMetadata,
                 },
               );
             }
@@ -88,10 +90,10 @@ abstract class MethodChannelTask extends TaskPlatform {
               // Required for android which fires another event when already cancelled
               &&
               snapshot.state != TaskState.canceled) {
-            MethodChannelTaskSnapshot snapshot = MethodChannelTaskSnapshot(
-                storage,
-                taskState,
-                Map<String, dynamic>.from(events['snapshot']));
+            final snapshotData = Map<String, dynamic>.from(events['snapshot']);
+            lastMetadata = snapshotData['metadata'];
+            MethodChannelTaskSnapshot snapshot =
+                MethodChannelTaskSnapshot(storage, taskState, snapshotData);
             _snapshot = snapshot;
 
             yield snapshot;
