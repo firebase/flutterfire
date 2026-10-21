@@ -36,12 +36,6 @@ class FlutterFirebaseCrashlyticsPlugin :
   private var testEventSink: EventChannel.EventSink? = null
   private lateinit var applicationContext: Context
 
-  // Cached ELF build ID read from libapp.so at startup. This is the build ID that the
-  // firebase-crashlytics-buildtools JAR extracts from .symbols files during upload, so using
-  // it ensures crash reports match uploaded symbols (even when the Dart VM's internal snapshot
-  // build ID differs, which happens with AAB + flavor + obfuscation builds).
-  private var elfBuildId: String? = null
-
   private fun initInstance(messenger: BinaryMessenger) {
     FlutterFirebasePluginRegistry.registerPlugin(CHANNEL_NAME, this)
     binaryMessenger = messenger
@@ -52,7 +46,6 @@ class FlutterFirebaseCrashlyticsPlugin :
 
   override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
     applicationContext = binding.applicationContext
-    elfBuildId = ElfBuildIdReader.readBuildId(applicationContext)
     initInstance(binding.binaryMessenger)
   }
 
@@ -114,8 +107,9 @@ class FlutterFirebaseCrashlyticsPlugin :
 
         // Prefer the ELF build ID from libapp.so over the Dart VM's snapshot build ID.
         // The firebase-crashlytics-buildtools JAR uses the ELF build ID when uploading symbols,
-        // so we must report the same ID for Crashlytics to match them.
-        val effectiveBuildId = elfBuildId ?: dartBuildId
+        // so we must report the same ID for Crashlytics to match them (even when the snapshot
+        // build ID differs, which happens with AAB + flavor + obfuscation builds).
+        val effectiveBuildId = ElfBuildIdReader.cachedBuildId(applicationContext) ?: dartBuildId
         if (effectiveBuildId.isNotEmpty()) {
           FlutterFirebaseCrashlyticsInternal.setFlutterBuildId(effectiveBuildId)
         }

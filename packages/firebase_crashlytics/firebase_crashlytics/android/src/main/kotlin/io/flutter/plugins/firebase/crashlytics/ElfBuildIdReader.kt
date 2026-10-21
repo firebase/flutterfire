@@ -9,6 +9,7 @@ import android.os.Build
 import android.os.Process
 import android.util.Log
 import androidx.annotation.VisibleForTesting
+import androidx.annotation.WorkerThread
 import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
@@ -84,6 +85,39 @@ internal class ElfBuildIdReader private constructor() {
     private const val ELF32_PHDR_MIN_BYTES = 32
     private const val ELF64_PHDR_MIN_BYTES = 56
     private const val NOTE_HEADER_BYTES = 12
+
+    private val cachedBuildIdLock = Any()
+    @Volatile private var isCachedBuildIdRead = false
+    private var cachedBuildIdValue: String? = null
+
+    /**
+     * Returns [readBuildId], reading it on the first call only: libapp.so does not change while the
+     * process runs, so every engine shares the result.
+     *
+     * Without extracted native libraries this opens the APK, so call it off the main thread.
+     */
+    @JvmStatic
+    @WorkerThread
+    fun cachedBuildId(context: Context): String? {
+      if (!isCachedBuildIdRead) {
+        synchronized(cachedBuildIdLock) {
+          if (!isCachedBuildIdRead) {
+            cachedBuildIdValue = readBuildId(context)
+            isCachedBuildIdRead = true
+          }
+        }
+      }
+      return cachedBuildIdValue
+    }
+
+    @JvmStatic
+    @VisibleForTesting
+    fun clearCachedBuildId() {
+      synchronized(cachedBuildIdLock) {
+        cachedBuildIdValue = null
+        isCachedBuildIdRead = false
+      }
+    }
 
     /**
      * Reads the ELF build ID from libapp.so.
