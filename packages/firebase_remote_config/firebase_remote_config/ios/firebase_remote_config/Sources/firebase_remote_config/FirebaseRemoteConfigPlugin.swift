@@ -207,7 +207,14 @@ public class FirebaseRemoteConfigPlugin: NSObject, FlutterPlugin, FlutterStreamH
     let remoteConfig = getRemoteConfig(from: appName)
     listenersMap[appName] = remoteConfig.addOnConfigUpdateListener { update, error in
       if let error {
-        print("Remote Config update error: \(error.localizedDescription)")
+        DispatchQueue.main.async {
+          events(
+            FlutterError(
+              code: "firebase_remote_config",
+              message: error.localizedDescription,
+              details: nil
+            ))
+        }
         return
       }
       if let update {
