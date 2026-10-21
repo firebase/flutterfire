@@ -128,5 +128,102 @@ void main() {
         response: arbitraryGenerateContentResponse,
       );
     });
+
+    test('does not combine streamed TextParts with SpeechMetadata in history',
+        () async {
+      final (client, model) = createModel('models/$defaultModelName');
+      final chat = model.startChat();
+      final responses = await client.checkStreamRequest(
+        () async => chat.sendMessageStream(Content.text('Generate dialogue')),
+        verifyRequest: (_, __) {},
+        responses: [
+          {
+            'candidates': [
+              {
+                'content': {
+                  'role': 'model',
+                  'parts': [
+                    {'text': 'Hello'},
+                  ],
+                },
+              },
+            ],
+          },
+          {
+            'candidates': [
+              {
+                'content': {
+                  'role': 'model',
+                  'parts': [
+                    {'text': ' world!'},
+                  ],
+                },
+              },
+            ],
+          },
+          {
+            'candidates': [
+              {
+                'content': {
+                  'role': 'model',
+                  'parts': [
+                    {
+                      'text': 'How are you?',
+                      'speechMetadata': {
+                        'speaker': 'Alice',
+                        'style': 'excitedly',
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+          {
+            'candidates': [
+              {
+                'content': {
+                  'role': 'model',
+                  'parts': [
+                    {'text': 'Goodbye'},
+                  ],
+                },
+              },
+            ],
+          },
+          {
+            'candidates': [
+              {
+                'content': {
+                  'role': 'model',
+                  'parts': [
+                    {'text': ' now.'},
+                  ],
+                },
+              },
+            ],
+          },
+        ],
+      );
+      await responses.drain<void>();
+
+      expect(chat.history, hasLength(2));
+      expect(
+        chat.history.last,
+        matchesContent(
+          Content.model([
+            const TextPart('Hello world!'),
+            const TextPart(
+              'How are you?',
+              speechMetadata: SpeechMetadata(
+                speaker: 'Alice',
+                style: 'excitedly',
+              ),
+            ),
+            const TextPart('Goodbye now.'),
+          ]),
+        ),
+      );
+    });
   });
 }
