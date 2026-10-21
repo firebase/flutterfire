@@ -52,5 +52,13 @@ AuthProvider convertToOAuthProvider(AuthProvider authProvider) {
     return oAuthProvider;
   }
 
+  if (authProvider is FacebookAuthProvider) {
+    final oAuthProvider = OAuthProvider(authProvider.providerId);
+    oAuthProvider.setScopes(authProvider.scopes);
+    oAuthProvider
+        .setCustomParameters(authProvider.parameters.cast<String, String>());
+    return oAuthProvider;
+  }
+
   return authProvider;
 }

@@ -363,7 +363,7 @@ class FlutterFirebaseAuthUser : FirebaseAuthUserHostApi {
     fun getCurrentUserFromPigeon(pigeonApp: AuthPigeonFirebaseApp): FirebaseUser? {
       val app = FirebaseApp.getInstance(pigeonApp.appName)
       val auth = FirebaseAuth.getInstance(app)
-      pigeonApp.tenantId?.let { auth.setTenantId(it) }
+      auth.tenantId = pigeonApp.tenantId
       return auth.currentUser
     }
 

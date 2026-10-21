@@ -542,7 +542,7 @@ class FlutterFirebaseAuthPlugin :
     fun getAuthFromPigeon(pigeonApp: AuthPigeonFirebaseApp): FirebaseAuth {
       val app = FirebaseApp.getInstance(pigeonApp.appName)
       val auth = FirebaseAuth.getInstance(app)
-      pigeonApp.tenantId?.let { auth.setTenantId(it) }
+      auth.tenantId = pigeonApp.tenantId
       val customDomain = FlutterFirebasePlugin.customAuthDomain[pigeonApp.appName]
       if (customDomain != null) {
         auth.setCustomAuthDomain(customDomain)
