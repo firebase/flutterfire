@@ -46,7 +46,9 @@ void main() {
                     (e) => e.message,
                     'message',
                     allOf(
-                        contains('Unable to connect'), isNot(contains(jsCode))),
+                      contains('Unable to connect'),
+                      isNot(contains(jsCode)),
+                    ),
                   ),
             ),
           // The stream stays open after an error.
