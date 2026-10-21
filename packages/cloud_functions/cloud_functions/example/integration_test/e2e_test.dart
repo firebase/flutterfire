@@ -406,6 +406,22 @@ void main() {
         },
       );
 
+      test('emits a [FirebaseFunctionsException] on error', () async {
+        await expectLater(
+          callable.stream({}),
+          emitsInOrder(<Object>[
+            emitsError(
+              isA<FirebaseFunctionsException>().having(
+                (e) => e.message,
+                'message',
+                contains('Invalid test requested.'),
+              ),
+            ),
+            emitsDone,
+          ]),
+        );
+      });
+
       test('should emit a [Result] as last value', () async {
         final stream = await callable.stream().last;
         expect(

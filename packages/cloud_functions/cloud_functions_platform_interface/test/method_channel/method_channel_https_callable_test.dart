@@ -28,6 +28,7 @@ void main() {
   HttpsCallableOptions kOptions = HttpsCallableOptions();
   String kPlatformExceptionMessage = 'Mock platform exception thrown';
   Map<String, Object?>? lastCallArguments;
+  void Function(String eventChannelId)? onRegisterEventChannel;
 
   group('$MethodChannelHttpsCallable', () {
     setUpAll(() async {
@@ -43,6 +44,8 @@ void main() {
               code: 'UNKNOWN', message: kPlatformExceptionMessage);
         }
         return kParameters;
+      }, (arguments) {
+        onRegisterEventChannel?.call(arguments['eventChannelId']! as String);
       }));
 
       functions =
@@ -60,6 +63,7 @@ void main() {
       mockPlatformExceptionThrown = false;
       mockExceptionThrown = false;
       lastCallArguments = null;
+      onRegisterEventChannel = null;
       functions!.allowInsecureTokenAttachment = false;
       httpsCallable!.options = kOptions;
     });
@@ -166,19 +170,97 @@ void main() {
           isTrue,
         );
       });
+
+      group('errors', () {
+        final messenger =
+            TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+
+        // Mocks the native side of the stream's event channel, which is only
+        // known once `stream()` registers it.
+        void mockNativeStream(
+          void Function(MockStreamHandlerEventSink events) onListen,
+        ) {
+          onRegisterEventChannel = (eventChannelId) {
+            final channel = EventChannel(
+                'plugins.flutter.io/firebase_functions/$eventChannelId');
+            messenger.setMockStreamHandler(
+              channel,
+              MockStreamHandler.inline(
+                onListen: (arguments, events) => onListen(events),
+              ),
+            );
+            addTearDown(() => messenger.setMockStreamHandler(channel, null));
+          };
+        }
+
+        test('are emitted as [FirebaseFunctionsException]', () async {
+          mockNativeStream((events) {
+            events.success(<Object?, Object?>{'message': 'chunk'});
+            events.error(
+              code: 'firebase_functions',
+              message: 'The function must be called while authenticated.',
+              details: <Object?, Object?>{
+                'code': 'unauthenticated',
+                'message': 'The function must be called while authenticated.',
+                'additionalData': <Object?, Object?>{'foo': 'bar'},
+              },
+            );
+            events.endOfStream();
+          });
+
+          await expectLater(
+            httpsCallable!.stream(null),
+            emitsInOrder(<Object>[
+              <String, dynamic>{'message': 'chunk'},
+              emitsError(
+                isA<FirebaseFunctionsException>()
+                    .having((e) => e.code, 'code', 'unauthenticated')
+                    .having((e) => e.message, 'message',
+                        'The function must be called while authenticated.')
+                    .having((e) => e.details, 'details', {'foo': 'bar'}),
+              ),
+              emitsDone,
+            ]),
+          );
+        });
+
+        test('without details are emitted as [FirebaseFunctionsException]',
+            () async {
+          mockNativeStream((events) {
+            events.error(code: 'firebase_functions', message: 'Bad arguments');
+            events.endOfStream();
+          });
+
+          await expectLater(
+            httpsCallable!.stream(null),
+            emitsInOrder(<Object>[
+              emitsError(
+                isA<FirebaseFunctionsException>()
+                    .having((e) => e.code, 'code', 'unknown')
+                    .having((e) => e.message, 'message', 'Bad arguments'),
+              ),
+              emitsDone,
+            ]),
+          );
+        });
+      });
     });
   });
 }
 
 class _TestCloudFunctionsHostApi implements TestCloudFunctionsHostApi {
-  _TestCloudFunctionsHostApi(this.callHandler);
+  _TestCloudFunctionsHostApi(
+      this.callHandler, this.registerEventChannelHandler);
 
   final Future<Object?> Function(Map<String, Object?> arguments) callHandler;
+  final void Function(Map<String, Object> arguments)
+      registerEventChannelHandler;
 
   @override
   Future<Object?> call(Map<String, Object?> arguments) =>
       callHandler(arguments);
 
   @override
-  Future<void> registerEventChannel(Map<String, Object> arguments) async {}
+  Future<void> registerEventChannel(Map<String, Object> arguments) async =>
+      registerEventChannelHandler(arguments);
 }
