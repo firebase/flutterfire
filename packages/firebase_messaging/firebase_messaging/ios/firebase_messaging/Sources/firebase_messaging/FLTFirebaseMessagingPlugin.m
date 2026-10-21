@@ -25,6 +25,13 @@ NSString *const kMessagingArgumentAdditionalData = @"additionalData";
 NSString *const kMessagingPresentationOptionsUserDefaults =
     @"flutter_firebase_messaging_presentation_options";
 
+// Messages sent to Dart before it has set up its handler on the channel, e.g. a push that made iOS
+// launch the app in the background. Flutter only keeps one by default.
+static const NSInteger kFLTFirebaseMessagingChannelBufferSize = 64;
+
+// How many recently handled FCM message IDs are remembered to drop repeated deliveries.
+static const NSUInteger kFLTFirebaseMessagingMaxHandledMessageIDs = 100;
+
 @implementation FLTFirebaseMessagingPlugin {
   FlutterMethodChannel *_channel;
   NSObject<FlutterPluginRegistrar> *_registrar;
@@ -43,6 +50,9 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 
   // Track if scene delegate connected (for iOS 13+ scene delegate support)
   BOOL _sceneDidConnect;
+
+  // FCM message IDs already forwarded to Dart, oldest first.
+  NSMutableOrderedSet *_handledMessageIDs;
 
   // Guard against calling setupNotificationHandling twice
   BOOL _notificationHandlingSetup;
@@ -79,6 +89,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     _sceneDidConnect = NO;
     _notificationHandlingSetup = NO;
     _applicationObserverRegistered = NO;
+    _handledMessageIDs = [NSMutableOrderedSet orderedSet];
   }
   return self;
 }
@@ -124,6 +135,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   FlutterMethodChannel *channel =
       [FlutterMethodChannel methodChannelWithName:kFLTFirebaseMessagingChannelName
                                   binaryMessenger:[registrar messenger]];
+  [channel resizeChannelBuffer:kFLTFirebaseMessagingChannelBufferSize];
   FLTFirebaseMessagingPlugin *instance = [FLTFirebaseMessagingPlugin sharedInstance];
   [instance configureWithFlutterMethodChannel:channel andFlutterPluginRegistrar:registrar];
   // Register with internal FlutterFire plugin registry.
@@ -743,12 +755,33 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   NSLog(@"%@", error.localizedDescription);
 }
 
+// A push can reach the remote notification handlers below more than once: through the
+// GoogleUtilities app delegate proxy (registerAppDelegateInterceptor) and through Flutter's plugin
+// app delegate forwarding (addApplicationDelegate). Returns NO when this message was already
+// handled, so it is only forwarded to Dart once.
+- (BOOL)markMessageAsHandled:(NSDictionary *)userInfo {
+  id messageID = userInfo[@"gcm.message_id"];
+  @synchronized(self) {
+    if ([_handledMessageIDs containsObject:messageID]) {
+      return NO;
+    }
+    [_handledMessageIDs addObject:messageID];
+    if (_handledMessageIDs.count > kFLTFirebaseMessagingMaxHandledMessageIDs) {
+      [_handledMessageIDs removeObjectAtIndex:0];
+    }
+    return YES;
+  }
+}
+
 // Called when a remote notification is received via APNs.
 #if TARGET_OS_OSX
 - (void)application:(NSApplication *)application
     didReceiveRemoteNotification:(NSDictionary *)userInfo {
   // Only handle notifications from FCM.
   if (userInfo[@"gcm.message_id"]) {
+    if (![self markMessageAsHandled:userInfo]) {
+      return;
+    }
     NSDictionary *notificationDict =
         [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:userInfo];
 
@@ -776,6 +809,12 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
       [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:userInfo];
   // Only handle notifications from FCM.
   if (userInfo[@"gcm.message_id"]) {
+    if (![self markMessageAsHandled:userInfo]) {
+      // Still complete this delivery: the GoogleUtilities proxy only calls the system completion
+      // handler once every delivery it made has completed.
+      completionHandler(UIBackgroundFetchResultNoData);
+      return YES;
+    }
     // For scene delegate apps: if this notification arrives during cold launch
     // (before initial notification gathering is complete) and no notification was found
     // in connectionOptions, this is the notification that caused the launch.

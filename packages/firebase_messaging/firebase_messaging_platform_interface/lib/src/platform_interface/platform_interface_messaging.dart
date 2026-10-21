@@ -59,6 +59,11 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
     return _instance ??= MethodChannelFirebaseMessaging.instance;
   }
 
+  // Native events only reach these streams once the default instance has set
+  // up its method channel handler, so listening sets it up instead of relying
+  // on the app having called another messaging API first.
+  static void _ensureInstance() => instance;
+
   /// Sets the [FirebaseMessagingPlatform.instance]
   static set instance(FirebaseMessagingPlatform instance) {
     PlatformInterface.verify(instance, _token);
@@ -72,7 +77,7 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   /// see [onBackgroundMessage].
   // ignore: close_sinks, never closed
   static final StreamController<RemoteMessage> onMessage =
-      StreamController<RemoteMessage>.broadcast();
+      StreamController<RemoteMessage>.broadcast(onListen: _ensureInstance);
 
   /// Returns a [Stream] that is called when a user presses a notification displayed
   /// via FCM.
@@ -84,7 +89,7 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   /// see [getInitialMessage].
   // ignore: close_sinks, never closed
   static final StreamController<RemoteMessage> onMessageOpenedApp =
-      StreamController<RemoteMessage>.broadcast();
+      StreamController<RemoteMessage>.broadcast(onListen: _ensureInstance);
 
   static BackgroundMessageHandler? _onBackgroundMessageHandler;
 

@@ -68,6 +68,10 @@ class FirebaseMessaging extends FirebasePlugin {
   ///
   /// This provided handler must be a top-level function and cannot be
   /// anonymous otherwise an [ArgumentError] will be thrown.
+  ///
+  /// On iOS and macOS, a message received before the handler is registered
+  /// (for example when the app is launched in the background by a push) waits
+  /// up to 10 seconds for it. Register it early in `main()` all the same.
   // ignore: use_setters_to_change_properties
   static void onBackgroundMessage(BackgroundMessageHandler handler) {
     FirebaseMessagingPlatform.onBackgroundMessage = handler;

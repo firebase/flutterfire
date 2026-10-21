@@ -118,12 +118,42 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
           // Apple only. Android calls via separate background channel.
           Map<String, dynamic> messageMap =
               Map<String, dynamic>.from(call.arguments);
-          return FirebaseMessagingPlatform.onBackgroundMessage
-              ?.call(RemoteMessage.fromMap(messageMap));
+          final handler = await _waitForBackgroundMessageHandler();
+          return handler?.call(RemoteMessage.fromMap(messageMap));
         default:
           throw UnimplementedError('${call.method} has not been implemented');
       }
     });
+  }
+
+  /// How long a background message waits for the app to register a handler
+  /// with `FirebaseMessaging.onBackgroundMessage` on Apple platforms.
+  ///
+  /// The native side completes the push 25 seconds after it arrived, so this
+  /// leaves the handler time to run once it is registered.
+  @visibleForTesting
+  static Duration backgroundMessageHandlerRegistrationTimeout =
+      const Duration(seconds: 10);
+
+  static Completer<void>? _backgroundMessageHandlerRegistered;
+
+  // When iOS launches the app in the background for a push, the message can
+  // reach Dart before `main()` has called `FirebaseMessaging.onBackgroundMessage`,
+  // for example when `FirebaseMessaging.instance` is used first. Hold the
+  // message until a handler is registered instead of dropping it.
+  static Future<BackgroundMessageHandler?>
+      _waitForBackgroundMessageHandler() async {
+    if (FirebaseMessagingPlatform.onBackgroundMessage == null) {
+      final registered =
+          _backgroundMessageHandlerRegistered ??= Completer<void>();
+      try {
+        await registered.future
+            .timeout(backgroundMessageHandlerRegistrationTimeout);
+      } on TimeoutException {
+        // The app never registered a handler, the message is not handled.
+      }
+    }
+    return FirebaseMessagingPlatform.onBackgroundMessage;
   }
 
   static const MethodChannel channel = MethodChannel(
@@ -205,6 +235,10 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
   Future<void> registerBackgroundMessageHandler(
       BackgroundMessageHandler handler) async {
     if (defaultTargetPlatform != TargetPlatform.android) {
+      // Apple platforms deliver background messages on the main channel, wake
+      // up any that arrived before this handler was registered.
+      _backgroundMessageHandlerRegistered?.complete();
+      _backgroundMessageHandlerRegistered = null;
       return;
     }
 

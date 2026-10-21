@@ -54,6 +54,40 @@ Future<bool> resetAndroidPermission(String permission) async {
   }
 }
 
+/// iOS test helper implemented in `ios/Runner/RemoteNotificationTestChannel.swift`.
+const _remoteNotificationsChannel = MethodChannel('tests/remote_notifications');
+
+/// Delivers a data message through the app delegate the same way iOS does when
+/// a push arrives. Returns how many times the fetch completion handler was
+/// called (`completionCount`) and with which `UIBackgroundFetchResult`
+/// (`fetchResult`).
+Future<Map<String, Object?>> deliverRemoteNotification(
+  String messageId, {
+  required bool inBackground,
+}) async {
+  final delivery = await _remoteNotificationsChannel
+      .invokeMapMethod<String, Object?>('deliver', {
+    'inBackground': inBackground,
+    'userInfo': {
+      'aps': {'content-available': 1},
+      'gcm.message_id': messageId,
+      'google.c.a.e': '1',
+      'from': 'e2e',
+      'test': 'remote-notification-delivery',
+    },
+  });
+  return delivery!;
+}
+
+const _uiBackgroundFetchResultNewData = 0;
+
+final List<RemoteMessage> _backgroundMessages = <RemoteMessage>[];
+
+@pragma('vm:entry-point')
+Future<void> _backgroundMessageHandler(RemoteMessage message) async {
+  _backgroundMessages.add(message);
+}
+
 // ignore: do_not_use_environment
 const bool skipTestsOnCI = bool.fromEnvironment('CI');
 
@@ -245,6 +279,81 @@ void main() {
           skip: defaultTargetPlatform != TargetPlatform.android,
         );
       });
+
+      group(
+        'remote notification delivery',
+        () {
+          String uniqueMessageId(String prefix) =>
+              '$prefix-${DateTime.now().microsecondsSinceEpoch}';
+
+          test('a data message in the foreground reaches onMessage once',
+              () async {
+            final messageId = uniqueMessageId('foreground');
+            final received = <RemoteMessage>[];
+            final subscription = FirebaseMessaging.onMessage
+                .where((message) => message.messageId == messageId)
+                .listen(received.add);
+            addTearDown(subscription.cancel);
+
+            final delivery = await deliverRemoteNotification(
+              messageId,
+              inBackground: false,
+            );
+            await Future<void>.delayed(const Duration(milliseconds: 500));
+
+            expect(received, hasLength(1));
+            expect(
+              received.single.data,
+              containsPair('test', 'remote-notification-delivery'),
+            );
+            expect(delivery['completionCount'], 1);
+          });
+
+          test(
+              'a data message in the background runs onBackgroundMessage once '
+              'before the push completes', () async {
+            FirebaseMessaging.onBackgroundMessage(_backgroundMessageHandler);
+            final messageId = uniqueMessageId('background');
+
+            final delivery = await deliverRemoteNotification(
+              messageId,
+              inBackground: true,
+            );
+
+            expect(
+              _backgroundMessages.where((m) => m.messageId == messageId),
+              hasLength(1),
+            );
+            expect(delivery['completionCount'], 1);
+            expect(delivery['fetchResult'], _uiBackgroundFetchResultNewData);
+          });
+
+          test('a message delivered again is only handled once', () async {
+            final messageId = uniqueMessageId('redelivered');
+            final received = <RemoteMessage>[];
+            final subscription = FirebaseMessaging.onMessage
+                .where((message) => message.messageId == messageId)
+                .listen(received.add);
+            addTearDown(subscription.cancel);
+
+            final first = await deliverRemoteNotification(
+              messageId,
+              inBackground: false,
+            );
+            final second = await deliverRemoteNotification(
+              messageId,
+              inBackground: false,
+            );
+            await Future<void>.delayed(const Duration(milliseconds: 500));
+
+            expect(received, hasLength(1));
+            expect(first['completionCount'], 1);
+            expect(second['completionCount'], 1);
+          });
+        },
+        // Pushes are delivered through the iOS app delegate.
+        skip: kIsWeb || defaultTargetPlatform != TargetPlatform.iOS,
+      );
 
       group('getInitialMessage', () {
         test('returns null when no initial message', () async {
