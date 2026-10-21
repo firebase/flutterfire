@@ -179,12 +179,14 @@ final class _FindNearestStage extends PipelineStage {
   final List<double> vectorValue;
   final DistanceMeasure distanceMeasure;
   final int? limit;
+  final String? distanceField;
 
   _FindNearestStage(
     this.vectorField,
     this.vectorValue,
     this.distanceMeasure, {
     this.limit,
+    this.distanceField,
   });
 
   @override
@@ -202,6 +204,10 @@ final class _FindNearestStage extends PipelineStage {
     };
     if (limit != null) {
       map['args']['limit'] = limit;
+    }
+    final outputField = distanceField;
+    if (outputField != null && outputField.isNotEmpty) {
+      map['args']['distance_field'] = outputField;
     }
     return map;
   }
