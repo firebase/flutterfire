@@ -187,15 +187,16 @@ public class FLTFirebaseAuthPlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
       open url: URL,
       options: [UIApplication.OpenURLOptionsKey: Any] = [:]
     ) -> Bool {
-      guard FirebaseApp.app() != nil else { return false }
-      return Auth.auth().canHandle(url) || Self.isAuthCallbackURL(url)
+      // Apps that only configure named apps have no default `Auth`, but their
+      // callback URLs must still be claimed.
+      (FirebaseApp.app() != nil && Auth.auth().canHandle(url)) || Self.isAuthCallbackURL(url)
     }
 
     public func scene(_ scene: UIScene, openURLContexts urlContexts: Set<UIOpenURLContext>) -> Bool
     {
-      guard FirebaseApp.app() != nil else { return false }
-      return urlContexts.contains { urlContext in
-        Auth.auth().canHandle(urlContext.url) || Self.isAuthCallbackURL(urlContext.url)
+      urlContexts.contains { urlContext in
+        (FirebaseApp.app() != nil && Auth.auth().canHandle(urlContext.url))
+          || Self.isAuthCallbackURL(urlContext.url)
       }
     }
 
