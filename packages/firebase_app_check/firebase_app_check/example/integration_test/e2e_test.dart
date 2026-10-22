@@ -61,9 +61,7 @@ void main() {
       test(
         'DeviceCheck reports unsupported-provider',
         () async {
-          await FirebaseAppCheck.instance.activate(
-            providerApple: const AppleDeviceCheckProvider(),
-          );
+          await FirebaseAppCheck.instance.activate();
 
           await expectLater(
             FirebaseAppCheck.instance.getToken(true),
@@ -77,7 +75,7 @@ void main() {
           );
         },
         skip: defaultTargetPlatform != TargetPlatform.iOS
-            ? 'The iOS simulator rejects DeviceCheck.'
+            ? 'iOS simulator only.'
             : null,
       );
 
