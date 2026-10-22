@@ -183,7 +183,12 @@ class LiveSession {
 
     final request = jsonEncode(setupJson);
     final ws = connector(Uri.parse(uri), headers);
-    await ws.ready.timeout(timeout);
+    try {
+      await ws.ready.timeout(timeout);
+    } catch (_) {
+      ws.sink.close().ignore();
+      rethrow;
+    }
 
     ws.sink.add(request);
     return ws;

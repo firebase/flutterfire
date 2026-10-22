@@ -114,12 +114,24 @@ void main() {
     });
 
     test(
-        'makeRequest times out at defaultTimeout (180s) when HTTP response never completes',
+        'makeRequest times out at defaultTimeout (180s), triggers abortTrigger, and cancels late response stream',
         () {
       fakeAsync((async) {
-        final hangingClient = MockClient(
-          (_) => Completer<http.Response>().future,
-        );
+        final responseCompleter = Completer<http.StreamedResponse>();
+        http.Abortable? capturedAbortable;
+        var abortTriggered = false;
+        var lateStreamCancelled = false;
+
+        final hangingClient = _CustomStreamClient((request) {
+          request.finalize();
+          if (request is http.Abortable) {
+            capturedAbortable = request;
+            request.abortTrigger?.whenComplete(() {
+              abortTriggered = true;
+            });
+          }
+          return responseCompleter.future;
+        });
         final client =
             HttpApiClient(apiKey: 'test-key', httpClient: hangingClient);
 
@@ -133,9 +145,26 @@ void main() {
 
         async.elapse(const Duration(seconds: 179));
         expect(caughtError, isNull);
+        expect(capturedAbortable, isNotNull);
+        expect(abortTriggered, isFalse);
 
         async.elapse(const Duration(seconds: 1));
         expect(caughtError, isA<TimeoutException>());
+        expect(abortTriggered, isTrue);
+
+        // If the underlying client resolves with a StreamedResponse after the
+        // timeout, its stream should be listened to and cancelled immediately.
+        final lateController = StreamController<List<int>>(
+          onCancel: () {
+            lateStreamCancelled = true;
+          },
+        );
+        responseCompleter.complete(
+          http.StreamedResponse(lateController.stream, 200),
+        );
+        async.flushMicrotasks();
+        expect(lateStreamCancelled, isTrue);
+        lateController.close();
       });
     });
 
@@ -179,12 +208,25 @@ void main() {
       });
     });
 
-    test('streamRequest times out when initial HTTP response headers stall',
+    test(
+        'streamRequest times out when initial HTTP response headers stall, triggers abortTrigger, and cancels late response stream',
         () {
       fakeAsync((async) {
-        final hangingHeadersClient = _CustomStreamClient(
-          (_) => Completer<http.StreamedResponse>().future,
-        );
+        final responseCompleter = Completer<http.StreamedResponse>();
+        http.Abortable? capturedAbortable;
+        var abortTriggered = false;
+        var lateStreamCancelled = false;
+
+        final hangingHeadersClient = _CustomStreamClient((request) {
+          request.finalize();
+          if (request is http.Abortable) {
+            capturedAbortable = request;
+            request.abortTrigger?.whenComplete(() {
+              abortTriggered = true;
+            });
+          }
+          return responseCompleter.future;
+        });
         final client = HttpApiClient(
           apiKey: 'test-key',
           httpClient: hangingHeadersClient,
@@ -201,9 +243,26 @@ void main() {
 
         async.elapse(const Duration(seconds: 9));
         expect(caughtError, isNull);
+        expect(capturedAbortable, isNotNull);
+        expect(abortTriggered, isFalse);
 
         async.elapse(const Duration(seconds: 1));
         expect(caughtError, isA<TimeoutException>());
+        expect(abortTriggered, isTrue);
+
+        // A StreamedResponse arriving after timeout should be listened to and
+        // cancelled so its connection is not held open.
+        final lateController = StreamController<List<int>>(
+          onCancel: () {
+            lateStreamCancelled = true;
+          },
+        );
+        responseCompleter.complete(
+          http.StreamedResponse(lateController.stream, 200),
+        );
+        async.flushMicrotasks();
+        expect(lateStreamCancelled, isTrue);
+        lateController.close();
       });
     });
 
@@ -295,7 +354,7 @@ void main() {
     });
 
     test(
-        'streamRequest parses no-space data:, multi-line data:, ignores [DONE], and tolerates malformed UTF-8',
+        'streamRequest parses no-space data:, multi-line data: with nested braces, ignores [DONE], and tolerates malformed UTF-8',
         () async {
       final prefixBytes = utf8.encode(
         ': keep-alive\n'
@@ -305,12 +364,10 @@ void main() {
         'data:{"first":1}\n'
         '\n'
         'data: {\n'
-        'data: "second": 2\n'
+        'data:   "a": {"b": 1}\n'
         'data: }\n'
         '\n'
         'data: [DONE]\n'
-        '\n'
-        'data: [1, 2, 3]\n'
         '\n'
         'data: {"third":"',
       );
@@ -326,13 +383,60 @@ void main() {
       final chunks = await client.streamRequest(uri, requestBody).toList();
       expect(chunks, hasLength(3));
       expect(chunks[0], {'first': 1});
-      expect(chunks[1], {'second': 2});
+      expect(chunks[1], {
+        'a': {'b': 1},
+      });
       expect(chunks[2]['third'], '\uFFFD');
     });
 
     test(
-        'streamRequest throws FirebaseAIException on 502 HTML or non-Map error bodies',
+        'streamRequest throws FormatException on corrupted or non-Map SSE frames',
         () async {
+      final corruptedClient = _CustomStreamClient(
+        (_) async => http.StreamedResponse(
+          Stream.value(utf8.encode('data: {not valid json}\n\n')),
+          200,
+        ),
+      );
+      final clientCorrupted =
+          HttpApiClient(apiKey: 'test-key', httpClient: corruptedClient);
+
+      await expectLater(
+        clientCorrupted.streamRequest(uri, requestBody).toList(),
+        throwsFormatException,
+      );
+
+      final nonMapClient = _CustomStreamClient(
+        (_) async => http.StreamedResponse(
+          Stream.value(utf8.encode('data: [1, 2, 3]\n\n')),
+          200,
+        ),
+      );
+      final clientNonMap =
+          HttpApiClient(apiKey: 'test-key', httpClient: nonMapClient);
+
+      await expectLater(
+        clientNonMap.streamRequest(uri, requestBody).toList(),
+        throwsFormatException,
+      );
+    });
+
+    test(
+        'streamRequest yields JSON error object on 5xx responses and throws FirebaseAIException on HTML or non-Map error bodies',
+        () async {
+      const error503Json = {
+        'error': {'code': 503, 'message': 'The model is overloaded.'},
+      };
+      final json503Client = MockClient(
+        (_) async => http.Response(jsonEncode(error503Json), 503),
+      );
+      final client503 =
+          HttpApiClient(apiKey: 'test-key', httpClient: json503Client);
+
+      final chunks503 =
+          await client503.streamRequest(uri, requestBody).toList();
+      expect(chunks503, [error503Json]);
+
       final html502Client = MockClient(
         (_) async => http.Response('<html>502 Bad Gateway</html>', 502),
       );

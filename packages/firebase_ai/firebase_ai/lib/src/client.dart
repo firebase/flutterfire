@@ -72,13 +72,40 @@ final class HttpApiClient implements ApiClient {
   Future<Map<String, Object?>> makeRequest(
       Uri uri, Map<String, Object?> body) async {
     final headers = await _headers();
-    final response = await _httpClient
-        .post(
-          uri,
-          headers: headers,
-          body: _utf8Json.encode(body),
-        )
-        .timeout(_timeout);
+    final abortCompleter = Completer<void>();
+    void abortRequest() {
+      if (!abortCompleter.isCompleted) {
+        abortCompleter.complete();
+      }
+    }
+
+    final request = http.AbortableRequest(
+      'POST',
+      uri,
+      abortTrigger: abortCompleter.future,
+    )
+      ..headers.addAll(headers)
+      ..bodyBytes = _utf8Json.encode(body);
+    final sendFuture = _httpClient.send(request);
+    unawaited(
+      sendFuture.then(
+        (lateResponse) {
+          if (abortCompleter.isCompleted) {
+            lateResponse.stream.listen((_) {}).cancel().ignore();
+          }
+        },
+        onError: (_) {},
+      ),
+    );
+    final http.Response response;
+    try {
+      final streamedResponse = await sendFuture.timeout(_timeout);
+      response =
+          await http.Response.fromStream(streamedResponse).timeout(_timeout);
+    } on TimeoutException {
+      abortRequest();
+      rethrow;
+    }
     if (response.statusCode >= 500) {
       throw FirebaseAIException(
           'Server Error [${response.statusCode}]: ${response.body}');
@@ -91,80 +118,108 @@ final class HttpApiClient implements ApiClient {
   Stream<Map<String, Object?>> streamRequest(
       Uri uri, Map<String, Object?> body) async* {
     Uri streamUri = uri.replace(queryParameters: {'alt': 'sse'});
-    final request = http.Request('POST', streamUri)
+    final abortCompleter = Completer<void>();
+    void abortRequest() {
+      if (!abortCompleter.isCompleted) {
+        abortCompleter.complete();
+      }
+    }
+
+    final request = http.AbortableRequest(
+      'POST',
+      streamUri,
+      abortTrigger: abortCompleter.future,
+    )
       ..bodyBytes = _utf8Json.encode(body)
       ..headers.addAll(await _headers());
-    final response = await _httpClient.send(request).timeout(_timeout);
-    if (response.statusCode != 200) {
-      final responseBody = await const Utf8Decoder(allowMalformed: true)
-          .bind(response.stream.timeout(_timeout))
-          .join();
-      if (response.statusCode >= 500) {
+    final sendFuture = _httpClient.send(request);
+    unawaited(
+      sendFuture.then(
+        (lateResponse) {
+          if (abortCompleter.isCompleted) {
+            lateResponse.stream.listen((_) {}).cancel().ignore();
+          }
+        },
+        onError: (_) {},
+      ),
+    );
+    final http.StreamedResponse response;
+    try {
+      response = await sendFuture.timeout(_timeout);
+    } on TimeoutException {
+      abortRequest();
+      rethrow;
+    }
+    try {
+      if (response.statusCode != 200) {
+        final String responseBody;
+        try {
+          responseBody = await const Utf8Decoder(allowMalformed: true)
+              .bind(response.stream.timeout(_timeout))
+              .join();
+        } on TimeoutException {
+          abortRequest();
+          rethrow;
+        }
+        try {
+          final decoded = jsonDecode(responseBody);
+          if (decoded is Map<String, Object?>) {
+            // Yield a potential error object like a normal result for
+            // consistency with `makeRequest` and `parseError`.
+            yield decoded;
+            return;
+          }
+        } on FormatException {
+          // Fall through to throw FirebaseAIException below when the error body
+          // is not JSON (e.g. an HTML 502 error page).
+        }
         throw FirebaseAIException(
           'Server Error [${response.statusCode}]: $responseBody',
         );
       }
-      try {
-        final decoded = jsonDecode(responseBody);
-        if (decoded is Map<String, Object?>) {
-          // Yield a potential error object like a normal result for consistency
-          // with `makeRequest`.
-          yield decoded;
-          return;
-        }
-      } on FormatException {
-        // Fall through to throw FirebaseAIException below.
-      }
-      throw FirebaseAIException(
-        'Server Error [${response.statusCode}]: $responseBody',
-      );
-    }
-    final lines = const Utf8Decoder(allowMalformed: true)
-        .bind(response.stream)
-        .transform(const LineSplitter())
-        .timeout(_timeout);
-    final dataBuffer = <String>[];
-    Map<String, Object?>? flushDataBuffer() {
-      if (dataBuffer.isEmpty) return null;
-      final jsonText = dataBuffer.join('\n').trim();
-      dataBuffer.clear();
-      if (jsonText.isEmpty || jsonText == '[DONE]') return null;
-      try {
+      final lines = const Utf8Decoder(allowMalformed: true)
+          .bind(response.stream)
+          .transform(const LineSplitter())
+          .timeout(_timeout);
+      final dataBuffer = <String>[];
+      Map<String, Object?>? flushDataBuffer() {
+        if (dataBuffer.isEmpty) return null;
+        final jsonText = dataBuffer.join('\n').trim();
+        dataBuffer.clear();
+        if (jsonText.isEmpty || jsonText == '[DONE]') return null;
         final decoded = jsonDecode(jsonText);
         if (decoded is Map<String, Object?>) {
           return decoded;
         }
-      } on FormatException {
-        // Ignore non-JSON or sentinel SSE frames.
+        throw FormatException('Unexpected SSE data payload', jsonText);
       }
-      return null;
-    }
 
-    await for (final line in lines) {
-      if (line.isEmpty) {
-        final chunk = flushDataBuffer();
-        if (chunk != null) yield chunk;
-        continue;
-      }
-      if (line.startsWith(':')) {
-        continue;
-      }
-      if (line.startsWith('data:')) {
-        var payload = line.substring('data:'.length);
-        if (payload.startsWith(' ')) {
-          payload = payload.substring(1);
-        }
-        if (dataBuffer.isNotEmpty) {
-          final buffered = dataBuffer.join('\n').trim();
-          if (buffered.startsWith('{') && buffered.endsWith('}')) {
+      try {
+        await for (final line in lines) {
+          if (line.isEmpty) {
             final chunk = flushDataBuffer();
             if (chunk != null) yield chunk;
+            continue;
+          }
+          if (line.startsWith(':')) {
+            continue;
+          }
+          if (line.startsWith('data:')) {
+            var payload = line.substring('data:'.length);
+            if (payload.startsWith(' ')) {
+              payload = payload.substring(1);
+            }
+            dataBuffer.add(payload);
           }
         }
-        dataBuffer.add(payload);
+      } on TimeoutException {
+        abortRequest();
+        rethrow;
       }
+      final trailing = flushDataBuffer();
+      if (trailing != null) yield trailing;
+    } finally {
+      abortRequest();
     }
-    final trailing = flushDataBuffer();
-    if (trailing != null) yield trailing;
   }
 }
