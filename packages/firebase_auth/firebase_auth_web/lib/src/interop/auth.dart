@@ -266,12 +266,6 @@ class User extends UserInfo<auth_interop.UserJsImpl> {
     return promise.toDart.then(IdTokenResult._fromJsObject);
   }
 
-  /// Returns a JSON-serializable representation of this object.
-  Map<String, dynamic> toJson() {
-    final result = jsObject.toJSON();
-    return (result as JSAny).dartify()! as Map<String, dynamic>;
-  }
-
   @override
   String toString() => 'User: $uid';
 }
