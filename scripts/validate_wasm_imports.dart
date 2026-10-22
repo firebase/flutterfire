@@ -46,8 +46,6 @@ const _wasmLibraries = {
 /// package. They are not followed; the script fails once one is no longer
 /// reached, so that its entry is removed with the fix.
 const _knownViolations = {
-  // IOWebSocketChannel, to send headers on native.
-  'firebase_ai': {'package:web_socket_channel/io.dart'},
   // Platform.operatingSystem for the x-goog-api-client header, and the
   // isolate and path_provider directory behind the native cache.
   'firebase_data_connect': {
