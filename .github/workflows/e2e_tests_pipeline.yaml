@@ -200,6 +200,9 @@ jobs:
         with:
           # https://github.com/actions/runner-images/blob/main/images/macos/xcode-27-arm64-Readme.md#installed-simulators
           model: "iPhone 17"
+      - name: Link the example plugin's Swift package dependencies
+        # Keeps the plugin's local package override resolvable; see the script.
+        run: ./.github/workflows/scripts/link-example-plugin-package-deps.sh packages/cloud_firestore/cloud_firestore/pipeline_example ios
       - name: Build iOS (simulator)
         working-directory: packages/cloud_firestore/cloud_firestore/pipeline_example
         # A cold SwiftPM fetch (grpc/abseil binaries) plus the Xcode build has

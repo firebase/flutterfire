@@ -167,6 +167,9 @@ jobs:
         run: |
           # shellcheck disable=SC2086 # an argument list: word-splitting is the point
           dart ./.github/workflows/scripts/generate-dummy-firebase-configs.dart $NATIVE_CONFIG_ARGS
+      - name: Link the example plugin's Swift package dependencies
+        # Keeps the plugin's local package override resolvable; see the script.
+        run: ./.github/workflows/scripts/link-example-plugin-package-deps.sh "$PACKAGE_PATH/example" macos
       - name: 'Build Application'
         working-directory: ${{ inputs.package-path }}/example
         timeout-minutes: 25

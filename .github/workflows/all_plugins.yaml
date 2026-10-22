@@ -207,7 +207,9 @@ jobs:
           flutter pub add $FLUTTER_DEPENDENCIES
           cd ../../../..
       - name: 'Swift Integration Setup'
-        run: flutter config --enable-swift-package-manager
+        run: |
+          flutter config --enable-swift-package-manager
+          ./.github/workflows/scripts/link-example-plugin-package-deps.sh packages/firebase_core/firebase_core/example ios
       - name: 'Build iOS App with Swift Package Manager'
         run: |
           dart ./.github/workflows/scripts/generate-dummy-firebase-configs.dart
@@ -236,7 +238,9 @@ jobs:
           flutter pub add $FLUTTER_DEPENDENCIES
           cd ../../../..
       - name: 'Swift Integration Setup'
-        run: flutter config --enable-swift-package-manager
+        run: |
+          flutter config --enable-swift-package-manager
+          ./.github/workflows/scripts/link-example-plugin-package-deps.sh packages/firebase_core/firebase_core/example macos
       - name: 'Build macOS App with Swift Package Manager'
         run: |
           dart ./.github/workflows/scripts/generate-dummy-firebase-configs.dart

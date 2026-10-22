@@ -195,6 +195,9 @@ jobs:
             /usr/libexec/PlistBuddy -c "Add :$key bool $value" Info.plist
             echo "Info.plist: $key = $value"
           done
+      - name: Link the example plugin's Swift package dependencies
+        # Keeps the plugin's local package override resolvable; see the script.
+        run: ./.github/workflows/scripts/link-example-plugin-package-deps.sh "$PACKAGE_PATH/example" ios
       - name: 'Build Application'
         working-directory: ${{ inputs.package-path }}/example
         timeout-minutes: 25
