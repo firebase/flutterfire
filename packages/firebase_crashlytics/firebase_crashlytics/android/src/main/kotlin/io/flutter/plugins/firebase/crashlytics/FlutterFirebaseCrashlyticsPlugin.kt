@@ -47,12 +47,16 @@ class FlutterFirebaseCrashlyticsPlugin :
   }
 
   override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
-    val context = binding.applicationContext
+    attachToEngine(binding.applicationContext, binding.binaryMessenger)
+  }
+
+  @VisibleForTesting
+  internal fun attachToEngine(context: Context, messenger: BinaryMessenger) {
     applicationContext = context
-    initInstance(binding.binaryMessenger)
-    // Read once at startup, off the main thread: the first report then doesn't have to, and the
-    // read doesn't happen while the app is short of memory or file descriptors, which is often
-    // why it reports an error, and would leave every report without the ID.
+    initInstance(messenger)
+    // Read once at startup, off the main thread, so the first report doesn't have to, and the read
+    // doesn't happen while the app is short of memory or file descriptors, which is often why it
+    // reports an error.
     buildIdExecutor.execute { ElfBuildIdReader.cachedBuildId(context) }
   }
 
@@ -290,7 +294,7 @@ class FlutterFirebaseCrashlyticsPlugin :
         "firebase_crashlytics_collection_enabled"
 
     /** Where the ELF build ID is read at startup. */
-    @VisibleForTesting @JvmStatic var buildIdExecutor: Executor = cachedThreadPool
+    @VisibleForTesting internal var buildIdExecutor: Executor = cachedThreadPool
 
     private fun readCrashlyticsDataCollectionEnabledFromManifest(
         applicationContext: Context

@@ -91,8 +91,9 @@ internal class ElfBuildIdReader private constructor() {
     private var cachedBuildIdValue: String? = null
 
     /**
-     * Returns [readBuildId], reading it on the first call only: libapp.so does not change while the
-     * process runs, so every engine shares the result.
+     * Returns [readBuildId], reading it once: libapp.so does not change while the process runs, so
+     * every engine shares the result. A read that fails is not kept, so a later call retries: a
+     * transient failure (memory or file descriptors) must not leave every report without the ID.
      *
      * Without extracted native libraries this opens the APK, so call it off the main thread.
      */
@@ -102,8 +103,16 @@ internal class ElfBuildIdReader private constructor() {
       if (!isCachedBuildIdRead) {
         synchronized(cachedBuildIdLock) {
           if (!isCachedBuildIdRead) {
-            cachedBuildIdValue = readBuildId(context)
-            isCachedBuildIdRead = true
+            try {
+              cachedBuildIdValue = readBuildIdOrThrow(context)
+              isCachedBuildIdRead = true
+            } catch (exception: Exception) {
+              Log.d(TAG, "Could not read ELF build ID from libapp.so", exception)
+              return null
+            } catch (error: OutOfMemoryError) {
+              Log.d(TAG, "Could not read ELF build ID from libapp.so", error)
+              return null
+            }
           }
         }
       }
@@ -131,18 +140,23 @@ internal class ElfBuildIdReader private constructor() {
     @WorkerThread
     fun readBuildId(context: Context): String? {
       return try {
-        val libApp = File(context.applicationInfo.nativeLibraryDir, "libapp.so")
-        if (libApp.exists()) {
-          readBuildIdFromFile(libApp)
-        } else {
-          readBuildIdFromApk(context)
-        }
+        readBuildIdOrThrow(context)
       } catch (exception: Exception) {
         Log.d(TAG, "Could not read ELF build ID from libapp.so", exception)
         null
       } catch (error: OutOfMemoryError) {
         Log.d(TAG, "Could not read ELF build ID from libapp.so", error)
         null
+      }
+    }
+
+    /** [readBuildId] that throws when libapp.so cannot be read, instead of returning `null`. */
+    private fun readBuildIdOrThrow(context: Context): String? {
+      val libApp = File(context.applicationInfo.nativeLibraryDir, "libapp.so")
+      return if (libApp.exists()) {
+        readBuildIdFromFile(libApp)
+      } else {
+        readBuildIdFromApk(context)
       }
     }
 
