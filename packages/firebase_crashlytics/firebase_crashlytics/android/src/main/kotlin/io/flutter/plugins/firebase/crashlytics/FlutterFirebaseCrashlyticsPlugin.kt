@@ -10,6 +10,7 @@ import android.content.pm.PackageManager
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import androidx.annotation.VisibleForTesting
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.TaskCompletionSource
 import com.google.android.gms.tasks.Tasks
@@ -27,6 +28,7 @@ import io.flutter.plugins.firebase.crashlytics.generated.CrashlyticsStackFrame
 import io.flutter.plugins.firebase.crashlytics.generated.FirebaseCrashlyticsHostApi
 import io.flutter.plugins.firebase.crashlytics.generated.FlutterError as PigeonFlutterError
 import io.flutter.plugins.firebase.crashlytics.generated.RecordErrorRequest
+import java.util.concurrent.Executor
 
 /** FlutterFirebaseCrashlyticsPlugin */
 class FlutterFirebaseCrashlyticsPlugin :
@@ -35,12 +37,6 @@ class FlutterFirebaseCrashlyticsPlugin :
   private var testEventChannel: EventChannel? = null
   private var testEventSink: EventChannel.EventSink? = null
   private lateinit var applicationContext: Context
-
-  // Cached ELF build ID read from libapp.so at startup. This is the build ID that the
-  // firebase-crashlytics-buildtools JAR extracts from .symbols files during upload, so using
-  // it ensures crash reports match uploaded symbols (even when the Dart VM's internal snapshot
-  // build ID differs, which happens with AAB + flavor + obfuscation builds).
-  private var elfBuildId: String? = null
 
   private fun initInstance(messenger: BinaryMessenger) {
     FlutterFirebasePluginRegistry.registerPlugin(CHANNEL_NAME, this)
@@ -51,9 +47,17 @@ class FlutterFirebaseCrashlyticsPlugin :
   }
 
   override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
-    applicationContext = binding.applicationContext
-    elfBuildId = ElfBuildIdReader.readBuildId(applicationContext)
-    initInstance(binding.binaryMessenger)
+    attachToEngine(binding.applicationContext, binding.binaryMessenger)
+  }
+
+  @VisibleForTesting
+  internal fun attachToEngine(context: Context, messenger: BinaryMessenger) {
+    applicationContext = context
+    initInstance(messenger)
+    // Read once at startup, off the main thread, so the first report doesn't have to, and the read
+    // doesn't happen while the app is short of memory or file descriptors, which is often why it
+    // reports an error.
+    buildIdExecutor.execute { ElfBuildIdReader.cachedBuildId(context) }
   }
 
   override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
@@ -114,8 +118,9 @@ class FlutterFirebaseCrashlyticsPlugin :
 
         // Prefer the ELF build ID from libapp.so over the Dart VM's snapshot build ID.
         // The firebase-crashlytics-buildtools JAR uses the ELF build ID when uploading symbols,
-        // so we must report the same ID for Crashlytics to match them.
-        val effectiveBuildId = elfBuildId ?: dartBuildId
+        // so we must report the same ID for Crashlytics to match them (even when the snapshot
+        // build ID differs, which happens with AAB + flavor + obfuscation builds).
+        val effectiveBuildId = ElfBuildIdReader.cachedBuildId(applicationContext) ?: dartBuildId
         if (effectiveBuildId.isNotEmpty()) {
           FlutterFirebaseCrashlyticsInternal.setFlutterBuildId(effectiveBuildId)
         }
@@ -287,6 +292,9 @@ class FlutterFirebaseCrashlyticsPlugin :
         "plugins.flutter.io/firebase_crashlytics_test_stream"
     private const val FIREBASE_CRASHLYTICS_COLLECTION_ENABLED =
         "firebase_crashlytics_collection_enabled"
+
+    /** Where the ELF build ID is read at startup. */
+    @VisibleForTesting internal var buildIdExecutor: Executor = cachedThreadPool
 
     private fun readCrashlyticsDataCollectionEnabledFromManifest(
         applicationContext: Context
