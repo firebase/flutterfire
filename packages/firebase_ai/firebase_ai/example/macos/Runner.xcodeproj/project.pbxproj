@@ -132,7 +132,6 @@
 				331C80D6294CF71000263BE5 /* RunnerTests */,
 				33CC10EE2044A3C60003C045 /* Products */,
 				08B0491E23641E5BA5DD096C /* GoogleService-Info.plist */,
-				BE277C424FC00920BE07E371 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -181,13 +180,6 @@
 				33BA886A226E78AF003329D5 /* Configs */,
 			);
 			path = Runner;
-			sourceTree = "<group>";
-		};
-		BE277C424FC00920BE07E371 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
