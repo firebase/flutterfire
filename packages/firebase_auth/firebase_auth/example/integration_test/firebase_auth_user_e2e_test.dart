@@ -522,6 +522,32 @@ void main() {
         );
 
         test(
+          'should preserve providerData photoURL after reload',
+          () async {
+            await FirebaseAuth.instance.createUserWithEmailAndPassword(
+              email: email,
+              password: testPassword,
+            );
+            await FirebaseAuth.instance.currentUser!.updatePhotoURL(
+              'http://photo.url/provider.jpg',
+            );
+            await FirebaseAuth.instance.currentUser!.reload();
+
+            expect(
+              FirebaseAuth.instance.currentUser!.providerData
+                  .where(
+                    (info) => info.providerId == EmailAuthProvider.PROVIDER_ID,
+                  )
+                  .map((info) => info.photoURL),
+              ['http://photo.url/provider.jpg'],
+            );
+          },
+          skip: kIsWeb ||
+              defaultTargetPlatform == TargetPlatform.macOS ||
+              defaultTargetPlatform == TargetPlatform.windows,
+        );
+
+        test(
           'should handle reload when photoURL is null',
           () async {
             await FirebaseAuth.instance.createUserWithEmailAndPassword(
