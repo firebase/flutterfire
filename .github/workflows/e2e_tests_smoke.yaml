@@ -246,8 +246,18 @@ jobs:
           export CCACHE_DEPEND=true
           export CCACHE_INODECACHE=true
           ccache -s
-          set -o pipefail
+          set +e
           flutter build ios --no-codesign --simulator --debug --target=./integration_test/core_shard_test.dart --dart-define=CI=true 2>&1 | tee build_output.log
+          BUILD_EXIT=${PIPESTATUS[0]}
+          # Same one-shot retry for the SPM package resolution race as
+          # reusable_e2e_ios.yaml - anything else fails immediately.
+          if [ "$BUILD_EXIT" -ne 0 ] && grep -q "Could not resolve package dependencies" build_output.log; then
+            echo "SPM package resolution race detected; retrying the build once."
+            flutter clean > /dev/null
+            flutter build ios --no-codesign --simulator --debug --target=./integration_test/core_shard_test.dart --dart-define=CI=true 2>&1 | tee build_output.log
+            BUILD_EXIT=${PIPESTATUS[0]}
+          fi
+          set -e
           ccache -s
           # Flutter silently falls back to CocoaPods when the app has a Podfile
           # or a plugin has no Package.swift.
@@ -255,6 +265,7 @@ jobs:
             echo "::error::flutter build ran pod install: the smoke app must build with Swift Package Manager only."
             exit 1
           fi
+          exit "$BUILD_EXIT"
       - name: Install Cloud Functions dependencies
         # `firebase emulators:exec` does not install these itself (the old
         # start-firebase-emulator.sh wrapper did); without them the functions
@@ -351,8 +362,18 @@ jobs:
           export CCACHE_DEPEND=true
           export CCACHE_INODECACHE=true
           ccache -s
-          set -o pipefail
+          set +e
           flutter build macos --debug --target=./integration_test/core_shard_test.dart --device-id=macos --dart-define=CI=true 2>&1 | tee build_output.log
+          BUILD_EXIT=${PIPESTATUS[0]}
+          # Same one-shot retry for the SPM package resolution race as
+          # reusable_e2e_ios.yaml - anything else fails immediately.
+          if [ "$BUILD_EXIT" -ne 0 ] && grep -q "Could not resolve package dependencies" build_output.log; then
+            echo "SPM package resolution race detected; retrying the build once."
+            flutter clean > /dev/null
+            flutter build macos --debug --target=./integration_test/core_shard_test.dart --device-id=macos --dart-define=CI=true 2>&1 | tee build_output.log
+            BUILD_EXIT=${PIPESTATUS[0]}
+          fi
+          set -e
           ccache -s
           # Flutter silently falls back to CocoaPods when the app has a Podfile
           # or a plugin has no Package.swift.
@@ -360,6 +381,7 @@ jobs:
             echo "::error::flutter build ran pod install: the smoke app must build with Swift Package Manager only."
             exit 1
           fi
+          exit "$BUILD_EXIT"
       - name: Install Cloud Functions dependencies
         # `firebase emulators:exec` does not install these itself (the old
         # start-firebase-emulator.sh wrapper did); without them the functions

@@ -213,15 +213,13 @@ jobs:
           # Same one-shot retry for the SPM package resolution race as the iOS
           # job - anything else fails immediately.
           set +e
-          flutter build macos --debug --target="./$TEST_TARGET" --device-id=macos --dart-define=CI=true > build_output.log 2>&1
-          BUILD_EXIT=$?
-          cat build_output.log
-          if [ $BUILD_EXIT -ne 0 ] && grep -q "Could not resolve package dependencies" build_output.log; then
+          flutter build macos --debug --target="./$TEST_TARGET" --device-id=macos --dart-define=CI=true 2>&1 | tee build_output.log
+          BUILD_EXIT=${PIPESTATUS[0]}
+          if [ "$BUILD_EXIT" -ne 0 ] && grep -q "Could not resolve package dependencies" build_output.log; then
             echo "SPM package resolution race detected; retrying the build once."
             flutter clean > /dev/null
-            flutter build macos --debug --target="./$TEST_TARGET" --device-id=macos --dart-define=CI=true > build_output.log 2>&1
-            BUILD_EXIT=$?
-            cat build_output.log
+            flutter build macos --debug --target="./$TEST_TARGET" --device-id=macos --dart-define=CI=true 2>&1 | tee build_output.log
+            BUILD_EXIT=${PIPESTATUS[0]}
           fi
           set -e
           ccache -s
@@ -231,7 +229,7 @@ jobs:
             echo "::error::flutter build ran pod install: this example must build with Swift Package Manager only."
             exit 1
           fi
-          exit $BUILD_EXIT
+          exit "$BUILD_EXIT"
       - name: Install Cloud Functions dependencies
         if: inputs.use-firebase-emulators
         # `firebase emulators:exec` does not install these itself (the old
