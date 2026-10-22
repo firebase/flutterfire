@@ -46,13 +46,6 @@ const _wasmLibraries = {
 /// package. They are not followed; the script fails once one is no longer
 /// reached, so that its entry is removed with the fix.
 const _knownViolations = {
-  // Platform.operatingSystem for the x-goog-api-client header, and the
-  // isolate and path_provider directory behind the native cache.
-  'firebase_data_connect': {
-    'dart:io',
-    'dart:isolate',
-    'package:path_provider/path_provider.dart',
-  },
   // putFile(File) in the public API; also blocks firebase_storage_web.
   'firebase_storage': {'dart:io'},
   'firebase_storage_platform_interface': {'dart:io'},
