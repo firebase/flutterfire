@@ -13,11 +13,6 @@ dependencies:
   firebase_messaging: ^17.0.0
   flutter:
     sdk: flutter
-  # 7.2.0 is the first release shipping Package.swift; the iOS e2e job builds
-  # this example with Swift Package Manager.
-  flutter_facebook_auth: ^7.2.0
-  google_sign_in: ^6.1.0
-  google_sign_in_dartio: ^0.3.0
 
 dev_dependencies:
   # `test_utils.dart` reaches for IterableExtension when scanning the emulator's
@@ -38,5 +33,5 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   config:
-    # CocoaPods until this example can use Swift Package Manager: google_sign_in cannot resolve under Swift Package Manager yet.
-    enable-swift-package-manager: false
+    # iOS and macOS build with Swift Package Manager only (no Podfile).
+    enable-swift-package-manager: true
