@@ -270,7 +270,7 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
 
     let values = request.value.compactMapValues { $0 }
 
-    reference.updateChildValues(values) { error, _ in }
+    reference.updateChildValues(values) { error, _ in
       if let error {
         completion(.failure(self.createFlutterError(error)))
       } else {
@@ -463,7 +463,7 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
 
     let values = request.value.compactMapValues { $0 }
 
-    reference.onDisconnectUpdateChildValues(values) { error, _ in }
+    reference.onDisconnectUpdateChildValues(values) { error, _ in
       if let error {
         completion(.failure(self.createFlutterError(error)))
       } else {
