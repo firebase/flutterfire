@@ -426,17 +426,12 @@ void main() {
       );
 
       test('emits a [FirebaseFunctionsException] on error', () async {
-        // The Android SDK reports every stream error as INTERNAL, with the
-        // server's code only inside the message (PublisherStream.processEvent).
-        final expectedCode =
-            !kIsWeb && Platform.isAndroid ? 'internal' : 'invalid-argument';
-
         await expectLater(
           callable.stream({}),
           emitsInOrder(<Object>[
             emitsError(
               isA<FirebaseFunctionsException>()
-                  .having((e) => e.code, 'code', expectedCode)
+                  .having((e) => e.code, 'code', 'invalid-argument')
                   .having(
                     (e) => e.message,
                     'message',

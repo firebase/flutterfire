@@ -52,9 +52,7 @@ import 'package:meta/meta.dart';
 /// code, [message] its message and [details] its details. See
 /// [Handle errors](https://firebase.google.com/docs/functions/callable#handle-errors-client).
 ///
-/// Errors from `HttpsCallable.stream` are reported with these codes too,
-/// except on Android, where the Firebase SDK reports errors sent by the
-/// function as `internal`, with the function's code and message in [message].
+/// Errors from `HttpsCallable.stream` are reported with these codes too.
 class FirebaseFunctionsException extends FirebaseException
     implements Exception {
   // ignore: public_member_api_docs

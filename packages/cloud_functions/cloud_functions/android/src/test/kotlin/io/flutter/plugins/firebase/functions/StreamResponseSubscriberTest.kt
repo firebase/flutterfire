@@ -38,6 +38,85 @@ class StreamResponseSubscriberTest {
         eventSink.events)
   }
 
+  // PublisherStream reports an error event from the function as INTERNAL, with the decoded error
+  // as details and its toString() as message.
+  private fun streamErrorEvent(error: Map<String, Any?>) =
+      TestFunctionsExceptions.create(
+          error.toString(), FirebaseFunctionsException.Code.INTERNAL, error, null)
+
+  @Test
+  fun onError_reportsTheCodeAndMessageTheFunctionSent() {
+    subscriber.onError(
+        streamErrorEvent(
+            mapOf(
+                "status" to "INVALID_ARGUMENT",
+                "message" to "Invalid test requested.",
+                "details" to mapOf("field" to "type"))))
+
+    assertEquals(
+        listOf(
+            listOf(
+                "error",
+                "firebase_functions",
+                "Invalid test requested.",
+                mapOf(
+                    "code" to "invalid-argument",
+                    "message" to "Invalid test requested.",
+                    "additionalData" to mapOf("field" to "type"))),
+            listOf("endOfStream")),
+        eventSink.events)
+  }
+
+  @Test
+  fun onError_reportsAnUnknownStatusAsInternal() {
+    subscriber.onError(
+        streamErrorEvent(
+            mapOf(
+                "status" to "NOT_A_CODE",
+                "message" to "Something went wrong.",
+                "details" to mapOf("field" to "type"))))
+
+    assertEquals(
+        listOf(
+            listOf(
+                "error",
+                "firebase_functions",
+                "INTERNAL",
+                mapOf("code" to "internal", "message" to "INTERNAL")),
+            listOf("endOfStream")),
+        eventSink.events)
+  }
+
+  @Test
+  fun onError_keepsTheMessageWhenTheFunctionSentNoStatus() {
+    subscriber.onError(streamErrorEvent(mapOf("message" to "Something went wrong.")))
+
+    assertEquals(
+        listOf(
+            listOf(
+                "error",
+                "firebase_functions",
+                "Something went wrong.",
+                mapOf("code" to "internal", "message" to "Something went wrong.")),
+            listOf("endOfStream")),
+        eventSink.events)
+  }
+
+  @Test
+  fun onError_usesTheCodeNameWhenTheFunctionSentNoMessage() {
+    subscriber.onError(streamErrorEvent(mapOf("status" to "NOT_FOUND")))
+
+    assertEquals(
+        listOf(
+            listOf(
+                "error",
+                "firebase_functions",
+                "NOT_FOUND",
+                mapOf("code" to "not-found", "message" to "NOT_FOUND")),
+            listOf("endOfStream")),
+        eventSink.events)
+  }
+
   @Test
   fun onError_mapsNetworkFailuresLikeCallableErrors() {
     subscriber.onError(
