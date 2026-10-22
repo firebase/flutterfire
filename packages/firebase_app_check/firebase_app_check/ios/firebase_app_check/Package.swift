@@ -7,7 +7,7 @@
 
 import PackageDescription
 
-let firebaseSdkVersion: Version = "13.0.0"
+let firebaseSdkVersion: Version = "13.1.1"
 
 let package = Package(
   name: "firebase_app_check",
