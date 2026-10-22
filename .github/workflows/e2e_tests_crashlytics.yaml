@@ -4,10 +4,6 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-crashlytics
   cancel-in-progress: true
 
-# Deliberately CocoaPods on iOS as well as macOS: the example's Xcode project
-# runs `"${PODS_ROOT}/FirebaseCrashlytics/run"` as a build phase, and PODS_ROOT
-# does not exist under Swift Package Manager.
-#
 # Thin caller: one job per platform this product supports, each delegating
 # to the matching `reusable_e2e_<platform>.yaml`. Platforms the product does
 # not support have no job here, so they render no check at all.
@@ -77,7 +73,6 @@ jobs:
       package-path: 'packages/firebase_crashlytics/firebase_crashlytics'
       package-scope: 'firebase_crashlytics*'
       cache-key-suffix: 'crashlytics'
-      ios-spm: false
       native-config-args: '--live-tier-plist=crashlytics'
       inject-config-secrets: true
       use-firebase-emulators: false
@@ -94,7 +89,6 @@ jobs:
       package-path: 'packages/firebase_crashlytics/firebase_crashlytics'
       package-scope: 'firebase_crashlytics*'
       cache-key-suffix: 'crashlytics'
-      macos-spm: false
       native-config-args: '--live-tier-plist=crashlytics'
       inject-config-secrets: true
       use-firebase-emulators: false

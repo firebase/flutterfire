@@ -94,8 +94,7 @@ example applications code automatically.
 
 iOS and macOS examples build with [Swift Package Manager](https://docs.flutter.dev/packages-and-plugins/swift-package-manager/for-app-developers)
 only: they commit no Podfile, and each example's `pubspec.yaml` sets `enable-swift-package-manager: true`, so you don't
-need CocoaPods or `pod install`. The exceptions are the `firebase_auth` and `firebase_crashlytics` examples, which
-still build with CocoaPods until they can resolve under Swift Package Manager.
+need CocoaPods or `pod install`.
 
 ## 6. Running tests
 

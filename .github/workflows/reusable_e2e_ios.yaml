@@ -4,9 +4,8 @@ name: reusable-e2e-ios
 # simulator and run the integration tests on it. Called by every
 # `e2e_tests_<product>.yaml` - every product supports iOS.
 #
-# Builds with Swift Package Manager (`ios-spm`, default true), like the macOS
-# job. `ios-spm: false` is only for the examples that cannot resolve under SPM
-# yet and still commit a Podfile.
+# Builds with Swift Package Manager only, like the macOS job: the examples
+# commit no Podfile.
 
 on:
   workflow_call:
@@ -68,22 +67,11 @@ on:
         default: '15.25.1'
       cache-key-suffix:
         description: >-
-          Short product token that makes the ccache/Pods cache keys unique, e.g.
+          Short product token that makes the ccache keys unique, e.g.
           'storage'. Two products sharing a suffix would clobber each other's
           caches, so this is required rather than defaulted.
         type: string
         required: true
-      ios-spm:
-        description: >-
-          true  = iOS builds under Swift Package Manager. The example must not
-                  commit a Podfile, and the build fails if Flutter falls back
-                  to `pod install` anyway.
-          false = iOS stays on CocoaPods and gets a Pods cache, as
-                  firebase_crashlytics must (its Xcode project runs
-                  "${PODS_ROOT}/FirebaseCrashlytics/run") and as firebase_auth
-                  must (google_sign_in cannot resolve under SPM).
-        type: boolean
-        default: true
       info-plist-overrides:
         description: >-
           Space-separated `Key=true|false` booleans written to the example's
@@ -127,7 +115,6 @@ jobs:
       TEST_TARGET: ${{ inputs.test-target }}
       NATIVE_CONFIG_ARGS: ${{ inputs.native-config-args }}
       INFO_PLIST_OVERRIDES: ${{ inputs.info-plist-overrides }}
-      IOS_SPM: ${{ inputs.ios-spm }}
     timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 60 }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -145,14 +132,7 @@ jobs:
       - name: Enable Swift Package Manager for iOS
         # Every plugin the example depends on ships a Package.swift, so the
         # whole app resolves under SPM. The example's pubspec also pins this.
-        if: inputs.ios-spm
         run: flutter config --enable-swift-package-manager
-      - name: Disable Swift Package Manager for iOS
-        # Recent stable Flutter enables SPM by default, which turns intended
-        # CocoaPods builds into hybrid ones. This job's CocoaPods coverage is
-        # deliberate (ios-spm: false), so opt out explicitly.
-        if: ${{ !inputs.ios-spm }}
-        run: flutter config --no-enable-swift-package-manager
       - uses: hendrikmuhs/ccache-action@f09c25b45002a07be2955cbe52e8cee55643f89d
         name: Xcode Compile Cache
         with:
@@ -215,19 +195,6 @@ jobs:
             /usr/libexec/PlistBuddy -c "Add :$key bool $value" Info.plist
             echo "Info.plist: $key = $value"
           done
-      - name: Pods Cache
-        if: ${{ !inputs.ios-spm }}
-        continue-on-error: true
-        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
-        id: pods-cache
-        with:
-          # Must match the save path exactly
-          path: ${{ inputs.package-path }}/example/ios/Pods
-          # Keyed on the Podfile and the pinned Firebase SDK version, not on a
-          # pubspec.lock: those are gitignored, so hashFiles() returns an empty
-          # string and the key could never be invalidated.
-          key: pods-v2-${{ runner.os }}-${{ inputs.cache-key-suffix }}-ios-${{ hashFiles(format('{0}/example/ios/Podfile', inputs.package-path), 'packages/firebase_core/firebase_core/ios/firebase_sdk_version.rb') }}
-          restore-keys: pods-v2-${{ runner.os }}-${{ inputs.cache-key-suffix }}-ios-
       - name: 'Build Application'
         working-directory: ${{ inputs.package-path }}/example
         timeout-minutes: 25
@@ -258,7 +225,7 @@ jobs:
           ccache -s
           # Flutter silently falls back to CocoaPods when the example has a
           # Podfile or a plugin has no Package.swift.
-          if [ "$IOS_SPM" = "true" ] && grep -q "Running pod install" build_output.log; then
+          if grep -q "Running pod install" build_output.log; then
             echo "::error::flutter build ran pod install: this example must build with Swift Package Manager only."
             exit 1
           fi
@@ -466,12 +433,3 @@ jobs:
           key: ${{ steps.firebase-emulator-cache.outputs.cache-primary-key }}
           # Must match the restore path exactly
           path: ~/.cache/firebase/emulators
-      - name: Save Pods Cache
-        continue-on-error: true
-        # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
-        if: ${{ !inputs.ios-spm && github.ref == 'refs/heads/main' }}
-        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
-        with:
-          key: ${{ steps.pods-cache.outputs.cache-primary-key }}
-          # Must match the restore path exactly
-          path: ${{ inputs.package-path }}/example/ios/Pods
