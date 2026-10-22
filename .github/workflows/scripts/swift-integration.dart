@@ -340,9 +340,6 @@ Future<void> buildSwiftExampleApp(String platform, String plugins) async {
     }
   }
 
-  await _runCommand('rm', ['Podfile']);
-  await _runCommand('pod', ['deintegrate']);
-
   // Check what SPM packages are being resolved before build
   if (debugMode) {
     print('[DEBUG] Checking for existing SPM packages directory...');

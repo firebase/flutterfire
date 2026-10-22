@@ -4,9 +4,9 @@ name: reusable-e2e-ios
 # simulator and run the integration tests on it. Called by every
 # `e2e_tests_<product>.yaml` - every product supports iOS.
 #
-# This job is the repository's Swift Package Manager coverage (`ios-spm`,
-# default true); the macOS job is always CocoaPods, so both dependency managers
-# stay exercised.
+# Builds with Swift Package Manager (`ios-spm`, default true), like the macOS
+# job. `ios-spm: false` is only for the examples that cannot resolve under SPM
+# yet and still commit a Podfile.
 
 on:
   workflow_call:
@@ -75,16 +75,13 @@ on:
         required: true
       ios-spm:
         description: >-
-          true  = iOS builds under Swift Package Manager (the Podfile is removed
-                  first, so `flutter build` does not prefer CocoaPods).
+          true  = iOS builds under Swift Package Manager. The example must not
+                  commit a Podfile, and the build fails if Flutter falls back
+                  to `pod install` anyway.
           false = iOS stays on CocoaPods and gets a Pods cache, as
                   firebase_crashlytics must (its Xcode project runs
-                  "${PODS_ROOT}/FirebaseCrashlytics/run") and as cloud_functions
-                  and firebase_performance currently must (Flutter's
-                  experimental SPM integration cannot resolve their examples on
-                  the CI Xcode).
-          The macOS job is always CocoaPods, so both dependency managers stay
-          covered either way.
+                  "${PODS_ROOT}/FirebaseCrashlytics/run") and as firebase_auth
+                  must (google_sign_in cannot resolve under SPM).
         type: boolean
         default: true
       info-plist-overrides:
@@ -130,15 +127,14 @@ jobs:
       TEST_TARGET: ${{ inputs.test-target }}
       NATIVE_CONFIG_ARGS: ${{ inputs.native-config-args }}
       INFO_PLIST_OVERRIDES: ${{ inputs.info-plist-overrides }}
+      IOS_SPM: ${{ inputs.ios-spm }}
     timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 60 }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       # Use the xcode-27 image default (Xcode 27 / iOS 27). Do not pin an older
       # Xcode: pinning 26.2 on macos-15 made SPM fail by canonicalizing Flutter's
       # ephemeral plugin symlink farm ("Could not resolve package dependencies
-      # ... ios/firebase_core does not exist"). cloud_functions and
-      # firebase_performance stay on CocoaPods until default-Xcode SPM runs prove
-      # clean.
+      # ... ios/firebase_core does not exist").
       - uses: ./.github/actions/setup-flutterfire
         with:
           node: ${{ inputs.use-firebase-emulators && 'true' || 'false' }}
@@ -147,10 +143,8 @@ jobs:
           firebase-tools-version: ${{ inputs.use-firebase-emulators && inputs.firebase-tools-version || '' }}
           bootstrap-scope: ${{ inputs.package-scope }}
       - name: Enable Swift Package Manager for iOS
-        # This job is the repository's iOS Swift Package Manager coverage for the
-        # product: every plugin the example depends on ships a Package.swift, so
-        # the whole app resolves under SPM. The macOS job stays on CocoaPods, so
-        # both dependency managers are exercised.
+        # Every plugin the example depends on ships a Package.swift, so the
+        # whole app resolves under SPM. The example's pubspec also pins this.
         if: inputs.ios-spm
         run: flutter config --enable-swift-package-manager
       - name: Disable Swift Package Manager for iOS
@@ -206,16 +200,6 @@ jobs:
         run: |
           # shellcheck disable=SC2086 # an argument list: word-splitting is the point
           dart ./.github/workflows/scripts/generate-dummy-firebase-configs.dart $NATIVE_CONFIG_ARGS
-      - name: Prepare iOS project for Swift Package Manager
-        # Done here rather than in the repository: the committed Podfile is what
-        # CocoaPods users of the example rely on, and `flutter build` prefers
-        # CocoaPods whenever a Podfile is present.
-        if: inputs.ios-spm
-        working-directory: ${{ inputs.package-path }}/example/ios
-        run: |
-          if [ -f Podfile ]; then pod deintegrate; fi
-          rm -f Podfile Podfile.lock
-          rm -rf Pods
       - name: Apply Info.plist overrides
         if: inputs.info-plist-overrides != ''
         working-directory: ${{ inputs.package-path }}/example/ios/Runner
@@ -266,11 +250,18 @@ jobs:
           if [ $BUILD_EXIT -ne 0 ] && grep -q "Could not resolve package dependencies" build_output.log; then
             echo "SPM package resolution race detected; retrying the build once."
             flutter clean > /dev/null
-            flutter build ios --no-codesign --simulator --debug --target="./$TEST_TARGET" --dart-define=CI=true
+            flutter build ios --no-codesign --simulator --debug --target="./$TEST_TARGET" --dart-define=CI=true > build_output.log 2>&1
             BUILD_EXIT=$?
+            cat build_output.log
           fi
           set -e
           ccache -s
+          # Flutter silently falls back to CocoaPods when the example has a
+          # Podfile or a plugin has no Package.swift.
+          if [ "$IOS_SPM" = "true" ] && grep -q "Running pod install" build_output.log; then
+            echo "::error::flutter build ran pod install: this example must build with Swift Package Manager only."
+            exit 1
+          fi
           # Fail rather than silently test the default configuration.
           if [ $BUILD_EXIT -eq 0 ]; then
             for override in $INFO_PLIST_OVERRIDES; do
