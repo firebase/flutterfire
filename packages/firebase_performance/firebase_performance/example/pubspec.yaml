@@ -26,3 +26,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  config:
+    # iOS and macOS build with Swift Package Manager only (no Podfile).
+    enable-swift-package-manager: true

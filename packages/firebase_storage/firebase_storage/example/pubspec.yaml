@@ -31,3 +31,6 @@ flutter:
   uses-material-design: true
   assets:
     - assets/hello.txt
+  config:
+    # iOS and macOS build with Swift Package Manager only (no Podfile).
+    enable-swift-package-manager: true

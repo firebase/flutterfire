@@ -207,7 +207,9 @@ jobs:
           flutter pub add $FLUTTER_DEPENDENCIES
           cd ../../../..
       - name: 'Swift Integration Setup'
-        run: flutter config --enable-swift-package-manager
+        run: |
+          flutter config --enable-swift-package-manager
+          ./.github/workflows/scripts/link-example-plugin-package-deps.sh packages/firebase_core/firebase_core/example ios
       - name: 'Build iOS App with Swift Package Manager'
         run: |
           dart ./.github/workflows/scripts/generate-dummy-firebase-configs.dart
@@ -236,11 +238,10 @@ jobs:
           flutter pub add $FLUTTER_DEPENDENCIES
           cd ../../../..
       - name: 'Swift Integration Setup'
-        run: flutter config --enable-swift-package-manager
+        run: |
+          flutter config --enable-swift-package-manager
+          ./.github/workflows/scripts/link-example-plugin-package-deps.sh packages/firebase_core/firebase_core/example macos
       - name: 'Build macOS App with Swift Package Manager'
-        # The script drops firebase_messaging from the example app before the
-        # macOS build; with iOS in its own job that no longer has to happen
-        # after a successful iOS build in the same checkout.
         run: |
           dart ./.github/workflows/scripts/generate-dummy-firebase-configs.dart
           dart ./.github/workflows/scripts/swift-integration.dart --platform=macos $FLUTTER_DEPENDENCIES

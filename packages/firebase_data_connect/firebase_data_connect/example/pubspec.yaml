@@ -14,7 +14,6 @@ dependencies:
   flutter:
     sdk: flutter
   firebase_core: ^5.0.0
-  google_sign_in: ^6.1.0
   firebase_auth: ^7.0.0
   firebase_data_connect:
     path: ../
@@ -40,4 +39,5 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   config:
-    enable-swift-package-manager: false
+    # iOS and macOS build with Swift Package Manager only (no Podfile).
+    enable-swift-package-manager: true

@@ -164,8 +164,10 @@ void main() {
             }
           }
         },
-        skip: kIsWeb ||
-            (!Platform.isAndroid && !Platform.isIOS && !Platform.isMacOS),
+        // Signing in persists the user to the keychain, which the unsigned
+        // macOS test app cannot write to (errSecMissingEntitlement), like the
+        // other sign-in tests here.
+        skip: kIsWeb || (!Platform.isAndroid && !Platform.isIOS),
       );
 
       group('idTokenChanges()', () {
