@@ -25,5 +25,5 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   config:
-    # CocoaPods until this example can use Swift Package Manager: the Xcode projects run Crashlytics scripts from $PODS_ROOT.
-    enable-swift-package-manager: false
+    # iOS and macOS build with Swift Package Manager only (no Podfile).
+    enable-swift-package-manager: true
