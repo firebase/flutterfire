@@ -142,20 +142,20 @@ class FlutterFirebaseFunctionsPlugin : FlutterPlugin, FlutterFirebasePlugin, Clo
       if (functionsException != null) {
         code = functionsException.code.name
         message = functionsException.message
-        additionalData = functionsException.details
+        // A stream that fails while reading gets the error as details, not as cause
+        // (PublisherStream.processSSEStream). The codec can't send a Throwable.
+        val cause = functionsException.cause ?: functionsException.details as? Throwable
+        additionalData = functionsException.details.takeUnless { it is Throwable }
 
-        if (functionsException.cause is IOException &&
-            "Canceled" == (functionsException.cause as IOException).message) {
+        if (cause is IOException && "Canceled" == cause.message) {
           // return DEADLINE_EXCEEDED for IOException cancel errors, to match iOS & Web
           code = FirebaseFunctionsException.Code.DEADLINE_EXCEEDED.name
           message = FirebaseFunctionsException.Code.DEADLINE_EXCEEDED.name
-        } else if (functionsException.cause is
-            InterruptedIOException // return DEADLINE_EXCEEDED for InterruptedIOException errors, to
-        // match iOS & Web
-        && "timeout" == (functionsException.cause as InterruptedIOException).message) {
+        } else if (cause is InterruptedIOException && "timeout" == cause.message) {
+          // return DEADLINE_EXCEEDED for InterruptedIOException errors, to match iOS & Web
           code = FirebaseFunctionsException.Code.DEADLINE_EXCEEDED.name
           message = FirebaseFunctionsException.Code.DEADLINE_EXCEEDED.name
-        } else if (functionsException.cause is IOException) {
+        } else if (cause is IOException) {
           // return UNAVAILABLE for network io errors, to match iOS & Web
           code = FirebaseFunctionsException.Code.UNAVAILABLE.name
           message = FirebaseFunctionsException.Code.UNAVAILABLE.name

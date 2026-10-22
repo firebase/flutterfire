@@ -5,6 +5,7 @@ package io.flutter.plugins.firebase.functions
 
 import com.google.firebase.functions.FirebaseFunctionsException
 import java.io.IOException
+import java.net.SocketTimeoutException
 import java.util.concurrent.Executor
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -133,6 +134,57 @@ class StreamResponseSubscriberTest {
                 "firebase_functions",
                 "INTERNAL",
                 mapOf("code" to "unavailable", "message" to "UNAVAILABLE")),
+            listOf("endOfStream")),
+        eventSink.events)
+  }
+
+  // PublisherStream reports an error while reading the stream as INTERNAL, with the error as
+  // details rather than as cause.
+  private fun streamReadError(message: String, error: Throwable) =
+      TestFunctionsExceptions.create(message, FirebaseFunctionsException.Code.INTERNAL, error, null)
+
+  @Test
+  fun onError_mapsStreamReadFailuresLikeNetworkErrors() {
+    subscriber.onError(
+        streamReadError("unexpected end of stream", IOException("unexpected end of stream")))
+
+    assertEquals(
+        listOf(
+            listOf(
+                "error",
+                "firebase_functions",
+                "unexpected end of stream",
+                mapOf("code" to "unavailable", "message" to "UNAVAILABLE")),
+            listOf("endOfStream")),
+        eventSink.events)
+  }
+
+  @Test
+  fun onError_mapsStreamReadTimeoutsToDeadlineExceeded() {
+    subscriber.onError(streamReadError("timeout", SocketTimeoutException("timeout")))
+
+    assertEquals(
+        listOf(
+            listOf(
+                "error",
+                "firebase_functions",
+                "timeout",
+                mapOf("code" to "deadline-exceeded", "message" to "DEADLINE_EXCEEDED")),
+            listOf("endOfStream")),
+        eventSink.events)
+  }
+
+  @Test
+  fun onError_doesNotSendTheErrorBehindInvalidJson() {
+    subscriber.onError(streamReadError("Invalid JSON: {", IllegalStateException("Unterminated")))
+
+    assertEquals(
+        listOf(
+            listOf(
+                "error",
+                "firebase_functions",
+                "Invalid JSON: {",
+                mapOf("code" to "internal", "message" to "Invalid JSON: {")),
             listOf("endOfStream")),
         eventSink.events)
   }
