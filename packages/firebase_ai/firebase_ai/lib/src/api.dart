@@ -1419,6 +1419,15 @@ final class GenerationConfig extends BaseGenerationConfig {
       };
 }
 
+/// Configuration parameters for sending requests to the backend.
+final class RequestOptions {
+  /// Constructor
+  const RequestOptions({this.timeout = const Duration(seconds: 180)});
+
+  /// The request’s timeout interval; defaults to 180 seconds.
+  final Duration timeout;
+}
+
 /// Type of task for which the embedding will be used.
 enum TaskType {
   /// Unset value, which will default to one of the other enum values.

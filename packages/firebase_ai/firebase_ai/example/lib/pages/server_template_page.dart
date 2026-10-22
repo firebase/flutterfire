@@ -11,7 +11,6 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../utils/function_call_utils.dart';
@@ -66,7 +65,7 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
 
     // Inputs are now provided ONCE here when creating the session
     _chatSession = _templateGenerativeModel?.startChat(
-      'chat_history.prompt',
+      'cj-chat-history',
       inputs: {},
     );
     _chatFunctionOverrideSession = _templateGenerativeModel?.startChat(
@@ -431,10 +430,13 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
       );
 
       _messages.add(MessageData(text: response?.text, fromUser: false));
-      final functionCalls = response?.functionCalls.toList();
-      if (functionCalls!.isNotEmpty) {
-        final functionCall = functionCalls.first;
-        if (functionCall.name == 'fetchWeather') {
+      final functionCalls = response?.functionCalls.toList() ?? [];
+      if (functionCalls.isNotEmpty &&
+          functionCalls.every((c) => c.name == 'fetchWeather')) {
+        // The model may issue parallel calls; the backend requires one
+        // FunctionResponse per FunctionCall in the next turn.
+        final functionResponses = <FunctionResponse>[];
+        for (final functionCall in functionCalls) {
           final location =
               functionCall.args['location']! as Map<String, dynamic>;
           final date = functionCall.args['date']! as String;
@@ -444,16 +446,22 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
             Location(city, state),
             date,
           );
-
-          // Respond to the function call
-          var functionResponse =
-              await _chatFunctionOverrideSession?.sendMessage(
-            Content.functionResponse(functionCall.name, functionResult),
-          );
-          _messages.add(
-            MessageData(text: functionResponse?.text, fromUser: false),
+          functionResponses.add(
+            FunctionResponse(
+              functionCall.name,
+              functionResult,
+              id: functionCall.id,
+            ),
           );
         }
+
+        // Respond to the function calls
+        var functionResponse = await _chatFunctionOverrideSession?.sendMessage(
+          Content.functionResponses(functionResponses),
+        );
+        _messages.add(
+          MessageData(text: functionResponse?.text, fromUser: false),
+        );
       }
     });
   }
@@ -515,13 +523,11 @@ class _ServerTemplatePageState extends State<ServerTemplatePage> {
 
       // ignore: experimental_member_use
       var response = await _templateGenerativeModel?.generateContent(
-        'media',
+        'cj-media-test',
         inputs: {
-          'imageData': {
-            'isInline': true,
-            'mimeType': 'image/jpeg',
-            'contents': base64Encode(imageBytes),
-          },
+          'prompt': message,
+          // Serialized by the SDK to {isInline, mimeType, contents(base64)}.
+          'imageData': [InlineDataPart('image/jpeg', imageBytes)],
         },
       );
       _messages.add(MessageData(text: response?.text, fromUser: false));

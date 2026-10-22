@@ -17,6 +17,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:fake_async/fake_async.dart';
 import 'package:firebase_ai/src/live_api.dart';
 import 'package:firebase_ai/src/live_session.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -44,6 +45,9 @@ class FakeWebSocketSink implements WebSocketSink {
 }
 
 class FakeWebSocketChannel implements WebSocketChannel {
+  FakeWebSocketChannel({Future<void>? ready}) : _ready = ready;
+
+  final Future<void>? _ready;
   final StreamController _controller = StreamController();
   final FakeWebSocketSink _sink = FakeWebSocketSink();
 
@@ -66,7 +70,7 @@ class FakeWebSocketChannel implements WebSocketChannel {
   String? get closeReason => null;
 
   @override
-  Future<void> get ready => Future.value();
+  Future<void> get ready => _ready ?? Future.value();
 
   @override
   String? get protocol => null;
@@ -239,6 +243,94 @@ void main() {
         'realtime_input': {
           'activity_end': {},
         },
+      });
+    });
+
+    test(
+        'create times out at default 180s when WebSocket handshake never completes',
+        () {
+      fakeAsync((async) {
+        Object? caughtError;
+        LiveSession.create(
+          uri: 'wss://example.com/ws',
+          headersProvider: () => const <String, String>{},
+          modelString: 'models/gemini-2.0-flash',
+          connector: (_, __) =>
+              FakeWebSocketChannel(ready: Completer<void>().future),
+        ).then<void>(
+          (_) {},
+          onError: (Object error) {
+            caughtError = error;
+          },
+        );
+
+        async.elapse(const Duration(seconds: 179));
+        expect(caughtError, isNull);
+
+        async.elapse(const Duration(seconds: 1));
+        expect(caughtError, isA<TimeoutException>());
+      });
+    });
+
+    test('create and resumeSession respect custom timeout', () {
+      fakeAsync((async) {
+        var attempt = 0;
+        LiveSession? session;
+        Object? createError;
+
+        // First test custom timeout on create().
+        LiveSession.create(
+          uri: 'wss://example.com/ws',
+          headersProvider: () => const <String, String>{},
+          modelString: 'models/gemini-2.0-flash',
+          timeout: const Duration(seconds: 15),
+          connector: (_, __) =>
+              FakeWebSocketChannel(ready: Completer<void>().future),
+        ).then<void>(
+          (_) {},
+          onError: (Object error) {
+            createError = error;
+          },
+        );
+
+        async.elapse(const Duration(seconds: 14));
+        expect(createError, isNull);
+        async.elapse(const Duration(seconds: 1));
+        expect(createError, isA<TimeoutException>());
+
+        // Next test that a session created with custom timeout applies that
+        // same timeout during resumeSession().
+        LiveSession.create(
+          uri: 'wss://example.com/ws',
+          headersProvider: () => const <String, String>{},
+          modelString: 'models/gemini-2.0-flash',
+          timeout: const Duration(seconds: 15),
+          connector: (_, __) {
+            attempt++;
+            if (attempt == 1) {
+              return FakeWebSocketChannel();
+            }
+            return FakeWebSocketChannel(ready: Completer<void>().future);
+          },
+        ).then((value) {
+          session = value;
+        });
+
+        async.flushMicrotasks();
+        expect(session, isNotNull);
+
+        Object? resumeError;
+        session!.resumeSession().then<void>(
+          (_) {},
+          onError: (Object error) {
+            resumeError = error;
+          },
+        );
+
+        async.elapse(const Duration(seconds: 14));
+        expect(resumeError, isNull);
+        async.elapse(const Duration(seconds: 1));
+        expect(resumeError, isA<TimeoutException>());
       });
     });
   });

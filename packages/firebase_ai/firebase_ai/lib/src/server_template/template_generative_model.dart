@@ -23,6 +23,7 @@ final class TemplateGenerativeModel extends BaseTemplateApiClientModel {
     required FirebaseApp app,
     required bool useAgentPlatform,
     http.Client? httpClient,
+    RequestOptions? requestOptions,
   }) : super(
           serializationStrategy: useAgentPlatform
               ? AgentPlatformSerialization()
@@ -33,6 +34,7 @@ final class TemplateGenerativeModel extends BaseTemplateApiClientModel {
           client: HttpApiClient(
               apiKey: app.options.apiKey,
               httpClient: httpClient,
+              timeout: requestOptions?.timeout,
               requestHeaders: BaseModel.firebaseTokens(null, null, app, false)),
           templateUri: useAgentPlatform
               ? _TemplateAgentPlatformUri(app: app, location: location)
@@ -47,6 +49,7 @@ final class TemplateGenerativeModel extends BaseTemplateApiClientModel {
     FirebaseAppCheck? appCheck,
     FirebaseAuth? auth,
     http.Client? httpClient,
+    RequestOptions? requestOptions,
   }) : super(
           serializationStrategy: useAgentPlatform
               ? AgentPlatformSerialization()
@@ -57,6 +60,7 @@ final class TemplateGenerativeModel extends BaseTemplateApiClientModel {
           client: HttpApiClient(
               apiKey: app.options.apiKey,
               httpClient: httpClient,
+              timeout: requestOptions?.timeout,
               requestHeaders: BaseModel.firebaseTokens(
                   appCheck, auth, app, useLimitedUseAppCheckTokens)),
           templateUri: useAgentPlatform
@@ -143,6 +147,7 @@ TemplateGenerativeModel createTemplateGenerativeModel({
   bool? useLimitedUseAppCheckTokens,
   FirebaseAppCheck? appCheck,
   FirebaseAuth? auth,
+  RequestOptions? requestOptions,
 }) =>
     TemplateGenerativeModel._(
       app: app,
@@ -151,6 +156,7 @@ TemplateGenerativeModel createTemplateGenerativeModel({
       useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
       auth: auth,
       location: location,
+      requestOptions: requestOptions,
     );
 
 /// Returns a [TemplateGenerativeModel] for test case.
@@ -161,10 +167,12 @@ TemplateGenerativeModel createTestTemplateGenerativeModel({
   required String location,
   required bool useAgentPlatform,
   required http.Client client,
+  RequestOptions? requestOptions,
 }) =>
     TemplateGenerativeModel._test(
       app: app,
       useAgentPlatform: useAgentPlatform,
       location: location,
       httpClient: client,
+      requestOptions: requestOptions,
     );
