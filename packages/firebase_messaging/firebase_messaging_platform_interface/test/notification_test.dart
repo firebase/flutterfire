@@ -683,7 +683,7 @@ void main() {
       expect(notification.titleLocArgs, <String>['single-arg']);
       expect(notification.titleLocKey, '456');
       expect(notification.body, '789');
-      expect(notification.bodyLocArgs, <String>['1', 'two', 'true']);
+      expect(notification.bodyLocArgs, <String>['1', 'two', '', 'true']);
       expect(notification.bodyLocKey, '101');
       expect(notification.apple, isNotNull);
       expect(notification.apple!.badge, '5');

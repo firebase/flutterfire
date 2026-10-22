@@ -300,10 +300,7 @@ List<String> _toList(dynamic value) {
     return <String>[];
   }
   if (value is Iterable) {
-    return value
-        .where((Object? e) => e != null)
-        .map((Object? e) => e.toString())
-        .toList();
+    return value.map((Object? e) => e?.toString() ?? '').toList();
   }
   return <String>[value.toString()];
 }

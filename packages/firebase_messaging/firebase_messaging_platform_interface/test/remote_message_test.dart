@@ -226,7 +226,7 @@ void main() {
     });
 
     test(
-        '"RemoteMessage.fromMap" coerces numeric string fields and tolerates epoch-seconds or non-integer sentTime',
+        '"RemoteMessage.fromMap" coerces numeric string fields, round-trips sentTime, and tolerates invalid sentTime',
         () {
       final message = RemoteMessage.fromMap(<String, dynamic>{
         'senderId': 12345,
@@ -237,7 +237,7 @@ void main() {
         'messageId': 888,
         'messageType': 2,
         'threadId': 7,
-        'sentTime': 1700000000, // 10-digit epoch seconds (2023-11-14)
+        'sentTime': '5000',
         'ttl': '3600',
       });
 
@@ -251,7 +251,11 @@ void main() {
       expect(message.threadId, '7');
       expect(
         message.sentTime,
-        DateTime.fromMillisecondsSinceEpoch(1700000000 * 1000),
+        DateTime.fromMillisecondsSinceEpoch(5000),
+      );
+      expect(
+        RemoteMessage.fromMap(message.toMap()).sentTime,
+        DateTime.fromMillisecondsSinceEpoch(5000),
       );
       expect(message.ttl, 3600);
 
@@ -259,6 +263,11 @@ void main() {
         'sentTime': 'not-a-timestamp',
       });
       expect(invalidSentTimeMessage.sentTime, isNull);
+
+      final outOfRangeSentTimeMessage = RemoteMessage.fromMap(<String, dynamic>{
+        'sentTime': 8640000000000001,
+      });
+      expect(outOfRangeSentTimeMessage.sentTime, isNull);
     });
   });
 }

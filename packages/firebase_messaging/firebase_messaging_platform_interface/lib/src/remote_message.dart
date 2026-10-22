@@ -65,13 +65,8 @@ class RemoteMessage {
   }
 
   static DateTime? _parseSentTime(Object? value) {
-    int? raw = _asInt(value);
+    final int? raw = _asInt(value);
     if (raw == null) return null;
-    // Convert positive 10-digit epoch-seconds values (e.g. Apple google.c.a.ts)
-    // to milliseconds since epoch.
-    if (raw > 0 && raw < 10000000000) {
-      raw = raw * 1000;
-    }
     const int maxEpochMs = 8640000000000000;
     if (raw < -maxEpochMs || raw > maxEpochMs) {
       return null;
