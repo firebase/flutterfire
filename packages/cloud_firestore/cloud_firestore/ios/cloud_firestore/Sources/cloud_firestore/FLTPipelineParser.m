@@ -1603,11 +1603,14 @@ static NSError *parseError(NSString *message) {
           return nil;
         }
         FIRVectorValue *queryVector = [[FIRVectorValue alloc] initWithArray:numbers];
+        __FIRExprBridge *distanceFieldExpr =
+            (distanceField.length > 0) ? [[__FIRFieldBridge alloc] initWithName:distanceField]
+                                       : nil;
         stage = [[__FIRFindNearestStageBridge alloc] initWithField:embeddingField
                                                        vectorValue:queryVector
                                                    distanceMeasure:distanceMeasure
                                                              limit:limit
-                                                     distanceField:distanceField];
+                                                     distanceField:distanceFieldExpr];
       } else {
         if (error)
           *error = parseError([NSString stringWithFormat:@"Unknown pipeline stage: %@", stageName]);

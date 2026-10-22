@@ -36,7 +36,7 @@ android {
         sourceCompatibility = javaVersion
         targetCompatibility = javaVersion
         // Require for flutter_notifications to work on sdk 21+ after AGP upgrade.
-        coreLibraryDesugaringEnabled true
+        coreLibraryDesugaringEnabled = true
     }
 
     defaultConfig {

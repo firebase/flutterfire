@@ -41,5 +41,27 @@ void runPipelineFindNearestTests() {
         }
       },
     );
+
+    test('findNearest distanceField is present on each result', () async {
+      final snapshot = await firestore
+          .pipeline()
+          .collection('pipeline-e2e')
+          .where(Expression.field('test').equalValue('find-nearest'))
+          .findNearest(
+            Field('embedding'),
+            [0.1, 0.2, 0.3],
+            DistanceMeasure.cosine,
+            limit: 5,
+            distanceField: 'distance',
+          )
+          .execute();
+      expect(snapshot.result, isNotEmpty);
+      for (final result in snapshot.result) {
+        final data = result.data();
+        expect(data, isNotNull);
+        expect(data!.containsKey('distance'), isTrue);
+        expect(data['distance'], isA<num>());
+      }
+    });
   });
 }

@@ -8,6 +8,20 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('convertToOAuthProvider()', () {
+    test('keeps YahooAuthProvider scopes and custom parameters', () {
+      final provider = YahooAuthProvider()
+        ..addScope('mail-r')
+        ..setCustomParameters({'prompt': 'login'});
+
+      final converted = convertToOAuthProvider(provider);
+
+      expect(converted, isA<OAuthProvider>());
+      converted as OAuthProvider;
+      expect(converted.providerId, 'yahoo.com');
+      expect(converted.scopes, ['mail-r']);
+      expect(converted.parameters, {'prompt': 'login'});
+    });
+
     test('keeps FacebookAuthProvider scopes and custom parameters', () {
       final provider = FacebookAuthProvider()
         ..addScope('user_birthday')

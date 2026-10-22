@@ -82,6 +82,30 @@ void main() {
       });
     });
 
+    test('SpeechMetadata toJson() returns correct JSON', () {
+      const metadataFull = SpeechMetadata(
+        speaker: 'Alice',
+        style: 'excitedly',
+      );
+      expect(metadataFull.toJson(), {
+        'speaker': 'Alice',
+        'style': 'excitedly',
+      });
+
+      const metadataSpeakerOnly = SpeechMetadata(speaker: 'Bob');
+      expect(metadataSpeakerOnly.toJson(), {
+        'speaker': 'Bob',
+      });
+
+      const metadataStyleOnly = SpeechMetadata(style: 'whispering');
+      expect(metadataStyleOnly.toJson(), {
+        'style': 'whispering',
+      });
+
+      const metadataEmpty = SpeechMetadata();
+      expect(metadataEmpty.toJson(), <String, Object?>{});
+    });
+
     test('ResponseModalities enum toJson() returns correct value', () {
       expect(ResponseModalities.text.toJson(), 'TEXT');
       expect(ResponseModalities.image.toJson(), 'IMAGE');

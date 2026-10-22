@@ -311,6 +311,8 @@ class PipelineStageHandlers {
     List<Number> vectorValue = (List<Number>) args.get("vector_value");
     String distanceMeasureStr = (String) args.get("distance_measure");
     Number limitObj = (Number) args.get("limit");
+    String distanceField =
+        args.get("distance_field") instanceof String ? (String) args.get("distance_field") : null;
 
     if (distanceMeasureStr == null) {
       throw new IllegalArgumentException("'find_nearest' requires a 'distance_measure' argument");
@@ -327,13 +329,18 @@ class PipelineStageHandlers {
     }
 
     Field fieldExpr = Expression.field(vectorField);
+    boolean hasDistanceField = distanceField != null && !distanceField.isEmpty();
 
-    if (limitObj != null) {
+    if (limitObj != null || hasDistanceField) {
+      FindNearestOptions options = new FindNearestOptions();
+      if (limitObj != null) {
+        options = options.withLimit(limitObj.intValue());
+      }
+      if (distanceField != null && !distanceField.isEmpty()) {
+        options = options.withDistanceField(distanceField);
+      }
       return pipeline.findNearest(
-          vectorField,
-          Expression.vector(vectorArray),
-          distanceMeasure,
-          new FindNearestOptions().withLimit(limitObj.intValue()));
+          vectorField, Expression.vector(vectorArray), distanceMeasure, options);
     } else {
       return pipeline.findNearest(fieldExpr, vectorArray, distanceMeasure);
     }

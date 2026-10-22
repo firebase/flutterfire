@@ -114,6 +114,13 @@ enum PigeonParser {
     if let iOSBundleId = settings.iOSBundleId {
       codeSettings.iOSBundleID = iOSBundleId
     }
+    if let androidPackageName = settings.androidPackageName {
+      codeSettings.setAndroidPackageName(
+        androidPackageName,
+        installIfNotAvailable: settings.androidInstallApp,
+        minimumVersion: settings.androidMinimumVersion
+      )
+    }
     return codeSettings
   }
 
