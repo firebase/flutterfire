@@ -180,6 +180,12 @@ class BidiSessionController extends ChangeNotifier {
   /// Number of successful [LiveSession.resumeSession] calls on this session.
   int resumeCount = 0;
 
+  /// Whether new sessions request limited-use App Check tokens.
+  ///
+  /// Limited-use tokens are rejected on replay, so resuming with them checks
+  /// that [LiveSession.resumeSession] fetches fresh headers for each reconnect.
+  bool useLimitedUseAppCheckTokens = true;
+
   void updateRealtimeConfig({
     bool? disableVAD,
     ActivityHandling? activityHandling,
@@ -212,6 +218,12 @@ class BidiSessionController extends ChangeNotifier {
     } else if (endSensitivity != null) {
       selectedEndSensitivity = endSensitivity;
     }
+    _initLiveModel();
+    notifyListeners();
+  }
+
+  void setUseLimitedUseAppCheckTokens(bool value) {
+    useLimitedUseAppCheckTokens = value;
     _initLiveModel();
     notifyListeners();
   }
@@ -261,14 +273,14 @@ class BidiSessionController extends ChangeNotifier {
 
     _liveModel = useVertexBackend
         ? FirebaseAI.agentPlatform(
-            useLimitedUseAppCheckTokens: kUseLimitedUseAppCheckTokens,
+            useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
           ).liveGenerativeModel(
             model: ExampleModels.liveAgentPlatform,
             liveGenerationConfig: config,
             tools: tools,
           )
         : FirebaseAI.googleAI(
-            useLimitedUseAppCheckTokens: kUseLimitedUseAppCheckTokens,
+            useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
           ).liveGenerativeModel(
             model: ExampleModels.liveGoogleAI,
             liveGenerationConfig: config,
@@ -400,7 +412,7 @@ class BidiSessionController extends ChangeNotifier {
     notifyListeners();
     _addSystemMessage(
       'Calling resumeSession() '
-      '(limited-use App Check: $kUseLimitedUseAppCheckTokens)...',
+      '(limited-use App Check: $useLimitedUseAppCheckTokens)...',
     );
 
     try {
@@ -804,9 +816,7 @@ class _BidiPageState extends State<BidiPage> {
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         Text(
-                          'App Check: '
-                          '${kUseLimitedUseAppCheckTokens ? 'limited-use' : 'standard'}'
-                          ' · resumes: ${_controller.resumeCount}',
+                          'Resumes: ${_controller.resumeCount}',
                           style: const TextStyle(fontSize: 11),
                         ),
                       ],
@@ -835,6 +845,16 @@ class _BidiPageState extends State<BidiPage> {
                         : null,
                   ),
                 ],
+              ),
+              SwitchListTile(
+                dense: true,
+                contentPadding: EdgeInsets.zero,
+                title: const Text('Limited-use App Check tokens'),
+                subtitle: const Text('Applies to the next session'),
+                value: _controller.useLimitedUseAppCheckTokens,
+                onChanged: _controller.isSessionActive || _controller.isLoading
+                    ? null
+                    : _controller.setUseLimitedUseAppCheckTokens,
               ),
               const SizedBox(height: 8),
               Card(

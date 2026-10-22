@@ -12,17 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/// Whether `FirebaseAI` instances should request limited-use App Check tokens.
-///
-/// Limited-use tokens are rejected on replay, which makes it easy to verify
-/// that `LiveSession.resumeSession` fetches fresh headers on every reconnect
-/// (https://github.com/firebase/flutterfire/pull/18814).
-///
-/// `FirebaseAI.googleAI()` / `FirebaseAI.agentPlatform()` cache their instances
-/// and ignore this flag after the first call, so it is applied once at startup
-/// in `main()` rather than being toggled at runtime.
-const bool kUseLimitedUseAppCheckTokens = true;
-
 /// Centralized model identifiers used across the example app.
 abstract final class ExampleModels {
   /// Default fast multimodal model.
