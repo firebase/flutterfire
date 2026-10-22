@@ -31,8 +31,8 @@ FirebaseException platformExceptionToFirebaseFunctionsException(
   PlatformException platformException,
   StackTrace stackTrace,
 ) {
-  Map<String, dynamic>? details = platformException.details != null
-      ? Map<String, dynamic>.from(platformException.details)
+  Map<String, dynamic>? details = platformException.details is Map
+      ? Map<String, dynamic>.from(platformException.details as Map)
       : null;
   dynamic additionalData = details != null ? details['additionalData'] : null;
 
@@ -40,13 +40,19 @@ FirebaseException platformExceptionToFirebaseFunctionsException(
   String? message = platformException.message;
 
   if (details != null) {
-    code = details['code'] ?? code;
-    message = details['message'] ?? message;
+    final Object? rawCode = details['code'];
+    if (rawCode is String) {
+      code = rawCode;
+    }
+    final Object? rawMessage = details['message'];
+    if (rawMessage is String) {
+      message = rawMessage;
+    }
   }
 
   return FirebaseFunctionsException(
     code: code,
-    message: message!,
+    message: message ?? code,
     details: additionalData,
     stackTrace: stackTrace,
   );
