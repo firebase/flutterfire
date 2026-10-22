@@ -81,5 +81,20 @@ void main() {
         ),
       );
     });
+
+    test('should fall back when details is not a Map', () async {
+      PlatformException platformException = PlatformException(
+          code: 'UNKNOWN', message: testMessage, details: 'non-map details');
+
+      expect(
+        () => convertPlatformException(platformException, StackTrace.empty),
+        throwsA(
+          isA<FirebaseFunctionsException>()
+              .having((e) => e.code, 'code', 'unknown')
+              .having((e) => e.message, 'message', testMessage)
+              .having((e) => e.details, 'details', isNull),
+        ),
+      );
+    });
   });
 }

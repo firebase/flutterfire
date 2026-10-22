@@ -203,6 +203,22 @@ void main() {
         expect(exception.code, 'unknown');
         expect(exception.message, 'fallback message');
       });
+
+      test('falls back when details is a non-Map value', () {
+        final exception = platformExceptionToFirebaseFunctionsException(
+          PlatformException(
+            code: 'functions_error',
+            message: 'fallback message',
+            details: 'non-map details',
+          ),
+          StackTrace.empty,
+        );
+
+        expect(exception, isA<FirebaseFunctionsException>());
+        expect(exception.code, 'unknown');
+        expect(exception.message, 'fallback message');
+        expect((exception as FirebaseFunctionsException).details, isNull);
+      });
     });
   });
 }
