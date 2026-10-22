@@ -50,7 +50,11 @@ class RemoteConfig
   /// defaultsMap['x'] = 1;                       // remoteConfig.defaultConfig will not be updated.
   /// remoteConfig.defaultConfig['x'] = 1;        // Runtime error: attempt to modify an unmodifiable map.
   /// ```
-  // ignore: avoid_setters_without_getters
+  Map<String, dynamic> get defaultConfig => Map<String, dynamic>.unmodifiable(
+        (jsObject.defaultConfig.dartify() as Map?)?.cast<String, dynamic>() ??
+            <String, dynamic>{},
+      );
+
   set defaultConfig(Map<String, dynamic> value) {
     jsObject.defaultConfig = value.jsify()! as JSObject;
   }
