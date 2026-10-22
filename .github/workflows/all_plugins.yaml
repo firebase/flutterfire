@@ -77,6 +77,9 @@ jobs:
       - name: 'Validate Workspace'
         if: always()
         run: melos run validate:workspace
+      - name: 'Validate Wasm Imports'
+        if: always()
+        run: melos run validate:wasm-imports
       # Note `pubspec_overrides.yaml` is not taken into account by
       # `pub publish --dry-run`, which is why this used to live in its own job -
       # the setup is identical either way, so the split bought nothing.
@@ -259,7 +262,11 @@ jobs:
       - name: 'Flutter Test'
         run: melos run test --no-select
       - name: 'Flutter Test - Web'
+        if: ${{ !cancelled() }}
         run: melos run test:web --no-select
+      - name: 'Flutter Test - Web (Wasm)'
+        if: ${{ !cancelled() }}
+        run: melos run test:web:wasm --no-select
 
   # Ruby, not Dart: crashlytics_add_upload_symbols_test.rb checks the generated
   # Xcode Run Script. It only needs the xcodeproj gem, so it stays off the
