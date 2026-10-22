@@ -268,7 +268,9 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
     let database = getDatabaseFromPigeonApp(app)
     let reference = database.reference(withPath: request.path)
 
-    reference.updateChildValues(updateValues(request)) { error, _ in
+    let values = request.value.compactMapValues { $0 }
+
+    reference.updateChildValues(values) { error, _ in }
       if let error {
         completion(.failure(self.createFlutterError(error)))
       } else {
@@ -459,7 +461,9 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
     let database = getDatabaseFromPigeonApp(app)
     let reference = database.reference(withPath: request.path)
 
-    reference.onDisconnectUpdateChildValues(updateValues(request)) { error, _ in
+    let values = request.value.compactMapValues { $0 }
+
+    reference.onDisconnectUpdateChildValues(values) { error, _ in }
       if let error {
         completion(.failure(self.createFlutterError(error)))
       } else {
@@ -831,10 +835,6 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
       message: message,
       details: ["code": code, "message": message]
     )
-  }
-
-  private func updateValues(_ request: UpdateRequest) -> [String: Any] {
-    Dictionary(uniqueKeysWithValues: request.value.map { ($0.key, $0.value ?? NSNull()) })
   }
 
   private func databaseInstanceKey(_ app: DatabasePigeonFirebaseApp) -> String {

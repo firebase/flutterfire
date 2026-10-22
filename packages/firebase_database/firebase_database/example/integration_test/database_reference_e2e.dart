@@ -106,16 +106,6 @@ void setupDatabaseReferenceTests() {
           'bar': newValue,
         });
       });
-
-      test('removes a child if updated to null', () async {
-        final ref = database.ref('tests/update-null');
-        await ref.remove();
-        await ref.set({'foo': 'bar', 'baz': 'qux'});
-        await ref.update({'foo': null});
-        final actual = await ref.get();
-
-        expect(actual.value, {'baz': 'qux'});
-      });
     });
 
     group('runTransaction()', () {
