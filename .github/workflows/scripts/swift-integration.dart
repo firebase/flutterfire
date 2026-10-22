@@ -371,13 +371,6 @@ Future<void> buildSwiftExampleApp(String platform, String plugins) async {
     print('[DEBUG] Flutter command args: ${flutterArgs.join(' ')}');
   }
 
-  if (platform == 'macos') {
-    // TODO: temp solution to macos to remove firebase_messaging from build
-    // See: https://github.com/firebase/flutterfire/actions/runs/17042278122/job/48308815666?pr=17634#step:8:787
-    await _runCommand('flutter', ['pub', 'remove', 'firebase_messaging']);
-    await _runCommand('flutter', ['clean']);
-  }
-
   // Run the flutter build command
   final flutterResult = await _runCommand('flutter', flutterArgs);
 
