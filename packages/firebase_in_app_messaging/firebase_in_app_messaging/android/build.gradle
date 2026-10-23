@@ -84,6 +84,7 @@ android {
       api 'com.google.firebase:firebase-inappmessaging'
       api 'com.google.firebase:firebase-inappmessaging-display'
       implementation 'androidx.annotation:annotation:1.7.0'
+      testImplementation 'junit:junit:4.13.2'
     }
 }
 

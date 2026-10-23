@@ -44,10 +44,19 @@ jobs:
         # task, which would also build the Dart sources of the aggregate test app.
         # Add a task here when a package gains an android/src/test directory.
         run: cd tests/android && ./gradlew :firebase_crashlytics:testDebugUnitTest :cloud_functions:testDebugUnitTest
+      - name: 'Run In-App Messaging Android unit tests'
+        # firebase_in_app_messaging is not a dependency of the aggregate test
+        # app, so its tests run from the plugin's example app.
+        working-directory: packages/firebase_in_app_messaging/firebase_in_app_messaging/example
+        run: |
+          flutter build apk --debug --config-only
+          cd android && ./gradlew :firebase_in_app_messaging:testDebugUnitTest
       - name: 'Upload test reports'
         if: failure()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: android-unit-test-reports
-          path: tests/build/*/reports/tests/
+          path: |
+            tests/build/*/reports/tests/
+            packages/firebase_in_app_messaging/firebase_in_app_messaging/example/build/*/reports/tests/
           retention-days: 5
