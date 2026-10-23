@@ -177,5 +177,20 @@ void setupDataSnapshotTests() {
       expect(children[1].value, 2);
       expect(children[2].value, 3);
     });
+
+    test('children returns the children for a nested list snapshot', () async {
+      final ref = getRef('nested-list-children');
+      await ref.set({
+        'items': ['first', 'second', 'third'],
+      });
+      final s = await ref.get();
+
+      final children = s.child('items').children.toList();
+      expect(children.map((c) => c.key).toList(), ['0', '1', '2']);
+      expect(
+        children.map((c) => c.value).toList(),
+        ['first', 'second', 'third'],
+      );
+    });
   });
 }

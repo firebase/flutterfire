@@ -6,6 +6,7 @@ import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
+import 'package:firebase_database_platform_interface/src/method_channel/method_channel_data_snapshot.dart';
 import 'package:firebase_database_platform_interface/src/method_channel/method_channel_database.dart';
 import 'package:firebase_database_platform_interface/src/method_channel/method_channel_database_reference.dart';
 import 'package:firebase_database_platform_interface/src/pigeon/messages.pigeon.dart'
@@ -560,6 +561,33 @@ void main() {
           <Matcher>[
             containsPair('method', 'queryObserve'),
           ],
+        );
+      });
+    });
+
+    group('MethodChannelDataSnapshot', () {
+      test(
+          'child() on a List-valued child generates 0-based childKeys and iterates children without RangeError',
+          () {
+        final snapshot = MethodChannelDataSnapshot(
+          database.ref('root'),
+          <String, dynamic>{
+            'key': 'root',
+            'value': <String, dynamic>{
+              'items': <Object?>['first', 'second', 'third'],
+            },
+            'priority': null,
+            'childKeys': <String>['items'],
+          },
+        );
+
+        final itemsSnapshot = snapshot.child('items');
+        final children = itemsSnapshot.children.toList();
+
+        expect(children.map((c) => c.key).toList(), <String>['0', '1', '2']);
+        expect(
+          children.map((c) => c.value).toList(),
+          <Object?>['first', 'second', 'third'],
         );
       });
     });
