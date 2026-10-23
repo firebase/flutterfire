@@ -190,8 +190,10 @@ class FirebaseRemoteConfigWeb extends FirebaseRemoteConfigPlatform {
 
   @override
   Stream<RemoteConfigUpdate> get onConfigUpdated {
-    return _delegate.onConfigUpdated
-        .map((event) => RemoteConfigUpdate(event.updatedKeys));
+    return convertWebExceptions(
+      () => _delegate.onConfigUpdated
+          .map((event) => RemoteConfigUpdate(event.updatedKeys)),
+    );
   }
 
   @override
