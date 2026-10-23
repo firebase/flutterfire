@@ -1,3 +1,7 @@
+## 0.4.5
+
+ - **FIX**(core): bump Firebase iOS SDK to 12.19.3 (4.x backport, Firestore security fix) ([#18861](https://github.com/firebase/flutterfire/issues/18861)). ([ff334acb](https://github.com/firebase/flutterfire/commit/ff334acbf5a87a94f33f9d59319d93cee576d2e7))
+
 ## 0.4.4
 
  - **FIX**(app_installations,android): dispatch ID-change events on the main thread ([#18652](https://github.com/firebase/flutterfire/issues/18652)). ([efed3e2b](https://github.com/firebase/flutterfire/commit/efed3e2b7bf88bbb60445bc3adbaab52006b21b7))

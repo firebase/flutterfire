@@ -3,6 +3,103 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2026-10-23
+
+### Changes
+
+> Note: This is a security release for Cloud Firestore on iOS and macOS. Firebase iOS SDK 12.19.3 removes compromised eMudhra CA roots from Firestore's embedded gRPC root-certificate bundle ([firebase-ios-sdk#16930](https://github.com/firebase/firebase-ios-sdk/pull/16930)). CocoaPods and Swift Package Manager both now use 12.19.3.
+>
+> - **Swift Package Manager**: upgrade to this `firebase_core` release.
+> - **CocoaPods**: upgrade to this release, or patch immediately by adding `$FirebaseSDKVersion = '12.19.3'` at the top of `ios/Podfile` and running `pod update FirebaseFirestore`. If you also use `firebase_analytics` or `firebase_app_check`, upgrade them as well: older versions require `FirebaseAnalytics`/`FirebaseAppCheck` 12.19.3, which was not published.
+> - **Windows**: the Firebase C++ SDK is also affected and will be fixed in a follow-up `firebase_core` release.
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`cloud_firestore` - `v6.10.1`](#cloud_firestore---v6101)
+ - [`cloud_functions` - `v6.5.1`](#cloud_functions---v651)
+ - [`firebase_analytics` - `v12.6.1`](#firebase_analytics---v1261)
+ - [`firebase_app_check` - `v0.4.9`](#firebase_app_check---v049)
+ - [`firebase_app_installations` - `v0.4.5`](#firebase_app_installations---v045)
+ - [`firebase_auth` - `v6.7.1`](#firebase_auth---v671)
+ - [`firebase_core` - `v4.15.1`](#firebase_core---v4151)
+ - [`firebase_crashlytics` - `v5.4.1`](#firebase_crashlytics---v541)
+ - [`firebase_database` - `v12.6.1`](#firebase_database---v1261)
+ - [`firebase_in_app_messaging` - `v0.9.5`](#firebase_in_app_messaging---v095)
+ - [`firebase_messaging` - `v16.7.1`](#firebase_messaging---v1671)
+ - [`firebase_ml_model_downloader` - `v0.4.6`](#firebase_ml_model_downloader---v046)
+ - [`firebase_performance` - `v0.11.7`](#firebase_performance---v0117)
+ - [`firebase_remote_config` - `v6.7.1`](#firebase_remote_config---v671)
+ - [`firebase_storage` - `v13.6.1`](#firebase_storage---v1361)
+
+---
+
+#### `cloud_firestore` - `v6.10.1`
+
+ - **FIX**(core): bump Firebase iOS SDK to 12.19.3 (4.x backport, Firestore security fix) ([#18861](https://github.com/firebase/flutterfire/issues/18861)). ([ff334acb](https://github.com/firebase/flutterfire/commit/ff334acbf5a87a94f33f9d59319d93cee576d2e7))
+
+#### `cloud_functions` - `v6.5.1`
+
+ - **FIX**(core): bump Firebase iOS SDK to 12.19.3 (4.x backport, Firestore security fix) ([#18861](https://github.com/firebase/flutterfire/issues/18861)). ([ff334acb](https://github.com/firebase/flutterfire/commit/ff334acbf5a87a94f33f9d59319d93cee576d2e7))
+
+#### `firebase_analytics` - `v12.6.1`
+
+ - **FIX**(core): bump Firebase iOS SDK to 12.19.3 (4.x backport, Firestore security fix) ([#18861](https://github.com/firebase/flutterfire/issues/18861)). ([ff334acb](https://github.com/firebase/flutterfire/commit/ff334acbf5a87a94f33f9d59319d93cee576d2e7))
+
+#### `firebase_app_check` - `v0.4.9`
+
+ - **FIX**(core): bump Firebase iOS SDK to 12.19.3 (4.x backport, Firestore security fix) ([#18861](https://github.com/firebase/flutterfire/issues/18861)). ([ff334acb](https://github.com/firebase/flutterfire/commit/ff334acbf5a87a94f33f9d59319d93cee576d2e7))
+
+#### `firebase_app_installations` - `v0.4.5`
+
+ - **FIX**(core): bump Firebase iOS SDK to 12.19.3 (4.x backport, Firestore security fix) ([#18861](https://github.com/firebase/flutterfire/issues/18861)). ([ff334acb](https://github.com/firebase/flutterfire/commit/ff334acbf5a87a94f33f9d59319d93cee576d2e7))
+
+#### `firebase_auth` - `v6.7.1`
+
+ - **FIX**(core): bump Firebase iOS SDK to 12.19.3 (4.x backport, Firestore security fix) ([#18861](https://github.com/firebase/flutterfire/issues/18861)). ([ff334acb](https://github.com/firebase/flutterfire/commit/ff334acbf5a87a94f33f9d59319d93cee576d2e7))
+
+#### `firebase_core` - `v4.15.1`
+
+ - **FIX**(core): bump Firebase iOS SDK to 12.19.3 (4.x backport, Firestore security fix) ([#18861](https://github.com/firebase/flutterfire/issues/18861)). ([ff334acb](https://github.com/firebase/flutterfire/commit/ff334acbf5a87a94f33f9d59319d93cee576d2e7))
+
+#### `firebase_crashlytics` - `v5.4.1`
+
+ - **FIX**(core): bump Firebase iOS SDK to 12.19.3 (4.x backport, Firestore security fix) ([#18861](https://github.com/firebase/flutterfire/issues/18861)). ([ff334acb](https://github.com/firebase/flutterfire/commit/ff334acbf5a87a94f33f9d59319d93cee576d2e7))
+
+#### `firebase_database` - `v12.6.1`
+
+ - **FIX**(core): bump Firebase iOS SDK to 12.19.3 (4.x backport, Firestore security fix) ([#18861](https://github.com/firebase/flutterfire/issues/18861)). ([ff334acb](https://github.com/firebase/flutterfire/commit/ff334acbf5a87a94f33f9d59319d93cee576d2e7))
+
+#### `firebase_in_app_messaging` - `v0.9.5`
+
+ - **FIX**(core): bump Firebase iOS SDK to 12.19.3 (4.x backport, Firestore security fix) ([#18861](https://github.com/firebase/flutterfire/issues/18861)). ([ff334acb](https://github.com/firebase/flutterfire/commit/ff334acbf5a87a94f33f9d59319d93cee576d2e7))
+
+#### `firebase_messaging` - `v16.7.1`
+
+ - **FIX**(core): bump Firebase iOS SDK to 12.19.3 (4.x backport, Firestore security fix) ([#18861](https://github.com/firebase/flutterfire/issues/18861)). ([ff334acb](https://github.com/firebase/flutterfire/commit/ff334acbf5a87a94f33f9d59319d93cee576d2e7))
+
+#### `firebase_ml_model_downloader` - `v0.4.6`
+
+ - **FIX**(core): bump Firebase iOS SDK to 12.19.3 (4.x backport, Firestore security fix) ([#18861](https://github.com/firebase/flutterfire/issues/18861)). ([ff334acb](https://github.com/firebase/flutterfire/commit/ff334acbf5a87a94f33f9d59319d93cee576d2e7))
+
+#### `firebase_performance` - `v0.11.7`
+
+ - **FIX**(core): bump Firebase iOS SDK to 12.19.3 (4.x backport, Firestore security fix) ([#18861](https://github.com/firebase/flutterfire/issues/18861)). ([ff334acb](https://github.com/firebase/flutterfire/commit/ff334acbf5a87a94f33f9d59319d93cee576d2e7))
+
+#### `firebase_remote_config` - `v6.7.1`
+
+ - **FIX**(core): bump Firebase iOS SDK to 12.19.3 (4.x backport, Firestore security fix) ([#18861](https://github.com/firebase/flutterfire/issues/18861)). ([ff334acb](https://github.com/firebase/flutterfire/commit/ff334acbf5a87a94f33f9d59319d93cee576d2e7))
+
+#### `firebase_storage` - `v13.6.1`
+
+ - **FIX**(core): bump Firebase iOS SDK to 12.19.3 (4.x backport, Firestore security fix) ([#18861](https://github.com/firebase/flutterfire/issues/18861)). ([ff334acb](https://github.com/firebase/flutterfire/commit/ff334acbf5a87a94f33f9d59319d93cee576d2e7))
+
+
 ## 2026-09-14 - [BoM 4.20.0](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-4200-2026-09-14)
 
 ### Changes
