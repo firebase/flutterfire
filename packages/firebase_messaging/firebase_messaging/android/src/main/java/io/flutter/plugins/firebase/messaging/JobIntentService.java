@@ -24,10 +24,13 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.annotation.VisibleForTesting;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 
 // Issue added for this file, we will migrate this in the future
 @SuppressWarnings("all")
@@ -47,13 +50,31 @@ abstract class JobIntentService extends Service {
   static final Object sLock = new Object();
 
   // Class only used to create a unique hash key for sClassWorkEnqueuer
-  private static class ComponentNameWithWakeful {
-    private ComponentName componentName;
-    private boolean useWakefulService;
+  private static final class ComponentNameWithWakeful {
+    private final ComponentName componentName;
+    private final boolean useWakefulService;
 
     ComponentNameWithWakeful(ComponentName componentName, boolean useWakefulService) {
       this.componentName = componentName;
       this.useWakefulService = useWakefulService;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) {
+        return true;
+      }
+      if (!(o instanceof ComponentNameWithWakeful)) {
+        return false;
+      }
+      ComponentNameWithWakeful other = (ComponentNameWithWakeful) o;
+      return useWakefulService == other.useWakefulService
+          && Objects.equals(componentName, other.componentName);
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(componentName, useWakefulService);
     }
   }
 
@@ -61,7 +82,17 @@ abstract class JobIntentService extends Service {
 
   // WakeLock.release() is a Binder call into PowerManager. Doing it on the main
   // thread during service teardown ANRs when the system power service is slow.
-  static volatile Executor wakeLockExecutor = Executors.newSingleThreadExecutor();
+  @VisibleForTesting
+  static volatile Executor wakeLockExecutor =
+      Executors.newSingleThreadExecutor(
+          new ThreadFactory() {
+            @Override
+            public Thread newThread(Runnable r) {
+              Thread thread = new Thread(r, "firebase-messaging-wakelock-release");
+              thread.setDaemon(true);
+              return thread;
+            }
+          });
 
   /**
    * Base class for the target service we can deliver work to and the implementation of how to
@@ -188,11 +219,7 @@ abstract class JobIntentService extends Service {
         // If we are transitioning back to a wakelock with a timeout, do the same
         // as if we had enqueued work without the service running.
         if (mLaunchingService) {
-          try {
-            mLaunchWakeLock.acquire(60 * 1000);
-          } catch (RuntimeException e) {
-            Log.e(TAG, "Failed to acquire launch wake lock after processing finished", e);
-          }
+          mLaunchWakeLock.acquire(60 * 1000);
         }
         mServiceProcessing = false;
         runLockToRelease = mRunWakeLock;
@@ -202,9 +229,7 @@ abstract class JobIntentService extends Service {
             @Override
             public void run() {
               try {
-                if (runLockToRelease != null) {
-                  runLockToRelease.release();
-                }
+                runLockToRelease.release();
               } catch (RuntimeException e) {
                 Log.e(TAG, "Failed to release run wake lock after processing finished", e);
               }
