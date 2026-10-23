@@ -1,3 +1,7 @@
+## 16.7.1
+
+ - **FIX**(core): bump Firebase iOS SDK to 12.19.3 (4.x backport, Firestore security fix) ([#18861](https://github.com/firebase/flutterfire/issues/18861)). ([ff334acb](https://github.com/firebase/flutterfire/commit/ff334acbf5a87a94f33f9d59319d93cee576d2e7))
+
 ## 16.7.0
 
  - **FIX**(messaging,ios): register for APNs after Dart Firebase.initializeApp() ([#18650](https://github.com/firebase/flutterfire/issues/18650)). ([2ea8381a](https://github.com/firebase/flutterfire/commit/2ea8381a1ada9fa6946c87fc0d203f94f04c6212))

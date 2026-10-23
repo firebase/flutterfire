@@ -1,3 +1,13 @@
+## 4.15.1
+
+> Note: This is a security release for Cloud Firestore on iOS and macOS. Firebase iOS SDK 12.19.3 removes compromised eMudhra CA roots from Firestore's embedded gRPC root-certificate bundle ([firebase-ios-sdk#16930](https://github.com/firebase/firebase-ios-sdk/pull/16930)). CocoaPods and Swift Package Manager both now use 12.19.3.
+>
+> - **Swift Package Manager**: upgrade to this `firebase_core` release.
+> - **CocoaPods**: upgrade to this release, or patch immediately by adding `$FirebaseSDKVersion = '12.19.3'` at the top of `ios/Podfile` and running `pod update FirebaseFirestore`. If you also use `firebase_analytics` or `firebase_app_check`, upgrade them as well: older versions require `FirebaseAnalytics`/`FirebaseAppCheck` 12.19.3, which was not published.
+> - **Windows**: the Firebase C++ SDK is also affected and will be fixed in a follow-up `firebase_core` release.
+
+ - **FIX**(core): bump Firebase iOS SDK to 12.19.3 (4.x backport, Firestore security fix) ([#18861](https://github.com/firebase/flutterfire/issues/18861)). ([ff334acb](https://github.com/firebase/flutterfire/commit/ff334acbf5a87a94f33f9d59319d93cee576d2e7))
+
 ## 4.15.0
 
  - **FEAT**(core): bump Firebase iOS SDK to 12.19.0 ([#18683](https://github.com/firebase/flutterfire/issues/18683)). ([35e39637](https://github.com/firebase/flutterfire/commit/35e39637f4cbef0d70043047f80d6f6e80daf8fe))

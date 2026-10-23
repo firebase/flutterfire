@@ -1,3 +1,7 @@
+## 6.5.1
+
+ - **FIX**(core): bump Firebase iOS SDK to 12.19.3 (4.x backport, Firestore security fix) ([#18861](https://github.com/firebase/flutterfire/issues/18861)). ([ff334acb](https://github.com/firebase/flutterfire/commit/ff334acbf5a87a94f33f9d59319d93cee576d2e7))
+
 ## 6.5.0
 
  - **FIX**(cloud_functions): lowercase Android error codes with Locale.ROOT ([#18651](https://github.com/firebase/flutterfire/issues/18651)). ([8f0a5d01](https://github.com/firebase/flutterfire/commit/8f0a5d0198663231a27fab2802cfad179838e601))
