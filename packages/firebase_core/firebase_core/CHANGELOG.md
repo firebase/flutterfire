@@ -1,3 +1,12 @@
+## 4.15.2
+
+> Note: This is a security release for Cloud Firestore on Windows. Firebase C++ SDK 13.13.1 builds Firestore from Firebase iOS SDK 12.19.3, which removes compromised eMudhra CA roots from Firestore's embedded gRPC root-certificate bundle ([firebase-ios-sdk#16930](https://github.com/firebase/firebase-ios-sdk/pull/16930)).
+>
+> - **Windows**: upgrade to this `firebase_core` release (or `cloud_firestore` 6.10.2, which requires it). If the build keeps using the old SDK, run `flutter clean`. If you set `FIREBASE_CPP_SDK_DIR`, point it at a 13.13.1 SDK.
+> - iOS/macOS were fixed in `firebase_core` 4.15.1 (BoM 4.20.1).
+
+ - **FIX**(core): bump Firebase C++ SDK to 13.13.1 (4.x backport, Windows Firestore security fix) ([#18868](https://github.com/firebase/flutterfire/issues/18868)). ([1ae6803a](https://github.com/firebase/flutterfire/commit/1ae6803a7abfa1bf5122647ccdd24087ee2b3a17))
+
 ## 4.15.1
 
 > Note: This is a security release for Cloud Firestore on iOS and macOS. Firebase iOS SDK 12.19.3 removes compromised eMudhra CA roots from Firestore's embedded gRPC root-certificate bundle ([firebase-ios-sdk#16930](https://github.com/firebase/firebase-ios-sdk/pull/16930)). CocoaPods and Swift Package Manager both now use 12.19.3.

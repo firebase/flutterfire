@@ -1,3 +1,7 @@
+## 6.10.2
+
+ - **FIX**(firestore,windows): require `firebase_core` ^4.15.2 so Windows builds use Firebase C++ SDK 13.13.1 (Firestore security fix).
+
 ## 6.10.1
 
  - **FIX**(core): bump Firebase iOS SDK to 12.19.3 (4.x backport, Firestore security fix) ([#18861](https://github.com/firebase/flutterfire/issues/18861)). ([ff334acb](https://github.com/firebase/flutterfire/commit/ff334acbf5a87a94f33f9d59319d93cee576d2e7))
