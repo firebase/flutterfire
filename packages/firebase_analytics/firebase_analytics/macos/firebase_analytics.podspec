@@ -59,7 +59,8 @@ Pod::Spec.new do |s|
 
   # Firebase dependencies
   s.dependency 'firebase_core'
-  s.dependency firebase_analytics, firebase_sdk_version
+  # FirebaseAnalytics is not released with every Firebase patch version (e.g. 12.19.3), so allow any patch of the minor.
+  s.dependency firebase_analytics, "~> #{firebase_sdk_version.sub(/\.\d+$/, '.0')}"
 
   s.static_framework = true
   s.pod_target_xcconfig = {
