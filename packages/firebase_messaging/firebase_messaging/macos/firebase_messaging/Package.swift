@@ -8,7 +8,7 @@
 import PackageDescription
 
 let libraryVersion = "16.7.0"
-let firebaseSdkVersion: Version = "12.19.0"
+let firebaseSdkVersion: Version = "12.19.3"
 
 let package = Package(
   name: "firebase_messaging",
