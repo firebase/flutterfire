@@ -17,13 +17,14 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
-import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import 'content.dart';
 import 'error.dart';
 import 'live_api.dart';
 import 'tool.dart';
+import 'web_socket_connect_web.dart'
+    if (dart.library.io) 'web_socket_connect_io.dart';
 
 /// Returns the HTTP headers (App Check, Auth, etc.) for a new WebSocket
 /// connection.
@@ -54,7 +55,7 @@ class LiveSession {
         _systemInstruction = systemInstruction,
         _tools = tools,
         _liveGenerationConfig = liveGenerationConfig,
-        _connector = connector ?? _defaultConnector,
+        _connector = connector ?? connectWebSocket,
         _messageController = StreamController<LiveServerResponse>.broadcast() {
     _listenToWebSocket();
   }
@@ -93,7 +94,7 @@ class LiveSession {
     LiveGenerationConfig? liveGenerationConfig,
     @visibleForTesting LiveWebSocketConnector? connector,
   }) async {
-    final effectiveConnector = connector ?? _defaultConnector;
+    final effectiveConnector = connector ?? connectWebSocket;
     final ws = await _performWebSocketSetup(
       uri: uri,
       headers: await headersProvider(),
@@ -115,12 +116,6 @@ class LiveSession {
       connector: effectiveConnector,
     );
   }
-
-  static WebSocketChannel _defaultConnector(
-          Uri uri, Map<String, String> headers) =>
-      kIsWeb
-          ? WebSocketChannel.connect(uri)
-          : IOWebSocketChannel.connect(uri, headers: headers);
 
   // Persisted values for session resumption.
   final String _uri;
