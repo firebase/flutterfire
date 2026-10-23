@@ -15,6 +15,7 @@ export const listfruits2ndgen = functionsv2.https.onCall((res, req) => {
     if (res.acceptsStreaming) {
       req?.sendChunk(fruit)
     }
+    return fruit;
   })
   return Promise.all(allFruits);
 });

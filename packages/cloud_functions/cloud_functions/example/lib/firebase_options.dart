@@ -24,7 +24,7 @@ class DefaultFirebaseOptions {
   }
 
   static const web = FirebaseOptions(
-    apiKey: 'dummy-api-key',
+    apiKey: 'AIzaSyDUMMYKEYFORFLUTTERFIRECITESTS0000',
     appId: '1:123456789012:web:0000000000000000000000',
     messagingSenderId: '123456789012',
     projectId: 'flutterfire-e2e-tests',
@@ -33,7 +33,7 @@ class DefaultFirebaseOptions {
   );
 
   static const android = FirebaseOptions(
-    apiKey: 'dummy-api-key',
+    apiKey: 'AIzaSyDUMMYKEYFORFLUTTERFIRECITESTS0000',
     appId: '1:123456789012:android:0000000000000000000000',
     messagingSenderId: '123456789012',
     projectId: 'flutterfire-e2e-tests',
@@ -41,7 +41,7 @@ class DefaultFirebaseOptions {
   );
 
   static const ios = FirebaseOptions(
-    apiKey: 'dummy-api-key',
+    apiKey: 'AIzaSyDUMMYKEYFORFLUTTERFIRECITESTS0000',
     appId: '1:123456789012:ios:0000000000000000000000',
     messagingSenderId: '123456789012',
     projectId: 'flutterfire-e2e-tests',
@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
   static const macos = ios;
 
   static const windows = FirebaseOptions(
-    apiKey: 'dummy-api-key',
+    apiKey: 'AIzaSyDUMMYKEYFORFLUTTERFIRECITESTS0000',
     appId: '1:123456789012:web:0000000000000000000000',
     messagingSenderId: '123456789012',
     projectId: 'flutterfire-e2e-tests',

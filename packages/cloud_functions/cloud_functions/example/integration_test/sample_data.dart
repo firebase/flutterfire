@@ -12,6 +12,17 @@ Map<String, dynamic> map = <String, dynamic>{
 
 List<dynamic> list = ['1', 2, true, false];
 
+/// What `listFruit` and `listfruits2ndgen` return, see
+/// .github/workflows/scripts/functions/src/index.ts.
+const List<String> fruits = [
+  'Apple',
+  'Banana',
+  'Cherry',
+  'Date',
+  'Fig',
+  'Grapes',
+];
+
 Map<String, dynamic> deepMap = <String, dynamic>{
   ...map,
   'list': list,

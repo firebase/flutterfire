@@ -177,7 +177,7 @@ void main() {
         );
 
         HttpsCallableResult result = await callable();
-        expect(result, isA<HttpsCallableResult>());
+        expect(result.data, equals(data.fruits));
       });
 
       test('can be called using an Uri url', () async {
@@ -193,7 +193,7 @@ void main() {
         );
 
         HttpsCallableResult result = await callable();
-        expect(result, isA<HttpsCallableResult>());
+        expect(result.data, equals(data.fruits));
       });
     });
 
