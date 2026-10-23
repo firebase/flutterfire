@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## 2026-10-23
+## 2026-10-23 - [BoM 4.20.2](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-4202-2026-10-23)
 
 ### Changes
 
@@ -29,7 +29,7 @@ Packages with other changes:
  - **FIX**(core): bump Firebase C++ SDK to 13.13.1 (4.x backport, Windows Firestore security fix) ([#18868](https://github.com/firebase/flutterfire/issues/18868)). ([1ae6803a](https://github.com/firebase/flutterfire/commit/1ae6803a7abfa1bf5122647ccdd24087ee2b3a17))
 
 
-## 2026-10-23 - [BoM 4.20.1](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-4201-2026-10-23)
+## 2026-10-23 - [BoM 4.20.2](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-4202-2026-10-23) - [BoM 4.20.1](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-4201-2026-10-23)
 
 ### Changes
 
