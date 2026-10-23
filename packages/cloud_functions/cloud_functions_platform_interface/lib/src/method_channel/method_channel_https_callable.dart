@@ -80,7 +80,12 @@ class MethodChannelHttpsCallable extends HttpsCallablePlatform {
         'allowInsecureTokenAttachment': functions.allowInsecureTokenAttachment,
         'timeout': options.timeout.inMilliseconds,
       };
-      yield* channel.receiveBroadcastStream(eventData).map(_convertNested);
+      // Stream errors are forwarded by `yield*` rather than thrown into the
+      // `catch` below, so they are converted on the stream itself.
+      yield* channel
+          .receiveBroadcastStream(eventData)
+          .handleError(convertPlatformException)
+          .map(_convertNested);
     } catch (e, s) {
       convertPlatformException(e, s);
     }

@@ -101,51 +101,6 @@ class FlutterFirebaseFunctionsPlugin : FlutterPlugin, FlutterFirebasePlugin, Clo
     return taskCompletionSource.task
   }
 
-  private fun getExceptionDetails(exception: Exception?): Map<String, Any?> {
-    val details: MutableMap<String, Any?> = HashMap()
-
-    if (exception == null) {
-      return details
-    }
-
-    var code = "UNKNOWN"
-    var message = exception.message
-    var additionalData: Any? = null
-
-    if (exception.cause is FirebaseFunctionsException) {
-      val functionsException = exception.cause as FirebaseFunctionsException?
-      code = functionsException!!.code.name
-      message = functionsException.message
-      additionalData = functionsException.details
-
-      if (functionsException.cause is IOException &&
-          "Canceled" == (functionsException.cause as IOException).message) {
-        // return DEADLINE_EXCEEDED for IOException cancel errors, to match iOS & Web
-        code = FirebaseFunctionsException.Code.DEADLINE_EXCEEDED.name
-        message = FirebaseFunctionsException.Code.DEADLINE_EXCEEDED.name
-      } else if (functionsException.cause is
-          InterruptedIOException // return DEADLINE_EXCEEDED for InterruptedIOException errors, to
-      // match iOS & Web
-      && "timeout" == (functionsException.cause as InterruptedIOException).message) {
-        code = FirebaseFunctionsException.Code.DEADLINE_EXCEEDED.name
-        message = FirebaseFunctionsException.Code.DEADLINE_EXCEEDED.name
-      } else if (functionsException.cause is IOException) {
-        // return UNAVAILABLE for network io errors, to match iOS & Web
-        code = FirebaseFunctionsException.Code.UNAVAILABLE.name
-        message = FirebaseFunctionsException.Code.UNAVAILABLE.name
-      }
-    }
-
-    details["code"] = mapFunctionsErrorCode(code)
-    details["message"] = message
-
-    if (additionalData != null) {
-      details["additionalData"] = additionalData
-    }
-
-    return details
-  }
-
   override fun getPluginConstantsForFirebaseApp(firebaseApp: FirebaseApp): Task<Map<String, Any>> {
     val taskCompletionSource = TaskCompletionSource<Map<String, Any>>()
 
@@ -168,6 +123,53 @@ class FlutterFirebaseFunctionsPlugin : FlutterPlugin, FlutterFirebasePlugin, Clo
     // Locale.ROOT: Turkish/Azerbaijani map 'I' → 'ı' under Locale.getDefault().
     internal fun mapFunctionsErrorCode(code: String): String {
       return code.replace("_", "-").lowercase(Locale.ROOT)
+    }
+
+    internal fun getExceptionDetails(exception: Throwable?): Map<String, Any?> {
+      val details: MutableMap<String, Any?> = HashMap()
+
+      if (exception == null) {
+        return details
+      }
+
+      var code = "UNKNOWN"
+      var message = exception.message
+      var additionalData: Any? = null
+
+      // Callable errors arrive wrapped by Tasks.await, stream errors unwrapped.
+      val functionsException =
+          exception as? FirebaseFunctionsException ?: exception.cause as? FirebaseFunctionsException
+      if (functionsException != null) {
+        code = functionsException.code.name
+        message = functionsException.message
+        // A stream that fails while reading gets the error as details, not as cause
+        // (PublisherStream.processSSEStream). The codec can't send a Throwable.
+        val cause = functionsException.cause ?: functionsException.details as? Throwable
+        additionalData = functionsException.details.takeUnless { it is Throwable }
+
+        if (cause is IOException && "Canceled" == cause.message) {
+          // return DEADLINE_EXCEEDED for IOException cancel errors, to match iOS & Web
+          code = FirebaseFunctionsException.Code.DEADLINE_EXCEEDED.name
+          message = FirebaseFunctionsException.Code.DEADLINE_EXCEEDED.name
+        } else if (cause is InterruptedIOException && "timeout" == cause.message) {
+          // return DEADLINE_EXCEEDED for InterruptedIOException errors, to match iOS & Web
+          code = FirebaseFunctionsException.Code.DEADLINE_EXCEEDED.name
+          message = FirebaseFunctionsException.Code.DEADLINE_EXCEEDED.name
+        } else if (cause is IOException) {
+          // return UNAVAILABLE for network io errors, to match iOS & Web
+          code = FirebaseFunctionsException.Code.UNAVAILABLE.name
+          message = FirebaseFunctionsException.Code.UNAVAILABLE.name
+        }
+      }
+
+      details["code"] = mapFunctionsErrorCode(code)
+      details["message"] = message
+
+      if (additionalData != null) {
+        details["additionalData"] = additionalData
+      }
+
+      return details
     }
   }
 

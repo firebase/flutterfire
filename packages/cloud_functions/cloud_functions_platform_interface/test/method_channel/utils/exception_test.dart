@@ -42,6 +42,20 @@ void main() {
       );
     });
 
+    test('should tolerate a missing message', () async {
+      PlatformException platformException = PlatformException(
+          code: 'foo', details: {'code': 'internal', 'message': null});
+
+      expect(
+        () => convertPlatformException(platformException, StackTrace.empty),
+        throwsA(
+          isA<FirebaseFunctionsException>()
+              .having((e) => e.code, 'code', 'internal')
+              .having((e) => e.message, 'message', isEmpty),
+        ),
+      );
+    });
+
     test('should override code and message if provided to additional details',
         () async {
       String code = 'baz';

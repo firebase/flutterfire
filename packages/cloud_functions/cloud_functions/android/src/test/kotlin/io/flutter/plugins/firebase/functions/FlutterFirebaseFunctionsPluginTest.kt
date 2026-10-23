@@ -3,7 +3,9 @@
 // found in the LICENSE file.
 package io.flutter.plugins.firebase.functions
 
+import com.google.firebase.functions.FirebaseFunctionsException
 import java.util.Locale
+import java.util.concurrent.ExecutionException
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -46,6 +48,25 @@ class FlutterFirebaseFunctionsPluginTest {
         "FAILED_PRECONDITION".replace("_", "-").lowercase(Locale.getDefault()))
 
     assertMappedCodes()
+  }
+
+  @Test
+  fun getExceptionDetails_unwrapsCallableErrors() {
+    // Tasks.await wraps the callable's FirebaseFunctionsException.
+    val exception =
+        ExecutionException(
+            TestFunctionsExceptions.create(
+                "Invalid test requested.",
+                FirebaseFunctionsException.Code.INVALID_ARGUMENT,
+                listOf(1, 2),
+                null))
+
+    assertEquals(
+        mapOf(
+            "code" to "invalid-argument",
+            "message" to "Invalid test requested.",
+            "additionalData" to listOf(1, 2)),
+        FlutterFirebaseFunctionsPlugin.getExceptionDetails(exception))
   }
 
   private fun assertMappedCodes() {
