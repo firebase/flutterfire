@@ -56,7 +56,7 @@ enum PigeonParser {
         "displayName": userInfo.displayName as Any,
         "email": userInfo.email as Any,
         "phoneNumber": userInfo.phoneNumber as Any,
-        "photoURL": photoUrlStr as Any,
+        "photoUrl": photoUrlStr as Any,
         "isAnonymous": false,
         "isEmailVerified": true,
       ]
