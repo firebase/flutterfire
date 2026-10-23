@@ -1,3 +1,7 @@
+## 0.2.7+30
+
+ - Update a dependency to the latest release.
+
 ## 0.2.6+29
 
  - **FEAT**(in_app_messaging): add custom Flutter display for campaigns ([#18586](https://github.com/firebase/flutterfire/issues/18586)). ([efa14e08](https://github.com/firebase/flutterfire/commit/efa14e08e78a2cba06a72a47d4dccee01be0ac61))

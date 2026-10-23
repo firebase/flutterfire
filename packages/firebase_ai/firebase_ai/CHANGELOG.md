@@ -1,3 +1,12 @@
+## 5.1.0
+
+ - **FIX**(firebaseai): add useLimitedUseAppCheckTokens flag to instance cache keys ([#18826](https://github.com/firebase/flutterfire/issues/18826)). ([91b00a03](https://github.com/firebase/flutterfire/commit/91b00a0399fe8282ff984029af350ccb67ab580e))
+ - **FIX**(android): replace Groovy space-assignment in plugin build.gradle files ([#18837](https://github.com/firebase/flutterfire/issues/18837)). ([09e913ac](https://github.com/firebase/flutterfire/commit/09e913acd98fa25ea6ff547141e7caf421b7b02d))
+ - **FIX**(ai): tolerate optional safetyRatings, unknown HarmProbability, and decoded webSearchQueries ([#18816](https://github.com/firebase/flutterfire/issues/18816)). ([9b821bc1](https://github.com/firebase/flutterfire/commit/9b821bc18500b9ae55a9cb74b0be949cb64bcd19))
+ - **FIX**(firebaseai): refresh App Check and Auth headers on LiveSession.resumeSession ([#18814](https://github.com/firebase/flutterfire/issues/18814)). ([a71a5e06](https://github.com/firebase/flutterfire/commit/a71a5e06b10e756b036ea85d460c33df0128090b))
+ - **FEAT**(firebaseai): add SpeechMetadata support to TextPart ([#18811](https://github.com/firebase/flutterfire/issues/18811)). ([e8f72dd5](https://github.com/firebase/flutterfire/commit/e8f72dd51b3c6044c9a81599d0c6af5164765bc3))
+ - **FEAT**: register flutter-fire-ai and flutter-fire-dc platform versions and fix web late registration ([#18707](https://github.com/firebase/flutterfire/issues/18707)). ([569c39e7](https://github.com/firebase/flutterfire/commit/569c39e71d32f1bef77b1cea4c0d1389374be2b5))
+
 ## 5.0.0
 
 > Note: This release has breaking changes.

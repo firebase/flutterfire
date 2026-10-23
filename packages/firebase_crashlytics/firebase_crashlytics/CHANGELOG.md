@@ -1,3 +1,8 @@
+## 6.0.1
+
+ - **FIX**(crashlytics,android): read the ELF build ID off the main thread, once per process ([#18835](https://github.com/firebase/flutterfire/issues/18835)). ([37c3620f](https://github.com/firebase/flutterfire/commit/37c3620f3b136b5db50608072f7c1077aed3ae56))
+ - **FIX**(android): replace Groovy space-assignment in plugin build.gradle files ([#18837](https://github.com/firebase/flutterfire/issues/18837)). ([09e913ac](https://github.com/firebase/flutterfire/commit/09e913acd98fa25ea6ff547141e7caf421b7b02d))
+
 ## 6.0.0
 
 > Note: This release has breaking changes.

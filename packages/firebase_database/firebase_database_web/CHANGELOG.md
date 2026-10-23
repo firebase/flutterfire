@@ -1,3 +1,7 @@
+## 0.2.9+16
+
+ - **FIX**(firebase_database_web): point DataSnapshot.child() ref at the child ([#18822](https://github.com/firebase/flutterfire/issues/18822)). ([63e8560c](https://github.com/firebase/flutterfire/commit/63e8560c353708b270f7946c9a27cf1b0e5be7a7))
+
 ## 0.2.8+15
 
  - Update a dependency to the latest release.

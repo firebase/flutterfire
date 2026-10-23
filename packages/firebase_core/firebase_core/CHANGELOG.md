@@ -1,3 +1,9 @@
+## 5.1.0
+
+ - **FIX**(android): replace Groovy space-assignment in plugin build.gradle files ([#18837](https://github.com/firebase/flutterfire/issues/18837)). ([09e913ac](https://github.com/firebase/flutterfire/commit/09e913acd98fa25ea6ff547141e7caf421b7b02d))
+ - **FEAT**(core): bump Firebase Android SDK to 35.0.2 ([#18812](https://github.com/firebase/flutterfire/issues/18812)). ([cb3cc4b6](https://github.com/firebase/flutterfire/commit/cb3cc4b6bed7aa0ca916d98abb11275fbfe0728f))
+ - **FEAT**(core): bump Firebase Android SDK to 35.0.1 ([#18808](https://github.com/firebase/flutterfire/issues/18808)). ([a0e08589](https://github.com/firebase/flutterfire/commit/a0e08589bc9d401067dd1a87a8ca5c0c2d205698))
+
 ## 5.0.0
 
 > Note: This release has breaking changes.
