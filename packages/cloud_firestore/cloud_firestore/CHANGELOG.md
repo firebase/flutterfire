@@ -1,6 +1,6 @@
 ## 6.10.2
 
- - Bump "cloud_firestore" to `6.10.2`.
+ - **FIX**(firestore,windows): require `firebase_core` ^4.15.2 so Windows builds use Firebase C++ SDK 13.13.1 (Firestore security fix).
 
 ## 6.10.1
 
