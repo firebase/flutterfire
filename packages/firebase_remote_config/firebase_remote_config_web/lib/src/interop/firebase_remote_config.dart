@@ -50,7 +50,10 @@ class RemoteConfig
   /// defaultsMap['x'] = 1;                       // remoteConfig.defaultConfig will not be updated.
   /// remoteConfig.defaultConfig['x'] = 1;        // Runtime error: attempt to modify an unmodifiable map.
   /// ```
-  Map<String, dynamic> get defaultConfig => Map.unmodifiable(
+  Map<String, dynamic> get defaultConfig =>
+      // ignore: deprecated_member_use, Map.unmodifiableOf requires Dart 3.13,
+      // above this package's SDK floor.
+      Map.unmodifiable(
         jsObject.defaultConfig.dartify()! as Map<String, dynamic>,
       );
 
