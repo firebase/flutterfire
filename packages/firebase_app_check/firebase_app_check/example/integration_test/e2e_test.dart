@@ -59,13 +59,34 @@ void main() {
       );
 
       test(
+        'DeviceCheck reports unsupported-provider',
+        () async {
+          await FirebaseAppCheck.instance.activate();
+
+          await expectLater(
+            FirebaseAppCheck.instance.getToken(true),
+            throwsA(
+              isA<FirebaseException>().having(
+                (e) => e.code,
+                'code',
+                'unsupported-provider',
+              ),
+            ),
+          );
+        },
+        skip: defaultTargetPlatform != TargetPlatform.iOS
+            ? 'iOS simulator only.'
+            : null,
+      );
+
+      test(
         'getToken',
         () async {
           try {
             await FirebaseAppCheck.instance.getToken(true);
           } catch (exception) {
             // Needs a debug token pasted in the Firebase console to work so we catch the exception.
-            expect(exception, isA<FirebaseException>());
+            _expectAppCheckFailure(exception);
           }
         },
       );
@@ -84,7 +105,7 @@ void main() {
             }
           } catch (exception) {
             // Needs a debug token pasted in the Firebase console to work so we catch the exception.
-            expect(exception, isA<FirebaseException>());
+            _expectAppCheckFailure(exception);
           }
         },
       );
@@ -112,7 +133,7 @@ void main() {
             token = await FirebaseAppCheck.instance.getLimitedUseToken();
           } catch (exception) {
             // Needs a debug token pasted in the Firebase console to work so we catch the exception.
-            expect(exception, isA<FirebaseException>());
+            _expectAppCheckFailure(exception);
             return;
           }
           if (kIsWeb) return;
@@ -234,6 +255,14 @@ void main() {
       );
     },
   );
+}
+
+void _expectAppCheckFailure(Object exception) {
+  expect(exception, isA<FirebaseException>());
+  if (defaultTargetPlatform != TargetPlatform.iOS) {
+    return;
+  }
+  expect((exception as FirebaseException).code, 'unsupported-provider');
 }
 
 /// The lifetime (`exp` - `iat`) of an App Check token, read from its JWT claims.
