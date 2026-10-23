@@ -24,7 +24,7 @@ import 'package:firebase_data_connect/src/common/common_library.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-import '../firebase_data_connect_test.mocks.dart';
+import '../src/firebase_data_connect_test.mocks.dart';
 
 void main() {
   late FirebaseDataConnect dataConnect;

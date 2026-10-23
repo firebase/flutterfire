@@ -32,7 +32,7 @@ String getGoogApiVal(CallerSDKType sdkType, String packageVersion) {
   if (sdkType == CallerSDKType.generated) {
     apiClientValue += ' dart/gen';
   }
-  return '$apiClientValue gl-${kIsWeb ? 'web' : operatingSystem}';
+  return '$apiClientValue gl-$operatingSystem';
 }
 
 String getFirebaseClientVal(String packageVersion) {

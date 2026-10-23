@@ -12,7 +12,7 @@
 /// The walk follows pana's: imports and exports are followed transitively,
 /// conditional imports resolve as they would on Wasm, and `package:flutter`
 /// is not descended into. pana starts from `lib/<package>.dart` only; this
-/// starts from every library in `lib/` outside `lib/src/`, so it is slightly
+/// starts from every library under `lib/` outside `lib/src/`, so it is slightly
 /// stricter. Run `melos bootstrap` (or `flutter pub get`) first.
 library;
 
@@ -42,13 +42,23 @@ const _wasmLibraries = {
   'js_interop_unsafe',
 };
 
-/// Known imports that lead to a library not available on Wasm, by importing
-/// package. They are not followed; the script fails once one is no longer
-/// reached, so that its entry is removed with the fix.
+/// Packages known not to be Wasm-ready, with the imports that make them so, as
+/// `'<importing package> -> <import>'`. These imports are not followed when
+/// checking that package; the script fails once one is no longer reached, so
+/// that its entry is removed with the fix.
 const _knownViolations = {
-  // putFile(File) in the public API; also blocks firebase_storage_web.
-  'firebase_storage': {'dart:io'},
-  'firebase_storage_platform_interface': {'dart:io'},
+  // putFile(File) in the public API of firebase_storage and its platform
+  // interface.
+  'firebase_storage': {
+    'firebase_storage -> dart:io',
+    'firebase_storage_platform_interface -> dart:io',
+  },
+  'firebase_storage_platform_interface': {
+    'firebase_storage_platform_interface -> dart:io',
+  },
+  'firebase_storage_web': {
+    'firebase_storage_platform_interface -> dart:io',
+  },
 };
 
 void main() {
@@ -72,7 +82,7 @@ void main() {
   for (final path in _loadYamlMap(p.join(rootDir, 'pubspec.yaml'))['workspace']
       as YamlList) {
     if (!'$path'.startsWith('packages/') ||
-        p.split('$path').contains('example')) {
+        p.posix.split('$path').contains('example')) {
       continue;
     }
     final pubspec = _loadYamlMap(p.join(rootDir, '$path', 'pubspec.yaml'));
@@ -85,18 +95,37 @@ void main() {
     if (!libDir.existsSync()) continue;
     checked++;
 
-    final publicLibraries = libDir
-        .listSync()
-        .whereType<File>()
-        .where((file) => file.path.endsWith('.dart'))
-        .map((file) => Uri.parse('package:$name/${p.basename(file.path)}'));
-    final violations = graph.findViolations(publicLibraries);
+    final publicLibraries = [
+      for (final file in libDir.listSync(recursive: true).whereType<File>())
+        if (file.path.endsWith('.dart'))
+          p.split(p.relative(file.path, from: libDir.path)),
+    ]
+        .where((segments) => segments.first != 'src')
+        .map((segments) => Uri.parse('package:$name/${segments.join('/')}'));
+    final known = _knownViolations[name] ?? const {};
+    final (:violations, :reachedKnown) =
+        graph.findViolations(publicLibraries, known);
     if (violations.isNotEmpty) errors.add('$name:');
     for (final chain in violations) {
       final reason = chain.last.isScheme('dart')
           ? 'is not available on Wasm'
           : 'could not be resolved (run `melos bootstrap`?)';
       errors.add('  ${chain.last} $reason\n      ${chain.join('\n      -> ')}');
+    }
+    for (final import in known) {
+      if (reachedKnown.contains(import)) {
+        print('Skipped known import in $name: $import.');
+      } else {
+        errors.add('$name no longer reaches $import: remove it from '
+            '_knownViolations.');
+      }
+    }
+  }
+
+  for (final name in _knownViolations.keys) {
+    if (!packages.containsKey(name)) {
+      errors.add('$name is not a published package in the workspace: remove '
+          'it from _knownViolations.');
     }
   }
 
@@ -105,17 +134,6 @@ void main() {
   }
 
   print('Checked $checked packages.');
-  for (final MapEntry(key: package, value: imports)
-      in _knownViolations.entries) {
-    for (final import in imports) {
-      if (graph.reachedKnownViolations.contains('$package $import')) {
-        print('Skipped known import of $import in $package.');
-      } else {
-        errors.add('$import is no longer reached through $package: remove '
-            'it from _knownViolations.');
-      }
-    }
-  }
 
   if (errors.isNotEmpty) {
     print('');
@@ -138,13 +156,15 @@ class _ImportGraph {
   final _packageRoots = <String, Uri>{};
   final _dependencies = <Uri, List<Uri>>{};
 
-  /// `'<package> <import>'` for each [_knownViolations] entry reached.
-  final reachedKnownViolations = <String>{};
-
   /// Returns the import chain to each import reachable from [libraries] that
   /// is a `dart:` library not available on Wasm, or a `package:` URI that
-  /// cannot be resolved.
-  List<List<Uri>> findViolations(Iterable<Uri> libraries) {
+  /// cannot be resolved, except the [known] imports
+  /// (`'<importing package> -> <import>'`), and which of those were reached.
+  ({List<List<Uri>> violations, Set<String> reachedKnown}) findViolations(
+    Iterable<Uri> libraries,
+    Set<String> known,
+  ) {
+    final reachedKnown = <String>{};
     final parents = <Uri, Uri?>{for (final library in libraries) library: null};
     List<Uri> chainTo(Uri uri) => [
           for (Uri? u = uri; u != null; u = parents[u]) u,
@@ -159,8 +179,9 @@ class _ImportGraph {
       final current = queue.removeFirst();
       final package = current.pathSegments.first;
       for (final dependency in _dependenciesOf(current)) {
-        if (_knownViolations[package]?.contains('$dependency') ?? false) {
-          reachedKnownViolations.add('$package $dependency');
+        final import = '$package -> $dependency';
+        if (known.contains(import)) {
+          reachedKnown.add(import);
         } else if (dependency.isScheme('dart')) {
           if (!_wasmLibraries.contains(dependency.path)) {
             violations.add([...chainTo(current), dependency]);
@@ -177,7 +198,7 @@ class _ImportGraph {
         }
       }
     }
-    return violations;
+    return (violations: violations, reachedKnown: reachedKnown);
   }
 
   bool _isResolvable(Uri library) =>
