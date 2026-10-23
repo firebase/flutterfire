@@ -1,3 +1,7 @@
+## 1.3.79
+
+ - **FIX**(_flutterfire_internals): tolerate null and non-string values in PlatformException.details (CORE-1) ([#18815](https://github.com/firebase/flutterfire/issues/18815)). ([be29a18d](https://github.com/firebase/flutterfire/commit/be29a18de7ad2de226ac30a26fbaa8c3d7f8212f))
+
 ## 1.3.78
 
  - Update a dependency to the latest release.

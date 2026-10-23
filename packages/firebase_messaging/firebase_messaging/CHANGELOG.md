@@ -1,3 +1,9 @@
+## 17.0.1
+
+ - **FIX**(android): replace Groovy space-assignment in plugin build.gradle files ([#18837](https://github.com/firebase/flutterfire/issues/18837)). ([09e913ac](https://github.com/firebase/flutterfire/commit/09e913acd98fa25ea6ff547141e7caf421b7b02d))
+ - **FIX**(messaging,ios): deliver background messages exactly once and stop dropping them at startup ([#18830](https://github.com/firebase/flutterfire/issues/18830)). ([04045d2a](https://github.com/firebase/flutterfire/commit/04045d2a040a1c2d0cf09a25b3d879659ac310fb))
+ - **FIX**(firebase_messaging,android): keep all fields of messages restored from the store ([#18823](https://github.com/firebase/flutterfire/issues/18823)). ([b969240a](https://github.com/firebase/flutterfire/commit/b969240a4ed84e87cc0c1ef59cc841856cb4cefd))
+
 ## 17.0.0
 
 > Note: This release has breaking changes.

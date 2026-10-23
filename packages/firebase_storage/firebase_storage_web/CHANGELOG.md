@@ -1,3 +1,7 @@
+## 3.11.15
+
+ - **FIX**(firebase_storage): keep task metadata on errors and let new web metadata win ([#18821](https://github.com/firebase/flutterfire/issues/18821)). ([efd7131c](https://github.com/firebase/flutterfire/commit/efd7131cafc609386c7e65881dbb9fca340c7f6f))
+
 ## 3.11.14
 
  - Update a dependency to the latest release.

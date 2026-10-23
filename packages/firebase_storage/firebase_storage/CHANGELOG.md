@@ -1,3 +1,8 @@
+## 14.0.1
+
+ - **FIX**(android): replace Groovy space-assignment in plugin build.gradle files ([#18837](https://github.com/firebase/flutterfire/issues/18837)). ([09e913ac](https://github.com/firebase/flutterfire/commit/09e913acd98fa25ea6ff547141e7caf421b7b02d))
+ - **FIX**(firebase_storage): keep custom metadata on data url uploads ([#18761](https://github.com/firebase/flutterfire/issues/18761)). ([14363dd2](https://github.com/firebase/flutterfire/commit/14363dd2ead0b06fac28d4ea8d865e0a1d387aeb))
+
 ## 14.0.0
 
 > Note: This release has breaking changes.
