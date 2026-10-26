@@ -1,11 +1,19 @@
 package io.flutter.plugins.firebase.messaging.example
 
+import android.app.ActivityManager
+import android.app.KeyguardManager
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.ParcelFileDescriptor
+import io.flutter.FlutterInjector
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.embedding.engine.dart.DartExecutor
 import io.flutter.plugin.common.MethodChannel
+import io.flutter.plugins.firebase.messaging.FlutterFirebaseMessagingPlugin
+import io.flutter.plugins.firebase.messaging.FlutterFirebaseMessagingReceiver
+import io.flutter.view.FlutterCallbackInformation
 import java.io.FileInputStream
 import java.io.InputStream
 import java.io.OutputStream
@@ -14,8 +22,74 @@ import java.net.Socket
 import java.nio.charset.StandardCharsets
 
 class MainActivity : FlutterActivity() {
+  private var secondEngine: FlutterEngine? = null
+  private val secondEngineMessages = mutableListOf<String>()
+
   override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
     super.configureFlutterEngine(flutterEngine)
+
+    // Test-only channel that hands FCM messages to the plugin's receiver like
+    // Google Play services does when pushes arrive, without needing FCM.
+    MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "tests/remote_notifications")
+        .setMethodCallHandler { call, result ->
+          when (call.method) {
+            "deliverToReceiver" -> {
+              val messageIds = call.argument<List<String>>("messageIds")
+              if (messageIds == null) {
+                result.error("INVALID_ARG", "messageIds is required", null)
+                return@setMethodCallHandler
+              }
+              // The receiver only sends messages to onMessage while the app is in the
+              // foreground, which the lock screen prevents.
+              if (!isAppInForeground()) {
+                try {
+                  executeShell("wm dismiss-keyguard")
+                } catch (_: Exception) {
+                  // Reported below.
+                }
+                // The keyguard goes away asynchronously.
+                for (attempt in 0 until 20) {
+                  if (isAppInForeground()) break
+                  Thread.sleep(100)
+                }
+              }
+              val foreground = isAppInForeground()
+              val receiver = FlutterFirebaseMessagingReceiver()
+              for (messageId in messageIds) {
+                val intent =
+                    Intent("com.google.android.c2dm.intent.RECEIVE").apply {
+                      putExtra("google.message_id", messageId)
+                      putExtra("from", "e2e")
+                      putExtra("test", "remote-notification-delivery")
+                    }
+                receiver.onReceive(applicationContext, intent)
+              }
+              // Keep the main thread busy while the receiver hands the messages over from its
+              // own thread, as when pushes arrive faster than the main thread runs.
+              Thread.sleep(500)
+              result.success(mapOf("foreground" to foreground))
+            }
+            "startSecondEngine" -> {
+              val callbackHandle = call.argument<Number>("callbackHandle")
+              val callback =
+                  callbackHandle?.let {
+                    FlutterCallbackInformation.lookupCallbackInformation(it.toLong())
+                  }
+              if (callback == null) {
+                result.error("INVALID_ARG", "a valid callbackHandle is required", null)
+                return@setMethodCallHandler
+              }
+              startSecondEngine(callback, result)
+            }
+            "secondEngineMessages" -> result.success(secondEngineMessages.toList())
+            "stopSecondEngine" -> {
+              secondEngine?.destroy()
+              secondEngine = null
+              result.success(null)
+            }
+            else -> result.notImplemented()
+          }
+        }
 
     // Test-only channel for manipulating runtime permissions during
     // integration tests. `flutter test` launches the app without Android
@@ -81,6 +155,55 @@ class MainActivity : FlutterActivity() {
             else -> result.notImplemented()
           }
         }
+  }
+
+  private fun isAppInForeground(): Boolean {
+    val keyguard = getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
+    if (keyguard.isKeyguardLocked) return false
+    val state = ActivityManager.RunningAppProcessInfo()
+    ActivityManager.getMyMemoryState(state)
+    return state.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND
+  }
+
+  /// Starts another engine running `secondEngineMain` from the test, which
+  /// listens to onMessage and reports what it receives. The messaging plugin
+  /// is attached once its Dart runs, like an engine created after messages
+  /// were received.
+  private fun startSecondEngine(
+      callback: FlutterCallbackInformation,
+      result: MethodChannel.Result
+  ) {
+    secondEngine?.destroy()
+    secondEngineMessages.clear()
+    val engine = FlutterEngine(applicationContext, null, /* automaticallyRegisterPlugins= */ false)
+    secondEngine = engine
+    MethodChannel(engine.dartExecutor.binaryMessenger, "tests/second_engine")
+        .setMethodCallHandler { call, reply ->
+          when (call.method) {
+            "ready" -> {
+              engine.plugins.add(FlutterFirebaseMessagingPlugin())
+              reply.success(null)
+            }
+            "listening" -> {
+              reply.success(null)
+              result.success(null)
+            }
+            "onMessage" -> {
+              secondEngineMessages.add(call.arguments as String)
+              reply.success(null)
+            }
+            else -> reply.notImplemented()
+          }
+        }
+    // Looked up by callback handle: in test builds the root library is a
+    // generated wrapper that only has `main`.
+    engine.dartExecutor.executeDartCallback(
+        DartExecutor.DartCallback(
+            assets,
+            FlutterInjector.instance().flutterLoader().findAppBundlePath(),
+            callback,
+        ),
+    )
   }
 
   private fun mutatePermission(permission: String, grant: Boolean) {

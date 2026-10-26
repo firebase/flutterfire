@@ -67,7 +67,7 @@ public class FlutterFirebaseMessagingReceiver extends BroadcastReceiver {
             //      App in Foreground
             //   ------------------------
             if (FlutterFirebaseMessagingUtils.isApplicationForeground(context)) {
-              FlutterFirebaseRemoteMessageLiveData.getInstance().postRemoteMessage(remoteMessage);
+              FlutterFirebaseRemoteMessageDispatcher.getInstance().dispatch(remoteMessage);
               return;
             }
 
@@ -91,7 +91,10 @@ public class FlutterFirebaseMessagingReceiver extends BroadcastReceiver {
                 onBackgroundMessageIntent,
                 remoteMessage.getOriginalPriority() == RemoteMessage.PRIORITY_HIGH);
           } finally {
-            pendingResult.finish();
+            // Null when onReceive is called outside of a broadcast, as the e2e tests do.
+            if (pendingResult != null) {
+              pendingResult.finish();
+            }
           }
         });
   }
