@@ -25,19 +25,43 @@ class MethodChannelFieldValueFactory extends FieldValueFactoryPlatform {
       MethodChannelFieldValue(FieldValueType.delete, null);
 
   @override
-  MethodChannelFieldValue increment(num value) {
+  MethodChannelFieldValue increment(num value) => _fromNum(
+        value,
+        FieldValueType.incrementDouble,
+        FieldValueType.incrementInteger,
+      );
+
+  @override
+  MethodChannelFieldValue minimum(num value) => _fromNum(
+        value,
+        FieldValueType.minimumDouble,
+        FieldValueType.minimumInteger,
+      );
+
+  @override
+  MethodChannelFieldValue maximum(num value) => _fromNum(
+        value,
+        FieldValueType.maximumDouble,
+        FieldValueType.maximumInteger,
+      );
+
+  MethodChannelFieldValue _fromNum(
+    num value,
+    FieldValueType doubleType,
+    FieldValueType integerType,
+  ) {
     // It is a compile-time error for any type other than `int` or `double` to
     // attempt to extend or implement `num`.
     assert(value is int || value is double);
     if (value is double) {
-      return MethodChannelFieldValue(FieldValueType.incrementDouble, value);
+      return MethodChannelFieldValue(doubleType, value);
       // ignore: avoid_double_and_int_checks
     } else if (value is int) {
-      return MethodChannelFieldValue(FieldValueType.incrementInteger, value);
+      return MethodChannelFieldValue(integerType, value);
     }
 
     throw StateError(
-        'MethodChannelFieldValue().increment() expects a "num" value');
+        'MethodChannelFieldValue() numeric factories expect a "num" value');
   }
 
   @override

@@ -37,11 +37,18 @@
 
 - (FlutterError *_Nullable)onListenWithArguments:(id _Nullable)arguments
                                        eventSink:(nonnull FlutterEventSink)events {
-  // use completion handler to inform user of platform error.
+  // Observers only see updates made after they are added, so a bundle that
+  // finishes loading first would never report success and the Dart stream would
+  // never close. The completion handler is registered with the task itself, so
+  // it reports both the final snapshot and platform errors.
   self.task = [_firestore
       loadBundle:_bundle.data
       completion:^(FIRLoadBundleTaskProgress *_Nullable snapshot, NSError *_Nullable error) {
-        if (error != nil) {
+        if (error == nil) {
+          dispatch_async(dispatch_get_main_queue(), ^{
+            events(snapshot);
+          });
+        } else {
           NSArray *codeAndMessage =
               [FLTFirebaseFirestoreUtils ErrorCodeAndMessageFromNSError:error];
           NSString *code = codeAndMessage[0];
@@ -62,7 +69,7 @@
   // use addObserver to update user with snapshot progress
   [self.task addObserver:^(FIRLoadBundleTaskProgress *_Nullable progress) {
     dispatch_async(dispatch_get_main_queue(), ^{
-      if (progress.state != FIRLoadBundleTaskStateError) {
+      if (progress.state == FIRLoadBundleTaskStateInProgress) {
         events(progress);
       }
     });

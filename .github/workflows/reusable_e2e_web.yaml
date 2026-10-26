@@ -2,8 +2,7 @@ name: reusable-e2e-web
 
 # The web half of the per-product e2e suite: `flutter drive` the example under
 # chromedriver. Called by every `e2e_tests_<product>.yaml` whose product ships
-# a web implementation (everything except firebase_crashlytics and
-# firebase_ml_model_downloader).
+# a web implementation (everything except firebase_crashlytics).
 #
 # `wasm: true` selects the WebAssembly variant instead of the JS one; a product
 # whose example ships `web/wasm_index.html` calls this workflow twice, once per
@@ -124,7 +123,7 @@ jobs:
       NATIVE_CONFIG_ARGS: ${{ inputs.native-config-args }}
     timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 25 }}
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - uses: ./.github/actions/setup-flutterfire
         timeout-minutes: 15
         with:

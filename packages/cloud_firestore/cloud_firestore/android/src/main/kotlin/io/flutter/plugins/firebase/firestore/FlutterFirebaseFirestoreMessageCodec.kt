@@ -53,6 +53,10 @@ open class FlutterFirebaseFirestoreMessageCodec : StandardMessageCodec() {
     private const val DATA_TYPE_FIRESTORE_QUERY: Byte = 197.toByte()
     private const val DATA_TYPE_FIRESTORE_SETTINGS: Byte = 198.toByte()
     private const val DATA_TYPE_VECTOR_VALUE: Byte = 199.toByte()
+    private const val DATA_TYPE_MINIMUM_DOUBLE: Byte = 200.toByte()
+    private const val DATA_TYPE_MINIMUM_INTEGER: Byte = 201.toByte()
+    private const val DATA_TYPE_MAXIMUM_DOUBLE: Byte = 202.toByte()
+    private const val DATA_TYPE_MAXIMUM_INTEGER: Byte = 203.toByte()
   }
 
   open override fun writeValue(stream: ByteArrayOutputStream, value: Any?) {
@@ -241,6 +245,22 @@ open class FlutterFirebaseFirestoreMessageCodec : StandardMessageCodec() {
       DATA_TYPE_INCREMENT_DOUBLE -> {
         val doubleIncrementValue = readValue(buffer) as Number
         FieldValue.increment(doubleIncrementValue.toDouble())
+      }
+      DATA_TYPE_MINIMUM_INTEGER -> {
+        val integerMinimumValue = readValue(buffer) as Number
+        FieldValue.minimum(integerMinimumValue.toLong())
+      }
+      DATA_TYPE_MINIMUM_DOUBLE -> {
+        val doubleMinimumValue = readValue(buffer) as Number
+        FieldValue.minimum(doubleMinimumValue.toDouble())
+      }
+      DATA_TYPE_MAXIMUM_INTEGER -> {
+        val integerMaximumValue = readValue(buffer) as Number
+        FieldValue.maximum(integerMaximumValue.toLong())
+      }
+      DATA_TYPE_MAXIMUM_DOUBLE -> {
+        val doubleMaximumValue = readValue(buffer) as Number
+        FieldValue.maximum(doubleMaximumValue.toDouble())
       }
       DATA_TYPE_DOCUMENT_ID -> FieldPath.documentId()
       DATA_TYPE_FIRESTORE_INSTANCE -> readFirestoreInstance(buffer)

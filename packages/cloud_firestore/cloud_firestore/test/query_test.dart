@@ -219,6 +219,24 @@ void main() {
           throwsAssertionError,
         );
       });
+
+      test('combines chained Filter calls with AND', () {
+        final first = Filter.or(
+          Filter('a', isEqualTo: 1),
+          Filter('b', isEqualTo: 2),
+        );
+        final second = Filter.or(
+          Filter('c', isEqualTo: 3),
+          Filter('d', isEqualTo: 4),
+        );
+
+        final q = query!.where(first).where(second);
+
+        expect(q.parameters['filters'], {
+          'op': 'AND',
+          'queries': [first.toJson(), second.toJson()],
+        });
+      });
     });
 
     group('cursor queries', () {

@@ -1,3 +1,12 @@
+## 5.8.0
+
+ - **FIX**(cloud_firestore): stop dropping filters, settings and instance on copies ([#18819](https://github.com/firebase/flutterfire/issues/18819)). ([b9c4a8ec](https://github.com/firebase/flutterfire/commit/b9c4a8ecee23701cf43051abd6264a2d7dcc69fd))
+ - **FEAT**(firestore): add FieldValue.minimum and FieldValue.maximum ([#18697](https://github.com/firebase/flutterfire/issues/18697)). ([387c707b](https://github.com/firebase/flutterfire/commit/387c707b25bc9b27825a436f11202664a5634fe0))
+
+## 5.7.4
+
+ - Update a dependency to the latest release.
+
 ## 5.7.3
 
  - Update a dependency to the latest release.

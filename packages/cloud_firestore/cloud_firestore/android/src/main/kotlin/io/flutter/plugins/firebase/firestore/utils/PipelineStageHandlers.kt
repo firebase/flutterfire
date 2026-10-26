@@ -224,12 +224,17 @@ internal class PipelineStageHandlers(private val parsers: ExpressionParsers) {
     val distanceMeasure = parsers.parseDistanceMeasure(distanceMeasureStr)
     val vectorArray = DoubleArray(vectorValue.size) { i -> vectorValue[i].toDouble() }
     val fieldExpr = Expression.field(vectorField)
-    return if (limitObj != null) {
+    val distanceField = (args["distance_field"] as? String)?.takeIf { it.isNotEmpty() }
+    return if (limitObj != null || distanceField != null) {
+      var options = FindNearestOptions()
+      if (limitObj != null) {
+        options = options.withLimit(limitObj.toLong())
+      }
+      if (distanceField != null) {
+        options = options.withDistanceField(Expression.field(distanceField))
+      }
       pipeline.findNearest(
-          vectorField,
-          Expression.vector(vectorArray),
-          distanceMeasure,
-          FindNearestOptions().withLimit(limitObj.toLong()))
+          vectorField, Expression.vector(vectorArray), distanceMeasure, options)
     } else {
       pipeline.findNearest(fieldExpr, vectorArray, distanceMeasure)
     }

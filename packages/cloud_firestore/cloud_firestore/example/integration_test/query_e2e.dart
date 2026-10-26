@@ -246,6 +246,36 @@ void runQueryTests() {
         expect(stream, isA<Stream<QuerySnapshot<Map<String, dynamic>>>>());
       });
 
+      test(
+        'cancelling before the first snapshot does not leave a listener attached',
+        () async {
+          final collection = await initializeTest('query-snapshot-cancel-race');
+          final stream = collection.snapshots();
+
+          await stream.listen((_) {}).cancel();
+
+          final matches = <int>[];
+          final firstMatch = Completer<void>();
+          final subscription = stream.listen((snapshot) {
+            final hits =
+                snapshot.docs.where((doc) => doc.data()['n'] == 1).length;
+            if (hits > 0) {
+              matches.add(hits);
+              if (!firstMatch.isCompleted) {
+                firstMatch.complete();
+              }
+            }
+          });
+          addTearDown(subscription.cancel);
+
+          await collection.add({'n': 1});
+          await firstMatch.future.timeout(const Duration(seconds: 10));
+          await Future<void>.delayed(const Duration(seconds: 1));
+
+          expect(matches, [1]);
+        },
+      );
+
       test('listens to a single response', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('get-single');
@@ -4138,6 +4168,40 @@ void runQueryTests() {
           expect(snapshot.getAverage('foo'), null);
         },
         skip: defaultTargetPlatform == TargetPlatform.windows,
+      );
+
+      test(
+        'sum() & average() report that they are unsupported on Windows',
+        () async {
+          final collection = await initializeTest('unsupported-aggregations');
+
+          await collection.add({'foo': 1});
+
+          final unsupportedError = isA<FirebaseException>()
+              .having((error) => error.code, 'code', 'unimplemented')
+              .having(
+                (error) => error.message,
+                'message',
+                'Sum and average aggregations are not supported by the '
+                    'Firebase C++ SDK on Windows.',
+              );
+
+          await expectLater(
+            collection.aggregate(sum('foo')).get(),
+            throwsA(unsupportedError),
+          );
+          await expectLater(
+            collection.aggregate(average('foo')).get(),
+            throwsA(unsupportedError),
+          );
+          // A mixed request used to resolve with the count and a null sum,
+          // which reads as a successful query returning no sum.
+          await expectLater(
+            collection.aggregate(count(), sum('foo')).get(),
+            throwsA(unsupportedError),
+          );
+        },
+        skip: defaultTargetPlatform != TargetPlatform.windows,
       );
     });
 

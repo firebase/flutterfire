@@ -16,6 +16,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:firebase_ai/firebase_ai.dart';
 
+import '../constants.dart';
 import '../widgets/message_widget.dart';
 
 class ImageGenerationPage extends StatefulWidget {
@@ -54,7 +55,7 @@ class _ImageGenerationPageState extends State<ImageGenerationPage> {
         : FirebaseAI.googleAI();
 
     _model = aiClient.generativeModel(
-      model: 'gemini-2.5-flash-image',
+      model: ExampleModels.flashImage,
       generationConfig: GenerationConfig(
         responseModalities: [ResponseModalities.text, ResponseModalities.image],
       ),

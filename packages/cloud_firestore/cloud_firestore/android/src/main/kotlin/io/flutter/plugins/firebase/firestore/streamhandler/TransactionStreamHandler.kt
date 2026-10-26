@@ -51,11 +51,15 @@ class TransactionStreamHandler(
 
               try {
                 if (!semaphore.tryAcquire(timeout, TimeUnit.MILLISECONDS)) {
-                  return@Function FlutterFirebaseFirestoreTransactionResult.failed(
+                  // Throw a non-FirebaseFirestoreException so the Android SDK
+                  // does not retry or commit. Returning a failed result object
+                  // makes apply() succeed, which commits and then crashes a later
+                  // transaction.get (see #18666).
+                  throw RuntimeException(
                       FirebaseFirestoreException("timed out", Code.DEADLINE_EXCEEDED))
                 }
               } catch (e: InterruptedException) {
-                return@Function FlutterFirebaseFirestoreTransactionResult.failed(
+                throw RuntimeException(
                     FirebaseFirestoreException("interrupted", Code.DEADLINE_EXCEEDED))
               }
 
@@ -118,9 +122,10 @@ class TransactionStreamHandler(
             })
         .addOnCompleteListener { task ->
           val map = HashMap<String, Any?>()
-          val resultException = task.result?.exception
-          if (task.exception != null || resultException != null) {
-            val exception = task.exception ?: resultException
+          val taskException = task.exception
+          val resultException = if (taskException == null) task.result?.exception else null
+          val exception = taskException ?: resultException
+          if (exception != null) {
             map["appName"] = firestore.app.name
             map["error"] = ExceptionConverter.createDetails(exception)
           } else if (task.result != null) {
@@ -136,7 +141,11 @@ class TransactionStreamHandler(
 
   override fun onCancel(arguments: Any?) {
     semaphore.release()
-    onTransactionCancelledListener(transactionId)
+    // FlutterFirebaseFirestorePlugin passes null when disposing all listeners and clears the
+    // listener maps itself. A non-null value identifies Dart's EventChannel cancellation.
+    if (arguments != null) {
+      onTransactionCancelledListener(transactionId)
+    }
   }
 
   override fun receiveTransactionResponse(

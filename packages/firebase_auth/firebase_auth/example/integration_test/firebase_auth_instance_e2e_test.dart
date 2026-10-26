@@ -6,8 +6,10 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth_platform_interface/src/pigeon/messages.pigeon.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:firebase_auth_example/firebase_options.dart';
@@ -83,6 +85,90 @@ void main() {
           await FirebaseAuth.instance.signInAnonymously();
         });
       });
+
+      test(
+        'native auth streams forward a signed-out initial callback',
+        () async {
+          final app = await Firebase.initializeApp(
+            name: 'initial-signed-out',
+            options: DefaultFirebaseOptions.currentPlatform,
+          );
+          // Keep the app for the suite's lifetime, as in the initialization
+          // test below: other plugins may still initialize it in the background.
+          final api = FirebaseAuthHostApi();
+          final pigeonApp = AuthPigeonFirebaseApp(appName: app.name);
+          await api.useEmulator(
+            pigeonApp,
+            testEmulatorHost,
+            testEmulatorPort,
+          );
+          await api.signOut(pigeonApp);
+          for (final register in [
+            api.registerAuthStateListener,
+            api.registerIdTokenListener,
+          ]) {
+            final channelName = await register(pigeonApp);
+            final event = await EventChannel(channelName)
+                .receiveBroadcastStream()
+                .first
+                .timeout(const Duration(seconds: 5));
+            expect(event['user'], isNull);
+          }
+        },
+        skip: kIsWeb ||
+            (!Platform.isAndroid && !Platform.isIOS && !Platform.isMacOS),
+      );
+
+      test(
+        'native auth streams drop a signed-in initial callback',
+        () async {
+          final app = await Firebase.initializeApp(
+            name: 'initial-signed-in',
+            options: DefaultFirebaseOptions.currentPlatform,
+          );
+          final api = FirebaseAuthHostApi();
+          final pigeonApp = AuthPigeonFirebaseApp(appName: app.name);
+          await api.useEmulator(
+            pigeonApp,
+            testEmulatorHost,
+            testEmulatorPort,
+          );
+          for (final register in [
+            api.registerAuthStateListener,
+            api.registerIdTokenListener,
+          ]) {
+            await api.signInAnonymously(pigeonApp);
+            final channelName = await register(pigeonApp);
+            final events = StreamIterator<dynamic>(
+              EventChannel(channelName).receiveBroadcastStream(),
+            );
+            try {
+              final firstEvent = events.moveNext();
+              expect(
+                await firstEvent.timeout(
+                  const Duration(seconds: 2),
+                  onTimeout: () => false,
+                ),
+                isFalse,
+              );
+              // Verify the same listener is active after the initial silence.
+              await api.signOut(pigeonApp);
+              expect(
+                await firstEvent.timeout(const Duration(seconds: 5)),
+                isTrue,
+              );
+              expect(events.current['user'], isNull);
+            } finally {
+              await events.cancel();
+              await api.signOut(pigeonApp);
+            }
+          }
+        },
+        // Signing in persists the user to the keychain, which the unsigned
+        // macOS test app cannot write to (errSecMissingEntitlement), like the
+        // other sign-in tests here.
+        skip: kIsWeb || (!Platform.isAndroid && !Platform.isIOS),
+      );
 
       group('idTokenChanges()', () {
         StreamSubscription? subscription;
@@ -1061,6 +1147,39 @@ void main() {
       );
 
       group('setSettings()', () {
+        test(
+          'migrates the current user when changing access groups',
+          () async {
+            const accessGroup =
+                'YYX2P3XVJ7.io.flutter.plugins.firebase.auth.example';
+            final auth = FirebaseAuth.instance;
+
+            await auth.signOut();
+            final credential = await auth.signInAnonymously();
+            final uid = credential.user!.uid;
+
+            try {
+              await auth.setSettings(
+                userAccessGroup: accessGroup,
+                migrateCurrentUser: true,
+              );
+
+              // Prefer the reconciled Dart cache from setSettings, then prove
+              // the native session survived with a token round-trip.
+              expect(auth.currentUser, isNotNull);
+              expect(auth.currentUser!.uid, uid);
+              expect(auth.currentUser!.isAnonymous, isTrue);
+              final token = await auth.currentUser!.getIdToken();
+              expect(token, isNotEmpty);
+            } finally {
+              // Leave later tests without this anonymous session. Access-group
+              // resets are not supported via null today (pre-existing).
+              await auth.signOut();
+            }
+          },
+          skip: kIsWeb || defaultTargetPlatform != TargetPlatform.iOS,
+        );
+
         test(
           'throws argument error if phoneNumber & smsCode have not been set simultaneously',
           () async {

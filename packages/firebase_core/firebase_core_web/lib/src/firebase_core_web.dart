@@ -68,7 +68,7 @@ class FirebaseCoreWeb extends FirebasePlatform {
   static const String _libraryName = 'flutter-fire-core';
 
   /// Registers that [FirebaseCoreWeb] is the platform implementation.
-  static void registerWith(Registrar registrar) {
+  static void registerWith(dynamic registrar) {
     FirebasePlatform.instance = FirebaseCoreWeb();
   }
 
@@ -87,6 +87,9 @@ class FirebaseCoreWeb extends FirebasePlatform {
 
   static void registerLibraryVersion(String libraryName, String version) {
     _libraryVersions[libraryName] = version;
+    if (globalContext.getProperty('firebase_core'.toJS) != null) {
+      _registerVersionIfNeeded(libraryName, version);
+    }
   }
 
   static void _registerAllLibraryVersions() {
@@ -117,16 +120,15 @@ class FirebaseCoreWeb extends FirebasePlatform {
   /// You must ensure the Firebase script is injected before using the service.
   List<String> get _ignoredServiceScripts {
     try {
-      JSObject? ignored =
+      final ignored =
           globalContext.getProperty('flutterfire_ignore_scripts'.toJS);
-
-      // Cannot be done with Dart 3.2 constraints
-      // ignore: invalid_runtime_check_with_js_interop_types
-      if (ignored is Iterable) {
-        // ignore: invalid_runtime_check_with_js_interop_types
-        return (ignored! as Iterable)
-            .map((e) => e.toString())
-            .toList(growable: false);
+      if (ignored != null && ignored.isA<JSArray>()) {
+        return (ignored as JSArray<JSAny?>).toDart.map((entry) {
+          if (entry != null && entry.isA<JSString>()) {
+            return (entry as JSString).toDart;
+          }
+          return entry?.toString() ?? 'null';
+        }).toList(growable: false);
       }
     } catch (e) {
       // Noop
@@ -134,6 +136,10 @@ class FirebaseCoreWeb extends FirebasePlatform {
 
     return [];
   }
+
+  /// Services listed on `window.flutterfire_ignore_scripts`.
+  @visibleForTesting
+  List<String> get ignoredServiceScripts => _ignoredServiceScripts;
 
   final String _defaultTrustedPolicyName = 'flutterfire-';
 
@@ -394,16 +400,17 @@ class FirebaseCoreWeb extends FirebasePlatform {
           measurementId: options.measurementId,
         );
       } catch (e) {
-        if (!e.isA<JSObject>()) {
+        // isA on Object requires Dart 3.12; this package supports 3.6.
+        // ignore: invalid_runtime_check_with_js_interop_types
+        if (e is! JSError) {
           rethrow;
         }
 
-        final jsError = e as JSError;
-        if (_getJSErrorCode(jsError) == 'app/duplicate-app') {
+        if (_getJSErrorCode(e) == 'app/duplicate-app') {
           throw duplicateApp(name);
         }
 
-        throw _catchJSError(jsError);
+        throw _catchJSError(e);
       }
     }
 
@@ -445,16 +452,17 @@ class FirebaseCoreWeb extends FirebasePlatform {
       app = guardNotInitialized(() => firebase.app(name));
       return _createFromJsApp(app);
     } catch (e) {
-      if (!e.isA<JSObject>()) {
+      // isA on Object requires Dart 3.12; this package supports 3.6.
+      // ignore: invalid_runtime_check_with_js_interop_types
+      if (e is! JSError) {
         rethrow;
       }
 
-      final jsError = e as JSError;
-      if (_getJSErrorCode(jsError) == 'app/no-app') {
+      if (_getJSErrorCode(e) == 'app/no-app') {
         throw noAppExists(name);
       }
 
-      throw _catchJSError(jsError);
+      throw _catchJSError(e);
     }
   }
 }

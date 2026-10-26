@@ -59,6 +59,18 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
     return _instance ??= MethodChannelFirebaseMessaging.instance;
   }
 
+  // Native events only reach these streams once the default instance has set
+  // up its method channel handler, so listening sets it up instead of relying
+  // on the app having called another messaging API first.
+  static void _ensureInstance() {
+    try {
+      instance;
+    } catch (_) {
+      // No binding yet (e.g. a unit test without one), so no native events
+      // can arrive either. The handler is set up when `instance` is used.
+    }
+  }
+
   /// Sets the [FirebaseMessagingPlatform.instance]
   static set instance(FirebaseMessagingPlatform instance) {
     PlatformInterface.verify(instance, _token);
@@ -72,7 +84,7 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   /// see [onBackgroundMessage].
   // ignore: close_sinks, never closed
   static final StreamController<RemoteMessage> onMessage =
-      StreamController<RemoteMessage>.broadcast();
+      StreamController<RemoteMessage>.broadcast(onListen: _ensureInstance);
 
   /// Returns a [Stream] that is called when a user presses a notification displayed
   /// via FCM.
@@ -84,7 +96,7 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   /// see [getInitialMessage].
   // ignore: close_sinks, never closed
   static final StreamController<RemoteMessage> onMessageOpenedApp =
-      StreamController<RemoteMessage>.broadcast();
+      StreamController<RemoteMessage>.broadcast(onListen: _ensureInstance);
 
   static BackgroundMessageHandler? _onBackgroundMessageHandler;
 
@@ -104,6 +116,7 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
     _onBackgroundMessageHandler = handler;
 
     if (handler != null) {
+      MethodChannelFirebaseMessaging.backgroundMessageHandlerSet();
       instance.registerBackgroundMessageHandler(handler);
     }
   }
@@ -160,6 +173,7 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   /// Removes access to an FCM token previously authorized with optional [senderId].
   ///
   /// Messages sent by the server to this token will fail.
+  @Deprecated('Use unregister() and onUnregistered instead.')
   Future<void> deleteToken() {
     throw UnimplementedError('deleteToken() is not implemented');
   }
@@ -170,7 +184,44 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
     throw UnimplementedError('getAPNSToken() is not implemented');
   }
 
+  /// Registers the current app instance with Firebase Cloud Messaging.
+  ///
+  /// Once registration completes, [onRegistered] provides the Firebase
+  /// Installation ID (FID) that can be used as the direct-send target for this
+  /// app instance.
+  Future<void> register({
+    String? vapidKey,
+    String? serviceWorkerScriptPath,
+  }) {
+    throw UnimplementedError('register() is not implemented');
+  }
+
+  /// Unregisters the current app instance with Firebase Cloud Messaging.
+  ///
+  /// Once unregistration completes, [onUnregistered] provides the Firebase
+  /// Installation ID (FID) that is no longer active for direct-send messaging.
+  Future<void> unregister() {
+    throw UnimplementedError('unregister() is not implemented');
+  }
+
+  /// Fires when this app instance is registered with Firebase Cloud Messaging.
+  ///
+  /// The event value is the Firebase Installation ID (FID) that should be sent
+  /// to your backend for direct-send messaging.
+  Stream<String> get onRegistered {
+    throw UnimplementedError('onRegistered is not implemented');
+  }
+
+  /// Fires when this app instance is unregistered from Firebase Cloud Messaging.
+  ///
+  /// The event value is the Firebase Installation ID (FID) that should be
+  /// removed from your backend.
+  Stream<String> get onUnregistered {
+    throw UnimplementedError('onUnregistered is not implemented');
+  }
+
   /// Returns the default FCM token for this device and optionally [senderId].
+  @Deprecated('Use register() and onRegistered instead.')
   Future<String?> getToken({
     String? vapidKey,
     String? serviceWorkerScriptPath,
@@ -179,6 +230,7 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   }
 
   /// Fires when a new FCM token is generated.
+  @Deprecated('Use onRegistered instead.')
   Stream<String> get onTokenRefresh {
     throw UnimplementedError('onTokenRefresh is not implemented');
   }

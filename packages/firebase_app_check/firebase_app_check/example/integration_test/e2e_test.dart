@@ -4,6 +4,8 @@
 
 // ignore_for_file: do_not_use_environment
 
+import 'dart:convert';
+
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -105,12 +107,21 @@ void main() {
       test(
         'getLimitedUseToken',
         () async {
+          final String token;
           try {
-            await FirebaseAppCheck.instance.getLimitedUseToken();
+            token = await FirebaseAppCheck.instance.getLimitedUseToken();
           } catch (exception) {
             // Needs a debug token pasted in the Firebase console to work so we catch the exception.
             expect(exception, isA<FirebaseException>());
+            return;
           }
+          if (kIsWeb) return;
+          // Limited-use tokens have a fixed 5 minute TTL, while standard tokens
+          // default to 1 hour. A longer TTL means a standard token was returned.
+          expect(
+            _tokenTtl(token),
+            lessThanOrEqualTo(const Duration(minutes: 5)),
+          );
         },
       );
 
@@ -223,4 +234,12 @@ void main() {
       );
     },
   );
+}
+
+/// The lifetime (`exp` - `iat`) of an App Check token, read from its JWT claims.
+Duration _tokenTtl(String token) {
+  final claims = jsonDecode(
+    utf8.decode(base64Url.decode(base64Url.normalize(token.split('.')[1]))),
+  ) as Map<String, dynamic>;
+  return Duration(seconds: (claims['exp'] as int) - (claims['iat'] as int));
 }

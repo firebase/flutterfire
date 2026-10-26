@@ -507,26 +507,32 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     }
   }
 
+  Stream<UserPlatform?> _streamChanges(
+      Stream<_ValueWrapper<UserPlatform>> stream) async* {
+    var isSignedOut = currentUser == null;
+    yield currentUser;
+    yield* stream.map((event) => event.value).where((user) {
+      if (user == null && isSignedOut) {
+        return false;
+      }
+      isSignedOut = user == null;
+      return true;
+    });
+  }
+
   @override
   Stream<UserPlatform?> authStateChanges() async* {
-    yield currentUser;
-    yield* _authStateChangesListeners[app.name]!
-        .stream
-        .map((event) => event.value);
+    yield* _streamChanges(_authStateChangesListeners[app.name]!.stream);
   }
 
   @override
   Stream<UserPlatform?> idTokenChanges() async* {
-    yield currentUser;
-    yield* _idTokenChangesListeners[app.name]!
-        .stream
-        .map((event) => event.value);
+    yield* _streamChanges(_idTokenChangesListeners[app.name]!.stream);
   }
 
   @override
   Stream<UserPlatform?> userChanges() async* {
-    yield currentUser;
-    yield* _userChangesListeners[app.name]!.stream.map((event) => event.value);
+    yield* _streamChanges(_userChangesListeners[app.name]!.stream);
   }
 
   @override
@@ -595,10 +601,17 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   Future<void> setSettings({
     bool appVerificationDisabledForTesting = false,
     String? userAccessGroup,
+    bool migrateCurrentUser = false,
     String? phoneNumber,
     String? smsCode,
     bool? forceRecaptchaFlow,
   }) async {
+    if (migrateCurrentUser && userAccessGroup == null) {
+      throw ArgumentError(
+        'The [userAccessGroup] must be set when [migrateCurrentUser] is true.',
+      );
+    }
+
     if (phoneNumber != null && smsCode == null ||
         phoneNumber == null && smsCode != null) {
       throw ArgumentError(
@@ -607,16 +620,33 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     }
 
     try {
-      await _api.setSettings(
+      final InternalUserDetails? migratedUser = await _api.setSettings(
           pigeonDefault,
           InternalFirebaseAuthSettings(
             appVerificationDisabledForTesting:
                 appVerificationDisabledForTesting,
             userAccessGroup: userAccessGroup,
+            migrateCurrentUser: migrateCurrentUser,
             phoneNumber: phoneNumber,
             smsCode: smsCode,
             forceRecaptchaFlow: forceRecaptchaFlow,
           ));
+
+      // Native migration completes before this Future resolves, but auth-state
+      // events are delivered asynchronously. Assign [currentUser] from the
+      // returned user (same pattern as sign-in APIs) so callers don't observe a
+      // stale or transiently-null cache. The events themselves come from the
+      // native listener, which the migration triggers on its own.
+      if (migratedUser != null) {
+        MethodChannelMultiFactor? multiFactorInstance =
+            _multiFactorInstances[app.name];
+        if (multiFactorInstance == null) {
+          multiFactorInstance = MethodChannelMultiFactor(this);
+          _multiFactorInstances[app.name] = multiFactorInstance;
+        }
+        currentUser =
+            MethodChannelUser(this, multiFactorInstance, migratedUser);
+      }
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }

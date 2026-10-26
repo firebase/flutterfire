@@ -39,6 +39,12 @@ abstract class FirebaseFunctionsPlatform extends PlatformInterface {
   /// The region for the HTTPS trigger, such as "us-central1".
   final String region;
 
+  /// Whether Auth, FCM, and App Check tokens may be sent over plain HTTP to a
+  /// non-loopback host.
+  ///
+  /// Only Apple debug builds consult this value. Android and web ignore it.
+  bool allowInsecureTokenAttachment = false;
+
   /// The current default [FirebaseFunctionsPlatform] instance.
   ///
   /// It will always default to [MethodChannelFirebaseFunctions]

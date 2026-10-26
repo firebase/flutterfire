@@ -573,7 +573,6 @@ void main() {
         expect(response.totalTokens, 123);
         // Developer API does not return other fields
         // ignore: deprecated_member_use_from_same_package
-        expect(response.totalBillableCharacters, isNull);
         expect(response.promptTokensDetails, isNull);
       });
 

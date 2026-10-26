@@ -396,6 +396,38 @@ void main() {
         final stage = pipeline.stages.last;
         expect(stage['args']['distance_measure'], 'dotProduct');
       });
+
+      test('serializes findNearest with distanceField', () {
+        final pipeline = firestore.pipeline().collection('items').findNearest(
+              Field('embedding'),
+              [0.1, 0.2, 0.3],
+              DistanceMeasure.cosine,
+              distanceField: 'distance',
+            );
+        final stage = pipeline.stages.last;
+        expect(stage['args']['distance_field'], 'distance');
+      });
+
+      test('omits distance_field when distanceField is absent', () {
+        final pipeline = firestore.pipeline().collection('items').findNearest(
+              Field('embedding'),
+              [0.1, 0.2, 0.3],
+              DistanceMeasure.cosine,
+            );
+        final stage = pipeline.stages.last;
+        expect(stage['args'].containsKey('distance_field'), isFalse);
+      });
+
+      test('omits distance_field when distanceField is empty', () {
+        final pipeline = firestore.pipeline().collection('items').findNearest(
+              Field('embedding'),
+              [0.1, 0.2, 0.3],
+              DistanceMeasure.cosine,
+              distanceField: '',
+            );
+        final stage = pipeline.stages.last;
+        expect(stage['args'].containsKey('distance_field'), isFalse);
+      });
     });
 
     group('_SearchStage', () {

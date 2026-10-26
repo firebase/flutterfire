@@ -74,16 +74,15 @@ public class FlutterFirebaseMessagingStore {
     setPreferencesStringValue(KEY_NOTIFICATION_IDS, notifications);
   }
 
+  /**
+   * Returns the map stored by {@link #storeFirebaseMessage}, in the same shape as {@link
+   * FlutterFirebaseMessagingUtils#remoteMessageToMap}.
+   */
   public Map<String, Object> getFirebaseMessageMap(String remoteMessageId) {
     String remoteMessageString = getPreferencesStringValue(remoteMessageId, null);
     if (remoteMessageString != null) {
       try {
-        Map<String, Object> argumentsMap = new HashMap<>(1);
-        Map<String, Object> messageOutMap = jsonObjectToMap(new JSONObject(remoteMessageString));
-        // Add a fake 'to' - as it's required to construct a RemoteMessage instance.
-        messageOutMap.put("to", remoteMessageId);
-        argumentsMap.put("message", messageOutMap);
-        return argumentsMap;
+        return jsonObjectToMap(new JSONObject(remoteMessageString));
       } catch (JSONException e) {
         e.printStackTrace();
       }

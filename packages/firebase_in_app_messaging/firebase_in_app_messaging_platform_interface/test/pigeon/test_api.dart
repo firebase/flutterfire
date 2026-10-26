@@ -20,6 +20,24 @@ class _PigeonCodec extends StandardMessageCodec {
     if (value is int) {
       buffer.putUint8(4);
       buffer.putInt64(value);
+    } else if (value is FiamDismissType) {
+      buffer.putUint8(129);
+      writeValue(buffer, value.index);
+    } else if (value is FiamCampaignMetadata) {
+      buffer.putUint8(130);
+      writeValue(buffer, value.encode());
+    } else if (value is FiamAction) {
+      buffer.putUint8(131);
+      writeValue(buffer, value.encode());
+    } else if (value is FiamText) {
+      buffer.putUint8(132);
+      writeValue(buffer, value.encode());
+    } else if (value is FiamDisplayAction) {
+      buffer.putUint8(133);
+      writeValue(buffer, value.encode());
+    } else if (value is FiamDisplayMessage) {
+      buffer.putUint8(134);
+      writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
     }
@@ -28,6 +46,19 @@ class _PigeonCodec extends StandardMessageCodec {
   @override
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
+      case 129:
+        final value = readValue(buffer) as int?;
+        return value == null ? null : FiamDismissType.values[value];
+      case 130:
+        return FiamCampaignMetadata.decode(readValue(buffer)!);
+      case 131:
+        return FiamAction.decode(readValue(buffer)!);
+      case 132:
+        return FiamText.decode(readValue(buffer)!);
+      case 133:
+        return FiamDisplayAction.decode(readValue(buffer)!);
+      case 134:
+        return FiamDisplayMessage.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
     }
@@ -44,6 +75,20 @@ abstract class TestFirebaseInAppMessagingHostApi {
   Future<void> setMessagesSuppressed(String appName, bool suppress);
 
   Future<void> setAutomaticDataCollectionEnabled(String appName, bool enabled);
+
+  /// Attaches the native message lifecycle listeners that forward events to
+  /// [FirebaseInAppMessagingFlutterApi]. Calling this more than once is a no-op.
+  Future<void> addEventListeners(String appName);
+
+  Future<void> setCustomDisplayEnabled(String appName, bool enabled);
+
+  Future<void> reportImpression(String campaignId);
+
+  Future<void> reportClick(String campaignId, String actionId);
+
+  Future<void> reportDismiss(String campaignId, String dismissType);
+
+  Future<void> reportDisplayError(String campaignId, String reason);
 
   static void setUp(
     TestFirebaseInAppMessagingHostApi? api, {
@@ -124,6 +169,166 @@ abstract class TestFirebaseInAppMessagingHostApi {
           try {
             await api.setAutomaticDataCollectionEnabled(
                 arg_appName, arg_enabled);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingHostApi.addEventListeners$messageChannelSuffix',
+          pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final String arg_appName = args[0]! as String;
+          try {
+            await api.addEventListeners(arg_appName);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingHostApi.setCustomDisplayEnabled$messageChannelSuffix',
+          pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final String arg_appName = args[0]! as String;
+          final bool arg_enabled = args[1]! as bool;
+          try {
+            await api.setCustomDisplayEnabled(arg_appName, arg_enabled);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingHostApi.reportImpression$messageChannelSuffix',
+          pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final String arg_campaignId = args[0]! as String;
+          try {
+            await api.reportImpression(arg_campaignId);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingHostApi.reportClick$messageChannelSuffix',
+          pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final String arg_campaignId = args[0]! as String;
+          final String arg_actionId = args[1]! as String;
+          try {
+            await api.reportClick(arg_campaignId, arg_actionId);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingHostApi.reportDismiss$messageChannelSuffix',
+          pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final String arg_campaignId = args[0]! as String;
+          final String arg_dismissType = args[1]! as String;
+          try {
+            await api.reportDismiss(arg_campaignId, arg_dismissType);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingHostApi.reportDisplayError$messageChannelSuffix',
+          pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final String arg_campaignId = args[0]! as String;
+          final String arg_reason = args[1]! as String;
+          try {
+            await api.reportDisplayError(arg_campaignId, arg_reason);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);

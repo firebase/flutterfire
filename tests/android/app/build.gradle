@@ -30,13 +30,13 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
-        coreLibraryDesugaringEnabled true
+        coreLibraryDesugaringEnabled = true
     }
 
     defaultConfig {
         applicationId = "io.flutter.plugins.firebase.tests"
-        // auth requires minSdk 23
-        minSdkVersion flutter.minSdkVersion
+        // Firebase Android BoM 35 requires API 24.
+        minSdkVersion = Math.max(flutter.minSdkVersion, 24)
         targetSdk = 35
         versionCode = flutterVersionCode.toInteger()
         versionName = flutterVersionName

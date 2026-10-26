@@ -441,6 +441,8 @@ class FlutterFirebaseFirestorePlugin :
                     DocumentSnapshot.ServerTimestampBehavior.NONE)))
       } catch (e: Exception) {
         ExceptionConverter.sendErrorToFlutter(callback, e)
+      } catch (t: Throwable) {
+        ExceptionConverter.sendErrorToFlutter(callback, Exception(t))
       }
     }
   }
@@ -792,11 +794,14 @@ class FlutterFirebaseFirestorePlugin :
                   updateTime = pipelineResult.updateTime?.toDate()?.time,
                   data = pipelineResult.getData() as Map<String?, Any?>?))
         }
+        val executionTime = snapshot.executionTime?.toDate()?.time
+        if (executionTime == null) {
+          throw IllegalStateException("Pipeline snapshot is missing executionTime.")
+        }
         callback(
             Result.success(
                 InternalPipelineSnapshot(
-                    results = pipelineResults,
-                    executionTime = snapshot.executionTime?.toDate()?.time ?: 0L)))
+                    results = pipelineResults, executionTime = executionTime)))
       } catch (e: Exception) {
         ExceptionConverter.sendErrorToFlutter(callback, e)
       }

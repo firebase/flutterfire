@@ -3,7 +3,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:io';
 import 'dart:js_interop';
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
@@ -12,6 +11,7 @@ import 'package:firebase_auth_web/src/firebase_auth_web_multi_factor.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
+import 'package:http_parser/http_parser.dart';
 
 import '../interop/auth.dart' as auth_interop;
 import '../interop/multi_factor.dart' as multi_factor_interop;
@@ -92,7 +92,8 @@ FirebaseAuthException getFirebaseAuthException(
       .replaceFirst('Firebase: ', '');
 
   // "customData" - see Firebase AuthError docs: https://firebase.google.com/docs/reference/js/auth.autherror
-  final customData = exception.customData as auth_interop.AuthErrorCustomData;
+  // Some Auth error shapes omit customData; casting a missing value throws TypeError.
+  final customData = exception.customData as auth_interop.AuthErrorCustomData?;
 
   if (code == 'multi-factor-auth-required') {
     final _auth = auth;
@@ -111,9 +112,9 @@ FirebaseAuthException getFirebaseAuthException(
     return FirebaseAuthMultiFactorExceptionPlatform(
       code: code,
       message: message,
-      email: customData.email?.toDart,
-      phoneNumber: customData.phoneNumber?.toDart,
-      tenantId: customData.tenantId?.toDart,
+      email: customData?.email?.toDart,
+      phoneNumber: customData?.phoneNumber?.toDart,
+      tenantId: customData?.tenantId?.toDart,
       resolver: MultiFactorResolverWeb(
         resolverWeb.hints.map(fromInteropMultiFactorInfo).toList(),
         MultiFactorSessionWeb('web', resolverWeb.session),
@@ -127,9 +128,9 @@ FirebaseAuthException getFirebaseAuthException(
   return FirebaseAuthException(
     code: code,
     message: message,
-    email: customData.email?.toDart,
-    phoneNumber: customData.phoneNumber?.toDart,
-    tenantId: customData.tenantId?.toDart,
+    email: customData?.email?.toDart,
+    phoneNumber: customData?.phoneNumber?.toDart,
+    tenantId: customData?.tenantId?.toDart,
     credential: credential,
   );
 }
@@ -142,7 +143,7 @@ MultiFactorInfo fromInteropMultiFactorInfo(
       displayName: e.displayName,
       factorId: e.factorId,
       enrollmentTimestamp:
-          HttpDate.parse(e.enrollmentTime).millisecondsSinceEpoch / 1000,
+          parseHttpDate(e.enrollmentTime).millisecondsSinceEpoch / 1000,
       uid: e.uid,
       phoneNumber: e.phoneNumber,
     );
@@ -151,7 +152,7 @@ MultiFactorInfo fromInteropMultiFactorInfo(
       displayName: e.displayName,
       factorId: e.factorId,
       enrollmentTimestamp:
-          HttpDate.parse(e.enrollmentTime).millisecondsSinceEpoch / 1000,
+          parseHttpDate(e.enrollmentTime).millisecondsSinceEpoch / 1000,
       uid: e.uid,
     );
   }
@@ -159,7 +160,7 @@ MultiFactorInfo fromInteropMultiFactorInfo(
     displayName: e.displayName,
     factorId: e.factorId,
     enrollmentTimestamp:
-        HttpDate.parse(e.enrollmentTime).millisecondsSinceEpoch / 1000,
+        parseHttpDate(e.enrollmentTime).millisecondsSinceEpoch / 1000,
     uid: e.uid,
   );
 }

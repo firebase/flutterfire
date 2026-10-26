@@ -9,6 +9,16 @@ import 'auth_credential.dart';
 
 /// Generic exception related to Firebase Authentication. Check the error code
 /// and message for more details.
+///
+/// [code] is a lowercase, hyphen-separated string such as `invalid-email` or
+/// `network-request-failed`, without an `auth/` or `ERROR_` prefix. The set of
+/// codes depends on the platform, because most codes come from the native
+/// Firebase SDK. See
+/// [Error Handling](https://firebase.google.com/docs/auth/flutter/errors) for
+/// the list of codes and the platforms that throw them.
+///
+/// When a user must complete a second factor to sign in, the subclass
+/// `FirebaseAuthMultiFactorException` is thrown.
 class FirebaseAuthException extends FirebaseException implements Exception {
   // ignore: public_member_api_docs
   @protected
