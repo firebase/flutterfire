@@ -92,6 +92,10 @@ flutter run
 Using Melos (installed in step 3), any changes made to the plugins locally will also be reflected within all
 example applications code automatically.
 
+iOS and macOS examples build with [Swift Package Manager](https://docs.flutter.dev/packages-and-plugins/swift-package-manager/for-app-developers)
+only: they commit no Podfile, and each example's `pubspec.yaml` sets `enable-swift-package-manager: true`, so you don't
+need CocoaPods or `pod install`.
+
 ## 6. Running tests
 
 FlutterFire comprises of a number of tests for each plugin, either end-to-end (e2e) or unit tests.

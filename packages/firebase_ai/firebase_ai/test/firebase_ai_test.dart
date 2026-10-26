@@ -128,6 +128,90 @@ void main() {
         expect(agentPlatform.app, equals(customApp));
         expect(agentPlatform.auth, equals(customAuth));
       });
+
+      test('Default location shares an instance with explicit global location',
+          () {
+        final defaultLocation = FirebaseAI.agentPlatform(app: app);
+        final globalLocation =
+            FirebaseAI.agentPlatform(app: app, location: 'global');
+
+        expect(identical(defaultLocation, globalLocation), isTrue);
+      });
+
+      test('Separate instances per useLimitedUseAppCheckTokens value', () {
+        final regular = FirebaseAI.agentPlatform(app: app);
+        final limitedUse = FirebaseAI.agentPlatform(
+          app: app,
+          useLimitedUseAppCheckTokens: true,
+        );
+
+        expect(identical(regular, limitedUse), isFalse);
+        expect(regular.useLimitedUseAppCheckTokens, isFalse);
+        expect(limitedUse.useLimitedUseAppCheckTokens, isTrue);
+        expect(
+          identical(
+            limitedUse,
+            FirebaseAI.agentPlatform(
+              app: app,
+              useLimitedUseAppCheckTokens: true,
+            ),
+          ),
+          isTrue,
+        );
+      });
+
+      test('Limited-use instance is not reused for calls without the flag', () {
+        final limitedUse = FirebaseAI.agentPlatform(
+          app: limitTokenApp,
+          useLimitedUseAppCheckTokens: true,
+        );
+        final regular = FirebaseAI.agentPlatform(app: limitTokenApp);
+
+        expect(identical(limitedUse, regular), isFalse);
+        expect(regular.useLimitedUseAppCheckTokens, isFalse);
+      });
+    });
+
+    group('googleAI tests', () {
+      test('Singleton behavior', () {
+        final instance1 = FirebaseAI.googleAI();
+        final instance2 = FirebaseAI.googleAI(
+          app: app,
+          useLimitedUseAppCheckTokens: false,
+        );
+
+        expect(identical(instance1, instance2), isTrue);
+      });
+
+      test('Separate instances per useLimitedUseAppCheckTokens value', () {
+        final regular = FirebaseAI.googleAI(app: app);
+        final limitedUse = FirebaseAI.googleAI(
+          app: app,
+          useLimitedUseAppCheckTokens: true,
+        );
+
+        expect(identical(regular, limitedUse), isFalse);
+        expect(regular.useLimitedUseAppCheckTokens, isFalse);
+        expect(limitedUse.useLimitedUseAppCheckTokens, isTrue);
+        expect(
+          identical(
+            limitedUse,
+            FirebaseAI.googleAI(app: app, useLimitedUseAppCheckTokens: true),
+          ),
+          isTrue,
+        );
+      });
+
+      test('Limited-use instance is not reused for calls without the flag', () {
+        final limitedUse = FirebaseAI.googleAI(
+          app: limitTokenApp,
+          useLimitedUseAppCheckTokens: true,
+        );
+        final regular = FirebaseAI.googleAI(app: limitTokenApp);
+
+        expect(identical(limitedUse, regular), isFalse);
+        expect(regular.useLimitedUseAppCheckTokens, isFalse);
+      });
     });
 
     test('generativeModel creation with Grounding tools', () {

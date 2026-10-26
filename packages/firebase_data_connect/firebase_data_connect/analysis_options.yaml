@@ -1,6 +1,5 @@
 analyzer:
   exclude:
-    - lib/src/generated/**
     - build/**
     - android/**
     - ios/**

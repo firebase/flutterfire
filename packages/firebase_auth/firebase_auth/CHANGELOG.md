@@ -1,3 +1,10 @@
+## 7.0.1
+
+ - **FIX**(auth): forward signed-out initial native callbacks ([#18797](https://github.com/firebase/flutterfire/issues/18797)). ([6cfdb79d](https://github.com/firebase/flutterfire/commit/6cfdb79db49e8a85cc20f389b890b81efa5951da))
+ - **FIX**(android): replace Groovy space-assignment in plugin build.gradle files ([#18837](https://github.com/firebase/flutterfire/issues/18837)). ([09e913ac](https://github.com/firebase/flutterfire/commit/09e913acd98fa25ea6ff547141e7caf421b7b02d))
+ - **FIX**(firebase_auth): stop dropping profile, provider and action code fields ([#18820](https://github.com/firebase/flutterfire/issues/18820)). ([2572d82b](https://github.com/firebase/flutterfire/commit/2572d82b760b2800dd53c454474381d3ddbe6d9f))
+ - **DOCS**(auth,functions): document all FirebaseAuthException and FirebaseFunctionsException codes ([#18713](https://github.com/firebase/flutterfire/issues/18713)). ([b4feba95](https://github.com/firebase/flutterfire/commit/b4feba95a65f650c91cb6d3863f8b7467ef099b7))
+
 ## 7.0.0
 
 > Note: This release has breaking changes.

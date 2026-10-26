@@ -135,6 +135,9 @@ jobs:
           npm-cache: 'false'
           firebase-tools-version: '15.25.1'
           bootstrap-scope: 'firebase_data_connect*'
+      - name: Enable Swift Package Manager
+        # The example's pubspec also pins this; there is no Podfile.
+        run: flutter config --enable-swift-package-manager
       - name: Setup PostgreSQL for Linux/macOS/Windows
         uses: ikalnytskyi/action-setup-postgres@c4dda34aae1c821e3a771b68b73b13af3198a7ee
       - uses: hendrikmuhs/ccache-action@f09c25b45002a07be2955cbe52e8cee55643f89d
@@ -143,18 +146,6 @@ jobs:
           key: xcode-cache-${{ runner.os }}-xcode27
           save: "${{ github.ref == 'refs/heads/main' }}"
           max-size: 700M
-      - uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
-        continue-on-error: true
-        name: Pods Cache
-        id: pods-cache
-        with:
-          # Must match the save path exactly
-          path: packages/firebase_data_connect/firebase_data_connect/example/ios/Pods
-          # tests/pubspec.lock is gitignored, so the old key hashed nothing and
-          # the cache never invalidated. Key on the files that actually pin the
-          # native SDK version instead.
-          key: ${{ runner.os }}-fdc-pods-v3-${{ hashFiles('packages/firebase_data_connect/firebase_data_connect/example/ios/Podfile', 'packages/firebase_core/firebase_core/ios/firebase_sdk_version.rb') }}
-          restore-keys: ${{ runner.os }}-fdc-pods-v3-
       - name: Firebase Emulator Cache
         id: firebase-emulator-cache
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
@@ -174,8 +165,26 @@ jobs:
           export CCACHE_DEPEND=true
           export CCACHE_INODECACHE=true
           ccache -s
-          flutter build ios --no-codesign --simulator --debug --target=./integration_test/e2e_test.dart --dart-define=CI=true
+          set +e
+          flutter build ios --no-codesign --simulator --debug --target=./integration_test/e2e_test.dart --dart-define=CI=true 2>&1 | tee build_output.log
+          BUILD_EXIT=${PIPESTATUS[0]}
+          # Same one-shot retry for the SPM package resolution race as
+          # reusable_e2e_ios.yaml - anything else fails immediately.
+          if [ "$BUILD_EXIT" -ne 0 ] && grep -q "Could not resolve package dependencies" build_output.log; then
+            echo "SPM package resolution race detected; retrying the build once."
+            flutter clean > /dev/null
+            flutter build ios --no-codesign --simulator --debug --target=./integration_test/e2e_test.dart --dart-define=CI=true 2>&1 | tee build_output.log
+            BUILD_EXIT=${PIPESTATUS[0]}
+          fi
+          set -e
           ccache -s
+          # Flutter silently falls back to CocoaPods when the example has a
+          # Podfile or a plugin has no Package.swift.
+          if grep -q "Running pod install" build_output.log; then
+            echo "::error::flutter build ran pod install: this example must build with Swift Package Manager only."
+            exit 1
+          fi
+          exit "$BUILD_EXIT"
       - name: Start Firebase Emulator
         run: |
           sudo chown -R 501:20 "/Users/runner/.npm"
@@ -217,15 +226,6 @@ jobs:
           key: ${{ steps.firebase-emulator-cache.outputs.cache-primary-key }}
           # Must match the restore path exactly
           path: ~/.cache/firebase/emulators
-      - name: Save Pods Cache
-        # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
-        if: github.ref == 'refs/heads/main'
-        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
-        continue-on-error: true
-        with:
-          key: ${{ steps.pods-cache.outputs.cache-primary-key }}
-          # Must match the restore path exactly
-          path: packages/firebase_data_connect/firebase_data_connect/example/ios/Pods
 
   web:
     runs-on: macos-latest

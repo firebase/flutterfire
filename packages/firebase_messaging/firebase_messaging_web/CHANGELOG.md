@@ -1,3 +1,7 @@
+## 4.3.1
+
+ - Update a dependency to the latest release.
+
 ## 4.3.0
 
  - **FEAT**(messaging): add FID registration APIs ([#18482](https://github.com/firebase/flutterfire/issues/18482)). ([ff6da47e](https://github.com/firebase/flutterfire/commit/ff6da47ea85fd62e4a2c267603d39f2077c6fdb3))

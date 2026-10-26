@@ -7,15 +7,15 @@ environment:
   flutter: '>=3.27.0'
 
 dependencies:
-  firebase_core: ^5.0.0
-  firebase_messaging: ^17.0.0
+  firebase_core: ^5.1.0
+  firebase_messaging: ^17.0.1
   flutter:
     sdk: flutter
   flutter_local_notifications: ^21.0.0
   http: ^1.0.0
 
 dev_dependencies:
-  firebase_messaging_platform_interface: ^4.11.0
+  firebase_messaging_platform_interface: ^4.11.1
   flutter_test:
     sdk: flutter
   integration_test:
@@ -26,3 +26,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  config:
+    # iOS and macOS build with Swift Package Manager only (no Podfile).
+    enable-swift-package-manager: true

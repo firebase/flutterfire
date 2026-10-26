@@ -71,13 +71,14 @@ class FirebaseAI extends FirebasePlugin {
     bool? useLimitedUseAppCheckTokens,
   }) {
     app ??= Firebase.app();
-    var instanceKey = '${app.name}::agentPlatform::$location';
+    location ??= _defaultAgentPlatformLocation;
+    final limitedUseTokens = useLimitedUseAppCheckTokens ?? false;
+    var instanceKey =
+        '${app.name}::agentPlatform::$location::$limitedUseTokens';
 
     if (_cachedInstances.containsKey(instanceKey)) {
       return _cachedInstances[instanceKey]!;
     }
-
-    location ??= _defaultAgentPlatformLocation;
 
     FirebaseAI newInstance = FirebaseAI._(
       app: app,
@@ -85,7 +86,7 @@ class FirebaseAI extends FirebasePlugin {
       appCheck: app.getService<FirebaseAppCheck>(),
       auth: app.getService<FirebaseAuth>(),
       useAgentPlatform: true,
-      useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens ?? false,
+      useLimitedUseAppCheckTokens: limitedUseTokens,
     );
     _cachedInstances[instanceKey] = newInstance;
 
@@ -101,7 +102,8 @@ class FirebaseAI extends FirebasePlugin {
     bool? useLimitedUseAppCheckTokens,
   }) {
     app ??= Firebase.app();
-    var instanceKey = '${app.name}::googleai';
+    final limitedUseTokens = useLimitedUseAppCheckTokens ?? false;
+    var instanceKey = '${app.name}::googleai::$limitedUseTokens';
 
     if (_cachedInstances.containsKey(instanceKey)) {
       return _cachedInstances[instanceKey]!;
@@ -113,7 +115,7 @@ class FirebaseAI extends FirebasePlugin {
       appCheck: app.getService<FirebaseAppCheck>(),
       auth: app.getService<FirebaseAuth>(),
       useAgentPlatform: false,
-      useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens ?? false,
+      useLimitedUseAppCheckTokens: limitedUseTokens,
     );
     _cachedInstances[instanceKey] = newInstance;
 

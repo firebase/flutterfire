@@ -211,10 +211,9 @@ jobs:
         with:
           firebase-tools-version: '15.25.1'
           bootstrap-scope: tests
-      - name: Disable Swift Package Manager
-        # Recent stable Flutter enables SPM by default; the smoke app's Apple
-        # builds are CocoaPods by design (tests/ios, tests/macos Podfiles).
-        run: flutter config --no-enable-swift-package-manager
+      - name: Enable Swift Package Manager
+        # tests/pubspec.yaml also pins this; there is no Podfile.
+        run: flutter config --enable-swift-package-manager
       - uses: hendrikmuhs/ccache-action@f09c25b45002a07be2955cbe52e8cee55643f89d
         name: Xcode Compile Cache
         with:
@@ -223,18 +222,6 @@ jobs:
           key: xcode-ccache-ios-xcode27
           save: "${{ github.ref == 'refs/heads/main' }}"
           max-size: 700M
-      - uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
-        continue-on-error: true
-        name: Pods Cache
-        id: pods-cache
-        with:
-          # Must match the save path exactly
-          path: tests/ios/Pods
-          # Keyed on the Podfile and the pinned Firebase SDK version, not tests/pubspec.lock:
-          # that file is gitignored, so hashFiles() returned an empty string and the key
-          # never changed - the cache could never be invalidated.
-          key: pods-v5-${{ runner.os }}-ios-${{ hashFiles('tests/ios/Podfile', 'packages/firebase_core/firebase_core/ios/firebase_sdk_version.rb') }}
-          restore-keys: pods-v5-${{ runner.os }}-ios-
       - name: Firebase Emulator Cache
         id: firebase-emulator-cache
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
@@ -259,8 +246,26 @@ jobs:
           export CCACHE_DEPEND=true
           export CCACHE_INODECACHE=true
           ccache -s
-          flutter build ios --no-codesign --simulator --debug --target=./integration_test/core_shard_test.dart --dart-define=CI=true
+          set +e
+          flutter build ios --no-codesign --simulator --debug --target=./integration_test/core_shard_test.dart --dart-define=CI=true 2>&1 | tee build_output.log
+          BUILD_EXIT=${PIPESTATUS[0]}
+          # Same one-shot retry for the SPM package resolution race as
+          # reusable_e2e_ios.yaml - anything else fails immediately.
+          if [ "$BUILD_EXIT" -ne 0 ] && grep -q "Could not resolve package dependencies" build_output.log; then
+            echo "SPM package resolution race detected; retrying the build once."
+            flutter clean > /dev/null
+            flutter build ios --no-codesign --simulator --debug --target=./integration_test/core_shard_test.dart --dart-define=CI=true 2>&1 | tee build_output.log
+            BUILD_EXIT=${PIPESTATUS[0]}
+          fi
+          set -e
           ccache -s
+          # Flutter silently falls back to CocoaPods when the app has a Podfile
+          # or a plugin has no Package.swift.
+          if grep -q "Running pod install" build_output.log; then
+            echo "::error::flutter build ran pod install: the smoke app must build with Swift Package Manager only."
+            exit 1
+          fi
+          exit "$BUILD_EXIT"
       - name: Install Cloud Functions dependencies
         # `firebase emulators:exec` does not install these itself (the old
         # start-firebase-emulator.sh wrapper did); without them the functions
@@ -308,15 +313,6 @@ jobs:
           key: ${{ steps.firebase-emulator-cache.outputs.cache-primary-key }}
           # Must match the restore paths exactly
           path: ~/.cache/firebase/emulators
-      - name: Save Pods Cache
-        # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
-        if: github.ref == 'refs/heads/main'
-        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
-        continue-on-error: true
-        with:
-          key: ${{ steps.pods-cache.outputs.cache-primary-key }}
-          # Must match the restore paths exactly
-          path: tests/ios/Pods
 
   macos:
     needs: changes
@@ -331,10 +327,9 @@ jobs:
         with:
           firebase-tools-version: '15.25.1'
           bootstrap-scope: tests
-      - name: Disable Swift Package Manager
-        # Recent stable Flutter enables SPM by default; the smoke app's Apple
-        # builds are CocoaPods by design (tests/ios, tests/macos Podfiles).
-        run: flutter config --no-enable-swift-package-manager
+      - name: Enable Swift Package Manager
+        # tests/pubspec.yaml also pins this; there is no Podfile.
+        run: flutter config --enable-swift-package-manager
       - uses: hendrikmuhs/ccache-action@f09c25b45002a07be2955cbe52e8cee55643f89d
         name: Xcode Compile Cache
         with:
@@ -343,18 +338,6 @@ jobs:
           key: xcode-ccache-macos-xcode27
           save: "${{ github.ref == 'refs/heads/main' }}"
           max-size: 700M
-      - name: Pods Cache
-        continue-on-error: true
-        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
-        id: pods-cache
-        with:
-          # Must match the save path exactly
-          path: tests/macos/Pods
-          # Keyed on the Podfile and the pinned Firebase SDK version, not tests/pubspec.lock:
-          # that file is gitignored, so hashFiles() returned an empty string and the key
-          # never changed - the cache could never be invalidated.
-          key: pods-v5-${{ runner.os }}-macos-${{ hashFiles('tests/macos/Podfile', 'packages/firebase_core/firebase_core/ios/firebase_sdk_version.rb') }}
-          restore-keys: pods-v5-${{ runner.os }}-macos-
       - name: Firebase Emulator Cache
         id: firebase-emulator-cache
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
@@ -379,8 +362,26 @@ jobs:
           export CCACHE_DEPEND=true
           export CCACHE_INODECACHE=true
           ccache -s
-          flutter build macos --debug --target=./integration_test/core_shard_test.dart --device-id=macos --dart-define=CI=true
+          set +e
+          flutter build macos --debug --target=./integration_test/core_shard_test.dart --device-id=macos --dart-define=CI=true 2>&1 | tee build_output.log
+          BUILD_EXIT=${PIPESTATUS[0]}
+          # Same one-shot retry for the SPM package resolution race as
+          # reusable_e2e_ios.yaml - anything else fails immediately.
+          if [ "$BUILD_EXIT" -ne 0 ] && grep -q "Could not resolve package dependencies" build_output.log; then
+            echo "SPM package resolution race detected; retrying the build once."
+            flutter clean > /dev/null
+            flutter build macos --debug --target=./integration_test/core_shard_test.dart --device-id=macos --dart-define=CI=true 2>&1 | tee build_output.log
+            BUILD_EXIT=${PIPESTATUS[0]}
+          fi
+          set -e
           ccache -s
+          # Flutter silently falls back to CocoaPods when the app has a Podfile
+          # or a plugin has no Package.swift.
+          if grep -q "Running pod install" build_output.log; then
+            echo "::error::flutter build ran pod install: the smoke app must build with Swift Package Manager only."
+            exit 1
+          fi
+          exit "$BUILD_EXIT"
       - name: Install Cloud Functions dependencies
         # `firebase emulators:exec` does not install these itself (the old
         # start-firebase-emulator.sh wrapper did); without them the functions
@@ -440,15 +441,6 @@ jobs:
           key: ${{ steps.firebase-emulator-cache.outputs.cache-primary-key }}
           # Must match the restore path exactly
           path: ~/.cache/firebase/emulators
-      - name: Save Pods Cache
-        continue-on-error: true
-        # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
-        if: github.ref == 'refs/heads/main'
-        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
-        with:
-          key: ${{ steps.pods-cache.outputs.cache-primary-key }}
-          # Must match the restore paths exactly
-          path: tests/macos/Pods
 
   web:
     needs: changes

@@ -53,6 +53,7 @@ class TestItem {
   final String name;
   final String description;
   final String model;
+  final bool useLimitedUseAppCheckTokens;
   final Future<TestResult> Function(FirebaseAI provider, TestLogger logger) run;
   TestResult googleAIResult;
   TestResult agentPlatformResult;
@@ -62,6 +63,7 @@ class TestItem {
     required String name,
     required this.description,
     required this.model,
+    this.useLimitedUseAppCheckTokens = false,
     required Future<TestResult> Function(
       FirebaseAI provider,
       TestLogger logger,
@@ -666,6 +668,8 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
         id: '12',
         name: 'Multimodal Response Modality',
         model: ExampleModels.flashImage,
+        // This model only accepts limited-use App Check tokens.
+        useLimitedUseAppCheckTokens: true,
         description:
             'Verifies text + image response output generation via ${ExampleModels.flashImage} model.',
         run: (provider, logger, modelName) async {
@@ -1254,8 +1258,13 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
   }
 
   Future<void> _runTestItem(TestItem item, bool isAgentPlatform) async {
-    final provider =
-        isAgentPlatform ? FirebaseAI.agentPlatform() : FirebaseAI.googleAI();
+    final provider = isAgentPlatform
+        ? FirebaseAI.agentPlatform(
+            useLimitedUseAppCheckTokens: item.useLimitedUseAppCheckTokens,
+          )
+        : FirebaseAI.googleAI(
+            useLimitedUseAppCheckTokens: item.useLimitedUseAppCheckTokens,
+          );
     final logger = TestLogger();
 
     setState(() {

@@ -9,6 +9,7 @@ import android.os.Build
 import android.os.Process
 import android.util.Log
 import androidx.annotation.VisibleForTesting
+import androidx.annotation.WorkerThread
 import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
@@ -85,6 +86,48 @@ internal class ElfBuildIdReader private constructor() {
     private const val ELF64_PHDR_MIN_BYTES = 56
     private const val NOTE_HEADER_BYTES = 12
 
+    private val cachedBuildIdLock = Any()
+    @Volatile private var isCachedBuildIdRead = false
+    private var cachedBuildIdValue: String? = null
+
+    /**
+     * Returns [readBuildId], reading it once: libapp.so does not change while the process runs, so
+     * every engine shares the result. A read that fails is not kept, so a later call retries: a
+     * transient failure (memory or file descriptors) must not leave every report without the ID.
+     *
+     * Without extracted native libraries this opens the APK, so call it off the main thread.
+     */
+    @JvmStatic
+    @WorkerThread
+    fun cachedBuildId(context: Context): String? {
+      if (!isCachedBuildIdRead) {
+        synchronized(cachedBuildIdLock) {
+          if (!isCachedBuildIdRead) {
+            try {
+              cachedBuildIdValue = readBuildIdOrThrow(context)
+              isCachedBuildIdRead = true
+            } catch (exception: Exception) {
+              Log.d(TAG, "Could not read ELF build ID from libapp.so", exception)
+              return null
+            } catch (error: OutOfMemoryError) {
+              Log.d(TAG, "Could not read ELF build ID from libapp.so", error)
+              return null
+            }
+          }
+        }
+      }
+      return cachedBuildIdValue
+    }
+
+    @JvmStatic
+    @VisibleForTesting
+    fun clearCachedBuildId() {
+      synchronized(cachedBuildIdLock) {
+        cachedBuildIdValue = null
+        isCachedBuildIdRead = false
+      }
+    }
+
     /**
      * Reads the ELF build ID from libapp.so.
      *
@@ -94,20 +137,26 @@ internal class ElfBuildIdReader private constructor() {
      * @return the build ID as a lowercase hex string, or `null` if it cannot be read.
      */
     @JvmStatic
+    @WorkerThread
     fun readBuildId(context: Context): String? {
       return try {
-        val libApp = File(context.applicationInfo.nativeLibraryDir, "libapp.so")
-        if (libApp.exists()) {
-          readBuildIdFromFile(libApp)
-        } else {
-          readBuildIdFromApk(context)
-        }
+        readBuildIdOrThrow(context)
       } catch (exception: Exception) {
         Log.d(TAG, "Could not read ELF build ID from libapp.so", exception)
         null
       } catch (error: OutOfMemoryError) {
         Log.d(TAG, "Could not read ELF build ID from libapp.so", error)
         null
+      }
+    }
+
+    /** [readBuildId] that throws when libapp.so cannot be read, instead of returning `null`. */
+    private fun readBuildIdOrThrow(context: Context): String? {
+      val libApp = File(context.applicationInfo.nativeLibraryDir, "libapp.so")
+      return if (libApp.exists()) {
+        readBuildIdFromFile(libApp)
+      } else {
+        readBuildIdFromApk(context)
       }
     }
 

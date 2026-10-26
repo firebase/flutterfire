@@ -1,3 +1,8 @@
+## 0.4.1
+
+ - **FIX**(data_connect): send the current result to a new subscriber of a live query ([#18833](https://github.com/firebase/flutterfire/issues/18833)). ([094c3b80](https://github.com/firebase/flutterfire/commit/094c3b80ddfdd97ed8888548c21a335def53e9dd))
+ - **FEAT**: register flutter-fire-ai and flutter-fire-dc platform versions and fix web late registration ([#18707](https://github.com/firebase/flutterfire/issues/18707)). ([569c39e7](https://github.com/firebase/flutterfire/commit/569c39e71d32f1bef77b1cea4c0d1389374be2b5))
+
 ## 0.4.0
 
 > Note: This release has breaking changes.
